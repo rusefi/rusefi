@@ -6,6 +6,7 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
+import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
@@ -43,7 +44,7 @@ public class CalibrationsHelper {
         final JComponent parent,
         final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks,
-        final Supplier<Boolean> updateFirmware
+        final Supplier<Boolean> updateFirmware, ConnectivityContext connectivityContext
     ) {
         AutoupdateUtil.assertNotAwtThread();
 
@@ -52,7 +53,7 @@ public class CalibrationsHelper {
         final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrations(
             ecuPort,
             callbacks,
-            getFileNameWithoutExtension(timestampFoleNameComponent, PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT)
+            getFileNameWithoutExtension(timestampFoleNameComponent, PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
         );
         if (!prevCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up current calibrations...");
@@ -66,7 +67,7 @@ public class CalibrationsHelper {
         final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrations(
             ecuPort,
             callbacks,
-            getFileNameWithoutExtension(timestampFoleNameComponent, UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT)
+            getFileNameWithoutExtension(timestampFoleNameComponent, UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
         );
         if (!updatedCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up updated calibrations...");
@@ -95,7 +96,7 @@ public class CalibrationsHelper {
             return CalibrationsUpdater.INSTANCE.updateCalibrations(
                 ecuPort.port,
                 mergedCalibrations.get().getImage().getConfigurationImage(),
-                callbacks
+                callbacks, connectivityContext
             );
         } else {
             return true;
@@ -180,7 +181,7 @@ public class CalibrationsHelper {
 
     public static Optional<CalibrationsInfo> readCurrentCalibrations(
         final String port,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         return BinaryProtocolExecutor.executeWithSuspendedPortScanner(
             port,
@@ -194,7 +195,7 @@ public class CalibrationsHelper {
                     return Optional.empty();
                 }
             },
-            Optional.empty()
+            Optional.empty(), connectivityContext
         );
     }
 
@@ -222,7 +223,7 @@ public class CalibrationsHelper {
     public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
         final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks,
-        final String backupFileName
+        final String backupFileName, ConnectivityContext connectivityContext
     ) {
         return BinaryProtocolExecutor.executeWithSuspendedPortScanner(
             ecuPort.port,
@@ -247,7 +248,7 @@ public class CalibrationsHelper {
                     return Optional.empty();
                 }
             },
-            Optional.empty()
+            Optional.empty(), connectivityContext
         );
     }
 

@@ -251,7 +251,7 @@ public class ConsoleUI {
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                new StartupFrame().showUi();
+                new StartupFrame(ConnectivityContext.INSTANCE).showUi();
             }
 
         } catch (Throwable e) {

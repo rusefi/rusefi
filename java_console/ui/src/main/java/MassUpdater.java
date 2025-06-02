@@ -1,5 +1,5 @@
+import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
-import com.rusefi.SerialPortScanner;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
@@ -23,13 +23,13 @@ public class MassUpdater {
     private final StatusWindow mainStatus = new StatusWindow();
     private final Set<String> knownBlts = new HashSet<>();
 
-    public MassUpdater() {
+    public MassUpdater(ConnectivityContext connectivityContext) {
         mainStatus.showFrame("Mass Updater " + rusEFIVersion.CONSOLE_VERSION);
 
         final AtomicBoolean previousDfuState = new AtomicBoolean();
         AtomicBoolean isUsingDfu = new AtomicBoolean(); // it seems like DFU detection is not 100% reliable? a work-around to avoid double-DFU
 
-        SerialPortScanner.INSTANCE.addListener(currentHardware -> {
+        connectivityContext.getSerialPortScanner().addListener(currentHardware -> {
 
             if (!isUsingDfu.get() && currentHardware.isDfuFound() != previousDfuState.get()) {
                 mainStatus.getContent().logLine(currentHardware.isDfuFound() ? "I see a DFU device!" : "No DFU...");
@@ -85,6 +85,6 @@ public class MassUpdater {
 
     public static void main(String[] args) throws InterruptedException, InvocationTargetException {
         ToolButtons.showDeviceManager();
-        SwingUtilities.invokeAndWait(MassUpdater::new);
+        SwingUtilities.invokeAndWait(() -> new MassUpdater(ConnectivityContext.INSTANCE));
     }
 }

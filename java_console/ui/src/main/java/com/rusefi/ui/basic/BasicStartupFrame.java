@@ -22,10 +22,7 @@ public class BasicStartupFrame {
     private final String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
 
     private final StatusPanel statusPanel = new StatusPanel();
-    private final BasicUpdaterPanel basicUpdaterPanel = new BasicUpdaterPanel(
-        ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
-        statusPanel
-    );
+    private final BasicUpdaterPanel basicUpdaterPanel;
     private final FrameHelper frame = FrameHelper.createFrame(
         whiteLabel + " basic console " + Launcher.CONSOLE_VERSION
     );
@@ -38,16 +35,20 @@ public class BasicStartupFrame {
 
     public static void runTool(String[] args) throws InterruptedException, InvocationTargetException {
         DefaultExceptionHandler.install();
-        SwingUtilities.invokeAndWait(BasicStartupFrame::new);
+        SwingUtilities.invokeAndWait(() -> new BasicStartupFrame(ConnectivityContext.INSTANCE));
     }
 
-    public BasicStartupFrame() {
+    public BasicStartupFrame(ConnectivityContext connectivityContext) {
         final JPanel panel = new JPanel();
+        basicUpdaterPanel = new BasicUpdaterPanel(connectivityContext,
+            ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
+            statusPanel
+        );
         panel.add(basicUpdaterPanel.getContent());
         panel.add(statusPanel);
         TunerStudioHelper.maybeCloseTs();
 
-        SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+        connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             onHardwareUpdated(currentHardware);
         }));
 

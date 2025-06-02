@@ -1,6 +1,6 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.SerialPortScanner;
+import com.rusefi.ConnectivityContext;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -58,12 +58,12 @@ public class BinaryProtocolExecutor {
         final String port,
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
-        final T failureResult
+        final T failureResult, ConnectivityContext connectivityContext
     ) {
         try {
             callbacks.logLine("Suspending port scanning...");
             try {
-                SerialPortScanner.INSTANCE.suspend().await(1, TimeUnit.MINUTES);
+                connectivityContext.getSerialPortScanner().suspend().await(1, TimeUnit.MINUTES);
                 callbacks.logLine("Port scanning is suspended.");
             } catch (final InterruptedException e) {
                 callbacks.logLine("Failed to  suspend port scanning in a minute.");
@@ -72,7 +72,7 @@ public class BinaryProtocolExecutor {
             return execute(port, callbacks, bpAction, failureResult, false);
         } finally {
             callbacks.logLine("Resuming port scanning...");
-            SerialPortScanner.INSTANCE.resume();
+            connectivityContext.getSerialPortScanner().resume();
             callbacks.logLine("Port scanning is resumed.");
         }
     }

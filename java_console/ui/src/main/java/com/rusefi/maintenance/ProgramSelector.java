@@ -1,13 +1,9 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.AvailableHardware;
-import com.rusefi.PortResult;
-import com.rusefi.UiProperties;
+import com.rusefi.*;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
-import com.rusefi.FileLog;
-import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -40,8 +36,10 @@ public class ProgramSelector {
     private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
     private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
+    private final ConnectivityContext connectivityContext;
 
-    public ProgramSelector(JComboBox<PortResult> comboPorts) {
+    public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
+        this.connectivityContext = connectivityContext;
         content.add(updateModeAndButton, BorderLayout.NORTH);
         content.add(noHardware, BorderLayout.SOUTH);
 
@@ -68,13 +66,13 @@ public class ProgramSelector {
         });
     }
 
-    private static void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {
+    private void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {
         log.info("ProgramSelector " + selectedMode + " " + selectedPort);
         Objects.requireNonNull(selectedMode);
         AsyncJob job;
         switch (selectedMode) {
             case DFU_AUTO:
-                job = new DfuAutoJob(selectedPort, parent);
+                job = new DfuAutoJob(selectedPort, parent, connectivityContext);
                 break;
             case DFU_MANUAL:
                 job = new DfuManualJob();
@@ -98,7 +96,7 @@ public class ProgramSelector {
                 job = new OpenBltManualJob(selectedPort, parent);
                 break;
             case OPENBLT_AUTO:
-                job = new OpenBltAutoJob(selectedPort, parent);
+                job = new OpenBltAutoJob(selectedPort, parent, connectivityContext);
                 break;
             case DFU_ERASE:
                 job = new DfuEraseJob();
@@ -164,12 +162,12 @@ public class ProgramSelector {
 
     private static boolean waitForEcuPortDisappeared(
         final PortResult ecuPort,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         return waitForPredicate(
             String.format("Waiting for ECU on port %s to reboot to OpenBlt for up to " + TOTAL_WAIT_SECONDS + " seconds...", ecuPort),
             () -> {
-                final AvailableHardware availableHardware = SerialPortScanner.INSTANCE.getCurrentHardware();
+                final AvailableHardware availableHardware = connectivityContext.getSerialPortScanner().getCurrentHardware();
                 log.info(String.format(
                     "current ports: [%s]",
                     availableHardware.getKnownPorts().stream()
@@ -184,13 +182,13 @@ public class ProgramSelector {
 
     private static List<PortResult> waitForNewOpenBltPortAppeared(
         final List<PortResult> openBltPortsBefore,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         final List<PortResult> newPorts = new ArrayList<>();
         waitForPredicate(
             "Waiting for new OpenBlt port to appear...",
             () -> {
-                final AvailableHardware availableHardwareAfter = SerialPortScanner.INSTANCE.getCurrentHardware();
+                final AvailableHardware availableHardwareAfter = connectivityContext.getSerialPortScanner().getCurrentHardware();
                 log.info(String.format(
                     "ports after reboot to OpenBlt: [%s]",
                     availableHardwareAfter.getKnownPorts().stream()
@@ -213,23 +211,23 @@ public class ProgramSelector {
     public static boolean flashOpenbltSerialAutomatic(
         JComponent parent,
         PortResult ecuPort,
-        UpdateOperationCallbacks callbacks
+        UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         return updateFirmwareAndRestorePreviousCalibrations(
             parent,
             ecuPort,
             callbacks,
-            () -> bltUpdateFirmware(parent, ecuPort, callbacks)
+            () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext
         );
     }
 
-    private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
-        final List<PortResult> openBltPortsBefore = SerialPortScanner.INSTANCE.getCurrentHardware().getKnownPorts(OpenBlt);
+    private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext) {
+        final List<PortResult> openBltPortsBefore = connectivityContext.getSerialPortScanner().getCurrentHardware().getKnownPorts(OpenBlt);
 
         rebootToOpenblt(parent, ecuPort.port, callbacks);
 
         // invoking blocking method
-        final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
+        final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks, connectivityContext);
 
         if (!isEcuPortDisappeared) {
             callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
@@ -239,7 +237,7 @@ public class ProgramSelector {
             return false;
         }
 
-        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks);
+        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks, connectivityContext);
 
         // Check that exactly one thing appeared in the "after" list
         if (newItems.isEmpty()) {
