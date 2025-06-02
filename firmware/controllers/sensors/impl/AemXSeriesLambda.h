@@ -6,7 +6,6 @@
 
 // Following codes "extend" wbo::Fault codes
 #define HACK_INVALID_AEM 7
-#define HACK_INVALID_RE 7
 
 // todo: static_cast<uint8_t>(Fault::LegacyProtocol);
 
