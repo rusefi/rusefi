@@ -34,18 +34,18 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 		return false;
 	}
 
-	uint32_t id = CAN_ID(frame);
-
-	if (type == RUSEFI) {
+	// RusEFI wideband uses standard CAN IDs
+	if ((!CAN_ISX(frame)) && (type == RUSEFI)) {
 		// 0th sensor is 0x190 and 0x191, 1st sensor is 0x192 and 0x193
 		uint32_t rusefiBaseId = rusefi_base + 2 * (engineConfiguration->flipWboChannels ? (1 - m_sensorIndex) : m_sensorIndex);
-		return ((id == rusefiBaseId) || (id == rusefiBaseId + 1));
+		return ((CAN_SID(frame) == rusefiBaseId) || (CAN_SID(frame) == rusefiBaseId + 1));
 	}
 
-	if (type == AEM) {
-		// 0th sensor is 0x180, 1st sensor is 0x181, etc
+	// AEM uses extended CAN ID
+	if ((CAN_ISX(frame)) && (type == AEM)) {
+		// 0th sensor is 0x00000180, 1st sensor is 0x00000181, etc
 		uint32_t aemXSeriesId = aem_base + m_sensorIndex;
-		return (id == aemXSeriesId);
+		return (CAN_EID(frame) == aemXSeriesId);
 	}
 
 	return false;
