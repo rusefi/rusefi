@@ -18,6 +18,10 @@ TEST(CanWideband, AcceptFrameId0) {
 	frame.SID = 0x180;
 	EXPECT_TRUE(dut.acceptFrame(frame));
 
+	// Check that the AEM frame with standard CAN ID is not accepted
+	frame.IDE = false;
+	EXPECT_FALSE(dut.acceptFrame(frame));
+
 	// Now switch to RusEFI
 	engineConfiguration->wboType1 = RUSEFI;
 
@@ -29,6 +33,13 @@ TEST(CanWideband, AcceptFrameId0) {
 	// Check that the rusEFI extended data is accepted
 	frame.SID = 0x191;
 	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI frames with extended CAN ID are not accepted
+	frame.IDE = true;
+	frame.SID = 0x190;
+	EXPECT_FALSE(dut.acceptFrame(frame));
+	frame.SID = 0x191;
+	EXPECT_FALSE(dut.acceptFrame(frame));
 }
 
 TEST(CanWideband, AcceptFrameId1) {
