@@ -361,7 +361,7 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	}
 
 	// Reset default tick rate
-	luaTickPeriodUs = MS2US(100);
+	luaTickPeriodUs = MS2US(5);
 
 	if (!loadScript(ls, script)) {
 		return false;

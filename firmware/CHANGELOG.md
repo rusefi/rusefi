@@ -40,6 +40,7 @@ Release template (copy/paste this for new release):
  - modern Chrysler VVT cam decoder https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#vvt
  - SD card formatting indicator
  - additional status on WBO dialog
+ - default Lua tick rate changed from 10Hz to 200Hz
 
 ### Fixed
  - map window averaging is broken since April 20th #7867
