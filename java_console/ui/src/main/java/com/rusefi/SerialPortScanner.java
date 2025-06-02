@@ -138,7 +138,7 @@ public enum SerialPortScanner {
         return new ArrayList<>(results.values());
     }
 
-    private final static SerialPortCache portCache = new SerialPortCache();
+    private final SerialPortCache portCache = new SerialPortCache();
 
     /**
      * Find all available serial ports and checks if simulator local TCP port is available
