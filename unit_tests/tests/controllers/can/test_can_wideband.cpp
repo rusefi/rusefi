@@ -15,11 +15,12 @@ TEST(CanWideband, AcceptFrameId0) {
 	engineConfiguration->wboType1 = AEM;
 
 	// Check that the AEM format frame is accepted
-	frame.SID = 0x180;
+	frame.EID = 0x180;
 	EXPECT_TRUE(dut.acceptFrame(frame));
 
 	// Check that the AEM frame with standard CAN ID is not accepted
 	frame.IDE = false;
+	frame.SID = 0x180;
 	EXPECT_FALSE(dut.acceptFrame(frame));
 
 	// Now switch to RusEFI
@@ -36,9 +37,9 @@ TEST(CanWideband, AcceptFrameId0) {
 
 	// Check that the rusEFI frames with extended CAN ID are not accepted
 	frame.IDE = true;
-	frame.SID = 0x190;
+	frame.EID = 0x190;
 	EXPECT_FALSE(dut.acceptFrame(frame));
-	frame.SID = 0x191;
+	frame.EID = 0x191;
 	EXPECT_FALSE(dut.acceptFrame(frame));
 }
 
@@ -55,7 +56,7 @@ TEST(CanWideband, AcceptFrameId1) {
 	engineConfiguration->wboType2 = AEM;
 
 	// Check that the AEM format frame is accepted
-	frame.SID = 0x181;
+	frame.EID = 0x181;
 	EXPECT_TRUE(dut.acceptFrame(frame));
 
 	// Now switch to RusEFI
@@ -87,7 +88,7 @@ TEST(CanWideband,DecodeAemXSeriesInvalidLambda){
 
 	// AEM uses extended CAN ID!
 	frame.IDE = true;
-	frame.SID = 0x180;
+	frame.EID = 0x180;
 
 	frame.DLC = 8;
 
@@ -112,7 +113,7 @@ TEST(CanWideband,DecodeAemXSeriesSensorFault){
 
 	// AEM uses extended CAN ID!
 	frame.IDE = true;
-	frame.SID = 0x180;
+	frame.EID = 0x180;
 
 	frame.DLC = 8;
 
@@ -142,7 +143,7 @@ TEST(CanWideband,DecodeAemXSeriesValidLambda){
 
 	// AEM uses extended CAN ID!
 	frame.IDE = true;
-	frame.SID = 0x180;
+	frame.EID = 0x180;
 
 	frame.DLC = 8;
 
@@ -177,7 +178,7 @@ TEST(CanWideband, DecodeValidAemFormat) {
 
 	// AEM uses extended CAN ID!
 	frame.IDE = true;
-	frame.SID = 0x180;
+	frame.EID = 0x180;
 
 	frame.DLC = 8;
 
