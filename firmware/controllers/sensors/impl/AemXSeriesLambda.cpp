@@ -78,13 +78,10 @@ void AemXSeriesWideband::refreshState() {
 
 	if (type == RUSEFI) {
 		// This is RE WBO
+		isValid = m_afrIsValid;
 		if (m_faultCode != static_cast<uint8_t>(wbo::Fault::None)) {
 			// Report error code from WBO
 			faultCode = m_faultCode;
-			isValid = false;
-			return;
-		} else if (!m_afrIsValid) {
-			faultCode = HACK_INVALID_RE;
 			isValid = false;
 			return;
 		}
@@ -95,7 +92,8 @@ void AemXSeriesWideband::refreshState() {
 		tempC = 0;
 		nernstVoltage = 0;
 
-		if (m_isFault || (!m_afrIsValid)) {
+		isValid = m_afrIsValid;
+		if (m_isFault) {
 			faultCode = HACK_INVALID_AEM;
 			isValid = false;
 			return;
@@ -107,11 +105,11 @@ void AemXSeriesWideband::refreshState() {
 		pumpDuty = 0;
 		tempC = 0;
 		nernstVoltage = 0;
+		isValid = false;
 		return;
 	}
 
 	faultCode = static_cast<uint8_t>(wbo::Fault::None);
-	isValid = true;
 }
 
 void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
