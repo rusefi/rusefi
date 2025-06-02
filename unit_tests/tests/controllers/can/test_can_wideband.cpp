@@ -80,7 +80,10 @@ public:
 
 TEST(CanWideband,DecodeAemXSeriesInvalidLambda){
 	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	CANRxFrame frame;
+
+	engineConfiguration->wboType1 = AEM;
 
 	// AEM uses extended CAN ID!
 	frame.IDE = true;
@@ -102,7 +105,10 @@ TEST(CanWideband,DecodeAemXSeriesInvalidLambda){
 
 TEST(CanWideband,DecodeAemXSeriesSensorFault){
 	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	CANRxFrame frame;
+
+	engineConfiguration->wboType1 = AEM;
 
 	// AEM uses extended CAN ID!
 	frame.IDE = true;
@@ -124,8 +130,10 @@ TEST(CanWideband,DecodeAemXSeriesSensorFault){
 
 
 TEST(CanWideband,DecodeAemXSeriesValidLambda){
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->wboType1 = AEM;
 
 	// only this tests needs register
 	wbo.Register();
@@ -156,8 +164,8 @@ TEST(CanWideband,DecodeAemXSeriesValidLambda){
 }
 
 TEST(CanWideband, DecodeValidAemFormat) {
-  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	dut.Register();
 
 	engineConfiguration->wboType1 = AEM;
@@ -214,9 +222,11 @@ TEST(CanWideband, DecodeValidAemFormat) {
 
 TEST(CanWideband, DecodeRusefiStandard)
 {
+	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	AemXSeriesWideband dut(0, SensorType::Lambda1);
+	engineConfiguration->wboType1 = RUSEFI;
+
 	dut.Register();
 
 	CANRxFrame frame;
@@ -294,9 +304,11 @@ TEST(CanWideband, DecodeRusefiStandard)
 
 TEST(CanWideband, DecodeRusefiStandardWrongVersion)
 {
+	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	AemXSeriesWideband dut(0, SensorType::Lambda1);
+	engineConfiguration->wboType1 = RUSEFI;
+
 	dut.Register();
 
 	CANRxFrame frame;
