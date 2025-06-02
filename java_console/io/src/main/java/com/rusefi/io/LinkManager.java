@@ -120,8 +120,14 @@ public class LinkManager implements Closeable {
         return COMMUNICATION_EXECUTOR.submit(runnable);
     }
 
+    interface SerialPortSource {
+        SerialPortSource REAL = SerialPort::getCommPorts;
+
+        SerialPort[] findPorts();
+    }
+
     public static Set<String> getCommPorts() {
-        SerialPort[] ports = SerialPort.getCommPorts();
+        SerialPort[] ports = SerialPortSource.REAL.findPorts();
         // wow sometimes driver returns same port name more than once?!
         return Arrays.stream(ports).map(SerialPort::getSystemPortName).collect(Collectors.toCollection(TreeSet::new));
     }
