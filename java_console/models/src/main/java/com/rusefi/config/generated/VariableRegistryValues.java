@@ -148,13 +148,14 @@ public class VariableRegistryValues {
 	public static final String CAM_INPUT_1_1_NAME = "Cam sensor bank 1 intake";
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
-	public static final int can_baudrate_e_B100KBPS = 2;
-	public static final int can_baudrate_e_B125KBPS = 3;
-	public static final int can_baudrate_e_B1MBPS = 6;
-	public static final int can_baudrate_e_B250KBPS = 4;
-	public static final int can_baudrate_e_B500KBPS = 5;
-	public static final int can_baudrate_e_B50KBPS = 0;
-	public static final int can_baudrate_e_B83KBPS = 1;
+	public static final int can_baudrate_e_B100KBPS = 3;
+	public static final int can_baudrate_e_B125KBPS = 4;
+	public static final int can_baudrate_e_B1MBPS = 7;
+	public static final int can_baudrate_e_B250KBPS = 5;
+	public static final int can_baudrate_e_B33KBPS = 0;
+	public static final int can_baudrate_e_B500KBPS = 6;
+	public static final int can_baudrate_e_B50KBPS = 1;
+	public static final int can_baudrate_e_B83KBPS = 2;
 	public static final int CAN_BENCH_HEADER2 = 0x66;
 	public static final int CAN_DEFAULT_BASE = 0x200;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x710;
@@ -500,7 +501,7 @@ public class VariableRegistryValues {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 250528;
+	public static final int FLASH_DATA_VERSION = 250601;
 	public static final int FLOW_LINEARIZATION_MASS_SIZE = 2;
 	public static final int FLOW_LINEARIZATION_PRESSURE_SIZE = 2;
 	public static final String FRONTEND_TITLE_BAR_NAME = "rusEFI";
@@ -1344,7 +1345,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 555111119;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1627,7 +1627,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.02.frankenso_na6.555111119";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.02.frankenso_na6.4175840923";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

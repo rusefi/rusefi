@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri May 23 14:07:01 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Jun 02 13:11:56 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -305,6 +305,8 @@ case B1MBPS:
   return "B1MBPS";
 case B250KBPS:
   return "B250KBPS";
+case B33KBPS:
+  return "B33KBPS";
 case B500KBPS:
   return "B500KBPS";
 case B50KBPS:
