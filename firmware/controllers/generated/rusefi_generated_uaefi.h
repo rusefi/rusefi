@@ -1437,7 +1437,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1949581783
+#define SIGNATURE_HASH 3686925856
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1891,6 +1891,7 @@
 #define ts_show_maf true
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
+#define ts_show_map_estimate true
 #define ts_show_mc33810 false
 #define ts_show_mc33810_cs false
 #define ts_show_multispark true
@@ -1958,10 +1959,11 @@
 #define ts_show_vr_threshold_pins false
 #define ts_show_vvt_output true
 #define ts_show_vvt_output_pin true
+#define ts_show_wall_wetting true
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.06.02.uaefi.1949581783"
+#define TS_SIGNATURE "rusEFI master.2025.06.02.uaefi.3686925856"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
