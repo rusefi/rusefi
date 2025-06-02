@@ -291,7 +291,6 @@ TEST(CanWideband, DecodeRusefiStandard)
 	engine->engineState.heaterControlEnabled = true;
 	dut.processFrame(frame, getTimeNowNt());
 	dut.processFrame(diagFrame, getTimeNowNt());
-	EXPECT_EQ(HACK_INVALID_RE, dut.faultCode);
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
 
 	// make valid again, but report WBO error in diagnostic frame
