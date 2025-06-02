@@ -5096,7 +5096,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250601" nPages="1" signature="rusEFI master.2025.06.02.f407-discovery.1914828210" version="5.0"/>
+    <versionInfo firmwareInfo="20250601" nPages="1" signature="rusEFI master.2025.06.02.f407-discovery.2457529343" version="5.0"/>
     <bibliography author="rusEFI 20250601" writeDate="date"/>
     <settings/>
     <userComments/>
