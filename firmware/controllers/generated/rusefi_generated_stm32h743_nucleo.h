@@ -1965,7 +1965,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.06.01.stm32h743_nucleo.3658653956"
+#define TS_SIGNATURE "rusEFI master.2025.06.02.stm32h743_nucleo.3658653956"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
