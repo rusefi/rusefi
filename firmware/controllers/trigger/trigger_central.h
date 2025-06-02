@@ -159,9 +159,6 @@ public:
 
 	TriggerNoiseFilter noiseFilter;
 
-	int vvtEventRiseCounter[CAM_INPUTS_COUNT];
-	int vvtEventFallCounter[CAM_INPUTS_COUNT];
-
 	angle_t getVVTPosition(uint8_t bankIndex, uint8_t camIndex);
 
 #if EFI_UNIT_TEST

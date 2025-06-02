@@ -3,6 +3,8 @@
 struct_no_prefix trigger_central_s
 
 	uint16_t[HW_EVENT_TYPES iterate] hwEventCounters;Hardware events since boot
+	uint16_t[CAM_INPUTS_COUNT iterate] vvtEventRiseCounter
+	uint16_t[CAM_INPUTS_COUNT iterate] vvtEventFallCounter
 
   uint16_t vvtCamCounter;Sync: total cams front counter
 
