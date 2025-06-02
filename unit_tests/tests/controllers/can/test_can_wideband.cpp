@@ -305,7 +305,7 @@ TEST(CanWideband, DecodeRusefiStandardWrongVersion)
 	frame.DLC = 8;
 
 	// version - WRONG VERSION ON PURPOSE!
-	frame.data8[0] = 0xA0 - 1;
+	frame.data8[0] = RUSEFI_WIDEBAND_VERSION_MIN - 1;
 
 	EXPECT_FATAL_ERROR(dut.processFrame(frame, getTimeNowNt()));
 }
