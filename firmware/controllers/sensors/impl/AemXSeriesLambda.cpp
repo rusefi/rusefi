@@ -17,6 +17,9 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 {
     faultCode = m_faultCode = static_cast<uint8_t>(wbo::Fault::CanSilent);// silent, initial state is "no one has spoken to us so far"
     isValid = m_isFault = m_afrIsValid = false;
+    // wait for first rusEFI WBO standard frame with protocol version field
+    fwUnsupported = true;
+    fwOutdated = true;
 }
 
 can_wbo_type_e AemXSeriesWideband::sensorType() const {
@@ -137,6 +140,10 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
  * @return true if valid, false if invalid
  */
 bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt) {
+	// we don't care
+	fwUnsupported = false;
+	fwOutdated = false;
+
 	// reports in 0.0001 lambda per LSB
 	uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 	float lambdaFloat = 0.0001f * lambdaInt;
@@ -158,11 +165,24 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt) {
 	auto data = reinterpret_cast<const wbo::StandardData*>(&frame.data8[0]);
 
-	if (data->Version < RUSEFI_WIDEBAND_VERSION_MIN) {
-		firmwareError(ObdCode::OBD_WB_FW_Mismatch, "Wideband controller index %d has outdated protocol version (0x%02x while minimum 0x%02x expected), please update!",
-			m_sensorIndex, data->Version, RUSEFI_WIDEBAND_VERSION_MIN);
+	if (data->Version > RUSEFI_WIDEBAND_VERSION) {
+		firmwareError(ObdCode::OBD_WB_FW_Mismatch, "Wideband controller index %d has newer protocol version (0x%02x while 0x%02x supported), please update ECU FW!",
+			m_sensorIndex, data->Version, RUSEFI_WIDEBAND_VERSION);
+		fwUnsupported = true;
 		return;
 	}
+
+	if (data->Version < RUSEFI_WIDEBAND_VERSION_MIN) {
+		firmwareError(ObdCode::OBD_WB_FW_Mismatch, "Wideband controller index %d has outdated protocol version (0x%02x while minimum 0x%02x expected), please update WBO!",
+			m_sensorIndex, data->Version, RUSEFI_WIDEBAND_VERSION_MIN);
+		fwUnsupported = true;
+		return;
+	}
+
+	fwUnsupported = false;
+	// compatible, but not latest
+	fwOutdated = (data->Version != RUSEFI_WIDEBAND_VERSION_MIN);
+	// TODO: request and check builddate
 
 	tempC = data->TemperatureC;
 	float lambda = 0.0001f * data->Lambda;
@@ -177,6 +197,10 @@ void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 }
 
 void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
+	if (fwUnsupported) {
+		return;
+	}
+
 	auto data = reinterpret_cast<const wbo::DiagData*>(&frame.data8[0]);
 
 	// convert to percent
