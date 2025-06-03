@@ -37,7 +37,7 @@ TEST(test_utils, assertEventExistsAtEnginePhase){
 TEST(test_utils, spin60_2UntilDeg){
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
     eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
-    testSpinEngineUntilData testSpinInfo;
+    testSpinEngineUntilData testSpinInfo = { 0, 0, 0 };
 
     eth.spin60_2UntilDeg(testSpinInfo, 300, 720);
     ASSERT_NEAR(300, Sensor::getOrZero(SensorType::Rpm), 1) << "RPM";
