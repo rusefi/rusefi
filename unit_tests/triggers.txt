@@ -13,7 +13,7 @@ isSynchronizationNeeded=0
 gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
-event 0 0 1 0.00 8.780488
+event 0 0 1 0.00 3.000000
 event 1 1 1 0.00 nan
 event 2 1 0 52.76 nan
 event 3 1 1 52.76 nan
