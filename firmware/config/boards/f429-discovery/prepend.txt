@@ -1,0 +1,36 @@
+
+! asserting that rectangular configuration works
+#define TRACTION_CONTROL_ETB_DROP_SLIP_SIZE 10
+! todo: #define TRACTION_CONTROL_ETB_DROP_SPEED_SIZE 16
+#define TRACTION_CONTROL_ETB_DROP_SPEED_SIZE 10
+
+#define GPPWM_LOAD_COUNT 8
+
+! asserting that rectangular configuration works
+#define GPPWM_LOAD_COUNT 4
+#define GPPWM_RPM_COUNT 8
+
+! asserting that rectangular configuration works
+#define TMF_SIZE 2
+! todo: #define TMF_RATIO_SIZE 4
+#define TMF_RATIO_SIZE 2
+
+! asserting that rectangular configuration works
+#define TORQUE_CURVE_SIZE 6
+! todo: #define TORQUE_CURVE_RPM_SIZE 16
+#define TORQUE_CURVE_RPM_SIZE 6
+
+! asserting that rectangular configuration works
+#define CRANKING_ENRICH_COUNT 6
+! todo
+#define CRANKING_ENRICH_CLT_COUNT 6
+
+! asserting that rectangular configuration works
+#define IAT_IGN_CORR_COUNT 8
+! todo
+#define IAT_IGN_CORR_LOAD_COUNT 8
+
+! asserting that rectangular configuration works
+#define INJ_PHASE_LOAD_COUNT 16
+! todo
+#define INJ_PHASE_RPM_COUNT 16

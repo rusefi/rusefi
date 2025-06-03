@@ -20,7 +20,7 @@ namespace {
         TestBase::SetUp();
         std::fill_n(
             &engineConfiguration->tractionControlIgnitionSkip[0][0],
-            TRACTION_CONTROL_ETB_DROP_SIZE * TRACTION_CONTROL_ETB_DROP_SIZE,
+            TRACTION_CONTROL_ETB_DROP_SLIP_SIZE * TRACTION_CONTROL_ETB_DROP_SPEED_SIZE,
             static_cast<int8_t>(TEST_TRACTION_CONTROL_IGNITION_SKIP)
         );
         getTestLuaScriptExecutor().setSparkSkipRatio(TEST_LUA_SOFT_SPARK_SKIP);
