@@ -1970,7 +1970,7 @@ float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 #define IAT_IGN_CORR_COUNT 8
 #define IAT_IGN_CORR_LOAD_COUNT 8
 
-int16_t[IAT_IGN_CORR_COUNT x IAT_IGN_CORR_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -50, 50, 1
+int16_t[IAT_IGN_CORR_LOAD_COUNT x IAT_IGN_CORR_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -50, 50, 1
 int8_t[IAT_IGN_CORR_COUNT] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0
 uint8_t[IAT_IGN_CORR_LOAD_COUNT] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
