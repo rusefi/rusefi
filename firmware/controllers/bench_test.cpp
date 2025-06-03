@@ -22,6 +22,7 @@
 
 #include "pch.h"
 #include "tunerstudio.h"
+#include "long_term_fuel_trim.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -382,6 +383,14 @@ void handleBenchCategory(uint16_t index) {
 	case LUA_COMMAND_4:
 		luaCommandCounters[3]++;
 		return;
+#if EFI_LTFT_CONTROL
+  case LTFT_RESET:
+    resetLongTermFuelTrim();
+		return;
+  case LTFT_DEV_POKE:
+    devPokeLongTermFuelTrim();
+		return;
+#endif // EFI_LTFT_CONTROL
 #if EFI_HD_ACR
 	case HD_ACR:
 		hdAcrBench(0);

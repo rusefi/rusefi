@@ -1,3 +1,5 @@
+// file long_term_fuel_trim.h
+
 #pragma once
 
 struct LtftState {
@@ -21,4 +23,6 @@ private:
 	LtftState *m_state;
 };
 
-void initLtft(void);
+void initLtft();
+void resetLongTermFuelTrim();
+void devPokeLongTermFuelTrim();

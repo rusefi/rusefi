@@ -64,4 +64,10 @@ void initLtft(void)
 	engine->module<LongTermFuelTrim>()->init(&ltftState);
 }
 
+void resetLongTermFuelTrim() {
+}
+
+void devPokeLongTermFuelTrim() {
+}
+
 #endif // EFI_LTFT_CONTROL
