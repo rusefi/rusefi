@@ -840,6 +840,13 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		engineConfiguration->luaCanRxWorkaround = true;
 		return 0;
 	});
+#if HW_PROTEUS
+	lua_register(lState, "disableExtendedCanBroadcast", [](lua_State* l) {
+		// that's about global_can_data
+		engineConfiguration->enableExtendedCanBroadcast = false;
+		return 0;
+	});
+#endif // HW_PROTEUS
 
 #if EFI_ELECTRONIC_THROTTLE_BODY && EFI_PROD_CODE
   lua_register(lState, "getEtbTarget", [](lua_State* l) {
