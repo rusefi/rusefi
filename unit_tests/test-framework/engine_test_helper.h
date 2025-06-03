@@ -104,6 +104,9 @@ public:
 	// read all scheluder queue and search for the requested callback, then asserts the expected angle, return true if we found the callback
 	bool assertEventExistsAtEnginePhase(const char *msg, void *callback, angle_t expectedEventEnginePhase);
 
+	// spins the engine using 60-2 trigger pattern, at target RPM, by X crank degree, not engine phase degree
+	void spin60_2UntilDeg(struct testSpinEngineUntilData& spinInfo, int targetRpm, float targetDegree);
+
 	int executeActions();
 	void moveTimeForwardMs(float deltaTimeMs);
 	void moveTimeForwardSec(float deltaTimeSec);
@@ -124,3 +127,10 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 void setVerboseTrigger(bool isEnabled);
 
 warningBuffer_t * getRecentWarnings();
+
+// used by EngineTestHelper::spin60_2UntilDeg func
+struct testSpinEngineUntilData {
+	float currentDegree;
+	int currentTooth;
+	int toothCount;
+};

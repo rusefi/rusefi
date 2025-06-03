@@ -32,3 +32,20 @@ TEST(test_utils, assertEventExistsAtEnginePhase){
     bool injectionDone = eth.assertEventExistsAtEnginePhase("sim start", (void*)startSimultaneousInjection, static_cast<angle_t>(177.08));
     EXPECT_TRUE(injectionDone);
 };
+
+
+TEST(test_utils, spin60_2UntilDeg){
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+    testSpinEngineUntilData testSpinInfo;
+
+    eth.spin60_2UntilDeg(testSpinInfo, 300, 720);
+    ASSERT_NEAR(300, Sensor::getOrZero(SensorType::Rpm), 1) << "RPM";
+
+    eth.spin60_2UntilDeg(testSpinInfo, 1000, 720);
+    ASSERT_NEAR(1000, Sensor::getOrZero(SensorType::Rpm), 1) << "RPM";
+
+    eth.spin60_2UntilDeg(testSpinInfo, 1200, 720);
+    ASSERT_NEAR(1200, Sensor::getOrZero(SensorType::Rpm), 1) << "RPM";
+
+}
