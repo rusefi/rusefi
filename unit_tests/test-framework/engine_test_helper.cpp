@@ -447,6 +447,32 @@ bool EngineTestHelper::assertEventExistsAtEnginePhase(const char *msg, void *cal
 	return false;
 }
 
+void EngineTestHelper::spin60_2UntilDeg(struct testSpinEngineUntilData& spinInfo, int targetRpm, float targetDegree) {
+  	volatile float tick_per_deg = 6000 * 60 / 360 / (float)targetRpm;
+	constexpr float tooth_per_deg = 360 / 60;
+
+	int targetTooth = (targetDegree - spinInfo.currentDegree) / tooth_per_deg;
+
+	for (size_t i = 0; i < targetTooth; i++) {
+		if (spinInfo.currentTooth < 30 || spinInfo.currentTooth > 31) {
+			smartFireTriggerEvents2(1 /* count */, tick_per_deg /*ms*/);
+		}
+
+		if (spinInfo.currentTooth == 30) {
+			// now fire missed tooth rise/fall
+    		fireRise(tick_per_deg * 5 /*ms*/);
+    		fireFall(tick_per_deg);
+    		executeActions();
+		}
+
+		if (spinInfo.currentTooth > 58) {
+            spinInfo.currentTooth = 0;
+		}
+
+		spinInfo.currentTooth++;
+	}
+}
+
 void EngineTestHelper::applyTriggerWaveform() {
 	engine.updateTriggerConfiguration();
 
