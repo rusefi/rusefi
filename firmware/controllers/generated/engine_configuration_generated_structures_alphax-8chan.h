@@ -3701,12 +3701,12 @@ struct engine_configuration_s {
 	 * units: ratio
 	 * offset 2384
 	 */
-	scaled_channel<uint16_t, 100, 1> tractionControlSlipBins[TRACTION_CONTROL_ETB_DROP_SIZE] = {};
+	scaled_channel<uint16_t, 100, 1> tractionControlSlipBins[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 2396
 	 */
-	uint8_t tractionControlSpeedBins[TRACTION_CONTROL_ETB_DROP_SIZE] = {};
+	uint8_t tractionControlSpeedBins[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] = {};
 	/**
 	 * offset 2402
 	 */
@@ -4338,7 +4338,7 @@ struct engine_configuration_s {
 	 * units: %
 	 * offset 3512
 	 */
-	int8_t tractionControlEtbDrop[TRACTION_CONTROL_ETB_DROP_SIZE][TRACTION_CONTROL_ETB_DROP_SIZE] = {};
+	int8_t tractionControlEtbDrop[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE][TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] = {};
 	/**
 	 * If injector duty cycle hits this value, instantly cut fuel.
 	 * units: %
@@ -4371,12 +4371,12 @@ struct engine_configuration_s {
 	 * units: Deg
 	 * offset 3576
 	 */
-	int8_t tractionControlTimingDrop[TRACTION_CONTROL_ETB_DROP_SIZE][TRACTION_CONTROL_ETB_DROP_SIZE] = {};
+	int8_t tractionControlTimingDrop[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE][TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 3612
 	 */
-	int8_t tractionControlIgnitionSkip[TRACTION_CONTROL_ETB_DROP_SIZE][TRACTION_CONTROL_ETB_DROP_SIZE] = {};
+	int8_t tractionControlIgnitionSkip[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE][TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] = {};
 	/**
 	 * offset 3648
 	 */
@@ -5032,11 +5032,11 @@ struct persistent_config_s {
 	/**
 	 * offset 3944
 	 */
-	float tmfTable[TMF_SIZE][TMF_SIZE] = {};
+	float tmfTable[TMF_RATIO_SIZE][TMF_SIZE] = {};
 	/**
 	 * offset 3960
 	 */
-	float tmfRatioBins[TMF_SIZE] = {};
+	float tmfRatioBins[TMF_RATIO_SIZE] = {};
 	/**
 	 * offset 3968
 	 */
@@ -5045,12 +5045,12 @@ struct persistent_config_s {
 	 * units: Nm
 	 * offset 3976
 	 */
-	scaled_channel<uint8_t, 1, 10> torqueTable[TORQUE_CURVE_SIZE][TORQUE_CURVE_SIZE] = {};
+	scaled_channel<uint8_t, 1, 10> torqueTable[TORQUE_CURVE_SIZE][TORQUE_CURVE_RPM_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 4012
 	 */
-	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE] = {};
+	uint16_t torqueRpmBins[TORQUE_CURVE_RPM_SIZE] = {};
 	/**
 	 * units: Load
 	 * offset 4024
@@ -5070,7 +5070,7 @@ struct persistent_config_s {
 	 * units: C
 	 * offset 4192
 	 */
-	int16_t postCrankingCLTBins[CRANKING_ENRICH_COUNT] = {};
+	int16_t postCrankingCLTBins[CRANKING_ENRICH_CLT_COUNT] = {};
 	/**
 	 * target TPS value, 0 to 100%
 	 * TODO: use int8 data date once we template interpolation method
@@ -5110,7 +5110,7 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 4364
 	 */
-	scaled_channel<uint8_t, 1, 10> iacPidMultRpmBins[IAC_PID_MULT_SIZE] = {};
+	scaled_channel<uint8_t, 1, 10> iacPidMultRpmBins[IAC_PID_MULT_RPM_SIZE] = {};
 	/**
 	 * On Single Coil or Wasted Spark setups you have to lower dwell at high RPM
 	 * units: RPM
@@ -5449,7 +5449,7 @@ struct persistent_config_s {
 	 * units: Load
 	 * offset 16624
 	 */
-	scaled_channel<uint8_t, 1, 5> ignitionIatCorrLoadBins[IAT_IGN_CORR_COUNT] = {};
+	scaled_channel<uint8_t, 1, 5> ignitionIatCorrLoadBins[IAT_IGN_CORR_LOAD_COUNT] = {};
 	/**
 	 * units: deg
 	 * offset 16632
