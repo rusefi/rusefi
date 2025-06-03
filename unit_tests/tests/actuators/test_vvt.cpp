@@ -55,6 +55,8 @@ TEST(VVT, SetpointHysteresisAdvancingCam) {
 	// m_engineRunningLongEnough
 	advanceTimeUs(0.8e6);
 	engineConfiguration->vvtActivationDelayMs = 5;
+	engineConfiguration->invertVvtControlIntake = false;
+	engineConfiguration->invertVvtControlExhaust = false;
 
 	FakeMap targetMap;
 	MockPwm pwm;
@@ -97,6 +99,7 @@ TEST(VVT, SetpointHysteresisRetardingCam) {
 	engineConfiguration->vvtActivationDelayMs = 5;
 
 	engineConfiguration->invertVvtControlIntake = true;
+	engineConfiguration->invertVvtControlExhaust = false;
 
 	FakeMap targetMap;
 	MockPwm pwm;
