@@ -48,11 +48,22 @@ struct FakeMap : public ValueProvider3D {
 
 TEST(VVT, SetpointHysteresisAdvancingCam) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	Sensor::setMockValue(SensorType::Clt, 70); // m_isCltWarmEnough
+	// m_isRpmHighEnough
+	engine->rpmCalculator.setRpmValue(1500);
+	engineConfiguration->vvtControlMinRpm = 500;
+	// m_engineRunningLongEnough
+	advanceTimeUs(0.8e6);
+	engineConfiguration->vvtActivationDelayMs = 5;
 
 	FakeMap targetMap;
+	MockPwm pwm;
 
-	VvtController dut(0, 0, 0);
-	dut.init(&targetMap, nullptr);
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+
+	// update m_engineRunningLongEnough / m_isRpmHighEnough flags
+	dut.onFastCallback();
 
 	// 0 position returns unexpected
 	targetMap.setpoint = 0;
@@ -77,13 +88,24 @@ TEST(VVT, SetpointHysteresisAdvancingCam) {
 
 TEST(VVT, SetpointHysteresisRetardingCam) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	Sensor::setMockValue(SensorType::Clt, 70); // m_isCltWarmEnough
+	// m_isRpmHighEnough
+	engine->rpmCalculator.setRpmValue(1500);
+	engineConfiguration->vvtControlMinRpm = 500;
+	// m_engineRunningLongEnough
+	advanceTimeUs(0.8e6);
+	engineConfiguration->vvtActivationDelayMs = 5;
 
 	engineConfiguration->invertVvtControlIntake = true;
 
 	FakeMap targetMap;
+	MockPwm pwm;
 
-	VvtController dut(0, 0, 0);
-	dut.init(&targetMap, nullptr);
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
+
+	// update m_engineRunningLongEnough / m_isRpmHighEnough flags
+	dut.onFastCallback();
 
 	// 0 position returns unexpected
 	targetMap.setpoint = 0;
