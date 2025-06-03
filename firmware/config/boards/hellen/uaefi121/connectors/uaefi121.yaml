@@ -149,7 +149,7 @@ pins:
     function: EGT positive input
 
   - pin: 22a
-    ts_name: EGT+
+    ts_name: EGT-
     function: EGT negative input
 
   - pin: 23a
