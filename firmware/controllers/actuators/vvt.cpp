@@ -32,6 +32,7 @@ void VvtController::init(const ValueProvider3D* targetMap, IPwm* pwm) {
 
 	m_targetMap = targetMap;
 	m_pwm = pwm;
+	m_targetHysteresis = Hysteresis();
 }
 
 void VvtController::onFastCallback() {
