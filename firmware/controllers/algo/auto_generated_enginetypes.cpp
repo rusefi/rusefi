@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri May 23 16:31:33 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jun 03 12:00:54 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -67,6 +67,10 @@ case HD_ACR:
   return "HD_ACR";
 case HD_ACR2:
   return "HD_ACR2";
+case LTFT_DEV_POKE:
+  return "LTFT_DEV_POKE";
+case LTFT_RESET:
+  return "LTFT_RESET";
 case LUA_COMMAND_1:
   return "LUA_COMMAND_1";
 case LUA_COMMAND_2:

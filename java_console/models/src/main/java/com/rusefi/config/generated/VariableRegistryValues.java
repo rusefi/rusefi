@@ -118,10 +118,12 @@ public class VariableRegistryValues {
 	public static final int bench_mode_e_BENCH_VVT3_VALVE = 19;
 	public static final int bench_mode_e_HD_ACR = 28;
 	public static final int bench_mode_e_HD_ACR2 = 29;
-	public static final int bench_mode_e_LUA_COMMAND_1 = 30;
-	public static final int bench_mode_e_LUA_COMMAND_2 = 31;
-	public static final int bench_mode_e_LUA_COMMAND_3 = 32;
-	public static final int bench_mode_e_LUA_COMMAND_4 = 33;
+	public static final int bench_mode_e_LTFT_DEV_POKE = 31;
+	public static final int bench_mode_e_LTFT_RESET = 30;
+	public static final int bench_mode_e_LUA_COMMAND_1 = 32;
+	public static final int bench_mode_e_LUA_COMMAND_2 = 33;
+	public static final int bench_mode_e_LUA_COMMAND_3 = 34;
+	public static final int bench_mode_e_LUA_COMMAND_4 = 35;
 	public static final int BENCH_STARTER_DURATION = 4000;
 	public static final int BENCH_VVT_DURATION = 300;
 	public static final int BLEND_FACTOR_SIZE = 8;
@@ -1345,7 +1347,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1573621992;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1628,7 +1629,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.03.frankenso_na6.1573621992";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.03.frankenso_na6.3136526589";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

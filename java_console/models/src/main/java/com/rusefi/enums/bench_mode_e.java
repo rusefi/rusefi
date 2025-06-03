@@ -35,6 +35,8 @@ public enum bench_mode_e {
 	BENCH_AUXOUT7,
 	HD_ACR,
 	HD_ACR2,
+	LTFT_RESET,
+	LTFT_DEV_POKE,
 	LUA_COMMAND_1,
 	LUA_COMMAND_2,
 	LUA_COMMAND_3,
