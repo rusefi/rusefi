@@ -12,25 +12,20 @@
 
 ! asserting that rectangular configuration works
 #define TMF_SIZE 2
-! todo: #define TMF_RATIO_SIZE 4
-#define TMF_RATIO_SIZE 2
+#define TMF_RATIO_SIZE 4
 
 ! asserting that rectangular configuration works
 #define TORQUE_CURVE_SIZE 6
-! todo: #define TORQUE_CURVE_RPM_SIZE 16
-#define TORQUE_CURVE_RPM_SIZE 6
+#define TORQUE_CURVE_RPM_SIZE 8
 
 ! asserting that rectangular configuration works
 #define CRANKING_ENRICH_COUNT 6
-! todo
-#define CRANKING_ENRICH_CLT_COUNT 6
+#define CRANKING_ENRICH_CLT_COUNT 8
 
 ! asserting that rectangular configuration works
 #define IAT_IGN_CORR_COUNT 8
-! todo
-#define IAT_IGN_CORR_LOAD_COUNT 8
+#define IAT_IGN_CORR_LOAD_COUNT 4
 
 ! asserting that rectangular configuration works
 #define INJ_PHASE_LOAD_COUNT 16
-! todo
-#define INJ_PHASE_RPM_COUNT 16
+#define INJ_PHASE_RPM_COUNT 8
