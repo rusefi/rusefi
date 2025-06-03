@@ -26,7 +26,7 @@ struct mapSampler {
 #if HAL_USE_ADC
 void mapAveragingAdcCallback(float instantVoltage);
 #endif
-
+void startAveraging(struct mapSampler* s);
 // allow smoothing up to number of cylinders
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
 #endif /* EFI_MAP_AVERAGING */

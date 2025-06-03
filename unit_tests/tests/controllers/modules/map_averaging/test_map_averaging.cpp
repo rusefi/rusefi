@@ -50,3 +50,24 @@ TEST(EngineModules, MapAveragingModule_onFastCallback) {
 
     EXPECT_EQ(engine->engineState.mapAveragingDuration, 50);
 }
+
+TEST(EngineModules, MapAveragingModule_60_2) {
+  	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+  	engineConfiguration->isMapAveragingEnabled = true;
+	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
+
+	engineConfiguration->isIgnitionEnabled = false;
+	engineConfiguration->isInjectionEnabled = false;
+
+	engine->engineState.mapAveragingDuration = 50;
+
+	testSpinEngineUntilData testSpinInfo;
+	eth.spin60_2UntilDeg(testSpinInfo, 1200, 720);
+	ASSERT_NEAR(1200, Sensor::getOrZero(SensorType::Rpm), 1) << "RPM";
+
+    // spin after first sync & search for map averaging call
+    eth.spin60_2UntilDeg(testSpinInfo, 1200, 200);
+	bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", (void*)startAveraging, static_cast<angle_t>(65));
+    EXPECT_TRUE(averageDone);
+
+}
