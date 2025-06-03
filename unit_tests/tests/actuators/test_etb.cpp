@@ -871,3 +871,46 @@ TEST(etb, openLoopNonThrottle) {
 	EXPECT_EQ(0, etb.getOpenLoop(75).value_or(-1));
 	EXPECT_EQ(0, etb.getOpenLoop(100).value_or(-1));
 }
+
+TEST(etb, tractionControlEtbDrop) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	setTable(engineConfiguration->tractionControlEtbDrop, -10);
+	setLinearCurve(engineConfiguration->tractionControlSlipBins, /*from*/0.9, /*to*/1.2, 0.05);
+	setLinearCurve(engineConfiguration->tractionControlSpeedBins, /*from*/10, /*to*/120, 5);
+
+	// Mock pedal map that's just passthru pedal -> target
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _))
+		.WillRepeatedly([](float xRpm, float y) {
+			return y;
+		});
+
+	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	EtbController1 etb;
+	etb.init(DC_Throttle1, nullptr, nullptr, &pedalMap);
+
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 47, true);
+	EXPECT_EQ(37, etb.getSetpoint().value_or(-1));
+
+	// test correct X/Y on table
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
+	Sensor::setMockValue(SensorType::WheelSlipRatio, 0.9);
+
+	engineConfiguration->tractionControlEtbDrop[0][0] = -15;
+	engineConfiguration->tractionControlEtbDrop[0][1] = -15;
+
+	engineConfiguration->tractionControlEtbDrop[4][4] = +15;
+	engineConfiguration->tractionControlEtbDrop[5][5] = +15;
+
+	EXPECT_EQ(37, etb.getSetpoint().value_or(-1)); // should be 62
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 120.0);
+	Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2);
+
+	EXPECT_EQ(62, etb.getSetpoint().value_or(-1)); // should be 37
+}
