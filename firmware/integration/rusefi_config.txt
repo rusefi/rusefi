@@ -201,6 +201,11 @@ struct_no_prefix engine_configuration_s
 #define ts_show_crankingTpsCurve true
 #define ts_show_etb_frequency true
 #define ENGINE_TYPES_DIALOG_NAME "Popular vehicles"
+#define ts_show_gppwm_1 true
+#define ts_show_gppwm_2 true
+#define ts_show_gppwm_3 true
+#define ts_show_gppwm_4 true
+#define ts_show_ve_table_map true
 #define VVT1_TARGET_NAME "VVT intake target"
 #define GPPWM_1_NAME "General Purpose PWM 1"
 #define GPPWM_2_NAME "General Purpose PWM 2"
