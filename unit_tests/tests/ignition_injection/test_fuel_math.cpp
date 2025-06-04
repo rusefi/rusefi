@@ -371,3 +371,30 @@ TEST(FuelMath, getCycleFuelMassTest) {
 	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 6.0f, EPS3D);
 	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 1, EPS3D);
 }
+
+TEST(FuelMath, postCrankingFactorAxis){
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	engine->periodicFastCallback();
+	setTestFuelCrankingTable(4000 * 1.5f);
+
+	// simulate cranking
+	for (size_t i = 0; i < 30; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+	setLinearCurve(config->postCrankingCLTBins, /*from*/-20, /*to*/80, 20);
+	setLinearCurve(config->postCrankingDurationBins, /*from*/0, /*to*/150, 40);
+	setTable(config->postCrankingFactor, 5);
+
+	config->postCrankingFactor[0][0] = 1;
+	config->postCrankingFactor[0][1] = 1;
+
+	Sensor::setMockValue(SensorType::Clt, -20);
+	engine->periodicFastCallback();
+
+	EXPECT_NEAR(engine->fuelComputer.running.postCrankingFuelCorrection, 1, EPS3D);
+
+	Sensor::setMockValue(SensorType::Clt, 70);
+	engine->periodicFastCallback();
+	EXPECT_NEAR(engine->fuelComputer.running.postCrankingFuelCorrection, 5, EPS3D);
+}
