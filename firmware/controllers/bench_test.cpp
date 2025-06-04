@@ -23,6 +23,7 @@
 #include "pch.h"
 #include "tunerstudio.h"
 #include "long_term_fuel_trim.h"
+#include "can_common.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -578,6 +579,12 @@ PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
 
 #if EFI_CAN_SUPPORT
 void processCanEcuControl(const CANRxFrame& frame) {
+	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::ECU_CAN_BUS_CONTROL) {
+		return;
+	}
+	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
+		return;
+	}
 }
 #endif // EFI_CAN_SUPPORT
 
