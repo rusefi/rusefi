@@ -379,15 +379,15 @@ float getPostCrankingFuelCorrection() {
 	if (revolutionCounter > config->postCrankingDurationBins[efi::size(config->postCrankingDurationBins) - 1])
 		return 1;
 
-	const auto clt = Sensor::get(SensorType::Clt);
-
-	if (!clt)
-		return 1; // this error should be already reported somewhere else, let's just handle it
+	// TODO:
+	//const auto clt = Sensor::get(SensorType::Clt);
+	//if (!clt)
+	//	return 1; // this error should be already reported somewhere else, let's just handle it
 
 	// post-cranking fuel enrichment.
 	float postCrankingFactor = interpolate3d(
 		config->postCrankingFactor,
-		config->postCrankingCLTBins, clt.Value,
+		config->postCrankingCLTBins, Sensor::getOrZero(SensorType::Clt),
 		config->postCrankingDurationBins, revolutionCounter
 	);
 
