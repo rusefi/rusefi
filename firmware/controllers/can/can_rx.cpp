@@ -12,6 +12,7 @@
 
 #include "rusefi_lua.h"
 #include "can_bench_test.h"
+#include "bench_test.h"
 #include "can_common.h"
 
 #if EFI_CAN_SUPPORT
@@ -209,6 +210,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	}
 
 	processCanQcBenchTest(frame);
+	processCanEcuControl(frame);
 
 	processLuaCan(busIndex, frame);
 

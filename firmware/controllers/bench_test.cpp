@@ -576,6 +576,11 @@ static void applyPreset(int index) {
 
 PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
 
+#if EFI_CAN_SUPPORT
+void processCanEcuControl(const CANRxFrame& frame) {
+}
+#endif // EFI_CAN_SUPPORT
+
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);
 
