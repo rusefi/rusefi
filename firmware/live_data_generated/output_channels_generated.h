@@ -632,15 +632,21 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 1000, 1> rawFuelLevel = (int16_t)0;
 	/**
+	 * units: Bin
 	 * offset 228
 	 */
 	uint8_t fuelClosedLoopBinIdx = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * units: Bin
 	 * offset 229
 	 */
-	uint8_t alignmentFill_at_229[3] = {};
+	uint8_t fuelClosedLoopLearningBinIdx = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 230
+	 */
+	uint8_t alignmentFill_at_230[2] = {};
 	/**
 	 * units: V
 	 * offset 232
@@ -1187,10 +1193,10 @@ struct output_channels_s {
 	bool vvtChannel4 : 1 {};
 	/**
 	offset 664 bit 30 */
-	bool unusedBit_242_30 : 1 {};
+	bool unusedBit_243_30 : 1 {};
 	/**
 	offset 664 bit 31 */
-	bool unusedBit_242_31 : 1 {};
+	bool unusedBit_243_31 : 1 {};
 	/**
 	 * offset 668
 	 */

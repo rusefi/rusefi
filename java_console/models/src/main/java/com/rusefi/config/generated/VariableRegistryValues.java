@@ -515,8 +515,6 @@ public class VariableRegistryValues {
 	public static final int fuel_pressure_sensor_mode_e_FPM_Differential = 2;
 	public static final int fuel_pressure_sensor_mode_e_FPM_Gauge = 1;
 	public static final int FUEL_RPM_COUNT = 16;
-	public static final int FUEL_TRIM_LOAD_COUNT = 8;
-	public static final int FUEL_TRIM_RPM_COUNT = 8;
 	public static final int FUEL_TRIM_SIZE = 4;
 	public static final int GAP_TRACKING_LENGTH = 18;
 	public static final String GAUGE_CATEGORY_BOOST_CONTROL = "Boost Control";
@@ -1207,6 +1205,9 @@ public class VariableRegistryValues {
 	public static final int load_override_e_AFR_Tps = 2;
 	public static final String LOG_DELIMITER = "`";
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
+	public static final int LTFT_BANK_CONUT = 2;
+	public static final int LTFT_LOAD_CELL_COUNT = 16;
+	public static final int LTFT_RPM_CELL_COUNT = 16;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
 	public static final int LUA_BUTTON_COUNT = 4;
 	public static final int LUA_DIGITAL_INPUT_COUNT = 8;
@@ -1287,7 +1288,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 23736;
+	public static final int persistent_config_s_size = 23760;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1407,7 +1408,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 23736;
+	public static final int TOTAL_CONFIG_SIZE = 23760;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1635,7 +1636,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.04.frankenso_na6.4099798804";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.04.frankenso_na6.4179797068";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
