@@ -151,6 +151,9 @@ static void setDefaultStftSettings() {
 	// Default to proportional mode (for wideband sensors)
 	engineConfiguration->stftIgnoreErrorMagnitude = false;
 
+	// Also used in lambda monitor
+	engineConfiguration->noFuelTrimAfterDfcoTime = 5;
+
 	// 60 second startup delay - some O2 sensors are slow to warm up.
 	cfg.startupDelay = 60;
 
