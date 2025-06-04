@@ -5156,7 +5156,7 @@ struct persistent_config_s {
 	 * units: mult
 	 * offset 4024
 	 */
-	float postCrankingFactor[CRANKING_ENRICH_COUNT][CRANKING_ENRICH_COUNT] = {};
+	float postCrankingFactor[CRANKING_ENRICH_CLT_COUNT][CRANKING_ENRICH_COUNT] = {};
 	/**
 	 * units: count
 	 * offset 4168
