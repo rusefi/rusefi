@@ -2353,6 +2353,7 @@ end_struct
 #define pedalSensor_NAME "Accelerator pedal"
 #define egoSettings_NAME "CAN O2 sensors"
 #define ts_show_charge_estimation true
+#define ts_show_flow_units true
 #define ts_show_live_data true
 #define ts_show_ve_blend true
 #define ts_show_InjectorFlowLinearizationTable false
