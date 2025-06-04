@@ -11,6 +11,7 @@
 void turnInjectionPinHigh(uintptr_t arg) {
 	efitick_t nowNt = getTimeNowNt();
 
+  static_assert(sizeof(uintptr_t) == sizeof(void *));
 	// clear last bit to recover the pointer
 	InjectionEvent *event = reinterpret_cast<InjectionEvent*>(arg & ~(1UL));
 
