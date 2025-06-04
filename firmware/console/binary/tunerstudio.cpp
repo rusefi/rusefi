@@ -156,7 +156,7 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
-uint8_t* getWorkingPageAddr() {
+static uint8_t* getWorkingPageAddr() {
 	// TODO: why engineConfiguration, not config
 	// TS has access to whole persistent_config_s
 	return (uint8_t*)engineConfiguration;
