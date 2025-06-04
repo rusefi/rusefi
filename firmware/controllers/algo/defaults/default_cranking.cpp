@@ -24,14 +24,8 @@ void setDefaultCranking() {
 	// After start enrichment
 #if !EFI_UNIT_TEST
 	// don't set this for unit tests, as it makes things more complicated to test
-	static const int16_t defaultPostCrankingCLTBins[] = {
-		-20, 0, 20, 40, 60, 80
-	};
-	static const uint16_t defaultPostCrankingDurationBins[] = {
-		0, 15, 35, 65, 100, 150
-	};
-	copyArray(config->postCrankingCLTBins, defaultPostCrankingCLTBins);
-	copyArray(config->postCrankingDurationBins, defaultPostCrankingDurationBins);
+	setLinearCurve(config->postCrankingCLTBins, /*from*/-20, /*to*/80, 20);
+	setLinearCurve(config->postCrankingDurationBins, /*from*/0, /*to*/150, 40);
 	setTable(config->postCrankingFactor, 1.2f);
 #endif
 
