@@ -23,6 +23,7 @@ percent_t getFuelALSCorrection(float rpm);
 int getNumberOfInjections(injection_mode_e mode);
 angle_t getInjectionOffset(float rpm, float load);
 float getIatFuelCorrection();
+float getPostCrankingFuelCorrection();
 
 float getCltFuelCorrection();
 angle_t getCltTimingCorrection();
