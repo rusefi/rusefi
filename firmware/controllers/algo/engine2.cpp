@@ -131,18 +131,7 @@ void EngineState::periodicFastCallback() {
 	// should be called before getInjectionMass() and getLimitingTimingRetard()
 	getLimpManager()->updateRevLimit(rpm);
 
-	// post-cranking fuel enrichment.
-	float m_postCrankingFactor = interpolate3d(
-		config->postCrankingFactor,
-		config->postCrankingCLTBins, Sensor::getOrZero(SensorType::Clt),
-		config->postCrankingDurationBins, engine->rpmCalculator.getRevolutionCounterSinceStart()
-	);
-	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
-	// if the engine run time is past the last bin, disable ASE in case the table is filled with values more than 1.0, helps with compatibility
-	if ((m_postCrankingFactor < 1.0f) || (engine->rpmCalculator.getRevolutionCounterSinceStart() > config->postCrankingDurationBins[efi::size(config->postCrankingDurationBins)-1])) {
-		m_postCrankingFactor = 1.0f;
-	}
-	engine->fuelComputer.running.postCrankingFuelCorrection = m_postCrankingFactor;
+	engine->fuelComputer.running.postCrankingFuelCorrection = getPostCrankingFuelCorrection();
 
 	baroCorrection = getBaroCorrection();
 
