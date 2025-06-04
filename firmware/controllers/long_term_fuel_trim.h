@@ -4,7 +4,7 @@
 
 struct LtftState {
 	int ecuRestartCounter = 0;
-	int8_t trims[FUEL_TRIM_RPM_COUNT][FUEL_TRIM_LOAD_COUNT];
+	int8_t trims[LTFT_BANK_CONUT][LTFT_RPM_CELL_COUNT][LTFT_LOAD_CELL_COUNT];
 
 	void save();
 	void load();
