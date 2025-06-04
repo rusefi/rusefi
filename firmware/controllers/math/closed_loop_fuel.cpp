@@ -123,6 +123,9 @@ bool shouldUpdateCorrection(SensorType sensor) {
 
 ClosedLoopFuelResult fuelClosedLoopCorrection() {
 	if (!shouldCorrect()) {
+#if EFI_TUNER_STUDIO
+		engine->outputChannels.fuelClosedLoopBinIdx = 5;
+#endif // EFI_TUNER_STUDIO
 		return {};
 	}
 
