@@ -796,12 +796,15 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #endif // EFI_SIMULATOR
 	case TS_IO_TEST_COMMAND:
 		{
-#if EFI_PROD_CODE
+//TODO: Why did we process `TS_IO_TEST_COMMAND` only in prod code? I've just turned it on for simulator as well, because
+//	I need test this functionality with simulator as well. We need to review the cases when we really need to turn off
+//	`TS_IO_TEST_COMMAND` processing. Do we really need guards below?
+#if EFI_SIMULATOR || EFI_PROD_CODE
 			uint16_t subsystem = SWAP_UINT16(data16[0]);
 			uint16_t index = SWAP_UINT16(data16[1]);
 
 			executeTSCommand(subsystem, index);
-#endif /* EFI_PROD_CODE */
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 			sendOkResponse(tsChannel);
 		}
 		break;
