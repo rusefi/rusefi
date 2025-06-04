@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22780">
+    <page number="0" size="22804">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -4380,7 +4380,15 @@ end</constant>
         <constant digits="3" name="triggerVVTGapOverrideTo2" units="ratio">0.0</constant>
         <constant digits="3" name="triggerVVTGapOverrideTo3" units="ratio">0.0</constant>
         <constant digits="3" name="triggerVVTGapOverrideTo4" units="ratio">0.0</constant>
-        <constant cols="1" digits="0" name="trimLoadBins" rows="8">
+        <constant cols="1" digits="0" name="trimLoadBins" rows="16">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
          0.0
          0.0
          0.0
@@ -4390,7 +4398,15 @@ end</constant>
          0.0
          0.0
 </constant>
-        <constant cols="1" digits="0" name="trimRpmBins" rows="8">
+        <constant cols="1" digits="0" name="trimRpmBins" rows="16">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
          0.0
          0.0
          0.0
@@ -4931,7 +4947,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250601" nPages="1" signature="rusEFI master.2025.06.04.f407-discovery.2124039229" version="5.0"/>
+    <versionInfo firmwareInfo="20250601" nPages="1" signature="rusEFI master.2025.06.04.f407-discovery.1944393573" version="5.0"/>
     <bibliography author="rusEFI 20250601" writeDate="date"/>
     <settings/>
     <userComments/>
