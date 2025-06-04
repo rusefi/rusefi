@@ -99,7 +99,7 @@ static void printErrorCounters() {
 	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
 			sizeof(engine->outputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
-	efiPrintf("TunerStudio W=%d / C=%d", tsState.writeValueCommandCounter,
+	efiPrintf("TunerStudio C=%d",
 			tsState.writeChunkCommandCounter);
 	efiPrintf("TunerStudio errors: underrun=%d / overrun=%d / crc=%d / unrecognized=%d / outofrange=%d / other=%d",
 			tsState.errorUnderrunCounter, tsState.errorOverrunCounter, tsState.errorCrcCounter,
@@ -213,6 +213,9 @@ void onApplyPreset() {
   engine->engineTypeChangeTimer.reset();
 }
 
+static void onCalibrationWrite(uint16_t page, uint16_t offset, uint16_t count) {
+}
+
 /**
  * This command is needed to make the whole transfer a bit faster
  */
@@ -238,6 +241,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
 		if (!needToTriggerTsRefresh()) {
 			uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
+			onCalibrationWrite(page, offset, count);
 			memcpy(addr, content, count);
 		}
 		// Force any board configuration options that humans shouldn't be able to change
