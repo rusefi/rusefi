@@ -1927,7 +1927,7 @@ uint8_t[CLT_CURVE_SIZE] autoscale iacCoastingRpmBins;RPM-based idle position for
 uint8_t[CLT_CURVE_SIZE] autoscale iacCoasting;    RPM-based idle position for coasting;"%", 0.5, 0, 0, 100, 1
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
-uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint16_t[BOOST_LOAD_COUNT] boostOpenLoopLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableClosedLoop;;"", 2, 0, 0, 510, 0
@@ -1935,7 +1935,7 @@ uint16_t[BOOST_LOAD_COUNT] boostClosedLoopLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIM
 
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
-uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position % for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position % for simple manual idle controller;"percent", 1, 0, 0, 100, 2
@@ -1973,7 +1973,7 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 #define CLT_IDLE_TABLE_RPM_SIZE 2
 float[CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_IDLE_TABLE_RPM_SIZE x CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 1, 0, 0, 100, 2
-uint8_t[CLT_IDLE_TABLE_RPM_SIZE] autoscale rpmIdleCorrBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[CLT_IDLE_TABLE_RPM_SIZE] autoscale rpmIdleCorrBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
@@ -2104,13 +2104,13 @@ uint8_t[8] tcu_32Vals;;"%", 1, 0, 0, 255, 0
 
 int8_t[ETB2_TRIM_SIZE x ETB2_TRIM_SIZE] autoscale throttle2TrimTable;;"%", 0.1, 0, -10, 10, 1
 uint8_t[ETB2_TRIM_SIZE] throttle2TrimTpsBins;;"%", 1, 0, 0, 120, 0
-uint8_t[ETB2_TRIM_SIZE] autoscale throttle2TrimRpmBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[ETB2_TRIM_SIZE] autoscale throttle2TrimRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
 #define KNOCK_TABLE_SIZE 6
 
 uint8_t[KNOCK_TABLE_SIZE x KNOCK_TABLE_SIZE] autoscale maxKnockRetardTable;;"deg", 0.25, 0, 0, 30, 2
 uint8_t[KNOCK_TABLE_SIZE] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
-uint8_t[KNOCK_TABLE_SIZE] autoscale maxKnockRetardRpmBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[KNOCK_TABLE_SIZE] autoscale maxKnockRetardRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
 #define ALS_SIZE 4
 
@@ -2254,13 +2254,13 @@ float[BOOST_CURVE_SIZE] cltBoostAdder;;"", 1, 0, 0, 5, 2
 float[BOOST_CURVE_SIZE] iatBoostAdderBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[BOOST_CURVE_SIZE] iatBoostAdder;;"", 1, 0, 0, 5, 2
 
-uint8_t[8] autoscale minimumOilPressureBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[8] autoscale minimumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint8_t[8] autoscale minimumOilPressureValues;;"kPa", 10, 0, 0, 1000, 0
 
 blend_table_s[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
 
 ! ltft
-uint8_t[LTFT_RPM_CELL_COUNT] autoscale trimRpmBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[LTFT_RPM_CELL_COUNT] autoscale trimRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint16_t[LTFT_RPM_CELL_COUNT] trimLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 
@@ -2324,7 +2324,7 @@ int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_SIZE] autoscale trailingSparkTable;;
 uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12000, 0
 uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
-uint8_t[4] autoscale maximumOilPressureBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[4] autoscale maximumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint8_t[4] autoscale maximumOilPressureValues;;"kPa", 10, 0, 0, 2000, 0
 
 gppwm_channel_e torqueReductionCutXaxis;Selects the X axis to use for the table.;
