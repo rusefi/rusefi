@@ -282,8 +282,8 @@ struct_no_prefix engine_configuration_s
 
 
 struct stft_cell_cfg_s
-	int8_t maxAdd;Maximum % that the short term fuel trim can add;"%", 1, 0, 0, 25, 0
-	int8_t maxRemove;Maximum % that the short term fuel trim can remove;"%", 1, 0, -25, 0, 0
+	uint8_t autoscale maxAdd;Maximum % that the short term fuel trim can add;"%", 0.1, 0, 0, 25, 1
+	uint8_t autoscale maxRemove;Maximum % that the short term fuel trim can remove;"%", 0.1, 0, 0, 25, 1
 	uint16_t autoscale timeConstant;Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.\nLower values makes the correction more sensitive, higher values slow the correction down.;"sec", 0.1, 0, 0.1, 100, 2
 end_struct
 

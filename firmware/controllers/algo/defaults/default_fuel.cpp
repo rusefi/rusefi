@@ -179,7 +179,7 @@ static void setDefaultStftSettings() {
 
 		/// Allow +-5%
 		cfg.cellCfgs[i].maxAdd = 5;
-		cfg.cellCfgs[i].maxRemove = -5;
+		cfg.cellCfgs[i].maxRemove = 5;
 	}
 }
 
