@@ -239,12 +239,14 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		}
 
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
+		// [tag:popular_vehicle]
 		if (!needToTriggerTsRefresh()) {
 			uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 			onCalibrationWrite(page, offset, count);
 			memcpy(addr, content, count);
 		}
 		// Force any board configuration options that humans shouldn't be able to change
+		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
 		setBoardConfigOverrides();
 
 		sendOkResponse(tsChannel);
@@ -389,7 +391,11 @@ static void handleBurnCommand(TsChannelBase* tsChannel) {
 	efiPrintf("TS -> Burn");
 	validateConfigOnStartUpOrBurn();
 
+	// problem: 'popular vehicles' dialog has 'Burn' which is very NOT helpful on that dialog
+	// since users often click both buttons producing a conflict between ECU desire to change settings
+	// and TS desire to send TS calibration snapshot into ECU
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
+  // [tag:popular_vehicle]
 	if (!needToTriggerTsRefresh()) {
 		requestBurn();
 	}
