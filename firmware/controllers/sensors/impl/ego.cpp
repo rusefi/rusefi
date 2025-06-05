@@ -21,8 +21,7 @@ namespace {
 	ExpAverage expAverageLambda2;
 
 	// this method is only used for canned tunes now! User-facing selection is defined in tunerstudio.template.ini using settingSelector
-	void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
-
+	void initEgoSensor(afr_sensor_s* sensor, ego_sensor_e type) {
 		switch (type) {
 		case ES_BPSX_D1:
 			/**
