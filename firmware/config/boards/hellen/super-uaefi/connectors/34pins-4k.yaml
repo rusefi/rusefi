@@ -1,0 +1,255 @@
+meta: config/boards/hellen_mm100_meta.h
+
+pins:
+  - pin: 1C
+    function:
+
+  - pin: 2C
+    function: +12v from main relay OUTPUT
+    type: 12V
+#    ??????????????????????
+#    function: WBO2 Heater Positive (pin 4)
+#    type: wbo
+#    color: grey
+
+  - pin: 3C
+    function: WBO2 SWD
+
+  - pin: 4C
+    function: WBO2 SWC
+
+  - pin: 5C
+    function: WBO2 Vs (Un) (pin 6)
+    type: wbo
+    color: black
+
+  - pin: 6C
+    function: WBO2 CalR (pin 5)
+    type: wbo
+    color: green
+
+  - pin: 7C
+    function: WBO2 Ip (pin 1)
+    type: wbo
+    color: red
+
+  - pin: 8C
+    function: WBO2 Vs/Ip (Vm) (pin 2)
+    type: wbo
+    color: yellow
+
+  - pin: 9C
+    function: WBO2 Heater Negative (pin 3)
+    color: white
+    type: wbo
+
+  - pin: 10C
+    function: +12v from main relay INPUT
+    type: 12V
+    color: red
+
+  - pin: 11C
+    function: +12v from main relay OUTPUT
+    type: 12V
+
+  - pin: 12C
+    function: USB VBUS
+
+  - pin: 13C
+    function: USB D-
+
+  - pin: 14C
+    function: USB D+
+
+  - pin: 15C
+    function: PROG BUTTON
+    color: white
+
+#  - pin: 16C
+#    function:
+
+#  - pin: 17C
+#    function:
+
+  - pin: 18C
+    function: +12v from main relay OUTPUT
+    type: 12V
+
+#  - pin: 19C
+#    function:
+
+#  - pin: 20C
+#    function:
+
+  - pin: 21C
+    function: GND
+    type: GND
+#   color: red / black
+
+  - pin: 22C
+    function: GND
+    type: GND
+#   color: red / black
+
+#  - pin: 23C
+#    function:
+
+#  - pin: 24C
+#   function:
+
+#  - pin: 25C
+#    function:
+
+  - pin: 26C
+    function: +12v Bat+ (Hot all times)
+    type: 12V
+
+  - pin: 27C
+    ts_name: EGT+
+    function: EGT positive input
+
+  - pin: 28C
+    ts_name: EGT-
+    function: EGT negative input
+
+  - pin: 29C
+    ts_name: ___ LS6_HOT
+    meta: MM100_IGN8
+    class: outputs
+    function: Low-Side 6 fuel relay always hot / relay capable output
+    type: ls
+
+  - pin: 30C
+    ts_name: ___ LS5_HOT
+    meta: MM100_IGN7
+    class: outputs
+    function: Low-Side 5 main relay / always hot / relay capable output
+    type: ls
+
+  - pin: 31C
+    ts_name: ___ LS4
+    meta: MM100_OUT_PWM2
+    class: outputs
+    function: Low-Side 4 output
+    type: ls
+
+  - pin: 32C
+    class: analog_inputs
+    ts_name: KNOCK2
+    function: KNOCK2 UNUSED sensor
+
+#  - pin: 33C
+#    function:
+
+#  - pin: 34C
+#    function:
+
+info:
+  cid: 34-4
+  title: super-uaefi
+  name: super-uaefi
+  image:
+    file: 34pins-4k.jpg
+  pins:
+    - pin: 1C
+      x: 75
+      y: 90
+    - pin: 2C
+      x: 95
+      y: 90
+    - pin: 3C
+      x: 120
+      y: 90
+    - pin: 4C
+      x: 145
+      y: 90
+    - pin: 5C
+      x: 165
+      y: 90
+    - pin: 6C
+      x: 190
+      y: 90
+    - pin: 7C
+      x: 215
+      y: 90
+    - pin: 8C
+      x: 240
+      y: 90
+    - pin: 9C
+      x: 265
+      y: 90
+    - pin: 10C
+      x: 85
+      y: 120
+    - pin: 11C
+      x: 105
+      y: 120
+    - pin: 12C
+      x: 130
+      y: 120
+    - pin: 13C
+      x: 155
+      y: 120
+    - pin: 14C
+      x: 180
+      y: 120
+    - pin: 15C
+      x: 205
+      y: 120
+    - pin: 16C
+      x: 225
+      y: 120
+    - pin: 17C
+      x: 245
+      y: 120
+    - pin: 18C
+      x: 85
+      y: 150
+    - pin: 19C
+      x: 110
+      y: 150
+    - pin: 20C
+      x: 130
+      y: 150
+    - pin: 21C
+      x: 155
+      y: 150
+    - pin: 22C
+      x: 180
+      y: 150
+    - pin: 23C
+      x: 205
+      y: 150
+    - pin: 24C
+      x: 225
+      y: 150
+    - pin: 25C
+      x: 245
+      y: 150
+    - pin: 26C
+      x: 74
+      y: 180
+    - pin: 27C
+      x: 98
+      y: 180
+    - pin: 28C
+      x: 122
+      y: 180
+    - pin: 29C
+      x: 146
+      y: 180
+    - pin: 30C
+      x: 170
+      y: 180
+    - pin: 31C
+      x: 195
+      y: 180
+    - pin: 32C
+      x: 220
+      y: 180
+    - pin: 33C
+      x: 245
+      y: 180
+    - pin: 34C
+      x: 265
+      y: 180

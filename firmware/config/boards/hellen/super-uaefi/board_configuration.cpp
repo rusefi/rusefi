@@ -138,9 +138,14 @@ void setBoardDefaultConfiguration() {
 	hellenWbo();
 }
 
-/*
 static Gpio OUTPUTS[] = {
-	Gpio::MM100_INJ6, // B1 injector output 6
+	Gpio::MM100_MEGA_UAEFI_INJ1, // 13B INJ_1
+	Gpio::MM100_INJ2, // 12B INJ_2
+	Gpio::MM100_INJ3, // 11B INJ_3
+	Gpio::MM100_INJ4, // 10B INJ_4
+	Gpio::MM100_INJ5, // 9B INJ_5
+	Gpio::MM100_INJ6, // 8B INJ_6
+/*
 	Gpio::MM100_INJ5, // B2 injector output 5
 	Gpio::MM100_INJ4, // B3 injector output 4
 	Gpio::MM100_INJ3, // B4 injector output 3
@@ -159,6 +164,7 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_IGN5, // B13 Coil 5
 	Gpio::MM100_IGN2, // B14 Coil 2
 	Gpio::MM100_IGN1, // B15 Coil 1
+*/
 };
 
 int getBoardMetaOutputsCount() {
@@ -172,7 +178,6 @@ int getBoardMetaLowSideOutputsCount() {
 Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
 }
-*/
 
 int getBoardMetaDcOutputsCount() {
     return 2;
