@@ -482,7 +482,7 @@ Disable the electronic throttle motor and DC idle motor for testing.\nThis mode 
 
 
 ### enableAemXSeries
-AEM X-Series or rusEFI Wideband
+AEM X-Series or rusEFI Wideband1s
 
 ### modeledFlowIdle
 
@@ -1959,4 +1959,7 @@ Voltage when the wastegate is closed
 
 ### dynoCarFrontalAreaM2
 @@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@
+
+### testPerBoardBit
+
 

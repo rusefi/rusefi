@@ -867,7 +867,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit tpsTpsPercentMode,"percent adder","ms adder"
 	bit verboseKLine
 	bit idleIncrementalPidCic
-	bit enableAemXSeries;AEM X-Series or rusEFI Wideband
+	bit enableAemXSeries;AEM X-Series or rusEFI Wideband1s
 	bit modeledFlowIdle
 	! bits 30, 31 are free to use
 	! 'unused32nd' is the 32nd bit here, you would need another bit region if more bits are desired
@@ -1835,7 +1835,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	float wastegatePositionOpenedVoltage;Voltage when the wastegate is fully open;"v", 1, 0, 0, 10, 2
 	float wastegatePositionClosedVoltage;Voltage when the wastegate is closed;"v", 1, 0, 0, 10, 2
 
-	#define can_wbo_type_e_enum "RusEFI", "AEM X-series", "Disabled/Analog"
+	#define can_wbo_type_e_enum "RusEFI", "AEM X-series", "Haltech WBC", "Disabled/Analog"
 	custom can_wbo_type_e 1 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@
 	can_wbo_type_e wboType1;
 	can_wbo_type_e wboType2;

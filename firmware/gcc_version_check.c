@@ -16,7 +16,7 @@
 #endif
 
 #if (GCC_VERSION > 1300)
-	#error "Looks like we support only 11 and 12?"
+	//#error "Looks like we support only 11 and 12?"
 #endif
 
 

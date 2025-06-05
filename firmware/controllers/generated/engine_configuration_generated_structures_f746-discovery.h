@@ -1645,7 +1645,7 @@ struct engine_configuration_s {
 	offset 724 bit 27 */
 	bool idleIncrementalPidCic : 1 {};
 	/**
-	 * AEM X-Series or rusEFI Wideband
+	 * AEM X-Series or rusEFI Wideband1s
 	offset 724 bit 28 */
 	bool enableAemXSeries : 1 {};
 	/**

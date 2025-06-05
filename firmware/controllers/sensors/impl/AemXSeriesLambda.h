@@ -11,13 +11,13 @@
 
 #define RUSEFI_WIDEBAND_VERSION_MIN	0xA0
 
-class AemXSeriesWideband : public CanSensorBase, public wideband_state_s {
+class CanWideband : public CanSensorBase, public wideband_state_s {
 public:
-	AemXSeriesWideband(uint8_t sensorIndex, SensorType type);
+	CanWideband(uint8_t sensorIndex, SensorType type);
 
-	bool acceptFrame(const CANRxFrame& frame) const override final;
+	bool acceptFrame(const CANRxFrame& frame) const final;
 
-	void refreshState(void);
+	void refreshState();
 
 protected:
 	// Dispatches to one of the three decoders below
@@ -29,6 +29,8 @@ protected:
 	// Decode rusEFI custom format
 	void decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt);
 	void decodeRusefiDiag(const CANRxFrame& frame);
+
+	void decodeHaltech(const CANRxFrame& frame, efitick_t nowNt);
 
 private:
 	can_wbo_type_e sensorType() const;
