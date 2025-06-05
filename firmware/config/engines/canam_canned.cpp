@@ -11,8 +11,6 @@ static void canneddwellVoltageCorrValues() {
 }
 
 static void cannedidleAdvanceBins() {
-	static const float hardCodedidleAdvanceBins[8] = {600.0, 800.0, 1000.0, 1200.0, 1400.0, 1600.0, 1800.0, 2000.0};
-	copyArray(config->idleAdvanceBins, hardCodedidleAdvanceBins);
 }
 
 static void cannedcltIdleRpm() {
@@ -23,8 +21,10 @@ static void cannedcltIdleRpm() {
 }
 
 static void cannedidleAdvance() {
+#if IDLE_ADVANCE_CURVE_SIZE == 8
 	static const float hardCodedidleAdvance[8] = {10.0, 10.571428, 11.142858, 11.714286, 12.285714, 12.857142, 13.428572, 14.0};
 	copyArray(config->idleAdvance, hardCodedidleAdvance);
+#endif
 }
 
 static void cannedignitionRpmBins() {

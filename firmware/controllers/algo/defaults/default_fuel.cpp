@@ -7,7 +7,7 @@
 
 static void setBosch02880155868(injector_s& cfg) {
 	// http://www.boschdealer.com/specsheets/0280155868cs.jpg (use web.archive.org)
-
+#if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
     static const float vBattBins[8] = { 6.0, 8.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0 };
 	static const float pressureBins[2] = { 206.843, 413.685 };
 
@@ -20,6 +20,7 @@ static void setBosch02880155868(injector_s& cfg) {
 	copyArray(cfg.battLagCorrBattBins, vBattBins);
 	copyArray(cfg.battLagCorrPressBins,pressureBins);
 	copyTable(cfg.battLagCorrTable, corrBins);
+#endif
 }
 
 static void setDefaultWarmupFuelEnrichment() {
