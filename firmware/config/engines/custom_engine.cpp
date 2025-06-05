@@ -570,13 +570,14 @@ void mreBoardNewTest() {
 
 }
 
-static const float hardCodedHpfpLobeProfileQuantityBins[HpfpLobeProfile_SIZE] = {0.0, 1.0, 4.5, 9.5,
+void setBoschHDEV_5_injectors() {
+#if HPFP_LOBE_PROFILE_SIZE == 16
+static const float hardCodedHpfpLobeProfileQuantityBins[16] = {0.0, 1.0, 4.5, 9.5,
 16.5, 25.0, 34.5, 45.0 ,
 55.0, 65.5, 75.0, 83.5,
 90.5, 95.5, 99.0, 100.0};
-
-void setBoschHDEV_5_injectors() {
 	copyArray(config->hpfpLobeProfileQuantityBins, hardCodedHpfpLobeProfileQuantityBins);
+#endif // HPFP_LOBE_PROFILE_SIZE
 	setHpfpLobeProfileAngle(3);
 	setLinearCurve(config->hpfpDeadtimeVoltsBins, 8, 16, 0.5);
 
