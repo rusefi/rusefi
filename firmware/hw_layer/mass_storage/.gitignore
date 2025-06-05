@@ -1,3 +1,4 @@
 ramdisk_image.h
+ramdisk_image_compressed.h
 *.temp
 
