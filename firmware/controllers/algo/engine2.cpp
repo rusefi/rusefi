@@ -175,32 +175,31 @@ void EngineState::periodicFastCallback() {
 	engine->ignitionState.baseIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(baseAdvance);
 	engine->ignitionState.correctedIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(correctedIgnitionAdvance);
 
-
 	// compute per-bank fueling
-	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
-		float corr = clResult.banks[i];
+	for (size_t bankIndex = 0; bankIndex < STFT_BANK_COUNT; bankIndex++) {
+		float corr = clResult.banks[bankIndex];
 		// todo: move to engine_state.txt and get rid of fuelPidCorrection in output_channels.txt?
-		engine->engineState.stftCorrection[i] = corr;
+		engine->engineState.stftCorrection[bankIndex] = corr;
 	}
 
 	// Now apply that to per-cylinder fueling and timing
-	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[i];
+	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
+		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[cylinderIndex];
 		auto bankTrim = engine->engineState.stftCorrection[bankIndex];
-		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
+		auto cylinderTrim = getCylinderFuelTrim(cylinderIndex, rpm, fuelLoad);
 		auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
 
 		// Apply both per-bank and per-cylinder trims
-		engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim * knockTrim;
+		engine->engineState.injectionMass[cylinderIndex] = untrimmedInjectionMass * bankTrim * cylinderTrim * knockTrim;
 
 		angle_t cylinderIgnitionAdvance = correctedIgnitionAdvance
-									+ getCylinderIgnitionTrim(i, rpm, l_ignitionLoad)
+									+ getCylinderIgnitionTrim(cylinderIndex, rpm, l_ignitionLoad)
 									// spark hardware latency correction, for implementation details see:
 									// https://github.com/rusefi/rusefi/issues/6832:
 									+ engine->ignitionState.getSparkHardwareLatencyCorrection();
 		wrapAngle(cylinderIgnitionAdvance, "EngineState::periodicFastCallback", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 		// todo: is it OK to apply cylinder trim with FIXED timing?
-		timingAdvance[i] = cylinderIgnitionAdvance;
+		timingAdvance[cylinderIndex] = cylinderIgnitionAdvance;
 	}
 
 	shouldUpdateInjectionTiming = getInjectorDutyCycle(rpm) < 90;
