@@ -186,8 +186,15 @@ static void setDefaultStftSettings() {
 static void setDefaultLtftSettings() {
 	auto& cfg = engineConfiguration->ltft;
 
-	// Default to disable
-	cfg.enabled = false;
+	// Default to allow learning, but do not apply learned corrections
+	cfg.enabled = true;
+	cfg.correctionEnabled = false;
+
+	// Default to very slow learning
+	cfg.timeConstant = 3000;
+
+	// 0.5% deadband
+	cfg.deadband = 0.5f;
 
 	// Allow +-12.5%
 	cfg.maxAdd = 12.5;
