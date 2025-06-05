@@ -84,3 +84,74 @@ TEST(ignition_state, getRunningAdvanceIdleTable) {
   Sensor::setMockValue(SensorType::DriverThrottleIntent, 2);
   EXPECT_NEAR(10, getRunningAdvance(rpm, load), EPS2D);
 }
+
+TEST(ignition_state, getRunningAdvanceTractionDrop) {
+  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+  engineConfiguration->torqueReductionEnabled = true;
+  const float rpm = 4500;
+  const float load = 50;
+
+  setWholeTimingTable(10);
+  initIgnitionAdvanceControl();
+
+  Sensor::setMockValue(SensorType::Clt, 35);
+  setTable(engineConfiguration->tractionControlTimingDrop, 0);
+  engineConfiguration->tractionControlTimingDrop[0][0] = -15;
+  engineConfiguration->tractionControlTimingDrop[0][1] = -15;
+
+  size_t lastYIndex = TRACTION_CONTROL_ETB_DROP_SLIP_SIZE - 1;
+  size_t lastXIndex = TRACTION_CONTROL_ETB_DROP_SPEED_SIZE - 1;
+
+  engineConfiguration->tractionControlTimingDrop[lastYIndex - 1][lastXIndex - 1] = 15;
+  engineConfiguration->tractionControlTimingDrop[lastYIndex][lastXIndex] = 15;
+
+  // test correct X/Y on table
+  // we expect here that the first values are -5 (10° base - 15° from traction table),
+  // and the last on the rigth side of the table are 25 (10° base + 15° from traction table)
+
+  Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 0);
+  EXPECT_NEAR(-5, getRunningAdvance(rpm, load), EPS2D);
+
+  Sensor::setMockValue(SensorType::VehicleSpeed, 120.0);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2);
+  EXPECT_NEAR(25, getRunningAdvance(rpm, load), EPS2D);
+}
+
+TEST(ignition_state, getRunningAdvanceTractionSparkSkip) {
+  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+  engineConfiguration->torqueReductionEnabled = true;
+  const float rpm = 4500;
+  const float load = 50;
+
+  setWholeTimingTable(10);
+  initIgnitionAdvanceControl();
+
+  // invalid load, should return NAN
+  auto correction = getRunningAdvance(rpm, NAN);
+  EXPECT_TRUE(std::isnan(correction));
+
+  // valid load, all secondary conditions off == 10°
+  Sensor::setMockValue(SensorType::Clt, 35);
+  setTable(engineConfiguration->tractionControlIgnitionSkip, 5);
+  engineConfiguration->tractionControlIgnitionSkip[0][0] = 0;
+  engineConfiguration->tractionControlIgnitionSkip[0][1] = 0;
+
+  size_t lastYIndex = TRACTION_CONTROL_ETB_DROP_SLIP_SIZE - 1;
+  size_t lastXIndex = TRACTION_CONTROL_ETB_DROP_SPEED_SIZE - 1;
+
+  engineConfiguration->tractionControlIgnitionSkip[lastYIndex - 1][lastXIndex - 1] = 50;
+  engineConfiguration->tractionControlIgnitionSkip[lastYIndex][lastXIndex] = 50;
+
+  // test correct X/Y on table
+  // we expect here that the first values are 0, and the last on the rigth side of the table are 50
+  Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 0);
+  getRunningAdvance(rpm, load);
+  EXPECT_NEAR(0, engine->engineState.tractionControlSparkSkip, EPS2D);
+
+  Sensor::setMockValue(SensorType::VehicleSpeed, 120.0);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2);
+  getRunningAdvance(rpm, load);
+  EXPECT_NEAR(50, engine->engineState.tractionControlSparkSkip, EPS2D);
+}
