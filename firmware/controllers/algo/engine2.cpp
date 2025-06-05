@@ -141,6 +141,11 @@ void EngineState::periodicFastCallback() {
 	float untrimmedInjectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
 	auto clResult = fuelClosedLoopCorrection();
 
+	float fuelLoad = getFuelingLoad();
+	engine->module<LongTermFuelTrim>()->learn(clResult, rpm, fuelLoad);
+
+	auto ltftResult = engine->module<LongTermFuelTrim>()->getTrims(rpm, fuelLoad);
+
 	injectionStage2Fraction = getStage2InjectionFraction(rpm, engine->fuelComputer.afrTableYAxis);
 	float stage2InjectionMass = untrimmedInjectionMass * injectionStage2Fraction;
 	float stage1InjectionMass = untrimmedInjectionMass - stage2InjectionMass;
@@ -152,7 +157,6 @@ void EngineState::periodicFastCallback() {
 		? engine->module<InjectorModelSecondary>()->getInjectionDuration(stage2InjectionMass)
 		: 0;
 
-	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 	engine->lambdaMonitor.update(rpm, fuelLoad);
 
@@ -177,14 +181,15 @@ void EngineState::periodicFastCallback() {
 
 	// compute per-bank fueling
 	for (size_t bankIndex = 0; bankIndex < FT_BANK_COUNT; bankIndex++) {
-		float corr = clResult.banks[bankIndex];
-		engine->engineState.stftCorrection[bankIndex] = corr;
+		engine->engineState.stftCorrection[bankIndex] = clResult.banks[bankIndex];
+		engine->engineState.ltftCorrection[bankIndex] = ltftResult.banks[bankIndex];
 	}
 
 	// Now apply that to per-cylinder fueling and timing
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
 		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[cylinderIndex];
-		auto bankTrim = engine->engineState.stftCorrection[bankIndex];
+		/* TODO: add LTFT trims when ready */
+		auto bankTrim = engine->engineState.stftCorrection[bankIndex] * engine->engineState.ltftCorrection[bankIndex];
 		auto cylinderTrim = getCylinderFuelTrim(cylinderIndex, rpm, fuelLoad);
 		auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
 
