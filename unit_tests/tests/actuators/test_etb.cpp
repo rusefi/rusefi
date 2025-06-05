@@ -904,13 +904,18 @@ TEST(etb, tractionControlEtbDrop) {
 	engineConfiguration->tractionControlEtbDrop[0][0] = -15;
 	engineConfiguration->tractionControlEtbDrop[0][1] = -15;
 
-	engineConfiguration->tractionControlEtbDrop[4][4] = +15;
-	engineConfiguration->tractionControlEtbDrop[5][5] = +15;
+	size_t lastYIndex = TRACTION_CONTROL_ETB_DROP_SLIP_SIZE - 1;
+	size_t lastXIndex = TRACTION_CONTROL_ETB_DROP_SPEED_SIZE - 1;
 
-	EXPECT_EQ(37, etb.getSetpoint().value_or(-1)); // should be 62
+	engineConfiguration->tractionControlEtbDrop[lastYIndex - 1][lastXIndex - 1] = 15;
+	engineConfiguration->tractionControlEtbDrop[lastYIndex][lastXIndex] = 15;
+
+	// we expect here that the first values are 37, and the last on the rigth side of the table are 62
+
+	EXPECT_EQ(37, etb.getSetpoint().value_or(-1));
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 120.0);
 	Sensor::setMockValue(SensorType::WheelSlipRatio, 1.2);
 
-	EXPECT_EQ(62, etb.getSetpoint().value_or(-1)); // should be 37
+	EXPECT_EQ(62, etb.getSetpoint().value_or(-1));
 }
