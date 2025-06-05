@@ -2,7 +2,12 @@ meta: config/boards/hellen_mm100_meta.h
 
 pins:
   - pin: 1C
-    function:
+    meta: MM100_IN_VBATT
+    class: analog_inputs
+    color: red
+    type: 12v
+    function: Ignition Switch / Battery Voltage Analog Input
+    ts_name: ___ Voltage From Key
 
   - pin: 2C
     function: +12v from main relay OUTPUT
