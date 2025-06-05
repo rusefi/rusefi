@@ -385,6 +385,8 @@ case AEM:
   return "AEM";
 case DISABLED:
   return "DISABLED";
+case HALTECH:
+  return "HALTECH";
 case RUSEFI:
   return "RUSEFI";
   }

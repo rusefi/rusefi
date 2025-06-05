@@ -1,13 +1,14 @@
 #include "pch.h"
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
-#include "AemXSeriesLambda.h"
+#include "CanWideband.h"
+#include "HaltechWideband.h"
 #include "wideband_firmware/for_rusefi/wideband_can.h"
 
 static constexpr uint32_t aem_base    = 0x180;
 static constexpr uint32_t rusefi_base = WB_DATA_BASE_ADDR;
 
-AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
+CanWideband::CanWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
 		0,	// ID passed here doesn't matter since we override acceptFrame
 		type,
@@ -22,11 +23,11 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
     fwOutdated = true;
 }
 
-can_wbo_type_e AemXSeriesWideband::sensorType() const {
+can_wbo_type_e CanWideband::sensorType() const {
 	return m_sensorIndex ? engineConfiguration->wboType2 : engineConfiguration->wboType1;
 }
 
-bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
+bool CanWideband::acceptFrame(const CANRxFrame& frame) const {
 	if (frame.DLC != 8) {
 		return false;
 	}
@@ -35,6 +36,10 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 
 	if (type == DISABLED) {
 		return false;
+	}
+
+	if ((!CAN_ISX(frame)) && (type == HALTECH)) {
+		return CAN_SID(frame) == Haltech::WboChannels::CHA;
 	}
 
 	// RusEFI wideband uses standard CAN IDs
@@ -54,11 +59,11 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 	return false;
 }
 
-bool AemXSeriesWideband::isHeaterAllowed() {
-	return ((sensorType() == AEM) || (engine->engineState.heaterControlEnabled));
+bool CanWideband::isHeaterAllowed() {
+	return sensorType() != HALTECH && ((sensorType() == AEM) || (engine->engineState.heaterControlEnabled));
 }
 
-void AemXSeriesWideband::refreshState() {
+void CanWideband::refreshState() {
 	can_wbo_type_e type = sensorType();
 
 	if ((type == RUSEFI) && (!isHeaterAllowed())) {
@@ -98,6 +103,18 @@ void AemXSeriesWideband::refreshState() {
 			isValid = false;
 			return;
 		}
+	} else if (type == HALTECH) {
+		// TODO implement status handling using Haltech::WboStatus enum from Haltech::decodeStatus
+		heaterDuty = 0;
+		pumpDuty = 0;
+		tempC = 0;
+		nernstVoltage = 0;
+
+		isValid = m_afrIsValid;
+		if (m_isFault) {
+			isValid = false;
+			return;
+		}
 	} else {
 		// disabled or analog
 		// clear all livedata
@@ -112,10 +129,12 @@ void AemXSeriesWideband::refreshState() {
 	faultCode = static_cast<uint8_t>(wbo::Fault::None);
 }
 
-void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
+void CanWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	// accept frame has already guaranteed that this message belongs to us
 	// We just have to check if it's AEM or rusEFI
-	if (sensorType() == RUSEFI){
+	if (sensorType() == HALTECH) {
+		decodeHaltech(frame, nowNt);
+	} else if (sensorType() == RUSEFI) {
 		uint32_t id = CAN_ID(frame);
 
 		// rusEFI custom format
@@ -137,7 +156,7 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 /**
  * @return true if valid, false if invalid
  */
-bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt) {
+bool CanWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt) {
 	// we don't care
 	fwUnsupported = false;
 	fwOutdated = false;
@@ -160,7 +179,27 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	return true;
 }
 
-void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt) {
+void CanWideband::decodeHaltech(const CANRxFrame& frame, efitick_t nowNt) {
+	fwUnsupported = false;
+	fwOutdated = false;
+
+	auto& data = *reinterpret_cast<const Haltech::DataFrame*>(&frame.data8[0]);
+
+	tempC = 0;
+	float lambda = Haltech::getLambda(data);
+
+	m_afrIsValid =  Haltech::decodeStatus(data) == Haltech::WboStatus::NoError;
+	m_isFault = !m_afrIsValid;
+
+	if (!m_afrIsValid) {
+		invalidate();
+		return;
+	}
+
+	setValidValue(lambda, nowNt);
+}
+
+void CanWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt) {
 	auto data = reinterpret_cast<const wbo::StandardData*>(&frame.data8[0]);
 
 	if (data->Version > RUSEFI_WIDEBAND_VERSION) {
@@ -194,7 +233,7 @@ void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 	setValidValue(lambda, nowNt);
 }
 
-void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
+void CanWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 	if (fwUnsupported) {
 		return;
 	}

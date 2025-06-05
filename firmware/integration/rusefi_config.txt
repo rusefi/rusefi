@@ -1842,7 +1842,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	float wastegatePositionOpenedVoltage;Voltage when the wastegate is fully open;"v", 1, 0, 0, 10, 2
 	float wastegatePositionClosedVoltage;Voltage when the wastegate is closed;"v", 1, 0, 0, 10, 2
 
-	#define can_wbo_type_e_enum "RusEFI", "AEM X-series", "Disabled/Analog"
+	#define can_wbo_type_e_enum "RusEFI", "AEM X-series", "HALTECH", "Disabled/Analog"
 	custom can_wbo_type_e 1 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@
 	can_wbo_type_e wboType1;
 	can_wbo_type_e wboType2;
