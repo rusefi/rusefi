@@ -57,8 +57,6 @@ public:
 	// Angle between firing the main (primary) spark and the secondary (trailing) spark
 	angle_t trailingSparkAngle = 0;
 
-	Timer timeSinceLastTChargeK;
-
 	/**
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */

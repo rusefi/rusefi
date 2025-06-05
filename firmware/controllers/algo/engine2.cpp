@@ -78,7 +78,7 @@ bool WarningCodeState::isWarningNow(ObdCode code) const {
 }
 
 EngineState::EngineState() {
-	timeSinceLastTChargeK.reset(getTimeNowNt());
+	sd.tChargeK = 0;
 }
 
 void EngineState::updateSparkSkip() {
@@ -216,15 +216,16 @@ void EngineState::periodicFastCallback() {
 }
 
 #if EFI_ENGINE_CONTROL
+constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
+
 void EngineState::updateTChargeK(float rpm, float tps) {
 	float newTCharge = engine->fuelComputer.getTCharge(rpm, tps);
 	if (!std::isnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
-		efitick_t nowNt = getTimeNowNt();
-		float secsPassed = timeSinceLastTChargeK.getElapsedSeconds(nowNt);
-		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, engineConfiguration->tChargeAirIncrLimit, engineConfiguration->tChargeAirDecrLimit, secsPassed);
+		sd.tCharge = (sd.tChargeK == 0) ?
+			newTCharge :
+			limitRateOfChange(newTCharge, sd.tCharge, engineConfiguration->tChargeAirIncrLimit, engineConfiguration->tChargeAirDecrLimit, integrator_dt);
 		sd.tChargeK = convertCelsiusToKelvin(sd.tCharge);
-		timeSinceLastTChargeK.reset(nowNt);
 	}
 }
 #endif
