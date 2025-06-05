@@ -4,6 +4,8 @@ name: Update wideband Reference
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '45 0 * * *'
 
 jobs:
   update-git:
