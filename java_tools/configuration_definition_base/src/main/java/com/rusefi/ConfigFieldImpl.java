@@ -92,7 +92,7 @@ public class ConfigFieldImpl implements ConfigField {
         this.arraySizes = arraySizes;
         this.tsInfo = tsInfo == null ? null : state.getVariableRegistry().applyVariables(tsInfo);
         this.isIterate = isIterate;
-        if (tsInfo != null && !ConnectionAndMeta.flexibleAutoscale()) {
+        if (tsInfo != null && !TypesHelper.isFloat(type)) {
             String[] tokens = getTokens();
             if (tokens.length > 1) {
                 String scale = tokens[1].trim();
