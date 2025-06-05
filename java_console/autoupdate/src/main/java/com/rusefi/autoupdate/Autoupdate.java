@@ -92,6 +92,8 @@ public class Autoupdate {
         // Let's try to get console .exe-file name before we rewrite autoupdate .jar file:
         final String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
 
+        // ATTENTION! To avoid `ClassNotFoundException` we need to load all necessary classes before unzipping
+        // autoupdate archive
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
         if (ConnectionAndMeta.startConsoleInAutoupdateProcess()) {
             //TODO: Afterwards we need to decide if we really want to support this option.
