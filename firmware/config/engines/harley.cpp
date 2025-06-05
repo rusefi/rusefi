@@ -28,7 +28,7 @@ void setHarley() {
 	strcpy(engineConfiguration->scriptSettingName[1], "compReleaseDur");
 	engineConfiguration->scriptSetting[1] = 5000;
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->enableAemXSeries = true;
+	engineConfiguration->enableCanWideband = true;
 
   // total 45 degree odd fire, split across two cylinders mostly for fun
 	engineConfiguration->timing_offset_cylinder[0] = -HARLEY_V_TWIN / 2;

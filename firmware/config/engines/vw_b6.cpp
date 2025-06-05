@@ -38,7 +38,7 @@ static inline void commonPassatB6() {
 
 //	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 
-//	engineConfiguration->enableAemXSeries = true;
+//	engineConfiguration->enableCanWideband = true;
 
 
 	// Injectors flow 1214 cc/min at 100 bar pressure

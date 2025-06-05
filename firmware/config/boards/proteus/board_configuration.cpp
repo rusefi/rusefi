@@ -114,7 +114,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_TPS;
 	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
 
-    // see also enableAemXSeries
+    // see also enableCanWideband
 	// pin #28 WBO AFR "Analog Volt 10"
 	engineConfiguration->afr.hwChannel = PROTEUS_IN_ANALOG_VOLT_10;
 }

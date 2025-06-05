@@ -4,7 +4,7 @@
 #include "mmc_card.h"
 
 void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
+	engineConfiguration->enableCanWideband = true;
 }
 
 // same for MM100, 144 and 176

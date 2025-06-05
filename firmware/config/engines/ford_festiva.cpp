@@ -116,7 +116,7 @@ void setFordEscortGt() {
 	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
-	setEgoSensor(ES_Innovate_MTX_L);
+	Ego::setEgoSensor(ES_Innovate_MTX_L);
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5 // PA2
 
 	// set_idle_position 10

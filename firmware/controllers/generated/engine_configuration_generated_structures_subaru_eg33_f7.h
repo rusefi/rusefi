@@ -1647,7 +1647,7 @@ struct engine_configuration_s {
 	/**
 	 * AEM X-Series or rusEFI Wideband1s
 	offset 724 bit 28 */
-	bool enableAemXSeries : 1 {};
+	bool enableCanWideband : 1 {};
 	/**
 	offset 724 bit 29 */
 	bool modeledFlowIdle : 1 {};

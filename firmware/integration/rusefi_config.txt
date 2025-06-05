@@ -867,7 +867,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit tpsTpsPercentMode,"percent adder","ms adder"
 	bit verboseKLine
 	bit idleIncrementalPidCic
-	bit enableAemXSeries;AEM X-Series or rusEFI Wideband1s
+	bit enableCanWideband;AEM X-Series, rusEFI Wideband or Haltech WBO
 	bit modeledFlowIdle
 	! bits 30, 31 are free to use
 	! 'unused32nd' is the 32nd bit here, you would need another bit region if more bits are desired

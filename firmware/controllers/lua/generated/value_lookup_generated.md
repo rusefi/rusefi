@@ -481,8 +481,8 @@ Disable the electronic throttle motor and DC idle motor for testing.\nThis mode 
 ### idleIncrementalPidCic
 
 
-### enableAemXSeries
-AEM X-Series or rusEFI Wideband1s
+### enableCanWideband
+AEM X-Series, rusEFI Wideband or Haltech WBO
 
 ### modeledFlowIdle
 

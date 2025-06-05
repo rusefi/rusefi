@@ -48,7 +48,7 @@ void setVwAba() {
 
 	float mapRange = 110;
 
-	setEgoSensor(ES_PLX);
+	Ego::setEgoSensor(ES_PLX);
 	setFuelTablesLoadBin(20, mapRange);
 	setLinearCurve(config->ignitionLoadBins, 20, mapRange);
 

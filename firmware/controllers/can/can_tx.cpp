@@ -89,7 +89,7 @@ void CanWrite::PeriodicTask(efitick_t) {
 	  }
 	}
 
-	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms) && boardEnableSendWidebandInfo()) {
+	if (engineConfiguration->enableCanWideband && cycle.isInterval(CI::_50ms) && boardEnableSendWidebandInfo()) {
 		sendWidebandInfo();
 	}
 

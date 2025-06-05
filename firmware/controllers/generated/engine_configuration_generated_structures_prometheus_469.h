@@ -1635,7 +1635,7 @@ struct engine_configuration_s {
 	/**
 	 * AEM X-Series or rusEFI Wideband
 	offset 752 bit 30 */
-	bool enableAemXSeries : 1 {};
+	bool enableCanWideband : 1 {};
 	/**
 	offset 752 bit 31 */
 	bool unused32nd : 1 {};
