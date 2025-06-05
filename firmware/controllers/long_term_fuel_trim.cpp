@@ -38,6 +38,11 @@ void LongTermFuelTrim::init(LtftState *state) {
 	m_state->load();
 }
 
+
+void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad) {
+
+}
+
 void LongTermFuelTrim::store() {
 	// TODO: lock to avoid modification while writing
 

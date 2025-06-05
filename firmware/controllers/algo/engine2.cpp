@@ -141,6 +141,8 @@ void EngineState::periodicFastCallback() {
 	float untrimmedInjectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
 	auto clResult = fuelClosedLoopCorrection();
 
+	engine->module<LongTermFuelTrim>()->learn(clResult, rpm, getFuelingLoad());
+
 	injectionStage2Fraction = getStage2InjectionFraction(rpm, engine->fuelComputer.afrTableYAxis);
 	float stage2InjectionMass = untrimmedInjectionMass * injectionStage2Fraction;
 	float stage1InjectionMass = untrimmedInjectionMass - stage2InjectionMass;
