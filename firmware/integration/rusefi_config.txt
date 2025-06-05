@@ -237,8 +237,7 @@ struct_no_prefix engine_configuration_s
 #define FUEL_LEVEL_TABLE_COUNT 8
 
 ! Short and Long term fuel corrections
-#define LTFT_RPM_CELL_COUNT 16
-#define LTFT_LOAD_CELL_COUNT 16
+! LTFT use same table size as VE: VE_LOAD_COUNT x VE_RPM_COUNT
 
 #define ts_show_long_term_fuel_trim false
 
@@ -307,9 +306,6 @@ struct ltft_s
 	bit enabled;Enables lambda sensor long term fuel corrections
 	uint8_t autoscale maxAdd;Maximum % that the long term fuel trim can add;"%", 0.1, 0, 0, 25, 1
 	uint8_t autoscale maxRemove;Maximum % that the long term fuel trim can remove;"%", 0.1, 0, 0, 25, 1
-
-	uint8_t[LTFT_RPM_CELL_COUNT] autoscale trimRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
-	uint16_t[LTFT_RPM_CELL_COUNT] trimLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 end_struct
 
 struct pid_s
