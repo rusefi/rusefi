@@ -488,9 +488,9 @@ float getConfigValueByName(const char *name) {
 // idleIncrementalPidCic
 		case 1064399425:
 			return engineConfiguration->idleIncrementalPidCic;
-// enableCanWideband
-		case 2096743964:
-			return engineConfiguration->enableCanWideband;
+// enableAemXSeries
+		case 259909218:
+			return engineConfiguration->enableAemXSeries;
 // modeledFlowIdle
 		case 600643125:
 			return engineConfiguration->modeledFlowIdle;
@@ -1967,9 +1967,6 @@ float getConfigValueByName(const char *name) {
 // dynoCarFrontalAreaM2
 		case -1661556925:
 			return config->dynoCarFrontalAreaM2;
-// testPerBoardBit
-		case 1479919923:
-			return config->testPerBoardBit;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -2781,9 +2778,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->idleIncrementalPidCic = (int)value;
 		return 1;
 	}
-		case 2096743964:
+		case 259909218:
 	{
-		engineConfiguration->enableCanWideband = (int)value;
+		engineConfiguration->enableAemXSeries = (int)value;
 		return 1;
 	}
 		case 600643125:
@@ -5244,11 +5241,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1661556925:
 	{
 		config->dynoCarFrontalAreaM2 = value;
-		return 1;
-	}
-		case 1479919923:
-	{
-		config->testPerBoardBit = (int)value;
 		return 1;
 	}
 	}

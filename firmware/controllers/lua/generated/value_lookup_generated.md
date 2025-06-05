@@ -481,8 +481,8 @@ Disable the electronic throttle motor and DC idle motor for testing.\nThis mode 
 ### idleIncrementalPidCic
 
 
-### enableCanWideband
-AEM X-Series, rusEFI Wideband or Haltech WBO
+### enableAemXSeries
+AEM X-Series or rusEFI Wideband
 
 ### modeledFlowIdle
 
@@ -1959,7 +1959,4 @@ Voltage when the wastegate is closed
 
 ### dynoCarFrontalAreaM2
 @@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@
-
-### testPerBoardBit
-
 
