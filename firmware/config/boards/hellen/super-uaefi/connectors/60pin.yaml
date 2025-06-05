@@ -1,0 +1,593 @@
+meta: config/boards/hellen_mm100_meta.h
+
+pins:
+  - pin: 1A
+    function: +5v HALL1 sensor
+    type: 5v
+    color: red
+
+  - pin: 2A
+    function: +5v HALL2 sensor
+    type: 5v
+    color: red
+
+  - pin: 3A
+    function: +5v HALL3 sensor
+    type: 5v
+    color: red
+
+  - pin: 4A
+    function: +5v DIN sensor
+    type: 5v
+    color: red
+
+  - pin: 5A
+    meta: MM100_IN_TPS_ANALOG
+    class: analog_inputs
+    ts_name: ___ TPS1
+    function: TPS 1 sensor input
+    type: av
+    color: green
+
+  - pin: 6A
+    class: analog_inputs
+    meta: MM100_IN_O2S2_ANALOG
+    ts_name: AIN 2
+    function: AUX2 analog input
+
+  - pin: 7A
+    class: analog_inputs
+    meta: MM100_IN_AUX2_ANALOG
+    ts_name: ___ PPS2
+    function: PPS input 2
+    type: av
+    color: orange/brown
+
+  - pin: 8A
+    meta: MM100_IN_D1
+    class: event_inputs
+    function: VSS / HALL1 Sensor
+    ts_name: ___ HALL1 / VSS
+    type: hall
+
+  - pin: 9A
+    function: CAM Sensor Exhaust
+    meta: MM100_IN_D3
+    class: event_inputs
+    ts_name: ___ HALL3
+    type: hall
+
+  - pin: 10A
+    function: +5v
+#   map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / PPS1 sensor / PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 11A
+    class: analog_inputs
+    meta: MM100_IN_CLT_ANALOG
+    ts_name: ___ CLT Coolant
+    function: CLT input
+    type: at
+    color: grey
+
+  - pin: 12A
+    class: analog_inputs
+    meta: MM100_IN_IAT_ANALOG
+    ts_name: ___ IAT
+    function: IAT input
+    type: at
+    color: blue
+
+  - pin: 13A
+    class: analog_inputs
+    meta: MM100_IN_PPS_ANALOG
+    ts_name: ___ PPS1
+    function: PPS input 1
+    type: av
+    color: white
+
+  - pin: 14A
+    class: analog_inputs
+    meta: MM100_IN_O2S_ANALOG
+    ts_name: AIN 1
+    function: AUX1 analog input
+
+  - pin: 15A
+    class: analog_inputs
+    meta: MM100_IN_AUX1_ANALOG
+    ts_name: ___ TPS2
+    function: TPS 2 sensor input
+    type: av
+    color: blue
+
+  - pin: 16A
+    meta: MM100_MEGA_UAEFI_IN_AUX3
+    class: switch_inputs
+    ts_name: ___ Digital input signal
+    function: Digital input signal
+
+  - pin: 17A
+    meta: MM100_IN_D2
+    class: event_inputs
+    function: CAM Sensor Intake
+    ts_name: ___ HALL2
+    type: hall
+
+  - pin: 18A
+    function: +5v
+#   map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / PPS1 sensor / PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 19A
+    function: +5v
+#   map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / PPS1 sensor / PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 20A
+    function: +5v
+#   map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / PPS1 sensor / PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 21A
+    function: +5v
+#   map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / PPS1 sensor / PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 22A
+    function: +5v
+#   map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / PPS1 sensor / PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 23A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 24A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 25A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 26A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 27A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 28A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 29A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 30A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 31A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 32A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 33A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 34A
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+#  - pin: 1B
+#    class: outputs
+#    ts_name: Coil 7
+#    function: Coil 7 UNUSED
+#    type: ign
+
+  - pin: 2B
+    class: outputs
+    meta: MM100_IGN1
+    ts_name: Coil 1
+    function: Coil 1
+    type: ign
+    color: green
+
+  - pin: 3B
+    class: outputs
+    meta: MM100_IGN2
+    ts_name: Coil 2
+    function: Coil 2
+    type: ign
+    color: white
+
+  - pin: 4B
+    class: outputs
+    meta: MM100_IGN3
+    ts_name: Coil 3
+    function: Coil 3
+    type: ign
+    color: blue
+
+  - pin: 5B
+    class: outputs
+    meta: MM100_IGN4
+    ts_name: Coil 4
+    function: Coil 4
+    type: ign
+    color: orange
+
+  - pin: 6B
+    class: outputs
+    meta: MM100_IGN5
+    ts_name: Coil 5
+    function: Coil 5
+    color: brown
+    type: ign
+
+  - pin: 7B
+    class: outputs
+    meta: MM100_IGN6
+    ts_name: Coil 6
+    function: Coil 6
+    color: yellow
+    type: ign
+
+  - pin: 8B
+    class: outputs
+    meta: MM100_INJ6
+    ts_name: ___ INJ_6
+    function: Injector 6
+    color: yellow
+    type: inj
+
+  - pin: 9B
+    class: outputs
+    meta: MM100_INJ5
+    ts_name: ___ INJ_5
+    function: Injector 5
+    color: brown
+    type: inj
+
+  - pin: 10B
+    class: outputs
+    meta: MM100_INJ4
+    ts_name: ___ INJ_4
+    function: Injector 4
+    color: orange/brown
+    type: inj
+
+  - pin: 11B
+    class: outputs
+    meta: MM100_INJ3
+    ts_name: ___ INJ_3
+    function: Injector 3
+    color: blue
+    type: inj
+
+  - pin: 12B
+    class: outputs
+    meta: MM100_INJ2
+    ts_name: ___ INJ_2
+    function: Injector 2
+    color: white
+    type: inj
+
+  - pin: 13B
+    class: outputs
+    meta: MM100_MEGA_UAEFI_INJ1
+    ts_name: ___ INJ_1
+    function: Injector 1
+    color: green
+    type: inj
+
+#  - pin: 14B
+#    class: outputs
+#    ts_name: Coil 8
+#    function: Coil 8 UNUSED
+#    type: ign
+
+  - pin: 15B
+    function: GND
+    type: GND
+#   color: red / black
+
+  - pin: 16B
+    function: +5v
+#   map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / PPS1 sensor / PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 17B
+    function: +5v
+#   map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / PPS1 sensor / PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 18B
+    class: outputs
+    meta: MM100_MEGA_UAEFI_SPI2_SCK
+    ts_name: ___ INJ_8
+    function: Injector 8
+    color: green
+    type: inj
+
+  - pin: 19B
+    class: outputs
+    meta: MM100_SPI2_CS
+    ts_name: ___ INJ_7
+    function: Injector 7
+    color: white
+    type: inj
+
+  - pin: 20B
+    meta: MM100_INJ7
+    ts_name: ___ LS1
+    class: outputs
+    function: Low-Side 1 output
+    type: ls
+
+  - pin: 21B
+    meta: MM100_INJ8
+    ts_name: ___ LS2
+    class: outputs
+    function: Low-Side 2 output
+    type: ls
+
+  - pin: 22B
+    ts_name: ___ LS3
+    meta: MM100_OUT_PWM1
+    class: outputs
+    function: Low-Side 3 output
+    type: ls
+
+  - pin: 23B
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 24B
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 25B
+    function: FLEX
+    class: event_inputs
+    meta: MM100_IN_VSS
+    ts_name: FLEX
+
+  - pin: 26B
+    class: analog_inputs
+    meta: MM100_IN_MAP1_ANALOG
+    ts_name: MAP
+    function: MAP signal
+    color: yellow
+
+info:
+  cid: main
+  title: super-uaefi
+  name: super-uaefi
+  image:
+    file: 60pins.jpg
+  pins:
+    - pin: 1A
+      x: 95
+      y: 90
+    - pin: 2A
+      x: 120
+      y: 90
+    - pin: 3A
+      x: 155
+      y: 90
+    - pin: 4A
+      x: 180
+      y: 90
+    - pin: 5A
+      x: 205
+      y: 90
+    - pin: 6A
+      x: 230
+      y: 90
+    - pin: 7A
+      x: 255
+      y: 90
+    - pin: 8A
+      x: 280
+      y: 90
+    - pin: 9A
+      x: 305
+      y: 90
+    - pin: 10A
+      x: 110
+      y: 120
+    - pin: 11A
+      x: 135
+      y: 120
+    - pin: 12A
+      x: 160
+      y: 120
+    - pin: 13A
+      x: 185
+      y: 120
+    - pin: 14A
+      x: 210
+      y: 120
+    - pin: 15A
+      x: 235
+      y: 120
+    - pin: 16A
+      x: 260
+      y: 120
+    - pin: 17A
+      x: 285
+      y: 120
+    - pin: 18A
+      x: 110
+      y: 150
+    - pin: 19A
+      x: 135
+      y: 150
+    - pin: 20A
+      x: 160
+      y: 150
+    - pin: 21A
+      x: 185
+      y: 150
+    - pin: 22A
+      x: 210
+      y: 150
+    - pin: 23A
+      x: 235
+      y: 150
+    - pin: 24A
+      x: 260
+      y: 150
+    - pin: 25A
+      x: 285
+      y: 150
+    - pin: 26A
+      x: 95
+      y: 180
+    - pin: 27A
+      x: 120
+      y: 180
+    - pin: 28A
+      x: 155
+      y: 180
+    - pin: 29A
+      x: 180
+      y: 180
+    - pin: 30A
+      x: 205
+      y: 180
+    - pin: 31A
+      x: 230
+      y: 180
+    - pin: 32A
+      x: 255
+      y: 180
+    - pin: 33A
+      x: 280
+      y: 180
+    - pin: 34A
+      x: 305
+      y: 180
+
+    - pin: 1B
+      x: 425
+      y: 90
+    - pin: 2B
+      x: 450
+      y: 90
+    - pin: 3B
+      x: 475
+      y: 90
+    - pin: 4B
+      x: 500
+      y: 90
+    - pin: 5B
+      x: 525
+      y: 90
+    - pin: 6B
+      x: 550
+      y: 90
+    - pin: 7B
+      x: 575
+      y: 90
+    - pin: 8B
+      x: 435
+      y: 120
+    - pin: 9B
+      x: 460
+      y: 120
+    - pin: 10B
+      x: 485
+      y: 120
+    - pin: 11B
+      x: 510
+      y: 120
+    - pin: 12B
+      x: 535
+      y: 120
+    - pin: 13B
+      x: 560
+      y: 120
+    - pin: 14B
+      x: 435
+      y: 150
+    - pin: 15B
+      x: 460
+      y: 150
+    - pin: 16B
+      x: 485
+      y: 150
+    - pin: 17B
+      x: 510
+      y: 150
+    - pin: 18B
+      x: 535
+      y: 150
+    - pin: 19B
+      x: 560
+      y: 150
+    - pin: 20B
+      x: 425
+      y: 180
+    - pin: 21B
+      x: 450
+      y: 180
+    - pin: 22B
+      x: 475
+      y: 180
+    - pin: 23B
+      x: 500
+      y: 180
+    - pin: 24B
+      x: 525
+      y: 180
+    - pin: 25B
+      x: 550
+      y: 180
+    - pin: 26B
+      x: 575
+      y: 180

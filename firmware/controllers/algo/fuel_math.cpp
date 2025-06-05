@@ -373,6 +373,31 @@ float getIatFuelCorrection() {
 	return interpolate2d(iat.Value, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
+float getPostCrankingFuelCorrection() {
+	const auto revolutionCounter = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	// if the engine run time is past the last bin, disable ASE in case the table is filled with values more than 1.0, helps with compatibility
+	if (revolutionCounter > config->postCrankingDurationBins[efi::size(config->postCrankingDurationBins) - 1])
+		return 1;
+
+	// TODO:
+	//const auto clt = Sensor::get(SensorType::Clt);
+	//if (!clt)
+	//	return 1; // this error should be already reported somewhere else, let's just handle it
+
+	// post-cranking fuel enrichment.
+	float postCrankingFactor = interpolate3d(
+		config->postCrankingFactor,
+		config->postCrankingCLTBins, Sensor::getOrZero(SensorType::Clt),
+		config->postCrankingDurationBins, revolutionCounter
+	);
+
+	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
+	if (postCrankingFactor < 1.0f)
+		postCrankingFactor = 1.0f;
+
+	return postCrankingFactor;
+}
+
 float getBaroCorrection() {
 	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 		// Default to 1atm if failed

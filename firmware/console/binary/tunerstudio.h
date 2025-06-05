@@ -39,8 +39,6 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 #define DO_NOT_LOG nullptr
 void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, /*empty line by default, use nullptr not to log*/const char *msg="");
 
-uint8_t* getWorkingPageAddr();
-
 void requestBurn();
 
 // Lua script might want to know how long since last TS request to see if unit is being actively monitored

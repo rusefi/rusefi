@@ -123,6 +123,10 @@ bool shouldUpdateCorrection(SensorType sensor) {
 
 ClosedLoopFuelResult fuelClosedLoopCorrection() {
 	if (!shouldCorrect()) {
+#if EFI_TUNER_STUDIO
+		engine->outputChannels.fuelClosedLoopBinIdx = 5;
+		engine->outputChannels.fuelClosedLoopLearningBinIdx = 5;
+#endif // EFI_TUNER_STUDIO
 		return {};
 	}
 
@@ -144,6 +148,9 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 
 		if (shouldUpdateCorrection(sensor)) {
 			cell.update(engineConfiguration->stft.deadband * 0.01f, engineConfiguration->stftIgnoreErrorMagnitude);
+			engine->outputChannels.fuelClosedLoopLearningBinIdx = binIdx;
+		} else {
+			engine->outputChannels.fuelClosedLoopLearningBinIdx = 5;
 		}
 
 		result.banks[i] = cell.getAdjustment();

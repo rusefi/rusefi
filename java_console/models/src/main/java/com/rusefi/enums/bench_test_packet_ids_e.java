@@ -17,6 +17,7 @@ public enum bench_test_packet_ids_e {
 	MANUAL_PIN_TEST(7798793),
 	FW_WIPE_OUT(7798794),
 	HW_QC_TESTER_PRESENT(7798795),
+	ECU_CAN_BUS_CONTROL(7798796),
 	;
 
 

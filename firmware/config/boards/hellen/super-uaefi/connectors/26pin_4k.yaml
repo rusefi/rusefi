@@ -1,0 +1,232 @@
+meta: config/boards/hellen_mm100_meta.h
+
+pins:
+  - pin: 1D
+    function: WBO1 Vs (Un) (pin 6)
+    type: wbo
+    color: black
+
+  - pin: 2D
+    function: WBO1 Vs/Ip (Vm) (pin 2)
+    type: wbo
+    color: yellow
+
+  - pin: 3D
+    function: WBO1 Heater Negative (pin 3)
+    color: white
+    type: wbo
+
+  - pin: 4D
+    class: outputs
+    ts_name: DC2-
+    function: DC2- output
+    type: etb
+
+  - pin: 5D
+    class: outputs
+    ts_name: DC2+
+    function: DC2+ output
+    type: etb
+
+  - pin: 6D
+    class: outputs
+    ts_name: DC1-
+    function: DC1- output
+    color: white
+    type: etb
+
+  - pin: 7D
+    class: outputs
+    ts_name: DC1+
+    function: DC1+ output
+    color: blue
+    type: etb
+
+  - pin: 8D
+    function: WBO1 CalR (pin 5)
+    type: wbo
+    color: green
+
+  - pin: 9D
+    class: analog_inputs
+    ts_name: KNOCK
+    function: KNOCK sensor
+
+  - pin: 10D
+    ts_name: VR_9924-
+    function: VR_9924 negative input
+    type: vr
+
+  - pin: 11D
+    meta: MM100_UART8_TX
+    class: event_inputs
+    ts_name: VR_9924+
+    function: VR_9924 positive input
+    type: vr
+
+  - pin: 12D
+    ts_name: VR_DISCRETE-
+    function: VR_DISCRETE negative input
+    type: vr
+
+  - pin: 13D
+    meta: MM100_UART8_RX
+    class: event_inputs
+    ts_name: VR_DISCRETE+
+    function: VR_DISCRETE positive input
+    type: vr
+
+  - pin: 14D
+    function: WBO1 SWC
+
+  - pin: 15D
+    function: WBO1 Ip (pin 1)
+    type: wbo
+    color: red
+
+  - pin: 16D
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 17D
+    function: GND
+    type: GND
+#   color: red / black
+
+  - pin: 18D
+    function: CAN bus low
+    color: blue
+    type: can
+
+  - pin: 19D
+    function: CAN bus high
+    color: green
+    type: can
+
+  - pin: 20D
+    class: outputs
+    meta: MM100_LED2_GREEN
+    ts_name: ___ High Side Output
+    function: High-side high current output
+
+  - pin: 21D
+    function: WBO1 SWD
+
+  - pin: 22D
+    function: +12v from main relay OUTPUT
+    type: 12V
+
+  - pin: 23D
+    function: GNDA
+#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+    type: gnd
+    color: black
+
+  - pin: 24D
+    meta: MM100_IN_CRANK
+    class: switch_inputs
+    color: yellow
+    ts_name: BUTTON1
+    function: BUTTON1 sensor
+
+  - pin: 25D
+    meta: MM100_IN_CAM
+    class: switch_inputs
+    color: green
+    ts_name: BUTTON2
+    function: BUTTON2 sensor
+
+  - pin: 26D
+    meta: MM100_IN_D4
+    class: switch_inputs
+    color: grey
+    ts_name: BUTTON3
+    function: BUTTON3 input
+
+info:
+  cid: 26-4
+  title: super-uaefi
+  name: super-uaefi
+  image:
+    file: 26pins-4k.jpg
+  pins:
+    - pin: 1D
+      x: 85
+      y: 90
+    - pin: 2D
+      x: 110
+      y: 90
+    - pin: 3D
+      x: 135
+      y: 90
+    - pin: 4D
+      x: 160
+      y: 90
+    - pin: 5D
+      x: 185
+      y: 90
+    - pin: 6D
+      x: 205
+      y: 90
+    - pin: 7D
+      x: 230
+      y: 90
+    - pin: 8D
+      x: 100
+      y: 120
+    - pin: 9D
+      x: 125
+      y: 120
+    - pin: 10D
+      x: 145
+      y: 120
+    - pin: 11D
+      x: 170
+      y: 120
+    - pin: 12D
+      x: 195
+      y: 120
+    - pin: 13D
+      x: 220
+      y: 120
+    - pin: 14D
+      x: 100
+      y: 150
+    - pin: 15D
+      x: 125
+      y: 150
+    - pin: 16D
+      x: 145
+      y: 150
+    - pin: 17D
+      x: 170
+      y: 150
+    - pin: 18D
+      x: 195
+      y: 150
+    - pin: 19D
+      x: 220
+      y: 150
+    - pin: 20D
+      x: 85
+      y: 180
+    - pin: 21D
+      x: 110
+      y: 180
+    - pin: 22D
+      x: 135
+      y: 180
+    - pin: 23D
+      x: 155
+      y: 180
+    - pin: 24D
+      x: 180
+      y: 180
+    - pin: 25D
+      x: 205
+      y: 180
+    - pin: 26D
+      x: 230
+      y: 180
