@@ -363,7 +363,7 @@
         <constant name="tpsTpsPercentMode">"ms adder"</constant>
         <constant name="verboseKLine">"false"</constant>
         <constant name="idleIncrementalPidCic">"false"</constant>
-        <constant name="enableAemXSeries">"true"</constant>
+        <constant name="enableCanWideband">"true"</constant>
         <constant name="unused32nd">"false"</constant>
         <constant name="logicAnalyzerPins1">"NONE"</constant>
         <constant name="logicAnalyzerPins2">"NONE"</constant>

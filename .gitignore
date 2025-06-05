@@ -24,6 +24,8 @@ log.txt
 *.rusefi_binary
 *.kicad_prl
 .*-sentinel
+**/.idea/
+**/.gradle/
 
 # Eclipse
 .metadata/

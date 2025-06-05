@@ -64,7 +64,7 @@ void setHyundaiPb() {
 	engineConfiguration->disableEtbWhenEngineStopped = true;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
-	engineConfiguration->enableAemXSeries = true;
+	engineConfiguration->enableCanWideband = true;
 
 	set201xHyundai();
 	// Injectors flow 1214 cc/min at 100 bar pressure

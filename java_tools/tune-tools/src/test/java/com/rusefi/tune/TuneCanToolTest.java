@@ -35,7 +35,7 @@ public class TuneCanToolTest {
         assertTrue(sb.indexOf("engineConfiguration->gppwm[2].loadAxis = GPPWM_Tps;") > 0);
         assertTrue(sb.indexOf("engineConfiguration->gppwm[3].loadAxis = GPPWM_Tps;") > 0);
     }
-    
+
     @Test
     public void TuneCanToolGetParentTest() throws Exception {
     	 RootHolder.ROOT = "../../firmware/";
@@ -43,27 +43,27 @@ public class TuneCanToolTest {
     	 ConfigField gppwmTable = TuneCanTool.getReaderState("gppwm1_table"); // engineConfiguration->gppwm[0].table
     	 ConfigField cltRevLimitRpmBins = TuneCanTool.getReaderState("cltRevLimitRpmBins"); // config->cltRevLimitRpmBins
     	 ConfigField rpmSoftLimitTimingRetard = TuneCanTool.getReaderState("rpmSoftLimitTimingRetard"); // engineConfiguration->rpmSoftLimitTimingRetard
-    	 
+
     	 String gppwmTableParentReference = TuneCanTool.getParentReference(gppwmTable, new StringBuffer("gppwm[0].table"));
     	 String cltRevLimitRpmBinsTableParentReference = TuneCanTool.getParentReference(cltRevLimitRpmBins, null);
     	 String rpmSoftLimitTimingRetardParentReference = TuneCanTool.getParentReference(rpmSoftLimitTimingRetard, null);
-    	
+
     	 assertEquals("engineConfiguration->gppwm[0].table", gppwmTableParentReference);
     	 assertEquals("config->", cltRevLimitRpmBinsTableParentReference);
     	 assertEquals("engineConfiguration->", rpmSoftLimitTimingRetardParentReference);
     }
-    
+
     @Test
     public void TuneCanToolBooleanTest() throws Exception {
     	RootHolder.ROOT = "../../firmware/";
     	Msq customOldTune = Msq.readTune(TuneReadWriteTest.TUNE_NAME);
-    	String fieldName = "enableAemXSeries";// config->enableAemXSeries
-    	ConfigField cf = TuneCanTool.getReaderState(fieldName); 
+    	String fieldName = "enableCanWideband";// config->enableCanWideband
+    	ConfigField cf = TuneCanTool.getReaderState(fieldName);
     	Constant customValue = customOldTune.getConstantsAsMap().get(fieldName);
-    	
+
     	// this logic is used on getTunePatch, maybe extract to function?
     	Boolean configFieldState = unquote(cf.getTrueName()).equals(unquote(customValue.getValue()));
-    	 
-    	assertFalse(configFieldState); // as config->enableAemXSeries default is false
+
+    	assertFalse(configFieldState); // as config->enableCanWideband default is false
     }
 }

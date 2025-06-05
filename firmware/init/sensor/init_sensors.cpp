@@ -42,7 +42,7 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 }
 
 static void initOldAnalogInputs() {
-    if (isAdcChannelValid(engineConfiguration->afr.hwChannel) && engineConfiguration->enableAemXSeries) {
+    if (isAdcChannelValid(engineConfiguration->afr.hwChannel) && engineConfiguration->enableCanWideband) {
         criticalError("Please pick either analog AFR or CAN AFR input not both.");
     }
 	initIfValid("AFR", engineConfiguration->afr.hwChannel);

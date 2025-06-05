@@ -872,7 +872,7 @@
 </constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
         <constant name="electronicThrottlePin1Mode">"default"</constant>
-        <constant name="enableAemXSeries">"false"</constant>
+        <constant name="enableCanWideband">"false"</constant>
         <constant name="enableCanVss">"false"</constant>
         <constant name="enabledStep1Limiter">"false"</constant>
         <constant name="enableFan1WithAc">"false"</constant>

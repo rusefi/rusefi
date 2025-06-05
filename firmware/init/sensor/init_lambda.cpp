@@ -52,7 +52,7 @@ const wideband_state_s* getLiveData(size_t idx) {
 void initLambda() {
 
 #if EFI_CAN_SUPPORT
-	if (engineConfiguration->enableAemXSeries) {
+	if (engineConfiguration->enableCanWideband) {
 		if (!engineConfiguration->canWriteEnabled || !engineConfiguration->canReadEnabled) {
 			criticalError("CAN read and write are required to use CAN wideband.");
 			return;

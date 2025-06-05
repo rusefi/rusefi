@@ -21,7 +21,7 @@ static ExpAverage expAverageLambda2;
 #include "cyclic_buffer.h"
 
 bool hasAfrSensor() {
-	if (engineConfiguration->enableAemXSeries) {
+	if (engineConfiguration->enableCanWideband) {
 		return true;
 	}
 

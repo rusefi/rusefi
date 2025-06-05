@@ -488,9 +488,9 @@ float getConfigValueByName(const char *name) {
 // idleIncrementalPidCic
 		case 1064399425:
 			return engineConfiguration->idleIncrementalPidCic;
-// enableAemXSeries
+// enableCanWideband
 		case 259909218:
-			return engineConfiguration->enableAemXSeries;
+			return engineConfiguration->enableCanWideband;
 // modeledFlowIdle
 		case 600643125:
 			return engineConfiguration->modeledFlowIdle;
@@ -2780,7 +2780,7 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case 259909218:
 	{
-		engineConfiguration->enableAemXSeries = (int)value;
+		engineConfiguration->enableCanWideband = (int)value;
 		return 1;
 	}
 		case 600643125:

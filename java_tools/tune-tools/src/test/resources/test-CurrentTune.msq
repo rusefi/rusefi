@@ -388,7 +388,7 @@
 <constant name="alignEngineSnifferAtTDC">"false"</constant>
 <constant name="useETBforIdleControl">"false"</constant>
 <constant name="idleIncrementalPidCic">"false"</constant>
-<constant name="enableAemXSeries">"false"</constant>
+<constant name="enableCanWideband">"false"</constant>
 <constant name="logicAnalyzerPins1">"NONE"</constant>
 <constant name="logicAnalyzerPins2">"NONE"</constant>
 <constant name="logicAnalyzerPins3">"NONE"</constant>
