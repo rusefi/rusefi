@@ -10,6 +10,7 @@ CONTROLLERS_SENSORS_SRC_CPP = \
 	$(PROJECT_DIR)/controllers/sensors/auto_generated_sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/impl/AemXSeriesLambda.cpp \
 	$(PROJECT_DIR)/controllers/sensors/impl/AemXSeriesEgt.cpp \
+	$(PROJECT_DIR)/controllers/sensors/impl/HaltechWideband.cpp \
 	$(PROJECT_DIR)/controllers/sensors/impl/map.cpp \
 	$(PROJECT_DIR)/controllers/sensors/impl/maf.cpp \
 	$(PROJECT_DIR)/controllers/sensors/impl/Lps25Sensor.cpp \
