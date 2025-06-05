@@ -66,7 +66,7 @@ enum class SensorType : unsigned char {
 	AuxTemp1,
 	AuxTemp2,
 
-  // this becomes AFR once we multiply by STOICH_RATIO
+	// this becomes AFR once we multiply by STOICH_RATIO
 	Lambda1,
 	Lambda2,
 	SmoothedLambda1,

@@ -549,7 +549,7 @@ static void setDefaultEngineConfiguration() {
 
 	setBoschHDEV_5_injectors();
 
-	setEgoSensor(ES_14Point7_Free);
+	Ego::setEgoSensor(ES_14Point7_Free);
 
 	engineConfiguration->adcVcc = 3.0;
 
