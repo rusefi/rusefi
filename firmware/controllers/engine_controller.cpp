@@ -591,8 +591,6 @@ bool validateConfigOnStartUpOrBurn() {
 
 		ensureArrayIsAscendingOrDefault("STFT Rpm", config->fuelTrimRpmBins);
 		ensureArrayIsAscendingOrDefault("STFT Load", config->fuelTrimLoadBins);
-		ensureArrayIsAscendingOrDefault("LTFT Rpm", engineConfiguration->ltft.trimRpmBins);
-		ensureArrayIsAscendingOrDefault("LTFT Load", engineConfiguration->ltft.trimLoadBins);
 
 		ensureArrayIsAscendingOrDefault("TC slip", engineConfiguration->tractionControlSlipBins);
 		ensureArrayIsAscendingOrDefault("TC speed", engineConfiguration->tractionControlSpeedBins);

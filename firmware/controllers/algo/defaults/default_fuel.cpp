@@ -192,10 +192,6 @@ static void setDefaultLtftSettings() {
 	// Allow +-12.5%
 	cfg.maxAdd = 12.5;
 	cfg.maxRemove = 12.5;
-
-	// default bins
-	setRpmTableBin(cfg.trimRpmBins);
-	setLinearCurve(cfg.trimLoadBins, 20, 100);
 }
 
 static const uint8_t tpsTpsTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE] = {
