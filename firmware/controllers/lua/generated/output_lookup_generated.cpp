@@ -353,6 +353,9 @@ float getOutputValueByName(const char *name) {
 // fuelClosedLoopBinIdx
 		case 1342844099:
 			return engine->outputChannels.fuelClosedLoopBinIdx;
+// fuelClosedLoopLearningBinIdx
+		case -578311629:
+			return engine->outputChannels.fuelClosedLoopLearningBinIdx;
 // rawPpsPrimary
 		case -347083354:
 			return engine->outputChannels.rawPpsPrimary;
