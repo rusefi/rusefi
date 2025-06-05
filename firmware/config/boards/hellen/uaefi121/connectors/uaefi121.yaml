@@ -633,6 +633,7 @@ pins:
     meta: MM100_IN_VBATT
     class: analog_inputs
     color: red
+    type: 12v
     function: Ignition Switch / Battery Voltage Analog Input
     ts_name: ___ Voltage From Key
 
