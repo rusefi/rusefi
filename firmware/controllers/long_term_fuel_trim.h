@@ -6,12 +6,13 @@
 
 struct LtftState {
 	int ecuRestartCounter = 0;
-	int8_t trims[LTFT_BANK_CONUT][VE_LOAD_COUNT][VE_RPM_COUNT];
+	float trims[LTFT_BANK_CONUT][VE_LOAD_COUNT][VE_RPM_COUNT];
 
 	void save();
 	void load();
 };
 
+// TODO: add livedata!
 class LongTermFuelTrim : public EngineModule {
 public:
 	// EngineModule implementation
@@ -24,6 +25,12 @@ public:
 
 private:
 	LtftState *m_state;
+
+	float getIntegratorGain();
+
+	// statistic, move to livedata
+	uint32_t miss = 0;
+	uint32_t hit = 0;
 };
 
 void initLtft();
