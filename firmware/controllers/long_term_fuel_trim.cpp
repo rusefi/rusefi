@@ -71,7 +71,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	float weight = 1.0 - hypotf(x.Frac, y.Frac) / hypotf(0.5, 0.5);
 	float k = getIntegratorGain() * integrator_dt * weight;
 
-	for (size_t bank = 0; bank < LTFT_BANK_CONUT; bank++) {
+	for (size_t bank = 0; bank < LTFT_BANK_COUNT; bank++) {
 		float lambdaCorrection = clResult.banks[bank] - 1.0;
 
 		// If we're within the deadband, make no adjustment.
