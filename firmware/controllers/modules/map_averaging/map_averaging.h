@@ -63,6 +63,7 @@ private:
 
 MapAverager& getMapAvg(size_t idx);
 float filterMapValue(float value);
+void startAveraging(struct mapSampler* s);
 
 class MapAveragingModule : public EngineModule {
 public:
