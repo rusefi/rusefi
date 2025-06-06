@@ -19,7 +19,7 @@ DDEFS += -DHELLEN_BOARD_ID_DEBUG
 # as long as we only have one boardID for all units the only consumer of boardID is HW QC process
 # so far all uaEFI boards are completely compatible
 DDEFS += -DHW_HELLEN_SKIP_BOARD_TYPE=TRUE
-DDEFS += -DSTATIC_BOARD_ID=BOARD_ID_UAEFI_B
+DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_SUPER_UAEFI
 
 DDEFS += -DHW_HELLEN_UAEFI=1
 DDEFS += -DDIAG_5VP_PIN=Gpio::MM100_SPI3_MOSI
