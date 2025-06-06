@@ -2938,7 +2938,7 @@ end</constant>
         <constant digits="0" name="nitrousMinimumVehicleSpeed" units="Kph">0.0</constant>
         <constant name="nitrousRelayPin">"NONE"</constant>
         <constant name="nitrousRelayPinMode">"default"</constant>
-        <constant digits="1" name="noFuelTrimAfterDfcoTime" units="sec">0.0</constant>
+        <constant digits="1" name="noFuelTrimAfterDfcoTime" units="sec">5.0</constant>
         <constant name="o2heaterPin">"NONE"</constant>
         <constant name="o2heaterPinModeTodO">"default"</constant>
         <constant name="oilPressure_hwChannel">"Disabled"</constant>
@@ -3435,17 +3435,17 @@ end</constant>
         <constant digits="0" name="stepperMinDutyCycle" units="%">0.0</constant>
         <constant name="stepperNumMicroSteps">"Full-Step (Default)"</constant>
         <constant digits="0" name="stepperParkingExtraSteps" units="%">0.0</constant>
-        <constant digits="0" name="stft_cellCfgs1_maxAdd" units="%">5.0</constant>
-        <constant digits="0" name="stft_cellCfgs1_maxRemove" units="%">-5.0</constant>
+        <constant digits="1" name="stft_cellCfgs1_maxAdd" units="%">5.0</constant>
+        <constant digits="1" name="stft_cellCfgs1_maxRemove" units="%">5.0</constant>
         <constant digits="2" name="stft_cellCfgs1_timeConstant" units="sec">30.0</constant>
-        <constant digits="0" name="stft_cellCfgs2_maxAdd" units="%">5.0</constant>
-        <constant digits="0" name="stft_cellCfgs2_maxRemove" units="%">-5.0</constant>
+        <constant digits="1" name="stft_cellCfgs2_maxAdd" units="%">5.0</constant>
+        <constant digits="1" name="stft_cellCfgs2_maxRemove" units="%">5.0</constant>
         <constant digits="2" name="stft_cellCfgs2_timeConstant" units="sec">30.0</constant>
-        <constant digits="0" name="stft_cellCfgs3_maxAdd" units="%">5.0</constant>
-        <constant digits="0" name="stft_cellCfgs3_maxRemove" units="%">-5.0</constant>
+        <constant digits="1" name="stft_cellCfgs3_maxAdd" units="%">5.0</constant>
+        <constant digits="1" name="stft_cellCfgs3_maxRemove" units="%">5.0</constant>
         <constant digits="2" name="stft_cellCfgs3_timeConstant" units="sec">30.0</constant>
-        <constant digits="0" name="stft_cellCfgs4_maxAdd" units="%">5.0</constant>
-        <constant digits="0" name="stft_cellCfgs4_maxRemove" units="%">-5.0</constant>
+        <constant digits="1" name="stft_cellCfgs4_maxAdd" units="%">5.0</constant>
+        <constant digits="1" name="stft_cellCfgs4_maxRemove" units="%">5.0</constant>
         <constant digits="2" name="stft_cellCfgs4_timeConstant" units="sec">30.0</constant>
         <constant digits="1" name="stft_deadband" units="%">0.5</constant>
         <constant digits="1" name="stft_maxAfr" units="afr">17.0</constant>
@@ -4950,7 +4950,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250601" nPages="1" signature="rusEFI master.2025.06.06.f407-discovery.852064047" version="5.0"/>
+    <versionInfo firmwareInfo="20250601" nPages="1" signature="rusEFI master.2025.06.06.f407-discovery.758720569" version="5.0"/>
     <bibliography author="rusEFI 20250601" writeDate="date"/>
     <settings/>
     <userComments/>
