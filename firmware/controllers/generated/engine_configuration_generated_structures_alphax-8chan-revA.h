@@ -10,13 +10,13 @@ struct stft_cell_cfg_s {
 	 * units: %
 	 * offset 0
 	 */
-	int8_t maxAdd;
+	scaled_channel<uint8_t, 10, 1> maxAdd;
 	/**
 	 * Maximum % that the short term fuel trim can remove
 	 * units: %
 	 * offset 1
 	 */
-	int8_t maxRemove;
+	scaled_channel<uint8_t, 10, 1> maxRemove;
 	/**
 	 * Commonly referred as Integral gain.
 	 * Time constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.
