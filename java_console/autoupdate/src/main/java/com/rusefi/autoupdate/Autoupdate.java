@@ -92,6 +92,7 @@ public class Autoupdate {
         // Let's try to get console .exe-file name before we rewrite autoupdate .jar file:
         final String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
 
+        // java lazy class-loader would get broken if we replace rusefi_autoupdate.jar file
         // ATTENTION! To avoid `ClassNotFoundException` we need to load all necessary classes before unzipping
         // autoupdate archive
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
