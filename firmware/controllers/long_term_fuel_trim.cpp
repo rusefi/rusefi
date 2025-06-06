@@ -6,6 +6,13 @@
 
 #include "long_term_fuel_trim.h"
 
+#if (LTFT_BANK_COUNT != STFT_BANK_COUNT)
+	#error Expected LTFT_BANK_COUNT to be equal to STFT_BANK_COUNT
+#endif
+
+// +/-25% maximum
+#define MAX_ADJ (0.25f)
+
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
 #if EFI_BACKUP_SRAM
@@ -40,18 +47,36 @@ void LongTermFuelTrim::init(LtftState *state) {
 	m_state->load();
 }
 
-float LongTermFuelTrim::getIntegratorGain()
+float LongTermFuelTrim::getIntegratorGain() const
 {
 	const auto& cfg = engineConfiguration->ltft;
 	//
 	return 1 / clampF(30, cfg.timeConstant, 3000);
 }
 
-#if (LTFT_BANK_COUNT != STFT_BANK_COUNT)
-	#error Expected LTFT_BANK_COUNT to be equal to STFT_BANK_COUNT
-#endif
+float LongTermFuelTrim::getMaxAdjustment() const {
+	const auto& cfg = engineConfiguration->ltft;
+
+	float raw = 0.01 * cfg.maxAdd;
+	// Don't allow maximum less than 0, or more than maximum adjustment
+	return clampF(0, raw, MAX_ADJ);
+}
+
+float LongTermFuelTrim::getMinAdjustment() const {
+	const auto& cfg = engineConfiguration->ltft;
+
+	float raw = -0.01f * cfg.maxRemove;
+	// Don't allow minimum more than 0, or more than maximum adjustment
+	return clampF(-MAX_ADJ, raw, 0);
+}
 
 void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad) {
+	const auto& cfg = engineConfiguration->ltft;
+
+	if (!cfg.enabled) {
+		return;
+	}
+
 	// x - load, y - rpm
 	auto x = priv::getClosestBin(fuelLoad, config->veLoadBins);
 	auto y = priv::getClosestBin(rpm, config->veRpmBins);
@@ -64,7 +89,6 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	}
 
 	bool adjusted = false;
-	const auto& cfg = engineConfiguration->ltft;
 
 	// calculate weight depenting on distance from cell center
 	// Is this too heavy?
@@ -85,7 +109,14 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		// Integrate
 		float newTrim = k * lambdaCorrection + trim;
 
-		(void)newTrim;
+		// TODO:
+		// rise OBD code if we hit trim limit
+
+		// Clamp to bounds and save
+		newTrim = clampF(getMinAdjustment(), newTrim, getMaxAdjustment());
+
+		// store
+		m_state->trims[bank][x.Idx][y.Idx] = newTrim;
 
 		adjusted = true;
 	}
@@ -95,13 +126,37 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	}
 }
 
-#if 0
-		float trim = interpolate3d(
+ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
+	const auto& cfg = engineConfiguration->ltft;
+
+	if (!cfg.enabled) {
+		return { };
+	}
+
+	// x - load, y - rpm
+	auto x = priv::getClosestBin(fuelLoad, config->veLoadBins);
+	auto y = priv::getClosestBin(rpm, config->veRpmBins);
+
+	// do not interpolate outside table...
+	if ((abs(x.Frac) > 0.5) ||
+		(abs(y.Frac) > 0.5)) {
+		// we are outside table
+		miss++;
+		return { };
+	}
+
+	ClosedLoopFuelResult result;
+
+	for (size_t bank = 0; bank < LTFT_BANK_COUNT; bank++) {
+		result.banks[bank] = 1.0f + interpolate3d(
 			m_state->trims[bank],
 			config->veLoadBins, fuelLoad,
 			config->veRpmBins, rpm
 		);
-#endif
+	}
+
+	return result;
+}
 
 void LongTermFuelTrim::store() {
 	// TODO: lock to avoid modification while writing
