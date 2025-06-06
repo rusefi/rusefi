@@ -31,7 +31,7 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20250529; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20250602; // separate from rusEFIVersion#CONSOLE_VERSION
 
     private static final String TITLE = getTitle();
 
@@ -77,6 +77,7 @@ public class Autoupdate {
         return sb.toString();
     }
 
+    // everything here assumes Windows. Sorry!
     private static void autoupdate(String[] args) {
         BundleUtil.BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
         if (BundleUtil.BundleInfo.isUndefined(bundleInfo)) {
@@ -95,20 +96,8 @@ public class Autoupdate {
         // java lazy class-loader would get broken if we replace rusefi_autoupdate.jar file
         // ATTENTION! To avoid `ClassNotFoundException` we need to load all necessary classes before unzipping
         // autoupdate archive
-        URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
-        if (ConnectionAndMeta.startConsoleInAutoupdateProcess()) {
-            //TODO: Afterwards we need to decide if we really want to support this option.
-            //  I would prefer to forget about it as about a nightmare :)
-            log.info("extremely dark magic: XML binding seems to depend on this");
-
-            //TODO: It looks like we need to set this context class loader to all consile threads if we want to avoid
-            //  potential JAXB problems
-            Thread.currentThread().setContextClassLoader(jarClassLoader);
-
-            startConsole(args, jarClassLoader);
-        } else {
-            startConsoleAsANewProcess(consoleExeFileName, args);
-        }
+        safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
+        startConsoleAsANewProcess(consoleExeFileName, args);
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String firstArgument, BundleUtil.BundleInfo bundleInfo) {
@@ -126,17 +115,11 @@ public class Autoupdate {
         return downloadedAutoupdateFile;
     }
 
-    private static URLClassLoader safeUnzipMakingSureClassloaderIsHappy(Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile) {
+    private static void safeUnzipMakingSureClassloaderIsHappy(Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile) {
+        // todo: we still have technical debt here! https://github.com/rusefi/rusefi/issues/7971
         downloadedAutoupdateFile.ifPresent(Autoupdate::unzipFreshConsole);
-        URLClassLoader jarClassLoader = prepareClassLoaderToStartConsole();
         downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
             try {
-/*
-                // technical dept here, guilty as charged!
-                boolean installedIntoProgramFilesHack = new File("uninstall.exe").exists();
-                log.info("installedIntoProgramFilesHack " + installedIntoProgramFilesHack);
-                String pathname = installedIntoProgramFilesHack ? "." : "..";
-*/
                 String pathname = "..";
                 log.info("unzipping everything else into " + pathname);
                 // We've already prepared class loader, so now we can unzip rusefi_autoupdate.jar and other files
@@ -152,7 +135,6 @@ public class Autoupdate {
                 }
             }
         });
-        return jarClassLoader;
     }
 
     private static void unzipFreshConsole(DownloadedAutoupdateFileInfo autoupdateFile) {
@@ -229,19 +211,6 @@ public class Autoupdate {
             throw log.log(new IllegalStateException("Failed to update properties: " + e, e));
         }
         return jarClassLoader;
-    }
-
-    private static void startConsole(final String[] args, final URLClassLoader jarClassLoader) {
-        log.info("Running console with " + Arrays.toString(args));
-        try {
-            Class mainClass = Class.forName(COM_RUSEFI_LAUNCHER, true, jarClassLoader);
-            Method mainMethod = mainClass.getMethod("main", args.getClass());
-            mainMethod.invoke(null, new Object[]{args});
-        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
-                 NoSuchMethodException e) {
-            log.error("Failed to start", e);
-            throw new IllegalStateException("Invoking console: " + e, e);
-        }
     }
 
     private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {

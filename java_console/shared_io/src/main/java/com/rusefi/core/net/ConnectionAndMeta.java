@@ -148,11 +148,7 @@ public class ConnectionAndMeta {
     }
 
     public static boolean startConsoleInAutoupdateProcess() {
-        return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(
-            getProperties(),
-            "start_console_in_autoupdate_process",
-            "false"
-        ));
+        return false;
     }
 
     public static Set<String> getNonMigratableIniFields() {
