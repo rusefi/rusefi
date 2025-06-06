@@ -582,6 +582,8 @@ PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
 /**
  * for example to bench test injector 1
  * 0x77000C 0x66 0x00 ?? ?? ?? ??
+ *
+ * See also more complicated ISO-TP CANBus wrapper of complete TS protocol
  */
 void processCanEcuControl(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
