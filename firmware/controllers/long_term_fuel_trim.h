@@ -21,12 +21,15 @@ public:
 
 	void init(LtftState *state);
 	void learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad);
+	ClosedLoopFuelResult getTrims(float rpm, float fuelLoad);
 	void store();
 
 private:
 	LtftState *m_state;
 
-	float getIntegratorGain();
+	float getIntegratorGain() const;
+	float getMaxAdjustment() const;
+	float getMinAdjustment() const;
 
 	// statistic, move to livedata
 	uint32_t miss = 0;
