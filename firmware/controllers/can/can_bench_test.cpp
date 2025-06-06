@@ -278,7 +278,7 @@ static void resetPinStats(bench_mode_e benchModePinIdx) {
 }
 
 void processCanQcBenchTest(const CANRxFrame& frame) {
-	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
+	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::HW_QC_IO_CONTROL) {
 		return;
 	}
 	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {

@@ -584,7 +584,7 @@ PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
  * 0x77000C 0x66 0x00 ?? ?? ?? ??
  */
 void processCanEcuControl(const CANRxFrame& frame) {
-	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::ECU_CAN_BUS_CONTROL) {
+	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
 		return;
 	}
 	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
