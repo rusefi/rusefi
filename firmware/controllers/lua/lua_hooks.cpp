@@ -1046,9 +1046,16 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	lua_register(lState, "startPwm", lua_startPwm);
 	lua_register(lState, "setPwmDuty", lua_setPwmDuty);
 	lua_register(lState, "setPwmFreq", lua_setPwmFreq);
-
 	lua_register(lState, "getFan", [](lua_State* l) {
                                  		lua_pushboolean(l, enginePins.fanRelay.getLogicValue());
+                                 		return 1;
+                                 	});
+	lua_register(lState, "getFan2", [](lua_State* l) {
+                                 		lua_pushboolean(l, enginePins.fanRelay2.getLogicValue());
+                                 		return 1;
+                                 	});
+	lua_register(lState, "getAcRelay", [](lua_State* l) {
+                                 		lua_pushboolean(l, enginePins.acRelay.getLogicValue());
                                  		return 1;
                                  	});
 	lua_register(lState, "getDigital", lua_getDigital);
