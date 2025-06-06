@@ -53,7 +53,7 @@ static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
 
-static void startAveraging(mapSampler* s) {
+void startAveraging(mapSampler* s) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, hasLotsOfRemainingStack(), "lowstck#9");
 
 	// TODO: set currentMapAverager based on cylinder bank
