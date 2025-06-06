@@ -235,8 +235,7 @@ struct_no_prefix engine_configuration_s
 #define FUEL_LEVEL_TABLE_COUNT 8
 
 ! Short and Long term fuel corrections
-#define LTFT_RPM_CELL_COUNT 16
-#define LTFT_LOAD_CELL_COUNT 16
+! LTFT use same table size as VE: VE_LOAD_COUNT x VE_RPM_COUNT
 
 #define ts_show_long_term_fuel_trim false
 
@@ -299,6 +298,14 @@ struct stft_s
 	uint8_t startupDelay;Delay after starting the engine before beginning closed loop correction.;"seconds", 1, 0, 0, 250, 0
 
 	stft_cell_cfg_s[STFT_CELL_COUNT iterate] cellCfgs;
+end_struct
+
+struct ltft_s
+	bit enabled;Enables lambda sensor long term fuel corrections
+	uint8_t autoscale deadband;When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;"%", 0.1, 0, 0, 3, 1
+	uint8_t autoscale maxAdd;Maximum % that the long term fuel trim can add;"%", 0.1, 0, 0, 25, 1
+	uint8_t autoscale maxRemove;Maximum % that the long term fuel trim can remove;"%", 0.1, 0, 0, 25, 1
+	uint16_t autoscale timeConstant;Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 30 will try to correct within 30 seconds.\nLower values makes the correction more sensitive, higher values slow the correction down.;"sec", 1, 0, 30, 3000, 2
 end_struct
 
 struct pid_s
@@ -1052,6 +1059,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 	float launchActivateDelay;;"", 1, 0, 0, 20000, 0
 
 	stft_s stft
+	ltft_s ltft
 
 	dc_io[DC_PER_STEPPER iterate] stepperDcIo
 
@@ -2259,11 +2267,6 @@ uint8_t[8] autoscale minimumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0,
 uint8_t[8] autoscale minimumOilPressureValues;;"kPa", 10, 0, 0, 1000, 0
 
 blend_table_s[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
-
-! ltft
-uint8_t[LTFT_RPM_CELL_COUNT] autoscale trimRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
-uint16_t[LTFT_RPM_CELL_COUNT] trimLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
-
 
 #define DYNO_RPM_STEP_UNITS "Rpm"
 #define DYNO_RPM_STEP_TOOLTIP "RPM Trim Window, Leave on 100 if you dont know what this does"
