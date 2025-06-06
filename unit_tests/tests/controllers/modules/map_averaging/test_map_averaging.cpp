@@ -47,9 +47,9 @@ TEST(EngineModules, MapAveragingModule_onFastCallback) {
 
     // we expect here than the map start angles correspond to the phase of the cylinder + 100 of samplingAngle
    	EXPECT_EQ(engine->engineState.mapAveragingStart[0], 100);
-    EXPECT_EQ(engine->engineState.mapAveragingStart[1], 280);
-    EXPECT_EQ(engine->engineState.mapAveragingStart[2], 460);
-    EXPECT_EQ(engine->engineState.mapAveragingStart[3], 640);
+    EXPECT_EQ(engine->engineState.mapAveragingStart[1], 640);
+    EXPECT_EQ(engine->engineState.mapAveragingStart[2], 280);
+    EXPECT_EQ(engine->engineState.mapAveragingStart[3], 460);
 
     EXPECT_EQ(engine->engineState.mapAveragingDuration, 50);
 }
@@ -72,9 +72,9 @@ TEST(EngineModules, MapAveragingModule_onFastCallbackCustomSampleWindow) {
 
     // we expect here than the map start angles correspond to the phase of the cylinder + 75 of samplingAngle
     EXPECT_EQ(engine->engineState.mapAveragingStart[0], 75);  // 0 + 75
-    EXPECT_EQ(engine->engineState.mapAveragingStart[1], 255); // 540 + 75
-    EXPECT_EQ(engine->engineState.mapAveragingStart[2], 435); // 180 + 75
-    EXPECT_EQ(engine->engineState.mapAveragingStart[3], 615); // 360 + 75
+    EXPECT_EQ(engine->engineState.mapAveragingStart[1], 615); // 540 + 75
+    EXPECT_EQ(engine->engineState.mapAveragingStart[2], 255); // 180 + 75
+    EXPECT_EQ(engine->engineState.mapAveragingStart[3], 435); // 360 + 75
 
     EXPECT_EQ(engine->engineState.mapAveragingDuration, 50);
 }
@@ -100,9 +100,9 @@ TEST(EngineModules, MapAveragingModule_onFastCallbackOddFire) {
     mapModule.onFastCallback();
 
     // 0 from getAngleOffset + 75 custom sampling start - 22.5 from timing_offset_cylinder
-    EXPECT_EQ(engine->engineState.mapAveragingStart[0], 75);
+    EXPECT_EQ(engine->engineState.mapAveragingStart[0], 52.5);
     // 540 from getAngleOffset + 75 custom sampling start + 22.5 from timing_offset_cylinder
-    EXPECT_EQ(engine->engineState.mapAveragingStart[1], 435);
+    EXPECT_EQ(engine->engineState.mapAveragingStart[1], 637.5);
 
     EXPECT_EQ(engine->engineState.mapAveragingDuration, 50);
 }
@@ -116,10 +116,10 @@ TEST(EngineModules, MapAveragingModule_onEnginePhase60_2_one_cylinder) {
 	MapAveragingModule mapModule;
 	engine->rpmCalculator.setRpmValue(200);
 
-	eth.spin60_2UntilDeg(testSpinInfo, 200, 200);
+	engine->module<MapAveragingModule>()->onEnginePhase(200, getTimeNowNt(), 0.f, 180.f);
 
-	// we expect offset of enginePhase + 100° of samplingAngle (default setting)
-	bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", (void*)startAveraging, static_cast<angle_t>(90));
+	// we expect offset of enginePhase (0 since we call onEnginePhase directy) + 100° of samplingAngle (default setting)
+	bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", (void*)startAveraging, static_cast<angle_t>(100));
     EXPECT_TRUE(averageDone);
 }
 
@@ -134,9 +134,9 @@ TEST(EngineModules, MapAveragingModule_onEnginePhase60_2_one_cylinderCustomSampl
 	setArrayValues(engineConfiguration->map.samplingAngle, 75);
 
 	engine->module<MapAveragingModule>()->onFastCallback();
-	eth.spin60_2UntilDeg(testSpinInfo, 200, 200);
+	engine->module<MapAveragingModule>()->onEnginePhase(200, getTimeNowNt(), 0.f, 180.f);
 
-	// we expect offset of enginePhase + 75° of samplingAngle
-	bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", (void*)startAveraging, static_cast<angle_t>(66));
+	// we expect offset of enginePhase (0 since we call onEnginePhase directy) + 75° of samplingAngle
+	bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", (void*)startAveraging, static_cast<angle_t>(75));
     EXPECT_TRUE(averageDone);
 }
