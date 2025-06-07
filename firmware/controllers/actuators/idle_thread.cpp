@@ -119,7 +119,7 @@ float IdleController::getCrankingOpenLoop(float clt) const {
 percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float rpm, float clt, SensorResult tps) {
 	float running = interpolate3d(
 		config->cltIdleCorrTable,
-		config->rpmIdleCorrBins, rpm,
+		config->rpmIdleCorrBins, m_lastTargetRpm,
 		config->cltIdleCorrBins, clt
 	);
 
