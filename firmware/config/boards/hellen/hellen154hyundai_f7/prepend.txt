@@ -46,3 +46,5 @@
 
 
 #define CLT_UPPER_LIMIT 125
+
+#define CLT_IDLE_TABLE_RPM_SIZE 6

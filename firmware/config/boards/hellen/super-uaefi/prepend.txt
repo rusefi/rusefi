@@ -25,4 +25,4 @@
 
 
 
-
+#define CLT_IDLE_TABLE_RPM_SIZE 6
