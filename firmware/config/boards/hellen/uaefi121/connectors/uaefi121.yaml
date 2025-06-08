@@ -223,14 +223,14 @@ pins:
     type: hall
 
   - pin: 35a
-    meta: MM100_IN_D2
+    meta: MEGA_UAEFI_IN_HALL2
     class: event_inputs
     function: CAM Sensor Intake
     ts_name: ___ HALL2
     type: hall
 
   - pin: 36a
-    meta: MM100_IN_D1
+    meta: MEGA_UAEFI_IN_HALL1
     class: event_inputs
     function: VSS / HALL1 Sensor
     ts_name: ___ HALL1 / VSS

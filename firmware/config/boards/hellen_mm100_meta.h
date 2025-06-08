@@ -35,6 +35,8 @@
 #define MM100_IN_CAM_ANALOG EFI_ADC_6
 // TIM1_CH2
 #define MM100_IN_VSS E11
+#define MEGA_UAEFI_IN_FLEX E11
+
 #define MM100_IN_TPS A4
 #define MM100_IN_TPS_ANALOG EFI_ADC_4
 #define MM100_IN_PPS A3
@@ -64,8 +66,14 @@
 //KNOCK not defined
 
 #define MM100_IN_D1 E12
+#define MEGA_UAEFI_IN_HALL1 E12
+
 #define MM100_IN_D2 E13
+#define MEGA_UAEFI_IN_HALL2 E13
+
 #define MM100_IN_D3 E14
+#define MEGA_UAEFI_IN_HALL3 E14
+
 #define MM100_IN_D4 E15
 
 #define MM100_IN_VBATT EFI_ADC_5
