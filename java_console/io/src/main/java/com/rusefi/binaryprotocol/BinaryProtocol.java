@@ -6,6 +6,7 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
@@ -385,8 +386,12 @@ public class BinaryProtocol {
                 log.warn("No image for saveConfigurationImageToFiles");
                 return;
             }
-            final Msq tune = MsqFactory.valueOf(image, ini);
-            tune.writeXmlFile(xmlFileName);
+            try {
+                final Msq tune = MsqFactory.valueOf(image, ini);
+                tune.writeXmlFile(xmlFileName);
+            } catch (OrdinalOutOfRangeException e) {
+                log.warn("Unexpected " + e, e);
+            }
         }
     }
 
