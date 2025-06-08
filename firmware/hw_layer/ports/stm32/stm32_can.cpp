@@ -227,6 +227,8 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 
 const CANConfig * findCanConfig(can_baudrate_e rate) {
    switch (rate) {
+   case B33KBPS:
+      return &canConfig50;
    case B50KBPS:
       return &canConfig50;
    case B83KBPS:
