@@ -28,8 +28,6 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
-## May 2025 "Day 1174"
-
 ### Added
  - SD card mode selection: do not wait for USB if vbatt voltage #7424
  - SD card mass storage read access performance improvements
@@ -41,6 +39,7 @@ Release template (copy/paste this for new release):
  - SD card formatting indicator
  - additional status on WBO dialog
  - default Lua tick rate changed from 10Hz to 200Hz
+ - GMLAN slow single wire baud rate
 
 ### Fixed
  - map window averaging is broken since April 20th #7867
