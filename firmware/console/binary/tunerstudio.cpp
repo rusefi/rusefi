@@ -335,8 +335,9 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
-
 	efiPrintf("TS <- Page %d read chunk offset %d count %d", page, offset, count);
+
+	uint8_t* addr = nullptr;
 
 	if (page == 0) {
 		if (validateOffsetCount(offset, count, tsChannel)) {
@@ -345,7 +346,6 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 			return;
 		}
 
-		uint8_t* addr;
 		if (isLockedFromUser()) {
 			// to have rusEFI console happy just send all zeros within a valid packet
 			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
@@ -353,10 +353,13 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 		} else {
 			addr = getWorkingPageAddr() + offset;
 		}
-		tsChannel->sendResponse(TS_CRC, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //		efiPrintf("Sending %d done", count);
 #endif
+	}
+
+	if (addr) {
+		tsChannel->sendResponse(TS_CRC, addr, count);
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: RD invalid page");
 	}
@@ -796,7 +799,10 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleBurnCommand(tsChannel, page);
 		break;
 	case TS_READ_COMMAND:
-		// command with no page argument, default page = 0
+		/* command with page argument */
+		page = data16[0];
+		offset = data16[1];
+		count = data16[2];
 		handlePageReadCommand(tsChannel, page, offset, count);
 		break;
 	case TS_TEST_COMMAND:
