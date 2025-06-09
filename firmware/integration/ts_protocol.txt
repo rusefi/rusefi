@@ -60,6 +60,7 @@
 #define TS_RESPONSE_FRAMING_ERROR 0x8D
 ! 0x52 82
 #define TS_READ_COMMAND 'R'
+#define TS_PAGE_READ_COMMAND 'r'
 ! 0x47
 #define TS_GET_TEXT 'G'
 ! 0x45
@@ -83,6 +84,7 @@
 #define TS_SINGLE_WRITE_COMMAND 'W'
 ! 0x43 pageChunkWrite
 #define TS_CHUNK_WRITE_COMMAND 'C'
+#define TS_PAGE_CHUNK_WRITE_COMMAND 'w'
 
 ! These commands are used exclusively by the rusEFI console
 ! 0x74

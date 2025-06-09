@@ -61,6 +61,9 @@ public:
 	 * See 'blockingFactor' in rusefi.ini
 	 */
 	char scratchBuffer[scratchBuffer_SIZE + 30];
+#if EFI_TS_SCATTER
+	uint16_t highSpeedOffsets[HIGH_SPEED_COUNT];
+#endif
 	const char *name;
 
 	void assertPacketSize(size_t size, bool allowLongPackets);

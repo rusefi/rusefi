@@ -96,9 +96,10 @@
 static_assert(sizeof(*config) <= 65536);
 
 static void printErrorCounters() {
-	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
+	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d / 9=%d",
 			sizeof(engine->outputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
-			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
+			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter,
+			tsState.readScatterCommandsCounter);
 	efiPrintf("TunerStudio C=%d",
 			tsState.writeChunkCommandCounter);
 	efiPrintf("TunerStudio errors: underrun=%d / overrun=%d / crc=%d / unrecognized=%d / outofrange=%d / other=%d",
@@ -106,10 +107,11 @@ static void printErrorCounters() {
 			tsState.errorUnrecognizedCommand, tsState.errorOutOfRange, tsState.errorOther);
 }
 
-static void printScatterList() {
+#if 0
+static void printScatterList(TsChannelBase* tsChannel) {
 	efiPrintf("Scatter list (global)");
 	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-		uint16_t packed = engineConfiguration->highSpeedOffsets[i];
+		uint16_t packed = tsChannel->highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 		uint16_t offset = packed & 0x1FFF;
 
@@ -120,6 +122,7 @@ static void printScatterList() {
 		efiPrintf("%02d offset 0x%04x size %d", i, offset, size);
 	}
 }
+#endif
 
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
@@ -142,7 +145,8 @@ static void printTsStats(void) {
 
 	printErrorCounters();
 
-	printScatterList();
+	// TODO: find way to get all tsChannel
+	//printScatterList();
 }
 
 static void setTsSpeed(int value) {
@@ -250,48 +254,68 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		setBoardConfigOverrides();
 
 		sendOkResponse(tsChannel);
+#if EFI_TS_SCATTER
+	} else if (page == 1) {
+		// Ensure we are reading from in bounds
+		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
+			tunerStudioError(tsChannel, "ERROR: CRC out of range");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			return;
+		}
+
+		uint8_t* addr = (uint8_t *)tsChannel->highSpeedOffsets + offset;
+		memcpy(addr, content, count);
+		sendOkResponse(tsChannel);
+#endif
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: WR invalid page");
 	}
 }
 
-void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, uint16_t count) {
+void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
+	uint32_t crc = 0;
 	tsState.crc32CheckCommandCounter++;
 
-	// Ensure we are reading from in bounds
-	if (validateOffsetCount(offset, count, tsChannel)) {
-		tunerStudioError(tsChannel, "ERROR: CRC out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+	if (page == 0) {
+		// Ensure we are reading from in bounds
+		if (validateOffsetCount(offset, count, tsChannel)) {
+			tunerStudioError(tsChannel, "ERROR: CRC out of range");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			return;
+		}
+
+		const uint8_t* start = getWorkingPageAddr() + offset;
+
+		crc = SWAP_UINT32(crc32(start, count));
+#if EFI_TS_SCATTER
+	} else if (page == 1) {
+		// Ensure we are reading from in bounds
+		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
+			tunerStudioError(tsChannel, "ERROR: CRC out of range");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			return;
+		}
+
+		const uint8_t* start = (uint8_t *)tsChannel->highSpeedOffsets + offset;
+
+		crc = SWAP_UINT32(crc32(start, count));
+#endif
+	} else {
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: WR invalid page");
 		return;
 	}
 
-#if EFI_TS_SCATTER
-	/*
-	 * highSpeedOffsets is noMsqSave, but located on settings page,
-	 * zero highSpeedOffsets as TS expect all noMsqSave data to be zero during CRC matching
-	 * TODO:
-	 * Move highSpeedOffsets to separate page as it is done on MS devices
-	 * Zero highSpeedOffsets on start and reconnect
-	 * TODO:
-	 * Is Crc check command good sing of new TS session?
-	 * TODO:
-	 * Support settings pages!
-	 */
-	memset(engineConfiguration->highSpeedOffsets, 0x00, sizeof(engineConfiguration->highSpeedOffsets));
-#endif // EFI_TS_SCATTER
-
-	const uint8_t* start = getWorkingPageAddr() + offset;
-
-	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
-	efiPrintf("TS <- Get CRC offset %d count %d result %08x", offset, count, (unsigned int)crc);
+	efiPrintf("TS <- Get CRC page %d offset %d count %d result %08x", page, offset, count, (unsigned int)crc);
 }
 
 #if EFI_TS_SCATTER
 void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
+	tsState.readScatterCommandsCounter++;
+
 	int totalResponseSize = 0;
 	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-		uint16_t packed = engineConfiguration->highSpeedOffsets[i];
+		uint16_t packed = tsChannel->highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 
 		size_t size = type == 0 ? 0 : 1 << (type - 1);
@@ -304,13 +328,12 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 //	printf("totalResponseSize %d\n", totalResponseSize);
 #endif /* EFI_SIMULATOR */
 
-
 	// Command part of CRC
 	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, totalResponseSize);
 
 	uint8_t dataBuffer[8];
 	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-		uint16_t packed = engineConfiguration->highSpeedOffsets[i];
+		uint16_t packed = tsChannel->highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 		uint16_t offset = packed & 0x1FFF;
 
@@ -335,8 +358,9 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
-
 	efiPrintf("TS <- Page %d read chunk offset %d count %d", page, offset, count);
+
+	uint8_t* addr = nullptr;
 
 	if (page == 0) {
 		if (validateOffsetCount(offset, count, tsChannel)) {
@@ -345,7 +369,6 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 			return;
 		}
 
-		uint8_t* addr;
 		if (isLockedFromUser()) {
 			// to have rusEFI console happy just send all zeros within a valid packet
 			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
@@ -353,10 +376,24 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 		} else {
 			addr = getWorkingPageAddr() + offset;
 		}
-		tsChannel->sendResponse(TS_CRC, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //		efiPrintf("Sending %d done", count);
 #endif
+#if EFI_TS_SCATTER
+	} else if (page == 1) {
+		// Ensure we are reading from in bounds
+		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
+			tunerStudioError(tsChannel, "ERROR: CRC out of range");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			return;
+		}
+
+		addr = (uint8_t *)tsChannel->highSpeedOffsets + offset;
+#endif
+	}
+
+	if (addr) {
+		tsChannel->sendResponse(TS_CRC, addr, count);
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: RD invalid page");
 	}
@@ -382,7 +419,11 @@ namespace {
 /**
  * 'Burn' command is a command to commit the changes
  */
-static void handleBurnCommand(TsChannelBase* tsChannel) {
+static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
+	if (page != 0) {
+		return;
+	}
+
 	Timer t;
 	t.reset();
 
@@ -407,9 +448,9 @@ static void handleBurnCommand(TsChannelBase* tsChannel) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static bool isKnownCommand(char command) {
-	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
+	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_PAGE_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
-			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
+			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_PAGE_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 #if EFI_SIMULATOR
 			|| command == TS_SIMULATE_CAN
@@ -769,6 +810,13 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioRWChunkRequest));
 		calibrationsWriteTimer.reset();
 		break;
+	case TS_PAGE_CHUNK_WRITE_COMMAND:
+		/* command with page argument */
+		page = data16[0];
+		offset = data16[1];
+		count = data16[2];
+		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioPageRWChunkRequest));
+		break;
 	case TS_SINGLE_WRITE_COMMAND:
 		// command with no page argument, default page = 0
 		// This command writes 1 byte
@@ -780,17 +828,34 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #if EFI_TS_SCATTER
 		handleScatteredReadCommand(tsChannel);
 #else
-    criticalError("Slow/wireless mode not supported");
+		criticalError("Slow/wireless mode not supported");
 #endif // EFI_TS_SCATTER
 		break;
 	case TS_CRC_CHECK_COMMAND:
-		handleCrc32Check(tsChannel, offset, count);
+		if (incomingPacketSize >= 7) {
+			/* command with page argument */
+			page = data16[0];
+			offset = data16[1];
+			count = data16[2];
+		}
+		handleCrc32Check(tsChannel, page, offset, count);
 		break;
 	case TS_BURN_COMMAND:
-		handleBurnCommand(tsChannel);
+		if (incomingPacketSize >= 3) {
+			/* command with page argument */
+			page = data16[0];
+		}
+		handleBurnCommand(tsChannel, page);
 		break;
 	case TS_READ_COMMAND:
 		// command with no page argument, default page = 0
+		handlePageReadCommand(tsChannel, page, offset, count);
+		break;
+	case TS_PAGE_READ_COMMAND:
+		/* command with page argument */
+		page = data16[0];
+		offset = data16[1];
+		count = data16[2];
 		handlePageReadCommand(tsChannel, page, offset, count);
 		break;
 	case TS_TEST_COMMAND:

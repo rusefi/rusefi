@@ -13,8 +13,8 @@ typedef struct {
 	int queryCommandCounter;
 	int outputChannelsCommandCounter;
 	int readPageCommandsCounter;
+	int readScatterCommandsCounter;
 	int burnCommandCounter;
-	int pageCommandCounter;
 	int crc32CheckCommandCounter;
 	int writeChunkCommandCounter;
 	int totalCounter;
@@ -59,6 +59,12 @@ typedef struct {
 	uint16_t offset;
 	uint16_t count;
 } TunerStudioRWChunkRequest;
+
+typedef struct {
+	uint16_t page;
+	uint16_t offset;
+	uint16_t count;
+} TunerStudioPageRWChunkRequest;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
