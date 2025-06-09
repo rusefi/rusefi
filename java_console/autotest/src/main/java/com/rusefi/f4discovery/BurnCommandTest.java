@@ -15,18 +15,18 @@ public class BurnCommandTest extends RusefiTestBase {
     @Test
     public void executeBurnCommand() throws InterruptedException {
         LinkManager linkManager = ecu.getLinkManager();
+        assertBurn(linkManager);
+    }
+
+    private void assertBurn(LinkManager linkManager) throws InterruptedException {
         AtomicReference<Boolean> result = new AtomicReference<>();
 
         CountDownLatch latch = new CountDownLatch(1);
-        linkManager.submit(new Runnable() {
-            @Override
-            public void run() {
-                result.set(BurnCommand.execute(ecu.getLinkManager().getBinaryProtocol()));
-                latch.countDown();
-
-            }
-        });
-
+        Runnable action = () -> {
+            result.set(BurnCommand.execute(ecu.getLinkManager().getBinaryProtocol()));
+            latch.countDown();
+        };
+        linkManager.submit(action);
 
         latch.await(30, TimeUnit.SECONDS);
         assertTrue("burn command", result.get());
