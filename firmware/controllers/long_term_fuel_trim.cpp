@@ -58,7 +58,7 @@ float LongTermFuelTrim::getMaxAdjustment() const {
 	const auto& cfg = engineConfiguration->ltft;
 
 	float raw = 0.01 * cfg.maxAdd;
-	// Don't allow maximum less than 0, or more than maximum adjustment
+	// Don't allow maximum less than 0, or more than maximum add adjustment
 	return clampF(0, raw, MAX_ADJ);
 }
 
@@ -66,7 +66,7 @@ float LongTermFuelTrim::getMinAdjustment() const {
 	const auto& cfg = engineConfiguration->ltft;
 
 	float raw = -0.01f * cfg.maxRemove;
-	// Don't allow minimum more than 0, or more than maximum adjustment
+	// Don't allow minimum more than 0, or less than maximum remove adjustment
 	return clampF(-MAX_ADJ, raw, 0);
 }
 
@@ -133,6 +133,7 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 		return { };
 	}
 
+#if 0
 	// x - load, y - rpm
 	auto x = priv::getClosestBin(fuelLoad, config->veLoadBins);
 	auto y = priv::getClosestBin(rpm, config->veRpmBins);
@@ -144,6 +145,7 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 		miss++;
 		return { };
 	}
+#endif
 
 	ClosedLoopFuelResult result;
 
@@ -168,6 +170,12 @@ void LongTermFuelTrim::store() {
 	// TODO: unlock
 }
 
+void LongTermFuelTrim::reset() {
+	for (size_t bank = 0; bank < LTFT_BANK_COUNT; bank++) {
+		setTable(m_state->trims[bank], 0.0f);
+	}
+}
+
 void LongTermFuelTrim::onSlowCallback() {
 	// Do some magic math here?
 
@@ -185,6 +193,7 @@ void initLtft(void)
 }
 
 void resetLongTermFuelTrim() {
+	engine->module<LongTermFuelTrim>()->reset();
 }
 
 void devPokeLongTermFuelTrim() {
