@@ -12,7 +12,7 @@
  *
  * 2. In the init/sensor folder, create/modify logic to create an instance of the new sensor,
  *    configure it if necessary, and call its Register() function if it should be enabled.
- *    See init_oil_pressure.cpp for a minimal example.
+ *    See init_fluid_pressure.cpp for a minimal example.
  *
  * 3. Consume the new sensor with Sensor::get(SensorType::MyNewSensor)
  *
@@ -118,7 +118,7 @@ public:
 	static void resetAllMocks();
 
 	/*
-	 * Inhibit sensor timeouts. Used if you're doing something that will block sensor updates, such as 
+	 * Inhibit sensor timeouts. Used if you're doing something that will block sensor updates, such as
 	 * erasing flash memory (which stalls the CPU on some MCUs)
 	 */
 	static void inhibitTimeouts(bool inhibit);
