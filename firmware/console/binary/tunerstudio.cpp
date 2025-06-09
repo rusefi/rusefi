@@ -382,7 +382,11 @@ namespace {
 /**
  * 'Burn' command is a command to commit the changes
  */
-static void handleBurnCommand(TsChannelBase* tsChannel) {
+static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
+	if (page != 0) {
+		return;
+	}
+
 	Timer t;
 	t.reset();
 
@@ -787,7 +791,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleCrc32Check(tsChannel, offset, count);
 		break;
 	case TS_BURN_COMMAND:
-		handleBurnCommand(tsChannel);
+		/* command with page argument */
+		page = data16[0];
+		handleBurnCommand(tsChannel, page);
 		break;
 	case TS_READ_COMMAND:
 		// command with no page argument, default page = 0
