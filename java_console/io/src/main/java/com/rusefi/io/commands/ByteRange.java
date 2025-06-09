@@ -57,4 +57,13 @@ public class ByteRange {
             return new ByteRange(offset, count);
         }
     }
+
+    public static ByteRange valueOf2(byte[] payload) throws IOException {
+        try (DataInputStream dis = createPayLoadStream(payload)) {
+            /* page */dis.readShort();
+            int offset = swap16(dis.readShort());
+            int count = swap16(dis.readShort());
+            return new ByteRange(offset, count);
+        }
+    }
 }

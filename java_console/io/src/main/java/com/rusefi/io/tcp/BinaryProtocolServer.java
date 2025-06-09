@@ -168,7 +168,7 @@ public class BinaryProtocolServer {
             } else if (command == Integration.TS_CRC_CHECK_COMMAND) {
                 handleCrc(linkManager, stream);
             } else if (command == Integration.TS_READ_COMMAND) {
-                ByteRange byteRange = ByteRange.valueOf(payload);
+                ByteRange byteRange = ByteRange.valueOf2(payload);
                 handleRead(linkManager, byteRange, stream);
             } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
                 ByteRange byteRange = ByteRange.valueOf(payload);
@@ -256,7 +256,7 @@ public class BinaryProtocolServer {
         byte secondByte = in.readByte(ioTimeout);
         return IoHelper.getInt(first, secondByte);
     }
-
+/*
     public static Packet readPromisedBytes(DataInputStream in, int length) throws IOException {
         if (length < 0)
             throw new IllegalArgumentException(String.format("Negative %d %x", length, length));
@@ -269,7 +269,7 @@ public class BinaryProtocolServer {
             throw new IOException("CRC mismatch");
         return new Packet(packet, crc);
     }
-
+*/
     public static Packet readPromisedBytes(IncomingDataBuffer in, int length) throws IOException {
         if (length <= 0)
             throw new IOException("Unexpected packed length " + length);

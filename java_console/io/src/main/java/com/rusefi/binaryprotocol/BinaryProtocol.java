@@ -438,8 +438,8 @@ public class BinaryProtocol {
     }
 
     private static byte[] createRequestCrcPayload(int size) {
-        byte[] packet = new byte[4];
-        ByteRange.packOffsetAndSize(0, size, packet);
+        byte[] packet = new byte[6];
+        ByteRange.packPageOffsetAndSize(0, size, packet);
         return packet;
     }
 
