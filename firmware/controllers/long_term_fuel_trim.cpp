@@ -17,7 +17,7 @@ constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
 #if EFI_BACKUP_SRAM
 	// TODO: current trims should be stored in backup ram
-	static LtftState ltftState;
+	static BKUP_RAM_NOINIT LtftState ltftState;
 #else
 	static LtftState ltftState;
 #endif
@@ -38,6 +38,12 @@ void LtftState::load() {
 #endif
 		//Reset to some defaules
 		memset(trims, 0, sizeof(trims));
+	}
+}
+
+void LtftState::reset() {
+	for (size_t bank = 0; bank < LTFT_BANK_COUNT; bank++) {
+		setTable(trims[bank], 0.0f);
 	}
 }
 
@@ -171,9 +177,7 @@ void LongTermFuelTrim::store() {
 }
 
 void LongTermFuelTrim::reset() {
-	for (size_t bank = 0; bank < LTFT_BANK_COUNT; bank++) {
-		setTable(m_state->trims[bank], 0.0f);
-	}
+	m_state->reset();
 }
 
 void LongTermFuelTrim::onSlowCallback() {

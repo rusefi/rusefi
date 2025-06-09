@@ -10,6 +10,7 @@ struct LtftState {
 
 	void save();
 	void load();
+	void reset();
 };
 
 // TODO: add livedata!
