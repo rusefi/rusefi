@@ -55,7 +55,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         String fileName = getTsFileOutputName(new File(ConfigDefinitionRootOutputFolder.getValue() + tsPath).getPath());
         Output tsHeader = new LazyFileImpl(fileName);
         writeContent(fieldsSection, tsContent, tsHeader);
-        testFreshlyProducedIniFile(fileName);
+        try {
+            testFreshlyProducedIniFile(fileName);
+        } catch (Throwable e) {
+            throw new IllegalStateException("While " + fileName, e);
+        }
     }
 
     private void testFreshlyProducedIniFile(String fileName) {
