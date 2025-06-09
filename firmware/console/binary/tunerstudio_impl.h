@@ -33,7 +33,7 @@ public:
 	void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize);
 	void handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count,
 			void *content);
-	void handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, uint16_t count);
+	void handleCrc32Check(TsChannelBase *tsChannel,  uint16_t page, uint16_t offset, uint16_t count);
 	void handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count);
 	void handleScatteredReadCommand(TsChannelBase* tsChannel);
 

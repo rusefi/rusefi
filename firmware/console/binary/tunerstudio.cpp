@@ -255,36 +255,28 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 	}
 }
 
-void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, uint16_t count) {
+void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
+	uint32_t crc = 0;
 	tsState.crc32CheckCommandCounter++;
 
-	// Ensure we are reading from in bounds
-	if (validateOffsetCount(offset, count, tsChannel)) {
-		tunerStudioError(tsChannel, "ERROR: CRC out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+	if (page == 0) {
+		// Ensure we are reading from in bounds
+		if (validateOffsetCount(offset, count, tsChannel)) {
+			tunerStudioError(tsChannel, "ERROR: CRC out of range");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			return;
+		}
+
+		const uint8_t* start = getWorkingPageAddr() + offset;
+
+		crc = SWAP_UINT32(crc32(start, count));
+	} else {
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: WR invalid page");
 		return;
 	}
 
-#if EFI_TS_SCATTER
-	/*
-	 * highSpeedOffsets is noMsqSave, but located on settings page,
-	 * zero highSpeedOffsets as TS expect all noMsqSave data to be zero during CRC matching
-	 * TODO:
-	 * Move highSpeedOffsets to separate page as it is done on MS devices
-	 * Zero highSpeedOffsets on start and reconnect
-	 * TODO:
-	 * Is Crc check command good sing of new TS session?
-	 * TODO:
-	 * Support settings pages!
-	 */
-	memset(engineConfiguration->highSpeedOffsets, 0x00, sizeof(engineConfiguration->highSpeedOffsets));
-#endif // EFI_TS_SCATTER
-
-	const uint8_t* start = getWorkingPageAddr() + offset;
-
-	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
-	efiPrintf("TS <- Get CRC offset %d count %d result %08x", offset, count, (unsigned int)crc);
+	efiPrintf("TS <- Get CRC page %d offset %d count %d result %08x", page, offset, count, (unsigned int)crc);
 }
 
 #if EFI_TS_SCATTER
@@ -791,7 +783,11 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #endif // EFI_TS_SCATTER
 		break;
 	case TS_CRC_CHECK_COMMAND:
-		handleCrc32Check(tsChannel, offset, count);
+		/* command with page argument */
+		page = data16[0];
+		offset = data16[1];
+		count = data16[2];
+		handleCrc32Check(tsChannel, page, offset, count);
 		break;
 	case TS_BURN_COMMAND:
 		/* command with page argument */
