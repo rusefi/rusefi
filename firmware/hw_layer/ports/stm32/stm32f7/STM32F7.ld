@@ -117,6 +117,9 @@ REGION_ALIAS("NOCACHE_RAM", ram3);
 /* RAM region to be used for eth segment.*/
 REGION_ALIAS("ETH_RAM", ram3);
 
+/* RAM region to be used for battery backuped data */
+REGION_ALIAS("BKUP_RAM", ram5);
+
 SECTIONS
 {
     /* Special section for non cache-able areas.*/
@@ -154,6 +157,11 @@ SECTIONS
     _eshared = .;
     __shared_end__ = _eshared;
   } > shared
+
+  .bkup_ram_noinit (NOLOAD):
+  {
+    *(.bkup_ram_noinit)
+  } > BKUP_RAM
 }
 
 /* Code rules inclusion.*/

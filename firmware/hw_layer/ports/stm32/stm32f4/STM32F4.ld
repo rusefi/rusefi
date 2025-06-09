@@ -113,6 +113,9 @@ REGION_ALIAS("HEAP_RAM", ram0);
 /* RAM region to be used for SDRAM segment.*/
 REGION_ALIAS("SDRAM_RAM", ram7);
 
+/* RAM region to be used for battery backuped data */
+REGION_ALIAS("BKUP_RAM", ram5);
+
 SECTIONS
 {
   /* Bootloader section */
@@ -137,6 +140,11 @@ SECTIONS
     _eshared = .;
     __shared_end__ = _eshared;
   } > shared
+
+  .bkup_ram_noinit (NOLOAD):
+  {
+    *(.bkup_ram_noinit)
+  } > BKUP_RAM
 }
 
 /* Generic rules inclusion.*/
