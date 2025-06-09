@@ -55,6 +55,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_PROTEUS_F7
 
   DDEFS += -DLUA_USER_HEAP=150000
+  # technical debt: UI uses separate ts_show_tcu flag
+  DDEFS += -DEFI_TCU=TRUE
 
 	ifeq ($(EFI_LUA_LOOKUP),)
     EFI_LUA_LOOKUP = TRUE

@@ -14,8 +14,6 @@
 #define ts_show_sd_pins false
 #define ts_show_vbatt false
 #define ts_show_clt_iat_pullup false
-! we are short on RAM or flash on F4 :( TODO split F4 config from F7 config
-#define ts_show_tcu false
 #define ts_show_gdi true
 
 

@@ -5,3 +5,7 @@
 
 #define MAP_EST_RPM_COUNT 6
 #define MAP_EST_LOAD_COUNT 6
+
+! we are short on RAM or flash on F4 :(
+! technical debt: actual code uses separate EFI_TCU flag
+#define ts_show_tcu false
