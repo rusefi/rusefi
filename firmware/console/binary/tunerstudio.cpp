@@ -407,7 +407,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
-			|| command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
+			|| command == TS_BURN_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 #if EFI_SIMULATOR
@@ -769,13 +769,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		offset = data16[1];
 		count = data16[2];
 		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioPageRWChunkRequest));
-		break;
-	case TS_SINGLE_WRITE_COMMAND:
-		// command with no page argument, default page = 0
-		// This command writes 1 byte
-		count = 1;
-		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(offset));
-		calibrationsWriteTimer.reset();
 		break;
 	case TS_GET_SCATTERED_GET_COMMAND:
 #if EFI_TS_SCATTER
