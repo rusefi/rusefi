@@ -13,8 +13,8 @@ typedef struct {
 	int queryCommandCounter;
 	int outputChannelsCommandCounter;
 	int readPageCommandsCounter;
+	int readScatterCommandsCounter;
 	int burnCommandCounter;
-	int pageCommandCounter;
 	int crc32CheckCommandCounter;
 	int writeChunkCommandCounter;
 	int totalCounter;
