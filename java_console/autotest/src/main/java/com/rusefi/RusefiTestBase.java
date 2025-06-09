@@ -1,9 +1,7 @@
 package com.rusefi;
 
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.IniFileProvider;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
 import org.junit.*;

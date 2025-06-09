@@ -47,10 +47,11 @@ public enum LiveDocsRegistry {
         return context -> {
             Field[] values = StateDictionary.INSTANCE.getFields(context);
             int size = Field.getStructureSize(values);
+            /*
             byte[] packet = new byte[4];
             int offset = context.ordinal();
             ByteRange.packOffsetAndSize(offset, size, packet);
-
+*/
             int structOffset = StateDictionary.INSTANCE.getOffset(context);
             byte[] overallOutputs = SensorCentral.getInstance().getResponse();
 
