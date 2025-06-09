@@ -511,8 +511,14 @@ public class BinaryProtocol {
 
             byte[] response = executeCommand(Integration.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
             if (!checkResponseCode(response) || response.length != 1) {
+                if (response == null) {
+                    log.error("writeData: null response Something is wrong, retrying...");
+                } else if (response.length == 0) {
+                    log.error("writeData: empty response Something is wrong, retrying...");
+                } else {
+                    log.error("writeData: Something is wrong, retrying... code = " + response[0]);
+                }
                 // huh?! when do we retry what here?!
-                log.error("writeData: Something is wrong, retrying...");
                 continue;
             }
             break;
