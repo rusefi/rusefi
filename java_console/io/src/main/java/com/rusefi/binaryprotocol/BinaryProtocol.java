@@ -319,8 +319,8 @@ public class BinaryProtocol {
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, iniFile.getBlockingFactor());
 
-            byte[] packet = new byte[4];
-            ByteRange.packOffsetAndSize(offset, requestSize, packet);
+            byte[] packet = new byte[6];
+            ByteRange.packPageOffsetAndSize(offset, requestSize, packet);
 
             byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
