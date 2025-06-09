@@ -603,6 +603,11 @@ static void setDefaultEngineConfiguration() {
 	// https://github.com/rusefi/rusefi/issues/4030
 	engineConfiguration->mapErrorDetectionTooHigh = 410;
 
+	engineConfiguration->gearboxPosition.v1 = 0;
+	engineConfiguration->gearboxPosition.v2 = 5.0f;
+	engineConfiguration->gearboxPosition.value1 = 0;
+	engineConfiguration->gearboxPosition.value2 = 360.0f;
+
 	setLinearCurve(config->throttleEstimateEffectiveAreaBins, 0, 100);
 #endif // EFI_ENGINE_CONTROL
     #include "default_script.lua"

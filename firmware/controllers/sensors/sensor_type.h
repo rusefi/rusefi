@@ -147,14 +147,16 @@ enum class SensorType : unsigned char {
 	LuaGauge7,
 	LuaGauge8,
 
-  IgnKeyVoltage,
+    IgnKeyVoltage,
 
-  DashOverrideRpm,
-  DashOverrideVehicleSpeed,
-  DashOverrideClt,
-  DashOverrideBatteryVoltage,
+    DashOverrideRpm,
+    DashOverrideVehicleSpeed,
+    DashOverrideClt,
+    DashOverrideBatteryVoltage,
 
-  AcPressure,
+    AcPressure,
+
+    GearboxPositionSensor,
 
 	AuxLinear1,
 	AuxLinear2,

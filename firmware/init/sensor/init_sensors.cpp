@@ -104,6 +104,7 @@ static void sensorStartUpOrReconfiguration(bool isFirstTime) {
 	initRangeSensors();
 #endif
 	initFlexSensor(isFirstTime);
+	initGearboxPosition();
 }
 
 
@@ -131,7 +132,6 @@ void initNewSensors() {
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
-
 #if defined(HARDWARE_CI) && !defined(HW_PROTEUS)
 	chThdSleepMilliseconds(100);
 
@@ -163,6 +163,7 @@ void stopSensors() {
 	deinitMap();
 	deinitInputShaftSpeedSensor();
 	stopEgt();
+	deinitGearboxPosition();
 }
 
 void reconfigureSensors() {

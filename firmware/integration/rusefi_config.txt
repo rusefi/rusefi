@@ -1849,6 +1849,21 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	can_wbo_type_e wboType1;
 	can_wbo_type_e wboType2;
 
+	linear_sensor_s gearboxPosition;
+	float gearboxHysteresis;Hysteresis of gearbox, meaning the range in angular position in which the gear is inserted correctly, MUST BE DIVIDED BY TWO;"degrees", 1, 0, 0, 360, 2
+	bit gearboxHasReverse;If the gearbox has reverse gear
+	float gearboxPositionReverse;Angular position in which the reverse gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	float gearboxPositionNeutral;Angular position in which the neutral gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	
+	float gearPosition1;Angular position in which the first gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	float gearPosition2;Angular position in which the second gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	float gearPosition3;Angular position in which the third gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	float gearPosition4;Angular position in which the fourth gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	float gearPosition5;Angular position in which the fifth gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	float gearPosition6;Angular position in which the sixth gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	float gearPosition7;Angular position in which the seventh gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+	float gearPosition8;Angular position in which the eight gear is inserted, starting point for hysteresis;"degrees", 1, 0, 0, 360, 2
+
 ! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
 
 ! end of engine_configuration_s
@@ -2735,3 +2750,7 @@ end_struct
 #define ts_show_etb_min_max true
 ! who needs this feature when?!
 #define ts_show_disable_etb false
+
+#define GAUGE_NAME_GEARBOX_POSITION "Gearbox Position"
+#define GAUGE_NAME_GEARBOX_POSITION_UNITS "deg"
+#define ts_show_gearbox_position_sensor true

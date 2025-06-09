@@ -61,6 +61,7 @@
 #include "adc_subscription.h"
 #include "gc_generic.h"
 #include "tuner_detector_utils.h"
+#include "gearbox_indicator.h"
 
 
 #if EFI_TUNER_STUDIO
@@ -508,6 +509,7 @@ void commonInitEngineController() {
 #endif
 
 	initSpeedometer();
+
 
 #if EFI_LTFT_CONTROL
 	initLtft();
