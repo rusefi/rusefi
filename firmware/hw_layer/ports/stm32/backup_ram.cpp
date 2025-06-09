@@ -47,10 +47,10 @@ void backupRamFlush(void) {
 // STM32 only has 4k bytes of backup SRAM
 static_assert(sizeof(BackupSramData) <= 4096);
 
-extern BackupSramData __backup_sram_addr__;
+static BKUP_RAM_NOINIT BackupSramData backupSramData;
 
 BackupSramData* getBackupSram() {
-	return &__backup_sram_addr__;
+	return &backupSramData;
 }
 
 #endif
