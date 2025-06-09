@@ -764,9 +764,11 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
-		// command with no page argument, default page = 0
-		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioRWChunkRequest));
-		calibrationsWriteTimer.reset();
+		/* command with page argument */
+		page = data16[0];
+		offset = data16[1];
+		count = data16[2];
+		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioPageRWChunkRequest));
 		break;
 	case TS_SINGLE_WRITE_COMMAND:
 		// command with no page argument, default page = 0
