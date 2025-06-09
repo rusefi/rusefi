@@ -18,10 +18,7 @@ import com.rusefi.core.Pair;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
-import com.rusefi.io.commands.BurnCommand;
-import com.rusefi.io.commands.ByteRange;
-import com.rusefi.io.commands.GetOutputsCommand;
-import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.commands.*;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -498,15 +495,14 @@ public class BinaryProtocol {
     public void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
-        byte[] packet = new byte[4 + size];
-        ByteRange.packOffsetAndSize(ecuOffset, size, packet);
-
-        System.arraycopy(content, contentOffset, packet, 4, size);
+        byte[] packet = WriteCommand.getWritePacket(content, contentOffset, ecuOffset, size);
 
         long start = System.currentTimeMillis();
         while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
+
             byte[] response = executeCommand(Integration.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
             if (!checkResponseCode(response) || response.length != 1) {
+                // huh?! when do we retry what here?!
                 log.error("writeData: Something is wrong, retrying...");
                 continue;
             }
