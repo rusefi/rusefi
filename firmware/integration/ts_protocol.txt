@@ -79,8 +79,6 @@
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 
-! 0x57 pageValueWrite
-#define TS_SINGLE_WRITE_COMMAND 'W'
 ! 0x43 pageChunkWrite
 #define TS_CHUNK_WRITE_COMMAND 'C'
 
