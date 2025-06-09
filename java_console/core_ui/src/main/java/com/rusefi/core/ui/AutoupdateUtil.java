@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -60,7 +61,14 @@ public class AutoupdateUtil {
             ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
         } catch (IOException e) {
             if (view.getProgressBar() != null) {
-                JOptionPane.showMessageDialog(view.getProgressBar(), "Error downloading: " + e, "Error", JOptionPane.ERROR_MESSAGE);
+                String message;
+                if (e instanceof UnknownHostException) {
+                    message = "Please fix your internet connection";
+                } else {
+                    message = "Error downloading: " + e;
+                }
+
+                JOptionPane.showMessageDialog(view.getProgressBar(), message, "Error", JOptionPane.ERROR_MESSAGE);
                 throw new ReportedIOException(e);
             } else {
                 throw e;
