@@ -8,7 +8,7 @@ ext {
           jsr305         : "com.google.code.findbugs:jsr305:3.0.2",
           antlr          : "org.antlr:antlr4:4.13.0",
           json           : "com.googlecode.json-simple:json-simple:1.1.1",
-          mockito        : "org.mockito:mockito-all:1.10.19",
+          mockito        : "org.mockito:mockito-core:4.11.0",
           javaxJson      : "javax.json:javax.json-api:1.1.4",
           snakeyaml      : "org.yaml:snakeyaml:1.26",
           commons_logging: "commons-logging:commons-logging:1.2",
