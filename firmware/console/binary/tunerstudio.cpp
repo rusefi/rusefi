@@ -96,6 +96,9 @@
 // Issue TS zeroes LSB byte of pageIdentifier
 #define TS_PAGE_SCATTER_OFFSETS		0x0100
 
+// Each offset is uint16_t
+static_assert(TS_SCATTER_PAGE_SIZE == TS_SCATTER_OFFSETS_COUNT * 2);
+
 // We have TS protocol limitation: offset within one settings page is uin16_t type.
 static_assert(sizeof(*config) <= 65536);
 
@@ -114,7 +117,7 @@ static void printErrorCounters() {
 #if 0
 static void printScatterList(TsChannelBase* tsChannel) {
 	efiPrintf("Scatter list (global)");
-	for (size_t i = 0; i < TS_HIGH_SPEED_COUNT; i++) {
+	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
 		uint16_t packed = tsChannel->highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 		uint16_t offset = packed & 0x1FFF;
@@ -317,7 +320,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	tsState.readScatterCommandsCounter++;
 
 	int totalResponseSize = 0;
-	for (size_t i = 0; i < TS_HIGH_SPEED_COUNT; i++) {
+	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
 		uint16_t packed = tsChannel->highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 
@@ -335,7 +338,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, totalResponseSize);
 
 	uint8_t dataBuffer[8];
-	for (size_t i = 0; i < TS_HIGH_SPEED_COUNT; i++) {
+	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
 		uint16_t packed = tsChannel->highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 		uint16_t offset = packed & 0x1FFF;
