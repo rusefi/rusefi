@@ -140,7 +140,7 @@ static void printTsStats(void) {
 #endif /* EFI_CONSOLE_RX_BRAIN_PIN */
 
 #if EFI_USB_SERIAL
-    printUsbConnectorStats();
+	printUsbConnectorStats();
 #endif // EFI_USB_SERIAL
 
 	printErrorCounters();
@@ -171,9 +171,10 @@ static void sendOkResponse(TsChannelBase *tsChannel) {
 }
 
 void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, const char *msg) {
-//TODO uncomment once I have test it myself  if (msg != DO_NOT_LOG) {
-//	  efiPrintf("TS <- Err: %d [%s]", code, msg);
-//  }
+	//TODO uncomment once I have test it myself
+	//if (msg != DO_NOT_LOG) {
+	//	efiPrintf("TS <- Err: %d [%s]", code, msg);
+	//}
 
 	switch (code) {
 	case TS_RESPONSE_UNDERRUN:
@@ -206,15 +207,15 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const ch
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
 PUBLIC_API_WEAK bool isBoardAskingTriggerTsRefresh() {
-  return false;
+	return false;
 }
 
 bool needToTriggerTsRefresh() {
-  return !engine->engineTypeChangeTimer.hasElapsedSec(1);
+	return !engine->engineTypeChangeTimer.hasElapsedSec(1);
 }
 
 void onApplyPreset() {
-  engine->engineTypeChangeTimer.reset();
+	engine->engineTypeChangeTimer.reset();
 }
 
 static void onCalibrationWrite(uint16_t page, uint16_t offset, uint16_t count) {
@@ -374,9 +375,6 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 		} else {
 			addr = getWorkingPageAddr() + offset;
 		}
-#if EFI_TUNER_STUDIO_VERBOSE
-//		efiPrintf("Sending %d done", count);
-#endif
 #if EFI_TS_SCATTER
 	} else if (page == 1) {
 		// Ensure we are reading from in bounds
@@ -392,6 +390,9 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 
 	if (addr) {
 		tsChannel->sendResponse(TS_CRC, addr, count);
+#if EFI_TUNER_STUDIO_VERBOSE
+//		efiPrintf("Sending %d done", count);
+#endif
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: RD invalid page");
 	}
@@ -491,7 +492,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowS());
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer),  __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	if (hasFirmwareError()) {
@@ -567,18 +568,18 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	uint8_t firstByte;
 	size_t received = tsChannel->readTimeout(&firstByte, 1, TS_COMMUNICATION_TIMEOUT);
 #if EFI_SIMULATOR
-		logMsg("received %d\r\n", received);
+	logMsg("received %d\r\n", received);
 #endif // EFI_SIMULATOR
 
 	if (received != 1) {
-//			tunerStudioError("ERROR: no command");
+		//tunerStudioError("ERROR: no command");
 #if EFI_BLUETOOTH_SETUP
 		if (tsChannel == getBluetoothChannel()) {
 			// no data in a whole second means time to disconnect BT
 			// assume there's connection loss and notify the bluetooth init code
 			bluetoothSoftwareDisconnectNotify(getBluetoothChannel());
 		}
-#endif  /* EFI_BLUETOOTH_SETUP */
+#endif /* EFI_BLUETOOTH_SETUP */
 		tsChannel->in_sync = false;
 		return -1;
 	}
@@ -734,12 +735,12 @@ static void handleGetText(TsChannelBase* tsChannel) {
 	size_t outputSize;
 	const char* output = swapOutputBuffers(&outputSize);
 #if EFI_SIMULATOR
-			logMsg("get test sending [%d]\r\n", outputSize);
+	logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
 	tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(output), outputSize, true);
 #if EFI_SIMULATOR
-			logMsg("sent [%d]\r\n", outputSize);
+	logMsg("sent [%d]\r\n", outputSize);
 #endif // EFI_SIMULATOR
 }
 #endif // EFI_TEXT_LOGGING
@@ -748,7 +749,7 @@ void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR
-			logMsg("execute [%s]\r\n", trimmed);
+	logMsg("execute [%s]\r\n", trimmed);
 #endif // EFI_SIMULATOR
 	(console_line_callback)(trimmed);
 
@@ -847,24 +848,24 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleTestCommand(tsChannel);
 		break;
 #if EFI_SIMULATOR
-    case TS_SIMULATE_CAN:
-        void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize);
+	case TS_SIMULATE_CAN:
+		void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize);
 		handleWrapCan(tsChannel, data, incomingPacketSize - 1);
 		break;
 #endif // EFI_SIMULATOR
 	case TS_IO_TEST_COMMAND:
-		{
-//TODO: Why did we process `TS_IO_TEST_COMMAND` only in prod code? I've just turned it on for simulator as well, because
-//	I need test this functionality with simulator as well. We need to review the cases when we really need to turn off
-//	`TS_IO_TEST_COMMAND` processing. Do we really need guards below?
 #if EFI_SIMULATOR || EFI_PROD_CODE
+		//TODO: Why did we process `TS_IO_TEST_COMMAND` only in prod code? I've just turned it on for simulator as well, because
+		//	I need test this functionality with simulator as well. We need to review the cases when we really need to turn off
+		//	`TS_IO_TEST_COMMAND` processing. Do we really need guards below?
+		{
 			uint16_t subsystem = SWAP_UINT16(data16[0]);
 			uint16_t index = SWAP_UINT16(data16[1]);
 
 			executeTSCommand(subsystem, index);
-#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
-			sendOkResponse(tsChannel);
 		}
+#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
+		sendOkResponse(tsChannel);
 		break;
 #if EFI_TOOTH_LOGGER
 	case TS_SET_LOGGER_SWITCH:
@@ -953,14 +954,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 #else
 	case TS_PERF_TRACE_BEGIN:
-    criticalError("TS_PERF_TRACE not supported");
-    break;
+		criticalError("TS_PERF_TRACE not supported");
+		break;
 	case TS_PERF_TRACE_GET_BUFFER:
-    criticalError("TS_PERF_TRACE_GET_BUFFER not supported");
-    break;
+		criticalError("TS_PERF_TRACE_GET_BUFFER not supported");
+		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-	  const char* configError = hasFirmwareError()? getCriticalErrorMessage() : getConfigErrorMessage();
+		const char* configError = hasFirmwareError()? getCriticalErrorMessage() : getConfigErrorMessage();
 		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
 		break;
 	}
@@ -994,10 +995,10 @@ bool isTuningNow() {
 void startTunerStudioConnectivity() {
 	// Assert tune & output channel struct sizes
 	static_assert(sizeof(persistent_config_s) == TOTAL_CONFIG_SIZE, "TS datapage size mismatch");
-// useful trick if you need to know how far off is the static_assert
-//	char (*__kaboom)[sizeof(persistent_config_s)] = 1;
-// another useful trick
-//  static_assert(offsetof (engine_configuration_s,HD44780_e) == 700);
+	// useful trick if you need to know how far off is the static_assert
+	//char (*__kaboom)[sizeof(persistent_config_s)] = 1;
+	// another useful trick
+	//static_assert(offsetof (engine_configuration_s,HD44780_e) == 700);
 
 	memset(&tsState, 0, sizeof(tsState));
 
@@ -1022,7 +1023,7 @@ void startTunerStudioConnectivity() {
 	addConsoleActionSSS("bluetooth_jdy", [](const char *baudRate, const char *name, const char *pinCode) {
 		bluetoothStart(BLUETOOTH_JDY_3x, baudRate, name, pinCode);
 	});
-  addConsoleActionSSS("bluetooth_jdy31", [](const char *baudRate, const char *name, const char *pinCode) {
+	addConsoleActionSSS("bluetooth_jdy31", [](const char *baudRate, const char *name, const char *pinCode) {
 		bluetoothStart(BLUETOOTH_JDY_31, baudRate, name, pinCode);
 	});
 #endif /* EFI_BLUETOOTH_SETUP */
