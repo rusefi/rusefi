@@ -316,8 +316,17 @@ public class BinaryProtocol {
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, iniFile.getBlockingFactor());
 
-            byte[] packet = new byte[6];
-            ByteRange.packPageOffsetAndSize(offset, requestSize, packet);
+            String pageReadCommand = iniFile.getMetaInfo().getPageReadCommand(0);
+            byte[] packet;
+            if (pageReadCommand.length() == 7) {
+                // older controller, no page index in read command
+                // PS: technically we can/shall actually use command syntax as specified by the .ini
+                packet = new byte[4];
+                ByteRange.packOffsetAndSize(offset, requestSize, packet);
+            } else {
+                packet = new byte[6];
+                ByteRange.packPageOffsetAndSize(offset, requestSize, packet);
+            }
 
             byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
