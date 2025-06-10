@@ -1,16 +1,14 @@
 #pragma once
 
-#include "efi_scaled_channel.h"
-#include "rusefi_types.h"
 #include <cstdint>
-#include <cstddef>
+#include <type_traits>
 
 struct Writer;
 class LogField {
 public:
 	// Scaled channels, memcpys data directly and describes format in header
 	template <typename TValue, int TMult, int TDiv>
-	constexpr LogField(const scaled_channel<TValue, TMult, TDiv>& toRead,
+	consteval LogField(const scaled_channel<TValue, TMult, TDiv>& toRead,
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(float(TDiv) / TMult)
 		, m_addr(toRead.getFirstByteAddr())
@@ -28,7 +26,7 @@ public:
 
 	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
 	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
-	constexpr LogField(TValue& toRead,
+	consteval LogField(TValue& toRead,
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(1)
 		, m_addr(&toRead)
@@ -46,7 +44,7 @@ public:
 
 	// Bit channel
 	template <typename TValue>
-	constexpr LogField(
+	consteval LogField(
 		TValue& toRead,
 		const uint32_t bitsBlockOffset,
 		const uint8_t bitNumber,
@@ -77,7 +75,7 @@ public:
 		F32 = 7,
 	};
 
-	constexpr size_t getSize() const {
+	consteval size_t getSize() const {
 		return m_size;
 	}
 
@@ -98,9 +96,9 @@ public:
 
 private:
 	template<typename T>
-	static constexpr Type resolveType();
+	static consteval Type resolveType();
 
-	static constexpr size_t sizeForType(Type t) {
+	static consteval size_t sizeForType(Type t) {
 		switch (t) {
 			case Type::U08:
 			case Type::S08:
@@ -129,67 +127,54 @@ private:
 	const uint8_t m_bitNumber; // only for bit log fields
 };
 
-template<>
-constexpr LogField::Type LogField::resolveType<const uint8_t>() {
-	return Type::U08;
-}
+template<typename T>
+struct TypeResolver;
 
 template<>
-constexpr LogField::Type LogField::resolveType<uint8_t>() {
-	return Type::U08;
-}
+struct TypeResolver<uint8_t> {
+	static constexpr LogField::Type value = LogField::Type::U08;
+};
 
 template<>
-constexpr LogField::Type LogField::resolveType<int8_t>() {
-	return Type::S08;
-}
+struct TypeResolver<int8_t> {
+	static constexpr LogField::Type value = LogField::Type::S08;
+};
 
 template<>
-constexpr LogField::Type LogField::resolveType<const int8_t>() {
-	return Type::S08;
-}
+struct TypeResolver<uint16_t> {
+	static constexpr LogField::Type value = LogField::Type::U16;
+};
 
 template<>
-constexpr LogField::Type LogField::resolveType<uint16_t>() {
-	return Type::U16;
-}
-
-
-template<>
-constexpr LogField::Type LogField::resolveType<const uint16_t>() {
-	return Type::U16;
-}
+struct TypeResolver<int16_t> {
+	static constexpr LogField::Type value = LogField::Type::S16;
+};
 
 template<>
-constexpr LogField::Type LogField::resolveType<int16_t>() {
-	return Type::S16;
-}
+struct TypeResolver<uint32_t> {
+	static constexpr LogField::Type value = LogField::Type::U32;
+};
 
 template<>
-constexpr LogField::Type LogField::resolveType<uint32_t>() {
-	return Type::U32;
-}
+struct TypeResolver<int32_t> {
+	static constexpr LogField::Type value = LogField::Type::S32;
+};
+
+template<>
+struct TypeResolver<float> {
+	static constexpr LogField::Type value = LogField::Type::F32;
+};
 
 #if EFI_PROD_CODE
 // we allow both 'int' and 'int32_t' just to allow extra flexibility in headers
 // https://stackoverflow.com/questions/55782246/why-is-uint32-t-typedeffed-to-unsigned-long-on-arm-none-eabi-gcc-and-how-to
 template<>
-constexpr LogField::Type LogField::resolveType<int>() {
-	return Type::S32;
-}
+struct TypeResolver<int> {
+	static constexpr LogField::Type value = LogField::Type::S32;
+};
 #endif
 
-template<>
-constexpr LogField::Type LogField::resolveType<int32_t>() {
-	return Type::S32;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<float>() {
-	return Type::F32;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<const float>() {
-	return Type::F32;
+template<typename T>
+consteval LogField::Type LogField::resolveType() {
+	return TypeResolver<std::remove_cv_t<T>>::value;
 }

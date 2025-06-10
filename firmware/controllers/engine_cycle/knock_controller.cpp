@@ -176,7 +176,7 @@ static void startKnockSampling(Engine* p_engine) {
 	}
 
 	// Convert sampling angle to time
-	float samplingSeconds = engine->rpmCalculator.oneDegreeUs * engineConfiguration->knockSamplingDuration / US_PER_SECOND_F;
+	float samplingSeconds = p_engine->rpmCalculator.oneDegreeUs * engineConfiguration->knockSamplingDuration / US_PER_SECOND_F;
 
 	// Look up which channel this cylinder uses
 	auto channel = getCylinderKnockBank(cylinderNumberCopy);
@@ -190,8 +190,17 @@ static void startKnockSampling(Engine* p_engine) {
 void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
 #if EFI_SOFTWARE_KNOCK
 	cylinderNumberCopy = cylinderNumber;
+
+#if EFI_UNIT_TEST
+	static_assert(engine != nullptr, "Engine can not be null in this test!");
+
 	scheduleByAngle(nullptr, nowNt,
-			/*angle*/engineConfiguration->knockDetectionWindowStart, { startKnockSampling, engine });
+		/*angle*/engineConfiguration->knockDetectionWindowStart, { startKnockSampling, (Engine*)engine });
+#else
+	scheduleByAngle(nullptr, nowNt,
+		/*angle*/engineConfiguration->knockDetectionWindowStart, { startKnockSampling, this });
+#endif
+
 #else
 	UNUSED(cylinderNumber);
 	UNUSED(nowNt);

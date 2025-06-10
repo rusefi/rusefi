@@ -14,7 +14,7 @@ static void memcpy_swapend(void* dest, const void* src, size_t num, void *offset
 }
 
 static void copyFloat(char* buffer, float value) {
-	memcpy_swapend(buffer, reinterpret_cast<char*>(&value), sizeof(float), nullptr);
+	memcpy_swapend(buffer, &value, sizeof(float), nullptr);
 }
 
 size_t LogField::writeHeader(Writer& outBuffer) const {

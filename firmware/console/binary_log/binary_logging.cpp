@@ -27,13 +27,18 @@ static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 // directory
 #include <log_fields_generated.h>
 
-int getSdCardFieldsCount() {
-	return efi::size(fields);
+template <typename T, size_t N>
+consteval size_t getFieldsSize(const T(&)[N]) {
+	return N;
 }
 
-static constexpr uint16_t computeFieldsRecordLength() {
+int getSdCardFieldsCount() {
+	return getFieldsSize(fields);
+}
+
+static consteval uint16_t computeFieldsRecordLength() {
 	uint16_t recLength = 0;
-	for (size_t i = 0; i < efi::size(fields); i++) {
+	for (size_t i = 0; i < getFieldsSize(fields); i++) {
 		recLength += fields[i].getSize();
 	}
 
