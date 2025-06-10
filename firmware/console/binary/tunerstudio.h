@@ -55,16 +55,18 @@ void startTunerStudioConnectivity();
 bool needToTriggerTsRefresh();
 void onApplyPreset();
 
-typedef struct {
+struct TunerStudioRWChunkRequest {
 	uint16_t offset;
 	uint16_t count;
-} TunerStudioRWChunkRequest;
+} __attribute__((packed));
+static_assert(sizeof(TunerStudioRWChunkRequest) == 4);
 
-typedef struct {
+struct TunerStudioPageRWChunkRequest {
 	uint16_t page;
 	uint16_t offset;
 	uint16_t count;
-} TunerStudioPageRWChunkRequest;
+} __attribute__((packed));
+static_assert(sizeof(TunerStudioPageRWChunkRequest) == 6);
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
