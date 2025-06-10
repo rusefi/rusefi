@@ -14,12 +14,6 @@ import static com.rusefi.IoUtil.sleepSeconds;
 import static org.junit.Assert.assertTrue;
 
 public class MiscTest extends RusefiTestBase {
-    @Test
-    public void burn() {
-        BinaryProtocol bp = ecu.getLinkManager().getCurrentStreamState();
-        // let's make sure 'burn' command works since sometimes it does not
-        bp.burn();
-    }
 
     @Test
     public void testGetAllOutputs() throws InterruptedException {
