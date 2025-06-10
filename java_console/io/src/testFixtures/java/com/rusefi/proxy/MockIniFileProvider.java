@@ -19,6 +19,7 @@ public class MockIniFileProvider {
         IniFileMetaInfo mockMeta = mock(IniFileMetaInfo.class);
 
         when(mockMeta.getTotalSize()).thenReturn(15000);
+        when(mockMeta.getPageReadCommand(anyInt())).thenReturn("123456");
 
         IniFileModel mockModel = mock(IniFileModel.class);
         when(mockModel.getSignature()).thenReturn("rusEFI mocked-ini-file");
