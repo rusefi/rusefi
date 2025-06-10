@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class IniFileReaderTest {
     private static final String PAGE_READ = "    pageReadCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n";
+    private static final String CRC_READ = "    crc32CheckCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n";
     private static final String SIGNATURE_UNIT_TEST = "  signature      = \"unit test\"\n";
     private static final double EPS = 0.00001;
 
@@ -93,6 +94,7 @@ public class IniFileReaderTest {
         String string = "   nPages              = 3\n" +
                 SIGNATURE_UNIT_TEST +
                 PAGE_READ +
+            CRC_READ +
             "ochBlockSize=1\n" +
                 "   pageSize            = 288,   64,     288\n";
 

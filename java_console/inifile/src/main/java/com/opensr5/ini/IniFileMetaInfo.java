@@ -13,5 +13,7 @@ public interface IniFileMetaInfo {
 
     String getPageReadCommand(int pageIndex);
 
+    String getCrc32CheckCommand(int pageIndex);
+
     int getPageSize(int pageIndex);
 }

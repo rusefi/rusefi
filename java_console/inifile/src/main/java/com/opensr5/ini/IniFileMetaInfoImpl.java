@@ -12,6 +12,7 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
     private final int nPages;
     private final String signature;
     private final List<String> pageReadCommands;
+    private final List<String> crc32CheckCommands;
 
     private int totalSize;
     private final List<Integer> pageSizes = new ArrayList<>();
@@ -44,6 +45,7 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
             }
 
             pageReadCommands = file.getValues("pageReadCommand");
+            crc32CheckCommands = file.getValues("crc32CheckCommand");
         } catch (MandatoryLineMissing e) {
             throw new RuntimeException("While reading " + file.msg, e);
         }
@@ -74,6 +76,11 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
     @Override
     public String getPageReadCommand(int pageIndex) {
         return pageReadCommands.get(pageIndex);
+    }
+
+    @Override
+    public String getCrc32CheckCommand(int pageIndex) {
+        return crc32CheckCommands.get(pageIndex);
     }
 
     @Override
