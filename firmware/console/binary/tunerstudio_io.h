@@ -62,7 +62,7 @@ public:
 	 */
 	char scratchBuffer[scratchBuffer_SIZE + 30];
 #if EFI_TS_SCATTER
-	uint16_t highSpeedOffsets[TS_HIGH_SPEED_COUNT];
+	uint16_t highSpeedOffsets[TS_SCATTER_OFFSETS_COUNT];
 #endif
 	const char *name;
 
