@@ -92,6 +92,10 @@
 
 #if EFI_TUNER_STUDIO
 
+#define TS_PAGE_SETTINGS			0x0000
+// Issue TS zeroes LSB byte of pageIdentifier
+#define TS_PAGE_SCATTER_OFFSETS		0x0100
+
 // We have TS protocol limitation: offset within one settings page is uin16_t type.
 static_assert(sizeof(*config) <= 65536);
 
@@ -231,7 +235,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 	efiPrintf("TS -> Page %d write chunk offset %d count %d (output_count=%d)",
 		page, offset, count, tsState.outputChannelsCommandCounter);
 
-	if (page == 0) {
+	if (page == TS_PAGE_SETTINGS) {
 		if (isLockedFromUser()) {
 			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
 			return;
@@ -254,7 +258,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
 		setBoardConfigOverrides();
 #if EFI_TS_SCATTER
-	} else if (page == 1) {
+	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		// Ensure we are writing in bounds
 		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
 			tunerStudioError(tsChannel, "ERROR: WR out of range");
@@ -278,7 +282,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 	const uint8_t* start = nullptr;
 	tsState.crc32CheckCommandCounter++;
 
-	if (page == 0) {
+	if (page == TS_PAGE_SETTINGS) {
 		// Ensure we are reading from in bounds
 		if (validateOffsetCount(offset, count, tsChannel)) {
 			tunerStudioError(tsChannel, "ERROR: CRC out of range");
@@ -288,7 +292,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 
 		start = getWorkingPageAddr() + offset;
 #if EFI_TS_SCATTER
-	} else if (page == 1) {
+	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		// Ensure we are reading from in bounds
 		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
 			tunerStudioError(tsChannel, "ERROR: CRC out of range");
@@ -361,7 +365,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 
 	uint8_t* addr = nullptr;
 
-	if (page == 0) {
+	if (page == TS_PAGE_SETTINGS) {
 		if (validateOffsetCount(offset, count, tsChannel)) {
 			tunerStudioError(tsChannel, "ERROR: RD out of range");
 			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
@@ -376,7 +380,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 			addr = getWorkingPageAddr() + offset;
 		}
 #if EFI_TS_SCATTER
-	} else if (page == 1) {
+	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		// Ensure we are reading from in bounds
 		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
 			tunerStudioError(tsChannel, "ERROR: RD out of range");
@@ -419,7 +423,7 @@ namespace {
  * 'Burn' command is a command to commit the changes
  */
 static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
-	if (page == 0) {
+	if (page == TS_PAGE_SETTINGS) {
 		Timer t;
 		t.reset();
 
@@ -438,7 +442,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 		}
 		efiPrintf("Burned in %.1fms", t.getElapsedSeconds() * 1e3);
 #if EFI_TS_SCATTER
-	} else if (page == 1) {
+	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		/* do nothing */
 #endif
 	} else {
