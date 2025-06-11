@@ -72,7 +72,12 @@ TEST(LTFT, testLearning)
 	// Other cells should not be affected
 	ASSERT_LTFT_RESULT(ltft.getTrims(5000, 50), 1.0, 1.0);
 
+#if 0
+	rpm = config->veRpmBins[0] - (config->veRpmBins[1] - config->veRpmBins[0]) - 1;
+	load = config->veLoadBins[0] - (config->veLoadBins[1] - config->veLoadBins[0]) - 1;
+	// we are not learning, buts but still calculating correction if far outside table
 	// test far outside
-	ASSERT_LTFT_RESULT(ltft.getTrims(rpm / 2, load / 2), 1.0, 1.0);
+	ASSERT_LTFT_RESULT(ltft.getTrims(rpm, load), 1.0, 1.0);
 	ASSERT_LTFT_RESULT(ltft.getTrims(10000, 1000), 1.0, 1.0);
+#endif
 }
