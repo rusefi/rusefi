@@ -125,7 +125,7 @@ public class CalibrationsHelper {
             }
             callbacks.logLine(String.format("Received a signature %s", signature));
             final IniFileModel iniFile = iniFileProvider.provide(signature);
-            final int pageSize = iniFile.getMetaInfo().getTotalSize();
+            final int pageSize = iniFile.getMetaInfo().getPageSize(0);
             callbacks.logLine(String.format("Page size is %d", pageSize));
             final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(pageSize, signature);
             callbacks.logLine("Reading current calibrations...");

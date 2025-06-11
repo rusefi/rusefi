@@ -24,7 +24,7 @@ class BinaryProtocolServerSandbox {
         IniFileModel model = IniFileModeSingleton.getInstance();
 
         BinaryProtocolState state = new BinaryProtocolState();
-        ConfigurationImage controller = new ConfigurationImage(new byte[model.getMetaInfo().getTotalSize()]);
+        ConfigurationImage controller = new ConfigurationImage(new byte[model.getMetaInfo().getPageSize(0)]);
 //        ScalarIniField iniField = s
 //        iniField.setValue(controller, new Constant(iniField.getName(), "", "1", iniField.getDigits()));
         state.setConfigurationImage(controller);

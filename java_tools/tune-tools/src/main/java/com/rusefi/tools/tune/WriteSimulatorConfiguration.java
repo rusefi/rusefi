@@ -71,7 +71,7 @@ public class WriteSimulatorConfiguration {
         if (ini == null)
             throw new IllegalStateException("Not found " + iniFileName);
         byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + inputBinaryTuneFileName).toPath());
-        int pageSize = ini.getMetaInfo().getTotalSize();
+        int pageSize = ini.getMetaInfo().getPageSize(0);
         log.info("Got " + fileContent.length + " from " + inputBinaryTuneFileName + " while expecting " + pageSize);
         if (fileContent.length != pageSize)
             throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + pageSize);

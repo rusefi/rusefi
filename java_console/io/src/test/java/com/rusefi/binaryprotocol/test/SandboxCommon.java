@@ -66,7 +66,7 @@ public class SandboxCommon {
         linkManager.COMMUNICATION_EXECUTOR.submit(() -> {
             if (tsStream.getDataBuffer().dropPending() != 0)
                 log.info("ERROR Extra data before CRC");
-            bp.getCrcFromController(IniFileModeSingleton.getInstance().getMetaInfo().getTotalSize());
+            bp.getCrcFromController(IniFileModeSingleton.getInstance().getMetaInfo().getPageSize(0));
 //            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
 //            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
             if (tsStream.getDataBuffer().dropPending() != 0)

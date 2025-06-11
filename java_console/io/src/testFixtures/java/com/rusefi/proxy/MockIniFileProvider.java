@@ -18,7 +18,7 @@ public class MockIniFileProvider {
     public static IniFileProvider create() {
         IniFileMetaInfo mockMeta = mock(IniFileMetaInfo.class);
 
-        when(mockMeta.getTotalSize()).thenReturn(15000);
+        when(mockMeta.getPageSize(0)).thenReturn(15000);
         when(mockMeta.getPageReadCommand(anyInt())).thenReturn("123456");
 
         IniFileModel mockModel = mock(IniFileModel.class);

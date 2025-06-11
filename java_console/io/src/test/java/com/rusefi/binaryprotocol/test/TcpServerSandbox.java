@@ -33,7 +33,7 @@ import static com.rusefi.io.tcp.BinaryProtocolServer.getOutputCommandResponse;
  * @see BinaryProtocolServerSandbox what's the difference?
  */
 public class TcpServerSandbox {
-    private final static byte[] TOTALLY_EMPTY_CONFIGURATION = new byte[IniFileModeSingleton.getInstance().getMetaInfo().getTotalSize()];
+    private final static byte[] TOTALLY_EMPTY_CONFIGURATION = new byte[IniFileModeSingleton.getInstance().getMetaInfo().getPageSize(0)];
 
     public static void main(String[] args) throws IOException {
         Listener serverSocketCreationCallback = parameter -> System.out.println("serverSocketCreationCallback");

@@ -179,7 +179,7 @@ public class BinaryProtocol {
         }
         iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
 
-        int pageSize = iniFile.getMetaInfo().getTotalSize();
+        int pageSize = iniFile.getMetaInfo().getPageSize(0);
         log.info("pageSize=" + pageSize);
         readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
         if (stream.isClosed())
