@@ -1,11 +1,17 @@
 package com.rusefi.output;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.*;
+import com.rusefi.binaryprotocol.MsqFactory;
+import com.rusefi.tune.xml.Msq;
 import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.Output;
 import org.jetbrains.annotations.NotNull;
 
+import javax.xml.bind.JAXBException;
 import java.io.*;
 
 import static com.rusefi.util.IoUtils.CHARSET;
@@ -49,6 +55,18 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         String fileName = getTsFileOutputName(new File(ConfigDefinitionRootOutputFolder.getValue() + tsPath).getPath());
         Output tsHeader = new LazyFileImpl(fileName);
         writeContent(fieldsSection, tsContent, tsHeader);
+        testFreshlyProducedIniFile(fileName);
+    }
+
+    private void testFreshlyProducedIniFile(String fileName) {
+        IniFileModel ini = IniFileModelImpl.readIniFile(fileName);
+        ConfigurationImage ci = new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
+        Msq msq = MsqFactory.valueOf(ci, ini);
+        try {
+            msq.writeXmlFile("quick-self-test.xml");
+        } catch (IOException | JAXBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected void writeContent(String fieldsSection, TsFileContent tsContent, Output tsHeader) throws IOException {

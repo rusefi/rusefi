@@ -387,17 +387,21 @@ public class BinaryProtocol {
             ConfigurationImageFile.saveToFile(imageWithMeta, binaryFileName);
         }
         if (xmlFileName != null) {
-            ConfigurationImage image = imageWithMeta.getConfigurationImage();
-            if (image == null) {
-                log.warn("No image for saveConfigurationImageToFiles");
-                return;
-            }
-            try {
-                final Msq tune = MsqFactory.valueOf(image, ini);
-                tune.writeXmlFile(xmlFileName);
-            } catch (OrdinalOutOfRangeException e) {
-                log.warn("Unexpected " + e, e);
-            }
+            saveXmlFile(imageWithMeta, ini, xmlFileName);
+        }
+    }
+
+    public static void saveXmlFile(ConfigurationImageWithMeta imageWithMeta, IniFileModel ini, @NotNull String xmlFileName) throws JAXBException, IOException {
+        ConfigurationImage image = imageWithMeta.getConfigurationImage();
+        if (image == null) {
+            log.warn("No image for saveConfigurationImageToFiles");
+            return;
+        }
+        try {
+            final Msq tune = MsqFactory.valueOf(image, ini);
+            tune.writeXmlFile(xmlFileName);
+        } catch (OrdinalOutOfRangeException e) {
+            log.warn("Unexpected " + e, e);
         }
     }
 

@@ -127,7 +127,7 @@ public class CalibrationsHelper {
             final IniFileModel iniFile = iniFileProvider.provide(signature);
             final int pageSize = iniFile.getMetaInfo().getPageSize(0);
             callbacks.logLine(String.format("Page size is %d", pageSize));
-            final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(pageSize, signature);
+            final ConfigurationImageMetaVersion0_0 meta = ConfigurationImageMetaVersion0_0.getMeta(iniFile);
             callbacks.logLine("Reading current calibrations...");
             final ConfigurationImageWithMeta image = binaryProtocol.readFullImageFromController(meta);
             return Optional.of(new CalibrationsInfo(iniFile, image));
