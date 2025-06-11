@@ -18,6 +18,8 @@ public class SimulatorFunctionalTestLauncher {
             e.printStackTrace();
             System.exit(66);
         });
+        if (args.length == 0)
+            throw new IllegalArgumentException("Required argument: .ini filename");
         String iniFileName = args[0];
         BinaryProtocol.iniFileProvider = signature -> IniFileModelImpl.readIniFile(iniFileName);
         boolean startSimulator = args.length > 1 && args[1].equalsIgnoreCase("start");
