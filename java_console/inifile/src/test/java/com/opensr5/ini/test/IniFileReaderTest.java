@@ -117,8 +117,9 @@ public class IniFileReaderTest {
 
     @Test
     public void testCurve() {
-        String string = "page = 1\n" +
+        String string =
                 "[Constants]\n" +
+                "page = 1\n" +
                 "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
                 "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n " +
                 "[CurveEditor]\n" +
@@ -131,14 +132,34 @@ public class IniFileReaderTest {
                 "\t\tshowTextValues = true\n";
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        // technically these are constants?!
         assertEquals(2, model.getAllIniFields().size());
         assertEquals(2, model.getFieldsInUiOrder().size());
     }
 
     @Test
+    public void testMultiPage() {
+        String string =
+            "[Constants]\n" +
+            "page = 2\n" +
+            "scriptCurve2Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+            "scriptCurve2 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n " +
+            "page = 1\n" +
+            "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+            "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n "
+    ;
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+
+        assertEquals(4, model.getAllIniFields().size());
+        assertEquals(0, model.getFieldsInUiOrder().size());
+    }
+
+    @Test
     public void testTable() {
-        String string = "page = 1\n" +
+        String string =
                 "[Constants]\n" +
+                "page = 1\n" +
                 "tpsTpsAccelTable = array, F32, 19744, [8x8], \"value\", 1, 0, 0, 30000, 2\n" +
                 "tpsTpsAccelFromRpmBins = array, F32, 20000, [8], \"from\", 1, 0, 0, 30000, 2\n" +
                 "tpsTpsAccelToRpmBins = array, F32, 20032, [8], \"to\", 1, 0, 0, 25500, 2\n\n " +
