@@ -32,8 +32,8 @@ public class IniFileModelImpl implements IniFileModel {
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
-    private Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
     public Map</*field name*/String, String> tooltips = new TreeMap<>();
@@ -219,10 +219,6 @@ public class IniFileModelImpl implements IniFileModel {
                 if (list.size() == 2)
                     tooltips.put(list.get(0), list.get(1));
                 return;
-            } else if (rawText.contains("SettingContextHelp")) {
-                isInsidePageDefinition = false;
-                isInSettingContextHelp = true;
-                return;
             }
 
             if (RawIniFile.Line.isCommentLine(rawText))
@@ -247,6 +243,11 @@ public class IniFileModelImpl implements IniFileModel {
 
             if (first.startsWith("[") && first.endsWith("]")) {
                 log.info("Section " + first);
+                if (first.contains("[SettingContextHelp]")) {
+                    isInsidePageDefinition = false;
+                    isInSettingContextHelp = true;
+                    return;
+                }
                 isConstantsSection = first.equals("[Constants]");
                 isOutputChannelsSection = first.equals("[OutputChannels]");
             }

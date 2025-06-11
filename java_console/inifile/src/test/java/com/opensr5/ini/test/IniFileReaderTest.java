@@ -118,6 +118,7 @@ public class IniFileReaderTest {
     @Test
     public void testCurve() {
         String string =
+            "   ; generates [SettingContextHelp]\n" +
                 "[Constants]\n" +
                 "page = 1\n" +
                 "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
