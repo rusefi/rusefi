@@ -108,8 +108,8 @@ void setHyundaiPb() {
 
 #if HW_PROTEUS && EFI_PROD_CODE
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
-	setCommonNTCSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
-	setCommonNTCSensor(&engineConfiguration->iat, PROTEUS_DEFAULT_AT_PULLUP);
+	setCommonNTCSensorParameters(&engineConfiguration->clt);
+	setCommonNTCSensorParameters(&engineConfiguration->iat);
 
 //    engineConfiguration->acRelayPin = Gpio::PROTEUS_LS_6;
     engineConfiguration->acSwitch = PROTEUS_DIGITAL_5;

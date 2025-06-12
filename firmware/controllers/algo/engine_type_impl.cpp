@@ -8,8 +8,6 @@
 #include "dodge_neon.h"
 #include "dodge_ram.h"
 
-#include "engine_template.h"
-
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
 #include "ford_ecoboost.h"

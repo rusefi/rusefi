@@ -9,7 +9,6 @@
 
 #include "pch.h"
 
-#include "engine_template.h"
 #include "honda_600.h"
 #include "custom_engine.h"
 
