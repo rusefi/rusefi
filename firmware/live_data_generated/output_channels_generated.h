@@ -731,7 +731,7 @@ struct output_channels_s {
 	 * units: %
 	 * offset 268
 	 */
-	scaled_channel<int16_t, 100, 1> fuelPidCorrection[STFT_BANK_COUNT] = {};
+	scaled_channel<int16_t, 100, 1> fuelPidCorrection[FT_BANK_COUNT] = {};
 	/**
 	 * units: V
 	 * offset 272

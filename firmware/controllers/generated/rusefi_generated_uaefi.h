@@ -547,6 +547,7 @@
 #define FLOW_LINEARIZATION_MASS_SIZE 2
 #define FLOW_LINEARIZATION_PRESSURE_SIZE 2
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
+#define FT_BANK_COUNT 2
 #define fuel_cyl_trim_s_size 16
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
@@ -1265,7 +1266,6 @@
 #define load_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define LOG_DELIMITER "`"
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define LTFT_BANK_CONUT 2
 #define LTFT_LOAD_CELL_COUNT 16
 #define LTFT_RPM_CELL_COUNT 16
 #define LUA_ANALOG_INPUT_COUNT 8
@@ -1444,7 +1444,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 13737747
+#define SIGNATURE_HASH 4240647173
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1465,7 +1465,6 @@
 #define stepper_num_micro_steps_e_STEPPER_FOURTH 4
 #define stepper_num_micro_steps_e_STEPPER_FULL 0
 #define stepper_num_micro_steps_e_STEPPER_HALF 2
-#define STFT_BANK_COUNT 2
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 28
@@ -1983,7 +1982,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.06.12.uaefi.13737747"
+#define TS_SIGNATURE "rusEFI master.2025.06.12.uaefi.4240647173"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

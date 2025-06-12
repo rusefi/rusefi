@@ -509,6 +509,7 @@ public class VariableRegistryValues {
 	public static final int FLOW_LINEARIZATION_MASS_SIZE = 2;
 	public static final int FLOW_LINEARIZATION_PRESSURE_SIZE = 2;
 	public static final String FRONTEND_TITLE_BAR_NAME = "rusEFI";
+	public static final int FT_BANK_COUNT = 2;
 	public static final int fuel_cyl_trim_s_size = 16;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
@@ -1205,7 +1206,6 @@ public class VariableRegistryValues {
 	public static final int load_override_e_AFR_Tps = 2;
 	public static final String LOG_DELIMITER = "`";
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
-	public static final int LTFT_BANK_CONUT = 2;
 	public static final int LTFT_LOAD_CELL_COUNT = 16;
 	public static final int LTFT_RPM_CELL_COUNT = 16;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
@@ -1353,7 +1353,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 499535594;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1371,7 +1370,6 @@ public class VariableRegistryValues {
 	public static final int stepper_num_micro_steps_e_STEPPER_FOURTH = 4;
 	public static final int stepper_num_micro_steps_e_STEPPER_FULL = 0;
 	public static final int stepper_num_micro_steps_e_STEPPER_HALF = 2;
-	public static final int STFT_BANK_COUNT = 2;
 	public static final int stft_cell_cfg_s_size = 4;
 	public static final int STFT_CELL_COUNT = 4;
 	public static final int stft_s_size = 28;
@@ -1641,7 +1639,7 @@ public class VariableRegistryValues {
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final int TS_SCATTER_PAGE_SIZE = 256;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.12.proteus_f7.499535594";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.12.proteus_f7.3788830204";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1916;
