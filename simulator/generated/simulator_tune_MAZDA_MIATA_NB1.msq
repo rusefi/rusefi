@@ -596,7 +596,7 @@
         <constant name="canWriteEnabled">"true"</constant>
         <constant name="cdmInputPin">"NONE"</constant>
         <constant name="clt_adcChannel">"Disabled"</constant>
-        <constant digits="1" name="clt_bias_resistor" units="Ohm">2700.0</constant>
+        <constant digits="1" name="clt_bias_resistor" units="Ohm">1500.0</constant>
         <constant digits="1" name="clt_resistance_1" units="Ohm">18000.0</constant>
         <constant digits="1" name="clt_resistance_2" units="Ohm">2100.0</constant>
         <constant digits="1" name="clt_resistance_3" units="Ohm">100.0</constant>
