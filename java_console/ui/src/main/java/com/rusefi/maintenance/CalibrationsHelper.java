@@ -228,28 +228,35 @@ public class CalibrationsHelper {
         return BinaryProtocolExecutor.executeWithSuspendedPortScanner(
             ecuPort,
             callbacks,
-            (binaryProtocol) -> {
-                try {
-                    final Optional<CalibrationsInfo> calibrationsInfo = readCalibrationsInfo(binaryProtocol, callbacks);
-                    if (calibrationsInfo.isPresent()) {
-                        final CalibrationsInfo receivedCalibrations = calibrationsInfo.get();
-                        if (backUpCalibrationsInfo(
-                            receivedCalibrations,
-                            backupFileName,
-                            callbacks
-                        )) {
-                            return calibrationsInfo;
-                        }
-                    }
-                    return Optional.empty();
-                } catch (final Exception e) {
-                    log.error("Back up current calibrations failed:", e);
-                    callbacks.logLine("Back up current calibrations failed");
-                    return Optional.empty();
-                }
-            },
-            Optional.empty(), connectivityContext
+            binaryProtocol -> readAndBackupCurrentCalibrations(binaryProtocol, callbacks, backupFileName),
+            Optional.empty(),
+            connectivityContext
         );
+    }
+
+    private static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
+        final BinaryProtocol binaryProtocol,
+        final UpdateOperationCallbacks callbacks,
+        final String backupFileName
+    ) {
+        try {
+            final Optional<CalibrationsInfo> calibrationsInfo = readCalibrationsInfo(binaryProtocol, callbacks);
+            if (calibrationsInfo.isPresent()) {
+                final CalibrationsInfo receivedCalibrations = calibrationsInfo.get();
+                if (backUpCalibrationsInfo(
+                    receivedCalibrations,
+                    backupFileName,
+                    callbacks
+                )) {
+                    return calibrationsInfo;
+                }
+            }
+            return Optional.empty();
+        } catch (final Exception e) {
+            log.error("Back up current calibrations failed:", e);
+            callbacks.logLine("Back up current calibrations failed");
+            return Optional.empty();
+        }
     }
 
     public static Optional<CalibrationsInfo> mergeCalibrations(
