@@ -256,6 +256,13 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 			uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 			onCalibrationWrite(page, offset, count);
 			memcpy(addr, content, count);
+		} else {
+			efiPrintf("Ignoring TS -> Page %d write chunk offset %d count %d (output_count=%d)",
+				page,
+				offset,
+				count,
+				tsState.outputChannelsCommandCounter
+			);
 		}
 		// Force any board configuration options that humans shouldn't be able to change
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
