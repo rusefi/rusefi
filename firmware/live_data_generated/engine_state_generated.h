@@ -380,8 +380,14 @@ struct engine_state_s {
 	 * offset 137
 	 */
 	uint8_t alignmentFill_at_137[3] = {};
+	/**
+	 * STFT: Bank
+	 * units: %
+	 * offset 140
+	 */
+	float stftCorrection[FT_BANK_COUNT] = {};
 };
-static_assert(sizeof(engine_state_s) == 140);
+static_assert(sizeof(engine_state_s) == 148);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt
