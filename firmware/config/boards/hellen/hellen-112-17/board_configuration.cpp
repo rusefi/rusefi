@@ -114,8 +114,8 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
-	setCommonNTCSensor(&engineConfiguration->clt, HELLEN_DEFAULT_AT_PULLUP);
-	setCommonNTCSensor(&engineConfiguration->iat, HELLEN_DEFAULT_AT_PULLUP);
+	setCommonNTCSensorParameters(&engineConfiguration->clt);
+	setCommonNTCSensorParameters(&engineConfiguration->iat);
 
     setTPS1Calibration(100, 650);
 	//hellenWbo();

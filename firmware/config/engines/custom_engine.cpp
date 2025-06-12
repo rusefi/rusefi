@@ -98,9 +98,9 @@ void setFrankensoConfiguration() {
 	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
 
-	setCommonNTCSensor(&engineConfiguration->clt, 2700);
-	setCommonNTCSensor(&engineConfiguration->iat, 2700);
-
+  // Frankenso hardware
+  engineConfiguration->clt.config.bias_resistor = 2700;
+  engineConfiguration->iat.config.bias_resistor = 2700;
 
 	/**
 	 * http://rusefi.com/wiki/index.php?title=Manual:Hardware_Frankenso_board
