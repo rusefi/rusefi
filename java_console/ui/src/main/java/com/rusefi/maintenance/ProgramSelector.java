@@ -215,7 +215,7 @@ public class ProgramSelector {
     ) {
         return updateFirmwareAndRestorePreviousCalibrations(
             parent,
-            ecuPort,
+            ecuPort.port,
             callbacks,
             () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext
         );

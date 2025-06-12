@@ -7,7 +7,6 @@ import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
 import com.rusefi.ConnectivityContext;
-import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -42,7 +41,7 @@ public class CalibrationsHelper {
 
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
         final JComponent parent,
-        final PortResult ecuPort,
+        final String ecuPort,
         final UpdateOperationCallbacks callbacks,
         final Supplier<Boolean> updateFirmware, ConnectivityContext connectivityContext
     ) {
@@ -94,7 +93,7 @@ public class CalibrationsHelper {
                 return false;
             }
             return CalibrationsUpdater.INSTANCE.updateCalibrations(
-                ecuPort.port,
+                ecuPort,
                 mergedCalibrations.get().getImage().getConfigurationImage(),
                 callbacks, connectivityContext
             );
@@ -221,12 +220,13 @@ public class CalibrationsHelper {
     }
 
     public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
-        final PortResult ecuPort,
+        final String ecuPort,
         final UpdateOperationCallbacks callbacks,
-        final String backupFileName, ConnectivityContext connectivityContext
+        final String backupFileName,
+        final ConnectivityContext connectivityContext
     ) {
         return BinaryProtocolExecutor.executeWithSuspendedPortScanner(
-            ecuPort.port,
+            ecuPort,
             callbacks,
             (binaryProtocol) -> {
                 try {

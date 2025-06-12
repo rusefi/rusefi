@@ -36,7 +36,7 @@ public enum TuneUploader {
         }
 
         final Optional<CalibrationsInfo> calibrationsToUpload = readAndBackupCurrentCalibrations(
-            ecuPort,
+            ecuPort.port,
             callbacks,
             CALIBRATIONS_TO_UPLOAD_FILE_NAME, connectivityContext
         );
