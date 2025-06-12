@@ -2,11 +2,10 @@ package com.rusefi.core;
 
 import com.devexperts.logging.Logging;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.FileUtil.RUSEFI_SETTINGS_FOLDER;
@@ -53,14 +52,22 @@ public class SignatureHelper {
             return EXTRA_INI_SOURCE;
         }
         log.info(".ini not found in " + LOCAL_INI_CACHE_FOLDER + "(" + localIniFile + "), trying to download " + p.first);
-        try (BufferedInputStream in = new BufferedInputStream(new URL(p.first).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(localIniFile)) {
-            byte[] dataBuffer = new byte[32 * 1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, dataBuffer.length)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
+        try {
+            HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(p.first).openConnection();
+            int statusCode = httpURLConnection.getResponseCode();
+            if (statusCode >= 300) {
+                log.info("Unexpected code " + statusCode);
+                return null;
             }
-            return localIniFile;
+            try (BufferedInputStream in = new BufferedInputStream(httpURLConnection.getInputStream());
+                 FileOutputStream fileOutputStream = new FileOutputStream(localIniFile)) {
+                byte[] dataBuffer = new byte[32 * 1024];
+                int bytesRead;
+                while ((bytesRead = in.read(dataBuffer, 0, dataBuffer.length)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+                return localIniFile;
+            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
             return null;
