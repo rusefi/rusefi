@@ -4,8 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.core.RusEfiSignature;
-import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BufferedSerialIoStream;
