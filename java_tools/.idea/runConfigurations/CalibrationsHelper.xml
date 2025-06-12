@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CalibrationsHelper" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.maintenance.CalibrationsHelper" />
+    <module name="java_tools.ui.main" />
+    <option name="PROGRAM_PARAMETERS" value="current_tune COM9" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.rusefi.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -56,4 +56,34 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
         public void clear() {
         }
     };
+
+    UpdateOperationCallbacks CONSOLE = new UpdateOperationCallbacks() {
+        @Override
+        public void log(final String message, final boolean breakLineOnTextArea, boolean sendToLogger) {
+            if (breakLineOnTextArea) {
+                System.out.println(message);
+            } else {
+                System.out.print(message);
+            }
+            if (sendToLogger) {
+                LOGGER.log(message, breakLineOnTextArea, true);
+            }
+        }
+
+        @Override
+        public void done() {
+            log.info("[DONE]");
+            LOGGER.done();
+        }
+
+        @Override
+        public void error() {
+            log.info("[error]");
+            LOGGER.error();
+        }
+
+        @Override
+        public void clear() {
+        }
+    };
 }

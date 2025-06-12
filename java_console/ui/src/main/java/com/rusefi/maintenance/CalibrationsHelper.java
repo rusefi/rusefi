@@ -39,6 +39,18 @@ public class CalibrationsHelper {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd-hh.mm.ss");
 
+    public static void main(final String[] args) {
+        if (args.length != 2) {
+            System.err.println("File name and port are expected as command line arguments!");
+        } else {
+            final String fileName = args[0];
+            final String port = args[1];
+            if (!readAndBackupCurrentCalibrations(port, UpdateOperationCallbacks.CONSOLE, fileName).isPresent()) {
+                System.err.printf("Failed to read current calibrations from %s port%n", port);
+            }
+        }
+    }
+
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
         final JComponent parent,
         final String ecuPort,
@@ -234,6 +246,19 @@ public class CalibrationsHelper {
         );
     }
 
+    private static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
+        final String ecuPort,
+        final UpdateOperationCallbacks callbacks,
+        final String backupFileName
+    ) {
+        return BinaryProtocolExecutor.execute(
+            ecuPort,
+            callbacks,
+            binaryProtocol -> readAndBackupCurrentCalibrations(binaryProtocol, callbacks, backupFileName),
+            Optional.empty(),
+            false
+        );
+    }
     private static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
         final BinaryProtocol binaryProtocol,
         final UpdateOperationCallbacks callbacks,
