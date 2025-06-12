@@ -1267,8 +1267,6 @@
 #define load_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define LOG_DELIMITER "`"
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define LTFT_LOAD_CELL_COUNT 16
-#define LTFT_RPM_CELL_COUNT 16
 #define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_BUTTON_COUNT 4
 #define LUA_DIGITAL_INPUT_COUNT 8
@@ -1445,7 +1443,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2461323935
+#define SIGNATURE_HASH 4063913616
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1982,7 +1980,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.06.12.alphax-4k-gdi.2461323935"
+#define TS_SIGNATURE "rusEFI master.2025.06.12.alphax-4k-gdi.4063913616"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

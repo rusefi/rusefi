@@ -6300,11 +6300,11 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 23424
 	 */
-	scaled_channel<uint8_t, 1, 100> trimRpmBins[LTFT_RPM_CELL_COUNT] = {};
+	scaled_channel<uint8_t, 1, 100> trimRpmBins[VE_RPM_COUNT] = {};
 	/**
 	 * offset 23440
 	 */
-	uint16_t trimLoadBins[LTFT_RPM_CELL_COUNT] = {};
+	uint16_t trimLoadBins[VE_LOAD_COUNT] = {};
 	/**
 	 * @@DYNO_RPM_STEP_TOOLTIP@@
 	 * units: Rpm
