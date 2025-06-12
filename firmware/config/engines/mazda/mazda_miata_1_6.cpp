@@ -111,8 +111,8 @@ void miataNAcommonEngineSettings() {
 
 	engineConfiguration->tachPulsePerRev = 2;
 
-	setCommonNTCSensor(&engineConfiguration->clt, 2700);
-	setCommonNTCSensor(&engineConfiguration->iat, 2700);
+	setCommonNTCSensorParameters(&engineConfiguration->clt);
+	setCommonNTCSensorParameters(&engineConfiguration->iat);
 
 #if IGN_LOAD_COUNT == 16 && IGN_RPM_COUNT == 16
 	copyTable(config->ignitionTable, mapBased16IgnitionTable);

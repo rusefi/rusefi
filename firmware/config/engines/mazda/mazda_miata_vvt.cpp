@@ -329,8 +329,8 @@ static void setCommonMazdaNB() {
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
 	// CLT/IAT
-	setCommonNTCSensor(&engineConfiguration->clt, 2700);
-	setCommonNTCSensor(&engineConfiguration->iat, 2700);
+	setCommonNTCSensorParameters(&engineConfiguration->clt);
+	setCommonNTCSensorParameters(&engineConfiguration->iat);
 
 	// MAF (todo: do we use this?)
 	setMAFTransferFunction();
