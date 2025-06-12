@@ -215,8 +215,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale vvtPositionB2I;@@GAUGE_NAME_VVT_B2I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 	int16_t autoscale vvtPositionB2E;@@GAUGE_NAME_VVT_B2E@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
-	int16_t[FT_BANK_COUNT iterate] autoscale fuelPidCorrection;Fuel: Trim bank;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
-
 	int16_t autoscale rawTps1Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
@@ -373,8 +371,6 @@ float mapFast
 
 	uint16_t schedulingUsedCount;;"",1,0,0,0,0
 	uint16_t autoscale vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
-
-	uint16_t autoscale Gego;;"%",0.01,0,50,150,2
 
 	uint16_t testBenchIter;;"count",1, 0, 0, 0, 0
 

@@ -77,5 +77,8 @@ struct_no_prefix engine_state_s
 	uint8_t overDwellNotScheduledCounter
 	uint8_t sparkOutOfOrderCounter
 
+	! todo: extract to injection.txt?
+	float[FT_BANK_COUNT iterate] stftCorrection;STFT: Bank; "%", 100, -1.0, 50, 150, 1
+
 ! engine_state_s
 end_struct
