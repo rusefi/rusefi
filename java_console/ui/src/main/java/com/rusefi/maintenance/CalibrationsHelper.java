@@ -49,7 +49,7 @@ public class CalibrationsHelper {
 
         final String timestampFoleNameComponent = DATE_FORMAT.format(new Date());
 
-        final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrations(
+        final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
             ecuPort,
             callbacks,
             getFileNameWithoutExtension(timestampFoleNameComponent, PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
@@ -63,7 +63,7 @@ public class CalibrationsHelper {
             return false;
         }
 
-        final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrations(
+        final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
             ecuPort,
             callbacks,
             getFileNameWithoutExtension(timestampFoleNameComponent, UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
@@ -219,7 +219,7 @@ public class CalibrationsHelper {
         );
     }
 
-    public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
+    public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
         final String ecuPort,
         final UpdateOperationCallbacks callbacks,
         final String backupFileName,
