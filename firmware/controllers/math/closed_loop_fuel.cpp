@@ -11,7 +11,7 @@ struct FuelingBank {
 	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
 };
 
-static FuelingBank banks[STFT_BANK_COUNT];
+static FuelingBank banks[FT_BANK_COUNT];
 
 static Deadband<25> idleDeadband;
 static Deadband<2> overrunDeadband;
@@ -138,7 +138,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 
 	ClosedLoopFuelResult result;
 
-	for (int i = 0; i < STFT_BANK_COUNT; i++) {
+	for (int i = 0; i < FT_BANK_COUNT; i++) {
 		auto& cell = banks[i].cells[binIdx];
 
 		SensorType sensor = getSensorForBankIndex(i);

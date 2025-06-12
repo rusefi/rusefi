@@ -176,7 +176,7 @@ void EngineState::periodicFastCallback() {
 	engine->ignitionState.correctedIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(correctedIgnitionAdvance);
 
 	// compute per-bank fueling
-	for (size_t bankIndex = 0; bankIndex < STFT_BANK_COUNT; bankIndex++) {
+	for (size_t bankIndex = 0; bankIndex < FT_BANK_COUNT; bankIndex++) {
 		float corr = clResult.banks[bankIndex];
 		// todo: move to engine_state.txt and get rid of fuelPidCorrection in output_channels.txt?
 		engine->engineState.stftCorrection[bankIndex] = corr;

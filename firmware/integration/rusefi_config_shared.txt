@@ -25,8 +25,7 @@
 #define HW_EVENT_TYPES 4
 
 ! Short and Long term fuel corrections
-#define STFT_BANK_COUNT 2
-#define LTFT_BANK_CONUT 2
+#define FT_BANK_COUNT 2
 
 #define TCU_GEAR_COUNT 10
 #define EGT_CHANNEL_COUNT 8

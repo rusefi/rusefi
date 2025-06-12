@@ -176,7 +176,7 @@ static void populateFrame(Fueling2& msg) {
 	msg.fuelFlowRate = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
 #endif // MODULE_ODOMETER
 
-	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
+	for (size_t i = 0; i < FT_BANK_COUNT; i++) {
 		msg.fuelTrim[i] = 100.0f * (engine->engineState.stftCorrection[i] - 1.0f);
 	}
 }

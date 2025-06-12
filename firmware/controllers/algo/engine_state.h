@@ -29,7 +29,7 @@ public:
 
 
   // todo: move to .txt or even better extract injection.txt?
-	float stftCorrection[STFT_BANK_COUNT] = {0};
+	float stftCorrection[FT_BANK_COUNT] = {0};
 
 	float injectionStage2Fraction = 0;
 

@@ -565,7 +565,7 @@ static void updateSensors() {
 }
 
 static void updateFuelCorrections() {
-	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
+	for (size_t i = 0; i < FT_BANK_COUNT; i++) {
 		engine->outputChannels.fuelPidCorrection[i] = 100.0f * (engine->engineState.stftCorrection[i] - 1.0f);
 	}
 	engine->outputChannels.Gego = 100.0f * engine->engineState.stftCorrection[0];
