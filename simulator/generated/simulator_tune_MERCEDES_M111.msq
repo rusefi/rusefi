@@ -1757,7 +1757,7 @@
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant name="iat_adcChannel">"Disabled"</constant>
-        <constant digits="1" name="iat_bias_resistor" units="Ohm">2700.0</constant>
+        <constant digits="1" name="iat_bias_resistor" units="Ohm">0.0</constant>
         <constant digits="1" name="iat_resistance_1" units="Ohm">7400.0</constant>
         <constant digits="1" name="iat_resistance_2" units="Ohm">2180.0</constant>
         <constant digits="1" name="iat_resistance_3" units="Ohm">180.0</constant>
