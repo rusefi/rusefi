@@ -58,6 +58,7 @@ void setVwAba() {
 }
 
 void setVag_5_cyl() {
+  strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	engineConfiguration->cylindersCount = 5;
 	engineConfiguration->displacement = 2.5;
 	engineConfiguration->firingOrder = FO_1_2_4_5_3;
