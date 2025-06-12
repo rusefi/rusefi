@@ -588,8 +588,9 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
 
 		ensureArrayIsAscendingOrDefault("Fuel Level Sensor", config->fuelLevelBins);
-		ensureArrayIsAscendingOrDefault("Fuel Trim Rpm", config->fuelTrimRpmBins);
-		ensureArrayIsAscendingOrDefault("Fuel Trim Load", config->fuelTrimLoadBins);
+
+		ensureArrayIsAscendingOrDefault("STFT Rpm", config->fuelTrimRpmBins);
+		ensureArrayIsAscendingOrDefault("STFT Load", config->fuelTrimLoadBins);
 
 		ensureArrayIsAscendingOrDefault("TC slip", engineConfiguration->tractionControlSlipBins);
 		ensureArrayIsAscendingOrDefault("TC speed", engineConfiguration->tractionControlSpeedBins);
