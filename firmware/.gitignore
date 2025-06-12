@@ -16,3 +16,5 @@ arm-gnu*
 # bundle temp folder
 rusefi.snapshot.*
 rusefi.ini.zip
+
+quick-self-test.xml
