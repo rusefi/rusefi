@@ -27,10 +27,6 @@ public:
 
 	bool useOddFireWastedSpark = false;
 
-
-  // todo: move to .txt or even better extract injection.txt?
-	float stftCorrection[FT_BANK_COUNT] = {0};
-
 	float injectionStage2Fraction = 0;
 
 	Timer crankingTimer;

@@ -564,13 +564,6 @@ static void updateSensors() {
 	updateMiscSensors();
 }
 
-static void updateFuelCorrections() {
-	for (size_t i = 0; i < FT_BANK_COUNT; i++) {
-		engine->outputChannels.fuelPidCorrection[i] = 100.0f * (engine->engineState.stftCorrection[i] - 1.0f);
-	}
-	engine->outputChannels.Gego = 100.0f * engine->engineState.stftCorrection[0];
-}
-
 static void updateFuelResults() {
 #if EFI_VEHICLE_SPEED && defined (MODULE_ODOMETER)
 	engine->outputChannels.fuelFlowRate = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
@@ -584,7 +577,6 @@ static void updateFuelResults() {
 }
 
 static void updateFuelInfo() {
-	updateFuelCorrections();
 	updateFuelResults();
 #if EFI_ENGINE_CONTROL
 	const auto& wallFuel = engine->injectionEvents.elements[0].getWallFuel();
