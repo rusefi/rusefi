@@ -451,7 +451,7 @@ void EngineTestHelper::spin60_2UntilDeg(struct testSpinEngineUntilData& spinInfo
   	volatile float tick_per_deg = 6000 * 60 / 360 / (float)targetRpm;
 	constexpr float tooth_per_deg = 360 / 60;
 
-	size_t targetTooth = (targetDegree - spinInfo.currentDegree) / tooth_per_deg;
+	auto targetTooth = static_cast<size_t>((targetDegree - spinInfo.currentDegree) / tooth_per_deg);
 
 	for (size_t i = 0; i < targetTooth; i++) {
 		if (spinInfo.currentTooth < 30 || spinInfo.currentTooth > 31) {
