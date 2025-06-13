@@ -374,6 +374,7 @@ float mapFast
 	uint16_t schedulingUsedCount;;"",1,0,0,0,0
 	uint16_t autoscale vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
 
+! todo: document if name is odd due to being a magic variable for TS VEAnalyzer integration or not
 	uint16_t autoscale Gego;;"%",0.01,0,50,150,2
 
 	uint16_t testBenchIter;;"count",1, 0, 0, 0, 0
