@@ -2,7 +2,6 @@ package com.rusefi.core;
 
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
-import com.rusefi.config.generated.FuelComputer;
 import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.sensor_logs.BinaryLogEntry;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +40,7 @@ public enum Sensor implements BinaryLogEntry {
 
     // throttle, pedal
     TPSVALUE(GAUGE_NAME_TPS, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.TPSVALUE, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
-    PPS(GAUGE_NAME_THROTTLE_PEDAL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.THROTTLEPEDALPOSITION, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // pedal position sensor
+    THROTTLEPEDALPOSITION(GAUGE_NAME_THROTTLE_PEDAL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.THROTTLEPEDALPOSITION, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // pedal position sensor
 
     // air flow/mass measurement
     MAFMEASURED(GAUGE_NAME_MAF, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAFMEASURED, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
@@ -93,9 +92,9 @@ public enum Sensor implements BinaryLogEntry {
 
 //
     // Mode, firmware, protocol, run time
-    TIME_SECONDS(GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.SECONDS, 1, 0, 5, ""),
+    SECONDS(GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.SECONDS, 1, 0, 5, ""),
 //    engineMode("mode", SensorCategory.OPERATIONS, FieldType.INT, 116, 0, 5),
-    FIRMWARE_VERSION(GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.FIRMWAREVERSION, 1, 0, 100, "version_f"),
+    FIRMWAREVERSION(GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.FIRMWAREVERSION, 1, 0, 100, "version_f"),
 
 //    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
@@ -127,11 +126,11 @@ public enum Sensor implements BinaryLogEntry {
 //    tcuDesiredGear(GAUGE_NAME_DESIRED_GEAR, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 262, 1.0, 0, 100, "gear"),
     flexPercent(GAUGE_NAME_FLEX, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.FLEXPERCENT, 1.0 / PACK_MULT_FLEX, 0, 100, "%"),
 
-    wastegatePosition(GAUGE_NAME_WG_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.WASTEGATEPOSITIONSENSOR, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
-    idlePositionSensor(GAUGE_NAME_IDLE_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.IDLEPOSITIONSENSOR, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
+    WASTEGATEPOSITIONSENSOR(GAUGE_NAME_WG_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.WASTEGATEPOSITIONSENSOR, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
+    IDLEPOSITIONSENSOR(GAUGE_NAME_IDLE_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.IDLEPOSITIONSENSOR, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 
-    lowFuelPressure(GAUGE_NAME_FUEL_PRESSURE_LOW, SensorCategory.OPERATIONS, FieldType.INT16, TsOutputs.RAWLOWFUELPRESSURE, 1.0 / PACK_MULT_PRESSURE, 10, 20, "afr"),
-    highFuelPressure(GAUGE_NAME_FUEL_PRESSURE_HIGH, SensorCategory.OPERATIONS, FieldType.INT16, TsOutputs.HIGHFUELPRESSURE, 1.0 / PACK_MULT_HIGH_PRESSURE, 10, 20, "afr"),
+    RAWLOWFUELPRESSURE(GAUGE_NAME_FUEL_PRESSURE_LOW, SensorCategory.OPERATIONS, FieldType.INT16, TsOutputs.RAWLOWFUELPRESSURE, 1.0 / PACK_MULT_PRESSURE, 10, 20, "afr"),
+    HIGHFUELPRESSURE(GAUGE_NAME_FUEL_PRESSURE_HIGH, SensorCategory.OPERATIONS, FieldType.INT16, TsOutputs.HIGHFUELPRESSURE, 1.0 / PACK_MULT_HIGH_PRESSURE, 10, 20, "afr"),
 
 
 //    airFuelRatio(GAUGE_NAME_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 282, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
@@ -142,17 +141,17 @@ public enum Sensor implements BinaryLogEntry {
     vvtPositionB2I(GAUGE_NAME_VVT_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.VVTPOSITIONB2I, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
     vvtPositionB2E(GAUGE_NAME_VVT_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.VVTPOSITIONB2E, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
 
-    vvtTargetB1I(GAUGE_NAME_VVT_TARGET_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VVTTARGETS1, 1, -50, 50, "deg"),
-    vvtTargetB1E(GAUGE_NAME_VVT_TARGET_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VVTTARGETS2, 1, -50, 50, "deg"),
-    vvtTargetB2I(GAUGE_NAME_VVT_TARGET_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VVTTARGETS3, 1, -50, 50, "deg"),
-    vvtTargetB2E(GAUGE_NAME_VVT_TARGET_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VVTTARGETS4, 1, -50, 50, "deg"),
+    VVTTARGETS1(GAUGE_NAME_VVT_TARGET_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VVTTARGETS1, 1, -50, 50, "deg"),
+    VVTTARGETS2(GAUGE_NAME_VVT_TARGET_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VVTTARGETS2, 1, -50, 50, "deg"),
+    VVTTARGETS3(GAUGE_NAME_VVT_TARGET_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VVTTARGETS3, 1, -50, 50, "deg"),
+    VVTTARGETS4(GAUGE_NAME_VVT_TARGET_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT8, TsOutputs.VVTTARGETS4, 1, -50, 50, "deg"),
     turboSpeed(GAUGE_NAME_TURBO_SPEED, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.TURBOSPEED, 1, -50, 50, "hz"),
 
 //    accelerationZ(GAUGE_NAME_ACCEL_Z, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 308, 1.0 / PACK_MULT_PERCENT, -3, 3, "G"),
 //    accelerationRoll(GAUGE_NAME_ACCEL_ROLL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 310, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
 //    accelerationYaw(GAUGE_NAME_ACCEL_YAW, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 312, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
 
-    instantMAP("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.INSTANTMAPVALUE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+    INSTANTMAPVALUE("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.INSTANTMAPVALUE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
 
 //    baseDwell("baseDwell", SensorCategory.SENSOR_INPUTS, FieldType.INT, 972, 1.0, -1.0, -1.0, ""),
@@ -163,8 +162,8 @@ public enum Sensor implements BinaryLogEntry {
 //    trim("trim", SensorCategory.SENSOR_INPUTS, FieldType.INT, 992, 1.0, -1.0, -1.0, ""),
 //    luaAdjustment("luaAdjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT, 996, 1.0, -1.0, -1.0, ""),
 
-    LUAGAUGE1("Lua gauge 1", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, TsOutputs.LUAGAUGES1, 1, 4, 18000, "value"),
-    LUAGAUGE2("Lua gauge 2", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, TsOutputs.LUAGAUGES2, 1, 4, 18000, "value"),
+    LUAGAUGES1("Lua gauge 1", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, TsOutputs.LUAGAUGES1, 1, 4, 18000, "value"),
+    LUAGAUGES2("Lua gauge 2", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, TsOutputs.LUAGAUGES2, 1, 4, 18000, "value"),
 
     MCUSERIAL(SensorCategory.OPERATIONS, TsOutputs.MCUSERIAL),
 
