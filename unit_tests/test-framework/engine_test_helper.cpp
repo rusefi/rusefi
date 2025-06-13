@@ -86,7 +86,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	pinRepository = decltype(pinRepository){};
 
 	auto testInfo = ::testing::UnitTest::GetInstance()->current_test_info();
-extern bool hasInitGtest;
+	extern bool hasInitGtest;
 	if (hasInitGtest) {
 		#if IS_WINDOWS_COMPILER
 		  mkdir(TEST_RESULTS_DIR);
@@ -119,8 +119,7 @@ extern bool hasInitGtest;
 		Sensor::setMockValue(s, v);
 	}
 
-	// activeConfiguration = decltype(activeConfiguration){}; but I do not speak C/C++
-	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
+	activeConfiguration = engine_configuration_s{};
 
 	enginePins.reset();
 	enginePins.unregisterPins();
