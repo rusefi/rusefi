@@ -136,6 +136,12 @@ jobs:
         name: rusefi_hw-ci-${{matrix.build-target}}.bin
         path: ./firmware/build/rusefi*.bin
 
+    - name: Upload .ini artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi_hw-ci-${{matrix.build-target}}.ini
+        path: ${{matrix.test-suite-ini}}    
+
     # This both compiles and runs HW CI tests
     # .github/workflows/hw-ci/run_hw_ci.sh com.rusefi.HwCiF4Discovery
     - name: Run Hardware CI
