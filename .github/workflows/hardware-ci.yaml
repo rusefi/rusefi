@@ -9,6 +9,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  AUTOMATION_REF: ${{github.ref_name}}
+
 jobs:
   hardware-ci:
     strategy:
