@@ -616,6 +616,8 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS = "kPa";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "Fuel: running";
+	public static final String GAUGE_NAME_FUEL_STFT_1 = "Short Term Fuel Trim: Bank 1";
+	public static final String GAUGE_NAME_FUEL_STFT_2 = "Short Term Fuel Trim: Bank 2";
 	public static final String GAUGE_NAME_FUEL_TEMPERATURE = "Fuel Temperature";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS AE add fuel ms";
 	public static final String GAUGE_NAME_FUEL_TPS_ROC = "Fuel: TPS change";
@@ -1637,7 +1639,7 @@ public class VariableRegistryValues {
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final int TS_SCATTER_PAGE_SIZE = 256;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.13.proteus_f7.3158871009";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.13.proteus_f7.2403872251";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1924;
