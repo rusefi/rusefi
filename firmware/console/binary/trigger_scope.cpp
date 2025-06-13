@@ -53,7 +53,7 @@ static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 2, &completionCallbac
 
 static constexpr size_t sampleCount = BIG_BUFFER_SIZE / (2 * sizeof(uint8_t));
 
-static void startSampling(void* = nullptr) {
+static void startSampling() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	if (buffer && !engineConfiguration->enableSoftwareKnock) {
@@ -94,7 +94,8 @@ const BigBufferHandle& triggerScopeGetBuffer() {
 
 	// Start the next sample once we've read out this one
 	if (isRunning) {
-		engine->scheduler.schedule("trigger scope", &restartTimer, getTimeNowNt() + MS2NT(10), startSampling);
+		static auto const startSamplingAction{ action_s::make<startSampling>() };
+		engine->scheduler.schedule("trigger scope", &restartTimer, getTimeNowNt() + MS2NT(10), startSamplingAction);
 	}
 
 	return buffer;

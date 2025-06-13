@@ -6,7 +6,7 @@
 
 extern bool printFuelDebug;
 
-void startSimultaneousInjection(void*) {
+void startSimultaneousInjection() {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		enginePins.injectors[i].open(nowNt);

@@ -12,7 +12,8 @@ using ::testing::Property;
 using ::testing::Truly;
 
 static bool ActionArgumentHasLowBitSet(const action_s& a) {
-	return (reinterpret_cast<uintptr_t>(a.getArgument()) & 1) != 0;
+	auto const tmp{ TaggedPointer<InjectionEvent>::fromRaw(a.getArgumentRaw()) };
+	return tmp.getFlag() != 0;
 }
 
 TEST(injectionScheduling, InjectionIsScheduled) {
@@ -44,7 +45,7 @@ TEST(injectionScheduling, InjectionIsScheduled) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgumentRaw, Eq(reinterpret_cast<uintptr_t>(&event)))));
 	}
 
 	// Event scheduled at 125 degrees
@@ -93,9 +94,9 @@ TEST(injectionScheduling, InjectionIsScheduledDualStage) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Truly(ActionArgumentHasLowBitSet)));
 		// falling edge (primary) 20ms later
-		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgumentRaw, Eq(reinterpret_cast<uintptr_t>(&event)))));
 		// falling edge (secondary) 10ms later
-		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(10), Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(10), Property(&action_s::getArgumentRaw, Eq(reinterpret_cast<uintptr_t>(&event)))));
 	}
 
 	// Event scheduled at 125 degrees
@@ -134,7 +135,7 @@ TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgumentRaw, Eq(reinterpret_cast<uintptr_t>(&event)))));
 	}
 
 	// Event scheduled at 715 degrees
@@ -173,7 +174,7 @@ TEST(injectionScheduling, InjectionIsScheduledAfterWraparound) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgumentRaw, Eq(reinterpret_cast<uintptr_t>(&event)))));
 	}
 
 	// Event scheduled at 5 degrees

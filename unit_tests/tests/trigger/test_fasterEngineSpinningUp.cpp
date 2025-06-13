@@ -62,8 +62,11 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	float expectedSimultaneousTimestamp = eth.angleToTimeUs(360 - phase);
 
-	eth.assertEvent5("inj start#1", 0, (void*)startSimultaneousInjection, expectedSimultaneousTimestamp - MS2US(engine->engineState.injectionDuration));
-	eth.assertEvent5("inj end#1", 1, (void*)endSimultaneousInjection, expectedSimultaneousTimestamp);
+	auto const startSimultaneousInjectionAction{ action_s::make<startSimultaneousInjection>() };
+	auto const endSimultaneousInjectionAction{ action_s::make<endSimultaneousInjection>((InjectionEvent*){})};
+
+	eth.assertEvent5("inj start#1", 0, startSimultaneousInjectionAction, expectedSimultaneousTimestamp - MS2US(engine->engineState.injectionDuration));
+	eth.assertEvent5("inj end#1", 1, endSimultaneousInjectionAction, expectedSimultaneousTimestamp);
 
 	// skip the rest of the cycle
 	eth.moveTimeForwardUs(MS2US(200));
@@ -86,8 +89,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check real events
 	expectedSimultaneousTimestamp = eth.angleToTimeUs(360 - phase);
 
-	eth.assertEvent5("inj start#2", 0, (void*)startSimultaneousInjection, expectedSimultaneousTimestamp - 1625);
-	eth.assertEvent5("inj end#2", 1, (void*)endSimultaneousInjection, expectedSimultaneousTimestamp);
+	eth.assertEvent5("inj start#2", 0, startSimultaneousInjectionAction, expectedSimultaneousTimestamp - 1625);
+	eth.assertEvent5("inj end#2", 1, endSimultaneousInjectionAction, expectedSimultaneousTimestamp);
 
 	// Now perform a fake VVT sync and check that ignition mode changes to sequential
 	engine->triggerCentral.syncEnginePhaseAndReport(2, 0);
@@ -115,8 +118,11 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// Note: See addFuelEvents() fix inside setRpmValue()!
 	expectedSimultaneousTimestamp = eth.angleToTimeUs(phase);
 	ASSERT_EQ(180, eth.timeToAngle(30.000));
-	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, -expectedSimultaneousTimestamp - 1625);
-	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, -expectedSimultaneousTimestamp);
+
+	auto const turnInjectionPinHighAction{ action_s::make<turnInjectionPinHigh>(uintptr_t{}) };
+	auto const turnInjectionPinLowAction{ action_s::make<turnInjectionPinLow>((InjectionEvent*){})};
+	eth.assertEvent5("inj start#3", 0, turnInjectionPinHighAction, -expectedSimultaneousTimestamp - 1625);
+	eth.assertEvent5("inj end#3", 1, turnInjectionPinLowAction, -expectedSimultaneousTimestamp);
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {

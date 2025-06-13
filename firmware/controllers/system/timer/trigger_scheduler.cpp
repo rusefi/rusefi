@@ -26,7 +26,7 @@ bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *e
 	return false;
 }
 
-void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, angle_t angle, action_s action) {
+void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, angle_t angle, action_s const& action) {
 	event->setAngle(angle);
 
 	schedule(msg, event, action);
@@ -64,7 +64,7 @@ bool TriggerScheduler::scheduleOrQueue(const char *msg, AngleBasedEvent *event,
 	}
 }
 
-void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_s action) {
+void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_s const& action) {
 	if (event->getAngle() < 0) {
 	    // at the moment we expect API consumer to wrap angle. shall we do the wrapping in the enginePhase setter?
 	    // i.e. what is the best level to take care of the range constraint?

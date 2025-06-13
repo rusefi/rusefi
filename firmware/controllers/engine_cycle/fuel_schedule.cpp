@@ -8,27 +8,21 @@
 
 #if EFI_ENGINE_CONTROL
 
-void turnInjectionPinHigh(uintptr_t arg) {
-	efitick_t nowNt = getTimeNowNt();
+void turnInjectionPinHigh(scheduler_arg_t const arg) {
+	auto const nowNt{ getTimeNowNt() };
 
-	// clear last bit to recover the pointer
-	InjectionEvent *event = reinterpret_cast<InjectionEvent*>(arg & ~(1UL));
+	auto const taggedPointer{ TaggedPointer<InjectionEvent>::fromRaw(arg) };
+	auto const event{ taggedPointer.getOriginalPointer() };
+	auto const hasStage2Injection{ taggedPointer.getFlag() };
 
-	// extract last bit
-	bool stage2Active = arg & 1;
-
-	for (size_t i = 0; i < efi::size(event->outputs); i++) {
-		InjectorOutputPin *output = event->outputs[i];
-
+	for (auto const& output: event->outputs) {
 		if (output) {
 			output->open(nowNt);
 		}
 	}
 
-	if (stage2Active) {
-		for (size_t i = 0; i < efi::size(event->outputsStage2); i++) {
-			InjectorOutputPin *output = event->outputsStage2[i];
-
+	if (hasStage2Injection) {
+		for (auto const& output: event->outputsStage2) {
 			if (output) {
 				output->open(nowNt);
 			}
@@ -51,8 +45,8 @@ void FuelSchedule::invalidate() {
 }
 
 void FuelSchedule::resetOverlapping() {
-	for (size_t i = 0; i < efi::size(enginePins.injectors); i++) {
-		enginePins.injectors[i].reset();
+	for (auto& inj : enginePins.injectors) {
+		inj.reset();
 	}
 }
 

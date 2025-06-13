@@ -157,12 +157,8 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
     }
 }
 
-static void assertREquals(void *expected, void *actual) {
-	ASSERT_EQ((float)(uint64_t)expected, (float)(uint64_t)actual);
-}
-
-static void assertREqualsM(const char *msg, void *expected, void *actual) {
-	ASSERT_NEAR(reinterpret_cast<uint64_t>(expected), reinterpret_cast<uint64_t>(actual), EPS4D) << msg;
+static void assertActionCallbacksEqual(const char *msg, action_s const& expected_action, action_s const& actual_action) {
+	ASSERT_EQ(expected_action.getCallback(), actual_action.getCallback()) << msg;
 }
 
 extern bool debugSignalExecutor;
@@ -256,17 +252,17 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #2";
 	ASSERT_EQ( 4,  engine->scheduler.size()) << "queue size/2";
 	{
-	scheduling_s *ev0 = engine->scheduler.getForUnitTest(0);
+		auto const ev0{ engine->scheduler.getForUnitTest(0) };
+		auto const turnSparkPinHighStartChargingAction{ action_s::make<turnSparkPinHighStartCharging>((IgnitionEvent*){}) };
+		assertActionCallbacksEqual("Call@0", ev0->action, turnSparkPinHighStartChargingAction);
+		ASSERT_EQ(start + 944, ev0->getMomentUs()) << "ev 0";
+		EXPECT_EQ(&enginePins.coils[0], ev0->action.getArgument<IgnitionEvent*>()->outputs[0]) << "coil 0";
 
-	assertREqualsM("Call@0", (void*)ev0->action.getCallback(), (void*)turnSparkPinHighStartCharging);
-	ASSERT_EQ(start + 944, ev0->getMomentUs()) << "ev 0";
-	EXPECT_EQ((uintptr_t)&enginePins.coils[0], (uintptr_t)((IgnitionEvent*)ev0->action.getArgument())->outputs[0]) << "coil 0";
-
-	scheduling_s *ev1 = engine->scheduler.getForUnitTest(1);
-	assertREqualsM("Call@1", (void*)ev1->action.getCallback(), (void*)fireSparkAndPrepareNextSchedule);
-	ASSERT_EQ(start + 944 + 1000 * FORD_INLINE_DWELL, ev1->getMomentUs()) << "ev 1";
-	EXPECT_EQ((uintptr_t)&enginePins.coils[0], (uintptr_t)((IgnitionEvent*)ev1->action.getArgument())->outputs[0]) << "coil 1";
-
+		auto const ev1{ engine->scheduler.getForUnitTest(1) };
+		auto const fireSparkAndPrepareNextScheduleAction{ action_s::make<fireSparkAndPrepareNextSchedule>((IgnitionEvent*){}) };
+		assertActionCallbacksEqual("Call@1", ev1->action, fireSparkAndPrepareNextScheduleAction);
+		ASSERT_EQ(start + 944 + 1000 * FORD_INLINE_DWELL, ev1->getMomentUs()) << "ev 1";
+		EXPECT_EQ(&enginePins.coils[0], ev1->action.getArgument<IgnitionEvent*>()->outputs[0]) << "coil 1";
 	}
 
 	engine->scheduler.clear();

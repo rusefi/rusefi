@@ -26,10 +26,12 @@ TEST(test_utils, assertEventExistsAtEnginePhase){
     // two simultaneous injections
     ASSERT_EQ( 4,  engine->scheduler.size()) << "plain#2";
 
+    auto const startSimultaneousInjectionAction{ action_s::make<startSimultaneousInjection>() };
+
     // old event assert:
-    eth.assertEvent5("sim start", 0, (void*)startSimultaneousInjection, 100000 - 1625);
+    eth.assertEvent5("sim start", 0, startSimultaneousInjectionAction, 100000 - 1625);
     // new event assert:
-    bool injectionDone = eth.assertEventExistsAtEnginePhase("sim start", (void*)startSimultaneousInjection, static_cast<angle_t>(177.08));
+    bool injectionDone = eth.assertEventExistsAtEnginePhase("sim start", startSimultaneousInjectionAction, static_cast<angle_t>(177.08));
     EXPECT_TRUE(injectionDone);
 };
 

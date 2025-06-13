@@ -23,19 +23,19 @@ public:
 	void setWeakSignal(bool isWeak);
 
 public:
-	triggerAdcSample_t adcDefaultThreshold;
-	triggerAdcSample_t adcMinThreshold;
-	triggerAdcSample_t adcMaxThreshold;
+	triggerAdcSample_t adcDefaultThreshold{};
+	triggerAdcSample_t adcMinThreshold{};
+	triggerAdcSample_t adcMaxThreshold{};
 
-	float triggerInputDividerCoefficient;
+	float triggerInputDividerCoefficient{};
 
 	float triggerAdcITermCoef = 1600.0f;
 	float triggerAdcITermMin = 3.125e-8f;	// corresponds to rpm=25
 
 	int transitionCooldown = 5;
 
-	int analogToDigitalTransitionCnt;
-	int digitalToAnalogTransitionCnt;
+	int analogToDigitalTransitionCnt{};
+	int digitalToAnalogTransitionCnt{};
 
 	triggerAdcMode_t curAdcMode = TRIGGER_ADC_NONE;
 	float adcThreshold = adcDefaultThreshold;
