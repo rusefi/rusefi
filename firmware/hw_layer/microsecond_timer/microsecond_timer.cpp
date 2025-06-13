@@ -125,19 +125,19 @@ static MicrosecondTimerWatchdogController watchdogControllerInstance;
 
 static scheduling_s watchDogBuddy;
 
-static void watchDogBuddyCallback(void*) {
+static void watchDogBuddyCallback() {
 	/**
 	 * the purpose of this periodic activity is to make watchdogControllerInstance
 	 * watchdog happy by ensuring that we have scheduler activity even in case of very broken configuration
 	 * without any PWM or input pins
 	 */
-	engine->scheduler.schedule("watch", &watchDogBuddy, getTimeNowNt() + MS2NT(1000), watchDogBuddyCallback);
+	engine->scheduler.schedule("watch", &watchDogBuddy, getTimeNowNt() + MS2NT(1000), action_s::make<watchDogBuddyCallback>());
 }
 
 static volatile bool testSchedulingHappened = false;
 static Timer testScheduling;
 
-static void timerValidationCallback(void*) {
+static void timerValidationCallback() {
 	testSchedulingHappened = true;
 	efitimems_t actualTimeSinceSchedulingMs = 1e3 * testScheduling.getElapsedSeconds();
 
@@ -161,7 +161,7 @@ static void validateHardwareTimer() {
 			"hw-validate",
 			&watchDogBuddy,
 			getTimeNowNt() + MS2NT(TEST_CALLBACK_DELAY_MS),
-			timerValidationCallback);
+			action_s::make<timerValidationCallback>());
 
 	chThdSleepMilliseconds(TEST_CALLBACK_DELAY_MS + 2);
 	if (!testSchedulingHappened) {
@@ -178,7 +178,7 @@ void initMicrosecondTimer() {
 
 	validateHardwareTimer();
 
-	watchDogBuddyCallback(NULL);
+	watchDogBuddyCallback();
 #if EFI_EMULATE_POSITION_SENSORS
 	watchdogControllerInstance.start();
 #endif /* EFI_EMULATE_POSITION_SENSORS */

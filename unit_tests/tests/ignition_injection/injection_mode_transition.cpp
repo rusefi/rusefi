@@ -64,19 +64,22 @@ TEST(fuelControl, transitionIssue1592) {
 
 	{
 		// Injector 2 should be scheduled to open then close
-		void* inj2 = reinterpret_cast<void*>(&engine->injectionEvents.elements[1]);
+		auto inj2 = &engine->injectionEvents.elements[1];
+		auto const taggedPointer{TaggedPointer<decltype(this)>::make(inj2, false)};
+		auto const aHigh{ action_s::make<turnInjectionPinHigh>( taggedPointer.getRaw() ) };
+		auto const aLow{ action_s::make<turnInjectionPinLow>( inj2 ) };
 
 		ASSERT_EQ(engine->scheduler.size(), 2);
 
 		// Check that the action is correct - we don't care about the timing necessarily
 		auto sched_open = engine->scheduler.getForUnitTest(0);
-		ASSERT_EQ(sched_open->action.getArgument(), inj2);
-		ASSERT_EQ(sched_open->action.getCallback(), (void(*)(void*))turnInjectionPinHigh);
+		ASSERT_EQ(sched_open->action.getArgumentRaw(), taggedPointer.getRaw());
+		ASSERT_EQ(sched_open->action.getCallback(), aHigh.getCallback());
 
 		auto sched_close = engine->scheduler.getForUnitTest(1);
 		// Next action should be closing the same injector
-		ASSERT_EQ(sched_close->action.getArgument(), inj2);
-		ASSERT_EQ(sched_close->action.getCallback(), (void(*)(void*))turnInjectionPinLow);
+		ASSERT_EQ(sched_close->action.getArgumentRaw(), taggedPointer.getRaw());
+		ASSERT_EQ(sched_close->action.getCallback(), aLow.getCallback());
 	}
 
 	// Run the engine for some revs

@@ -64,10 +64,11 @@ TEST(OddFireRunningMode, hd) {
 	angle_t expectedAngle3 = -180 + cylinderOne - timing;
 
 	ASSERT_EQ( 8,  engine->scheduler.size());
-	eth.assertEvent5("spark down#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle3));
+	auto const fireSparkAndPrepareNextScheduleAction{ action_s::make<fireSparkAndPrepareNextSchedule>((IgnitionEvent*){})};
+	eth.assertEvent5("spark down#3", 3, fireSparkAndPrepareNextScheduleAction, eth.angleToTimeUs(expectedAngle3));
 
 	angle_t expectedAngle5 = -180 + cylinderTwo - timing;
-	eth.assertEvent5("spark down#5", 5, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle5));
+	eth.assertEvent5("spark down#5", 5, fireSparkAndPrepareNextScheduleAction, eth.angleToTimeUs(expectedAngle5));
 
 	ASSERT_EQ(500, Sensor::getOrZero(SensorType::Rpm));
 
@@ -78,10 +79,11 @@ TEST(OddFireRunningMode, hd) {
 	ASSERT_NEAR(0.0069257142022, getInjectionMass(200), EPS3D);
 
 	ASSERT_EQ( 8,  engine->scheduler.size());
-	eth.assertEvent5("fuel down2#2", 2, (void*)turnInjectionPinLow, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET + cylinderOne));
-	eth.assertEvent5("spark down2#4", 4, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 + cylinderOne - timing));
-	eth.assertEvent5("fuel down2#7", 7, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET + cylinderTwo));
-	eth.assertEvent5("spark down2#0", 0, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-540 + cylinderTwo - timing));
+	auto const turnInjectionPinLowAction{ action_s::make<turnInjectionPinLow>((InjectionEvent*){})};
+	eth.assertEvent5("fuel down2#2", 2, turnInjectionPinLowAction, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET + cylinderOne));
+	eth.assertEvent5("spark down2#4", 4, fireSparkAndPrepareNextScheduleAction, eth.angleToTimeUs(-180 + cylinderOne - timing));
+	eth.assertEvent5("fuel down2#7", 7, turnInjectionPinLowAction, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET + cylinderTwo));
+	eth.assertEvent5("spark down2#0", 0, fireSparkAndPrepareNextScheduleAction, eth.angleToTimeUs(-540 + cylinderTwo - timing));
 
 	ASSERT_EQ(2, engine->getBailedOnDwellCount()) << "Please check if our dwell algorithm have really got better.";
 }

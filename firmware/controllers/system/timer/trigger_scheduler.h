@@ -6,7 +6,7 @@ class TriggerScheduler : public EngineModule {
 public:
     // *kludge* we have three methods with *schedule* in the name meaning three different things
     // this method just places event into the collection of tooth-based events
-	void schedule(const char *msg, AngleBasedEvent* event, angle_t angle, action_s action);
+	void schedule(const char *msg, AngleBasedEvent* event, angle_t angle, action_s const& action);
 
     // 'schedule' means 'delegates to time-based scheduler' and 'queue' here matches the 'schedule' method above
 	bool scheduleOrQueue(const char *msg, AngleBasedEvent *event,
@@ -25,7 +25,7 @@ public:
 #endif // EFI_UNIT_TEST
 
 private:
-	void schedule(const char *msg, AngleBasedEvent* event, action_s action);
+	void schedule(const char *msg, AngleBasedEvent* event, action_s const& action);
 
 	bool assertNotInList(AngleBasedEvent *head, AngleBasedEvent *element);
 

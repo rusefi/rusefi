@@ -31,7 +31,7 @@ static void scheduleOpen(AuxActor *current) {
 			"aux-valve",
 			&current->open,
 			current->extra + engine->engineState.auxValveStart,
-			{ auxPlainPinTurnOn, current }
+			action_s::make<auxPlainPinTurnOn>( current )
 			);
 }
 
@@ -49,7 +49,7 @@ void auxPlainPinTurnOn(AuxActor *current) {
 			"aux-valve",
 			&current->close,
 			current->extra + engine->engineState.auxValveEnd,
-			{ plainPinTurnOff, output }
+			action_s::make<plainPinTurnOff>( output )
 			);
 	}
 

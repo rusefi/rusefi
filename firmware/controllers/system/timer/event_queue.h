@@ -26,7 +26,7 @@ public:
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
-	bool insertTask(scheduling_s *scheduling, efitick_t timeX, action_s action);
+	bool insertTask(scheduling_s *scheduling, efitick_t timeX, action_s const& action);
 	void remove(scheduling_s* scheduling);
 
 	int executeAll(efitick_t now);

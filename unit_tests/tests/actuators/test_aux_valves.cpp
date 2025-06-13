@@ -17,27 +17,32 @@ TEST(Actuators, AuxValves) {
 	// Engine must be "spinning" for scheduleByAngle to work
 	engine->rpmCalculator.setRpmValue(1000);
 
-	eth.assertTriggerEvent("a0", 0, &engine->auxValves[0][0].open, (void*)&auxPlainPinTurnOn, 0);
-	eth.assertTriggerEvent("a1", 1, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 360);
-	eth.assertTriggerEvent("a2", 2, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 180);
-	eth.assertTriggerEvent("a3", 3, &engine->auxValves[1][1].open, (void*)&auxPlainPinTurnOn, 540);
+	auto const auxPlainPinTurnOnAction{ action_s::make<auxPlainPinTurnOn>((AuxActor*){}) };
+
+	// TODO: This whole block is passing some expected values which are ignored by check implementation, fix?
+
+	eth.assertTriggerEvent("a0", 0, &engine->auxValves[0][0].open, auxPlainPinTurnOnAction, 0);
+	eth.assertTriggerEvent("a1", 1, &engine->auxValves[0][1].open, auxPlainPinTurnOnAction, 360);
+	eth.assertTriggerEvent("a2", 2, &engine->auxValves[1][0].open, auxPlainPinTurnOnAction, 180);
+	eth.assertTriggerEvent("a3", 3, &engine->auxValves[1][1].open, auxPlainPinTurnOnAction, 540);
 
 	// Execute the first one, ensure scheduling for the "close" event happens
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(1000, 0, 0, 1);
 
 	// Old head should now be missing - we just ran it
-	eth.assertTriggerEvent("a1", 0, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 360);
-	eth.assertTriggerEvent("a2", 1, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 180);
-	eth.assertTriggerEvent("a3", 2, &engine->auxValves[1][1].open, (void*)&auxPlainPinTurnOn, 540);
+	eth.assertTriggerEvent("a1", 0, &engine->auxValves[0][1].open, auxPlainPinTurnOnAction, 360);
+	eth.assertTriggerEvent("a2", 1, &engine->auxValves[1][0].open, auxPlainPinTurnOnAction, 180);
+	eth.assertTriggerEvent("a3", 2, &engine->auxValves[1][1].open, auxPlainPinTurnOnAction, 540);
 
 	// Execute the action it put on the regular scheduler
 	eth.setTimeAndInvokeEventsUs(999999);
 
-	eth.assertTriggerEvent("a1", 0, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 360);
-	eth.assertTriggerEvent("a2", 1, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 180);
-	eth.assertTriggerEvent("a3", 2, &engine->auxValves[1][1].open, (void*)&auxPlainPinTurnOn, 540);
+	eth.assertTriggerEvent("a1", 0, &engine->auxValves[0][1].open, auxPlainPinTurnOnAction, 360);
+	eth.assertTriggerEvent("a2", 1, &engine->auxValves[1][0].open, auxPlainPinTurnOnAction, 180);
+	eth.assertTriggerEvent("a3", 2, &engine->auxValves[1][1].open, auxPlainPinTurnOnAction, 540);
 	// same event is back at the end of the list
-	eth.assertTriggerEvent("a0", 3, &engine->auxValves[0][0].open, (void*)&auxPlainPinTurnOn, 0);
+	eth.assertTriggerEvent("a0", 3, &engine->auxValves[0][0].open, auxPlainPinTurnOnAction, 0);
 	// PLUS the turn off event!
-	eth.assertTriggerEvent("off", 4, &engine->auxValves[0][0].close, nullptr, 30);
+	action_s const noneAction{};
+	eth.assertTriggerEvent("off", 4, &engine->auxValves[0][0].close, noneAction, 30);
 }

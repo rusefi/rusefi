@@ -90,19 +90,19 @@ public:
 	 */
 	void clearQueue();
 
-	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitimeus_t expectedTimestamp);
-	scheduling_s * assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitimeus_t expectedTimestamp);
+	scheduling_s * assertEvent5(const char *msg, int index, action_s const& action, efitimeus_t expectedTimestamp);
+	scheduling_s * assertScheduling(const char *msg, int index, scheduling_s *expected, action_s const& action, efitimeus_t expectedTimestamp);
 
-	const AngleBasedEvent* assertTriggerEvent(const char *msg, int index, AngleBasedEvent *expected, void *callback, angle_t enginePhase);
+	const AngleBasedEvent* assertTriggerEvent(const char *msg, int index, AngleBasedEvent *expected, action_s const& action, angle_t enginePhase);
 
-	void assertEvent(const char *msg, int index, void *callback, efitimeus_t momentUs, InjectionEvent *event);
+	void assertEvent(const char *msg, int index, action_s const& action, efitimeus_t momentUs, InjectionEvent *event);
 	void assertInjectorUpEvent(const char *msg, int eventIndex, efitimeus_t momentUs, long injectorIndex);
 	void assertInjectorDownEvent(const char *msg, int eventIndex, efitimeus_t momentUs, long injectorIndex);
 	// todo: open question if this is worth a helper method or should be inlined?
 	void assertRpm(int expectedRpm, const char *msg = "RPM");
 
 	// read all scheluder queue and search for the requested callback, then asserts the expected angle, return true if we found the callback
-	bool assertEventExistsAtEnginePhase(const char *msg, void *callback, angle_t expectedEventEnginePhase);
+	bool assertEventExistsAtEnginePhase(const char *msg, action_s const& action, angle_t expectedEventEnginePhase);
 
 	// spins the engine using 60-2 trigger pattern, at target RPM, by X crank degree, not engine phase degree
 	void spin60_2UntilDeg(struct testSpinEngineUntilData& spinInfo, int targetRpm, float targetDegree);

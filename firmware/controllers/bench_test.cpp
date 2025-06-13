@@ -116,9 +116,12 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 		efitick_t startTime = nowNt + US2NT(50);
 		efitick_t endTime = startTime + US2NT(onTimeUs);
 
+		auto const bstartAction{ swapOnOff ? action_s::make<benchOff>(output) : action_s::make<benchOn>(output) };
+		auto const bendAction{ swapOnOff ? action_s::make<benchOn>(output) : action_s::make<benchOff>(output) };
+
 		// Schedule both events
-		engine->scheduler.schedule("bstart", &benchSchedStart, startTime, {(swapOnOff ? benchOff : benchOn), output});
-		engine->scheduler.schedule("bend", &benchSchedEnd, endTime, {(swapOnOff ? benchOn : benchOff), output});
+		engine->scheduler.schedule("bstart", &benchSchedStart, startTime, bstartAction);
+		engine->scheduler.schedule("bend", &benchSchedEnd, endTime, bendAction);
 
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);

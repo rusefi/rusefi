@@ -47,7 +47,7 @@
 
 #include "backup_ram.h"
 
-void endSimultaneousInjection(InjectionEvent *event) {
+void endSimultaneousInjection(InjectionEvent* event) {
 	endSimultaneousInjectionOnlyTogglePins();
 	event->update();
 }
@@ -165,20 +165,15 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	action_s startAction, endActionStage1, endActionStage2;
 	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
 	if (isSimultaneous) {
-		startAction = startSimultaneousInjection;
-		endActionStage1 = { &endSimultaneousInjection, this };
+		startAction = action_s::make<startSimultaneousInjection>();
+		endActionStage1 = action_s::make<endSimultaneousInjection>(this);
 	} else {
-		uintptr_t startActionPtr = reinterpret_cast<uintptr_t>(this);
-
-		if (hasStage2Injection) {
-			// Set the low bit in the arg if there's a secondary injection to start too
-			startActionPtr |= 1;
-		}
+		auto const taggedPointer{TaggedPointer<decltype(this)>::make(this, hasStage2Injection)};
 
 		// sequential or batch
-		startAction = { &turnInjectionPinHigh, startActionPtr };
-		endActionStage1 = { &turnInjectionPinLow, this };
-		endActionStage2 = { &turnInjectionPinLowStage2, this };
+		startAction = action_s::make<turnInjectionPinHigh>( taggedPointer.getRaw() );
+		endActionStage1 = action_s::make<turnInjectionPinLow>( this );
+		endActionStage2 = action_s::make<turnInjectionPinLowStage2>( this );
 	}
 
 	// Correctly wrap injection start angle

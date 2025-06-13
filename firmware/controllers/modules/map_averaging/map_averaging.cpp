@@ -68,7 +68,7 @@ void startAveraging(mapSampler* s) {
 	engine->outputChannels.isMapAveraging = true;
 
 	scheduleByAngle(&s->timer, getTimeNowNt(), engine->engineState.mapAveragingDuration,
-		{ endAveraging, &averager });
+		action_s::make<endAveraging>(&averager));
 }
 
 void MapAverager::start(uint8_t cylinderNumber) {
@@ -222,7 +222,7 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 
 		auto& s = samplers[i];
 
-		scheduleByAngle(&s.timer, edgeTimestamp, angleOffset, { startAveraging, &s });
+		scheduleByAngle(&s.timer, edgeTimestamp, angleOffset, action_s::make<startAveraging>(&s));
 	}
 }
 

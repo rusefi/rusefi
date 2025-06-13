@@ -8,14 +8,12 @@
 
 #if EFI_ENGINE_CONTROL
 
-void turnInjectionPinHigh(uintptr_t arg) {
-	efitick_t nowNt = getTimeNowNt();
+void turnInjectionPinHigh(scheduler_arg_t const arg) {
+	auto const nowNt{ getTimeNowNt() };
 
-	// clear last bit to recover the pointer
-	InjectionEvent *event = reinterpret_cast<InjectionEvent*>(arg & ~(1UL));
-
-	// extract last bit
-	bool stage2Active = arg & 1;
+	auto const taggedPointer{ TaggedPointer<InjectionEvent>::fromRaw(arg) };
+	auto const event{ taggedPointer.getOriginalPointer() };
+	auto const hasStage2Injection{ taggedPointer.getFlag() };
 
 	for (auto const& output: event->outputs) {
 		if (output) {
@@ -23,7 +21,7 @@ void turnInjectionPinHigh(uintptr_t arg) {
 		}
 	}
 
-	if (stage2Active) {
+	if (hasStage2Injection) {
 		for (auto const& output: event->outputsStage2) {
 			if (output) {
 				output->open(nowNt);

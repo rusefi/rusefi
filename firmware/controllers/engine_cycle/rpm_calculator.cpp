@@ -330,7 +330,7 @@ float RpmCalculator::getSecondsSinceEngineStart(efitick_t nowNt) const {
  * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the rusEfi console
  * digital sniffer.
  */
-static void onTdcCallback(void *) {
+static void onTdcCallback() {
 #if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
 		return;
@@ -367,7 +367,7 @@ void tdcMarkCallback(
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
 			wrapAngle(tdcPosition, "tdcPosition", ObdCode::CUSTOM_ERR_6553);
-			scheduleByAngle(&engine->tdcScheduler[revIndex2], nowNt, tdcPosition, onTdcCallback);
+			scheduleByAngle(&engine->tdcScheduler[revIndex2], nowNt, tdcPosition, action_s::make<onTdcCallback>());
 		}
 	}
 }
@@ -379,8 +379,7 @@ void tdcMarkCallback(
  *
  * @return tick time of scheduled action
  */
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle,
-		action_s action) {
+efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle, action_s const& action) {
 	float delayUs = engine->rpmCalculator.oneDegreeUs * angle;
 
 	efitick_t actionTimeNt = sumTickAndFloat(nowNt, USF2NT(delayUs));

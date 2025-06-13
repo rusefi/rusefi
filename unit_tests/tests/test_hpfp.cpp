@@ -265,13 +265,13 @@ TEST(HPFP, Schedule) {
 
 		// First call to setRpmValue will cause a dummy call to fast periodic timer.
 		// Injection Mass will be 0 so expect a no-op.
-		EXPECT_CALL(mockExec, schedule(testing::NotNull(), &hpfp.m_event.eventScheduling, nt0, action_s(HpfpController::pinTurnOff, &hpfp)));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), &hpfp.m_event.eventScheduling, nt0, action_s::make<HpfpController::pinTurnOff>(&hpfp)));
 
 		// Second call will be the start of a real pump event.
-		EXPECT_CALL(mockExec, schedule(testing::NotNull(), &hpfp.m_event.eventScheduling, nt1, action_s(HpfpController::pinTurnOn, &hpfp)));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), &hpfp.m_event.eventScheduling, nt1, action_s::make<HpfpController::pinTurnOn>(&hpfp)));
 
 		// Third call will be off event
-		EXPECT_CALL(mockExec, schedule(testing::NotNull(), &hpfp.m_event.eventScheduling, nt2, action_s(HpfpController::pinTurnOff, &hpfp)));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), &hpfp.m_event.eventScheduling, nt2, action_s::make<HpfpController::pinTurnOff>(&hpfp)));
 	}
 	EXPECT_CALL(mockExec, cancel(_)).Times(2);
 
@@ -284,8 +284,10 @@ TEST(HPFP, Schedule) {
 	engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
 
 	hpfp.onFastCallback();
+
+	auto const pinTurnOffAction{ action_s::make<HpfpController::pinTurnOff>((HpfpController*){}) };
 	// First event was scheduled by setRpmValue with 0 injection mass.  So, it's off.
-	eth.assertTriggerEvent("h0", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOff, 270);
+	eth.assertTriggerEvent("h0", 0, &hpfp.m_event, pinTurnOffAction, 270);
 
 	// Make the previous event happen, schedule the next.
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
@@ -293,8 +295,9 @@ TEST(HPFP, Schedule) {
 	// Mock executor doesn't run events, so we run it manually
 	HpfpController::pinTurnOff(&hpfp);
 
+	auto const pinTurnOnAction{ action_s::make<HpfpController::pinTurnOn>((HpfpController*){}) };
 	// Now we should have a regular on/off event.
-	eth.assertTriggerEvent("h1", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOn, 450 - 37.6923065f);
+	eth.assertTriggerEvent("h1", 0, &hpfp.m_event, pinTurnOnAction, 450 - 37.6923065f);
 
 	// Make it happen
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
