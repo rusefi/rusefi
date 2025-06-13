@@ -87,9 +87,6 @@ endif
 #USE_OPT += $(RUSEFI_OPT)
 #USE_OPT += -Wno-error=format= -Wno-error=register -Wno-error=write-strings
 
-#another dream https://github.com/rusefi/rusefi/issues/8070
-#USE_OPT += -Werror=class-memaccess
-
 # See explanation in main firmware Makefile for these three defines
 USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
 
