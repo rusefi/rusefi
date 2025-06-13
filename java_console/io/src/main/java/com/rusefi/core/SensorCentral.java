@@ -34,9 +34,9 @@ public class SensorCentral implements ISensorCentral {
     }
 
     @Override
-    public void grabSensorValues(byte[] response, @NotNull IniFileModel binaryProtocol) {
+    public void grabSensorValues(byte[] response, @NotNull IniFileModel ini) {
         this.response = response;
-        ISensorCentral.super.grabSensorValues(response, binaryProtocol);
+        ISensorCentral.super.grabSensorValues(response, ini);
         for (ResponseListener listener : listeners)
             listener.onSensorUpdate();
     }
