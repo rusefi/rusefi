@@ -288,7 +288,7 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 #endif
 
-#if defined(HW_HELLEN_8CHAN) || defined(HW_HELLEN_UAEFI121)
+#if defined(HW_HELLEN_8CHAN) || defined(HW_HELLEN_UAEFI121) || defined(HW_HELLEN_UAEFI)
 	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
