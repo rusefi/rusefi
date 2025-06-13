@@ -224,6 +224,7 @@ ULIBS = -lm
 ifeq ($(COVERAGE),yes)
   ifeq ($(IS_CLANG),1)
     # Clang coverage: needs no -lgcov, no --coverage
+    ULIBS += -fprofile-instr-generate
   else
     # GCC coverage: gcov linking needed
     ULIBS += -lgcov
