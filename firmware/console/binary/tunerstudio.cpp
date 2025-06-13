@@ -267,6 +267,9 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// Force any board configuration options that humans shouldn't be able to change
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
 		setBoardConfigOverrides();
+
+		// we don't care about writes to scatter page
+		calibrationsWriteTimer.reset();
 #if EFI_TS_SCATTER
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		// Ensure we are writing in bounds
