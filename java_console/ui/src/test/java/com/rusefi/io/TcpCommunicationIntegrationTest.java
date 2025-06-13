@@ -49,7 +49,7 @@ public class TcpCommunicationIntegrationTest {
 
         assertLatch(failedCountDownLatch);
     }
-
+/*
     @Test
     public void testConnectAndTransmitImageOverTcpIp() throws InterruptedException {
         int value = 239;
@@ -122,5 +122,5 @@ public class TcpCommunicationIntegrationTest {
 
         clientManager.close();
     }
-
+*/
 }

@@ -7,6 +7,7 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import java.io.IOException;
 
 public class GetOutputsCommandBrokenHelper {
+/*
     public static byte[] createRequest() {
         // problem: unused networking layer is not handling meta info properly
         // each session should know what signature it talks to and use dynamic IniModel!
@@ -20,4 +21,5 @@ public class GetOutputsCommandBrokenHelper {
         response[0] = (byte) BinaryProtocolServer.TS_OK.charAt(0);
         stream.sendPacket(response);
     }
+*/
 }

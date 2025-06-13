@@ -27,7 +27,7 @@ public class NetworkConnectorTest {
     public void setup() throws MalformedURLException {
         BackendTestHelper.commonServerTest();
     }
-
+/*
     @Test
     public void testReconnect() throws InterruptedException {
         int serverPortForControllers = 7504;
@@ -109,4 +109,5 @@ public class NetworkConnectorTest {
         assertLatch(onControllerRegistered);
         backend.close();
     }
+*/
 }

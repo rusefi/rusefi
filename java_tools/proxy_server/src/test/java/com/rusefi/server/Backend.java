@@ -87,62 +87,68 @@ public class Backend implements Closeable {
     private ServerSocketReference applicationConnector;
     private ServerSocketReference controllerConnector;
 
-    public Backend(UserDetailsResolver userDetailsResolver, int httpPort) {
-        this(userDetailsResolver, httpPort, APPLICATION_INACTIVITY_TIMEOUT);
-    }
-
-    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, int applicationTimeout) {
+    public Backend(int applicationTimeout, UserDetailsResolver userDetailsResolver) {
         this.applicationTimeout = applicationTimeout;
         this.userDetailsResolver = userDetailsResolver;
-
-
-        new Thread(() -> {
-            try {
-                log.info("Starting http backend on " + httpPort);
-                try {
-                    Take forkTake = new TkFork(showOnlineControllers,
-                            showOnlineApplications,
-                            new Monitoring(this).showStatistics,
-                            new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
-                            new FkRegex(ProxyClient.UPDATE_CONNECTOR_SOFTWARE, new UpdateRequestHandler(this)),
-                            new FkRegex("/", new RsHtml("<html><body>\n" +
-                                    "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
-                                    "<br/><br/><br/>\n" +
-                                    "<img src='https://rusefi.com/style/rusefi_online_color.png'/>" +
-                                    "<br/><br/><br/>\n" +
-                                    "<br/><br/><br/><a href='" + Monitoring.STATUS + "'>Status</a>\n" +
-                                    "<br/><br/><br/><a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
-                                    "<br/><br/><br/><a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
-                                    "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
-                                    "</body></html>\n"))
-                    );
-                    Front frontEnd = new FtBasic(new BkParallel(new BkSafe(new BkBasic(forkTake)), 4), httpPort);
-                    frontEnd.start(() -> isClosed());
-                } catch (BindException e) {
-                    throw new IllegalStateException("While binding " + httpPort, e);
-                }
-                log.info("Shutting down backend on port " + httpPort);
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-
-        }, "Http Server Thread").start();
-
-        APPLICATION_CONNECTION_CLEANUP.newThread(() -> {
-            while (!isClosed()) {
-                log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
-                runApplicationConnectionsCleanup();
-                BinaryProtocol.sleep(applicationTimeout);
-            }
-        }).start();
-
-        GAUGE_POKER.newThread(() -> {
-            while (!isClosed()) {
-                grabOutputs();
-                BinaryProtocol.sleep(SECOND);
-            }
-        }).start();
     }
+
+    /*
+        public Backend(UserDetailsResolver userDetailsResolver, int httpPort) {
+            this(userDetailsResolver, httpPort, APPLICATION_INACTIVITY_TIMEOUT);
+        }
+
+        public Backend(UserDetailsResolver userDetailsResolver, int httpPort, int applicationTimeout) {
+            this.applicationTimeout = applicationTimeout;
+            this.userDetailsResolver = userDetailsResolver;
+
+
+            new Thread(() -> {
+                try {
+                    log.info("Starting http backend on " + httpPort);
+                    try {
+                        Take forkTake = new TkFork(showOnlineControllers,
+                                showOnlineApplications,
+                                new Monitoring(this).showStatistics,
+                                new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
+                                new FkRegex(ProxyClient.UPDATE_CONNECTOR_SOFTWARE, new UpdateRequestHandler(this)),
+                                new FkRegex("/", new RsHtml("<html><body>\n" +
+                                        "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
+                                        "<br/><br/><br/>\n" +
+                                        "<img src='https://rusefi.com/style/rusefi_online_color.png'/>" +
+                                        "<br/><br/><br/>\n" +
+                                        "<br/><br/><br/><a href='" + Monitoring.STATUS + "'>Status</a>\n" +
+                                        "<br/><br/><br/><a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
+                                        "<br/><br/><br/><a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
+                                        "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
+                                        "</body></html>\n"))
+                        );
+                        Front frontEnd = new FtBasic(new BkParallel(new BkSafe(new BkBasic(forkTake)), 4), httpPort);
+                        frontEnd.start(() -> isClosed());
+                    } catch (BindException e) {
+                        throw new IllegalStateException("While binding " + httpPort, e);
+                    }
+                    log.info("Shutting down backend on port " + httpPort);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+
+            }, "Http Server Thread").start();
+
+            APPLICATION_CONNECTION_CLEANUP.newThread(() -> {
+                while (!isClosed()) {
+                    log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
+                    runApplicationConnectionsCleanup();
+                    BinaryProtocol.sleep(applicationTimeout);
+                }
+            }).start();
+
+            GAUGE_POKER.newThread(() -> {
+                while (!isClosed()) {
+                    grabOutputs();
+                    BinaryProtocol.sleep(SECOND);
+                }
+            }).start();
+        }
 
     private void grabOutputs() {
         List<ControllerConnectionState> controllers = getControllers();
@@ -158,6 +164,7 @@ public class Backend implements Closeable {
             }
         }
     }
+    */
 
     public void runApplicationConnector(int serverPortForApplications, Listener<?> serverSocketCreationCallback) throws IOException {
         this.serverPortForApplications = serverPortForApplications;
@@ -244,7 +251,7 @@ public class Backend implements Closeable {
         }
         log.info("Disconnecting application " + applicationConnectionState);
     }
-
+/*
     public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) throws IOException {
         this.serverPortForControllers = serverPortForControllers;
         log.info("Starting controller connector at " + serverPortForControllers);
@@ -265,7 +272,7 @@ public class Backend implements Closeable {
             }
         }, serverPortForControllers, "ControllerServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
-
+*/
     @NotNull
     private RsJson getApplicationsOnline() throws IOException {
         JsonArrayBuilder builder = Json.createArrayBuilder();

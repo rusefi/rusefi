@@ -86,6 +86,7 @@ public class LocalApplicationProxy implements Closeable {
      * @param disconnectListener
      * @param connectionListener
      */
+/*
     public static ServerSocketReference startAndRun(LocalApplicationProxyContext context, ApplicationRequest applicationRequest, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener, ConnectionListener connectionListener) throws IOException {
         String version = context.executeGet(ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         log.info("Server says version=" + version);
@@ -96,6 +97,7 @@ public class LocalApplicationProxy implements Closeable {
             /**
              * let's give wrapper script a chance to update us
              */
+/*
             throw new IncompatibleBackendException(message);
         }
 
@@ -108,6 +110,7 @@ public class LocalApplicationProxy implements Closeable {
         /**
          * We need to entertain proxy server and remote controller while user has already connected to proxy but has not yet started TunerStudio
          */
+/*
         THREAD_FACTORY.newThread(() -> {
             try {
                 while (true) {
@@ -141,7 +144,7 @@ public class LocalApplicationProxy implements Closeable {
         connectionListener.onConnected(localApplicationProxy, authenticatorToProxyStream);
         return serverHolder;
     }
-
+*/
     private static boolean isTimeForApplicationToConnect(long start, int idle) {
         return System.currentTimeMillis() - start > idle;
     }

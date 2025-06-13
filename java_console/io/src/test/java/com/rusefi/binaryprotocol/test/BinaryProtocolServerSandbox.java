@@ -15,7 +15,7 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
  * BinaryProtocolServer#DEFAULT_PROXY_PORT
  */
 class BinaryProtocolServerSandbox {
-
+/*
     public static void main(String[] args) {
 //        File f = new File(BinaryProtocolServer.TEST_FILE);
 //        if (!f.exists())
@@ -34,4 +34,5 @@ class BinaryProtocolServerSandbox {
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));
         new BinaryProtocolServer().start(linkManager);
     }
+*/
 }
