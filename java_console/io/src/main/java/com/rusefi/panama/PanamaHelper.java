@@ -3,7 +3,6 @@ package com.rusefi.panama;
 import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.LinkManager;
@@ -11,7 +10,7 @@ import com.rusefi.io.LinkManager;
 import java.nio.ByteBuffer;
 
 public class PanamaHelper {
-    public static final String MCUSERIAL = TsOutputs.MCUSERIAL.getName();
+    public static final String MCUSERIAL = "MCUSERIAL";
 
     public static IniField getIniField(final BinaryProtocol bp) throws IniMemberNotFound {
         return bp.getIniFile().getOutputChannel(MCUSERIAL);
