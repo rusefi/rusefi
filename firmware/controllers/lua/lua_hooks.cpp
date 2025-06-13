@@ -967,6 +967,21 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		return 0;
 	});
 
+#if !defined(STM32F4)
+	lua_register(lState, "getTorque", [](lua_State* l) {
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
+		auto tps = Sensor::getOrZero(SensorType::Tps1);
+
+		auto result = interpolate3d(
+                  		config->torqueTable,
+                  		config->torqueLoadBins, tps,
+                  		config->torqueRpmBins, rpm
+                  	);
+		lua_pushnumber(l, result);
+		return 1;
+	});
+#endif
+
 	lua_register(lState, "setTorqueReductionState", [](lua_State* l) {
 		engine->engineState.lua.torqueReductionState = lua_toboolean(l, 1);
 		return 0;
