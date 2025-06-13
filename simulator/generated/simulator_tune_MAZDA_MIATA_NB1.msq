@@ -4200,11 +4200,11 @@ end</constant>
 </constant>
         <constant cols="1" digits="0" name="torqueLoadBins" rows="6">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         20.0
+         40.0
+         60.0
+         80.0
+         100.0
 </constant>
         <constant name="torqueReductionActivationMode">"Torque Reduction Button"</constant>
         <constant digits="0" name="torqueReductionActivationTemperature" units="C">60.0</constant>
@@ -4265,12 +4265,12 @@ end</constant>
         <constant name="torqueReductionTriggerPin">"NONE"</constant>
         <constant name="torqueReductionTriggerPinMode">"DEFAULT"</constant>
         <constant cols="1" digits="0" name="torqueRpmBins" rows="6">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         650.0
+         800.0
+         2200.0
+         3600.0
+         5000.0
+         7000.0
 </constant>
         <constant cols="6" digits="0" name="torqueTable" rows="6">
          0.0 0.0 0.0 0.0 0.0 0.0
