@@ -52,7 +52,7 @@ public:
 	float injectionStartAngle = 0;
 };
 
-void turnInjectionPinHigh(uintptr_t arg);
+void turnInjectionPinHigh(scheduler_arg_t arg);
 
 
 /**

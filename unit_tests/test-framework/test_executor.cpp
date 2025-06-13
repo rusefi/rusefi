@@ -35,7 +35,7 @@ scheduling_s* TestExecutor::getForUnitTest(int index) {
 	return schedulingQueue.getElementAtIndexForUnitText(index);
 }
 
-void TestExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+void TestExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s const& action) {
 	if (m_mockExecutor) {
 		m_mockExecutor->schedule(msg, scheduling, timeNt, action);
 		return;

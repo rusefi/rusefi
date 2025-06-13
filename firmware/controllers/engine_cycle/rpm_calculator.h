@@ -181,4 +181,4 @@ operation_mode_e lookupOperationMode();
 /**
   * @return tick time of scheduled action
   */
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle, action_s action);
+efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle, action_s const& action);

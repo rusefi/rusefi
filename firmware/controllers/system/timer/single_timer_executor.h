@@ -13,7 +13,7 @@
 class SingleTimerExecutor final : public Scheduler {
 public:
 	SingleTimerExecutor();
-	void schedule(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s action) override;
+	void schedule(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s const& action) override;
 	void cancel(scheduling_s* scheduling) override;
 
 	void onTimerCallback();

@@ -379,19 +379,25 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 
 void EngineTestHelper::assertInjectorUpEvent(const char *msg, int eventIndex, efitimeus_t momentUs, long injectorIndex) {
 	InjectionEvent *event = &engine.injectionEvents.elements[injectorIndex];
-	assertEvent(msg, eventIndex, (void*)turnInjectionPinHigh, momentUs, event);
+	auto const expected_action{ action_s::make<turnInjectionPinHigh>(uintptr_t{}) };
+	assertEvent(msg, eventIndex, expected_action, momentUs, event);
 }
 
 void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, efitimeus_t momentUs, long injectorIndex) {
 	InjectionEvent *event = &engine.injectionEvents.elements[injectorIndex];
-	assertEvent(msg, eventIndex, (void*)turnInjectionPinLow, momentUs, event);
+	auto const expected_action{ action_s::make<turnInjectionPinLow>((InjectionEvent*){}) };
+	assertEvent(msg, eventIndex, expected_action, momentUs, event);
 }
 
-scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *callback, efitimeus_t expectedTimestamp) {
+scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, action_s const& action_expected, efitimeus_t expectedTimestamp) {
 	TestExecutor *executor = &engine.scheduler;
 	EXPECT_TRUE(executor->size() > index) << msg << " valid index";
 	scheduling_s *event = executor->getForUnitTest(index);
-	EXPECT_NEAR_M4((void*)event->action.getCallback() == (void*) callback, 1) << msg << " callback up/down";
+	assert(event != nullptr);
+
+	auto const& action_scheduled{ event->action };
+
+	EXPECT_EQ(action_scheduled.getCallback(), action_expected.getCallback()) << msg << " callback up/down";
 	efitimeus_t start = getTimeNowUs();
 	EXPECT_NEAR(expectedTimestamp, event->getMomentUs() - start,/*3us precision to address rounding etc*/3) << msg;
 	return event;
@@ -403,37 +409,49 @@ angle_t EngineTestHelper::timeToAngle(float timeMs) {
 
 const AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,
 		int index, AngleBasedEvent *expected,
-		void *callback,
+		action_s const& action_expected,
 		angle_t enginePhase) {
 	auto event = engine.module<TriggerScheduler>()->getElementAtIndexForUnitTest(index);
 
-	if (callback) {
-		EXPECT_EQ(reinterpret_cast<void*>(event->action.getCallback()), reinterpret_cast<void*>(callback)) << " callback up/down";
+	if (action_expected) {
+		auto const& action_scheduled{ event->action };
+		EXPECT_EQ(action_scheduled.getCallback(), action_expected.getCallback()) << " callback up/down";
 	}
 
 	EXPECT_NEAR(enginePhase, event->getAngle(), EPS4D) << " angle";
 	return event;
 }
 
-scheduling_s * EngineTestHelper::assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitimeus_t expectedTimestamp) {
-	scheduling_s * actual = assertEvent5(msg, index, callback, expectedTimestamp);
+scheduling_s * EngineTestHelper::assertScheduling(const char *msg, int index, scheduling_s *expected, action_s const& action, efitimeus_t expectedTimestamp) {
+	scheduling_s * actual = assertEvent5(msg, index, action, expectedTimestamp);
 	return actual;
 }
 
-void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, efitimeus_t momentUs, InjectionEvent *expectedEvent) {
-	scheduling_s *event = assertEvent5(msg, index, callback, momentUs);
+void EngineTestHelper::assertEvent(const char *msg, int index, action_s const& action, efitimeus_t momentUs, InjectionEvent *expectedEvent) {
+	scheduling_s *event = assertEvent5(msg, index, action, momentUs);
 
-	InjectionEvent *actualEvent = (InjectionEvent *)event->action.getArgument();
+	auto const actualEvent{ event->action.getArgument<InjectionEvent*>() };
 
 	ASSERT_EQ(expectedEvent->outputs[0], actualEvent->outputs[0]) << msg;
 // but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
 }
 
-bool EngineTestHelper::assertEventExistsAtEnginePhase(const char *msg, void *callback, angle_t expectedEventEnginePhase){
+bool EngineTestHelper::assertEventExistsAtEnginePhase(const char *msg, action_s const& action_expected, angle_t expectedEventEnginePhase){
 	TestExecutor *executor = &engine.scheduler;
+
+	//std::cout << "executor->size():              " << executor->size() << std::endl;
+	//std::cout << "expected_action.getCallback():  0x" << std::hex << reinterpret_cast<size_t>(action_expected.getCallback()) << "; name: " << action_expected.getCallbackName() << std::endl;
+
 	for (size_t i = 0; i < executor->size(); i++) {
-		scheduling_s *event = executor->getForUnitTest(i);
-		if(reinterpret_cast<void*>(event->action.getCallback()), reinterpret_cast<void*>(callback)) {
+		auto event = executor->getForUnitTest(i);
+		assert(event != nullptr);
+
+		auto const action_scheduled{ event->action };
+
+		// Uncomment next to see what was stored in executor queue
+		// std::cout << "action_scheduled.getCallback(): 0x" << std::hex << reinterpret_cast<size_t>(action_scheduled.getCallback()) << "; name: " << action_scheduled.getCallbackName() << std::endl;
+
+		if(action_scheduled.getCallback() == action_expected.getCallback()) {
 			efitimeus_t start = getTimeNowUs();
 			efitimeus_t expectedTimestamp = angleToTimeUs(expectedEventEnginePhase);
 			// after #7245 we can increase the resolution of this test for expect 0.5 or less

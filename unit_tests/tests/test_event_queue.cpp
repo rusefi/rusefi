@@ -11,8 +11,12 @@
 
 static int callbackCounter = 0;
 
-static void callback(void *a) {
+static void callback() {
 	callbackCounter++;
+}
+
+namespace {
+	auto const callbackAction{ action_s::make<callback>() };
 }
 
 static int complexTestNow;
@@ -30,7 +34,7 @@ static void complexCallback(TestPwm *testPwm) {
 	callbackCounter++;
 
 	testPwm->eventQueue->insertTask(&testPwm->s, complexTestNow + testPwm->period,
-			{ complexCallback, testPwm });
+			action_s::make<complexCallback>(testPwm));
 }
 
 TEST(EventQueue, testSignalExecutor2) {
@@ -42,8 +46,8 @@ TEST(EventQueue, testSignalExecutor2) {
 
 	complexTestNow = 0;
 	callbackCounter = 0;
-	eq.insertTask(&p1.s, 0, { complexCallback, &p1 });
-	eq.insertTask(&p2.s, 0, { complexCallback, &p2 });
+	eq.insertTask(&p1.s, 0, action_s::make<complexCallback>(&p1));
+	eq.insertTask(&p2.s, 0, action_s::make<complexCallback>(&p2));
 	eq.executeAll(complexTestNow);
 	ASSERT_EQ( 2,  callbackCounter) << "callbackCounter #1";
 	ASSERT_EQ(2, eq.size());
@@ -60,8 +64,8 @@ TEST(EventQueue, testSignalExecutor2) {
 
 static uintptr_t prevValue = 0;
 
-static void orderCallback(void *a) {
-	uintptr_t value = (uintptr_t)a;
+static void orderCallback(uintptr_t a) {
+	uintptr_t value = a;
 
 	printf("value=%d prevValue=%d\r\n", value, prevValue);
 	ASSERT_TRUE(value > prevValue) << "orderCallback";
@@ -76,9 +80,9 @@ TEST(EventQueue, simple) {
 	scheduling_s s2;
 	scheduling_s s3;
 
-	eq.insertTask(&s1, 10, { orderCallback, (void*)1 });
-	eq.insertTask(&s2, 11, { orderCallback, (void*)2 });
-	eq.insertTask(&s3, 12, { orderCallback, (void*)3 });
+	eq.insertTask(&s1, 10, action_s::make<orderCallback>(uintptr_t{1}));
+	eq.insertTask(&s2, 11, action_s::make<orderCallback>(uintptr_t{2}));
+	eq.insertTask(&s3, 12, action_s::make<orderCallback>(uintptr_t{3}));
 	eq.executeAll(100);
 }
 
@@ -90,10 +94,10 @@ TEST(EventQueue, complex) {
 	scheduling_s s3;
 	scheduling_s s4;
 
-	eq.insertTask(&s1, 10, callback);
-	eq.insertTask(&s4, 10, callback);
-	eq.insertTask(&s3, 12, callback);
-	eq.insertTask(&s2, 11, callback);
+	eq.insertTask(&s1, 10, callbackAction);
+	eq.insertTask(&s4, 10, callbackAction);
+	eq.insertTask(&s3, 12, callbackAction);
+	eq.insertTask(&s2, 11, callbackAction);
 
 	ASSERT_EQ(4, eq.size());
 	ASSERT_EQ(10, eq.getHead()->getMomentNt());
@@ -110,9 +114,9 @@ TEST(EventQueue, complex) {
 	eq.executeAll(100);
 	ASSERT_EQ(0, eq.size());
 
-	eq.insertTask(&s1, 12, callback);
-	eq.insertTask(&s2, 11, callback);
-	eq.insertTask(&s3, 10, callback);
+	eq.insertTask(&s1, 12, callbackAction);
+	eq.insertTask(&s2, 11, callbackAction);
+	eq.insertTask(&s3, 10, callbackAction);
 	callbackCounter = 0;
 	eq.executeAll(10);
 	ASSERT_EQ( 1,  callbackCounter) << "callbackCounter/1#2";
@@ -123,7 +127,7 @@ TEST(EventQueue, complex) {
 	ASSERT_EQ(0, eq.size());
 
 	callbackCounter = 0;
-	eq.insertTask(&s1, 10, callback);
+	eq.insertTask(&s1, 10, callbackAction);
 	ASSERT_EQ(10, eq.getNextEventTime(0).value_or(-1));
 
 	eq.executeAll(1);
@@ -134,8 +138,8 @@ TEST(EventQueue, complex) {
 
 	ASSERT_EQ(eq.getNextEventTime(0), unexpected);
 
-	eq.insertTask(&s1, 10, callback);
-	eq.insertTask(&s2, 13, callback);
+	eq.insertTask(&s1, 10, callbackAction);
+	eq.insertTask(&s2, 13, callbackAction);
 	ASSERT_EQ(10, eq.getNextEventTime(0).value_or(-1));
 
 	eq.executeAll(1);
@@ -145,8 +149,8 @@ TEST(EventQueue, complex) {
 	ASSERT_EQ(0, eq.size());
 	callbackCounter = 0;
 	// both events are scheduled for the same time
-	eq.insertTask(&s1, 10, callback);
-	eq.insertTask(&s2, 10, callback);
+	eq.insertTask(&s1, 10, callbackAction);
+	eq.insertTask(&s2, 10, callbackAction);
 
 	eq.executeAll(11);
 
@@ -159,9 +163,9 @@ protected:
 	scheduling_s s1, s2, s3;
 
 	void SetUp() override {
-		dut.insertTask(&s1, 100, callback);
-		dut.insertTask(&s2, 200, callback);
-		dut.insertTask(&s3, 300, callback);
+		dut.insertTask(&s1, 100, callbackAction);
+		dut.insertTask(&s2, 200, callbackAction);
+		dut.insertTask(&s3, 300, callbackAction);
 
 		// Check that things are assembled as we think
 		ASSERT_EQ(&s1, dut.getElementAtIndexForUnitText(0));

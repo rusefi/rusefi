@@ -146,8 +146,7 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 	return totalShift;
 }
 
-static void turnOffAllDebugFields(void *arg) {
-	(void)arg;
+static void turnOffAllDebugFields() {
 #if EFI_PROD_CODE
 	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
 		if (isBrainPinValid(engineConfiguration->triggerInputDebugPins[index])) {
@@ -247,7 +246,7 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
 #endif /* EFI_PROD_CODE */
-		getScheduler()->schedule("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		getScheduler()->schedule("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, action_s::make<turnOffAllDebugFields>());
 	}
 
 	if (!useOnlyRise || engineConfiguration->displayLogicLevelsInEngineSniffer) {
@@ -543,7 +542,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 #if EFI_PROD_CODE
 		writePad("trigger debug", engineConfiguration->triggerInputDebugPins[signalIndex], 1);
 #endif /* EFI_PROD_CODE */
-		getScheduler()->schedule("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		getScheduler()->schedule("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, action_s::make<turnOffAllDebugFields>());
 	}
 
 #if EFI_TOOTH_LOGGER
