@@ -646,7 +646,7 @@ public class BinaryProtocol {
 
         state.setCurrentOutputs(reassemblyBuffer);
 
-        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer);
+        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer, getIniFile());
         return true;
     }
 

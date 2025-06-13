@@ -1,5 +1,6 @@
 package com.rusefi.core;
 
+import com.opensr5.ini.IniFileModel;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
@@ -7,7 +8,7 @@ import java.nio.ByteBuffer;
 import static com.rusefi.core.FileUtil.littleEndianWrap;
 
 public interface ISensorHolder {
-    default void grabSensorValues(byte[] response) {
+    default void grabSensorValues(byte[] response, @NotNull IniFileModel binaryProtocol) {
         for (Sensor sensor : Sensor.values()) {
             if (sensor.getType() == null) {
                 // for example ETB_CONTROL_QUALITY, weird use-case
