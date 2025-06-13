@@ -86,29 +86,29 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	pinRepository = decltype(pinRepository){};
 
 	auto testInfo = ::testing::UnitTest::GetInstance()->current_test_info();
-extern bool hasInitGtest;
+	extern bool hasInitGtest;
 	if (hasInitGtest) {
-	#if IS_WINDOWS_COMPILER
-     mkdir(TEST_RESULTS_DIR);
-  #else
-     mkdir(TEST_RESULTS_DIR, 0777);
-  #endif
-  createUnitTestLog();
+		#if IS_WINDOWS_COMPILER
+		mkdir(TEST_RESULTS_DIR);
+		#else
+		mkdir(TEST_RESULTS_DIR, 0777);
+		#endif
+		createUnitTestLog();
 
-    	std::stringstream filePath;
-    	filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
-    	// fun fact: ASAN says not to extract 'fileName' into a variable, we must be doing something a bit not right?
-    	jsonTrace = fopen(filePath.str().c_str(), "wb");
-    	if (jsonTrace == nullptr) {
-//    		criticalError("Error creating file [%s]", filePath.str().c_str());
-    		// TOOD handle config tests
-    		printf("Error creating file [%s]\n", filePath.str().c_str());
-    	} else {
-    		fprintf(jsonTrace, "{\"traceEvents\": [\n");
-    		fprintf(jsonTrace, "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":-16,\"tid\":0,\"args\":{\"name\":\"Main\"}}\n");
-    	}
+		std::stringstream filePath;
+		filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
+		// fun fact: ASAN says not to extract 'fileName' into a variable, we must be doing something a bit not right?
+		jsonTrace = fopen(filePath.str().c_str(), "wb");
+		if (jsonTrace == nullptr) {
+			//    		criticalError("Error creating file [%s]", filePath.str().c_str());
+			// TOOD handle config tests
+			printf("Error creating file [%s]\n", filePath.str().c_str());
+		} else {
+			fprintf(jsonTrace, "{\"traceEvents\": [\n");
+			fprintf(jsonTrace, "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":-16,\"tid\":0,\"args\":{\"name\":\"Main\"}}\n");
+		}
     } else {
-	  // todo: document why this branch even exists
+		// todo: document why this branch even exists
 		jsonTrace = nullptr;
 	}
 
@@ -119,8 +119,7 @@ extern bool hasInitGtest;
 		Sensor::setMockValue(s, v);
 	}
 
-	// activeConfiguration = decltype(activeConfiguration){}; but I do not speak C/C++
-	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
+	activeConfiguration = engine_configuration_s{};
 
 	enginePins.reset();
 	enginePins.unregisterPins();
@@ -151,7 +150,7 @@ extern bool hasInitGtest;
 	commonInitEngineController();
 
 	// this is needed to have valid CLT and IAT.
-//todo: reuse 	initPeriodicEvents() method
+	//todo: reuse 	initPeriodicEvents() method
 	engine.periodicSlowCallback();
 
 	extern bool hasInitGtest;
@@ -221,7 +220,7 @@ EngineTestHelper::~EngineTestHelper() {
 
 	// Cleanup
   	// reset config to an invalid state, will trigger isPinConfigurationChanged
-  persistentConfig = decltype(persistentConfig){};
+	persistentConfig = decltype(persistentConfig){};
 	enginePins.reset();
 	enginePins.unregisterPins();
 	Sensor::resetRegistry();
@@ -451,7 +450,7 @@ void EngineTestHelper::spin60_2UntilDeg(struct testSpinEngineUntilData& spinInfo
   	volatile float tick_per_deg = 6000 * 60 / 360 / (float)targetRpm;
 	constexpr float tooth_per_deg = 360 / 60;
 
-	size_t targetTooth = (targetDegree - spinInfo.currentDegree) / tooth_per_deg;
+	int targetTooth = (targetDegree - spinInfo.currentDegree) / tooth_per_deg;
 
 	for (size_t i = 0; i < targetTooth; i++) {
 		if (spinInfo.currentTooth < 30 || spinInfo.currentTooth > 31) {

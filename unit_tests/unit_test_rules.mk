@@ -121,6 +121,12 @@ ifeq ($(COVERAGE),yes)
   USE_CPPOPT += $(COVERAGE_FLAGS)
 endif
 
+ifeq ($(IS_CLANG),1)
+  USE_CPPOPT += -Wno-unused-private-field
+else
+  USE_CPPOPT += -Werror=class-memaccess
+endif
+
 # Enable address sanitizer for C++ files, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
 # only c++ because lua does some things asan doesn't like, but don't actually cause overruns.
 ifeq ($(SANITIZE),yes)
@@ -157,7 +163,7 @@ ASMSRC =
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition
 
 # Define C++ warning options here
-CPPWARN = -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -Wno-format -Wno-unused-parameter -Wno-unused-private-field
+CPPWARN = -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -Wno-format -Wno-unused-parameter
 
 # TODO: improve on this code duplication drama!
 # current problem with older gcc in unit_tests is
