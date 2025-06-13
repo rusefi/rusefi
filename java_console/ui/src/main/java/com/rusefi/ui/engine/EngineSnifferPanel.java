@@ -266,7 +266,7 @@ public class EngineSnifferPanel {
 
     private void saveImage() {
         int rpm = RpmModel.getInstance().getValue();
-        double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
+        double maf = SensorCentral.getInstance().getValue(Sensor.MAFMEASURED);
         String fileName = FileLog.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
 
         UiUtils.saveImageWithPrompt(fileName, mainPanel, imagePanel);

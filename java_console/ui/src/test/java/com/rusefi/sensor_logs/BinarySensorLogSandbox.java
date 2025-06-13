@@ -22,24 +22,24 @@ public class BinarySensorLogSandbox {
                 Arrays.asList(
                 Sensor.TIME_SECONDS,
                 Sensor.RPMValue,
-                Sensor.vehicleSpeedKph,
-                Sensor.TPS,
+                Sensor.VEHICLESPEEDKPH,
+                Sensor.TPSVALUE,
                 Sensor.tpsAccelFuel,
                 Sensor.PPS,
                 Sensor.veValue,
 //                Sensor.etbTarget,
                 Sensor.etb1DutyCycle,
                 Sensor.totalTriggerErrorCounter,
-                Sensor.Lambda1,
+                Sensor.LAMBDAVALUE,
 //                Sensor.TARGET_AFR,
                 Sensor.FIRMWARE_VERSION,
-                Sensor.CLT));
+                Sensor.COOLANT));
 
         values.put(Sensor.TIME_SECONDS, 1.0);
         values.put(Sensor.RPMValue, 0.0);
-        values.put(Sensor.vehicleSpeedKph, 60.0);
+        values.put(Sensor.VEHICLESPEEDKPH, 60.0);
         values.put(Sensor.FIRMWARE_VERSION, 20200101.0);
-        values.put(Sensor.CLT, 29.0);
+        values.put(Sensor.COOLANT, 29.0);
 
         l.writeSensorLogLine();
 
@@ -47,7 +47,7 @@ public class BinarySensorLogSandbox {
             values.put(Sensor.TIME_SECONDS, (double) i);
             values.put(Sensor.RPMValue, 180.0 + i);
             values.put(Sensor.FIRMWARE_VERSION, 20200101.0);
-            values.put(Sensor.CLT, 39.0);
+            values.put(Sensor.COOLANT, 39.0);
             l.writeSensorLogLine();
         }
 

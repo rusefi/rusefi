@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
@@ -19,9 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
-import org.takes.facets.fork.TkFork;
-import org.takes.http.*;
-import org.takes.rs.RsHtml;
 import org.takes.rs.RsJson;
 
 import javax.json.Json;
@@ -30,13 +26,11 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.BindException;
 import java.util.*;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.server.Birthday.humanReadableFormat;
 
 /**
@@ -306,7 +300,7 @@ public class Backend implements Closeable {
             // todo: at the moment we use current OutputChannel layout - a better way would be to take
             // todo: OutputChannel from .ini file based on controller signature
             int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPMValue);
-            double clt = client.getSensorsHolder().getValue(Sensor.CLT);
+            double clt = client.getSensorsHolder().getValue(Sensor.COOLANT);
             UserDetails owner = client.getTwoKindSemaphore().getOwner();
             SessionDetails sessionDetails = client.getSessionDetails();
             ControllerInfo controllerInfo = sessionDetails.getControllerInfo();
