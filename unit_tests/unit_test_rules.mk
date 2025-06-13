@@ -31,6 +31,49 @@ ifneq ($(OS),Windows_NT)
     endif
 endif
 
+# It looks like cygwin build of mingwg-w64 has issues with gcov runtime :(
+# mingw-w64 is a project which forked from mingw in 2007 - be careful not to confuse these two.
+# In order to have coverage generated please download from https://mingw-w64.org/doku.php/download/mingw-builds
+# Install using mingw-w64-install.exe instead of similar thing packaged with cygwin
+# Both 32 bit and 64 bit versions of mingw-w64 are generating coverage data.
+
+ifeq ($(OS),Windows_NT)
+ifeq ($(USE_MINGW32_I686),)
+#this one is 64 bit
+  TRGT = x86_64-w64-mingw32-
+else
+#this one was 32 bit
+  TRGT = i686-w64-mingw32-
+endif
+else
+  TRGT =
+endif
+
+# On Mac OS gcc from mingw-w64 is a wrapper around clang
+# so clang-specific coverage cmd args must be used
+IS_CLANG := $(shell $(CC) --version | grep -i clang >/dev/null && echo 1 || echo 0)
+
+ifeq ($(IS_CLANG),1)
+CC   = $(TRGT)clang
+CXX  = $(TRGT)clang++
+CPPC = $(TRGT)clang++
+LD   = $(TRGT)clang++
+AS   = $(TRGT)clang -x assembler-with-cpp
+else
+CC   = $(TRGT)gcc
+CXX  = $(TRGT)g++
+CPPC = $(TRGT)g++
+LD   = $(TRGT)g++
+AS   = $(TRGT)gcc -x assembler-with-cpp
+endif
+# Enable loading with g++ only if you need C++ runtime support.
+# NOTE: You can use C++ even without C++ support if you are careful. C++
+#       runtime support makes code size explode.
+CP   = $(TRGT)objcopy
+OD   = $(TRGT)objdump
+HEX  = $(CP) -O ihex
+BIN  = $(CP) -O binary
+
 # Compiler options here.
 ifeq ($(USE_OPT),)
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
@@ -39,11 +82,6 @@ ifeq ($(USE_OPT),)
   USE_OPT += -Werror=missing-field-initializers
   USE_OPT += -D US_TO_NT_MULTIPLIER=$(US_TO_NT_MULTIPLIER)
 endif
-
-ifeq ($(COVERAGE),yes)
-	USE_OPT += -fprofile-arcs -ftest-coverage
-endif
-
 
 #TODO! this is a nice goal
 #USE_OPT += $(RUSEFI_OPT)
@@ -66,7 +104,19 @@ ifeq ($(USE_CPPOPT),)
   USE_CPPOPT = -std=gnu++2a -fno-rtti -fno-use-cxa-atexit
 endif
 
-USE_CPPOPT += $(RUSEFI_CPPOPT) -fPIC -fprofile-arcs -ftest-coverage
+USE_CPPOPT += $(RUSEFI_CPPOPT) -fPIC
+
+ifeq ($(COVERAGE),yes)
+  ifeq ($(IS_CLANG),1)
+    COVERAGE_FLAGS := -fprofile-instr-generate -fcoverage-mapping
+    $(info Detected Clang: using LLVM-style coverage flags)
+  else
+    COVERAGE_FLAGS := -fprofile-arcs -ftest-coverage
+    $(info Detected GCC: using GCC-style coverage flags)
+  endif
+  USE_OPT += $(COVERAGE_FLAGS)
+  USE_CPPOPT += $(COVERAGE_FLAGS)
+endif
 
 # Enable address sanitizer for C++ files, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
 # only c++ because lua does some things asan doesn't like, but don't actually cause overruns.
@@ -74,7 +124,7 @@ ifeq ($(SANITIZE),yes)
 	ifeq ($(IS_MAC),yes)
 		USE_CPPOPT += -fsanitize=address
 	else
-		USE_CPPOPT += -fsanitize=address -fsanitize=bounds-strict -fno-sanitize-recover=all
+		USE_CPPOPT += -fsanitize=address -fno-sanitize-recover=all
 	endif
 endif
 
@@ -100,38 +150,6 @@ ASMSRC =
 ##############################################################################
 # Compiler settings
 #
-
-# It looks like cygwin build of mingwg-w64 has issues with gcov runtime :(
-# mingw-w64 is a project which forked from mingw in 2007 - be careful not to confuse these two.
-# In order to have coverage generated please download from https://mingw-w64.org/doku.php/download/mingw-builds
-# Install using mingw-w64-install.exe instead of similar thing packaged with cygwin
-# Both 32 bit and 64 bit versions of mingw-w64 are generating coverage data.
-
-ifeq ($(OS),Windows_NT)
-ifeq ($(USE_MINGW32_I686),)
-#this one is 64 bit
-  TRGT = x86_64-w64-mingw32-
-else
-#this one was 32 bit
-  TRGT = i686-w64-mingw32-
-endif
-else
-  TRGT =
-endif
-
-CC   = $(TRGT)gcc
-CPPC = $(TRGT)g++
-# Enable loading with g++ only if you need C++ runtime support.
-# NOTE: You can use C++ even without C++ support if you are careful. C++
-#       runtime support makes code size explode.
-#LD   = $(TRGT)gcc
-LD   = $(TRGT)g++
-CP   = $(TRGT)objcopy
-AS   = $(TRGT)gcc -x assembler-with-cpp
-OD   = $(TRGT)objdump
-HEX  = $(CP) -O ihex
-BIN  = $(CP) -O binary
-
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition
 
@@ -203,12 +221,13 @@ ULIBDIR =
 # List all user libraries here
 ULIBS = -lm
 
-ifneq ($(IS_MAC),yes)
-	ULIBS += -lgcov --coverage
-endif
-
 ifeq ($(COVERAGE),yes)
-	ULIBS += --coverage
+  ifeq ($(IS_CLANG),1)
+    # Clang coverage: needs no -lgcov, no --coverage
+  else
+    # GCC coverage: gcov linking needed
+    ULIBS += -lgcov
+  endif
 endif
 
 ifeq ($(SANITIZE),yes)
