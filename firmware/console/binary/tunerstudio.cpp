@@ -114,6 +114,10 @@ static void printErrorCounters() {
 			tsState.errorUnrecognizedCommand, tsState.errorOutOfRange, tsState.errorOther);
 }
 
+namespace {
+	Timer calibrationsWriteTimer;
+}
+
 #if 0
 static void printScatterList(TsChannelBase* tsChannel) {
 	efiPrintf("Scatter list (global)");
@@ -427,11 +431,6 @@ void requestBurn() {
 }
 
 #if EFI_TUNER_STUDIO
-
-namespace {
-	Timer calibrationsWriteTimer;
-}
-
 /**
  * 'Burn' command is a command to commit the changes
  */
