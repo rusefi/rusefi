@@ -124,7 +124,7 @@ ifeq ($(SANITIZE),yes)
 	ifeq ($(IS_MAC),yes)
 		USE_CPPOPT += -fsanitize=address
 	else
-		USE_CPPOPT += -fsanitize=address -fno-sanitize-recover=all
+		USE_CPPOPT += -fsanitize=address -fsanitize=bounds -fno-sanitize-recover=all
 	endif
 endif
 
