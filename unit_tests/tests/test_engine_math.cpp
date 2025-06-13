@@ -67,60 +67,7 @@ TEST(misc, testEngineMath) {
 	ASSERT_NEAR(46.2747f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
 
-typedef enum {
-    CS_OPEN = 0,
-    CS_CLOSED = 1,
-    CS_SWIRL_TUMBLE = 2,
-
-} chamber_style_e;
-
-/**
- * @param octane gas octane number
- * @param bore in mm
- */
-static float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore) {
-    int octaneCorrection;
-    if ( octane <= 90) {
-        octaneCorrection = -2;
-    } else if (octane < 94) {
-        octaneCorrection = -1;
-    } else {
-        octaneCorrection = 0;
-    }
-
-    int compressionCorrection;
-    if (compression <= 9) {
-        compressionCorrection = 2;
-    } else if (compression <= 10) {
-        compressionCorrection = 1;
-    } else if (compression <= 11) {
-        compressionCorrection = 0;
-    } else {
-        // compression ratio above 11
-        compressionCorrection = -2;
-    }
-    int base;
-    if (style == CS_OPEN) {
-    	base = 33;
-    } else if (style == CS_CLOSED) {
-    	base = 28;
-    } else {
-    	// CS_SWIRL_TUMBLE
-    	base = 22;
-    }
-
-    float boreCorrection = (bore - 4 * 25.4) / 25.4 * 6;
-    float result = base + octaneCorrection + compressionCorrection + boreCorrection;
-    return ((int)(result * 10)) / 10.0;
-}
-
-
 TEST(misc, testIgnitionMapGenerator) {
-	printf("*************************************************** testIgnitionMapGenerator\r\n");
-
-	ASSERT_EQ(35, getTopAdvanceForBore(CS_OPEN, 98, 8, 101.6));
-	ASSERT_EQ(33, getTopAdvanceForBore(CS_OPEN, 98, 11, 101.6));
-
 	float rpmBin[16];
 	setRpmBin(rpmBin, 16, 800, 7000);
 	ASSERT_EQ(650, rpmBin[0]);
@@ -129,10 +76,6 @@ TEST(misc, testIgnitionMapGenerator) {
 	ASSERT_EQ( 1400,  rpmBin[3]) << "rpm@3";
 	ASSERT_EQ( 4700,  rpmBin[14]) << "rpm@14";
 	ASSERT_EQ(7000, rpmBin[15]);
-
-
-	ASSERT_FLOAT_EQ(22.0, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 101.6));
-    ASSERT_FLOAT_EQ(32.2, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 145));
 
 	ASSERT_NEAR(36.0, getInitialAdvance(6000, 100, 36), 0.1);
 	ASSERT_NEAR(9.9, getInitialAdvance(600, 100, 36), 0.2);
