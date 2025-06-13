@@ -178,7 +178,6 @@ public enum Sensor implements BinaryLogEntry {
     private final double maxValue;
     @Nullable
     private final FieldType type;
-    private final int offset;
     private final double scale;
 
     static {
@@ -193,7 +192,6 @@ public enum Sensor implements BinaryLogEntry {
     Sensor(String name, SensorCategory category, FieldType type, Field field, double scale, double minValue, double maxValue, String units) {
         this.name = name == null ? name() : name;
         this.type = type;
-        this.offset = field.getTotalOffset();
         this.scale = scale;
         this.category = category;
         this.units = units;
@@ -227,10 +225,7 @@ public enum Sensor implements BinaryLogEntry {
         this.maxValue = maxValue;
         this.scale = 1.0;
         type = null;
-        offset = -1;
     }
-
-
 
     public static Collection<Sensor> getSensorsForCategory(String category) {
         final Set<Sensor> sensors = new TreeSet<>(Comparator.comparing(o -> o.getName().toLowerCase()));
@@ -334,11 +329,6 @@ public enum Sensor implements BinaryLogEntry {
 
     public double getMaxValue() {
         return maxValue;
-    }
-
-    @Deprecated // this takes (wrong!) hard-coded offset, TODO migrate to IniModel approach!
-    public int getOffset() {
-        return offset;
     }
 
     public double getScale() {
