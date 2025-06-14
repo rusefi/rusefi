@@ -433,7 +433,7 @@ bool EngineTestHelper::assertEventExistsAtEnginePhase(const char *msg, void *cal
 	TestExecutor *executor = &engine.scheduler;
 	for (size_t i = 0; i < executor->size(); i++) {
 		scheduling_s *event = executor->getForUnitTest(i);
-		if(reinterpret_cast<void*>(event->action.getCallback()), reinterpret_cast<void*>(callback)) {
+		if(reinterpret_cast<void*>(event->action.getCallback()) == reinterpret_cast<void*>(callback)) {
 			efitimeus_t start = getTimeNowUs();
 			efitimeus_t expectedTimestamp = angleToTimeUs(expectedEventEnginePhase);
 			// after #7245 we can increase the resolution of this test for expect 0.5 or less
