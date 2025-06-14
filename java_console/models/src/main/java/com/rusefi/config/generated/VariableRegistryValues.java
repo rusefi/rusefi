@@ -459,7 +459,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_MINIMAL_PINS = 99;
 	public static final int engine_type_e_MITSUBISHI_3A92 = 12;
 	public static final int engine_type_e_MITSUBISHI_4G93 = 16;
-	public static final int engine_type_e_MRE_BOARD_NEW_TEST = 31;
 	public static final int engine_type_e_MRE_BODY_CONTROL = 23;
 	public static final int engine_type_e_MRE_SECONDARY_CAN = 4;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
@@ -472,7 +471,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_PROTEUS_GM_LS_4 = 27;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_NISSAN_VQ35 = 103;
-	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
 	public static final int engine_type_e_PROTEUS_STIM_QC = 73;
 	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;
@@ -494,6 +492,8 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_UNUSED102 = 102;
+	public static final int engine_type_e_UNUSED31 = 31;
+	public static final int engine_type_e_UNUSED42 = 42;
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_105 = 105;
 	public static final int engine_type_e_UNUSED_97 = 97;
@@ -1639,7 +1639,7 @@ public class VariableRegistryValues {
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final int TS_SCATTER_PAGE_SIZE = 256;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.14.proteus_f7.2854908462";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.15.proteus_f7.2854908462";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1952;

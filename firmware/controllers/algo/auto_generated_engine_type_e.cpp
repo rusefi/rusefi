@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sun May 25 00:57:29 UTC 2025
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sat Jun 14 22:58:58 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -137,8 +137,6 @@ case engine_type_e::MITSUBISHI_3A92:
   return "MITSUBISHI_3A92";
 case engine_type_e::MITSUBISHI_4G93:
   return "MITSUBISHI_4G93";
-case engine_type_e::MRE_BOARD_NEW_TEST:
-  return "MRE_BOARD_NEW_TEST";
 case engine_type_e::MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
 case engine_type_e::MRE_SECONDARY_CAN:
@@ -163,8 +161,6 @@ case engine_type_e::PROTEUS_LUA_DEMO:
   return "PROTEUS_LUA_DEMO";
 case engine_type_e::PROTEUS_NISSAN_VQ35:
   return "PROTEUS_NISSAN_VQ35";
-case engine_type_e::PROTEUS_QC_TEST_BOARD:
-  return "PROTEUS_QC_TEST_BOARD";
 case engine_type_e::PROTEUS_STIM_QC:
   return "PROTEUS_STIM_QC";
 case engine_type_e::PROTEUS_VW_B6:
@@ -207,6 +203,10 @@ case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case engine_type_e::UNUSED102:
   return "UNUSED102";
+case engine_type_e::UNUSED31:
+  return "UNUSED31";
+case engine_type_e::UNUSED42:
+  return "UNUSED42";
 case engine_type_e::UNUSED94:
   return "UNUSED94";
 case engine_type_e::UNUSED_105:
