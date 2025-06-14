@@ -325,6 +325,9 @@ static void setBasicNotECUmode() {
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
 	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
@@ -614,6 +617,7 @@ void detectBoardType() {
 	// see hellen128 which has/had alternative i2c board id?
 }
 
+// set engine_type 15
 void fuelBenchMode() {
     engineConfiguration->cranking.rpm = 12000;
 #if EFI_ENGINE_CONTROL
