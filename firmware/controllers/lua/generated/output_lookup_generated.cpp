@@ -500,18 +500,6 @@ float getOutputValueByName(const char *name) {
 // triggerSecondaryRise
 		case 1016529812:
 			return engine->outputChannels.triggerSecondaryRise;
-// triggerVvtFall
-		case 1537196344:
-			return engine->outputChannels.triggerVvtFall;
-// triggerVvtRise
-		case 1537636524:
-			return engine->outputChannels.triggerVvtRise;
-// triggerVvt2Fall
-		case -873628278:
-			return engine->outputChannels.triggerVvt2Fall;
-// triggerVvt2Rise
-		case -873188098:
-			return engine->outputChannels.triggerVvt2Rise;
 // starterState
 		case -1438648277:
 			return engine->outputChannels.starterState;
