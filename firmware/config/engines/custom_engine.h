@@ -16,20 +16,14 @@ void setL9779TestConfiguration();
 
 void setEepromTestConfiguration();
 
-void mreBoardNewTest();
 void mreSecondaryCan();
 void mreBCM();
 void setBodyControlUnit();
 
 void fuelBenchMode();
 
-/**
- * PROTEUS_QC_TEST_BOARD
- * set engine_type 42
- */
-void proteusBoardTest();
 void proteusLuaDemo();
-void proteusStimQc();
+
 void proteusDcWastegateTest();
 
 void setTest33816EngineConfiguration();

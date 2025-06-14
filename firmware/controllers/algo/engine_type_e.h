@@ -78,7 +78,7 @@ enum class engine_type_e : uint16_t {
 
 	PROTEUS_ANALOG_PWM_TEST = 30,
 
-	MRE_BOARD_NEW_TEST = 31,
+	UNUSED31 = 31,
 
 	VW_ABA = 32,
 
@@ -99,7 +99,7 @@ enum class engine_type_e : uint16_t {
   // used by unit tests and HW CI
 	FRANKENSO_BMW_M73_F = 40,
 
-	PROTEUS_QC_TEST_BOARD = 42,
+	UNUSED42 = 42,
 
 	HONDA_600 = 43,
 
@@ -147,7 +147,7 @@ enum class engine_type_e : uint16_t {
 
 	HELLEN_121_VAG_4_CYL = 71,
 	HELLEN_121_NISSAN_6_CYL = 72,
-	PROTEUS_STIM_QC = 73,
+	UNUSED73 = 73,
 	HELLEN_4CHAN_STIM_QC = 74,
 	HELLEN_2CHAN_STIM_QC = 75,
 	HELLEN_154_VAG = 76,
