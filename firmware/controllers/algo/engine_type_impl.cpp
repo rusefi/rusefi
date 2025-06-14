@@ -131,9 +131,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
 		break;
-	case engine_type_e::MRE_BOARD_NEW_TEST:
-		mreBoardNewTest();
-		break;
+	case engine_type_e::UNUSED31:
 	case engine_type_e::BMW_M73_MRE:
 	case engine_type_e::BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi();
@@ -228,9 +226,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::PROTEUS_VW_B6:
 		setProteusVwPassatB6();
 		break;
-	case engine_type_e::PROTEUS_QC_TEST_BOARD:
-		proteusBoardTest();
-		break;
+	case engine_type_e::UNUSED42:
 	case engine_type_e::PROTEUS_LUA_DEMO:
 		proteusLuaDemo();
 		break;
