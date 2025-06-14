@@ -168,7 +168,7 @@ public class PinoutLogic {
             Object pinId = pin.get(ID);
             Object metaAsObject = pin.get(META);
             if (metaAsObject != null && !(metaAsObject instanceof String))
-                throw new IllegalStateException("[" + metaAsObject + "] meta could only be a string for " + pinId);
+                throw new IllegalStateException("[" + metaAsObject + "] meta could only be a string for pinId=[" + pinId + "]. For arrays use 'id', it's inconsisten.");
             String meta = (String) metaAsObject;
             if (meta != null && pinId != null) {
                 throw new IllegalStateException("Please use either meta or id, not both. id=" + pinId + " not expected with meta=" + meta);
