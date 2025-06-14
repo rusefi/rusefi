@@ -684,3 +684,4 @@ void testEngine6451() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->triggerSimulatorRpm = 4800;
 }
+
