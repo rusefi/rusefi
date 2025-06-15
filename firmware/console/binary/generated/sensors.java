@@ -29,7 +29,7 @@ wallFuelAmount("Fuel: wall amount", SensorCategory.SENSOR_INPUTS, FieldType.INT1
 wallFuelCorrectionValue("Fuel: wall correction", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 54, 0.01, 0.0, 0.0, "mg"),
 revolutionCounterSinceStart("revolutionCounterSinceStart", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 56, 1.0, 0.0, 0.0, ""),
 canReadCounter("CAN: Rx", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 58, 1.0, 0.0, 64000.0, ""),
-tpsAccelFuel("Fuel: TPS AE add fuel ms", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 60, 0.0033333333333333335, 0.0, 0.0, "ms"),
+tpsAccelFuel("Fuel: TPS acceleration add fuel ms", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 60, 0.0033333333333333335, 0.0, 0.0, "ms"),
 currentIgnitionMode("Ignition: Mode", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 62, 1.0, -1.0, -1.0, ""),
 currentInjectionMode("Fuel: Injection mode", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 63, 1.0, -1.0, -1.0, ""),
 coilDutyCycle("Ignition: coil duty cycle", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 64, 0.01, 0.0, 0.0, "%"),

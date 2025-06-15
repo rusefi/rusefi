@@ -63,7 +63,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.wallFuelCorrectionValue, "Fuel: wall correction", "mg", 3},
 	{engine->outputChannels.revolutionCounterSinceStart, "revolutionCounterSinceStart", "", 0},
 	{engine->outputChannels.canReadCounter, "CAN: Rx", "", 0},
-	{engine->outputChannels.tpsAccelFuel, "Fuel: TPS AE add fuel ms", "ms", 3},
+	{engine->outputChannels.tpsAccelFuel, "Fuel: TPS acceleration add fuel ms", "ms", 3},
 	{engine->outputChannels.currentIgnitionMode, "Ignition: Mode", "", 0},
 	{engine->outputChannels.currentInjectionMode, "Fuel: Injection mode", "", 0},
 	{engine->outputChannels.coilDutyCycle, "Ignition: coil duty cycle", "%", 0},
