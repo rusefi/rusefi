@@ -74,7 +74,6 @@ public enum Sensor implements BinaryLogEntry {
 //
 //    // TPS/load AE
 //    engineLoadAccelDelta("load accel delta", SensorCategory.FUEL, FieldType.INT16, 76, 1.0 / PACK_MULT_PERCENT, -5, 5, "ratio"),
-//    deltaTps(Fields.GAUGE_NAME_FUEL_TPS_ROC, SensorCategory.FUEL, FieldType.INT16, 78, 1.0 / PACK_MULT_PERCENT, -100, 100, "%"),
     tpsAccelFuel(GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.INT16, 1.0 / PACK_MULT_MS, 0, 200, "ms"),
 //
 //    // Ignition

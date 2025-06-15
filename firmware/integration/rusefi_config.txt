@@ -2428,22 +2428,14 @@ end_struct
 #define COIL_1_NAME "Spark #1"
 #define COIL_2_NAME "Spark #2"
 
+
+! todo: technical debt: which file is correct for gauge CATEGORY names? removal from here removes entries from .ini
 #define GAUGE_CATEGORY_TIMING "Timing"
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
 #define GAUGE_CATEGORY_BOOST_CONTROL "Boost Control"
 #define GAUGE_CATEGORY_ETB "ETB more"
 #define GAUGE_CATEGORY_SENT "Sensors - SENT"
-
-#define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"
-#define GAUGE_NAME_VVT_B1E "VVT: bank 1 exhaust"
-#define GAUGE_NAME_VVT_B2I "VVT: bank 2 intake"
-#define GAUGE_NAME_VVT_B2E "VVT: bank 2 exhaust"
-
-#define GAUGE_NAME_VVT_TARGET_B1I "VVT: bank 1 intake target"
-#define GAUGE_NAME_VVT_TARGET_B1E "VVT: bank 1 exhaust target"
-#define GAUGE_NAME_VVT_TARGET_B2I "VVT: bank 2 intake target"
-#define GAUGE_NAME_VVT_TARGET_B2E "VVT: bank 2 exhaust target"
 
 #define GAUGE_NAME_VVS "Vehicle Speed"
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
@@ -2477,39 +2469,7 @@ end_struct
 #define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
 #define GAUGE_NAME_ACCEL_YAW "Acceleration: Yaw"
 
-#define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
 
-#define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
-#define GAUGE_NAME_OIL_PRESSURE_UNITS "kPa"
-
-#define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
-
-#define GAUGE_NAME_AUX_LINEAR_1 "Aux Linear #1"
-#define GAUGE_NAME_AUX_LINEAR_2 "Aux Linear #2"
-
-#define GAUGE_NAME_BOOST_OUTPUT "Boost Output"
-#define GAUGE_NAME_BOOST_CLOSED_LOOP "Boost Closed Loop"
-#define GAUGE_NAME_BOOST_OPEN_LOOP "Boost Open Loop"
-#define GAUGE_NAME_BOOST_TARGET "Boost Target"
-
-#define INDICATOR_NAME_CLUTCH_UP "clutch: up"
-#define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
-#define INDICATOR_NAME_BRAKE_DOWN "brake: down"
-#define INDICATOR_NAME_AC_SWITCH "AC switch"
-
-#define GAUGE_NAME_AIR_FLOW_MEASURED "MAF"
-#define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF #2"
-#define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
-#define GAUGE_NAME_AIR_MASS "air mass"
-
-#define GAUGE_NAME_WARNING_LAST "warning: last"
-#define GAUGE_NAME_WARNING_COUNTER "warning: counter"
-
-#define GAUGE_NAME_FUEL_LEVEL "fuel level"
-#define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
-#define GAUGE_NAME_KNOCK_COUNTER "knock: count"
-#define GAUGE_NAME_KNOCK_RETARD "knock: retard"
-#define GAUGE_NAME_KNOCK_FREQ "knock: frequency"
 #define GAUGE_NAME_KNOCK_1 "knock 1"
 #define GAUGE_NAME_KNOCK_2 "knock 2"
 #define GAUGE_NAME_KNOCK_3 "knock 3"
@@ -2522,26 +2482,6 @@ end_struct
 #define GAUGE_NAME_KNOCK_10 "knock 10"
 #define GAUGE_NAME_KNOCK_11 "knock 11"
 #define GAUGE_NAME_KNOCK_12 "knock 12"
-
-#define GAUGE_NAME_FUEL_BARO_CORR "Fuel: Barometric pressure mult"
-#define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position PPS"
-#define GAUGE_NAME_FUEL_TPS_ROC "Fuel: TPS change"
-#define GAUGE_NAME_FUEL_CHARGE_TEMP "Fuel: Estimated charge temperature"
-#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS acceleration add fuel ms"
-#define GAUGE_NAME_FUEL_CLT_CORR "Fuel: CLT correction"
-#define GAUGE_NAME_FUEL_IAT_CORR "Fuel: IAT correction"
-#define GAUGE_NAME_FUEL_VE "Fuel: VE"
-#define GAUGE_NAME_FUEL_CRANKING "Fuel: cranking"
-#define GAUGE_NAME_FUEL_RUNNING "Fuel: running"
-#define GAUGE_NAME_FUEL_LAST_INJECTION "Fuel: Last Inj Pulsewidth"
-#define GAUGE_NAME_FUEL_BASE "Fuel: base mass"
-#define GAUGE_NAME_FUEL_STFT_1 "Short Term Fuel Trim: Bank 1"
-#define GAUGE_NAME_FUEL_STFT_2 "Short Term Fuel Trim: Bank 2"
-#define GAUGE_NAME_FUEL_WALL_AMOUNT "Fuel: wall amount"
-#define GAUGE_NAME_FUEL_WALL_CORRECTION "Fuel: wall correction"
-#define GAUGE_NAME_FUEL_LOAD "Fuel: load"
-#define GAUGE_NAME_FUEL_CONSUMPTION "Fuel: Total consumed"
-#define GAUGE_NAME_FUEL_FLOW "Fuel: Flow rate"
 
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"

@@ -56,6 +56,7 @@
 #define GAUGE_NAME_CAN_WRITE_OK "CAN: Tx OK"
 #define GAUGE_NAME_CAN_WRITE_ERR "CAN: Tx err"
 
+! todo: technical debt: which file is correct for gauge CATEGORY names?
 #define GAUGE_CATEGORY_TIMING "Timing"
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
@@ -162,7 +163,7 @@
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_INJECTOR_LAG "Fuel: injector lag"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "Fuel: Estimated charge temperature"
-#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS AE add fuel ms"
+#define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS acceleration add fuel ms"
 #define GAUGE_NAME_FUEL_CLT_CORR "Fuel: CLT correction"
 #define GAUGE_NAME_FUEL_IAT_CORR "Fuel: IAT correction"
 #define GAUGE_NAME_FUEL_VE "Fuel: VE"
