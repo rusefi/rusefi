@@ -53,7 +53,7 @@ static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 2, &completionCallbac
 
 static constexpr size_t sampleCount = BIG_BUFFER_SIZE / (2 * sizeof(uint8_t));
 
-static void startSampling(void* = nullptr) {
+static void startSampling() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	if (buffer && !engineConfiguration->enableSoftwareKnock) {
