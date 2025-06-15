@@ -847,6 +847,17 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		engineConfiguration->enableExtendedCanBroadcast = false;
 		return 0;
 	});
+	lua_register(lState, "getCanBaudRate", [](lua_State* l) {
+	  auto index = luaL_checkinteger(l, 1);
+	  if (index == 1) {
+	    lua_pushnumber(l, engineConfiguration->canBaudRate);
+	  } else {
+	    lua_pushnumber(l, engineConfiguration->can2BaudRate);
+	  }
+		// that's about global_can_data
+		engineConfiguration->enableExtendedCanBroadcast = false;
+		return 1;
+	});
 #endif // HW_PROTEUS
 
 #if EFI_ELECTRONIC_THROTTLE_BODY && EFI_PROD_CODE
