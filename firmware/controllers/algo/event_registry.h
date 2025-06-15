@@ -80,7 +80,7 @@ public:
 	 * Sequential number of currently processed spark event
 	 * @see engineState.globalSparkCounter
 	 */
-	int sparkCounter = 0;
+	uint32_t sparkCounter = 0;
 	/**
 	 * [0, cylindersCount)
 	 */
