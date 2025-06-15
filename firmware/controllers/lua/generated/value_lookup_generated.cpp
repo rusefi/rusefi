@@ -728,6 +728,24 @@ float getConfigValueByName(const char *name) {
 // stft.startupDelay
 		case 1028902582:
 			return engineConfiguration->stft.startupDelay;
+// ltft.enabled
+		case -1407066344:
+			return engineConfiguration->ltft.enabled;
+// ltft.correctionEnabled
+		case -1686338448:
+			return engineConfiguration->ltft.correctionEnabled;
+// ltft.deadband
+		case -1888587696:
+			return engineConfiguration->ltft.deadband;
+// ltft.maxAdd
+		case 1427207708:
+			return engineConfiguration->ltft.maxAdd;
+// ltft.maxRemove
+		case -269110527:
+			return engineConfiguration->ltft.maxRemove;
+// ltft.timeConstant
+		case 1941168166:
+			return engineConfiguration->ltft.timeConstant;
 // tps2SecondaryMin
 		case 18659930:
 			return engineConfiguration->tps2SecondaryMin;
@@ -3176,6 +3194,36 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1028902582:
 	{
 		engineConfiguration->stft.startupDelay = (int)value;
+		return 1;
+	}
+		case -1407066344:
+	{
+		engineConfiguration->ltft.enabled = (int)value;
+		return 1;
+	}
+		case -1686338448:
+	{
+		engineConfiguration->ltft.correctionEnabled = (int)value;
+		return 1;
+	}
+		case -1888587696:
+	{
+		engineConfiguration->ltft.deadband = (int)value;
+		return 1;
+	}
+		case 1427207708:
+	{
+		engineConfiguration->ltft.maxAdd = (int)value;
+		return 1;
+	}
+		case -269110527:
+	{
+		engineConfiguration->ltft.maxRemove = (int)value;
+		return 1;
+	}
+		case 1941168166:
+	{
+		engineConfiguration->ltft.timeConstant = (int)value;
 		return 1;
 	}
 		case 18659930:

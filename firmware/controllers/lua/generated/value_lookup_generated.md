@@ -721,6 +721,24 @@ Above this AFR, correction is paused
 ### stft.startupDelay
 Delay after starting the engine before beginning closed loop correction.
 
+### ltft.enabled
+Enables lambda sensor long term fuel corrections learning
+
+### ltft.correctionEnabled
+Enables applying long term fuel corrections
+
+### ltft.deadband
+When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.
+
+### ltft.maxAdd
+Maximum % that the long term fuel trim can add
+
+### ltft.maxRemove
+Maximum % that the long term fuel trim can remove
+
+### ltft.timeConstant
+Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 30.0 means it will try to make most of the correction within 30 seconds, and a value of 300.0 will try to correct within 5 minutes.\nLower values makes the correction more sensitive, higher values slow the correction down.
+
 ### tps2SecondaryMin
 
 
