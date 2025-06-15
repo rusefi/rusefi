@@ -1967,9 +1967,6 @@ float getConfigValueByName(const char *name) {
 // dynoCarFrontalAreaM2
 		case -1661556925:
 			return config->dynoCarFrontalAreaM2;
-// technicalDebt7738
-		case 218340072:
-			return config->technicalDebt7738;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -5244,11 +5241,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1661556925:
 	{
 		config->dynoCarFrontalAreaM2 = value;
-		return 1;
-	}
-		case 218340072:
-	{
-		config->technicalDebt7738 = (int)value;
 		return 1;
 	}
 	}
