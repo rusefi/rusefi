@@ -134,6 +134,10 @@ public:
 	OutputPin tcuPcSolenoid;
 	OutputPin tcu32Solenoid;
 
+#ifdef EFI_UNIT_TEST
+	void resetForUnitTest();
+#endif
+
 private:
 	void startInjectionPins();
 	void startIgnitionPins();
