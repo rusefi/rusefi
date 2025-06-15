@@ -11,12 +11,12 @@
 #include "hellen_mm176_meta.h"
 
 // stm32 UART8
-#define H144_UART8_RX Gpio::E0
-#define H144_UART8_TX Gpio::E1
+#define H144_UART8_RX E0
+#define H144_UART8_TX E1
 
 // stm32 UART2
-#define H144_UART2_RX Gpio::D6
-#define H144_UART2_TX Gpio::D5
+#define H144_UART2_RX D6
+#define H144_UART2_TX D5
 
 #define H144_LED1_RED Gpio::G0
 #define H144_LED2_GREEN Gpio::G1

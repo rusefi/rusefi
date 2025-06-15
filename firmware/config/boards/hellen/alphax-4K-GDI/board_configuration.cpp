@@ -201,12 +201,12 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
     }
 	{
 	  static OutputPin TleEn;
-	  TleEn.initPin("TLE9104 En", H144_UART8_RX);
+	  TleEn.initPin("TLE9104 En", Gpio::H144_UART8_RX);
 	  TleEn.setValue(1);
 	  }
 	  {
 	    static OutputPin TleReset;
-	    TleReset.initPin("TLE9104 Reset", H144_UART8_TX);
+	    TleReset.initPin("TLE9104 Reset", Gpio::H144_UART8_TX);
 	    TleReset.setValue(1);
     }
     {

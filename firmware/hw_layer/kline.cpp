@@ -160,8 +160,8 @@ void startKLine() {
         return;
     }
 #if EFI_PROD_CODE
-	efiSetPadMode("K-Line UART RX", KLINE_SERIAL_DEVICE_RX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-	efiSetPadMode("K-Line UART TX", KLINE_SERIAL_DEVICE_TX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+	efiSetPadMode("K-Line UART RX", Gpio::KLINE_SERIAL_DEVICE_RX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+	efiSetPadMode("K-Line UART TX", Gpio::KLINE_SERIAL_DEVICE_TX, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 #endif /* EFI_PROD_CODE */
 
 	static SerialConfig cfg = {
@@ -185,8 +185,8 @@ void stopKLine() {
 #ifdef EFI_KLINE
 #if EFI_PROD_CODE
     if (activeConfiguration.enableKline) {
-	    efiSetPadUnused(KLINE_SERIAL_DEVICE_RX);
-	    efiSetPadUnused(KLINE_SERIAL_DEVICE_TX);
+	    efiSetPadUnused(Gpio::KLINE_SERIAL_DEVICE_RX);
+	    efiSetPadUnused(Gpio::KLINE_SERIAL_DEVICE_TX);
 
 	    sdStop(klDriver);
 	}
