@@ -79,10 +79,6 @@ static float getInjectionAngleCorrection(float fuelMs, float oneDegreeUs) {
 	}
 }
 
-InjectionEvent::InjectionEvent() {
-	memset(outputs, 0, sizeof(outputs));
-}
-
 // Returns the start angle of this injector in engine coordinates (0-720 for a 4 stroke),
 // or unexpected if unable to calculate the start angle due to missing information.
 expected<float> InjectionEvent::computeInjectionAngle() const {

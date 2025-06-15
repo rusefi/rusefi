@@ -15,7 +15,7 @@
 
 class InjectionEvent {
 public:
-	InjectionEvent();
+	InjectionEvent() = default;
 
 	bool update();
 
@@ -43,12 +43,12 @@ private:
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;
 
-	WallFuel wallFuel;
+	WallFuel wallFuel{};
 
 public:
 	// TODO: this should be private
-	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
-	InjectorOutputPin *outputsStage2[MAX_WIRES_COUNT];
+	InjectorOutputPin *outputs[MAX_WIRES_COUNT]{};
+	InjectorOutputPin *outputsStage2[MAX_WIRES_COUNT]{};
 	float injectionStartAngle = 0;
 };
 
@@ -74,7 +74,7 @@ public:
 	 */
 	void addFuelEvents();
 
-	void resetOverlapping();
+	static void resetOverlapping();
 
 	/**
 	 * injection events, per cylinder
