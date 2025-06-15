@@ -1353,7 +1353,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 552307278;
+	public static final int SIGNATURE_HASH = 333324481;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1640,7 +1640,7 @@ public class VariableRegistryValues {
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final int TS_SCATTER_PAGE_SIZE = 256;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.15.proteus_f7.552307278";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.16.proteus_f7.333324481";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1952;
