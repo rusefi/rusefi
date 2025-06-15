@@ -17,18 +17,14 @@ void turnInjectionPinHigh(uintptr_t arg) {
 	// extract last bit
 	bool stage2Active = arg & 1;
 
-	for (size_t i = 0; i < efi::size(event->outputs); i++) {
-		InjectorOutputPin *output = event->outputs[i];
-
+	for (auto const& output: event->outputs) {
 		if (output) {
 			output->open(nowNt);
 		}
 	}
 
 	if (stage2Active) {
-		for (size_t i = 0; i < efi::size(event->outputsStage2); i++) {
-			InjectorOutputPin *output = event->outputsStage2[i];
-
+		for (auto const& output: event->outputsStage2) {
 			if (output) {
 				output->open(nowNt);
 			}
@@ -51,8 +47,8 @@ void FuelSchedule::invalidate() {
 }
 
 void FuelSchedule::resetOverlapping() {
-	for (size_t i = 0; i < efi::size(enginePins.injectors); i++) {
-		enginePins.injectors[i].reset();
+	for (auto& inj : enginePins.injectors) {
+		inj.reset();
 	}
 }
 
