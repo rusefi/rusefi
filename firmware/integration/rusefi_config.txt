@@ -64,6 +64,9 @@
 !
 ! Q: what's the difference between 'engineConfiguration' and rest of the 'persistent_config_s'?
 ! A: 'engineConfiguration' portion has 'activeConfiguration' copy so that we can detect changes
+! A number of systems like IO and trigger do not like to be re-initialized while engine is running, these are great candidates
+! for engineConfiguration
+! on the other hand VE table changes are much easier to make on the fly with engine running
 ! todo: move all curves and tables out of engineConfiguration that would make 'activeConfiguration' smaller and we might save a couple of K of ram
 !
 !
