@@ -221,7 +221,7 @@ EngineTestHelper::~EngineTestHelper() {
 
 	// Cleanup
   	// reset config to an invalid state, will trigger isPinConfigurationChanged
-	memset(&persistentConfig, 0, sizeof(persistentConfig));
+	enginePins.resetForUnitTest();
 	enginePins.reset();
 	enginePins.unregisterPins();
 	Sensor::resetRegistry();
