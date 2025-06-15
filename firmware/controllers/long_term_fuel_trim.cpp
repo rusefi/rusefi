@@ -107,7 +107,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		float trim = m_state->trims[bank][x.Idx][y.Idx];
 
 		// Integrate
-		float newTrim = k * lambdaCorrection + trim;
+		float newTrim = trim + k * (lambdaCorrection - trim);
 
 		// TODO:
 		// rise OBD code if we hit trim limit
