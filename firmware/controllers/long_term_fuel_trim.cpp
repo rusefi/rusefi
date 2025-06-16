@@ -17,16 +17,14 @@ constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 static BKUP_RAM_NOINIT LtftState ltftState;
 
 void LtftState::save() {
-	ecuRestartCounter++;
-
 #if EFI_PROD_CODE
-	storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)this, sizeof(*this));
+	storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)trims, sizeof(trims));
 #endif //EFI_PROD_CODE
 }
 
 void LtftState::load() {
 #if EFI_PROD_CODE
-	if (storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)this, sizeof(*this)) != StorageStatus::Ok) {
+	if (storageRead(EFI_LTFT_RECORD_ID, (uint8_t *)trims, sizeof(trims)) != StorageStatus::Ok) {
 #else
 	if (1) {
 #endif
