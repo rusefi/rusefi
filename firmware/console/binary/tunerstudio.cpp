@@ -183,6 +183,33 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 	}
 }
 
+static constexpr size_t getTunerStudioPageSize(size_t page) {
+	switch (page) {
+	case TS_PAGE_SETTINGS:
+		return TOTAL_CONFIG_SIZE;
+#if EFI_TS_SCATTER
+	case TS_PAGE_SCATTER_OFFSETS:
+		return TS_SCATTER_PAGE_SIZE;
+#endif
+	default:
+		return 0;
+	}
+}
+
+// Validate whether the specified offset and count would cause an overrun in the tune.
+// Returns true if an overrun would occur.
+static bool validateOffsetCount(size_t page, size_t offset, size_t count, TsChannelBase* tsChannel) {
+	size_t allowedSize = getTunerStudioPageSize(page);
+	if (offset + count > allowedSize) {
+		efiPrintf("TS: Project mismatch? Too much configuration requested %d+%d>%d", offset, count, allowedSize);
+		tunerStudioError(tsChannel, "ERROR: out of range");
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "bad_offset");
+		return true;
+	}
+
+	return false;
+}
+
 static void sendOkResponse(TsChannelBase *tsChannel) {
 	tsChannel->sendResponse(TS_CRC, nullptr, 0);
 }
@@ -220,8 +247,6 @@ void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, const char *msg) {
 void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const char *msg) {
 	::sendErrorCode(tsChannel, code, msg);
 }
-
-bool validateOffsetCount(size_t page, size_t offset, size_t count, TsChannelBase* tsChannel);
 
 PUBLIC_API_WEAK bool isBoardAskingTriggerTsRefresh() {
 	return false;
