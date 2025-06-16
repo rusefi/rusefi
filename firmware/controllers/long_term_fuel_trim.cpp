@@ -204,4 +204,12 @@ void resetLongTermFuelTrim() {
 void devPokeLongTermFuelTrim() {
 }
 
+void *ltftGetTsPage() {
+	return (void *)ltftState.trims;
+}
+
+size_t ltftGetTsPageSize() {
+	return sizeof(ltftState.trims);
+}
+
 #endif // EFI_LTFT_CONTROL
