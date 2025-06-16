@@ -92,10 +92,6 @@
 
 #if EFI_TUNER_STUDIO
 
-#define TS_PAGE_SETTINGS			0x0000
-// Issue TS zeroes LSB byte of pageIdentifier
-#define TS_PAGE_SCATTER_OFFSETS		0x0100
-
 // Each offset is uint16_t
 static_assert(TS_SCATTER_PAGE_SIZE == TS_SCATTER_OFFSETS_COUNT * 2);
 
@@ -215,7 +211,7 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const ch
 	::sendErrorCode(tsChannel, code, msg);
 }
 
-bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
+bool validateOffsetCount(size_t page, size_t offset, size_t count, TsChannelBase* tsChannel);
 
 PUBLIC_API_WEAK bool isBoardAskingTriggerTsRefresh() {
 	return false;
@@ -242,15 +238,16 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 	efiPrintf("TS -> Page %d write chunk offset %d count %d (output_count=%d)",
 		page, offset, count, tsState.outputChannelsCommandCounter);
 
+
+	if (validateOffsetCount(page, offset, count, tsChannel)) {
+		tunerStudioError(tsChannel, "ERROR: WR out of range");
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+		return;
+	}
+
 	if (page == TS_PAGE_SETTINGS) {
 		if (isLockedFromUser()) {
 			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
-			return;
-		}
-
-		if (validateOffsetCount(offset, count, tsChannel)) {
-			tunerStudioError(tsChannel, "ERROR: WR out of range");
-			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 			return;
 		}
 
@@ -276,13 +273,6 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		calibrationsWriteTimer.reset();
 #if EFI_TS_SCATTER
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		// Ensure we are writing in bounds
-		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
-			tunerStudioError(tsChannel, "ERROR: WR out of range");
-			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-			return;
-		}
-
 		uint8_t* addr = (uint8_t *)tsChannel->highSpeedOffsets + offset;
 		memcpy(addr, content, count);
 #endif
@@ -299,24 +289,17 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 	const uint8_t* start = nullptr;
 	tsState.crc32CheckCommandCounter++;
 
-	if (page == TS_PAGE_SETTINGS) {
-		// Ensure we are reading from in bounds
-		if (validateOffsetCount(offset, count, tsChannel)) {
-			tunerStudioError(tsChannel, "ERROR: CRC out of range");
-			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-			return;
-		}
+	// Ensure we are reading from in bounds
+	if (validateOffsetCount(page, offset, count, tsChannel)) {
+		tunerStudioError(tsChannel, "ERROR: CRC out of range");
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+		return;
+	}
 
+	if (page == TS_PAGE_SETTINGS) {
 		start = getWorkingPageAddr() + offset;
 #if EFI_TS_SCATTER
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		// Ensure we are reading from in bounds
-		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
-			tunerStudioError(tsChannel, "ERROR: CRC out of range");
-			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-			return;
-		}
-
 		start = (uint8_t *)tsChannel->highSpeedOffsets + offset;
 #endif
 	} else {
@@ -380,15 +363,15 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 	tsState.readPageCommandsCounter++;
 	efiPrintf("TS <- Page %d read chunk offset %d count %d", page, offset, count);
 
+	if (validateOffsetCount(page, offset, count, tsChannel)) {
+		tunerStudioError(tsChannel, "ERROR: RD out of range");
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+		return;
+	}
+
 	uint8_t* addr = nullptr;
 
 	if (page == TS_PAGE_SETTINGS) {
-		if (validateOffsetCount(offset, count, tsChannel)) {
-			tunerStudioError(tsChannel, "ERROR: RD out of range");
-			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-			return;
-		}
-
 		if (isLockedFromUser()) {
 			// to have rusEFI console happy just send all zeros within a valid packet
 			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
@@ -398,13 +381,6 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 		}
 #if EFI_TS_SCATTER
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		// Ensure we are reading from in bounds
-		if (offset + count > sizeof(tsChannel->highSpeedOffsets)) {
-			tunerStudioError(tsChannel, "ERROR: RD out of range");
-			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-			return;
-		}
-
 		addr = (uint8_t *)tsChannel->highSpeedOffsets + offset;
 #endif
 	}
