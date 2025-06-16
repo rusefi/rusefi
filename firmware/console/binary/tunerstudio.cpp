@@ -178,6 +178,10 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 	case TS_PAGE_SCATTER_OFFSETS:
 		return (uint8_t *)tsChannel->highSpeedOffsets + offset;
 #endif
+#if EFI_LTFT_CONTROL
+	case TS_PAGE_LTFT_TRIMS:
+		return (uint8_t *)ltftGetTsPage() + offset;
+#endif
 	default:
 		return nullptr;
 	}
@@ -190,6 +194,10 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
 		return TS_SCATTER_PAGE_SIZE;
+#endif
+#if EFI_LTFT_CONTROL
+	case TS_PAGE_LTFT_TRIMS:
+		return ltftGetTsPageSize();
 #endif
 	default:
 		return 0;

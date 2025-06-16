@@ -42,3 +42,6 @@ private:
 void initLtft();
 void resetLongTermFuelTrim();
 void devPokeLongTermFuelTrim();
+
+void *ltftGetTsPage();
+size_t ltftGetTsPageSize();
