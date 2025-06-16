@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sat Jun 14 22:58:58 UTC 2025
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Mon Jun 16 17:16:43 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -57,6 +57,8 @@ case engine_type_e::GM_LTG:
   return "GM_LTG";
 case engine_type_e::GM_SBC:
   return "GM_SBC";
+case engine_type_e::GM_SBC_GEN4:
+  return "GM_SBC_GEN4";
 case engine_type_e::GM_SBC_GEN5:
   return "GM_SBC_GEN5";
 case engine_type_e::GY6_139QMB:
@@ -155,8 +157,6 @@ case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case engine_type_e::PROTEUS_BMW_M73:
   return "PROTEUS_BMW_M73";
-case engine_type_e::PROTEUS_GM_LS_4:
-  return "PROTEUS_GM_LS_4";
 case engine_type_e::PROTEUS_LUA_DEMO:
   return "PROTEUS_LUA_DEMO";
 case engine_type_e::PROTEUS_NISSAN_VQ35:

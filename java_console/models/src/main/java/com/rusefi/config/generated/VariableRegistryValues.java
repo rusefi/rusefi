@@ -127,8 +127,8 @@ public class VariableRegistryValues {
 	public static final int BENCH_STARTER_DURATION = 4000;
 	public static final int BENCH_VVT_DURATION = 300;
 	public static final int BLEND_FACTOR_SIZE = 8;
-	public static final int BLEND_TABLE_COUNT = 8;
-	public static final int blend_table_s_size = 188;
+	public static final int BLEND_TABLE_COUNT = 2;
+	public static final int blend_table_s_size = 44;
 	public static final int BLOCKING_FACTOR = 1024;
 	public static final int BOOST_BLEND_COUNT = 2;
 	public static final int BOOST_CURVE_SIZE = 5;
@@ -198,10 +198,10 @@ public class VariableRegistryValues {
 	public static final int CLT_CURVE_SIZE = 16;
 	public static final int CLT_FUEL_CURVE_SIZE = 16;
 	public static final int CLT_IDLE_TABLE_CLT_SIZE = 8;
-	public static final int CLT_IDLE_TABLE_RPM_SIZE = 6;
+	public static final int CLT_IDLE_TABLE_RPM_SIZE = 2;
 	public static final int CLT_LIMITER_CURVE_SIZE = 4;
-	public static final int CLT_TIMING_CURVE_SIZE = 3;
-	public static final int CLT_UPPER_LIMIT = 250;
+	public static final int CLT_TIMING_CURVE_SIZE = 5;
+	public static final int CLT_UPPER_LIMIT = 125;
 	public static final String CMD_AC_RELAY_BENCH = "acrelaybench";
 	public static final String CMD_ALTERNATOR_PIN = "set_alternator_pin";
 	public static final String CMD_BOOST_PIN = "set_boost_pin";
@@ -263,7 +263,6 @@ public class VariableRegistryValues {
 	public static final int cranking_parameters_s_size = 4;
 	public static final int CRITICAL_BUFFER_SIZE = 120;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
-	public static final int CUSTOM_TS_BUFFER_SIZE = 32000;
 	public static final int CYLINDER_BORE_MULTIPLIER = 1;
 	public static final String CYLINDER_BORE_TOOLTIP = "Cylinder diameter in mm";
 	public static final String CYLINDER_BORE_UNITS = "mm";
@@ -419,6 +418,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_GM_LNF = 65;
 	public static final int engine_type_e_GM_LTG = 55;
 	public static final int engine_type_e_GM_SBC = 98;
+	public static final int engine_type_e_GM_SBC_GEN4 = 27;
 	public static final int engine_type_e_GM_SBC_GEN5 = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HARLEY = 6;
@@ -468,7 +468,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_POLARIS_RZR = 9;
 	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 30;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
-	public static final int engine_type_e_PROTEUS_GM_LS_4 = 27;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_NISSAN_VQ35 = 103;
 	public static final int engine_type_e_PROTEUS_STIM_QC = 73;
@@ -1133,7 +1132,7 @@ public class VariableRegistryValues {
 	public static final int IAC_PID_MULT_RPM_SIZE = 8;
 	public static final int IAC_PID_MULT_SIZE = 8;
 	public static final int IAT_CURVE_SIZE = 16;
-	public static final int IAT_IGN_CORR_COUNT = 4;
+	public static final int IAT_IGN_CORR_COUNT = 8;
 	public static final int IAT_IGN_CORR_LOAD_COUNT = 8;
 	public static final int IDLE_ADVANCE_CURVE_SIZE = 8;
 	public static final int idle_hardware_s_size = 12;
@@ -1223,13 +1222,13 @@ public class VariableRegistryValues {
 	public static final int lua_gauge_meaning_e_LUA_GAUGE_LOWER_BOUND = 0;
 	public static final int lua_gauge_meaning_e_LUA_GAUGE_UPPER_BOUND = 1;
 	public static final int LUA_PWM_COUNT = 8;
-	public static final int LUA_SCRIPT_SIZE = 48000;
+	public static final int LUA_SCRIPT_SIZE = 8000;
 	public static final int MAF_DECODING_COUNT = 32;
 	public static final int maf_sensor_type_e_Bosch0280218004 = 2;
 	public static final int maf_sensor_type_e_Bosch0280218037 = 1;
 	public static final int maf_sensor_type_e_CUSTOM = 0;
 	public static final int maf_sensor_type_e_DensoTODO = 3;
-	public static final String MAIN_HELP_URL = "https://github.com/rusefi/rusefi/wiki/Proteus-Manual";
+	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_EST_LOAD_COUNT = 16;
 	public static final int MAP_EST_RPM_COUNT = 16;
@@ -1288,7 +1287,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 63760;
+	public static final int persistent_config_s_size = 20984;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1319,11 +1318,11 @@ public class VariableRegistryValues {
 	public static final int REBOOT_COMMAND = 0xbb;
 	public static final int RPM_AS_BYTE_LIMIT = 25000;
 	public static final int RPM_AS_BYTE_SCALE = 100;
-	public static final int SCRIPT_CURVE_16 = 16;
+	public static final int SCRIPT_CURVE_16 = 2;
 	public static final int SCRIPT_CURVE_8 = 8;
 	public static final int SCRIPT_CURVE_COUNT = 6;
 	public static final int SCRIPT_SETTING_COUNT = 8;
-	public static final int SCRIPT_TABLE_8 = 8;
+	public static final int SCRIPT_TABLE_8 = 2;
 	public static final int SCRIPT_TABLE_COUNT = 4;
 	public static final String SD_CARD_LABEL = "rusEFI logs";
 	public static final int SelectedGear_Drive = 6;
@@ -1353,7 +1352,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1814072703;
+	public static final int SIGNATURE_HASH = 291482359;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1397,7 +1396,7 @@ public class VariableRegistryValues {
 	public static final int tle8888_mode_e_TL_MANUAL = 2;
 	public static final int tle8888_mode_e_TL_SEMI_AUTO = 1;
 	public static final int TMF_RATIO_SIZE = 2;
-	public static final int TMF_SIZE = 8;
+	public static final int TMF_SIZE = 2;
 	public static final int TOOTH_DATA_LENGTH = 2000;
 	public static final int TOOTH_PACKET_COUNT = 1000;
 	public static final int TOOTH_PACKET_SIZE = 2;
@@ -1410,7 +1409,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 63760;
+	public static final int TOTAL_CONFIG_SIZE = 20984;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1418,7 +1417,7 @@ public class VariableRegistryValues {
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int TRACTION_CONTROL_ETB_DROP_SLIP_SIZE = 6;
 	public static final int TRACTION_CONTROL_ETB_DROP_SPEED_SIZE = 6;
-	public static final int TRAILING_SPARK_SIZE = 4;
+	public static final int TRAILING_SPARK_SIZE = 2;
 	public static final int TransmissionControllerMode_Generic4 = 2;
 	public static final int TransmissionControllerMode_Gm4l6x = 3;
 	public static final int TransmissionControllerMode_None = 0;
@@ -1565,7 +1564,7 @@ public class VariableRegistryValues {
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_ENABLE = 0x0D;
 	public static final int ts_14_command_TS_WIDEBAND_UPDATE = 0x12;
 	public static final int ts_14_command_TS_WRITE_FLASH = 0x0A;
-	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
+	public static final int TS_BLOCK_READ_TIMEOUT = 300;
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final int ts_command_e_TS_BENCH_CATEGORY = 22;
@@ -1640,7 +1639,7 @@ public class VariableRegistryValues {
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final int TS_SCATTER_PAGE_SIZE = 256;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.16.proteus_f7.1814072703";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.16.subaru_eg33_f7.291482359";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1952;
