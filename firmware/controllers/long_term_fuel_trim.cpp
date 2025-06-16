@@ -3,6 +3,8 @@
 #if EFI_LTFT_CONTROL
 
 #include "storage.h"
+// For BKUP_RAM_NOINIT
+#include "global_port.h"
 
 #include "long_term_fuel_trim.h"
 
