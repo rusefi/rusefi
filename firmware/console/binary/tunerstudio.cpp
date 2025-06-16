@@ -167,10 +167,20 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
-static uint8_t* getWorkingPageAddr() {
-	// TODO: why engineConfiguration, not config
-	// TS has access to whole persistent_config_s
-	return (uint8_t*)engineConfiguration;
+static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t offset) {
+	// TODO: validate offset?
+	switch (page) {
+	case TS_PAGE_SETTINGS:
+		// TODO: why engineConfiguration, not config
+		// TS has access to whole persistent_config_s
+		return (uint8_t*)engineConfiguration + offset;
+#if EFI_TS_SCATTER
+	case TS_PAGE_SCATTER_OFFSETS:
+		return (uint8_t *)tsChannel->highSpeedOffsets + offset;
+#endif
+	default:
+		return nullptr;
+	}
 }
 
 static void sendOkResponse(TsChannelBase *tsChannel) {
@@ -254,7 +264,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
 		// [tag:popular_vehicle]
 		if (!needToTriggerTsRefresh()) {
-			uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
+			uint8_t * addr = getWorkingPageAddr(tsChannel, page, offset);
 			onCalibrationWrite(page, offset, count);
 			memcpy(addr, content, count);
 		} else {
@@ -273,7 +283,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		calibrationsWriteTimer.reset();
 #if EFI_TS_SCATTER
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		uint8_t* addr = (uint8_t *)tsChannel->highSpeedOffsets + offset;
+		uint8_t* addr = getWorkingPageAddr(tsChannel, page, offset);
 		memcpy(addr, content, count);
 #endif
 	} else {
@@ -297,10 +307,10 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 	}
 
 	if (page == TS_PAGE_SETTINGS) {
-		start = getWorkingPageAddr() + offset;
+		start = getWorkingPageAddr(tsChannel, page, offset);
 #if EFI_TS_SCATTER
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		start = (uint8_t *)tsChannel->highSpeedOffsets + offset;
+		start = getWorkingPageAddr(tsChannel, page, offset);
 #endif
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: CRC invalid page");
@@ -377,11 +387,11 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
 			memset(addr, 0, count);
 		} else {
-			addr = getWorkingPageAddr() + offset;
+			addr = getWorkingPageAddr(tsChannel, page, offset);
 		}
 #if EFI_TS_SCATTER
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		addr = (uint8_t *)tsChannel->highSpeedOffsets + offset;
+		addr = getWorkingPageAddr(tsChannel, page, offset);
 #endif
 	}
 
