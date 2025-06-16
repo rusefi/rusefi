@@ -80,6 +80,10 @@ void CanWrite::PeriodicTask(efitick_t) {
 	  if (cycle.isInterval(CI::_100ms)) {
   		sendQcBenchEventCounters();
   		sendQcBenchRawAnalogValues();
+#ifdef HW_HELLEN_8CHAN
+  		sendQcBenchEventCounters(/*bus*/1);
+  		sendQcBenchRawAnalogValues(/*bus*/1);
+#endif
 	  }
 
 	  if (cycle.isInterval(CI::_250ms)) {
