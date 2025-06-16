@@ -65,8 +65,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
-	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
-	engineConfiguration->tps1_2AdcChannel = H144_IN_TPS2;
+	setTPS1Inputs(H144_IN_TPS, H144_IN_TPS2);
 	setPPSInputs(H144_IN_PPS, H144_IN_PPS2);
 }
 
