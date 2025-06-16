@@ -10,14 +10,21 @@
 
 #if EFI_TUNER_STUDIO
 
-static constexpr size_t getTunerStudioPageSize() {
-	return TOTAL_CONFIG_SIZE;
+static constexpr size_t getTunerStudioPageSize(size_t page) {
+	switch (page) {
+	case TS_PAGE_SETTINGS:
+		return TOTAL_CONFIG_SIZE;
+	case TS_PAGE_SCATTER_OFFSETS:
+		return TS_SCATTER_PAGE_SIZE;
+	default:
+		return 0;
+	}
 }
 
 // Validate whether the specified offset and count would cause an overrun in the tune.
 // Returns true if an overrun would occur.
-bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) {
-	size_t allowedSize = getTunerStudioPageSize();
+bool validateOffsetCount(size_t page, size_t offset, size_t count, TsChannelBase* tsChannel) {
+	size_t allowedSize = getTunerStudioPageSize(page);
 	if (offset + count > allowedSize) {
 		efiPrintf("TS: Project mismatch? Too much configuration requested %d+%d>%d", offset, count, allowedSize);
 		tunerStudioError(tsChannel, "ERROR: out of range");
