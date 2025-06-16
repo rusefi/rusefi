@@ -7,5 +7,5 @@
 
 #include "engine_configuration.h"
 
+// set engine_type 27
 void setGmLs4();
-void setProteusGmLs4();

@@ -213,15 +213,18 @@ void applyEngineType(engine_type_e engineType) {
 	  setGmSbcGen5();
 		break;
 
+#if defined(HW_HELLEN_8CHAN) || HW_PROTEUS || EFI_SIMULATOR
+	case engine_type_e::GM_SBC_GEN4:
+		setGmLs4();
+		break;
+#endif
+
 #if HW_PROTEUS || EFI_SIMULATOR
     case engine_type_e::WASTEGATE_PROTEUS_TEST:
         proteusDcWastegateTest();
         break;
     case engine_type_e::PROTEUS_NISSAN_VQ35:
         setProteusNissanVQ();
-		break;
-	case engine_type_e::PROTEUS_GM_LS_4:
-		setProteusGmLs4();
 		break;
 	case engine_type_e::PROTEUS_VW_B6:
 		setProteusVwPassatB6();

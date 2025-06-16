@@ -69,7 +69,7 @@ enum class engine_type_e : uint16_t {
 
 	TEST_ENGINE = 26,
 
-	PROTEUS_GM_LS_4 = 27,
+	GM_SBC_GEN4 = 27,
 
 	TEST_CRANK_ENGINE = 28,
 

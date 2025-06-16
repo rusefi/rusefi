@@ -11,6 +11,15 @@
 void setGmLs4() {
 	engineConfiguration->globalTriggerAngleOffset = 86;
 
+#if HW_PROTEUS
+	engineConfiguration->etbFunctions[1] = DC_None;
+
+	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_2, PROTEUS_IN_ANALOG_VOLT_11);
+	setTPS1Inputs(PROTEUS_IN_ANALOG_VOLT_4, PROTEUS_IN_ANALOG_VOLT_3);
+
+// todo: tps
+#endif //HW_PROTEUS
+
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 	engineConfiguration->injector.flow = 440;
@@ -132,16 +141,4 @@ end
 
 	setPPSCalibration(0.51, 2.11, 1.01, 4.23);
 	setTPS1Calibration(880, 129, 118, 870);
-}
-
-void setProteusGmLs4() {
-#if HW_PROTEUS
-	engineConfiguration->etbFunctions[1] = DC_None;
-
-	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_2, PROTEUS_IN_ANALOG_VOLT_11);
-	setTPS1Inputs(PROTEUS_IN_ANALOG_VOLT_4, PROTEUS_IN_ANALOG_VOLT_3);
-
-// todo: tps
-#endif //HW_PROTEUS
-	setGmLs4();
 }

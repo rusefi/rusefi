@@ -45,6 +45,10 @@ board_id_t getBoardId() {
         // a way to test harness patch cord
         return STATIC_BOARD_ID_PLATINUM_SBC;
     }
+    if (engineConfiguration->engineType == engine_type_e::GM_SBC_GEN4) {
+        // a way to test harness patch cord
+        return STATIC_BOARD_ID_PLATINUM_GM_GEN4;
+    }
     if (engineConfiguration->engineType == engine_type_e::GM_SBC_GEN5) {
         // a way to test harness patch cord
         return STATIC_BOARD_ID_8CHAN_E92;
