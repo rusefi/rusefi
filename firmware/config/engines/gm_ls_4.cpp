@@ -8,7 +8,13 @@
 #include <rusefi/arrays.h>
 #include "proteus_meta.h"
 
+#ifdef HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
+
 void setGmLs4() {
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
+	strcpy(engineConfiguration->engineCode, "gen4");
 	engineConfiguration->globalTriggerAngleOffset = 86;
 
 #if HW_PROTEUS
@@ -19,6 +25,17 @@ void setGmLs4() {
 
 // todo: tps
 #endif //HW_PROTEUS
+
+#if defined(HW_HELLEN_8CHAN)
+	engineConfiguration->injectionPins[4] = Gpio::MM176_INJ5;
+	engineConfiguration->injectionPins[5] = Gpio::MM176_INJ6;
+	engineConfiguration->injectionPins[6] = Gpio::MM176_INJ7;
+	engineConfiguration->injectionPins[7] = Gpio::MM176_INJ8;
+	engineConfiguration->ignitionPins[4] = Gpio::MM176_IGN5;
+	engineConfiguration->ignitionPins[5] = Gpio::MM176_IGN6;
+	engineConfiguration->ignitionPins[6] = Gpio::MM176_IGN7;
+	engineConfiguration->ignitionPins[7] = Gpio::MM176_IGN8;
+#endif
 
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
