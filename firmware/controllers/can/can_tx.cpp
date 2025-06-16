@@ -84,6 +84,9 @@ void CanWrite::PeriodicTask(efitick_t) {
 
 	  if (cycle.isInterval(CI::_250ms)) {
 		  sendQcBenchBoardStatus();
+#ifdef HW_HELLEN_8CHAN
+		  sendQcBenchBoardStatus(/*bus*/1);
+#endif
 		  sendQcBenchButtonCounters();
 		  sendQcBenchAuxDigitalCounters();
 	  }

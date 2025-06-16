@@ -211,9 +211,9 @@ static void sendOutBoardMeta() {
 #endif // EFI_PROD_CODE
 }
 
-void sendQcBenchBoardStatus() {
+void sendQcBenchBoardStatus(size_t bus) {
 #if EFI_PROD_CODE
-	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BOARD_STATUS, 8, /*bus*/0, /*isExtended*/true);
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BOARD_STATUS, 8, bus, /*isExtended*/true);
 
 	int boardId = getBoardId();
 	msg[0] = TRUNCATE_TO_BYTE(boardId >> 8);

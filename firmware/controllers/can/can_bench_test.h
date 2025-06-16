@@ -10,5 +10,5 @@ void sendQcBenchEventCounters();
 void sendQcBenchButtonCounters();
 void sendQcBenchAuxDigitalCounters();
 void sendQcBenchRawAnalogValues();
-void sendQcBenchBoardStatus();
+void sendQcBenchBoardStatus(size_t bus = 0);
 void initQcBenchControls();
