@@ -263,7 +263,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x370, 8);
 			/* Vehicle Speed */
-			auto vehicleSpeed10 = Sensor::getOrZero(SensorType::VehicleSpeed);
+			auto vehicleSpeed10 = Sensor::getOrZero(SensorType::VehicleSpeed) * 10;
 			msg.setShortValueMsb(vehicleSpeed10, 0);
 			/* unused */
 			msg[2] = 0x00;
