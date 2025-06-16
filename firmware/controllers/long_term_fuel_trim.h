@@ -5,7 +5,6 @@
 #include "closed_loop_fuel.h"
 
 struct LtftState {
-	int ecuRestartCounter = 0;
 	float trims[FT_BANK_COUNT][VE_LOAD_COUNT][VE_RPM_COUNT];
 
 	void save();
