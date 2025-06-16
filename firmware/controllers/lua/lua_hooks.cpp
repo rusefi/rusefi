@@ -854,11 +854,9 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	  } else {
 	    lua_pushnumber(l, engineConfiguration->can2BaudRate);
 	  }
-		// that's about global_can_data
-		engineConfiguration->enableExtendedCanBroadcast = false;
 		return 1;
 	});
-#endif // HW_PROTEUS
+#endif // STM32F4
 
 #if EFI_ELECTRONIC_THROTTLE_BODY && EFI_PROD_CODE
   lua_register(lState, "getEtbTarget", [](lua_State* l) {
