@@ -159,6 +159,10 @@ static Gpio OUTPUTS_GM_GEN4[] = {
 	Gpio::MM176_INJ6, // 6D - Injector 6
 	Gpio::MM176_INJ7, // 7D - Injector 7
 	Gpio::MM176_INJ8, // 13D - Injector 8
+
+  Gpio::MM176_GP1, // 11D - Main Relay
+	Gpio::MM176_GP2, // 10D - Fan
+//	Gpio::MM176_OUT_PWM1, // 8D - VVT 1
 };
 
 static Gpio OUTPUTS[] = {

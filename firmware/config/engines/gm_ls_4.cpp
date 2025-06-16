@@ -35,6 +35,8 @@ void setGmLs4() {
 	engineConfiguration->ignitionPins[5] = Gpio::MM176_IGN6;
 	engineConfiguration->ignitionPins[6] = Gpio::MM176_IGN7;
 	engineConfiguration->ignitionPins[7] = Gpio::MM176_IGN8;
+
+  engineConfiguration->vvtPins[0] = Gpio::MM176_OUT_PWM1; // 8D - VVT 1
 #endif
 
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
