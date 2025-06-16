@@ -255,6 +255,13 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		return;
 	}
 
+	uint8_t * addr = getWorkingPageAddr(tsChannel, page, offset);
+	if (addr == nullptr) {
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: WR invalid page");
+		return;
+	}
+
+	// Special case
 	if (page == TS_PAGE_SETTINGS) {
 		if (isLockedFromUser()) {
 			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
@@ -264,7 +271,6 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
 		// [tag:popular_vehicle]
 		if (!needToTriggerTsRefresh()) {
-			uint8_t * addr = getWorkingPageAddr(tsChannel, page, offset);
 			onCalibrationWrite(page, offset, count);
 			memcpy(addr, content, count);
 		} else {
@@ -281,22 +287,14 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 
 		// we don't care about writes to scatter page
 		calibrationsWriteTimer.reset();
-#if EFI_TS_SCATTER
-	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		uint8_t* addr = getWorkingPageAddr(tsChannel, page, offset);
-		memcpy(addr, content, count);
-#endif
 	} else {
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: WR invalid page");
-		return;
+		memcpy(addr, content, count);
 	}
 
 	sendOkResponse(tsChannel);
 }
 
 void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
-	uint32_t crc = 0;
-	const uint8_t* start = nullptr;
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
@@ -306,18 +304,13 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 		return;
 	}
 
-	if (page == TS_PAGE_SETTINGS) {
-		start = getWorkingPageAddr(tsChannel, page, offset);
-#if EFI_TS_SCATTER
-	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		start = getWorkingPageAddr(tsChannel, page, offset);
-#endif
-	} else {
+	const uint8_t* start = getWorkingPageAddr(tsChannel, page, offset);
+	if (start == nullptr) {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: CRC invalid page");
 		return;
 	}
 
-	crc = SWAP_UINT32(crc32(start, count));
+	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
 	efiPrintf("TS <- Get CRC page %d offset %d count %d result %08x", page, offset, count, (unsigned int)crc);
 }
@@ -379,30 +372,24 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 		return;
 	}
 
-	uint8_t* addr = nullptr;
-
+	uint8_t* addr = getWorkingPageAddr(tsChannel, page, offset);
 	if (page == TS_PAGE_SETTINGS) {
 		if (isLockedFromUser()) {
 			// to have rusEFI console happy just send all zeros within a valid packet
 			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
 			memset(addr, 0, count);
-		} else {
-			addr = getWorkingPageAddr(tsChannel, page, offset);
 		}
-#if EFI_TS_SCATTER
-	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
-		addr = getWorkingPageAddr(tsChannel, page, offset);
-#endif
 	}
 
-	if (addr) {
-		tsChannel->sendResponse(TS_CRC, addr, count);
-#if EFI_TUNER_STUDIO_VERBOSE
-//		efiPrintf("Sending %d done", count);
-#endif
-	} else {
+	if (addr == nullptr) {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: RD invalid page");
+		return;
 	}
+
+	tsChannel->sendResponse(TS_CRC, addr, count);
+#if EFI_TUNER_STUDIO_VERBOSE
+//	efiPrintf("Sending %d done", count);
+#endif
 }
 #endif // EFI_TUNER_STUDIO
 
