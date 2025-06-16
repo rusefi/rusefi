@@ -65,8 +65,7 @@ bool validateBoardConfig() {
 #ifndef HW_HELLEN_UAEFI121
   // this same file is used for both uaefi and uaefi121
   if (engineConfiguration->can2RxPin != Gpio::B12) {
-	  engineConfiguration->can2RxPin = Gpio::B12;
-	  engineConfiguration->can2TxPin = Gpio::B13;
+	  setHellenCan2();
   }
 #endif
   return true;
@@ -102,8 +101,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canRxPin = Gpio::MM100_CAN_RX;
 #ifndef HW_HELLEN_UAEFI121
   // this same file is used for both uaefi and uaefi121
-	engineConfiguration->can2RxPin = Gpio::B12;
-	engineConfiguration->can2TxPin = Gpio::B13;
+	setHellenCan2();
 #endif
 
   engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;

@@ -13,6 +13,11 @@ void setHellenCan() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
+void setHellenCan2() {
+	engineConfiguration->can2RxPin = Gpio::B12;
+	engineConfiguration->can2TxPin = Gpio::B13;
+}
+
 static void init5vpDiag() {
 #ifdef DIAG_5VP_PIN
 static bool is5vpInit = false;

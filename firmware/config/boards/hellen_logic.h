@@ -22,6 +22,7 @@ void hellenMegaAccelerometerPreInitCS2Pin();
 void configureHellenCanTerminator();
 
 void setHellenCan();
+void setHellenCan2();
 void setHellen64Can();
 
 void setHellenAnalogDividers();

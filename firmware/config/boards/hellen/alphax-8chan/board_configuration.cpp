@@ -100,9 +100,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 void setBoardConfigOverrides() {
 	hellenMegaModule();
 	setHellenCan();
-
-	engineConfiguration->can2RxPin = Gpio::B12;
-	engineConfiguration->can2TxPin = Gpio::B13;
+	setHellenCan2();
 }
 
 /**
