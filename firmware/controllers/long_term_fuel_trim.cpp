@@ -3,8 +3,6 @@
 #if EFI_LTFT_CONTROL
 
 #include "storage.h"
-// For BKUP_RAM_NOINIT
-#include "global_port.h"
 
 #include "long_term_fuel_trim.h"
 
@@ -13,8 +11,12 @@
 
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
+#if EFI_PROD_CODE
 // current trims are stored in backup ram (if exists)
 static BKUP_RAM_NOINIT LtftState ltftState;
+#else
+static LtftState ltftState;
+#endif
 
 void LtftState::save() {
 #if EFI_PROD_CODE
