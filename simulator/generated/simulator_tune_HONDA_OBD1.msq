@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22704">
+    <page number="0" size="22708">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -3039,6 +3039,7 @@ end</constant>
         <constant digits="0" name="nitrousMinimumVehicleSpeed" units="Kph">0.0</constant>
         <constant name="nitrousRelayPin">"NONE"</constant>
         <constant name="nitrousRelayPinMode">"default"</constant>
+        <constant digits="1" name="noFuelTrimAfterAccelTime" units="sec">0.0</constant>
         <constant digits="1" name="noFuelTrimAfterDfcoTime" units="sec">5.0</constant>
         <constant name="o2heaterPin">"NONE"</constant>
         <constant name="o2heaterPinModeTodO">"default"</constant>
@@ -5015,7 +5016,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250615" nPages="1" signature="rusEFI master.2025.06.17.f407-discovery.3095475330" version="5.0"/>
+    <versionInfo firmwareInfo="20250615" nPages="1" signature="rusEFI master.2025.06.17.f407-discovery.2986204989" version="5.0"/>
     <bibliography author="rusEFI 20250615" writeDate="date"/>
     <settings/>
     <userComments/>
