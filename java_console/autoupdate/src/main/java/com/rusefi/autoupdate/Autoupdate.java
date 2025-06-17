@@ -28,6 +28,7 @@ import java.util.zip.ZipEntry;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.FindFileHelper.findSrecFile;
+import static com.rusefi.core.FindFileHelper.findFirmwareFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
@@ -126,7 +127,8 @@ public class Autoupdate {
                 // except already unzipped rusefi_console.jar (see #6777):
                 FileUtil.unzip(autoupdateFile.zipFileName, new File(pathname), isConsoleJar.negate());
                 final String srecFile = findSrecFile();
-                new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
+                final String firmwareFile = findFirmwareFile();
+                new File(srecFile == null ? firmwareFile : srecFile)
                     .setLastModified(autoupdateFile.lastModified);
             } catch (IOException e) {
                 log.error("Error unzipping autoupdate from bundle: " + e);

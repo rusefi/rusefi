@@ -42,7 +42,7 @@ public class MaintenanceUtil {
     }
 
     public static long getBinaryModificationTimestamp() {
-        String fileName = FindFileHelper.isObfuscated() ? FindFileHelper.findSrecFile() : FindFileHelper.FIRMWARE_BIN_FILE;
+        String fileName = FindFileHelper.isObfuscated() ? FindFileHelper.findSrecFile() : FindFileHelper.findFirmwareFile();
         return new File(fileName).lastModified();
     }
 }

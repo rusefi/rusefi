@@ -73,7 +73,7 @@ public class DfuFlasher {
             }
 
             timeForDfuSwitch(callbacks);
-            if (executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE)) {
+            if (executeDFU(callbacks, FindFileHelper.findFirmwareFile())) {
                 // We need to wait to allow connection to ECU port (see #7403)
                 timeForDfuSwitch(callbacks);
                 return true;
@@ -164,7 +164,7 @@ public class DfuFlasher {
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         submitAction(() -> {
             JobHelper.doJob(
-                () -> executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.FIRMWARE_BIN_FILE),
+                () -> executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.findFirmwareFile()),
                 onJobFinished
             );
         });

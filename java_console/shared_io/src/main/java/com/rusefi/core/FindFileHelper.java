@@ -66,6 +66,10 @@ public class FindFileHelper {
         return fileAtFirstLocation;
     }
 
+    public static String findFirmwareFile() {
+        return FIRMWARE_BIN_FILE;
+    }
+
     public static boolean isObfuscated() {
         String srecFile = findSrecFile();
         return srecFile != null && srecFile.contains("obfuscated");
