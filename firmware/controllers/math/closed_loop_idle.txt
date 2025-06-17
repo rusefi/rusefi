@@ -1,0 +1,4 @@
+struct_no_prefix closed_loop_idle_s
+  bit isStableIdle
+  float emaError
+end_struct

@@ -449,7 +449,7 @@ void IdleController::onFastCallback() {
 	float position = getIdlePosition(engine->triggerCentral.instantRpm.getInstantRpm());
 	applyIACposition(position);
 	// huh: why not onIgnitionStateChanged?
-	m_ltit.checkIfShouldSave();
+	engine->m_ltit.checkIfShouldSave();
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
@@ -467,17 +467,17 @@ void IdleController::init() {
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
 	m_timingHpf.configureHighpass(20, 1);
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
-	m_ltit.loadLtitFromConfig();
+	engine->m_ltit.loadLtitFromConfig();
 }
 
 void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
 	if (engineConfiguration->ltitEnabled) {
-		m_ltit.update(rpm, clt, acActive, fan1Active, fan2Active, idleIntegral);
+		engine->m_ltit.update(rpm, clt, acActive, fan1Active, fan2Active, idleIntegral);
 	}
 }
 
 void IdleController::onIgnitionStateChanged(bool ignitionOn) {
-    m_ltit.onIgnitionStateChanged(ignitionOn);
+    engine->m_ltit.onIgnitionStateChanged(ignitionOn);
 }
 
 #endif /* EFI_IDLE_CONTROL */

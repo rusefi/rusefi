@@ -9,6 +9,7 @@
 #include "tcu_controller_generated.h"
 #include "fuel_computer.h"
 #include "antilag_system_state_generated.h"
+#include "closed_loop_idle_generated.h"
 #include "vvt_generated.h"
 #include "mc33810_state_generated.h"
 #include <livedata_board_extra.h>
@@ -225,6 +226,15 @@ template<>
 const sent_state_s* getLiveData(size_t) {
 #if EFI_SENT_SUPPORT
 	return &engine->sent_state;
+#else
+	return nullptr;
+#endif
+}
+
+template<>
+const closed_loop_idle_s* getLiveData(size_t) {
+#if EFI_IDLE_CONTROL
+	return &engine->m_ltit;
 #else
 	return nullptr;
 #endif

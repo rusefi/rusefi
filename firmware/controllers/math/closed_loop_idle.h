@@ -5,12 +5,13 @@
 #include "sensor.h"
 #include "flash_main.h"
 #include "table_helper.h"
+#include "closed_loop_idle_generated.h"
 #include <rusefi/interpolation.h>
 #include <rusefi/timer.h>
 
 constexpr int LTIT_TABLE_SIZE = CLT_IDLE_TABLE_CLT_SIZE;
 
-class LongTermIdleTrim {
+class LongTermIdleTrim : public closed_loop_idle_s {
 public:
     LongTermIdleTrim();
     float getLtitFactor(float rpm, float clt) const;
@@ -27,7 +28,6 @@ public:
 
 private:
     float ltitTableHelper[LTIT_TABLE_SIZE];
-    float emaError = 0.0f;
     bool ltitTableInitialized = false;
 
     // Timers for control
@@ -35,8 +35,6 @@ private:
     Timer m_stableIdleTimer;
     Timer m_ignitionOffTimer;
 
-    // State tracking
-    bool isStableIdle = false;
     bool m_ignitionState = false;
 
     // Learning state management

@@ -132,7 +132,6 @@ private:
 	float m_lastAutomaticPosition = 0;
 
 	Pid m_timingPid;
-	LongTermIdleTrim m_ltit;
 	float m_modeledFlowIdleTiming = 0;
 	Biquad m_timingHpf;
 };

@@ -186,6 +186,11 @@ Usages:
     java: WallFuelState.java
     folder: controllers/algo
 
+  - name: closed_loop_idle
+    cppFileName: closed_loop_idle
+    java: closed_loop_idle.java
+    folder: controllers/math
+
   - name: idle_state
     cppFileName: idle_thread
     java: IdleState.java
