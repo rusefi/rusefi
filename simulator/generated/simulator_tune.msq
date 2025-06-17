@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22708">
+    <page number="0" size="22716">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -2255,6 +2255,7 @@
          10.5 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0
 </constant>
         <constant name="ignKeyAdcChannel">"Disabled"</constant>
+        <constant digits="0" name="ignKeyAdcDivider" units="">0.0</constant>
         <constant name="ignOverrideMode">"None"</constant>
         <constant cols="1" digits="0" name="ignTrimLoadBins" rows="4">
          20.0
@@ -5016,7 +5017,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250615" nPages="1" signature="rusEFI master.2025.06.17.f407-discovery.309947729" version="5.0"/>
+    <versionInfo firmwareInfo="20250615" nPages="1" signature="rusEFI master.2025.06.17.f407-discovery.1762013136" version="5.0"/>
     <bibliography author="rusEFI 20250615" writeDate="date"/>
     <settings/>
     <userComments/>
