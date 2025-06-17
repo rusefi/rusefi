@@ -11,9 +11,12 @@ void MainRelayController::onSlowCallback() {
 	}
 
 #if EFI_MAIN_RELAY_CONTROL
-	// Query whether any engine modules want to keep the lights on
-	delayedShutoffRequested = engine->engineModules.aggregate([](auto& m, bool prev) { return m.needsDelayedShutoff() | prev; }, false);
-
+	if (hasIgnitionVoltage) {
+		delayedShutoffRequested = false;
+	} else {
+		// Query whether any engine modules want to keep the lights on
+		delayedShutoffRequested = engine->engineModules.aggregate([](auto& m, bool prev) { return m.needsDelayedShutoff() | prev; }, false);
+	}
 	// TODO: delayed shutoff timeout?
 
 	mainRelayState = hasIgnitionVoltage | delayedShutoffRequested;
