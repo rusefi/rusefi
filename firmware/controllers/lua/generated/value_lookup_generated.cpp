@@ -1778,6 +1778,9 @@ float getConfigValueByName(const char *name) {
 // speedometerPulsePerKm
 		case 1007396714:
 			return engineConfiguration->speedometerPulsePerKm;
+// ignKeyAdcDivider
+		case -506535813:
+			return engineConfiguration->ignKeyAdcDivider;
 // maxInjectorDutyInstant
 		case 896753456:
 			return engineConfiguration->maxInjectorDutyInstant;
@@ -4950,6 +4953,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1007396714:
 	{
 		engineConfiguration->speedometerPulsePerKm = (int)value;
+		return 1;
+	}
+		case -506535813:
+	{
+		engineConfiguration->ignKeyAdcDivider = value;
 		return 1;
 	}
 		case 896753456:

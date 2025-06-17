@@ -1771,6 +1771,9 @@ Pull-up resistor value on your board
 ### speedometerPulsePerKm
 Number of speedometer pulses per kilometer travelled.
 
+### ignKeyAdcDivider
+null
+
 ### maxInjectorDutyInstant
 If injector duty cycle hits this value, instantly cut fuel.
 
