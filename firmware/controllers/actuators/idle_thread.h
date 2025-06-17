@@ -91,6 +91,10 @@ public:
 		return m_lastPhase == Phase::Coasting && engineConfiguration->useIdleAdvanceWhileCoasting;
 	}
 
+	Phase getCurrentPhase() const {
+		return m_lastPhase;
+	}
+
 	PidIndustrial industrialWithOverrideIdlePid;
 
 	#if EFI_IDLE_PID_CIC

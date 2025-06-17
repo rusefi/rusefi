@@ -123,7 +123,7 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     }
 
     // Check if we're in idle RPM range
-    float targetRpm = idleController.getTargetRpm(clt);
+    float targetRpm = idleController.getTargetRpm(clt).ClosedLoopTarget;
     float rpmDelta = fabsf(rpm - targetRpm);
     bool isIdleRpm = rpmDelta < engineConfiguration->ltitStableRpmThreshold;
 

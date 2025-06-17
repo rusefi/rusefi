@@ -8,7 +8,7 @@
 #include <rusefi/interpolation.h>
 #include <rusefi/timer.h>
 
-constexpr int LTIT_TABLE_SIZE = 16;
+constexpr int LTIT_TABLE_SIZE = CLT_IDLE_TABLE_CLT_SIZE;
 
 class LongTermIdleTrim {
 public:

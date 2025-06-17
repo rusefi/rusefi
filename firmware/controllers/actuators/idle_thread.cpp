@@ -15,6 +15,7 @@
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
 #include "idle_hardware.h"
+#include "closed_loop_idle.h"
 
 #include "dc_motors.h"
 
