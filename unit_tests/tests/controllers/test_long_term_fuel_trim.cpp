@@ -32,6 +32,7 @@ TEST(LTFT, testLearning)
 	ltft.init(&ltftState);
 
 	engineConfiguration->ltft.enabled = false;
+	engineConfiguration->ltft.correctionEnabled = false;
 	engineConfiguration->ltft.deadband = 0.5; // %
 	engineConfiguration->ltft.maxAdd = 15.0; // %
 	engineConfiguration->ltft.maxRemove = 5; // %
@@ -51,6 +52,7 @@ TEST(LTFT, testLearning)
 
 	// Enabling
 	engineConfiguration->ltft.enabled = true;
+	engineConfiguration->ltft.correctionEnabled = true;
 
 	// Run for 100 sec with positive correction
 	clInput.banks[0] = clInput.banks[1] = 1.5;
