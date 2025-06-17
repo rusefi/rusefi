@@ -42,8 +42,10 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 	if (isAboveAccelThreshold) {
 		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
 		extraFuel = valueFromTable;
+		m_timeSinceAccel.reset();
 	} else if (isBelowDecelThreshold) {
 		extraFuel = deltaTps * engineConfiguration->tpsDecelEnleanmentMultiplier;
+		m_timeSinceAccel.reset();
 	} else {
 		extraFuel = 0;
 	}
@@ -191,6 +193,10 @@ void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*p
 	}
 
 	setLength(length);
+}
+
+float TpsAccelEnrichment::getTimeSinceAcell() const {
+	return m_timeSinceAccel.getElapsedSeconds();
 }
 
 void initAccelEnrichment() {
