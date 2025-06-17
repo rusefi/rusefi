@@ -3,7 +3,7 @@
 // begin
 #pragma once
 #include "rusefi_types.h"
-// start of long_term_idle_trim_s
+// start of closed_loop_idle_s
 struct closed_loop_idle_s {
 	/**
 	offset 0 bit 0 */

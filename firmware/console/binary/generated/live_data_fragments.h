@@ -28,6 +28,7 @@ decl_frag<trigger_state_s, 3>{},	// vvt2i
 decl_frag<trigger_state_s, 4>{},	// vvt2e
 decl_frag<trigger_state_primary_s>{},
 decl_frag<wall_fuel_state_s>{},
+decl_frag<closed_loop_idle_s>{},
 decl_frag<idle_state_s>{},
 decl_frag<electronic_throttle_s, 0>{},	// etb1
 decl_frag<electronic_throttle_s, 1>{},	// etb2
