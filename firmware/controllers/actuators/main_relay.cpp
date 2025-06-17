@@ -4,19 +4,7 @@
 #include "ignition_controller.h"
 
 void MainRelayController::onSlowCallback() {
-    if (engineConfiguration->ignKeyAdcDivider > 0 && isAdcChannelValid(engineConfiguration->ignKeyAdcChannel)) {
-      hasIgnitionVoltage = isIgnVoltage();
-    } else
-#if EFI_PROD_CODE
-    if (engineConfiguration->ignitionKeyDigitalPin != Gpio::Unassigned) {
-        // separate digital input pin just for main relay logic since it's preferred to read voltage from main relay
-        // key-on is usually a bit smaller voltage than main relay but sometimes even 1v off!
-        hasIgnitionVoltage = efiReadPin(engineConfiguration->ignitionKeyDigitalPin);
-    } else
-#endif // EFI_PROD_CODE
-    {
-	    hasIgnitionVoltage = isIgnVoltage();
-	  }
+	hasIgnitionVoltage = isIgnVoltage();
 
 	if (hasIgnitionVoltage) {
 		m_lastIgnitionTime.reset();
