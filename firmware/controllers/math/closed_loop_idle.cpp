@@ -228,7 +228,9 @@ void LongTermIdleTrim::onSlowCallback() {
                 config->ltitTable[i] = static_cast<uint16_t>(ltitTableHelper[i]);
             }
 
+#if EFI_PROD_CODE
             setNeedToWriteConfiguration();
+#endif // EFI_PROD_CODE
             m_pendingSave = false;
         }
     }
