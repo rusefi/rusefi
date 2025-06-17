@@ -17,23 +17,24 @@ TEST(EngineModules, MapAveragingModule_onEnginePhase) {
     EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
     engineConfiguration->isMapAveragingEnabled = true;
     engineConfiguration->measureMapOnlyInOneCylinder = true;
+	engine->engineState.mapAveragingDuration = 100;
+	engine->rpmCalculator.setRpmValue(200);
 
-    // trigger events at crank speed
-    for (size_t i = 0; i < 9; i++) {
-        eth.fireTriggerEventsWithDuration(200);
-        eth.executeActions();
-    }
+	engine->module<MapAveragingModule>()->onEnginePhase(200, getTimeNowNt(), 50.f, 180.f);
 
-    EXPECT_TRUE(engine->outputChannels.isMapAveraging);
+	// check for startMapAveraging schedule at 50° on the future (since onEnginePhase was called 50° late [start angle is 100°])
+    bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", startAveragingAction, static_cast<angle_t>(50));
+    EXPECT_TRUE(averageDone);
 
-		bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", startAveragingAction, static_cast<angle_t>(50));
+    // move forward, we expect that the startAveraging is called and we are currently running the averaging code
+	eth.moveTimeForwardMs(50);
+	eth.executeActions();
+	EXPECT_TRUE(engine->outputChannels.isMapAveraging);
 
-		EXPECT_TRUE(averageDone);
-
-    	// move forward
-    	eth.fireRise(200);
-    	eth.executeActions();
-    	EXPECT_FALSE(engine->outputChannels.isMapAveraging);
+    // move forward, here we expect the averaging is done and endAveraging was called
+   	eth.moveTimeForwardMs(50);
+	eth.executeActions();
+    EXPECT_FALSE(engine->outputChannels.isMapAveraging);
 }
 
 TEST(EngineModules, MapAveragingModule_onFastCallback) {
