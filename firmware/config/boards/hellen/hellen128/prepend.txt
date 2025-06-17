@@ -21,5 +21,3 @@
 
 
 
-
-#define show_Hellen128merc_presets true

@@ -16,8 +16,3 @@
 #define ts_show_hardware_simulator false
 
 
-
-
-
-
-#define show_8chan_presets false

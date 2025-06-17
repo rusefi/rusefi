@@ -24,7 +24,5 @@
 #define ts_show_gdi_low_level false
 #define ts_show_analog_diag true
 
-#define show_8chan_presets true
-
 #define VR_THRESHOLD_COUNT 3
 

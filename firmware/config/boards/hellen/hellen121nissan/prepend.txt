@@ -27,4 +27,3 @@
 
 #define CLT_UPPER_LIMIT 125
 
-#define show_Hellen121nissan_presets true

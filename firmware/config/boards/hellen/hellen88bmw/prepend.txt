@@ -22,5 +22,3 @@
 
 
 
-
-#define show_Hellen88bmw_presets true

@@ -22,5 +22,3 @@
 
 
 
-#define show_HellenNB1_presets false
-#define show_Hellen96_presets true

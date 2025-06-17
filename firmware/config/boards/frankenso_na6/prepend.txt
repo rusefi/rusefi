@@ -1,4 +1,2 @@
-#define show_test_presets true
-#define show_Frankenso_presets true
 
 ! todo looks like this was pretty much ignored #define MAX_CYLINDER_COUNT 8

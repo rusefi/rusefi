@@ -20,6 +20,3 @@
 #define ts_show_ford_toyota_tps_pps false
 
 
-
-
-#define show_Hellen121vag_presets true
