@@ -13,8 +13,8 @@
 #include "efi_pid.h"
 #include "sensor.h"
 #include "idle_state_generated.h"
+#include "closed_loop_idle.h"
 #include "biquad.h"
-
 
 struct IIdleController {
 	enum class Phase : uint8_t {
@@ -111,6 +111,8 @@ public:
 		return &industrialWithOverrideIdlePid;
 	}
 
+  void updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral);
+  void onIgnitionStateChanged(bool ignitionOn) override;
 
 private:
 
@@ -130,6 +132,7 @@ private:
 	float m_lastAutomaticPosition = 0;
 
 	Pid m_timingPid;
+	LongTermIdleTrim m_ltit;
 	float m_modeledFlowIdleTiming = 0;
 	Biquad m_timingHpf;
 };

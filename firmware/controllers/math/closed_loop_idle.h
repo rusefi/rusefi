@@ -17,7 +17,7 @@ public:
     void update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral);
     void smoothLtitTable(float intensity);
     void onIgnitionStateChanged(bool ignitionOn);
-    void onSlowCallback();
+    void checkIfShouldSave();
     bool updatedLtit = false;
 
     // Load data from flash to helper table

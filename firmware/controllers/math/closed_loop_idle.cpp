@@ -213,7 +213,7 @@ void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
     }
 }
 
-void LongTermIdleTrim::onSlowCallback() {
+void LongTermIdleTrim::checkIfShouldSave() {
     // Handle delayed save after ignition off
     if (m_pendingSave && !m_ignitionState) {
         float saveDelaySeconds = engineConfiguration->ltitIgnitionOffSaveDelay;
