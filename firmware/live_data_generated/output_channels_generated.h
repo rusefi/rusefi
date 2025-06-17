@@ -141,16 +141,17 @@ struct output_channels_s {
 	bool triggerPageRefreshFlag : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool unusedBit_28_28 : 1 {};
+	bool hasFaultReportFile : 1 {};
 	/**
+	 * Analog sensors supply failure
 	offset 0 bit 29 */
-	bool unusedBit_28_29 : 1 {};
+	bool isAnalogFailure : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_28_30 : 1 {};
+	bool isTuningNow : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_28_31 : 1 {};
+	bool unusedBit_31_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
@@ -502,192 +503,200 @@ struct output_channels_s {
 	 */
 	uint8_t alignmentFill_at_122[2] = {};
 	/**
-	 * offset 124
-	 */
-	uint32_t tsConfigVersion = (uint32_t)0;
-	/**
 	 * @@GAUGE_NAME_TRG_ERR@@
 	 * units: counter
-	 * offset 128
+	 * offset 124
 	 */
 	uint32_t totalTriggerErrorCounter = (uint32_t)0;
 	/**
-	 * offset 132
+	 * offset 128
 	 */
 	uint32_t orderingErrorCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_WARNING_COUNTER@@
 	 * units: count
-	 * offset 136
+	 * offset 132
 	 */
 	uint16_t warningCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_WARNING_LAST@@
 	 * units: error
-	 * offset 138
+	 * offset 134
 	 */
 	uint16_t lastErrorCode = (uint16_t)0;
 	/**
 	 * Warning code
 	 * units: error
-	 * offset 140
+	 * offset 136
 	 */
 	uint16_t recentErrorCode[8] = {};
 	/**
 	 * units: val
-	 * offset 156
+	 * offset 152
 	 */
 	float debugFloatField1 = (float)0;
 	/**
 	 * units: val
-	 * offset 160
+	 * offset 156
 	 */
 	float debugFloatField2 = (float)0;
 	/**
 	 * units: val
-	 * offset 164
+	 * offset 160
 	 */
 	float debugFloatField3 = (float)0;
 	/**
 	 * units: val
-	 * offset 168
+	 * offset 164
 	 */
 	float debugFloatField4 = (float)0;
 	/**
 	 * units: val
-	 * offset 172
+	 * offset 168
 	 */
 	float debugFloatField5 = (float)0;
 	/**
 	 * units: val
-	 * offset 176
+	 * offset 172
 	 */
 	float debugFloatField6 = (float)0;
 	/**
 	 * units: val
-	 * offset 180
+	 * offset 176
 	 */
 	float debugFloatField7 = (float)0;
 	/**
 	 * units: val
-	 * offset 184
+	 * offset 180
 	 */
 	uint32_t debugIntField1 = (uint32_t)0;
 	/**
 	 * units: val
-	 * offset 188
+	 * offset 184
 	 */
 	uint32_t debugIntField2 = (uint32_t)0;
 	/**
 	 * units: val
-	 * offset 192
+	 * offset 188
 	 */
 	uint32_t debugIntField3 = (uint32_t)0;
 	/**
 	 * units: val
-	 * offset 196
+	 * offset 192
 	 */
 	int16_t debugIntField4 = (int16_t)0;
 	/**
 	 * units: val
-	 * offset 198
+	 * offset 194
 	 */
 	int16_t debugIntField5 = (int16_t)0;
 	/**
 	 * EGT
 	 * units: deg C
-	 * offset 200
+	 * offset 196
 	 */
 	scaled_channel<int16_t, 4, 1> egt[EGT_CHANNEL_COUNT] = {};
 	/**
 	 * units: V
-	 * offset 216
+	 * offset 212
 	 */
 	scaled_channel<int16_t, 1000, 1> rawTps1Primary = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 218
+	 * offset 214
 	 */
 	scaled_channel<int16_t, 1000, 1> rawClt = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 220
+	 * offset 216
 	 */
 	scaled_channel<int16_t, 1000, 1> rawIat = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 222
+	 * offset 218
 	 */
 	scaled_channel<int16_t, 1000, 1> rawOilPressure = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 224
+	 * offset 220
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAcPressure = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 226
+	 * offset 222
 	 */
 	scaled_channel<int16_t, 1000, 1> rawFuelLevel = (int16_t)0;
 	/**
-	 * offset 228
+	 * offset 224
 	 */
 	uint8_t fuelClosedLoopBinIdx = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 229
+	 * offset 225
 	 */
-	uint8_t alignmentFill_at_229[3] = {};
+	uint8_t alignmentFill_at_225[3] = {};
 	/**
 	 * units: V
-	 * offset 232
+	 * offset 228
 	 */
 	float rawPpsPrimary = (float)0;
 	/**
 	 * units: V
-	 * offset 236
+	 * offset 232
 	 */
 	float rawPpsSecondary = (float)0;
 	/**
 	 * units: V
-	 * offset 240
+	 * offset 236
 	 */
 	float rawRawPpsPrimary = (float)0;
 	/**
 	 * units: V
-	 * offset 244
+	 * offset 240
 	 */
 	float rawRawPpsSecondary = (float)0;
 	/**
 	 * @@GAUGE_NAME_IDLE_POSITION@@
 	 * units: %
-	 * offset 248
+	 * offset 244
 	 */
 	scaled_channel<int16_t, 100, 1> idlePositionSensor = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_AFR@@
 	 * units: AFR
-	 * offset 250
+	 * offset 246
 	 */
 	scaled_channel<uint16_t, 1000, 1> AFRValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AFR2@@
+	 * units: AFR
+	 * offset 248
+	 */
+	scaled_channel<uint16_t, 1000, 1> AFRValue2 = (uint16_t)0;
+	/**
+	 * @@SMOOTHED_GAUGE_NAME_AFR@@
+	 * units: AFR
+	 * offset 250
+	 */
+	scaled_channel<uint16_t, 1000, 1> SmoothedAFRValue = (uint16_t)0;
+	/**
+	 * @@SMOOTHED_GAUGE_NAME_AFR2@@
+	 * units: AFR
+	 * offset 252
+	 */
+	scaled_channel<uint16_t, 1000, 1> SmoothedAFRValue2 = (uint16_t)0;
+	/**
 	 * Vss Accel
 	 * units: m/s2
-	 * offset 252
+	 * offset 254
 	 */
 	scaled_channel<uint16_t, 300, 1> VssAcceleration = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_LAMBDA2@@
-	 * offset 254
-	 */
-	scaled_channel<uint16_t, 10000, 1> lambdaValue2 = (uint16_t)0;
-	/**
-	 * @@GAUGE_NAME_AFR2@@
-	 * units: AFR
 	 * offset 256
 	 */
-	scaled_channel<uint16_t, 1000, 1> AFRValue2 = (uint16_t)0;
+	scaled_channel<uint16_t, 10000, 1> lambdaValue2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_VVT_B1E@@
 	 * units: deg
@@ -1179,10 +1188,10 @@ struct output_channels_s {
 	bool vvtChannel4 : 1 {};
 	/**
 	offset 652 bit 30 */
-	bool unusedBit_241_30 : 1 {};
+	bool unusedBit_242_30 : 1 {};
 	/**
 	offset 652 bit 31 */
-	bool unusedBit_241_31 : 1 {};
+	bool unusedBit_242_31 : 1 {};
 	/**
 	 * offset 656
 	 */
@@ -1412,15 +1421,49 @@ struct output_channels_s {
 	/**
 	 * offset 798
 	 */
-	uint8_t unusedAtTheEnd[52] = {};
+	int16_t hp = (int16_t)0;
+	/**
+	 * offset 800
+	 */
+	int16_t torque = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 850
+	 * offset 802
 	 */
-	uint8_t alignmentFill_at_850[2] = {};
+	uint8_t alignmentFill_at_802[2] = {};
+	/**
+	 * offset 804
+	 */
+	uint32_t mcuSerial = (uint32_t)0;
+	/**
+	 * offset 808
+	 */
+	uint8_t unusedAtTheEnd[48] = {};
+	/**
+	 * LTIT multiplicativo
+	 * units: mult
+	 * offset 856
+	 */
+	float ltitFactor = (float)0;
+	/**
+	 * Wall Wetting Tau
+	 * units: s
+	 * offset 860
+	 */
+	float wwTau = (float)0;
+	/**
+	 * Wall Wetting Beta
+	 * offset 864
+	 */
+	float wwBeta = (float)0;
+	/**
+	 * Wall Wetting Alpha
+	 * offset 868
+	 */
+	float wwAlpha = (float)0;
 };
-static_assert(sizeof(output_channels_s) == 852);
+static_assert(sizeof(output_channels_s) == 872);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt

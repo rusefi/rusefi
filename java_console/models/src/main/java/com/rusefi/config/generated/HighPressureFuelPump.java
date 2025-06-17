@@ -6,18 +6,18 @@ package com.rusefi.config.generated;
 import com.rusefi.config.*;
 
 public class HighPressureFuelPump {
-	public static final Field M_REQUESTED_PUMP = Field.create("M_REQUESTED_PUMP", 0, FieldType.FLOAT).setBaseOffset(1104);
-	public static final Field FUEL_REQUESTED_PERCENT = Field.create("FUEL_REQUESTED_PERCENT", 4, FieldType.FLOAT).setBaseOffset(1104);
-	public static final Field FUEL_REQUESTED_PERCENT_PI = Field.create("FUEL_REQUESTED_PERCENT_PI", 8, FieldType.FLOAT).setBaseOffset(1104);
-	public static final Field NOVALVE = Field.create("NOVALVE", 12, FieldType.BIT, 0).setBaseOffset(1104);
-	public static final Field ANGLEABOVEMIN = Field.create("ANGLEABOVEMIN", 12, FieldType.BIT, 1).setBaseOffset(1104);
-	public static final Field ISHPFPACTIVE = Field.create("ISHPFPACTIVE", 12, FieldType.BIT, 2).setBaseOffset(1104);
-	public static final Field HPFPVALVESTATE = Field.create("HPFPVALVESTATE", 12, FieldType.BIT, 3).setBaseOffset(1104);
-	public static final Field M_PRESSURETARGET_KPA = Field.create("M_PRESSURETARGET_KPA", 16, FieldType.FLOAT).setBaseOffset(1104);
-	public static final Field NEXTLOBE = Field.create("NEXTLOBE", 20, FieldType.FLOAT).setBaseOffset(1104);
-	public static final Field DI_NEXTSTART = Field.create("DI_NEXTSTART", 24, FieldType.FLOAT).setBaseOffset(1104);
-	public static final Field HPFDACTIVATIONPHASE = Field.create("HPFDACTIVATIONPHASE", 28, FieldType.FLOAT).setBaseOffset(1104);
-	public static final Field HPFDDEACTIVATIONPHASE = Field.create("HPFDDEACTIVATIONPHASE", 32, FieldType.FLOAT).setBaseOffset(1104);
+	public static final Field M_REQUESTED_PUMP = Field.create("M_REQUESTED_PUMP", 0, FieldType.FLOAT).setBaseOffset(1112);
+	public static final Field FUEL_REQUESTED_PERCENT = Field.create("FUEL_REQUESTED_PERCENT", 4, FieldType.FLOAT).setBaseOffset(1112);
+	public static final Field FUEL_REQUESTED_PERCENT_PI = Field.create("FUEL_REQUESTED_PERCENT_PI", 8, FieldType.FLOAT).setBaseOffset(1112);
+	public static final Field NOVALVE = Field.create("NOVALVE", 12, FieldType.BIT, 0).setBaseOffset(1112);
+	public static final Field ANGLEABOVEMIN = Field.create("ANGLEABOVEMIN", 12, FieldType.BIT, 1).setBaseOffset(1112);
+	public static final Field ISHPFPACTIVE = Field.create("ISHPFPACTIVE", 12, FieldType.BIT, 2).setBaseOffset(1112);
+	public static final Field HPFPVALVESTATE = Field.create("HPFPVALVESTATE", 12, FieldType.BIT, 3).setBaseOffset(1112);
+	public static final Field M_PRESSURETARGET_KPA = Field.create("M_PRESSURETARGET_KPA", 16, FieldType.FLOAT).setBaseOffset(1112);
+	public static final Field NEXTLOBE = Field.create("NEXTLOBE", 20, FieldType.FLOAT).setBaseOffset(1112);
+	public static final Field DI_NEXTSTART = Field.create("DI_NEXTSTART", 24, FieldType.FLOAT).setBaseOffset(1112);
+	public static final Field HPFDACTIVATIONPHASE = Field.create("HPFDACTIVATIONPHASE", 28, FieldType.FLOAT).setBaseOffset(1112);
+	public static final Field HPFDDEACTIVATIONPHASE = Field.create("HPFDDEACTIVATIONPHASE", 32, FieldType.FLOAT).setBaseOffset(1112);
 	public static final Field[] VALUES = {
 	M_REQUESTED_PUMP,
 	FUEL_REQUESTED_PERCENT,

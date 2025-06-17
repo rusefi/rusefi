@@ -120,100 +120,101 @@ struct fan_control_s {
 	/**
 	 * Enable for AC Memory
 	offset 8 bit 0 */
-	bool m_enabledForAc : 1 {};
+	bool m_enabledByAc : 1 {};
 	/**
+	 * Enabled AC Memory
 	offset 8 bit 1 */
-	bool unusedBit_35_1 : 1 {};
+	bool m_enabledAc : 1 {};
 	/**
 	offset 8 bit 2 */
-	bool unusedBit_35_2 : 1 {};
+	bool unusedBit_36_2 : 1 {};
 	/**
 	offset 8 bit 3 */
-	bool unusedBit_35_3 : 1 {};
+	bool unusedBit_36_3 : 1 {};
 	/**
 	offset 8 bit 4 */
-	bool unusedBit_35_4 : 1 {};
+	bool unusedBit_36_4 : 1 {};
 	/**
 	offset 8 bit 5 */
-	bool unusedBit_35_5 : 1 {};
+	bool unusedBit_36_5 : 1 {};
 	/**
 	offset 8 bit 6 */
-	bool unusedBit_35_6 : 1 {};
+	bool unusedBit_36_6 : 1 {};
 	/**
 	offset 8 bit 7 */
-	bool unusedBit_35_7 : 1 {};
+	bool unusedBit_36_7 : 1 {};
 	/**
 	offset 8 bit 8 */
-	bool unusedBit_35_8 : 1 {};
+	bool unusedBit_36_8 : 1 {};
 	/**
 	offset 8 bit 9 */
-	bool unusedBit_35_9 : 1 {};
+	bool unusedBit_36_9 : 1 {};
 	/**
 	offset 8 bit 10 */
-	bool unusedBit_35_10 : 1 {};
+	bool unusedBit_36_10 : 1 {};
 	/**
 	offset 8 bit 11 */
-	bool unusedBit_35_11 : 1 {};
+	bool unusedBit_36_11 : 1 {};
 	/**
 	offset 8 bit 12 */
-	bool unusedBit_35_12 : 1 {};
+	bool unusedBit_36_12 : 1 {};
 	/**
 	offset 8 bit 13 */
-	bool unusedBit_35_13 : 1 {};
+	bool unusedBit_36_13 : 1 {};
 	/**
 	offset 8 bit 14 */
-	bool unusedBit_35_14 : 1 {};
+	bool unusedBit_36_14 : 1 {};
 	/**
 	offset 8 bit 15 */
-	bool unusedBit_35_15 : 1 {};
+	bool unusedBit_36_15 : 1 {};
 	/**
 	offset 8 bit 16 */
-	bool unusedBit_35_16 : 1 {};
+	bool unusedBit_36_16 : 1 {};
 	/**
 	offset 8 bit 17 */
-	bool unusedBit_35_17 : 1 {};
+	bool unusedBit_36_17 : 1 {};
 	/**
 	offset 8 bit 18 */
-	bool unusedBit_35_18 : 1 {};
+	bool unusedBit_36_18 : 1 {};
 	/**
 	offset 8 bit 19 */
-	bool unusedBit_35_19 : 1 {};
+	bool unusedBit_36_19 : 1 {};
 	/**
 	offset 8 bit 20 */
-	bool unusedBit_35_20 : 1 {};
+	bool unusedBit_36_20 : 1 {};
 	/**
 	offset 8 bit 21 */
-	bool unusedBit_35_21 : 1 {};
+	bool unusedBit_36_21 : 1 {};
 	/**
 	offset 8 bit 22 */
-	bool unusedBit_35_22 : 1 {};
+	bool unusedBit_36_22 : 1 {};
 	/**
 	offset 8 bit 23 */
-	bool unusedBit_35_23 : 1 {};
+	bool unusedBit_36_23 : 1 {};
 	/**
 	offset 8 bit 24 */
-	bool unusedBit_35_24 : 1 {};
+	bool unusedBit_36_24 : 1 {};
 	/**
 	offset 8 bit 25 */
-	bool unusedBit_35_25 : 1 {};
+	bool unusedBit_36_25 : 1 {};
 	/**
 	offset 8 bit 26 */
-	bool unusedBit_35_26 : 1 {};
+	bool unusedBit_36_26 : 1 {};
 	/**
 	offset 8 bit 27 */
-	bool unusedBit_35_27 : 1 {};
+	bool unusedBit_36_27 : 1 {};
 	/**
 	offset 8 bit 28 */
-	bool unusedBit_35_28 : 1 {};
+	bool unusedBit_36_28 : 1 {};
 	/**
 	offset 8 bit 29 */
-	bool unusedBit_35_29 : 1 {};
+	bool unusedBit_36_29 : 1 {};
 	/**
 	offset 8 bit 30 */
-	bool unusedBit_35_30 : 1 {};
+	bool unusedBit_36_30 : 1 {};
 	/**
 	offset 8 bit 31 */
-	bool unusedBit_35_31 : 1 {};
+	bool unusedBit_36_31 : 1 {};
 };
 static_assert(sizeof(fan_control_s) == 12);
 

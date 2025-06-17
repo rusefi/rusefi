@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Mar 05 00:15:53 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Jun 17 02:11:04 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -318,6 +318,8 @@ case CAN_BUS_BMW_E46:
   return "CAN_BUS_BMW_E46";
 case CAN_BUS_BMW_E90:
   return "CAN_BUS_BMW_E90";
+case CAN_BUS_FIESTA_MK65:
+  return "CAN_BUS_FIESTA_MK65";
 case CAN_BUS_GENESIS_COUPE:
   return "CAN_BUS_GENESIS_COUPE";
 case CAN_BUS_HONDA_K:

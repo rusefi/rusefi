@@ -35,68 +35,68 @@ static const LogField fields[] = {
 	{engine->outputChannels, 0, 30, "isTuningNow", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
-	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
-	{engine->outputChannels.internalMcuTemperature, "CPU Temperature", "deg C", 0},
-	{engine->outputChannels.coolant, "CLT", "deg C", 1},
-	{engine->outputChannels.intake, "IAT", "deg C", 1},
+	{engine->outputChannels.speedToRpmRatio, "Relação de marchas", "value", 2},
+	{engine->outputChannels.internalMcuTemperature, "Temperatura da CPU", "deg C", 0},
+	{engine->outputChannels.coolant, "Temperatura arrefecimento (CLT)", "deg C", 1},
+	{engine->outputChannels.intake, "Temperatura admissão (IAT)", "deg C", 1},
 	{engine->outputChannels.auxTemp1, "auxTemp1", "deg C", 1},
 	{engine->outputChannels.auxTemp2, "auxTemp2", "deg C", 1},
 	{engine->outputChannels.TPSValue, "TPS", "%", 2},
-	{engine->outputChannels.throttlePedalPosition, "Throttle pedal position", "%", 2},
+	{engine->outputChannels.throttlePedalPosition, "Posição do pedal do acelerador", "%", 2},
 	{engine->outputChannels.tpsADC, "tpsADC", "ADC", 0},
 	{engine->outputChannels.rawMaf, "rawMaf", "V", 3},
 	{engine->outputChannels.mafMeasured, "MAF", "kg/h", 1},
 	{engine->outputChannels.MAPValue, "MAP", "kPa", 1},
 	{engine->outputChannels.baroPressure, "baroPressure", "kPa", 1},
 	{engine->outputChannels.lambdaValue, "Lambda", "", 3},
-	{engine->outputChannels.VBatt, "VBatt", "V", 2},
-	{engine->outputChannels.oilPressure, "Oil Pressure", "kPa", 0},
-	{engine->outputChannels.vvtPositionB1I, "VVT: bank 1 intake", "deg", 1},
-	{engine->outputChannels.actualLastInjection, "Fuel: Last inj pulse width", "ms", 3},
-	{engine->outputChannels.injectorDutyCycle, "Fuel: injector duty cycle", "%", 0},
+	{engine->outputChannels.VBatt, "Bateria (VBatt)", "V", 2},
+	{engine->outputChannels.oilPressure, "Pressão do óleo", "kPa", 0},
+	{engine->outputChannels.vvtPositionB1I, "VVT: 1 admissão", "deg", 1},
+	{engine->outputChannels.actualLastInjection, "Combustível: último pulso", "ms", 3},
+	{engine->outputChannels.injectorDutyCycle, "Combustível: ciclo de trabalho", "%", 0},
 	{engine->outputChannels.tempLogging1, "tempLogging1", "", 0},
-	{engine->outputChannels.injectionOffset, "Fuel: Injection timing SOI", "deg", 0},
-	{engine->outputChannels.engineMakeCodeNameCrc16, "Engine CRC16", "crc16", 0},
-	{engine->outputChannels.wallFuelAmount, "Fuel: wall amount", "mg", 3},
-	{engine->outputChannels.wallFuelCorrectionValue, "Fuel: wall correction", "mg", 3},
+	{engine->outputChannels.injectionOffset, "Combustível: fase da injeção", "deg", 0},
+	{engine->outputChannels.engineMakeCodeNameCrc16, "CRC16 do motor", "crc16", 0},
+	{engine->outputChannels.wallFuelAmount, "Combustível: quantidade na parede", "mg", 3},
+	{engine->outputChannels.wallFuelCorrectionValue, "Combustível: correção de parede", "mg", 3},
 	{engine->outputChannels.revolutionCounterSinceStart, "revolutionCounterSinceStart", "", 0},
 	{engine->outputChannels.canReadCounter, "CAN: Rx", "", 0},
-	{engine->outputChannels.tpsAccelFuel, "Fuel: TPS AE add fuel ms", "ms", 3},
-	{engine->outputChannels.currentIgnitionMode, "Ignition: Mode", "", 0},
-	{engine->outputChannels.currentInjectionMode, "Fuel: Injection mode", "", 0},
-	{engine->outputChannels.coilDutyCycle, "Ignition: coil duty cycle", "%", 0},
-	{engine->outputChannels.etb1DutyCycle, "ETB: Duty", "%", 1},
+	{engine->outputChannels.tpsAccelFuel, "Combustível: acréscimo TPS (ms)", "ms", 3},
+	{engine->outputChannels.currentIgnitionMode, "Ignição: modo", "", 0},
+	{engine->outputChannels.currentInjectionMode, "Combustível: modo de injeção", "", 0},
+	{engine->outputChannels.coilDutyCycle, "Ignição: ciclo de trabalho", "%", 0},
+	{engine->outputChannels.etb1DutyCycle, "ETB: ciclo de trabalho", "%", 1},
 	{engine->outputChannels.fuelTankLevel, "Fuel level", "%", 0},
-	{engine->outputChannels.totalFuelConsumption, "Fuel: Total consumed", "grams", 1},
-	{engine->outputChannels.fuelFlowRate, "Fuel: Flow rate", "gram/s", 3},
+	{engine->outputChannels.totalFuelConsumption, "Combustível: total consumido", "grams", 1},
+	{engine->outputChannels.fuelFlowRate, "Combustível: taxa de fluxo", "gram/s", 3},
 	{engine->outputChannels.TPS2Value, "TPS2", "%", 2},
-	{engine->outputChannels.tuneCrc16, "Tune CRC16", "crc16", 0},
-	{engine->outputChannels.veValue, "Fuel: VE", "ratio", 1},
-	{engine->outputChannels.seconds, "Uptime", "sec", 0},
+	{engine->outputChannels.tuneCrc16, "CRC16 da calibração", "crc16", 0},
+	{engine->outputChannels.veValue, "Combustível: VE", "ratio", 1},
+	{engine->outputChannels.seconds, "Tempo ligado", "sec", 0},
 	{engine->outputChannels.engineMode, "Engine Mode", "em", 0},
 	{engine->outputChannels.firmwareVersion, "firmware", "version_f", 0},
 	{engine->outputChannels.rawIdlePositionSensor, "rawIdlePositionSensor", "V", 3},
 	{engine->outputChannels.rawWastegatePosition, "rawWastegatePosition", "V", 3},
-	{engine->outputChannels.accelerationLat, "Accel: Lateral", "G", 0},
-	{engine->outputChannels.accelerationLon, "Accel: Longitudinal", "G", 0},
-	{engine->outputChannels.detectedGear, "Detected Gear", "", 0},
+	{engine->outputChannels.accelerationLat, "Aceleração: lateral", "G", 0},
+	{engine->outputChannels.accelerationLon, "Aceleração: longitudinal", "G", 0},
+	{engine->outputChannels.detectedGear, "Marcha detectada", "", 0},
 	{engine->outputChannels.maxTriggerReentrant, "maxTriggerReentrant", "", 0},
 	{engine->outputChannels.rawLowFuelPressure, "rawLowFuelPressure", "V", 3},
 	{engine->outputChannels.rawHighFuelPressure, "rawHighFuelPressure", "V", 3},
-	{engine->outputChannels.lowFuelPressure, "Fuel pressure (low)", "kpa", 0},
-	{engine->outputChannels.tcuDesiredGear, "TCU: Desired Gear", "gear", 0},
-	{engine->outputChannels.flexPercent, "Flex Ethanol %", "%", 1},
-	{engine->outputChannels.wastegatePositionSensor, "Wastegate position sensor", "%", 2},
-	{engine->outputChannels.highFuelPressure, "Fuel pressure (high)", "bar", 0},
+	{engine->outputChannels.lowFuelPressure, "Pressão de comb. (baixa)", "kpa", 0},
+	{engine->outputChannels.tcuDesiredGear, "TCU: Marcha desejada", "gear", 0},
+	{engine->outputChannels.flexPercent, "Flex Etanol %", "%", 1},
+	{engine->outputChannels.wastegatePositionSensor, "Sensor de posição da wastegate", "%", 2},
+	{engine->outputChannels.highFuelPressure, "Pressão de comb. (alta)", "bar", 0},
 	{engine->outputChannels.tempLogging3, "tempLogging3", "", 0},
 	{engine->outputChannels.tempLogging4, "tempLogging4", "", 0},
 	{engine->outputChannels.calibrationValue, "calibrationValue", "", 0},
 	{engine->outputChannels.calibrationMode, "calibrationMode", "", 0},
 	{engine->outputChannels.idleStepperTargetPosition, "Idle: Stepper target position", "", 0},
-	{engine->outputChannels.totalTriggerErrorCounter, "Trigger Error Counter", "counter", 0},
+	{engine->outputChannels.totalTriggerErrorCounter, "Erro sincronismo Trigger", "counter", 0},
 	{engine->outputChannels.orderingErrorCounter, "orderingErrorCounter", "", 0},
-	{engine->outputChannels.warningCounter, "Warning: counter", "count", 0},
-	{engine->outputChannels.lastErrorCode, "Warning: last", "error", 0},
+	{engine->outputChannels.warningCounter, "Aviso: contador", "count", 0},
+	{engine->outputChannels.lastErrorCode, "Aviso: último", "error", 0},
 	{engine->outputChannels.recentErrorCode[0], "Warning code 1", "error", 0},
 	{engine->outputChannels.recentErrorCode[1], "Warning code 2", "error", 0},
 	{engine->outputChannels.recentErrorCode[2], "Warning code 3", "error", 0},
@@ -136,28 +136,28 @@ static const LogField fields[] = {
 	{engine->outputChannels.rawPpsSecondary, "rawPpsSecondary", "V", 3},
 	{engine->outputChannels.rawRawPpsPrimary, "rawRawPpsPrimary", "V", 3},
 	{engine->outputChannels.rawRawPpsSecondary, "rawRawPpsSecondary", "V", 3},
-	{engine->outputChannels.idlePositionSensor, "Idle: Position sensor", "%", 2},
-	{engine->outputChannels.AFRValue, "Air/Fuel Ratio", "AFR", 2},
-	{engine->outputChannels.AFRValue2, "Air/Fuel Ratio 2", "AFR", 2},
-	{engine->outputChannels.SmoothedAFRValue, "Smoothed Air/Fuel Ratio", "AFR", 2},
-	{engine->outputChannels.SmoothedAFRValue2, "Smoothed Air/Fuel Ratio 2", "AFR", 2},
+	{engine->outputChannels.idlePositionSensor, "Marcha lenta: sensor de posição", "%", 2},
+	{engine->outputChannels.AFRValue, "Relação AF", "AFR", 2},
+	{engine->outputChannels.AFRValue2, "Relação AF 2", "AFR", 2},
+	{engine->outputChannels.SmoothedAFRValue, "Relação AF suavizada", "AFR", 2},
+	{engine->outputChannels.SmoothedAFRValue2, "Relação AF 2 suavizada", "AFR", 2},
 	{engine->outputChannels.VssAcceleration, "Vss Accel", "m/s2", 2},
 	{engine->outputChannels.lambdaValue2, "Lambda 2", "", 3},
-	{engine->outputChannels.vvtPositionB1E, "VVT: bank 1 exhaust", "deg", 1},
-	{engine->outputChannels.vvtPositionB2I, "VVT: bank 2 intake", "deg", 1},
-	{engine->outputChannels.vvtPositionB2E, "VVT: bank 2 exhaust", "deg", 1},
+	{engine->outputChannels.vvtPositionB1E, "VVT: 1 escape", "deg", 1},
+	{engine->outputChannels.vvtPositionB2I, "VVT: 2 admissão", "deg", 1},
+	{engine->outputChannels.vvtPositionB2E, "VVT: 2 escape", "deg", 1},
 	{engine->outputChannels.fuelPidCorrection[0], "Fuel: Trim bank 1", "%", 2},
 	{engine->outputChannels.fuelPidCorrection[1], "Fuel: Trim bank 2", "%", 2},
 	{engine->outputChannels.rawTps1Secondary, "rawTps1Secondary", "V", 3},
 	{engine->outputChannels.rawTps2Primary, "rawTps2Primary", "V", 3},
 	{engine->outputChannels.rawTps2Secondary, "rawTps2Secondary", "V", 3},
-	{engine->outputChannels.accelerationVert, "Accel: Vertical", "G", 0},
-	{engine->outputChannels.gyroYaw, "Gyro: Yaw rate", "deg/sec", 0},
+	{engine->outputChannels.accelerationVert, "Aceleração: vertical", "G", 0},
+	{engine->outputChannels.gyroYaw, "Giro: taxa de guinada", "deg/sec", 0},
 	{engine->outputChannels.vvtTargets[0], "vvtTargets 1", "deg", 0},
 	{engine->outputChannels.vvtTargets[1], "vvtTargets 2", "deg", 0},
 	{engine->outputChannels.vvtTargets[2], "vvtTargets 3", "deg", 0},
 	{engine->outputChannels.vvtTargets[3], "vvtTargets 4", "deg", 0},
-	{engine->outputChannels.turboSpeed, "Turbocharger Speed", "hz", 0},
+	{engine->outputChannels.turboSpeed, "Velocidade do turbo", "hz", 0},
 	{engine->outputChannels.ignitionAdvanceCyl[0], "Ign: Timing Cyl 1", "deg", 1},
 	{engine->outputChannels.ignitionAdvanceCyl[1], "Ign: Timing Cyl 2", "deg", 1},
 	{engine->outputChannels.ignitionAdvanceCyl[2], "Ign: Timing Cyl 3", "deg", 1},
@@ -176,7 +176,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.accPedalSplit, "accPedalSplit", "%", 2},
 	{engine->outputChannels.sparkCutReason, "Ign: Cut Code", "code", 0},
 	{engine->outputChannels.fuelCutReason, "Fuel: Cut Code", "code", 0},
-	{engine->outputChannels.mafEstimate, "Air: Flow estimate", "kg/h", 0},
+	{engine->outputChannels.mafEstimate, "Ar: estimativa de fluxo", "kg/h", 0},
 	{engine->outputChannels.instantRpm, "sync: instant RPM", "rpm", 0},
 	{engine->outputChannels.rawMap, "rawMap", "V", 3},
 	{engine->outputChannels.rawAfr, "rawAfr", "V", 3},
@@ -193,15 +193,15 @@ static const LogField fields[] = {
 	{engine->outputChannels.instantMAPValue, "Instant MAP", "kPa", 2},
 	{engine->outputChannels.maxLockedDuration, "maxLockedDuration", "us", 0},
 	{engine->outputChannels.canWriteOk, "CAN: Tx OK", "", 0},
-	{engine->outputChannels.canWriteNotOk, "CAN: Tx err", "", 0},
+	{engine->outputChannels.canWriteNotOk, "CAN: Tx erro", "", 0},
 	{engine->outputChannels.triggerPrimaryFall, "triggerPrimaryFall", "", 3},
 	{engine->outputChannels.triggerPrimaryRise, "triggerPrimaryRise", "", 3},
 	{engine->outputChannels.triggerSecondaryFall, "triggerSecondaryFall", "", 3},
 	{engine->outputChannels.triggerSecondaryRise, "triggerSecondaryRise", "", 3},
 	{engine->outputChannels.triggerVvtFall, "triggerVvtFall", "", 0},
 	{engine->outputChannels.triggerVvtRise, "triggerVvtRise", "", 0},
-	{engine->outputChannels.triggerVvt2Fall, "triggerVvt2Fall", "", 0, "Sync"},
-	{engine->outputChannels.triggerVvt2Rise, "triggerVvt2Rise", "", 0, "Sync"},
+	{engine->outputChannels.triggerVvt2Fall, "triggerVvt2Fall", "", 0, "Sincronia"},
+	{engine->outputChannels.triggerVvt2Rise, "triggerVvt2Rise", "", 0, "Sincronia"},
 	{engine->outputChannels.starterState, "starterState", "", 3},
 	{engine->outputChannels.starterRelayDisable, "starterRelayDisable", "", 3},
 	{engine->outputChannels.multiSparkCounter, "Ign: Multispark count", "", 3},
@@ -238,7 +238,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.wastegateDcStatus.resetCounter, "wastegateDcStatus.resetCounter", "", 0},
 	{engine->outputChannels.auxSpeed1, "Aux speed 1", "s", 0},
 	{engine->outputChannels.auxSpeed2, "Aux speed 2", "s", 0},
-	{engine->outputChannels.ISSValue, "TCU: Input Shaft Speed", "RPM", 0},
+	{engine->outputChannels.ISSValue, "TCU: Velocidade do eixo de entrada", "RPM", 0},
 	{engine->outputChannels.rawAnalogInput[0], "rawAnalogInput 1", "V", 3},
 	{engine->outputChannels.rawAnalogInput[1], "rawAnalogInput 2", "V", 3},
 	{engine->outputChannels.rawAnalogInput[2], "rawAnalogInput 3", "V", 3},
@@ -339,7 +339,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.rawMaf2, "rawMaf2", "V", 3},
 	{engine->outputChannels.mafMeasured2, "MAF #2", "kg/h", 1},
 	{engine->outputChannels.schedulingUsedCount, "schedulingUsedCount", "", 0},
-	{engine->outputChannels.vehicleSpeedKph, "Vehicle Speed", "kph", 2},
+	{engine->outputChannels.vehicleSpeedKph, "Velocidade do veículo", "kph", 2},
 	{engine->outputChannels.Gego, "Gego", "%", 2},
 	{engine->outputChannels.Ltft, "Ltft", "%", 2},
 	{engine->outputChannels.testBenchIter, "testBenchIter", "count", 0},
@@ -352,8 +352,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.ignitionOnTime, "ignitionOnTime", "sec", 1},
 	{engine->outputChannels.engineRunTime, "engineRunTime", "sec", 1},
 	{engine->outputChannels.distanceTraveled, "distanceTraveled", "km", 1},
-	{engine->outputChannels.afrGasolineScale, "Air/Fuel Ratio (Gas Scale)", "AFR", 2},
-	{engine->outputChannels.afr2GasolineScale, "Air/Fuel Ratio 2 (Gas Scale)", "AFR", 2},
+	{engine->outputChannels.afrGasolineScale, "Relação AF (gasolina)", "AFR", 2},
+	{engine->outputChannels.afr2GasolineScale, "Relação AF 2 (gasolina)", "AFR", 2},
 	{engine->outputChannels.wheelSlipRatio, "wheelSlipRatio", "", 0},
 	{engine->outputChannels.ignitorDiagnostic[0], "ignitorDiagnostic 1", "", 0},
 	{engine->outputChannels.ignitorDiagnostic[1], "ignitorDiagnostic 2", "", 0},
@@ -379,8 +379,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.injectorDiagnostic[9], "injectorDiagnostic 10", "", 0},
 	{engine->outputChannels.injectorDiagnostic[10], "injectorDiagnostic 11", "", 0},
 	{engine->outputChannels.injectorDiagnostic[11], "injectorDiagnostic 12", "", 0},
-	{engine->outputChannels.actualLastInjectionStage2, "Fuel: Last inj pulse width stg 2", "ms", 3},
-	{engine->outputChannels.injectorDutyCycleStage2, "Fuel: injector duty cycle stage 2", "%", 0},
+	{engine->outputChannels.actualLastInjectionStage2, "Combustível: último pulso 2", "ms", 3},
+	{engine->outputChannels.injectorDutyCycleStage2, "Combustível: ciclo de trabalho 2", "%", 0},
 	{engine->outputChannels.rawFlexFreq, "rawFlexFreq", "", 0},
 	{engine->outputChannels.fastAdcErrorsCount, "fastAdcErrorsCount", "", 0},
 	{engine->outputChannels.deviceUid, "deviceUid", "", 0},
@@ -388,7 +388,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.sadDwellRatioCounter, "sadDwellRatioCounter", "", 0},
 	{engine->outputChannels.injectionPrimingCounter, "injectionPrimingCounter", "", 0},
 	{engine->outputChannels.tempLogging2, "tempLogging2", "", 0},
-	{engine->outputChannels.acPressure, "A/C pressure", "kPa", 0},
+	{engine->outputChannels.acPressure, "Pressão do ar-condicionado", "kPa", 0},
 	{engine->outputChannels.rawAuxAnalog1, "rawAuxAnalog1", "V", 3},
 	{engine->outputChannels.rawAuxAnalog2, "rawAuxAnalog2", "V", 3},
 	{engine->outputChannels.rawAuxAnalog3, "rawAuxAnalog3", "V", 3},
@@ -404,35 +404,39 @@ static const LogField fields[] = {
 	{engine->outputChannels.hp, "hp", "", 0},
 	{engine->outputChannels.torque, "torque", "", 0},
 	{engine->outputChannels.mcuSerial, "mcuSerial", "", 0},
+	{engine->outputChannels.ltitFactor, "LTIT multiplicativo", "mult", 3},
+	{engine->outputChannels.wwTau, "Wall Wetting Tau", "s", 3},
+	{engine->outputChannels.wwBeta, "Wall Wetting Beta", "", 3},
+	{engine->outputChannels.wwAlpha, "Wall Wetting Alpha", "", 3},
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
+	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Combustível: cálculo"},
 #endif
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.running.postCrankingFuelCorrection, "Fuel: Post cranking mult", "", 0},
 #endif
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.running.intakeTemperatureCoefficient, "Fuel: IAT correction", "", 0},
+	{engine->fuelComputer.running.intakeTemperatureCoefficient, "Combustível: correção IAT", "", 0},
 #endif
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.running.coolantTemperatureCoefficient, "Fuel: CLT correction", "", 0},
+	{engine->fuelComputer.running.coolantTemperatureCoefficient, "Combustível: correção CLT", "", 0},
 #endif
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.running.timeSinceCrankingInSecs, "running.timeSinceCrankingInSecs", "secs", 0, "Fuel: math"},
+	{engine->fuelComputer.running.timeSinceCrankingInSecs, "running.timeSinceCrankingInSecs", "secs", 0, "Combustível: cálculo"},
 #endif
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.running.baseFuel, "Fuel: base cycle mass", "mg", 3},
+	{engine->fuelComputer.running.baseFuel, "Combustível: massa base", "mg", 3},
 #endif
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.running.fuel, "Fuel: running", "mg", 3},
+	{engine->fuelComputer.running.fuel, "Combustível: em funcionamento", "mg", 3},
 #endif
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.afrTableYAxis, "afrTableYAxis", "%", 0},
 #endif
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.targetLambda, "Fuel: target lambda", "", 2, "Fuel: math"},
+	{engine->fuelComputer.targetLambda, "Combustível: lambda alvo", "", 2, "Combustível: cálculo"},
 #endif
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.targetAFR, "Fuel: target AFR", "ratio", 2, "Fuel: math"},
+	{engine->fuelComputer.targetAFR, "Combustível: AFR alvo", "ratio", 2, "Combustível: cálculo"},
 #endif
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.stoichiometricRatio, "Fuel: Stoich ratio", "ratio", 2},
@@ -441,7 +445,7 @@ static const LogField fields[] = {
 	{engine->fuelComputer.sdTcharge_coff, "sdTcharge_coff", "", 0},
 #endif
 #if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.sdAirMassInOneCylinder, "Air: Cylinder airmass", "g", 3},
+	{engine->fuelComputer.sdAirMassInOneCylinder, "Ar: massa por cilindro", "g", 3},
 #endif
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.normalizedCylinderFilling, "Air: Normalized cyl filling", "%", 1},
@@ -455,22 +459,22 @@ static const LogField fields[] = {
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer, 48, 0, "injectorHwIssue", ""},
 #endif
-	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
-	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
-	{engine->ignitionState.dwellDurationAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
-	{engine->ignitionState.cltTimingCorrection, "Ign: CLT correction", "deg", 2, "Timing"},
-	{engine->ignitionState.timingIatCorrection, "Ign: IAT correction", "deg", 2, "Timing"},
-	{engine->ignitionState.timingPidCorrection, "Idle: Timing adjustment", "deg", 2, "Timing"},
+	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Sincronismo"},
+	{engine->ignitionState.sparkDwell, "Ignição: tempo de carga", "ms", 1, "Sincronismo"},
+	{engine->ignitionState.dwellDurationAngle, "Ignition: dwell duration", "deg", 1, "Sincronismo"},
+	{engine->ignitionState.cltTimingCorrection, "Ign: CLT correction", "deg", 2, "Sincronismo"},
+	{engine->ignitionState.timingIatCorrection, "Ign: IAT correction", "deg", 2, "Sincronismo"},
+	{engine->ignitionState.timingPidCorrection, "Idle: Timing adjustment", "deg", 2, "Sincronismo"},
 	{engine->ignitionState.dfcoTimingRetard, "DFCO: Timing retard", "deg", 2},
-	{engine->ignitionState.baseIgnitionAdvance, "Timing: base ignition", "deg", 1},
-	{engine->ignitionState.correctedIgnitionAdvance, "Timing: ignition", "deg", 1},
+	{engine->ignitionState.baseIgnitionAdvance, "Sincronismo: ignição base", "deg", 1},
+	{engine->ignitionState.correctedIgnitionAdvance, "Sincronismo: ignição", "deg", 1},
 	{engine->ignitionState.tractionAdvanceDrop, "Traction: timing correction", "deg", 1},
 	{engine->ignitionState.dwellVoltageCorrection, "Ign: Dwell voltage correction", "", 0},
-	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
-	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
+	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Sincronismo"},
+	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Sincronismo"},
 	{engine->ignitionState, 40, 0, "Ign: Lua Spark Skip", ""},
-	{engine->ignitionState.trailingSparkAngle, "Ign: Trailing spark deg", "deg", 2, "Timing"},
-	{engine->module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
+	{engine->ignitionState.trailingSparkAngle, "Ign: Trailing spark deg", "deg", 2, "Sincronismo"},
+	{engine->module<KnockController>()->m_knockLevel, "Detonação: nível atual", "Volts", 2},
 	{engine->module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
 	{engine->module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
 	{engine->module<KnockController>()->m_knockCyl[2], "Knock: Cyl 3", "dBv", 0},
@@ -483,9 +487,9 @@ static const LogField fields[] = {
 	{engine->module<KnockController>()->m_knockCyl[9], "Knock: Cyl 10", "dBv", 0},
 	{engine->module<KnockController>()->m_knockCyl[10], "Knock: Cyl 11", "dBv", 0},
 	{engine->module<KnockController>()->m_knockCyl[11], "Knock: Cyl 12", "dBv", 0},
-	{engine->module<KnockController>()->m_knockRetard, "Knock: Retard", "deg", 1},
+	{engine->module<KnockController>()->m_knockRetard, "Detonação: retardo", "deg", 1},
 	{engine->module<KnockController>()->m_knockThreshold, "Knock: Threshold", "", 0},
-	{engine->module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
+	{engine->module<KnockController>()->m_knockCount, "Detonação: contagem", "", 0},
 	{engine->module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
 	{engine->module<KnockController>()->m_knockSpectrum[0], "Knock: SpectrumData 1", "compressed data", 0},
 	{engine->module<KnockController>()->m_knockSpectrum[1], "Knock: SpectrumData 2", "compressed data", 0},
@@ -509,7 +513,7 @@ static const LogField fields[] = {
 	{engine->module<KnockController>()->m_knockFuelTrimMultiplier, "Knock: Fuel trim when knock", "multiplier", 0},
 	{*engine->module<PrimeController>(), 0, 0, "IsFuelPriming", ""},
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
+	{engine->module<InjectorModelPrimary>()->m_deadtime, "Combustível: atraso do injetor", "ms", 3},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<InjectorModelPrimary>()->pressureDelta, "Fuel: Injector pressure delta", "kPa", 1},
@@ -518,7 +522,7 @@ static const LogField fields[] = {
 	{engine->module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<InjectorModelPrimary>()->pressureCorrectionReference, "Fuel: corr reference pressure", "kPa", 1},
+	{engine->module<InjectorModelPrimary>()->pressureCorrectionReference, "Combustível: pressão de referência", "kPa", 1},
 #endif
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController.retardThresholdRpm, "Launch: Retard threshold RPM", "", 0},
@@ -611,25 +615,25 @@ static const LogField fields[] = {
 	{*engine->module<BoostController>(), 0, 10, "isBoostControlled", ""},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
+	{engine->module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Controle de pressão turbo"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->module<BoostController>()->boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
+	{engine->module<BoostController>()->boostOutput, "Turbo: Saída", "percent", 2, "Controle de pressão turbo"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->module<BoostController>()->luaTargetMult, "Boost: Lua target mult", "v", 1, "Boost Control"},
+	{engine->module<BoostController>()->luaTargetMult, "Boost: Lua target mult", "v", 1, "Controle de pressão turbo"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->module<BoostController>()->openLoopPart, "Boost: Open loop", "v", 1, "Boost Control"},
+	{engine->module<BoostController>()->openLoopPart, "Turbo: Malha aberta", "v", 1, "Controle de pressão turbo"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Boost Control"},
+	{engine->module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Controle de pressão turbo"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->module<BoostController>()->boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
+	{engine->module<BoostController>()->boostControllerClosedLoopPart, "Turbo: Malha fechada", "%", 1, "Controle de pressão turbo"},
 #endif
 #if EFI_BOOST_CONTROL
-	{engine->module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
+	{engine->module<BoostController>()->boostControlTarget, "Turbo: Alvo", "kPa", 1, "Controle de pressão turbo"},
 #endif
 #if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 0, "fan1cranking", ""},
@@ -665,6 +669,9 @@ static const LogField fields[] = {
 	{*engine->module<FanControl1>(), 8, 0, "fan1Enable for AC Memory", ""},
 #endif
 #if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 8, 1, "fan1Enabled AC Memory", ""},
+#endif
+#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 0, "fan2cranking", ""},
 #endif
 #if FULL_SD_LOGS
@@ -697,6 +704,9 @@ static const LogField fields[] = {
 #if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 8, 0, "fan2Enable for AC Memory", ""},
 #endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 8, 1, "fan2Enabled AC Memory", ""},
+#endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
 	{engine->engineState, 8, 0, "lua.clutchUpState", ""},
@@ -714,10 +724,10 @@ static const LogField fields[] = {
 	{engine->engineState.crankingFuel.tpsCoefficient, "Fuel: cranking TPS mult", "", 0},
 	{engine->engineState.crankingFuel.durationCoefficient, "Fuel: cranking duration mult", "", 0},
 	{engine->engineState.crankingFuel.fuel, "Fuel: Cranking cycle mass", "mg", 2},
-	{engine->engineState.baroCorrection, "Fuel: Barometric pressure mult", "", 0},
+	{engine->engineState.baroCorrection, "Combustível: correção barométrica", "", 0},
 	{engine->engineState.hellenBoardId, "Detected Board ID", "id", 0},
-	{engine->engineState.clutchUpState, "Clutch: up", "", 0},
-	{engine->engineState.brakePedalState, "Brake switch", "", 0},
+	{engine->engineState.clutchUpState, "Embreagem: cima", "", 0},
+	{engine->engineState.brakePedalState, "Interruptor do freio", "", 0},
 	{engine->engineState.startStopState, "startStopState", "", 0},
 	{engine->engineState.smartChipState, "smartChipState", "", 0},
 	{engine->engineState.smartChipRestartCounter, "smartChipRestartCounter", "", 0},
@@ -730,15 +740,15 @@ static const LogField fields[] = {
 	{engine->engineState, 48, 5, "luaDigitalState1", ""},
 	{engine->engineState, 48, 6, "luaDigitalState2", ""},
 	{engine->engineState, 48, 7, "luaDigitalState3", ""},
-	{engine->engineState, 48, 8, "Clutch: down", ""},
+	{engine->engineState, 48, 8, "Embreagem: baixo", ""},
 	{engine->engineState.startStopStateToggleCounter, "startStopStateToggleCounter", "", 0},
 	{engine->engineState.luaSoftSparkSkip, "luaSoftSparkSkip", "", 0},
 	{engine->engineState.luaHardSparkSkip, "luaHardSparkSkip", "", 0},
 	{engine->engineState.tractionControlSparkSkip, "tractionControlSparkSkip", "", 0},
 	{engine->engineState.fuelInjectionCounter, "Fuel: Injection counter", "", 0},
 	{engine->engineState.globalSparkCounter, "Ign: Spark counter", "", 0},
-	{engine->engineState.fuelingLoad, "Fuel: Load", "", 0},
-	{engine->engineState.ignitionLoad, "Ignition: load", "", 0},
+	{engine->engineState.fuelingLoad, "Combustível: carga", "", 0},
+	{engine->engineState.ignitionLoad, "Ignição: carga", "", 0},
 	{engine->engineState.veTableYAxis, "veTableYAxis", "%", 0},
 	{engine->engineState.overDwellCounter, "overDwellCounter", "", 0},
 	{engine->engineState.overDwellNotScheduledCounter, "overDwellNotScheduledCounter", "", 0},
@@ -810,7 +820,7 @@ static const LogField fields[] = {
 	{engine->triggerCentral.triggerState.vvtToothPosition[3], "trgsync: Cam Position 4", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.triggerState.triggerSyncGapRatio, "trgSync: Trigger Latest Ratio", "", 3},
+	{engine->triggerCentral.triggerState.triggerSyncGapRatio, "trgTrigger: Última razão", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.triggerStateIndex, "trgtriggerStateIndex", "", 0},
@@ -837,7 +847,7 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[3], "vvt1isync: Cam Position 4", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].triggerSyncGapRatio, "vvt1iSync: Trigger Latest Ratio", "", 3},
+	{engine->triggerCentral.vvtState[0][0].triggerSyncGapRatio, "vvt1iTrigger: Última razão", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[0][0].triggerStateIndex, "vvt1itriggerStateIndex", "", 0},
@@ -864,7 +874,7 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[3], "vvt1esync: Cam Position 4", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].triggerSyncGapRatio, "vvt1eSync: Trigger Latest Ratio", "", 3},
+	{engine->triggerCentral.vvtState[0][1].triggerSyncGapRatio, "vvt1eTrigger: Última razão", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[0][1].triggerStateIndex, "vvt1etriggerStateIndex", "", 0},
@@ -891,7 +901,7 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[3], "vvt2isync: Cam Position 4", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].triggerSyncGapRatio, "vvt2iSync: Trigger Latest Ratio", "", 3},
+	{engine->triggerCentral.vvtState[1][0].triggerSyncGapRatio, "vvt2iTrigger: Última razão", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[1][0].triggerStateIndex, "vvt2itriggerStateIndex", "", 0},
@@ -918,7 +928,7 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[3], "vvt2esync: Cam Position 4", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].triggerSyncGapRatio, "vvt2eSync: Trigger Latest Ratio", "", 3},
+	{engine->triggerCentral.vvtState[1][1].triggerSyncGapRatio, "vvt2eTrigger: Última razão", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[1][1].triggerStateIndex, "vvt2etriggerStateIndex", "", 0},
@@ -975,10 +985,13 @@ static const LogField fields[] = {
 	{engine->module<IdleController>().unmock(), 12, 14, "looksLikeCrankToIdle", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 12, 15, "Idle: coasting", ""},
+	{engine->module<IdleController>().unmock(), 12, 15, "Idle: running", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 12, 16, "Idle: Closed loop active", ""},
+	{engine->module<IdleController>().unmock(), 12, 16, "Idle: coasting", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 12, 17, "Idle: Closed loop active", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
@@ -999,7 +1012,7 @@ static const LogField fields[] = {
 	{engine->module<IdleController>().unmock().idleClosedLoop, "Closed loop", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
+	{engine->module<IdleController>().unmock().currentIdlePosition, "Marcha lenta: posição", "%", 1},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().idleTargetAirmass, "Target airmass", "mg", 0},
@@ -1008,16 +1021,16 @@ static const LogField fields[] = {
 	{engine->module<IdleController>().unmock().idleTargetFlow, "Target airflow", "kg/h", 2},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition, "etb1ETB: target with idle", "%", 2, "ETB more"},
+	{getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition, "etb1ETB: target with idle", "%", 2, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->trim, "etb1ETB: trim", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(0)->luaAdjustment, "etb1ETB: luaAdjustment", "%", 2, "ETB more"},
+	{getLiveData<electronic_throttle_s>(0)->luaAdjustment, "etb1ETB: luaAdjustment", "%", 2, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(0)->m_wastegatePosition, "etb1DC: wastegatePosition", "%", 2, "ETB more"},
+	{getLiveData<electronic_throttle_s>(0)->m_wastegatePosition, "etb1DC: wastegatePosition", "%", 2, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbFeedForward, "etb1etbFeedForward", "", 0},
@@ -1038,10 +1051,10 @@ static const LogField fields[] = {
 	{*getLiveData<electronic_throttle_s>(0), 28, 2, "etb1validPlantPosition", ""},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter, "etb1ETB TPS error counter", "count", 0, "ETB more"},
+	{getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter, "etb1ETB TPS error counter", "count", 0, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(0)->etbPpsErrorCounter, "etb1ETB pedal error counter", "count", 0, "ETB more"},
+	{getLiveData<electronic_throttle_s>(0)->etbPpsErrorCounter, "etb1ETB pedal error counter", "count", 0, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbErrorCode, "etb1etbErrorCode", "", 0},
@@ -1062,16 +1075,16 @@ static const LogField fields[] = {
 	{getLiveData<electronic_throttle_s>(0)->state, "etb1state", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->targetWithIdlePosition, "etb2ETB: target with idle", "%", 2, "ETB more"},
+	{getLiveData<electronic_throttle_s>(1)->targetWithIdlePosition, "etb2ETB: target with idle", "%", 2, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->trim, "etb2ETB: trim", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->luaAdjustment, "etb2ETB: luaAdjustment", "%", 2, "ETB more"},
+	{getLiveData<electronic_throttle_s>(1)->luaAdjustment, "etb2ETB: luaAdjustment", "%", 2, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->m_wastegatePosition, "etb2DC: wastegatePosition", "%", 2, "ETB more"},
+	{getLiveData<electronic_throttle_s>(1)->m_wastegatePosition, "etb2DC: wastegatePosition", "%", 2, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->etbFeedForward, "etb2etbFeedForward", "", 0},
@@ -1092,10 +1105,10 @@ static const LogField fields[] = {
 	{*getLiveData<electronic_throttle_s>(1), 28, 2, "etb2validPlantPosition", ""},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbTpsErrorCounter, "etb2ETB TPS error counter", "count", 0, "ETB more"},
+	{getLiveData<electronic_throttle_s>(1)->etbTpsErrorCounter, "etb2ETB TPS error counter", "count", 0, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbPpsErrorCounter, "etb2ETB pedal error counter", "count", 0, "ETB more"},
+	{getLiveData<electronic_throttle_s>(1)->etbPpsErrorCounter, "etb2ETB pedal error counter", "count", 0, "ETB mais"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->etbErrorCode, "etb2etbErrorCode", "", 0},
@@ -1115,8 +1128,8 @@ static const LogField fields[] = {
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->state, "etb2state", "", 0},
 #endif
-	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB more"},
-	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB more"},
+	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB mais"},
+	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB mais"},
 	{engine->dc_motors, 8, 0, "isEnabled0", ""},
 #if EFI_VVT_PID
 	{engine->module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},

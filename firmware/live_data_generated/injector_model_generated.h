@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/injector_model.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -22,8 +22,14 @@ struct injector_model_s {
 	 * offset 8
 	 */
 	float pressureRatio = (float)0;
+	/**
+	 * @@GAUGE_NAME_FUEL_CORRECTION_REFERENCE_PRESSURE@@
+	 * units: kPa
+	 * offset 12
+	 */
+	float pressureCorrectionReference = (float)0;
 };
-static_assert(sizeof(injector_model_s) == 12);
+static_assert(sizeof(injector_model_s) == 16);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/fuel/injector_model.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/injector_model.txt

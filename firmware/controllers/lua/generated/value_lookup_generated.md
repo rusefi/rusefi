@@ -2,70 +2,100 @@
 null
 
 ### sensorSnifferRpmThreshold
-Disable sensor sniffer above this rpm
+Desabilitar sensor sniffer acima desta rpm
 
 ### launchRpm
-A secondary Rev limit engaged by the driver to help launch the vehicle faster
+Um limitador de giros secundario acionado pelo piloto para ajudar o veiculo a acelerar mais rapido
 
 ### rpmHardLimit
 set rpm_hard_limit X
 
 ### engineSnifferRpmThreshold
-Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X
+Engine sniffer seria desabilitado acima desta rpm\nset engineSnifferRpmThreshold X
 
 ### multisparkMaxRpm
-Disable multispark above this engine speed.
+Desabilitar multispark acima desta velocidade do motor.
 
 ### maxAcRpm
-Above this RPM, disable AC. Set to 0 to disable check.
+Acima desta RPM, desabilitar ar condicionado. Configure 0 para desabilitar verificacao.
 
 ### maxAcTps
-Above this TPS, disable AC. Set to 0 to disable check.
+Acima deste TPS, desabilitar ar condicionado. Configure 0 para desabilitar verificacao.
 
 ### maxAcClt
-Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.
+Acima desta CLT, desabilitar ar condicionado para prevenir superaquecimento do motor. Configure 0 para desabilitar verificacao.
 
 ### compressionRatio
-Just for reference really, not taken into account by any logic at this point
+Apenas para referencia, nao levado em conta por nenhuma logica neste ponto
 
 ### wastegatePositionMin
-Voltage when the wastegate is closed.\nYou probably don't have one of these!
+Voltagem quando a wastegate esta fechada.\nVoce provavelmente nao tem uma dessas!
 
 ### wastegatePositionMax
-Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units
+Voltagem quando a wastegate esta totalmente aberta.\nVoce provavelmente nao tem uma dessas!\n1 volt = 1000 unidades
 
 ### idlePositionMin
-Voltage when the idle valve is closed.\nYou probably don't have one of these!
+Voltagem quando a valvula de marcha lenta esta fechada.\nVoce provavelmente nao tem uma dessas!
 
 ### idlePositionMax
-Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units
+Voltagem quando a valvula de marcha lenta esta aberta.\nVoce provavelmente nao tem uma dessas!\n1 volt = 1000 unidades
+
+### ltitEnabled
+Enable LTIT (Long Term Idle Trim) learning
+
+### ltitEmaAlpha
+Constante de filtro EMA para LTIT (0-255)
+
+### ltitStableRpmThreshold
+Faixa de RPM para considerar marcha lenta estavel
+
+### ltitStableTime
+Tempo minimo de marcha lenta estavel antes do aprendizado
+
+### ltitCorrectionRate
+Taxa de aprendizado LTIT
+
+### ltitIgnitionOnDelay
+Atraso apos ignicao ligada antes do aprendizado/aplicacao LTIT
+
+### ltitIgnitionOffSaveDelay
+Atraso apos ignicao desligada antes de salvar LTIT
+
+### ltitClampMin
+Valor minimo de correcao multiplicativa LTIT
+
+### ltitClampMax
+Valor maximo de correcao multiplicativa LTIT
+
+### ltitSmoothingIntensity
+Intensidade de suavizacao regional da tabela LTIT (0=sem suavizacao)
+
+### ltitIntegratorThreshold
+Threshold minimo do integrador PID para correcao LTIT
 
 ### launchFuelAdderPercent
 
 
 ### etbJamTimeout
-Time after which the throttle is considered jammed.
+Tempo apos o qual o acelerador e considerado travado.
 
 ### acIdleExtraOffset
-Additional idle % while A/C is active
-
-### manIdlePosition
-Value between 0 and 100 used in Manual mode
+Porcentagem adicional de marcha lenta enquanto ar condicionado estiver ativo
 
 ### multisparkMaxSparkingAngle
-This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.
+Este parametro define o mais tardio que o ultimo multispark pode ocorrer apos o evento principal de ignicao. Por exemplo, se o tempo de ignicao e 30 graus BTDC, e este parametro e definido como 45, nenhum multispark sera disparado apos 15 graus ATDC.
 
 ### multisparkMaxExtraSparkCount
-Configures the maximum number of extra sparks to fire (does not include main spark)
+Configura o numero maximo de fagulhas extras para disparar (nao inclui fagulha principal)
 
 ### vvtControlMinRpm
 
 
 ### injector.flow
-This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below
+Este e o fluxo do seu injetor na pressao de combustivel usada no veiculo\nVeja configuracao de unidades abaixo
 
 ### injectorSecondary.flow
-This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below
+Este e o fluxo do seu injetor na pressao de combustivel usada no veiculo\nVeja configuracao de unidades abaixo
 
 ### isForcedInduction
 Does the vehicle have a turbo or supercharger?
@@ -137,7 +167,7 @@ Shall we display real life signal or just the part consumed by trigger decoder.\
 
 
 ### verboseCan
-Print incoming and outgoing first bus CAN messages in rusEFI console
+Print incoming and outgoing first bus CAN messages in evoTech console
 
 ### artificialTestMisfire
 Experimental setting that will cause a misfire\nDO NOT ENABLE.
@@ -191,28 +221,28 @@ TPS error detection: what throttle % is unrealistically low?\nAlso used for acce
 TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equipped.
 
 ### cranking.baseFuel
-Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.
+Massa base do combustivel por cilindro injetado durante a partida. Isso e modificado pelos multiplicadores para CLT, IAT, TPS etc, para dar a largura final do pulso de partida.\nUm ponto de partida razoavel e 60mg por litro por cilindro.\nex: 2 litros 4 cil = 500cc/cil, entao 30mg combustivel de partida.
 
 ### cranking.rpm
-This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X
+Isso define o limite de RPM abaixo do qual a ECU usara combustivel e logica de ignicao de partida, tipicamente isso e cerca de 350-450rpm. \nset cranking_rpm X
 
 ### ignitionDwellForCrankingMs
-Dwell duration while cranking
+Duracao do dwell durante a partida
 
 ### etbRevLimitStart
-Once engine speed passes this value, start reducing ETB angle.
+Uma vez que a velocidade do motor passe este valor, comece a reduzir o angulo ETB.
 
 ### etbRevLimitRange
-This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.
+Esta distancia acima do 'Inicio do limitador suave', feche totalmente a borboleta. Na parte inferior da faixa, o controle da borboleta e normal. Na parte superior da faixa, a borboleta esta totalmente fechada.
 
 ### map.sensor.lowValue
-kPa value at low volts
+Valor kPa em voltagem baixa
 
 ### map.sensor.highValue
-kPa value at high volts
+Valor kPa em voltagem alta
 
 ### clt.config.tempC_1
-these values are in Celcius
+estes valores estao em Celsius
 
 ### clt.config.tempC_2
 
@@ -230,10 +260,10 @@ these values are in Celcius
 
 
 ### clt.config.bias_resistor
-Pull-up resistor value on your board
+Valor do resistor pull-up em sua placa
 
 ### iat.config.tempC_1
-these values are in Celcius
+estes valores estao em Celsius
 
 ### iat.config.tempC_2
 
@@ -251,19 +281,22 @@ these values are in Celcius
 
 
 ### iat.config.bias_resistor
-Pull-up resistor value on your board
+Valor do resistor pull-up em sua placa
 
 ### launchTimingRetard
 
 
-### hip9011PrescalerAndSDO
+### hip9011Prescaler
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
+### tuningDetector
+Valor zero significa nao detectar ajuste
+
 ### alternator_iTermMin
-iTerm min value
+Valor minimo iTerm
 
 ### alternator_iTermMax
-iTerm max value
+Valor maximo iTerm
 
 ### displacement
 @@DISPLACEMENT_TOOLTIP@@
@@ -278,10 +311,10 @@ Number of cylinder the engine has.
 null
 
 ### mapSyncThreshold
-Delta kPa for MAP sync
+Delta kPa para sincronizacao MAP
 
 ### torqueReductionIgnitionCut
-How many % of ignition events will be cut
+Quantos % dos eventos de ignicao serao cortados
 
 ### cylinderBore
 @@CYLINDER_BORE_TOOLTIP@@
@@ -302,49 +335,49 @@ Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, a
 Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X
 
 ### gapTrackingLengthOverride
-How many consecutive gap rations have to match expected ranges for sync to happen
+Quantas razoes de lacuna consecutivas tem que corresponder aos intervalos esperados para que a sincronizacao aconteca
 
 ### maxIdleVss
-Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
+Acima desta velocidade, desabilitar controle de marcha lenta em malha fechada. Configure 0 para desabilitar (permitir marcha lenta em malha fechada em qualquer velocidade).
 
 ### camDecoder2jzPrecision
 null
 
 ### minOilPressureAfterStart
-Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
+Pressao de oleo esperada apos ligar o motor. Se a pressao de oleo nao atingir este nivel dentro de 5 segundos apos a partida do motor, o combustivel sera cortado. Configure 0 para desabilitar e sempre permitir a partida.
+
+### enableSanderoPump
+This option enables sandelo eletrohydraulic steering pump to be CAN controller by the ECU;
 
 ### fixedModeTiming
 This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.
 
 ### globalTriggerAngleOffset
-Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchronization point before TDC and negative in case of synchronization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nHOWTO:\n1: Switch to fixed timing mode on 'ignition setting' dialog\n2: use an actual timing light to calibrate\n3: add/subtract until timing light confirms desired fixed timing value!'
+Angulo entre o Ponto Morto Superior (TDC) e o primeiro evento de trigger.\nValor positivo no caso de ponto de sincronizacao antes do TDC e negativo no caso de ponto de sincronizacao apos TDC\n.Conhecer este angulo nos permite controlar tempo e outros angulos em referencia ao TDC.\nCOMO FAZER:\n1: Mude para modo de tempo fixo no dialogo de configuracao de ignicao\n2: use uma pistola de ponto real para calibrar\n3: adicione/subtraia ate que a pistola de ponto confirme o valor de tempo fixo desejado!'
 
 ### analogInputDividerCoefficient
-Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.
+Razao/coeficiente dos divisores de voltagem de entrada em sua PCB. Por exemplo, use '2' se sua placa dividir 5v em 2.5v. Use '1.66' se sua placa dividir 5v em 3v.
 
 ### vbattDividerCoeff
-This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.
+Esta e a razao dos resistores para a voltagem da bateria, meca a voltagem na bateria e entao ajuste este numero ate que o medidor corresponda a leitura.
 
 ### fanOnTemperature
-Cooling fan turn-on temperature threshold, in Celsius
+Limite de temperatura para ligar o ventilador de resfriamento, em Celsius
 
 ### fanOffTemperature
-Cooling fan turn-off temperature threshold, in Celsius
+Limite de temperatura para desligar o ventilador de resfriamento, em Celsius
 
 ### driveWheelRevPerKm
-Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.
+Numero de revolucoes por quilometro para as rodas onde seu sensor de velocidade do veiculo esta conectado. Use uma calculadora online para determinar isso baseado no tamanho do seu pneu.
 
 ### canSleepPeriodMs
-CANbus thread period in ms
+Periodo da thread CANbus em ms
 
 ### byFirmwareVersion
 
 
 ### idle_derivativeFilterLoss
 0.1 is a good default value
-
-### trailingSparkAngle
-just a temporary solution
 
 ### trigger.customTotalToothCount
 
@@ -353,10 +386,10 @@ just a temporary solution
 
 
 ### airByRpmTaper
-Extra air taper amount
+Quantidade de afunilamento de ar extra
 
 ### boostControlSafeDutyCycle
-Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.
+Ciclo de trabalho para usar em caso de falha do sensor. Este ciclo de trabalho deve produzir a menor quantidade possivel de boost. Este ciclo tambem e usado caso qualquer das condicoes minimas de RPM/TPS/MAP nao sejam atendidas.
 
 ### acrRevolutions
 
@@ -368,7 +401,7 @@ null
 
 
 ### mapCamDetectionAnglePosition
-Magic engine phase: we compare instant MAP at X to instant MAP at x+360 angle in one complete cycle
+Fase magica do motor: comparamos MAP instantaneo em X com MAP instantaneo em x+360 graus em um ciclo completo
 
 ### afr.v1
 
@@ -383,22 +416,22 @@ Magic engine phase: we compare instant MAP at X to instant MAP at x+360 angle in
 
 
 ### etbSplit
-TPS/PPS error threshold
+Limite de erro TPS/PPS
 
 ### baroSensor.lowValue
-kPa value at low volts
+Valor kPa em voltagem baixa
 
 ### baroSensor.highValue
-kPa value at high volts
+Valor kPa em voltagem alta
 
 ### idle.solenoidFrequency
 
 
 ### knockRetardAggression
-Ignition timing to remove when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.), 15% (high knock, e.g. GDI), 20% (spicy lump),
+Tempo de ignicao para remover quando um evento de detonacao ocorrer. Conselho: 5% (leve), 10% (turbo/alta compressao), 15% (alta detonacao, ex. GDI), 20% (bem agressivo)
 
 ### knockRetardReapplyRate
-After a knock event, reapply timing at this rate.
+Apos um evento de detonacao, reaplicar tempo nesta taxa.
 
 ### vssGearRatio
 Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.
@@ -410,7 +443,7 @@ Set this so your vehicle speed signal is responsive, but not noisy. Larger value
 Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.
 
 ### gapVvtTrackingLengthOverride
-How many consecutive VVT gap rations have to match expected ranges for sync to happen
+Quantas razoes de lacuna VVT consecutivas tem que corresponder aos intervalos esperados para que a sincronizacao aconteca
 
 ### idle_antiwindupFreq
 0.1 is a good default value
@@ -423,6 +456,69 @@ Ratio between the wheels and your transmission output.
 
 ### tcuInputSpeedSensorTeeth
 null
+
+### wwEnableAdaptiveLearning
+Enable adaptive learning for wall wetting parameters
+
+### wwMinCoolantTemp
+Minimum coolant temperature for learning
+
+### wwAquinoAccelThresh
+Acceleration transient threshold for adaptive detection
+
+### wwAquinoDecelThresh
+Deceleration transient threshold for adaptive detection
+
+### wwAquinoMapAccelThresh
+MAP acceleration threshold for adaptive detection
+
+### wwAquinoMapDecelThresh
+MAP deceleration threshold for adaptive detection
+
+### wwAquinoMinLambdaErr
+Minimum lambda error magnitude for adaptation
+
+### wwAquinoTransMinDuration
+Minimum transient duration for analysis
+
+### wwAquinoAnalysisMaxDuration
+Maximum analysis window duration
+
+### wwAquinoBetaAccelGain
+Beta correction gain for acceleration transients
+
+### wwAquinoBetaDecelGain
+Beta correction gain for deceleration transients
+
+### wwAquinoBetaLeanThresh
+Beta lean threshold for correction
+
+### wwAquinoBetaRichThresh
+Beta rich threshold for correction
+
+### wwAquinoTauSettleThresh
+Lambda settle threshold for tau analysis
+
+### wwAquinoTauIdealFactor
+Ideal settle time factor (multiplied by tau)
+
+### wwAquinoTauToleranceFactor
+Tolerance margin factor for settle time
+
+### wwAquinoTauOvershootMinDur
+Minimum overshoot duration
+
+### wwAquinoTauOvershootMinMag
+Minimum overshoot magnitude
+
+### wwAquinoTauOvershootGain
+Tau correction gain for overshoot
+
+### wwAquinoTauSlowGain
+Tau correction gain for slow settling
+
+### wwAquinoTauFastGain
+Tau correction gain for fast settling
 
 ### fordInjectorSmallPulseSlope
 
@@ -446,7 +542,7 @@ null
 enable sd/disable sd
 
 ### rusefiVerbose29b
-Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
+Use 11 bit (standard) or 29 bit (extended) IDs for evoTech verbose CAN format.
 
 ### rethrowHardFault
 
@@ -476,7 +572,7 @@ This setting should only be used if you have a stepper motor idle valve and a st
 
 
 ### enableVerboseCanTx
-CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
+CAN broadcast using custom evoTech protocol\nenable can_broadcast/disable can_broadcast
 
 ### externalRusEfiGdiModule
 
@@ -495,9 +591,6 @@ If enabled, try to fire the engine before a full engine cycle has been completed
 
 ### coastingFuelCutEnabled
 This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-
-### useIacTableForCoasting
-Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
 
 ### useNoiselessTriggerDecoder
 
@@ -524,24 +617,27 @@ Disable the electronic throttle motor and DC idle motor for testing.\nThis mode 
 
 
 ### enableAemXSeries
-AEM X-Series or rusEFI Wideband
+AEM X-Series or evoTech Wideband
+
+### sanderoPumpSpeed
+
+
+### modeledFlowIdle
+
 
 ### verboseCanBaseAddress
 
 
 ### mc33_hvolt
-Boost Voltage
+Voltagem de Boost
 
 ### minimumBoostClosedLoopMap
-Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
+MAP minimo antes que o boost em malha fechada seja habilitado. Use para prevenir comportamento inadequado ao entrar em boost.
 
 ### initialIgnitionCutPercent
 
 
 ### finalIgnitionCutPercentBeforeLaunch
-
-
-### vehicleWeight
 
 
 ### idlePidRpmUpperLimit
@@ -551,16 +647,16 @@ How far above idle speed do we consider idling, i.e. coasting detection threshol
 Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
 
 ### torqueReductionArmingRpm
-Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction
+Como o pino de reducao de torque e geralmente compartilhado com controle de largada, a maioria das pessoas tem uma RPM onde o comportamento abaixo disso e Controle de Largada, acima disso e Reducao de Torque
 
 ### stoichRatioSecondary
-Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0
+Razao estequiometrica para seu combustivel secundario. Este valor e usado quando o sensor Flex Fuel indica E100, tipicamente 9.0
 
 ### etbMaximumPosition
-Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.
+Posicao maxima permitida do ETB. Algumas borboletas passam da totalmente aberta, entao isso permite limitar a totalmente aberta.
 
 ### sdCardLogFrequency
-Rate the ECU will log to the SD card, in hz (log lines per second).
+Taxa que a ECU ira registrar no cartao SD, em hz (linhas de log por segundo).
 
 ### launchCorrectionsEndRpm
 
@@ -569,10 +665,10 @@ Rate the ECU will log to the SD card, in hz (log lines per second).
 
 
 ### mapMinBufferLength
-This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.
+Esta quantidade de amostras MAP e usada para estimar o MAP atual. Esta quantidade de amostras e considerada, e o minimo e tomado. Valor recomendado e 1 para motores de borboleta unica, e seu numero de cilindros para corpos de borboleta individuais.
 
 ### idlePidDeactivationTpsThreshold
-Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.
+Abaixo desta posicao da borboleta, o motor e considerado em marcha lenta. Se voce tem uma borboleta eletronica, isso verifica a posicao do pedal do acelerador em vez da posicao da borboleta, e deve ser definido para 1-2%.
 
 ### stepperParkingExtraSteps
 
@@ -587,19 +683,13 @@ Below this throttle position, the engine is considered idling. If you have an el
 
 
 ### startCrankingDuration
-Maximum time to crank starter when start/stop button is pressed
+Tempo maximo para girar o motor de partida quando o botao start/stop e pressionado
 
 ### lambdaProtectionMinTps
 
 
 ### lambdaProtectionTimeout
 Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
-
-### clutchUpPinInverted
-
-
-### clutchDownPinInverted
-
 
 ### useHbridgesToDriveIdleStepper
 If enabled we use two H-bridges to drive stepper idle air valve
@@ -614,7 +704,7 @@ If enabled we use two H-bridges to drive stepper idle air valve
 
 
 ### consumeObdSensors
-This property is useful if using rusEFI as TCM or BCM only
+This property is useful if using evoTech as TCM or BCM only
 
 ### enableCanVss
 Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
@@ -686,7 +776,7 @@ In Alpha-N mode, compensate for air temperature.
 If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 
 ### verboseCan2
-Print incoming and outgoing second bus CAN messages in rusEFI console
+Print incoming and outgoing second bus CAN messages in evoTech console
 
 ### boostPid.pFactor
 
@@ -698,16 +788,16 @@ Print incoming and outgoing second bus CAN messages in rusEFI console
 
 
 ### boostPid.offset
-Linear addition to PID logic
+Adicao linear a logica PID
 
 ### boostPid.periodMs
-PID dTime
+Tempo PID dTime
 
 ### boostPid.minValue
-Output Min Duty Cycle
+Ciclo de Trabalho Minimo de Saida
 
 ### boostPid.maxValue
-Output Max Duty Cycle
+Ciclo de Trabalho Maximo de Saida
 
 ### standbyTimeout
 How long it takes to enter standby mode, in seconds. Any value below 60 will cause the ECU to not enter standby, with an average consumption of 80mA
@@ -725,10 +815,10 @@ Pause closed loop fueling after deceleration fuel cut occurs. Set this to a litt
 Pause closed loop fueling after acceleration fuel occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel accel.
 
 ### launchSpeedThreshold
-Launch disabled above this speed if setting is above zero
+Launch desabilitado acima desta velocidade se a configuracao estiver acima de zero
 
 ### launchRpmWindow
-Starting Launch RPM window to activate (subtracts from Launch RPM)
+Janela de RPM de Launch inicial para ativar (subtrai do RPM de Launch)
 
 ### triggerEventsTimeoutMs
 
@@ -749,28 +839,28 @@ null
 
 
 ### stft.maxIdleRegionRpm
-Below this RPM, the idle region is active, idle+300 would be a good value
+Abaixo desta RPM, a regiao de marcha lenta esta ativa, marcha lenta+300 seria um bom valor
 
 ### stft.maxOverrunLoad
-Below this engine load, the overrun region is active
+Abaixo desta carga do motor, a regiao de desaceleracao esta ativa\nQuando ajustando por MAP as unidades sao kPa, ex. 30 significaria 30kPa. Quando ajustando TPS, 30 seria 30%
 
 ### stft.minPowerLoad
-Above this engine load, the power region is active
+Acima desta carga do motor, a regiao de potencia esta ativa\nQuando ajustando por MAP as unidades sao kPa
 
 ### stft.deadband
-When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.
+Quando proximo do AFR correto, pausar correcao. Isso pode melhorar a estabilidade nao alterando o ajuste se o erro for extremamente pequeno, mas nao e obrigatorio.
 
 ### stft.minClt
-Below this temperature, correction is disabled.
+Abaixo desta temperatura, a correcao e desabilitada.
 
 ### stft.minAfr
-Below this AFR, correction is paused
+Abaixo deste AFR, a correcao e pausada
 
 ### stft.maxAfr
-Above this AFR, correction is paused
+Acima deste AFR, a correcao e pausada
 
 ### stft.startupDelay
-Delay after starting the engine before beginning closed loop correction.
+Atraso apos ligar o motor antes de iniciar a correcao em malha fechada.
 
 ### tps2SecondaryMin
 
@@ -838,9 +928,6 @@ This is the Cut Mode normally used
 ### torqueReductionEnabled
 
 
-### torqueReductionTriggerPinInverted
-
-
 ### limitTorqueReductionTime
 
 
@@ -850,9 +937,6 @@ Are you a developer troubleshooting TS over CAN ISO/TP?
 ### engineSnifferFocusOnInputs
 
 
-### launchActivateInverted
-
-
 ### twoStroke
 
 
@@ -860,7 +944,7 @@ Are you a developer troubleshooting TS over CAN ISO/TP?
 Where is your primary skipped wheel located?
 
 ### etbNeutralPosition
-Expected neutral position
+Posicao neutra esperada
 
 ### isInjectionEnabled
 
@@ -880,9 +964,6 @@ RPM is measured based on last 720 degrees while instant RPM is measured based on
 ### isMapAveragingEnabled
 
 
-### overrideCrankingIacSetting
-If enabled, use separate temperature multiplier table for cranking idle position.\nIf disabled, use normal running multiplier table applied to the cranking base position.
-
 ### useSeparateAdvanceForIdle
 This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra advance at low idle speeds will prevent stalling and extra retard at high idle speeds can help reduce engine power and slow the idle speed.
 
@@ -894,9 +975,6 @@ This activates a separate fuel table for Idle, this allows fine tuning of the id
 
 ### verboseTriggerSynchDetails
 Verbose info in console below engineSnifferRpmThreshold\nenable trigger_details
-
-### cutFuelInAcr
-
 
 ### hondaK
 
@@ -946,9 +1024,6 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 ### sdTriggerLog
 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 
-### ALSActivateInverted
-
-
 ### stepper_dc_use_two_wires
 
 
@@ -965,12 +1040,9 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 Idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 
 ### warningPeriod
-set warningPeriod X
+definir warningPeriod X
 
 ### knockDetectionWindowStart
-
-
-### knockDetectionWindowEnd
 
 
 ### idleStepperReactionTime
@@ -980,10 +1052,10 @@ set warningPeriod X
 
 
 ### torqueReductionArmingApp
-Pedal position to realize that we need to reduce torque when the trigger pin is uuuh triggered
+Posicao do pedal para perceber que precisamos reduzir o torque quando o pino de trigger e acionado
 
 ### tachPulseDuractionMs
-Duration in ms or duty cycle depending on selected mode
+Duracao em ms ou ciclo de trabalho dependendo do modo selecionado
 
 ### wwaeTau
 Length of time the deposited wall fuel takes to dissipate after the start of acceleration.
@@ -998,16 +1070,16 @@ Length of time the deposited wall fuel takes to dissipate after the start of acc
 
 
 ### alternatorControl.offset
-Linear addition to PID logic
+Adicao linear a logica PID
 
 ### alternatorControl.periodMs
-PID dTime
+Tempo PID dTime
 
 ### alternatorControl.minValue
-Output Min Duty Cycle
+Ciclo de Trabalho Minimo de Saida
 
 ### alternatorControl.maxValue
-Output Max Duty Cycle
+Ciclo de Trabalho Maximo de Saida
 
 ### etb.pFactor
 
@@ -1019,19 +1091,19 @@ Output Max Duty Cycle
 
 
 ### etb.offset
-Linear addition to PID logic
+Adicao linear a logica PID
 
 ### etb.periodMs
-PID dTime
+Tempo PID dTime
 
 ### etb.minValue
-Output Min Duty Cycle
+Ciclo de Trabalho Minimo de Saida
 
 ### etb.maxValue
-Output Max Duty Cycle
+Ciclo de Trabalho Maximo de Saida
 
 ### airTaperRpmRange
-RPM range above upper limit for extra air taper
+Faixa de RPM acima do limite superior para afunilamento de ar extra
 
 ### tps2Min
 Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel
@@ -1043,10 +1115,10 @@ Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1
 
 
 ### mapErrorDetectionTooLow
-kPa value which is too low to be true
+Valor kPa que e muito baixo para ser verdadeiro
 
 ### mapErrorDetectionTooHigh
-kPa value which is too high to be true
+Valor kPa que e muito alto para ser verdadeiro
 
 ### multisparkSparkDuration
 How long to wait for the spark to fire before recharging the coil for another spark.
@@ -1064,16 +1136,16 @@ This sets the dwell time for subsequent sparks. The main spark's dwell is set by
 
 
 ### idleRpmPid.offset
-Linear addition to PID logic
+Adicao linear a logica PID
 
 ### idleRpmPid.periodMs
-PID dTime
+Tempo PID dTime
 
 ### idleRpmPid.minValue
-Output Min Duty Cycle
+Ciclo de Trabalho Minimo de Saida
 
 ### idleRpmPid.maxValue
-Output Max Duty Cycle
+Ciclo de Trabalho Maximo de Saida
 
 ### wwaeBeta
 0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment.
@@ -1082,13 +1154,16 @@ Output Max Duty Cycle
 
 
 ### throttlePedalWOTVoltage
-Pedal in the floor
+Pedal no chao
 
 ### startUpFuelPumpDuration
-on IGN voltage detection turn fuel pump on to build fuel pressure
+na deteccao de voltagem IGN ligar bomba de combustivel para construir pressao de combustivel
 
 ### idlePidRpmDeadZone
 If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
+
+### idleMaximumAirmass
+Maximum commanded airmass for the idle controller.
 
 ### torqueReductionTime
 For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced
@@ -1133,7 +1208,7 @@ VSS and Aux Speed 1 or Aux Speed 1 with Aux Speed 2?
 
 
 ### enableAemXSeriesEgt
-AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
+AEM X-Series EGT gauge kit or evoTech EGT sensor from Wideband controller
 
 ### startRequestPinInverted
 
@@ -1141,7 +1216,7 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 ### tcu_rangeSensorPulldown
 
 
-### brakePedalPinInverted
+### devBit01
 
 
 ### devBit0
@@ -1178,10 +1253,10 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 
 
 ### afterCrankingIACtaperDuration
-This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
+This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\nShould be 100 once tune is better
 
 ### iacByTpsTaper
-IAC Value added when coasting and transitioning into idle.
+This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.
 
 ### coastingFuelCutVssLow
 Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
@@ -1199,7 +1274,7 @@ Maximum change delta of TPS percentage over the 'length'. Actual TPS change has 
 Additional idle % when fan #1 is active
 
 ### uartConsoleSerialSpeed
-Band rate for primary TTL
+Taxa de banda para TTL primario
 
 ### tpsDecelEnleanmentThreshold
 For decel we simply multiply delta of TPS and tFor decel we do not use table?!
@@ -1208,13 +1283,13 @@ For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
 
 ### torqueReductionIgnitionRetard
-How many degrees of timing advance will be reduced during the Torque Reduction Time
+Quantos graus de avanco de tempo serao reduzidos durante o Tempo de Reducao de Torque
 
 ### throttlePedalSecondaryUpVoltage
 
 
 ### throttlePedalSecondaryWOTVoltage
-Pedal in the floor
+Pedal no chao
 
 ### mc33_hpfp_i_peak
 
@@ -1223,22 +1298,22 @@ Pedal in the floor
 
 
 ### mc33_hpfp_i_hold_off
-How long to deactivate power when hold current is reached before applying power again
+Quanto tempo desativar a energia quando a corrente de manutencao e atingida antes de aplicar energia novamente
 
 ### mc33_hpfp_max_hold
-Maximum amount of time the solenoid can be active before assuming a programming error
+Quantidade maxima de tempo que o solenoide pode estar ativo antes de assumir um erro de programacao
 
 ### stepperDcInvertedPins
-Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
+Habilite se o driver de motor DC (ponte H) inverter os sinais (ex: RZ7899 em placas Hellen)
 
 ### canOpenBLT
-Allow OpenBLT on Primary CAN
+Permitir OpenBLT no CAN Primário
 
 ### can2OpenBLT
-Allow OpenBLT on Secondary CAN
+Permitir OpenBLT no CAN Secundário
 
 ### injectorFlowAsMassFlow
-Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
+Selecione se deseja configurar o fluxo do injetor em fluxo volumétrico (padrão, cc/min) ou fluxo de massa (g/s).
 
 ### boardUseCanTerminator
 
@@ -1247,7 +1322,7 @@ Select whether to configure injector flow in volumetric flow (default, cc/min) o
 
 
 ### can1ListenMode
-ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
+ListenMode é sobre reconhecer tráfego CAN no nível do protocolo. Diferente de canWriteEnabled
 
 ### can2ListenMode
 
@@ -1256,7 +1331,7 @@ ListenMode is about acknowledging CAN traffic on the protocol level. Different f
 null
 
 ### benchTestOnTime
-Duration of each test pulse
+Duração de cada pulso de teste
 
 ### lambdaProtectionRestoreTps
 
@@ -1265,7 +1340,7 @@ Duration of each test pulse
 
 
 ### boostCutPressure
-MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.
+Valor de MAP acima do qual o combustível é cortado em caso de overboost. Defina como 0 para desabilitar o corte de overboost.
 
 ### fixedTiming
 Fixed timing, useful for TDC testing
@@ -1280,7 +1355,7 @@ MAP voltage for low point
 EGO value correction
 
 ### crankingIACposition
-This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
+Esta é a posição do IAC durante a partida, alguns motores dão partida melhor se receberem mais ar durante a partida para melhorar o enchimento dos cilindros.
 
 ### tChargeMinRpmMinTps
 
@@ -1304,16 +1379,16 @@ Maximum timing advance allowed. No spark on any cylinder will ever fire before t
 
 
 ### fan2ExtraIdle
-Additional idle % when fan #2 is active
+Marcha lenta adicional % quando o ventilador #2 está ativo
 
 ### primingDelay
-Delay to allow fuel pressure to build before firing the priming pulse.
+Atraso para permitir que a pressão de combustível se estabilize antes de disparar o pulso de priming.
 
 ### fuelReferencePressure
-This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
+Esta é a pressão na qual o fluxo do seu injetor é conhecido.\nPor exemplo, se seus injetores fluem 400cc/min a 3,5 bar, insira 350kpa aqui.
 
 ### auxTempSensor1.config.tempC_1
-these values are in Celcius
+estes valores estao em Celsius
 
 ### auxTempSensor1.config.tempC_2
 
@@ -1331,10 +1406,10 @@ these values are in Celcius
 
 
 ### auxTempSensor1.config.bias_resistor
-Pull-up resistor value on your board
+Valor do resistor pull-up em sua placa
 
 ### auxTempSensor2.config.tempC_1
-these values are in Celcius
+estes valores estao em Celsius
 
 ### auxTempSensor2.config.tempC_2
 
@@ -1352,7 +1427,7 @@ these values are in Celcius
 
 
 ### auxTempSensor2.config.bias_resistor
-Pull-up resistor value on your board
+Valor do resistor pull-up em sua placa
 
 ### knockSamplingDuration
 
@@ -1370,22 +1445,22 @@ Pull-up resistor value on your board
 
 
 ### etbWastegatePid.offset
-Linear addition to PID logic
+Adicao linear a logica PID
 
 ### etbWastegatePid.periodMs
-PID dTime
+Tempo PID dTime
 
 ### etbWastegatePid.minValue
-Output Min Duty Cycle
+Ciclo de Trabalho Minimo de Saida
 
 ### etbWastegatePid.maxValue
-Output Max Duty Cycle
+Ciclo de Trabalho Maximo de Saida
 
 ### stepperMinDutyCycle
-Use to limit the current when the stepper motor is idle, not moving (100% = no limit)
+Use para limitar a corrente quando o motor de passo está parado, não se movendo (100% = no limit)
 
 ### stepperMaxDutyCycle
-Use to limit the max.current through the stepper motor (100% = no limit)
+Use para limitar a corrente máxima através do motor de passo (100% = no limit)
 
 ### idlePidActivationTime
 
@@ -1403,31 +1478,31 @@ Use to limit the max.current through the stepper motor (100% = no limit)
 
 
 ### fan2OnTemperature
-Cooling fan turn-on temperature threshold, in Celsius
+Limite de temperatura para ligar o ventilador de resfriamento #2, em Celsius
 
 ### fan2OffTemperature
-Cooling fan turn-off temperature threshold, in Celsius
+Limite de temperatura para desligar o ventilador de resfriamento #2, em Celsius
 
 ### auxFrequencyFilter
 
 
 ### coastingFuelCutRpmHigh
-This sets the RPM above which fuel cut is active.
+Define o RPM acima do qual o corte de combustível está ativo.
 
 ### coastingFuelCutRpmLow
-This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle
+Define o RPM abaixo do qual o corte de combustível é desativado, isso previne solavancos ou problemas ao transitar para marcha lenta
 
 ### coastingFuelCutTps
-Throttle position below which fuel cut is active. With an electronic throttle enabled, this checks against pedal position.
+Posição do acelerador abaixo da qual o corte de combustível está ativo. Com acelerador eletrônico habilitado, isso verifica a posição do pedal em vez da borboleta, e deve ser definido para 1-2%.
 
 ### coastingFuelCutClt
-Fuel cutoff is disabled when the engine is cold.
+O corte de combustível é desabilitado quando o motor está frio.
 
 ### pidExtraForLowRpm
-Increases PID reaction for RPM<target by adding extra percent to PID-error
+Aumenta a reação do PID para RPM<alvo adicionando percentual extra ao erro do PID
 
 ### coastingFuelCutMap
-MAP value above which fuel injection is re-enabled.
+Valor de MAP acima do qual a injeção de combustível é reabilitada.
 
 ### highPressureFuel.v1
 
@@ -1454,28 +1529,28 @@ MAP value above which fuel injection is re-enabled.
 
 
 ### tChargeAirCoefMin
-Heat transfer coefficient at zero flow.\n0 means the air charge is fully heated to the same temperature as CLT.\n1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.
+Coeficiente de transferência de calor em fluxo zero.\n0 means the air charge is fully heated to the same temperature as CLT.\n1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.
 
 ### tChargeAirCoefMax
-Heat transfer coefficient at high flow, as defined by "max air flow".\n0 means the air charge is fully heated to the same temperature as CLT.\n1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.
+Coeficiente de transferência de calor em alto fluxo, conforme definido por "fluxo máximo de ar".\n0 means the air charge is fully heated to the same temperature as CLT.\n1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.
 
 ### tChargeAirFlowMax
-High flow point for heat transfer estimation.\nSet this to perhaps 50-75% of your maximum airflow at wide open throttle.
+Ponto de alto fluxo para estimativa de transferência de calor.\nDefina isso para talvez 50-75% do seu fluxo máximo de ar em WOT.
 
 ### tChargeAirIncrLimit
-Maximum allowed rate of increase allowed for the estimated charge temperature
+Taxa máxima permitida de aumento para a temperatura estimada da carga de ar
 
 ### tChargeAirDecrLimit
-Maximum allowed rate of decrease allowed for the estimated charge temperature
+Taxa máxima permitida de diminuição para a temperatura estimada da carga de ar
 
 ### hip9011Gain
 
 
 ### etb_iTermMin
-iTerm min value
+Valor mínimo de iTerm
 
 ### etb_iTermMax
-iTerm max value
+Valor máximo de iTerm
 
 ### idleTimingPid.pFactor
 
@@ -1487,49 +1562,49 @@ iTerm max value
 
 
 ### idleTimingPid.offset
-Linear addition to PID logic
+Adicao linear a logica PID
 
 ### idleTimingPid.periodMs
-PID dTime
+Tempo PID dTime
 
 ### idleTimingPid.minValue
-Output Min Duty Cycle
+Ciclo de Trabalho Minimo de Saida
 
 ### idleTimingPid.maxValue
-Output Max Duty Cycle
+Ciclo de Trabalho Maximo de Saida
 
 ### idleTimingSoftEntryTime
-When entering idle, and the PID settings are aggressive, it's good to make a soft entry upon entering closed loop
+Ao entrar em marcha lenta, e as configurações do PID são agressivas, é bom fazer uma entrada suave ao entrar em malha fechada
 
 ### tpsAccelFractionPeriod
-A delay in cycles between fuel-enrich. portions
+Atraso em ciclos entre porções de enriquecimento de combustível
 
 ### tpsAccelFractionDivisor
-A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions
+Divisor de fração: 1 ou menos = toda a porção de uma vez, ou dividido em frações decrescentes
 
 ### idlerpmpid_iTermMin
-iTerm min value
+Valor mínimo de iTerm
 
 ### stoichRatioPrimary
-Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.\nE0 = 14.7\nE10 = 14.1\nE85 = 9.9\nE100 = 9.0
+Razão estequiométrica para seu combustível primário. Quando Flex Fuel está habilitado, este valor é usado quando o sensor Flex Fuel indica E0.\nE0 = 14.7\nE10 = 14.1\nE85 = 9.9\nE100 = 9.0
 
 ### idlerpmpid_iTermMax
-iTerm max value
+Valor máximo de iTerm
 
 ### etbIdleThrottleRange
-This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position.
+Define o alcance do controle de marcha lenta no ETB. Em 100% da posição de marcha lenta, o valor especificado aqui define a posição base do ETB.
 
 ### triggerCompCenterVolt
-Trigger comparator center point voltage
+Ponto central de tensão do comparador de trigger
 
 ### triggerCompHystMin
-Trigger comparator hysteresis voltage (Min)
+Tensão de histerese do comparador de trigger (Mín)
 
 ### triggerCompHystMax
-Trigger comparator hysteresis voltage (Max)
+Tensão de histerese do comparador de trigger (Máx)
 
 ### triggerCompSensorSatRpm
-VR-sensor saturation RPM
+RPM de saturação do sensor VR
 
 ### disableFan1AtSpeed
 null
@@ -1538,22 +1613,22 @@ null
 null
 
 ### mc33_i_boost
-Boost Current
+Corrente de Boost
 
 ### mc33_i_peak
-Peak Current
+Corrente de Pico
 
 ### mc33_i_hold
-Hold Current
+Corrente de Manutenção
 
 ### mc33_t_max_boost
-Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.
+Tempo máximo permitido na fase de boost. Se a corrente do injetor não atingir o limite antes desse tempo, assume-se que o injetor está ausente ou com falha em circuito aberto.
 
 ### mc33_t_peak_off
 
 
 ### mc33_t_peak_tot
-Peak phase duration
+Duração da fase de pico
 
 ### mc33_t_bypass
 
@@ -1562,37 +1637,37 @@ Peak phase duration
 
 
 ### mc33_t_hold_tot
-Hold phase duration
+Duração da fase de manutenção
 
 ### maxCamPhaseResolveRpm
-Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.
+Abaixo deste RPM, use a informação do comando para sincronizar a posição do virabrequim para operação totalmente sequencial. Use isto se seu sensor de comando apresentar comportamentos estranhos em altas rotações. Defina como 0 para desabilitar e sempre usar o comando para ajudar a sincronizar o virabrequim.
 
 ### dfcoDelay
-Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...
+Atraso antes de cortar o combustível. Defina como 0 para cortar imediatamente sem atraso. Pode causar estouros e pipocos no escapamento...
 
 ### acDelay
-Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.
+Atraso antes de acionar o compressor do ar-condicionado. Defina como 0 para acionar imediatamente sem atraso. Use isto para evitar queda de rotação em marcha lenta ao acionar o ar-condicionado.
 
 ### fordInjectorSmallPulseBreakPoint
 
 
 ### etbJamDetectThreshold
-Threshold in ETB error (target vs. actual) above which the jam timer is started. If the timer reaches the time specified in the jam detection timeout period, the throttle is considered jammed, and engine operation limited.
+Limite de erro do ETB (alvo vs. real) acima do qual o temporizador de travamento é iniciado. Se o temporizador atingir o tempo especificado no período de detecção de travamento, a borboleta é considerada travada e a operação do motor é limitada.
 
 ### hpfpCamLobes
 
 
 ### acLowRpmLimit
-Low engine speed for A/C. Larger engines can survive lower values
+Baixa rotação do motor para o A/C. Motores maiores podem suportar valores menores
 
 ### hpfpMinAngle
-If the requested activation time is below this angle, don't bother running the pump
+Se o tempo de ativação solicitado estiver abaixo deste ângulo, não acione a bomba
 
 ### hpfpPumpVolume
-Size of the pump chamber in cc. Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.
+Tamanho da câmara da bomba em cc. Típica Bosch HDP5 tem 9,0mm de diâmetro, típico BMW N* curso é 4,4mm.
 
 ### hpfpActivationAngle
-How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own)
+Tempo de ativação da válvula (para permitir que a bomba gere pressão e mantenha a válvula aberta sozinha)
 
 ### issFilterReciprocal
 
@@ -1604,7 +1679,7 @@ How long to keep the valve activated (in order to allow the pump to build pressu
 
 
 ### hpfpTargetDecay
-The fastest rate the target pressure can be reduced by. This is because HPFP have no way to bleed off pressure other than injecting fuel.
+A taxa mais rápida que a pressão alvo pode ser reduzida. Isso porque HPFP não tem como aliviar pressão além de injetar combustível.
 
 ### vvtActivationDelayMs
 We need to give engine time to build oil pressure without diverting it to VVT
@@ -1721,7 +1796,7 @@ Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU 
 How many test bench pulses do you want
 
 ### iacByTpsHoldTime
-How long initial IAC adder is held before starting to decay.
+How long initial idle adder is held before starting to decay.
 
 ### iacByTpsDecayTime
 How long it takes to remove initial IAC adder to return to normal idle.
@@ -1730,7 +1805,7 @@ How long it takes to remove initial IAC adder to return to normal idle.
 Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.
 
 ### oilTempSensor.config.tempC_1
-these values are in Celcius
+estes valores estao em Celsius
 
 ### oilTempSensor.config.tempC_2
 
@@ -1748,10 +1823,10 @@ these values are in Celcius
 
 
 ### oilTempSensor.config.bias_resistor
-Pull-up resistor value on your board
+Valor do resistor pull-up em sua placa
 
 ### fuelTempSensor.config.tempC_1
-these values are in Celcius
+estes valores estao em Celsius
 
 ### fuelTempSensor.config.tempC_2
 
@@ -1769,10 +1844,10 @@ these values are in Celcius
 
 
 ### fuelTempSensor.config.bias_resistor
-Pull-up resistor value on your board
+Valor do resistor pull-up em sua placa
 
 ### ambientTempSensor.config.tempC_1
-these values are in Celcius
+estes valores estao em Celsius
 
 ### ambientTempSensor.config.tempC_2
 
@@ -1790,10 +1865,10 @@ these values are in Celcius
 
 
 ### ambientTempSensor.config.bias_resistor
-Pull-up resistor value on your board
+Valor do resistor pull-up em sua placa
 
 ### compressorDischargeTemperature.config.tempC_1
-these values are in Celcius
+estes valores estao em Celsius
 
 ### compressorDischargeTemperature.config.tempC_2
 
@@ -1811,7 +1886,7 @@ these values are in Celcius
 
 
 ### compressorDischargeTemperature.config.bias_resistor
-Pull-up resistor value on your board
+Valor do resistor pull-up em sua placa
 
 ### speedometerPulsePerKm
 Number of speedometer pulses per kilometer travelled.
@@ -1915,9 +1990,6 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 ### nitrousControlEnabled
 
 
-### nitrousControlTriggerPinInverted
-
-
 ### nitrousLuaGaugeArmingValue
 
 
@@ -1969,6 +2041,18 @@ Error below specified value
 ### fuelLevelHighThresholdVoltage
 Error above specified value
 
+### mapExpAverageAfr
+
+
+### sparkHardwareLatencyCorrection
+Compensates for trigger delay due to belt stretch, or other electromechanical issues. beware that raising this value advances ignition timing!
+
+### maxOilPressureTimeout
+Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.
+
+### maxOilPressure
+Maximum allowed oil pressure. If oil pressure exceed this level within <timeout> seconds, fuel will be cut. Set to 0 to disable.
+
 ### ltftEnabled
 
 
@@ -1990,6 +2074,63 @@ How much long term fuel trim should act to reduce short term fuel trim, 100 shou
 ### ltftMinCorrection
 
 
+### ltftEmaAlpha
+Constante de tempo do filtro EMA para STFT usado no LTFT
+
+### ltftStftRejectThreshold
+Limiar de rejeição para STFT (em %)
+
+### ltftIgnitionOnDelay
+Delay pós-ignição ON para aprendizado/aplicação do LTFT
+
+### ltftIgnitionOffSaveDelay
+Delay após ignição OFF para salvamento do LTFT
+
+### wwBufferSize
+200
+
 ### tcu_shiftTime
 
+
+### dynoRpmStep
+@@DYNO_RPM_STEP_TOOLTIP@@
+
+### dynoSaeTemperatureC
+@@DYNO_SAE_TEMPERATURE_C_TOOLTIP@@
+
+### dynoSaeRelativeHumidity
+@@DYNO_SAE_RELATIVE_HUMIDITY_TOOLTIP@@
+
+### dynoSaeBaro
+@@DYNO_SAE_BARO_TOOLTIP@@
+
+### dynoCarWheelDiaInch
+@@DYNO_CAR_WHEEL_DIA_INCH_TOOLTIP@@
+
+### dynoCarWheelAspectRatio
+@@DYNO_CAR_WHEEL_ASPECT_RATIO_TOOLTIP@@
+
+### dynoCarWheelTireWidthMm
+@@DYNO_CAR_WHEEL_TIRE_WIDTH_TOOLTIP@@
+
+### dynoCarGearPrimaryReduction
+@@DYNO_CAR_GEAR_PRIMARY_REDUCTION_TOOLTIP@@
+
+### dynoCarGearRatio
+@@DYNO_CAR_GEAR_RATIO_TOOLTIP@@
+
+### dynoCarGearFinalDrive
+@@DYNO_CAR_GEAR_FINAL_DRIVE_TOOLTIP@@
+
+### dynoCarCarMassKg
+@@DYNO_CAR_CAR_MASS_TOOLTIP@@
+
+### dynoCarCargoMassKg
+@@DYNO_CAR_CARGO_MASS_TOOLTIP@@
+
+### dynoCarCoeffOfDrag
+@@DYNO_CAR_COEFF_OF_DRAG_TOOLTIP@@
+
+### dynoCarFrontalAreaM2
+@@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@
 
