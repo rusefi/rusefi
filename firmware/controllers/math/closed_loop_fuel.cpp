@@ -111,6 +111,12 @@ bool shouldUpdateCorrection(SensorType sensor) {
 		return false;
 	}
 
+	// Pause correction if Accel enrichment was active recently
+	auto timeSinceAccel = engine->module<TpsAccelEnrichment>()->getTimeSinceAcell();
+	if (timeSinceAccel < engineConfiguration->noFuelTrimAfterAccelTime) {
+		return false;
+	}
+
 	// Pause if some other cut was active recently
 	auto timeSinceFuelCut = engine->module<LimpManager>()->getTimeSinceAnyCut();
 	// TODO: should duration this be configurable?

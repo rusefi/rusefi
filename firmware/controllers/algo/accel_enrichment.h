@@ -17,6 +17,7 @@
 typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float, float> tps_tps_Map3D_t;
 
 class TpsAccelEnrichment : public tps_accel_state_s, public EngineModule {
+	Timer m_timeSinceAccel;
 public:
 	TpsAccelEnrichment();
 
@@ -37,6 +38,7 @@ public:
 	void onEngineCycleTps();
 	void resetFractionValues();
 	void resetAE();
+	float getTimeSinceAcell() const;
 };
 
 void initAccelEnrichment();
