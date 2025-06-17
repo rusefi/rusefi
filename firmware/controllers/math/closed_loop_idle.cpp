@@ -71,16 +71,14 @@ float LongTermIdleTrim::getLtitFactor(float rpm, float clt) const {
 }
 
 bool LongTermIdleTrim::isValidConditionsForLearning(float idleIntegral) const {
-    // *** CORREÇÃO 1: Verificar threshold do integrador corretamente ***
-    // O integrador deve ser MAIOR que o threshold para indicar erro persistente
     float minThreshold = engineConfiguration->ltitIntegratorThreshold;
     if (fabsf(idleIntegral) < minThreshold) {
-        return false; // Integrador muito baixo - PID não está trabalhando o suficiente
+        return false; // Integrator too low - PID not working hard enough
     }
 
-    // Limite superior para evitar condições extremas
+    // Upper limit to avoid extreme conditions
     if (fabsf(idleIntegral) > 25.0f) {
-        return false; // Integrador muito alto - condições instáveis
+        return false; // Integrator too high - unstable conditions
     }
 
     // Check if enough time has passed since ignition on
@@ -114,12 +112,10 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         return;
     }
 
-    // *** CORREÇÃO 2: Verificar se está realmente na fase de marcha lenta ***
-    // Obter a fase atual do IdleController
     auto& idleController = engine->module<IdleController>().unmock();
     auto currentPhase = idleController.getCurrentPhase();
 
-    // LTIT só deve aprender durante Phase::Idling
+    // LTIT should only learn during Phase::Idling
     if (currentPhase != IIdleController::Phase::Idling) {
         m_stableIdleTimer.reset();
         isStableIdle = false;
@@ -147,8 +143,6 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         return;
     }
 
-    // *** CORREÇÃO 3: Verificar se o PID está realmente ativo ***
-    // Só aprender se estiver em malha fechada (closed loop)
     if (!idleController.useClosedLoop) {
         return; // PID não está ativo, não há integrador válido
     }
@@ -200,9 +194,6 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     }
 
     updatedLtit = true;
-
-    // Apply smoothing if configured
-    // smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
 }
 
 void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
