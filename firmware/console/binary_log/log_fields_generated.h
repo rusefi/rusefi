@@ -753,6 +753,8 @@ static const LogField fields[] = {
 	{engine->engineState.sparkOutOfOrderCounter, "sparkOutOfOrderCounter", "", 0},
 	{engine->engineState.stftCorrection[0], "STFT: Bank 1", "%", 1},
 	{engine->engineState.stftCorrection[1], "STFT: Bank 2", "%", 1},
+	{engine->engineState.ltftCorrection[0], "LTFT: Bank 1", "%", 1},
+	{engine->engineState.ltftCorrection[1], "LTFT: Bank 2", "%", 1},
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[0], "Hardware events since boot 1", "", 0},
 #endif
