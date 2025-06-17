@@ -38,6 +38,39 @@ float getConfigValueByName(const char *name) {
 // idlePositionMax
 		case -1256791970:
 			return engineConfiguration->idlePositionMax;
+// ltitEnabled
+		case 1049828813:
+			return engineConfiguration->ltitEnabled;
+// ltitEmaAlpha
+		case -1008029221:
+			return engineConfiguration->ltitEmaAlpha;
+// ltitStableRpmThreshold
+		case 341693817:
+			return engineConfiguration->ltitStableRpmThreshold;
+// ltitStableTime
+		case 496209836:
+			return engineConfiguration->ltitStableTime;
+// ltitCorrectionRate
+		case 743163558:
+			return engineConfiguration->ltitCorrectionRate;
+// ltitIgnitionOnDelay
+		case -135093297:
+			return engineConfiguration->ltitIgnitionOnDelay;
+// ltitIgnitionOffSaveDelay
+		case 423655964:
+			return engineConfiguration->ltitIgnitionOffSaveDelay;
+// ltitClampMin
+		case -1622665645:
+			return engineConfiguration->ltitClampMin;
+// ltitClampMax
+		case -1622665899:
+			return engineConfiguration->ltitClampMax;
+// ltitSmoothingIntensity
+		case 341519713:
+			return engineConfiguration->ltitSmoothingIntensity;
+// ltitIntegratorThreshold
+		case -2065042706:
+			return engineConfiguration->ltitIntegratorThreshold;
 // launchFuelAdderPercent
 		case -904771683:
 			return engineConfiguration->launchFuelAdderPercent;
@@ -2053,6 +2086,61 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1256791970:
 	{
 		engineConfiguration->idlePositionMax = (int)value;
+		return 1;
+	}
+		case 1049828813:
+	{
+		engineConfiguration->ltitEnabled = (int)value;
+		return 1;
+	}
+		case -1008029221:
+	{
+		engineConfiguration->ltitEmaAlpha = (int)value;
+		return 1;
+	}
+		case 341693817:
+	{
+		engineConfiguration->ltitStableRpmThreshold = (int)value;
+		return 1;
+	}
+		case 496209836:
+	{
+		engineConfiguration->ltitStableTime = (int)value;
+		return 1;
+	}
+		case 743163558:
+	{
+		engineConfiguration->ltitCorrectionRate = (int)value;
+		return 1;
+	}
+		case -135093297:
+	{
+		engineConfiguration->ltitIgnitionOnDelay = (int)value;
+		return 1;
+	}
+		case 423655964:
+	{
+		engineConfiguration->ltitIgnitionOffSaveDelay = (int)value;
+		return 1;
+	}
+		case -1622665645:
+	{
+		engineConfiguration->ltitClampMin = value;
+		return 1;
+	}
+		case -1622665899:
+	{
+		engineConfiguration->ltitClampMax = value;
+		return 1;
+	}
+		case 341519713:
+	{
+		engineConfiguration->ltitSmoothingIntensity = (int)value;
+		return 1;
+	}
+		case -2065042706:
+	{
+		engineConfiguration->ltitIntegratorThreshold = value;
 		return 1;
 	}
 		case -904771683:

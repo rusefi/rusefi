@@ -31,6 +31,39 @@ Voltage when the idle valve is closed.\nYou probably don't have one of these!
 ### idlePositionMax
 Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units
 
+### ltitEnabled
+Enable LTIT (Long Term Idle Trim) learning
+
+### ltitEmaAlpha
+EMA filter constant for LTIT (0-255)
+
+### ltitStableRpmThreshold
+RPM range to consider stable idle
+
+### ltitStableTime
+Minimum time of stable idle before learning
+
+### ltitCorrectionRate
+LTIT learning rate
+
+### ltitIgnitionOnDelay
+Delay after ignition ON before LTIT learning/application
+
+### ltitIgnitionOffSaveDelay
+Delay after ignition OFF before LTIT save
+
+### ltitClampMin
+Minimum LTIT multiplicative correction value
+
+### ltitClampMax
+Maximum LTIT multiplicative correction value
+
+### ltitSmoothingIntensity
+LTIT table regional smoothing intensity (0=no smoothing)
+
+### ltitIntegratorThreshold
+Minimum threshold of PID integrator for LTIT correction
+
 ### launchFuelAdderPercent
 
 
