@@ -26,11 +26,6 @@ TEST(EngineModules, MapAveragingModule_onEnginePhase) {
 
     EXPECT_TRUE(engine->outputChannels.isMapAveraging);
 
-	// All other tests relying on assertEventExistsAtEnginePhase are working
-	// That one is failing on timing problem, but if timings are fixed then it will fail on expected angles
-	// smth should be wrong with reference data
-	if (false)
-	{
 		bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", startAveragingAction, static_cast<angle_t>(50));
 
 		EXPECT_TRUE(averageDone);
@@ -39,7 +34,6 @@ TEST(EngineModules, MapAveragingModule_onEnginePhase) {
     	eth.fireRise(200);
     	eth.executeActions();
     	EXPECT_FALSE(engine->outputChannels.isMapAveraging);
-	}
 }
 
 TEST(EngineModules, MapAveragingModule_onFastCallback) {
