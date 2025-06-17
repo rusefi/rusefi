@@ -2534,10 +2534,10 @@ end_struct
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 
 ! some board files override this value using prepend file
-#define ts_show_ign_key_switch false
+#define ts_show_ign_key_switch true
 #define ts_show_ford_toyota_tps_pps true
 #define ts_show_primary_trigger true
-#define ts_show_ign_key_analog_input false
+#define ts_show_ign_key_analog_input true
 #define ts_show_vehicle_speed_sensor true
 #define ts_show_output_diag false
 #define ts_show_top_level_can_menu true
