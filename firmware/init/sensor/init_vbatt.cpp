@@ -15,14 +15,11 @@ void initVbatt() {
 	  vbattSensor.setFunction(vbattFunc);
 	}
 
-#if defined(IGN_KEY_DIVIDER)
-  {
+  if (engineConfiguration->ignKeyAdcDivider > 0) {
     static LinearFunc ignBattFunc; // static with scoped visibility just to reduce change of code defect
-	  ignBattFunc.configure(0, 0, 1, IGN_KEY_DIVIDER, 0, 50);
+	  ignBattFunc.configure(0, 0, 1, engineConfiguration->ignKeyAdcDivider, 0, 50);
 	  ignBattSensor.setFunction(ignBattFunc);
 	}
-#endif //	IGN_KEY_DIVIDER
-
 
 	if (isAdcChannelValid(engineConfiguration->vbattAdcChannel)) {
 	  // adcVoltsPerVolt is set to 1.0 because vbatt doesn't go thru the analog input divider
@@ -30,17 +27,13 @@ void initVbatt() {
 	  vbattSensor.Register();
 	}
 
-#if defined(IGN_KEY_DIVIDER)
 	if (isAdcChannelValid(engineConfiguration->ignKeyAdcChannel)) {
 	  AdcSubscription::SubscribeSensor(ignBattSensor, engineConfiguration->ignKeyAdcChannel, /* filter HZ = */ 20, /* adcVoltsPerVolt = */ 1.0f);
 	  ignBattSensor.Register();
 	}
-#endif //	IGN_KEY_DIVIDER
 }
 
 void deinitVbatt() {
 	AdcSubscription::UnsubscribeSensor(vbattSensor, engineConfiguration->vbattAdcChannel);
-#if defined(IGN_KEY_DIVIDER)
 	AdcSubscription::UnsubscribeSensor(ignBattSensor, engineConfiguration->ignKeyAdcChannel);
-#endif //	IGN_KEY_DIVIDER
 }

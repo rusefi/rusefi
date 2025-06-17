@@ -23,8 +23,6 @@
 #define CLT_IDLE_TABLE_RPM_SIZE 6
 
 #define ts_show_ign_key_analog_input true
-! todo: insert actual value here!
-#define IGN_KEY_DIVIDER 3
 
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "C2/C3 Crank VR"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "E5/E6 Cam VR"

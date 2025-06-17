@@ -1675,6 +1675,7 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 uint8_t[CAM_INPUTS_COUNT iterate] simulatorCamPosition;
 
 adc_channel_e ignKeyAdcChannel
+float ignKeyAdcDivider
 
 	pin_mode_e spi6MisoMode;
 

@@ -4,11 +4,9 @@
 #include "ignition_controller.h"
 
 void MainRelayController::onSlowCallback() {
-#if defined(IGN_KEY_DIVIDER)
-    if (isAdcChannelValid(engineConfiguration->ignKeyAdcChannel)) {
+    if (engineConfiguration->ignKeyAdcDivider > 0 && isAdcChannelValid(engineConfiguration->ignKeyAdcChannel)) {
       hasIgnitionVoltage = isIgnVoltage();
     } else
-#endif // IGN_KEY_DIVIDER
 #if EFI_PROD_CODE
     if (engineConfiguration->ignitionKeyDigitalPin != Gpio::Unassigned) {
         // separate digital input pin just for main relay logic since it's preferred to read voltage from main relay

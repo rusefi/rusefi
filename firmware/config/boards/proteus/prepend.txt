@@ -15,7 +15,7 @@
 #define ts_show_vbatt false
 #define ts_show_clt_iat_pullup false
 #define ts_show_gdi true
-
+#define ts_show_ign_key_analog_input true
 
 ! in case of direct Lua control we need UI to undo defaults
 #define ts_show_etb_pins true
