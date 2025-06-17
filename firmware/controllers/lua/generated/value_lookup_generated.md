@@ -673,6 +673,9 @@ How long to look back for TPS-based acceleration enrichment. Increasing this tim
 ### noFuelTrimAfterDfcoTime
 Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
 
+### noFuelTrimAfterAccelTime
+Pause closed loop fueling after acceleration fuel occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel accel.
+
 ### launchSpeedThreshold
 Launch disabled above this speed if setting is above zero
 

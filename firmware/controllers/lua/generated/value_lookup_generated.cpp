@@ -680,6 +680,9 @@ float getConfigValueByName(const char *name) {
 // noFuelTrimAfterDfcoTime
 		case 1286770247:
 			return engineConfiguration->noFuelTrimAfterDfcoTime;
+// noFuelTrimAfterAccelTime
+		case -1460984893:
+			return engineConfiguration->noFuelTrimAfterAccelTime;
 // launchSpeedThreshold
 		case -1743747394:
 			return engineConfiguration->launchSpeedThreshold;
@@ -3114,6 +3117,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1286770247:
 	{
 		engineConfiguration->noFuelTrimAfterDfcoTime = (int)value;
+		return 1;
+	}
+		case -1460984893:
+	{
+		engineConfiguration->noFuelTrimAfterAccelTime = (int)value;
 		return 1;
 	}
 		case -1743747394:
