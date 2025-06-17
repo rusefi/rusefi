@@ -37,6 +37,11 @@ void setGmLs4() {
 	engineConfiguration->ignitionPins[7] = Gpio::MM176_IGN8;
 
   engineConfiguration->vvtPins[0] = Gpio::MM176_OUT_PWM1; // 8D - VVT 1
+  engineConfiguration->map.sensor.hwChannel = MM176_IN_CRANK_ANALOG;
+  engineConfiguration->triggerInputPins[0] = Gpio::MM176_IN_D4; // 9A
+  engineConfiguration->camInputs[1] = Gpio::Unassigned;
+  engineConfiguration->camInputs[2] = Gpio::Unassigned;
+  engineConfiguration->camInputs[3] = Gpio::Unassigned;
 #endif
 
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
