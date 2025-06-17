@@ -148,6 +148,9 @@ If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 ### enableStagedInjection
 
 
+### useIdleAdvanceWhileCoasting
+
+
 ### tpsMin
 Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel
 

@@ -977,7 +977,7 @@ struct engine_configuration_s {
 	bool enableStagedInjection : 1 {};
 	/**
 	offset 164 bit 31 */
-	bool unusedBit_59_31 : 1 {};
+	bool useIdleAdvanceWhileCoasting : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
