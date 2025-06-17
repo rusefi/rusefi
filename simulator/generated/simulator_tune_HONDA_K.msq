@@ -4540,6 +4540,7 @@ end</constant>
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
         <constant name="useIacPidMultTable">"false"</constant>
         <constant name="useIacTableForCoasting">"false"</constant>
+        <constant name="useIdleAdvanceWhileCoasting">"false"</constant>
         <constant name="useIdleTimingPidControl">"false"</constant>
         <constant name="useInjectorFlowLinearizationTable">"false"</constant>
         <constant name="useLinearCltSensor">"false"</constant>
@@ -5017,7 +5018,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250615" nPages="1" signature="rusEFI master.2025.06.17.f407-discovery.2986204989" version="5.0"/>
+    <versionInfo firmwareInfo="20250615" nPages="1" signature="rusEFI master.2025.06.17.f407-discovery.309947729" version="5.0"/>
     <bibliography author="rusEFI 20250615" writeDate="date"/>
     <settings/>
     <userComments/>
