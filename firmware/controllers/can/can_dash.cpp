@@ -488,8 +488,8 @@ struct Aim5f2 {
 static void populateFrame(Aim5f2& msg) {
 	msg.Iat = Sensor::getOrZero(SensorType::Iat) + 45;
 	msg.Ect = Sensor::getOrZero(SensorType::Clt) + 45;
-	msg.FuelT = Sensor::getOrZero(SensorType::AuxTemp1) + 45;
-	msg.OilT = Sensor::getOrZero(SensorType::AuxTemp2) + 45;
+	msg.FuelT = Sensor::getOrZero(SensorType::FuelTemperature) + 45;
+	msg.OilT = Sensor::getOrZero(SensorType::OilTemperature) + 45;
 }
 
 struct Aim5f3 {
