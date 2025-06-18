@@ -127,9 +127,7 @@ public class TuneCanTool {
         new File(REPORTS_OUTPUT_FOLDER).mkdir();
 
         Msq customTune = Msq.readTune(customTuneFileName);
-        File xmlFile = new File(defaultTuneFileName);
-        log.info("Reading " + xmlFile.getAbsolutePath());
-        Msq defaultTune = XmlUtil.readModel(Msq.class, xmlFile);
+        Msq defaultTune = Msq.readTune(defaultTuneFileName);
 
         StringBuilder methods = new StringBuilder();
 
