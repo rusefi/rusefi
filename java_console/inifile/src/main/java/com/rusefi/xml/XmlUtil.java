@@ -38,6 +38,7 @@ public class XmlUtil {
     }
 
     public static <T> T readModel(Class<?> modelClass, File xmlFile) throws JAXBException {
+        log.info("Reading " + xmlFile.getAbsolutePath());
         JAXBContext jaxbContext;
         jaxbContext = JAXBContext.newInstance(modelClass);
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
