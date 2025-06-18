@@ -158,7 +158,7 @@ void sendWidebandInfo() {
 // This array contains the firmware image for the wideband contoller
 #include "wideband_firmware/for_rusefi/wideband_image.h"
 
-void updateWidebandFirmware() {
+void updateWidebandFirmware(uint8_t hwIndex) {
 	size_t bus = getWidebandBus();
 	size_t totalSize = sizeof(build_wideband_image_bin);
 
@@ -173,19 +173,31 @@ void updateWidebandFirmware() {
 	efiPrintf("***************************************");
 	efiPrintf("        WIDEBAND FIRMWARE UPDATE");
 	efiPrintf("***************************************");
-	efiPrintf("Wideband Update: Rebooting to bootloader...");
-
+	if (hwIndex != 0xff) {
+		efiPrintf("Wideband Update: Rebooting WBO hwIndex %d to bootloader...", hwIndex);
+	} else {
+		efiPrintf("Wideband Update: Rebooting any WBO to bootloader...");
+	}
 	// The first request will reboot the chip (if necessary), and the second one will enable bootloader mode
 	// If the chip was already in bootloader (aka manual mode), then that's ok - the second request will
 	// just be safely ignored (but acked)
 	for (int i = 0; i < 2; i++) {
-		{
-			// Send bootloader entry command
+		// Send bootloader entry command
+		// First packet will ask main FW to reboot to bootloader
+		// Second will ask bootloader to stay in bootloader and wait for FW upload
+		// First packet can be new format - individually addressed
+		// Second one should have zero payload - bootloader expects no payload.
+		if ((hwIndex != 0xff) && (i == 0)) {
+			// New format - individually addressed
+			CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_ENTER, 1, bus, true);
+			m[0] = hwIndex;
+		} else {
 			CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_ENTER, 0, bus, true);
 		}
 
 		if (!waitAck()) {
-			efiPrintf("Wideband Update ERROR: Expected ACK from entry to bootloader, didn't get one.");
+			efiPrintf("Wideband Update ERROR: Expected ACK from entry to bootloader, didn't get %s.",
+				i ? "second (from bootloader)" : "first (from app)");
 			setStatus(WBO_RE_FAILED);
 			goto exit;
 		}
