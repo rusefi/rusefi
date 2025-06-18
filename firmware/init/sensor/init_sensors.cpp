@@ -174,6 +174,8 @@ void reconfigureSensors() {
 
 // Mocking/testing helpers
 static void initSensorCli() {
+	using namespace rusefi::stringutil;
+
 	addConsoleActionSS("set_sensor_mock", [](const char* typeName, const char* valueStr) {
 		SensorType type = findSensorTypeByName(typeName);
 

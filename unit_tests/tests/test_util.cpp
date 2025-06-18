@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-#include <string.h>
+#include <cstring>
 
 #include "histogram.h"
 
@@ -15,8 +15,9 @@
 #include "cli_registry.h"
 
 #include "nmea.h"
-#include "mmc_card.h"
 #include "fl_stack.h"
+
+using namespace rusefi::stringutil;
 
 TEST(util, testitoa) {
 	char buffer[12];

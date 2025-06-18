@@ -6,7 +6,7 @@
 
 #include "thermistor_func.h"
 
-#include <math.h>
+#include <cmath>
 
 SensorResult ThermistorFunc::convert(float ohms) const {
 	// This resistance should have already been validated - only

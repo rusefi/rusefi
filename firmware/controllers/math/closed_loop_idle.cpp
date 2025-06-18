@@ -4,7 +4,7 @@
 #include "efitime.h"
 #include "engine.h"
 #include <cmath>
-#include <rusefi/math.h>
+#include <rusefi/rusefi_math.h>
 
 // LTIT_TABLE_SIZE is defined in the header file
 

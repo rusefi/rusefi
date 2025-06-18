@@ -9,6 +9,8 @@
 
 #include "script_impl.h"
 
+using namespace rusefi::stringutil;
+
 static script1_Map3D_f32t scriptTable1{"script1"};
 static script2_Map3D_f32t scriptTable2{"script2"};
 static script3_Map3D_u8t scriptTable3{"script3"};

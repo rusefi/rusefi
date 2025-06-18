@@ -257,6 +257,8 @@ void Sensor::setInvalidMockValue(SensorType type) {
  * todo: some sort of hashmap in the future?
  */
 SensorType findSensorTypeByName(const char *name) {
+	using namespace rusefi::stringutil;
+
 	for (size_t i = 0;i < efi::size(s_sensorRegistry); i++) {
 		SensorType type = (SensorType)i;
 		const char *sensorName = getSensorType(type);

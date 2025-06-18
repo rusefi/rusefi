@@ -19,14 +19,14 @@
 
 // looks like some technical debt here?! that's about error: ‘isnan’ is not a member of ‘std’
 #include <cmath>
-#include <rusefi/math.h>
+#include <rusefi/rusefi_math.h>
 
 #include "efiprintf.h"
 #include "rusefi/efistringutil.h"
 #include "cli_registry.h"
 
 /* for isspace() */
-#include <ctype.h>
+#include <cctype>
 
 #ifndef CONSOLE_MAX_ACTIONS
 #define CONSOLE_MAX_ACTIONS 256
@@ -38,6 +38,8 @@
 
 // todo: support \t as well
 #define SPACE_CHAR ' '
+
+using namespace rusefi::stringutil;
 
 static int consoleActionCount = 0;
 static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS];
