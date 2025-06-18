@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <math.h>
+#include <cmath>
 #include "datalogging.h"
 #include "obd_error_codes.h"
 #include "error_handling.h"

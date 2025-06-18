@@ -1,6 +1,6 @@
 #include "dac.h"
 
-#include <rusefi/math.h>
+#include <rusefi/rusefi_math.h>
 
 #if EFI_DAC
 

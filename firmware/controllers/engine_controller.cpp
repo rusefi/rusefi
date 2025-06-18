@@ -99,6 +99,7 @@ Engine * engine;
 
 #endif /* EFI_UNIT_TEST */
 
+using namespace rusefi::stringutil;
 
 void initDataStructures() {
 #if EFI_ENGINE_CONTROL

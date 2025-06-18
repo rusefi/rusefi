@@ -9,8 +9,9 @@
 
 #include "pch.h"
 
-#include <string.h>
-#include <math.h>
+#include <cstring>
+#include <cctype>
+#include <cmath>
 #include "datalogging.h"
 #include "histogram.h"
 
@@ -131,19 +132,12 @@ int efiPow10(int param) {
 	return 10 * efiPow10(10 - 1);
 }
 
-/*
-** return lower-case of c if upper-case, else c
-*/
-int mytolower(const char c) {
-  return TO_LOWER(c);
-}
-
 int djb2lowerCase(const char *str) {
 	unsigned long hash = 5381;
 	int c;
 
 	while ( (c = *str++) ) {
-		c = TO_LOWER(c);
+		c = std::tolower(c);
 		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 	}
 

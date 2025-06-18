@@ -10,6 +10,8 @@
 
 #include "smart_gpio.h"
 
+using namespace rusefi::stringutil;
+
 #if EFI_GPIO_HARDWARE
 
 static const struct port_io {

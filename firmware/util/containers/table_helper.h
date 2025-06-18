@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <math.h>
+#include <cmath>
 #include "efi_interpolation.h"
 #include "efilib.h"
 #include "efi_ratio.h"

@@ -47,7 +47,6 @@ inline uint32_t SWAP_UINT32(uint32_t x)
 const char * boolToString(bool value);
 
 char * efiTrim(char *param);
-int mytolower(const char c);
 int efiPow10(int param);
 
 /**

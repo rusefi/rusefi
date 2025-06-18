@@ -23,6 +23,8 @@
 #include "nmea.h"
 #include "rtc_helper.h"
 
+using namespace rusefi::stringutil;
+
 static long hex2int(const char * a, const int len) {
 	int i;
 	long val = 0;

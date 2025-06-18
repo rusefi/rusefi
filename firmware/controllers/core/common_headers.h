@@ -21,7 +21,7 @@
 #include "rusefi_types.h"
 #include "efi_quote.h"
 
-#include <math.h>
+#include <cmath>
 #include <stdio.h>
 
 #include "auto_generated_enums.h"
