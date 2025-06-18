@@ -95,6 +95,16 @@
 // Each offset is uint16_t
 static_assert(TS_SCATTER_PAGE_SIZE == TS_SCATTER_OFFSETS_COUNT * 2);
 
+static_assert(
+    TS_LTFT_TABLE_BANK2_OFFSET <= 4 * VE_LOAD_COUNT * VE_RPM_COUNT,
+    "TS_LTFT_TABLE_BANK2_OFFSET should be at least 4 * VE_LOAD_COUNT * VE_RPM_COUNT"
+);
+
+static_assert(
+    TS_LTFT_PAGE_SIZE <= 2 * TS_LTFT_TABLE_BANK2_OFFSET,
+    "TS_LTFT_PAGE_SIZE should be at least twice as TS_LTFT_TABLE_BANK2_OFFSET"
+);
+
 // We have TS protocol limitation: offset within one settings page is uin16_t type.
 static_assert(sizeof(*config) <= 65536);
 
