@@ -133,7 +133,7 @@ public class TuneCanTool {
 
         StringBuilder sb = getTunePatch(defaultTune, customTune, ini, customTuneFileName, methods, defaultTuneFileName, methodNamePrefix);
 
-        String folder = ENGINE_TUNE_OUTPUT_FOLDER + REPORTS_OUTPUT_FOLDER;
+        final String folder = ENGINE_TUNE_OUTPUT_FOLDER + REPORTS_OUTPUT_FOLDER;
         new File(folder).mkdirs();
         String fileNameMethods = folder + "/" + vehicleName + "_methods" + EXTENSION;
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
@@ -142,7 +142,7 @@ public class TuneCanTool {
             methodsWriter.append(MD_FIXED_FORMATTING);
         }
 
-        String fileName = ENGINE_TUNE_OUTPUT_FOLDER + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + EXTENSION;
+        String fileName = folder + "/" + vehicleName + EXTENSION;
         File outputFile = new File(fileName);
         log.info("Writing to " + outputFile.getAbsolutePath());
 
