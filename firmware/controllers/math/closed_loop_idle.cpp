@@ -8,6 +8,8 @@
 
 // LTIT_TABLE_SIZE is defined in the header file
 
+#if EFI_IDLE_CONTROL
+
 LongTermIdleTrim::LongTermIdleTrim() {
     initializeTableWithDefaults();
     emaError = 0.0f;
@@ -276,3 +278,5 @@ void LongTermIdleTrim::smoothLtitTable(float intensity) {
     // Mark for saving
     m_pendingSave = true;
 }
+
+#endif // EFI_IDLE_CONTROL

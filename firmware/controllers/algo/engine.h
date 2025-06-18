@@ -128,8 +128,9 @@ public:
   DynoView dynoInstance;
 #endif
 
+#if EFI_IDLE_CONTROL
 	LongTermIdleTrim m_ltit;
-
+#endif // EFI_IDLE_CONTROL
 
 #if EFI_ENGINE_CONTROL
 	FuelComputer fuelComputer;
