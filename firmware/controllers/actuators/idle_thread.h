@@ -55,7 +55,7 @@ struct IIdleController {
 class IdleController : public IIdleController, public EngineModule, public idle_state_s {
 public:
 	// Mockable<> interface
-	using interface_t = IIdleController;
+	using interface_t = IdleController;
 
 	void init();
 
