@@ -2,7 +2,7 @@
 
 #include "pch.h"
 #include <cstddef>
-#include <math.h>
+#include <cmath>
 #include <vector>
 #include <complex>
 #include "biquad.h"

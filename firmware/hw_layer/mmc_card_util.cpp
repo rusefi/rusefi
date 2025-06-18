@@ -9,6 +9,8 @@
 
 #define LOG_INDEX_FILENAME "index.txt"
 
+using namespace rusefi::stringutil;
+
 // 10 because we want at least 4 character name (is that about TS protocol which we do not use any more?)
 #define MIN_FILE_INDEX 10
 int logFileIndex = MIN_FILE_INDEX;
