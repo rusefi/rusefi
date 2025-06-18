@@ -144,6 +144,7 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 // todo: migrate to smarter getOutputOnTheBenchTest() approach?
 static volatile bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
+static uint8_t widebandUpdateHwId = 0;
 static float globalOnTimeMs;
 static float globalOffTimeMs;
 static int globalCount;
@@ -298,6 +299,13 @@ static void vvtValveBench(int vvtIndex) {
 #endif // EFI_VVT_PID
 }
 
+static void requestWidebandUpdate(int hwIndex)
+{
+	widebandUpdateHwId = hwIndex;
+	widebandUpdatePending = true;
+	benchSemaphore.signal();
+}
+
 class BenchController : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	BenchController() : ThreadController("BenchTest", PRIO_BENCH_TEST) { }
@@ -315,7 +323,7 @@ private:
 
 			if (widebandUpdatePending) {
 	#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
-				updateWidebandFirmware();
+				updateWidebandFirmware(widebandUpdateHwId);
 	#endif
 				widebandUpdatePending = false;
 			}
@@ -537,8 +545,8 @@ static void handleCommandX14(uint16_t index) {
 		return;
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 	case TS_WIDEBAND_UPDATE:
-		widebandUpdatePending = true;
-		benchSemaphore.signal();
+		// broadcast, for old WBO FWs
+		requestWidebandUpdate(0xff);
 		return;
 	case TS_BURN_WITHOUT_FLASH:
 		#if EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE
@@ -665,6 +673,17 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case TS_WIDEBAND_PING_BY_ID:
 		pingWideband(index >> 8);
 		break;
+
+	case TS_WIDEBAND_FLASH_BY_ID:
+		{
+			uint8_t hwIndex = index >> 8;
+
+			// Hack until we fix canReWidebandHwIndex and set "Broadcast" to 0xff
+			// TODO:
+			widebandUpdateHwId = hwIndex < 8 ? hwIndex : 0xff;
+			requestWidebandUpdate(widebandUpdateHwId);
+		}
+		break;
 #endif // EFI_CAN_SUPPORT
 	case TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
@@ -747,7 +766,7 @@ void initBenchTest() {
 
 #if EFI_CAN_SUPPORT
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
-	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
+	addConsoleActionI("update_wideband", requestWidebandUpdate);
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 	addConsoleActionII("set_wideband_index", [](int hwIndex, int index) { setWidebandOffset(hwIndex, index); });
 #endif // EFI_CAN_SUPPORT

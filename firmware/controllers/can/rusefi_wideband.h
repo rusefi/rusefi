@@ -24,5 +24,5 @@ void setWidebandOffset(uint8_t hwIndex, uint8_t index);
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 // Update the firmware on any connected wideband controller
-void updateWidebandFirmware();
+void updateWidebandFirmware(uint8_t hwIndex);
 #endif //EFI_WIDEBAND_FIRMWARE_UPDATE
