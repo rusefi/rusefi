@@ -21,6 +21,7 @@ public class TuneCanToolRunner {
         String customTuneFileName = args[4];
         RootHolder.ROOT = args[5];
         String ignoreListFileName = args[6];
+        // todo optional white list argument args[7]
         System.out.println("ignoreListFileName=" + ignoreListFileName);
 
         if (!ignoreListFileName.isEmpty())
