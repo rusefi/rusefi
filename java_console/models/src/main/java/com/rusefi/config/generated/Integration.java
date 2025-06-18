@@ -103,6 +103,8 @@ public class Integration {
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';
+	public static final int TS_LTFT_PAGE_SIZE = 2048;
+	public static final int TS_LTFT_TABLE_BANK2_OFFSET = 1024;
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_ALL_COMMAND = 'A';
 	public static final char TS_OUTPUT_COMMAND = 'O';
