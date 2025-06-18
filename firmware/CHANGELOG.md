@@ -28,6 +28,8 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## June 2025 "Day 1210"
+
 ### Added
  - SD card mode selection: do not wait for USB if vbatt voltage #7424
  - SD card mass storage read access performance improvements
