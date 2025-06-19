@@ -30,21 +30,41 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
     public static final String TS_DROP_TEMPLATE_COMMENTS = "ts_drop_template_comments";
 
-    private final String tsPath;
-    private final ReaderStateImpl state;
+    static class TSProjectConsumerState {
+        private final ReaderStateImpl state;
+        private int totalTsSize;
+        final TsOutput tsOutput;
+
+        public TSProjectConsumerState(ReaderStateImpl state, TsOutput tsOutput) {
+            this.state = state;
+            this.tsOutput = tsOutput;
+        }
+
+        public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
+            state.getVariableRegistry().register(structure.getName() + "_size", structure.getTotalSize());
+            totalTsSize = tsOutput.run(readerState, structure, 0, "", "");
+
+            if (state.isStackEmpty()) {
+                state.getVariableRegistry().register("TOTAL_CONFIG_SIZE", totalTsSize);
+            }
+        }
+    }
+
+    private final TSProjectConsumerState consumerState;
+
     private boolean dropComments;
-    private int totalTsSize;
-    private final TsOutput tsOutput;
+    private final ReaderStateImpl state;
+    private final String tsPath;
 
     public TSProjectConsumer(String tsPath, ReaderStateImpl state) {
         this.tsPath = tsPath;
-        tsOutput = new TsOutput(true);
+        consumerState = new TSProjectConsumerState(state, new TsOutput(true));
         this.state = state;
     }
 
     // also known as TS tooltips
     public String getSettingContextHelpForUnitTest() {
-        return tsOutput.getSettingContextHelp();
+        return consumerState.tsOutput.getSettingContextHelp();
     }
 
     protected void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
@@ -82,9 +102,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         }
         tsHeader.write("page = 1" + ToolUtil.EOL);
         tsHeader.write(fieldsSection);
-        if (tsOutput.getSettingContextHelp().length() > 0) {
+        if (consumerState.tsOutput.getSettingContextHelp().length() > 0) {
             tsHeader.write("[" + SETTING_CONTEXT_HELP + "]" + ToolUtil.EOL);
-            tsHeader.write(tsOutput.getSettingContextHelp() + ToolUtil.EOL + ToolUtil.EOL);
+            tsHeader.write(consumerState.tsOutput.getSettingContextHelp() + ToolUtil.EOL + ToolUtil.EOL);
             tsHeader.write("; " + SETTING_CONTEXT_HELP_END + ToolUtil.EOL);
         }
         tsHeader.write("; " + CONFIG_DEFINITION_END + ToolUtil.EOL);
@@ -181,15 +201,10 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
-        state.getVariableRegistry().register(structure.getName() + "_size", structure.getTotalSize());
-        totalTsSize = tsOutput.run(readerState, structure, 0, "", "");
-
-        if (state.isStackEmpty()) {
-            state.getVariableRegistry().register("TOTAL_CONFIG_SIZE", totalTsSize);
-        }
+        consumerState.handleEndStruct(readerState, structure);
     }
 
     public String getContent() {
-        return tsOutput.getContent();
+        return consumerState.tsOutput.getContent();
     }
 }
