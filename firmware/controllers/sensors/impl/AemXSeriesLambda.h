@@ -32,6 +32,8 @@ protected:
 
 private:
 	can_wbo_type_e sensorType() const;
+	uint32_t getReCanId() const;
+	uint32_t getAemCanId() const;
 	bool isHeaterAllowed();
 
 	const uint8_t m_sensorIndex;

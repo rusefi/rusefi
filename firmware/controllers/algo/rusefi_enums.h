@@ -690,6 +690,44 @@ typedef enum __attribute__ ((__packed__)) {
 	WBO_RE_FAILED = 3
 } can_wbo_re_status_e;
 
+typedef enum __attribute__((__packed__)) {
+	WBO_RE_ID1  =  0,
+	WBO_RE_ID2  =  1,
+	WBO_RE_ID3  =  2,
+	WBO_RE_ID4  =  3,
+	WBO_RE_ID5  =  4,
+	WBO_RE_ID6  =  5,
+	WBO_RE_ID7  =  6,
+	WBO_RE_ID8  =  7,
+	WBO_RE_ID9  =  8,
+	WBO_RE_ID10 =  9,
+	WBO_RE_ID11 = 10,
+	WBO_RE_ID12 = 11,
+	WBO_RE_ID13 = 12,
+	WBO_RE_ID14 = 13,
+	WBO_RE_ID15 = 14,
+	WBO_RE_ID16 = 15
+} can_wbo_re_id_e;
+
+typedef enum __attribute__((__packed__)) {
+	WBO_AEM_ID1  =  0,
+	WBO_AEM_ID2  =  1,
+	WBO_AEM_ID3  =  2,
+	WBO_AEM_ID4  =  3,
+	WBO_AEM_ID5  =  4,
+	WBO_AEM_ID6  =  5,
+	WBO_AEM_ID7  =  6,
+	WBO_AEM_ID8  =  7,
+	WBO_AEM_ID9  =  8,
+	WBO_AEM_ID10 =  9,
+	WBO_AEM_ID11 = 10,
+	WBO_AEM_ID12 = 11,
+	WBO_AEM_ID13 = 12,
+	WBO_AEM_ID14 = 13,
+	WBO_AEM_ID15 = 14,
+	WBO_AEM_ID16 = 15
+} can_wbo_aem_id_e;
+
 typedef enum __attribute__ ((__packed__)) {
 	GPPWM_GreaterThan = 0,
 	GPPWM_LessThan = 1,
