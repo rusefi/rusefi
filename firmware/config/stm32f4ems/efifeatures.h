@@ -369,9 +369,11 @@
 	  #define ENABLE_PERF_TRACE FALSE
 	#endif // ENABLE_PERF_TRACE
 
+/* explicit LUA_USER_HEAP is now optional
 	#ifndef LUA_USER_HEAP
 	  #define LUA_USER_HEAP 18000
 	#endif
+*/
 #endif
 
 #ifndef EFI_USE_COMPRESSED_INI_MSD
