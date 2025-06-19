@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22760">
+    <page number="0" size="22764">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -593,6 +593,12 @@
         <constant name="canTxPin">"NONE"</constant>
         <constant name="canVssNbcType">"BMW_e46"</constant>
         <constant digits="4" name="canVssScaling" units="ratio">1.0</constant>
+        <constant name="canWbo1_aemId">"ID1 0x0000180"</constant>
+        <constant name="canWbo1_reId">"ID1 0x190/191"</constant>
+        <constant name="canWbo1_type">"RusEFI"</constant>
+        <constant name="canWbo2_aemId">"ID2 0x0000181"</constant>
+        <constant name="canWbo2_reId">"ID2 0x192/193"</constant>
+        <constant name="canWbo2_type">"RusEFI"</constant>
         <constant name="canWriteEnabled">"true"</constant>
         <constant name="cdmInputPin">"NONE"</constant>
         <constant name="clt_adcChannel">"Disabled"</constant>
@@ -1073,7 +1079,6 @@
         <constant name="flexCranking">"false"</constant>
         <constant name="flexSensorInverted">"Normal"</constant>
         <constant name="flexSensorPin">"NONE"</constant>
-        <constant name="flipWboChannels">"false"</constant>
         <constant name="forceO2Heating">"no"</constant>
         <constant digits="3" name="fordInjectorSmallPulseBreakPoint" units="mg">0.0</constant>
         <constant digits="3" name="fordInjectorSmallPulseSlope" units="g/s">0.0</constant>
@@ -4585,6 +4590,7 @@ end</constant>
         <constant name="unusedFancy7">"false"</constant>
         <constant name="unusedFancy8">"false"</constant>
         <constant name="unusedFancy9">"false"</constant>
+        <constant name="unusedFlipWboChannels">"false"</constant>
         <constant name="useAdvanceCorrectionsForCranking">"false"</constant>
         <constant name="useAuxSpeedForSlipRatio">"false"</constant>
         <constant name="useBiQuadOnAuxSpeedSensors">"false"</constant>
@@ -5009,8 +5015,6 @@ end</constant>
         <constant digits="2" name="wastegatePositionOpenedVoltage" units="v">5.0</constant>
         <constant name="wastegatePositionSensor">"Disabled"</constant>
         <constant name="watchOutForLinearTime">"true"</constant>
-        <constant name="wboType1">"RusEFI"</constant>
-        <constant name="wboType2">"RusEFI"</constant>
         <constant name="widebandOnSecondBus">"CAN1"</constant>
         <constant digits="2" name="wwaeBeta" units="Fraction">0.3</constant>
         <constant digits="2" name="wwaeTau" units="Seconds">0.3</constant>
@@ -5076,7 +5080,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250618" nPages="1" signature="rusEFI master.2025.06.19.f407-discovery.2566333772" version="5.0"/>
+    <versionInfo firmwareInfo="20250618" nPages="1" signature="rusEFI master.2025.06.19.f407-discovery.3248273874" version="5.0"/>
     <bibliography author="rusEFI 20250618" writeDate="date"/>
     <settings/>
     <userComments/>
