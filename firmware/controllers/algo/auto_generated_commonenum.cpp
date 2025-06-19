@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Jun 02 13:11:56 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu Jun 19 13:36:53 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -363,6 +363,80 @@ case NISSAN_350:
   return "NISSAN_350";
 case W202:
   return "W202";
+  }
+ return NULL;
+}
+const char *getCan_wbo_aem_id_e(can_wbo_aem_id_e value){
+switch(value) {
+case WBO_AEM_ID1:
+  return "WBO_AEM_ID1";
+case WBO_AEM_ID10:
+  return "WBO_AEM_ID10";
+case WBO_AEM_ID11:
+  return "WBO_AEM_ID11";
+case WBO_AEM_ID12:
+  return "WBO_AEM_ID12";
+case WBO_AEM_ID13:
+  return "WBO_AEM_ID13";
+case WBO_AEM_ID14:
+  return "WBO_AEM_ID14";
+case WBO_AEM_ID15:
+  return "WBO_AEM_ID15";
+case WBO_AEM_ID16:
+  return "WBO_AEM_ID16";
+case WBO_AEM_ID2:
+  return "WBO_AEM_ID2";
+case WBO_AEM_ID3:
+  return "WBO_AEM_ID3";
+case WBO_AEM_ID4:
+  return "WBO_AEM_ID4";
+case WBO_AEM_ID5:
+  return "WBO_AEM_ID5";
+case WBO_AEM_ID6:
+  return "WBO_AEM_ID6";
+case WBO_AEM_ID7:
+  return "WBO_AEM_ID7";
+case WBO_AEM_ID8:
+  return "WBO_AEM_ID8";
+case WBO_AEM_ID9:
+  return "WBO_AEM_ID9";
+  }
+ return NULL;
+}
+const char *getCan_wbo_re_id_e(can_wbo_re_id_e value){
+switch(value) {
+case WBO_RE_ID1:
+  return "WBO_RE_ID1";
+case WBO_RE_ID10:
+  return "WBO_RE_ID10";
+case WBO_RE_ID11:
+  return "WBO_RE_ID11";
+case WBO_RE_ID12:
+  return "WBO_RE_ID12";
+case WBO_RE_ID13:
+  return "WBO_RE_ID13";
+case WBO_RE_ID14:
+  return "WBO_RE_ID14";
+case WBO_RE_ID15:
+  return "WBO_RE_ID15";
+case WBO_RE_ID16:
+  return "WBO_RE_ID16";
+case WBO_RE_ID2:
+  return "WBO_RE_ID2";
+case WBO_RE_ID3:
+  return "WBO_RE_ID3";
+case WBO_RE_ID4:
+  return "WBO_RE_ID4";
+case WBO_RE_ID5:
+  return "WBO_RE_ID5";
+case WBO_RE_ID6:
+  return "WBO_RE_ID6";
+case WBO_RE_ID7:
+  return "WBO_RE_ID7";
+case WBO_RE_ID8:
+  return "WBO_RE_ID8";
+case WBO_RE_ID9:
+  return "WBO_RE_ID9";
   }
  return NULL;
 }

@@ -475,9 +475,6 @@ CAN broadcast using custom rusEFI protocol
 ### externalRusEfiGdiModule
 
 
-### flipWboChannels
-
-
 ### measureMapOnlyInOneCylinder
 Useful for individual intakes
 
