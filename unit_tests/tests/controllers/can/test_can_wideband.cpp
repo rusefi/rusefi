@@ -12,7 +12,7 @@ TEST(CanWideband, AcceptFrameId0) {
 	frame.IDE = true;
 	frame.DLC = 8;
 
-	engineConfiguration->wboType1 = AEM;
+	engineConfiguration->canWbo[0].type = AEM;
 
 	// Check that the AEM format frame is accepted
 	frame.EID = 0x180;
@@ -24,7 +24,7 @@ TEST(CanWideband, AcceptFrameId0) {
 	EXPECT_FALSE(dut.acceptFrame(frame));
 
 	// Now switch to RusEFI
-	engineConfiguration->wboType1 = RUSEFI;
+	engineConfiguration->canWbo[0].type = RUSEFI;
 
 	// Check that the rusEFI standard data is accepted
 	frame.IDE = false;
@@ -53,14 +53,16 @@ TEST(CanWideband, AcceptFrameId1) {
 	frame.IDE = true;
 	frame.DLC = 8;
 
-	engineConfiguration->wboType2 = AEM;
+	engineConfiguration->canWbo[1].type = AEM;
+	engineConfiguration->canWbo[1].aemId = WBO_AEM_ID2;
 
 	// Check that the AEM format frame is accepted
 	frame.EID = 0x181;
 	EXPECT_TRUE(dut.acceptFrame(frame));
 
 	// Now switch to RusEFI
-	engineConfiguration->wboType2 = RUSEFI;
+	engineConfiguration->canWbo[1].type = RUSEFI;
+	engineConfiguration->canWbo[1].reId = WBO_RE_ID2;
 
 	// Check that the rusEFI standard data is accepted
 	frame.IDE = false;
@@ -84,7 +86,7 @@ TEST(CanWideband,DecodeAemXSeriesInvalidLambda){
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	CANRxFrame frame;
 
-	engineConfiguration->wboType1 = AEM;
+	engineConfiguration->canWbo[0].type = AEM;
 
 	// AEM uses extended CAN ID!
 	frame.IDE = true;
@@ -109,7 +111,7 @@ TEST(CanWideband,DecodeAemXSeriesSensorFault){
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	CANRxFrame frame;
 
-	engineConfiguration->wboType1 = AEM;
+	engineConfiguration->canWbo[0].type = AEM;
 
 	// AEM uses extended CAN ID!
 	frame.IDE = true;
@@ -134,7 +136,7 @@ TEST(CanWideband,DecodeAemXSeriesValidLambda){
 	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	engineConfiguration->wboType1 = AEM;
+	engineConfiguration->canWbo[0].type = AEM;
 
 	// only this tests needs register
 	wbo.Register();
@@ -169,7 +171,7 @@ TEST(CanWideband, DecodeValidAemFormat) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	dut.Register();
 
-	engineConfiguration->wboType1 = AEM;
+	engineConfiguration->canWbo[0].type = AEM;
 
 	// check not set
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
@@ -226,7 +228,7 @@ TEST(CanWideband, DecodeRusefiStandard)
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	engineConfiguration->wboType1 = RUSEFI;
+	engineConfiguration->canWbo[0].type = RUSEFI;
 
 	dut.Register();
 
@@ -307,7 +309,7 @@ TEST(CanWideband, DecodeRusefiStandardWrongVersion)
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	engineConfiguration->wboType1 = RUSEFI;
+	engineConfiguration->canWbo[0].type = RUSEFI;
 
 	dut.Register();
 
