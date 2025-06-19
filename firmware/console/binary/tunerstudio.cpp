@@ -173,7 +173,7 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 		return (uint8_t*)engineConfiguration + offset;
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
-		return (uint8_t *)tsChannel->highSpeedOffsets + offset;
+		return (uint8_t *)tsChannel->page1.highSpeedOffsets + offset;
 #endif
 #if EFI_LTFT_CONTROL
 	case TS_PAGE_LTFT_TRIMS:
@@ -351,7 +351,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 	int totalResponseSize = 0;
 	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
-		uint16_t packed = tsChannel->highSpeedOffsets[i];
+		uint16_t packed = tsChannel->page1.highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 
 		size_t size = type == 0 ? 0 : 1 << (type - 1);
@@ -369,7 +369,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 	uint8_t dataBuffer[8];
 	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
-		uint16_t packed = tsChannel->highSpeedOffsets[i];
+		uint16_t packed = tsChannel->page1.highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 		uint16_t offset = packed & 0x1FFF;
 

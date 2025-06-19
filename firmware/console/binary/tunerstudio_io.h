@@ -9,6 +9,7 @@
 #pragma once
 #include "global.h"
 #include "tunerstudio_impl.h"
+#include "page_1_generated.h"
 
 #if EFI_USB_SERIAL
 #include "usbconsole.h"
@@ -62,7 +63,7 @@ public:
 	 */
 	char scratchBuffer[scratchBuffer_SIZE + 30];
 #if EFI_TS_SCATTER
-	uint16_t highSpeedOffsets[TS_SCATTER_OFFSETS_COUNT];
+	page1_s page1;
 #endif
 	const char *name;
 

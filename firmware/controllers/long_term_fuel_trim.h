@@ -5,6 +5,7 @@
 #include "closed_loop_fuel.h"
 
 struct LtftState {
+  // todo: probably reuse page_2_generated.h?
 	float trims[FT_BANK_COUNT][VE_LOAD_COUNT][VE_RPM_COUNT];
 
 	void save();
