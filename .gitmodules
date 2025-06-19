@@ -52,5 +52,5 @@
 [submodule ".github/workflows/hw-ci/gethla"]
 	path = .github/workflows/hw-ci/gethla
 	url = https://github.com/rusefi/gethla/
-  branch = prod
+	branch = prod
 
