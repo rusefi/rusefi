@@ -273,6 +273,14 @@ void setDefaultWallWetting() {
 	copyArray(config->wwBetaMapValues, betaMap);
 }
 
+static void setDefaultWboSettings() {
+	for (size_t i = 0; i < CAN_WBO_COUNT; i++) {
+		engineConfiguration->canWbo[i].type = RUSEFI;
+		engineConfiguration->canWbo[i].reId = static_cast<can_wbo_re_id_e>(i);
+		engineConfiguration->canWbo[i].aemId = static_cast<can_wbo_aem_id_e>(i);
+	}
+}
+
 static void setDefaultLambdaProtection() {
 	engineConfiguration->lambdaProtectionEnable = false;
 
@@ -367,6 +375,8 @@ void setDefaultFuel() {
 
 	// Some reasonable reference pressure that many vehicles use
 	engineConfiguration->fuelReferencePressure = 300;
+
+	setDefaultWboSettings();
 
 	// Lambda protection defaults
 	setDefaultLambdaProtection();
