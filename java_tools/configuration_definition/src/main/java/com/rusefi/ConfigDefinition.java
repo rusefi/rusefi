@@ -63,10 +63,8 @@ public class ConfigDefinition {
     public static void doJob(String[] args, ReaderStateImpl state) throws IOException {
         log.info(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
-        handlePage(state, 1);
-        handlePage(state, 2);
-
         String tsInputFileFolder = null;
+        List<String> softPrePrendsFileNames = new ArrayList<>();
 
         DefinitionsState parseState = state.getEnumsReader().parseState;
         String signatureDestination = null;
@@ -136,8 +134,11 @@ public class ConfigDefinition {
                 case KEY_PREPEND:
                     state.addPrepend(args[i + 1].trim());
                     break;
-                case KEY_SOFT_PREPEND:
-                    state.addSoftPrepend(args[i + 1].trim());
+                case KEY_SOFT_PREPEND: {
+                    String softPrependFileName = args[i + 1].trim();
+                    softPrePrendsFileNames.add(softPrependFileName);
+                    state.addSoftPrepend(softPrependFileName);
+                }
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];
@@ -170,6 +171,9 @@ public class ConfigDefinition {
             }
         }
 
+        handlePage(state, 1, softPrePrendsFileNames);
+        handlePage(state, 2, softPrePrendsFileNames);
+
         if (tsInputFileFolder != null) {
             // used to update .ini files
             state.addInputFile(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
@@ -199,8 +203,8 @@ public class ConfigDefinition {
         state.doJob();
     }
 
-    private static void handlePage(ReaderStateImpl parentState, int pageIndex) throws IOException {
-        PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt");
+    private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends) throws IOException {
+        PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends);
         page.doJob();
         // PAGE_CONTENT_1 is handled here!
         parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
