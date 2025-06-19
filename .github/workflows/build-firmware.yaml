@@ -5,10 +5,14 @@ name: Firmware at GHA
 #
 # this github action is the heaviest one we've got, with each run taking around 10 minutes and the matrix which has a few dozens of these runs
 #
-# We have two mechanists to reduce github action runner consumption
+# statement zero: with great powers of github action matrix here we produce two dozens of runs
+# statement one: github actions are technically not free
+# statement three: on top of dollar cost, actions get queued meaning other collaborators have to wait
+# statement three: in case of bad commit/bad PR more than one annoying email is sent
+# in light of above we have two mechanisms to reduce github action runner consumption:
+# * 'only' syntax allow to build only specified configuration, for example 'only:uaefi' line in the commit message would only build 'uaefi' firmware configuration
+# *        for random commits we can build zero firmware jobs if we do 'only:docs' or anything similar
 # * 'skip_rate' ratio in meta-info.env files allows to skip some builds with specific skip percentage
-# * 'only' syntax allow to build only specificed configuration, for example 'only:uaefi' line in the commit message would only build 'uaefi' configuration
-# *        for random commits we can build zero jobs if we do 'only:docs' or anything similar
 #
 
 on:
