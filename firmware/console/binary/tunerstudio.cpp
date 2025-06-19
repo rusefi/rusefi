@@ -92,9 +92,6 @@
 
 #if EFI_TUNER_STUDIO
 
-// Each offset is uint16_t
-static_assert(TS_SCATTER_PAGE_SIZE == TS_SCATTER_OFFSETS_COUNT * 2);
-
 // We have TS protocol limitation: offset within one settings page is uin16_t type.
 static_assert(sizeof(*config) <= 65536);
 
@@ -193,7 +190,7 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 		return TOTAL_CONFIG_SIZE;
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
-		return TS_SCATTER_PAGE_SIZE;
+		return PAGE_SIZE_1;
 #endif
 #if EFI_LTFT_CONTROL
 	case TS_PAGE_LTFT_TRIMS:

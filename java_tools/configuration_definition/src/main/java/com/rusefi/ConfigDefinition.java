@@ -204,6 +204,6 @@ public class ConfigDefinition {
         page.doJob();
         // PAGE_CONTENT_1 is handled here!
         parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
-        parentState.getVariableRegistry().put("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
+        parentState.getVariableRegistry().register("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
     }
 }
