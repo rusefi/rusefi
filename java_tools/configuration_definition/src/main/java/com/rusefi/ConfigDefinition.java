@@ -45,10 +45,10 @@ public class ConfigDefinition {
             String[] totalArgs = options.toArray(new String[0]);
             if (totalArgs.length < 2) {
                 log.error("Please specify\r\n"
-                        + KEY_DEFINITION + " x\n"
-                        + KEY_TS_TEMPLATE + " x\n"
-                        + KEY_C_DESTINATION + " x\n"
-                        + KEY_JAVA_DESTINATION + " x\n"
+                    + KEY_DEFINITION + " x\n"
+                    + KEY_TS_TEMPLATE + " x\n"
+                    + KEY_C_DESTINATION + " x\n"
+                    + KEY_JAVA_DESTINATION + " x\n"
                 );
                 return;
             }
@@ -62,6 +62,9 @@ public class ConfigDefinition {
 
     public static void doJob(String[] args, ReaderStateImpl state) throws IOException {
         log.info(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
+
+        handlePage(state, 1);
+        handlePage(state, 2);
 
         String tsInputFileFolder = null;
 
@@ -107,7 +110,7 @@ public class ConfigDefinition {
                     i++;
                     state.addDestination(new GetConfigValueConsumer(cppFile, mdFile, LazyFile.REAL));
                 }
-                    break;
+                break;
                 case READFILE_OPTION:
                     String keyName = args[i + 1];
                     // yes, we take three parameters here thus pre-increment!
@@ -123,13 +126,13 @@ public class ConfigDefinition {
                     String firingEnumFileName = args[i + 1];
                     ExtraUtil.handleFiringOrder(firingEnumFileName, state.getVariableRegistry(), parseState);
                     state.addInputFile(firingEnumFileName);
-                    }
-                    break;
+                }
+                break;
                 case "-triggerInputFolder": {
                     String triggersInputFolder = args[i + 1];
                     new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
                 }
-                    break;
+                break;
                 case KEY_PREPEND:
                     state.addPrepend(args[i + 1].trim());
                     break;
@@ -154,7 +157,7 @@ public class ConfigDefinition {
                         throw new IllegalStateException("Reading " + file.getAbsolutePath(), e);
                     }
                 }
-                    break;
+                break;
                 case "-ts_output_name":
                     state.setTsFileOutputName(args[i + 1]);
                     break;
@@ -194,5 +197,12 @@ public class ConfigDefinition {
         }
 
         state.doJob();
+    }
+
+    private static void handlePage(ReaderStateImpl state, int pageIndex) throws IOException {
+        PlainConfigHandler page1 = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt");
+        page1.doJob();
+        // PAGE_CONTENT_1 is handled here!
+        state.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page1.tsProjectConsumer.getContent());
     }
 }
