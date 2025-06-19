@@ -30,8 +30,6 @@ BUNDLE_OPENOCD = yes
 # EGT chip
 DDEFS += -DEFI_MAX_31855=TRUE
 
-DDEFS += -DRAM_UNUSED_SIZE=200
-
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
 DDEFS += $(DEFAULT_ENGINE_TYPE)

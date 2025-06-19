@@ -770,30 +770,9 @@ void initRealHardwareEngineController() {
 }
 
 /**
- * these two variables are here only to let us know how much RAM is available, also these
- * help to notice when RAM usage goes up - if a code change adds to RAM usage these variables would fail
- * linking process which is the way to raise the alarm
- *
- * You get "cannot move location counter backwards" linker error when you run out of RAM. When you run out of RAM you shall reduce these
- * UNUSED_SIZE constants.
- */
-#ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 17400
-#endif
-#ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 512
-#endif
-static volatile char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
-static volatile char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
-
-/**
  * See also SIGNATURE_HASH
  */
 int getRusEfiVersion() {
-	if (UNUSED_RAM_SIZE[0] != 0)
-		return 123; // this is here to make the compiler happy about the unused array
-	if (UNUSED_CCM_SIZE[0] * 0 != 0)
-		return 3211; // this is here to make the compiler happy about the unused array
 #if defined(EFI_BOOTLOADER_INCLUDE_CODE)
 	// make bootloader code happy too
 	if (initBootloader() != 0)

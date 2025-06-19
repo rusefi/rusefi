@@ -18,10 +18,6 @@ PRIMARY_COMMUNICATION_PORT_USART2=-DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::D6 -DEFI_CONS
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
 
-ifeq ($(RAM_UNUSED_SIZE),)
-    DDEFS += -DRAM_UNUSED_SIZE=96
-endif
-
 ifeq ($(ONBOARD_MEMS_TYPE),LIS2DH12)
  # Same spi is used for SD and Accelerometer
  DDEFS += -DMMC_USE_MUTUAL_EXCLUSION=TRUE
