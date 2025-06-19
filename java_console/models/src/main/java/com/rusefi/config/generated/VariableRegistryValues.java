@@ -1618,7 +1618,6 @@ public class VariableRegistryValues {
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';
 	public static final int TS_LTFT_PAGE_SIZE = 2048;
-	public static final int TS_LTFT_TABLE_BANK2_OFFSET = 1024;
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_ALL_COMMAND = 'A';
 	public static final char TS_OUTPUT_COMMAND = 'O';
@@ -1641,7 +1640,7 @@ public class VariableRegistryValues {
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final int TS_SCATTER_PAGE_SIZE = 256;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.19.proteus_f7.2930051758";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.19.proteus_f7.3275434071";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1968;
