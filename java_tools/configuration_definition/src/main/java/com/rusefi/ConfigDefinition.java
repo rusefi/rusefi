@@ -199,10 +199,11 @@ public class ConfigDefinition {
         state.doJob();
     }
 
-    private static void handlePage(ReaderStateImpl state, int pageIndex) throws IOException {
-        PlainConfigHandler page1 = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt");
-        page1.doJob();
+    private static void handlePage(ReaderStateImpl parentState, int pageIndex) throws IOException {
+        PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt");
+        page.doJob();
         // PAGE_CONTENT_1 is handled here!
-        state.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page1.tsProjectConsumer.getContent());
+        parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
+        parentState.getVariableRegistry().put("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
     }
 }

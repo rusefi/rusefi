@@ -21,4 +21,8 @@ public class PlainTsProjectConsumer implements ConfigurationConsumer {
     public String getContent() {
         return consumerState.tsOutput.getContent();
     }
+
+    public int getTotalSize() {
+        return consumerState.getTotalSize();
+    }
 }

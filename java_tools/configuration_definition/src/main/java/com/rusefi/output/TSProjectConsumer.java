@@ -43,10 +43,10 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
             state.getVariableRegistry().register(structure.getName() + "_size", structure.getTotalSize());
             totalTsSize = tsOutput.run(readerState, structure, 0, "", "");
+        }
 
-            if (state.isStackEmpty()) {
-                state.getVariableRegistry().register("TOTAL_CONFIG_SIZE", totalTsSize);
-            }
+        public int getTotalSize() {
+            return totalTsSize;
         }
     }
 
@@ -202,6 +202,9 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
         consumerState.handleEndStruct(readerState, structure);
+        if (state.isStackEmpty()) {
+            state.getVariableRegistry().register("TOTAL_CONFIG_SIZE", consumerState.getTotalSize());
+        }
     }
 
     public String getContent() {
