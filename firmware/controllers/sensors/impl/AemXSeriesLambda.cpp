@@ -23,7 +23,17 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 }
 
 can_wbo_type_e AemXSeriesWideband::sensorType() const {
-	return m_sensorIndex ? engineConfiguration->wboType2 : engineConfiguration->wboType1;
+	return engineConfiguration->canWbo[m_sensorIndex].type;
+}
+
+uint32_t AemXSeriesWideband::getReCanId() const {
+	// 0th sensor is 0x190 and 0x191, 1st sensor is 0x192 and 0x193
+	return rusefi_base + 2 * engineConfiguration->canWbo[m_sensorIndex].reId;
+}
+
+uint32_t AemXSeriesWideband::getAemCanId() const {
+	// 0th sensor is 0x00000180, 1st sensor is 0x00000181, etc
+	return aem_base + engineConfiguration->canWbo[m_sensorIndex].aemId;
 }
 
 bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
@@ -40,14 +50,14 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 	// RusEFI wideband uses standard CAN IDs
 	if ((!CAN_ISX(frame)) && (type == RUSEFI)) {
 		// 0th sensor is 0x190 and 0x191, 1st sensor is 0x192 and 0x193
-		uint32_t rusefiBaseId = rusefi_base + 2 * (engineConfiguration->flipWboChannels ? (1 - m_sensorIndex) : m_sensorIndex);
+		uint32_t rusefiBaseId = getReCanId();
 		return ((CAN_SID(frame) == rusefiBaseId) || (CAN_SID(frame) == rusefiBaseId + 1));
 	}
 
 	// AEM uses extended CAN ID
 	if ((CAN_ISX(frame)) && (type == AEM)) {
 		// 0th sensor is 0x00000180, 1st sensor is 0x00000181, etc
-		uint32_t aemXSeriesId = aem_base + m_sensorIndex;
+		uint32_t aemXSeriesId = getAemCanId();
 		return (CAN_EID(frame) == aemXSeriesId);
 	}
 
