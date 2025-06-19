@@ -1367,7 +1367,7 @@
 #define PACK_MULT_VSS 100
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PAGE_SIZE_1 256
-#define PAGE_SIZE_2 2048
+#define PAGE_SIZE_2 3072
 #define PEDAL_TO_TPS_SIZE 8
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
