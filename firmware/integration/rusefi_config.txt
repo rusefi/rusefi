@@ -281,6 +281,7 @@ struct_no_prefix engine_configuration_s
 #define GPPWM_CHANNELS 4
 #define GPPWM_NOTE_SIZE 16
 
+#define CAN_WBO_COUNT 2
 
 struct stft_cell_cfg_s
 	uint8_t autoscale maxAdd;Maximum % that the short term fuel trim can add;"%", 0.1, 0, 0, 25, 1
@@ -1878,7 +1879,7 @@ struct wbo_s
 	can_wbo_aem_id_e aemId;
 end_struct
 
-	wbo_s[2 iterate] canWbo;
+	wbo_s[CAN_WBO_COUNT iterate] canWbo;
 
 ! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
 
