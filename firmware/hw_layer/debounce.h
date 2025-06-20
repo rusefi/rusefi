@@ -11,6 +11,7 @@
 #pragma once
 
 #include "io_pins.h"
+#include <rusefi/timer.h>
 
 class ButtonDebounce {
 public:
