@@ -273,7 +273,9 @@ expected<percent_t> EtbController::getSetpointIdleValve() const {
 }
 
 expected<percent_t> EtbController::getSetpointWastegate() const {
-	return clampPercentValue(m_wastegatePosition);
+	percent_t targetPosition = m_wastegatePosition + getLuaAdjustment();
+
+	return clampPercentValue(targetPosition);
 }
 
 float getSanitizedPedal() {
@@ -1179,9 +1181,28 @@ void setEtbWastegatePosition(percent_t pos) {
 
 void setEtbLuaAdjustment(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
-		if (auto etb = engine->etbControllers[i]) {
+		/* TODO: use from engine, add getFunction() to base class */
+		//if (auto etb = engine->etbControllers[i]) {
+		if (auto etb = etbControllers[i]) {
 			assertNotNullVoid(etb);
-			etb->setLuaAdjustment(pos);
+			// try to adjust all ETB
+			if (etb->getFunction() == DC_Throttle1 || etb->getFunction() == DC_Throttle2) {
+				etb->setLuaAdjustment(pos);
+			}
+		}
+	}
+}
+
+void setEwgLuaAdjustment(percent_t pos) {
+	for (int i = 0; i < ETB_COUNT; i++) {
+		/* TODO: use from engine, add getFunction() to base class */
+		//if (auto etb = engine->etbControllers[i]) {
+		if (auto etb = etbControllers[i]) {
+			assertNotNullVoid(etb);
+			// try to adjust all ETB
+			if (etb->getFunction() == DC_Wastegate) {
+				etb->setLuaAdjustment(pos);
+			}
 		}
 	}
 }
