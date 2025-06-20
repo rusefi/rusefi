@@ -948,6 +948,13 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 
 		return 0;
 	});
+	lua_register(lState, "setEwgAdd", [](lua_State* l) {
+		auto luaAdjustment = luaL_checknumber(l, 1);
+
+		setEwgLuaAdjustment(luaAdjustment);
+
+		return 0;
+	});
 	lua_register(lState, "setEtbDisabled", [](lua_State* l) {
 		engine->engineState.lua.luaDisableEtb = lua_toboolean(l, 1);
 		return 0;

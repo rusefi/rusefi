@@ -17,6 +17,7 @@ void doInitElectronicThrottle();
 void setEtbIdlePosition(percent_t pos);
 void setEtbWastegatePosition(percent_t pos);
 void setEtbLuaAdjustment(percent_t adjustment);
+void setEwgLuaAdjustment(percent_t pos);
 void setHitachiEtbCalibration();
 
 void blinkEtbErrorCodes(bool blinkPhase);
