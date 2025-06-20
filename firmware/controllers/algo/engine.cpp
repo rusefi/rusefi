@@ -264,25 +264,13 @@ extern bool kAcRequestState;
 #endif // EFI_GPIO_HARDWARE
 }
 
-Engine::Engine()
-    : clutchUpSwitchedState(&engineState.clutchUpState),
-	brakePedalSwitchedState(&engineState.brakePedalState),
-	acButtonSwitchedState(&module<AcController>().unmock().acButtonState)
-
-#if EFI_LAUNCH_CONTROL
-
-	, softSparkLimiter(false), hardSparkLimiter(true)
-
-#if EFI_ANTILAG_SYSTEM
-//	, ALSsoftSparkLimiter(false)
-#endif /* EFI_ANTILAG_SYSTEM */
-
-#endif // EFI_LAUNCH_CONTROL
-{
-	reset();
+Engine::Engine() {
+	// Everything else has default initializers setup in generated file
+	engineState.lua.fuelMult = 1;
+	ignitionState.luaTimingMult = 1;
 }
 
-int Engine::getGlobalConfigurationVersion(void) const {
+int Engine::getGlobalConfigurationVersion() const {
 	return globalConfigurationVersion;
 }
 

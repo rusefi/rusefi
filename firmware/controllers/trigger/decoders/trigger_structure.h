@@ -12,7 +12,6 @@
 
 #include "state_sequence.h"
 #include "generated_lookup_engine_configuration.h"
-#include "engine_state.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
@@ -28,23 +27,7 @@
 
 // Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
 // See also wrapVvt
-inline void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
-	if (std::isnan(angle)) {
-		firmwareError(ObdCode::CUSTOM_ERR_ANGLE, "a NaN %s", msg);
-		angle = 0;
-	}
-
-	assertAngleRange(angle, msg, code);
-	float engineCycle = getEngineState()->engineCycle;
-
-	while (angle < 0) {
-		angle += engineCycle;
-	}
-
-	while (angle >= engineCycle) {
-		angle -= engineCycle;
-	}
-}
+void wrapAngle(angle_t& angle, const char* msg, ObdCode code);
 
 // proper method avoids un-wrapped state of variables
 inline angle_t wrapAngleMethod(angle_t param, const char *msg = "", ObdCode code = ObdCode::OBD_PCM_Processor_Fault) {
