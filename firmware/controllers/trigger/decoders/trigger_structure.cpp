@@ -38,6 +38,25 @@
 #include "trigger_vw.h"
 #include "trigger_universal.h"
 #include "trigger_mercedes.h"
+#include "engine_state.h"
+
+void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
+	if (std::isnan(angle)) {
+		firmwareError(ObdCode::CUSTOM_ERR_ANGLE, "a NaN %s", msg);
+		angle = 0;
+	}
+
+	assertAngleRange(angle, msg, code);
+	float engineCycle = getEngineState()->engineCycle;
+
+	while (angle < 0) {
+		angle += engineCycle;
+	}
+
+	while (angle >= engineCycle) {
+		angle -= engineCycle;
+	}
+}
 
 TriggerWaveform::TriggerWaveform() {
 	initialize(OM_NONE, SyncEdge::Rise);
