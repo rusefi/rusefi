@@ -1,5 +1,5 @@
 /**
- * @file	engine.h
+ * @file    engine.h
  *
  * @date May 21, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -67,6 +67,8 @@
 #include "engine_modules_generated.h"
 #endif
 
+static_assert(MAX_CYLINDER_COUNT > 0);
+
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
 #endif
@@ -98,34 +100,34 @@ class IEtbController;
 
 class Engine final : public TriggerStateListener {
 public:
-	Engine();
+    Engine();
 
-	StartStopState startStopState;
+    StartStopState startStopState{};
 
 
-	TunerStudioOutputChannels outputChannels;
+    TunerStudioOutputChannels outputChannels{};
 
-	/**
-	 * Sometimes for instance during shutdown we need to completely supress CAN TX
-	 */
-	bool allowCanTx = true;
+    /**
+     * Sometimes for instance during shutdown we need to completely supress CAN TX
+     */
+    bool allowCanTx = true;
 
-	// used by HW CI
-	bool isPwmEnabled = true;
+    // used by HW CI
+    bool isPwmEnabled = true;
 
-	/**
-	 * ELM327 cannot handle both RX and TX at the same time, we have to stay quite once first ISO/TP packet was detected
-	 * this is a pretty temporary hack only while we are trying ELM327, long term ISO/TP and rusEFI broadcast should find a way to coexists
-	 */
-	bool pauseCANdueToSerial = false;
+    /**
+     * ELM327 cannot handle both RX and TX at the same time, we have to stay quite once first ISO/TP packet was detected
+     * this is a pretty temporary hack only while we are trying ELM327, long term ISO/TP and rusEFI broadcast should find a way to coexists
+     */
+    bool pauseCANdueToSerial = false;
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
-	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
+    IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 
 #if EFI_DYNO_VIEW
-  DynoView dynoInstance;
+    DynoView dynoInstance{};
 #endif
 
 #if EFI_IDLE_CONTROL
@@ -133,249 +135,252 @@ public:
 #endif // EFI_IDLE_CONTROL
 
 #if EFI_ENGINE_CONTROL
-	FuelComputer fuelComputer;
+    FuelComputer fuelComputer{};
 #endif // EFI_ENGINE_CONTROL
 
-	type_list<
-		Mockable<InjectorModelPrimary>,
-		Mockable<InjectorModelSecondary>,
+    type_list<
+        Mockable<InjectorModelPrimary>,
+        Mockable<InjectorModelSecondary>,
 #if EFI_IDLE_CONTROL
-		Mockable<IdleController>,
+        Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL
-		TriggerScheduler,
+
+        TriggerScheduler,
 #if EFI_HPFP && EFI_ENGINE_CONTROL
-		Mockable<HpfpController>,
+        Mockable<HpfpController>,
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
 #if EFI_ENGINE_CONTROL
-		Mockable<ThrottleModel>,
+        Mockable<ThrottleModel>,
 #endif // EFI_ENGINE_CONTROL
 #if EFI_ALTERNATOR_CONTROL
-		AlternatorController,
+        AlternatorController,
 #endif /* EFI_ALTERNATOR_CONTROL */
-		MainRelayController,
-		Mockable<IgnitionController>,
-		Mockable<AcController>,
-		PrimeController,
-		DfcoController,
+        MainRelayController,
+        Mockable<IgnitionController>,
+        Mockable<AcController>,
+        PrimeController,
+        DfcoController,
 #if EFI_HD_ACR
-		HarleyAcr,
+        HarleyAcr,
 #endif // EFI_HD_ACR
-		Mockable<WallFuelController>,
-		KnockController,
-		SensorChecker,
+        Mockable<WallFuelController>,
+        KnockController,
+        SensorChecker,
 #if EFI_ENGINE_CONTROL
-		Mockable<LimpManager>,
+        Mockable<LimpManager>,
 #endif // EFI_ENGINE_CONTROL
 #if EFI_VVT_PID
-		VvtController1,
-		VvtController2,
-		VvtController3,
-		VvtController4,
+        VvtController1,
+        VvtController2,
+        VvtController3,
+        VvtController4,
 #endif // EFI_VVT_PID
 #if EFI_BOOST_CONTROL
-		BoostController,
+        BoostController,
 #endif // EFI_BOOST_CONTROL
-		TpsAccelEnrichment,
+        TpsAccelEnrichment,
 #if EFI_LAUNCH_CONTROL
         NitrousController,
 #endif // EFI_LAUNCH_CONTROL
 #if EFI_LTFT_CONTROL
-		LongTermFuelTrim,
+        LongTermFuelTrim,
 #endif
 
 #include "modules_list_generated.h"
 
-		EngineModule // dummy placeholder so the previous entries can all have commas
-		> engineModules;
+        EngineModule // dummy placeholder so the previous entries can all have commas
+    > engineModules{};
 
-	/**
-	 * Slightly shorter helper function to keep the code looking clean.
-	 */
-	template<typename get_t>
-	constexpr auto & module() {
-		return engineModules.get<get_t>();
-	}
+    /**
+     * Slightly shorter helper function to keep the code looking clean.
+     */
+    template<typename get_t>
+    constexpr auto & module() {
+        return engineModules.get<get_t>();
+    }
+
+    template<typename get_t>
+    constexpr auto const & module() const {
+        return engineModules.get<get_t>();
+    }
 
 #if EFI_TCU
-	GearControllerBase *gearController = nullptr;
+    GearControllerBase *gearController = nullptr;
 #endif
 
-	// todo: boolean sensors should leverage sensor framework #6342
-	SwitchedState clutchUpSwitchedState;
-   	SwitchedState brakePedalSwitchedState;
-   	SwitchedState acButtonSwitchedState;
-  SimpleSwitchedState luaDigitalInputState[LUA_DIGITAL_INPUT_COUNT];
+    // todo: boolean sensors should leverage sensor framework #6342
+    SwitchedState clutchUpSwitchedState{&engineState.clutchUpState};
+    SwitchedState brakePedalSwitchedState{&engineState.brakePedalState};
+    SwitchedState acButtonSwitchedState{&engineModules.get<AcController>().unmock().acButtonState};
+    SimpleSwitchedState luaDigitalInputState[LUA_DIGITAL_INPUT_COUNT]{};
 
 #if EFI_LAUNCH_CONTROL
-	LaunchControlBase launchController;
-	ShiftTorqueReductionController shiftTorqueReductionController;
-	SoftSparkLimiter softSparkLimiter;
-	// technically not directly related to EFI_LAUNCH_CONTROL since useful for TCU
-	SoftSparkLimiter hardSparkLimiter;
+    LaunchControlBase launchController{};
+    ShiftTorqueReductionController shiftTorqueReductionController{};
+    SoftSparkLimiter softSparkLimiter{false};
+    // technically not directly related to EFI_LAUNCH_CONTROL since useful for TCU
+    SoftSparkLimiter hardSparkLimiter{true};
 #endif // EFI_LAUNCH_CONTROL
 
 #if EFI_ANTILAG_SYSTEM
-	AntilagSystemBase antilagController;
+    AntilagSystemBase antilagController{};
 #endif // EFI_ANTILAG_SYSTEM
 
 #if EFI_ANTILAG_SYSTEM
-//	SoftSparkLimiter ALSsoftSparkLimiter;
+//    SoftSparkLimiter ALSsoftSparkLimiter{false};
 #endif /* EFI_ANTILAG_SYSTEM */
 
 #if EFI_SHAFT_POSITION_INPUT
-	LambdaMonitor lambdaMonitor;
+    LambdaMonitor lambdaMonitor{};
 #endif // EFI_ENGINE_CONTROL
 
-	IgnitionState ignitionState;
-	void resetLua();
+    IgnitionState ignitionState{};
+    void resetLua();
 
 #if EFI_SHAFT_POSITION_INPUT
-	void OnTriggerStateProperState(efitick_t nowNt) override;
-	void OnTriggerSynchronization(bool wasSynchronized, bool isDecodingError) override;
-	void OnTriggerSynchronizationLost() override;
+    void OnTriggerStateProperState(efitick_t nowNt) override;
+    void OnTriggerSynchronization(bool wasSynchronized, bool isDecodingError) override;
+    void OnTriggerSynchronizationLost() override;
 #endif
 
-	void setConfig();
+    void setConfig();
 
 #if EFI_AUX_VALVES
-	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
+    AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2]{};
 #endif // EFI_AUX_VALVES
 
 #if EFI_UNIT_TEST
-	bool needTdcCallback = true;
+    bool needTdcCallback = true;
 private:
-	int bailedOnDwellCount = 0;
+    int bailedOnDwellCount = 0;
 public:
-	int getBailedOnDwellCount() const { return bailedOnDwellCount; }
-	void incrementBailedOnDwellCount() { bailedOnDwellCount++; }
+    int getBailedOnDwellCount() const { return bailedOnDwellCount; }
+    void incrementBailedOnDwellCount() { bailedOnDwellCount++; }
 #endif /* EFI_UNIT_TEST */
 
-	int getGlobalConfigurationVersion(void) const;
+    int getGlobalConfigurationVersion() const;
 
-
-	// a pointer with interface type would make this code nicer but would carry extra runtime
-	// cost to resolve pointer, we use instances as a micro optimization
+    // a pointer with interface type would make this code nicer but would carry extra runtime
+    // cost to resolve pointer, we use instances as a micro optimization
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
   // while theoretically PROD could be using EFI_SIGNAL_EXECUTOR_SLEEP, as of 2024 all PROD uses SingleTimerExecutor
-	SingleTimerExecutor scheduler;
+    SingleTimerExecutor scheduler{};
 #endif
 #if EFI_SIGNAL_EXECUTOR_SLEEP
   // at the moment this one is used exclusively by x86 simulator it should theoretically be possible to make it available in embedded if needed
-	SleepExecutor scheduler;
+    SleepExecutor scheduler{};
 #endif
 #if EFI_UNIT_TEST
-	TestExecutor scheduler;
+    TestExecutor scheduler{};
 
-	std::function<void(IgnitionEvent*, bool)> onIgnitionEvent;
-	std::function<void(const IgnitionEvent&, efitick_t, angle_t, efitick_t)> onScheduleTurnSparkPinHighStartCharging
-			= [](const IgnitionEvent&, efitick_t, angle_t, efitick_t) -> void {};
-	std::function<void(const IgnitionEvent&, efitick_t)> onScheduleOverFireSparkAndPrepareNextSchedule
-			= [](const IgnitionEvent&, efitick_t) -> void {};
+    std::function<void(IgnitionEvent*, bool)> onIgnitionEvent;
+    std::function<void(const IgnitionEvent&, efitick_t, angle_t, efitick_t)> onScheduleTurnSparkPinHighStartCharging
+            = [](const IgnitionEvent&, efitick_t, angle_t, efitick_t) -> void {};
+    std::function<void(const IgnitionEvent&, efitick_t)> onScheduleOverFireSparkAndPrepareNextSchedule
+            = [](const IgnitionEvent&, efitick_t) -> void {};
 #endif // EFI_UNIT_TEST
 
 #if EFI_ENGINE_CONTROL
-	FuelSchedule injectionEvents;
-	IgnitionEventList ignitionEvents;
-	scheduling_s tdcScheduler[2];
-	OneCylinder cylinders[MAX_CYLINDER_COUNT];
+    FuelSchedule injectionEvents{};
+    IgnitionEventList ignitionEvents{};
+    scheduling_s tdcScheduler[2]{};
+    OneCylinder cylinders[MAX_CYLINDER_COUNT]{};
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
     // todo: move to electronic_throttle something?
-	bool etbAutoTune = false;
-	bool etbIgnoreJamProtection = false;
+    bool etbAutoTune = false;
+    bool etbIgnoreJamProtection = false;
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 #if EFI_UNIT_TEST
-	bool tdcMarkEnabled = true;
+    bool tdcMarkEnabled = true;
 #endif // EFI_UNIT_TEST
 
+    bool slowCallBackWasInvoked = false;
 
-	bool slowCallBackWasInvoked = false;
+    RpmCalculator rpmCalculator{};
 
-	RpmCalculator rpmCalculator;
+    Timer configBurnTimer{};
+    Timer engineTypeChangeTimer{};
 
-	Timer configBurnTimer;
-	Timer engineTypeChangeTimer;
-
-	/**
-	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
-	 * tuning software)
-	 */
-	int globalConfigurationVersion = 0;
+    /**
+     * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
+     * tuning software)
+     */
+    int globalConfigurationVersion = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
-	TriggerCentral triggerCentral;
+    TriggerCentral triggerCentral{};
 #endif // EFI_SHAFT_POSITION_INPUT
-
 
     /**
       * See FAST_CALLBACK_PERIOD_MS
       */
-	void periodicFastCallback();
+    void periodicFastCallback();
     /**
       * See SLOW_CALLBACK_PERIOD_MS
       */
-	void periodicSlowCallback();
-	void updateSlowSensors();
-	void updateSwitchInputs();
-	void updateTriggerConfiguration();
+    void periodicSlowCallback();
+    void updateSlowSensors();
+    void updateSwitchInputs();
+    void updateTriggerConfiguration();
 
-	bool isRunningPwmTest = false;
+    bool isRunningPwmTest = false;
 
-	/**
-	 * are we running any kind of functional test? this affect
-	 * some areas
-	 */
-	bool isFunctionalTestMode = false;
+    /**
+     * are we running any kind of functional test? this affect
+     * some areas
+     */
+    bool isFunctionalTestMode = false;
 
-	void resetEngineSnifferIfInTestMode();
+    void resetEngineSnifferIfInTestMode();
 
-	EngineState engineState;
+    EngineState engineState{};
 
-	dc_motors_s dc_motors;
+    dc_motors_s dc_motors{};
 #if EFI_SENT_SUPPORT
-	sent_state_s sent_state;
+    sent_state_s sent_state{};
 #endif
 
-	efitimeus_t timeToStopIdleTest = 0;
+    efitimeus_t timeToStopIdleTest{};
 
-	SensorsState sensors;
+    SensorsState sensors{};
 
-	void preCalculate();
+    void preCalculate();
 
-	void efiWatchdog();
-	void onEngineHasStopped();
+    void efiWatchdog();
+    void onEngineHasStopped();
 
-	/**
-	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
-	 * This method cancels shutdown if the ignition voltage is detected.
-	 */
-	void checkShutdown();
+    /**
+     * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
+     * This method cancels shutdown if the ignition voltage is detected.
+     */
+    void checkShutdown();
 
-	/**
-	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
-	   Called when the ignition switch is turned off (vBatt is too low).
-	   Returns true if some operations are in progress on background.
-	 */
-	bool isInShutdownMode() const;
+    /**
+     * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
+       Called when the ignition switch is turned off (vBatt is too low).
+       Returns true if some operations are in progress on background.
+     */
+    bool isInShutdownMode() const;
 
-	/**
-	 * The stepper does not work if the main relay is turned off (it requires +12V).
-	 * Needed by the stepper motor code to detect if it works.
-	 */
-	bool isMainRelayEnabled() const;
+    /**
+     * The stepper does not work if the main relay is turned off (it requires +12V).
+     * Needed by the stepper motor code to detect if it works.
+     */
+    bool isMainRelayEnabled() const;
 
-	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
+    void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
 
 #if EFI_UNIT_TEST
-	AirmassModelBase* mockAirmassModel = nullptr;
+    AirmassModelBase* mockAirmassModel{};
 #endif
 
 private:
-	void reset();
+    void reset();
 
-	void injectEngineReferences();
+    void injectEngineReferences();
 };
 
 trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode);
@@ -390,7 +395,18 @@ void unlockEcu(int password);
 // These externs aren't needed for unit tests - everything is injected instead
 #if !EFI_UNIT_TEST
 extern Engine ___engine;
-static Engine * const engine = &___engine;
+static constexpr Engine* engine_ptr = &___engine;
+
+struct EngineAccessor {
+    constexpr Engine* operator->() { return engine_ptr; }
+    constexpr Engine const* operator->() const { return engine_ptr; }
+    constexpr operator Engine*() { return engine_ptr; }
+    constexpr operator Engine const*() const { return engine_ptr; }
+    constexpr operator bool() const { return true; }
+};
+
+[[maybe_unused]] static EngineAccessor engine;
+
 #else // EFI_UNIT_TEST
-extern Engine *engine;
+extern Engine* engine;
 #endif // EFI_UNIT_TEST

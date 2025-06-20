@@ -7,34 +7,33 @@
 
 #include "io_pins.h"
 #include "smart_gpio.h"
+#if EFI_SIMULATOR
 #include <rusefi/timer.h>
+#endif
 
 // This class acts as a boolean, but has a switch counter inside
 class SwitchedState {
 public:
-    SwitchedState(int8_t *p_state) {
-        state = p_state;
-    }
+	SwitchedState() = default;
+
+    explicit SwitchedState(int8_t* const p_state) : state{ p_state } { }
 
     // returns true if the state has been changed
     bool update(bool newState);
-    uint16_t getCounter();
+    [[nodiscard]] uint16_t getCounter() const;
 
-    operator bool() const {
-        return (bool)*state;
+    explicit operator bool() const {
+        return state != nullptr;
     }
 
 private:
-    int8_t *state;
-    uint16_t counter = 0;
+    int8_t *state{};
+    uint16_t counter{};
 };
 
-class SimpleSwitchedState {
-public:
-  SimpleSwitchedState() : state(&value) {
-  }
-  int8_t value = 0;
-  SwitchedState state;
+struct SimpleSwitchedState {
+  int8_t value{};
+  SwitchedState state{&value};
 };
 
 // Used if you want a function to be virtual only for unit testing purposes
