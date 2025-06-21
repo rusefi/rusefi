@@ -33,6 +33,7 @@ gcov *.c* > gcov.log 2>gcov.err
 
 echo -e "\nCollecting rusEFI unit test coverage"
 #FIXME: we have some problem related to google test macro "TEST" and the ouput code on lcov
+# todo gtest vs gcov https://github.com/rusefi/rusefi/issues/8129
 # Currently we cannot obtain coverage on the tests themselves, but on the tests towards the code.
 lcov --ignore-errors mismatch --capture --directory . --output-file coverage.info
 
