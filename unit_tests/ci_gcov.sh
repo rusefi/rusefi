@@ -32,7 +32,9 @@ echo -e "\nGenerating rusEFI unit test coverage"
 gcov *.c* > gcov.log 2>gcov.err
 
 echo -e "\nCollecting rusEFI unit test coverage"
-lcov --capture --directory . --output-file coverage.info
+#FIXME: we have some problem related to google test macro "TEST" and the ouput code on lcov
+# Currently we cannot obtain coverage on the tests themselves, but on the tests towards the code.
+lcov --ignore-errors mismatch --capture --directory . --output-file coverage.info
 
 echo -e "\nGenerating rusEFI unit test HTML"
 genhtml coverage.info --output-directory gcov
