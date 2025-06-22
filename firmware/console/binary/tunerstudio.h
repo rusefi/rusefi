@@ -91,4 +91,6 @@ public:
 };
 #endif
 
+bool isTouchingArea(uint16_t offset, uint16_t count, int areaStart, int areaSize);
+
 #endif /* EFI_TUNER_STUDIO */

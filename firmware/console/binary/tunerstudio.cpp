@@ -108,7 +108,7 @@ static void printErrorCounters() {
 }
 
 namespace {
-	Timer calibrationsWriteTimer;
+	Timer calibrationsVeWriteTimer;
 }
 
 #if 0
@@ -268,6 +268,23 @@ void onApplyPreset() {
 static void onCalibrationWrite(uint16_t page, uint16_t offset, uint16_t count) {
 }
 
+bool isTouchingArea(uint16_t offset, uint16_t count, int areaStart, int areaSize) {
+  if (offset + count < areaStart) {
+    // we are touching below for instance VE table
+    return false;
+  }
+  if (offset > areaStart + areaSize) {
+    // we are touching after for instance VE table
+    return false;
+  }
+  // else - we are touching it!
+  return true;
+}
+
+PUBLIC_API_WEAK bool isTouchingVe(uint16_t offset, uint16_t count) {
+  return isTouchingArea(offset, count, offsetof(persistent_config_s, veTable), sizeof(config->veTable));
+}
+
 /**
  * This command is needed to make the whole transfer a bit faster
  */
@@ -315,8 +332,9 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
 		setBoardConfigOverrides();
 
-		// we don't care about writes to scatter page
-		calibrationsWriteTimer.reset();
+		if (isTouchingVe(offset, count)) {
+		  calibrationsVeWriteTimer.reset();
+    }
 	} else {
 		memcpy(addr, content, count);
 	}
@@ -1008,7 +1026,7 @@ static char tsErrorBuff[80];
 
 bool isTuningNow() {
 	return (!TunerDetectorUtils::isTuningDetectorUndefined()) &&
-		!calibrationsWriteTimer.hasElapsedSec(TunerDetectorUtils::getUserEnteredTuningDetector());
+		!calibrationsVeWriteTimer.hasElapsedSec(TunerDetectorUtils::getUserEnteredTuningDetector());
 }
 
 void startTunerStudioConnectivity() {
