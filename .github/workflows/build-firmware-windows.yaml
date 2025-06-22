@@ -22,7 +22,7 @@ jobs:
 
       - uses: carlosperate/arm-none-eabi-gcc-action@v1
         with:
-          release: '12.3.Rel1' # 13 fails overloaded-virtual
+          release: '13.3.Rel1'
 
       - uses: actions/checkout@v4
 
