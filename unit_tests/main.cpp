@@ -8,10 +8,16 @@
 
 #include "pch.h"
 #include <stdlib.h>
+#include "mlq_reader.h"
 
 bool hasInitGtest = false;
 
 GTEST_API_ int main(int argc, char **argv) {
+/*
+	BinarySensorReader r;
+	r.readMlq("pretty-happy-reference.mlg");
+*/
+
 	hasInitGtest = true;
 
 	testing::InitGoogleTest(&argc, argv);
