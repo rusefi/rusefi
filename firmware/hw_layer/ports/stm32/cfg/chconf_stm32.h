@@ -380,7 +380,7 @@
  */
 #if !defined(CH_CFG_USE_HEAP)
 // everything is allocated statically, the only exception in production code is CH_HEAP_AREA
-#define CH_CFG_USE_HEAP                     TRUE
+#define CH_CFG_USE_HEAP                     FALSE
 #endif
 
 /**

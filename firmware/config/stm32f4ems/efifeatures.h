@@ -381,7 +381,7 @@
 #endif
 
 #ifndef EFI_LUA
-#define EFI_LUA TRUE
+#define EFI_LUA FALSE
 #endif
 
 #ifndef FULL_SD_LOGS
