@@ -100,6 +100,16 @@ public class TriggerImage {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
+        SwingUtilities.invokeAndWait(() -> {
+            try {
+                runAwt(args);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private static void runAwt(String[] args) throws InterruptedException, InvocationTargetException {
         final String workingFolder;
         if (args.length < 1) {
             workingFolder = TriggerWheelInfo.DEFAULT_WORK_FOLDER;
@@ -132,7 +142,7 @@ public class TriggerImage {
             f.showFrame(content);
             f.getFrame().setSize(900, 700);
 
-            AutoupdateUtil.trueLayout(content);
+            AutoupdateUtil.trueLayoutAndRepaint(content);
         });
 
         SwingUtilities.invokeAndWait(() -> {
@@ -149,7 +159,7 @@ public class TriggerImage {
         topPanel.removeAll();
 
         JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true,
-                triggerWheelInfo);
+            triggerWheelInfo);
 
         topPanel.add(firstWheelControl);
         topPanel.add(LogoHelper.createLogoLabel());
@@ -158,12 +168,12 @@ public class TriggerImage {
 
         if (!waves.get(1).list.isEmpty()) {
             JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals(), false,
-                    triggerWheelInfo);
+                triggerWheelInfo);
             topPanel.add(secondWheelControl);
         }
 
-        AutoupdateUtil.trueLayout(topPanel);
-        AutoupdateUtil.trueLayout(content);
+        AutoupdateUtil.trueLayoutAndRepaint(topPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(content);
 
         triggerPanel.tdcPosition = triggerWheelInfo.getTdcPosition();
         triggerPanel.gaps = triggerWheelInfo.getGaps();
@@ -203,8 +213,8 @@ public class TriggerImage {
         triggerPanel.name = getTriggerName(triggerWheelInfo);
 //        triggerPanel.id = "#" + triggerWheelInfo.id;
 
-        AutoupdateUtil.trueLayout(triggerPanel);
-        AutoupdateUtil.trueLayout(triggerPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(triggerPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(triggerPanel);
         content.paintImmediately(content.getVisibleRect());
         new File(OUTPUT_FOLDER).mkdir();
         UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + findByOrdinal(triggerWheelInfo.getId()) + ".png", content);
@@ -229,8 +239,8 @@ public class TriggerImage {
                     g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
                     // draw TDC mark and text on the round wheel
                     g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
-                            2 * tdcMarkRadius,
-                            2 * tdcMarkRadius);
+                        2 * tdcMarkRadius,
+                        2 * tdcMarkRadius);
 
                     g.drawString("TDC", middle + smallX + tdcMarkRadius * 2, middle + smallY);
                 }
@@ -301,7 +311,7 @@ public class TriggerImage {
         for (int i = 1; i <= 2 + EXTRA_COUNT; i++) {
             for (TriggerSignal s : signals)
                 toShow.add(new TriggerSignal(s.getWaveIndex(), s.getState(), s.getAngle() + i * 720,
-                        s.getGap()));
+                    s.getGap()));
         }
 
         List<WaveState> waves = new ArrayList<>();
