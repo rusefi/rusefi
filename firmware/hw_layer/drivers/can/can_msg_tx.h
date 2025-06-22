@@ -82,11 +82,16 @@ public:
 		return &m_frame;
 	}
 
-void setArray(uint8_t *data, size_t len) {
-    for (size_t i = 0; i < len; i++) {
-        m_frame.data8[i] = data[i];
+    void setArray(const uint8_t *data, size_t len) {
+        for (size_t i = 0; i < std::min(len, size_t(8)); i++) {
+            m_frame.data8[i] = data[i];
+        }
     }
-}
+
+    template<size_t N>
+    void setArray(const uint8_t (&data)[N]) {
+        setArray(data, N);
+    }
 
 #endif // HAL_USE_CAN || EFI_UNIT_TEST
 
