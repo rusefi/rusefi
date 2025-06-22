@@ -6,6 +6,7 @@ import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.util.SwingUtilities2;
 import com.rusefi.waves.EngineReport;
 import org.jetbrains.annotations.NotNull;
 
@@ -100,7 +101,7 @@ public class TriggerImage {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-        SwingUtilities.invokeAndWait(() -> {
+        SwingUtilities2.invokeAndWait(() -> {
             try {
                 runAwt(args);
             } catch (Throwable e) {
@@ -135,7 +136,7 @@ public class TriggerImage {
 
         JPanel topPanel = new JPanel(new FlowLayout());
 
-        SwingUtilities.invokeAndWait(() -> {
+        SwingUtilities2.invokeAndWait(() -> {
             content.add(topPanel, BorderLayout.NORTH);
             content.add(triggerPanel, BorderLayout.CENTER);
 
@@ -145,7 +146,7 @@ public class TriggerImage {
             AutoupdateUtil.trueLayoutAndRepaint(content);
         });
 
-        SwingUtilities.invokeAndWait(() -> {
+        SwingUtilities2.invokeAndWait(() -> {
             TriggerWheelInfo.readWheels(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
         });
         Thread.sleep(1000L * sleepAtEnd);

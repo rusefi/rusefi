@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
+import com.rusefi.util.SwingUtilities2;
 import org.jetbrains.annotations.Nullable;
 import org.putgemin.VerticalFlowLayout;
 
@@ -178,14 +179,6 @@ public class Updater {
         }
     }
 
-    private static void invokeAndWait(Runnable runnable) throws InterruptedException, InvocationTargetException {
-        if (SwingUtilities.isEventDispatchThread()) {
-            runnable.run();
-        } else {
-            SwingUtilities.invokeAndWait(runnable);
-        }
-    }
-
     private void startPlugin() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, InterruptedException, InvocationTargetException {
         log.info("Starting plugin " + this);
         Class clazz = getPluginClass();
@@ -194,7 +187,7 @@ public class Updater {
                 log.info("Not starting second instance");
                 return; // avoid having two instances running
             }
-            invokeAndWait(() -> {
+            SwingUtilities2.invokeAndWait(() -> {
                 try {
                     instance = (TsPluginBody) clazz.newInstance();
                     replaceWith(instance);
