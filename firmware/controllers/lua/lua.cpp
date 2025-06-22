@@ -17,8 +17,8 @@ static bool withErrorLoading = false;
 
 #ifndef LUA_USER_HEAP
 // At least one heap_header_t should fit
-// todo: cleaner documentation of how things work at the moment - looks like we ALWAYS have LUA_USER_HEAP
-// todo: yet there is claim of dynamic allocation within all unused RAM?
+// see [tag:multi-step-lua-alloc] below
+// this is a bit over-complicated at the moment, one argument would be that this supports multi-region RAM use-case
 #define LUA_USER_HEAP 16
 #endif // LUA_USER_HEAP
 
@@ -90,6 +90,7 @@ public:
 		// try this heap first
 		new_mem = alloc(nsize);
 
+    // [tag:multi-step-lua-alloc]
 		// then try ChibiOS default heap
 		if (new_mem == nullptr) {
 			new_mem = chHeapAlloc(NULL, nsize);
