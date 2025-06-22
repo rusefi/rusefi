@@ -33,6 +33,9 @@ public class TriggerImage {
     private static final int SMALL_DIAMETER = 420;
     private static final int _180 = 180;
     public static final int MIN_TIME = 720;
+    private static final int FRAME_WIDTH = 900;
+    private static final int FRAME_HEIGHT = 700;
+    private static final int PANEL_HEIGHT = 480;
 
     /**
      * number of extra frames
@@ -130,7 +133,7 @@ public class TriggerImage {
         final TriggerPanel triggerPanel = new TriggerPanel() {
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension((1 + EXTRA_COUNT) * WIDTH, 480);
+                return new Dimension((1 + EXTRA_COUNT) * WIDTH, PANEL_HEIGHT);
             }
         };
 
@@ -141,7 +144,7 @@ public class TriggerImage {
             content.add(triggerPanel, BorderLayout.CENTER);
 
             f.showFrame(content);
-            f.getFrame().setSize(900, 700);
+            f.getFrame().setSize(FRAME_WIDTH, FRAME_HEIGHT);
 
             AutoupdateUtil.trueLayoutAndRepaint(content);
         });
