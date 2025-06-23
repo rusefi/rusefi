@@ -38,6 +38,7 @@ public class Msq {
 
     @NotNull
     public static Msq valueOf(ConfigurationImage image, int totalConfigSize, String tsSignature, IniFileModel ini) {
+        Objects.requireNonNull(image, "image valueOf");
         Msq tune = create(totalConfigSize, tsSignature);
         for (String key : ini.getAllIniFields().keySet())
             tune.loadConstant(ini, key, image);
@@ -48,6 +49,7 @@ public class Msq {
     public static Msq create(int totalConfigSize, String tsSignature) {
         Msq tune = new Msq();
         tune.versionInfo.setSignature(tsSignature);
+        // TODO: document what on earth is this null/null page about?!
         tune.page.add(new Page(null, null));
         tune.page.add(new Page(0, totalConfigSize));
         return tune;
@@ -81,7 +83,7 @@ public class Msq {
         versionInfo.validate();
         Page page = findPage();
         if (page.constant.isEmpty())
-            throw new IllegalStateException("Empty Msq file");
+            throw new IllegalStateException("Empty Msq file " + page);
         XmlUtil.writeXml(this, Msq.class, outputXmlFileName);
     }
 
