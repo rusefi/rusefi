@@ -259,7 +259,7 @@ void luaHeapPrintInfo() {
 
 #else // not EFI_PROD_CODE
 // Non-MCU code can use plain realloc function instead of custom implementation
-void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
+void* luaHeapAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 	if (!nsize) {
 		free(ptr);
 		return nullptr;

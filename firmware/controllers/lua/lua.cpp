@@ -377,7 +377,7 @@ int testLuaReturnsInteger(const char* script) {
 }
 
 void testLuaExecString(const char* script) {
-	auto ls = setupLuaState(luaHepAlloc);
+	auto ls = setupLuaState(luaHeapAlloc);
 
 	if (!ls) {
 		throw std::logic_error("Call to setupLuaState failed, returned null");
