@@ -18,4 +18,5 @@
 #define SDRAM_OPTIONAL __attribute__((section(".ram7")))
 #define NO_CACHE	// F4 has no cache, do nothing
 #define BKUP_RAM_NOINIT __attribute__((section(".bkup_ram_noinit")))
+#define MCU_HAS_CCM_RAM	TRUE
 #endif
