@@ -1,34 +1,29 @@
 #include "pch.h"
 
 #include "rusefi_lua.h"
-#include "thread_controller.h"
 
 #if EFI_LUA
 
 #include "lua.hpp"
-#include "lua_hooks.h"
+#include "lua_heap.h"
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-#ifndef LUA_USER_HEAP
-// At least one heap_header_t should fit
-// see [tag:multi-step-lua-alloc] below
-// this is a bit over-complicated at the moment, one argument would be that this supports multi-region RAM use-case
-#define LUA_USER_HEAP 16
-#endif // LUA_USER_HEAP
-
-//#ifdef PERSISTENT_LOCATION_TODO
-//#define LUA_HEAP_RAM_SECTION CCM_OPTIONAL
-//#endif
-
-CH_HEAP_AREA(luaUserHeap, LUA_USER_HEAP)
-#ifdef EFI_HAS_EXT_SDRAM
-SDRAM_OPTIONAL
+#ifndef MCU_HAS_CCM_RAM
+	#define MCU_HAS_CCM_RAM FALSE
 #endif
-#ifdef LUA_HEAP_RAM_SECTION
-LUA_HEAP_RAM_SECTION
+
+#ifndef LUA_EXTRA_HEAP
+	#define LUA_EXTRA_HEAP 0
 #endif
-;
+
+#if (LUA_EXTRA_HEAP > 0)
+CH_HEAP_AREA(luaExtraHeapArea, LUA_EXTRA_HEAP)
+	#ifdef EFI_HAS_EXT_SDRAM
+		SDRAM_OPTIONAL
+	#endif
+	;
+#endif
 
 class Heap {
 public:
@@ -56,6 +51,11 @@ public:
 		reinit(buffer, TSize);
 	}
 
+	Heap()
+	{
+		reinit(nullptr, 0);
+	}
+
 	void reinit(uint8_t *buffer, size_t size) {
 		criticalAssertVoid(used() == 0, "Too late to reinit Lua heap");
 
@@ -63,41 +63,6 @@ public:
 		m_buffer = buffer;
 
 		reset();
-	}
-
-	void* realloc(void* ptr, size_t osize, size_t nsize) {
-		if (nsize == 0) {
-			// requested size is zero, free if necessary and return nullptr
-			if (ptr) {
-				free(ptr);
-			}
-
-			return nullptr;
-		}
-
-		void *new_mem = nullptr;
-
-		// try this heap first
-		new_mem = alloc(nsize);
-
-    // [tag:multi-step-lua-alloc]
-		// then try ChibiOS default heap
-		if (new_mem == nullptr) {
-			new_mem = chHeapAlloc(NULL, nsize);
-		}
-
-		if (!ptr) {
-			// No old pointer passed in, simply return allocated block
-			return new_mem;
-		}
-
-		// An old pointer was passed in, copy the old data in, then free
-		if (new_mem != nullptr) {
-			memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
-			free(ptr);
-		}
-
-		return new_mem;
 	}
 
 	size_t size() const {
@@ -129,13 +94,97 @@ public:
 	}
 };
 
-static Heap userHeap(luaUserHeap);
+// see [tag:multi-step-lua-alloc] below
+// this is a bit over-complicated at the moment, one argument would be that this supports multi-region RAM use-case
+#if (LUA_EXTRA_HEAP > 0)
+// Optional SDRAM
+static Heap luaExtraHeap(luaExtraHeapArea);
+#endif
+
+#if defined(STM32F4)
+// Optional RAM3 exist on STM32F42x
+static Heap luaOptionalHeap;
+#endif
+
+#if MCU_HAS_CCM_RAM
+// CCM RAM leftovers on STM32F4xx
+static Heap luaCcmHeap;
+#endif
+
+void luaHeapInit()
+{
+	// stm32f4xx can have optional ram3 region
+#if defined(STM32F4)
+	// Some boads can be equiped with STM32F42x only, in this case we allow linker to take care of ram3
+#if !defined(EFI_IS_F42x)
+	// cute hack: let's check at runtime if you are a lucky owner of board with extra RAM and use that extra RAM for extra Lua
+	// we need this on microRusEFI for sure
+	// definitely should NOT have this on Proteus
+	// on Hellen a bit of open question what's the best track
+	if (isStm32F42x()) {
+		// This is safe to use section base and end as we define ram3 for all F4 chips
+		extern uint8_t __ram3_base__[];
+		extern uint8_t __ram3_end__[];
+		luaOptionalHeap.reinit(__ram3_base__, __ram3_end__ - __ram3_base__);
+	}
+#endif // !EFI_IS_F42x
+#endif // STM32F4
+
+	// stm32f4xx have CCM memory that may have some leftovers
+#if MCU_HAS_CCM_RAM
+	extern uint8_t __heap_ccm_base__[];
+	extern uint8_t __heap_ccm_end__[];
+	luaCcmHeap.reinit(__heap_ccm_base__, __heap_ccm_end__ - __heap_ccm_base__);
+#endif
+}
+
+static size_t luaMemoryUsed = 0;
 
 void* luaHeapAlloc(void* /*ud*/, void* optr, size_t osize, size_t nsize) {
-	void *nptr = userHeap.realloc(optr, osize, nsize);
+	void *nptr = nullptr;
+
+	if (nsize) {
+		// [tag:multi-step-lua-alloc]
+		// First try dedicated Lua heap(s)
+		#if (LUA_EXTRA_HEAP > 0)
+			if (nptr == nullptr) {
+				nptr = luaExtraHeap.alloc(nsize);
+			}
+		#endif
+		#if defined(STM32F4)
+			if (nptr == nullptr) {
+				nptr = luaOptionalHeap.alloc(nsize);
+			}
+		#endif
+		#if MCU_HAS_CCM_RAM
+			if (nptr == nullptr) {
+				nptr = luaCcmHeap.alloc(nsize);
+			}
+		#endif
+
+		// [tag:multi-step-lua-alloc]
+		// then try ChibiOS default heap
+		if (nptr == nullptr) {
+			nptr = chHeapAlloc(NULL, nsize);
+		}
+	}
+
+	if (nptr) {
+		luaMemoryUsed += nsize;
+	}
+
+	if (optr) {
+		// An old pointer was passed in, copy the old data in, then free
+		if (nptr != nullptr) {
+			memcpy(nptr, optr, chHeapGetSize(optr) > nsize ? nsize : chHeapGetSize(optr));
+		}
+		// chHeapFree will find correct heap to return memory to
+		chHeapFree(optr);
+		luaMemoryUsed -= osize;
+	}
 
 	if (engineConfiguration->debugMode == DBG_LUA) {
-		engine->outputChannels.debugIntField1 = userHeap.used();
+		engine->outputChannels.debugIntField1 = luaHeapUsed();
 	}
 
 	return nptr;
@@ -143,29 +192,74 @@ void* luaHeapAlloc(void* /*ud*/, void* optr, size_t osize, size_t nsize) {
 
 size_t luaHeapUsed()
 {
-	return userHeap.used();
+	return luaMemoryUsed;
 }
 
 void luaHeapReset()
 {
-	userHeap.reset();
+#if (LUA_EXTRA_HEAP > 0)
+	luaExtraHeap.reset();
+#endif
+#if defined(STM32F4)
+	luaOptionalHeap.reset();
+#endif
+#if MCU_HAS_CCM_RAM
+	luaCcmHeap.reset();
+#endif
+
+	luaMemoryUsed = 0;
 }
 
-void luaHeapPrintInfo() {
-	auto heapSize = userHeap.size();
+#if CH_CFG_MEMCORE_SIZE == 0
+	extern uint8_t __heap_base__[];
+	extern uint8_t __heap_end__[];
+#endif
 
-	if (heapSize) {
-		auto memoryUsed = userHeap.used();
-		float pct = 100.0f * memoryUsed / heapSize;
-		efiPrintf("Dedicated Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
+void luaHeapPrintInfo() {
+	size_t chMemTotal =
+		/* Chibios heap size */
+		#if CH_CFG_MEMCORE_SIZE == 0
+			(__heap_end__ - __heap_base__);
+		#else
+			CH_CFG_MEMCORE_SIZE;
+		#endif
+	auto totalHeapSize =
+		chMemTotal +
+	#if (LUA_EXTRA_HEAP > 0)
+		luaExtraHeap.size() +
+	#endif
+	#if defined(STM32F4)
+		luaOptionalHeap.size() +
+	#endif
+	#if MCU_HAS_CCM_RAM
+		luaCcmHeap.size() +
+	#endif
+		0;
+
+	if (totalHeapSize) {
+		auto memoryUsed = luaHeapUsed();
+		float pct = 100.0f * memoryUsed / totalHeapSize;
+		efiPrintf("Lua total heap(s) usage: %d / %d bytes = %.1f%%", memoryUsed, totalHeapSize, pct);
 	} else {
-		efiPrintf("No dedicated Lua heap, using ChibiOS default heap");
+		efiPrintf("No heap available for Lua");
 	}
+
+	#if (LUA_EXTRA_HEAP > 0)
+		efiPrintf("Lua extra heap usage: %d / %d", luaExtraHeap.used(), luaExtraHeap.size());
+	#endif
+	#if defined(STM32F4)
+		efiPrintf("Lua optional heap usage: %d / %d", luaOptionalHeap.used(), luaOptionalHeap.size());
+	#endif
+	#if MCU_HAS_CCM_RAM
+		efiPrintf("Lua CCM heap usage: %d / %d", luaCcmHeap.used(), luaCcmHeap.size());
+	#endif
 
 	size_t chHeapFree = 0;
 	chHeapStatus(NULL, &chHeapFree, NULL);
+	/* total available for ChibiOS minus left free, plus free in Chibios Heap */
+	size_t chMemCoreUsed = chMemTotal - chCoreGetStatusX() - chHeapFree;
 	efiPrintf("Common ChibiOS heap: %d bytes free", chHeapFree);
-	efiPrintf("ChibiOS memcore: %d bytes free", chCoreGetStatusX());
+	efiPrintf("ChibiOS memcore usage: %d / %d", chMemCoreUsed, chMemTotal);
 }
 
 #else // not EFI_PROD_CODE
