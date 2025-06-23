@@ -265,7 +265,14 @@ void onApplyPreset() {
 	engine->engineTypeChangeTimer.reset();
 }
 
+PUBLIC_API_WEAK bool isTouchingVe(uint16_t offset, uint16_t count) {
+  return isTouchingArea(offset, count, offsetof(persistent_config_s, veTable), sizeof(config->veTable));
+}
+
 static void onCalibrationWrite(uint16_t page, uint16_t offset, uint16_t count) {
+		if (isTouchingVe(offset, count)) {
+		  calibrationsVeWriteTimer.reset();
+    }
 }
 
 bool isTouchingArea(uint16_t offset, uint16_t count, int areaStart, int areaSize) {
@@ -279,10 +286,6 @@ bool isTouchingArea(uint16_t offset, uint16_t count, int areaStart, int areaSize
   }
   // else - we are touching it!
   return true;
-}
-
-PUBLIC_API_WEAK bool isTouchingVe(uint16_t offset, uint16_t count) {
-  return isTouchingArea(offset, count, offsetof(persistent_config_s, veTable), sizeof(config->veTable));
 }
 
 /**
@@ -331,10 +334,6 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// Force any board configuration options that humans shouldn't be able to change
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
 		setBoardConfigOverrides();
-
-		if (isTouchingVe(offset, count)) {
-		  calibrationsVeWriteTimer.reset();
-    }
 	} else {
 		memcpy(addr, content, count);
 	}
@@ -1024,7 +1023,7 @@ static char tsErrorBuff[80];
 
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
-bool isTuningNow() {
+bool isTuningVeNow() {
 	return (!TunerDetectorUtils::isTuningDetectorUndefined()) &&
 		!calibrationsVeWriteTimer.hasElapsedSec(TunerDetectorUtils::getUserEnteredTuningDetector());
 }

@@ -1,3 +1,5 @@
+// closed_loop_fuel.h
+
 #pragma once
 
 struct stft_s;
@@ -16,3 +18,4 @@ struct ClosedLoopFuelResult {
 ClosedLoopFuelResult fuelClosedLoopCorrection();
 size_t computeStftBin(float rpm, float load, stft_s& cfg);
 bool shouldUpdateCorrection(SensorType sensor);
+bool checkIfTuningVeNow();

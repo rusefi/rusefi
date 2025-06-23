@@ -50,16 +50,17 @@ size_t computeStftBin(float rpm, float load, stft_s& cfg) {
 	return 3;
 }
 
-namespace {
-	bool checkIfTuningIsNow() {
+	bool checkIfTuningVeNow() {
 #if EFI_TUNER_STUDIO
-		const bool result = isTuningNow();
+		const bool result = isTuningVeNow();
 #else
 		const bool result = false;
 #endif /* EFI_TUNER_STUDIO */
 		engine->outputChannels.isTuningNow = result;
 		return result;
 	}
+
+namespace {
 
 	bool shouldCorrect() {
 		const auto& cfg = engineConfiguration->stft;
@@ -69,8 +70,8 @@ namespace {
 			return false;
 		}
 
-		// Don't correct if tuning seens to be happening
-		if (checkIfTuningIsNow()) {
+		// Don't correct if tuning seems to be happening
+		if (checkIfTuningVeNow()) {
 			return false;
 		}
 

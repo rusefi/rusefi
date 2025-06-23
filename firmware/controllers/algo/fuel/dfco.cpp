@@ -1,11 +1,17 @@
+// Deceleration Fuel Cut-off
 
 #include "pch.h"
 
 #include "dfco.h"
+#include "closed_loop_fuel.h"
 
 bool DfcoController::getState() const {
 	if (!engineConfiguration->coastingFuelCutEnabled) {
 		return false;
+	}
+
+	if (checkIfTuningVeNow()) {
+	  return false;
 	}
 
 	const auto tps = Sensor::get(SensorType::DriverThrottleIntent);

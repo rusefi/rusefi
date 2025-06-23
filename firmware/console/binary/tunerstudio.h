@@ -55,7 +55,7 @@ int getSecondsSinceChannelsRequest();
 
 void updateTunerStudioState();
 
-bool isTuningNow();
+bool isTuningVeNow();
 void startTunerStudioConnectivity();
 bool needToTriggerTsRefresh();
 void onApplyPreset();
