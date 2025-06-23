@@ -110,6 +110,9 @@ REGION_ALIAS("BSS_RAM", ram0);
 /* RAM region to be used for the default heap.*/
 REGION_ALIAS("HEAP_RAM", ram0);
 
+/* Use CCM RAM leftovers for additional LUA heap */
+REGION_ALIAS("HEAP_CCM_RAM", ram4);
+
 /* RAM region to be used for SDRAM segment.*/
 REGION_ALIAS("SDRAM_RAM", ram7);
 
@@ -149,3 +152,15 @@ SECTIONS
 
 /* Generic rules inclusion.*/
 INCLUDE rules.ld
+
+SECTIONS
+{
+  /* Additional LUA heap uses the unused part of a CCM RAM section.*/
+  .heap_ccm (NOLOAD) :
+  {
+    . = ALIGN(8);
+    __heap_ccm_base__ = .;
+    . = ORIGIN(HEAP_CCM_RAM) + LENGTH(HEAP_CCM_RAM);
+    __heap_ccm_end__ = .;
+  } > HEAP_CCM_RAM
+}
