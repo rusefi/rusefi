@@ -347,7 +347,7 @@
 	#ifndef ENABLE_PERF_TRACE
 	  #define ENABLE_PERF_TRACE TRUE
 	#endif // ENABLE_PERF_TRACE
-	#define LUA_USER_HEAP (1 * 1024 * 1024)
+	#define LUA_EXTRA_HEAP (1 * 1024 * 1024)
 #elif defined(EFI_IS_F42x)
 	// F42x has more memory, so we can:
 	//  - use compressed USB MSD image (requires 32k of memory)
