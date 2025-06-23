@@ -15,7 +15,7 @@ using ::testing::_;
 using ICP = IIdleController::Phase;
 using TgtInfo = IIdleController::TargetInfo;
 
-class MockIdle : public MockIdleController {
+class MockIdleLTIT : public MockIdleController {
 public:
     bool useClosedLoop = true;
 	ICP m_lastPhase = ICP::Cranking;
@@ -47,7 +47,7 @@ TEST(LongTermIdleTrim, isValidConditionsForLearning){
 
     constexpr int mocked_rpm = 920;
 
-    StrictMock<MockIdle> idler;
+    StrictMock<MockIdleLTIT> idler;
     engine->engineModules.get<IdleController>().set(&idler);
 	idler.m_lastPhase = ICP::Idling;
 
@@ -195,7 +195,7 @@ TEST(LongTermIdleTrim, update_idle) {
 	engine->m_ltit.isStableIdle = true;
 	constexpr int mocked_rpm = 920;
 
-	StrictMock<MockIdle> idler;
+	StrictMock<MockIdleLTIT> idler;
     engine->engineModules.get<IdleController>().set(&idler);
 
 	engine->m_ltit.loadLtitFromConfig();
@@ -252,7 +252,7 @@ TEST(LongTermIdleTrim, update) {
     constexpr int mocked_rpm = 920;
 	constexpr int mocked_temp = 45.5;
 
-    StrictMock<MockIdle> idler;
+    StrictMock<MockIdleLTIT> idler;
     engine->engineModules.get<IdleController>().set(&idler);
 	idler.m_lastPhase = ICP::Idling;
 	idler.useClosedLoop = true;
@@ -269,4 +269,28 @@ TEST(LongTermIdleTrim, update) {
    	engine->m_ltit.update(mocked_rpm, mocked_temp, false, false, false, 4.5);
 	EXPECT_NEAR(engine->m_ltit.ltitTableHelper[0], 105, EPS4D);
 	EXPECT_TRUE(engine->m_ltit.updatedLtit);
+}
+
+//TODO: this func is unused:
+TEST(LongTermIdleTrim, smoothLtitTable){
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    // ltit config
+    engineConfiguration->ltitEnabled = true;
+	setArrayValues(engine->m_ltit.ltitTableHelper, 100);
+
+	// randomize a bit the table:
+    for(size_t i = 0; i < LTIT_TABLE_SIZE; i++){
+      engine->m_ltit.ltitTableHelper[i] = engine->m_ltit.ltitTableHelper[i] + (5 * i);
+    }
+
+    // invalid factor:
+    engine->m_ltit.smoothLtitTable(180);
+    EXPECT_FALSE(engine->m_ltit.m_pendingSave);
+
+    // valid factor
+    engine->m_ltit.smoothLtitTable(45);
+	EXPECT_EQ(engine->m_ltit.ltitTableHelper[0], 101.125);
+    EXPECT_EQ(engine->m_ltit.ltitTableHelper[1], 105);
+	EXPECT_EQ(engine->m_ltit.ltitTableHelper[3], 115);
+	EXPECT_TRUE(engine->m_ltit.m_pendingSave);
 }
