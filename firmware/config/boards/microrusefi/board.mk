@@ -71,6 +71,6 @@ ifeq ($(BOARD_HAS_EXT_FLASH),yes)
     # Move persistentState out of CCM as it should be accessible by DMA
     DDEFS += -DPERSISTENT_LOCATION=""
     # Move LUA heap to CCM
-    DDEFS += -DLUA_HEAD_RAM_SECTION=CCM_OPTIONAL
+    DDEFS += -DLUA_HEAP_RAM_SECTION=CCM_OPTIONAL
     BOARDCPPSRC += $(BOARD_DIR)/board_storage.cpp
 endif
