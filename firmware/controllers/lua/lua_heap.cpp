@@ -48,16 +48,16 @@ public:
 	template<size_t TSize>
 	Heap(uint8_t (&buffer)[TSize])
 	{
-		reinit(buffer, TSize);
+		init(buffer, TSize);
 	}
 
 	Heap()
 	{
-		reinit(nullptr, 0);
+		init(nullptr, 0);
 	}
 
-	void reinit(uint8_t *buffer, size_t size) {
-		criticalAssertVoid(used() == 0, "Too late to reinit Lua heap");
+	void init(uint8_t *buffer, size_t size) {
+		criticalAssertVoid(used() == 0, "Too late to init Lua heap: already in use");
 
 		m_size = size;
 		m_buffer = buffer;
@@ -77,12 +77,7 @@ public:
 		size_t heapFree = 0;
 		size_t lagestFree = 0;
 		chHeapStatus(&m_heap, &heapFree, &lagestFree);
-		// hack to return zero when heap is totaly free
-		// this is for leak detector
-		// if all free memory is in one chunk this means heap is totaly free
-		if (heapFree == lagestFree) {
-			return 0;
-		}
+
 		return m_size - heapFree;
 	}
 
@@ -125,7 +120,7 @@ void luaHeapInit()
 		// This is safe to use section base and end as we define ram3 for all F4 chips
 		extern uint8_t __ram3_base__[];
 		extern uint8_t __ram3_end__[];
-		luaOptionalHeap.reinit(__ram3_base__, __ram3_end__ - __ram3_base__);
+		luaOptionalHeap.init(__ram3_base__, __ram3_end__ - __ram3_base__);
 	}
 #endif // !EFI_IS_F42x
 #endif // STM32F4
@@ -134,7 +129,7 @@ void luaHeapInit()
 #if MCU_HAS_CCM_RAM
 	extern uint8_t __heap_ccm_base__[];
 	extern uint8_t __heap_ccm_end__[];
-	luaCcmHeap.reinit(__heap_ccm_base__, __heap_ccm_end__ - __heap_ccm_base__);
+	luaCcmHeap.init(__heap_ccm_base__, __heap_ccm_end__ - __heap_ccm_base__);
 #endif
 }
 
