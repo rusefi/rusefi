@@ -117,8 +117,8 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         return;
     }
 
-    auto& idleController = engine->module<IdleController>().unmock();
-    auto currentPhase = idleController.getCurrentPhase();
+    auto& idleController = engine->engineModules.get<IdleController>();
+    auto currentPhase = idleController->getCurrentPhase();
 
     // LTIT should only learn during Phase::Idling
     if (currentPhase != IIdleController::Phase::Idling) {
@@ -128,7 +128,7 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     }
 
     // Check if we're in idle RPM range
-    float targetRpm = idleController.getTargetRpm(clt).ClosedLoopTarget;
+    float targetRpm = idleController->getTargetRpm(clt).ClosedLoopTarget;
     float rpmDelta = std::abs(rpm - targetRpm);
     bool isIdleRpm = rpmDelta < engineConfiguration->ltitStableRpmThreshold;
 
@@ -149,7 +149,7 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         return;
     }
 
-    if (!idleController.useClosedLoop) {
+    if (!idleController->useClosedLoop) {
         return; // PID não está ativo, não há integrador válido
     }
 
