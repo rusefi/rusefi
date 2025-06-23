@@ -30,7 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - OilTempGauge
- - explicit LUA_USER_HEAP is now optional
+ - LUA_USER_HEAP is no longer used
  - official binaries use gcc14
 
 ## June 2025 "Day 1210"
