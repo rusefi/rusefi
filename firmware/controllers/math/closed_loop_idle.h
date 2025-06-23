@@ -22,11 +22,13 @@ public:
     bool updatedLtit = false;
 
     // Load data from flash to helper table
-    void loadLtitFromConfig();
+    virtual void loadLtitFromConfig();
     // Check if table has valid data
     bool hasValidData() const;
 
+#ifndef EFI_UNIT_TEST
 private:
+#endif
     float ltitTableHelper[LTIT_TABLE_SIZE];
     bool ltitTableInitialized = false;
 
