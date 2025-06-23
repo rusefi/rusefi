@@ -3,7 +3,6 @@
 #include "engine_math.h"
 #include "efitime.h"
 #include "engine.h"
-#include <cmath>
 #include <rusefi/rusefi_math.h>
 
 // LTIT_TABLE_SIZE is defined in the header file
@@ -74,12 +73,12 @@ float LongTermIdleTrim::getLtitFactor(float rpm, float clt) const {
 
 bool LongTermIdleTrim::isValidConditionsForLearning(float idleIntegral) const {
     float minThreshold = engineConfiguration->ltitIntegratorThreshold;
-    if (fabsf(idleIntegral) < minThreshold) {
+    if (std::abs(idleIntegral) < minThreshold) {
         return false; // Integrator too low - PID not working hard enough
     }
 
     // Upper limit to avoid extreme conditions
-    if (fabsf(idleIntegral) > 25.0f) {
+    if (std::abs(idleIntegral) > 25.0f) {
         return false; // Integrator too high - unstable conditions
     }
 
@@ -126,7 +125,7 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
 
     // Check if we're in idle RPM range
     float targetRpm = idleController.getTargetRpm(clt).ClosedLoopTarget;
-    float rpmDelta = fabsf(rpm - targetRpm);
+    float rpmDelta = std::abs(rpm - targetRpm);
     bool isIdleRpm = rpmDelta < engineConfiguration->ltitStableRpmThreshold;
 
     // Check stability
