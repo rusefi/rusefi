@@ -52,6 +52,3 @@
 
 // H7 runs faster "slow" ADC to make up for reduced oversampling
 #define SLOW_ADC_RATE 1000
-
-#undef LUA_USER_HEAP
-#define LUA_USER_HEAP 100000

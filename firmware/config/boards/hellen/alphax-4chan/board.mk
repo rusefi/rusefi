@@ -6,9 +6,6 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Add them all together
 
-# 37K would not fit
-DDEFS += -DLUA_USER_HEAP=32000
-
 # pretty temporary?
 DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
 

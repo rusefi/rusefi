@@ -36,10 +36,6 @@
 #define EFI_USE_COMPRESSED_INI_MSD TRUE
 #endif
 
-#ifndef LUA_USER_HEAP
-#define LUA_USER_HEAP 100000
-#endif
-
 // UART driver not implemented on F7
 #ifndef AUX_SERIAL_DEVICE
 #define AUX_SERIAL_DEVICE (&SD6)
