@@ -8,15 +8,15 @@
 
 #include "pch.h"
 #include <stdlib.h>
-#include "mlq_reader.h"
 
 bool hasInitGtest = false;
 
 GTEST_API_ int main(int argc, char **argv) {
-/*
-	BinarySensorReader r;
-	r.readMlq("pretty-happy-reference.mlg");
-*/
+  if (argc == 2 && strcmp(argv[1], "sandbox") == 0) {
+    void runSandbox();
+    runSandbox();
+    return 0;
+  }
 
 	hasInitGtest = true;
 

@@ -18,8 +18,7 @@ int readSwappedInt(std::ifstream *ifs) {
 		throw std::runtime_error("Error reading value");
 	}
 	uint32_t swapped_value = ((value & 0x000000FF) << 24)
-			| ((value & 0x0000FF00) << 8)
-			| ((value & 0x00FF0000) >> 8)
+			| ((value & 0x0000FF00) << 8) | ((value & 0x00FF0000) >> 8)
 			| ((value & 0xFF000000) >> 24);
 	return static_cast<int32_t>(swapped_value);
 }
@@ -34,8 +33,7 @@ float readSwappedFloat(std::ifstream *ifs) {
 		uint32_t i;
 	} converter;
 	uint32_t swapped_bytes = ((value & 0x000000FF) << 24)
-			| ((value & 0x0000FF00) << 8)
-			| ((value & 0x00FF0000) >> 8)
+			| ((value & 0x0000FF00) << 8) | ((value & 0x00FF0000) >> 8)
 			| ((value & 0xFF000000) >> 24);
 
 	converter.i = swapped_bytes;
@@ -100,8 +98,11 @@ int BinarySensorReader::readRecordsMetadata(std::ifstream &ifs,
 		MlqDataType type = findByOrdinal(typeCode);
 		lineTotalSize += getRecordSize(type);
 
-		records.emplace_back(fieldName, type, scale);
+		Record *record = new Record(fieldName, type, scale);
+		recordByName[fieldName] = record;
+		records.emplace_back(record);
 	}
+	afterHeaderCallback();
 	return lineTotalSize;
 }
 
@@ -112,15 +113,19 @@ void BinarySensorReader::readLoggerFieldData(std::ifstream &ifs) {
 
 	std::map<const Record*, float> currentSnapshot;
 
-	for (Record &record : records) {
-		float value = record.read(ifs);
-		currentSnapshot[&record] = value;
+	for (Record *record : records) {
+		float value = record->read(ifs);
+		currentSnapshot[record] = value;
 	}
 
 	/*uint8_t crc = */static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
 
 	recordCounter++;
 	logContent.emplace_back(currentSnapshot);
+
+	if (callback)
+		callback(currentSnapshot);
+
 }
 
 void BinarySensorReader::readBlocks(std::ifstream &ifs) {

@@ -1,4 +1,5 @@
 TESTS_SRC_CPP = \
+	tests/ltfp_sandbox.cpp \
 	tests/trigger/test_all_triggers.cpp \
 	tests/trigger/test_2_stroke.cpp \
 	tests/trigger/test_symmetrical_crank.cpp \
