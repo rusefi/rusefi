@@ -45,10 +45,10 @@ public class ConfigDefinition {
             String[] totalArgs = options.toArray(new String[0]);
             if (totalArgs.length < 2) {
                 log.error("Please specify\r\n"
-                        + KEY_DEFINITION + " x\n"
-                        + KEY_TS_TEMPLATE + " x\n"
-                        + KEY_C_DESTINATION + " x\n"
-                        + KEY_JAVA_DESTINATION + " x\n"
+                    + KEY_DEFINITION + " x\n"
+                    + KEY_TS_TEMPLATE + " x\n"
+                    + KEY_C_DESTINATION + " x\n"
+                    + KEY_JAVA_DESTINATION + " x\n"
                 );
                 return;
             }
@@ -64,6 +64,7 @@ public class ConfigDefinition {
         log.info(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
+        List<String> softPrePrendsFileNames = new ArrayList<>();
 
         DefinitionsState parseState = state.getEnumsReader().parseState;
         String signatureDestination = null;
@@ -99,7 +100,6 @@ public class ConfigDefinition {
                     break;
                 case KEY_JAVA_DESTINATION:
                     String folderName = args[i + 1];
-                    state.addJavaDestination(folderName + "Fields.java");
                     state.addDestination(new FileJavaVariableRegistryConsumer(state, folderName, LazyFile.REAL, "VariableRegistryValues"));
                     break;
                 case "-field_lookup_file": {
@@ -108,7 +108,7 @@ public class ConfigDefinition {
                     i++;
                     state.addDestination(new GetConfigValueConsumer(cppFile, mdFile, LazyFile.REAL));
                 }
-                    break;
+                break;
                 case READFILE_OPTION:
                     String keyName = args[i + 1];
                     // yes, we take three parameters here thus pre-increment!
@@ -124,18 +124,21 @@ public class ConfigDefinition {
                     String firingEnumFileName = args[i + 1];
                     ExtraUtil.handleFiringOrder(firingEnumFileName, state.getVariableRegistry(), parseState);
                     state.addInputFile(firingEnumFileName);
-                    }
-                    break;
+                }
+                break;
                 case "-triggerInputFolder": {
                     String triggersInputFolder = args[i + 1];
                     new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
                 }
-                    break;
+                break;
                 case KEY_PREPEND:
                     state.addPrepend(args[i + 1].trim());
                     break;
-                case KEY_SOFT_PREPEND:
-                    state.addSoftPrepend(args[i + 1].trim());
+                case KEY_SOFT_PREPEND: {
+                    String softPrependFileName = args[i + 1].trim();
+                    softPrePrendsFileNames.add(softPrependFileName);
+                    state.addSoftPrepend(softPrependFileName);
+                }
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];
@@ -155,7 +158,7 @@ public class ConfigDefinition {
                         throw new IllegalStateException("Reading " + file.getAbsolutePath(), e);
                     }
                 }
-                    break;
+                break;
                 case "-ts_output_name":
                     state.setTsFileOutputName(args[i + 1]);
                     break;
@@ -167,6 +170,9 @@ public class ConfigDefinition {
                     break;
             }
         }
+
+        handlePage(state, 1, softPrePrendsFileNames);
+        handlePage(state, 2, softPrePrendsFileNames);
 
         if (tsInputFileFolder != null) {
             // used to update .ini files
@@ -195,5 +201,13 @@ public class ConfigDefinition {
         }
 
         state.doJob();
+    }
+
+    private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends) throws IOException {
+        PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends);
+        page.doJob();
+        // PAGE_CONTENT_1 is handled here!
+        parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
+        parentState.getVariableRegistry().register("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
     }
 }

@@ -32,7 +32,7 @@ public class ReaderStateImpl implements ReaderState {
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
-    private static final String VARIABLE_PREFIX = "@@";
+    public static final String INCLUDE_PREFIX = "include_file";
     // used to update other files
     private final List<String> inputFiles = new ArrayList<>();
     private final Stack<ConfigStructureImpl> stack = new Stack<>();
@@ -255,7 +255,8 @@ public class ReaderStateImpl implements ReaderState {
         String lineReaded;
         while ((lineReaded = definitionReader.readLine()) != null) {
             lineReaded = ToolUtil.trimLine(lineReaded);
-            if (lineReaded.startsWith(VARIABLE_PREFIX)) {
+            if (lineReaded.startsWith(INCLUDE_PREFIX)) {
+                lineReaded = lineReaded.substring(INCLUDE_PREFIX.length());
                 String lineExpanded = variableRegistry.applyVariables(lineReaded);
                 String sublines[] = lineExpanded.split("\\r?\\n");
                 lines.addAll(Arrays.asList(sublines));
@@ -410,7 +411,6 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     public void addJavaDestination(String fileName) {
-        destinations.add(new FileJavaFieldsConsumer(this, fileName, 0, fileFactory));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.ReaderStateImpl;
+import com.rusefi.VariableRegistry;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.tools.tune.BoardConfigStrategy;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class BoardConfigTest {
 
         String inputString = "struct parent\n" +
             "int fieldName;\n" +
-            "@@" + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + "@@\n" +
+            ReaderStateImpl.INCLUDE_PREFIX + "@@" + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + "@@\n" +
             "end_struct\n";
 
         state.readBufferedReader(inputString, javaFieldsConsumer);
@@ -40,7 +41,8 @@ public class BoardConfigTest {
             "string_here_t fieldName2;\n");
 
         String inputString = "struct parent\n" +
-            "@@" + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + "@@\n" +
+            ReaderStateImpl.INCLUDE_PREFIX + VariableRegistry.TEMPLATE_TAG + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + VariableRegistry.TEMPLATE_TAG +
+            "\n" +
             "int fieldName;\n" +
             "end_struct\n";
 

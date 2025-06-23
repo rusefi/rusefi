@@ -40,7 +40,7 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
         log.info("Writing to " + fileName);
         LazyFile cHeader = new LazyFileImpl(fileName);
 
-        cHeader.write("//\n// " + ToolUtil.getGeneratedAutomaticallyTag() + headerComment + "\n//\n\n");
+        cHeader.write("//\n// " + CHeaderConsumer.class.getSimpleName() + " " + ToolUtil.getGeneratedAutomaticallyTag() + headerComment + "\n//\n\n");
         cHeader.write(variableRegistry.getDefinesSection());
         cHeader.close();
     }

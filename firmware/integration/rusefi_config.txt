@@ -1714,7 +1714,7 @@ int anotherCiTest
 linear_sensor_s auxLinear3
 linear_sensor_s auxLinear4
 
-@@BOARD_ENGINE_CONFIGURATION_FROM_FILE@@
+include_file@@BOARD_ENGINE_CONFIGURATION_FROM_FILE@@
 
 uint8_t autoscale knockSuppressMinTps;Below TPS value all knock suppression will be disabled.;"%", 1, 0, 0, 100, 1
 uint8_t autoscale knockFuelTrimAggression;Fuel to odd when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.), 15% (high knock, e.g. GDI), 20% (spicy lump),;"%", 0.1, 0, 0, 20, 1
@@ -2257,7 +2257,7 @@ uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;"Load", 5, 0, 0,  
 uint8_t[4] autoscale maximumOilPressureBins;;"RPM", 100, 0, 0, 25000, 0
 uint8_t[4] autoscale maximumOilPressureValues;;"kPa", 10, 0, 0, 2000, 0
 
-@@BOARD_CONFIG_FROM_FILE@@
+include_file@@BOARD_CONFIG_FROM_FILE@@
 
 end_struct
 

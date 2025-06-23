@@ -5,6 +5,7 @@ import com.rusefi.output.*;
 import com.rusefi.parse.TypesHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,15 +50,15 @@ public class ConfigFieldParserTest {
     public void testFloatMsAlias() {
         String test = "struct pid_s\n" +
                 "floatms_t afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0, noMsqSave\n" +
-                "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "percent_t afr_typet;PID dTime;\"ms\",      0.1,      0,       0, 3000,      0\n" +
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
-                "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
-                "; total TS size = 8\n", tsProjectConsumer.getContent());
+            "afr_typet = scalar, F32, 4, \"ms\", 0.1, 0, 0, 3000, 0\n" +
+            "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
     @Test

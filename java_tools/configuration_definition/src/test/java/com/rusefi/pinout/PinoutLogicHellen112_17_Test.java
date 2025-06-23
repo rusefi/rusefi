@@ -31,6 +31,8 @@ public class PinoutLogicHellen112_17_Test {
 
         StringWriter outputsTestWriter = new StringWriter();
 
+        StringWriter boardPinNamesTestWriter = new StringWriter();
+
         PinoutLogic logic = new PinoutLogic(new FileSystemBoardInputsReaderImpl(FileSystemBoardInputsReaderImpl.PREFIX + "config/boards/hellen/hellen-112-17/") {
             @Override
             public Writer getBoardNamesWriter() {
@@ -40,6 +42,11 @@ public class PinoutLogicHellen112_17_Test {
             @Override
             public Writer getOutputsWriter() {
                 return outputsTestWriter;
+            }
+
+            @Override
+            public Writer getBoardPinNamesWriter() throws IOException {
+                return boardPinNamesTestWriter;
             }
         });
 

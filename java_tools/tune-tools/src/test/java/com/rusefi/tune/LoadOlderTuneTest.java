@@ -6,14 +6,14 @@ import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.*;
-import com.rusefi.config.generated.Fields;
-import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,6 +31,9 @@ public class LoadOlderTuneTest {
         assertFalse(ini.getFieldsInUiOrder().isEmpty());
 
         RootHolder.ROOT = "../../firmware/";
+
+        // somewhere deep we have append prefix is not absolute path, so let's make path absolute
+        TuneCanTool.boardPath = new File("../../firmware/" + "config/boards/hellen/uaefi/").getAbsolutePath() + File.separator;
 
         StringBuilder sb = TuneCanTool.getTunePatch(lessOldDefaultTune, customOldTune, ini, TuneReadWriteTest.TUNE_NAME, new StringBuilder(), null, "");
 
@@ -153,9 +156,9 @@ public class LoadOlderTuneTest {
     @Test
     public void findFieldByName() throws IniMemberNotFound {
         IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
-        StringIniField make = (StringIniField) ini.getIniField(Fields.ENGINEMAKE);
+        StringIniField make = (StringIniField) ini.getIniField("ENGINEMAKE");
         assertNotNull(make);
-        ScalarIniField tps = (ScalarIniField) ini.getOutputChannel(TsOutputs.RPMVALUE.getName());
+        ScalarIniField tps = (ScalarIniField) ini.getOutputChannel("RPMVALUE");
         assertNotNull(tps);
     }
 }
