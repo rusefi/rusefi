@@ -50,6 +50,7 @@ struct IIdleController {
 	virtual bool isIdlingOrTaper() const = 0;
 	virtual bool isCoastingAdvance() const = 0;
 	virtual float getIdleTimingAdjustment(float rpm) = 0;
+	virtual Phase getCurrentPhase() const = 0;
 };
 
 class IdleController : public IIdleController, public EngineModule, public idle_state_s {
@@ -91,7 +92,7 @@ public:
 		return m_lastPhase == Phase::Coasting && engineConfiguration->useIdleAdvanceWhileCoasting;
 	}
 
-	Phase getCurrentPhase() const {
+	Phase getCurrentPhase() const override {
 		return m_lastPhase;
 	}
 
