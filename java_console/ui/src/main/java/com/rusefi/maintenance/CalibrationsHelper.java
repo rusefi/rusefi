@@ -320,6 +320,9 @@ public class CalibrationsHelper {
                 newIniFile,
                 new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent())
             ));
+        } else if ("true".equals(System.getenv("RUSEFI_FORCE_CALIBRATIONS_RESTORE"))) {
+            callbacks.logLine("It looks like we do not need to update previous calibrations, but for debugging we are going to rewrite to ECU new calibrations again.");
+            result = Optional.of(newCalibrations);
         } else {
             callbacks.logLine("It looks like we do not need to update any fields to restore previous calibrations.");
         }
