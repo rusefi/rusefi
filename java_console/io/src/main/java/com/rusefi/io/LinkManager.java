@@ -78,7 +78,13 @@ public class LinkManager implements Closeable {
         try {
             // let's wait for the above trivial task to finish
             future.get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (final InterruptedException e) {
+            log.warn(String.format(
+                "Thread `%s` is interrupted on LinkManager initialization",
+                Thread.currentThread().getName()
+            ));
+            throw new IllegalStateException(e);
+        } catch (final ExecutionException e) {
             throw new IllegalStateException(e);
         }
 

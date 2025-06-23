@@ -107,12 +107,16 @@ public enum SerialPortScanner {
 
         // One thread per port to check
         final List<Thread> threads = ports.stream().map(p -> {
+            final String threadName = "SerialPortScanner inspectPort " + p;
+
             Thread t = new Thread(() -> {
+                log.trace(String.format("Thread `%s` is starting...", threadName));
                 PortResult r = inspectPort(p);
 
                 // Record the result under lock
                 synchronized (resultsLock) {
                     if (Thread.currentThread().isInterrupted()) {
+                        log.trace(String.format("Thread `%s` is interrupted.", threadName));
                         // If interrupted, don't try to write our result
                         return;
                     }
@@ -124,9 +128,10 @@ public enum SerialPortScanner {
                         callingThread.interrupt();
                     }
                 }
+                log.trace(String.format("Thread `%s` has finished.", threadName));
             });
 
-            t.setName("SerialPortScanner inspectPort " + p);
+            t.setName(threadName);
             t.setDaemon(true);
             t.start();
 
@@ -145,6 +150,7 @@ public enum SerialPortScanner {
         // Interrupt all threads under lock to ensure no more objects are added to results
         synchronized (resultsLock) {
             for (Thread t : threads) {
+                log.trace(String.format("Interrupting thread `%s`...", t.getName()));
                 t.interrupt();
             }
         }
