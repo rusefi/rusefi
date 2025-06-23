@@ -11,7 +11,7 @@
 
 LongTermIdleTrim::LongTermIdleTrim() {
     initializeTableWithDefaults();
-    emaError = 0.0f;
+    emaError = 0.0f; //TODO: unused?
     ltitTableInitialized = false;
     m_pendingSave = false;
 }
@@ -23,6 +23,7 @@ void LongTermIdleTrim::initializeTableWithDefaults() {
     }
 }
 
+//TODO: move? add? to validateConfigOnStartUpOrBurn
 bool LongTermIdleTrim::hasValidData() const {
     // More robust validation - check for reasonable range and distribution
     int validCount = 0;
@@ -56,12 +57,14 @@ void LongTermIdleTrim::loadLtitFromConfig() {
 
         ltitTableInitialized = true;
     } else {
+        //TODO: this is part of setDefaultEngineConfiguration?
         // Initialize with defaults if no valid data
         initializeTableWithDefaults();
         ltitTableInitialized = true;
     }
 }
 
+//TODO: rpm unused?
 float LongTermIdleTrim::getLtitFactor(float rpm, float clt) const {
     if (!ltitTableInitialized) {
         return 1.0f; // No correction if not initialized
@@ -95,6 +98,7 @@ bool LongTermIdleTrim::isValidConditionsForLearning(float idleIntegral) const {
     return true;
 }
 
+//TODO: acActive unused, fan1Active, fan2Active, check comment about isValidConditionsForLearning
 void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
     if (!engineConfiguration->ltitEnabled) {
         return;
@@ -136,6 +140,7 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     }
 
     // Check if stable for minimum time
+    // TODO: set ltitStableTime default value? also move to autoscale 0.1 like other configs with seconds?
     if (!isStableIdle && m_stableIdleTimer.hasElapsedSec(engineConfiguration->ltitStableTime)) {
         isStableIdle = true;
     }
@@ -160,6 +165,8 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     }
     m_updateTimer.reset();
 
+    //TODO: docs?, weird use of non-public interpolation.h, we are trying to the get bin index for X temp?
+    // also ltitTableHelper scale will depend on clt idle bins?
     // Use proper bin finding with getBin function for CLT only
     auto cltBin = priv::getBin(clt, config->cltIdleCorrBins);
 
@@ -208,6 +215,7 @@ void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
         m_pendingSave = false;
     } else if (updatedLtit) {
         // Schedule save after ignition off
+        // TODO: maybe move all this to EngineModule & use needsDelayedShutoff?
         m_pendingSave = true;
         m_ignitionOffTimer.reset();
         updatedLtit = false;
@@ -219,10 +227,12 @@ void LongTermIdleTrim::checkIfShouldSave() {
     if (m_pendingSave && !m_ignitionState) {
         float saveDelaySeconds = engineConfiguration->ltitIgnitionOffSaveDelay;
         if (saveDelaySeconds <= 0) {
+            //TODO: this is part of setDefaultEngineConfiguration?
             saveDelaySeconds = 5.0f; // Default 5 seconds
         }
 
         if (m_ignitionOffTimer.hasElapsedSec(saveDelaySeconds)) {
+            // TODO: copyArray?
             // Save to flash memory
             for (int i = 0; i < LTIT_TABLE_SIZE; i++) {
                 // Convert float to autoscaled uint16_t
@@ -230,6 +240,7 @@ void LongTermIdleTrim::checkIfShouldSave() {
             }
 
 #if EFI_PROD_CODE
+            //TODO: we need to use requestBurn here?
             setNeedToWriteConfiguration();
 #endif // EFI_PROD_CODE
             m_pendingSave = false;
@@ -237,6 +248,7 @@ void LongTermIdleTrim::checkIfShouldSave() {
     }
 }
 
+//TODO: unused?
 void LongTermIdleTrim::smoothLtitTable(float intensity) {
     if (!engineConfiguration->ltitEnabled || intensity <= 0.0f || intensity > 100.0f) {
         return; // Invalid intensity or LTIT disabled
