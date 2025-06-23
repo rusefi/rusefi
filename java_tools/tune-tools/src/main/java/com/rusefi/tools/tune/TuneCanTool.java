@@ -263,7 +263,7 @@ public class TuneCanTool {
                 log.info("Ignoring " + cName);
                 continue;
             }
-            if (TuneCanToolHelper.IGNORE_LIST.contains(cName)) {
+            if (!TuneCanToolHelper.accept(cName)) {
                 log.info("Ignoring " + cName);
                 continue;
             }

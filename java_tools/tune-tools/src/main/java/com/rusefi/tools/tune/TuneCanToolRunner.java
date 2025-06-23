@@ -9,7 +9,7 @@ import static com.rusefi.tools.tune.TuneCanTool.writeDiffBetweenLocalTuneFileAnd
 
 public class TuneCanToolRunner {
     public static void main(String[] args) throws JAXBException, IOException {
-        int count = 7;
+        int count = 8;
         if (args.length != count)
             throw new IllegalArgumentException(count + " arguments expected");
         TuneCanTool.boardPath = args[0];
@@ -21,11 +21,15 @@ public class TuneCanToolRunner {
         String customTuneFileName = args[4];
         RootHolder.ROOT = args[5];
         String ignoreListFileName = args[6];
-        // todo optional white list argument args[7]
+        String whiteListFileName = args[7];
         System.out.println("ignoreListFileName=" + ignoreListFileName);
+        System.out.println("whiteListFileName=" + whiteListFileName);
 
-        if (!ignoreListFileName.isEmpty())
+        if (!ignoreListFileName.isEmpty()) {
             TuneCanToolHelper.readIgnoreList(ignoreListFileName);
+        } else {
+            TuneCanToolHelper.readWhiteList(whiteListFileName);
+        }
 
         TuneCanToolHelper.initialize(TuneContext.iniFileName);
         TuneContext.boardPrepend = TuneCanTool.boardPath + "prepend.txt";
