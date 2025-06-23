@@ -26,7 +26,7 @@
 
 ! 0x42 burnCommand
 #define TS_BURN_COMMAND 'B'
-! 0x77
+! 0x5A custom rusEFI command
 #define TS_IO_TEST_COMMAND 'Z'
 
 #define TS_RESPONSE_OK 0
@@ -69,7 +69,7 @@
 #define TS_GET_OUTPUTS_SIZE '4'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_SCATTERED_GET_COMMAND '9'
-
+#define TS_SCATTER_OFFSETS_COUNT 128
 #define TS_QUERY_BOOTLOADER 'L'
 
 #define TS_QUERY_BOOTLOADER_NONE 0

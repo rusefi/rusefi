@@ -26,6 +26,9 @@
 
 #define STFT_BANK_COUNT 2
 
+#define VE_RPM_COUNT 16
+#define VE_LOAD_COUNT 16
+
 #define TCU_GEAR_COUNT 10
 #define EGT_CHANNEL_COUNT 8
 

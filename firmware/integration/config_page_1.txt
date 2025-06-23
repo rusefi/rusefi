@@ -1,0 +1,4 @@
+struct_no_prefix page1_s
+! offsets + type array for scatteredOchGetCommand
+	uint16_t[TS_SCATTER_OFFSETS_COUNT] highSpeedOffsets;;"",      1.0000,   0.00000,  0.00,  65535,       0, noMsqSave
+end_struct

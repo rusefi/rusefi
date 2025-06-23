@@ -214,8 +214,6 @@ struct_no_prefix engine_configuration_s
 
 #define VEHICLE_INFO_SIZE 32
 
-#define VE_RPM_COUNT 16
-#define VE_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 #define INJ_PHASE_RPM_COUNT 16

@@ -1,0 +1,5 @@
+struct_no_prefix page2_s
+	! LTFT, convert to percents
+  float[VE_LOAD_COUNT x VE_RPM_COUNT] ltft_table_bank1;;"%",  100,   0.00000, -35.0,   35.0,       1, noMsqSave,controllerPriority
+  float[VE_LOAD_COUNT x VE_RPM_COUNT] ltft_table_bank2;;"%",  100,   0.00000, -35.0,   35.0,       1, noMsqSave,controllerPriority
+end_struct
