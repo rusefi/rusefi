@@ -55,13 +55,15 @@ public class EnumIniField extends IniField {
         ordinal = getBitRange(ordinal, bitPosition, bitSize0 + 1);
 
         if (ordinal >= enums.size())
-            throw new IllegalStateException("Ordinal out of range " + ordinal + " in " + getName() + " while " + enums.size() + " " + type);
+            throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + getName() + " while " + enums.size() + " " + type);
         return "\"" + enums.get(ordinal) + "\"";
     }
 
     @NotNull
     private ByteBuffer getByteBuffer(ConfigurationImage image) {
         Objects.requireNonNull(image, "image enum getter");
+        if (image.getSize() < getOffset() + 4)
+            throw new IllegalArgumentException("OutOfBounds while " + getName() + " " + getOffset());
         return image.getByteBuffer(getOffset(), 4);
     }
 
