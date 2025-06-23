@@ -263,9 +263,7 @@ void LuaThread::ThreadTask() {
 	}
 }
 
-#if LUA_USER_HEAP > 1
 static LuaThread luaThread;
-#endif
 
 void startLua() {
 	// stm32f4xx can have optional ram3 region
@@ -285,7 +283,6 @@ void startLua() {
 #endif // !EFI_IS_F42x
 #endif // STM32F4
 
-#if LUA_USER_HEAP > 1
 #if EFI_CAN_SUPPORT
 	initLuaCanRx();
 #endif // EFI_CAN_SUPPORT
@@ -319,7 +316,6 @@ void startLua() {
 
      luaHeapPrintInfo();
   });
-#endif
 }
 
 #else // not EFI_UNIT_TEST
