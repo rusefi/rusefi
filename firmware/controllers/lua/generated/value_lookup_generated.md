@@ -106,12 +106,6 @@ Turn on this fan when AC is on.
 ### enableFan2WithAc
 Turn on this fan when AC is on.
 
-### disableFan1WhenStopped
-Inhibit operation of this fan while the engine is not running.
-
-### disableFan2WhenStopped
-Inhibit operation of this fan while the engine is not running.
-
 ### enableTrailingSparks
 Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 
@@ -345,6 +339,12 @@ null
 
 ### disableFan2AtSpeed
 null
+
+### disableFan1WhenStopped
+Inhibit operation of this fan while the engine is not running.
+
+### disableFan2WhenStopped
+Inhibit operation of this fan while the engine is not running.
 
 ### driveWheelRevPerKm
 Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.

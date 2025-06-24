@@ -113,12 +113,6 @@ float getConfigValueByName(const char *name) {
 // enableFan2WithAc
 		case 993282195:
 			return engineConfiguration->enableFan2WithAc;
-// disableFan1WhenStopped
-		case -1132710384:
-			return engineConfiguration->disableFan1WhenStopped;
-// disableFan2WhenStopped
-		case -311454863:
-			return engineConfiguration->disableFan2WhenStopped;
 // enableTrailingSparks
 		case -1409016614:
 			return engineConfiguration->enableTrailingSparks;
@@ -353,6 +347,12 @@ float getConfigValueByName(const char *name) {
 // disableFan2AtSpeed
 		case -1906717594:
 			return engineConfiguration->disableFan2AtSpeed;
+// disableFan1WhenStopped
+		case -1132710384:
+			return engineConfiguration->disableFan1WhenStopped;
+// disableFan2WhenStopped
+		case -311454863:
+			return engineConfiguration->disableFan2WhenStopped;
 // driveWheelRevPerKm
 		case 991724096:
 			return engineConfiguration->driveWheelRevPerKm;
@@ -2210,16 +2210,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableFan2WithAc = (int)value;
 		return 1;
 	}
-		case -1132710384:
-	{
-		engineConfiguration->disableFan1WhenStopped = (int)value;
-		return 1;
-	}
-		case -311454863:
-	{
-		engineConfiguration->disableFan2WhenStopped = (int)value;
-		return 1;
-	}
 		case -1409016614:
 	{
 		engineConfiguration->enableTrailingSparks = (int)value;
@@ -2608,6 +2598,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1906717594:
 	{
 		engineConfiguration->disableFan2AtSpeed = (int)value;
+		return 1;
+	}
+		case -1132710384:
+	{
+		engineConfiguration->disableFan1WhenStopped = (int)value;
+		return 1;
+	}
+		case -311454863:
+	{
+		engineConfiguration->disableFan2WhenStopped = (int)value;
 		return 1;
 	}
 		case 991724096:
