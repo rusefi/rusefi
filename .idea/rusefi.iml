@@ -5,6 +5,9 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/firmware/.dep" />
       <excludeFolder url="file://$MODULE_DIR$/firmware/build" />
+      <excludeFolder url="file://$MODULE_DIR$/simulator/.dep" />
+      <excludeFolder url="file://$MODULE_DIR$/simulator/build" />
+      <excludeFolder url="file://$MODULE_DIR$/unit_tests/.dep" />
       <excludeFolder url="file://$MODULE_DIR$/unit_tests/build" />
       <excludeFolder url="file://$MODULE_DIR$/java_tools/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/java_tools/build" />
