@@ -36,7 +36,7 @@ public class ReaderStateImpl implements ReaderState {
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
     public static final String SPLIT_LINES = "split_lines";
-    private static final String INCLUDE_FILE = "include_file";
+    public static final String INCLUDE_FILE = "include_file";
     // used to update other files
     private final List<String> inputFiles = new ArrayList<>();
     private final Stack<ConfigStructureImpl> stack = new Stack<>();
@@ -266,7 +266,7 @@ public class ReaderStateImpl implements ReaderState {
             if (lineReaded.startsWith(INCLUDE_FILE)) {
                 String fileName = lineReaded.substring(INCLUDE_FILE.length()).trim();
                 log.info("Including " + fileName);
-                lines.addAll(Files.readAllLines(Paths.get( new File(RootHolder.ROOT + fileName).getAbsolutePath())));
+                lines.addAll(readAllLinesWithRoot(fileName));
             } else if (lineReaded.startsWith(SPLIT_LINES)) {
                 String template = lineReaded.substring(SPLIT_LINES.length());
                 String lineExpanded = variableRegistry.applyVariables(template);
@@ -315,6 +315,11 @@ public class ReaderStateImpl implements ReaderState {
         for (ConfigurationConsumer consumer : consumers)
             consumer.endFile();
         ensureEmptyAfterProcessing();
+    }
+
+    public static @NotNull List<String> readAllLinesWithRoot(String fileName) throws IOException {
+        // 'getAbsolutePath' seems to somehow help some tests? something is weird
+        return Files.readAllLines(Paths.get(new File(RootHolder.ROOT + fileName).getAbsolutePath()));
     }
 
     private void addBitPadding() {

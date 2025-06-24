@@ -13,7 +13,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
+import java.util.List;
 
+import static com.rusefi.ReaderStateImpl.INCLUDE_FILE;
 import static com.rusefi.util.IoUtils.CHARSET;
 
 /**
@@ -134,6 +136,15 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         boolean isAfterEndTag = false;
         String line;
         while ((line = r.readLine()) != null) {
+            if (line.startsWith(INCLUDE_FILE)) {
+                String fileName = line.substring(INCLUDE_FILE.length()).trim();
+                log.info("Including " + fileName);
+                List<String> lines = ReaderStateImpl.readAllLinesWithRoot(fileName);
+                for (String includedLine : lines) {
+                    processAndUse(includedLine, isBeforeStartTag, prefix, isAfterEndTag, postfix);
+                }
+                continue;
+            }
             if (line.contains(CONFIG_DEFINITION_START)) {
                 isBeforeStartTag = false;
                 continue;
@@ -142,28 +153,33 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 isAfterEndTag = true;
                 continue;
             }
-            if (line.trim().startsWith(";") && dropComments)
-                continue;
-
-            if (line.contains(TS_CONDITION)) {
-                String token = getToken(line);
-                String strValue = state.getVariableRegistry().get(token);
-                boolean value = Boolean.parseBoolean(strValue);
-                if (!value)
-                    continue; // skipping this line
-                line = removeToken(line);
-            }
-
-            line = state.getVariableRegistry().applyVariables(line) + ToolUtil.EOL;
-
-            if (isBeforeStartTag)
-                prefix.append(line);
-
-            if (isAfterEndTag)
-                postfix.append(line);
+            processAndUse(line, isBeforeStartTag, prefix, isAfterEndTag, postfix);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
+    }
+
+    private void processAndUse(String line, boolean isBeforeStartTag, StringBuilder prefix, boolean isAfterEndTag, StringBuilder postfix) {
+        if (line.trim().startsWith(";") && dropComments) {
+            return;
+        }
+
+        if (line.contains(TS_CONDITION)) {
+            String token = getToken(line);
+            String strValue = state.getVariableRegistry().get(token);
+            boolean value = Boolean.parseBoolean(strValue);
+            if (!value)
+                return; // skipping this line
+            line = removeToken(line);
+        }
+
+        line = state.getVariableRegistry().applyVariables(line) + ToolUtil.EOL;
+
+        if (isBeforeStartTag)
+            prefix.append(line);
+
+        if (isAfterEndTag)
+            postfix.append(line);
     }
 
     public static String removeToken(String line) {
