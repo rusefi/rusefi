@@ -131,6 +131,11 @@ BO_ 522 BASE10: 8 Vector__XXX
  SG_ knock0 : 0|8@1- (1,0) [-60|10] "db" Vector__XXX
  SG_ knock1 : 8|8@1- (1,0) [-60|10] "db" Vector__XXX
  SG_ knock2 : 16|8@1- (1,0) [-60|10] "db" Vector__XXX
+ SG_ knock3 : 24|8@1- (1,0) [-60|10] "db" Vector__XXX
+ SG_ knock4 : 32|8@1- (1,0) [-60|10] "db" Vector__XXX
+ SG_ knock5 : 40|8@1- (1,0) [-60|10] "db" Vector__XXX
+ SG_ knock6 : 48|8@1- (1,0) [-60|10] "db" Vector__XXX
+ SG_ knock7 : 56|8@1- (1,0) [-60|10] "db" Vector__XXX
 
 
 CM_ SG_ 3221225472 AFR "Current AFR Reading

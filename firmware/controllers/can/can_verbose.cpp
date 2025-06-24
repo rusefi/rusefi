@@ -184,8 +184,8 @@ static void populateFrame(Fueling2& msg) {
 struct Fueling3 {
 	scaled_channel<uint16_t, 10000> Lambda;
 	scaled_channel<uint16_t, 10000> Lambda2;
-	scaled_channel<int16_t, 30> FuelPressureLow;
-	scaled_channel<int16_t, 10> FuelPressureHigh;
+	scaled_channel<uint16_t, 30> FuelPressureLow;
+	scaled_channel<uint16_t, 10> FuelPressureHigh;
 };
 
 static void populateFrame(Fueling3& msg) {
@@ -196,7 +196,7 @@ static void populateFrame(Fueling3& msg) {
 }
 
 struct PerCylinderKnock {
-  uint8_t knock[8];
+  int8_t knock[8];
 };
 
 static void populateFrame(PerCylinderKnock& msg) {
@@ -238,6 +238,7 @@ struct Egts {
 static void populateFrame(Egts& msg) {
 	msg.egt[0] = Sensor::getOrZero(SensorType::EGT1) / 5;
 	msg.egt[1] = Sensor::getOrZero(SensorType::EGT2) / 5;
+	// DBC Defines signals Egt3 through Egt8 but we do not have the code
 }
 
 void sendCanVerbose() {
