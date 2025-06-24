@@ -58,12 +58,12 @@ public:
 	uint8_t& operator[](size_t);
 
 	/**
-	 * @brief Write a 16-bit short value to the buffer. Note: this writes in little endian byte order.
+	 * @brief Write a 16-bit short value to the buffer. Note: this writes in Intel little endian byte order.
 	 */
 	void setShortValue(uint16_t value, size_t offset);
 
 	/**
-	 Same as above but big endian
+	 Same as above but big endian Motorola
 	 * for instance DBC 8|16@0
 	 */
 	void setShortValueMsb(uint16_t value, size_t offset);

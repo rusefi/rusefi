@@ -301,9 +301,6 @@ BO_ 0x472 ECU_CruiseControl: 8 ECU
  SG_ Cruise_Control_Controller_State : 52|4@1+ (1,0) [0|0] "" ECU
  SG_ Cruise_Control_Input_State : 56|8@1+ (1,0) [0|0] "" ECU
 
-VAL_ 0x472 Cruise_Control_Controller_State 0 "Disabled" 1 "Inactive" 2 "Cruising" 3 "Accelerating" 4 "Decelerating";
-VAL_ 0x472 Cruise_Control_Input_State 0 "Unused" 1 "Disable" 2 "Enable" 3 "Enable/Disable" 4 "Cancel" 8 "Set" 12 "Set/Cancel" 16 "Resume" 20 "Resume/Cancel" 32 "Accel" 64 "Decel" 76 "Set/Coast/Cancel" 84 "Resume/Coast/Cancel" 128 "Increment" 168 "Set/Accel/+" 176 "Resume/Accel/+" 256 "Decrement" 328 "Set/Coast/-" 336 "Resume/Coast/-" 512 "Rest Position";
-
 BO_ 0x473 ECU_StatesOutputs: 8 ECU
  SG_ Total_Fuel_Used : 0|32@1+ (1,0) [0|0] "cc" ECU
  SG_ Rolling_Antilag_Switch_State : 39|1@1+ (1,0) [0|1] "" ECU
@@ -336,8 +333,6 @@ BO_ 0x473 ECU_StatesOutputs: 8 ECU
  SG_ Water_Injection_Advanced_Override_Output_State : 60|1@1+ (1,0) [0|1] "" ECU
  SG_ Cut_Percentage_Method : 56|4@1+ (1,0) [0|0] "" ECU
 
-VAL_ 0x473 Cut_Percentage_Method 0 "No Cut" 1 "Fuel" 2 "Ignition" 3 "Fuel and Ignition";
-
 BO_ 0x474 ECU_G_Rates: 8 ECU
  SG_ Vertical_G : 0|16@1- (0.1,0) [0|0] "m/s2" ECU
  SG_ Pitch_Rate : 16|16@1- (0.1,0) [0|0] "deg/s" ECU
@@ -364,10 +359,6 @@ BO_ 0x477 ECU_EngineLimiter: 8 ECU
  SG_ Cut_Percentage_Function : 48|8@1+ (1,0) [0|0] "" ECU
  SG_ Engine_Limiter_Method : 59|4@1+ (1,0) [0|0] "" ECU
  SG_ RPM_Limiter_Method : 56|4@1+ (1,0) [0|0] "" ECU
-
-VAL_ 0x477 Engine_Limiter_Method 0 "No Cut" 1 "Fuel" 2 "Ignition" 3 "Fuel and Ignition";
-VAL_ 0x477 RPM_Limiter_Method 0 "No Cut" 1 "Fuel" 2 "Ignition" 3 "Fuel and Ignition";
-# Note: "Engine Limiting Functions table" values not provided, so not included in VAL_ section.
 
 BO_ 0x6F0 ECU_TyrePressure: 8 ECU
  SG_ Front_Left_Tyre_Pressure : 0|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
@@ -397,13 +388,6 @@ BO_ 0x6F3 ECU_TyreProtection: 8 ECU
  SG_ Engine_Protection_Severity_Level : 40|8@1+ (1,0) [0|3] "" ECU
  SG_ Engine_Protection_Reason : 48|16@1+ (1,0) [0|0] "" ECU
 
-VAL_ 0x6F3 Rear_Right_Tyre_Air_Leak_Detected 0 "No Leak" 1 "Leak Detected";
-VAL_ 0x6F3 Rear_Left_Tyre_Air_Leak_Detected 0 "No Leak" 1 "Leak Detected";
-VAL_ 0x6F3 Front_Right_Tyre_Air_Leak_Detected 0 "No Leak" 1 "Leak Detected";
-VAL_ 0x6F3 Front_Left_Tyre_Air_Leak_Detected 0 "No Leak" 1 "Leak Detected";
-VAL_ 0x6F3 Engine_Protection_Severity_Level 0 "Idle" 1 "Level 1" 2 "Level 2" 3 "Level 3";
-# Comment for Engine_Protection_Reason is complex, adding as CM_
-
 BO_ 0x6F4 ECU_LightStates: 8 ECU
  SG_ Park_Light_State : 0|1@1+ (1,0) [0|1] "" ECU
  SG_ Head_Light_State : 1|1@1+ (1,0) [0|1] "" ECU
@@ -426,10 +410,6 @@ BO_ 0x6F8 ECU_MotorControlStates: 8 ECU
  SG_ Generic_Open_Loop_Motor_Control_1_State : 16|8@1- (1,0) [0|0] "" ECU
  SG_ Generic_Open_Loop_Motor_Control_2_State : 24|8@1- (1,0) [0|0] "" ECU
  SG_ Generic_Open_Loop_Motor_Control_3_State : 32|8@1- (1,0) [0|0] "" ECU
-# Reserved for future use not added as signals.
-
-VAL_ 0x6F8 Exhaust_Cutout_State -1 "Input Error" 0 "Disabled" 1 "Closed" 2 "Opening" 3 "Open" 4 "Closing" 5 "Paused Part Way";
-# Haltech Special Values for Nitrous Bottle Opener State, Generic Open Loop Motor Control states not provided, so not included in VAL_ section.
 
 BO_ 0x700 ECU_PDMInfo: 8 ECU
  SG_ HBO_HCO8_HCO25_Info_Byte0 : 0|8@1+ (1,0) [0|0] "" ECU
@@ -440,25 +420,3 @@ BO_ 0x700 ECU_PDMInfo: 8 ECU
  SG_ HBO_HCO8_HCO25_Info_Byte5 : 40|8@1+ (1,0) [0|0] "" ECU
  SG_ HBO_HCO8_HCO25_Info_Byte6 : 48|8@1+ (1,0) [0|0] "" ECU
  SG_ HBO_HCO8_HCO25_Info_Byte7 : 56|8@1+ (1,0) [0|0] "" ECU
-
-CM_ BO_ 0x700 "Sends out HBO, HCO8, HCO25 information as per the PD16 to ECU protocol for the internal R5 PDM. See (PD16 CAN Protocol) for more detailed info.";
-CM_ SG_ 0x36B NOS_Pressure_Sensor_1 "Saturated at 14316.4 kPa, 14417.7 kPa absolute, 2076 psi.";
-CM_ SG_ 0x3E6 NOS_Pressure_Sensor_2 "Saturated at 14316.4 kPa, 14417.7 kPa absolute, 2076 psi.";
-CM_ SG_ 0x3E6 NOS_Pressure_Sensor_3 "Saturated at 14316.4 kPa, 14417.7 kPa absolute, 2076 psi.";
-CM_ SG_ 0x3E6 NOS_Pressure_Sensor_4 "Saturated at 14316.4 kPa, 14417.7 kPa absolute, 2076 psi.";
-CM_ SG_ 0x6F0 Front_Left_Tyre_Pressure "CAN Error Values table otherwise: y = x/10 - 101.3";
-CM_ SG_ 0x6F0 Front_Right_Tyre_Pressure "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10 - 101.3";
-CM_ SG_ 0x6F0 Rear_Left_Tyre_Pressure "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10 - 101.3";
-CM_ SG_ 0x6F0 Rear_Right_Tyre_Pressure "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10 - 101.3";
-CM_ SG_ 0x6F1 Front_Left_Tyre_Temperature "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10";
-CM_ SG_ 0x6F1 Front_Right_Tyre_Temperature "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10";
-CM_ SG_ 0x6F1 Rear_Left_Tyre_Temperature "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10";
-CM_ SG_ 0x6F1 Rear_Right_Tyre_Temperature "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10";
-CM_ SG_ 0x6F2 Front_Left_Tyre_Sensor_Battery_Voltage "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/1000";
-CM_ SG_ 0x6F2 Front_Right_Tyre_Sensor_Battery_Voltage "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/1000";
-CM_ SG_ 0x6F2 Rear_Left_Tyre_Sensor_Battery_Voltage "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/1000";
-CM_ SG_ 0x6F2 Rear_Right_Tyre_Sensor_Battery_Voltage "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/1000";
-CM_ SG_ 0x6F3 Engine_Protection_Reason "This value is hexadecimal, and represents the OBDII DTC. The upper 2 bits determine which letter it is (0b00 = P, 0b01 = B, 0b10 = C, 0b11 = U). The remaining 14 bits, when viewed as hexadecimal are the number part of the code. e.g. 0x2A00 = P2A00 = 'Wideband 1 Sensor Failure. See Wideband O2 1 channel.'";
-CM_ SG_ 0x6F7 Generic_Output_1_20_States "0 = Off, 1 = On (at least 0.1% duty cycle if in Duty Cycle mode, or at least 1 Hz if in Frequency mode) Bit X = Generic output X+1";
-CM_ SG_ 0x470 Gear_Selector_Position "Haltech Special Values";
-CM_ SG_ 0x470 Gear_Combined_With_Selector_Pos "Haltech Special Values";
