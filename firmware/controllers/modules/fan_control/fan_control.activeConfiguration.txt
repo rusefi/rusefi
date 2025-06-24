@@ -1,0 +1,2 @@
+! aka engineConfiguration below BOARD_ENGINE_CONFIGURATION_FROM_FILE
+! This file follows the same rules as rusefi.txt

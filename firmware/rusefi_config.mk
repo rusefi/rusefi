@@ -13,7 +13,9 @@ CONFIG_INPUTS = \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_content.ini \
-  $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/gauges.ini
+  $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/gauges.ini \
+  $(MODULES_ACTIVE_CONFIGURATION) \
+  $(MODULES_PERSISTENT_CONFIGURATION)
 
 ifneq ("$(wildcard $(BOARD_DIR)/prepend.txt)","")
   CONFIG_INPUTS += $(BOARD_DIR)/prepend.txt

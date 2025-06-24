@@ -87,3 +87,10 @@ void FanController::onSlowCallback() {
 
 	pin.setValue(result);
 }
+
+void FanController::onDefaultEngineConfiguration() {
+	engineConfiguration->fanOnTemperature = 92;
+	engineConfiguration->fanOffTemperature = 88;
+	engineConfiguration->fan2OnTemperature = 95;
+	engineConfiguration->fan2OffTemperature = 91;
+}

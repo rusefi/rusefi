@@ -710,6 +710,8 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscending("Oil pressure protection", config->minimumOilPressureBins);
 	}
 
+	engine->engineModules.apply_all([](auto & m) { m.onValidateConfigOnStartUpOrBurn(); });
+
 	return true;
 }
 
