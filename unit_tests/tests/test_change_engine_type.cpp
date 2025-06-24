@@ -19,8 +19,7 @@ TEST(misc, changeEngineType) {
 	ASSERT_TRUE(brainPin != Gpio::Unassigned);
 	ASSERT_TRUE(activeConfiguration.hpfpValvePin != Gpio::Unassigned);
 
-	int pinIndex = brainPin_to_index(brainPin);
-	ASSERT_TRUE(nullptr != getBrainUsedPin(pinIndex));
+	ASSERT_TRUE(isBrainPinValid(brainPin));
 
 	// above we have asserted that triggerInputDebugPins is in fact used
 	// now let's change into engine type without hpfpValvePin and assert shut down
@@ -30,6 +29,6 @@ TEST(misc, changeEngineType) {
 
 	ASSERT_TRUE(engineConfiguration->hpfpValvePin == Gpio::Unassigned);
 
-	ASSERT_TRUE(nullptr == getBrainUsedPin(pinIndex));
+	ASSERT_FALSE(isBrainPinValid(engineConfiguration->hpfpValvePin));
 }
 
