@@ -11,7 +11,7 @@ public class TuneCanToolRunner {
     public static void main(String[] args) throws JAXBException, IOException {
         int count = 8;
         if (args.length != count)
-            throw new IllegalArgumentException(count + " arguments expected");
+            throw new IllegalArgumentException(count + " arguments expected but " + args.length);
         TuneCanTool.boardPath = args[0];
         System.out.println("boardPath=" + TuneCanTool.boardPath);
         TuneContext.iniFileName = args[1];
