@@ -334,6 +334,18 @@ Cooling fan turn-on temperature threshold, in Celsius
 ### fanOffTemperature
 Cooling fan turn-off temperature threshold, in Celsius
 
+### fan2OnTemperature
+Cooling fan turn-on temperature threshold, in Celsius
+
+### fan2OffTemperature
+Cooling fan turn-off temperature threshold, in Celsius
+
+### disableFan1AtSpeed
+null
+
+### disableFan2AtSpeed
+null
+
 ### driveWheelRevPerKm
 Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.
 
@@ -1381,12 +1393,6 @@ Minimum coolant temperature to activate VVT
 ### oilPressure.value2
 
 
-### fan2OnTemperature
-Cooling fan turn-on temperature threshold, in Celsius
-
-### fan2OffTemperature
-Cooling fan turn-off temperature threshold, in Celsius
-
 ### auxFrequencyFilter
 
 
@@ -1506,12 +1512,6 @@ Trigger comparator hysteresis voltage (Max)
 
 ### triggerCompSensorSatRpm
 VR-sensor saturation RPM
-
-### disableFan1AtSpeed
-null
-
-### disableFan2AtSpeed
-null
 
 ### mc33_i_boost
 Boost Current

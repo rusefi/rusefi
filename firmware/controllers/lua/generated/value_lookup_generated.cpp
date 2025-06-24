@@ -341,6 +341,18 @@ float getConfigValueByName(const char *name) {
 // fanOffTemperature
 		case 4686563:
 			return engineConfiguration->fanOffTemperature;
+// fan2OnTemperature
+		case 871106583:
+			return engineConfiguration->fan2OnTemperature;
+// fan2OffTemperature
+		case 1077467605:
+			return engineConfiguration->fan2OffTemperature;
+// disableFan1AtSpeed
+		case -1575487611:
+			return engineConfiguration->disableFan1AtSpeed;
+// disableFan2AtSpeed
+		case -1906717594:
+			return engineConfiguration->disableFan2AtSpeed;
 // driveWheelRevPerKm
 		case 991724096:
 			return engineConfiguration->driveWheelRevPerKm;
@@ -1388,12 +1400,6 @@ float getConfigValueByName(const char *name) {
 // oilPressure.value2
 		case -505257057:
 			return engineConfiguration->oilPressure.value2;
-// fan2OnTemperature
-		case 871106583:
-			return engineConfiguration->fan2OnTemperature;
-// fan2OffTemperature
-		case 1077467605:
-			return engineConfiguration->fan2OffTemperature;
 // auxFrequencyFilter
 		case 383307083:
 			return engineConfiguration->auxFrequencyFilter;
@@ -1514,12 +1520,6 @@ float getConfigValueByName(const char *name) {
 // triggerCompSensorSatRpm
 		case -953183719:
 			return engineConfiguration->triggerCompSensorSatRpm;
-// disableFan1AtSpeed
-		case -1575487611:
-			return engineConfiguration->disableFan1AtSpeed;
-// disableFan2AtSpeed
-		case -1906717594:
-			return engineConfiguration->disableFan2AtSpeed;
 // mc33_i_boost
 		case -371707639:
 			return engineConfiguration->mc33_i_boost;
@@ -2582,12 +2582,32 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case -853358747:
 	{
-		engineConfiguration->fanOnTemperature = value;
+		engineConfiguration->fanOnTemperature = (int)value;
 		return 1;
 	}
 		case 4686563:
 	{
-		engineConfiguration->fanOffTemperature = value;
+		engineConfiguration->fanOffTemperature = (int)value;
+		return 1;
+	}
+		case 871106583:
+	{
+		engineConfiguration->fan2OnTemperature = (int)value;
+		return 1;
+	}
+		case 1077467605:
+	{
+		engineConfiguration->fan2OffTemperature = (int)value;
+		return 1;
+	}
+		case -1575487611:
+	{
+		engineConfiguration->disableFan1AtSpeed = (int)value;
+		return 1;
+	}
+		case -1906717594:
+	{
+		engineConfiguration->disableFan2AtSpeed = (int)value;
 		return 1;
 	}
 		case 991724096:
@@ -4335,16 +4355,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->oilPressure.value2 = value;
 		return 1;
 	}
-		case 871106583:
-	{
-		engineConfiguration->fan2OnTemperature = (int)value;
-		return 1;
-	}
-		case 1077467605:
-	{
-		engineConfiguration->fan2OffTemperature = (int)value;
-		return 1;
-	}
 		case 383307083:
 	{
 		engineConfiguration->auxFrequencyFilter = value;
@@ -4543,16 +4553,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -953183719:
 	{
 		engineConfiguration->triggerCompSensorSatRpm = (int)value;
-		return 1;
-	}
-		case -1575487611:
-	{
-		engineConfiguration->disableFan1AtSpeed = (int)value;
-		return 1;
-	}
-		case -1906717594:
-	{
-		engineConfiguration->disableFan2AtSpeed = (int)value;
 		return 1;
 	}
 		case -371707639:
