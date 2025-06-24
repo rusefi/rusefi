@@ -657,7 +657,7 @@ injection_mode_e crankingInjectionMode;This is the injection strategy during eng
 
 injection_mode_e injectionMode;This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.
 
-include_file controllers/actuators/boost_control_config.txt
+include_file controllers/actuators/boost_control_engineConfiguration.txt
 
 angle_t crankingTimingAngle;Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X;"deg", 1, 0, -30, 30, 0
 
@@ -684,7 +684,7 @@ angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the fir
 float analogInputDividerCoefficient;Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.;"coef", 1, 0, 0.01, 10, 2
 float vbattDividerCoeff;This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef", 1, 0, 0.01, 99, 2
 
-include_file controllers/modules/fan_control/fan_control_config.txt
+include_file controllers/modules/fan_control/fan_control_engineConfiguration.txt
 output_pin_e acrPin;
 
 float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
@@ -2255,17 +2255,7 @@ uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetLoadBins;;"Load"
 uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 #define BOOST_CURVE_SIZE 5
-float[BOOST_CURVE_SIZE] cltBoostCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[BOOST_CURVE_SIZE] cltBoostCorr;;"ratio", 1, 0, 0, 5, 2
-
-float[BOOST_CURVE_SIZE] iatBoostCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[BOOST_CURVE_SIZE] iatBoostCorr;;"ratio", 1, 0, 0, 5, 2
-
-float[BOOST_CURVE_SIZE] cltBoostAdderBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[BOOST_CURVE_SIZE] cltBoostAdder;;"", 1, 0, 0, 5, 2
-
-float[BOOST_CURVE_SIZE] iatBoostAdderBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[BOOST_CURVE_SIZE] iatBoostAdder;;"", 1, 0, 0, 5, 2
+include_file controllers/actuators/boost_control_config.txt
 
 uint8_t[8] autoscale minimumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint8_t[8] autoscale minimumOilPressureValues;;"kPa", 10, 0, 0, 1000, 0
