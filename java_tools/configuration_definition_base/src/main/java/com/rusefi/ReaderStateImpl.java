@@ -13,6 +13,8 @@ import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -34,6 +36,7 @@ public class ReaderStateImpl implements ReaderState {
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
     public static final String SPLIT_LINES = "split_lines";
+    private static final String INCLUDE_FILE = "include_file";
     // used to update other files
     private final List<String> inputFiles = new ArrayList<>();
     private final Stack<ConfigStructureImpl> stack = new Stack<>();
@@ -260,10 +263,14 @@ public class ReaderStateImpl implements ReaderState {
         String lineReaded;
         while ((lineReaded = definitionReader.readLine()) != null) {
             lineReaded = ToolUtil.trimLine(lineReaded);
-            if (lineReaded.startsWith(SPLIT_LINES)) {
-                lineReaded = lineReaded.substring(SPLIT_LINES.length());
-                String lineExpanded = variableRegistry.applyVariables(lineReaded);
-                String sublines[] = lineExpanded.split("\\r?\\n");
+            if (lineReaded.startsWith(INCLUDE_FILE)) {
+                String fileName = lineReaded.substring(INCLUDE_FILE.length()).trim();
+                log.info("Including " + fileName);
+                lines.addAll(Files.readAllLines(Paths.get(fileName)));
+            } else if (lineReaded.startsWith(SPLIT_LINES)) {
+                String template = lineReaded.substring(SPLIT_LINES.length());
+                String lineExpanded = variableRegistry.applyVariables(template);
+                String[] sublines = lineExpanded.split("\\r?\\n");
                 lines.addAll(Arrays.asList(sublines));
             } else {
                 lines.add(lineReaded);

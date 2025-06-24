@@ -1,0 +1,6 @@
+uint16_t boostControlMinRpm; Minimum RPM to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, 25000, 0
+uint8_t boostControlMinTps; Minimum TPS to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, 100, 0
+uint16_t boostControlMinMap; Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+
+output_pin_e boostControlPin;Wastegate control Solenoid, set to 'NONE' if you are using DC wastegate
+pin_output_mode_e boostControlPinMode

@@ -31,18 +31,8 @@
 ! things only being able to be added at the end of the structure or where other things were removed previously.
 ! TODO: technically we can clean this every once in a while and maybe we should
 !
-! Find a "padding" field (usually the huge unusedOftenChangesDuringFirmwareUpdate[] array at the end of the structure)
-! The standard practice is to name these "unusedSomething", so you can find them easily
-! by searching for "unused" within this file.
 !
 ! Rename or substitute the field with any new fields that total to the same size.
-! If you're adding a field to the end of the file, add it just before unusedOftenChangesDuringFirmwareUpdate[],
-! and subtract the size of the field you added from unusedOftenChangesDuringFirmwareUpdate[].
-! For example, if you added a uint8_t field, and unusedOftenChangesDuringFirmwareUpdate was `uint8_t[100]`,
-! it should now be `uint8_t[99]`
-!
-! When we run out of unusedOftenChangesDuringFirmwareUpdate space we have to bump FLASH_DATA_VERSION and add
-! extra unusedOftenChangesDuringFirmwareUpdate
 !
 ! At this point it's a good idea to save your changes in version control, i.e. with `git commit`,
 !	so that you can roll back to the current state after you generate the config files.
@@ -99,7 +89,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250601
+#define FLASH_DATA_VERSION 250622
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -667,9 +657,7 @@ injection_mode_e crankingInjectionMode;This is the injection strategy during eng
 
 injection_mode_e injectionMode;This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups.
 
-uint16_t boostControlMinRpm; Minimum RPM to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, 25000, 0
-uint8_t boostControlMinTps; Minimum TPS to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, 100, 0
-uint16_t boostControlMinMap; Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+include_file controllers/actuators/boost_control_config.txt
 
 angle_t crankingTimingAngle;Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X;"deg", 1, 0, -30, 30, 0
 
@@ -1045,8 +1033,6 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 	dc_io[ETB_COUNT iterate] etbIo
 
 
-    output_pin_e boostControlPin;Wastegate control Solenoid, set to 'NONE' if you are using DC wastegate;
-	pin_output_mode_e boostControlPinMode;
     switch_input_pin_e ALSActivatePin;
     switch_input_pin_e launchActivatePin;
 
