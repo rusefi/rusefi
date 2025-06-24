@@ -1,0 +1,464 @@
+VERSION ""
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: ECU
+
+BO_ 0x360 ECU_EngineData1: 8 ECU
+ SG_ RPM : 0|16@1+ (1,0) [0|0] "RPM" ECU
+ SG_ Manifold_Pressure : 16|16@1+ (0.1,0) [0|0] "kPa (Abs)" ECU
+ SG_ Throttle_Position : 32|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Coolant_Pressure : 48|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+
+BO_ 0x361 ECU_EngineData2: 8 ECU
+ SG_ Fuel_Pressure : 0|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+ SG_ Oil_Pressure : 16|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+ SG_ Engine_Demand : 32|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Wastegate_Pressure : 48|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+
+BO_ 0x362 ECU_InjectionIgnition: 8 ECU
+ SG_ Injection_Stage_1_Duty_Cycle : 0|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Injection_Stage_2_Duty_Cycle : 16|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Ignition_Angle_Leading : 32|16@1- (0.1,0) [0|0] "°" ECU
+
+BO_ 0x363 ECU_WheelControl: 8 ECU
+ SG_ Wheel_Slip : 0|16@1- (0.1,0) [0|0] "km/h" ECU
+ SG_ Wheel_Diff : 16|16@1- (0.1,0) [0|0] "km/h" ECU
+ SG_ Launch_Control_End_RPM : 48|16@1+ (1,0) [0|0] "RPM" ECU
+
+BO_ 0x364 ECU_InjectionTime: 8 ECU
+ SG_ Injection_Stage_1_Average_Injection_Time : 0|16@1+ (0.001,0) [0|0] "ms" ECU
+ SG_ Injection_Stage_2_Average_Injection_Time : 16|16@1+ (0.001,0) [0|0] "ms" ECU
+ SG_ Injection_Stage_3_Average_Injection_Time : 32|16@1+ (0.001,0) [0|0] "ms" ECU
+ SG_ Injection_Stage_4_Average_Injection_Time : 48|16@1+ (0.001,0) [0|0] "ms" ECU
+
+BO_ 0x368 ECU_Wideband1to4: 8 ECU
+ SG_ Wideband_Sensor_1 : 0|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_2 : 16|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_3 : 32|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_4 : 48|16@1+ (0.001,0) [0|0] "λ" ECU
+
+BO_ 0x369 ECU_TriggerSystem: 8 ECU
+ SG_ Trigger_System_Error_Count : 0|16@1+ (1,0) [0|0] "raw" ECU
+ SG_ Trigger_Counter : 16|16@1+ (1,0) [0|0] "raw" ECU
+ SG_ Trigger_Sync_Level : 48|16@1+ (1,0) [0|0] "raw" ECU
+
+BO_ 0x36A ECU_KnockLevel: 8 ECU
+ SG_ Knock_Level_1 : 0|16@1+ (0.01,0) [0|0] "dB" ECU
+ SG_ Knock_Level_2 : 16|16@1+ (0.01,0) [0|0] "dB" ECU
+
+BO_ 0x36B ECU_Sensors3: 8 ECU
+ SG_ Brake_Pressure_Front : 0|16@1+ (1,-101.3) [0|0] "kPa" ECU
+ SG_ NOS_Pressure_Sensor_1 : 16|16@1+ (0.22,-101.3) [0|14417.7] "kPa" ECU
+ SG_ Turbo_Speed_Sensor_1 : 32|16@1+ (10,0) [0|0] "RPM" ECU
+ SG_ Lateral_G : 48|16@1- (0.1,0) [0|0] "m/s2" ECU
+
+BO_ 0x36C ECU_WheelSpeed: 8 ECU
+ SG_ Wheel_Speed_Front_Left : 0|16@1+ (0.1,0) [0|0] "km/h" ECU
+ SG_ Wheel_Speed_Front_Right : 16|16@1+ (0.1,0) [0|0] "km/h" ECU
+ SG_ Wheel_Speed_Rear_Left : 32|16@1+ (0.1,0) [0|0] "km/h" ECU
+ SG_ Wheel_Speed_Rear_Right : 48|16@1+ (0.1,0) [0|0] "km/h" ECU
+
+BO_ 0x36D ECU_ExhaustCamAngle: 8 ECU
+ SG_ Exhaust_Cam_Angle_1 : 32|16@1- (0.1,0) [0|0] "°" ECU
+ SG_ Exhaust_Cam_Angle_2 : 48|16@1- (0.1,0) [0|0] "°" ECU
+
+BO_ 0x36E ECU_LimitingAccel: 8 ECU
+ SG_ Engine_Limiting_Active : 0|16@1+ (1,0) [0|1] "boolean" ECU
+ SG_ Launch_Control_Ignition_Retard : 16|16@1- (0.1,0) [0|0] "°" ECU
+ SG_ Launch_Control_Fuel_Enrich : 32|16@1- (0.1,0) [0|0] "%" ECU
+ SG_ Longitudinal_G : 48|16@1- (0.1,0) [0|0] "m/s2" ECU
+
+BO_ 0x36F ECU_Outputs: 8 ECU
+ SG_ Generic_Output_1_Duty_Cycle : 0|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Boost_Control_Output : 16|16@1+ (0.1,0) [0|0] "%" ECU
+
+BO_ 0x370 ECU_VehicleIntakeCam: 8 ECU
+ SG_ Vehicle_Speed : 0|16@1+ (0.1,0) [0|0] "km/h" ECU
+ SG_ Intake_Cam_Angle_1 : 32|16@1- (0.1,0) [0|0] "°" ECU
+ SG_ Intake_Cam_Angle_2 : 48|16@1- (0.1,0) [0|0] "°" ECU
+
+BO_ 0x371 ECU_FuelFlow: 8 ECU
+ SG_ Fuel_Flow : 0|16@1+ (1,0) [0|0] "cc/min" ECU
+ SG_ Fuel_Flow_Return : 16|16@1+ (1,0) [0|0] "cc/min" ECU
+
+BO_ 0x372 ECU_BatteryBoostBaro: 8 ECU
+ SG_ Battery_Voltage : 0|16@1+ (0.1,0) [0|0] "Volts" ECU
+ SG_ Target_Boost_Level : 32|16@1+ (0.1,0) [0|0] "kPa" ECU
+ SG_ Barometric_Pressure : 48|16@1+ (0.1,0) [0|0] "kPa (Abs)" ECU
+
+BO_ 0x373 ECU_EGT1to4: 8 ECU
+ SG_ EGT_Sensor_1 : 0|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_2 : 16|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_3 : 32|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_4 : 48|16@1+ (0.1,0) [0|0] "K" ECU
+
+BO_ 0x374 ECU_EGT5to8: 8 ECU
+ SG_ EGT_Sensor_5 : 0|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_6 : 16|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_7 : 32|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_8 : 48|16@1+ (0.1,0) [0|0] "K" ECU
+
+BO_ 0x375 ECU_EGT9to12: 8 ECU
+ SG_ EGT_Sensor_9 : 0|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_10 : 16|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_11 : 32|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ EGT_Sensor_12 : 48|16@1+ (0.1,0) [0|0] "K" ECU
+
+BO_ 0x376 ECU_Humidity: 8 ECU
+ SG_ Ambient_Air_Temperature : 0|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Relative_Humidity : 16|16@1- (0.1,0) [0|0] "%" ECU
+ SG_ Specific_Humidity : 32|16@1+ (100,0) [0|0] "ppm" ECU
+ SG_ Absolute_Humidity : 48|16@1+ (0.1,0) [0|0] "g/m3" ECU
+
+BO_ 0x3E0 ECU_Temperatures: 8 ECU
+ SG_ Coolant_Temperature : 0|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Air_Temperature : 16|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Fuel_Temperature : 32|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Oil_Temperature : 48|16@1+ (0.1,0) [0|0] "K" ECU
+
+BO_ 0x3E1 ECU_FluidTempsFuelComp: 8 ECU
+ SG_ Gearbox_Oil_Temperature : 0|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Diff_Oil_Temperature : 16|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Fuel_Composition : 32|16@1+ (0.1,0) [0|0] "%" ECU
+
+BO_ 0x3E2 ECU_FuelLevel: 8 ECU
+ SG_ Fuel_Level : 0|16@1+ (0.1,0) [0|0] "L" ECU
+
+BO_ 0x3E3 ECU_FuelTrims: 8 ECU
+ SG_ Fuel_Trim_Short_Term_Bank_1 : 0|16@1- (0.1,0) [0|0] "%" ECU
+ SG_ Fuel_Trim_Short_Term_Bank_2 : 16|16@1- (0.1,0) [0|0] "%" ECU
+ SG_ Fuel_Trim_Long_Term_Bank_1 : 32|16@1- (0.1,0) [0|0] "%" ECU
+ SG_ Fuel_Trim_Long_Term_Bank_2 : 48|16@1- (0.1,0) [0|0] "%" ECU
+
+BO_ 0x3E4 ECU_SwitchesAndStates: 8 ECU
+ SG_ Neutral_Switch : 7|1@1+ (1,0) [0|1] "" ECU
+ SG_ Reverse_Switch : 6|1@1+ (1,0) [0|1] "" ECU
+ SG_ Gear_Switch : 5|1@1+ (1,0) [0|1] "" ECU
+ SG_ Decel_Cut_Active : 4|1@1+ (1,0) [0|1] "" ECU
+ SG_ Transient_Throttle_Active : 3|1@1+ (1,0) [0|1] "" ECU
+ SG_ Brake_Pedal_Switch : 2|1@1+ (1,0) [0|1] "" ECU
+ SG_ Clutch_Switch : 1|1@1+ (1,0) [0|1] "" ECU
+ SG_ Oil_Pressure_Light : 0|1@1+ (1,0) [0|1] "" ECU
+ SG_ Launch_Control_Active : 15|1@1+ (1,0) [0|1] "" ECU
+ SG_ Launch_Control_Switch : 14|1@1+ (1,0) [0|1] "" ECU
+ SG_ Aux_RPM_Limiter_Active : 13|1@1+ (1,0) [0|1] "" ECU
+ SG_ Flat_Shift_Switch : 11|1@1+ (1,0) [0|1] "" ECU
+ SG_ Torque_Reduction_Active : 9|1@1+ (1,0) [0|1] "" ECU
+ SG_ Traction_Control_Enabled : 31|1@1+ (1,0) [0|1] "" ECU
+ SG_ Traction_Control_Active : 30|1@1+ (1,0) [0|1] "" ECU
+ SG_ Air_Con_Request : 29|1@1+ (1,0) [0|1] "" ECU
+ SG_ Air_Con_Output : 28|1@1+ (1,0) [0|1] "" ECU
+ SG_ Themo_fan_4_On : 27|1@1+ (1,0) [0|1] "" ECU
+ SG_ Thermo_fan_3_On : 26|1@1+ (1,0) [0|1] "" ECU
+ SG_ Thermo_fan_2_On : 25|1@1+ (1,0) [0|1] "" ECU
+ SG_ Themo_fan_1_On : 24|1@1+ (1,0) [0|1] "" ECU
+ SG_ Rotary_Trim_Pot_1 : 32|8@1- (1,0) [0|0] "raw" ECU
+ SG_ Rotary_Trim_Pot_2 : 40|8@1- (1,0) [0|0] "raw" ECU
+ SG_ Rotary_Trim_Pot_3 : 48|8@1- (1,0) [0|0] "raw" ECU
+ SG_ Check_Engine_Light : 63|1@1+ (1,0) [0|1] "" ECU
+ SG_ Battery_Light_Active : 62|1@1+ (1,0) [0|1] "" ECU
+ SG_ Hand_Brake_State : 57|1@1+ (1,0) [0|1] "" ECU
+ SG_ Traction_Control_Light : 56|1@1+ (1,0) [0|1] "" ECU
+
+BO_ 0x3E5 ECU_VehicleStatus: 8 ECU
+ SG_ Ignition_Switch : 0|8@1+ (1,0) [0|1] "" ECU
+ SG_ Turbo_Timer_Time_Remaining : 8|8@1+ (1,0) [0|0] "s" ECU
+ SG_ Turbo_Timer_Engine_Time_Remaining : 16|8@1+ (1,0) [0|0] "s" ECU
+ SG_ Pit_Lane_Speed_Limiter_Error : 25|1@1+ (1,0) [0|0] "" ECU
+ SG_ Pit_Lane_Speed_Limiter_Active : 24|1@1+ (1,0) [0|0] "" ECU
+ SG_ Pit_Lane_Speed_Limiter_Switch_State : 28|1@1+ (1,0) [0|1] "" ECU
+ SG_ ABS_Error : 26|1@1+ (1,0) [0|0] "" ECU
+ SG_ ABS_Active : 25|1@1+ (1,0) [0|0] "" ECU
+ SG_ ABS_Armed : 24|1@1+ (1,0) [0|0] "" ECU
+ SG_ Steering_Wheel_Angle : 32|16@1- (0.1,0) [0|0] "°" ECU
+ SG_ Driveshaft_RPM : 48|16@1+ (1,0) [0|0] "RPM" ECU
+
+BO_ 0x3E6 ECU_NOS_TurboSpeed2: 8 ECU
+ SG_ NOS_Pressure_Sensor_2 : 0|16@1+ (0.22,-101.3) [0|14417.7] "kPa" ECU
+ SG_ NOS_Pressure_Sensor_3 : 16|16@1+ (0.22,-101.3) [0|14417.7] "kPa" ECU
+ SG_ NOS_Pressure_Sensor_4 : 32|16@1+ (0.22,-101.3) [0|14417.7] "kPa" ECU
+ SG_ Turbo_Speed_Sensor_2 : 48|16@1+ (10,0) [0|0] "RPM" ECU
+
+BO_ 0x3E7 ECU_GenericSensors1to4: 8 ECU
+ SG_ Generic_Sensor_1 : 0|16@1+ (1,0) [0|0] "" ECU
+ SG_ Generic_Sensor_2 : 16|16@1+ (1,0) [0|0] "" ECU
+ SG_ Generic_Sensor_3 : 32|16@1+ (1,0) [0|0] "" ECU
+ SG_ Generic_Sensor_4 : 48|16@1+ (1,0) [0|0] "" ECU
+
+BO_ 0x3E8 ECU_GenericSensors5to8: 8 ECU
+ SG_ Generic_Sensor_5 : 0|16@1+ (1,0) [0|0] "" ECU
+ SG_ Generic_Sensor_6 : 16|16@1+ (1,0) [0|0] "" ECU
+ SG_ Generic_Sensor_7 : 32|16@1+ (1,0) [0|0] "" ECU
+ SG_ Generic_Sensor_8 : 48|16@1+ (1,0) [0|0] "" ECU
+
+BO_ 0x3E9 ECU_GenericSensors9_10_NitrousTorque: 8 ECU
+ SG_ Generic_Sensor_9 : 0|16@1+ (1,0) [0|0] "" ECU
+ SG_ Generic_Sensor_10 : 16|16@1+ (1,0) [0|0] "" ECU
+ SG_ Target_Lambda : 32|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Nitrous_Stage_1_Output_State : 55|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Stage_2_Output_State : 54|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Stage_3_Output_State : 53|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Stage_4_Output_State : 52|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Stage_5_Output_State : 51|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Stage_6_Output_State : 50|1@1+ (1,0) [0|1] "" ECU
+ SG_ Water_Injection_Advanced_Output_State : 49|1@1+ (1,0) [0|1] "" ECU
+ SG_ Torque_Management_Knob : 56|8@1- (1,0) [0|0] "raw" ECU
+
+BO_ 0x3EA ECU_PressuresDutyCycles: 8 ECU
+ SG_ Gearbox_Line_Pressure : 0|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+ SG_ Injection_Stage_3_Duty_Cycle : 16|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Injection_Stage_4_Duty_Cycle : 32|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Crank_Case_Pressure : 48|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+
+BO_ 0x3EB ECU_IgnitionAngleBanks: 8 ECU
+ SG_ Race_Timer : 0|32@1+ (1,0) [0|0] "ms" ECU
+ SG_ Ignition_Angle_Bank_1 : 32|16@1- (0.1,0) [0|0] "°" ECU
+ SG_ Ignition_Angle_Bank_2 : 48|16@1- (0.1,0) [0|0] "°" ECU
+
+BO_ 0x3EC ECU_TorqueMgmtDriveshaftRPM: 8 ECU
+ SG_ Torque_Management_Driveshaft_RPM_Target : 0|16@1- (1,0) [0|0] "RPM" ECU
+ SG_ Torque_Management_Driveshaft_RPM_Target_Error : 16|16@1- (1,0) [0|0] "RPM" ECU
+ SG_ Torque_Management_Driveshaft_RPM_Target_Error_Ignition_Correction : 32|16@1- (0.1,0) [0|0] "°" ECU
+ SG_ Torque_Management_Driveshaft_RPM_Timed_Ignition_Correction : 48|16@1- (0.1,0) [0|0] "°" ECU
+
+BO_ 0x3ED ECU_TorqueMgmtCombinedIgnition: 8 ECU
+ SG_ Torque_Management_Combined_Ignition_Correction : 0|16@1- (0.1,0) [0|0] "°" ECU
+
+BO_ 0x3EE ECU_Wideband5to8: 8 ECU
+ SG_ Wideband_Sensor_5 : 0|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_6 : 16|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_7 : 32|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_8 : 48|16@1+ (0.001,0) [0|0] "λ" ECU
+
+BO_ 0x3EF ECU_Wideband9to12: 8 ECU
+ SG_ Wideband_Sensor_9 : 0|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_10 : 16|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_11 : 32|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Sensor_12 : 48|16@1+ (0.001,0) [0|0] "λ" ECU
+
+BO_ 0x3F0 ECU_ShockTravelUncalibrated: 8 ECU
+ SG_ Shock_Travel_Sensor_Front_Left_Uncalibrated : 0|16@1+ (0.1,0) [0|0] "mm" ECU
+ SG_ Shock_Travel_Sensor_Front_Right_Uncalibrated : 16|16@1+ (0.1,0) [0|0] "mm" ECU
+ SG_ Shock_Travel_Sensor_Rear_Left_Uncalibrated : 32|16@1+ (0.1,0) [0|0] "mm" ECU
+ SG_ Shock_Travel_Sensor_Rear_Right_Uncalibrated : 48|16@1+ (0.1,0) [0|0] "mm" ECU
+
+BO_ 0x3F1 ECU_ShockTravelCalibrated: 8 ECU
+ SG_ Shock_Travel_Sensor_Front_Left : 0|16@1- (0.1,0) [0|0] "mm" ECU
+ SG_ Shock_Travel_Sensor_Front_Right : 16|16@1- (0.1,0) [0|0] "mm" ECU
+ SG_ Shock_Travel_Sensor_Rear_Left : 32|16@1- (0.1,0) [0|0] "mm" ECU
+ SG_ Shock_Travel_Sensor_Rear_Right : 48|16@1- (0.1,0) [0|0] "mm" ECU
+
+BO_ 0x469 ECU_Temperature: 8 ECU
+ SG_ ECU_Temperature : 0|16@1+ (0.1,0) [0|0] "K" ECU
+
+BO_ 0x470 ECU_WidebandGear: 8 ECU
+ SG_ Wideband_Overall : 0|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Bank_1 : 16|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Wideband_Bank_2 : 32|16@1+ (0.001,0) [0|0] "λ" ECU
+ SG_ Gear_Selector_Position : 48|8@1- (1,0) [0|0] "" ECU
+ SG_ Gear_Combined_With_Selector_Pos : 56|8@1- (1,0) [0|0] "" ECU
+
+BO_ 0x471 ECU_InjectorAccelExhaust: 8 ECU
+ SG_ Injector_Pressure_Differential : 0|16@1- (0.1,0) [0|0] "kPa" ECU
+ SG_ Accelerator_Pedal_Position : 16|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Exhaust_Manifold_Pressure : 32|16@1+ (0.1,0) [0|0] "kPa" ECU
+
+BO_ 0x472 ECU_CruiseControl: 8 ECU
+ SG_ Cruise_Control_Target_Speed : 0|16@1+ (0.1,0) [0|0] "km/h" ECU
+ SG_ Cruise_Control_Last_Target_Speed : 16|16@1+ (0.1,0) [0|0] "km/h" ECU
+ SG_ Cruise_Control_Speed_Error : 32|16@1- (0.1,0) [0|0] "km/h" ECU
+ SG_ Cruise_Control_Controller_State : 52|4@1+ (1,0) [0|0] "" ECU
+ SG_ Cruise_Control_Input_State : 56|8@1+ (1,0) [0|0] "" ECU
+
+VAL_ 0x472 Cruise_Control_Controller_State 0 "Disabled" 1 "Inactive" 2 "Cruising" 3 "Accelerating" 4 "Decelerating";
+VAL_ 0x472 Cruise_Control_Input_State 0 "Unused" 1 "Disable" 2 "Enable" 3 "Enable/Disable" 4 "Cancel" 8 "Set" 12 "Set/Cancel" 16 "Resume" 20 "Resume/Cancel" 32 "Accel" 64 "Decel" 76 "Set/Coast/Cancel" 84 "Resume/Coast/Cancel" 128 "Increment" 168 "Set/Accel/+" 176 "Resume/Accel/+" 256 "Decrement" 328 "Set/Coast/-" 336 "Resume/Coast/-" 512 "Rest Position";
+
+BO_ 0x473 ECU_StatesOutputs: 8 ECU
+ SG_ Total_Fuel_Used : 0|32@1+ (1,0) [0|0] "cc" ECU
+ SG_ Rolling_Antilag_Switch_State : 39|1@1+ (1,0) [0|1] "" ECU
+ SG_ Antilag_Switch_State : 38|1@1+ (1,0) [0|1] "" ECU
+ SG_ Antilag_Output_State : 37|1@1+ (1,0) [0|1] "" ECU
+ SG_ Traction_Control_Switch_State : 36|1@1+ (1,0) [0|1] "" ECU
+ SG_ Primary_Fuel_Pump_Output_State : 35|1@1+ (1,0) [0|1] "" ECU
+ SG_ Aux_1_Fuel_Pump_Output_State : 34|1@1+ (1,0) [0|1] "" ECU
+ SG_ Aux_2_Fuel_Pump_Output_State : 33|1@1+ (1,0) [0|1] "" ECU
+ SG_ Aux_3_Fuel_Pump_Output_State : 32|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Enable_1_Switch_State : 47|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Enable_1_Output_State : 46|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Enable_2_Switch_State : 45|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Enable_2_Output_State : 44|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Enable_3_Switch_State : 43|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Enable_3_Output_State : 42|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Enable_4_Switch_State : 41|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Enable_4_Output_State : 40|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Override_1_Switch_State : 55|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Override_1_Output_State : 54|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Override_2_Switch_State : 53|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Override_2_Output_State : 52|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Override_3_Switch_State : 51|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Override_3_Output_State : 50|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Override_4_Switch_State : 49|1@1+ (1,0) [0|1] "" ECU
+ SG_ Nitrous_Override_4_Output_State : 48|1@1+ (1,0) [0|1] "" ECU
+ SG_ Water_Injection_Advanced_Enable_Switch_State : 63|1@1+ (1,0) [0|1] "" ECU
+ SG_ Water_Injection_Advanced_Enable_Output_State : 62|1@1+ (1,0) [0|1] "" ECU
+ SG_ Water_Injection_Advanced_Override_Switch_State : 61|1@1+ (1,0) [0|1] "" ECU
+ SG_ Water_Injection_Advanced_Override_Output_State : 60|1@1+ (1,0) [0|1] "" ECU
+ SG_ Cut_Percentage_Method : 56|4@1+ (1,0) [0|0] "" ECU
+
+VAL_ 0x473 Cut_Percentage_Method 0 "No Cut" 1 "Fuel" 2 "Ignition" 3 "Fuel and Ignition";
+
+BO_ 0x474 ECU_G_Rates: 8 ECU
+ SG_ Vertical_G : 0|16@1- (0.1,0) [0|0] "m/s2" ECU
+ SG_ Pitch_Rate : 16|16@1- (0.1,0) [0|0] "deg/s" ECU
+ SG_ Roll_Rate : 32|16@1- (0.1,0) [0|0] "deg/s" ECU
+ SG_ Yaw_Rate : 48|16@1- (0.1,0) [0|0] "deg/s" ECU
+
+BO_ 0x475 ECU_FuelPumpDutyCycles: 8 ECU
+ SG_ Primary_Fuel_Pump_Duty_Cycle : 0|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Aux_1_Fuel_Pump_Duty_Cycle : 16|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Aux_2_Fuel_Pump_Duty_Cycle : 32|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Aux_3_Fuel_Pump_Duty_Cycle : 48|16@1+ (0.1,0) [0|0] "%" ECU
+
+BO_ 0x476 ECU_BrakePressure: 8 ECU
+ SG_ Brake_Pressure_Rear : 0|16@1+ (1,-101.3) [0|0] "kPa" ECU
+ SG_ Brake_Pressure_Front_Ratio : 16|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Brake_Pressure_Rear_Ratio : 32|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Brake_Pressure_Difference_Front_Minus_Rear : 48|16@1- (1,0) [0|0] "kPa (Abs)" ECU
+
+BO_ 0x477 ECU_EngineLimiter: 8 ECU
+ SG_ Engine_Limiter_Max_RPM : 0|16@1+ (1,0) [0|0] "RPM" ECU
+ SG_ Cut_Percentage : 8|16@1+ (0.1,0) [0|0] "%" ECU
+ SG_ Engine_Limiter_Function : 32|8@1+ (1,0) [0|0] "" ECU
+ SG_ RPM_Limiter_Function : 40|8@1+ (1,0) [0|0] "" ECU
+ SG_ Cut_Percentage_Function : 48|8@1+ (1,0) [0|0] "" ECU
+ SG_ Engine_Limiter_Method : 59|4@1+ (1,0) [0|0] "" ECU
+ SG_ RPM_Limiter_Method : 56|4@1+ (1,0) [0|0] "" ECU
+
+VAL_ 0x477 Engine_Limiter_Method 0 "No Cut" 1 "Fuel" 2 "Ignition" 3 "Fuel and Ignition";
+VAL_ 0x477 RPM_Limiter_Method 0 "No Cut" 1 "Fuel" 2 "Ignition" 3 "Fuel and Ignition";
+# Note: "Engine Limiting Functions table" values not provided, so not included in VAL_ section.
+
+BO_ 0x6F0 ECU_TyrePressure: 8 ECU
+ SG_ Front_Left_Tyre_Pressure : 0|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+ SG_ Front_Right_Tyre_Pressure : 16|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+ SG_ Rear_Left_Tyre_Pressure : 32|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+ SG_ Rear_Right_Tyre_Pressure : 48|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+
+BO_ 0x6F1 ECU_TyreTemperature: 8 ECU
+ SG_ Front_Left_Tyre_Temperature : 0|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Front_Right_Tyre_Temperature : 16|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Rear_Left_Tyre_Temperature : 32|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Rear_Right_Tyre_Temperature : 48|16@1+ (0.1,0) [0|0] "K" ECU
+
+BO_ 0x6F2 ECU_TyreBatteryVoltage: 8 ECU
+ SG_ Front_Left_Tyre_Sensor_Battery_Voltage : 0|16@1+ (0.001,0) [0|0] "V" ECU
+ SG_ Front_Right_Tyre_Sensor_Battery_Voltage : 16|16@1+ (0.001,0) [0|0] "V" ECU
+ SG_ Rear_Left_Tyre_Sensor_Battery_Voltage : 32|16@1+ (0.001,0) [0|0] "V" ECU
+ SG_ Rear_Right_Tyre_Sensor_Battery_Voltage : 48|16@1+ (0.001,0) [0|0] "V" ECU
+
+BO_ 0x6F3 ECU_TyreProtection: 8 ECU
+ SG_ Front_Tyre_Recommended_Pressure : 0|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+ SG_ Rear_Tyre_Recommended_Pressure : 16|16@1+ (0.1,-101.3) [0|0] "kPa" ECU
+ SG_ Rear_Right_Tyre_Air_Leak_Detected : 35|1@1+ (1,0) [0|1] "" ECU
+ SG_ Rear_Left_Tyre_Air_Leak_Detected : 34|1@1+ (1,0) [0|1] "" ECU
+ SG_ Front_Right_Tyre_Air_Leak_Detected : 33|1@1+ (1,0) [0|1] "" ECU
+ SG_ Front_Left_Tyre_Air_Leak_Detected : 32|1@1+ (1,0) [0|1] "" ECU
+ SG_ Engine_Protection_Severity_Level : 40|8@1+ (1,0) [0|3] "" ECU
+ SG_ Engine_Protection_Reason : 48|16@1+ (1,0) [0|0] "" ECU
+
+VAL_ 0x6F3 Rear_Right_Tyre_Air_Leak_Detected 0 "No Leak" 1 "Leak Detected";
+VAL_ 0x6F3 Rear_Left_Tyre_Air_Leak_Detected 0 "No Leak" 1 "Leak Detected";
+VAL_ 0x6F3 Front_Right_Tyre_Air_Leak_Detected 0 "No Leak" 1 "Leak Detected";
+VAL_ 0x6F3 Front_Left_Tyre_Air_Leak_Detected 0 "No Leak" 1 "Leak Detected";
+VAL_ 0x6F3 Engine_Protection_Severity_Level 0 "Idle" 1 "Level 1" 2 "Level 2" 3 "Level 3";
+# Comment for Engine_Protection_Reason is complex, adding as CM_
+
+BO_ 0x6F4 ECU_LightStates: 8 ECU
+ SG_ Park_Light_State : 0|1@1+ (1,0) [0|1] "" ECU
+ SG_ Head_Light_State : 1|1@1+ (1,0) [0|1] "" ECU
+ SG_ High_Beam_Light_State : 2|1@1+ (1,0) [0|1] "" ECU
+ SG_ Left_Indicator_State : 3|1@1+ (1,0) [0|1] "" ECU
+ SG_ Right_Indicator_State : 4|1@1+ (1,0) [0|1] "" ECU
+
+BO_ 0x6F6 ECU_FuelTrip: 8 ECU
+ SG_ Total_Fuel_Used_Since_Trip_1_Reset : 0|32@1- (1,0) [0|0] "cc" ECU
+ SG_ Trip_Meter_1 : 32|32@1- (1,0) [0|0] "m" ECU
+
+BO_ 0x6F7 ECU_GenericOutputWaterInj: 8 ECU
+ SG_ Generic_Output_1_20_States : 0|32@1+ (1,0) [0|0] "" ECU
+ SG_ Calculated_Air_Temperature : 32|16@1+ (0.1,0) [0|0] "K" ECU
+ SG_ Water_Injection_Advanced_Solenoid_Duty_Cycle : 48|16@1+ (0.1,0) [0|0] "%" ECU
+
+BO_ 0x6F8 ECU_MotorControlStates: 8 ECU
+ SG_ Exhaust_Cutout_State : 0|8@1- (1,0) [0|0] "" ECU
+ SG_ Nitrous_Bottle_Opener_State : 8|8@1- (1,0) [0|0] "" ECU
+ SG_ Generic_Open_Loop_Motor_Control_1_State : 16|8@1- (1,0) [0|0] "" ECU
+ SG_ Generic_Open_Loop_Motor_Control_2_State : 24|8@1- (1,0) [0|0] "" ECU
+ SG_ Generic_Open_Loop_Motor_Control_3_State : 32|8@1- (1,0) [0|0] "" ECU
+# Reserved for future use not added as signals.
+
+VAL_ 0x6F8 Exhaust_Cutout_State -1 "Input Error" 0 "Disabled" 1 "Closed" 2 "Opening" 3 "Open" 4 "Closing" 5 "Paused Part Way";
+# Haltech Special Values for Nitrous Bottle Opener State, Generic Open Loop Motor Control states not provided, so not included in VAL_ section.
+
+BO_ 0x700 ECU_PDMInfo: 8 ECU
+ SG_ HBO_HCO8_HCO25_Info_Byte0 : 0|8@1+ (1,0) [0|0] "" ECU
+ SG_ HBO_HCO8_HCO25_Info_Byte1 : 8|8@1+ (1,0) [0|0] "" ECU
+ SG_ HBO_HCO8_HCO25_Info_Byte2 : 16|8@1+ (1,0) [0|0] "" ECU
+ SG_ HBO_HCO8_HCO25_Info_Byte3 : 24|8@1+ (1,0) [0|0] "" ECU
+ SG_ HBO_HCO8_HCO25_Info_Byte4 : 32|8@1+ (1,0) [0|0] "" ECU
+ SG_ HBO_HCO8_HCO25_Info_Byte5 : 40|8@1+ (1,0) [0|0] "" ECU
+ SG_ HBO_HCO8_HCO25_Info_Byte6 : 48|8@1+ (1,0) [0|0] "" ECU
+ SG_ HBO_HCO8_HCO25_Info_Byte7 : 56|8@1+ (1,0) [0|0] "" ECU
+
+CM_ BO_ 0x700 "Sends out HBO, HCO8, HCO25 information as per the PD16 to ECU protocol for the internal R5 PDM. See (PD16 CAN Protocol) for more detailed info.";
+CM_ SG_ 0x36B NOS_Pressure_Sensor_1 "Saturated at 14316.4 kPa, 14417.7 kPa absolute, 2076 psi.";
+CM_ SG_ 0x3E6 NOS_Pressure_Sensor_2 "Saturated at 14316.4 kPa, 14417.7 kPa absolute, 2076 psi.";
+CM_ SG_ 0x3E6 NOS_Pressure_Sensor_3 "Saturated at 14316.4 kPa, 14417.7 kPa absolute, 2076 psi.";
+CM_ SG_ 0x3E6 NOS_Pressure_Sensor_4 "Saturated at 14316.4 kPa, 14417.7 kPa absolute, 2076 psi.";
+CM_ SG_ 0x6F0 Front_Left_Tyre_Pressure "CAN Error Values table otherwise: y = x/10 - 101.3";
+CM_ SG_ 0x6F0 Front_Right_Tyre_Pressure "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10 - 101.3";
+CM_ SG_ 0x6F0 Rear_Left_Tyre_Pressure "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10 - 101.3";
+CM_ SG_ 0x6F0 Rear_Right_Tyre_Pressure "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10 - 101.3";
+CM_ SG_ 0x6F1 Front_Left_Tyre_Temperature "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10";
+CM_ SG_ 0x6F1 Front_Right_Tyre_Temperature "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10";
+CM_ SG_ 0x6F1 Rear_Left_Tyre_Temperature "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10";
+CM_ SG_ 0x6F1 Rear_Right_Tyre_Temperature "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/10";
+CM_ SG_ 0x6F2 Front_Left_Tyre_Sensor_Battery_Voltage "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/1000";
+CM_ SG_ 0x6F2 Front_Right_Tyre_Sensor_Battery_Voltage "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/1000";
+CM_ SG_ 0x6F2 Rear_Left_Tyre_Sensor_Battery_Voltage "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/1000";
+CM_ SG_ 0x6F2 Rear_Right_Tyre_Sensor_Battery_Voltage "0 = error (can be No Signal, Calibrating or Device Timeout) otherwise: y = x/1000";
+CM_ SG_ 0x6F3 Engine_Protection_Reason "This value is hexadecimal, and represents the OBDII DTC. The upper 2 bits determine which letter it is (0b00 = P, 0b01 = B, 0b10 = C, 0b11 = U). The remaining 14 bits, when viewed as hexadecimal are the number part of the code. e.g. 0x2A00 = P2A00 = 'Wideband 1 Sensor Failure. See Wideband O2 1 channel.'";
+CM_ SG_ 0x6F7 Generic_Output_1_20_States "0 = Off, 1 = On (at least 0.1% duty cycle if in Duty Cycle mode, or at least 1 Hz if in Frequency mode) Bit X = Generic output X+1";
+CM_ SG_ 0x470 Gear_Selector_Position "Haltech Special Values";
+CM_ SG_ 0x470 Gear_Combined_With_Selector_Pos "Haltech Special Values";
