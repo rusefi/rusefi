@@ -1757,7 +1757,7 @@ int anotherCiTest
 linear_sensor_s auxLinear3
 linear_sensor_s auxLinear4
 
-include_file@@BOARD_ENGINE_CONFIGURATION_FROM_FILE@@
+split_lines@@BOARD_ENGINE_CONFIGURATION_FROM_FILE@@
 
 uint8_t autoscale knockSuppressMinTps;Below TPS value all knock suppression will be disabled.;"%", 1, 0, 0, 100, 1
 uint8_t autoscale knockFuelTrimAggression;Fuel to odd when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.), 15% (high knock, e.g. GDI), 20% (spicy lump),;"%", 0.1, 0, 0, 20, 1
@@ -2374,7 +2374,7 @@ float[TORQUE_TABLE_Y_SIZE x TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardTa
 int16_t[TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardXBins;;"", 1, 0, -30000, 30000, 0
 int8_t[TORQUE_TABLE_Y_SIZE] torqueReductionIgnitionRetardGearBins ;;"gear N°", 1, 0, 0, 20, 0
 
-include_file@@BOARD_CONFIG_FROM_FILE@@
+split_lines@@BOARD_CONFIG_FROM_FILE@@
 
 end_struct
 

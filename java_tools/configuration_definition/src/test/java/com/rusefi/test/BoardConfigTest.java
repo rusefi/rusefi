@@ -22,7 +22,7 @@ public class BoardConfigTest {
 
         String inputString = "struct parent\n" +
             "int fieldName;\n" +
-            ReaderStateImpl.INCLUDE_PREFIX + "@@" + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + "@@\n" +
+            ReaderStateImpl.SPLIT_LINES + "@@" + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + "@@\n" +
             "end_struct\n";
 
         state.readBufferedReader(inputString, javaFieldsConsumer);
@@ -41,7 +41,7 @@ public class BoardConfigTest {
             "string_here_t fieldName2;\n");
 
         String inputString = "struct parent\n" +
-            ReaderStateImpl.INCLUDE_PREFIX + VariableRegistry.TEMPLATE_TAG + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + VariableRegistry.TEMPLATE_TAG +
+            ReaderStateImpl.SPLIT_LINES + VariableRegistry.TEMPLATE_TAG + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + VariableRegistry.TEMPLATE_TAG +
             "\n" +
             "int fieldName;\n" +
             "end_struct\n";
