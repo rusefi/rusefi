@@ -89,7 +89,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250622
+#define FLASH_DATA_VERSION 250623
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -684,9 +684,7 @@ angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the fir
 float analogInputDividerCoefficient;Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.;"coef", 1, 0, 0.01, 10, 2
 float vbattDividerCoeff;This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.;"coef", 1, 0, 0.01, 99, 2
 
-float fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
-float fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
-
+include_file controllers/modules/fan_control/fan_control_config.txt
 output_pin_e acrPin;
 
 float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
@@ -802,8 +800,6 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 
 	output_pin_e malfunctionIndicatorPin;Check engine light, also malfunction indicator light. Always blinks once on boot.
 	pin_output_mode_e malfunctionIndicatorPinMode;
-	pin_output_mode_e fanPinMode;
-	output_pin_e fanPin;
 
 switch_input_pin_e clutchDownPin;Some cars have a switch to indicate that clutch pedal is all the way down
 	output_pin_e alternatorControlPin;
@@ -1375,7 +1371,6 @@ tle8888_mode_e tle8888mode;
 	custom injector_compensation_mode_e 1 bits, U08, @OFFSET@, [0:1], "None", "Fixed rail pressure", "Sensed Rail Pressure", "HPFP fuel mass compensation"
 	injector_compensation_mode_e injectorCompensationMode;None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor\n HPFP fuel mass compensation = manual mode for GDI engines;
 
-	pin_output_mode_e fan2PinMode;
 	float fuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.\nThis is gauge pressure/in reference to atmospheric.;"kPa", 1, 0, 50, 700000, 0
 
 	ThermistorConf auxTempSensor1
@@ -1425,9 +1420,6 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	linear_sensor_s oilPressure;
 
 	spi_device_e accelerometerSpiDevice;
-	output_pin_e fan2Pin;
-	uint8_t fan2OnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
-	uint8_t fan2OffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 
 #define SCRIPT_CURVE_COUNT 6
 #define SCRIPT_TABLE_COUNT 4
@@ -1504,8 +1496,6 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 
 uint16_t[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] autoscale tractionControlSlipBins;;"ratio", 0.01, 0, 0, 650, 2
 uint8_t[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0, 250, 0
-	int8_t disableFan1AtSpeed
-	int8_t disableFan2AtSpeed
 
 
 	custom can_vss_nbc_e 1 bits, U08, @OFFSET@, [0:2], "BMW_e46", "W202", "BMW E8x/E9x MK60e5", "Nissan 350", "Hyundai PB", "Honda Civic9"

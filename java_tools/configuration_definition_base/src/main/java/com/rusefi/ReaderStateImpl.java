@@ -266,7 +266,7 @@ public class ReaderStateImpl implements ReaderState {
             if (lineReaded.startsWith(INCLUDE_FILE)) {
                 String fileName = lineReaded.substring(INCLUDE_FILE.length()).trim();
                 log.info("Including " + fileName);
-                lines.addAll(Files.readAllLines(Paths.get(fileName)));
+                lines.addAll(Files.readAllLines(Paths.get( new File(RootHolder.ROOT + fileName).getAbsolutePath())));
             } else if (lineReaded.startsWith(SPLIT_LINES)) {
                 String template = lineReaded.substring(SPLIT_LINES.length());
                 String lineExpanded = variableRegistry.applyVariables(template);
