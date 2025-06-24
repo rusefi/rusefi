@@ -32,4 +32,13 @@ public:
 								angle_t /*currentPhase*/,
 								angle_t /*nextPhase*/)
 								{ }
+
+	// called from setDefaultBaseEngine, resets module configuration
+	virtual void onDefaultEngineConfiguration() { }
+
+	// called from defaultsOrFixOnBurn
+	virtual void onDefaultsOrFixOnBurn() { }
+
+	// caled from validateConfigOnStartUpOrBurn use this before onDefaultsOrFixOnBurn for validate configs
+	virtual void onValidateConfigOnStartUpOrBurn() { }
 };

@@ -1,0 +1,14 @@
+! aka rest of persistent_config_s below BOARD_CONFIG_FROM_FILE
+! This file follows the same rules as rusefi.txt
+
+pin_output_mode_e fanPinMode;
+output_pin_e fanPin;
+
+float fanOnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+float fanOffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+
+output_pin_e fan2Pin;
+pin_output_mode_e fan2PinMode;
+
+uint8_t fan2OnTemperature;Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+uint8_t fan2OffTemperature;Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
