@@ -3,7 +3,6 @@ package com.rusefi.io;
 import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.Callable;
-import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
@@ -59,7 +58,6 @@ public class LinkManager implements Closeable {
     private boolean needPullText = true;
     private boolean needPullLiveData = true;
     public final MessagesListener messageListener = (source, message) -> log.info(source + ": " + message);
-    private Thread communicationThread;
     private boolean isDisconnectedByUser;
 
     private final boolean validateConfigVersionOnConnect;
@@ -70,23 +68,6 @@ public class LinkManager implements Closeable {
 
     public LinkManager(final boolean validateConfigVersionInConnect) {
         this.validateConfigVersionOnConnect = validateConfigVersionInConnect;
-
-        Future<?> future = submit(() -> {
-            communicationThread = Thread.currentThread();
-            log.info("communicationThread lookup DONE");
-        });
-        try {
-            // let's wait for the above trivial task to finish
-            future.get();
-        } catch (final InterruptedException e) {
-            log.warn(String.format(
-                "Thread `%s` is interrupted on LinkManager initialization",
-                Thread.currentThread().getName()
-            ));
-            throw new IllegalStateException(e);
-        } catch (final ExecutionException e) {
-            throw new IllegalStateException(e);
-        }
 
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
             @Override
@@ -214,21 +195,22 @@ public class LinkManager implements Closeable {
     }
 
     public final LinkedBlockingQueue<Runnable> COMMUNICATION_QUEUE = new LinkedBlockingQueue<>();
+
+    private final CommunicationThreadFactory COMMUNICATION_THREAD_FACTORY = new CommunicationThreadFactory();
     /**
      * All request/responses to underlying controller are happening on this single-threaded executor in a FIFO manner
      */
-    public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(1, 1,
-            0L, TimeUnit.MILLISECONDS,
-            COMMUNICATION_QUEUE,
-            new NamedThreadFactory("ECU Communication Executor", true));
+    public final ExecutorService COMMUNICATION_EXECUTOR = new ThreadPoolExecutor(
+        1,
+        1,
+        0L,
+        TimeUnit.MILLISECONDS,
+        COMMUNICATION_QUEUE,
+        COMMUNICATION_THREAD_FACTORY
+    );
 
     public void assertCommunicationThread() {
-        if (Thread.currentThread() != communicationThread) {
-            IllegalStateException e = new IllegalStateException("Communication on wrong thread. Use linkManager.execute or linkManager.submit");
-            e.printStackTrace();
-            log.error(e.getMessage(), e);
-            throw e;
-        }
+        COMMUNICATION_THREAD_FACTORY.assertCommunicationThread();
     }
 
     private final EngineState engineState;
