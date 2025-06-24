@@ -1,12 +1,7 @@
 /**
  * @author Andrey Belomutskiy, (c) 2012-2020
  *
- * EGO Exhaust Gas Oxygen, also known as AFR Air/Fuel Ratio :)
- *
- * rusEfi has three options for wideband:
- * 1) integration with external widebands using liner analog signal wire
- * 2) 8-point interpolation curve to emulate a wide-band with a narrow-band sensor.
- * 3) CJ125 internal wideband controller is known to work with both 4.2 and 4.9
+ * EGO Exhaust Gas Oxygen, also known as AFR Air/Fuel Ratio :) connectet over analog input
  *
  */
 #include "pch.h"
@@ -27,8 +22,6 @@ bool hasAfrSensor() {
 
 	return isAdcChannelValid(engineConfiguration->afr.hwChannel);
 }
-
-extern float InnovateLC2AFR;
 
 float getAfr(SensorType type) {
 	afr_sensor_s * sensor = &engineConfiguration->afr;
