@@ -559,6 +559,40 @@ void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
 	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
+void configureJeepEVA_36_2_2(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
+
+	float wide = 15 * 2;
+	float narrow = 5 * 2;
+
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2, 0.6 );
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 2.2, 3.8);
+
+	for (int i = 2; i < 17; i++) {
+		s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.7, 1.6);
+	}
+
+	/* Starting with big gap */
+	float base = wide - narrow / 2;
+
+	for (int i = 0; i < 16; i++) {
+		s->addEventAngle(base, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEventAngle(base + narrow / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+		base += narrow;
+	}
+
+	/* Big tooth */
+	s->addEventAngle(base, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(base + wide - narrow / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	base += wide;
+
+	for (int i = 0; i < 15; i++) {
+		s->addEventAngle(base, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEventAngle(base + narrow / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+		base += narrow;
+	}
+}
+
 void configureChryslerVtt15(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	int width = 5;

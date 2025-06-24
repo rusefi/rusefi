@@ -735,6 +735,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureChryslerNGC_36_2_2(this);
 		break;
 
+	case trigger_type_e::TT_JEEP_EVA_36_2_2:
+		configureJeepEVA_36_2_2(this);
+		break;
+
 	case trigger_type_e::TT_DODGE_RAM:
 		initDodgeRam(this);
 		break;
