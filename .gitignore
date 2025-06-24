@@ -15,6 +15,7 @@ Debug/
 doxygen/
 /.idea
 workspace.xml
+unit_test*xml
 /console
 .vscode/.*
 *.cmp

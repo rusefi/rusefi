@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GitSharedSettings">
+    <option name="FORCE_PUSH_PROHIBITED_PATTERNS">
+      <list />
+    </option>
+    <option name="synchronizeBranchProtectionRules" value="false" />
+  </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/ChibiOS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/ChibiOS-Contrib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/controllers/can/wideband_firmware" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/controllers/lua/luaaa" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/ext/lua" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/ext/openblt" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/ext/uzlib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/libfirmware" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/hardware/InteractiveHtmlBom" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/hardware/rusefi_lib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/java_console/luaformatter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/java_console/peak-can-basic" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/misc/hex2dfu" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/unit_tests/googletest" vcs="Git" />
+  </component>
+</project>
