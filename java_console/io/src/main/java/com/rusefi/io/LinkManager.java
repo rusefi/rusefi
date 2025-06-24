@@ -202,7 +202,12 @@ public class LinkManager implements Closeable {
     );
 
     public void assertCommunicationThread() {
-        COMMUNICATION_THREAD_FACTORY.assertCommunicationThread();
+        if (!COMMUNICATION_THREAD_FACTORY.isInCommunicationThread()) {
+            final IllegalStateException e = new IllegalStateException("Communication on wrong thread. Use linkManager.execute or linkManager.submit");
+            e.printStackTrace();
+            log.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
     private final EngineState engineState;
