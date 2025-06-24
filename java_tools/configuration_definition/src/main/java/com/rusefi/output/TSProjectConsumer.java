@@ -154,13 +154,13 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 line = removeToken(line);
             }
 
-            line = state.getVariableRegistry().applyVariables(line);
+            line = state.getVariableRegistry().applyVariables(line) + ToolUtil.EOL;
 
             if (isBeforeStartTag)
-                prefix.append(line + ToolUtil.EOL);
+                prefix.append(line);
 
             if (isAfterEndTag)
-                postfix.append(state.getVariableRegistry().applyVariables(line) + ToolUtil.EOL);
+                postfix.append(line);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
