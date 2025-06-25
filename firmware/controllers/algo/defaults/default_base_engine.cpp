@@ -224,11 +224,6 @@ void setDefaultBaseEngine() {
 	// let's have valid default while we still have the field
 	engineConfiguration->debugMode = DBG_EXECUTOR;
 
-	engineConfiguration->boostCutPressure = 300;
-	engineConfiguration->boostCutPressureHyst = 20;
-  engineConfiguration->boostControlMinRpm = 2000;
-  engineConfiguration->boostControlMinTps = 30;
-  engineConfiguration->boostControlMinMap = 110;
 
 	engineConfiguration->primingDelay = 0.5;
 	// this should not be below default rpm! maybe even make them equal?
