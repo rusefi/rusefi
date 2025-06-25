@@ -270,7 +270,7 @@ void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, Tri
 void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	efiAssertVoid(ObdCode::CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
-	if (channelIndex == TriggerWheel:: T_SECONDARY) {
+	if (channelIndex == TriggerWheel::T_SECONDARY) {
 		needSecondTriggerInput = true;
 	}
 
