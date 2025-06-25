@@ -163,6 +163,8 @@ TEST(CanWideband,DecodeAemXSeriesValidLambda){
 	wbo.decodeAemXSeries(frame, getTimeNowNt());
 
 	EXPECT_FLOAT_EQ(1.2032f, Sensor::get(SensorType::Lambda1).value_or(-1));
+	//TODO: fixme!
+	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::SmoothedLambda1).value_or(-1));
 	Sensor::resetRegistry();
 }
 
@@ -302,6 +304,8 @@ TEST(CanWideband, DecodeRusefiStandard)
 	dut.processFrame(diagFrame, getTimeNowNt());
 	EXPECT_EQ((uint8_t)wbo::Fault::SensorNoHeatSupply, dut.faultCode);
 	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::Lambda1).value_or(-1));
+	//TODO: fixme!
+	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::SmoothedLambda1).value_or(-1));
 }
 
 TEST(CanWideband, DecodeRusefiStandardWrongVersion)
