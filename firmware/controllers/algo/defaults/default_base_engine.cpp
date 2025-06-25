@@ -381,11 +381,6 @@ void setDefaultBaseEngine() {
 	engineConfiguration->benchTestOffTime = 500;
 	engineConfiguration->benchTestCount = 3;
 
-	// Fans
-	engineConfiguration->fanOnTemperature = 92;
-	engineConfiguration->fanOffTemperature = 88;
-	engineConfiguration->fan2OnTemperature = 95;
-	engineConfiguration->fan2OffTemperature = 91;
 
 	// Tachometer
 	// 50% duty cycle is the default for tach signal
