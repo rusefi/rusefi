@@ -19,7 +19,7 @@ enum class RadiatorFanState : uint8_t {
 
 struct FanController : public EngineModule, public fan_control_s {
 	void onSlowCallback() override;
-
+	void setDefaultConfiguration() override;
 private:
 	bool getState(bool acActive, bool lastState);
 
