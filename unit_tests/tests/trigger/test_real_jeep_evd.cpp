@@ -9,7 +9,7 @@ TEST(realJeepEva, cranking) {
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	//setVerboseTrigger(true);
-	eth.setTriggerType(trigger_type_e::TT_JEEP_EVA_36_2_2);
+	eth.setTriggerType(trigger_type_e::TT_JEEP_EVD_36_2_2);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 

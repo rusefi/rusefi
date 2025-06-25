@@ -235,7 +235,7 @@ enum class trigger_type_e : uint32_t {
   TT_TOYOTA_3_TOOTH_UZ = 91,
 
 	// See also TT_CHRYSLER_NGC_36_2_2
-	TT_JEEP_EVA_36_2_2 = 92,
+	TT_JEEP_EVD_36_2_2 = 92,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt

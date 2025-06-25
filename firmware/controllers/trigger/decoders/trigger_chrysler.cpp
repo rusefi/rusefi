@@ -559,7 +559,7 @@ void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
 	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
-void configureJeepEVA_36_2_2(TriggerWaveform *s) {
+void configureJeepEVD_36_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	float wide = 15 * 2;

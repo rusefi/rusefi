@@ -30,7 +30,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_nissan_hr_vvt.cpp \
 	tests/trigger/test_real_k24a2.cpp \
 	tests/trigger/test_real_k20.cpp \
-	tests/trigger/test_real_jeep_eva.cpp \
+	tests/trigger/test_real_jeep_evd.cpp \
 	tests/trigger/test_toyota_3_tooth_cam.cpp \
 	tests/trigger/test_real_noisy_trigger.cpp \
 	tests/trigger/test_map_cam.cpp \
