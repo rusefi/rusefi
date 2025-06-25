@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ego.h"
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "AemXSeriesLambda.h"
@@ -22,6 +23,7 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
     // wait for first rusEFI WBO standard frame with protocol version field
     fwUnsupported = true;
     fwOutdated = true;
+	m_type = type;
 }
 
 can_wbo_type_e AemXSeriesWideband::sensorType() const {
@@ -172,6 +174,7 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	}
 
 	setValidValue(lambdaFloat, nowNt);
+	refreshSmoothedLambda(lambdaFloat);
 	return true;
 }
 
@@ -205,9 +208,27 @@ bool AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 		invalidate();
 	} else {
 		setValidValue(lambda, nowNt);
+		refreshSmoothedLambda(lambda);
 	}
 
 	return true;
+}
+
+void AemXSeriesWideband::refreshSmoothedLambda(float lambda) {
+	switch (m_type) {
+	case SensorType::Lambda1: {
+			expAverageLambda1.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
+			smoothedLambda1Sensor.setValidValue(expAverageLambda1.initOrAverage(lambda), getTimeNowNt());
+			break;
+	}
+	case SensorType::Lambda2: {
+			expAverageLambda2.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
+			smoothedLambda2Sensor.setValidValue(expAverageLambda2.initOrAverage(lambda), getTimeNowNt());
+			break;
+	}
+	default:
+		break;
+	}
 }
 
 void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {

@@ -19,6 +19,8 @@ public:
 
 	void refreshState(void);
 
+	void refreshSmoothedLambda(float lambda);
+
 protected:
 	// Dispatches to one of the three decoders below
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override;
@@ -45,4 +47,6 @@ private:
 	bool m_isFault;
 	// Last valid packed received, for wbo::Fault::CanSilent state
 	efitick_t m_lastUpdate = 0;
+	// Lambda1 / Lambda2 / etc
+	SensorType m_type;
 };
