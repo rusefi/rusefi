@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - OilTempGauge
  - LUA_USER_HEAP is no longer used
  - official binaries use gcc14
+ - Jeep EVA 36-2-2 trigger pattern
 
 ## June 2025 "Day 1210"
 
