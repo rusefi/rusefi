@@ -11,7 +11,6 @@
 #pragma once
 
 #include "state_sequence.h"
-#include "generated_lookup_engine_configuration.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
