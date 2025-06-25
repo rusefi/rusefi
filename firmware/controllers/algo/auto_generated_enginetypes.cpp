@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Jun 19 13:36:54 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Jun 25 08:08:43 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -269,6 +269,8 @@ case trigger_type_e::TT_JEEP_18_2_2_2:
   return "TT_JEEP_18_2_2_2";
 case trigger_type_e::TT_JEEP_4_CYL:
   return "TT_JEEP_4_CYL";
+case trigger_type_e::TT_JEEP_EVA_36_2_2:
+  return "TT_JEEP_EVA_36_2_2";
 case trigger_type_e::TT_KAWA_KX450F:
   return "TT_KAWA_KX450F";
 case trigger_type_e::TT_MAZDA_DOHC_1_4:

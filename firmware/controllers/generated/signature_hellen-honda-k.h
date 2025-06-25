@@ -2,5 +2,5 @@
 // CHeaderConsumer was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 851163606
-#define TS_SIGNATURE "rusEFI master.2025.06.25.hellen-honda-k.851163606"
+#define SIGNATURE_HASH 4080918324
+#define TS_SIGNATURE "rusEFI master.2025.06.25.hellen-honda-k.4080918324"
