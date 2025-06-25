@@ -421,6 +421,7 @@ void setDefaultBaseEngine() {
 	setRpmTableBin(config->minimumOilPressureBins);
 	setRpmTableBin(config->maximumOilPressureBins);
 
+	engine->engineModules.apply_all([](auto & m) { m.setDefaultConfiguration(); });
   // we invoke this last so that we can validate even defaults
   defaultsOrFixOnBurn();
 }
