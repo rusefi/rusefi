@@ -46,27 +46,25 @@ TEST(trigger, testSomethingWeird) {
 	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
 
 	TriggerDecoderBase state_("test");
-	TriggerDecoderBase *sta = &state_;
 
 	const auto& triggerConfiguration = engine->triggerCentral.primaryTriggerConfiguration;
 
-
-	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
+	ASSERT_FALSE(state_.shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
-	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
-	ASSERT_EQ(0, sta->getCurrentIndex());
+	state_.decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
+	ASSERT_TRUE(state_.shaft_is_synchronized); // first signal rise synchronize
+	ASSERT_EQ(0, state_.getCurrentIndex());
 
 	for (int i = 2; i < 10; i += 2) {
-		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
-		ASSERT_NEAR(i, sta->getCurrentIndex(), 0.0001) << "even";
+		state_.decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+		ASSERT_NEAR(i, state_.getCurrentIndex(), 0.0001) << "even";
 	}
 
-	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
-	ASSERT_EQ(10, sta->getCurrentIndex());
+	state_.decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	ASSERT_EQ(10, state_.getCurrentIndex());
 
-	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
-	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
+	state_.decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	ASSERT_EQ(0, state_.getCurrentIndex()); // new revolution
 }
 
 TEST(trigger, test1995FordInline6TriggerDecoder) {
