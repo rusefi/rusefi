@@ -50,6 +50,9 @@ const wideband_state_s* getLiveData(size_t idx) {
 }
 
 void initLambda() {
+  	// first we register the smoothed sensors for the early return on the can wbo case
+	smoothedLambda1Sensor.Register();
+	smoothedLambda2Sensor.Register();
 
 #if EFI_CAN_SUPPORT
 	if (engineConfiguration->enableAemXSeries) {
@@ -78,6 +81,4 @@ void initLambda() {
 	if (isAdcChannelValid(engineConfiguration->afr.hwChannel2) || isUnitTest) {
 	  lambdaSensor2.Register();
   }
-	smoothedLambda1Sensor.Register();
-	smoothedLambda2Sensor.Register();
 }

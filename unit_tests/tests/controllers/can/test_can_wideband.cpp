@@ -135,6 +135,8 @@ TEST(CanWideband,DecodeAemXSeriesSensorFault){
 TEST(CanWideband,DecodeAemXSeriesValidLambda){
 	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// we dont call initLambda on the tests init code. so we need to register this sensor on the test
+	smoothedLambda1Sensor.Register();
 
 	engineConfiguration->canWbo[0].type = AEM;
 
@@ -163,6 +165,7 @@ TEST(CanWideband,DecodeAemXSeriesValidLambda){
 	wbo.decodeAemXSeries(frame, getTimeNowNt());
 
 	EXPECT_FLOAT_EQ(1.2032f, Sensor::get(SensorType::Lambda1).value_or(-1));
+	EXPECT_FLOAT_EQ(1.2032f, Sensor::get(SensorType::SmoothedLambda1).value_or(-1));
 	Sensor::resetRegistry();
 }
 
@@ -227,6 +230,8 @@ TEST(CanWideband, DecodeRusefiStandard)
 {
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// we dont call initLambda on the tests init code. so we need to register this sensor on the test
+	smoothedLambda1Sensor.Register();
 
 	engineConfiguration->canWbo[0].type = RUSEFI;
 
@@ -276,6 +281,7 @@ TEST(CanWideband, DecodeRusefiStandard)
 	dut.processFrame(frame, getTimeNowNt());
 	dut.processFrame(diagFrame, getTimeNowNt());
 	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::Lambda1).value_or(-1));
+	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::SmoothedLambda1).value_or(-1));
 
 	// Check that temperature updates
 	EXPECT_EQ(dut.tempC, 1234);
