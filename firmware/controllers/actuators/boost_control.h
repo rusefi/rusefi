@@ -28,6 +28,7 @@ public:
     );
 
 	void onFastCallback() override;
+	void setDefaultConfiguration() override;
 	void resetLua();
 
 	// Called when the configuration may have changed.  Controller will
