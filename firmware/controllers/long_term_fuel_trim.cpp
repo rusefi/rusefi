@@ -152,14 +152,17 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 	}
 #endif
 
-	ClosedLoopFuelResult result;
-
 	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
-		result.banks[bank] = 1.0f + interpolate3d(
+		ltftCorrection[bank] = 1.0f + interpolate3d(
 			m_state->trims[bank],
 			config->veLoadBins, fuelLoad,
 			config->veRpmBins, rpm
 		);
+	}
+
+	ClosedLoopFuelResult result;
+	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
+		result.banks[bank] = ltftCorrection[bank];
 	}
 
 	return result;
