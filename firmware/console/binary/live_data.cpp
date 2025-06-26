@@ -279,3 +279,12 @@ static const FragmentEntry fragments[] = {
 FragmentList getLiveDataFragments() {
 	return { fragments, efi::size(fragments) };
 }
+
+template<>
+const long_term_fuel_trim_state_s* getLiveData(size_t) {
+#if EFI_LTFT_CONTROL
+	return &engine->module<LongTermFuelTrim>().unmock();
+#else
+	return nullptr;
+#endif
+}
