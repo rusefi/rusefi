@@ -86,7 +86,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	if ((abs(x.Frac) > 0.5) ||
 		(abs(y.Frac) > 0.5)) {
 		// we are outside table
-		cntMiss++;
+		ltftCntMiss++;
 		return;
 	}
 
@@ -124,9 +124,9 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	}
 
 	if (adjusted) {
-		cntHit++;
+		ltftCntHit++;
 	} else {
-		cntDead++;
+		ltftCntDeadband++;
 	}
 }
 
@@ -178,9 +178,9 @@ void LongTermFuelTrim::store() {
 void LongTermFuelTrim::reset() {
 	m_state->reset();
 
-	cntHit = 0;
-	cntMiss = 0;
-	cntDead = 0;
+	ltftCntHit = 0;
+	ltftCntMiss = 0;
+	ltftCntDeadband = 0;
 }
 
 void LongTermFuelTrim::onSlowCallback() {

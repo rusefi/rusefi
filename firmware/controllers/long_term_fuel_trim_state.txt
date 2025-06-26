@@ -1,0 +1,5 @@
+struct_no_prefix long_term_fuel_trim_state_s
+	uint32_t autoscale ltftCntHit;LTFT lerning: hits;"cnt", 1, 0, 0, 10000, 0
+	uint32_t autoscale ltftCntMiss;LTFT learning: miss;"cnt", 1, 0, 0, 10000, 0
+	uint32_t autoscale ltftCntDeadband;LTFT learning: in deadband;"cnt", 1, 0, 0, 10000, 0
+end_struct

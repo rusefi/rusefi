@@ -3,6 +3,7 @@
 #pragma once
 
 #include "closed_loop_fuel.h"
+#include "long_term_fuel_trim_state_generated.h"
 
 struct LtftState {
   // todo: probably reuse page_2_generated.h?
@@ -14,7 +15,7 @@ struct LtftState {
 };
 
 // TODO: add livedata!
-class LongTermFuelTrim : public EngineModule {
+class LongTermFuelTrim : public EngineModule, public long_term_fuel_trim_state_s {
 public:
 	// EngineModule implementation
 	void onSlowCallback() override;
@@ -32,11 +33,6 @@ private:
 	float getIntegratorGain() const;
 	float getMaxAdjustment() const;
 	float getMinAdjustment() const;
-
-	// statistic, move to livedata
-	uint32_t cntHit = 0;
-	uint32_t cntMiss = 0;
-	uint32_t cntDead = 0;
 };
 
 void initLtft();

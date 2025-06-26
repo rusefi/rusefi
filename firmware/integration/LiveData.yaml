@@ -248,3 +248,9 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     isPtr: true
     conditional_compilation: "EFI_PROD_CODE"
+
+  - name: long_term_fuel_trim_state
+    cppFileName: long_term_fuel_trim
+    java: LongTermFuelTrim.java
+    folder: controllers
+    prepend: integration/rusefi_config_shared.txt
