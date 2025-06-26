@@ -565,7 +565,10 @@ void configureJeepEVD_36_2_2(TriggerWaveform *s) {
 	float wide = 15 * 2;
 	float narrow = 5 * 2;
 
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2, 0.6 );
+	/* Last falling edge before big gap */
+	s->tdcPosition = 13.5 * narrow;
+
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2, 0.6);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 2.2, 3.8);
 
 	for (int i = 2; i < 17; i++) {
