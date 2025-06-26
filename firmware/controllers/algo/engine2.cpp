@@ -182,14 +182,13 @@ void EngineState::periodicFastCallback() {
 	// compute per-bank fueling
 	for (size_t bankIndex = 0; bankIndex < FT_BANK_COUNT; bankIndex++) {
 		engine->engineState.stftCorrection[bankIndex] = clResult.banks[bankIndex];
-		engine->engineState.ltftCorrection[bankIndex] = ltftResult.banks[bankIndex];
 	}
 
 	// Now apply that to per-cylinder fueling and timing
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
 		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[cylinderIndex];
 		/* TODO: add LTFT trims when ready */
-		auto bankTrim = engine->engineState.stftCorrection[bankIndex] * engine->engineState.ltftCorrection[bankIndex];
+		auto bankTrim = clResult.banks[bankIndex] * ltftResult.banks[bankIndex];
 		auto cylinderTrim = getCylinderFuelTrim(cylinderIndex, rpm, fuelLoad);
 		auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
 
