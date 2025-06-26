@@ -6071,7 +6071,7 @@ event 2 0 1 270.00 1.000000
 event 3 0 0 270.00 nan
 event 4 0 1 450.00 0.666667
 event 5 0 0 450.00 nan
-TRIGGERTYPE 92 128 TT_JEEP_EVA_36_2_2 0.00
+TRIGGERTYPE 92 128 TT_JEEP_EVD_36_2_2 135.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
