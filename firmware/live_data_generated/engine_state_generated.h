@@ -386,14 +386,8 @@ struct engine_state_s {
 	 * offset 140
 	 */
 	float stftCorrection[FT_BANK_COUNT] = {};
-	/**
-	 * LTFT: Bank
-	 * units: %
-	 * offset 148
-	 */
-	float ltftCorrection[FT_BANK_COUNT] = {};
 };
-static_assert(sizeof(engine_state_s) == 156);
+static_assert(sizeof(engine_state_s) == 148);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt
