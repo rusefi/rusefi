@@ -1389,7 +1389,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1245236993;
+	public static final int SIGNATURE_HASH = 2028646978;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1513,7 +1513,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_HONDA_K_CRANK_12_1 = 46;
 	public static final int trigger_type_e_TT_JEEP_18_2_2_2 = 37;
 	public static final int trigger_type_e_TT_JEEP_4_CYL = 40;
-	public static final int trigger_type_e_TT_JEEP_EVA_36_2_2 = 92;
+	public static final int trigger_type_e_TT_JEEP_EVD_36_2_2 = 92;
 	public static final int trigger_type_e_TT_KAWA_KX450F = 57;
 	public static final int trigger_type_e_TT_MAZDA_DOHC_1_4 = 15;
 	public static final int trigger_type_e_TT_MAZDA_MIATA_NA = 3;
@@ -1677,7 +1677,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.06.25.proteus_f7.1245236993";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.06.26.proteus_f7.2028646978";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1968;
