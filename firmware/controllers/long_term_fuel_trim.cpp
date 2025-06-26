@@ -74,6 +74,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	const auto& cfg = engineConfiguration->ltft;
 
 	if (!cfg.enabled) {
+		ltftLearning = false;
 		return;
 	}
 
@@ -87,6 +88,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		(abs(y.Frac) > 0.5)) {
 		// we are outside table
 		ltftCntMiss++;
+		ltftLearning = false;
 		return;
 	}
 
@@ -123,6 +125,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		adjusted = true;
 	}
 
+	ltftLearning = adjusted;
 	if (adjusted) {
 		ltftCntHit++;
 	} else {
@@ -134,6 +137,10 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 	const auto& cfg = engineConfiguration->ltft;
 
 	if (!cfg.correctionEnabled) {
+		for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
+			ltftCorrection[bank] = 1.0f;
+		}
+		ltftCorrecting = false;
 		return { };
 	}
 
@@ -152,6 +159,8 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 	}
 #endif
 
+	// Is there any reason we should not apply LTFT?
+
 	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
 		ltftCorrection[bank] = 1.0f + interpolate3d(
 			m_state->trims[bank],
@@ -165,6 +174,7 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 		result.banks[bank] = ltftCorrection[bank];
 	}
 
+	ltftCorrecting = true;
 	return result;
 }
 
