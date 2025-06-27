@@ -53,6 +53,11 @@ void setCommonNTCSensor(ThermistorConf *thermistorConf, float pullup) {
   thermistorConf->config.bias_resistor = pullup;
 }
 
-void setGmCltSensor(ThermistorConf *thermistorConf, float pullup) {
-	thermistorConf->config = {-40, 40, 130, 100'000, 1459, 70, pullup};
+void setGmCltSensor(ThermistorConf *thermistorConf) {
+    thermistorConf->config.tempC_1 = -40;
+    thermistorConf->config.tempC_2 = 40;
+    thermistorConf->config.tempC_3 = 130;
+    thermistorConf->config.resistance_1 = 100'000;
+    thermistorConf->config.resistance_2 = 1459;
+    thermistorConf->config.resistance_3 = 70;
 }

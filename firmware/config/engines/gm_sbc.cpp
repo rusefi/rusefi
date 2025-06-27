@@ -128,7 +128,7 @@ void setGmSbc() {
     engineConfiguration->fuelPumpPin = Gpio::PROTEUS_HS_1;
     // low side on MEFI3 ELECTRONIC-FUEL-INJECTION-MEFI-3-5.7L-350CID-8.2L-502CID.pdf page 487
 
-    setGmCltSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
+    setGmCltSensor(&engineConfiguration->clt);
 #endif // HW_PROTEUS
 	engineConfiguration->mainRelayPin = Gpio::Unassigned; // vehicle controls main relay
 
@@ -163,7 +163,7 @@ static void setGmGdi() {
   engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS3; // Digital Input 4
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
   engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
-  setGmCltSensor(&engineConfiguration->clt, HELLEN_DEFAULT_AT_PULLUP);
+  setGmCltSensor(&engineConfiguration->clt);
 
   // engineConfiguration->starterControlPin = high side :()
 #endif // HW_HELLEN_4K_GDI
@@ -181,7 +181,7 @@ static void setGmGdi() {
 	config->boardUseCrankPullUp = true;
 
 	engineConfiguration->starterControlPin = Gpio::PIN_5C; // 5C - High Side 1, ignition output is not enough at least on HHR
-	setGmCltSensor(&engineConfiguration->clt, HELLEN_DEFAULT_AT_PULLUP);
+	setGmCltSensor(&engineConfiguration->clt);
 #endif // HW_HELLEN_8CHAN
 
   setPPSCalibration(1, 4.25, 0.5, 2.14);
