@@ -110,7 +110,7 @@ int BinarySensorReader::readRecordsMetadata(std::ifstream &ifs,
 	return lineTotalSize;
 }
 
-void BinarySensorReader::readLoggerFieldData(std::ifstream &ifs) {
+void BinarySensorReader::readLoggerFieldData() {
 	/*uint16_t timestamp =*/static_cast<uint16_t>(readSwappedShort(&ifs));
 
 //    std::cout << "Reading for record " << recordCounter << std::endl;
@@ -124,25 +124,22 @@ void BinarySensorReader::readLoggerFieldData(std::ifstream &ifs) {
 
 	recordCounter++;
 	//logContent.emplace_back(currentSnapshot);
-
-	if (callback) {
-		callback(currentSnapshot);
-	}
-
 }
 
-void BinarySensorReader::readBlocks(std::ifstream &ifs) {
+std::map<const std::string, float>& BinarySensorReader::readBlock() {
 	uint8_t blockType = static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
 	uint8_t counter = static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
 
 	if (blockType == 0) {
-		readLoggerFieldData(ifs);
+		readLoggerFieldData();
 	} else if (blockType == 1) {
 		throw std::runtime_error("todo support markers");
 	} else {
 		throw std::runtime_error(
 				"Unexpected block type " + std::to_string(blockType));
 	}
+
+	return currentSnapshot;
 }
 
 void BinarySensorReader::openMlq(const std::string fileName) {
@@ -217,9 +214,9 @@ void BinarySensorReader::openMlq(const std::string fileName) {
 	}
 }
 
-void BinarySensorReader::readMlq() {
-	while (ifs.peek() != EOF) {
-		readBlocks(ifs);
+void BinarySensorReader::readMlq(mlq_logline_callback_t callback) {
+	while (!eof()) {
+		callback(readBlock());
 	}
 
 	std::cout << "Got " << recordCounter << " record(s)" << std::endl;
@@ -227,3 +224,6 @@ void BinarySensorReader::readMlq() {
 	ifs.close();
 }
 
+bool BinarySensorReader::eof() {
+	return (ifs.peek() == EOF);
+}
