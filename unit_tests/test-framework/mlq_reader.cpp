@@ -121,7 +121,7 @@ void BinarySensorReader::readLoggerFieldData(std::ifstream &ifs) {
 	/*uint8_t crc = */static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
 
 	recordCounter++;
-	logContent.emplace_back(currentSnapshot);
+	//logContent.emplace_back(currentSnapshot);
 
 	if (callback)
 		callback(currentSnapshot);
@@ -142,8 +142,8 @@ void BinarySensorReader::readBlocks(std::ifstream &ifs) {
 	}
 }
 
-void BinarySensorReader::readMlq(const std::string fileName) {
-	std::ifstream ifs(fileName, std::ios::binary);
+void BinarySensorReader::openMlq(const std::string fileName) {
+	ifs.open(fileName, std::ios::binary);
 
 	if (!ifs.is_open()) {
 		throw std::runtime_error("Error opening file: " + fileName);
@@ -211,14 +211,15 @@ void BinarySensorReader::readMlq(const std::string fileName) {
 			throw std::runtime_error(
 					"Size validation failed by "
 							+ std::to_string(sizeValidation));
-
 	}
+}
 
+void BinarySensorReader::readMlq() {
 	while (ifs.peek() != EOF) {
 		readBlocks(ifs);
 	}
 
-	std::cout << "Got " << logContent.size() << " record(s)" << std::endl;
+	std::cout << "Got " << recordCounter << " record(s)" << std::endl;
 
 	ifs.close();
 }
