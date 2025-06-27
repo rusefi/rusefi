@@ -58,7 +58,7 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
         return msq.getConstantsAsMap().get(fieldName);
     }
 
-    private TestTuneMigrationContext(
+    public TestTuneMigrationContext(
         final Msq prevMsq,
         final IniFileModel prevIni,
         final Msq updatedMsq,
