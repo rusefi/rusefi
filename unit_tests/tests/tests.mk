@@ -189,11 +189,11 @@ TESTS_SRC_CPP = \
 	tests/controllers/can/test_can_serial.cpp \
 	tests/controllers/can/test_can_wideband.cpp \
 	tests/controllers/can/test_obd2.cpp \
-	tests/controllers/test_long_term_fuel_trim.cpp \
 	tests/ignition_injection/test_ignition_state.cpp \
 	tests/core/test_main_loop.cpp \
 	tests/test_trip_odometer.cpp \
 	tests/controllers/modules/map_averaging/test_map_averaging.cpp \
+	tests/controllers/modules/long_term_fuel_trim/test_long_term_fuel_trim.cpp \
 	tests/util/test_utils.cpp \
 	tests/controllers/algo/test_engine_cylinder.cpp \
 	tests/controllers/algo/test_closed_loop_idle.cpp \
