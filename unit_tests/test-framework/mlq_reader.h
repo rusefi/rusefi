@@ -25,6 +25,11 @@ public:
   std::map<const std::string, float>& readBlock();
   bool eof();
 
+  ~BinarySensorReader() {
+  for (auto record : records) {
+    delete record;
+  }
+}
 private:
   std::ifstream ifs;
   void readLoggerFieldData();
