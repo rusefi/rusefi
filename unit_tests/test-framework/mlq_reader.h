@@ -13,13 +13,13 @@
 #include <functional>
 
 using after_header_callback_t = std::function<void()>;
-using mlq_logline_callback_t = std::function<void(std::map<const Record*, float>& currentSnapshot)>;
+using mlq_logline_callback_t = std::function<void(std::map<const std::string, float>& currentSnapshot)>;
 
 class BinarySensorReader {
 public:
   std::vector<Record*> records;
   std::map<std::string, const Record*> recordByName;
-  std::map<const Record*, float> snapshot;
+  std::map<const std::string, float> currentSnapshot;
   //std::vector<LogLine> logContent;
   int recordCounter = 0;
 

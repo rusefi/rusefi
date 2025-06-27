@@ -102,7 +102,11 @@ int BinarySensorReader::readRecordsMetadata(std::ifstream &ifs,
 		recordByName[fieldName] = record;
 		records.emplace_back(record);
 	}
-	afterHeaderCallback();
+
+	if (afterHeaderCallback) {
+		afterHeaderCallback();
+	}
+
 	return lineTotalSize;
 }
 
@@ -111,11 +115,9 @@ void BinarySensorReader::readLoggerFieldData(std::ifstream &ifs) {
 
 //    std::cout << "Reading for record " << recordCounter << std::endl;
 
-	std::map<const Record*, float> currentSnapshot;
-
 	for (Record *record : records) {
 		float value = record->read(ifs);
-		currentSnapshot[record] = value;
+		currentSnapshot[record->getFieldName()] = value;
 	}
 
 	/*uint8_t crc = */static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
@@ -123,8 +125,9 @@ void BinarySensorReader::readLoggerFieldData(std::ifstream &ifs) {
 	recordCounter++;
 	//logContent.emplace_back(currentSnapshot);
 
-	if (callback)
+	if (callback) {
 		callback(currentSnapshot);
+	}
 
 }
 
