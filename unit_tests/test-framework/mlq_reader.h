@@ -20,17 +20,19 @@ public:
   std::vector<Record*> records;
   std::map<std::string, const Record*> recordByName;
   std::map<const Record*, float> snapshot;
-  std::vector<LogLine> logContent;
+  //std::vector<LogLine> logContent;
   int recordCounter = 0;
 
   after_header_callback_t afterHeaderCallback{};
   mlq_logline_callback_t callback{};
 
-  void readMlq(const std::string fileName);
+  void openMlq(const std::string fileName);
+  void readMlq();
   void readBlocks(std::ifstream& ifs);
   void readLoggerFieldData(std::ifstream& ifs);
 
 private:
+  std::ifstream ifs;
   int readRecordsMetadata(std::ifstream &ifs, int numberOfFields);
 
 };
