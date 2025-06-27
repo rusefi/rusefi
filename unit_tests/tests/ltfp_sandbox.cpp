@@ -7,16 +7,13 @@ using ::testing::StrictMock;
 //static int counter = 0;
 
 constexpr float executor_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
-
-static BinarySensorReader reader;
-
-EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+static constexpr bool verbose = false;
 
 static bool firstRun = true;
 static float prevTime = 0;
 static float dt = 0 ;
 
-static void my_log_handler(std::map<const std::string, float> &snapshot) {
+static void my_log_handler(std::map<const std::string, float>& snapshot) {
 	//static size_t counter = 0;
 	//std::cout << "Lambda callback received snapshot. It has " << snapshot.size()
 	//		<< " entries.\n";
@@ -34,17 +31,20 @@ static void my_log_handler(std::map<const std::string, float> &snapshot) {
 			dt -= executor_dt;
 			counter++;
 		}
-		if (counter) {
-			std::cout << time << ": periodicFastCallback() executed " << counter << " times\n";
-		}
 
-		printf("%.3f: CLT: %3.0f, RPM %3.0f, MAP %3.0f, Lambdas: %f %f\n",
-			time,
-			snapshot["CLT"],
-			snapshot["RPM"],
-			snapshot["MAP"],
-			snapshot["Front Lambda"],
-			snapshot["Rear Lambda"]);
+		if (verbose) {
+			if (counter) {
+				std::cout << time << ": periodicFastCallback() executed " << counter << " times\n";
+			}
+
+			printf("%.3f: CLT: %3.0f, RPM %3.0f, MAP %3.0f, Lambdas: %f %f\n",
+				time,
+				snapshot["CLT"],
+				snapshot["RPM"],
+				snapshot["MAP"],
+				snapshot["Front Lambda"],
+				snapshot["Rear Lambda"]);
+		}
 	}
 
 	// TODO: find way to mock target AFR?
@@ -61,11 +61,13 @@ static void my_log_handler(std::map<const std::string, float> &snapshot) {
 }
 
 void runSandbox() {
-	reader.callback = my_log_handler;
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	BinarySensorReader reader;
 
 	reader.openMlq("pretty-happy-reference.mlg");
 
-	reader.readMlq();
+	reader.readMlq(my_log_handler);
 
 	printf("LTFT test: miss: %d, hit %d, deadband %d\n",
 		engine->module<LongTermFuelTrim>()->ltftCntMiss,
