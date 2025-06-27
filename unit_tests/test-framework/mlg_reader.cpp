@@ -1,5 +1,5 @@
 /*
- * mlq_reader.cpp
+ * mlg_reader.cpp
  *
  */
 
@@ -9,7 +9,7 @@
 #include <stdexcept> // For std::runtime_error
 #include <chrono>    // For time-related operations
 #include <ctime>     // For std::put_time and std::localtime
-#include "mlq_reader.h"
+#include "mlg_reader.h"
 #define FIXED_HEADER_SIZE 24
 
 int readSwappedInt(std::ifstream *ifs) {
@@ -95,7 +95,7 @@ int BinarySensorReader::readRecordsMetadata(std::ifstream &ifs,
 		int8_t digits = readByte(&ifs);
 		/*category*/readFixedSizeString(ifs, 34);
 
-		MlqDataType type = findByOrdinal(typeCode);
+		MlgDataType type = findByOrdinal(typeCode);
 		lineTotalSize += getRecordSize(type);
 
 		Record *record = new Record(fieldName, type, scale);
@@ -142,7 +142,7 @@ std::map<const std::string, float>& BinarySensorReader::readBlock() {
 	return currentSnapshot;
 }
 
-void BinarySensorReader::openMlq(const std::string fileName) {
+void BinarySensorReader::openMlg(const std::string fileName) {
 	ifs.open(fileName, std::ios::binary);
 
 	if (!ifs.is_open()) {
@@ -214,7 +214,7 @@ void BinarySensorReader::openMlq(const std::string fileName) {
 	}
 }
 
-void BinarySensorReader::readMlq(mlq_logline_callback_t callback) {
+void BinarySensorReader::readMlg(mlg_logline_callback_t callback) {
 	while (!eof()) {
 		callback(readBlock());
 	}

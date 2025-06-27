@@ -1,10 +1,8 @@
 #include "pch.h"
-#include "mlq_reader.h"
+#include "mlg_reader.h"
 
 using ::testing::_;
 using ::testing::StrictMock;
-
-//static int counter = 0;
 
 constexpr float executor_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 static constexpr bool verbose = false;
@@ -17,7 +15,7 @@ static void my_log_handler(std::map<const std::string, float>& snapshot) {
 	//static size_t counter = 0;
 	//std::cout << "Lambda callback received snapshot. It has " << snapshot.size()
 	//		<< " entries.\n";
-	
+
 	float time = snapshot["Time"];
 
 	if (!firstRun) {
@@ -65,9 +63,9 @@ void runSandbox() {
 
 	BinarySensorReader reader;
 
-	reader.openMlq("pretty-happy-reference.mlg");
+	reader.openMlg("pretty-happy-reference.mlg");
 
-	reader.readMlq(my_log_handler);
+	reader.readMlg(my_log_handler);
 
 	printf("LTFT test: miss: %d, hit %d, deadband %d\n",
 		engine->module<LongTermFuelTrim>()->ltftCntMiss,

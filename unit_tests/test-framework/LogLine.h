@@ -8,7 +8,7 @@
 #pragma once
 
 #include <map>
-#include "MlqRecord.h"
+#include "MlgRecord.h"
 
 class LogLine {
 public:

@@ -1,5 +1,5 @@
 /*
- * mlq_reader.h
+ * mlg_reader.h
  *
  */
 
@@ -7,21 +7,20 @@
 
 #include <vector>
 #include <map>
-#include "MlqDataType.h"
-#include "MlqRecord.h"
+#include "MlgDataType.h"
+#include "MlgRecord.h"
 #include "LogLine.h"
 #include <functional>
 
 using after_header_callback_t = std::function<void()>;
-using mlq_logline_callback_t = std::function<void(std::map<const std::string, float>& currentSnapshot)>;
+using mlg_logline_callback_t = std::function<void(std::map<const std::string, float>& currentSnapshot)>;
 
 class BinarySensorReader {
 public:
   after_header_callback_t afterHeaderCallback{};
-  //mlq_logline_callback_t callback{};
 
-  void openMlq(const std::string fileName);
-  void readMlq(mlq_logline_callback_t callback);
+  void openMlg(const std::string fileName);
+  void readMlg(mlg_logline_callback_t callback);
   std::map<const std::string, float>& readBlock();
   bool eof();
 
