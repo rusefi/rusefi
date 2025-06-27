@@ -12,6 +12,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         VeTableExtensionMigrator.INSTANCE,
         BattLagCorrExtensionMigrator.INSTANCE,
         CltIdleCorrMigrator.INSTANCE,
+        DisplacementIniFieldMigrator.INSTANCE,
         DefaultTuneMigrator.INSTANCE
     );
 
