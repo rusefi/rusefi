@@ -1,3 +1,5 @@
+meta: config/boards/hellen_meta.h
+
 pins:
   - pin: aux1
     ts_name: 1 GND
@@ -5,15 +7,13 @@ pins:
 
   - pin: aux2
     class: outputs
-    # H144_OUT_PWM4
-    id: C8
+    meta: H144_OUT_PWM4
     ts_name: 2 Aux Low 3
     function: Aux Low 3
 
   - pin: aux3
     class: outputs
-    # H144_OUT_PWM3
-    id: C7
+    meta: H144_OUT_PWM3
     ts_name: 3 Aux Low 2
     function: Aux Low 2
 
@@ -23,6 +23,11 @@ pins:
     class: switch_inputs
     ts_name: 4 DIN 3
     function: DIN3
+
+  - pin: auxP65
+    meta: H144_IN_RES3
+    class: switch_inputs
+    function: P65
 
   - pin: aux5
     ts_name: 5 AIN 3
