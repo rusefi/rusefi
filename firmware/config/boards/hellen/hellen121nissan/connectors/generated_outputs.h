@@ -14,8 +14,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::G5, // 104 ETB Relay
 	Gpio::G14, // 111 Main Relay
 	Gpio::D12, // 113 Fuel Pump Relay
-	Gpio::C8, // 2 Aux Low 3
-	Gpio::C7, // 3 Aux Low 2
+	Gpio::H144_OUT_PWM4, // 2 Aux Low 3
+	Gpio::H144_OUT_PWM3, // 3 Aux Low 2
 	Gpio::C6, // 8 Aux Low 1
 	Gpio::F13, // 10 - VTC Left
 	Gpio::F14, // 11 - VTC Right
