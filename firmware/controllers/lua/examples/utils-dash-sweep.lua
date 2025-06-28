@@ -26,6 +26,9 @@ speedSensor : setTimeout(timeout)
 gearSensor = Sensor.new("DetectedGear")
 gearSensor : setTimeout(timeout)
 
+oilP = Sensor.new("OilPressure")
+oilP : setTimeout(timeout)
+
 function onTickDashSweep()
 
   speedSensor : set(    3 * dashSweepCounter)
@@ -34,6 +37,7 @@ function onTickDashSweep()
   cltSensor : set(    dashSweepCounter)
   iatSensor : set( 100 -   dashSweepCounter)
   mapSensor : set( dashSweepCounter / 2)
+  oilP      : set( dashSweepCounter / 3)
   --print()
 
   gearSensor: set( dashSweepCounter / 20)
