@@ -5,13 +5,12 @@
  *
  */
 #include "pch.h"
-#include "exp_average.h"
 
 StoredValueSensor smoothedLambda1Sensor(SensorType::SmoothedLambda1, MS2NT(500));
 StoredValueSensor smoothedLambda2Sensor(SensorType::SmoothedLambda2, MS2NT(500));
 
-static ExpAverage expAverageLambda1;
-static ExpAverage expAverageLambda2;
+ExpAverage expAverageLambda1;
+ExpAverage expAverageLambda2;
 
 #include "cyclic_buffer.h"
 
