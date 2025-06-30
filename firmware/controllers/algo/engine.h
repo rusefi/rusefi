@@ -231,6 +231,8 @@ public:
     void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) override;
 	void OnTriggerSynchronization(bool wasSynchronized, bool isDecodingError) override;
 	void OnTriggerSynchronizationLost() override;
+    TriggerStateListener* nextListener() override;
+    TriggerStateListener* secondListener = nullptr;
 #endif
 
 	void setConfig();

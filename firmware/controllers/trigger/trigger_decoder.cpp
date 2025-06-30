@@ -623,8 +623,10 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	triggerStateIndex = currentCycle.current_index;
 
 	// Needed for early instant-RPM detection
-	if (triggerStateListener) {
-		triggerStateListener->OnTriggerStateProperState(nowNt, triggerStateIndex);
+	TriggerStateListener * l = triggerStateListener;
+	while (l) {
+		l->OnTriggerStateProperState(nowNt, triggerStateIndex);
+		l = l->nextListener();
 	}
 
 	if (getShaftSynchronized()) {

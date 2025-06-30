@@ -352,6 +352,10 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex
 	rpmCalculator.setSpinningUp(nowNt);
 }
 
+TriggerStateListener* Engine::nextListener() {
+  return secondListener;
+}
+
 void Engine::OnTriggerSynchronizationLost() {
 	// Needed for early instant-RPM detection
 	rpmCalculator.setStopSpinning();

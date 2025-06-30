@@ -20,6 +20,8 @@ struct TriggerStateListener {
 	virtual void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) = 0;
 	virtual void OnTriggerSynchronization(bool wasSynchronized, bool isDecodingError) = 0;
 	virtual void OnTriggerSynchronizationLost() = 0;
+	// todo: replace this dirty hack with proper collection (linked list?) of listeners
+	virtual TriggerStateListener* nextListener() = 0;
 #endif // EFI_SHAFT_POSITION_INPUT
 };
 
