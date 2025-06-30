@@ -228,7 +228,7 @@ public:
 	void resetLua();
 
 #if EFI_SHAFT_POSITION_INPUT
-	void OnTriggerStateProperState(efitick_t nowNt) override;
+    void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) override;
 	void OnTriggerSynchronization(bool wasSynchronized, bool isDecodingError) override;
 	void OnTriggerSynchronizationLost() override;
 #endif
