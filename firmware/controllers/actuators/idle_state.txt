@@ -34,6 +34,7 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
     percent_t iacByRpmTaper;idle: iacByRpmTaper portion
 
     percent_t luaAdd;idle: Lua Adder
+	int m_lastTargetRpm
 
 	! Closed loop
 	percent_t idleClosedLoop;Closed loop
