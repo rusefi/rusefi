@@ -17,7 +17,7 @@ const char *getTrigger_value_e(TriggerValue value);
 
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
-	virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
+	virtual void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) = 0;
 	virtual void OnTriggerSynchronization(bool wasSynchronized, bool isDecodingError) = 0;
 	virtual void OnTriggerSynchronizationLost() = 0;
 #endif // EFI_SHAFT_POSITION_INPUT

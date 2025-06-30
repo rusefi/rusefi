@@ -628,12 +628,12 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		return unexpected;
 	}
 
+	triggerStateIndex = currentCycle.current_index;
+
 	// Needed for early instant-RPM detection
 	if (triggerStateListener) {
-		triggerStateListener->OnTriggerStateProperState(nowNt);
+		triggerStateListener->OnTriggerStateProperState(nowNt, triggerStateIndex);
 	}
-
-	triggerStateIndex = currentCycle.current_index;
 
 	if (getShaftSynchronized()) {
 		return TriggerDecodeResult{ currentCycle.current_index };
