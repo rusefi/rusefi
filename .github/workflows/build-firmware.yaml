@@ -102,7 +102,7 @@ jobs:
 
     - name: Create Release
       if: ${{ env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.16.0
+      uses: ncipollo/release-action@v1.18.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
@@ -278,7 +278,7 @@ jobs:
 
     - name: Add Bundles to Release
       if: ${{ env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.16.0
+      uses: ncipollo/release-action@v1.18.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
