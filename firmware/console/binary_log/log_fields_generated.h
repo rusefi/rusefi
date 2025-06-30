@@ -1054,6 +1054,9 @@ static const LogField fields[] = {
 	{engine->module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().m_lastTargetRpm, "m_lastTargetRpm", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().idleClosedLoop, "Closed loop", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL

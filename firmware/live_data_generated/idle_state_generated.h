@@ -157,30 +157,34 @@ struct idle_state_s {
 	 */
 	percent_t luaAdd = (percent_t)0;
 	/**
-	 * Closed loop
 	 * offset 36
+	 */
+	int m_lastTargetRpm = (int)0;
+	/**
+	 * Closed loop
+	 * offset 40
 	 */
 	percent_t idleClosedLoop = (percent_t)0;
 	/**
 	 * @@GAUGE_NAME_IAC@@
 	 * units: %
-	 * offset 40
+	 * offset 44
 	 */
 	percent_t currentIdlePosition = (percent_t)0;
 	/**
 	 * Target airmass
 	 * units: mg
-	 * offset 44
+	 * offset 48
 	 */
 	uint16_t idleTargetAirmass = (uint16_t)0;
 	/**
 	 * Target airflow
 	 * units: kg/h
-	 * offset 46
+	 * offset 50
 	 */
 	scaled_channel<uint16_t, 100, 1> idleTargetFlow = (uint16_t)0;
 };
-static_assert(sizeof(idle_state_s) == 48);
+static_assert(sizeof(idle_state_s) == 52);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/idle_state.txt

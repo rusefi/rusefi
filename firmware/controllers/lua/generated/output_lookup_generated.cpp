@@ -1910,6 +1910,11 @@ float getOutputValueByName(const char *name) {
 		case 206059088:
 			return engine->module<IdleController>().unmock().luaAdd;
 #endif
+// m_lastTargetRpm
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case 1838047931:
+			return engine->module<IdleController>().unmock().m_lastTargetRpm;
+#endif
 // idleClosedLoop
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1267620087:
