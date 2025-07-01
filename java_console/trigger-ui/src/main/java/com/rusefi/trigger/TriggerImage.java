@@ -30,12 +30,13 @@ public class TriggerImage {
 
     private static final int WHEEL_BORDER = 20;
     private static final int WHEEL_DIAMETER = 500;
-    private static final int SMALL_DIAMETER = 420;
+    private static final int SMALL_DIAMETER = WHEEL_DIAMETER - 80;
     private static final int _180 = 180;
     public static final int MIN_TIME = 720;
     private static final int FRAME_WIDTH = 900;
     private static final int FRAME_HEIGHT = 700;
     private static final int PANEL_HEIGHT = 480;
+    private static final boolean DEBUG = false;
 
     /**
      * number of extra frames
@@ -136,14 +137,22 @@ public class TriggerImage {
                 return new Dimension((1 + EXTRA_COUNT) * WIDTH, PANEL_HEIGHT);
             }
         };
+        if (DEBUG) {
+            triggerPanel.setBackground(Color.pink);
+            triggerPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+        }
 
         JPanel topPanel = new JPanel(new FlowLayout());
+        if (DEBUG)
+            topPanel.setBorder(BorderFactory.createLineBorder(Color.orange));
 
         SwingUtilities2.invokeAndWait(() -> {
             content.add(topPanel, BorderLayout.NORTH);
             content.add(triggerPanel, BorderLayout.CENTER);
 
             f.showFrame(content);
+            if (DEBUG)
+                f.getFrame().setBackground(Color.cyan);
             f.getFrame().setSize(FRAME_WIDTH, FRAME_HEIGHT);
 
             AutoupdateUtil.trueLayoutAndRepaint(content);
@@ -164,6 +173,9 @@ public class TriggerImage {
 
         JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true,
             triggerWheelInfo);
+        if (DEBUG) {
+            firstWheelControl.setBorder(BorderFactory.createLineBorder(Color.green));
+        }
 
         topPanel.add(firstWheelControl);
         topPanel.add(LogoHelper.createLogoLabel());
