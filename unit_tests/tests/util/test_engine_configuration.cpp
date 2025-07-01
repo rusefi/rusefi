@@ -336,10 +336,16 @@ void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<B
         copyTable(engineConfiguration->injector.battLagCorrTable, battLagCorr.value());
     } else {
 #if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
-        EXPECT_THAT(
-            engineConfiguration->injector.battLagCorrTable[0],
-            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR[0])
+        EXPECT_EQ(
+            battLagCorr->size(),
+            std::size(engineConfiguration->injector.battLagCorrTable)
         );
+        for (size_t row = 0; row < battLagCorr->size(); ++row) {
+            EXPECT_THAT(
+                engineConfiguration->injector.battLagCorrTable[row],
+                testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR[row])
+            );
+        }
 #endif //(VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
     }
 }
@@ -389,10 +395,16 @@ void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::o
         }
     } else {
 #if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
-       EXPECT_THAT(
-            engineConfiguration->injectorSecondary.battLagCorrTable[0],
-            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR[0])
+        EXPECT_EQ(
+            battLagCorr->size(),
+            std::size(engineConfiguration->injector.battLagCorrTable)
         );
+        for (size_t row = 0; row < battLagCorr->size(); ++row) {
+            EXPECT_THAT(
+                engineConfiguration->injector.battLagCorrTable[row],
+                testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR[row])
+            );
+        }
 #endif //(VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
     }
 }
