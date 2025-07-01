@@ -9,11 +9,7 @@ static void setBosch02880155868(injector_s& cfg) {
 	// http://www.boschdealer.com/specsheets/0280155868cs.jpg (use web.archive.org)
 #if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
     // see https://github.com/rusefi/rusefi/issues/7521 for adding more values
-    static const float corrBins[2][8] = {
-	    { 4.240, 2.483, 1.739, 1.501, 1.308, 1.149, 0.964, 0.913 },
-		{ 3.084, 1.641, 1.149, 1.194, 0.992, 0.759, 0.637, 0.603 },
-    };
-	copyTable(cfg.battLagCorrTable, corrBins);
+	copyTable(cfg.battLagCorrTable, engine_configuration_defaults::INJECTOR_BATT_LAG_CURR);
 #endif
 
 #if (VBAT_INJECTOR_CURVE_SIZE == 8)
