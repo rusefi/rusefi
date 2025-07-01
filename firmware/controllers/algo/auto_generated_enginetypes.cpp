@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Jun 26 10:44:44 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jul 01 00:27:52 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -392,8 +392,6 @@ case COMMAND_X14_UNUSED_4:
   return "COMMAND_X14_UNUSED_4";
 case COMMAND_X14_UNUSED_5:
   return "COMMAND_X14_UNUSED_5";
-case COMMAND_X14_UNUSED_9:
-  return "COMMAND_X14_UNUSED_9";
 case TS_BURN_WITHOUT_FLASH:
   return "TS_BURN_WITHOUT_FLASH";
 case TS_ETB_AUTOCAL_0:
@@ -436,6 +434,8 @@ case TS_SD_MOUNT_PC:
   return "TS_SD_MOUNT_PC";
 case TS_SD_UNMOUNT:
   return "TS_SD_UNMOUNT";
+case TS_START_STOP_ENGINE:
+  return "TS_START_STOP_ENGINE";
 case TS_TRIGGER_STIMULATOR_DISABLE:
   return "TS_TRIGGER_STIMULATOR_DISABLE";
 case TS_TRIGGER_STIMULATOR_ENABLE:
