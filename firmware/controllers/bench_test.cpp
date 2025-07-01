@@ -482,10 +482,12 @@ static void handleCommandX14(uint16_t index) {
 			mc33810_req_init();
 		#endif
 		return;
+#if EFI_SHAFT_POSITION_INPUT
 	case TS_START_STOP_ENGINE:
 	  // this is different from starter relay bench test!
 	  startStopButtonToggle();
 		return;
+#endif // EFI_SHAFT_POSITION_INPUT
 	case TS_WRITE_FLASH:
 		// cmd_write_config
 		#if EFI_CONFIGURATION_STORAGE
