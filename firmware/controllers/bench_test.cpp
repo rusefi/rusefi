@@ -482,6 +482,10 @@ static void handleCommandX14(uint16_t index) {
 			mc33810_req_init();
 		#endif
 		return;
+	case TS_START_STOP_ENGINE:
+	  // this is different from starter relay bench test!
+	  startStopButtonToggle();
+		return;
 	case TS_WRITE_FLASH:
 		// cmd_write_config
 		#if EFI_CONFIGURATION_STORAGE
@@ -593,6 +597,7 @@ PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
 /**
  * for example to bench test injector 1
  * 0x77000C 0x66 0x00 ?? ?? ?? ??
+ * 0x77000C 0x66 0x00 0x00 0x14 0x00 0x09 start/stop engine
  *
  * See also more complicated ISO-TP CANBus wrapper of complete TS protocol
  */
