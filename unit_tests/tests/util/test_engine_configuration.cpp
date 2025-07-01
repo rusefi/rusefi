@@ -333,13 +333,7 @@ void TestEngineConfiguration::configureInjectorFlow(const std::optional<float> f
 
 void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     if (battLagCorr.has_value()) {
-        for (size_t i = 0; i < VBAT_INJECTOR_CURVE_PRESSURE_SIZE; i++) {
-            std::copy(
-                std::begin(battLagCorr.value()[i]),
-                std::end(battLagCorr.value()[i]),
-                std::begin(engineConfiguration->injector.battLagCorrTable[i])
-            );
-        }
+        copyTable(engineConfiguration->injector.battLagCorrTable, battLagCorr.value());
     } else {
 #if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
         EXPECT_THAT(

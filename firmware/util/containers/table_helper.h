@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cmath>
+#include <array>
 #include "efi_interpolation.h"
 #include "efilib.h"
 #include "efi_ratio.h"
@@ -170,6 +171,19 @@ constexpr void setTable(TElement (&dest)[N][M], const VElement value) {
 
 template <typename TDest, typename TSource, size_t N, size_t M>
 constexpr void copyTable(TDest (&dest)[N][M], const TSource (&source)[N][M], float multiply = 1.0f) {
+	for (size_t n = 0; n < N; n++) {
+		for (size_t m = 0; m < M; m++) {
+			dest[n][m] = source[n][m] * multiply;
+		}
+	}
+}
+
+template <typename TDest, typename TSource, size_t N, size_t M>
+constexpr void copyTable(
+	TDest (&dest)[N][M],
+	const std::array<std::array<TSource, M>, N>& source,
+	float multiply = 1.0f
+) {
 	for (size_t n = 0; n < N; n++) {
 		for (size_t m = 0; m < M; m++) {
 			dest[n][m] = source[n][m] * multiply;
