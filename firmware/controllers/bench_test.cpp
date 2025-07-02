@@ -782,6 +782,12 @@ void initBenchTest() {
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
+#if EFI_CAN_SUPPORT
+  addConsoleActionI("ping_wideband", [](int index) {
+    pingWideband(index);
+  });
+#endif // EFI_CAN_SUPPORT
+
 #if EFI_LUA
   // this commands facilitates TS Lua Button scripts development
   addConsoleActionI("lua_button", [](int index) {
