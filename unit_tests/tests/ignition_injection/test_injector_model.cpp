@@ -147,6 +147,8 @@ TEST(InjectorModel, nonlinearPolynomial) {
 	EXPECT_EQ(dut.correctInjectionPolynomial(10.1f), 10.1f);
 }
 
+
+#if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
 TEST(InjectorModel, Deadtime) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -171,6 +173,7 @@ TEST(InjectorModel, Deadtime) {
 	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
 	EXPECT_NEAR(dut.getDeadtime(), 0.72, EPS2D);
 }
+#endif //(VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
 
 struct TesterGetFlowRate : public InjectorModelPrimary {
 	MOCK_METHOD(float, getInjectorFlowRatio, (), (override));
