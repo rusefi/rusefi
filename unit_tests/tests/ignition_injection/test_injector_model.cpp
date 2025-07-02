@@ -65,6 +65,7 @@ TEST(InjectorModel, getInjectionDurationWithFlowRatio) {
 }
 
 TEST(InjectorModel, getInjectionDurationWithHPFPManualCompensation) {
+#if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	InjectorModelPrimary dut;
 	static const auto HPFPMockedMassCompensation = 2;
@@ -76,6 +77,7 @@ TEST(InjectorModel, getInjectionDurationWithHPFPManualCompensation) {
 
 	EXPECT_NEAR(dut.getInjectionDuration(0.01f), (10 * HPFPMockedMassCompensation) / (4.8f * 1.1 ) + 2.0f, EPS0D);
 	EXPECT_NEAR(dut.getInjectionDuration(0.02f), (20 * HPFPMockedMassCompensation) / (4.8f * 1.1 ) + 2.0f, EPS0D);
+#endif // (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
 }
 
 TEST(InjectorModel, nonLinearFordMode) {
