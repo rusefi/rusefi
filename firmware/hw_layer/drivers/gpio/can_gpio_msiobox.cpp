@@ -177,7 +177,7 @@ public:
 	}
 
 	CanListener* request() override;
-	bool acceptFrame(const CANRxFrame& frame) const override;
+	bool acceptFrame(const size_t busIndex, const CANRxFrame& frame) const override;
 
 	int init() override;
 	int config(uint32_t bus, uint32_t base, uint16_t period);
@@ -275,7 +275,9 @@ int MsIoBox::config(uint32_t bus, uint32_t base, uint16_t period)
 	return 0;
 }
 
-bool MsIoBox::acceptFrame(const CANRxFrame& frame) const {
+bool MsIoBox::acceptFrame(const size_t busIndex, const CANRxFrame& frame) const {
+	/* TODO: check busIndex! */
+
 	/* 11 bit only */
 	if (CAN_ISX(frame)) {
 		return false;
