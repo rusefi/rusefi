@@ -27,7 +27,12 @@ static size_t getWidebandBus() {
 
 static thread_t* waitingBootloaderThread = nullptr;
 
-void handleWidebandCan(const CANRxFrame& frame) {
+void handleWidebandCan(const size_t busIndex, const CANRxFrame& frame) {
+	// wrong bus
+	if (busIndex != getWidebandBus()) {
+		return;
+	}
+
 	// Bootloader acks with address 0x727573 aka ascii "rus"
 	if (CAN_EID(frame) != WB_ACK) {
 		return;
