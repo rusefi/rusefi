@@ -42,7 +42,7 @@ uint32_t AemXSeriesWideband::getAemCanId() const {
 }
 
 bool AemXSeriesWideband::acceptFrame(const size_t busIndex, const CANRxFrame& frame) const {
-#ifndef EFI_UNIT_TEST
+#if !EFI_UNIT_TEST
 	if (busIndex != getWidebandBus()) {
 		return false;
 	}
