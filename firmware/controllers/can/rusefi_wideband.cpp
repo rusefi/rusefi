@@ -140,6 +140,7 @@ void pingWideband(uint8_t hwIndex) {
 		efiPrintf("Wideband ping failed: no controller detected!");
 		setStatus(WBO_RE_FAILED);
 	} else {
+		efiPrintf("WBO_RE_DONE");
 		setStatus(WBO_RE_DONE);
 	}
 
