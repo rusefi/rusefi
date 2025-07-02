@@ -4,6 +4,7 @@
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "AemXSeriesLambda.h"
 #include "wideband_firmware/for_rusefi/wideband_can.h"
+#include "rusefi_wideband.h"
 
 static constexpr uint32_t aem_base    = 0x180;
 static constexpr uint32_t rusefi_base = WB_DATA_BASE_ADDR;
@@ -40,7 +41,11 @@ uint32_t AemXSeriesWideband::getAemCanId() const {
 	return aem_base + engineConfiguration->canWbo[m_sensorIndex].aemId;
 }
 
-bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
+bool AemXSeriesWideband::acceptFrame(const size_t busIndex, const CANRxFrame& frame) const {
+	if (busIndex != getWidebandBus()) {
+		return false;
+	}
+
 	if (frame.DLC != 8) {
 		return false;
 	}
