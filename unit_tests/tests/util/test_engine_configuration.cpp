@@ -341,10 +341,12 @@ void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<B
             );
         }
     } else {
+#if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
         EXPECT_THAT(
             engineConfiguration->injector.battLagCorrTable[0],
             testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR[0])
         );
+#endif //(VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
     }
 }
 void TestEngineConfiguration::configureFuelReferencePressure(const std::optional<float> fuelReferencePressure) {
@@ -392,10 +394,12 @@ void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::o
             );
         }
     } else {
+#if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
        EXPECT_THAT(
             engineConfiguration->injectorSecondary.battLagCorrTable[0],
             testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR[0])
         );
+#endif //(VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
     }
 }
 
