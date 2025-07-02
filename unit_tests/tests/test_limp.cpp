@@ -130,7 +130,7 @@ TEST(limp, revHardLimitHyst) {
 }
 
 TEST(limp, revSoftLimit) {
-	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->rpmHardLimit = 2500;
 	engineConfiguration->rpmHardLimitHyst = 200;
