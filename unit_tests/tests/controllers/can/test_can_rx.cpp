@@ -10,7 +10,7 @@ public:
 	MockCanListener(uint32_t id) : CanListener(id) { }
 
 	MOCK_METHOD(void, decodeFrame, (const CANRxFrame& frame, efitick_t nowNt), (override));
-	MOCK_METHOD(bool, acceptFrame, (const CANRxFrame& frame), (const, override));
+	MOCK_METHOD(bool, acceptFrame, (const size_t busIndex, const CANRxFrame& frame), (const, override));
 };
 
 TEST(CanListener, FrameAccepted) {
@@ -19,12 +19,12 @@ TEST(CanListener, FrameAccepted) {
 	CANRxFrame frame;
 
 	// Accept should be called, returns true
-	EXPECT_CALL(dut, acceptFrame(_)).WillOnce(Return(true));
+	EXPECT_CALL(dut, acceptFrame(0, _)).WillOnce(Return(true));
 
 	// Because accept returns true, decode is called
 	EXPECT_CALL(dut, decodeFrame(_, 1234));
 
-	dut.processFrame(frame, 1234);
+	dut.processFrame(0, frame, 1234);
 }
 
 TEST(CanListener, FrameNotAccepted) {
@@ -33,9 +33,9 @@ TEST(CanListener, FrameNotAccepted) {
 	CANRxFrame frame;
 
 	// Accept should be called, returns false, so decode not called
-	EXPECT_CALL(dut, acceptFrame(_)).WillOnce(Return(false));
+	EXPECT_CALL(dut, acceptFrame(0, _)).WillOnce(Return(false));
 
-	dut.processFrame(frame, 1234);
+	dut.processFrame(0, frame, 1234);
 }
 
 struct CanListenerNoDecode : public CanListener {
@@ -52,7 +52,7 @@ TEST(CanListener, FrameAcceptedChecksId) {
 	frame.SID = 0x123;
 	frame.IDE = false;
 
-	EXPECT_TRUE(dut.acceptFrame(frame));
+	EXPECT_TRUE(dut.acceptFrame(0, frame));
 }
 
 TEST(CanListener, FrameNotAcceptedChecksId) {
@@ -63,5 +63,5 @@ TEST(CanListener, FrameNotAcceptedChecksId) {
 	frame.SID = 0x456;
 	frame.IDE = false;
 
-	EXPECT_FALSE(dut.acceptFrame(frame));
+	EXPECT_FALSE(dut.acceptFrame(0, frame));
 }
