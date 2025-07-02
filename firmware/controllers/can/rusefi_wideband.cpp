@@ -131,7 +131,8 @@ void pingWideband(uint8_t hwIndex) {
 		m[0] = hwIndex;
 	}
 
-	if (!waitAck()) {
+	// 25mS should be enought, lets do not block TS thread too long while waiting for WBO reply
+	if (!waitAck(25)) {
 		efiPrintf("Wideband ping failed: no controller detected!");
 		setStatus(WBO_RE_FAILED);
 	} else {
