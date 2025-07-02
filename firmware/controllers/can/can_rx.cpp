@@ -56,7 +56,7 @@ struct CanListenerTailSentinel : public CanListener {
 	{
 	}
 
-	bool acceptFrame(const CANRxFrame&) const override {
+	bool acceptFrame(const size_t, const CANRxFrame&) const override {
 		return false;
 	}
 
@@ -68,12 +68,12 @@ struct CanListenerTailSentinel : public CanListener {
 static CanListenerTailSentinel tailSentinel;
 CanListener *canListeners_head = &tailSentinel;
 
-void serviceCanSubscribers(const CANRxFrame &frame, efitick_t nowNt) {
+void serviceCanSubscribers(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
 	CanListener *current = canListeners_head;
 	size_t iterationValidationCounter = 0;
 
 	while (current) {
-		current = current->processFrame(frame, nowNt);
+		current = current->processFrame(busIndex, frame, nowNt);
 		if (iterationValidationCounter++ > 239) {
 		  criticalError("forever loop canListeners_head");
 		  return;
@@ -198,7 +198,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	boardProcessCanRxMessage(busIndex, frame, nowNt);
 
     // see AemXSeriesWideband as an example of CanSensorBase/CanListener
-	serviceCanSubscribers(frame, nowNt);
+	serviceCanSubscribers(busIndex, frame, nowNt);
 
 	// todo: convert to CanListener or not?
 	//Vss is configurable, should we handle it here:
