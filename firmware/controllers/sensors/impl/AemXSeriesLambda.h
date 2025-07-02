@@ -15,7 +15,7 @@ class AemXSeriesWideband : public CanSensorBase, public wideband_state_s {
 public:
 	AemXSeriesWideband(uint8_t sensorIndex, SensorType type);
 
-	bool acceptFrame(const CANRxFrame& frame) const override final;
+	bool acceptFrame(const size_t busIndex, const CANRxFrame& frame) const override final;
 
 	void refreshState(void);
 
