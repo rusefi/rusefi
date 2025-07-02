@@ -79,14 +79,14 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 		// If failed flex sensor, default to 50% E
 		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50);
 
-		engine->engineState.crankingFuel.coolantTemperatureCoefficient =
+		engine->engineState.crankingFuel.E85Coefficient =
 			interpolateClamped(
 				0, e0Mult,
 				85, e85Mult,
 				flex
 			);
 	} else {
-		engine->engineState.crankingFuel.coolantTemperatureCoefficient = e0Mult;
+		engine->engineState.crankingFuel.E85Coefficient = e0Mult;
 	}
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
@@ -96,7 +96,7 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 		: 1; // in case of failed TPS, don't correct.
 
 	floatms_t crankingFuel = baseCrankingFuel
-			* engine->engineState.crankingFuel.coolantTemperatureCoefficient
+			* engine->engineState.crankingFuel.E85Coefficient
 			* engine->engineState.crankingFuel.tpsCoefficient;
 
 	engine->engineState.crankingFuel.fuel = crankingFuel * 1000;

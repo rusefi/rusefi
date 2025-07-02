@@ -353,7 +353,7 @@ TEST(FuelMath, getCycleFuelMassTest) {
 	}
 
 	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 20.571f, EPS3D);
-	EXPECT_NEAR(engine->engineState.crankingFuel.coolantTemperatureCoefficient, 1, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.E85Coefficient, 1, EPS3D);
 	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 3.428f, EPS3D);
 
 	for (size_t i = 0; i < 10; i++) {
@@ -361,7 +361,7 @@ TEST(FuelMath, getCycleFuelMassTest) {
 	}
 
 	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 20.571f, EPS3D);
-	EXPECT_NEAR(engine->engineState.crankingFuel.coolantTemperatureCoefficient, 1, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.E85Coefficient, 1, EPS3D);
 	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 3.428f, EPS3D);
 
 	// simulate TPS error:

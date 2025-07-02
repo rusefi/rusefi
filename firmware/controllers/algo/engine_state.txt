@@ -21,7 +21,7 @@ struct_no_prefix engine_state_s
 	end_struct
 
 	struct cranking_fuel_s
-		float coolantTemperatureCoefficient;Fuel: cranking CLT mult
+		float E85Coefficient;Fuel: cranking E85 mult x temp
 		float tpsCoefficient;Fuel: cranking TPS mult
 		uint16_t autoscale baseFuel;Fuel: Cranking cycle base mass;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 2
 		uint16_t autoscale fuel;Fuel: Cranking cycle mass;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 2
