@@ -374,6 +374,45 @@ TEST(FuelMath, getCycleFuelMassTest) {
 	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 1, EPS3D);
 }
 
+
+TEST(FuelMath, getCycleFuelMassE85Test) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/8, 1);
+	setLinearCurve(config->crankingFuelCoefE100, /*from*/2.8, /*to*/1, 0.5);
+	engineConfiguration->flexCranking = true;
+	setTestFuelCrankingTable(4000 * 1.5f);
+
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 35.0f);
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 100);
+
+	// test running fuel as crank fuel case
+	engineConfiguration->useRunningMathForCranking = true;
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 0.240f, EPS3D);
+
+	engineConfiguration->useRunningMathForCranking = false;
+
+	// simulate cranking
+	for (size_t i = 0; i < 5; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 28.8f, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.E85Coefficient, 1.40, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 3.428f, EPS3D);
+
+	for (size_t i = 0; i < 10; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 28.8f, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.E85Coefficient, 1.40, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 3.428f, EPS3D);
+
+	// invalid e85 table test:
+	setArrayValues(config->crankingFuelCoefE100, 0);
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 0, EPS3D);
+}
+
 TEST(FuelMath, postCrankingFactorAxis){
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
