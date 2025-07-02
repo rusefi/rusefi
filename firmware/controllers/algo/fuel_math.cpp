@@ -60,13 +60,8 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 	 * If the sensor is failed, use 20 deg C
 	 */
 	auto clt = Sensor::get(SensorType::Clt).value_or(20);
-	auto e0Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoef);
 
 	bool alreadyWarned = false;
-	if (e0Mult <= 0.1f) {
-		warning(ObdCode::CUSTOM_ERR_ZERO_E0_MULT, "zero e0 multiplier");
-		alreadyWarned = true;
-	}
 
 	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
 		auto e85Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
@@ -81,12 +76,12 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 
 		engine->engineState.crankingFuel.E85Coefficient =
 			interpolateClamped(
-				0, e0Mult,
+				0, 1,
 				85, e85Mult,
 				flex
 			);
 	} else {
-		engine->engineState.crankingFuel.E85Coefficient = e0Mult;
+		engine->engineState.crankingFuel.E85Coefficient = 1.0f;
 	}
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);

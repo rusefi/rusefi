@@ -47,7 +47,6 @@ TEST(fuelControl, transitionIssue1592) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	setTable(config->injectionPhase, 0.0f);
-	setArrayValues(config->crankingFuelCoef, 1.0f);
 
 
 	engineConfiguration->globalTriggerAngleOffset = 20;
