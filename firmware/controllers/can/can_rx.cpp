@@ -225,7 +225,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	}
 #endif // EFI_ENGINE_CONTROL
 
-	handleWidebandCan(frame);
+	handleWidebandCan(busIndex, frame);
 #if EFI_USE_OPENBLT
 #include "openblt/efi_blt_ids.h"
 	if ((CAN_SID(frame) == BOOT_COM_CAN_RX_MSG_ID) && (frame.DLC == 2)) {
