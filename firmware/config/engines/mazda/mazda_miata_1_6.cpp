@@ -162,11 +162,7 @@ void miataNAcommonEngineSettings() {
 
 	// chartsize 200
 	engineConfiguration->engineChartSize = 200;
-	constexpr float crankingBaseFuel = 27.5;
-	setTable(config->crankingCycleBaseFuel, crankingBaseFuel);
-	config->crankingCycleBaseFuel[0][0] = crankingBaseFuel * 2.8;
-	config->crankingCycleBaseFuel[1][0] = crankingBaseFuel * 2.2;
-	config->crankingCycleBaseFuel[2][0] = crankingBaseFuel * 1.5;
+	setTable(config->crankingCycleBaseFuel, 27.5);
 
 	engineConfiguration->displacement = 1.6;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
