@@ -19,7 +19,7 @@
 #include "wideband_firmware/for_rusefi/wideband_can.h"
 #pragma GCC diagnostic pop
 
-static size_t getWidebandBus() {
+size_t getWidebandBus() {
 	return engineConfiguration->widebandOnSecondBus ? 1 : 0;
 }
 

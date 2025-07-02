@@ -3,6 +3,9 @@
 #pragma once
 #include "can.h"
 
+// Return index of CAN bus where WBO(s) live
+size_t getWidebandBus();
+
 // Send info to the wideband controller like battery voltage, heater enable bit, etc.
 void sendWidebandInfo();
 
