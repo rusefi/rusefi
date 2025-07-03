@@ -58,8 +58,13 @@ namespace engine_configuration_defaults {
         VBAT_INJECTOR_CURVE_PRESSURE_SIZE
     >(
         { {
+#if (VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
             { 4.240f, 2.483f, 1.739f, 1.501f, 1.308f, 1.149f, 0.964f, 0.913f },
             { 3.084f, 1.641f, 1.149f, 1.194f, 0.992f, 0.759f, 0.637f, 0.603f },
+#else //(VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
+            { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+            { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+#endif //(VBAT_INJECTOR_CURVE_PRESSURE_SIZE == 2) && (VBAT_INJECTOR_CURVE_SIZE == 8)
         } },
         0.0f
     );
