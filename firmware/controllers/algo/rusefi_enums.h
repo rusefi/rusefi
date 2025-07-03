@@ -800,6 +800,7 @@ typedef enum __attribute__ ((__packed__)) {
 typedef enum __attribute__ ((__packed__)) {
 	AE_MODE_MS_ADDER = 0,
 	AE_MODE_PERCENT_ADDER = 1,
+	AE_MODE_PREDICTIVE_MAP = 2,
 } accel_enrichment_mode_e;
 
 #if __cplusplus
