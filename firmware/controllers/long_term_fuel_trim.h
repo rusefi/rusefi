@@ -14,7 +14,6 @@ struct LtftState {
 	void reset();
 };
 
-// TODO: add livedata!
 class LongTermFuelTrim : public EngineModule, public long_term_fuel_trim_state_s {
 public:
 	// EngineModule implementation
