@@ -878,7 +878,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 
 	! bit 24
 	bit pauseEtbControl;Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	bit tpsTpsPercentMode,"percent adder","ms adder"
+
 	bit verboseKLine
 	bit idleIncrementalPidCic
 ! technical debt 'enableAemXSeries' should probably be renamed to enableCanWideband one day once we improve calibration migration toolset

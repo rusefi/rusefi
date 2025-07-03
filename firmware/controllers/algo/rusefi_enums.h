@@ -796,6 +796,12 @@ typedef enum __attribute__ ((__packed__)) {
     HPFP_CAM_EX2 = 4,
 } hpfp_cam_e;
 
+// IMPORTANT: This enum must be kept in sync with the definition in rusefi_config.txt
+typedef enum __attribute__ ((__packed__)) {
+	AE_MODE_MS_ADDER = 0,
+	AE_MODE_PERCENT_ADDER = 1,
+} accel_enrichment_mode_e;
+
 #if __cplusplus
 #include <cstdint>
 

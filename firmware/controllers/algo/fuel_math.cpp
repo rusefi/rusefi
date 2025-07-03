@@ -333,7 +333,7 @@ float getInjectionMass(float rpm) {
 
 	float tpsAccelPerInjection = durationMultiplier * tpsAccelEnrich;
 
-  if (engineConfiguration->tpsTpsPercentMode) {
+  if (engineConfiguration->accelEnrichmentMode == AE_MODE_PERCENT_ADDER) {
   	return injectionFuelMass * (1 + tpsAccelPerInjection);
   } else {
 	  // For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass

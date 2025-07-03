@@ -1,3 +1,6 @@
 	uint8_t autoscale tpsAccelLookback;How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.;"sec", 0.05, 0, 0, 5, 2
 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
 	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
+
+custom accel_enrichment_mode_e 1 bits, U08, @OFFSET@, [0:1], "MS Adder"
+accel_enrichment_mode_e accelEnrichmentMode;Selects the acceleration enrichment strategy.
