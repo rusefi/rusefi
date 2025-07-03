@@ -104,7 +104,10 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 }
 
 TEST(misc, testGetCoilDutyCycleIssue977) {
-	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setSingleCoilDwell();
+	engineConfiguration->ignitionMode = IM_ONE_COIL;
+	eth.setTriggerType(trigger_type_e::TT_FORD_ASPIRE);
 
 	float rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
