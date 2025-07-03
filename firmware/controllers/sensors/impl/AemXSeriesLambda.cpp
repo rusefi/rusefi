@@ -25,7 +25,6 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
     fwUnsupported = true;
     // Do not light "FW: need update" indicator until we get some data from WBO
     fwOutdated = false;
-	m_type = type;
 }
 
 can_wbo_type_e AemXSeriesWideband::sensorType() const {
@@ -223,7 +222,7 @@ bool AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 }
 
 void AemXSeriesWideband::refreshSmoothedLambda(float lambda) {
-	switch (m_type) {
+	switch (type()) {
 	case SensorType::Lambda1: {
 			expAverageLambda1.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
 			smoothedLambda1Sensor.setValidValue(expAverageLambda1.initOrAverage(lambda), getTimeNowNt());
