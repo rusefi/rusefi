@@ -8,7 +8,6 @@
 #include "dodge_neon.h"
 #include "dodge_ram.h"
 
-#include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
 #include "ford_ecoboost.h"
 
@@ -79,6 +78,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::SIMULATOR_CONFIG:
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::MINIMAL_PINS:
+	case engine_type_e::UNUSED_3:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
@@ -359,9 +359,6 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 	case engine_type_e::DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration();
-		break;
-	case engine_type_e::FORD_ASPIRE_1996:
-		setFordAspireEngineConfiguration();
 		break;
 	case engine_type_e::NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration();

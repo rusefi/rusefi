@@ -1,7 +1,6 @@
 ENGINES_INC = $(PROJECT_DIR)/config/engines/mazda/
 
-ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
-	$(PROJECT_DIR)/config/engines/custom_engine.cpp \
+ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/custom_engine.cpp \
 	$(PROJECT_DIR)/config/engines/bmw_m52.cpp \
 	$(PROJECT_DIR)/config/engines/bmw_m73.cpp \
 	$(PROJECT_DIR)/config/engines/bmw_m73_mre.cpp \

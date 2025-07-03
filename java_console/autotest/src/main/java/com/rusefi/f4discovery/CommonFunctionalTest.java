@@ -8,6 +8,7 @@ import com.rusefi.enums.SensorType;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
+import com.rusefi.IoUtil;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 public class CommonFunctionalTest extends RusefiTestBase {
     @Test
     public void testChangingIgnitionMode() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(engine_type_e.TEST_ENGINE);
         ecu.changeRpm(2000);
 
         // First is wasted spark
@@ -109,7 +110,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testRevLimiter() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(engine_type_e.TEST_ENGINE);
         ecu.changeRpm(2000);
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
@@ -321,7 +322,8 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testFordAspire() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(engine_type_e.TEST_ENGINE);
+        ecu.sendCommand(IoUtil.setTriggerType(com.rusefi.enums.trigger_type_e.TT_FORD_ASPIRE));
         ecu.sendCommand("disable cylinder_cleanup");
         ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.Map.name() + " 69.12");
         ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.BatteryVoltage.name() + " 12");
