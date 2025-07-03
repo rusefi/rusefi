@@ -23,7 +23,8 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
     isValid = m_isFault = m_afrIsValid = false;
     // wait for first rusEFI WBO standard frame with protocol version field
     fwUnsupported = true;
-    fwOutdated = true;
+    // Do not light "FW: need update" indicator until we get some data from WBO
+    fwOutdated = false;
 	m_type = type;
 }
 
