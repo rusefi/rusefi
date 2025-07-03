@@ -28,6 +28,11 @@
 // on this level we do not distinguish between multiplier and 'ms adder' modes
 float TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
+	
+	// If predictive MAP mode is active, the old "adder" logic is disabled.
+	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
+		return 0;
+	}
 
 	if (engineConfiguration->tpsAccelLookback == 0) {
 		// If disabled, return 0.
@@ -177,8 +182,21 @@ void TpsAccelEnrichment::onNewValue(float currentValue) {
 	// Update threshold detection
 	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;
 
+	// If an acceleration event just happened, latch the flag so it can be read once.
+	if (isAboveAccelThreshold) {
+		m_accelEventJustOccurred = true;
+	}
+
 	// TODO: can deltaTps actually be negative? Will this ever trigger?
 	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
+}
+
+bool TpsAccelEnrichment::isAccelEventTriggered() {
+	// Read the flag
+	bool result = m_accelEventJustOccurred;
+	// Reset it so we only fire once per event
+	m_accelEventJustOccurred = false;
+	return result;
 }
 
 TpsAccelEnrichment::TpsAccelEnrichment() {
@@ -206,4 +224,3 @@ void initAccelEnrichment() {
 
 	engine->module<TpsAccelEnrichment>()->onConfigurationChange(nullptr);
 }
-
