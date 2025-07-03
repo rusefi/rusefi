@@ -5,3 +5,4 @@
 #include "trip_odometer.h"
 #include "fan_control.h"
 #include "map_averaging.h"
+#include "example_module.h"

@@ -191,6 +191,11 @@ Usages:
     java: closed_loop_idle.java
     folder: controllers/math
 
+  - name: live_data_example
+    cppFileName: live_data_example
+    java: live_data_example.java
+    folder: controllers/modules/example_module
+
   - name: idle_state
     cppFileName: idle_thread
     java: IdleState.java
