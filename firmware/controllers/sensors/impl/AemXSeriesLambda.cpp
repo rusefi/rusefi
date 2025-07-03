@@ -204,7 +204,7 @@ bool AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 
 	fwUnsupported = false;
 	// compatible, but not latest
-	fwOutdated = (data->Version != RUSEFI_WIDEBAND_VERSION_MIN);
+	fwOutdated = (data->Version != RUSEFI_WIDEBAND_VERSION);
 	// TODO: request and check builddate
 
 	tempC = data->TemperatureC;
