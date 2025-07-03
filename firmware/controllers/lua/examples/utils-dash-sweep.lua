@@ -31,9 +31,11 @@ oilP : setTimeout(timeout)
 
 function onTickDashSweep()
 
+  dashSweepCounter = 20
+
   speedSensor : set(    3 * dashSweepCounter)
-  ppsSensor : set(    dashSweepCounter)
-  tpsSensor : set(    dashSweepCounter)
+  ppsSensor : set( 10 +   dashSweepCounter)
+  tpsSensor : set( 5 +   dashSweepCounter)
   cltSensor : set(    dashSweepCounter)
   iatSensor : set( 100 -   dashSweepCounter)
   mapSensor : set( dashSweepCounter / 2)
@@ -43,7 +45,7 @@ function onTickDashSweep()
   gearSensor: set( dashSweepCounter / 20)
   rpmSensor:set(dashSweepCounter * 80)
 
-  if dashSweepCounter > 99 then
+  if dashSweepCounter > 79 then
       dashSweepCounter = 0
   end
   dashSweepCounter = dashSweepCounter + 1
