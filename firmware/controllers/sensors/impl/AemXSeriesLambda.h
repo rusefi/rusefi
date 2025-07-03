@@ -47,6 +47,4 @@ private:
 	bool m_isFault;
 	// Last valid packed received, for wbo::Fault::CanSilent state
 	efitick_t m_lastUpdate = 0;
-	// Lambda1 / Lambda2 / etc
-	SensorType m_type;
 };
