@@ -29,9 +29,6 @@ public:
 
 	void onConfigurationChange(engine_configuration_s const* previousConfig) override;
 
-	// This function returns true ONCE per acceleration event.
-	bool isAccelEventTriggered();
-
 	int getMaxDeltaIndex();
 	float getMaxDelta();
 
