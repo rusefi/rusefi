@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 public class CommonFunctionalTest extends RusefiTestBase {
     @Test
     public void testChangingIgnitionMode() {
-        ecu.setEngineType(engine_type_e.TEST_ENGINE);
+        ecu.setEngineType(engine_type_e.DODGE_NEON_2003_CRANK);
         ecu.changeRpm(2000);
 
         // First is wasted spark
@@ -110,7 +110,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testRevLimiter() {
-        ecu.setEngineType(engine_type_e.TEST_ENGINE);
+        ecu.setEngineType(engine_type_e.DODGE_NEON_2003_CRANK);
         ecu.changeRpm(2000);
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
@@ -322,7 +322,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testFordAspire() {
-        ecu.setEngineType(engine_type_e.TEST_ENGINE);
+        ecu.setEngineType(engine_type_e.FORD_ESCORT_GT);
         ecu.sendCommand(IoUtil.setTriggerType(com.rusefi.enums.trigger_type_e.TT_FORD_ASPIRE));
         ecu.sendCommand("disable cylinder_cleanup");
         ecu.sendCommand(CMD_SET_SENSOR_MOCK + " " + SensorType.Map.name() + " 69.12");
