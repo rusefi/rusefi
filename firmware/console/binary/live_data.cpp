@@ -288,3 +288,12 @@ const long_term_fuel_trim_state_s* getLiveData(size_t) {
 	return nullptr;
 #endif
 }
+
+template<>
+const long_term_fuel_trim_state_s* getLiveData(size_t) {
+#if EFI_LTFT_CONTROL
+	return &engine->module<ExampleModule>().unmock();
+#else
+	return nullptr;
+#endif
+}
