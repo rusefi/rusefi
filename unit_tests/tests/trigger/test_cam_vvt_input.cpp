@@ -75,8 +75,9 @@ TEST(trigger, testNoisyInput) {
 }
 
 TEST(trigger, testCamInput) {
-	// setting some weird engine
-	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->globalTriggerAngleOffset = -37;
+	engineConfiguration->crankingTimingAngle = 3;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
