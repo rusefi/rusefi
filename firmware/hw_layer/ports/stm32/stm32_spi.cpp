@@ -265,30 +265,36 @@ int spiCalcClockDiv(SPIDriver *spip, SPIConfig *spiConfig, unsigned int clk)
 // H7 SPI clock is set to 80MHz
 // fast mode is 80mhz/2 = 40MHz
 SPIConfig mmc_hs_spicfg = {
-		.circular = false,
+	.circular = false,
 #ifdef _CHIBIOS_RT_CONF_VER_6_1_
-		.end_cb = NULL,
+	.end_cb = NULL,
 #else
         .slave = false,
         .data_cb = NULL,
         .error_cb = NULL,
 #endif
-		.ssport = NULL,
-		.sspad = 0,
-		.cfg1 = 7 // 8 bits per byte
-			| 0 /* MBR = 0, divider = 2 */,
-		.cfg2 = 0
+	.ssport = NULL,
+	.sspad = 0,
+	.cfg1 = 7 // 8 bits per byte
+		| 0 /* MBR = 0, divider = 2 */,
+	.cfg2 = 0
 };
 
 // Slow mode is 80mhz/4 = 20MHz
 SPIConfig mmc_ls_spicfg = {
-		.circular = false,
-		.end_cb = NULL,
-		.ssport = NULL,
-		.sspad = 0,
-		.cfg1 = 7 // 8 bits per byte
-			| SPI_CFG1_MBR_0 /* MBR = 001, divider = 4 */,
-		.cfg2 = 0
+	.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
+	.ssport = NULL,
+	.sspad = 0,
+	.cfg1 = 7 // 8 bits per byte
+		| SPI_CFG1_MBR_0 /* MBR = 001, divider = 4 */,
+	.cfg2 = 0
 };
 
 #else /* not STM32H7XX */
@@ -301,27 +307,33 @@ SPIConfig mmc_ls_spicfg = {
 // Slow mode is 13.5 or 6.75 MHz
 // Fast mode is 54 or 27 MHz (technically out of spec, needs testing!)
 SPIConfig mmc_hs_spicfg = {
-		.circular = false,
+	.circular = false,
 #ifdef _CHIBIOS_RT_CONF_VER_6_1_
 	.end_cb = NULL,
 #else
-        .slave = false,
-        .data_cb = NULL,
-        .error_cb = NULL,
+	.slave = false,
+	.data_cb = NULL,
+	.error_cb = NULL,
 #endif
-		.ssport = NULL,
-		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_2,
-		.cr2 = 0
+	.ssport = NULL,
+	.sspad = 0,
+	.cr1 = SPI_BaudRatePrescaler_2,
+	.cr2 = 0
 };
 
 SPIConfig mmc_ls_spicfg = {
-		.circular = false,
-		.end_cb = NULL,
-		.ssport = NULL,
-		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_8,
-		.cr2 = 0
+	.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.end_cb = NULL,
+#else
+	.slave = false,
+	.data_cb = NULL,
+	.error_cb = NULL,
+#endif
+	.ssport = NULL,
+	.sspad = 0,
+	.cr1 = SPI_BaudRatePrescaler_8,
+	.cr2 = 0
 };
 #endif
 

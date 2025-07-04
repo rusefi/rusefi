@@ -42,7 +42,13 @@ NO_CACHE SNORDriver snor1;
  */
 static const SPIConfig W25SpiCfg = {
 	.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 	.end_cb = NULL,
+#else
+	.slave = false,
+	.data_cb = NULL,
+	.error_cb = NULL,
+#endif
 	.ssport = EFI_FLASH_SPI_CS_GPIO,
 	.sspad = EFI_FLASH_SPI_CS_PIN,
 	.cr1 =

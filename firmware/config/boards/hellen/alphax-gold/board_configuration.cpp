@@ -147,7 +147,13 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.spi_bus = &SPID2,
 		.spi_config = {
 			.circular = false,
-			.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+			.end_cb = nullptr,
+#else
+			.slave = false,
+			.data_cb = nullptr,
+			.error_cb = nullptr,
+#endif
 			.ssport = GPIOC,
 			.sspad = 10,		// 9104_CSN_INJ_LO <- SPI3_SCK
 			.cr1 =
@@ -174,7 +180,13 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.spi_bus = &SPID2,
 		.spi_config = {
 			.circular = false,
-			.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+			.end_cb = nullptr,
+#else
+			.slave = false,
+			.data_cb = nullptr,
+			.error_cb = nullptr,
+#endif
 			.ssport = GPIOC,
 			.sspad = 11,		// 9104_CSN_INJ_HI <- SPI3_MISO
 			.cr1 =
@@ -201,7 +213,13 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.spi_bus = &SPID2,
 		.spi_config = {
 			.circular = false,
-			.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+			.end_cb = nullptr,
+#else
+			.slave = false,
+			.data_cb = nullptr,
+			.error_cb = nullptr,
+#endif
 			.ssport = GPIOC,
 			.sspad = 12,		// 9104_CSN_AUX1 <- SPI3_MOSI
 			.cr1 =
@@ -228,7 +246,13 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.spi_bus = &SPID2,
 		.spi_config = {
 			.circular = false,
-			.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+			.end_cb = nullptr,
+#else
+			.slave = false,
+			.data_cb = nullptr,
+			.error_cb = nullptr,
+#endif
 			.ssport = GPIOA,
 			.sspad = 15,		// 9104_CSN_AUX2 <- SPI3_CS
 			.cr1 =

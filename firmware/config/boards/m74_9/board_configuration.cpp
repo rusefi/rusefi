@@ -110,7 +110,13 @@ static struct l9779_config l9779_cfg = {
 	.spi_bus = &SPID1,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+		.end_cb = nullptr,
+#else
+		.slave = false,
+		.data_cb = nullptr,
+		.error_cb = nullptr,
+#endif
 		.ssport = GPIOE,
 		.sspad = 12,
 		.cr1 =
