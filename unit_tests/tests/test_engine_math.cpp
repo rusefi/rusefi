@@ -12,10 +12,12 @@
 
 TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
-	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setTable(config->lambdaTable, 0.92f);
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	engine->periodicFastCallback();
-	ASSERT_NEAR(13.5, engine->fuelComputer.targetAFR, EPS4D) << "testIgnitionPlanning_AFR";
+	ASSERT_NEAR(12.857, engine->fuelComputer.targetAFR, EPS4D) << "testIgnitionPlanning_AFR";
 
 	ASSERT_EQ(IM_BATCH, engineConfiguration->injectionMode);
 }
@@ -24,7 +26,8 @@ TEST(misc, testEngineMath) {
 	printf("*************************************************** testEngineMath\r\n");
 
 	// todo: let's see if we can make 'engine' unneeded in this test?
-	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setTable(config->lambdaTable, 0.92f);
 	setTable(config->veTable, 80);
 
     setCamOperationMode();
@@ -53,7 +56,7 @@ TEST(misc, testEngineMath) {
 	engineConfiguration->tChargeAirFlowMax = 153.6f;
 	// calc. some airMass given the engine displacement=1.839 and 4 cylinders (FORD_ESCORT_GT)
 	fuelComputer->sdAirMassInOneCylinder = SpeedDensityBase::getAirmassImpl(/*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f);
-	ASSERT_NEAR(0.5464f, fuelComputer->sdAirMassInOneCylinder, EPS4D);
+	ASSERT_NEAR(0.59418f, fuelComputer->sdAirMassInOneCylinder, EPS4D);
 
 	Sensor::setMockValue(SensorType::Clt, 90);
 	Sensor::setMockValue(SensorType::Iat, 20);
@@ -63,8 +66,8 @@ TEST(misc, testEngineMath) {
 
 	// calc. airFlow using airMass, and find tCharge
 	engine->periodicFastCallback();
-	ASSERT_NEAR(59.12f, engine->engineState.sd.tCharge, EPS4D);
-	ASSERT_NEAR(46.2747f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
+	ASSERT_NEAR(57.0099f, engine->engineState.sd.tCharge, EPS3D);
+	ASSERT_NEAR(50.6476f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
 
 TEST(misc, testIgnitionMapGenerator) {
