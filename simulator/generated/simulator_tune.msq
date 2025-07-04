@@ -2,6 +2,7 @@
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
     <page number="0" size="22752">
+        <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -2700,7 +2701,7 @@
          0.0 0.0 0.0 7.17465E-41 9.10844E-42 9.183549999999999E-39 3.15914E-36 0.0 0.0 2.35099E-36 0.0 0.0 0.0 0.0 0.0 9.2233720368547763E17
          7.00649E-42 0.0 0.0 1.8367099999999999E-37 1.4012999999999999E-43 7.00649E-43 1.4013000000000002E-40 2.75506E-38 0.0 8.369520000000001E-34 0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 3.58732E-41 0.0 0.0 0.0 0.0 0.0 0.0 50.0 30.0
-         0.0 0.0 1.92852E-37 0.0 4.62428E-42 0.0 0.0 0.0 7.00649E-42 4.2039E-42 7.00649E-41 0.0 100.0 100.0 1.0 0.0
+         0.0 0.0 1.92852E-37 0.0 4.62428E-42 0.0 0.0 0.0 1.79366E-39 4.2039E-42 7.00649E-41 0.0 100.0 100.0 1.0 0.0
 </constant>
         <constant cols="16" digits="1" name="ltft_table_bank2" rows="16">
          0.0 3.21427E-37 0.811775 5.57128E-37 3.16274E-36 3.16274E-36 3.16274E-36 3.16274E-36 1.4012999999999999E-43 1.15243E-36 4.2039E-40 0.0 0.0 0.0 0.0 0.0
@@ -4396,7 +4397,6 @@ end</constant>
          90.0
          100.0
 </constant>
-        <constant name="tpsTpsPercentMode">"ms adder"</constant>
         <constant cols="1" digits="2" name="tpsTspCorrValues" rows="4">
          1.0
          1.0
@@ -5072,7 +5072,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250618" nPages="1" signature="rusEFI master.2025.07.05.f407-discovery.2713345651" version="5.0"/>
+    <versionInfo firmwareInfo="20250618" nPages="1" signature="rusEFI master.2025.07.05.f407-discovery.177386900" version="5.0"/>
     <bibliography author="rusEFI 20250618" writeDate="date"/>
     <settings/>
     <userComments/>
