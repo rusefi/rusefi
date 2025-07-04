@@ -170,11 +170,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
     }
 
     @Test
-    public void testAuxValveNissan() {
-        ecu.setEngineType(engine_type_e.NISSAN_PRIMERA);
-        ecu.changeRpm(1200);
-    }
-    @Test
     public void testTwoStrokeSachs() {
         ecu.setEngineType(engine_type_e.SACHS);
         ecu.changeRpm(1200);

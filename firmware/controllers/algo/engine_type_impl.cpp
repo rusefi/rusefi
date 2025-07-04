@@ -20,7 +20,6 @@
 
 #include "GY6_139QMB.h"
 
-#include "nissan_primera.h"
 #include "nissan_vq.h"
 #include "tc_4l6x.h"
 #include "../board_id/qc_stim_meta.h"
@@ -79,6 +78,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::SIMULATOR_CONFIG:
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::MINIMAL_PINS:
+	case engine_type_e::UNUSED_5:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
@@ -362,9 +362,6 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 	case engine_type_e::FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration();
-		break;
-	case engine_type_e::NISSAN_PRIMERA:
-		setNissanPrimeraEngineConfiguration();
 		break;
 	case engine_type_e::FRANKENSO_MIATA_NA6_MAP:
 		setMiataNA6_MAP_Frankenso();
