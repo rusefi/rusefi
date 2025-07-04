@@ -10,12 +10,12 @@
 #include "perf_trace.h"
 
 #if !EFI_UNIT_TEST
-void runAndScheduleNext(PeriodicTimerController *controller) {
+void runAndScheduleNext(virtual_timer_t *vtp, PeriodicTimerController *controller) {
 	{
 		ScopePerf perf(PE::PeriodicTimerControllerPeriodicTask);
 		controller->PeriodicTask();
 	}
 
-	chVTSetAny(&controller->timer, TIME_MS2I(controller->getPeriodMs()), (vtfunc_t) &runAndScheduleNext, controller);
+	chVTSetAny(vtp, TIME_MS2I(controller->getPeriodMs()), (vtfunc_t) &runAndScheduleNext, controller);
 }
 #endif /* EFI_UNIT_TEST */
