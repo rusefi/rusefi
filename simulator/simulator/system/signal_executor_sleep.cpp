@@ -42,7 +42,7 @@ void SleepExecutor::schedule(const char * /*msg*/, scheduling_s* scheduling, efi
 	doScheduleForLater(scheduling, NT2US(timeNt) - getTimeNowUs(), action);
 }
 
-static void timerCallback(CallbackContext* ctx) {
+static void timerCallback(ch_virtual_timer *, CallbackContext* ctx) {
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printSchedulerDebug) {
 		if (ctx->scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
