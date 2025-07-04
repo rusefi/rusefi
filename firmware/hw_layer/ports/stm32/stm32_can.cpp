@@ -132,64 +132,80 @@ static const CANConfig canConfig1000 = {
 
 #elif defined(STM32H7XX)
 static const CANConfig canConfig33 = {
+   .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_33,
    .DBTP = CAN_DBTP_33,
+   .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
    .RXGFC = 0,
 };
 
 static const CANConfig canConfig50 = {
+   .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_50,
    .DBTP = CAN_DBTP_50,
+   .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
    .RXGFC = 0,
 };
 
 static const CANConfig canConfig83 = {
+   .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_83,
    .DBTP = CAN_DBTP_83,
+   .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
    .RXGFC = 0,
 };
 
 static const CANConfig canConfig100 = {
+   .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_100,
    .DBTP = CAN_DBTP_100,
+   .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
    .RXGFC = 0,
 };
 
 static const CANConfig canConfig125 = {
+   .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_125,
    .DBTP = CAN_DBTP_125,
+   .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
    .RXGFC = 0,
 };
 
 static const CANConfig canConfig250 = {
+   .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_250,
    .DBTP = CAN_DBTP_250,
+   .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
    .RXGFC = 0,
 };
 
 static const CANConfig canConfig500 = {
+   .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_500,
    .DBTP = CAN_DBTP_500,
+   .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
    .RXGFC = 0,
 };
 
 static const CANConfig canConfig1000 = {
+   .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_1k0,
    .DBTP = CAN_DBTP_1k0,
+   .TDCR = 0,
    .CCCR = 0,
    .TEST = 0,
    .RXGFC = 0,
