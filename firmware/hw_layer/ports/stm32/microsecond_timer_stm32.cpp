@@ -47,9 +47,7 @@ static constexpr PWMConfig timerConfig = {
 		{PWM_OUTPUT_DISABLED, nullptr}
 	},
 	.cr2 = 0,
-#if STM32_PWM_USE_ADVANCED
 	.bdtr = 0,
-#endif
 	.dier = 0
 };
 
