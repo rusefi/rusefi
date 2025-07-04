@@ -32,6 +32,26 @@
 
 /*===========================================================================*/
 /**
+ * @name System settings
+ * @{
+ */
+/*===========================================================================*/
+
+/**
+ * @brief   Handling of instances.
+ * @note    If enabled then threads assigned to various instances can
+ *          interact each other using the same synchronization objects.
+ *          If disabled then each OS instance is a separate world, no
+ *          direct interactions are handled by the OS.
+ */
+#if !defined(CH_CFG_SMP_MODE)
+#define CH_CFG_SMP_MODE                     FALSE
+#endif
+
+/** @} */
+
+/*===========================================================================*/
+/**
  * @name System timers settings
  * @{
  */
@@ -161,7 +181,17 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_TM)
-#define CH_CFG_USE_TM                       FALSE
+#define CH_CFG_USE_TM                       TRUE
+#endif
+
+/**
+ * @brief   Time Stamps APIs.
+ * @details If enabled then the time stamps APIs are included in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_TIMESTAMP)
+#define CH_CFG_USE_TIMESTAMP                TRUE
 #endif
 
 /**
@@ -333,14 +363,6 @@
 #if !defined(CH_CFG_USE_MAILBOXES)
 #define CH_CFG_USE_MAILBOXES                TRUE
 #endif
-
-/**
- * @brief   I/O Queues APIs.
- * @details If enabled then the I/O queues APIs are included in the kernel.
- *
- * @note    The default is @p TRUE.
- */
-#define CH_CFG_USE_QUEUES                   FALSE
 
 /**
  * @brief   Core Memory Manager APIs.
@@ -640,85 +662,7 @@
  */
 /*===========================================================================*/
 
-/**
- * @brief   System structure extension.
- * @details User fields added to the end of the @p ch_system_t structure.
- */
-#define CH_CFG_SYSTEM_EXTRA_FIELDS                                          \
-  /* Add threads custom fields here.*/
-
-/**
- * @brief   System initialization hook.
- * @details User initialization code added to the @p chSysInit() function
- *          just before interrupts are enabled globally.
- */
-#define CH_CFG_SYSTEM_INIT_HOOK() {                                         \
-  /* Add threads initialization code here.*/                                \
-}
-
-/**
- * @brief   Threads finalization hook.
- * @details User finalization code added to the @p chThdExit() API.
- */
-#define CH_CFG_THREAD_EXIT_HOOK(tp) {                                       \
-  /* Add threads finalization code here.*/                                  \
-}
-
-/**
- * @brief   Idle thread enter hook.
- * @note    This hook is invoked within a critical zone, no OS functions
- *          should be invoked from here.
- * @note    This macro can be used to activate a power saving mode.
- */
-#define CH_CFG_IDLE_ENTER_HOOK() {                                          \
-  /* Idle-enter code here.*/                                                \
-}
-
-/**
- * @brief   Idle thread leave hook.
- * @note    This hook is invoked within a critical zone, no OS functions
- *          should be invoked from here.
- * @note    This macro can be used to deactivate a power saving mode.
- */
-#define CH_CFG_IDLE_LEAVE_HOOK() {                                          \
-  /* Idle-leave code here.*/                                                \
-}
-
-/**
- * @brief   Idle Loop hook.
- * @details This hook is continuously invoked by the idle thread loop.
- */
-#define CH_CFG_IDLE_LOOP_HOOK() {                                           \
-  /* Idle loop code here.*/                                                 \
-}
-
-/**
- * @brief   System tick event hook.
- * @details This hook is invoked in the system tick handler immediately
- *          after processing the virtual timers queue.
- */
-#define CH_CFG_SYSTEM_TICK_HOOK() {                                         \
-  /* System tick event code here.*/                                         \
-}
-
-/**
- * @brief   System halt hook.
- * @details This hook is invoked in case to a system halting error before
- *          the system is halted.
- */
-#define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
-  /* System halt code here.*/                                               \
-  chDbgPanic3(reason, __FILE__, __LINE__); \
-}
-
-/**
- * @brief   Trace hook.
- * @details This hook is invoked each time a new record is written in the
- *          trace buffer.
- */
-#define CH_CFG_TRACE_HOOK(tep) {                                            \
-  /* Trace code here.*/                                                     \
-}
+/* See chconf_common.h */
 
 /** @} */
 
