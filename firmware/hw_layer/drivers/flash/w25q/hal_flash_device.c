@@ -305,7 +305,7 @@ void snor_device_init(SNORDriver *devp) {
 #if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_SPI
   /* Reading device ID.*/
   bus_cmd_receive(devp->config->busp, W25Q_CMD_READ_JEDEC_ID,
-                  sizeof devp->device_id, devp->device_id);
+                  3U, &devp->nocache->buf[0]);
 
 #else /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
   /* Attempting a reset of the XIP mode, it could be in an unexpected state
@@ -324,15 +324,15 @@ void snor_device_init(SNORDriver *devp) {
   /* Checking if the device is white listed.*/
   osalDbgAssert(w25q_find_id(w25q_manufacturer_ids,
                              sizeof w25q_manufacturer_ids,
-                             devp->device_id[0]),
+                             devp->nocache->buf[0]),
                 "invalid manufacturer id");
   osalDbgAssert(w25q_find_id(w25q_memory_type_ids,
                              sizeof w25q_memory_type_ids,
-                             devp->device_id[1]),
+                             devp->nocache->buf[1]),
                 "invalid memory type id");
 
   /* Setting up the device size.*/
-  snor_descriptor.sectors_count = (1U << (size_t)devp->device_id[2]) /
+  snor_descriptor.sectors_count = (1U << (size_t)devp->nocache->buf[2]) /
                                   SECTOR_SIZE;
   snor_descriptor.size = (size_t)snor_descriptor.sectors_count * SECTOR_SIZE;
 }
