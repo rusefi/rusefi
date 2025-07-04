@@ -247,13 +247,13 @@ void setBoardConfigOverrides() {
 static const struct mc33810_config mc33810_odd = {
 	.spi_bus = &SPID5,
 	.spi_config = {
-		.circular = false,
+	.circular = false,
 #ifdef _CHIBIOS_RT_CONF_VER_6_1_
-		.end_cb = NULL,
+	.end_cb = nullptr,
 #else
-        .slave = false,
-        .data_cb = NULL,
-        .error_cb = NULL,
+	.slave = false,
+	.data_cb = nullptr,
+	.error_cb = nullptr,
 #endif
 		.ssport = GPIOF,
 		.sspad = 1,
@@ -298,13 +298,13 @@ static const struct mc33810_config mc33810_odd = {
 static const struct mc33810_config mc33810_even = {
 	.spi_bus = &SPID5,
 	.spi_config = {
-		.circular = false,
+	.circular = false,
 #ifdef _CHIBIOS_RT_CONF_VER_6_1_
-	.end_cb = NULL,
+	.end_cb = nullptr,
 #else
-        .slave = false,
-        .data_cb = NULL,
-        .error_cb = NULL,
+	.slave = false,
+	.data_cb = nullptr,
+	.error_cb = nullptr,
 #endif
 		.ssport = GPIOF,
 		.sspad = 2,

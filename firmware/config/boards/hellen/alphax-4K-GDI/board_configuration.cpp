@@ -74,7 +74,13 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.spi_bus = &SPID2,
 		.spi_config = {
 			.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 			.end_cb = nullptr,
+#else
+			.slave = false,
+			.data_cb = nullptr,
+			.error_cb = nullptr,
+#endif
 			.ssport = GPIOD, // H144_GP_IO1
 			.sspad = 4,
 			.cr1 =
@@ -100,7 +106,13 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.spi_bus = &SPID2,
 		.spi_config = {
 			.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 			.end_cb = nullptr,
+#else
+			.slave = false,
+			.data_cb = nullptr,
+			.error_cb = nullptr,
+#endif
 			.ssport = GPIOD, // H144_GP_IO2
 			.sspad = 7,
 			.cr1 =
@@ -126,7 +138,13 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.spi_bus = &SPID2,
 		.spi_config = {
 			.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 			.end_cb = nullptr,
+#else
+			.slave = false,
+			.data_cb = nullptr,
+			.error_cb = nullptr,
+#endif
 			.ssport = GPIOG, // H144_GP_IO3
 			.sspad = 10,
 			.cr1 =
@@ -152,7 +170,13 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
    		.spi_bus = &SPID2,
    		.spi_config = {
    			.circular = false,
-   			.end_cb = nullptr,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+			.end_cb = nullptr,
+#else
+			.slave = false,
+			.data_cb = nullptr,
+			.error_cb = nullptr,
+#endif
    			.ssport = GPIOG, // H144_GP_IO4
    			.sspad = 9,
    			.cr1 =

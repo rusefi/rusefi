@@ -119,7 +119,13 @@ static const struct mc33810_config mc33810 = {
 	.spi_bus = &SPID3,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+		.end_cb = nullptr,
+#else
+		.slave = false,
+		.data_cb = nullptr,
+		.error_cb = nullptr,
+#endif
 		// todo: use engineConfiguration->mc33810_cs
 		.ssport = GPIOC,
 		.sspad = 5,

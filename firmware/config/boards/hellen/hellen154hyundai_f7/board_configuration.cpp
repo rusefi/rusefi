@@ -50,7 +50,13 @@ static struct tle9201_config tle9201 = {
 	.spi_bus = &SPID3,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+		.end_cb = nullptr,
+#else
+		.slave = false,
+		.data_cb = nullptr,
+		.error_cb = nullptr,
+#endif
 		// H_SPI3_CS
 		.ssport = GPIOA,
 		.sspad = 15,
@@ -144,11 +150,11 @@ static const struct mc33810_config mc33810 = {
 	.spi_config = {
 		.circular = false,
 #ifdef _CHIBIOS_RT_CONF_VER_6_1_
-		.end_cb = NULL,
+		.end_cb = nullptr,
 #else
-        .slave = false,
-        .data_cb = NULL,
-        .error_cb = NULL,
+		.slave = false,
+		.data_cb = nullptr,
+		.error_cb = nullptr,
 #endif
 		// SPI3_CS_33810 OUT_PWM1 H144_OUT_PWM1
 		.ssport = GPIOD,

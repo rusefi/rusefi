@@ -45,9 +45,15 @@
  */
 static SPIConfig accelerometerSpiCfg = {
 #if SPI_SUPPORTS_CIRCULAR == TRUE
-	.circular = FALSE,
+	.circular = false,
 #endif
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 	.end_cb = NULL,
+#else
+	.slave = false,
+	.data_cb = NULL,
+	.error_cb = NULL,
+#endif
 	/* HW dependent part.*/
 	.ssport = NULL,
 	.sspad = 0,
