@@ -140,7 +140,8 @@ public class LoadOlderTuneTest {
                 "    engineConfiguration->boostCutPressure = 0;\n" +
                 "    // de", sb.substring(0, 3500));
         } catch (final Exception e) {
-            log.error(String.format("Exception: %s", e.getMessage()), e);
+            System.out.print(String.format("Exception: %s", e.getMessage()));
+            e.printStackTrace();
             throw e;
         }
     }

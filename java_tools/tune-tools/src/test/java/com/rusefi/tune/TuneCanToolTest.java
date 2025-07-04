@@ -40,7 +40,8 @@ public class TuneCanToolTest {
             assertTrue(sb.indexOf("engineConfiguration->gppwm[2].loadAxis = GPPWM_Tps;") > 0);
             assertTrue(sb.indexOf("engineConfiguration->gppwm[3].loadAxis = GPPWM_Tps;") > 0);
         } catch (final Exception e) {
-            log.error(String.format("Exception: %s", e.getMessage()), e);
+            System.out.print(String.format("Exception: %s", e.getMessage()));
+            e.printStackTrace();
             throw e;
         }
     }
@@ -62,7 +63,8 @@ public class TuneCanToolTest {
              assertEquals("config->", cltRevLimitRpmBinsTableParentReference);
              assertEquals("engineConfiguration->", rpmSoftLimitTimingRetardParentReference);
          } catch (final Exception e) {
-             log.error(String.format("Exception: %s", e.getMessage()), e);
+             System.out.print(String.format("Exception: %s", e.getMessage()));
+             e.printStackTrace();
              throw e;
          }
     }
@@ -81,7 +83,8 @@ public class TuneCanToolTest {
 
             assertFalse(configFieldState); // as config->enableAemXSeries default is false
         } catch (final Exception e) {
-            log.error(String.format("Exception: %s", e.getMessage()), e);
+            System.out.print(String.format("Exception: %s", e.getMessage()));
+            e.printStackTrace();
             throw e;
         }
     }
