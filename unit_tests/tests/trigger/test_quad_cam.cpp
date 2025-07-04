@@ -6,8 +6,9 @@
 #include "pch.h"
 
 TEST(trigger, testQuadCamInput) {
-	// setting some weird engine
-	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->globalTriggerAngleOffset = -37;
+	engineConfiguration->crankingTimingAngle = 3;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engineConfiguration->alwaysInstantRpm = true;
