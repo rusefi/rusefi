@@ -715,6 +715,12 @@ Output Max Duty Cycle
 ### tpsAccelLookback
 How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
 
+### tpsDecelEnleanmentThreshold
+For decel we simply multiply delta of TPS and tFor decel we do not use table?!
+
+### tpsDecelEnleanmentMultiplier
+Magic multiplier, we multiply delta of TPS and get fuel squirt duration
+
 ### noFuelTrimAfterDfcoTime
 Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
 
@@ -1194,12 +1200,6 @@ Additional idle % when fan #1 is active
 
 ### uartConsoleSerialSpeed
 Band rate for primary TTL
-
-### tpsDecelEnleanmentThreshold
-For decel we simply multiply delta of TPS and tFor decel we do not use table?!
-
-### tpsDecelEnleanmentMultiplier
-Magic multiplier, we multiply delta of TPS and get fuel squirt duration
 
 ### throttlePedalSecondaryUpVoltage
 

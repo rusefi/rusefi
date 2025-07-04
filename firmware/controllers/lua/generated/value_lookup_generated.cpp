@@ -722,6 +722,12 @@ float getConfigValueByName(const char *name) {
 // tpsAccelLookback
 		case -1164331270:
 			return engineConfiguration->tpsAccelLookback;
+// tpsDecelEnleanmentThreshold
+		case -965453331:
+			return engineConfiguration->tpsDecelEnleanmentThreshold;
+// tpsDecelEnleanmentMultiplier
+		case 1164012327:
+			return engineConfiguration->tpsDecelEnleanmentMultiplier;
 // noFuelTrimAfterDfcoTime
 		case 1286770247:
 			return engineConfiguration->noFuelTrimAfterDfcoTime;
@@ -1202,12 +1208,6 @@ float getConfigValueByName(const char *name) {
 // uartConsoleSerialSpeed
 		case -999870619:
 			return engineConfiguration->uartConsoleSerialSpeed;
-// tpsDecelEnleanmentThreshold
-		case -965453331:
-			return engineConfiguration->tpsDecelEnleanmentThreshold;
-// tpsDecelEnleanmentMultiplier
-		case 1164012327:
-			return engineConfiguration->tpsDecelEnleanmentMultiplier;
 // throttlePedalSecondaryUpVoltage
 		case -1564912640:
 			return engineConfiguration->throttlePedalSecondaryUpVoltage;
@@ -3225,6 +3225,16 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->tpsAccelLookback = (int)value;
 		return 1;
 	}
+		case -965453331:
+	{
+		engineConfiguration->tpsDecelEnleanmentThreshold = value;
+		return 1;
+	}
+		case 1164012327:
+	{
+		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
+		return 1;
+	}
 		case 1286770247:
 	{
 		engineConfiguration->noFuelTrimAfterDfcoTime = (int)value;
@@ -4023,16 +4033,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -999870619:
 	{
 		engineConfiguration->uartConsoleSerialSpeed = (int)value;
-		return 1;
-	}
-		case -965453331:
-	{
-		engineConfiguration->tpsDecelEnleanmentThreshold = value;
-		return 1;
-	}
-		case 1164012327:
-	{
-		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
 		return 1;
 	}
 		case -1564912640:
