@@ -208,6 +208,7 @@ static spi_device_e mmcSpiDevice = SPI_NONE;
 /**
  * MMC driver instance.
  */
+static NO_CACHE uint8_t mmcbuf[MMC_BUFFER_SIZE];
 MMCDriver MMCD1;
 
 /* MMC/SD over SPI driver configuration.*/
@@ -444,7 +445,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	spiCalcClockDiv(mmccfg.spip, &mmc_ls_spicfg, 250 * 1000);
 
 	// We think we have everything for the card, let's try to mount it!
-	mmcObjectInit(&MMCD1);
+	mmcObjectInit(&MMCD1, mmcbuf);
 	mmcStart(&MMCD1, &mmccfg);
 
 	// Performs the initialization procedure on the inserted card.
@@ -474,7 +475,8 @@ static void deinitializeMmcBlockDevide() {
 #endif // RE_SDC_MODE
 
 static const SDCConfig sdcConfig = {
-	.bus_width = RE_SDC_MODE
+	.bus_width = RE_SDC_MODE,
+	.slowdown = 0U
 };
 
 static bool isSdCardEnabled() {
