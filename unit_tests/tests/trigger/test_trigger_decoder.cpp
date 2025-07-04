@@ -155,6 +155,25 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
     }
 }
 
+//same as testTriggerDecoder2 but using trigger type not engine type
+static void testTriggerDecoderByTriggerType(const char *msg, trigger_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGapRatio = NAN) {
+	printf("====================================================================================== testTriggerDecoderByTriggerName msg=%s\r\n", msg);
+
+	// Some configs use aux valves, which requires this sensor
+	std::unordered_map<SensorType, float> sensorVals = {{SensorType::DriverThrottleIntent, 0}};
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, sensorVals);
+	eth.setTriggerType(type);
+
+	TriggerWaveform *t = &engine->triggerCentral.triggerShape;
+
+	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
+
+	ASSERT_EQ(synchPointIndex, t->getTriggerWaveformSynchPointIndex()) << "synchPointIndex " << msg;
+	if (!std::isnan(expectedGapRatio)) {
+		ASSERT_NEAR(expectedGapRatio, initState.triggerSyncGapRatio, 0.001) << "actual gap ratio";
+    }
+}
+
 static void assertActionCallbacksEqual(const char *msg, action_s const& expected_action, action_s const& actual_action) {
 	ASSERT_EQ(expected_action.getCallback(), actual_action.getCallback()) << msg;
 }
@@ -363,7 +382,7 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoder2("testFordEscortGt", engine_type_e::FORD_ESCORT_GT, 0, 0.8096, 0.3844);
 
-	testTriggerDecoder2("NISSAN_PRIMERA", engine_type_e::NISSAN_PRIMERA, 2, 0.9611, 0.0);
+	testTriggerDecoderByTriggerType("NISSAN_PRIMERA", trigger_type_e::TT_NISSAN_SR20VE, 2, 0.9611, 0.0);
 
 	testTriggerDecoder2("test1+1", engine_type_e::DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
