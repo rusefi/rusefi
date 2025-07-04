@@ -492,7 +492,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
 	public static final int engine_type_e_MINIMAL_PINS = 99;
 	public static final int engine_type_e_MITSUBISHI_3A92 = 12;
-	public static final int engine_type_e_MITSUBISHI_4G93 = 16;
 	public static final int engine_type_e_MRE_BODY_CONTROL = 23;
 	public static final int engine_type_e_MRE_SECONDARY_CAN = 4;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
@@ -528,6 +527,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_UNUSED42 = 42;
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_105 = 105;
+	public static final int engine_type_e_UNUSED_16 = 16;
 	public static final int engine_type_e_UNUSED_5 = 5;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VAG_5_CYL = 77;

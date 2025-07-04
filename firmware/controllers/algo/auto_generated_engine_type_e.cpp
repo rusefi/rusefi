@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Fri Jul 04 02:12:45 UTC 2025
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Fri Jul 04 05:12:55 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -137,8 +137,6 @@ case engine_type_e::MINIMAL_PINS:
   return "MINIMAL_PINS";
 case engine_type_e::MITSUBISHI_3A92:
   return "MITSUBISHI_3A92";
-case engine_type_e::MITSUBISHI_4G93:
-  return "MITSUBISHI_4G93";
 case engine_type_e::MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
 case engine_type_e::MRE_SECONDARY_CAN:
@@ -209,6 +207,8 @@ case engine_type_e::UNUSED94:
   return "UNUSED94";
 case engine_type_e::UNUSED_105:
   return "UNUSED_105";
+case engine_type_e::UNUSED_16:
+  return "UNUSED_16";
 case engine_type_e::UNUSED_5:
   return "UNUSED_5";
 case engine_type_e::UNUSED_97:
