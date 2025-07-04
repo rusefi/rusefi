@@ -258,8 +258,6 @@
 /*
  * PWM driver system settings.
  */
-#define STM32_PWM_USE_ADVANCED              FALSE
-
 #ifndef STM32_PWM_USE_TIM1
 #define STM32_PWM_USE_TIM1                  TRUE
 #endif
