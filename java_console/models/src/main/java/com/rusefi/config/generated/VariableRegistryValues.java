@@ -497,7 +497,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_MRE_SECONDARY_CAN = 4;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_MRE_VW_B6 = 62;
-	public static final int engine_type_e_NISSAN_PRIMERA = 5;
 	public static final int engine_type_e_POLARIS = 35;
 	public static final int engine_type_e_POLARIS_RZR = 9;
 	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 30;
@@ -529,6 +528,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_UNUSED42 = 42;
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_105 = 105;
+	public static final int engine_type_e_UNUSED_5 = 5;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VAG_5_CYL = 77;
 	public static final int engine_type_e_VW_ABA = 32;

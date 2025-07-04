@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Mon Jun 16 17:16:43 UTC 2025
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Fri Jul 04 02:12:45 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -147,8 +147,6 @@ case engine_type_e::MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
 case engine_type_e::MRE_VW_B6:
   return "MRE_VW_B6";
-case engine_type_e::NISSAN_PRIMERA:
-  return "NISSAN_PRIMERA";
 case engine_type_e::POLARIS:
   return "POLARIS";
 case engine_type_e::POLARIS_RZR:
@@ -211,6 +209,8 @@ case engine_type_e::UNUSED94:
   return "UNUSED94";
 case engine_type_e::UNUSED_105:
   return "UNUSED_105";
+case engine_type_e::UNUSED_5:
+  return "UNUSED_5";
 case engine_type_e::UNUSED_97:
   return "UNUSED_97";
 case engine_type_e::VAG_5_CYL:
