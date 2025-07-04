@@ -22,7 +22,7 @@
 
 TEST(LTFT, testLearning)
 {
-	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	LtftState ltftState;
 	LongTermFuelTrim ltft;
