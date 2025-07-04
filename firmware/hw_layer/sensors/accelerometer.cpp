@@ -98,7 +98,7 @@ static LSM303AGRConfig lis2dh12cfg = {
 	.accsensitivity = NULL,
 	.accbias = NULL,
 	.accfullscale = LSM303AGR_ACC_FS_4G,
-	.accoutdatarate = LSM303AGR_ACC_ODR_50Hz,
+	.accodr = LSM303AGR_ACC_ODR_50Hz,
 #if LSM303AGR_USE_ADVANCED
 	.accmode = LSM303AGR_ACC_MODE_HRES,
 	.accblockdataupdate = LSM303AGR_ACC_BDU_CONT,
@@ -107,7 +107,7 @@ static LSM303AGRConfig lis2dh12cfg = {
 	/* LIS2DW12 is Accelerometer only, ignore following */
 	.compsensitivity = NULL,
 	.compbias = NULL,
-	.compoutputdatarate = LSM303AGR_COMP_ODR_50HZ,
+	.compodr = LSM303AGR_COMP_ODR_50HZ,
 #if LSM303AGR_USE_ADVANCED
 	.compmode = LSM303AGR_COMP_MODE_NORM,
 	.complp = LSM303AGR_COMP_LPOW_EN
