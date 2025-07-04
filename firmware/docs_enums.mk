@@ -36,6 +36,7 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
 endif
 
 .docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR)
+	bash $(PROJECT_DIR)/bin/detect_github.sh
 	bash $(PROJECT_DIR)/gen_live_documentation.sh
 	@touch $@
 
