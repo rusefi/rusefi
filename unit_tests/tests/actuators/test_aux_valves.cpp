@@ -10,10 +10,14 @@
 #include "aux_valves.h"
 
 TEST(Actuators, AuxValves) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->auxValves[0] = Gpio::E14;
+	engineConfiguration->auxValves[1] = Gpio::E12;
+	eth.setTriggerType(trigger_type_e::TT_NISSAN_SR20VE);
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 
-	EngineTestHelper eth(engine_type_e::NISSAN_PRIMERA);
-
+	// force recalculation of aux valves:
+	initAuxValves();
 	// Engine must be "spinning" for scheduleByAngle to work
 	engine->rpmCalculator.setRpmValue(1000);
 
