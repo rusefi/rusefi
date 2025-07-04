@@ -624,7 +624,6 @@ void fuelBenchMode() {
     setFlatInjectorLag(0);
 #endif // EFI_ENGINE_CONTROL
 	setTable(config->postCrankingFactor, 1.0f);
-	setArrayValues(config->crankingFuelCoef, 1.0f);
 	setTable(config->crankingCycleBaseFuel, 1.0f);
 	setBasicNotECUmode();
 }
