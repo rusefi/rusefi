@@ -17,7 +17,7 @@ enum class engine_type_e : uint16_t {
 	 * 1996 1.3 Ford Aspire
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
-	FORD_ASPIRE_1996 = 3,
+	UNUSED_3 = 3,
 	/**
 	 * See also PROTEUS_LUA_DEMO
 	 */
