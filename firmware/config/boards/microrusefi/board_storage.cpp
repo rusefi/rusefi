@@ -33,7 +33,9 @@
 #define EFI_FLASH_SIZE (8 * 1024 * 1024)
 
 /* Some fields in following struct are used for DMA transfers, so do not cache */
-NO_CACHE SNORDriver snor1;
+/* TODO: can we drop NO_CACHE for snor1 since snor1buf? */
+static NO_CACHE SNORDriver snor1;
+static NO_CACHE snor_nocache_buffer_t snor1buf;
 
 /*
  * Maximum speed SPI configuration (Clock = Fpclk / 2 =  21 MHz, CPHA=0, CPOL=0, MSb first).
@@ -120,7 +122,7 @@ void boardInitMfs()
 	/*
 	 * Initializing and starting flash driver.
 	 */
-	snorObjectInit(&snor1);
+	snorObjectInit(&snor1, &snor1buf);
 	snorStart(&snor1, &W25FlashConfig);
 }
 
