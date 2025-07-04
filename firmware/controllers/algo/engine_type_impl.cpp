@@ -43,7 +43,6 @@
 #include "toyota_jz.h"
 #include "toyota_1NZ_FE.h"
 #include "mitsubishi_3A92.h"
-#include "mitsubishi_4G93.h"
 #include "ford_festiva.h"
 
 static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
@@ -79,6 +78,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::MINIMAL_PINS:
 	case engine_type_e::UNUSED_5:
+	case engine_type_e::UNUSED_16:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
@@ -379,9 +379,6 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 	case engine_type_e::MITSUBISHI_3A92:
 	    setMitsubishi3A92();
-	    break;
-	case engine_type_e::MITSUBISHI_4G93:
-	    setMitsubishi4G93();
 	    break;
 	case engine_type_e::FORD_INLINE_6_1995:
 		setFordInline6();
