@@ -11,7 +11,9 @@
 
 class PeriodicTimerController;
 
+#if !EFI_UNIT_TEST
 void runAndScheduleNext(virtual_timer_t *vtp, PeriodicTimerController *controller);
+#endif
 
 /**
  * this is an intermediate implementation - we should probably move from using virtual_timer_t which works on interrupts
