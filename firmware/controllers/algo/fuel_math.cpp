@@ -327,19 +327,40 @@ float getInjectionMass(float rpm) {
 		engine->module<InjectorModelSecondary>()->prepare();
 	}
 
+	// This variable will hold the extra fuel mass from legacy AE modes
+	float tpsFuelMass = 0;
+
+	// Get the AE value (it will be 0 if predictive mode is active)
 	float tpsAccelEnrich = engine->module<TpsAccelEnrichment>()->getTpsEnrichment();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
 
 	float tpsAccelPerInjection = durationMultiplier * tpsAccelEnrich;
 
-  if (engineConfiguration->accelEnrichmentMode == AE_MODE_PERCENT_ADDER) {
-  	return injectionFuelMass * (1 + tpsAccelPerInjection);
-  } else {
-	  // For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
-	  float tpsFuelMass = engine->module<InjectorModelPrimary>()->getFuelMassForDuration(tpsAccelPerInjection);
-	  return injectionFuelMass + tpsFuelMass;
+	// Use a switch to handle all AE modes
+	switch ((accel_enrichment_mode_e)engineConfiguration->accelEnrichmentMode) {
+		case AE_MODE_PERCENT_ADDER:
+			// Treat the tpsAccelEnrich value as a percentage
+			tpsFuelMass = injectionFuelMass * tpsAccelPerInjection;
+			break;
+
+		case AE_MODE_MS_ADDER:
+			// For legacy reasons, the TPS accel table is in units of milliseconds,
+			// so we have to convert BACK to mass
+			tpsFuelMass = engine->module<InjectorModelPrimary>()->getFuelMassForDuration(tpsAccelPerInjection);
+			break;
+
+		case AE_MODE_PREDICTIVE_MAP:
+			// Do nothing here. Fuel correction has already been handled by providing a
+			// corrected MAP value to the getBaseFuelMass() calculation.
+			break;
+
+		default:
+			criticalError("Invalid accelEnrichmentMode %d", engineConfiguration->accelEnrichmentMode);
+			break;
 	}
+
+	return injectionFuelMass + tpsFuelMass;
 }
 #endif
 
