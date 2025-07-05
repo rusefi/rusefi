@@ -14,7 +14,7 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
  * @see DataLogConsumer
  */
 public class SdCardFieldsContent {
-    public static final String SD_CARD_OUTPUT_FILE_NAME = "console/binary_log/log_fields_generated.h";
+    public static final String SD_CARD_OUTPUT_FILE_NAME = "console/binary/generated/log_fields_generated.h";
     public static final String BOARD_LOOKUP_H = "#include \"board_lookup.h\"\n";
     private final StringBuilder body = new StringBuilder();
 
