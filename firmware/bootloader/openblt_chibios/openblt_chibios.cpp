@@ -14,9 +14,10 @@ void TimerReset() { }
 void CopService() { }
 void TimerUpdate() { }
 
-extern "C" void __core_init() {
+// See also STM32_NOCACHE_ENABLE option will enable MPU init
+extern "C" void __cpu_init() {
   // *** this is about specifically stm32f7 ***
-	// This overrides the built-in __core_init() function
+	// This overrides the built-in __cpu_init() function
 	// We do this to avoid enabling the D/I caches, which
 	// we'll immediately have to turn back off when jumping
 	// to the main firmware (which will then enable them itself)

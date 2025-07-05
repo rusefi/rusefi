@@ -43,10 +43,6 @@
  extern "C" {
 #endif
 
-#define FLASH_OTP_BASE         0x1FF0F000U /*!< Base address of : (up to 1024 Bytes) embedded FLASH OTP Area                            */
-#define FLASH_OTP_END          0x1FF0F41FU /*!< End address of : (up to 1024 Bytes) embedded FLASH OTP Area                             */
-
-
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"
 

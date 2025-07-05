@@ -33,9 +33,7 @@ void initWS2812()
 			[3] = {.mode = WS2812_TIM_CH == 3 ? PWM_OUTPUT_ACTIVE_HIGH : PWM_OUTPUT_DISABLED, .callback = NULL}, // Turn on the channel we care about
 		},
 		.cr2 = 0,
-		#if STM32_PWM_USE_ADVANCED
 		.bdtr = 0,
-		#endif
 		.dier = TIM_DIER_UDE, // DMA on update event for next period
 	};
 

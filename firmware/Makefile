@@ -199,12 +199,14 @@ endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 
-# should be after 'board.mk'
-include rusefi_rules.mk
-
 # Include various ChibiOS mk files
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk
+
+# should be after 'board.mk'
+# includes ChibiOS's platform.mk for specified CPU
+include rusefi_rules.mk
+
 # Startup files.
 include $(CPU_STARTUP_DIR)
 # HAL-OSAL files (optional).
@@ -213,7 +215,7 @@ include $(CPU_PLATFORM)
 include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
-include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
+include $(CHIBIOS)/os/common/ports/ARMv7-M/compilers/GCC/mk/port.mk
 # EX files (optional).
 ifeq ($(EFI_ONBOARD_MEMS_LIS2DW12),yes)
   DDEFS += -DEFI_ONBOARD_MEMS_LIS2DW12=TRUE

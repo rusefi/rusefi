@@ -16,7 +16,8 @@
 #include "hal_mfs.h"
 
 /* Managed Flash Storage driver */
-MFSDriver mfsd;
+static MFSDriver mfsd;
+static NO_CACHE mfs_nocache_buffer_t mfsbuf;
 
 extern void boardInitMfs(void);
 extern const MFSConfig *boardGetMfsConfig(void);
@@ -86,7 +87,7 @@ void initStorageMfs() {
 	const MFSConfig *mfsConfig = boardGetMfsConfig();
 
 	/* MFS */
-	mfsObjectInit(&mfsd);
+	mfsObjectInit(&mfsd, &mfsbuf);
 	mfs_error_t err = mfsStart(&mfsd, mfsConfig);
 	if (err < MFS_NO_ERROR) {
 		/* hm...? */
