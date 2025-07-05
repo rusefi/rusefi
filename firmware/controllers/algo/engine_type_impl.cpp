@@ -24,7 +24,6 @@
 #include "tc_4l6x.h"
 #include "../board_id/qc_stim_meta.h"
 
-#include "mazda_miata.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_na8.h"
 #include "mazda_miata_vvt.h"
