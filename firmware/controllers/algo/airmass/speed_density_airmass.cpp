@@ -52,67 +52,65 @@ float SpeedDensityAirmass::getAirflow(float rpm, float map, bool postState) {
 	return massPerCycle * rpm / 60;
 }
 
-float getPredictiveMap(float rpm, bool postState) {
-	auto realTimeMapResult = Sensor::get(SensorType::Map);
-	auto tps = Sensor::getOrZero(SensorType::Tps1);
-	float realTimeMap = realTimeMapResult.value_or(m_initialRealMap);
+float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float mapSensor) {
+	float blendDuration = engineConfiguration->mapPredictionBlendDuration;
+	float elapsedTime = m_predictionTimer.getElapsedSeconds();
+
+	if (m_isMapPredictionActive && elapsedTime >= blendDuration) {
+			// prediction phase is over
+			m_isMapPredictionActive = false;
+	}
 
 	float effectiveMap = 0;
-
 	if (m_isMapPredictionActive) {
-		float blendDuration = engineConfiguration->mapPredictionBlendDuration;
-		float elapsedTime = m_predictionTimer.getElapsedSeconds();
-
-		float blendFactor = (blendDuration > 0) ? (elapsedTime / blendDuration) : 1.0f;
+		float blendFactor = elapsedTime / blendDuration;
 		// Linearly interpolate between the initial predicted and real values
 		effectiveMap = m_initialPredictedMap + (m_initialRealMap - m_initialPredictedMap) * blendFactor;
 
-		if (elapsedTime >= blendDuration || realTimeMap >= effectiveMap || blendDuration <= 0 || !realTimeMapResult) {
+		if (mapSensor >= effectiveMap) {
 			m_isMapPredictionActive = false;
 		}
 	} else {
 		if (engine->module<TpsAccelEnrichment>()->isAccelEventTriggered()) {
-			float predictedMap = m_mapEstimationTable->getValue(rpm, tps);
+			float predictedMap = logAndGetFallback(rpm, postState);
 
-			if (realTimeMapResult && predictedMap > realTimeMap) {
+			if (predictedMap > mapSensor) {
 				m_isMapPredictionActive = true;
 				m_predictionTimer.reset();
 				m_initialPredictedMap = predictedMap;
-				m_initialRealMap = realTimeMap;
+				m_initialRealMap = mapSensor;
 				effectiveMap = predictedMap;
 			}
 		}
 	}
 
 	if (!m_isMapPredictionActive) {
-		float fallbackMap = m_mapEstimationTable->getValue(rpm, tps);
-		effectiveMap = realTimeMapResult.value_or(fallbackMap);
+		effectiveMap = mapSensor;
 	}
 
 #if EFI_TUNER_STUDIO
 	if (postState) {
 		engine->outputChannels.effectiveMap = effectiveMap;
-
-		float fallbackMap = m_mapEstimationTable->getValue(rpm, tps);
-		engine->outputChannels.fallbackMap = fallbackMap;
 	}
 #endif // EFI_TUNER_STUDIO
 
 	return effectiveMap;
 }
 
-float SpeedDensityAirmass::getMap(float rpm, bool postState) {
-	// If predictive MAP AE isn't enabled, just use the original logic.
-	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
-		return getPredictiveMap(rpm, postState);
-	}
-	float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
-
+float SpeedDensityAirmass::logAndGetFallback(float rpm, bool postState) const {
+  float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
 #if EFI_TUNER_STUDIO
 	if (postState) {
 		engine->outputChannels.fallbackMap = fallbackMap;
 	}
 #endif // EFI_TUNER_STUDIO
+  return fallbackMap;
+}
 
-	return Sensor::get(SensorType::Map).value_or(fallbackMap);
+float SpeedDensityAirmass::getMap(float rpm, bool postState) {
+  auto mapSensor = Sensor::get(SensorType::Map);
+	if (mapSensor && engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
+		return getPredictiveMap(rpm, postState, mapSensor.Value);
+	}
+	return mapSensor.value_or(logAndGetFallback(rpm, postState));
 }
