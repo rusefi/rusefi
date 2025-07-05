@@ -5,6 +5,8 @@ git update-index --assume-unchanged ../java_console/models/src/main/java/com/rus
 
 git update-index --assume-unchanged controllers/algo/auto*.*
 git update-index --assume-unchanged controllers/lua/generated/value_lookup_generated.*
+git update-index --assume-unchanged live_data_generated/*
 git update-index --assume-unchanged console/binary/generated/*
+git update-index --assume-unchanged tunerstudio/generated/*
 git update-index --assume-unchanged controllers/generated/*
 git update-index --assume-unchanged hw_layer/mass_storage/ramdisk_image_compressed.h
