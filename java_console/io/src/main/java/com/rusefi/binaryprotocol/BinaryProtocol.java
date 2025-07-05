@@ -59,6 +59,10 @@ public class BinaryProtocol {
 
     private final BinaryProtocolState state = new BinaryProtocolState();
 
+    static {
+        log.info("BINARY_IO_TIMEOUT=" + Timeouts.BINARY_IO_TIMEOUT);
+        log.info("CONNECTION_RESTART_DELAY=" + Timeouts.CONNECTION_RESTART_DELAY);
+    }
 
     private final BinaryProtocolLogger binaryProtocolLogger;
     public static IniFileProvider iniFileProvider = new RealIniFileProvider();
