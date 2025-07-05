@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu Jun 19 13:36:53 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jul 05 00:55:33 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -216,6 +216,15 @@ case UiMode::INSTALLATION:
   return "INSTALLATION";
 case UiMode::TUNING:
   return "TUNING";
+  }
+ return NULL;
+}
+const char *getAccel_enrichment_mode_e(accel_enrichment_mode_e value){
+switch(value) {
+case AE_MODE_MS_ADDER:
+  return "AE_MODE_MS_ADDER";
+case AE_MODE_PERCENT_ADDER:
+  return "AE_MODE_PERCENT_ADDER";
   }
  return NULL;
 }

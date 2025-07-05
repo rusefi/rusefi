@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu Jun 19 13:36:53 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jul 05 00:55:33 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -45,6 +45,7 @@ const char *getTsCalMode(TsCalMode value);
 #if __cplusplus
 const char *getUiMode(UiMode value);
 #endif //__cplusplus
+const char *getAccel_enrichment_mode_e(accel_enrichment_mode_e value);
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value);
 const char *getAntiLagActivationMode_e(antiLagActivationMode_e value);
 const char *getBoostType_e(boostType_e value);

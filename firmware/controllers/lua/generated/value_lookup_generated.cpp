@@ -524,9 +524,6 @@ float getConfigValueByName(const char *name) {
 // pauseEtbControl
 		case -24313313:
 			return engineConfiguration->pauseEtbControl;
-// tpsTpsPercentMode
-		case -676706647:
-			return engineConfiguration->tpsTpsPercentMode;
 // verboseKLine
 		case -485091122:
 			return engineConfiguration->verboseKLine;
@@ -2893,11 +2890,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -24313313:
 	{
 		engineConfiguration->pauseEtbControl = (int)value;
-		return 1;
-	}
-		case -676706647:
-	{
-		engineConfiguration->tpsTpsPercentMode = (int)value;
 		return 1;
 	}
 		case -485091122:
