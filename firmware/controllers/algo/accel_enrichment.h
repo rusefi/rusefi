@@ -15,13 +15,6 @@
 #include "wall_fuel_state_generated.h"
 #include "tps_accel_state_generated.h"
 
-//
-// IMPORTANT: This enum must be kept in sync with the definition
-// in firmware/integration/rusefi_config.txt
-//
-
-
-
 typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float, float> tps_tps_Map3D_t;
 
 class TpsAccelEnrichment : public tps_accel_state_s, public EngineModule {
