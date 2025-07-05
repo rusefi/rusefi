@@ -60,9 +60,8 @@ float SpeedDensityAirmass::getMap(float rpm, bool postState) {
 
 		#if EFI_TUNER_STUDIO
 		if (postState) {
-			engine->outputChannels.fallbackMap = fallbackMap / 0.1f;
-			// Store the real MAP in our new channel, making sure to apply the scale
-			engine->outputChannels.effectiveMap = realMap / 0.1f;
+			engine->outputChannels.fallbackMap = fallbackMap;
+			engine->outputChannels.effectiveMap = realMap;
 		}
 		#endif // EFI_TUNER_STUDIO
 
@@ -109,11 +108,10 @@ float SpeedDensityAirmass::getMap(float rpm, bool postState) {
 
 #if EFI_TUNER_STUDIO
 	if (postState) {
-		// FINAL FIX: Convert the float 'effectiveMap' to a scaled integer for logging
-		engine->outputChannels.effectiveMap = effectiveMap / 0.1f;
+		engine->outputChannels.effectiveMap = effectiveMap;
 
 		float fallbackMap = m_mapEstimationTable->getValue(rpm, tps);
-		engine->outputChannels.fallbackMap = fallbackMap / 0.1f;
+		engine->outputChannels.fallbackMap = fallbackMap;
 	}
 #endif // EFI_TUNER_STUDIO
 
