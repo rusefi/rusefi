@@ -383,7 +383,7 @@ TEST(trigger, testTriggerDecoder) {
 	testTriggerDecoder2("test engine", engine_type_e::TEST_ENGINE, 0, 0.7500, 0.2500);
 	testTriggerDecoder2("testGY6_139QMB", engine_type_e::GY6_139QMB, 0, 0.4375, 0.0);
 
-	testTriggerDecoder2("testFordEscortGt", engine_type_e::FORD_ESCORT_GT, 0, 0.8096, 0.3844);
+	testTriggerDecoderByTriggerType("testFordEscortGt", trigger_type_e::TT_MAZDA_DOHC_1_4, 0, 0.8096, 0.3844);
 
 	testTriggerDecoderByTriggerType("NISSAN_PRIMERA", trigger_type_e::TT_NISSAN_SR20VE, 2, 0.9611, 0.0);
 
