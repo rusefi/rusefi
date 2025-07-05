@@ -22,11 +22,14 @@ static int rxTime;
 #endif // EFI_CAN_SUPPORT
 
 static int lua_setTickRate(lua_State* l) {
-	float freq = luaL_checknumber(l, 1);
+	float userFreq = luaL_checknumber(l, 1);
 
 	// For instance BMW does 100 CAN messages per second on some IDs, let's allow at least twice that speed
 	// Limit to 1..200 hz
-	freq = clampF(1, freq, 200);
+	float freq = clampF(1, userFreq, 2000);
+	if (freq != userFreq) {
+	  efiPrintf(TAG "clamping tickrate %f", freq);
+	}
 
 	if (freq > 150 && !engineConfiguration->luaCanRxWorkaround) {
 	  efiPrintf(TAG "luaCanRxWorkaround recommended at high tick rate!");
