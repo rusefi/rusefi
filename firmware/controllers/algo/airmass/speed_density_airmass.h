@@ -17,7 +17,8 @@ public:
 	float getMap(float rpm, bool postState);
 
 private:
-  float logAndGetFallback(float rpm, bool postState) const;
+	float getPredictiveMap(float rpm, bool postState);
+	float logAndGetFallback(float rpm, bool postState) const;
 	const ValueProvider3D* const m_mapEstimationTable;
 
 	// State for predictive MAP blending
