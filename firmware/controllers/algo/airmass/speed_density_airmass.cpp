@@ -50,14 +50,17 @@ float SpeedDensityAirmass::getAirflow(float rpm, float map, bool postState) {
 	return massPerCycle * rpm / 60;
 }
 
-float SpeedDensityAirmass::getMap(float rpm, bool postState) const {
-	float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
-
+float SpeedDensityAirmass::logAndGetFallback(float rpm, bool postState) const {
+  float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
 #if EFI_TUNER_STUDIO
 	if (postState) {
 		engine->outputChannels.fallbackMap = fallbackMap;
 	}
 #endif // EFI_TUNER_STUDIO
+  return fallbackMap;
+}
 
+float SpeedDensityAirmass::getMap(float rpm, bool postState) const {
+	float fallbackMap = logAndGetFallback(rpm, postState);
 	return Sensor::get(SensorType::Map).value_or(fallbackMap);
 }
