@@ -17,7 +17,7 @@ public:
 	float getMap(float rpm, bool postState);
 
 private:
-	float getPredictiveMap(float rpm, bool postState);
+	float getPredictiveMap(float rpm, bool postState, float mapSensor);
 	float logAndGetFallback(float rpm, bool postState) const;
 	const ValueProvider3D* const m_mapEstimationTable;
 
