@@ -52,24 +52,7 @@ float SpeedDensityAirmass::getAirflow(float rpm, float map, bool postState) {
 	return massPerCycle * rpm / 60;
 }
 
-float SpeedDensityAirmass::getMap(float rpm, bool postState) {
-	// If predictive MAP AE isn't enabled, just use the original logic.
-	if (engineConfiguration->accelEnrichmentMode != AE_MODE_PREDICTIVE_MAP) {
-		float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
-		float realMap = Sensor::get(SensorType::Map).value_or(fallbackMap);
-
-		#if EFI_TUNER_STUDIO
-		if (postState) {
-			engine->outputChannels.fallbackMap = fallbackMap;
-			engine->outputChannels.effectiveMap = realMap;
-		}
-		#endif // EFI_TUNER_STUDIO
-
-		return realMap;
-	}
-
-	// --- Predictive MAP Acceleration Enrichment Logic ---
-
+float getPredictiveMap(float rpm, bool postState) {
 	auto realTimeMapResult = Sensor::get(SensorType::Map);
 	auto tps = Sensor::getOrZero(SensorType::Tps1);
 	float realTimeMap = realTimeMapResult.value_or(m_initialRealMap);
@@ -116,4 +99,20 @@ float SpeedDensityAirmass::getMap(float rpm, bool postState) {
 #endif // EFI_TUNER_STUDIO
 
 	return effectiveMap;
+}
+
+float SpeedDensityAirmass::getMap(float rpm, bool postState) {
+	// If predictive MAP AE isn't enabled, just use the original logic.
+	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
+		return getPredictiveMap(rpm, postState);
+	}
+	float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
+
+#if EFI_TUNER_STUDIO
+	if (postState) {
+		engine->outputChannels.fallbackMap = fallbackMap;
+	}
+#endif // EFI_TUNER_STUDIO
+
+	return Sensor::get(SensorType::Map).value_or(fallbackMap);
 }
