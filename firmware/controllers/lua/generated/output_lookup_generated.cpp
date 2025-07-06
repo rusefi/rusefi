@@ -1839,11 +1839,6 @@ float getOutputValueByName(const char *name) {
 		case 705044501:
 			return engine->module<IdleController>().unmock().isIacTableForCoasting;
 #endif
-// notIdling
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1304441005:
-			return engine->module<IdleController>().unmock().notIdling;
-#endif
 // needReset
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -2049691836:
@@ -1858,11 +1853,6 @@ float getOutputValueByName(const char *name) {
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 432464630:
 			return engine->module<IdleController>().unmock().isBlipping;
-#endif
-// useClosedLoop
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -87867258:
-			return engine->module<IdleController>().unmock().useClosedLoop;
 #endif
 // badTps
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
