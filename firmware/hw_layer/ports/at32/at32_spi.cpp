@@ -240,7 +240,7 @@ void initSpiCsNoOccupy(SPIConfig *spiConfig, brain_pin_e csPin) {
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	/* TODO: why this is here? */
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+#if !defined(HAL_LLD_SELECT_SPI_V2)
 	spiConfig->end_cb = nullptr;
 #else
 	spiConfig->data_cb = nullptr;
@@ -271,27 +271,33 @@ int spiCalcClockDiv(SPIDriver*, SPIConfig*, unsigned int)
 // Slow mode is 13.5 or 6.75 MHz
 // Fast mode is 54 or 27 MHz (technically out of spec, needs testing!)
 SPIConfig mmc_hs_spicfg = {
-		.circular = false,
-#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.circular = false,
+#if !defined(HAL_LLD_SELECT_SPI_V2)
 	.end_cb = NULL,
 #else
         .slave = false,
         .data_cb = NULL,
         .error_cb = NULL,
 #endif
-		.ssport = NULL,
-		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_2,
-		.cr2 = 0
+	.ssport = NULL,
+	.sspad = 0,
+	.cr1 = SPI_BaudRatePrescaler_2,
+	.cr2 = 0
 };
 
 SPIConfig mmc_ls_spicfg = {
-		.circular = false,
-		.end_cb = NULL,
-		.ssport = NULL,
-		.sspad = 0,
-		.cr1 = SPI_BaudRatePrescaler_8,
-		.cr2 = 0
+	.circular = false,
+#if !defined(HAL_LLD_SELECT_SPI_V2)
+	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
+	.ssport = NULL,
+	.sspad = 0,
+	.cr1 = SPI_BaudRatePrescaler_8,
+	.cr2 = 0
 };
 
 #endif /* HAL_USE_SPI */
