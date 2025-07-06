@@ -258,6 +258,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	efitimeus_t nowUs = getTimeNowUs();
 
 	notIdling = phase != IIdleController::Phase::Idling;
+  // todo:
+  useClosedLoop = !notIdling;
+
 	if (notIdling) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
@@ -378,9 +381,8 @@ float IdleController::getIdlePosition(float rpm) {
 			// Force closed loop operation for modeled flow
 			auto idleMode = useModeledFlow ? IM_AUTO : engineConfiguration->idleMode;
 
-			useClosedLoop = tps.Valid && idleMode == IM_AUTO;
 			// If TPS is working and automatic mode enabled, add any closed loop correction
-			if (useClosedLoop) {
+			if (tps.Valid && idleMode == IM_AUTO) {
 				if (useModeledFlow && phase != Phase::Idling) {
 					auto idlePid = getIdlePid();
 					idlePid->reset();
