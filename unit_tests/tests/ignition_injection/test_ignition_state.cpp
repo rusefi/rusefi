@@ -155,3 +155,37 @@ TEST(ignition_state, getRunningAdvanceTractionSparkSkip) {
   getRunningAdvance(rpm, load);
   EXPECT_NEAR(50, engine->engineState.tractionControlSparkSkip, EPS2D);
 }
+
+TEST(ignition_state, tsAdvanceIndicators) {
+  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+  const float rpm = 900;
+  const float load = 30;
+  setWholeTimingTable(10);
+  setArrayValues(config->idleAdvance, 5);
+
+  MockIdle idler;
+  engine->engineModules.get<IdleController>().set(&idler);
+
+  Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+
+  engineConfiguration->useSeparateAdvanceForIdle = true;
+  engineConfiguration->idlePidDeactivationTpsThreshold = 2;
+
+  idler.isIdling = true;
+  EXPECT_TRUE(engine->module<IdleController>()->isIdlingOrTaper());
+
+  // 0% of idle threshold -> idle table
+  Sensor::setMockValue(SensorType::DriverThrottleIntent, 0.001);
+  EXPECT_NEAR(5, getRunningAdvance(rpm, load), EPS2D);
+  EXPECT_EQ(-1, engine->ignitionState.rpmForIgnitionTableDot);
+  EXPECT_EQ(-1, engine->ignitionState.loadForIgnitionTableDot);
+  EXPECT_EQ(rpm, engine->ignitionState.rpmForIgnitionIdleTableDot);
+
+  idler.isIdling = false;
+  // idle threshold -> normal table
+  Sensor::setMockValue(SensorType::DriverThrottleIntent, 2);
+  EXPECT_NEAR(10, getRunningAdvance(rpm, load), EPS2D);
+  EXPECT_EQ(rpm, engine->ignitionState.rpmForIgnitionTableDot);
+  EXPECT_EQ(load, engine->ignitionState.loadForIgnitionTableDot);
+  EXPECT_EQ(-1, engine->ignitionState.rpmForIgnitionIdleTableDot);
+}
