@@ -457,7 +457,11 @@ TEST(idle_v2, RunningToIdleTransition) {
   // back to running mode, should reset all:
   EXPECT_EQ(0, dut.getClosedLoop(ICP::Running, expectedTps.Value, 950, 1100));
   dut.getIdlePid()->postState(engine->outputChannels.idleStatus);
-  
+
+  // first cycle we set shouldResetPid / mustResetPid, now we test the reset:
+  EXPECT_EQ(0, dut.getClosedLoop(ICP::Running, expectedTps.Value, 400, 1100));
+  dut.getIdlePid()->postState(engine->outputChannels.idleStatus);
+
   // FIXME!, this all be 0's
   EXPECT_NEAR(0.4, engine->outputChannels.idleStatus.dTerm, EPS2D);
   EXPECT_NEAR(0.01, engine->outputChannels.idleStatus.iTerm, EPS2D);
