@@ -257,11 +257,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 	efitimeus_t nowUs = getTimeNowUs();
 
-	notIdling = phase != IIdleController::Phase::Idling;
-  // todo:
-  useClosedLoop = !notIdling;
+	isIdleClosedLoop = phase == IIdleController::Phase::Idling;
 
-	if (notIdling) {
+	if (!isIdleClosedLoop) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
 		if (mightResetPid) {
@@ -390,17 +388,18 @@ float IdleController::getIdlePosition(float rpm) {
 				auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm.ClosedLoopTarget);
 				idleClosedLoop = closedLoop;
 				iacPosition += closedLoop;
+			} else {
+			  isIdleClosedLoop = false;
 			}
 
 			iacPosition = clampPercentValue(iacPosition);
 
+// todo: while is below disabled for unit tests?
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
-		isIdleClosedLoop = phase == Phase::Idling;
 
-		if (useModeledFlow || idleMode == IM_AUTO) {
 			// see also tsOutputChannels->idlePosition
 			getIdlePid()->postState(engine->outputChannels.idleStatus);
-		}
+
 
 		extern StepperMotor iacMotor;
 		engine->outputChannels.idleStepperTargetPosition = iacMotor.getTargetPosition();
