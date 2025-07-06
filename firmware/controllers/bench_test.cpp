@@ -599,7 +599,7 @@ PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
 /**
  * for example to bench test injector 1
  * 0x77000C 0x66 0x00 ?? ?? ?? ??
- * 0x77000C 0x66 0x00 0x00 0x14 0x00 0x09 start/stop engine
+ * 0x77000C 0x66 0x00 0x14 0x00 0x09 0x00 start/stop engine
  *
  * See also more complicated ISO-TP CANBus wrapper of complete TS protocol
  */
