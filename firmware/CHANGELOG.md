@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - LUA_USER_HEAP is no longer used
  - official binaries use gcc14
  - Jeep EVA 36-2-2 trigger pattern
+ - migration to ChibiOS 21.11
 
 ## June 2025 "Day 1210"
 
