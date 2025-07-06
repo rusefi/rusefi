@@ -23,6 +23,8 @@ float dwellVoltageCorrection;Ign: Dwell voltage correction
 bit luaIgnitionSkip;Ign: Lua Spark Skip
 
     int16_t autoscale trailingSparkAngle;Ign: Trailing spark deg;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
-
+    int16_t rpmForIgnitionTableDot;
+    int16_t rpmForIgnitionIdleTableDot;
+    float loadForIgnitionTableDot;
 end_struct
 

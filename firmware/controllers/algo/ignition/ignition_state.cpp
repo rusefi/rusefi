@@ -99,6 +99,19 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	}
 #endif
 
+#if EFI_IDLE_CONTROL
+	// reset ignition table dot, see #8198
+	if(engineConfiguration->useSeparateAdvanceForIdle && engine->module<IdleController>()->isIdlingOrTaper()){
+		engine->ignitionState.rpmForIgnitionIdleTableDot = rpm;
+		engine->ignitionState.rpmForIgnitionTableDot = -1;
+		engine->ignitionState.loadForIgnitionTableDot = -1;
+	} else {
+		engine->ignitionState.rpmForIgnitionIdleTableDot = -1;
+		engine->ignitionState.rpmForIgnitionTableDot = rpm;
+		engine->ignitionState.loadForIgnitionTableDot = engineLoad;
+	}
+#endif
+
 #if EFI_LAUNCH_CONTROL
 	if (engineConfiguration->launchControlEnabled && engineConfiguration->enableLaunchRetard) {
 		const float launchAngle = engineConfiguration->launchTimingRetard;
