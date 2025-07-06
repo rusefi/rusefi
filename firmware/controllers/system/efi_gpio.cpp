@@ -799,6 +799,8 @@ void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode
 }
 
 void OutputPin::deInit() {
+	efiPrintf("unregistering %s", hwPortname(brainPin));
+
 	// Unregister under lock - we don't want other threads mucking with the pin while we're trying to turn it off
 	chibios_rt::CriticalSectionLocker csl;
 
@@ -810,8 +812,6 @@ void OutputPin::deInit() {
 #if (BOARD_EXT_GPIOCHIPS > 0)
 	ext = false;
 #endif // (BOARD_EXT_GPIOCHIPS > 0)
-
-	efiPrintf("unregistering %s", hwPortname(brainPin));
 
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	efiSetPadUnused(brainPin);
