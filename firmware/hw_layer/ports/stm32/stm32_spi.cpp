@@ -124,8 +124,8 @@ void turnOnSpi(spi_device_e device) {
 				engineConfiguration->spi6MosiMode,
 				engineConfiguration->spi6MisoMode);
 #else
-		criticalError("SPI5 not available in this binary");
-#endif /* STM32_SPI_USE_SPI5 */
+		criticalError("SPI6 not available in this binary");
+#endif /* STM32_SPI_USE_SPI6 */
 	}
 }
 
