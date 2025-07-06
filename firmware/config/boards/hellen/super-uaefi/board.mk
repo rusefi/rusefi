@@ -29,6 +29,9 @@ DDEFS += -DEFI_SENT_SUPPORT=TRUE
 
 ONBOARD_MEMS_TYPE=LIS2DH12
 
+# this one is questionable TODO dron
+include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
+
 include $(BOARDS_DIR)/hellen/hellen-common100.mk
 
 
