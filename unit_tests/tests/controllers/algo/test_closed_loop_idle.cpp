@@ -262,8 +262,8 @@ TEST(LongTermIdleTrim, update) {
     engine->m_ltit.loadLtitFromConfig();
     engine->m_ltit.onIgnitionStateChanged(true);
 
-    // idle controller useClosedLoop
-	engine->engineModules.get<IdleController>()->useClosedLoop = true;
+    // idle controller isIdleClosedLoop
+	engine->engineModules.get<IdleController>()->isIdleClosedLoop = true;
 
     advanceTimeUs(MS2US(2500));
    	engine->m_ltit.update(mocked_rpm, mocked_temp, false, false, false, 4.5);

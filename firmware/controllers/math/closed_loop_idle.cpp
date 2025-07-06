@@ -149,8 +149,8 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         return;
     }
 
-    if (!idleController->useClosedLoop) {
-        return; // PID não está ativo, não há integrador válido
+    if (!idleController->isIdleClosedLoop) {
+        return;
     }
 
     // Main table learning (now allowed even with AC/Fan active)
