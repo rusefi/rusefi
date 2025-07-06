@@ -195,13 +195,25 @@ struct ignition_state_s {
 	 */
 	scaled_channel<int16_t, 100, 1> trailingSparkAngle = (int16_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 46
 	 */
-	uint8_t alignmentFill_at_46[2] = {};
+	int16_t rpmForIgnitionTableDot = (int16_t)0;
+	/**
+	 * offset 48
+	 */
+	int16_t rpmForIgnitionIdleTableDot = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 50
+	 */
+	uint8_t alignmentFill_at_50[2] = {};
+	/**
+	 * offset 52
+	 */
+	float loadForIgnitionTableDot = (float)0;
 };
-static_assert(sizeof(ignition_state_s) == 48);
+static_assert(sizeof(ignition_state_s) == 56);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition/ignition_state.txt

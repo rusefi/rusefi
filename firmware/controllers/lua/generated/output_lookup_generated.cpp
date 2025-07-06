@@ -1005,6 +1005,15 @@ float getOutputValueByName(const char *name) {
 // trailingSparkAngle
 		case 274318471:
 			return engine->ignitionState.trailingSparkAngle;
+// rpmForIgnitionTableDot
+		case 1700636875:
+			return engine->ignitionState.rpmForIgnitionTableDot;
+// rpmForIgnitionIdleTableDot
+		case -80687031:
+			return engine->ignitionState.rpmForIgnitionIdleTableDot;
+// loadForIgnitionTableDot
+		case 2031242236:
+			return engine->ignitionState.loadForIgnitionTableDot;
 // m_knockLevel
 		case -1571781441:
 			return engine->module<KnockController>()->m_knockLevel;
