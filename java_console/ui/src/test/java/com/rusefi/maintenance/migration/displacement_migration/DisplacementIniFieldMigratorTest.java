@@ -1,23 +1,16 @@
 package com.rusefi.maintenance.migration.displacement_migration;
 
-import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
-import com.rusefi.maintenance.TestCallbacks;
 import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
-import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-import java.util.Optional;
-
 import static com.rusefi.maintenance.migration.DisplacementIniFieldMigrator.DISPLACEMENT_FIELD_NAME;
+import static com.rusefi.maintenance.migration.TestTuneMigrationContextFactory.createTestMigrationContext;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class DisplacementIniFieldMigratorTest {
     private static final IniField TEST_DISPLACEMENT_INI_FIELD_IN_LITERS = new ScalarIniField(
@@ -121,28 +114,5 @@ public class DisplacementIniFieldMigratorTest {
 
         final Constant migratedDisplacementValue = testContext.getMigratedConstants().get(DISPLACEMENT_FIELD_NAME);
         assertNull(migratedDisplacementValue);
-    }
-
-    public static TestTuneMigrationContext createTestMigrationContext(
-        final Constant prevConst,
-        final IniField prevIniField,
-        final Constant updatedConst,
-        final IniField updatedIniField
-    ) {
-        final IniFileModelImpl prevIniFile = mock(IniFileModelImpl.class);
-        when(prevIniFile.findIniField(prevIniField.getName())).thenReturn(Optional.of(prevIniField));
-        when(prevIniFile.getAllIniFields()).thenReturn(Map.of(prevIniField.getName(), prevIniField));
-
-        final Msq prevMsq = mock(Msq.class);
-        when(prevMsq.getConstantsAsMap()).thenReturn(Map.of(prevConst.getName(), prevConst));
-
-        final IniFileModelImpl updatedIniFile = mock(IniFileModelImpl.class);
-        when(updatedIniFile.findIniField(updatedIniField.getName())).thenReturn(Optional.of(updatedIniField));
-        when(updatedIniFile.getAllIniFields()).thenReturn(Map.of(updatedIniField.getName(), updatedIniField));
-
-        final Msq updatedMsq = mock(Msq.class);
-        when(updatedMsq.getConstantsAsMap()).thenReturn(Map.of(updatedConst.getName(), updatedConst));
-
-        return new TestTuneMigrationContext(prevMsq, prevIniFile, updatedMsq, updatedIniFile, new TestCallbacks());
     }
 }
