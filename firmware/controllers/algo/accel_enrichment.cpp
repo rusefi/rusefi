@@ -24,7 +24,6 @@
 #include "pch.h"
 #include "accel_enrichment.h"
 
-static tps_tps_Map3D_t tpsTpsMap{"tps"};
 
 // on this level we do not distinguish between multiplier and 'ms adder' modes
 float TpsAccelEnrichment::getTpsEnrichment() {
@@ -40,7 +39,11 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 	}
 
 	if (isAboveAccelThreshold) {
-		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
+    valueFromTable = interpolate3d(config->tpsTpsAccelTable,
+      config->tpsTpsAccelToRpmBins, tpsTo,
+      config->tpsTpsAccelFromRpmBins, tpsFrom
+    );
+
 		extraFuel = valueFromTable;
 		m_timeSinceAccel.reset();
 	} else if (isBelowDecelThreshold) {
@@ -200,7 +203,6 @@ float TpsAccelEnrichment::getTimeSinceAcell() const {
 }
 
 void initAccelEnrichment() {
-	tpsTpsMap.initTable(config->tpsTpsAccelTable, config->tpsTpsAccelToRpmBins, config->tpsTpsAccelFromRpmBins);
 
 	engine->module<TpsAccelEnrichment>()->onConfigurationChange(nullptr);
 }
