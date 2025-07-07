@@ -26,6 +26,8 @@ static chibios_rt::Mailbox<CanFrameData*, canFrameCount> freeBuffers;
 // CAN frame buffers that are waiting to be processed by the lua thread
 static chibios_rt::Mailbox<CanFrameData*, canFrameCount> filledBuffers;
 
+static size_t dropRxCount = 0;
+
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	auto filter = getFilterForId(busIndex, CAN_ID(frame));
 
@@ -45,7 +47,7 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 
 	if (msg != MSG_OK) {
 		// all buffers are already in use, this frame will be dropped!
-		// TODO: warn the user
+		dropRxCount++;
 		return;
 	}
 
@@ -173,6 +175,11 @@ void initLuaCanRx() {
 	for (size_t i = 0; i < canFrameCount; i++) {
 		freeBuffers.post(&canFrames[i], TIME_INFINITE);
 	}
+}
+
+size_t getLuaCanRxDropped()
+{
+	return dropRxCount;
 }
 
 #endif // EFI_CAN_SUPPORT
