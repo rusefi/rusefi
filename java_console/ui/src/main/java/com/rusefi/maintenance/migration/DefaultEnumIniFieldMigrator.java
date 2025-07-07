@@ -25,13 +25,6 @@ public enum DefaultEnumIniFieldMigrator {
                 prevField.getType(),
                 newField.getType()
             ));
-        } else if (!Objects.equals(prevField.getBitSize0(), newField.getBitSize0())) {
-            callbacks.logLine(String.format(
-                "WARNING! Field `%s` cannot be migrated because bit size 0 is updated: `%s` -> `%s`",
-                prevField.getName(),
-                prevField.getBitSize0(),
-                newField.getBitSize0()
-            ));
         } else {
             final EnumIniField.EnumKeyValueMap newFieldKeyValues = newField.getEnums();
             if (newFieldKeyValues.indexOf(prevValue) == -1) {
