@@ -51,7 +51,7 @@ static int lua_vin(lua_State* l) {
 		lua_pushnil(l);
 	} else {
 		char value = engineConfiguration->vinNumber[zeroBasedCharIndex];
-		lua_pushnumber(l, value);
+		lua_pushinteger(l, value);
 	}
 	return 1;
 }
@@ -65,7 +65,7 @@ static int lua_readpin(lua_State* l) {
 		lua_pushnil(l);
 	} else {
 		int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
-		lua_pushnumber(l, physicalValue);
+		lua_pushinteger(l, physicalValue);
 	}
 #endif
 	return 1;
@@ -160,8 +160,9 @@ uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size)
 		if (result > size) {
 			luaL_error(l, "Input array longer than buffer");
 		}
-
-		data[result - 1] = val;
+		else {
+			data[result - 1] = val;
+		}
 	}
 	return result;
 }
@@ -736,7 +737,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	});
     // time since console or TunerStudio
 	lua_register(lState, "secondsSinceTsActivity", [](lua_State* l) {
-		lua_pushnumber(l, getSecondsSinceChannelsRequest());
+		lua_pushinteger(l, getSecondsSinceChannelsRequest());
 		return 1;
 	});
 
@@ -761,7 +762,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 			  luaL_error(l, "Invalid button index: %d", humanIndex);
 			  return 0;
 			}
-			lua_pushnumber(l, luaCommandCounters[humanIndex - 1]);
+			lua_pushinteger(l, luaCommandCounters[humanIndex - 1]);
 			return 1;
 	});
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
@@ -781,8 +782,8 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 			uint16_t sig1;
 			auto humanIndex = luaL_checkinteger(l, 1);
 			/*auto ret = */getSentValues(static_cast<SentInput>(humanIndex), &sig0, &sig1);
-			lua_pushnumber(l, sig0);
-			lua_pushnumber(l, sig1);
+			lua_pushinteger(l, sig0);
+			lua_pushinteger(l, sig1);
 			return 2;
 	});
 #endif // EFI_SENT_SUPPORT
@@ -845,7 +846,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 #if EFI_CAN_SUPPORT
 	lua_register(lState, "getCanRxDropped", [](lua_State* l) {
 	  auto count = getLuaCanRxDropped();
-    lua_pushnumber(l, count);
+    lua_pushinteger(l, count);
 		return 1;
 	});
 #endif // EFI_CAN_SUPPORT
@@ -857,9 +858,9 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	lua_register(lState, "getCanBaudRate", [](lua_State* l) {
 	  auto index = luaL_checkinteger(l, 1);
 	  if (index == 1) {
-	    lua_pushnumber(l, engineConfiguration->canBaudRate);
+	    lua_pushinteger(l, engineConfiguration->canBaudRate);
 	  } else {
-	    lua_pushnumber(l, engineConfiguration->can2BaudRate);
+	    lua_pushinteger(l, engineConfiguration->can2BaudRate);
 	  }
 		return 1;
 	});
@@ -898,7 +899,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		auto trimLength = luaL_checkinteger(l, 2);
 		int crc = crc8(data, minI(length, trimLength));
 
-		lua_pushnumber(l, crc);
+		lua_pushinteger(l, crc);
 		return 1;
 	});
 
@@ -1050,7 +1051,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 			// spinning-up or cranking
 			luaStateCode = 1;
 		}
-		lua_pushnumber(l, luaStateCode);
+		lua_pushinteger(l, luaStateCode);
 		return 1;
 	});
 #endif //EFI_SHAFT_POSITION_INPUT
@@ -1076,7 +1077,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	});
 
 	lua_register(lState, "getGlobalConfigurationVersion", [](lua_State* l) {
-		lua_pushnumber(l, engine->getGlobalConfigurationVersion());
+		lua_pushinteger(l, engine->getGlobalConfigurationVersion());
 		return 1;
 	});
 
@@ -1137,7 +1138,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	});
 	lua_register(lState, "getTimeSinceTriggerEventMs", [](lua_State* l) {
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
-		lua_pushnumber(l, result);
+		lua_pushinteger(l, result);
 		return 1;
 	});
 #endif // EFI_SHAFT_POSITION_INPUT
@@ -1157,7 +1158,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
   /* todo: hasCriticalReportFile method #7291
 	lua_register(lState, "hasCriticalReportFile", [](lua_State*) {
 		// todo: actual method to scan SD card for error report files
-		lua_pushnumber(l, hasCriticalReportFile());
+		lua_pushinteger(l, hasCriticalReportFile());
 	  return 1;
   }
 */
