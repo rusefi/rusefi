@@ -143,6 +143,8 @@ static void doInteractive(LuaHandle& ls) {
 	lua_settop(ls, 0);
 }
 
+static uint32_t maxLuaDuration{};
+
 static void invokeTick(LuaHandle& ls) {
 	ScopePerf perf(PE::LuaTickFunction);
 
@@ -153,8 +155,16 @@ static void invokeTick(LuaHandle& ls) {
 		lua_settop(ls, 0);
 		return;
 	}
+#if EFI_PROD_CODE
+  uint32_t before = port_rt_get_counter_value();
+#endif // EFI_PROD_CODE
 
 	int status = lua_pcall(ls, 0, 0, 0);
+
+#if EFI_PROD_CODE
+  uint32_t duration = port_rt_get_counter_value() - before;
+  maxLuaDuration = std::max(maxLuaDuration, duration);
+#endif // EFI_PROD_CODE
 
 	if (0 != status) {
 		// error calling hook function
@@ -297,6 +307,7 @@ void startLua() {
 	});
 
 	addConsoleAction("luamemory", [](){
+	  efiPrintf("maxLuaDuration %lu", maxLuaDuration);
 	  efiPrintf("rx total/recent %d %d", totalRxCount,
 	    recentRxCount);
 	  efiPrintf("luaCycle %luus including luaRxTime %dus", NT2US(engine->outputChannels.luaLastCycleDuration),
