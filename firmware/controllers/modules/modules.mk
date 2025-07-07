@@ -9,3 +9,4 @@ include $(PROJECT_DIR)/controllers/modules/trip_odometer/trip_odometer.mk
 include $(PROJECT_DIR)/controllers/modules/fan_control/fan_control.mk
 include $(PROJECT_DIR)/controllers/modules/map_averaging/map_averaging.mk
 include $(PROJECT_DIR)/controllers/modules/ethernet_console/ethernet_console.mk
+include $(PROJECT_DIR)/controllers/modules/example_module/example_module.mk

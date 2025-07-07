@@ -194,7 +194,7 @@ Usages:
   - name: live_data_example
     cppFileName: live_data_example
     java: live_data_example.java
-    folder: controllers/math
+    folder: controllers/modules/example_module
 
   - name: idle_state
     cppFileName: idle_thread
