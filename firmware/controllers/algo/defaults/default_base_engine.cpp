@@ -163,7 +163,12 @@ void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->displacement = 2;
 	engineConfiguration->knockDetectionUseDoubleFrequency = true;
+#if MAX_CYLINDER_COUNT >= 4
 	setInline4();
+#else
+  // todo: invoke more complete one cylinder default?
+  engineConfiguration->cylindersCount = 1;
+#endif
 
   for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
     // one knock sensor by default. See also 'setLeftRightBanksNeedBetterName()'
