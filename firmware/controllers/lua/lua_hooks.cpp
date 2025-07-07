@@ -842,6 +842,11 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	});
 // high-performance CANbus should be done on F7+, let's preserve couple of priceless bytes on F4
 #if !defined(STM32F4)
+	lua_register(lState, "getCanRxDropped", [](lua_State* l) {
+	  auto count = getLuaCanRxDropped();
+    lua_pushnumber(l, count);
+		return 1;
+	});
 	lua_register(lState, "disableExtendedCanBroadcast", [](lua_State* l) {
 		// that's about global_can_data
 		engineConfiguration->enableExtendedCanBroadcast = false;

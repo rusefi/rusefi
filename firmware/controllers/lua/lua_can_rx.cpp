@@ -177,8 +177,7 @@ void initLuaCanRx() {
 	}
 }
 
-size_t getLuaCanRxDropped()
-{
+size_t getLuaCanRxDropped() {
 	return dropRxCount;
 }
 
