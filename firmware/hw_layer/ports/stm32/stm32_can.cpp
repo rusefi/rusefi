@@ -288,8 +288,7 @@ const CANConfig * findCanConfig(can_baudrate_e rate) {
    }
 }
 
-void canHwInfo(CANDriver* cand)
-{
+void canHwInfo(CANDriver* cand) {
    if (cand == NULL)
       return;
 
