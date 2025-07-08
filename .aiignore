@@ -1,6 +1,10 @@
+CLion/jetbrains/junie/etc uses .aiignore file
+Gemini/ Gemini plugin for CLion uses .aiexclude file
+
 firmware/ChibiOS/
 firmware/ChibiOS-Contrib/
-hardware/
+firmware/libfirmware/
+firmware/tunerstudio/generated/hardware/
 state/
 logs/
 doxygen/
@@ -9,5 +13,3 @@ misc/
 simulator/generated/
 simulator/build/
 **/.dep/
-firmware/libfirmware/
-firmware/tunerstudio/generated/
