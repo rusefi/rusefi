@@ -64,6 +64,21 @@
 #define RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL    STM32_RTCSEL_LSI
 
 /*
+ * General settings.
+ */
+#define STM32_NO_INIT                       FALSE
+
+/*
+ * Memory attributes settings.
+ */
+#ifndef STM32_NOCACHE_ENABLE
+#define STM32_NOCACHE_ENABLE                FALSE
+#endif
+#define STM32_NOCACHE_MPU_REGION            MPU_REGION_6
+#define STM32_NOCACHE_RBAR                  SRAM2_BASE
+#define STM32_NOCACHE_RASR                  MPU_RASR_SIZE_16K
+
+/*
  * HAL driver system settings.
  */
 #define STM32_NO_INIT                       FALSE
@@ -123,10 +138,6 @@
 #define STM32_CECSEL                        STM32_CECSEL_LSE
 #define STM32_CK48MSEL                      STM32_CK48MSEL_PLL
 #define STM32_SDMMCSEL                      STM32_SDMMCSEL_PLL48CLK
-
-#ifndef STM32_SRAM2_NOCACHE
-#define STM32_SRAM2_NOCACHE                 TRUE
-#endif
 
 /*
  * GPT driver system settings.
