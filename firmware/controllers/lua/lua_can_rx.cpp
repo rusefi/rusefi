@@ -19,12 +19,15 @@ struct CanFrameData {
 	CANRxFrame Frame;
 };
 
-static constexpr size_t canFrameCount = 32;
-static CanFrameData canFrames[canFrameCount];
+#ifndef LUA_canFrameCount
+#define LUA_canFrameCount 32
+#endif
+
+static CanFrameData canFrames[LUA_canFrameCount];
 // CAN frame buffers that are not in use
-static chibios_rt::Mailbox<CanFrameData*, canFrameCount> freeBuffers;
+static chibios_rt::Mailbox<CanFrameData*, LUA_canFrameCount> freeBuffers;
 // CAN frame buffers that are waiting to be processed by the lua thread
-static chibios_rt::Mailbox<CanFrameData*, canFrameCount> filledBuffers;
+static chibios_rt::Mailbox<CanFrameData*, LUA_canFrameCount> filledBuffers;
 
 static size_t dropRxCount = 0;
 
@@ -172,7 +175,7 @@ int doLuaCanRx(LuaHandle& ls) {
 
 void initLuaCanRx() {
 	// Push all CAN frames in to the free buffer
-	for (size_t i = 0; i < canFrameCount; i++) {
+	for (size_t i = 0; i < LUA_canFrameCount; i++) {
 		freeBuffers.post(&canFrames[i], TIME_INFINITE);
 	}
 }
