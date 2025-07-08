@@ -72,7 +72,7 @@
  * Memory attributes settings.
  */
 #ifndef STM32_NOCACHE_ENABLE
-#define STM32_NOCACHE_ENABLE                FALSE
+#define STM32_NOCACHE_ENABLE                TRUE
 #endif
 #define STM32_NOCACHE_MPU_REGION            MPU_REGION_6
 #define STM32_NOCACHE_RBAR                  SRAM2_BASE
