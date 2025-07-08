@@ -2032,7 +2032,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.07.08.hellen121vag.3736484191"
+#define TS_SIGNATURE "rusEFI master.2025.07.09.hellen121vag.3736484191"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
