@@ -1,0 +1,13 @@
+firmware/ChibiOS/
+firmware/ChibiOS-Contrib/
+hardware/
+state/
+logs/
+doxygen/
+android/
+misc/
+simulator/generated/
+simulator/build/
+**/.dep/
+firmware/libfirmware/
+firmware/tunerstudio/generated/
