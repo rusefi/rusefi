@@ -67,11 +67,7 @@ CanTxMessage::~CanTxMessage() {
 	printf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x \n",
 		   getCanCategory(category),
 		   busIndex + 1,
-#ifndef STM32H7XX
-		   (unsigned int)((m_frame.IDE == CAN_IDE_EXT) ? CAN_EID(m_frame) : CAN_SID(m_frame)),
-#else
-		   (unsigned int)(m_frame.common.XTD ? CAN_EID(m_frame) : CAN_SID(m_frame)),
-#endif
+		   (unsigned int)CAN_ID(m_frame),
 		   m_frame.DLC,
 		   m_frame.data8[0], m_frame.data8[1],
 		   m_frame.data8[2], m_frame.data8[3],
@@ -90,12 +86,7 @@ CanTxMessage::~CanTxMessage() {
 	auto device = s_devices[busIndex];
 	if (!device) {
 		criticalError("Send: CAN%d device not configured %s %x", busIndex + 1, getCanCategory(category),
-#ifndef STM32H7XX
-		   (unsigned int)((m_frame.IDE == CAN_IDE_EXT) ? CAN_EID(m_frame) : CAN_SID(m_frame))
-#else
-		   (unsigned int)(m_frame.common.XTD ? CAN_EID(m_frame) : CAN_SID(m_frame))
-#endif
-			);
+		   (unsigned int)CAN_ID(m_frame));
 		return;
 	}
 
@@ -106,11 +97,7 @@ CanTxMessage::~CanTxMessage() {
 		efiPrintf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
 				getCanCategory(category),
 				busIndex + 1,
-#ifndef STM32H7XX
-				(unsigned int)((m_frame.IDE == CAN_IDE_EXT) ? CAN_EID(m_frame) : CAN_SID(m_frame)),
-#else
-				(unsigned int)(m_frame.common.XTD ? CAN_EID(m_frame) : CAN_SID(m_frame)),
-#endif
+				(unsigned int)CAN_ID(m_frame),
 				m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
 				m_frame.data8[2], m_frame.data8[3],
