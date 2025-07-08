@@ -91,7 +91,7 @@ void TriggerDecoderBase::setTriggerErrorState(int errorIncrement) {
 }
 
 void TriggerDecoderBase::resetCurrentCycleState() {
-	memset(currentCycle.eventCount, 0, sizeof(currentCycle.eventCount));
+	setArrayValues(currentCycle.eventCount, 0);
 	currentCycle.current_index = 0;
 }
 
