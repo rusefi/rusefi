@@ -19,7 +19,9 @@ typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float, float> tps
 
 class TpsAccelEnrichment : public tps_accel_state_s, public EngineModule {
 	Timer m_timeSinceAccel;
-
+#ifdef EFI_UNIT_TEST
+public:
+#endif
 	// This flag is set by onNewValue() when an accel event is detected
 	// and cleared by isAccelEventTriggered() after being read.
 	bool m_accelEventJustOccurred = false;
