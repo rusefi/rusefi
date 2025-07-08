@@ -134,7 +134,7 @@ private:
 };
 
 typedef Map3D<VE_RPM_COUNT, VE_LOAD_COUNT, uint16_t, uint16_t, uint16_t> ve_Map3D_t;
-typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t, uint8_t> pedal2tps_t;
+typedef Map3D<PEDAL_TO_TPS_RPM_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t, uint8_t> pedal2tps_t;
 typedef Map3D<MAP_EST_RPM_COUNT, MAP_EST_LOAD_COUNT, uint16_t, uint16_t, uint16_t> mapEstimate_Map3D_t;
 
 /**

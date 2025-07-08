@@ -29,3 +29,9 @@
 ! asserting that rectangular configuration works
 #define INJ_PHASE_LOAD_COUNT 16
 #define INJ_PHASE_RPM_COUNT 8
+
+#define BOOST_RPM_COUNT 8
+#define BOOST_LOAD_COUNT 4
+
+#define PEDAL_TO_TPS_SIZE 10
+#define PEDAL_TO_TPS_RPM_SIZE 6
