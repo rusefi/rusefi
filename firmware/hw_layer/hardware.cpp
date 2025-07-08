@@ -404,6 +404,13 @@ void setBor(int borValue) {
 }
 #endif /* EFI_BOR_LEVEL */
 
+// Weak link a stub so that every board doesn't have to implement this function
+// Called before configuration is loaded
+PUBLIC_API_WEAK void boardInitHardwareEarly() { }
+
+PUBLIC_API_WEAK void boardInitHardware() { }
+PUBLIC_API_WEAK void boardInitHardwareExtra() { }
+
 // This function initializes hardware that can do so before configuration is loaded
 void initHardwareNoConfig() {
 	efiAssertVoid(ObdCode::CUSTOM_IH_STACK, hasLotsOfRemainingStack(), "init h");
@@ -412,6 +419,10 @@ void initHardwareNoConfig() {
 
 #if EFI_PROD_CODE
 	initPinRepository();
+#endif
+
+#if EFI_PROD_CODE
+	boardInitHardwareEarly();
 #endif
 
 #if EFI_HISTOGRAMS
@@ -500,10 +511,6 @@ void startHardware() {
 	startCanPins();
 #endif /* EFI_CAN_SUPPORT */
 }
-
-// Weak link a stub so that every board doesn't have to implement this function
-PUBLIC_API_WEAK void boardInitHardware() { }
-PUBLIC_API_WEAK void boardInitHardwareExtra() { }
 
 PUBLIC_API_WEAK void setPinConfigurationOverrides() { }
 
