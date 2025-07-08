@@ -1224,15 +1224,15 @@ float getOutputValueByName(const char *name) {
 		case 119157463:
 			return engine->module<BoostController>()->luaTargetAdd;
 #endif
-// boostOutput
-#if EFI_BOOST_CONTROL
-		case 1239062717:
-			return engine->module<BoostController>()->boostOutput;
-#endif
 // luaTargetMult
 #if EFI_BOOST_CONTROL
 		case -362320880:
 			return engine->module<BoostController>()->luaTargetMult;
+#endif
+// boostControlTarget
+#if EFI_BOOST_CONTROL
+		case -1712045196:
+			return engine->module<BoostController>()->boostControlTarget;
 #endif
 // openLoopPart
 #if EFI_BOOST_CONTROL
@@ -1249,10 +1249,10 @@ float getOutputValueByName(const char *name) {
 		case -707712709:
 			return engine->module<BoostController>()->boostControllerClosedLoopPart;
 #endif
-// boostControlTarget
+// boostOutput
 #if EFI_BOOST_CONTROL
-		case -1712045196:
-			return engine->module<BoostController>()->boostControlTarget;
+		case 1239062717:
+			return engine->module<BoostController>()->boostOutput;
 #endif
 // acButtonState
 #if FULL_SD_LOGS

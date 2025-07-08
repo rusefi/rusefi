@@ -35,6 +35,7 @@ public enum live_data_e {
 	LDS_trigger_state_primary,
 	LDS_wall_fuel_state,
 	LDS_closed_loop_idle,
+	LDS_live_data_example,
 	LDS_idle_state,
 	LDS_electronic_throttle0,
 	LDS_electronic_throttle1,
