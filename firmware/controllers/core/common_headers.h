@@ -48,4 +48,6 @@
 #define hasLotsOfRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
 
 // this macro helps locate all board Public API methods
+// DEPRECATED that's a bad pattern, many usages should be listeners, many usages should be something else - as long as
+// explicit static linking!
 #define PUBLIC_API_WEAK __attribute__((weak))

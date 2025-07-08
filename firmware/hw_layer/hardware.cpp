@@ -408,6 +408,7 @@ void setBor(int borValue) {
 // Called before configuration is loaded
 PUBLIC_API_WEAK void boardInitHardwareEarly() { }
 
+// todo: actually PUBLIC_API_WEAK is too fragile, TODO replace with callback/listener?
 PUBLIC_API_WEAK void boardInitHardware() { }
 PUBLIC_API_WEAK void boardInitHardwareExtra() { }
 
