@@ -32,7 +32,7 @@ jobs:
         git submodule update --init --depth=1 java_console/peak-can-basic
 
     - name: Set up Cygwin
-      uses: cygwin/cygwin-install-action@v5
+      uses: cygwin/cygwin-install-action@v6
 
     - name: Print bash version
       run: bash --version
