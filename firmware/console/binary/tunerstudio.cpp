@@ -180,6 +180,8 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 		return (uint8_t *)ltftGetTsPage() + offset;
 #endif
 	default:
+// technical dept: TS seems to try to read the 3 pages sequentially, does not look like we properly handle 'EFI_TS_SCATTER=FALSE'
+		criticalError("unhandled getWorkingPageAddr");
 		return nullptr;
 	}
 }
