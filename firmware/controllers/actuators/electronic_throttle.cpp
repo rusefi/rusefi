@@ -1001,7 +1001,7 @@ void setDefaultEtbParameters() {
 	setRpmTableBin(config->pedalToTpsRpmBins);
 
 	for (int pedalIndex = 0;pedalIndex<PEDAL_TO_TPS_SIZE;pedalIndex++) {
-		for (int rpmIndex = 0;rpmIndex<PEDAL_TO_TPS_SIZE;rpmIndex++) {
+		for (int rpmIndex = 0;rpmIndex<PEDAL_TO_TPS_RPM_SIZE;rpmIndex++) {
 			config->pedalToTpsTable[pedalIndex][rpmIndex] = config->pedalToTpsPedalBins[pedalIndex];
 		}
 	}
