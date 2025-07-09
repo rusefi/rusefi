@@ -24,6 +24,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "board_overrides.h"
+
 #define CONSOLE_WA_SIZE     THD_WORKING_AREA_SIZE(4096)
 
 bool main_loop_started = false;
@@ -137,12 +139,21 @@ bool verboseMode = true;
 
 static virtual_timer_t exitTimer;
 
+// board override demo:
+static inline void myCustomHello(){
+	efiPrintf("custom board hello from simulator");
+}
+
+void setup_custom_board_overrides(){
+	custom_board_boardSayHello = myCustomHello;
+}
+
 /*------------------------------------------------------------------------*
  * Simulator main.                                                        *
  *------------------------------------------------------------------------*/
 int main(int argc, char** argv) {
 	setbuf(stdout, NULL);
-
+	setup_custom_board_overrides();
 	/*
 	 * System initializations.
 	 * - HAL initialization, this also initializes the configured device drivers
