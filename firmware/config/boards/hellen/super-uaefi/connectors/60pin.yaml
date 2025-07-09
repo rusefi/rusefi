@@ -343,7 +343,7 @@ pins:
 
   - pin: 18B
     class: outputs
-    meta: MM100_MEGA_UAEFI_SPI2_SCK
+    meta: MM100_SPI2_SCK
     ts_name: ___ INJ_8
     function: Injector 8
     color: green

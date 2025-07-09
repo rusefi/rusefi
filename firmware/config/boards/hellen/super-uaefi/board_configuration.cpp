@@ -138,6 +138,10 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_INJ4, // 10B INJ_4
 	Gpio::MM100_INJ5, // 9B INJ_5
 	Gpio::MM100_INJ6, // 8B INJ_6
+	Gpio::MM100_SPI2_CS, // 19B INJ_7
+	Gpio::MM100_SPI2_SCK, // 18B INJ_8
+	Gpio::MM100_INJ7,
+	Gpio::MM100_INJ8,
 /*
 	Gpio::MM100_INJ7, // B7 Low Side output 1
 	Gpio::MM100_IGN8, // B8 Fan Relay Weak Low Side output 2
