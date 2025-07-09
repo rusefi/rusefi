@@ -335,6 +335,16 @@ void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<B
     if (battLagCorr.has_value()) {
         copyTable(engineConfiguration->injector.battLagCorrTable, battLagCorr.value());
     } else {
+        // This whole thing is wrong as you can not access std::optional which was found to be empty.
+        // On top of that this method is called after explicitly setting test config with test curve data
+        // (TEST_PRIMARY_INJECTOR_BATT_LAG_CORR_CURVE) with curve filled by 5.6f
+        // But then it is compared against default config table with very different data from firmware defaults
+        // in file engine_configuration_defaults.h (INJECTOR_BATT_LAG_CURR)
+        // { 4.240f, 2.483f, 1.739f, 1.501f, 1.308f, 1.149f, 0.964f, 0.913f },
+        // { 3.084f, 1.641f, 1.149f, 1.194f, 0.992f, 0.759f, 0.637f, 0.603f },
+        // Seems like it was covered by some std::optional+gtest bug...
+        return;
+
         EXPECT_EQ(
             battLagCorr->size(),
             std::size(engineConfiguration->injector.battLagCorrTable)
@@ -392,6 +402,16 @@ void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::o
             );
         }
     } else {
+        // This whole thing is wrong as you can not access std::optional which was found to be empty.
+        // On top of that this method is called after explicitly setting test config with test curve data
+        // (TEST_SECONDARY_INJECTOR_DEAD_TIME) with curve filled by 7.8f
+        // But then it is compared against default config table with very different data from firmware defaults
+        // in file engine_configuration_defaults.h (INJECTOR_SECONDARY_BATT_LAG_CURR)
+        // { 4.240f, 2.483f, 1.739f, 1.501f, 1.308f, 1.149f, 0.964f, 0.913f },
+        // { 3.084f, 1.641f, 1.149f, 1.194f, 0.992f, 0.759f, 0.637f, 0.603f },
+        // Seems like it was covered by some std::optional+gtest bug...
+        return;
+
         EXPECT_EQ(
             battLagCorr->size(),
             std::size(engineConfiguration->injector.battLagCorrTable)

@@ -19,7 +19,7 @@ class BitLoggerFieldTest : public ::testing::Test {
 
         std::unique_ptr<output_channels_s> m_testOutputChannels;
         std::unique_ptr<LogField> m_logField;
-        std::array<char, 6> m_buffer;
+        std::array<uint8_t, 6> m_buffer{};
     };
 
     void BitLoggerFieldTest::SetUp() {
@@ -42,7 +42,7 @@ class BitLoggerFieldTest : public ::testing::Test {
     }
 
     void BitLoggerFieldTest::checkBitLoggerField(const bool expected, const char* const context) {
-        EXPECT_EQ(1, m_logField->writeData(m_buffer.data(), nullptr)) << context;
+        EXPECT_EQ(1, m_logField->writeData(reinterpret_cast<char*>(m_buffer.data()), nullptr)) << context;
         EXPECT_THAT(m_buffer, ::testing::ElementsAre((expected ? 0x01 : 0x00), 0xAA, 0xAA, 0xAA, 0xAA, 0xAA));
     }
 
