@@ -1,10 +1,30 @@
 #pragma once
 
-#include "efi_scaled_channel.h"
-#include "rusefi_types.h"
 #include <concepts>
+#include <type_traits>
 #include <cstdint>
-#include <cstddef>
+
+// Used in constructors
+#include <rusefi/scaled_channel.h>
+
+// Constexpr writer functions will use it
+#include "buffered_writer.h"
+
+// For MLQ_FIELD_HEADER_SIZE
+#include "generated_lookup_meta.h"
+
+// For unit tests we are manipulating with storage in runtime so consteval is not possible.
+// In prod builds we have engine and configs as global instances so all addresses to read data from
+// must be known compile-time. If consteval fails then some runtime logic made its way into LogField and that moves
+// LogField instance into RAM which is correct from code perspective but incorrect intent-wise and consume code and RAM
+// for no real reason.
+#if defined(EFI_UNIT_TEST) && EFI_UNIT_TEST
+#define LOG_FIELD_CONSTNESS_SPECIFIER_METHODS constexpr
+#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const
+#else
+#define LOG_FIELD_CONSTNESS_SPECIFIER_METHODS consteval
+#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const
+#endif
 
 struct Writer;
 class LogField {
@@ -15,9 +35,9 @@ public:
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(float(TDiv) / TMult)
 		, m_addr(toRead.getFirstByteAddr())
-		, m_type(resolveType<TValue>())
+		, m_type(resolveBuiltInNumberType<TValue>())
 		, m_digits(digits)
-		, m_size(sizeForType(resolveType<TValue>()))
+		, m_size(sizeForType<resolveBuiltInNumberType<TValue>()>())
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
@@ -33,9 +53,9 @@ public:
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(1)
 		, m_addr(&toRead)
-		, m_type(resolveType<TValue>())
+		, m_type(resolveBuiltInNumberType<TValue>())
 		, m_digits(digits)
-		, m_size(sizeForType(resolveType<TValue>()))
+		, m_size(sizeForType<resolveBuiltInNumberType<TValue>()>())
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
@@ -74,10 +94,11 @@ public:
 		S16 = 3,
 		U32 = 4,
 		S32 = 5,
-		U64 = 6,
-		S64 = 7,
-		F32 = 8,
-		F64 = 9
+		S64 = 6,
+		F32 = 7,
+		U64 = 8,
+		F64 = 9,
+		unsupported = static_cast<uint8_t>(-1)
 	};
 
 	constexpr size_t getSize() const {
@@ -102,13 +123,10 @@ public:
 private:
 
 	template<typename T>
-	static constexpr bool always_false = false;
-
-	template<typename T>
-	static constexpr Type resolveType() {
+	static constexpr Type resolveBuiltInNumberType() {
 		using enum Type;
 		using CleanType = std::remove_const_t<T>;
-		constexpr Type result = []() {
+		constexpr auto resolvedType{[](){
 			if      constexpr (std::same_as<CleanType, float>)  { return F32; }
 			else if constexpr (std::same_as<CleanType, double>) { return F64; }
 			else if constexpr (std::is_integral_v<CleanType>) {
@@ -124,19 +142,26 @@ private:
 					else if constexpr (sizeof(CleanType) == 8) { return U64; }
 				}
 			}
-			else { static_assert(always_false<T>, "Unsupported type"); }
-		}();
-		return result;
+			else { return unsupported; }
+		}()};
+		static_assert(resolvedType != unsupported, "Type was not recognized as supported built in numeric type");
+		return resolvedType;
 	}
 
-	static constexpr size_t sizeForType(Type const t) {
-		switch (t) {
-			using enum Type;
-		case U08: case S08: return 1;
-		case U16: case S16: return 2;
-		case U32: case S32: case F32: return 4;
-		case U64: case S64: case F64: return 8;
-		}
+	template<Type t>
+	static constexpr size_t sizeForType() {
+		constexpr auto s{[]{
+			switch (t) {
+				using enum Type;
+				case U08: case S08: return 1;
+				case U16: case S16: return 2;
+				case U32: case S32: case F32: return 4;
+				case U64: case S64: case F64: return 8;
+				default: return 0;
+			}
+		}()};
+		static_assert(s != 0, "Can not resolve type, check enum for new values that were left unhandled");
+		return s;
 	}
 
 	const float m_multiplier;
