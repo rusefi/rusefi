@@ -331,15 +331,13 @@ void TestEngineConfiguration::configureInjectorFlow(const std::optional<float> f
     }
 }
 
+static_assert(std::tuple_size<BattLagCorrTable> {} == sizeof(engineConfiguration->injector.battLagCorrTable) / sizeof(engineConfiguration->injector.battLagCorrTable[0]));
+
 void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     if (battLagCorr.has_value()) {
         copyTable(engineConfiguration->injector.battLagCorrTable, battLagCorr.value());
     } else {
-        EXPECT_EQ(
-            battLagCorr->size(),
-            std::size(engineConfiguration->injector.battLagCorrTable)
-        );
-        for (size_t row = 0; row < battLagCorr->size(); ++row) {
+        for (size_t row = 0; row < std::tuple_size<BattLagCorrTable> {}; ++row) {
             EXPECT_THAT(
                 engineConfiguration->injector.battLagCorrTable[row],
                 testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR[row])
@@ -392,11 +390,7 @@ void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::o
             );
         }
     } else {
-        EXPECT_EQ(
-            battLagCorr->size(),
-            std::size(engineConfiguration->injector.battLagCorrTable)
-        );
-        for (size_t row = 0; row < battLagCorr->size(); ++row) {
+       for (size_t row = 0; row < std::tuple_size<BattLagCorrTable> {}; ++row) {
             EXPECT_THAT(
                 engineConfiguration->injector.battLagCorrTable[row],
                 testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR[row])
