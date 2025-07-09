@@ -1,5 +1,5 @@
 /**
- * @file    accel_enrichment.h
+* @file    accel_enrichment.h
  * @brief   Acceleration enrichment calculator
  *
  * @date Apr 21, 2014
@@ -28,6 +28,9 @@ public:
 	TpsAccelEnrichment();
 
 	void onConfigurationChange(engine_configuration_s const* previousConfig) override;
+
+	// This function returns true ONCE per acceleration event.
+	bool isAccelEventTriggered();
 
 	int getMaxDeltaIndex();
 	float getMaxDelta();

@@ -65,7 +65,7 @@ float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float map
 	if (m_isMapPredictionActive) {
 		float blendFactor = elapsedTime / blendDuration;
 		// Linearly interpolate between the initial predicted and real values
-		effectiveMap = m_initialPredictedMap + (m_initialRealMap - m_initialPredictedMap) * blendFactor;
+		effectiveMap = m_initialPredictedMap - (m_initialPredictedMap - m_initialRealMap) * blendFactor;
 
 		if (mapSensor >= effectiveMap) {
 			m_isMapPredictionActive = false;
