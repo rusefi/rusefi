@@ -35,3 +35,55 @@ Ideal change happens as two commits:
 
 * first we add coverage for _current_ behaviour. In case of a defect we add *green* coverage confirming defect.
 * second step would be change in production code alongside of *change* in coverage.
+
+### Testing 101
+
+**Basic Test Setup**
+```cpp
+TEST(ModuleName, TestDescription) {
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    
+    // Your test logic here
+    ASSERT_EQ(expectedValue, actualValue);
+}
+```
+
+**Mocking Sensor Inputs**
+```cpp
+TEST(SensorModule, TestWithMockedSensor) {
+    EngineTestHelper eth;
+    
+    // Mock sensor reading
+    Sensor::setMockValue(SensorType::Clt, 80.0f);
+    
+    // Test logic using mocked sensor
+    ASSERT_NEAR(80.0f, Sensor::get(SensorType::Clt), 0.1f);
+}
+```
+
+**Testing Time-Based Functions**
+```cpp
+TEST(TimeModule, TestWithTimeAdvance) {
+    EngineTestHelper eth;
+    
+    // Advance virtual time
+    eth.moveTimeForwardUs(1000); // Advance 1ms
+    eth.moveTimeForwardMs(1); // Advance 1ms
+
+    // Test time-dependent behavior
+    // ...
+}
+```
+**Testing with Engine Module Mocks**
+```cpp
+TEST(ModuleInteraction, TestWithMockedModule) {
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+    MockIgnitionController ignController;
+
+    EXPECT_CALL(ignController, getIgnState).WillRepeatedly(Return(true));
+
+    engine->module<IgnitionController>().set(&ignController);
+    EXPECT_TRUE(engine->module<IgnitionController>()->getIgnState());
+}
+```
