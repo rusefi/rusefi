@@ -81,8 +81,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
-	engineConfiguration->globalTriggerAngleOffset = 0;
-
 	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->canTxPin = Gpio::MM100_CAN_TX;

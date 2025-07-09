@@ -113,8 +113,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
 
-	engineConfiguration->globalTriggerAngleOffset = 0;
-
 	engineConfiguration->enableSoftwareKnock = true;
 
 	// Done in setBoardConfigOverrides() -> setHellenCan() ?
