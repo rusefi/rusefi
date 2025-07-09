@@ -27,6 +27,9 @@
 #include "eficonsole.h"
 #include "console_io.h"
 #include "mpu_util.h"
+#include "board_overrides.h"
+
+std::optional<setup_custom_board_overrides_type> custom_board_boardSayHello;
 
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 static void printUid() {
@@ -61,6 +64,7 @@ static void sayHello() {
 #endif
 
   boardSayHello();
+  call_board_override(custom_board_boardSayHello);
 
 #if EFI_PROD_CODE && ENABLE_AUTO_DETECT_HSE
 	extern float hseFrequencyMhz;
