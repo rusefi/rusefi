@@ -165,7 +165,7 @@ int getBoardMetaOutputsCount() {
 }
 
 int getBoardMetaLowSideOutputsCount() {
-  return getBoardMetaOutputsCount() - 6;
+  return getBoardMetaOutputsCount() - 0;
 }
 
 Gpio* getBoardMetaOutputs() {
