@@ -67,6 +67,8 @@ public:
 	{}
 
 	enum class Type : uint8_t {
+	  // NOTE THAT Ordinals are part of logging serialization as described in
+	  // https://www.efianalytics.com/TunerStudio/docs/MLG_Binary_LogFormat_2.0.pdf
 		U08 = 0,
 		S08 = 1,
 		U16 = 2,
