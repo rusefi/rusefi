@@ -522,7 +522,3 @@
 #ifndef EFI_SENT_SUPPORT
 #define EFI_SENT_SUPPORT        FALSE
 #endif
-
-#ifndef EFI_FLASH_WRITE_THREAD
-#define EFI_FLASH_WRITE_THREAD FALSE
-#endif

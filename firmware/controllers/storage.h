@@ -10,15 +10,6 @@
 #define EFI_STORAGE_MFS_EXTERNAL FALSE
 #endif
 
-#ifndef EFI_FLASH_WRITE_THREAD
-#define EFI_FLASH_WRITE_THREAD FALSE
-#endif
-
-// Sanity check
-#if (EFI_STORAGE_MFS_EXTERNAL == TRUE) && (EFI_FLASH_WRITE_THREAD == FALSE)
-	#error EFI_FLASH_WRITE_THREAD should be enabled if MFS is used for external flash
-#endif
-
 // Storage status
 enum class StorageStatus {
 	Ok,

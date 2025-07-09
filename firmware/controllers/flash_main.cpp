@@ -35,7 +35,6 @@ static bool needToWriteConfiguration = false;
  * should be in a different sector of flash since complete flash sectors are erased on write.
  */
 
-#if (EFI_FLASH_WRITE_THREAD == TRUE)
 chibios_rt::Mailbox<msg_t, 16> flashWriterMb;
 
 #if EFI_STORAGE_MFS == TRUE
@@ -67,7 +66,6 @@ static void flashWriteThread(void*) {
 		}
 	}
 }
-#endif // EFI_FLASH_WRITE_THREAD
 
 // Allow saving setting to flash while engine is runnig.
 bool allowFlashWhileRunning() {
@@ -80,23 +78,19 @@ void setNeedToWriteConfiguration() {
 	efiPrintf("Scheduling configuration write");
 	needToWriteConfiguration = true;
 
-#if (EFI_FLASH_WRITE_THREAD == TRUE)
 	if (allowFlashWhileRunning()) {
 		// Signal the flash writer thread to wake up and write at its leisure
 		msg_t id = EFI_SETTINGS_RECORD_ID;
 		flashWriterMb.post(id, TIME_IMMEDIATE);
 	}
-#endif // EFI_FLASH_WRITE_THREAD
 }
 
 void settingsLtftRequestWriteToFlash() {
-#if (EFI_FLASH_WRITE_THREAD == TRUE)
 	if (allowFlashWhileRunning()) {
 		// Signal the flash writer thread to wake up and write at its leisure
 		msg_t id = EFI_LTFT_RECORD_ID;
 		flashWriterMb.post(id, TIME_IMMEDIATE);
 	}
-#endif // EFI_FLASH_WRITE_THREAD
 }
 
 bool getNeedToWriteConfiguration() {
@@ -104,14 +98,10 @@ bool getNeedToWriteConfiguration() {
 }
 
 void writeToFlashIfPending() {
-#if (EFI_FLASH_WRITE_THREAD == TRUE)
-	// with a flash write thread, the schedule happens directly from
-	// setNeedToWriteConfiguration and writing happens from flash thread,
-	// so there's nothing to do here
 	if (allowFlashWhileRunning()) {
 		return;
 	}
-#endif
+
 	if (!getNeedToWriteConfiguration()) {
 		// Allow sensor timeouts again now that we're done (and a little time has passed)
 		Sensor::inhibitTimeouts(false);
@@ -346,13 +336,7 @@ void initFlash() {
 	addConsoleAction("resetconfig", doResetConfiguration);
 	addConsoleAction("rewriteconfig", rewriteConfig);
 
-#if (EFI_FLASH_WRITE_THREAD == TRUE)
-	if (allowFlashWhileRunning()) {
-		chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
-	} else {
-		efiPrintf("EFI_FLASH_WRITE_THREAD is enabled, but not used");
-	}
-#endif
+	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
 }
 
 #endif /* EFI_CONFIGURATION_STORAGE */
