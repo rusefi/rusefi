@@ -35,9 +35,9 @@ public:
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(float(TDiv) / TMult)
 		, m_addr(toRead.getFirstByteAddr())
-		, m_type(resolveType<TValue>())
+		, m_type(resolveBuiltInNumberType<TValue>())
 		, m_digits(digits)
-		, m_size(sizeForType(resolveType<TValue>()))
+		, m_size(sizeForType<resolveBuiltInNumberType<TValue>()>())
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
@@ -53,9 +53,9 @@ public:
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(1)
 		, m_addr(&toRead)
-		, m_type(resolveType<TValue>())
+		, m_type(resolveBuiltInNumberType<TValue>())
 		, m_digits(digits)
-		, m_size(sizeForType(resolveType<TValue>()))
+		, m_size(sizeForType<resolveBuiltInNumberType<TValue>()>())
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
@@ -96,6 +96,9 @@ public:
 		S32 = 5,
 		S64 = 6,
 		F32 = 7,
+		U64 = 8,
+		F64 = 9,
+		unsupported = static_cast<uint8_t>(-1)
 	};
 
 	constexpr size_t getSize() const {
@@ -118,21 +121,47 @@ public:
 #endif
 
 private:
-	template<typename T>
-	static constexpr Type resolveType();
 
-	static constexpr size_t sizeForType(Type t) {
-		switch (t) {
-			case Type::U08:
-			case Type::S08:
-				return 1;
-			case Type::U16:
-			case Type::S16:
-				return 2;
-			default:
-				// float, uint32, int32
-				return 4;
-		}
+	template<typename T>
+	static constexpr Type resolveBuiltInNumberType() {
+		using enum Type;
+		using CleanType = std::remove_const_t<T>;
+		constexpr auto resolvedType{[](){
+			if      constexpr (std::same_as<CleanType, float>)  { return F32; }
+			else if constexpr (std::same_as<CleanType, double>) { return F64; }
+			else if constexpr (std::is_integral_v<CleanType>) {
+				if constexpr (std::is_signed_v<CleanType>) {
+					if      constexpr (sizeof(CleanType) == 1) { return S08; }
+					else if constexpr (sizeof(CleanType) == 2) { return S16; }
+					else if constexpr (sizeof(CleanType) == 4) { return S32; }
+					else if constexpr (sizeof(CleanType) == 8) { return S64; }
+				} else {
+					if      constexpr (sizeof(CleanType) == 1) { return U08; }
+					else if constexpr (sizeof(CleanType) == 2) { return U16; }
+					else if constexpr (sizeof(CleanType) == 4) { return U32; }
+					else if constexpr (sizeof(CleanType) == 8) { return U64; }
+				}
+			}
+			else { return unsupported; }
+		}()};
+		static_assert(resolvedType != unsupported, "Type was not recognized as supported built in numeric type");
+		return resolvedType;
+	}
+
+	template<Type t>
+	static constexpr size_t sizeForType() {
+		constexpr auto s{[]{
+			switch (t) {
+				using enum Type;
+				case U08: case S08: return 1;
+				case U16: case S16: return 2;
+				case U32: case S32: case F32: return 4;
+				case U64: case S64: case F64: return 8;
+				default: return 0;
+			}
+		}()};
+		static_assert(s != 0, "Can not resolve type, check enum for new values that were left unhandled");
+		return s;
 	}
 
 	const float m_multiplier;
@@ -149,68 +178,3 @@ private:
 	const uint32_t m_bitsBlockOffset; // only for bit log fields
 	const uint8_t m_bitNumber; // only for bit log fields
 };
-
-template<>
-constexpr LogField::Type LogField::resolveType<const uint8_t>() {
-	return Type::U08;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<uint8_t>() {
-	return Type::U08;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<int8_t>() {
-	return Type::S08;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<const int8_t>() {
-	return Type::S08;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<uint16_t>() {
-	return Type::U16;
-}
-
-
-template<>
-constexpr LogField::Type LogField::resolveType<const uint16_t>() {
-	return Type::U16;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<int16_t>() {
-	return Type::S16;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<uint32_t>() {
-	return Type::U32;
-}
-
-#if EFI_PROD_CODE
-// we allow both 'int' and 'int32_t' just to allow extra flexibility in headers
-// https://stackoverflow.com/questions/55782246/why-is-uint32-t-typedeffed-to-unsigned-long-on-arm-none-eabi-gcc-and-how-to
-template<>
-constexpr LogField::Type LogField::resolveType<int>() {
-	return Type::S32;
-}
-#endif
-
-template<>
-constexpr LogField::Type LogField::resolveType<int32_t>() {
-	return Type::S32;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<float>() {
-	return Type::F32;
-}
-
-template<>
-constexpr LogField::Type LogField::resolveType<const float>() {
-	return Type::F32;
-}
