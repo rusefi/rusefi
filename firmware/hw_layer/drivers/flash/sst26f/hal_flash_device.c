@@ -109,7 +109,7 @@ static flash_error_t jedec_poll_status(SNORDriver *devp) {
     osalThreadSleepMilliseconds(1);
 #endif
     /* Read status command.*/
-    bus_cmd_receive(devp->config->busp, JEDEC_CMD_READ_STATUS_REGISTER,
+    bus_cmd_receive(devp, JEDEC_CMD_READ_STATUS_REGISTER,
                     1, tmpbuf);
     sts = tmpbuf[0];
   } while ((sts & JEDEC_FLAGS_STS_BUSY) != 0U);
@@ -198,19 +198,19 @@ static void jedec_set_config(SNORDriver *devp, uint8_t val)
   tmpbuf[0] = 0;
   tmpbuf[1] = val;
 
-  bus_cmd_send(devp->config->busp, JEDEC_CMD_WRITE_STATUS_REGISTER, 2, tmpbuf);
+  bus_cmd_send(devp, JEDEC_CMD_WRITE_STATUS_REGISTER, 2, tmpbuf);
 }
 
 static uint8_t jedec_get_config(SNORDriver *devp) {
   /* Read status command.*/
-  bus_cmd_receive(devp->config->busp, JEDEC_CMD_READ_CONFIGURATION_REGISTER,
+  bus_cmd_receive(devp, JEDEC_CMD_READ_CONFIGURATION_REGISTER,
                   1, tmpbuf);
   return tmpbuf[0];
 }
 
 static void jedec_write_enable(SNORDriver *devp, int enable) {
     /* Enabling write operation.*/
-    bus_cmd(devp->config->busp, enable ? JEDEC_CMD_WRITE_ENABLE : JEDEC_CMD_WRITE_DISABLE);
+    bus_cmd(devp, enable ? JEDEC_CMD_WRITE_ENABLE : JEDEC_CMD_WRITE_DISABLE);
 }
 
 static void snor_device_fill_cmd(wspi_command_t *cmd,
@@ -292,7 +292,7 @@ void snor_device_init(SNORDriver *devp) {
 
   /* Global Block Protection Unlock */
   jedec_write_enable(devp, 1);
-  bus_cmd(devp->config->busp, JEDEC_CMD_GLOBAL_BLOCK_PROTECTION_UNLOCK);
+  bus_cmd(devp, JEDEC_CMD_GLOBAL_BLOCK_PROTECTION_UNLOCK);
 
   /* Reading SFDP Header. */
   snor_device_read_sfdp(devp, offset, 8, buf);
@@ -467,7 +467,7 @@ flash_error_t snor_device_start_erase_all(SNORDriver *devp) {
   jedec_write_enable(devp, 1);
 
   /* Bulk erase command.*/
-  bus_cmd(devp->config->busp, JEDEC_CMD_BULK_ERASE);
+  bus_cmd(devp, JEDEC_CMD_BULK_ERASE);
 
   return FLASH_NO_ERROR;
 }
@@ -525,7 +525,7 @@ flash_error_t snor_device_query_erase(SNORDriver *devp, uint32_t *msec) {
   uint8_t sts;
 
   /* Read status command.*/
-  bus_cmd_receive(devp->config->busp, JEDEC_CMD_READ_STATUS_REGISTER,
+  bus_cmd_receive(devp, JEDEC_CMD_READ_STATUS_REGISTER,
                   1, tmpbuf);
   sts = tmpbuf[0];
 
@@ -587,7 +587,7 @@ void snor_activate_xip(SNORDriver *devp) {
 
   /* Activating XIP mode in the device.*/
   jedec_write_enable(devp, 1);
-  bus_cmd_send(devp->config->busp, JEDEC_CMD_WRITE_V_CONF_REGISTER,
+  bus_cmd_send(devp, JEDEC_CMD_WRITE_V_CONF_REGISTER,
                1, flash_status_xip);
 #endif
 }
@@ -628,7 +628,7 @@ void snor_reset_xip(SNORDriver *devp) {
   /* Enabling write operation.*/
   jedec_write_enable(devp, 1);
   /* Rewriting volatile configuration register.*/
-  bus_cmd_send(devp->config->busp, JEDEC_CMD_WRITE_V_CONF_REGISTER,
+  bus_cmd_send(devp, JEDEC_CMD_WRITE_V_CONF_REGISTER,
                1, flash_conf);
 #endif
 }
