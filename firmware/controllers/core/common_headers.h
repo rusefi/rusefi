@@ -48,6 +48,10 @@
 #define hasLotsOfRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
 
 // this macro helps locate all board Public API methods
-// DEPRECATED that's a bad pattern, many usages should be listeners, many usages should be something else - as long as
-// explicit static linking!
+// DEPRECATED that's a bad pattern - weak linking is extremely fragile, we risk changing method signature
+// and loosing magic
+// open question what's best way?
+//
+// better option one: listeners
+// better option two: required per-board method, like what we do for getWarningLedPin() etc
 #define PUBLIC_API_WEAK __attribute__((weak))

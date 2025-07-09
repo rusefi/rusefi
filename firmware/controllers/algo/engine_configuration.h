@@ -21,6 +21,7 @@
 
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90826 Weak symbol does not work reliably on windows
 // https://sourceware.org/bugzilla/show_bug.cgi?id=9687 Weak symbols not working on mingw32
+// DEPRECATED see PUBLIC_API_WEAK
 #if !defined(IS_WINDOWS_COMPILER) || !IS_WINDOWS_COMPILER
 #define PUBLIC_API_WEAK_SOMETHING_WEIRD __attribute__((weak))
 #else
