@@ -191,6 +191,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.auxLinear3, "Aux linear #3", "", 2},
 	{engine->outputChannels.auxLinear4, "Aux linear #4", "", 2},
 	{engine->outputChannels.fallbackMap, "fallbackMap", "kPa", 1},
+	{engine->outputChannels.effectiveMap, "Effective MAP", "kPa", 1},
 	{engine->outputChannels.instantMAPValue, "Instant MAP", "kPa", 2},
 	{engine->outputChannels.maxLockedDuration, "maxLockedDuration", "us", 0},
 	{engine->outputChannels.canWriteOk, "CAN: Tx OK", "", 0},

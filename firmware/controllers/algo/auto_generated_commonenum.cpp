@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jul 05 00:55:33 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Jul 09 01:53:29 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -225,6 +225,8 @@ case AE_MODE_MS_ADDER:
   return "AE_MODE_MS_ADDER";
 case AE_MODE_PERCENT_ADDER:
   return "AE_MODE_PERCENT_ADDER";
+case AE_MODE_PREDICTIVE_MAP:
+  return "AE_MODE_PREDICTIVE_MAP";
   }
  return NULL;
 }

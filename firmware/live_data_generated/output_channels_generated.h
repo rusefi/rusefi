@@ -880,32 +880,32 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> fallbackMap = (uint16_t)0;
 	/**
-	 * Instant MAP
+	 * Effective MAP
 	 * units: kPa
 	 * offset 366
+	 */
+	scaled_channel<uint16_t, 10, 1> effectiveMap = (uint16_t)0;
+	/**
+	 * Instant MAP
+	 * units: kPa
+	 * offset 368
 	 */
 	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
 	/**
 	 * units: us
-	 * offset 368
+	 * offset 370
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_CAN_WRITE_OK@@
-	 * offset 370
+	 * offset 372
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_CAN_WRITE_ERR@@
-	 * offset 372
-	 */
-	uint16_t canWriteNotOk = (uint16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 374
 	 */
-	uint8_t alignmentFill_at_374[2] = {};
+	uint16_t canWriteNotOk = (uint16_t)0;
 	/**
 	 * offset 376
 	 */

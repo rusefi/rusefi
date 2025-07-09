@@ -476,6 +476,9 @@ float getOutputValueByName(const char *name) {
 // fallbackMap
 		case -940825965:
 			return engine->outputChannels.fallbackMap;
+// effectiveMap
+		case -1724101868:
+			return engine->outputChannels.effectiveMap;
 // instantMAPValue
 		case -1162308767:
 			return engine->outputChannels.instantMAPValue;

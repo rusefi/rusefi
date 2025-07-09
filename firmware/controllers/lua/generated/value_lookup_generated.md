@@ -718,6 +718,9 @@ For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
 
+### mapPredictionBlendDuration
+Time to blend from predicted MAP back to real MAP. Used only in Predictive MAP mode.
+
 ### noFuelTrimAfterDfcoTime
 Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
 
