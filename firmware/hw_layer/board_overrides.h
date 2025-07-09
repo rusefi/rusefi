@@ -26,6 +26,7 @@
 #include <functional>
 #include <optional>
 
+// function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
 
 /**
