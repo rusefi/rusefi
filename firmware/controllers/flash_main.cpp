@@ -28,12 +28,6 @@
 
 static bool needToWriteConfiguration = false;
 
-/**
- * https://sourceforge.net/p/rusefi/tickets/335/
- *
- * In order to preserve at least one copy of the tune in case of electrical issues address of second configuration copy
- * should be in a different sector of flash since complete flash sectors are erased on write.
- */
 
 chibios_rt::Mailbox<msg_t, 16> flashWriterMb;
 
@@ -172,7 +166,12 @@ void writeToFlashNow() {
 	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
 	efitick_t startNt = getTimeNowNt();
 
-	// Flash two copies
+	/**
+	 * https://sourceforge.net/p/rusefi/tickets/335/
+	 *
+	 * In order to preserve at least one copy of the tune in case of electrical issues address of second configuration copy
+	 * should be in a different sector of flash since complete flash sectors are erased on write.
+	 */
 	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
 	int result2 = FLASH_RETURN_SUCCESS;
 	/* Only if second copy is supported */
