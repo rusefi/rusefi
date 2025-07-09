@@ -5945,6 +5945,9 @@ struct persistent_config_s {
 	 */
 	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT] = {};
 	/**
+	 * This table represents MAP at a given TPS vs RPM, which we use if our MAP sensor has failed, or if we are using MAP Prediciton. 
+	 *  This table should be a direct representation of MAP, you can tune it manually by disconnecting MAP sensor, and filling out the table with values that match an external gauge that shows MAP.
+	 * Additionally, you can also use MLV to get the map values and/or generate the table for you
 	 * units: kPa
 	 * offset 20920
 	 */
