@@ -9,6 +9,7 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration_uaefi121.cpp \
 
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"uaefi121\" $(VAR_DEF_ENGINE_TYPE)
+DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 # EGT chip
 DDEFS += -DEFI_MAX_31855=TRUE
 
