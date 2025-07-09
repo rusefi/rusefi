@@ -132,18 +132,13 @@ void setBoardDefaultConfiguration() {
 }
 
 static Gpio OUTPUTS[] = {
-	Gpio::MM100_MEGA_UAEFI_INJ1, // 13B INJ_1
+	Gpio::MM100_INJ1, // 13B INJ_1
 	Gpio::MM100_INJ2, // 12B INJ_2
 	Gpio::MM100_INJ3, // 11B INJ_3
 	Gpio::MM100_INJ4, // 10B INJ_4
 	Gpio::MM100_INJ5, // 9B INJ_5
 	Gpio::MM100_INJ6, // 8B INJ_6
 /*
-	Gpio::MM100_INJ5, // B2 injector output 5
-	Gpio::MM100_INJ4, // B3 injector output 4
-	Gpio::MM100_INJ3, // B4 injector output 3
-	Gpio::MM100_INJ2, // B5 injector output 2
-	Gpio::MM100_INJ1, // B6 injector output 1
 	Gpio::MM100_INJ7, // B7 Low Side output 1
 	Gpio::MM100_IGN8, // B8 Fan Relay Weak Low Side output 2
 	Gpio::MM100_IGN7, // B9 Main Relay Weak Low Side output 1

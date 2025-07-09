@@ -312,7 +312,7 @@ pins:
 
   - pin: 13B
     class: outputs
-    meta: MM100_MEGA_UAEFI_INJ1
+    meta: MM100_INJ1
     ts_name: ___ INJ_1
     function: Injector 1
     color: green
