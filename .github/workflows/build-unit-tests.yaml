@@ -42,6 +42,13 @@ jobs:
     - name: Test Java Compiler
       run: javac -version
 
+    - name: switch to gcc-14 on linux
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt install gcc-14 g++-14
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 --slave /usr/bin/g++ g++ /usr/bin/g++-14 --slave /usr/bin/gcov gcov /usr/bin/gcov-14
+        sudo update-alternatives --set gcc /usr/bin/gcc-14
+
     - name: Print Compiler version
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
       run: gcc -v
