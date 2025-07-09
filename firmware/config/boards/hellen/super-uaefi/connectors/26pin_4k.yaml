@@ -110,6 +110,7 @@ pins:
     meta: MM100_LED2_GREEN
     ts_name: ___ High Side Output
     function: High-side high current output
+    type: hs
 
   - pin: 21D
     function: WBO1 SWD

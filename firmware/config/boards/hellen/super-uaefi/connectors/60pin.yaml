@@ -343,7 +343,7 @@ pins:
 
   - pin: 18B
     class: outputs
-    meta: MM100_MEGA_UAEFI_SPI2_SCK
+    meta: MM100_INJ8
     ts_name: ___ INJ_8
     function: Injector 8
     color: green
@@ -351,30 +351,30 @@ pins:
 
   - pin: 19B
     class: outputs
-    meta: MM100_SPI2_CS
+    meta: MM100_INJ7
     ts_name: ___ INJ_7
     function: Injector 7
     color: white
     type: inj
 
   - pin: 20B
-    meta: MM100_INJ7
+#    meta: MM100_INJ7
     ts_name: ___ LS1
-    class: outputs
+#    class: outputs
     function: Low-Side 1 output
     type: ls
 
   - pin: 21B
-    meta: MM100_INJ8
+#    meta: MM100_INJ8
     ts_name: ___ LS2
-    class: outputs
+#    class: outputs
     function: Low-Side 2 output
     type: ls
 
   - pin: 22B
     ts_name: ___ LS3
-    meta: MM100_OUT_PWM1
-    class: outputs
+#    meta: MM100_OUT_PWM1
+#    class: outputs
     function: Low-Side 3 output
     type: ls
 
