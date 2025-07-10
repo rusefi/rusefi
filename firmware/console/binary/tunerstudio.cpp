@@ -447,7 +447,7 @@ void requestBurn() {
 	onBurnRequest();
 
 #if EFI_CONFIGURATION_STORAGE
-	setNeedToWriteConfiguration();
+	settingsNeedToWriteConfiguration();
 #endif /* EFI_CONFIGURATION_STORAGE */
 #endif // !EFI_UNIT_TEST
 }

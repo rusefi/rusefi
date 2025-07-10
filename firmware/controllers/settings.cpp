@@ -744,7 +744,7 @@ void setEngineType(int value, bool isWriteToFlash) {
 
 #if EFI_CONFIGURATION_STORAGE
 		if (isWriteToFlash) {
-			writeToFlashNow();
+			settingsNeedToWriteConfiguration(true);
 		}
 #endif /* EFI_CONFIGURATION_STORAGE */
 	}

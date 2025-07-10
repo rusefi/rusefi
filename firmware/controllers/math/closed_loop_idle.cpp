@@ -241,7 +241,7 @@ void LongTermIdleTrim::checkIfShouldSave() {
 
 #if EFI_PROD_CODE
             //TODO: we need to use requestBurn here?
-            setNeedToWriteConfiguration();
+            settingsNeedToWriteConfiguration();
 #endif // EFI_PROD_CODE
             m_pendingSave = false;
         }
