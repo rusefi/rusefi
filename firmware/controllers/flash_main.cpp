@@ -46,13 +46,16 @@ static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
 #define MSG_FLASH_NOW	BIT(30)
 #define MSG_ID_MASK		0x1f
 
-static void flashRequestWriteID(msg_t id, bool forced)
+static bool flashRequestWriteID(msg_t id, bool forced)
 {
 	if (forced) {
 		id |= MSG_FLASH_NOW;
 	}
+	// Note: we are not sure about caller context and using universal (but not optimal) chSysGetStatusAndLockX()
+	chibios_rt::CriticalSectionLocker csl;
+
 	// Signal the flash writer thread to wake up and write at its leisure
-	flashWriterMb.post(id, TIME_IMMEDIATE);
+	return (flashWriterMb.postI(id) == MSG_OK);
 }
 
 static bool flashWriteID(uint32_t id)
