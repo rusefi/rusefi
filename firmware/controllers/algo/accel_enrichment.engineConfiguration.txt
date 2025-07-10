@@ -4,5 +4,5 @@
 
 	float mapPredictionBlendDuration;Time to blend from predicted MAP back to real MAP. Used only in Predictive MAP mode.;"s", 1, 0, 0.1, 2.0, 2
 
-custom accel_enrichment_mode_e 1 bits, U08, @OFFSET@, [0:1], "MS Adder", "Percent Adder", "Percent Adder"
+custom accel_enrichment_mode_e 1 bits, U08, @OFFSET@, [0:1], "MS Adder", "Percent Adder", "MAP Prediction"
 accel_enrichment_mode_e accelEnrichmentMode;Selects the acceleration enrichment strategy.
