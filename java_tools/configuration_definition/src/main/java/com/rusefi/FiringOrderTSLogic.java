@@ -22,17 +22,20 @@ public class FiringOrderTSLogic {
     private static final String FIRING_ORDER_PREFIX = "FO_";
 
     public static void main(String[] args) throws IOException {
+        VariableRegistry variableRegistry = new VariableRegistry();
+        variableRegistry.register("MAX_CYLINDER_COUNT", 8);
         // sandbox code
-        invoke("../firmware/controllers/algo/firing_order.h");
+        invoke("../firmware/controllers/algo/firing_order.h", variableRegistry);
     }
 
-    public static String invoke(String fileName) throws IOException {
+    public static String invoke(String fileName, VariableRegistry variableRegistry) throws IOException {
         State state = new State();
 
         readFiringOrders(fileName, state);
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 2; i <= /*MAX_CYLINDER_COUNT?*/12; i++) {
+        Integer maxCylinderCount = variableRegistry.intValues.getOrDefault("MAX_CYLINDER_COUNT", 12);
+        for (int i = 2; i <= maxCylinderCount; i++) {
             String line = processId(i, state);
             sb.append(line).append("\n");
         }
