@@ -192,24 +192,6 @@ static void doPeriodicSlowCallback() {
 
 	engine->periodicSlowCallback();
 
-#if EFI_SHAFT_POSITION_INPUT
-	if (engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped()) {
-		/**
-		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
-		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
-		 *
-		 * todo: allow writing if 2nd bank of flash is used
-		 */
-#if EFI_CONFIGURATION_STORAGE
-		writeToFlashIfPending();
-#endif /* EFI_CONFIGURATION_STORAGE */
-	}
-#else /* if EFI_SHAFT_POSITION_INPUT */
-	#if EFI_CONFIGURATION_STORAGE
-		writeToFlashIfPending();
-	#endif /* EFI_CONFIGURATION_STORAGE */
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
 #if EFI_TCU
 	if (engineConfiguration->tcuEnabled && engineConfiguration->gearControllerMode != GearControllerMode::None) {
 		if (engine->gearController == NULL) {
