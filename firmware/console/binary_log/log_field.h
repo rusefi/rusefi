@@ -15,9 +15,9 @@ public:
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(float(TDiv) / TMult)
 		, m_addr(toRead.getFirstByteAddr())
-		, m_type(resolveBuiltInNumberType<TValue>())
+		, m_type(resolveType<TValue>())
 		, m_digits(digits)
-		, m_size(sizeForType<resolveBuiltInNumberType<TValue>()>())
+		, m_size(sizeForType(resolveType<TValue>()))
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
@@ -33,9 +33,9 @@ public:
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(1)
 		, m_addr(&toRead)
-		, m_type(resolveBuiltInNumberType<TValue>())
+		, m_type(resolveType<TValue>())
 		, m_digits(digits)
-		, m_size(sizeForType<resolveBuiltInNumberType<TValue>()>())
+		, m_size(sizeForType(resolveType<TValue>()))
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
@@ -74,11 +74,10 @@ public:
 		S16 = 3,
 		U32 = 4,
 		S32 = 5,
-		S64 = 6,
-		F32 = 7,
-		U64 = 8,
-		F64 = 9,
-		unsupported = static_cast<uint8_t>(-1)
+		U64 = 6,
+		S64 = 7,
+		F32 = 8,
+		F64 = 9
 	};
 
 	constexpr size_t getSize() const {
@@ -103,10 +102,13 @@ public:
 private:
 
 	template<typename T>
-	static consteval Type resolveBuiltInNumberType() {
+	static constexpr bool always_false = false;
+
+	template<typename T>
+	static constexpr Type resolveType() {
 		using enum Type;
 		using CleanType = std::remove_const_t<T>;
-		constexpr auto resolvedType{[](){
+		constexpr Type result = []() {
 			if      constexpr (std::same_as<CleanType, float>)  { return F32; }
 			else if constexpr (std::same_as<CleanType, double>) { return F64; }
 			else if constexpr (std::is_integral_v<CleanType>) {
@@ -122,26 +124,19 @@ private:
 					else if constexpr (sizeof(CleanType) == 8) { return U64; }
 				}
 			}
-			else { return unsupported; }
-		}()};
-		static_assert(resolvedType != unsupported, "Type was not recognized as supported built in numeric type");
-		return resolvedType;
+			else { static_assert(always_false<T>, "Unsupported type"); }
+		}();
+		return result;
 	}
 
-	template<Type t>
-	consteval size_t sizeForType() {
-		constexpr auto s{[]{
-			switch (t) {
-				using enum Type;
-				case U08: case S08: return 1;
-				case U16: case S16: return 2;
-				case U32: case S32: case F32: return 4;
-				case U64: case S64: case F64: return 8;
-				default: return 0;
-			}
-		}()};
-		static_assert(s != 0, "Can not resolve type, check enum for new values that were left unhandled");
-		return s;
+	static constexpr size_t sizeForType(Type const t) {
+		switch (t) {
+			using enum Type;
+		case U08: case S08: return 1;
+		case U16: case S16: return 2;
+		case U32: case S32: case F32: return 4;
+		case U64: case S64: case F64: return 8;
+		}
 	}
 
 	const float m_multiplier;
