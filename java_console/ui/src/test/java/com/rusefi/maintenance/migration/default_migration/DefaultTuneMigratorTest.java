@@ -108,7 +108,28 @@ public class DefaultTuneMigratorTest {
     @Test
     public void testContent() {
         assertEquals(
-            "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n",
+            "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
+                "We aren't going to restore field `engineCode`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `engineMake`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptCurveName1`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptCurveName2`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptCurveName3`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptCurveName4`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptCurveName5`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptCurveName6`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptSettingName1`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptSettingName2`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptSettingName3`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptSettingName4`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptSettingName5`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptSettingName6`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptSettingName7`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptSettingName8`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptTableName1`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptTableName2`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptTableName3`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `scriptTableName4`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `vinNumber`: it is missed in new .ini file\r\n",
             testContext.getTestCallbacks().getContent()
         );
     }
