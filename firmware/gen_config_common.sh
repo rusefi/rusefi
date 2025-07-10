@@ -77,6 +77,8 @@ COMMON_GEN_CONFIG="
  -soft_prepend ${BOARD_DIR}/prepend.txt \
  -soft_prepend ${BOARD_DIR}/prepend_${SHORT_BOARD_NAME}.txt \
  -prepend integration/rusefi_config_shared.txt \
+ -firing_order \
+ controllers/algo/firing_order.h \
  -ts_destination tunerstudio \
  -triggerInputFolder ../unit_tests \
  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \
