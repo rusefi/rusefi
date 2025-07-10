@@ -21,13 +21,13 @@
 PUBLIC_API_WEAK void setup_custom_board_overrides() {
 }
 
-// std::optional<setup_custom_board_overrides_type> custom_board_preHalInit;
+std::optional<setup_custom_board_overrides_type> custom_board_preHalInit;
 
 int main(void) {
 	setup_custom_board_overrides();
 	// Maybe your board needs to do something special before HAL init
 	preHalInit();
-	// call_board_override(custom_board_preHalInit);
+	call_board_override(custom_board_preHalInit);
 
 	/*
 	 * ChibiOS/RT initialization

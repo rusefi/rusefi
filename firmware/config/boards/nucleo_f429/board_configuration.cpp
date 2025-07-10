@@ -16,7 +16,7 @@ Gpio getWarningLedPin() {
 	return Gpio::Unassigned;
 }
 
-void preHalInit() {
+void nucleo_f429_preHalInit() {
 	efiSetPadMode("Ethernet",  Gpio::A1, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet",  Gpio::A2, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet",  Gpio::A7, PAL_MODE_ALTERNATE(0xb));
@@ -29,4 +29,8 @@ void preHalInit() {
 
 	efiSetPadMode("Ethernet", Gpio::G11, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet", Gpio::G13, PAL_MODE_ALTERNATE(0xb));
+}
+
+void setup_custom_board_overrides() {
+	custom_board_preHalInit = nucleo_f429_preHalInit;
 }

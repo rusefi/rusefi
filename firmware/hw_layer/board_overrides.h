@@ -34,7 +34,7 @@ using setup_custom_board_overrides_type = void (*)();
  * Allows boards to perform custom initialization before HAL is initialized
  * Example: special pin setup or hardware initialization needed before HAL
  */
-// extern std::optional<setup_custom_board_overrides_type> custom_board_preHalInit;
+extern std::optional<setup_custom_board_overrides_type> custom_board_preHalInit;
 
 extern std::optional<setup_custom_board_overrides_type> custom_board_boardSayHello;
 
