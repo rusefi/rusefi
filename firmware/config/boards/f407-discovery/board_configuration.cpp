@@ -3,6 +3,7 @@
  */
 
 #include "pch.h"
+#include "board_overrides.h"
 
 static void setDefaultFrankensoStepperIdleParameters() {
 	engineConfiguration->idle.stepperDirectionPin = Gpio::E10;
@@ -112,8 +113,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->is_enabled_spi_3 = true;
 }
 
-// weak linkage
-void boardInitHardware() {
+void f407_discovery_boardInitHardware() {
 
 static const struct mc33810_config mc33810 = {
 	.spi_bus = &SPID3,
@@ -174,4 +174,8 @@ static const struct mc33810_config mc33810 = {
 	    });
 #endif // EFI_BOOTLOADER
 	}
+}
+
+void setup_custom_board_overrides() {
+	custom_board_InitHardware = f407_discovery_boardInitHardware;
 }
