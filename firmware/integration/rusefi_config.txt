@@ -1218,8 +1218,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	switch_input_pin_e tcuUpshiftButtonPin
 	switch_input_pin_e tcuDownshiftButtonPin
 
-	float throttlePedalUpVoltage;;"voltage", 1, 0, -6, 6, 2
-	float throttlePedalWOTVoltage;Pedal in the floor;"voltage", 1, 0, -6, 6, 2
+	float throttlePedalUpVoltage;;"volts", 1, 0, -6, 6, 2
+	float throttlePedalWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2
 
 	int16_t startUpFuelPumpDuration;on IGN voltage detection turn fuel pump on to build fuel pressure;"seconds", 1, 0, 0, 6000, 0
 	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 800, 0
@@ -1277,8 +1277,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
 
 
-	float throttlePedalSecondaryUpVoltage;;"voltage", 1, 0, -6, 6, 2
-	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"voltage", 1, 0, -6, 6, 2
+	float throttlePedalSecondaryUpVoltage;;"volts", 1, 0, -6, 6, 2
+	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2
 
 	#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:2], @@can_baudrate_e_enum@@
@@ -2246,7 +2246,7 @@ uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed43;;"MPH", 1, 0, 0, 255, 0
 float tcu_shiftTime;;"ms", 1, 0, 0, 3000, 0
 
 #define ALTERNATOR_VOLTAGE_TARGET_SIZE 4
-int16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE x ALTERNATOR_VOLTAGE_TARGET_SIZE] autoscale alternatorVoltageTargetTable;;"Volts", 0.1, 0, 0, 30, 1
+int16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE x ALTERNATOR_VOLTAGE_TARGET_SIZE] autoscale alternatorVoltageTargetTable;;"volts", 0.1, 0, 0, 30, 1
 uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetLoadBins;;"Load", 1, 0, 0, 1000, 0
 uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
