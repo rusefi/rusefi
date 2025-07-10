@@ -38,7 +38,12 @@ set_board_file BOARD_INJECTION_SETTINGS_FILE "${BOARD_DIR}/board_injection_setti
 set_board_file BOARD_IGNITION_SETTINGS_FILE "${BOARD_DIR}/board_ignition_settings.ini"
 
 
+# most static arguments go first
+# reading into VariableRegistry and overrides go next
+
 COMMON_GEN_CONFIG="
+ -initialize_to_zero false \
+ -with_c_defines false \
  -prepend integration/ts_protocol.txt \
  -readfile OUTPUTS_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
  -readfile DATALOG_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
@@ -67,18 +72,16 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_POPULAR_VEHICLES_FILE ${BOARD_POPULAR_VEHICLES_FILE} \
  -readfile BOARD_ENGINE_METADATA_FILE ${BOARD_ENGINE_METADATA_FILE} \
  -readfile BOARD_CAM_SETTINGS_FILE ${BOARD_CAM_SETTINGS_FILE} \
-   -ts_destination tunerstudio \
- -triggerInputFolder ../unit_tests \
- -with_c_defines false \
- -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \
- -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/ \
- -initialize_to_zero false \
- -signature ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt \
- -signature_destination controllers/generated/signature_${SHORT_BOARD_NAME}.h \
- -ts_output_name generated/${INI} \
  -prepend integration/rusefi_config_trigger.txt \
  -prepend ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/total_live_data_generated.h \
  -soft_prepend ${BOARD_DIR}/prepend.txt \
  -soft_prepend ${BOARD_DIR}/prepend_${SHORT_BOARD_NAME}.txt \
  -prepend integration/rusefi_config_shared.txt \
+ -ts_destination tunerstudio \
+ -triggerInputFolder ../unit_tests \
+ -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \
+ -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/ \
+ -signature ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt \
+ -signature_destination controllers/generated/signature_${SHORT_BOARD_NAME}.h \
+ -ts_output_name generated/${INI} \
  -board ${BOARD_DIR}"
