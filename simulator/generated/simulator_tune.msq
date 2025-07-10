@@ -4228,10 +4228,10 @@ end</constant>
         <constant name="throttleInletPressureChannel">"Disabled"</constant>
         <constant name="throttlePedalPositionAdcChannel">"Disabled"</constant>
         <constant name="throttlePedalPositionSecondAdcChannel">"Disabled"</constant>
-        <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">5.0</constant>
-        <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">0.0</constant>
-        <constant digits="2" name="throttlePedalUpVoltage" units="voltage">0.0</constant>
-        <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">5.0</constant>
+        <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="volts">5.0</constant>
+        <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="volts">0.0</constant>
+        <constant digits="2" name="throttlePedalUpVoltage" units="volts">0.0</constant>
+        <constant digits="2" name="throttlePedalWOTVoltage" units="volts">5.0</constant>
         <constant digits="1" name="timing_offset_cylinder1" units="deg">0.0</constant>
         <constant digits="1" name="timing_offset_cylinder10" units="deg">0.0</constant>
         <constant digits="1" name="timing_offset_cylinder11" units="deg">0.0</constant>
@@ -5073,7 +5073,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250618" nPages="1" signature="rusEFI master.2025.07.10.f407-discovery.1140675965" version="5.0"/>
+    <versionInfo firmwareInfo="20250618" nPages="1" signature="rusEFI master.2025.07.10.f407-discovery.2115756625" version="5.0"/>
     <bibliography author="rusEFI 20250618" writeDate="date"/>
     <settings/>
     <userComments/>
