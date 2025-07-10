@@ -141,14 +141,14 @@ static void flashWriteThread(void*) {
 	}
 }
 
-void settingsNeedToWriteConfiguration(bool forced) {
+bool settingsNeedToWriteConfiguration(bool forced) {
 	efiPrintf("Scheduling %sconfiguration write", forced ? "FORCED " : "");
 
-	flashRequestWriteID(EFI_SETTINGS_RECORD_ID, forced);
+	return flashRequestWriteID(EFI_SETTINGS_RECORD_ID, forced);
 }
 
-void settingsLtftRequestWriteToFlash() {
-	flashRequestWriteID(EFI_LTFT_RECORD_ID, false);
+bool settingsLtftRequestWriteToFlash() {
+	return flashRequestWriteID(EFI_LTFT_RECORD_ID, false);
 }
 
 bool getNeedToWriteConfiguration() {
@@ -366,6 +366,10 @@ static void doRewriteConfig() {
 	settingsNeedToWriteConfiguration(true);
 }
 
+static void doWriteLTFT() {
+	settingsLtftRequestWriteToFlash();
+}
+
 void initFlash() {
 	// Init storage(s) if any
 	initStorage();
@@ -376,7 +380,7 @@ void initFlash() {
 	 */
 	addConsoleAction(CMD_WRITECONFIG, doWriteConfigurationToFlash);
 
-	addConsoleAction("ltftwrite", settingsLtftRequestWriteToFlash);
+	addConsoleAction("ltftwrite", doWriteLTFT);
 #if EFI_TUNER_STUDIO
 	/**
 	 * This would schedule write to flash once the engine is stopped

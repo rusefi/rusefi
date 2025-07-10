@@ -18,10 +18,10 @@ void initFlash();
  * running so we postpone the write until the engine is stopped.
  * Calling following function with forced = true can cause ecu stall and engine stop!
  */
-void settingsNeedToWriteConfiguration(bool forced = false);
+bool settingsNeedToWriteConfiguration(bool forced = false);
 /**
  * @return true if an flash write is pending
  */
 bool getNeedToWriteConfiguration();
 
-void settingsLtftRequestWriteToFlash();
+bool settingsLtftRequestWriteToFlash();
