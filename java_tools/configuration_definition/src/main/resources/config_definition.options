@@ -6,5 +6,3 @@ controllers/algo/engine_type_e.h
 controllers/algo/rusefi_enums.h
 -definition
 integration/rusefi_config.txt
--firing_order
-controllers/algo/firing_order.h
