@@ -103,7 +103,7 @@ public:
 private:
 
 	template<typename T>
-	static constexpr Type resolveBuiltInNumberType() {
+	static consteval Type resolveBuiltInNumberType() {
 		using enum Type;
 		using CleanType = std::remove_const_t<T>;
 		constexpr auto resolvedType{[](){
@@ -129,7 +129,7 @@ private:
 	}
 
 	template<Type t>
-	constexpr size_t sizeForType() {
+	consteval size_t sizeForType() {
 		constexpr auto s{[]{
 			switch (t) {
 				using enum Type;
