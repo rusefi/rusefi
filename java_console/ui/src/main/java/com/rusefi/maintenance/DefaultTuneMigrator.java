@@ -133,7 +133,10 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                                 }
                             }
                         } else {
-                            log.info(String.format("Field `%s` is missed in new .ini file", prevFieldName));
+                            callbacks.logLine(String.format(
+                                "We aren't going to restore field `%s`: it is missed in new .ini file",
+                                prevFieldName
+                            ));
                         }
                     }
                 }
