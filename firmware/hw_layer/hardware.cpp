@@ -72,6 +72,13 @@
 #include "can_vss.h"
 #endif
 
+#include "board_overrides.h"
+
+std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareEarly;
+std::optional<setup_custom_board_overrides_type> custom_board_InitHardware;
+std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
+
+
 #if HAL_USE_SPI
 /* zero index is SPI_NONE */
 extern bool isSpiInitialized[SPI_TOTAL_COUNT + 1];
@@ -424,6 +431,7 @@ void initHardwareNoConfig() {
 
 #if EFI_PROD_CODE
 	boardInitHardwareEarly();
+	call_board_override(custom_board_InitHardwareEarly);
 #endif
 
 #if EFI_HISTOGRAMS
@@ -535,11 +543,13 @@ void initHardware() {
 #endif // STM32_I2C_USE_I2C3
 
 	boardInitHardware();
+	call_board_override(custom_board_InitHardware);
 #if EFI_PROD_CODE
 	// this applies some board configurations
 	boardOnConfigurationChange(nullptr);
 #endif // EFI_PROD_CODE
 	boardInitHardwareExtra();
+	call_board_override(custom_board_InitHardwareExtra);
 
 #if HAL_USE_ADC
 	initAdcInputs();

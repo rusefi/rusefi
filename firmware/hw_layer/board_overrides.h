@@ -37,6 +37,11 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_preHalInit;
 
 extern std::optional<setup_custom_board_overrides_type> custom_board_boardSayHello;
 
+// Called before configuration is loaded
+extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareEarly;
+extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardware;
+extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
+
 /**
  * This function checks if an override is present and calls it if available.
  */
