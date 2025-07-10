@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "board_overrides.h"
 
 // PB14 is error LED, configured in board.mk
 // Board only has 3 LEDs, so no warning LED
