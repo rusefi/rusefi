@@ -2,7 +2,6 @@
 
 #include "efi_scaled_channel.h"
 #include "rusefi_types.h"
-#include <concepts>
 #include <cstdint>
 #include <cstddef>
 
@@ -74,10 +73,8 @@ public:
 		S16 = 3,
 		U32 = 4,
 		S32 = 5,
-		U64 = 6,
-		S64 = 7,
-		F32 = 8,
-		F64 = 9
+		S64 = 6,
+		F32 = 7,
 	};
 
 	constexpr size_t getSize() const {
@@ -100,42 +97,20 @@ public:
 #endif
 
 private:
-
 	template<typename T>
-	static constexpr bool always_false = false;
+	static constexpr Type resolveType();
 
-	template<typename T>
-	static constexpr Type resolveType() {
-		using enum Type;
-		using CleanType = std::remove_const_t<T>;
-		constexpr Type result = []() {
-			if      constexpr (std::same_as<CleanType, float>)  { return F32; }
-			else if constexpr (std::same_as<CleanType, double>) { return F64; }
-			else if constexpr (std::is_integral_v<CleanType>) {
-				if constexpr (std::is_signed_v<CleanType>) {
-					if      constexpr (sizeof(CleanType) == 1) { return S08; }
-					else if constexpr (sizeof(CleanType) == 2) { return S16; }
-					else if constexpr (sizeof(CleanType) == 4) { return S32; }
-					else if constexpr (sizeof(CleanType) == 8) { return S64; }
-				} else {
-					if      constexpr (sizeof(CleanType) == 1) { return U08; }
-					else if constexpr (sizeof(CleanType) == 2) { return U16; }
-					else if constexpr (sizeof(CleanType) == 4) { return U32; }
-					else if constexpr (sizeof(CleanType) == 8) { return U64; }
-				}
-			}
-			else { static_assert(always_false<T>, "Unsupported type"); }
-		}();
-		return result;
-	}
-
-	static constexpr size_t sizeForType(Type const t) {
+	static constexpr size_t sizeForType(Type t) {
 		switch (t) {
-			using enum Type;
-		case U08: case S08: return 1;
-		case U16: case S16: return 2;
-		case U32: case S32: case F32: return 4;
-		case U64: case S64: case F64: return 8;
+			case Type::U08:
+			case Type::S08:
+				return 1;
+			case Type::U16:
+			case Type::S16:
+				return 2;
+			default:
+				// float, uint32, int32
+				return 4;
 		}
 	}
 
@@ -153,3 +128,68 @@ private:
 	const uint32_t m_bitsBlockOffset; // only for bit log fields
 	const uint8_t m_bitNumber; // only for bit log fields
 };
+
+template<>
+constexpr LogField::Type LogField::resolveType<const uint8_t>() {
+	return Type::U08;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<uint8_t>() {
+	return Type::U08;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<int8_t>() {
+	return Type::S08;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<const int8_t>() {
+	return Type::S08;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<uint16_t>() {
+	return Type::U16;
+}
+
+
+template<>
+constexpr LogField::Type LogField::resolveType<const uint16_t>() {
+	return Type::U16;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<int16_t>() {
+	return Type::S16;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<uint32_t>() {
+	return Type::U32;
+}
+
+#if EFI_PROD_CODE
+// we allow both 'int' and 'int32_t' just to allow extra flexibility in headers
+// https://stackoverflow.com/questions/55782246/why-is-uint32-t-typedeffed-to-unsigned-long-on-arm-none-eabi-gcc-and-how-to
+template<>
+constexpr LogField::Type LogField::resolveType<int>() {
+	return Type::S32;
+}
+#endif
+
+template<>
+constexpr LogField::Type LogField::resolveType<int32_t>() {
+	return Type::S32;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<float>() {
+	return Type::F32;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<const float>() {
+	return Type::F32;
+}
