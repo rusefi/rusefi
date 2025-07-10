@@ -3214,13 +3214,13 @@ struct engine_configuration_s {
 	 */
 	switch_input_pin_e tcuDownshiftButtonPin;
 	/**
-	 * units: voltage
+	 * units: volts
 	 * offset 1512
 	 */
 	float throttlePedalUpVoltage;
 	/**
 	 * Pedal in the floor
-	 * units: voltage
+	 * units: volts
 	 * offset 1516
 	 */
 	float throttlePedalWOTVoltage;
@@ -3404,13 +3404,13 @@ struct engine_configuration_s {
 	 */
 	uint32_t uartConsoleSerialSpeed;
 	/**
-	 * units: voltage
+	 * units: volts
 	 * offset 1552
 	 */
 	float throttlePedalSecondaryUpVoltage;
 	/**
 	 * Pedal in the floor
-	 * units: voltage
+	 * units: volts
 	 * offset 1556
 	 */
 	float throttlePedalSecondaryWOTVoltage;
@@ -6615,7 +6615,7 @@ struct persistent_config_s {
 	 */
 	float tcu_shiftTime;
 	/**
-	 * units: Volts
+	 * units: volts
 	 * offset 25032
 	 */
 	scaled_channel<int16_t, 10, 1> alternatorVoltageTargetTable[ALTERNATOR_VOLTAGE_TARGET_SIZE][ALTERNATOR_VOLTAGE_TARGET_SIZE] = {};
