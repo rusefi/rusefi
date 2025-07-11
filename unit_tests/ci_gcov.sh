@@ -3,14 +3,6 @@
 #
 # this script is used by github actions
 #
-# TODO: this script validates that it has three arguments but then proceeds to use environment variables not arguments!
-# TODO: clean this up!
-#
-
-if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
- echo "No SSH Secrets, not even generating coverage"
- exit 0
-fi
 
 rm -rf gcov_working_area
 
@@ -40,7 +32,3 @@ lcov --ignore-errors mismatch --capture --directory . --output-file coverage.inf
 echo -e "\nGenerating rusEFI unit test HTML"
 genhtml coverage.info --output-directory gcov
 echo -e "\nGenerating rusEFI unit test HTML"
-
-echo -e "\nUploading HTML"
-tar -czf - -C gcov . | sshpass -p "$RUSEFI_SSH_PASS" ssh -o StrictHostKeyChecking=no "$RUSEFI_SSH_USER"@"$RUSEFI_SSH_SERVER" "tar -xzf - -C docs/unit_tests_coverage"
-echo -e "\nHappy End."

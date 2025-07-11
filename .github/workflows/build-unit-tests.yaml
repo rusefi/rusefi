@@ -81,9 +81,21 @@ jobs:
         fi
 
     - name: Generate Code Coverage
+      if: ${{ matrix.os != 'macos-latest' }}
+      working-directory: ./unit_tests/
+      run: ./ci_gcov.sh
+
+    - name: Upload code coverage artifacts
+      if: ${{ matrix.os != 'macos-latest' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi_code_coverage.txt
+        path: ./unit_tests/gcov_working_area/gcov
+
+    - name: upload test coverage to remote server
       if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       working-directory: ./unit_tests/
-      run: ./ci_gcov.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }}
+      run: ./upload_coverage.sh
 
 
 #   - name: Run Tests (sharded)
