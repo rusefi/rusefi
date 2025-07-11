@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/tle9104.h"
+#include "board_overrides.h"
 
 // Configurable 2.7K pull-ups to 5V
 static OutputPin alphaTempPullUp;
@@ -313,7 +314,7 @@ static void board_init_ext_gpios() {
 /**
  * @brief Board-specific initialization code.
  */
-void boardInitHardware() {
+static void alphax_gold_boardInitHardware() {
 	// TEMP_PULLUP
 	alphaTempPullUp.initPin("Temp PullUp", Gpio::H144_GP_IO3);
 	// IN_KNOCK1_PULLUP
@@ -395,5 +396,9 @@ Gpio* getBoardMetaOutputs() {
 
 int getBoardMetaDcOutputsCount() {
     return 2;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_InitHardware = alphax_gold_boardInitHardware;
 }
 
