@@ -11,6 +11,7 @@
 #include "pch.h"
 #include "hellen_meta.h"
 #include "defaults.h"
+#include "board_overrides.h"
 
 static OutputPin alphaCrankPPullUp;
 
@@ -72,7 +73,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = MM176_IN_IAT_ANALOG;
 }
 
-void boardInitHardware() {
+static void alphax_8chan_boardInitHardware() {
   // technically same thing as setHellenMegaEnPin() since underlying pin E10 is same as H144_GP8
 	setHellenEnPin(Gpio::MM176_EN_PIN);
 
@@ -250,4 +251,8 @@ int getBoardMetaDcOutputsCount() {
         return 1;
     }
     return 2;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_InitHardware = alphax_8chan_boardInitHardware;
 }
