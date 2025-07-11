@@ -36,8 +36,8 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                     prevFieldEntry
                 )) {
                     final IniField newField = newIniFields.get(prevFieldName);
+                    final Constant prevValue = prevValues.get(prevFieldName);
                     if (newField != null) {
-                        final Constant prevValue = prevValues.get(prevFieldName);
                         final Constant newValue = newValues.get(prevFieldName);
                         if (prevValue != null) {
                             if (newValue == null) { // new value is empty
@@ -122,12 +122,12 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                                     }
                                 }
                             }
-                        } else {
-                            callbacks.logLine(String.format(
-                                "We aren't going to restore field `%s`: it is missed in new .ini file",
-                                prevFieldName
-                            ));
                         }
+                    } else if (prevValue != null) {
+                        callbacks.logLine(String.format(
+                            "We aren't going to restore field `%s`: it is missed in new .ini file",
+                            prevFieldName
+                        ));
                     }
                 }
             }

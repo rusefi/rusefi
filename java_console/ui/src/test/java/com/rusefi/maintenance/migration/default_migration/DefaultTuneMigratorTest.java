@@ -108,28 +108,41 @@ public class DefaultTuneMigratorTest {
     @Test
     public void testContent() {
         assertEquals(
-            "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
-                "We aren't going to restore field `engineCode`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `engineMake`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptCurveName1`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptCurveName2`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptCurveName3`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptCurveName4`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptCurveName5`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptCurveName6`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptSettingName1`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptSettingName2`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptSettingName3`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptSettingName4`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptSettingName5`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptSettingName6`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptSettingName7`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptSettingName8`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptTableName1`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptTableName2`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptTableName3`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `scriptTableName4`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `vinNumber`: it is missed in new .ini file\r\n",
+            "We aren't going to restore field `auxSerialRxPin`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `auxSerialSpeed`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `auxSerialTxPin`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUse2stepPullDown`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseCamPullDown`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseCamVrPullUp`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseCrankPullUp`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseD2PullDown`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseD3PullDown`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseD4PullDown`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseD5PullDown`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseTachPullUp`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boardUseTempPullUp`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `boostTpsBins`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `communityCommsLedPid`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `crankingCycleCoef`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `enableInnovateLC2`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
+                "We aren't going to restore field `etb1configured`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `etb2configured`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `etbExpAverageLength`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `etbJamIntegratorLimit`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `etbRocExpAverageLength`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `isManualSpinningMode`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `knockBandCustom`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `mapAveragingSchedulingAtIndex`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `noAccelAfterHardLimitPeriodSecs`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `oddFireEngine`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `showHumanReadableWarning`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `skipADC12bitAssert`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `skipBoardCanDash`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `targetVBatt`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `test557pin`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `throttlePedalUpPin`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `throttlePedalUpPinMode`: it is missed in new .ini file\r\n",
             testContext.getTestCallbacks().getContent()
         );
     }
