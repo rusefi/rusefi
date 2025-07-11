@@ -5,6 +5,7 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/tle9104.h"
 #include "pca_board_id.h" // bb i2c board id, works via __weak__ magic
+#include "board_overrides.h"
 
 static OutputPin alphaTempPullUp;
 static OutputPin alphaTachSelPullUp;
@@ -163,7 +164,7 @@ static void board_init_ext_gpios() {
 /**
  * @brief Board-specific initialization code.
  */
-void boardInitHardware() {
+static void alphax_silver_revA_boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", Gpio::MM100_IGN8); //  E6
 	alphaTachSelPullUp.initPin("Tach PullUp", Gpio::MM100_OUT_PWM1);
 	alphaHall1PullUp.initPin("hall1 PullUp", Gpio::MM100_OUT_PWM3);
@@ -208,3 +209,8 @@ int getBoardMetaLowSideOutputsCount() {
 Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
 }
+
+void setup_custom_board_overrides() {
+	custom_board_InitHardware = alphax_silver_revA_boardInitHardware;
+}
+
