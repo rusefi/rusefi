@@ -65,33 +65,32 @@ MAKEFLAGS_ONLY := $(filter -%,$(MAKECMDGOALS))
 
 # Firmware dispatcher
 firmware:
-	@$(eval ARG1 := $(word 2, $(MAKECMDGOALS)))
-	@$(eval ARG2 := $(word 3, $(MAKECMDGOALS)))
-	@$(eval ARG3 := $(word 4, $(MAKECMDGOALS)))
-	@if [ -n "$(ARG3)" ]; then \
-		echo "Error: Too many arguments for 'make firmware' (max 2)"; \
-		exit 1; \
-	fi
-	@if [ -z "$(ARG1)" ]; then \
-		echo "→ make -C firmware $(MAKEFLAGS_ONLY)"; \
-		$(MAKE) -C firmware $(MAKEFLAGS_ONLY); \
-	elif [ "$(ARG1)" = "clean" ]; then \
-		echo "→ make -C firmware $(MAKEFLAGS_ONLY) clean"; \
-		$(MAKE) -C firmware $(MAKEFLAGS_ONLY) clean; \
-	elif [ -z "$(ARG2)" ]; then \
-		echo "→ make -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG1)"; \
-		$(MAKE) -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG1); \
-	else \
-		echo "→ make -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG2)"; \
-		$(MAKE) -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG2); \
-	fi
+ifeq ($(ARG3),)
+  ifeq ($(ARG1),)
+	@echo "→ make -C firmware $(MAKEFLAGS_ONLY)"
+	$(MAKE) -C firmware $(MAKEFLAGS_ONLY)
+  else ifeq ($(ARG1),clean)
+	@echo "→ make -C firmware $(MAKEFLAGS_ONLY) clean"
+	$(MAKE) -C firmware $(MAKEFLAGS_ONLY) clean
+  else ifeq ($(ARG2),)
+	@echo "→ make -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG1)"
+	$(MAKE) -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG1)
+  else
+	@echo "→ make -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG2)"
+	$(MAKE) -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG2)
+  endif
+else
+	$(error Too many arguments for 'firmware'. Max 2.)
+endif
 
-# Forward all args to these dirs
+# -------------------------------------------------------------------
+# Other subdirs — forward everything after the first word
+# -------------------------------------------------------------------
 simulator:
-	$(MAKE) -C simulator $(MAKEFLAGS_ONLY) $(wordlist 2, 99, $(MAKECMDGOALS))
+	$(MAKE) -C simulator $(MAKEFLAGS_ONLY) $(wordlist 2, 99, $(GOALS))
 
 unit_tests:
-	$(MAKE) -C unit_tests $(MAKEFLAGS_ONLY) $(wordlist 2, 99, $(MAKECMDGOALS))
+	$(MAKE) -C unit_tests $(MAKEFLAGS_ONLY) $(wordlist 2, 99, $(GOALS))
 
 # Catch non-targets so they don't cause "No rule to make target"
 %:
