@@ -4,7 +4,7 @@ TL, DR: just follow [tests](tests) folder as examples. [tests/nitrous_control](t
 
 gcc/makefile/gtest
 
-1. Run 'make' to build desktop binary.
+1. Run `make` to build desktop binary, you can add `-j4` | `-j8` | `-j16` for using multiple cores
 2. Execute rusefi_test binary on your PC/Mac, it's expected to say SUCCESS and not fail :) Googletest will also print results summary.
 3. To run only one test use command line like ```build/rusefi_test --gtest_filter=*TEST_NAME*``` ~~uncomment and modify [main.cpp](https://github.com/rusefi/rusefi/blob/master/unit_tests/main.cpp) line ``::testing::GTEST_FLAG(filter)``~~
 
@@ -12,9 +12,16 @@ In this folder we have rusEFI unit tests using https://github.com/google/googlet
 
 Unit tests are not aware of ChibiOS or ARM or else, they are just plain C/C++ which you build for your desktop, not your MCU.
 
-
+Note:
+If you're using VSCode, we have launch tasks available to debug your tests!
+see `.vscode/launch.json` "Debug Unit Tests (gdb)"
 
 [Code Coverage Report](https://rusefi.com/docs/unit_tests_coverage/)
+
+for make the coverage locally you need to install [gcovr](https://gcovr.com/en/stable/installation.html)
+
+build the test with `make COVERAGE=yes`, run `build/rusefi_test` then finally `unit_tests/ci_gcov.sh`
+the report will be on `unit_tests/gcov_working_area/gcov/index.html`
 
 See also [https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation](https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation)
 
