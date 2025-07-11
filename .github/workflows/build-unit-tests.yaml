@@ -95,7 +95,7 @@ jobs:
 
     - name: upload test coverage to remote server
       if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      working-directory: ./unit_tests/
+      working-directory: ./unit_tests/gcov_working_area
       run: ./upload_coverage.sh
 
 
