@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "hellen_meta.h"
 #include "drivers/gpio/tle9104.h"
+#include "board_overrides.h"
 
 static OutputPin tempPullUp;
 
@@ -200,7 +201,7 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
    	}
 	};
 
-/*PUBLIC_API_WEAK*/ void boardInitHardware() {
+static void alphax_4kGDI_boardInitHardware() {
   setHellenMegaEnPin();
     {
     	static OutputPin csLs1;
@@ -283,3 +284,8 @@ Gpio* getBoardMetaOutputs() {
 int getBoardMetaDcOutputsCount() {
     return 1;
 }
+
+void setup_custom_board_overrides() {
+	custom_board_InitHardware = alphax_4kGDI_boardInitHardware;
+}
+
