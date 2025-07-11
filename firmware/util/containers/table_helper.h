@@ -32,6 +32,9 @@ public:
  * this helper class brings together 3D table with two 2D axis curves
  * TODO: explicitly spell out why do we have this template and when exactly is it useful (useful with scaled content?)
  * todo: improve interpolate3d to handle scaling?
+ * A recommended use is if a class depends on a table and this can be shared with several classes but only one is instantiated, see for example airmass.h
+ * It can also be used if you need to test the behavior of a calculated X/Y => table value, but it is advisable to do those expects externally and/or only test the result of the get,
+ * since interpotalate3d is easier to use and does not require initiation.
  * *** WARNING *** https://en.wikipedia.org/wiki/KISS_principle
  * *** WARNING *** this helper requires initialization, make sure that helper is useful any time you consider using it
  * *** WARNING *** we had too many bugs where we were not initializing, often just using the underlying interpolate3d is the way to go
