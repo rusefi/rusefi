@@ -29,7 +29,7 @@ jobs:
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo bash misc/actions/ubuntu-install-tools.sh
-        sudo apt-get install lcov valgrind
+        sudo apt-get install python3-pip valgrind
 
     - name: Install required software (macos)
       if: ${{ matrix.os == 'macos-latest' }}
