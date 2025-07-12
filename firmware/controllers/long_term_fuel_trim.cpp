@@ -9,6 +9,8 @@
 // +/-25% maximum
 #define MAX_ADJ (0.25f)
 
+#define SAVE_AFTER_HITS	1000
+
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
 #if EFI_PROD_CODE
@@ -73,7 +75,7 @@ float LongTermFuelTrim::getMinAdjustment() const {
 void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad) {
 	const auto& cfg = engineConfiguration->ltft;
 
-	if (!cfg.enabled) {
+	if ((!cfg.enabled) || (ltftSavePending)) {
 		ltftLearning = false;
 		return;
 	}
@@ -128,6 +130,10 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	ltftLearning = adjusted;
 	if (adjusted) {
 		ltftCntHit++;
+		if ((ltftCntHit % SAVE_AFTER_HITS) == 0) {
+			//request save
+			settingsLtftRequestWriteToFlash();
+		}
 	} else {
 		ltftCntDeadband++;
 	}
@@ -180,12 +186,14 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 
 void LongTermFuelTrim::store() {
 	// TODO: lock to avoid modification while writing
+	ltftSavePending = true;
 
 	if (m_state) {
 		m_state->save();
 	}
 
 	// TODO: unlock
+	ltftSavePending = false;
 }
 
 void LongTermFuelTrim::reset() {
