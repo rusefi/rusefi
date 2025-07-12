@@ -54,7 +54,7 @@
 flash_descriptor_t snor_descriptor = {
   .attributes       = FLASH_ATTR_ERASED_IS_ONE | FLASH_ATTR_REWRITABLE |
                       FLASH_ATTR_SUSPEND_ERASE_CAPABLE,
-  .page_size        = 256U,
+  .page_size        = PAGE_SIZE,
   .sectors_count    = 0U,           /* It is overwritten.*/
   .sectors          = NULL,
   .sectors_size     = SECTOR_SIZE,
@@ -195,14 +195,15 @@ static flash_error_t w25q_poll_status(SNORDriver *devp) {
   int timeout = 100;
 
   do {
+    uint8_t sts;
     /* Read status command.*/
     bus_cmd_receive(devp, W25Q_CMD_READ_STATUS_REGISTER,
-                    1, &devp->nocache->buf[0]);
-    uint8_t sts = devp->nocache->buf[0];
+                    1, &sts);
     if ((sts & W25Q_FLAGS_BUSY) == 0U) {
       break;
     }
 #if W25Q_NICE_WAITING == TRUE
+    /* TODO: release bus so other users can access it while we are waiting */
     osalThreadSleepMilliseconds(1);
 #endif
   } while (--timeout);
@@ -301,12 +302,11 @@ static const uint8_t w25q_memory_type_ids[] = W25Q_SUPPORTED_MEMORY_TYPE_IDS;
 /*===========================================================================*/
 
 void snor_device_init(SNORDriver *devp) {
-
+  uint8_t id[3];
 #if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_SPI
   /* Reading device ID.*/
   bus_cmd_receive(devp, W25Q_CMD_READ_JEDEC_ID,
-                  3U, &devp->nocache->buf[0]);
-
+                  3U, id);
 #else /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
   /* Attempting a reset of the XIP mode, it could be in an unexpected state
      because a CPU reset does not reset the memory too.*/
@@ -318,21 +318,21 @@ void snor_device_init(SNORDriver *devp) {
 
   /* Reading device ID and unique ID.*/
   wspiReceive(devp, &w25q_cmd_read_id,
-              sizeof(devp->device_id), devp->device_id);
+              3U, id);
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
   /* Checking if the device is white listed.*/
   osalDbgAssert(w25q_find_id(w25q_manufacturer_ids,
                              sizeof(w25q_manufacturer_ids),
-                             devp->nocache->buf[0]),
+                             id[0]),
                 "invalid manufacturer id");
   osalDbgAssert(w25q_find_id(w25q_memory_type_ids,
                              sizeof(w25q_memory_type_ids),
-                             devp->nocache->buf[1]),
+                             id[1]),
                 "invalid memory type id");
 
   /* Setting up the device size.*/
-  snor_descriptor.sectors_count = (1U << (size_t)devp->nocache->buf[2]) /
+  snor_descriptor.sectors_count = (1U << (size_t)id[2]) /
                                   SECTOR_SIZE;
   snor_descriptor.size = (size_t)snor_descriptor.sectors_count * SECTOR_SIZE;
 }
@@ -415,7 +415,7 @@ flash_error_t snor_device_start_erase_sector(SNORDriver *devp,
 
 flash_error_t snor_device_verify_erase(SNORDriver *devp,
                                        flash_sector_t sector) {
-  uint8_t *cmpbuf = devp->nocache->buf;
+  uint8_t cmpbuf[W25Q_COMPARE_BUFFER_SIZE];
   flash_offset_t offset;
   size_t n;
 
@@ -426,15 +426,15 @@ flash_error_t snor_device_verify_erase(SNORDriver *devp,
 #if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI
     bus_cmd_addr_dummy_receive(devp, W25Q_CMD_FAST_READ,
                                offset, W25Q_READ_DUMMY_CYCLES,
-                               SNOR_BUFFER_SIZE, cmpbuf);
+                               W25Q_COMPARE_BUFFER_SIZE, cmpbuf);
 #else
     /* Normal read command in SPI mode.*/
     bus_cmd_addr_receive(devp, W25Q_CMD_READ,
-                         offset, SNOR_BUFFER_SIZE, cmpbuf);
+                         offset, W25Q_COMPARE_BUFFER_SIZE, cmpbuf);
 #endif
 
     /* Checking for erased state of current buffer.*/
-    for (size_t i = 0; i < SNOR_BUFFER_SIZE; i++) {
+    for (size_t i = 0; i < W25Q_COMPARE_BUFFER_SIZE; i++) {
       if (cmpbuf[i] != 0xFFU) {
         /* Ready state again.*/
         devp->state = FLASH_READY;
@@ -443,18 +443,18 @@ flash_error_t snor_device_verify_erase(SNORDriver *devp,
       }
     }
 
-    offset += SNOR_BUFFER_SIZE;
-    n -= SNOR_BUFFER_SIZE;
+    offset += W25Q_COMPARE_BUFFER_SIZE;
+    n -= W25Q_COMPARE_BUFFER_SIZE;
   }
 
   return FLASH_NO_ERROR;
 }
 
 flash_error_t snor_device_query_erase(SNORDriver *devp, uint32_t *msec) {
+  uint8_t sts;
   /* Read status command.*/
   bus_cmd_receive(devp, W25Q_CMD_READ_STATUS_REGISTER,
-                  1, &devp->nocache->buf[0]);
-  uint8_t sts = devp->nocache->buf[0];
+                  1, &sts);
 
   /* If the P/E bit is 1 (busy) report that the operation is still in progress.*/
   if ((sts & W25Q_FLAGS_BUSY) != 0U) {
