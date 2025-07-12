@@ -30,6 +30,14 @@
 
 #define TIMING_ADJUSTMENT_SIZE 4
 #define MAX_CYLINDER_COUNT 8
+#define ts_show_cylinder_9 false
+#define ts_show_cylinder_10 false
+#define ts_show_cylinder_11 false
+#define ts_show_cylinder_12 false
+#define ts_show_fuel_trim_cylinder_9 false
+#define ts_show_fuel_trim_cylinder_10 false
+#define ts_show_fuel_trim_cylinder_11 false
+#define ts_show_fuel_trim_cylinder_12 false
 
 #define canReWidebandHwIndex_enum "INVALID", "Idx 1", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 
