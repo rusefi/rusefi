@@ -192,22 +192,21 @@ static bool writeToFlashNow() {
 	persistentState.version = FLASH_DATA_VERSION;
 	persistentState.crc = persistentState.getCrc();
 
+	bool isSuccess = false;
+	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
+	efitick_t startNt = getTimeNowNt();
+
 	// Do actual write
 #if EFI_STORAGE_MFS == TRUE
 	/* In case of MFS:
 	 * do we need to have two copies?
 	 * do we need to protect it with CRC? */
 	if (storageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState)) == StorageStatus::Ok) {
-		// Never used:
-		//isSuccess = true;
+		isSuccess = true;
 	}
 #endif
 
 #if EFI_STORAGE_INT_FLASH == TRUE
-	bool isSuccess = false;
-	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
-	efitick_t startNt = getTimeNowNt();
-
 	if (!mcuCanFlashWhileRunning()) {
 		// there's no wdgStop() for STM32, so we cannot disable it.
 		// we just set a long timeout of 5 secs to wait until flash is done.
@@ -228,15 +227,8 @@ static bool writeToFlashNow() {
 	}
 
 	// handle success/failure
-	isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
-
-	if (isSuccess) {
-		efitick_t endNt = getTimeNowNt();
-		int elapsed_Ms = US2MS(NT2US(endNt - startNt));
-
-		efiPrintf("FLASH_SUCCESS after %d mS", elapsed_Ms);
-	} else {
-		efiPrintf("Flashing failed");
+	if ((result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS)) {
+		isSuccess = true;
 	}
 
 	if (!mcuCanFlashWhileRunning()) {
@@ -244,6 +236,10 @@ static bool writeToFlashNow() {
 		startWatchdog();
 	}
 #endif
+	efitick_t endNt = getTimeNowNt();
+	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
+
+	efiPrintf("Flashing %s after %d mS", isSuccess ? "SUCCESS" : "FAILED", elapsed_Ms);
 
 	resetMaxValues();
 
@@ -295,17 +291,13 @@ static StorageStatus readConfiguration() {
 #if EFI_STORAGE_MFS == TRUE
 	StorageStatus ret = storageRead(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
 
-	if (ret == StorageStatus::Ok) {
-		return validatePersistentState();
+	if ((ret == StorageStatus::Ok) && (validatePersistentState() == StorageStatus::Ok)) {
+		return StorageStatus::Ok;
 	}
-
-	return ret;
 #endif
 
 #if EFI_STORAGE_INT_FLASH == TRUE
-	auto firstCopyAddr = getFlashAddrFirstCopy();
-
-	StorageStatus firstCopy = readOneConfigurationCopy(firstCopyAddr);
+	StorageStatus firstCopy = readOneConfigurationCopy(getFlashAddrFirstCopy());
 
 	if (firstCopy == StorageStatus::Ok) {
 		// First copy looks OK, don't even need to check second copy.
@@ -322,8 +314,7 @@ static StorageStatus readConfiguration() {
 	return readOneConfigurationCopy(secondyCopyAddr);
 #endif
 
-	// In case of neither of those cases, return that things went OK?
-	return StorageStatus::Ok;
+	return StorageStatus::NotFound;
 }
 
 void readFromFlash() {
