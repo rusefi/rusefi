@@ -39,6 +39,10 @@ DDEFS += -DWSPI_USE_MUTUAL_EXCLUSION=FALSE
 
 # This board uses ChibiOS MFS driver on internal flash
 include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
+# We have cache
+DDEFS += -DSNOR_SPI_WORKAROUND_CACHE=TRUE
+# We want big intermediate buffer
+DDEFS += -DSNOR_BUFFER_SIZE=512
 
 #Serial flash driver
 include $(PROJECT_DIR)/hw_layer/drivers/flash/sst26f/sst26f_jedec.mk
