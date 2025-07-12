@@ -192,10 +192,6 @@ static bool writeToFlashNow() {
 	persistentState.version = FLASH_DATA_VERSION;
 	persistentState.crc = persistentState.getCrc();
 
-	// there's no wdgStop() for STM32, so we cannot disable it.
-	// we just set a long timeout of 5 secs to wait until flash is done.
-	startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
-
 	// Do actual write
 #if EFI_STORAGE_MFS == TRUE
 	/* In case of MFS:
@@ -211,6 +207,12 @@ static bool writeToFlashNow() {
 	bool isSuccess = false;
 	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
 	efitick_t startNt = getTimeNowNt();
+
+	if (!mcuCanFlashWhileRunning()) {
+		// there's no wdgStop() for STM32, so we cannot disable it.
+		// we just set a long timeout of 5 secs to wait until flash is done.
+		startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
+	}
 
 	/**
 	 * https://sourceforge.net/p/rusefi/tickets/335/
@@ -236,10 +238,12 @@ static bool writeToFlashNow() {
 	} else {
 		efiPrintf("Flashing failed");
 	}
-#endif
 
-	// restart the watchdog with the default timeout
-	startWatchdog();
+	if (!mcuCanFlashWhileRunning()) {
+		// restart the watchdog with the default timeout
+		startWatchdog();
+	}
+#endif
 
 	resetMaxValues();
 
