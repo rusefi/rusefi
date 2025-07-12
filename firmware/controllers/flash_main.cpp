@@ -367,6 +367,7 @@ static void doWriteLTFT() {
 
 void initFlash() {
 	// Init storage(s) if any
+	// Note: may take some time
 	initStorage();
 
 	addConsoleAction("readconfig", readFromFlash);
