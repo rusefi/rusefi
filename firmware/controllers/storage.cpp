@@ -38,7 +38,14 @@ StorageStatus storageRead(int id, uint8_t *ptr, size_t size)
 void initStorage()
 {
 #if EFI_STORAGE_MFS == TRUE
+	// Set long timeout to watchdog as this code is called before any thread is started
+	// and no one is feeding watchdog
+	startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
+
 	initStorageMfs();
+
+	// restart the watchdog with the default timeout
+	startWatchdog();
 #endif // EFI_STORAGE_MFS
 }
 
