@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jul 01 00:27:52 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jul 13 10:54:40 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -384,6 +384,8 @@ case COMMAND_X14_UNUSED_0:
   return "COMMAND_X14_UNUSED_0";
 case COMMAND_X14_UNUSED_1:
   return "COMMAND_X14_UNUSED_1";
+case COMMAND_X14_UNUSED_15:
+  return "COMMAND_X14_UNUSED_15";
 case COMMAND_X14_UNUSED_2:
   return "COMMAND_X14_UNUSED_2";
 case COMMAND_X14_UNUSED_3:
@@ -392,8 +394,6 @@ case COMMAND_X14_UNUSED_4:
   return "COMMAND_X14_UNUSED_4";
 case COMMAND_X14_UNUSED_5:
   return "COMMAND_X14_UNUSED_5";
-case TS_BURN_WITHOUT_FLASH:
-  return "TS_BURN_WITHOUT_FLASH";
 case TS_ETB_AUTOCAL_0:
   return "TS_ETB_AUTOCAL_0";
 case TS_ETB_AUTOCAL_0_FAST:

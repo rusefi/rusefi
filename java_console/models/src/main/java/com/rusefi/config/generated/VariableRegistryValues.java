@@ -1575,11 +1575,11 @@ public class VariableRegistryValues {
 	public static final int TriggerWheel_T_SECONDARY = 1;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_0 = 0x00;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_1 = 0x01;
+	public static final int ts_14_command_COMMAND_X14_UNUSED_15 = 0x15;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_2 = 0x02;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_3 = 0x03;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_4 = 0x04;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_5 = 0x05;
-	public static final int ts_14_command_TS_BURN_WITHOUT_FLASH = 0x15;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0 = 0x0E;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0_FAST = 0x1C;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_1 = 0x11;
