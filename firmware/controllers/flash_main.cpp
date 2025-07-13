@@ -27,7 +27,7 @@
 #include "runtime_state.h"
 
 
-static bool writeToFlashNow();
+static bool writeToFlashNowImpl();
 
 static uint32_t pendingWrites = 0;
 
@@ -62,7 +62,7 @@ static bool flashWriteID(uint32_t id)
 {
 	// Do the actual flash write operation for given ID
 	if (id == EFI_SETTINGS_RECORD_ID) {
-		return writeToFlashNow();
+		return writeToFlashNowImpl();
 	} else if (id == EFI_LTFT_RECORD_ID) {
 		engine->module<LongTermFuelTrim>()->store();
 		return true;
@@ -180,7 +180,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 
 bool burnWithoutFlash = false;
 
-static bool writeToFlashNow() {
+static bool writeToFlashNowImpl() {
 	engine->configBurnTimer.reset();
 
 	if (burnWithoutFlash) {
