@@ -12,6 +12,7 @@ import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.widgets.ToolButtons;
+import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -123,23 +124,18 @@ public class BasicUpdaterPanel {
 
     private void updateUpdateFirmwareJob(final AvailableHardware currentHardware) {
         log.info("updateUpdateFirmwareJob " + currentHardware);
-        if (currentHardware.isDfuFound()) {
-            setUpdateFirmwareJob(new DfuManualJob());
+        List<PortResult> portsToUpdateFirmware = getPortResults(currentHardware);
+        if (!portsToUpdateFirmware.isEmpty()) {
+            // OpenBlt first preference
+            updateUpdateFirmwareJobNotDfu(portsToUpdateFirmware);
         } else {
-            final Set<SerialPortType> portTypesToUpdateFirmware = (isObfuscated ?
-                CompatibilitySet.of(
-                    SerialPortType.EcuWithOpenblt,
-                    SerialPortType.OpenBlt
-                ) :
-                CompatibilitySet.of(
-                    SerialPortType.Ecu,
-                    SerialPortType.EcuWithOpenblt
-                )
-            );
-            final List<PortResult> portsToUpdateFirmware = currentHardware.getKnownPorts(
-                portTypesToUpdateFirmware
-            );
+            // fallback to DFU which is more fragile
+            setUpdateFirmwareJob(new DfuManualJob());
+        }
+    }
 
+    private void updateUpdateFirmwareJobNotDfu(List<PortResult> portsToUpdateFirmware) {
+        {
             switch (portsToUpdateFirmware.size()) {
                 case 0: {
                     resetUpdateFirmwareJob("ECU not found");
@@ -181,6 +177,20 @@ public class BasicUpdaterPanel {
                 }
             }
         }
+    }
+
+    private @NotNull List<PortResult> getPortResults(AvailableHardware currentHardware) {
+        final Set<SerialPortType> portTypesToUpdateFirmware = (isObfuscated ?
+            CompatibilitySet.of(
+                SerialPortType.EcuWithOpenblt,
+                SerialPortType.OpenBlt
+            ) :
+            CompatibilitySet.of(
+                SerialPortType.Ecu,
+                SerialPortType.EcuWithOpenblt
+            )
+        );
+        return currentHardware.getKnownPorts(portTypesToUpdateFirmware);
     }
 
     private void setUpdateFirmwareJob(final AsyncJob updateFirmwareJob) {
