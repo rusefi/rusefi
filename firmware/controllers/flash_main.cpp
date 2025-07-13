@@ -141,10 +141,16 @@ static void flashWriteThread(void*) {
 	}
 }
 
-bool settingsNeedToWriteConfiguration(bool forced) {
-	efiPrintf("Scheduling %sconfiguration write", forced ? "FORCED " : "");
+void writeToFlashNow() {
+	efiPrintf("Scheduling FORCED write");
 
-	return flashRequestWriteID(EFI_SETTINGS_RECORD_ID, forced);
+	flashRequestWriteID(EFI_SETTINGS_RECORD_ID, true);
+}
+
+void setNeedToWriteConfiguration() {
+	efiPrintf("Scheduling write");
+
+	flashRequestWriteID(EFI_SETTINGS_RECORD_ID, false);
 }
 
 bool settingsLtftRequestWriteToFlash() {
@@ -348,7 +354,7 @@ void readFromFlash() {
 
 static void doWriteConfigurationToFlash() {
 	// force settings write to storage
-	settingsNeedToWriteConfiguration(true);
+	writeToFlashNow();
 }
 
 static void doResetConfiguration() {
@@ -358,7 +364,7 @@ static void doResetConfiguration() {
 static void doRewriteConfig() {
 	doResetConfiguration();
 	// force settings write to storage
-	settingsNeedToWriteConfiguration(true);
+	writeToFlashNow();
 }
 
 static void doWriteLTFT() {
