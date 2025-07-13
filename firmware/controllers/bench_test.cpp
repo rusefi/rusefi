@@ -491,7 +491,7 @@ static void handleCommandX14(uint16_t index) {
 	case TS_WRITE_FLASH:
 		// cmd_write_config
 		#if EFI_CONFIGURATION_STORAGE
-			settingsNeedToWriteConfiguration(true);
+			writeToFlashNow();
 		#endif /* EFI_CONFIGURATION_STORAGE */
 		return;
 	case TS_TRIGGER_STIMULATOR_ENABLE:

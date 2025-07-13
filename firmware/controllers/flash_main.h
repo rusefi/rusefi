@@ -12,13 +12,14 @@ void readFromFlash();
 void initFlash();
 
 /**
- * Because of hardware-related issues, some stm32f4/7 chips is totally
+ * Because of hardware-related issues, some stm32f4/7 chips are totally
  * frozen while we are writing to internal flash. Writing the configuration takes
  * about 1-2 seconds, we cannot afford to do that while the engine is
  * running so we postpone the write until the engine is stopped.
- * Calling following function with forced = true can cause ecu stall and engine stop!
  */
-bool settingsNeedToWriteConfiguration(bool forced = false);
+void writeToFlashNow();
+void setNeedToWriteConfiguration();
+
 /**
  * @return true if an flash write is pending
  */

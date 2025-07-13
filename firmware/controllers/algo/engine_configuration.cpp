@@ -630,7 +630,7 @@ void loadConfiguration() {
 	if (IGNORE_FLASH_CONFIGURATION) {
 		engineConfiguration->engineType = DEFAULT_ENGINE_TYPE;
 		resetConfigurationExt(engineConfiguration->engineType);
-		settingsNeedToWriteConfiguration(true);
+		writeToFlashNow();
 	} else {
 		// this call reads configuration from flash memory or sets default configuration
 		// if flash state does not look right.
