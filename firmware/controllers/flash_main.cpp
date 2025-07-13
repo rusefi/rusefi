@@ -184,14 +184,8 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 	return err;
 }
 
-bool burnWithoutFlash = false;
-
 static bool writeToFlashNowImpl() {
 	engine->configBurnTimer.reset();
-
-	if (burnWithoutFlash) {
-		return true;
-	}
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);

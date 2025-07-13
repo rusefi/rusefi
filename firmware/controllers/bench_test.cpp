@@ -554,11 +554,7 @@ static void handleCommandX14(uint16_t index) {
 		// broadcast, for old WBO FWs
 		requestWidebandUpdate(0xff);
 		return;
-	case TS_BURN_WITHOUT_FLASH:
-		#if EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE
-			extern bool burnWithoutFlash;
-			burnWithoutFlash = true;
-		#endif /* EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE */
+	case COMMAND_X14_UNUSED_15:
 		return;
 
 #if EFI_PROD_CODE && EFI_FILE_LOGGING
