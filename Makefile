@@ -3,11 +3,10 @@
 #     • first word = sub-directory
 #     • rest of the words are forwarded (i.e. special rules for subdir's Makefile)
 # ─────────────────────────────────────────────────────────────
-
-.DEFAULT_GOAL := help
 .NOTPARALLEL:
+.DEFAULT_GOAL := help
 
-.PHONY: help firmware simulator unit_tests
+.PHONY: help firmware simulator unit_tests clean all
 
 SUBDIRS := firmware simulator unit_tests
 
@@ -26,6 +25,10 @@ help:
 	@echo "# It is expected from user:"
 	@echo "#   * to execute from root dir"
 	@echo "#   * to set number of jobs via -j# or --jobs=#, this is not shown in examples below"
+	@echo ""
+	@echo "  make all                         # Calls make in firmware/unit_tests/simulator"
+	@echo ""
+	@echo "  make clean                       # Calls make clean in firmware/unit_tests/simulator"
 	@echo ""
 	@echo "  make firmware                    # Builds default target(s) in firmware dir"
 	@echo "  make firmware clean              # Runs 'make clean' in firmware dir"
@@ -59,38 +62,63 @@ help:
 	@echo "  make unit_tests clean # Runs 'make clean' in unit_tests dir"
 	@echo ""
 
-# Extract MAKE flags (-j, etc) and goals
-GOALS := $(filter-out -%,$(MAKECMDGOALS))
-MAKEFLAGS_ONLY := $(filter -%,$(MAKECMDGOALS))
+# Extract MAKE flags (-j, etc) and targets
+TARGETS := $(filter-out -%,$(MAKECMDGOALS))
+MAKEFLAGS := $(filter -%,$(MAKECMDGOALS))
 
-# Firmware dispatcher
+FIRMWARE_POTENTIAL_ARG1 := $(word 2,$(TARGETS))
+FIRMWARE_POTENTIAL_ARG2 := $(word 3,$(TARGETS))
+FIRMWARE_POTENTIAL_ARG3 := $(word 4,$(TARGETS))
+
+# List of allowed top-level targets
+EXCLUSIVE_TARGETS := help firmware simulator unit_tests all
+
+# Count how many exclusive targets are present in the command
+EXCLUSIVE_COUNT := $(words $(filter $(EXCLUSIVE_TARGETS),$(TARGETS)))
+
+# Disallow more than one exclusive target at once
+ifeq ($(EXCLUSIVE_COUNT),1)
+# OK
+else ifneq ($(EXCLUSIVE_COUNT),0)
+$(error Only one of [$(EXCLUSIVE_TARGETS)] can be used at a time. Got: $(filter $(EXCLUSIVE_TARGETS),$(TARGETS)))
+endif
+
+clean:
+	$(info Cleaning all subdirs: $(SUBDIRS))
+	$(MAKE) -C firmware clean
+	$(MAKE) -C simulator clean
+	$(MAKE) -C unit_tests clean
+
+all:
+	$(info Running make with default target in all subdirs: $(SUBDIRS))
+	$(MAKE) -C firmware
+	$(MAKE) -C simulator
+	$(MAKE) -C unit_tests
+
 firmware:
-ifeq ($(ARG3),)
-  ifeq ($(ARG1),)
-	@echo "→ make -C firmware $(MAKEFLAGS_ONLY)"
-	$(MAKE) -C firmware $(MAKEFLAGS_ONLY)
-  else ifeq ($(ARG1),clean)
-	@echo "→ make -C firmware $(MAKEFLAGS_ONLY) clean"
-	$(MAKE) -C firmware $(MAKEFLAGS_ONLY) clean
-  else ifeq ($(ARG2),)
-	@echo "→ make -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG1)"
-	$(MAKE) -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG1)
+	$(info Building firmware)
+	$(info FW_ARGS="$(TARGETS)" FW_ARG1="$(FIRMWARE_POTENTIAL_ARG1)" FW_ARG2="$(FIRMWARE_POTENTIAL_ARG2)" FW_ARG3="$(FIRMWARE_POTENTIAL_ARG3)" FW_MAKEFLAGS="$(MAKEFLAGS)")
+ifeq ($(FIRMWARE_POTENTIAL_ARG3),)
+  ifeq ($(FIRMWARE_POTENTIAL_ARG1),)
+	$(MAKE) -C firmware
+  else ifeq ($(FIRMWARE_POTENTIAL_ARG1),clean)
+	$(MAKE) -C firmware clean
+  else ifeq ($(FIRMWARE_POTENTIAL_ARG2),)
+	$(MAKE) -C firmware BOARD_DIR=./config/boards/$(FIRMWARE_POTENTIAL_ARG1) SHORT_BOARD_NAME=$(FIRMWARE_POTENTIAL_ARG1)
   else
-	@echo "→ make -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG2)"
-	$(MAKE) -C firmware $(MAKEFLAGS_ONLY) BOARD_DIR=./config/boards/$(ARG1) SHORT_BOARD_NAME=$(ARG2)
+	$(MAKE) -C firmware BOARD_DIR=./config/boards/$(FIRMWARE_POTENTIAL_ARG1) SHORT_BOARD_NAME=$(FIRMWARE_POTENTIAL_ARG2)
   endif
 else
 	$(error Too many arguments for 'firmware'. Max 2.)
 endif
 
-# -------------------------------------------------------------------
-# Other subdirs — forward everything after the first word
-# -------------------------------------------------------------------
 simulator:
-	$(MAKE) -C simulator $(MAKEFLAGS_ONLY) $(wordlist 2, 99, $(GOALS))
+	$(info Building simulator)
+	$(MAKE) -C simulator $(wordlist 2, 99, $(TARGETS))
 
 unit_tests:
-	$(MAKE) -C unit_tests $(MAKEFLAGS_ONLY) $(wordlist 2, 99, $(GOALS))
+	$(info Building unit_tests)
+	$(MAKE) -C unit_tests $(wordlist 2, 99, $(TARGETS))
 
 # Catch non-targets so they don't cause "No rule to make target"
 %:
