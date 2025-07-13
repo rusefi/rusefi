@@ -825,6 +825,11 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeSubaru_SVX(this);
 		break;
 
+	case trigger_type_e::TT_JEEPRENIX_66_2_2_2:
+		initializeJeepRenix66_2_2(this);
+		break;
+
+
 	default:
 	  customTrigger(triggerOperationMode, this, triggerType.type);
 	}
