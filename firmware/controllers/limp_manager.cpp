@@ -22,6 +22,11 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 #endif
 	}
 
+	if (engineConfiguration->ignitionMode == IM_ONE_COIL) {
+	  // distributor routes to the correct cylinder, no need to worry about sync
+	  return false;
+	}
+
 	// Symmetrical crank modes require cam sync before firing
 	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
 	// Examples include Nissan MR/VQ, Miata NB, etc
