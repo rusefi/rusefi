@@ -98,5 +98,6 @@ public enum trigger_type_e {
 	TT_CHRYSLER_PHASER,
 	TT_TOYOTA_3_TOOTH_UZ,
 	TT_JEEP_EVD_36_2_2,
+	TT_JEEPRENIX_66_2_2_2,
 	TT_UNUSED,
 }
