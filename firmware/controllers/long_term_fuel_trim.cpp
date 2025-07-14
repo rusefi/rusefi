@@ -132,7 +132,9 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		ltftCntHit++;
 		if ((ltftCntHit % SAVE_AFTER_HITS) == 0) {
 			//request save
+#if EFI_PROD_CODE
 			settingsLtftRequestWriteToFlash();
+#endif
 		}
 	} else {
 		ltftCntDeadband++;
