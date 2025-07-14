@@ -2435,6 +2435,8 @@ struct engine_configuration_s {
 	 */
 	Gpio spi3sckPin;
 	/**
+	 * UNUSED
+	 * Will remove in 2026 for sure
 	 * Saab Combustion Detection Module knock signal input pin
 	 * also known as Saab Ion Sensing Module
 	 * offset 922
