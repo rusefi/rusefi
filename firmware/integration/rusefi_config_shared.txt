@@ -206,6 +206,7 @@
 #define GAUGE_LONG_NAME_CLT "Coolant temp"
 #define GAUGE_LONG_NAME_IAT "Intake air temp"
 #define UNITS_CELSIUS "C"
+#define UNITS_FAHRENHEIT "F"
 
 #define GAUGE_PRECISION_TEMPERATURE_C 1,1
 
