@@ -1,2 +1,8 @@
 // displacement
 #define FIELD_DISPLACEMENT_HASH -1227821282
+// injector.flow
+#define FIELD_INJECTOR_FLOW_HASH 1542550121
+// injector
+#define INSTANCE_INJECTOR_HASH 1960343683
+// flow
+#define MEMBER_FLOW_HASH 2090260573
