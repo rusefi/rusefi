@@ -32,6 +32,8 @@
 
 #ifndef MAX3185X_REFRESH_TIME
 #define MAX3185X_REFRESH_TIME 100
+// MAX6675 needs 0.22 S for convertion in worst case
+#define MAX6675_REFRESH_TIME 250
 #endif
 
 /* TODO: move all stuff to Max3185xRead class */
@@ -46,6 +48,7 @@ public:
 		UNKNOWN_TYPE = 0,
 		MAX31855_TYPE = 1,
 		MAX31856_TYPE = 2,
+		MAX6675_TYPE = 3
 	} Max3185xType;
 
 	typedef enum {
@@ -164,6 +167,8 @@ public:
 private:
 	// bits D17 and D3 are always expected to be zero
 	#define MAX31855_RESERVED_BITS	0x20008
+	// bit D3 is always expected to be zero, D15 is dummy sign bit also always zero
+	#define MAX6675_RESERVED_BITS	0x8002
 
 	brain_pin_e m_cs[EGT_CHANNEL_COUNT];
 
@@ -250,6 +255,25 @@ private:
 		return 0;
 	}
 
+	int spi_rx16(size_t channel, uint16_t *data)
+	{
+		int ret;
+		/* dummy */
+		uint8_t tx[2] = {0};
+		uint8_t rx[2];
+
+		ret = spi_txrx(channel, tx, rx, 2);
+		if (ret) {
+			return ret;
+		}
+		if (data) {
+			*data =	(rx[0] << 8) |
+					(rx[1] << 0);
+		}
+
+		return 0;
+	}
+
 	int spi_rx32(size_t channel, uint32_t *data)
 	{
 		int ret;
@@ -315,6 +339,11 @@ private:
 			return UNKNOWN_TYPE;
 		}
 
+		/* MAX6675 replyes with 16 bit. */
+		if ((data >> 16) == (data & 0xffff)) {
+			return MAX6675_TYPE;
+		}
+
 		if ((data & MAX31855_RESERVED_BITS) == 0x0) {
 			return MAX31855_TYPE;
 		}
@@ -377,6 +406,20 @@ private:
 		return code;
 	}
 
+	Max3185xState getMax6675ErrorCode(uint16_t egtPacket) {
+		#define MAX6675_OPEN_BIT			BIT(2)
+
+		if (((egtPacket & MAX6675_RESERVED_BITS) != 0) ||
+			(egtPacket == 0x0) ||
+			(egtPacket == 0xffff)) {
+			return MAX3185X_NO_REPLY;
+		} else if ((egtPacket & MAX6675_OPEN_BIT) != 0) {
+			return MAX3185X_OPEN_CIRCUIT;
+		} else {
+			return MAX3185X_OK;
+		}
+	}
+
 	Max3185xState getMax31856EgtValues(size_t channel, float *temp, float *coldJunctionTemp)
 	{
 		uint8_t rx[7];
@@ -415,6 +458,33 @@ private:
 		return MAX3185X_OK;
 	}
 
+	Max3185xState getMax6675EgtValues(size_t channel, float *temp, float *coldJunctionTemp) {
+		uint16_t packet;
+		Max3185xState code = MAX3185X_NO_REPLY;
+		int ret;
+
+		ret = spi_rx16(channel, &packet);
+		if (ret == 0) {
+			code = getMax6675ErrorCode(packet);
+		}
+
+		if (code != MAX3185X_OK) {
+			return code;
+		}
+
+		if (temp) {
+			// bits 14:3, 1C resolution
+			uint16_t tmp = (packet >> 3) & 0x0fff;
+			*temp = (float) tmp * 0.25;
+		}
+		if (coldJunctionTemp) {
+			// this chip does not provide
+			*coldJunctionTemp = -273.15;
+		}
+
+		return code;
+	}
+
 	Max3185xState getMax3185xEgtValues(size_t channel, float *temp, float *coldJunctionTemp) {
 		Max3185xState ret;
 
@@ -434,8 +504,10 @@ private:
 
 		if (types[channel] == MAX31855_TYPE) {
 			ret = getMax31855EgtValues(channel, temp, coldJunctionTemp);
-		} else {
+		} else if (types[channel] == MAX31856_TYPE) {
 			ret = getMax31856EgtValues(channel, temp, coldJunctionTemp);
+		} else if (types[channel] == MAX6675_TYPE) {
+			ret = getMax6675EgtValues(channel, temp, coldJunctionTemp);
 		}
 
 		if (ret == MAX3185X_NO_REPLY) {
