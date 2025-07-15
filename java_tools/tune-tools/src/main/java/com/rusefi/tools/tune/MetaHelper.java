@@ -28,6 +28,8 @@ public class MetaHelper {
 
         options.add(ConfigDefinition.KEY_PREPEND);
         options.add("integration/rusefi_config_shared.txt");
+        options.add(ConfigDefinition.KEY_PREPEND);
+        options.add("integration/fields_api.txt");
 
         // add board prepend
         options.add(ConfigDefinition.KEY_PREPEND);
