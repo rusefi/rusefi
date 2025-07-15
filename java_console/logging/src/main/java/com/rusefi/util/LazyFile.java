@@ -13,4 +13,8 @@ public interface LazyFile extends Output {
 
     @Override
     void write(String line);
+
+    default void write(CharSequence line) {
+        write(line.toString());
+    }
 }

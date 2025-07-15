@@ -74,7 +74,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
     private void writeStringToFile(@Nullable String fileName, StringBuilder writer) throws IOException {
         if (fileName != null) {
             LazyFile fw = fileFactory.create(fileName);
-            fw.write(writer.toString());
+            fw.write(writer);
             fw.close();
         }
     }
