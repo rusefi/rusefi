@@ -8,6 +8,7 @@ import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -16,6 +17,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TuneCanToolTest {
     private static final Logging log = getLogging(TuneCanToolTest.class);
+
+    @BeforeAll
+    public static void before() {
+        RootHolder.ROOT = "../../firmware/";
+    }
 
     @Test
     public void testGPPWMTuneParse() throws Exception {
@@ -28,8 +34,6 @@ public class TuneCanToolTest {
         IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
         assertEquals(256, ini.getBlockingFactor());
         assertFalse(ini.getFieldsInUiOrder().isEmpty());
-
-        RootHolder.ROOT = "../../firmware/";
 
         try {
             StringBuilder sb = TuneCanTool.getTunePatch(lessOldDefaultTune, customOldTune, ini, TuneReadWriteTest.TUNE_NAME, new StringBuilder(), null, "");
@@ -48,8 +52,6 @@ public class TuneCanToolTest {
 
     @Test
     public void TuneCanToolGetParentTest() throws Exception {
-    	 RootHolder.ROOT = "../../firmware/";
-
          try {
              ConfigField gppwmTable = TuneCanTool.getReaderState("gppwm1_table"); // engineConfiguration->gppwm[0].table
              ConfigField cltRevLimitRpmBins = TuneCanTool.getReaderState("cltRevLimitRpmBins"); // config->cltRevLimitRpmBins
@@ -71,7 +73,6 @@ public class TuneCanToolTest {
 
     @Test
     public void TuneCanToolBooleanTest() throws Exception {
-    	RootHolder.ROOT = "../../firmware/";
     	Msq customOldTune = Msq.readTune(TuneReadWriteTest.TUNE_NAME);
     	String fieldName = "enableAemXSeries";// config->enableAemXSeries
         try {
