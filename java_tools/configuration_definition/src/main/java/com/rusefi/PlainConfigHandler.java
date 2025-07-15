@@ -5,6 +5,9 @@ import com.rusefi.output.PlainTsProjectConsumer;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * used to prepare secondary pages in TS .ini file
+ */
 class PlainConfigHandler {
     ReaderStateImpl readerState = new ReaderStateImpl();
     PlainTsProjectConsumer tsProjectConsumer = new PlainTsProjectConsumer(readerState);
