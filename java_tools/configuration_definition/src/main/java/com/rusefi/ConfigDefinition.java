@@ -171,6 +171,7 @@ public class ConfigDefinition {
             }
         }
 
+        FieldsApiGenerator.run();
         handlePage(state, 1, softPrePrendsFileNames);
         handlePage(state, 2, softPrePrendsFileNames);
 
