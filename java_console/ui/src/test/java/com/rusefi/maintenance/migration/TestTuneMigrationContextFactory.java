@@ -36,4 +36,25 @@ public class TestTuneMigrationContextFactory {
 
         return new TestTuneMigrationContext(prevMsq, prevIniFile, updatedMsq, updatedIniFile, new TestCallbacks());
     }
+
+    public static TestTuneMigrationContext createTestMigrationContextWithDisappearedConst(
+        final Constant prevConst,
+        final IniField prevIniField
+    ) {
+        final IniFileModelImpl prevIniFile = mock(IniFileModelImpl.class);
+        when(prevIniFile.findIniField(prevIniField.getName())).thenReturn(Optional.of(prevIniField));
+        when(prevIniFile.getAllIniFields()).thenReturn(Map.of(prevIniField.getName(), prevIniField));
+
+        final Msq prevMsq = mock(Msq.class);
+        when(prevMsq.getConstantsAsMap()).thenReturn(Map.of(prevConst.getName(), prevConst));
+
+        final IniFileModelImpl updatedIniFile = mock(IniFileModelImpl.class);
+        when(updatedIniFile.findIniField(prevIniField.getName())).thenReturn(Optional.empty());
+        when(updatedIniFile.getAllIniFields()).thenReturn(Map.of());
+
+        final Msq updatedMsq = mock(Msq.class);
+        when(updatedMsq.getConstantsAsMap()).thenReturn(Map.of());
+
+        return new TestTuneMigrationContext(prevMsq, prevIniFile, updatedMsq, updatedIniFile, new TestCallbacks());
+    }
 }
