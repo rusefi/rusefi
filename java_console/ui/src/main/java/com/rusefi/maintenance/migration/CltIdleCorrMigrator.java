@@ -18,8 +18,11 @@ public enum CltIdleCorrMigrator implements TuneMigrator {
     public static final String CLT_IDLE_CORR_BINS_FIELD_NAME = "cltIdleCorrBins";
     public static final String CLT_IDLE_CORR_FIELD_NAME = "cltIdleCorr";
 
+    public static final String OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME = "overrideCrankingIacSetting";
+
     @Override
     public void migrateTune(final TuneMigrationContext context) {
+        checkIfOverrideCrankingIacSettingHasDisappeared(context);
         final IniFileModel updatedIniFile = context.getUpdatedIniFile();
         if (!updatedIniFile.findIniField(MAN_IDLE_POSITION_FIELD_NAME).isPresent()) {
             final Map<String, Constant> prevTune = context.getPrevTune().getConstantsAsMap();
@@ -164,5 +167,27 @@ public enum CltIdleCorrMigrator implements TuneMigrator {
             return Optional.empty();
         }
         return Optional.of(arrayField);
+    }
+
+    private static void checkIfOverrideCrankingIacSettingHasDisappeared(final TuneMigrationContext context) {
+        final IniFileModel prevIniFile = context.getPrevIniFile();
+        final IniFileModel updatedIniFile = context.getUpdatedIniFile();
+        if (prevIniFile.findIniField(OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME).isPresent()
+            && !updatedIniFile.findIniField(OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME).isPresent()
+        ) {
+            final Map<String, Constant> prevTune = context.getPrevTune().getConstantsAsMap();
+            final Constant prevOverrideCrankingIacSettingConst = prevTune.get(OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME);
+            if (prevOverrideCrankingIacSettingConst != null) {
+                final String prevOverrideCrankingIacSettingValue = prevOverrideCrankingIacSettingConst.getValue();
+                if (!("\"true\"".equals(prevOverrideCrankingIacSettingValue))) {
+                    context.getCallbacks().logLine(String.format(
+                        "WARNING! `%s` ini-field with value `%s` cannot be migrated.",
+                        OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME,
+                        prevOverrideCrankingIacSettingValue
+                    ));
+                }
+                context.addMigration(OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME, null);
+            }
+        }
     }
 }
