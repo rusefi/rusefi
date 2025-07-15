@@ -36,6 +36,9 @@ ifeq ($(USE_OPT),)
   USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(EXTRA_3_PARAMS) $(DEBUG_LEVEL_BLT_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
 endif
 
+# let everyone know that we are compiling bootloader
+IS_RE_BOOTLOADER = yes
+
 # Configure the linker script to build the bootloader, not the firmware
 USE_OPT += -Wl,--defsym=IS_BOOTLOADER=1
 
