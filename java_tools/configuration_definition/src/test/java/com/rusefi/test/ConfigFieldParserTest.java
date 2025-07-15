@@ -33,6 +33,16 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testNameTemplating() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().put("name", "value");
+        {
+            ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "uint8_t @@name@@");
+            assertEquals(cf.getName(), "value");
+        }
+    }
+
+    @Test
     public void testByte3dArray() {
         ReaderStateImpl state = new ReaderStateImpl();
         {

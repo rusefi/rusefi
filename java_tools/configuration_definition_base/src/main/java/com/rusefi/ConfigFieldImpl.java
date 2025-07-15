@@ -30,7 +30,7 @@ public class ConfigFieldImpl implements ConfigField {
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
-    private static final String namePattern = "[[\\w\\d\\s_]]+";
+    private static final String namePattern = "[[@\\w\\d\\s_]]+";
     private static final String commentPattern = ";([^;]*)";
 
     private static final Pattern FIELD = Pattern.compile(typePattern + "\\s(" + namePattern + ")(" + commentPattern + ")?(;(.*))?");
@@ -191,7 +191,7 @@ public class ConfigFieldImpl implements ConfigField {
         if (!matcher.matches())
             return null;
 
-        String nameString = matcher.group(8).trim();
+        String nameString = state.getVariableRegistry().applyVariables(matcher.group(8).trim());
         String[] nameTokens = nameString.split("\\s");
         String name = nameTokens[nameTokens.length - 1];
 
