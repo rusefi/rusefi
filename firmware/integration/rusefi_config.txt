@@ -519,14 +519,14 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 
 
 struct injector_s
-	float flow;This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below;"", 1, 0, 0, 99999, 2
+	float @@MEMBER_FLOW@@;This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below;"", 1, 0, 0, 99999, 2
     int16_t[VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorrBattBins;;"volts", 0.01, 0, 0, 22, 2
     ! 30k Kpa considering the highest value I found online for a GDI engine, for a Mustang GT PP1
     uint32_t[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] autoscale battLagCorrPressBins;Injector correction pressure;"kPa", 0.1, 0, 0, 30000, 2
     int16_t[VBAT_INJECTOR_CURVE_PRESSURE_SIZE x VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorrTable;ms delay between injector open and close dead times;"ms", 0.01, 0, 0, 50, 2
 end_struct
 
-injector_s injector
+injector_s @@INSTANCE_INJECTOR@@
 injector_s injectorSecondary
 
 bit isForcedInduction;Does the vehicle have a turbo or supercharger?
