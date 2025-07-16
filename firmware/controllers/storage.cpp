@@ -14,7 +14,7 @@
 #if EFI_CONFIGURATION_STORAGE
 
 #if EFI_STORAGE_MFS == TRUE
-#include "mfs_storage.h"
+#include "storage_mfs.h"
 #endif
 
 StorageStatus storageWrite(int id, const uint8_t *ptr, size_t size)

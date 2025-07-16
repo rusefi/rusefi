@@ -1,5 +1,5 @@
 /**
- * @file    mfs_storage.cpp
+ * @file    storage_mfs.cpp
  * @brief   Storage interface to ChibiOS MFS driver
  *
  * @date Jan 4, 2025
