@@ -3,13 +3,17 @@
  * http://www.chibios.com/forum/viewtopic.php?f=8&t=820
  * https://github.com/tegesoft/flash-stm32f407
  *
- * @file    flash_int.c
+ * @file    flash_int.cpp
  * @brief	Lower-level code related to internal flash memory
  */
 
 #include "pch.h"
 
-#if defined(EFI_BOOTLOADER) || EFI_STORAGE_INT_FLASH
+#ifndef EFI_STORAGE_INT_FLASH_DRIVER
+#define EFI_STORAGE_INT_FLASH_DRIVER TRUE
+#endif
+
+#if defined(EFI_BOOTLOADER) || EFI_STORAGE_INT_FLASH_DRIVER
 
 #include "flash_int.h"
 #include <string.h>
