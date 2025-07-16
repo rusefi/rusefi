@@ -618,6 +618,7 @@ static void processCanSetCalibration(const CANRxFrame& frame) {
 // todo
 }
 static void processCanRequestCalibration(const CANRxFrame& frame) {
+#if EFI_LUA_LOOKUP
   int hash = getFourBytesLsb(frame, 2);
   efiPrintf("processCanRequestCalibration=%x", hash);
   FloatIntBytes fb;
@@ -632,6 +633,7 @@ static void processCanRequestCalibration(const CANRxFrame& frame) {
   for (size_t i = 0;i<sizeof(float);i++) {
     msg[i] = fb.bytes[i];
   }
+#endif // EFI_LUA_LOOKUP
 }
 
 void processCanEcuControl(const CANRxFrame& frame) {
