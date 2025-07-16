@@ -8,10 +8,6 @@
 
 #pragma once
 
-#include "flash_main.h"
+#include "storage.h"
 
-StorageStatus mfsStorageWrite(int id, const uint8_t *ptr, size_t size);
-StorageStatus mfsStorageRead(int id, uint8_t *ptr, size_t size);
-StorageStatus mfsStorageFormat();
-
-void initStorageMfs();
+SettingStorageBase *initStorageMfs();

@@ -8,34 +8,52 @@
 
 #include "pch.h"
 
-#include "storage.h"
+#include "storage_mfs.h"
+#include "flash_main.h"
 
 /* if we use ChibiOS MFS for settings */
 #if EFI_STORAGE_MFS == TRUE
 
 #include "hal_mfs.h"
 
-/* Managed Flash Storage driver */
-static MFSDriver mfsd;
-static NO_CACHE mfs_nocache_buffer_t mfsbuf;
+class SettingStorageMFS : public SettingStorageBase {
+public:
+	bool isIdSupported(size_t id) override;
+	StorageStatus store(size_t id, const uint8_t *ptr, size_t size) override;
+	StorageStatus read(size_t id, uint8_t *ptr, size_t size) override;
+	StorageStatus format() override;
 
-extern void boardInitMfs(void);
-extern const MFSConfig *boardGetMfsConfig(void);
+	SettingStorageMFS(MFSDriver *drv) {
+		m_drv = drv;
+	}
 
-StorageStatus mfsStorageWrite(int id, const uint8_t *ptr, size_t size) {
-	efiPrintf("Writing storage ID %d ... %d bytes", id, size);
+private:
+	MFSDriver *m_drv;
+};
+
+bool SettingStorageMFS::isIdSupported(size_t id)
+{
+	if ((id >= 1) && (id < MFS_CFG_MAX_RECORDS)) {
+		return true;
+	}
+
+	return false;
+}
+
+StorageStatus SettingStorageMFS::store(size_t id, const uint8_t *ptr, size_t size) {
+	efiPrintf("MFS: Writing storage ID %d ... %d bytes", id, size);
 	efitick_t startNt = getTimeNowNt();
 
 	// TODO: add watchdog disable and enable in case MFS is on internal flash and one bank
-	mfs_error_t err = mfsWriteRecord(&mfsd, id, size, ptr);
+	mfs_error_t err = mfsWriteRecord(m_drv, id, size, ptr);
 
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
 
 	if (err >= MFS_NO_ERROR) {
-		efiPrintf("Write done with no errors after %d mS MFS status %d", elapsed_Ms, err);
+		efiPrintf("MFS: Write done with no errors after %d mS MFS status %d", elapsed_Ms, err);
 	} else {
-		efiPrintf("Write FAILED after %d with MFS status %d", elapsed_Ms, err);
+		efiPrintf("MFS: Write FAILED after %d with MFS status %d", elapsed_Ms, err);
 
 		return StorageStatus::Failed;
 	}
@@ -43,20 +61,20 @@ StorageStatus mfsStorageWrite(int id, const uint8_t *ptr, size_t size) {
 	return StorageStatus::Ok;
 }
 
-StorageStatus mfsStorageRead(int id, uint8_t *ptr, size_t size) {
-	efiPrintf("Reading storage ID %d ... %d bytes", id, size);
+StorageStatus SettingStorageMFS::read(size_t id, uint8_t *ptr, size_t size) {
+	efiPrintf("MFS: Reading storage ID %d ... %d bytes", id, size);
 
 	size_t readed_size = size;
-	mfs_error_t err = mfsReadRecord(&mfsd, id, &readed_size, ptr);
+	mfs_error_t err = mfsReadRecord(m_drv, id, &readed_size, ptr);
 
 	if (err >= MFS_NO_ERROR) {
 		if (readed_size != size) {
-			efiPrintf("Incorrect size expected %d readed %d", size, readed_size);
+			efiPrintf("MFS: Incorrect size expected %d readed %d", size, readed_size);
 			return StorageStatus::IncompatibleVersion;
 		}
-		efiPrintf("Reding done with no errors and MFS status %d", err);
+		efiPrintf("MFS: Reding done with no errors and MFS status %d", err);
 	} else {
-		efiPrintf("Read FAILED with MFS status %d", err);
+		efiPrintf("MFS: Read FAILED with MFS status %d", err);
 
 		// TODO: or corrupted?
 		return StorageStatus::NotFound;
@@ -64,25 +82,34 @@ StorageStatus mfsStorageRead(int id, uint8_t *ptr, size_t size) {
 	return StorageStatus::Ok;
 }
 
-StorageStatus mfsStorageFormat()
+StorageStatus SettingStorageMFS::format()
 {
 	efitick_t startNt = getTimeNowNt();
 
 	mfs_error_t err;
-	err = mfsErase(&mfsd);
+	err = mfsErase(m_drv);
 
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
-	efiPrintf("MFS erase done %d mS err %d", elapsed_Ms, err);
+	efiPrintf("MFS: format done %d mS err %d", elapsed_Ms, err);
 
 	return (err >= MFS_NO_ERROR) ? StorageStatus::Ok : StorageStatus::Failed;
 }
 
-static void eraseStorage() {
-	mfsStorageFormat();
-}
+//static void eraseStorage() {
+//	mfsStorageFormat();
+//}
 
-void initStorageMfs() {
+/* Managed Flash Storage driver */
+static MFSDriver mfsd;
+static NO_CACHE mfs_nocache_buffer_t mfsbuf;
+
+static SettingStorageMFS storageMFS(&mfsd);
+
+extern void boardInitMfs(void);
+extern const MFSConfig *boardGetMfsConfig(void);
+
+SettingStorageBase *initStorageMfs() {
 	boardInitMfs();
 	const MFSConfig *mfsConfig = boardGetMfsConfig();
 
@@ -90,10 +117,13 @@ void initStorageMfs() {
 	mfsObjectInit(&mfsd, &mfsbuf);
 	mfs_error_t err = mfsStart(&mfsd, mfsConfig);
 	if (err < MFS_NO_ERROR) {
-		/* hm...? */
+		efiPrintf("MFS: storage failed to start: %d", err);
+		return nullptr;
 	}
 
-	addConsoleAction("erasestorage", eraseStorage);
+	//addConsoleAction("erasestorage", eraseStorage);
+
+	return &storageMFS;
 }
 
 #endif //EFI_STORAGE_MFS
