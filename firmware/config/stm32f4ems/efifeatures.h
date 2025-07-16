@@ -205,6 +205,13 @@
 
 
 /**
+ * Controlled defined to TRUE by USE_FATFS=yes in board mk file
+ */
+#ifndef EFI_SUPPORT_FATFS
+#define EFI_SUPPORT_FATFS		FALSE
+#endif
+
+/**
  * Usually you need shaft position input, but maybe you do not need it?
  */
 #ifndef EFI_SHAFT_POSITION_INPUT
