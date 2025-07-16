@@ -38,8 +38,8 @@ static uint32_t pendingWrites = 0;
 
 chibios_rt::Mailbox<msg_t, 16> flashWriterMb;
 
-#if EFI_STORAGE_MFS == TRUE
-/* in case of MFS we need more stack */
+#if (EFI_STORAGE_MFS == TRUE) || (EFI_STORAGE_SD == TRUE)
+/* in case of MFS of SD card we need more stack */
 static THD_WORKING_AREA(flashWriteStack, 3 * UTILITY_THREAD_STACK_SIZE);
 #else
 static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);

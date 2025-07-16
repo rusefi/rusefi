@@ -192,17 +192,33 @@
 
 #define TRIGGER_EXTREME_LOGGING FALSE
 
+/**
+ * Store configuration as raw binary to internal flash (two copies if there is enough flash)
+ * No wear leveling, one copy occupie whole sector erased on each update
+ * Legacy, should be replaced with EFI_STORAGE_MFS
+ */
 #ifndef EFI_STORAGE_INT_FLASH
 // historically we've started with low-level flash access with our own redundancy logic
 // todo: migrate to EFI_STORAGE_MFS which provides same functionality and more!
 #define EFI_STORAGE_INT_FLASH   TRUE
 #endif
 
+/**
+ * ChibiOS Managed Flash Storage
+ * Can store finite number of records, can update/add while there is free space in bank.
+ * Recover from power loss
+ */
 #ifndef EFI_STORAGE_MFS
 // todo: this higher level API should replace EFI_STORAGE_INT_FLASH legacy implementation
 #define EFI_STORAGE_MFS         FALSE
 #endif
 
+/**
+ * Store settings/calibrations/learning to SD card as a files
+ */
+#ifndef EFI_STORAGE_SD
+#define EFI_STORAGE_SD	        FALSE
+#endif
 
 /**
  * Controlled defined to TRUE by USE_FATFS=yes in board mk file

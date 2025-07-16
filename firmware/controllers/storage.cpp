@@ -17,8 +17,15 @@
 #include "storage_mfs.h"
 #endif
 
+#if EFI_STORAGE_SD == TRUE
+#include "storage_sd.h"
+#endif
+
 static constexpr size_t storageCount =
 #if EFI_STORAGE_MFS == TRUE
+	1 +
+#endif
+#if EFI_STORAGE_SD == TRUE
 	1 +
 #endif
 	0;
@@ -84,6 +91,13 @@ void initStorage()
 
 	// restart the watchdog with the default timeout
 	startWatchdog();
+#endif // EFI_STORAGE_MFS
+
+#if EFI_STORAGE_SD == TRUE
+	storages[n] = initStorageSD();
+	if (storages[n]) {
+		n++;
+	}
 #endif // EFI_STORAGE_MFS
 }
 
