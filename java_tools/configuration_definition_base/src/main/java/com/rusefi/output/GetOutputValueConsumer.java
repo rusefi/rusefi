@@ -90,16 +90,21 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
         return
                 GetConfigValueConsumer.getHeader(getClass()) +
-                "float getOutputValueByName(const char *name) {\n" +
+                "float getOutputValueByHash(const int hash) {\n" +
                 fullSwitch +
-                getterBody + GetConfigValueConsumer.GET_METHOD_FOOTER
+                getterBody + "\treturn EFI_ERROR_CODE;\n" +
+                    "}\n" +
+                    "float getOutputValueByName(const char *name) {\n" +
+                    "\tint hash = djb2lowerCase(name);\n" +
+                    "\treturn getOutputValueByHash(hash);\n" +
+                    "}\n"
                 ;
     }
 
     @NotNull
     static String wrapSwitchStatement(StringBuilder switchBody) {
         String fullSwitch = switchBody.length() == 0 ? "" :
-                ("\tint hash = djb2lowerCase(name);\n" +
+                (
 
                         "\tswitch(hash) {\n" + switchBody + "\t}\n");
         return fullSwitch;
