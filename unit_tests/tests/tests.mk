@@ -197,4 +197,5 @@ TESTS_SRC_CPP = \
 	tests/util/test_utils.cpp \
 	tests/controllers/algo/test_engine_cylinder.cpp \
 	tests/controllers/algo/test_closed_loop_idle.cpp \
-	tests/controllers/modules/test_example_module.cpp
+	tests/controllers/modules/test_example_module.cpp \
+	tests/controllers/test_flash.cpp
