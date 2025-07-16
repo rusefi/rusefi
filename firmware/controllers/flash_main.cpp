@@ -9,6 +9,10 @@
 
 #include "pch.h"
 
+#if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
+#include "storage.h"
+#endif
+
 /* If any setting storage is exist */
 #if EFI_CONFIGURATION_STORAGE
 
@@ -22,7 +26,6 @@
 #include "tunerstudio.h"
 #endif
 
-#include "storage.h"
 
 #include "runtime_state.h"
 
@@ -73,8 +76,11 @@ static bool flashWriteID(uint32_t id)
 	}
 	return true;
 }
+#endif // EFI_CONFIGURATION_STORAGE
 
-static bool flashAllowWriteID(uint32_t id)
+/* If any setting storage is exist or we are in unit test */
+#if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
+bool flashAllowWriteID(uint32_t id)
 {
 	if (id == EFI_SETTINGS_RECORD_ID) {
 		// special case, settings can be stored in internal flash
@@ -98,7 +104,10 @@ static bool flashAllowWriteID(uint32_t id)
 	// TODO: we expect every other ID to be stored in external flash...
 	return true;
 }
+#endif // EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 
+/* If any setting storage is exist */
+#if EFI_CONFIGURATION_STORAGE
 static void flashWriteThread(void*) {
 	chRegSetThreadName("flash writer");
 

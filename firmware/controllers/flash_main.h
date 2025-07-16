@@ -26,3 +26,5 @@ void setNeedToWriteConfiguration();
 bool getNeedToWriteConfiguration();
 
 bool settingsLtftRequestWriteToFlash();
+
+bool flashAllowWriteID(uint32_t id);
