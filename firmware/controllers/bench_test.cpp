@@ -25,6 +25,8 @@
 #include "long_term_fuel_trim.h"
 #include "can_common.h"
 #include "can_rx.h"
+#include "value_lookup.h"
+#include "can_msg_tx.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -599,18 +601,53 @@ PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
  *
  * See also more complicated ISO-TP CANBus wrapper of complete TS protocol
  */
-void processCanEcuControl(const CANRxFrame& frame) {
-	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
-		return;
-	}
-	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
-		return;
-	}
+static void processCanUserControl(const CANRxFrame& frame) {
 	// reserved data8[1]
 	uint16_t subsystem = getTwoBytesLsb(frame, 2);
 	uint16_t index = getTwoBytesLsb(frame, 4);
 	executeTSCommand(subsystem, index);
 }
+
+   union FloatIntBytes {
+          float f;
+          int i;
+          uint8_t bytes[sizeof(float)];
+      };
+
+static void processCanSetCalibration(const CANRxFrame& frame) {
+// todo
+}
+static void processCanRequestCalibration(const CANRxFrame& frame) {
+  int hash = getFourBytesLsb(frame, 2);
+  FloatIntBytes fb;
+  fb.f = getOutputValueByHash(hash);
+
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_GET_CALIBRATION, 8, /*bus*/0, /*isExtended*/true);
+  for (size_t i = 0;i<sizeof(float);i++) {
+    msg[4 + i] = fb.bytes[i];
+  }
+
+  fb.i = hash;
+  for (size_t i = 0;i<sizeof(float);i++) {
+    msg[i] = fb.bytes[i];
+  }
+}
+
+void processCanEcuControl(const CANRxFrame& frame) {
+	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
+		return;
+	}
+
+  int eid = CAN_EID(frame);
+  if (eid == (int)bench_test_packet_ids_e::ECU_SET_CALIBRATION) {
+    processCanSetCalibration(frame);
+  } else if (eid == (int)bench_test_packet_ids_e::ECU_REQ_CALIBRATION) {
+    processCanRequestCalibration(frame);
+  } else if (eid == (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
+    processCanUserControl(frame);
+  }
+}
+
 #endif // EFI_CAN_SUPPORT
 
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
