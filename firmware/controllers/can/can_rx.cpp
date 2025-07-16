@@ -116,6 +116,13 @@ void registerCanSensor(CanSensorBase& sensor) {
 #define MM5_10_MB_YAW_Y_CANID		0x150
 #define MM5_10_MB_ROLL_X_CANID		0x151
 
+uint32_t getFourBytesLsb(const CANRxFrame& frame, int offset) {
+	return (frame.data8[offset + 3] << 24) +
+	    (frame.data8[offset + 2] << 16) +
+	    (frame.data8[offset + 1] << 8) +
+	    frame.data8[offset];
+}
+
 uint16_t getTwoBytesLsb(const CANRxFrame& frame, int offset) {
 	return (frame.data8[offset + 1] << 8) + frame.data8[offset];
 }
