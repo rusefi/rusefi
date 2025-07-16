@@ -617,6 +617,10 @@ static void processCanUserControl(const CANRxFrame& frame) {
 static void processCanSetCalibration(const CANRxFrame& frame) {
 // todo
 }
+/**
+ * see fields_api.txt for well-known fields
+ * see generated_fields_api_header.h for corresponding hashes
+ */
 static void processCanRequestCalibration(const CANRxFrame& frame) {
 #if EFI_LUA_LOOKUP
   int hash = getFourBytesLsb(frame, 2);
@@ -630,6 +634,7 @@ static void processCanRequestCalibration(const CANRxFrame& frame) {
   }
 
   fb.i = hash;
+  // first half of the packed is copy of that hash value so that recipients know what they are processing
   for (size_t i = 0;i<sizeof(float);i++) {
     msg[i] = fb.bytes[i];
   }
