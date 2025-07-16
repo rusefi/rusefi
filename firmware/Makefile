@@ -243,6 +243,7 @@ endif
 include $(CHIBIOS)/os/hal/lib/complex/mfs/hal_mfs.mk
 
 ifeq ($(USE_FATFS),yes)
+  DDEFS += -DEFI_SUPPORT_FATFS=TRUE
   include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
 endif
 
