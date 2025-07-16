@@ -74,3 +74,5 @@ namespace chibios_rt {
 
 #define chsnprintf snprintf
 #define chvsnprintf vsnprintf
+
+bool mcuCanFlashWhileRunning() ;
