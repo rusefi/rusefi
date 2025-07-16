@@ -202,6 +202,9 @@
 #define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_IAC "Idle: Position"
+#define GAUGE_LONG_NAME_CLT "Coolant temp"
+#define GAUGE_LONG_NAME_IAT "Intake air temp"
+#define UNITS_CELSIUS "C"
 
 #define GAUGE_NAME_ADJUSTED_TIMING "Timing: ignition"
 #define GAUGE_NAME_TIMING_ADVANCE "Timing: base ignition"
