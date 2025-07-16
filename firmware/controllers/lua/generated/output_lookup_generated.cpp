@@ -2,8 +2,7 @@
 #include "pch.h"
 #include "board_lookup.h"
 #include "value_lookup.h"
-float getOutputValueByName(const char *name) {
-	int hash = djb2lowerCase(name);
+float getOutputValueByHash(const int hash) {
 	switch(hash) {
 // sd_present
 		case -230533156:
@@ -2183,4 +2182,8 @@ float getOutputValueByName(const char *name) {
 #endif
 	}
 	return EFI_ERROR_CODE;
+}
+float getOutputValueByName(const char *name) {
+	int hash = djb2lowerCase(name);
+	return getOutputValueByHash(hash);
 }

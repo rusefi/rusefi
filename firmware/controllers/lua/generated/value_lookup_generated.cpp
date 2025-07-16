@@ -2,8 +2,7 @@
 #include "pch.h"
 #include "board_lookup.h"
 #include "value_lookup.h"
-float getConfigValueByName(const char *name) {
-	int hash = djb2lowerCase(name);
+float getConfigValueByHash(const int hash) {
 	switch(hash) {
 // startButtonSuppressOnStartUpMs
 		case 1856486116:
@@ -2026,6 +2025,10 @@ float getConfigValueByName(const char *name) {
 			return config->dynoCarFrontalAreaM2;
 	}
 	return EFI_ERROR_CODE;
+}
+float getConfigValueByName(const char *name) {
+	int hash = djb2lowerCase(name);
+	return getConfigValueByHash(hash);
 }
 bool setConfigValueByName(const char *name, float value) {
 	int hash = djb2lowerCase(name);
