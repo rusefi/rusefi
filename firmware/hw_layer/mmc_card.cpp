@@ -362,7 +362,7 @@ static void sdLoggerCreateFile(FIL *fd) {
 	FRESULT err = f_open(fd, logName, FA_CREATE_ALWAYS | FA_WRITE);
 	if (err != FR_OK && err != FR_EXIST) {
 		sdStatus = SD_STATUS_OPEN_FAILED;
-		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
+		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: file open failed");
 		printError("log file create", err);	// else - show error
 		return;
 	}
@@ -558,7 +558,7 @@ static bool mountMmc() {
 		memset(&resources, 0x00, sizeof(resources));
 		// We were able to connect the SD card, mount the filesystem
 		memset(&MMC_FS, 0, sizeof(FATFS));
-		ret = (f_mount(&MMC_FS, "/", /* Mount immediately */ 1) == FR_OK);
+		ret = (f_mount(&MMC_FS, "", /* Mount immediately */ 1) == FR_OK);
 
 		if (ret == false) {
 			sdStatus = SD_STATUS_MOUNT_FAILED;
@@ -583,8 +583,12 @@ static bool mountMmc() {
  * @return true if we had SD card alive
  */
 static void unmountMmc() {
+	FRESULT ret;
 	// FATFS: Unregister work area prior to discard it
-	f_mount(NULL, 0, 0);
+	ret = f_unmount("");
+	if (ret != FR_OK) {
+		printError("Umount failed", ret);
+	}
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.sd_logging_internal = false;
