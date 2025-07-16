@@ -619,6 +619,7 @@ static void processCanSetCalibration(const CANRxFrame& frame) {
 }
 static void processCanRequestCalibration(const CANRxFrame& frame) {
   int hash = getFourBytesLsb(frame, 2);
+  efiPrintf("processCanRequestCalibration=%x", hash);
   FloatIntBytes fb;
   fb.f = getOutputValueByHash(hash);
 
