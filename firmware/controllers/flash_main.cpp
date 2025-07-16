@@ -94,9 +94,11 @@ bool flashAllowWriteID(uint32_t id)
 #if EFI_SHAFT_POSITION_INPUT
 		// MCU does not support write while executing, check if engine is stopped
 		if (engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped()) {
+			return true;
+		} else {
 			// rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
 			// postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
-			return true;
+			return false;
 		}
 #endif
 	}
