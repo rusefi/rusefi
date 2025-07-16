@@ -4,7 +4,7 @@
 git update-index --assume-unchanged ../java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java
 
 git update-index --assume-unchanged controllers/algo/auto*.*
-git update-index --assume-unchanged controllers/lua/generated/value_lookup_generated.*
+git update-index --assume-unchanged controllers/lua/generated/*
 git update-index --assume-unchanged live_data_generated/*
 git update-index --assume-unchanged console/binary/generated/*
 git update-index --assume-unchanged tunerstudio/generated/*
