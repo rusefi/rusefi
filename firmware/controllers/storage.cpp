@@ -42,13 +42,24 @@ static SettingStorageBase *storages[storageCount];
 #define for_all_storages	SettingStorageBase* storage = nullptr; \
 	for (size_t i = 0; (i < storageCount) && ((storage = storages[i]) != nullptr); i++)
 
+bool storageIsIdAvailable(int id)
+{
+	for_all_storages {
+		if ((storage->isReady()) && (storage->isIdSupported(id))) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 StorageStatus storageWrite(int id, const uint8_t *ptr, size_t size)
 {
 	bool success = false;
 	StorageStatus status = StorageStatus::NotSupported;
 
 	for_all_storages {
-		if (!storage->isIdSupported(id)) {
+		if ((!storage->isReady()) || (!storage->isIdSupported(id))) {
 			continue;
 		}
 
@@ -67,7 +78,7 @@ StorageStatus storageRead(int id, uint8_t *ptr, size_t size)
 	StorageStatus status = StorageStatus::NotSupported;
 
 	for_all_storages {
-		if (!storage->isIdSupported(id)) {
+		if ((!storage->isReady()) || (!storage->isIdSupported(id))) {
 			continue;
 		}
 

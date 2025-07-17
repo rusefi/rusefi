@@ -22,12 +22,19 @@ enum class StorageStatus {
 
 class SettingStorageBase {
 public:
+	/* is storage ready? */
+	virtual bool isReady() = 0;
+	/* does storage able to srore given ID? */
 	virtual bool isIdSupported(size_t id) = 0;
+	/* store given ID */
 	virtual StorageStatus store(size_t id, const uint8_t *ptr, size_t size) = 0;
+	/* read given ID */
 	virtual StorageStatus read(size_t id, uint8_t *ptr, size_t size) = 0;
+	/* format/esare storage */
 	virtual StorageStatus format() = 0;
 };
 
+bool storageIsIdAvailable(int id);
 StorageStatus storageWrite(int id, const uint8_t *ptr, size_t size);
 StorageStatus storageRead(int id, uint8_t *ptr, size_t size);
 

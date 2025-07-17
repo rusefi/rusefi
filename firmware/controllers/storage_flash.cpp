@@ -17,6 +17,7 @@
 
 class SettingStorageFlash : public SettingStorageBase {
 public:
+	bool isReady() override;
 	bool isIdSupported(size_t id) override;
 	StorageStatus store(size_t id, const uint8_t *ptr, size_t size) override;
 	StorageStatus read(size_t id, uint8_t *ptr, size_t size) override;
@@ -26,8 +27,7 @@ private:
 	flashaddr_t getIdAddress(size_t id);
 };
 
-flashaddr_t SettingStorageFlash::getIdAddress(size_t id)
-{
+flashaddr_t SettingStorageFlash::getIdAddress(size_t id) {
 	if (id == EFI_SETTINGS_RECORD_ID) {
 		return getFlashAddrFirstCopy();
 	} else if (id == EFI_SETTINGS_BACKUP_RECORD_ID) {
@@ -37,8 +37,11 @@ flashaddr_t SettingStorageFlash::getIdAddress(size_t id)
 	return 0;
 }
 
-bool SettingStorageFlash::isIdSupported(size_t id)
-{
+bool SettingStorageFlash::isReady() {
+	return true;
+}
+
+bool SettingStorageFlash::isIdSupported(size_t id) {
 	return (getIdAddress(id) != 0);
 }
 

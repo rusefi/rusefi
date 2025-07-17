@@ -18,10 +18,12 @@
 #endif
 
 #include "ff.h"
+#include "mmc_card.h"
 #include "mmc_card_util.h"
 
 class SettingStorageSD : public SettingStorageBase {
 public:
+	bool isReady() override;
 	bool isIdSupported(size_t id) override;
 	StorageStatus store(size_t id, const uint8_t *ptr, size_t size) override;
 	StorageStatus read(size_t id, uint8_t *ptr, size_t size) override;
@@ -36,8 +38,7 @@ private:
 	FIL *m_fd;
 };
 
-const char *SettingStorageSD::getIdFileName(size_t id)
-{
+const char *SettingStorageSD::getIdFileName(size_t id) {
 	switch (id) {
 	case EFI_LTFT_RECORD_ID:
 		return "ltft.bin";
@@ -46,8 +47,11 @@ const char *SettingStorageSD::getIdFileName(size_t id)
 	}
 }
 
-bool SettingStorageSD::isIdSupported(size_t id)
-{
+bool SettingStorageSD::isReady() {
+	return (sdCardGetCurrentMode() == SD_MODE_ECU);
+}
+
+bool SettingStorageSD::isIdSupported(size_t id) {
 	return (getIdFileName(id) != nullptr);
 }
 
