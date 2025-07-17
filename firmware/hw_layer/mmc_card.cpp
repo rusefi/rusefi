@@ -43,6 +43,10 @@ static bool sdLoggerReady = false;
 
 #include "rtc_helper.h"
 
+#if EFI_STORAGE_SD == TRUE
+#include "storage_sd.h"
+#endif // EFI_STORAGE_SD
+
 // TODO: do we need this additioal layer of buffering?
 // FIL structure already have buffer of FF_MAX_SS size
 // check if it is better to increase FF_MAX_SS and drop BufferedWriter?
@@ -571,6 +575,11 @@ static bool mountMmc() {
 		efiPrintf("MMC/SD mounted!");
 	}
 
+#if EFI_STORAGE_SD == TRUE
+	// notificate storage subsystem
+	initStorageSD();
+#endif // EFI_STORAGE_SD
+
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.sd_logging_internal = ret;
 #endif
@@ -584,6 +593,12 @@ static bool mountMmc() {
  */
 static void unmountMmc() {
 	FRESULT ret;
+
+#if EFI_STORAGE_SD == TRUE
+	// notificate storage subsystem
+	deinitStorageSD();
+#endif // EFI_STORAGE_SD
+
 	// FATFS: Unregister work area prior to discard it
 	ret = f_unmount("");
 	if (ret != FR_OK) {

@@ -25,22 +25,31 @@
 #include "storage_sd.h"
 #endif
 
-static constexpr size_t storageCount =
-#if EFI_STORAGE_INT_FLASH == TRUE
-	1 +
-#endif
-#if EFI_STORAGE_MFS == TRUE
-	1 +
-#endif
-#if EFI_STORAGE_SD == TRUE
-	1 +
-#endif
-	0;
+static constexpr size_t storagesCount = STORAGE_TOTAL;
 
-static SettingStorageBase *storages[storageCount];
+static SettingStorageBase *storages[storagesCount];
+
+static const char *storageTypeToName(StorageType type)
+{
+	switch (type) {
+	case STORAGE_INT_FLASH:
+		return "INT_FLASH";
+	case STORAGE_MFS_INT_FLASH:
+		return "MFS_INT_FLASH";
+	case STORAGE_MFS_EXT_FLASH:
+		return "MFS_EXT_FLASH";
+	case STORAGE_SD_CARD:
+		return "SD_CARD";
+	default:
+		break;
+	}
+
+	return "UNK";
+}
 
 #define for_all_storages	SettingStorageBase* storage = nullptr; \
-	for (size_t i = 0; (i < storageCount) && ((storage = storages[i]) != nullptr); i++)
+	for (size_t i = 0; i < storagesCount; i++) \
+		if ((storage = storages[i]) != nullptr)
 
 bool storageIsIdAvailable(int id)
 {
@@ -91,38 +100,59 @@ StorageStatus storageRead(int id, uint8_t *ptr, size_t size)
 	return (success ? StorageStatus::Ok : status);
 }
 
+bool storageRegisterStorage(StorageType type, SettingStorageBase *storage)
+{
+	if (type >= STORAGE_TOTAL) {
+		return false;
+	}
+
+	if (storages[type] != nullptr) {
+		/* already registered */
+		efiPrintf("Trying to register already exist storage %s", storageTypeToName(type));
+		return false;
+	}
+
+	storages[type] = storage;
+	efiPrintf("Storage %s registered", storageTypeToName(type));
+
+	/* TODO: notificate storage manager about newly added storage */
+
+	return true;
+}
+
+bool storageUnregisterStorage(StorageType type)
+{
+	if (type >= STORAGE_TOTAL) {
+		return false;
+	}
+
+	if (storages[type] == nullptr) {
+		/* already unregistered */
+		efiPrintf("Trying to unregister non-exist storage %s", storageTypeToName(type));
+		return false;
+	}
+
+	storages[type] = nullptr;
+	efiPrintf("Storage %s unregistered", storageTypeToName(type));
+
+	return true;
+}
+
 void initStorage()
 {
-	size_t n = 0;
-
-	// may be unused
-	(void)n;
-
 #if EFI_STORAGE_INT_FLASH == TRUE
-	storages[n] = initStorageFlash();
-	if (storages[n]) {
-		n++;
-	}
-#endif
+	initStorageFlash();
+#endif // STORAGE_SD_CARD
+
 #if EFI_STORAGE_MFS == TRUE
 	// Set long timeout to watchdog as this code is called before any thread is started
 	// and no one is feeding watchdog
 	startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
 
-	storages[n] = initStorageMfs();
-	if (storages[n]) {
-		n++;
-	}
+	initStorageMfs();
 
 	// restart the watchdog with the default timeout
 	startWatchdog();
-#endif // EFI_STORAGE_MFS
-
-#if EFI_STORAGE_SD == TRUE
-	storages[n] = initStorageSD();
-	if (storages[n]) {
-		n++;
-	}
 #endif // EFI_STORAGE_MFS
 }
 

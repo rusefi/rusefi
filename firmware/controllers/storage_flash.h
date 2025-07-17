@@ -8,4 +8,4 @@
 
 #pragma once
 
-SettingStorageBase *initStorageFlash();
+bool initStorageFlash();

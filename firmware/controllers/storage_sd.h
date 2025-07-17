@@ -8,4 +8,5 @@
 
 #pragma once
 
-SettingStorageBase *initStorageSD();
+bool initStorageSD();
+bool deinitStorageSD();

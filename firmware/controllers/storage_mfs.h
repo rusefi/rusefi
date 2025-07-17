@@ -10,4 +10,4 @@
 
 #include "storage.h"
 
-SettingStorageBase *initStorageMfs();
+bool initStorageMfs();
