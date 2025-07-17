@@ -6,7 +6,7 @@
 
 #include <array>
 
-#include "log_field.h"
+#include "mlg_field.h"
 
 namespace {
 class BitLoggerFieldTest : public ::testing::Test {
@@ -18,7 +18,7 @@ class BitLoggerFieldTest : public ::testing::Test {
         void updateTestBit(bool value);
 
         std::unique_ptr<output_channels_s> m_testOutputChannels;
-        std::unique_ptr<LogField> m_logField;
+        std::unique_ptr<MLG::Entries::Field> m_logField;
         std::array<char, 6> m_buffer;
     };
 
@@ -29,7 +29,7 @@ class BitLoggerFieldTest : public ::testing::Test {
 			reinterpret_cast<const char*>(&m_testOutputChannels->outputRequestPeriod)
 				- reinterpret_cast<const char*>(m_testOutputChannels.get())
         ) - sizeof(uint32_t);
-        m_logField = std::make_unique<LogField>(
+        m_logField = std::make_unique<MLG::Entries::Field>(
             *m_testOutputChannels,
             testCoilStateBlockOffset,
             COIL_STATE_12_BIT_NUMBER,

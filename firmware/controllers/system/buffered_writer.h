@@ -6,10 +6,7 @@
 
 #include <cstring>
 
-struct Writer {
-	virtual size_t write(const char* buffer, size_t count) = 0;
-	virtual size_t flush() = 0;
-};
+#include "writer.h"
 
 template <int TBufferSize>
 class BufferedWriter : public Writer {

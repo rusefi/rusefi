@@ -47,7 +47,7 @@
 #include "can_hw.h"
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
-#include "binary_logging.h"
+#include "binary_mlg_logging.h"
 #include "buffered_writer.h"
 #include "dynoview.h"
 #include "frequency_sensor.h"
