@@ -40,6 +40,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/engine_cycle/fuel_schedule.cpp \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
 	$(CONTROLLERS_DIR)/storage.cpp \
+	$(CONTROLLERS_DIR)/storage_flash.cpp \
 	$(CONTROLLERS_DIR)/storage_mfs.cpp \
 	$(CONTROLLERS_DIR)/storage_sd.cpp \
 	$(CONTROLLERS_DIR)/bench_test.cpp \
