@@ -41,7 +41,8 @@ void initStorage();
 enum StorageItemId {
 	/* 0 is reserved due to MFS limitation */
 	EFI_SETTINGS_RECORD_ID = 1,
-	EFI_LTFT_RECORD_ID = 2,
+	EFI_SETTINGS_BACKUP_RECORD_ID = 2,
+	EFI_LTFT_RECORD_ID = 3,
 
 	EFI_STORAGE_TOTAL_ITEMS
 };

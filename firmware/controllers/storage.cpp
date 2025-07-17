@@ -13,6 +13,10 @@
 /* If any setting storage is exist */
 #if EFI_CONFIGURATION_STORAGE
 
+#if EFI_STORAGE_INT_FLASH == TRUE
+#include "storage_flash.h"
+#endif
+
 #if EFI_STORAGE_MFS == TRUE
 #include "storage_mfs.h"
 #endif
@@ -22,6 +26,9 @@
 #endif
 
 static constexpr size_t storageCount =
+#if EFI_STORAGE_INT_FLASH == TRUE
+	1 +
+#endif
 #if EFI_STORAGE_MFS == TRUE
 	1 +
 #endif
@@ -79,6 +86,13 @@ void initStorage()
 
 	// may be unused
 	(void)n;
+
+#if EFI_STORAGE_INT_FLASH == TRUE
+	storages[n] = initStorageFlash();
+	if (storages[n]) {
+		n++;
+	}
+#endif
 #if EFI_STORAGE_MFS == TRUE
 	// Set long timeout to watchdog as this code is called before any thread is started
 	// and no one is feeding watchdog

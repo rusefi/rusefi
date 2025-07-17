@@ -39,7 +39,7 @@ static uint32_t pendingWrites = 0;
 chibios_rt::Mailbox<msg_t, 16> flashWriterMb;
 
 #if (EFI_STORAGE_MFS == TRUE) || (EFI_STORAGE_SD == TRUE)
-/* in case of MFS of SD card we need more stack */
+/* in case of MFS or SD card we need more stack */
 static THD_WORKING_AREA(flashWriteStack, 3 * UTILITY_THREAD_STACK_SIZE);
 #else
 static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
@@ -82,7 +82,8 @@ static bool flashWriteID(uint32_t id)
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 bool flashAllowWriteID(uint32_t id)
 {
-	if (id == EFI_SETTINGS_RECORD_ID) {
+	if ((id == EFI_SETTINGS_RECORD_ID) ||
+		(id == EFI_SETTINGS_BACKUP_RECORD_ID)) {
 		// special case, settings can be stored in internal flash
 
 		// writing internal flash can cause cpu freeze
@@ -172,29 +173,6 @@ bool getNeedToWriteConfiguration() {
 	return (pendingWrites & BIT(EFI_SETTINGS_RECORD_ID)) != 0;
 }
 
-// Erase and write a copy of the configuration at the specified address
-template <typename TStorage>
-int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
-	// error already reported, return
-	if (!storageAddress) {
-		return FLASH_RETURN_SUCCESS;
-	}
-
-	auto err = intFlashErase(storageAddress, sizeof(TStorage));
-	if (FLASH_RETURN_SUCCESS != err) {
-		criticalError("Failed to erase flash at 0x%08x: %d", storageAddress, err);
-		return err;
-	}
-
-	err = intFlashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
-	if (FLASH_RETURN_SUCCESS != err) {
-		criticalError("Failed to write flash at 0x%08x: %d", storageAddress, err);
-		return err;
-	}
-
-	return err;
-}
-
 static bool writeToFlashNowImpl() {
 	engine->configBurnTimer.reset();
 
@@ -203,58 +181,13 @@ static bool writeToFlashNowImpl() {
 	persistentState.version = FLASH_DATA_VERSION;
 	persistentState.crc = persistentState.getCrc();
 
-	bool isSuccess = false;
-	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
-	efitick_t startNt = getTimeNowNt();
-
 	// Do actual write
-#if EFI_STORAGE_MFS == TRUE
-	/* In case of MFS:
-	 * do we need to have two copies?
-	 * do we need to protect it with CRC? */
-	if (storageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState)) == StorageStatus::Ok) {
-		isSuccess = true;
-	}
-#endif
-
-#if EFI_STORAGE_INT_FLASH == TRUE
-	if (!mcuCanFlashWhileRunning()) {
-		// there's no wdgStop() for STM32, so we cannot disable it.
-		// we just set a long timeout of 5 secs to wait until flash is done.
-		startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
-	}
-
-	/**
-	 * https://sourceforge.net/p/rusefi/tickets/335/
-	 *
-	 * In order to preserve at least one copy of the tune in case of electrical issues address of second configuration copy
-	 * should be in a different sector of flash since complete flash sectors are erased on write.
-	 */
-	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
-	int result2 = FLASH_RETURN_SUCCESS;
-	/* Only if second copy is supported */
-	if (getFlashAddrSecondCopy()) {
-		result2 = eraseAndFlashCopy(getFlashAddrSecondCopy(), persistentState);
-	}
-
-	// handle success/failure
-	if ((result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS)) {
-		isSuccess = true;
-	}
-
-	if (!mcuCanFlashWhileRunning()) {
-		// restart the watchdog with the default timeout
-		startWatchdog();
-	}
-#endif
-	efitick_t endNt = getTimeNowNt();
-	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
-
-	efiPrintf("Flashing %s after %d mS", isSuccess ? "SUCCESS" : "FAILED", elapsed_Ms);
+	auto result1 = storageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
+	auto result2 = storageWrite(EFI_SETTINGS_BACKUP_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
 
 	resetMaxValues();
 
-	return true;
+	return ((result1 == StorageStatus::Ok) && (result2 == StorageStatus::Ok));
 }
 
 static StorageStatus validatePersistentState() {
@@ -274,24 +207,6 @@ static StorageStatus validatePersistentState() {
     }
 }
 
-#if EFI_STORAGE_INT_FLASH == TRUE
-/**
- * Read single copy of rusEFI configuration from interan flash using custom driver
- */
-static StorageStatus readOneConfigurationCopy(flashaddr_t address) {
-	efiPrintf("readFromFlash %x", address);
-
-	// error already reported, return
-	if (!address) {
-		return StorageStatus::NotFound;
-	}
-
-	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
-
-	return validatePersistentState();
-}
-#endif
-
 /**
  * this method could and should be executed before we have any
  * connectivity so no console output here
@@ -299,33 +214,23 @@ static StorageStatus readOneConfigurationCopy(flashaddr_t address) {
  * in this method we read first copy of configuration in flash. if that first copy has CRC or other issues we read second copy.
  */
 static StorageStatus readConfiguration() {
-#if EFI_STORAGE_MFS == TRUE
-	StorageStatus ret = storageRead(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
-
-	if ((ret == StorageStatus::Ok) && (validatePersistentState() == StorageStatus::Ok)) {
-		return StorageStatus::Ok;
-	}
-#endif
-
-#if EFI_STORAGE_INT_FLASH == TRUE
-	StorageStatus firstCopy = readOneConfigurationCopy(getFlashAddrFirstCopy());
-
+	auto firstCopy = storageRead(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
 	if (firstCopy == StorageStatus::Ok) {
-		// First copy looks OK, don't even need to check second copy.
-		return firstCopy;
+		firstCopy = validatePersistentState();
+		if (firstCopy == StorageStatus::Ok) {
+			return StorageStatus::Ok;
+		}
 	}
 
-	auto secondyCopyAddr = getFlashAddrSecondCopy();
-	/* no second copy? */
-	if (secondyCopyAddr == 0x0) {
-		return firstCopy;
+	auto secondCopy = storageRead(EFI_SETTINGS_BACKUP_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
+	if (secondCopy == StorageStatus::Ok) {
+		secondCopy = validatePersistentState();
+		if (secondCopy == StorageStatus::Ok) {
+			return StorageStatus::Ok;
+		}
 	}
 
-	efiPrintf("Reading second configuration copy");
-	return readOneConfigurationCopy(secondyCopyAddr);
-#endif
-
-	return StorageStatus::NotFound;
+	return firstCopy;
 }
 
 void readFromFlash() {
