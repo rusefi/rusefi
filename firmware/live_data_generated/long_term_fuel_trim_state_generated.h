@@ -10,19 +10,19 @@ struct long_term_fuel_trim_state_s {
 	 * units: cnt
 	 * offset 0
 	 */
-	scaled_channel<uint32_t, 1, 1> ltftCntHit = (uint32_t)0;
+	uint32_t ltftCntHit = (uint32_t)0;
 	/**
 	 * LTFT learning: miss
 	 * units: cnt
 	 * offset 4
 	 */
-	scaled_channel<uint32_t, 1, 1> ltftCntMiss = (uint32_t)0;
+	uint32_t ltftCntMiss = (uint32_t)0;
 	/**
 	 * LTFT learning: in deadband
 	 * units: cnt
 	 * offset 8
 	 */
-	scaled_channel<uint32_t, 1, 1> ltftCntDeadband = (uint32_t)0;
+	uint32_t ltftCntDeadband = (uint32_t)0;
 	/**
 	 * LTFT learning
 	offset 12 bit 0 */
