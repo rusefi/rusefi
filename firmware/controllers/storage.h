@@ -8,10 +8,6 @@
 
 #pragma once
 
-#ifndef EFI_STORAGE_MFS_EXTERNAL
-#define EFI_STORAGE_MFS_EXTERNAL FALSE
-#endif
-
 // Storage status
 enum class StorageStatus {
 	Ok,
