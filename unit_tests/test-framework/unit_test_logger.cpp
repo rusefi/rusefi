@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "unit_test_logger.h"
-#include "binary_logging.h"
+#include "binary_mlg_logging.h"
 
 FILE *mslFile = nullptr;
 
@@ -17,7 +17,7 @@ static UnitTestLogBufferWriter unitTestLogWriter;
 
 void writeUnitTestLogLine() {
 	if (mslFile != nullptr) {
-		writeSdLogLine(unitTestLogWriter);
+		MLG::writeSdLogLine(unitTestLogWriter);
 	}
 }
 
@@ -30,8 +30,8 @@ void createUnitTestLog() {
 	mslFile = fopen(filePath.str().c_str(), "wb");
 	if (mslFile != nullptr) {
 		printf("Writing [%s]\n", filePath.str().c_str());
-		resetFileLogging();
-		writeSdLogLine(unitTestLogWriter);
+		MLG::resetFileLogging();
+		MLG::writeSdLogLine(unitTestLogWriter);
 	}
 }
 
