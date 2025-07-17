@@ -33,6 +33,13 @@ private:
 
 bool SettingStorageMFS::isIdSupported(size_t id)
 {
+#if (EFI_STORAGE_INT_FLASH == TRUE)
+	// If internal flash storage is enabled - settings are stored in there
+	if ((id == EFI_SETTINGS_RECORD_ID) ||
+		(id == EFI_SETTINGS_BACKUP_RECORD_ID)) {
+		return false;
+	}
+#endif // EFI_STORAGE_INT_FLASH
 	if ((id >= 1) && (id < MFS_CFG_MAX_RECORDS)) {
 		return true;
 	}
