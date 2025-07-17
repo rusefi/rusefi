@@ -18,6 +18,7 @@
 #endif
 
 #include "ff.h"
+#include "mmc_card_util.h"
 
 class SettingStorageSD : public SettingStorageBase {
 public:
@@ -63,7 +64,7 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 	/* Create new or truncate file. */
 	FRESULT err = f_open(m_fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
 	if (err != FR_OK) {
-		efiPrintf("SD: failed to create file %d", err);
+		printFatFsError("SD: failed to create file", err);
 		return StorageStatus::Failed;
 	}
 
@@ -71,7 +72,7 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 	size_t bytesWritten = 0;
 	err = f_write(m_fd, ptr, size, &bytesWritten);
 	if (err != FR_OK) {
-		efiPrintf("SD: failed to write %d", err);
+		printFatFsError("SD: failed to write", err);
 		status = StorageStatus::Failed;
 	}
 
@@ -102,7 +103,7 @@ StorageStatus SettingStorageSD::read(size_t id, uint8_t *ptr, size_t size) {
 	/* Create new or truncate file. */
 	FRESULT err = f_open(m_fd, fileName, FA_READ);
 	if (err != FR_OK) {
-		efiPrintf("SD: failed to open file %d", err);
+		printFatFsError("SD: failed to open file", err);
 		return StorageStatus::NotFound;
 	}
 
@@ -110,7 +111,7 @@ StorageStatus SettingStorageSD::read(size_t id, uint8_t *ptr, size_t size) {
 	size_t bytesRead = 0;
 	err = f_read(m_fd, ptr, size, &bytesRead);
 	if (err != FR_OK) {
-		efiPrintf("SD: failed to read %d", err);
+		printFatFsError("SD: failed to read", err);
 		status = StorageStatus::Failed;
 	}
 
