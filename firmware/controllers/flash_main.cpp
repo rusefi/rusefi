@@ -82,6 +82,7 @@ static bool flashWriteID(uint32_t id)
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 bool flashAllowWriteID(uint32_t id)
 {
+#if (EFI_STORAGE_INT_FLASH == TRUE) || defined(EFI_UNIT_TEST)
 	if ((id == EFI_SETTINGS_RECORD_ID) ||
 		(id == EFI_SETTINGS_BACKUP_RECORD_ID)) {
 		// special case, settings can be stored in internal flash
@@ -101,8 +102,9 @@ bool flashAllowWriteID(uint32_t id)
 			// postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
 			return false;
 		}
-#endif
+#endif // EFI_SHAFT_POSITION_INPUT
 	}
+#endif // EFI_STORAGE_INT_FLASH
 
 	// TODO: we expect every other ID to be stored in external flash...
 	return true;
