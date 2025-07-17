@@ -18,7 +18,7 @@
 
 #include "buffered_writer.h"
 #include "status_loop.h"
-#include "binary_logging.h"
+#include "binary_mlg_logging.h"
 
 // Divide logs into 32Mb chunks.
 // With this opstion defined SW will pre-allocate file with given size and
@@ -33,8 +33,8 @@ static bool sdLoggerReady = false;
 
 #if EFI_PROD_CODE
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include "mmc_card.h"
 #include "ff.h"
 #include "mmc_card_util.h"
@@ -312,7 +312,7 @@ static void sdStatistics() {
 		efiPrintf("filename=%s size=%d", logName, logBuffer.writen());
 	}
 #if EFI_FILE_LOGGING
-	efiPrintf("%d SD card fields", getSdCardFieldsCount());
+	efiPrintf("%d SD card fields", MLG::getSdCardFieldsCount());
 #endif
 }
 
@@ -630,7 +630,7 @@ static int sdLogger(FIL *fd)
 		incLogFileName(fd);
 		sdLoggerCreateFile(fd);
 		logBuffer.start(fd);
-		resetFileLogging();
+		MLG::resetFileLogging();
 		sdLoggerInitDone = true;
 	}
 
@@ -658,7 +658,7 @@ static int sdLogger(FIL *fd)
 		incLogFileName(fd);
 		sdLoggerCreateFile(fd);
 		logBuffer.start(fd);
-		resetFileLogging();
+		MLG::resetFileLogging();
 	}
 #endif
 
@@ -916,7 +916,7 @@ static int mlgLogger() {
 
 	systime_t before = chVTGetSystemTime();
 
-	size_t writen = writeSdLogLine(logBuffer);
+	size_t writen = MLG::writeSdLogLine(logBuffer);
 
 	// Something went wrong (already handled), so cancel further writes
 	if (logBuffer.failed) {

@@ -1,5 +1,5 @@
 /**
- * binary_logging.cpp
+ * binary_mlg_logging.cpp
  *
  * See also BinarySensorLog.java
  * See also mlq_file_format.txt
@@ -10,14 +10,20 @@
 
 #include "pch.h"
 
-#include "binary_logging.h"
-#include "log_field.h"
-#include "buffered_writer.h"
+#include "binary_mlg_logging.h"
+#include "mlg_field.h"
 #include "tunerstudio.h"
 
 #if EFI_FILE_LOGGING || EFI_UNIT_TEST
 
 #define TIME_PRECISION 1000
+
+#if EFI_PROD_CODE
+extern bool main_loop_started;
+#endif
+
+namespace MLG
+{
 
 // floating number of seconds with millisecond precision
 static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
@@ -46,7 +52,7 @@ static const uint16_t recordLength = computeFieldsRecordLength();
 
 static size_t writeFileHeader(Writer& outBuffer) {
 	size_t writen = 0;
-	char buffer[MLQ_HEADER_SIZE];
+	char buffer[Types::Header::Size];
 	// File format: MLVLG\0
 	strncpy(buffer, "MLVLG", 6);
 
@@ -66,7 +72,7 @@ static size_t writeFileHeader(Writer& outBuffer) {
 	buffer[14] = 0;
 	buffer[15] = 0;
 
-	size_t headerSize = MLQ_HEADER_SIZE + efi::size(fields) * MLQ_FIELD_HEADER_SIZE;
+	size_t headerSize = Types::Header::Size + efi::size(fields) * Types::Field::DescriptorSize;
 
 	// Data begin index: begins immediately after the header
 	buffer[16] = (headerSize >> 24) & 0xFF;
@@ -83,10 +89,10 @@ static size_t writeFileHeader(Writer& outBuffer) {
 	buffer[22] = fieldsCount >> 8;
 	buffer[23] = fieldsCount;
 
-	outBuffer.write(buffer, MLQ_HEADER_SIZE);
-	writen += MLQ_HEADER_SIZE;
+	outBuffer.write(buffer, Types::Header::Size);
+	writen += Types::Header::Size;
 
-	// Write the actual logger fields, offset 22
+	// Write the actual logger fields, offset by header size (24)
 	for (size_t i = 0; i < efi::size(fields); i++) {
 		writen += fields[i].writeHeader(outBuffer);
 	}
@@ -117,17 +123,37 @@ static size_t writeSdBlock(Writer& outBuffer) {
 	writen += 4;
 
 	// todo: add a log field for SD card period
-//	prevSdCardLineTime = nowUs;
+	// revSdCardLineTime = nowUs;
 
 	packedTime = getTimeNowMs() * 1.0 / TIME_PRECISION;
 
 	uint8_t sum = 0;
 	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {
 		#if EFI_UNIT_TEST
-			// dark magic: most elements of log_fields_generated.h were const-evaluated against 'nullptr' engine, let's add it!
-			void *offset = fields[fieldIndex].needsEngineOffsetHack(sizeof(*engine)) ? engine : nullptr;
+			if (engine == nullptr) {
+				throw std::runtime_error{"Engine pointer is nullptr in writeSdBlock"};
+			}
+
+			// For tests a global Engine pointer is initialised with the nullptr, and tests that do require it
+			// create their own instance and set up the global pointer accordingly.
+			// Global static const array of fields in the generated file log_fields_generated.h has fields with
+			// addresses const-evaluated against 'nullptr' engine, which effectively means offsets in Engine struct,
+			// so if that is the case, we need to account for the offset to whatever
+			// real current engine pointer is set to.
+			// In tests, we are dealing with ELF on linux, and as far as I'm aware, there are no distributions
+			// where the default linker config can map smth before the 4 MB address.
+			// If in doubt, check your system for a min text-segment with "ld --verbose | grep -A20 ENTRY"
+			// Engine struct is lower than 4MB in size, so we can compare field address against Engine size
+			// to find out whether field address was initialised against nullptr engine or not.
+
+			constexpr auto engineObjectSize{ sizeof(Engine) };
+			static_assert(engineObjectSize < 0x400000);
+
+			auto const currentFieldAddress{ reinterpret_cast<uintptr_t>(fields[fieldIndex].getAddr()) };
+			auto const fieldNeedsOffset{ currentFieldAddress < engineObjectSize };
+			void* const offset{ fieldNeedsOffset ? engine : nullptr };
 		#else
-			void *offset = nullptr;
+			void* const offset{ nullptr };
 		#endif
 
 		size_t entrySize = fields[fieldIndex].writeData(buffer, offset);
@@ -151,7 +177,6 @@ static size_t writeSdBlock(Writer& outBuffer) {
 
 size_t writeSdLogLine(Writer& bufferedWriter) {
 #if EFI_PROD_CODE
-extern bool main_loop_started;
 	if (!main_loop_started)
 		return 0;
 #endif //EFI_PROD_CODE
@@ -172,5 +197,7 @@ void resetFileLogging() {
 	binaryLogCount = 0;
 	blockRollCounter = 0;
 }
+
+} /* namespace MLG */
 
 #endif /* EFI_FILE_LOGGING */
