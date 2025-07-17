@@ -102,13 +102,12 @@ void setTriggerEmulatorRPM(int rpm) {
 	 * All we need to do here is to change the periodMs
 	 * togglePwmState() would see that the periodMs has changed and act accordingly
 	 */
+	float rPerSecond = NAN;
+	if (rpm != 0) {
+		float rpmM = getRpmMultiplier(getEngineRotationState()->getOperationMode());
+		rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
+	}
 	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
-		float rPerSecond = NAN;
-		if (rpm != 0) {
-			// use 0.5 multiplier for cam
-			float rpmM = (channel == 0) ? getRpmMultiplier(getEngineRotationState()->getOperationMode()) : 0.5f;
-			rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
-		}
 		triggerEmulatorSignals[channel].setFrequency(rPerSecond);
 	}
 
