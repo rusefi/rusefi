@@ -19,12 +19,6 @@
 
 #include "ff.h"
 
-static const char *idFileNames[EFI_STORAGE_TOTAL_ITEMS] = {
-	nullptr,
-	nullptr,
-	/* [EFI_LTFT_RECORD_ID] = */"ltft.bin"
-};
-
 class SettingStorageSD : public SettingStorageBase {
 public:
 	bool isIdSupported(size_t id) override;
@@ -43,11 +37,12 @@ private:
 
 const char *SettingStorageSD::getIdFileName(size_t id)
 {
-	if (id >= efi::size(idFileNames)) {
+	switch (id) {
+	case EFI_LTFT_RECORD_ID:
+		return "ltft.bin";
+	default:
 		return nullptr;
 	}
-
-	return idFileNames[id];
 }
 
 bool SettingStorageSD::isIdSupported(size_t id)
