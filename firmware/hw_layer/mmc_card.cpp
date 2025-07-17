@@ -86,11 +86,11 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 		FRESULT err = f_write(m_fd, buffer, count, &bytesWritten);
 
 		if (err) {
-			printError("log file write", err);
+			printFatFsError("log file write", err);
 			failed = true;
 			return 0;
 		} else if (bytesWritten != count) {
-			printError("log file write partitial", err);
+			printFatFsError("log file write partitial", err);
 			failed = true;
 			return 0;
 		} else {
@@ -266,7 +266,7 @@ static const char *fatErrors[] = {
 };
 
 // print FAT error function
-void printError(const char *str, FRESULT f_error) {
+void printFatFsError(const char *str, FRESULT f_error) {
 	static int fatFsErrors = 0;
 
 	if (fatFsErrors++ > 16) {
@@ -274,7 +274,7 @@ void printError(const char *str, FRESULT f_error) {
 		return;
 	}
 
-	efiPrintf("FATfs Error \"%s\" %d %s", str, f_error, f_error <= FR_INVALID_PARAMETER ? fatErrors[f_error] : "unknown");
+	efiPrintf("%s FATfs Error %d %s", str, f_error, f_error <= FR_INVALID_PARAMETER ? fatErrors[f_error] : "unknown");
 }
 
 // format, file access and MSD are used exclusively, we can union.
@@ -363,7 +363,7 @@ static void sdLoggerCreateFile(FIL *fd) {
 	if (err != FR_OK && err != FR_EXIST) {
 		sdStatus = SD_STATUS_OPEN_FAILED;
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: file open failed");
-		printError("log file create", err);	// else - show error
+		printFatFsError("log file create", err);	// else - show error
 		return;
 	}
 
@@ -371,7 +371,7 @@ static void sdLoggerCreateFile(FIL *fd) {
 	//pre-allocate data ahead
 	err = f_expand(fd, LOGGER_MAX_FILE_SIZE, /* Find and allocate */ 1);
 	if (err != FR_OK) {
-		printError("pre-allocate", err);
+		printFatFsError("pre-allocate", err);
 		// this is not critical
 	}
 #endif
@@ -587,7 +587,7 @@ static void unmountMmc() {
 	// FATFS: Unregister work area prior to discard it
 	ret = f_unmount("");
 	if (ret != FR_OK) {
-		printError("Umount failed", ret);
+		printFatFsError("Umount failed", ret);
 	}
 
 #if EFI_TUNER_STUDIO
@@ -699,13 +699,13 @@ static bool sdFormat()
 	FRESULT ret = f_mkfs("", nullptr, resources.formatBuff, sizeof(resources.formatBuff));
 
 	if (ret) {
-		printError("format failed", ret);
+		printFatFsError("format failed", ret);
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: format failed");
 		goto exit;
 	}
 	ret = f_setlabel(SD_CARD_LABEL);
 	if (ret) {
-		printError("setlabel failed", ret);
+		printFatFsError("setlabel failed", ret);
 		// this is not critical
 		ret = FR_OK;
 	}

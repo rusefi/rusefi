@@ -30,7 +30,7 @@ void incLogFileName(FIL *fd) {
 		ret = f_read(fd, (void*)data, sizeof(data) - 1, &readed);
 
 		if (ret != FR_OK) {
-			printError("log index file read", ret);
+			printFatFsError("log index file read", ret);
 			logFileIndex = MIN_FILE_INDEX;
 		} else {
 			efiPrintf("Got content [%s] size %d", data, readed);
@@ -47,7 +47,7 @@ void incLogFileName(FIL *fd) {
 		// no index file - this is not an error, just an empty SD
 		logFileIndex = MIN_FILE_INDEX;
 	} else {
-		printError("log index file open", ret);
+		printFatFsError("log index file open", ret);
 		efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, ret);
 		logFileIndex = MIN_FILE_INDEX;
 	}
@@ -59,11 +59,11 @@ void incLogFileName(FIL *fd) {
 		size_t len = itoa10(data, logFileIndex) - data;
 		ret = f_write(fd, (void*)data, len, &writen);
 		if ((ret != FR_OK) || (len != writen)) {
-			printError("log index write", ret);
+			printFatFsError("log index write", ret);
 		}
 		f_close(fd);
 	} else {
-		printError("log index file write", ret);
+		printFatFsError("log index file write", ret);
 	}
 
 	efiPrintf("New log file index %d", logFileIndex);
