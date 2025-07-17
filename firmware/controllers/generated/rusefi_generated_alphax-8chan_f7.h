@@ -609,6 +609,8 @@
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_TIMING "Timing"
 #define GAUGE_COIL_DWELL_TIME "Ignition: coil charge time"
+#define GAUGE_LONG_NAME_CLT "Coolant temp"
+#define GAUGE_LONG_NAME_IAT "Intake air temp"
 #define GAUGE_LUA_FROM_0 -30000
 #define GAUGE_LUA_FROM_1 -30000
 #define GAUGE_LUA_FROM_2 -30000
@@ -1493,7 +1495,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2357266699
+#define SIGNATURE_HASH 3431937935
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2034,7 +2036,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.07.16.alphax-8chan_f7.2357266699"
+#define TS_SIGNATURE "rusEFI master.2025.07.17.alphax-8chan_f7.3431937935"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
@@ -2073,6 +2075,7 @@
 #define UiMode_FULL 0
 #define UiMode_INSTALLATION 1
 #define UiMode_TUNING 2
+#define UNITS_CELSIUS "C"
 #define VBAT_INJECTOR_CURVE_PRESSURE_SIZE 4
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define VE_BLEND1_TABLE_NAME "VE blend 1"

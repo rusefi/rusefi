@@ -561,6 +561,8 @@ public class VariableRegistryValues {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
+	public static final String GAUGE_LONG_NAME_CLT = "Coolant temp";
+	public static final String GAUGE_LONG_NAME_IAT = "Intake air temp";
 	public static final int GAUGE_LUA_FROM_0 = -30000;
 	public static final int GAUGE_LUA_FROM_1 = -30000;
 	public static final int GAUGE_LUA_FROM_2 = -30000;
@@ -1392,7 +1394,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 56084318;
+	public static final int SIGNATURE_HASH = 1129970138;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1681,7 +1683,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.07.16.stm32h743_nucleo.56084318";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.07.17.stm32h743_nucleo.1129970138";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2004;
@@ -1715,6 +1717,7 @@ public class VariableRegistryValues {
 	public static final int UiMode_FULL = 0;
 	public static final int UiMode_INSTALLATION = 1;
 	public static final int UiMode_TUNING = 2;
+	public static final String UNITS_CELSIUS = "C";
 	public static final int VBAT_INJECTOR_CURVE_PRESSURE_SIZE = 2;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final String VE_BLEND1_TABLE_NAME = "VE blend 1";
