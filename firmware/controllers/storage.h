@@ -34,11 +34,14 @@ public:
 	virtual StorageStatus format() = 0;
 };
 
-bool storageIsIdAvailable(int id);
-StorageStatus storageWrite(int id, const uint8_t *ptr, size_t size);
-StorageStatus storageRead(int id, uint8_t *ptr, size_t size);
+enum StorageType {
+	STORAGE_INT_FLASH = 0,
+	STORAGE_MFS_INT_FLASH = 1,
+	STORAGE_MFS_EXT_FLASH = 2,
+	STORAGE_SD_CARD = 3,
 
-void initStorage();
+	STORAGE_TOTAL
+};
 
 // IDs used as MFS record ids and internal RusEFI ids
 enum StorageItemId {
@@ -49,3 +52,12 @@ enum StorageItemId {
 
 	EFI_STORAGE_TOTAL_ITEMS
 };
+
+bool storageIsIdAvailable(int id);
+StorageStatus storageWrite(int id, const uint8_t *ptr, size_t size);
+StorageStatus storageRead(int id, uint8_t *ptr, size_t size);
+
+bool storageRegisterStorage(StorageType type, SettingStorageBase *storage);
+bool storageUnregisterStorage(StorageType type);
+
+void initStorage();

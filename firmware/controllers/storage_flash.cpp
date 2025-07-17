@@ -114,8 +114,8 @@ StorageStatus SettingStorageFlash::format() {
 
 static SettingStorageFlash storageFlash;
 
-SettingStorageBase *initStorageFlash() {
-	return &storageFlash;
+bool initStorageFlash() {
+	return storageRegisterStorage(STORAGE_INT_FLASH, &storageFlash);
 }
 
 #endif //EFI_STORAGE_SD
