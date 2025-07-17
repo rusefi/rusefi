@@ -84,7 +84,9 @@ public enum CltIdleCorrMigrator implements TuneMigrator {
                     Integer.toString(updatedCltIdleCorrField.getCols())
                 )
             );
-
+            // Add null migration to prevent processing of disappeared `ManIdlePosition` ini-field by
+            // `DefaultTuneMigrator`:
+            context.addMigration(MAN_IDLE_POSITION_FIELD_NAME, null);
         }
     }
 
