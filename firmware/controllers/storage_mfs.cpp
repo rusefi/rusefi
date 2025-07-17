@@ -18,6 +18,7 @@
 
 class SettingStorageMFS : public SettingStorageBase {
 public:
+	bool isReady() override;
 	bool isIdSupported(size_t id) override;
 	StorageStatus store(size_t id, const uint8_t *ptr, size_t size) override;
 	StorageStatus read(size_t id, uint8_t *ptr, size_t size) override;
@@ -27,12 +28,17 @@ public:
 		m_drv = drv;
 	}
 
+	bool m_ready = false;
+
 private:
 	MFSDriver *m_drv;
 };
 
-bool SettingStorageMFS::isIdSupported(size_t id)
-{
+bool SettingStorageMFS::isReady(){
+	return m_ready;
+}
+
+bool SettingStorageMFS::isIdSupported(size_t id) {
 #if (EFI_STORAGE_INT_FLASH == TRUE)
 	// If internal flash storage is enabled - settings are stored in there
 	if ((id == EFI_SETTINGS_RECORD_ID) ||
@@ -129,6 +135,8 @@ SettingStorageBase *initStorageMfs() {
 	}
 
 	//addConsoleAction("erasestorage", eraseStorage);
+
+	storageMFS.m_ready = true;
 
 	return &storageMFS;
 }
