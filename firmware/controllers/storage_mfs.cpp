@@ -122,7 +122,7 @@ static SettingStorageMFS storageMFS(&mfsd);
 extern void boardInitMfs(void);
 extern const MFSConfig *boardGetMfsConfig(void);
 
-SettingStorageBase *initStorageMfs() {
+bool initStorageMfs() {
 	boardInitMfs();
 	const MFSConfig *mfsConfig = boardGetMfsConfig();
 
@@ -131,14 +131,14 @@ SettingStorageBase *initStorageMfs() {
 	mfs_error_t err = mfsStart(&mfsd, mfsConfig);
 	if (err < MFS_NO_ERROR) {
 		efiPrintf("MFS: storage failed to start: %d", err);
-		return nullptr;
+		return false;
 	}
 
 	//addConsoleAction("erasestorage", eraseStorage);
 
 	storageMFS.m_ready = true;
 
-	return &storageMFS;
+	return storageRegisterStorage(STORAGE_MFS_EXT_FLASH, &storageMFS);
 }
 
 #endif //EFI_STORAGE_MFS

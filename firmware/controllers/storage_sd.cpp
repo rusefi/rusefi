@@ -141,8 +141,12 @@ static NO_CACHE FIL fd;
 
 static SettingStorageSD storageSD(&fd);
 
-SettingStorageBase *initStorageSD() {
-	return &storageSD;
+bool initStorageSD() {
+	return storageRegisterStorage(STORAGE_SD_CARD, &storageSD);
+}
+
+bool deinitStorageSD() {
+	return storageUnregisterStorage(STORAGE_SD_CARD);
 }
 
 #endif //EFI_STORAGE_SD
