@@ -33,7 +33,7 @@ void LtftState::load() {
 	if (1) {
 #endif
 		//Reset to some defaules
-		memset(trims, 0, sizeof(trims));
+		reset();
 	}
 }
 
@@ -46,7 +46,12 @@ void LtftState::reset() {
 void LongTermFuelTrim::init(LtftState *state) {
 	m_state = state;
 
-	m_state->load();
+#if EFI_PROD_CODE
+	ltftLoadPending = storageReqestReadID(EFI_LTFT_RECORD_ID);
+#else
+	ltftLoadPending = false;
+	reset();
+#endif
 }
 
 float LongTermFuelTrim::getIntegratorGain() const
@@ -75,7 +80,7 @@ float LongTermFuelTrim::getMinAdjustment() const {
 void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad) {
 	const auto& cfg = engineConfiguration->ltft;
 
-	if ((!cfg.enabled) || (ltftSavePending)) {
+	if ((!cfg.enabled) || (ltftSavePending) || (ltftLoadPending)) {
 		ltftLearning = false;
 		return;
 	}
@@ -131,7 +136,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	if (adjusted) {
 		ltftCntHit++;
 		if ((ltftCntHit % SAVE_AFTER_HITS) == 0) {
-			//request save
+			// request save
 #if EFI_PROD_CODE
 			settingsLtftRequestWriteToFlash();
 #endif
@@ -144,7 +149,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 	const auto& cfg = engineConfiguration->ltft;
 
-	if (!cfg.correctionEnabled) {
+	if ((!cfg.correctionEnabled) || (ltftLoadPending)) {
 		for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
 			ltftCorrection[bank] = 1.0f;
 		}
@@ -186,6 +191,13 @@ ClosedLoopFuelResult LongTermFuelTrim::getTrims(float rpm, float fuelLoad) {
 	return result;
 }
 
+// Called from storage manager thread when requested ID is ready
+void LongTermFuelTrim::load() {
+	m_state->load();
+
+	ltftLoadPending = false;
+}
+
 void LongTermFuelTrim::store() {
 	// TODO: lock to avoid modification while writing
 	ltftSavePending = true;
@@ -207,6 +219,11 @@ void LongTermFuelTrim::reset() {
 }
 
 void LongTermFuelTrim::onSlowCallback() {
+	if ((ltftLearning) && (engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > 1.0)) {
+		efiPrintf("LTFT: failed to load calibrations");
+		m_state->reset();
+		ltftLoadPending = false;
+	}
 	// Do some magic math here?
 
 	/* ... */
