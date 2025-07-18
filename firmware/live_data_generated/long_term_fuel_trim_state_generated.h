@@ -6,7 +6,7 @@
 // start of long_term_fuel_trim_state_s
 struct long_term_fuel_trim_state_s {
 	/**
-	 * LTFT lerning: hits
+	 * LTFT learning: hits
 	 * units: cnt
 	 * offset 0
 	 */
