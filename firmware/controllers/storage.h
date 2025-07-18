@@ -53,11 +53,22 @@ enum StorageItemId {
 	EFI_STORAGE_TOTAL_ITEMS
 };
 
-bool storageIsIdAvailable(int id);
-StorageStatus storageWrite(int id, const uint8_t *ptr, size_t size);
-StorageStatus storageRead(int id, uint8_t *ptr, size_t size);
+// exported for unit tests only
+bool storageAllowWriteID(StorageItemId id);
+
+StorageStatus storageWrite(StorageItemId id, const uint8_t *ptr, size_t size);
+StorageStatus storageRead(StorageItemId id, uint8_t *ptr, size_t size);
+
+// request storage manager to read or write given ID from its own context when storage is ready
+bool storageRequestWriteID(StorageItemId id, bool forced);
+bool storageReqestReadID(StorageItemId id);
 
 bool storageRegisterStorage(StorageType type, SettingStorageBase *storage);
 bool storageUnregisterStorage(StorageType type);
+
+/**
+ * @return true if an persistentState write is pending
+ */
+bool getNeedToWriteConfiguration();
 
 void initStorage();

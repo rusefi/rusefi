@@ -49,7 +49,7 @@
 #define PRIO_BENCH_TEST (NORMALPRIO - 10)
 
 // These are intentionally low priority so they can't get in the way of anything else
-#define PRIO_FLASH_WRITE LOWPRIO + 20
+#define PRIO_STORAGE_MANAGER LOWPRIO + 20
 
 // USB mass storage
 #define MSD_THD_PRIO LOWPRIO + 20

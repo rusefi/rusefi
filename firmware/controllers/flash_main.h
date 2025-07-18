@@ -18,12 +18,8 @@ void initFlash();
  * running so we postpone the write until the engine is stopped.
  */
 void writeToFlashNow();
+bool writeToFlashNowImpl();
 void setNeedToWriteConfiguration();
-
-/**
- * @return true if an flash write is pending
- */
-bool getNeedToWriteConfiguration();
 
 bool settingsLtftRequestWriteToFlash();
 
