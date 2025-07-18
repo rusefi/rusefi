@@ -7,6 +7,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/engine_cycle/knock_controller.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/prime_injection.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_central.txt \
+  $(PROJECT_DIR)/controllers/long_term_fuel_trim_state.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_state.txt \
   $(PROJECT_DIR)/controllers/algo/shift_torque_reduction_state.txt \
   $(PROJECT_DIR)/controllers/algo/shift_torque_reduction_state.txt \
