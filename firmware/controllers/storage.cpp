@@ -238,6 +238,13 @@ static THD_WORKING_AREA(storageManagerThreadStack, UTILITY_THREAD_STACK_SIZE);
 static void storageManagerThread(void*) {
 	chRegSetThreadName("storage manger");
 
+#if EFI_STORAGE_MFS == TRUE
+	if (storages[STORAGE_MFS_EXT_FLASH] == nullptr) {
+		// (re)try MFS for external flash
+		initStorageMfs();
+	}
+#endif // EFI_STORAGE_MFS
+
 	while (true) {
 		msg_t ret;
 		msg_t msg;
@@ -263,7 +270,7 @@ static void storageManagerThread(void*) {
 			}
 		}
 
-		// check if we can read sone of pending IDs...
+		// check if we can read some of pending IDs...
 		for (size_t i = 0; (i < EFI_STORAGE_TOTAL_ITEMS) && pendingReads; i++) {
 			if ((pendingReads & BIT(i)) == 0) {
 				continue;
@@ -307,19 +314,26 @@ bool getNeedToWriteConfiguration() {
 }
 
 void initStorage() {
+	bool settingsStorageReady = false;
+
 #if EFI_STORAGE_INT_FLASH == TRUE
-	initStorageFlash();
+	settingsStorageReady = initStorageFlash();
 #endif // STORAGE_SD_CARD
 
 #if EFI_STORAGE_MFS == TRUE
-	// Set long timeout to watchdog as this code is called before any thread is started
-	// and no one is feeding watchdog
-	startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
+	if (settingsStorageReady) {
+		// Skip MFS if internal storage is used for persistentState
+		// Init of MFS may take significant time, lets postpone it until storage manager thread
+	} else {
+		// Set long timeout to watchdog as this code is called before any thread is started
+		// and no one is feeding watchdog
+		startWatchdog(WATCHDOG_MFS_START_TIMEOUT_MS);
 
-	initStorageMfs();
+		initStorageMfs();
 
-	// restart the watchdog with the default timeout
-	startWatchdog();
+		// restart the watchdog with the default timeout
+		startWatchdog();
+	}
 #endif // EFI_STORAGE_MFS
 
 	chThdCreateStatic(storageManagerThreadStack, sizeof(storageManagerThreadStack), PRIO_STORAGE_MANAGER, storageManagerThread, nullptr);

@@ -18,6 +18,8 @@
 #define WATCHDOG_TIMEOUT_MS (3 * WATCHDOG_RESET_MS)
 // 5 secs should be enough to wait until
 #define WATCHDOG_FLASH_TIMEOUT_MS 5000
+// MFS startup time in case of garbage collection can take a loooot of time
+#define WATCHDOG_MFS_START_TIMEOUT_MS 7000
 
 
 // we use 'int' for compatibility with addConsoleActionI()
