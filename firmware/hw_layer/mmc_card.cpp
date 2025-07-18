@@ -844,21 +844,13 @@ static int sdModeExecuter()
 
 static int sdReportStorageInit()
 {
-	if (mountMmc()) {
-		// write error report file if needed
-		errorHandlerWriteReportFile(&resources.fd);
+	// write error report file if needed
+	errorHandlerWriteReportFile(&resources.fd);
 
-		// check for any exist reports
-		errorHandlerCheckReportFiles();
+	// check for any exist reports
+	errorHandlerCheckReportFiles();
 
-		// done with SD card
-		unmountMmc();
-
-		return 0;
-	}
-
-	// card is failed to mount
-	return -1;
+	return 0;
 }
 
 PUBLIC_API_WEAK bool boardSdCardEnable() {
@@ -890,7 +882,16 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	}
 
 	// Try to mount SD card, drop critical report if needed and check for previously stored reports
-	sdReportStorageInit();
+	if (mountMmc()) {
+		sdReportStorageInit();
+
+		sdMode = SD_MODE_ECU;
+
+#if EFI_STORAGE_SD == TRUE
+		// Give some time for storage manager to load settings from SD
+		chThdSleepMilliseconds(1000);
+#endif
+	}
 
 #if HAL_USE_USB_MSD
 	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
