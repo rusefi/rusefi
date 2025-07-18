@@ -1,5 +1,5 @@
 struct_no_prefix long_term_fuel_trim_state_s
-	uint32_t ltftCntHit;LTFT lerning: hits;"cnt", 1, 0, 0, 10000, 0
+	uint32_t ltftCntHit;LTFT learning: hits;"cnt", 1, 0, 0, 10000, 0
 	uint32_t ltftCntMiss;LTFT learning: miss;"cnt", 1, 0, 0, 10000, 0
 	uint32_t ltftCntDeadband;LTFT learning: in deadband;"cnt", 1, 0, 0, 10000, 0
 
