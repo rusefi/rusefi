@@ -29,153 +29,29 @@
 
 #include "runtime_state.h"
 
-
-static bool writeToFlashNowImpl();
-
-static uint32_t pendingWrites = 0;
-
-#define FLASH_WRITER_POLL_INTERVAL_MS	100
-
-chibios_rt::Mailbox<msg_t, 16> flashWriterMb;
-
-#if (EFI_STORAGE_MFS == TRUE) || (EFI_STORAGE_SD == TRUE)
-/* in case of MFS or SD card we need more stack */
-static THD_WORKING_AREA(flashWriteStack, 3 * UTILITY_THREAD_STACK_SIZE);
-#else
-static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
-#endif
-
-// force settings save independently of mcuCanFlashWhileRunning()
-#define MSG_FLASH_NOW	BIT(30)
-#define MSG_ID_MASK		0x1f
-
-static bool flashRequestWriteID(msg_t id, bool forced)
-{
-	if (forced) {
-		id |= MSG_FLASH_NOW;
-	}
-	// Note: we are not sure about caller context and using universal (but not optimal) chSysGetStatusAndLockX()
-	chibios_rt::CriticalSectionLocker csl;
-
-	// Signal the flash writer thread to wake up and write at its leisure
-	return (flashWriterMb.postI(id) == MSG_OK);
-}
-
-static bool flashWriteID(uint32_t id)
-{
-	// Do the actual flash write operation for given ID
-	if (id == EFI_SETTINGS_RECORD_ID) {
-		return writeToFlashNowImpl();
-	} else if (id == EFI_LTFT_RECORD_ID) {
-		engine->module<LongTermFuelTrim>()->store();
-		return true;
-	} else {
-		efiPrintf("Requested to write unknown record id %ld", id);
-		// to clear pending bit
-		return true;
-	}
-	return true;
-}
 #endif // EFI_CONFIGURATION_STORAGE
-
-/* If any setting storage is exist or we are in unit test */
-#if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
-bool flashAllowWriteID(uint32_t id)
-{
-#if (EFI_STORAGE_INT_FLASH == TRUE) || defined(EFI_UNIT_TEST)
-	if ((id == EFI_SETTINGS_RECORD_ID) ||
-		(id == EFI_SETTINGS_BACKUP_RECORD_ID)) {
-		// special case, settings can be stored in internal flash
-
-		// writing internal flash can cause cpu freeze
-		// check if HW support flash writing while executing
-		if (mcuCanFlashWhileRunning()) {
-			return true;
-		}
-
-#if EFI_SHAFT_POSITION_INPUT
-		// MCU does not support write while executing, check if engine is stopped
-		if (engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped()) {
-			return true;
-		} else {
-			// rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
-			// postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
-			return false;
-		}
-#endif // EFI_SHAFT_POSITION_INPUT
-	}
-#endif // EFI_STORAGE_INT_FLASH
-
-	// TODO: we expect every other ID to be stored in external flash...
-	return true;
-}
-#endif // EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 
 /* If any setting storage is exist */
 #if EFI_CONFIGURATION_STORAGE
-static void flashWriteThread(void*) {
-	chRegSetThreadName("flash writer");
-
-	while (true) {
-		msg_t ret;
-		msg_t msg;
-		bool force = false;
-
-		// Wait for a request to come in or timeout
-		ret = flashWriterMb.fetch(&msg, TIME_MS2I(FLASH_WRITER_POLL_INTERVAL_MS));
-		if (ret == MSG_OK) {
-			if (msg & MSG_FLASH_NOW) {
-				force = true;
-			}
-			uint32_t id = msg & MSG_ID_MASK;
-
-			pendingWrites |= BIT(id);
-			if (force) {
-				// skip flashAllowWriteID() check
-				if (flashWriteID(id)) {
-					pendingWrites &= ~BIT(id);
-				}
-			}
-		}
-
-		// check if we can write some of pendind IDs...
-		for (size_t id = 0; (id < 32) && pendingWrites; id++) {
-			if ((pendingWrites & BIT(id)) == 0) {
-				continue;
-			}
-
-			if (!flashAllowWriteID(id)) {
-				continue;
-			}
-
-			if (flashWriteID(id)) {
-				pendingWrites &= ~BIT(id);
-			}
-		}
-	}
-}
 
 void writeToFlashNow() {
 	efiPrintf("Scheduling FORCED write");
 
-	flashRequestWriteID(EFI_SETTINGS_RECORD_ID, true);
+	storageRequestWriteID(EFI_SETTINGS_RECORD_ID, true);
 }
 
 void setNeedToWriteConfiguration() {
 	efiPrintf("Scheduling write");
 
-	flashRequestWriteID(EFI_SETTINGS_RECORD_ID, false);
+	storageRequestWriteID(EFI_SETTINGS_RECORD_ID, false);
 }
 
 bool settingsLtftRequestWriteToFlash() {
-	return flashRequestWriteID(EFI_LTFT_RECORD_ID, false);
+	return storageRequestWriteID(EFI_LTFT_RECORD_ID, false);
 }
 
-bool getNeedToWriteConfiguration() {
-	return (pendingWrites & BIT(EFI_SETTINGS_RECORD_ID)) != 0;
-}
-
-static bool writeToFlashNowImpl() {
+/* TODO: extract to persistentState method */
+bool writeToFlashNowImpl() {
 	engine->configBurnTimer.reset();
 
 	// Set up the container
@@ -304,8 +180,6 @@ void initFlash() {
 #endif
 	addConsoleAction("resetconfig", doResetConfiguration);
 	addConsoleAction("rewriteconfig", doRewriteConfig);
-
-	chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
 }
 
 #endif /* EFI_CONFIGURATION_STORAGE */
