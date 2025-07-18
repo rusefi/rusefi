@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include "pch.h"
+#include "livedata_board_extra.h"
 
 struct plain_get_integer_s {
 	const char *token;
