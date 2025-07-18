@@ -9,6 +9,7 @@
 #include "pch.h"
 
 #include "storage.h"
+#include "mpu_util.h"
 
 /* If any setting storage is exist or we are in unit test */
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
