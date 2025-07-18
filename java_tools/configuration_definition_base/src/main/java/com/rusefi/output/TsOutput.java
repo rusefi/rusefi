@@ -28,7 +28,13 @@ public class TsOutput {
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
     private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+    private final String celsiusConditionalStart = "#if CELSIUS" + EOL;
+    private final String celsiusConditionalElse = "#else" + EOL;
+    private final String celsiusConditionalEnd = "#endif" + EOL;
     private final String temperatureCelsiusUnit = quote("C");
+    private final String temperatureFahrenheitUnit = quote("F");
+    private final String temperatureToFahrenheitScale = "{ 9 / 5 }";
+    private final String temperatureToFahrenheitTranslate = "17.77777";
 
     public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
@@ -155,7 +161,13 @@ public class TsOutput {
                 if (originalUnits.startsWith("SPECIAL_CASE_TEMPERATURE")) {
                     // first the Celsius case, and save the index after writing the field
                     configField.setTsInfo(formatTemperatureTsInfo(configField.getTsInfo(), false));
+                    tsHeader.append(celsiusConditionalStart);
                     int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+                    tsHeader.append(celsiusConditionalElse);
+                    // now the fahrenheit case:
+                    configField.setTsInfo(formatTemperatureTsInfo(configField.getTsInfo(), true));
+                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+                    tsHeader.append(celsiusConditionalEnd);
                     return newIndex;
                 }
 
@@ -170,6 +182,10 @@ public class TsOutput {
         return structureStartingTsPosition;
     }
 
+    private double celsiusToFahrenheit(double celsius){
+        return celsius * 1.8 + 32;
+    }
+
     private String formatTemperatureTsInfo(String tsInfo, boolean isFahrenheit){
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // this case is handle by handleTsInfo, so we return a empty string
@@ -177,8 +193,17 @@ public class TsOutput {
         }
         String[] fields = tokenizeWithBraces(tsInfo);
 
+         if (isFahrenheit){
+            // override scale/translate & units, convert min-max
+            fields[0] = temperatureFahrenheitUnit;
+            fields[1] = temperatureToFahrenheitScale;
+            fields[2] = temperatureToFahrenheitTranslate;
+            fields[3] = String.valueOf( celsiusToFahrenheit( IniField.parseDouble(fields[3]) ) ); // min
+            fields[4] = String.valueOf( celsiusToFahrenheit( IniField.parseDouble(fields[4]) ) ); // max
+         } else {
             // override units
             fields[0] = temperatureCelsiusUnit;
+         }
 
           return tokensToString(fields);
     }
