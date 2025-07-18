@@ -219,9 +219,10 @@ void LongTermFuelTrim::reset() {
 }
 
 void LongTermFuelTrim::onSlowCallback() {
+	// we can wait some time for LTFT to be loaded from storage...
 	if ((ltftLearning) &&
 #if EFI_SHAFT_POSITION_INPUT
-		(engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > 1.0) &&
+		(engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > 5.0) &&
 #endif
 		(1)) {
 		efiPrintf("LTFT: failed to load calibrations");
