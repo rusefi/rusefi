@@ -156,6 +156,9 @@ public interface ConfigField {
         public String getCommentTemplated() {
             return null;
         }
+        @Override
+        public void setTsInfo(String newtsInfo) {
+        }
     };
 
     default boolean isUnusedField() {
@@ -233,4 +236,6 @@ public interface ConfigField {
     boolean isFromIterate();
 
     String getCommentTemplated();
+
+    void setTsInfo(String tsInfo);
 }
