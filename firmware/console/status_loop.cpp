@@ -65,6 +65,7 @@
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CONFIGURATION_STORAGE
+#include "storage.h"
 #include "flash_main.h"
 #endif
 
