@@ -50,7 +50,9 @@
 ! type name;comment;"units",scale,offset,min,max,number_of_digits
 ! hello;I like rusEFI;"ms",1,0,-10,10,2
 !
-!
+! for using temperature fields, you maybe want to use "SPECIAL_CASE_TEMPERATURE"
+! so we can auto-generate the TS conditional on the final ini, all the temperature-related fields, should be treated in celsius in the code,
+! they wel be represented on fahrenheit only on the TS interface
 !
 ! Q: what's the difference between 'engineConfiguration' and rest of the 'persistent_config_s'?
 ! A: 'engineConfiguration' portion has 'activeConfiguration' copy so that we can detect changes
@@ -1961,11 +1963,11 @@ custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SI
 lua_script_t luaScript;
 
 #define CLT_FUEL_CURVE_SIZE 16
-float[CLT_FUEL_CURVE_SIZE] cltFuelCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[CLT_FUEL_CURVE_SIZE] cltFuelCorrBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_FUEL_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
 #define IAT_CURVE_SIZE 16
-float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[IAT_CURVE_SIZE] iatFuelCorrBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
 	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0, 50, 2
