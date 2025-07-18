@@ -22,6 +22,7 @@ CONFDIR = $(PROJECT_DIR)/hw_layer/ports/at32/at32f4/cfg
 
 # This board uses ChibiOS MFS driver on internal flash
 DDEFS += -DHAL_USE_EFL=TRUE
+DDEFS += -DEFI_STORAGE_INT_FLASH=FALSE
 include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
 
 DDEFS += -DFIRMWARE_ID=\"at_start_f435\"
