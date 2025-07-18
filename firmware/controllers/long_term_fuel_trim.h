@@ -23,6 +23,7 @@ public:
 	void init(LtftState *state);
 	void learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad);
 	ClosedLoopFuelResult getTrims(float rpm, float fuelLoad);
+	void load();
 	void store();
 	void reset();
 
