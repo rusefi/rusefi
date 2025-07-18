@@ -1965,7 +1965,7 @@ float[CLT_FUEL_CURVE_SIZE] cltFuelCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@
 float[CLT_FUEL_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
 #define IAT_CURVE_SIZE 16
-float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[IAT_CURVE_SIZE] iatFuelCorrBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
 	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0, 50, 2
