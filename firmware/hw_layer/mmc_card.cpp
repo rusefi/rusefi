@@ -566,13 +566,13 @@ static bool mountMmc() {
 
 		if (ret == false) {
 			sdStatus = SD_STATUS_MOUNT_FAILED;
-			efiPrintf("MMC/SD card mount failed!");
+			efiPrintf("SD card mount failed!");
 		}
 	}
 
 	if (ret) {
 		sdStatus = SD_STATUS_MOUNTED;
-		efiPrintf("MMC/SD mounted!");
+		efiPrintf("SD card mounted!");
 	}
 
 #if EFI_STORAGE_SD == TRUE
@@ -588,7 +588,7 @@ static bool mountMmc() {
 }
 
 /*
- * MMC card un-mount.
+ * SD card un-mount.
  * @return true if we had SD card alive
  */
 static void unmountMmc() {
@@ -615,12 +615,12 @@ static void unmountMmc() {
 #else // not EFI_PROD_CODE (simulator)
 
 bool initMmc() {
-	// Stub so the loop thinks the MMC is present
+	// Stub so the loop thinks the SD is present
 	return true;
 }
 
 bool mountMmc() {
-	// Stub so the loop thinks the MMC mounted OK
+	// Stub so the loop thinks the SD mounted OK
 	return true;
 }
 
@@ -874,7 +874,7 @@ static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC 
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
 
-	chRegSetThreadName("MMC Card Logger");
+	chRegSetThreadName("SD Card Logger");
 
 	while (!boardSdCardEnable()) {
 		// wait until board enables peripheral
