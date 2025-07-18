@@ -315,6 +315,8 @@ bool getNeedToWriteConfiguration() {
 
 void initStorage() {
 	bool settingsStorageReady = false;
+	// may be unused
+	(void)settingsStorageReady;
 
 #if EFI_STORAGE_INT_FLASH == TRUE
 	settingsStorageReady = initStorageFlash();
