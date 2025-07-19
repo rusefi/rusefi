@@ -228,6 +228,7 @@ void LongTermFuelTrim::onSlowCallback() {
 		efiPrintf("LTFT: failed to load calibrations");
 		m_state->reset();
 		ltftLoadPending = false;
+		ltftLoadError = true;
 	}
 	// Do some magic math here?
 
