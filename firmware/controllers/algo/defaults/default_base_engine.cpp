@@ -140,6 +140,9 @@ void defaultsOrFixOnBurn() {
 	  engineConfiguration->mapExpAverageAlpha = 1;
 	}
 
+	if (engineConfiguration->ppsExpAverageAlpha <= 0 || engineConfiguration->ppsExpAverageAlpha > 1) {
+	  engineConfiguration->ppsExpAverageAlpha = 1;
+	}
 	if (engineConfiguration->afrExpAverageAlpha <= 0 || engineConfiguration->afrExpAverageAlpha > 1) {
 	  engineConfiguration->afrExpAverageAlpha = 1;
 	}
