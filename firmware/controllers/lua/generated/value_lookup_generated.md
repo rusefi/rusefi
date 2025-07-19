@@ -583,9 +583,6 @@ Below this throttle position, the engine is considered idling. If you have an el
 ### tps1SecondaryMax
 
 
-### antiLagRpmTreshold
-
-
 ### startCrankingDuration
 Maximum time to crank starter when start/stop button is pressed
 

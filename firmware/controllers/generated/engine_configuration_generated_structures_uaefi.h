@@ -2354,46 +2354,47 @@ struct engine_configuration_s {
 	 */
 	uint16_t tps1SecondaryMax;
 	/**
-	 * units: rpm
-	 * offset 860
-	 */
-	int16_t antiLagRpmTreshold;
-	/**
 	 * Maximum time to crank starter when start/stop button is pressed
 	 * units: Seconds
-	 * offset 862
+	 * offset 860
 	 */
 	uint16_t startCrankingDuration;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
-	 * offset 864
+	 * offset 862
 	 */
 	Gpio triggerErrorPin;
 	/**
-	 * offset 866
+	 * offset 864
 	 */
 	pin_output_mode_e triggerErrorPinMode;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 867
+	 * offset 865
 	 */
-	uint8_t alignmentFill_at_867[1] = {};
+	uint8_t alignmentFill_at_865[1] = {};
 	/**
-	 * offset 868
+	 * offset 866
 	 */
 	output_pin_e acRelayPin;
 	/**
 	 * units: %
-	 * offset 870
+	 * offset 868
 	 */
 	uint8_t lambdaProtectionMinTps;
 	/**
 	 * Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 	 * units: s
-	 * offset 871
+	 * offset 869
 	 */
 	scaled_channel<uint8_t, 10, 1> lambdaProtectionTimeout;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 870
+	 */
+	uint8_t alignmentFill_at_870[2] = {};
 	/**
 	 * offset 872
 	 */

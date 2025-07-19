@@ -589,9 +589,6 @@ float getConfigValueByHash(const int hash) {
 // tps1SecondaryMax
 		case -1312968741:
 			return engineConfiguration->tps1SecondaryMax;
-// antiLagRpmTreshold
-		case -47392967:
-			return engineConfiguration->antiLagRpmTreshold;
 // startCrankingDuration
 		case 644409862:
 			return engineConfiguration->startCrankingDuration;
@@ -3009,11 +3006,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1312968741:
 	{
 		engineConfiguration->tps1SecondaryMax = (int)value;
-		return 1;
-	}
-		case -47392967:
-	{
-		engineConfiguration->antiLagRpmTreshold = (int)value;
 		return 1;
 	}
 		case 644409862:
