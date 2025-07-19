@@ -188,7 +188,7 @@ static RedundantFordTps fordPps(SensorType::AcceleratorPedal, SensorType::Accele
 // Pedal sensors and redundancy
 static FuncSensPair pedalPrimary(1, SensorType::AcceleratorPedalPrimary);
 static FuncSensPair pedalSecondary(1, SensorType::AcceleratorPedalSecondary);
-static RedundantPair pedal(pedalPrimary, pedalSecondary, SensorType::AcceleratorPedal);
+static RedundantPair pedal(pedalPrimary, pedalSecondary, SensorType::AcceleratorPedalUnfiltered);
 
 void updateUnfilteredRawPedal() {
   pedal.updateUnfilteredRawValues();
@@ -196,6 +196,7 @@ void updateUnfilteredRawPedal() {
 
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
 static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
+static ProxySensor ppsFilterSensor(SensorType::AcceleratorPedal);
 
 // These sensors are TPS-like, so handle them in here too
 static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
@@ -246,6 +247,17 @@ void initTps() {
 		{ engineConfiguration->throttlePedalPositionSecondAdcChannel, engineConfiguration->throttlePedalSecondaryUpVoltage, engineConfiguration->throttlePedalSecondaryWOTVoltage, minTpsPps, maxTpsPps },
 		engineConfiguration->allowIdenticalPps
 	);
+	ppsFilterSensor.setProxiedSensor(SensorType::AcceleratorPedalUnfiltered);
+	ppsFilterSensor.setConverter([](SensorResult arg) {
+	  if (!arg) {
+	    return arg;
+	  }
+	  static ExpAverage ppsExpAverage;
+	  ppsExpAverage.setSmoothingFactor(engineConfiguration->ppsExpAverageAlpha);
+	  SensorResult result = ppsExpAverage.initOrAverage(arg.Value);
+    return result;
+  });
+	ppsFilterSensor.Register();
 
 		// TPS-like stuff that isn't actually a TPS
 		wastegate.init({ engineConfiguration->wastegatePositionSensor, (float)engineConfiguration->wastegatePositionMin, (float)engineConfiguration->wastegatePositionMax, minTpsPps, maxTpsPps });

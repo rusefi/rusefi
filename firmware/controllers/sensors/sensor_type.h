@@ -51,6 +51,7 @@ enum class SensorType : unsigned char {
 	Tps2Secondary,
 
 	// Redundant and combined sensors for acc pedal
+	AcceleratorPedalUnfiltered,
 	AcceleratorPedal,
 	// pedal according to only first physical sensor
 	AcceleratorPedalPrimary,
