@@ -155,6 +155,7 @@ printf("init m_redund.Register() %s\n", getSensorType(m_redund.type()));
 
 	}
 
+  // technical debt: oop violation: this method is specific to PPS usage
 	void updateUnfilteredRawValues() {
 	  engine->outputChannels.rawRawPpsPrimary = m_pri.adc == nullptr ? 0 : m_pri.adc->sensorVolts;
 	  engine->outputChannels.rawRawPpsSecondary = m_sec.adc == nullptr ? 0 : m_sec.adc->sensorVolts;
