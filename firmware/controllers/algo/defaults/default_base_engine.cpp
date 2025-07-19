@@ -117,6 +117,7 @@ void setDefaultBaseEngine() {
 
   setDynoDefaults();
 
+    engineConfiguration->ppsExpAverageAlpha = 1;
 
 
   for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
