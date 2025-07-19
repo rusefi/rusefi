@@ -156,6 +156,8 @@ public class TsOutput {
                     return it.adjustSize(tsPosition);
                 }
 
+                 // if the units are SPECIAL_CASE_TEMPERATURE, we are going to deal with a temperature-based config
+                // so we need to edit the unit first on C degree, and then on F degree, also the TS conditional is added here
                 if (originalUnits.startsWith("SPECIAL_CASE_TEMPERATURE")) {
                     // first the Celsius case, and save the index after writing the field
                     configField.setTsInfo(formatTemperatureTsInfo(configField.getTsInfo(), false));
