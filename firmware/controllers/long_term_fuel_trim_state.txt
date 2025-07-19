@@ -7,6 +7,7 @@ struct_no_prefix long_term_fuel_trim_state_s
 	bit ltftCorrecting;LTFT correcting
 	bit ltftSavePending;LTFT saving
 	bit ltftLoadPending;LTFT loading calibration
+	bit ltftLoadError;LTFT loading calibration error
 
 	float[FT_BANK_COUNT iterate] ltftCorrection;LTFT: Bank; "%", 100, -1.0, 50, 150, 1
 end_struct
