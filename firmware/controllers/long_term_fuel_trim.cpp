@@ -220,7 +220,7 @@ void LongTermFuelTrim::reset() {
 
 void LongTermFuelTrim::onSlowCallback() {
 	// we can wait some time for LTFT to be loaded from storage...
-	if ((ltftLearning) &&
+	if ((ltftLoadPending) &&
 #if EFI_SHAFT_POSITION_INPUT
 		(engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > 5.0) &&
 #endif
