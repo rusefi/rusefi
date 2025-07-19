@@ -25,6 +25,7 @@ constexpr size_t adcChannelCount = 16;
 #endif
 
 #ifdef ADC_MUX_PIN
+// https://github.com/rusefi/alphax-4chan is the reference board with ADC mux
 static OutputPin muxControl;
 #endif // ADC_MUX_PIN
 
