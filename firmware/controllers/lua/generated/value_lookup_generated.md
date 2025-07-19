@@ -736,6 +736,9 @@ Starting Launch RPM window to activate (subtracts from Launch RPM)
 ### triggerEventsTimeoutMs
 
 
+### ppsExpAverageAlpha
+
+
 ### mapExpAverageAlpha
 
 
