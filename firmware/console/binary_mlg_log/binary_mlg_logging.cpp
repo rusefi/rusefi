@@ -13,6 +13,7 @@
 #include "binary_mlg_logging.h"
 #include "mlg_field.h"
 #include "tunerstudio.h"
+#include "board_lookup.h"
 
 #if EFI_FILE_LOGGING || EFI_UNIT_TEST
 
