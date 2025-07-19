@@ -1,7 +1,7 @@
 /**
  * @file    proxy_sensor.h
  * @brief A sensor to duplicate a sensor to an additional SensorType.
- * 
+ *
  * This was built for the use case of "driver throttle intent" where we care what the driver's
  * right foot is doing, but that might mean TPS (cable throttle) or pedal (electronic throttle).
  *
@@ -28,9 +28,18 @@ public:
 	    return proxied ? proxied->isRedundant() : false;
 	}
 
+	void setConverter(std::function<SensorResult(SensorResult)> p_converter) {
+		converter = p_converter;
+	}
+
 private:
+	std::function<SensorResult(SensorResult)> converter = [](SensorResult arg) {
+		return arg;
+	};
+
 	SensorResult get() const override {
-		return Sensor::get(m_proxiedSensor);
+		SensorResult proxiedValue = Sensor::get(m_proxiedSensor);
+		return converter(proxiedValue);
 	}
 
 	bool hasSensor() const override {
