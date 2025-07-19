@@ -65,6 +65,7 @@ ifeq ($(BOARD_HAS_EXT_FLASH),yes)
     # MRE has optional external SPI flash that uses ChibiOS MFS driver
     include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
     include $(PROJECT_DIR)/hw_layer/drivers/flash/w25q/w25q_single_spi.mk
+    DDEFS += -DEFI_STORAGE_SD=FALSE
     DDEFS += -DEFI_STORAGE_MFS_EXTERNAL=TRUE
     # Use same method to workaround DMA access to CCM memory where persistentState can be located
     DDEFS += -DSNOR_SPI_WORKAROUND_CACHE=TRUE
