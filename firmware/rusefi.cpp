@@ -322,3 +322,10 @@ void chDbgStackOverflowPanic(thread_t *otp) {
 #endif
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
+
+namespace std {
+    void __throw_bad_function_call() {
+      // something to do with lack of libc++?
+      criticalError("invalid function called");
+    }
+}
