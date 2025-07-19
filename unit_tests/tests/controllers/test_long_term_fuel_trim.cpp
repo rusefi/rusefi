@@ -95,20 +95,21 @@ TEST(LTFT, testSlowCallbackLoadError) {
 	ltft.init(&ltftState);
 
 	// mock loading state
-	ltft.ltftLearning = true;
+	ltft.ltftLearning = false;
 	ltft.ltftLoadPending = true;
 	engine->rpmCalculator.setRpmValue(1000);
 
 	ltft.onSlowCallback();
 	// still in loading time:
 	EXPECT_TRUE(ltft.ltftLoadPending);
+	EXPECT_FALSE(ltft.ltftLoadError);
 
-	// this should be ltftLoadPending!, also maybe be cool to add another variable for track the error on loading?, like "isLTFTLoadError" or smth
-	ltft.ltftLearning = true;
+	ltft.ltftLoadPending = true;
 
 	// too much time loading!
 	advanceTimeUs(8'000'000);
 
 	ltft.onSlowCallback();
 	EXPECT_FALSE(ltft.ltftLoadPending);
+	EXPECT_TRUE(ltft.ltftLoadError);
 }
