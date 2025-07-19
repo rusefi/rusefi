@@ -14,5 +14,6 @@ CONSOLE_SRC_CPP = $(CONSOLE_COMMON_SRC_CPP) \
 CONSOLE_INC=\
 	$(PROJECT_DIR)/console/binary \
 	$(PROJECT_DIR)/console \
+	$(PROJECT_DIR)/console/binary_log \
 	$(PROJECT_DIR)/console/binary_mlg_log
 
