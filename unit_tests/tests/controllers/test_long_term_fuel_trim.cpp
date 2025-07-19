@@ -83,3 +83,32 @@ TEST(LTFT, testLearning)
 	ASSERT_LTFT_RESULT(ltft.getTrims(10000, 1000), 1.0, 1.0);
 #endif
 }
+
+TEST(LTFT, testSlowCallbackLoadError) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	LtftState ltftState;
+	LongTermFuelTrim ltft;
+
+	// reset to zero
+	ltftState.load();
+	ltft.init(&ltftState);
+
+	// mock loading state
+	ltft.ltftLearning = true;
+	ltft.ltftLoadPending = true;
+	engine->rpmCalculator.setRpmValue(1000);
+
+	ltft.onSlowCallback();
+	// still in loading time:
+	EXPECT_TRUE(ltft.ltftLoadPending);
+
+	// this should be ltftLoadPending!, also maybe be cool to add another variable for track the error on loading?, like "isLTFTLoadError" or smth
+	ltft.ltftLearning = true;
+
+	// too much time loading!
+	advanceTimeUs(8'000'000);
+
+	ltft.onSlowCallback();
+	EXPECT_FALSE(ltft.ltftLoadPending);
+}
