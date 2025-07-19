@@ -47,6 +47,11 @@
 #define EFI_LTFT_CONTROL TRUE
 #endif
 
+#ifndef EFI_STORAGE_SD
+// Lets try saving LTFT trims on SD card by default
+#define EFI_STORAGE_SD TRUE
+#endif
+
 #ifndef EFI_ANTILAG_SYSTEM
 #define EFI_ANTILAG_SYSTEM TRUE
 #endif
