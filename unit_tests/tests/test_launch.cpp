@@ -164,9 +164,7 @@ static void setDefaultLaunchParameters() {
 	engineConfiguration->launchFuelAdderPercent = 10; // Extra fuel in % when launch are triggered
 //	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
 //	engineConfiguration->enableLaunchRetard = true;
-// dead code todo	engineConfiguration->enableLaunchBoost = true;
 	engineConfiguration->launchSmoothRetard = true; //interpolates the advance linear from launchrpm to fully retarded at launchtimingrpmrange
-	// dead code todo	engineConfiguration->antiLagRpmTreshold = 3000;
 }
 
 TEST(LaunchControl, CompleteRun) {
