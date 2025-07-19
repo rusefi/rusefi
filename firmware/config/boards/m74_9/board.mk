@@ -19,6 +19,7 @@ DDEFS += -DBOARD_L9779_COUNT=1
 
 # This board has no storage
 DDEFS += -DEFI_FILE_LOGGING=FALSE
+DDEFS += -DEFI_STORAGE_SD=FALSE
 USE_FATFS = no
 
 # Configuration directorys
