@@ -14,6 +14,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         CltIdleCorrMigrator.INSTANCE,
         DisplacementIniFieldMigrator.INSTANCE,
         VeBlends1BlendParameterMigrator.INSTANCE,
+        BoostLoadBinsMigrator.INSTANCE,
         DefaultTuneMigrator.INSTANCE
     );
 
