@@ -344,7 +344,7 @@ extern bool isInHardFaultHandler;
 
 	if (!chip) {
 		// todo: make readPad fail in a similar way?
-		criticalError("gpiochip not found for pin %d", pin);
+		criticalError("Failed migration? Time to reset settings? gpiochip not found for pin %d", pin);
 		return -108;
 	}
 
