@@ -38,7 +38,7 @@ TEST(trigger, finder) {
     	printf("%d ratio %f\n", i, ratio);
     	ratios[i] = ratio;
     }
-/*
+
     int length = 2;
 
     for (int sourceIndex =0;sourceIndex<toothCount;sourceIndex++) {
@@ -60,7 +60,7 @@ TEST(trigger, finder) {
 
   MockTriggerConfiguration triggerConfiguration(triggerConfig);
   triggerConfiguration.TriggerType = triggerConfig; // technical debt :(
-
+/*
 		try {
 			expected<uint32_t> res = TriggerStimulatorHelper::findTriggerSyncPoint(form,
 					triggerConfiguration,
@@ -71,12 +71,12 @@ TEST(trigger, finder) {
 		} catch (...) {
 			printf("Not good %d\n", sourceIndex);
 		}
-
+*/
     }
 
 
 
 
-    setVerboseTrigger(true);
-*/
+//    setVerboseTrigger(true);
+
 }
