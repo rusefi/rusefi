@@ -237,11 +237,11 @@ public:
 
 	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
 
-private:
 	/**
 	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
 	 */
 	angle_t getSwitchAngle(int index) const;
+private:
 
 	/**
 	 * This variable is used to confirm that events are added in the right order.
