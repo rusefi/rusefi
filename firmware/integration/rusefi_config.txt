@@ -2427,7 +2427,7 @@ split_lines@@BOARD_CONFIG_FROM_FILE@@
 	uint8_t[6] autoscale knockGainRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
 	struct KnockGain
-		int8_t[6 x 6] gain;;"dB", 1, 0, -80, 80, 0
+		int8_t[6 x 6] table;;"dB", 1, 0, -80, 80, 0
 	end_struct
 
 	KnockGain[MAX_CYLINDER_COUNT iterate] knockGains

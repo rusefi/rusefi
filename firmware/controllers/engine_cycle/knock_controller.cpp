@@ -187,7 +187,7 @@ void KnockControllerBase::onFastCallback() {
 
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		m_gain[i] = interpolate3d(
-			config->knockGains[i].gain,
+			config->knockGains[i].table,
 			config->knockGainLoadBins, load,
 			config->knockGainRpmBins, rpm
 		);
