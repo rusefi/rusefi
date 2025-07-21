@@ -36,6 +36,7 @@ public:
 
 protected:
 	virtual bool isVerboseTriggerSynchDetails() const = 0;
+public:
 	virtual trigger_config_s getType() const = 0;
 };
 
