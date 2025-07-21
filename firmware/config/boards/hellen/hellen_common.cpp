@@ -2,6 +2,7 @@
 #include "hellen_meta.h"
 #include "adc_subscription.h"
 #include "mmc_card.h"
+#include "storage.h"
 
 void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -106,22 +107,36 @@ static void setHellenEnValue(int value) {
 void hellenEnableEn(const char *msg) {
   efiPrintf("Turning board ON [%s]", msg);
   setHellenEnValue(1);
+#if EFI_STORAGE_MFS
+  chThdSleepMilliseconds(1);
+	storagRequestRegisterStorage(STORAGE_MFS_EXT_FLASH);
+#endif
 }
 
 void hellenDisableEn(const char *msg) {
-#if EFI_FILE_LOGGING && EFI_PROD_CODE
+#if (EFI_FILE_LOGGING || EFI_CONFIGURATION_STORAGE) && EFI_PROD_CODE
 	// un-mount before turning power off SD card
 	// wait up to 1 second for SD card to become unmounted
 	efiPrintf("Long poll for SD card unmount");
 	int timeout = 1000;
+	sdCardRequestMode(SD_MODE_UNMOUNT);
+#if EFI_CONFIGURATION_STORAGE
+	// safe to call, even board does not have EXT FLASH
+	storagRequestUnregisterStorage(STORAGE_MFS_EXT_FLASH);
+#endif // EFI_CONFIGURATION_STORAGE
 	do {
-		sdCardRequestMode(SD_MODE_UNMOUNT);
 		chThdSleepMilliseconds(10);
 		if (sdCardGetCurrentMode() == SD_MODE_IDLE) {
 			break;
 		}
 		timeout -= 10;
 	} while (timeout > 0);
+#if EFI_CONFIGURATION_STORAGE
+	while (storageIsStorageRegistered(STORAGE_MFS_EXT_FLASH) && timeout > 0) {
+		chThdSleepMilliseconds(10);
+		timeout -= 10;
+	}
+#endif // EFI_CONFIGURATION_STORAGE
 #endif
   efiPrintf("Turning board off [%s]", msg);
   hellenDisableEnSilently();
