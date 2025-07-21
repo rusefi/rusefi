@@ -42,7 +42,7 @@ const MFSConfig mfsd_nor_config = {
 	.bank1_sectors	= 128U
 };
 
-void boardInitMfs()
+bool boardInitMfs()
 {
 #if SNOR_SHARED_BUS == FALSE
 	wspiStart(&WSPID1, &WSPIcfg1);
@@ -50,6 +50,8 @@ void boardInitMfs()
 	/* Initializing and starting snor1 driver.*/
 	snorObjectInit(&snor1, &snor1buf);
 	snorStart(&snor1, &snorcfg1);
+
+	return true;
 }
 
 const MFSConfig *boardGetMfsConfig()

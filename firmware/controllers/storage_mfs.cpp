@@ -119,11 +119,14 @@ static NO_CACHE mfs_nocache_buffer_t mfsbuf;
 
 static SettingStorageMFS storageMFS(&mfsd);
 
-extern void boardInitMfs(void);
+extern bool boardInitMfs(void);
 extern const MFSConfig *boardGetMfsConfig(void);
 
 bool initStorageMfs() {
-	boardInitMfs();
+	if (boardInitMfs() == false) {
+		return false;
+	}
+
 	const MFSConfig *mfsConfig = boardGetMfsConfig();
 
 	/* MFS */
