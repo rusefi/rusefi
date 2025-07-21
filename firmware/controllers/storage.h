@@ -56,6 +56,7 @@ enum StorageItemId {
 // exported for unit tests only
 bool storageAllowWriteID(StorageItemId id);
 
+// read and write storate item. executed in caller context
 StorageStatus storageWrite(StorageItemId id, const uint8_t *ptr, size_t size);
 StorageStatus storageRead(StorageItemId id, uint8_t *ptr, size_t size);
 
@@ -65,6 +66,12 @@ bool storageReqestReadID(StorageItemId id);
 
 bool storageRegisterStorage(StorageType type, SettingStorageBase *storage);
 bool storageUnregisterStorage(StorageType type);
+
+bool storageIsStorageRegistered(StorageType type);
+
+// request storage manager to attach or deattach storage from its own context
+bool storagRequestRegisterStorage(StorageType id);
+bool storagRequestUnregisterStorage(StorageType id);
 
 /**
  * @return true if an persistentState write is pending

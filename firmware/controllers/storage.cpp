@@ -75,6 +75,8 @@ chibios_rt::Mailbox<msg_t, 16> storageManagerMb;
 #define MSG_CMD_WRITE_NOW	(1)
 #define MSG_CMD_READ		(2)
 #define MSG_CMD_PING		(3)
+#define MSG_CMD_REG			(4)
+#define MSG_CMD_UNREG		(5)
 
 #define MSG_ID_MASK		0x1f
 
@@ -194,7 +196,7 @@ bool storageRegisterStorage(StorageType type, SettingStorageBase *storage) {
 		return false;
 	}
 
-	if (storages[type] != nullptr) {
+	if (storageIsStorageRegistered(type)) {
 		/* already registered */
 		efiPrintf("Trying to register already exist storage %s", storageTypeToName(type));
 		return false;
@@ -213,7 +215,7 @@ bool storageUnregisterStorage(StorageType type) {
 		return false;
 	}
 
-	if (storages[type] == nullptr) {
+	if (!storageIsStorageRegistered(type)) {
 		/* already unregistered */
 		efiPrintf("Trying to unregister non-exist storage %s", storageTypeToName(type));
 		return false;
@@ -223,6 +225,24 @@ bool storageUnregisterStorage(StorageType type) {
 	efiPrintf("Storage %s unregistered", storageTypeToName(type));
 
 	return true;
+}
+
+bool storageIsStorageRegistered(StorageType type) {
+	if (type >= STORAGE_TOTAL) {
+		return false;
+	}
+
+	return (storages[type] != nullptr);
+}
+
+bool storagRequestRegisterStorage(StorageType id)
+{
+	return storageManagerSendCmd(MSG_CMD_REG, (uint32_t)id);
+}
+
+bool storagRequestUnregisterStorage(StorageType id)
+{
+	return storageManagerSendCmd(MSG_CMD_UNREG, (uint32_t)id);
 }
 
 static uint32_t pendingWrites = 0;
@@ -238,13 +258,6 @@ static THD_WORKING_AREA(storageManagerThreadStack, UTILITY_THREAD_STACK_SIZE);
 static void storageManagerThread(void*) {
 	chRegSetThreadName("storage manger");
 
-#if EFI_STORAGE_MFS == TRUE
-	if (storages[STORAGE_MFS_EXT_FLASH] == nullptr) {
-		// (re)try MFS for external flash
-		initStorageMfs();
-	}
-#endif // EFI_STORAGE_MFS
-
 	while (true) {
 		msg_t ret;
 		msg_t msg;
@@ -255,18 +268,46 @@ static void storageManagerThread(void*) {
 			uint8_t cmd = (msg >> 24) & 0xff;
 			uint32_t id = msg & MSG_ID_MASK;
 
-			if (cmd == MSG_CMD_READ) {
+			switch (cmd) {
+			case MSG_CMD_READ:
 				pendingReads |= BIT(id);
-			} else if (cmd == MSG_CMD_WRITE) {
+				break;
+			case MSG_CMD_WRITE:
 				pendingWrites |= BIT(id);
-			} else if (cmd == MSG_CMD_WRITE_NOW) {
+				break;
+			case MSG_CMD_WRITE_NOW:
 				pendingWrites |= BIT(id);
 				// skip storageAllowWriteID() check
 				if (storageWriteID(id)) {
 					pendingWrites &= ~BIT(id);
 				}
-			} else if (cmd == MSG_CMD_PING) {
+				break;
+			case MSG_CMD_PING:
 				/* nop */
+				break;
+			case MSG_CMD_REG:
+#if EFI_STORAGE_INT_FLASH == TRUE
+				if ((StorageType)id == STORAGE_INT_FLASH) {
+					initStorageFlash();
+				}
+#endif // EFI_STORAGE_INT_FLASH
+#if EFI_STORAGE_MFS == TRUE
+				if ((StorageType)id == STORAGE_MFS_EXT_FLASH) {
+					initStorageMfs();
+				}
+#endif // EFI_STORAGE_MFS
+#if EFI_STORAGE_SD == TRUE
+				if ((StorageType)id == STORAGE_SD_CARD) {
+					initStorageSD();
+				}
+#endif // EFI_STORAGE_SD
+				break;
+			case MSG_CMD_UNREG:
+				storageUnregisterStorage((StorageType)id);
+				break;
+			default:
+				/* ignore */
+				break;
 			}
 		}
 
@@ -320,12 +361,13 @@ void initStorage() {
 
 #if EFI_STORAGE_INT_FLASH == TRUE
 	settingsStorageReady = initStorageFlash();
-#endif // STORAGE_SD_CARD
+#endif // EFI_STORAGE_INT_FLASH
 
 #if EFI_STORAGE_MFS == TRUE
 	if (settingsStorageReady) {
 		// Skip MFS if internal storage is used for persistentState
 		// Init of MFS may take significant time, lets postpone it until storage manager thread
+		storagRequestRegisterStorage(STORAGE_MFS_EXT_FLASH);
 	} else {
 		// Set long timeout to watchdog as this code is called before any thread is started
 		// and no one is feeding watchdog
