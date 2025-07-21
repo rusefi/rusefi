@@ -85,7 +85,7 @@ public:
 	int version = 0;
 
 	/**
-	 * Depending on trigger shape, we use betweeb one and three previous gap ranges to detect synchronizaiton.
+	 * Depending on trigger shape, we use between one and three previous gap ranges to detect synchronization.
 	 *
 	 * Usually second or third gap is not needed, but some crazy triggers like 36-2-2-2 require two consecutive
 	 * gaps ratios to sync
