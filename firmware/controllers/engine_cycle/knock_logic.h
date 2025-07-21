@@ -37,6 +37,10 @@ private:
 	using PD = PeakDetect<float, MS2NT(50)>;
 	PD peakDetectors[MAX_CYLINDER_COUNT];
 	PD allCylinderPeakDetector;
+
+	Timer m_lastKnockTimer;
+
+	int8_t m_gain[MAX_CYLINDER_COUNT];
 };
 
 class KnockController : public KnockControllerBase {

@@ -2423,6 +2423,14 @@ bit wizardInjectorFlow,"yes","no"
 
 split_lines@@BOARD_CONFIG_FROM_FILE@@
 
+	uint8_t[6] autoscale knockGainLoadBins;;"", 10, 0, 0, 1000, 0
+	uint8_t[6] autoscale knockGainRpmBins;;"RPM", 100, 0, 0, 25000, 0
+
+	struct KnockGain
+		int8_t[6 x 6] gain;;"dB", 1, 0, -80, 80, 0
+	end_struct
+
+	KnockGain[MAX_CYLINDER_COUNT iterate] knockGains
 end_struct
 
 #define VE_BLEND1_TABLE_NAME "VE blend 1"

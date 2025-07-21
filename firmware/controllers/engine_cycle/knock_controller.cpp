@@ -59,6 +59,9 @@ int getCylinderKnockBank(uint8_t cylinderNumber) {
 	 *    - Clamps adjustments to configured maximums.
 	 */
 bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime) {
+	// Adjust by the user-configured gain for this cylinder
+	dbv += m_gain[cylinderNumber];
+
 	bool isKnock = dbv > m_knockThreshold;
 
 	// Per-cylinder peak detector
@@ -163,8 +166,22 @@ void KnockControllerBase::onFastCallback() {
 		}
 	}
 
+	hasKnockRecently = !m_lastKnockTimer.hasElapsedSec(0.5f);
+	hasKnockRetardNow = m_knockRetard > 0;
+
 	m_knockThreshold = getKnockThreshold();
 	m_maximumRetard = getMaximumRetard();
+
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
+	auto load = getIgnitionLoad();
+
+	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+		m_gain[i] = interpolate3d(
+			config->knockGains[i].gain,
+			config->knockGainLoadBins, load,
+			config->knockGainRpmBins, rpm
+		);
+	}
 }
 
 float KnockController::getKnockThreshold() const {
