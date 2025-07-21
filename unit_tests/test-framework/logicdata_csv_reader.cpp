@@ -65,6 +65,9 @@ double CsvReader::readTimestampAndValues(double *values) {
 	return timeStamp;
 }
 
+// Emulate 500Hz refresh rate
+#define TIME_DELTA	(1.0/500.0)
+
 // todo: separate trigger handling from csv file processing, maybe reuse 'readTimestampAndValues'?
 void CsvReader::processLine(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
@@ -102,6 +105,15 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	history.add(timeStamp);
 
 	timeStamp += m_timestampOffset;
+
+#ifdef TIME_DELTA
+	// Fill the gap
+	while (lastTimeStamp + TIME_DELTA < timeStamp) {
+		lastTimeStamp += TIME_DELTA;
+		eth->setTimeAndInvokeEventsUs(1'000'000 * lastTimeStamp);
+		writeUnitTestLogLine();
+	}
+#endif
 
 	eth->setTimeAndInvokeEventsUs(1'000'000 * timeStamp);
 	for (size_t index = 0; index < m_triggerCount; index++) {
@@ -144,6 +156,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 	}
 	writeUnitTestLogLine();
+	lastTimeStamp = timeStamp;
 }
 
 void CsvReader::readLine(EngineTestHelper *eth) {
