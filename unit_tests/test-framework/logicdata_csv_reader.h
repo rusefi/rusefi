@@ -32,6 +32,7 @@ public:
 	bool flipOnRead = false;
 	bool flipVvtOnRead = false;
 	int readingOffset = 0;
+	double lastTimeStamp = 0.0;
 
 	int lineIndex() const {
 		return m_lineIndex;
