@@ -95,7 +95,7 @@ const MFSConfig mfsd_nor_config = {
 #endif
 };
 
-void boardInitMfs()
+bool boardInitMfs()
 {
 #if SNOR_SHARED_BUS == FALSE
 	spiStart(&EFI_FLASH_SDPID, &W25SpiCfg);
@@ -124,6 +124,8 @@ void boardInitMfs()
 	 */
 	snorObjectInit(&snor1, &snor1buf);
 	snorStart(&snor1, &W25FlashConfig);
+
+	return true;
 }
 
 const MFSConfig *boardGetMfsConfig()

@@ -25,10 +25,12 @@ const MFSConfig mfscfg1 = {
   .bank1_sectors    = 32U
 };
 
-void boardInitMfs()
+bool boardInitMfs()
 {
   /* Starting EFL driver.*/
   eflStart(&EFLD2, NULL);
+
+  return true;
 }
 
 const MFSConfig *boardGetMfsConfig()
