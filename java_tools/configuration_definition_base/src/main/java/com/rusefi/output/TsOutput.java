@@ -43,60 +43,9 @@ public class TsOutput {
 
     public int run(ReaderState state, ConfigStructure structure, int structureStartingTsPosition, String temporaryLineComment, String variableNamePrefix) {
         FieldsStrategy strategy = new FieldsStrategy() {
-            @Override
-            public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
-                ConfigField configField = it.cf;
-                ConfigField next = it.next;
-                int bitIndex = it.bitState.get();
-                String nameWithPrefix = prefix + variableNamePrefix + configField.getName();
 
-                /**
-                 * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
-                 * A simple solution would be to allow only one variable per each conditional section - would be simpler not to check against previous field
-                 */
-                if (!usedNames.add(nameWithPrefix)
-                        && !isConstantsSection
-                        && !configField.isUnusedField()) {
-                    throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
-                }
-
-                // note that we need to handle account for unused bits size below!
-                if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)) {
-                    return it.adjustSize(tsPosition);
-                }
-
-                if (configField.isDirective() && configField.getComment() != null) {
-                    tsHeader.append(configField.getComment());
-                    tsHeader.append(EOL);
-                    return tsPosition;
-                }
-
-                ConfigStructure cs = configField.getStructureType();
-                if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
-                    String commentContent = configField.getCommentTemplated();
-                    commentContent = ConfigFieldImpl.unquote(commentContent);
-                    settingContextHelp.append(temporaryLineComment + "\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
-                }
-
-                if (cs != null) {
-                    String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
-                    return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
-                }
-
-                if (configField.isBit()) {
-                    if (!configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
-                        tsHeader.append(temporaryLineComment + nameWithPrefix + " = bits, U32,");
-                        tsHeader.append(" " + tsPosition + ", [");
-                        tsHeader.append(bitIndex + ":" + bitIndex);
-                        tsHeader.append("]");
-                        if (isConstantsSection)
-                            tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
-                        tsHeader.append(EOL);
-                    }
-
-                    return it.adjustSize(tsPosition);
-                }
-
+			int writeFieldJob(String nameWithPrefix, ConfigFieldImpl configField, ConfigField next, int tsPosition,
+					int bitIndex, String prefix, ConfigStructure cs) {
                 if (configField.getState().getTsCustomLine().containsKey(configField.getTypeName())) {
                     // todo: rename 'bits' to 'customLine' or something since _not_ bits for array?
                     String bits = configField.getState().getTsCustomLine().get(configField.getTypeName());
@@ -144,7 +93,64 @@ public class TsOutput {
                 tsHeader.append(EOL);
                 return tsPosition;
             }
-        };
+
+			@Override
+			public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
+				ConfigFieldImpl configField = (ConfigFieldImpl) it.cf;
+				ConfigField next = it.next;
+				int bitIndex = it.bitState.get();
+				String nameWithPrefix = prefix + variableNamePrefix + configField.getName();
+                ConfigStructure cs = configField.getStructureType();
+
+                /**
+                 * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
+                 * A simple solution would be to allow only one variable per each conditional section - would be simpler not to check against previous field
+                 */
+                if (!usedNames.add(nameWithPrefix)
+                        && !isConstantsSection
+                        && !configField.isUnusedField()) {
+                    throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
+                }
+
+                // note that we need to handle account for unused bits size below!
+                if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)) {
+                    return it.adjustSize(tsPosition);
+                }
+
+                if (configField.isDirective() && configField.getComment() != null) {
+                    tsHeader.append(configField.getComment());
+                    tsHeader.append(EOL);
+                    return tsPosition;
+                }
+
+                if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
+                    String commentContent = configField.getCommentTemplated();
+                    commentContent = ConfigFieldImpl.unquote(commentContent);
+                    settingContextHelp.append(temporaryLineComment + "\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
+                }
+
+                if (cs != null) {
+                    String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
+                    return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
+                }
+
+                if (configField.isBit()) {
+                    if (!configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
+                        tsHeader.append(temporaryLineComment + nameWithPrefix + " = bits, U32,");
+                        tsHeader.append(" " + tsPosition + ", [");
+                        tsHeader.append(bitIndex + ":" + bitIndex);
+                        tsHeader.append("]");
+                        if (isConstantsSection)
+                            tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
+                        tsHeader.append(EOL);
+                    }
+
+                    return it.adjustSize(tsPosition);
+                }
+
+				return writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+			}
+		};
         structureStartingTsPosition = strategy.run(state, structure, structureStartingTsPosition);
 
         if (state.isStackEmpty()) {
