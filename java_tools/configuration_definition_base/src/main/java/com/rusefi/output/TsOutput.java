@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static com.rusefi.TokenUtils.tokenizeWithBraces;
+import static com.rusefi.TokenUtils.tokensToString;
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
@@ -179,19 +180,13 @@ public class TsOutput {
                     fields[multiplierIndex] = " " + val;
                 }
             }
-            StringBuilder sb = new StringBuilder();
+
             if (!isConstantsSection) {
                 String[] subarray = new String[3];
                 System.arraycopy(fields, 0, subarray, 0, subarray.length);
                 fields = subarray;
             }
-            for (String f : fields) {
-                if (sb.length() > 0) {
-                    sb.append(",");
-                }
-                sb.append(f);
-            }
-            return sb.toString();
+            return tokensToString(fields);
         } catch (Throwable e) {
             throw new IllegalStateException("While parsing [" + tsInfo + "] of " + configField, e);
         }
