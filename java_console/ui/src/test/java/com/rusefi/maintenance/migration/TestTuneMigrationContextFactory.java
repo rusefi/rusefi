@@ -10,6 +10,9 @@ import com.rusefi.tune.xml.Msq;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.mockito.AdditionalMatchers.not;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,6 +24,7 @@ public class TestTuneMigrationContextFactory {
         final IniField updatedIniField
     ) {
         final IniFileModelImpl prevIniFile = mock(IniFileModelImpl.class);
+        when(prevIniFile.findIniField(not(eq(prevIniField.getName())))).thenReturn(Optional.empty());
         when(prevIniFile.findIniField(prevIniField.getName())).thenReturn(Optional.of(prevIniField));
         when(prevIniFile.getAllIniFields()).thenReturn(Map.of(prevIniField.getName(), prevIniField));
 
@@ -28,6 +32,7 @@ public class TestTuneMigrationContextFactory {
         when(prevMsq.getConstantsAsMap()).thenReturn(Map.of(prevConst.getName(), prevConst));
 
         final IniFileModelImpl updatedIniFile = mock(IniFileModelImpl.class);
+        when(updatedIniFile.findIniField(not(eq(updatedIniField.getName())))).thenReturn(Optional.empty());
         when(updatedIniFile.findIniField(updatedIniField.getName())).thenReturn(Optional.of(updatedIniField));
         when(updatedIniFile.getAllIniFields()).thenReturn(Map.of(updatedIniField.getName(), updatedIniField));
 
@@ -42,6 +47,7 @@ public class TestTuneMigrationContextFactory {
         final IniField prevIniField
     ) {
         final IniFileModelImpl prevIniFile = mock(IniFileModelImpl.class);
+        when(prevIniFile.findIniField(not(eq(prevIniField.getName())))).thenReturn(Optional.empty());
         when(prevIniFile.findIniField(prevIniField.getName())).thenReturn(Optional.of(prevIniField));
         when(prevIniFile.getAllIniFields()).thenReturn(Map.of(prevIniField.getName(), prevIniField));
 
@@ -49,7 +55,7 @@ public class TestTuneMigrationContextFactory {
         when(prevMsq.getConstantsAsMap()).thenReturn(Map.of(prevConst.getName(), prevConst));
 
         final IniFileModelImpl updatedIniFile = mock(IniFileModelImpl.class);
-        when(updatedIniFile.findIniField(prevIniField.getName())).thenReturn(Optional.empty());
+        when(updatedIniFile.findIniField(any())).thenReturn(Optional.empty());
         when(updatedIniFile.getAllIniFields()).thenReturn(Map.of());
 
         final Msq updatedMsq = mock(Msq.class);
