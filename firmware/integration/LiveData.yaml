@@ -259,3 +259,9 @@ Usages:
     java: LongTermFuelTrim.java
     folder: controllers
     prepend: integration/rusefi_config_shared.txt
+
+  - name: short_term_fuel_trim_state
+    cppFileName: short_term_fuel_trim
+    java: ShortTermFuelTrim.java
+    folder: controllers/math
+    prepend: integration/rusefi_config_shared.txt

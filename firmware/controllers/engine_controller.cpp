@@ -492,6 +492,7 @@ void commonInitEngineController() {
 
 	initSpeedometer();
 
+	initStft();
 #if EFI_LTFT_CONTROL
 	initLtft();
 #endif

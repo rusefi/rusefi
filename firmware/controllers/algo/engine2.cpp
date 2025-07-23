@@ -139,7 +139,7 @@ void EngineState::periodicFastCallback() {
 	updateTChargeK(rpm, tps.value_or(0));
 
 	float untrimmedInjectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
-	auto clResult = fuelClosedLoopCorrection();
+	auto clResult = engine->module<ShortTermFuelTrim>()->getCorrection();
 
 	float fuelLoad = getFuelingLoad();
 	engine->module<LongTermFuelTrim>()->learn(clResult, rpm, fuelLoad);

@@ -1,0 +1,4 @@
+struct_no_prefix short_term_fuel_trim_state_s
+	uint8_t stftBinIdx;STFT: used bin;"Bin", 1, 0, 0, 0, 0
+	uint8_t stftLearningBinIdx;STFT: learning bin;"Bin", 1, 0, 0, 0, 0
+end_struct
