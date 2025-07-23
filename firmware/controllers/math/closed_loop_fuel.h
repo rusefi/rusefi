@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include "closed_loop_fuel_cell.h"
+#include "deadband.h"
+#include "short_term_fuel_trim_state_generated.h"
+
 struct stft_s;
 
 struct ClosedLoopFuelResult {
@@ -15,7 +19,33 @@ struct ClosedLoopFuelResult {
 	float banks[FT_BANK_COUNT];
 };
 
-ClosedLoopFuelResult fuelClosedLoopCorrection();
-size_t computeStftBin(float rpm, float load, stft_s& cfg);
-bool shouldUpdateCorrection(SensorType sensor);
+struct FuelingBank {
+	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
+};
+
+class ShortTermFuelTrim : public EngineModule, public short_term_fuel_trim_state_s {
+public:
+	void init(stft_s *stftCfg);
+	// EngineModule implementation
+	void onSlowCallback() override;
+	bool needsDelayedShutoff() override;
+
+	ClosedLoopFuelResult getCorrection();
+
+private:
+	FuelingBank banks[FT_BANK_COUNT];
+
+	Deadband<25> idleDeadband;
+	Deadband<2> overrunDeadband;
+	Deadband<2> loadDeadband;
+
+	SensorType getSensorForBankIndex(size_t index);
+	size_t computeStftBin(float rpm, float load, stft_s& cfg);
+	bool shouldCorrect();
+	bool shouldUpdateCorrection(SensorType sensor);
+};
+
+void initStft(void);
+
+/* TODO: move out of here */
 bool checkIfTuningVeNow();
