@@ -65,6 +65,7 @@ double CsvReader::readTimestampAndValues(double *values) {
 	return timeStamp;
 }
 
+// this is about TS logs generated during trigger tests and viewing these files by humans.
 // Emulate 500Hz refresh rate
 #define TIME_DELTA	(1.0/500.0)
 
