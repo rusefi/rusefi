@@ -77,6 +77,7 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength,
 
 	TriggerWaveform form;
 	function(&form);
+	toothOffset = (form.syncEdge == SyncEdge::Rise ? 0 : 1);
 
 	operation_mode_e om = form.getWheelOperationMode();
 	float cycle = 720 / getCrankDivider(om);
@@ -108,12 +109,10 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength,
 }
 
 TEST(trigger, finder) {
-	toothOffset = 1; // todo: make this smarter?
 	ASSERT_EQ(9, findAllSyncSequences(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, [] (TriggerWaveform* form) {
 						configureQuickStartSenderWheel(form);
 					}));
 
-	toothOffset = 0; // todo: make this smarter?
 	ASSERT_EQ(27, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, [] (TriggerWaveform* form) {
 						initGmLS24_3deg(form);
 					}));

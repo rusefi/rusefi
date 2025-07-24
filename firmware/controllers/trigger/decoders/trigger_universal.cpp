@@ -134,6 +134,7 @@ void configureKawaKX450F(TriggerWaveform *s) {
 	s->addToothRiseFall(360, /* width*/10.80);
 }
 
+// TT_VVT_BOSCH_QUICK_START
 void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	// todo: most cam wheels are defined as 'SyncEdge::Rise' or 'SyncEdge::RiseOnly' shall we unify?
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
