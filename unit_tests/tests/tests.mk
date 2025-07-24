@@ -111,6 +111,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_Leiderman_Khlystov.cpp \
 	tests/lua/test_can_filter.cpp \
 	tests/lua/test_lua_vin.cpp \
+	tests/lua/test_lua_debounce.cpp \
 	tests/test_change_engine_type.cpp \
 	tests/test_big_buffer.cpp \
 	tests/system/test_periodic_thread_controller.cpp \
