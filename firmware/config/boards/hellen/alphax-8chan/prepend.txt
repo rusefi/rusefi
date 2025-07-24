@@ -24,6 +24,9 @@
 #define ts_show_gdi_low_level false
 #define ts_show_analog_diag true
 
+#define CLT_IDLE_TABLE_CLT_SIZE 6
+#define CLT_IDLE_TABLE_RPM_SIZE 4
+
 #define VR_THRESHOLD_COUNT 3
 
 !                                             1                                        5
