@@ -1,7 +1,7 @@
 package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.*;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.core.SignatureHelper;
 
@@ -28,6 +28,8 @@ public class RealIniFileProvider implements IniFileProvider {
         }
         if (localIniFile == null)
             throw new IllegalStateException("Failed to locate .ini file in five different places!");
-        return IniFileModelImpl.readIniFile(localIniFile);
+        IniFileModelImpl iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+        PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
+        return iniFileModel;
     }
 }
