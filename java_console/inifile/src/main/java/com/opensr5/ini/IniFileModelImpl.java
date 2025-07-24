@@ -134,6 +134,7 @@ public class IniFileModelImpl implements IniFileModel {
         return fieldsInUiOrder;
     }
 
+    @NotNull
     public static IniFileModelImpl readIniFile(String fileName) {
         Objects.requireNonNull(fileName, "fileName");
         log.info("Reading " + fileName);
