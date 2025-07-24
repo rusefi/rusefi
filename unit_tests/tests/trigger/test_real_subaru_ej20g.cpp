@@ -2,7 +2,7 @@
 
 #include "engine_csv_reader.h"
 
-TEST(realSubaruEj20g, cranking_only_cam7) {
+TEST(real, SubaruEj20gcranking_only_cam7) {
 	EngineCsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
 
 	/* 0 - cam
@@ -24,8 +24,8 @@ TEST(realSubaruEj20g, cranking_only_cam7) {
 	ASSERT_EQ(0, eth.recentWarnings()->getCount());
 }
 
-TEST(realSubaruEj20g, cranking) {
-	CsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
+TEST(real, SubaruEj20gDefaultCranking) {
+	EngineCsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
 
 	/* 0 - cam
 	 * 1 - crank */
@@ -44,6 +44,9 @@ TEST(realSubaruEj20g, cranking) {
 	bool firstRpm = false;
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
+
+		reader.assertFirstRpm(228, /*expectedFirstRpmAtIndex*/47);
+
 		//printf("%5d: RPM %f\n", n++, Sensor::getOrZero(SensorType::Rpm));
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if ((rpm) && (!firstRpm)) {
@@ -54,8 +57,8 @@ TEST(realSubaruEj20g, cranking) {
 	}
 }
 
-TEST(realSubaruEj20g, crankingWot) {
-	CsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
+TEST(real, SubaruEj20gCrankingWot) {
+	EngineCsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
 
 	/* 0 - cam
 	 * 1 - crank */
@@ -74,6 +77,9 @@ TEST(realSubaruEj20g, crankingWot) {
 	bool firstRpm = false;
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
+
+		reader.assertFirstRpm(212, /*expectedFirstRpmAtIndex*/27);
+
 		//printf("%5d: RPM %f\n", n++, Sensor::getOrZero(SensorType::Rpm));
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if ((rpm) && (!firstRpm)) {
