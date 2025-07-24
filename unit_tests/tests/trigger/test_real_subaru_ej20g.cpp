@@ -28,6 +28,10 @@ TEST(realSubaruEj20g, cranking) {
 			printf("Got first RPM %f, at %d\n", rpm, n);
 			firstRpm = true;
 		}
+		if ((rpm == 0) && (firstRpm)) {
+			printf("Lost RPM at %d\n", n);
+			firstRpm = false;
+		}
 		n++;
 	}
 }
@@ -57,6 +61,10 @@ TEST(realSubaruEj20g, crankingWot) {
 		if ((rpm) && (!firstRpm)) {
 			printf("Got first RPM %f, at %d\n", rpm, n);
 			firstRpm = true;
+		}
+		if ((rpm == 0) && (firstRpm)) {
+			printf("Lost RPM at %d\n", n);
+			firstRpm = false;
 		}
 		n++;
 	}
