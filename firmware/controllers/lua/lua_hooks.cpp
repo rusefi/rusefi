@@ -13,6 +13,7 @@
 #include "lua_pid.h"
 #include "start_stop.h"
 #include "tinymt32.h" // TL,DR: basic implementation of 'random'
+#include "signaldebounce.h"
 
 #if EFI_PROD_CODE && HW_HELLEN
 #include "hellen_meta.h"
@@ -1184,4 +1185,17 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	});
 #endif // EFI_DAC
 
+    LuaClass<SignalDebounce> luaDebounce(lState, "SignalDebounce");
+    luaDebounce
+        .ctor<float>()
+        .fun("set", &SignalDebounce::set)
+        .fun("get", &SignalDebounce::get);
+
+#if EFI_UNIT_TEST
+    lua_register(lState, "advanceTimeUs", [](lua_State *l){
+        auto us = luaL_checknumber(l, 1);
+        advanceTimeUs(us);
+        return 0;
+    });
+#endif // EFI_UNIT_TEST
 }
