@@ -6,7 +6,7 @@ TEST(realSubaruEj20g, cranking) {
 	CsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
 
 	/* 0 - cam
-	 * 1 - cranck */
+	 * 1 - crank */
 	reader.open("tests/trigger/resources/subaru_6_7.csv");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -36,7 +36,7 @@ TEST(realSubaruEj20g, crankingWot) {
 	CsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
 
 	/* 0 - cam
-	 * 1 - cranck */
+	 * 1 - crank */
 	reader.open("tests/trigger/resources/subaru_6_7_wot.csv");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
