@@ -2,6 +2,28 @@
 
 #include "engine_csv_reader.h"
 
+TEST(realSubaruEj20g, cranking_only_cam7) {
+	EngineCsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
+
+	/* 0 - cam
+	 * 1 - crank */
+	reader.open("tests/trigger/resources/subaru_6_7.csv");
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+//	setVerboseTrigger(true);
+	eth.setTriggerType(trigger_type_e::TT_SUBARU_7_WITHOUT_6);
+
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+		reader.assertFirstRpm(254, /*expectedFirstRpmAtIndex*/47);
+	}
+
+	ASSERT_TRUE(reader.gotRpm);
+	ASSERT_FALSE(reader.gotSync);
+
+	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+}
+
 TEST(realSubaruEj20g, cranking) {
 	CsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
 
