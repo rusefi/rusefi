@@ -42,7 +42,7 @@ class BitLoggerFieldTest : public ::testing::Test {
     }
 
     void BitLoggerFieldTest::checkBitLoggerField(const bool expected, const char* const context) {
-        EXPECT_EQ(1, m_logField->writeData(m_buffer.data(), nullptr)) << context;
+        EXPECT_EQ(1u, m_logField->writeData(m_buffer.data(), nullptr)) << context;
         EXPECT_THAT(m_buffer, ::testing::ElementsAre((expected ? 0x01 : 0x00), 0xAA, 0xAA, 0xAA, 0xAA, 0xAA));
     }
 

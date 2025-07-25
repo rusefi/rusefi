@@ -39,29 +39,29 @@ TEST(TriggerDecoder, FindsFirstSyncPoint) {
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_FALSE(dut.getShaftSynchronized());
-	EXPECT_EQ(2, dut.currentCycle.current_index);
+	EXPECT_EQ(2u, dut.currentCycle.current_index);
 
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_FALSE(dut.getShaftSynchronized());
-	EXPECT_EQ(4, dut.currentCycle.current_index);
+	EXPECT_EQ(4u, dut.currentCycle.current_index);
 
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_FALSE(dut.getShaftSynchronized());
-	EXPECT_EQ(6, dut.currentCycle.current_index);
+	EXPECT_EQ(6u, dut.currentCycle.current_index);
 
 	// Missing tooth, 2x normal length!
 	t += MS2NT(2);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
-	EXPECT_EQ(0, dut.currentCycle.current_index);
+	EXPECT_EQ(0u, dut.currentCycle.current_index);
 
 	// Normal tooth after the missing tooth, should be index 2 now (one rise + one fall)
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
-	EXPECT_EQ(2, dut.currentCycle.current_index);
+	EXPECT_EQ(2u, dut.currentCycle.current_index);
 
 	EXPECT_FALSE(dut.someSortOfTriggerError());
 }
@@ -90,7 +90,7 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 	t += MS2NT(2);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
-	EXPECT_EQ(0, dut.currentCycle.current_index);
+	EXPECT_EQ(0u, dut.currentCycle.current_index);
 	EXPECT_EQ(0, dut.getSynchronizationCounter());
 
 	// Do 100 turns and make sure we stay synchronized
@@ -98,18 +98,18 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 		// normal tooth
 		t += MS2NT(1);
 		doTooth(dut, shape, cfg, t);
-		EXPECT_EQ(2, dut.currentCycle.current_index);
+		EXPECT_EQ(2u, dut.currentCycle.current_index);
 
 		// normal tooth
 		t += MS2NT(1);
 		doTooth(dut, shape, cfg, t);
-		EXPECT_EQ(4, dut.currentCycle.current_index);
+		EXPECT_EQ(4u, dut.currentCycle.current_index);
 
 		// Missing tooth, 2x normal length!
 		t += MS2NT(2);
 		doTooth(dut, shape, cfg, t);
 		EXPECT_TRUE(dut.getShaftSynchronized());
-		EXPECT_EQ(0, dut.currentCycle.current_index);
+		EXPECT_EQ(0u, dut.currentCycle.current_index);
 		EXPECT_FALSE(dut.someSortOfTriggerError());
 
 		// We do one revolution per loop iteration
@@ -147,7 +147,7 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 	t += MS2NT(2);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
-	EXPECT_EQ(0, dut.currentCycle.current_index);
+	EXPECT_EQ(0u, dut.currentCycle.current_index);
 
 	// Fake that we have RPM so that all trigger error detection is enabled
 	Sensor::setMockValue(SensorType::Rpm, 1000);
@@ -155,20 +155,20 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
-	EXPECT_EQ(2, dut.currentCycle.current_index);
+	EXPECT_EQ(2u, dut.currentCycle.current_index);
 
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
-	EXPECT_EQ(4, dut.currentCycle.current_index);
-	EXPECT_EQ(0, dut.totalTriggerErrorCounter);
+	EXPECT_EQ(4u, dut.currentCycle.current_index);
+	EXPECT_EQ(0u, dut.totalTriggerErrorCounter);
 
 	// This tooth is extra - expect a call to onTriggerError() and loss of sync!
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_FALSE(dut.getShaftSynchronized());
-	EXPECT_EQ(6, dut.currentCycle.current_index);
-	EXPECT_EQ(1, dut.totalTriggerErrorCounter);
+	EXPECT_EQ(6u, dut.currentCycle.current_index);
+	EXPECT_EQ(1u, dut.totalTriggerErrorCounter);
 
 	// Fire some normal revolutions to ensure we recover without additional error types.
 	for (size_t i = 0; i < 10; i++) {
@@ -176,17 +176,17 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 		t += MS2NT(2);
 		doTooth(dut, shape, cfg, t);
 		EXPECT_TRUE(dut.getShaftSynchronized());
-		EXPECT_EQ(0, dut.currentCycle.current_index);
+		EXPECT_EQ(0u, dut.currentCycle.current_index);
 
 		// normal tooth
 		t += MS2NT(1);
 		doTooth(dut, shape, cfg, t);
-		EXPECT_EQ(2, dut.currentCycle.current_index);
+		EXPECT_EQ(2u, dut.currentCycle.current_index);
 
 		// normal tooth
 		t += MS2NT(1);
 		doTooth(dut, shape, cfg, t);
-		EXPECT_EQ(4, dut.currentCycle.current_index);
+		EXPECT_EQ(4u, dut.currentCycle.current_index);
 	}
 
 	// Should now have sync again
@@ -225,7 +225,7 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	t += MS2NT(2);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
-	EXPECT_EQ(0, dut.currentCycle.current_index);
+	EXPECT_EQ(0u, dut.currentCycle.current_index);
 
 	// Fake that we have RPM so that all trigger error detection is enabled
 	Sensor::setMockValue(SensorType::Rpm, 1000);
@@ -233,9 +233,9 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
-	EXPECT_EQ(2, dut.currentCycle.current_index);
+	EXPECT_EQ(2u, dut.currentCycle.current_index);
 	EXPECT_FALSE(dut.someSortOfTriggerError());
-	EXPECT_EQ(0, dut.totalTriggerErrorCounter);
+	EXPECT_EQ(0u, dut.totalTriggerErrorCounter);
 
 	// Missing tooth, but it comes early - not enough teeth have happened yet!
 	t += MS2NT(2);
@@ -243,8 +243,8 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 
 	// Sync is lost until we get to another sync point
 	EXPECT_FALSE(dut.getShaftSynchronized());
-	EXPECT_EQ(0, dut.currentCycle.current_index);
-	EXPECT_EQ(1, dut.totalTriggerErrorCounter);
+	EXPECT_EQ(0u, dut.currentCycle.current_index);
+	EXPECT_EQ(1u, dut.totalTriggerErrorCounter);
 	EXPECT_TRUE(dut.someSortOfTriggerError());
 
 	// Fire some normal revolutions to ensure we recover without additional error types.
@@ -252,18 +252,18 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 		// normal tooth
 		t += MS2NT(1);
 		doTooth(dut, shape, cfg, t);
-		EXPECT_EQ(2, dut.currentCycle.current_index);
+		EXPECT_EQ(2u, dut.currentCycle.current_index);
 
 		// normal tooth
 		t += MS2NT(1);
 		doTooth(dut, shape, cfg, t);
-		EXPECT_EQ(4, dut.currentCycle.current_index);
+		EXPECT_EQ(4u, dut.currentCycle.current_index);
 
 		// Missing tooth, 2x normal length!
 		t += MS2NT(2);
 		doTooth(dut, shape, cfg, t);
 		EXPECT_TRUE(dut.getShaftSynchronized());
-		EXPECT_EQ(0, dut.currentCycle.current_index);
+		EXPECT_EQ(0u, dut.currentCycle.current_index);
 	}
 
 	// Should now have sync again

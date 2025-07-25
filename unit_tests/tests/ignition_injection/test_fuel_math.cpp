@@ -226,7 +226,7 @@ TEST(FuelMath, testDifferentInjectionModes) {
 	setInjectionMode((int)IM_SINGLE_POINT);
 	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 40,  engine->engineState.injectionDuration) << "injection while IM_SINGLE_POINT";
-	EXPECT_EQ( 0, eth.recentWarnings()->getCount()) << "warningCounter#testDifferentInjectionModes";
+	EXPECT_EQ( 0u, eth.recentWarnings()->getCount()) << "warningCounter#testDifferentInjectionModes";
 }
 #endif //FUEL_RPM_COUNT == 16
 

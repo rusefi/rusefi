@@ -21,7 +21,7 @@ TEST(real, SubaruEj20gcranking_only_cam7) {
 	ASSERT_TRUE(reader.gotRpm);
 	ASSERT_FALSE(reader.gotSync);
 
-	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+	ASSERT_EQ(0u, eth.recentWarnings()->getCount());
 }
 
 TEST(real, SubaruEj20gDefaultCranking) {

@@ -359,7 +359,7 @@ TEST(trigger, testTriggerDecoder) {
 		TriggerWaveform * s = &engine->triggerCentral.triggerShape;
 
 		initializeSkippedToothTrigger(s, 2, 0, FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
-		ASSERT_EQ(4, s->getSize()) << "shape size";
+		ASSERT_EQ(4u, s->getSize()) << "shape size";
 		ASSERT_EQ(s->wave.getSwitchTime(0), 0.25);
 		ASSERT_EQ(s->wave.getSwitchTime(1), 0.5);
 		ASSERT_EQ(s->wave.getSwitchTime(2), 0.75);
@@ -454,7 +454,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|.......#|........|
 	// inj #1 |........|.......#|........|.......#|
 	ASSERT_EQ( 4,  engine->scheduler.size()) << "qs#00";
-	ASSERT_EQ( 3,  getRevolutionCounter()) << "rev cnt#3";
+	ASSERT_EQ( 3u, getRevolutionCounter()) << "rev cnt#3";
 	eth->assertInjectorUpEvent("setTestBug299: 1@0", 0, MS2US(8.5), 2);
 	eth->assertInjectorDownEvent("@1", 1, MS2US(10), 2);
 	eth->assertInjectorUpEvent("1@2", 2, MS2US(18.5), 3);
@@ -477,7 +477,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|.......#|........|
 	// inj #1 |........|.......#|........|.......#|
 	ASSERT_EQ( 8,  engine->scheduler.size()) << "qs#0";
-	ASSERT_EQ( 3,  getRevolutionCounter()) << "rev cnt#3";
+	ASSERT_EQ( 3u, getRevolutionCounter()) << "rev cnt#3";
 	eth->assertInjectorUpEvent("02@0", 0, MS2US(-11.5), 2);
 	eth->assertInjectorDownEvent("@1", 1, MS2US(-10), 2);
 	eth->assertInjectorUpEvent("@2", 2, MS2US(-1.5), 3);
@@ -520,7 +520,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	// inj #0 |.......#|........|........|........|
 	// inj #1 |........|.......#|........|........|
 	ASSERT_EQ( 4,  engine->scheduler.size()) << "qs#0-2";
-	ASSERT_EQ( 4,  getRevolutionCounter()) << "rev cnt#4";
+	ASSERT_EQ( 4u, getRevolutionCounter()) << "rev cnt#4";
 	eth->assertInjectorUpEvent("0@0", 0, MS2US(8.5), 0);
 	eth->assertInjectorDownEvent("0@1", 1, MS2US(10), 0);
 	eth->assertInjectorUpEvent("0@2", 2, MS2US(18.5), 1);
@@ -582,9 +582,9 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	ASSERT_EQ( 0,  engine->scheduler.size()) << "qs#1#2";
 
 
-	ASSERT_EQ( 4,  getRevolutionCounter()) << "rev cnt#4#0";
+	ASSERT_EQ( 4u,  getRevolutionCounter()) << "rev cnt#4#0";
 	eth.firePrimaryTriggerRise();
-	ASSERT_EQ( 5,  getRevolutionCounter()) << "rev cnt#4#1";
+	ASSERT_EQ( 5u,  getRevolutionCounter()) << "rev cnt#4#1";
 	// time...|0.......|10......|20......|30......|40......|50......|60......|
 	// inj #0 |########|##...###|########|.....###|########|........|........|
 	// inj #1 |.....###|########|....####|########|........|........|........|
@@ -612,7 +612,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.fireFall(20);
 	ASSERT_EQ( 8,  engine->scheduler.size()) << "qs#2#1";
-	ASSERT_EQ( 5,  getRevolutionCounter()) << "rev cnt#5";
+	ASSERT_EQ( 5u, getRevolutionCounter()) << "rev cnt#5";
 	// using old fuel schedule - but already wider pulses
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |........|.....###|########|.....###|########|........|........|
@@ -655,7 +655,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ( 4,  engine->scheduler.size()) << "qs#2#2";
-	ASSERT_EQ( 6,  getRevolutionCounter()) << "rev cnt6";
+	ASSERT_EQ( 6u, getRevolutionCounter()) << "rev cnt6";
 	// time...|-20.....|-10.....|0.......|10......|20......|30......|40......|
 	// inj #0 |########|.....###|########|....####|........|........|........|
 	// inj #1 |.....###|########|.....###|########|........|........|........|
@@ -695,7 +695,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	eth.firePrimaryTriggerFall();
 
 	ASSERT_EQ( 5,  engine->scheduler.size()) << "qs#3";
-	ASSERT_EQ( 6,  getRevolutionCounter()) << "rev cnt6";
+	ASSERT_EQ( 6u, getRevolutionCounter()) << "rev cnt6";
 	ASSERT_EQ( 0,  eth.executeActions()) << "executed #6";
 
 
@@ -786,7 +786,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 ////	assertInjectorDownEvent("8@8", 8, MS2US(45), 1);
 ////	assertInjectorDownEvent("8@9", 9, MS2US(55), 0);
 
-	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
+	ASSERT_EQ( 0u,  getRecentWarnings()->getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
 }
 
 void setInjectionMode(int value) {
@@ -1036,7 +1036,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
-	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
+	ASSERT_EQ( 0u,  getRecentWarnings()->getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
 }
 #endif //FUEL_RPM_COUNT == 16
 
@@ -1111,7 +1111,7 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	eth.fireFall(20);
 	eth.executeActions();
-	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #4";
+	ASSERT_EQ( 1u,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #4";
 
 	printf("*************************************************** (rpm is back) now let's have a good engine cycle and confirm things work\r\n");
 
@@ -1140,7 +1140,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireFall(20);
 	eth.executeActions();
 	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #8";
-	ASSERT_EQ( 2,  getRecentWarnings()->getCount()) << "warningCounter#SparkReverseOrderBug319";
+	ASSERT_EQ( 2u, getRecentWarnings()->getCount()) << "warningCounter#SparkReverseOrderBug319";
 	ASSERT_EQ(ObdCode::CUSTOM_DWELL_TOO_LONG, getRecentWarnings()->get(0).Code) << "warning @0";
 	ASSERT_EQ(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, getRecentWarnings()->get(1).Code);
 }
@@ -1156,27 +1156,27 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#0";
+	ASSERT_EQ( 0u,  getRecentWarnings()->getCount()) << "warningCounter#0";
 
   // todo: migrate to 'smartFireRise' see header which explains the difference
 	eth.fireRise(20);
 	eth.executeActions();
-	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#0";
+	ASSERT_EQ( 0u,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#0";
 
 
 	eth.fireFall(20);
 	eth.executeActions();
-	ASSERT_EQ( 1,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#1";
+	ASSERT_EQ( 1u,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#1";
 
 
 	eth.fireRise(20);
 	eth.executeActions();
-	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#2";
+	ASSERT_EQ( 0u,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#2";
 
 
 	eth.fireFall(20);
 	eth.executeActions();
-	ASSERT_EQ( 1,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#3";
+	ASSERT_EQ( 1u,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#3";
 
 
 	eth.fireRise(20);
@@ -1185,7 +1185,7 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 
 	eth.fireFall(20);
 	eth.executeActions();
-	ASSERT_EQ( 1,  eth.engine.triggerCentral.triggerState.currentCycle.current_index) << "ci#5";
+	ASSERT_EQ( 1u,  eth.engine.triggerCentral.triggerState.currentCycle.current_index) << "ci#5";
 
 
 	printf("*************************************************** testMissedSpark299 start\r\n");
@@ -1228,5 +1228,5 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 	eth.fireFall(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#1";
+	ASSERT_EQ( 0u,  getRecentWarnings()->getCount()) << "warningCounter#1";
 }

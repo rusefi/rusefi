@@ -28,7 +28,7 @@ TEST(real4b11, running) {
 		reader.assertFirstRpm(1436, 30);
 	}
 
-	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+	ASSERT_EQ(0u, eth.recentWarnings()->getCount());
 }
 
 TEST(real4b11, runningDoubledEdge) {
@@ -50,6 +50,6 @@ TEST(real4b11, runningDoubledEdge) {
 	}
 
 	// Should get a warning for the doubled edge, but NOT one for a trigger error!
-	ASSERT_EQ(1, eth.recentWarnings()->getCount());
+	ASSERT_EQ(1u, eth.recentWarnings()->getCount());
 	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE, eth.recentWarnings()->get(0).Code);
 }

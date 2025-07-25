@@ -77,18 +77,18 @@ TEST(GearDetector, DetermineGearSingleSpeed) {
 	dut.onConfigurationChange(nullptr);
 
 	// Super high ratios indicate clutch slip or idling in neutral or something
-	EXPECT_EQ(0, dut.determineGearFromRatio(100));
-	EXPECT_EQ(0, dut.determineGearFromRatio(4));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(100));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(4));
 
 	// Check exactly on the gear
-	EXPECT_EQ(1, dut.determineGearFromRatio(2));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(2));
 
 	// Check near the gear
-	EXPECT_EQ(1, dut.determineGearFromRatio(2.1));
-	EXPECT_EQ(1, dut.determineGearFromRatio(1.9));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(2.1));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(1.9));
 
 	// Extremely low ratio suggests stopped engine at speed?
-	EXPECT_EQ(0, dut.determineGearFromRatio(1.0));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(1.0));
 }
 
 TEST(GearDetector, DetermineGear5Speed) {
@@ -105,34 +105,34 @@ TEST(GearDetector, DetermineGear5Speed) {
 	dut.onConfigurationChange(nullptr);
 
 	// Super high ratios indicate clutch slip or idling in neutral or something
-	EXPECT_EQ(0, dut.determineGearFromRatio(100));
-	EXPECT_EQ(0, dut.determineGearFromRatio(6));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(100));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(6));
 
 	// Check exactly on gears
-	EXPECT_EQ(1, dut.determineGearFromRatio(3.35));
-	EXPECT_EQ(2, dut.determineGearFromRatio(1.99));
-	EXPECT_EQ(3, dut.determineGearFromRatio(1.33));
-	EXPECT_EQ(4, dut.determineGearFromRatio(1.00));
-	EXPECT_EQ(5, dut.determineGearFromRatio(0.72));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(3.35));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(1.99));
+	EXPECT_EQ(3u, dut.determineGearFromRatio(1.33));
+	EXPECT_EQ(4u, dut.determineGearFromRatio(1.00));
+	EXPECT_EQ(5u, dut.determineGearFromRatio(0.72));
 
 	// Check near each gear
-	EXPECT_EQ(1, dut.determineGearFromRatio(3.45));
-	EXPECT_EQ(1, dut.determineGearFromRatio(3.25));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(3.45));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(3.25));
 
-	EXPECT_EQ(2, dut.determineGearFromRatio(2.2));
-	EXPECT_EQ(2, dut.determineGearFromRatio(1.8));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(2.2));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(1.8));
 
-	EXPECT_EQ(3, dut.determineGearFromRatio(1.45));
-	EXPECT_EQ(3, dut.determineGearFromRatio(1.25));
+	EXPECT_EQ(3u, dut.determineGearFromRatio(1.45));
+	EXPECT_EQ(3u, dut.determineGearFromRatio(1.25));
 
-	EXPECT_EQ(4, dut.determineGearFromRatio(1.1));
-	EXPECT_EQ(4, dut.determineGearFromRatio(0.9));
+	EXPECT_EQ(4u, dut.determineGearFromRatio(1.1));
+	EXPECT_EQ(4u, dut.determineGearFromRatio(0.9));
 
-	EXPECT_EQ(5, dut.determineGearFromRatio(0.8));
-	EXPECT_EQ(5, dut.determineGearFromRatio(0.6));
+	EXPECT_EQ(5u, dut.determineGearFromRatio(0.8));
+	EXPECT_EQ(5u, dut.determineGearFromRatio(0.6));
 
 	// Extremely low ratio suggests stopped engine at speed?
-	EXPECT_EQ(0, dut.determineGearFromRatio(0.1));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(0.1));
 }
 
 TEST(GearDetector, MiataNb6Speed) {
@@ -151,16 +151,16 @@ TEST(GearDetector, MiataNb6Speed) {
 
 	dut.onConfigurationChange(nullptr);
 
-	EXPECT_EQ(0, dut.determineGearFromRatio(5.85));
-	EXPECT_EQ(1, dut.determineGearFromRatio(5.51));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(5.85));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(5.51));
 
 	// Check exactly on gears
-	EXPECT_EQ(1, dut.determineGearFromRatio(3.76));
-	EXPECT_EQ(2, dut.determineGearFromRatio(2.27));
-	EXPECT_EQ(3, dut.determineGearFromRatio(1.65));
-	EXPECT_EQ(4, dut.determineGearFromRatio(1.26));
-	EXPECT_EQ(5, dut.determineGearFromRatio(1.00));
-	EXPECT_EQ(6, dut.determineGearFromRatio(0.84));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(3.76));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(2.27));
+	EXPECT_EQ(3u, dut.determineGearFromRatio(1.65));
+	EXPECT_EQ(4u, dut.determineGearFromRatio(1.26));
+	EXPECT_EQ(5u, dut.determineGearFromRatio(1.00));
+	EXPECT_EQ(6u, dut.determineGearFromRatio(0.84));
 }
 
 TEST(GearDetector, DetermineGear8Speed) {
@@ -181,25 +181,25 @@ TEST(GearDetector, DetermineGear8Speed) {
 	dut.onConfigurationChange(nullptr);
 
 	// Super high ratios indicate clutch slip or idling in neutral or something
-	EXPECT_EQ(0, dut.determineGearFromRatio(100));
-	EXPECT_EQ(0, dut.determineGearFromRatio(8));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(100));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(8));
 
 	// Check exactly on gears - only test the ends, the middle works
-	EXPECT_EQ(1, dut.determineGearFromRatio(4.69));
-	EXPECT_EQ(2, dut.determineGearFromRatio(3.13));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(4.69));
+	EXPECT_EQ(2u, dut.determineGearFromRatio(3.13));
 
-	EXPECT_EQ(7, dut.determineGearFromRatio(0.84));
-	EXPECT_EQ(8, dut.determineGearFromRatio(0.67));
+	EXPECT_EQ(7u, dut.determineGearFromRatio(0.84));
+	EXPECT_EQ(8u, dut.determineGearFromRatio(0.67));
 
 	// Check near each gear - only test the ends, the middle works
-	EXPECT_EQ(1, dut.determineGearFromRatio(4.75));
-	EXPECT_EQ(1, dut.determineGearFromRatio(4.3));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(4.75));
+	EXPECT_EQ(1u, dut.determineGearFromRatio(4.3));
 
-	EXPECT_EQ(8, dut.determineGearFromRatio(0.71));
-	EXPECT_EQ(8, dut.determineGearFromRatio(0.6));
+	EXPECT_EQ(8u, dut.determineGearFromRatio(0.71));
+	EXPECT_EQ(8u, dut.determineGearFromRatio(0.6));
 
 	// Extremely low ratio suggests stopped engine at speed?
-	EXPECT_EQ(0, dut.determineGearFromRatio(0.1));
+	EXPECT_EQ(0u, dut.determineGearFromRatio(0.1));
 }
 
 TEST(GearDetector, ParameterValidation) {

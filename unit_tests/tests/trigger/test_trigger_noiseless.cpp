@@ -94,7 +94,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	fireNoisyCycle60_2(&eth, 2, 1000, -1, 0, 0, 0);
 
 	// should be no errors anyway
-	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoderProcedure totalTriggerErrorCounter";
+	ASSERT_EQ( 0u, engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoderProcedure totalTriggerErrorCounter";
 	// check if we're imitating the 60-2 signal correctly
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 	// check rpm (60secs / (1000us * 60teeth)) = 1000rpm
@@ -155,7 +155,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	// alas, this is a hard case even for noiseless decoder, and it fails...
 	// but still we're close to 33% signal-noise ratio threshold - not bad!
 	// so here's an error anyway!
-	ASSERT_EQ( 1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoder noise#7_fail_test";
+	ASSERT_EQ( 1u,  engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoder noise#7_fail_test";
 }
 
 TEST(trigger, noiselessDecoder) {
@@ -168,7 +168,7 @@ TEST(trigger, noiselessDecoder) {
 	// we'll test on 60-2 wheel
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 
-	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ( 0u, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "testNoiselessDecoder RPM";
 
 	//printTriggerDebug = true;

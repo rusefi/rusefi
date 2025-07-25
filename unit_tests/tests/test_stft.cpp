@@ -56,24 +56,24 @@ TEST(ClosedLoopFuel, CellSelection) {
 	cfg.maxOverrunLoad = 30;
 
 	// Test idle
-	EXPECT_EQ(0, computeStftBin(1000, 10, cfg));
-	EXPECT_EQ(0, computeStftBin(1000, 50, cfg));
-	EXPECT_EQ(0, computeStftBin(1000, 90, cfg));
+	EXPECT_EQ(0u, computeStftBin(1000, 10, cfg));
+	EXPECT_EQ(0u, computeStftBin(1000, 50, cfg));
+	EXPECT_EQ(0u, computeStftBin(1000, 90, cfg));
 
 	// Test overrun
-	EXPECT_EQ(1, computeStftBin(2000, 10, cfg));
-	EXPECT_EQ(1, computeStftBin(4000, 10, cfg));
-	EXPECT_EQ(1, computeStftBin(10000, 10, cfg));
+	EXPECT_EQ(1u, computeStftBin(2000, 10, cfg));
+	EXPECT_EQ(1u, computeStftBin(4000, 10, cfg));
+	EXPECT_EQ(1u, computeStftBin(10000, 10, cfg));
 
 	// Test load
-	EXPECT_EQ(2, computeStftBin(2000, 90, cfg));
-	EXPECT_EQ(2, computeStftBin(4000, 90, cfg));
-	EXPECT_EQ(2, computeStftBin(10000, 90, cfg));
+	EXPECT_EQ(2u, computeStftBin(2000, 90, cfg));
+	EXPECT_EQ(2u, computeStftBin(4000, 90, cfg));
+	EXPECT_EQ(2u, computeStftBin(10000, 90, cfg));
 
 	// Main cell
-	EXPECT_EQ(3, computeStftBin(2000, 50, cfg));
-	EXPECT_EQ(3, computeStftBin(4000, 50, cfg));
-	EXPECT_EQ(3, computeStftBin(10000, 50, cfg));
+	EXPECT_EQ(3u, computeStftBin(2000, 50, cfg));
+	EXPECT_EQ(3u, computeStftBin(4000, 50, cfg));
+	EXPECT_EQ(3u, computeStftBin(10000, 50, cfg));
 }
 
 TEST(ClosedLoopFuel, afrLimits) {

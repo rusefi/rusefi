@@ -18,16 +18,16 @@ TEST(BufferedWriter, WriteSmall) {
 	// No calls to dut expected
 	StrictMock<MockBufferedWriter<10>> dut;
 
-	EXPECT_EQ(0, dut.write(testBuffer, 5));
+	EXPECT_EQ(0u, dut.write(testBuffer, 5));
 }
 
 TEST(BufferedWriter, WriteSmallFlush) {
 	StrictMock<MockBufferedWriter<10>> dut;
 	EXPECT_CALL(dut, writeInternal(_, 5)).WillOnce(Return(5));
 
-	ASSERT_EQ(0, dut.write(testBuffer, 5));
+	ASSERT_EQ(0u, dut.write(testBuffer, 5));
 
-	EXPECT_EQ(dut.flush(), 5);
+	EXPECT_EQ(dut.flush(), 5u);
 }
 
 TEST(BufferedWriter, WriteMultipleSmall) {
@@ -37,13 +37,13 @@ TEST(BufferedWriter, WriteMultipleSmall) {
 		EXPECT_CALL(dut, writeInternal(_, 2)).WillOnce(Return(2));
 	}
 
-	EXPECT_EQ(0, dut.write(testBuffer, 3));
-	EXPECT_EQ(0, dut.write(testBuffer, 3));
-	EXPECT_EQ(0, dut.write(testBuffer, 3));
-	EXPECT_EQ(10, dut.write(testBuffer, 3));	// <- this one should trigger a flush
+	EXPECT_EQ(0u, dut.write(testBuffer, 3));
+	EXPECT_EQ(0u, dut.write(testBuffer, 3));
+	EXPECT_EQ(0u, dut.write(testBuffer, 3));
+	EXPECT_EQ(10u, dut.write(testBuffer, 3));	// <- this one should trigger a flush
 
 	// Flush the remainder
-	EXPECT_EQ(dut.flush(), 2);
+	EXPECT_EQ(dut.flush(), 2u);
 }
 
 TEST(BufferedWriter, WriteSingleFullBufferSize) {
@@ -51,10 +51,10 @@ TEST(BufferedWriter, WriteSingleFullBufferSize) {
 
 	EXPECT_CALL(dut, writeInternal(_, 50)).WillOnce(Return(50));
 
-	EXPECT_EQ(50, dut.write(testBuffer, 50));
+	EXPECT_EQ(50u, dut.write(testBuffer, 50));
 
 	// Nothing left to flush!
-	EXPECT_EQ(0, dut.flush());
+	EXPECT_EQ(0u, dut.flush());
 }
 
 TEST(BufferedWriter, WriteLarge) {
@@ -64,9 +64,9 @@ TEST(BufferedWriter, WriteLarge) {
 		EXPECT_CALL(dut, writeInternal(_, 45)).WillOnce(Return(45));
 	}
 
-	EXPECT_EQ(45, dut.write(testBuffer, 45));
+	EXPECT_EQ(45u, dut.write(testBuffer, 45));
 
-	EXPECT_EQ(0, dut.flush());
+	EXPECT_EQ(0u, dut.flush());
 }
 
 TEST(BufferedWriter, WriteLargeAfterSmall) {
@@ -77,9 +77,9 @@ TEST(BufferedWriter, WriteLargeAfterSmall) {
 		EXPECT_CALL(dut, writeInternal(_, 36)).WillOnce(Return(36));
 	}
 
-	EXPECT_EQ(0, dut.write(testBuffer, 1));
+	EXPECT_EQ(0u, dut.write(testBuffer, 1));
 
-	EXPECT_EQ(46, dut.write(testBuffer, 45));
+	EXPECT_EQ(46u, dut.write(testBuffer, 45));
 
-	EXPECT_EQ(0, dut.flush());
+	EXPECT_EQ(0u, dut.flush());
 }

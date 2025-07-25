@@ -250,12 +250,12 @@ TEST(misc, testGpsParser) {
 	ASSERT_NEAR(11.2, GPSdata.speed, EPS3D) << "3 speed";
 //	ASSERT_EQ( 0,  GPSdata.altitude) << "3 altitude";  // GPRMC not overwrite altitude
 	ASSERT_EQ( 0,  GPSdata.course) << "3 course";
-	ASSERT_EQ( 2006,  GPSdata.time.year + 1900) << "3 GPS yy";
-	ASSERT_EQ( 12,  GPSdata.time.month) << "3 GPS mm";
-	ASSERT_EQ( 26,  GPSdata.time.day) << "3 GPS dd";
-	ASSERT_EQ( 11,  GPSdata.time.hour) << "3 GPS hh";
-	ASSERT_EQ( 16,  GPSdata.time.minute) << "3 GPS mm";
-	ASSERT_EQ( 9,  GPSdata.time.second) << "3 GPS ss";
+	ASSERT_EQ( 2006u,  GPSdata.time.year + 1900u) << "3 GPS yy";
+	ASSERT_EQ( 12u,  GPSdata.time.month) << "3 GPS mm";
+	ASSERT_EQ( 26u,  GPSdata.time.day) << "3 GPS dd";
+	ASSERT_EQ( 11u,  GPSdata.time.hour) << "3 GPS hh";
+	ASSERT_EQ( 16u,  GPSdata.time.minute) << "3 GPS mm";
+	ASSERT_EQ( 9u,  GPSdata.time.second) << "3 GPS ss";
 
 	// check again first one
 	// we need to pass a mutable string, not a constant because the parser would be modifying the string

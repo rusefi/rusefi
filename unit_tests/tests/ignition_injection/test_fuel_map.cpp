@@ -141,7 +141,7 @@ TEST(misc, testAngleResolver) {
 
 	ASSERT_EQ(4, ts->getTriggerWaveformSynchPointIndex());
 
-	ASSERT_EQ( 10,  ts->getSize()) << "shape size";
+	ASSERT_EQ( 10u,  ts->getSize()) << "shape size";
 
 	TriggerWaveform t;
 	configureFordAspireTriggerWaveform(&t);

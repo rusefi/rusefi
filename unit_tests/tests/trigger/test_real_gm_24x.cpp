@@ -22,6 +22,6 @@ TEST(crankingGm24x_5, gmRealCrankingFromFile) {
 		reader.assertFirstRpm(77, 23);
 	}
 
-	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
+	ASSERT_EQ( 0u, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
 	ASSERT_EQ( 139, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }

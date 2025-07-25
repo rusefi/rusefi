@@ -61,7 +61,7 @@ TEST(real4g93, cranking) {
 	ASSERT_TRUE(reader.gotRpm);
 	ASSERT_TRUE(reader.gotSync);
 
-	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+	ASSERT_EQ(0u, eth.recentWarnings()->getCount());
 }
 
 TEST(real4g93, crankingOn11) {
@@ -114,5 +114,5 @@ TEST(real4g93, crankingCamOnly) {
 	ASSERT_TRUE(reader.gotRpm);
 	ASSERT_TRUE(reader.gotSync);
 
-	ASSERT_EQ(1, eth.recentWarnings()->getCount());
+	ASSERT_EQ(1u, eth.recentWarnings()->getCount());
 }

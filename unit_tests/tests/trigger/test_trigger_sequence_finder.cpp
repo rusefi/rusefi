@@ -28,7 +28,7 @@ static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
 		trigger_config_s &triggerConfig) {
 	int toothCount = form.getSize() / 2;
 
-	for (int gapIndex = 0; gapIndex < length; gapIndex++) {
+	for (size_t gapIndex = 0; gapIndex < length; gapIndex++) {
 
 		int ratioIndex = toothIndex - gapIndex;
 		if (ratioIndex < 0)
@@ -36,7 +36,7 @@ static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
 		float ratio = ratios[ratioIndex];
 		ratiosThisTime[ratioIndex] = ratio;
 //			printf("trying %d ratio %f\n", gapIndex, ratio);
-    form.setTriggerSynchronizationGap4(gapIndex, ratio);
+		form.setTriggerSynchronizationGap4(gapIndex, ratio);
 	}
 
 	TriggerDecoderBase decoder("test");
@@ -50,7 +50,7 @@ static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
 				triggerConfiguration);
 
 		if (!form.shapeDefinitionError) {
-			for (int i = 0; i < length; i++) {
+			for (int i = 0; i < (int)length; i++) {
 				float ratio = ratiosThisTime[i];
 				printf("happy ratio %f @ %d\n", ratio, i);
 			}
@@ -109,11 +109,11 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength,
 }
 
 TEST(trigger, finder) {
-	ASSERT_EQ(9, findAllSyncSequences(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, [] (TriggerWaveform* form) {
+	ASSERT_EQ(9u, findAllSyncSequences(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, [] (TriggerWaveform* form) {
 						configureQuickStartSenderWheel(form);
 					}));
 
-	ASSERT_EQ(27, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, [] (TriggerWaveform* form) {
+	ASSERT_EQ(27u, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, [] (TriggerWaveform* form) {
 						initGmLS24_3deg(form);
 					}));
 

@@ -25,7 +25,7 @@ TEST(cranking, realCrankingFromFile) {
 	}
 
 	EXPECT_EQ(0, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
-	EXPECT_EQ( 0, eth.recentWarnings()->getCount());
+	EXPECT_EQ(0u, eth.recentWarnings()->getCount());
 
 	// This tooth should be first sync point
 	reader.readLine(&eth);
@@ -47,6 +47,6 @@ TEST(cranking, realCrankingFromFile) {
 		reader.processLine(&eth);
 	}
 
-	EXPECT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
+	EXPECT_EQ(0u, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
 	EXPECT_EQ(191, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
