@@ -7,19 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 public class TsTuneReader {
-    private static final String TS_USER_FILE = System.getProperty("user.home") + File.separator + ".efiAnalytics" + File.separator + "tsUser.properties";
-
-    public static void main(String[] args) throws Exception {
-        String ecuName = "dev";
-
-        Msq tune = readTsTune(ecuName);
-        System.out.println(tune);
-    }
 
     public static Msq readTsTune(String ecuName) throws Exception {
         String fileName = getTsTuneFileName(ecuName);
@@ -30,13 +21,12 @@ public class TsTuneReader {
     public static String getTsTuneFileName(String ecuName) {
         String projectsDir = getProjectsDir();
 
-        return projectsDir + File.separator + ecuName + File.separator + "CurrentTune.msq";
+        return projectsDir + File.separator + ecuName + File.separator + TsHelper.CURRENT_TUNE_MSQ;
     }
 
     public static String getProjectsDir() {
         try {
-            Properties tsUser = new Properties();
-            tsUser.load(new FileInputStream(TS_USER_FILE));
+            Properties tsUser = TsHelper.readTsProperties();
             // reading TS properties
             return tsUser.getProperty("projectsDir");
         } catch (IOException e) {
