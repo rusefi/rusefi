@@ -8,9 +8,9 @@
 #include "pch.h"
 using ::testing::_;
 
-static size_t hpfpTotalToggle = 0;
+static int hpfpTotalToggle = 0;
 
-static void assertToggleCounterExtra(EngineTestHelper *eth, size_t extra, const char *msg) {
+static void assertToggleCounterExtra(EngineTestHelper *eth, int extra, const char *msg) {
 	eth->smartFireTriggerEvents2(/*count*/4, /*delay*/ 16);
 	ASSERT_EQ(hpfpTotalToggle + extra, enginePins.hpfpValve.pinToggleCounter) << msg;
 	hpfpTotalToggle += extra;

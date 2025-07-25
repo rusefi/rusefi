@@ -97,7 +97,7 @@ TEST(sent, testFordIdle) {
 	ASSERT_TRUE(lineCount > 100);
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
-		ASSERT_EQ(statistic.RestartCnt, 0);
+		ASSERT_EQ(statistic.RestartCnt, 0u);
 	#endif
 }
 
@@ -110,7 +110,7 @@ TEST(sent, testFordClosed) {
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
 		/* TODO: bad captured data or real problem? */
-		ASSERT_TRUE(statistic.RestartCnt <= 1);
+		ASSERT_TRUE(statistic.RestartCnt <= 1u);
 	#endif
 }
 
@@ -123,7 +123,7 @@ TEST(sent, testOpelIdle) {
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
 		/* TODO: bad captured data or real problem? */
-		ASSERT_TRUE(statistic.RestartCnt <= 1);
+		ASSERT_TRUE(statistic.RestartCnt <= 1u);
 	#endif
 }
 
@@ -136,7 +136,7 @@ TEST(sent, testOpelMove) {
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
 		/* TODO: bad captured data or real problem? */
-		ASSERT_TRUE(statistic.RestartCnt <= 1);
+		ASSERT_TRUE(statistic.RestartCnt <= 1u);
 	#endif
 }
 
@@ -148,7 +148,7 @@ TEST(sent, testFuelPressure) {
    	ASSERT_FALSE(isError);
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
-		ASSERT_TRUE(statistic.RestartCnt == 0);
+		ASSERT_TRUE(statistic.RestartCnt == 0u);
 		/* TODO: add more checks? Check data? */
 	#endif
 }
@@ -162,7 +162,7 @@ TEST(sent, testVagMap) {
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
 		/* TODO: bad captured data or real problem? */
-		ASSERT_TRUE(statistic.RestartCnt <= 1);
+		ASSERT_TRUE(statistic.RestartCnt <= 1u);
 	#endif
 }
 

@@ -26,20 +26,20 @@ TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
 	// Check one angle just after every trigger tooth, for two full revolutions (720 degrees, one engine cycle, 4 loops of the trigger)
 
 	// First quarter
-	EXPECT_FINDANGLE(0 * 180 + 5, 0);		// 5
-	EXPECT_FINDANGLE(0 * 180 + 115, 2);		// 115
+	EXPECT_FINDANGLE(0 * 180 + 5, 0u);		// 5
+	EXPECT_FINDANGLE(0 * 180 + 115, 2u);		// 115
 
 	// Second quarter
-	EXPECT_FINDANGLE(1 * 180 + 5, 4);		// 180+5 = 185
-	EXPECT_FINDANGLE(1 * 180 + 115, 6);		// 180+115 = 295
+	EXPECT_FINDANGLE(1 * 180 + 5, 4u);		// 180+5 = 185
+	EXPECT_FINDANGLE(1 * 180 + 115, 6u);		// 180+115 = 295
 
 	// Third quarter
-	EXPECT_FINDANGLE(2 * 180 + 5, 8);		// 360+5 = 365
-	EXPECT_FINDANGLE(2 * 180 + 115, 10);	// 360+115 = 475
+	EXPECT_FINDANGLE(2 * 180 + 5, 8u);		// 360+5 = 365
+	EXPECT_FINDANGLE(2 * 180 + 115, 10u);	// 360+115 = 475
 
 	// Fourth quarter
-	EXPECT_FINDANGLE(3 * 180 + 5, 12);		// 540+5 = 545
-	EXPECT_FINDANGLE(3 * 180 + 115, 14);	// 540+115 = 655
+	EXPECT_FINDANGLE(3 * 180 + 5, 12u);		// 540+5 = 545
+	EXPECT_FINDANGLE(3 * 180 + 115, 14u);	// 540+115 = 655
 }
 
 TEST(engine, testSymmetricalCrank) {

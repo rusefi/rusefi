@@ -17,8 +17,8 @@ TEST(nissan, realFromFile) {
 		reader.processLine(&eth);
 	}
 
-	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
-	ASSERT_EQ(1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ(1u,  eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
+	ASSERT_EQ(1u,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ(528, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
 
@@ -38,8 +38,8 @@ TEST(nissan, realNoSparkPlugsFromFile) {
 	}
 
 
-	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
-	ASSERT_EQ(1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ(1u,  eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
+	ASSERT_EQ(1u,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ(215, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
 
@@ -59,7 +59,7 @@ TEST(nissan, realFromFile4seconds) {
 //		printf("RPM=%f\n", Sensor::getOrZero(SensorType::Rpm));
 	}
 
-	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
-	ASSERT_EQ(0,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ(0u,  eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
+	ASSERT_EQ(0u,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ(0, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }

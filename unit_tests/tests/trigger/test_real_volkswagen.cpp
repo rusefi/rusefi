@@ -23,7 +23,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 		reader.processLine(&eth);
 	}
 
-	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
+	ASSERT_EQ( 0u, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
 	ASSERT_EQ( 1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
 
@@ -43,7 +43,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 			reader.processLine(&eth);
 		}
 
-		ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
+		ASSERT_EQ(0u, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
 		ASSERT_EQ(1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	}
 
@@ -59,7 +59,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 			reader.processLine(&eth);
 		}
 
-		ASSERT_EQ(0, eth.recentWarnings()->getCount());
+		ASSERT_EQ(0u, eth.recentWarnings()->getCount());
 		ASSERT_EQ(1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	}
 
@@ -73,7 +73,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 			reader.processLine(&eth);
 		}
 
-		ASSERT_EQ(0, eth.recentWarnings()->getCount());
+		ASSERT_EQ(0u, eth.recentWarnings()->getCount());
 		ASSERT_EQ(1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	}
 }

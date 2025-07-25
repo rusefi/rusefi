@@ -41,7 +41,7 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 	ASSERT_EQ(3078, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// TODO: why warnings?
-	ASSERT_EQ(1, eth.recentWarnings()->getCount());
+	ASSERT_EQ(1u, eth.recentWarnings()->getCount());
 	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(0).Code);
 }
 

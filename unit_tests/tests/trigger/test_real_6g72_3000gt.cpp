@@ -47,7 +47,7 @@ static void constructTriggerFromRecording(CsvReader *reader) {
 	}
 }
 
-static void runTriggerTest(const char *fileName, int totalErrors, int syncCounter, float firstRpm) {
+static void runTriggerTest(const char *fileName, uint32_t totalErrors, int syncCounter, float firstRpm) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	prepare(&eth, trigger_type_e::TT_VVT_MITSU_6G72);

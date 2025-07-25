@@ -58,7 +58,7 @@ TEST(BinaryLogField, Value) {
 	memset(buffer, 0xAA, sizeof(buffer));
 
 	// Should write 4 bytes
-	EXPECT_EQ(4, lf.writeData(buffer, nullptr));
+	EXPECT_EQ(4u, lf.writeData(buffer, nullptr));
 
 	// Check that big endian data was written, and bytes after weren't touched
 	EXPECT_THAT(buffer, ElementsAre(0x00, 0xbc, 0x61, 0x4e, 0xAA, 0xAA));

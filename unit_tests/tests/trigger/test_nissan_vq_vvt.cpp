@@ -143,5 +143,5 @@ TEST(nissan, vq_vvt) {
 	ASSERT_NEAR(34, tc->vvtPosition[0][0], EPS2D);
 	ASSERT_NEAR(34, tc->vvtPosition[1][0], EPS2D);
 
-	EXPECT_EQ(0, eth.recentWarnings()->getCount());
+	EXPECT_EQ(0u, eth.recentWarnings()->getCount());
 }

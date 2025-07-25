@@ -68,6 +68,8 @@ static int lua_readpin(lua_State* l) {
 		int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
 		lua_pushinteger(l, physicalValue);
 	}
+#else
+    UNUSED(l);
 #endif
 	return 1;
 }
@@ -364,6 +366,7 @@ bool getAuxDigital(int index) {
 #if EFI_PROD_CODE
     return efiReadPin(engineConfiguration->luaDigitalInputPins[index]);
 #else
+    UNUSED(index);
     return false;
 #endif
 }
@@ -630,7 +633,9 @@ int lua_canRxAddMask(lua_State* l) {
 }
 #endif // EFI_CAN_SUPPORT
 
-PUBLIC_API_WEAK void boardConfigureLuaHooks(lua_State* lState) { }
+PUBLIC_API_WEAK void boardConfigureLuaHooks(lua_State* lState) {
+    UNUSED(lState);
+}
 
 static tinymt32_t tinymt;
 
@@ -837,7 +842,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		return 0;
 	});
 
-	lua_register(lState, "enableCanRxWorkaround", [](lua_State* l) {
+	lua_register(lState, "enableCanRxWorkaround", [](lua_State*) {
 		// that's about global_can_data
 		engineConfiguration->luaCanRxWorkaround = true;
 		return 0;
@@ -851,7 +856,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		return 1;
 	});
 #endif // EFI_CAN_SUPPORT
-	lua_register(lState, "disableExtendedCanBroadcast", [](lua_State* l) {
+	lua_register(lState, "disableExtendedCanBroadcast", [](lua_State*) {
 		// that's about global_can_data
 		engineConfiguration->enableExtendedCanBroadcast = false;
 		return 0;
@@ -1072,7 +1077,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		}
 		return 0;
 	});
-	lua_register(lState, CMD_BURNCONFIG, [](lua_State* l) {
+	lua_register(lState, CMD_BURNCONFIG, [](lua_State*) {
 	  requestBurn();
 		return 0;
 	});

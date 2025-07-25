@@ -60,7 +60,7 @@ TEST(CppMemoryLayout, VirtualStruct) {
 
 	// '4' in case of 32 bit target
 	// '8' in case of 64 bit target
-	int MAGIC_VTABLE_SIZE = sizeof(void*);
+	size_t MAGIC_VTABLE_SIZE = sizeof(void*);
 
 	// validate field initializers just for fun
 	ASSERT_EQ(540, c.field0);
@@ -91,14 +91,14 @@ TEST(CppMemoryLayout, PlainExtraFieldsStruct) {
 	// parent fields go first
 	memcpy(&destimationInt, &c, 4);
 	ASSERT_EQ(540, destimationInt);
-	ASSERT_EQ(0, (uintptr_t)&c.field0 - (uintptr_t)&c);
+	ASSERT_EQ(0u, (uintptr_t)&c.field0 - (uintptr_t)&c);
 }
 
 TEST(CppMemoryLayout, structSize) {
-	ASSERT_EQ(1, sizeof(adc_channel_e)) << "adc_channel_e enum size";
-	ASSERT_EQ(1, sizeof(pin_input_mode_e)) << "pin_input_mode_e enum size";
-	ASSERT_EQ(1, sizeof(pin_output_mode_e)) << "pin_output_mode_e enum size";
-	ASSERT_EQ(2, sizeof(brain_pin_e)) << "brain_pin_e enum size";
-	ASSERT_EQ(12, sizeof(air_pressure_sensor_config_s));
-	ASSERT_EQ(TOTAL_CONFIG_SIZE, sizeof(persistent_config_s));
+	ASSERT_EQ(1u, sizeof(adc_channel_e)) << "adc_channel_e enum size";
+	ASSERT_EQ(1u, sizeof(pin_input_mode_e)) << "pin_input_mode_e enum size";
+	ASSERT_EQ(1u, sizeof(pin_output_mode_e)) << "pin_output_mode_e enum size";
+	ASSERT_EQ(2u, sizeof(brain_pin_e)) << "brain_pin_e enum size";
+	ASSERT_EQ(12u, sizeof(air_pressure_sensor_config_s));
+	ASSERT_EQ(size_t(TOTAL_CONFIG_SIZE), sizeof(persistent_config_s));
 }

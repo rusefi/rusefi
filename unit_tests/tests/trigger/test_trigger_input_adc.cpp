@@ -83,7 +83,7 @@ static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &trigAdcSt
 	}
 }
 
-static void testOnCsvData(const char *fileName, int finalRpm, int risingCnt, int fallingCnt, int errCnt) {
+static void testOnCsvData(const char *fileName, int finalRpm, int risingCnt, int fallingCnt, uint32_t errCnt) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
@@ -97,7 +97,7 @@ static void testOnCsvData(const char *fileName, int finalRpm, int risingCnt, int
 	// we generate the data that way
 	engineConfiguration->invertPrimaryTriggerSignal = true;
 
-	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ(0u, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ(0,  Sensor::getOrZero(SensorType::Rpm)) << "testTriggerInputAdc RPM #1 on " << fileName;
 
 	trigAdcState.init();

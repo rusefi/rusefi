@@ -157,7 +157,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 133 */ EVENT(/* timestamp*/3.00650825, TriggerWheel::T_SECONDARY, /*value*/true);
 	/* 134 */ EVENT(/* timestamp*/3.031735, TriggerWheel::T_PRIMARY, /*value*/true);
 
-	EXPECT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#realCranking";
+	EXPECT_EQ( 0u,  getRecentWarnings()->getCount()) << "warningCounter#realCranking";
 
 	EXPECT_EQ(623,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM at the end";
 }
@@ -173,6 +173,6 @@ TEST(cranking, naCrankFromFile) {
 		reader.processLine(&eth);
 	}
 
-	EXPECT_EQ(0, eth.recentWarnings()->getCount());
+	EXPECT_EQ(0u, eth.recentWarnings()->getCount());
 	EXPECT_EQ(669, round(Sensor::getOrZero(SensorType::Rpm)));
 }

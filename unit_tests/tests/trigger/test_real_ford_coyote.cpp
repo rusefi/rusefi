@@ -2,7 +2,7 @@
 
 #include "logicdata_csv_reader.h"
 
-static void runCoyoteIntakeCam(bool invertPrimaryTriggerSignal, int warningCount, int rpm) {
+static void runCoyoteIntakeCam(bool invertPrimaryTriggerSignal, uint32_t warningCount, int rpm) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/ford-coyote-intake-cam.csv");
@@ -27,7 +27,7 @@ TEST(fordCoyote, intakeCam) {
   runCoyoteIntakeCam(false, 1, 1093);
 }
 
-static void runCoyoteExhaustCam(bool invertPrimaryTriggerSignal, int warningCount, int rpm) {
+static void runCoyoteExhaustCam(bool invertPrimaryTriggerSignal, uint32_t warningCount, int rpm) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/ford-coyote-exhaust-cam.csv");

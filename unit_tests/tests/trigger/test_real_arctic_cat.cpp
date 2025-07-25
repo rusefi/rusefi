@@ -18,6 +18,6 @@ TEST(arctic, realStartFromFile) {
 		reader.processLine(&eth);
 	}
 
-	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#arcticRealCranking";
+	ASSERT_EQ( 1u, eth.recentWarnings()->getCount())<< "warningCounter#arcticRealCranking";
 	ASSERT_EQ(2165, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
