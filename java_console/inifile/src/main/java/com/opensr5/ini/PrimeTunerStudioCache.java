@@ -1,7 +1,7 @@
 package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.TsHelper;
+import com.rusefi.ts.TsHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;

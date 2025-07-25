@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.ts;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ public class TsHelper {
     public static final String CURRENT_TUNE_MSQ = "CurrentTune.msq";
     static final String TS_USER_FILE = TS_ROOT + "tsUser.properties";
 
-    static @NotNull Properties readTsProperties() throws IOException {
+    public static @NotNull Properties readTsProperties() throws IOException {
         Properties properties = new Properties();
         properties.load(Files.newInputStream(Paths.get(TS_USER_FILE)));
         return properties;
