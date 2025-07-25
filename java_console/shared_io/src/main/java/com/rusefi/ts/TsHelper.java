@@ -11,6 +11,7 @@ import java.util.Properties;
 public class TsHelper {
     public static final String TS_ROOT = System.getProperty("user.home") + File.separator + ".efiAnalytics" + File.separator;
     public static final String CURRENT_TUNE_MSQ = "CurrentTune.msq";
+    public static final String MAIN_CONTROLLER_PATH = "projectCfg" + File.separator + "mainController.ini";
     static final String TS_USER_FILE = TS_ROOT + "tsUser.properties";
 
     public static @NotNull Properties readTsProperties() throws IOException {

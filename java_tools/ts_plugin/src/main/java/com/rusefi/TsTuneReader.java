@@ -43,8 +43,7 @@ public class TsTuneReader {
     @NotNull
     public static String getProjectModeFileName(String projectName) {
         return getProjectsDir() +
-                    File.separator + projectName +
-                    File.separator + "projectCfg" +
-                    File.separator + "mainController.ini";
+            File.separator + projectName +
+            File.separator + TsHelper.MAIN_CONTROLLER_PATH;
     }
 }

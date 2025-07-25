@@ -1,8 +1,10 @@
 package com.rusefi.ts;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -30,5 +32,13 @@ public enum TsProjectUpdater {
             return;
         }
         log.info("lastProjectPath=" + lastProjectPath + ", lastConnectedFirmwareSignature=" + lastConnectedFirmwareSignature);
+
+        String projectIniFile = lastProjectPath + File.separator + TsHelper.MAIN_CONTROLLER_PATH;
+        IniFileModelImpl tsProjectIni = IniFileModelImpl.readIniFile(projectIniFile);
+        String tsProjectSignature = tsProjectIni.getSignature();
+        if (!tsProjectSignature.equals(context.getPrevIniFile().getSignature())) {
+            log.info(tsProjectSignature + " does not match " + context.getPrevIniFile().getSignature());
+            return;
+        }
     }
 }
