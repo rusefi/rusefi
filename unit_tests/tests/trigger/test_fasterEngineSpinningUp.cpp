@@ -94,7 +94,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	// Now perform a fake VVT sync and check that ignition mode changes to sequential
 	engine->triggerCentral.syncEnginePhaseAndReport(2, 0);
-	ASSERT_EQ(IM_SEQUENTIAL, getCurrentIgnitionMode());
+	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode());
+	ASSERT_EQ(IM_SIMULTANEOUS, getCurrentInjectionMode());
 	// still cranking fuel
 	ASSERT_NEAR(0.0039, getInjectionMass(200), EPS3D);
 
