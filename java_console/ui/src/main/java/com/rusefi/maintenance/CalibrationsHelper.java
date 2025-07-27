@@ -279,14 +279,29 @@ public class CalibrationsHelper {
         if (!valuesToUpdate.isEmpty()) {
             final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
             for (final Map.Entry<String, Constant> valueToUpdate : valuesToUpdate) {
-                final IniField fieldToUpdate = newIniFile.getIniField(valueToUpdate.getKey());
-                final Constant value = valueToUpdate.getValue();
-                fieldToUpdate.setValue(mergedImage, value);
-                callbacks.logLine(String.format(
-                    "To restore previous calibrations we are going to update the field `%s` with a value `%s`",
-                    fieldToUpdate.getName(),
-                    value.getValue()
-                ));
+                final String migratedFieldName = valueToUpdate.getKey();
+                final Constant migratedValue = valueToUpdate.getValue();
+                final Optional<IniField> fieldToUpdate = newIniFile.findIniField(migratedFieldName);
+                if (fieldToUpdate.isPresent()) {
+                    fieldToUpdate.get().setValue(mergedImage, migratedValue);
+                    callbacks.logLine(String.format(
+                        "To restore previous calibrations we are going to update the field `%s` with a value `%s`",
+                        migratedFieldName,
+                        migratedValue.getValue()
+                    ));
+                } else if (null == migratedValue) {
+                    log.info(String.format(
+                        "Disappeared `%s` field has been already migrated by one of migrators",
+                        migratedFieldName
+                    ));
+                } else {
+                    callbacks.logLine(String.format(
+                        "WARNING!!! To restore previous calibrations we want to update the field `%s` with a value " +
+                            "`%s`, but this field has disappeared in updated .ini file",
+                        migratedFieldName,
+                        migratedValue.getValue()
+                    ));
+                }
             }
             result = Optional.of(new CalibrationsInfo(
                 newIniFile,
