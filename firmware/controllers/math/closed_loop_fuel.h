@@ -30,7 +30,7 @@ public:
 	void onSlowCallback() override;
 	bool needsDelayedShutoff() override;
 
-	ClosedLoopFuelResult getCorrection();
+	ClosedLoopFuelResult getCorrection(float rpm, float fuelLoad);
 
 private:
 	FuelingBank banks[FT_BANK_COUNT];
