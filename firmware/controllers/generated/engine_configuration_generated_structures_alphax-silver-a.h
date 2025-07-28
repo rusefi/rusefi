@@ -2674,10 +2674,12 @@ struct engine_configuration_s {
 	 */
 	float triggerEventsTimeoutMs;
 	/**
+	 * A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.
 	 * offset 1012
 	 */
 	float ppsExpAverageAlpha;
 	/**
+	 * A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.
 	 * offset 1016
 	 */
 	float mapExpAverageAlpha;
@@ -5468,6 +5470,7 @@ struct engine_configuration_s {
 	 */
 	float fuelLevelHighThresholdVoltage;
 	/**
+	 * A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.
 	 * offset 3856
 	 */
 	float afrExpAverageAlpha;

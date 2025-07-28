@@ -734,10 +734,10 @@ Starting Launch RPM window to activate (subtracts from Launch RPM)
 
 
 ### ppsExpAverageAlpha
-
+A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.
 
 ### mapExpAverageAlpha
-
+A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.
 
 ### magicNumberAvailableForDevTricks
 null
@@ -1955,7 +1955,7 @@ Error below specified value
 Error above specified value
 
 ### afrExpAverageAlpha
-
+A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.
 
 ### sparkHardwareLatencyCorrection
 Compensates for trigger delay due to belt stretch, or other electromechanical issues. beware that raising this value advances ignition timing!
