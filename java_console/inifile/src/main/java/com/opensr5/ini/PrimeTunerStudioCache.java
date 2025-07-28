@@ -24,7 +24,7 @@ public class PrimeTunerStudioCache {
             return;
         }
         String ecuDefLocalFileName = iniFileModel.getSignature().replaceAll(" ", "");
-        String fullEcuDefFileName = ECU_DEF_FOLDER + ecuDefLocalFileName;
+        String fullEcuDefFileName = ECU_DEF_FOLDER + ecuDefLocalFileName + ".ini";
         if (new File(fullEcuDefFileName).exists()) {
             log.info(fullEcuDefFileName + " already present");
             return;
