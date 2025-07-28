@@ -32,7 +32,9 @@ public:
 
 	ClosedLoopFuelResult getCorrection(float rpm, float fuelLoad);
 
+#if ! EFI_UNIT_TEST
 private:
+#endif
 	FuelingBank banks[FT_BANK_COUNT];
 
 	Deadband<25> idleDeadband;
