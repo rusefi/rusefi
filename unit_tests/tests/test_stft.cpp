@@ -89,11 +89,11 @@ TEST(ClosedLoopFuel, afrLimits) {
 	stft.init(&engineConfiguration->stft);
 
 	Sensor::setMockValue(SensorType::Lambda1, 0.1f);
-	EXPECT_FALSE(stft.shouldUpdateCorrection(SensorType::Lambda1));
+	EXPECT_NE(stft.getLearningState(SensorType::Lambda1), stftEnabled);
 
 	Sensor::setMockValue(SensorType::Lambda1, 1.0f);
-	EXPECT_TRUE(stft.shouldUpdateCorrection(SensorType::Lambda1));
+	EXPECT_EQ(stft.getLearningState(SensorType::Lambda1), stftEnabled);
 
 	Sensor::setMockValue(SensorType::Lambda1, 2.0f);
-	EXPECT_FALSE(stft.shouldUpdateCorrection(SensorType::Lambda1));
+	EXPECT_NE(stft.getLearningState(SensorType::Lambda1), stftEnabled);
 }

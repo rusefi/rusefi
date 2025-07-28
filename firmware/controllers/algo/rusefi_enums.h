@@ -862,4 +862,18 @@ enum class SelectedGear : uint8_t {
 
 #define SC_Exhaust_First 1
 
+typedef enum __attribute__ ((__packed__)) {
+	stftEnabled = 0,
+	stftDisabledSettings = 1,
+	stftDisabledTuning = 2,
+	stftDisabledRPM = 3,
+	stftDisabledCrankingDelay = 4,
+	stftDisabledClt = 5,
+	// below state related to learning only
+	stftDisabledAfrOurOfRange = 6,
+	stftDisabledDFCO = 7,
+	stftDisabledTpsAccel = 8,
+	stftDisabledFuelCut = 9
+} stft_state_e;
+
 #endif // __cplusplus
