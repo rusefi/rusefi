@@ -48,6 +48,7 @@ TEST(ClosedLoopFuelCell, AdjustRate) {
 }
 
 TEST(ClosedLoopFuel, CellSelection) {
+	ShortTermFuelTrim stft;
 	stft_s cfg;
 
 	// Sensible region config
@@ -55,39 +56,44 @@ TEST(ClosedLoopFuel, CellSelection) {
 	cfg.minPowerLoad = 80;
 	cfg.maxOverrunLoad = 30;
 
+	stft.init(&cfg);
+
 	// Test idle
-	EXPECT_EQ(0u, computeStftBin(1000, 10, cfg));
-	EXPECT_EQ(0u, computeStftBin(1000, 50, cfg));
-	EXPECT_EQ(0u, computeStftBin(1000, 90, cfg));
+	EXPECT_EQ(0u, stft.computeStftBin(1000, 10, cfg));
+	EXPECT_EQ(0u, stft.computeStftBin(1000, 50, cfg));
+	EXPECT_EQ(0u, stft.computeStftBin(1000, 90, cfg));
 
 	// Test overrun
-	EXPECT_EQ(1u, computeStftBin(2000, 10, cfg));
-	EXPECT_EQ(1u, computeStftBin(4000, 10, cfg));
-	EXPECT_EQ(1u, computeStftBin(10000, 10, cfg));
+	EXPECT_EQ(1u, stft.computeStftBin(2000, 10, cfg));
+	EXPECT_EQ(1u, stft.computeStftBin(4000, 10, cfg));
+	EXPECT_EQ(1u, stft.computeStftBin(10000, 10, cfg));
 
 	// Test load
-	EXPECT_EQ(2u, computeStftBin(2000, 90, cfg));
-	EXPECT_EQ(2u, computeStftBin(4000, 90, cfg));
-	EXPECT_EQ(2u, computeStftBin(10000, 90, cfg));
+	EXPECT_EQ(2u, stft.computeStftBin(2000, 90, cfg));
+	EXPECT_EQ(2u, stft.computeStftBin(4000, 90, cfg));
+	EXPECT_EQ(2u, stft.computeStftBin(10000, 90, cfg));
 
 	// Main cell
-	EXPECT_EQ(3u, computeStftBin(2000, 50, cfg));
-	EXPECT_EQ(3u, computeStftBin(4000, 50, cfg));
-	EXPECT_EQ(3u, computeStftBin(10000, 50, cfg));
+	EXPECT_EQ(3u, stft.computeStftBin(2000, 50, cfg));
+	EXPECT_EQ(3u, stft.computeStftBin(4000, 50, cfg));
+	EXPECT_EQ(3u, stft.computeStftBin(10000, 50, cfg));
 }
 
 TEST(ClosedLoopFuel, afrLimits) {
+	ShortTermFuelTrim stft;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->stft.minAfr = 10;  // 10.0 AFR
 	engineConfiguration->stft.maxAfr = 18;  // 18.0 AFR
 
+	stft.init(&engineConfiguration->stft);
+
 	Sensor::setMockValue(SensorType::Lambda1, 0.1f);
-	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1));
+	EXPECT_FALSE(stft.shouldUpdateCorrection(SensorType::Lambda1));
 
 	Sensor::setMockValue(SensorType::Lambda1, 1.0f);
-	EXPECT_TRUE(shouldUpdateCorrection(SensorType::Lambda1));
+	EXPECT_TRUE(stft.shouldUpdateCorrection(SensorType::Lambda1));
 
 	Sensor::setMockValue(SensorType::Lambda1, 2.0f);
-	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1));
+	EXPECT_FALSE(stft.shouldUpdateCorrection(SensorType::Lambda1));
 }
