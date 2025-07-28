@@ -112,14 +112,14 @@ void ShortTermFuelTrim::init(stft_s *stftCfg) {
 	}
 }
 
-ClosedLoopFuelResult ShortTermFuelTrim::getCorrection() {
+ClosedLoopFuelResult ShortTermFuelTrim::getCorrection(float rpm, float fuelLoad) {
 	if (!shouldCorrect()) {
 		stftBinIdx = 5;
 		stftLearningBinIdx = 5;
 		return {};
 	}
 
-	stftBinIdx = computeStftBin(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad(), engineConfiguration->stft);
+	stftBinIdx = computeStftBin(rpm, fuelLoad, engineConfiguration->stft);
 
 	ClosedLoopFuelResult result;
 
