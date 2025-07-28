@@ -43,8 +43,8 @@ private:
 
 	SensorType getSensorForBankIndex(size_t index);
 	size_t computeStftBin(float rpm, float load, stft_s& cfg);
-	bool shouldCorrect();
-	bool shouldUpdateCorrection(SensorType sensor);
+	stft_state_e getCorrectionState();
+	stft_state_e getLearningState(SensorType sensor);
 };
 
 void initStft(void);
