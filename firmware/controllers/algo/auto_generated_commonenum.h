@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jul 05 00:55:33 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Jul 29 20:21:00 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -85,6 +85,7 @@ const char *getPin_input_mode_e(pin_input_mode_e value);
 const char *getPin_output_mode_e(pin_output_mode_e value);
 const char *getSpi_device_e(spi_device_e value);
 const char *getStepper_num_micro_steps_e(stepper_num_micro_steps_e value);
+const char *getStft_state_e(stft_state_e value);
 const char *getTChargeMode_e(tChargeMode_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getTle8888_mode_e(tle8888_mode_e value);

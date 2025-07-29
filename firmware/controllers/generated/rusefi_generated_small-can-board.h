@@ -1501,7 +1501,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2152096670
+#define SIGNATURE_HASH 3346864136
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1525,6 +1525,16 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 28
+#define stft_state_e_stftDisabledAfrOurOfRange 6
+#define stft_state_e_stftDisabledClt 5
+#define stft_state_e_stftDisabledCrankingDelay 4
+#define stft_state_e_stftDisabledDFCO 7
+#define stft_state_e_stftDisabledFuelCut 9
+#define stft_state_e_stftDisabledRPM 3
+#define stft_state_e_stftDisabledSettings 1
+#define stft_state_e_stftDisabledTpsAccel 8
+#define stft_state_e_stftDisabledTuning 2
+#define stft_state_e_stftEnabled 0
 #define switch_input_pin_e_enum 0="NONE",4="B2 - Analog/Digital Input",5="B3 - Analog/Digital Input",6="B4 - Analog/Digital Input",7="B5 - Analog/Digital Input",8="B7 - Analog/Digital Input",9="C1 - Analog/Digital Input 6",38="C2 - Analog/Digital Input 7",3="C3 - Digital Input with 2.7K pull up",39="C4 - Analog/Digital Input 8"
 #define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","C3 - Digital Input with 2.7K pull up","B2 - Analog/Digital Input","B3 - Analog/Digital Input","B4 - Analog/Digital Input","B5 - Analog/Digital Input","B7 - Analog/Digital Input","C1 - Analog/Digital Input 6","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C2 - Analog/Digital Input 7","C4 - Analog/Digital Input 8"
 #define TABLE_2_LOAD_SIZE 8
@@ -2043,12 +2053,12 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.07.28.small-can-board.2152096670"
+#define TS_SIGNATURE "rusEFI master.2025.07.29.small-can-board.3346864136"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 2004
+#define TS_TOTAL_OUTPUT_SIZE 2008
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

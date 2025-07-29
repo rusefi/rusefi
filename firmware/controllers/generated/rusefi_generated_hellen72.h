@@ -1503,7 +1503,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2054054402
+#define SIGNATURE_HASH 1028987284
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1527,6 +1527,16 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 28
+#define stft_state_e_stftDisabledAfrOurOfRange 6
+#define stft_state_e_stftDisabledClt 5
+#define stft_state_e_stftDisabledCrankingDelay 4
+#define stft_state_e_stftDisabledDFCO 7
+#define stft_state_e_stftDisabledFuelCut 9
+#define stft_state_e_stftDisabledRPM 3
+#define stft_state_e_stftDisabledSettings 1
+#define stft_state_e_stftDisabledTpsAccel 8
+#define stft_state_e_stftDisabledTuning 2
+#define stft_state_e_stftEnabled 0
 #define switch_input_pin_e_enum 0="NONE",91="4B - Brake/RES1 (A7)",18="4F - AC_PRES/AUX1 (A23)",90="4I - Clutch rev D",79="4I - Clutch rev E/F",9="4J - VTCS/AUX4 (A20)",34="5A - Pressure Input",87="5D - SENSOR INPUT",38="5M - PPS2 OR TEMPERATURE SENSOR",2="5N - TPS2",5="5P - PPS1"
 #define switch_input_pin_e_fullenum "NONE","INVALID","5N - TPS2","INVALID","INVALID","5P - PPS1","INVALID","INVALID","INVALID","4J - VTCS/AUX4 (A20)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4F - AC_PRES/AUX1 (A23)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","5A - Pressure Input","INVALID","INVALID","INVALID","5M - PPS2 OR TEMPERATURE SENSOR","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4I - Clutch rev E/F","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","5D - SENSOR INPUT","INVALID","INVALID","4I - Clutch rev D","4B - Brake/RES1 (A7)"
 #define TABLE_2_LOAD_SIZE 8
@@ -2044,12 +2054,12 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.07.28.hellen72.2054054402"
+#define TS_SIGNATURE "rusEFI master.2025.07.29.hellen72.1028987284"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 2004
+#define TS_TOTAL_OUTPUT_SIZE 2008
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

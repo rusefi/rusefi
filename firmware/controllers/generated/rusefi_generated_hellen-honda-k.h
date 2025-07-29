@@ -1501,7 +1501,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 241113503
+#define SIGNATURE_HASH 1231315465
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1525,6 +1525,16 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 28
+#define stft_state_e_stftDisabledAfrOurOfRange 6
+#define stft_state_e_stftDisabledClt 5
+#define stft_state_e_stftDisabledCrankingDelay 4
+#define stft_state_e_stftDisabledDFCO 7
+#define stft_state_e_stftDisabledFuelCut 9
+#define stft_state_e_stftDisabledRPM 3
+#define stft_state_e_stftDisabledSettings 1
+#define stft_state_e_stftDisabledTpsAccel 8
+#define stft_state_e_stftDisabledTuning 2
+#define stft_state_e_stftEnabled 0
 #define switch_input_pin_e_enum 0="NONE",87="C18 Aux Digital 3",86="C19 Aux Digital 2",85="C21 Aux Digital 1",8="E22 Brake"
 #define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","E22 Brake","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C21 Aux Digital 1","C19 Aux Digital 2","C18 Aux Digital 3"
 #define TABLE_2_LOAD_SIZE 8
@@ -2045,12 +2055,12 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.07.28.hellen-honda-k.241113503"
+#define TS_SIGNATURE "rusEFI master.2025.07.29.hellen-honda-k.1231315465"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 2004
+#define TS_TOTAL_OUTPUT_SIZE 2008
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

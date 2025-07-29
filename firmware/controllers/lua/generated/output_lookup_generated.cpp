@@ -349,12 +349,6 @@ float getOutputValueByHash(const int hash) {
 // rawFuelLevel
 		case 1413130003:
 			return engine->outputChannels.rawFuelLevel;
-// fuelClosedLoopBinIdx
-		case 1342844099:
-			return engine->outputChannels.fuelClosedLoopBinIdx;
-// fuelClosedLoopLearningBinIdx
-		case -578311629:
-			return engine->outputChannels.fuelClosedLoopLearningBinIdx;
 // rawPpsPrimary
 		case -347083354:
 			return engine->outputChannels.rawPpsPrimary;

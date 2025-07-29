@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Jul 09 01:53:29 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Jul 29 20:21:00 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -930,6 +930,31 @@ case STEPPER_FULL:
   return "STEPPER_FULL";
 case STEPPER_HALF:
   return "STEPPER_HALF";
+  }
+ return NULL;
+}
+const char *getStft_state_e(stft_state_e value){
+switch(value) {
+case stftDisabledAfrOurOfRange:
+  return "stftDisabledAfrOurOfRange";
+case stftDisabledClt:
+  return "stftDisabledClt";
+case stftDisabledCrankingDelay:
+  return "stftDisabledCrankingDelay";
+case stftDisabledDFCO:
+  return "stftDisabledDFCO";
+case stftDisabledFuelCut:
+  return "stftDisabledFuelCut";
+case stftDisabledRPM:
+  return "stftDisabledRPM";
+case stftDisabledSettings:
+  return "stftDisabledSettings";
+case stftDisabledTpsAccel:
+  return "stftDisabledTpsAccel";
+case stftDisabledTuning:
+  return "stftDisabledTuning";
+case stftEnabled:
+  return "stftEnabled";
   }
  return NULL;
 }
