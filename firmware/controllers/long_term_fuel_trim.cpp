@@ -43,6 +43,10 @@ void LtftState::reset() {
 	}
 }
 
+void LtftState::fillRandom() {
+	/* TODO */
+}
+
 void LongTermFuelTrim::init(LtftState *state) {
 	m_state = state;
 
@@ -218,6 +222,10 @@ void LongTermFuelTrim::reset() {
 	ltftCntDeadband = 0;
 }
 
+void LongTermFuelTrim::fillRandom() {
+	m_state->fillRandom();
+}
+
 void LongTermFuelTrim::onSlowCallback() {
 	// we can wait some time for LTFT to be loaded from storage...
 	if ((ltftLoadPending) &&
@@ -250,6 +258,7 @@ void resetLongTermFuelTrim() {
 }
 
 void devPokeLongTermFuelTrim() {
+	engine->module<LongTermFuelTrim>()->fillRandom();
 }
 
 void *ltftGetTsPage() {

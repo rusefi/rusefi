@@ -12,6 +12,8 @@ struct LtftState {
 	void save();
 	void load();
 	void reset();
+	// Development only, to be removed
+	void fillRandom();
 };
 
 class LongTermFuelTrim : public EngineModule, public long_term_fuel_trim_state_s {
@@ -26,6 +28,8 @@ public:
 	void load();
 	void store();
 	void reset();
+	// Development only, to be removed
+	void fillRandom();
 
 private:
 	LtftState *m_state;
