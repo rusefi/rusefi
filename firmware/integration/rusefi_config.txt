@@ -2228,7 +2228,7 @@ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50,
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 ! yes, 200C region is legit for some air-cooled engines
-int8_t[CLT_LIMITER_CURVE_SIZE] autoscale cltRevLimitRpmBins;;"C", 5, 0, -40, 200, 0
+int8_t[CLT_LIMITER_CURVE_SIZE] autoscale cltRevLimitRpmBins;;"SPECIAL_CASE_TEMPERATURE", 5, 0, -40, 200, 0
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;;"RPM", 1, 0, 0, 20000, 0
 
 uint16_t[FUEL_LEVEL_TABLE_COUNT] autoscale fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
