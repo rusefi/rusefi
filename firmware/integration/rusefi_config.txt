@@ -1946,7 +1946,7 @@ uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_RPM_SIZE] pedalToTpsTable;;"%", 1, 0, 0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
 uint8_t[PEDAL_TO_TPS_RPM_SIZE] autoscale pedalToTpsRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
-float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position % for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position % for simple manual idle controller;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position % for simple manual idle controller;"percent", 1, 0, 0, 100, 2
 
 float[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDurationBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
