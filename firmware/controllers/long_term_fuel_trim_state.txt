@@ -8,6 +8,8 @@ struct_no_prefix long_term_fuel_trim_state_s
 	bit ltftSavePending;LTFT saving
 	bit ltftLoadPending;LTFT loading calibration
 	bit ltftLoadError;LTFT loading calibration error
+	bit ltftPageRefreshFlag;LTFT page refresh frag
 
 	float[FT_BANK_COUNT iterate] ltftCorrection;LTFT: Bank; "%", 100, -1.0, 50, 150, 1
+	float[FT_BANK_COUNT iterate] ltftAccummulatedCorrection;LTFT: Total Bank; "%", 100, 0, 50, 150, 1
 end_struct

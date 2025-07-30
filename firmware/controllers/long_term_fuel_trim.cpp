@@ -44,7 +44,14 @@ void LtftState::reset() {
 }
 
 void LtftState::fillRandom() {
-	/* TODO */
+	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
+		// x - load, y - rpm
+		for (size_t x = 0; x < VE_LOAD_COUNT; x++) {
+			for (size_t y = 0; y < VE_RPM_COUNT; y++) {
+				trims[bank][x][y] = 0.01 * (x + y * 0.1);
+			}
+		}
+	}
 }
 
 void LongTermFuelTrim::init(LtftState *state) {
@@ -129,6 +136,9 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 
 		// Clamp to bounds and save
 		newTrim = clampF(getMinAdjustment(), newTrim, getMaxAdjustment());
+
+		// accumulate
+		ltftAccummulatedCorrection[bank] += newTrim - trim;
 
 		// store
 		m_state->trims[bank][x.Idx][y.Idx] = newTrim;
@@ -220,6 +230,20 @@ void LongTermFuelTrim::reset() {
 	ltftCntHit = 0;
 	ltftCntMiss = 0;
 	ltftCntDeadband = 0;
+
+	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
+		ltftAccummulatedCorrection[bank] = 0.0;
+	}
+}
+
+void LongTermFuelTrim::onLiveDataRead() {
+	// rise refresh flag every second for one TS reading of livedata...
+	if (ltftPageRefreshFlag) {
+		ltftPageRefreshFlag = false;
+		pageRefreshTimer.reset();
+	} else {
+		ltftPageRefreshFlag = pageRefreshTimer.hasElapsedSec(1);
+	}
 }
 
 void LongTermFuelTrim::fillRandom() {

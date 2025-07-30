@@ -702,6 +702,8 @@
 #define GAUGE_NAME_FUEL_LOAD "Fuel: Load"
 #define GAUGE_NAME_FUEL_LTFT_1 "Long Term Fuel Trim: Bank 1"
 #define GAUGE_NAME_FUEL_LTFT_2 "Long Term Fuel Trim: Bank 2"
+#define GAUGE_NAME_FUEL_LTFT_ACC_1 "LTFT learned accumulator: Bank 1"
+#define GAUGE_NAME_FUEL_LTFT_ACC_2 "LTFT learned accumulator: Bank 2"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS "bar"
 #define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
