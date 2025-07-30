@@ -10,9 +10,9 @@ public:
 	// Get the current adjustment amount, without altering internal state.
 	float getAdjustment() const;
 
+	virtual float getLambdaError() const = 0;
 protected:
 	// Helpers - virtual for mocking
-	virtual float getLambdaError() const = 0;
 	virtual float getMaxAdjustment() const = 0;
 	virtual float getMinAdjustment() const = 0;
 	virtual float getIntegratorGain() const = 0;
@@ -33,12 +33,12 @@ public:
 		m_lambdaSensor = lambdaSensor;
 	}
 
+	float getLambdaError() const override;
 private:
 	const stft_cell_cfg_s *m_config = nullptr;
 	SensorType m_lambdaSensor = SensorType::Invalid;
 
 protected:
-	float getLambdaError() const override;
 	float getMaxAdjustment() const override;
 	float getMinAdjustment() const override;
 	float getIntegratorGain() const override;

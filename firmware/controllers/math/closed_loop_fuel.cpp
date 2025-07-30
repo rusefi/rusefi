@@ -136,6 +136,7 @@ ClosedLoopFuelResult ShortTermFuelTrim::getCorrection(float rpm, float fuelLoad)
 
 		stftLearningState[bank] = getLearningState(sensor);
 		if (stftLearningState[bank] == stftEnabled) {
+			stftInputError[bank] = cell.getLambdaError();
 			cell.update(engineConfiguration->stft.deadband * 0.01f, engineConfiguration->stftIgnoreErrorMagnitude);
 			stftLearningBinIdx = stftCorrectionBinIdx;
 		}

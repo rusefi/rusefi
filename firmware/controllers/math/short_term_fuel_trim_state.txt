@@ -5,4 +5,5 @@ struct_no_prefix short_term_fuel_trim_state_s
 	custom stft_state_e 1 bits, U08, @OFFSET@, [0:2], "STFT state"
 	stft_state_e stftCorrectionState
 	stft_state_e[FT_BANK_COUNT iterate] stftLearningState
+	float[FT_BANK_COUNT iterate] stftInputError;STFT: input Lambda error; "%", 100, 0, 50, 150, 1
 end_struct
