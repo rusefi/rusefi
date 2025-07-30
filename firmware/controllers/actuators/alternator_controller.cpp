@@ -65,6 +65,8 @@ expected<percent_t> AlternatorController::getOpenLoop(float /*target*/) {
 }
 
 expected<percent_t> AlternatorController::getClosedLoop(float setpoint, float observation) {
+		alternatorPid.iTermMin = engineConfiguration->alternator_iTermMin;
+		alternatorPid.iTermMax = engineConfiguration->alternator_iTermMax;
 	return alternatorPid.getOutput(setpoint, observation, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 }
 
