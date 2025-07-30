@@ -1413,7 +1413,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	pid_s[CAMS_PER_BANK iterate] auxPid;VVT output PID\nTODO: rename to vvtPid
 	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
 #define PRIME_CURVE_COUNT 8
-	int8_t[PRIME_CURVE_COUNT] autoscale primeBins;;"C", 5, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+	int8_t[PRIME_CURVE_COUNT] autoscale primeBins;;"SPECIAL_CASE_TEMPERATURE", 5, 0, -40, @@CLT_UPPER_LIMIT@@, 0
 
 	linear_sensor_s oilPressure;
 
