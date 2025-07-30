@@ -35,16 +35,10 @@ public class SrecParser {
     public void parse(File file) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            Pattern pattern = Pattern.compile("^S([0-9])([0-9A-Fa-f]+)$");
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if (line.isEmpty()) continue;
-
-                Matcher matcher = pattern.matcher(line);
-                if (!matcher.matches()) {
-                    throw new IOException("Invalid SREC line: " + line);
-                }
+                if (line.isEmpty() || line.charAt(0) != 'S') continue;
 
                 char recordType = line.charAt(1);
                 String hexData = line.substring(2);
@@ -54,17 +48,10 @@ public class SrecParser {
 
                 int addrLen;
                 switch (recordType) {
-                    case '1':
-                        addrLen = 2;
-                        break;  // 16-bit address
-                    case '2':
-                        addrLen = 3;
-                        break;  // 24-bit address
-                    case '3':
-                        addrLen = 4;
-                        break;  // 32-bit address
-                    default:
-                        continue;  // skip S0, S5, S7–S9
+                    case '1': addrLen = 2; break;
+                    case '2': addrLen = 3; break;
+                    case '3': addrLen = 4; break;
+                    default: continue; // skip unsupported types
                 }
 
                 if (count < addrLen + 1) {
@@ -103,7 +90,7 @@ public class SrecParser {
             SRecord next = mRecords.get(i);
 
             if (current.endAddress() == next.address) {
-                // Merge next into current
+                // Merge next in to current
                 byte[] newData = new byte[current.data.length + next.data.length];
                 System.arraycopy(current.data, 0, newData, 0, current.data.length);
                 System.arraycopy(next.data, 0, newData, current.data.length, next.data.length);
@@ -124,7 +111,7 @@ public class SrecParser {
         if (len % 2 != 0) throw new IllegalArgumentException("Hex string has odd length.");
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
-            int byteVal = Integer.parseInt(s.substring(i, i + 2), 16);
+            int byteVal = Character.digit(s.charAt(i), 16) << 4 | Character.digit(s.charAt(i + 1), 16);
             data[i / 2] = (byte) byteVal;
         }
         return data;
