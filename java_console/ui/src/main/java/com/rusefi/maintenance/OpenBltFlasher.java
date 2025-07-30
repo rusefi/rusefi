@@ -59,8 +59,8 @@ public class OpenBltFlasher {
                 .map(s -> s.data.length).reduce(0, Integer::sum);
 
         mCallbacks.log("Firmware file parsed:");
-        mCallbacks.log("\tsegments: " + mSegments.size());
         mCallbacks.log("\tfirst address: 0x" + Integer.toString(mSegments.get(0).address, 16));
+        mCallbacks.log("\ttotal size: " + mTotalFileSize);
     }
 
     private class ProgressUpdater {
