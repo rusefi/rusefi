@@ -84,24 +84,31 @@ public class SrecParser {
         mRecords.sort(Comparator.comparingInt(r -> r.address));
         List<SRecord> merged = new ArrayList<>();
 
-        SRecord current = mRecords.get(0);
+        int i = 0;
+        while (i < mRecords.size()) {
+            SRecord start = mRecords.get(i);
+            int totalLength = start.data.length;
+            int end = i + 1;
 
-        for (int i = 1; i < mRecords.size(); i++) {
-            SRecord next = mRecords.get(i);
-
-            if (current.endAddress() == next.address) {
-                // Merge next in to current
-                byte[] newData = new byte[current.data.length + next.data.length];
-                System.arraycopy(current.data, 0, newData, 0, current.data.length);
-                System.arraycopy(next.data, 0, newData, current.data.length, next.data.length);
-                current = new SRecord(current.address, newData);
-            } else {
-                merged.add(current);
-                current = next;
+            // Find contiguous run
+            while (end < mRecords.size() && mRecords.get(end - 1).endAddress() == mRecords.get(end).address) {
+                totalLength += mRecords.get(end).data.length;
+                end++;
             }
+
+            // Merge all contiguous records in one pass
+            byte[] mergedData = new byte[totalLength];
+            int offset = 0;
+            for (int j = i; j < end; j++) {
+                byte[] segment = mRecords.get(j).data;
+                System.arraycopy(segment, 0, mergedData, offset, segment.length);
+                offset += segment.length;
+            }
+
+            merged.add(new SRecord(start.address, mergedData));
+            i = end;
         }
 
-        merged.add(current);
         mRecords.clear();
         mRecords.addAll(merged);
     }
