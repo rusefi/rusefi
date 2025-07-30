@@ -1947,7 +1947,7 @@ uint8_t[PEDAL_TO_TPS_RPM_SIZE] autoscale pedalToTpsRpmBins;;"RPM", @@RPM_AS_BYTE
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position % for simple manual idle controller;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position % for simple manual idle controller;"percent", 1, 0, 0, 100, 2
 
-float[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDurationBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDurationBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 uint16_t[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDuration;This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\nShould be 100 once tune is better;"cycles", 1, 0, 0, 500, 1
 
 uint8_t[IDLE_ADVANCE_CURVE_SIZE] autoscale idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", 50, 0, 0, 12000, 0
