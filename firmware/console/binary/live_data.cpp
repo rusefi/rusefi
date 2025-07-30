@@ -283,6 +283,7 @@ FragmentList getLiveDataFragments() {
 template<>
 const long_term_fuel_trim_state_s* getLiveData(size_t) {
 #if EFI_LTFT_CONTROL
+	engine->module<LongTermFuelTrim>()->onLiveDataRead();
 	return &engine->module<LongTermFuelTrim>().unmock();
 #else
 	return nullptr;

@@ -28,6 +28,7 @@ public:
 	void load();
 	void store();
 	void reset();
+	void onLiveDataRead();
 	// Development only, to be removed
 	void fillRandom();
 
@@ -37,6 +38,8 @@ private:
 	float getIntegratorGain() const;
 	float getMaxAdjustment() const;
 	float getMinAdjustment() const;
+
+	Timer pageRefreshTimer{};
 };
 
 void initLtft();
