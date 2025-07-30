@@ -1596,7 +1596,7 @@ uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
 
 	vin_number_t vinNumber;Individual characters are accessible using vin(index) Lua function
-	int8_t torqueReductionActivationTemperature;;"C", 1, 0, 0, 90, 0
+	int8_t torqueReductionActivationTemperature;;"SPECIAL_CASE_TEMPERATURE", 1, 0, 0, 90, 0
 
 #define fuel_pressure_sensor_mode_e_enum "Absolute", "Gauge", "Differential", "INVALID"
 custom fuel_pressure_sensor_mode_e 1 bits, U08, @OFFSET@, [0:1], @@fuel_pressure_sensor_mode_e_enum@@
