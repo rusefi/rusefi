@@ -1971,10 +1971,10 @@ float[IAT_CURVE_SIZE] iatFuelCorrBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @
 float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
 	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0, 50, 2
-	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C", 1, 0, -80, @@CLT_UPPER_LIMIT@@, 2
+	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -80, @@CLT_UPPER_LIMIT@@, 2
 
 	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter", 1, 0, -80, 170, 0
-  int16_t[CRANKING_CYCLE_CLT_SIZE] crankingCycleFuelCltBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+  int16_t[CRANKING_CYCLE_CLT_SIZE] crankingCycleFuelCltBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 	float[CRANKING_CYCLE_CLT_SIZE x CRANKING_CURVE_SIZE] crankingCycleBaseFuel;Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg", 1, 0, 0, 500, 1
 
 
