@@ -1978,7 +1978,7 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
 #define CLT_IDLE_TABLE_CLT_SIZE 8
 #define CLT_IDLE_TABLE_RPM_SIZE 2
-float[CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_IDLE_TABLE_RPM_SIZE x CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 1, 0, 0, 100, 2
 uint8_t[CLT_IDLE_TABLE_RPM_SIZE] autoscale rpmIdleCorrBins;;"Target RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
