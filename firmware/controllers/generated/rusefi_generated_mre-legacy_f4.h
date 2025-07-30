@@ -711,6 +711,8 @@
 #define GAUGE_NAME_FUEL_RUNNING "Fuel: running"
 #define GAUGE_NAME_FUEL_STFT_1 "Short Term Fuel Trim: Bank 1"
 #define GAUGE_NAME_FUEL_STFT_2 "Short Term Fuel Trim: Bank 2"
+#define GAUGE_NAME_FUEL_STFT_INPUT_1 "STFT input lambda error: Bank 1"
+#define GAUGE_NAME_FUEL_STFT_INPUT_2 "STFT input lambda error: Bank 2"
 #define GAUGE_NAME_FUEL_TEMPERATURE "Fuel Temperature"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS acceleration add fuel ms"
 #define GAUGE_NAME_FUEL_VE "Fuel: VE"
