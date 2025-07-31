@@ -30,12 +30,15 @@ public:
 	void store();
 	void reset();
 	void applyTrimsToVe();
+	bool isVeUpdated();
 	void onLiveDataRead();
 	// Development only, to be removed
 	void fillRandom();
 
 private:
 	LtftState *m_state;
+	// TODO: move to livedata and kill isVeUpdated() ?
+	bool veNeedRefresh = false;
 
 	float getIntegratorGain() const;
 	float getMaxAdjustment() const;
@@ -47,6 +50,7 @@ private:
 void initLtft();
 void resetLongTermFuelTrim();
 void applyLongTermFuelTrimToVe();
+bool ltftNeedVeRefresh();
 void devPokeLongTermFuelTrim();
 
 void *ltftGetTsPage();
