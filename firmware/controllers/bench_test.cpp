@@ -402,6 +402,9 @@ void handleBenchCategory(uint16_t index) {
 	case LTFT_RESET:
 		resetLongTermFuelTrim();
 		return;
+	case LTFT_APPLY_TO_VE:
+		applyLongTermFuelTrimToVe();
+		return;
 	case LTFT_DEV_POKE:
 		devPokeLongTermFuelTrim();
 		return;
