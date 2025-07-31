@@ -164,6 +164,38 @@ void initializeSubaru7_6(TriggerWaveform *s) {
 	initializeSubaru7_6(s, true);
 }
 
+void initializeSubaru7_6_crankOnly(TriggerWaveform *s) {
+	/**
+	 * Note how we use 0..180 range while defining FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR trigger
+	 * Note that only half of the physical wheel is defined here!
+	 */
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
+
+	const float width = 1;
+	const float offset = 10;
+
+	s->tdcPosition = -65 - offset;
+
+	// BTDC: 97, 65, 10
+	// Distances: 93, 32, 55
+	s->addEventAngle(180 + offset - 97 - width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180 + offset - 97, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	s->addEventAngle(180 + offset - 65 - width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180 + offset - 65, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	s->addEventAngle(180 + offset - 10 - width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180 + offset - 10, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	// Nominal gaps:
+	// 55 / 32 = 1.7187
+	//s->setTriggerSynchronizationGap2(0.85f, 3.43f);
+	// 93 / 55 = 1.6909
+	//s->setTriggerSynchronizationGap2(0.84f, 3.38);
+	// 32 / 93 = 0.344
+	s->setTriggerSynchronizationGap2(0.172f, 0.688f);
+}
+
 /*
  * Falling edges showed only:
  *              6       3       2       5       4       1

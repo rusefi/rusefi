@@ -829,6 +829,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeJeepRenix66_2_2(this);
 		break;
 
+	case trigger_type_e::TT_SUBARU_7_6_CRANK:
+		initializeSubaru7_6_crankOnly(this);
+		break;
+
 
 	default:
 	  customTrigger(triggerOperationMode, this, triggerType.type);
