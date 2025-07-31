@@ -735,7 +735,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->hasCriticalError = hasFirmwareError() || hasConfigError();
 	tsOutputChannels->hasFaultReportFile = hasErrorReportFile();
-	tsOutputChannels->triggerPageRefreshFlag = needToTriggerTsRefresh();
+	tsOutputChannels->triggerPageRefreshFlag = needToTriggerTsRefresh() || ltftNeedVeRefresh();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
 

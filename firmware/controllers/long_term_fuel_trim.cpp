@@ -257,7 +257,15 @@ void LongTermFuelTrim::applyTrimsToVe() {
 	m_state->applyToVe();
 	m_state->reset();
 
-	/* TODO: notificate TS about VE table change */
+	veNeedRefresh = true;
+}
+
+bool LongTermFuelTrim::isVeUpdated() {
+	if (veNeedRefresh) {
+		veNeedRefresh = false;
+		return true;
+	}
+	return false;
 }
 
 void LongTermFuelTrim::onLiveDataRead() {
@@ -307,6 +315,10 @@ void resetLongTermFuelTrim() {
 
 void applyLongTermFuelTrimToVe() {
 	engine->module<LongTermFuelTrim>()->applyTrimsToVe();
+}
+
+bool ltftNeedVeRefresh() {
+	return engine->module<LongTermFuelTrim>()->isVeUpdated();
 }
 
 void devPokeLongTermFuelTrim() {
