@@ -651,6 +651,8 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: Load";
 	public static final String GAUGE_NAME_FUEL_LTFT_1 = "Long Term Fuel Trim: Bank 1";
 	public static final String GAUGE_NAME_FUEL_LTFT_2 = "Long Term Fuel Trim: Bank 2";
+	public static final String GAUGE_NAME_FUEL_LTFT_ACC_1 = "LTFT learned accumulator: Bank 1";
+	public static final String GAUGE_NAME_FUEL_LTFT_ACC_2 = "LTFT learned accumulator: Bank 2";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS = "bar";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
@@ -658,6 +660,8 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_FUEL_RUNNING = "Fuel: running";
 	public static final String GAUGE_NAME_FUEL_STFT_1 = "Short Term Fuel Trim: Bank 1";
 	public static final String GAUGE_NAME_FUEL_STFT_2 = "Short Term Fuel Trim: Bank 2";
+	public static final String GAUGE_NAME_FUEL_STFT_INPUT_1 = "STFT input lambda error: Bank 1";
+	public static final String GAUGE_NAME_FUEL_STFT_INPUT_2 = "STFT input lambda error: Bank 2";
 	public static final String GAUGE_NAME_FUEL_TEMPERATURE = "Fuel Temperature";
 	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "Fuel: TPS acceleration add fuel ms";
 	public static final String GAUGE_NAME_FUEL_VE = "Fuel: VE";
@@ -1395,7 +1399,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 654549687;
+	public static final int SIGNATURE_HASH = 1231583220;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1694,10 +1698,10 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.07.30.stm32h743_nucleo.654549687";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.07.31.stm32h743_nucleo.1231583220";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 2008;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 2024;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;

@@ -31,8 +31,14 @@ struct short_term_fuel_trim_state_s {
 	 * offset 5
 	 */
 	uint8_t alignmentFill_at_5[3] = {};
+	/**
+	 * STFT: input Lambda error
+	 * units: %
+	 * offset 8
+	 */
+	float stftInputError[FT_BANK_COUNT] = {};
 };
-static_assert(sizeof(short_term_fuel_trim_state_s) == 8);
+static_assert(sizeof(short_term_fuel_trim_state_s) == 16);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/math/short_term_fuel_trim_state.txt
