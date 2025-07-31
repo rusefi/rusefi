@@ -124,12 +124,13 @@
 #define bench_mode_e_BENCH_VVT3_VALVE 19
 #define bench_mode_e_HD_ACR 28
 #define bench_mode_e_HD_ACR2 29
-#define bench_mode_e_LTFT_DEV_POKE 31
+#define bench_mode_e_LTFT_APPLY_TO_VE 31
+#define bench_mode_e_LTFT_DEV_POKE 32
 #define bench_mode_e_LTFT_RESET 30
-#define bench_mode_e_LUA_COMMAND_1 32
-#define bench_mode_e_LUA_COMMAND_2 33
-#define bench_mode_e_LUA_COMMAND_3 34
-#define bench_mode_e_LUA_COMMAND_4 35
+#define bench_mode_e_LUA_COMMAND_1 33
+#define bench_mode_e_LUA_COMMAND_2 34
+#define bench_mode_e_LUA_COMMAND_3 35
+#define bench_mode_e_LUA_COMMAND_4 36
 #define BENCH_STARTER_DURATION 4000
 #define BENCH_VVT_DURATION 300
 #define BLEND_FACTOR_SIZE 8
@@ -1506,7 +1507,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2714018966
+#define SIGNATURE_HASH 1740543684
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2057,7 +2058,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.07.31.mre-legacy_f4.2714018966"
+#define TS_SIGNATURE "rusEFI master.2025.07.31.mre-legacy_f4.1740543684"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
