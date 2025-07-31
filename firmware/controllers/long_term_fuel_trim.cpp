@@ -54,6 +54,23 @@ void LtftState::fillRandom() {
 	}
 }
 
+void LtftState::applyToVe() {
+	// x - load, y - rpm
+	for (size_t x = 0; x < VE_LOAD_COUNT; x++) {
+		for (size_t y = 0; y < VE_RPM_COUNT; y++) {
+			float k = 0;
+
+			/* We have single VE table, but two banks of trims */
+			for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
+				k += 1.0f + trims[bank][x][y];
+			}
+			k = k / FT_BANK_COUNT;
+
+			config->veTable[x][y] = config->veTable[x][y] * k;
+		}
+	}
+}
+
 void LongTermFuelTrim::init(LtftState *state) {
 	m_state = state;
 
@@ -236,6 +253,13 @@ void LongTermFuelTrim::reset() {
 	}
 }
 
+void LongTermFuelTrim::applyTrimsToVe() {
+	m_state->applyToVe();
+	m_state->reset();
+
+	/* TODO: notificate TS about VE table change */
+}
+
 void LongTermFuelTrim::onLiveDataRead() {
 	// rise refresh flag every second for one TS reading of livedata...
 	if (ltftPageRefreshFlag) {
@@ -279,6 +303,10 @@ void initLtft(void)
 
 void resetLongTermFuelTrim() {
 	engine->module<LongTermFuelTrim>()->reset();
+}
+
+void applyLongTermFuelTrimToVe() {
+	engine->module<LongTermFuelTrim>()->applyTrimsToVe();
 }
 
 void devPokeLongTermFuelTrim() {

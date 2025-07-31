@@ -12,6 +12,7 @@ struct LtftState {
 	void save();
 	void load();
 	void reset();
+	void applyToVe();
 	// Development only, to be removed
 	void fillRandom();
 };
@@ -28,6 +29,7 @@ public:
 	void load();
 	void store();
 	void reset();
+	void applyTrimsToVe();
 	void onLiveDataRead();
 	// Development only, to be removed
 	void fillRandom();
@@ -44,6 +46,7 @@ private:
 
 void initLtft();
 void resetLongTermFuelTrim();
+void applyLongTermFuelTrimToVe();
 void devPokeLongTermFuelTrim();
 
 void *ltftGetTsPage();
