@@ -21,7 +21,7 @@
  * set engine_type 37
  */
 void setSubaruEJ18_MRE() {
-	engineConfiguration->trigger.type = trigger_type_e::TT_SUBARU_7_WITHOUT_6;
+	engineConfiguration->trigger.type = trigger_type_e::TT_VVT_SUBARU_7_WITHOUT_6;
 
 
 //	engineConfiguration->isDoubleSolenoidIdle = true;

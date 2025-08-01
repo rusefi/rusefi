@@ -119,6 +119,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return trigger_type_e::TT_MITSU_4G63_CAM;
 	case VVT_HR12DDR_IN:
 	    return trigger_type_e::TT_NISSAN_HR_CAM_IN;
+	case VVT_SUBARU_7TOOTH:
+			return trigger_type_e::TT_SUBARU_7_6_CRANK;
 	default:
 	  return getCustomVvtTriggerType(vvtMode);
 	}

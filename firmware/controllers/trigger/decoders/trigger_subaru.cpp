@@ -156,12 +156,56 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 	s->useOnlyPrimaryForSync = withCrankWheel;
 }
 
-void initializeSubaruOnly7(TriggerWaveform *s) {
-	initializeSubaru7_6(s, false);
-}
-
 void initializeSubaru7_6(TriggerWaveform *s) {
 	initializeSubaru7_6(s, true);
+}
+
+void initializeSubaru7_6_camOnly(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+
+	const float width = 1;
+	const float offset = 720 - 560;
+
+	s->tdcPosition = 560 + offset;
+
+	#define SUBARU76_CAMONLY_PULSE(cyl, subtooth) \
+		s->addEventAngle((offset + 180 * (cyl)) + 20 + 15 * (subtooth) - width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);	\
+		s->addEventAngle((offset + 180 * (cyl)) + 20 + 15 * (subtooth), TriggerValue::FALL, TriggerWheel::T_PRIMARY)
+
+	// CYL1
+	// 5, 20, 35
+	SUBARU76_CAMONLY_PULSE(0, -1);
+	SUBARU76_CAMONLY_PULSE(0,  0);
+	SUBARU76_CAMONLY_PULSE(0, +1);
+
+	// CYL3
+	// 200
+	SUBARU76_CAMONLY_PULSE(1,  0);
+
+	// CYL2
+	// 380, 395
+	SUBARU76_CAMONLY_PULSE(2,  0);
+	SUBARU76_CAMONLY_PULSE(2, +1);
+
+	// CYL4
+	// 560
+	SUBARU76_CAMONLY_PULSE(3,  0);
+
+	// Tooths positions, deltas and gap ratios
+	//  (5,  20,  35, 200, 380, 395, 560) 725...
+	//      (15,  15, 165, 180,  15, 165, 165)  15...
+	// K:  0.09,   1,  11,1.09,0.08,  11,   1)0.09
+
+	// Gaps: 1, 0.09, 1, 11 at 560
+	s->setTriggerSynchronizationGap3(0,  0.50,  1.50);
+	s->setTriggerSynchronizationGap3(1,  0.04,  0.15);
+	s->setTriggerSynchronizationGap3(2,  0.50,  1.50);
+	s->setTriggerSynchronizationGap3(3,  7.00, 15.00);
+}
+
+void initializeSubaruOnly7(TriggerWaveform *s) {
+	//initializeSubaru7_6(s, false);
+	initializeSubaru7_6_camOnly(s);
 }
 
 void initializeSubaru7_6_crankOnly(TriggerWaveform *s) {
