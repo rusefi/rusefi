@@ -5929,7 +5929,7 @@ struct persistent_config_s {
 	 */
 	lua_script_t luaScript;
 	/**
-	 * units: C
+	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 13620
 	 */
 	float cltFuelCorrBins[CLT_FUEL_CURVE_SIZE] = {};
@@ -5939,7 +5939,7 @@ struct persistent_config_s {
 	 */
 	float cltFuelCorr[CLT_FUEL_CURVE_SIZE] = {};
 	/**
-	 * units: C
+	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 13748
 	 */
 	float iatFuelCorrBins[IAT_CURVE_SIZE] = {};
