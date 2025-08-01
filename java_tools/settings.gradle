@@ -21,7 +21,6 @@ include ':gcc_map_reader'
 project(':gcc_map_reader').projectDir = new File('gcc_map_reader')
 include ':enum_to_string'
 project(':enum_to_string').projectDir = new File('enum_to_string')
-include ':logicdata2c'
 include ':version2header'
 include ':bin2header'
 include ':config_definition_base'
