@@ -3995,7 +3995,7 @@ struct engine_configuration_s {
 	int16_t coastingFuelCutTps;
 	/**
 	 * Fuel cutoff is disabled when the engine is cold.
-	 * units: C
+	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 2080
 	 */
 	int16_t coastingFuelCutClt;
@@ -4523,7 +4523,7 @@ struct engine_configuration_s {
 	 */
 	vin_number_t vinNumber;
 	/**
-	 * units: C
+	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 3277
 	 */
 	int8_t torqueReductionActivationTemperature;
@@ -4557,12 +4557,12 @@ struct engine_configuration_s {
 	 */
 	int16_t ALSMaxDuration;
 	/**
-	 * units: C
+	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 3302
 	 */
 	int8_t ALSMinCLT;
 	/**
-	 * units: C
+	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 3303
 	 */
 	int8_t ALSMaxCLT;
