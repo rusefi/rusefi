@@ -20,7 +20,7 @@ jobs:
         with:
           distribution: 'zulu'
           # As of 2025 rusEFI TS plugin is useful again: it provides a knock spectrogram! TS uses java 8 [tag:java8]
-          java-version: '11'
+          java-version: '17'
 
       - name: Test Compiler
         run: javac -version
