@@ -28,6 +28,7 @@ public class TsOutput {
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
     private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+    private final String temperatureCelsiusUnit = quote("C");
 
     public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
@@ -100,6 +101,7 @@ public class TsOutput {
 				ConfigField next = it.next;
 				int bitIndex = it.bitState.get();
 				String nameWithPrefix = prefix + variableNamePrefix + configField.getName();
+				String originalUnits = configField.getUnits();
                 ConfigStructure cs = configField.getStructureType();
 
                 /**
@@ -148,6 +150,15 @@ public class TsOutput {
                     return it.adjustSize(tsPosition);
                 }
 
+                 // if the units are SPECIAL_CASE_TEMPERATURE, we are going to deal with a temperature-based config
+                // so we need to edit the unit first on C degree, and then on F degree, also the TS conditional is added here
+                if (originalUnits.startsWith("SPECIAL_CASE_TEMPERATURE")) {
+                    // first the Celsius case, and save the index after writing the field
+                    configField.setTsInfo(formatTemperatureTsInfo(configField.getTsInfo(), false));
+                    int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+                    return newIndex;
+                }
+
 				return writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
 			}
 		};
@@ -157,6 +168,19 @@ public class TsOutput {
             tsHeader.append("; total TS size = " + structureStartingTsPosition + EOL);
         }
         return structureStartingTsPosition;
+    }
+
+    private String formatTemperatureTsInfo(String tsInfo, boolean isFahrenheit){
+        if (tsInfo == null || tsInfo.trim().isEmpty()) {
+            // this case is handle by handleTsInfo, so we return a empty string
+            return "";
+        }
+        String[] fields = tokenizeWithBraces(tsInfo);
+
+            // override units
+            fields[0] = temperatureCelsiusUnit;
+
+          return tokensToString(fields);
     }
 
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
