@@ -809,7 +809,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initGmLS24_3deg(this);
 		break;
 
-	case trigger_type_e::TT_SUBARU_7_WITHOUT_6:
+	case trigger_type_e::TT_VVT_SUBARU_7_WITHOUT_6:
 		initializeSubaruOnly7(this);
 		break;
 

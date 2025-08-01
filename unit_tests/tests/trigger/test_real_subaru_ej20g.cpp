@@ -11,7 +11,7 @@ TEST(real, SubaruEj20gcranking_only_cam7) {
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 //	setVerboseTrigger(true);
-	eth.setTriggerType(trigger_type_e::TT_SUBARU_7_WITHOUT_6);
+	eth.setTriggerType(trigger_type_e::TT_VVT_SUBARU_7_WITHOUT_6);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
