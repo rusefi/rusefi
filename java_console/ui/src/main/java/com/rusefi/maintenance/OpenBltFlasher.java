@@ -45,10 +45,13 @@ public class OpenBltFlasher {
 
         // Write new data
         write();
+
+        // Done, stop the session!
+        mLoader.stop();
     }
 
     private void loadFile(String filename) throws IOException {
-        // mCallbacks.log("Parsing firmware file...");
+        mCallbacks.log("Parsing firmware file...");
 
         SrecParser file = new SrecParser();
         file.parse(new File(filename));
