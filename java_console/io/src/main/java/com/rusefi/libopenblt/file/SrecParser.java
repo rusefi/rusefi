@@ -10,8 +10,8 @@ import java.util.List;
 
 public class SrecParser {
     public static class SRecord {
-        public int address;
-        public byte[] data;
+        public final int address;
+        public final byte[] data;
 
         public SRecord(int address, byte[] data) {
             this.address = address;

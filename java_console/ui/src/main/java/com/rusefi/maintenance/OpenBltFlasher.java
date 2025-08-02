@@ -37,6 +37,7 @@ public class OpenBltFlasher {
     public void flash(String filename) throws IOException {
         loadFile(filename);
 
+        mCallbacks.setPhase("Connect to target", false);
         // Prepare loader
         mLoader.start();
 
@@ -46,12 +47,14 @@ public class OpenBltFlasher {
         // Write new data
         write();
 
+        mCallbacks.setPhase("Cleanup", false);
         // Done, stop the session!
         mLoader.stop();
     }
 
     private void loadFile(String filename) throws IOException {
-        mCallbacks.log("Parsing firmware file...");
+        mCallbacks.setPhase("Load firmware file", false);
+//        mCallbacks.log("Parsing firmware file...");
 
         SrecParser file = new SrecParser();
         file.parse(new File(filename));
@@ -59,7 +62,7 @@ public class OpenBltFlasher {
         mSegments = file.getSegments();
 
         mTotalFileSize = mSegments.stream()
-                .map(s -> s.data.length).reduce(0, Integer::sum);
+            .map(s -> s.data.length).reduce(0, Integer::sum);
 
         mCallbacks.log("Firmware file parsed:");
         mCallbacks.log("\tfirst address: 0x" + Integer.toString(mSegments.get(0).address, 16));
@@ -69,17 +72,26 @@ public class OpenBltFlasher {
     private class ProgressUpdater {
         private int mTotalProcessed = 0;
 
+        private int mLastPercent = -1;
+
         void processBytes(int thisChunk) {
             mTotalProcessed += thisChunk;
 
-            mCallbacks.updateProgress((int)(100.0 * mTotalProcessed / mTotalFileSize));
+            int percent = (int)(100.0 * mTotalProcessed / mTotalFileSize);
+
+            if (percent != mLastPercent) {
+                mLastPercent = percent;
+
+                mCallbacks.updateProgress(percent);
+            }
         }
     }
 
     private void erase() throws IOException {
+        mCallbacks.setPhase("Erase", true);
         final ProgressUpdater pu = new ProgressUpdater();
 
-        forEachFirmwareChunk(32768, (Chunk c) -> {
+        forEachFirmwareChunk(65536, (Chunk c) -> {
             mLoader.clearMemory(c.address, c.data.length);
 
             pu.processBytes(c.data.length);
@@ -87,9 +99,10 @@ public class OpenBltFlasher {
     }
 
     private void write() throws IOException {
+        mCallbacks.setPhase("Program", true);
         final ProgressUpdater pu = new ProgressUpdater();
 
-        forEachFirmwareChunk(256, (Chunk c) -> {
+        forEachFirmwareChunk(200, (Chunk c) -> {
             mLoader.writeData(c.address, c.data);
 
             pu.processBytes(c.data.length);
@@ -123,11 +136,5 @@ public class OpenBltFlasher {
                 segmentOffset += chunkSize;
             }
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        OpenBltFlasher f = OpenBltFlasher.makeTcp("192.168.10.1", 29000, null, null);
-
-        f.loadFile("/Users/matthewkennedy/Source/fome-fw/firmware/build/fome.srec");
     }
 }
