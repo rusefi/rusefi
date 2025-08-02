@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.libopenblt.transport;
+package com.rusefi.libopenblt.transport;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortThreadFactory;

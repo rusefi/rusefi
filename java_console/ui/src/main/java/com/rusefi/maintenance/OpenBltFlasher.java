@@ -1,11 +1,11 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.maintenance.libopenblt.XcpLoader;
-import com.rusefi.maintenance.libopenblt.XcpSettings;
-import com.rusefi.maintenance.libopenblt.file.SrecParser;
-import com.rusefi.maintenance.libopenblt.transport.IXcpTransport;
-import com.rusefi.maintenance.libopenblt.transport.XcpNet;
-import com.rusefi.maintenance.libopenblt.transport.XcpSerial;
+import com.rusefi.libopenblt.XcpLoader;
+import com.rusefi.libopenblt.XcpSettings;
+import com.rusefi.libopenblt.file.SrecParser;
+import com.rusefi.libopenblt.transport.IXcpTransport;
+import com.rusefi.libopenblt.transport.XcpNet;
+import com.rusefi.libopenblt.transport.XcpSerial;
 
 import java.io.File;
 import java.io.IOException;

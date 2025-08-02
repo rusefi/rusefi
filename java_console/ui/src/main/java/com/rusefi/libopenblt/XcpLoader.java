@@ -1,6 +1,6 @@
-package com.rusefi.maintenance.libopenblt;
+package com.rusefi.libopenblt;
 
-import com.rusefi.maintenance.libopenblt.transport.IXcpTransport;
+import com.rusefi.libopenblt.transport.IXcpTransport;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

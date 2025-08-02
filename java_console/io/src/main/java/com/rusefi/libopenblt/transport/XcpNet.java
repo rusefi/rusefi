@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.libopenblt.transport;
+package com.rusefi.libopenblt.transport;
 
 import org.jetbrains.annotations.NotNull;
 

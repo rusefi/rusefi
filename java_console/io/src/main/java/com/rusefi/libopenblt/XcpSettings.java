@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.libopenblt;
+package com.rusefi.libopenblt;
 
 public class XcpSettings {
     int timeoutT1 = 1000;
