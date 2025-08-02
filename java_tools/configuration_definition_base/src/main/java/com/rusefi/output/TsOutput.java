@@ -188,7 +188,7 @@ public class TsOutput {
         return celsius * 1.8 + 32;
     }
 
-    private String formatTemperatureTsInfo(String tsInfo, boolean isFahrenheit){
+    public String formatTemperatureTsInfo(String tsInfo, boolean isFahrenheit){
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // this case is handle by handleTsInfo, so we return a empty string
             return "";
