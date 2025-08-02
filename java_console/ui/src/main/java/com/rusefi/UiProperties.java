@@ -5,6 +5,7 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import java.util.Properties;
 
 public class UiProperties {
+    public static final String SKIP_ECU_TYPE_DETECTION = "skip_ecu_type_detection";
     private static Properties properties;
 
     public static boolean usePCAN() {
@@ -36,6 +37,6 @@ public class UiProperties {
     }
 
     public static boolean skipEcuTypeDetection() {
-        return ConnectionAndMeta.getBoolean("skip_ecu_type_detection");
+        return ConnectionAndMeta.getBoolean(SKIP_ECU_TYPE_DETECTION);
     }
 }
