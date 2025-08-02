@@ -123,7 +123,7 @@ public class ProgramSelector {
             showError32bitJava(parent);
             return;
         }
-        OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
+        OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
             OpenbltJni.flashCan(FindFileHelper.findSrecFile(), cb);
@@ -261,8 +261,8 @@ public class ProgramSelector {
         return flashOpenbltSerialJni(parent, openbltPort, callbacks);
     }
 
-    private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
-        return new OpenbltJni.OpenbltCallbacks() {
+    private static OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
+        return new OpenbltCallbacks() {
             @Override
             public void log(String line) {
                 callbacks.logLine(line);
@@ -296,7 +296,7 @@ public class ProgramSelector {
             return false;
         }
 
-        OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
+        OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         String fileName = FindFileHelper.findSrecFile();
         if (fileName == null) {
