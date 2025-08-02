@@ -51,6 +51,8 @@
 ! hello;I like rusEFI;"ms",1,0,-10,10,2
 !
 ! you want to use "SPECIAL_CASE_TEMPERATURE" for temperature fields
+! so we can auto-generate the TS conditional on the final ini, all the temperature-related fields, should be treated in celsius in the code,
+! they wel be represented on fahrenheit only on the TS interface
 !
 ! Q: what's the difference between 'engineConfiguration' and rest of the 'persistent_config_s'?
 ! A: 'engineConfiguration' portion has 'activeConfiguration' copy so that we can detect changes
