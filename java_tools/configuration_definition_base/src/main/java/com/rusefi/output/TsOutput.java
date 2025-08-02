@@ -159,15 +159,17 @@ public class TsOutput {
                  // if the units are SPECIAL_CASE_TEMPERATURE, we are going to deal with a temperature-based config
                 // so we need to edit the unit first on C degree, and then on F degree, also the TS conditional is added here
                 if (originalUnits.startsWith("SPECIAL_CASE_TEMPERATURE")) {
+                	String originalTsInfo = configField.getTsInfo();
                     // first the Celsius case, and save the index after writing the field
-                    configField.setTsInfo(formatTemperatureTsInfo(configField.getTsInfo(), false));
+                    configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, false));
                     tsHeader.append(celsiusConditionalStart);
                     int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
                     tsHeader.append(celsiusConditionalElse);
                     // now the fahrenheit case:
-                    configField.setTsInfo(formatTemperatureTsInfo(configField.getTsInfo(), true));
+                    configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, true));
                     writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
                     tsHeader.append(celsiusConditionalEnd);
+                    configField.setTsInfo(originalTsInfo);
                     return newIndex;
                 }
 
