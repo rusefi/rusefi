@@ -39,7 +39,7 @@ public class XcpSerial implements IXcpTransport{
             }
 
             SerialPort port = SerialPort.getCommPort(mPortName);
-            if (!mPort.openPort()) {
+            if (!port.openPort()) {
                 throw new IOException("Failed to connect to serial port: " + mPortName);
             }
 
