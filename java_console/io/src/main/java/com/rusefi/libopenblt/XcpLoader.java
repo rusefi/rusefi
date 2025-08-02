@@ -58,10 +58,10 @@ public class XcpLoader {
 
     private void connect() throws IOException {
         byte[] request =
-                ByteBuffer.allocate(2)
-                        .put((byte) XCPLOADER_CMD_CONNECT)
-                        .put((byte) 0)  // connection mode?
-                        .array();
+            ByteBuffer.allocate(2)
+                .put((byte) XCPLOADER_CMD_CONNECT)
+                .put((byte) 0)  // connection mode?
+                .array();
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT6, 8);
 
@@ -102,9 +102,9 @@ public class XcpLoader {
     // Place the target in programming mode, and return the maximum programming CTO
     private int programStart() throws IOException {
         byte[] request =
-                ByteBuffer.allocate(1)
-                        .put((byte) XCPLOADER_CMD_PROGRAM_START)
-                        .array();
+            ByteBuffer.allocate(1)
+                .put((byte) XCPLOADER_CMD_PROGRAM_START)
+                .array();
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT6, 7);
 
@@ -135,14 +135,14 @@ public class XcpLoader {
         setMta(address);
 
         byte[] request =
-                ByteBuffer.allocate(8)
-                        .order(mTargetInfo.byteOrder)
-                        .put((byte)XCPLOADER_CMD_PROGRAM_CLEAR)
-                        .put((byte)0)
-                        .put((byte)0)
-                        .put((byte)0)
-                        .putInt(len)
-                        .array();
+            ByteBuffer.allocate(8)
+                .order(mTargetInfo.byteOrder)
+                .put((byte)XCPLOADER_CMD_PROGRAM_CLEAR)
+                .put((byte)0)
+                .put((byte)0)
+                .put((byte)0)
+                .putInt(len)
+                .array();
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT4, 1);
 
@@ -170,11 +170,11 @@ public class XcpLoader {
 
     private void sendCmdProgram(byte[] data) throws IOException {
         byte[] request =
-                ByteBuffer.allocate(2 + data.length)
-                        .put((byte)XCPLOADER_CMD_PROGRAM)
-                        .put((byte)data.length)
-                        .put(data)
-                        .array();
+            ByteBuffer.allocate(2 + data.length)
+                .put((byte)XCPLOADER_CMD_PROGRAM)
+                .put((byte)data.length)
+                .put(data)
+                .array();
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT5, 1);
 
@@ -185,9 +185,9 @@ public class XcpLoader {
 
     private void sendCmdProgramReset() throws IOException {
         byte[] request =
-                ByteBuffer.allocate(1)
-                        .put((byte) XCPLOADER_CMD_PROGRAM_RESET)
-                        .array();
+            ByteBuffer.allocate(1)
+                .put((byte) XCPLOADER_CMD_PROGRAM_RESET)
+                .array();
 
         byte[] response;
 
@@ -209,14 +209,14 @@ public class XcpLoader {
 
     private void setMta(int address) throws IOException {
         byte[] request =
-                ByteBuffer.allocate(8)
-                    .order(mTargetInfo.byteOrder)
-                    .put((byte)XCPLOADER_CMD_SET_MTA)
-                    .put((byte)0)
-                    .put((byte)0)
-                    .put((byte)0)
-                    .putInt(address)
-                    .array();
+            ByteBuffer.allocate(8)
+                .order(mTargetInfo.byteOrder)
+                .put((byte)XCPLOADER_CMD_SET_MTA)
+                .put((byte)0)
+                .put((byte)0)
+                .put((byte)0)
+                .putInt(address)
+                .array();
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT1, 1);
 
