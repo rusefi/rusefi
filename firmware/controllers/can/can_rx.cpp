@@ -216,6 +216,15 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		processCanRxImu(frame);
 	}
 
+/*
+static Timer dashAliveTimer;
+
+  if (CAN_EID(frame) == (int)bench_test_packet_ids_e::DASH_ALIVE) {
+    // todo: add an indicator that dash is connected?
+    dashAliveTimer.reset();
+  }
+*/
+
 	processCanQcBenchTest(frame);
 	processCanEcuControl(frame);
 
