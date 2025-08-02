@@ -1,6 +1,7 @@
 package com.rusefi.binaryprotocol.test;
 
 import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.io.commands.HelloCommand;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,11 +28,9 @@ public class CRCTest {
 
     @Test
     public void testPackPacket() {
-        byte[] command = {'S'};
+        byte[] command = HelloCommand.HELLO_COMMAND;
         byte[] expected = {0, 1, 0x53, 0x20, 0x60, -17, -61};
         byte[] actual = IoHelper.makeCrc32Packet(command);
-        Assertions.assertTrue(Arrays.equals(expected, actual),
-            Arrays.toString(expected) + " vs " + Arrays.toString(actual)
-        );
+        Assertions.assertArrayEquals(expected, actual, Arrays.toString(expected) + " vs " + Arrays.toString(actual));
     }
 }
