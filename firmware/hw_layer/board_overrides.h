@@ -49,9 +49,12 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwar
 
 /**
  * This function checks if an override is present and calls it if available.
+ * Return true if override is present and was called
  */
-static inline void call_board_override(std::optional<setup_custom_board_overrides_type> board_override){
+static inline bool call_board_override(std::optional<setup_custom_board_overrides_type> board_override){
     if (board_override.has_value()) {
         std::invoke(board_override.value());
+        return true;
     }
+    return false;
 }
