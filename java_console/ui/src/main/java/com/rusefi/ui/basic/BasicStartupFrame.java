@@ -15,6 +15,9 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * java -jar rusefi_console.jar basic-ui
+ * java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar rusefi_console.jar basic-ui
+ *
  * Focuses on firmware updater
  * Much simpler than {@link com.rusefi.StartupFrame}
  */

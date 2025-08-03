@@ -223,8 +223,9 @@ public class ConsoleUI {
         if (JustOneInstance.isAlreadyRunning()) {
             int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like another instance is already running. Do you really want to start another instance?",
                 TITLE, JOptionPane.YES_NO_OPTION);
-            if (result == JOptionPane.NO_OPTION)
+            if (result == JOptionPane.NO_OPTION) {
                 System.exit(-1);
+            }
         }
         JustOneInstance.onStart();
         TunerStudioHelper.maybeCloseTs();
