@@ -791,6 +791,7 @@
          400.0
          1000.0
 </constant>
+        <constant name="crankingCondition">"None"</constant>
         <constant cols="8" digits="1" name="crankingCycleBaseFuel" rows="4">
          27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
          27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
@@ -2697,7 +2698,7 @@
          0.0 0.0 100000.0 7.00649E-42 0.0 0.0 0.0 5.32493E-42 0.0 0.0 0.0 4.59177E-38 3.3245E-36 300.0 0.0 0.0
          0.0 0.0 0.0 999.6 500.0 1999.2 1.79366E-39 0.0 0.0 50000.0 0.0 4.2039E-41 0.0 0.0 1.10422E-39 2.64667E-24
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         2.35099E-36 0.0 0.0 0.0 3.58732E-41 0.0 7.17465E-41 0.0 0.0 9.183689999999999E-37 9.183549999999999E-39 0.0 0.0 0.0 5.59981E-38 2.75506E-38
+         2.35099E-36 0.0 0.0 0.0 3.58732E-41 0.0 7.17465E-41 0.0 0.0 9.183689999999999E-37 9.183549999999999E-39 0.0 0.0 0.0 5.59981E-38 1.37753E-38
          0.0 0.0 0.0 7.17465E-41 9.10844E-42 9.183549999999999E-39 3.15914E-36 0.0 0.0 2.35099E-36 0.0 0.0 0.0 0.0 0.0 9.2233720368547763E17
          7.00649E-42 0.0 0.0 1.8367099999999999E-37 1.4012999999999999E-43 7.00649E-43 1.4013000000000002E-40 4.2039E-43 0.0 1.86373E-40 0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 50.0 30.0
@@ -3196,7 +3197,6 @@ end</constant>
          40.0
 </constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
-        <constant name="requireFootOnBrakeToCrank">"false"</constant>
         <constant name="rethrowHardFault">"false"</constant>
         <constant digits="0" name="rpmHardLimit" units="rpm">7000.0</constant>
         <constant digits="0" name="rpmHardLimitHyst" units="RPM">50.0</constant>
@@ -5073,7 +5073,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250724" nPages="1" signature="rusEFI master.2025.08.03.f407-discovery.1413184285" version="5.0"/>
+    <versionInfo firmwareInfo="20250724" nPages="1" signature="rusEFI master.2025.08.03.f407-discovery.2737837206" version="5.0"/>
     <bibliography author="rusEFI 20250724" writeDate="date"/>
     <settings/>
     <userComments/>
