@@ -20,6 +20,13 @@ static BKUP_RAM_NOINIT LtftState ltftState;
 static LtftState ltftState;
 #endif
 
+PUBLIC_API_WEAK_SOMETHING_WEIRD
+bool ltftCustomTrimsToVeApply(LtftState *state)
+{
+	(void)state;
+	return false;
+}
+
 void LtftState::save() {
 #if EFI_PROD_CODE
 	storageWrite(EFI_LTFT_RECORD_ID, (const uint8_t *)trims, sizeof(trims));
@@ -54,6 +61,11 @@ void LtftState::fillRandom() {
 }
 
 void LtftState::applyToVe() {
+	// if we have custom implementation
+	if (ltftCustomTrimsToVeApply(this)) {
+		return;
+	}
+
 	for (size_t loadIndex = 0; loadIndex < VE_LOAD_COUNT; loadIndex++) {
 		for (size_t rpmIndex = 0; rpmIndex < VE_RPM_COUNT; rpmIndex++) {
 			float k = 0;
