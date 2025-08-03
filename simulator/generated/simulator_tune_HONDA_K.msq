@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250802E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250803E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -2695,13 +2695,13 @@
          5000.0 5000.0 5000.0 5000.0 5000.0 5000.0 0.0 0.0 1.4012999999999999E-43 0.0 2388.89 4888.89 950000.0 210000.0 100000.0 150000.0
          0.0 -2000.0 2388.89 12000.0 1800000.0 210000.0 10000.0 0.0 0.0 0.0 -9.223372036854775E12 1.4013000000000002E-40 240.0 1.6815600000000002E-40 5.60519E-43 1.4012999999999999E-43
          8750.0 2.35135E-36 2.75787E-37 1.54143E-41 0.0 600.0 7.10543E-13 0.0 5000.0 30300.0 200.0 533.3333 9.2233720368547763E17 1.23314E-41 8.39111E-37 0.0
-         0.0 0.0 100000.0 7.00649E-42 0.0 0.0 0.0 6.44597E-42 0.0 0.0 0.0 4.59177E-38 3.32449E-36 300.0 0.0 0.0
+         0.0 0.0 100000.0 7.00649E-42 0.0 0.0 0.0 6.44597E-42 0.0 0.0 0.0 4.59177E-38 3.3245E-36 300.0 0.0 0.0
          0.0 0.0 0.0 999.6 500.0 1999.2 1.79366E-39 0.0 0.0 50000.0 0.0 4.2039E-41 0.0 0.0 1.02878E-38 2.64667E-24
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
          2.35099E-36 0.0 0.0 0.0 3.58732E-41 0.0 7.17465E-41 0.0 0.0 9.183689999999999E-37 9.183549999999999E-39 0.0 0.0 0.0 5.59981E-38 2.75506E-38
          0.0 0.0 0.0 7.17465E-41 9.10844E-42 9.183549999999999E-39 3.15914E-36 0.0 0.0 2.35099E-36 0.0 0.0 0.0 0.0 0.0 9.2233720368547763E17
          7.00649E-42 0.0 0.0 1.8367099999999999E-37 1.4012999999999999E-43 7.00649E-43 1.4013000000000002E-40 4.2039E-43 0.0 1.86373E-40 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 3.58732E-41 0.0 0.0 0.0 0.0 0.0 0.0 50.0 30.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 50.0 30.0
          0.0 0.0 1.92852E-37 0.0 4.62428E-42 0.0 0.0 0.0 0.0 1.79366E-39 4.2039E-42 7.00649E-41 0.0 100.0 100.0 100.0
 </constant>
         <constant cols="16" digits="1" name="ltft_table_bank2" rows="16">
@@ -2874,7 +2874,6 @@ end</constant>
          2040.0
          2041.0
 </constant>
-        <constant name="mafSensorType">"v1"</constant>
         <constant digits="0" name="magicNumberAvailableForDevTricks" units="">1.0</constant>
         <constant name="mainRelayPin">"NONE"</constant>
         <constant name="mainRelayPinMode">"default"</constant>
@@ -5075,7 +5074,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250724" nPages="1" signature="rusEFI master.2025.08.02.f407-discovery.335984904" version="5.0"/>
+    <versionInfo firmwareInfo="20250724" nPages="1" signature="rusEFI master.2025.08.03.f407-discovery.1413184285" version="5.0"/>
     <bibliography author="rusEFI 20250724" writeDate="date"/>
     <settings/>
     <userComments/>
