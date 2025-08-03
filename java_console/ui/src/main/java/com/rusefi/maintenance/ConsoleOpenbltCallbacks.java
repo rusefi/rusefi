@@ -1,7 +1,7 @@
 package com.rusefi.maintenance;
 
-public interface OpenbltCallbacks {
-    OpenbltCallbacks CONSOLE = new OpenbltCallbacks() {
+public class ConsoleOpenbltCallbacks {
+    public static final OpenbltJni.OpenbltCallbacks CONSOLE = new OpenbltJni.OpenbltCallbacks() {
         @Override
         public void log(String line) {
             System.out.println(line);
@@ -23,12 +23,4 @@ public interface OpenbltCallbacks {
             log("Begin phase: " + title);
         }
     };
-
-    void log(String line);
-
-    void updateProgress(int percent);
-
-    void error(String line);
-
-    void setPhase(String title, boolean hasProgress);
 }

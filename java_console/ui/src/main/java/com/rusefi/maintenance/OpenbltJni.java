@@ -8,7 +8,17 @@ import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 import java.util.Objects;
 
+// careful: JNI is fragile!
 public final class OpenbltJni {
+    // careful: JNI is fragile! interface full name is part of magic API
+    public interface OpenbltCallbacks
+    {
+        void log(String line);
+        void updateProgress(int percent);
+        void error(String line);
+
+        void setPhase(String title, boolean hasProgress);
+    }
 
     private static final String OS_NAME = System.getProperty("os.name").toLowerCase(Locale.ROOT);
     private static final boolean IS_MAC = OS_NAME.contains("mac") || OS_NAME.contains("darwin");
