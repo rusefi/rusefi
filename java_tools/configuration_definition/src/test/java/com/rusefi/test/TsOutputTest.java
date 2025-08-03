@@ -52,7 +52,7 @@ class TsOutputTest {
         String content = tsOutput.getContent();
         
         // Verify the content contains both Celsius and Fahrenheit conditionals
-        assertTrue(content.contains("#if CELSIUS"));
+        assertTrue(content.contains("#if USE_METRIC_UNITS"));
         assertTrue(content.contains("#else"));
         assertTrue(content.contains("#endif"));
 
