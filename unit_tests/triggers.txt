@@ -3037,7 +3037,7 @@ event 16 0 1 556.00 1.533333
 event 17 0 0 556.00 nan
 event 18 0 1 586.00 0.652174
 event 19 0 0 586.00 nan
-TRIGGERTYPE 51 14 TT_SUBARU_7_WITHOUT_6 520.00
+TRIGGERTYPE 51 14 TT_VVT_SUBARU_7_WITHOUT_6 720.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
@@ -3055,7 +3055,7 @@ gapTo.2=0.300000
 # end of meta section
 event 0 0 1 0.00 11.000000
 event 1 0 0 0.00 nan
-event 2 0 1 180.00 1.090922
+event 2 0 1 180.00 1.090909
 event 3 0 0 180.00 nan
 event 4 0 1 195.00 0.083333
 event 5 0 0 195.00 nan
