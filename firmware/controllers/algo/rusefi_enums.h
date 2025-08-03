@@ -532,7 +532,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 } timing_mode_e;
 
-	/* I am confused: renaming CCNONE to CC_NONE fails with 'expected identifier before numeric constant'?! */
+	/* I am confused: wingdi.h has CCNONE meaning TODO migrate to proper enum! */
 typedef enum __attribute__ ((__packed__)) {
 	CCNONE = 0,
 	CC_BRAKE = 1,
