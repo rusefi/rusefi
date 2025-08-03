@@ -532,9 +532,8 @@ typedef enum __attribute__ ((__packed__)) {
 
 } timing_mode_e;
 
-	/* I am confused: renaming CCNONE to CC_NONE fails with 'expected identifier before numeric constant'?! */
 typedef enum __attribute__ ((__packed__)) {
-	CCNONE = 0,
+	CC_NONE = 0,
 	CC_BRAKE = 1,
 	CC_CLUTCH = 2,
 } cranking_condition_e;
