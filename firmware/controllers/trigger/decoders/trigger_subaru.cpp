@@ -172,16 +172,9 @@ void initializeSubaru7_6_camOnly(TriggerWaveform *s) {
 	float last = offset - 165;
 	float pre_last = offset - 165 - 165;
 
-	#define SUBARU76_CAMONLY_PULSE(cyl, subtooth) do { \
-		float tooth = offset + (180 * (cyl)) + 20 + (15 * (subtooth)) - width; \
+	#define SUBARU76_CAMONLY_PULSE(cyl, subtooth) \
 		s->addEventAngle(offset + (180 * (cyl)) + 20 + (15 * (subtooth)) - width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);	\
-		s->addEventAngle(offset + (180 * (cyl)) + 20 + (15 * (subtooth)), TriggerValue::FALL, TriggerWheel::T_PRIMARY); \
-		printf("tooth at %f\n", offset + (180 * (cyl)) + 20 + (15 * (subtooth))); \
-		printf(" k = %f\n", (tooth - last) / (last - pre_last)); \
-		pre_last = last; \
-		last = tooth; \
-		i++; \
-	} while(0)
+		s->addEventAngle(offset + (180 * (cyl)) + 20 + (15 * (subtooth)), TriggerValue::FALL, TriggerWheel::T_PRIMARY)
 
 	// CYL1
 	// 5, 20, 35
