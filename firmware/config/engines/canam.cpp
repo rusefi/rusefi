@@ -54,7 +54,6 @@ void setMaverickX3() {
     engineConfiguration->idlePidDeactivationTpsThreshold = 2;
     engineConfiguration->useSeparateAdvanceForIdle = true;
     engineConfiguration->vvtControlMinRpm = 2000;
-    engineConfiguration->requireFootOnBrakeToCrank = true;
 
     engineConfiguration->startButtonSuppressOnStartUpMs = 1000;
     engineConfiguration->vssToothCount = 10;
