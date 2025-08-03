@@ -147,6 +147,7 @@ public class NetworkConnector implements Closeable {
                 byte command = packet.getPacket()[0];
                 if (command == Integration.TS_ONLINE_PROTOCOL) {
                     byte connectorCommand = packet.getPacket()[1];
+/*
                     log.info("Got connector command " + packet.getPacket());
                     if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE_LATEST) {
                         context.onConnectorSoftwareUpdateToLatestRequest();
@@ -157,6 +158,7 @@ public class NetworkConnector implements Closeable {
                     } else if (connectorCommand == NetworkConnector.UPDATE_FIRMWARE_RELEASE) {
                         context.onFirmwareUpdateToReleaseRequest();
                     }
+  */
                     return;
                 }
 
