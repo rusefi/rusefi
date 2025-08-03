@@ -8,6 +8,7 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/.github/workflows/hw-ci/gethla" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/firmware/ChibiOS" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/firmware/ChibiOS-Contrib" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/firmware/controllers/can/wideband_firmware" vcs="Git" />
