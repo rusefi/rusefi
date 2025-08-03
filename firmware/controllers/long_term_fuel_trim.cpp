@@ -166,6 +166,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	ltftLearning = adjusted;
 	if (adjusted) {
 		ltftCntHit++;
+		showUpdateToUser = true;
 		if ((ltftCntHit % SAVE_AFTER_HITS) == 0) {
 			// request save
 #if EFI_PROD_CODE
@@ -269,12 +270,14 @@ bool LongTermFuelTrim::isVeUpdated() {
 }
 
 void LongTermFuelTrim::onLiveDataRead() {
-	// rise refresh flag every second for one TS reading of livedata...
+	// rise refresh flag every second for one TS reading of livedata if we have something new...
 	if (ltftPageRefreshFlag) {
 		ltftPageRefreshFlag = false;
+		showUpdateToUser = false;
 		pageRefreshTimer.reset();
 	} else {
-		ltftPageRefreshFlag = pageRefreshTimer.hasElapsedSec(1);
+		// was update to table and timeout
+		ltftPageRefreshFlag = showUpdateToUser && pageRefreshTimer.hasElapsedSec(1);
 	}
 }
 

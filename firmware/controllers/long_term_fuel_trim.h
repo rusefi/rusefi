@@ -39,6 +39,7 @@ private:
 	LtftState *m_state;
 	// TODO: move to livedata and kill isVeUpdated() ?
 	bool veNeedRefresh = false;
+	bool showUpdateToUser = false;
 
 	float getIntegratorGain() const;
 	float getMaxAdjustment() const;
