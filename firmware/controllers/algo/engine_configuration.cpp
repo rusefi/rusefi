@@ -417,7 +417,6 @@ static void setDefaultEngineConfiguration() {
 	setDefaultEtbBiasCurve();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-	engineConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037();
 
 	engineConfiguration->mapMinBufferLength = 1;

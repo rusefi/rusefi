@@ -89,7 +89,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250718
+#define FLASH_DATA_VERSION 250801
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -972,14 +972,6 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	Gpio spi3sckPin;
 	Gpio cdmInputPin;UNUSED\nWill remove in 2026 for sure\nSaab Combustion Detection Module knock signal input pin\nalso known as Saab Ion Sensing Module;
 	uart_device_e consoleUartDevice;
-
-
-
-#define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
-custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@@
-
-
-	maf_sensor_type_e mafSensorType;
 
 #define CAN_RX_PREFIX "CAN_rx"
 

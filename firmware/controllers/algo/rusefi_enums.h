@@ -520,14 +520,6 @@ typedef enum {
 } gear_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	CUSTOM = 0,
-	Bosch0280218037 = 1,
-	Bosch0280218004 = 2,
-	DensoTODO = 3,
-
-} maf_sensor_type_e;
-
-typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * This is the default mode in which ECU controls timing dynamically
 	 */
