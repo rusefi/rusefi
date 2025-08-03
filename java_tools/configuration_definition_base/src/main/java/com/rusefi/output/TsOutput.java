@@ -28,7 +28,7 @@ public class TsOutput {
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
     private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-    private final String celsiusConditionalStart = "#if CELSIUS" + EOL;
+    private final String celsiusConditionalStart = "#if USE_METRIC_UNITS" + EOL;
     private final String celsiusConditionalElse = "#else" + EOL;
     private final String celsiusConditionalEnd = "#endif" + EOL;
     private final String temperatureCelsiusUnit = quote("C");
