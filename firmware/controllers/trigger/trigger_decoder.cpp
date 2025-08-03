@@ -728,7 +728,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("findTriggerZeroEventIndex: syncIndex located %d!\r\n", syncIndex);
+		printf("findTriggerZeroEventIndex: syncIndex located %lu!\r\n", syncIndex.Value);
 	}
 #endif /* EFI_UNIT_TEST */
 
