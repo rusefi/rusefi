@@ -168,9 +168,20 @@ void initializeSubaru7_6_camOnly(TriggerWaveform *s) {
 
 	s->tdcPosition = 560 + offset;
 
-	#define SUBARU76_CAMONLY_PULSE(cyl, subtooth) \
-		s->addEventAngle((offset + 180 * (cyl)) + 20 + 15 * (subtooth) - width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);	\
-		s->addEventAngle((offset + 180 * (cyl)) + 20 + 15 * (subtooth), TriggerValue::FALL, TriggerWheel::T_PRIMARY)
+	int i = 0;
+	float last = offset - 165;
+	float pre_last = offset - 165 - 165;
+
+	#define SUBARU76_CAMONLY_PULSE(cyl, subtooth) do { \
+		float tooth = offset + (180 * (cyl)) + 20 + (15 * (subtooth)) - width; \
+		s->addEventAngle(offset + (180 * (cyl)) + 20 + (15 * (subtooth)) - width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);	\
+		s->addEventAngle(offset + (180 * (cyl)) + 20 + (15 * (subtooth)), TriggerValue::FALL, TriggerWheel::T_PRIMARY); \
+		printf("tooth at %f\n", offset + (180 * (cyl)) + 20 + (15 * (subtooth))); \
+		printf(" k = %f\n", (tooth - last) / (last - pre_last)); \
+		pre_last = last; \
+		last = tooth; \
+		i++; \
+	} while(0)
 
 	// CYL1
 	// 5, 20, 35
@@ -197,10 +208,14 @@ void initializeSubaru7_6_camOnly(TriggerWaveform *s) {
 	// K:  0.09,   1,  11,1.09,0.08,  11,   1)0.09
 
 	// Gaps: 1, 0.09, 1, 11 at 560
-	s->setTriggerSynchronizationGap3(0,  0.50,  1.50);
-	s->setTriggerSynchronizationGap3(1,  0.04,  0.15);
-	s->setTriggerSynchronizationGap3(2,  0.50,  1.50);
-	s->setTriggerSynchronizationGap3(3,  7.00, 15.00);
+	//s->setTriggerSynchronizationGap3(0,  0.50,  1.50);
+	//s->setTriggerSynchronizationGap3(0,  0.04,  0.15);
+	//s->setTriggerSynchronizationGap3(1,  0.50,  1.50);
+	//s->setTriggerSynchronizationGap3(2,  7.00, 15.00);
+
+	s->setTriggerSynchronizationGap3(/*index*/0, 6.53 * TRIGGER_GAP_DEVIATION_LOW, 15);
+	s->setTriggerSynchronizationGap3(/*index*/1, 0.3, 1 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*index*/2, 0.08, 0.3);
 }
 
 void initializeSubaruOnly7(TriggerWaveform *s) {
