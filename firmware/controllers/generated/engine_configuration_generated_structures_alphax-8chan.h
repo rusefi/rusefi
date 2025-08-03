@@ -2448,15 +2448,11 @@ struct engine_configuration_s {
 	 */
 	uart_device_e consoleUartDevice;
 	/**
-	 * offset 925
-	 */
-	maf_sensor_type_e mafSensorType;
-	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 926
+	 * offset 925
 	 */
-	uint8_t alignmentFill_at_926[2] = {};
+	uint8_t alignmentFill_at_925[3] = {};
 	/**
 	 * Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 	offset 928 bit 0 */
@@ -2558,10 +2554,10 @@ struct engine_configuration_s {
 	bool verboseCan2 : 1 {};
 	/**
 	offset 928 bit 30 */
-	bool unusedBit_409_30 : 1 {};
+	bool unusedBit_408_30 : 1 {};
 	/**
 	offset 928 bit 31 */
-	bool unusedBit_409_31 : 1 {};
+	bool unusedBit_408_31 : 1 {};
 	/**
 	 * offset 932
 	 */
@@ -2900,22 +2896,22 @@ struct engine_configuration_s {
 	bool skippedWheelOnCam : 1 {};
 	/**
 	offset 1360 bit 26 */
-	bool unusedBit_486_26 : 1 {};
+	bool unusedBit_485_26 : 1 {};
 	/**
 	offset 1360 bit 27 */
-	bool unusedBit_486_27 : 1 {};
+	bool unusedBit_485_27 : 1 {};
 	/**
 	offset 1360 bit 28 */
-	bool unusedBit_486_28 : 1 {};
+	bool unusedBit_485_28 : 1 {};
 	/**
 	offset 1360 bit 29 */
-	bool unusedBit_486_29 : 1 {};
+	bool unusedBit_485_29 : 1 {};
 	/**
 	offset 1360 bit 30 */
-	bool unusedBit_486_30 : 1 {};
+	bool unusedBit_485_30 : 1 {};
 	/**
 	offset 1360 bit 31 */
-	bool unusedBit_486_31 : 1 {};
+	bool unusedBit_485_31 : 1 {};
 	/**
 	 * A/C button input
 	 * offset 1364
@@ -3050,16 +3046,16 @@ struct engine_configuration_s {
 	bool watchOutForLinearTime : 1 {};
 	/**
 	offset 1372 bit 28 */
-	bool unusedBit_525_28 : 1 {};
+	bool unusedBit_524_28 : 1 {};
 	/**
 	offset 1372 bit 29 */
-	bool unusedBit_525_29 : 1 {};
+	bool unusedBit_524_29 : 1 {};
 	/**
 	offset 1372 bit 30 */
-	bool unusedBit_525_30 : 1 {};
+	bool unusedBit_524_30 : 1 {};
 	/**
 	offset 1372 bit 31 */
-	bool unusedBit_525_31 : 1 {};
+	bool unusedBit_524_31 : 1 {};
 	/**
 	 * units: count
 	 * offset 1376
@@ -3340,16 +3336,16 @@ struct engine_configuration_s {
 	bool enableKnockSpectrogramFilter : 1 {};
 	/**
 	offset 1528 bit 28 */
-	bool unusedBit_593_28 : 1 {};
+	bool unusedBit_592_28 : 1 {};
 	/**
 	offset 1528 bit 29 */
-	bool unusedBit_593_29 : 1 {};
+	bool unusedBit_592_29 : 1 {};
 	/**
 	offset 1528 bit 30 */
-	bool unusedBit_593_30 : 1 {};
+	bool unusedBit_592_30 : 1 {};
 	/**
 	offset 1528 bit 31 */
-	bool unusedBit_593_31 : 1 {};
+	bool unusedBit_592_31 : 1 {};
 	/**
 	 * This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.
 	 * units: percent
@@ -3498,76 +3494,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1572 bit 8 */
-	bool unusedBit_627_8 : 1 {};
+	bool unusedBit_626_8 : 1 {};
 	/**
 	offset 1572 bit 9 */
-	bool unusedBit_627_9 : 1 {};
+	bool unusedBit_626_9 : 1 {};
 	/**
 	offset 1572 bit 10 */
-	bool unusedBit_627_10 : 1 {};
+	bool unusedBit_626_10 : 1 {};
 	/**
 	offset 1572 bit 11 */
-	bool unusedBit_627_11 : 1 {};
+	bool unusedBit_626_11 : 1 {};
 	/**
 	offset 1572 bit 12 */
-	bool unusedBit_627_12 : 1 {};
+	bool unusedBit_626_12 : 1 {};
 	/**
 	offset 1572 bit 13 */
-	bool unusedBit_627_13 : 1 {};
+	bool unusedBit_626_13 : 1 {};
 	/**
 	offset 1572 bit 14 */
-	bool unusedBit_627_14 : 1 {};
+	bool unusedBit_626_14 : 1 {};
 	/**
 	offset 1572 bit 15 */
-	bool unusedBit_627_15 : 1 {};
+	bool unusedBit_626_15 : 1 {};
 	/**
 	offset 1572 bit 16 */
-	bool unusedBit_627_16 : 1 {};
+	bool unusedBit_626_16 : 1 {};
 	/**
 	offset 1572 bit 17 */
-	bool unusedBit_627_17 : 1 {};
+	bool unusedBit_626_17 : 1 {};
 	/**
 	offset 1572 bit 18 */
-	bool unusedBit_627_18 : 1 {};
+	bool unusedBit_626_18 : 1 {};
 	/**
 	offset 1572 bit 19 */
-	bool unusedBit_627_19 : 1 {};
+	bool unusedBit_626_19 : 1 {};
 	/**
 	offset 1572 bit 20 */
-	bool unusedBit_627_20 : 1 {};
+	bool unusedBit_626_20 : 1 {};
 	/**
 	offset 1572 bit 21 */
-	bool unusedBit_627_21 : 1 {};
+	bool unusedBit_626_21 : 1 {};
 	/**
 	offset 1572 bit 22 */
-	bool unusedBit_627_22 : 1 {};
+	bool unusedBit_626_22 : 1 {};
 	/**
 	offset 1572 bit 23 */
-	bool unusedBit_627_23 : 1 {};
+	bool unusedBit_626_23 : 1 {};
 	/**
 	offset 1572 bit 24 */
-	bool unusedBit_627_24 : 1 {};
+	bool unusedBit_626_24 : 1 {};
 	/**
 	offset 1572 bit 25 */
-	bool unusedBit_627_25 : 1 {};
+	bool unusedBit_626_25 : 1 {};
 	/**
 	offset 1572 bit 26 */
-	bool unusedBit_627_26 : 1 {};
+	bool unusedBit_626_26 : 1 {};
 	/**
 	offset 1572 bit 27 */
-	bool unusedBit_627_27 : 1 {};
+	bool unusedBit_626_27 : 1 {};
 	/**
 	offset 1572 bit 28 */
-	bool unusedBit_627_28 : 1 {};
+	bool unusedBit_626_28 : 1 {};
 	/**
 	offset 1572 bit 29 */
-	bool unusedBit_627_29 : 1 {};
+	bool unusedBit_626_29 : 1 {};
 	/**
 	offset 1572 bit 30 */
-	bool unusedBit_627_30 : 1 {};
+	bool unusedBit_626_30 : 1 {};
 	/**
 	offset 1572 bit 31 */
-	bool unusedBit_627_31 : 1 {};
+	bool unusedBit_626_31 : 1 {};
 	/**
 	 * Angle of tooth detection within engine phase cycle
 	 * units: angle

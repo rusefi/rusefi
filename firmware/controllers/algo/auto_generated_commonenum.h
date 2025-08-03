@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Jul 29 20:21:00 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Aug 03 07:19:48 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -77,7 +77,6 @@ const char *getLaunchActivationMode_e(launchActivationMode_e value);
 const char *getLoad_override_e(load_override_e value);
 const char *getLua_gauge_e(lua_gauge_e value);
 const char *getLua_gauge_meaning_e(lua_gauge_meaning_e value);
-const char *getMaf_sensor_type_e(maf_sensor_type_e value);
 const char *getMc33810maxDwellTimer_e(mc33810maxDwellTimer_e value);
 const char *getNitrous_arming_method_e(nitrous_arming_method_e value);
 const char *getOperation_mode_e(operation_mode_e value);
