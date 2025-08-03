@@ -25,7 +25,7 @@ Important note - we now use submodules:
 `git submodule update --init`
 
 # What do we have here?
- * [Firmware](/firmware) Source code for open source engine control unit for stm32 chips incuding [implementation overview](https://github.com/rusefi/rusefi/blob/master/firmware/readme.md)
+ * [Firmware](/firmware) Source code for open source engine control unit for stm32 chips including [implementation overview](https://github.com/rusefi/rusefi/blob/master/firmware/readme.md)
  * [Hardware](/hardware) KiCAD files for our older PCBs
  * [rusEFI console](/java_console) rusEFI own native tuning software
  * [Simulator](/simulator) win32 or posix version of firmware allows to explore without any hardware
