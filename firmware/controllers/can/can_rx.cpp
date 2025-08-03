@@ -10,19 +10,19 @@
 
 #include "pch.h"
 
+#if EFI_CAN_SUPPORT
+
 #include "rusefi_lua.h"
 #include "can_bench_test.h"
 #include "bench_test.h"
 #include "can_common.h"
-
-#if EFI_CAN_SUPPORT
 
 #include "can_rx.h"
 #include "obd2.h"
 #include "can_sensor.h"
 #include "can_vss.h"
 #include "rusefi_wideband.h"
-
+#include "board_overrides.h"
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
@@ -193,7 +193,12 @@ static void processCanRxImu(const CANRxFrame& frame) {
 
 extern bool verboseRxCan;
 
-PUBLIC_API_WEAK void boardProcessCanRxMessage(const size_t, const CANRxFrame &, efitick_t) { }
+void boardProcessCanRxMessage(const size_t, const CANRxFrame &, efitick_t) {
+ // this is here to indicate that migration is required
+ // todo: remove in 2026
+}
+
+std::optional<board_can_rx_type> custom_board_can_rx;
 
 void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
 	if ((engineConfiguration->verboseCan && busIndex == 0) || verboseRxCan) {
@@ -202,7 +207,9 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		printPacket(busIndex, frame);
 	}
 
-	boardProcessCanRxMessage(busIndex, frame, nowNt);
+  if (custom_board_can_rx.has_value()) {
+      custom_board_can_rx.value()(busIndex, frame, nowNt);
+  }
 
     // see AemXSeriesWideband as an example of CanSensorBase/CanListener
 	serviceCanSubscribers(busIndex, frame, nowNt);

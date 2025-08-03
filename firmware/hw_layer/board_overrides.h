@@ -29,6 +29,11 @@
 // function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
 
+#if EFI_CAN_SUPPORT
+using board_can_rx_type = void (*)(const size_t, const CANRxFrame &, efitick_t);
+extern std::optional<board_can_rx_type> custom_board_can_rx;
+#endif // EFI_CAN_SUPPORT
+
 /**
  * @brief Pre-HAL initialization override point
  * Allows boards to perform custom initialization before HAL is initialized
