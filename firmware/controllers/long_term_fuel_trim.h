@@ -55,4 +55,5 @@ bool ltftNeedVeRefresh();
 void devPokeLongTermFuelTrim();
 
 void *ltftGetTsPage();
+LtftState *ltftGetState();
 size_t ltftGetTsPageSize();

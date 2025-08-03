@@ -6,6 +6,8 @@
 
 #include "long_term_fuel_trim.h"
 
+#include "board_overrides.h"
+
 // +/-25% maximum
 #define MAX_ADJ (0.25f)
 
@@ -20,12 +22,8 @@ static BKUP_RAM_NOINIT LtftState ltftState;
 static LtftState ltftState;
 #endif
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD
-bool ltftCustomTrimsToVeApply(LtftState *state)
-{
-	(void)state;
-	return false;
-}
+// LTFT to VE table custom apply algo
+std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
 
 void LtftState::save() {
 #if EFI_PROD_CODE
@@ -62,7 +60,7 @@ void LtftState::fillRandom() {
 
 void LtftState::applyToVe() {
 	// if we have custom implementation
-	if (ltftCustomTrimsToVeApply(this)) {
+	if (call_board_override(custom_board_LtftTrimToVeApply)) {
 		return;
 	}
 
@@ -340,6 +338,10 @@ void devPokeLongTermFuelTrim() {
 
 void *ltftGetTsPage() {
 	return (void *)ltftState.trims;
+}
+
+LtftState *ltftGetState() {
+	return &ltftState;
 }
 
 size_t ltftGetTsPageSize() {
