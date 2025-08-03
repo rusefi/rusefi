@@ -1559,7 +1559,6 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_SKODA_FAVORIT = 55;
 	public static final int trigger_type_e_TT_SUBARU_7_6 = 36;
 	public static final int trigger_type_e_TT_SUBARU_7_6_CRANK = 94;
-	public static final int trigger_type_e_TT_SUBARU_7_WITHOUT_6 = 51;
 	public static final int trigger_type_e_TT_SUBARU_EZ30 = 12;
 	public static final int trigger_type_e_TT_SUBARU_SVX = 49;
 	public static final int trigger_type_e_TT_SUBARU_SVX_CAM_VVT = 64;
@@ -1585,6 +1584,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_3A92 = 62;
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_4G69 = 78;
 	public static final int trigger_type_e_TT_VVT_NISSAN_VQ35 = 59;
+	public static final int trigger_type_e_TT_VVT_SUBARU_7_WITHOUT_6 = 51;
 	public static final int trigger_type_e_TT_VVT_TOYOTA_3_TOOTH = 17;
 	public static final int trigger_type_e_TT_VVT_TOYOTA_4_1 = 73;
 	public static final String TRIGGER_WITH_SYNC = "isSynchronizationNeeded";
@@ -1698,7 +1698,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.08.03.stm32h743_nucleo.3356539399";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.08.04.stm32h743_nucleo.3902677464";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2024;
@@ -1779,6 +1779,7 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SINGLE_TOOTH = 1;
+	public static final int vvt_mode_e_VVT_SUBARU_7TOOTH = 28;
 	public static final int vvt_mode_e_VVT_TOYOTA_3_TOOTH = 2;
 	public static final int vvt_mode_e_VVT_TOYOTA_3TOOTH_UZ = 27;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
