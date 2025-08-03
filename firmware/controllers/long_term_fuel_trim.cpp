@@ -45,28 +45,26 @@ void LtftState::reset() {
 
 void LtftState::fillRandom() {
 	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
-		// x - load, y - rpm
-		for (size_t x = 0; x < VE_LOAD_COUNT; x++) {
-			for (size_t y = 0; y < VE_RPM_COUNT; y++) {
-				trims[bank][x][y] = 0.01 * (x + y * 0.1);
+		for (size_t loadIndex = 0; loadIndex < VE_LOAD_COUNT; loadIndex++) {
+			for (size_t rpmIndex = 0; rpmIndex < VE_RPM_COUNT; rpmIndex++) {
+				trims[bank][loadIndex][rpmIndex] = 0.01 * (loadIndex + rpmIndex * 0.1);
 			}
 		}
 	}
 }
 
 void LtftState::applyToVe() {
-	// x - load, y - rpm
-	for (size_t x = 0; x < VE_LOAD_COUNT; x++) {
-		for (size_t y = 0; y < VE_RPM_COUNT; y++) {
+	for (size_t loadIndex = 0; loadIndex < VE_LOAD_COUNT; loadIndex++) {
+		for (size_t rpmIndex = 0; rpmIndex < VE_RPM_COUNT; rpmIndex++) {
 			float k = 0;
 
 			/* We have single VE table, but two banks of trims */
 			for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
-				k += 1.0f + trims[bank][x][y];
+				k += 1.0f + trims[bank][loadIndex][rpmIndex];
 			}
 			k = k / FT_BANK_COUNT;
 
-			config->veTable[x][y] = config->veTable[x][y] * k;
+			config->veTable[loadIndex][rpmIndex] = config->veTable[loadIndex][rpmIndex] * k;
 		}
 	}
 }
