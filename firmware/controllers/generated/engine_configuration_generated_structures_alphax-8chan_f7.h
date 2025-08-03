@@ -2049,92 +2049,92 @@ struct engine_configuration_s {
 	bool rethrowHardFault : 1 {};
 	/**
 	offset 844 bit 6 */
-	bool requireFootOnBrakeToCrank : 1 {};
-	/**
-	offset 844 bit 7 */
 	bool verboseQuad : 1 {};
 	/**
 	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	offset 844 bit 8 */
+	offset 844 bit 7 */
 	bool useStepperIdle : 1 {};
 	/**
-	offset 844 bit 9 */
+	offset 844 bit 8 */
 	bool enabledStep1Limiter : 1 {};
 	/**
-	offset 844 bit 10 */
+	offset 844 bit 9 */
 	bool lambdaProtectionEnable : 1 {};
 	/**
-	offset 844 bit 11 */
+	offset 844 bit 10 */
 	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
-	offset 844 bit 12 */
+	offset 844 bit 11 */
 	bool enableVerboseCanTx : 1 {};
 	/**
-	offset 844 bit 13 */
+	offset 844 bit 12 */
 	bool externalRusEfiGdiModule : 1 {};
 	/**
-	offset 844 bit 14 */
+	offset 844 bit 13 */
 	bool unusedFlipWboChannels : 1 {};
 	/**
 	 * Useful for individual intakes
-	offset 844 bit 15 */
+	offset 844 bit 14 */
 	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
-	offset 844 bit 16 */
+	offset 844 bit 15 */
 	bool stepperForceParkingEveryRestart : 1 {};
 	/**
 	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	offset 844 bit 17 */
+	offset 844 bit 16 */
 	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
 	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	offset 844 bit 18 */
+	offset 844 bit 17 */
 	bool coastingFuelCutEnabled : 1 {};
 	/**
 	 * Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
-	offset 844 bit 19 */
+	offset 844 bit 18 */
 	bool useIacTableForCoasting : 1 {};
 	/**
-	offset 844 bit 20 */
+	offset 844 bit 19 */
 	bool useNoiselessTriggerDecoder : 1 {};
 	/**
-	offset 844 bit 21 */
+	offset 844 bit 20 */
 	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	offset 844 bit 22 */
+	offset 844 bit 21 */
 	bool disableEtbWhenEngineStopped : 1 {};
 	/**
-	offset 844 bit 23 */
+	offset 844 bit 22 */
 	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	offset 844 bit 24 */
+	offset 844 bit 23 */
 	bool pauseEtbControl : 1 {};
 	/**
-	offset 844 bit 25 */
+	offset 844 bit 24 */
 	bool verboseKLine : 1 {};
 	/**
-	offset 844 bit 26 */
+	offset 844 bit 25 */
 	bool idleIncrementalPidCic : 1 {};
 	/**
 	 * AEM X-Series or rusEFI Wideband
-	offset 844 bit 27 */
+	offset 844 bit 26 */
 	bool enableAemXSeries : 1 {};
 	/**
-	offset 844 bit 28 */
+	offset 844 bit 27 */
 	bool modeledFlowIdle : 1 {};
 	/**
+	offset 844 bit 28 */
+	bool unusedBit_309_28 : 1 {};
+	/**
 	offset 844 bit 29 */
-	bool unusedBit_310_29 : 1 {};
+	bool unusedBit_309_29 : 1 {};
 	/**
 	offset 844 bit 30 */
-	bool unusedBit_310_30 : 1 {};
+	bool unusedBit_309_30 : 1 {};
 	/**
 	offset 844 bit 31 */
-	bool unusedBit_310_31 : 1 {};
+	bool unusedBit_309_31 : 1 {};
 	/**
 	 * offset 848
 	 */
@@ -2600,17 +2600,15 @@ struct engine_configuration_s {
 	 */
 	antiLagActivationMode_e antiLagActivationMode;
 	/**
-	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
-	 * units: sec
 	 * offset 1062
 	 */
-	scaled_channel<uint8_t, 20, 1> tpsAccelLookback;
+	cranking_condition_e crankingCondition;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
+	 * units: sec
 	 * offset 1063
 	 */
-	uint8_t alignmentFill_at_1063[1] = {};
+	scaled_channel<uint8_t, 20, 1> tpsAccelLookback;
 	/**
 	 * For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 	 * units: roc

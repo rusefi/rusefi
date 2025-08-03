@@ -469,9 +469,6 @@ float getConfigValueByHash(const int hash) {
 // rethrowHardFault
 		case 1081456939:
 			return engineConfiguration->rethrowHardFault;
-// requireFootOnBrakeToCrank
-		case -703903346:
-			return engineConfiguration->requireFootOnBrakeToCrank;
 // verboseQuad
 		case -1055678778:
 			return engineConfiguration->verboseQuad;
@@ -2806,11 +2803,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1081456939:
 	{
 		engineConfiguration->rethrowHardFault = (int)value;
-		return 1;
-	}
-		case -703903346:
-	{
-		engineConfiguration->requireFootOnBrakeToCrank = (int)value;
 		return 1;
 	}
 		case -1055678778:

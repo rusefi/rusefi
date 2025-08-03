@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Aug 03 07:19:48 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Aug 03 08:15:14 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -57,6 +57,7 @@ const char *getCan_wbo_aem_id_e(can_wbo_aem_id_e value);
 const char *getCan_wbo_re_id_e(can_wbo_re_id_e value);
 const char *getCan_wbo_re_status_e(can_wbo_re_status_e value);
 const char *getCan_wbo_type_e(can_wbo_type_e value);
+const char *getCranking_condition_e(cranking_condition_e value);
 const char *getDc_function_e(dc_function_e value);
 const char *getDisplay_mode_e(display_mode_e value);
 const char *getEgo_sensor_e(ego_sensor_e value);
