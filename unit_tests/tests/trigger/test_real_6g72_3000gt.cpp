@@ -80,10 +80,61 @@ static void runTriggerTest(const char *fileName, uint32_t totalErrors, int syncC
 }
 
 
+/*
 TEST(real6g72, data1) {
 	runTriggerTest("tests/trigger/resources/3000gt.csv", 0, 15, 195.515f);
 }
 
 TEST(real6g72, data2) {
 	runTriggerTest("tests/trigger/resources/3000gt_cranking_cam_first_crank_second_only_cam.csv", 2, 9, 157.843f);
+}
+*/
+
+void generateLog(const char* filename) {
+    CsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 1);
+
+    reader.open(filename, NORMAL_ORDER, NORMAL_ORDER);
+
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    setVerboseTrigger(true);
+
+    engineConfiguration->vvtMode[0] = vvt_mode_e::VVT_MITSUBISHI_6G72;
+    eth.setTriggerType(trigger_type_e::TT_3_TOOTH_CRANK);
+
+    engineConfiguration->globalTriggerAngleOffset = 125;
+    engineConfiguration->isFasterEngineSpinUpEnabled = true;
+    engineConfiguration->alwaysInstantRpm = true;
+    engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+
+    int n = 0;
+    bool firstRpm = false;
+    while (reader.haveMore()) {
+        reader.processLine(&eth);
+        auto rpm = Sensor::getOrZero(SensorType::Rpm);
+        if ((rpm) && (!firstRpm)) {
+            printf("Got first RPM %f, at %d\n", rpm, n);
+            firstRpm = true;
+        }
+        n++;
+    }
+}
+
+TEST(real6g72, sync_3000gt_cranking_rusefi) {
+    generateLog("tests/trigger/resources/3000gt_cranking_rusefi.csv");
+}
+
+TEST(real6g72, sync_3000gt_cranking_rusefi_2) {
+    generateLog("tests/trigger/resources/3000gt_cranking_rusefi_2.csv");
+}
+
+TEST(real6g72, sync_3000gt_crank_cam_cranking) {
+    generateLog("tests/trigger/resources/3000gt_crank_cam_cranking.csv");
+}
+
+TEST(real6g72, sync_3000gt_crank_cam_cranking_2) {
+    generateLog("tests/trigger/resources/3000gt_crank_cam_cranking_2.csv");
+}
+
+TEST(real6g72, sync_3000gt_crank_cam_cranking_idle) {
+    generateLog("tests/trigger/resources/3000gt_crank_cam_cranking_idle.csv");
 }

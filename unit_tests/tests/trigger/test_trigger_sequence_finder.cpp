@@ -3,6 +3,7 @@
 #include "mock_trigger_configuration.h"
 #include "trigger_gm.h"
 #include "trigger_universal.h"
+#include "trigger_mitsubishi.h"
 
 typedef void (*TriggerWaveformFunctionPtr)(TriggerWaveform*);
 
@@ -14,19 +15,19 @@ static float wrap(float angle, float cycle) {
 
 static int toothOffset = 0;
 
-static float getPos(TriggerWaveform *form, int index) {
+static float getPos(TriggerWaveform *form, int index, size_t step) {
 	if (index < 0) {
-		index += form->getSize() / 2;
+		index += form->getSize() / step;
 	}
-	return form->getSwitchAngle(2 * index + toothOffset);
+	return form->getSwitchAngle(step * index + toothOffset);
 }
 
 static float ratios[400];
 static float ratiosThisTime[400];
 
 static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
-		trigger_config_s &triggerConfig) {
-	int toothCount = form.getSize() / 2;
+		trigger_config_s &triggerConfig, size_t step) {
+	int toothCount = form.getSize() / step;
 
 	for (size_t gapIndex = 0; gapIndex < length; gapIndex++) {
 
@@ -66,7 +67,7 @@ static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
 	return false;
 }
 
-static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength,
+static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength, size_t step,
 		TriggerWaveformFunctionPtr function) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -77,18 +78,18 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength,
 
 	TriggerWaveform form;
 	function(&form);
-	toothOffset = (form.syncEdge == SyncEdge::Rise ? 0 : 1);
+	toothOffset = (form.syncEdge == SyncEdge::Rise || form.syncEdge == SyncEdge::Both ? 0 : 1);
 
 	operation_mode_e om = form.getWheelOperationMode();
 	float cycle = 720 / getCrankDivider(om);
 
-	int toothCount = form.getSize() / 2;
+	int toothCount = form.getSize() / step;
 
 	for (int i = 0; i < toothCount; i++) {
 //		printf("%d angle %f\n", i, getPos(&form, i));
 
-		float duration0 = wrap(getPos(&form, i) - getPos(&form, i - 1), cycle);
-		float duration1 = wrap(getPos(&form, i - 1) - getPos(&form, i - 2),
+		float duration0 = wrap(getPos(&form, i, step) - getPos(&form, i - 1, step), cycle);
+		float duration1 = wrap(getPos(&form, i - 1, step) - getPos(&form, i - 2, step),
 				cycle);
 
 		float ratio = duration0 / duration1;
@@ -99,7 +100,7 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength,
 
 	for (size_t length = 1; length <= maxLength; length++) {
 		for (int sourceIndex = 0; sourceIndex < toothCount; sourceIndex++) {
-			if (tryGapSequence(length, sourceIndex, form, triggerConfig)) {
+			if (tryGapSequence(length, sourceIndex, form, triggerConfig, step)) {
 				happySequenceCounter++;
 			}
 		}
@@ -109,12 +110,17 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength,
 }
 
 TEST(trigger, finder) {
-	ASSERT_EQ(9u, findAllSyncSequences(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, [] (TriggerWaveform* form) {
+    // step - 1 - for both, 2 - for rise/fall only
+
+	ASSERT_EQ(9u, findAllSyncSequences(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, 2, [] (TriggerWaveform* form) {
 						configureQuickStartSenderWheel(form);
 					}));
 
-	ASSERT_EQ(27u, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, [] (TriggerWaveform* form) {
+	ASSERT_EQ(27u, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, 2, [] (TriggerWaveform* form) {
 						initGmLS24_3deg(form);
 					}));
 
+    ASSERT_EQ(44u, findAllSyncSequences(trigger_type_e::TT_VVT_MITSU_6G72, 8, 1, [] (TriggerWaveform* form) {
+        initializeVvt6G72(form);
+    }));
 }
