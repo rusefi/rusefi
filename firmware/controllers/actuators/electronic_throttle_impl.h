@@ -29,7 +29,7 @@ public:
 	bool init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
 	void setIdlePosition(percent_t pos) override;
 	void setWastegatePosition(percent_t pos) override;
-	void reset() override;
+	void reset(const char *reason) override;
 
 	// Update the controller's state: read sensors, send output, etc
 	void update() override;

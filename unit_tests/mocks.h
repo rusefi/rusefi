@@ -19,7 +19,7 @@ public:
 	virtual ~MockEtb();
 
 	// IEtbController mocks
-	MOCK_METHOD(void, reset, (), (override));
+	MOCK_METHOD(void, reset, (const char *reason), (override));
 	MOCK_METHOD(bool, isEtbMode, (), (const, override));
 	MOCK_METHOD(void, update, (), (override));
 	MOCK_METHOD(bool, init, (dc_function_e function, DcMotor* motor, pid_s* pidParameters, const ValueProvider3D* pedalMap), (override));

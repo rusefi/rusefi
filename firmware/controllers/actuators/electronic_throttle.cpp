@@ -211,13 +211,14 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	// Ignore 3% position error before complaining
 	m_targetErrorAccumulator.init(3.0f, etbPeriodSeconds);
 
-	reset();
+	reset("init");
 
 	state = (uint8_t)EtbState::SuccessfulInit;
 	return true;
 }
 
-void EtbController::reset() {
+void EtbController::reset(const char *reason) {
+	efiPrintf("ETB reset %s", reason);
 	m_shouldResetPid = true;
 	etbTpsErrorCounter = 0;
 	etbPpsErrorCounter = 0;
@@ -936,14 +937,16 @@ static DcThread dcThread CCM_OPTIONAL;
 
 #endif // !EFI_UNIT_TEST
 
+#if EFI_UNIT_TEST
 void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		if (auto controller = engine->etbControllers[i]) {
 			assertNotNullVoid(controller);
-			controller->reset();
+			controller->reset("unit_test");
 		}
 	}
 }
+#endif // EFI_UNIT_TEST
 
 void etbAutocal(dc_function_e function, bool reportToTs) {
 	for (size_t i = 0 ; i < ETB_COUNT; i++) {

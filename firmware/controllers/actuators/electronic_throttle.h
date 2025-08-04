@@ -65,7 +65,7 @@ public:
 	// Initialize the throttle.
 	// returns true if the throttle was initialized, false otherwise.
 	virtual bool init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) = 0;
-	virtual void reset() = 0;
+	virtual void reset(const char *reason) = 0;
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void setWastegatePosition(percent_t pos) = 0;
 	virtual void update() = 0;
