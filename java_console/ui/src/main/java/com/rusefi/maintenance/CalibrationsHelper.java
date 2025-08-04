@@ -15,6 +15,7 @@ import com.rusefi.maintenance.migration.ComposedTuneMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
+import com.rusefi.ui.basic.MigrateSettingsCheckboxState;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -89,13 +90,7 @@ public class CalibrationsHelper {
             updatedCalibrations.get(),
             callbacks
         );
-        if (mergedCalibrations.isPresent() && (JOptionPane.showConfirmDialog(
-            parent,
-            "Some calibrations fields were overwritten with default values.\n" +
-                "Would you like to restore previous calibrations?",
-            "Restore previous calibrations",
-            JOptionPane.YES_NO_OPTION
-        ) == JOptionPane.YES_OPTION)) {
+        if (mergedCalibrations.isPresent() && MigrateSettingsCheckboxState.isMigrationNeeded) {
             if (!backUpCalibrationsInfo(
                 mergedCalibrations.get(),
                 getFileNameWithoutExtension(timestampFoleNameComponent, MERGED_CALIBRATIONS_FILE_NAME_COMPONENT),

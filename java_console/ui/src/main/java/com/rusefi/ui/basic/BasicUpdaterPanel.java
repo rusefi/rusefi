@@ -39,6 +39,8 @@ public class BasicUpdaterPanel {
     private final String panamaUrl = getProperties().getProperty("panama_url");
 
     private final JLabel statusMessage = new JLabel();
+    private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings");
+
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
     private final JButton updateCalibrationsButton = new JButton(
         "Update Calibrations",
@@ -99,11 +101,22 @@ public class BasicUpdaterPanel {
         if (showUrlLabel)
             content.add(LogoHelper.createUrlLabel());
 
-        updateCalibrationsButton.addActionListener(this::onUpdateCalibrationsButtonClicked);
-        updateCalibrationsButton.setEnabled(false);
+/*
+never used?
         if (ConnectionAndMeta.showUpdateCalibrations()) {
+            updateCalibrationsButton.addActionListener(this::onUpdateCalibrationsButtonClicked);
+            updateCalibrationsButton.setEnabled(false);
             content.add(updateCalibrationsButton);
         }
+  */
+        migrateSettings.setSelected(true);
+        migrateSettings.addActionListener(e -> updateMigrateSettingState());
+        updateMigrateSettingState();
+        content.add(migrateSettings);
+    }
+
+    private void updateMigrateSettingState() {
+        MigrateSettingsCheckboxState.isMigrationNeeded = migrateSettings.isSelected();
     }
 
     private void hideStatusMessage() {
