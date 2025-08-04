@@ -22,6 +22,8 @@
 #include "stepper.h"
 #endif
 
+using enum idle_mode_e;
+
 IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
 	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
 
