@@ -23,7 +23,7 @@ void setMazdaMiata96() {
 	engineConfiguration->injector.flow = 265;
 	engineConfiguration->cylinderBore = 83;
 
-	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
 	// below 20% this valve seems to be opening for fail-safe idle air
 	engineConfiguration->idleRpmPid.pFactor = 0.0065;
 	engineConfiguration->idleRpmPid.iFactor = 0.3;

@@ -507,7 +507,7 @@ static void setDefaultEngineConfiguration() {
 	// set idle_position 50
 	setDefaultIdleOpenLoopParameters();
 //	engineConfiguration->idleMode = IM_AUTO;
-	engineConfiguration->idleMode = IM_MANUAL;
+	engineConfiguration->idleMode = idle_mode_e::IM_MANUAL;
 
 	engineConfiguration->useStepperIdle = false;
 

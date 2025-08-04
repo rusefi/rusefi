@@ -141,7 +141,7 @@ void miataNAcommonEngineSettings() {
 
 	setMapVeTable();
 
-	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
 	// below 20% this valve seems to be opening for fail-safe idle air
 	engineConfiguration->idleRpmPid.minValue = 20;
 	engineConfiguration->idleRpmPid.pFactor = 0.01;
