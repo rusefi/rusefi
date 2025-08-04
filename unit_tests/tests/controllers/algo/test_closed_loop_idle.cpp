@@ -36,7 +36,7 @@ public:
 TEST(LongTermIdleTrim, isValidConditionsForLearning){
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
     // idle config
-    engineConfiguration->idleMode = IM_AUTO;
+    engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
 
     // ltit config
     engineConfiguration->ltitEnabled = true;
@@ -239,7 +239,7 @@ TEST(LongTermIdleTrim, update_idle) {
 TEST(LongTermIdleTrim, update) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
     // idle config
-    engineConfiguration->idleMode = IM_AUTO;
+    engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
 
     // ltit config
     engineConfiguration->ltitEnabled = true;
