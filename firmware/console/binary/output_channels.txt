@@ -447,5 +447,8 @@ float mapFast
 	uint8_t canReWidebandFwMon
 	uint8_t canReWidebandFwYear
 
+  uint16_t transitionEventCode
+  uint16_t transitionEventsCounter
+
   uint8_t[MAX_CYLINDER_COUNT iterate] mapPerCylinder;;"kPa", 1, 0, 0, 0, 0
 end_struct
