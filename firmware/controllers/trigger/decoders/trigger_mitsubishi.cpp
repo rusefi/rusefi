@@ -43,18 +43,30 @@ void initializeMitsubishi4gSymmetricalCrank(TriggerWaveform *s) {
 void initializeVvt6G72(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
-    s->setTriggerSynchronizationGap3(0, 0.3f, 0.95f);
-    s->setTriggerSynchronizationGap3(1, 0.5f, 0.7f);
-    s->setTriggerSynchronizationGap3(2, 0.55f, 1.1f);
+    //happy ratio 0.548387 @ 0
+    //happy ratio 0.941176 @ 1
+    //happy ratio 0.500000 @ 2
+    //happy ratio 3.750002 @ 3
+    //happy ratio 0.266667 @ 4
+    //happy ratio 3.250000 @ 5
+    //happy ratio 0.307692 @ 6
+    //happy ratio 3.875000 @ 7
 
-  s->addEvent360(25.548325, TriggerValue::RISE);
-  s->addEvent360(87.945659, TriggerValue::FALL);
-  s->addEvent360(117.753483, TriggerValue::RISE);
-  s->addEvent360(178.618554, TriggerValue::FALL);
-  s->addEvent360(204.233855, TriggerValue::RISE);
-  s->addEvent360(266.592641, TriggerValue::FALL);
-  s->addEvent360(326.382236, TriggerValue::RISE);
-  s->addEvent360(360.000000, TriggerValue::FALL);
+    // real working ranges for all of the engine states
+    s->setTriggerSynchronizationGap3(0, 1.3, 3.2);
+    s->setTriggerSynchronizationGap3(1, 0.3, 0.66);
+    s->setTriggerSynchronizationGap3(2, 1.3, 3.2);
+    s->setTriggerSynchronizationGap3(3, 0.3, 0.66);
+    s->setTriggerSynchronizationGap3(4, 1.3, 3.2);
+
+    s->addEvent360(52.5, TriggerValue::FALL);
+    s->addEvent360(82.5, TriggerValue::RISE);
+    s->addEvent360(112.5, TriggerValue::FALL);
+    s->addEvent360(177.5, TriggerValue::RISE);
+    s->addEvent360(207.5, TriggerValue::FALL);
+    s->addEvent360(262.5, TriggerValue::RISE);
+    s->addEvent360(292.5, TriggerValue::FALL);
+    s->addEvent360(360, TriggerValue::RISE);
 }
 
 void initializeMitsubishi4g63Cam(TriggerWaveform *s) {

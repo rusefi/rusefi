@@ -181,7 +181,7 @@ void configure12ToothCrank(TriggerWaveform* s) {
 
 void configure3ToothCrank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
-  commonSymmetrical(s, 3, 0.7, 1.4);
+  commonSymmetrical(s, 3, 0.5, 1.4);
 }
 
 void configure6ToothCrank(TriggerWaveform* s) {
