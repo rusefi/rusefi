@@ -144,7 +144,6 @@ void setManualIdleValvePosition(int positionPercent);
 void startIdleThread();
 void setDefaultIdleParameters();
 void startIdleBench(void);
-void setIdleMode(idle_mode_e value);
 void setTargetIdleRpm(int value);
 void startSwitchPins();
 void stopSwitchPins();
