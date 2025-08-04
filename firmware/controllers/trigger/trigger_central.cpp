@@ -1073,9 +1073,9 @@ void onConfigurationChangeTriggerCallback() {
 		getTriggerCentral()->noiseFilter.resetAccumSignalData();
 	#endif
 	}
-#if EFI_DEFAILED_LOGGING
+#if EFI_DETAILED_LOGGING
 	efiPrintf("isTriggerConfigChanged=%d", triggerConfigChanged);
-#endif /* EFI_DEFAILED_LOGGING */
+#endif /* EFI_DETAILED_LOGGING */
 
 	// we do not want to miss two updates in a row
 	getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange = getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange || changed;

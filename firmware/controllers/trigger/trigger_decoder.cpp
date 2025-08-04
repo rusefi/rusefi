@@ -318,7 +318,7 @@ int TriggerDecoderBase::getEventCountersError(const TriggerWaveform& triggerShap
 	  }
 	}
 
-#if EFI_DEFAILED_LOGGING
+#if EFI_DETAILED_LOGGING
 	printf("getEventCountersError: isDecodingError=%d\n", (countersError != 0));
 	if (countersError != 0) {
 		for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {

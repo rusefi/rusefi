@@ -60,7 +60,7 @@
  */
 #define EFI_TUNER_STUDIO_VERBOSE FALSE
 
-#define EFI_DEFAILED_LOGGING FALSE
+#define EFI_DETAILED_LOGGING FALSE
 
 /**
  * Dev console support.

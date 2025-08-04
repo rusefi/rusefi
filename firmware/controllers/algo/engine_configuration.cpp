@@ -135,9 +135,9 @@ void incrementGlobalConfigurationVersion(const char * msg) {
         criticalError("too early to invoke incrementGlobalConfigurationVersion %s", msg);
     }
 	engine->globalConfigurationVersion++;
-#if EFI_DEFAILED_LOGGING
+#if EFI_DETAILED_LOGGING
 	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);
-#endif /* EFI_DEFAILED_LOGGING */
+#endif /* EFI_DETAILED_LOGGING */
 
 	applyNewHardwareSettings();
 

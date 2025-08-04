@@ -271,14 +271,14 @@ extern bool unitTestBusyWaitHack;
 	tryReturnScheduling(current);
 	current = nullptr;
 
-#if EFI_DEFAILED_LOGGING
+#if EFI_DETAILED_LOGGING
 	printf("QUEUE: execute current=%d param=%d\r\n", reinterpret_cast<uintptr_t>(current), action.getArgumentRaw());
 #endif
 
 	// Execute the current element
 	{
 		ScopePerf perf2(PE::EventQueueExecuteCallback);
-#if EFI_DEFAILED_LOGGING && EFI_UNIT_TEST_VERBOSE_ACTION
+#if EFI_DETAILED_LOGGING && EFI_UNIT_TEST_VERBOSE_ACTION
 		std::cout << "EventQueue::executeOne: " << action.getCallbackName() << "(" << reinterpret_cast<uintptr_t>(action.getCallback()) << ") with raw arg = " << action.getArgumentRaw() << std::endl;
 #endif
 		action.execute();

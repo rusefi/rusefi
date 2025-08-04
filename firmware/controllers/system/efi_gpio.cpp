@@ -444,9 +444,9 @@ void NamedOutputPin::setHigh(const char *msg) {
 		efiPrintf("pin %s goes high", name);
 	}
 #endif // EFI_UNIT_TEST
-#if EFI_DEFAILED_LOGGING
+#if EFI_DETAILED_LOGGING
 //	signal->hi_time = hTimeNow();
-#endif /* EFI_DEFAILED_LOGGING */
+#endif /* EFI_DETAILED_LOGGING */
 
 	// turn the output level ACTIVE
 	setValue(msg, true);
