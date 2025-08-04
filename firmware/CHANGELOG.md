@@ -35,6 +35,9 @@ Release template (copy/paste this for new release):
  - Jeep EVA 36-2-2 trigger pattern
  - migration to ChibiOS 21.11
 
+### Fixed
+ - 3000gt 6g72 triggers cam and crank 3-0 more accuracy
+
 ## June 2025 "Day 1210"
 
 ### Added
