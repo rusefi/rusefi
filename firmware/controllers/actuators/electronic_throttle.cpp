@@ -217,11 +217,19 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	return true;
 }
 
+#if EFI_UNIT_TEST
+int ebtResetCounter;
+#endif // EFI_UNIT_TEST
+
 void EtbController::reset(const char *reason) {
 	efiPrintf("ETB reset %s", reason);
 	m_shouldResetPid = true;
 	etbTpsErrorCounter = 0;
 	etbPpsErrorCounter = 0;
+#if EFI_UNIT_TEST
+	ebtResetCounter++;
+#endif // EFI_UNIT_TEST
+
 }
 
 // todo: document why is EtbController not engine_module?
@@ -945,6 +953,7 @@ void etbPidReset() {
 			controller->reset("unit_test");
 		}
 	}
+	ebtResetCounter = 0;
 }
 #endif // EFI_UNIT_TEST
 
