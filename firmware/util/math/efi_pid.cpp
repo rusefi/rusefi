@@ -28,17 +28,25 @@ void Pid::initPidClass(pid_s *p_parameters) {
 	Pid::reset();
 }
 
+static bool isClose(float a, float b) {
+  bool result = (a == b);
+  if (!result) {
+      efiPrintf("PID: not same %f %f", a, b);
+  }
+  return result;
+}
+
 bool Pid::isSame(const pid_s *p_parameters) const {
 	if (!parameters) {
 		// this 'null' could happen on first execution during initialization
 		return false;
 	}
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, p_parameters != nullptr, "PID::isSame nullptr", false);
-	return parameters->pFactor == p_parameters->pFactor
-			&& parameters->iFactor == p_parameters->iFactor
-			&& parameters->dFactor == p_parameters->dFactor
-			&& parameters->offset == p_parameters->offset
-			&& parameters->periodMs == p_parameters->periodMs;
+	return isClose(parameters->pFactor, p_parameters->pFactor)
+			&& isClose(parameters->iFactor, p_parameters->iFactor)
+			&& isClose(parameters->dFactor, p_parameters->dFactor)
+			&& isClose(parameters->offset, p_parameters->offset)
+			&& isClose(parameters->periodMs, p_parameters->periodMs);
 }
 
 /**
