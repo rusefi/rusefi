@@ -893,7 +893,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	lua_register(lState, "restartEtb", [](lua_State*) {
 		// this is about Lua sensor acting in place of real analog PPS sensor
 		// todo: smarter implementation
-		doInitElectronicThrottle();
+		doInitElectronicThrottle(true); // lame, we run with 'isStartupInit=true' in order to reset, NOT COOL
 		return 0;
 	});
 #endif // EFI_ELECTRONIC_THROTTLE_BODY

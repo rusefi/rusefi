@@ -19,7 +19,7 @@ static EtbController * initEtbIntegratedTest() {
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
 
 	initTps();
-	doInitElectronicThrottle();
+	doInitElectronicThrottle(/*isInit*/true);
 
 	engine->etbControllers[0]->setIdlePosition(0);
 
@@ -32,8 +32,8 @@ TEST(etb, integrated) {
   ASSERT_EQ(0, ebtResetCounter);
 	EtbController *etb = initEtbIntegratedTest();
   ASSERT_EQ(1, ebtResetCounter);
-	doInitElectronicThrottle();
-  ASSERT_EQ(2, ebtResetCounter);
+	doInitElectronicThrottle(/*isInit*/false);
+  ASSERT_EQ(1, ebtResetCounter);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 40);
 	Sensor::setMockValue(SensorType::AcceleratorPedalSecondary, 40);
@@ -160,7 +160,7 @@ TEST(etb, sentTpsIntegrated) {
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
 
 	initTps();
-	doInitElectronicThrottle();
+	doInitElectronicThrottle(/*isInit*/true);
 }
 
 TEST(etb, sentTpsIntegratedDecode) {

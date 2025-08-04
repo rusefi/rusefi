@@ -31,7 +31,7 @@ TEST(etb, initializationNoPedal) {
 	EXPECT_CALL(mocks[1], init(DC_Throttle2, _, _, _)).WillOnce(Return(false));
 
 	// This shouldn't throw, since no throttles are configured, but no pedal is configured either
-	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle());
+	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(true));
 }
 
 TEST(etb, initializationMissingThrottle) {
@@ -54,7 +54,7 @@ TEST(etb, initializationMissingThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	// This should throw: a pedal is configured but no throttles
-	EXPECT_FATAL_ERROR(doInitElectronicThrottle());
+	EXPECT_FATAL_ERROR(doInitElectronicThrottle(true));
 }
 
 TEST(etb, initializationSingleThrottle) {
@@ -82,7 +82,7 @@ TEST(etb, initializationSingleThrottle) {
 	// Expect mock1 to be init as none
 	EXPECT_CALL(mocks[1], init(DC_None, _, _, _)).Times(0);
 
-	doInitElectronicThrottle();
+	doInitElectronicThrottle(false);
 }
 
 TEST(etb, initializationSingleThrottleInSecondSlot) {
@@ -110,7 +110,7 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	// Expect mock1 to be init as throttle 1, and PID params
 	EXPECT_CALL(mocks[1], init(DC_Throttle1, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
 
-	doInitElectronicThrottle();
+	doInitElectronicThrottle(false);
 }
 
 TEST(etb, initializationDualThrottle) {
@@ -143,7 +143,7 @@ TEST(etb, initializationDualThrottle) {
 	// Expect mock1 to be init as throttle 2, and PID params
 	EXPECT_CALL(mocks[1], init(DC_Throttle2, _, &engineConfiguration->etb, Ne(nullptr))).WillOnce(Return(true));
 
-	doInitElectronicThrottle();
+	doInitElectronicThrottle(false);
 }
 
 TEST(etb, initializationWastegate) {
@@ -167,7 +167,7 @@ TEST(etb, initializationWastegate) {
 	// Expect mock1 to be init as none
 	EXPECT_CALL(mocks[1], init(DC_None, _, _, _)).Times(0);
 
-	doInitElectronicThrottle();
+	doInitElectronicThrottle(false);
 }
 
 TEST(etb, initializationNoFunction) {

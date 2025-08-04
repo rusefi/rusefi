@@ -211,8 +211,6 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	// Ignore 3% position error before complaining
 	m_targetErrorAccumulator.init(3.0f, etbPeriodSeconds);
 
-	reset("init");
-
 	state = (uint8_t)EtbState::SuccessfulInit;
 	return true;
 }
@@ -239,7 +237,7 @@ void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 		m_shouldResetPid = true;
 	}
 
-	doInitElectronicThrottle();
+	doInitElectronicThrottle(/*isStartupInit*/false);
 }
 
 void EtbController::showStatus() {
@@ -1081,7 +1079,7 @@ PUBLIC_API_WEAK ValueProvider3D* pedal2TpsProvider() {
   return &pedal2tpsMap;
 }
 
-void doInitElectronicThrottle() {
+void doInitElectronicThrottle(bool isStartupInit) {
 	bool anyEtbConfigured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
@@ -1102,6 +1100,9 @@ void doInitElectronicThrottle() {
 		auto pid = getPidForDcFunction(func);
 
 		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider());
+		if (isStartupInit && dcConfigured) {
+			controller->reset("init");
+		}
 		anyEtbConfigured |= dcConfigured && controller->isEtbMode();
 	}
 
@@ -1173,7 +1174,7 @@ void initElectronicThrottle() {
 	throttle2TrimTable.initTable(config->throttle2TrimTable, config->throttle2TrimRpmBins, config->throttle2TrimTpsBins);
 	tcEtbDropTable.initTable(engineConfiguration->tractionControlEtbDrop, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
 
-	doInitElectronicThrottle();
+	doInitElectronicThrottle(/*isStartupInit*/true);
 }
 
 void setEtbIdlePosition(percent_t pos) {

@@ -12,7 +12,7 @@
 #include "engine_configuration.h"
 
 void initElectronicThrottle();
-void doInitElectronicThrottle();
+void doInitElectronicThrottle(bool isStartupInit);
 
 void setEtbIdlePosition(percent_t pos);
 void setEtbWastegatePosition(percent_t pos);
