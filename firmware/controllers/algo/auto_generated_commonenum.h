@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Aug 03 08:15:14 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Aug 04 01:57:36 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -67,7 +67,9 @@ const char *getGear_e(gear_e value);
 const char *getGppwm_channel_e(gppwm_channel_e value);
 const char *getGppwm_compare_mode_e(gppwm_compare_mode_e value);
 const char *getHpfp_cam_e(hpfp_cam_e value);
+#if __cplusplus
 const char *getIdle_mode_e(idle_mode_e value);
+#endif //__cplusplus
 const char *getIdle_state_e(idle_state_e value);
 const char *getIgnition_mode_e(ignition_mode_e value);
 const char *getImu_type_e(imu_type_e value);

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Aug 03 23:06:41 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Aug 04 01:57:36 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -675,9 +675,9 @@ case HPFP_CAM_NONE:
 }
 const char *getIdle_mode_e(idle_mode_e value){
 switch(value) {
-case IM_AUTO:
+case idle_mode_e::IM_AUTO:
   return "IM_AUTO";
-case IM_MANUAL:
+case idle_mode_e::IM_MANUAL:
   return "IM_MANUAL";
   }
  return NULL;
