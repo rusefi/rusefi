@@ -28,10 +28,6 @@
 #include "dc_motors.h"
 #include "idle_hardware.h"
 
-void setIdleMode(idle_mode_e value) {
-	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
-}
-
 void setManualIdleValvePosition(int positionPercent) {
 	if (positionPercent < 1 || positionPercent > 99)
 		return;
