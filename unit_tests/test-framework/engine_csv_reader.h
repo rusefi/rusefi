@@ -37,6 +37,9 @@ public:
   	void setFlipOnRead(bool v) {
   	  cvsReader.flipOnRead = v;
   	}
+    void setFlipVvtOnRead(bool v) {
+      cvsReader.flipVvtOnRead = v;
+    }
 
   void processLine(EngineTestHelper *eth) {
     cvsReader.processLine(eth);
