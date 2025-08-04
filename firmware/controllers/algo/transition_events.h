@@ -1,0 +1,21 @@
+// transition_events.h
+
+#pragma once
+
+#include "pch.h"
+
+enum class TransitionEvent : char
+{
+	None = 0,
+	BurnRequest = 1,
+	TriggerError = 2,
+	EngineResync = 3,
+	GlobalConfigurationVersion,
+};
+
+inline void onTransitionEvent(TransitionEvent event) {
+#if EFI_PROD_CODE
+  engine->outputChannels.transitionEventCode = (int)event;
+  engine->outputChannels.transitionEventsCounter++;
+#endif
+}

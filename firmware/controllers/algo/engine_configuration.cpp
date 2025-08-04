@@ -21,7 +21,7 @@
  */
 
 #include "pch.h"
-
+#include "transition_events.h"
 #include "speed_density.h"
 #include "flash_main.h"
 
@@ -96,7 +96,7 @@ void rememberCurrentConfiguration() {
     hasRememberedConfiguration = true;
 }
 
-static void wipeString(char *string, int size) {
+static void fillAfterString(char *string, int size) {
 	// we have to reset bytes after \0 symbol in order to calculate correct tune CRC from MSQ file
 	for (int i = strlen(string) + 1; i < size; i++) {
 		string[i] = 0;
@@ -104,12 +104,13 @@ static void wipeString(char *string, int size) {
 }
 
 static void wipeStrings() {
-	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
-	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
-	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
+	fillAfterString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
+	fillAfterString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
+	fillAfterString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
 }
 
 void onBurnRequest() {
+  onTransitionEvent(TransitionEvent::BurnRequest);
 	wipeStrings();
 
 	incrementGlobalConfigurationVersion("burn");
@@ -132,6 +133,7 @@ PUBLIC_API_WEAK void boardOnConfigurationChange(engine_configuration_s* /*previo
  * See 'preCalculate' or 'startHardware' which are invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion(const char * msg) {
+  onTransitionEvent(TransitionEvent::GlobalConfigurationVersion);
     assertStackVoid("increment", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);
     if (!hasRememberedConfiguration) {
         criticalError("too early to invoke incrementGlobalConfigurationVersion %s", msg);

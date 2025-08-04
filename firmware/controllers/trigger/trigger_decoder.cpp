@@ -26,6 +26,7 @@
 
 #include "global_shared.h"
 #include "engine_configuration.h"
+#include "transition_events.h"
 
 /**
  * decoder uses TriggerStimulatorHelper in findTriggerZeroEventIndex
@@ -88,6 +89,7 @@ void TriggerDecoderBase::resetState() {
 void TriggerDecoderBase::setTriggerErrorState(int errorIncrement) {
 	m_timeSinceDecodeError.reset();
 	totalTriggerErrorCounter += errorIncrement;
+	onTransitionEvent(TransitionEvent::TriggerError);
 }
 
 void TriggerDecoderBase::resetCurrentCycleState() {
@@ -230,6 +232,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 
 	if (totalShift > 0) {
 		camResyncCounter++;
+		onTransitionEvent(TransitionEvent::EngineResync);
 	}
 
 	return totalShift;
