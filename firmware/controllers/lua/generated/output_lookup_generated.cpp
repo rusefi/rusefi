@@ -871,6 +871,12 @@ float getOutputValueByHash(const int hash) {
 // canReWidebandFwYear
 		case -734820550:
 			return engine->outputChannels.canReWidebandFwYear;
+// transitionEventCode
+		case -1006487219:
+			return engine->outputChannels.transitionEventCode;
+// transitionEventsCounter
+		case 1163075685:
+			return engine->outputChannels.transitionEventsCounter;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

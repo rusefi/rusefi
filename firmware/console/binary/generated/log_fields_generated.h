@@ -429,6 +429,8 @@ static const MLG::Entries::Field fields[] = {
 	{engine->outputChannels.canReWidebandFwDay, "canReWidebandFwDay", "", 0},
 	{engine->outputChannels.canReWidebandFwMon, "canReWidebandFwMon", "", 0},
 	{engine->outputChannels.canReWidebandFwYear, "canReWidebandFwYear", "", 0},
+	{engine->outputChannels.transitionEventCode, "transitionEventCode", "", 0},
+	{engine->outputChannels.transitionEventsCounter, "transitionEventsCounter", "", 0},
 	{engine->outputChannels.mapPerCylinder[0], "mapPerCylinder 1", "kPa", 0},
 	{engine->outputChannels.mapPerCylinder[1], "mapPerCylinder 2", "kPa", 0},
 	{engine->outputChannels.mapPerCylinder[2], "mapPerCylinder 3", "kPa", 0},
