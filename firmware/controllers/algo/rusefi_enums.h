@@ -184,7 +184,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 } mc33810maxDwellTimer_e;
 
-typedef enum __attribute__ ((__packed__)) {
+enum class idle_mode_e : uint8_t {
 	/**
 	 * In auto mode we currently have some pid-like-but-not really PID logic which is trying
 	 * to get idle RPM to desired value by dynamically adjusting idle valve position.
@@ -197,7 +197,7 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	IM_MANUAL = 1,
 
-} idle_mode_e;
+};
 
 enum class SentEtbType : uint8_t {
 	NONE = 0,
