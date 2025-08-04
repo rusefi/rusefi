@@ -10,7 +10,8 @@ enum class TransitionEvent : char
 	BurnRequest = 1,
 	TriggerError = 2,
 	EngineResync = 3,
-	GlobalConfigurationVersion,
+	GlobalConfigurationVersion = 4,
+	EtbPidReset = 5,
 };
 
 inline void onTransitionEvent(TransitionEvent event) {

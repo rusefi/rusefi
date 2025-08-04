@@ -45,6 +45,7 @@
 #include "dc_motors.h"
 #include "defaults.h"
 #include "tunerstudio.h"
+#include "transition_events.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -518,6 +519,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t observation) {
 	if (m_shouldResetPid) {
 		m_pid.reset();
+		onTransitionEvent(TransitionEvent::EtbPidReset);
 		m_shouldResetPid = false;
 	}
 
