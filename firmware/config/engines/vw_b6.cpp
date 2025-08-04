@@ -24,7 +24,7 @@ static inline void commonPassatB6() {
     engineConfiguration->globalTriggerAngleOffset = 90;
 
 	engineConfiguration->idlePidRpmDeadZone = 500;
-	engineConfiguration->idleMode = IM_AUTO;
+	engineConfiguration->idleMode = idle_mode_e::IM_AUTO;
 
 	setInline4();
 
