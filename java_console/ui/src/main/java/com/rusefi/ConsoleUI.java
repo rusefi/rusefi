@@ -135,7 +135,11 @@ public class ConsoleUI {
 //        if (!linkManager.isLogViewer())
 //            tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!linkManager.isLogViewer()) {
+/*
+console live data tab is broken #8402
+
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
+ */
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
         }
 
