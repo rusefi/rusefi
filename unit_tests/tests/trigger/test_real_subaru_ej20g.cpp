@@ -10,12 +10,18 @@ TEST(real, SubaruEj20gcranking_only_cam7) {
 	reader.open("tests/trigger/resources/subaru_6_7.csv");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// See comment at SubaruEj20gDefaultCrankingSeparateTrigger about following three lines
+	reader.setFlipOnRead(true);
+	reader.setFlipVvtOnRead(true);
+	engineConfiguration->invertPrimaryTriggerSignal = true;
+
 //	setVerboseTrigger(true);
 	eth.setTriggerType(trigger_type_e::TT_VVT_SUBARU_7_WITHOUT_6);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		reader.assertFirstRpm(259, /*expectedFirstRpmAtIndex*/36);
+		reader.assertFirstRpm(240, /*expectedFirstRpmAtIndex*/38);
 	}
 
 	ASSERT_TRUE(reader.gotRpm);
@@ -99,6 +105,32 @@ TEST(real, SubaruEj20gCrankingWot) {
 	}
 }
 
+TEST(real, SubaruEj20gDefaultCranking_only_crank) {
+	EngineCsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 1);
+
+	/* 1 - cam
+	 * 0 - crank */
+	reader.open("tests/trigger/resources/subaru_6_7_crank_first.csv");
+	reader.setFlipOnRead(true);
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	//setVerboseTrigger(true);
+	eth.setTriggerType(trigger_type_e::TT_SUBARU_7_6_CRANK);
+	engineConfiguration->invertPrimaryTriggerSignal = true;
+
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->alwaysInstantRpm = true;
+
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
+		bool hasFullSync = getTriggerCentral()->triggerState.hasSynchronizedPhase();
+
+		reader.assertFirstRpm(182, /*expectedFirstRpmAtIndex*/13);
+	}
+}
+
 TEST(real, SubaruEj20gDefaultCrankingSeparateTrigger) {
 	EngineCsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 1);
 
@@ -107,7 +139,7 @@ TEST(real, SubaruEj20gDefaultCrankingSeparateTrigger) {
 	reader.open("tests/trigger/resources/subaru_6_7_crank_first.csv");
 	// test CSV file was captured without inversion of cam and crank signals.
 	// triggers are defined with SyncEdge::RiseOnly, while with real VR sensor we should rely on falling edges only.
-	// FallOnly is not supported (yet?). So trigger is defined as SyncEdge::RiseOnly and with 1 degree tooths. 
+	// FallOnly is not supported (yet?). So trigger is defined as SyncEdge::RiseOnly and with 1 degree tooth width.
 	// setting both crank and cam inversion allows us to feed trigger decoder with correct (falling) edges.
 	// invertPrimaryTriggerSignal and invertCamVVTSignal do invertion twice: see https://github.com/rusefi/rusefi/issues/8373
 	// we keep both set to true to align with settings for real car.
