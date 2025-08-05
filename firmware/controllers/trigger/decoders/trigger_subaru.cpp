@@ -164,9 +164,9 @@ void initializeSubaru7_6_camOnly(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	const float width = 1;
-	const float offset = 720 - 560;
+	const float offset = 720 - (3 * 180 + 20);
 
-	s->tdcPosition = 560 + offset;
+	s->tdcPosition = 180 + offset;
 
 	#define SUBARU76_CAMONLY_PULSE(cyl, subtooth) \
 		s->addEventAngle(offset + (180 * (cyl)) + 20 + (15 * (subtooth)) - width, TriggerValue::RISE, TriggerWheel::T_PRIMARY);	\
@@ -222,7 +222,7 @@ void initializeSubaru7_6_crankOnly(TriggerWaveform *s) {
 	const float width = 1;
 	const float offset = 10;
 
-	s->tdcPosition = -65 - offset;
+	s->tdcPosition = 65;
 
 	// BTDC: 97, 65, 10
 	// Distances: 93, 32, 55
