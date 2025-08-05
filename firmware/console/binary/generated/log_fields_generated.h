@@ -602,6 +602,9 @@ static const MLG::Entries::Field fields[] = {
 	{engine->launchController, 4, 11, "Launch: tpsCondition", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 12, "luaLaunchState", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
 	{engine->shiftTorqueReductionController, 0, 0, "isTorqueReductionTriggerPinValid", ""},
 #endif
 #if EFI_LAUNCH_CONTROL

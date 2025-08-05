@@ -1131,6 +1131,11 @@ float getOutputValueByHash(const int hash) {
 		case 827982787:
 			return engine->launchController.tpsCondition;
 #endif
+// luaLaunchState
+#if EFI_LAUNCH_CONTROL
+		case 707453027:
+			return engine->launchController.luaLaunchState;
+#endif
 // isTorqueReductionTriggerPinValid
 #if EFI_LAUNCH_CONTROL
 		case 1922853657:
