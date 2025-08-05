@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - Jeep EVA 36-2-2 trigger pattern
  - migration to ChibiOS 21.11
  - long term fuel trim LTFT using SD card #6223
+ - Add Lua hook for Launch Control request with 'setLaunchTrigger' method #7161
 
 ### Fixed
  - 3000gt 6g72 triggers cam and crank 3-0 more accuracy

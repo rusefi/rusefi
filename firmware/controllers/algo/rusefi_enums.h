@@ -591,6 +591,7 @@ typedef enum __attribute__ ((__packed__)) {
 	CLUTCH_INPUT_LAUNCH = 1,
 	ALWAYS_ACTIVE_LAUNCH = 2,
 	STOP_INPUT_LAUNCH = 3,
+	LUA_LAUNCH = 4,
 } launchActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {

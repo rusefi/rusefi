@@ -1028,8 +1028,8 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     Gpio ignitionKeyDigitalPin
     int boostPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
-	#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Speed Based", "Brake Pedal"
-    custom launchActivationMode_e  1 bits, S08, @OFFSET@, [0:1], @@launchActivationMode_e_enum@@
+	#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Speed Based", "Brake Pedal", "Lua"
+    custom launchActivationMode_e  1 bits, S08, @OFFSET@, [0:2], @@launchActivationMode_e_enum@@
     launchActivationMode_e launchActivationMode;
 
     #define antiLagActivationMode_e_enum "Switch Input", "Always Active"

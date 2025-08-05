@@ -35,6 +35,8 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 		return getClutchDownState();
 	} else if (isBrakePedalActivated) {
 		return getBrakePedalState();
+	} else if (engineConfiguration->launchActivationMode == LUA_LAUNCH) {
+		return luaLaunchState;
 	} else {
 		// ALWAYS_ACTIVE_LAUNCH
 		return true;

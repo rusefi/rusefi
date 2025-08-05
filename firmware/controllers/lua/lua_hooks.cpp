@@ -807,6 +807,11 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		engine->engineState.updateSparkSkip();
 		return 0;
 	});
+	lua_register(lState, "setLaunchTrigger", [](lua_State* l) {
+		auto value = luaL_checkinteger(l, 1);
+  	engine->launchController.luaLaunchState = value;
+		return 0;
+	});
 #endif // EFI_LAUNCH_CONTROL
 
 #if EFI_EMULATE_POSITION_SENSORS && !EFI_UNIT_TEST
