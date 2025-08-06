@@ -3,17 +3,13 @@
 #include "engine_csv_reader.h"
 
 TEST(real, SubaruEj20gcranking_only_cam7) {
-	EngineCsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
+	EngineCsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 0);
 
 	/* 0 - cam
 	 * 1 - crank */
 	reader.open("tests/trigger/resources/subaru_6_7.csv");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-
-	// See comment at SubaruEj20gDefaultCrankingSeparateTrigger about following three lines
-	reader.setFlipOnRead(true);
-	reader.setFlipVvtOnRead(true);
 	engineConfiguration->invertPrimaryTriggerSignal = true;
 
 //	setVerboseTrigger(true);
@@ -52,7 +48,7 @@ TEST(real, SubaruEj20gDefaultCranking) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		reader.assertFirstRpm(183, /*expectedFirstRpmAtIndex*/36);
+		reader.assertFirstRpm(193, /*expectedFirstRpmAtIndex*/38);
 
 		//printf("%5d: RPM %f\n", n++, Sensor::getOrZero(SensorType::Rpm));
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -89,7 +85,7 @@ TEST(real, SubaruEj20gCrankingWot) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		reader.assertFirstRpm(179, /*expectedFirstRpmAtIndex*/30);
+		reader.assertFirstRpm(188, /*expectedFirstRpmAtIndex*/32);
 
 		//printf("%5d: RPM %f\n", n++, Sensor::getOrZero(SensorType::Rpm));
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -106,12 +102,11 @@ TEST(real, SubaruEj20gCrankingWot) {
 }
 
 TEST(real, SubaruEj20gDefaultCranking_only_crank) {
-	EngineCsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 1);
+	EngineCsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 0);
 
 	/* 1 - cam
 	 * 0 - crank */
 	reader.open("tests/trigger/resources/subaru_6_7_crank_first.csv");
-	reader.setFlipOnRead(true);
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	//setVerboseTrigger(true);
@@ -141,10 +136,6 @@ TEST(real, SubaruEj20gDefaultCrankingSeparateTrigger) {
 	// triggers are defined with SyncEdge::RiseOnly, while with real VR sensor we should rely on falling edges only.
 	// FallOnly is not supported (yet?). So trigger is defined as SyncEdge::RiseOnly and with 1 degree tooth width.
 	// setting both crank and cam inversion allows us to feed trigger decoder with correct (falling) edges.
-	// invertPrimaryTriggerSignal and invertCamVVTSignal do invertion twice: see https://github.com/rusefi/rusefi/issues/8373
-	// we keep both set to true to align with settings for real car.
-	reader.setFlipOnRead(true);
-	reader.setFlipVvtOnRead(true);
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	//setVerboseTrigger(true);
@@ -173,7 +164,7 @@ TEST(real, SubaruEj20gDefaultCrankingSeparateTrigger) {
 			gotFullSync = true;
 
 			// Should get full sync and non-zero RPM
-			EXPECT_EQ(reader.lineIndex(), 36);
+			EXPECT_EQ(reader.lineIndex(), 38);
 			EXPECT_NEAR(rpm, 220.0f, 1.0f);
 		}
 	}
