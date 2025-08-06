@@ -130,7 +130,7 @@ public class KnockAnalyzerTab {
                     int finalChecksum = checksum;
                     controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, name, (name1, v) -> {
                         if (!started) {
-                            // SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+                            refreshCanvases();
                             return;
                         }
 
@@ -231,7 +231,7 @@ public class KnockAnalyzerTab {
         boolean enabled = this.getEnabledEcu();
         this.setStartState(enabled);
 
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+        refreshCanvases();
     }
 
     private void flush() {
@@ -244,8 +244,7 @@ public class KnockAnalyzerTab {
             case CT_ALL:
                 canvases.forEach(canvas -> {
                     canvas.processValues(values);
-                    AutoupdateUtil.trueLayout(canvas.getComponent());
-                });
+                    });
                 break;
             case CT_SENSORS:
                 assert channel < canvases.size();
@@ -257,13 +256,17 @@ public class KnockAnalyzerTab {
                 break;
         }
 
-        canvases.forEach(canvas -> {
-            AutoupdateUtil.trueLayout(canvas.getComponent());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                canvases.forEach(canvas -> {
+                    AutoupdateUtil.trueLayout(canvas.getComponent());
+                });
+
+                Arrays.fill(values, 0);
+                flushed = true;
+            }
         });
-
-        Arrays.fill(values, 0);
-
-        flushed = true;
     }
 
     private void initCanvas(KnockMotionListener kmml, KnockMouseListener kml, JComponent canvas) {
@@ -306,6 +309,14 @@ public class KnockAnalyzerTab {
     }
 
     public void refreshCanvases() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                canvases.forEach(canvas -> {
+                    AutoupdateUtil.trueLayout(canvas.getComponent());
+                });
+            }
+        });
         SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(canvasesComponent));
         SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
     }
@@ -335,7 +346,7 @@ public class KnockAnalyzerTab {
             String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
             ControllerParameter enable = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, ENABLE_KNOCK_SPECTROGRAM);
             String enabled = enable.getStringValue();
-            return enabled.indexOf("true") > 0;
+            return enabled.contains("true") || enabled.contains("yes");
         } catch (ControllerException ee) {
             log.error(ee.getMessage());
         }
