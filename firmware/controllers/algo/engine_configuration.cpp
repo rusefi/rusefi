@@ -63,7 +63,12 @@
 #include "tunerstudio.h"
 #endif
 
+#include "board_overrides.h"
+
 #define TS_DEFAULT_SPEED 38400
+
+std::optional<setup_custom_board_overrides_type> custom_board_DefaultConfiguration;
+std::optional<setup_custom_board_overrides_type> custom_board_ConfigOverrides;
 
 /**
  * Current engine configuration. On firmware start we assign empty configuration, then
@@ -645,6 +650,7 @@ void loadConfiguration() {
 
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();
+	call_board_override(custom_board_ConfigOverrides);
 }
 
 void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType) {
@@ -670,6 +676,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	// call overrided board-specific configuration setup, if needed (for custom boards only)
 	setBoardDefaultConfiguration();
 	setBoardConfigOverrides();
+
+	call_board_override(custom_board_DefaultConfiguration);
+	call_board_override(custom_board_ConfigOverrides);
 #endif // EFI_PROD_CODE
 
 	engineConfiguration->engineType = engineType;
