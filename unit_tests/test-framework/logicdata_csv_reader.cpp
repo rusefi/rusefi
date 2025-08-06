@@ -123,12 +123,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
-        bool state;
-		if (index == 0) {
-		    state = newTriggerState[index] ^ flipOnRead ^ engineConfiguration->invertPrimaryTriggerSignal;
-		} else {
-		    state = newTriggerState[index] ^ flipOnRead ^ engineConfiguration->invertSecondaryTriggerSignal;
-		}
+		bool state = newTriggerState[index] ^ flipOnRead;
 		hwHandleShaftSignal(index, state, nowNt);
 
 		currentState[index] = newTriggerState[index];
@@ -140,7 +135,8 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
-		bool state = newVvtState[vvtIndex] ^ flipVvtOnRead ^ engineConfiguration->invertCamVVTSignal;
+		bool state = newVvtState[vvtIndex] ^ flipVvtOnRead;
+
 		// todo: configurable selection of vvt mode - dual bank or dual cam single bank
 		int bankIndex;
 		int camIndex;
