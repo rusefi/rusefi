@@ -257,8 +257,20 @@ extern bool main_loop_started;
   return false;
 }
 
-void hwHandleVvtCamSignal(bool isRising, efitick_t timestamp, int index) {
-	hwHandleVvtCamSignal(isRising ? TriggerValue::RISE : TriggerValue::FALL, timestamp, index);
+/**
+ * This function is called by all "hardware" trigger inputs:
+ *  - Hardware triggers
+ *  - Trigger replay from CSV (unit tests)
+ */
+void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
+	int camIndex = CAM_BY_INDEX(index);
+	bool invertSetting = camIndex == 0 ? engineConfiguration->invertCamVVTSignal : engineConfiguration->invertExhaustCamVVTSignal;
+
+	if (isRising ^ invertSetting) {
+		hwHandleVvtCamSignal(TriggerValue::RISE, nowNt, index);
+	} else {
+		hwHandleVvtCamSignal(TriggerValue::FALL, nowNt, index);
+	}
 }
 
 // 'invertCamVVTSignal' is already accounted by the time this method is invoked

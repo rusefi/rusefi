@@ -42,14 +42,7 @@ static void cam_callback(void *arg, efitick_t stamp) {
 
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
-	int camIndex = CAM_BY_INDEX(index);
-	bool invertSetting = camIndex == 0 ? engineConfiguration->invertCamVVTSignal : engineConfiguration->invertExhaustCamVVTSignal;
-
-	if (rise ^ invertSetting) {
-		hwHandleVvtCamSignal(TriggerValue::RISE, stamp, index);
-	} else {
-		hwHandleVvtCamSignal(TriggerValue::FALL, stamp, index);
-	}
+	hwHandleVvtCamSignal(rise, stamp, index);
 }
 
 /*==========================================================================*/

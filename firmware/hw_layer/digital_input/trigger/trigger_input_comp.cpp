@@ -70,11 +70,7 @@ static void comp_shaft_callback(COMPDriver *comp) {
 static void comp_cam_callback(COMPDriver *comp) {
 	efitick_t stamp = getTimeNowNt();
 
-	if (isRising) {
-		hwHandleVvtCamSignal(TriggerValue::RISE, stamp, index);
-	} else {
-		hwHandleVvtCamSignal(TriggerValue::FALL, stamp, index);
-	}
+	hwHandleVvtCamSignal(isRising, stamp, index);
 }
 #endif
 
