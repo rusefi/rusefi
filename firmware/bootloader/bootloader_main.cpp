@@ -15,6 +15,8 @@ extern "C" {
 
 static blt_bool waitedLongerThanTimeout = BLT_FALSE;
 
+static const uint8_t maxWdRebootCounter = 10;
+
 class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
 protected:
 	void main(void) override {
@@ -96,6 +98,7 @@ protected:
 static BlinkyThread blinky;
 
 blt_bool stayInBootloader;
+blt_bool rebootLoop;
 
 static blt_bool checkIfRebootIntoOpenBltRequested(void) {
 	uint8_t value = 0x00;
@@ -105,6 +108,25 @@ static blt_bool checkIfRebootIntoOpenBltRequested(void) {
 		return BLT_TRUE;
 	}
 	return BLT_FALSE;
+}
+
+static blt_bool checkIfResetLoop(void) {
+	uint8_t wd_counter = 0;
+	Reset_Cause_t resetCause = getMCUResetCause();
+	if ((resetCause == Reset_Cause_IWatchdog) ||
+		(resetCause == Reset_Cause_WWatchdog)) {
+		// One of watchdogs
+		SharedParamsReadByIndex(1, &wd_counter);
+		wd_counter++;
+		SharedParamsWriteByIndex(1, wd_counter);
+	} else if ((resetCause == Reset_Cause_NRST_Pin) ||
+			   (resetCause == Reset_Cause_POR)) {
+		// power on or NRST reset
+		// cleat WD counter
+		SharedParamsWriteByIndex(1, wd_counter);
+	}
+
+	return (wd_counter > maxWdRebootCounter);
 }
 
 int main(void) {
@@ -118,7 +140,8 @@ int main(void) {
 
 	// Init openblt shared params
 	SharedParamsInit();
-	stayInBootloader = checkIfRebootIntoOpenBltRequested();
+	rebootLoop = checkIfResetLoop();
+	stayInBootloader = checkIfRebootIntoOpenBltRequested() || rebootLoop;
 
 	// Init openblt itself
 	BootInit();
