@@ -243,8 +243,6 @@ private:
 		spiExchange(driver, n, tx, rx);
 		/* Slave Select de-assertion. */
 		spiUnselect(driver);
-		/* Bus deinit */
-		spiStop(driver);
 		/* Ownership release. */
 		spiReleaseBus(driver);
 
