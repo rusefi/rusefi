@@ -44,6 +44,8 @@
  */
 #define SHARED_PARAMS_CFG_BUFFER_DATA_LEN        (16 - 4 - 2)
 
+/* TODO: add enum with shared parameters idx/offset to avoid magic numbers in Read/Write calls */
+
 
 /****************************************************************************************
 * Function prototypes
