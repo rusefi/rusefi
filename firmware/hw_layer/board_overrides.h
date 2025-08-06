@@ -50,6 +50,10 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwar
 // LTFT to VE table custom apply algo
 extern std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
 
+// specific firmware builds are meant for specific hardware. In order to provide best user experience on well-known boards sometimes we reduce user flexibility.
+extern std::optional<setup_custom_board_overrides_type> custom_board_DefaultConfiguration;
+extern std::optional<setup_custom_board_overrides_type> custom_board_ConfigOverrides;
+
 /**
  * This function checks if an override is present and calls it if available.
  * Return true if override is present and was called

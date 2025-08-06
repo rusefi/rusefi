@@ -90,6 +90,8 @@
 #include "rusEfiFunctionalTest.h"
 #endif /* EFI_SIMULATOR */
 
+#include "board_overrides.h"
+
 #if EFI_TUNER_STUDIO
 
 // We have TS protocol limitation: offset within one settings page is uin16_t type.
@@ -336,6 +338,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// Force any board configuration options that humans shouldn't be able to change
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
 		setBoardConfigOverrides();
+		call_board_override(custom_board_ConfigOverrides);
 	} else {
 		memcpy(addr, content, count);
 	}
