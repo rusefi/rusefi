@@ -3,7 +3,7 @@
 #include "engine_csv_reader.h"
 
 TEST(real, SubaruEj20gcranking_only_cam7) {
-	EngineCsvReader reader(/*triggerCount*/ 2, /* vvtCount */ 0);
+	EngineCsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 0);
 
 	/* 0 - cam
 	 * 1 - crank */
