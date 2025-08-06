@@ -3037,7 +3037,7 @@ event 16 0 1 556.00 1.533333
 event 17 0 0 556.00 nan
 event 18 0 1 586.00 0.652174
 event 19 0 0 586.00 nan
-TRIGGERTYPE 51 14 TT_VVT_SUBARU_7_WITHOUT_6 720.00
+TRIGGERTYPE 51 14 TT_VVT_SUBARU_7_WITHOUT_6 340.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
@@ -6503,7 +6503,7 @@ event 236 0 1 698.18 nan
 event 237 0 0 698.18 nan
 event 238 0 1 714.55 nan
 event 239 0 0 714.55 nan
-TRIGGERTYPE 94 24 TT_SUBARU_7_6_CRANK -75.00
+TRIGGERTYPE 94 24 TT_SUBARU_7_6_CRANK 65.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
