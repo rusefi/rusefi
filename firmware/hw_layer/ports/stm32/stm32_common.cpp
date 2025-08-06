@@ -150,6 +150,8 @@ void startWatchdog(int timeoutMs) {
 }
 
 static efitimems_t watchdogResetPeriodMs = 0;
+// Reset watchod reset counted in SharedParams after this delay
+static const efitimems_t watchdogCounterResetDelay = 3000;
 
 void setWatchdogResetPeriod(int resetMs) {
 #if 0
@@ -161,11 +163,22 @@ void setWatchdogResetPeriod(int resetMs) {
 void tryResetWatchdog() {
 #if HAL_USE_WDG
 	static Timer lastTimeWasReset;
+	static efitimems_t wdUptime = 0;
 	// check if it's time to reset the watchdog
 	if (lastTimeWasReset.hasElapsedMs(watchdogResetPeriodMs)) {
 		// we assume tryResetWatchdog() is called from a timer callback
 		wdgResetI(&WDGD1);
 		lastTimeWasReset.reset();
+		// with 100 ms WD
+		if (wdUptime < watchdogCounterResetDelay) {
+			wdUptime += watchdogResetPeriodMs;
+			// we just crossed the treshold
+			if (wdUptime >= watchdogCounterResetDelay) {
+#if EFI_USE_OPENBLT
+				SharedParamsWriteByIndex(1, 0);
+#endif
+			}
+		}
 	}
 #endif // HAL_USE_WDG
 }
