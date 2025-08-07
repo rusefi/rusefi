@@ -13,8 +13,10 @@ extern "C" {
 	#include "shared_params.h"
 }
 
+// used externaly by openblt_usb.cpp
+blt_bool stayInBootloader;
+
 static blt_bool waitedLongerThanTimeout = BLT_FALSE;
-static blt_bool stayInBootloader;
 static blt_bool rebootLoop;
 static blt_bool wdReset;
 
