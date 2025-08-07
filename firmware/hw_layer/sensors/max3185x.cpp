@@ -110,6 +110,7 @@ public:
 
 	void ThreadTask() override {
 		while (!chThdShouldTerminateX()) {
+			sysinterval_t refreshTime = MAX3185X_REFRESH_TIME;
 			for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
 				float value;
 
@@ -118,12 +119,17 @@ public:
 					auto& sensor = egtSensors[i];
 
 					sensor.setValidValue(value, getTimeNowNt());
+
+					// this one is slow
+					if (types[i] == MAX6675_TYPE) {
+						refreshTime = MAX6675_REFRESH_TIME;
+					}
 				} else {
 					/* TODO: report error code? */
 				}
 			}
 
-			chThdSleepMilliseconds(MAX3185X_REFRESH_TIME);
+			chThdSleepMilliseconds(refreshTime);
 		}
 
 		chThdExit((msg_t)0x0);
@@ -520,14 +526,14 @@ private:
 	Max3185xType types[EGT_CHANNEL_COUNT];
 
 	StoredValueSensor egtSensors[EGT_CHANNEL_COUNT] = {
-		{ SensorType::EGT1, MS2NT(MAX3185X_REFRESH_TIME * 3) },
-		{ SensorType::EGT2, MS2NT(MAX3185X_REFRESH_TIME * 3) },
-		{ SensorType::EGT3, MS2NT(MAX3185X_REFRESH_TIME * 3) },
-		{ SensorType::EGT4, MS2NT(MAX3185X_REFRESH_TIME * 3) },
-		{ SensorType::EGT5, MS2NT(MAX3185X_REFRESH_TIME * 3) },
-		{ SensorType::EGT6, MS2NT(MAX3185X_REFRESH_TIME * 3) },
-		{ SensorType::EGT7, MS2NT(MAX3185X_REFRESH_TIME * 3) },
-		{ SensorType::EGT8, MS2NT(MAX3185X_REFRESH_TIME * 3) }
+		{ SensorType::EGT1, MS2NT(MAX6675_REFRESH_TIME * 3) },
+		{ SensorType::EGT2, MS2NT(MAX6675_REFRESH_TIME * 3) },
+		{ SensorType::EGT3, MS2NT(MAX6675_REFRESH_TIME * 3) },
+		{ SensorType::EGT4, MS2NT(MAX6675_REFRESH_TIME * 3) },
+		{ SensorType::EGT5, MS2NT(MAX6675_REFRESH_TIME * 3) },
+		{ SensorType::EGT6, MS2NT(MAX6675_REFRESH_TIME * 3) },
+		{ SensorType::EGT7, MS2NT(MAX6675_REFRESH_TIME * 3) },
+		{ SensorType::EGT8, MS2NT(MAX6675_REFRESH_TIME * 3) }
 	};
 };
 
