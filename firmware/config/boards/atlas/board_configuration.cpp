@@ -30,9 +30,13 @@ Gpio getWifiIsrPin() {
 	return Gpio::E3;
 }
 
-void setBoardConfigOverrides() {
+static void AtlasBoardConfigOverrides() {
 	engineConfiguration->is_enabled_spi_4 = true;
 	engineConfiguration->spi4sckPin = Gpio::E2;
 	engineConfiguration->spi4misoPin = Gpio::E5;
 	engineConfiguration->spi4mosiPin = Gpio::E6;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_ConfigOverrides = AtlasBoardConfigOverrides;
 }
