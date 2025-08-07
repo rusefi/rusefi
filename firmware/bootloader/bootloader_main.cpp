@@ -14,6 +14,9 @@ extern "C" {
 }
 
 static blt_bool waitedLongerThanTimeout = BLT_FALSE;
+static blt_bool stayInBootloader;
+static blt_bool rebootLoop;
+static blt_bool wdReset;
 
 static const uint8_t maxWdRebootCounter = 10;
 
@@ -71,7 +74,11 @@ protected:
 			palSetPad(greenPort, greenPin);
 		}
 		if (redPort) {
-			palSetPad(redPort, redPin);
+			if (wdReset) {
+				palClearPad(redPort, redPin);
+			} else {
+				palSetPad(redPort, redPin);
+			}
 		}
 
 		while (true) {
@@ -84,7 +91,7 @@ protected:
 			if (greenPort) {
 				palTogglePad(greenPort, greenPin);
 			}
-			if (redPort) {
+			if (redPort && !wdReset) {
 				palTogglePad(redPort, redPin);
 			}
 			// blink 3 times faster if Dual Bank is not enabled
@@ -96,9 +103,6 @@ protected:
 };
 
 static BlinkyThread blinky;
-
-blt_bool stayInBootloader;
-blt_bool rebootLoop;
 
 static blt_bool checkIfRebootIntoOpenBltRequested(void) {
 	uint8_t value = 0x00;
@@ -119,6 +123,7 @@ static blt_bool checkIfResetLoop(void) {
 		SharedParamsReadByIndex(1, &wd_counter);
 		wd_counter++;
 		SharedParamsWriteByIndex(1, wd_counter);
+		wdReset = BLT_TRUE;
 	} else if ((resetCause == Reset_Cause_NRST_Pin) ||
 			   (resetCause == Reset_Cause_POR)) {
 		// power on or NRST reset
@@ -135,13 +140,13 @@ int main(void) {
 
 	baseMCUInit();
 
-	// start the blinky thread
-	blinky.start(NORMALPRIO + 10);
-
 	// Init openblt shared params
 	SharedParamsInit();
 	rebootLoop = checkIfResetLoop();
 	stayInBootloader = checkIfRebootIntoOpenBltRequested() || rebootLoop;
+
+	// start the blinky thread
+	blinky.start(NORMALPRIO + 10);
 
 	// Init openblt itself
 	BootInit();
