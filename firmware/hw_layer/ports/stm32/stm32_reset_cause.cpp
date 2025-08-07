@@ -52,8 +52,6 @@ static Reset_Cause_t readMCUResetCause() {
 
 	if (cause & BORRSTF) {
 		return Reset_Cause_BOR;
-    } else if (cause & PINRSTF) {
-		return Reset_Cause_NRST_Pin;
 	} else if (cause & PORRSTF) {
 		return Reset_Cause_POR;
 	} else if (cause & SFTRSTF) {
@@ -64,6 +62,11 @@ static Reset_Cause_t readMCUResetCause() {
         return Reset_Cause_WWatchdog;
 	} else if (cause & LPWRRSTF) {
 		return Reset_Cause_Illegal_Mode;
+	} else if (cause & PINRSTF) {
+		// See STM32 datasheet "Simplified diagram of the reset circuit"
+		// All internal resets happens through driving NRST pin low
+		// This cause rise of PINRSTF bit in CSR register
+		return Reset_Cause_NRST_Pin;
 	}
     return Reset_Cause_Unknown;
 }
