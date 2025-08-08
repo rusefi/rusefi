@@ -21,6 +21,7 @@
 #include "pch.h"
 #include "mre_meta.h"
 #include "defaults.h"
+#include "board_overrides.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = MRE_INJ_1;
@@ -118,7 +119,7 @@ static void setupDefaultSensorInputs() {
 #endif // EFI_BOOTLOADER
 }
 
-void setBoardConfigOverrides() {
+static void microrusefi_boardConfigOverrides() {
 	setupVbatt();
 	setupTle8888();
 	setupEtb();
@@ -149,7 +150,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void microrusefi_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -226,4 +227,9 @@ Gpio* getBoardMetaOutputs() {
 
 int getBoardMetaDcOutputsCount() {
     return 1;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = microrusefi_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  microrusefi_boardConfigOverrides;
 }
