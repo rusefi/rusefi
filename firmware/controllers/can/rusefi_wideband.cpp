@@ -76,9 +76,20 @@ static void setStatus(can_wbo_re_status_e status)
 #endif
 }
 
-void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
+void setWidebandOffsetNoWait(uint8_t hwIndex, uint8_t index) {
 	size_t bus = getWidebandBus();
 
+	if (hwIndex == 0xff) {
+		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 1, bus, true);
+		m[0] = index;
+	} else {
+		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 2, bus, true);
+		m[0] = index;
+		m[1] = hwIndex;
+	}
+}
+
+void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
 	setStatus(WBO_RE_BUSY);
 
 	// Clear any pending acks for this thread
@@ -93,14 +104,10 @@ void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
 
 	if (hwIndex == 0xff) {
 		efiPrintf("Setting all connected widebands to index %d...", index);
-		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 1, bus, true);
-		m[0] = index;
 	} else {
 		efiPrintf("Setting wideband with hwIndex %d to CAN index %d...", hwIndex, index);
-		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 2, bus, true);
-		m[0] = index;
-		m[1] = hwIndex;
 	}
+	setWidebandOffsetNoWait(hwIndex, index);
 
 	if (!waitAck()) {
 		efiPrintf("Wideband index set failed: no controller detected!");
