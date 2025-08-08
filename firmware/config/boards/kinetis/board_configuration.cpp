@@ -8,6 +8,7 @@
  */
 
 #include "pch.h"
+#include "board_overrides.h"
 
 #if 0
 char __debugBuffer[80];
@@ -37,7 +38,7 @@ static void setSerialConfigurationOverrides() {
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setBoardOverrides() {
+static void kinetis_boardConfigOverrides() {
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
 	setAlgorithm(LM_SPEED_DENSITY);
@@ -121,4 +122,8 @@ void longjmp(jmp_buf /*env*/, int /*status*/) {
 int setjmp(jmp_buf /*env*/) {
 	// Fake return 0, not implemented
 	return 0;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_ConfigOverrides =  kinetis_boardConfigOverrides;
 }
