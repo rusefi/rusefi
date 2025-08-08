@@ -96,7 +96,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaD4PullDown.setValue(config->boardUseD4PullDown);
 }
 
-void setBoardConfigOverrides() {
+static void alphax_8chan_reva_boardConfigOverrides() {
 	setHellenVbatt();
 
 	setHellenSdCardSpi2();
@@ -114,7 +114,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void alphax_8chan_reva_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -170,4 +170,6 @@ Gpio* getBoardMetaOutputs() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_8chan_reva_boardInitHardware;
+	custom_board_DefaultConfiguration = alphax_8chan_reva_boardDefaultConfiguration;
+	custom_board_ConfigOverrides = alphax_8chan_reva_boardConfigOverrides;
 }
