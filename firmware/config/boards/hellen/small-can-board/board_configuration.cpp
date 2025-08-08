@@ -2,8 +2,9 @@
 #include "hellen_meta.h"
 
 #include "hellen_leds_64.cpp"
+#include "board_overrides.h"
 
-void setBoardConfigOverrides() {
+static void small_can_board_boardConfigOverrides() {
 	setHellen64Can();
 	setHellen64MegaEnPin();
 	setHellen64SdCardSpi();
@@ -16,7 +17,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 }
 
-void setBoardDefaultConfiguration() {
+static void small_can_board_boardDefaultConfiguration() {
 	engineConfiguration->luaOutputPins[0] = Gpio::MM64_OUT_PWM1;
 	engineConfiguration->luaOutputPins[1] = Gpio::MM64_OUT_PWM2;
 	engineConfiguration->luaOutputPins[2] = Gpio::MM64_OUT_PWM3;
@@ -27,4 +28,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->auxAnalogInputs[2] = MM64_IN_ADC4_ANALOG;
 	engineConfiguration->auxAnalogInputs[3] = MM64_IN_ADC5_ANALOG;
 	engineConfiguration->auxAnalogInputs[4] = MM64_IN_ADC6_ANALOG;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = small_can_board_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  small_can_board_boardConfigOverrides;
 }
