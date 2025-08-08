@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "board_overrides.h"
 
 /**
  * @brief   Board-specific configuration defaults.
@@ -41,7 +42,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_OPENDRAIN;
 }
 
-void setBoardDefaultConfiguration() {
+static void s105_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -96,7 +97,7 @@ static void setupVbatt() {
 	engineConfiguration->adcVcc = 3.3f;
 }
 
-void setBoardConfigOverrides() {
+static void s105_boardConfigOverrides() {
 	setupVbatt();
 
 	//1.5K
@@ -150,4 +151,9 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 			return engineConfiguration->analogInputDividerCoefficient;
 	}
 	return engineConfiguration->analogInputDividerCoefficient;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = s105_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  s105_boardConfigOverrides;
 }
