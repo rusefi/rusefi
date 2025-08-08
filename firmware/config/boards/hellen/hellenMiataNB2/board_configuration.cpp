@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "hellen_meta.h"
+#include "board_overrides.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::G7;
@@ -48,7 +49,7 @@ static void setupDefaultSensorInputs() {
 
 #include "hellen_leds_176.cpp"
 
-void setBoardConfigOverrides() {
+static void hellen_MiataNB2_boardConfigOverrides() {
 	setHellenVbatt();
 
 	if (engine->engineState.hellenBoardId == -1) {
@@ -77,7 +78,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void hellen_MiataNB2_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -114,4 +115,9 @@ void setBoardDefaultConfiguration() {
 
 
 	hellenWbo();
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = hellen_MiataNB2_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  hellen_MiataNB2_boardConfigOverrides;
 }
