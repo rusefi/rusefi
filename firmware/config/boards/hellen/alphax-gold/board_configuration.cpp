@@ -77,7 +77,7 @@ static void setDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
-void setBoardConfigOverrides() {
+static void alphax_gold_boardConfigOverrides() {
 	setHellenMegaEnPin();
 
 	setHellenVbatt();
@@ -101,7 +101,7 @@ static void setDefaultETBPins() {
  * See also setDefaultEngineConfiguration
  *
  */
-void setBoardDefaultConfiguration() {
+static void alphax_gold_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setHellenMMbaro();
@@ -400,5 +400,7 @@ int getBoardMetaDcOutputsCount() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_gold_boardInitHardware;
+	custom_board_DefaultConfiguration = alphax_gold_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  alphax_gold_boardConfigOverrides;
 }
 
