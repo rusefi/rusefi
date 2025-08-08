@@ -13,6 +13,7 @@
 #include "pch.h"
 #include "hellen_all_meta.h"
 #include "defaults.h"
+#include "board_overrides.h"
 
 #ifndef EFI_BOOTLOADER
 #include "electronic_throttle.h"
@@ -60,7 +61,7 @@ static void setupDefaultSensorInputs() {
 
 #include "hellen_leds_176.cpp"
 
-void setBoardConfigOverrides() {
+static void hellen121_vag_boardConfigOverrides() {
 	setHellenVbatt();
 
 	setHellenSdCardSpi3();
@@ -77,7 +78,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void hellen121_vag_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -128,4 +129,9 @@ void setBoardDefaultConfiguration() {
 
 int getBoardMetaDcOutputsCount() {
     return 1;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = hellen121_vag_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  hellen121_vag_boardConfigOverrides;
 }
