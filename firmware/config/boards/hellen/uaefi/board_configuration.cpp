@@ -10,6 +10,7 @@
 #include "defaults.h"
 #include "hellen_meta.h"
 #include "hellen_leds_100.cpp"
+#include "board_overrides.h"
 #include "connectors/generated_board_pin_names.h"
 
 static void setInjectorPins() {
@@ -47,7 +48,7 @@ static void setupDefaultSensorInputs() {
   engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D3;
 }
 
-void setBoardConfigOverrides() {
+static void uaefi_boardConfigOverrides() {
 	setHellenMegaEnPin();
 	setHellenVbatt();
 
@@ -83,7 +84,7 @@ static void setDefaultETBPins() {
  * See also setDefaultEngineConfiguration
  *
  */
-void setBoardDefaultConfiguration() {
+static void uaefi_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setDefaultETBPins();
@@ -180,4 +181,9 @@ int getBoardMetaDcOutputsCount() {
         return 0;
     }
     return 2;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = uaefi_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  uaefi_boardConfigOverrides;
 }
