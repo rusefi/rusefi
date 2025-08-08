@@ -85,7 +85,7 @@ static bool isMegaModuleRevision() {
 #endif // EFI_BOOTLOADER
 }
 
-void setBoardConfigOverrides() {
+static void alphax_2chan_ConfigOverrides() {
 	setHellenVbatt();
 #ifndef EFI_BOOTLOADER
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
@@ -124,7 +124,7 @@ void setBoardConfigOverrides() {
  * See also setDefaultEngineConfiguration
  *
  */
-void setBoardDefaultConfiguration() {
+static void  alphax_2chan_defaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -175,4 +175,6 @@ Gpio* getBoardMetaOutputs() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_2chan_boardInitHardware;
+	custom_board_DefaultConfiguration = alphax_2chan_defaultConfiguration;
+	custom_board_ConfigOverrides = alphax_2chan_ConfigOverrides;
 }
