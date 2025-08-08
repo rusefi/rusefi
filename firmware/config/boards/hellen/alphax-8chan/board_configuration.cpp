@@ -98,7 +98,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	tempPullUp.setValue(config->boardUseTempPullUp);
 }
 
-void setBoardConfigOverrides() {
+static void alphax_8chan_boardConfigOverrides() {
 	hellenMegaModule();
 	setHellenCan();
 	setHellenCan2();
@@ -110,7 +110,7 @@ void setBoardConfigOverrides() {
  * See also setDefaultEngineConfiguration
  *
  */
-void setBoardDefaultConfiguration() {
+static void alphax_8chan_defaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setupTLE9201(/*controlPin*/Gpio::MM176_OUT_PWM9, Gpio::MM176_GP6, Gpio::MM176_GP7);
@@ -255,4 +255,6 @@ int getBoardMetaDcOutputsCount() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_8chan_boardInitHardware;
+	custom_board_DefaultConfiguration = alphax_8chan_defaultConfiguration;
+	custom_board_ConfigOverrides = alphax_8chan_boardConfigOverrides;
 }
