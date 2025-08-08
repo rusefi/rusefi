@@ -16,6 +16,7 @@
 #include "i2c_bb.h"
 #include "defaults.h"
 #include "m111.h"
+#include "board_overrides.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
@@ -114,7 +115,7 @@ static void setHellen128ETBConfig() {
 
 #include "hellen_leds_176.cpp"
 
-void setBoardConfigOverrides() {
+static void hellen128_boardConfigOverrides() {
 	setHellenVbatt();
 
 	setHellenSdCardSpi2();
@@ -135,7 +136,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void hellen128_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -164,4 +165,9 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->vrThreshold[0].pin = Gpio::D14;
 	hellenWbo();
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = hellen128_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  hellen128_boardConfigOverrides;
 }
