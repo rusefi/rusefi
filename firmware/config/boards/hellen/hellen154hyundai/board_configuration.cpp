@@ -13,6 +13,7 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
+#include "board_overrides.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
@@ -59,7 +60,7 @@ static bool isFirstInvocation = true;
   return detectedId;
 }
 
-void setBoardConfigOverrides() {
+static void hellen154_hyundai_boardConfigOverrides() {
 	setHellenVbatt();
 
 	setHellenSdCardSpi2();
@@ -135,7 +136,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void hellen154_hyundai_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -194,4 +195,9 @@ int getBoardMetaDcOutputsCount() {
 
 Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = hellen154_hyundai_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  hellen154_hyundai_boardConfigOverrides;
 }

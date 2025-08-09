@@ -9,6 +9,7 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
+#include "board_overrides.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
@@ -42,7 +43,7 @@ static void setupDefaultSensorInputs() {
 
 #include "hellen_leds_100.cpp"
 
-void setBoardConfigOverrides() {
+static void hellen112_17_boardConfigOverrides() {
 	// rev A needs EN pin but newer revisions would potentially not use it
 	setHellenMegaEnPin();
 	setHellenVbatt();
@@ -72,7 +73,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void hellen112_17_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -151,4 +152,9 @@ Gpio* getBoardMetaOutputs() {
 
 int getBoardMetaDcOutputsCount() {
     return 1;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = hellen112_17_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  hellen112_17_boardConfigOverrides;
 }

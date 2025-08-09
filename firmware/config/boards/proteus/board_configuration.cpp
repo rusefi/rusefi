@@ -8,6 +8,7 @@
 
 #include "pch.h"
 #include "proteus_meta.h"
+#include "board_overrides.h"
 
 static const brain_pin_e injPins[] = {
     Gpio::PROTEUS_LS_1,
@@ -134,7 +135,7 @@ static void setupSdCard() {
 	engineConfiguration->spi5mosiPin = Gpio::F9;
 }
 
-void setBoardConfigOverrides() {
+static void proteus_boardConfigOverrides() {
 	setupSdCard();
 	setupVbatt();
 
@@ -157,7 +158,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void proteus_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setupEtb();
@@ -374,3 +375,7 @@ Gpio* getBoardMetaOutputs() {
 }
 #endif // HW_PROTEUS
 
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = proteus_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  proteus_boardConfigOverrides;
+}

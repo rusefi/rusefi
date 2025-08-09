@@ -115,7 +115,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 
 
 
-void setBoardConfigOverrides() {
+static void alphax_4chan_ConfigOverrides() {
 	setHellenVbatt();
 
     if (is_F_OrOlder()) {
@@ -139,7 +139,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void alphax_4chan_defaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setupTLE9201(/*controlPin*/Gpio::H144_OUT_PWM2, /*directionPin1*/Gpio::H144_GP_IO1, /*disablePin*/Gpio::H144_GP_IO2);
@@ -216,4 +216,6 @@ int getBoardMetaDcOutputsCount() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_4chan_boardInitHardware;
+	custom_board_DefaultConfiguration = alphax_4chan_defaultConfiguration;
+	custom_board_ConfigOverrides = alphax_4chan_ConfigOverrides;
 }

@@ -18,7 +18,7 @@ Gpio getRunningLedPin() {
 	return Gpio::Unassigned;
 }
 
-void setBoardConfigOverrides() {
+static void tdg_pdm8_boardConfigOverrides() {
 	// No divider, just direct connected analog inputs (they're all internal, so why divide?)
 	engineConfiguration->analogInputDividerCoefficient = 1;
 
@@ -54,5 +54,6 @@ static void tdg_pdm8_boardInitHardware() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = tdg_pdm8_boardInitHardware;
+	custom_board_ConfigOverrides =  tdg_pdm8_boardConfigOverrides;
 }
 

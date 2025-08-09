@@ -40,7 +40,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
 }
 
-void setBoardConfigOverrides() {
+static void alphax_silver_boardConfigOverrides() {
 	/* Force PWR_EN as TLE9104s are powered from +5VA */
 	setHellenMegaEnPin();
 
@@ -52,7 +52,7 @@ void setBoardConfigOverrides() {
  	engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM2;
 }
 
-void setBoardDefaultConfiguration() {
+static void alphax_silver_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setHellenMMbaro();
@@ -251,5 +251,7 @@ Gpio* getBoardMetaOutputs() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_silver_boardInitHardware;
+	custom_board_DefaultConfiguration = alphax_silver_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  alphax_silver_boardConfigOverrides;
 }
 

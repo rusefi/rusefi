@@ -4,7 +4,7 @@
 #include "hellen_leds_100.cpp"
 #include "mega-uaefi.h"
 
-void setBoardConfigOverrides() {
+void setMegaUaefiBoardConfigOverrides() {
 	setHellenMegaEnPin();
 	setHellenVbatt();
 

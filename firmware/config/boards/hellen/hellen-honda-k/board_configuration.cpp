@@ -10,6 +10,7 @@
 #include "defaults.h"
 #include "hellen_meta.h"
 #include "honda_k_dbc.h"
+#include "board_overrides.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
@@ -45,7 +46,7 @@ void onBoardStandBy() {
     hellenBoardStandBy();
 }
 
-void setBoardConfigOverrides() {
+static void hellen_honda_k_boardConfigOverrides() {
 	setHellenMegaEnPin();
 
 	hellenMegaModule();
@@ -77,7 +78,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void hellen_honda_k_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setHondaK();
@@ -183,4 +184,9 @@ int getBoardMetaLowSideOutputsCount() {
 
 Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
+}
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = hellen_honda_k_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  hellen_honda_k_boardConfigOverrides;
 }

@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "hellen_meta.h"
+#include "board_overrides.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::G7;
@@ -58,7 +59,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;	// ADC3_1
 }
 
-void setBoardConfigOverrides() {
+static void hellen81_boardConfigOverrides() {
 	setHellenVbatt();
 
 // Hellen81a uses SPI2 for SD-card
@@ -80,7 +81,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void hellen81_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -106,3 +107,9 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;	// IM_SIMULTANEOUS; //IM_BATCH;
 }
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = hellen81_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  hellen81_boardConfigOverrides;
+}
+

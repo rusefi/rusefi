@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "hellen_meta.h"
+#include "board_overrides.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
@@ -52,7 +53,7 @@ static void setupDefaultSensorInputs() {
 
 
 
-void setBoardConfigOverrides() {
+static void hellen_MiataNB1_boardConfigOverrides() {
 	setHellenVbatt();
 
 	setHellenSdCardSpi2();
@@ -69,7 +70,7 @@ void setBoardConfigOverrides() {
  *
 
  */
-void setBoardDefaultConfiguration() {
+static void hellen_MiataNB1_boardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -101,3 +102,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 }
+
+void setup_custom_board_overrides() {
+	custom_board_DefaultConfiguration = hellen_MiataNB1_boardDefaultConfiguration;
+	custom_board_ConfigOverrides =  hellen_MiataNB1_boardConfigOverrides;
+}
+

@@ -24,7 +24,7 @@ Gpio getCommsLedPin() {
 	return Gpio::Unassigned;
 }
 
-void setBoardDefaultConfiguration() {
+static void cypressBoardDefaultConfiguration() {
 	setCrankOperationMode();
 
 	setAlgorithm(LM_SPEED_DENSITY);
@@ -84,4 +84,8 @@ void setBoardDefaultConfiguration() {
 
 void setAdcChannelOverrides() {
 	addAdcChannelForTrigger();
+}
+
+void setup_custom_board_overrides() {
+	custom_board_ConfigOverrides = cypressBoardDefaultConfiguration;
 }

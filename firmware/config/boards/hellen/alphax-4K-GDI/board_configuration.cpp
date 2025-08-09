@@ -7,7 +7,7 @@
 
 static OutputPin tempPullUp;
 
-void setBoardConfigOverrides() {
+static void alphax_4kgdi_boardConfigOverrides() {
     hellenMegaSdWithAccelerometer();
 	setHellenVbatt();
     enableHellenSpi2();
@@ -24,7 +24,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->mc33816_flag0 = Gpio::H144_IN_RES3;
 }
 
-void setBoardDefaultConfiguration() {
+static void alphax_4kgdi_defaultConfiguration() {
 	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
 	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
@@ -287,5 +287,7 @@ int getBoardMetaDcOutputsCount() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_4kGDI_boardInitHardware;
+	custom_board_DefaultConfiguration = alphax_4kgdi_defaultConfiguration;
+	custom_board_ConfigOverrides = alphax_4kgdi_boardConfigOverrides;
 }
 
