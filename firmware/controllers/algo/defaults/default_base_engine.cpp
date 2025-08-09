@@ -179,6 +179,8 @@ void setDefaultBaseEngine() {
     engineConfiguration->cylinderBankSelect[i] = 0;
   }
 
+  engineConfiguration->alwaysInstantRpm = true;
+
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
 	engineConfiguration->boardUseCanTerminator = true;
