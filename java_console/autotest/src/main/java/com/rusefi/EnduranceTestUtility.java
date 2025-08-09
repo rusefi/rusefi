@@ -26,7 +26,7 @@ public class EnduranceTestUtility {
             CommandQueue commandQueue = linkManager.getCommandQueue();
 
             for (int i = 0; i < count; i++) {
-                EcuTestHelper.currentEngineType = engine_type_e.FORD_ASPIRE_1996.ordinal();
+                EcuTestHelper.currentEngineType = engine_type_e.MINIMAL_PINS.ordinal();
                 sendBlockingCommand("set " + Integration.CMD_ENGINE_TYPE + " " + 3, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 sendBlockingCommand(getEnableCommand("self_stimulation"), commandQueue);
