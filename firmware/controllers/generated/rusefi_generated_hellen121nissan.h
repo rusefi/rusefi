@@ -802,6 +802,7 @@
 #define GAUGE_NAME_WARNING_LAST "Warning: last"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
 #define GAUGE_PRECISION_TEMPERATURE_C 1,1
+#define GAUGE_PRECISION_TEMPERATURE_F 1,2
 #define gear_controller_e_enum "None", "Button Shift", "Automatic", "Generic"
 #define GEAR_DETECTION_DIALOG_NAME "Gear Detection"
 #define gear_e_GEAR_1 1
@@ -1508,7 +1509,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1481003555
+#define SIGNATURE_HASH 1321168373
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2060,7 +2061,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.08.08.hellen121nissan.1481003555"
+#define TS_SIGNATURE "rusEFI master.2025.08.09.hellen121nissan.1321168373"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
@@ -2100,6 +2101,7 @@
 #define UiMode_INSTALLATION 1
 #define UiMode_TUNING 2
 #define UNITS_CELSIUS "C"
+#define UNITS_FAHRENHEIT "F"
 #define VBAT_INJECTOR_CURVE_PRESSURE_SIZE 2
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define VE_BLEND1_TABLE_NAME "VE blend 1"

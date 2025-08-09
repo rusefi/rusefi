@@ -1400,7 +1400,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1380627332;
+	public static final int SIGNATURE_HASH = 1152617554;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1700,7 +1700,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.08.08.stm32h743_nucleo.1380627332";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.08.09.stm32f767_nucleo.1152617554";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2028;
@@ -1735,6 +1735,7 @@ public class VariableRegistryValues {
 	public static final int UiMode_INSTALLATION = 1;
 	public static final int UiMode_TUNING = 2;
 	public static final String UNITS_CELSIUS = "C";
+	public static final String UNITS_FAHRENHEIT = "F";
 	public static final int VBAT_INJECTOR_CURVE_PRESSURE_SIZE = 2;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final String VE_BLEND1_TABLE_NAME = "VE blend 1";
