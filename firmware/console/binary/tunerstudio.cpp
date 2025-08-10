@@ -337,7 +337,6 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		}
 		// Force any board configuration options that humans shouldn't be able to change
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
-		setBoardConfigOverrides();
 		call_board_override(custom_board_ConfigOverrides);
 	} else {
 		memcpy(addr, content, count);

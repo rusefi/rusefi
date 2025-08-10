@@ -649,7 +649,6 @@ void loadConfiguration() {
 #endif /* EFI_CONFIGURATION_STORAGE */
 
 	// Force any board configuration options that humans shouldn't be able to change
-	setBoardConfigOverrides();
 	call_board_override(custom_board_ConfigOverrides);
 }
 
@@ -673,10 +672,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	}
 
 #if EFI_PROD_CODE
-	// call overrided board-specific configuration setup, if needed (for custom boards only)
-	setBoardDefaultConfiguration();
-	setBoardConfigOverrides();
-
+	// call board-specific configuration setup, if needed (for custom boards only)
 	call_board_override(custom_board_DefaultConfiguration);
 	call_board_override(custom_board_ConfigOverrides);
 #endif // EFI_PROD_CODE
@@ -721,10 +717,12 @@ void commonFrankensoAnalogInputs() {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 }
 
-// These symbols are weak so that a board_configuration.cpp file can override them
-PUBLIC_API_WEAK void setBoardDefaultConfiguration() { }
-// specific firmware builds are meant for specific hardware. In order to provide best user experience on well-known boards sometimes we reduce user flexibility.
-PUBLIC_API_WEAK_SOMETHING_WEIRD void setBoardConfigOverrides() { }
+void setBoardDefaultConfiguration() {
+  // custom_board_DefaultConfiguration
+}
+void setBoardConfigOverrides() {
+  // time to force migration to custom_board_ConfigOverrides
+}
 
 PUBLIC_API_WEAK int hackHellenBoardId(int detectedId) { return detectedId; }
 
