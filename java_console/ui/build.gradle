@@ -9,6 +9,9 @@ dependencies {
     implementation project(':luaformatter')
     implementation project(':config_definition_base')
 
+    implementation("com.fifesoft:autocomplete:3.3.2")
+    implementation("com.fifesoft:rsyntaxtextarea:3.6.0")
+
     implementation global_libs.antlr
     implementation 'com.miglayout:miglayout-swing:4.1'
     implementation 'org.bidib.jbidib.eu.hansolo:SteelSeries:3.9.31.2'
