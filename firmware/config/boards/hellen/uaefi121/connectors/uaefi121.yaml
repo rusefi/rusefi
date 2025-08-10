@@ -176,7 +176,7 @@ pins:
   - pin: 27a
     class: outputs
     ts_name: Coil 6
-    function: Coil 6
+    function: Coil 6 second wire to split current per pin
     type: ign
 
   - pin: 28a
@@ -206,7 +206,7 @@ pins:
   - pin: 32a
     class: outputs
     ts_name: Coil 1
-    function: Coil 1
+    function: Coil 1 second wire to split current per pin
     type: ign
 
   - pin: 33a
