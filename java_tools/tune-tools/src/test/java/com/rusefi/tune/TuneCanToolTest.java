@@ -43,7 +43,7 @@ public class TuneCanToolTest {
             assertTrue(sb.indexOf("engineConfiguration->gppwm[1].loadAxis = GPPWM_Tps;") > 0);
             assertTrue(sb.indexOf("engineConfiguration->gppwm[2].loadAxis = GPPWM_Tps;") > 0);
             assertTrue(sb.indexOf("engineConfiguration->gppwm[3].loadAxis = GPPWM_Tps;") > 0);
-        } catch (final Exception e) {
+        } catch (Exception e) {
             System.err.print(String.format("TuneCanToolTest.testGPPWMTuneParse: Exception: %s", e.getMessage()));
             e.printStackTrace();
             throw e;

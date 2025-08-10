@@ -55,7 +55,7 @@ public class TuneCanTool {
     // see write_tune.sh for env variable to property mapping
     static final String ENGINE_TUNE_OUTPUT_FOLDER = System.getProperty("ENGINE_TUNE_OUTPUT_FOLDER", "../simulator/generated/");
     private static final String EXTENSION = ".cpp";
-    public static String boardPath = "config/boards/hellen/uaefi/";
+    public static String boardPath = new File("config/boards/hellen/uaefi/").getAbsolutePath();
 
     protected static IniFileModel ini;
 
