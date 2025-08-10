@@ -396,11 +396,9 @@ custom switch_input_pin_e 2 bits, U16, @OFFSET@, [0:8], $switch_input_pin_e_list
 custom output_pin_e 2 bits, U16, @OFFSET@, [0:8], $output_pin_e_list
 #define output_pin_e_fullenum @@output_pin_e_enum@@
 
-#define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
-custom pin_output_mode_e 1 bits, U08, @OFFSET@, [0:1], @@pin_output_mode_e_enum@@
+custom pin_output_mode_e 1 bits, U08, @OFFSET@, [0:1], $pin_output_mode_e_enum
 
-#define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN", "INVALID", "INVERTED DEFAULT", "INVERTED PULLUP", "INVERTED PULLDOWN"
-custom pin_input_mode_e 1 bits, U08,	@OFFSET@,	[0:2], @@pin_input_mode_e_enum@@
+custom pin_input_mode_e 1 bits, U08,	@OFFSET@,	[0:2], $pin_input_mode_e_enum
 
 #define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 In Actual", "VVT 1 Ex Actual", "VVT 2 In Actual", "VVT 2 Ex Actual", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2", "RPM", "Gear (detected)", "Baro pressure", "EGT 1", "EGT 2", "Aux Linear 3", "Aux Linear 4", "Vehicle speed", "Oil pressure", "Oil temp", "Fuel Pressure"
 custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:5], @@gppwm_channel_e_enum@@
@@ -717,7 +715,7 @@ trigger_config_s trigger;
 
     float airByRpmTaper;Extra air taper amount;"%", 1, 0, 0, 50, 1
 
-custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "SPI5", "SPI6"
+	custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], $spi_device_e_enum
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
 	adc_channel_e mafAdcChannel
 
@@ -1179,8 +1177,7 @@ float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
 
 int torqueReductionArmingApp;Pedal position to realize that we need to reduce torque when the trigger pin is uuuh triggered;"", 1, 0, 0, 20000, 0
 
-	#define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
-custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
+custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], $pin_mode_e_enum
 
 
 ! todo: rename field remove 'ms', also fix typo in name should be 'tachPulseDuration' and that would be an incompatible breaking change for users :(
