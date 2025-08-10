@@ -85,10 +85,10 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     private void testFreshlyProducedIniFile(String fileName) {
-        IniFileModel ini = IniFileModelImpl.readIniFile(fileName);
-        ConfigurationImage ci = new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
-        Msq msq = MsqFactory.valueOf(ci, ini);
         try {
+            IniFileModel ini = IniFileModelImpl.readIniFile(fileName);
+            ConfigurationImage ci = new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
+            Msq msq = MsqFactory.valueOf(ci, ini);
             msq.writeXmlFile("quick-self-test.xml");
         } catch (IOException | JAXBException e) {
             throw new RuntimeException(e);

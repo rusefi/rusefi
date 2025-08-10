@@ -16,6 +16,7 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +30,15 @@ public class TuneReadWriteTest {
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.binary_image";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
 
-    private final IniFileModelImpl model = IniFileModelImpl.readIniFile(TEST_INI);
+    private final IniFileModelImpl model;
+
+    {
+        try {
+            model = IniFileModelImpl.readIniFile(TEST_INI);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Test
     public void testCopyCode() {

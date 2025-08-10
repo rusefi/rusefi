@@ -5,6 +5,8 @@ import com.opensr5.ini.*;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.core.SignatureHelper;
 
+import java.io.FileNotFoundException;
+
 import static com.devexperts.logging.Logging.getLogging;
 
 public class RealIniFileProvider implements IniFileProvider {
@@ -28,7 +30,12 @@ public class RealIniFileProvider implements IniFileProvider {
         }
         if (localIniFile == null)
             throw new IllegalStateException("Failed to locate .ini file in five different places!");
-        IniFileModelImpl iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+        IniFileModelImpl iniFileModel = null;
+        try {
+            iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
         return iniFileModel;
     }

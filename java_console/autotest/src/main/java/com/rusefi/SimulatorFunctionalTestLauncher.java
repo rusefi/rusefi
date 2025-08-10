@@ -6,7 +6,10 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.simulator.SimulatorFunctionalTest;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import static com.opensr5.ini.IniFileModelImpl.readIniFile;
 
 /**
  * this class runs rusEFI functional tests against rusEFI simulator
@@ -21,7 +24,13 @@ public class SimulatorFunctionalTestLauncher {
         if (args.length == 0)
             throw new IllegalArgumentException("Required argument: .ini filename");
         String iniFileName = args[0];
-        BinaryProtocol.iniFileProvider = signature -> IniFileModelImpl.readIniFile(iniFileName);
+        BinaryProtocol.iniFileProvider = signature -> {
+            try {
+                return readIniFile(iniFileName);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        };
         boolean startSimulator = args.length > 1 && args[1].equalsIgnoreCase("start");
 
 //        if (startSimulator) {

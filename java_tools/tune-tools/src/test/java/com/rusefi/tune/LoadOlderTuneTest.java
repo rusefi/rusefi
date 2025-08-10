@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static org.junit.jupiter.api.Assertions.*;
@@ -164,7 +165,7 @@ public class LoadOlderTuneTest {
     }
 
     @Test
-    public void findFieldByName() throws IniMemberNotFound {
+    public void findFieldByName() throws IniMemberNotFound, FileNotFoundException {
         IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
         StringIniField make = (StringIniField) ini.getIniField("ENGINEMAKE");
         assertNotNull(make);

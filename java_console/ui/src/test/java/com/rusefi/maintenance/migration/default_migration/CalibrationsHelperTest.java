@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
 
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public class CalibrationsHelperTest {
     CalibrationsInfo mergedCalibrations;
 
     @BeforeEach
-    public void setUp() throws JAXBException {
+    public void setUp() throws JAXBException, FileNotFoundException {
         testContext = DefaultTestTuneMigrationContext.load();
         final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
             testContext.getPrevCalibrationsInfo(),

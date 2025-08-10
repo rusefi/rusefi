@@ -50,7 +50,13 @@ public class PrimeTunerStudioCache {
                 return;
             }
         }
-        IniFileModelImpl iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+        IniFileModelImpl iniFileModel;
+        try {
+            iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+        } catch (FileNotFoundException e) {
+            log.warn("error " + e);
+            return;
+        }
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
     }
 }

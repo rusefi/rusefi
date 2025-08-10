@@ -6,9 +6,11 @@ import com.rusefi.LocalIniFileProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+
 public class ReadCurrentIniTest {
     @Test
-    public void test() {
+    public void test() throws FileNotFoundException {
         IniFileModel ini = IniFileModelImpl.readIniFile("../" + LocalIniFileProvider.INI_FILE_FOR_SIMULATOR);
         Assertions.assertNotNull(ini);
     }

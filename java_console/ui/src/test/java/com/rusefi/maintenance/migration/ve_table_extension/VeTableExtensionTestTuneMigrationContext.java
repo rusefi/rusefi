@@ -7,6 +7,8 @@ import com.rusefi.tune.xml.Constant;
 
 import javax.xml.bind.JAXBException;
 
+import java.io.FileNotFoundException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

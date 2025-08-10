@@ -11,16 +11,22 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 
 public class TestTuneMigrationContext extends TuneMigrationContext {
     public static TestTuneMigrationContext load(final String testDataFolder) throws JAXBException {
-        final TestTuneMigrationContext result = new TestTuneMigrationContext(
-            Msq.readTune(String.format("%s/prev_calibrations.msq", testDataFolder)),
-            IniFileModelImpl.readIniFile(String.format("%s/prev_calibrations.ini", testDataFolder)),
-            Msq.readTune(String.format("%s/updated_calibrations.msq", testDataFolder)),
-            IniFileModelImpl.readIniFile(String.format("%s/updated_calibrations.ini", testDataFolder)),
-            new TestCallbacks()
-        );
+        final TestTuneMigrationContext result;
+        try {
+            result = new TestTuneMigrationContext(
+                Msq.readTune(String.format("%s/prev_calibrations.msq", testDataFolder)),
+                IniFileModelImpl.readIniFile(String.format("%s/prev_calibrations.ini", testDataFolder)),
+                Msq.readTune(String.format("%s/updated_calibrations.msq", testDataFolder)),
+                IniFileModelImpl.readIniFile(String.format("%s/updated_calibrations.ini", testDataFolder)),
+                new TestCallbacks()
+            );
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return result;
     }
 

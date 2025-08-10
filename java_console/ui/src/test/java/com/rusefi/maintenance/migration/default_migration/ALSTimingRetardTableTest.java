@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
 
+import java.io.FileNotFoundException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ALSTimingRetardTableTest {
@@ -33,7 +35,7 @@ public class ALSTimingRetardTableTest {
     private Constant prevValue;
 
     @BeforeEach
-    void setUp() throws JAXBException {
+    void setUp() throws JAXBException, FileNotFoundException {
         final TestTuneMigrationContext testContext = DefaultTestTuneMigrationContext.load();
         final CalibrationsInfo prevCalibrations = testContext.getPrevCalibrationsInfo();
         final IniFileModel prevIni = prevCalibrations.getIniFile();
