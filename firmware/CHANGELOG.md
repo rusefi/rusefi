@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
  - Add Lua hook for Launch Control request with 'setLaunchTrigger' method #7161
  - option to use Fahrenheit units #4788
  - lua editor highlighting #8413
+ - lua: count dropped CAN messages #8225
 
 ### Fixed
  - 3000gt 6g72 triggers cam and crank 3-0 more accuracy
