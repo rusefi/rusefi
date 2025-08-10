@@ -411,13 +411,16 @@ void setBor(int borValue) {
 }
 #endif /* EFI_BOR_LEVEL */
 
-// Weak link a stub so that every board doesn't have to implement this function
 // Called before configuration is loaded
-PUBLIC_API_WEAK void boardInitHardwareEarly() { }
-
-// todo: actually PUBLIC_API_WEAK is too fragile, TODO replace with callback/listener?
-PUBLIC_API_WEAK void boardInitHardware() { }
-PUBLIC_API_WEAK void boardInitHardwareExtra() { }
+void boardInitHardwareEarly() {
+  // forcing migration to custom_board_InitHardwareEarly
+}
+void boardInitHardware() {
+  // time to force migration to custom_board_InitHardware
+}
+void boardInitHardwareExtra() {
+  // forcing migration to custom_board_InitHardwareExtra
+}
 
 // This function initializes hardware that can do so before configuration is loaded
 void initHardwareNoConfig() {
