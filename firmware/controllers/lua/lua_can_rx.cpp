@@ -20,7 +20,11 @@ struct CanFrameData {
 };
 
 #ifndef LUA_canFrameCount
+#if defined(STM32F7) || defined(STM32H7)
+#define LUA_canFrameCount 256
+#else
 #define LUA_canFrameCount 32
+#endif
 #endif
 
 static CanFrameData canFrames[LUA_canFrameCount];
