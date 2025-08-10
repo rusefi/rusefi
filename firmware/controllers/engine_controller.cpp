@@ -569,6 +569,9 @@ bool validateConfigOnStartUpOrBurn() {
 	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
 	  engineConfiguration->mapExpAverageAlpha = 1;
 	}
+	if (engineConfiguration->ppsExpAverageAlpha <= 0 || engineConfiguration->ppsExpAverageAlpha > 1) {
+	  engineConfiguration->ppsExpAverageAlpha = 1;
+	}
 
 	if (engineConfiguration->alternator_iTermMin == 0) {
   	engineConfiguration->alternator_iTermMin = -1000;
