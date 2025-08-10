@@ -36,6 +36,8 @@ Release template (copy/paste this for new release):
  - migration to ChibiOS 21.11
  - long term fuel trim LTFT using SD card #6223
  - Add Lua hook for Launch Control request with 'setLaunchTrigger' method #7161
+ - option to use Fahrenheit units #4788
+ - lua editor highlighting #8413
 
 ### Fixed
  - 3000gt 6g72 triggers cam and crank 3-0 more accuracy
