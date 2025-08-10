@@ -63,6 +63,8 @@
 #define ETB_INTERMITTENT_LIMIT 50
 #endif
 
+
+
 static pedal2tps_t pedal2tpsMap{"p2t"};
 static Map3D<ETB2_TRIM_SIZE, ETB2_TRIM_SIZE, int8_t, uint8_t, uint8_t> throttle2TrimTable{"t2t"};
 static Map3D<TRACTION_CONTROL_ETB_DROP_SLIP_SIZE, TRACTION_CONTROL_ETB_DROP_SPEED_SIZE, int8_t, uint16_t, uint8_t> tcEtbDropTable{"tce"};
@@ -549,6 +551,18 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		return m_pid.getOutput(target, observation, dt);
 	}
 }
+
+void ElectronicThrottle::update() {
+    // Check if torque control is overriding ETB
+    if (engineConfiguration->isTorqueControlEnabled) {
+        float torque_throttle_pos = torqueManager.getTorqueBasedThrottlePosition();
+        if (torque_throttle_pos >= 0.0f) {
+            // Use torque-based position command
+            setTargetPosition(torque_throttle_pos);
+            return; // Skip traditional ETB control
+        }
+    }
+    
 
 void EtbController::setOutput(expected<percent_t> outputValue) {
 #if EFI_TUNER_STUDIO

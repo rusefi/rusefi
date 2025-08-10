@@ -4,7 +4,7 @@
  *
  *
  *
- * @date Feb 7, 2013
+ * @date Feb 7,2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  *
  * This file is part of rusEfi - see http://rusefi.com
@@ -22,7 +22,6 @@
  */
 
 #include "pch.h"
-
 
 #include "trigger_central.h"
 #include "script_impl.h"
@@ -61,7 +60,7 @@
 #include "adc_subscription.h"
 #include "gc_generic.h"
 #include "tuner_detector_utils.h"
-
+#include "torque_manager.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -101,6 +100,21 @@ Engine * engine;
 
 using namespace rusefi::stringutil;
 
+// Add global torque manager instance
+RusEfiTorqueManager torqueManager;
+
+void EngineController::init() {
+    // Initialization code for EngineController
+    initDataStructures();
+    initPeriodicEvents();
+      // Initialize torque control if enabled
+    if (engineConfiguration->isTorqueControlEnabled) {
+        torqueManager.initializeTorqueControl();
+        efiPrintf("Torque-based control initialized");
+    }
+
+}
+
 void initDataStructures() {
 #if EFI_ENGINE_CONTROL
 	initFuelMap();
@@ -128,6 +142,8 @@ class PeriodicFastController : public PeriodicTimerController {
 		return FAST_CALLBACK_PERIOD_MS;
 	}
 };
+
+
 
 class PeriodicSlowController : public PeriodicTimerController {
 	void PeriodicTask() override {
@@ -385,6 +401,42 @@ static void initConfigActions() {
 
 // one-time start-up
 // this method is used by real firmware and simulator and unit test
+
+#if EFI_ENGINE_CONTROL
+void initEngineActuatorControl() {
+    // This function will be called from the main engine loop
+    // Integration with existing actuator control systems
+}
+
+// Main engine actuator control with torque integration
+void updateEngineActuators(efitick_t nowNt) {
+    // Update torque control first
+    if (engineConfiguration->isTorqueControlEnabled) {
+        torqueManager.updateTorqueControl();
+    }
+
+    // Get torque-based actuator commands
+    ActuatorCommands torqueCommands = torqueManager.getActuatorOverrides();
+
+    // ETB Control - override with torque commands if active
+    if (torqueCommands.throttle_position_percent >= 0.0f) {
+        // Use torque-based throttle control
+        // Note: This will integrate with existing ETB system
+        engine->module<ElectronicThrottle>()->setTargetPosition(torqueCommands.throttle_position_percent);
+    }
+
+    // Ignition Control - integrate torque-based timing
+    if (torqueManager.shouldOverrideTraditionalControl()) {
+        engine->ignitionState.baseIgnitionAdvance = torqueCommands.ignition_advance_deg;
+    }
+
+    // Fuel Control - apply torque-based corrections
+    if (torqueCommands.fuel_correction_factor > 0) {
+        engine->fuelComputer.targetAFR *= torqueCommands.fuel_correction_factor;
+    }
+}
+#endif // EFI_ENGINE_CONTROL
+
 void commonInitEngineController() {
 #if EFI_PROD_CODE
 	addConsoleAction("sensorinfo", printSensorInfo);
@@ -408,7 +460,6 @@ void commonInitEngineController() {
 
 	engine->injectionEvents.addFuelEvents();
 #endif // EFI_ENGINE_CONTROL
-
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initSettings();
@@ -496,6 +547,16 @@ void commonInitEngineController() {
 #if EFI_LTFT_CONTROL
 	initLtft();
 #endif
+
+#if EFI_ENGINE_CONTROL
+    // Initialize engine actuator control integration
+    initEngineActuatorControl();
+#endif // EFI_ENGINE_CONTROL
+
+    // Call the new EngineController::init() function
+    EngineController::init();
+
+
 }
 
 PUBLIC_API_WEAK bool validateBoardConfig() {
