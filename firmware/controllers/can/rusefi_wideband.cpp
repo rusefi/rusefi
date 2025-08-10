@@ -155,7 +155,10 @@ void pingWideband(uint8_t hwIndex) {
 	waitingBootloaderThread = nullptr;
 }
 
+// Called with 50mS interval and only if CAN and (on-boards) WBO(s) are enabled
 void sendWidebandInfo() {
+	static int counter = 0;
+
 	CanTxMessage m(CanCategory::WBO_SERVICE, WB_MGS_ECU_STATUS, /*dlc*/2, getWidebandBus(), /*isExtended*/true);
 
 	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
@@ -164,6 +167,19 @@ void sendWidebandInfo() {
 
 	// Offset 1 bit 0 = heater enable
 	m[1] = engine->engineState.heaterControlEnabled ? 0x01 : 0x00;
+
+	// 10 * 50 = 0.5S delay
+	if (counter == 10) {
+		for (size_t i = 0; i < CAN_WBO_COUNT; i++) {
+			if ((engineConfiguration->canWbo[i].enableRemap) &&
+				(engineConfiguration->canWbo[i].type == RUSEFI)) {
+				// remap
+				setWidebandOffsetNoWait(engineConfiguration->canWbo[i].reHwidx, engineConfiguration->canWbo[i].reId);
+			}
+		}
+	}
+
+	counter++;
 }
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
