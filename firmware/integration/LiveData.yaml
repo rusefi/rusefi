@@ -211,7 +211,8 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: [ "etb1", "etb2" ]
-    constexpr: ["getLiveData<electronic_throttle_s>(0)", "getLiveData<electronic_throttle_s>(1)"]
+    additional_headers: [ "electronic_throttle_impl.h" ]
+    constexpr: ["getLiveDataConstexpr<electronic_throttle_s, 0>()", "getLiveDataConstexpr<electronic_throttle_s, 1>()"]
     isPtr: true
     conditional_compilation: "EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS"
 
