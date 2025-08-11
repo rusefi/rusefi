@@ -711,6 +711,18 @@ typedef enum __attribute__((__packed__)) {
 	WBO_RE_ID16 = 15
 } can_wbo_re_id_e;
 
+// Hardware index, usually strapped by cfg pins and pull-up/pull-down resistors
+typedef enum  __attribute__((__packed__)) {
+	WBO_RE_HWIDX0 = 0,
+	WBO_RE_HWIDX1 = 1,
+	WBO_RE_HWIDX2 = 2,
+	WBO_RE_HWIDX3 = 3,
+	WBO_RE_HWIDX4 = 4,
+	WBO_RE_HWIDX5 = 5,
+	WBO_RE_HWIDX6 = 6,
+	WBO_RE_HWIDX7 = 7,
+} can_wbo_re_hwidx_e;
+
 typedef enum __attribute__((__packed__)) {
 	WBO_AEM_ID1  =  0,
 	WBO_AEM_ID2  =  1,
