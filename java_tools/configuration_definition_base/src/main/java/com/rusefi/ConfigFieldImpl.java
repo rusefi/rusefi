@@ -113,6 +113,7 @@ public class ConfigFieldImpl implements ConfigField {
             }
         }
         validateRange();
+        validateScale();
     }
 
     private void validateRange() {
@@ -130,6 +131,19 @@ public class ConfigFieldImpl implements ConfigField {
         double maxValue = scale * TypesHelper.getMaxValue(type);
         if (max > maxValue)
             throw new FieldOutOfRangeException(name + ": max value " + max + " outside of range. Type " + type + " maxValue " + maxValue);
+    }
+
+    private void validateScale(){
+        String[] tokens = getTokens();
+        if (tokens.length < 2) {
+            return;
+        }
+        String units = getUnits();
+        String scale = tokens[1].trim();
+
+        if(units.startsWith("SPECIAL_CASE_TEMPERATURE") && Integer.valueOf(scale) != 1){
+            throw new FieldOutOfRangeException(name + ": incorrect scale for SPECIAL_CASE_TEMPERATURE field, use 1 as scale");
+        }
     }
 
     @Override
