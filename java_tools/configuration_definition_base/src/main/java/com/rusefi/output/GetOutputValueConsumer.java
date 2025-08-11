@@ -32,6 +32,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     public boolean moduleMode;
     public String currentEngineModule;
     public String conditional;
+    public String additionalHeaders = "";
     public Boolean isPtr = false;
 
     public GetOutputValueConsumer(String fileName, LazyFile.LazyFileFactory fileFactory) {
@@ -90,6 +91,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
         return
                 GetConfigValueConsumer.getHeader(getClass()) +
+                additionalHeaders +
                 "float getOutputValueByHash(const int hash) {\n" +
                 fullSwitch +
                 getterBody + "\treturn EFI_ERROR_CODE;\n" +
