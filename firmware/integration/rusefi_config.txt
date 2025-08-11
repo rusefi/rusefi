@@ -1838,11 +1838,14 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	custom can_wbo_type_e 1 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@
 	custom can_wbo_re_id_e 1 bits, U08, @OFFSET@, [0:3], $can_wbo_re_id_list
 	custom can_wbo_aem_id_e 1 bits, U08, @OFFSET@, [0:3], $can_wbo_aem_id_list
+	custom can_wbo_re_hwidx_e 1 bits, U08, @OFFSET@, [0:3], $can_wbo_re_hwidx_list
 
 struct wbo_s
 	can_wbo_type_e type;
 	can_wbo_re_id_e reId;
 	can_wbo_aem_id_e aemId;
+	can_wbo_re_hwidx_e reHwidx;
+	bit enableRemap;
 end_struct
 
 	wbo_s[CAN_WBO_COUNT iterate] canWbo;
