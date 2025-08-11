@@ -64,12 +64,21 @@ void Engine::resetEngineSnifferIfInTestMode() {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
+PUBLIC_API_WEAK trigger_type_e getCustomVvtTriggerType(vvt_mode_e vvtMode) {
+		criticalError("Broken VVT mode maybe corrupted calibration %d: %s", vvtMode, getVvt_mode_e(vvtMode));
+		return trigger_type_e::TT_HALF_MOON; // we have to return something for the sake of -Werror=return-type
+}
+
+// todo: move this method from engine.cpp already?
 /**
  * VVT decoding delegates to universal trigger decoder. Here we map vvt_mode_e into corresponding trigger_type_e
  */
 trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
+	case VVT_CUSTOM_1:
+	case VVT_CUSTOM_2:
 	case VVT_INACTIVE:
+	  // hold on, what? 'VVT_INACTIVE' means TT_HALF_MOON?!
 		return trigger_type_e::TT_HALF_MOON;
 	case VVT_TOYOTA_3_TOOTH:
 		return trigger_type_e::TT_VVT_TOYOTA_3_TOOTH;

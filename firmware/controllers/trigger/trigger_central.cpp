@@ -208,6 +208,8 @@ static angle_t adjustCrankPhase(int camIndex) {
 	    // with 4 evenly spaced tooth we cannot use this wheel for engine sync
         criticalError("Honda K Intake is not suitable for engine sync");
         [[fallthrough]];
+	case VVT_CUSTOM_1:
+	case VVT_CUSTOM_2:
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
