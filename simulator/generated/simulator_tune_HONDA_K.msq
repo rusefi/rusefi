@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22796">
+    <page number="0" size="22804">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -590,9 +590,13 @@
         <constant name="canVssNbcType">"BMW_e46"</constant>
         <constant digits="4" name="canVssScaling" units="ratio">1.0</constant>
         <constant name="canWbo1_aemId">"ID1 0x0000180"</constant>
+        <constant name="canWbo1_enableRemap">"false"</constant>
+        <constant name="canWbo1_reHwidx">"Idx 0"</constant>
         <constant name="canWbo1_reId">"ID1 0x190/191"</constant>
         <constant name="canWbo1_type">"RusEFI"</constant>
         <constant name="canWbo2_aemId">"ID2 0x0000181"</constant>
+        <constant name="canWbo2_enableRemap">"false"</constant>
+        <constant name="canWbo2_reHwidx">"Idx 0"</constant>
         <constant name="canWbo2_reId">"ID2 0x192/193"</constant>
         <constant name="canWbo2_type">"RusEFI"</constant>
         <constant name="canWriteEnabled">"true"</constant>
@@ -5074,7 +5078,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250810" nPages="1" signature="rusEFI master.2025.08.11.f407-discovery.1309241207" version="5.0"/>
+    <versionInfo firmwareInfo="20250810" nPages="1" signature="rusEFI master.2025.08.12.f407-discovery.4104034096" version="5.0"/>
     <bibliography author="rusEFI 20250810" writeDate="date"/>
     <settings/>
     <userComments/>
