@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Aug 05 17:50:17 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Aug 11 20:20:53 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -411,6 +411,27 @@ case WBO_AEM_ID8:
   return "WBO_AEM_ID8";
 case WBO_AEM_ID9:
   return "WBO_AEM_ID9";
+  }
+ return NULL;
+}
+const char *getCan_wbo_re_hwidx_e(can_wbo_re_hwidx_e value){
+switch(value) {
+case WBO_RE_HWIDX0:
+  return "WBO_RE_HWIDX0";
+case WBO_RE_HWIDX1:
+  return "WBO_RE_HWIDX1";
+case WBO_RE_HWIDX2:
+  return "WBO_RE_HWIDX2";
+case WBO_RE_HWIDX3:
+  return "WBO_RE_HWIDX3";
+case WBO_RE_HWIDX4:
+  return "WBO_RE_HWIDX4";
+case WBO_RE_HWIDX5:
+  return "WBO_RE_HWIDX5";
+case WBO_RE_HWIDX6:
+  return "WBO_RE_HWIDX6";
+case WBO_RE_HWIDX7:
+  return "WBO_RE_HWIDX7";
   }
  return NULL;
 }
