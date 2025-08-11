@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22760">
+    <page number="0" size="22792">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.025081E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250811E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -2720,8 +2720,8 @@
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 4.702E-35 100.0 0.0 0.0 0.0 5.6018799999999996E-37 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
          0.0 200.0 0.5 0.0 4.62428E-42 8.26521E-37 0.0 0.0 0.0 0.0 8.26521E-37 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 1.51625E-34 7.27251E-25 0.0 50.0 0.0 450.0 68947.6 0.0 0.0 0.0 0.0 2.06887E-33 1.85493E-38
-         8.407789999999999E-42 4.2039E-42 0.0 50.0 0.0 450.0 2000000.0 0.0 0.0 0.0 500.0 10000.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 1.8367099999999999E-37 5.51019E-37 9.18366E-37 0.0 50.0 0.0 450.0 68947.6 0.0 0.0 0.0 0.0
+         2.06887E-33 1.85493E-38 8.407789999999999E-42 4.2039E-42 0.0 50.0 0.0 450.0 2000000.0 0.0 0.0 0.0 500.0 10000.0 0.0 0.0
 </constant>
         <constant digits="0" name="ltft_timeConstant" units="sec">3000.0</constant>
         <constant digits="1" name="ltitClampMax" units="%">0.0</constant>
@@ -5164,7 +5164,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250810" nPages="1" signature="rusEFI master.2025.08.11.f407-discovery.4270981030" version="5.0"/>
+    <versionInfo firmwareInfo="20250810" nPages="1" signature="rusEFI master.2025.08.11.f407-discovery.995443029" version="5.0"/>
     <bibliography author="rusEFI 20250810" writeDate="date"/>
     <settings/>
     <userComments/>
