@@ -6561,450 +6561,450 @@ struct persistent_config_s {
 	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 22808
 	 */
-	scaled_channel<int8_t, 1, 5> cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE] = {};
+	scaled_channel<int16_t, 1, 1> cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE] = {};
 	/**
 	 * units: RPM
-	 * offset 22812
+	 * offset 22816
 	 */
 	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE] = {};
 	/**
 	 * units: volt
-	 * offset 22820
+	 * offset 22824
 	 */
 	scaled_channel<uint16_t, 1000, 1> fuelLevelBins[FUEL_LEVEL_TABLE_COUNT] = {};
 	/**
 	 * units: %
-	 * offset 22836
+	 * offset 22840
 	 */
 	uint8_t fuelLevelValues[FUEL_LEVEL_TABLE_COUNT] = {};
 	/**
 	 * units: volts
-	 * offset 22844
+	 * offset 22848
 	 */
 	scaled_channel<uint8_t, 10, 1> dwellVoltageCorrVoltBins[DWELL_CURVE_SIZE] = {};
 	/**
 	 * units: multiplier
-	 * offset 22852
+	 * offset 22856
 	 */
 	scaled_channel<uint8_t, 50, 1> dwellVoltageCorrValues[DWELL_CURVE_SIZE] = {};
 	/**
 	 * units: %
-	 * offset 22860
+	 * offset 22864
 	 */
 	scaled_channel<uint8_t, 1, 1> tcu_shiftTpsBins[TCU_TABLE_WIDTH] = {};
 	/**
 	 * units: MPH
-	 * offset 22868
+	 * offset 22872
 	 */
 	uint8_t tcu_shiftSpeed12[TCU_TABLE_WIDTH] = {};
 	/**
 	 * units: MPH
-	 * offset 22876
+	 * offset 22880
 	 */
 	uint8_t tcu_shiftSpeed23[TCU_TABLE_WIDTH] = {};
 	/**
 	 * units: MPH
-	 * offset 22884
+	 * offset 22888
 	 */
 	uint8_t tcu_shiftSpeed34[TCU_TABLE_WIDTH] = {};
 	/**
 	 * units: MPH
-	 * offset 22892
+	 * offset 22896
 	 */
 	uint8_t tcu_shiftSpeed21[TCU_TABLE_WIDTH] = {};
 	/**
 	 * units: MPH
-	 * offset 22900
+	 * offset 22904
 	 */
 	uint8_t tcu_shiftSpeed32[TCU_TABLE_WIDTH] = {};
 	/**
 	 * units: MPH
-	 * offset 22908
+	 * offset 22912
 	 */
 	uint8_t tcu_shiftSpeed43[TCU_TABLE_WIDTH] = {};
 	/**
 	 * units: ms
-	 * offset 22916
+	 * offset 22920
 	 */
 	float tcu_shiftTime;
 	/**
 	 * units: volts
-	 * offset 22920
+	 * offset 22924
 	 */
 	scaled_channel<int16_t, 10, 1> alternatorVoltageTargetTable[ALTERNATOR_VOLTAGE_TARGET_SIZE][ALTERNATOR_VOLTAGE_TARGET_SIZE] = {};
 	/**
 	 * units: Load
-	 * offset 22952
+	 * offset 22956
 	 */
 	uint16_t alternatorVoltageTargetLoadBins[ALTERNATOR_VOLTAGE_TARGET_SIZE] = {};
 	/**
 	 * units: RPM
-	 * offset 22960
+	 * offset 22964
 	 */
 	uint16_t alternatorVoltageTargetRpmBins[ALTERNATOR_VOLTAGE_TARGET_SIZE] = {};
 	/**
 	 * units: C
-	 * offset 22968
+	 * offset 22972
 	 */
 	float cltBoostCorrBins[BOOST_CURVE_SIZE] = {};
 	/**
 	 * units: ratio
-	 * offset 22988
+	 * offset 22992
 	 */
 	float cltBoostCorr[BOOST_CURVE_SIZE] = {};
 	/**
 	 * units: C
-	 * offset 23008
+	 * offset 23012
 	 */
 	float iatBoostCorrBins[BOOST_CURVE_SIZE] = {};
 	/**
 	 * units: ratio
-	 * offset 23028
+	 * offset 23032
 	 */
 	float iatBoostCorr[BOOST_CURVE_SIZE] = {};
 	/**
 	 * units: C
-	 * offset 23048
+	 * offset 23052
 	 */
 	float cltBoostAdderBins[BOOST_CURVE_SIZE] = {};
 	/**
-	 * offset 23068
+	 * offset 23072
 	 */
 	float cltBoostAdder[BOOST_CURVE_SIZE] = {};
 	/**
 	 * units: C
-	 * offset 23088
+	 * offset 23092
 	 */
 	float iatBoostAdderBins[BOOST_CURVE_SIZE] = {};
 	/**
-	 * offset 23108
+	 * offset 23112
 	 */
 	float iatBoostAdder[BOOST_CURVE_SIZE] = {};
 	/**
 	 * units: RPM
-	 * offset 23128
+	 * offset 23132
 	 */
 	scaled_channel<uint8_t, 1, 100> minimumOilPressureBins[8] = {};
 	/**
 	 * units: kPa
-	 * offset 23136
+	 * offset 23140
 	 */
 	scaled_channel<uint8_t, 1, 10> minimumOilPressureValues[8] = {};
 	/**
-	 * offset 23144
+	 * offset 23148
 	 */
 	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT] = {};
 	/**
 	 * @@DYNO_RPM_STEP_TOOLTIP@@
 	 * units: Rpm
-	 * offset 23520
+	 * offset 23524
 	 */
 	scaled_channel<uint8_t, 1, 1> dynoRpmStep;
 	/**
 	 * @@DYNO_SAE_TEMPERATURE_C_TOOLTIP@@
 	 * units: C
-	 * offset 23521
+	 * offset 23525
 	 */
 	scaled_channel<int8_t, 1, 1> dynoSaeTemperatureC;
 	/**
 	 * @@DYNO_SAE_RELATIVE_HUMIDITY_TOOLTIP@@
 	 * units: %
-	 * offset 23522
+	 * offset 23526
 	 */
 	scaled_channel<uint8_t, 1, 1> dynoSaeRelativeHumidity;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23523
+	 * offset 23527
 	 */
-	uint8_t alignmentFill_at_23523[1] = {};
+	uint8_t alignmentFill_at_23527[1] = {};
 	/**
 	 * @@DYNO_SAE_BARO_TOOLTIP@@
 	 * units: KPa
-	 * offset 23524
+	 * offset 23528
 	 */
 	scaled_channel<float, 1, 1> dynoSaeBaro;
 	/**
 	 * @@DYNO_CAR_WHEEL_DIA_INCH_TOOLTIP@@
 	 * units: Inch
-	 * offset 23528
+	 * offset 23532
 	 */
 	scaled_channel<int8_t, 1, 1> dynoCarWheelDiaInch;
 	/**
 	 * @@DYNO_CAR_WHEEL_ASPECT_RATIO_TOOLTIP@@
 	 * units: Aspect Ratio (height)
-	 * offset 23529
+	 * offset 23533
 	 */
 	scaled_channel<int8_t, 1, 1> dynoCarWheelAspectRatio;
 	/**
 	 * @@DYNO_CAR_WHEEL_TIRE_WIDTH_TOOLTIP@@
 	 * units: Width mm
-	 * offset 23530
+	 * offset 23534
 	 */
 	scaled_channel<int16_t, 1, 1> dynoCarWheelTireWidthMm;
 	/**
 	 * @@DYNO_CAR_GEAR_PRIMARY_REDUCTION_TOOLTIP@@
 	 * units: Units
-	 * offset 23532
+	 * offset 23536
 	 */
 	scaled_channel<float, 1, 1> dynoCarGearPrimaryReduction;
 	/**
 	 * @@DYNO_CAR_GEAR_RATIO_TOOLTIP@@
 	 * units: Units
-	 * offset 23536
+	 * offset 23540
 	 */
 	scaled_channel<float, 1, 1> dynoCarGearRatio;
 	/**
 	 * @@DYNO_CAR_GEAR_FINAL_DRIVE_TOOLTIP@@
 	 * units: Units
-	 * offset 23540
+	 * offset 23544
 	 */
 	scaled_channel<float, 1, 1> dynoCarGearFinalDrive;
 	/**
 	 * @@DYNO_CAR_CAR_MASS_TOOLTIP@@
 	 * units: Kg
-	 * offset 23544
+	 * offset 23548
 	 */
 	scaled_channel<int16_t, 1, 1> dynoCarCarMassKg;
 	/**
 	 * @@DYNO_CAR_CARGO_MASS_TOOLTIP@@
 	 * units: Kg
-	 * offset 23546
+	 * offset 23550
 	 */
 	scaled_channel<int16_t, 1, 1> dynoCarCargoMassKg;
 	/**
 	 * @@DYNO_CAR_COEFF_OF_DRAG_TOOLTIP@@
 	 * units: Coeff
-	 * offset 23548
+	 * offset 23552
 	 */
 	scaled_channel<float, 1, 1> dynoCarCoeffOfDrag;
 	/**
 	 * @@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@
 	 * units: m2
-	 * offset 23552
+	 * offset 23556
 	 */
 	scaled_channel<float, 1, 1> dynoCarFrontalAreaM2;
 	/**
 	 * units: deg
-	 * offset 23556
+	 * offset 23560
 	 */
 	scaled_channel<int8_t, 10, 1> trailingSparkTable[TRAILING_SPARK_SIZE][TRAILING_SPARK_SIZE] = {};
 	/**
 	 * units: rpm
-	 * offset 23572
+	 * offset 23576
 	 */
 	scaled_channel<uint8_t, 1, 50> trailingSparkRpmBins[TRAILING_SPARK_SIZE] = {};
 	/**
 	 * units: Load
-	 * offset 23576
+	 * offset 23580
 	 */
 	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
 	/**
 	 * units: RPM
-	 * offset 23580
+	 * offset 23584
 	 */
 	scaled_channel<uint8_t, 1, 100> maximumOilPressureBins[4] = {};
 	/**
 	 * units: kPa
-	 * offset 23584
+	 * offset 23588
 	 */
 	scaled_channel<uint8_t, 1, 10> maximumOilPressureValues[4] = {};
 	/**
 	 * Selects the X axis to use for the table.
-	 * offset 23588
+	 * offset 23592
 	 */
 	gppwm_channel_e torqueReductionCutXaxis;
 	/**
 	 * How many % of ignition events will be cut
 	 * units: %
-	 * offset 23589
+	 * offset 23593
 	 */
 	int8_t torqueReductionIgnitionCutTable[TORQUE_TABLE_Y_SIZE][TORQUE_TABLE_X_SIZE] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23601
+	 * offset 23605
 	 */
-	uint8_t alignmentFill_at_23601[1] = {};
+	uint8_t alignmentFill_at_23605[1] = {};
 	/**
-	 * offset 23602
+	 * offset 23606
 	 */
 	int16_t torqueReductionCutXBins[TORQUE_TABLE_X_SIZE] = {};
 	/**
 	 * units: gear N°
-	 * offset 23614
+	 * offset 23618
 	 */
 	int8_t torqueReductionCutGearBins[TORQUE_TABLE_Y_SIZE] = {};
 	/**
 	 * Selects the X axis to use for the table.
-	 * offset 23616
+	 * offset 23620
 	 */
 	gppwm_channel_e torqueReductionTimeXaxis;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23617
+	 * offset 23621
 	 */
-	uint8_t alignmentFill_at_23617[3] = {};
+	uint8_t alignmentFill_at_23621[3] = {};
 	/**
 	 * For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced
 	 * units: ms
-	 * offset 23620
+	 * offset 23624
 	 */
 	float torqueReductionTimeTable[TORQUE_TABLE_Y_SIZE][TORQUE_TABLE_X_SIZE] = {};
 	/**
-	 * offset 23668
+	 * offset 23672
 	 */
 	int16_t torqueReductionTimeXBins[TORQUE_TABLE_X_SIZE] = {};
 	/**
 	 * units: gear N°
-	 * offset 23680
+	 * offset 23684
 	 */
 	int8_t torqueReductionTimeGearBins[TORQUE_TABLE_Y_SIZE] = {};
 	/**
 	 * Selects the X axis to use for the table.
-	 * offset 23682
+	 * offset 23686
 	 */
 	gppwm_channel_e torqueReductionIgnitionRetardXaxis;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23683
+	 * offset 23687
 	 */
-	uint8_t alignmentFill_at_23683[1] = {};
+	uint8_t alignmentFill_at_23687[1] = {};
 	/**
 	 * How many degrees of timing advance will be reduced during the Torque Reduction Time
 	 * units: deg
-	 * offset 23684
+	 * offset 23688
 	 */
 	float torqueReductionIgnitionRetardTable[TORQUE_TABLE_Y_SIZE][TORQUE_TABLE_X_SIZE] = {};
 	/**
-	 * offset 23732
+	 * offset 23736
 	 */
 	int16_t torqueReductionIgnitionRetardXBins[TORQUE_TABLE_X_SIZE] = {};
 	/**
 	 * units: gear N°
-	 * offset 23744
+	 * offset 23748
 	 */
 	int8_t torqueReductionIgnitionRetardGearBins[TORQUE_TABLE_Y_SIZE] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23746
+	 * offset 23750
 	 */
-	uint8_t alignmentFill_at_23746[2] = {};
+	uint8_t alignmentFill_at_23750[2] = {};
 	/**
-	offset 23748 bit 0 */
+	offset 23752 bit 0 */
 	bool testPerBoardBit : 1 {};
 	/**
-	offset 23748 bit 1 */
+	offset 23752 bit 1 */
 	bool unusedBit_274_1 : 1 {};
 	/**
-	offset 23748 bit 2 */
+	offset 23752 bit 2 */
 	bool unusedBit_274_2 : 1 {};
 	/**
-	offset 23748 bit 3 */
+	offset 23752 bit 3 */
 	bool unusedBit_274_3 : 1 {};
 	/**
-	offset 23748 bit 4 */
+	offset 23752 bit 4 */
 	bool unusedBit_274_4 : 1 {};
 	/**
-	offset 23748 bit 5 */
+	offset 23752 bit 5 */
 	bool unusedBit_274_5 : 1 {};
 	/**
-	offset 23748 bit 6 */
+	offset 23752 bit 6 */
 	bool unusedBit_274_6 : 1 {};
 	/**
-	offset 23748 bit 7 */
+	offset 23752 bit 7 */
 	bool unusedBit_274_7 : 1 {};
 	/**
-	offset 23748 bit 8 */
+	offset 23752 bit 8 */
 	bool unusedBit_274_8 : 1 {};
 	/**
-	offset 23748 bit 9 */
+	offset 23752 bit 9 */
 	bool unusedBit_274_9 : 1 {};
 	/**
-	offset 23748 bit 10 */
+	offset 23752 bit 10 */
 	bool unusedBit_274_10 : 1 {};
 	/**
-	offset 23748 bit 11 */
+	offset 23752 bit 11 */
 	bool unusedBit_274_11 : 1 {};
 	/**
-	offset 23748 bit 12 */
+	offset 23752 bit 12 */
 	bool unusedBit_274_12 : 1 {};
 	/**
-	offset 23748 bit 13 */
+	offset 23752 bit 13 */
 	bool unusedBit_274_13 : 1 {};
 	/**
-	offset 23748 bit 14 */
+	offset 23752 bit 14 */
 	bool unusedBit_274_14 : 1 {};
 	/**
-	offset 23748 bit 15 */
+	offset 23752 bit 15 */
 	bool unusedBit_274_15 : 1 {};
 	/**
-	offset 23748 bit 16 */
+	offset 23752 bit 16 */
 	bool unusedBit_274_16 : 1 {};
 	/**
-	offset 23748 bit 17 */
+	offset 23752 bit 17 */
 	bool unusedBit_274_17 : 1 {};
 	/**
-	offset 23748 bit 18 */
+	offset 23752 bit 18 */
 	bool unusedBit_274_18 : 1 {};
 	/**
-	offset 23748 bit 19 */
+	offset 23752 bit 19 */
 	bool unusedBit_274_19 : 1 {};
 	/**
-	offset 23748 bit 20 */
+	offset 23752 bit 20 */
 	bool unusedBit_274_20 : 1 {};
 	/**
-	offset 23748 bit 21 */
+	offset 23752 bit 21 */
 	bool unusedBit_274_21 : 1 {};
 	/**
-	offset 23748 bit 22 */
+	offset 23752 bit 22 */
 	bool unusedBit_274_22 : 1 {};
 	/**
-	offset 23748 bit 23 */
+	offset 23752 bit 23 */
 	bool unusedBit_274_23 : 1 {};
 	/**
-	offset 23748 bit 24 */
+	offset 23752 bit 24 */
 	bool unusedBit_274_24 : 1 {};
 	/**
-	offset 23748 bit 25 */
+	offset 23752 bit 25 */
 	bool unusedBit_274_25 : 1 {};
 	/**
-	offset 23748 bit 26 */
+	offset 23752 bit 26 */
 	bool unusedBit_274_26 : 1 {};
 	/**
-	offset 23748 bit 27 */
+	offset 23752 bit 27 */
 	bool unusedBit_274_27 : 1 {};
 	/**
-	offset 23748 bit 28 */
+	offset 23752 bit 28 */
 	bool unusedBit_274_28 : 1 {};
 	/**
-	offset 23748 bit 29 */
+	offset 23752 bit 29 */
 	bool unusedBit_274_29 : 1 {};
 	/**
-	offset 23748 bit 30 */
+	offset 23752 bit 30 */
 	bool unusedBit_274_30 : 1 {};
 	/**
-	offset 23748 bit 31 */
+	offset 23752 bit 31 */
 	bool unusedBit_274_31 : 1 {};
 	/**
-	 * offset 23752
+	 * offset 23756
 	 */
 	uint8_t rainTimingAdjustment[TIMING_ADJUSTMENT_SIZE][TIMING_ADJUSTMENT_SIZE] = {};
 	/**
 	 * units: RPM
-	 * offset 23768
+	 * offset 23772
 	 */
 	uint16_t rainTimingRpmBins[TIMING_ADJUSTMENT_SIZE] = {};
 	/**
 	 * units: C
-	 * offset 23776
+	 * offset 23780
 	 */
 	float rainTimingPpsBins[TIMING_ADJUSTMENT_SIZE] = {};
 };
-static_assert(sizeof(persistent_config_s) == 23792);
+static_assert(sizeof(persistent_config_s) == 23796);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
