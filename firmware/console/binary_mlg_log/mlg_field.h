@@ -8,6 +8,19 @@
 #include "writer.h"
 #include "mlg_types.h"
 
+// For unit tests we are manipulating with storage in runtime so consteval is not possible.
+// In prod builds we have engine and configs as global instances so all addresses to read data from
+// must be known compile-time. If consteval fails then some runtime logic made its way into LogField and that moves
+// LogField instance into RAM which is correct from code perspective but incorrect intent-wise and consume code and RAM
+// for no real reason.
+#if defined(EFI_UNIT_TEST) && EFI_UNIT_TEST
+#define LOG_FIELD_CONSTNESS_SPECIFIER_METHODS constexpr
+#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const
+#else
+#define LOG_FIELD_CONSTNESS_SPECIFIER_METHODS consteval
+#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const
+#endif
+
 namespace MLG::Entries {
 using namespace MLG;
 
