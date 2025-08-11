@@ -330,3 +330,26 @@ private:
 	float m_primaryMin;
 	float m_secondaryMin;
 };
+
+extern EtbImpl<EtbController1> etb1;
+extern EtbImpl<EtbController2> etb2;
+
+static constexpr electronic_throttle_s const* etbData1_ptr = &etb1;
+static constexpr electronic_throttle_s const* etbData2_ptr = &etb2;
+
+// To be used by LogFields, for LiveData fragments see non constexpr getLiveData() in electronic_throttle.cpp
+template<typename T, size_t idx>
+consteval electronic_throttle_s const* getLiveDataConstexpr() requires std::is_same_v<T, electronic_throttle_s> {
+#if EFI_ELECTRONIC_THROTTLE_BODY
+
+	static_assert(idx < ETB_COUNT);
+
+	if constexpr (idx == 0) {
+		return etbData1_ptr;
+	}
+
+	return etbData2_ptr;
+#else
+	return nullptr;
+#endif
+}

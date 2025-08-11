@@ -726,11 +726,11 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 #include <utility>
 
 // real implementation (we mock for some unit tests)
-static EtbImpl<EtbController1> etb1;
-static EtbImpl<EtbController2> etb2(throttle2TrimTable);
+EtbImpl<EtbController1> etb1;
+EtbImpl<EtbController2> etb2(throttle2TrimTable);
 
-static_assert(ETB_COUNT == 2);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
+static_assert(ETB_COUNT == sizeof(etbControllers) / sizeof(EtbController*));
 
 void blinkEtbErrorCodes(bool blinkPhase) {
 	for (int i = 0;i<ETB_COUNT;i++) {
@@ -1081,6 +1081,7 @@ void setProteusHitachiEtbDefaults() {
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
+// So far used by FragmentEntry (LiveData)
 template<>
 const electronic_throttle_s* getLiveData(size_t idx) {
 #if EFI_ELECTRONIC_THROTTLE_BODY
@@ -1093,4 +1094,3 @@ const electronic_throttle_s* getLiveData(size_t idx) {
 	return nullptr;
 #endif
 }
-
