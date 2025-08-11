@@ -19,3 +19,6 @@ Gpio getRunningLedPin() {
 	// LD3 - green
 	return Gpio::G13;
 }
+
+void setup_custom_board_overrides() {
+}
