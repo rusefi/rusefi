@@ -37,6 +37,10 @@ public class TsOutput {
     private final String temperatureToFahrenheitTranslate = "17.77777";
 
     private final String pressureMetricUnit = quote("kPa");
+    private final String pressureImperialUnit = quote("psi");
+    private final Double kpaToPsiValue = 0.145038;
+    private final String pressureToPsiScale = String.valueOf(kpaToPsiValue);
+    private final String pressureToPsiTranslate = "0";
 
     public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
@@ -203,6 +207,10 @@ public class TsOutput {
         return celsius * 1.8 + 32;
     }
 
+    private double kPaToPsi(double kPa){
+        return kPa * kpaToPsiValue;
+    }
+
     public String formatTemperatureTsInfo(String tsInfo, boolean isImperial){
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // this case is handle by handleTsInfo, so we return a empty string
@@ -232,8 +240,17 @@ public class TsOutput {
         }
 
         String[] fields = tokenizeWithBraces(tsInfo);
-        // override units
-        fields[0] = pressureMetricUnit;
+         if (isImperial){
+                    // override scale/translate & units, convert min-max
+                    fields[0] = pressureImperialUnit;
+                    fields[1] = pressureToPsiScale;
+                    fields[2] = pressureToPsiTranslate;
+                    fields[3] = String.valueOf( kPaToPsi( IniField.parseDouble(fields[3]) ) ); // min
+                    fields[4] = String.valueOf( kPaToPsi( IniField.parseDouble(fields[4]) ) ); // max
+        } else {
+            // override units
+            fields[0] = pressureMetricUnit;
+        }
         return tokensToString(fields);
     }
 
