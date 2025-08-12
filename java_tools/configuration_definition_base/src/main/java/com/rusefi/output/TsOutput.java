@@ -188,14 +188,14 @@ public class TsOutput {
         return celsius * 1.8 + 32;
     }
 
-    public String formatTemperatureTsInfo(String tsInfo, boolean isFahrenheit){
+    public String formatTemperatureTsInfo(String tsInfo, boolean isImperial){
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // this case is handle by handleTsInfo, so we return a empty string
             return "";
         }
         String[] fields = tokenizeWithBraces(tsInfo);
 
-         if (isFahrenheit){
+         if (isImperial){
             // override scale/translate & units, convert min-max
             fields[0] = temperatureFahrenheitUnit;
             fields[1] = temperatureToFahrenheitScale;
