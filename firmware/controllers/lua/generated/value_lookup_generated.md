@@ -203,10 +203,10 @@ Once engine speed passes this value, start reducing ETB angle.
 This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.
 
 ### map.sensor.lowValue
-kPa value at low volts
+kPa/psi value at low volts
 
 ### map.sensor.highValue
-kPa value at high volts
+kPa/psi value at high volts
 
 ### clt.config.tempC_1
 these values are in Celcius
@@ -278,7 +278,7 @@ Number of cylinder the engine has.
 null
 
 ### mapSyncThreshold
-Delta kPa for MAP sync
+Delta kPa/psi for MAP sync
 
 ### cylinderBore
 @@CYLINDER_BORE_TOOLTIP@@
@@ -398,10 +398,10 @@ Magic engine phase: we compare instant MAP at X to instant MAP at x+360 angle in
 TPS/PPS error threshold
 
 ### baroSensor.lowValue
-kPa value at low volts
+kPa/psi value at low volts
 
 ### baroSensor.highValue
-kPa value at high volts
+kPa/psi value at high volts
 
 ### idle.solenoidFrequency
 
@@ -752,10 +752,10 @@ null
 Below this RPM, the idle region is active, idle+300 would be a good value
 
 ### stft.maxOverrunLoad
-Below this engine load, the overrun region is active\nWhen tuning by MAP the units are kPa, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%
+Below this engine load, the overrun region is active\nWhen tuning by MAP the units are kPa/psi, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%
 
 ### stft.minPowerLoad
-Above this engine load, the power region is active\nWhen tuning by MAP the units are kPa
+Above this engine load, the power region is active\nWhen tuning by MAP the units are kPa/psi
 
 ### stft.deadband
 When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.
@@ -1046,10 +1046,10 @@ Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1
 
 
 ### mapErrorDetectionTooLow
-kPa value which is too low to be true
+kPa/psi value which is too low to be true
 
 ### mapErrorDetectionTooHigh
-kPa value which is too high to be true
+kPa/psi value which is too high to be true
 
 ### multisparkSparkDuration
 How long to wait for the spark to fire before recharging the coil for another spark.
@@ -1295,7 +1295,7 @@ Additional idle % when fan #2 is active
 Delay to allow fuel pressure to build before firing the priming pulse.
 
 ### fuelReferencePressure
-This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.\nThis is gauge pressure/in reference to atmospheric.
+This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa/50.7psi here.\nThis is gauge pressure/in reference to atmospheric.
 
 ### auxTempSensor1.config.tempC_1
 these values are in Celcius
@@ -1844,10 +1844,10 @@ Maximum coil charge current, 1A step
 
 
 ### minAcPressure
-value of A/C pressure in kPa before that compressor is disengaged
+value of A/C pressure in kPa/psi before that compressor is disengaged
 
 ### maxAcPressure
-value of A/C pressure in kPa after that compressor is disengaged
+value of A/C pressure in kPa/psi after that compressor is disengaged
 
 ### minimumOilPressureTimeout
 Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.

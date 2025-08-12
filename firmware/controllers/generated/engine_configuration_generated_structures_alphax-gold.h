@@ -44,14 +44,14 @@ struct stft_s {
 	uint8_t alignmentFill_at_1[1] = {};
 	/**
 	 * Below this engine load, the overrun region is active
-	 * When tuning by MAP the units are kPa, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%
+	 * When tuning by MAP the units are kPa/psi, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%
 	 * units: load
 	 * offset 2
 	 */
 	uint16_t maxOverrunLoad;
 	/**
 	 * Above this engine load, the power region is active
-	 * When tuning by MAP the units are kPa
+	 * When tuning by MAP the units are kPa/psi
 	 * units: load
 	 * offset 4
 	 */
@@ -389,14 +389,14 @@ static_assert(sizeof(gppwm_channel) == 108);
 // start of air_pressure_sensor_config_s
 struct air_pressure_sensor_config_s {
 	/**
-	 * kPa value at low volts
-	 * units: kpa
+	 * kPa/psi value at low volts
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 0
 	 */
 	float lowValue;
 	/**
-	 * kPa value at high volts
-	 * units: kpa
+	 * kPa/psi value at high volts
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 4
 	 */
 	float highValue;
@@ -1390,8 +1390,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t justATempTest;
 	/**
-	 * Delta kPa for MAP sync
-	 * units: kPa
+	 * Delta kPa/psi for MAP sync
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 446
 	 */
 	uint8_t mapSyncThreshold;
@@ -1502,7 +1502,7 @@ struct engine_configuration_s {
 	uint8_t camDecoder2jzPrecision;
 	/**
 	 * Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
-	 * units: kPa
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 476
 	 */
 	uint16_t minOilPressureAfterStart;
@@ -2261,7 +2261,7 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_785[1] = {};
 	/**
 	 * Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
-	 * units: kPa
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 786
 	 */
 	uint16_t minimumBoostClosedLoopMap;
@@ -3257,14 +3257,14 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> tachPulsePerRev;
 	/**
-	 * kPa value which is too low to be true
-	 * units: kPa
+	 * kPa/psi value which is too low to be true
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 1452
 	 */
 	float mapErrorDetectionTooLow;
 	/**
-	 * kPa value which is too high to be true
-	 * units: kPa
+	 * kPa/psi value which is too high to be true
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 1456
 	 */
 	float mapErrorDetectionTooHigh;
@@ -3736,7 +3736,7 @@ struct engine_configuration_s {
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
 	 * Set to 0 to disable overboost cut.
-	 * units: kPa (absolute)
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 1580
 	 */
 	float boostCutPressure;
@@ -3864,9 +3864,9 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_1691[1] = {};
 	/**
 	 * This is the pressure at which your injector flow is known.
-	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
+	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa/50.7psi here.
 	 * This is gauge pressure/in reference to atmospheric.
-	 * units: kPa
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 1692
 	 */
 	float fuelReferencePressure;
@@ -4095,7 +4095,7 @@ struct engine_configuration_s {
 	int16_t pidExtraForLowRpm;
 	/**
 	 * MAP value above which fuel injection is re-enabled.
-	 * units: kPa
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 1996
 	 */
 	int16_t coastingFuelCutMap;
@@ -5106,14 +5106,14 @@ struct engine_configuration_s {
 	 */
 	linear_sensor_s acPressure;
 	/**
-	 * value of A/C pressure in kPa before that compressor is disengaged
-	 * units: kPa
+	 * value of A/C pressure in kPa/psi before that compressor is disengaged
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 3724
 	 */
 	uint16_t minAcPressure;
 	/**
-	 * value of A/C pressure in kPa after that compressor is disengaged
-	 * units: kPa
+	 * value of A/C pressure in kPa/psi after that compressor is disengaged
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 3726
 	 */
 	uint16_t maxAcPressure;
@@ -5458,7 +5458,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_3821[1] = {};
 	/**
-	 * units: kPa
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 3822
 	 */
 	int16_t nitrousMaximumMap;
@@ -5882,7 +5882,7 @@ struct persistent_config_s {
 	 */
 	float scriptCurve6[SCRIPT_CURVE_8] = {};
 	/**
-	 * units: kPa
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 5024
 	 */
 	float baroCorrPressureBins[BARO_CORR_SIZE] = {};
