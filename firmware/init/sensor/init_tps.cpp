@@ -9,6 +9,7 @@
 #include "tps.h"
 #include "auto_generated_sensor.h"
 #include "defaults.h"
+#include "exp_average.h"
 
 struct TpsConfig {
 	adc_channel_e channel;
