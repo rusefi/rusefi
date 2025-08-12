@@ -91,13 +91,13 @@ pins:
     function: Fuel Pressure / Auxiliary analog input 3
 
   - pin: C16
-    function: VR2+ max9924
+    function: VR2+ max9924 best for normal 12+ tooth wheels
     color: blue
 
   - pin: C17
     meta: MM100_UART8_TX
     class: event_inputs
-    ts_name: ___ VR2-/HALL max9924
+    ts_name: ___ VR2-/HALL max9924 best for normal 12+ tooth wheels
     function: VR2-/HALL
     color: white
 
@@ -113,11 +113,11 @@ pins:
     type: hall
     class: event_inputs
     function: VR1+
-    ts_name: ___ VR1+ Discrete
+    ts_name: ___ VR1+ Discrete for low count wheel
     color: blue
 
   - pin: C19
-    function: VR1- Discrete
+    function: VR1- Discrete for low count wheel
     color: white
 
   - pin: C20

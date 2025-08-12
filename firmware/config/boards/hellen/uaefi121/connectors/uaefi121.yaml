@@ -124,24 +124,24 @@ pins:
     meta: MM100_UART8_RX
     class: event_inputs
     ts_name: VR_DISCRETE+
-    function: VR_DISCRETE positive input
+    function: VR_DISCRETE positive input best for low count wheel
     type: vr
 
   - pin: 18a
     ts_name: VR_DISCRETE-
-    function: VR_DISCRETE negative input
+    function: VR_DISCRETE negative input best for low count wheel
     type: vr
 
   - pin: 19a
     meta: MM100_UART8_TX
     class: event_inputs
     ts_name: VR_9924+
-    function: VR_9924 positive input
+    function: VR_9924 positive input best for normal 12+ tooth wheels
     type: vr
 
   - pin: 20a
     ts_name: VR_9924-
-    function: VR_9924 negative input
+    function: VR_9924 negative input best for normal 12+ tooth wheels
     type: vr
 
   - pin: 21a
