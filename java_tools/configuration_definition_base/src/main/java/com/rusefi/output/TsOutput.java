@@ -28,9 +28,9 @@ public class TsOutput {
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
     private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-    private final String celsiusConditionalStart = "#if USE_METRIC_UNITS" + EOL;
-    private final String celsiusConditionalElse = "#else" + EOL;
-    private final String celsiusConditionalEnd = "#endif" + EOL;
+    private final String metricUnitsConditionalStart = "#if USE_METRIC_UNITS" + EOL;
+    private final String metricUnitsConditionalElse = "#else" + EOL;
+    private final String metricUnitsConditionalEnd = "#endif" + EOL;
     private final String temperatureCelsiusUnit = quote("C");
     private final String temperatureFahrenheitUnit = quote("F");
     private final String temperatureToFahrenheitScale = "{ 9 / 5 }";
@@ -162,13 +162,13 @@ public class TsOutput {
                 	String originalTsInfo = configField.getTsInfo();
                     // first the Celsius case, and save the index after writing the field
                     configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, false));
-                    tsHeader.append(celsiusConditionalStart);
+                    tsHeader.append(metricUnitsConditionalStart);
                     int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
-                    tsHeader.append(celsiusConditionalElse);
+                    tsHeader.append(metricUnitsConditionalElse);
                     // now the fahrenheit case:
                     configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, true));
                     writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
-                    tsHeader.append(celsiusConditionalEnd);
+                    tsHeader.append(metricUnitsConditionalEnd);
                     configField.setTsInfo(originalTsInfo);
                     return newIndex;
                 }
