@@ -271,9 +271,9 @@
          1.0 1.0 1.0 1.0
          1.0 1.0 1.0 1.0
 </constant>
-        <constant digits="2" name="baroSensor_highValue" units="kpa">500.0</constant>
+        <constant digits="2" name="baroSensor_highValue" units="kPa">500.0</constant>
         <constant name="baroSensor_hwChannel">"Disabled"</constant>
-        <constant digits="2" name="baroSensor_lowValue" units="kpa">0.0</constant>
+        <constant digits="2" name="baroSensor_lowValue" units="kPa">0.0</constant>
         <constant name="baroSensor_type">"Custom"</constant>
         <constant digits="0" name="benchTestCount" units="">3.0</constant>
         <constant digits="1" name="benchTestOffTime" units="ms">500.0</constant>
@@ -401,7 +401,7 @@
         <constant name="boostControlPin">"NONE"</constant>
         <constant name="boostControlPinMode">"default"</constant>
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
-        <constant digits="0" name="boostCutPressure" units="kPa (absolute)">300.0</constant>
+        <constant digits="0" name="boostCutPressure" units="kPa">300.0</constant>
         <constant digits="1" name="boostCutPressureHyst" units="kPa (absolute)">20.0</constant>
         <constant cols="1" digits="1" name="boostOpenLoopBlends1_blendBins" rows="8">
          0.0
@@ -3014,9 +3014,9 @@ end</constant>
          5300.0
          7000.0
 </constant>
-        <constant digits="2" name="map_sensor_highValue" units="kpa">101.3</constant>
+        <constant digits="2" name="map_sensor_highValue" units="kPa">101.3</constant>
         <constant name="map_sensor_hwChannel">"Disabled"</constant>
-        <constant digits="2" name="map_sensor_lowValue" units="kpa">20.0</constant>
+        <constant digits="2" name="map_sensor_lowValue" units="kPa">20.0</constant>
         <constant name="map_sensor_type">"Custom"</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant digits="2" name="mapErrorDetectionTooHigh" units="kPa">410.0</constant>
@@ -5168,7 +5168,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250810" nPages="1" signature="rusEFI master.2025.08.12.f407-discovery.2672249538" version="5.0"/>
+    <versionInfo firmwareInfo="20250810" nPages="1" signature="rusEFI master.2025.08.12.f407-discovery.1496166756" version="5.0"/>
     <bibliography author="rusEFI 20250810" writeDate="date"/>
     <settings/>
     <userComments/>
