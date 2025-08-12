@@ -6538,7 +6538,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 100, 1> wwBetaCltValues[WWAE_TABLE_SIZE] = {};
 	/**
-	 * units: kPa
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 22016
 	 */
 	uint8_t wwMapBins[WWAE_TABLE_SIZE] = {};
