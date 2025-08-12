@@ -12,6 +12,6 @@
 
 #if HAL_USE_SPI
 void initMax3185x(spi_device_e device, egt_cs_array_t max31855_cs);
-void stopMax3185x(void);
+void stopMax3185x();
 void startMax3185x(spi_device_e device, egt_cs_array_t max31855_cs);
 #endif /* HAL_USE_SPI */

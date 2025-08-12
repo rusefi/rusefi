@@ -37,18 +37,18 @@ void initEgt() {
 #endif /* EFI_MAX_31855 */
 }
 
-void stopEgt(void)
-{
+void stopEgt() {
 	/* TODO: also stop CAN sensors */
 #if EFI_MAX_31855
 	stopMax3185x();
 #endif /* EFI_MAX_31855 */
 }
 
-void startEgt(void)
-{
+void startEgt() {
 	/* TODO: also start CAN sensors */
 #if EFI_MAX_31855
 	startMax3185x(engineConfiguration->max31855spiDevice, engineConfiguration->max31855_cs);
+#else
+  criticalAssertVoid(SPI_NONE == engineConfiguration->max31855spiDevice, "not EFI_MAX_31855");
 #endif /* EFI_MAX_31855 */
 }

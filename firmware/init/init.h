@@ -52,8 +52,8 @@ void deinitMap();
 void deinitAuxSpeedSensors();
 void deinitInputShaftSpeedSensor();
 
-void stopEgt(void);
-void startEgt(void);
+void stopEgt();
+void startEgt();
 
 #if EFI_SENT_SUPPORT
 void sentPressureDecode(SentInput sentCh);
