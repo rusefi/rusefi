@@ -26,8 +26,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D15: return "B7 VVT1 or Low Side output 1 (has flyback D2)";
 		case Gpio::D2: return "B2 injector output 5";
 		case Gpio::D3: return "B6 injector output 1";
-		case Gpio::E0: return "C18 VR1+ Discrete";
-		case Gpio::E1: return "C17 VR2-/HALL max9924";
+		case Gpio::E0: return "C18 VR1+ Discrete for low count wheel";
+		case Gpio::E1: return "C17 VR2-/HALL max9924 best for normal 12+ tooth wheels";
 		case Gpio::E11: return "D5 FLEX";
 		case Gpio::E12: return "C5 CAM 1 / HALL1";
 		case Gpio::E13: return "C6 CAM 2 / HALL2";
