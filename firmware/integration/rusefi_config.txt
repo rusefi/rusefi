@@ -284,8 +284,8 @@ end_struct
 
 struct stft_s
 	uint8_t autoscale maxIdleRegionRpm;Below this RPM, the idle region is active, idle+300 would be a good value;"RPM", 50, 0, 0, 12000, 0
-	uint16_t maxOverrunLoad;Below this engine load, the overrun region is active\nWhen tuning by MAP the units are kPa, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%;"load", 1, 0, 0, 250, 0
-	uint16_t minPowerLoad;Above this engine load, the power region is active\nWhen tuning by MAP the units are kPa;"load", 1, 0, 0, 250, 0
+	uint16_t maxOverrunLoad;Below this engine load, the overrun region is active\nWhen tuning by MAP the units are kPa/psi, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%;"load", 1, 0, 0, 250, 0
+	uint16_t minPowerLoad;Above this engine load, the power region is active\nWhen tuning by MAP the units are kPa/psi;"load", 1, 0, 0, 250, 0
 	uint8_t autoscale deadband;When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;"%", 0.1, 0, 0, 3, 1
 
 	int8_t minClt;Below this temperature, correction is disabled.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -20, 100, 0
@@ -429,8 +429,8 @@ custom air_pressure_sensor_type_e 1 bits, U08, @OFFSET@, [0:4], "Custom", "DENSO
 custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5], $adc_channel_e_list
 
 struct air_pressure_sensor_config_s
-float lowValue;kPa value at low volts;"kpa", 1, 0, -400, 800, 2
-float highValue;kPa value at high volts;"kpa", 1, 0, -400, 800, 2
+float lowValue;kPa/psi value at low volts;"SPECIAL_CASE_PRESSURE", 1, 0, -400, 800, 2
+float highValue;kPa/psi value at high volts;"SPECIAL_CASE_PRESSURE", 1, 0, -400, 800, 2
 air_pressure_sensor_type_e type;
 adc_channel_e hwChannel;
 
@@ -637,7 +637,7 @@ uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CY
 custom firing_order_e 1 bits, U08, @OFFSET@, [0:6], @@firing_order_e_enum@@
 firing_order_e firingOrder;
 uint8_t justATempTest
-uint8_t mapSyncThreshold;Delta kPa for MAP sync;"kPa", 1, 0, 0, 50, 0
+uint8_t mapSyncThreshold;Delta kPa/psi for MAP sync;"SPECIAL_CASE_PRESSURE", 1, 0, 0, 50, 0
 
 #define CYLINDER_BORE_UNITS "mm"
 #define CYLINDER_BORE_TOOLTIP "Cylinder diameter in mm"
@@ -666,7 +666,7 @@ ignition_mode_e ignitionMode;Single coil = distributor\nIndividual coils = one c
 int8_t gapTrackingLengthOverride;How many consecutive gap rations have to match expected ranges for sync to happen;"count", 1, 0, 1, @@GAP_TRACKING_LENGTH@@, 0
  uint8_t maxIdleVss;Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).;"kph", 1, 0, 0, 100, 0
 uint8_t camDecoder2jzPrecision;Allowed range around detection position
- uint16_t minOilPressureAfterStart;Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.;"kPa", 1, 0, 0, 1000, 0
+ uint16_t minOilPressureAfterStart;Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.;"SPECIAL_CASE_PRESSURE", 1, 0, 0, 1000, 0
 
 custom timing_mode_e 1 bits, U08, @OFFSET@, [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;Dynamic uses the timing map to decide the ignition timing\nStatic timing fixes the timing to the value set below (only use for checking static timing with a timing light).
@@ -894,7 +894,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
 	uint8_t mc33_hvolt;Boost Voltage;"v", 1, 0, 40, 70, 0
-	uint16_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"kPa", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+	uint16_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"SPECIAL_CASE_PRESSURE", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
     int8_t initialIgnitionCutPercent;;"%", 1, 0, 0, 100, 0
     int8_t finalIgnitionCutPercentBeforeLaunch;;"%", 1, 0, 0, 100, 0
@@ -1198,8 +1198,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
   uint16_t autoscale tachPulsePerRev;;"", 0.001, 0, 1, 15, 3
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle
-	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa", 1, 0, -100, 100, 2
-	float mapErrorDetectionTooHigh;kPa value which is too high to be true;"kPa", 1, 0, -100, 800, 2
+	float mapErrorDetectionTooLow;kPa/psi value which is too low to be true;"SPECIAL_CASE_PRESSURE", 1, 0, -100, 100, 2
+	float mapErrorDetectionTooHigh;kPa/psi value which is too high to be true;"SPECIAL_CASE_PRESSURE", 1, 0, -100, 800, 2
 	uint16_t autoscale multisparkSparkDuration;How long to wait for the spark to fire before recharging the coil for another spark.;"ms", 0.001, 0, 0, 3, 2
 	uint16_t autoscale multisparkDwell;This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.;"ms", 0.001, 0, 0, 3, 2
 	pid_s idleRpmPid;See cltIdleRpmBins
@@ -1321,7 +1321,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	output_pin_e hpfpValvePin;
 	pin_output_mode_e hpfpValvePinMode;
 
-	float boostCutPressure;MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.;"kPa (absolute)", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+	float boostCutPressure;MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.;"SPECIAL_CASE_PRESSURE", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 	uint8_t[16] autoscale tchargeBins;;"kg/h", 5, 0, 0, 1200, 0
 	uint8_t[16] autoscale tchargeValues;;"ratio", 0.01, 0, 0, 1, 2
@@ -1361,7 +1361,7 @@ tle8888_mode_e tle8888mode;
 	custom injector_compensation_mode_e 1 bits, U08, @OFFSET@, [0:1], "None", "Fixed rail pressure", "Sensed Rail Pressure", "HPFP fuel mass compensation"
 	injector_compensation_mode_e injectorCompensationMode;None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor\n HPFP fuel mass compensation = manual mode for GDI engines;
 
-	float fuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.\nThis is gauge pressure/in reference to atmospheric.;"kPa", 1, 0, 50, 700000, 0
+	float fuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa/50.7psi here.\nThis is gauge pressure/in reference to atmospheric.;"SPECIAL_CASE_PRESSURE", 1, 0, 50, 700000, 0
 
 	ThermistorConf auxTempSensor1
 	ThermistorConf auxTempSensor2
@@ -1430,7 +1430,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	int16_t coastingFuelCutClt;Fuel cutoff is disabled when the engine is cold.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 0
 
 	int16_t pidExtraForLowRpm;Increases PID reaction for RPM<target by adding extra percent to PID-error;"%", 1, 0, 0, 100, 0
-	int16_t coastingFuelCutMap;MAP value above which fuel injection is re-enabled.;"kPa", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+	int16_t coastingFuelCutMap;MAP value above which fuel injection is re-enabled.;"SPECIAL_CASE_PRESSURE", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 
 	linear_sensor_s highPressureFuel;
@@ -1715,8 +1715,8 @@ int anotherCiTest
 	uint8_t mc33810Maxi;Maximum coil charge current, 1A step;"A", 1, 0, 6, 21, 0
 
     linear_sensor_s acPressure
-    uint16_t minAcPressure;value of A/C pressure in kPa before that compressor is disengaged;"kPa", 1, 0, 0, 500, 0
-    uint16_t maxAcPressure;value of A/C pressure in kPa after that compressor is disengaged;"kPa", 1, 0, 0, 500, 0
+    uint16_t minAcPressure;value of A/C pressure in kPa/psi before that compressor is disengaged;"SPECIAL_CASE_PRESSURE", 1, 0, 0, 500, 0
+    uint16_t maxAcPressure;value of A/C pressure in kPa/psi after that compressor is disengaged;"SPECIAL_CASE_PRESSURE", 1, 0, 0, 500, 0
 
 	uint8_t autoscale minimumOilPressureTimeout;Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.;"sec", 0.1, 0, 0, 5, 1
 
@@ -1795,7 +1795,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
 	int nitrousMinimumTps;;"", 1, 0, 0, 20000, 0
 	uint8_t nitrousMinimumClt;;"deg C", 1, 0, 0, @@CLT_UPPER_LIMIT@@, 0
-	int16_t nitrousMaximumMap;;"kPa", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+	int16_t nitrousMaximumMap;;"SPECIAL_CASE_PRESSURE", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 	uint8_t autoscale nitrousMaximumAfr;;"afr", 0.1, 0, 10, 20, 1
 
 	uint16_t nitrousActivationRpm;;"rpm", 1, 0, 0, 20000, 0
@@ -1917,7 +1917,7 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_RPM_SIZE] autoscale torqueTable;;"Nm", 
 	float[SCRIPT_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -10000, 10000, 3
 	float[SCRIPT_CURVE_8] scriptCurve6;;"y", 1, 0, -10000, 10000, 3
 
-	float[BARO_CORR_SIZE] baroCorrPressureBins;;"kPa", 1, 0, 0, 120, 2
+	float[BARO_CORR_SIZE] baroCorrPressureBins;;"SPECIAL_CASE_PRESSURE", 1, 0, 0, 120, 2
     float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
     float[BARO_CORR_SIZE x BARO_CORR_SIZE] baroCorrTable;;"ratio", 1, 0, 0, 2, 2
