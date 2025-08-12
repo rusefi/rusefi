@@ -36,6 +36,8 @@ public class TsOutput {
     private final String temperatureToFahrenheitScale = "{ 9 / 5 }";
     private final String temperatureToFahrenheitTranslate = "17.77777";
 
+    private final String pressureMetricUnit = quote("kPa");
+
     public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
     }
@@ -108,6 +110,7 @@ public class TsOutput {
 				int bitIndex = it.bitState.get();
 				String nameWithPrefix = prefix + variableNamePrefix + configField.getName();
 				String originalUnits = configField.getUnits();
+				String originalTsInfo = configField.getTsInfo();
                 ConfigStructure cs = configField.getStructureType();
 
                 /**
@@ -159,7 +162,6 @@ public class TsOutput {
                  // if the units are SPECIAL_CASE_TEMPERATURE, we are going to deal with a temperature-based config
                 // so we need to edit the unit first on C degree, and then on F degree, also the TS conditional is added here
                 if (originalUnits.startsWith("SPECIAL_CASE_TEMPERATURE")) {
-                	String originalTsInfo = configField.getTsInfo();
                     // first the Celsius case, and save the index after writing the field
                     configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, false));
                     tsHeader.append(metricUnitsConditionalStart);
@@ -167,6 +169,19 @@ public class TsOutput {
                     tsHeader.append(metricUnitsConditionalElse);
                     // now the fahrenheit case:
                     configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, true));
+                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+                    tsHeader.append(metricUnitsConditionalEnd);
+                    configField.setTsInfo(originalTsInfo);
+                    return newIndex;
+                }
+                // equal structure as temperature case, now with kPa and psi as units
+                if (originalUnits.startsWith("SPECIAL_CASE_PRESSURE")) {
+                    configField.setTsInfo(formatPressureTsInfo(originalTsInfo, false));
+                    tsHeader.append(metricUnitsConditionalStart);
+                    int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+                    tsHeader.append(metricUnitsConditionalElse);
+                    // now the psi case:
+                    configField.setTsInfo(formatPressureTsInfo(originalTsInfo, true));
                     writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
                     tsHeader.append(metricUnitsConditionalEnd);
                     configField.setTsInfo(originalTsInfo);
@@ -208,6 +223,18 @@ public class TsOutput {
          }
 
           return tokensToString(fields);
+    }
+
+    public String formatPressureTsInfo(String tsInfo, boolean isImperial) {
+        if (tsInfo == null || tsInfo.trim().isEmpty()) {
+            // this case is handle by handleTsInfo, so we return a empty string
+            return "";
+        }
+
+        String[] fields = tokenizeWithBraces(tsInfo);
+        // override units
+        fields[0] = pressureMetricUnit;
+        return tokensToString(fields);
     }
 
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
