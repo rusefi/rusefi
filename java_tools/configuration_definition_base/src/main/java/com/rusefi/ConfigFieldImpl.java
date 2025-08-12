@@ -141,7 +141,7 @@ public class ConfigFieldImpl implements ConfigField {
         String units = getUnits();
         String scale = tokens[1].trim();
 
-        if(units.startsWith("SPECIAL_CASE_") && Integer.valueOf(scale) != 1){
+        if(units.startsWith("SPECIAL_CASE_") && Double.valueOf(scale) != 1){
             throw new FieldOutOfRangeException(name + ": incorrect scale for SPECIAL_CASE_* field, use 1 as scale");
         }
     }
