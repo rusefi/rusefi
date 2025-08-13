@@ -32,18 +32,14 @@ public class GetOutputValueConsumerTest {
     "#include \"value_lookup.h\"\n" +
     "float getOutputValueByHash(const int hash) {\n" +
     "\tswitch(hash) {\n" +
-    "// issue_294_31\n" +
     "#if EFI_BOOST_CONTROL\n" +
+    "// issue_294_31\n" +
     "\t\tcase -1571463185:\n" +
     "\t\t\treturn engine->outputChannels->issue_294_31;\n" +
-    "#endif\n" +
     "// enableFan1WithAc\n" +
-    "#if EFI_BOOST_CONTROL\n" +
     "\t\tcase -298185774:\n" +
     "\t\t\treturn engine->outputChannels->enableFan1WithAc;\n" +
-    "#endif\n" +
     "// hwChannel\n" +
-    "#if EFI_BOOST_CONTROL\n" +
     "\t\tcase -709106787:\n" +
     "\t\t\treturn engine->outputChannels->hwChannel;\n" +
     "#endif\n" +

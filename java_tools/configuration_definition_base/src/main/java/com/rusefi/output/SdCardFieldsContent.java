@@ -5,6 +5,7 @@ import com.rusefi.ReaderState;
 import com.rusefi.util.LazyFile;
 
 import java.io.IOException;
+import java.util.*;
 
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
@@ -16,7 +17,7 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 public class SdCardFieldsContent {
     public static final String SD_CARD_OUTPUT_FILE_NAME = "console/binary/generated/log_fields_generated.h";
     public static final String BOARD_LOOKUP_H = "#include \"board_lookup.h\"\n";
-    private final StringBuilder body = new StringBuilder();
+    private final Map<java.util.Optional<String>, List<String>> collectedFieldsMap = new HashMap<>();
 
     public String[] expressions = {"test->reference"}; // technical debt: default value is only used by unit tests
     public String conditional;
@@ -59,7 +60,10 @@ public class SdCardFieldsContent {
         PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
             @Override
             public String process(ReaderState state, ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
-                return processOutput(configField, prefix, currentPosition, perFieldWithStructuresIterator, namePrefix, expression);
+                String line = processOutput(configField, prefix, currentPosition, perFieldWithStructuresIterator, namePrefix, expression);
+                java.util.Optional<String> key = java.util.Optional.ofNullable(conditional);
+                collectedFieldsMap.computeIfAbsent(key, k -> new ArrayList<>()).add(line);
+                return line;
             }
 
             @Override
@@ -67,11 +71,10 @@ public class SdCardFieldsContent {
                 return cf.getOriginalArrayName();
             }
         };
+
         PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
-                strategy, ".");
+            strategy, ".");
         structureStartingTsPosition = iterator.loop(structureStartingTsPosition);
-        String content = iterator.getContent();
-        body.append(content);
     }
 
     private String processOutput(ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, String namePrefix, String expression) {
@@ -98,16 +101,13 @@ public class SdCardFieldsContent {
         if (isEnum)
             return "";
 
-        String before = conditional == null ? "" : "#if " + conditional + "\n";
-        String after = conditional == null ? "" : "#endif\n";
-
         if (configField.isBit()) {
             // 'structureStartingTsPosition' is about fragment list see fragments.h
             int offsetWithinCurrentStructure = currentPosition - structureStartingTsPosition;
             if (offsetWithinCurrentStructure < 0)
                 throw new IllegalStateException(humanName + " seems broken: " + currentPosition + " vs " + structureStartingTsPosition);
-            return before
-                + "\t{" +
+            return
+                "\t{" +
                 (isPtr ? "*" : "") + expression +
                 ", " + offsetWithinCurrentStructure +
                 ", " + perFieldWithStructuresIterator.bitState.get() + ", "
@@ -115,11 +115,10 @@ public class SdCardFieldsContent {
                 ", " +
                 quote(configField.getUnits()) +
                 categoryStr +
-                "},\n" +
-                after;
+                "},\n";
         } else {
-            return before
-                + "\t{" +
+            return
+                "\t{" +
                 expression + (isPtr ? "->" : ".") + name +
                 ", "
                 + humanName +
@@ -128,12 +127,36 @@ public class SdCardFieldsContent {
                 ", " +
                 configField.getDigits() +
                 categoryStr +
-                "},\n" +
-                after;
+                "},\n";
         }
     }
 
+    public void processCollectedFieldsBlocks(StringBuilder body) {
+        Comparator<java.util.Optional<String>> optCmp = Comparator.comparing(
+            (java.util.Optional<String> o) -> o.orElse(null),
+            Comparator.nullsFirst(String::compareTo)
+        );
+
+        collectedFieldsMap.entrySet().stream().sorted(Map.Entry.comparingByKey(optCmp))
+        .forEach(
+            e -> {
+                String conditionalKey = e.getKey().orElse(null);
+                List<String> block = e.getValue();
+                // process the block here, e.g., write to output file
+                if (conditionalKey != null) {
+                    body.append("#if ").append(conditionalKey).append("\n");
+                }
+                block.forEach(body::append);
+                if (conditionalKey != null) {
+                    body.append("#endif\n");
+                }
+            }
+        );
+    }
+
     public String getBody() {
+        StringBuilder body = new StringBuilder();
+        processCollectedFieldsBlocks(body);
         return body.toString();
     }
 }

@@ -8,10 +8,9 @@ import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 import static com.rusefi.output.SdCardFieldsContent.getNamePrefix;
@@ -112,30 +111,57 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         return fullSwitch;
     }
 
-    @NotNull
-    static StringBuilder getGetters(StringBuilder switchBody, List<VariableRecord> getterPairs) {
-        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(getterPairs);
+    static void BuildGetters(String conditional, List<VariableRecord> getterPairs, StringBuilder switchBody, StringBuilder getterBody, HashMap<Integer, AtomicInteger> hashConflicts ) {
+        if (conditional != null) {
+            switchBody.append("#if " + conditional + "\n");
+        }
 
-        StringBuilder getterBody = new StringBuilder();
         for (VariableRecord pair : getterPairs) {
             String returnLine = "\t\treturn " + pair.getFullName() + ";\n";
-            String conditional = pair.getConditional();
-
-            String before = conditional == null ? "" : "#if " + conditional + "\n";
-            String after = conditional == null ? "" : "#endif\n";
 
             int hash = HashUtil.hash(pair.getUserName());
             if (hashConflicts.get(hash).get() == 1) {
                 switchBody.append("// " + pair.getUserName() + "\n");
-                switchBody.append(before);
                 switchBody.append("\t\tcase " + hash + ":\n");
                 switchBody.append("\t" + returnLine);
-                switchBody.append(after);
             } else {
                 getterBody.append(getCompareName(pair.getUserName()));
                 getterBody.append(returnLine);
             }
         }
+
+        if (conditional != null) {
+            switchBody.append("#endif\n");
+        }
+    }
+
+    @NotNull
+    static StringBuilder getGetters(StringBuilder switchBody, List<VariableRecord> getterPairs) {
+        StringBuilder getterBody = new StringBuilder();
+
+        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(getterPairs);
+
+        Map<java.util.Optional<String>, List<VariableRecord>> byConditional = getterPairs.stream().collect(
+            Collectors.groupingBy(
+                v -> java.util.Optional.ofNullable(v.getConditional())
+            )
+        );
+
+        Comparator<java.util.Optional<String>> optCmp = Comparator.comparing(
+            (java.util.Optional<String> o) -> o.orElse(null),
+            Comparator.nullsFirst(String::compareTo)
+        );
+
+        byConditional.entrySet().stream().sorted(Map.Entry.comparingByKey(optCmp)).forEach(
+            e -> BuildGetters(
+                e.getKey().orElse(null),
+                e.getValue(),
+                switchBody,
+                getterBody,
+                hashConflicts
+            )
+        );
+
         return getterBody;
     }
 
