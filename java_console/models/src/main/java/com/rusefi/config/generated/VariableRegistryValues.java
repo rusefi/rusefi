@@ -82,6 +82,7 @@ public class VariableRegistryValues {
 	public static final int ALS_SIZE = 4;
 	public static final int ALTERNATOR_VOLTAGE_TARGET_SIZE = 4;
 	public static final int antiLagActivationMode_e_ALWAYS_ON_ANTILAG = 1;
+	public static final int antiLagActivationMode_e_LUA_ANTILAG = 2;
 	public static final int antiLagActivationMode_e_SWITCH_INPUT_ANTILAG = 0;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int AUX_SPEED_SENSOR_COUNT = 2;
@@ -1408,7 +1409,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 706079717;
+	public static final int SIGNATURE_HASH = 1763558796;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1708,7 +1709,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.08.13.stm32f767_nucleo.706079717";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.08.13.stm32f767_nucleo.1763558796";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2028;
