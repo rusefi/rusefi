@@ -24,9 +24,13 @@ bool AntilagSystemBase::isInsideALSSwitchCondition() {
 #endif
 		}
 		return ALSActivatePinState;
-	} else {
-		// ALWAYS_ACTIVE_ANTILAG
+	} else if (engineConfiguration->antiLagActivationMode == LUA_ANTILAG) {
+	  return luaAntilagState;
+	} else if (engineConfiguration->antiLagActivationMode == ALWAYS_ON_ANTILAG) {
 		return true;
+	} else {
+	  criticalError("Unexpected antiLagActivationMode");
+		return false;
 	}
 }
 

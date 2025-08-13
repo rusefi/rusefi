@@ -10,6 +10,7 @@ bit isALSSwitchActivated
 bit ALSActivatePinState
 bit ALSSwitchCondition
 bit ALSTimerCondition
+bit luaAntilagState
 
 float fuelALSCorrection
 int16_t autoscale timingALSCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2

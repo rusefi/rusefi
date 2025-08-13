@@ -813,6 +813,13 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		return 0;
 	});
 #endif // EFI_LAUNCH_CONTROL
+#if EFI_ANTILAG_SYSTEM
+	lua_register(lState, "setRollingIdleTrigger", [](lua_State* l) {
+		auto value = luaL_checkinteger(l, 1);
+  	engine->antilagController.luaAntilagState = value;
+		return 0;
+	});
+#endif // EFI_ANTILAG_SYSTEM
 
 #if EFI_EMULATE_POSITION_SENSORS && !EFI_UNIT_TEST
 	lua_register(lState, "selfStimulateRPM", [](lua_State* l) {
