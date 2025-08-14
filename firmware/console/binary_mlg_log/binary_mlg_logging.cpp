@@ -23,9 +23,6 @@
 extern bool main_loop_started;
 #endif
 
-namespace MLG
-{
-
 // floating number of seconds with millisecond precision
 static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
@@ -33,6 +30,9 @@ static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 // We use angle brackets instead of quotes because for some boards we want to use header different from the one in this
 // directory
 #include <log_fields_generated.h>
+
+namespace MLG
+{
 
 int getSdCardFieldsCount() {
 	return efi::size(fields);
