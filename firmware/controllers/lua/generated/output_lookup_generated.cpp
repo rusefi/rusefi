@@ -2,6 +2,9 @@
 #include "pch.h"
 #include "board_lookup.h"
 #include "value_lookup.h"
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+#include <electronic_throttle_impl.h>
+#endif
 float getOutputValueByHash(const int hash) {
 	switch(hash) {
 // sd_present
@@ -877,91 +880,6 @@ float getOutputValueByHash(const int hash) {
 // transitionEventsCounter
 		case 1163075685:
 			return engine->outputChannels.transitionEventsCounter;
-// totalFuelCorrection
-#if EFI_ENGINE_CONTROL
-		case -1779658835:
-			return engine->fuelComputer.totalFuelCorrection;
-#endif
-// running.postCrankingFuelCorrection
-#if EFI_ENGINE_CONTROL
-		case -1288205717:
-			return engine->fuelComputer.running.postCrankingFuelCorrection;
-#endif
-// running.intakeTemperatureCoefficient
-#if EFI_ENGINE_CONTROL
-		case 197173469:
-			return engine->fuelComputer.running.intakeTemperatureCoefficient;
-#endif
-// running.coolantTemperatureCoefficient
-#if EFI_ENGINE_CONTROL
-		case 1822238385:
-			return engine->fuelComputer.running.coolantTemperatureCoefficient;
-#endif
-// running.timeSinceCrankingInSecs
-#if EFI_ENGINE_CONTROL
-		case 526786951:
-			return engine->fuelComputer.running.timeSinceCrankingInSecs;
-#endif
-// running.baseFuel
-#if EFI_ENGINE_CONTROL
-		case -42886021:
-			return engine->fuelComputer.running.baseFuel;
-#endif
-// running.fuel
-#if EFI_ENGINE_CONTROL
-		case -794283008:
-			return engine->fuelComputer.running.fuel;
-#endif
-// afrTableYAxis
-#if EFI_ENGINE_CONTROL
-		case 995190836:
-			return engine->fuelComputer.afrTableYAxis;
-#endif
-// targetLambda
-#if EFI_ENGINE_CONTROL
-		case -734904659:
-			return engine->fuelComputer.targetLambda;
-#endif
-// targetAFR
-#if EFI_ENGINE_CONTROL
-		case 2122891301:
-			return engine->fuelComputer.targetAFR;
-#endif
-// stoichiometricRatio
-#if EFI_ENGINE_CONTROL
-		case 341978922:
-			return engine->fuelComputer.stoichiometricRatio;
-#endif
-// sdTcharge_coff
-#if EFI_ENGINE_CONTROL
-		case 1417236183:
-			return engine->fuelComputer.sdTcharge_coff;
-#endif
-// sdAirMassInOneCylinder
-#if EFI_ENGINE_CONTROL
-		case 1650433343:
-			return engine->fuelComputer.sdAirMassInOneCylinder;
-#endif
-// normalizedCylinderFilling
-#if EFI_ENGINE_CONTROL
-		case 1599780729:
-			return engine->fuelComputer.normalizedCylinderFilling;
-#endif
-// brokenInjector
-#if EFI_ENGINE_CONTROL
-		case -1453554940:
-			return engine->fuelComputer.brokenInjector;
-#endif
-// idealEngineTorque
-#if EFI_ENGINE_CONTROL
-		case -791713926:
-			return engine->fuelComputer.idealEngineTorque;
-#endif
-// injectorHwIssue
-#if EFI_ENGINE_CONTROL
-		case -1237512821:
-			return engine->fuelComputer.injectorHwIssue;
-#endif
 // baseDwell
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
@@ -1046,316 +964,6 @@ float getOutputValueByHash(const int hash) {
 // m_isPriming
 		case -612624925:
 			return engine->module<PrimeController>()->m_isPriming;
-// m_deadtime
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1167844818:
-			return engine->module<InjectorModelPrimary>()->m_deadtime;
-#endif
-// pressureDelta
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -376325528:
-			return engine->module<InjectorModelPrimary>()->pressureDelta;
-#endif
-// pressureRatio
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -359858019:
-			return engine->module<InjectorModelPrimary>()->pressureRatio;
-#endif
-// pressureCorrectionReference
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -917305595:
-			return engine->module<InjectorModelPrimary>()->pressureCorrectionReference;
-#endif
-// retardThresholdRpm
-#if EFI_LAUNCH_CONTROL
-		case -1374156957:
-			return engine->launchController.retardThresholdRpm;
-#endif
-// launchActivatePinState
-#if EFI_LAUNCH_CONTROL
-		case 1928406809:
-			return engine->launchController.launchActivatePinState;
-#endif
-// isPreLaunchCondition
-#if EFI_LAUNCH_CONTROL
-		case -1872098102:
-			return engine->launchController.isPreLaunchCondition;
-#endif
-// isLaunchCondition
-#if EFI_LAUNCH_CONTROL
-		case -1959120957:
-			return engine->launchController.isLaunchCondition;
-#endif
-// isSwitchActivated
-#if EFI_LAUNCH_CONTROL
-		case 1699495432:
-			return engine->launchController.isSwitchActivated;
-#endif
-// isClutchActivated
-#if EFI_LAUNCH_CONTROL
-		case 1569151513:
-			return engine->launchController.isClutchActivated;
-#endif
-// isBrakePedalActivated
-#if EFI_LAUNCH_CONTROL
-		case 781025153:
-			return engine->launchController.isBrakePedalActivated;
-#endif
-// isValidInputPin
-#if EFI_LAUNCH_CONTROL
-		case -978523544:
-			return engine->launchController.isValidInputPin;
-#endif
-// activateSwitchCondition
-#if EFI_LAUNCH_CONTROL
-		case 1265600943:
-			return engine->launchController.activateSwitchCondition;
-#endif
-// rpmLaunchCondition
-#if EFI_LAUNCH_CONTROL
-		case 859283926:
-			return engine->launchController.rpmLaunchCondition;
-#endif
-// rpmPreLaunchCondition
-#if EFI_LAUNCH_CONTROL
-		case -774592003:
-			return engine->launchController.rpmPreLaunchCondition;
-#endif
-// speedCondition
-#if EFI_LAUNCH_CONTROL
-		case 1722712413:
-			return engine->launchController.speedCondition;
-#endif
-// tpsCondition
-#if EFI_LAUNCH_CONTROL
-		case 827982787:
-			return engine->launchController.tpsCondition;
-#endif
-// luaLaunchState
-#if EFI_LAUNCH_CONTROL
-		case 707453027:
-			return engine->launchController.luaLaunchState;
-#endif
-// isTorqueReductionTriggerPinValid
-#if EFI_LAUNCH_CONTROL
-		case 1922853657:
-			return engine->shiftTorqueReductionController.isTorqueReductionTriggerPinValid;
-#endif
-// torqueReductionTriggerPinState
-#if EFI_LAUNCH_CONTROL
-		case 501156654:
-			return engine->shiftTorqueReductionController.torqueReductionTriggerPinState;
-#endif
-// isTimeConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case 1973309843:
-			return engine->shiftTorqueReductionController.isTimeConditionSatisfied;
-#endif
-// isRpmConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case -304304077:
-			return engine->shiftTorqueReductionController.isRpmConditionSatisfied;
-#endif
-// isAppConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case -1634779035:
-			return engine->shiftTorqueReductionController.isAppConditionSatisfied;
-#endif
-// isFlatShiftConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case 1378388905:
-			return engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied;
-#endif
-// isBelowTemperatureThreshold
-#if EFI_LAUNCH_CONTROL
-		case 319978869:
-			return engine->shiftTorqueReductionController.isBelowTemperatureThreshold;
-#endif
-// isTpsInvalid
-#if EFI_BOOST_CONTROL
-		case -575666209:
-			return engine->module<BoostController>()->isTpsInvalid;
-#endif
-// m_shouldResetPid
-#if EFI_BOOST_CONTROL
-		case 1846215200:
-			return engine->module<BoostController>()->m_shouldResetPid;
-#endif
-// isBelowClosedLoopThreshold
-#if EFI_BOOST_CONTROL
-		case 1826317915:
-			return engine->module<BoostController>()->isBelowClosedLoopThreshold;
-#endif
-// isNotClosedLoop
-#if EFI_BOOST_CONTROL
-		case -1642402810:
-			return engine->module<BoostController>()->isNotClosedLoop;
-#endif
-// isZeroRpm
-#if EFI_BOOST_CONTROL
-		case 2111912944:
-			return engine->module<BoostController>()->isZeroRpm;
-#endif
-// hasInitBoost
-#if EFI_BOOST_CONTROL
-		case -2011570052:
-			return engine->module<BoostController>()->hasInitBoost;
-#endif
-// rpmTooLow
-#if EFI_BOOST_CONTROL
-		case 193830616:
-			return engine->module<BoostController>()->rpmTooLow;
-#endif
-// tpsTooLow
-#if EFI_BOOST_CONTROL
-		case -1033638560:
-			return engine->module<BoostController>()->tpsTooLow;
-#endif
-// mapTooLow
-#if EFI_BOOST_CONTROL
-		case -734877977:
-			return engine->module<BoostController>()->mapTooLow;
-#endif
-// isPlantValid
-#if EFI_BOOST_CONTROL
-		case -304796912:
-			return engine->module<BoostController>()->isPlantValid;
-#endif
-// isBoostControlled
-#if EFI_BOOST_CONTROL
-		case -1074908546:
-			return engine->module<BoostController>()->isBoostControlled;
-#endif
-// luaTargetAdd
-#if EFI_BOOST_CONTROL
-		case 119157463:
-			return engine->module<BoostController>()->luaTargetAdd;
-#endif
-// luaTargetMult
-#if EFI_BOOST_CONTROL
-		case -362320880:
-			return engine->module<BoostController>()->luaTargetMult;
-#endif
-// boostControlTarget
-#if EFI_BOOST_CONTROL
-		case -1712045196:
-			return engine->module<BoostController>()->boostControlTarget;
-#endif
-// openLoopPart
-#if EFI_BOOST_CONTROL
-		case -1481117304:
-			return engine->module<BoostController>()->openLoopPart;
-#endif
-// luaOpenLoopAdd
-#if EFI_BOOST_CONTROL
-		case 1944984220:
-			return engine->module<BoostController>()->luaOpenLoopAdd;
-#endif
-// boostControllerClosedLoopPart
-#if EFI_BOOST_CONTROL
-		case -707712709:
-			return engine->module<BoostController>()->boostControllerClosedLoopPart;
-#endif
-// boostOutput
-#if EFI_BOOST_CONTROL
-		case 1239062717:
-			return engine->module<BoostController>()->boostOutput;
-#endif
-// acButtonState
-#if FULL_SD_LOGS
-		case -1809939546:
-			return engine->module<AcController>()->acButtonState;
-#endif
-// m_acEnabled
-#if FULL_SD_LOGS
-		case 449790048:
-			return engine->module<AcController>()->m_acEnabled;
-#endif
-// engineTooSlow
-#if FULL_SD_LOGS
-		case 1183441554:
-			return engine->module<AcController>()->engineTooSlow;
-#endif
-// engineTooFast
-#if FULL_SD_LOGS
-		case 1182962523:
-			return engine->module<AcController>()->engineTooFast;
-#endif
-// noClt
-#if FULL_SD_LOGS
-		case 268704037:
-			return engine->module<AcController>()->noClt;
-#endif
-// engineTooHot
-#if FULL_SD_LOGS
-		case 1467505752:
-			return engine->module<AcController>()->engineTooHot;
-#endif
-// tpsTooHigh
-#if FULL_SD_LOGS
-		case 249515182:
-			return engine->module<AcController>()->tpsTooHigh;
-#endif
-// isDisabledByLua
-#if FULL_SD_LOGS
-		case 1199244598:
-			return engine->module<AcController>()->isDisabledByLua;
-#endif
-// acCompressorState
-#if FULL_SD_LOGS
-		case -1015278697:
-			return engine->module<AcController>()->acCompressorState;
-#endif
-// acPressureTooLow
-#if FULL_SD_LOGS
-		case -1208328954:
-			return engine->module<AcController>()->acPressureTooLow;
-#endif
-// acPressureTooHigh
-#if FULL_SD_LOGS
-		case -1220300524:
-			return engine->module<AcController>()->acPressureTooHigh;
-#endif
-// isNitrousArmed
-#if EFI_LAUNCH_CONTROL
-		case 595683774:
-			return engine->module<NitrousController>()->isNitrousArmed;
-#endif
-// isNitrousSpeedCondition
-#if EFI_LAUNCH_CONTROL
-		case 2135736269:
-			return engine->module<NitrousController>()->isNitrousSpeedCondition;
-#endif
-// isNitrousTpsCondition
-#if EFI_LAUNCH_CONTROL
-		case 1400235571:
-			return engine->module<NitrousController>()->isNitrousTpsCondition;
-#endif
-// isNitrousCltCondition
-#if EFI_LAUNCH_CONTROL
-		case 31747807:
-			return engine->module<NitrousController>()->isNitrousCltCondition;
-#endif
-// isNitrousMapCondition
-#if EFI_LAUNCH_CONTROL
-		case 541066842:
-			return engine->module<NitrousController>()->isNitrousMapCondition;
-#endif
-// isNitrousAfrCondition
-#if EFI_LAUNCH_CONTROL
-		case 2008830549:
-			return engine->module<NitrousController>()->isNitrousAfrCondition;
-#endif
-// isNitrousRpmCondition
-#if EFI_LAUNCH_CONTROL
-		case -649083733:
-			return engine->module<NitrousController>()->isNitrousRpmCondition;
-#endif
-// isNitrousCondition
-#if EFI_LAUNCH_CONTROL
-		case -454003684:
-			return engine->module<NitrousController>()->isNitrousCondition;
-#endif
 // fan1cranking
 		case -113087656:
 			return engine->module<FanControl1>()->cranking;
@@ -1581,576 +1189,6 @@ float getOutputValueByHash(const int hash) {
 // sparkOutOfOrderCounter
 		case -1595596945:
 			return engine->engineState.sparkOutOfOrderCounter;
-// vvtCamCounter
-#if EFI_SHAFT_POSITION_INPUT
-		case 477303734:
-			return engine->triggerCentral.vvtCamCounter;
-#endif
-// mapVvt_MAP_AT_SPECIAL_POINT
-#if EFI_SHAFT_POSITION_INPUT
-		case -1727829859:
-			return engine->triggerCentral.mapVvt_MAP_AT_SPECIAL_POINT;
-#endif
-// mapVvt_MAP_AT_DIFF
-#if EFI_SHAFT_POSITION_INPUT
-		case -1585778708:
-			return engine->triggerCentral.mapVvt_MAP_AT_DIFF;
-#endif
-// mapVvt_MAP_AT_CYCLE_COUNT
-#if EFI_SHAFT_POSITION_INPUT
-		case 1637661099:
-			return engine->triggerCentral.mapVvt_MAP_AT_CYCLE_COUNT;
-#endif
-// mapVvt_sync_counter
-#if EFI_SHAFT_POSITION_INPUT
-		case 1921134430:
-			return engine->triggerCentral.mapVvt_sync_counter;
-#endif
-// mapVvt_min_point_counter
-#if EFI_SHAFT_POSITION_INPUT
-		case -983339026:
-			return engine->triggerCentral.mapVvt_min_point_counter;
-#endif
-// temp_mapVvt_index
-#if EFI_SHAFT_POSITION_INPUT
-		case 997197711:
-			return engine->triggerCentral.temp_mapVvt_index;
-#endif
-// mapVvt_CycleDelta
-#if EFI_SHAFT_POSITION_INPUT
-		case 122475036:
-			return engine->triggerCentral.mapVvt_CycleDelta;
-#endif
-// currentEngineDecodedPhase
-#if EFI_SHAFT_POSITION_INPUT
-		case 162105111:
-			return engine->triggerCentral.currentEngineDecodedPhase;
-#endif
-// triggerToothAngleError
-#if EFI_SHAFT_POSITION_INPUT
-		case -280624712:
-			return engine->triggerCentral.triggerToothAngleError;
-#endif
-// triggerIgnoredToothCount
-#if EFI_SHAFT_POSITION_INPUT
-		case 989545496:
-			return engine->triggerCentral.triggerIgnoredToothCount;
-#endif
-// mapCamPrevToothAngle
-#if EFI_SHAFT_POSITION_INPUT
-		case 1581624998:
-			return engine->triggerCentral.mapCamPrevToothAngle;
-#endif
-// isDecodingMapCam
-#if EFI_SHAFT_POSITION_INPUT
-		case 756216589:
-			return engine->triggerCentral.isDecodingMapCam;
-#endif
-// triggerElapsedUs
-#if EFI_SHAFT_POSITION_INPUT
-		case 767689023:
-			return engine->triggerCentral.triggerElapsedUs;
-#endif
-// trgsynchronizationCounter
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -1943574844:
-			return engine->triggerCentral.triggerState.synchronizationCounter;
-#endif
-// trgvvtToothDurations0
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -601476695:
-			return engine->triggerCentral.triggerState.vvtToothDurations0;
-#endif
-// trgvvtCurrentPosition
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 1926227562:
-			return engine->triggerCentral.triggerState.vvtCurrentPosition;
-#endif
-// trgtriggerSyncGapRatio
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 1313522810:
-			return engine->triggerCentral.triggerState.triggerSyncGapRatio;
-#endif
-// trgtriggerStateIndex
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 310661471:
-			return engine->triggerCentral.triggerState.triggerStateIndex;
-#endif
-// trgtriggerCountersError
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 1108896195:
-			return engine->triggerCentral.triggerState.triggerCountersError;
-#endif
-// vvt1isynchronizationCounter
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -608535663:
-			return engine->triggerCentral.vvtState[0][0].synchronizationCounter;
-#endif
-// vvt1ivvtToothDurations0
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 1574758390:
-			return engine->triggerCentral.vvtState[0][0].vvtToothDurations0;
-#endif
-// vvt1ivvtCurrentPosition
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -192504649:
-			return engine->triggerCentral.vvtState[0][0].vvtCurrentPosition;
-#endif
-// vvt1itriggerSyncGapRatio
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 114836583:
-			return engine->triggerCentral.vvtState[0][0].triggerSyncGapRatio;
-#endif
-// vvt1itriggerStateIndex
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -404295156:
-			return engine->triggerCentral.vvtState[0][0].triggerStateIndex;
-#endif
-// vvt1itriggerCountersError
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 206956368:
-			return engine->triggerCentral.vvtState[0][0].triggerCountersError;
-#endif
-// vvt1esynchronizationCounter
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -1159462771:
-			return engine->triggerCentral.vvtState[0][1].synchronizationCounter;
-#endif
-// vvt1evvtToothDurations0
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -1703719182:
-			return engine->triggerCentral.vvtState[0][1].vvtToothDurations0;
-#endif
-// vvt1evvtCurrentPosition
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 823985075:
-			return engine->triggerCentral.vvtState[0][1].vvtCurrentPosition;
-#endif
-// vvt1etriggerSyncGapRatio
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -700740893:
-			return engine->triggerCentral.vvtState[0][1].triggerSyncGapRatio;
-#endif
-// vvt1etriggerStateIndex
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 797862280:
-			return engine->triggerCentral.vvtState[0][1].triggerStateIndex;
-#endif
-// vvt1etriggerCountersError
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -937296564:
-			return engine->triggerCentral.vvtState[0][1].triggerCountersError;
-#endif
-// vvt2isynchronizationCounter
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -1432096142:
-			return engine->triggerCentral.vvtState[1][0].synchronizationCounter;
-#endif
-// vvt2ivvtToothDurations0
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 704910935:
-			return engine->triggerCentral.vvtState[1][0].vvtToothDurations0;
-#endif
-// vvt2ivvtCurrentPosition
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -1062352104:
-			return engine->triggerCentral.vvtState[1][0].vvtCurrentPosition;
-#endif
-// vvt2itriggerSyncGapRatio
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 1474641640:
-			return engine->triggerCentral.vvtState[1][0].triggerSyncGapRatio;
-#endif
-// vvt2itriggerStateIndex
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -1732159411:
-			return engine->triggerCentral.vvtState[1][0].triggerStateIndex;
-#endif
-// vvt2itriggerCountersError
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 2130850289:
-			return engine->triggerCentral.vvtState[1][0].triggerCountersError;
-#endif
-// vvt2esynchronizationCounter
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -1983023250:
-			return engine->triggerCentral.vvtState[1][1].synchronizationCounter;
-#endif
-// vvt2evvtToothDurations0
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 1721400659:
-			return engine->triggerCentral.vvtState[1][1].vvtToothDurations0;
-#endif
-// vvt2evvtCurrentPosition
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -45862380:
-			return engine->triggerCentral.vvtState[1][1].vvtCurrentPosition;
-#endif
-// vvt2etriggerSyncGapRatio
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 659064164:
-			return engine->triggerCentral.vvtState[1][1].triggerSyncGapRatio;
-#endif
-// vvt2etriggerStateIndex
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case -530001975:
-			return engine->triggerCentral.vvtState[1][1].triggerStateIndex;
-#endif
-// vvt2etriggerCountersError
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-		case 986597357:
-			return engine->triggerCentral.vvtState[1][1].triggerCountersError;
-#endif
-// idleState
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1886060228:
-			return engine->module<IdleController>().unmock().idleState;
-#endif
-// baseIdlePosition
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -580955469:
-			return engine->module<IdleController>().unmock().baseIdlePosition;
-#endif
-// iacByTpsTaper
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -2065814304:
-			return engine->module<IdleController>().unmock().iacByTpsTaper;
-#endif
-// mightResetPid
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 149945022:
-			return engine->module<IdleController>().unmock().mightResetPid;
-#endif
-// shouldResetPid
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -226320012:
-			return engine->module<IdleController>().unmock().shouldResetPid;
-#endif
-// wasResetPid
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1830486000:
-			return engine->module<IdleController>().unmock().wasResetPid;
-#endif
-// mustResetPid
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1685322158:
-			return engine->module<IdleController>().unmock().mustResetPid;
-#endif
-// isCranking
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1055526802:
-			return engine->module<IdleController>().unmock().isCranking;
-#endif
-// isIacTableForCoasting
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 705044501:
-			return engine->module<IdleController>().unmock().isIacTableForCoasting;
-#endif
-// needReset
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -2049691836:
-			return engine->module<IdleController>().unmock().needReset;
-#endif
-// isInDeadZone
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1661765918:
-			return engine->module<IdleController>().unmock().isInDeadZone;
-#endif
-// isBlipping
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 432464630:
-			return engine->module<IdleController>().unmock().isBlipping;
-#endif
-// badTps
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -208884349:
-			return engine->module<IdleController>().unmock().badTps;
-#endif
-// looksLikeRunning
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1126009613:
-			return engine->module<IdleController>().unmock().looksLikeRunning;
-#endif
-// looksLikeCoasting
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1786409942:
-			return engine->module<IdleController>().unmock().looksLikeCoasting;
-#endif
-// looksLikeCrankToIdle
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -2079775742:
-			return engine->module<IdleController>().unmock().looksLikeCrankToIdle;
-#endif
-// isIdleCoasting
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 2141275671:
-			return engine->module<IdleController>().unmock().isIdleCoasting;
-#endif
-// isIdleClosedLoop
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1473688883:
-			return engine->module<IdleController>().unmock().isIdleClosedLoop;
-#endif
-// idleTarget
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 2127645162:
-			return engine->module<IdleController>().unmock().idleTarget;
-#endif
-// targetRpmByClt
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1241725607:
-			return engine->module<IdleController>().unmock().targetRpmByClt;
-#endif
-// targetRpmAc
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1156739423:
-			return engine->module<IdleController>().unmock().targetRpmAc;
-#endif
-// iacByRpmTaper
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1638166696:
-			return engine->module<IdleController>().unmock().iacByRpmTaper;
-#endif
-// luaAdd
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 206059088:
-			return engine->module<IdleController>().unmock().luaAdd;
-#endif
-// m_lastTargetRpm
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1838047931:
-			return engine->module<IdleController>().unmock().m_lastTargetRpm;
-#endif
-// idleClosedLoop
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1267620087:
-			return engine->module<IdleController>().unmock().idleClosedLoop;
-#endif
-// currentIdlePosition
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1149240133:
-			return engine->module<IdleController>().unmock().currentIdlePosition;
-#endif
-// idleTargetAirmass
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1805437050:
-			return engine->module<IdleController>().unmock().idleTargetAirmass;
-#endif
-// idleTargetFlow
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1190004798:
-			return engine->module<IdleController>().unmock().idleTargetFlow;
-#endif
-// etb1targetWithIdlePosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 99356871:
-			return getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition;
-#endif
-// etb1trim
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 2069994349:
-			return getLiveData<electronic_throttle_s>(0)->trim;
-#endif
-// etb1boardEtbAdjustment
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 1055284435:
-			return getLiveData<electronic_throttle_s>(0)->boardEtbAdjustment;
-#endif
-// etb1luaAdjustment
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 1246430386:
-			return getLiveData<electronic_throttle_s>(0)->luaAdjustment;
-#endif
-// etb1m_wastegatePosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 561614935:
-			return getLiveData<electronic_throttle_s>(0)->m_wastegatePosition;
-#endif
-// etb1m_lastPidDtMs
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1808022618:
-			return getLiveData<electronic_throttle_s>(0)->m_lastPidDtMs;
-#endif
-// etb1etbFeedForward
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1970249707:
-			return getLiveData<electronic_throttle_s>(0)->etbFeedForward;
-#endif
-// etb1integralError
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1507281103:
-			return getLiveData<electronic_throttle_s>(0)->integralError;
-#endif
-// etb1etbCurrentTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1044288778:
-			return getLiveData<electronic_throttle_s>(0)->etbCurrentTarget;
-#endif
-// etb1m_adjustedTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 28274136:
-			return getLiveData<electronic_throttle_s>(0)->m_adjustedTarget;
-#endif
-// etb1etbRevLimitActive
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1808516876:
-			return getLiveData<electronic_throttle_s>(0)->etbRevLimitActive;
-#endif
-// etb1jamDetected
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1238909045:
-			return getLiveData<electronic_throttle_s>(0)->jamDetected;
-#endif
-// etb1validPlantPosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 752161333:
-			return getLiveData<electronic_throttle_s>(0)->validPlantPosition;
-#endif
-// etb1etbTpsErrorCounter
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 86860621:
-			return getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter;
-#endif
-// etb1etbPpsErrorCounter
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 2014293065:
-			return getLiveData<electronic_throttle_s>(0)->etbPpsErrorCounter;
-#endif
-// etb1etbErrorCode
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 839236273:
-			return getLiveData<electronic_throttle_s>(0)->etbErrorCode;
-#endif
-// etb1etbErrorCodeBlinker
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1007205736:
-			return getLiveData<electronic_throttle_s>(0)->etbErrorCodeBlinker;
-#endif
-// etb1tcEtbDrop
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 1502782136:
-			return getLiveData<electronic_throttle_s>(0)->tcEtbDrop;
-#endif
-// etb1jamTimer
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -213258422:
-			return getLiveData<electronic_throttle_s>(0)->jamTimer;
-#endif
-// etb1adjustedEtbTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -762743481:
-			return getLiveData<electronic_throttle_s>(0)->adjustedEtbTarget;
-#endif
-// etb1state
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -410785646:
-			return getLiveData<electronic_throttle_s>(0)->state;
-#endif
-// etb2targetWithIdlePosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -836653176:
-			return getLiveData<electronic_throttle_s>(1)->targetWithIdlePosition;
-#endif
-// etb2trim
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 2071180270:
-			return getLiveData<electronic_throttle_s>(1)->trim;
-#endif
-// etb2boardEtbAdjustment
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -272579820:
-			return getLiveData<electronic_throttle_s>(1)->boardEtbAdjustment;
-#endif
-// etb2luaAdjustment
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -2054472109:
-			return getLiveData<electronic_throttle_s>(1)->luaAdjustment;
-#endif
-// etb2m_wastegatePosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -308232520:
-			return getLiveData<electronic_throttle_s>(1)->m_wastegatePosition;
-#endif
-// etb2m_lastPidDtMs
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -813957817:
-			return getLiveData<electronic_throttle_s>(1)->m_lastPidDtMs;
-#endif
-// etb2etbFeedForward
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 769117654:
-			return getLiveData<electronic_throttle_s>(1)->etbFeedForward;
-#endif
-// etb2integralError
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -513216302:
-			return getLiveData<electronic_throttle_s>(1)->integralError;
-#endif
-// etb2etbCurrentTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 1419463927:
-			return getLiveData<electronic_throttle_s>(1)->etbCurrentTarget;
-#endif
-// etb2m_adjustedTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1802940455:
-			return getLiveData<electronic_throttle_s>(1)->m_adjustedTarget;
-#endif
-// etb2etbRevLimitActive
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -2109056235:
-			return getLiveData<electronic_throttle_s>(1)->etbRevLimitActive;
-#endif
-// etb2jamDetected
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -417653524:
-			return getLiveData<electronic_throttle_s>(1)->jamDetected;
-#endif
-// etb2validPlantPosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -575702922:
-			return getLiveData<electronic_throttle_s>(1)->validPlantPosition;
-#endif
-// etb2etbTpsErrorCounter
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1241003634:
-			return getLiveData<electronic_throttle_s>(1)->etbTpsErrorCounter;
-#endif
-// etb2etbPpsErrorCounter
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 686428810:
-			return getLiveData<electronic_throttle_s>(1)->etbPpsErrorCounter;
-#endif
-// etb2etbErrorCode
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -2124102606:
-			return getLiveData<electronic_throttle_s>(1)->etbErrorCode;
-#endif
-// etb2etbErrorCodeBlinker
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1877053191:
-			return getLiveData<electronic_throttle_s>(1)->etbErrorCodeBlinker;
-#endif
-// etb2tcEtbDrop
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 1570583513:
-			return getLiveData<electronic_throttle_s>(1)->tcEtbDrop;
-#endif
-// etb2jamTimer
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 1741054027:
-			return getLiveData<electronic_throttle_s>(1)->jamTimer;
-#endif
-// etb2adjustedEtbTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -1063282840:
-			return getLiveData<electronic_throttle_s>(1)->adjustedEtbTarget;
-#endif
-// etb2state
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case -371650253:
-			return getLiveData<electronic_throttle_s>(1)->state;
-#endif
 // dcOutput0
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;
@@ -2160,30 +1198,617 @@ float getOutputValueByHash(const int hash) {
 // isEnabled0
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
-// vvtTarget
+#if EFI_BOOST_CONTROL
+// isTpsInvalid
+		case -575666209:
+			return engine->module<BoostController>()->isTpsInvalid;
+// m_shouldResetPid
+		case 1846215200:
+			return engine->module<BoostController>()->m_shouldResetPid;
+// isBelowClosedLoopThreshold
+		case 1826317915:
+			return engine->module<BoostController>()->isBelowClosedLoopThreshold;
+// isNotClosedLoop
+		case -1642402810:
+			return engine->module<BoostController>()->isNotClosedLoop;
+// isZeroRpm
+		case 2111912944:
+			return engine->module<BoostController>()->isZeroRpm;
+// hasInitBoost
+		case -2011570052:
+			return engine->module<BoostController>()->hasInitBoost;
+// rpmTooLow
+		case 193830616:
+			return engine->module<BoostController>()->rpmTooLow;
+// tpsTooLow
+		case -1033638560:
+			return engine->module<BoostController>()->tpsTooLow;
+// mapTooLow
+		case -734877977:
+			return engine->module<BoostController>()->mapTooLow;
+// isPlantValid
+		case -304796912:
+			return engine->module<BoostController>()->isPlantValid;
+// isBoostControlled
+		case -1074908546:
+			return engine->module<BoostController>()->isBoostControlled;
+// luaTargetAdd
+		case 119157463:
+			return engine->module<BoostController>()->luaTargetAdd;
+// luaTargetMult
+		case -362320880:
+			return engine->module<BoostController>()->luaTargetMult;
+// boostControlTarget
+		case -1712045196:
+			return engine->module<BoostController>()->boostControlTarget;
+// openLoopPart
+		case -1481117304:
+			return engine->module<BoostController>()->openLoopPart;
+// luaOpenLoopAdd
+		case 1944984220:
+			return engine->module<BoostController>()->luaOpenLoopAdd;
+// boostControllerClosedLoopPart
+		case -707712709:
+			return engine->module<BoostController>()->boostControllerClosedLoopPart;
+// boostOutput
+		case 1239062717:
+			return engine->module<BoostController>()->boostOutput;
+#endif
+#if EFI_ENGINE_CONTROL
+// totalFuelCorrection
+		case -1779658835:
+			return engine->fuelComputer.totalFuelCorrection;
+// running.postCrankingFuelCorrection
+		case -1288205717:
+			return engine->fuelComputer.running.postCrankingFuelCorrection;
+// running.intakeTemperatureCoefficient
+		case 197173469:
+			return engine->fuelComputer.running.intakeTemperatureCoefficient;
+// running.coolantTemperatureCoefficient
+		case 1822238385:
+			return engine->fuelComputer.running.coolantTemperatureCoefficient;
+// running.timeSinceCrankingInSecs
+		case 526786951:
+			return engine->fuelComputer.running.timeSinceCrankingInSecs;
+// running.baseFuel
+		case -42886021:
+			return engine->fuelComputer.running.baseFuel;
+// running.fuel
+		case -794283008:
+			return engine->fuelComputer.running.fuel;
+// afrTableYAxis
+		case 995190836:
+			return engine->fuelComputer.afrTableYAxis;
+// targetLambda
+		case -734904659:
+			return engine->fuelComputer.targetLambda;
+// targetAFR
+		case 2122891301:
+			return engine->fuelComputer.targetAFR;
+// stoichiometricRatio
+		case 341978922:
+			return engine->fuelComputer.stoichiometricRatio;
+// sdTcharge_coff
+		case 1417236183:
+			return engine->fuelComputer.sdTcharge_coff;
+// sdAirMassInOneCylinder
+		case 1650433343:
+			return engine->fuelComputer.sdAirMassInOneCylinder;
+// normalizedCylinderFilling
+		case 1599780729:
+			return engine->fuelComputer.normalizedCylinderFilling;
+// brokenInjector
+		case -1453554940:
+			return engine->fuelComputer.brokenInjector;
+// idealEngineTorque
+		case -791713926:
+			return engine->fuelComputer.idealEngineTorque;
+// injectorHwIssue
+		case -1237512821:
+			return engine->fuelComputer.injectorHwIssue;
+#endif
+#if EFI_LAUNCH_CONTROL
+// retardThresholdRpm
+		case -1374156957:
+			return engine->launchController.retardThresholdRpm;
+// launchActivatePinState
+		case 1928406809:
+			return engine->launchController.launchActivatePinState;
+// isPreLaunchCondition
+		case -1872098102:
+			return engine->launchController.isPreLaunchCondition;
+// isLaunchCondition
+		case -1959120957:
+			return engine->launchController.isLaunchCondition;
+// isSwitchActivated
+		case 1699495432:
+			return engine->launchController.isSwitchActivated;
+// isClutchActivated
+		case 1569151513:
+			return engine->launchController.isClutchActivated;
+// isBrakePedalActivated
+		case 781025153:
+			return engine->launchController.isBrakePedalActivated;
+// isValidInputPin
+		case -978523544:
+			return engine->launchController.isValidInputPin;
+// activateSwitchCondition
+		case 1265600943:
+			return engine->launchController.activateSwitchCondition;
+// rpmLaunchCondition
+		case 859283926:
+			return engine->launchController.rpmLaunchCondition;
+// rpmPreLaunchCondition
+		case -774592003:
+			return engine->launchController.rpmPreLaunchCondition;
+// speedCondition
+		case 1722712413:
+			return engine->launchController.speedCondition;
+// tpsCondition
+		case 827982787:
+			return engine->launchController.tpsCondition;
+// luaLaunchState
+		case 707453027:
+			return engine->launchController.luaLaunchState;
+// isTorqueReductionTriggerPinValid
+		case 1922853657:
+			return engine->shiftTorqueReductionController.isTorqueReductionTriggerPinValid;
+// torqueReductionTriggerPinState
+		case 501156654:
+			return engine->shiftTorqueReductionController.torqueReductionTriggerPinState;
+// isTimeConditionSatisfied
+		case 1973309843:
+			return engine->shiftTorqueReductionController.isTimeConditionSatisfied;
+// isRpmConditionSatisfied
+		case -304304077:
+			return engine->shiftTorqueReductionController.isRpmConditionSatisfied;
+// isAppConditionSatisfied
+		case -1634779035:
+			return engine->shiftTorqueReductionController.isAppConditionSatisfied;
+// isFlatShiftConditionSatisfied
+		case 1378388905:
+			return engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied;
+// isBelowTemperatureThreshold
+		case 319978869:
+			return engine->shiftTorqueReductionController.isBelowTemperatureThreshold;
+// isNitrousArmed
+		case 595683774:
+			return engine->module<NitrousController>()->isNitrousArmed;
+// isNitrousSpeedCondition
+		case 2135736269:
+			return engine->module<NitrousController>()->isNitrousSpeedCondition;
+// isNitrousTpsCondition
+		case 1400235571:
+			return engine->module<NitrousController>()->isNitrousTpsCondition;
+// isNitrousCltCondition
+		case 31747807:
+			return engine->module<NitrousController>()->isNitrousCltCondition;
+// isNitrousMapCondition
+		case 541066842:
+			return engine->module<NitrousController>()->isNitrousMapCondition;
+// isNitrousAfrCondition
+		case 2008830549:
+			return engine->module<NitrousController>()->isNitrousAfrCondition;
+// isNitrousRpmCondition
+		case -649083733:
+			return engine->module<NitrousController>()->isNitrousRpmCondition;
+// isNitrousCondition
+		case -454003684:
+			return engine->module<NitrousController>()->isNitrousCondition;
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+// etb1targetWithIdlePosition
+		case 99356871:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->targetWithIdlePosition;
+// etb1trim
+		case 2069994349:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->trim;
+// etb1boardEtbAdjustment
+		case 1055284435:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->boardEtbAdjustment;
+// etb1luaAdjustment
+		case 1246430386:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->luaAdjustment;
+// etb1m_wastegatePosition
+		case 561614935:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->m_wastegatePosition;
+// etb1m_lastPidDtMs
+		case -1808022618:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->m_lastPidDtMs;
+// etb1etbFeedForward
+		case -1970249707:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbFeedForward;
+// etb1integralError
+		case -1507281103:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->integralError;
+// etb1etbCurrentTarget
+		case -1044288778:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbCurrentTarget;
+// etb1m_adjustedTarget
+		case 28274136:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->m_adjustedTarget;
+// etb1etbRevLimitActive
+		case -1808516876:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbRevLimitActive;
+// etb1jamDetected
+		case -1238909045:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->jamDetected;
+// etb1validPlantPosition
+		case 752161333:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->validPlantPosition;
+// etb1etbTpsErrorCounter
+		case 86860621:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbTpsErrorCounter;
+// etb1etbPpsErrorCounter
+		case 2014293065:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbPpsErrorCounter;
+// etb1etbErrorCode
+		case 839236273:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbErrorCode;
+// etb1etbErrorCodeBlinker
+		case -1007205736:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbErrorCodeBlinker;
+// etb1tcEtbDrop
+		case 1502782136:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->tcEtbDrop;
+// etb1jamTimer
+		case -213258422:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->jamTimer;
+// etb1adjustedEtbTarget
+		case -762743481:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->adjustedEtbTarget;
+// etb1state
+		case -410785646:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->state;
+// etb2targetWithIdlePosition
+		case -836653176:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->targetWithIdlePosition;
+// etb2trim
+		case 2071180270:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->trim;
+// etb2boardEtbAdjustment
+		case -272579820:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->boardEtbAdjustment;
+// etb2luaAdjustment
+		case -2054472109:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->luaAdjustment;
+// etb2m_wastegatePosition
+		case -308232520:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->m_wastegatePosition;
+// etb2m_lastPidDtMs
+		case -813957817:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->m_lastPidDtMs;
+// etb2etbFeedForward
+		case 769117654:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbFeedForward;
+// etb2integralError
+		case -513216302:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->integralError;
+// etb2etbCurrentTarget
+		case 1419463927:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbCurrentTarget;
+// etb2m_adjustedTarget
+		case -1802940455:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->m_adjustedTarget;
+// etb2etbRevLimitActive
+		case -2109056235:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbRevLimitActive;
+// etb2jamDetected
+		case -417653524:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->jamDetected;
+// etb2validPlantPosition
+		case -575702922:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->validPlantPosition;
+// etb2etbTpsErrorCounter
+		case -1241003634:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbTpsErrorCounter;
+// etb2etbPpsErrorCounter
+		case 686428810:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbPpsErrorCounter;
+// etb2etbErrorCode
+		case -2124102606:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbErrorCode;
+// etb2etbErrorCodeBlinker
+		case -1877053191:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbErrorCodeBlinker;
+// etb2tcEtbDrop
+		case 1570583513:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->tcEtbDrop;
+// etb2jamTimer
+		case 1741054027:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->jamTimer;
+// etb2adjustedEtbTarget
+		case -1063282840:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->adjustedEtbTarget;
+// etb2state
+		case -371650253:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->state;
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+// m_deadtime
+		case -1167844818:
+			return engine->module<InjectorModelPrimary>()->m_deadtime;
+// pressureDelta
+		case -376325528:
+			return engine->module<InjectorModelPrimary>()->pressureDelta;
+// pressureRatio
+		case -359858019:
+			return engine->module<InjectorModelPrimary>()->pressureRatio;
+// pressureCorrectionReference
+		case -917305595:
+			return engine->module<InjectorModelPrimary>()->pressureCorrectionReference;
+// idleState
+		case 1886060228:
+			return engine->module<IdleController>().unmock().idleState;
+// baseIdlePosition
+		case -580955469:
+			return engine->module<IdleController>().unmock().baseIdlePosition;
+// iacByTpsTaper
+		case -2065814304:
+			return engine->module<IdleController>().unmock().iacByTpsTaper;
+// mightResetPid
+		case 149945022:
+			return engine->module<IdleController>().unmock().mightResetPid;
+// shouldResetPid
+		case -226320012:
+			return engine->module<IdleController>().unmock().shouldResetPid;
+// wasResetPid
+		case 1830486000:
+			return engine->module<IdleController>().unmock().wasResetPid;
+// mustResetPid
+		case 1685322158:
+			return engine->module<IdleController>().unmock().mustResetPid;
+// isCranking
+		case -1055526802:
+			return engine->module<IdleController>().unmock().isCranking;
+// isIacTableForCoasting
+		case 705044501:
+			return engine->module<IdleController>().unmock().isIacTableForCoasting;
+// needReset
+		case -2049691836:
+			return engine->module<IdleController>().unmock().needReset;
+// isInDeadZone
+		case -1661765918:
+			return engine->module<IdleController>().unmock().isInDeadZone;
+// isBlipping
+		case 432464630:
+			return engine->module<IdleController>().unmock().isBlipping;
+// badTps
+		case -208884349:
+			return engine->module<IdleController>().unmock().badTps;
+// looksLikeRunning
+		case -1126009613:
+			return engine->module<IdleController>().unmock().looksLikeRunning;
+// looksLikeCoasting
+		case -1786409942:
+			return engine->module<IdleController>().unmock().looksLikeCoasting;
+// looksLikeCrankToIdle
+		case -2079775742:
+			return engine->module<IdleController>().unmock().looksLikeCrankToIdle;
+// isIdleCoasting
+		case 2141275671:
+			return engine->module<IdleController>().unmock().isIdleCoasting;
+// isIdleClosedLoop
+		case 1473688883:
+			return engine->module<IdleController>().unmock().isIdleClosedLoop;
+// idleTarget
+		case 2127645162:
+			return engine->module<IdleController>().unmock().idleTarget;
+// targetRpmByClt
+		case -1241725607:
+			return engine->module<IdleController>().unmock().targetRpmByClt;
+// targetRpmAc
+		case 1156739423:
+			return engine->module<IdleController>().unmock().targetRpmAc;
+// iacByRpmTaper
+		case -1638166696:
+			return engine->module<IdleController>().unmock().iacByRpmTaper;
+// luaAdd
+		case 206059088:
+			return engine->module<IdleController>().unmock().luaAdd;
+// m_lastTargetRpm
+		case 1838047931:
+			return engine->module<IdleController>().unmock().m_lastTargetRpm;
+// idleClosedLoop
+		case 1267620087:
+			return engine->module<IdleController>().unmock().idleClosedLoop;
+// currentIdlePosition
+		case -1149240133:
+			return engine->module<IdleController>().unmock().currentIdlePosition;
+// idleTargetAirmass
+		case 1805437050:
+			return engine->module<IdleController>().unmock().idleTargetAirmass;
+// idleTargetFlow
+		case -1190004798:
+			return engine->module<IdleController>().unmock().idleTargetFlow;
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+// vvtCamCounter
+		case 477303734:
+			return engine->triggerCentral.vvtCamCounter;
+// mapVvt_MAP_AT_SPECIAL_POINT
+		case -1727829859:
+			return engine->triggerCentral.mapVvt_MAP_AT_SPECIAL_POINT;
+// mapVvt_MAP_AT_DIFF
+		case -1585778708:
+			return engine->triggerCentral.mapVvt_MAP_AT_DIFF;
+// mapVvt_MAP_AT_CYCLE_COUNT
+		case 1637661099:
+			return engine->triggerCentral.mapVvt_MAP_AT_CYCLE_COUNT;
+// mapVvt_sync_counter
+		case 1921134430:
+			return engine->triggerCentral.mapVvt_sync_counter;
+// mapVvt_min_point_counter
+		case -983339026:
+			return engine->triggerCentral.mapVvt_min_point_counter;
+// temp_mapVvt_index
+		case 997197711:
+			return engine->triggerCentral.temp_mapVvt_index;
+// mapVvt_CycleDelta
+		case 122475036:
+			return engine->triggerCentral.mapVvt_CycleDelta;
+// currentEngineDecodedPhase
+		case 162105111:
+			return engine->triggerCentral.currentEngineDecodedPhase;
+// triggerToothAngleError
+		case -280624712:
+			return engine->triggerCentral.triggerToothAngleError;
+// triggerIgnoredToothCount
+		case 989545496:
+			return engine->triggerCentral.triggerIgnoredToothCount;
+// mapCamPrevToothAngle
+		case 1581624998:
+			return engine->triggerCentral.mapCamPrevToothAngle;
+// isDecodingMapCam
+		case 756216589:
+			return engine->triggerCentral.isDecodingMapCam;
+// triggerElapsedUs
+		case 767689023:
+			return engine->triggerCentral.triggerElapsedUs;
+// lambdaCurrentlyGood
+		case 350535927:
+			return engine->lambdaMonitor.lambdaCurrentlyGood;
+// lambdaMonitorCut
+		case 1849938842:
+			return engine->lambdaMonitor.lambdaMonitorCut;
+// lambdaTimeSinceGood
+		case 481450608:
+			return engine->lambdaMonitor.lambdaTimeSinceGood;
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+// trgsynchronizationCounter
+		case -1943574844:
+			return engine->triggerCentral.triggerState.synchronizationCounter;
+// trgvvtToothDurations0
+		case -601476695:
+			return engine->triggerCentral.triggerState.vvtToothDurations0;
+// trgvvtCurrentPosition
+		case 1926227562:
+			return engine->triggerCentral.triggerState.vvtCurrentPosition;
+// trgtriggerSyncGapRatio
+		case 1313522810:
+			return engine->triggerCentral.triggerState.triggerSyncGapRatio;
+// trgtriggerStateIndex
+		case 310661471:
+			return engine->triggerCentral.triggerState.triggerStateIndex;
+// trgtriggerCountersError
+		case 1108896195:
+			return engine->triggerCentral.triggerState.triggerCountersError;
+// vvt1isynchronizationCounter
+		case -608535663:
+			return engine->triggerCentral.vvtState[0][0].synchronizationCounter;
+// vvt1ivvtToothDurations0
+		case 1574758390:
+			return engine->triggerCentral.vvtState[0][0].vvtToothDurations0;
+// vvt1ivvtCurrentPosition
+		case -192504649:
+			return engine->triggerCentral.vvtState[0][0].vvtCurrentPosition;
+// vvt1itriggerSyncGapRatio
+		case 114836583:
+			return engine->triggerCentral.vvtState[0][0].triggerSyncGapRatio;
+// vvt1itriggerStateIndex
+		case -404295156:
+			return engine->triggerCentral.vvtState[0][0].triggerStateIndex;
+// vvt1itriggerCountersError
+		case 206956368:
+			return engine->triggerCentral.vvtState[0][0].triggerCountersError;
+// vvt1esynchronizationCounter
+		case -1159462771:
+			return engine->triggerCentral.vvtState[0][1].synchronizationCounter;
+// vvt1evvtToothDurations0
+		case -1703719182:
+			return engine->triggerCentral.vvtState[0][1].vvtToothDurations0;
+// vvt1evvtCurrentPosition
+		case 823985075:
+			return engine->triggerCentral.vvtState[0][1].vvtCurrentPosition;
+// vvt1etriggerSyncGapRatio
+		case -700740893:
+			return engine->triggerCentral.vvtState[0][1].triggerSyncGapRatio;
+// vvt1etriggerStateIndex
+		case 797862280:
+			return engine->triggerCentral.vvtState[0][1].triggerStateIndex;
+// vvt1etriggerCountersError
+		case -937296564:
+			return engine->triggerCentral.vvtState[0][1].triggerCountersError;
+// vvt2isynchronizationCounter
+		case -1432096142:
+			return engine->triggerCentral.vvtState[1][0].synchronizationCounter;
+// vvt2ivvtToothDurations0
+		case 704910935:
+			return engine->triggerCentral.vvtState[1][0].vvtToothDurations0;
+// vvt2ivvtCurrentPosition
+		case -1062352104:
+			return engine->triggerCentral.vvtState[1][0].vvtCurrentPosition;
+// vvt2itriggerSyncGapRatio
+		case 1474641640:
+			return engine->triggerCentral.vvtState[1][0].triggerSyncGapRatio;
+// vvt2itriggerStateIndex
+		case -1732159411:
+			return engine->triggerCentral.vvtState[1][0].triggerStateIndex;
+// vvt2itriggerCountersError
+		case 2130850289:
+			return engine->triggerCentral.vvtState[1][0].triggerCountersError;
+// vvt2esynchronizationCounter
+		case -1983023250:
+			return engine->triggerCentral.vvtState[1][1].synchronizationCounter;
+// vvt2evvtToothDurations0
+		case 1721400659:
+			return engine->triggerCentral.vvtState[1][1].vvtToothDurations0;
+// vvt2evvtCurrentPosition
+		case -45862380:
+			return engine->triggerCentral.vvtState[1][1].vvtCurrentPosition;
+// vvt2etriggerSyncGapRatio
+		case 659064164:
+			return engine->triggerCentral.vvtState[1][1].triggerSyncGapRatio;
+// vvt2etriggerStateIndex
+		case -530001975:
+			return engine->triggerCentral.vvtState[1][1].triggerStateIndex;
+// vvt2etriggerCountersError
+		case 986597357:
+			return engine->triggerCentral.vvtState[1][1].triggerCountersError;
+#endif
 #if EFI_VVT_PID
+// vvtTarget
 		case -2132393748:
 			return engine->module<VvtController1>()->vvtTarget;
-#endif
 // vvtOutput
-#if EFI_VVT_PID
 		case 1990697206:
 			return engine->module<VvtController1>()->vvtOutput;
 #endif
-// lambdaCurrentlyGood
-#if EFI_SHAFT_POSITION_INPUT
-		case 350535927:
-			return engine->lambdaMonitor.lambdaCurrentlyGood;
-#endif
-// lambdaMonitorCut
-#if EFI_SHAFT_POSITION_INPUT
-		case 1849938842:
-			return engine->lambdaMonitor.lambdaMonitorCut;
-#endif
-// lambdaTimeSinceGood
-#if EFI_SHAFT_POSITION_INPUT
-		case 481450608:
-			return engine->lambdaMonitor.lambdaTimeSinceGood;
+#if FULL_SD_LOGS
+// acButtonState
+		case -1809939546:
+			return engine->module<AcController>()->acButtonState;
+// m_acEnabled
+		case 449790048:
+			return engine->module<AcController>()->m_acEnabled;
+// engineTooSlow
+		case 1183441554:
+			return engine->module<AcController>()->engineTooSlow;
+// engineTooFast
+		case 1182962523:
+			return engine->module<AcController>()->engineTooFast;
+// noClt
+		case 268704037:
+			return engine->module<AcController>()->noClt;
+// engineTooHot
+		case 1467505752:
+			return engine->module<AcController>()->engineTooHot;
+// tpsTooHigh
+		case 249515182:
+			return engine->module<AcController>()->tpsTooHigh;
+// isDisabledByLua
+		case 1199244598:
+			return engine->module<AcController>()->isDisabledByLua;
+// acCompressorState
+		case -1015278697:
+			return engine->module<AcController>()->acCompressorState;
+// acPressureTooLow
+		case -1208328954:
+			return engine->module<AcController>()->acPressureTooLow;
+// acPressureTooHigh
+		case -1220300524:
+			return engine->module<AcController>()->acPressureTooHigh;
 #endif
 	}
 	return EFI_ERROR_CODE;
