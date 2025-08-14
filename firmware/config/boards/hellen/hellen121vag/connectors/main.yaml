@@ -64,6 +64,8 @@ pins:
   - pin: 3a
     function: +12v
     type: vign
+    meta: EFI_ADC_5
+    class: analog_inputs
 
   - pin: 5a
     function: LSU Heat -
@@ -404,8 +406,6 @@ pins:
     type: ls
 
   - pin: 106a
-    id: EFI_ADC_5
-    class: analog_inputs
     ts_name: 106 - KNOCK
     function: Knock sens. in
 
