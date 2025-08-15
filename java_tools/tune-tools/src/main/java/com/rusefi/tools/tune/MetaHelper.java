@@ -24,7 +24,7 @@ public class MetaHelper {
 
     @NotNull
     static ReaderStateImpl getReaderState(String boardPath) throws IOException {
-        List<String> options = FileLinesHelper.readAllLines("/../" + ConfigDefinition.CONFIG_PATH);
+        List<String> options = FileLinesHelper.readAllLinesWithRoot("/../" + ConfigDefinition.CONFIG_PATH);
         List<String> boardOptions = FileLinesHelper.readAllLines2(boardPath + "board_config.txt");
 
         options.add(ConfigDefinition.KEY_PREPEND);
