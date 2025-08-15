@@ -3734,8 +3734,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1579[1] = {};
 	/**
-	 * MAP value above which fuel is cut in case of overboost.
-	 * Set to 0 to disable overboost cut.
+	 * Specifies the boost pressure allowed before triggering a cut. Setting this to 0 will DISABLE overboost cut.
 	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 1580
 	 */
@@ -4917,13 +4916,13 @@ struct engine_configuration_s {
 	 */
 	int8_t tractionControlEtbDrop[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE][TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] = {};
 	/**
-	 * If injector duty cycle hits this value, instantly cut fuel.
+	 * This sets an immediate limit on injector duty cycle. If this threshold is reached, the system will immediately cut the injectors.
 	 * units: %
 	 * offset 3600
 	 */
 	uint8_t maxInjectorDutyInstant;
 	/**
-	 * If injector duty cycle hits this value for the specified delay time, cut fuel.
+	 * This limit allows injectors to operate up to the specified duty cycle percentage for a short period (as defined by the delay). After this delay, if the duty cycle remains above the limit, it will trigger a cut.
 	 * units: %
 	 * offset 3601
 	 */

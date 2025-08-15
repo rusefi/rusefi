@@ -1253,7 +1253,7 @@ Duration of each test pulse
 
 
 ### boostCutPressure
-MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.
+Specifies the boost pressure allowed before triggering a cut. Setting this to 0 will DISABLE overboost cut.
 
 ### fixedTiming
 Fixed timing, useful for TDC testing
@@ -1802,10 +1802,10 @@ Number of speedometer pulses per kilometer travelled.
 null
 
 ### maxInjectorDutyInstant
-If injector duty cycle hits this value, instantly cut fuel.
+This sets an immediate limit on injector duty cycle. If this threshold is reached, the system will immediately cut the injectors.
 
 ### maxInjectorDutySustained
-If injector duty cycle hits this value for the specified delay time, cut fuel.
+This limit allows injectors to operate up to the specified duty cycle percentage for a short period (as defined by the delay). After this delay, if the duty cycle remains above the limit, it will trigger a cut.
 
 ### maxInjectorDutySustainedTimeout
 Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.
