@@ -58,8 +58,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",12="101 - MAP2",6="106 - KNOCK",1="14 - O2",11="29 In Maf",4="34 In PPS1",15="35 In PPS2",9="84 - TPS2",14="85 - IAT",7="86 - CAM1",8="87 - CAM2",5="92 - TPS 1",13="93 - CLT",18="auxP2 analog",3="auxP4 analog",16="auxP5 analog"
-#define adc_channel_e_fullenum "NONE","14 - O2","INVALID","auxP4 analog","34 In PPS1","92 - TPS 1","106 - KNOCK","86 - CAM1","87 - CAM2","84 - TPS2","INVALID","29 In Maf","101 - MAP2","93 - CLT","85 - IAT","35 In PPS2","auxP5 analog","INVALID","auxP2 analog"
+#define adc_channel_e_enum 0="NONE",6="+12v",12="101 - MAP2",1="14 - O2",11="29 In Maf",4="34 In PPS1",15="35 In PPS2",9="84 - TPS2",14="85 - IAT",7="86 - CAM1",8="87 - CAM2",5="92 - TPS 1",13="93 - CLT",18="auxP2 analog",3="auxP4 analog",16="auxP5 analog"
+#define adc_channel_e_fullenum "NONE","14 - O2","INVALID","auxP4 analog","34 In PPS1","92 - TPS 1","+12v","86 - CAM1","87 - CAM2","84 - TPS2","INVALID","29 In Maf","101 - MAP2","93 - CLT","85 - IAT","35 In PPS2","auxP5 analog","INVALID","auxP2 analog"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1516,7 +1516,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2541720400
+#define SIGNATURE_HASH 3054893679
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2068,7 +2068,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.08.14.hellen121vag.2541720400"
+#define TS_SIGNATURE "rusEFI master.2025.08.15.hellen121vag.3054893679"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

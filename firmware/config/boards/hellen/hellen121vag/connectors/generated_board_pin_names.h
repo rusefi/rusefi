@@ -11,6 +11,7 @@
 #define PIN_auxP7 MM176_OUT_IO5
 #define PIN_auxP8 MM176_OUT_IO6
 #define PIN_MR MM176_OUT_PWM17
+#define PIN_3a EFI_ADC_5
 #define PIN_7a E5
 #define PIN_8a I6
 #define PIN_14a EFI_ADC_0
@@ -54,7 +55,6 @@
 #define PIN_104a A9
 #define PIN_105a_legacy D14
 #define PIN_105a G5
-#define PIN_106a EFI_ADC_5
 #define PIN_110a I5
 #define PIN_111a E4
 #define PIN_112a F12
