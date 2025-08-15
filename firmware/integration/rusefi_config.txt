@@ -1321,7 +1321,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	output_pin_e hpfpValvePin;
 	pin_output_mode_e hpfpValvePinMode;
 
-	float boostCutPressure;MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.;"SPECIAL_CASE_PRESSURE", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+	float boostCutPressure;Specifies the boost pressure allowed before triggering a cut. Setting this to 0 will DISABLE overboost cut.;"SPECIAL_CASE_PRESSURE", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 	uint8_t[16] autoscale tchargeBins;;"kg/h", 5, 0, 0, 1200, 0
 	uint8_t[16] autoscale tchargeValues;;"ratio", 0.01, 0, 0, 1, 2
