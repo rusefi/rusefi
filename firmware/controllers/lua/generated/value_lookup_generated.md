@@ -1691,7 +1691,7 @@ Degrees of timing REMOVED from actual timing during soft RPM limit window
 % of fuel ADDED during window
 
 ### rpmHardLimitHyst
-Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
+Sets a buffer below the RPM hard limit, helping avoid rapid cycling of cut actions by defining a range within which RPM must drop before cut actions are re-enabled.\nHysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
 
 ### benchTestOffTime
 Time between bench test pulses
