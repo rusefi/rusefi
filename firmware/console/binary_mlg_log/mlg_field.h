@@ -18,7 +18,7 @@
 #define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const
 #else
 #define LOG_FIELD_CONSTNESS_SPECIFIER_METHODS consteval
-#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const
+#define LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE const constinit
 #endif
 
 namespace MLG::Entries {
@@ -28,7 +28,7 @@ class Field {
 public:
 	// Scaled channels, memcpys data directly and describes format in header
 	template <typename TValue, int TMult, int TDiv>
-	constexpr Field(const scaled_channel<TValue, TMult, TDiv>& toRead,
+	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(const scaled_channel<TValue, TMult, TDiv>& toRead,
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(float(TDiv) / TMult)
 		, m_addr(toRead.getFirstByteAddr())
@@ -46,7 +46,7 @@ public:
 
 	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
 	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
-	constexpr Field(TValue& toRead,
+	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(TValue& toRead,
 			   const char* name, const char* units, int8_t digits, const char* category = "none")
 		: m_multiplier(1)
 		, m_addr(&toRead)
@@ -64,7 +64,7 @@ public:
 
 	// Bit channel
 	template <typename TValue>
-	constexpr Field(
+	LOG_FIELD_CONSTNESS_SPECIFIER_METHODS Field(
 		TValue& toRead,
 		const uint32_t bitsBlockOffset,
 		const uint8_t bitNumber,
