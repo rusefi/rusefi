@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.*;
 import com.rusefi.binaryprotocol.MsqFactory;
+import com.rusefi.tools.tune.FileLinesHelper;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.Output;
@@ -139,7 +140,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             if (line.startsWith(INCLUDE_FILE)) {
                 String fileName = line.substring(INCLUDE_FILE.length()).trim();
                 log.info("Including " + fileName);
-                List<String> lines = ReaderStateImpl.readAllLinesWithRoot(fileName);
+                List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
                 for (String includedLine : lines) {
                     processAndUse(includedLine, isBeforeStartTag, prefix, isAfterEndTag, postfix);
                 }

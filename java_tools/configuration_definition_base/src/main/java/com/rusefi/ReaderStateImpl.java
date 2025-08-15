@@ -9,12 +9,11 @@ import com.rusefi.enum_reader.Value;
 import com.rusefi.output.*;
 import com.rusefi.parse.TokenUtil;
 import com.rusefi.parse.TypesHelper;
+import com.rusefi.tools.tune.FileLinesHelper;
 import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -266,7 +265,7 @@ public class ReaderStateImpl implements ReaderState {
             if (lineReaded.startsWith(INCLUDE_FILE)) {
                 String fileName = lineReaded.substring(INCLUDE_FILE.length()).trim();
                 log.info("Including " + fileName);
-                lines.addAll(readAllLinesWithRoot(fileName));
+                lines.addAll(FileLinesHelper.readAllLinesWithRoot(fileName));
             } else if (lineReaded.startsWith(SPLIT_LINES)) {
                 String template = lineReaded.substring(SPLIT_LINES.length());
                 String lineExpanded = variableRegistry.applyVariables(template);
@@ -315,11 +314,6 @@ public class ReaderStateImpl implements ReaderState {
         for (ConfigurationConsumer consumer : consumers)
             consumer.endFile();
         ensureEmptyAfterProcessing();
-    }
-
-    public static @NotNull List<String> readAllLinesWithRoot(String fileName) throws IOException {
-        // 'getAbsolutePath' seems to somehow help some tests? something is weird
-        return Files.readAllLines(Paths.get(new File(RootHolder.ROOT + fileName).getAbsolutePath()));
     }
 
     private void addBitPadding() {
