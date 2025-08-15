@@ -1664,7 +1664,7 @@ float ignKeyAdcDivider
 int8_t[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE x TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] tractionControlEtbDrop;;"%", 1, 0, -100, 0, 0
 
 	uint8_t maxInjectorDutyInstant;If injector duty cycle hits this value, instantly cut fuel.;"%", 1, 0, 50, 200, 0
-	uint8_t maxInjectorDutySustained;If injector duty cycle hits this value for the specified delay time, cut fuel.;"%", 1, 0, 50, 120, 0
+	uint8_t maxInjectorDutySustained;This limit allows injectors to operate up to the specified duty cycle percentage for a short period (as defined by the delay). After this delay, if the duty cycle remains above the limit, it will trigger a cut. ;"%", 1, 0, 50, 120, 0
 	uint8_t autoscale maxInjectorDutySustainedTimeout;Timeout period for duty cycle over the sustained limit to trigger duty cycle protection.;"sec", 0.1, 0, 0, 5, 1
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPinsStage2;
