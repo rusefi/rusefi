@@ -64,7 +64,7 @@ pins:
   - pin: 3a
     function: +12v
     type: vign
-    meta: EFI_ADC_5
+    id: EFI_ADC_5
     class: analog_inputs
 
   - pin: 5a
