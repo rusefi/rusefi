@@ -1408,10 +1408,11 @@ struct engine_configuration_s {
 	 */
 	float cylinderBore;
 	/**
-	 * This setting controls which fuel quantity control algorithm is used.
-	 * Alpha-N means drive by TPS commonly only used for NA engines
-	 * Speed Density requires MAP sensor and is the default choice for may installs
-	 * MAF air charge is a cylinder filling based method that uses a mass air flow sensor.
+	 * Determines the method used for calculating fuel delivery. The following options are available:
+	 * Uses intake manifold pressure (MAP) and intake air temperature (IAT) to calculate air density and fuel requirements. This is a common strategy, especially for naturally aspirated or turbocharged engines.
+	 * Alpha-N: Uses throttle position as the primary load input for fuel calculation. This strategy is generally used in engines with individual throttle bodies or those that lack a reliable MAP signal.
+	 * MAF Air Charge: Relies on a Mass Air Flow (MAF) sensor to measure the amount of air entering the engine directly, making it effective for engines equipped with a MAF sensor.
+	 * Lua: Allows for custom fuel calculations using Lua scripting, enabling highly specific tuning applications where the other strategies don’t apply.
 	 * offset 532
 	 */
 	engine_load_mode_e fuelAlgorithm;
@@ -2949,6 +2950,7 @@ struct engine_configuration_s {
 	offset 1440 bit 14 */
 	bool invertSecondaryTriggerSignal : 1 {};
 	/**
+	 * When enabled, this option cuts the fuel supply when the RPM limit is reached. Cutting fuel provides a smoother limiting action; however, it may lead to slightly higher combustion chamber temperatures since unburned fuel is not present to cool the combustion process.
 	offset 1440 bit 15 */
 	bool cutFuelOnHardLimit : 1 {};
 	/**
