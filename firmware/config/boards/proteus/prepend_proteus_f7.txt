@@ -6,3 +6,6 @@
 #define TMF_SIZE 8
 
 #define CLT_IDLE_TABLE_RPM_SIZE 6
+
+#define VE_RPM_COUNT 24
+#define VE_LOAD_COUNT 24
