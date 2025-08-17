@@ -18,7 +18,7 @@ import static com.rusefi.ui.util.UiUtils.setToolTip;
 
 public class SimulatorHelper {
     private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorHelper");
-    public static final String BINARY = "rusefi_simulator.exe";
+    private static final String BINARY = "rusefi_simulator.exe";
     private static Process process;
     private static final Logging log = getLogging(SimulatorHelper.class);
 
@@ -48,6 +48,7 @@ public class SimulatorHelper {
                     isPortOpened = TcpConnector.isTcpPortOpened();
                     try {
                         Thread.sleep(1000);
+                        log.info("Process " + process);
                     } catch (InterruptedException e) {
                         throw new IllegalStateException("Unexpected", e);
                     }
@@ -73,6 +74,7 @@ public class SimulatorHelper {
                     log.info("Executing simulator " + BINARY + "=" + process);
                     SimulatorExecHelper.dumpProcessOutput(process, new CountDownLatch(1));
                 } catch (IOException e) {
+                    log.warn("Error " + e, e);
                     throw new IllegalStateException(e);
                 }
             }
