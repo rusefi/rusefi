@@ -10,7 +10,7 @@ extern "C" {
 
 // CAN1 PB8+PB9 and CAN2 PB5+PB6 pins are commonly used by Hellen.
 // CAN2 PB5+PB13 pins can be used for ST-bootloader compatibility.
-// 
+//
 // Other STM32 CAN pin combinations:
 // CAN1_RX: { PI9, PA11, PH14, PD0, PB8 }, CAN1_TX: { PA12, PH13, PD1, PB9 }
 // CAN2_RX: { PB5, PB12 }, CAN2_TX: { PB6, PB13 }
@@ -109,7 +109,6 @@ extern "C" void CanTransmitPacket(blt_int8u *data, blt_int8u len)
 extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 {
 	constexpr blt_int32u rxMsgId = BOOT_COM_CAN_RX_MSG_ID;
-	blt_bool result = BLT_FALSE;
 	CANRxFrame frame;
 
 	if (MSG_OK != canReceiveTimeout(&OPENBLT_CAND, CAN_ANY_MAILBOX, &frame, TIME_IMMEDIATE)) {
