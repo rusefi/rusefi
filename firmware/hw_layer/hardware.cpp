@@ -286,8 +286,10 @@ void onFastAdcComplete(adcsample_t*) {
 	 */
 	efiAssertVoid(ObdCode::CUSTOM_STACK_ADC, hasLotsOfRemainingStack(), "lowstck#9b");
 
+	auto mapRaw = adcRawValueToScaledVoltage(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel);
+	engine->outputChannels.rawMapFast = mapRaw;
 #if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
-	mapAveragingAdcCallback(adcRawValueToScaledVoltage(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel));
+	mapAveragingAdcCallback(mapRaw);
 #endif /* EFI_MAP_AVERAGING */
 }
 #endif /* HAL_USE_ADC */
