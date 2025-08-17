@@ -197,6 +197,8 @@ public class StartupFrame {
             frame.pack();
         }));
 
+        /*
+        LOG_VIEWER is a bit dead, is not it?
         final JButton buttonLogViewer = new JButton();
         buttonLogViewer.setText("Start " + LinkManager.LOG_VIEWER);
         buttonLogViewer.addActionListener(new ActionListener() {
@@ -209,7 +211,7 @@ public class StartupFrame {
 
         miscPanel.add(buttonLogViewer, "wrap");
         miscPanel.add(new HorizontalLine(), "wrap");
-
+*/
         miscPanel.add(SimulatorHelper.createSimulatorComponent(this));
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
