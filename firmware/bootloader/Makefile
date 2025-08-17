@@ -31,9 +31,23 @@ DDEFS += -DSTM32_NOCACHE_ENABLE=FALSE
 
 DDEFS += -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=1 -DEFI_SIMULATOR=0
 
+PROJECT_DIR = ..
+include $(PROJECT_DIR)/rusefi_rules.mk
+
 # Compiler options here.
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(EXTRA_3_PARAMS) $(DEBUG_LEVEL_BLT_OPT) $(RFLAGS) -Wno-error=implicit-fallthrough -Wno-error=bool-operation -fomit-frame-pointer -falign-functions=16 -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Werror=type-limits -Wno-error=strict-aliasing -Wno-error=attributes
+  USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(EXTRA_3_PARAMS) $(DEBUG_LEVEL_BLT_OPT) $(RFLAGS)
+  USE_OPT += $(RUSEFI_OPT)
+  # huh why do we have custom settings not uniform with rusefi_rules.mk?
+  USE_OPT += -Wno-error=implicit-fallthrough \
+    -Wno-error=bool-operation \
+    -fomit-frame-pointer \
+    -falign-functions=16 \
+    -Wno-error=pointer-sign \
+    -Wno-error=unused-function \
+    -Werror=type-limits \
+    -Wno-error=strict-aliasing\
+    -Wno-error=attributes
 endif
 
 # let everyone know that we are compiling bootloader
@@ -124,7 +138,6 @@ endif
 
 # Define project name here
 PROJECT = openblt_$(PROJECT_BOARD)
-PROJECT_DIR = ..
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
