@@ -121,7 +121,7 @@ static void slowAdcErrorCB(ADCDriver *, adcerror_t err) {
 
 // Conversion group for slow channels
 // This simply samples every channel in sequence
-static constexpr ADCConversionGroup convGroupSlow = {
+static /* constexpr */ ADCConversionGroup convGroupSlow = {
 	.circular			= FALSE,
 	.num_channels		= adcChannelCount,
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
@@ -271,6 +271,36 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 
 #if EFI_USE_FAST_ADC
 
+// See: https://github.com/rusefi/rusefi/issues/8445
+// We need to disable Slow ADC access to pins that are handled by fast ADC to avoid additional noise
+static void slowAdcEnableDisableChannel(adc_channel_e hwChannel, bool en)
+{
+	if (!isAdcChannelValid(hwChannel)) {
+		return;
+	}
+
+	/* TODO: following is correct for STM32 ADC1/2.
+	 * ADC3 has another input to gpio mapping
+	 * and should be handled separately */
+	uint32_t channelAdcIndex = hwChannel - EFI_ADC_0;
+	// Switch disabled channel to internal Vrefint channel
+	uint32_t channelHwIndex = en ? channelAdcIndex : 17;
+
+	if (channelAdcIndex <= 5) {
+		size_t shift = (channelAdcIndex - 0) * 5;
+		convGroupSlow.sqr3 = (convGroupSlow.sqr3 & (~(0x1f << shift))) |
+							 (channelHwIndex << shift);
+	} else if (channelAdcIndex <= 11) {
+		size_t shift = (channelAdcIndex - 6) * 5;
+		convGroupSlow.sqr2 = (convGroupSlow.sqr3 & (~(0x1f << shift))) |
+							 (channelHwIndex << shift);
+	} else {
+		size_t shift = (channelAdcIndex - 12) * 5;
+		convGroupSlow.sqr1 = (convGroupSlow.sqr3 & (~(0x1f << shift))) |
+							 (channelHwIndex << shift);
+	}
+}
+
 #include "AdcDevice.h"
 
 extern AdcDevice fastAdc;
@@ -279,6 +309,9 @@ AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
 	if (!isAdcChannelValid(channel)) {
 		return invalidAdcToken;
 	}
+
+	// Do not run slow ADC for fast ADC inputs
+	slowAdcEnableDisableChannel(channel, false);
 
 	return fastAdc.getAdcChannelToken(channel);
 }
