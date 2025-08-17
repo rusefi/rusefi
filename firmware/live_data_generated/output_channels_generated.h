@@ -807,13 +807,12 @@ struct output_channels_s {
 	 * units: V
 	 * offset 320
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> rawMapFast = (uint16_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * units: V
 	 * offset 322
 	 */
-	uint8_t alignmentFill_at_322[2] = {};
+	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
 	/**
 	 * offset 324
 	 */

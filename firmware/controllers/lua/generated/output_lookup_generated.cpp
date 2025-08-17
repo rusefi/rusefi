@@ -439,6 +439,9 @@ float getOutputValueByHash(const int hash) {
 // rawMap
 		case 417956621:
 			return engine->outputChannels.rawMap;
+// rawMapFast
+		case -1458054117:
+			return engine->outputChannels.rawMapFast;
 // rawAfr
 		case 417943720:
 			return engine->outputChannels.rawAfr;

@@ -182,6 +182,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels.mafEstimate, "Air: Flow estimate", "kg/h", 0},
 	{engine->outputChannels.instantRpm, "sync: instant RPM", "rpm", 0},
 	{engine->outputChannels.rawMap, "rawMap", "V", 3},
+	{engine->outputChannels.rawMapFast, "rawMapFast", "V", 3},
 	{engine->outputChannels.rawAfr, "rawAfr", "V", 3},
 	{engine->outputChannels.calibrationValue2, "calibrationValue2", "", 0},
 	{engine->outputChannels.luaInvocationCounter, "Lua: Tick counter", "count", 0},
