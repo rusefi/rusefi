@@ -48,9 +48,9 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
-
-
+#ifndef EFI_BOOTLOADER
 static bool isFirstInvocation = true;
+#endif // EFI_BOOTLOADER
 
 /*PUBLIC_API_WEAK*/ int hackHellenBoardId(int detectedId) {
   if (detectedId == BOARD_ID_VAG121_D) {
