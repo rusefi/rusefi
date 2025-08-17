@@ -30,8 +30,12 @@
 using setup_custom_board_overrides_type = void (*)();
 
 #if EFI_CAN_SUPPORT
+#include "can_msg_tx.h"
 using board_can_rx_type = void (*)(const size_t, const CANRxFrame &, efitick_t);
 extern std::optional<board_can_rx_type> custom_board_can_rx;
+
+using board_can_update_dash_type = void (*)(CanCycle cycle);
+extern std::optional<board_can_update_dash_type> custom_board_update_dash;
 #endif // EFI_CAN_SUPPORT
 
 /**

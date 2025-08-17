@@ -14,7 +14,7 @@
 #include "can_dash_ms.h"
 #include "can_dash_nissan.h"
 #include "can_dash_haltech.h"
-#include "can_msg_tx.h"
+#include "board_overrides.h"
 #include "can_bmw.h"
 #include "can_vag.h"
 #include "can_dash_honda.h"
@@ -609,9 +609,15 @@ void canDashboardAim(CanCycle cycle) {
 	// transmitStruct<Aim5fd>(0x5fd, false);
 }
 
+std::optional<board_can_update_dash_type> custom_board_update_dash;
+
 PUBLIC_API_WEAK void boardUpdateDash(CanCycle cycle) {}
 
 void updateDash(CanCycle cycle) {
+  if (custom_board_update_dash.has_value()) {
+      custom_board_update_dash.value()(cycle);
+  }
+
   boardUpdateDash(cycle);
 
 	// Transmit dash data, if enabled
