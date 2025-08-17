@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 public class ErrorMessageHelper {
-    public static @NotNull JFrame createOnTopParent() {
+    private static @NotNull JFrame createOnTopParent() {
         JFrame frame = new JFrame();
         // https://stackoverflow.com/questions/438463/joptionpane-wont-show-its-dialog-on-top-of-other-windows
         frame.pack();
