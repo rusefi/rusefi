@@ -11,6 +11,7 @@
 
 #if EFI_CAN_SUPPORT
 #include "can.h"
+#include "can_tx.h"
 #include "can_hw.h"
 #include "can_dash.h"
 #include "obd2.h"

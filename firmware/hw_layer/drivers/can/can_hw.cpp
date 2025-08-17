@@ -18,6 +18,7 @@
 
 #include "can.h"
 #include "can_hw.h"
+#include "can_tx.h"
 #include "can_msg_tx.h"
 #include "string.h"
 #include "mpu_util.h"
