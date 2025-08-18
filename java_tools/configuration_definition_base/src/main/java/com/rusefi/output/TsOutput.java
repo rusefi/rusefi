@@ -42,6 +42,8 @@ public class TsOutput {
     private final String pressureToPsiScale = String.valueOf(kpaToPsiValue);
     private final String pressureToPsiTranslate = "0";
 
+    private final Double KmhToMphValue = 0.62137119;
+
     public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
     }
@@ -209,6 +211,10 @@ public class TsOutput {
 
     private double kPaToPsi(double kPa){
         return kPa * kpaToPsiValue;
+    }
+
+    private double KmhToMph(double Kmh){
+        return Kmh * KmhToMphValue;
     }
 
     public String formatTemperatureTsInfo(String tsInfo, boolean isImperial){
