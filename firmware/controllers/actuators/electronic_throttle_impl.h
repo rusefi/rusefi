@@ -322,7 +322,7 @@ public:
 private:
 	ACPhase m_autocalPhase = ACPhase::Stopped;
 	Timer m_autocalTimer;
-	// Report calibated values to TS, if false - set directrly to config
+	// Report calibrated values to TS, if false - set directly to config
 	bool m_isAutocalTs;
 
 	float m_primaryMax;
