@@ -396,6 +396,8 @@ static void updateThrottles() {
 	engine->outputChannels.tps12Split = Sensor::getOrZero(SensorType::Tps1) - Sensor::getOrZero(SensorType::Tps2);
 	// Pedal pri/sec split
 	engine->outputChannels.accPedalSplit = Sensor::getOrZero(SensorType::AcceleratorPedalPrimary) - Sensor::getOrZero(SensorType::AcceleratorPedalSecondary);
+
+	engine->outputChannels.accPedalUnfiltered = Sensor::getOrZero(SensorType::AcceleratorPedalUnfiltered);
 	updateUnfilteredRawPedal();
 }
 

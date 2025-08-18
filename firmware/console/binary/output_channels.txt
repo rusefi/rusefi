@@ -239,6 +239,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale tps2Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale tps12Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale accPedalSplit;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale accPedalUnfiltered;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
 	int8_t sparkCutReason;Ign: Cut Code;"code",1, 0, 0, 0, 0
 	int8_t fuelCutReason;Fuel: Cut Code;"code",1, 0, 0, 0, 0
