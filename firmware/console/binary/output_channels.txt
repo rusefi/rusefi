@@ -330,6 +330,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendOutput;;"%", 0.1, 0, -1000, 1000, 1
+	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendYAxis;;"", 0.1, 0, -1000, 1000, 1
 
 bit coilState1
 bit coilState2
