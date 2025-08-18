@@ -90,7 +90,7 @@ void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_
 void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
 							   efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
-	if (!isValidRpm(rpm)) {
+	if (rpm == 0) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}

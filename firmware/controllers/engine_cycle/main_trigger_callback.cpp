@@ -259,11 +259,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		// todo: check for 'trigger->is_synchnonized?'
 		return;
 	}
-	if (rpm == NOISY_RPM) {
-		warning(ObdCode::OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, "noisy trigger");
-		return;
-	}
-
 
 	if (trgEventIndex == 0) {
 
