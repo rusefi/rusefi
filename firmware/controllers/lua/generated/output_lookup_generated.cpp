@@ -424,6 +424,9 @@ float getOutputValueByHash(const int hash) {
 // accPedalSplit
 		case 864210494:
 			return engine->outputChannels.accPedalSplit;
+// accPedalUnfiltered
+		case 1466421764:
+			return engine->outputChannels.accPedalUnfiltered;
 // sparkCutReason
 		case -56739846:
 			return engine->outputChannels.sparkCutReason;
