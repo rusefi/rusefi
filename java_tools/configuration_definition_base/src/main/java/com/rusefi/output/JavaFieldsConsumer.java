@@ -121,7 +121,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private static boolean isUsefulField(ConfigField configField) {
-        return !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX);
+        return !configField.getName().startsWith(UnusedPrefix.UNUSED_ANYTHING_PREFIX);
     }
 
     private String terminateField() {

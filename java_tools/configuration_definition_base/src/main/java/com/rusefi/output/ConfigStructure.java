@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface ConfigStructure {
-    String UNUSED_ANYTHING_PREFIX = "unused";
 
     Map<String, ConfigField> getCurrentInstance();
 
