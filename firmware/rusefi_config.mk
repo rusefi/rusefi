@@ -43,10 +43,13 @@ RAMDISK = \
   $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image_compressed.h
 
 GENERATED_ENUMS = \
-	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/rusefi_enums_generated.h
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/rusefi_enums_generated.h \
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)integration/config_generated_enums-$(SHORT_BOARD_NAME).txt \
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)integration/config_generated_enums-$(SHORT_BOARD_NAME).ini \
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)integration/config_generated_enums-$(SHORT_BOARD_NAME).cfg
 
 $(GENERATED_ENUMS): $(GENERATE_ENUM_JAR) $(PROJECT_DIR)/generate_enums.sh
-	bash $(PROJECT_DIR)/generate_enums.sh
+	bash $(PROJECT_DIR)/generate_enums.sh $(SHORT_BOARD_NAME)
 
 CONFIG_FILES = \
   $(INI_FILE) \
@@ -84,7 +87,7 @@ $(CONFIG_FILES): .config-sentinel ;
 
 # CONFIG_DEFINITION is always rebuilt, but the file will only be updated if it needs to be,
 # so it won't trigger a config file generation unless it needs to.
-.config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION_JAR) $(TGT_SENTINEL)
+.config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION_JAR) $(TGT_SENTINEL) $(GENERATED_ENUMS)
 ifneq (,$(CUSTOM_GEN_CONFIG))
 	bash $(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
 else

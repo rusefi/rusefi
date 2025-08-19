@@ -1,5 +1,5 @@
 
-COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARD_NAME} \
+COMMON_GEN_CONFIG_PREFIX=" -DboardName=${SHORT_BOARD_NAME} -DSystemOut.name=logs/gen_config_${SHORT_BOARD_NAME} \
  -jar ../java_tools/configuration_definition/build/libs/config_definition-all.jar"
 
 set_board_file() {
@@ -40,10 +40,12 @@ set_board_file BOARD_IGNITION_SETTINGS_FILE "${BOARD_DIR}/board_ignition_setting
 
 # most static arguments go first
 # reading into VariableRegistry and overrides go next
-
 COMMON_GEN_CONFIG="
  -initialize_to_zero false \
  -with_c_defines false \
+ -enum_definitions_cfg integration/config_generated_enums-${SHORT_BOARD_NAME}.cfg \
+ -enum_replacements_ini integration/config_generated_enums-${SHORT_BOARD_NAME}.ini \
+ -enum_definitions_txt integration/config_generated_enums-${SHORT_BOARD_NAME}.txt \
  -prepend integration/ts_protocol.txt \
  -readfile OUTPUTS_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
  -readfile DATALOG_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \

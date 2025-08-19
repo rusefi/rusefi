@@ -59,7 +59,7 @@ void printConfiguration() {
 	efiPrintf("Template %s/%d trigger %s/%s/%d", getEngine_type_e(engineConfiguration->engineType),
 			(int)engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type),
-			getEngine_load_mode_e(engineConfiguration->fuelAlgorithm), (int)engineConfiguration->fuelAlgorithm);
+			Enum2String(engineConfiguration->fuelAlgorithm), (int)engineConfiguration->fuelAlgorithm);
 
 	efiPrintf("configurationVersion=%d", engine->getGlobalConfigurationVersion());
 

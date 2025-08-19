@@ -21,8 +21,10 @@ import java.util.*;
 public class ConfigDefinition {
     private final static Logging log = Logging.getLogging(ConfigDefinition.class);
     public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
-
     private static final String KEY_DEFINITION = "-definition";
+    private static final String ENUM_DEFINITIONS_CFG = "-enum_definitions_cfg";
+    private static final String ENUM_REPLACEMENT_INI = "-enum_replacements_ini";
+    private static final String ENUM_DEFINITIONS_TXT = "-enum_definitions_txt";
     private static final String KEY_TS_TEMPLATE = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
@@ -78,6 +80,19 @@ public class ConfigDefinition {
                 case "-tool":
                     // lame: order of command line arguments is important
                     ToolUtil.TOOL = args[i + 1];
+                    break;
+                case ENUM_DEFINITIONS_CFG:
+                    String extraEnumsFileNameCfg = args[i + 1];
+                    ExtraUtil.handleEnumCfgDefitions(extraEnumsFileNameCfg, state.getVariableRegistry());
+                    state.addInputFile(extraEnumsFileNameCfg);
+                    break;
+                case ENUM_REPLACEMENT_INI:
+                    String extraEnumsFileNameIni = args[i + 1];
+                    ExtraUtil.handleEnumIniReplacements(extraEnumsFileNameIni, state.getVariableRegistry());
+                    break;
+                case ENUM_DEFINITIONS_TXT:
+                    String extraEnumsFileNameTxt = args[i + 1];
+                    ExtraUtil.handleEnumTxtDefinitions(extraEnumsFileNameTxt, state);
                     break;
                 case KEY_DEFINITION:
                     // lame: order of command line arguments is important, these arguments should be AFTER '-tool' argument

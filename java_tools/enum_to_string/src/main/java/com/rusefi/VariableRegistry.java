@@ -212,8 +212,9 @@ public class VariableRegistry {
                 throw new IllegalStateException("Something broken in: [" + line + "]");
             String key = m.group(2);
             String newValue = function.apply(key);
-            newValue = newValue.replace("\\", "\\\\"); // hack out symbol escaping
-            line = m.replaceFirst(newValue);
+            //log.info("Replacing " + key + " with " + newValue + " in " + line + " using " + pattern.pattern());
+            newValue = newValue.replace("\\", "\\\\");
+            line = m.replaceFirst(Matcher.quoteReplacement(newValue));
         }
         return line;
     }
