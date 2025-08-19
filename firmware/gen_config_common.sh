@@ -44,6 +44,7 @@ set_board_file BOARD_IGNITION_SETTINGS_FILE "${BOARD_DIR}/board_ignition_setting
 COMMON_GEN_CONFIG="
  -initialize_to_zero false \
  -with_c_defines false \
+ -prepend integration/config_generated_enums.txt \
  -prepend integration/ts_protocol.txt \
  -readfile OUTPUTS_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
  -readfile DATALOG_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
