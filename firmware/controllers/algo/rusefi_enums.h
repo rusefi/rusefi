@@ -874,10 +874,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 #endif // __cplusplus
 
-#if __has_include("rusefi_enums_generated.h")
-#   include "rusefi_enums_generated.h"
-#else
-#   warning "rusefi_enums_generated.h not found, continuing without it"
-#endif
+#include "rusefi_enums_generated.h"
 
 using namespace rusefi::generated::enums;

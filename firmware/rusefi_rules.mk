@@ -13,4 +13,3 @@ endif
 RUSEFI_OPT += -Wno-error=sign-compare
 RUSEFI_OPT += -Wno-error=overloaded-virtual
 RUSEFI_OPT += -Wno-error=unused-parameter
-RUSEFI_OPT += -Wno-error=cpp

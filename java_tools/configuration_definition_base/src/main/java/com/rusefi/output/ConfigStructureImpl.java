@@ -70,7 +70,7 @@ public class ConfigStructureImpl implements ConfigStructure {
          * we make alignment decision based on C fields since we expect iteration and non-iteration fields
          * to match in size
          */
-        FieldIteratorWithOffset iterator  = new FieldIteratorWithOffset(cFields) {
+        FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(cFields) {
             @Override
             public void end(int currentPosition) {
                 super.end(currentPosition);
