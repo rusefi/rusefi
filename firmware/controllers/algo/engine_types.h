@@ -325,6 +325,7 @@ typedef enum {
 	TS_WIDEBAND_SET_IDX_BY_ID = 33,
 	TS_WIDEBAND_PING_BY_ID = 34,
 	TS_WIDEBAND_FLASH_BY_ID = 35,
+	TS_STOP_ENGINE = 36,
 } ts_command_e;
 
 typedef enum {

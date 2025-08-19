@@ -752,7 +752,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		applyPreset((int)DEFAULT_ENGINE_TYPE);
 		break;
 
-	case 0x79:
+	case TS_STOP_ENGINE:
 		doScheduleStopEngine(StopRequestedReason::TsCommand);
 		break;
 
