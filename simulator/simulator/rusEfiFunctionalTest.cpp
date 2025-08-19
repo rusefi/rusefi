@@ -346,5 +346,5 @@ void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize)
 	}
 
     memcpy(wrapOutBuffer, &numPackets, 2);
-    tsChannel->sendResponse(TS_CRC, wrapOutBuffer, outputSize, true);
+    tsChannel->sendResponse(TS_CRC, wrapOutBuffer, outputSize);
 }

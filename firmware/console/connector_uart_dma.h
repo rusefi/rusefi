@@ -12,7 +12,7 @@
 #if HAL_USE_UART && EFI_USE_UART_DMA
 
 // See uart_dma_s
-#define TS_FIFO_BUFFER_SIZE (BLOCKING_FACTOR + 30)
+#define TS_FIFO_BUFFER_SIZE (750 + 30)
 // This must be a power of 2!
 #define TS_DMA_BUFFER_SIZE 32
 

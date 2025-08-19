@@ -70,7 +70,8 @@
 
 #include "generated_lookup_meta.h"
 
+// No longer true:
 // Ensure that one TCP segment can always fit an entire response to TS - we never need to split a TS packet across multiple frames.
-#define TCP_MSS (BLOCKING_FACTOR + 10)
+#define TCP_MSS (750 + 10)
 
 #endif /* LWIP_HDR_LWIPOPTS_H__ */

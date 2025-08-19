@@ -778,7 +778,7 @@ static void handleGetText(TsChannelBase* tsChannel) {
 	logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(output), outputSize, true);
+	tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(output), outputSize);
 #if EFI_SIMULATOR
 	logMsg("sent [%d]\r\n", outputSize);
 #endif // EFI_SIMULATOR
@@ -921,7 +921,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 				auto toothBuffer = GetToothLoggerBufferNonblocking();
 
 				if (toothBuffer) {
-					tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
+					tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s));
 
 					ReturnToothLoggerBuffer(toothBuffer);
 				} else {
@@ -942,7 +942,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 				const auto& buffer = triggerScopeGetBuffer();
 
 				if (buffer) {
-					tsChannel->sendResponse(TS_CRC, buffer.get<uint8_t>(), buffer.size(), true);
+					tsChannel->sendResponse(TS_CRC, buffer.get<uint8_t>(), buffer.size());
 				} else {
 					// TS asked for a tooth logger buffer, but we don't have one to give it.
 					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
@@ -965,7 +965,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			auto toothBuffer = GetToothLoggerBufferNonblocking();
 
 			if (toothBuffer) {
-				tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
+				tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s));
 
 				ReturnToothLoggerBuffer(toothBuffer);
 			} else {
@@ -988,7 +988,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
 			auto trace = perfTraceGetBuffer();
-			tsChannel->sendResponse(TS_CRC, trace.get<uint8_t>(), trace.size(), true);
+			tsChannel->sendResponse(TS_CRC, trace.get<uint8_t>(), trace.size());
 		}
 
 		break;
@@ -1001,8 +1001,8 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-		const char* configError = hasFirmwareError()? getCriticalErrorMessage() : getConfigErrorMessage();
-		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
+		const char* configError = hasFirmwareError() ? getCriticalErrorMessage() : getConfigErrorMessage();
+		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
 		break;
 	}
 	case TS_QUERY_BOOTLOADER: {
@@ -1011,7 +1011,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		bldata = TS_QUERY_BOOTLOADER_OPENBLT;
 #endif
 
-		tsChannel->sendResponse(TS_CRC, &bldata, 1, false);
+		tsChannel->sendResponse(TS_CRC, &bldata, 1);
 		break;
 	}
 	default:
