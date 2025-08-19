@@ -7,6 +7,18 @@
 
 #pragma once
 
+// In the ignition advance calculation function
+angle_t getAdvance(int rpm, float engineLoad) {
+    // Check for torque-based ignition control
+    if (engineConfiguration->isTorqueControlEnabled && 
+        torqueManager.shouldOverrideTraditionalControl()) {
+        
+        return torqueManager.getTorqueBasedIgnitionTiming();
+    }
+    
+    // Traditional ignition timing calculation continues...
+    return getAdvanceFromTable(rpm, engineLoad);
+
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad);
 /**
  * this method is used to build default advance map
@@ -19,3 +31,7 @@ angle_t getAdvanceCorrections(float engineLoad);
 
 size_t getMultiSparkCount(float rpm);
 void initIgnitionAdvanceControl();
+
+
+
+}
