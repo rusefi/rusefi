@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Aug 03 23:06:41 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Aug 19 15:55:09 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -507,6 +507,8 @@ case TS_SET_ENGINE_TYPE:
   return "TS_SET_ENGINE_TYPE";
 case TS_SOLENOID_CATEGORY:
   return "TS_SOLENOID_CATEGORY";
+case TS_STOP_ENGINE:
+  return "TS_STOP_ENGINE";
 case TS_UNUSED_23:
   return "TS_UNUSED_23";
 case TS_UNUSED_24:
