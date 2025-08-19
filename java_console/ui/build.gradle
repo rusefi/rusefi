@@ -7,7 +7,7 @@ dependencies {
     implementation project(':trigger-ui')
     implementation project(':autotest')
     implementation project(':luaformatter')
-    implementation project(':config_definition_base')
+    implementation project(':enum_to_string')
 
     implementation("com.fifesoft:autocomplete:3.3.2")
     implementation("com.fifesoft:rsyntaxtextarea:3.6.0")

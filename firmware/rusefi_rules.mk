@@ -1,3 +1,5 @@
+# rusefi_rules.mk
+
 # Warnings-as-errors...
 RUSEFI_OPT = -Werror
 # some compilers seem to have this off by default?

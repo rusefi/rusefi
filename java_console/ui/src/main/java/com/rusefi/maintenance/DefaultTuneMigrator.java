@@ -9,7 +9,7 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.migration.DefaultIniFieldMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.maintenance.migration.TuneMigrator;
-import com.rusefi.output.ConfigStructure;
+import com.rusefi.output.UnusedPrefix;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.*;
@@ -145,6 +145,6 @@ public enum DefaultTuneMigrator implements TuneMigrator {
     }
 
     private static boolean isUnusedField(final String fieldName) {
-        return fieldName.startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX);
+        return fieldName.startsWith(UnusedPrefix.UNUSED_ANYTHING_PREFIX);
     }
 }

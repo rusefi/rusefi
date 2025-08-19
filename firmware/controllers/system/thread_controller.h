@@ -42,6 +42,8 @@ public:
 	{
 	}
 
+	using chibios_rt::BaseStaticThread<TStackSize>::start;
+
 	/**
 	 * @brief Start the thread.
 	 */

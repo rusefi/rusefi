@@ -239,6 +239,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale tps2Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale tps12Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale accPedalSplit;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale accPedalUnfiltered;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
 	int8_t sparkCutReason;Ign: Cut Code;"code",1, 0, 0, 0, 0
 	int8_t fuelCutReason;Fuel: Cut Code;"code",1, 0, 0, 0, 0
@@ -247,6 +248,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t instantRpm;sync: instant RPM;"rpm", 1, 0, 0, 0, 0
 
 	uint16_t autoscale rawMap;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	uint16_t autoscale rawMapFast;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t autoscale rawAfr;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	float calibrationValue2;;"", 1, 0, 0, 0, 0
@@ -328,6 +330,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendOutput;;"%", 0.1, 0, -1000, 1000, 1
+	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendYAxis;;"", 0.1, 0, -1000, 1000, 1
 
 bit coilState1
 bit coilState2

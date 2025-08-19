@@ -71,6 +71,7 @@ float FuelComputer::getTargetLambda(float rpm, float load) const {
 		engine->outputChannels.targetAfrBlendParameter[i] = result.BlendParameter;
 		engine->outputChannels.targetAfrBlendBias[i] = result.Bias;
 		engine->outputChannels.targetAfrBlendOutput[i] = result.Value;
+		engine->outputChannels.targetAfrBlendYAxis[i] = result.TableYAxis;
 
 		target += result.Value;
 	}
