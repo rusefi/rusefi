@@ -44,6 +44,7 @@ Release template (copy/paste this for new release):
 ### Fixed
  - 3000gt 6g72 triggers cam and crank 3-0 more accuracy
  - unneeded ETB PID reset causes AE and causes AFR dip #8392
+ - Torque reduction while using "Clutch Up Switch" trigger is inverted. #8447
 
 ## June 2025 "Day 1210"
 
