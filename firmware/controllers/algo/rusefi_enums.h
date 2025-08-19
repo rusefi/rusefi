@@ -897,3 +897,9 @@ typedef enum __attribute__ ((__packed__)) {
 } stft_state_e;
 
 #endif // __cplusplus
+
+#if __has_include("rusefi_enums_generated.h")
+#   include "rusefi_enums_generated.h"
+#else
+#   warning "rusefi_enums_generated.h not found, continuing without it"
+#endif

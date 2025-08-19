@@ -421,6 +421,10 @@ end_struct
 
 custom air_pressure_sensor_type_e 1 bits, U08, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "GM 3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "MPXH6400", "MPXH6300"
 
+!#!generate_enum_start
+!#!{"name":"wbo_adc", "type":"uint8_t", "values":[{"i":0,"v":"first"}, {"i":5,"v":"second"}]}
+!#!generate_enum_end
+
 !
 ! lower 16 values are used on stm32 rusEFI, values above 16 are related to Kinetis work in progress
 !

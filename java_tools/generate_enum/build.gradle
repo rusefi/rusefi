@@ -1,0 +1,20 @@
+defaultTasks 'shadowJar'
+
+dependencies {
+  api project(':logging')
+  implementation global_libs.json
+  testImplementation global_libs.junit5
+  testImplementation global_libs.junit5engine
+}
+
+build.dependsOn shadowJar
+
+shadowJar {
+  archiveBaseName.set('generate_enum')
+  archiveClassifier.set('all')
+  manifest {
+    attributes(
+      'Main-Class': 'rusefi.GenerateEnum'
+    )
+  }
+}

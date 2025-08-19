@@ -42,6 +42,12 @@ RAMDISK = \
   $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image.h \
   $(PROJECT_DIR)/hw_layer/mass_storage/ramdisk_image_compressed.h
 
+GENERATED_ENUMS = \
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/rusefi_enums_generated.h
+
+$(GENERATED_ENUMS): $(GENERATE_ENUM_JAR) $(PROJECT_DIR)/generate_enums.sh
+	bash $(PROJECT_DIR)/generate_enums.sh
+
 CONFIG_FILES = \
   $(INI_FILE) \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/rusefi_generated_$(SHORT_BOARD_NAME).h \
@@ -56,7 +62,7 @@ CONFIG_FILES = \
 #  the deps for that .o file in the same GCC call, so if the .deps aren't already
 #  in the correct state, things can fail to build because Make doesn't know it needs
 #  to build the prerequisites (in this case CONFIG_FILES and RAMDISK) for those files ahead of time.
-$(TCOBJS): $(CONFIG_FILES)
+$(TCOBJS): $(CONFIG_FILES) $(GENERATED_ENUMS)
 $(TCPPOBJS): $(RAMDISK)
 
 # Always try to rebuild the signature file.

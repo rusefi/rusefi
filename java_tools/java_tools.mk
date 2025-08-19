@@ -12,6 +12,7 @@ FLOCK = flock -o /tmp/java.lock
 CONFIG_DEFINITION_JAR = $(JAVA_TOOLS)/configuration_definition/build/libs/config_definition-all.jar
 CONFIG_DEFINITION_BASE_JAR = $(JAVA_TOOLS)/configuration_definition_base/build/libs/config_definition_base-all.jar
 ENUM_TO_STRING_JAR = $(JAVA_TOOLS)/enum_to_string/build/libs/enum_to_string-all.jar
+GENERATE_ENUM_JAR = $(JAVA_TOOLS)/generate_enum/build/libs/generate_enum-all.jar
 # TUNE_TOOLS_JAR = $(JAVA_TOOLS)/tune-tools/build/libs/tune-tools-all.jar
 TS_PLUGIN_LAUNCHER_JAR = $(JAVA_TOOLS)/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
 CONSOLE_JAR = $(PROJECT_DIR)/../console/rusefi_console.jar
@@ -28,6 +29,9 @@ $(CONFIG_DEFINITION_BASE_JAR): .FORCE
 
 $(ENUM_TO_STRING_JAR): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :enum_to_string:shadowJar
+
+$(GENERATE_ENUM_JAR): .FORCE
+	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :generate_enum:shadowJar
 
 #$(TUNE_TOOLS_JAR):
 	#cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :tune-tools:shadowJar
