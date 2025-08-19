@@ -2954,6 +2954,7 @@ struct engine_configuration_s {
 	offset 1344 bit 15 */
 	bool cutFuelOnHardLimit : 1 {};
 	/**
+	 * When selected, this option cuts the spark to limit RPM. Cutting spark can produce flames from the exhaust due to unburned fuel igniting in the exhaust system. Additionally, this unburned fuel can help cool the combustion chamber, which may be beneficial in high-performance applications.
 	 * Be careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
 	offset 1344 bit 16 */
 	bool cutSparkOnHardLimit : 1 {};
@@ -4782,7 +4783,8 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> benchTestOffTime;
 	/**
-	 * Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
+	 * Defines a pressure range below the cut limit at which boost can resume, providing smoother control over boost cut actions.
+	 * For example: if hard cut is 240kpa, and boost cut hysteresis is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
 	 * units: kPa (absolute)
 	 * offset 3264
 	 */

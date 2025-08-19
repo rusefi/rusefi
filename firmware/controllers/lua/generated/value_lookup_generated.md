@@ -845,7 +845,7 @@ https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the sign
 When enabled, this option cuts the fuel supply when the RPM limit is reached. Cutting fuel provides a smoother limiting action; however, it may lead to slightly higher combustion chamber temperatures since unburned fuel is not present to cool the combustion process.
 
 ### cutSparkOnHardLimit
-Be careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
+When selected, this option cuts the spark to limit RPM. Cutting spark can produce flames from the exhaust due to unburned fuel igniting in the exhaust system. Additionally, this unburned fuel can help cool the combustion chamber, which may be beneficial in high-performance applications.\nBe careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
 
 ### launchFuelCutEnable
 
@@ -1697,7 +1697,7 @@ Sets a buffer below the RPM hard limit, helping avoid rapid cycling of cut actio
 Time between bench test pulses
 
 ### boostCutPressureHyst
-Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
+Defines a pressure range below the cut limit at which boost can resume, providing smoother control over boost cut actions.\nFor example: if hard cut is 240kpa, and boost cut hysteresis is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
 
 ### benchTestCount
 How many test bench pulses do you want
