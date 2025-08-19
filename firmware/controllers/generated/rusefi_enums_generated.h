@@ -7,7 +7,7 @@ template<typename T>
 constexpr char const* Enum2String(T const e);
 
 template<typename T>
-constexpr T String2Enum(char const* const s);
+T String2Enum(char const* const s);
 
 /* This enum is used to select your desired Engine Load calculation algorithm */
 enum engine_load_mode_e: uint8_t {
@@ -34,7 +34,7 @@ template<> constexpr char const* Enum2String<engine_load_mode_e>(engine_load_mod
     }
 };
 
-template<> constexpr engine_load_mode_e String2Enum<engine_load_mode_e>(char const* const s){
+template<> engine_load_mode_e String2Enum<engine_load_mode_e>(char const* const s){
     if (strncmp(Enum2String<engine_load_mode_e>(engine_load_mode_e::LM_SPEED_DENSITY), s, 16+1) == 0) return engine_load_mode_e::LM_SPEED_DENSITY;
     if (strncmp(Enum2String<engine_load_mode_e>(engine_load_mode_e::LM_REAL_MAF), s, 11+1) == 0) return engine_load_mode_e::LM_REAL_MAF;
     if (strncmp(Enum2String<engine_load_mode_e>(engine_load_mode_e::LM_ALPHA_N), s, 10+1) == 0) return engine_load_mode_e::LM_ALPHA_N;

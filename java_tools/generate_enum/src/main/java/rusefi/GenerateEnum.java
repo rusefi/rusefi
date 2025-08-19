@@ -198,7 +198,7 @@ public class GenerateEnum {
         cpp.append("};\n\n");
 
         // string2Enum
-        cpp.append("template<> constexpr ").append(enumName).append(" String2Enum<").append(enumName).append(">(char const* const s){\n");
+        cpp.append("template<> ").append(enumName).append(" String2Enum<").append(enumName).append(">(char const* const s){\n");
         for (EnumDefinition.EnumEntry entry : entries) {
             int length = entry.valueCpp.length();
             cpp.append("    if (strncmp(Enum2String<").append(enumName)
@@ -303,7 +303,7 @@ public class GenerateEnum {
                 "constexpr char const* Enum2String(T const e);\n" +
                 "\n" +
                 "template<typename T>\n" +
-                "constexpr T String2Enum(char const* const s);\n");
+                "T String2Enum(char const* const s);\n");
             for (String e : parsedStrings.cppEnums) {
                 out.println(e);
             }
