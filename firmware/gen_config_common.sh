@@ -1,5 +1,4 @@
-
-sCOMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARD_NAME} \
+COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARD_NAME} \
  -jar ../java_tools/configuration_definition/build/libs/config_definition-all.jar"
 
 set_board_file() {
