@@ -1265,7 +1265,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t totalGearsCount;;"", 1, 0, 1, @@TCU_GEAR_COUNT@@, 0
 
 	custom InjectionTimingMode 1 bits, U08, @OFFSET@, [0:1], "End of injection", "Start of injection", "Center of injection"
-	InjectionTimingMode injectionTimingMode;Sets what part of injection's is controlled by the injection phase table.
+	InjectionTimingMode injectionTimingMode;Defines when fuel is injected relative to the intake valve opening. Options include End of Injection or other timing references.
 
 	debug_mode_e debugMode;See http://rusefi.com/s/debugmode
 	uint8_t fan1ExtraIdle;Additional idle % when fan #1 is active;"%", 1, 0, 0, 100, 0
