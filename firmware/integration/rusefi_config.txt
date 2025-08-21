@@ -785,7 +785,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	#define ve_override_e_enum "None", "MAP", "TPS"
 	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1], @@ve_override_e_enum@@
 
-	ve_override_e idleVeOverrideMode;Override the Y axis (load) value used for only the Idle VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+	ve_override_e idleVeOverrideMode;Allows you to change the default load axis used for the VE table, which is typically MAP (manifold absolute pressure).
 
 	Gpio l9779_cs;
 
