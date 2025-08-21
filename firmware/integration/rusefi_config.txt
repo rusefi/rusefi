@@ -998,7 +998,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold
 	bit invertCamVVTSignal,"Falling","Rising"
-	bit alphaNUseIat;In Alpha-N mode, compensate for air temperature.
+	bit alphaNUseIat;When set to true, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
 	bit knockBankCyl1,"Channel 2","Channel 1"
 	bit knockBankCyl2,"Channel 2","Channel 1"
 	bit knockBankCyl3,"Channel 2","Channel 1"
