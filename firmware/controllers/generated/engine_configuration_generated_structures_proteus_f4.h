@@ -1492,7 +1492,7 @@ struct engine_configuration_s {
 	int8_t gapTrackingLengthOverride;
 	/**
 	 * Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
-	 * units: kph
+	 * units: SPECIAL_CASE_SPEED
 	 * offset 474
 	 */
 	uint8_t maxIdleVss;
@@ -2753,7 +2753,7 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_1003[1] = {};
 	/**
 	 * Launch disabled above this speed if setting is above zero
-	 * units: Kph
+	 * units: SPECIAL_CASE_SPEED
 	 * offset 1004
 	 */
 	int launchSpeedThreshold;
@@ -3459,13 +3459,13 @@ struct engine_configuration_s {
 	Gpio accelerometerCsPin;
 	/**
 	 * Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
-	 * units: kph
+	 * units: SPECIAL_CASE_SPEED
 	 * offset 1524
 	 */
 	uint8_t coastingFuelCutVssLow;
 	/**
 	 * Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
-	 * units: kph
+	 * units: SPECIAL_CASE_SPEED
 	 * offset 1525
 	 */
 	uint8_t coastingFuelCutVssHigh;
@@ -5428,7 +5428,7 @@ struct engine_configuration_s {
 	 */
 	float nitrousIgnitionRetard;
 	/**
-	 * units: Kph
+	 * units: SPECIAL_CASE_SPEED
 	 * offset 3844
 	 */
 	uint16_t nitrousMinimumVehicleSpeed;
@@ -6318,17 +6318,17 @@ struct persistent_config_s {
 	 */
 	uint8_t tcu_tccTpsBins[8] = {};
 	/**
-	 * units: MPH
+	 * units: SPECIAL_CASE_SPEED
 	 * offset 22124
 	 */
 	uint8_t tcu_tccLockSpeed[8] = {};
 	/**
-	 * units: MPH
+	 * units: SPECIAL_CASE_SPEED
 	 * offset 22132
 	 */
 	uint8_t tcu_tccUnlockSpeed[8] = {};
 	/**
-	 * units: KPH
+	 * units: SPECIAL_CASE_SPEED
 	 * offset 22140
 	 */
 	uint8_t tcu_32SpeedBins[8] = {};
