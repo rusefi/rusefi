@@ -290,7 +290,7 @@ struct stft_s
 	uint16_t minPowerLoad;Above this engine load, the power region is active\nWhen tuning by MAP the units are kPa/psi;"load", 1, 0, 0, 250, 0
 	uint8_t autoscale deadband;When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;"%", 0.1, 0, 0, 3, 1
 
-	int8_t minClt;Below this temperature, correction is disabled.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -20, 100, 0
+	int8_t minClt;Minimum coolant temperature before closed loop operation is allowed.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -20, 100, 0
 	uint8_t autoscale minAfr;Below this AFR, correction is paused;"afr", 0.1, 0, 10, 20, 1
 	uint8_t autoscale maxAfr;Above this AFR, correction is paused;"afr", 0.1, 0, 10, 20, 1
 	uint8_t startupDelay;Delay after starting the engine before beginning closed loop correction.;"seconds", 1, 0, 0, 250, 0
