@@ -425,9 +425,9 @@ public class VariableRegistryValues {
 	public static final int engine_configuration_s_size = 3936;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
-	public static final int engine_load_mode_e_LM_MOCK = 100;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
 	public static final int engine_load_mode_e_LM_SPEED_DENSITY = 0;
+	public static final int engine_load_mode_e_UNSUPPORTED_ENUM_VALUE = 4;
 	public static final String ENGINE_MAKE_BMW = "BMW";
 	public static final String ENGINE_MAKE_FORD = "Ford";
 	public static final String ENGINE_MAKE_GM = "GM";

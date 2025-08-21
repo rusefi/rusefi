@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Aug 13 02:54:44 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu Aug 21 21:46:11 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -554,16 +554,16 @@ case ES_PLX:
 }
 const char *getEngine_load_mode_e(engine_load_mode_e value){
 switch(value) {
-case LM_ALPHA_N:
+case engine_load_mode_e::LM_ALPHA_N:
   return "LM_ALPHA_N";
-case LM_LUA:
+case engine_load_mode_e::LM_LUA:
   return "LM_LUA";
-case LM_MOCK:
-  return "LM_MOCK";
-case LM_REAL_MAF:
+case engine_load_mode_e::LM_REAL_MAF:
   return "LM_REAL_MAF";
-case LM_SPEED_DENSITY:
+case engine_load_mode_e::LM_SPEED_DENSITY:
   return "LM_SPEED_DENSITY";
+case engine_load_mode_e::UNSUPPORTED_ENUM_VALUE:
+  return "UNSUPPORTED_ENUM_VALUE";
   }
  return NULL;
 }
