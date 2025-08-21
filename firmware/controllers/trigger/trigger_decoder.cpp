@@ -374,6 +374,40 @@ static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel
 	return false;
 }
 
+void TriggerDecoderBase::printGaps(const char * prefix,
+  const TriggerConfiguration& triggerConfiguration,
+  const TriggerWaveform& triggerShape) {
+				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
+					float ratioFrom = triggerShape.synchronizationRatioFrom[i];
+					if (std::isnan(ratioFrom)) {
+						// we do not track gap at this depth
+						continue;
+					}
+
+					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
+					if (std::isnan(gap)) {
+						efiPrintf("%s index=%d NaN gap, you have noise issues?", prefix, i);
+					} else {
+						float ratioTo = triggerShape.synchronizationRatioTo[i];
+
+						bool gapOk = isInRange(ratioFrom, gap, ratioTo);
+
+						efiPrintf("%s %srpm=%d time=%d eventIndex=%lu gapIndex=%d: %s gap=%.3f expected from %.3f to %.3f error=%s",
+								prefix,
+								triggerConfiguration.PrintPrefix,
+								(int)Sensor::getOrZero(SensorType::Rpm),
+							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowS(),
+							currentCycle.current_index,
+							i,
+							gapOk ? "Y" : "n",
+							gap,
+							ratioFrom,
+							ratioTo,
+							boolToString(someSortOfTriggerError()));
+					}
+				}
+}
+
 /**
  * @brief Trigger decoding happens here
  * VR falls are filtered out and some VR noise detection happens prior to invoking this method, for
@@ -488,36 +522,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 			if (verbose || (someSortOfTriggerError() && !silentTriggerError)) {
 			    const char * prefix = verbose ? "[vrb]" : "[err]";
-
-				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
-					float ratioFrom = triggerShape.synchronizationRatioFrom[i];
-					if (std::isnan(ratioFrom)) {
-						// we do not track gap at this depth
-						continue;
-					}
-
-					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					if (std::isnan(gap)) {
-						efiPrintf("%s index=%d NaN gap, you have noise issues?", prefix, i);
-					} else {
-						float ratioTo = triggerShape.synchronizationRatioTo[i];
-
-						bool gapOk = isInRange(ratioFrom, gap, ratioTo);
-
-						efiPrintf("%s %srpm=%d time=%d eventIndex=%lu gapIndex=%d: %s gap=%.3f expected from %.3f to %.3f error=%s",
-								prefix,
-								triggerConfiguration.PrintPrefix,
-								(int)Sensor::getOrZero(SensorType::Rpm),
-							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowS(),
-							currentCycle.current_index,
-							i,
-							gapOk ? "Y" : "n",
-							gap,
-							ratioFrom,
-							ratioTo,
-							boolToString(someSortOfTriggerError()));
-					}
-				}
+			    printGaps(prefix, triggerConfiguration, triggerShape);
 			}
 #else
 			if (printTriggerTrace) {
