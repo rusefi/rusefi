@@ -592,6 +592,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 				// This is a decoding error
 				onTriggerError();
+				printGaps("newerr", triggerConfiguration, triggerShape);
 			} else {
 				// If this was the first sync point OR no decode error, we're synchronized!
 				setShaftSynchronized(true);
