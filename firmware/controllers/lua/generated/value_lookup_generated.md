@@ -761,7 +761,7 @@ Above this engine load, the power region is active\nWhen tuning by MAP the units
 When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.
 
 ### stft.minClt
-Below this temperature, correction is disabled.
+Minimum coolant temperature before closed loop operation is allowed.
 
 ### stft.minAfr
 Below this AFR, correction is paused
@@ -770,7 +770,7 @@ Below this AFR, correction is paused
 Above this AFR, correction is paused
 
 ### stft.startupDelay
-Delay after starting the engine before beginning closed loop correction.
+Time after startup before closed loop operation is allowed.
 
 ### ltft.enabled
 Enables lambda sensor long term fuel corrections learning

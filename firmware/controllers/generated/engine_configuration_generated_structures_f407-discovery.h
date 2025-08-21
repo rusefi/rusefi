@@ -63,7 +63,7 @@ struct stft_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> deadband;
 	/**
-	 * Below this temperature, correction is disabled.
+	 * Minimum coolant temperature before closed loop operation is allowed.
 	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 7
 	 */
@@ -81,7 +81,7 @@ struct stft_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> maxAfr;
 	/**
-	 * Delay after starting the engine before beginning closed loop correction.
+	 * Time after startup before closed loop operation is allowed.
 	 * units: seconds
 	 * offset 10
 	 */
