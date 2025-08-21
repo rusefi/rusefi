@@ -94,7 +94,7 @@ void m73engine() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
 	strcpy(engineConfiguration->engineCode, "M73");
 	engineConfiguration->firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_ALPHA_N;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;

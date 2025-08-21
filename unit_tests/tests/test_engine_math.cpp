@@ -31,7 +31,7 @@ TEST(misc, testEngineMath) {
 	setTable(config->veTable, 80);
 
     setCamOperationMode();
-	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
+	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_SPEED_DENSITY;
 
 	ASSERT_NEAR( 50,  getOneDegreeTimeMs(600) * 180, EPS4D) << "600 RPM";
 	ASSERT_EQ( 5,  getOneDegreeTimeMs(6000) * 180) << "6000 RPM";

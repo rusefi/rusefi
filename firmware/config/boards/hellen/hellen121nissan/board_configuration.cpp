@@ -97,9 +97,9 @@ static void hellen121_nissan_boardDefaultConfiguration() {
 	// Some sensible defaults for other options
 	setCrankOperationMode();
 
-//	setAlgorithm(LM_SPEED_DENSITY);
+//	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
     // at least this starts
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_ALPHA_N;
 
 	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->fanOnTemperature = 85;

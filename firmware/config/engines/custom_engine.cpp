@@ -133,7 +133,7 @@ void setFrankensoConfiguration() {
 	engineConfiguration->injectionPins[3] = EFI_INJECTOR_PIN3; // #4
 #endif /* EFI_INJECTOR_PIN3 */
 
-	setAlgorithm(LM_SPEED_DENSITY);
+	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
 
 	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[5] = Gpio::Unassigned;

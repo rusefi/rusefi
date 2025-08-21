@@ -155,8 +155,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	extern bool hasInitGtest;
 	if (hasInitGtest) {
-		// Setup running in mock airmass mode if running actual tests
-		engineConfiguration->fuelAlgorithm = LM_MOCK;
+		// When built in unit tests mode UNSUPPORTED_ENUM_VALUE leads to acquiring of mockAirmassModel
+		engineConfiguration->fuelAlgorithm = engine_load_mode_e::UNSUPPORTED_ENUM_VALUE;
 
 		mockAirmass = std::make_unique<::testing::NiceMock<MockAirmass>>();
 		engine.mockAirmassModel = mockAirmass.get();
