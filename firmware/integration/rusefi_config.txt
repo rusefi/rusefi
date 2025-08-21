@@ -293,7 +293,7 @@ struct stft_s
 	int8_t minClt;Minimum coolant temperature before closed loop operation is allowed.;"SPECIAL_CASE_TEMPERATURE", 1, 0, -20, 100, 0
 	uint8_t autoscale minAfr;Below this AFR, correction is paused;"afr", 0.1, 0, 10, 20, 1
 	uint8_t autoscale maxAfr;Above this AFR, correction is paused;"afr", 0.1, 0, 10, 20, 1
-	uint8_t startupDelay;Delay after starting the engine before beginning closed loop correction.;"seconds", 1, 0, 0, 250, 0
+	uint8_t startupDelay;Time after startup before closed loop operation is allowed.;"seconds", 1, 0, 0, 250, 0
 
 	stft_cell_cfg_s[STFT_CELL_COUNT iterate] cellCfgs;
 end_struct
