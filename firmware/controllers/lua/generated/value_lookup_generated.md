@@ -629,7 +629,7 @@ Verbose info in console below engineSnifferRpmThreshold
 
 
 ### alphaNUseIat
-In Alpha-N mode, compensate for air temperature.
+When set to true, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
 
 ### knockBankCyl1
 

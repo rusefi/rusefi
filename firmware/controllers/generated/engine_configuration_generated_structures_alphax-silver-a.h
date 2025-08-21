@@ -1900,8 +1900,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t vssToothCount;
 	/**
-	 * Override the Y axis (load) value used for only the Idle VE table.
-	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
+	 * Allows you to change the default load axis used for the VE table, which is typically MAP (manifold absolute pressure).
 	 * offset 644
 	 */
 	ve_override_e idleVeOverrideMode;
@@ -2600,7 +2599,7 @@ struct engine_configuration_s {
 	offset 932 bit 12 */
 	bool invertCamVVTSignal : 1 {};
 	/**
-	 * In Alpha-N mode, compensate for air temperature.
+	 * When set to true, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
 	offset 932 bit 13 */
 	bool alphaNUseIat : 1 {};
 	/**
@@ -3490,7 +3489,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t totalGearsCount;
 	/**
-	 * Sets what part of injection's is controlled by the injection phase table.
+	 * Defines when fuel is injected relative to the intake valve opening. Options include End of Injection or other timing references.
 	 * offset 1537
 	 */
 	InjectionTimingMode injectionTimingMode;
