@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.025082E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250821E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -766,8 +766,8 @@
         <constant digits="0" name="coastingFuelCutRpmHigh" units="rpm">1500.0</constant>
         <constant digits="0" name="coastingFuelCutRpmLow" units="rpm">1300.0</constant>
         <constant digits="0" name="coastingFuelCutTps" units="%">2.0</constant>
-        <constant digits="0" name="coastingFuelCutVssHigh" units="kph">0.0</constant>
-        <constant digits="0" name="coastingFuelCutVssLow" units="kph">0.0</constant>
+        <constant digits="0" name="coastingFuelCutVssHigh" units="kmh">0.0</constant>
+        <constant digits="0" name="coastingFuelCutVssLow" units="kmh">0.0</constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
         <constant name="complexWallModel">"Basic (constants)"</constant>
         <constant digits="1" name="compressionRatio" units="CR">9.0</constant>
@@ -2671,7 +2671,7 @@
         <constant digits="0" name="launchRpmWindow" units="RPM">500.0</constant>
         <constant name="launchSmoothRetard">"false"</constant>
         <constant name="launchSparkCutEnable">"false"</constant>
-        <constant digits="0" name="launchSpeedThreshold" units="Kph">30.0</constant>
+        <constant digits="0" name="launchSpeedThreshold" units="kmh">30.0</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="launchTpsThreshold" units="">0.0</constant>
         <constant name="limitTorqueReductionTime">"false"</constant>
@@ -2975,7 +2975,7 @@ end</constant>
         <constant digits="0" name="maxAcRpm" units="rpm">5000.0</constant>
         <constant digits="0" name="maxAcTps" units="%">75.0</constant>
         <constant digits="0" name="maxCamPhaseResolveRpm" units="rpm">0.0</constant>
-        <constant digits="0" name="maxIdleVss" units="kph">0.0</constant>
+        <constant digits="0" name="maxIdleVss" units="kmh">0.0</constant>
         <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">60.0</constant>
         <constant cols="1" digits="0" name="maximumOilPressureBins" rows="4">
          700.0
@@ -3101,7 +3101,7 @@ end</constant>
         <constant digits="0" name="nitrousMaximumMap" units="kPa">0.0</constant>
         <constant digits="0" name="nitrousMinimumClt" units="C">60.0</constant>
         <constant digits="0" name="nitrousMinimumTps" units="">80.0</constant>
-        <constant digits="0" name="nitrousMinimumVehicleSpeed" units="Kph">0.0</constant>
+        <constant digits="0" name="nitrousMinimumVehicleSpeed" units="kmh">0.0</constant>
         <constant name="nitrousRelayPin">"NONE"</constant>
         <constant name="nitrousRelayPinMode">"default"</constant>
         <constant digits="1" name="noFuelTrimAfterAccelTime" units="sec">0.0</constant>
@@ -5078,7 +5078,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250817" nPages="1" signature="rusEFI master.2025.08.20.f407-discovery.1905603825" version="5.0"/>
+    <versionInfo firmwareInfo="20250817" nPages="1" signature="rusEFI master.2025.08.21.f407-discovery.1696243564" version="5.0"/>
     <bibliography author="rusEFI 20250817" writeDate="date"/>
     <settings/>
     <userComments/>
