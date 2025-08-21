@@ -19,7 +19,7 @@ jobs:
       # as of 2025 TS unfortunately still uses java 8
       # we use JDK11 but sourceCompatibility/targetCompatibility 8 so that rusEFI TS plugin is compatible with TS
       #  [tag:java8]
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '17'
