@@ -228,7 +228,7 @@ void setDefaultBaseEngine() {
  	setRpmTableBin(config->torqueRpmBins);
  	setLinearCurve(config->torqueLoadBins, 0, 100, 1);
 
-	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
+	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_SPEED_DENSITY;
 	// let's have valid default while we still have the field
 	engineConfiguration->debugMode = DBG_EXECUTOR;
 

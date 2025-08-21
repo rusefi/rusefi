@@ -28,6 +28,8 @@
 #include "status_loop.h"
 #include "electronic_throttle.h"
 
+#include <type_traits>
+
 #if EFI_LOGIC_ANALYZER
 #include "logic_analyzer.h"
 #endif /* EFI_LOGIC_ANALYZER */
@@ -336,7 +338,7 @@ static CommunicationBlinkingTask communicationsBlinkingTask;
  * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
  */
 static int packEngineMode() {
-	return (engineConfiguration->fuelAlgorithm << 4) +
+	return (static_cast<std::underlying_type_t<decltype(engineConfiguration->fuelAlgorithm)>>(engineConfiguration->fuelAlgorithm) << 4) +
 			(engineConfiguration->injectionMode << 2) +
 			engineConfiguration->ignitionMode;
 }

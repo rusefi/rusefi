@@ -85,7 +85,7 @@ void setTestVVTEngineConfiguration() {
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
 	// set algorithm 3
-	setAlgorithm(LM_SPEED_DENSITY);
+	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
 
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = Gpio::A5;

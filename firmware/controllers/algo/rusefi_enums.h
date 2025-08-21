@@ -141,7 +141,7 @@ typedef enum  __attribute__ ((__packed__)) {
 /**
  * This enum is used to select your desired Engine Load calculation algorithm
  */
-typedef enum __attribute__ ((__packed__)) {
+enum class engine_load_mode_e : uint8_t {
 	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
@@ -157,10 +157,8 @@ typedef enum __attribute__ ((__packed__)) {
 
 	LM_LUA = 3,
 
-	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
-	LM_MOCK = 100,
-
-} engine_load_mode_e;
+	UNSUPPORTED_ENUM_VALUE
+};
 
 typedef enum __attribute__ ((__packed__)) {
 	DM_NONE = 0,

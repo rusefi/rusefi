@@ -150,19 +150,22 @@ static MafAirmass mafAirmass(veMap);
 static AlphaNAirmass alphaNAirmass(veMap);
 
 AirmassModelBase* getAirmassModel(engine_load_mode_e mode) {
-	switch (mode) {
-		case LM_SPEED_DENSITY: return &sdAirmass;
-		case LM_REAL_MAF: return &mafAirmass;
-		case LM_ALPHA_N: return &alphaNAirmass;
-#if EFI_LUA
-		case LM_LUA: return &(getLuaAirmassModel());
-#endif
 #if EFI_UNIT_TEST
-		case LM_MOCK: return engine->mockAirmassModel;
+	if (mode == engine_load_mode_e::UNSUPPORTED_ENUM_VALUE) {
+		return engine->mockAirmassModel;
+	}
 #endif
-		default:
-			firmwareError(ObdCode::CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", engineConfiguration->fuelAlgorithm);
-			return nullptr;
+
+	switch (mode) {
+	case engine_load_mode_e::LM_SPEED_DENSITY: return &sdAirmass;
+	case engine_load_mode_e::LM_REAL_MAF: return &mafAirmass;
+	case engine_load_mode_e::LM_ALPHA_N: return &alphaNAirmass;
+#if EFI_LUA
+	case engine_load_mode_e::LM_LUA: return &(getLuaAirmassModel());
+#endif
+	default:
+		firmwareError(ObdCode::CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", engineConfiguration->fuelAlgorithm);
+		return nullptr;
 	}
 }
 

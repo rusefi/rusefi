@@ -209,10 +209,10 @@ static void subaru_eg33_boardDefaultConfiguration() {
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::H2;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::H3;
 
-	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
-		setAlgorithm(LM_SPEED_DENSITY);
-	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)
-		setAlgorithm(LM_ALPHA_N);
+	if (engineConfiguration->fuelAlgorithm == engine_load_mode_e::LM_REAL_MAF)
+		setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
+	if (engineConfiguration->fuelAlgorithm == engine_load_mode_e::LM_ALPHA_N)
+		setAlgorithm(engine_load_mode_e::LM_ALPHA_N);
 }
 
 static void subaru_eg33_boardConfigOverrides() {

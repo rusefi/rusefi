@@ -85,7 +85,7 @@ float getInitialAdvance(float rpm, float map, float advanceMax) {
  * this method builds a good-enough base timing advance map bases on a number of heuristics
  */
 static void buildTimingMap(float advanceMax) {
-	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
+	if (engineConfiguration->fuelAlgorithm != engine_load_mode_e::LM_SPEED_DENSITY) {
 		warning(ObdCode::CUSTOM_WRONG_ALGORITHM, "wrong algorithm for MAP-based timing");
 		return;
 	}

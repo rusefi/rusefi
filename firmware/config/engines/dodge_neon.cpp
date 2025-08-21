@@ -21,7 +21,7 @@
 void setDodgeNeon1995EngineConfiguration() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_DODGE_NEON_1995;
 
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_ALPHA_N;
 
 	setWholeTimingTable(12);
 
@@ -82,7 +82,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 
 	setLinearCurve(config->ignitionLoadBins, 20, 120, 1);
 
-	setAlgorithm(LM_SPEED_DENSITY);
+	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
 
 	setFuelTablesLoadBin(20, 120);
 
@@ -146,7 +146,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 //	engineConfiguration->fanOnTemperature = 115; // knock testing - value is a bit high
 //	engineConfiguration->fanOffTemperature = 100;
 
-	setAlgorithm(LM_SPEED_DENSITY);
+	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
 
 //temp	engineConfiguration->alternatorControlPin = Gpio::D5;
 	setTable(config->alternatorVoltageTargetTable, 14.0);

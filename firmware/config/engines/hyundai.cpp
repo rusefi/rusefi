@@ -30,7 +30,7 @@ static void set201xHyundai() {
     setTPS1Calibration(98, 926, 891, 69);
     setEtbPID(8.8944, 70.2307, 0.1855);
    	// Some sensible defaults for other options
-   	setAlgorithm(LM_SPEED_DENSITY);
+   	setAlgorithm(engine_load_mode_e::LM_SPEED_DENSITY);
 
   engineConfiguration->vvtControlMinRpm = 1500;
 }

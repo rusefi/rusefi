@@ -89,7 +89,7 @@ float HpfpQuantity::calcFuelPercent(float rpm) {
 static float getLoad() {
     switch(engineConfiguration->fuelAlgorithm) {
     // TODO: allow other load axis, like we claim to
-    case LM_ALPHA_N:
+    case engine_load_mode_e::LM_ALPHA_N:
         return Sensor::getOrZero(SensorType::DriverThrottleIntent);
     default:
        return Sensor::getOrZero(SensorType::Map);
