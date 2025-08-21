@@ -50,7 +50,26 @@ class TsOutputTest {
         String expectedPsi = "\"psi\",0.145038,0,2.17557,36.2595, 0";
         assertEquals(expectedPsi, tsOutput.formatPressureTsInfo(pressureInput, true));
     }
-    
+
+    @Test
+    void testFormatSpeedTsInfo() {
+        TsOutput tsOutput = new TsOutput(false);
+
+        // Test null or empty input
+        assertEquals("", tsOutput.formatSpeedTsInfo(null, false));
+        assertEquals("", tsOutput.formatSpeedTsInfo("", false));
+        assertEquals("", tsOutput.formatSpeedTsInfo("  ", false));
+
+        String speedInput = "\"SPECIAL_CASE_SPEED, 0, 15, 250, 0";
+
+        // Test kmh format
+        String expectedKmh = "\"kmh\", 0, 15, 250, 0";
+        assertEquals(expectedKmh, tsOutput.formatSpeedTsInfo(speedInput, false));
+
+        // Test mph format
+        String expectedMph = "\"mph\",0.62137119,0,155.3427975,0.0";
+        assertEquals(expectedMph, tsOutput.formatSpeedTsInfo(speedInput, true));
+    }
 
     @Test
     void testWriteOneFieldTemperature() throws IOException {

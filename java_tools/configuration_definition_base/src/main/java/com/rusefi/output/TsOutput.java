@@ -42,6 +42,12 @@ public class TsOutput {
     private final String pressureToPsiScale = String.valueOf(kpaToPsiValue);
     private final String pressureToPsiTranslate = "0";
 
+    private final String speedMetricUnit = quote("kmh");
+    private final String speedImperialUnit = quote("mph");
+    private final Double KmhToMphValue = 0.62137119;
+    private final String KmhToMphScale = String.valueOf(KmhToMphValue);
+    private final String KmhToMphTranslate = "0";
+
     public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
     }
@@ -191,6 +197,18 @@ public class TsOutput {
                     configField.setTsInfo(originalTsInfo);
                     return newIndex;
                 }
+                if (originalUnits.startsWith("SPECIAL_CASE_SPEED")) {
+                    configField.setTsInfo(formatSpeedTsInfo(originalTsInfo, false));
+                    tsHeader.append(metricUnitsConditionalStart);
+                    int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+                    tsHeader.append(metricUnitsConditionalElse);
+                    // now the psi case:
+                    configField.setTsInfo(formatSpeedTsInfo(originalTsInfo, true));
+                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+                    tsHeader.append(metricUnitsConditionalEnd);
+                    configField.setTsInfo(originalTsInfo);
+                    return newIndex;
+                }
 
 				return writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
 			}
@@ -209,6 +227,10 @@ public class TsOutput {
 
     private double kPaToPsi(double kPa){
         return kPa * kpaToPsiValue;
+    }
+
+    private double KmhToMph(double Kmh){
+        return Kmh * KmhToMphValue;
     }
 
     public String formatTemperatureTsInfo(String tsInfo, boolean isImperial){
@@ -250,6 +272,27 @@ public class TsOutput {
         } else {
             // override units
             fields[0] = pressureMetricUnit;
+        }
+        return tokensToString(fields);
+    }
+
+    public String formatSpeedTsInfo(String tsInfo, boolean isImperial) {
+        if (tsInfo == null || tsInfo.trim().isEmpty()) {
+            // this case is handle by handleTsInfo, so we return a empty string
+            return "";
+        }
+
+        String[] fields = tokenizeWithBraces(tsInfo);
+         if (isImperial){
+                    // override scale/translate & units, convert min-max
+                    fields[0] = speedImperialUnit;
+                    fields[1] = KmhToMphScale;
+                    fields[2] = KmhToMphTranslate;
+                    fields[3] = String.valueOf( KmhToMph( IniField.parseDouble(fields[3]) ) ); // min
+                    fields[4] = String.valueOf( KmhToMph( IniField.parseDouble(fields[4]) ) ); // max
+        } else {
+            // override units
+            fields[0] = speedMetricUnit;
         }
         return tokensToString(fields);
     }
