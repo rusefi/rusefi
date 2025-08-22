@@ -292,11 +292,11 @@ static void slowAdcEnableDisableChannel(adc_channel_e hwChannel, bool en)
 							 (channelHwIndex << shift);
 	} else if (channelAdcIndex <= 11) {
 		size_t shift = (channelAdcIndex - 6) * 5;
-		convGroupSlow.sqr2 = (convGroupSlow.sqr3 & (~(0x1f << shift))) |
+		convGroupSlow.sqr2 = (convGroupSlow.sqr2 & (~(0x1f << shift))) |
 							 (channelHwIndex << shift);
 	} else {
 		size_t shift = (channelAdcIndex - 12) * 5;
-		convGroupSlow.sqr1 = (convGroupSlow.sqr3 & (~(0x1f << shift))) |
+		convGroupSlow.sqr1 = (convGroupSlow.sqr1 & (~(0x1f << shift))) |
 							 (channelHwIndex << shift);
 	}
 }
