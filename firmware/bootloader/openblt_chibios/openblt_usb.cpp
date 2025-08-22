@@ -33,7 +33,6 @@ static void     Rs232TransmitByte(blt_int8u data);
 ****************************************************************************************/
 void Rs232TransmitPacket(blt_int8u *data, blt_int8u len)
 {
-  blt_int16u data_index;
 
   /* verify validity of the len-paramenter */
   // ASSERT_RT(len <= BOOT_COM_RS232_TX_MAX_DATA);
