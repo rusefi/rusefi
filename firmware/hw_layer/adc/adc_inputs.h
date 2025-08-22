@@ -93,9 +93,6 @@ void removeChannel(const char *name, adc_channel_e hwChannel);
 
 #define adcRawValueToScaledVoltage(adc, hwChannel) (adcRawValueToRawVoltage(adc) * getAnalogInputDividerCoefficient(hwChannel))
 
-// This callback is called by the ADC driver when a new fast ADC sample is ready
-void onFastAdcComplete(adcsample_t* samples);
-
 using AdcToken = uint32_t;
 
 using AdcTockenInternal = union {

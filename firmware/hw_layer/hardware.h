@@ -44,6 +44,11 @@ void printSpiConfig(const char *msg, spi_device_e device);
 
 #endif /* HAL_USE_SPI */
 
+#if EFI_PROD_CODE
+// This callback is called by the ADC driver when a new fast ADC sample is ready
+void onFastAdcComplete(adcsample_t*);
+#endif
+
 void applyNewHardwareSettings();
 
 // Initialize hardware that doesn't require configuration to be loaded
