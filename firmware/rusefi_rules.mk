@@ -14,5 +14,6 @@ RUSEFI_OPT += -Wno-error=sign-compare
 RUSEFI_OPT += -Wno-error=overloaded-virtual
 RUSEFI_OPT += -Wno-error=unused-parameter
 
+# todo 'delete-non-abstract-non-virtual-dtor issue or not #8476'
 # reduce clutter while compiling unit tests
 RUSEFI_OPT += -Wno-delete-non-abstract-non-virtual-dtor
