@@ -134,6 +134,45 @@ int getAdcInternalChannel(ADC_TypeDef *adc, adc_channel_e hwChannel)
 
     // Channel is not supported by this ADC
     return -1;
+}
+
+adc_channel_e getHwChannelForAdcInput(ADC_TypeDef *adc, size_t hwIndex)
+{
+    uint8_t mask = 0;
+
+#if STM32_ADC_USE_ADC1
+    if (adc == ADC1) {
+        mask = BIT(0);
+    }
+#endif
+#if STM32_ADC_USE_ADC2
+    if (adc == ADC2) {
+        mask = BIT(1);
+    }
+#endif
+#if STM32_ADC_USE_ADC3
+    if (adc == ADC3) {
+        mask = BIT(2);
+    }
+#endif
+
+    if (mask == 0) {
+        // Unknown ADC instance
+        return EFI_ADC_ERROR;
+    }
+
+    int tmpIndex = 0;
+    for (size_t idx = 0; idx < efi::size(adcChannels); idx++) {
+        if (adcChannels[idx].adc & mask) {
+            if (hwIndex == tmpIndex) {
+                return adcChannels[idx].ch;
+            }
+            tmpIndex++;
+        }
+    }
+
+    // Channel is not supported by this ADC
+    return EFI_ADC_ERROR;
 
 }
 

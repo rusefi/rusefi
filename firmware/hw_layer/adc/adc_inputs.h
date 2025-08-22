@@ -78,7 +78,7 @@ enum class AdcChannelMode : char {
 	Fast
 };
 
-void updateSlowAdc(efitick_t nowNt);
+void adcInputsUpdateSubscribers(efitick_t nowNt);
 
 AdcChannelMode getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();

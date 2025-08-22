@@ -2,6 +2,7 @@ DRIVERS_DIR=$(PROJECT_DIR)/hw_layer/drivers
 
 HW_LAYER_DRIVERS_INC = \
 	$(DRIVERS_DIR) \
+	$(DRIVERS_DIR)/adc \
 	$(DRIVERS_DIR)/gpio \
 	$(DRIVERS_DIR)/can \
 	$(DRIVERS_DIR)/sent \
@@ -22,6 +23,8 @@ HW_LAYER_DRIVERS_CORE_CPP = \
 HW_LAYER_DRIVERS =
 
 HW_LAYER_DRIVERS_CPP = \
+	$(DRIVERS_DIR)/adc/ads1015.cpp \
+	$(DRIVERS_DIR)/adc/mcp3208.cpp \
 	$(DRIVERS_DIR)/can/can_hw.cpp \
 	$(PROJECT_DIR)/hw_layer/smart_gpio.cpp \
 	$(DRIVERS_DIR)/gpio/can_gpio_msiobox.cpp \

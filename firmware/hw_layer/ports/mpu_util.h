@@ -30,6 +30,7 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
 bool adcIsMuxedInput(adc_channel_e hwChannel);
 adc_channel_e adcMuxedGetParent(adc_channel_e hwChannel);
 int getAdcInternalChannel(ADC_TypeDef *adc, adc_channel_e hwChannel);
+adc_channel_e getHwChannelForAdcInput(ADC_TypeDef *adc, size_t hwIndex);
 
 // deprecated - migrate to 'getAdcChannelBrainPin'
 ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel);
