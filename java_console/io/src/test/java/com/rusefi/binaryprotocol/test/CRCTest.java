@@ -33,4 +33,13 @@ public class CRCTest {
         byte[] actual = IoHelper.makeCrc32Packet(command);
         Assertions.assertArrayEquals(expected, actual, Arrays.toString(expected) + " vs " + Arrays.toString(actual));
     }
+
+    @Test
+    public void testStopEngine() {
+        // see 'cmd_stop_engine' in .ini file
+        byte[] command = {'Z', 0, 0x24, 0, 0};
+        byte[] expected = {0x00, 0x05, 0x5a, 0x00, 0x24, 0x00, 0x00, (byte) 0x8b, (byte) 0xc5, (byte) 0xce, 0x4b};
+        byte[] actual = IoHelper.makeCrc32Packet(command);
+        Assertions.assertArrayEquals(expected, actual, Arrays.toString(expected) + " vs " + Arrays.toString(actual));
+    }
 }
