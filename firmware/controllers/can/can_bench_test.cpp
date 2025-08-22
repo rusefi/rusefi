@@ -181,8 +181,19 @@ void sendQcBenchRawAnalogValues(size_t bus) {
 		Sensor::getRaw(SensorType::FuelPressureHigh),
 		Sensor::getRaw(SensorType::AuxTemp1),
 	};
+	const float lua_values_1[] = {
+		Sensor::getRaw(SensorType::AuxAnalog1),
+		Sensor::getRaw(SensorType::AuxAnalog2),
+		Sensor::getRaw(SensorType::AuxAnalog3),
+		Sensor::getRaw(SensorType::AuxAnalog4),
+		Sensor::getRaw(SensorType::AuxAnalog5),
+		Sensor::getRaw(SensorType::AuxAnalog6),
+		Sensor::getRaw(SensorType::AuxAnalog7),
+		Sensor::getRaw(SensorType::AuxAnalog8),
+	};
 	static_assert(efi::size(values_1) <= 8);
 	static_assert(efi::size(values_2) <= 8);
+	static_assert(efi::size(lua_values_1) <= 8);
 
 
 	// send the first packet
@@ -196,6 +207,13 @@ void sendQcBenchRawAnalogValues(size_t bus) {
 		CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::RAW_ANALOG_2, 8, bus, /*isExtended*/true);
 		for (size_t valueIdx = 0; valueIdx < efi::size(values_2); valueIdx++) {
 			msg[valueIdx] = RAW_TO_BYTE(values_2[valueIdx]);
+		}
+	}
+	// todo: time to extract method already?
+	{
+		CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::RAW_LUA_ANALOG_1, 8, bus, /*isExtended*/true);
+		for (size_t valueIdx = 0; valueIdx < efi::size(lua_values_1); valueIdx++) {
+			msg[valueIdx] = RAW_TO_BYTE(lua_values_1[valueIdx]);
 		}
 	}
 }
