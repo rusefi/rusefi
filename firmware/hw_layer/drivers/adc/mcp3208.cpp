@@ -2,14 +2,16 @@
  * @file    mcp3208.cpp
  * @brief   MCP3208 external ADC chip implementation. Not really used right now.
  *
+ * never has been used in PROD? kill it?
+ *
  * @date Aug 12, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "global.h"
 
+#if 0
 
-#if EFI_MCP_3208
 #include "mcp3208.h"
 #include "pin_repository.h"
 
@@ -136,4 +138,4 @@ void init_adc_mcp3208(McpAdcState *state, SPIDriver *driver) {
 	spiStart(driver, &spicfg);
 }
 
-#endif /* EFI_MCP_3208 */
+#endif /* 0 */

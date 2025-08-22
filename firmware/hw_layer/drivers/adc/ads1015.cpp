@@ -1,4 +1,13 @@
+/**
+ * I2C ADC chip
+ *
+ * never has been used in PROD? kill it?
+ *
+ */
+
 #include "pch.h"
+
+#if 0
 
 #include "ads1015.h"
 
@@ -66,3 +75,5 @@ uint16_t Ads1015::readReg(uint8_t reg) {
 	m_i2c.read(addr, reinterpret_cast<uint8_t*>(&res), 2);
 	return SWAP_UINT16(res);
 }
+
+#endif // 0
