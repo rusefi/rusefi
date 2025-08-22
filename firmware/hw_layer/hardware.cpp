@@ -34,7 +34,6 @@
 
 #include "adc_device.h"
 #include "idle_hardware.h"
-#include "mcp3208.h"
 
 #include "histogram.h"
 #include "gps_uart.h"
