@@ -83,12 +83,8 @@ void updateSlowAdc(efitick_t nowNt);
 AdcChannelMode getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
-// wait until at least 1 slowADC sampling is complete
-void waitForSlowAdc(uint32_t lastAdcCounter = 1);
-
 void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
-float getMCUInternalTemperature(void);
 
 void addFastAdcChannel(const char *name, adc_channel_e hwChannel);
 void removeChannel(const char *name, adc_channel_e hwChannel);
@@ -118,6 +114,12 @@ AdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
 adcsample_t getFastAdc(AdcToken token);
 const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx);
 void onKnockSamplingComplete();
+
+// Slow ADC stuff
+float getMCUInternalTemperature(void);
+// wait until at least 1 slowADC sampling is complete
+void waitForSlowAdc(uint32_t lastAdcCounter = 1);
+
 #endif // HAL_USE_ADC
 
 void printFullAdcReport(void);

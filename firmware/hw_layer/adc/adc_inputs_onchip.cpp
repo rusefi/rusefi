@@ -29,17 +29,9 @@
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
 
-// voltage in MCU universe, from zero to Vref
-float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
-}
-
-// voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
-float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
-	// TODO: merge getAnalogInputDividerCoefficient() and boardAdjustVoltage() into single board hook?
-	float voltage = adcGetRawVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
-	return boardAdjustVoltage(voltage, hwChannel);
-}
+#ifndef ADC_MAX_CHANNELS_COUNT
+#define ADC_MAX_CHANNELS_COUNT 16
+#endif /* ADC_MAX_CHANNELS_COUNT */
 
 #if EFI_USE_FAST_ADC
 

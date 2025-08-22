@@ -51,15 +51,19 @@ int analogGetDiagnostic()
 #include "mpu_util.h"
 #include "protected_gpio.h"
 
+// voltage in MCU universe, from zero to Vref
+float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
+	return adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
+}
+
+// voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
+float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
+	// TODO: merge getAnalogInputDividerCoefficient() and boardAdjustVoltage() into single board hook?
+	float voltage = adcGetRawVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
+	return boardAdjustVoltage(voltage, hwChannel);
+}
+
 extern AdcDevice fastAdc;
-
-/* TODO: Drop NO_CACHE for F4 and F7 couse with ADCv2 driver CPU does averaging and CPU stores result to this array */
-/* TODO: store summ of samples is this array and divide on oversample factor only when converting to float - this will increase accuracity */
-static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
-
-static uint32_t slowAdcConversionCount = 0;
-
-static float mcuTemperature;
 
 static AdcChannelMode adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
 
@@ -70,9 +74,7 @@ AdcChannelMode getAdcMode(adc_channel_e hwChannel) {
 	return adcHwChannelMode[hwChannel];
 }
 
-float getMCUInternalTemperature() {
-	return mcuTemperature;
-}
+extern adcsample_t adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel);
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
@@ -86,7 +88,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	}
 #endif // EFI_USE_FAST_ADC
 
-	return slowAdcSamples[hwChannel - EFI_ADC_0];
+	return adcOnchipSlowGetAvgRaw(hwChannel);
 }
 
 static void printAdcValue(int channel) {
@@ -100,7 +102,7 @@ static void printAdcValue(int channel) {
 	efiPrintf("adc %d input %.3fV", channel, voltsInput);
 }
 
-static void printAdcChannedReport(const char *prefix, int internalIndex, adc_channel_e hwChannel)
+void adcPrintChannelReport(const char *prefix, int internalIndex, adc_channel_e hwChannel)
 {
 	if (isAdcChannelValid(hwChannel)) {
 		ioportid_t port = getAdcChannelPort("print", hwChannel);
@@ -116,6 +118,8 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 	}
 }
 
+extern void adcOnchipSlowShowReport();
+
 void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
 	efiPrintf("fast %u samples", engine->outputChannels.fastAdcConversionCount);
@@ -123,17 +127,11 @@ void printFullAdcReport(void) {
 	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
 		adc_channel_e hwChannel = fastAdc.getAdcChannelByInternalIndex(internalIndex);
 
-		printAdcChannedReport("F", internalIndex, hwChannel);
+		adcPrintChannelReport("F", internalIndex, hwChannel);
 	}
 #endif // EFI_USE_FAST_ADC
-	efiPrintf("slow %lu samples", slowAdcConversionCount);
 
-	/* we assume that all slow ADC channels are enabled */
-	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {
-		adc_channel_e hwChannel = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
-
-		printAdcChannedReport("S", internalIndex, hwChannel);
-	}
+	adcOnchipSlowShowReport();
 }
 
 static void setAdcDebugReporting(int value) {
@@ -141,30 +139,13 @@ static void setAdcDebugReporting(int value) {
 	efiPrintf("adcDebug=%d", adcDebugReporting);
 }
 
+extern void adcOnchipSlowUpdate(efitick_t nowNt);
+
 void updateSlowAdc(efitick_t nowNt) {
-	{
-		ScopePerf perf(PE::AdcConversionSlow);
-
-		/* drop volatile type qualifier - this is safe */
-		if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
-			engine->outputChannels.slowAdcErrorCount++;
-			return;
-		}
-
-		// Ask the port to sample the MCU temperature
-		mcuTemperature = getMcuTemperature();
-		if (mcuTemperature > 150.0f || mcuTemperature < -50.0f) {
-			/*
-			 * we have a sporadic issue with this check todo https://github.com/rusefi/rusefi/issues/2552
-			 */
-			//criticalError("Invalid CPU temperature measured %f", degrees);
-		}
-	}
+	adcOnchipSlowUpdate(nowNt);
 
 	{
 		ScopePerf perf(PE::AdcProcessSlow);
-
-		slowAdcConversionCount++;
 
 		AdcSubscription::UpdateSubscribers(nowNt);
 
@@ -220,14 +201,6 @@ static void configureInputs() {
 	setAdcChannelOverrides();
 }
 
-void waitForSlowAdc(uint32_t lastAdcCounter) {
-	// note that having ADC reading is one thing while having new sensor API is a totally different thing!
-	// todo: use sync.objects?
-	while (slowAdcConversionCount <= lastAdcCounter) {
-		chThdSleepMilliseconds(1);
-	}
-}
-
 void initAdcInputs() {
 	efiPrintf("initAdcInputs()");
 
@@ -237,6 +210,7 @@ void initAdcInputs() {
 	addConsoleActionI("adcdebug", &setAdcDebugReporting);
 
 #if EFI_INTERNAL_ADC
+	// This will start HW for all used ADCs
 	portInitAdc();
 
 #if EFI_USE_FAST_ADC

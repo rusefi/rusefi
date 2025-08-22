@@ -9,18 +9,6 @@
 
 #if HAL_USE_ADC
 
-#ifndef ADC_MAX_CHANNELS_COUNT
-#define ADC_MAX_CHANNELS_COUNT 16
-#endif /* ADC_MAX_CHANNELS_COUNT */
-
-#ifndef SLOW_ADC_CHANNEL_COUNT
-#ifdef ADC_MUX_PIN
-#define SLOW_ADC_CHANNEL_COUNT 32
-#else // not ADC_MUX_PIN
-#define SLOW_ADC_CHANNEL_COUNT 16
-#endif // def ADC_MUX_PIN
-#endif // SLOW_ADC_CHANNEL_COUNT
-
 class AdcDevice {
 public:
 	explicit AdcDevice(ADCDriver *p_adcp, ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf, size_t p_depth);
