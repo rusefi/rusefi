@@ -141,7 +141,7 @@ static void setAdcDebugReporting(int value) {
 
 extern void adcOnchipSlowUpdate(efitick_t nowNt);
 
-void updateSlowAdc(efitick_t nowNt) {
+void adcInputsUpdateSubscribers(efitick_t nowNt) {
 	adcOnchipSlowUpdate(nowNt);
 
 	{
@@ -225,7 +225,7 @@ void initAdcInputs() {
 
 	// Workaround to pre-feed all sensors with some data...
 	chThdSleepMilliseconds(1);
-	updateSlowAdc(getTimeNowNt());
+	adcInputsUpdateSubscribers(getTimeNowNt());
 }
 
 void printFullAdcReportIfNeeded(void) {
