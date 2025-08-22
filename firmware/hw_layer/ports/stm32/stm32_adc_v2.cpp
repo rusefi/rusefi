@@ -301,7 +301,7 @@ static void slowAdcEnableDisableChannel(adc_channel_e hwChannel, bool en)
 	}
 }
 
-#include "AdcDevice.h"
+#include "adc_device.h"
 
 extern AdcDevice fastAdc;
 
