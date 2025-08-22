@@ -22,8 +22,8 @@ HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/mmc_card.cpp \
 	$(PROJECT_DIR)/hw_layer/mmc_card_util.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_inputs.cpp \
-	$(PROJECT_DIR)/hw_layer/adc/adc_inputs_onchip.cpp \
-	$(PROJECT_DIR)/hw_layer/adc/adc_inputs_onchip_slow.cpp \
+	$(PROJECT_DIR)/hw_layer/adc/adc_onchip_fast.cpp \
+	$(PROJECT_DIR)/hw_layer/adc/adc_onchip_slow.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_subscription.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/ads1015.cpp \
 	$(PROJECT_DIR)/hw_layer/mc33816.cpp \
