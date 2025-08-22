@@ -162,6 +162,13 @@ int getAdcInternalChannel(ADC_TypeDef *adc, adc_channel_e hwChannel) {
 	return (hwChannel - EFI_ADC_0);
 }
 
+adc_channel_e getHwChannelForAdcInput(ADC_TypeDef *adc, size_t hwIndex)
+{
+	(void)adc;
+
+	return (EFI_ADC_0 + hwIndex);
+}
+
 // deprecated - migrate to 'getAdcChannelBrainPin'
 ioportid_t getAdcChannelPort(const char *msg, adc_channel_e hwChannel) {
 	return getHwPort(msg, getAdcChannelBrainPin(msg, hwChannel));
