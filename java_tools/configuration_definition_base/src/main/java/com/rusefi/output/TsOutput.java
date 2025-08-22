@@ -33,20 +33,18 @@ public class TsOutput {
     private final String metricUnitsConditionalEnd = "#endif" + EOL;
     private final String temperatureCelsiusUnit = quote("C");
     private final String temperatureFahrenheitUnit = quote("F");
-    private final String temperatureToFahrenheitScale = "{ 9 / 5 }";
-    private final String temperatureToFahrenheitTranslate = "17.77777";
+    private final Double temperatureToFahrenheitScale = 1.8;
+    private final Double temperatureToFahrenheitTranslate = 17.77777;
 
     private final String pressureMetricUnit = quote("kPa");
     private final String pressureImperialUnit = quote("psi");
-    private final Double kpaToPsiValue = 0.145038;
-    private final String pressureToPsiScale = String.valueOf(kpaToPsiValue);
-    private final String pressureToPsiTranslate = "0";
+    private final Double pressureToPsiScale = 0.145038;
+    private final Double pressureToPsiTranslate = 0.0;
 
     private final String speedMetricUnit = quote("kmh");
     private final String speedImperialUnit = quote("mph");
-    private final Double KmhToMphValue = 0.62137119;
-    private final String KmhToMphScale = String.valueOf(KmhToMphValue);
-    private final String KmhToMphTranslate = "0";
+    private final Double KmhToMphScale = 0.62137119;
+    private final Double KmhToMphTranslate = 0.0;
 
     public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
@@ -222,15 +220,15 @@ public class TsOutput {
     }
 
     private double celsiusToFahrenheit(double celsius){
-        return celsius * 1.8 + 32;
+        return celsius * temperatureToFahrenheitScale + 32;
     }
 
     private double kPaToPsi(double kPa){
-        return kPa * kpaToPsiValue;
+        return kPa * pressureToPsiScale;
     }
 
     private double KmhToMph(double Kmh){
-        return Kmh * KmhToMphValue;
+        return Kmh * KmhToMphScale;
     }
 
     public String formatTemperatureTsInfo(String tsInfo, boolean isImperial){
@@ -239,12 +237,13 @@ public class TsOutput {
             return "";
         }
         String[] fields = tokenizeWithBraces(tsInfo);
+        Double scale = IniField.parseDouble(fields[1]);
 
          if (isImperial){
             // override scale/translate & units, convert min-max
             fields[0] = temperatureFahrenheitUnit;
-            fields[1] = temperatureToFahrenheitScale;
-            fields[2] = temperatureToFahrenheitTranslate;
+            fields[1] = String.valueOf( temperatureToFahrenheitScale * scale );
+            fields[2] = String.valueOf( temperatureToFahrenheitTranslate * scale );
             fields[3] = String.valueOf( celsiusToFahrenheit( IniField.parseDouble(fields[3]) ) ); // min
             fields[4] = String.valueOf( celsiusToFahrenheit( IniField.parseDouble(fields[4]) ) ); // max
          } else {
@@ -262,11 +261,13 @@ public class TsOutput {
         }
 
         String[] fields = tokenizeWithBraces(tsInfo);
+        Double scale = IniField.parseDouble(fields[1]);
+
          if (isImperial){
                     // override scale/translate & units, convert min-max
                     fields[0] = pressureImperialUnit;
-                    fields[1] = pressureToPsiScale;
-                    fields[2] = pressureToPsiTranslate;
+                    fields[1] = String.valueOf( pressureToPsiScale * scale );
+                    fields[2] = String.valueOf( pressureToPsiTranslate * scale );
                     fields[3] = String.valueOf( kPaToPsi( IniField.parseDouble(fields[3]) ) ); // min
                     fields[4] = String.valueOf( kPaToPsi( IniField.parseDouble(fields[4]) ) ); // max
         } else {
@@ -283,11 +284,13 @@ public class TsOutput {
         }
 
         String[] fields = tokenizeWithBraces(tsInfo);
+        Double scale = IniField.parseDouble(fields[1]);
+
          if (isImperial){
                     // override scale/translate & units, convert min-max
                     fields[0] = speedImperialUnit;
-                    fields[1] = KmhToMphScale;
-                    fields[2] = KmhToMphTranslate;
+                    fields[1] = String.valueOf( KmhToMphScale * scale );
+                    fields[2] = String.valueOf( KmhToMphTranslate * scale );
                     fields[3] = String.valueOf( KmhToMph( IniField.parseDouble(fields[3]) ) ); // min
                     fields[4] = String.valueOf( KmhToMph( IniField.parseDouble(fields[4]) ) ); // max
         } else {

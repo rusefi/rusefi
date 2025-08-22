@@ -27,7 +27,27 @@ class TsOutputTest {
         assertEquals(expectedCelsius, tsOutput.formatTemperatureTsInfo(temperatureInput, false));
 
         // Test Fahrenheit format
-        String expectedFahrenheit = "\"F\",{ 9 / 5 },17.77777,-40.0,392.0, 0";
+        String expectedFahrenheit = "\"F\",1.8,17.77777,-40.0,392.0, 0";
+        assertEquals(expectedFahrenheit, tsOutput.formatTemperatureTsInfo(temperatureInput, true));
+    }
+    
+    @Test
+    void testFormatTemperatureTsInfoWithScaling() {
+        TsOutput tsOutput = new TsOutput(false);
+
+        // Test null or empty input
+        assertEquals("", tsOutput.formatTemperatureTsInfo(null, false));
+        assertEquals("", tsOutput.formatTemperatureTsInfo("", false));
+        assertEquals("", tsOutput.formatTemperatureTsInfo("  ", false));
+
+        String temperatureInput = "\"SPECIAL_CASE_TEMPERATURE\", 2.0, 0, -40, 200, 0";
+        
+        // Test Celsius format
+        String expectedCelsius = "\"C\", 2.0, 0, -40, 200, 0";
+        assertEquals(expectedCelsius, tsOutput.formatTemperatureTsInfo(temperatureInput, false));
+
+        // Test Fahrenheit format
+        String expectedFahrenheit = "\"F\",3.6,35.55554,-40.0,392.0, 0";
         assertEquals(expectedFahrenheit, tsOutput.formatTemperatureTsInfo(temperatureInput, true));
     }
 
@@ -47,7 +67,27 @@ class TsOutputTest {
         assertEquals(expectedKPa, tsOutput.formatPressureTsInfo(pressureInput, false));
 
         // Test psi format
-        String expectedPsi = "\"psi\",0.145038,0,2.17557,36.2595, 0";
+        String expectedPsi = "\"psi\",0.145038,0.0,2.17557,36.2595, 0";
+        assertEquals(expectedPsi, tsOutput.formatPressureTsInfo(pressureInput, true));
+    }
+
+    @Test
+    void testFormatPressureTsInfoWithScaling() {
+        TsOutput tsOutput = new TsOutput(false);
+
+        // Test null or empty input
+        assertEquals("", tsOutput.formatPressureTsInfo(null, false));
+        assertEquals("", tsOutput.formatPressureTsInfo("", false));
+        assertEquals("", tsOutput.formatPressureTsInfo("  ", false));
+
+        String pressureInput = "\"SPECIAL_CASE_PRESSURE\", 2, 0, 15, 250, 0";
+
+        // Test kPa format
+        String expectedKPa = "\"kPa\", 2, 0, 15, 250, 0";
+        assertEquals(expectedKPa, tsOutput.formatPressureTsInfo(pressureInput, false));
+
+        // Test psi format
+        String expectedPsi = "\"psi\",0.290076,0.0,2.17557,36.2595, 0";
         assertEquals(expectedPsi, tsOutput.formatPressureTsInfo(pressureInput, true));
     }
 
@@ -60,14 +100,34 @@ class TsOutputTest {
         assertEquals("", tsOutput.formatSpeedTsInfo("", false));
         assertEquals("", tsOutput.formatSpeedTsInfo("  ", false));
 
-        String speedInput = "\"SPECIAL_CASE_SPEED, 0, 15, 250, 0";
+        String speedInput = "\"SPECIAL_CASE_SPEED, 1, 15, 250, 0";
 
         // Test kmh format
-        String expectedKmh = "\"kmh\", 0, 15, 250, 0";
+        String expectedKmh = "\"kmh\", 1, 15, 250, 0";
         assertEquals(expectedKmh, tsOutput.formatSpeedTsInfo(speedInput, false));
 
         // Test mph format
-        String expectedMph = "\"mph\",0.62137119,0,155.3427975,0.0";
+        String expectedMph = "\"mph\",0.62137119,0.0,155.3427975,0.0";
+        assertEquals(expectedMph, tsOutput.formatSpeedTsInfo(speedInput, true));
+    }
+
+    @Test
+    void testFormatSpeedTsInfoWithScaling() {
+        TsOutput tsOutput = new TsOutput(false);
+
+        // Test null or empty input
+        assertEquals("", tsOutput.formatSpeedTsInfo(null, false));
+        assertEquals("", tsOutput.formatSpeedTsInfo("", false));
+        assertEquals("", tsOutput.formatSpeedTsInfo("  ", false));
+
+        String speedInput = "\"SPECIAL_CASE_SPEED, 2, 15, 250, 0";
+
+        // Test kmh format
+        String expectedKmh = "\"kmh\", 2, 15, 250, 0";
+        assertEquals(expectedKmh, tsOutput.formatSpeedTsInfo(speedInput, false));
+
+        // Test mph format
+        String expectedMph = "\"mph\",1.24274238,0.0,155.3427975,0.0";
         assertEquals(expectedMph, tsOutput.formatSpeedTsInfo(speedInput, true));
     }
 
