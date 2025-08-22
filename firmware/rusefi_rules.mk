@@ -13,3 +13,6 @@ endif
 RUSEFI_OPT += -Wno-error=sign-compare
 RUSEFI_OPT += -Wno-error=overloaded-virtual
 RUSEFI_OPT += -Wno-error=unused-parameter
+
+# reduce clutter while compiling unit tests
+RUSEFI_OPT += -Wno-delete-non-abstract-non-virtual-dtor
