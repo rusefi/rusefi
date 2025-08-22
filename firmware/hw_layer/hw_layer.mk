@@ -25,7 +25,6 @@ HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/adc/adc_onchip_fast.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_onchip_slow.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_subscription.cpp \
-	$(PROJECT_DIR)/hw_layer/adc/ads1015.cpp \
 	$(PROJECT_DIR)/hw_layer/mc33816.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper_dual_hbridge.cpp \
@@ -33,7 +32,6 @@ HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/cdm_ion_sense.cpp \
 	$(PROJECT_DIR)/hw_layer/debounce.cpp \
-	$(PROJECT_DIR)/hw_layer/adc/mcp3208.cpp \
 	$(PROJECT_DIR)/hw_layer/atwinc1500/wifi_bsp.cpp \
 
 
