@@ -309,24 +309,46 @@ public class TuneCanTool {
                 if (isHardwareEnum(type)) {
                     continue;
                 }
-                EnumsReader.EnumState sourceCodeEnum = state.getEnumsReader().getEnums().get(type);
-                if (sourceCodeEnum == null) {
+
+                boolean ordinalFound = false;
+                String sourceCodeValue = null;
+                int ordinal = 0;
+
+                Map<String, EnumGenerator.Parser.EnumDefinition> enumDefinitions = state.getEnumDefinitionMap();
+                EnumGenerator.Parser.EnumDefinition enumDefinition = enumDefinitions.get(type);
+
+                if (enumDefinition != null) {
+                    for (EnumGenerator.Parser.EnumDefinition.EnumEntry entry : enumDefinition.entries) {
+                        if (entry.valueTs.equalsIgnoreCase(customValue.getValue())) {
+                            ordinal = Math.toIntExact(entry.index);
+                            sourceCodeValue = entry.valueCpp;
+                            ordinalFound = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!ordinalFound) {
+                    EnumsReader.EnumState sourceCodeEnum = state.getEnumsReader().getEnums().get(type);
+                    String customEnum = state.getTsCustomLine().get(type);
+                    if (sourceCodeEnum != null && customEnum != null) {
+                        try {
+                            ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()));
+                            sourceCodeValue = sourceCodeEnum.findByValue(ordinal);
+                            ordinalFound = sourceCodeValue != null;
+                        } catch (IllegalStateException e) {
+                            log.info("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
+                        }
+                    }
+                }
+
+                if (!ordinalFound || sourceCodeValue == null || sourceCodeValue.isEmpty()) {
                     log.info("No info for " + type);
                     continue;
                 }
-                String customEnum = state.getTsCustomLine().get(type);
 
-                int ordinal;
-                try {
-                    ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()), ini.getDefines());
-                } catch (IllegalStateException e) {
-                    log.info("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
-                    continue;
-                }
+                log.info(cf + " " + defaultValue + " " + sourceCodeValue + " " + ordinal);
 
-                log.info(cf + " " + sourceCodeEnum + " " + customEnum + " " + ordinal);
-
-                String sourceCodeValue = sourceCodeEnum.findByValue(ordinal);
                 sb.append(TuneTools.getAssignmentCode(defaultValue, parentReference, cName, sourceCodeValue));
 
                 continue;
