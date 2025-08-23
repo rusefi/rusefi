@@ -4784,7 +4784,7 @@ struct engine_configuration_s {
 	/**
 	 * Defines a pressure range below the cut limit at which boost can resume, providing smoother control over boost cut actions.
 	 * For example: if hard cut is 240kpa, and boost cut hysteresis is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
-	 * units: kPa (absolute)
+	 * units: SPECIAL_CASE_PRESSURE
 	 * offset 3268
 	 */
 	scaled_channel<uint8_t, 2, 1> boostCutPressureHyst;
