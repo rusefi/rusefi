@@ -271,6 +271,11 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 
 #if EFI_USE_FAST_ADC
 
+#include "adc_device.h"
+#include "adc_onchip.h"
+
+extern AdcDevice fastAdc;
+
 // See: https://github.com/rusefi/rusefi/issues/8445
 // We need to disable Slow ADC access to pins that are handled by fast ADC to avoid additional noise
 static void slowAdcEnableDisableChannel(adc_channel_e hwChannel, bool en)
@@ -284,36 +289,18 @@ static void slowAdcEnableDisableChannel(adc_channel_e hwChannel, bool en)
 	 * and should be handled separately */
 	uint32_t channelAdcIndex = hwChannel - EFI_ADC_0;
 	// Switch disabled channel to internal Vrefint channel
-	uint32_t channelHwIndex = en ? channelAdcIndex : 17;
-
-	if (channelAdcIndex <= 5) {
-		size_t shift = (channelAdcIndex - 0) * 5;
-		convGroupSlow.sqr3 = (convGroupSlow.sqr3 & (~(0x1f << shift))) |
-							 (channelHwIndex << shift);
-	} else if (channelAdcIndex <= 11) {
-		size_t shift = (channelAdcIndex - 6) * 5;
-		convGroupSlow.sqr2 = (convGroupSlow.sqr2 & (~(0x1f << shift))) |
-							 (channelHwIndex << shift);
-	} else {
-		size_t shift = (channelAdcIndex - 12) * 5;
-		convGroupSlow.sqr1 = (convGroupSlow.sqr1 & (~(0x1f << shift))) |
-							 (channelHwIndex << shift);
-	}
+	adcConversionGroupSetSeqInput(&convGroupSlow, channelAdcIndex, en ? channelAdcIndex : 17);
 }
 
-#include "adc_device.h"
-
-extern AdcDevice fastAdc;
-
-AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
-	if (!isAdcChannelValid(channel)) {
+AdcToken enableFastAdcChannel(const char*, adc_channel_e hwChannel) {
+	if (!isAdcChannelValid(hwChannel)) {
 		return invalidAdcToken;
 	}
 
 	// Do not run slow ADC for fast ADC inputs
-	slowAdcEnableDisableChannel(channel, false);
+	slowAdcEnableDisableChannel(hwChannel, false);
 
-	return fastAdc.getAdcChannelToken(channel);
+	return fastAdc.getAdcChannelToken(hwChannel);
 }
 
 adcsample_t getFastAdc(AdcToken token) {
