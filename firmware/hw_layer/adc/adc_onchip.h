@@ -14,5 +14,7 @@
 #define ADC_MAX_CHANNELS_COUNT 16
 #endif /* ADC_MAX_CHANNELS_COUNT */
 
+#if defined(STM32F4) || defined(STM32F7)
 int adcConversionGroupSetSeqInput(ADCConversionGroup* cfg, size_t sqn, size_t input);
 int adcConversionGroupGetSeqInput(ADCConversionGroup* cfg, size_t sqn);
+#endif

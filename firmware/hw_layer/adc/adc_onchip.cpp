@@ -15,6 +15,8 @@
 // Some helpers for ADCConversionGroup manipulations
 // mostly for STM32 devices. Should we move this to ports?
 
+#if defined(STM32F4) || defined(STM32F7)
+
 int adcConversionGroupSetSeqInput(ADCConversionGroup* cfg, size_t sqn, size_t input) {
 	if (sqn < 6) {
 		size_t shift = 5 * (sqn  - 0);
@@ -68,5 +70,7 @@ int adcConversionGroupGetSeqInput(ADCConversionGroup* cfg, size_t sqn) {
 
 	return -1;
 }
+
+#endif // STM32F4 || STM32F7
 
 #endif // HAL_USE_ADC
