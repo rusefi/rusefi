@@ -4,7 +4,7 @@ controllers/algo/engine_types.h
 controllers/algo/engine_type_e.h
 -enumInputFile
 controllers/algo/rusefi_enums.h
--enumInputFile
-controllers/generated/enums/rusefi_config_generated_enums.h
+-enumsConfig
+integration/rusefi_config_enums_definitions.json
 -definition
 integration/rusefi_config.txt

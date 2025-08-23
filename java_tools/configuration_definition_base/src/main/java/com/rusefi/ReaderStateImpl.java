@@ -30,7 +30,7 @@ public class ReaderStateImpl implements ReaderState {
     private static final Logging log = getLogging(ReaderStateImpl.class);
 
     public static final String BIT = "bit";
-    private static final String CUSTOM = "custom";
+    public static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
@@ -55,6 +55,7 @@ public class ReaderStateImpl implements ReaderState {
 
     private final EnumsReader enumsReader = new EnumsReader();
     private final VariableRegistry variableRegistry = new VariableRegistry();
+    private final Map<String, EnumGenerator.Parser.EnumDefinition> enumDefinitionMap = new HashMap<>();
 
     public ReaderStateImpl() {
         this(ReaderProvider.REAL, LazyFile.REAL);
@@ -63,6 +64,10 @@ public class ReaderStateImpl implements ReaderState {
     public ReaderStateImpl(ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
         this.readerProvider = readerProvider;
         this.fileFactory = fileFactory;
+    }
+
+    public Map<String, EnumGenerator.Parser.EnumDefinition> getEnumDefinitionMap() {
+        return enumDefinitionMap;
     }
 
     @Override
@@ -155,7 +160,7 @@ public class ReaderStateImpl implements ReaderState {
         enumsReader.enums.putAll(newEnums);
     }
 
-    private void handleCustomLine(String customLineWithPrefix) {
+    public void handleCustomLine(String customLineWithPrefix){
         String withoutPrefix = customLineWithPrefix.substring(CUSTOM.length() + 1).trim();
         Pair<String, String> nameAndRest = TokenUtil.grabFirstTokenAndTheRest(withoutPrefix);
         String name = nameAndRest.first;
