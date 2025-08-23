@@ -1,7 +1,23 @@
 apply from: '../../java_tools/dependencies.gradle'
 
+defaultTasks 'shadowJar'
+
 dependencies {
   api project(':logging')
   implementation global_libs.json
+  testImplementation global_libs.junit5
+  testImplementation global_libs.junit5engine
   api project(':core_io')
+}
+
+build.dependsOn shadowJar
+
+shadowJar {
+  archiveBaseName.set('enum_generator')
+  archiveClassifier.set('all')
+  manifest {
+    attributes(
+      'Main-Class': 'com.rusefi.EnumGenerator'
+    )
+  }
 }
