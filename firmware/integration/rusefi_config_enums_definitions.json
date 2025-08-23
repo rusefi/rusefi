@@ -1,0 +1,13 @@
+{
+  "enum":{
+    "name":"engine_load_mode_e",
+    "type":"uint8_t",
+    "comment":"This enum is used to select your desired Engine Load calculation algorithm",
+    "entries":[
+      {"i":0,"v":"LM_SPEED_DENSITY","n":"Speed Density", "c":"Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR\nhttp://articles.sae.org/8539/"},
+      {"i":1,"v":"LM_REAL_MAF","n":"MAF Air Charge", "c":"MAF with a known kg/hour function"},
+      {"i":2,"v":"LM_ALPHA_N","n":"Alpha-N"},
+      {"i":3,"v":"LM_LUA","n":"Lua"}
+    ]
+  }
+}

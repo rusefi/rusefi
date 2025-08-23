@@ -1,0 +1,4 @@
+#define engine_load_mode_e_LM_SPEED_DENSITY 0
+#define engine_load_mode_e_LM_REAL_MAF 1
+#define engine_load_mode_e_LM_ALPHA_N 2
+#define engine_load_mode_e_LM_LUA 3

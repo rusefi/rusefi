@@ -138,28 +138,6 @@ typedef enum  __attribute__ ((__packed__)) {
   VVT_CUSTOM_2 = 30,
 } vvt_mode_e;
 
-/**
- * This enum is used to select your desired Engine Load calculation algorithm
- */
-enum class engine_load_mode_e : uint8_t {
-	/**
-	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
-	 * http://articles.sae.org/8539/
-	 */
-	LM_SPEED_DENSITY = 0,
-
-	/**
-	 * MAF with a known kg/hour function
-	 */
-	LM_REAL_MAF = 1,
-
-	LM_ALPHA_N = 2,
-
-	LM_LUA = 3,
-
-	UNSUPPORTED_ENUM_VALUE
-};
-
 typedef enum __attribute__ ((__packed__)) {
 	DM_NONE = 0,
 	DM_HD44780 = 1,
@@ -895,3 +873,7 @@ typedef enum __attribute__ ((__packed__)) {
 } stft_state_e;
 
 #endif // __cplusplus
+
+#include "generated/enums/rusefi_config_generated_enums.h"
+
+using namespace rusefi::generated::enums;

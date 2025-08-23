@@ -95,6 +95,10 @@
 ! update this string to the current date!
 #define FLASH_DATA_VERSION 250805
 
+! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
+! Also remove file integration/generated/rusefi_config_generated_enums.txt
+include_file integration/generated/rusefi_config_generated_enums.txt
+
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
 
@@ -646,10 +650,8 @@ uint8_t mapSyncThreshold;Delta kPa/psi for MAP sync;"SPECIAL_CASE_PRESSURE", 1, 
 #define CYLINDER_BORE_MULTIPLIER 1
 float cylinderBore;@@CYLINDER_BORE_TOOLTIP@@;@@CYLINDER_BORE_UNITS@@, @@CYLINDER_BORE_MULTIPLIER@@, 0, 0, 2000, 2
 
-#define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
-
-
-custom engine_load_mode_e 1 bits, U08, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
+! Remove custom type declaration when Java toolset can read json enum config
+custom engine_load_mode_e 1 bits, U08, @OFFSET@, [0:2], $engine_load_mode_e_list
 engine_load_mode_e fuelAlgorithm;Determines the method used for calculating fuel delivery. The following options are available:\nUses intake manifold pressure (MAP) and intake air temperature (IAT) to calculate air density and fuel requirements. This is a common strategy, especially for naturally aspirated or turbocharged engines.\nAlpha-N: Uses throttle position as the primary load input for fuel calculation. This strategy is generally used in engines with individual throttle bodies or those that lack a reliable MAP signal.\nMAF Air Charge: Relies on a Mass Air Flow (MAF) sensor to measure the amount of air entering the engine directly, making it effective for engines equipped with a MAF sensor.\nLua: Allows for custom fuel calculations using Lua scripting, enabling highly specific tuning applications where the other strategies don't apply.;
 uint8_t ALSMaxTPS;;"%", 1, 0, 0, 10, 0
 

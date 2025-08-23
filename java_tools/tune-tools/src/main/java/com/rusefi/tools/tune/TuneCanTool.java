@@ -23,10 +23,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigFieldImpl.unquote;
@@ -321,7 +318,7 @@ public class TuneCanTool {
 
                 int ordinal;
                 try {
-                    ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()));
+                    ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()), ini.getDefines(), log);
                 } catch (IllegalStateException e) {
                     log.info("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
                     continue;
