@@ -402,7 +402,7 @@
         <constant name="boostControlPinMode">"default"</constant>
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant digits="0" name="boostCutPressure" units="kPa">300.0</constant>
-        <constant digits="1" name="boostCutPressureHyst" units="kPa (absolute)">20.0</constant>
+        <constant digits="1" name="boostCutPressureHyst" units="kPa">20.0</constant>
         <constant cols="1" digits="1" name="boostOpenLoopBlends1_blendBins" rows="8">
          0.0
          0.0
@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250822E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250823E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -5078,7 +5078,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250817" nPages="1" signature="rusEFI master.2025.08.22.f407-discovery.3574090773" version="5.0"/>
+    <versionInfo firmwareInfo="20250817" nPages="1" signature="rusEFI master.2025.08.23.f407-discovery.3915247409" version="5.0"/>
     <bibliography author="rusEFI 20250817" writeDate="date"/>
     <settings/>
     <userComments/>
