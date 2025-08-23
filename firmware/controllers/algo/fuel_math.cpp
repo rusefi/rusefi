@@ -128,7 +128,6 @@ float getRunningFuel(float baseFuel) {
 
 #if EFI_LAUNCH_CONTROL
 	correction *= engine->launchController.getFuelCoefficient();
-	correction *= engine->module<NitrousController>().unmock().getFuelCoefficient();
 #endif
 
 	engine->engineModules.apply_all([&correction](auto & m) { correction *= m.getFuelCoefficient(); });
