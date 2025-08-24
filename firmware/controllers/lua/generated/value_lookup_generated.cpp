@@ -1096,6 +1096,9 @@ float getConfigValueByHash(const int hash) {
 // startUpFuelPumpDuration
 		case -664540020:
 			return engineConfiguration->startUpFuelPumpDuration;
+// mafFilterParameter
+		case 1564984000:
+			return engineConfiguration->mafFilterParameter;
 // idlePidRpmDeadZone
 		case -528043591:
 			return engineConfiguration->idlePidRpmDeadZone;
@@ -3848,6 +3851,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -664540020:
 	{
 		engineConfiguration->startUpFuelPumpDuration = (int)value;
+		return 1;
+	}
+		case 1564984000:
+	{
+		engineConfiguration->mafFilterParameter = (int)value;
 		return 1;
 	}
 		case -528043591:

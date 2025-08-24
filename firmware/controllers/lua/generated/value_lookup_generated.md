@@ -1090,6 +1090,9 @@ Pedal in the floor
 ### startUpFuelPumpDuration
 on IGN voltage detection turn fuel pump on to build fuel pressure
 
+### mafFilterParameter
+larger value = larger intake manifold volume
+
 ### idlePidRpmDeadZone
 If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
 
