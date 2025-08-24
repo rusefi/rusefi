@@ -318,7 +318,7 @@ public class TuneCanTool {
 
                 int ordinal;
                 try {
-                    ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()), ini.getDefines(), log);
+                    ordinal = TuneTools.resolveEnumByName(customEnum, unquote(customValue.getValue()), ini.getDefines());
                 } catch (IllegalStateException e) {
                     log.info("Looks like things were renamed: " + customValue.getValue() + " not found in " + customEnum);
                     continue;
