@@ -5,7 +5,6 @@ defaultTasks 'shadowJar'
 dependencies {
     api project(':config_definition_base')
     api project(':trigger-image')
-    api project(':enum_generator')
 
     testImplementation testFixtures(project(':config_definition_base'))
 }

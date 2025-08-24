@@ -55,6 +55,7 @@ public class ReaderStateImpl implements ReaderState {
 
     private final EnumsReader enumsReader = new EnumsReader();
     private final VariableRegistry variableRegistry = new VariableRegistry();
+    private final Map<String, EnumGenerator.Parser.EnumDefinition> enumDefinitionMap = new HashMap<>();
 
     public ReaderStateImpl() {
         this(ReaderProvider.REAL, LazyFile.REAL);
@@ -63,6 +64,10 @@ public class ReaderStateImpl implements ReaderState {
     public ReaderStateImpl(ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
         this.readerProvider = readerProvider;
         this.fileFactory = fileFactory;
+    }
+
+    public Map<String, EnumGenerator.Parser.EnumDefinition> getEnumDefinitionMap() {
+        return enumDefinitionMap;
     }
 
     @Override
