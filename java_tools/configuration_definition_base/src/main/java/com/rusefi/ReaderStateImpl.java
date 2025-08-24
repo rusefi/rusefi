@@ -30,7 +30,7 @@ public class ReaderStateImpl implements ReaderState {
     private static final Logging log = getLogging(ReaderStateImpl.class);
 
     public static final String BIT = "bit";
-    private static final String CUSTOM = "custom";
+    public static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
@@ -155,7 +155,7 @@ public class ReaderStateImpl implements ReaderState {
         enumsReader.enums.putAll(newEnums);
     }
 
-    private void handleCustomLine(String customLineWithPrefix) {
+    public void handleCustomLine(String customLineWithPrefix) {
         String withoutPrefix = customLineWithPrefix.substring(CUSTOM.length() + 1).trim();
         Pair<String, String> nameAndRest = TokenUtil.grabFirstTokenAndTheRest(withoutPrefix);
         String name = nameAndRest.first;
