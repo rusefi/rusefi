@@ -62,7 +62,7 @@ public class ConfigDefinition {
     }
 
     public static void doJob(String[] args, ReaderStateImpl state) throws IOException {
-        log.info(ConfigDefinition.class + " Invoked with 1 " + Arrays.toString(args));
+        log.info(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
         List<String> softPrePrendsFileNames = new ArrayList<>();
