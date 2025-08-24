@@ -8,7 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class TuneTools {
+    private static final Logging log = getLogging(TuneTools.class);
+
     private static String quote(String string) {
         return "\"" + string + "\"";
     }
@@ -25,7 +29,7 @@ public class TuneTools {
         throw new IllegalStateException("Enum name [" + key + "] not found in " + tsCustomLine);
     }
 
-    public static int resolveEnumByName(String tsCustomLine, String key, Map<String, List<String>> iniDefines, Logging log) {
+    public static int resolveEnumByName(String tsCustomLine, String key, Map<String, List<String>> iniDefines) {
         for (String k : iniDefines.keySet()) {
             String token = "$" + k;
             if (tsCustomLine.contains(token)) {
