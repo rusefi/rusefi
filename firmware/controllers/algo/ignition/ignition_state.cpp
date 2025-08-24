@@ -141,6 +141,8 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
     }
 #endif /* EFI_LAUNCH_CONTROL */
 
+	engine->engineModules.apply_all([&advanceAngle](auto & m) { advanceAngle += m.getTimingModifier(); });
+
 	return advanceAngle;
 }
 
