@@ -184,6 +184,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->boardUseCanTerminator = true;
 	engineConfiguration->acLowRpmLimit = 500;
 
+	engineConfiguration->mafFilterParameter = 1;
+
 #ifdef EFI_KLINE
   engineConfiguration->kLinePeriodUs = 300 /* us*/;
   engineConfiguration->kLineDoHondaSend = true;
