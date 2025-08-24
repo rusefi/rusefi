@@ -37,6 +37,7 @@ public class ConfigDefinition {
     private static final String KEY_BOARD_NAME = "-board";
     public static final String CONFIG_PATH = "java_tools/configuration_definition/src/main/resources/config_definition.options";
     public static final String READFILE_OPTION = "-readfile";
+    public static final String KEY_ENUMS_CONFIG_PATH = "-enumsConfig";
 
     public static void main(String[] args) {
         try {
@@ -167,6 +168,11 @@ public class ConfigDefinition {
                     pinoutLogic = PinoutLogic.create(boardName);
                     for (String inputFile : pinoutLogic.getInputFiles())
                         state.addInputFile(inputFile);
+                    break;
+                case KEY_ENUMS_CONFIG_PATH:
+                    String enumsDefinitionsFilePath = args[i + 1];
+                    String enumsDefinitionsFilePathFixed = IoUtil3.prependIfNotAbsolute(RootHolder.ROOT, enumsDefinitionsFilePath);
+                    ExtraUtil.handleEnumsDefinitions(enumsDefinitionsFilePathFixed, state);
                     break;
             }
         }
