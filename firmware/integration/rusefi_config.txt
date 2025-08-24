@@ -95,10 +95,6 @@
 ! update this string to the current date!
 #define FLASH_DATA_VERSION 250805
 
-! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
-! Also remove file integration/generated/rusefi_config_generated_enums.txt
-include_file integration/generated/rusefi_config_generated_enums.txt
-
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
 
