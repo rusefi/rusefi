@@ -28,7 +28,7 @@
 // on this level we do not distinguish between multiplier and 'ms adder' modes
 float TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
-	
+
 	// If predictive MAP mode is active, the old "adder" logic is disabled.
 	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
 		return 0;
@@ -39,7 +39,7 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		return 0;
 	}
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	if (rpm == 0) {
+	if (rpm < engineConfiguration->cranking.rpm) {
 		return 0;
 	}
 
