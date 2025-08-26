@@ -307,3 +307,12 @@ const live_data_example_s* getLiveData(size_t) {
 	return nullptr;
 #endif
 }
+
+template<>
+const vvl_controller_state_s* getLiveData(size_t) {
+#if MODULE_VVL_CONTROLLER
+	return &engine->module<VvlController>().unmock();
+#else
+	return nullptr;
+#endif
+}

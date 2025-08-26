@@ -1,0 +1,10 @@
+struct_no_prefix vvl_controller_state_s
+
+bit isVvlTpsCondition
+bit isVvlCltCondition
+bit isVvlMapCondition
+bit isVvlAfrCondition
+bit isVvlRpmCondition
+bit isVvlCondition
+
+end_struct
