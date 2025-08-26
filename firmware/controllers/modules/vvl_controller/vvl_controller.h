@@ -14,6 +14,8 @@ public:
     using interface_t = VvlController;
 
     void onSlowCallback() override;
+	float getFuelCoefficient() const;
+	float getTimingModifier() const;
 
 private:
     void updateTpsConditionSatisfied();

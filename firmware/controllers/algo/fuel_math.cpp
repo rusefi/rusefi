@@ -131,6 +131,10 @@ float getRunningFuel(float baseFuel) {
 	correction *= engine->module<NitrousController>().unmock().getFuelCoefficient();
 #endif
 
+#ifdef MODULE_VVL_CONTROLLER
+	correction *= engine->module<VvlController>().unmock().getFuelCoefficient();
+#endif /* MODULE_VVL_CONTROLLER */
+
 	correction *= getLimpManager()->getLimitingFuelCorrection();
 
 	float runningFuel = baseFuel * correction;

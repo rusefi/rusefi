@@ -21,7 +21,23 @@ void VvlController::onSlowCallback() {
     } else {
         isVvlCondition = false;
     }
-	// enginePins.vvlRelay.setValue(isVvlCondition);
+	enginePins.vvlRelay.setValue(isVvlCondition);
+}
+
+float VvlController::getFuelCoefficient() const {
+    float result = 1.0f;
+    if (engineConfiguration->vvlControlEnabled && isVvlCondition) {
+        result += engineConfiguration->vvlController.fuelAdderPercent / 100.0f;
+    }
+    return result;
+}
+
+float VvlController::getTimingModifier() const {
+    if (engineConfiguration->vvlControlEnabled && isVvlCondition) {
+		// note the "-" here to remove timing!
+        return -engineConfiguration->vvlController.ignitionRetard;
+    }
+    return 0.0f;
 }
 
 void VvlController::updateTpsConditionSatisfied() {
