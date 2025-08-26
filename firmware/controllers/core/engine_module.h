@@ -34,4 +34,10 @@ public:
 								angle_t /*currentPhase*/,
 								angle_t /*nextPhase*/)
 								{ }
+
+	// adds-remove fuel from final calculation, do not implement any close loop logic here! (ie only for VVL/Nitrous/etc)
+	virtual float getFuelCoefficient(){ return 1.0f; }
+
+	// adds-remove timing from final calculation, do not implement any close loop logic here! (ie only for VVL/Nitrous/etc)
+	virtual float getTimingModifier() { return 0.0f;}
 };
