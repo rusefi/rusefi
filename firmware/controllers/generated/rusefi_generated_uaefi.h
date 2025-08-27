@@ -58,8 +58,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",6="A7 Voltage From Key",9="C14 TPS2",8="C15 Fuel Pressure / AUX3",2="C3 AUX2",15="C4 PPS2",1="D1 AUX1",5="D13 TPS1",14="D15 IAT",13="D16 CLT Coolant",4="D6 PPS1",11="D9 MAP",12="On-board MAP"
-#define adc_channel_e_fullenum "NONE","D1 AUX1","C3 AUX2","INVALID","D6 PPS1","D13 TPS1","A7 Voltage From Key","INVALID","C15 Fuel Pressure / AUX3","C14 TPS2","INVALID","D9 MAP","On-board MAP","D16 CLT Coolant","D15 IAT","C4 PPS2"
+#define adc_channel_e_enum 0="NONE",6="A7 Voltage From Key",9="C14 TPS2",8="C15 Fuel Pressure / AUX3",2="C3 AUX2",15="C4 PPS2",1="D1 AUX1",7="D10 A/C Request / BUTTON2",5="D13 TPS1",14="D15 IAT",13="D16 CLT Coolant",10="D2 BUTTON1",4="D6 PPS1",11="D9 MAP",12="On-board MAP"
+#define adc_channel_e_fullenum "NONE","D1 AUX1","C3 AUX2","INVALID","D6 PPS1","D13 TPS1","A7 Voltage From Key","D10 A/C Request / BUTTON2","C15 Fuel Pressure / AUX3","C14 TPS2","D2 BUTTON1","D9 MAP","On-board MAP","D16 CLT Coolant","D15 IAT","C4 PPS2"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1508,7 +1508,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 834068377
+#define SIGNATURE_HASH 677655864
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2062,7 +2062,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.08.27.uaefi.834068377"
+#define TS_SIGNATURE "rusEFI master.2025.08.27.uaefi.677655864"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
