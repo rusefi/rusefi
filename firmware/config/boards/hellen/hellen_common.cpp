@@ -238,6 +238,15 @@ int boardGetAnalogDiagnostic()
 #endif
 }
 
+float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
+	if (hwChannel == MM100_IN_CRANK_ANALOG) [[unlikely]] {
+		// (4.7K || 5.1K) + 4.7K divider
+		// 4.7K || 5.1K == 2.445K
+		return (4.7f + 2.445f) / 4.7f;
+	}
+	return engineConfiguration->analogInputDividerCoefficient;
+}
+
 #ifndef EFI_BOOTLOADER
 bool boardSdCardEnable() {
 	// on mega-module we manage SD card power supply
