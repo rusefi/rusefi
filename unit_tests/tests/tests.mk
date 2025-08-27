@@ -200,4 +200,8 @@ TESTS_SRC_CPP = \
 	tests/controllers/algo/test_engine_cylinder.cpp \
 	tests/controllers/algo/test_closed_loop_idle.cpp \
 	tests/controllers/modules/test_example_module.cpp \
-	tests/controllers/test_flash.cpp
+	tests/controllers/test_flash.cpp \
+	tests/controllers/modules/vvl_controller/vvl_controller_rpm_condition.cpp \
+	tests/controllers/modules/vvl_controller/vvl_controller_clt_condition.cpp \
+	tests/controllers/modules/vvl_controller/vvl_controller_tps_condition.cpp \
+	tests/controllers/modules/vvl_controller/vvl_controller_map_condition.cpp

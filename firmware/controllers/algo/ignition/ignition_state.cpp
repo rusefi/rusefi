@@ -141,6 +141,10 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
     }
 #endif /* EFI_LAUNCH_CONTROL */
 
+#ifdef MODULE_VVL_CONTROLLER
+	advanceAngle += engine->module<VvlController>().unmock().getTimingModifier();
+#endif /* MODULE_VVL_CONTROLLER */
+
 	return advanceAngle;
 }
 

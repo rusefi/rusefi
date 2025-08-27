@@ -266,3 +266,11 @@ Usages:
     java: ShortTermFuelTrim.java
     folder: controllers/math
     prepend: integration/rusefi_config_shared.txt
+
+  - name: vvl_controller_state
+    java: VvlController.java
+    folder: controllers/modules/vvl_controller
+    prepend: integration/rusefi_config_shared.txt
+    output_name: vvl
+    engineModule: VvlController
+    conditional_compilation: "MODULE_VVL_CONTROLLER"
