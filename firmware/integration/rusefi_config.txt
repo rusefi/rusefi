@@ -527,7 +527,7 @@ struct injector_s
 	float @@MEMBER_FLOW@@;This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below;"", 1, 0, 0, 99999, 2
     int16_t[VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorrBattBins;;"volts", 0.01, 0, 0, 22, 2
     ! 30k Kpa considering the highest value I found online for a GDI engine, for a Mustang GT PP1
-    uint32_t[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] autoscale battLagCorrPressBins;Injector correction pressure;"kPa", 0.1, 0, 0, 30000, 2
+    uint32_t[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] autoscale battLagCorrPressBins;Injector correction pressure;"SPECIAL_CASE_PRESSURE", 0.1, 0, 0, 30000, 2
     int16_t[VBAT_INJECTOR_CURVE_PRESSURE_SIZE x VBAT_INJECTOR_CURVE_SIZE] autoscale battLagCorrTable;ms delay between injector open and close dead times;"ms", 0.01, 0, 0, 50, 2
 end_struct
 
@@ -1613,7 +1613,7 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 250, 0
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
 	float ALSSkipRatio;;"", 1, 0, 0, 1, 1
-	uint8_t autoscale acPressureEnableHyst;Hysterisis: if Pressure High Disable is 240kpa, and acPressureEnableHyst is 20, when the ECU sees 240kpa, A/C will be disabled, and stay disabled until 240-20=220kpa is reached;"kPa (absolute)", 0.5, 0, 0, 125, 1
+	uint8_t autoscale acPressureEnableHyst;Hysterisis: if Pressure High Disable is 240kpa, and acPressureEnableHyst is 20, when the ECU sees 240kpa, A/C will be disabled, and stay disabled until 240-20=220kpa is reached;"SPECIAL_CASE_PRESSURE", 0.5, 0, 0, 125, 1
 	pin_input_mode_e ALSActivatePinMode;
 
 	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%;"%", 0.5, 0, 0, 100, 1
@@ -1739,7 +1739,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	float knockFrequency;"Estimated knock frequency, ignore cylinderBore if this one > 0";"Hz", 1, 0, 0, 20000, 2
 
 	injector_compensation_mode_e secondaryInjectorCompensationMode;None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor;
-	float secondaryInjectorFuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 50, 700000, 0
+	float secondaryInjectorFuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"SPECIAL_CASE_PRESSURE", 1, 0, 50, 700000, 0
 
     SentInput EtbSentInput;SENT input connected to ETB
 
@@ -2026,7 +2026,7 @@ uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0,
 #define MAP_EST_RPM_COUNT 16
 #define MAP_EST_LOAD_COUNT 16
 
-uint16_t[MAP_EST_LOAD_COUNT x MAP_EST_RPM_COUNT] autoscale mapEstimateTable;This table represents MAP at a given TPS vs RPM, which we use if our MAP sensor has failed, or if we are using MAP Prediciton. \n This table should be a direct representation of MAP, you can tune it manually by disconnecting MAP sensor, and filling out the table with values that match an external gauge that shows MAP.\nAdditionally, you can also use MLV to get the map values and/or generate the table for you;"kPa", 0.01, 0, 0, @@MAP_UPPER_LIMIT@@, 2
+uint16_t[MAP_EST_LOAD_COUNT x MAP_EST_RPM_COUNT] autoscale mapEstimateTable;This table represents MAP at a given TPS vs RPM, which we use if our MAP sensor has failed, or if we are using MAP Prediciton. \n This table should be a direct representation of MAP, you can tune it manually by disconnecting MAP sensor, and filling out the table with values that match an external gauge that shows MAP.\nAdditionally, you can also use MLV to get the map values and/or generate the table for you;"SPECIAL_CASE_PRESSURE", 0.01, 0, 0, @@MAP_UPPER_LIMIT@@, 2
 uint16_t[MAP_EST_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[MAP_EST_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
@@ -2257,12 +2257,12 @@ uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0
 uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 uint8_t[TCU_TABLE_WIDTH] autoscale tcu_shiftTpsBins;;"%", 1, 0, 0, 255, 2
-uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed12;;"MPH", 1, 0, 0, 255, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed23;;"MPH", 1, 0, 0, 255, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed34;;"MPH", 1, 0, 0, 255, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed21;;"MPH", 1, 0, 0, 255, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed32;;"MPH", 1, 0, 0, 255, 0
-uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed43;;"MPH", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed12;;"SPECIAL_CASE_SPEED", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed23;;"SPECIAL_CASE_SPEED", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed34;;"SPECIAL_CASE_SPEED", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed21;;"SPECIAL_CASE_SPEED", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed32;;"SPECIAL_CASE_SPEED", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed43;;"SPECIAL_CASE_SPEED", 1, 0, 0, 255, 0
 
 float tcu_shiftTime;;"ms", 1, 0, 0, 3000, 0
 
@@ -2275,7 +2275,7 @@ uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 
 include_file controllers/actuators/boost_control_config.txt
 
 uint8_t[8] autoscale minimumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
-uint8_t[8] autoscale minimumOilPressureValues;;"kPa", 10, 0, 0, 1000, 0
+uint8_t[8] autoscale minimumOilPressureValues;;"SPECIAL_CASE_PRESSURE", 10, 0, 0, 1000, 0
 
 blend_table_s[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
 
@@ -2340,7 +2340,7 @@ uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12
 uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
 uint8_t[4] autoscale maximumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
-uint8_t[4] autoscale maximumOilPressureValues;;"kPa", 10, 0, 0, 2000, 0
+uint8_t[4] autoscale maximumOilPressureValues;;"SPECIAL_CASE_PESSURE", 10, 0, 0, 2000, 0
 
 gppwm_channel_e torqueReductionCutXaxis;Selects the X axis to use for the table.;
 int8_t[TORQUE_TABLE_Y_SIZE x TORQUE_TABLE_X_SIZE] torqueReductionIgnitionCutTable;How many % of ignition events will be cut;"%", 1, 0, 0, 100, 0
