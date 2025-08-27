@@ -3,6 +3,7 @@ package com.rusefi.ui.basic;
 import com.rusefi.*;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.StatusAnimation;
 import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
@@ -50,6 +51,7 @@ public class BasicStartupFrame {
             statusPanel,
             doNotUseStatusWindow
         );
+        DfuFlasher.dfuEnabledInCaseOfError = false;
         panel.add(basicUpdaterPanel.getContent());
         if (doNotUseStatusWindow) {
             panel.add(statusPanel);
