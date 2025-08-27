@@ -511,12 +511,12 @@ extern int flexCallbackCounter;
 	for (int i = 0; i < LUA_ANALOG_INPUT_COUNT; i++) {
 		adc_channel_e channel = engineConfiguration->auxAnalogInputs[i];
 		if (isAdcChannelValid(channel)) {
-			engine->outputChannels.rawAnalogInput[i] = adcGetScaledVoltage("raw aux", channel);
+			engine->outputChannels.rawAnalogInput[i] = adcGetScaledVoltage("raw aux", channel).value_or(0);
 		}
 	}
 
 	// TODO: transition AFR to new sensor model
-	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : adcGetScaledVoltage("ego", engineConfiguration->afr.hwChannel);
+	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : adcGetScaledVoltage("ego", engineConfiguration->afr.hwChannel).value_or(0);
 }
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);

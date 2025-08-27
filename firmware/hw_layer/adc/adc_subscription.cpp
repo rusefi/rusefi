@@ -149,20 +149,24 @@ void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 			continue;
 		}
 
-		float mcuVolts = adcGetRawVoltage("sensor", entry.Channel);
-		entry.sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
+		auto mcuVolts = adcGetRawVoltage("sensor", entry.Channel);
+		if (mcuVolts) {
+			entry.sensorVolts = mcuVolts.value_or(0) * entry.VoltsPerAdcVolt;
 
-		// On the very first update, preload the filter as if we've been
-		// seeing this value for a long time.  This prevents a slow ramp-up
-		// towards the correct value just after startup
-		if (!entry.HasUpdated) {
-			entry.Filter.cookSteadyState(entry.sensorVolts);
-			entry.HasUpdated = true;
+			// On the very first update, preload the filter as if we've been
+			// seeing this value for a long time.  This prevents a slow ramp-up
+			// towards the correct value just after startup
+			if (!entry.HasUpdated) {
+				entry.Filter.cookSteadyState(entry.sensorVolts);
+				entry.HasUpdated = true;
+			}
+
+			float filtered = entry.Filter.filter(entry.sensorVolts);
+
+			entry.Sensor->postRawValue(filtered, nowNt);
+		} else {
+
 		}
-
-		float filtered = entry.Filter.filter(entry.sensorVolts);
-
-		entry.Sensor->postRawValue(filtered, nowNt);
 	}
 }
 
@@ -177,19 +181,20 @@ void AdcSubscription::PrintInfo() {
 		}
 
 		const auto name = entry.Sensor->getSensorName();
-		float mcuVolts = adcGetRawVoltage("sensor", entry.Channel);
-		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
+		auto mcuVolts = adcGetRawVoltage("sensor", entry.Channel);
+		float sensorVolts = mcuVolts.value_or(0) * entry.VoltsPerAdcVolt;
 		auto channel = entry.Channel;
 
 		char pinNameBuffer[16];
 
 		efiPrintf(
-			"%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f",
+			"%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f %s",
 			name,
 			channel,
 			(int)getAdcMode(channel),
 			getPinNameByAdcChannel(name, channel, pinNameBuffer, sizeof(pinNameBuffer)),
-			mcuVolts, sensorVolts, entry.VoltsPerAdcVolt
+			mcuVolts.value_or(0), sensorVolts, entry.VoltsPerAdcVolt,
+			mcuVolts ? "valid" : "INVALID"
 		);
 	}
 }

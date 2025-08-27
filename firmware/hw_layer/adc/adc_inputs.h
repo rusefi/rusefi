@@ -17,6 +17,8 @@
 
 float getAnalogInputDividerCoefficient(adc_channel_e);
 float boardAdjustVoltage(float voltage, adc_channel_e hwChannel);
+/* optional, checks if measured voltage is valid */
+int boardGetAnalogInputDiagnostic(adc_channel_e, float voltage);
 
 inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	/* Compiler will optimize, keep following if as a reminder */

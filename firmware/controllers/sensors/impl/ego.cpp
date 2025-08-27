@@ -29,9 +29,9 @@ float getAfr(SensorType type) {
 		return 0;
 	}
 
-	float volts = adcGetScaledVoltage("ego", type == SensorType::Lambda1 ? sensor->hwChannel : sensor->hwChannel2);
+	auto volts = adcGetScaledVoltage("ego", type == SensorType::Lambda1 ? sensor->hwChannel : sensor->hwChannel2);
 
-	float interpolatedAfr = interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts);
+	float interpolatedAfr = interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts.value_or(0));
 
 	switch (type) {
 		case SensorType::Lambda1: {
@@ -48,7 +48,7 @@ float getAfr(SensorType type) {
 			break;
 	}
 
-	return interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
+	return interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts.value_or(0))
 			+ engineConfiguration->egoValueShift;
 }
 
