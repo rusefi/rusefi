@@ -238,6 +238,29 @@ int boardGetAnalogDiagnostic()
 #endif
 }
 
+float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
+#if (HELLEN_BOARD_MM64 == TRUE)
+	(void)hwChannel;
+	if (0)
+#endif
+#if (HELLEN_BOARD_MM100 == TRUE)
+	if (hwChannel == MM100_IN_CRANK_ANALOG) [[unlikely]]
+#endif
+#if (HELLEN_BOARD_MM144 == TRUE)
+	if (hwChannel == H144_IN_CRANK_ANALOG) [[unlikely]]
+#endif
+#if (HELLEN_BOARD_MM176 == TRUE)
+	if (hwChannel == MM176_IN_CRANK_ANALOG) [[unlikely]]
+#endif
+	{
+		// (4.7K || 5.1K) + 4.7K divider
+		// 4.7K || 5.1K == 2.445K
+		return (4.7f + 2.445f) / 4.7f;
+	}
+
+	return engineConfiguration->analogInputDividerCoefficient;
+}
+
 #ifndef EFI_BOOTLOADER
 bool boardSdCardEnable() {
 	// on mega-module we manage SD card power supply

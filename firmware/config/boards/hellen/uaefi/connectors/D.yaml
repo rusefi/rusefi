@@ -9,8 +9,8 @@ pins:
     function: Auxiliary analog input 1
 
   - pin: D2
-    meta: MM100_IN_CRANK
-    class: switch_inputs
+    id: [MM100_IN_CRANK_ANALOG, MM100_IN_CRANK]
+    class: [analog_inputs, switch_inputs]
     color: yellow
     ts_name: ___ BUTTON1
     function: Button input 1
@@ -59,8 +59,8 @@ pins:
     color: yellow
 
   - pin: D10
-    meta: MM100_IN_CAM
-    class: switch_inputs
+    id: [MM100_IN_CAM_ANALOG, MM100_IN_CAM]
+    class: [analog_inputs, switch_inputs]
     color: green
     ts_name: ___ A/C Request / BUTTON2
     function: A/C Request / Button input 2
