@@ -15,7 +15,7 @@
         <constant digits="2" name="acPressure_v2" units="volts">5.0</constant>
         <constant digits="2" name="acPressure_value1" units="">0.0</constant>
         <constant digits="2" name="acPressure_value2" units="">100.0</constant>
-        <constant digits="1" name="acPressureEnableHyst" units="kPa (absolute)">10.0</constant>
+        <constant digits="1" name="acPressureEnableHyst" units="kPa">10.0</constant>
         <constant digits="0" name="acrDisablePhase" units="deg">0.0</constant>
         <constant digits="0" name="acRelayAlternatorDutyAdder" units="%">0.0</constant>
         <constant name="acRelayPin">"NONE"</constant>
@@ -5089,7 +5089,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250827" nPages="1" signature="rusEFI master.2025.08.27.f407-discovery.3565052234" version="5.0"/>
+    <versionInfo firmwareInfo="20250827" nPages="1" signature="rusEFI master.2025.08.28.f407-discovery.1547306215" version="5.0"/>
     <bibliography author="rusEFI 20250827" writeDate="date"/>
     <settings/>
     <userComments/>
