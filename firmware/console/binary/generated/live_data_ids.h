@@ -46,6 +46,7 @@ LDS_lambda_monitor,
 LDS_mc33810_state,
 LDS_long_term_fuel_trim_state,
 LDS_short_term_fuel_trim_state,
+LDS_vvl_controller_state,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 872
@@ -83,3 +84,4 @@ LDS_short_term_fuel_trim_state,
 #define MC33810_STATE_BASE_ADDRESS 1972
 #define LONG_TERM_FUEL_TRIM_STATE_BASE_ADDRESS 1988
 #define SHORT_TERM_FUEL_TRIM_STATE_BASE_ADDRESS 2020
+#define VVL_CONTROLLER_STATE_BASE_ADDRESS 2036

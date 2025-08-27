@@ -1909,6 +1909,9 @@ float getConfigValueByHash(const int hash) {
 // nitrousControlEnabled
 		case -582951931:
 			return engineConfiguration->nitrousControlEnabled;
+// vvlControlEnabled
+		case -708922423:
+			return engineConfiguration->vvlControlEnabled;
 // nitrousLuaGaugeArmingValue
 		case -1760115393:
 			return engineConfiguration->nitrousLuaGaugeArmingValue;
@@ -1978,6 +1981,33 @@ float getConfigValueByHash(const int hash) {
 // wastegatePositionClosedVoltage
 		case 20003211:
 			return engineConfiguration->wastegatePositionClosedVoltage;
+// vvlController.fuelAdderPercent
+		case 666098796:
+			return engineConfiguration->vvlController.fuelAdderPercent;
+// vvlController.ignitionRetard
+		case 1427131506:
+			return engineConfiguration->vvlController.ignitionRetard;
+// vvlController.minimumTps
+		case 1664936450:
+			return engineConfiguration->vvlController.minimumTps;
+// vvlController.minimumClt
+		case 1664917806:
+			return engineConfiguration->vvlController.minimumClt;
+// vvlController.maximumMap
+		case -102001909:
+			return engineConfiguration->vvlController.maximumMap;
+// vvlController.maximumAfr
+		case -102014810:
+			return engineConfiguration->vvlController.maximumAfr;
+// vvlController.activationRpm
+		case -798441680:
+			return engineConfiguration->vvlController.activationRpm;
+// vvlController.deactivationRpm
+		case -172907815:
+			return engineConfiguration->vvlController.deactivationRpm;
+// vvlController.deactivationRpmWindow
+		case 1849727793:
+			return engineConfiguration->vvlController.deactivationRpmWindow;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5208,6 +5238,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->nitrousControlEnabled = (int)value;
 		return 1;
 	}
+		case -708922423:
+	{
+		engineConfiguration->vvlControlEnabled = (int)value;
+		return 1;
+	}
 		case -1760115393:
 	{
 		engineConfiguration->nitrousLuaGaugeArmingValue = value;
@@ -5321,6 +5356,51 @@ bool setConfigValueByName(const char *name, float value) {
 		case 20003211:
 	{
 		engineConfiguration->wastegatePositionClosedVoltage = value;
+		return 1;
+	}
+		case 666098796:
+	{
+		engineConfiguration->vvlController.fuelAdderPercent = (int)value;
+		return 1;
+	}
+		case 1427131506:
+	{
+		engineConfiguration->vvlController.ignitionRetard = value;
+		return 1;
+	}
+		case 1664936450:
+	{
+		engineConfiguration->vvlController.minimumTps = (int)value;
+		return 1;
+	}
+		case 1664917806:
+	{
+		engineConfiguration->vvlController.minimumClt = (int)value;
+		return 1;
+	}
+		case -102001909:
+	{
+		engineConfiguration->vvlController.maximumMap = (int)value;
+		return 1;
+	}
+		case -102014810:
+	{
+		engineConfiguration->vvlController.maximumAfr = (int)value;
+		return 1;
+	}
+		case -798441680:
+	{
+		engineConfiguration->vvlController.activationRpm = (int)value;
+		return 1;
+	}
+		case -172907815:
+	{
+		engineConfiguration->vvlController.deactivationRpm = (int)value;
+		return 1;
+	}
+		case 1849727793:
+	{
+		engineConfiguration->vvlController.deactivationRpmWindow = (int)value;
 		return 1;
 	}
 		case -1658957891:

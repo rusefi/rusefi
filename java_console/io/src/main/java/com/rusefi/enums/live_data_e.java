@@ -48,4 +48,5 @@ public enum live_data_e {
 	LDS_mc33810_state,
 	LDS_long_term_fuel_trim_state,
 	LDS_short_term_fuel_trim_state,
+	LDS_vvl_controller_state,
 }

@@ -1816,6 +1816,26 @@ float getOutputValueByHash(const int hash) {
 		case -1220300524:
 			return engine->module<AcController>()->acPressureTooHigh;
 #endif
+#if MODULE_VVL_CONTROLLER
+// isVvlTpsCondition
+		case 365919991:
+			return engine->module<VvlController>()->isVvlTpsCondition;
+// isVvlCltCondition
+		case -1002567773:
+			return engine->module<VvlController>()->isVvlCltCondition;
+// isVvlMapCondition
+		case -493248738:
+			return engine->module<VvlController>()->isVvlMapCondition;
+// isVvlAfrCondition
+		case 974514969:
+			return engine->module<VvlController>()->isVvlAfrCondition;
+// isVvlRpmCondition
+		case -1683399313:
+			return engine->module<VvlController>()->isVvlRpmCondition;
+// isVvlCondition
+		case 1072636768:
+			return engine->module<VvlController>()->isVvlCondition;
+#endif
 	}
 	return EFI_ERROR_CODE;
 }

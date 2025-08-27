@@ -1903,6 +1903,9 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 ### nitrousControlEnabled
 
 
+### vvlControlEnabled
+
+
 ### nitrousLuaGaugeArmingValue
 
 
@@ -1971,6 +1974,33 @@ Voltage when the wastegate is fully open
 
 ### wastegatePositionClosedVoltage
 Voltage when the wastegate is closed
+
+### vvlController.fuelAdderPercent
+
+
+### vvlController.ignitionRetard
+Retard timing to remove from actual final timing (after all corrections) due to additional air.
+
+### vvlController.minimumTps
+
+
+### vvlController.minimumClt
+
+
+### vvlController.maximumMap
+
+
+### vvlController.maximumAfr
+
+
+### vvlController.activationRpm
+
+
+### vvlController.deactivationRpm
+
+
+### vvlController.deactivationRpmWindow
+
 
 ### tcu_shiftTime
 
