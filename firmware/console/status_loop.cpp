@@ -375,7 +375,7 @@ void updateUnfilteredRawPedal();
 static void updateThrottles() {
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
 	engine->outputChannels.TPSValue = tps1.value_or(0);
-	engine->outputChannels.isTpsError = !tps1.Valid;
+	engine->outputChannels.isTpsError = Sensor::hasSensor(SensorType::Tps1) ? !tps1.Valid : false;
 	engine->outputChannels.tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
@@ -386,7 +386,7 @@ static void updateThrottles() {
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	engine->outputChannels.throttlePedalPosition = pedal.value_or(0);
 	// Only report fail if you have one (many people don't)
-	engine->outputChannels.isPedalError = !pedal.Valid;
+	engine->outputChannels.isPedalError = Sensor::hasSensor(SensorType::AcceleratorPedal) ? !pedal.Valid : false;
 
 	// TPS 1 pri/sec split
 	engine->outputChannels.tps1Split = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
