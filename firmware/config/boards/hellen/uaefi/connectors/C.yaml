@@ -12,8 +12,8 @@ pins:
     color: red
 
   - pin: C3
-    meta: MM100_IN_O2S2_ANALOG
-    class: analog_inputs
+    id: [MM100_IN_O2S2_ANALOG, MM100_IN_O2S2]
+    class: [analog_inputs, switch_inputs]
     color: yellow
     ts_name: ___ AUX2
     function: Auxiliary analog input 2
@@ -84,9 +84,9 @@ pins:
     color: blue
 
   - pin: C15
-    meta: MM100_IN_AUX3_ANALOG
+    id: [MM100_IN_AUX3_ANALOG, MM100_IN_AUX3]
     color: grey
-    class: analog_inputs
+    class: [analog_inputs, switch_inputs]
     ts_name: ___ Fuel Pressure / AUX3
     function: Fuel Pressure / Auxiliary analog input 3
 
