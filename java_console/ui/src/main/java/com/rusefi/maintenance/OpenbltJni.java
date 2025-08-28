@@ -48,7 +48,7 @@ public final class OpenbltJni {
         // Load our OpenBLT JNI lib we actually want to use
         System.loadLibrary("openblt_jni");
     }
-
+/*
     public static void flashSerial(String filename, String serialPort, OpenbltCallbacks callbacks) {
         Objects.requireNonNull(filename);
         // On non-Windows, prepend "/dev/" to the serial port name if it's missing
@@ -58,7 +58,7 @@ public final class OpenbltJni {
 
         flashSerialNative(filename, serialPort, callbacks);
     }
-
+*/
     public static void flashCan(String filename, OpenbltCallbacks callbacks) {
         flashCanNative(filename, callbacks);
     }

@@ -1,6 +1,5 @@
 package com.rusefi.test;
 
-import com.rusefi.libopenblt.XcpSettings;
 import com.rusefi.maintenance.OpenBltFlasher;
 import com.rusefi.maintenance.ConsoleOpenbltCallbacks;
 

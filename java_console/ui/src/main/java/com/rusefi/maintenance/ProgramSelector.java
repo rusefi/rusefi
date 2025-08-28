@@ -258,7 +258,7 @@ public class ProgramSelector {
 
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
 
-        return flashOpenbltSerialJni(parent, openbltPort, callbacks);
+        return flashOpenbltSerial(parent, openbltPort, callbacks);
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
@@ -290,11 +290,11 @@ public class ProgramSelector {
             "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static boolean flashOpenbltSerialJni(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
-        if (FileLog.is32bitJava()) {
-            showError32bitJava(parent);
-            return false;
-        }
+    public static boolean flashOpenbltSerial(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
+//        if (FileLog.is32bitJava()) {
+//            showError32bitJava(parent);
+//            return false;
+//        }
 
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
@@ -305,15 +305,13 @@ public class ProgramSelector {
         }
         try {
             callbacks.logLine("flashSerial " + fileName);
-            OpenbltJni.flashSerial(fileName, port, cb);
+            OpenBltFlasher.flashSerial(fileName, port, cb);
 
             callbacks.logLine("Update completed successfully!");
             return true;
         } catch (Throwable e) {
             callbacks.logLine("Error: " + e);
             return false;
-        } finally {
-            OpenbltJni.stop(cb);
         }
     }
 
