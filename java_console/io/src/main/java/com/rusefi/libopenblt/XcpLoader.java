@@ -31,10 +31,15 @@ public class XcpLoader {
 
     private static class TargetInfo {
         ByteOrder byteOrder;
+
+        // The max number of bytes in the command transmit object (master->slave).
         int maxCto;
+
+        // The max number of bytes in the data transmit object (slave->master).
         int maxDto;
 
-        // Maximum CTO during programming phase
+        // The max number of bytes in the command transmit object (master->slave)
+        // during a programming session.
         int maxProgCto;
     }
 
@@ -158,10 +163,14 @@ public class XcpLoader {
         int offset = 0;
 
         while (len > 0) {
-            int chunkSize = Math.min(mTargetInfo.maxProgCto, len);
+            final int maxChunkSize = mTargetInfo.maxProgCto - 1;
+            int chunkSize = Math.min(maxChunkSize, len);
 
-            byte[] chunk = Arrays.copyOfRange(data, offset, offset + len);
-            sendCmdProgram(chunk);
+            byte[] chunk = Arrays.copyOfRange(data, offset, offset + chunkSize);
+            if (chunkSize < maxChunkSize)
+                sendCmdProgram(chunk);
+            else
+                sendCmdProgramMax(chunk);
 
             offset += chunkSize;
             len -= chunkSize;
@@ -169,6 +178,12 @@ public class XcpLoader {
     }
 
     private void sendCmdProgram(byte[] data) throws IOException {
+
+        if (data.length > mTargetInfo.maxProgCto - 2 ||
+            mTargetInfo.maxProgCto > XCPLOADER_PACKET_SIZE_MAX) {
+            throw new IllegalStateException("CmdProgram: too much data: " + data.length);
+        }
+
         byte[] request =
             ByteBuffer.allocate(2 + data.length)
                 .put(XCPLOADER_CMD_PROGRAM)
@@ -180,6 +195,26 @@ public class XcpLoader {
 
         if (response.length != 1 || response[0] != XCPLOADER_CMD_PID_RES) {
             throw new IOException("sendCmdProgram failed");
+        }
+    }
+
+    private void sendCmdProgramMax(byte[] data) throws IOException {
+
+        if (data.length != mTargetInfo.maxProgCto - 1 ||
+            mTargetInfo.maxProgCto > XCPLOADER_PACKET_SIZE_MAX) {
+            throw new IllegalStateException("CmdProgramMax: wrong data length: " + data.length);
+        }
+
+        byte[] request =
+            ByteBuffer.allocate(1 + data.length)
+                .put(XCPLOADER_CMD_PROGRAM_MAX)
+                .put(data)
+                .array();
+
+        byte[] response = mTransport.sendPacket(request, mSettings.timeoutT5, 1);
+
+        if (response.length != 1 || response[0] != XCPLOADER_CMD_PID_RES) {
+            throw new IOException("sendCmdProgramMax failed");
         }
     }
 
