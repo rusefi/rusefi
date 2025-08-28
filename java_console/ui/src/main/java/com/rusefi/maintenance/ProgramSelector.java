@@ -37,6 +37,7 @@ public class ProgramSelector {
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
     private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
     private final ConnectivityContext connectivityContext;
+    private final static boolean USE_JAVA_SERIAL = Boolean.getBoolean("USE_JAVA_OPENBLT_SERIAL");
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
@@ -291,10 +292,10 @@ public class ProgramSelector {
     }
 
     public static boolean flashOpenbltSerial(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
-//        if (FileLog.is32bitJava()) {
-//            showError32bitJava(parent);
-//            return false;
-//        }
+        if (FileLog.is32bitJava()) {
+            showError32bitJava(parent);
+            return false;
+        }
 
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
@@ -305,13 +306,22 @@ public class ProgramSelector {
         }
         try {
             callbacks.logLine("flashSerial " + fileName);
-            OpenBltFlasher.flashSerial(fileName, port, cb);
+            if (USE_JAVA_SERIAL) {
+                OpenBltFlasher.flashSerial(fileName, port, cb);
+                callbacks.logLine("java flasher was used");
+            } else {
+                OpenbltJni.flashSerial(fileName, port, cb);
+            }
 
             callbacks.logLine("Update completed successfully!");
             return true;
         } catch (Throwable e) {
             callbacks.logLine("Error: " + e);
             return false;
+        } finally {
+            if (!USE_JAVA_SERIAL) {
+                OpenbltJni.stop(cb);
+            }
         }
     }
 
