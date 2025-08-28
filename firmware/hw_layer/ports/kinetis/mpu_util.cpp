@@ -272,6 +272,11 @@ float getMcuTemperature() {
 	return 0;
 }
 
+float getMcuVrefVoltage() {
+	// TODO: implement me!
+	return engineConfiguration->adcVcc;
+}
+
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	// TODO: implement me!
 	return true;

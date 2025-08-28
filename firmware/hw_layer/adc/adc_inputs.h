@@ -116,6 +116,7 @@ void onKnockSamplingComplete();
 
 // Slow ADC stuff
 float getMCUInternalTemperature(void);
+float getMCUVref(void);
 // wait until at least 1 slowADC sampling is complete
 void waitForSlowAdc(uint32_t lastAdcCounter = 1);
 

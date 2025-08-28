@@ -59,6 +59,11 @@ float getMcuTemperature() {
 	return 0;
 }
 
+float getMcuVrefVoltage() {
+	// TODO: implement me!
+	return engineConfiguration->adcVcc;
+}
+
 adcsample_t* fastSampleBuffer;
 
 static void adc_callback(ADCDriver *adcp) {
