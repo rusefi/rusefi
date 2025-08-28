@@ -228,7 +228,7 @@ public class XcpLoader {
 
         try {
             response = mTransport.sendPacket(request, mSettings.timeoutT6, 1);
-        } catch (IOException e) {
+        } catch (IOException | IllegalStateException e) {
             // Eat any exception, it's fine if this fails
             return;
         }
