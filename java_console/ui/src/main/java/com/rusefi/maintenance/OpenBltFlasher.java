@@ -102,7 +102,7 @@ public class OpenBltFlasher {
         mCallbacks.setPhase("Program", true);
         final ProgressUpdater pu = new ProgressUpdater();
 
-        forEachFirmwareChunk(200, (Chunk c) -> {
+        forEachFirmwareChunk(1024, (Chunk c) -> {
             mLoader.writeData(c.address, c.data);
 
             pu.processBytes(c.data.length);
