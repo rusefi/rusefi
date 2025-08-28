@@ -67,7 +67,7 @@ static void setupVbatt() {
 	// PC1, pin #1 input +12 from Main Relay. Main Relay controlled by TLE8888
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 
-	engineConfiguration->adcVcc = 3.29f;
+	engineConfiguration->adcVcc = 3.3f;
 }
 
 static void setupTle8888() {
