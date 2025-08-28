@@ -80,7 +80,7 @@ float getMcuTemperature() {
 		sum += tempSensorSamples[i];
 	}
 
-	float volts = (float)sum / (4096 * tempSensorOversample);
+	float volts = (float)sum / (ADC_MAX_VALUE * tempSensorOversample);
 	volts *= engineConfiguration->adcVcc;
 
 	volts -= 0.760f; // Subtract the reference voltage at 25 deg C
