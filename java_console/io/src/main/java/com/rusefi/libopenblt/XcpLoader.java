@@ -135,7 +135,7 @@ public class XcpLoader {
      * @param len Number of bytes to erase
      */
     public void clearMemory(int address, int len) throws IOException {
-        System.out.println("clearMemory " + address + " len " + len);
+//        System.out.println("clearMemory " + address + " len " + len);
 
         setMta(address);
 
