@@ -30,6 +30,8 @@ struct plain_get_float_s {
 };
 
 float getOutputValueByHash(const int hash);
+
+float getConfigValueByHash(const int hash);
 float getConfigValueByName(const char *name);
 /**
  * @return true if name was recognized, false otherwise

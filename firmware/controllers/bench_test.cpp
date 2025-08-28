@@ -618,9 +618,11 @@ static void processCanUserControl(const CANRxFrame& frame) {
       };
 
 static void processCanSetCalibration(const CANRxFrame& frame) {
-// todo
+// todo allow changes of scalar settings via CANbus
 }
 /**
+ * CANbus protocol to query scalar calibrations using hash keys
+ *
  * see fields_api.txt for well-known fields
  * see generated_fields_api_header.h for corresponding hashes
  */
@@ -629,7 +631,7 @@ static void processCanRequestCalibration(const CANRxFrame& frame) {
   int hash = getFourBytesLsb(frame, 2);
   efiPrintf("processCanRequestCalibration=%x", hash);
   FloatIntBytes fb;
-  fb.f = getOutputValueByHash(hash);
+  fb.f = getConfigValueByHash(hash);
 
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_GET_CALIBRATION, 8, /*bus*/0, /*isExtended*/true);
   for (size_t i = 0;i<sizeof(float);i++) {
