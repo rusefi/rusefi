@@ -1,5 +1,6 @@
 package com.rusefi.libopenblt;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.libopenblt.transport.IXcpTransport;
 
 import java.io.IOException;
@@ -7,7 +8,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class XcpLoader {
+    private static final Logging log = getLogging(XcpLoader.class);
+
     // XCP command codes as defined by the protocol currently supported by this module
     private static final byte XCPLOADER_CMD_CONNECT = (byte)0xFF;    // XCP connect command code
     private static final byte XCPLOADER_CMD_GET_STATUS = (byte)0xFD;    // XCP get status command code
@@ -228,7 +233,8 @@ public class XcpLoader {
 
         try {
             response = mTransport.sendPacket(request, mSettings.timeoutT6, 1);
-        } catch (IOException | IllegalStateException e) {
+        } catch (IOException e) {
+            log.info("sendCmdProgramReset not a problem: " + e);
             // Eat any exception, it's fine if this fails
             return;
         }

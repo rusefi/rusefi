@@ -79,20 +79,20 @@ public class XcpSerial implements IXcpTransport{
 
             int actualWritten = mPort.writeBytes(buf, buf.length);
             if (actualWritten != buf.length) {
-                throw new IllegalStateException("Cannot write to serial, expected " + buf.length + " turned out " + actualWritten);
+                throw new IOException("Cannot write to serial, expected " + buf.length + " turned out " + actualWritten);
             }
 
             byte[] responseLen = new byte[1];
             int actualRead = mPort.readBytes(responseLen, 1);
             if (actualRead != 1) {
-                throw new IllegalStateException("Cannot read response");
+                throw new IOException("Cannot read response");
             }
 
             byte[] response = new byte[responseLen[0]];
             actualRead = mPort.readBytes(response, response.length);
             if (actualRead != expectResponseBytes ||
                 responseLen[0] != expectResponseBytes) {
-                throw new IllegalStateException("Unexpected bytes read on command " + Integer.toHexString(request[0] & 0xFF) +
+                throw new IOException("Unexpected bytes read on command " + Integer.toHexString(request[0] & 0xFF) +
                     ", requested " + expectResponseBytes + " but got " + actualRead + ": " + hexlify(response));
             }
 
