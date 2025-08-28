@@ -2408,6 +2408,7 @@ end_struct
 #define ts_show_dc_hardware true
 #define ts_show_can_wbo true
 #define ts_show_vvt_output_pin true
+#define ts_show_vvl_control true
 #define ts_show_hbridge_function true
 #define ts_show_aux_sensors true
 #define ts_show_clutch_up true
