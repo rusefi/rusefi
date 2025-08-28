@@ -106,6 +106,11 @@ extern "C" void CanTransmitPacket(blt_int8u *data, blt_int8u len)
 ** \return    BLT_TRUE is a packet was received, BLT_FALSE otherwise.
 **
 ****************************************************************************************/
+
+#ifdef BOOTLOADER_CAN_LISTENER
+extern void boardCanListener(CANRxFrame *frame);
+#endif
+
 extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 {
 	constexpr blt_int32u rxMsgId = BOOT_COM_CAN_RX_MSG_ID;
@@ -120,19 +125,19 @@ extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 	constexpr bool configuredAsExt = (rxMsgId & 0x80000000) != 0;
 	if (configuredAsExt != frame.IDE) {
 		// Wrong frame type
-		return BLT_FALSE;
+		goto wrong;
 	}
 
 	// Check that the frame's ID matches
 	if (frame.IDE) {
 		if (frame.EID != (rxMsgId & ~0x80000000)) {
 			// Wrong ID
-			return BLT_FALSE;
+			goto wrong;
 		}
 	} else {
 		if (frame.SID != rxMsgId) {
 			// Wrong ID
-			return BLT_FALSE;
+			goto wrong;
 		}
 	}
 
@@ -141,4 +146,12 @@ extern "C" blt_bool CanReceivePacket(blt_int8u *data, blt_int8u *len)
 	memcpy(data, frame.data8, frame.DLC);
 
 	return BLT_TRUE;
+
+wrong:
+
+#ifdef BOOTLOADER_CAN_LISTENER
+	boardCanListener(&frame);
+#endif
+
+	return BLT_FALSE;
 }
