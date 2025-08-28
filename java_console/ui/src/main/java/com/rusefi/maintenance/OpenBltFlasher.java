@@ -34,6 +34,11 @@ public class OpenBltFlasher {
         return new OpenBltFlasher(transport, settings, callbacks);
     }
 
+    public static void flashSerial(String fileName, String port, OpenbltJni.OpenbltCallbacks callbacks) throws IOException {
+        OpenBltFlasher f = OpenBltFlasher.makeSerial(port, new XcpSettings(), callbacks);
+        f.flash(fileName);
+    }
+
     public void flash(String filename) throws IOException {
         loadFile(filename);
 
