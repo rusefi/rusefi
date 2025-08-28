@@ -111,39 +111,9 @@ blt_bool CpuUserProgramStartHook(void)
 ****************************************************************************************/
 
 #if (BOOT_COP_HOOKS_ENABLE > 0)
-/************************************************************************************//**
-** \brief     Callback that gets called at the end of the internal COP driver
-**            initialization routine. It can be used to configure and enable the
-**            watchdog.
-** \return    none.
-**
-****************************************************************************************/
-void CopInitHook(void)
-{
-  /* this function is called upon initialization. might as well use it to initialize
-   * the LED driver. It is kind of a visual watchdog anyways.
-   */
-  LedBlinkInit(100);
-} /*** end of CopInitHook ***/
 
+// CopInitHook() and CopServiceHook() are defined in bootloader_main.cpp */
 
-/************************************************************************************//**
-** \brief     Callback that gets called at the end of the internal COP driver
-**            service routine. This gets called upon initialization and during
-**            potential long lasting loops and routine. It can be used to service
-**            the watchdog to prevent a watchdog reset.
-** \return    none.
-**
-****************************************************************************************/
-void CopServiceHook(void)
-{
-  /* run the LED blink task. this is a better place to do it than in the main() program
-   * loop. certain operations such as flash erase can take a long time, which would cause
-   * a blink interval to be skipped. this function is also called during such operations,
-   * so no blink intervals will be skipped when calling the LED blink task here.
-   */
-  LedBlinkTask();
-} /*** end of CopServiceHook ***/
 #endif /* BOOT_COP_HOOKS_ENABLE > 0 */
 
 
