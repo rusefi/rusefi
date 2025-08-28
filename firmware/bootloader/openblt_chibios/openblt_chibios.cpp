@@ -5,7 +5,7 @@ extern "C" {
 	#include "flash.h"
 }
 
-void CopInit() { }
+void CpuInit() { }
 
 void TimerInit() { }
 void TimerReset() { }

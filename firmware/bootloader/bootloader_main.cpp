@@ -23,18 +23,23 @@ static blt_bool wdReset;
 static const uint8_t maxWdRebootCounter = 10;
 
 #if (BOOT_COP_HOOKS_ENABLE > 0)
+extern "C" {
+	void CopInitHook(void);
+	void CopServiceHook(void);
+}
+
 // Functions for controlling the watchdog
-void CpuInit(void) {
+void CopInitHook(void) {
 	// Nothing to do...
 }
 
-void CopService(void) {
+void CopServiceHook(void) {
 	// We need to reset WDT here
 #if HAL_USE_WDG
 	wdgResetI(&WDGD1);
-#endif
+#endif // HAL_USE_WDG
 }
-#endif
+#endif // BOOT_COP_HOOKS_ENABLE
 
 class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
 protected:

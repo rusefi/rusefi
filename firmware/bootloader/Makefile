@@ -205,6 +205,7 @@ CSRC =  $(ALLCSRC) \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/boot.c \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/com.c \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/xcp.c \
+	$(PROJECT_DIR)/ext/openblt/Target/Source/cop.c \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/nvm.c \
 	$(PROJECT_DIR)/hw_layer/openblt/hooks.c \
 
