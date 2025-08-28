@@ -41,6 +41,11 @@ void CopServiceHook(void) {
 }
 #endif // BOOT_COP_HOOKS_ENABLE
 
+PUBLIC_API_WEAK bool OpenBltIsBoardOk()
+{
+	return true;
+}
+
 class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
 protected:
 	void main(void) override {
@@ -106,7 +111,7 @@ protected:
 			if (yellowPort) {
 				palTogglePad(yellowPort, yellowPin);
 			}
-			if (bluePort) {
+			if (bluePort && OpenBltIsBoardOk()) {
 				palTogglePad(bluePort, bluePin);
 			}
 			if (greenPort) {
