@@ -37,11 +37,36 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 	return 0;
 }
 
+static ObdCode analogGetVrefDiagnostic()
+{
+	float vref = getMCUVref();
+
+	// TODO: +/-10% is way too big?
+	if (vref > engineConfiguration->adcVcc * 1.1) {
+		return ObdCode::OBD_Sensor_Refence_Voltate_A_High;
+	}
+
+	if (vref < engineConfiguration->adcVcc * 0.9) {
+		return ObdCode::OBD_Sensor_Refence_Voltate_A_Low;
+	}
+
+	return ObdCode::None;
+}
+
 /* Get analog part diagnostic */
-int analogGetDiagnostic()
+ObdCode analogGetDiagnostic()
 {
 	/* TODO: debounce? */
-	return boardGetAnalogDiagnostic();
+	auto code = analogGetVrefDiagnostic();
+	if (code != ObdCode::None) {
+		return code;
+	}
+
+	if (boardGetAnalogDiagnostic() < 0) {
+		return ObdCode::OBD_Sensor_Refence_Voltate_A_Open;
+	}
+
+	return ObdCode::None;
 }
 
 #if HAL_USE_ADC
