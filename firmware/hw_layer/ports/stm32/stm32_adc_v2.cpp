@@ -240,7 +240,7 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 		size_t index = i;
 		for (size_t j = 0; j < SLOW_ADC_OVERSAMPLE; j++) {
 			sum += b[index];
-			index += 16;
+			index += adcChannelCount;
 		}
 
 		adcsample_t value = static_cast<adcsample_t>(sum / SLOW_ADC_OVERSAMPLE);
