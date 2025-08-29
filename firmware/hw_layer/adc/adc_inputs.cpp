@@ -20,8 +20,8 @@ float PUBLIC_API_WEAK boardAdjustVoltage(float voltage, adc_channel_e /* hwChann
 /* overall analog health state
  * return negative in case of any problems
  * return 0 if everything is ok or no diagnostic is available */
-int PUBLIC_API_WEAK boardGetAnalogDiagnostic() {
-	return 0;
+ObdCode PUBLIC_API_WEAK boardGetAnalogDiagnostic() {
+	return ObdCode::None;
 }
 
 /* simple implementation if board does not provide advanced diagnostic */
@@ -29,7 +29,7 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 #if EFI_PROD_CODE
 	/* for on-chip ADC inputs we check common analog health */
 	if (isAdcChannelOnChip(channel)) {
-		return boardGetAnalogDiagnostic();
+		return (boardGetAnalogDiagnostic() == ObdCode::None) ? 0 : -1;
 	}
 #endif // EFI_PROD_CODE
 
@@ -37,10 +37,33 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 	return 0;
 }
 
+static ObdCode analogGetVrefDiagnostic()
+{
+#if HAL_USE_ADC
+	float vref = getMCUVref();
+
+	// TODO: +/-10% is way too big?
+	if (vref > engineConfiguration->adcVcc * 1.1) {
+		return ObdCode::OBD_Sensor_Refence_Voltate_A_High;
+	}
+
+	if (vref < engineConfiguration->adcVcc * 0.9) {
+		return ObdCode::OBD_Sensor_Refence_Voltate_A_Low;
+	}
+#endif
+
+	return ObdCode::None;
+}
+
 /* Get analog part diagnostic */
-int analogGetDiagnostic()
+ObdCode analogGetDiagnostic()
 {
 	/* TODO: debounce? */
+	auto code = analogGetVrefDiagnostic();
+	if (code != ObdCode::None) {
+		return code;
+	}
+
 	return boardGetAnalogDiagnostic();
 }
 

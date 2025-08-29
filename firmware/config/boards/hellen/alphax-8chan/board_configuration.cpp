@@ -282,7 +282,7 @@ int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {
 		case MM176_IN_AUX3_ANALOG:
 		case MM176_IN_AUX4_ANALOG:
 			/* TODO: more? */
-			return boardGetAnalogDiagnostic();
+			return (boardGetAnalogDiagnostic() == ObdCode::None) ? 0 : -1;
 		/* all other inputs should not rely on output 5V */
 		default:
 			return 0;

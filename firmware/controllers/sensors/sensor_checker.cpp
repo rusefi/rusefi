@@ -250,9 +250,10 @@ void SensorChecker::onSlowCallback() {
 #endif // BOARD_EXT_GPIOCHIPS > 0
 
 	// Check ADC(s) and analog inputs
-	if (analogGetDiagnostic() < 0) {
+	auto code = analogGetDiagnostic();
+	if (code != ObdCode::None) {
 		/* TODO: map to more OBD codes? */
-		warning(ObdCode::OBD_Sensor_Refence_Voltate_A_Open, "Analog subsystem fault");
+		warning(code, "Analog subsystem fault");
 		state->isAnalogFailure = true;
 	} else {
 		state->isAnalogFailure = false;

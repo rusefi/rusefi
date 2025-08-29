@@ -223,18 +223,18 @@ void detectHellenBoardType() {
 #endif /* EFI_BOOTLOADER */
 }
 
-int boardGetAnalogDiagnostic()
+ObdCode boardGetAnalogDiagnostic()
 {
 #ifdef DIAG_5VP_PIN
 	/* paranoid check */
 	if (!isBrainPinValid(DIAG_5VP_PIN)) {
 		/* Pin is not defined - return success */
-		return 0;
+		return ObdCode::None;
 	}
 
-	return efiReadPin(DIAG_5VP_PIN) ? 0 : -1;
+	return efiReadPin(DIAG_5VP_PIN) ? ObdCode::None : ObdCode::OBD_ECM_VSS_OUTPUT_A_MALFUNCTION;
 #else
-	return 0;
+	return ObdCode::None;
 #endif
 }
 
