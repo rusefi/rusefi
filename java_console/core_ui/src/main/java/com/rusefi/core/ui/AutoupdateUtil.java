@@ -175,6 +175,7 @@ public class AutoupdateUtil {
         for(StackTraceElement element : e.getStackTrace())
             trace.append(element.toString()).append("\n");
         SwingUtilities.invokeLater(() -> {
+            // todo: reuse ErrorMessageHelper?
             Window w = getSelectedWindow(Window.getWindows());
             JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
         });
