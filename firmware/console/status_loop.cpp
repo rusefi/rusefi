@@ -551,6 +551,7 @@ static void updateMiscSensors() {
 
 #if	HAL_USE_ADC
 	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();
+	engine->outputChannels.internalVref = getMCUVref();
 #endif /* HAL_USE_ADC */
 }
 
