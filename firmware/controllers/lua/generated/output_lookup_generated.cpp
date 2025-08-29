@@ -115,6 +115,9 @@ float getOutputValueByHash(const int hash) {
 // internalMcuTemperature
 		case -871891659:
 			return engine->outputChannels.internalMcuTemperature;
+// internalVref
+		case -1221814987:
+			return engine->outputChannels.internalVref;
 // coolant
 		case -746111499:
 			return engine->outputChannels.coolant;
