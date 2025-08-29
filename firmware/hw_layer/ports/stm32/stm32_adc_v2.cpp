@@ -16,6 +16,7 @@
 
 /* HW channels count per ADC */
 constexpr size_t adcChannelCount = 16;
+constexpr size_t adcAuxChannelCount = 2;
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define SLOW_ADC_OVERSAMPLE      8
@@ -37,9 +38,9 @@ static void slowAdcErrorCB(ADCDriver *, adcerror_t);
 /*
  * ADC conversion group.
  */
-static const ADCConversionGroup tempSensorConvGroup = {
+static const ADCConversionGroup auxConvGroup = {
 	.circular			= FALSE,
-	.num_channels		= 1,
+	.num_channels		= adcAuxChannelCount,
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
 	.end_cb				= slowAdcEndCB,
 #else
@@ -51,36 +52,39 @@ static const ADCConversionGroup tempSensorConvGroup = {
 	.cr2				= ADC_CR2_SWSTART,
 	// sample times for channels 10...18
 	.smpr1 =
-		ADC_SMPR1_SMP_VBAT(ADC_SAMPLE_144)    |	/* input18 - temperature and vbat input on some STM32F7xx */
-		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144),	/* input16 - temperature sensor input on STM32F4xx */
+		ADC_SMPR1_SMP_VBAT(ADC_SAMPLE_144) |	/* input18 - temperature and vbat input on some STM32F7xx */
+		ADC_SMPR1_SMP_SENSOR(ADC_SAMPLE_144) |	/* input16 - temperature sensor input on STM32F4xx */
+		ADC_SMPR1_SMP_VREF(ADC_SAMPLE_144),		/* input17 - Vrefint input */
 	.smpr2 = 0,
 	.htr = 0, .ltr = 0,
 	.sqr1 = 0,
 	.sqr2 = 0,
+	.sqr3 =
 #if defined(STM32F4XX)
-	.sqr3 = ADC_SQR3_SQ1_N(16),
+		ADC_SQR3_SQ1_N(16) |
 #endif
 #if defined(STM32F7XX)
-	.sqr3 = ADC_SQR3_SQ1_N(18),
+		ADC_SQR3_SQ1_N(18) |
 #endif
+		ADC_SQR3_SQ2_N(17),
 };
 
 // 4x oversample is plenty
-static constexpr int tempSensorOversample = 4;
-static volatile NO_CACHE adcsample_t tempSensorSamples[tempSensorOversample];
+static constexpr int auxSensorOversample = 4;
+static volatile NO_CACHE adcsample_t auxSensorSamples[adcAuxChannelCount * auxSensorOversample];
 
 float getMcuTemperature() {
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 	// Temperature sensor is only physically wired to ADC1
-	adcConvert(&ADCD1, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
+	adcConvert(&ADCD1, &auxConvGroup, (adcsample_t *)auxSensorSamples, auxSensorOversample);
 #endif
 
 	uint32_t sum = 0;
-	for (size_t i = 0; i < tempSensorOversample; i++) {
-		sum += tempSensorSamples[i];
+	for (size_t i = 0; i < auxSensorOversample; i++) {
+		sum += auxSensorSamples[0 + adcAuxChannelCount * i];
 	}
 
-	float volts = (float)sum / (4096 * tempSensorOversample);
+	float volts = (float)sum / (ADC_MAX_VALUE * auxSensorOversample);
 	volts *= engineConfiguration->adcVcc;
 
 	volts -= 0.760f; // Subtract the reference voltage at 25 deg C
@@ -89,6 +93,21 @@ float getMcuTemperature() {
 	degrees += 25.0; // Add the 25 deg C
 
 	return degrees;
+}
+
+float getMcuVrefVoltage() {
+	uint32_t sum = 0;
+	for (size_t i = 0; i < auxSensorOversample; i++) {
+		sum += auxSensorSamples[1 + adcAuxChannelCount * i];
+	}
+
+	// TODO: apply calibration value from OTP (if exists)
+	// vrefint should be 1.21V
+	// Let's calculate external Vref+
+	// sum / (ADC_MAX_VALUE * auxSensorOversample) * Vref+ = 1.21;
+	float Vref = 1.21f * auxSensorOversample * ADC_MAX_VALUE / sum;
+
+	return Vref;
 }
 
 // See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
@@ -167,7 +186,7 @@ typedef enum {
 #ifdef ADC_MUX_PIN
 	convertMuxed,
 #endif
-	convertTemperature
+	convertAux,
 } slowAdcState_t;
 
 static slowAdcState_t slowAdcGetNextState(slowAdcState_t state)
@@ -177,15 +196,15 @@ static slowAdcState_t slowAdcGetNextState(slowAdcState_t state)
 		#ifdef ADC_MUX_PIN
 		return convertMuxed;
 		#else
-		return convertTemperature;
+		return convertAux;
 		#endif
 	break;
 #ifdef ADC_MUX_PIN
 	case convertMuxed:
-		return convertTemperature;
+		return convertAux;
 	break;
 #endif
-	case convertTemperature:
+	case convertAux:
 		return convertPrimary;
 	break;
 	}
@@ -215,8 +234,8 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 			adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
 			break;
 		#endif
-		case convertTemperature:
-			adcStartConversionI(adcp, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
+		case convertAux:
+			adcStartConversionI(adcp, &auxConvGroup, (adcsample_t *)auxSensorSamples, auxSensorOversample);
 			break;
 		}
 		chSysUnlockFromISR();
@@ -240,7 +259,7 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 		size_t index = i;
 		for (size_t j = 0; j < SLOW_ADC_OVERSAMPLE; j++) {
 			sum += b[index];
-			index += 16;
+			index += adcChannelCount;
 		}
 
 		adcsample_t value = static_cast<adcsample_t>(sum / SLOW_ADC_OVERSAMPLE);

@@ -27,6 +27,7 @@ static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 static uint32_t slowAdcConversionCount = 0;
 
 static float mcuTemperature;
+static float mcuVrefVoltage;
 
 void adcOnchipSlowUpdate(efitick_t nowNt) {
 	{
@@ -50,6 +51,8 @@ void adcOnchipSlowUpdate(efitick_t nowNt) {
 			 */
 			//criticalError("Invalid CPU temperature measured %f", degrees);
 		}
+
+		mcuVrefVoltage = getMcuVrefVoltage();
 	}
 }
 
@@ -74,6 +77,10 @@ void adcOnchipSlowShowReport()
 
 float getMCUInternalTemperature() {
 	return mcuTemperature;
+}
+
+float getMCUVref() {
+	return mcuVrefVoltage;
 }
 
 /* TODO: kill this */
