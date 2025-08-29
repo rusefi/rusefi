@@ -39,6 +39,7 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 
 static ObdCode analogGetVrefDiagnostic()
 {
+#if HAL_USE_ADC
 	float vref = getMCUVref();
 
 	// TODO: +/-10% is way too big?
@@ -49,6 +50,7 @@ static ObdCode analogGetVrefDiagnostic()
 	if (vref < engineConfiguration->adcVcc * 0.9) {
 		return ObdCode::OBD_Sensor_Refence_Voltate_A_Low;
 	}
+#endif
 
 	return ObdCode::None;
 }
