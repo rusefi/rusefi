@@ -201,7 +201,7 @@ static slowAdcState_t slowAdcGetNextState(slowAdcState_t state)
 	break;
 #ifdef ADC_MUX_PIN
 	case convertMuxed:
-		return convertTemperature;
+		return convertAux;
 	break;
 #endif
 	case convertAux:
