@@ -654,7 +654,7 @@ enum class ObdCode : uint16_t {
 	//P0605 Internal Control Module Read Only Memory (ROM) Error
 	OBD_PCM_Processor_Fault = 606,
 	//P0607 Control Module Performance
-	//P0608 Control Module VSS Output "A" Malfunction
+	OBD_ECM_VSS_OUTPUT_A_MALFUNCTION = 608,
 	//P0609 Control Module VSS Output "B" Malfunction
 	//P0610 Control Module Vehicle Options Error
 	//P0611 Fuel Injector Control Module Performance

@@ -31,7 +31,7 @@ void setHellenVbatt();
 int detectHellenBoardId();
 void detectHellenBoardType();
 
-int boardGetAnalogDiagnostic();
+ObdCode boardGetAnalogDiagnostic();
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-function"

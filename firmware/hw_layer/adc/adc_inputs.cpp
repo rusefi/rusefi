@@ -20,8 +20,8 @@ float PUBLIC_API_WEAK boardAdjustVoltage(float voltage, adc_channel_e /* hwChann
 /* overall analog health state
  * return negative in case of any problems
  * return 0 if everything is ok or no diagnostic is available */
-int PUBLIC_API_WEAK boardGetAnalogDiagnostic() {
-	return 0;
+ObdCode PUBLIC_API_WEAK boardGetAnalogDiagnostic() {
+	return ObdCode::None;
 }
 
 /* simple implementation if board does not provide advanced diagnostic */
@@ -29,7 +29,7 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 #if EFI_PROD_CODE
 	/* for on-chip ADC inputs we check common analog health */
 	if (isAdcChannelOnChip(channel)) {
-		return boardGetAnalogDiagnostic();
+		return (boardGetAnalogDiagnostic() == ObdCode::None) ? 0 : -1;
 	}
 #endif // EFI_PROD_CODE
 
@@ -62,11 +62,7 @@ ObdCode analogGetDiagnostic()
 		return code;
 	}
 
-	if (boardGetAnalogDiagnostic() < 0) {
-		return ObdCode::OBD_Sensor_Refence_Voltate_A_Open;
-	}
-
-	return ObdCode::None;
+	return boardGetAnalogDiagnostic();
 }
 
 #if HAL_USE_ADC
