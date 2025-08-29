@@ -53,7 +53,6 @@ public class CalibrationsHelper {
     }
 
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
-        final JComponent parent,
         final String ecuPort,
         final UpdateOperationCallbacks callbacks,
         final Supplier<Boolean> updateFirmware, ConnectivityContext connectivityContext

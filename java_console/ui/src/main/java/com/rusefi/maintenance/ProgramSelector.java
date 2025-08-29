@@ -215,7 +215,6 @@ public class ProgramSelector {
         UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         return updateFirmwareAndRestorePreviousCalibrations(
-            parent,
             ecuPort.port,
             callbacks,
             () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext

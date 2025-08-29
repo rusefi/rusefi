@@ -46,7 +46,6 @@ public class DfuFlasher {
         final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         return CalibrationsHelper.updateFirmwareAndRestorePreviousCalibrations(
-            parent,
             port,
             callbacks,
             () -> dfuUpdateFirmware(parent, port, callbacks), connectivityContext
