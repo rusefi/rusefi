@@ -211,6 +211,10 @@
 #define GAUGE_LONG_NAME_IAT "Intake air temp"
 #define UNITS_CELSIUS "C"
 #define UNITS_FAHRENHEIT "F"
+#define UNITS_KPA "kPa"
+#define UNITS_PSI "psi"
+#define UNITS_KMH "kmh"
+#define UNITS_MPH "mph"
 
 #define GAUGE_PRECISION_TEMPERATURE_C 1,1
 #define GAUGE_PRECISION_TEMPERATURE_F 1,2
