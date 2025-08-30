@@ -239,10 +239,12 @@ public class IniFileModelImpl implements IniFileModel {
 
             String first = list.getFirst();
 
-            if (first.equalsIgnoreCase("signature")) {
+            if (first.equalsIgnoreCase("signature")
+                && signature == null /*we have signature twice on top of file, but we can also have field called 'signature' so we better use first occurrence */
+            ) {
                 signature = list.get(1);
             } else if (first.equalsIgnoreCase("blockingFactor")) {
-                blockingFactor = Integer.valueOf(list.get(1));
+                blockingFactor = Integer.parseInt(list.get(1));
             }
 
 
