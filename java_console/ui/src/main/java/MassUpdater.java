@@ -52,6 +52,10 @@ public class MassUpdater {
                         }
 
                         @Override
+                        public void warning() {
+                        }
+
+                        @Override
                         public void clear() {}
                     };
                     SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(

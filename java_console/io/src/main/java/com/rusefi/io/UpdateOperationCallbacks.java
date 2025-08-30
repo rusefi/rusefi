@@ -14,6 +14,7 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
     }
 
     void done();
+    void warning();
     void error();
 
     void clear();
@@ -32,7 +33,17 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
         }
 
         @Override
+        public void warning() {
+
+        }
+
+        @Override
         public void clear() {
+        }
+
+        @Override
+        public String toString() {
+            return "DUMMY";
         }
     };
 
@@ -48,8 +59,54 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
         }
 
         @Override
+        public void warning() {
+            log.info("[warning]");
+        }
+
+        @Override
         public void error() {
             log.info("[error]");
+        }
+
+        @Override
+        public void clear() {
+        }
+
+        @Override
+        public String toString() {
+            return "LOGGER";
+        }
+    };
+
+    UpdateOperationCallbacks CONSOLE = new UpdateOperationCallbacks() {
+        @Override
+        public void log(final String message, final boolean breakLineOnTextArea, boolean sendToLogger) {
+            if (breakLineOnTextArea) {
+                System.out.println(message);
+            } else {
+                System.out.print(message);
+            }
+            if (sendToLogger) {
+                LOGGER.log(message, breakLineOnTextArea, true);
+            }
+        }
+
+        @Override
+        public void done() {
+            log.info("[DONE]");
+            LOGGER.done();
+        }
+
+        @Override
+        public void warning() {
+            log.info("[warning]");
+            LOGGER.warning();
+        }
+
+        @Override
+        public void error() {
+            log.info("[error]");
+            LOGGER.error();
         }
 
         @Override
