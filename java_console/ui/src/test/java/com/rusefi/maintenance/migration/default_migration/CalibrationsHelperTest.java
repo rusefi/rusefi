@@ -27,7 +27,8 @@ public class CalibrationsHelperTest {
     public void setUp() throws JAXBException, FileNotFoundException {
         testContext = DefaultTestTuneMigrationContext.load();
         final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
-            testContext.getPrevCalibrationsInfo(),
+            testContext.getPrevIniFile(),
+            testContext.getPrevTune(),
             testContext.getUpdatedCalibrationsInfo(),
             testContext.getCallbacks()
         );

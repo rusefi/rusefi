@@ -85,7 +85,8 @@ public class CalibrationsHelper {
             return false;
         }
         final Optional<CalibrationsInfo> mergedCalibrations = mergeCalibrations(
-            prevCalibrations.get(),
+            prevCalibrations.get().getIniFile(),
+            prevCalibrations.get().generateMsq(),
             updatedCalibrations.get(),
             callbacks
         );
@@ -280,13 +281,12 @@ public class CalibrationsHelper {
     }
 
     public static Optional<CalibrationsInfo> mergeCalibrations(
-        final CalibrationsInfo prevCalibrations,
+        final IniFileModel prevIniFile,
+        final Msq prevMsq,
         final CalibrationsInfo newCalibrations,
         final UpdateOperationCallbacks callbacks
     ) {
         Optional<CalibrationsInfo> result = Optional.empty();
-        final IniFileModel prevIniFile = prevCalibrations.getIniFile();
-        final Msq prevMsq = prevCalibrations.generateMsq();
         final IniFileModel newIniFile = newCalibrations.getIniFile();
         final Msq newMsq = newCalibrations.generateMsq();
 
