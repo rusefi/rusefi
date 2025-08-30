@@ -3,9 +3,9 @@ package com.rusefi.ui.basic;
 import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.core.FindFileHelper;
-import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.LogoHelper;
@@ -52,6 +52,7 @@ public class BasicUpdaterPanel {
     private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
     private volatile Optional<PortResult> ecuPortToUse = Optional.empty();
+    private String latestReportedHash;
 
     BasicUpdaterPanel(
         ConnectivityContext connectivityContext,
@@ -256,7 +257,17 @@ never used?
         SwingUtilities.invokeLater(() -> {
             refreshButtons();
             if (port.getFirmwareHash().isPresent()) {
-                updateOperationCallbacks.logLine("Detected " + port.getFirmwareHash().get());
+                String hash = port.getFirmwareHash().get();
+                if (hash.equals(latestReportedHash)) {
+                    // we do not want to print same every second
+                    return;
+                }
+                latestReportedHash = hash;
+                updateOperationCallbacks.logLine("Detected " + hash);
+                CalibrationsInfo calibrations = port.getCalibrations();
+                if (calibrations != null) {
+                    updateOperationCallbacks.logLine(calibrations.getIniFile().getSignature());
+                }
             }
         });
     }
