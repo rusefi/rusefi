@@ -59,12 +59,12 @@ public class CalibrationsHelper {
     ) {
         AutoupdateUtil.assertNotAwtThread();
 
-        final String timestampFoleNameComponent = DATE_FORMAT.format(new Date());
+        final String timestampFileNameComponent = DATE_FORMAT.format(new Date());
 
         final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
             ecuPort,
             callbacks,
-            getFileNameWithoutExtension(timestampFoleNameComponent, PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
+            getFileNameWithoutExtension(timestampFileNameComponent, PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
         );
         if (!prevCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up current calibrations...");
@@ -78,7 +78,7 @@ public class CalibrationsHelper {
         final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
             ecuPort,
             callbacks,
-            getFileNameWithoutExtension(timestampFoleNameComponent, UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
+            getFileNameWithoutExtension(timestampFileNameComponent, UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
         );
         if (!updatedCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up updated calibrations...");
@@ -92,7 +92,7 @@ public class CalibrationsHelper {
         if (mergedCalibrations.isPresent() && MigrateSettingsCheckboxState.isMigrationNeeded) {
             if (!backUpCalibrationsInfo(
                 mergedCalibrations.get(),
-                getFileNameWithoutExtension(timestampFoleNameComponent, MERGED_CALIBRATIONS_FILE_NAME_COMPONENT),
+                getFileNameWithoutExtension(timestampFileNameComponent, MERGED_CALIBRATIONS_FILE_NAME_COMPONENT),
                 callbacks
             )) {
                 callbacks.logLine("Failed to back up merged calibrations...");
