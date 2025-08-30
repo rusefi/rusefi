@@ -16,6 +16,11 @@ public class TestCallbacks implements UpdateOperationCallbacks {
     public void done() {}
 
     @Override
+    public void warning() {
+
+    }
+
+    @Override
     public void error() {}
 
     @Override
