@@ -12,6 +12,7 @@ import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
 public class TestTuneMigrationContext extends TuneMigrationContext {
     public static TestTuneMigrationContext load(final String testDataFolder) throws JAXBException {
@@ -51,6 +52,7 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
     }
 
     private static CalibrationsInfo getCalibrationsInfo(final Msq msq, final IniFileModel ini) {
+        Objects.requireNonNull(ini);
         final ConfigurationImage image = msq.asImage(ini);
         final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(
             image.getSize(),
