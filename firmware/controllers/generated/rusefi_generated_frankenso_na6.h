@@ -1514,7 +1514,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2774425144
+#define SIGNATURE_HASH 825271094
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2068,7 +2068,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.08.30.frankenso_na6.2774425144"
+#define TS_SIGNATURE "rusEFI master.2025.08.31.frankenso_na6.825271094"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
@@ -2109,6 +2109,10 @@
 #define UiMode_TUNING 2
 #define UNITS_CELSIUS "C"
 #define UNITS_FAHRENHEIT "F"
+#define UNITS_KMH "kmh"
+#define UNITS_KPA "kPa"
+#define UNITS_MPH "mph"
+#define UNITS_PSI "psi"
 #define VBAT_INJECTOR_CURVE_PRESSURE_SIZE 2
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define VE_BLEND1_TABLE_NAME "VE blend 1"
