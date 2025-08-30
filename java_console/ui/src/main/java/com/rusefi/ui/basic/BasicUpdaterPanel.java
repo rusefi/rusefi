@@ -277,6 +277,7 @@ never used?
                 CalibrationsInfo calibrations = port.getCalibrations();
                 if (calibrations != null) {
                     updateOperationCallbacks.logLine(calibrations.getIniFile().getSignature());
+                    Usability.INSTANCE.onCalibrations(updateOperationCallbacks, calibrations);
                 }
             }
         });
