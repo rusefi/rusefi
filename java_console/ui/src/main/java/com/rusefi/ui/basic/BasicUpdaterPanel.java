@@ -42,6 +42,10 @@ public class BasicUpdaterPanel {
     private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings");
 
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
+    private final JButton importTuneButton = new JButton(
+        "Import Tune",
+        AutoupdateUtil.loadIcon("writeconfig48.png")
+    );
     private final JButton updateCalibrationsButton = new JButton(
         "Update Calibrations",
         AutoupdateUtil.loadIcon("writeconfig48.png")
@@ -52,6 +56,7 @@ public class BasicUpdaterPanel {
     private final ConnectivityContext connectivityContext;
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateOperationCallbacks updateOperationCallbacks;
+    private final ImportTune importTune;
     private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
     private volatile Optional<PortResult> ecuPortToUse = Optional.empty();
@@ -67,6 +72,7 @@ public class BasicUpdaterPanel {
             () -> SwingUtilities.invokeLater(this::refreshButtons)
         );
         this.updateOperationCallbacks = updateOperationCallbacks;
+        importTune = new ImportTune(singleAsyncJobExecutor);
         updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
         if (isWindows()) {
@@ -88,6 +94,10 @@ public class BasicUpdaterPanel {
             statusMessage.setForeground(Color.red);
             content.add(statusMessage);
             content.add(updateFirmwareButton);
+
+            importTuneButton.addActionListener(this::onImportTuneButtonClicked);
+            importTuneButton.setEnabled(false);
+            content.add(importTuneButton);
         } else {
             content.add(new JLabel("Sorry only works on Windows"));
         }
@@ -286,6 +296,7 @@ never used?
     private void resetEcuPortToUse() {
         ecuPortToUse = Optional.empty();
         SwingUtilities.invokeLater(() -> {
+            importTuneButton.setEnabled(false);
             updateCalibrationsButton.setEnabled(false);
             if (logoLabelPopupMenu != null) {
                 logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
@@ -300,6 +311,23 @@ never used?
                 singleAsyncJobExecutor.startJob(value, updateFirmwareButton);
             },
             () -> log.error("Update firmware job is is not defined.")
+        );
+        refreshButtons();
+    }
+
+    private void onImportTuneButtonClicked(final ActionEvent actionEvent) {
+        disableButtons();
+        CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
+            port -> {
+                importTune.importTuneAction(port, updateCalibrationsButton, connectivityContext);
+            }, () -> {
+                JOptionPane.showMessageDialog(
+                    importTuneButton,
+                    "Device is not connected",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
         );
         refreshButtons();
     }
@@ -325,6 +353,7 @@ never used?
         updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
         final Optional<PortResult> ecuPort = ecuPortToUse;
         final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
+        importTuneButton.setEnabled(isEcuPortJobPossible);
         updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
         if (logoLabelPopupMenu != null) {
             logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
@@ -345,6 +374,7 @@ never used?
 
     private void disableButtons() {
         updateFirmwareButton.setEnabled(false);
+        importTuneButton.setEnabled(false);
         updateCalibrationsButton.setEnabled(false);
         if (logoLabelPopupMenu != null) {
             logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);

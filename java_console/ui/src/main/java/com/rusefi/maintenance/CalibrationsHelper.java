@@ -38,7 +38,7 @@ public class CalibrationsHelper {
     private static final String UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT = "updated_calibrations";
     private static final String MERGED_CALIBRATIONS_FILE_NAME_COMPONENT = "merged_calibrations";
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd-hh.mm.ss");
+    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd-hh.mm.ss");
 
     public static void main(final String[] args) {
         if (args.length != 2) {
@@ -109,7 +109,60 @@ public class CalibrationsHelper {
         }
     }
 
-    private static String getFileNameWithoutExtension(
+    public static boolean importTune(
+        final String ecuPort,
+        final Msq msqToImport,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
+        AutoupdateUtil.assertNotAwtThread();
+
+        final String signature = msqToImport.versionInfo.getSignature();
+        final IniFileModel iniFileToImport = iniFileProvider.provide(signature);
+        if (iniFileToImport == null) {
+            callbacks.logLine(String.format("We failed to get .ini file for signature `%s`", signature));
+            return false;
+        }
+
+        final String timestampFileNameComponent = DATE_FORMAT.format(new Date());
+
+        final Optional<CalibrationsInfo> prevTune = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+            ecuPort,
+            callbacks,
+            getFileNameWithoutExtension(timestampFileNameComponent, "prev_tune"), connectivityContext
+        );
+        if (!prevTune.isPresent()) {
+            callbacks.logLine("Failed to back up current tune...");
+            return false;
+        }
+
+        final Optional<CalibrationsInfo> mergedTune = mergeCalibrations(
+            iniFileToImport,
+            msqToImport,
+            prevTune.get(),
+            callbacks
+        );
+        if (mergedTune.isPresent()) {
+            if (!backUpCalibrationsInfo(
+                mergedTune.get(),
+                getFileNameWithoutExtension(timestampFileNameComponent, "merged_tune"),
+                callbacks
+            )) {
+                callbacks.logLine("Failed to back up merged tune...");
+                return false;
+            }
+            return CalibrationsUpdater.INSTANCE.updateCalibrations(
+                ecuPort,
+                mergedTune.get().getImage().getConfigurationImage(),
+                callbacks,
+                connectivityContext
+            );
+        } else {
+            return true;
+        }
+    }
+
+    static String getFileNameWithoutExtension(
         final String timestampNameComponent,
         final String fileNameComponent
     ) {
