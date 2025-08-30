@@ -129,11 +129,11 @@ public class DfuFlasher {
                 return null;
             }).getSerialPort();
             if (port == null) {
-                callbacks.logLine("*** ERROR *** rusEFI serial port not detected");
+                callbacks.logLine("*** ERROR *** ECU serial port not detected");
                 callbacks.error();
                 return null;
             } else {
-                callbacks.logLine("Detected rusEFI on " + port + "\n");
+                callbacks.logLine("ECU Detected on " + port + "\n");
             }
         }
         return isSignatureValidated;

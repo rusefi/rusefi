@@ -28,7 +28,7 @@ public class ReconnectSandbox {
     private static String detectPortUntilDetected() {
         while (true) {
             String port = PortDetector.autoDetectSerial(null).getSerialPort();
-            System.out.println("Detected " + port);
+            System.out.println("detectPortUntilDetected " + port);
             if (port != null)
                 return port;
             IoUtil.sleepSeconds(1);
