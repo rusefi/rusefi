@@ -296,20 +296,8 @@ public class LuaScriptPanel {
 
             byte[] paddedScript = getScriptBytes(field, script);
 
-            int idx = 0;
-            int remaining;
-
             log.info("Sending " + field);
-            do {
-                remaining = paddedScript.length - idx;
-                int thisWrite = Math.min(remaining, VariableRegistryValues.BLOCKING_FACTOR);
-
-                bp.writeData(paddedScript, idx, field.getOffset() + idx, thisWrite);
-
-                idx += thisWrite;
-
-                remaining -= thisWrite;
-            } while (remaining > 0);
+            bp.writeInBlocks(paddedScript, 0, field.getOffset(), paddedScript.length);
 
 // need a way to modify script on the fly with shorter execution gaps to keep E65 CAN network happy
 // todo: auto-burn on console close check box in case of Lua changes?
