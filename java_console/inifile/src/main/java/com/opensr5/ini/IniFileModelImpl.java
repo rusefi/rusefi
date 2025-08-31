@@ -49,7 +49,6 @@ public class IniFileModelImpl implements IniFileModel {
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
-    private String signature;
     private int blockingFactor;
     // useful when connecting remotely via TCP/IP, if CUSTOM_TS_BUFFER_SIZE is available
     private static final Integer blockingFactorOverride = Integer.getInteger("blockingFactorOverride");
@@ -75,7 +74,7 @@ public class IniFileModelImpl implements IniFileModel {
 
     @Override
     public String getSignature() {
-        return signature;
+        return metaInfo.getSignature();
     }
 
     @Override
@@ -239,11 +238,7 @@ public class IniFileModelImpl implements IniFileModel {
 
             String first = list.getFirst();
 
-            if (first.equalsIgnoreCase("signature")
-                && signature == null /*we have signature twice on top of file, but we can also have field called 'signature' so we better use first occurrence */
-            ) {
-                signature = list.get(1);
-            } else if (first.equalsIgnoreCase("blockingFactor")) {
+            if (first.equalsIgnoreCase("blockingFactor")) {
                 blockingFactor = Integer.parseInt(list.get(1));
             }
 
