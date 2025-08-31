@@ -23,8 +23,8 @@ public class OutputChannelsHelper {
             ecuPort.port,
             callbacks,
             (binaryProtocol) -> readMcuSerial(binaryProtocol, callbacks),
-            Optional.empty(), connectivityContext
-        );
+            Optional.empty(), connectivityContext,
+            "readMcuSerial");
     }
 
     private static Optional<Integer> readMcuSerial(

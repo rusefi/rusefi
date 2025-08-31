@@ -19,7 +19,7 @@ public class BinaryProtocolExecutor {
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
         final T failureResult,
-        boolean isScanningForEcu) {
+        boolean isScanningForEcu, String msg) {
         final AtomicReference<T> executionResult = new AtomicReference<>(failureResult);
         try (LinkManager linkManager = new LinkManager()
             .setNeedPullText(false)
@@ -29,7 +29,7 @@ public class BinaryProtocolExecutor {
             try {
                 if (linkManager.connect(port, isScanningForEcu).await(1, TimeUnit.MINUTES)) {
                     final CountDownLatch latch = new CountDownLatch(1);
-                    callbacks.logLine(String.format("Performing action on port %s...", port));
+                    callbacks.logLine(String.format(msg + ": Performing action on port %s...", port));
                     linkManager.execute(() -> {
                         try {
                             executionResult.set(bpAction.doWithBinaryProtocol(linkManager.getBinaryProtocol()));
@@ -58,18 +58,19 @@ public class BinaryProtocolExecutor {
         final String port,
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
-        final T failureResult, ConnectivityContext connectivityContext
-    ) {
+        final T failureResult, ConnectivityContext connectivityContext,
+        String msg) {
         try {
             callbacks.logLine("Suspending port scanning...");
             try {
+                long start = System.currentTimeMillis();
                 connectivityContext.getSerialPortScanner().suspend().await(1, TimeUnit.MINUTES);
-                callbacks.logLine("Port scanning is suspended.");
+                callbacks.logLine(String.format("Port scanning is suspended in %dms.", System.currentTimeMillis() - start));
             } catch (final InterruptedException e) {
-                callbacks.logLine("Failed to  suspend port scanning in a minute.");
+                callbacks.logLine("Failed to suspend port scanning in a minute.");
                 return failureResult;
             }
-            return execute(port, callbacks, bpAction, failureResult, false);
+            return execute(port, callbacks, bpAction, failureResult, false, msg);
         } finally {
             callbacks.logLine("Resuming port scanning...");
             connectivityContext.getSerialPortScanner().resume();

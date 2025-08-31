@@ -202,8 +202,8 @@ public class CalibrationsHelper {
                     return Optional.empty();
                 }
             },
-            Optional.empty(), connectivityContext
-        );
+            Optional.empty(), connectivityContext,
+            "readCalibrationsInfo");
     }
 
     public static Optional<CalibrationsInfo> readCurrentCalibrationsWithoutSuspendingPortScanner(
@@ -223,8 +223,8 @@ public class CalibrationsHelper {
                 }
             },
             Optional.empty(),
-            true
-        );
+            true,
+            "readCalibrationsInfo");
     }
 
     public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
@@ -238,8 +238,8 @@ public class CalibrationsHelper {
             callbacks,
             binaryProtocol -> readAndBackupCurrentCalibrations(binaryProtocol, callbacks, backupFileName),
             Optional.empty(),
-            connectivityContext
-        );
+            connectivityContext,
+            "readAndBackupCurrentCalibrations");
     }
 
     private static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
@@ -252,8 +252,8 @@ public class CalibrationsHelper {
             callbacks,
             binaryProtocol -> readAndBackupCurrentCalibrations(binaryProtocol, callbacks, backupFileName),
             Optional.empty(),
-            false
-        );
+            false,
+            "readAndBackupCurrentCalibrations");
     }
     private static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
         final BinaryProtocol binaryProtocol,
