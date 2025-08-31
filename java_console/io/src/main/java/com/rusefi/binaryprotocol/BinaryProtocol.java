@@ -509,6 +509,23 @@ public class BinaryProtocol {
         stream.close();
     }
 
+    public void writeInBlocks(byte[] content, int contentOffset, int ecuOffset, int size) {
+        int idx = 0;
+        int remaining;
+        int blockingFactor = getIniFile().getBlockingFactor();
+
+        do {
+            remaining = size - idx;
+            int thisWrite = Math.min(remaining, blockingFactor);
+
+            writeData(content, contentOffset + idx, ecuOffset + idx, thisWrite);
+
+            idx += thisWrite;
+
+            remaining -= thisWrite;
+        } while (remaining > 0);
+    }
+
     public void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
