@@ -2831,7 +2831,8 @@ struct engine_configuration_s {
 	float triggerEventsTimeoutMs;
 	/**
 	 * A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.
-	 * '1' means no filtering, 0.98 would be some filtering.
+	 * '100%' means no filtering, 98% would be some filtering.
+	 * units: percent
 	 * offset 1016
 	 */
 	float ppsExpAverageAlpha;
