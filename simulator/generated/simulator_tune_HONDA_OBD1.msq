@@ -3179,7 +3179,7 @@ end</constant>
          1.2 1.2 1.2 1.2 1.2 1.2
          1.2 1.2 1.2 1.2 1.2 1.2
 </constant>
-        <constant digits="3" name="ppsExpAverageAlpha" units="">1.0</constant>
+        <constant digits="3" name="ppsExpAverageAlpha" units="percent">100.0</constant>
         <constant digits="1" name="ppsSecondaryMaximum" units="%">0.0</constant>
         <constant cols="1" digits="0" name="primeBins" rows="8">
          -40.0
@@ -5089,7 +5089,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250830" nPages="1" signature="rusEFI master.2025.08.31.f407-discovery.2781167468" version="5.0"/>
+    <versionInfo firmwareInfo="20250830" nPages="1" signature="rusEFI master.2025.08.31.f407-discovery.868480711" version="5.0"/>
     <bibliography author="rusEFI 20250830" writeDate="date"/>
     <settings/>
     <userComments/>
