@@ -46,6 +46,7 @@ Release template (copy/paste this for new release):
  - 3000gt 6g72 triggers cam and crank 3-0 more accuracy
  - unneeded ETB PID reset causes AE and causes AFR dip #8392
  - TPS AE Fuel During Cranking #8500
+ - migration fails in case of large diff #8524
 
 ## June 2025 "Day 1210"
 

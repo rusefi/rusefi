@@ -264,7 +264,7 @@ public class BinaryProtocol {
             byte[] newBytes = newVersion.getRange(range.first, size);
             log.info("new " + Arrays.toString(newBytes));
 
-            writeData(newVersion.getContent(), range.first, range.first, size);
+            writeInBlocks(newVersion.getContent(), range.first, range.first, size);
 
             offset = range.second;
         }
@@ -526,7 +526,7 @@ public class BinaryProtocol {
         } while (remaining > 0);
     }
 
-    public void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
+    private void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
         byte[] packet = WriteCommand.getWritePacket(content, contentOffset, ecuOffset, size);
