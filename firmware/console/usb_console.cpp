@@ -7,7 +7,7 @@
 #include "tunerstudio.h"
 
 // Assert that the USB tx/rx buffers are large enough to fit one full packet
-// Lets don't care about underlaying driver. If driver has no enought free
+// Lets don't care about underlying driver. If driver has no enough free
 // space in buffers it will block chnWriteTimeout() until buffers available
 // or timeout happens.
 //static_assert(SERIAL_USB_BUFFERS_TX_SIZE >= BLOCKING_FACTOR + 10);
