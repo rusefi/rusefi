@@ -39,7 +39,7 @@ public enum DefaultTuneMigrator implements TuneMigrator {
         for (final Map.Entry<String, IniField> prevFieldEntry: prevIniFields.entrySet()) {
             final String prevFieldName = prevFieldEntry.getKey();
             if (!INI_FIELDS_TO_IGNORE.contains(prevFieldName) && !boardSpecificIniFieldsToIgnore.contains(prevFieldName)
-                && !isUnusedField(prevFieldName)
+                && !context.isAdditionalIniFieldToIgnore(prevFieldName) && !isUnusedField(prevFieldName)
             ) {
                 // We do not want to migrate already migrated ini-fields:
                 if (!context.isFieldAlreadyMigrated(prevFieldName) && !context.getMigratedConstants().containsKey(

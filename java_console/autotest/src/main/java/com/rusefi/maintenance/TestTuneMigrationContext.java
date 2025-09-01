@@ -12,6 +12,7 @@ import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.Objects;
 
 public class TestTuneMigrationContext extends TuneMigrationContext {
@@ -73,6 +74,6 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
         final IniFileModel updatedIni,
         final UpdateOperationCallbacks callbacks
     ) {
-        super(prevIni, prevMsq, updatedIni, updatedMsq, callbacks);
+        super(prevIni, prevMsq, updatedIni, updatedMsq, callbacks, Collections.emptySet());
     }
 }

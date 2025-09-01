@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
 
-import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.Optional;
 
 import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalibrationsHelperTest {
@@ -24,13 +24,14 @@ public class CalibrationsHelperTest {
     CalibrationsInfo mergedCalibrations;
 
     @BeforeEach
-    public void setUp() throws JAXBException, FileNotFoundException {
+    public void setUp() throws JAXBException {
         testContext = DefaultTestTuneMigrationContext.load();
         final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
             testContext.getPrevIniFile(),
             testContext.getPrevTune(),
             testContext.getUpdatedCalibrationsInfo(),
-            testContext.getCallbacks()
+            testContext.getCallbacks(),
+            emptySet()
         );
         assertTrue(result.isPresent());
         mergedCalibrations = result.get();

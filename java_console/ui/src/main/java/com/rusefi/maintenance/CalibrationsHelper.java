@@ -30,6 +30,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
 import static com.rusefi.binaryprotocol.BinaryProtocol.saveConfigurationImageToFiles;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.util.Collections.emptySet;
 
 public class CalibrationsHelper {
     private static final Logging log = getLogging(CalibrationsHelper.class);
@@ -88,7 +89,8 @@ public class CalibrationsHelper {
             prevCalibrations.get().getIniFile(),
             prevCalibrations.get().generateMsq(),
             updatedCalibrations.get(),
-            callbacks
+            callbacks,
+            emptySet()
         );
         if (mergedCalibrations.isPresent() && MigrateSettingsCheckboxState.isMigrationNeeded) {
             if (!backUpCalibrationsInfo(
@@ -140,7 +142,9 @@ public class CalibrationsHelper {
             iniFileToImport,
             msqToImport,
             prevTune.get(),
-            callbacks
+            callbacks,
+            // we do not want to import `vinNumber` ini-field
+            new HashSet<>(Collections.singletonList("vinNumber"))
         );
         if (mergedTune.isPresent()) {
             if (!backUpCalibrationsInfo(
@@ -337,7 +341,8 @@ public class CalibrationsHelper {
         final IniFileModel prevIniFile,
         final Msq prevMsq,
         final CalibrationsInfo newCalibrations,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks,
+        final Set<String> additionalIniFieldsToIgnore
     ) {
         Optional<CalibrationsInfo> result = Optional.empty();
         final IniFileModel newIniFile = newCalibrations.getIniFile();
@@ -348,7 +353,8 @@ public class CalibrationsHelper {
             prevMsq,
             newIniFile,
             newMsq,
-            callbacks
+            callbacks,
+            additionalIniFieldsToIgnore
         );
         ComposedTuneMigrator.INSTANCE.migrateTune(context);
         final Set<Map.Entry<String, Constant>> valuesToUpdate = context.getMigratedConstants().entrySet();
