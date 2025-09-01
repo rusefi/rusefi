@@ -17,13 +17,7 @@ public enum Usability {
         String ppsExpAverageAlphaName = "ppsExpAverageAlpha";
 
         Optional<IniField> iniField = calibrations.getIniFile().findIniField(ppsExpAverageAlphaName);
-        if (iniField.isPresent()) {
-            String value = iniField.get().getValue(calibrations.getImage().getConfigurationImage());
-            if (Double.parseDouble(value) == 1) {
-                updateOperationCallbacks.logLine(ppsExpAverageAlphaName + " Twist Dampening not configured, call support!");
-                updateOperationCallbacks.warning();
-            }
-        } else {
+        if (!iniField.isPresent()) {
             updateOperationCallbacks.logLine(ppsExpAverageAlphaName + " not found: you want to update firmware!");
             updateOperationCallbacks.warning();
         }
