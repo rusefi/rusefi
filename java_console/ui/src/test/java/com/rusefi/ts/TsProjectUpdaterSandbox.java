@@ -6,6 +6,7 @@ import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext;
 
 import javax.xml.bind.JAXBException;
+import java.util.Collections;
 
 public class TsProjectUpdaterSandbox {
     public static void main(String[] args) throws JAXBException {
@@ -13,7 +14,7 @@ public class TsProjectUpdaterSandbox {
         TestTuneMigrationContext result = DefaultTestTuneMigrationContext.load();
 
         TuneMigrationContext context = new TuneMigrationContext(result.getPrevIniFile(), null,
-            null, null, UpdateOperationCallbacks.DUMMY);
+            null, null, UpdateOperationCallbacks.DUMMY, Collections.emptySet());
         TsProjectUpdater.INSTANCE.afterTuneMigration(context);
     }
 }

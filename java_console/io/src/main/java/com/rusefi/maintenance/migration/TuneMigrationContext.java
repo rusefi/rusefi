@@ -19,19 +19,22 @@ public class TuneMigrationContext {
     private final Map<String, Constant> migratedConstants = new HashMap<>();
     private final Set<String> migratedFields = new HashSet<>();
     final UpdateOperationCallbacks callbacks;
+    final Set<String> additionalIniFieldsToIgnore;
 
     public TuneMigrationContext(
         final IniFileModel prevIniFile,
         final Msq prevTune,
         final IniFileModel updatedIniFile,
         final Msq updatedTune,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks,
+        final Set<String> additionalIniFieldsToIgnore
     ) {
         this.prevIniFile = prevIniFile;
         this.prevTune = prevTune;
         this.updatedIniFile = updatedIniFile;
         this.updatedTune = updatedTune;
         this.callbacks = callbacks;
+        this.additionalIniFieldsToIgnore = additionalIniFieldsToIgnore;
     }
 
     public IniFileModel getPrevIniFile() {
@@ -48,6 +51,10 @@ public class TuneMigrationContext {
 
     public Msq getUpdatedTune() {
         return updatedTune;
+    }
+
+    public boolean isAdditionalIniFieldToIgnore(final String iniFieldName) {
+        return additionalIniFieldsToIgnore.contains(iniFieldName);
     }
 
     public Map<String, Constant> getMigratedConstants() {
