@@ -1,17 +1,21 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
+import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.ConnectivityContext;
+import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.fazecast.jSerialComm.SerialPort.getCommPorts;
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class BinaryProtocolExecutor {
     private static final Logging log = Logging.getLogging(BinaryProtocolExecutor.class);
@@ -81,7 +85,7 @@ public class BinaryProtocolExecutor {
             if (LinkManager.isSpecialNotSerial(port)) {
                 log.info("Special " + port);
             } else {
-                log.info("Currently available: " + Arrays.toString(getCommPorts()));
+                waitForPort(port);
             }
             return execute(port, callbacks, bpAction, failureResult, false, msg);
         } finally {
@@ -89,5 +93,33 @@ public class BinaryProtocolExecutor {
             connectivityContext.getSerialPortScanner().resume();
             callbacks.logLine("Port scanning is resumed.");
         }
+    }
+
+    private static void waitForPort(String port) {
+        boolean portAvailable;
+        {
+            SerialPort[] commPorts = getCommPorts();
+            portAvailable = contains(commPorts, port);
+            log.info("Currently available: " + Arrays.toString(commPorts) + "; " + portAvailable);
+            if (portAvailable)
+                return; // bail without extra logging
+        }
+        // sametimes we need to wait for the port to re-appear
+        long start = System.currentTimeMillis();
+        while (!portAvailable && (System.currentTimeMillis() - start) < Timeouts.MINUTE) {
+            sleep(200);
+            portAvailable = contains(getCommPorts(), port);
+        }
+        log.info("Appeared: " + portAvailable + " in " + (System.currentTimeMillis() - start) + "ms");
+    }
+
+    private static boolean contains(SerialPort[] commPorts, String port) {
+        Objects.requireNonNull(port, "port");
+        for (SerialPort p : commPorts) {
+            if (port.equals(p.getSystemPortName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
