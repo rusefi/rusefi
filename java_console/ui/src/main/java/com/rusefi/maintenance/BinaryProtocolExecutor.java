@@ -78,7 +78,7 @@ public class BinaryProtocolExecutor {
                 return failureResult;
             }
             log.info(msg + ": Executing " + callbacks);
-            if (!LinkManager.isSpecialNotSerial(port)) {
+            if (LinkManager.isSpecialNotSerial(port)) {
                 log.info("Special " + port);
             } else {
                 log.info("Currently available: " + Arrays.toString(getCommPorts()));
