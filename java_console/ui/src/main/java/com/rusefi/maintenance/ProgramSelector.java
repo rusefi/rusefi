@@ -388,4 +388,8 @@ public class ProgramSelector {
   public static JButton createUpdateFirmwareButton() {
     return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
   }
+
+    public void setMode(UpdateMode updateMode) {
+        updateModeComboBox.setSelectedItem(updateMode);
+    }
 }
