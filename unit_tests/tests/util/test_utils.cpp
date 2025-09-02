@@ -51,3 +51,36 @@ TEST(test_utils, spin60_2UntilDeg){
     ASSERT_NEAR(1200, Sensor::getOrZero(SensorType::Rpm), 1) << "RPM";
 
 }
+
+TEST(CyclicBuffer, Contains) {
+	using tbuffer = cyclic_buffer<int, 4>;
+
+	tbuffer buf;
+
+	buf.add(1);
+	EXPECT_TRUE(buf.contains(1));
+	EXPECT_FALSE(buf.contains(2));
+	EXPECT_FALSE(buf.contains(3));
+	EXPECT_FALSE(buf.contains(4));
+
+	buf.add(2);
+	buf.add(3);
+	buf.add(4);
+
+	EXPECT_FALSE(buf.contains(1)); // huh?
+	EXPECT_FALSE(buf.contains(2)); // huh?
+	EXPECT_FALSE(buf.contains(3)); // huh?
+	EXPECT_FALSE(buf.contains(4)); // huh?
+
+	buf.add(5);
+	buf.add(6);
+	buf.add(7);
+
+	EXPECT_FALSE(buf.contains(1));
+	EXPECT_FALSE(buf.contains(2));
+	EXPECT_FALSE(buf.contains(3));
+	EXPECT_FALSE(buf.contains(4)); // huh?
+	EXPECT_TRUE(buf.contains(5));
+	EXPECT_TRUE(buf.contains(6));
+	EXPECT_TRUE(buf.contains(7));
+}
