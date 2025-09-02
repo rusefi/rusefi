@@ -25,6 +25,8 @@ public abstract class SerialIoStream extends AbstractIoStream {
     protected final SerialPort sp;
     protected final String port;
     private boolean withListener;
+    // used by "serialPort.openPort", time waited before connecting to serial port, in mS
+    private final static int portConnectionDelay = 500;
 
     static {
         log.info("Using com.fazecast.jSerialComm " + SerialPort.getVersion());
@@ -41,7 +43,7 @@ public abstract class SerialIoStream extends AbstractIoStream {
     protected static SerialPort openSerial(String port) {
         SerialPort serialPort = SerialPort.getCommPort(port);
         serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
-        boolean openedOk = serialPort.openPort();
+        boolean openedOk = serialPort.openPort(portConnectionDelay);
         if (!openedOk) {
             log.error("Error opening " + port + " maybe no permissions?");
             // todo: leverage jSerialComm method once we start using version 2.9+
