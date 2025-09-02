@@ -215,6 +215,7 @@ struct_no_prefix engine_configuration_s
 #define GPPWM_3_NAME "General Purpose PWM 3"
 #define GPPWM_4_NAME "General Purpose PWM 4"
 
+#define ppsExpAverageAlpha_NAME "Accelerator Exp Average"
 #define IGN_TRIM_1_NAME "Ignition trim cyl 1"
 #define IGN_TRIM_2_NAME "Ignition trim cyl 2"
 #define ts_show_knock_cylinder_mapping true
