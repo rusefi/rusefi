@@ -23,7 +23,7 @@ public class WarningPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             label.setVisible(!label.isVisible());
-            AutoupdateUtil.trueLayout(label);
+            AutoupdateUtil.trueLayoutAndRepaint(label);
         }
     });
 

@@ -260,7 +260,7 @@ public class KnockAnalyzerTab {
             @Override
             public void run() {
                 canvases.forEach(canvas -> {
-                    AutoupdateUtil.trueLayout(canvas.getComponent());
+                    AutoupdateUtil.trueLayoutAndRepaint(canvas.getComponent());
                 });
 
                 Arrays.fill(values, 0);
@@ -313,12 +313,12 @@ public class KnockAnalyzerTab {
             @Override
             public void run() {
                 canvases.forEach(canvas -> {
-                    AutoupdateUtil.trueLayout(canvas.getComponent());
+                    AutoupdateUtil.trueLayoutAndRepaint(canvas.getComponent());
                 });
             }
         });
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(canvasesComponent));
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(canvasesComponent));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(content));
     }
 
     public void createCanvas(int number, int divider) {

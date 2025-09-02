@@ -110,7 +110,7 @@ public class LogViewer extends JPanel {
         descPanel.removeAll();
         descPanel.add(new JLabel("Total digital charts: "));
         descPanel.add(new JLabel("" + ChartRepository.getInstance().getSize()));
-        AutoupdateUtil.trueLayout(descPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(descPanel);
     }
 
     private void openFolder(String folderName) {

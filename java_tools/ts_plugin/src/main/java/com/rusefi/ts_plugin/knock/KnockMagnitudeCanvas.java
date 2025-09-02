@@ -59,7 +59,7 @@ public class KnockMagnitudeCanvas {
     public KnockMagnitudeCanvas() {
 
         SwingUtilities.invokeLater(() -> {
-            AutoupdateUtil.trueLayout(component);
+            AutoupdateUtil.trueLayoutAndRepaint(component);
         });
 
         bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
@@ -178,7 +178,7 @@ public class KnockMagnitudeCanvas {
         }
         bufferedGraphics.setFont(defaultFont);
 
-        AutoupdateUtil.trueLayout(component);
+        AutoupdateUtil.trueLayoutAndRepaint(component);
     }
 
 }

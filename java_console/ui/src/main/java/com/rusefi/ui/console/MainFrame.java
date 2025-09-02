@@ -67,7 +67,7 @@ public class MainFrame {
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
             setTitle();
             // this would repaint status label
-            AutoupdateUtil.trueLayout(tabbedPane.tabbedPane);
+            AutoupdateUtil.trueLayoutAndRepaint(tabbedPane.tabbedPane);
             if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
                 LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
                 String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);

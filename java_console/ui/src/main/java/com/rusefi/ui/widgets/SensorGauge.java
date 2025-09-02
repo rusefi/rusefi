@@ -81,7 +81,7 @@ public class SensorGauge {
         wrapper.removeAllChildrenAndListeners();
         wrapper.addMouseListener(mouseListener);
         wrapper.add(gauge, BorderLayout.CENTER);
-        AutoupdateUtil.trueLayout(wrapper.getParent());
+        AutoupdateUtil.trueLayoutAndRepaint(wrapper.getParent());
     }
 
     private static void showPopupMenu(UIContext uiContext, MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener,

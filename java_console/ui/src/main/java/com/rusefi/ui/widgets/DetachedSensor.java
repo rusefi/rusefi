@@ -113,7 +113,7 @@ public class DetachedSensor {
             Component mockComponent = createMockValueSlider(uiContext.getCommandQueue(), sensor);
             mockControlPanel.add(mockComponent);
         }
-        AutoupdateUtil.trueLayout(content);
+        AutoupdateUtil.trueLayoutAndRepaint(content);
         int size = width;
         int h = isMockable ? (int) (size * 1.5) : size;
         frame.setSize(size, h);

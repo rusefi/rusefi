@@ -380,8 +380,8 @@ public class ProgramSelector {
             updateModeComboBox.setSelectedItem(updateModeToRestore);
         }
 
-        AutoupdateUtil.trueLayout(updateModeComboBox);
-        AutoupdateUtil.trueLayout(content);
+        AutoupdateUtil.trueLayoutAndRepaint(updateModeComboBox);
+        AutoupdateUtil.trueLayoutAndRepaint(content);
     }
 
   @NotNull

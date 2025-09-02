@@ -156,7 +156,7 @@ public class LuaScriptPanel {
         mainPanel.add(upperPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        AutoupdateUtil.trueLayout(mainPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(mainPanel);
     }
 
     private String getScriptFullFileName() {
