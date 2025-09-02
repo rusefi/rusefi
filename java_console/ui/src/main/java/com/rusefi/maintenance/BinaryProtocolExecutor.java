@@ -1,19 +1,26 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.fazecast.jSerialComm.SerialPort.getCommPorts;
+
 public class BinaryProtocolExecutor {
+    private static final Logging log = Logging.getLogging(BinaryProtocolExecutor.class);
+
     @FunctionalInterface
     public interface BinaryProtocolAction<T> {
         T doWithBinaryProtocol(BinaryProtocol binaryProtocol);
     }
+
     public static <T> T execute(
         final String port,
         final UpdateOperationCallbacks callbacks,
@@ -25,7 +32,7 @@ public class BinaryProtocolExecutor {
             .setNeedPullText(false)
             .setNeedPullLiveData(true)
         ) {
-            callbacks.logLine(String.format("Connecting to port `%s`...", port));
+            callbacks.logLine(String.format(msg + ": Connecting to port `%s`...", port));
             try {
                 if (linkManager.connect(port, isScanningForEcu).await(1, TimeUnit.MINUTES)) {
                     final CountDownLatch latch = new CountDownLatch(1);
@@ -69,6 +76,12 @@ public class BinaryProtocolExecutor {
             } catch (final InterruptedException e) {
                 callbacks.logLine("Failed to suspend port scanning in a minute.");
                 return failureResult;
+            }
+            log.info(msg + ": Executing " + callbacks);
+            if (!LinkManager.isSpecialNotSerial(port)) {
+                log.info("Special " + port);
+            } else {
+                log.info("Currently available: " + Arrays.toString(getCommPorts()));
             }
             return execute(port, callbacks, bpAction, failureResult, false, msg);
         } finally {

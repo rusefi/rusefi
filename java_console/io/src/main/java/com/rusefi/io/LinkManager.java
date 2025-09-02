@@ -245,10 +245,10 @@ public class LinkManager implements Closeable {
         lastTriedPort = port; // Save port before connection attempt
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
-        } else if (PCAN.equals(port)) {
+        } else if (isPcanPort(port)) {
             Callable<IoStream> streamFactory = PCanIoStream::createStream;
             setConnector(new StreamConnector(this, streamFactory));
-        } else if (SOCKET_CAN.equals(port)) {
+        } else if (isSocketCan(port)) {
             Callable<IoStream> streamFactory = SocketCANIoStream::createStream;
             setConnector(new StreamConnector(this, streamFactory));
         } else if (TcpConnector.isTcpPort(port)) {
@@ -285,12 +285,24 @@ public class LinkManager implements Closeable {
         }
     }
 
+    private static boolean isSocketCan(String port) {
+        return SOCKET_CAN.equals(port);
+    }
+
+    private static boolean isPcanPort(String port) {
+        return PCAN.equals(port);
+    }
+
     public void setConnector(LinkConnector connector) {
         if (isStarted) {
             throw new IllegalStateException("Already started");
         }
         isStarted = true;
         this.connector = connector;
+    }
+
+    public static boolean isSpecialNotSerial(String port) {
+        return isLogViewerMode(port) || isPcanPort(port) || isSocketCan(port) || TcpConnector.isTcpPort(port);
     }
 
     public static boolean isLogViewerMode(String port) {
