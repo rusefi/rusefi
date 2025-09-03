@@ -4,6 +4,14 @@ ifeq (,$(BUNDLE_NAME))
   BUNDLE_NAME = $(SHORT_BOARD_NAME)
 endif
 
+ifeq (,$(BUNDLE_DATE))
+  BUNDLE_DATE = yymmdd
+endif
+
+ifeq (,$(GITHUB_SHA))
+  GITHUB_SHA = local
+endif
+
 # If we're running on Windows, we need to call the .exe of hex2dfu
 ifeq ($(UNAME_S),)
 	UNAME_S = $(shell uname -s)
@@ -109,7 +117,7 @@ BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
 ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_HEX_OUT = $(BOOTLOADER_HEX)
   BOOTLOADER_BIN_OUT = $(FOLDER)/openblt.bin
-  SREC_TARGET = $(FOLDER)/rusefi_update.srec
+  SREC_TARGET = $(FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(GITHUB_SHA)_update.srec
 else
   FIRMWARE_OUTPUTS = $(FOLDER)/$(PROJECT).hex
   BINSRC = $(BUILDDIR)/$(PROJECT).bin
