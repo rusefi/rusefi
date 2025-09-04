@@ -38,10 +38,10 @@ static void flexCallback(efitick_t nowNt, bool value) {
 
 		if (pulseWidthUs < 900) {
 			flexFuelTemp.invalidate(UnexpectedCode::Low);
-			warning(ObdCode::CUSTOM_OBD_6003, "flex low %f", pulseWidthUs);
+			warning(ObdCode::CUSTOM_FLEX_LOW, "flex low %f", pulseWidthUs);
 		} else if (pulseWidthUs > 5100) {
 			flexFuelTemp.invalidate(UnexpectedCode::High);
-			warning(ObdCode::CUSTOM_OBD_6004, "flex high %f", pulseWidthUs);
+			warning(ObdCode::CUSTOM_FLEX_HIGH, "flex high %f", pulseWidthUs);
 		} else {
 			// -40C = 1000us
 			// 125C = 5000us
