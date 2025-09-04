@@ -6,8 +6,8 @@ percent_t tpsFrom;Fuel: TPS AE from
 percent_t tpsTo;Fuel: TPS AE to
 percent_t deltaTps;Fuel: TPS AE change
 
-	floatms_t extraFuel;
-	float valueFromTable;
+	floatms_t extraFuel;Fuel: TPS extraFuel
+	float valueFromTable;Fuel: TPS valueFromTable
 
 bit isAboveAccelThreshold;Fuel: TPS AE Active
 bit isBelowDecelThreshold;
@@ -16,10 +16,10 @@ bit isFractionalEnrichment
 bit belowEpsilon;Fuel: TPS AE: below threshold
 bit tooShort;Fuel: TPS AE: too short
 
-float fractionalInjFuel
+float fractionalInjFuel;Fuel: TPS AE fractionalInjFuel
 
 !	/**
-!	 * Used for Fractional TPS enrichment. 
+!	 * Used for Fractional TPS enrichment.
 !	 */
 	floatms_t accumulatedValue
 	floatms_t maxExtraPerCycle
