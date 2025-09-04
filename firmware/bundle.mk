@@ -221,7 +221,7 @@ else
 endif
 	@touch $@
 
-OBFUSCATED_SREC = $(FOLDER)/rusefi-obfuscated.srec
+OBFUSCATED_SREC = $(FOLDER)/rusefi-$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(GITHUB_SHA)_obfuscated.srec
 
 OBFUSCATED_OUT = \
   $(FOLDER)/rusefi-obfuscated.bin \
