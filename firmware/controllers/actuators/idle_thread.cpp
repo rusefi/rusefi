@@ -53,6 +53,8 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  	}
 
  	idleTarget = target;
+	idleEntryRpm = entryRpm;
+	idleExitRpm = exitRpm;
  	return { target, entryRpm, exitRpm };
 }
 

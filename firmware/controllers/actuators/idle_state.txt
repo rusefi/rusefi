@@ -27,7 +27,10 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
     bit isIdleCoasting;Idle: coasting
 	bit isIdleClosedLoop;Idle: Closed loop active
 
-	int idleTarget;Idle: Target RPM
+	uint16_t idleTarget;Idle: Target RPM
+	uint16_t idleEntryRpm;Idle: Entry threshold
+	uint16_t idleExitRpm;Idle: Exit threshold
+
 	int targetRpmByClt;Idle: Target RPM base
 	int targetRpmAc;Idle: Target A/C RPM
 
