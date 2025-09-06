@@ -28,8 +28,6 @@ import static com.rusefi.core.FindFileHelper.INPUT_FILES_PATH;
  * @see StLinkFlasher
  */
 public class DfuFlasher {
-    //private static final Logging log = getLogging(DfuFlasher.class);
-
     public static final String BOOTLOADER_BIN_FILE = INPUT_FILES_PATH + "/" + "openblt.bin";
     private static final String DFU_CMD_TOOL_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
