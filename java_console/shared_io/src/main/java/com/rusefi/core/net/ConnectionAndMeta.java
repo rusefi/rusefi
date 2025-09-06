@@ -13,8 +13,6 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.devexperts.logging.Logging;
-
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
     public static final String DEFAULT_WHITE_LABEL = "rusefi";
@@ -28,8 +26,6 @@ public class ConnectionAndMeta {
     private HttpsURLConnection httpConnection;
     private long completeFileSize;
     private long lastModified;
-
-    private static final Logging log = Logging.getLogging(ConnectionAndMeta.class);
 
     public ConnectionAndMeta(String zipFileName) {
         this.zipFileName = zipFileName;
@@ -172,14 +168,7 @@ public class ConnectionAndMeta {
     }
 
     public ConnectionAndMeta invoke(String baseUrl) throws IOException {
-        // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
-        SSLContext ctx = null;
-        try {
-            ctx = SSLContext.getInstance("TLS");
-            ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new IOException("TLS exception", e);
-        }
+        SSLContext ctx = acceptAnyCertificate();
 
         URL url = new URL(baseUrl + zipFileName);
         System.out.println("Connecting to " + url);
@@ -188,6 +177,18 @@ public class ConnectionAndMeta {
         completeFileSize = httpConnection.getContentLength();
         lastModified = httpConnection.getLastModified();
         return this;
+    }
+
+    private static @NotNull SSLContext acceptAnyCertificate() throws IOException {
+        // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
+        SSLContext ctx;
+        try {
+            ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new IOException("TLS exception", e);
+        }
+        return ctx;
     }
 
     public interface DownloadProgressListener {
