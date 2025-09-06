@@ -6,6 +6,7 @@ import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
+import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
@@ -13,16 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 
@@ -162,10 +157,10 @@ public class Autoupdate {
     private static Optional<DownloadedAutoupdateFileInfo> doDownload(final BundleUtil.BundleInfo bundleInfo) {
         if (bundleInfo.isMaster()) {
             log.info("Snapshot requested");
-            return downloadAutoupdateZipFile(bundleInfo, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
+            return downloadAutoupdateZipFile(bundleInfo, PropertiesHolder.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
         } else {
             final String branchName = selectBranchName(bundleInfo);
-            return downloadAutoupdateZipFile(bundleInfo, ConnectionAndMeta.getBaseUrl() + "/lts/" + branchName + ConnectionAndMeta.AUTOUPDATE);
+            return downloadAutoupdateZipFile(bundleInfo, PropertiesHolder.getBaseUrl() + "/lts/" + branchName + ConnectionAndMeta.AUTOUPDATE);
         }
     }
 
@@ -187,32 +182,6 @@ public class Autoupdate {
             }
         }
         return branchName;
-    }
-
-    private static URLClassLoader prepareClassLoaderToStartConsole() {
-        final URLClassLoader jarClassLoader;
-        String consoleJarFileName = ConnectionAndMeta.getRusEfiConsoleJarName();
-        if (!new File(consoleJarFileName).exists()) {
-            throw log.log(new RuntimeException("Looks like corrupted installation: " + consoleJarFileName + " not found"));
-        }
-
-        try {
-            jarClassLoader = AutoupdateUtil.getClassLoaderByJar(consoleJarFileName);
-        } catch (MalformedURLException e) {
-            log.error("Failed to start", e);
-            throw new IllegalStateException("Problem with " + consoleJarFileName, e);
-        }
-        // we want to make sure that files are available to write so we use reflection to get lazy class initialization
-        // since we are overriding file we cannot just use static java classpath while launching
-        try {
-            hackProperties(jarClassLoader);
-        } catch (ClassNotFoundException e) {
-            throw log.log(new IllegalStateException("Class not found: " + e, e));
-        } catch (NoSuchMethodException | InvocationTargetException |
-                 IllegalAccessException e) {
-            throw log.log(new IllegalStateException("Failed to update properties: " + e, e));
-        }
-        return jarClassLoader;
     }
 
     private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
@@ -241,15 +210,6 @@ public class Autoupdate {
                 ), "Error");
             }
         }
-    }
-
-    private static void hackProperties(URLClassLoader jarClassLoader) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        // in case of fresh jar file for some reason we are failing with ZipException if executed within console domain
-        Class uiProperties = Class.forName("com.rusefi.UiProperties", true, jarClassLoader);
-        for (Method m : uiProperties.getMethods())
-            System.out.println(m);
-        Method setter = uiProperties.getMethod("setProperties", Properties.class);
-        setter.invoke(null, ConnectionAndMeta.getProperties());
     }
 
     private static class DownloadedAutoupdateFileInfo {
