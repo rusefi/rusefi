@@ -1603,6 +1603,12 @@ float getOutputValueByHash(const int hash) {
 // idleTarget
 		case 2127645162:
 			return engine->module<IdleController>().unmock().idleTarget;
+// idleEntryRpm
+		case -1902025276:
+			return engine->module<IdleController>().unmock().idleEntryRpm;
+// idleExitRpm
+		case 190585324:
+			return engine->module<IdleController>().unmock().idleExitRpm;
 // targetRpmByClt
 		case -1241725607:
 			return engine->module<IdleController>().unmock().targetRpmByClt;

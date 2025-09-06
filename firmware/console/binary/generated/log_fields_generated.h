@@ -721,6 +721,8 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->module<IdleController>().unmock(), 12, 13, "Idle: coasting", ""},
 	{engine->module<IdleController>().unmock(), 12, 14, "Idle: Closed loop active", ""},
 	{engine->module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
+	{engine->module<IdleController>().unmock().idleEntryRpm, "Idle: Entry threshold", "", 0},
+	{engine->module<IdleController>().unmock().idleExitRpm, "Idle: Exit threshold", "", 0},
 	{engine->module<IdleController>().unmock().targetRpmByClt, "Idle: Target RPM base", "", 0},
 	{engine->module<IdleController>().unmock().targetRpmAc, "Idle: Target A/C RPM", "", 0},
 	{engine->module<IdleController>().unmock().iacByRpmTaper, "idle: iacByRpmTaper portion", "", 0},
