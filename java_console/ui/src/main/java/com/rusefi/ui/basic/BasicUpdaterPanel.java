@@ -96,7 +96,6 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
             content.add(updateFirmwareButton);
 
             importTuneButton.setEnabled(false);
-            content.add(importTuneButton.getContent());
         } else {
             content.add(new JLabel("Sorry only works on Windows"));
         }
@@ -123,6 +122,10 @@ never used?
         migrateSettings.addActionListener(e -> updateMigrateSettingState());
         updateMigrateSettingState();
         content.add(migrateSettings);
+    }
+
+    public ImportTuneControl getImportTuneButton() {
+        return importTuneButton;
     }
 
     private void updateMigrateSettingState() {

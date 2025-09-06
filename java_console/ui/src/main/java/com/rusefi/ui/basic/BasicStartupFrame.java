@@ -42,23 +42,28 @@ public class BasicStartupFrame {
     }
 
     private BasicStartupFrame(ConnectivityContext connectivityContext) {
-        final JPanel panel = new JPanel();
+        DfuFlasher.dfuEnabledInCaseOfError = false;
+        TunerStudioHelper.maybeCloseTs();
+
+        JTabbedPane tabbedPane = new JTabbedPane();
+        final JPanel firmwareUpdateContent = new JPanel();
         StatusPanel statusPanel = new StatusPanel();
         basicUpdaterPanel = new BasicUpdaterPanel(connectivityContext,
             ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
             statusPanel
         );
-        DfuFlasher.dfuEnabledInCaseOfError = false;
-        panel.add(basicUpdaterPanel.getContent());
-        panel.add(statusPanel);
-        TunerStudioHelper.maybeCloseTs();
+        firmwareUpdateContent.add(basicUpdaterPanel.getContent());
+        firmwareUpdateContent.add(statusPanel);
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             onHardwareUpdated(currentHardware);
         }));
 
+        tabbedPane.addTab("Firmware", firmwareUpdateContent);
+        tabbedPane.addTab("Tunes", new TuneManagementTab(basicUpdaterPanel.getImportTuneButton()).getContent());
+
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
-        frame.showFrame(panel, false);
+        frame.showFrame(tabbedPane, false);
         UiUtils.centerWindow(frame.getFrame());
         packFrame();
     }
