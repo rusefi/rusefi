@@ -21,6 +21,7 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -29,7 +30,7 @@ import static com.rusefi.StartupFrame.newReleaseAnnounce;
 import static com.rusefi.core.net.ConnectionAndMeta.getProperties;
 import static com.rusefi.ui.basic.UnitLabelPrinter.UNIT_IDENTIFIER_FIELD_NAMES;
 
-public class BasicUpdaterPanel {
+public class BasicUpdaterPanel implements BasicButtonCoordinator {
     private static final Logging log = getLogging(BasicUpdaterPanel.class);
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
@@ -42,10 +43,8 @@ public class BasicUpdaterPanel {
     private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings");
 
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
-    private final JButton importTuneButton = new JButton(
-        "Import Tune",
-        AutoupdateUtil.loadIcon("writeconfig48.png")
-    );
+    private final ImportTuneControl importTuneButton;
+
     private final JButton updateCalibrationsButton = new JButton(
         "Update Calibrations",
         AutoupdateUtil.loadIcon("writeconfig48.png")
@@ -56,10 +55,9 @@ public class BasicUpdaterPanel {
     private final ConnectivityContext connectivityContext;
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateOperationCallbacks updateOperationCallbacks;
-    private final ImportTune importTune;
-    private final UpdateCalibrations updateCalibrations;
+//    private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
-    private volatile Optional<PortResult> ecuPortToUse = Optional.empty();
+    private final AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
     private String latestReportedHash;
 
     BasicUpdaterPanel(
@@ -72,8 +70,10 @@ public class BasicUpdaterPanel {
             () -> SwingUtilities.invokeLater(this::refreshButtons)
         );
         this.updateOperationCallbacks = updateOperationCallbacks;
-        importTune = new ImportTune(singleAsyncJobExecutor);
-        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
+        importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this,
+            connectivityContext,
+            ecuPortToUse);
+//        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
         if (isWindows()) {
             final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
@@ -95,9 +95,8 @@ public class BasicUpdaterPanel {
             content.add(statusMessage);
             content.add(updateFirmwareButton);
 
-            importTuneButton.addActionListener(this::onImportTuneButtonClicked);
             importTuneButton.setEnabled(false);
-            content.add(importTuneButton);
+            content.add(importTuneButton.getContent());
         } else {
             content.add(new JLabel("Sorry only works on Windows"));
         }
@@ -272,7 +271,7 @@ never used?
     }
 
     private void setEcuPortToUse(final PortResult port) {
-        ecuPortToUse = Optional.of(port);
+        ecuPortToUse.set(Optional.of(port));
 
         SwingUtilities.invokeLater(() -> {
             refreshButtons();
@@ -294,10 +293,10 @@ never used?
     }
 
     private void resetEcuPortToUse() {
-        ecuPortToUse = Optional.empty();
+        ecuPortToUse.set(Optional.empty());
         SwingUtilities.invokeLater(() -> {
             importTuneButton.setEnabled(false);
-            updateCalibrationsButton.setEnabled(false);
+//            updateCalibrationsButton.setEnabled(false);
             if (logoLabelPopupMenu != null) {
                 logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
             }
@@ -315,23 +314,7 @@ never used?
         refreshButtons();
     }
 
-    private void onImportTuneButtonClicked(final ActionEvent actionEvent) {
-        disableButtons();
-        CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
-            port -> {
-                importTune.importTuneAction(port, updateCalibrationsButton, connectivityContext);
-            }, () -> {
-                JOptionPane.showMessageDialog(
-                    importTuneButton,
-                    "Device is not connected",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
-        );
-        refreshButtons();
-    }
-
+    /*
     private void onUpdateCalibrationsButtonClicked(final ActionEvent actionEvent) {
         disableButtons();
         CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
@@ -348,13 +331,14 @@ never used?
         );
         refreshButtons();
     }
+    */
 
-    private void refreshButtons() {
+    public void refreshButtons() {
         updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
-        final Optional<PortResult> ecuPort = ecuPortToUse;
+        final Optional<PortResult> ecuPort = ecuPortToUse.get();
         final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
         importTuneButton.setEnabled(isEcuPortJobPossible);
-        updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
+//        updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
         if (logoLabelPopupMenu != null) {
             logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
                 isEcuPortJobPossible,
@@ -364,7 +348,7 @@ never used?
     }
 
     private boolean existsAnyOfUnitIdentifierFields(final IniFileModel iniFile) {
-        for (final String fieldName: UNIT_IDENTIFIER_FIELD_NAMES) {
+        for (final String fieldName : UNIT_IDENTIFIER_FIELD_NAMES) {
             if (iniFile.findIniField(fieldName).isPresent()) {
                 return true;
             }
@@ -372,10 +356,11 @@ never used?
         return false;
     }
 
-    private void disableButtons() {
+    @Override
+    public void disableButtons() {
         updateFirmwareButton.setEnabled(false);
         importTuneButton.setEnabled(false);
-        updateCalibrationsButton.setEnabled(false);
+//        updateCalibrationsButton.setEnabled(false);
         if (logoLabelPopupMenu != null) {
             logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
         }
@@ -383,12 +368,12 @@ never used?
 
     private void uploadTune() {
         disableButtons();
-        CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
+        CompatibilityOptional.ifPresentOrElse(ecuPortToUse.get(),
             port -> {
                 singleAsyncJobExecutor.startJob(new UploadTuneJob(connectivityContext, port, panamaUrl), logoLabelPopupMenu);
             }, () -> {
                 JOptionPane.showMessageDialog(
-                    updateCalibrationsButton,
+                    content,
                     "Device is not connected",
                     "Error",
                     JOptionPane.ERROR_MESSAGE
@@ -400,7 +385,7 @@ never used?
 
     private void printUnitLabel() {
         disableButtons();
-        CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
+        CompatibilityOptional.ifPresentOrElse(ecuPortToUse.get(),
             port -> {
                 singleAsyncJobExecutor.startJob(new PrintUnitLabelJob(connectivityContext, port, logoLabelPopupMenu), logoLabelPopupMenu);
             }, () -> {
