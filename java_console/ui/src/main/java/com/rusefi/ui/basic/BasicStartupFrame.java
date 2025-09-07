@@ -60,7 +60,7 @@ public class BasicStartupFrame {
         }));
 
         tabbedPane.addTab("Firmware", firmwareUpdateContent);
-        tabbedPane.addTab("Tunes", new TuneManagementTab(basicUpdaterPanel.getImportTuneButton()).getContent());
+        tabbedPane.addTab("Tunes", new TuneManagementTab(basicUpdaterPanel.getImportTuneButton().getContent()).getContent());
 
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
         frame.showFrame(tabbedPane, false);

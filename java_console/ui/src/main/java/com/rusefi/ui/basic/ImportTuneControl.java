@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ImportTuneControl implements EnableableControl {
     private final JButton importTuneButton = new JButton(
-        "Import Tune",
+        "Import Tune From File...",
         AutoupdateUtil.loadIcon("writeconfig48.png")
     );
 

@@ -81,4 +81,20 @@ public class TuneManifestHelper {
             throw new IOException("JSON error " + e, e);
         }
     }
+
+    public static void downloadAllTunes(String baseUrl, Callback callback) throws IOException, ParseException {
+        String localManifest = downloadFile(baseUrl, baseUrl + MANIFEST_FILE_NAME, MANIFEST_FILE_NAME);
+        List<TuneModel> tunes = parseManifest(localManifest);
+
+        for (TuneModel t : tunes) {
+            String localTuneName = trimUrlToLocalName(t.getUrl());
+            // at the moment we always download latest version of all tunes
+            downloadFile(baseUrl, t.getUrl(), localTuneName);
+        }
+        callback.onDownloaded(tunes);
+    }
+
+    public interface Callback {
+        void onDownloaded(List<TuneModel> tunes);
+    }
 }
