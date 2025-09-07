@@ -56,7 +56,14 @@ public class TuneManagementTab {
         buttonColumn.setPreferredWidth(100);
 
         buttonColumn.setCellRenderer(new ButtonRenderer());
-        buttonColumn.setCellEditor(new ButtonEditor(new JButton(), "Click Me", table));
+        buttonColumn.setCellEditor(new ButtonEditor(new JButton(), "Import", table, new ButtonEditor.Clicked() {
+            @Override
+            public void clicked(int row) {
+                TuneModel model = tunes.get(row);
+                // Fire a message box with information about the clicked button
+                JOptionPane.showMessageDialog(table, "Button clicked at Row " + model.getSaferLocalFileName());
+            }
+        }));
 
         content.add(importTuneButton, BorderLayout.SOUTH);
     }
@@ -101,6 +108,8 @@ public class TuneManagementTab {
 
         @Override
         public boolean isCellEditable(int row, int column) {
+            if (row == 0)
+                return false;
             return column == BUTTON_COLUMN - 1;
         }
 

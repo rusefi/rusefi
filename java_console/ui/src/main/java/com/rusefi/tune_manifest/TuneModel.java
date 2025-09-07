@@ -1,5 +1,6 @@
 package com.rusefi.tune_manifest;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 
 public class TuneModel {
@@ -15,6 +16,10 @@ public class TuneModel {
         String notes = (String) object.get("Notes");
         String url = (String) object.get("Url");
         return new TuneModel(notes, url);
+    }
+
+    public @NotNull String getSaferLocalFileName() {
+        return TuneManifestHelper.trimUrlToLocalName(getUrl());
     }
 
     public String getNotes() {

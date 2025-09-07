@@ -6,6 +6,8 @@ import java.awt.*;
 
 public class ButtonRenderer extends JButton implements TableCellRenderer {
 
+    private final JLabel header = new JLabel();
+
     public ButtonRenderer() {
         setOpaque(true);
     }
@@ -13,6 +15,8 @@ public class ButtonRenderer extends JButton implements TableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected, boolean hasFocus, int row, int column) {
+        if (row == 0)
+            return header;
         if (isSelected) {
             setForeground(table.getSelectionForeground());
             setBackground(table.getSelectionBackground());

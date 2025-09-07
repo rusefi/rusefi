@@ -6,21 +6,22 @@ import java.awt.event.ActionListener;
 import java.util.EventObject;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 public class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
 
+    private final JTable table;
+    private final Clicked clicked;
     private final JButton button;
     private String label;
     private boolean isPushed;
-    private final JTable table;
 
-    public ButtonEditor(JButton button, String label, JTable table) {
+    public ButtonEditor(JButton button, String label, JTable table, Clicked clicked) {
         this.button = button;
         this.label = label;
         this.table = table;
+        this.clicked = clicked;
         this.button.setOpaque(true);
         this.button.addActionListener(this);
     }
@@ -58,9 +59,7 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
             // Get the selected row and column
             int selectedRow = table.getSelectedRow();
             int selectedCol = table.getSelectedColumn();
-
-            // Fire a message box with information about the clicked button
-            JOptionPane.showMessageDialog(button, "Button clicked at Row " + selectedRow + ", Column " + selectedCol);
+            clicked.clicked(selectedRow - 1);
         }
         fireEditingStopped();
     }
@@ -69,5 +68,9 @@ public class ButtonEditor extends AbstractCellEditor implements TableCellEditor,
     public boolean isCellEditable(EventObject anEvent) {
         // The cell should only be editable when a button is clicked
         return true;
+    }
+
+    public interface Clicked {
+        void clicked(int row);
     }
 }
