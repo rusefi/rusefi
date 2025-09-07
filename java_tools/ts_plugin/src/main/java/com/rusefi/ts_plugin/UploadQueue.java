@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class UploadQueue {
     private final static Logging log = Logging.getLogging(UploadQueue.class);
 
-    public static final String OUTBOX_FOLDER = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "outbox";
+    public static final String OUTBOX_FOLDER = FileUtil.RUSEFI_SETTINGS_FOLDER + "outbox";
     private static final LinkedBlockingDeque<FileAndFolder> queue = new LinkedBlockingDeque<>(128);
 
     private static boolean isStarted;

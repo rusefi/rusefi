@@ -84,7 +84,7 @@ public class FindFileHelper {
     }
 
     private static void moveFile(String fileDirectory, String fileName) {
-        String destinationFolder = RUSEFI_SETTINGS_FOLDER + File.separator + "older-fw" + File.separator;
+        String destinationFolder = RUSEFI_SETTINGS_FOLDER + "older-fw" + File.separator;
         boolean wasCreated = new File(destinationFolder).mkdirs();
         log.info(destinationFolder + ": created: " + wasCreated);
         String fullSourceFileName = fileDirectory + File.separator + fileName;

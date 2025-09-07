@@ -21,7 +21,7 @@ public class PersistentConfiguration {
         new File(FileUtil.RUSEFI_SETTINGS_FOLDER).mkdirs();
     }
 
-    private static final String CONFIG_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "console_properties.xml";
+    private static final String CONFIG_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + "console_properties.xml";
 
     private Map<String, Object> config = new HashMap<>();
     private boolean isLoaded;

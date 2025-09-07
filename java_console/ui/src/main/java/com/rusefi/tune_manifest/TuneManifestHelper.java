@@ -26,7 +26,7 @@ public class TuneManifestHelper {
 
     // Regex to match any character that is NOT a letter (a-z, A-Z) or digit etc
     private static final String LESS_SAFE_SYMBOLS = "[^a-zA-Z0-9_-]";
-    static final String LOCAL_CACHE = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "tune_manifest" + File.separator;
+    static final String LOCAL_CACHE = FileUtil.RUSEFI_SETTINGS_FOLDER + "tune_manifest" + File.separator;
     static final String MANIFEST_FILE_NAME = "manifest.json";
 
     static String trimUrlToLocalName(String url) {

@@ -12,7 +12,7 @@ import static com.rusefi.core.FileUtil.RUSEFI_SETTINGS_FOLDER;
 
 public class SignatureHelper {
     private static final Logging log = getLogging(SignatureHelper.class);
-    private final static String LOCAL_INI_CACHE_FOLDER = RUSEFI_SETTINGS_FOLDER + File.separator + "ini_database";
+    private final static String LOCAL_INI_CACHE_FOLDER = RUSEFI_SETTINGS_FOLDER + "ini_database";
 
     // todo: find a way to reference Fields.PROTOCOL_SIGNATURE_PREFIX
     private static final String PREFIX = "rusEFI ";
