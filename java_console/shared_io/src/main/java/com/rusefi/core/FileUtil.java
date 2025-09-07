@@ -17,7 +17,7 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class FileUtil {
     private static final Logging log = getLogging(FileUtil.class);
-    public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
+    public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI" + File.separator;
 
     public static void unzip(
         final String zipFileName,

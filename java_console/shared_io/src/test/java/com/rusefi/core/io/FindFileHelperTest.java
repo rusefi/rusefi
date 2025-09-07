@@ -4,42 +4,51 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.rusefi.core.FindFileHelper;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FindFileHelperTest {
     @Test
     public void testNullInCaseOfNoMatches() {
         String testPrefix = "file1";
         String testSuffix = "bin";
-        
-        String[] testFileArray = { "file1", "invalid file"};
-        
-        String result = FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix,testFileArray);
+
+        String[] testFileArray = {"file1", "invalid file"};
+
+        AtomicInteger counter = new AtomicInteger();
+        String result = FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet());
         Assertions.assertNull(result);
+        assertEquals(0, counter.get());
     }
-    
+
     @Test
     public void testValueInCaseOfOneMatches() {
         String testPrefix = "file1";
         String testSuffix = "bin";
-        
-        String[] testFileArray = { "file1", "invalid file", "file1 .bin", "file1.bin" };
-        
-        String result = FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix,testFileArray);
-        Assertions.assertEquals("fileDirectory" + File.separator + "file1.bin", result);
+
+
+        String[] testFileArray = {"file1", "invalid file", "file1 .bin", "file1.bin"};
+
+        AtomicInteger counter = new AtomicInteger();
+        String result = FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet());
+        assertEquals("fileDirectory" + File.separator + "file1.bin", result);
+        assertEquals(0, counter.get());
     }
-    
+
     @Test
-    public void testExceptioInCaseOfMultipleMatches() {
+    public void testMultipleMatches() {
         String testPrefix = "file1";
         String testSuffix = "bin";
-        
-        String[] testFileArray = { "file1.bin", "invalid file", "file1.bin" };
-        
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-        	FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix,testFileArray);
-        });
+
+        String[] testFileArray = {"file1.bin", "invalid file", "file1.bin"};
+
+        AtomicInteger counter = new AtomicInteger();
+
+        FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet());
+        assertEquals(1, counter.get());
     }
 }
 
