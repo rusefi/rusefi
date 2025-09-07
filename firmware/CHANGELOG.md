@@ -41,6 +41,7 @@ Release template (copy/paste this for new release):
  - lua: count dropped CAN messages #8225
  - larger LUA_canFrameCount on F7
  - native OpenBLT updater should help Mac/Linux #8495
+ - firmware binaries to have detailed file names, older files go into .rusefi/older-fw folder #7830
 
 ### Fixed
  - 3000gt 6g72 triggers cam and crank 3-0 more accuracy

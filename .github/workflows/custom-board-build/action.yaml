@@ -107,6 +107,11 @@ runs:
         [ -z "${{inputs.RUSEFI_SSH_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_PASS}}"
         [ -z "${{inputs.ADDITIONAL_ENV}}" ] || echo "::add-mask::${{inputs.ADDITIONAL_ENV}}"
 
+    - name: Get current date
+      shell: bash
+      id: date
+      run: echo "BUNDLE_DATE=$(date +'%Y-%m-%d')">> $GITHUB_ENV
+
     - name: Set Token
       shell: bash
       run: |
