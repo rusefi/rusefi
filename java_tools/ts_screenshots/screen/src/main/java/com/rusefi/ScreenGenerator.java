@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ScreenGenerator {
-    public static final String FILE_NAME = "output.xml";
     private static final String PNG = "png";
     private static ArrayList<AbstractButton> topLevelButtons = new ArrayList<>();
 
