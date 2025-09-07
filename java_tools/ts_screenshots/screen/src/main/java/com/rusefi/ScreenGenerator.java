@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.xml.*;
 
 import javax.imageio.ImageIO;
