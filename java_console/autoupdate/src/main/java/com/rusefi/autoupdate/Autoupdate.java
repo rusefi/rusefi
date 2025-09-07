@@ -115,6 +115,7 @@ public class Autoupdate {
         // todo: we still have technical debt here! https://github.com/rusefi/rusefi/issues/7971
         downloadedAutoupdateFile.ifPresent(Autoupdate::unzipFreshConsole);
         downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
+            findSrecFile(false); // move all current copies into older fw folder
             try {
                 String pathname = "..";
                 log.info("unzipping everything else into " + pathname);

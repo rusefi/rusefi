@@ -187,7 +187,7 @@ public class IniFileModelImpl implements IniFileModel {
     public static @Nullable String findIniFile(String iniFilePath) {
         return FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX, (fileDirectory, fileName) -> {
             throw new IllegalStateException("Unique match expected " + fileName);
-        });
+        }, true);
     }
 
     private void finishDialog() {

@@ -11,7 +11,7 @@ public class PrimeTunerStudioCacheSandbox {
             IniFileModelImpl.RUSEFI_INI_SUFFIX,
             (fileDirectory, fileName) -> {
                 throw new IllegalStateException();
-            });
+            }, true);
         System.out.println("Working with " + localIniFile);
         IniFileModelImpl iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);

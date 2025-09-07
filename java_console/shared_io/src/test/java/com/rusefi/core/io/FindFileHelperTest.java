@@ -19,7 +19,7 @@ public class FindFileHelperTest {
         String[] testFileArray = {"file1", "invalid file"};
 
         AtomicInteger counter = new AtomicInteger();
-        String result = FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet());
+        String result = FindFileHelper.findXNumberOfFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet(), true);
         Assertions.assertNull(result);
         assertEquals(0, counter.get());
     }
@@ -33,7 +33,7 @@ public class FindFileHelperTest {
         String[] testFileArray = {"file1", "invalid file", "file1 .bin", "file1.bin"};
 
         AtomicInteger counter = new AtomicInteger();
-        String result = FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet());
+        String result = FindFileHelper.findXNumberOfFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet(), true);
         assertEquals("fileDirectory" + File.separator + "file1.bin", result);
         assertEquals(0, counter.get());
     }
@@ -47,7 +47,7 @@ public class FindFileHelperTest {
 
         AtomicInteger counter = new AtomicInteger();
 
-        FindFileHelper.findOneFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet());
+        FindFileHelper.findXNumberOfFile("fileDirectory", testPrefix, testSuffix, testFileArray, (fileDirectory, fileName) -> counter.incrementAndGet(), true);
         assertEquals(1, counter.get());
     }
 }
