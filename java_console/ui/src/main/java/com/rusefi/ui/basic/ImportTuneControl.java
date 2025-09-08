@@ -17,7 +17,7 @@ public class ImportTuneControl implements EnableableControl {
         AutoupdateUtil.loadIcon("writeconfig48.png")
     );
 
-    private final ImportTune importTune;
+    private final ImportTuneFileChooser importTune;
 
     private final BasicButtonCoordinator basicButtonCoordinator;
     private final ConnectivityContext connectivityContext;
@@ -31,7 +31,7 @@ public class ImportTuneControl implements EnableableControl {
         this.connectivityContext = connectivityContext;
         this.ecuPortToUse = ecuPortToUse;
         importTuneButton.addActionListener(this::onImportTuneButtonClicked);
-        importTune = new ImportTune(singleAsyncJobExecutor);
+        importTune = new ImportTuneFileChooser(singleAsyncJobExecutor);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ImportTuneControl implements EnableableControl {
         basicButtonCoordinator.disableButtons();
         CompatibilityOptional.ifPresentOrElse(ecuPortToUse.get(),
             port -> {
-                importTune.importTuneAction(port, importTuneButton, connectivityContext);
+                importTune.showFileChooserToImportTuneAction(port, importTuneButton, connectivityContext);
             }, () -> {
                 JOptionPane.showMessageDialog(
                     importTuneButton,

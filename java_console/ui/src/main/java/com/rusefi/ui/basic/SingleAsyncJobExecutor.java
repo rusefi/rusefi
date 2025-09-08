@@ -23,7 +23,7 @@ public class SingleAsyncJobExecutor {
         this.onJobInProgressFinished = onJobInProgressFinished;
     }
 
-    void startJob(final AsyncJob job, final Component parent) {
+    public void startJob(final AsyncJob job, final Component parent) {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
             updateOperationCallbacks.clear();

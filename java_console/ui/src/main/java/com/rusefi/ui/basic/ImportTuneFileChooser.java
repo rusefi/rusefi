@@ -1,31 +1,25 @@
 package com.rusefi.ui.basic;
 
-import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
-import com.rusefi.tune.xml.Msq;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.bind.JAXBException;
 
 import java.io.File;
 
-import static com.devexperts.logging.Logging.getLogging;
-
-public class ImportTune {
-    private static final Logging log = getLogging(ImportTune.class);
+public class ImportTuneFileChooser {
     private static final String TUNE_TO_IMPORT_DEFAULT_DIRECTORY_PROPERTY_NAME = "tune_to_import_default_directory";
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final JFileChooser tuneToImportFileChooser = createTuneToImportFileChooser();
 
-    public ImportTune(final SingleAsyncJobExecutor singleAsyncJobExecutor) {
+    public ImportTuneFileChooser(final SingleAsyncJobExecutor singleAsyncJobExecutor) {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
     }
 
-    void importTuneAction(
+    void showFileChooserToImportTuneAction(
         final PortResult port,
         final JComponent parent,
         final ConnectivityContext connectivityContext
@@ -34,22 +28,8 @@ public class ImportTune {
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             final File selectedFile = tuneToImportFileChooser.getSelectedFile();
             saveTuneToImportDefaultDirectory(selectedFile.getParent());
-            try {
-                final Msq tuneToImport = Msq.readTune(selectedFile.getAbsolutePath());
-                singleAsyncJobExecutor.startJob(new ImportTuneJob(port, tuneToImport, connectivityContext), parent);
-            } catch (JAXBException e) {
-                final String errorMsg = String.format(
-                    "Failed to load tune to import from file %s",
-                    selectedFile.getAbsolutePath()
-                );
-                log.error(errorMsg, e);
-                JOptionPane.showMessageDialog(
-                    parent,
-                    errorMsg,
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
+            String tuneFileName = selectedFile.getAbsolutePath();
+            ImportTuneJob.importTuneIntoDevice(port, parent, connectivityContext, tuneFileName, singleAsyncJobExecutor);
         }
     }
 
