@@ -23,14 +23,14 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     private final JTextArea logTextArea = new JTextArea();
     private final JLabel bottomStatusLabel = new JLabel();
 
-    public StatusPanel() {
+    public StatusPanel(final int height) {
         super(new BorderLayout());
 
         logTextArea.setLineWrap(true);
         JScrollPane messagesScroll = new JScrollPane(logTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension(400, 400);
+                return new Dimension(400, height);
             }
         };
         super.add(messagesScroll, BorderLayout.CENTER);

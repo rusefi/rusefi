@@ -3,6 +3,7 @@ package com.rusefi.ui.basic;
 import com.rusefi.*;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.io.DoubleCallbacks;
 import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.StatusAnimation;
 import com.rusefi.tools.TunerStudioHelper;
@@ -49,17 +50,18 @@ public class BasicStartupFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         final JPanel firmwareUpdateContent = new JPanel();
-        StatusPanel statusPanel = new StatusPanel();
-        SingleAsyncJobExecutor singleAsyncJobExecutor = new SingleAsyncJobExecutor(statusPanel);
+        StatusPanel statusPanelFirmwareTab = new StatusPanel(500);
+        StatusPanel statusPanelTuneTab = new StatusPanel(250);
+        SingleAsyncJobExecutor singleAsyncJobExecutor = new SingleAsyncJobExecutor(new DoubleCallbacks(statusPanelFirmwareTab, statusPanelTuneTab));
 
         AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
         basicUpdaterPanel = new BasicUpdaterPanel(connectivityContext,
             ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
-            statusPanel,
+            statusPanelFirmwareTab,
             singleAsyncJobExecutor, ecuPortToUse
         );
         firmwareUpdateContent.add(basicUpdaterPanel.getContent());
-        firmwareUpdateContent.add(statusPanel);
+        firmwareUpdateContent.add(statusPanelFirmwareTab);
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             onHardwareUpdated(currentHardware);
@@ -70,7 +72,8 @@ public class BasicStartupFrame {
             connectivityContext,
             ecuPortToUse,
             basicUpdaterPanel.getImportTuneButton().getContent(),
-            singleAsyncJobExecutor
+            singleAsyncJobExecutor,
+            statusPanelTuneTab
         ).getContent());
 
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
