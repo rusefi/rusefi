@@ -36,8 +36,8 @@ public class IniFileModelImpl implements IniFileModel {
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
-    public Map</*field name*/String, String> tooltips = new TreeMap<>();
-    public Map<String, String> protocolMeta = new TreeMap<>();
+    private final Map</*field name*/String, String> tooltips = new TreeMap<>();
+    private final Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private boolean isOutputChannelsSection;
     private String currentYBins;
