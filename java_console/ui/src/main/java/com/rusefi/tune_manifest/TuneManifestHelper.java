@@ -36,9 +36,9 @@ public class TuneManifestHelper {
     }
 
     static @Nullable String downloadFile(String baseUrl, String fullFileUrl, String localFileName) throws IOException {
-        String localCacheForSpecificUrl = getLocalFolder(baseUrl);
+        String localFolderForSpecificUrl = getLocalFolder(baseUrl);
 
-        String fullLocalFileName = localCacheForSpecificUrl + localFileName;
+        String fullLocalFileName = localFolderForSpecificUrl + localFileName;
 
         URL url = new URL(fullFileUrl);
         try {
@@ -54,7 +54,7 @@ public class TuneManifestHelper {
         return fullLocalFileName;
     }
 
-    private static @NotNull String getLocalFolder(String baseUrl) {
+    public static @NotNull String getLocalFolder(String baseUrl) {
         String localCacheForSpecificUrl = LOCAL_CACHE + trimUrlToLocalName(baseUrl) + File.separator;
         new File(localCacheForSpecificUrl).mkdirs();
         return localCacheForSpecificUrl;

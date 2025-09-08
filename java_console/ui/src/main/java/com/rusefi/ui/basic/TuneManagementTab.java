@@ -1,7 +1,11 @@
 package com.rusefi.ui.basic;
 
+import com.devexperts.logging.Logging;
+import com.rusefi.ConnectivityContext;
+import com.rusefi.PortResult;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.tune_manifest.TuneManifestHelper;
 import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
@@ -15,15 +19,22 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
 
 public class TuneManagementTab {
+    private static final Logging log = getLogging(TuneManagementTab.class);
+
     private static final int BUTTON_COLUMN = 3;
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel status = new JLabel("Downloading tunes...");
     private final JTable table = new JTable(new MyTableModel());
     private List<TuneModel> tunes = new ArrayList<>();
 
-    public TuneManagementTab(Component importTuneButton, SingleAsyncJobExecutor singleAsyncJobExecutor) {
+    public TuneManagementTab(ConnectivityContext connectivityContext, AtomicReference<Optional<PortResult>> ecuPortToUse, Component importTuneButton, SingleAsyncJobExecutor singleAsyncJobExecutor) {
 //        content.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 
         String tunesManifestUrl = getTunesManifestUrl();
@@ -60,8 +71,13 @@ public class TuneManagementTab {
             @Override
             public void clicked(int row) {
                 TuneModel model = tunes.get(row);
-                // Fire a message box with information about the clicked button
-                JOptionPane.showMessageDialog(table, "Button clicked at Row " + model.getSaferLocalFileName());
+                String localFolderForSpecificUrl = getLocalFolder(tunesManifestUrl);
+                String tuneFileName = localFolderForSpecificUrl + model.getSaferLocalFileName();
+                Optional<PortResult> portResult = ecuPortToUse.get();
+                if (portResult.isPresent()) {
+                    log.info("Let's load " + tuneFileName + " into " + portResult);
+                    ImportTuneJob.importTuneIntoDevice(portResult.get(), status, connectivityContext, tuneFileName, singleAsyncJobExecutor);
+                }
             }
         }));
 

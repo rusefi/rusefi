@@ -58,20 +58,22 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
     private final UpdateOperationCallbacks updateOperationCallbacks;
 //    private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
-    private final AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
+    private final AtomicReference<Optional<PortResult>> ecuPortToUse;
+
     private String latestReportedHash;
 
     BasicUpdaterPanel(
         ConnectivityContext connectivityContext, final boolean showUrlLabel,
-        final UpdateOperationCallbacks updateOperationCallbacks, SingleAsyncJobExecutor singleAsyncJobExecutor
+        final UpdateOperationCallbacks updateOperationCallbacks, SingleAsyncJobExecutor singleAsyncJobExecutor, AtomicReference<Optional<PortResult>> ecuPortToUse
     ) {
         this.connectivityContext = connectivityContext;
+        this.ecuPortToUse = ecuPortToUse;
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
         this.updateOperationCallbacks = updateOperationCallbacks;
         singleAsyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
         importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this,
             connectivityContext,
-            ecuPortToUse);
+            this.ecuPortToUse);
 //        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
         if (isWindows()) {

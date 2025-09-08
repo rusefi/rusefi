@@ -14,6 +14,8 @@ import com.rusefi.ui.widgets.StatusPanel;
 import javax.swing.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * java -jar rusefi_console.jar basic-ui
@@ -50,10 +52,11 @@ public class BasicStartupFrame {
         StatusPanel statusPanel = new StatusPanel();
         SingleAsyncJobExecutor singleAsyncJobExecutor = new SingleAsyncJobExecutor(statusPanel);
 
+        AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
         basicUpdaterPanel = new BasicUpdaterPanel(connectivityContext,
             ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
             statusPanel,
-            singleAsyncJobExecutor
+            singleAsyncJobExecutor, ecuPortToUse
         );
         firmwareUpdateContent.add(basicUpdaterPanel.getContent());
         firmwareUpdateContent.add(statusPanel);
@@ -64,6 +67,8 @@ public class BasicStartupFrame {
 
         tabbedPane.addTab("Firmware", firmwareUpdateContent);
         tabbedPane.addTab("Tunes", new TuneManagementTab(
+            connectivityContext,
+            ecuPortToUse,
             basicUpdaterPanel.getImportTuneButton().getContent(),
             singleAsyncJobExecutor
         ).getContent());
