@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 public class TuneModel {
     private final String notes;
     private final String url;
+    private boolean error;
 
     public TuneModel(String notes, String url) {
         this.notes = notes;
@@ -36,5 +37,13 @@ public class TuneModel {
             "notes='" + notes + '\'' +
             ", url='" + url + '\'' +
             '}';
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
+    }
+
+    public boolean isError() {
+        return error;
     }
 }

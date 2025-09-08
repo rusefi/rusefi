@@ -89,7 +89,8 @@ public class TuneManifestHelper {
         for (TuneModel t : tunes) {
             String localTuneName = t.getSaferLocalFileName();
             // at the moment we always download latest version of all tunes
-            downloadFile(baseUrl, t.getUrl(), localTuneName);
+            String localFile = downloadFile(baseUrl, t.getUrl(), localTuneName);
+            t.setError(localFile == null);
         }
         callback.onDownloaded(tunes);
     }
