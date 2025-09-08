@@ -23,7 +23,7 @@ public class TuneManagementTab {
     private final JTable table = new JTable(new MyTableModel());
     private List<TuneModel> tunes = new ArrayList<>();
 
-    public TuneManagementTab(Component importTuneButton) {
+    public TuneManagementTab(Component importTuneButton, SingleAsyncJobExecutor singleAsyncJobExecutor) {
 //        content.setBorder(BorderFactory.createLineBorder(Color.GREEN));
 
         String tunesManifestUrl = getTunesManifestUrl();

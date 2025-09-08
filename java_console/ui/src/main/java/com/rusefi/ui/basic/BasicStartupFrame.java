@@ -48,9 +48,12 @@ public class BasicStartupFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
         final JPanel firmwareUpdateContent = new JPanel();
         StatusPanel statusPanel = new StatusPanel();
+        SingleAsyncJobExecutor singleAsyncJobExecutor = new SingleAsyncJobExecutor(statusPanel);
+
         basicUpdaterPanel = new BasicUpdaterPanel(connectivityContext,
             ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
-            statusPanel
+            statusPanel,
+            singleAsyncJobExecutor
         );
         firmwareUpdateContent.add(basicUpdaterPanel.getContent());
         firmwareUpdateContent.add(statusPanel);
@@ -60,7 +63,10 @@ public class BasicStartupFrame {
         }));
 
         tabbedPane.addTab("Firmware", firmwareUpdateContent);
-        tabbedPane.addTab("Tunes", new TuneManagementTab(basicUpdaterPanel.getImportTuneButton().getContent()).getContent());
+        tabbedPane.addTab("Tunes", new TuneManagementTab(
+            basicUpdaterPanel.getImportTuneButton().getContent(),
+            singleAsyncJobExecutor
+        ).getContent());
 
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
         frame.showFrame(tabbedPane, false);

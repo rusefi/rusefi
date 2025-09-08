@@ -43,6 +43,7 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
     private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings");
 
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
+    // todo: this control lives on a different parent TODO fix this mess!
     private final ImportTuneControl importTuneButton;
 
     private final JButton updateCalibrationsButton = new JButton(
@@ -62,14 +63,12 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
 
     BasicUpdaterPanel(
         ConnectivityContext connectivityContext, final boolean showUrlLabel,
-        final UpdateOperationCallbacks updateOperationCallbacks
+        final UpdateOperationCallbacks updateOperationCallbacks, SingleAsyncJobExecutor singleAsyncJobExecutor
     ) {
         this.connectivityContext = connectivityContext;
-        singleAsyncJobExecutor = new SingleAsyncJobExecutor(
-            updateOperationCallbacks,
-            () -> SwingUtilities.invokeLater(this::refreshButtons)
-        );
+        this.singleAsyncJobExecutor = singleAsyncJobExecutor;
         this.updateOperationCallbacks = updateOperationCallbacks;
+        singleAsyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
         importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this,
             connectivityContext,
             ecuPortToUse);
