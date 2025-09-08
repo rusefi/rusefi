@@ -15,6 +15,8 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.rusefi.ScreenGeneratorTool.FILE_NAME;
+
 public class ScreenGenerator {
     private static final String PNG = "png";
     private static ArrayList<AbstractButton> topLevelButtons = new ArrayList<>();
@@ -37,9 +39,9 @@ public class ScreenGenerator {
             System.exit(-1);
         }
 
-        iniFileModel = IniFileModelImpl.readIniFile(".");
+        iniFileModel = IniFileModelImpl.readIniFile("C:\\stuff\\rusefi\\firmware\\tunerstudio\\generated\\rusefi_uaefi.ini");
 
-        for (Map.Entry<String, com.opensr5.ini.DialogModel.Field> a : iniFileModel.getAllFields().entrySet()) {
+        for (Map.Entry<String, com.opensr5.ini.DialogModel.Field> a : iniFileModel.getFieldsInUiOrder().entrySet()) {
             String cleanUiName = cleanName(a.getValue().getUiName());
             byCleanUiName.put(cleanUiName, a.getValue());
         }
@@ -190,7 +192,7 @@ public class ScreenGenerator {
                 continue;
 
             String fieldName = f.getKey();
-            String tooltip = iniFileModel.tooltips.get(fieldName);
+            String tooltip = iniFileModel.getTooltips().get(fieldName);
 
             dialogModel.fields.add(new FieldModel(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip));
 

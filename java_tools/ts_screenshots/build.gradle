@@ -1,4 +1,5 @@
 dependencies {
   api project(':inifile')
   api global_libs.jaxb
+  implementation files('lib/TunerStudioMS.jar')
 }
