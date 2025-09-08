@@ -10,6 +10,7 @@ public class TunerStudioIntegration {
      * these magic class names are specific to TS build
      * At the moment we use 3.1.02 names
      * http://www.tunerstudio.com/downloads2/TunerStudioMS_Setup_v3.1.02.exe
+     * https://github.com/rusefi/rusefi_external_utils/blob/master/TunerStudio/TunerStudioMS_Setup_v3.1.02.exe
      */
     private static final String VERSION = "3.1.02";
     private static final String TS_DIALOG = "com.efiAnalytics.ui.dg";
