@@ -62,7 +62,7 @@ public class WriteSimulatorConfiguration {
             readBinaryWriteXmlTune(iniFileName, in,
                 TuneCanTool.getDefaultTuneOutputFileName(engineType), ini);
         } catch (Throwable e) {
-            throw new IllegalStateException("With " + engineType, e);
+            throw new IllegalStateException("writeSpecificEngineType: With " + engineType, e);
         }
     }
 

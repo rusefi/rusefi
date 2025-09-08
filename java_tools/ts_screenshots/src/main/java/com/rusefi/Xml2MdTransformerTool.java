@@ -20,7 +20,7 @@ public class Xml2MdTransformerTool {
         //FOLDER = "images/";
         FOLDER = "overview/TS_generated/";
 
-        ContentModel contentModel = XmlUtil.readModel(ContentModel.class, new File(ScreenGeneratorTool.FILE_NAME));
+        ContentModel contentModel = XmlUtil.readModel(ContentModel.class, new File(ScreenGenerator.XML_DUMP));
 
         generateTopLevel(contentModel);
 

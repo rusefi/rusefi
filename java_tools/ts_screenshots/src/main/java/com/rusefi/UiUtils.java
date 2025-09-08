@@ -40,10 +40,14 @@ public class UiUtils {
     }
 
     public static BufferedImage getScreenShot(Component component) {
+        int width = component.getWidth();
+        int height = component.getHeight();
+        if (width == 0 || height == 0)
+            return null;
         BufferedImage image = new BufferedImage(
-                component.getWidth(),
-                component.getHeight(),
-                BufferedImage.TYPE_INT_RGB
+            width,
+            height,
+            BufferedImage.TYPE_INT_RGB
         );
         // call the Component's paint method, using
         // the Graphics object of the image.
