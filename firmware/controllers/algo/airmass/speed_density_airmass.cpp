@@ -53,7 +53,7 @@ float SpeedDensityAirmass::getAirflow(float rpm, float map, bool postState) {
 }
 
 float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float mapSensor) {
-	float blendDuration = = interpolate2d(rpm, config->tpsTspCorrValuesBins,
+	float blendDuration = interpolate2d(rpm, config->tpsTspCorrValuesBins,
 						config->tpsTspCorrValues);
 	if ( blendDuration > 2) {
 		blendDuration = 1;
