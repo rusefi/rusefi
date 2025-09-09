@@ -33,7 +33,7 @@ public class BasicStartupFrame {
         whiteLabel + " basic console " + Launcher.CONSOLE_VERSION
     );
 
-    private final StatusAnimation status = new StatusAnimation(this::updateStatus, StartupFrame.SCANNING_PORTS);
+    private final StatusAnimation status;
 
     public static void main(String[] args) throws InterruptedException, InvocationTargetException {
         runTool(null);
@@ -80,6 +80,8 @@ public class BasicStartupFrame {
         frame.showFrame(tabbedPane, false);
         UiUtils.centerWindow(frame.getFrame());
         packFrame();
+
+        status = new StatusAnimation(this::updateStatus, StartupFrame.SCANNING_PORTS);
     }
 
     private void packFrame() {
