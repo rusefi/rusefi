@@ -1,0 +1,1 @@
+#define LUA_SCRIPT_SIZE 48000

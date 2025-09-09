@@ -3,7 +3,9 @@
 # Target ECU board design
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
-
+ifeq ($(PROJECT_CPU),ARCH_STM32F7)
+	DDEFS += -DLUA_RX_MAX_FILTER_COUNT=96
+endif
 
 #no mux on mm100
 
