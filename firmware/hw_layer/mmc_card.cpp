@@ -657,7 +657,7 @@ static int sdLogger(FIL *fd)
 		}
 	} else {
 		// logger is dead until restart, do not waste CPU
-		chThdSleepMilliseconds(TIME_MS2I(100));
+		chThdSleepMilliseconds(100);
 		return -1;
 	}
 
@@ -833,7 +833,7 @@ static int sdModeExecuter()
 	case SD_MODE_UNMOUNT:
 	case SD_MODE_FORMAT:
 		// nothing to do in these state, just sleep
-		chThdSleepMilliseconds(TIME_MS2I(100));
+		chThdSleepMilliseconds(100);
 		return 0;
 	case SD_MODE_ECU:
 		if (sdNeedRemoveReports) {
