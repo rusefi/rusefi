@@ -1,0 +1,346 @@
+-- Transmission Control for 4 gears; more, maybe later!
+-- https://rusefi.com/forum/viewtopic.php?f=5&t=2925
+
+-- TCU Lua Script: Normal var names, Corrected VSS logic, Toggleable filters
+
+-- Configuration Flags (Manually change for testing)
+local enableVssSpikeFilter = false   -- Set to false to disable VSS spike filtering
+local enableGearErrorCheck = false   -- Set to false to disable gear match error detection
+
+-- Sensor Declarations
+local cltSensor = Sensor.new("Clt")
+local rpmSensor = Sensor.new("Rpm")
+local mapSensor = Sensor.new("Map")
+local tps1Sensor = Sensor.new("Tps1")
+local vehicleSpeedSensor = Sensor.new("VehicleSpeed")
+local inputShaftSpeedSensor = Sensor.new("InputShaftSpeed")
+local detectedGearSensor = Sensor.new("DetectedGear")
+
+-- Sensor Timeouts
+local SENSOR_TIMEOUT_MS = 3000
+cltSensor:setTimeout(SENSOR_TIMEOUT_MS)
+rpmSensor:setTimeout(SENSOR_TIMEOUT_MS)
+mapSensor:setTimeout(SENSOR_TIMEOUT_MS)
+tps1Sensor:setTimeout(SENSOR_TIMEOUT_MS)
+vehicleSpeedSensor:setTimeout(SENSOR_TIMEOUT_MS)
+inputShaftSpeedSensor:setTimeout(SENSOR_TIMEOUT_MS)
+detectedGearSensor:setTimeout(SENSOR_TIMEOUT_MS)
+
+-- Core State Variables
+local IntendedGear = 3
+local initialDataReceived = false
+local lastKnownRawVss = nil             -- Raw VSS after idle override, before scaling (used by spike filter & print)
+local lastSetVehicleSpeed = 0.0         -- Scaled VSS value that was last set to the firmware sensor
+local idleStateForcedInLastCanCycle = false
+
+-- PWM Configuration
+local SOLENOID_A_PWM_INDEX = 0
+local SOLENOID_B_PWM_INDEX = 1
+local PWM_FREQUENCY = 10
+
+-- Solenoid State Strings for Printing
+local solenoid_A_state_str = "OFF"
+local solenoid_B_state_str = "OFF"      -- Will be correctly set during init by setSolenoidsForGear
+
+-- Shift Process Timers and Flags
+local shift_in_progress_timer = Timer.new()
+local is_shifting = false
+
+local gearMatchTimer = Timer.new()
+local is_checking_gear_match = false
+local shiftErrorActive = false
+
+local printStatusTimer = Timer.new()
+
+-- User-Configurable Settings (loaded in init, using normal length Lua variable names)
+local wotTpsThresholdSetting
+local shiftExecutionTimeSecondsSetting
+local downshiftLockoutRpmSetting
+local gearMatchTimeoutSecondsSetting
+local numberOfGearSolenoidsSetting
+
+-- Table and Curve Indices (loaded in init)
+local upshiftScheduleTableIndex
+local downshiftScheduleTableIndex
+local wotRpmCurveIndex
+local solenoidPatternCurveIndex
+
+-- Helper: Get 16-bit unsigned value from CAN data (Big Endian based on your usage)
+function getTwoBytesUnsignedLsb(data, startIndex)
+    local msb = data[startIndex]
+    local lsb = data[startIndex + 1]
+    if msb == nil or lsb == nil then return 0 end
+    return lsb + (msb * 256)
+end
+
+-- Helper: Get signed byte
+function getSignedByte(rawValue)
+    if rawValue > 127 then return rawValue - 256
+    else return rawValue end
+end
+
+-- Helper: Command solenoids based on pattern from "solPattern" curve
+function setSolenoidsForGear(targetGear)
+    if solenoidPatternCurveIndex == nil then
+        print("ERR: solPattern Idx nil")
+        if numberOfGearSolenoidsSetting >= 1 then setPwmDuty(SOLENOID_A_PWM_INDEX, 0.0); solenoid_A_state_str = "OFF" end
+        if numberOfGearSolenoidsSetting >= 2 then setPwmDuty(SOLENOID_B_PWM_INDEX, 0.0); solenoid_B_state_str = "OFF" end
+        return
+    end
+
+    local patternCode = curve(solenoidPatternCurveIndex, targetGear)
+    if patternCode == nil then
+        print("WARN: No solPattern for gear " .. targetGear)
+        patternCode = 0
+    end
+    patternCode = math.floor(patternCode)
+    local tempPattern = patternCode
+
+    -- Solenoid A
+    if numberOfGearSolenoidsSetting >= 1 then
+        local solA_duty = 0.0
+        if numberOfGearSolenoidsSetting == 1 then
+            if tempPattern == 1 then solA_duty = 1.0 end
+        elseif numberOfGearSolenoidsSetting == 2 then
+            if math.floor(tempPattern / 10) == 1 then solA_duty = 1.0 end
+        elseif numberOfGearSolenoidsSetting == 3 then
+            if math.floor(tempPattern / 100) == 1 then solA_duty = 1.0 end
+        end
+        setPwmDuty(SOLENOID_A_PWM_INDEX, solA_duty)
+        solenoid_A_state_str = (solA_duty == 1.0) and "ON" or "OFF"
+    else
+        solenoid_A_state_str = "N/A"
+    end
+
+    -- Solenoid B
+    if numberOfGearSolenoidsSetting >= 2 then
+        local solB_duty = 0.0
+        if numberOfGearSolenoidsSetting == 2 then
+            if tempPattern % 10 == 1 then solB_duty = 1.0 end
+        elseif numberOfGearSolenoidsSetting == 3 then
+            if math.floor((tempPattern % 100) / 10) == 1 then solB_duty = 1.0 end
+        end
+        setPwmDuty(SOLENOID_B_PWM_INDEX, solB_duty)
+        solenoid_B_state_str = (solB_duty == 1.0) and "ON" or "OFF"
+    else
+        solenoid_B_state_str = "N/A"
+    end
+end
+
+-- Initialization Function
+function initializeShiftLogic()
+    -- Load user settings using shortened camelCase names for findSetting
+    wotTpsThresholdSetting = findSetting("wotTps", 90.0)
+    local shiftExecutionTimeMsSetting = findSetting("shiftTime", 500)
+    shiftExecutionTimeSecondsSetting = shiftExecutionTimeMsSetting / 1000.0
+    downshiftLockoutRpmSetting = findSetting("dsLockRpm", 7000)
+    local gearMatchTimeoutMsSetting = findSetting("gearMatch", 3000)
+    gearMatchTimeoutSecondsSetting = gearMatchTimeoutMsSetting / 1000.0
+    numberOfGearSolenoidsSetting = findSetting("numGearSol", 2)
+
+    -- Load table and curve indices using shortened camelCase names
+    upshiftScheduleTableIndex = findTableIndex("upSched")
+    downshiftScheduleTableIndex = findTableIndex("downSched")
+    wotRpmCurveIndex = findCurveIndex("wotRpm")
+    solenoidPatternCurveIndex = findCurveIndex("solPattern")
+
+    if upshiftScheduleTableIndex == nil or downshiftScheduleTableIndex == nil or wotRpmCurveIndex == nil or solenoidPatternCurveIndex == nil then
+        print("ERR: Table/Curve nil")
+    end
+
+    if numberOfGearSolenoidsSetting >= 1 then startPwm(SOLENOID_A_PWM_INDEX, PWM_FREQUENCY, 0.0) end
+    if numberOfGearSolenoidsSetting >= 2 then startPwm(SOLENOID_B_PWM_INDEX, PWM_FREQUENCY, 0.0) end
+
+    setSolenoidsForGear(IntendedGear) -- Set solenoids to initial IntendedGear (3rd)
+    printStatusTimer:reset()
+end
+
+initializeShiftLogic()
+
+-- onCanRx: Callback for received CAN messages
+function onCanRx(bus, id, dlc, data)
+    if id == 0x360 then -- RPM, MAP, TPS
+        rpmSensor:set(getTwoBytesUnsignedLsb(data, 1))
+        mapSensor:set(getTwoBytesUnsignedLsb(data, 3) / 10.0)
+        tps1Sensor:set(getTwoBytesUnsignedLsb(data, 5) / 10.0)
+    elseif id == 0x3E0 then -- Coolant Temp
+        cltSensor:set(getTwoBytesUnsignedLsb(data, 1) / 100.0)
+    elseif id == 0x470 then -- ECU Transmitted Gear Data
+        local rawGearValue = data[8]
+        if rawGearValue ~= nil then
+            local actualGear = getSignedByte(rawGearValue)
+            detectedGearSensor:set(actualGear)
+        end
+    elseif id == 0x370 then -- Vehicle Speed, and main shift logic trigger
+        idleStateForcedInLastCanCycle = false -- Reset per 0x370 cycle
+        local newRawVssFromCan = getTwoBytesUnsignedLsb(data, 1)
+        local processedRawVss = newRawVssFromCan -- This will hold raw VSS after idle forcing
+        local currentFinalVehicleSpeed           -- This will hold scaled VSS after spike filter & idle forcing
+        local forceIdleState = false             -- True if idle conditions (low RPM/TPS) are met
+
+        -- One-time check for initial sensor data
+        if not initialDataReceived then
+            if getSensor("Rpm") ~= nil and getSensor("Tps1") ~= nil and newRawVssFromCan ~= nil then
+                initialDataReceived = true
+            end
+        end
+
+        local currentRpm = getSensor("Rpm")
+        local currentTps = getSensor("Tps1")
+
+        -- Force VSS to 0 if idle-like conditions met
+        if currentRpm ~= nil and currentTps ~= nil then
+            if currentRpm < 1300 and currentTps < 1.0 then
+                processedRawVss = 0 -- Force the VSS value used for logic to 0
+                forceIdleState = true
+                idleStateForcedInLastCanCycle = true
+            end
+        end
+
+        -- VSS Spike Filter (conditionally active)
+        local useLastSpeedDueToSpike = false
+        if enableVssSpikeFilter then
+            if lastKnownRawVss ~= nil and processedRawVss ~= nil and math.abs(processedRawVss - lastKnownRawVss) > 100 then
+                useLastSpeedDueToSpike = true
+            end
+        end
+
+        if useLastSpeedDueToSpike then
+            currentFinalVehicleSpeed = lastSetVehicleSpeed -- Use last scaled VSS
+            -- lastKnownRawVss is NOT updated with the spiky processedRawVss
+        elseif processedRawVss ~= nil then
+            currentFinalVehicleSpeed = processedRawVss  -- Scale the (potentially overridden) raw VSS
+            lastKnownRawVss = processedRawVss                 -- Store the raw (but potentially overridden) value
+        else
+            currentFinalVehicleSpeed = lastSetVehicleSpeed    -- Fallback
+        end
+
+        vehicleSpeedSensor:set(currentFinalVehicleSpeed)
+        inputShaftSpeedSensor:set(currentFinalVehicleSpeed)
+        lastSetVehicleSpeed = currentFinalVehicleSpeed
+
+        -- Check "Shift In Progress" Timer
+        if is_shifting then
+            if shift_in_progress_timer:getElapsedSeconds() >= shiftExecutionTimeSecondsSetting then
+                is_shifting = false
+            end
+        end
+
+        -- High Priority: Force to 1st gear if idle state is active and not already in 1st/shifting
+        if forceIdleState and IntendedGear ~= 1 and not is_shifting then
+            IntendedGear = 1
+            setSolenoidsForGear(IntendedGear)
+            is_shifting = true; shift_in_progress_timer:reset()
+            is_checking_gear_match = true; gearMatchTimer:reset()
+            shiftErrorActive = false
+        end
+
+        -- Main Shift Decision Logic: Only if not shifting, data received, tables loaded
+        if not is_shifting and initialDataReceived and
+           upshiftScheduleTableIndex ~= nil and downshiftScheduleTableIndex ~= nil and
+           wotRpmCurveIndex ~= nil and solenoidPatternCurveIndex ~= nil then
+
+            currentRpm = getSensor("Rpm") -- Re-fetch for current values
+            currentTps = getSensor("Tps1")
+
+            if currentRpm == nil or currentTps == nil then
+                -- Skip if essential sensor data still missing for this cycle
+            else
+                local isWOT = (currentTps >= wotTpsThresholdSetting)
+                local newPotentialDesiredGear = IntendedGear
+
+                -- 1. WOT Upshift
+                if isWOT and IntendedGear < 4 then
+                    local wotTargetRpm = curve(wotRpmCurveIndex, IntendedGear)
+                    if wotTargetRpm ~= nil and currentRpm >= wotTargetRpm then
+                        newPotentialDesiredGear = IntendedGear + 1
+                    end
+                end
+
+                -- 2. Table Downshift (if no WOT upshift)
+                if newPotentialDesiredGear == IntendedGear and IntendedGear > 1 then
+                    local yAxis = IntendedGear
+                    local targetVss = table3d(downshiftScheduleTableIndex, currentTps, yAxis)
+                    if targetVss ~= nil and currentFinalVehicleSpeed <= targetVss and currentRpm <= downshiftLockoutRpmSetting then
+                        newPotentialDesiredGear = IntendedGear - 1
+                    end
+                end
+
+                -- 3. Table Upshift (if no WOT upshift or downshift)
+                if newPotentialDesiredGear == IntendedGear and IntendedGear < 4 then
+                    local yAxis = IntendedGear
+                    local vssForTableLookup = currentFinalVehicleSpeed
+                    if currentRpm < 1200 then vssForTableLookup = 0.0 end -- RPM override for VSS in table lookup
+
+                    local targetVss = table3d(upshiftScheduleTableIndex, currentTps, yAxis)
+                    if targetVss ~= nil and vssForTableLookup >= targetVss then
+                        newPotentialDesiredGear = IntendedGear + 1
+                    end
+                end
+
+                -- Shift Execution
+                if newPotentialDesiredGear ~= IntendedGear and newPotentialDesiredGear >= 1 and newPotentialDesiredGear <= 4 then
+                    IntendedGear = newPotentialDesiredGear
+                    setSolenoidsForGear(IntendedGear)
+                    is_shifting = true; shift_in_progress_timer:reset()
+                    is_checking_gear_match = true; gearMatchTimer:reset()
+                    shiftErrorActive = false
+                end
+            end
+        end
+    end
+end
+
+canRxAdd(0x360);
+canRxAdd(0x3E0);
+canRxAdd(0x370);
+canRxAdd(0x470) -- 0x470 is added in initializeShiftLogic
+
+-- onTick: Called periodically by TCU firmware
+function onTick()
+    -- Check "Gear Match" Timer (conditionally active)
+    if enableGearErrorCheck and is_checking_gear_match then
+        local actualGear = getSensor("DetectedGear")
+        if actualGear ~= nil and IntendedGear == actualGear then
+            shiftErrorActive = false
+            is_checking_gear_match = false
+        elseif gearMatchTimer:getElapsedSeconds() >= gearMatchTimeoutSecondsSetting then
+            shiftErrorActive = true
+            is_checking_gear_match = false
+        end
+    elseif not enableGearErrorCheck and is_checking_gear_match then
+        is_checking_gear_match = false
+        shiftErrorActive = false
+    end
+
+    -- Periodic Status Print (every 500ms)
+    if printStatusTimer:getElapsedSeconds() >= 0.5 then
+        if initialDataReceived then
+            local detectedGearString = "nil"; local detectedGearValue = getSensor("DetectedGear")
+            if detectedGearValue ~= nil then detectedGearString = detectedGearValue end
+
+            local rpmString = "nil"; local rpmValue = getSensor("Rpm")
+            if rpmValue ~= nil then rpmString = rpmValue end
+
+            local tpsString = "nil"; local tpsValue = getSensor("Tps1")
+            if tpsValue ~= nil then tpsString = tpsValue end
+
+            local lastKnownRawVssString = "nil"
+            if lastKnownRawVss ~= nil then lastKnownRawVssString = lastKnownRawVss end
+
+            local shiftErrorString = "N/A"
+            if enableGearErrorCheck then shiftErrorString = (shiftErrorActive and "TRUE" or "false") end
+
+            local isShiftingString = (is_shifting and "YES" or "no")
+            local idleForcedString = (idleStateForcedInLastCanCycle and "YES" or "no")
+
+            print("VSS:"..lastSetVehicleSpeed.."(Raw:"..lastKnownRawVssString..") RPM:"..rpmString.." TPS:"..tpsString..
+                  " IGear:"..IntendedGear.." AGear:"..detectedGearString..
+                  " SolA:"..solenoid_A_state_str.." SolB:"..solenoid_B_state_str..
+                  " SErr:"..shiftErrorString.." Shft'ing:"..isShiftingString.." IdleFrc:"..idleForcedString)
+        end
+        printStatusTimer:reset()
+    end
+end
+
+setTickRate(100) -- 100 Hz
