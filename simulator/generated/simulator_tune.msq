@@ -4353,8 +4353,8 @@ end</constant>
         <constant digits="0" name="totalGearsCount" units="">0.0</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="tps1_2AdcChannel">"Disabled"</constant>
-        <constant digits="0" name="tps1SecondaryMax" units="ADC">0.0</constant>
-        <constant digits="0" name="tps1SecondaryMin" units="ADC">1000.0</constant>
+        <constant digits="2" name="tps1SecondaryMax" units="V">0.0</constant>
+        <constant digits="2" name="tps1SecondaryMin" units="V">4.882813</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
         <constant name="tps2_2AdcChannel">"Disabled"</constant>
         <constant digits="0" name="tps2Max" units="ADC">1000.0</constant>
@@ -4369,8 +4369,8 @@ end</constant>
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
-        <constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
-        <constant digits="0" name="tpsMin" units="ADC">0.0</constant>
+        <constant digits="2" name="tpsMax" units="V">4.882813</constant>
+        <constant digits="2" name="tpsMin" units="V">0.0</constant>
         <constant digits="1" name="tpsSecondaryMaximum" units="%">0.0</constant>
         <constant cols="1" digits="2" name="tpsTpsAccelFromRpmBins" rows="8">
          0.0
@@ -5088,7 +5088,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250908" nPages="1" signature="rusEFI master.2025.09.10.f407-discovery.1964545473" version="5.0"/>
+    <versionInfo firmwareInfo="20250908" nPages="1" signature="rusEFI master.2025.09.10.f407-discovery.3262994812" version="5.0"/>
     <bibliography author="rusEFI 20250908" writeDate="date"/>
     <settings/>
     <userComments/>
