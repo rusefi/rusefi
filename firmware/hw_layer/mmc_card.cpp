@@ -351,7 +351,10 @@ static void prepareLogFileName() {
  * This function saves the name of the file in a global variable
  * so that we can later append to that file
  */
-static void sdLoggerCreateFile(FIL *fd) {
+static int sdLoggerCreateFile(FIL *fd) {
+	// turn off indicator
+	sdLoggerSetReady(false);
+
 	// clear the memory
 	memset(fd, 0, sizeof(FIL));
 	prepareLogFileName();
@@ -359,11 +362,18 @@ static void sdLoggerCreateFile(FIL *fd) {
 	efiPrintf("starting log file %s", logName);
 	// Create new file. If file is exist - truncate and overwrite, we need header to be at zero offset.
 	FRESULT err = f_open(fd, logName, FA_CREATE_ALWAYS | FA_WRITE);
-	if (err != FR_OK && err != FR_EXIST) {
+	if (err == FR_EXIST) {
+		err = FR_OK;
+	}
+#if EFI_TUNER_STUDIO
+	// Show error to TS
+	engine->outputChannels.sd_error = (uint8_t)err;
+#endif
+	if (err != FR_OK) {
 		sdStatus = SD_STATUS_OPEN_FAILED;
-		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
-		printError("log file create", err);	// else - show error
-		return;
+		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: file open failed");
+		printError("log file create", err);
+		return -1;
 	}
 
 #ifdef LOGGER_MAX_FILE_SIZE
@@ -377,6 +387,8 @@ static void sdLoggerCreateFile(FIL *fd) {
 
 	// SD logger is ok
 	sdLoggerSetReady(true);
+
+	return 0;
 }
 
 static void sdLoggerCloseFile(FIL *fd)
@@ -622,10 +634,18 @@ static int sdLogger(FIL *fd)
 
 	if (!sdLoggerInitDone) {
 		incLogFileName(fd);
-		sdLoggerCreateFile(fd);
-		logBuffer.start(fd);
+		ret = sdLoggerCreateFile(fd);
+		if (ret == 0) {
+			ret = logBuffer.start(fd);
+		}
 		resetFileLogging();
+
 		sdLoggerInitDone = true;
+
+		if (ret < 0) {
+			sdLoggerFailed = true;
+			return ret;
+		}
 	}
 
 	if (!sdLoggerFailed) {
@@ -638,6 +658,13 @@ static int sdLogger(FIL *fd)
 
 	if (ret < 0) {
 		sdLoggerFailed = true;
+		return ret;
+	}
+
+	if (sdLoggerFailed) {
+		// logger is dead until restart, do not waste CPU
+		chThdSleepMilliseconds(100);
+		return -1;
 	}
 
 #ifdef LOGGER_MAX_FILE_SIZE
@@ -648,11 +675,8 @@ static int sdLogger(FIL *fd)
 		logBuffer.stop();
 		sdLoggerCloseFile(fd);
 
-		//start new file
-		incLogFileName(fd);
-		sdLoggerCreateFile(fd);
-		logBuffer.start(fd);
-		resetFileLogging();
+		//need to start new file
+		sdLoggerInitDone = false;
 	}
 #endif
 
@@ -807,7 +831,7 @@ static int sdModeExecuter()
 	case SD_MODE_UNMOUNT:
 	case SD_MODE_FORMAT:
 		// nothing to do in these state, just sleep
-		chThdSleepMilliseconds(TIME_MS2I(100));
+		chThdSleepMilliseconds(100);
 		return 0;
 	case SD_MODE_ECU:
 		if (sdNeedRemoveReports) {
