@@ -184,12 +184,6 @@ float getConfigValueByHash(const int hash) {
 // useIdleAdvanceWhileCoasting
 		case 586887955:
 			return engineConfiguration->useIdleAdvanceWhileCoasting;
-// tpsMin
-		case 513872736:
-			return engineConfiguration->tpsMin;
-// tpsMax
-		case 513872482:
-			return engineConfiguration->tpsMax;
 // tpsErrorDetectionTooLow
 		case 625338761:
 			return engineConfiguration->tpsErrorDetectionTooLow;
@@ -580,12 +574,6 @@ float getConfigValueByHash(const int hash) {
 // stepperParkingExtraSteps
 		case -509113657:
 			return engineConfiguration->stepperParkingExtraSteps;
-// tps1SecondaryMin
-		case -1312968487:
-			return engineConfiguration->tps1SecondaryMin;
-// tps1SecondaryMax
-		case -1312968741:
-			return engineConfiguration->tps1SecondaryMax;
 // startCrankingDuration
 		case 644409862:
 			return engineConfiguration->startCrankingDuration;
@@ -2363,16 +2351,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useIdleAdvanceWhileCoasting = (int)value;
 		return 1;
 	}
-		case 513872736:
-	{
-		engineConfiguration->tpsMin = (int)value;
-		return 1;
-	}
-		case 513872482:
-	{
-		engineConfiguration->tpsMax = (int)value;
-		return 1;
-	}
 		case 625338761:
 	{
 		engineConfiguration->tpsErrorDetectionTooLow = (int)value;
@@ -3021,16 +2999,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -509113657:
 	{
 		engineConfiguration->stepperParkingExtraSteps = (int)value;
-		return 1;
-	}
-		case -1312968487:
-	{
-		engineConfiguration->tps1SecondaryMin = (int)value;
-		return 1;
-	}
-		case -1312968741:
-	{
-		engineConfiguration->tps1SecondaryMax = (int)value;
 		return 1;
 	}
 		case 644409862:

@@ -178,12 +178,6 @@ If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 ### useIdleAdvanceWhileCoasting
 
 
-### tpsMin
-Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel
-
-### tpsMax
-Full throttle.\nSee also tps1_1AdcChannel
-
 ### tpsErrorDetectionTooLow
 TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equipped.
 
@@ -572,12 +566,6 @@ This many MAP samples are used to estimate the current MAP. This many samples ar
 Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.
 
 ### stepperParkingExtraSteps
-
-
-### tps1SecondaryMin
-
-
-### tps1SecondaryMax
 
 
 ### startCrankingDuration

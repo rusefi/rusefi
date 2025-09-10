@@ -1325,19 +1325,15 @@ struct engine_configuration_s {
 	offset 192 bit 31 */
 	bool unusedBit_102_31 : 1 {};
 	/**
-	 * Closed throttle, 1 volt = 200 units.
-	 * See also tps1_1AdcChannel
-	 * units: ADC
+	 * Closed voltage for primary throttle position sensor
 	 * offset 196
 	 */
-	int16_t tpsMin;
+	tps_limit_t tpsMin;
 	/**
-	 * Full throttle.
-	 * See also tps1_1AdcChannel
-	 * units: ADC
+	 * Fully opened voltage for primary throttle position sensor
 	 * offset 198
 	 */
-	int16_t tpsMax;
+	tps_limit_t tpsMax;
 	/**
 	 * TPS error detection: what throttle % is unrealistically low?
 	 * Also used for accelerator pedal error detection if so equipped.
@@ -2506,15 +2502,15 @@ struct engine_configuration_s {
 	 */
 	int16_t stepperParkingExtraSteps;
 	/**
-	 * units: ADC
+	 * Closed voltage for secondary throttle position sensor
 	 * offset 860
 	 */
-	uint16_t tps1SecondaryMin;
+	tps_limit_t tps1SecondaryMin;
 	/**
-	 * units: ADC
+	 * Fully opened voltage for secondary throttle position sensor
 	 * offset 862
 	 */
-	uint16_t tps1SecondaryMax;
+	tps_limit_t tps1SecondaryMax;
 	/**
 	 * Maximum time to crank starter when start/stop button is pressed
 	 * units: Seconds
