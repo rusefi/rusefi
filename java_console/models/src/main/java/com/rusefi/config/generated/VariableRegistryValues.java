@@ -1410,7 +1410,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1352081540;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1623,6 +1622,8 @@ public class VariableRegistryValues {
 	public static final int ts_14_command_TS_EXTERNAL_TRIGGER_STIMULATOR_ENABLE = 0x13;
 	public static final int ts_14_command_TS_GRAB_PEDAL_UP = 6;
 	public static final int ts_14_command_TS_GRAB_PEDAL_WOT = 7;
+	public static final int ts_14_command_TS_GRAB_TPS_CLOSED = 0x20;
+	public static final int ts_14_command_TS_GRAB_TPS_OPEN = 0x21;
 	public static final int ts_14_command_TS_RESET_MC33810 = 0x16;
 	public static final int ts_14_command_TS_RESET_TLE8888 = 8;
 	public static final int ts_14_command_TS_SD_DELETE_REPORTS = 0x1B;
@@ -1711,7 +1712,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.09.10.f429-discovery.1352081540";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.09.10.f429-discovery.2197137517";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2048;

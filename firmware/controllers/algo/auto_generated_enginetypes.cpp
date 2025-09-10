@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Aug 19 15:55:09 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Sep 10 21:27:00 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -426,6 +426,10 @@ case TS_GRAB_PEDAL_UP:
   return "TS_GRAB_PEDAL_UP";
 case TS_GRAB_PEDAL_WOT:
   return "TS_GRAB_PEDAL_WOT";
+case TS_GRAB_TPS_CLOSED:
+  return "TS_GRAB_TPS_CLOSED";
+case TS_GRAB_TPS_OPEN:
+  return "TS_GRAB_TPS_OPEN";
 case TS_RESET_MC33810:
   return "TS_RESET_MC33810";
 case TS_RESET_TLE8888:
