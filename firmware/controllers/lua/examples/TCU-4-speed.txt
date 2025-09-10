@@ -9,22 +9,24 @@ local enableVssFiltering = true
 -- secondary box acting as TCU or build into ECU?
 local buildIntoEcu = false
 
--- Sensor Declarations
-local coolantTempSensor = Sensor.new("Clt")
-local engineRpmSensor = Sensor.new("Rpm")
-local manifoldPressureSensor = Sensor.new("Map")
-local throttlePosSensor = Sensor.new("Tps1")
-local vehicleSpeedSensor = Sensor.new("VehicleSpeed")
-local detectedGearSensor = Sensor.new("DetectedGear")
+if not buildIntoEcu then
+  -- Sensor Declarations
+  local coolantTempSensor = Sensor.new("Clt")
+  local engineRpmSensor = Sensor.new("Rpm")
+  local manifoldPressureSensor = Sensor.new("Map")
+  local throttlePosSensor = Sensor.new("Tps1")
+  local vehicleSpeedSensor = Sensor.new("VehicleSpeed")
+  local detectedGearSensor = Sensor.new("DetectedGear")
 
--- Sensor Timeouts
-local SENSOR_TIMEOUT_MILLISECONDS = 3000
-coolantTempSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
-engineRpmSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
-manifoldPressureSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
-throttlePosSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
-vehicleSpeedSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
-detectedGearSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
+  -- Sensor Timeouts
+  local SENSOR_TIMEOUT_MILLISECONDS = 3000
+  coolantTempSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
+  engineRpmSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
+  manifoldPressureSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
+  throttlePosSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
+  vehicleSpeedSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
+  detectedGearSensor:setTimeout(SENSOR_TIMEOUT_MILLISECONDS)
+end
 
 -- Core State Variables
 local intendedGear = 3
@@ -148,22 +150,16 @@ end
 
 initializeShiftLogic()
 
-function onCanRx(bus, id, dlc, data)
-    if id == 0x360 then
+function onPacket360(bus, id, dlc, data)
         engineRpmSensor:set(getTwoBytesUnsignedLsb(data, 1))
         manifoldPressureSensor:set(getTwoBytesUnsignedLsb(data, 3) / 10.0)
         local tpsCanVal = getTwoBytesUnsignedLsb(data, 5)
         if tpsCanVal ~= nil then
              throttlePosSensor:set(tpsCanVal / 10.0)
         end
-    elseif id == 0x3E0 then
-        coolantTempSensor:set(getTwoBytesUnsignedLsb(data, 1) / 100.0)
-    elseif id == 0x470 then
-        local rawGearValue = data[8]
-        if rawGearValue ~= nil then
-            detectedGearSensor:set(getSignedByte(rawGearValue))
-        end
-    elseif id == 0x370 then
+end
+
+function onPacket370(bus, id, dlc, data)
         idleStateTriggeredShiftToFirst = false
 
         local vssFromCan = getTwoBytesUnsignedLsb(data, 1)
@@ -297,13 +293,26 @@ function onCanRx(bus, id, dlc, data)
                 end
             end
         end
+end
+
+function onCanRx(bus, id, dlc, data)
+    if id == 0x360 then
+    elseif id == 0x3E0 then
+        coolantTempSensor:set(getTwoBytesUnsignedLsb(data, 1) / 100.0)
+    elseif id == 0x470 then
+        local rawGearValue = data[8]
+        if rawGearValue ~= nil then
+            detectedGearSensor:set(getSignedByte(rawGearValue))
+        end
     end
 end
 
-canRxAdd(0x360)
-canRxAdd(0x3E0)
-canRxAdd(0x370)
-canRxAdd(0x470)
+if not buildIntoEcu then
+  canRxAdd(0x360, onPacket360)
+  canRxAdd(0x3E0)
+  canRxAdd(0x370, onPacket370)
+  canRxAdd(0x470)
+end
 
 function onTick()
     if enableGearErrorCheck and isCheckingGearMatch then
