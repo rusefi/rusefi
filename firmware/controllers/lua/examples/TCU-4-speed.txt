@@ -159,6 +159,7 @@ function onPacket360(bus, id, dlc, data)
         end
 end
 
+-- todo: this method has too many responsibilities, need to extract CAN RX? filtering? actual TCU logic?
 function onPacket370(bus, id, dlc, data)
         idleStateTriggeredShiftToFirst = false
 
