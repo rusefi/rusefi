@@ -271,20 +271,14 @@ public:
 
 				// Next: start transmitting results
 				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
-				if (TBase::isEtbMode())
-					engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_primaryMax);
-				else
-					engine->outputChannels.calibrationValue = m_primaryMax;
+				engine->outputChannels.calibrationValue = m_primaryMax;
 				return ACPhase::TransmitPrimaryMax;
 			}
 			break;
 		case ACPhase::TransmitPrimaryMax:
 			if (m_autocalTimer.hasElapsedMs(500)) {
 				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
-				if (TBase::isEtbMode())
-					engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_primaryMin);
-				else
-					engine->outputChannels.calibrationValue = m_primaryMin;
+				engine->outputChannels.calibrationValue = m_primaryMin;
 				return ACPhase::TransmitPrimaryMin;
 			}
 			break;
@@ -294,14 +288,14 @@ public:
 				// No secondary sensor?
 				if (engine->outputChannels.calibrationMode == (uint8_t)TsCalMode::None)
 					return ACPhase::Stopped;
-				engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_secondaryMax);
+				engine->outputChannels.calibrationValue = m_secondaryMax;
 				return ACPhase::TransmitSecondaryMax;
 			}
 			break;
 		case ACPhase::TransmitSecondaryMax:
 			if (m_autocalTimer.hasElapsedMs(500)) {
 				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
-				engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_secondaryMin);
+				engine->outputChannels.calibrationValue = m_secondaryMin;
 				return ACPhase::TransmitSecondaryMin;
 			}
 			break;

@@ -477,6 +477,12 @@ static void handleCommandX14(uint16_t index) {
 	case TS_GRAB_PEDAL_WOT:
 		grabPedalIsWideOpen();
 		return;
+	case TS_GRAB_TPS_CLOSED:
+		grapTps1PrimaryIsClosed();
+		return;
+	case TS_GRAB_TPS_OPEN:
+		grapTps1PrimaryIsOpen();
+		return;
 	case TS_RESET_TLE8888:
 		#if (BOARD_TLE8888_COUNT > 0)
 			tle8888_req_init();

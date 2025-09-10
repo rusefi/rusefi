@@ -44,6 +44,19 @@ void grabPedalIsWideOpen() {
 	onGrabPedal();
 }
 
+// In case of cable throttle we need support calibration of primary sensor of first throttle only
+void grapTps1PrimaryIsClosed()
+{
+	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::Tps1Min;
+	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::Tps1Primary);
+}
+
+void grapTps1PrimaryIsOpen()
+{
+	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::Tps1Max;
+	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::Tps1Primary);
+}
+
 #if EFI_SENT_SUPPORT
 
 extern SentTps sentTps;
