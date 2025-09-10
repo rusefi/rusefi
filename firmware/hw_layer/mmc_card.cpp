@@ -655,10 +655,15 @@ static int sdLogger(FIL *fd)
 		} else {
 			ret = mlgLogger();
 		}
+	} else {
+		// logger is dead until restart, do not waste CPU
+		chThdSleepMilliseconds(TIME_MS2I(100));
+		return -1;
 	}
 
 	if (ret < 0) {
 		sdLoggerFailed = true;
+		return ret;
 	}
 
 #ifdef LOGGER_MAX_FILE_SIZE
