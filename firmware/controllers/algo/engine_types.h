@@ -285,6 +285,8 @@ typedef enum {
 	TS_ETB_AUTOCAL_1_FAST = 0x1D,
 	TS_EWG_AUTOCAL_0 = 0x1E,
 	TS_EWG_AUTOCAL_0_FAST = 0x1F,
+	TS_GRAB_TPS_CLOSED = 0x20,
+	TS_GRAB_TPS_OPEN = 0x21,
 } ts_14_command;
 
 typedef enum {

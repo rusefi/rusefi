@@ -25,6 +25,8 @@ constexpr inline int convertVoltageTo10bitADC(float voltage) {
 void grabTPSIsClosed();
 void grabTPSIsWideOpen();
 void grabPedalIsUp();
+void grapTps1PrimaryIsClosed();
+void grapTps1PrimaryIsOpen();
 void grabPedalIsWideOpen();
 
 #if EFI_SENT_SUPPORT
