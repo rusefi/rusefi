@@ -566,8 +566,10 @@ bit useSpiImu;If enabled - use onboard SPI Accelerometer, otherwise listen for C
 bit enableStagedInjection
 bit useIdleAdvanceWhileCoasting
 
-int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
-int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
+! note: 0.00489 mult is correct for "faking" 10 bit ADC with 5V Vref
+custom tps_limit_t 2 scalar, S16, @OFFSET@, "V", 0.0048828125, 0, 0, 5, 2
+tps_limit_t tpsMin;Closed voltage for primary throttle position sensor
+tps_limit_t tpsMax;Fully opened voltage for primary throttle position sensor
 
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
@@ -947,8 +949,9 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	int mapMinBufferLength;This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.;"count", 1, 0, 1, 24, 0
 	int16_t idlePidDeactivationTpsThreshold;Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.;"%", 1, 0, 0, 50, 0
 	int16_t stepperParkingExtraSteps;;"%", 1, 0, 0, 3000, 0
-	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
-	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
+
+	tps_limit_t tps1SecondaryMin;Closed voltage for secondary throttle position sensor
+	tps_limit_t tps1SecondaryMax;Fully opened voltage for secondary throttle position sensor
 	uint16_t startCrankingDuration;Maximum time to crank starter when start/stop button is pressed;"Seconds", 1, 0, 0, 30, 0
 
 	Gpio triggerErrorPin;This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
