@@ -75,7 +75,11 @@ public class ScreenGenerator {
             UiUtils.visitComponents(mainFrame, "", (parent, component) -> {
                 if (component instanceof AbstractButton) {
                     AbstractButton ab = (AbstractButton) component;
-                    System.out.println("topLevelButton " + ab.getText());
+                    if (TunerStudioIntegration.DISCOVERY_MODE) {
+                        // search for 'topLevelButton Setup'
+                        // search for 'topLevelButton Sensors'
+                        System.out.println("topLevelButton " + ab.getText() + "/class " + ab.getClass().getName());
+                    }
 
                     if (TunerStudioIntegration.isTopLevelMenuButton(component)) {
                         topLevelButtons.add(ab);
