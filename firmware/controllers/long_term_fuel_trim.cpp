@@ -15,12 +15,8 @@
 
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
-#if EFI_PROD_CODE
-// current trims are stored in backup ram (if exists)
-static BKUP_RAM_NOINIT LtftState ltftState;
-#else
+// TODO: store in backup ram and validate on start
 static LtftState ltftState;
-#endif
 
 // LTFT to VE table custom apply algo
 std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
