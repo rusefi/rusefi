@@ -22,6 +22,7 @@
 
 #include "pch.h"
 #include "tunerstudio.h"
+#include "tunerstudio_calibration_channel.h"
 #include "long_term_fuel_trim.h"
 #include "can_common.h"
 #include "can_rx.h"
@@ -548,7 +549,7 @@ static void handleCommandX14(uint16_t index) {
 	case TS_ETB_STOP_AUTOTUNE:
 			engine->etbAutoTune = false;
 			#if EFI_TUNER_STUDIO
-				engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+				tsCalibrationSetIdle();
 			#endif // EFI_TUNER_STUDIO
 		return;
 	case TS_ETB_DISABLE_JAM_DETECT:

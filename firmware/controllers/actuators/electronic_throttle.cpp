@@ -45,6 +45,7 @@
 #include "dc_motors.h"
 #include "defaults.h"
 #include "tunerstudio.h"
+#include "tunerstudio_calibration_channel.h"
 #include "transition_events.h"
 
 #if defined(HAS_OS_ACCESS)
@@ -478,16 +479,13 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 
 		switch (m_autotuneCurrentParam) {
 		case 0:
-			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKp;
-			engine->outputChannels.calibrationValue = kp;
+			tsCalibrationSetData(TsCalMode::EtbKp, kp);
 			break;
 		case 1:
-			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKi;
-			engine->outputChannels.calibrationValue = ki;
+			tsCalibrationSetData(TsCalMode::EtbKi, ki);
 			break;
 		case 2:
-			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKd;
-			engine->outputChannels.calibrationValue = kd;
+			tsCalibrationSetData(TsCalMode::EtbKd, kd);
 			break;
 		}
 

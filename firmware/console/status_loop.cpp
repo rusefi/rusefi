@@ -40,6 +40,7 @@
 #include "speed_density.h"
 
 #include "tunerstudio.h"
+#include "tunerstudio_calibration_channel.h"
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
 #include "spark_logic.h"
@@ -701,6 +702,8 @@ void updateTunerStudioState() {
 	updateFuelInfo();
 	updateIgnition(rpm);
 	updateFlags();
+	// update calibration channel, reset to None state after timeout
+	tsCalibrationIsIdle();
 
 	// Output both the estimated air flow, and measured air flow (if available)
 	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);

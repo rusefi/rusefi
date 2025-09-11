@@ -14,6 +14,7 @@
 #include "efi_pid.h"
 #include "error_accumulator.h"
 #include "electronic_throttle_generated.h"
+#include "tunerstudio_calibration_channel.h"
 
 /**
  * Hard code ETB update speed.
@@ -270,39 +271,34 @@ public:
 				}
 
 				// Next: start transmitting results
-				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
-				engine->outputChannels.calibrationValue = m_primaryMax;
+				tsCalibrationSetData(functionToCalModePriMax(myFunction), m_primaryMax);
 				return ACPhase::TransmitPrimaryMax;
 			}
 			break;
 		case ACPhase::TransmitPrimaryMax:
-			if (m_autocalTimer.hasElapsedMs(500)) {
-				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
-				engine->outputChannels.calibrationValue = m_primaryMin;
+			if (tsCalibrationIsIdle()) {
+				tsCalibrationSetData(functionToCalModePriMin(myFunction), m_primaryMin);
 				return ACPhase::TransmitPrimaryMin;
 			}
 			break;
 		case ACPhase::TransmitPrimaryMin:
-			if (m_autocalTimer.hasElapsedMs(500)) {
-				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
+			if (tsCalibrationIsIdle()) {
+				tsCalibrationSetData(functionToCalModeSecMax(myFunction), m_secondaryMax);
 				// No secondary sensor?
-				if (engine->outputChannels.calibrationMode == (uint8_t)TsCalMode::None)
+				if (tsCalibrationIsIdle())
 					return ACPhase::Stopped;
-				engine->outputChannels.calibrationValue = m_secondaryMax;
 				return ACPhase::TransmitSecondaryMax;
 			}
 			break;
 		case ACPhase::TransmitSecondaryMax:
-			if (m_autocalTimer.hasElapsedMs(500)) {
-				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
-				engine->outputChannels.calibrationValue = m_secondaryMin;
+			if (tsCalibrationIsIdle()) {
+				tsCalibrationSetData(functionToCalModeSecMin(myFunction), m_secondaryMin);
 				return ACPhase::TransmitSecondaryMin;
 			}
 			break;
 		case ACPhase::TransmitSecondaryMin:
-			if (m_autocalTimer.hasElapsedMs(500)) {
+			if (tsCalibrationIsIdle()) {
 				// Done!
-				engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
 				return ACPhase::Stopped;
 			}
 			break;
