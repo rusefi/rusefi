@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.xml.*;
 
 import java.io.File;
@@ -7,10 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  *
  */
 public class Xml2MdTransformerTool {
+    private static final Logging log = getLogging(Xml2MdTransformerTool.class);
     public static final String PREFIX = "rusEFI-project";
     static String FOLDER;
 
@@ -20,13 +24,16 @@ public class Xml2MdTransformerTool {
         //FOLDER = "images/";
         FOLDER = "overview/TS_generated/";
 
+
         ContentModel contentModel = XmlUtil.readModel(ContentModel.class, new File(ScreenGenerator.XML_DUMP));
 
         generateTopLevel(contentModel);
 
         for (TopLevelMenuModel topLevelMenuModel : contentModel.getTopLevelMenus()) {
             String pageName = getPageName(topLevelMenuModel);
-            FileWriter md = new FileWriter(pageName + ".md");
+            String outputFileName = pageName + ".md";
+            log.info("Writing to " + outputFileName);
+            FileWriter md = new FileWriter(outputFileName);
 
             md.append("# [rusEFI project](rusEFI-project)"+ EOL);
 
