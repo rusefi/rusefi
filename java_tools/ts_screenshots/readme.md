@@ -1,4 +1,13 @@
 
+TL,DR: look at https://github.com/rusefi/technical-and-legacy/tree/main/screenshots/uaefi-screenshots-and-XML-2025-09 sample output
+
+Here we have a tool which does the following:
+
+* automatically saves a screenshot of each TS dialog
+* slices dialogs into individual settings
+* exports an XML file of TS dialogs structure with corresponding images meta info
+* there is also java code to convert XML into .md - but that's definitely not the way to render documentation from such XML
+
 step 0:
 
 In TunerStudio, set "Options->Preferences->Load Last Project on startup".
