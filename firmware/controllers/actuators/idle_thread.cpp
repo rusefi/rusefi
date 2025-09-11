@@ -366,6 +366,9 @@ float IdleController::getIdlePosition(float rpm) {
 		float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 		auto phase = determinePhase(rpm, targetRpm, tps, vehicleSpeed, crankingTaper);
 
+		// update TS flag
+		isIdling = (phase == Phase::Idling) || (phase == Phase::CrankToIdleTaper);
+
     if (phase != m_lastPhase && phase == Phase::Idling) {
         // Just entered idle, reset timer
  		    m_timeInIdlePhase.reset();
