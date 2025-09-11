@@ -68,6 +68,7 @@ public:
 		return 0;
 	}
 
+  // pedal-based part of ETB target, without idle and other interventions
   float getCurrentTarget() const override {
     return etbCurrentTarget;
   }
