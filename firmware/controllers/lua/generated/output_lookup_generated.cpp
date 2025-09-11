@@ -1600,6 +1600,9 @@ float getOutputValueByHash(const int hash) {
 // isIdleClosedLoop
 		case 1473688883:
 			return engine->module<IdleController>().unmock().isIdleClosedLoop;
+// isIdling
+		case -212260968:
+			return engine->module<IdleController>().unmock().isIdling;
 // idleTarget
 		case 2127645162:
 			return engine->module<IdleController>().unmock().idleTarget;
