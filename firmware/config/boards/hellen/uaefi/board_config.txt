@@ -1,4 +1,4 @@
-bit testPerBoardBit
+
 	uint8_t[TIMING_ADJUSTMENT_SIZE x TIMING_ADJUSTMENT_SIZE] rainTimingAdjustment;;"", 1, 0, 1, 50, 2
 	uint16_t[TIMING_ADJUSTMENT_SIZE] rainTimingRpmBins;;"RPM", 1, 0, 0, 65000, 0
 	float[TIMING_ADJUSTMENT_SIZE] rainTimingPpsBins;;"C", 1, 0, -100, 120, 2

@@ -78,6 +78,8 @@ public class ConfigFieldImpl implements ConfigField {
                            String trueName,
                            String falseName) {
         this.hasAutoscale = hasAutoscale;
+        if (TypesHelper.isBoolean(type) && trueName == null)
+            state.intDefaultBitNameCounter();
         this.trueName = trueName == null ? "true" : trueName;
         this.falseName = falseName == null ? "false" : falseName;
         Objects.requireNonNull(name, comment + " " + type);
