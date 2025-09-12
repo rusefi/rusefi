@@ -7067,123 +7067,27 @@ struct persistent_config_s {
 	 */
 	int8_t torqueReductionIgnitionRetardGearBins[TORQUE_TABLE_Y_SIZE] = {};
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 23802
-	 */
-	uint8_t alignmentFill_at_23802[2] = {};
-	/**
-	offset 23804 bit 0 */
-	bool testPerBoardBit : 1 {};
-	/**
-	offset 23804 bit 1 */
-	bool unusedBit_274_1 : 1 {};
-	/**
-	offset 23804 bit 2 */
-	bool unusedBit_274_2 : 1 {};
-	/**
-	offset 23804 bit 3 */
-	bool unusedBit_274_3 : 1 {};
-	/**
-	offset 23804 bit 4 */
-	bool unusedBit_274_4 : 1 {};
-	/**
-	offset 23804 bit 5 */
-	bool unusedBit_274_5 : 1 {};
-	/**
-	offset 23804 bit 6 */
-	bool unusedBit_274_6 : 1 {};
-	/**
-	offset 23804 bit 7 */
-	bool unusedBit_274_7 : 1 {};
-	/**
-	offset 23804 bit 8 */
-	bool unusedBit_274_8 : 1 {};
-	/**
-	offset 23804 bit 9 */
-	bool unusedBit_274_9 : 1 {};
-	/**
-	offset 23804 bit 10 */
-	bool unusedBit_274_10 : 1 {};
-	/**
-	offset 23804 bit 11 */
-	bool unusedBit_274_11 : 1 {};
-	/**
-	offset 23804 bit 12 */
-	bool unusedBit_274_12 : 1 {};
-	/**
-	offset 23804 bit 13 */
-	bool unusedBit_274_13 : 1 {};
-	/**
-	offset 23804 bit 14 */
-	bool unusedBit_274_14 : 1 {};
-	/**
-	offset 23804 bit 15 */
-	bool unusedBit_274_15 : 1 {};
-	/**
-	offset 23804 bit 16 */
-	bool unusedBit_274_16 : 1 {};
-	/**
-	offset 23804 bit 17 */
-	bool unusedBit_274_17 : 1 {};
-	/**
-	offset 23804 bit 18 */
-	bool unusedBit_274_18 : 1 {};
-	/**
-	offset 23804 bit 19 */
-	bool unusedBit_274_19 : 1 {};
-	/**
-	offset 23804 bit 20 */
-	bool unusedBit_274_20 : 1 {};
-	/**
-	offset 23804 bit 21 */
-	bool unusedBit_274_21 : 1 {};
-	/**
-	offset 23804 bit 22 */
-	bool unusedBit_274_22 : 1 {};
-	/**
-	offset 23804 bit 23 */
-	bool unusedBit_274_23 : 1 {};
-	/**
-	offset 23804 bit 24 */
-	bool unusedBit_274_24 : 1 {};
-	/**
-	offset 23804 bit 25 */
-	bool unusedBit_274_25 : 1 {};
-	/**
-	offset 23804 bit 26 */
-	bool unusedBit_274_26 : 1 {};
-	/**
-	offset 23804 bit 27 */
-	bool unusedBit_274_27 : 1 {};
-	/**
-	offset 23804 bit 28 */
-	bool unusedBit_274_28 : 1 {};
-	/**
-	offset 23804 bit 29 */
-	bool unusedBit_274_29 : 1 {};
-	/**
-	offset 23804 bit 30 */
-	bool unusedBit_274_30 : 1 {};
-	/**
-	offset 23804 bit 31 */
-	bool unusedBit_274_31 : 1 {};
-	/**
-	 * offset 23808
 	 */
 	uint8_t rainTimingAdjustment[TIMING_ADJUSTMENT_SIZE][TIMING_ADJUSTMENT_SIZE] = {};
 	/**
 	 * units: RPM
-	 * offset 23824
+	 * offset 23818
 	 */
 	uint16_t rainTimingRpmBins[TIMING_ADJUSTMENT_SIZE] = {};
 	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 23826
+	 */
+	uint8_t alignmentFill_at_23826[2] = {};
+	/**
 	 * units: C
-	 * offset 23832
+	 * offset 23828
 	 */
 	float rainTimingPpsBins[TIMING_ADJUSTMENT_SIZE] = {};
 };
-static_assert(sizeof(persistent_config_s) == 23848);
+static_assert(sizeof(persistent_config_s) == 23844);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
