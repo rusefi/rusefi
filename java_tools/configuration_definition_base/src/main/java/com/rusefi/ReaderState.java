@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface ReaderState {
+    int getDefaultBitNameCounter();
+
+    void intDefaultBitNameCounter();
+
     void setWithC_Defines(boolean withC_Defines);
 
     EnumsReader getEnumsReader();

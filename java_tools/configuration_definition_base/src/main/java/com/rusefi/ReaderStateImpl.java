@@ -56,6 +56,7 @@ public class ReaderStateImpl implements ReaderState {
     private final EnumsReader enumsReader = new EnumsReader();
     private final VariableRegistry variableRegistry = new VariableRegistry();
     private final Map<String, EnumGenerator.Parser.EnumDefinition> enumDefinitionMap = new HashMap<>();
+    private int defaultBitNameCounter;
 
     public ReaderStateImpl() {
         this(ReaderProvider.REAL, LazyFile.REAL);
@@ -64,6 +65,16 @@ public class ReaderStateImpl implements ReaderState {
     public ReaderStateImpl(ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
         this.readerProvider = readerProvider;
         this.fileFactory = fileFactory;
+    }
+
+    @Override
+    public int getDefaultBitNameCounter() {
+        return defaultBitNameCounter;
+    }
+
+    @Override
+    public void intDefaultBitNameCounter() {
+        defaultBitNameCounter++;
     }
 
     public Map<String, EnumGenerator.Parser.EnumDefinition> getEnumDefinitionMap() {

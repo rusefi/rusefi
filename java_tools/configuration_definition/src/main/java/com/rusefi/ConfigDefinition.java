@@ -53,7 +53,12 @@ public class ConfigDefinition {
                 );
                 return;
             }
-            doJob(totalArgs, new ReaderStateImpl());
+            ReaderStateImpl state = new ReaderStateImpl();
+            doJob(totalArgs, state);
+            int frenchBooleanNameLimit = Integer.parseInt(state.getVariableRegistry().get("TRUE_FALSE_COUNT_LIMIT"));
+            if (state.getDefaultBitNameCounter() > frenchBooleanNameLimit) {
+                throw new IllegalStateException("We are trying to reduce inhumane true/false bitNames: " + state.getDefaultBitNameCounter());
+            }
         } catch (Throwable e) {
             log.error("unexpected", e);
             e.printStackTrace();
