@@ -102,11 +102,12 @@ static_assert(sizeof(stft_s) == 28);
 // start of ltft_s
 struct ltft_s {
 	/**
-	 * Enables lambda sensor long term fuel corrections data gathering
+	 * Enables lambda sensor long term fuel corrections data gathering into LTFT trim tables
 	offset 0 bit 0 */
 	bool enabled : 1 {};
 	/**
-	 * Enables applying long term fuel corrections
+	 * Apply LTFT trims into fuel calculation on top of VE table.
+	 * We do not adjust VE table automatically, please click 'Apply to VE' if you want to adjust your VE tables and reset trims.
 	offset 0 bit 1 */
 	bool correctionEnabled : 1 {};
 	/**

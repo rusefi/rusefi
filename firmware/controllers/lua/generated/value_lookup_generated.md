@@ -761,10 +761,10 @@ Above this AFR, correction is paused
 Time after startup before closed loop operation is allowed.
 
 ### ltft.enabled
-Enables lambda sensor long term fuel corrections data gathering
+Enables lambda sensor long term fuel corrections data gathering into LTFT trim tables
 
 ### ltft.correctionEnabled
-Enables applying long term fuel corrections
+Apply LTFT trims into fuel calculation on top of VE table.\nWe do not adjust VE table automatically, please click 'Apply to VE' if you want to adjust your VE tables and reset trims.
 
 ### ltft.deadband
 When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.
