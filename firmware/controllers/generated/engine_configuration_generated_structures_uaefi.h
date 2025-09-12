@@ -102,7 +102,7 @@ static_assert(sizeof(stft_s) == 28);
 // start of ltft_s
 struct ltft_s {
 	/**
-	 * Enables lambda sensor long term fuel corrections learning
+	 * Enables lambda sensor long term fuel corrections data gathering
 	offset 0 bit 0 */
 	bool enabled : 1 {};
 	/**

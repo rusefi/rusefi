@@ -761,7 +761,7 @@ Above this AFR, correction is paused
 Time after startup before closed loop operation is allowed.
 
 ### ltft.enabled
-Enables lambda sensor long term fuel corrections learning
+Enables lambda sensor long term fuel corrections data gathering
 
 ### ltft.correctionEnabled
 Enables applying long term fuel corrections
