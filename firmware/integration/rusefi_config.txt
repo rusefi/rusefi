@@ -307,8 +307,8 @@ struct stft_s
 end_struct
 
 struct ltft_s
-	bit enabled,"yes","no";Enables lambda sensor long term fuel corrections data gathering
-	bit correctionEnabled,"yes","no";Enables applying long term fuel corrections
+	bit enabled,"yes","no";Enables lambda sensor long term fuel corrections data gathering into LTFT trim tables
+	bit correctionEnabled,"yes","no";Apply LTFT trims into fuel calculation on top of VE table.\nWe do not adjust VE table automatically, please click 'Apply to VE' if you want to adjust your VE tables and reset trims.
 	uint8_t autoscale deadband;When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;"%", 0.1, 0, 0, 3, 1
 	uint8_t autoscale maxAdd;Maximum % that the long term fuel trim can add;"%", 0.1, 0, 0, 25, 1
 	uint8_t autoscale maxRemove;Maximum % that the long term fuel trim can remove;"%", 0.1, 0, 0, 25, 1
