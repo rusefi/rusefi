@@ -11,6 +11,7 @@ import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.maintenance.migration.TuneMigrator;
 import com.rusefi.output.UnusedPrefix;
 import com.rusefi.tune.xml.Constant;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -67,7 +68,7 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                                             prevValue.getName(),
                                             newValue.getName()
                                         ));
-                                    } else if (!Objects.equals(prevValue.getUnits(), newValue.getUnits())) {
+                                    } else if (!checkIfUnitsCanBeMigrated(prevValue.getUnits(), newValue.getUnits())) {
                                         callbacks.logLine(String.format(
                                             "WARNING! Field `%s` cannot be updated because its units are updated: `%s` -> `%s`",
                                             prevFieldName,
@@ -142,6 +143,32 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                 }
             }
         }
+    }
+
+    //ATTENTION! please add only lower-cased value in the list below:
+    private final static List<Set<String>> UNITS_SYNONYMS = Arrays.asList(
+        CompatibilitySet.of("%", "percent"),
+        CompatibilitySet.of("deg c", "c"),
+        CompatibilitySet.of("voltage", "volts")
+    );
+
+    public static boolean checkIfUnitsCanBeMigrated(@Nullable final String prevUnits, @Nullable final String newUnits) {
+        if ((prevUnits == null) || prevUnits.isEmpty()) {
+            return true;
+        } else if (newUnits != null) {
+            final String lcPrevUnits = prevUnits.toLowerCase();
+            final String lcNewUnits = prevUnits.toLowerCase();
+            if (lcPrevUnits.equals(lcNewUnits)) {
+                return true;
+            } else {
+                for (final Set<String> synonyms: UNITS_SYNONYMS) {
+                    if (synonyms.contains(lcPrevUnits) && synonyms.contains(lcNewUnits)) {
+                        return true;
+                    }
+                };
+            }
+        }
+        return false;
     }
 
     private static boolean isUnusedField(final String fieldName) {

@@ -206,7 +206,7 @@
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.852941</constant>
         <constant digits="0" name="fanOnTemperature" units="deg C">92.0</constant>
-        <constant digits="0" name="fanOffTemperature" units="deg C">88.0</constant>
+        <constant digits="0" name="fanOffTemperature" units="C">88.0</constant>
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
@@ -724,7 +724,7 @@
         <constant name="auxValves2">"NONE"</constant>
         <constant name="tcuUpshiftButtonPin">"NONE"</constant>
         <constant name="tcuDownshiftButtonPin">"NONE"</constant>
-        <constant digits="2" name="throttlePedalUpVoltage" units="voltage">0.0</constant>
+        <constant digits="2" name="throttlePedalUpVoltage" units="volts">0.0</constant>
         <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">5.0</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
@@ -2211,7 +2211,7 @@
          80.0
          100.0
 </constant>
-        <constant cols="1" digits="2" name="cltCrankingCorr" rows="8">
+        <constant cols="1" digits="2" name="cltCrankingCorr" units="percent" rows="8">
          1.0
          1.0
          1.0
