@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.maintenance.DefaultTuneMigrator.checkIfUnitsCanBeMigrated;
 
 public enum DefaultIniFieldMigrator {
     INSTANCE;
@@ -81,7 +82,7 @@ public enum DefaultIniFieldMigrator {
         final UpdateOperationCallbacks callbacks
     ) {
         boolean result = false;
-        if (!Objects.equals(prevField.getUnits(), newField.getUnits())) {
+        if (!checkIfUnitsCanBeMigrated(prevField.getUnits(), newField.getUnits())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because units are updated: `%s` -> `%s`",
                 prevField.getName(),
