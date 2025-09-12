@@ -23,7 +23,7 @@ public class VeTableExtensionMigratorTest {
 
         final Constant migratedVeTableValue = migratedConstants.get(VE_TABLE_FIELD_NAME);
         assertEquals(VE_TABLE_FIELD_NAME, migratedVeTableValue.getName());
-        assertNull(migratedVeTableValue.getUnits());
+        assertEquals("%", migratedVeTableValue.getUnits());
         assertEquals("\n" +
                 "         48.5 48.4 51.4 48.9 48.2 46.0 46.0 46.0 51.6 52.3 52.4 51.8 50.8 49.9 48.9 48.0 48.0 48.0 48.0 48.0 48.0 48.0 48.0 48.0\n" +
                 "         45.6 48.9 49.2 51.9 49.0 46.0 46.0 46.0 49.7 50.0 49.5 48.3 47.1 46.0 44.9 43.8 43.8 43.8 43.8 43.8 43.8 43.8 43.8 43.8\n" +
@@ -49,7 +49,7 @@ public class VeTableExtensionMigratorTest {
 
         final Constant migratedVeRpmBinsValue = migratedConstants.get(VE_RPM_BINS_FIELD_NAME);
         assertEquals(VE_RPM_BINS_FIELD_NAME, migratedVeRpmBinsValue.getName());
-        assertNull(migratedVeRpmBinsValue.getUnits());
+        assertEquals("RPM", migratedVeRpmBinsValue.getUnits());
         assertEquals(
             "\n" +
                 "         800.0\n" +

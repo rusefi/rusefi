@@ -43,7 +43,7 @@ public class CltIdleCorrMigratorTest {
             final Constant migratedCltIdleCorrValue = migratedConstants.get(CLT_IDLE_CORR_FIELD_NAME);
             assertNotNull(migratedCltIdleCorrValue);
             assertEquals(CLT_IDLE_CORR_FIELD_NAME, migratedCltIdleCorrValue.getName());
-            assertNull(migratedCltIdleCorrValue.getUnits());
+            assertEquals("%", migratedCltIdleCorrValue.getUnits());
             assertEquals(
                 "\n" +
                     "         75.0\n" +
