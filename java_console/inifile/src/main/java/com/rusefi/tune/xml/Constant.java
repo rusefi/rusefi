@@ -104,9 +104,18 @@ public class Constant {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Constant constant = (Constant) o;
+        return equalsWithoutUnits(o) &&
+            Objects.equals(getUnits(), constant.getUnits());
+    }
+
+    public boolean equalsWithoutUnits(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Constant constant = (Constant) o;
-        return Objects.equals(getName(), constant.getName()) && Objects.equals(getUnits(), constant.getUnits())
+        return Objects.equals(getName(), constant.getName())
             && Objects.equals(getValue(), constant.getValue()) && Objects.equals(getDigits(), constant.getDigits())
             && Objects.equals(getRows(), constant.getRows()) && Objects.equals(getCols(), constant.getCols());
     }
