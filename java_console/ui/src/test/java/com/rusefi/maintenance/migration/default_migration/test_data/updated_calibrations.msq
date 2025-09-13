@@ -89,7 +89,7 @@
         <constant name="useTLE8888_cranking_hack">"true"</constant>
         <constant name="kickStartCranking">"false"</constant>
         <constant name="useSeparateIdleTablesForCrankingTaper">"false"</constant>
-        <constant name="launchControlEnabled">"false"</constant>
+        <constant name="launchControlEnabled">"disabled"</constant>
         <constant name="doNotFilterTriggerEdgeNoise">"with filter"</constant>
         <constant name="antiLagEnabled">"false"</constant>
         <constant name="useRunningMathForCranking">"Fixed"</constant>
