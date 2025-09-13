@@ -6,8 +6,6 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.field.OrdinalOutOfRangeException;
-import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
@@ -19,7 +17,6 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.*;
-import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +32,7 @@ import java.util.concurrent.*;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 import static com.rusefi.config.generated.VariableRegistryValues.*;
+import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
 
 /**
  * This object represents logical state of physical connection.
@@ -379,34 +377,6 @@ public class BinaryProtocol {
             }
         }
         return imageWithMeta;
-    }
-
-    public static void saveConfigurationImageToFiles(
-        final ConfigurationImageWithMeta imageWithMeta,
-        final IniFileModel ini,
-        @Nullable final String binaryFileName,
-        @Nullable final String xmlFileName
-    ) throws JAXBException, IOException {
-        if (binaryFileName != null) {
-            ConfigurationImageFile.saveToFile(imageWithMeta, binaryFileName);
-        }
-        if (xmlFileName != null) {
-            saveXmlFile(imageWithMeta, ini, xmlFileName);
-        }
-    }
-
-    public static void saveXmlFile(ConfigurationImageWithMeta imageWithMeta, IniFileModel ini, @NotNull String xmlFileName) throws JAXBException, IOException {
-        ConfigurationImage image = imageWithMeta.getConfigurationImage();
-        if (image == null) {
-            log.warn("No image for saveConfigurationImageToFiles");
-            return;
-        }
-        try {
-            final Msq tune = MsqFactory.valueOf(image, ini);
-            tune.writeXmlFile(xmlFileName);
-        } catch (OrdinalOutOfRangeException e) {
-            log.warn("Unexpected " + e, e);
-        }
     }
 
     private static String getCode(byte[] response) {
