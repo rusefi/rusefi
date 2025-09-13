@@ -40,14 +40,18 @@ public class CalibrationsHelper {
 
     static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss");
 
-    public static void main(final String[] args) {
+    public static void main(String[] args) {
+//        args = new String[] {"destinationFileName.xml", "COM34"};
         if (args.length != 2) {
             System.err.println("File name and port are expected as command line arguments!");
         } else {
-            final String fileName = args[0];
+            final String destinationFileName = args[0];
             final String port = args[1];
-            if (!readAndBackupCurrentCalibrations(port, UpdateOperationCallbacks.CONSOLE, fileName).isPresent()) {
+            Optional<CalibrationsInfo> calibrationsInfo = readAndBackupCurrentCalibrations(port, UpdateOperationCallbacks.CONSOLE, destinationFileName);
+            if (!calibrationsInfo.isPresent()) {
                 System.err.printf("Failed to read current calibrations from %s port%n", port);
+            } else {
+                backUpCalibrationsInfo(calibrationsInfo.get(), destinationFileName + "_", UpdateOperationCallbacks.CONSOLE);
             }
         }
     }
@@ -356,6 +360,7 @@ public class CalibrationsHelper {
             false,
             "readAndBackupCurrentCalibrations");
     }
+
     private static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
         final BinaryProtocol binaryProtocol,
         final UpdateOperationCallbacks callbacks,
