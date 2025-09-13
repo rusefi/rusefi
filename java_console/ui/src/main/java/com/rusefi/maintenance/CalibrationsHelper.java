@@ -127,6 +127,16 @@ public class CalibrationsHelper {
 
         final String timestampFileNameComponent = DATE_FORMAT.format(new Date());
 
+        if (!backupTune(
+            iniFileToImport,
+            msqToImport,
+            getFileNameWithoutExtension(timestampFileNameComponent, "tune_to_import"),
+            callbacks
+        )) {
+            callbacks.logLine("Failed to back up tune to import...");
+            return false;
+        }
+
         final Optional<CalibrationsInfo> prevTune = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
             ecuPort,
             callbacks,
@@ -198,6 +208,40 @@ public class CalibrationsHelper {
             log.error("Failed to read meta:", e);
             callbacks.logLine("Failed to read meta");
             return Optional.empty();
+        }
+    }
+
+    private static boolean backupTune(
+        final IniFileModel ini,
+        final Msq msq,
+        final String fileName,
+        final UpdateOperationCallbacks callbacks
+    )  {
+        try {
+            final String iniFileName = String.format("%s.ini", fileName);
+            final Path iniFilePath = Paths.get(ini.getIniFilePath());
+            callbacks.logLine(String.format("Backing up ini-file `%s`...", iniFilePath));
+            Files.copy(
+                iniFilePath,
+                Paths.get(iniFileName),
+                REPLACE_EXISTING
+            );
+            callbacks.logLine(String.format(
+                "`%s` ini-file is backed up as `%s`",
+                iniFilePath.getFileName(),
+                iniFileName
+            ));
+
+            final String msqFileName = String.format("%s.msq", fileName);
+            callbacks.logLine(String.format("Backing up msq-file to %s...", msqFileName));
+            msq.writeXmlFile(msqFileName);
+            callbacks.logLine(String.format("msq-file is backed up as `%s`", msqFileName));
+
+            return true;
+        } catch (final Exception e) {
+            log.error("Backing up tune failed:", e);
+            callbacks.logLine("Backing up tune failed: " + e);
+            return false;
         }
     }
 
