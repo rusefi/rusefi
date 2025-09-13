@@ -25,7 +25,7 @@ public class MaintenanceUtil {
             ExecHelper.executeCommand(queryCommand, callbacks, output, error, null);
         } catch (ErrorExecutingCommand e) {
             log.error("Error: " + e, e);
-            callbacks.logLine("IOError: " + e);
+            callbacks.logLine("detectDevice IOError: " + e);
             // let's assume DFU is present just to give user more options
             return valueInCaseOfError;
         }
