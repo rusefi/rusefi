@@ -137,7 +137,7 @@ public class ProgramSelector {
             callbacks.logLine("Update completed successfully!");
             callbacks.done();
         } catch (Throwable e) {
-            callbacks.logLine("Error: " + e);
+            callbacks.logLine("OpenbltJni Error: " + e);
             callbacks.error();
         } finally {
             OpenbltJni.stop(cb);
@@ -320,7 +320,8 @@ public class ProgramSelector {
             callbacks.logLine("Update completed successfully!");
             return true;
         } catch (Throwable e) {
-            callbacks.logLine("Error: " + e);
+            callbacks.logLine("flashOpenbltSerial Error: " + e);
+            log.error("flashOpenbltSerial " + e, e);
             return false;
         } finally {
             if (!USE_JAVA_SERIAL) {

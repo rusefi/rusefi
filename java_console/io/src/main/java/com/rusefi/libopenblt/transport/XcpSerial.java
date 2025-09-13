@@ -85,7 +85,7 @@ public class XcpSerial implements IXcpTransport{
             byte[] responseLen = new byte[1];
             int actualRead = mPort.readBytes(responseLen, 1);
             if (actualRead != 1) {
-                throw new IOException("Cannot read response");
+                throw new IOException("XcpSerial: Cannot read response " + actualRead + "; " + request.length + ", timeoutMs=" + timeoutMs);
             }
 
             byte[] response = new byte[responseLen[0]];
