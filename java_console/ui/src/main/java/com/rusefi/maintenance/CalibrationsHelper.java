@@ -38,7 +38,7 @@ public class CalibrationsHelper {
     private static final String UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT = "updated_calibrations";
     private static final String MERGED_CALIBRATIONS_FILE_NAME_COMPONENT = "merged_calibrations";
 
-    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd-hh.mm.ss");
+    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss");
 
     public static void main(final String[] args) {
         if (args.length != 2) {
