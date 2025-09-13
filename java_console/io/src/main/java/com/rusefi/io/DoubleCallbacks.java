@@ -39,4 +39,12 @@ public class DoubleCallbacks implements UpdateOperationCallbacks {
         one.clear();
         two.clear();
     }
+
+    @Override
+    public String toString() {
+        return "DoubleCallbacks{" +
+            "one=" + one +
+            ", two=" + two +
+            '}';
+    }
 }

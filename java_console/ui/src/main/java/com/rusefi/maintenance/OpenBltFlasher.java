@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.libopenblt.XcpLoader;
 import com.rusefi.libopenblt.XcpSettings;
 import com.rusefi.libopenblt.file.SrecParser;
@@ -12,7 +13,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class OpenBltFlasher {
+    private static final Logging log = getLogging(OpenBltFlasher.class);
+
     private final XcpLoader mLoader;
     private final OpenbltJni.OpenbltCallbacks mCallbacks;
 
@@ -25,6 +30,7 @@ public class OpenBltFlasher {
     }
 
     public static OpenBltFlasher makeSerial(String portName, XcpSettings settings, OpenbltJni.OpenbltCallbacks callbacks) {
+        log.info("makeSerial " + portName);
         IXcpTransport transport = new XcpSerial(portName);
         return new OpenBltFlasher(transport, settings, callbacks);
     }

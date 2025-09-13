@@ -40,6 +40,10 @@ public class ProgramSelector {
     private final ConnectivityContext connectivityContext;
     private final static boolean USE_JAVA_SERIAL = parseBoolean(System.getProperty("USE_JAVA_OPENBLT_SERIAL", "true"));
 
+    static {
+        log.info("USE_JAVA_SERIAL=" + USE_JAVA_SERIAL);
+    }
+
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
         content.add(updateModeAndButton, BorderLayout.NORTH);
