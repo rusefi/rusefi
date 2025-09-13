@@ -38,7 +38,7 @@ public class ProgramSelector {
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
     private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
     private final ConnectivityContext connectivityContext;
-    private final static boolean USE_JAVA_SERIAL = parseBoolean(System.getProperty("USE_JAVA_OPENBLT_SERIAL", "true"));
+    private final static boolean USE_JAVA_SERIAL = parseBoolean(System.getProperty("USE_JAVA_OPENBLT_SERIAL", "false"));
 
     static {
         log.info("USE_JAVA_SERIAL=" + USE_JAVA_SERIAL);
