@@ -8,7 +8,6 @@ import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.StatusAnimation;
 import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
-import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.StatusPanel;
 
@@ -40,7 +39,7 @@ public class BasicStartupFrame {
     }
 
     public static void runTool(@SuppressWarnings("unused") String[] args) throws InterruptedException, InvocationTargetException {
-        DefaultExceptionHandler.install();
+        UiHelper.commonUiStartup();
         SwingUtilities.invokeAndWait(() -> new BasicStartupFrame(ConnectivityContext.INSTANCE));
     }
 

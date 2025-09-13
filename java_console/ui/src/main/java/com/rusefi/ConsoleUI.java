@@ -37,6 +37,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.core.rusEFIVersion.CONSOLE_VERSION;
+import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 import static com.rusefi.ui.util.UiUtils.createOnTopParent;
 
 /**
@@ -205,12 +206,9 @@ console live data tab is broken #8402
             new Thread(ConsoleUI::writeReadmeFile).start();
         }
 
-        log.info("OS name: " + FileLog.getOsName());
-        log.info("OS version: " + System.getProperty(FileLog.OS_VERSION));
-
         getConfig().load();
         AutotestLogging.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
-        DefaultExceptionHandler.install();
+        commonUiStartup();
 // not very useful?        VersionChecker.start();
         SwingUtilities.invokeAndWait(() -> awtCode(args));
     }
