@@ -96,7 +96,7 @@ public class OpenBltFlasher {
         mCallbacks.setPhase("Erase", true);
         final ProgressUpdater pu = new ProgressUpdater();
 
-        forEachFirmwareChunk(65536, (Chunk c) -> {
+        forEachFirmwareChunk(32768, (Chunk c) -> {
             mLoader.clearMemory(c.address, c.data.length);
 
             pu.processBytes(c.data.length);
