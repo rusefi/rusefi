@@ -67,8 +67,12 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         // actually get overall status message
         SwingUtilities.invokeLater(() -> {
             final String contentWithoutNullTerminators = logTextArea.getText().replace("\0", EOL);
-            Toolkit.getDefaultToolkit().getSystemClipboard()
-                .setContents(new StringSelection(contentWithoutNullTerminators), null);
+            try {
+                Toolkit.getDefaultToolkit().getSystemClipboard()
+                    .setContents(new StringSelection(contentWithoutNullTerminators), null);
+            } catch (Throwable e) {
+                log.error("getSystemClipboard error " + e, e);
+            }
         });
 
         logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
