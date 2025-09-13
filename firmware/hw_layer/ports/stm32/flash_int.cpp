@@ -216,16 +216,13 @@ static int intFlashSectorErase(flashsector_t sector) {
 }
 
 int intFlashErase(flashaddr_t address, size_t size) {
-	while (size > 0) {
+	flashaddr_t endAddress = address + size - 1;
+	while (address <= endAddress) {
 		flashsector_t sector = intFlashSectorAt(address);
 		int err = intFlashSectorErase(sector);
 		if (err != FLASH_RETURN_SUCCESS)
 			return err;
 		address = intFlashSectorEnd(sector);
-		size_t sector_size = flashSectorSize(sector);
-		if (sector_size >= size)
-			break;
-		size -= sector_size;
 	}
 
 	return FLASH_RETURN_SUCCESS;
