@@ -6,6 +6,7 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
@@ -369,7 +370,7 @@ public class BinaryProtocol {
                 );
             } catch (JAXBException e) {
                 log.error("JAXBException", e);
-            } catch (IOException e) {
+            } catch (final IOException | OrdinalOutOfRangeException e) {
                 log.info("Ignoring " + e, e);
             } catch (Exception e) {
                 log.error("Unexpected exception:" + e, e);

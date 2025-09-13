@@ -46,8 +46,9 @@ public class TuneBackupUtil {
         try {
             final Msq tune = MsqFactory.valueOf(image, ini);
             tune.writeXmlFile(xmlFileName);
-        } catch (OrdinalOutOfRangeException e) {
-            log.warn("Unexpected " + e, e);
+        } catch (final OrdinalOutOfRangeException e) {
+            log.warn("OrdinalOutOfRangeException exception on saving .msq file:" + e, e);
+            throw e;
         }
     }
 }
