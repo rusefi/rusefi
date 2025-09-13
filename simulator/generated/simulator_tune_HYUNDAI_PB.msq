@@ -2663,7 +2663,7 @@
         <constant name="launchActivatePin">"NONE"</constant>
         <constant name="launchActivatePinMode">"DEFAULT"</constant>
         <constant name="launchActivationMode">"Launch Button"</constant>
-        <constant name="launchControlEnabled">"false"</constant>
+        <constant name="launchControlEnabled">"disabled"</constant>
         <constant digits="0" name="launchCorrectionsEndRpm" units="">0.0</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
         <constant name="launchFuelCutEnable">"false"</constant>
@@ -5180,7 +5180,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.13.f407-discovery.4074021780" version="5.0"/>
+    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.13.f407-discovery.2143052619" version="5.0"/>
     <bibliography author="rusEFI 20250913" writeDate="date"/>
     <settings/>
     <userComments/>
