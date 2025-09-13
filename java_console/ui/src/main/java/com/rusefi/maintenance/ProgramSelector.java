@@ -38,10 +38,12 @@ public class ProgramSelector {
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
     private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
     private final ConnectivityContext connectivityContext;
-    private final static boolean USE_JAVA_SERIAL = parseBoolean(System.getProperty("USE_JAVA_OPENBLT_SERIAL", "false"));
+    private final static boolean USE_JAVA_SERIAL;
 
     static {
-        log.info("USE_JAVA_SERIAL=" + USE_JAVA_SERIAL);
+        String KEY = "USE_JAVA_OPENBLT_SERIAL";
+        USE_JAVA_SERIAL = parseBoolean(System.getProperty(KEY, "false"));
+        log.info(KEY + "=" + USE_JAVA_SERIAL);
     }
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
@@ -201,7 +203,7 @@ public class ProgramSelector {
                         .map(PortResult::toString)
                         .collect(Collectors.joining(","))
                 ));
-                for (final PortResult p: availableHardwareAfter.getKnownPorts(OpenBlt)) {
+                for (final PortResult p : availableHardwareAfter.getKnownPorts(OpenBlt)) {
                     if (!openBltPortsBefore.contains(p)) {
                         // This item is in the after list but not before list
                         newPorts.add(p);
@@ -390,10 +392,10 @@ public class ProgramSelector {
         AutoupdateUtil.trueLayoutAndRepaint(content);
     }
 
-  @NotNull
-  public static JButton createUpdateFirmwareButton() {
-    return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
-  }
+    @NotNull
+    public static JButton createUpdateFirmwareButton() {
+        return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
+    }
 
     public void setMode(UpdateMode updateMode) {
         updateModeComboBox.setSelectedItem(updateMode);

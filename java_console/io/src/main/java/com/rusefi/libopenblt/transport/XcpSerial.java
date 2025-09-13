@@ -1,12 +1,25 @@
 package com.rusefi.libopenblt.transport;
 
+import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortThreadFactory;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.util.HexBinary;
 
 import java.io.IOException;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class XcpSerial implements IXcpTransport{
+    private static final Logging log = getLogging(XcpSerial.class);
+    private static final boolean VERBOSE;
+
+    static {
+        String KEY = "XcpSerial.VERBOSE";
+        VERBOSE = Boolean.getBoolean(KEY);
+        log.info(KEY + "=" + VERBOSE);
+    }
+
     private final Object mLock = new Object();
 
     private final String mPortName;
@@ -68,6 +81,9 @@ public class XcpSerial implements IXcpTransport{
         synchronized (mLock) {
             checkPort();
 
+            if (VERBOSE) {
+                log.info("setComPortTimeouts=" + timeoutMs);
+            }
             mPort.setComPortTimeouts(
                 SerialPort.TIMEOUT_READ_BLOCKING | SerialPort.TIMEOUT_WRITE_BLOCKING,
                 timeoutMs, timeoutMs);
@@ -77,41 +93,41 @@ public class XcpSerial implements IXcpTransport{
             buf[0] = (byte)request.length;
             System.arraycopy(request, 0, buf, 1, request.length);
 
+            if (VERBOSE) {
+                log.info("writeBytes " + HexBinary.printHexBinary(buf));
+            }
             int actualWritten = mPort.writeBytes(buf, buf.length);
+            if (VERBOSE) {
+                log.info("actualWritten " + actualWritten);
+            }
             if (actualWritten != buf.length) {
                 throw new IOException("Cannot write to serial, expected " + buf.length + " turned out " + actualWritten);
             }
 
             byte[] responseLen = new byte[1];
             int actualRead = mPort.readBytes(responseLen, 1);
+            if (VERBOSE) {
+                log.info("actualRead " + actualRead);
+            }
             if (actualRead != 1) {
                 throw new IOException("XcpSerial: Cannot read response " + actualRead + "; " + request.length + ", timeoutMs=" + timeoutMs);
+            }
+            if (VERBOSE) {
+                log.info("actualRead responseLen " + HexBinary.printHexBinary(responseLen));
             }
 
             byte[] response = new byte[responseLen[0]];
             actualRead = mPort.readBytes(response, response.length);
+            if (VERBOSE) {
+                log.info("actualRead response " + HexBinary.printHexBinary(response));
+            }
             if (actualRead != expectResponseBytes ||
                 responseLen[0] != expectResponseBytes) {
                 throw new IOException("Unexpected bytes read on command " + Integer.toHexString(request[0] & 0xFF) +
-                    ", requested " + expectResponseBytes + " but got " + actualRead + ": " + hexlify(response));
+                    ", requested " + expectResponseBytes + " but got " + actualRead + ": " + HexBinary.printHexBinary(response));
             }
 
             return response;
         }
-    }
-
-    static private String hexlify(byte [] bytes) {
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : bytes) {
-            if (hexString.length() > 0) {
-                hexString.append(' ');
-            }
-            String hex = Integer.toHexString(b & 0xFF);
-            if (hex.length() == 1) {
-                hexString.append('0');
-            }
-            hexString.append(hex);
-        }
-        return hexString.toString();
     }
 }
