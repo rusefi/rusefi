@@ -17,7 +17,6 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.basic.MigrateSettingsCheckboxState;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,7 +27,7 @@ import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
-import static com.rusefi.binaryprotocol.BinaryProtocol.saveConfigurationImageToFiles;
+import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Collections.emptySet;
 
@@ -222,6 +221,7 @@ public class CalibrationsHelper {
                 iniFilePath.getFileName(),
                 iniFileName
             ));
+
             final String zipFileName = String.format("%s.zip", fileName);
             final String msqFileName = String.format("%s.msq", fileName);
             callbacks.logLine(String.format(
