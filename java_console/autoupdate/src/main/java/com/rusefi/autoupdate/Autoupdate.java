@@ -27,7 +27,15 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20250618; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20250913; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final String KEY = "Autoupdate.do_not_download";
+    private static final boolean doNotDownload;
+
+    static {
+        doNotDownload = Boolean.getBoolean(KEY);
+        log.info(KEY + "=" + doNotDownload);
+    }
+
 
     private static final String TITLE = getTitle();
 
@@ -39,10 +47,6 @@ public class Autoupdate {
             return "Title error: " + e;
         }
     }
-
-    private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
-
-
 
     public static void main(String[] args) {
         try {
@@ -83,8 +87,13 @@ public class Autoupdate {
 
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
-        final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(firstArgument, bundleInfo);
-        downloadedAutoupdateFile.ifPresent(downloadedFile -> ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles());
+        final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
+        if (doNotDownload) {
+            downloadedAutoupdateFile = Optional.empty();
+        } else {
+            downloadedAutoupdateFile = downloadFreshZipFile(firstArgument, bundleInfo);
+            downloadedAutoupdateFile.ifPresent(downloadedFile -> ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles());
+        }
 
         // Let's try to get console .exe-file name before we rewrite autoupdate .jar file:
         final String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
