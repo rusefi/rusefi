@@ -11,11 +11,13 @@ public class DialogModel {
     private final String key;
     private final String uiName;
     private final List<Field> fields;
+    private final List<Command> commandsOfCurrentDialog;
 
-    public DialogModel(String key, String uiName, List<Field> fields) {
+    public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog) {
         this.key = key;
         this.uiName = uiName;
         this.fields = new ArrayList<>(fields);
+        this.commandsOfCurrentDialog = new ArrayList<>(commandsOfCurrentDialog);
     }
 
     public List<Field> getFields() {
@@ -54,6 +56,24 @@ public class DialogModel {
                     "key='" + key + '\'' +
                     ", uiName='" + uiName + '\'' +
                     '}';
+        }
+    }
+
+    public static class Command {
+        private final String uiName;
+        private final String command;
+
+        public Command(String uiName, String command) {
+            this.uiName = uiName;
+            this.command = command;
+        }
+
+        public String getUiName() {
+            return uiName;
+        }
+
+        public String getCommand() {
+            return command;
         }
     }
 }

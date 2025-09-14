@@ -32,6 +32,7 @@ public class IniFileModelImpl implements IniFileModel {
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
+    private final List<DialogModel.Command> commandsOfCurrentDialog = new ArrayList<>();
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -200,14 +201,15 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     private void finishDialog() {
-        if (fieldsOfCurrentDialog.isEmpty())
+        if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
-        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog));
+        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog));
 
         dialogId = null;
         fieldsOfCurrentDialog.clear();
+        commandsOfCurrentDialog.clear();
     }
 
     private void handleLine(RawIniFile.Line line) {
@@ -287,6 +289,9 @@ public class IniFileModelImpl implements IniFileModel {
             switch (first) {
                 case "field":
                     handleField(list);
+                    break;
+                case "commandButton":
+                    handleCommand(list);
                     break;
                 case "slider":
                     handleSlider(list);
@@ -413,6 +418,13 @@ public class IniFileModelImpl implements IniFileModel {
 
         registerUiField(key, uiFieldName);
         log.debug("IniFileModel: Slider label=[" + uiFieldName + "] : key=[" + key + "]");
+    }
+
+    private void handleCommand(LinkedList<String> list) {
+        list.removeFirst(); // "commandButton"
+        String uiName = list.removeFirst();
+        String command = list.removeFirst();
+        commandsOfCurrentDialog.add(new DialogModel.Command(uiName, command));
     }
 
     private void handleField(LinkedList<String> list) {
