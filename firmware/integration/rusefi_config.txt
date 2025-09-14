@@ -555,8 +555,8 @@ bit useCicPidForIdle;Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
 bit kickStartCranking
 bit useSeparateIdleTablesForCrankingTaper;This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
-bit launchControlEnabled,"enabled","disabled";
-bit antiLagEnabled;
+bit launchControlEnabled,"enabled","disabled"
+bit antiLagEnabled,"enabled","disabled"
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit displayLogicLevelsInEngineSniffer;Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
 bit useTLE8888_stepper
@@ -1756,8 +1756,8 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
     SentInput FuelHighPressureSentInput;SENT input used for high pressure fuel sensor
     SentFuelHighPressureType FuelHighPressureSentType;If you have SENT High Pressure Fuel Sensor please select type. For analog TPS leave None
 
-	bit nitrousControlEnabled
-	bit vvlControlEnabled
+	bit nitrousControlEnabled,"enabled","disabled"
+	bit vvlControlEnabled,"enabled","disabled"
 	bit unusedFancy3
 	bit unusedFancy4
 	bit unusedFancy5
