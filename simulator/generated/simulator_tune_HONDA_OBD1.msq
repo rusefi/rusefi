@@ -185,7 +185,7 @@
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="0" name="anotherCiTest" units="">0.0</constant>
         <constant name="antiLagActivationMode">"Switch Input"</constant>
-        <constant name="antiLagEnabled">"false"</constant>
+        <constant name="antiLagEnabled">"disabled"</constant>
         <constant digits="3" name="applyNonlinearBelowPulse" units="ms">0.0</constant>
         <constant name="artificialTestMisfire">"No thank you"</constant>
         <constant name="auxAnalogInputs1">"Disabled"</constant>
@@ -2921,7 +2921,7 @@ end</constant>
         <constant digits="2" name="multisparkSparkDuration" units="ms">1.0</constant>
         <constant digits="0" name="nitrousActivationRpm" units="rpm">4000.0</constant>
         <constant name="nitrousControlArmingMethod">"Digital Switch Input"</constant>
-        <constant name="nitrousControlEnabled">"false"</constant>
+        <constant name="nitrousControlEnabled">"disabled"</constant>
         <constant name="nitrousControlTriggerPin">"NONE"</constant>
         <constant name="nitrousControlTriggerPinMode">"DEFAULT"</constant>
         <constant digits="0" name="nitrousDeactivationRpm" units="rpm">7000.0</constant>
@@ -4766,7 +4766,7 @@ end</constant>
         <constant digits="0" name="vssFilterReciprocal" units="">3.0</constant>
         <constant digits="3" name="vssGearRatio" units="ratio">3.73</constant>
         <constant digits="0" name="vssToothCount" units="count">21.0</constant>
-        <constant name="vvlControlEnabled">"false"</constant>
+        <constant name="vvlControlEnabled">"disabled"</constant>
         <constant digits="0" name="vvlController_activationRpm" units="rpm">0.0</constant>
         <constant digits="0" name="vvlController_deactivationRpm" units="rpm">0.0</constant>
         <constant digits="0" name="vvlController_deactivationRpmWindow" units="rpm">0.0</constant>
@@ -4923,7 +4923,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.14.f407-discovery.3595964304" version="5.0"/>
+    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.14.f407-discovery.3057951919" version="5.0"/>
     <bibliography author="rusEFI 20250913" writeDate="date"/>
     <settings/>
     <userComments/>
