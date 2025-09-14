@@ -70,6 +70,10 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
         new BooleanField("isMapAveragingEnabled", "enabled", "disabled"),
         new BooleanField("isFasterEngineSpinUpEnabled", "enabled", "disabled"),
         new BooleanField("enableSoftwareKnock", "enabled", "disabled"),
+        new BooleanField("fuelClosedLoopCorrectionEnabled", "enabled", "disabled"),
+        new BooleanField("isSdCardEnabled", "enabled", "disabled"),
+        new BooleanField("isBoostControlEnabled", "enabled", "disabled"),
+        new BooleanField("stftIgnoreErrorMagnitude", "yes", "no"),
     };
 
     @Override

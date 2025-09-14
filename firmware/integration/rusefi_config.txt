@@ -1004,7 +1004,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	bit canInputBCM
 	bit consumeObdSensors;This property is useful if using rusEFI as TCM or BCM only
 	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
-	bit stftIgnoreErrorMagnitude;If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
+	bit stftIgnoreErrorMagnitude,"yes","no";If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 	bit vvtBooleanForVerySpecialCases
 	bit enableSoftwareKnock,"enabled","disabled"
 	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold
@@ -1106,7 +1106,7 @@ end_struct
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 
 	bit widebandOnSecondBus,"CAN2","CAN1";Select which bus the wideband controller is attached to.
-	bit fuelClosedLoopCorrectionEnabled;Enables lambda sensor closed loop feedback for fuelling.
+	bit fuelClosedLoopCorrectionEnabled,"enabled","disabled";Enables lambda sensor closed loop feedback for fuelling.
 	bit alwaysWriteSdCard;Write SD card log even when powered by USB
 	bit knockDetectionUseDoubleFrequency,"second harmonic","first harmonic";Second harmonic (aka double) is usually quieter background noise
 	bit yesUnderstandLocking,"yes","no"
@@ -1158,7 +1158,7 @@ bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";In Constant mode,
 bit useAdvanceCorrectionsForCranking;This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
 bit flexCranking;Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
 bit useIacPidMultTable;This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
-bit isBoostControlEnabled
+bit isBoostControlEnabled,"enabled","disabled"
 bit launchSmoothRetard;Interpolates the Ignition Retard from 0 to 100% within the RPM Range
 bit isPhaseSyncRequiredForIgnition;Some engines are OK running semi-random sequential while other engine require phase synchronization
 bit useCltBasedRpmLimit,"yes","no";If enabled, use a curve for RPM limit (based on coolant temperature) instead of a constant value.

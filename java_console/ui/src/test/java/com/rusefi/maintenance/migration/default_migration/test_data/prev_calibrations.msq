@@ -336,7 +336,7 @@
         <constant name="is_enabled_spi_1">"true"</constant>
         <constant name="is_enabled_spi_2">"false"</constant>
         <constant name="is_enabled_spi_3">"false"</constant>
-        <constant name="isSdCardEnabled">"true"</constant>
+        <constant name="isSdCardEnabled">"enabled"</constant>
         <constant name="rusefiVerbose29b">"11 bit"</constant>
         <constant name="rethrowHardFault">"false"</constant>
         <constant name="isHip9011Enabled">"false"</constant>
@@ -456,7 +456,7 @@
         <constant name="enableCanVss">"false"</constant>
         <constant name="enableInnovateLC2">"false"</constant>
         <constant name="showHumanReadableWarning">"false"</constant>
-        <constant name="stftIgnoreErrorMagnitude">"false"</constant>
+        <constant name="stftIgnoreErrorMagnitude">"no"</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
         <constant name="enableSoftwareKnock">"enabled"</constant>
         <constant name="verboseVVTDecoding">"false"</constant>
@@ -607,7 +607,7 @@
         <constant digits="0" name="tps2SecondaryMin" units="ADC">1000.0</constant>
         <constant digits="0" name="tps2SecondaryMax" units="ADC">0.0</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
-        <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
+        <constant name="fuelClosedLoopCorrectionEnabled">"disabled"</constant>
         <constant name="oddFireEngine">"false"</constant>
         <constant name="boardUseTachPullUp">"5v"</constant>
         <constant name="boardUseTempPullUp">"Piggyback Mode"</constant>
@@ -663,7 +663,7 @@
         <constant name="useAdvanceCorrectionsForCranking">"false"</constant>
         <constant name="flexCranking">"false"</constant>
         <constant name="useIacPidMultTable">"false"</constant>
-        <constant name="isBoostControlEnabled">"false"</constant>
+        <constant name="isBoostControlEnabled">"disabled"</constant>
         <constant name="launchSmoothRetard">"false"</constant>
         <constant name="isPhaseSyncRequiredForIgnition">"false"</constant>
         <constant name="useCltBasedRpmLimit">"no"</constant>
