@@ -2196,7 +2196,6 @@ struct engine_configuration_s {
 	offset 768 bit 2 */
 	bool is_enabled_spi_3 : 1 {};
 	/**
-	 * enable sd/disable sd
 	offset 768 bit 3 */
 	bool isSdCardEnabled : 1 {};
 	/**
