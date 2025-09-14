@@ -199,6 +199,7 @@ struct_no_prefix engine_configuration_s
 #define VVT_OFFSET_1_1_NAME "VVT offset bank 1 intake"
 #define GEAR_DETECTION_DIALOG_NAME "Gear Detection"
 #define ts_show_final_ratio true
+#define ts_show_ecu_stimulator true
 #define ts_show_linear_thermistors true
 #define ts_show_ign_key_menu true
 #define ts_show_map_estimate true
