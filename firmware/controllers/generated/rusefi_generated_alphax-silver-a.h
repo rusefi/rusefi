@@ -1512,7 +1512,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4152257189
+#define SIGNATURE_HASH 1672658671
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1973,6 +1973,7 @@
 #define ts_show_iat true
 #define ts_show_idle_hardware true
 #define ts_show_ign_key_analog_input false
+#define ts_show_ign_key_menu true
 #define ts_show_ign_key_switch false
 #define ts_show_ignitionOutputs true
 #define ts_show_ignitionPinMode true
@@ -1988,6 +1989,7 @@
 #define ts_show_k_line false
 #define ts_show_knock_cylinder_mapping true
 #define ts_show_l9779 false
+#define ts_show_linear_thermistors true
 #define ts_show_live_data true
 #define ts_show_long_term_fuel_trim false
 #define ts_show_maf true
@@ -2069,7 +2071,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.09.14.alphax-silver-a.4152257189"
+#define TS_SIGNATURE "rusEFI master.2025.09.14.alphax-silver-a.1672658671"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
