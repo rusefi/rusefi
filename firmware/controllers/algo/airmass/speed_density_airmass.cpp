@@ -56,7 +56,7 @@ float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float map
 	float blendDuration = interpolate2d(rpm, config->tpsTspCorrValuesBins,
 						config->tpsTspCorrValues);
 	if ( blendDuration > 2) {
-		blendDuration = 1;
+		blendDuration = 2; //even 2 seconds is quesionable but whatever
 	}
 
 	float elapsedTime = m_predictionTimer.getElapsedSeconds();
