@@ -1084,7 +1084,7 @@
         <constant digits="3" name="fordInjectorSmallPulseBreakPoint" units="mg">0.0</constant>
         <constant digits="3" name="fordInjectorSmallPulseSlope" units="g/s">0.0</constant>
         <constant name="fuelAlgorithm">"Speed Density"</constant>
-        <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
+        <constant name="fuelClosedLoopCorrectionEnabled">"disabled"</constant>
         <constant name="FuelHighPressureSentInput">"None"</constant>
         <constant name="FuelHighPressureSentType">"None"</constant>
         <constant digits="4" name="fuelLevelAveragingAlpha" units="">0.001</constant>
@@ -2371,7 +2371,7 @@
         <constant name="is_enabled_spi_5">"false"</constant>
         <constant name="is_enabled_spi_6">"false"</constant>
         <constant name="isAlternatorControlEnabled">"false"</constant>
-        <constant name="isBoostControlEnabled">"false"</constant>
+        <constant name="isBoostControlEnabled">"disabled"</constant>
         <constant name="isCylinderCleanupEnabled">"enabled"</constant>
         <constant name="isDoubleSolenoidIdle">"false"</constant>
         <constant name="isFasterEngineSpinUpEnabled">"enabled"</constant>
@@ -2380,7 +2380,7 @@
         <constant name="isInjectionEnabled">"enabled"</constant>
         <constant name="isMapAveragingEnabled">"enabled"</constant>
         <constant name="isPhaseSyncRequiredForIgnition">"false"</constant>
-        <constant name="isSdCardEnabled">"false"</constant>
+        <constant name="isSdCardEnabled">"disabled"</constant>
         <constant digits="0" name="issFilterReciprocal" units="">2.0</constant>
         <constant name="isWaveAnalyzerEnabled">"true"</constant>
         <constant digits="0" name="justATempTest" units="">0.0</constant>
@@ -3457,7 +3457,7 @@ end</constant>
         <constant digits="0" name="stft_minClt" units="C">60.0</constant>
         <constant digits="0" name="stft_minPowerLoad" units="load">85.0</constant>
         <constant digits="0" name="stft_startupDelay" units="seconds">60.0</constant>
-        <constant name="stftIgnoreErrorMagnitude">"false"</constant>
+        <constant name="stftIgnoreErrorMagnitude">"no"</constant>
         <constant digits="1" name="stoichRatioPrimary" units=":1">14.7</constant>
         <constant digits="1" name="stoichRatioSecondary" units=":1">9.0</constant>
         <constant name="tachOutputPin">"NONE"</constant>
@@ -4924,7 +4924,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.14.f407-discovery.1380582202" version="5.0"/>
+    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.14.f407-discovery.3595964304" version="5.0"/>
     <bibliography author="rusEFI 20250913" writeDate="date"/>
     <settings/>
     <userComments/>
