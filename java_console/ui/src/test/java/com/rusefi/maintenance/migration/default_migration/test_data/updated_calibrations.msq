@@ -352,7 +352,7 @@
         <constant name="flipWboChannels">"false"</constant>
         <constant name="measureMapOnlyInOneCylinder">"false"</constant>
         <constant name="stepperForceParkingEveryRestart">"true"</constant>
-        <constant name="isFasterEngineSpinUpEnabled">"true"</constant>
+        <constant name="isFasterEngineSpinUpEnabled">"enabled"</constant>
         <constant name="coastingFuelCutEnabled">"false"</constant>
         <constant name="useIacTableForCoasting">"false"</constant>
         <constant name="useNoiselessTriggerDecoder">"false"</constant>
@@ -457,7 +457,7 @@
         <constant name="suppressWboWorkaround7048">"false"</constant>
         <constant name="stftIgnoreErrorMagnitude">"false"</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
-        <constant name="enableSoftwareKnock">"true"</constant>
+        <constant name="enableSoftwareKnock">"enabled"</constant>
         <constant name="verboseVVTDecoding">"false"</constant>
         <constant name="invertCamVVTSignal">"Rising"</constant>
         <constant name="alphaNUseIat">"false"</constant>
@@ -636,12 +636,12 @@
         <constant name="vRefAdcChannel">"NONE"</constant>
         <constant digits="0" name="etbNeutralPosition" units="%">0.0</constant>
         <constant name="idleMode">"Open Loop"</constant>
-        <constant name="isInjectionEnabled">"true"</constant>
-        <constant name="isIgnitionEnabled">"true"</constant>
-        <constant name="isCylinderCleanupEnabled">"true"</constant>
+        <constant name="isInjectionEnabled">"enabled"</constant>
+        <constant name="isIgnitionEnabled">"enabled"</constant>
+        <constant name="isCylinderCleanupEnabled">"enabled"</constant>
         <constant name="complexWallModel">"Basic (constants)"</constant>
         <constant name="alwaysInstantRpm">"false"</constant>
-        <constant name="isMapAveragingEnabled">"true"</constant>
+        <constant name="isMapAveragingEnabled">"enabled"</constant>
         <constant name="overrideCrankingIacSetting">"false"</constant>
         <constant name="useSeparateAdvanceForIdle">"false"</constant>
         <constant name="isWaveAnalyzerEnabled">"true"</constant>

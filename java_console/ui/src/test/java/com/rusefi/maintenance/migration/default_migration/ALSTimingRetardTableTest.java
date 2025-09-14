@@ -35,7 +35,7 @@ public class ALSTimingRetardTableTest {
     private Constant prevValue;
 
     @BeforeEach
-    void setUp() throws JAXBException, FileNotFoundException {
+    void setUp() throws JAXBException {
         final TestTuneMigrationContext testContext = DefaultTestTuneMigrationContext.load();
         final CalibrationsInfo prevCalibrations = testContext.getPrevCalibrationsInfo();
         final IniFileModel prevIni = prevCalibrations.getIniFile();

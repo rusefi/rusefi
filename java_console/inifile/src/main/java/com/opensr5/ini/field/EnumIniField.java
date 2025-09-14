@@ -77,7 +77,7 @@ public class EnumIniField extends IniField {
         String v = constant.getValue();
         int ordinal = enums.indexOf(v);
         if (ordinal == -1)
-            throw new IllegalArgumentException("Not found " + v);
+            throw new IllegalArgumentException(constant.getName() + ": Enum name not found " + v);
         int value = getByteBuffer(image).getInt();
         value = setBitRange(value, ordinal, bitPosition, bitSize0 + 1);
         getByteBuffer(image).putInt(value);

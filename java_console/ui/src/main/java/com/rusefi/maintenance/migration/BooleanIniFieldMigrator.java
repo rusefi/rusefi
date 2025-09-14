@@ -62,8 +62,14 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
     public static final String LAUNCH_CONTROL_FIELD_NAME = "launchControlEnabled";
 
     public static final BooleanField[] fieldsToMigrate = {
-    		// List all the boolean fields to migrate here, you should also update the tests!!
-            new BooleanField(LAUNCH_CONTROL_FIELD_NAME, "enabled", "disabled"),
+        // List all the boolean fields to migrate here, you should also update the tests!!
+        new BooleanField(LAUNCH_CONTROL_FIELD_NAME, "enabled", "disabled"),
+        new BooleanField("isInjectionEnabled", "enabled", "disabled"),
+        new BooleanField("isIgnitionEnabled", "enabled", "disabled"),
+        new BooleanField("isCylinderCleanupEnabled", "enabled", "disabled"),
+        new BooleanField("isMapAveragingEnabled", "enabled", "disabled"),
+        new BooleanField("isFasterEngineSpinUpEnabled", "enabled", "disabled"),
+        new BooleanField("enableSoftwareKnock", "enabled", "disabled"),
     };
 
     @Override
@@ -82,7 +88,7 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
             final String prevBooleanValue = prevBooleanConst.getValue();
 
             if ((null == prevBooleanConst) || (null == updatedBooleanConst)) {
-            	continue;
+                continue;
             }
 
             Optional<Boolean> shouldMigrate = field.shouldMigrateField(prevBooleanValue);

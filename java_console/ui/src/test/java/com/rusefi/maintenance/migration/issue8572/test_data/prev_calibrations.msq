@@ -991,7 +991,7 @@
         <constant name="enableKnockSpectrogramFilter">"false"</constant>
         <constant name="enableLaunchRetard">"false"</constant>
         <constant name="enableOilPressureProtect">"false"</constant>
-        <constant name="enableSoftwareKnock">"true"</constant>
+        <constant name="enableSoftwareKnock">"enabled"</constant>
         <constant name="enableStagedInjection">"false"</constant>
         <constant name="enableTrailingSparks">"false"</constant>
         <constant name="enableVerboseCanTx">"true"</constant>
@@ -2400,13 +2400,13 @@
         <constant name="is_enabled_spi_6">"false"</constant>
         <constant name="isAlternatorControlEnabled">"false"</constant>
         <constant name="isBoostControlEnabled">"false"</constant>
-        <constant name="isCylinderCleanupEnabled">"true"</constant>
+        <constant name="isCylinderCleanupEnabled">"enabled"</constant>
         <constant name="isDoubleSolenoidIdle">"false"</constant>
-        <constant name="isFasterEngineSpinUpEnabled">"true"</constant>
+        <constant name="isFasterEngineSpinUpEnabled">"enabled"</constant>
         <constant name="isForcedInduction">"false"</constant>
-        <constant name="isIgnitionEnabled">"true"</constant>
-        <constant name="isInjectionEnabled">"true"</constant>
-        <constant name="isMapAveragingEnabled">"true"</constant>
+        <constant name="isIgnitionEnabled">"enabled"</constant>
+        <constant name="isInjectionEnabled">"enabled"</constant>
+        <constant name="isMapAveragingEnabled">"enabled"</constant>
         <constant name="isPhaseSyncRequiredForIgnition">"false"</constant>
         <constant name="isSdCardEnabled">"true"</constant>
         <constant digits="0" name="issFilterReciprocal" units="">2.0</constant>
