@@ -4,7 +4,6 @@ import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.AnyCommand;
-import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,7 +48,6 @@ public class MessagesPane {
         JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         statsPanel.add(new RpmLabel(uiContext).getContent());
-        statsPanel.add(new IdleLabel());
         statsPanel.add(new WarningPanel(config).getPanel(config));
 
         content.add(statsPanel, BorderLayout.SOUTH);
