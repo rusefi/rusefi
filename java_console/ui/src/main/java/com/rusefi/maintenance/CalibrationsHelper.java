@@ -39,6 +39,7 @@ public class CalibrationsHelper {
     private static final String MERGED_CALIBRATIONS_FILE_NAME_COMPONENT = "merged_calibrations";
 
     static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss");
+    private static final String RUSEFI_FORCE_CALIBRATIONS_RESTORE = System.getenv("RUSEFI_FORCE_CALIBRATIONS_RESTORE");
     public static boolean RETHROW = false;
 
     public static void main(String[] args) {
@@ -443,7 +444,7 @@ public class CalibrationsHelper {
                 newIniFile,
                 new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent())
             ));
-        } else if ("true".equals(System.getenv("RUSEFI_FORCE_CALIBRATIONS_RESTORE"))) {
+        } else if ("true".equalsIgnoreCase(RUSEFI_FORCE_CALIBRATIONS_RESTORE)) {
             callbacks.logLine("It looks like we do not need to update previous calibrations, but for debugging we are going to rewrite to ECU new calibrations again.");
             result = Optional.of(newCalibrations);
         } else {
