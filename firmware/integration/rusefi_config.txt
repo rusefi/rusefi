@@ -204,7 +204,7 @@ struct_no_prefix engine_configuration_s
 #define ts_show_gasoline_scale true
 #define ts_show_crankingTpsCurve true
 #define ts_show_etb_frequency true
-#define ENGINE_TYPES_DIALOG_NAME "Popular vehicles"
+#define ENGINE_TYPES_DIALOG_NAME "Base Tunes"
 #define ts_show_gppwm_1 true
 #define ts_show_gppwm_2 true
 #define ts_show_gppwm_3 true
