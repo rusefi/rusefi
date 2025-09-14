@@ -42,7 +42,7 @@ public class ProgramSelector {
 
     static {
         String KEY = "USE_JAVA_OPENBLT_SERIAL";
-        USE_JAVA_SERIAL = parseBoolean(System.getProperty(KEY, "false"));
+        USE_JAVA_SERIAL = parseBoolean(System.getProperty(KEY, "true"));
         log.info(KEY + "=" + USE_JAVA_SERIAL);
     }
 
