@@ -863,7 +863,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit is_enabled_spi_1
 	bit is_enabled_spi_2
 	bit is_enabled_spi_3
-	bit isSdCardEnabled;enable sd/disable sd
+	bit isSdCardEnabled,"enabled","disabled"
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit rethrowHardFault
 	bit verboseQuad
