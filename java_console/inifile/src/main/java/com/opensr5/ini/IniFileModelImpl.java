@@ -33,6 +33,7 @@ public class IniFileModelImpl implements IniFileModel {
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
@@ -57,6 +58,8 @@ public class IniFileModelImpl implements IniFileModel {
         if (blockingFactorOverride != null)
             log.info("blockingFactorOverride=" + blockingFactorOverride);
     }
+
+    private int currentPageIndex;
 
     public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
@@ -92,8 +95,14 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     @Override
+    // todo: rename to 'getPrimaryPageIniFields()'?
     public Map<String, IniField> getAllIniFields() {
-        return allIniFields;
+        return Collections.unmodifiableMap(allIniFields);
+    }
+
+    @Override
+    public Map<String, IniField> getSecondaryIniFields() {
+        return Collections.unmodifiableMap(secondaryIniFields);
     }
 
     @Override
@@ -212,6 +221,9 @@ public class IniFileModelImpl implements IniFileModel {
             }
 
             if (!list.isEmpty() && list.get(0).equals(SECTION_PAGE)) {
+                if (list.size() >= 2) {
+                    currentPageIndex = Integer.parseInt(list.get(1));
+                }
                 isInsidePageDefinition = true;
                 return;
             }
@@ -382,6 +394,11 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     private void registerField(IniField field) {
+        if (currentPageIndex != 1) {
+            log.info("Skipping field from secondary page: " + field);
+            secondaryIniFields.put(field.getName(), field);
+            return;
+        }
         if (allIniFields.containsKey(field.getName()))
             return;
         allIniFields.put(field.getName(), field);

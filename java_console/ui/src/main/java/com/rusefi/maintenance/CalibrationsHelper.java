@@ -287,10 +287,6 @@ public class CalibrationsHelper {
             ));
             return true;
         } catch (final Exception e) {
-            if (RETHROW && e instanceof RuntimeException) {
-                RuntimeException re = (RuntimeException) e;
-                throw re;
-            }
             log.error("Backing up calibrations failed:", e);
             callbacks.logLine("Backing up current calibrations failed: " + e);
             return false;
