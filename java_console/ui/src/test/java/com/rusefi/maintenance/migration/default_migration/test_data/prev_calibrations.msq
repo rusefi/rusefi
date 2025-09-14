@@ -1399,40 +1399,6 @@
         <constant name="acrPin2">"NONE"</constant>
         <constant digits="2" name="etbMinimumPosition" units="%">1.0</constant>
         <constant digits="0" name="tuneHidingKey" units="">0.0</constant>
-        <constant cols="1" digits="0" name="highSpeedOffsets" rows="32">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-</constant>
         <constant name="fuelPressureSensorMode">"Absolute"</constant>
         <constant name="luaDigitalInputPins1">"NONE"</constant>
         <constant name="luaDigitalInputPins2">"NONE"</constant>

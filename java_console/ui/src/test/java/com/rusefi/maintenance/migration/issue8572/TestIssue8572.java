@@ -26,8 +26,7 @@ public class TestIssue8572 {
             emptySet()
         ).get();
         CalibrationsHelper.RETHROW = true;
-        // huh?! why do we have wrapped OrdinalOutOfRangeException
-        Assertions.assertThrows(OrdinalOutOfRangeException.class,
-            () -> CalibrationsHelper.backUpCalibrationsInfo(result, "issue", UpdateOperationCallbacks.CONSOLE));
+
+        CalibrationsHelper.backUpCalibrationsInfo(result, "issue", UpdateOperationCallbacks.CONSOLE);
     }
 }
