@@ -39,6 +39,7 @@ public class CalibrationsHelper {
     private static final String MERGED_CALIBRATIONS_FILE_NAME_COMPONENT = "merged_calibrations";
 
     static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss");
+    public static boolean RETHROW = false;
 
     public static void main(String[] args) {
 //        args = new String[] {"destinationFileName.xml", "COM34"};
@@ -249,7 +250,7 @@ public class CalibrationsHelper {
         }
     }
 
-    private static boolean backUpCalibrationsInfo(
+    public static boolean backUpCalibrationsInfo(
         final CalibrationsInfo calibrationsInfo,
         final String fileName,
         final UpdateOperationCallbacks callbacks
@@ -285,6 +286,10 @@ public class CalibrationsHelper {
             ));
             return true;
         } catch (final Exception e) {
+            if (RETHROW && e instanceof RuntimeException) {
+                RuntimeException re = (RuntimeException) e;
+                throw re;
+            }
             log.error("Backing up calibrations failed:", e);
             callbacks.logLine("Backing up current calibrations failed: " + e);
             return false;
