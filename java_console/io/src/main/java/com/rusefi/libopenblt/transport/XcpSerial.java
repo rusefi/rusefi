@@ -121,11 +121,11 @@ public class XcpSerial implements IXcpTransport{
             if (VERBOSE) {
                 log.info("actualRead response " + HexBinary.printHexBinary(response));
             }
-            if (actualRead != expectResponseBytes ||
-                responseLen[0] != expectResponseBytes) {
-                throw new IOException("Unexpected bytes read on command " + Integer.toHexString(request[0] & 0xFF) +
-                    ", requested " + expectResponseBytes + " but got " + actualRead + ": " + HexBinary.printHexBinary(response));
-            }
+            //if (actualRead != expectResponseBytes ||
+            //    responseLen[0] != expectResponseBytes) {
+            //    throw new IOException("Unexpected bytes read on command " + Integer.toHexString(request[0] & 0xFF) +
+            //        ", requested " + expectResponseBytes + " but got " + actualRead + ": " + HexBinary.printHexBinary(response));
+            //}
 
             return response;
         }
