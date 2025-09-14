@@ -27,6 +27,9 @@ public class XcpLoader {
     private static final byte XCPLOADER_CMD_PROGRAM_MAX = (byte)0xC9;    // XCP program max command code
 
     private static final byte XCPLOADER_CMD_PID_RES = (byte)0xFF;   // positive response
+    private static final byte XCPLOADER_CMD_PID_ERR = (byte)0xFE;   // negative response
+
+    private static final byte XCPLOADER_ERR_CMD_UNKNOWN = (byte)0x20;   // unknown command
 
     private static final int XCPLOADER_PACKET_SIZE_MAX = 255;
 
@@ -198,6 +201,14 @@ public class XcpLoader {
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT5, 1);
 
+        if (response.length == 2 && response[0] == XCPLOADER_CMD_PID_ERR && response[1] == XCPLOADER_ERR_CMD_UNKNOWN) {
+            throw new IOException("Non secure bootloader?!");
+        }
+
+        if (response.length == 1 && response[0] == XCPLOADER_CMD_PID_ERR) {
+            throw new IOException("Error programming ECU. Non secure bootloader?!");
+        }
+
         if (response.length != 1 || response[0] != XCPLOADER_CMD_PID_RES) {
             throw new IOException("sendCmdProgram failed");
         }
@@ -217,6 +228,14 @@ public class XcpLoader {
                 .array();
 
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT5, 1);
+
+        if (response.length == 2 && response[0] == XCPLOADER_CMD_PID_ERR && response[1] == XCPLOADER_ERR_CMD_UNKNOWN) {
+            throw new IOException("Non secure bootloader?!");
+        }
+
+        if (response.length == 1 && response[0] == XCPLOADER_CMD_PID_ERR) {
+            throw new IOException("Error programming ECU. Non secure bootloader?!");
+        }
 
         if (response.length != 1 || response[0] != XCPLOADER_CMD_PID_RES) {
             throw new IOException("sendCmdProgramMax failed");
