@@ -45,7 +45,10 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
     }
 
     public Constant getPrevValue(final String fieldName) {
-        return getValue(getPrevTune(), fieldName);
+        Constant value = getValue(getPrevTune(), fieldName);
+        if (value == null)
+            throw new NullPointerException("Failed to locate " + fieldName);
+        return value;
     }
 
     public Constant getUpdatedValue(final String fieldName) {
