@@ -992,7 +992,7 @@
         <constant name="enableKnockSpectrogramFilter">"false"</constant>
         <constant name="enableLaunchRetard">"false"</constant>
         <constant name="enableOilPressureProtect">"false"</constant>
-        <constant name="enableSoftwareKnock">"false"</constant>
+        <constant name="enableSoftwareKnock">"disabled"</constant>
         <constant name="enableStagedInjection">"false"</constant>
         <constant name="enableTrailingSparks">"false"</constant>
         <constant name="enableVerboseCanTx">"false"</constant>
@@ -2371,13 +2371,13 @@
         <constant name="is_enabled_spi_6">"false"</constant>
         <constant name="isAlternatorControlEnabled">"false"</constant>
         <constant name="isBoostControlEnabled">"false"</constant>
-        <constant name="isCylinderCleanupEnabled">"true"</constant>
+        <constant name="isCylinderCleanupEnabled">"enabled"</constant>
         <constant name="isDoubleSolenoidIdle">"false"</constant>
-        <constant name="isFasterEngineSpinUpEnabled">"true"</constant>
+        <constant name="isFasterEngineSpinUpEnabled">"enabled"</constant>
         <constant name="isForcedInduction">"false"</constant>
-        <constant name="isIgnitionEnabled">"true"</constant>
-        <constant name="isInjectionEnabled">"true"</constant>
-        <constant name="isMapAveragingEnabled">"true"</constant>
+        <constant name="isIgnitionEnabled">"enabled"</constant>
+        <constant name="isInjectionEnabled">"enabled"</constant>
+        <constant name="isMapAveragingEnabled">"enabled"</constant>
         <constant name="isPhaseSyncRequiredForIgnition">"false"</constant>
         <constant name="isSdCardEnabled">"false"</constant>
         <constant digits="0" name="issFilterReciprocal" units="">2.0</constant>
@@ -4923,7 +4923,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.14.f407-discovery.3004457095" version="5.0"/>
+    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.14.f407-discovery.668513485" version="5.0"/>
     <bibliography author="rusEFI 20250913" writeDate="date"/>
     <settings/>
     <userComments/>
