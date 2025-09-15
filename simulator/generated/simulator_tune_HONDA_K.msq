@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250914E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250915E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -990,7 +990,7 @@
         <constant name="enableKline">"false"</constant>
         <constant name="enableKnockSpectrogram">"no"</constant>
         <constant name="enableKnockSpectrogramFilter">"false"</constant>
-        <constant name="enableLaunchRetard">"false"</constant>
+        <constant name="enableLaunchRetard">"no"</constant>
         <constant name="enableOilPressureProtect">"false"</constant>
         <constant name="enableSoftwareKnock">"disabled"</constant>
         <constant name="enableStagedInjection">"false"</constant>
@@ -2536,11 +2536,11 @@
         <constant name="launchControlEnabled">"disabled"</constant>
         <constant digits="0" name="launchCorrectionsEndRpm" units="">0.0</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
-        <constant name="launchFuelCutEnable">"false"</constant>
+        <constant name="launchFuelCutEnable">"no"</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
         <constant digits="0" name="launchRpmWindow" units="RPM">500.0</constant>
         <constant name="launchSmoothRetard">"false"</constant>
-        <constant name="launchSparkCutEnable">"false"</constant>
+        <constant name="launchSparkCutEnable">"no"</constant>
         <constant digits="0" name="launchSpeedThreshold" units="kmh">30.0</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="launchTpsThreshold" units="">0.0</constant>
@@ -4924,7 +4924,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.14.f407-discovery.3057951919" version="5.0"/>
+    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.15.f407-discovery.3809170760" version="5.0"/>
     <bibliography author="rusEFI 20250913" writeDate="date"/>
     <settings/>
     <userComments/>
