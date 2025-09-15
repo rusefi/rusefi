@@ -78,6 +78,7 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
         new BooleanField("enableLaunchRetard", "yes", "no"),
         new BooleanField("launchFuelCutEnable", "yes", "no"),
         new BooleanField("launchSparkCutEnable", "yes", "no"),
+        new BooleanField("useAdvanceCorrectionsForCranking", "yes", "no"),
     };
 
     @Override

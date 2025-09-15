@@ -660,7 +660,7 @@
         <constant name="twoWireBatchIgnition">"false"</constant>
         <constant name="useFixedBaroCorrFromMap">"false"</constant>
         <constant name="useSeparateAdvanceForCranking">"Fixed (auto taper)"</constant>
-        <constant name="useAdvanceCorrectionsForCranking">"false"</constant>
+        <constant name="useAdvanceCorrectionsForCranking">"no"</constant>
         <constant name="flexCranking">"false"</constant>
         <constant name="useIacPidMultTable">"false"</constant>
         <constant name="isBoostControlEnabled">"disabled"</constant>
