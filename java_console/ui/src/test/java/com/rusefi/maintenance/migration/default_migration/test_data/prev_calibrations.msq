@@ -88,7 +88,7 @@
         <constant name="useCicPidForIdle">"false"</constant>
         <constant name="useTLE8888_cranking_hack">"true"</constant>
         <constant name="kickStartCranking">"false"</constant>
-        <constant name="useSeparateIdleTablesForCrankingTaper">"false"</constant>
+        <constant name="useSeparateIdleTablesForCrankingTaper">"disabled"</constant>
         <constant name="launchControlEnabled">"false"</constant>
         <constant name="doNotFilterTriggerEdgeNoise">"with filter"</constant>
         <constant name="antiLagEnabled">"false"</constant>
@@ -354,7 +354,7 @@
         <constant name="stepperForceParkingEveryRestart">"true"</constant>
         <constant name="isFasterEngineSpinUpEnabled">"enabled"</constant>
         <constant name="coastingFuelCutEnabled">"false"</constant>
-        <constant name="useIacTableForCoasting">"false"</constant>
+        <constant name="useIacTableForCoasting">"disabled"</constant>
         <constant name="useNoiselessTriggerDecoder">"false"</constant>
         <constant name="useIdleTimingPidControl">"false"</constant>
         <constant name="disableEtbWhenEngineStopped">"false"</constant>
@@ -650,9 +650,9 @@
         <constant name="alwaysInstantRpm">"false"</constant>
         <constant name="isMapAveragingEnabled">"enabled"</constant>
         <constant name="overrideCrankingIacSetting">"false"</constant>
-        <constant name="useSeparateAdvanceForIdle">"false"</constant>
+        <constant name="useSeparateAdvanceForIdle">"disabled"</constant>
         <constant name="isWaveAnalyzerEnabled">"true"</constant>
-        <constant name="useSeparateVeForIdle">"false"</constant>
+        <constant name="useSeparateVeForIdle">"disabled"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
         <constant name="isManualSpinningMode">"false"</constant>
         <constant name="cutFuelInAcr">"false"</constant>

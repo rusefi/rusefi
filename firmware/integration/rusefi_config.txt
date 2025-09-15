@@ -554,7 +554,7 @@ bit useEeprom
 bit useCicPidForIdle;Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
 bit kickStartCranking
-bit useSeparateIdleTablesForCrankingTaper;This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
+bit useSeparateIdleTablesForCrankingTaper,"enabled","disabled";This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled,"enabled","disabled"
 bit antiLagEnabled,"enabled","disabled"
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
@@ -570,7 +570,7 @@ bit allowIdenticalPps
 bit overrideVvtTriggerGaps
 bit useSpiImu;If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 bit enableStagedInjection
-bit useIdleAdvanceWhileCoasting
+bit useIdleAdvanceWhileCoasting,"yes","no"
 
 ! note: 0.00489 mult is correct for "faking" 10 bit ADC with 5V Vref
 custom tps_limit_t 2 scalar, S16, @OFFSET@, "V", 0.0048828125, 0, 0, 5, 2
@@ -882,7 +882,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit stepperForceParkingEveryRestart
 	bit isFasterEngineSpinUpEnabled,"enabled","disabled";If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	bit coastingFuelCutEnabled;This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	bit useIacTableForCoasting;Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
+	bit useIacTableForCoasting,"enabled","disabled";Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
 	bit useNoiselessTriggerDecoder
 	bit useIdleTimingPidControl
 	bit disableEtbWhenEngineStopped;Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
@@ -1147,9 +1147,9 @@ custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Ope
 	bit complexWallModel,"Advanced (tables)","Basic (constants)";Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 	bit alwaysInstantRpm;RPM is measured based on last 720 degrees while instant RPM is measured based on the last 90 degrees of crank revolution
 	bit isMapAveragingEnabled,"enabled","disabled"
-	bit useSeparateAdvanceForIdle;This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra advance at low idle speeds will prevent stalling and extra retard at high idle speeds can help reduce engine power and slow the idle speed.
+	bit useSeparateAdvanceForIdle,"enabled","disabled";This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra advance at low idle speeds will prevent stalling and extra retard at high idle speeds can help reduce engine power and slow the idle speed.
 	bit isWaveAnalyzerEnabled
-	bit useSeparateVeForIdle;This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
+	bit useSeparateVeForIdle,"enabled","disabled";This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
 	bit verboseTriggerSynchDetails;Verbose info in console below engineSnifferRpmThreshold
 	bit hondaK
 	bit twoWireBatchIgnition;This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
