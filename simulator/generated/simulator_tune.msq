@@ -4433,8 +4433,8 @@ end</constant>
         <constant name="useHardSkipInTraction">"false"</constant>
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
         <constant name="useIacPidMultTable">"false"</constant>
-        <constant name="useIacTableForCoasting">"false"</constant>
-        <constant name="useIdleAdvanceWhileCoasting">"false"</constant>
+        <constant name="useIacTableForCoasting">"disabled"</constant>
+        <constant name="useIdleAdvanceWhileCoasting">"no"</constant>
         <constant name="useIdleTimingPidControl">"false"</constant>
         <constant name="useInjectorFlowLinearizationTable">"false"</constant>
         <constant name="useLinearCltSensor">"false"</constant>
@@ -4444,9 +4444,9 @@ end</constant>
         <constant name="useRunningMathForCranking">"Fixed"</constant>
         <constant name="usescriptTableForCanSniffingFiltering">"false"</constant>
         <constant name="useSeparateAdvanceForCranking">"Fixed (auto taper)"</constant>
-        <constant name="useSeparateAdvanceForIdle">"false"</constant>
-        <constant name="useSeparateIdleTablesForCrankingTaper">"false"</constant>
-        <constant name="useSeparateVeForIdle">"false"</constant>
+        <constant name="useSeparateAdvanceForIdle">"disabled"</constant>
+        <constant name="useSeparateIdleTablesForCrankingTaper">"disabled"</constant>
+        <constant name="useSeparateVeForIdle">"disabled"</constant>
         <constant name="useSpiImu">"false"</constant>
         <constant name="useStepperIdle">"false"</constant>
         <constant name="useTLE8888_cranking_hack">"true"</constant>
@@ -4922,7 +4922,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.15.f407-discovery.3373042888" version="5.0"/>
+    <versionInfo firmwareInfo="20250913" nPages="1" signature="rusEFI master.2025.09.15.f407-discovery.2598645844" version="5.0"/>
     <bibliography author="rusEFI 20250913" writeDate="date"/>
     <settings/>
     <userComments/>
