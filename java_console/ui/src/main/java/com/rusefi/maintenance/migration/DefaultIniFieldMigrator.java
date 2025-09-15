@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.*;
 
 public enum DefaultIniFieldMigrator {
     INSTANCE;
@@ -86,14 +86,14 @@ public enum DefaultIniFieldMigrator {
                 prevField,
                 newField
             ));
-        } else if (!Objects.equals(prevField.getType(), newField.getType())) {
+        } else if (!checkIfTypeCanBeMigrated(prevField.getType(), newField.getType())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because type is updated: `%s` -> `%s`",
                 prevField.getName(),
                 prevField,
                 newField
             ));
-        } else if (!Objects.equals(prevField.getDigits(), newField.getDigits())) {
+        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because digits are updated: `%s` -> `%s`",
                 prevField.getName(),
@@ -112,7 +112,7 @@ public enum DefaultIniFieldMigrator {
         final UpdateOperationCallbacks callbacks
     ) {
         boolean result = false;
-        if (!Objects.equals(prevField.getType(), newField.getType())) {
+        if (!checkIfTypeCanBeMigrated(prevField.getType(), newField.getType())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because type is updated: `%s` -> `%s`",
                 prevField.getName(),
@@ -133,7 +133,7 @@ public enum DefaultIniFieldMigrator {
                 prevField.getRows(),
                 newField.getRows()
             ));
-        } else if (!Objects.equals(prevField.getDigits(), newField.getDigits())) {
+        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because digits are updated: `%s` -> `%s`",
                 prevField.getName(),
