@@ -2,16 +2,13 @@ package com.rusefi.maintenance.migration;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
-import com.rusefi.CompatibilitySet;
-import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.UpdateOperationCallbacks;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.maintenance.DefaultTuneMigrator.checkIfUnitsCanBeMigrated;
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
 
 public enum DefaultIniFieldMigrator {
     INSTANCE;
