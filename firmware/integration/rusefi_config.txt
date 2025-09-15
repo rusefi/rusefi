@@ -1000,7 +1000,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	bit useInjectorFlowLinearizationTable
 	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
-	bit enableLaunchRetard
+	bit enableLaunchRetard,"yes","no"
 	bit canInputBCM
 	bit consumeObdSensors;This property is useful if using rusEFI as TCM or BCM only
 	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
@@ -1123,8 +1123,8 @@ end_struct
 
 bit cutFuelOnHardLimit,"yes","no";When enabled, this option cuts the fuel supply when the RPM limit is reached. Cutting fuel provides a smoother limiting action; however, it may lead to slightly higher combustion chamber temperatures since unburned fuel is not present to cool the combustion process.
 bit cutSparkOnHardLimit,"yes","no";When selected, this option cuts the spark to limit RPM. Cutting spark can produce flames from the exhaust due to unburned fuel igniting in the exhaust system. Additionally, this unburned fuel can help cool the combustion chamber, which may be beneficial in high-performance applications.\nBe careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
-bit launchFuelCutEnable
-bit launchSparkCutEnable;This is the Cut Mode normally used
+bit launchFuelCutEnable,"yes","no"
+bit launchSparkCutEnable,"yes","no";This is the Cut Mode normally used
 	bit torqueReductionEnabled
 	bit camSyncOnSecondCrankRevolution,"second","first"
 	bit limitTorqueReductionTime

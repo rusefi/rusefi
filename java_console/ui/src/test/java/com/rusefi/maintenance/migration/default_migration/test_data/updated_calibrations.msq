@@ -450,7 +450,7 @@
         <constant name="clutchDownPinInverted">"Normal"</constant>
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
         <constant name="multisparkEnable">"false"</constant>
-        <constant name="enableLaunchRetard">"false"</constant>
+        <constant name="enableLaunchRetard">"no"</constant>
         <constant name="canInputBCM">"false"</constant>
         <constant name="consumeObdSensors">"false"</constant>
         <constant name="enableCanVss">"false"</constant>
@@ -621,8 +621,8 @@
         <constant name="invertSecondaryTriggerSignal">"Rising"</constant>
         <constant name="cutFuelOnHardLimit">"yes"</constant>
         <constant name="cutSparkOnHardLimit">"yes"</constant>
-        <constant name="launchFuelCutEnable">"false"</constant>
-        <constant name="launchSparkCutEnable">"false"</constant>
+        <constant name="launchFuelCutEnable">"no"</constant>
+        <constant name="launchSparkCutEnable">"no"</constant>
         <constant name="torqueReductionEnabled">"false"</constant>
         <constant name="torqueReductionTriggerPinInverted">"false"</constant>
         <constant name="limitTorqueReductionTime">"false"</constant>
