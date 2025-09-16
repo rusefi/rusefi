@@ -15,6 +15,7 @@ import com.rusefi.tune.xml.Constant;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfDigitsCanBeMigrated;
 import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
 
 public enum DefaultTuneMigrator implements TuneMigrator {
@@ -75,7 +76,7 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                                             prevValue.getUnits(),
                                             newValue.getUnits()
                                         ));
-                                    } else if (!Objects.equals(prevValue.getDigits(), newValue.getDigits())) {
+                                    } else if (!checkIfDigitsCanBeMigrated(prevValue.getDigits(), newValue.getDigits())) {
                                         callbacks.logLine(String.format(
                                             "WARNING! Field `%s` cannot be updated because its digits are updated: `%s` -> `%s`",
                                             prevFieldName,
