@@ -730,6 +730,17 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 			setWidebandOffset(hwIndex, canIndex);
 		}
 		break;
+	case TS_WIDEBAND_SET_SENS_BY_ID:
+		{
+			uint8_t hwIndex = index >> 8;
+			uint8_t sensType = index & 0xff;
+
+			// Hack until we fix canReWidebandHwIndex and set "Broadcast" to 0xff
+			// TODO:
+			hwIndex = hwIndex < 8 ? hwIndex : 0xff;
+			setWidebandSensorType(hwIndex, sensType);
+		}
+		break;
 	case TS_WIDEBAND_PING_BY_ID:
 		pingWideband(index >> 8);
 		break;

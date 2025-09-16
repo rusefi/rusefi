@@ -28,6 +28,10 @@ void setWidebandOffsetNoWait(uint8_t hwIndex, uint8_t index);
 // Addressing by hwIndex is supported by 2025 WBO FW
 void setWidebandOffset(uint8_t hwIndex, uint8_t index);
 
+// Set Sensor type for hwIndex wideband controller
+// Supported by late 2025 WBO FW
+void setWidebandSensorType(uint8_t hwIndex, uint8_t type);
+
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 // Update the firmware on any connected wideband controller
 void updateWidebandFirmware(uint8_t hwIndex);

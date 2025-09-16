@@ -119,6 +119,35 @@ void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
 	waitingBootloaderThread = nullptr;
 }
 
+void setWidebandSensorType(uint8_t hwIndex, uint8_t type) {
+	size_t bus = getWidebandBus();
+
+	setStatus(WBO_RE_BUSY);
+
+	// Clear any pending acks for this thread
+	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
+
+	// Send messages to the current thread when acks come in
+	waitingBootloaderThread = chThdGetSelfX();
+
+	{
+		// Note position of hwIndex, compared to WB_MSG_SET_INDEX
+		// TODO: replace madic number after updating WBO submodule
+		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF7'0000 /* WB_MSG_SET_SENS_TYPE */, 2, bus, true);
+		m[0] = hwIndex;
+		m[1] = type;
+	}
+
+	if (!waitAck()) {
+		efiPrintf("Wideband sensor type set failed: no controller detected!");
+		setStatus(WBO_RE_FAILED);
+	} else {
+		setStatus(WBO_RE_DONE);
+	}
+
+	waitingBootloaderThread = nullptr;
+}
+
 void pingWideband(uint8_t hwIndex) {
 	size_t bus = getWidebandBus();
 
