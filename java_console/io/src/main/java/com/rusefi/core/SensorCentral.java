@@ -1,5 +1,8 @@
 package com.rusefi.core;
 
+import com.opensr5.ini.IniFileModel;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +34,9 @@ public class SensorCentral implements ISensorCentral {
     }
 
     @Override
-    public void grabSensorValues(byte[] response) {
+    public void grabSensorValues(byte[] response, @NotNull IniFileModel ini) {
         this.response = response;
-        ISensorCentral.super.grabSensorValues(response);
+        ISensorCentral.super.grabSensorValues(response, ini);
         for (ResponseListener listener : listeners)
             listener.onSensorUpdate();
     }

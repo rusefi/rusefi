@@ -1,5 +1,8 @@
 package com.rusefi.core;
 
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniMemberNotFound;
+import com.opensr5.ini.field.IniField;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
@@ -7,24 +10,26 @@ import java.nio.ByteBuffer;
 import static com.rusefi.core.FileUtil.littleEndianWrap;
 
 public interface ISensorHolder {
-    default void grabSensorValues(byte[] response) {
+    default void grabSensorValues(byte[] response, @NotNull IniFileModel ini) {
         for (Sensor sensor : Sensor.values()) {
             if (sensor.getType() == null) {
                 // for example ETB_CONTROL_QUALITY, weird use-case
                 continue;
             }
+            IniField sensorField;
+            String sensorInternalName = sensor.name();
+            try {
+                sensorField = ini.getOutputChannel(sensorInternalName);
+            } catch (IniMemberNotFound e) {
+                throw new RuntimeException("Not found by " + sensorInternalName, e);
+            }
 
-            ByteBuffer bb = getByteBufferForSensor(response, sensor);
+            ByteBuffer bb = getByteBuffer(response, sensor.toString(), sensorField.getOffset());
 
             double rawValue = sensor.getValueForChannel(bb);
             double scaledValue = rawValue * sensor.getScale();
             setValue(scaledValue, sensor);
         }
-    }
-
-    @Deprecated
-    static @NotNull ByteBuffer getByteBufferForSensor(byte[] response, Sensor sensor) {
-        return getByteBuffer(response, sensor.toString(), sensor.getOffset());
     }
 
     static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset) {
