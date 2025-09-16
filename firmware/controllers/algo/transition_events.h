@@ -1,4 +1,5 @@
 // transition_events.h
+// also known as 'special event counter'
 
 #pragma once
 
@@ -12,6 +13,7 @@ enum class TransitionEvent : char
 	EngineResync = 3,
 	GlobalConfigurationVersion = 4,
 	EtbPidReset = 5,
+	CruiseControl = 6,
 };
 
 inline void onTransitionEvent(TransitionEvent event) {
