@@ -77,6 +77,6 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
         final IniFileModel updatedIni,
         final UpdateOperationCallbacks callbacks
     ) {
-        super(prevIni, prevMsq, updatedIni, updatedMsq, callbacks);
+        super(prevIni, prevMsq, updatedIni, updatedMsq, callbacks, Collections.emptySet());
     }
 }
