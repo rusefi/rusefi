@@ -11,10 +11,11 @@ public interface Timeouts {
     /**
      * The longest justified binary communication delay would be related to stm32f407 flash saving time
      */
-    int BINARY_IO_TIMEOUT = 5 * SECOND;
+    int BINARY_IO_TIMEOUT = Integer.getInteger("BINARY_IO_TIMEOUT", 10) * SECOND;
     int READ_IMAGE_TIMEOUT = 60 * SECOND;
 
-    int CONNECTION_RESTART_DELAY = 1 * SECOND;
+    // local connection is happy with 1 second, but remote TCP is asking for 5 seconds
+    int CONNECTION_RESTART_DELAY = Integer.getInteger("CONNECTION_RESTART_DELAY", 10) * SECOND;
 
     int CMD_TIMEOUT = 20 * SECOND;
     int SET_ENGINE_TIMEOUT = 60 * SECOND;
