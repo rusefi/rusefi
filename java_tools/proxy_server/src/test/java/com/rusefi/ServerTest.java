@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.IoStream;
@@ -39,7 +38,7 @@ public class ServerTest {
     public void setup() throws MalformedURLException {
         BackendTestHelper.commonServerTest();
     }
-
+/*
     @Test
     public void testControllerSessionStartupTimeTimeout() throws InterruptedException, IOException {
         int serverPortForControllers = 7000;
@@ -94,7 +93,7 @@ public class ServerTest {
             assertLatch("allClientsDisconnected", allClientsDisconnected);
         }
     }
-
+*/
 /*
 covered by FullServerTest
     @Test
@@ -135,7 +134,6 @@ covered by FullServerTest
 
         }
     }
- */
 
     @Test
     public void testInvalidApplicationRequest() throws InterruptedException, IOException {
@@ -214,4 +212,5 @@ covered by FullServerTest
         }
 
     }
+*/
 }

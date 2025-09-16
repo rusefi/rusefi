@@ -6,23 +6,18 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.io.ConfigurationImageFile;
+import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
-import com.rusefi.io.commands.BurnCommand;
-import com.rusefi.io.commands.ByteRange;
-import com.rusefi.io.commands.GetOutputsCommand;
-import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.tune.xml.Msq;
+import com.rusefi.io.commands.*;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +33,7 @@ import java.util.concurrent.*;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 import static com.rusefi.config.generated.VariableRegistryValues.*;
+import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
 
 /**
  * This object represents logical state of physical connection.
@@ -62,6 +58,10 @@ public class BinaryProtocol {
 
     private final BinaryProtocolState state = new BinaryProtocolState();
 
+    static {
+        log.info("BINARY_IO_TIMEOUT=" + Timeouts.BINARY_IO_TIMEOUT);
+        log.info("CONNECTION_RESTART_DELAY=" + Timeouts.CONNECTION_RESTART_DELAY);
+    }
 
     private final BinaryProtocolLogger binaryProtocolLogger;
     public static IniFileProvider iniFileProvider = new RealIniFileProvider();
@@ -182,7 +182,7 @@ public class BinaryProtocol {
         }
         iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
 
-        int pageSize = iniFile.getMetaInfo().getTotalSize();
+        int pageSize = iniFile.getMetaInfo().getPageSize(0);
         log.info("pageSize=" + pageSize);
         readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
         if (stream.isClosed())
@@ -317,10 +317,19 @@ public class BinaryProtocol {
                 return ConfigurationImageWithMeta.VOID;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
+            int requestSize = Math.min(remainingSize, iniFile.getBlockingFactor());
 
-            byte[] packet = new byte[4];
-            ByteRange.packOffsetAndSize(offset, requestSize, packet);
+            String pageReadCommand = iniFile.getMetaInfo().getPageReadCommand(0);
+            byte[] packet;
+            if (pageReadCommand.length() == 7) {
+                // older controller, no page index in read command
+                // PS: technically we can/shall actually use command syntax as specified by the .ini
+                packet = new byte[4];
+                ByteRange.packOffsetAndSize(offset, requestSize, packet);
+            } else {
+                packet = new byte[6];
+                ByteRange.packPageOffsetAndSize(offset, requestSize, packet);
+            }
 
             byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
@@ -359,26 +368,16 @@ public class BinaryProtocol {
                     (ConnectionAndMeta.saveSettingsToFile() ? BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_BINARY : null),
                     BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
                 );
+            } catch (JAXBException e) {
+                log.error("JAXBException", e);
+            } catch (final IOException | OrdinalOutOfRangeException e) {
+                log.info("Ignoring " + e, e);
             } catch (Exception e) {
-                log.error("Ignoring " + e);
+                log.error("Unexpected exception:" + e, e);
+                throw e;
             }
         }
         return imageWithMeta;
-    }
-
-    public static void saveConfigurationImageToFiles(
-        final ConfigurationImageWithMeta imageWithMeta,
-        final IniFileModel ini,
-        @Nullable final String binaryFileName,
-        @Nullable final String xmlFileName
-    ) throws JAXBException, IOException {
-        if (binaryFileName != null) {
-            ConfigurationImageFile.saveToFile(imageWithMeta, binaryFileName);
-        }
-        if (xmlFileName != null) {
-            final Msq tune = MsqFactory.valueOf(imageWithMeta.getConfigurationImage(), ini);
-            tune.writeXmlFile(xmlFileName);
-        }
     }
 
     private static String getCode(byte[] response) {
@@ -424,8 +423,8 @@ public class BinaryProtocol {
     }
 
     private static byte[] createRequestCrcPayload(int size) {
-        byte[] packet = new byte[4];
-        ByteRange.packOffsetAndSize(0, size, packet);
+        byte[] packet = new byte[6];
+        ByteRange.packPageOffsetAndSize(0, size, packet);
         return packet;
     }
 
@@ -501,16 +500,21 @@ public class BinaryProtocol {
     private void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
-        byte[] packet = new byte[4 + size];
-        ByteRange.packOffsetAndSize(ecuOffset, size, packet);
-
-        System.arraycopy(content, contentOffset, packet, 4, size);
+        byte[] packet = WriteCommand.getWritePacket(content, contentOffset, ecuOffset, size);
 
         long start = System.currentTimeMillis();
         while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
+
             byte[] response = executeCommand(Integration.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
             if (!checkResponseCode(response) || response.length != 1) {
-                log.error("writeData: Something is wrong, retrying...");
+                if (response == null) {
+                    log.error("writeData: null response Something is wrong, retrying...");
+                } else if (response.length == 0) {
+                    log.error("writeData: empty response Something is wrong, retrying...");
+                } else {
+                    log.error("writeData: Something is wrong, retrying... code = " + response[0]);
+                }
+                // huh?! when do we retry what here?!
                 continue;
             }
             break;
@@ -614,7 +618,7 @@ public class BinaryProtocol {
 
         while (remaining > 0) {
             // If less than one full chunk left, do a smaller read
-            int chunkSize = Math.min(remaining, BLOCKING_FACTOR);
+            int chunkSize = Math.min(remaining, iniFile.getBlockingFactor());
 
             byte[] response = executeCommand(
                 Integration.TS_OUTPUT_COMMAND,
@@ -634,7 +638,7 @@ public class BinaryProtocol {
 
         state.setCurrentOutputs(reassemblyBuffer);
 
-        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer);
+        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer, getIniFile());
         return true;
     }
 

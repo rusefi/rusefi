@@ -1,7 +1,7 @@
 package com.rusefi.maintenance.migration.default_migration;
 
-import com.rusefi.maintenance.DefaultTuneMigrator;
 import com.rusefi.maintenance.TestTuneMigrationContext;
+import com.rusefi.maintenance.migration.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 
 import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
+import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultTuneMigratorTest {
@@ -17,7 +19,7 @@ public class DefaultTuneMigratorTest {
     @BeforeEach
     public void setUp() throws JAXBException {
         testContext = DefaultTestTuneMigrationContext.load();
-        DefaultTuneMigrator.INSTANCE.migrateTune(testContext);
+        ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
     }
 
     @Test
@@ -106,6 +108,92 @@ public class DefaultTuneMigratorTest {
     }
 
     @Test
+    public void testVeRpmBins() {
+        checkValueToUpdateExist(VE_RPM_BINS_FIELD_NAME, PREV_VE_RPM_BINS_VALUE, UPDATED_VE_RPM_BINS_VALUE);
+    }
+
+    @Test
+    public void testVeTable() {
+        checkValueToUpdateExist(VE_TABLE_FIELD_NAME, PREV_VE_TABLE_VALUE, UPDATED_VE_TABLE_VALUE);
+    }
+
+    @Test
+    public void testLambdaLoadBins() {
+        checkValueToUpdateExist(
+            "lambdaLoadBins",
+            "\n" +
+                "         31.0\n" +
+                "         41.0\n" +
+                "         51.0\n" +
+                "         61.0\n" +
+                "         71.0\n" +
+                "         81.0\n" +
+                "         91.0\n" +
+                "         101.0\n" +
+                "         111.0\n" +
+                "         121.0\n" +
+                "         131.0\n" +
+                "         151.0\n" +
+                "         171.0\n" +
+                "         201.0\n" +
+                "         221.0\n" +
+                "         251.0\n",
+            "\n" +
+                "         30.0\n" +
+                "         40.0\n" +
+                "         50.0\n" +
+                "         60.0\n" +
+                "         70.0\n" +
+                "         80.0\n" +
+                "         90.0\n" +
+                "         100.0\n" +
+                "         110.0\n" +
+                "         120.0\n" +
+                "         130.0\n" +
+                "         150.0\n" +
+                "         175.0\n" +
+                "         200.0\n" +
+                "         225.0\n" +
+                "         250.0\n"
+        );
+    }
+
+    @Test
+    public void testThrottlePedalUpVoltage() {
+        checkValueToUpdateExist("throttlePedalUpVoltage", "1.7", "0.0");
+    }
+
+    @Test
+    public void testCltCrankingCorr() {
+        checkValueToUpdateExist(
+            "cltCrankingCorr",
+            "\n" +
+                "         1.0\n" +
+                "         1.1\n" +
+                "         1.2\n" +
+                "         1.3\n" +
+                "         1.4\n" +
+                "         1.5\n" +
+                "         1.6\n" +
+                "         1.7\n",
+            "\n" +
+                "         1.0\n" +
+                "         1.0\n" +
+                "         1.0\n" +
+                "         1.0\n" +
+                "         1.0\n" +
+                "         1.0\n" +
+                "         1.0\n" +
+                "         1.0\n"
+        );
+    }
+
+    @Test
+    public void testFanOffTemperature() {
+        checkValueToUpdateExist("fanOffTemperature", "98.0", "88.0");
+    }
+
+    @Test
     public void testContent() {
         assertEquals(
             "We aren't going to restore field `auxSerialRxPin`: it is missed in new .ini file\r\n" +
@@ -171,6 +259,9 @@ public class DefaultTuneMigratorTest {
 
         final Constant valueToUpdate = testContext.getMigratedConstants().get(fieldName);
         assertNotNull(valueToUpdate);
-        assertEquals(prevValue, valueToUpdate);
+        final Constant expectedValueToUpdate = updatedValue != null ?
+            updatedValue.cloneWithValue(prevValue.getValue()) :
+            prevValue;
+        assertEquals(expectedValueToUpdate, valueToUpdate);
     }
 }

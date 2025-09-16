@@ -1,14 +1,12 @@
 package com.rusefi.common;
 
 import com.rusefi.Timeouts;
-import com.rusefi.config.generated.Integration;
 import com.rusefi.autotest.ControllerConnectorState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 
-import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Integration.*;
 
@@ -28,7 +26,7 @@ public class VssHardwareTestLogic {
         ecu.sendCommand(CMD_IDLE_PIN + " " + idlePin);
         ecu.sendCommand("set idle_solenoid_freq 100");
 
-        EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
+        EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VEHICLESPEEDKPH));
 
         // attaching VSS to idle output since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " " + vssPin);
@@ -37,7 +35,7 @@ public class VssHardwareTestLogic {
 
         // todo: this command does not seem to work for whatever reasons :( cAsE? else?
         ecu.sendCommand("set " + "driveWheelRevPerKm" + " " + "500");
-        EcuTestHelper.assertSomewhatClose("VSS with input", 145.58, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
+        EcuTestHelper.assertSomewhatClose("VSS with input", 145.58, SensorCentral.getInstance().getValue(Sensor.VEHICLESPEEDKPH));
 
         // not related to VSS test, just need to validate this somewhere, so this random test is as good as any
         if (ControllerConnectorState.firmwareVersion == null)

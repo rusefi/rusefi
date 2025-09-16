@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static com.opensr5.ini.IniFileModelImpl.readIniFile;
+
 /**
  * this class runs rusEFI functional tests against rusEFI simulator
  */
@@ -19,10 +21,12 @@ public class SimulatorFunctionalTestLauncher {
             e.printStackTrace();
             System.exit(66);
         });
+        if (args.length == 0)
+            throw new IllegalArgumentException("Required argument: .ini filename");
         String iniFileName = args[0];
         BinaryProtocol.iniFileProvider = signature -> {
             try {
-                return IniFileModelImpl.readIniFile(iniFileName);
+                return readIniFile(iniFileName);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }

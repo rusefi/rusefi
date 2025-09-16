@@ -49,21 +49,9 @@ public class TuneTools {
         throw new IllegalStateException("Enum name [" + key + "] not found in " + tsCustomLine);
     }
 
-    public static int resolveEnumByName(String tsCustomLine, String key) {
-        String quotedKey = quote(key);
-        String[] tokens = tsCustomLine.split(",");
-        int magicOffset = 4; // skipping meta info header
-        for (int i = 0; i < tokens.length - magicOffset; i++) {
-            String token = tokens[i + magicOffset].trim();
-            if (token.equalsIgnoreCase(quotedKey))
-                return i;
-        }
-        throw new IllegalStateException("Enum name [" + key + "] not found in " + tsCustomLine);
-    }
-
     @NotNull
     public static String getAssignmentCode(Constant defaultValue, String parent ,String name, String value) {
         return "    // default " + defaultValue.getValue() + "\n" +
-            "    " + parent + name + " = " + value + ";\n";
+                "    " + parent + name + " = " + value + ";\n";
     }
 }

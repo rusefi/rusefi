@@ -3,16 +3,13 @@ package com.rusefi.ui;
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;

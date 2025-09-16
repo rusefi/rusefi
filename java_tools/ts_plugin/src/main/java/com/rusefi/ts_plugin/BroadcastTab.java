@@ -64,7 +64,7 @@ public class BroadcastTab {
         content.add(new URLLabel(RemoteTab.HOWTO_REMOTE_TUNING));
         content.add(new JLabel(PluginEntry.LOGO));
 
-        AutoupdateUtil.trueLayoutAndRepaint(content);
+        AutoupdateUtil.trueLayout(content);
     }
 
     private Component createVehicleTokenPanel() {
@@ -119,7 +119,7 @@ public class BroadcastTab {
 
             }).start();
         }
-        AutoupdateUtil.trueLayoutAndRepaint(content);
+        AutoupdateUtil.trueLayout(content);
     }
 
     public JComponent getContent() {

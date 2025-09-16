@@ -5,6 +5,7 @@ import com.rusefi.output.*;
 import com.rusefi.parse.TypesHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +33,16 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testNameTemplating() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().put("name", "value");
+        {
+            ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "uint8_t @@name@@");
+            assertEquals(cf.getName(), "value");
+        }
+    }
+
+    @Test
     public void testByte3dArray() {
         ReaderStateImpl state = new ReaderStateImpl();
         {
@@ -49,15 +60,15 @@ public class ConfigFieldParserTest {
     public void testFloatMsAlias() {
         String test = "struct pid_s\n" +
                 "floatms_t afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0, noMsqSave\n" +
-                "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "percent_t afr_typet;PID dTime;\"ms\",      0.1,      0,       0, 3000,      0\n" +
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
-                "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
-                "; total TS size = 8\n", tsProjectConsumer.getContent());
+            "afr_typet = scalar, F32, 4, \"ms\", 0.1, 0, 0, 3000, 0\n" +
+            "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
     @Test
@@ -164,6 +175,24 @@ public class ConfigFieldParserTest {
                 "afr_type2 = bits, S08, 1, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "int = scalar, S16, 2, \"\", 1, 0, 0, 32000, 0\n" +
                 "; total TS size = 4\n", tsProjectConsumer.getContent());
+    }
+
+    @Test
+    public void testCustomEnumAlignment() {
+        assertThrows(SizeMismatchException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                String test = "struct pid_s\n" +
+                    "#define can_wbo_type_e_enum \"RusEFI\", \"AEM X-series\", \"Disabled/Analog\"\n" +
+                    "\tcustom can_wbo_type_e 2 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@\n" +
+                    "\tcan_wbo_type_e wboType1;\n" +
+                    "end_struct\n";
+                ReaderStateImpl state = new ReaderStateImpl();
+
+                TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+                state.readBufferedReader(test, tsProjectConsumer);
+            }
+        });
     }
 
     @Test
@@ -507,6 +536,9 @@ public class ConfigFieldParserTest {
         ReaderStateImpl state = new ReaderStateImpl();
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(test, consumer, javaFieldsConsumer);
+
+        assertEquals(32, state.getDefaultBitNameCounter());
+
         assertEquals("\tpublic static final Field BYTE1 = Field.create(\"BYTE1\", 0, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n" +
                         "\tpublic static final Field ALIGNMENTFILL_AT_1 = Field.create(\"ALIGNMENTFILL_AT_1\", 1, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n" +
                         "\tpublic static final Field SHORT = Field.create(\"SHORT\", 2, FieldType.INT16).setScale(1.0).setBaseOffset(0);\n" +

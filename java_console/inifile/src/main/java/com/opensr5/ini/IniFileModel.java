@@ -15,7 +15,10 @@ public interface IniFileModel {
 
     Map<String, List<String>> getDefines();
 
+    // todo: rename to 'getPrimaryPageIniFields()'?
     Map<String, IniField> getAllIniFields();
+
+    Map<String, IniField> getSecondaryIniFields();
 
     Optional<IniField> findIniField(String key);
 

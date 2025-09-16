@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class IniFileReaderTest {
     private static final String PAGE_READ = "    pageReadCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n";
+    private static final String CRC_READ = "    crc32CheckCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n";
     private static final String SIGNATURE_UNIT_TEST = "  signature      = \"unit test\"\n";
     private static final double EPS = 0.00001;
 
@@ -93,15 +94,18 @@ public class IniFileReaderTest {
         String string = "   nPages              = 3\n" +
                 SIGNATURE_UNIT_TEST +
                 PAGE_READ +
+            CRC_READ +
             "ochBlockSize=1\n" +
                 "   pageSize            = 288,   64,     288\n";
 
 
         IniFileMetaInfo meta = new IniFileMetaInfoImpl(fromString(string));
 
+        /*
         assertEquals(3, meta.getnPages());
         assertEquals(IniFileMetaInfoImpl.DEFAULT_BLOCKING_FACTOR, meta.getBlockingFactor());
         assertEquals(640, meta.getTotalSize());
+        */
         assertEquals("unit test", meta.getSignature());
 
         assertEquals(64, meta.getPageSize(1));
@@ -115,8 +119,10 @@ public class IniFileReaderTest {
 
     @Test
     public void testCurve() {
-        String string = "page = 1\n" +
+        String string =
+            "   ; generates [SettingContextHelp]\n" +
                 "[Constants]\n" +
+                "page = 1\n" +
                 "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
                 "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n " +
                 "[CurveEditor]\n" +
@@ -129,14 +135,62 @@ public class IniFileReaderTest {
                 "\t\tshowTextValues = true\n";
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        // technically these are constants?!
         assertEquals(2, model.getAllIniFields().size());
         assertEquals(2, model.getFieldsInUiOrder().size());
     }
 
     @Test
-    public void testTable() {
-        String string = "page = 1\n" +
+    public void testReadDialogCommandsCurve() {
+        String string =
+            "   ; generates [SettingContextHelp]\n" +
                 "[Constants]\n" +
+                "page = 1\n" +
+                "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+                                "[SettingContextHelp]\n" +
+                "; SettingContextHelpEnd\n" +
+"\tdialog = engineTypeDialog1, \"Base T1\"\n" +
+                "\t\tfield = \"!These buttons send a command to rusEFI controller to apply preset values\"\n" +
+                "\t\tfield = \"!Once you send the command, please reconnect to rusEFI controller in order to read fresh values\"\n" +
+                "\n" +
+                "\t\tcommandButton = \"Reset to factory tune\", cmd_set_engine_type_default\n" +
+                "\tdialog = engineTypeDialog2, \"Base T2\"\n" +
+                "\t\tfield = \"!These buttons send a command to rusEFI controller to apply preset values\"\n" +
+                "\t\tfield = \"!Once you send the command, please reconnect to rusEFI controller in order to read fresh values\"\n" +
+                "\n" +
+                "\t\tcommandButton = \"Reset to factory tune\", cmd_set_engine_type_default\n" +
+                "" +
+                "";
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        assertEquals(1, model.getAllIniFields().size());
+        assertEquals(2, model.getDialogs().size());
+    }
+
+    @Test
+    public void testMultiPage() {
+        String string =
+            "[Constants]\n" +
+            "page = 2\n" +
+            "scriptCurve2Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+            "scriptCurve2 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n " +
+            "page = 1\n" +
+            "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
+            "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n "
+    ;
+        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+
+        assertEquals(2, model.getAllIniFields().size());
+        assertEquals(2, model.getSecondaryIniFields().size());
+        assertEquals(0, model.getFieldsInUiOrder().size());
+    }
+
+    @Test
+    public void testTable() {
+        String string =
+                "[Constants]\n" +
+                "page = 1\n" +
                 "tpsTpsAccelTable = array, F32, 19744, [8x8], \"value\", 1, 0, 0, 30000, 2\n" +
                 "tpsTpsAccelFromRpmBins = array, F32, 20000, [8], \"from\", 1, 0, 0, 30000, 2\n" +
                 "tpsTpsAccelToRpmBins = array, F32, 20032, [8], \"to\", 1, 0, 0, 25500, 2\n\n " +

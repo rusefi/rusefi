@@ -1,7 +1,6 @@
 package com.rusefi.ui.console;
 
 import com.rusefi.PaneSettings;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStatusLogic;

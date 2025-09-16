@@ -5,6 +5,7 @@ defaultTasks 'shadowJar'
 dependencies {
     api project(':inifile')
     api project(':enum_to_string')
+    api project(':enum_generator')
     api global_libs.snakeyaml
     testFixturesApi global_libs.junit5
 }

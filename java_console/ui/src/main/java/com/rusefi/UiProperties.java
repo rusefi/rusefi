@@ -1,41 +1,28 @@
 package com.rusefi;
 
 import com.rusefi.core.net.ConnectionAndMeta;
-
-import java.util.Properties;
+import com.rusefi.core.net.PropertiesHolder;
 
 public class UiProperties {
-    private static Properties properties;
+    public static final String SKIP_ECU_TYPE_DETECTION = "skip_ecu_type_detection";
 
     public static boolean usePCAN() {
-        return ConnectionAndMeta.getBoolean("show_pcan", getProperties());
+        return ConnectionAndMeta.getBoolean("show_pcan", PropertiesHolder.INSTANCE.getProperties());
     }
 
     public static boolean useSimulator() {
-        return ConnectionAndMeta.getBoolean("show_simulator", getProperties());
-    }
-
-    private static synchronized Properties getProperties() {
-        if (properties == null) {
-            properties = ConnectionAndMeta.getProperties();
-        }
-        return properties;
-    }
-
-    // https://github.com/rusefi/rusefi/issues/6777 sad hack: Autoupdate invokes via reflection
-    public static void setProperties(Properties properties) {
-        UiProperties.properties = properties;
+        return ConnectionAndMeta.getBoolean("show_simulator", PropertiesHolder.INSTANCE.getProperties());
     }
 
     public static String getWhiteLabel() {
-        return ConnectionAndMeta.getWhiteLabel(getProperties());
+        return ConnectionAndMeta.getWhiteLabel(PropertiesHolder.INSTANCE.getProperties());
     }
 
     public static String getUpdateHelpUrl() {
-        return properties.getProperty("UPDATE_FW_HELP_URL", "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware");
+        return PropertiesHolder.getProperty("UPDATE_FW_HELP_URL", "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware");
     }
 
     public static boolean skipEcuTypeDetection() {
-        return ConnectionAndMeta.getBoolean("skip_ecu_type_detection");
+        return ConnectionAndMeta.getBoolean(SKIP_ECU_TYPE_DETECTION);
     }
 }

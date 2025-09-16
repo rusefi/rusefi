@@ -6,7 +6,6 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
 import com.rusefi.ui.BasicLogoHelper;
@@ -29,8 +28,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.SerialPortType.EcuWithOpenblt;
+import static com.rusefi.SerialPortType.OpenBlt;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.*;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
@@ -75,6 +77,8 @@ public class StartupFrame {
     private boolean isProceeding;
     private final JLabel noPortsMessage = new JLabel();
     private final StatusAnimation status;
+    private ProgramSelector selector;
+    private boolean firstTimeHasEcuWithOpenBlt = true;
 
     public StartupFrame(ConnectivityContext connectivityContext) {
         this.connectivityContext = connectivityContext;
@@ -171,7 +175,7 @@ public class StartupFrame {
         realHardwarePanel.add(noPortsMessage, "right, wrap");
         noPortsMessage.setToolTipText("Check you cables. Check your drivers. Do you want to start simulator maybe?");
 
-        ProgramSelector selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
+        selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
 
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
         realHardwarePanel.add(selector.getControl(), "right, wrap");
@@ -197,6 +201,8 @@ public class StartupFrame {
             frame.pack();
         }));
 
+        /*
+        LOG_VIEWER is a bit dead, is not it?
         final JButton buttonLogViewer = new JButton();
         buttonLogViewer.setText("Start " + LinkManager.LOG_VIEWER);
         buttonLogViewer.addActionListener(new ActionListener() {
@@ -209,7 +215,7 @@ public class StartupFrame {
 
         miscPanel.add(buttonLogViewer, "wrap");
         miscPanel.add(new HorizontalLine(), "wrap");
-
+*/
         miscPanel.add(SimulatorHelper.createSimulatorComponent(this));
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
@@ -333,6 +339,11 @@ public class StartupFrame {
 
         noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
 
+        boolean hasEcuWithOpenBlt = !currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == EcuWithOpenblt).collect(Collectors.toList()).isEmpty();
+        if (hasEcuWithOpenBlt && firstTimeHasEcuWithOpenBlt) {
+            selector.setMode(UpdateMode.OPENBLT_AUTO);
+            firstTimeHasEcuWithOpenBlt = false;
+        }
 
         AutoupdateUtil.trueLayoutAndRepaint(connectPanel);
     }

@@ -8,7 +8,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 import java.util.Objects;
 
+// careful: JNI is fragile!
 public final class OpenbltJni {
+    // careful: JNI is fragile! interface full name is part of magic API
     public interface OpenbltCallbacks
     {
         void log(String line);

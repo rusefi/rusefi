@@ -191,7 +191,9 @@ void setDefaultBoostParameters() {
 	}
 
 	// Defaults for ETB-style wastegate actuator
-	engineConfiguration->etbWastegatePid.pFactor = 1;
+	engineConfiguration->etbWastegatePid.pFactor = 4.5;
+  engineConfiguration->etbWastegatePid.iFactor = 100;
+  engineConfiguration->etbWastegatePid.dFactor = 0.05;
 	engineConfiguration->etbWastegatePid.minValue = -60;
 	engineConfiguration->etbWastegatePid.maxValue = 60;
 }

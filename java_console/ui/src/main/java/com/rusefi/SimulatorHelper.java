@@ -1,9 +1,9 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.core.ui.ErrorMessageHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
-import com.rusefi.ui.logview.LogViewer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +18,7 @@ import static com.rusefi.ui.util.UiUtils.setToolTip;
 
 public class SimulatorHelper {
     private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorHelper");
-    public static final String BINARY = "rusefi_simulator.exe";
+    private static final String BINARY = "rusefi_simulator.exe";
     private static Process process;
     private static final Logging log = getLogging(SimulatorHelper.class);
 
@@ -26,13 +26,45 @@ public class SimulatorHelper {
         return new File(BINARY).exists();
     }
 
+    public interface Listener {
+        void onSimulatorLaunched(boolean isLaunchedOk);
+    }
     /**
-     * this code start sumulator for UI console
+     * this code starts simulator for UI console
      * todo: unify with the code which starts simulator for auto tests?
      */
-    private static void startSimulator() {
+    private static void startSimulator(Listener simulatorListener) {
         LinkManager.isSimulationMode = true;
 
+        launchSimulatorInADifferenceThread();
+
+        THREAD_FACTORY.newThread(new Runnable() {
+            @Override
+            public void run() {
+                // unfortunately at this point Windows might popup a dialog asking for a permission to listen to port
+
+                boolean isPortOpened = false;
+                for (int i = 0; i < 60 && !isPortOpened; i++) {
+                    isPortOpened = TcpConnector.isTcpPortOpened();
+                    try {
+                        Thread.sleep(1000);
+                        log.info("Process " + process);
+                    } catch (InterruptedException e) {
+                        throw new IllegalStateException("Unexpected", e);
+                    }
+                }
+                if (!isPortOpened) {
+                    simulatorListener.onSimulatorLaunched(/*isLaunchedOk*/false);
+                } else {
+                    log.info("Port " + TcpConnector.DEFAULT_PORT + " is alive");
+                    simulatorListener.onSimulatorLaunched(/*isLaunchedOk*/true);
+                }
+
+            }
+        }).start();
+    }
+
+    private static void launchSimulatorInADifferenceThread() {
         log.info("Executing simulator " + BINARY);
         THREAD_FACTORY.newThread(new Runnable() {
             @Override
@@ -42,27 +74,11 @@ public class SimulatorHelper {
                     log.info("Executing simulator " + BINARY + "=" + process);
                     SimulatorExecHelper.dumpProcessOutput(process, new CountDownLatch(1));
                 } catch (IOException e) {
+                    log.warn("Error " + e, e);
                     throw new IllegalStateException(e);
                 }
             }
         }).start();
-
-        // unfortunately at this point Windows might popup a dialog asking for a permission to listen to port
-
-        boolean isPortOpened = false;
-        for (int i = 0; i < 60 && !isPortOpened; i++) {
-            isPortOpened = TcpConnector.isTcpPortOpened();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new IllegalStateException("Unexpected", e);
-            }
-        }
-        if (!isPortOpened)
-            throw new IllegalStateException("Port not opened?");
-        log.info("Port " + TcpConnector.DEFAULT_PORT + " is alive");
-
-        new ConsoleUI("" + TcpConnector.DEFAULT_PORT);
     }
 
     public static JComponent createSimulatorComponent(final StartupFrame portSelector) {
@@ -76,8 +92,17 @@ public class SimulatorHelper {
         simulatorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                portSelector.disposeFrameAndProceed();
-                startSimulator();
+                simulatorButton.setText("Launching...");
+                simulatorButton.setEnabled(false);
+                startSimulator(isLaunchedOk -> SwingUtilities.invokeLater(() -> {
+                    if (isLaunchedOk) {
+                        portSelector.disposeFrameAndProceed();
+                        new ConsoleUI("" + TcpConnector.DEFAULT_PORT);
+                    } else {
+                        ErrorMessageHelper.showErrorDialog("Error starting simulator", "Error");
+                        simulatorButton.setText("Failed");
+                    }
+                }));
             }
         });
         setToolTip(simulatorButton, "Connect to totally virtual simulator",

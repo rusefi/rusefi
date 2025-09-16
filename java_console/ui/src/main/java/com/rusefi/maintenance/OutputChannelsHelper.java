@@ -24,8 +24,7 @@ public class OutputChannelsHelper {
             callbacks,
             (binaryProtocol) -> readMcuSerial(binaryProtocol, callbacks),
             Optional.empty(), connectivityContext,
-            false
-        );
+            "readMcuSerial");
     }
 
     private static Optional<Integer> readMcuSerial(

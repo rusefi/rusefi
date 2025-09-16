@@ -45,9 +45,9 @@ public class ByteRange {
     @Override
     public String toString() {
         return "{" +
-            "offset=" + offset +
-            ", count=" + count +
-            '}';
+                "offset=" + offset +
+                ", count=" + count +
+                '}';
     }
 
     public static ByteRange valueOf(byte[] payload) throws IOException {

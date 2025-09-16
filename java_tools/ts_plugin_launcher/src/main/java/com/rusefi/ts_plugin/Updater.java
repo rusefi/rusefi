@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
+import com.rusefi.util.SwingUtilities2;
 import org.jetbrains.annotations.Nullable;
 import org.putgemin.VerticalFlowLayout;
 
@@ -30,7 +31,7 @@ public class Updater {
     private static final Logging log = getLogging(Updater.class);
     private static final String PLUGIN_ENTRY_CLASS = "com.rusefi.ts_plugin.PluginEntry";
     private static final String PLUGIN_BODY_JAR = "rusefi_plugin_body.jar";
-    private static final String LOCAL_JAR_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
+    private static final String LOCAL_JAR_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + PLUGIN_BODY_JAR;
     private static final String TITLE = "rusEFI plugin installer " + VERSION;
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
@@ -178,14 +179,6 @@ public class Updater {
         }
     }
 
-    private static void invokeAndWait(Runnable runnable) throws InterruptedException, InvocationTargetException {
-        if (SwingUtilities.isEventDispatchThread()) {
-            runnable.run();
-        } else {
-            SwingUtilities.invokeAndWait(runnable);
-        }
-    }
-
     private void startPlugin() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, InterruptedException, InvocationTargetException {
         log.info("Starting plugin " + this);
         Class clazz = getPluginClass();
@@ -194,7 +187,7 @@ public class Updater {
                 log.info("Not starting second instance");
                 return; // avoid having two instances running
             }
-            invokeAndWait(() -> {
+            SwingUtilities2.invokeAndWait(() -> {
                 try {
                     instance = (TsPluginBody) clazz.newInstance();
                     replaceWith(instance);

@@ -2,7 +2,6 @@ package com.rusefi.composite;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.EnumIniField;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 
 import java.nio.ByteBuffer;

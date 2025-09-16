@@ -17,8 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
-
 
 /**
  * Date: 2/5/13
@@ -29,21 +27,21 @@ import static com.rusefi.core.preferences.storage.PersistentConfiguration.getCon
 public class GaugesPanel {
     private static final Sensor[] DEFAULT_LAYOUT = {
             Sensor.RPMValue,
-            Sensor.MAF,
-            Sensor.CLT,
-            Sensor.IAT,
-            Sensor.TPS,
+            Sensor.MAFMEASURED,
+            Sensor.COOLANT,
+            Sensor.INTAKE,
+            Sensor.TPSVALUE,
 
-            Sensor.MAP,
+            Sensor.MAPVALUE,
 //            Sensor.tCharge,
 //            Sensor.baseFuel,
 //            Sensor.runningFuel,
 
 //            Sensor.etbTarget,
             Sensor.lastErrorCode,
-            Sensor.Lambda1,
+            Sensor.LAMBDAVALUE,
             Sensor.VBATT,
-            Sensor.vehicleSpeedKph,
+            Sensor.VEHICLESPEEDKPH,
 
     };
     private static final String GAUGES_ROWS = "gauges_rows";

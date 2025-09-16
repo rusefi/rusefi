@@ -3,11 +3,13 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.core.Pair;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.output.*;
 import com.rusefi.parse.TokenUtil;
 import com.rusefi.parse.TypesHelper;
+import com.rusefi.tools.tune.FileLinesHelper;
 import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,11 +30,12 @@ public class ReaderStateImpl implements ReaderState {
     private static final Logging log = getLogging(ReaderStateImpl.class);
 
     public static final String BIT = "bit";
-    private static final String CUSTOM = "custom";
+    public static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
-    private static final String VARIABLE_PREFIX = "@@";
+    public static final String SPLIT_LINES = "split_lines";
+    public static final String INCLUDE_FILE = "include_file";
     // used to update other files
     private final List<String> inputFiles = new ArrayList<>();
     private final Stack<ConfigStructureImpl> stack = new Stack<>();
@@ -52,6 +55,8 @@ public class ReaderStateImpl implements ReaderState {
 
     private final EnumsReader enumsReader = new EnumsReader();
     private final VariableRegistry variableRegistry = new VariableRegistry();
+    private final Map<String, EnumGenerator.Parser.EnumDefinition> enumDefinitionMap = new HashMap<>();
+    private int defaultBitNameCounter;
 
     public ReaderStateImpl() {
         this(ReaderProvider.REAL, LazyFile.REAL);
@@ -60,6 +65,20 @@ public class ReaderStateImpl implements ReaderState {
     public ReaderStateImpl(ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
         this.readerProvider = readerProvider;
         this.fileFactory = fileFactory;
+    }
+
+    @Override
+    public int getDefaultBitNameCounter() {
+        return defaultBitNameCounter;
+    }
+
+    @Override
+    public void intDefaultBitNameCounter() {
+        defaultBitNameCounter++;
+    }
+
+    public Map<String, EnumGenerator.Parser.EnumDefinition> getEnumDefinitionMap() {
+        return enumDefinitionMap;
     }
 
     @Override
@@ -152,7 +171,7 @@ public class ReaderStateImpl implements ReaderState {
         enumsReader.enums.putAll(newEnums);
     }
 
-    private void handleCustomLine(String customLineWithPrefix) {
+    public void handleCustomLine(String customLineWithPrefix) {
         String withoutPrefix = customLineWithPrefix.substring(CUSTOM.length() + 1).trim();
         Pair<String, String> nameAndRest = TokenUtil.grabFirstTokenAndTheRest(withoutPrefix);
         String name = nameAndRest.first;
@@ -173,6 +192,10 @@ public class ReaderStateImpl implements ReaderState {
 
         RawIniFile.Line rawLine = new RawIniFile.Line(tunerStudioLine);
         if (rawLine.getTokens()[0].equals("bits")) {
+            String tsTypeString = rawLine.getTokens()[1];
+            FieldType typeInTsString = FieldType.parseTs(tsTypeString);
+            if (size != typeInTsString.getStorageSize())
+                throw new SizeMismatchException("Size mismatch " + customSize + " vs " + tsTypeString + " in " + customLineWithPrefix);
             EnumIniField.ParseBitRange bitRange = new EnumIniField.ParseBitRange().invoke(rawLine.getTokens()[3]);
             int totalCount = 1 << (bitRange.getBitSize0() + 1);
             List<String> enums = Arrays.asList(rawLine.getTokens()).subList(4, rawLine.getTokens().length);
@@ -255,9 +278,14 @@ public class ReaderStateImpl implements ReaderState {
         String lineReaded;
         while ((lineReaded = definitionReader.readLine()) != null) {
             lineReaded = ToolUtil.trimLine(lineReaded);
-            if (lineReaded.startsWith(VARIABLE_PREFIX)) {
-                String lineExpanded = variableRegistry.applyVariables(lineReaded);
-                String sublines[] = lineExpanded.split("\\r?\\n");
+            if (lineReaded.startsWith(INCLUDE_FILE)) {
+                String fileName = lineReaded.substring(INCLUDE_FILE.length()).trim();
+                log.info("Including " + fileName);
+                lines.addAll(FileLinesHelper.readAllLinesWithRoot(fileName));
+            } else if (lineReaded.startsWith(SPLIT_LINES)) {
+                String template = lineReaded.substring(SPLIT_LINES.length());
+                String lineExpanded = variableRegistry.applyVariables(template);
+                String[] sublines = lineExpanded.split("\\r?\\n");
                 lines.addAll(Arrays.asList(sublines));
             } else {
                 lines.add(lineReaded);
@@ -410,7 +438,6 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     public void addJavaDestination(String fileName) {
-        destinations.add(new FileJavaFieldsConsumer(this, fileName, 0, fileFactory));
     }
 
     @Override

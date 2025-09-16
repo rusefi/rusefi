@@ -27,7 +27,7 @@ public class BattLagCorrMigratorTest {
         );
         assertNotNull(migratedInjectorBattLagCorrBattBins);
         assertEquals(INJECTOR_BATT_LAG_CORR_BATT_BINS_FIELD_NAME, migratedInjectorBattLagCorrBattBins.getName());
-        assertNull(migratedInjectorBattLagCorrBattBins.getUnits());
+        assertEquals("volts", migratedInjectorBattLagCorrBattBins.getUnits());
         Assertions.assertEquals(BattLagCorrMigrationTestTuneMigrationContext.INJECTOR_BATT_LAG_CORR_BINS_TEST_VALUE, migratedInjectorBattLagCorrBattBins.getValue());
         assertEquals("2", migratedInjectorBattLagCorrBattBins.getDigits());
         assertEquals("8", migratedInjectorBattLagCorrBattBins.getRows());
@@ -38,7 +38,7 @@ public class BattLagCorrMigratorTest {
         );
         assertNotNull(migratedInjectorBattLagCorrTable);
         assertEquals(INJECTOR_BATT_LAG_CORR_TABLE_FIELD_NAME, migratedInjectorBattLagCorrTable.getName());
-        assertNull(migratedInjectorBattLagCorrTable.getUnits());
+        assertEquals("ms", migratedInjectorBattLagCorrTable.getUnits());
         assertEquals(
             "\n" +
             "         3.371 1.974 1.383 1.194 1.04 0.914 0.797 0.726\n" +

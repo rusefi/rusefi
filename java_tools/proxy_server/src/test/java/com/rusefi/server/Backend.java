@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
@@ -19,9 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
-import org.takes.facets.fork.TkFork;
-import org.takes.http.*;
-import org.takes.rs.RsHtml;
 import org.takes.rs.RsJson;
 
 import javax.json.Json;
@@ -30,13 +26,11 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.BindException;
 import java.util.*;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.server.Birthday.humanReadableFormat;
 
 /**
@@ -87,62 +81,68 @@ public class Backend implements Closeable {
     private ServerSocketReference applicationConnector;
     private ServerSocketReference controllerConnector;
 
-    public Backend(UserDetailsResolver userDetailsResolver, int httpPort) {
-        this(userDetailsResolver, httpPort, APPLICATION_INACTIVITY_TIMEOUT);
-    }
-
-    public Backend(UserDetailsResolver userDetailsResolver, int httpPort, int applicationTimeout) {
+    public Backend(int applicationTimeout, UserDetailsResolver userDetailsResolver) {
         this.applicationTimeout = applicationTimeout;
         this.userDetailsResolver = userDetailsResolver;
-
-
-        new Thread(() -> {
-            try {
-                log.info("Starting http backend on " + httpPort);
-                try {
-                    Take forkTake = new TkFork(showOnlineControllers,
-                            showOnlineApplications,
-                            new Monitoring(this).showStatistics,
-                            new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
-                            new FkRegex(ProxyClient.UPDATE_CONNECTOR_SOFTWARE, new UpdateRequestHandler(this)),
-                            new FkRegex("/", new RsHtml("<html><body>\n" +
-                                    "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
-                                    "<br/><br/><br/>\n" +
-                                    "<img src='https://rusefi.com/style/rusefi_online_color.png'/>" +
-                                    "<br/><br/><br/>\n" +
-                                    "<br/><br/><br/><a href='" + Monitoring.STATUS + "'>Status</a>\n" +
-                                    "<br/><br/><br/><a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
-                                    "<br/><br/><br/><a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
-                                    "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
-                                    "</body></html>\n"))
-                    );
-                    Front frontEnd = new FtBasic(new BkParallel(new BkSafe(new BkBasic(forkTake)), 4), httpPort);
-                    frontEnd.start(() -> isClosed());
-                } catch (BindException e) {
-                    throw new IllegalStateException("While binding " + httpPort, e);
-                }
-                log.info("Shutting down backend on port " + httpPort);
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-
-        }, "Http Server Thread").start();
-
-        APPLICATION_CONNECTION_CLEANUP.newThread(() -> {
-            while (!isClosed()) {
-                log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
-                runApplicationConnectionsCleanup();
-                BinaryProtocol.sleep(applicationTimeout);
-            }
-        }).start();
-
-        GAUGE_POKER.newThread(() -> {
-            while (!isClosed()) {
-                grabOutputs();
-                BinaryProtocol.sleep(SECOND);
-            }
-        }).start();
     }
+
+    /*
+        public Backend(UserDetailsResolver userDetailsResolver, int httpPort) {
+            this(userDetailsResolver, httpPort, APPLICATION_INACTIVITY_TIMEOUT);
+        }
+
+        public Backend(UserDetailsResolver userDetailsResolver, int httpPort, int applicationTimeout) {
+            this.applicationTimeout = applicationTimeout;
+            this.userDetailsResolver = userDetailsResolver;
+
+
+            new Thread(() -> {
+                try {
+                    log.info("Starting http backend on " + httpPort);
+                    try {
+                        Take forkTake = new TkFork(showOnlineControllers,
+                                showOnlineApplications,
+                                new Monitoring(this).showStatistics,
+                                new FkRegex(ProxyClient.VERSION_PATH, ProxyClient.BACKEND_VERSION),
+                                new FkRegex(ProxyClient.UPDATE_CONNECTOR_SOFTWARE, new UpdateRequestHandler(this)),
+                                new FkRegex("/", new RsHtml("<html><body>\n" +
+                                        "<br/><a href='https://rusefi.com/online/'>rusEFI Online</a>\n" +
+                                        "<br/><br/><br/>\n" +
+                                        "<img src='https://rusefi.com/style/rusefi_online_color.png'/>" +
+                                        "<br/><br/><br/>\n" +
+                                        "<br/><br/><br/><a href='" + Monitoring.STATUS + "'>Status</a>\n" +
+                                        "<br/><br/><br/><a href='" + ProxyClient.VERSION_PATH + "'>Version</a>\n" +
+                                        "<br/><br/><br/><a href='" + ProxyClient.LIST_CONTROLLERS_PATH + "'>Controllers</a>\n" +
+                                        "<br/><br/><br/><a href='" + ProxyClient.LIST_APPLICATIONS_PATH + "'>Applications</a>\n" +
+                                        "</body></html>\n"))
+                        );
+                        Front frontEnd = new FtBasic(new BkParallel(new BkSafe(new BkBasic(forkTake)), 4), httpPort);
+                        frontEnd.start(() -> isClosed());
+                    } catch (BindException e) {
+                        throw new IllegalStateException("While binding " + httpPort, e);
+                    }
+                    log.info("Shutting down backend on port " + httpPort);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+
+            }, "Http Server Thread").start();
+
+            APPLICATION_CONNECTION_CLEANUP.newThread(() -> {
+                while (!isClosed()) {
+                    log.info(getApplicationsCount() + " applications, " + getControllersCount() + " controllers");
+                    runApplicationConnectionsCleanup();
+                    BinaryProtocol.sleep(applicationTimeout);
+                }
+            }).start();
+
+            GAUGE_POKER.newThread(() -> {
+                while (!isClosed()) {
+                    grabOutputs();
+                    BinaryProtocol.sleep(SECOND);
+                }
+            }).start();
+        }
 
     private void grabOutputs() {
         List<ControllerConnectionState> controllers = getControllers();
@@ -158,6 +158,7 @@ public class Backend implements Closeable {
             }
         }
     }
+    */
 
     public void runApplicationConnector(int serverPortForApplications, Listener<?> serverSocketCreationCallback) throws IOException {
         this.serverPortForApplications = serverPortForApplications;
@@ -244,7 +245,7 @@ public class Backend implements Closeable {
         }
         log.info("Disconnecting application " + applicationConnectionState);
     }
-
+/*
     public void runControllerConnector(int serverPortForControllers, Listener<?> serverSocketCreationCallback) throws IOException {
         this.serverPortForControllers = serverPortForControllers;
         log.info("Starting controller connector at " + serverPortForControllers);
@@ -265,7 +266,7 @@ public class Backend implements Closeable {
             }
         }, serverPortForControllers, "ControllerServer", serverSocketCreationCallback, BinaryProtocolServer.SECURE_SOCKET_FACTORY);
     }
-
+*/
     @NotNull
     private RsJson getApplicationsOnline() throws IOException {
         JsonArrayBuilder builder = Json.createArrayBuilder();
@@ -299,7 +300,7 @@ public class Backend implements Closeable {
             // todo: at the moment we use current OutputChannel layout - a better way would be to take
             // todo: OutputChannel from .ini file based on controller signature
             int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPMValue);
-            double clt = client.getSensorsHolder().getValue(Sensor.CLT);
+            double clt = client.getSensorsHolder().getValue(Sensor.COOLANT);
             UserDetails owner = client.getTwoKindSemaphore().getOwner();
             SessionDetails sessionDetails = client.getSessionDetails();
             ControllerInfo controllerInfo = sessionDetails.getControllerInfo();

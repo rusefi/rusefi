@@ -37,6 +37,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.core.rusEFIVersion.CONSOLE_VERSION;
+import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 import static com.rusefi.ui.util.UiUtils.createOnTopParent;
 
 /**
@@ -135,7 +136,11 @@ public class ConsoleUI {
 //        if (!linkManager.isLogViewer())
 //            tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!linkManager.isLogViewer()) {
+/*
+console live data tab is broken #8402
+
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
+ */
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
         }
 
@@ -201,12 +206,9 @@ public class ConsoleUI {
             new Thread(ConsoleUI::writeReadmeFile).start();
         }
 
-        log.info("OS name: " + FileLog.getOsName());
-        log.info("OS version: " + System.getProperty(FileLog.OS_VERSION));
-
         getConfig().load();
         AutotestLogging.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
-        DefaultExceptionHandler.install();
+        commonUiStartup();
 // not very useful?        VersionChecker.start();
         SwingUtilities.invokeAndWait(() -> awtCode(args));
     }
@@ -223,8 +225,9 @@ public class ConsoleUI {
         if (JustOneInstance.isAlreadyRunning()) {
             int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like another instance is already running. Do you really want to start another instance?",
                 TITLE, JOptionPane.YES_NO_OPTION);
-            if (result == JOptionPane.NO_OPTION)
+            if (result == JOptionPane.NO_OPTION) {
                 System.exit(-1);
+            }
         }
         JustOneInstance.onStart();
         TunerStudioHelper.maybeCloseTs();

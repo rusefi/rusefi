@@ -22,7 +22,38 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
         this.connectivityContext = connectivityContext;
     }
 
+    public static void importTuneIntoDevice(PortResult port, JComponent parent, ConnectivityContext connectivityContext, String tuneFileName, SingleAsyncJobExecutor singleAsyncJobExecutor) {
+        try {
+            final Msq tuneToImport = Msq.readTune(tuneFileName);
+            singleAsyncJobExecutor.startJob(new ImportTuneJob(port, tuneToImport, connectivityContext), parent);
+        } catch (JAXBException e) {
+            final String errorMsg = String.format(
+                "Failed to load tune to import from file %s",
+                tuneFileName
+            );
+            log.error(errorMsg, e);
+            JOptionPane.showMessageDialog(
+                parent,
+                errorMsg,
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        JobHelper.doJob(() -> {
+            if (CalibrationsHelper.importTune(
+                context.getPort().port,
+                context.getTuneToImport(),
+                callbacks,
+                connectivityContext
+            )) {
+                callbacks.done();
+            } else {
+                callbacks.error();
+            }
+        }, onJobFinished);
     }
 }

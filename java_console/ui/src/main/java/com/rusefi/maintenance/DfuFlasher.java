@@ -40,14 +40,13 @@ public class DfuFlasher {
 
     public static boolean doAutoDfu(
         final JComponent parent,
-        final PortResult port,
+        final String port,
         final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         return CalibrationsHelper.updateFirmwareAndRestorePreviousCalibrations(
-            parent,
             port,
             callbacks,
-            () -> dfuUpdateFirmware(parent, port.port, callbacks), connectivityContext
+            () -> dfuUpdateFirmware(parent, port, callbacks), connectivityContext
         );
     }
 
@@ -72,7 +71,7 @@ public class DfuFlasher {
             }
 
             timeForDfuSwitch(callbacks);
-            if (executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE)) {
+            if (executeDFU(callbacks, FindFileHelper.findFirmwareFile())) {
                 // We need to wait to allow connection to ECU port (see #7403)
                 timeForDfuSwitch(callbacks);
                 return true;
@@ -127,11 +126,11 @@ public class DfuFlasher {
                 return null;
             }).getSerialPort();
             if (port == null) {
-                callbacks.logLine("*** ERROR *** rusEFI serial port not detected");
+                callbacks.logLine("*** ERROR *** ECU serial port not detected");
                 callbacks.error();
                 return null;
             } else {
-                callbacks.logLine("Detected rusEFI on " + port + "\n");
+                callbacks.logLine("ECU Detected on " + port + "\n");
             }
         }
         return isSignatureValidated;
@@ -163,7 +162,7 @@ public class DfuFlasher {
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         submitAction(() -> {
             JobHelper.doJob(
-                () -> executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.FIRMWARE_BIN_FILE),
+                () -> executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.findFirmwareFile()),
                 onJobFinished
             );
         });

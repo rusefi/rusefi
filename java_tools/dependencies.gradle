@@ -17,10 +17,8 @@ ext {
   ]
 
   ts_plugin_libs = [
-      // todo: migrating to httpclient5 #7551
-          httpclient  : "org.apache.httpcomponents:httpclient:4.5.14",
-          httpcore    : "org.apache.httpcomponents:httpcore:4.4.16",
-          httpmime    : "org.apache.httpcomponents:httpmime:4.5.14",
+          httpclient  : "org.apache.httpcomponents.client5:httpclient5:5.4.2",
+          httpcore    : "org.apache.httpcomponents.core5:httpcore5:5.3.3",
           launcher_api: fileTree( dir: "lib", include: "TunerStudioPluginAPI.jar" )
   ]
 }

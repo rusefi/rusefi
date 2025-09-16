@@ -25,7 +25,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
     // https://github.com/rusefi/web_backend/issues/166
     private static final int MSQ_LENGTH_LIMIT = 34;
 
-    public static final String UNUSED = ConfigStructure.UNUSED_ANYTHING_PREFIX;
+    public static final String UNUSED = UnusedPrefix.UNUSED_ANYTHING_PREFIX;
     private final String fileName;
     private final LazyFile.LazyFileFactory fileFactory;
     private final StringBuilder tsWriter = new StringBuilder();
@@ -74,7 +74,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
     private void writeStringToFile(@Nullable String fileName, StringBuilder writer) throws IOException {
         if (fileName != null) {
             LazyFile fw = fileFactory.create(fileName);
-            fw.write(writer.toString());
+            fw.write(writer);
             fw.close();
         }
     }

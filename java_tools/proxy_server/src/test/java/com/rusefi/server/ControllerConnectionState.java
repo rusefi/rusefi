@@ -6,7 +6,6 @@ import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorsHolder;
 import com.rusefi.io.IoStream;
@@ -71,10 +70,6 @@ public class ControllerConnectionState {
         return controllerKey;
     }
 
-    public boolean isClosed() {
-        return isClosed;
-    }
-
     public void close() {
         isClosed = true;
         FileUtil.close(clientSocket);
@@ -128,6 +123,7 @@ public class ControllerConnectionState {
         return sessionDetails;
     }
 
+    /*
     public void getOutputs() throws IOException {
         // TODO: why is this logic duplicated from BinaryProtocol?
         byte[] commandPacket = new byte[5];
@@ -145,7 +141,7 @@ public class ControllerConnectionState {
             throw new IOException("getOutputs: unexpected package length " + packet.length);
         sensorsHolder.grabSensorValues(packet);
     }
-
+*/
     @NotNull
     public TwoKindSemaphore getTwoKindSemaphore() {
         return twoKindSemaphore;
@@ -156,6 +152,7 @@ public class ControllerConnectionState {
         return sensorsHolder;
     }
 
+    /*
     public void grabOutputs(Backend backend) {
         try {
             getOutputs();
@@ -165,7 +162,7 @@ public class ControllerConnectionState {
             backend.close(this);
         }
     }
-
+*/
     public void invokeOnlineCommand(byte command) throws IOException {
         byte[] packet = new byte[2];
         packet[0] = Integration.TS_ONLINE_PROTOCOL;

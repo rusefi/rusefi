@@ -2,15 +2,12 @@ package com.rusefi.ui.engine;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.*;
-import com.rusefi.ui.config.BitConfigField;
-import com.rusefi.ui.config.ConfigUiField;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -129,13 +126,13 @@ public class EngineSnifferPanel {
 
         if (!uiContext.getLinkManager().isLogViewer()) {
             JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSEVVTDECODING, "Verbose VVT Sync").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.ENGINESNIFFERFOCUSONINPUTS, "Focus On Inputs").getContent());
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.INVERTPRIMARYTRIGGERSIGNAL, "Invert Primary Input").getContent());
+//            lowerButtons.add(new ConfigUiField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
+//            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
+//            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSEVVTDECODING, "Verbose VVT Sync").getContent());
+//            lowerButtons.add(new BitConfigField(uiContext, Fields.ENGINESNIFFERFOCUSONINPUTS, "Focus On Inputs").getContent());
+//            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
+//            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
+//            lowerButtons.add(new BitConfigField(uiContext, Fields.INVERTPRIMARYTRIGGERSIGNAL, "Invert Primary Input").getContent());
             bottomPanel.add(lowerButtons, BorderLayout.NORTH);
         }
 
@@ -269,7 +266,7 @@ public class EngineSnifferPanel {
 
     private void saveImage() {
         int rpm = RpmModel.getInstance().getValue();
-        double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
+        double maf = SensorCentral.getInstance().getValue(Sensor.MAFMEASURED);
         String fileName = FileLog.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
 
         UiUtils.saveImageWithPrompt(fileName, mainPanel, imagePanel);

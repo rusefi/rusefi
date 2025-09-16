@@ -31,11 +31,13 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
                 "#include \"value_lookup.h\"\n";
     }
 
-    private static final String GET_METHOD_HEADER =
-            "float getConfigValueByName(const char *name) {\n";
-
-    static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
-    private static final String SET_METHOD_HEADER = "bool setConfigValueByName(const char *name, float value) {\n";
+    static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" +
+        "}\n" +
+        "float getConfigValueByName(const char *name) {\n" +
+            "\tint hash = djb2lowerCase(name);\n"
+        ;
+    private static final String SET_METHOD_HEADER = "bool setConfigValueByName(const char *name, float value) {\n" +
+        "\tint hash = djb2lowerCase(name);\n";
     private static final String SET_METHOD_FOOTER = "}\n";
     private final List<VariableRecord> variables = new ArrayList<>();
     private final String outputFileName;
@@ -144,9 +146,11 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
         String fullSwitch = GetOutputValueConsumer.wrapSwitchStatement(switchBody);
 
-        return GET_METHOD_HEADER +
+        return "float getConfigValueByHash(const int hash) {\n" +
                 fullSwitch +
-                getterBody + GET_METHOD_FOOTER;
+                getterBody + GET_METHOD_FOOTER +
+            "\treturn getConfigValueByHash(hash);\n" +
+            "}\n";
     }
 
     public String getSetterBody() {

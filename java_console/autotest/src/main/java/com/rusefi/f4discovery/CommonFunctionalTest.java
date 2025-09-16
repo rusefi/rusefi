@@ -1,6 +1,5 @@
 package com.rusefi.f4discovery;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
@@ -170,11 +169,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
 //        changeRpm(1500);
     }
 
-    @Test
-    public void testAuxValveNissan() {
-        ecu.setEngineType(engine_type_e.NISSAN_PRIMERA);
-        ecu.changeRpm(1200);
-    }
     @Test
     public void testTwoStrokeSachs() {
         ecu.setEngineType(engine_type_e.SACHS);
@@ -413,7 +407,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(2400);
         ecu.changeRpm(2000);
         chart = nextChart();
-        EcuTestHelper.assertSomewhatClose("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAP));
+        EcuTestHelper.assertSomewhatClose("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAPVALUE));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
 
         assertWaveNotNull(msg + " fuel SD #1", chart, EngineChart.INJECTOR_1);

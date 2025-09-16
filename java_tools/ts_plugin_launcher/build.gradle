@@ -5,7 +5,6 @@ apply from: '../../java_tools/dependencies.gradle'
 dependencies {
   implementation global_libs.annotations
   implementation ts_plugin_libs.httpcore
-  implementation ts_plugin_libs.httpmime
   implementation project(':autoupdate')
   implementation ts_plugin_libs.launcher_api
   implementation global_libs.commons_logging

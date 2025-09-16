@@ -1,6 +1,10 @@
 package com.rusefi.ui.basic;
 
+import com.rusefi.core.ui.ErrorMessageHelper;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class LogoLabelPopupMenu extends JPopupMenu {
     private final JMenuItem uploadTuneMenuItem;
@@ -15,6 +19,21 @@ public class LogoLabelPopupMenu extends JPopupMenu {
         instanceNameMenuItem.addActionListener(
             e -> InstanceNameEditor.INSTANCE.editInstanceName(instanceNameMenuItem)
         );
+
+        JMenuItem importTune = new JMenuItem("Import Tune");
+        add(importTune);
+        importTune.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Select a File");
+                int result = fileChooser.showOpenDialog(ErrorMessageHelper.createOnTopParent());
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                }
+            }
+        });
 
         uploadTuneMenuItem = new JMenuItem("Upload Tune");
         uploadTuneMenuItem.setEnabled(false);

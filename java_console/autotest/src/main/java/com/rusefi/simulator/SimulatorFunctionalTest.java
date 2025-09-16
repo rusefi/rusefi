@@ -175,7 +175,7 @@ public class SimulatorFunctionalTest {
                                          byte subCommand) throws InterruptedException {
         CountDownLatch gotCan = new CountDownLatch(1);
         byte [][] packets = new byte [1][];
-        packets[0] = getCanFrameData(bench_test_packet_ids_e.IO_CONTROL.get(),
+        packets[0] = getCanFrameData(bench_test_packet_ids_e.HW_QC_IO_CONTROL.get(),
                 new byte [] {
                         (byte)bench_test_magic_numbers_e.BENCH_HEADER.get(),
                         (byte)command.get(),

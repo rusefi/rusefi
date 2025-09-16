@@ -6,6 +6,13 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
+import org.fife.ui.autocomplete.AutoCompletion;
+import org.fife.ui.autocomplete.BasicCompletion;
+import org.fife.ui.autocomplete.CompletionProvider;
+import org.fife.ui.autocomplete.DefaultCompletionProvider;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -30,14 +37,23 @@ import java.awt.event.KeyEvent;
  */
 public class LuaTextEditor {
     private final JPanel area = new JPanel(new BorderLayout());
-    private final JTextArea textArea = new JTextArea();
+    private final RSyntaxTextArea textArea = new RSyntaxTextArea();
     private final JLabel sizeLabel = new JLabel();
     private final JLabel locationLabel = new JLabel();
     private final UIContext context;
+    private final DefaultCompletionProvider completionProvider = new DefaultCompletionProvider();
 
     public LuaTextEditor(UIContext context) {
         this.context = context;
+        // Configure RSyntaxTextArea editor
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_LUA);
+        textArea.setCodeFoldingEnabled(true);
+        textArea.setAutoIndentEnabled(true);
+        textArea.setBracketMatchingEnabled(true);
         textArea.setTabSize(2);
+        Font current = textArea.getFont();
+        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, current != null ? current.getSize() : 12));
+		textArea.requestFocusInWindow();
 
         AbstractDocument pDoc = (AbstractDocument) textArea.getDocument();
         pDoc.setDocumentFilter(new DocumentSizeFilter(context));
@@ -70,7 +86,14 @@ public class LuaTextEditor {
             }
         });
 
-        JScrollPane textAreaScroll = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        // Install autocomplete
+        installDefaultCompletions(completionProvider);
+        AutoCompletion ac = new AutoCompletion(completionProvider);
+        ac.setAutoActivationEnabled(true);
+        ac.setAutoActivationDelay(250);
+        ac.install(textArea);
+
+        RTextScrollPane textAreaScroll = new RTextScrollPane(textArea, true);
         area.add(textAreaScroll, BorderLayout.CENTER);
         JPanel bottomArea = new JPanel(new BorderLayout());
         area.add(bottomArea, BorderLayout.SOUTH);
@@ -100,9 +123,9 @@ public class LuaTextEditor {
 
     private void installUndoRedoKeystrokes() {
         KeyStroke undoKeyStroke = KeyStroke.getKeyStroke(
-                KeyEvent.VK_Z, InputEvent.CTRL_MASK);
+                KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK);
         KeyStroke redoKeyStroke = KeyStroke.getKeyStroke(
-                KeyEvent.VK_Y, InputEvent.CTRL_MASK);
+                KeyEvent.VK_Y, InputEvent.CTRL_DOWN_MASK);
 
         UndoManager undoManager = new UndoManager();
 
@@ -150,4 +173,29 @@ public class LuaTextEditor {
     public String getText() {
         return textArea.getText();
     }
+
+    public CompletionProvider getCompletionProvider() {
+        return completionProvider;
+    }
+
+    private static void installDefaultCompletions(DefaultCompletionProvider provider) {
+        // Basic Lua keywords - extend as needed
+        String[] keywords = new String[]{
+            "and","break","do","else","elseif","end","false","for","function","goto","if",
+            "in","local","nil","not","or","repeat","return","then","true","until","while"
+        };
+        for (String kw : keywords) {
+            provider.addCompletion(new BasicCompletion(provider, kw));
+        }
+        // Common global functions (subset)
+        String[] funcs = new String[]{
+            "assert","collectgarbage","dofile","error","getmetatable","ipairs","load","loadfile","next",
+            "pairs","pcall","print","rawequal","rawget","rawlen","rawset","require","select","setmetatable",
+            "tonumber","tostring","type","xpcall"
+        };
+        for (String f : funcs) {
+            provider.addCompletion(new BasicCompletion(provider, f));
+        }
+    }
+    
 }

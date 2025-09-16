@@ -11,7 +11,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.config.generated.Integration.CMD_SELF_STIMULATION;
 import static org.junit.Assert.*;
@@ -65,7 +64,7 @@ public class ProteusAnalogTest extends RusefiTestBase {
         // wait a sec for sensors to update
         sleepSeconds(5);
 
-        double actualTps = SensorCentral.getInstance().getValue(Sensor.TPS);
+        double actualTps = SensorCentral.getInstance().getValue(Sensor.TPSVALUE);
 
         // Accept up to 2.5% error - there is an analog filter installed, it should be at least be close
         assertEquals("With idle of " + idle, expectedTps, actualTps, 2.5);

@@ -15,7 +15,7 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         JobHelper.doJob(
             () -> {
-                if (ProgramSelector.flashOpenbltSerialJni(context.getParent(), context.getPort().port, callbacks)) {
+                if (ProgramSelector.flashOpenbltSerial(context.getParent(), context.getPort().port, callbacks)) {
                     callbacks.done();
                 } else {
                     callbacks.error();

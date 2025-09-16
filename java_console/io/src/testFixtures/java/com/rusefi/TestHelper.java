@@ -6,7 +6,6 @@ import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.IoStream;
@@ -18,7 +17,6 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
-import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 
@@ -45,13 +43,13 @@ public class TestHelper extends MockitoTestHelper {
     }
 
     @NotNull
-    public static ConfigurationImage prepareImage(int input, ScalarIniField scalarIniField) {
-        ConfigurationImage ci = new ConfigurationImage(BinaryProtocol.iniFileProvider.provide(null).getMetaInfo().getTotalSize());
+    public static ConfigurationImage prepareImage(int input) {
+        ConfigurationImage ci = new ConfigurationImage(BinaryProtocol.iniFileProvider.provide(null).getMetaInfo().getPageSize(0));
 
-        scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input), scalarIniField.getDigits()));
+  //      scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input), scalarIniField.getDigits()));
         return ci;
     }
-
+/*
     @NotNull
     public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) throws IOException {
         BinaryProtocolState state = new BinaryProtocolState();
@@ -65,7 +63,7 @@ public class TestHelper extends MockitoTestHelper {
         server.start(linkManager, port, serverSocketCreationCallback, context);
         return server;
     }
-
+*/
     @NotNull
     public static IoStream secureConnectToLocalhost(int controllerPort) {
         IoStream targetEcuSocket;
@@ -87,7 +85,7 @@ public class TestHelper extends MockitoTestHelper {
         }
         return targetEcuSocket;
     }
-
+/*
     public static BinaryProtocolServer createVirtualController(int controllerPort, ConfigurationImage controllerImage, BinaryProtocolServer.Context context) throws InterruptedException {
         CountDownLatch controllerCreated = new CountDownLatch(1);
         try {
@@ -98,7 +96,7 @@ public class TestHelper extends MockitoTestHelper {
             throw new IllegalStateException(e);
         }
     }
-
+*/
     public static SessionDetails createTestSession(String authToken, String signature) {
         ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
 

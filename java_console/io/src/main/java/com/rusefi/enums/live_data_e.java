@@ -34,6 +34,8 @@ public enum live_data_e {
 	LDS_trigger_state4,
 	LDS_trigger_state_primary,
 	LDS_wall_fuel_state,
+	LDS_closed_loop_idle,
+	LDS_live_data_example,
 	LDS_idle_state,
 	LDS_electronic_throttle0,
 	LDS_electronic_throttle1,
@@ -44,4 +46,7 @@ public enum live_data_e {
 	LDS_vvt,
 	LDS_lambda_monitor,
 	LDS_mc33810_state,
+	LDS_long_term_fuel_trim_state,
+	LDS_short_term_fuel_trim_state,
+	LDS_vvl_controller_state,
 }

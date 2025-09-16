@@ -5,7 +5,7 @@ import com.rusefi.TsTuneReader;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
-import org.apache.http.concurrent.FutureCallback;
+import org.apache.hc.core5.concurrent.FutureCallback;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 

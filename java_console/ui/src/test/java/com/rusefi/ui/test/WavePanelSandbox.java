@@ -1,6 +1,5 @@
 package com.rusefi.ui.test;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.FrameHelper;

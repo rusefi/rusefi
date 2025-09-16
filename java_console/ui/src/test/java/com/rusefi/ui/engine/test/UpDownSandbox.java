@@ -1,6 +1,5 @@
 package com.rusefi.ui.engine.test;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.ui.test.WavePanelSandbox;
 import com.rusefi.waves.EngineChart;
