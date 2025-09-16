@@ -11,7 +11,6 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/math/short_term_fuel_trim_state.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_state.txt \
   $(PROJECT_DIR)/controllers/algo/shift_torque_reduction_state.txt \
-  $(PROJECT_DIR)/controllers/algo/shift_torque_reduction_state.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/high_pressure_fuel_pump.txt \
   $(PROJECT_DIR)/controllers/actuators/idle_state.txt \
   $(PROJECT_DIR)/controllers/actuators/electronic_throttle.txt \
