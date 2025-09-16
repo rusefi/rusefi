@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Sep 10 21:27:00 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Sep 16 14:01:03 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -531,6 +531,8 @@ case TS_WIDEBAND_PING_BY_ID:
   return "TS_WIDEBAND_PING_BY_ID";
 case TS_WIDEBAND_SET_IDX_BY_ID:
   return "TS_WIDEBAND_SET_IDX_BY_ID";
+case TS_WIDEBAND_SET_SENS_BY_ID:
+  return "TS_WIDEBAND_SET_SENS_BY_ID";
 case TS_X14:
   return "TS_X14";
   }

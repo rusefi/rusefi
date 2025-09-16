@@ -1410,7 +1410,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 135154092;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1677,6 +1676,7 @@ public class VariableRegistryValues {
 	public static final int ts_command_e_TS_WIDEBAND_FLASH_BY_ID = 35;
 	public static final int ts_command_e_TS_WIDEBAND_PING_BY_ID = 34;
 	public static final int ts_command_e_TS_WIDEBAND_SET_IDX_BY_ID = 33;
+	public static final int ts_command_e_TS_WIDEBAND_SET_SENS_BY_ID = 37;
 	public static final int ts_command_e_TS_X14 = 20;
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;
@@ -1714,7 +1714,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.09.15.f429-discovery.135154092";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.09.16.f429-discovery.2863890829";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2048;
