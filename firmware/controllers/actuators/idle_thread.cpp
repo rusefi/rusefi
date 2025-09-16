@@ -128,7 +128,7 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 	);
 
 	// Now we bump it by the AC/fan amount if necessary
-    if(engine->module<AcController>().unmock().acButtonState && phase == Phase::Idling) {
+    if (engine->module<AcController>().unmock().acButtonState && (phase == Phase::Idling || phase == Phase::CrankToIdleTaper)) {
     	running += engineConfiguration->acIdleExtraOffset;
     }
 
