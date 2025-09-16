@@ -14,12 +14,14 @@ import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 public class HelloCommand implements Command {
     private final String tsSignature;
 
+    public static final byte[] HELLO_COMMAND = {Integration.TS_HELLO_COMMAND};
+
     public HelloCommand(String tsSignature) {
         this.tsSignature = tsSignature;
     }
 
     public static void send(IoStream stream) throws IOException {
-        stream.sendPacket(new byte[]{Integration.TS_HELLO_COMMAND});
+        stream.sendPacket(HELLO_COMMAND);
     }
 
     @Nullable
