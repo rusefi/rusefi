@@ -48,6 +48,9 @@ static critical_msg_t criticalErrorMessageBuffer;
 static critical_msg_t configErrorMessageBuffer; // recoverable configuration error, non-critical
 
 bool hasCriticalFirmwareErrorFlag = false;
+/**
+ * not critical error: TS would display text error message until clearConfigErrorMessage() is invoked
+ */
 static bool hasConfigErrorFlag = false;
 static bool hasReportFile = false;
 
