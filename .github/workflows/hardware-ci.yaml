@@ -143,6 +143,10 @@ jobs:
         name: rusefi_hw-ci-${{matrix.build-target}}.ini
         path: ${{matrix.test-suite-ini}}
 
+    - name: Show USB status after flashing
+      run: |
+        lsusb -vvv
+
     # This both compiles and runs HW CI tests
     # .github/workflows/hw-ci/run_hw_ci.sh com.rusefi.HwCiF4Discovery
     - name: Run Hardware CI
