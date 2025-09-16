@@ -1,6 +1,6 @@
 package com.rusefi.ui.engine;
 
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.util.UiUtils;
@@ -38,7 +38,7 @@ public class UpDownImage extends JPanel {
     private TimeAxisTranslator translator;
     private RevolutionLog time2rpm = RevolutionLog.parseRevolutions(null);
     /**
-     * firmware is sending {@link Fields#PROTOCOL_OUTPIN}
+     * firmware is sending {@link Integration#PROTOCOL_OUTPIN}
      */
     private String pin = "NO PIN";
 
