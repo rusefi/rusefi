@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import static com.rusefi.livedata.LiveDataParserPanel.getParseTree;
 import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
@@ -30,7 +31,7 @@ public class LiveDataConventionTest {
 
     private void assertFile(String fileName, Field[] values) throws IOException, URISyntaxException {
         VariableValueSource valueSource = name -> {
-            Field f = Field.findFieldOrNull(values, "", name);
+            Field f = Field.findFieldOrNull(Arrays.asList(values), "", name);
             if (f == null) {
                 return null;
             }

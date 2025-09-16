@@ -64,7 +64,8 @@ public class LiveDataParserPanel {
             g.setColor(Color.red);
 
             for (Token setting : parseResult.getConfigTokens()) {
-                Field field = Field.findFieldOrNull(Fields.VALUES, "", setting.getText());
+                // todo: something like binaryProtocol.getIniFile().getFieldsInUiOrder().values()?
+                Field field = Field.findFieldOrNull(null, "", setting.getText());
                 if (field == null)
                     continue;
                 if (field.getType().isString())
@@ -201,7 +202,7 @@ public class LiveDataParserPanel {
             byte[] bytes = reference.get();
             if (bytes == null)
                 return null;
-            Field f = Field.findFieldOrNull(values, "", name);
+            Field f = Field.findFieldOrNull(null, "", name);
             if (f == null) {
                 //log.error("BAD condition, should be variable: " + name);
                 return null;

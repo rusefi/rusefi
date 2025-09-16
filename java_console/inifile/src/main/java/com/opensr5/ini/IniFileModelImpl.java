@@ -54,9 +54,12 @@ public class IniFileModelImpl implements IniFileModel {
 
     public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
-        return IniFileModelImpl.readIniFile(fileName);
+        try {
+            return IniFileModelImpl.readIniFile(fileName);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
-
     private IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo, final String iniFilePath) {
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
@@ -135,7 +138,7 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     @NotNull
-    public static IniFileModelImpl readIniFile(String fileName) {
+    public static IniFileModelImpl readIniFile(String fileName) throws FileNotFoundException {
         Objects.requireNonNull(fileName, "fileName");
         log.info("Reading " + fileName);
         File input = new File(fileName);

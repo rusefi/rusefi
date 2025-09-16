@@ -1,15 +1,15 @@
 package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.ts.TsHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
 
 public class PrimeTunerStudioCache {
-    private static final String ECU_DEF_FOLDER = System.getProperty("user.home") +
-        File.separator + ".efiAnalytics" +
-        File.separator + "TunerStudio" +
+    private static final String ECU_DEF_FOLDER = TsHelper.TS_ROOT +
+        "TunerStudio" +
         File.separator + "config" +
         File.separator + "ecuDef" +
         File.separator;
@@ -50,7 +50,13 @@ public class PrimeTunerStudioCache {
                 return;
             }
         }
-        IniFileModelImpl iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+        IniFileModelImpl iniFileModel;
+        try {
+            iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+        } catch (FileNotFoundException e) {
+            log.warn("error " + e);
+            return;
+        }
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
     }
 }

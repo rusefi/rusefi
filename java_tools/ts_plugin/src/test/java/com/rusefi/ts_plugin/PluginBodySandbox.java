@@ -11,6 +11,7 @@ import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ts_plugin.knock.KnockAnalyzerTab;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class PluginBodySandbox {
             return "true";
         }
     };
-    public static void main(String[] args) throws ControllerException {
+    public static void main(String[] args) throws ControllerException, FileNotFoundException {
         String iniFile = TsTuneReader.getProjectModeFileName(PROJECT_NAME);
         IniFileModelImpl model = IniFileModelImpl.readIniFile(iniFile);
         Objects.requireNonNull(model, "model");

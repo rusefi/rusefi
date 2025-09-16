@@ -15,11 +15,11 @@ public class TuneCanToolHelper {
     private static final Set<String> WHITE_LIST = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     protected static void initialize(String iniFileName) {
-//        try {
+        try {
             TuneCanTool.ini = IniFileModelImpl.readIniFile(iniFileName);
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     static void readIgnoreList(String ignoreListFileName) throws IOException {

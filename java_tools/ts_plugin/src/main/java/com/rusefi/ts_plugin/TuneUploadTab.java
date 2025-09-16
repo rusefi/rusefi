@@ -22,6 +22,7 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ThreadFactory;
@@ -178,7 +179,12 @@ public class TuneUploadTab {
     }
 
     private void subscribeToUpdates(String configurationName, ControllerAccess controllerAccess) {
-        IniFileModelImpl model = IniFileModelImpl.readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
+        IniFileModelImpl model = null;
+        try {
+            model = IniFileModelImpl.readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         Map<String, IniField> allIniFields = model.getAllIniFields();
         if (model.getAllIniFields() == null)
             return;

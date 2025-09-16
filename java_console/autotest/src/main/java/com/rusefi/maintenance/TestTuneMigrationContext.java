@@ -11,16 +11,24 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
+import java.util.Collections;
+import java.util.Objects;
 
 public class TestTuneMigrationContext extends TuneMigrationContext {
     public static TestTuneMigrationContext load(final String testDataFolder) throws JAXBException {
-        final TestTuneMigrationContext result = new TestTuneMigrationContext(
-            Msq.readTune(String.format("%s/prev_calibrations.msq", testDataFolder)),
-            IniFileModelImpl.readIniFile(String.format("%s/prev_calibrations.ini", testDataFolder)),
-            Msq.readTune(String.format("%s/updated_calibrations.msq", testDataFolder)),
-            IniFileModelImpl.readIniFile(String.format("%s/updated_calibrations.ini", testDataFolder)),
-            new TestCallbacks()
-        );
+        final TestTuneMigrationContext result;
+        try {
+            result = new TestTuneMigrationContext(
+                Msq.readTune(String.format("%s/prev_calibrations.msq", testDataFolder)),
+                IniFileModelImpl.readIniFile(String.format("%s/prev_calibrations.ini", testDataFolder)),
+                Msq.readTune(String.format("%s/updated_calibrations.msq", testDataFolder)),
+                IniFileModelImpl.readIniFile(String.format("%s/updated_calibrations.ini", testDataFolder)),
+                new TestCallbacks()
+            );
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         return result;
     }
 
@@ -37,7 +45,10 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
     }
 
     public Constant getPrevValue(final String fieldName) {
-        return getValue(getPrevTune(), fieldName);
+        Constant value = getValue(getPrevTune(), fieldName);
+        if (value == null)
+            throw new NullPointerException("Failed to locate " + fieldName);
+        return value;
     }
 
     public Constant getUpdatedValue(final String fieldName) {
@@ -45,6 +56,7 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
     }
 
     private static CalibrationsInfo getCalibrationsInfo(final Msq msq, final IniFileModel ini) {
+        Objects.requireNonNull(ini);
         final ConfigurationImage image = msq.asImage(ini);
         final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(
             image.getSize(),

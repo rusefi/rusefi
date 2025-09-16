@@ -33,11 +33,11 @@ public class TuneReadWriteTest {
     private final IniFileModelImpl model;
 
     {
-//        try {
+        try {
             model = IniFileModelImpl.readIniFile(TEST_INI);
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

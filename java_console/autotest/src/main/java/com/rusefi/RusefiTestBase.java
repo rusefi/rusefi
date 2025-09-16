@@ -1,12 +1,12 @@
 package com.rusefi;
 
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.IniFileProvider;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
 import org.junit.*;
+
+import java.io.FileNotFoundException;
 
 public class RusefiTestBase {
     protected EcuTestHelper ecu;
@@ -18,7 +18,13 @@ public class RusefiTestBase {
 
     @Before
     public void startUp() {
-        BinaryProtocol.iniFileProvider = signature -> IniFileModelImpl.readIniFile(LocalIniFileProvider.INI_FILE_FOR_SIMULATOR_ROOT_PATH);
+        BinaryProtocol.iniFileProvider = signature -> {
+            try {
+                return IniFileModelImpl.readIniFile(LocalIniFileProvider.INI_FILE_FOR_SIMULATOR_ROOT_PATH);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        };
         try {
             ecu = EcuTestHelper.createInstance(needsHardwareTriggerInput());
         } catch (Throwable e) {

@@ -6,6 +6,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.simulator.SimulatorFunctionalTest;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -19,7 +20,13 @@ public class SimulatorFunctionalTestLauncher {
             System.exit(66);
         });
         String iniFileName = args[0];
-        BinaryProtocol.iniFileProvider = signature -> IniFileModelImpl.readIniFile(iniFileName);
+        BinaryProtocol.iniFileProvider = signature -> {
+            try {
+                return IniFileModelImpl.readIniFile(iniFileName);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        };
         boolean startSimulator = args.length > 1 && args[1].equalsIgnoreCase("start");
 
 //        if (startSimulator) {

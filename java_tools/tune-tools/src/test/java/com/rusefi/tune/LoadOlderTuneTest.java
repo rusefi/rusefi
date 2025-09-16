@@ -166,7 +166,7 @@ public class LoadOlderTuneTest {
     }
 
     @Test
-    public void findFieldByName() throws IniMemberNotFound {
+    public void findFieldByName() throws IniMemberNotFound, FileNotFoundException {
         IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
         StringIniField make = (StringIniField) ini.getIniField("ENGINEMAKE");
         assertNotNull(make);

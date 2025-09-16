@@ -5,16 +5,21 @@ import com.rusefi.RootHolder;
 import com.rusefi.enums.engine_type_e;
 
 import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static com.rusefi.LocalIniFileProvider.INI_FILE_FOR_SIMULATOR;
 
 public class TuneCanToolRunner extends TuneCanTool {
     static {
-        initialize(INI_FILE_FOR_SIMULATOR);
+        try {
+            initialize(INI_FILE_FOR_SIMULATOR);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    protected static void initialize(String iniFileForSimulator) {
+    protected static void initialize(String iniFileForSimulator) throws FileNotFoundException {
         ini = IniFileModelImpl.readIniFile(iniFileForSimulator);
         if (ini == null)
             throw new IllegalStateException("Not found " + iniFileForSimulator);
