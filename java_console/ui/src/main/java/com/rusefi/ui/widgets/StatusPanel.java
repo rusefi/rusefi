@@ -23,14 +23,14 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     private final JTextArea logTextArea = new JTextArea();
     private final JLabel bottomStatusLabel = new JLabel();
 
-    public StatusPanel() {
+    public StatusPanel(final int height) {
         super(new BorderLayout());
 
         logTextArea.setLineWrap(true);
         JScrollPane messagesScroll = new JScrollPane(logTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension(400, 400);
+                return new Dimension(400, height);
             }
         };
         super.add(messagesScroll, BorderLayout.CENTER);
@@ -67,8 +67,12 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         // actually get overall status message
         SwingUtilities.invokeLater(() -> {
             final String contentWithoutNullTerminators = logTextArea.getText().replace("\0", EOL);
-            Toolkit.getDefaultToolkit().getSystemClipboard()
-                .setContents(new StringSelection(contentWithoutNullTerminators), null);
+            try {
+                Toolkit.getDefaultToolkit().getSystemClipboard()
+                    .setContents(new StringSelection(contentWithoutNullTerminators), null);
+            } catch (Throwable e) {
+                log.error("getSystemClipboard error " + e, e);
+            }
         });
 
         logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");

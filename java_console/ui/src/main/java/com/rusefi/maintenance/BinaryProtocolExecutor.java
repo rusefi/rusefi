@@ -30,18 +30,17 @@ public class BinaryProtocolExecutor {
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
         final T failureResult,
-        final boolean validateConfigVersionOnConnect,
-        boolean isScanningForEcu) {
+        boolean isScanningForEcu, String msg) {
         final AtomicReference<T> executionResult = new AtomicReference<>(failureResult);
-        try (LinkManager linkManager = new LinkManager(validateConfigVersionOnConnect)
+        try (LinkManager linkManager = new LinkManager()
             .setNeedPullText(false)
             .setNeedPullLiveData(true)
         ) {
-            callbacks.logLine(String.format("Connecting to port `%s`...", port));
+            callbacks.logLine(String.format(msg + ": Connecting to port `%s`...", port));
             try {
                 if (linkManager.connect(port, isScanningForEcu).await(1, TimeUnit.MINUTES)) {
                     final CountDownLatch latch = new CountDownLatch(1);
-                    callbacks.logLine(String.format("Performing action on port %s...", port));
+                    callbacks.logLine(String.format(msg + ": Performing action on port %s...", port));
                     linkManager.execute(() -> {
                         try {
                             executionResult.set(bpAction.doWithBinaryProtocol(linkManager.getBinaryProtocol()));
@@ -71,8 +70,7 @@ public class BinaryProtocolExecutor {
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
         final T failureResult, ConnectivityContext connectivityContext,
-        final boolean validateConfigVersionOnConnect
-    ) {
+        String msg) {
         try {
             callbacks.logLine("Suspending port scanning...");
             try {
@@ -83,12 +81,13 @@ public class BinaryProtocolExecutor {
                 callbacks.logLine("Failed to suspend port scanning in a minute.");
                 return failureResult;
             }
+            log.info(msg + ": Executing " + callbacks);
             if (LinkManager.isSpecialNotSerial(port)) {
                 log.info("Special " + port);
             } else {
                 waitForPort(port);
             }
-            return execute(port, callbacks, bpAction, failureResult, validateConfigVersionOnConnect, false);
+            return execute(port, callbacks, bpAction, failureResult, false, msg);
         } finally {
             callbacks.logLine("Resuming port scanning...");
             connectivityContext.getSerialPortScanner().resume();

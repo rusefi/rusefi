@@ -15,7 +15,6 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
-import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.config.generated.Integration.CMD_BURNCONFIG;
 import static com.rusefi.config.generated.Integration.CMD_EXTERNAL_STIMULATION;
 import static org.junit.Assert.assertEquals;

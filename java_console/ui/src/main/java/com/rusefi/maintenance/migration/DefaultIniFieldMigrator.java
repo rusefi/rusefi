@@ -2,24 +2,17 @@ package com.rusefi.maintenance.migration;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
-import com.rusefi.CompatibilitySet;
-import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.UpdateOperationCallbacks;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.*;
 
 public enum DefaultIniFieldMigrator {
     INSTANCE;
     private static final Logging log = getLogging(DefaultIniFieldMigrator.class);
-
-    // ini fields to ignore on all boards
-    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of("byFirmwareVersion");
-
-    private static final Set<String> boardSpecificIniFieldsToIgnore = ConnectionAndMeta.getNonMigratableIniFields();
 
     public Optional<String> tryMigrateValue(
         final IniField prevField,
@@ -29,55 +22,53 @@ public enum DefaultIniFieldMigrator {
     ) {
         Optional<String> result = Optional.empty();
         final String prevFieldName = prevField.getName();
-        if (!INI_FIELDS_TO_IGNORE.contains(prevFieldName) && !boardSpecificIniFieldsToIgnore.contains(prevFieldName)) {
-            if (prevField instanceof ScalarIniField) {
-                if (newField instanceof ScalarIniField) {
-                    if (canScalarValueBeMigrated((ScalarIniField) prevField, (ScalarIniField) newField, callbacks)) {
-                        result = Optional.of(prevValue);
-                    }
-                } else {
-                    callbacks.logLine(String.format(
-                        "WARNING! Field `%s` cannot be migrated because it is no is no longer scalar in new .ini file",
-                        prevFieldName
-                    ));
-                }
-            } else if (prevField instanceof StringIniField) {
-                if (newField instanceof StringIniField) {
+        if (prevField instanceof ScalarIniField) {
+            if (newField instanceof ScalarIniField) {
+                if (canScalarValueBeMigrated((ScalarIniField) prevField, (ScalarIniField) newField, callbacks)) {
                     result = Optional.of(prevValue);
-                } else {
-                    callbacks.logLine(String.format(
-                        "WARNING! Field `%s` cannot be migrated because it is no longer string in new .ini file",
-                        prevFieldName
-                    ));
-                }
-            } else if (prevField instanceof EnumIniField) {
-                if (newField instanceof EnumIniField) {
-                    result = DefaultEnumIniFieldMigrator.INSTANCE.tryMigrateValue(
-                        (EnumIniField) prevField,
-                        (EnumIniField) newField,
-                        prevValue,
-                        callbacks
-                    );
-                } else {
-                    callbacks.logLine(String.format(
-                        "WARNING! `%s` cannot be migrated because it is no longer enum in new .ini file",
-                        prevFieldName
-                    ));
-                }
-            } else if (prevField instanceof ArrayIniField) {
-                if (newField instanceof ArrayIniField) {
-                    if (canArrayValueBeMigrated((ArrayIniField) prevField, (ArrayIniField) newField, callbacks)) {
-                        result = Optional.of(prevValue);
-                    }
-                } else {
-                    callbacks.logLine(String.format(
-                        "WARNING! Field `%s` cannot be migrated because it is no longer array in new .ini file",
-                        prevFieldName
-                    ));
                 }
             } else {
-                log.error(String.format("Unexpected field type: %s", prevField.getClass()));
+                callbacks.logLine(String.format(
+                    "WARNING! Field `%s` cannot be migrated because it is no is no longer scalar in new .ini file",
+                    prevFieldName
+                ));
             }
+        } else if (prevField instanceof StringIniField) {
+            if (newField instanceof StringIniField) {
+                result = Optional.of(prevValue);
+            } else {
+                callbacks.logLine(String.format(
+                    "WARNING! Field `%s` cannot be migrated because it is no longer string in new .ini file",
+                    prevFieldName
+                ));
+            }
+        } else if (prevField instanceof EnumIniField) {
+            if (newField instanceof EnumIniField) {
+                result = DefaultEnumIniFieldMigrator.INSTANCE.tryMigrateValue(
+                    (EnumIniField) prevField,
+                    (EnumIniField) newField,
+                    prevValue,
+                    callbacks
+                );
+            } else {
+                callbacks.logLine(String.format(
+                    "WARNING! `%s` cannot be migrated because it is no longer enum in new .ini file",
+                    prevFieldName
+                ));
+            }
+        } else if (prevField instanceof ArrayIniField) {
+            if (newField instanceof ArrayIniField) {
+                if (canArrayValueBeMigrated((ArrayIniField) prevField, (ArrayIniField) newField, callbacks)) {
+                    result = Optional.of(prevValue);
+                }
+            } else {
+                callbacks.logLine(String.format(
+                    "WARNING! Field `%s` cannot be migrated because it is no longer array in new .ini file",
+                    prevFieldName
+                ));
+            }
+        } else {
+            log.error(String.format("Unexpected field type: %s", prevField.getClass()));
         }
         return result;
     }
@@ -88,21 +79,21 @@ public enum DefaultIniFieldMigrator {
         final UpdateOperationCallbacks callbacks
     ) {
         boolean result = false;
-        if (!Objects.equals(prevField.getUnits(), newField.getUnits())) {
+        if (!checkIfUnitsCanBeMigrated(prevField.getUnits(), newField.getUnits())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because units are updated: `%s` -> `%s`",
                 prevField.getName(),
                 prevField,
                 newField
             ));
-        } else if (!Objects.equals(prevField.getType(), newField.getType())) {
+        } else if (!checkIfTypeCanBeMigrated(prevField.getType(), newField.getType())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because type is updated: `%s` -> `%s`",
                 prevField.getName(),
                 prevField,
                 newField
             ));
-        } else if (!Objects.equals(prevField.getDigits(), newField.getDigits())) {
+        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because digits are updated: `%s` -> `%s`",
                 prevField.getName(),
@@ -121,7 +112,7 @@ public enum DefaultIniFieldMigrator {
         final UpdateOperationCallbacks callbacks
     ) {
         boolean result = false;
-        if (!Objects.equals(prevField.getType(), newField.getType())) {
+        if (!checkIfTypeCanBeMigrated(prevField.getType(), newField.getType())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because type is updated: `%s` -> `%s`",
                 prevField.getName(),
@@ -142,7 +133,7 @@ public enum DefaultIniFieldMigrator {
                 prevField.getRows(),
                 newField.getRows()
             ));
-        } else if (!Objects.equals(prevField.getDigits(), newField.getDigits())) {
+        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because digits are updated: `%s` -> `%s`",
                 prevField.getName(),

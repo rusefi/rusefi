@@ -57,7 +57,7 @@ public class Msq {
 
     public ConfigurationImage asImage(IniFileModel instance) {
         Objects.requireNonNull(instance, "ini model");
-        ConfigurationImage ci = new ConfigurationImage(instance.getMetaInfo().getTotalSize());
+        ConfigurationImage ci = new ConfigurationImage(instance.getMetaInfo().getPageSize(0));
 
         Page page = findPage();
         if (page == null)

@@ -1,10 +1,7 @@
 package com.rusefi.config.test;
 
-import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldCommandResponse;
-import com.rusefi.config.generated.Fields;
-import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -28,28 +25,6 @@ public class FieldTest {
             assertEquals(new Integer(808), p.first);
             assertEquals(1.0, p.second);
         }
-    }
-
-    @Test
-    public void setBooleanValue() {
-        byte[] config = new byte[VariableRegistryValues.persistent_config_s_size];
-        ConfigurationImage ci = new ConfigurationImage(config);
-
-        assertFalse(Fields.ISFORCEDINDUCTION.getBooleanValue(ci));
-        assertFalse(Fields.OVERRIDETRIGGERGAPS.getBooleanValue(ci));
-        assertFalse(Fields.ENABLEFAN1WITHAC.getBooleanValue(ci));
-
-        Fields.OVERRIDETRIGGERGAPS.setValue(config, true);
-
-        assertFalse(Fields.ISFORCEDINDUCTION.getBooleanValue(ci));
-        assertTrue(Fields.OVERRIDETRIGGERGAPS.getBooleanValue(ci));
-        assertFalse(Fields.ENABLEFAN1WITHAC.getBooleanValue(ci));
-
-        Fields.OVERRIDETRIGGERGAPS.setValue(config, false);
-
-        assertFalse(Fields.ISFORCEDINDUCTION.getBooleanValue(ci));
-        assertFalse(Fields.OVERRIDETRIGGERGAPS.getBooleanValue(ci));
-        assertFalse(Fields.ENABLEFAN1WITHAC.getBooleanValue(ci));
     }
 
     @Test

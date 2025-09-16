@@ -3,9 +3,9 @@ package com.rusefi.maintenance.migration;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.io.UpdateOperationCallbacks;
 
-import java.util.Objects;
 import java.util.Optional;
 
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfTypeCanBeMigrated;
 import static javax.management.ObjectName.quote;
 
 public enum DefaultEnumIniFieldMigrator {
@@ -18,7 +18,7 @@ public enum DefaultEnumIniFieldMigrator {
         final UpdateOperationCallbacks callbacks
     ) {
         Optional<String> result = Optional.empty();
-        if (!Objects.equals(prevField.getType(), newField.getType())) {
+        if (!checkIfTypeCanBeMigrated(prevField.getType(), newField.getType())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because type is updated: `%s` -> `%s`",
                 prevField.getName(),

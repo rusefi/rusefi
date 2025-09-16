@@ -16,6 +16,7 @@ import com.rusefi.proxy.client.LocalApplicationProxyContext;
 import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -102,6 +103,10 @@ public class FullServerTest {
                     return serverPortForControllers;
                 }
 
+                @Override
+                public void onConnectorSoftwareUpdateToLatestRequest() {
+                    softwareUpdateRequest.countDown();
+                }
             };
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network

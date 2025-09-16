@@ -6,6 +6,7 @@ import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.util.SwingUtilities2;
 import com.rusefi.waves.EngineReport;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,9 +30,13 @@ public class TriggerImage {
 
     private static final int WHEEL_BORDER = 20;
     private static final int WHEEL_DIAMETER = 500;
-    private static final int SMALL_DIAMETER = 420;
+    private static final int SMALL_DIAMETER = WHEEL_DIAMETER - 80;
     private static final int _180 = 180;
     public static final int MIN_TIME = 720;
+    private static final int FRAME_WIDTH = 900;
+    private static final int FRAME_HEIGHT = 700;
+    private static final int PANEL_HEIGHT = 480;
+    private static final boolean DEBUG = false;
 
     /**
      * number of extra frames
@@ -100,6 +105,16 @@ public class TriggerImage {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
+        SwingUtilities2.invokeAndWait(() -> {
+            try {
+                runAwt(args);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private static void runAwt(String[] args) throws InterruptedException, InvocationTargetException {
         final String workingFolder;
         if (args.length < 1) {
             workingFolder = TriggerWheelInfo.DEFAULT_WORK_FOLDER;
@@ -119,23 +134,31 @@ public class TriggerImage {
         final TriggerPanel triggerPanel = new TriggerPanel() {
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension((1 + EXTRA_COUNT) * WIDTH, 480);
+                return new Dimension((1 + EXTRA_COUNT) * WIDTH, PANEL_HEIGHT);
             }
         };
+        if (DEBUG) {
+            triggerPanel.setBackground(Color.pink);
+            triggerPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+        }
 
         JPanel topPanel = new JPanel(new FlowLayout());
+        if (DEBUG)
+            topPanel.setBorder(BorderFactory.createLineBorder(Color.orange));
 
-        SwingUtilities.invokeAndWait(() -> {
+        SwingUtilities2.invokeAndWait(() -> {
             content.add(topPanel, BorderLayout.NORTH);
             content.add(triggerPanel, BorderLayout.CENTER);
 
             f.showFrame(content);
-            f.getFrame().setSize(900, 700);
+            if (DEBUG)
+                f.getFrame().setBackground(Color.cyan);
+            f.getFrame().setSize(FRAME_WIDTH, FRAME_HEIGHT);
 
             AutoupdateUtil.trueLayoutAndRepaint(content);
         });
 
-        SwingUtilities.invokeAndWait(() -> {
+        SwingUtilities2.invokeAndWait(() -> {
             TriggerWheelInfo.readWheels(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
         });
         Thread.sleep(1000L * sleepAtEnd);
@@ -149,7 +172,10 @@ public class TriggerImage {
         topPanel.removeAll();
 
         JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true,
-                triggerWheelInfo);
+            triggerWheelInfo);
+        if (DEBUG) {
+            firstWheelControl.setBorder(BorderFactory.createLineBorder(Color.green));
+        }
 
         topPanel.add(firstWheelControl);
         topPanel.add(LogoHelper.createLogoLabel());
@@ -158,7 +184,7 @@ public class TriggerImage {
 
         if (!waves.get(1).list.isEmpty()) {
             JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals(), false,
-                    triggerWheelInfo);
+                triggerWheelInfo);
             topPanel.add(secondWheelControl);
         }
 
@@ -229,8 +255,8 @@ public class TriggerImage {
                     g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
                     // draw TDC mark and text on the round wheel
                     g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
-                            2 * tdcMarkRadius,
-                            2 * tdcMarkRadius);
+                        2 * tdcMarkRadius,
+                        2 * tdcMarkRadius);
 
                     g.drawString("TDC", middle + smallX + tdcMarkRadius * 2, middle + smallY);
                 }
@@ -301,7 +327,7 @@ public class TriggerImage {
         for (int i = 1; i <= 2 + EXTRA_COUNT; i++) {
             for (TriggerSignal s : signals)
                 toShow.add(new TriggerSignal(s.getWaveIndex(), s.getState(), s.getAngle() + i * 720,
-                        s.getGap()));
+                    s.getGap()));
         }
 
         List<WaveState> waves = new ArrayList<>();

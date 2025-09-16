@@ -6,42 +6,31 @@ import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class SingleAsyncJobExecutor {
     private final UpdateOperationCallbacks updateOperationCallbacks;
 
-    // Temporary feature flag for testing #7199
-    // TODO: get rid of this feature flag after #7199 is completed
-    private final boolean doNotUseStatusWindow;
-
-    private final Runnable onJobInProgressFinished;
+    private final java.util.List<Runnable> onJobInProgressFinished = new ArrayList<>();
 
     private volatile Optional<AsyncJob> jobInProgress = Optional.empty();
 
     SingleAsyncJobExecutor(
-        final UpdateOperationCallbacks updateOperationCallbacks,
-        final boolean doNotUseStatusWindow,
-        final Runnable onJobInProgressFinished
+        final UpdateOperationCallbacks updateOperationCallbacks
     ) {
         this.updateOperationCallbacks = updateOperationCallbacks;
-        this.doNotUseStatusWindow = doNotUseStatusWindow;
-        this.onJobInProgressFinished = onJobInProgressFinished;
     }
 
-    void startJob(final AsyncJob job, final Component parent) {
+    public void addOnJobInProgressFinishedListener(Runnable listener) {
+        onJobInProgressFinished.add(listener);
+    }
+
+    public void startJob(final AsyncJob job, final Component parent) {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
             updateOperationCallbacks.clear();
-            if (doNotUseStatusWindow) {
-                AsyncJobExecutor.INSTANCE.executeJob(job, updateOperationCallbacks, this::handleJobInProgressFinished);
-            } else {
-                AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
-                    job,
-                    updateOperationCallbacks,
-                    this::handleJobInProgressFinished
-                );
-            }
+            AsyncJobExecutor.INSTANCE.executeJob(job, updateOperationCallbacks, this::handleJobInProgressFinished);
         } else {
             JOptionPane.showMessageDialog(
                 parent,
@@ -70,6 +59,7 @@ public class SingleAsyncJobExecutor {
 
     private void handleJobInProgressFinished() {
         resetJobInProgress();
-        onJobInProgressFinished.run();
+        for (Runnable listener : onJobInProgressFinished)
+            listener.run();
     }
 }

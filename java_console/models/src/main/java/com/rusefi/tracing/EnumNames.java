@@ -1,5 +1,5 @@
 package com.rusefi.tracing;
-// generated Thu Feb 15 09:45:57 EST 2024 by class com.rusefi.PerfTraceEnumGenerator
+// Wed Apr 23 04:25:14 UTC 2025 was generated automatically by rusEFI tool class com.rusefi.PerfTraceEnumGenerator
 public class EnumNames {
 	public static final String[] TypeNames = {
 	"INVALID",
@@ -16,7 +16,6 @@ public class EnumNames {
 	"SingleTimerExecutorDoExecute",
 	"SingleTimerExecutorScheduleTimerCallback",
 	"PeriodicControllerPeriodicTask",
-	"PeriodicTimerControllerPeriodicTask",
 	"AdcCallbackFast",
 	"AdcProcessSlow",
 	"AdcConversionSlow",
@@ -33,7 +32,7 @@ public class EnumNames {
 	"GetSpeedDensityFuel",
 	"WallFuelAdjust",
 	"MapAveragingTriggerCallback",
-	"Unused1",
+	"MainLoop",
 	"SingleTimerExecutorScheduleByTimestamp",
 	"GetTimeNowUs",
 	"EventQueueExecuteCallback",
@@ -51,11 +50,27 @@ public class EnumNames {
 	"GlobalLock",
 	"GlobalUnlock",
 	"SoftwareKnockProcess",
+	"KnockAnalyzer",
 	"LogTriggerTooth",
 	"LuaTickFunction",
 	"LuaOneCanRxFunction",
 	"LuaAllCanRxFunction",
 	"LuaOneCanRxCallback",
 	"LuaOneCanTxFunction",
+	"CanThreadTx",
+	"CanThreadRx",
+	"CanDriverTx",
+	"Temporary5",
+	"Temporary6",
+	"Temporary7",
+	"Temporary8",
+	"Temporary9",
+	"Temporary10",
+	"Temporary11",
+	"Temporary12",
+	"Temporary13",
+	"Temporary14",
+	"Temporary15",
+	"Temporary16",
 	};
 }

@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
 import com.devexperts.util.TimeUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import org.jetbrains.annotations.NotNull;
@@ -8,10 +9,14 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * @see SimulatorExecHelper
  */
 public class ExecHelper {
+    private static final Logging log = getLogging(ExecHelper.class);
+
     private static boolean isRunning(Process p) {
         try {
             p.exitValue();
@@ -63,7 +68,7 @@ public class ExecHelper {
     @NotNull
     public static String executeCommand(String workingDirPath, String command, String binaryRelativeName, UpdateOperationCallbacks callbacks, StringBuffer output) throws FileNotFoundException {
         StringBuffer error = new StringBuffer();
-        String binaryFullName = workingDirPath + File.separator + binaryRelativeName;
+        String binaryFullName = getBinaryFullFileName(workingDirPath, binaryRelativeName);
         if (!new File(binaryFullName).exists()) {
             callbacks.logLine(binaryFullName + " not found :(");
             throw new FileNotFoundException(binaryFullName);
@@ -79,6 +84,10 @@ public class ExecHelper {
         }
     }
 
+    private static @NotNull String getBinaryFullFileName(String workingDirPath, String binaryRelativeName) {
+        return workingDirPath + File.separator + binaryRelativeName;
+    }
+
     @NotNull
     public static String executeCommand(String command, UpdateOperationCallbacks callbacks, StringBuffer output, StringBuffer error, File workingDir) throws ErrorExecutingCommand {
         callbacks.logLine("Executing command=" + command);
@@ -88,6 +97,7 @@ public class ExecHelper {
             startStreamThread(p, p.getErrorStream(), error, callbacks);
             p.waitFor(3, TimeUnit.MINUTES);
         } catch (IOException e) {
+            log.info("executeCommand " + e);
             throw new ErrorExecutingCommand(e);
         } catch (InterruptedException e) {
             callbacks.logLine("WaitError: " + e);

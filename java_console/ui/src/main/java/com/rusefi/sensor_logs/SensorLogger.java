@@ -15,22 +15,21 @@ import java.util.List;
  */
 public class SensorLogger {
     protected static Sensor[] SENSORS = {Sensor.RPMValue,
-            Sensor.TIME_SECONDS,
-            Sensor.INT_TEMP,
+            Sensor.SECONDS,
+            Sensor.INTERNALMCUTEMPERATURE,
 
 //            Sensor.engineMode,
-            Sensor.CLT,
-            Sensor.TPS,
+            Sensor.COOLANT,
+            Sensor.TPSVALUE,
             Sensor.VBATT,
-            Sensor.IAT,
-            Sensor.MAF,
-            Sensor.MAP,
-            Sensor.instantMAP,
-            Sensor.Lambda1,
+            Sensor.INTAKE,
+            Sensor.MAFMEASURED,
+            Sensor.MAPVALUE,
+            Sensor.INSTANTMAPVALUE,
+            Sensor.LAMBDAVALUE,
 
-            Sensor.PPS,
-            Sensor.ETB_CONTROL_QUALITY,
-//            Sensor.etb1DutyCycle,
+            Sensor.THROTTLEPEDALPOSITION,
+              Sensor.etb1DutyCycle,
 //
 //            Sensor.idlePosition,
 
@@ -65,10 +64,10 @@ public class SensorLogger {
             Sensor.vvtPositionB2I,
             Sensor.vvtPositionB2E,
 
-            Sensor.vvtTargetB1I,
-            Sensor.vvtTargetB1E,
-            Sensor.vvtTargetB2I,
-            Sensor.vvtTargetB2E,
+            Sensor.VVTTARGETS1,
+            Sensor.VVTTARGETS2,
+            Sensor.VVTTARGETS3,
+            Sensor.VVTTARGETS4,
 
 //            Sensor.vehicleSpeedKph,
 //            Sensor.speedToRpmRatio,
@@ -94,12 +93,12 @@ public class SensorLogger {
             Sensor.debugIntField5,
 
 //            Sensor.knockLevel,
-            Sensor.wastegatePosition,
-            Sensor.idlePositionSensor,
+            Sensor.WASTEGATEPOSITIONSENSOR,
+            Sensor.IDLEPOSITIONSENSOR,
 //            Sensor.airFuelRatio,
 //            Sensor.airFuelRatio2,
-            Sensor.lowFuelPressure,
-            Sensor.highFuelPressure,
+            Sensor.RAWLOWFUELPRESSURE,
+            Sensor.HIGHFUELPRESSURE,
 
             Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,
@@ -121,7 +120,7 @@ public class SensorLogger {
             return;
         }
         isInitialized = true;
-        SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS,
+        SensorCentral.getInstance().addListener(Sensor.SECONDS,
             value -> {
                 if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
                     return;

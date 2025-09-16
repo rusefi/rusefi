@@ -35,12 +35,12 @@ public class DetachedSensor {
     private static final String WIDTH = "width";
 
     private static final Collection<Sensor> MOCKABLE = Arrays.asList(
-            Sensor.CLT,
-            Sensor.Lambda1,
-            Sensor.IAT,
-            Sensor.MAF,
-            Sensor.MAP,
-            Sensor.TPS);
+            Sensor.COOLANT,
+            Sensor.LAMBDAVALUE,
+            Sensor.INTAKE,
+            Sensor.MAFMEASURED,
+            Sensor.MAPVALUE,
+            Sensor.TPSVALUE);
 
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
     public static final String XPOS = "xpos";

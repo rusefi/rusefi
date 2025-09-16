@@ -18,14 +18,14 @@ import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.ui.StatusConsumer;
-import org.apache.http.Consts;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
+
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
+import java.nio.charset.StandardCharsets;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.BINARY_IO_TIMEOUT;
@@ -58,18 +59,20 @@ public class LocalApplicationProxy implements Closeable {
         this.authenticatorToProxyStream = authenticatorToProxyStream;
     }
 
-    public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
+    public static CloseableHttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
         HttpPost httpPost = new HttpPost(ProxyClient.getHttpAddress(httpPort) + ProxyClient.UPDATE_CONNECTOR_SOFTWARE);
 
-        List<NameValuePair> form = new ArrayList<>();
+        List<BasicNameValuePair> form = new ArrayList<>();
         form.add(new BasicNameValuePair(ProxyClient.JSON, applicationRequest.toJson()));
         form.add(new BasicNameValuePair(ProxyClient.UPDATE_TYPE, type.name()));
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, Consts.UTF_8);
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, StandardCharsets.UTF_8);
 
         httpPost.setEntity(entity);
 
-        HttpClient httpclient = new DefaultHttpClient();
-        return httpclient.execute(httpPost);
+        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
+        CloseableHttpResponse response = httpclient.execute(httpPost);
+        httpclient.close();
+        return response;
     }
 
     public ApplicationRequest getApplicationRequest() {
@@ -83,6 +86,7 @@ public class LocalApplicationProxy implements Closeable {
      * @param disconnectListener
      * @param connectionListener
      */
+/*
     public static ServerSocketReference startAndRun(LocalApplicationProxyContext context, ApplicationRequest applicationRequest, int jsonHttpPort, TcpIoStream.DisconnectListener disconnectListener, ConnectionListener connectionListener) throws IOException {
         String version = context.executeGet(ProxyClient.getHttpAddress(jsonHttpPort) + ProxyClient.VERSION_PATH);
         log.info("Server says version=" + version);
@@ -93,6 +97,7 @@ public class LocalApplicationProxy implements Closeable {
             /**
              * let's give wrapper script a chance to update us
              */
+/*
             throw new IncompatibleBackendException(message);
         }
 
@@ -105,6 +110,7 @@ public class LocalApplicationProxy implements Closeable {
         /**
          * We need to entertain proxy server and remote controller while user has already connected to proxy but has not yet started TunerStudio
          */
+/*
         THREAD_FACTORY.newThread(() -> {
             try {
                 while (true) {
@@ -138,7 +144,7 @@ public class LocalApplicationProxy implements Closeable {
         connectionListener.onConnected(localApplicationProxy, authenticatorToProxyStream);
         return serverHolder;
     }
-
+*/
     private static boolean isTimeForApplicationToConnect(long start, int idle) {
         return System.currentTimeMillis() - start > idle;
     }

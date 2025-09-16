@@ -11,7 +11,7 @@ import com.rusefi.ui.basic.InstanceNameEditor;
 import java.io.File;
 import java.util.Optional;
 
-import static com.rusefi.maintenance.CalibrationsHelper.readAndBackupCurrentCalibrations;
+import static com.rusefi.maintenance.CalibrationsHelper.readAndBackupCurrentCalibrationsWithSuspendedPortScanner;
 
 public enum TuneUploader {
     INSTANCE;
@@ -35,8 +35,8 @@ public enum TuneUploader {
             return false;
         }
 
-        final Optional<CalibrationsInfo> calibrationsToUpload = readAndBackupCurrentCalibrations(
-            ecuPort,
+        final Optional<CalibrationsInfo> calibrationsToUpload = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+            ecuPort.port,
             callbacks,
             CALIBRATIONS_TO_UPLOAD_FILE_NAME, connectivityContext
         );

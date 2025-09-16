@@ -44,7 +44,7 @@ public class TuneUploder {
         IniFileMetaInfo meta = MetaDataCache.getModel(configurationName);
         if (meta == null)
             return null;
-        Msq msq = Msq.create(meta.getTotalSize(), meta.getSignature());
+        Msq msq = Msq.create(meta.getPageSize(0), meta.getSignature());
         ControllerParameterServer controllerParameterServer = controllerAccess.getControllerParameterServer();
         Objects.requireNonNull(controllerParameterServer, "controllerParameterServer");
 

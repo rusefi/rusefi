@@ -1,7 +1,7 @@
 package com.rusefi.binaryprotocol;
 
 import com.opensr5.ConfigurationImage;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import org.jetbrains.annotations.Nullable;
 
 public class BinaryProtocolState {
@@ -9,7 +9,7 @@ public class BinaryProtocolState {
     private ConfigurationImage configurationImage;
     /**
      * Snapshot of current gauges status
-     * @see Fields#TS_OUTPUT_COMMAND
+     * @see Integration#TS_OUTPUT_COMMAND
      */
     private byte[] currentOutputs;
 

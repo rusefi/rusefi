@@ -209,7 +209,6 @@ public class LiveDataProcessor {
                 state.addCHeaderDestination(outFolder + File.separator + name + "_generated.h");
 
                 sdCardFieldsConsumer.structureStartingTsPosition = outputsSections.getBaseOffset();
-                state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, outputsSections.getBaseOffset(), fileFactory));
 
                 if (constexpr != null) {
                     sdCardFieldsConsumer.expressions = constexpr;
@@ -255,6 +254,8 @@ public class LiveDataProcessor {
             }
         };
 
+        StringBuilder additionalHeadersStr = new StringBuilder();
+
         for (LinkedHashMap<?, ?> entry : liveDocs) {
             String name = (String) entry.get("name");
             String java = (String) entry.get("java");
@@ -271,6 +272,21 @@ public class LiveDataProcessor {
             isPtr = isPtr != null && isPtr;
 
             Object outputNames = entry.get("output_name");
+            Object additionalHeaders = entry.get("additional_headers");
+
+            if (additionalHeaders != null) {
+                String[] additionalHeadersArr = getStrings(additionalHeaders);
+
+                for (String s : additionalHeadersArr) {
+                    if (conditional != null) {
+                        additionalHeadersStr.append("#if ").append(conditional).append("\n");
+                    }
+                    additionalHeadersStr.append("#include <").append(s).append(">\n");
+                    if (conditional != null) {
+                        additionalHeadersStr.append("#endif\n");
+                    }
+                }
+            }
 
             String[] outputNamesArr = getStrings(outputNames);
             String[] constexpr = constexprValue == null ? null : getStrings(constexprValue);
@@ -317,8 +333,12 @@ public class LiveDataProcessor {
         }
         enumContent.append("} live_data_e;\n");
 
+        if (additionalHeadersStr.length() > 0) {
+            outputValueConsumer.additionalHeaders = additionalHeadersStr.toString();
+        }
+
         LazyFile lazyFile = fileFactory.create(destinationFolder + SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME);
-        SdCardFieldsContent.wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
+        SdCardFieldsContent.wrapContent(lazyFile, sdCardFieldsConsumer.getBody(), additionalHeadersStr.toString());
         lazyFile.close();
 
         dataLogConsumer.endFile();

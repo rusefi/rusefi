@@ -47,8 +47,8 @@ public class TuneReadWriteTest {
 
         String copyMethodBody = TS2C.getCopyMethodBody(tableReference, model, tableName);
         assertEquals("\tcopyArray(config->veLoadBins, hardCodedveRpmBins);\n" +
-            "\tcopyArray(config->veRpmBins, hardCodedveLoadBins);\n" +
-            "\tcopyTable(config->veTable, hardCodedveTable);\n", copyMethodBody);
+                "\tcopyArray(config->veRpmBins, hardCodedveLoadBins);\n" +
+                "\tcopyTable(config->veTable, hardCodedveTable);\n", copyMethodBody);
     }
 
     @Test

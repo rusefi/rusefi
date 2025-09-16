@@ -60,15 +60,7 @@ public class LinkManager implements Closeable {
     public final MessagesListener messageListener = (source, message) -> log.info(source + ": " + message);
     private boolean isDisconnectedByUser;
 
-    private final boolean validateConfigVersionOnConnect;
-
     public LinkManager() {
-        this(true);
-    }
-
-    public LinkManager(final boolean validateConfigVersionInConnect) {
-        this.validateConfigVersionOnConnect = validateConfigVersionInConnect;
-
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
             @Override
             public void beforeLine(String fullLine) {

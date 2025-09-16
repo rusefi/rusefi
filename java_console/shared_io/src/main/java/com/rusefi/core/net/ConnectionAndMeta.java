@@ -13,32 +13,20 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.devexperts.logging.Logging;
-
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
     public static final String DEFAULT_WHITE_LABEL = "rusefi";
     public static final String AUTOUPDATE = "/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
-    private volatile static Properties properties; // sad: we do not completely understand #6777 but caching should not hurt
     public static final int CENTUM = 100;
-    public static final String IO_PROPERTIES = "/shared_io.properties";
     private final String zipFileName;
     private HttpsURLConnection httpConnection;
     private long completeFileSize;
     private long lastModified;
 
-    private static final Logging log = Logging.getLogging(ConnectionAndMeta.class);
-
     public ConnectionAndMeta(String zipFileName) {
         this.zipFileName = zipFileName;
-    }
-
-    public static String getBaseUrl() {
-        String result = getProperties().getProperty("auto_update_root_url");
-        System.out.println(ConnectionAndMeta.class + ": got [" + result + "]");
-        return result;
     }
 
     public static String getWhiteLabel(Properties properties) {
@@ -63,11 +51,6 @@ public class ConnectionAndMeta {
         return signatureWhiteLabel;
     }
 
-    // TS multiplier is technically different from autoscale, open question when we shall allow multiplier without autoscale
-    public static boolean flexibleAutoscale() {
-        return getBoolean("flexible_autoscale");
-    }
-
     public static boolean showUpdateCalibrations() {
         return getBoolean("show_update_calibrations");
     }
@@ -77,31 +60,15 @@ public class ConnectionAndMeta {
     }
 
     public static boolean getBoolean(String propertyName, Properties properties) {
-        String flag = properties.getProperty(propertyName);
-        return Boolean.TRUE.toString().equalsIgnoreCase(flag);
+        return PropertiesHolder.INSTANCE.getBoolean(propertyName, properties);
     }
 
     public synchronized static Properties getProperties() throws RuntimeException {
-        if (properties == null) {
-            properties = getPropertiesForReal();
-        }
-        return properties;
-    }
-
-    private static Properties getPropertiesForReal() throws RuntimeException {
-        Properties props = new Properties();
-        try {
-            InputStream stream = ConnectionAndMeta.class.getResourceAsStream(IO_PROPERTIES);
-            Objects.requireNonNull(stream, "Error reading " + IO_PROPERTIES);
-            props.load(stream);
-            return props;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return PropertiesHolder.INSTANCE.getProperties();
     }
 
     public static String getDefaultAutoUpdateUrl() {
-        return getBaseUrl() + AUTOUPDATE;
+        return PropertiesHolder.INSTANCE.getBaseUrl() + AUTOUPDATE;
     }
 
     public static void downloadFile(String localTargetFileName, ConnectionAndMeta connectionAndMeta, DownloadProgressListener listener) throws IOException {
@@ -149,11 +116,7 @@ public class ConnectionAndMeta {
     }
 
     public static boolean startConsoleInAutoupdateProcess() {
-        return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(
-            getProperties(),
-            "start_console_in_autoupdate_process",
-            "false"
-        ));
+        return false;
     }
 
     public static Set<String> getNonMigratableIniFields() {
@@ -177,14 +140,7 @@ public class ConnectionAndMeta {
     }
 
     public ConnectionAndMeta invoke(String baseUrl) throws IOException {
-        // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
-        SSLContext ctx = null;
-        try {
-            ctx = SSLContext.getInstance("TLS");
-            ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new IOException("TLS exception", e);
-        }
+        SSLContext ctx = acceptAnyCertificate();
 
         URL url = new URL(baseUrl + zipFileName);
         System.out.println("Connecting to " + url);
@@ -193,6 +149,18 @@ public class ConnectionAndMeta {
         completeFileSize = httpConnection.getContentLength();
         lastModified = httpConnection.getLastModified();
         return this;
+    }
+
+    private static @NotNull SSLContext acceptAnyCertificate() throws IOException {
+        // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
+        SSLContext ctx;
+        try {
+            ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new IOException("TLS exception", e);
+        }
+        return ctx;
     }
 
     public interface DownloadProgressListener {

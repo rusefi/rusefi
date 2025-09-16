@@ -3,21 +3,30 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
+import com.rusefi.CompatibilitySet;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.migration.DefaultIniFieldMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.maintenance.migration.TuneMigrator;
-import com.rusefi.output.ConfigStructure;
+import com.rusefi.output.UnusedPrefix;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
 
 public enum DefaultTuneMigrator implements TuneMigrator {
     INSTANCE;
 
     private static final Logging log = getLogging(DefaultTuneMigrator.class);
+
+    // ini fields to ignore on all boards
+    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of("byFirmwareVersion");
+
+    private static final Set<String> boardSpecificIniFieldsToIgnore = ConnectionAndMeta.getNonMigratableIniFields();
+
 
     @Override
     public void migrateTune(final TuneMigrationContext context) {
@@ -30,7 +39,9 @@ public enum DefaultTuneMigrator implements TuneMigrator {
         final Map<String, IniField> newIniFields = newIni.getAllIniFields();
         for (final Map.Entry<String, IniField> prevFieldEntry: prevIniFields.entrySet()) {
             final String prevFieldName = prevFieldEntry.getKey();
-            if (!isUnusedField(prevFieldName)) {
+            if (!INI_FIELDS_TO_IGNORE.contains(prevFieldName) && !boardSpecificIniFieldsToIgnore.contains(prevFieldName)
+                && !context.isAdditionalIniFieldToIgnore(prevFieldName) && !isUnusedField(prevFieldName)
+            ) {
                 // We do not want to migrate already migrated ini-fields:
                 if (!context.isFieldAlreadyMigrated(prevFieldName) && !context.getMigratedConstants().containsKey(
                     prevFieldEntry
@@ -57,7 +68,7 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                                             prevValue.getName(),
                                             newValue.getName()
                                         ));
-                                    } else if (!Objects.equals(prevValue.getUnits(), newValue.getUnits())) {
+                                    } else if (!checkIfUnitsCanBeMigrated(prevValue.getUnits(), newValue.getUnits())) {
                                         callbacks.logLine(String.format(
                                             "WARNING! Field `%s` cannot be updated because its units are updated: `%s` -> `%s`",
                                             prevFieldName,
@@ -135,6 +146,6 @@ public enum DefaultTuneMigrator implements TuneMigrator {
     }
 
     private static boolean isUnusedField(final String fieldName) {
-        return fieldName.startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX);
+        return fieldName.startsWith(UnusedPrefix.UNUSED_ANYTHING_PREFIX);
     }
 }

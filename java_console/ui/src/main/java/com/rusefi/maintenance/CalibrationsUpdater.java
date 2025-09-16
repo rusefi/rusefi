@@ -15,7 +15,7 @@ public enum CalibrationsUpdater {
         final Runnable onJobFinished, ConnectivityContext connectivityContext
     ) {
         JobHelper.doJob(() -> {
-            if (updateCalibrations(port, calibrationsImage, callbacks, connectivityContext, true)) {
+            if (updateCalibrations(port, calibrationsImage, callbacks, connectivityContext)) {
                 callbacks.done();
             } else {
                 callbacks.error();
@@ -26,8 +26,7 @@ public enum CalibrationsUpdater {
     public synchronized boolean updateCalibrations(
         final String port,
         final ConfigurationImage calibrationsImage,
-        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext,
-        final boolean validateConfigVersionOnConnect
+        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         boolean result = false;
         if (calibrationsImage != null) {
@@ -40,8 +39,7 @@ public enum CalibrationsUpdater {
             result = BinaryProtocolExecutor.executeWithSuspendedPortScanner(port, callbacks, binaryProtocol -> {
                 binaryProtocol.uploadChanges(calibrationsImage);
                 return true;
-            }, false, connectivityContext,
-                validateConfigVersionOnConnect);
+            }, false, connectivityContext, "uploadChanges");
             if (result) {
                 callbacks.logLine(String.format(
                     "Configuration image (%d bytes) has been uploaded to port %s",

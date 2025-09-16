@@ -3,6 +3,8 @@ package com.rusefi;
 import com.rusefi.tracing.Entry;
 import com.rusefi.tracing.EnumNames;
 import com.rusefi.tracing.JsonOutput;
+import com.rusefi.util.LazyFile;
+import com.rusefi.util.LazyFileImpl;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -40,10 +42,10 @@ public class PerfTraceEnumGenerator {
     }
 
     private static void writeClass(String outputFileName, List<String> enumNames) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
+        LazyFile writer = LazyFileImpl.REAL.create(outputFileName);
 
         writer.write("package com.rusefi.tracing;\n");
-        writer.write("// generated " + new Date() + " by " + PerfTraceEnumGenerator.class + "\n");
+        writer.write("// " + new Date() + " " + LazyFile.LAZY_FILE_TAG + PerfTraceEnumGenerator.class + "\n");
         writer.write("public class EnumNames {\n");
         writer.write("\t" +
             "public static final String" +

@@ -18,11 +18,6 @@ public enum StateDictionary {
 
     StateDictionary() {
         StateDictionaryFactory.initialize(this);
-        if (map.size() != live_data_e.values().length) {
-            Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
-            missing.removeAll(map.keySet());
-            throw new IllegalStateException("Some live_data_e does not have values: " + missing);
-        }
     }
 
     static int getSize(Field[] values) {
@@ -39,8 +34,8 @@ public enum StateDictionary {
         return result;
     }
 
-    public void register(live_data_e ldsIndex, Field[] values, String fileName) {
-        map.put(ldsIndex, values);
+    public void register(live_data_e ldsIndex, String fileName) {
+        //map.put(ldsIndex, values);
         fileNames.put(ldsIndex, fileName);
     }
 

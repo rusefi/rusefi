@@ -1,6 +1,5 @@
 package com.rusefi.waves.test;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.waves.EngineChart;
 import com.rusefi.waves.EngineReport;
 import com.rusefi.waves.RevolutionLog;

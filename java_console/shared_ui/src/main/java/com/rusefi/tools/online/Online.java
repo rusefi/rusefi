@@ -4,15 +4,19 @@ import com.devexperts.logging.Logging;
 import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.concurrent.BasicFuture;
-import org.apache.http.concurrent.FutureCallback;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
+
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.entity.mime.FileBody;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+
+import org.apache.hc.core5.concurrent.BasicFuture;
+import org.apache.hc.core5.concurrent.FutureCallback;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.ContentType;
+
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,32 +26,34 @@ import javax.swing.*;
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class Online {
     private final static Logging log = Logging.getLogging(Online.class);
 
-    public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + "output.msq";
+    public static final String outputXmlFileName = FileUtil.RUSEFI_SETTINGS_FOLDER + "output.msq";
     private static final String url = "https://rusefi.com/online/upload.php";
 
     /**
      * blocking call for http file upload
      */
     public static UploadResult upload(File fileName, String authTokenValue) {
-        HttpClient httpclient = new DefaultHttpClient();
+    	CloseableHttpClient httpclient = HttpClients.custom().build();
         HttpPost httpPost = new HttpPost(url);
 
         String responseString;
         try {
             FileBody uploadFilePart = new FileBody(fileName);
-            MultipartEntity reqEntity = new MultipartEntity();
-            reqEntity.addPart("upload-file", uploadFilePart);
-            reqEntity.addPart("rusefi_token", new StringBody(authTokenValue));
+            HttpEntity reqEntity = MultipartEntityBuilder.create()
+                .addPart("upload-file", uploadFilePart)
+                .addTextBody("rusefi_token", authTokenValue, ContentType.TEXT_PLAIN.withCharset(StandardCharsets.UTF_8))
+                .build();
 
             httpPost.setEntity(reqEntity);
 
-            HttpResponse response = httpclient.execute(httpPost);
+            CloseableHttpResponse response = httpclient.execute(httpPost);
             log.debug("response=" + response);
-            log.debug("code " + response.getStatusLine().getStatusCode());
+            log.debug("code " + response.getCode());
             responseString = HttpUtil.getResponse(response);
 
         } catch (IOException e) {

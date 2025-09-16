@@ -27,6 +27,7 @@ public class BackendTestHelper {
         assertLatch(applicationServerCreated);
     }
 
+    /*
     public static void runControllerConnectorBlocking(Backend backend, int serverPortForControllers) throws InterruptedException {
         CountDownLatch controllerServerCreated = new CountDownLatch(1);
         try {
@@ -36,7 +37,7 @@ public class BackendTestHelper {
         }
         assertLatch(controllerServerCreated);
     }
-
+*/
     @NotNull
     public static UserDetailsResolver createTestUserResolver() {
         return authToken -> new UserDetails(authToken.substring(0, 5), authToken.charAt(6));

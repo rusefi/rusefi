@@ -14,7 +14,7 @@ import javax.swing.*;
  */
 public class StatusWindow {
     // todo: extract driver from console bundle? find a separate driver bundle?
-    StatusPanel content = new StatusPanel();
+    StatusPanel content = new StatusPanel(400);
 
     public static UpdateOperationCallbacks createAndShowFrame(final String frameTitle) {
         final StatusWindow statusWindow = new StatusWindow();

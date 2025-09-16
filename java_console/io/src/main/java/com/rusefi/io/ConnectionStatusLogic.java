@@ -31,7 +31,7 @@ public class ConnectionStatusLogic {
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
     private ConnectionStatusLogic() {
-        SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, value -> markConnected());
+        SensorCentral.getInstance().addListener(Sensor.SECONDS, value -> markConnected());
 
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override

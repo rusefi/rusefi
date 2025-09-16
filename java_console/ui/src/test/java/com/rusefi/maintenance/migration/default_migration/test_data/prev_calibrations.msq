@@ -88,7 +88,7 @@
         <constant name="useCicPidForIdle">"false"</constant>
         <constant name="useTLE8888_cranking_hack">"true"</constant>
         <constant name="kickStartCranking">"false"</constant>
-        <constant name="useSeparateIdleTablesForCrankingTaper">"false"</constant>
+        <constant name="useSeparateIdleTablesForCrankingTaper">"disabled"</constant>
         <constant name="launchControlEnabled">"false"</constant>
         <constant name="doNotFilterTriggerEdgeNoise">"with filter"</constant>
         <constant name="antiLagEnabled">"false"</constant>
@@ -204,7 +204,7 @@
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.852941</constant>
         <constant digits="0" name="fanOnTemperature" units="deg C">92.0</constant>
-        <constant digits="0" name="fanOffTemperature" units="deg C">88.0</constant>
+        <constant digits="0" name="fanOffTemperature" units="deg C">98.0</constant>
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
@@ -336,7 +336,7 @@
         <constant name="is_enabled_spi_1">"true"</constant>
         <constant name="is_enabled_spi_2">"false"</constant>
         <constant name="is_enabled_spi_3">"false"</constant>
-        <constant name="isSdCardEnabled">"true"</constant>
+        <constant name="isSdCardEnabled">"enabled"</constant>
         <constant name="rusefiVerbose29b">"11 bit"</constant>
         <constant name="rethrowHardFault">"false"</constant>
         <constant name="isHip9011Enabled">"false"</constant>
@@ -352,9 +352,9 @@
         <constant name="etb2configured">"false"</constant>
         <constant name="measureMapOnlyInOneCylinder">"false"</constant>
         <constant name="stepperForceParkingEveryRestart">"true"</constant>
-        <constant name="isFasterEngineSpinUpEnabled">"true"</constant>
+        <constant name="isFasterEngineSpinUpEnabled">"enabled"</constant>
         <constant name="coastingFuelCutEnabled">"false"</constant>
-        <constant name="useIacTableForCoasting">"false"</constant>
+        <constant name="useIacTableForCoasting">"disabled"</constant>
         <constant name="useNoiselessTriggerDecoder">"false"</constant>
         <constant name="useIdleTimingPidControl">"false"</constant>
         <constant name="disableEtbWhenEngineStopped">"false"</constant>
@@ -450,15 +450,15 @@
         <constant name="clutchDownPinInverted">"Normal"</constant>
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
         <constant name="multisparkEnable">"false"</constant>
-        <constant name="enableLaunchRetard">"false"</constant>
+        <constant name="enableLaunchRetard">"no"</constant>
         <constant name="canInputBCM">"false"</constant>
         <constant name="consumeObdSensors">"false"</constant>
         <constant name="enableCanVss">"false"</constant>
         <constant name="enableInnovateLC2">"false"</constant>
         <constant name="showHumanReadableWarning">"false"</constant>
-        <constant name="stftIgnoreErrorMagnitude">"false"</constant>
+        <constant name="stftIgnoreErrorMagnitude">"no"</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
-        <constant name="enableSoftwareKnock">"true"</constant>
+        <constant name="enableSoftwareKnock">"enabled"</constant>
         <constant name="verboseVVTDecoding">"false"</constant>
         <constant name="invertCamVVTSignal">"Rising"</constant>
         <constant name="alphaNUseIat">"false"</constant>
@@ -607,7 +607,7 @@
         <constant digits="0" name="tps2SecondaryMin" units="ADC">1000.0</constant>
         <constant digits="0" name="tps2SecondaryMax" units="ADC">0.0</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
-        <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
+        <constant name="fuelClosedLoopCorrectionEnabled">"disabled"</constant>
         <constant name="oddFireEngine">"false"</constant>
         <constant name="boardUseTachPullUp">"5v"</constant>
         <constant name="boardUseTempPullUp">"Piggyback Mode"</constant>
@@ -624,8 +624,8 @@
         <constant name="invertSecondaryTriggerSignal">"Rising"</constant>
         <constant name="cutFuelOnHardLimit">"yes"</constant>
         <constant name="cutSparkOnHardLimit">"yes"</constant>
-        <constant name="launchFuelCutEnable">"false"</constant>
-        <constant name="launchSparkCutEnable">"false"</constant>
+        <constant name="launchFuelCutEnable">"no"</constant>
+        <constant name="launchSparkCutEnable">"no"</constant>
         <constant name="boardUseCrankPullUp">"VR"</constant>
         <constant name="boardUseCamPullDown">"With Pull Up"</constant>
         <constant name="boardUseCamVrPullUp">"VR"</constant>
@@ -643,16 +643,16 @@
         <constant name="vRefAdcChannel">"NONE"</constant>
         <constant digits="0" name="etbNeutralPosition" units="%">0.0</constant>
         <constant name="idleMode">"Open Loop"</constant>
-        <constant name="isInjectionEnabled">"true"</constant>
-        <constant name="isIgnitionEnabled">"true"</constant>
-        <constant name="isCylinderCleanupEnabled">"true"</constant>
+        <constant name="isInjectionEnabled">"enabled"</constant>
+        <constant name="isIgnitionEnabled">"enabled"</constant>
+        <constant name="isCylinderCleanupEnabled">"enabled"</constant>
         <constant name="complexWallModel">"Basic (constants)"</constant>
         <constant name="alwaysInstantRpm">"false"</constant>
-        <constant name="isMapAveragingEnabled">"true"</constant>
+        <constant name="isMapAveragingEnabled">"enabled"</constant>
         <constant name="overrideCrankingIacSetting">"false"</constant>
-        <constant name="useSeparateAdvanceForIdle">"false"</constant>
+        <constant name="useSeparateAdvanceForIdle">"disabled"</constant>
         <constant name="isWaveAnalyzerEnabled">"true"</constant>
-        <constant name="useSeparateVeForIdle">"false"</constant>
+        <constant name="useSeparateVeForIdle">"disabled"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
         <constant name="isManualSpinningMode">"false"</constant>
         <constant name="cutFuelInAcr">"false"</constant>
@@ -660,10 +660,10 @@
         <constant name="twoWireBatchIgnition">"false"</constant>
         <constant name="useFixedBaroCorrFromMap">"false"</constant>
         <constant name="useSeparateAdvanceForCranking">"Fixed (auto taper)"</constant>
-        <constant name="useAdvanceCorrectionsForCranking">"false"</constant>
+        <constant name="useAdvanceCorrectionsForCranking">"no"</constant>
         <constant name="flexCranking">"false"</constant>
         <constant name="useIacPidMultTable">"false"</constant>
-        <constant name="isBoostControlEnabled">"false"</constant>
+        <constant name="isBoostControlEnabled">"disabled"</constant>
         <constant name="launchSmoothRetard">"false"</constant>
         <constant name="isPhaseSyncRequiredForIgnition">"false"</constant>
         <constant name="useCltBasedRpmLimit">"no"</constant>
@@ -733,7 +733,7 @@
         <constant name="auxValves2">"NONE"</constant>
         <constant name="tcuUpshiftButtonPin">"NONE"</constant>
         <constant name="tcuDownshiftButtonPin">"NONE"</constant>
-        <constant digits="2" name="throttlePedalUpVoltage" units="voltage">0.0</constant>
+        <constant digits="2" name="throttlePedalUpVoltage" units="voltage">1.7</constant>
         <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">5.0</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
@@ -1399,40 +1399,6 @@
         <constant name="acrPin2">"NONE"</constant>
         <constant digits="2" name="etbMinimumPosition" units="%">1.0</constant>
         <constant digits="0" name="tuneHidingKey" units="">0.0</constant>
-        <constant cols="1" digits="0" name="highSpeedOffsets" rows="32">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-</constant>
         <constant name="fuelPressureSensorMode">"Absolute"</constant>
         <constant name="luaDigitalInputPins1">"NONE"</constant>
         <constant name="luaDigitalInputPins2">"NONE"</constant>
@@ -2297,15 +2263,15 @@
          80.0
          100.0
 </constant>
-        <constant cols="1" digits="2" name="cltCrankingCorr" rows="8">
+        <constant cols="1" digits="2" name="cltCrankingCorr" units="%" rows="8">
          1.0
-         1.0
-         1.0
-         1.0
-         1.0
-         1.0
-         1.0
-         1.0
+         1.1
+         1.2
+         1.3
+         1.4
+         1.5
+         1.6
+         1.7
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8">
          0.0
@@ -2928,23 +2894,23 @@ end</constant>
          0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299 0.748299
          0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891 0.727891
 </constant>
-        <constant cols="1" digits="0" name="lambdaLoadBins" rows="16">
-         30.0
-         40.0
-         50.0
-         60.0
-         70.0
-         80.0
-         90.0
-         100.0
-         110.0
-         120.0
-         130.0
-         150.0
-         175.0
-         200.0
-         225.0
-         250.0
+        <constant cols="1" digits="0" name="lambdaLoadBins" rows="16" units="">
+         31.0
+         41.0
+         51.0
+         61.0
+         71.0
+         81.0
+         91.0
+         101.0
+         111.0
+         121.0
+         131.0
+         151.0
+         171.0
+         201.0
+         221.0
+         251.0
 </constant>
         <constant cols="1" digits="0" name="lambdaRpmBins" rows="16">
          650.0

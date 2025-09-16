@@ -7,7 +7,12 @@ dependencies {
     implementation project(':trigger-ui')
     implementation project(':autotest')
     implementation project(':luaformatter')
-    implementation project(':config_definition_base')
+    implementation project(':enum_to_string')
+    implementation global_libs.json
+    implementation 'com.formdev:flatlaf:3.6.1'
+
+    implementation("com.fifesoft:autocomplete:3.3.2")
+    implementation("com.fifesoft:rsyntaxtextarea:3.6.0")
 
     implementation global_libs.antlr
     implementation 'com.miglayout:miglayout-swing:4.1'
@@ -17,7 +22,7 @@ dependencies {
     implementation files('../lib/dfu/dfu_java.jar')
     implementation files('../lib/dfu/IntelHexParser.jar')
 */
-    testImplementation testFixtures(project(':ecu_io'))
+    testFixturesApi testFixtures(project(':ecu_io'))
 }
 
 shadowJar {

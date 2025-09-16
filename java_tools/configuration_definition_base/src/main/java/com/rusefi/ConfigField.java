@@ -156,6 +156,9 @@ public interface ConfigField {
         public String getCommentTemplated() {
             return null;
         }
+        @Override
+        public void setTsInfo(String newtsInfo) {
+        }
     };
 
     default boolean isUnusedField() {
@@ -163,6 +166,7 @@ public interface ConfigField {
     }
 
     default String getOriginalArrayName() {
+    // FIXME: this method fails in case of a array of structs with a array inside (ie only GPPWM at the moment)
         if (isFromIterate()) {
             return getIterateOriginalName() + "[" + (getIterateIndex() - 1) + "]";
         } else {
@@ -232,4 +236,6 @@ public interface ConfigField {
     boolean isFromIterate();
 
     String getCommentTemplated();
+
+    void setTsInfo(String tsInfo);
 }

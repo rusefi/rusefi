@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.opensr5.ConfigurationImageMeta;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
@@ -19,10 +20,16 @@ public class PortResult {
         this.port = port;
         this.type = type;
         this.calibrations = calibrations;
-        this.signature = (calibrations != null ?
-            SignatureHelper.parse(calibrations.getImage().getMeta().getEcuSignature()) :
-            null
-        );
+        if (calibrations == null) {
+            signature = null;
+        } else {
+            ConfigurationImageMeta meta = calibrations.getImage().getMeta();
+            if (meta == null) {
+                signature = null;
+            } else {
+                signature = SignatureHelper.parse(meta.getEcuSignature());
+            }
+        }
     }
     public PortResult(String port, SerialPortType type) {
         this(port, type, null);

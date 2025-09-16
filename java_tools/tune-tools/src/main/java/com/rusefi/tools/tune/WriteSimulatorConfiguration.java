@@ -5,7 +5,6 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.MsqFactory;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.enums.engine_type_e;
@@ -47,7 +46,7 @@ public class WriteSimulatorConfiguration {
             for (engine_type_e type : WriteSimulatorEngines.ENGINE_TYPE_ES) {
                 writeSpecificEngineType(iniFileName, type, ini);
             }
-            TuneCanToolRunner.runPopular();
+            //TuneCanToolRunner.runPopular();
         } catch (Throwable e) {
             log.error("Unfortunately", e);
             System.exit(-1);
@@ -63,7 +62,7 @@ public class WriteSimulatorConfiguration {
             readBinaryWriteXmlTune(iniFileName, in,
                 TuneCanTool.getDefaultTuneOutputFileName(engineType), ini);
         } catch (Throwable e) {
-            throw new IllegalStateException("With " + engineType, e);
+            throw new IllegalStateException("writeSpecificEngineType: With " + engineType, e);
         }
     }
 
@@ -73,14 +72,14 @@ public class WriteSimulatorConfiguration {
         if (ini == null)
             throw new IllegalStateException("Not found " + iniFileName);
         byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + inputBinaryTuneFileName).toPath());
-        int pageSize = ini.getMetaInfo().getTotalSize();
+        int pageSize = ini.getMetaInfo().getPageSize(0);
         log.info("Got " + fileContent.length + " from " + inputBinaryTuneFileName + " while expecting " + pageSize);
         if (fileContent.length != pageSize)
             throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + pageSize);
         ConfigurationImage configuration = new ConfigurationImage(fileContent);
         log.info("Got " + Objects.requireNonNull(configuration, "configuration"));
         Msq m = MsqFactory.valueOf(configuration, ini);
-        String name = Fields.KNOCKNOISERPMBINS.getName();
+        String name = "KNOCKNOISERPMBINS";
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
         if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
             throw new IllegalStateException(name + " canary wonders if everything is fine?");

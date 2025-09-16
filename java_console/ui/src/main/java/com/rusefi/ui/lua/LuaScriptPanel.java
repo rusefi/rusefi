@@ -6,8 +6,6 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
-import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
@@ -124,11 +122,18 @@ public class LuaScriptPanel {
         JPanel scriptPanel = new JPanel(new BorderLayout());
 
         scriptText = new LuaTextEditor(context);
-        scriptPanel.add(scriptText.getControl(), BorderLayout.CENTER);
+        JComponent editorComponent = scriptText.getControl();
+        // enforce monospaced font for editor
+        editorComponent.setFont(new Font(Font.MONOSPACED, Font.PLAIN, editorComponent.getFont().getSize()));
+        scriptPanel.add(editorComponent, BorderLayout.CENTER);
 
         //centerPanel.add(, BorderLayout.WEST);
         JPanel messagesPanel = new JPanel(new BorderLayout());
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
+        // enforce monospaced font for log view
+        Font current = mp.getFont();
+        Font mono = new Font(Font.MONOSPACED, Font.PLAIN, current.getSize());
+        mp.setFont(mono, config);
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
@@ -145,12 +150,13 @@ public class LuaScriptPanel {
         });
 
         JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel);
+        centerPanel.setResizeWeight(0.5);
+        centerPanel.setDividerLocation(0.5);
 
         mainPanel.add(upperPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         AutoupdateUtil.trueLayoutAndRepaint(mainPanel);
-        SwingUtilities.invokeLater(() -> centerPanel.setDividerLocation(centerPanel.getSize().width / 2));
     }
 
     private String getScriptFullFileName() {
@@ -274,7 +280,7 @@ public class LuaScriptPanel {
         // todo: do we have "luaScript" as code-generated constant anywhere?
         IniFileModel iniFile = bp.getIniFile();
         Objects.requireNonNull(iniFile, "iniFile");
-        return (StringIniField) iniFile.getIniField(Fields.LUASCRIPT);
+        return (StringIniField) iniFile.getIniField("LUASCRIPT");
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

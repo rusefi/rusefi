@@ -56,5 +56,15 @@ public class AvailableHardware {
     public boolean isEmpty() {
         return !dfuFound && !stLinkConnected && !PCANConnected && ports.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return "AvailableHardware{" +
+            "ports=" + ports +
+            ", dfuFound=" + dfuFound +
+            ", stLinkConnected=" + stLinkConnected +
+            ", PCANConnected=" + PCANConnected +
+            '}';
+    }
 }
 
