@@ -6,6 +6,6 @@ import com.rusefi.tune.xml.Msq;
 
 public class MsqFactory {
     public static Msq valueOf(ConfigurationImage image, IniFileModel ini) {
-        return Msq.valueOf(image, ini.getMetaInfo().getTotalSize(), ini.getSignature(), ini);
+        return Msq.valueOf(image, ini.getMetaInfo().getPageSize(0), ini.getSignature(), ini);
     }
 }
