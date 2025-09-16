@@ -119,7 +119,7 @@ extern bool hasInitGtest;
 		Sensor::setMockValue(s, v);
 	}
 
-	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
+	activeConfiguration = engine_configuration_s{};
 
 	enginePins.reset();
 	enginePins.unregisterPins();
