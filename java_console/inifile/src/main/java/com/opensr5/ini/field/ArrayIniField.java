@@ -45,6 +45,11 @@ public class ArrayIniField extends IniField {
         this.digits = digits;
     }
 
+    @Override
+    public String getUnits() {
+        return unit;
+    }
+
     public FieldType getType() {
         return type;
     }
