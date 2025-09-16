@@ -1,0 +1,7 @@
+#define FIELD_DISPLACEMENT displacement
+
+#define MEMBER_FLOW flow
+
+#define INSTANCE_INJECTOR injector
+
+#define FIELD_INJECTOR_FLOW @@INSTANCE_INJECTOR@@.@@MEMBER_FLOW@@

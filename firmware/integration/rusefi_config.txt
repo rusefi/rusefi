@@ -1482,7 +1482,7 @@ uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0
 	int8_t disableFan2AtSpeed
 
 
-	custom can_vss_nbc_e 2 bits, U08, @OFFSET@, [0:2], "BMW_e46", "W202", "BMW E8x/E9x MK60e5", "Nissan 350", "Hyundai PB", "Honda Civic9"
+	custom can_vss_nbc_e 1 bits, U08, @OFFSET@, [0:2], "BMW_e46", "W202", "BMW E8x/E9x MK60e5", "Nissan 350", "Hyundai PB", "Honda Civic9"
 	can_vss_nbc_e canVssNbcType
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
@@ -2640,3 +2640,4 @@ end_struct
 #define CAN_ECU_SERIAL_RX_ID 0x710
 #define CAN_ECU_SERIAL_TX_ID 0x720
 
+#define TRUE_FALSE_COUNT_LIMIT 600
