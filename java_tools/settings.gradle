@@ -29,7 +29,8 @@ project(':config_definition_base').projectDir = new File('configuration_definiti
 include ':config_definition'
 project(':config_definition').projectDir = new File('configuration_definition')
 include ':ts_plugin_launcher'
-project(':ts_plugin_launcher').projectDir = new File('ts_plugin_launcher')
+include ':ts_screenshots'
+
 include ':ts_plugin'
 project(':ts_plugin').projectDir = new File('ts_plugin')
 include ':autoupdate'
@@ -52,3 +53,5 @@ include ':ui'
 project(':ui').projectDir = new File('../java_console/ui')
 include ':luaformatter'
 project(':luaformatter').projectDir = new File('../java_console/luaformatter_module')
+include ':enum_generator'
+project(':enum_generator').projectDir = new File('enum_generator')
