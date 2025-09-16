@@ -112,6 +112,8 @@ public class LoadOlderTuneTest {
                 "    engineConfiguration->idleTimingPid.minValue = 0;\n" +
                 "    // default 10.0\n" +
                 "    engineConfiguration->idleTimingPid.maxValue = 0;\n" +
+                "    // default \"false\"\n" +
+                "    engineConfiguration->isHip9011Enabled = true;\n" +
                 "    // default 20.0\n" +
                 "    engineConfiguration->knockDetectionWindowStart = 35;\n" +
                 "    // default 33.0\n" +
@@ -138,9 +140,7 @@ public class LoadOlderTuneTest {
                 "    engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;\n" +
                 "    // default \"Speed Density\"\n" +
                 "    engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;\n" +
-                "    // default 300.0\n" +
-                "    engineConfiguration->boostCutPressure = 0;\n" +
-                "    // de", sb.substring(0, 3500));
+                "    ", sb.substring(0, 3500));
         } catch (final Exception e) {
             System.err.print(String.format("LoadOlderTuneTest.loadOlderTuneAgainstCurrentIni: Exception: %s", e.getMessage()));
             e.printStackTrace();
