@@ -274,9 +274,9 @@ PUBLIC_API_WEAK bool isTouchingVe(uint16_t offset, uint16_t count) {
 }
 
 static void onCalibrationWrite(uint16_t page, uint16_t offset, uint16_t count) {
-		if (isTouchingVe(offset, count)) {
-		  calibrationsVeWriteTimer.reset();
-    }
+	if ((page == TS_PAGE_SETTINGS) && isTouchingVe(offset, count)) {
+		calibrationsVeWriteTimer.reset();
+	}
 }
 
 bool isTouchingArea(uint16_t offset, uint16_t count, int areaStart, int areaSize) {
@@ -315,6 +315,8 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		return;
 	}
 
+	onCalibrationWrite(page, offset, count);
+
 	// Special case
 	if (page == TS_PAGE_SETTINGS) {
 		if (isLockedFromUser()) {
@@ -325,7 +327,6 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
 		// [tag:popular_vehicle]
 		if (!needToTriggerTsRefresh()) {
-			onCalibrationWrite(page, offset, count);
 			memcpy(addr, content, count);
 		} else {
 			efiPrintf("Ignoring TS -> Page %d write chunk offset %d count %d (output_count=%d)",
