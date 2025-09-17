@@ -1,5 +1,6 @@
 package com.rusefi.core.ui;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.autoupdate.ReportedIOException;
 import com.rusefi.core.net.ConnectionAndMeta;
 import org.jetbrains.annotations.NotNull;
@@ -12,10 +13,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class AutoupdateUtil {
+    private static final Logging log = getLogging(AutoupdateUtil.class);
     public static final boolean runHeadless = Boolean.getBoolean("run_headless") || GraphicsEnvironment.isHeadless();
 
     // todo: figure out a better way to work with absolute path
@@ -56,7 +61,14 @@ public class AutoupdateUtil {
             ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
         } catch (IOException e) {
             if (view.getProgressBar() != null) {
-                JOptionPane.showMessageDialog(view.getProgressBar(), "Error downloading: " + e, "Error", JOptionPane.ERROR_MESSAGE);
+                String message;
+                if (e instanceof UnknownHostException) {
+                    message = "Please fix your internet connection";
+                } else {
+                    message = "Error downloading: " + e;
+                }
+
+                JOptionPane.showMessageDialog(view.getProgressBar(), message, "Error", JOptionPane.ERROR_MESSAGE);
                 throw new ReportedIOException(e);
             } else {
                 throw e;
@@ -163,6 +175,7 @@ public class AutoupdateUtil {
         for(StackTraceElement element : e.getStackTrace())
             trace.append(element.toString()).append("\n");
         SwingUtilities.invokeLater(() -> {
+            // todo: reuse ErrorMessageHelper?
             Window w = getSelectedWindow(Window.getWindows());
             JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
         });
@@ -179,10 +192,12 @@ public class AutoupdateUtil {
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
+            log.info("Using secondary resource path for " + strPath);
             imgURL = dynamicResourcesLoader.getResource("/com/rusefi/" + strPath);
             if (imgURL != null) {
                 return new ImageIcon(imgURL);
             }
+            log.warn("icon resource not found " + strPath);
             return null;
         }
     }
