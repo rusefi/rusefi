@@ -3,6 +3,8 @@ package com.rusefi;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.net.PropertiesHolder;
 
+import java.util.Properties;
+
 public class UiProperties {
     public static final String SKIP_ECU_TYPE_DETECTION = "skip_ecu_type_detection";
 
@@ -12,6 +14,10 @@ public class UiProperties {
 
     public static boolean useSimulator() {
         return ConnectionAndMeta.getBoolean("show_simulator", PropertiesHolder.INSTANCE.getProperties());
+    }
+
+    public static void setProperties(Properties properties) {
+        // needed for compatibility with older Autoupdater
     }
 
     public static String getWhiteLabel() {
