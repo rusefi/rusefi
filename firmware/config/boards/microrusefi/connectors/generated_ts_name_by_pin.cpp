@@ -12,8 +12,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::A0: return "18 - AN temp 1";
 		case Gpio::A1: return "23 - AN temp 2";
 		case Gpio::A15: return "AUX J2 PA15";
-		case Gpio::A2: return "24 - AN temp 3 or Hall Input";
-		case Gpio::A3: return "22 - AN temp 4 or Hall Input";
+		case Gpio::A2: return "24 - AN temp 3 or Hall Input or Flex";
+		case Gpio::A3: return "22 - AN temp 4 or Hall Input or Flex";
 		case Gpio::A4: return "28 - AN volt 10, Aux Reuse";
 		case Gpio::A5: return "25 - Hall Cam";
 		case Gpio::A6: return "26 - AN volt 2";
