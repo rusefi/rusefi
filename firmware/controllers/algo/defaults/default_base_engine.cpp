@@ -4,6 +4,7 @@
 #include "vr_pwm.h"
 #include "kline.h"
 #include "engine_configuration_defaults.h"
+#include "tuner_detector_utils.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
 #include "proteus_meta.h"
@@ -108,6 +109,12 @@ void setDynoDefaults() {
     config->dynoCarCoeffOfDrag = 0.29;
     config->dynoCarFrontalAreaM2 = 1.85;
  }
+
+void defaultsOrFixOnBurn() {
+	if (TunerDetectorUtils::isTuningDetectorUndefined()) {
+		TunerDetectorUtils::setUserEnteredTuningDetector(20);
+	}
+}
 
 void setDefaultBaseEngine() {
 	// Base Engine Settings

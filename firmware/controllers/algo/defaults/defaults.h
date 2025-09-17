@@ -6,6 +6,7 @@
 
 void setLeftRightBanksNeedBetterName();
 void setDefaultBaseEngine();
+void defaultsOrFixOnBurn();
 void setDefaultFuel();
 void setDefaultIgnition();
 void setDefaultCranking();

@@ -540,9 +540,7 @@ bool validateConfigOnStartUpOrBurn() {
   if (config->dynoCarCarMassKg == 0) {
     setDynoDefaults();
   }
-  if (TunerDetectorUtils::isTuningDetectorUndefined()) {
-  	TunerDetectorUtils::setUserEnteredTuningDetector(10);
-  }
+  defaultsOrFixOnBurn();
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
