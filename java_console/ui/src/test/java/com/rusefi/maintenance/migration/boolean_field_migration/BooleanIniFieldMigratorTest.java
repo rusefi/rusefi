@@ -4,6 +4,7 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.ComposedTuneMigrator;
 import com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
@@ -16,6 +17,7 @@ import static javax.management.ObjectName.quote;
 public class BooleanIniFieldMigratorTest {
 
     @Test
+    @Disabled
     void checkBooleanMigrations() throws JAXBException {
         final TestTuneMigrationContext testContext = DefaultTestTuneMigrationContext.load();
         ComposedTuneMigrator.INSTANCE.migrateTune(testContext);

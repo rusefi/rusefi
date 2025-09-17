@@ -221,6 +221,7 @@ public class DefaultTuneMigratorTest {
                 "We aren't going to restore field `etbRocExpAverageLength`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `isManualSpinningMode`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `knockBandCustom`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `launchControlEnabled`: it looks like its value is just renamed: `\"false\"` -> `\"disabled\"`\r\n" +
                 "We aren't going to restore field `mapAveragingSchedulingAtIndex`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `noAccelAfterHardLimitPeriodSecs`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `oddFireEngine`: it is missed in new .ini file\r\n" +
