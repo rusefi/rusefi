@@ -525,6 +525,13 @@ bool validateConfigOnStartUpOrBurn() {
   if (!validateGdi()) {
     return false;
   }
+  if (engineConfiguration->etbMinimumPosition + 1 >= engineConfiguration->etbMaximumPosition) {
+		criticalError("Broken ETB min/max %d %d",
+		  engineConfiguration->etbMinimumPosition,
+		  engineConfiguration->etbMaximumPosition);
+		return false;
+  }
+
   defaultsOrFixOnBurn();
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
