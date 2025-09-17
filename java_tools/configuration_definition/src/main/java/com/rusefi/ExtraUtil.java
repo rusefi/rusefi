@@ -11,7 +11,7 @@ public class ExtraUtil {
     static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, DefinitionsState parseState) throws IOException {
         if (firingEnumFileName != null) {
             log.info("Reading firing from " + firingEnumFileName);
-            String result = FiringOrderTSLogic.invoke(firingEnumFileName);
+            String result = FiringOrderTSLogic.invoke(firingEnumFileName, variableRegistry);
             parseState.addDefinition(variableRegistry, "FIRINGORDER", result, Definition.OverwritePolicy.NotAllowed);
         }
     }
