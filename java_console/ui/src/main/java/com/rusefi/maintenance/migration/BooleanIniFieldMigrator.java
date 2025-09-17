@@ -61,7 +61,7 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
 
     public static final String LAUNCH_CONTROL_FIELD_NAME = "launchControlEnabled";
 
-    public static final BooleanField[] fieldsToMigrate = {
+    private static final BooleanField[] fieldsToMigrate = {
         // List all the boolean fields to migrate here, you should also update the tests!!
         new BooleanField(LAUNCH_CONTROL_FIELD_NAME, "enabled", "disabled"),
         new BooleanField("isInjectionEnabled", "enabled", "disabled"),
