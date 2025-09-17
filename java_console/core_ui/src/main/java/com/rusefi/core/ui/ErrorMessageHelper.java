@@ -18,10 +18,13 @@ public class ErrorMessageHelper {
     }
 
     public static void showErrorDialog(String message, String title) {
-        JOptionPane.showMessageDialog(createOnTopParent(),
+        JFrame parent = createOnTopParent();
+        JOptionPane.showMessageDialog(parent,
             message,
             title,
             JOptionPane.ERROR_MESSAGE
         );
+        parent.setVisible(false);
+        parent.dispose();
     }
 }

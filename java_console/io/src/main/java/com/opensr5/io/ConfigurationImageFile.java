@@ -100,12 +100,17 @@ public class ConfigurationImageFile {
     }
 
     public static void saveToFile(
-        final ConfigurationImageWithMeta configurationImage,
+        final ConfigurationImageWithMeta configurationImageWithMeta,
         final String fileName
     ) throws IOException {
-        log.info(String.format("Saving %d bytes of configuration into %s", configurationImage.getConfigurationImage().getSize(), fileName));
+        ConfigurationImage configurationImage = configurationImageWithMeta.getConfigurationImage();
+        if (configurationImage == null) {
+            log.warn("No image to save");
+            return;
+        }
+        log.info(String.format("Saving %d bytes of configuration into %s", configurationImage.getSize(), fileName));
         final File outputFile = new File(fileName);
-        final byte[] calibrationsFileContent = getFileContent(configurationImage.getConfigurationImage());
+        final byte[] calibrationsFileContent = getFileContent(configurationImage);
         final int calibrationsFileSize = calibrationsFileContent.length;
         try (
             final FileOutputStream fos = new FileOutputStream(outputFile);
@@ -117,7 +122,7 @@ public class ConfigurationImageFile {
             zos.write(calibrationsFileContent);
             zos.closeEntry();
 
-            final ConfigurationImageMeta meta = configurationImage.getMeta();
+            final ConfigurationImageMeta meta = configurationImageWithMeta.getMeta();
             final ZipEntry metaZipEntry = new ZipEntry(meta.getZipEntryName());
             zos.putNextEntry(metaZipEntry);
             ConfigurationImageMetaYamlUtil.dump(meta, zos);
