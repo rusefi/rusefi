@@ -99,6 +99,9 @@ float getOutputValueByName(const char *name) {
 // isTuningNow
 		case 1109228234:
 			return engine->outputChannels.isTuningNow;
+// sd_formating
+		case 352763970:
+			return engine->outputChannels.sd_formating;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
@@ -159,6 +162,9 @@ float getOutputValueByName(const char *name) {
 // actualLastInjection
 		case 681043126:
 			return engine->outputChannels.actualLastInjection;
+// stopEngineCode
+		case -2112117188:
+			return engine->outputChannels.stopEngineCode;
 // injectorDutyCycle
 		case -354325031:
 			return engine->outputChannels.injectorDutyCycle;
@@ -420,6 +426,9 @@ float getOutputValueByName(const char *name) {
 // accPedalSplit
 		case 864210494:
 			return engine->outputChannels.accPedalSplit;
+// accPedalUnfiltered
+		case 1466421764:
+			return engine->outputChannels.accPedalUnfiltered;
 // sparkCutReason
 		case -56739846:
 			return engine->outputChannels.sparkCutReason;
@@ -843,6 +852,15 @@ float getOutputValueByName(const char *name) {
 // mcuSerial
 		case 714144074:
 			return engine->outputChannels.mcuSerial;
+// sd_error
+		case -1811686395:
+			return engine->outputChannels.sd_error;
+// transitionEventCode
+		case -1006487219:
+			return engine->outputChannels.transitionEventCode;
+// transitionEventsCounter
+		case 1163075685:
+			return engine->outputChannels.transitionEventsCounter;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

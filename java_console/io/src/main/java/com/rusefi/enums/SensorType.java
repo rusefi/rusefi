@@ -24,6 +24,7 @@ public enum SensorType {
 	Tps2,
 	Tps2Primary,
 	Tps2Secondary,
+	AcceleratorPedalUnfiltered,
 	AcceleratorPedal,
 	AcceleratorPedalPrimary,
 	AcceleratorPedalSecondary,

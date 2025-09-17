@@ -710,6 +710,9 @@ float getConfigValueByName(const char *name) {
 // triggerEventsTimeoutMs
 		case 665024981:
 			return engineConfiguration->triggerEventsTimeoutMs;
+// ppsExpAverageAlpha
+		case 457158886:
+			return engineConfiguration->ppsExpAverageAlpha;
 // mapExpAverageAlpha
 		case -1852204335:
 			return engineConfiguration->mapExpAverageAlpha;
@@ -2405,7 +2408,7 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case -1227821282:
 	{
-		engineConfiguration->displacement = (int)value;
+		engineConfiguration->displacement = value;
 		return 1;
 	}
 		case 2122875976:
@@ -3161,6 +3164,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 665024981:
 	{
 		engineConfiguration->triggerEventsTimeoutMs = value;
+		return 1;
+	}
+		case 457158886:
+	{
+		engineConfiguration->ppsExpAverageAlpha = value;
 		return 1;
 	}
 		case -1852204335:

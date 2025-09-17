@@ -6,7 +6,7 @@ package com.rusefi.config.generated;
 import com.rusefi.config.*;
 
 public class PrimeController {
-	public static final Field M_ISPRIMING = Field.create("M_ISPRIMING", 0, FieldType.BIT, 0).setBaseOffset(1076);
+	public static final Field M_ISPRIMING = Field.create("M_ISPRIMING", 0, FieldType.BIT, 0).setBaseOffset(1036);
 	public static final Field[] VALUES = {
 	M_ISPRIMING,
 	};

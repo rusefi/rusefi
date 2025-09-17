@@ -150,8 +150,9 @@ struct output_channels_s {
 	offset 0 bit 30 */
 	bool isTuningNow : 1 {};
 	/**
+	 * SD: formating is in progress
 	offset 0 bit 31 */
-	bool unusedBit_31_31 : 1 {};
+	bool sd_formating : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
@@ -274,118 +275,122 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 300, 1> actualLastInjection = (uint16_t)0;
 	/**
+	 * offset 44
+	 */
+	uint8_t stopEngineCode = (uint8_t)0;
+	/**
 	 * @@GAUGE_NAME_FUEL_INJ_DUTY@@
 	 * units: %
-	 * offset 44
+	 * offset 45
 	 */
 	scaled_channel<uint8_t, 2, 1> injectorDutyCycle = (uint8_t)0;
 	/**
-	 * offset 45
+	 * offset 46
 	 */
 	uint8_t tempLogging1 = (uint8_t)0;
 	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 47
+	 */
+	uint8_t alignmentFill_at_47[1] = {};
+	/**
 	 * @@GAUGE_NAME_FUEL_INJECTION_TIMING@@
 	 * units: deg
-	 * offset 46
+	 * offset 48
 	 */
 	int16_t injectionOffset = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ENGINE_CRC16@@
 	 * units: crc16
-	 * offset 48
+	 * offset 50
 	 */
 	uint16_t engineMakeCodeNameCrc16 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	 * units: mg
-	 * offset 50
+	 * offset 52
 	 */
 	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
 	 * units: mg
-	 * offset 52
+	 * offset 54
 	 */
 	scaled_channel<int16_t, 100, 1> wallFuelCorrectionValue = (int16_t)0;
 	/**
-	 * offset 54
+	 * offset 56
 	 */
 	uint16_t revolutionCounterSinceStart = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_CAN_READ_OK@@
-	 * offset 56
+	 * offset 58
 	 */
 	uint16_t canReadCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_TPS_EXTRA@@
 	 * units: ms
-	 * offset 58
+	 * offset 60
 	 */
 	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_MODE@@
-	 * offset 60
+	 * offset 62
 	 */
 	uint8_t currentIgnitionMode = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_INJECTION_MODE@@
-	 * offset 61
+	 * offset 63
 	 */
 	uint8_t currentInjectionMode = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_DWELL_DUTY@@
 	 * units: %
-	 * offset 62
+	 * offset 64
 	 */
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ETB_DUTY@@
 	 * units: %
-	 * offset 64
+	 * offset 66
 	 */
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 	/**
 	 * Fuel level
 	 * units: %
-	 * offset 66
+	 * offset 68
 	 */
 	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	 * units: grams
-	 * offset 68
+	 * offset 70
 	 */
 	uint16_t totalFuelConsumption = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_FLOW@@
 	 * units: gram/s
-	 * offset 70
+	 * offset 72
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_TPS2@@
 	 * units: %
-	 * offset 72
+	 * offset 74
 	 */
 	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TUNE_CRC16@@
 	 * units: crc16
-	 * offset 74
+	 * offset 76
 	 */
 	uint16_t tuneCrc16 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_VE@@
 	 * units: ratio
-	 * offset 76
-	 */
-	scaled_channel<uint16_t, 10, 1> veValue = (uint16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 78
 	 */
-	uint8_t alignmentFill_at_78[2] = {};
+	scaled_channel<uint16_t, 10, 1> veValue = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_UPTIME@@
 	 * units: sec
@@ -786,45 +791,44 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 	/**
+	 * units: %
+	 * offset 320
+	 */
+	scaled_channel<int16_t, 100, 1> accPedalUnfiltered = (int16_t)0;
+	/**
 	 * Ign: Cut Code
 	 * units: code
-	 * offset 320
+	 * offset 322
 	 */
 	int8_t sparkCutReason = (int8_t)0;
 	/**
 	 * Fuel: Cut Code
 	 * units: code
-	 * offset 321
+	 * offset 323
 	 */
 	int8_t fuelCutReason = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_ESTIMATE@@
 	 * units: kg/h
-	 * offset 322
+	 * offset 324
 	 */
 	scaled_channel<uint16_t, 10, 1> mafEstimate = (uint16_t)0;
 	/**
 	 * sync: instant RPM
 	 * units: rpm
-	 * offset 324
+	 * offset 326
 	 */
 	uint16_t instantRpm = (uint16_t)0;
 	/**
 	 * units: V
-	 * offset 326
+	 * offset 328
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawMap = (uint16_t)0;
 	/**
 	 * units: V
-	 * offset 328
-	 */
-	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 330
 	 */
-	uint8_t alignmentFill_at_330[2] = {};
+	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
 	/**
 	 * offset 332
 	 */
@@ -1182,10 +1186,10 @@ struct output_channels_s {
 	bool vvtChannel4 : 1 {};
 	/**
 	offset 664 bit 30 */
-	bool unusedBit_241_30 : 1 {};
+	bool unusedBit_242_30 : 1 {};
 	/**
 	offset 664 bit 31 */
-	bool unusedBit_241_31 : 1 {};
+	bool unusedBit_242_31 : 1 {};
 	/**
 	 * offset 668
 	 */
@@ -1434,9 +1438,29 @@ struct output_channels_s {
 	/**
 	 * offset 820
 	 */
-	uint8_t unusedAtTheEnd[48] = {};
+	uint8_t sd_error = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 821
+	 */
+	uint8_t alignmentFill_at_821[1] = {};
+	/**
+	 * offset 822
+	 */
+	uint16_t transitionEventCode = (uint16_t)0;
+	/**
+	 * offset 824
+	 */
+	uint16_t transitionEventsCounter = (uint16_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 826
+	 */
+	uint8_t alignmentFill_at_826[2] = {};
 };
-static_assert(sizeof(output_channels_s) == 868);
+static_assert(sizeof(output_channels_s) == 828);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt

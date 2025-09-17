@@ -703,8 +703,11 @@ Starting Launch RPM window to activate (subtracts from Launch RPM)
 ### triggerEventsTimeoutMs
 
 
-### mapExpAverageAlpha
+### ppsExpAverageAlpha
+A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'1' means no filtering, 0.98 would be some filtering.
 
+### mapExpAverageAlpha
+A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'1' means no filtering, 0.98 would be some filtering.
 
 ### magicNumberAvailableForDevTricks
 null

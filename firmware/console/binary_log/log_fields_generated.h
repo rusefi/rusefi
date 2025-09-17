@@ -33,6 +33,7 @@ static const LogField fields[] = {
 	{engine->outputChannels, 0, 28, "hasFaultReportFile", ""},
 	{engine->outputChannels, 0, 29, "Analog sensors supply failure", ""},
 	{engine->outputChannels, 0, 30, "isTuningNow", ""},
+	{engine->outputChannels, 0, 31, "SD: formating is in progress", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -53,6 +54,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.oilPressure, "Oil Pressure", "kPa", 0},
 	{engine->outputChannels.vvtPositionB1I, "VVT: bank 1 intake", "deg", 1},
 	{engine->outputChannels.actualLastInjection, "Fuel: Last inj pulse width", "ms", 3},
+	{engine->outputChannels.stopEngineCode, "stopEngineCode", "", 0},
 	{engine->outputChannels.injectorDutyCycle, "Fuel: injector duty cycle", "%", 0},
 	{engine->outputChannels.tempLogging1, "tempLogging1", "", 0},
 	{engine->outputChannels.injectionOffset, "Fuel: Injection timing SOI", "deg", 0},
@@ -174,6 +176,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.tps2Split, "tps2Split", "%", 2},
 	{engine->outputChannels.tps12Split, "tps12Split", "%", 2},
 	{engine->outputChannels.accPedalSplit, "accPedalSplit", "%", 2},
+	{engine->outputChannels.accPedalUnfiltered, "accPedalUnfiltered", "%", 2},
 	{engine->outputChannels.sparkCutReason, "Ign: Cut Code", "code", 0},
 	{engine->outputChannels.fuelCutReason, "Fuel: Cut Code", "code", 0},
 	{engine->outputChannels.mafEstimate, "Air: Flow estimate", "kg/h", 0},
@@ -409,6 +412,9 @@ static const LogField fields[] = {
 	{engine->outputChannels.hp, "hp", "", 0},
 	{engine->outputChannels.torque, "torque", "", 0},
 	{engine->outputChannels.mcuSerial, "mcuSerial", "", 0},
+	{engine->outputChannels.sd_error, "sd_error", "", 0},
+	{engine->outputChannels.transitionEventCode, "transitionEventCode", "", 0},
+	{engine->outputChannels.transitionEventsCounter, "transitionEventsCounter", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

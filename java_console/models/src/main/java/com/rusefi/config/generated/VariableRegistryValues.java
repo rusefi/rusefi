@@ -313,6 +313,9 @@ public class VariableRegistryValues {
 	public static final int DEFAULT_SELT_STIM_VVT0 = 23;
 	public static final int DEFAULT_SOLENOID_FREQUENCY = 300;
 	public static final int DIGIPOT_COUNT = 4;
+	public static final int DISPLACEMENT_DIGITS = 3;
+	public static final int DISPLACEMENT_MAX = 65;
+	public static final int DISPLACEMENT_MULTIPLIER = 1;
 	public static final String DISPLACEMENT_TOOLTIP = "Engine displacement in litres";
 	public static final String DISPLACEMENT_UNITS = "L";
 	public static final int display_mode_e_DM_HD44780 = 1;
@@ -355,7 +358,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
 	public static final int END_OF_CALIBRATION_PADDING = 54;
-	public static final int engine_configuration_s_size = 4012;
+	public static final int engine_configuration_s_size = 4020;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_MOCK = 100;
@@ -485,7 +488,7 @@ public class VariableRegistryValues {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 250311;
+	public static final int FLASH_DATA_VERSION = 250340;
 	public static final String FRONTEND_TITLE_BAR_NAME = "rusEFI";
 	public static final int fuel_cyl_trim_s_size = 16;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
@@ -1110,8 +1113,8 @@ public class VariableRegistryValues {
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "Brake switch";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
-	public static final int INJ_PHASE_LOAD_COUNT = 16;
-	public static final int INJ_PHASE_RPM_COUNT = 16;
+	public static final int INJ_PHASE_LOAD_COUNT = 6;
+	public static final int INJ_PHASE_RPM_COUNT = 6;
 	public static final int INJ_STAGING_COUNT = 6;
 	public static final int injection_mode_e_IM_BATCH = 2;
 	public static final int injection_mode_e_IM_SEQUENTIAL = 1;
@@ -1170,10 +1173,10 @@ public class VariableRegistryValues {
 	public static final int maf_sensor_type_e_DensoTODO = 3;
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int MAP_ANGLE_SIZE = 8;
-	public static final int MAP_EST_LOAD_COUNT = 16;
-	public static final int MAP_EST_RPM_COUNT = 16;
+	public static final int MAP_EST_LOAD_COUNT = 6;
+	public static final int MAP_EST_RPM_COUNT = 6;
 	public static final int MAP_sensor_config_s_size = 140;
-	public static final int MAP_UPPER_LIMIT = 1000;
+	public static final int MAP_UPPER_LIMIT = 650;
 	public static final int MAP_WINDOW_SIZE = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
 	public static final int MAX_TPS_PPS_DISCREPANCY = 5;
@@ -1227,7 +1230,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 23536;
+	public static final int persistent_config_s_size = 22588;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1239,6 +1242,7 @@ public class VariableRegistryValues {
 	public static final int pin_output_mode_e_OM_INVERTED = 1;
 	public static final int pin_output_mode_e_OM_OPENDRAIN = 2;
 	public static final int pin_output_mode_e_OM_OPENDRAIN_INVERTED = 3;
+	public static final String ppsExpAverageAlpha_NAME = "Accelerator Exp Average";
 	public static final int PRIME_CURVE_COUNT = 8;
 	public static final String PROTOCOL_COIL_SHORT_PREFIX = "c";
 	public static final String PROTOCOL_CRANK1 = "t1";
@@ -1342,7 +1346,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 23536;
+	public static final int TOTAL_CONFIG_SIZE = 22588;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1460,6 +1464,7 @@ public class VariableRegistryValues {
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TriggerWheel_T_PRIMARY = 0;
 	public static final int TriggerWheel_T_SECONDARY = 1;
+	public static final int TRUE_FALSE_COUNT_LIMIT = 600;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_0 = 0x00;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_1 = 0x01;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_2 = 0x02;
@@ -1560,8 +1565,9 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_OVERRUN = 0x81;
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
+	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.03.15.stm32h743_nucleo.2380587095";
+	public static final String TS_SIGNATURE = "rusEFI lts-25jersey.2025.09.17.f407-discovery.2867869117";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1613,8 +1619,14 @@ public class VariableRegistryValues {
 	public static final int VSS_FILTER_MAX = 200;
 	public static final int VSS_FILTER_MIN = 3;
 	public static final String VVT1_TARGET_NAME = "VVT intake target";
+	public static final String VVT_25_NAME = "INVALID";
+	public static final String VVT_26_NAME = "INVALID";
 	public static final int vvt_mode_e_VVT_BARRA_3_PLUS_1 = 8;
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
+	public static final int vvt_mode_e_VVT_CUSTOM_1 = 29;
+	public static final int vvt_mode_e_VVT_CUSTOM_2 = 30;
+	public static final int vvt_mode_e_VVT_CUSTOM_25 = 25;
+	public static final int vvt_mode_e_VVT_CUSTOM_26 = 26;
 	public static final int vvt_mode_e_VVT_DEV = 23;
 	public static final int vvt_mode_e_VVT_FORD_COYOTE = 19;
 	public static final int vvt_mode_e_VVT_FORD_ST170 = 7;
@@ -1636,7 +1648,9 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SINGLE_TOOTH = 1;
+	public static final int vvt_mode_e_VVT_SUBARU_7TOOTH = 28;
 	public static final int vvt_mode_e_VVT_TOYOTA_3_TOOTH = 2;
+	public static final int vvt_mode_e_VVT_TOYOTA_3TOOTH_UZ = 27;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
 	public static final int VVT_TABLE_SIZE = 8;
 	public static final int VVT_TRACKING_LENGTH = 4;

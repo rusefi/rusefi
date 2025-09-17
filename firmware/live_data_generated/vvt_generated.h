@@ -9,7 +9,7 @@ struct vvt_s {
 	 * units: deg
 	 * offset 0
 	 */
-	scaled_channel<uint16_t, 10, 1> vvtTarget = (uint16_t)0;
+	scaled_channel<int16_t, 10, 1> vvtTarget = (int16_t)0;
 	/**
 	 * units: %
 	 * offset 2
