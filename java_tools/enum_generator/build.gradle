@@ -1,0 +1,7 @@
+apply from: '../../java_tools/dependencies.gradle'
+
+dependencies {
+  api project(':logging')
+  implementation global_libs.json
+  api project(':core_io')
+}
