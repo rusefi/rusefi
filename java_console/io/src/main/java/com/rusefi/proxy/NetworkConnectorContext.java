@@ -35,6 +35,7 @@ public class NetworkConnectorContext {
         return ProxyClient.SERVER_PORT_FOR_CONTROLLERS;
     }
 
+    /*
     public void onConnectorSoftwareUpdateToLatestRequest() {
         log.info("onConnectorSoftwareUpdateToLatestRequest");
         System.exit(UPDATE_LATEST_SBC_EXIT_CODE);
@@ -54,4 +55,5 @@ public class NetworkConnectorContext {
         log.info("onFirmwareUpdateRequest");
         System.exit(UPDATE_RELEASE_FIRMWARE_EXIT_CODE);
     }
+     */
 }

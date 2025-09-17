@@ -44,7 +44,7 @@ public class TcpIoStream extends AbstractIoStream {
         String hostname = TcpConnector.getHostname(port);
         Socket socket = new Socket(hostname, portPart);
 
-        return new TcpIoStream("[start] ", socket);
+        return new TcpIoStream("[start] " + port + " ", socket);
     }
 
     @Override
@@ -68,6 +68,11 @@ public class TcpIoStream extends AbstractIoStream {
     public void write(byte[] bytes) throws IOException {
         super.write(bytes);
         output.write(bytes);
+    }
+
+    @Override
+    public String toString() {
+        return "TcpIoStream{" + loggingPrefix + '}';
     }
 
     @Override
