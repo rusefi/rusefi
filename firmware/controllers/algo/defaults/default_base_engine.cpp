@@ -132,9 +132,9 @@ void defaultsOrFixOnBurn() {
     setDynoDefaults();
   }
 
-  if (TunerDetectorUtils::isTuningDetectorUndefined()) {
-  	TunerDetectorUtils::setUserEnteredTuningDetector(10);
-  }
+	if (TunerDetectorUtils::isTuningDetectorUndefined()) {
+		TunerDetectorUtils::setUserEnteredTuningDetector(20);
+	}
 
 	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
 	  engineConfiguration->mapExpAverageAlpha = 1;
