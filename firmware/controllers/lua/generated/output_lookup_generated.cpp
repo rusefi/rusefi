@@ -166,6 +166,9 @@ float getOutputValueByHash(const int hash) {
 // actualLastInjection
 		case 681043126:
 			return engine->outputChannels.actualLastInjection;
+// actualLastInjectionRatio
+		case -1476961259:
+			return engine->outputChannels.actualLastInjectionRatio;
 // stopEngineCode
 		case -2112117188:
 			return engine->outputChannels.stopEngineCode;
@@ -775,6 +778,9 @@ float getOutputValueByHash(const int hash) {
 // actualLastInjectionStage2
 		case -1434098660:
 			return engine->outputChannels.actualLastInjectionStage2;
+// actualLastInjectionRatioStage2
+		case -666982725:
+			return engine->outputChannels.actualLastInjectionRatioStage2;
 // injectorDutyCycleStage2
 		case -1337459841:
 			return engine->outputChannels.injectorDutyCycleStage2;

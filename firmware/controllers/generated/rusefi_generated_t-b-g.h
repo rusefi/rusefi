@@ -714,6 +714,8 @@
 #define GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2 "Fuel: injector duty cycle stage 2"
 #define GAUGE_NAME_FUEL_INJECTION_TIMING "Fuel: Injection timing SOI"
 #define GAUGE_NAME_FUEL_LAST_INJECTION "Fuel: Last inj pulse width"
+#define GAUGE_NAME_FUEL_LAST_INJECTION_RATIO "Fuel: Last inj pulse growth"
+#define GAUGE_NAME_FUEL_LAST_INJECTION_RATIO_STAGE_2 "Fuel: Last inj pulse growth stg 2"
 #define GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2 "Fuel: Last inj pulse width stg 2"
 #define GAUGE_NAME_FUEL_LEVEL "Fuel level"
 #define GAUGE_NAME_FUEL_LOAD "Fuel: Load"
@@ -1515,7 +1517,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3403069888
+#define SIGNATURE_HASH 392582244
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2076,12 +2078,12 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.09.17.t-b-g.3403069888"
+#define TS_SIGNATURE "rusEFI master.2025.09.17.t-b-g.392582244"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 2048
+#define TS_TOTAL_OUTPUT_SIZE 2060
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5
