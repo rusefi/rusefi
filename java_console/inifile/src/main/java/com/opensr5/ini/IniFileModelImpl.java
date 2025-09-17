@@ -173,7 +173,12 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     public static @Nullable String findIniFile(String iniFilePath) {
-        return FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX);
+        return FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX, new FindFileHelper.AdditionalFileHandler() {
+            @Override
+            public void onAdditionalFile(String fileDirectory, String fileName) {
+
+            }
+        }, false);
     }
 
     private void finishDialog() {

@@ -25,4 +25,14 @@ public class VariableRecord {
     public String getConditional() {
         return conditional;
     }
+
+    @Override
+    public String toString() {
+        return "VariableRecord{" +
+            "type='" + type + '\'' +
+            ", humanName='" + humanName + '\'' +
+            ", fullName='" + fullName + '\'' +
+            ", conditional='" + conditional + '\'' +
+            '}';
+    }
 }
