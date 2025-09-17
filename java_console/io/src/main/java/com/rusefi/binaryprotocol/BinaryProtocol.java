@@ -181,6 +181,9 @@ public class BinaryProtocol {
             return "Failed to read signature " + e;
         }
         iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
+        if (isSinglePageController()) {
+            log.info("*** COMPATIBILITY MODE: older single-page firmware");
+        }
 
         int pageSize = iniFile.getMetaInfo().getPageSize(0);
         log.info("pageSize=" + pageSize);
@@ -319,17 +322,7 @@ public class BinaryProtocol {
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, iniFile.getBlockingFactor());
 
-            String pageReadCommand = iniFile.getMetaInfo().getPageReadCommand(0);
-            byte[] packet;
-            if (pageReadCommand.length() == 7) {
-                // older controller, no page index in read command
-                // PS: technically we can/shall actually use command syntax as specified by the .ini
-                packet = new byte[4];
-                ByteRange.packOffsetAndSize(offset, requestSize, packet);
-            } else {
-                packet = new byte[6];
-                ByteRange.packPageOffsetAndSize(offset, requestSize, packet);
-            }
+            byte[] packet = smartPacketPrefix(offset, requestSize);
 
             byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
@@ -351,6 +344,25 @@ public class BinaryProtocol {
             offset += requestSize;
         }
         return imageWithMeta;
+    }
+
+    public byte @NotNull [] smartPacketPrefix(int offset, int requestSize) {
+        byte[] packet;
+        if (isSinglePageController()) {
+            // older controller, no page index in read command
+            // PS: technically we can/shall actually use command syntax as specified by the .ini
+            packet = new byte[4];
+            ByteRange.packOffsetAndSize(offset, requestSize, packet);
+        } else {
+            packet = new byte[6];
+            ByteRange.packPageOffsetAndSize(offset, requestSize, packet);
+        }
+        return packet;
+    }
+
+    public boolean isSinglePageController() {
+        String pageReadCommand = iniFile.getMetaInfo().getPageReadCommand(0);
+        return pageReadCommand.length() == 7;
     }
 
     @NotNull
@@ -422,10 +434,8 @@ public class BinaryProtocol {
         }
     }
 
-    private static byte[] createRequestCrcPayload(int size) {
-        byte[] packet = new byte[6];
-        ByteRange.packPageOffsetAndSize(0, size, packet);
-        return packet;
+    private byte[] createRequestCrcPayload(int size) {
+        return smartPacketPrefix(0, size);
     }
 
     public byte[] executeCommand(char opcode, String msg) {
@@ -500,7 +510,7 @@ public class BinaryProtocol {
     private void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
-        byte[] packet = WriteCommand.getWritePacket(content, contentOffset, ecuOffset, size);
+        byte[] packet = WriteCommand.getWritePacket(this, content, contentOffset, ecuOffset, size);
 
         long start = System.currentTimeMillis();
         while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
