@@ -130,7 +130,7 @@ public class KnockAnalyzerTab {
                     int finalChecksum = checksum;
                     controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, name, (name1, v) -> {
                         if (!started) {
-                            // SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+                            // SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(content));
                             return;
                         }
 
@@ -231,7 +231,7 @@ public class KnockAnalyzerTab {
         boolean enabled = this.getEnabledEcu();
         this.setStartState(enabled);
 
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(content));
     }
 
     private void flush() {
@@ -244,7 +244,7 @@ public class KnockAnalyzerTab {
             case CT_ALL:
                 canvases.forEach(canvas -> {
                     canvas.processValues(values);
-                    AutoupdateUtil.trueLayout(canvas.getComponent());
+                    AutoupdateUtil.trueLayoutAndRepaint(canvas.getComponent());
                 });
                 break;
             case CT_SENSORS:
@@ -258,7 +258,7 @@ public class KnockAnalyzerTab {
         }
 
         canvases.forEach(canvas -> {
-            AutoupdateUtil.trueLayout(canvas.getComponent());
+            AutoupdateUtil.trueLayoutAndRepaint(canvas.getComponent());
         });
 
         Arrays.fill(values, 0);
@@ -306,8 +306,8 @@ public class KnockAnalyzerTab {
     }
 
     public void refreshCanvases() {
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(canvasesComponent));
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(canvasesComponent));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(content));
     }
 
     public void createCanvas(int number, int divider) {

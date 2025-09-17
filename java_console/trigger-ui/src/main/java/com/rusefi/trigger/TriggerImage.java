@@ -132,7 +132,7 @@ public class TriggerImage {
             f.showFrame(content);
             f.getFrame().setSize(900, 700);
 
-            AutoupdateUtil.trueLayout(content);
+            AutoupdateUtil.trueLayoutAndRepaint(content);
         });
 
         SwingUtilities.invokeAndWait(() -> {
@@ -162,8 +162,8 @@ public class TriggerImage {
             topPanel.add(secondWheelControl);
         }
 
-        AutoupdateUtil.trueLayout(topPanel);
-        AutoupdateUtil.trueLayout(content);
+        AutoupdateUtil.trueLayoutAndRepaint(topPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(content);
 
         triggerPanel.tdcPosition = triggerWheelInfo.getTdcPosition();
         triggerPanel.gaps = triggerWheelInfo.getGaps();
@@ -203,8 +203,8 @@ public class TriggerImage {
         triggerPanel.name = getTriggerName(triggerWheelInfo);
 //        triggerPanel.id = "#" + triggerWheelInfo.id;
 
-        AutoupdateUtil.trueLayout(triggerPanel);
-        AutoupdateUtil.trueLayout(triggerPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(triggerPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(triggerPanel);
         content.paintImmediately(content.getVisibleRect());
         new File(OUTPUT_FOLDER).mkdir();
         UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + findByOrdinal(triggerWheelInfo.getId()) + ".png", content);

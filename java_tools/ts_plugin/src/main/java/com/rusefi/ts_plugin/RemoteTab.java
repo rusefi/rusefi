@@ -155,7 +155,7 @@ public class RemoteTab {
                 verticalPanel.add(createControllerRow(user));
             }
         }
-        AutoupdateUtil.trueLayout(list);
+        AutoupdateUtil.trueLayoutAndRepaint(list);
     }
 
     private JComponent createControllerRow(PublicSession publicSession) {
@@ -303,7 +303,7 @@ public class RemoteTab {
                 list.add(component);
             }
         }
-        AutoupdateUtil.trueLayout(list);
+        AutoupdateUtil.trueLayoutAndRepaint(list);
     }
 
     private void runAuthenticator(PublicSession publicSession, LocalApplicationProxy.ConnectionListener connectionListener) {

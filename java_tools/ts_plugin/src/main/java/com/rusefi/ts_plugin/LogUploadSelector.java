@@ -64,7 +64,7 @@ public class LogUploadSelector {
             processFolder(folder);
         }
 
-        AutoupdateUtil.trueLayout(content);
+        AutoupdateUtil.trueLayoutAndRepaint(content);
     }
 
     private void processFolder(String folder) {

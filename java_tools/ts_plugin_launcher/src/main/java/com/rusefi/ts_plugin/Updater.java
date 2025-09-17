@@ -216,7 +216,7 @@ public class Updater {
     private void replaceWith(TsPluginBody instance) {
         content.removeAll();
         content.add(instance.getContent());
-        AutoupdateUtil.trueLayout(content.getParent());
+        AutoupdateUtil.trueLayoutAndRepaint(content.getParent());
         Window windowAncestor = SwingUtilities.getWindowAncestor(content);
         AutoupdateUtil.pack(windowAncestor);
     }
