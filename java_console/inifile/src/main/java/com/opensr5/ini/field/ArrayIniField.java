@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 public class ArrayIniField extends IniField {
+    private final String unit;
     private final FieldType type;
     private final int cols;
     private final int rows;
@@ -31,8 +32,10 @@ public class ArrayIniField extends IniField {
         final double multiplier,
         final String min,
         final String max,
-        String digits) {
+        String digits
+    ) {
         super(name, offset);
+        this.unit = unit;
         this.type = type;
         this.cols = cols;
         this.rows = rows;
