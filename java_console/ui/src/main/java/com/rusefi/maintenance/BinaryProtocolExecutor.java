@@ -100,9 +100,13 @@ public class BinaryProtocolExecutor {
         {
             SerialPort[] commPorts = getCommPorts();
             portAvailable = contains(commPorts, port);
-            log.info("Currently available: " + Arrays.toString(commPorts) + "; " + portAvailable);
-            if (portAvailable)
+            log.info("Available right away: " + Arrays.toString(commPorts) + "; " + portAvailable);
+            if (portAvailable) {
+                long justInCase = 300;
+                log.info("Giving it " + justInCase + "ms just in case...");
+                sleep(justInCase);
                 return; // bail without extra logging
+            }
         }
         // sametimes we need to wait for the port to re-appear
         long start = System.currentTimeMillis();
