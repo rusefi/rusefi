@@ -172,6 +172,8 @@
 #define GAUGE_NAME_FUEL_RUNNING "Fuel: running"
 #define GAUGE_NAME_FUEL_LAST_INJECTION "Fuel: Last inj pulse width"
 #define GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2 "Fuel: Last inj pulse width stg 2"
+#define GAUGE_NAME_FUEL_LAST_INJECTION_RATIO "Fuel: Last inj pulse growth"
+#define GAUGE_NAME_FUEL_LAST_INJECTION_RATIO_STAGE_2 "Fuel: Last inj pulse growth stg 2"
 #define GAUGE_NAME_FUEL_BASE "Fuel: base cycle mass"
 #define GAUGE_NAME_FUEL_TRIM "Fuel: fuel trim"
 #define GAUGE_NAME_FUEL_TRIM_2 "Fuel: fuel trim 2"

@@ -123,6 +123,16 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	if (this->cylinderNumber == 0) {
+		if (engine->outputChannels.actualLastInjection) {
+			engine->outputChannels.actualLastInjectionRatio = injectionDurationStage1 / engine->outputChannels.actualLastInjection;
+		} else {
+			engine->outputChannels.actualLastInjectionRatio = 0;
+		}
+		if (engine->outputChannels.actualLastInjectionStage2) {
+			engine->outputChannels.actualLastInjectionRatioStage2 = injectionDurationStage2 / engine->outputChannels.actualLastInjectionStage2;
+		} else {
+			engine->outputChannels.actualLastInjectionRatioStage2 = 0;
+		}
 		engine->outputChannels.actualLastInjection = injectionDurationStage1;
 		engine->outputChannels.actualLastInjectionStage2 = injectionDurationStage2;
 	}
