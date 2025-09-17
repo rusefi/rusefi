@@ -91,7 +91,7 @@ public class SensorLiveGraph extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                AutoupdateUtil.trueLayout(SensorLiveGraph.this);
+                AutoupdateUtil.trueLayoutAndRepaint(SensorLiveGraph.this);
             }
         });
     }

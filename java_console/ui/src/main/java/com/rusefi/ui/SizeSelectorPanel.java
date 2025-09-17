@@ -24,8 +24,8 @@ public class SizeSelectorPanel extends JPanel {
                 Element selected = (Element) e.getSource();
                 selectedColumn = selected.column;
                 selectedRow = selected.row;
-                AutoupdateUtil.trueLayout(SizeSelectorPanel.this);
-                AutoupdateUtil.trueLayout(SizeSelectorPanel.this);
+                AutoupdateUtil.trueLayoutAndRepaint(SizeSelectorPanel.this);
+                AutoupdateUtil.trueLayoutAndRepaint(SizeSelectorPanel.this);
                 System.out.println(selectedColumn + " r=" + selectedRow);
             }
 

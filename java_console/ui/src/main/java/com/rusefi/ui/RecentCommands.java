@@ -168,7 +168,7 @@ public class RecentCommands {
                         content.add(createButton(uiContext, reentrant, entry.command));
                     }
                 }
-                AutoupdateUtil.trueLayout(content.getParent());
+                AutoupdateUtil.trueLayoutAndRepaint(content.getParent());
             }
         });
         getConfig().getRoot().setProperty(KEY, pack());

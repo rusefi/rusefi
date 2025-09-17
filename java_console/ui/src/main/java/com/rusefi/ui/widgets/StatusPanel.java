@@ -97,7 +97,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
                 stringForTestArea += "\r\n";
             }
             logTextArea.append(stringForTestArea);
-            AutoupdateUtil.trueLayout(logTextArea);
+            AutoupdateUtil.trueLayoutAndRepaint(logTextArea);
         });
     }
 
