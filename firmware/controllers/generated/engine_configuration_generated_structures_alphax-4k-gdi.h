@@ -1397,7 +1397,7 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 2> idleMaximumAirmass;
 	/**
-	 * Zero value means do not detect tuning
+	 * Zero value means do not detect tuning, set at least 15 if you are using TunerStudio autotune
 	 * units: seconds
 	 * offset 425
 	 */
