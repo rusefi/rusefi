@@ -338,7 +338,7 @@ public class LiveDataProcessor {
         }
 
         LazyFile lazyFile = fileFactory.create(destinationFolder + SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME);
-        SdCardFieldsContent.wrapContent(lazyFile, sdCardFieldsConsumer.getBody(), additionalHeadersStr.toString());
+        SdCardFieldsContent.wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
         lazyFile.close();
 
         dataLogConsumer.endFile();
