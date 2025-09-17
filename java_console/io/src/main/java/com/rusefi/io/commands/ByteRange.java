@@ -28,6 +28,12 @@ public class ByteRange {
         putShort(packet, 2, swap16(requestSize));
     }
 
+    public static void packPageOffsetAndSize(int offset, int requestSize, byte[] packet) {
+        putShort(packet, 0, swap16(/*page*/0));
+        putShort(packet, 2, swap16(offset));
+        putShort(packet, 4, swap16(requestSize));
+    }
+
     public int getOffset() {
         return offset;
     }
@@ -39,13 +45,22 @@ public class ByteRange {
     @Override
     public String toString() {
         return "{" +
-                "offset=" + offset +
-                ", count=" + count +
-                '}';
+            "offset=" + offset +
+            ", count=" + count +
+            '}';
     }
 
     public static ByteRange valueOf(byte[] payload) throws IOException {
         try (DataInputStream dis = createPayLoadStream(payload)) {
+            int offset = swap16(dis.readShort());
+            int count = swap16(dis.readShort());
+            return new ByteRange(offset, count);
+        }
+    }
+
+    public static ByteRange valueOf2(byte[] payload) throws IOException {
+        try (DataInputStream dis = createPayLoadStream(payload)) {
+            /* page */dis.readShort();
             int offset = swap16(dis.readShort());
             int count = swap16(dis.readShort());
             return new ByteRange(offset, count);
