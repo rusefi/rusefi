@@ -79,6 +79,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale vvtPositionB1I;@@GAUGE_NAME_VVT_B1I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
 	uint16_t autoscale actualLastInjection;@@GAUGE_NAME_FUEL_LAST_INJECTION@@\nActual last injection time - including all compensation and injection mode;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
+	float actualLastInjectionRatio;@@GAUGE_NAME_FUEL_LAST_INJECTION_RATIO@@\nLast injection time divided to previous injection time;"", 1, 0, 0, 0, 3
 
   uint8_t stopEngineCode
 
@@ -400,6 +401,7 @@ float mapFast
 	uint8_t[MAX_CYLINDER_COUNT iterate] injectorDiagnostic
 
 	uint16_t autoscale actualLastInjectionStage2;@@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
+	float actualLastInjectionRatioStage2;@@GAUGE_NAME_FUEL_LAST_INJECTION_RATIO_STAGE_2@@;"", 1, 0, 0, 0, 3
 
 	uint8_t autoscale injectorDutyCycleStage2;@@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@;"%",{1/2}, 0, 0, 0, 0
 	uint8_t rawFlexFreq
