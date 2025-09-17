@@ -38,9 +38,8 @@ public class CalibrationsHelper {
     private static final String UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT = "updated_calibrations";
     private static final String MERGED_CALIBRATIONS_FILE_NAME_COMPONENT = "merged_calibrations";
 
-    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss");
+    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
     private static final String RUSEFI_FORCE_CALIBRATIONS_RESTORE = System.getenv("RUSEFI_FORCE_CALIBRATIONS_RESTORE");
-    public static boolean RETHROW = false;
 
     public static void main(String[] args) {
 //        args = new String[] {"destinationFileName.xml", "COM34"};
