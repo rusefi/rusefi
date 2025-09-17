@@ -1209,7 +1209,7 @@ void updateDash(CanCycle cycle) {
 		canDashboardTS(cycle);
 		break;
 	default:
-		criticalError("Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
+		criticalError("Nothing for canNbcType %d/%s", engineConfiguration->canNbcType, getCan_nbc_e(engineConfiguration->canNbcType));
 		break;
 	}
 }
