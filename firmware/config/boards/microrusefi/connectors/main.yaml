@@ -135,7 +135,7 @@ pins:
     function: Starting from version 0.5.0 this pin can be used as 5V input for USB connection through main connector (No need to open case to access micro-USB connector) WATCH OUT FOR D7
     ts_name: 19 - AN volt 4
     type: av
-  
+
   - pin: 20
     id: [C3, EFI_ADC_13]
     class: [switch_inputs, analog_inputs]
@@ -153,7 +153,7 @@ pins:
     id: [A3, A3, EFI_ADC_3]
     class: [event_inputs, switch_inputs, analog_inputs]
     color: dark green
-    ts_name: 22 - AN temp 4 or Hall Input
+    ts_name: 22 - AN temp 4 or Hall Input or Flex
     type: at
 
   - pin: 23
@@ -168,7 +168,7 @@ pins:
     id: [A2, A2, EFI_ADC_2]
     class: [event_inputs, switch_inputs, analog_inputs]
     color: dark green
-    ts_name: 24 - AN temp 3 or Hall Input
+    ts_name: 24 - AN temp 3 or Hall Input or Flex
     type: at
 
   # RC filter input for hall
@@ -178,7 +178,7 @@ pins:
     color: light blue right
     ts_name: 25 - Hall Cam
     type: hall
-    
+
   - pin: 26
     id: [A6, EFI_ADC_6]
     class: [switch_inputs, analog_inputs]
@@ -265,8 +265,8 @@ pins:
   # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT21#91
   - pin: 35
     id: TLE8888_PIN_21
-    class: outputs   
-    color: orange 
+    class: outputs
+    color: orange
     function: Fuel pump relay (IDLE stepper coil 1+)
     ts_name: 35 - GP Out 1
     type: [gp_low, gp_pp]
