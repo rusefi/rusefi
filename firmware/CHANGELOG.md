@@ -42,6 +42,7 @@ Release template (copy/paste this for new release):
  - larger LUA_canFrameCount on F7
  - native OpenBLT updater should help Mac/Linux #8495
  - firmware binaries to have detailed file names, older files go into .rusefi/older-fw folder #7830
+ - predictive MAP AE Blend Duration is now a curve #8579
 
 ### Fixed
  - 3000gt 6g72 triggers cam and crank 3-0 more accuracy
