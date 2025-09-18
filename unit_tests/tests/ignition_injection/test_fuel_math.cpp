@@ -414,7 +414,11 @@ TEST(AirmassModes, PredictiveMapCalculation) {
 
 	// Configure engine for predictive MAP mode
 	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
-	engineConfiguration->mapPredictionBlendDuration = 0.5f; // 500ms blend duration
+
+  // FIXME!  setLinearCurve(config->predictiveMapBlendDurationValues, /*value*/0.5, /*precision*/0.1);
+  	for (auto index = 0;index < efi::size(config->predictiveMapBlendDurationValues);index++) {
+  	  config->predictiveMapBlendDurationValues[index] = 0.5f;
+  	}
 
 	// Create our speed density airmass model
 	SpeedDensityAirmass dut(veTable, mapFallback);
