@@ -706,9 +706,6 @@ float getConfigValueByHash(const int hash) {
 // tpsDecelEnleanmentMultiplier
 		case 1164012327:
 			return engineConfiguration->tpsDecelEnleanmentMultiplier;
-// mapPredictionBlendDuration
-		case 1445156767:
-			return engineConfiguration->mapPredictionBlendDuration;
 // noFuelTrimAfterDfcoTime
 		case 1286770247:
 			return engineConfiguration->noFuelTrimAfterDfcoTime;
@@ -3219,11 +3216,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1164012327:
 	{
 		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
-		return 1;
-	}
-		case 1445156767:
-	{
-		engineConfiguration->mapPredictionBlendDuration = value;
 		return 1;
 	}
 		case 1286770247:
