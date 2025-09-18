@@ -334,6 +334,9 @@ void setDefaultFuel() {
 	setRpmTableBin(config->tpsTspCorrValuesBins);
 	setLinearCurve(config->tpsTspCorrValues, 1, 1);
 
+	setRpmTableBin(config->predictiveMapBlendDurationBins);
+	setLinearCurve(config->predictiveMapBlendDurationValues, 1, 1);
+
 	setDefaultVETable();
 	setDefaultLambdaTable();
 
