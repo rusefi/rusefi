@@ -2256,6 +2256,9 @@ int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output kno
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 12500, 0
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationBins;;"RPM", 50, 0, 0, 12500, 0
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;;"second", 0.02, 0, 0, 5, 2
+
 ! yes, 200C region is legit for some air-cooled engines
 int16_t[CLT_LIMITER_CURVE_SIZE] autoscale cltRevLimitRpmBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, 200, 0
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;;"RPM", 1, 0, 0, 20000, 0
