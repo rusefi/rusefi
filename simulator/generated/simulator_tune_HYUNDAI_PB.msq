@@ -3107,16 +3107,16 @@ end</constant>
         <constant digits="1" name="ppsExpAverageAlpha" units="percent">100.0</constant>
         <constant digits="1" name="ppsSecondaryMaximum" units="%">0.0</constant>
         <constant cols="1" digits="0" name="predictiveMapBlendDurationBins" rows="4" units="RPM">
-         0.0
-         0.0
-         0.0
-         0.0
+         650.0
+         800.0
+         3750.0
+         7000.0
 </constant>
         <constant cols="1" digits="2" name="predictiveMapBlendDurationValues" rows="4" units="second">
-         0.0
-         0.0
-         0.0
-         0.0
+         1.0
+         1.0
+         1.0
+         1.0
 </constant>
         <constant cols="1" digits="0" name="primeBins" rows="8" units="C">
          -40.0
