@@ -32,8 +32,9 @@ public class MaintenanceUtil {
         callbacks.logLine(output.toString());
         callbacks.logLine(error.toString());
         long cost = System.currentTimeMillis() - now;
-        log.info("detectDevice lookup cost " + cost + "ms");
-        log.info(queryCommand + " says " + output);
+        String duration = "detectDevice lookup cost " + cost + "ms; ";
+        String nicerOutput = output.length() == 0 ? "(empty)" : output.toString();
+        log.info(duration + queryCommand + " says " + nicerOutput);
         return output.toString().contains(pattern);
     }
 
