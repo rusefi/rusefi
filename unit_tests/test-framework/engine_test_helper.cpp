@@ -114,6 +114,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
+	Sensor::setMockValue(SensorType::BatteryVoltage, 13);
 
 	for (const auto& [s, v] : sensorValues) {
 		Sensor::setMockValue(s, v);
