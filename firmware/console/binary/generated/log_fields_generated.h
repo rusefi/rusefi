@@ -350,6 +350,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels, 688, 27, "bank 1 exhaust cam input", ""},
 	{engine->outputChannels, 688, 28, "bank 2 intake cam input", ""},
 	{engine->outputChannels, 688, 29, "bank 2 exhaust cam input", ""},
+	{engine->outputChannels, 688, 30, "AE: Map Prediction Active", ""},
 	{engine->outputChannels.outputRequestPeriod, "outputRequestPeriod", "", 0},
 	{engine->outputChannels.mapFast, "mapFast", "", 0},
 	{engine->outputChannels.luaGauges[0], "Lua: Gauge 1", "value", 3},

@@ -1201,11 +1201,12 @@ struct output_channels_s {
 	offset 688 bit 29 */
 	bool vvtChannel4 : 1 {};
 	/**
+	 * AE: Map Prediction Active
 	offset 688 bit 30 */
-	bool unusedBit_245_30 : 1 {};
+	bool isMapPredictionActive : 1 {};
 	/**
 	offset 688 bit 31 */
-	bool unusedBit_245_31 : 1 {};
+	bool unusedBit_246_31 : 1 {};
 	/**
 	 * offset 692
 	 */

@@ -715,6 +715,9 @@ float getOutputValueByHash(const int hash) {
 // vvtChannel4
 		case -1764857646:
 			return engine->outputChannels.vvtChannel4;
+// isMapPredictionActive
+		case 884518764:
+			return engine->outputChannels.isMapPredictionActive;
 // outputRequestPeriod
 		case 1894184322:
 			return engine->outputChannels.outputRequestPeriod;
