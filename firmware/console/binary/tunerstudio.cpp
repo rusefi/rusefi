@@ -441,6 +441,11 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	tsChannel->flush();
 }
 
+static void handleGetConfigErorr(TsChannelBase* tsChannel) {
+	const char* configError = hasFirmwareError()? getCriticalErrorMessage() : getConfigErrorMessage();
+	tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
+}
+
 /**
  * this command is part of protocol initialization
  *
@@ -781,6 +786,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case 'T':
 		handleTestCommand(tsChannel);
 		break;
+	case TS_GET_CONFIG_ERROR:
+		handleGetConfigErorr(tsChannel);
+		break;
 #if EFI_SIMULATOR
     case TS_SIMULATE_CAN:
         void handleWrapCan(TsChannelBase* tsChannel, char *data, int incomingPacketSize);
@@ -891,11 +899,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
     criticalError("TS_PERF_TRACE_GET_BUFFER not supported");
     break;
 #endif /* ENABLE_PERF_TRACE */
-	case TS_GET_CONFIG_ERROR: {
-	  const char* configError = hasFirmwareError()? getCriticalErrorMessage() : getConfigErrorMessage();
-		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
-		break;
-	}
 	case TS_QUERY_BOOTLOADER: {
 		uint8_t bldata = TS_QUERY_BOOTLOADER_NONE;
 #if EFI_USE_OPENBLT
