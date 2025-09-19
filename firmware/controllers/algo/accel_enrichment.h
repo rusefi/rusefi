@@ -17,7 +17,6 @@
 
 
 class TpsAccelEnrichment : public tps_accel_state_s, public EngineModule {
-	Timer m_timeSinceAccel;
 #ifdef EFI_UNIT_TEST
 public:
 #endif
@@ -29,6 +28,7 @@ public:
 
 	void onConfigurationChange(engine_configuration_s const* previousConfig) override;
 
+	Timer m_timeSinceAccel;
 	// This function returns true ONCE per acceleration event.
 	bool isAccelEventTriggered();
 
