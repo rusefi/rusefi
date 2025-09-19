@@ -20,8 +20,11 @@ pins:
     function: TPS1
   - pin: B10
     function: TPS2
+
   - pin: B11
-    function: Muffler Control Solenoid
+    function: Exhaust cutout Muffler Control Solenoid
+    type: ls
+
   - pin: B14
     function: UNUSED TCU
   - pin: B15

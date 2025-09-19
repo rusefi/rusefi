@@ -1,7 +1,9 @@
 pins:
 
   - pin: A1
-    function: Starter Motor Control Sense
+    function: SMC Starter Motor Control Sense (normally controlled by ACM Audio Control Module)
+    type: hs
+
   - pin: A5
     function: Case Ground
   - pin: A8
@@ -50,15 +52,22 @@ pins:
     function: Pedal Position Power 2
   - pin: A42
     function: Start Stop Switch
+
   - pin: A44
-    function: UNUSED Fuel Temperature Sensor 5.2
+    function: Fuel Temperature Sensor
     class: analog_inputs
+    type: at
+
   - pin: A46
-    function: UNUSED Fuel Pressure Sensor
+    function: Fuel Pressure Sensor
     class: analog_inputs
+    type: av
+
   - pin: A47
-    function: UNUSED Ambient Air Sensor
+    function: Ambient Air Sensor
     class: analog_inputs
+    type: at
+
   - pin: A49
     function: Fuel Pump On
   - pin: A51
@@ -71,8 +80,11 @@ pins:
     function: MAF Return
   - pin: A55
     function: UNUSED Diff Sensor
+
   - pin: A58
-    function: Starter Control
+    function: SMC Starter Control
+    type: ls
+
   - pin: A59
     function: Pedal Position Ground 2
   - pin: A60
