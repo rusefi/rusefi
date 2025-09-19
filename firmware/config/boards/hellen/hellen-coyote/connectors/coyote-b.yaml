@@ -15,7 +15,7 @@ pins:
   - pin: B7
     function: VVT21 Solenoid
   - pin: B8
-    function: ETB Pos DC Motor
+    function: 5V for TPS
   - pin: B9
     function: TPS1
   - pin: B10
@@ -26,39 +26,37 @@ pins:
     type: ls
 
   - pin: B14
-    function: UNUSED TCU
+    function: TorqueConverterClutch TCU (bypass for TCU molex)
   - pin: B15
-    function: UNUSED TCU
+    function: LinePressureControl TCU (bypass for TCU molex)
   - pin: B16
     function: Injector 8
-
   - pin: B17
-    function: Cam Sensors Power
+    function: Cam Sensors Power (share and pass for TCU molex)
   - pin: B18
     function: VPWR F
+  - pin: B22
+    function:  Ground for Output Shaft Speed
   - pin: B23
-    function: ETB Neg DC Motor
+    function: Sensor Ground for TPS
   - pin: B24
-    function: UNUSED TCU
+    function: Trans Fluid Temp TCU (bypass for TCU molex)
   - pin: B25
-    function: UNUSED TCU
+    function: TransmissionShaftSpeed TCU (bypass for TCU molex)
   - pin: B26
-    function: UNUSED TCU
-
+    function: Output Shaft Speed (VSS, digital input + pass for TCU molex)
   - pin: B27
     function: Intake Air Temperature
   - pin: B30
-    function: UNUSED Oil Level Switch
+    function: Oil Level Switch
   - pin: B31
     function: Injector 6
   - pin: B34
     function: Cam Sensor Power
   - pin: B37
-    function: UNUSED TCU
-
+    function: TR-P TRANSMISSION RANGE PWM TCU (bypass for TCU molex)
   - pin: B39
     function: Crank Shield
-
   - pin: B40
     function: Cam22 VR Ground
   - pin: B41
@@ -66,9 +64,9 @@ pins:
   - pin: B42
     function: Cam21 Signal
   - pin: B44
-    function: Intake Sensor
+    function: IMRC Sensor
   - pin: B45
-    function: Intake Sensor 2
+    function: IMRC Sensor 2
   - pin: B46
     function: Injector 3
   - pin: B47
@@ -86,16 +84,17 @@ pins:
   - pin: B55
     function: Cam12 VR Signal
   - pin: B56
-    function: Position 1 Ex Signal
+    function: Cam11 Hall Signal
+  - pin: B57
+    function: Engine Oil Pressure Signal
   - pin: B59
-    function: Manifold Header
+    function: IMRC2 Control Solenoid
   - pin: B60
     function: Intake Manifold Runner Control Solenoid
   - pin: B61
     function: Injector 7
   - pin: B62
     function: Injector 2
-
   - pin: B67
     function: Knock2 Neg
   - pin: B68
@@ -105,23 +104,21 @@ pins:
   - pin: B70
     function: Crank VR Positive
   - pin: B71
-    function: UNUSED Canister Purge
+    function: Canister Purge
   - pin: B72
-    function: UNUSED TCU
+    function: SSD TCU (bypass for TCU molex)
   - pin: B73
-    function: UNUSED TCU
+    function: SSC TCU (bypass for TCU molex)
   - pin: B74
-    function: UNUSED TCU
+    function: SSB TCU (bypass for TCU molex)
   - pin: B75
-    function: UNUSED TCU
+    function: SSA TCU (bypass for TCU molex)
   - pin: B77
-    function: UNUSED TCU
+    function: SSE TCU (bypass for TCU molex)
   - pin: B81
     function: Throttle Actuator Neg
   - pin: B82
     function: Throttle Actuator Pos
-
-
   - pin: B87
     function: Coil 7
   - pin: B88
@@ -130,7 +127,8 @@ pins:
     function: Coil 5
   - pin: B90
     function: Coil 8
-
+  - pin: B91
+    function: TSPC TRANSAXLE SOLENOID POWER CONTROL TCU (bypass for TCU molex)
   - pin: B92
     function: Coil 4
   - pin: B93

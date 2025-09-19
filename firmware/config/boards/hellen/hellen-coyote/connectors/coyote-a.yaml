@@ -13,7 +13,7 @@ pins:
   - pin: A10
     function: High Cooling Fans
   - pin: A13
-    function: Starting RC
+    function: Alternator RC Control
   - pin: A14
     function: Fuel Pump Command
   - pin: A15
@@ -23,17 +23,17 @@ pins:
   - pin: A20
     function: Main Relay Control
   - pin: A22
-    function: UNUSED Shift Down
+    function: TCU Shift Down (bypass to molex)
   - pin: A23
-    function: UNUSED Shift Up
+    function: TCU Shift Up (bypass to molex)
   - pin: A26
     function: Alternator Load Input
   - pin: A27
     function: Fuel Pump Monitor
   - pin: A29
-    function: UNUSED Sensor Power
+    function: 5V Sensor Power
   - pin: A30
-    function: UNUSED Analog Ground
+    function: Analog Ground
   - pin: A31
     function: UNUSED Fuel Pump Monitor 2 5.2
   - pin: A32
@@ -41,13 +41,13 @@ pins:
   - pin: A33
     function: Air Conditioner Pressure Sensor
   - pin: A34
-    function: UNUSED Fuel Rail Pressure 5.2
+    function: Fuel Rail Pressure
   - pin: A35
     function: Pedal Position Ground 1
   - pin: A36
     function: Pedal Position Power 1
   - pin: A39
-    function: UNUSED Canister Ventilation Solenoid
+    function: Canister Ventilation Solenoid
   - pin: A40
     function: Pedal Position Power 2
   - pin: A42
@@ -69,7 +69,7 @@ pins:
     type: at
 
   - pin: A49
-    function: Fuel Pump On
+    function: UNUSED Fuel Pump On
   - pin: A51
     function: Generator Current Sensor
   - pin: A52
@@ -92,15 +92,15 @@ pins:
   - pin: A61
     function: Pedal Position Signal 1
   - pin: A63
-    function: UNUSED Trans Pump
+    function: Differential Pump
   - pin: A64
     function: Ignition Power Input
   - pin: A65
-    function: Fuel Pump Control
+    function: UNUSED Fuel Pump Control
   - pin: A66
-    function: UNUSED BPS
+    function: Brake Pedal Sensor
   - pin: A67
-    function: UNUSED BOO
+    function: UNUSED BOO Brake Normally Open
   - pin: A69
     function: UNUSED Aux Trans Pump
   - pin: A73
