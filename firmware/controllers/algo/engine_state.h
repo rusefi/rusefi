@@ -35,6 +35,7 @@ public:
 	float injectionStage2Fraction = 0;
 
 	Timer crankingTimer;
+	Timer undervoltageCrankingTimer{};
 
 	WarningCodeState warnings;
 

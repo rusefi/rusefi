@@ -196,6 +196,16 @@ void Engine::periodicSlowCallback() {
 	updateDynoView();
 #endif
 
+	// TODO: move to sensor_checker.cpp?
+	if ((engine->rpmCalculator.isCranking()) && (Sensor::getOrZero(SensorType::BatteryVoltage) < 7)) {
+		// undervoltage crancking!
+		if (getEngineState()->undervoltageCrankingTimer.getElapsedSeconds() > 1) {
+			warningTsReport(ObdCode::OBD_System_Voltage_Low, "Cranking on low battery!");
+		}
+	} else {
+		getEngineState()->undervoltageCrankingTimer.reset();
+	}
+
 	slowCallBackWasInvoked = true;
 
 #if EFI_PROD_CODE
