@@ -43,7 +43,7 @@ bit hasFaultReportFile
 bit isAnalogFailure;Analog sensors supply failure
 bit isTuningNow
 bit sd_formating; SD: formating is in progress
-
+! bit 31 - last one!
   bit isMapAveraging
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
@@ -363,7 +363,9 @@ bit triggerChannel2
 bit vvtChannel1;bank 1 intake cam input
 bit vvtChannel2;bank 1 exhaust cam input
 bit vvtChannel3;bank 2 intake cam input
+! bit 29
 bit vvtChannel4;bank 2 exhaust cam input
+bit isMapPredictionActive;AE: Map Prediction Active
 
 uint32_t outputRequestPeriod
 float mapFast
