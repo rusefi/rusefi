@@ -1,12 +1,18 @@
 package com.rusefi.core.net;
 
+import com.devexperts.logging.Logging;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public enum PropertiesHolder {
     INSTANCE;
+
+    private static final Logging log = getLogging(PropertiesHolder.class);
 
     private static final String IO_PROPERTIES = "/shared_io.properties";
 
@@ -45,8 +51,10 @@ public enum PropertiesHolder {
     }
 
     public static String getBaseUrl() {
-        String result = INSTANCE.getProperties().getProperty("auto_update_root_url");
-        System.out.println(ConnectionAndMeta.class + ": got [" + result + "]");
+        String propertyFileValue = INSTANCE.getProperties().getProperty("auto_update_root_url");
+        log.info("auto_update_root_url=" + propertyFileValue);
+        String result = System.getProperty("RE_UPDATE_URL", propertyFileValue);
+        log.info("auto_update_root_url getProperty=" + propertyFileValue);
         return result;
     }
 
