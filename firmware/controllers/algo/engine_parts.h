@@ -31,11 +31,17 @@ public:
 struct warning_t {
 	Timer LastTriggered;
 	ObdCode Code = ObdCode::None;
+	bool Texted = false;
 
 	warning_t() { }
 
-	explicit warning_t(ObdCode code)
-		: Code(code)
+	void clear() {
+		Code = ObdCode::None;
+		Texted = false;
+	}
+
+	explicit warning_t(ObdCode code, bool texted)
+		: Code(code), Texted(texted)
 	{
 	}
 
@@ -55,12 +61,14 @@ typedef static_vector<warning_t, 24> warningBuffer_t;
 class WarningCodeState {
 public:
 	WarningCodeState();
-	void addWarningCode(ObdCode code);
+	void addWarningCode(ObdCode code, const char *text = nullptr);
 	bool isWarningNow() const;
 	bool isWarningNow(ObdCode code) const;
+	void refreshTs();
 	void clear();
 	int warningCounter;
 	ObdCode lastErrorCode = ObdCode::None;
+	const char *description;
 
 	Timer timeSinceLastWarning;
 
