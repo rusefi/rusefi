@@ -33,7 +33,7 @@ void WarningCodeState::clear() {
 	recentWarnings.clear();
 }
 
-void WarningCodeState::addWarningCode(ObdCode code) {
+void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
 	warningCounter++;
 	lastErrorCode = code;
 
@@ -42,6 +42,9 @@ void WarningCodeState::addWarningCode(ObdCode code) {
 	if (!existing) {
 		chibios_rt::CriticalSectionLocker csl;
 
+		if (text) {
+			//strlncpy()
+		}
 		// Add the code to the list
 		existing = recentWarnings.add(warning_t(code));
 	}
@@ -53,6 +56,42 @@ void WarningCodeState::addWarningCode(ObdCode code) {
 
 	// Reset the "any warning" timer too
 	timeSinceLastWarning.reset();
+}
+
+void WarningCodeState::refreshTs() {
+	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
+	const int period = maxI(3, engineConfiguration->warningPeriod);
+
+	// TODO: do we neet this sticky warning code?
+	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
+	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
+
+	// TODO: fix OBD codes "jumping" between positions when one of codes disapears
+
+	size_t i = 0;
+	for (size_t j = 0; j < recentWarnings.getCount(); j++) {
+		warning_t& warn = recentWarnings.get(j);
+		// if still active
+		if (warn.Code != ObdCode::None) {
+			if (!warn.LastTriggered.hasElapsedSec(period)) {
+				if (i < efi::size(tsOutputChannels->recentErrorCode)) {
+					tsOutputChannels->recentErrorCode[i] = static_cast<uint16_t>(warn.Code);
+					i++;
+				}
+			} else {
+				// TODO:
+				// reset with warning as it is outdated
+			}
+		}
+	}
+
+	// reset rest
+	for ( ; i < efi::size(tsOutputChannels->recentErrorCode); i++) {
+		tsOutputChannels->recentErrorCode[i] = 0;
+	}
+
+	// Do we have any code to show as test?
+	tsOutputChannels->hasCriticalError |= 0;
 }
 
 /**
