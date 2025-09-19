@@ -491,46 +491,54 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 /**
- * ObdCode::OBD_PCM_Processor_Fault is the general error code for now
- *
  * @returns TRUE in case there were warnings recently
  */
-bool warning(ObdCode code, const char *fmt, ...) {
+bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 	if (hasCriticalFirmwareErrorFlag) {
 		return true;
 	}
 
 	bool known = engine->engineState.warnings.isWarningNow(code);
 
-	// if known - just reset timer
-	engine->engineState.warnings.addWarningCode(code);
-
-#if EFI_SIMULATOR || EFI_PROD_CODE
-	// we just had this same warning, let's not spam
 	if (known) {
+		// if known - just reset timer
+		engine->engineState.warnings.addWarningCode(code);
+#if EFI_SIMULATOR || EFI_PROD_CODE
+		// we just had this same warning, let's not spam
 		return true;
+#endif
 	}
 
 	// print Pxxxx (for standard OBD) or Cxxxx (for custom) prefix
 	size_t size = snprintf(warningBuffer, sizeof(warningBuffer), "%s%04d: ",
 		code < ObdCode::CUSTOM_NAN_ENGINE_LOAD ? "P" : "C", (int) code);
 
-	va_list ap;
-	va_start(ap, fmt);
-	chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, ap);
-	va_end(ap);
+	chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, args);
 
+	engine->engineState.warnings.addWarningCode(code, reportToTs ? warningBuffer : nullptr);
+#if EFI_SIMULATOR || EFI_PROD_CODE
 	efiPrintf("WARNING: %s", warningBuffer);
 #else
-	printf("unit_test_warning: ");
-	va_list ap;
-	va_start(ap, fmt);
-	vprintf(fmt, ap);
-	va_end(ap);
-	printf("\r\n");
-
+	printf("unit_test_warning: %s\n", warningBuffer);
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
+
 	return false;
+}
+
+bool warning(ObdCode code, const char *fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
+	bool ret = warningVA(code, false, fmt, args);
+	va_end(args);
+	return ret;
+}
+
+bool warningTsReport(ObdCode code, const char *fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
+	bool ret = warningVA(code, true, fmt, args);
+	va_end(args);
+	return ret;
 }
 
 #if EFI_CLOCK_LOCKS

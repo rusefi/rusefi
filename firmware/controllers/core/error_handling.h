@@ -19,6 +19,11 @@
  */
 bool warning(ObdCode code, const char *fmt, ...);
 
+/**
+ * Same as above, but also report to user by pop-up window in TunerStudio
+ */
+bool warningTsReport(ObdCode code, const char *fmt, ...);
+
 using critical_msg_t = char[CRITICAL_BUFFER_SIZE];
 
 #define criticalShutdown() \
