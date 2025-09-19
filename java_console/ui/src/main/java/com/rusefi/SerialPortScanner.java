@@ -175,6 +175,7 @@ public enum SerialPortScanner {
         boolean PCANConnected;
 
         final Set<String> serialPorts = LinkManager.getCommPorts();
+        log.info("getCommPorts: " + serialPorts);
 
         List<String> portsToInspect = new ArrayList<>();
 
