@@ -82,10 +82,6 @@ bool hasErrorReportFile() {
 	return hasReportFile;
 }
 
-const char* getConfigErrorMessageBuffer() {
-	return configErrorMessageBuffer;
-}
-
 #if EFI_PROD_CODE
 
 #if EFI_BACKUP_SRAM
