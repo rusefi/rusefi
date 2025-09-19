@@ -608,7 +608,7 @@ enum class ObdCode : uint16_t {
 	//P0559 Brake Booster Pressure Sensor Circuit Intermittent
 	OBD_System_Voltage_Malfunction = 560,
 	//P0561 System Voltage Unstable
-	//P0562 System Voltage Low
+	OBD_System_Voltage_Low = 562,
 	//P0563 System Voltage High
 	//P0564 Cruise Control Multi-Function Input "A" Circuit
 	//P0565 Cruise Control On Signal Malfunction
