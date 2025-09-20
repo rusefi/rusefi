@@ -91,15 +91,19 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
 CONSOLE_FOLDER_SOURCES = \
   ../misc/console_launcher/rusefi_autoupdate.exe \
   ../misc/console_launcher/rusefi_console.exe \
-  $(wildcard ../java_console/*.dll) \
-  ../firmware/ext/openblt/Host/libopenblt.dll \
-  ../firmware/ext/openblt/Host/BootCommander.exe \
-  ../firmware/ext/openblt/Host/libopenblt.so \
-  ../firmware/ext/openblt/Host/libopenblt.dylib \
-  ../firmware/ext/openblt/Host/openblt_jni.dll \
-  ../firmware/ext/openblt/Host/libopenblt_jni.so \
-  ../firmware/ext/openblt/Host/libopenblt_jni.dylib \
   $(SIMULATOR_EXE)
+
+#  $(wildcard ../java_console/*.dll) \
+
+
+#   ../firmware/ext/openblt/Host/libopenblt.dll \
+#   ../firmware/ext/openblt/Host/BootCommander.exe \
+#   ../firmware/ext/openblt/Host/libopenblt.so \
+#   ../firmware/ext/openblt/Host/libopenblt.dylib \
+#   ../firmware/ext/openblt/Host/openblt_jni.dll \
+#   ../firmware/ext/openblt/Host/libopenblt_jni.so \
+#   ../firmware/ext/openblt/Host/libopenblt_jni.dylib \
+
 
 # yes, this one is inverted
 ifneq ($(DO_NOT_BUNDLE_STM32_PROG),yes)
