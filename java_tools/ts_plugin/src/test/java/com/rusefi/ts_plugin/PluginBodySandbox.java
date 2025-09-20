@@ -60,9 +60,11 @@ public class PluginBodySandbox {
         doReturn(controllerParameterServer).when(controllerAccess).getControllerParameterServer();
         doReturn(outputChannelServer).when(controllerAccess).getOutputChannelServer();
 
-        FrameHelper frameHelper = new FrameHelper();
-        frameHelper.getFrame().setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
-        frameHelper.showFrame(new PluginEntry(() -> controllerAccess).getContent());
-    }
 
+        SwingUtilities.invokeLater(() -> {
+            FrameHelper frameHelper = new FrameHelper();
+            frameHelper.getFrame().setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
+            frameHelper.showFrame(new PluginEntry(() -> controllerAccess).getContent());
+        });
+    }
 }
