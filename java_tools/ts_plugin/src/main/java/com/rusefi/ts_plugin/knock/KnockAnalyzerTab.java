@@ -419,7 +419,9 @@ public class KnockAnalyzerTab {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+/* dead code?
             knockCanvas.setupFrequencyByClick(e.getX(), e.getY());
+ */
         }
     }
 }
