@@ -218,19 +218,6 @@ never used?
         this.updateFirmwareJob = Optional.of(updateFirmwareJob);
         hideStatusMessage();
         refreshButtons();
-        Optional<String> updateFirmwareButtonText = Optional.empty();
-        if (updateFirmwareJob instanceof OpenBltAutoJob) {
-            updateFirmwareButtonText = Optional.of("Auto Update Firmware");
-        } else if (updateFirmwareJob instanceof OpenBltManualJob) {
-            updateFirmwareButtonText = Optional.of("Blt Update Firmware");
-        } else if (updateFirmwareJob instanceof DfuAutoJob) {
-            updateFirmwareButtonText = Optional.of("Update Firmware");
-        } else if (updateFirmwareJob instanceof DfuManualJob) {
-            updateFirmwareButtonText = Optional.of("Update Firmware via DFU");
-        } else {
-            log.error(String.format("Unexpected job type: %s", updateFirmwareJob.getClass().getSimpleName()));
-        }
-        updateFirmwareButtonText.ifPresent(updateFirmwareButton::setText);
     }
 
     private void resetUpdateFirmwareJob(final String reason) {
@@ -333,7 +320,29 @@ never used?
     */
 
     public void refreshButtons() {
-        updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
+        final boolean isFirmwareUpdatePossible =
+            updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress();
+        if (isFirmwareUpdatePossible) {
+            final AsyncJob currentUpdateFirmwareJob = updateFirmwareJob.get();
+            Optional<String> updateFirmwareButtonText = Optional.empty();
+            if (currentUpdateFirmwareJob instanceof OpenBltAutoJob) {
+                updateFirmwareButtonText = Optional.of("Auto Update Firmware");
+            } else if (currentUpdateFirmwareJob instanceof OpenBltManualJob) {
+                updateFirmwareButtonText = Optional.of("Blt Update Firmware");
+            } else if (currentUpdateFirmwareJob instanceof DfuAutoJob) {
+                updateFirmwareButtonText = Optional.of("Update Firmware");
+            } else if (currentUpdateFirmwareJob instanceof DfuManualJob) {
+                updateFirmwareButtonText = Optional.of("Update Firmware via DFU");
+            } else {
+                log.error(String.format(
+                    "Unexpected job type: %s",
+                    currentUpdateFirmwareJob.getClass().getSimpleName()
+                ));
+            }
+            updateFirmwareButtonText.ifPresent(updateFirmwareButton::setText);
+        }
+        updateFirmwareButton.setEnabled(isFirmwareUpdatePossible);
+
         final Optional<PortResult> ecuPort = ecuPortToUse.get();
         final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
         importTuneButton.setEnabled(isEcuPortJobPossible);
