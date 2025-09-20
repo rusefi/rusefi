@@ -45,11 +45,6 @@ public class XcpNet implements IXcpTransport {
         }
     }
 
-    @Override
-    public void close() throws IOException {
-        disconnect();
-    }
-
     private static class TransportImpl implements Closeable {
         private final Socket mSocket;
 
