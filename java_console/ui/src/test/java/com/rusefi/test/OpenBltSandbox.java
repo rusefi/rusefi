@@ -5,9 +5,12 @@ import com.rusefi.libopenblt.XcpSettings;
 import com.rusefi.libopenblt.transport.IXcpTransport;
 import com.rusefi.libopenblt.transport.XcpNet;
 
+import java.io.IOException;
+
 public class OpenBltSandbox {
-    public static void main(String[] args) {
-        try (IXcpTransport transport = new XcpNet("192.168.10.1", 29000)) {
+    public static void main(String[] args) throws IOException {
+        IXcpTransport transport = new XcpNet("192.168.10.1", 29000);
+        try {
             XcpLoader loader = new XcpLoader(transport, new XcpSettings());
 
             loader.start();
@@ -21,6 +24,8 @@ public class OpenBltSandbox {
             }
         } catch (Exception e) {
             System.out.print(e);
+        } finally {
+            transport.disconnect();
         }
     }
 }
