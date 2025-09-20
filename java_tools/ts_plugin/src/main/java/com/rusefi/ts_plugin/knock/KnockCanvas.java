@@ -459,7 +459,9 @@ public class KnockCanvas {
             }
         }
 
-        return (int)((float)imageX / bx);
+        int i = (int) ((float) imageX / bx);
+        // we shall be in [0, width) range
+        return Integer.min(width - 1, i);
     }
 
     int canvasYToSpectrogramSpace(int y) {
