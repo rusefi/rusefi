@@ -2,7 +2,7 @@ package com.rusefi.libopenblt.transport;
 
 import java.io.IOException;
 
-public interface IXcpTransport extends AutoCloseable {
+public interface IXcpTransport {
     void connect() throws IOException;
     void disconnect() throws IOException;
 

@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public class XcpSerial implements IXcpTransport{
+public class XcpSerial implements IXcpTransport {
     private static final Logging log = getLogging(XcpSerial.class);
     private static final boolean VERBOSE;
 
@@ -69,11 +69,6 @@ public class XcpSerial implements IXcpTransport{
                 mPort = null;
             }
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        disconnect();
     }
 
     @Override
