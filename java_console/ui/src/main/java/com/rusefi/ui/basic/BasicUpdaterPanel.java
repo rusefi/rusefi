@@ -152,59 +152,52 @@ never used?
     private void updateUpdateFirmwareJob() {
         final AvailableHardware currentHardware = connectivityContext.getCurrentHardware();
         log.info("updateUpdateFirmwareJob " + currentHardware);
-        List<PortResult> portsToUpdateFirmware = getPortResults(currentHardware);
-        if (!portsToUpdateFirmware.isEmpty()) {
-            // OpenBlt first preference
-            updateUpdateFirmwareJobNotDfu(portsToUpdateFirmware);
-        } else {
-            // fallback to DFU which is more fragile
-            setUpdateFirmwareJob(new DfuManualJob());
+        final List<PortResult> portsToUpdateFirmware = getPortResults(currentHardware);
+        switch (portsToUpdateFirmware.size()) {
+            case 1: {
+                // OpenBlt first preference
+                setUpdateFirmwareJob(getNonDfuUpdateFirmwareJobForPort(portsToUpdateFirmware.get(0)));
+                break;
+            }
+            case 0: {
+                // fallback to DFU which is more fragile
+                setUpdateFirmwareJob(new DfuManualJob());
+                break;
+            }
+            default: {
+                resetUpdateFirmwareJob(String.format(
+                    "Multiple ECUs found on: %s",
+                    portsToUpdateFirmware.stream()
+                        .map(portResult -> portResult.port)
+                        .collect(Collectors.joining(", "))
+                ));
+                break;
+            }
         }
     }
 
-    private void updateUpdateFirmwareJobNotDfu(List<PortResult> portsToUpdateFirmware) {
-        {
-            switch (portsToUpdateFirmware.size()) {
-                case 0: {
-                    resetUpdateFirmwareJob("ECU not found");
-                    break;
-                }
-                case 1: {
-                    final PortResult portToUpdateFirmware = portsToUpdateFirmware.get(0);
-                    AsyncJob job = null;
-                    final SerialPortType portType = portToUpdateFirmware.type;
-                    switch (portType) {
-                        case Ecu: {
-                            job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
-                            break;
-                        }
-                        case EcuWithOpenblt: {
-                            job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
-                            break;
-                        }
-                        case OpenBlt: {
-                            job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton);
-                            break;
-                        }
-                        default: {
-                            log.error(String.format("Unexpected port type: %s", portType));
-                            break;
-                        }
-                    }
-                    setUpdateFirmwareJob(job);
-                    break;
-                }
-                default: {
-                    resetUpdateFirmwareJob(String.format(
-                        "Multiple ECUs found on: %s",
-                        portsToUpdateFirmware.stream()
-                            .map(portResult -> portResult.port)
-                            .collect(Collectors.joining(", "))
-                    ));
-                    break;
-                }
+    private AsyncJob getNonDfuUpdateFirmwareJobForPort(final PortResult portToUpdateFirmware) {
+        AsyncJob job = null;
+        final SerialPortType portType = portToUpdateFirmware.type;
+        switch (portType) {
+            case Ecu: {
+                job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
+                break;
+            }
+            case EcuWithOpenblt: {
+                job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
+                break;
+            }
+            case OpenBlt: {
+                job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton);
+                break;
+            }
+            default: {
+                log.error(String.format("Unexpected port type: %s", portType));
+                break;
             }
         }
+        return job;
     }
 
     private @NotNull List<PortResult> getPortResults(AvailableHardware currentHardware) {
