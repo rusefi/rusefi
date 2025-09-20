@@ -175,7 +175,7 @@ public class ProgramSelector {
         return waitForPredicate(
             String.format("Waiting for ECU on port %s to reboot to OpenBlt for up to " + TOTAL_WAIT_SECONDS + " seconds...", ecuPort),
             () -> {
-                final AvailableHardware availableHardware = connectivityContext.getSerialPortScanner().getCurrentHardware();
+                final AvailableHardware availableHardware = connectivityContext.getCurrentHardware();
                 log.info(String.format(
                     "current ports: [%s]",
                     availableHardware.getKnownPorts().stream()
@@ -196,7 +196,7 @@ public class ProgramSelector {
         waitForPredicate(
             "Waiting for new OpenBlt port to appear...",
             () -> {
-                final AvailableHardware availableHardwareAfter = connectivityContext.getSerialPortScanner().getCurrentHardware();
+                final AvailableHardware availableHardwareAfter = connectivityContext.getCurrentHardware();
                 log.info(String.format(
                     "ports after reboot to OpenBlt: [%s]",
                     availableHardwareAfter.getKnownPorts().stream()
@@ -229,7 +229,7 @@ public class ProgramSelector {
     }
 
     private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext) {
-        final List<PortResult> openBltPortsBefore = connectivityContext.getSerialPortScanner().getCurrentHardware().getKnownPorts(OpenBlt);
+        final List<PortResult> openBltPortsBefore = connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt);
 
         rebootToOpenblt(parent, ecuPort.port, callbacks);
 
