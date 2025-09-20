@@ -67,6 +67,7 @@ public class XcpLoader {
         // Send a null program to conclude the programming session
         sendCmdProgram(new byte[0]);
         sendCmdProgramReset();
+        mTransport.disconnect();
     }
 
     private void connect() throws IOException {

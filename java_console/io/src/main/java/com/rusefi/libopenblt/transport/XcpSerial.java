@@ -66,6 +66,7 @@ public class XcpSerial implements IXcpTransport {
         synchronized (mLock) {
             if (mPort != null) {
                 mPort.closePort();
+                log.info("disconnect " + mPortName);
                 mPort = null;
             }
         }
