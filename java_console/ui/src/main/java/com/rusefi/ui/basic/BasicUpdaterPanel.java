@@ -142,14 +142,15 @@ never used?
         statusMessage.setText(niceStatus);
     }
 
-    public void onHardwareUpdated(final AvailableHardware currentHardware) {
+    public void onHardwareUpdated() {
         hideStatusMessage();
 
-        updateUpdateFirmwareJob(currentHardware);
-        updateEcuPortToUse(currentHardware);
+        updateUpdateFirmwareJob();
+        updateEcuPortToUse();
     }
 
-    private void updateUpdateFirmwareJob(final AvailableHardware currentHardware) {
+    private void updateUpdateFirmwareJob() {
+        final AvailableHardware currentHardware = connectivityContext.getCurrentHardware();
         log.info("updateUpdateFirmwareJob " + currentHardware);
         List<PortResult> portsToUpdateFirmware = getPortResults(currentHardware);
         if (!portsToUpdateFirmware.isEmpty()) {
@@ -245,7 +246,8 @@ never used?
         statusMessage.setText(reason);
     }
 
-    private void updateEcuPortToUse(final AvailableHardware currentHardware) {
+    private void updateEcuPortToUse() {
+        final AvailableHardware currentHardware = connectivityContext.getCurrentHardware();
         final List<PortResult> ecuPortsToUse = currentHardware.getKnownPorts(CompatibilitySet.of(
             SerialPortType.Ecu,
             SerialPortType.EcuWithOpenblt
