@@ -25,8 +25,6 @@ public class PluginEntry implements TsPluginBody {
 
     static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
 
-    private final JTabbedPane tabbedPane = new JTabbedPane();
-
     /**
      * the real constructor - this one is invoked via reflection
      */
@@ -44,31 +42,22 @@ public class PluginEntry implements TsPluginBody {
             return;
         }
 
-        TuneUploadTab tuneUploadTab = new TuneUploadTab(controllerAccessSupplier);
-        LogUploadSelector logUploadTab = new LogUploadSelector(controllerAccessSupplier);
+//        TuneUploadTab tuneUploadTab = new TuneUploadTab(controllerAccessSupplier);
+//        LogUploadSelector logUploadTab = new LogUploadSelector(controllerAccessSupplier);
         //BroadcastTab broadcastTab = new BroadcastTab();
         //RemoteTab remoteTab = new RemoteTab();
         KnockAnalyzerTab knockAnalyzerTab = new KnockAnalyzerTab(controllerAccessSupplier);
 
-        tabbedPane.addTab("Tune Upload", tuneUploadTab.getContent());
-        tabbedPane.addTab("Log Upload", logUploadTab.getContent());
+//        tabbedPane.addTab("Tune Upload", tuneUploadTab.getContent());
+//        tabbedPane.addTab("Log Upload", logUploadTab.getContent());
 //        tabbedPane.addTab("Broadcast", broadcastTab.getContent());
 //        tabbedPane.addTab("Remote ECU", remoteTab.getContent());
+        JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Knock Analyzer", knockAnalyzerTab.getContent());
 
         this.content.add(tabbedPane);
 
         InstanceAuthContext.startup();
-    }
-
-    public static String getNonDaemonThreads() {
-        StringBuilder sb = new StringBuilder();
-        for (Thread thread : Thread.getAllStackTraces().keySet()) {
-            // Daemon thread will not prevent the JVM from exiting
-            if (!thread.isDaemon())
-                sb.append(thread.getName() + "\n");
-        }
-        return sb.toString();
     }
 
     private boolean isLauncherTooOld() {
@@ -90,7 +79,7 @@ public class PluginEntry implements TsPluginBody {
     }
 
     private static boolean isEmpty(String value) {
-        return value == null || value.trim().length() == 0;
+        return value == null || value.trim().isEmpty();
     }
 
     @Override
@@ -104,7 +93,7 @@ public class PluginEntry implements TsPluginBody {
 */
 
     /**
-     * this method is invoked by refection
+     * this method is invoked by reflection
      *
      * @see TsPluginBody#GET_VERSION
      */
