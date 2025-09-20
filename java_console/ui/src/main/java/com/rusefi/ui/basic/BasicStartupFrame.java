@@ -63,7 +63,7 @@ public class BasicStartupFrame {
         firmwareUpdateContent.add(statusPanelFirmwareTab);
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
-            onHardwareUpdated(currentHardware);
+            onHardwareUpdated();
         }));
 
         tabbedPane.addTab("Firmware", firmwareUpdateContent);
@@ -95,10 +95,10 @@ public class BasicStartupFrame {
         packFrame();
     }
 
-    public void onHardwareUpdated(final AvailableHardware currentHardware) {
+    public void onHardwareUpdated() {
         status.stop();
 
-        basicUpdaterPanel.onHardwareUpdated(currentHardware);
+        basicUpdaterPanel.onHardwareUpdated();
 
         // I'm not sure if the following frame packing is really necessary, but I'm adding it just in case if frame was
         // not packed in updateStatus method
