@@ -320,6 +320,20 @@ never used?
     */
 
     public void refreshButtons() {
+        refreshUpdateFirmwareButton();
+        final Optional<PortResult> ecuPort = ecuPortToUse.get();
+        final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
+        importTuneButton.setEnabled(isEcuPortJobPossible);
+//        updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
+        if (logoLabelPopupMenu != null) {
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
+                isEcuPortJobPossible,
+                ecuPort.map(port -> existsAnyOfUnitIdentifierFields(port.getCalibrations().getIniFile())).orElse(false)
+            );
+        }
+    }
+
+    private void refreshUpdateFirmwareButton() {
         final boolean isFirmwareUpdatePossible =
             updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress();
         if (isFirmwareUpdatePossible) {
@@ -342,17 +356,6 @@ never used?
             updateFirmwareButtonText.ifPresent(updateFirmwareButton::setText);
         }
         updateFirmwareButton.setEnabled(isFirmwareUpdatePossible);
-
-        final Optional<PortResult> ecuPort = ecuPortToUse.get();
-        final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
-        importTuneButton.setEnabled(isEcuPortJobPossible);
-//        updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
-        if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
-                isEcuPortJobPossible,
-                ecuPort.map(port -> existsAnyOfUnitIdentifierFields(port.getCalibrations().getIniFile())).orElse(false)
-            );
-        }
     }
 
     private boolean existsAnyOfUnitIdentifierFields(final IniFileModel iniFile) {
