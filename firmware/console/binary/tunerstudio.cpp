@@ -442,8 +442,12 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 }
 
 static void handleGetConfigErorr(TsChannelBase* tsChannel) {
-	const char* configError = hasFirmwareError()? getCriticalErrorMessage() : getConfigErrorMessage();
-	tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
+	const char* errorMessage = hasFirmwareError() ? getCriticalErrorMessage() : getConfigErrorMessage();
+	if (strlen(errorMessage) == 0) {
+		// Check for engine's warning code
+		errorMessage = engine->engineState.warnings.getWarningMessage();
+	}
+	tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(errorMessage), strlen(errorMessage), true);
 }
 
 /**

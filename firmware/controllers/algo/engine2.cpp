@@ -19,6 +19,8 @@
 #include "injector_model.h"
 #include "tunerstudio.h"
 
+#include "rusefi/efistring.h"
+
 #if ! EFI_UNIT_TEST
 #include "status_loop.h"
 #endif
@@ -38,13 +40,9 @@ void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
 	lastErrorCode = code;
 
 	warning_t* existing = recentWarnings.find(code);
-
 	if (!existing) {
 		chibios_rt::CriticalSectionLocker csl;
 
-		if (text) {
-			//strlncpy()
-		}
 		// Add the code to the list
 		existing = recentWarnings.add(warning_t(code));
 	}
@@ -52,6 +50,12 @@ void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
 	if (existing) {
 		// Reset the timer on the code to now
 		existing->LastTriggered.reset();
+
+		// no pending message? lets try to add this
+		if ((m_msgWarning == nullptr) && (text)) {
+			strlncpy(m_msg, text, sizeof(m_msg));
+			m_msgWarning = existing;
+		}
 	}
 
 	// Reset the "any warning" timer too
@@ -71,7 +75,6 @@ void WarningCodeState::refreshTs() {
 	size_t i = 0;
 	for (size_t j = 0; j < recentWarnings.getCount(); j++) {
 		warning_t& warn = recentWarnings.get(j);
-		// if still active
 		if (warn.Code != ObdCode::None) {
 			if (!warn.LastTriggered.hasElapsedSec(period)) {
 				if (i < efi::size(tsOutputChannels->recentErrorCode)) {
@@ -79,8 +82,13 @@ void WarningCodeState::refreshTs() {
 					i++;
 				}
 			} else {
+				// warning message is outdated, stop showing to TS
+				if (m_msgWarning == &warn) {
+					m_msg[0] = 0;
+					m_msgWarning = nullptr;
+				}
 				// TODO:
-				// reset with warning as it is outdated
+				// reset warning as it is outdated
 			}
 		}
 	}
@@ -89,9 +97,15 @@ void WarningCodeState::refreshTs() {
 	for ( ; i < efi::size(tsOutputChannels->recentErrorCode); i++) {
 		tsOutputChannels->recentErrorCode[i] = 0;
 	}
+}
 
-	// Do we have any code to show as test?
-	tsOutputChannels->hasCriticalError |= 0;
+bool WarningCodeState::hasWarningMessage() {
+	// Do we have any error code to show as text?
+	return (m_msgWarning != nullptr);
+}
+
+const char* WarningCodeState::getWarningMessage() {
+	return m_msg;
 }
 
 /**
