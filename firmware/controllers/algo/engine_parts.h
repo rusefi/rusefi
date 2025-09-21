@@ -58,6 +58,8 @@ public:
 	void addWarningCode(ObdCode code, const char *text = nullptr);
 	bool isWarningNow() const;
 	bool isWarningNow(ObdCode code) const;
+	bool hasWarningMessage();
+	const char* getWarningMessage();
 	void refreshTs();
 	void clear();
 	int warningCounter;
@@ -65,6 +67,10 @@ public:
 	const char *description;
 
 	Timer timeSinceLastWarning;
+
+	// text that may be assotiated with some warning and should be reported to TS
+	critical_msg_t m_msg;
+	warning_t *m_msgWarning = nullptr;
 
 	// todo: we need a way to post multiple recent warnings into TS
 	warningBuffer_t recentWarnings;
