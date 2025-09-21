@@ -36,16 +36,6 @@ BS_:
 BU_:
 
 
-BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
- SG_ AFR : 7|16@0+ (0.001,0) [0|0] "AFR" Vector__XXX
- SG_ VVTPos : 24|16@1- (0.02,0) [0|0] "deg" Vector__XXX
- SG_ NewSignal_0010 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0009 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0008 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0015 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0016 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0024 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 512 BASE0: 8 Vector__XXX
  SG_ WarningCounter : 0|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ LastError : 16|16@1+ (1,0) [0|0] "" Vector__XXX
@@ -138,9 +128,6 @@ BO_ 522 BASE10: 8 Vector__XXX
  SG_ knock7 : 56|8@1- (1,0) [-60|10] "db" Vector__XXX
 
 
-CM_ SG_ 3221225472 AFR "Current AFR Reading
-";
-CM_ SG_ 3221225472 VVTPos "Current VVT Position Reading";
 CM_ SG_ 512 WarningCounter "Total warnings since ECU start time";
 CM_ SG_ 512 LastError "Last error code";
 CM_ SG_ 512 RevLimAct "RPM Limiter Active";
