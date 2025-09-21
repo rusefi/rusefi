@@ -12,6 +12,7 @@
 #include "error_handling_led.h"
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
+#include "rusefi/efistring.h"
 
 #if EFI_USE_OPENBLT
 /* communication with OpenBLT that is plain C, not to modify external file */
@@ -26,22 +27,6 @@ using namespace rusefi::stringutil;
  * Executes the BKPT instruction that causes the debugger to stop.
  */
 #define bkpt() __asm volatile("BKPT #0\n")
-
-// see strncpy man page
-// this implementation helps avoiding following gcc error/warning:
-// error: 'strncpy' output may be truncated copying xxx bytes from a string of length xxx
-
-char *strlncpy(char *dest, const char *src, size_t size)
-{
-	size_t i;
-
-	for (i = 0; (i < (size - 1)) && (src[i] != '\0'); i++)
-		dest[i] = src[i];
-	for ( ; i < size; i++)
-		dest[i] = '\0';
-
-	return dest;
-}
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
