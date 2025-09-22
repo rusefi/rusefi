@@ -11,7 +11,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -29,12 +28,10 @@ public class KnockAnalyzerTab {
     }
 
     private final Supplier<ControllerAccess> controllerAccessSupplier;
-    String ecuControllerName;
 
     private final JComponent content = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 5, 5));
-    JComponent allDraw = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
-    JComponent canvasesComponent = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 5, 5));
+    private final JComponent canvasesComponent = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 5, 5));
     private final JButton buttonStartStop = new JButton("Start");
 
     private boolean started = false;
@@ -51,121 +48,18 @@ public class KnockAnalyzerTab {
     private CanvasType canvasType = CanvasType.CT_ALL;
 
     private final ArrayList<KnockCanvas> canvases = new ArrayList<>();
-    private final KnockMagnitudeCanvas magnituges = new KnockMagnitudeCanvas();
+    private final KnockMagnitudeCanvas magnitudes = new KnockMagnitudeCanvas();
 
     public KnockAnalyzerTab(Supplier<ControllerAccess> controllerAccessSupplier) {
         this.controllerAccessSupplier = controllerAccessSupplier;
-        ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
 
-        try {
-            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockFrequencyStart", new OutputChannelClient() {
-                @Override
-                public void setCurrentOutputChannelValue(String name, double v) {
-
-                    int frequency = (int) v;
-                    canvases.forEach(c -> c.setFrequencyStart(frequency));
-                    magnituges.setFrequencyStart(frequency);
-                }
-            });
-        } catch (ControllerException ee) {
-            log.error(ee.getMessage());
-        }
-
-        try {
-            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockFrequencyStep", new OutputChannelClient() {
-                @Override
-                public void setCurrentOutputChannelValue(String name, double v) {
-
-                    float frequencyStep = (float) v;
-                    canvases.forEach(c -> c.setFrequencyStep(frequencyStep));
-                    magnituges.setFrequencyStep(frequencyStep);
-                }
-            });
-        } catch (ControllerException e) {
-            log.error(e.getMessage());
-        }
-
-        try {
-            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockSpectrumChannelCyl", (name, v) -> {
-
-                long value = (long) v;
-
-                flush();
-
-                KnockAnalyzerTab.this.channel = (int) (value >>> 8) & 0xFF;
-                KnockAnalyzerTab.this.cylinder = (int) (value & 0xFF);
-            });
-        } catch (ControllerException e) {
-            log.error(e.getMessage());
-        }
-
-        try {
-            ControllerParameter cylindersCountParameter = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, CYLINDERS_COUNT);
-            if (cylindersCountParameter != null) {
-                double value = cylindersCountParameter.getScalarValue();
-                KnockAnalyzerTab.this.cylindersCount = (int) (value);
-            }
-        } catch (ControllerException e) {
-            log.error(e.getMessage());
-        }
-
-        try {
-            String[] outputChannelNames = this.controllerAccessSupplier.get().getOutputChannelServer().getOutputChannels(ecuControllerName);
-
-            String[] spectrums = Arrays.stream(outputChannelNames)
-                .filter((n) -> n.indexOf("m_knockSpectrum") >= 0)
-                .collect(Collectors.toList())
-                .toArray(new String[0]);
-
-            int checksum = 0;
-            for (int i = 0; i < 16; ++i) {
-                checksum += i;
-            }
-
-            if (outputChannelNames.length!=0)
-            for (int i = 0; i < 16; ++i) {
-                try {
-
-                    String name = spectrums[i];
-                    int finalChecksum = checksum;
-                    controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, name, (name1, v) -> {
-                        if (!started) {
-                            refreshCanvases();
-                            return;
-                        }
-
-                        flushed = false;
-
-                        String indexStr = name1.substring(15);
-                        int index = Integer.parseInt(indexStr) - 1;
-
-                        long value = (long) v;
-
-                        long a = (value >>> 24) & 0xFF;
-                        long b = (value >>> 16) & 0xFF;
-                        long c = (value >>> 8) & 0xFF;
-                        long d = value & 0xFF;
-
-                        values[index * 4] = a;
-                        values[(index * 4) + 1] = b;
-                        values[(index * 4) + 2] = c;
-                        values[(index * 4) + 3] = d;
-
-                        line_sum_index[0] += index;
-                        if (line_sum_index[0] >= finalChecksum) {
-
-                            flush();
-
-                            line_sum_index[0] = 0;
-                        }
-                    });
-                } catch (ControllerException ee) {
-                    log.error(ee.getMessage());
-                }
-            }
-
-        } catch (ControllerException e) {
-            log.error(e.getMessage());
+        String[] ecuConfigurationNames = this.controllerAccessSupplier.get().getEcuConfigurationNames();
+        if (ecuConfigurationNames.length > 0) {
+            String ecuControllerName = ecuConfigurationNames[0];
+            subscribe(controllerAccessSupplier, ecuControllerName);
+        } else {
+            // major todo: plugin could be displayed prior to opening project!
+            log.info("No configuration yet");
         }
 
         buttonStartStop.addActionListener(e -> {
@@ -214,17 +108,18 @@ public class KnockAnalyzerTab {
         canvasScroll.setPreferredSize(new Dimension(840, 800));
         canvasScroll.setMinimumSize(new Dimension(840, 800));
         canvasScroll.setMaximumSize(new Dimension(840, 800));
+        JComponent allDraw = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         allDraw.add(canvasScroll);
         content.add(allDraw);
 
-        JComponent magnituges = this.magnituges.getComponent();
-        magnituges.setFocusable(true);
-        magnituges.setFocusTraversalKeysEnabled(false);
-        magnituges.setFocusable(true);
-        magnituges.setDoubleBuffered(true);
-        magnituges.setPreferredSize(new Dimension(760, 200));
-        magnituges.setMinimumSize(new Dimension(760, 200));
-        allDraw.add(magnituges);
+        JComponent magnitudes = this.magnitudes.getComponent();
+        magnitudes.setFocusable(true);
+        magnitudes.setFocusTraversalKeysEnabled(false);
+        magnitudes.setFocusable(true);
+        magnitudes.setDoubleBuffered(true);
+        magnitudes.setPreferredSize(new Dimension(760, 200));
+        magnitudes.setMinimumSize(new Dimension(760, 200));
+        allDraw.add(magnitudes);
 
         createCanvas(CanvasType.CT_ALL);
 
@@ -232,6 +127,117 @@ public class KnockAnalyzerTab {
         this.setStartState(enabled);
 
         refreshCanvases();
+    }
+
+    private void subscribe(Supplier<ControllerAccess> controllerAccessSupplier, String ecuControllerName1) {
+        try {
+            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName1, "m_knockFrequencyStart", new OutputChannelClient() {
+                @Override
+                public void setCurrentOutputChannelValue(String name, double v) {
+
+                    int frequency = (int) v;
+                    canvases.forEach(c -> c.setFrequencyStart(frequency));
+                    magnitudes.setFrequencyStart(frequency);
+                }
+            });
+        } catch (ControllerException ee) {
+            log.error(ee.getMessage());
+        }
+
+        try {
+            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName1, "m_knockFrequencyStep", new OutputChannelClient() {
+                @Override
+                public void setCurrentOutputChannelValue(String name, double v) {
+
+                    float frequencyStep = (float) v;
+                    canvases.forEach(c -> c.setFrequencyStep(frequencyStep));
+                    magnitudes.setFrequencyStep(frequencyStep);
+                }
+            });
+        } catch (ControllerException e) {
+            log.error(e.getMessage());
+        }
+
+        try {
+            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName1, "m_knockSpectrumChannelCyl", (name, v) -> {
+
+                long value = (long) v;
+
+                flush();
+
+                KnockAnalyzerTab.this.channel = (int) (value >>> 8) & 0xFF;
+                KnockAnalyzerTab.this.cylinder = (int) (value & 0xFF);
+            });
+        } catch (ControllerException e) {
+            log.error(e.getMessage());
+        }
+
+        try {
+            ControllerParameter cylindersCountParameter = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName1, CYLINDERS_COUNT);
+            if (cylindersCountParameter != null) {
+                double value = cylindersCountParameter.getScalarValue();
+                KnockAnalyzerTab.this.cylindersCount = (int) (value);
+            }
+        } catch (ControllerException e) {
+            log.error(e.getMessage());
+        }
+
+        try {
+            String[] outputChannelNames = this.controllerAccessSupplier.get().getOutputChannelServer().getOutputChannels(ecuControllerName1);
+
+            String[] spectrums = Arrays.stream(outputChannelNames)
+                .filter((n) -> n.contains("m_knockSpectrum")).toArray(String[]::new);
+
+            int checksum = 0;
+            for (int i = 0; i < 16; ++i) {
+                checksum += i;
+            }
+
+            if (outputChannelNames.length != 0)
+                for (int i = 0; i < 16; ++i) {
+                    try {
+
+                        String name = spectrums[i];
+                        int finalChecksum = checksum;
+                        controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName1, name, (name1, v) -> {
+                            if (!started) {
+                                refreshCanvases();
+                                return;
+                            }
+
+                            flushed = false;
+
+                            String indexStr = name1.substring(15);
+                            int index = Integer.parseInt(indexStr) - 1;
+
+                            long value = (long) v;
+
+                            long a = (value >>> 24) & 0xFF;
+                            long b = (value >>> 16) & 0xFF;
+                            long c = (value >>> 8) & 0xFF;
+                            long d = value & 0xFF;
+
+                            values[index * 4] = a;
+                            values[(index * 4) + 1] = b;
+                            values[(index * 4) + 2] = c;
+                            values[(index * 4) + 3] = d;
+
+                            line_sum_index[0] += index;
+                            if (line_sum_index[0] >= finalChecksum) {
+
+                                flush();
+
+                                line_sum_index[0] = 0;
+                            }
+                        });
+                    } catch (ControllerException ee) {
+                        log.error(ee.getMessage());
+                    }
+                }
+
+        } catch (ControllerException e) {
+            log.error(e.getMessage());
+        }
     }
 
     private void flush() {
@@ -324,7 +330,7 @@ public class KnockAnalyzerTab {
     public void createCanvas(int number, int divider) {
         KnockCanvas canvas = new KnockCanvas(number, divider);
         KnockMouseListener kml = new KnockMouseListener(canvas);
-        KnockMotionListener kmml = new KnockMotionListener(canvas, this.magnituges);
+        KnockMotionListener kmml = new KnockMotionListener(canvas, this.magnitudes);
         initCanvas(kmml, kml, canvas.getComponent());
         canvasesComponent.add(canvas.getComponent());
         canvases.add(canvas);
@@ -385,12 +391,12 @@ public class KnockAnalyzerTab {
 
     public class KnockMotionListener implements MouseMotionListener {
 
-        private KnockCanvas knockCanvas;
-        private KnockMagnitudeCanvas magnitugesCanvas;
+        private final KnockCanvas knockCanvas;
+        private final KnockMagnitudeCanvas magnitudesCanvas;
 
-        KnockMotionListener(KnockCanvas canvas, KnockMagnitudeCanvas magnituges) {
+        KnockMotionListener(KnockCanvas canvas, KnockMagnitudeCanvas magnitudes) {
             knockCanvas = canvas;
-            magnitugesCanvas = magnituges;
+            magnitudesCanvas = magnitudes;
         }
 
         @Override
@@ -405,7 +411,7 @@ public class KnockAnalyzerTab {
 
             float[] magnitudes = knockCanvas.getCurrentMouseMagnitudes();
 
-            magnitugesCanvas.processValues(magnitudes);
+            magnitudesCanvas.processValues(magnitudes);
         }
     }
 
