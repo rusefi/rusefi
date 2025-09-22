@@ -137,8 +137,8 @@ void HardFaultVector(void);
 #endif /* __cplusplus */
 
 // search:openblt_version
-// ascii 'BL02' in reverse LBS byte order
-#define BLT_CURRENT_VERSION 0x32304C42
+// ascii 'BL03' in reverse LBS byte order
+#define BLT_CURRENT_VERSION 0x33304C42
 #define BLT_BIN_VERSION_ADDR              ((uint32_t)0x08000024U)       /*! 3rd reserved DWORD in vector table search:openblt_version */
 
 #if EFI_USE_OPENBLT
