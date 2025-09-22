@@ -17,6 +17,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         VeBlends1BlendParameterMigrator.INSTANCE,
         BoostLoadBinsMigrator.INSTANCE,
         BooleanIniFieldMigrator.INSTANCE,
+        DigitsIniFieldMigrator.INSTANCE,
 
         // leave the default as the final migrator!
         DefaultTuneMigrator.INSTANCE
