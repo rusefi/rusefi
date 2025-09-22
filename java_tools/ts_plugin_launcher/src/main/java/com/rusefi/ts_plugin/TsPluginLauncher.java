@@ -20,7 +20,7 @@ import static com.devexperts.logging.Logging.getLogging;
  * @see Updater
  */
 public class TsPluginLauncher implements ApplicationPlugin {
-    public static final int BUILD_VERSION = 6;
+    public static final int BUILD_VERSION = 7;
     static final String VERSION = "2025.alpha." + BUILD_VERSION;
     private static final Logging log = getLogging(TsPluginLauncher.class);
     private static final String HELP_URL = "https://github.com/rusefi/rusefi/wiki/TS-Plugin";
