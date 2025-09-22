@@ -1,6 +1,8 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.IoHelper;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
 
 import java.io.IOException;
@@ -35,5 +37,18 @@ public class OpenbltDetectorStrategy {
         // Response packet should start with FF
         // Not much else to check, as the rest of the response is protocol settings from the device.
         return response[0] == (byte) 0xFF;
+    }
+
+    static boolean streamHasOpenBlt(IoStream stream) throws IOException {
+        stream.sendPacket(new byte[]{(byte) Integration.TS_QUERY_BOOTLOADER});
+
+        byte[] response = stream.getDataBuffer().getPacket(500, "ecuHasOpenblt");
+        if (!IoHelper.checkResponseCode(response, (byte) Integration.TS_RESPONSE_OK)) {
+            // ECU didn't understand request, bootloader certainly not supported
+            return false;
+        }
+
+        // Data byte indicates bootloader type
+        return response[1] == Integration.TS_QUERY_BOOTLOADER_OPENBLT;
     }
 }

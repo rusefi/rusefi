@@ -1,8 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.binaryprotocol.IoHelper;
-import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BufferedSerialIoStream;
@@ -138,7 +136,7 @@ public enum SerialPortScanner {
         // Give everyone a chance to finish
         try {
             // todo: see if everyone has already finished - make this sleep conditional!
-            // todo: lowe this timeout?
+            // todo: lower this timeout?
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             // We got interrupted because the last port got found, nothing to do
@@ -146,10 +144,7 @@ public enum SerialPortScanner {
 
         // Interrupt all threads under lock to ensure no more objects are added to results
         synchronized (resultsLock) {
-            for (Thread t : threads) {
-                log.trace(String.format("Interrupting thread `%s`...", t.getName()));
-                t.interrupt();
-            }
+            interruptThreads(threads);
         }
 
         // Now check that we got everything - if any timed out, register them as unknown
@@ -161,6 +156,13 @@ public enum SerialPortScanner {
         }
 
         return new ArrayList<>(results.values());
+    }
+
+    private static void interruptThreads(List<Thread> threads) {
+        for (Thread t : threads) {
+            log.trace(String.format("Interrupting thread `%s`...", t.getName()));
+            t.interrupt();
+        }
     }
 
     private final SerialPortCache portCache = new SerialPortCache();
@@ -252,16 +254,7 @@ public enum SerialPortScanner {
                 return false;
             }
 
-            stream.sendPacket(new byte[]{(byte) Integration.TS_QUERY_BOOTLOADER});
-
-            byte[] response = stream.getDataBuffer().getPacket(500, "ecuHasOpenblt");
-            if (!IoHelper.checkResponseCode(response, (byte) Integration.TS_RESPONSE_OK)) {
-                // ECU didn't understand request, bootloader certainly not supported
-                return false;
-            }
-
-            // Data byte indicates bootloader type
-            return response[1] == Integration.TS_QUERY_BOOTLOADER_OPENBLT;
+            return OpenbltDetectorStrategy.streamHasOpenBlt(stream);
         } catch (Exception e) {
             return false;
         }
