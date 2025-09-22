@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.updater;
 
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
@@ -8,7 +8,7 @@ import com.rusefi.io.IoStream;
 import java.io.IOException;
 
 public class OpenbltDetectorStrategy {
-    static boolean isPortOpenblt(IoStream stream) throws IOException {
+    public static boolean isPortOpenblt(IoStream stream) throws IOException {
         if (stream == null) {
             return false;
         }
@@ -39,7 +39,7 @@ public class OpenbltDetectorStrategy {
         return response[0] == (byte) 0xFF;
     }
 
-    static boolean streamHasOpenBlt(IoStream stream) throws IOException {
+    public static boolean streamHasOpenBlt(IoStream stream) throws IOException {
         stream.sendPacket(new byte[]{(byte) Integration.TS_QUERY_BOOTLOADER});
 
         byte[] response = stream.getDataBuffer().getPacket(500, "ecuHasOpenblt");

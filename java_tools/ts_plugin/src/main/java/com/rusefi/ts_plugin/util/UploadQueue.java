@@ -1,10 +1,11 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.util;
 
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.core.FileUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
+import com.rusefi.ts_plugin.ui.TuneUploder;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 

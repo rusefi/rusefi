@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin;
 
+import com.rusefi.ts_plugin.ui.ConnectPanel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

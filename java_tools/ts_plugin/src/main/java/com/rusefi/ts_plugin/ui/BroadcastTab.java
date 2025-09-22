@@ -1,21 +1,4 @@
-package com.rusefi.ts_plugin;
-
-import com.rusefi.auth.AuthTokenUtil;
-import com.rusefi.autodetect.PortDetector;
-import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.proxy.NetworkConnector;
-import com.rusefi.proxy.NetworkConnectorContext;
-import com.rusefi.tools.VehicleToken;
-import com.rusefi.ui.AuthTokenPanel;
-import com.rusefi.ui.util.URLLabel;
-import org.putgemin.VerticalFlowLayout;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package com.rusefi.ts_plugin.ui;
 
 /**
  * @see PluginEntry

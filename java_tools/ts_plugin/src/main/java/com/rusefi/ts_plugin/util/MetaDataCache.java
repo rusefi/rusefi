@@ -1,4 +1,4 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.util;
 
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileMetaInfoImpl;

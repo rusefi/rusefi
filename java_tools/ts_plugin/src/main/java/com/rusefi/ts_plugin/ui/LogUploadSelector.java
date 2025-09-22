@@ -1,4 +1,4 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.ui;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.TsTuneReader;

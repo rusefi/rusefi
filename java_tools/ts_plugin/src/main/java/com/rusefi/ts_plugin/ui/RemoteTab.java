@@ -1,40 +1,4 @@
-package com.rusefi.ts_plugin;
-
-import com.rusefi.NamedThreadFactory;
-import com.rusefi.core.SignatureHelper;
-import com.rusefi.Timeouts;
-import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.core.Pair;
-import com.rusefi.io.serial.StreamStatistics;
-import com.rusefi.io.tcp.ServerSocketReference;
-import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.proxy.NetworkConnector;
-import com.rusefi.core.rusEFIVersion;
-import com.rusefi.server.ApplicationRequest;
-import com.rusefi.server.ControllerInfo;
-import com.rusefi.server.SessionDetails;
-import com.rusefi.server.UserDetails;
-import com.rusefi.tools.online.HttpUtil;
-import com.rusefi.tools.online.ProxyClient;
-import com.rusefi.tools.online.PublicSession;
-import com.rusefi.ts_plugin.auth.InstanceAuthContext;
-import com.rusefi.ts_plugin.auth.SelfInfo;
-import com.rusefi.ui.AuthTokenPanel;
-import com.rusefi.ui.util.URLLabel;
-import org.jetbrains.annotations.NotNull;
-import org.putgemin.VerticalFlowLayout;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+package com.rusefi.ts_plugin.ui;
 
 /**
  * remote ECU access & control

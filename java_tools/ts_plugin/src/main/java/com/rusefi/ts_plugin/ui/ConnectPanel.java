@@ -1,4 +1,4 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;

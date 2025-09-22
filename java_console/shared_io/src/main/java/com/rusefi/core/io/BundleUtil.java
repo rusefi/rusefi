@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -17,7 +16,6 @@ import static com.devexperts.logging.Logging.getLogging;
 public class BundleUtil {
     private static final Logging log = getLogging(BundleUtil.class);
 
-    private static final String DEVELOPMENT = "development";
     private static final String BRANCH_REF_FILE = "release.txt";
 
     /**
@@ -65,51 +63,4 @@ public class BundleUtil {
         return new BundleInfo(branchName, nextBranchName, target);
     }
 
-    public static class BundleInfo {
-        static final BundleInfo UNKNOWN = new BundleInfo("unknown", null, "unknown");
-
-        private final String branchName;
-        private final String nextBranchName;
-        private final String target;
-
-        public BundleInfo(String branchName, String nextBranchName, String target) {
-            this.branchName = Objects.requireNonNull(branchName, "branchName");
-            this.nextBranchName = nextBranchName;
-            this.target = Objects.requireNonNull(target, "target");
-        }
-
-        public static boolean isUndefined(BundleInfo bundleInfo) {
-            return bundleInfo == UNKNOWN;
-        }
-
-        public String getBranchName() {
-            return branchName;
-        }
-
-        public String getNextBranchName() {
-            return nextBranchName;
-        }
-
-        public boolean isMaster() {
-            return DEVELOPMENT.equals(branchName);
-        }
-
-        public String getTarget() {
-            return target;
-        }
-
-        @Override
-        public String toString() {
-            String nextBranchString = nextBranchName != null && !nextBranchName.isEmpty() ? "nextBranchName='" + nextBranchName + '\'' : "";
-            return "BundleInfo{" +
-                "branchName='" + branchName + '\'' +
-                nextBranchString +
-                ", target='" + target + '\'' +
-                '}';
-        }
-
-        public String getUiLabel() {
-            return target + "." + branchName;
-        }
-    }
 }

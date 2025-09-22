@@ -7,6 +7,7 @@ import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.*;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.updater.OpenbltDetectorStrategy;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -144,7 +145,7 @@ public enum SerialPortScanner {
 
         // Interrupt all threads under lock to ensure no more objects are added to results
         synchronized (resultsLock) {
-            interruptThreads(threads);
+            ScannerHelper.interruptThreads(threads);
         }
 
         // Now check that we got everything - if any timed out, register them as unknown
@@ -156,13 +157,6 @@ public enum SerialPortScanner {
         }
 
         return new ArrayList<>(results.values());
-    }
-
-    public static void interruptThreads(List<Thread> threads) {
-        for (Thread t : threads) {
-            log.trace(String.format("Interrupting thread `%s`...", t.getName()));
-            t.interrupt();
-        }
     }
 
     private final SerialPortCache portCache = new SerialPortCache();

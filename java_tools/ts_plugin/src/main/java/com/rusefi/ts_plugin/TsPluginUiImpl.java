@@ -4,6 +4,7 @@ import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ts_plugin.auth.InstanceAuthContext;
 import com.rusefi.ts_plugin.knock.KnockAnalyzerTab;
+import com.rusefi.ts_plugin.ui.TuneUploadTab;
 import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.tune.xml.Constant;
 
@@ -20,20 +21,20 @@ import java.util.function.Supplier;
  * @see BroadcastTab offer your ECU for remove access & control
  * @see PluginBodySandbox
  */
-public class PluginEntry implements TsPluginBody {
+public class TsPluginUiImpl implements TsPluginUi {
     private final JPanel content = new JPanel(new BorderLayout());
 
-    static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
+    public static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
 
     /**
      * the real constructor - this one is invoked via reflection
      */
     @SuppressWarnings("unused")
-    public PluginEntry() {
+    public TsPluginUiImpl() {
         this(ControllerAccess::getInstance);
     }
 
-    public PluginEntry(Supplier<ControllerAccess> controllerAccessSupplier) {
+    public TsPluginUiImpl(Supplier<ControllerAccess> controllerAccessSupplier) {
         System.out.println("PluginEntry init " + this);
 
         if (isLauncherTooOld()) {
@@ -55,7 +56,7 @@ public class PluginEntry implements TsPluginBody {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Knock Analyzer", knockAnalyzerTab.getContent());
 
-        this.content.add(tabbedPane);
+        content.add(tabbedPane);
 
         InstanceAuthContext.startup();
     }
@@ -91,14 +92,4 @@ public class PluginEntry implements TsPluginBody {
         PersistentConfiguration.getConfig().save();
     }
 */
-
-    /**
-     * this method is invoked by reflection
-     *
-     * @see TsPluginBody#GET_VERSION
-     */
-    @SuppressWarnings("unused")
-    public static String getVersion() {
-        return ManifestHelper.getVersion();
-    }
 }

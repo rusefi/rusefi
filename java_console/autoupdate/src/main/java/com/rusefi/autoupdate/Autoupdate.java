@@ -3,6 +3,7 @@ package com.rusefi.autoupdate;
 import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.core.FindFileHelper;
+import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
@@ -79,8 +80,8 @@ public class Autoupdate {
 
     // everything here assumes Windows. Sorry!
     private static void autoupdate(String[] args) {
-        BundleUtil.BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
-        if (BundleUtil.BundleInfo.isUndefined(bundleInfo)) {
+        BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
+        if (BundleInfo.isUndefined(bundleInfo)) {
             log.error("ERROR: Autoupdate: unable to perform without bundleFullName");
             System.exit(-1);
         }
@@ -105,7 +106,7 @@ public class Autoupdate {
         startConsoleAsANewProcess(consoleExeFileName, args);
     }
 
-    private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String firstArgument, BundleUtil.BundleInfo bundleInfo) {
+    private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String firstArgument, BundleInfo bundleInfo) {
         Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
         if (firstArgument.equalsIgnoreCase("release")) {
             // this branch needs progress for custom boards!
@@ -166,7 +167,7 @@ public class Autoupdate {
 
     private static final Predicate<ZipEntry> isConsoleJar = zipEntry -> consoleJarZipEntry.equals(zipEntry.getName());
 
-    private static Optional<DownloadedAutoupdateFileInfo> doDownload(final BundleUtil.BundleInfo bundleInfo) {
+    private static Optional<DownloadedAutoupdateFileInfo> doDownload(final BundleInfo bundleInfo) {
         if (bundleInfo.isMaster()) {
             log.info("Snapshot requested");
             return downloadAutoupdateZipFile(bundleInfo, PropertiesHolder.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
@@ -176,7 +177,7 @@ public class Autoupdate {
         }
     }
 
-    private static String selectBranchName(BundleUtil.BundleInfo bundleInfo) {
+    private static String selectBranchName(BundleInfo bundleInfo) {
         final String branchName = bundleInfo.getBranchName();
         final String nextBranchName = bundleInfo.getNextBranchName();
         if (nextBranchName != null && !nextBranchName.isBlank()) {
@@ -235,7 +236,7 @@ public class Autoupdate {
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadAutoupdateZipFile(
-        final BundleUtil.BundleInfo info,
+        final BundleInfo info,
         final String baseUrl
     ) {
         try {

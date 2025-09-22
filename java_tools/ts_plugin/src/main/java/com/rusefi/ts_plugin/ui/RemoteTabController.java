@@ -1,7 +1,5 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.ui;
 
-
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /*
 public enum RemoteTabController {

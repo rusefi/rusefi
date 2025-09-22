@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ApplicationPlugin;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.core.rusEFIVersion;
+import com.rusefi.ts_plugin.headless.TsHeadlessPlugin;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
     public TsPluginLauncher() {
         log.info("init " + this);
         TsPluginBodyFetcher.downloadLatestIfNeeded();
+        TsHeadlessPlugin.start();
     }
 
     @Override

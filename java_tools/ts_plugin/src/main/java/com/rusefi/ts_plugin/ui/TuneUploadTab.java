@@ -1,4 +1,4 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.ui;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
@@ -10,7 +10,10 @@ import com.rusefi.TsTuneReader;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
+import com.rusefi.ts_plugin.TsPluginUiImpl;
+import com.rusefi.ts_plugin.UploaderStatus;
 import com.rusefi.ts_plugin.util.ManifestHelper;
+import com.rusefi.ts_plugin.util.UploadQueue;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
@@ -149,7 +152,7 @@ public class TuneUploadTab {
         content.add(uploadView.getContent());
         content.add(upload);
 
-        content.add(new JLabel(PluginEntry.LOGO));
+        content.add(new JLabel(TsPluginUiImpl.LOGO));
         content.add(tokenPanel.getContent());
         content.add(new URLLabel(REO_URL));
 

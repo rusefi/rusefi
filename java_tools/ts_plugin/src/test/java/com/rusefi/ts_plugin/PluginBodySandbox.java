@@ -50,7 +50,7 @@ public class PluginBodySandbox {
         SwingUtilities.invokeLater(() -> {
             FrameHelper frameHelper = new FrameHelper();
             frameHelper.getFrame().setDefaultCloseOperation(JDialog.EXIT_ON_CLOSE);
-            frameHelper.showFrame(new PluginEntry(() -> controllerAccess).getContent());
+            frameHelper.showFrame(new TsPluginUiImpl(() -> controllerAccess).getContent());
         });
     }
 

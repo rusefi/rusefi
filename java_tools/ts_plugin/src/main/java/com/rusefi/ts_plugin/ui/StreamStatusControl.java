@@ -1,4 +1,4 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.ui;
 
 import com.rusefi.io.serial.StreamStatistics;
 

@@ -1,6 +1,6 @@
 package com.rusefi.ts_plugin.util;
 
-import com.rusefi.ts_plugin.PluginEntry;
+import com.rusefi.ts_plugin.TsPluginUiImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class ManifestHelper {
     @NotNull
     private static String getAttribute(String attributeName) {
         // all this magic below to make sure we are reading manifest of the *our* jar file not TS main jar file
-        Class clazz = PluginEntry.class;
+        Class clazz = TsPluginUiImpl.class;
         String className = clazz.getSimpleName() + ".class";
         URL resource = clazz.getResource(className);
         Objects.requireNonNull(resource, "resource");

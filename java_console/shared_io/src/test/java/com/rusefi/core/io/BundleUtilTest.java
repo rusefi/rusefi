@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class BundleUtilTest {
     @Test
     public void testExtractBundleTarget() {
-        BundleUtil.BundleInfo info = BundleUtil.parse(Arrays.asList("platform=proteus_f7", "release=development"));
+        BundleInfo info = BundleUtil.parse(Arrays.asList("platform=proteus_f7", "release=development"));
 
         Assertions.assertEquals("proteus_f7", info.getTarget());
         Assertions.assertEquals("development", info.getBranchName());

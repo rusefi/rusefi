@@ -3,6 +3,7 @@ package com.rusefi.ts_plugin;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.MockitoTestHelper;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.ts_plugin.ui.LogUploadSelector;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

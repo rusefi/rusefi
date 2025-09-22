@@ -1,4 +1,4 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.ui;
 
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
@@ -8,6 +8,7 @@ import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.opensr5.ini.IniFileMetaInfo;
 import com.rusefi.TsTuneReader;
 import com.rusefi.tools.online.Online;
+import com.rusefi.ts_plugin.util.MetaDataCache;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
@@ -67,7 +68,7 @@ public class TuneUploder {
     }
 
     @NotNull
-    static Map<String, Constant> getFileSystemValues(String configurationName) {
+    public static Map<String, Constant> getFileSystemValues(String configurationName) {
         if (configurationName == null)
             return Collections.emptyMap();
         Msq tsTune;
