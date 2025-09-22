@@ -19,7 +19,8 @@
 #include "injector_model.h"
 #include "tunerstudio.h"
 
-#include "rusefi/efistring.h"
+//#include "rusefi/efistring.h"
+extern char *strlncpy(char *dest, const char *src, size_t size);
 
 #if ! EFI_UNIT_TEST
 #include "status_loop.h"
