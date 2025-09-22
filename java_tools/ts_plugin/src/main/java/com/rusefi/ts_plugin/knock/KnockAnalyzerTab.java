@@ -63,7 +63,7 @@ public class KnockAnalyzerTab {
         }
 
         buttonStartStop.addActionListener(e -> {
-            boolean enabled = this.getEnabledEcu();
+            boolean enabled = getEnabledEcu();
             KnockAnalyzerTab.this.setStartState(!enabled);
             KnockAnalyzerTab.this.setEnabledEcu(!enabled);
         });
@@ -123,15 +123,15 @@ public class KnockAnalyzerTab {
 
         createCanvas(CanvasType.CT_ALL);
 
-        boolean enabled = this.getEnabledEcu();
+        boolean enabled = getEnabledEcu();
         this.setStartState(enabled);
 
         refreshCanvases();
     }
 
-    private void subscribe(Supplier<ControllerAccess> controllerAccessSupplier, String ecuControllerName1) {
+    private void subscribe(Supplier<ControllerAccess> controllerAccessSupplier, String ecuControllerName) {
         try {
-            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName1, "m_knockFrequencyStart", new OutputChannelClient() {
+            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockFrequencyStart", new OutputChannelClient() {
                 @Override
                 public void setCurrentOutputChannelValue(String name, double v) {
 
@@ -145,7 +145,7 @@ public class KnockAnalyzerTab {
         }
 
         try {
-            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName1, "m_knockFrequencyStep", new OutputChannelClient() {
+            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockFrequencyStep", new OutputChannelClient() {
                 @Override
                 public void setCurrentOutputChannelValue(String name, double v) {
 
@@ -159,7 +159,7 @@ public class KnockAnalyzerTab {
         }
 
         try {
-            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName1, "m_knockSpectrumChannelCyl", (name, v) -> {
+            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockSpectrumChannelCyl", (name, v) -> {
 
                 long value = (long) v;
 
@@ -173,7 +173,7 @@ public class KnockAnalyzerTab {
         }
 
         try {
-            ControllerParameter cylindersCountParameter = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName1, CYLINDERS_COUNT);
+            ControllerParameter cylindersCountParameter = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, CYLINDERS_COUNT);
             if (cylindersCountParameter != null) {
                 double value = cylindersCountParameter.getScalarValue();
                 KnockAnalyzerTab.this.cylindersCount = (int) (value);
@@ -183,7 +183,7 @@ public class KnockAnalyzerTab {
         }
 
         try {
-            String[] outputChannelNames = this.controllerAccessSupplier.get().getOutputChannelServer().getOutputChannels(ecuControllerName1);
+            String[] outputChannelNames = controllerAccessSupplier.get().getOutputChannelServer().getOutputChannels(ecuControllerName);
 
             String[] spectrums = Arrays.stream(outputChannelNames)
                 .filter((n) -> n.contains("m_knockSpectrum")).toArray(String[]::new);
@@ -199,7 +199,7 @@ public class KnockAnalyzerTab {
 
                         String name = spectrums[i];
                         int finalChecksum = checksum;
-                        controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName1, name, (name1, v) -> {
+                        controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, name, (name1, v) -> {
                             if (!started) {
                                 refreshCanvases();
                                 return;
@@ -250,7 +250,7 @@ public class KnockAnalyzerTab {
             case CT_ALL:
                 canvases.forEach(canvas -> {
                     canvas.processValues(values);
-                    });
+                });
                 break;
             case CT_SENSORS:
                 assert channel < canvases.size();
@@ -347,10 +347,14 @@ public class KnockAnalyzerTab {
         }
     }
 
-    public boolean getEnabledEcu() {
+    private boolean getEnabledEcu() {
         try {
-            String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-            ControllerParameter enable = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, ENABLE_KNOCK_SPECTROGRAM);
+            ControllerAccess controllerAccess = controllerAccessSupplier.get();
+            String[] ecuConfigurationNames = controllerAccess.getEcuConfigurationNames();
+            if (ecuConfigurationNames.length == 0)
+                return false; // project not open
+            String ecuControllerName = ecuConfigurationNames[0];
+            ControllerParameter enable = controllerAccess.getControllerParameterServer().getControllerParameter(ecuControllerName, ENABLE_KNOCK_SPECTROGRAM);
             String enabled = enable.getStringValue();
             return enabled.contains("true") || enabled.contains("yes");
         } catch (ControllerException ee) {
@@ -362,7 +366,12 @@ public class KnockAnalyzerTab {
 
     public void setEnabledEcu(boolean enabled) {
         try {
-            String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
+            String[] ecuConfigurationNames = controllerAccessSupplier.get().getEcuConfigurationNames();
+            if (ecuConfigurationNames.length == 0) {
+                log.warn("No project?");
+                return;
+            }
+            String ecuControllerName = ecuConfigurationNames[0];
             controllerAccessSupplier.get().getControllerParameterServer().updateParameter(ecuControllerName, "enableKnockSpectrogram", enabled ? 1.0 : 0.0);
         } catch (ControllerException ee) {
             log.error(ee.getMessage());
