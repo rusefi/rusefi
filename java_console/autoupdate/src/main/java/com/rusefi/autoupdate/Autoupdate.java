@@ -27,7 +27,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20250913; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20250919; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String KEY = "Autoupdate.do_not_download";
     private static final boolean doNotDownload;
 
@@ -135,6 +135,8 @@ public class Autoupdate {
                 final String firmwareFile = findFirmwareFile();
                 new File(srecFile == null ? firmwareFile : srecFile)
                     .setLastModified(autoupdateFile.lastModified);
+
+                TsPluginInstaller.installTsPlugin();
             } catch (IOException e) {
                 log.error("Error unzipping autoupdate from bundle: " + e);
                 if (!AutoupdateUtil.runHeadless) {

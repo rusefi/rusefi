@@ -1,11 +1,11 @@
 package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.core.FileUtil;
 import com.rusefi.ts.TsHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.nio.channels.FileChannel;
 
 public class PrimeTunerStudioCache {
     private static final String ECU_DEF_FOLDER = TsHelper.TS_ROOT +
@@ -31,9 +31,7 @@ public class PrimeTunerStudioCache {
         }
 
         try {
-            FileChannel localIniFileChannel = new FileInputStream(localIniFile).getChannel();
-            FileChannel dest = new FileOutputStream(fullEcuDefFileName).getChannel();
-            dest.transferFrom(localIniFileChannel, 0, localIniFileChannel.size());
+            FileUtil.copyFile(localIniFile, fullEcuDefFileName);
         } catch (IOException e) {
             log.error("While trying to prime", e);
         }
