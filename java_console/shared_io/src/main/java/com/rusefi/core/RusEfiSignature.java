@@ -47,4 +47,16 @@ public class RusEfiSignature {
     public String getHash() {
         return hash;
     }
+
+    @Override
+    public String toString() {
+        return "RusEfiSignature{" +
+            "branch='" + branch + '\'' +
+            ", year='" + year + '\'' +
+            ", month='" + month + '\'' +
+            ", day='" + day + '\'' +
+            ", bundleTarget='" + bundleTarget + '\'' +
+            ", hash='" + hash + '\'' +
+            '}';
+    }
 }

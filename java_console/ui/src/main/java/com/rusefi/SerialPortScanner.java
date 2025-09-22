@@ -158,7 +158,7 @@ public enum SerialPortScanner {
         return new ArrayList<>(results.values());
     }
 
-    private static void interruptThreads(List<Thread> threads) {
+    public static void interruptThreads(List<Thread> threads) {
         for (Thread t : threads) {
             log.trace(String.format("Interrupting thread `%s`...", t.getName()));
             t.interrupt();
