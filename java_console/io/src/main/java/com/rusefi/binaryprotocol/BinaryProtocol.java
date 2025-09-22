@@ -191,7 +191,8 @@ public class BinaryProtocol {
         if (stream.isClosed())
             return "Failed to read calibration";
 
-        startPullThread(listener);
+        if (linkManager.getNeedPullData())
+            startPullThread(listener);
         binaryProtocolLogger.start();
         return null;
     }
@@ -285,23 +286,31 @@ public class BinaryProtocol {
      * read complete tune from physical data stream
      */
     public void readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
-        ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
+        if (arguments.needImage) {
+            ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
-        if (image.isEmpty()) {
-            image = readFullImageFromController(arguments, meta);
-            if (image.isEmpty())
-                return;
+            if (image.isEmpty()) {
+                image = readFullImageFromController(arguments, meta);
+                if (image.isEmpty())
+                    return;
+            }
+            setConfigurationImage(image.getConfigurationImage());
+            log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
         }
-        setConfigurationImage(image.getConfigurationImage());
-        log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
     public static class Arguments {
         final boolean saveFile;
+        final boolean needImage;
+
+        public Arguments(boolean needImage, boolean saveFile) {
+            this.needImage = needImage;
+            this.saveFile = saveFile;
+        }
 
         public Arguments(final boolean saveFile) {
-            this.saveFile = saveFile;
+            this(true, saveFile);
         }
     }
 
