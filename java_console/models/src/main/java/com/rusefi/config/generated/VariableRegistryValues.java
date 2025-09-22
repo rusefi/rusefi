@@ -1375,6 +1375,7 @@ public class VariableRegistryValues {
 	public static final String PROTOCOL_TEST_RESPONSE_TAG = "ts_p_alive";
 	public static final String PROTOCOL_VERSION_TAG = "rusEfiVersion";
 	public static final int RANGE_INPUT_COUNT = 6;
+	public static final String RE_auto_update_root_url = "https://rusefi.com/build_server";
 	public static final int REBOOT_COMMAND = 0xbb;
 	public static final int RPM_AS_BYTE_LIMIT = 25000;
 	public static final int RPM_AS_BYTE_SCALE = 100;
@@ -1716,7 +1717,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.09.22.f429-discovery.4053092954";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.09.22.f429-discovery.3082749973";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2060;
