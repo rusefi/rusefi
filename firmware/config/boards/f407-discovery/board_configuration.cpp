@@ -24,7 +24,7 @@ Gpio getWarningLedPin() {
 }
 
 Gpio getCommsLedPin() {
-#ifdef HW_NOT_COMMUNITY_FRANKENSO
+#if defined(HW_NOT_COMMUNITY_FRANKENSO) || defined(EFI_BOOTLOADER)
   // not f407-discovery but f407-discovery while reusing board file
   return Gpio::D15;
 #else
