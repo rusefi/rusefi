@@ -177,6 +177,8 @@ public:
 	AccelController() : PeriodicController("Acc SPI") { }
 private:
 	void PeriodicTask(efitick_t nowNt) override	{
+		UNUSED(nowNt);
+
 		msg_t ret = MSG_RESET;
 		float acccooked[3];
 

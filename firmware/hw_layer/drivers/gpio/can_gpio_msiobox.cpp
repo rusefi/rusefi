@@ -277,6 +277,7 @@ int MsIoBox::config(uint32_t bus, uint32_t base, uint16_t period)
 
 bool MsIoBox::acceptFrame(const size_t busIndex, const CANRxFrame& frame) const {
 	/* TODO: check busIndex! */
+	UNUSED(busIndex);
 
 	/* 11 bit only */
 	if (CAN_ISX(frame)) {

@@ -61,6 +61,7 @@ static void icuperiodcb(ICUDriver *icup, size_t index)
 
 static void icuovercapture(ICUDriver *icup, size_t index)
 {
+	UNUSED(icup);
 	overcapture[index] = true;
 }
 

@@ -338,6 +338,7 @@ static BenchController instance;
 
 static void auxOutBench(int index) {
     // todo!
+    UNUSED(index);
 }
 
 #if EFI_HD_ACR
@@ -625,7 +626,8 @@ static void processCanUserControl(const CANRxFrame& frame) {
       };
 
 static void processCanSetCalibration(const CANRxFrame& frame) {
-// todo allow changes of scalar settings via CANbus
+	// todo allow changes of scalar settings via CANbus
+	UNUSED(frame);
 }
 /**
  * CANbus protocol to query scalar calibrations using hash keys

@@ -333,6 +333,8 @@ void Engine::preCalculate() {
 
 #if EFI_SHAFT_POSITION_INPUT
 void Engine::OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) {
+	UNUSED(triggerStateIndex);
+
 	rpmCalculator.setSpinningUp(nowNt);
 }
 

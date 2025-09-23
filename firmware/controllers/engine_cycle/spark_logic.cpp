@@ -354,6 +354,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 
 static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		float rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+	UNUSED(rpm);
 
 	float angleOffset = dwellAngle - currentPhase;
 	if (angleOffset < 0) {

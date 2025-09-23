@@ -351,7 +351,7 @@ void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
 		return;
 	}
 	currentCoilState = state;
-	UNUSED(timestamp);
+	UNUSED(timestamp); UNUSED(index);
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
@@ -363,7 +363,7 @@ void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
 		return;
 	}
 	currentInjectorState = state;
-	UNUSED(timestamp);
+	UNUSED(timestamp); UNUSED(index);
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
