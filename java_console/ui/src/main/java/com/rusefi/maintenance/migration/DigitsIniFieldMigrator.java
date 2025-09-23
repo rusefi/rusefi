@@ -71,7 +71,13 @@ public enum DigitsIniFieldMigrator implements TuneMigrator {
 
     private static final IntDigitField[] fieldsToMigrate = {
         // List all the fields to migrate here:
-        new IntDigitField("ppsExpAverageAlpha", (v) -> v * 100, "3" , "1")
+        new IntDigitField("ppsExpAverageAlpha", (v) -> v * 100, "3" , "1"),
+
+        // converted from raw ADC to Volts:
+        new IntDigitField("tpsMin", (v) -> v * 0.0048828125, "0" , "2"),
+        new IntDigitField("tpsMax", (v) -> v * 0.0048828125, "0" , "2"),
+        new IntDigitField("tps1SecondaryMin", (v) -> v * 0.0048828125, "0" , "2"),
+        new IntDigitField("tps1SecondaryMax", (v) -> v * 0.0048828125, "0" , "2"),
     };
 
     @Override
