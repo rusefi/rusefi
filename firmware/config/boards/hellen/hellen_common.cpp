@@ -74,11 +74,12 @@ static bool hellenEnPinInitialized = false;
   return !getHellenBoardEnabled();
 }
 
-PUBLIC_API_WEAK void onHellenEnChange(int value) {
-}
+PUBLIC_API_WEAK void onHellenEnChange(int value) { UNUSED(value); }
 
 // Board specific helper to enable SD card only
 PUBLIC_API_WEAK bool onHellenSdChange(int value) {
+	UNUSED(value);
+
 	// most Hellen board have no separate SD card power control
 	// return false and let MegaEn to be enabled
 	return false;

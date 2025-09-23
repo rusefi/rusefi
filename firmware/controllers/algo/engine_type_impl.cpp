@@ -52,7 +52,7 @@ PUBLIC_API_WEAK_SOMETHING_WEIRD void applyUnknownEngineType(engine_type_e engine
 		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 }
 
-PUBLIC_API_WEAK void boardAfterTuneDefaults(engine_type_e engineType) { }
+PUBLIC_API_WEAK void boardAfterTuneDefaults(engine_type_e engineType) { UNUSED(engineType); }
 
 void applyEngineType(engine_type_e engineType) {
 	/**
