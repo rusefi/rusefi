@@ -162,7 +162,7 @@ adc_channel_e getHwChannelForAdcInput(ADC_TypeDef *adc, size_t hwIndex)
         return EFI_ADC_ERROR;
     }
 
-    int tmpIndex = 0;
+    size_t tmpIndex = 0;
     for (size_t idx = 0; idx < efi::size(adcChannels); idx++) {
         if (adcChannels[idx].adc & mask) {
             if (hwIndex == tmpIndex) {
