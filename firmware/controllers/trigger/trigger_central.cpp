@@ -117,10 +117,12 @@ int getCrankDivider(operation_mode_e operationMode) {
 }
 
 PUBLIC_API_WEAK bool boardIsSpecialVvtDecoder(vvt_mode_e vvtMode) {
-  return false;
+	UNUSED(vvtMode);
+
+	return false;
 }
 
-PUBLIC_API_WEAK void boardTriggerCallback(efitick_t timestamp, float currentPhase) {}
+PUBLIC_API_WEAK void boardTriggerCallback(efitick_t timestamp, float currentPhase) { UNUSED(timestamp); UNUSED(currentPhase); }
 
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
@@ -144,6 +146,9 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 }
 
 PUBLIC_API_WEAK angle_t customAdjustCustom(TriggerCentral *tc, vvt_mode_e vvtMode) {
+	UNUSED(tc);
+	UNUSED(vvtMode);
+
   return 0;
 }
 
@@ -292,6 +297,8 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
  * @returns true if tooth should be ignored
  */
 PUBLIC_API_WEAK bool skipToothSpecialShape(size_t index, vvt_mode_e vvtMode, angle_t currentPosition) {
+	UNUSED(index);
+
 	switch(vvtMode) {
 	case VVT_TOYOTA_3_TOOTH:
 	{
@@ -639,6 +646,8 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 }
 
 bool TriggerCentral::isMapCamSync(efitick_t timestamp, float currentPhase) {
+	UNUSED(timestamp);
+
 		// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
 		auto toothAngle360 = currentPhase;
 		while (toothAngle360 >= 360) {

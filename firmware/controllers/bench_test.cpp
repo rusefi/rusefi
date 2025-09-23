@@ -601,7 +601,7 @@ static void applyPreset(int index) {
 #endif // EFI_TUNER_STUDIO
 }
 
-PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
+PUBLIC_API_WEAK void boardTsAction(uint16_t index) { UNUSED(index); }
 
 #if EFI_CAN_SUPPORT
 /**
