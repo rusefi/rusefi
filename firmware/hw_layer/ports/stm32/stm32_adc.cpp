@@ -68,6 +68,7 @@ bool adcIsMuxedInput(adc_channel_e hwChannel) {
 #ifdef ADC_MUX_PIN
     return ((hwChannel >= EFI_ADC_16) && (hwChannel <= EFI_ADC_31));
 #else
+    UNUSED(hwChannel);
     return false;
 #endif
 }

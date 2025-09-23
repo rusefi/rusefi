@@ -317,6 +317,8 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		rpmState->assignRpmValue(instantRpm);
 #if 0
 		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", trgEventIndex, ckpSignalType, instantRpm);
+#else
+		UNUSED(ckpSignalType);
 #endif
 	}
 }
