@@ -3,5 +3,6 @@
     <page/>
     <page number="0" size="46496">
         <constant digits="1" name="ppsExpAverageAlpha" units="percent">100.0</constant>
+        <constant digits="2" name="tpsMax" units="V">4.8828125</constant>
     </page>
 </msq>

@@ -25,5 +25,10 @@ public class DigitIniFieldMigratorTest {
             assertNotNull(migratedPpsExpAverageName);
             assertEquals("100.0", migratedPpsExpAverageName.getValue());
         }
+        {
+            final Constant migratedTpsMaxConstant = migratedConstants.get("tpsMax");
+            assertNotNull(migratedTpsMaxConstant);
+            assertEquals("4.88", migratedTpsMaxConstant.getValue());
+        }
     }
 }
