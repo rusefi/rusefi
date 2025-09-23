@@ -122,14 +122,15 @@ void InstantRpmCalculator::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 
 void InstantRpmCalculator::updateInstantRpm(
 		uint32_t current_index,
-	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
-	uint32_t index, efitick_t nowNt) {
+		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
+		uint32_t index, efitick_t nowNt) {
+	UNUSED(current_index);
 
 	m_instantRpm = calculateInstantRpm(triggerShape, triggerFormDetails, index,
 					   nowNt);
 #if EFI_UNIT_TEST
-  if (printTriggerDebug) {
-		 printf("instantRpm = %f\n", m_instantRpm);
+	if (printTriggerDebug) {
+		printf("instantRpm = %f\n", m_instantRpm);
 	}
 #endif
 

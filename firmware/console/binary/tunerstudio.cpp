@@ -225,6 +225,7 @@ static void sendOkResponse(TsChannelBase *tsChannel) {
 
 void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, const char *msg) {
 	//TODO uncomment once I have test it myself
+	UNUSED(msg);
 	//if (msg != DO_NOT_LOG) {
 	//	efiPrintf("TS <- Err: %d [%s]", code, msg);
 	//}

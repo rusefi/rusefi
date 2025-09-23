@@ -692,6 +692,8 @@ float mapAtAngle[200];
 #endif
 
 void TriggerCentral::decodeMapCam(int toothIndexForListeners, efitick_t timestamp, float currentPhase) {
+	UNUSED(toothIndexForListeners);
+
     isDecodingMapCam = engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
                        			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm;
 	if (isDecodingMapCam) {

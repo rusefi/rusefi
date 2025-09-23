@@ -9,7 +9,7 @@
 #define CLEANUP_MODE_TPS 90
 
 #if EFI_SHAFT_POSITION_INPUT
-static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
+static bool noFiringUntilVvtSync() {
 	auto operationMode = getEngineRotationState()->getOperationMode();
 
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
@@ -99,7 +99,7 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::LambdaProtection);
 	}
 
-	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
+	if (noFiringUntilVvtSync()
 			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// examples:

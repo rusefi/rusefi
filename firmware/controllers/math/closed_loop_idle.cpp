@@ -64,8 +64,10 @@ void LongTermIdleTrim::loadLtitFromConfig() {
     }
 }
 
-//TODO: rpm unused?
 float LongTermIdleTrim::getLtitFactor(float rpm, float clt) const {
+    //TODO: rpm unused?
+    UNUSED(rpm);
+
     if (!ltitTableInitialized) {
         return 1.0f; // No correction if not initialized
     }
@@ -98,8 +100,10 @@ bool LongTermIdleTrim::isValidConditionsForLearning(float idleIntegral) const {
     return true;
 }
 
-//TODO: acActive unused, fan1Active, fan2Active, check comment about isValidConditionsForLearning
 void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
+    //TODO: acActive unused, fan1Active, fan2Active, check comment about isValidConditionsForLearning
+    UNUSED(acActive); UNUSED(fan1Active); UNUSED(fan2Active);
+
     if (!engineConfiguration->ltitEnabled) {
         return;
     }

@@ -30,30 +30,30 @@ static float mcuTemperature;
 static float mcuVrefVoltage;
 
 void adcOnchipSlowUpdate(efitick_t nowNt) {
-	{
-		ScopePerf perf(PE::AdcConversionSlow);
+	UNUSED(nowNt);
 
-		/* drop volatile type qualifier - this is safe */
-		if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
-			engine->outputChannels.slowAdcErrorCount++;
-			return;
-		}
+	ScopePerf perf(PE::AdcConversionSlow);
 
-		// TODO:
-		//engine->outputChannels.slowAdcConversionCount++;
-		slowAdcConversionCount++;
-
-		// Ask the port to sample the MCU temperature
-		mcuTemperature = getMcuTemperature();
-		if (mcuTemperature > 150.0f || mcuTemperature < -50.0f) {
-			/*
-			 * we have a sporadic issue with this check todo https://github.com/rusefi/rusefi/issues/2552
-			 */
-			//criticalError("Invalid CPU temperature measured %f", degrees);
-		}
-
-		mcuVrefVoltage = getMcuVrefVoltage();
+	/* drop volatile type qualifier - this is safe */
+	if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
+		engine->outputChannels.slowAdcErrorCount++;
+		return;
 	}
+
+	// TODO:
+	//engine->outputChannels.slowAdcConversionCount++;
+	slowAdcConversionCount++;
+
+	// Ask the port to sample the MCU temperature
+	mcuTemperature = getMcuTemperature();
+	if (mcuTemperature > 150.0f || mcuTemperature < -50.0f) {
+		/*
+		 * we have a sporadic issue with this check todo https://github.com/rusefi/rusefi/issues/2552
+		 */
+		//criticalError("Invalid CPU temperature measured %f", degrees);
+	}
+
+	mcuVrefVoltage = getMcuVrefVoltage();
 }
 
 adcsample_t adcOnchipSlowGetAvgRaw(adc_channel_e hwChannel)
