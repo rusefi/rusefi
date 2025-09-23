@@ -171,6 +171,7 @@ const trigger_state_s* getLiveData(size_t idx) {
 		default: return nullptr;
 	}
 #else
+	UNUSED(idx);
 	return nullptr;
 #endif
 }
@@ -186,6 +187,7 @@ const vvt_s* getLiveData(size_t idx) {
 		default: return nullptr;
 	}
 #else
+	UNUSED(idx);
 	return nullptr;
 #endif
 }
@@ -267,6 +269,7 @@ const mc33810_state_s* getLiveData(size_t idx) {
 #if (BOARD_MC33810_COUNT > 0)
 	return mc33810getLiveData(idx);
 #else
+	UNUSED(idx);
 	return nullptr;
 #endif
 }

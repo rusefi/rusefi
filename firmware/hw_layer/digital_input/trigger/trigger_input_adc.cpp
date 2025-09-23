@@ -420,6 +420,8 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 #endif // EFI_SHAFT_POSITION_INPUT
 
 	prevStamp = stamp;
+#else
+	UNUSED(stamp); UNUSED(value);
 #endif // ! EFI_SIMULATOR && ((HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST)
 }
 

@@ -260,26 +260,27 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 
 void LogTriggerSync(bool isSync, efitick_t timestamp) {
 #if EFI_UNIT_TEST
-        jsonTraceEntry("sync", 3, /*isEnter*/isSync, timestamp);
+	jsonTraceEntry("sync", 3, /*isEnter*/isSync, timestamp);
 #else
+	UNUSED(isSync); UNUSED(timestamp);
 #endif
 }
 
 void LogTriggerCamTooth(bool isRising, efitick_t timestamp, int index) {
 #if EFI_UNIT_TEST
-        jsonTraceEntry("cam", JSON_CAM_PID + index, /*isEnter*/isRising, timestamp);
+	jsonTraceEntry("cam", JSON_CAM_PID + index, /*isEnter*/isRising, timestamp);
 #else
+	UNUSED(isRising); UNUSED(timestamp); UNUSED(index);
 #endif
 }
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
-
 #if EFI_UNIT_TEST
-     if (tooth == SHAFT_PRIMARY_RISING) {
-        jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/true, timestamp);
-      } else if (tooth == SHAFT_PRIMARY_FALLING) {
-        jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/false, timestamp);
-      }
+	if (tooth == SHAFT_PRIMARY_RISING) {
+		jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/true, timestamp);
+	} else if (tooth == SHAFT_PRIMARY_FALLING) {
+		jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/false, timestamp);
+	}
 #endif // EFI_UNIT_TEST
 
     efiAssertVoid(ObdCode::CUSTOM_ERR_6650, hasLotsOfRemainingStack(), "l-t-t");
