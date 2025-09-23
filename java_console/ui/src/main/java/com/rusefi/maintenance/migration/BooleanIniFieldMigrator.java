@@ -2,57 +2,12 @@ package com.rusefi.maintenance.migration;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.Optional;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static javax.management.ObjectName.quote;
-
-
-class BooleanField {
-    private String fieldName;   // ex: launchControlEnabled
-    private String trueValue;   // ex: "enabled"
-    private String falseValue;  // ex: "disabled"
-
-    public BooleanField(String fieldName, String trueValue, String falseValue) {
-        this.fieldName = fieldName;
-        this.falseValue = quote(falseValue);
-        this.trueValue = quote(trueValue);
-    }
-
-    public String migrateField(String oldTuneFieldValue) {
-        if (oldTuneFieldValue.startsWith(quote("true"))) {
-            return trueValue;
-        }
-        return falseValue;
-    }
-
-    public Optional<Boolean> shouldMigrateField(String oldTuneFieldValue) {
-        boolean isLegacyValue = oldTuneFieldValue.startsWith(quote("true")) || oldTuneFieldValue.startsWith(quote("false"));
-        // ie: already migrated on previous run/migration/etc
-        boolean isMigratedValue = oldTuneFieldValue.startsWith(trueValue) || oldTuneFieldValue.startsWith(falseValue);
-
-        if (!isLegacyValue && !isMigratedValue) {
-            // invalid!, error on migration code? or on updated .ini?
-            return Optional.empty();
-        }
-        return Optional.of(isLegacyValue);
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public String getTrueValue() {
-        return trueValue;
-    }
-
-    public String getFalseValue() {
-        return falseValue;
-    }
-
-}
 
 public enum BooleanIniFieldMigrator implements TuneMigrator {
     INSTANCE;
@@ -99,13 +54,16 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
 
             final Constant prevBooleanConst = context.getPrevTune().getConstantsAsMap().get(field.getFieldName());
             final Constant updatedBooleanConst = context.getUpdatedTune().getConstantsAsMap().get(field.getFieldName());
+            
+            // used to check if the migration is possible/valid:
             final String prevBooleanValue = prevBooleanConst.getValue();
+            final String updatedBooleanFalse = ((EnumIniField) updatedBooleanIniField.get()).getEnums().get(0);
 
             if ((null == prevBooleanConst) || (null == updatedBooleanConst)) {
                 continue;
             }
 
-            Optional<Boolean> shouldMigrate = field.shouldMigrateField(prevBooleanValue);
+            Optional<Boolean> shouldMigrate = field.shouldMigrateField(prevBooleanValue, updatedBooleanFalse);
 
             // check if migration of this value is possible/valid
             if (shouldMigrate.isPresent()) {
