@@ -212,9 +212,9 @@ void RpmCalculator::onSlowCallback() {
 	}
 }
 
-void RpmCalculator::setStopped() {
+void RpmCalculator::setStopSpinning() {
+	isSpinning = false;
 	revolutionCounterSinceStart = 0;
-
 	rpmRate = 0;
 
 	if (cachedRpmValue != 0) {
@@ -226,11 +226,6 @@ void RpmCalculator::setStopped() {
 	state = STOPPED;
 
 	engine->onEngineStopped();
-}
-
-void RpmCalculator::setStopSpinning() {
-	isSpinning = false;
-	setStopped();
 }
 
 void RpmCalculator::setSpinningUp(efitick_t nowNt) {
