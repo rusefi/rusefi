@@ -80,8 +80,9 @@ public:
 	// CLOSED LOOP CORRECTION
 	float getClosedLoop(IIdleController::Phase phase, float tpsPos, float rpm, float targetRpm) override;
 
-	void onConfigurationChange(engine_configuration_s const * previousConfig) final;
-	void onFastCallback() final;
+	void onConfigurationChange(engine_configuration_s const * previousConfig) override final;
+	void onFastCallback() override final;
+	void onEngineStop() override final;
 
 	// Allow querying state from outside
 	bool isIdlingOrTaper() const override {
