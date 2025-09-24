@@ -4296,7 +4296,7 @@ struct engine_configuration_s {
 	 */
 	int16_t idlerpmpid_iTermMax;
 	/**
-	 * This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position.
+	 * This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position. Can also be interpreted as the maximum allowed TPS% Opening for Idle Control.
 	 * units: %
 	 * offset 2396
 	 */
@@ -5951,13 +5951,13 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 100> pedalToTpsRpmBins[PEDAL_TO_TPS_RPM_SIZE] = {};
 	/**
-	 * CLT-based cranking position % for simple manual idle controller
+	 * CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.
 	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 5508
 	 */
 	float cltCrankingCorrBins[CLT_CRANKING_CURVE_SIZE] = {};
 	/**
-	 * CLT-based cranking position % for simple manual idle controller
+	 * CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.
 	 * units: percent
 	 * offset 5540
 	 */
