@@ -1,6 +1,8 @@
 
 TL,DR: look at https://github.com/rusefi/technical-and-legacy/tree/main/screenshots/uaefi-screenshots-and-XML-2025-09 sample output
 
+## java phase: .ini to XML and automated screenshots, for most recent TS project
+
 Here we have a tool which does the following:
 
 * automatically saves a screenshot of each TS dialog
@@ -31,3 +33,11 @@ Copy ScreenShots.jar inside TS install folder
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005 -cp lib/*;ts_screenshots-all.jar ScreenCaptureLauncher C:\stuff\rusefi\firmware\tunerstudio\generated\rusefi_uaefi.ini
 
 java -cp lib/*;ts_screenshots-all.jar ScreenCaptureLauncher C:\stuff\rusefi\firmware\tunerstudio\generated\rusefi_uaefi.ini
+
+## python prototype to convert above into static .html
+
+See bin/
+
+## questionable java which converts above into static .md
+
+see Xml2MdTransformerTool.java
