@@ -22,6 +22,9 @@ public:
 	// Called approx 200Hz
 	virtual void onFastCallback() { }
 
+	// Called when the engine stops. Reset your state, etc to prepare for the next start.
+	virtual void onEngineStop() { }
+
 	// Called whenever the ignition switch state changes
 	virtual void onIgnitionStateChanged(bool /*ignitionOn*/) { }
 
