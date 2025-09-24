@@ -566,6 +566,10 @@ void Engine::periodicFastCallback() {
 	engineModules.apply_all([](auto & m) { m.onFastCallback(); });
 }
 
+void Engine::onEngineStopped() {
+	engineModules.apply_all([](auto& m) { m.onEngineStop(); });
+}
+
 EngineRotationState * getEngineRotationState() {
 	return &engine->rpmCalculator;
 }

@@ -224,6 +224,8 @@ void RpmCalculator::setStopped() {
 		efiPrintf("engine stopped");
 	}
 	state = STOPPED;
+
+	engine->onEngineStopped();
 }
 
 void RpmCalculator::setStopSpinning() {

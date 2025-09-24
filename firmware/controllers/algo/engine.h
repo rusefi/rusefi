@@ -321,14 +321,15 @@ public:
     /**
       * See FAST_CALLBACK_PERIOD_MS
       */
-    void periodicFastCallback();
+  void periodicFastCallback();
     /**
       * See SLOW_CALLBACK_PERIOD_MS
       */
-    void periodicSlowCallback();
-    void updateSlowSensors();
-    void updateSwitchInputs();
-    void updateTriggerConfiguration();
+  void periodicSlowCallback();
+	void onEngineStopped();
+  void updateSlowSensors();
+  void updateSwitchInputs();
+  void updateTriggerConfiguration();
 
     bool isRunningPwmTest = false;
 
