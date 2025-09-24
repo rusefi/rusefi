@@ -459,6 +459,10 @@ void IdleController::onFastCallback() {
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
+void IdleController::onEngineStop() {
+	getIdlePid()->reset();
+}
+
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 #if ! EFI_UNIT_TEST
 	shouldResetPid = !previousConfiguration || !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
