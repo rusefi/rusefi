@@ -18,6 +18,7 @@ import static com.fazecast.jSerialComm.SerialPort.getCommPorts;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class BinaryProtocolExecutor {
+    private static final long JUST_IN_CASE = Integer.getInteger("BinaryProtocolExecutor.serial_jic", 300);
     private static final Logging log = Logging.getLogging(BinaryProtocolExecutor.class);
 
     @FunctionalInterface
@@ -100,11 +101,10 @@ public class BinaryProtocolExecutor {
         {
             SerialPort[] commPorts = getCommPorts();
             portAvailable = contains(commPorts, port);
-            log.info("Available right away: " + Arrays.toString(commPorts) + "; " + portAvailable);
+            log.info(port + ": Available right away? " + Arrays.toString(commPorts) + "; " + portAvailable);
             if (portAvailable) {
-                long justInCase = 300;
-                log.info("Giving it " + justInCase + "ms just in case...");
-                sleep(justInCase);
+                log.info("Giving it " + JUST_IN_CASE + "ms just in case...");
+                sleep(JUST_IN_CASE);
                 return; // bail without extra logging
             }
         }
@@ -114,7 +114,9 @@ public class BinaryProtocolExecutor {
             sleep(200);
             portAvailable = contains(getCommPorts(), port);
         }
-        log.info("Appeared: " + portAvailable + " in " + (System.currentTimeMillis() - start) + "ms");
+        log.info(port + ": Appeared: " + portAvailable + " in " + (System.currentTimeMillis() - start) + "ms");
+        log.info("Giving it " + JUST_IN_CASE + "ms just in case...");
+        sleep(JUST_IN_CASE);
     }
 
     private static boolean contains(SerialPort[] commPorts, String port) {
