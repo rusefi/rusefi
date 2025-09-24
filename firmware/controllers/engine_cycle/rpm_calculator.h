@@ -140,11 +140,6 @@ private:
 	 float cachedRpmValue = 0;
 
 	/**
-	 * Should be called once we've realized engine is not spinning any more.
-	 */
-	void setStopped();
-
-	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
 	 */
