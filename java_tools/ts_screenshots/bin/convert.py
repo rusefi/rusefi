@@ -119,7 +119,8 @@ def main():
                 content_parts.append("<div class='field'>")
                 content_parts.append(f"<strong>{ui_name}</strong>")
                 if tooltip:
-                    content_parts.append(f"<div class='tooltip'>{tooltip}</div>")
+                    tooltipHtml = "<br>".join(tooltip.split("\n"))
+                    content_parts.append(f"<div class='tooltip'>{tooltipHtml}</div>")
                 if img:
                     img_path = copy_image(img)
                     if img_path:
