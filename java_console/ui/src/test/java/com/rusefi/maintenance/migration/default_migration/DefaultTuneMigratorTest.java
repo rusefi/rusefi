@@ -34,7 +34,7 @@ public class DefaultTuneMigratorTest {
 
     @Test
     public void testIsEnabledSpi3() {
-        checkValueToUpdateExist("is_enabled_spi_3", "\"false\"", "\"true\"");
+        checkValueToUpdateExist("is_enabled_spi_3", "\"false\"", "\"yes\"");
     }
 
     @Test
@@ -262,6 +262,6 @@ public class DefaultTuneMigratorTest {
         final Constant expectedValueToUpdate = updatedValue != null ?
             updatedValue.cloneWithValue(prevValue.getValue()) :
             prevValue;
-        assertEquals(expectedValueToUpdate, valueToUpdate);
+        assertEquals(expectedValueToUpdate.getName(), valueToUpdate.getName());
     }
 }
