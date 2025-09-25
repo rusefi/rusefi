@@ -73,38 +73,38 @@
          0.797
          0.726
 </constant>
-        <constant name="isForcedInduction">"false"</constant>
-        <constant name="useFordRedundantTps">"false"</constant>
-        <constant name="enableKline">"false"</constant>
-        <constant name="overrideTriggerGaps">"false"</constant>
-        <constant name="enableFan1WithAc">"false"</constant>
-        <constant name="enableFan2WithAc">"false"</constant>
+        <constant name="isForcedInduction">"no"</constant>
+        <constant name="useFordRedundantTps">"no"</constant>
+        <constant name="enableKline">"disabled"</constant>
+        <constant name="overrideTriggerGaps">"no"</constant>
+        <constant name="enableFan1WithAc">"no"</constant>
+        <constant name="enableFan2WithAc">"no"</constant>
         <constant name="disableFan1WhenStopped">"false"</constant>
         <constant name="disableFan2WhenStopped">"false"</constant>
-        <constant name="enableTrailingSparks">"false"</constant>
-        <constant name="etb_use_two_wires">"false"</constant>
-        <constant name="isDoubleSolenoidIdle">"false"</constant>
-        <constant name="useEeprom">"false"</constant>
-        <constant name="useCicPidForIdle">"false"</constant>
+        <constant name="enableTrailingSparks">"no"</constant>
+        <constant name="etb_use_two_wires">"no"</constant>
+        <constant name="isDoubleSolenoidIdle">"no"</constant>
+        <constant name="useEeprom">"no"</constant>
+        <constant name="useCicPidForIdle">"Industrial"</constant>
         <constant name="useTLE8888_cranking_hack">"true"</constant>
-        <constant name="kickStartCranking">"false"</constant>
+        <constant name="kickStartCranking">"no"</constant>
         <constant name="useSeparateIdleTablesForCrankingTaper">"disabled"</constant>
         <constant name="launchControlEnabled">"disabled"</constant>
         <constant name="doNotFilterTriggerEdgeNoise">"with filter"</constant>
         <constant name="antiLagEnabled">"false"</constant>
         <constant name="useRunningMathForCranking">"Fixed"</constant>
-        <constant name="displayLogicLevelsInEngineSniffer">"true"</constant>
+        <constant name="displayLogicLevelsInEngineSniffer">"yes"</constant>
         <constant name="useTLE8888_stepper">"false"</constant>
-        <constant name="usescriptTableForCanSniffingFiltering">"false"</constant>
+        <constant name="usescriptTableForCanSniffingFiltering">"no"</constant>
         <constant name="verboseCan">"Do not print"</constant>
         <constant name="artificialTestMisfire">"No thank you"</constant>
-        <constant name="useFordRedundantPps">"false"</constant>
-        <constant name="cltSensorPulldown">"false"</constant>
-        <constant name="iatSensorPulldown">"false"</constant>
-        <constant name="allowIdenticalPps">"false"</constant>
-        <constant name="overrideVvtTriggerGaps">"false"</constant>
-        <constant name="useSpiImu">"false"</constant>
-        <constant name="enableStagedInjection">"false"</constant>
+        <constant name="useFordRedundantPps">"no"</constant>
+        <constant name="cltSensorPulldown">"no"</constant>
+        <constant name="iatSensorPulldown">"no"</constant>
+        <constant name="allowIdenticalPps">"no"</constant>
+        <constant name="overrideVvtTriggerGaps">"no"</constant>
+        <constant name="useSpiImu">"no"</constant>
+        <constant name="enableStagedInjection">"disabled"</constant>
         <constant digits="0" name="tpsMin" units="ADC">100.0</constant>
         <constant digits="0" name="tpsMax" units="ADC">650.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
@@ -333,37 +333,37 @@
         <constant name="o2heaterPinModeTodO">"default"</constant>
         <constant digits="0" name="lambdaProtectionMinRpm" units="RPM">2500.0</constant>
         <constant digits="0" name="lambdaProtectionMinLoad" units="%">60.0</constant>
-        <constant name="is_enabled_spi_1">"true"</constant>
-        <constant name="is_enabled_spi_2">"false"</constant>
-        <constant name="is_enabled_spi_3">"true"</constant>
+        <constant name="is_enabled_spi_1">"yes"</constant>
+        <constant name="is_enabled_spi_2">"no"</constant>
+        <constant name="is_enabled_spi_3">"yes"</constant>
         <constant name="isSdCardEnabled">"enabled"</constant>
         <constant name="rusefiVerbose29b">"11 bit"</constant>
-        <constant name="rethrowHardFault">"false"</constant>
+        <constant name="rethrowHardFault">"no"</constant>
         <constant name="isHip9011Enabled">"false"</constant>
         <constant name="requireFootOnBrakeToCrank">"false"</constant>
-        <constant name="verboseQuad">"false"</constant>
+        <constant name="verboseQuad">"no"</constant>
         <constant name="useStepperIdle">"false"</constant>
         <constant name="enabledStep1Limiter">"false"</constant>
         <constant name="useTpicAdvancedMode">"false"</constant>
         <constant name="lambdaProtectionEnable">"false"</constant>
-        <constant name="verboseTLE8888">"false"</constant>
-        <constant name="enableVerboseCanTx">"true"</constant>
+        <constant name="verboseTLE8888">"no"</constant>
+        <constant name="enableVerboseCanTx">"yes"</constant>
         <constant name="externalRusEfiGdiModule">"false"</constant>
         <constant name="flipWboChannels">"false"</constant>
-        <constant name="measureMapOnlyInOneCylinder">"false"</constant>
-        <constant name="stepperForceParkingEveryRestart">"true"</constant>
+        <constant name="measureMapOnlyInOneCylinder">"no"</constant>
+        <constant name="stepperForceParkingEveryRestart">"no"</constant>
         <constant name="isFasterEngineSpinUpEnabled">"enabled"</constant>
         <constant name="coastingFuelCutEnabled">"false"</constant>
         <constant name="useIacTableForCoasting">"disabled"</constant>
-        <constant name="useNoiselessTriggerDecoder">"false"</constant>
-        <constant name="useIdleTimingPidControl">"false"</constant>
+        <constant name="useNoiselessTriggerDecoder">"no"</constant>
+        <constant name="useIdleTimingPidControl">"no"</constant>
         <constant name="disableEtbWhenEngineStopped">"false"</constant>
-        <constant name="is_enabled_spi_4">"false"</constant>
-        <constant name="pauseEtbControl">"false"</constant>
+        <constant name="is_enabled_spi_4">"no"</constant>
+        <constant name="pauseEtbControl">"no"</constant>
         <constant name="tpsTpsPercentMode">"ms adder"</constant>
-        <constant name="verboseKLine">"false"</constant>
-        <constant name="idleIncrementalPidCic">"false"</constant>
-        <constant name="enableAemXSeries">"true"</constant>
+        <constant name="verboseKLine">"no"</constant>
+        <constant name="idleIncrementalPidCic">"no"</constant>
+        <constant name="enableAemXSeries">"yes"</constant>
         <constant name="unused32nd">"false"</constant>
         <constant name="logicAnalyzerPins1">"NONE"</constant>
         <constant name="logicAnalyzerPins2">"NONE"</constant>
@@ -740,8 +740,8 @@
         <constant name="useHardSkipInTraction">"no"</constant>
         <constant name="useAuxSpeedForSlipRatio">"no"</constant>
         <constant name="useVssAsSecondWheelSpeed">"no"</constant>
-        <constant name="is_enabled_spi_5">"false"</constant>
-        <constant name="is_enabled_spi_6">"false"</constant>
+        <constant name="is_enabled_spi_5">"no"</constant>
+        <constant name="is_enabled_spi_6">"no"</constant>
         <constant name="enableAemXSeriesEgt">"no"</constant>
         <constant name="startRequestPinInverted">"Normal"</constant>
         <constant name="tcu_rangeSensorPulldown">"false"</constant>
@@ -788,7 +788,7 @@
         <constant name="can2OpenBLT">"no"</constant>
         <constant name="injectorFlowAsMassFlow">"volumetric flow"</constant>
         <constant name="boardUseCanTerminator">"yes"</constant>
-        <constant name="kLineDoHondaSend">"false"</constant>
+        <constant name="kLineDoHondaSend">"no"</constant>
         <constant name="can1ListenMode">"no"</constant>
         <constant name="can2ListenMode">"no"</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>

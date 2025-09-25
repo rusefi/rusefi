@@ -558,35 +558,35 @@ end_struct
 injector_s @@INSTANCE_INJECTOR@@
 injector_s injectorSecondary
 
-bit isForcedInduction;Does the vehicle have a turbo or supercharger?
-bit useFordRedundantTps;On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
-bit enableKline
-bit overrideTriggerGaps
-bit enableFan1WithAc;Turn on this fan when AC is on.
-bit enableFan2WithAc;Turn on this fan when AC is on.
-bit enableTrailingSparks;Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
-bit etb_use_two_wires;TLE7209 and L6205 use two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
-bit isDoubleSolenoidIdle;Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
-bit useEeprom
-bit useCicPidForIdle;Switch between Industrial and Cic PID implementation
+bit isForcedInduction,"yes","no";Does the vehicle have a turbo or supercharger?
+bit useFordRedundantTps,"yes","no";On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+bit enableKline,"enabled","disabled"
+bit overrideTriggerGaps,"yes","no"
+bit enableFan1WithAc,"yes","no";Turn on this fan when AC is on.
+bit enableFan2WithAc,"yes","no";Turn on this fan when AC is on.
+bit enableTrailingSparks,"yes","no";Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
+bit etb_use_two_wires,"yes","no";TLE7209 and L6205 use two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
+bit isDoubleSolenoidIdle,"yes","no";Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
+bit useEeprom,"yes","no"
+bit useCicPidForIdle,"Cic","Industrial";Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
-bit kickStartCranking
+bit kickStartCranking,"yes","no"
 bit useSeparateIdleTablesForCrankingTaper,"enabled","disabled";This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled,"enabled","disabled"
 bit antiLagEnabled,"enabled","disabled"
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
-bit displayLogicLevelsInEngineSniffer;Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
+bit displayLogicLevelsInEngineSniffer,"yes","no";Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
 bit useTLE8888_stepper
-bit usescriptTableForCanSniffingFiltering
+bit usescriptTableForCanSniffingFiltering,"yes","no"
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
-bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
-bit cltSensorPulldown
-bit iatSensorPulldown
-bit allowIdenticalPps
-bit overrideVvtTriggerGaps
-bit useSpiImu;If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
-bit enableStagedInjection
+bit useFordRedundantPps,"yes","no";On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+bit cltSensorPulldown,"yes","no"
+bit iatSensorPulldown,"yes","no"
+bit allowIdenticalPps,"yes","no"
+bit overrideVvtTriggerGaps,"yes","no"
+bit useSpiImu,"yes","no";If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
+bit enableStagedInjection,"enabled","disabled"
 bit useIdleAdvanceWhileCoasting,"yes","no"
 
 ! note: 0.00489 mult is correct for "faking" 10 bit ADC with 5V Vref
@@ -876,42 +876,42 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	uint8_t autoscale lambdaProtectionMinLoad;;"%", 10, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 	! bit 0
-	bit is_enabled_spi_1
-	bit is_enabled_spi_2
-	bit is_enabled_spi_3
+	bit is_enabled_spi_1,"yes","no"
+	bit is_enabled_spi_2,"yes","no"
+	bit is_enabled_spi_3,"yes","no"
 	bit isSdCardEnabled,"enabled","disabled"
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
-	bit rethrowHardFault
-	bit verboseQuad
+	bit rethrowHardFault,"yes","no"
+	bit verboseQuad,"yes","no"
 
 	! bit 8
 	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	bit enabledStep1Limiter
 	bit lambdaProtectionEnable
-	bit verboseTLE8888
-	bit enableVerboseCanTx;CAN broadcast using custom rusEFI protocol
-	bit externalRusEfiGdiModule
+	bit verboseTLE8888,"yes","no"
+	bit enableVerboseCanTx,"yes","no";CAN broadcast using custom rusEFI protocol
+	bit externalRusEfiGdiModule,"yes","no"
 	bit unusedFlipWboChannels
-	bit measureMapOnlyInOneCylinder;Useful for individual intakes
+	bit measureMapOnlyInOneCylinder,"yes","no";Useful for individual intakes
 
 	! bit 16
-	bit stepperForceParkingEveryRestart
+	bit stepperForceParkingEveryRestart,"yes","no"
 	bit isFasterEngineSpinUpEnabled,"enabled","disabled";If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	bit coastingFuelCutEnabled;This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
 	bit useIacTableForCoasting,"enabled","disabled";Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
-	bit useNoiselessTriggerDecoder
-	bit useIdleTimingPidControl
+	bit useNoiselessTriggerDecoder,"yes","no"
+	bit useIdleTimingPidControl,"yes","no"
 	bit disableEtbWhenEngineStopped;Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	bit is_enabled_spi_4
+	bit is_enabled_spi_4,"yes","no"
 
 	! bit 24
-	bit pauseEtbControl;Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
+	bit pauseEtbControl,"yes","no";Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 
-	bit verboseKLine
-	bit idleIncrementalPidCic
+	bit verboseKLine,"yes","no"
+	bit idleIncrementalPidCic,"yes","no"
 ! technical debt 'enableAemXSeries' should probably be renamed to enableCanWideband one day once we improve calibration migration toolset
-	bit enableAemXSeries;AEM X-Series or rusEFI Wideband
-	bit modeledFlowIdle
+	bit enableAemXSeries,"yes","no";AEM X-Series or rusEFI Wideband
+	bit modeledFlowIdle,"yes","no"
 	bit isTuningDetectorEnabled,"yes","no"
 	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
 	bit useAbsolutePressureForLagTime,"yes","no"
@@ -1269,8 +1269,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit useHardSkipInTraction,"yes","no"
 	bit useAuxSpeedForSlipRatio,"yes","no";Use Aux Speed 1 as one of speeds for wheel slip ratio?
 	bit useVssAsSecondWheelSpeed,"yes","no";VSS and Aux Speed 1 or Aux Speed 1 with Aux Speed 2?
-	bit is_enabled_spi_5
-	bit is_enabled_spi_6
+	bit is_enabled_spi_5,"yes","no"
+	bit is_enabled_spi_6,"yes","no"
 	bit enableAemXSeriesEgt,"yes","no";AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 	bit startRequestPinInverted,"Inverted","Normal"
 	bit tcu_rangeSensorPulldown
@@ -1333,7 +1333,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit can2OpenBLT,"yes","no"; Allow OpenBLT on Secondary CAN
 	bit injectorFlowAsMassFlow,"grams per second","cc/min";Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
 	bit boardUseCanTerminator,"yes","no"
-	bit kLineDoHondaSend
+	bit kLineDoHondaSend,"yes","no"
 	bit can1ListenMode,"yes","no";ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
 	bit can2ListenMode,"yes","no"
 	uint16_t camDecoder2jzPosition;Angle of tooth detection within engine phase cycle;"angle", 1, 0, 0, 360, 0
