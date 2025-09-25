@@ -500,7 +500,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 
-	bit ltitEnabled;Enable LTIT (Long Term Idle Trim) learning
+	bit ltitEnabled,"yes","no";Enable LTIT (Long Term Idle Trim) learning
 	uint8_t ltitEmaAlpha;EMA filter constant for LTIT (0-255);"0-255",1,0,1,255,0
 	uint8_t ltitStableRpmThreshold;RPM range to consider stable idle;"rpm",1,0,1,100,0
 	uint8_t ltitStableTime;Minimum time of stable idle before learning;"s",1,0,1,30,0
@@ -999,19 +999,19 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
 	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
-	bit useInjectorFlowLinearizationTable
+	bit useInjectorFlowLinearizationTable,"yes","no"
 	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
-	bit multisparkEnable
+	bit multisparkEnable,"yes","no"
 	bit enableLaunchRetard,"yes","no"
 	bit canInputBCM
-	bit consumeObdSensors;This property is useful if using rusEFI as TCM or BCM only
-	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
+	bit consumeObdSensors,"yes","no";This property is useful if using rusEFI as TCM or BCM only
+	bit enableCanVss,"yes","no";Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit stftIgnoreErrorMagnitude,"yes","no";If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 	bit vvtBooleanForVerySpecialCases
 	bit enableSoftwareKnock,"enabled","disabled"
-	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold
+	bit verboseVVTDecoding,"enabled","disabled";Verbose info in console below engineSnifferRpmThreshold
 	bit invertCamVVTSignal,"Falling","Rising"
-	bit alphaNUseIat;When set to true, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
+	bit alphaNUseIat,"yes","no";When set to yes, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
 	bit knockBankCyl1,"Channel 2","Channel 1"
 	bit knockBankCyl2,"Channel 2","Channel 1"
 	bit knockBankCyl3,"Channel 2","Channel 1"
@@ -1024,9 +1024,9 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	bit knockBankCyl10,"Channel 2","Channel 1"
 	bit knockBankCyl11,"Channel 2","Channel 1"
 	bit knockBankCyl12,"Channel 2","Channel 1"
-	bit tcuEnabled
+	bit tcuEnabled,"enabled","disabled"
 bit canBroadcastUseChannelTwo,"second","first"
-	bit useRawOutputToDriveIdleStepper;If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
+	bit useRawOutputToDriveIdleStepper,"yes","no";If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
 
 
@@ -1109,15 +1109,15 @@ end_struct
 
 	bit widebandOnSecondBus,"CAN2","CAN1";Select which bus the wideband controller is attached to.
 	bit fuelClosedLoopCorrectionEnabled,"enabled","disabled";Enables lambda sensor closed loop feedback for fuelling.
-	bit alwaysWriteSdCard;Write SD card log even when powered by USB
+	bit alwaysWriteSdCard,"yes","no";Write SD card log even when powered by USB
 	bit knockDetectionUseDoubleFrequency,"second harmonic","first harmonic";Second harmonic (aka double) is usually quieter background noise
 	bit yesUnderstandLocking,"yes","no"
 	bit silentTriggerError;Sometimes we have a performance issue while printing error
-	bit useLinearCltSensor
+	bit useLinearCltSensor,"yes","no"
 	bit canReadEnabled;enable can_read/disable can_read
 	bit canWriteEnabled;enable can_write/disable can_write. See also can1ListenMode
-	bit useLinearIatSensor
-	bit enableOilPressureProtect
+	bit useLinearIatSensor,"yes","no"
+	bit enableOilPressureProtect,"yes","no"
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal,"Falling","Rising";https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the primary engine speed sensor.
@@ -1127,9 +1127,9 @@ bit cutFuelOnHardLimit,"yes","no";When enabled, this option cuts the fuel supply
 bit cutSparkOnHardLimit,"yes","no";When selected, this option cuts the spark to limit RPM. Cutting spark can produce flames from the exhaust due to unburned fuel igniting in the exhaust system. Additionally, this unburned fuel can help cool the combustion chamber, which may be beneficial in high-performance applications.\nBe careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
 bit launchFuelCutEnable,"yes","no"
 bit launchSparkCutEnable,"yes","no";This is the Cut Mode normally used
-	bit torqueReductionEnabled
+	bit torqueReductionEnabled,"enabled","disabled"
 	bit camSyncOnSecondCrankRevolution,"second","first"
-	bit limitTorqueReductionTime
+	bit limitTorqueReductionTime,"yes","no"
 bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs;In this mode only trigger events go into engine sniffer and not coils/injectors etc
 bit twoStroke,"Two Stroke","Four Stroke"
@@ -1150,26 +1150,26 @@ custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Ope
 	bit alwaysInstantRpm;RPM is measured based on last 720 degrees while instant RPM is measured based on the last 90 degrees of crank revolution
 	bit isMapAveragingEnabled,"enabled","disabled"
 	bit useSeparateAdvanceForIdle,"enabled","disabled";This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra advance at low idle speeds will prevent stalling and extra retard at high idle speeds can help reduce engine power and slow the idle speed.
-	bit isWaveAnalyzerEnabled
+	bit isWaveAnalyzerEnabled,"yes","no"
 	bit useSeparateVeForIdle,"enabled","disabled";This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
 	bit verboseTriggerSynchDetails;Verbose info in console below engineSnifferRpmThreshold
 	bit hondaK
-	bit twoWireBatchIgnition;This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
-bit useFixedBaroCorrFromMap;Read MAP sensor on ECU start-up to use as baro value.
+	bit twoWireBatchIgnition,"yes","no";This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
+bit useFixedBaroCorrFromMap,"yes","no";Read MAP sensor on ECU start-up to use as baro value.
 bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
 bit useAdvanceCorrectionsForCranking,"yes","no";This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
 bit flexCranking,"enabled","disabled";Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
-bit useIacPidMultTable;This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
+bit useIacPidMultTable,"yes","no";This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled,"enabled","disabled"
-bit launchSmoothRetard;Interpolates the Ignition Retard from 0 to 100% within the RPM Range
-bit isPhaseSyncRequiredForIgnition;Some engines are OK running semi-random sequential while other engine require phase synchronization
+bit launchSmoothRetard,"enabled","disabled";Interpolates the Ignition Retard from 0 to 100% within the RPM Range
+bit isPhaseSyncRequiredForIgnition,"yes","no";Some engines are OK running semi-random sequential while other engine require phase synchronization
 bit useCltBasedRpmLimit,"yes","no";If enabled, use a curve for RPM limit (based on coolant temperature) instead of a constant value.
 bit forceO2Heating,"yes","no";If enabled, don't wait for engine start to heat O2 sensors.\nWARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
 bit invertVvtControlIntake,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
-bit useBiQuadOnAuxSpeedSensors
+bit useBiQuadOnAuxSpeedSensors,"yes","no"
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
-bit stepper_dc_use_two_wires
+bit stepper_dc_use_two_wires,"yes","no"
 bit watchOutForLinearTime
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
@@ -1246,12 +1246,12 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 ! temporary for too much CAN RX processing kills Lua script #5841
 	bit luaCanRxWorkaround;global_can_data performance hack
 	bit flexSensorInverted,"Inverted","Normal"
-	bit useHardSkipInTraction
-	bit useAuxSpeedForSlipRatio;Use Aux Speed 1 as one of speeds for wheel slip ratio?
-	bit useVssAsSecondWheelSpeed;VSS and Aux Speed 1 or Aux Speed 1 with Aux Speed 2?
+	bit useHardSkipInTraction,"yes","no"
+	bit useAuxSpeedForSlipRatio,"yes","no";Use Aux Speed 1 as one of speeds for wheel slip ratio?
+	bit useVssAsSecondWheelSpeed,"yes","no";VSS and Aux Speed 1 or Aux Speed 1 with Aux Speed 2?
 	bit is_enabled_spi_5
 	bit is_enabled_spi_6
-	bit enableAemXSeriesEgt;AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
+	bit enableAemXSeriesEgt,"yes","no";AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 	bit startRequestPinInverted,"Inverted","Normal"
 	bit tcu_rangeSensorPulldown
 	bit devBit01
@@ -1265,7 +1265,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit devBit7
 	bit invertExhaustCamVVTSignal,"Falling","Rising"
 	bit enableKnockSpectrogram,"yes","no";"Available via TS Plugin see https://rusefi.com/s/knock"
-	bit enableKnockSpectrogramFilter
+	bit enableKnockSpectrogramFilter,"yes","no"
 
 	int16_t iacByTpsTaper;This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.;"percent", 1, 0, 0, 500, 0
 
@@ -1308,14 +1308,14 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t mc33_hpfp_i_hold_off;How long to deactivate power when hold current is reached before applying power again;"us", 1, 0, 0, 255, 0
 	uint8_t mc33_hpfp_max_hold;Maximum amount of time the solenoid can be active before assuming a programming error;"ms", 1, 0, 0, 255, 0
 
-	bit stepperDcInvertedPins;Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
-	bit canOpenBLT; Allow OpenBLT on Primary CAN
-	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
+	bit stepperDcInvertedPins,"yes","no";Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
+	bit canOpenBLT,"yes","no"; Allow OpenBLT on Primary CAN
+	bit can2OpenBLT,"yes","no"; Allow OpenBLT on Secondary CAN
 	bit injectorFlowAsMassFlow,"grams per second","cc/min";Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
-	bit boardUseCanTerminator
+	bit boardUseCanTerminator,"yes","no"
 	bit kLineDoHondaSend
-	bit can1ListenMode;ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
-	bit can2ListenMode
+	bit can1ListenMode,"yes","no";ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
+	bit can2ListenMode,"yes","no"
 	uint8_t camDecoder2jzPosition;Angle of tooth detection within engine phase cycle;"angle", 1, 0, 0, 255, 0
 	custom mc33810maxDwellTimer_e 1 bits, U08, @OFFSET@, [0:2], "2 mS", "4 mS", "8 mS", "16 mS", "32 mS", "64 mS"
 	mc33810maxDwellTimer_e mc33810maxDwellTimer;
@@ -1862,7 +1862,7 @@ struct wbo_s
 	can_wbo_re_id_e reId;
 	can_wbo_aem_id_e aemId;
 	can_wbo_re_hwidx_e reHwidx;
-	bit enableRemap;
+	bit enableRemap,"yes","no";
 end_struct
 
 	wbo_s[CAN_WBO_COUNT iterate] canWbo;
