@@ -449,18 +449,18 @@
         <constant name="clutchUpPinInverted">"Normal"</constant>
         <constant name="clutchDownPinInverted">"Normal"</constant>
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
-        <constant name="multisparkEnable">"false"</constant>
+        <constant name="multisparkEnable">"no"</constant>
         <constant name="enableLaunchRetard">"no"</constant>
         <constant name="canInputBCM">"false"</constant>
-        <constant name="consumeObdSensors">"false"</constant>
-        <constant name="enableCanVss">"false"</constant>
+        <constant name="consumeObdSensors">"no"</constant>
+        <constant name="enableCanVss">"no"</constant>
         <constant name="suppressWboWorkaround7048">"false"</constant>
         <constant name="stftIgnoreErrorMagnitude">"no"</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
         <constant name="enableSoftwareKnock">"enabled"</constant>
-        <constant name="verboseVVTDecoding">"false"</constant>
+        <constant name="verboseVVTDecoding">"disabled"</constant>
         <constant name="invertCamVVTSignal">"Rising"</constant>
-        <constant name="alphaNUseIat">"false"</constant>
+        <constant name="alphaNUseIat">"no"</constant>
         <constant name="knockBankCyl1">"Channel 1"</constant>
         <constant name="knockBankCyl2">"Channel 1"</constant>
         <constant name="knockBankCyl3">"Channel 1"</constant>
@@ -473,9 +473,9 @@
         <constant name="knockBankCyl10">"Channel 1"</constant>
         <constant name="knockBankCyl11">"Channel 1"</constant>
         <constant name="knockBankCyl12">"Channel 1"</constant>
-        <constant name="tcuEnabled">"false"</constant>
+        <constant name="tcuEnabled">"disabled"</constant>
         <constant name="canBroadcastUseChannelTwo">"first"</constant>
-        <constant name="useRawOutputToDriveIdleStepper">"false"</constant>
+        <constant name="useRawOutputToDriveIdleStepper">"no"</constant>
         <constant name="verboseCan2">"Do not print"</constant>
         <constant name="etbIo1_directionPin1">"PC8"</constant>
         <constant name="etbIo1_directionPin2">"NONE"</constant>
@@ -606,15 +606,15 @@
         <constant digits="0" name="tps2SecondaryMax" units="ADC">0.0</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
         <constant name="fuelClosedLoopCorrectionEnabled">"disabled"</constant>
-        <constant name="alwaysWriteSdCard">"false"</constant>
+        <constant name="alwaysWriteSdCard">"no"</constant>
         <constant name="knockDetectionUseDoubleFrequency">"second harmonic"</constant>
         <constant name="yesUnderstandLocking">"no"</constant>
         <constant name="silentTriggerError">"true"</constant>
-        <constant name="useLinearCltSensor">"false"</constant>
+        <constant name="useLinearCltSensor">"no"</constant>
         <constant name="canReadEnabled">"true"</constant>
         <constant name="canWriteEnabled">"true"</constant>
-        <constant name="useLinearIatSensor">"false"</constant>
-        <constant name="enableOilPressureProtect">"false"</constant>
+        <constant name="useLinearIatSensor">"no"</constant>
+        <constant name="enableOilPressureProtect">"no"</constant>
         <constant name="tachPulseDurationAsDutyCycle">"Duty cycle"</constant>
         <constant name="isAlternatorControlEnabled">"false"</constant>
         <constant name="invertPrimaryTriggerSignal">"Rising"</constant>
@@ -623,9 +623,9 @@
         <constant name="cutSparkOnHardLimit">"yes"</constant>
         <constant name="launchFuelCutEnable">"no"</constant>
         <constant name="launchSparkCutEnable">"no"</constant>
-        <constant name="torqueReductionEnabled">"false"</constant>
+        <constant name="torqueReductionEnabled">"disabled"</constant>
         <constant name="torqueReductionTriggerPinInverted">"false"</constant>
-        <constant name="limitTorqueReductionTime">"false"</constant>
+        <constant name="limitTorqueReductionTime">"no"</constant>
         <constant name="verboseIsoTp">"false"</constant>
         <constant name="engineSnifferFocusOnInputs">"false"</constant>
         <constant name="launchActivateInverted">"false"</constant>
@@ -644,28 +644,28 @@
         <constant name="isMapAveragingEnabled">"enabled"</constant>
         <constant name="overrideCrankingIacSetting">"false"</constant>
         <constant name="useSeparateAdvanceForIdle">"disabled"</constant>
-        <constant name="isWaveAnalyzerEnabled">"true"</constant>
+        <constant name="isWaveAnalyzerEnabled">"yes"</constant>
         <constant name="useSeparateVeForIdle">"disabled"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
         <constant name="cutFuelInAcr">"false"</constant>
         <constant name="hondaK">"false"</constant>
-        <constant name="twoWireBatchIgnition">"false"</constant>
-        <constant name="useFixedBaroCorrFromMap">"false"</constant>
+        <constant name="twoWireBatchIgnition">"no"</constant>
+        <constant name="useFixedBaroCorrFromMap">"no"</constant>
         <constant name="useSeparateAdvanceForCranking">"Fixed (auto taper)"</constant>
         <constant name="useAdvanceCorrectionsForCranking">"no"</constant>
         <constant name="flexCranking">"false"</constant>
-        <constant name="useIacPidMultTable">"false"</constant>
+        <constant name="useIacPidMultTable">"no"</constant>
         <constant name="isBoostControlEnabled">"disabled"</constant>
-        <constant name="launchSmoothRetard">"false"</constant>
-        <constant name="isPhaseSyncRequiredForIgnition">"false"</constant>
+        <constant name="launchSmoothRetard">"disabled"</constant>
+        <constant name="isPhaseSyncRequiredForIgnition">"no"</constant>
         <constant name="useCltBasedRpmLimit">"no"</constant>
         <constant name="forceO2Heating">"no"</constant>
         <constant name="invertVvtControlIntake">"advance"</constant>
         <constant name="invertVvtControlExhaust">"advance"</constant>
-        <constant name="useBiQuadOnAuxSpeedSensors">"false"</constant>
+        <constant name="useBiQuadOnAuxSpeedSensors">"disabled"</constant>
         <constant name="sdTriggerLog">"normal"</constant>
         <constant name="ALSActivateInverted">"false"</constant>
-        <constant name="stepper_dc_use_two_wires">"false"</constant>
+        <constant name="stepper_dc_use_two_wires">"no"</constant>
         <constant name="watchOutForLinearTime">"true"</constant>
         <constant digits="0" name="engineChartSize" units="count">300.0</constant>
         <constant digits="3" name="turboSpeedSensorMultiplier" units="mult">1.0</constant>
@@ -737,12 +737,12 @@
         <constant name="enableExtendedCanBroadcast">"true"</constant>
         <constant name="luaCanRxWorkaround">"false"</constant>
         <constant name="flexSensorInverted">"Normal"</constant>
-        <constant name="useHardSkipInTraction">"false"</constant>
-        <constant name="useAuxSpeedForSlipRatio">"false"</constant>
-        <constant name="useVssAsSecondWheelSpeed">"false"</constant>
+        <constant name="useHardSkipInTraction">"no"</constant>
+        <constant name="useAuxSpeedForSlipRatio">"no"</constant>
+        <constant name="useVssAsSecondWheelSpeed">"no"</constant>
         <constant name="is_enabled_spi_5">"false"</constant>
         <constant name="is_enabled_spi_6">"false"</constant>
-        <constant name="enableAemXSeriesEgt">"false"</constant>
+        <constant name="enableAemXSeriesEgt">"no"</constant>
         <constant name="startRequestPinInverted">"Normal"</constant>
         <constant name="tcu_rangeSensorPulldown">"false"</constant>
         <constant name="brakePedalPinInverted">"Normal"</constant>
@@ -756,7 +756,7 @@
         <constant name="devBit7">"false"</constant>
         <constant name="invertExhaustCamVVTSignal">"Rising"</constant>
         <constant name="enableKnockSpectrogram">"no"</constant>
-        <constant name="enableKnockSpectrogramFilter">"false"</constant>
+        <constant name="enableKnockSpectrogramFilter">"no"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
@@ -783,14 +783,14 @@
         <constant digits="1" name="mc33_hpfp_i_hold" units="A">3.0</constant>
         <constant digits="0" name="mc33_hpfp_i_hold_off" units="us">10.0</constant>
         <constant digits="0" name="mc33_hpfp_max_hold" units="ms">10.0</constant>
-        <constant name="stepperDcInvertedPins">"false"</constant>
-        <constant name="canOpenBLT">"false"</constant>
-        <constant name="can2OpenBLT">"false"</constant>
+        <constant name="stepperDcInvertedPins">"no"</constant>
+        <constant name="canOpenBLT">"no"</constant>
+        <constant name="can2OpenBLT">"no"</constant>
         <constant name="injectorFlowAsMassFlow">"volumetric flow"</constant>
-        <constant name="boardUseCanTerminator">"true"</constant>
+        <constant name="boardUseCanTerminator">"yes"</constant>
         <constant name="kLineDoHondaSend">"false"</constant>
-        <constant name="can1ListenMode">"false"</constant>
-        <constant name="can2ListenMode">"false"</constant>
+        <constant name="can1ListenMode">"no"</constant>
+        <constant name="can2ListenMode">"no"</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>
         <constant name="mc33810maxDwellTimer">"8 mS"</constant>
         <constant digits="2" name="benchTestOnTime" units="ms">4.0</constant>
