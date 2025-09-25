@@ -17,6 +17,7 @@ import java.util.Optional;
 import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.*;
+import static javax.management.ObjectName.quote;
 
 public class CalibrationsHelperTest {
     TestTuneMigrationContext testContext;
@@ -44,7 +45,7 @@ public class CalibrationsHelperTest {
 
     @Test
     public void testIsEnabledSpi3() {
-        checkField("is_enabled_spi_3", "\"false\"", "\"true\"");
+    	checkField("is_enabled_spi_3", quote("no"), quote("yes"), quote("yes"));
     }
 
     @Test
