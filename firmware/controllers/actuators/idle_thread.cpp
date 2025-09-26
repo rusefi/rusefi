@@ -212,6 +212,9 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	// This clamps once you fall off the end, so no explicit check for >1 required
 	return interpolateClamped(0, crankingValvePosition, 1, running, crankingTaperFraction);
 }
+void IdleController::onEngineStop() {
+		getIdlePid()->reset();
+}
 
 float IdleController::getIdleTimingAdjustment(float rpm) {
 	return getIdleTimingAdjustment(rpm, m_lastTargetRpm, m_lastPhase);
