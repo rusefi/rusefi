@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 
 import static com.rusefi.maintenance.migration.VeTableExtensionMigrator.*;
 
-enum VeRpmBinsIniFieldMigrator {
-    INSTANCE;
-
+class VeRpmBinsIniFieldMigrator {
     private static final int BINS_INI_FIELD_COLS = 1;
     private static final double BINS_INI_FIELD_MULTIPLIER = 1;
     private static final String BINS_INI_FIELD_DIGITS = "0";

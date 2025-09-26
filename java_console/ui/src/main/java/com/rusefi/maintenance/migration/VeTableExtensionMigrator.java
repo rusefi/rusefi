@@ -104,7 +104,7 @@ public enum VeTableExtensionMigrator implements TuneMigrator {
                 return;
             }
             final ArrayIniField updatedVeRpmBinsField = (ArrayIniField) updatedField.get();
-            final Optional<String> migratedValue = VeRpmBinsIniFieldMigrator.INSTANCE.tryMigrateVeRpmBins(
+            final Optional<String> migratedValue = new VeRpmBinsIniFieldMigrator().tryMigrateVeRpmBins(
                 prevField.get(),
                 updatedVeRpmBinsField,
                 prevValue.getValue(),
