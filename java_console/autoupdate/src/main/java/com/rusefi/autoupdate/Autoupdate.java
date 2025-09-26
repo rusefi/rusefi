@@ -4,6 +4,7 @@ import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleInfo;
+import com.rusefi.core.io.BundleInfoStrategy;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
@@ -13,7 +14,6 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -113,8 +113,7 @@ public class Autoupdate {
             log.info("Release update requested");
             downloadedAutoupdateFile = downloadAutoupdateZipFile(
                 bundleInfo,
-                ConnectionAndMeta.BASE_URL_RELEASE
-            );
+                ConnectionAndMeta.BASE_URL_RELEASE, FindFileHelper.isObfuscated());
         } else {
             downloadedAutoupdateFile = doDownload(bundleInfo);
         }
@@ -168,33 +167,8 @@ public class Autoupdate {
     private static final Predicate<ZipEntry> isConsoleJar = zipEntry -> consoleJarZipEntry.equals(zipEntry.getName());
 
     private static Optional<DownloadedAutoupdateFileInfo> doDownload(final BundleInfo bundleInfo) {
-        if (bundleInfo.isMaster()) {
-            log.info("Snapshot requested");
-            return downloadAutoupdateZipFile(bundleInfo, PropertiesHolder.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
-        } else {
-            final String branchName = selectBranchName(bundleInfo);
-            return downloadAutoupdateZipFile(bundleInfo, PropertiesHolder.getBaseUrl() + "/lts/" + branchName + ConnectionAndMeta.AUTOUPDATE);
-        }
-    }
-
-    private static String selectBranchName(BundleInfo bundleInfo) {
-        final String branchName = bundleInfo.getBranchName();
-        final String nextBranchName = bundleInfo.getNextBranchName();
-        if (nextBranchName != null && !nextBranchName.isBlank()) {
-            if (JOptionPane.showConfirmDialog(
-                null,
-                String.format("A new version `%s` is available!\nWould you like to update from `%s` to `%s` now?",
-                    nextBranchName,
-                    branchName,
-                    nextBranchName
-                ),
-                "Release selection",
-                JOptionPane.YES_NO_OPTION
-            ) == JOptionPane.YES_OPTION) {
-                return nextBranchName;
-            }
-        }
-        return branchName;
+        String branchUrl = BundleInfoStrategy.getDownloadUrl(bundleInfo, PropertiesHolder.getBaseUrl(), BundleInfoStrategy::selectBranchName);
+        return downloadAutoupdateZipFile(bundleInfo, branchUrl, FindFileHelper.isObfuscated());
     }
 
     private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
@@ -235,18 +209,19 @@ public class Autoupdate {
         }
     }
 
-    private static Optional<DownloadedAutoupdateFileInfo> downloadAutoupdateZipFile(
+    public static Optional<DownloadedAutoupdateFileInfo> downloadAutoupdateZipFile(
         final BundleInfo info,
-        final String baseUrl
-    ) {
+        final String baseUrl,
+        boolean isObfuscated) {
         try {
-            String suffix = FindFileHelper.isObfuscated() ? "_obfuscated_public" : "";
-            String zipFileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
-            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
-            log.info("Remote file " + zipFileName);
+            String suffix = isObfuscated ? "_obfuscated_public" : "";
+            String localFolder = "";
+            String localZipFileName = localFolder + ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(localZipFileName).invoke(baseUrl);
+            log.info("Local file " + localZipFileName);
             log.info("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
 
-            if (AutoupdateUtil.hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
+            if (AutoupdateUtil.hasExistingFile(localZipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
                 log.info("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
                 return Optional.empty();
             }
@@ -257,13 +232,13 @@ public class Autoupdate {
 
             log.info(info + " " + completeFileSize + " bytes, last modified " + new Date(lastModified));
 
-            AutoupdateUtil.downloadAutoupdateFile(zipFileName, connectionAndMeta, TITLE);
+            AutoupdateUtil.downloadAutoupdateFile(localZipFileName, connectionAndMeta, TITLE);
 
-            File file = new File(zipFileName);
+            File file = new File(localZipFileName);
             file.setLastModified(lastModified);
             log.info("Downloaded " + file.length() + " bytes, lastModified=" + lastModified);
 
-            return Optional.of(new DownloadedAutoupdateFileInfo(zipFileName, lastModified));
+            return Optional.of(new DownloadedAutoupdateFileInfo(localZipFileName, lastModified));
         } catch (ReportedIOException e) {
             // we had already reported error with a UI dialog when we had parent frame
             log.error("Error downloading bundle: " + e);
