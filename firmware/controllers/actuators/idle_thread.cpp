@@ -194,7 +194,16 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
 	isIacTableForCoasting = engineConfiguration->useIacTableForCoasting && isIdleCoasting;
 	if (isIacTableForCoasting) {
-		return interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting);
+		percent_t coastingPosition = interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting);
+
+		// Add A/C offset if the A/C is on during coasting
+		if (engine->module<AcController>().unmock().acButtonState) {
+			coastingPosition += engineConfiguration->acIdleExtraOffset;
+		}
+
+		// We return here, bypassing the final interpolation, so we should clamp the value
+		// to ensure it's a valid percentage.
+		return clampPercentValue(coastingPosition);
 	}
 
 	percent_t running = getRunningOpenLoop(phase, rpm, clt, tps);
@@ -457,10 +466,6 @@ void IdleController::onFastCallback() {
 	// huh: why not onIgnitionStateChanged?
 	engine->m_ltit.checkIfShouldSave();
 #endif // EFI_SHAFT_POSITION_INPUT
-}
-
-void IdleController::onEngineStop() {
-	getIdlePid()->reset();
 }
 
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
