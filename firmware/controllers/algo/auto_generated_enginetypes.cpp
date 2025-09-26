@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Sep 16 14:01:03 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Sep 26 19:09:01 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -75,12 +75,24 @@ case LTFT_RESET:
   return "LTFT_RESET";
 case LUA_COMMAND_1:
   return "LUA_COMMAND_1";
+case LUA_COMMAND_10:
+  return "LUA_COMMAND_10";
 case LUA_COMMAND_2:
   return "LUA_COMMAND_2";
 case LUA_COMMAND_3:
   return "LUA_COMMAND_3";
 case LUA_COMMAND_4:
   return "LUA_COMMAND_4";
+case LUA_COMMAND_5:
+  return "LUA_COMMAND_5";
+case LUA_COMMAND_6:
+  return "LUA_COMMAND_6";
+case LUA_COMMAND_7:
+  return "LUA_COMMAND_7";
+case LUA_COMMAND_8:
+  return "LUA_COMMAND_8";
+case LUA_COMMAND_9:
+  return "LUA_COMMAND_9";
   }
  return NULL;
 }

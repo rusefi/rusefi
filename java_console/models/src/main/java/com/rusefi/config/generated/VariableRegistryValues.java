@@ -126,9 +126,15 @@ public class VariableRegistryValues {
 	public static final int bench_mode_e_LTFT_DEV_POKE = 32;
 	public static final int bench_mode_e_LTFT_RESET = 30;
 	public static final int bench_mode_e_LUA_COMMAND_1 = 33;
+	public static final int bench_mode_e_LUA_COMMAND_10 = 42;
 	public static final int bench_mode_e_LUA_COMMAND_2 = 34;
 	public static final int bench_mode_e_LUA_COMMAND_3 = 35;
 	public static final int bench_mode_e_LUA_COMMAND_4 = 36;
+	public static final int bench_mode_e_LUA_COMMAND_5 = 37;
+	public static final int bench_mode_e_LUA_COMMAND_6 = 38;
+	public static final int bench_mode_e_LUA_COMMAND_7 = 39;
+	public static final int bench_mode_e_LUA_COMMAND_8 = 40;
+	public static final int bench_mode_e_LUA_COMMAND_9 = 41;
 	public static final int BENCH_STARTER_DURATION = 4000;
 	public static final int BENCH_VVT_DURATION = 300;
 	public static final int BLEND_FACTOR_SIZE = 8;
@@ -1268,7 +1274,7 @@ public class VariableRegistryValues {
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int ltft_s_size = 12;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
-	public static final int LUA_BUTTON_COUNT = 4;
+	public static final int LUA_BUTTON_COUNT = 10;
 	public static final int LUA_DIGITAL_INPUT_COUNT = 8;
 	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int lua_gauge_e_LUA_GAUGE_1 = 0;
@@ -1414,7 +1420,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 489379788;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1719,7 +1724,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.09.26.stm32h743_nucleo.489379788";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.09.26.stm32h743_nucleo.2894365843";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2060;

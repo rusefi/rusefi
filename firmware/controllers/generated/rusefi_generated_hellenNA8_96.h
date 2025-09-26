@@ -129,9 +129,15 @@
 #define bench_mode_e_LTFT_DEV_POKE 32
 #define bench_mode_e_LTFT_RESET 30
 #define bench_mode_e_LUA_COMMAND_1 33
+#define bench_mode_e_LUA_COMMAND_10 42
 #define bench_mode_e_LUA_COMMAND_2 34
 #define bench_mode_e_LUA_COMMAND_3 35
 #define bench_mode_e_LUA_COMMAND_4 36
+#define bench_mode_e_LUA_COMMAND_5 37
+#define bench_mode_e_LUA_COMMAND_6 38
+#define bench_mode_e_LUA_COMMAND_7 39
+#define bench_mode_e_LUA_COMMAND_8 40
+#define bench_mode_e_LUA_COMMAND_9 41
 #define BENCH_STARTER_DURATION 4000
 #define BENCH_VVT_DURATION 300
 #define BLEND_FACTOR_SIZE 8
@@ -1345,7 +1351,7 @@
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define ltft_s_size 12
 #define LUA_ANALOG_INPUT_COUNT 8
-#define LUA_BUTTON_COUNT 4
+#define LUA_BUTTON_COUNT 10
 #define LUA_DIGITAL_INPUT_COUNT 8
 #define LUA_GAUGE_COUNT 8
 #define lua_gauge_e_auto_enum 0="LUA_GAUGE_1",1="LUA_GAUGE_2",2="LUA_GAUGE_3",3="LUA_GAUGE_4",4="LUA_GAUGE_5",5="LUA_GAUGE_6",6="LUA_GAUGE_7",7="LUA_GAUGE_8"
@@ -1519,7 +1525,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3056243768
+#define SIGNATURE_HASH 126175079
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2081,7 +2087,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.09.26.hellenNA8_96.3056243768"
+#define TS_SIGNATURE "rusEFI master.2025.09.26.hellenNA8_96.126175079"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
