@@ -163,6 +163,7 @@ struct_no_prefix engine_configuration_s
 #define CLT_TIMING_CURVE_SIZE 5
 #define IDLE_VE_SIZE 4
 #define RE_auto_update_root_url "https://rusefi.com/build_server"
+#define RE_obfuscated "false"
 
 #define TCU_SOLENOID_COUNT 6
 
