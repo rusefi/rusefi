@@ -215,10 +215,15 @@ public class Autoupdate {
         boolean isObfuscated) {
         try {
             String suffix = isObfuscated ? "_obfuscated_public" : "";
-            String localFolder = "";
-            String localZipFileName = localFolder + ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
-            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(localZipFileName).invoke(baseUrl);
+            String folderName = info.getTarget() + "_" + info.getBranchName();
+            String localFolder = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator + folderName + File.separator;
+            new File(localFolder).mkdirs();
+
+            String fileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
+            String localZipFileName = localFolder + fileName;
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(fileName).invoke(baseUrl);
             log.info("Local file " + localZipFileName);
+            log.info("Remote file " + fileName);
             log.info("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
 
             if (AutoupdateUtil.hasExistingFile(localZipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
