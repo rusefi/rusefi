@@ -19,6 +19,12 @@ class VeRpmBinsIniFieldMigrator {
     private static final String BINS_INI_FIELD_DIGITS = "0";
     private static final FieldType BINS_INI_FIELD_TYPE = FieldType.UINT16;
 
+    private final String iniFieldName;
+
+    VeRpmBinsIniFieldMigrator(final String binsIniFieldName) {
+        this.iniFieldName = binsIniFieldName;
+    }
+
     Optional<String> tryMigrateVeRpmBins(
         final IniField prevField,
         final IniField newField,
@@ -58,7 +64,8 @@ class VeRpmBinsIniFieldMigrator {
                         recommendedStep = Optional.of(chooseStep(prevLongValues, maxPossibleStep));
                     } else {
                         callbacks.logLine(String.format(
-                            "WARNING! `veRpmBins` ini-field cannot be propagated with increasing values, because max value is %s",
+                            "WARNING! `%s` ini-field cannot be propagated with increasing values, because max value is %s",
+                            iniFieldName,
                             max
                         ));
                         return Optional.empty();
@@ -92,13 +99,14 @@ class VeRpmBinsIniFieldMigrator {
     }
 
 
-    private static Optional<ArrayIniField> getValidatedVeRpmBinsArrayIniField(
+    private Optional<ArrayIniField> getValidatedVeRpmBinsArrayIniField(
         final IniField field,
         final UpdateOperationCallbacks callbacks
     ) {
         if (!(field instanceof ArrayIniField)) {
             callbacks.logLine(String.format(
-                "WARNING! `veRpmBins` ini-field is expected to be `ArrayIniField` instead of %s",
+                "WARNING! `%s` ini-field is expected to be `ArrayIniField` instead of %s",
+                iniFieldName,
                 field.getClass().getName()
             ));
             return Optional.empty();
@@ -107,7 +115,8 @@ class VeRpmBinsIniFieldMigrator {
         final FieldType arrayFieldType = arrayField.getType();
         if (arrayFieldType != BINS_INI_FIELD_TYPE) {
             callbacks.logLine(String.format(
-                "WARNING! Type of `veRpmBins` ini-field is expected to be `%s` instead of `%s`",
+                "WARNING! Type of `%s` ini-field is expected to be `%s` instead of `%s`",
+                iniFieldName,
                 BINS_INI_FIELD_TYPE,
                 arrayFieldType
             ));
@@ -116,7 +125,8 @@ class VeRpmBinsIniFieldMigrator {
         final int arrayFieldCols = arrayField.getCols();
         if (arrayFieldCols != BINS_INI_FIELD_COLS) {
             callbacks.logLine(String.format(
-                "WARNING! `veRpmBins` ini-field is expected to contain %d columns instead of %d",
+                "WARNING! `%s` ini-field is expected to contain %d columns instead of %d",
+                iniFieldName,
                 VE_TABLE_ROWS,
                 arrayFieldCols
             ));
@@ -125,7 +135,8 @@ class VeRpmBinsIniFieldMigrator {
         final double arrayFieldMultiplier = arrayField.getMultiplier();
         if (arrayFieldMultiplier != BINS_INI_FIELD_MULTIPLIER) {
             callbacks.logLine(String.format(
-                "WARNING! Multiplier of `veRpmBins` ini-field is expected to be %f instead of %f",
+                "WARNING! Multiplier of `%s` ini-field is expected to be %f instead of %f",
+                iniFieldName,
                 BINS_INI_FIELD_MULTIPLIER,
                 arrayFieldMultiplier
             ));
@@ -134,7 +145,8 @@ class VeRpmBinsIniFieldMigrator {
         final String arrayFieldDigits = arrayField.getDigits();
         if (!BINS_INI_FIELD_DIGITS.equals(arrayFieldDigits)) {
             callbacks.logLine(String.format(
-                "WARNING! Digits of `veRpmBins` ini-field is expected to be `%s` instead of `%s`",
+                "WARNING! Digits of `%s` ini-field is expected to be `%s` instead of `%s`",
+                iniFieldName,
                 BINS_INI_FIELD_DIGITS,
                 arrayFieldDigits
             ));
@@ -148,8 +160,8 @@ class VeRpmBinsIniFieldMigrator {
             }
             default: {
                 callbacks.logLine(String.format(
-                    "WARNING! `veRpmBins` ini-field is expected to contain %d or %d rows " +
-                        "instead of %d",
+                    "WARNING! `%s` ini-field is expected to contain %d or %d rows instead of %d",
+                    iniFieldName,
                     OLD_VE_TABLE_COLS,
                     NEW_VE_TABLE_COLS,
                     arrayFieldRows
