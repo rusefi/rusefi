@@ -23,6 +23,7 @@
 
 #include "pch.h"
 #include "accel_enrichment.h"
+#include "tunerstudio.h"
 
 
 // on this level we do not distinguish between multiplier and 'ms adder' modes
@@ -38,6 +39,12 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		// If disabled, return 0.
 		return 0;
 	}
+
+#if EFI_TUNER_STUDIO
+	if (isTuningVeNow()) {
+		return 0;
+	}
+#endif
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (rpm < engineConfiguration->cranking.rpm) {
