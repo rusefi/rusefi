@@ -16,10 +16,10 @@ import static com.rusefi.maintenance.migration.VeTableExtensionMigrator.*;
 enum VeRpmBinsIniFieldMigrator {
     INSTANCE;
 
-    private static final int VE_RPM_BINS_COLS = 1;
-    private static final double VE_RPM_BINS_MULTIPLIER = 1;
-    private static final String VE_RPM_BINS_DIGITS = "0";
-    private static final FieldType VE_RPM_BINS_TYPE = FieldType.UINT16;
+    private static final int BINS_INI_FIELD_COLS = 1;
+    private static final double BINS_INI_FIELD_MULTIPLIER = 1;
+    private static final String BINS_INI_FIELD_DIGITS = "0";
+    private static final FieldType BINS_INI_FIELD_TYPE = FieldType.UINT16;
 
     Optional<String> tryMigrateVeRpmBins(
         final IniField prevField,
@@ -108,16 +108,16 @@ enum VeRpmBinsIniFieldMigrator {
         }
         final ArrayIniField arrayField = (ArrayIniField) field;
         final FieldType arrayFieldType = arrayField.getType();
-        if (arrayFieldType != VE_RPM_BINS_TYPE) {
+        if (arrayFieldType != BINS_INI_FIELD_TYPE) {
             callbacks.logLine(String.format(
                 "WARNING! Type of `veRpmBins` ini-field is expected to be `%s` instead of `%s`",
-                VE_RPM_BINS_TYPE,
+                BINS_INI_FIELD_TYPE,
                 arrayFieldType
             ));
             return Optional.empty();
         }
         final int arrayFieldCols = arrayField.getCols();
-        if (arrayFieldCols != VE_RPM_BINS_COLS) {
+        if (arrayFieldCols != BINS_INI_FIELD_COLS) {
             callbacks.logLine(String.format(
                 "WARNING! `veRpmBins` ini-field is expected to contain %d columns instead of %d",
                 VE_TABLE_ROWS,
@@ -126,19 +126,19 @@ enum VeRpmBinsIniFieldMigrator {
             return Optional.empty();
         }
         final double arrayFieldMultiplier = arrayField.getMultiplier();
-        if (arrayFieldMultiplier != VE_RPM_BINS_MULTIPLIER) {
+        if (arrayFieldMultiplier != BINS_INI_FIELD_MULTIPLIER) {
             callbacks.logLine(String.format(
                 "WARNING! Multiplier of `veRpmBins` ini-field is expected to be %f instead of %f",
-                VE_RPM_BINS_MULTIPLIER,
+                BINS_INI_FIELD_MULTIPLIER,
                 arrayFieldMultiplier
             ));
             return Optional.empty();
         }
         final String arrayFieldDigits = arrayField.getDigits();
-        if (!VE_RPM_BINS_DIGITS.equals(arrayFieldDigits)) {
+        if (!BINS_INI_FIELD_DIGITS.equals(arrayFieldDigits)) {
             callbacks.logLine(String.format(
                 "WARNING! Digits of `veRpmBins` ini-field is expected to be `%s` instead of `%s`",
-                VE_RPM_BINS_DIGITS,
+                BINS_INI_FIELD_DIGITS,
                 arrayFieldDigits
             ));
             return Optional.empty();
