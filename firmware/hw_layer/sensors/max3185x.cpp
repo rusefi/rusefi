@@ -229,6 +229,8 @@ private:
 			return "max31855";
 		case MAX31856_TYPE:
 			return "max31856";
+		case MAX6675_TYPE:
+			return "max6675";
 		default:
 			return "unknown";
 		}
@@ -479,7 +481,7 @@ private:
 		}
 
 		if (temp) {
-			// bits 14:3, 1C resolution
+			// bits 14:3, 0.25C resolution
 			uint16_t tmp = (packet >> 3) & 0x0fff;
 			*temp = (float) tmp * 0.25;
 		}
