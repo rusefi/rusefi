@@ -314,7 +314,6 @@ public class ProgramSelector {
             callbacks.logLine("flashSerial " + fileName);
             if (USE_JAVA_SERIAL) {
                 OpenBltFlasher.flashSerial(fileName, port, cb);
-                callbacks.logLine("java flasher was used");
             } else {
                 OpenbltJni.flashSerial(fileName, port, cb);
             }
