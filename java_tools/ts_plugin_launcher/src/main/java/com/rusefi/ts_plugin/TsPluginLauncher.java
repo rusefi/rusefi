@@ -30,8 +30,11 @@ public class TsPluginLauncher implements ApplicationPlugin {
 
     public TsPluginLauncher() {
         log.info("init " + this);
-        TsPluginBodyFetcher.downloadLatestIfNeeded();
-        TsHeadlessPlugin.start();
+        Thread pluginFetchThread = new Thread(() -> {
+            TsPluginBodyFetcher.downloadLatestIfNeeded();
+            TsHeadlessPlugin.start();
+        }, "pluginFetchThread");
+        pluginFetchThread.start();
     }
 
     @Override
