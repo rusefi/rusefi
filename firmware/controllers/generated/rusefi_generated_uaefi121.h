@@ -1470,6 +1470,7 @@
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define RANGE_INPUT_COUNT 6
 #define RE_auto_update_root_url "https://rusefi.com/build_server"
+#define RE_obfuscated "false"
 #define REBOOT_COMMAND 0xbb
 #define RPM_AS_BYTE_LIMIT 25000
 #define RPM_AS_BYTE_SCALE 100
@@ -1516,7 +1517,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3514144555
+#define SIGNATURE_HASH 866158294
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2078,7 +2079,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.09.26.uaefi121.3514144555"
+#define TS_SIGNATURE "rusEFI master.2025.09.26.uaefi121.866158294"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
