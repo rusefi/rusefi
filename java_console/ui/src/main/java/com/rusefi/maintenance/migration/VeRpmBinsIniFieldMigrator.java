@@ -37,9 +37,8 @@ class VeRpmBinsIniFieldMigrator {
         if (prevVeRpmBinsValidatedField.isPresent() && newVeRpmBinsValidatedField.isPresent()) {
             final ArrayIniField prevVeRpmBinsField = prevVeRpmBinsValidatedField.get();
             final ArrayIniField newVeRpmBinsField = newVeRpmBinsValidatedField.get();
-            final int prevVeRpmBinsFieldRows = prevVeRpmBinsField.getRows();
-            final int newVeRpmBinsFieldRows = newVeRpmBinsField.getRows();
-            if ((prevVeRpmBinsFieldRows == OLD_VE_TABLE_COLS) && (newVeRpmBinsFieldRows == NEW_VE_TABLE_COLS)) {
+            final int binsToAddCount = newVeRpmBinsField.getRows() - prevVeRpmBinsField.getRows();
+            if (0 < binsToAddCount) {
                 final List<String> prevValues = Arrays.stream(prevVeRpmBinsField.getValues(prevValue))
                     .map(e -> e[0])
                     .collect(Collectors.toList());
@@ -53,7 +52,7 @@ class VeRpmBinsIniFieldMigrator {
                 Optional<Long> recommendedStep;
                 if (max != null) {
                     final long maxPossibleStep = (long)(
-                        (Double.parseDouble(max) - lastValue) / (NEW_VE_TABLE_COLS - OLD_VE_TABLE_COLS)
+                        (Double.parseDouble(max) - lastValue) / binsToAddCount
                     );
                     if (1 <= maxPossibleStep) {
                         recommendedStep = Optional.of(chooseStep(prevLongValues, maxPossibleStep));
