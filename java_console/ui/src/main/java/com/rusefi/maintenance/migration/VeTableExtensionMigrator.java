@@ -67,25 +67,23 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             if (prevArrayIniField.isPresent() && updatedArrayIniField.isPresent()) {
                 final ArrayIniField prevTableField = prevArrayIniField.get();
                 final ArrayIniField updatedTableField = updatedArrayIniField.get();
-                if (prevTableField.getCols() < updatedTableField.getCols()) {
-                    final Optional<String> migratedValue = tryMigrateTable(
-                        prevTableField,
-                        updatedTableField,
-                        prevValue.getValue()
-                    );
-                    if (migratedValue.isPresent()) {
-                        context.addMigration(
+                final Optional<String> migratedValue = tryMigrateTable(
+                    prevTableField,
+                    updatedTableField,
+                    prevValue.getValue()
+                );
+                if (migratedValue.isPresent()) {
+                    context.addMigration(
+                        tableFieldName,
+                        new Constant(
                             tableFieldName,
-                            new Constant(
-                                tableFieldName,
-                                updatedTableField.getUnits(),
-                                migratedValue.get(),
-                                updatedTableField.getDigits(),
-                                Integer.toString(updatedTableField.getRows()),
-                                Integer.toString(updatedTableField.getCols())
-                            )
-                        );
-                    }
+                            updatedTableField.getUnits(),
+                            migratedValue.get(),
+                            updatedTableField.getDigits(),
+                            Integer.toString(updatedTableField.getRows()),
+                            Integer.toString(updatedTableField.getCols())
+                        )
+                    );
                 }
             }
         }
