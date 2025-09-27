@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VeRpmBinsIniFieldMigratorTest {
     private TestCallbacks testCallbacks;
-    private VeRpmBinsIniFieldMigrator testMigrator;
+    private BinsIniFieldMigrator testMigrator;
 
     @BeforeEach
     void setUp() {
         testCallbacks = new TestCallbacks();
-        testMigrator = new VeRpmBinsIniFieldMigrator(VE_RPM_BINS_FIELD_NAME, OLD_VE_TABLE_COLS, NEW_VE_TABLE_COLS);
+        testMigrator = new BinsIniFieldMigrator(VE_RPM_BINS_FIELD_NAME, OLD_VE_TABLE_COLS, NEW_VE_TABLE_COLS);
     }
 
     @Test

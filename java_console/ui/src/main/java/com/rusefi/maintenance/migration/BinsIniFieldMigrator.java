@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-class VeRpmBinsIniFieldMigrator {
+class BinsIniFieldMigrator {
     private static final int BINS_INI_FIELD_COLS = 1;
     private static final double BINS_INI_FIELD_MULTIPLIER = 1;
     private static final String BINS_INI_FIELD_DIGITS = "0";
@@ -22,7 +22,7 @@ class VeRpmBinsIniFieldMigrator {
     private final int prevCount;
     private final int newCount;
 
-    VeRpmBinsIniFieldMigrator(final String binsIniFieldName, final int prevBinsCount, final int newBinsCount) {
+    BinsIniFieldMigrator(final String binsIniFieldName, final int prevBinsCount, final int newBinsCount) {
         iniFieldName = binsIniFieldName;
         prevCount = prevBinsCount;
         newCount = newBinsCount;
