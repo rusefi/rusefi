@@ -71,8 +71,7 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                     final Optional<String> migratedValue = tryMigrateTable(
                         prevTableField,
                         updatedTableField,
-                        prevValue.getValue(),
-                        context.getCallbacks()
+                        prevValue.getValue()
                     );
                     if (migratedValue.isPresent()) {
                         context.addMigration(
@@ -139,34 +138,27 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     }
 
     private Optional<String> tryMigrateTable(
-        final IniField prevField,
-        final IniField newField,
-        final String prevValue,
-        final UpdateOperationCallbacks callbacks
+        final ArrayIniField prevField,
+        final ArrayIniField newField,
+        final String prevValue
     ) {
         Optional<String> result = Optional.empty();
-        final Optional<ArrayIniField> prevValidatedTableField = getValidatedTableArrayIniField(prevField, callbacks);
-        final Optional<ArrayIniField> newValidatedTableField = getValidatedTableArrayIniField(newField, callbacks);
-        if (prevValidatedTableField.isPresent() && newValidatedTableField.isPresent()) {
-            final ArrayIniField prevTableField = prevValidatedTableField.get();
-            final ArrayIniField newTableField = newValidatedTableField.get();
-            final int prevTableFieldCols = prevTableField.getCols();
-            final int newTableFieldCols = newTableField.getCols();
-            if (prevTableFieldCols < newTableFieldCols) {
-                final String[][] prevValues = prevTableField.getValues(prevValue);
-                final String[][] newValues = new String[VE_TABLE_ROWS][newTableFieldCols];
-                for (int rowIdx = 0; rowIdx < VE_TABLE_ROWS; rowIdx++) {
-                    // copy prev values:
-                    for (int colIdx = 0; colIdx < prevTableFieldCols; colIdx++) {
-                        newValues[rowIdx][colIdx] = prevValues[rowIdx][colIdx];
-                    }
-                    // propagate value from a last column to new columns:
-                    for (int colIdx = prevTableFieldCols; colIdx < newTableFieldCols; colIdx++) {
-                        newValues[rowIdx][colIdx] = prevValues[rowIdx][prevTableFieldCols - 1];
-                    }
+        final int prevTableFieldCols = prevField.getCols();
+        final int newTableFieldCols = newField.getCols();
+        if (prevTableFieldCols < newTableFieldCols) {
+            final String[][] prevValues = prevField.getValues(prevValue);
+            final String[][] newValues = new String[VE_TABLE_ROWS][newTableFieldCols];
+            for (int rowIdx = 0; rowIdx < VE_TABLE_ROWS; rowIdx++) {
+                // copy prev values:
+                for (int colIdx = 0; colIdx < prevTableFieldCols; colIdx++) {
+                    newValues[rowIdx][colIdx] = prevValues[rowIdx][colIdx];
                 }
-                result = Optional.of(newTableField.formatValue(newValues));
+                // propagate value from a last column to new columns:
+                for (int colIdx = prevTableFieldCols; colIdx < newTableFieldCols; colIdx++) {
+                    newValues[rowIdx][colIdx] = prevValues[rowIdx][prevTableFieldCols - 1];
+                }
             }
+            result = Optional.of(newField.formatValue(newValues));
         }
         return result;
     }
