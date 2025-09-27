@@ -12,10 +12,6 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     static final String VE_TABLE_FIELD_NAME = "veTable";
     static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
 
-    // todo: can this be more dynamic?
-    static final int OLD_VE_TABLE_COLS = 16;
-    static final int NEW_VE_TABLE_COLS = 24;
-
     private final String tableFieldName;
     private final FieldType tableFieldType;
     private final String columnsBinFieldName;
@@ -191,22 +187,6 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             ));
             return Optional.empty();
         }
-        final int arrayFieldCols = arrayField.getCols();
-        switch (arrayFieldCols) {
-            case OLD_VE_TABLE_COLS:
-            case NEW_VE_TABLE_COLS: {
-                return Optional.of(arrayField);
-            }
-            default: {
-                callbacks.logLine(String.format(
-                    "WARNING! `%s` ini-field is expected to contain %d or %d columns instead of %d",
-                    tableFieldName,
-                    OLD_VE_TABLE_COLS,
-                    NEW_VE_TABLE_COLS,
-                    arrayFieldCols
-                ));
-                return Optional.empty();
-            }
-        }
+        return Optional.of(arrayField);
     }
 }
