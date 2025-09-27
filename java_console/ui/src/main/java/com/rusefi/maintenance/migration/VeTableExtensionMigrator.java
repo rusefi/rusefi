@@ -33,33 +33,33 @@ public class VeTableExtensionMigrator implements TuneMigrator {
 
     @Override
     public void migrateTune(final TuneMigrationContext context) {
-        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
-        if (prevValue != null) {
-            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(tableFieldName);
-            if (!prevField.isPresent()) {
-                context.getCallbacks().logLine(String.format(
-                    "WARNING!!! Missed `%s` ini field in previous .ini file.",
-                    tableFieldName
-                ));
-                return;
-            }
-            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(tableFieldName);
-            if (!updatedField.isPresent()) {
-                context.getCallbacks().logLine(String.format(
-                    "WARNING!!! Missed `%s` ini field in updated .ini file.",
-                    tableFieldName
-                ));
-                return;
-            }
-            final Optional<ArrayIniField> prevArrayIniField = getValidatedTableArrayIniField(
-                prevField.get(),
-                context.getCallbacks()
-            );
-            final Optional<ArrayIniField> updatedArrayIniField = getValidatedTableArrayIniField(
-                updatedField.get(),
-                context.getCallbacks()
-            );
-            if (prevArrayIniField.isPresent() && updatedArrayIniField.isPresent()) {
+        final Optional<IniField> prevField = context.getPrevIniFile().findIniField(tableFieldName);
+        if (!prevField.isPresent()) {
+            context.getCallbacks().logLine(String.format(
+                "WARNING!!! Missed `%s` ini field in previous .ini file.",
+                tableFieldName
+            ));
+            return;
+        }
+        final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(tableFieldName);
+        if (!updatedField.isPresent()) {
+            context.getCallbacks().logLine(String.format(
+                "WARNING!!! Missed `%s` ini field in updated .ini file.",
+                tableFieldName
+            ));
+            return;
+        }
+        final Optional<ArrayIniField> prevArrayIniField = getValidatedTableArrayIniField(
+            prevField.get(),
+            context.getCallbacks()
+        );
+        final Optional<ArrayIniField> updatedArrayIniField = getValidatedTableArrayIniField(
+            updatedField.get(),
+            context.getCallbacks()
+        );
+        if (prevArrayIniField.isPresent() && updatedArrayIniField.isPresent()) {
+            final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
+            if (prevValue != null) {
                 final ArrayIniField prevTableField = prevArrayIniField.get();
                 final ArrayIniField updatedTableField = updatedArrayIniField.get();
                 final Optional<String> migratedValue = tryMigrateTable(
@@ -81,8 +81,8 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                     );
                 }
             }
+            migrateBins(context);
         }
-        migrateBins(context);
     }
 
     private void migrateBins(final TuneMigrationContext context) {
