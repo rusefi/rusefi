@@ -34,7 +34,6 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     @Override
     public void migrateTune(final TuneMigrationContext context) {
         migrateTable(context);
-        migrateBins(context);
     }
 
     private void migrateTable(final TuneMigrationContext context) {
@@ -87,6 +86,7 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                 }
             }
         }
+        migrateBins(context);
     }
 
     private void migrateBins(final TuneMigrationContext context) {
