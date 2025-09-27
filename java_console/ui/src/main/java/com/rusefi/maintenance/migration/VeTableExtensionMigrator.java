@@ -8,9 +8,7 @@ import com.rusefi.tune.xml.Constant;
 
 import java.util.Optional;
 
-public enum VeTableExtensionMigrator implements TuneMigrator {
-    INSTANCE;
-
+public class VeTableExtensionMigrator implements TuneMigrator {
     static final String VE_TABLE_FIELD_NAME = "veTable";
     static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
 
