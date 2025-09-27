@@ -58,10 +58,12 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             context.getCallbacks()
         );
         if (prevArrayIniField.isPresent() && updatedArrayIniField.isPresent()) {
+            final ArrayIniField prevTableField = prevArrayIniField.get();
+            final int prevTableFieldCols = prevTableField.getCols();
+            final ArrayIniField updatedTableField = updatedArrayIniField.get();
+            final int updatedTableFieldCols = updatedTableField.getCols();
             final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
             if (prevValue != null) {
-                final ArrayIniField prevTableField = prevArrayIniField.get();
-                final ArrayIniField updatedTableField = updatedArrayIniField.get();
                 final Optional<String> migratedValue = tryMigrateTable(
                     prevTableField,
                     updatedTableField,
@@ -76,16 +78,16 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                             migratedValue.get(),
                             updatedTableField.getDigits(),
                             Integer.toString(updatedTableField.getRows()),
-                            Integer.toString(updatedTableField.getCols())
+                            Integer.toString(updatedTableFieldCols)
                         )
                     );
                 }
             }
-            migrateBins(context);
+            migrateBins(context, prevTableFieldCols, updatedTableFieldCols);
         }
     }
 
-    private void migrateBins(final TuneMigrationContext context) {
+    private void migrateBins(final TuneMigrationContext context, final int prevBinsCount, final int updatedBinsCount) {
         final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(columnsBinFieldName);
         if (prevValue != null) {
             final Optional<IniField> prevField = context.getPrevIniFile().findIniField(columnsBinFieldName);
@@ -107,8 +109,8 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             final ArrayIniField updatedBinsField = (ArrayIniField) updatedField.get();
             final Optional<String> migratedValue = new BinsIniFieldMigrator(
                 columnsBinFieldName,
-                OLD_VE_TABLE_COLS,
-                NEW_VE_TABLE_COLS
+                prevBinsCount,
+                updatedBinsCount
             ).tryMigrateBins(
                 prevField.get(),
                 updatedBinsField,
