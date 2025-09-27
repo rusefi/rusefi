@@ -28,27 +28,27 @@ class VeRpmBinsIniFieldMigrator {
         newCount = newBinsCount;
     }
 
-    Optional<String> tryMigrateVeRpmBins(
+    Optional<String> tryMigrateBins(
         final IniField prevField,
         final IniField newField,
         final String prevValue,
         final UpdateOperationCallbacks callbacks
     ) {
         Optional<String> result = Optional.empty();
-        final Optional<ArrayIniField> prevVeRpmBinsValidatedField = getValidatedVeRpmBinsArrayIniField(
+        final Optional<ArrayIniField> prevValidatedBinsIniField = getValidatedBinsArrayIniField(
             prevField,
             callbacks
         );
-        final Optional<ArrayIniField> newVeRpmBinsValidatedField = getValidatedVeRpmBinsArrayIniField(
+        final Optional<ArrayIniField> newValidatedBinsIniField = getValidatedBinsArrayIniField(
             newField,
             callbacks
         );
-        if (prevVeRpmBinsValidatedField.isPresent() && newVeRpmBinsValidatedField.isPresent()) {
-            final ArrayIniField prevVeRpmBinsField = prevVeRpmBinsValidatedField.get();
-            final ArrayIniField newVeRpmBinsField = newVeRpmBinsValidatedField.get();
-            final int binsToAddCount = newVeRpmBinsField.getRows() - prevVeRpmBinsField.getRows();
+        if (prevValidatedBinsIniField.isPresent() && newValidatedBinsIniField.isPresent()) {
+            final ArrayIniField prevBinsField = prevValidatedBinsIniField.get();
+            final ArrayIniField newBinsField = newValidatedBinsIniField.get();
+            final int binsToAddCount = newBinsField.getRows() - prevBinsField.getRows();
             if (0 < binsToAddCount) {
-                final List<String> prevValues = Arrays.stream(prevVeRpmBinsField.getValues(prevValue))
+                final List<String> prevValues = Arrays.stream(prevBinsField.getValues(prevValue))
                     .map(e -> e[0])
                     .collect(Collectors.toList());
                 final List<Long> prevLongValues = prevValues.stream()
@@ -56,7 +56,7 @@ class VeRpmBinsIniFieldMigrator {
                     .map(Math::round)
                     .collect(Collectors.toList());
                 final long lastValue = prevLongValues.get(prevLongValues.size() - 1);
-                final String max = newVeRpmBinsField.getMax();
+                final String max = newBinsField.getMax();
 
                 Optional<Long> recommendedStep;
                 if (max != null) {
@@ -79,7 +79,7 @@ class VeRpmBinsIniFieldMigrator {
                 }
                 if (recommendedStep.isPresent()) {
                     final String[][] newValues = expandValues(prevValues, lastValue, recommendedStep);
-                    result = Optional.of(newVeRpmBinsField.formatValue(newValues));
+                    result = Optional.of(newBinsField.formatValue(newValues));
                 }
             }
         }
@@ -102,7 +102,7 @@ class VeRpmBinsIniFieldMigrator {
     }
 
 
-    private Optional<ArrayIniField> getValidatedVeRpmBinsArrayIniField(
+    private Optional<ArrayIniField> getValidatedBinsArrayIniField(
         final IniField field,
         final UpdateOperationCallbacks callbacks
     ) {

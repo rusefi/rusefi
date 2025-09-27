@@ -108,7 +108,7 @@ public enum VeTableExtensionMigrator implements TuneMigrator {
                 VE_RPM_BINS_FIELD_NAME,
                 OLD_VE_TABLE_COLS,
                 NEW_VE_TABLE_COLS
-            ).tryMigrateVeRpmBins(
+            ).tryMigrateBins(
                 prevField.get(),
                 updatedVeRpmBinsField,
                 prevValue.getValue(),

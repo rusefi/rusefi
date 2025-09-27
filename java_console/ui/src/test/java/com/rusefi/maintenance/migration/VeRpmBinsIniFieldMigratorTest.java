@@ -49,7 +49,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             "0"
         );
 
-        final Optional<String> migratedValue = testMigrator.tryMigrateVeRpmBins(
+        final Optional<String> migratedValue = testMigrator.tryMigrateBins(
             oldVeTableField,
             newVeTableField,
             "\n" +
@@ -130,7 +130,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             "0"
         );
 
-        final Optional<String> migratedValue = testMigrator.tryMigrateVeRpmBins(
+        final Optional<String> migratedValue = testMigrator.tryMigrateBins(
             oldVeTableField,
             newVeTableField,
             "\n" +
@@ -211,7 +211,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             "0"
         );
 
-        final Optional<String> migratedValue = testMigrator.tryMigrateVeRpmBins(
+        final Optional<String> migratedValue = testMigrator.tryMigrateBins(
             oldVeTableField,
             newVeTableField,
             "\n" +
@@ -292,7 +292,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             "0"
         );
 
-        final Optional<String> migratedValue = testMigrator.tryMigrateVeRpmBins(
+        final Optional<String> migratedValue = testMigrator.tryMigrateBins(
             oldVeTableField,
             newVeTableField,
             "\n" +
@@ -373,7 +373,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             "0"
         );
 
-        final Optional<String> migratedValue = testMigrator.tryMigrateVeRpmBins(
+        final Optional<String> migratedValue = testMigrator.tryMigrateBins(
             oldVeTableField,
             newVeTableField,
             "\n" +
