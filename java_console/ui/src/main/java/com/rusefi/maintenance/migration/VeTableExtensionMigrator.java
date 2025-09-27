@@ -33,10 +33,6 @@ public class VeTableExtensionMigrator implements TuneMigrator {
 
     @Override
     public void migrateTune(final TuneMigrationContext context) {
-        migrateTable(context);
-    }
-
-    private void migrateTable(final TuneMigrationContext context) {
         final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
         if (prevValue != null) {
             final Optional<IniField> prevField = context.getPrevIniFile().findIniField(tableFieldName);
