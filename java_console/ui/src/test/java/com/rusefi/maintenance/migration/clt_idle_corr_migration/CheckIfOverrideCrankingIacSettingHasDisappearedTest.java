@@ -39,7 +39,10 @@ public class CheckIfOverrideCrankingIacSettingHasDisappearedTest {
         ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
 
         assertNull(testContext.getMigratedConstants().get(OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME));
-        assertEquals("", testContext.getTestCallbacks().getContent());
+        assertEquals(
+            "WARNING!!! Missed `veTable` ini field in previous .ini file.\r\n",
+            testContext.getTestCallbacks().getContent()
+        );
     }
 
     @Test
@@ -58,7 +61,8 @@ public class CheckIfOverrideCrankingIacSettingHasDisappearedTest {
 
         assertNull(testContext.getMigratedConstants().get(OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME));
         assertEquals(
-            "WARNING! `overrideCrankingIacSetting` ini-field with value `\"false\"` cannot be migrated.\r\n",
+            "WARNING!!! Missed `veTable` ini field in previous .ini file.\r\n" +
+                "WARNING! `overrideCrankingIacSetting` ini-field with value `\"false\"` cannot be migrated.\r\n",
             testContext.getTestCallbacks().getContent()
         );
     }

@@ -49,6 +49,9 @@ public class BattLagCorrMigratorTest {
         assertEquals("2", migratedInjectorBattLagCorrTable.getRows());
         assertEquals("8", migratedInjectorBattLagCorrTable.getCols());
 
-        assertEquals("", testContext.getTestCallbacks().getContent());
+        assertEquals(
+            "WARNING!!! Missed `veTable` ini field in previous .ini file.\r\n",
+            testContext.getTestCallbacks().getContent()
+        );
     }
 }
