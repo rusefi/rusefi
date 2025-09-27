@@ -8,7 +8,7 @@ import com.rusefi.tune.xml.Constant;
 
 import java.util.Optional;
 
-public class VeTableExtensionMigrator implements TuneMigrator {
+public class TableAddColumnsMigrator implements TuneMigrator {
     static final String VE_TABLE_FIELD_NAME = "veTable";
     static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
 
@@ -16,7 +16,7 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     private final FieldType tableFieldType;
     private final String columnsBinFieldName;
 
-    VeTableExtensionMigrator(
+    TableAddColumnsMigrator(
         final String tableIniFieldName,
         final FieldType tableIniFieldType,
         final String columnsIniBinFieldName
