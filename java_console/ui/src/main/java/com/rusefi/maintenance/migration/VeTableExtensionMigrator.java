@@ -12,12 +12,24 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     static final String VE_TABLE_FIELD_NAME = "veTable";
     static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
 
-    private static final FieldType VE_TABLE_TYPE = FieldType.UINT16;
-
     static final int VE_TABLE_ROWS = 16;
     // todo: can this be more dynamic?
     static final int OLD_VE_TABLE_COLS = 16;
     static final int NEW_VE_TABLE_COLS = 24;
+
+    private final String tableFieldName;
+    private final FieldType tableFieldType;
+    private final String columnsBinFieldName;
+
+    VeTableExtensionMigrator(
+        final String tableIniFieldName,
+        final FieldType tableIniFieldType,
+        final String columnsIniBinFieldName
+    ) {
+        tableFieldName = tableIniFieldName;
+        tableFieldType = tableIniFieldType;
+        columnsBinFieldName = columnsIniBinFieldName;
+    }
 
     @Override
     public void migrateTune(final TuneMigrationContext context) {
@@ -26,21 +38,21 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     }
 
     private void migrateVeTable(final TuneMigrationContext context) {
-        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(VE_TABLE_FIELD_NAME);
+        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
         if (prevValue != null) {
-            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(VE_TABLE_FIELD_NAME);
+            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(tableFieldName);
             if (!prevField.isPresent()) {
                 context.getCallbacks().logLine(String.format(
                     "WARNING!!! Missed `%s` ini field in previous .ini file.",
-                    VE_TABLE_FIELD_NAME
+                    tableFieldName
                 ));
                 return;
             }
-            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(VE_TABLE_FIELD_NAME);
+            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(tableFieldName);
             if (!updatedField.isPresent()) {
                 context.getCallbacks().logLine(String.format(
                     "WARNING!!! Missed `%s` ini field in updated .ini file.",
-                    VE_TABLE_FIELD_NAME
+                    tableFieldName
                 ));
                 return;
             }
@@ -66,9 +78,9 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                     );
                     if (migratedValue.isPresent()) {
                         context.addMigration(
-                            VE_TABLE_FIELD_NAME,
+                            tableFieldName,
                             new Constant(
-                                VE_TABLE_FIELD_NAME,
+                                tableFieldName,
                                 updatedVeTableField.getUnits(),
                                 migratedValue.get(),
                                 updatedVeTableField.getDigits(),
@@ -83,27 +95,27 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     }
 
     private void migrateVeRpmBinsTable(final TuneMigrationContext context) {
-        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(VE_RPM_BINS_FIELD_NAME);
+        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(columnsBinFieldName);
         if (prevValue != null) {
-            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(VE_RPM_BINS_FIELD_NAME);
+            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(columnsBinFieldName);
             if (!prevField.isPresent()) {
                 context.getCallbacks().logLine(String.format(
                     "WARNING!!! Missed `%s` ini field in previous .ini file.",
-                    VE_RPM_BINS_FIELD_NAME
+                    columnsBinFieldName
                 ));
                 return;
             }
-            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(VE_RPM_BINS_FIELD_NAME);
+            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(columnsBinFieldName);
             if (!updatedField.isPresent()) {
                 context.getCallbacks().logLine(String.format(
                     "WARNING!!! Missed `%s` ini field in updated .ini file.",
-                    VE_RPM_BINS_FIELD_NAME
+                    columnsBinFieldName
                 ));
                 return;
             }
             final ArrayIniField updatedVeRpmBinsField = (ArrayIniField) updatedField.get();
             final Optional<String> migratedValue = new BinsIniFieldMigrator(
-                VE_RPM_BINS_FIELD_NAME,
+                columnsBinFieldName,
                 OLD_VE_TABLE_COLS,
                 NEW_VE_TABLE_COLS
             ).tryMigrateBins(
@@ -114,9 +126,9 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             );
             if (migratedValue.isPresent()) {
                 context.addMigration(
-                    VE_RPM_BINS_FIELD_NAME,
+                    columnsBinFieldName,
                     new Constant(
-                        VE_RPM_BINS_FIELD_NAME,
+                        columnsBinFieldName,
                         updatedVeRpmBinsField.getUnits(),
                         migratedValue.get(),
                         updatedVeRpmBinsField.getDigits(),
@@ -161,22 +173,24 @@ public class VeTableExtensionMigrator implements TuneMigrator {
         return result;
     }
 
-    private static Optional<ArrayIniField> getValidatedVeTableArrayIniField(
+    private Optional<ArrayIniField> getValidatedVeTableArrayIniField(
         final IniField field,
         final UpdateOperationCallbacks callbacks
     ) {
         if (!(field instanceof ArrayIniField)) {
             callbacks.logLine(String.format(
-                "WARNING! `veTable` ini-field is expected to be `ArrayIniField` instead of %s",
+                "WARNING! `%s` ini-field is expected to be `ArrayIniField` instead of %s",
+                tableFieldName,
                 field.getClass().getName()
             ));
             return Optional.empty();
         }
         final ArrayIniField arrayField = (ArrayIniField) field;
         final FieldType arrayFieldType = arrayField.getType();
-        if (arrayFieldType != VE_TABLE_TYPE) {
+        if (arrayFieldType != tableFieldType) {
             callbacks.logLine(String.format(
-                "WARNING! `veTable` ini-field is expected to be `ArrayIniField` instead of %s",
+                "WARNING! `%s` ini-field is expected to be `ArrayIniField` instead of %s",
+                tableFieldName,
                 field.getClass().getName()
             ));
             return Optional.empty();
@@ -184,7 +198,8 @@ public class VeTableExtensionMigrator implements TuneMigrator {
         final int arrayFieldRows = arrayField.getRows();
         if (arrayFieldRows != VE_TABLE_ROWS) {
             callbacks.logLine(String.format(
-                "WARNING! `veTable` ini-field is expected to contain %d rows instead of %d",
+                "WARNING! `%s` ini-field is expected to contain %d rows instead of %d",
+                tableFieldName,
                 VE_TABLE_ROWS,
                 arrayFieldRows
             ));
@@ -198,8 +213,8 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             }
             default: {
                 callbacks.logLine(String.format(
-                    "WARNING! `veTable` ini-field is expected to contain %d or %d columns " +
-                        "instead of %d",
+                    "WARNING! `%s` ini-field is expected to contain %d or %d columns instead of %d",
+                    tableFieldName,
                     OLD_VE_TABLE_COLS,
                     NEW_VE_TABLE_COLS,
                     arrayFieldRows
