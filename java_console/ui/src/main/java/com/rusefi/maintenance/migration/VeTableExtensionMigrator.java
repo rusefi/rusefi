@@ -33,11 +33,11 @@ public class VeTableExtensionMigrator implements TuneMigrator {
 
     @Override
     public void migrateTune(final TuneMigrationContext context) {
-        migrateVeTable(context);
-        migrateVeRpmBinsTable(context);
+        migrateTable(context);
+        migrateBins(context);
     }
 
-    private void migrateVeTable(final TuneMigrationContext context) {
+    private void migrateTable(final TuneMigrationContext context) {
         final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
         if (prevValue != null) {
             final Optional<IniField> prevField = context.getPrevIniFile().findIniField(tableFieldName);
@@ -56,23 +56,23 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                 ));
                 return;
             }
-            final Optional<ArrayIniField> prevArrayIniField = getValidatedVeTableArrayIniField(
+            final Optional<ArrayIniField> prevArrayIniField = getValidatedTableArrayIniField(
                 prevField.get(),
                 context.getCallbacks()
             );
-            final Optional<ArrayIniField> updatedArrayIniField = getValidatedVeTableArrayIniField(
+            final Optional<ArrayIniField> updatedArrayIniField = getValidatedTableArrayIniField(
                 updatedField.get(),
                 context.getCallbacks()
             );
             if (prevArrayIniField.isPresent() && updatedArrayIniField.isPresent()) {
-                final ArrayIniField prevVeTableField = prevArrayIniField.get();
-                final ArrayIniField updatedVeTableField = updatedArrayIniField.get();
-                if ((prevVeTableField.getCols() == OLD_VE_TABLE_COLS)
-                    && (updatedVeTableField.getCols() == NEW_VE_TABLE_COLS)
+                final ArrayIniField prevTableField = prevArrayIniField.get();
+                final ArrayIniField updatedTableField = updatedArrayIniField.get();
+                if ((prevTableField.getCols() == OLD_VE_TABLE_COLS)
+                    && (updatedTableField.getCols() == NEW_VE_TABLE_COLS)
                 ) {
-                    final Optional<String> migratedValue = tryMigrateVeTable(
-                        prevVeTableField,
-                        updatedVeTableField,
+                    final Optional<String> migratedValue = tryMigrateTable(
+                        prevTableField,
+                        updatedTableField,
                         prevValue.getValue(),
                         context.getCallbacks()
                     );
@@ -81,11 +81,11 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                             tableFieldName,
                             new Constant(
                                 tableFieldName,
-                                updatedVeTableField.getUnits(),
+                                updatedTableField.getUnits(),
                                 migratedValue.get(),
-                                updatedVeTableField.getDigits(),
-                                Integer.toString(updatedVeTableField.getRows()),
-                                Integer.toString(updatedVeTableField.getCols())
+                                updatedTableField.getDigits(),
+                                Integer.toString(updatedTableField.getRows()),
+                                Integer.toString(updatedTableField.getCols())
                             )
                         );
                     }
@@ -94,7 +94,7 @@ public class VeTableExtensionMigrator implements TuneMigrator {
         }
     }
 
-    private void migrateVeRpmBinsTable(final TuneMigrationContext context) {
+    private void migrateBins(final TuneMigrationContext context) {
         final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(columnsBinFieldName);
         if (prevValue != null) {
             final Optional<IniField> prevField = context.getPrevIniFile().findIniField(columnsBinFieldName);
@@ -113,14 +113,14 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                 ));
                 return;
             }
-            final ArrayIniField updatedVeRpmBinsField = (ArrayIniField) updatedField.get();
+            final ArrayIniField updatedBinsField = (ArrayIniField) updatedField.get();
             final Optional<String> migratedValue = new BinsIniFieldMigrator(
                 columnsBinFieldName,
                 OLD_VE_TABLE_COLS,
                 NEW_VE_TABLE_COLS
             ).tryMigrateBins(
                 prevField.get(),
-                updatedVeRpmBinsField,
+                updatedBinsField,
                 prevValue.getValue(),
                 context.getCallbacks()
             );
@@ -129,33 +129,33 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                     columnsBinFieldName,
                     new Constant(
                         columnsBinFieldName,
-                        updatedVeRpmBinsField.getUnits(),
+                        updatedBinsField.getUnits(),
                         migratedValue.get(),
-                        updatedVeRpmBinsField.getDigits(),
-                        Integer.toString(updatedVeRpmBinsField.getRows()),
-                        Integer.toString(updatedVeRpmBinsField.getCols())
+                        updatedBinsField.getDigits(),
+                        Integer.toString(updatedBinsField.getRows()),
+                        Integer.toString(updatedBinsField.getCols())
                     )
                 );
             }
         }
     }
 
-    private Optional<String> tryMigrateVeTable(
+    private Optional<String> tryMigrateTable(
         final IniField prevField,
         final IniField newField,
         final String prevValue,
         final UpdateOperationCallbacks callbacks
     ) {
         Optional<String> result = Optional.empty();
-        final Optional<ArrayIniField> prevVeTableValidatedField = getValidatedVeTableArrayIniField(prevField, callbacks);
-        final Optional<ArrayIniField> newVeTableValidatedField = getValidatedVeTableArrayIniField(newField, callbacks);
-        if (prevVeTableValidatedField.isPresent() && newVeTableValidatedField.isPresent()) {
-            final ArrayIniField prevVeTableField = prevVeTableValidatedField.get();
-            final ArrayIniField newVeTableField = newVeTableValidatedField.get();
-            final int prevVeTableFieldCols = prevVeTableField.getCols();
-            final int newVeTableFieldCols = newVeTableField.getCols();
-            if ((prevVeTableFieldCols == OLD_VE_TABLE_COLS) && (newVeTableFieldCols == NEW_VE_TABLE_COLS)) {
-                final String[][] prevValues = prevVeTableField.getValues(prevValue);
+        final Optional<ArrayIniField> prevValidatedTableField = getValidatedTableArrayIniField(prevField, callbacks);
+        final Optional<ArrayIniField> newValidatedTableField = getValidatedTableArrayIniField(newField, callbacks);
+        if (prevValidatedTableField.isPresent() && newValidatedTableField.isPresent()) {
+            final ArrayIniField prevTableField = prevValidatedTableField.get();
+            final ArrayIniField newTableField = newValidatedTableField.get();
+            final int prevTableFieldCols = prevTableField.getCols();
+            final int newTableFieldCols = newTableField.getCols();
+            if ((prevTableFieldCols == OLD_VE_TABLE_COLS) && (newTableFieldCols == NEW_VE_TABLE_COLS)) {
+                final String[][] prevValues = prevTableField.getValues(prevValue);
                 final String[][] newValues = new String[VE_TABLE_ROWS][NEW_VE_TABLE_COLS];
                 for (int rowIdx = 0; rowIdx < VE_TABLE_ROWS; rowIdx++) {
                     // copy prev values:
@@ -167,13 +167,13 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                         newValues[rowIdx][colIdx] = prevValues[rowIdx][OLD_VE_TABLE_COLS - 1];
                     }
                 }
-                result = Optional.of(newVeTableField.formatValue(newValues));
+                result = Optional.of(newTableField.formatValue(newValues));
             }
         }
         return result;
     }
 
-    private Optional<ArrayIniField> getValidatedVeTableArrayIniField(
+    private Optional<ArrayIniField> getValidatedTableArrayIniField(
         final IniField field,
         final UpdateOperationCallbacks callbacks
     ) {
