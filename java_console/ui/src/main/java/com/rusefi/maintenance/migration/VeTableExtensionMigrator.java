@@ -12,7 +12,6 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     static final String VE_TABLE_FIELD_NAME = "veTable";
     static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
 
-    static final int VE_TABLE_ROWS = 16;
     // todo: can this be more dynamic?
     static final int OLD_VE_TABLE_COLS = 16;
     static final int NEW_VE_TABLE_COLS = 24;
@@ -67,7 +66,8 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                 final Optional<String> migratedValue = tryMigrateTable(
                     prevTableField,
                     updatedTableField,
-                    prevValue.getValue()
+                    prevValue.getValue(),
+                    context.getCallbacks()
                 );
                 if (migratedValue.isPresent()) {
                     context.addMigration(
@@ -136,25 +136,35 @@ public class VeTableExtensionMigrator implements TuneMigrator {
     private Optional<String> tryMigrateTable(
         final ArrayIniField prevField,
         final ArrayIniField newField,
-        final String prevValue
+        final String prevValue,
+        final UpdateOperationCallbacks callbacks
     ) {
         Optional<String> result = Optional.empty();
-        final int prevTableFieldCols = prevField.getCols();
-        final int newTableFieldCols = newField.getCols();
-        if (prevTableFieldCols < newTableFieldCols) {
-            final String[][] prevValues = prevField.getValues(prevValue);
-            final String[][] newValues = new String[VE_TABLE_ROWS][newTableFieldCols];
-            for (int rowIdx = 0; rowIdx < VE_TABLE_ROWS; rowIdx++) {
-                // copy prev values:
-                for (int colIdx = 0; colIdx < prevTableFieldCols; colIdx++) {
-                    newValues[rowIdx][colIdx] = prevValues[rowIdx][colIdx];
+        final int tableFieldRows = prevField.getRows();
+        if (newField.getRows() == tableFieldRows) {
+            final int prevTableFieldCols = prevField.getCols();
+            final int newTableFieldCols = newField.getCols();
+            if (prevTableFieldCols < newTableFieldCols) {
+                final String[][] prevValues = prevField.getValues(prevValue);
+                final String[][] newValues = new String[tableFieldRows][newTableFieldCols];
+                for (int rowIdx = 0; rowIdx < tableFieldRows; rowIdx++) {
+                    // copy prev values:
+                    for (int colIdx = 0; colIdx < prevTableFieldCols; colIdx++) {
+                        newValues[rowIdx][colIdx] = prevValues[rowIdx][colIdx];
+                    }
+                    // propagate value from a last column to new columns:
+                    for (int colIdx = prevTableFieldCols; colIdx < newTableFieldCols; colIdx++) {
+                        newValues[rowIdx][colIdx] = prevValues[rowIdx][prevTableFieldCols - 1];
+                    }
                 }
-                // propagate value from a last column to new columns:
-                for (int colIdx = prevTableFieldCols; colIdx < newTableFieldCols; colIdx++) {
-                    newValues[rowIdx][colIdx] = prevValues[rowIdx][prevTableFieldCols - 1];
-                }
+                result = Optional.of(newField.formatValue(newValues));
             }
-            result = Optional.of(newField.formatValue(newValues));
+        } else {
+            callbacks.logLine(String.format(
+                "WARNING! New `%s` ini-field is expected to contain %d rows as prev ini-field does",
+                tableFieldName,
+                tableFieldRows
+            ));
         }
         return result;
     }
@@ -181,16 +191,6 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             ));
             return Optional.empty();
         }
-        final int arrayFieldRows = arrayField.getRows();
-        if (arrayFieldRows != VE_TABLE_ROWS) {
-            callbacks.logLine(String.format(
-                "WARNING! `%s` ini-field is expected to contain %d rows instead of %d",
-                tableFieldName,
-                VE_TABLE_ROWS,
-                arrayFieldRows
-            ));
-            return Optional.empty();
-        }
         final int arrayFieldCols = arrayField.getCols();
         switch (arrayFieldCols) {
             case OLD_VE_TABLE_COLS:
@@ -203,7 +203,7 @@ public class VeTableExtensionMigrator implements TuneMigrator {
                     tableFieldName,
                     OLD_VE_TABLE_COLS,
                     NEW_VE_TABLE_COLS,
-                    arrayFieldRows
+                    arrayFieldCols
                 ));
                 return Optional.empty();
             }
