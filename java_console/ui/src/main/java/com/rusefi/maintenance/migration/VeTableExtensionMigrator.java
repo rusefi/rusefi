@@ -104,7 +104,11 @@ public enum VeTableExtensionMigrator implements TuneMigrator {
                 return;
             }
             final ArrayIniField updatedVeRpmBinsField = (ArrayIniField) updatedField.get();
-            final Optional<String> migratedValue = new VeRpmBinsIniFieldMigrator(VE_RPM_BINS_FIELD_NAME).tryMigrateVeRpmBins(
+            final Optional<String> migratedValue = new VeRpmBinsIniFieldMigrator(
+                VE_RPM_BINS_FIELD_NAME,
+                OLD_VE_TABLE_COLS,
+                NEW_VE_TABLE_COLS
+            ).tryMigrateVeRpmBins(
                 prevField.get(),
                 updatedVeRpmBinsField,
                 prevValue.getValue(),
