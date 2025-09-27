@@ -12,8 +12,6 @@
 #include "electronic_throttle.h"
 #include "gppwm_channel_reader.h"
 
-#define NO_PIN_PERIOD 500
-
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
 #endif

@@ -11,8 +11,6 @@
 #include "vvt.h"
 #include "bench_test.h"
 
-#define NO_PIN_PERIOD 500
-
 using vvt_map_t = Map3D<VVT_TABLE_SIZE, VVT_TABLE_SIZE, int8_t, uint16_t, uint16_t>;
 
 // todo: rename to intakeVvtTable?
