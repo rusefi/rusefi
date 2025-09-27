@@ -2,6 +2,7 @@ package com.rusefi.maintenance.migration;
 
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.CompatibilitySet;
 import com.rusefi.config.FieldType;
 import com.rusefi.io.UpdateOperationCallbacks;
 import org.jetbrains.annotations.NotNull;
@@ -11,8 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.rusefi.maintenance.migration.VeTableExtensionMigrator.*;
-
 class VeRpmBinsIniFieldMigrator {
     private static final int BINS_INI_FIELD_COLS = 1;
     private static final double BINS_INI_FIELD_MULTIPLIER = 1;
@@ -20,9 +19,13 @@ class VeRpmBinsIniFieldMigrator {
     private static final FieldType BINS_INI_FIELD_TYPE = FieldType.UINT16;
 
     private final String iniFieldName;
+    private final int prevCount;
+    private final int newCount;
 
-    VeRpmBinsIniFieldMigrator(final String binsIniFieldName) {
-        this.iniFieldName = binsIniFieldName;
+    VeRpmBinsIniFieldMigrator(final String binsIniFieldName, final int prevBinsCount, final int newBinsCount) {
+        iniFieldName = binsIniFieldName;
+        prevCount = prevBinsCount;
+        newCount = newBinsCount;
     }
 
     Optional<String> tryMigrateVeRpmBins(
@@ -83,15 +86,15 @@ class VeRpmBinsIniFieldMigrator {
         return result;
     }
 
-    private static String[] @NotNull [] expandValues(List<String> prevValues, long lastValue, Optional<Long> recommendedStep) {
-        final String[][] newValues = new String[NEW_VE_TABLE_COLS][1];
+    private String[] @NotNull [] expandValues(List<String> prevValues, long lastValue, Optional<Long> recommendedStep) {
+        final String[][] newValues = new String[newCount][1];
         // copy prev values:
-        for (int i = 0; i < OLD_VE_TABLE_COLS; i++) {
+        for (int i = 0; i < prevCount; i++) {
             newValues[i] = new String[] { prevValues.get(i) };
         }
         long lastBin = lastValue;
         // add missed bins with recommended step:
-        for (int i = OLD_VE_TABLE_COLS; i < NEW_VE_TABLE_COLS; i++) {
+        for (int i = prevCount; i < newCount; i++) {
             lastBin += recommendedStep.get();
             newValues[i] = new String[] { String.format("%.1f", (double)lastBin) };
         }
@@ -127,7 +130,7 @@ class VeRpmBinsIniFieldMigrator {
             callbacks.logLine(String.format(
                 "WARNING! `%s` ini-field is expected to contain %d columns instead of %d",
                 iniFieldName,
-                VE_TABLE_ROWS,
+                BINS_INI_FIELD_COLS,
                 arrayFieldCols
             ));
             return Optional.empty();
@@ -153,21 +156,17 @@ class VeRpmBinsIniFieldMigrator {
             return Optional.empty();
         }
         final int arrayFieldRows = arrayField.getRows();
-        switch (arrayFieldRows) {
-            case OLD_VE_TABLE_COLS:
-            case NEW_VE_TABLE_COLS: {
-                return Optional.of(arrayField);
-            }
-            default: {
-                callbacks.logLine(String.format(
-                    "WARNING! `%s` ini-field is expected to contain %d or %d rows instead of %d",
-                    iniFieldName,
-                    OLD_VE_TABLE_COLS,
-                    NEW_VE_TABLE_COLS,
-                    arrayFieldRows
-                ));
-                return Optional.empty();
-            }
+        if (CompatibilitySet.of(prevCount, newCount).contains(arrayFieldRows)) {
+            return Optional.of(arrayField);
+        } else {
+            callbacks.logLine(String.format(
+                "WARNING! `%s` ini-field is expected to contain %d or %d rows instead of %d",
+                iniFieldName,
+                prevCount,
+                newCount,
+                arrayFieldRows
+            ));
+            return Optional.empty();
         }
     }
 
