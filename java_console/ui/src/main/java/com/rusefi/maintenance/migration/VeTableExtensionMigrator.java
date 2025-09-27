@@ -67,9 +67,7 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             if (prevArrayIniField.isPresent() && updatedArrayIniField.isPresent()) {
                 final ArrayIniField prevTableField = prevArrayIniField.get();
                 final ArrayIniField updatedTableField = updatedArrayIniField.get();
-                if ((prevTableField.getCols() == OLD_VE_TABLE_COLS)
-                    && (updatedTableField.getCols() == NEW_VE_TABLE_COLS)
-                ) {
+                if (prevTableField.getCols() < updatedTableField.getCols()) {
                     final Optional<String> migratedValue = tryMigrateTable(
                         prevTableField,
                         updatedTableField,
@@ -154,17 +152,17 @@ public class VeTableExtensionMigrator implements TuneMigrator {
             final ArrayIniField newTableField = newValidatedTableField.get();
             final int prevTableFieldCols = prevTableField.getCols();
             final int newTableFieldCols = newTableField.getCols();
-            if ((prevTableFieldCols == OLD_VE_TABLE_COLS) && (newTableFieldCols == NEW_VE_TABLE_COLS)) {
+            if (prevTableFieldCols < newTableFieldCols) {
                 final String[][] prevValues = prevTableField.getValues(prevValue);
-                final String[][] newValues = new String[VE_TABLE_ROWS][NEW_VE_TABLE_COLS];
+                final String[][] newValues = new String[VE_TABLE_ROWS][newTableFieldCols];
                 for (int rowIdx = 0; rowIdx < VE_TABLE_ROWS; rowIdx++) {
                     // copy prev values:
-                    for (int colIdx = 0; colIdx < OLD_VE_TABLE_COLS; colIdx++) {
+                    for (int colIdx = 0; colIdx < prevTableFieldCols; colIdx++) {
                         newValues[rowIdx][colIdx] = prevValues[rowIdx][colIdx];
                     }
                     // propagate value from a last column to new columns:
-                    for (int colIdx = OLD_VE_TABLE_COLS; colIdx < NEW_VE_TABLE_COLS; colIdx++) {
-                        newValues[rowIdx][colIdx] = prevValues[rowIdx][OLD_VE_TABLE_COLS - 1];
+                    for (int colIdx = prevTableFieldCols; colIdx < newTableFieldCols; colIdx++) {
+                        newValues[rowIdx][colIdx] = prevValues[rowIdx][prevTableFieldCols - 1];
                     }
                 }
                 result = Optional.of(newTableField.formatValue(newValues));
