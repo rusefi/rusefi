@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static com.rusefi.maintenance.migration.VeTableExtensionMigrator.*;
+import static com.rusefi.maintenance.migration.TableAddColumnsMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

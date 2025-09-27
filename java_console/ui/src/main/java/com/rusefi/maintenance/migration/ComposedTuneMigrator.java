@@ -7,14 +7,14 @@ import com.rusefi.ts.TsProjectUpdater;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.rusefi.maintenance.migration.VeTableExtensionMigrator.VE_RPM_BINS_FIELD_NAME;
-import static com.rusefi.maintenance.migration.VeTableExtensionMigrator.VE_TABLE_FIELD_NAME;
+import static com.rusefi.maintenance.migration.TableAddColumnsMigrator.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.TableAddColumnsMigrator.VE_TABLE_FIELD_NAME;
 
 public enum ComposedTuneMigrator implements TuneMigrator {
     INSTANCE;
 
     private final List<TuneMigrator> tuneMigrators = Arrays.asList(
-        new VeTableExtensionMigrator(VE_TABLE_FIELD_NAME, FieldType.UINT16, VE_RPM_BINS_FIELD_NAME),
+        new TableAddColumnsMigrator(VE_TABLE_FIELD_NAME, FieldType.UINT16, VE_RPM_BINS_FIELD_NAME),
         BattLagCorrExtensionMigrator.INSTANCE,
         CltIdleCorrMigrator.INSTANCE,
         DisplacementIniFieldMigrator.INSTANCE,
