@@ -16,6 +16,9 @@ public class VeRpmBinsIniFieldMigratorTest {
     private TestCallbacks testCallbacks;
     private BinsIniFieldMigrator testMigrator;
 
+    private static final int OLD_VE_TABLE_COLS = 16;
+    private static final int NEW_VE_TABLE_COLS = 24;
+
     @BeforeEach
     void setUp() {
         testCallbacks = new TestCallbacks();
@@ -29,7 +32,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            16,
+            OLD_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -41,7 +44,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            24,
+            NEW_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -110,7 +113,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            16,
+            OLD_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -122,7 +125,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            24,
+            NEW_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -191,7 +194,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            16,
+            OLD_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -203,7 +206,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            24,
+            NEW_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -272,7 +275,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            16,
+            OLD_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -284,7 +287,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            24,
+            NEW_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -353,7 +356,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            16,
+            OLD_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
@@ -365,7 +368,7 @@ public class VeRpmBinsIniFieldMigratorTest {
             0,
             FieldType.UINT16,
             1,
-            24,
+            NEW_VE_TABLE_COLS,
             "RPM",
             1,
             "0",
