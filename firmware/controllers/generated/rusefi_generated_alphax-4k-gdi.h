@@ -1777,6 +1777,9 @@
 #define ts_cic_idle false
 #define ts_command_e_TS_BENCH_CATEGORY 22
 #define ts_command_e_TS_BOARD_ACTION 29
+#define ts_command_e_TS_BOARD_ACTION2 26
+#define ts_command_e_TS_BOARD_ACTION3 27
+#define ts_command_e_TS_BOARD_ACTION4 28
 #define ts_command_e_TS_CLEAR_WARNINGS 17
 #define ts_command_e_TS_COMMAND_1 1
 #define ts_command_e_TS_COMMAND_10 10
@@ -1804,9 +1807,6 @@
 #define ts_command_e_TS_STOP_ENGINE 36
 #define ts_command_e_TS_UNUSED_23 23
 #define ts_command_e_TS_UNUSED_24 24
-#define ts_command_e_TS_UNUSED_26 26
-#define ts_command_e_TS_UNUSED_27 27
-#define ts_command_e_TS_UNUSED_28 28
 #define ts_command_e_TS_WIDEBAND 21
 #define ts_command_e_TS_WIDEBAND_FLASH_BY_ID 35
 #define ts_command_e_TS_WIDEBAND_PING_BY_ID 34

@@ -1653,6 +1653,9 @@ public class VariableRegistryValues {
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final int ts_command_e_TS_BENCH_CATEGORY = 22;
 	public static final int ts_command_e_TS_BOARD_ACTION = 29;
+	public static final int ts_command_e_TS_BOARD_ACTION2 = 26;
+	public static final int ts_command_e_TS_BOARD_ACTION3 = 27;
+	public static final int ts_command_e_TS_BOARD_ACTION4 = 28;
 	public static final int ts_command_e_TS_CLEAR_WARNINGS = 17;
 	public static final int ts_command_e_TS_COMMAND_1 = 1;
 	public static final int ts_command_e_TS_COMMAND_10 = 10;
@@ -1680,9 +1683,6 @@ public class VariableRegistryValues {
 	public static final int ts_command_e_TS_STOP_ENGINE = 36;
 	public static final int ts_command_e_TS_UNUSED_23 = 23;
 	public static final int ts_command_e_TS_UNUSED_24 = 24;
-	public static final int ts_command_e_TS_UNUSED_26 = 26;
-	public static final int ts_command_e_TS_UNUSED_27 = 27;
-	public static final int ts_command_e_TS_UNUSED_28 = 28;
 	public static final int ts_command_e_TS_WIDEBAND = 21;
 	public static final int ts_command_e_TS_WIDEBAND_FLASH_BY_ID = 35;
 	public static final int ts_command_e_TS_WIDEBAND_PING_BY_ID = 34;

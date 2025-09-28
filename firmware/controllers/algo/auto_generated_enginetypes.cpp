@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Sep 26 19:09:01 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Sep 28 19:02:53 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -475,6 +475,12 @@ case TS_BENCH_CATEGORY:
   return "TS_BENCH_CATEGORY";
 case TS_BOARD_ACTION:
   return "TS_BOARD_ACTION";
+case TS_BOARD_ACTION2:
+  return "TS_BOARD_ACTION2";
+case TS_BOARD_ACTION3:
+  return "TS_BOARD_ACTION3";
+case TS_BOARD_ACTION4:
+  return "TS_BOARD_ACTION4";
 case TS_CLEAR_WARNINGS:
   return "TS_CLEAR_WARNINGS";
 case TS_COMMAND_1:
@@ -529,12 +535,6 @@ case TS_UNUSED_23:
   return "TS_UNUSED_23";
 case TS_UNUSED_24:
   return "TS_UNUSED_24";
-case TS_UNUSED_26:
-  return "TS_UNUSED_26";
-case TS_UNUSED_27:
-  return "TS_UNUSED_27";
-case TS_UNUSED_28:
-  return "TS_UNUSED_28";
 case TS_WIDEBAND:
   return "TS_WIDEBAND";
 case TS_WIDEBAND_FLASH_BY_ID:
