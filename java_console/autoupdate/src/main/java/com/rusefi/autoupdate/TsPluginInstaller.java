@@ -26,6 +26,7 @@ public class TsPluginInstaller {
             return;
         }
         try {
+            new File(PLUGIN_FOLDER).mkdirs();
             FileUtil.copyFile(RUSEFI_TS_PLUGIN_LAUNCHER_JAR, PLUGIN_FOLDER + RUSEFI_TS_PLUGIN_LAUNCHER_JAR);
             log.info("Just installed fresh " + RUSEFI_TS_PLUGIN_LAUNCHER_JAR + " into " + PLUGIN_FOLDER);
             String legacyPluginFileName = PLUGIN_FOLDER + "rusefi_plugin_launcher.jar";
