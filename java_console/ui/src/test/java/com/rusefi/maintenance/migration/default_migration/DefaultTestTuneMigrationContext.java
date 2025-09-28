@@ -5,8 +5,8 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 import javax.xml.bind.JAXBException;
 
 import static com.rusefi.maintenance.migration.CltIdleCorrMigrator.*;
-import static com.rusefi.maintenance.migration.table_add_columns_migration.TableAddColumnsMigrationContext.VE_RPM_BINS_FIELD_NAME;
-import static com.rusefi.maintenance.migration.table_add_columns_migration.TableAddColumnsMigrationContext.VE_TABLE_FIELD_NAME;
+import static com.rusefi.maintenance.migration.TableAddColumnsMigrator.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.TableAddColumnsMigrator.VE_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

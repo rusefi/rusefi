@@ -7,18 +7,17 @@ import com.rusefi.tune.xml.Constant;
 
 import javax.xml.bind.JAXBException;
 
+import static com.rusefi.maintenance.migration.TableAddColumnsMigrator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TableAddColumnsMigrationContext {
-    public static final String VE_TABLE_FIELD_NAME = "veTable";
-    public static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
-
     public static TestTuneMigrationContext load() throws JAXBException {
         final TestTuneMigrationContext result = TestTuneMigrationContext.load(
             "src/test/java/com/rusefi/maintenance/migration/table_add_columns_migration/test_data"
         );
         validateVeTable(result);
+        validateLambdaTable(result);
 
         return result;
     }
@@ -187,5 +186,174 @@ public class TableAddColumnsMigrationContext {
         assertEquals("0", updatedVeRpmBinsValue.getDigits());
         assertEquals("24", updatedVeRpmBinsValue.getRows());
         assertEquals("1", updatedVeRpmBinsValue.getCols());
+    }
+
+    private static void validateLambdaTable(final TestTuneMigrationContext result) {
+        final ArrayIniField prevTableIniField = (ArrayIniField) result.getPrevIniFile().getIniField(
+            LAMBDA_TABLE_FIELD_NAME
+        );
+        assertEquals(FieldType.UINT8, prevTableIniField.getType());
+        assertEquals(32552, prevTableIniField.getOffset());
+        assertEquals(16, prevTableIniField.getCols());
+        assertEquals(16, prevTableIniField.getRows());
+        assertEquals("afr", prevTableIniField.getUnits());
+        assertEquals(0.1, prevTableIniField.getMultiplier());
+        assertEquals("0", prevTableIniField.getMin());
+        assertEquals("25", prevTableIniField.getMax());
+        assertEquals("1", prevTableIniField.getDigits());
+
+        final ArrayIniField prevBinsIniField = (ArrayIniField) result.getPrevIniFile().getIniField(
+            LAMBDA_RPM_BINS_FIELD_NAME
+        );
+        assertEquals(FieldType.UINT16, prevBinsIniField.getType());
+        assertEquals(32840, prevBinsIniField.getOffset());
+        assertEquals(1, prevBinsIniField.getCols());
+        assertEquals(16, prevBinsIniField.getRows());
+        assertEquals("RPM", prevBinsIniField.getUnits());
+        assertEquals(1, prevBinsIniField.getMultiplier());
+        assertEquals("0", prevBinsIniField.getMin());
+        assertEquals("18000", prevBinsIniField.getMax());
+        assertEquals("0", prevBinsIniField.getDigits());
+
+        final Constant prevTableValue = result.getPrevTune().getConstantsAsMap().get(LAMBDA_TABLE_FIELD_NAME);
+        assertEquals(LAMBDA_TABLE_FIELD_NAME, prevTableValue.getName());
+        assertEquals("afr", prevTableValue.getUnits());
+        assertEquals(
+            "\n" +
+                "         10.0 10.1 10.2 10.3 10.4 10.5 10.6 10.7 10.8 10.9 11.0 11.1 11.2 11.3 11.4 11.5\n" +
+                "         11.0 11.1 11.2 11.3 11.4 11.5 11.6 11.7 11.8 11.9 12.0 12.1 12.2 12.3 12.4 12.5\n" +
+                "         12.0 12.1 12.2 12.3 12.4 12.5 12.6 12.7 12.8 12.9 13.0 13.1 13.2 13.3 13.4 13.5\n" +
+                "         13.0 13.1 13.2 13.3 13.4 13.5 13.6 13.7 13.8 13.9 14.0 14.1 14.2 14.3 14.4 14.5\n" +
+                "         14.0 14.1 14.2 14.3 14.4 14.5 14.6 14.7 14.8 14.9 15.0 15.1 15.2 15.3 15.4 15.5\n" +
+                "         15.0 15.1 15.2 15.3 15.4 15.5 15.6 15.7 15.8 15.9 16.0 16.1 16.2 16.3 16.4 16.5\n" +
+                "         16.0 16.1 16.2 16.3 16.4 16.5 16.6 16.7 16.8 16.9 17.0 17.1 17.2 17.3 17.4 17.5\n" +
+                "         17.0 17.1 17.2 17.3 17.4 17.5 17.6 17.7 17.8 17.9 18.0 18.1 18.2 18.3 18.4 18.5\n" +
+                "         18.0 18.1 18.2 18.3 18.4 18.5 18.6 18.7 18.8 18.9 19.0 19.1 19.2 19.3 19.4 19.5\n" +
+                "         19.0 19.1 19.2 19.3 19.4 19.5 19.6 19.7 19.8 19.9 20.0 20.1 20.2 20.3 20.4 20.5\n" +
+                "         20.0 20.1 20.2 20.3 20.4 20.5 20.6 20.7 20.8 20.9 21.0 21.1 21.2 21.3 21.4 21.5\n" +
+                "         21.0 21.1 21.2 21.3 21.4 21.5 21.6 21.7 21.8 21.9 22.0 22.1 22.2 22.3 22.4 22.5\n" +
+                "         22.0 22.1 22.2 22.3 22.4 22.5 22.6 22.7 22.8 22.9 23.0 23.1 23.2 23.3 23.4 23.5\n" +
+                "         23.0 23.1 23.2 23.3 23.4 23.5 23.6 23.7 23.8 23.9 24.0 24.1 24.2 24.3 24.4 24.5\n" +
+                "         24.0 24.1 24.2 24.3 24.4 24.5 24.6 24.7 24.8 24.9 25.0 25.1 25.2 25.3 25.4 25.5\n" +
+                "         25.0 25.1 25.2 25.3 25.4 25.5 25.6 25.7 25.8 25.9 26.0 26.1 26.2 26.3 26.4 26.5\n",
+            prevTableValue.getValue()
+        );
+        assertEquals("1", prevTableValue.getDigits());
+        assertEquals("16", prevTableValue.getRows());
+        assertEquals("16", prevTableValue.getCols());
+
+        final Constant prevBinsValue = result.getPrevTune().getConstantsAsMap().get(LAMBDA_RPM_BINS_FIELD_NAME);
+        assertEquals(LAMBDA_RPM_BINS_FIELD_NAME, prevBinsValue.getName());
+        assertEquals("RPM", prevBinsValue.getUnits());
+        assertEquals(
+            "\n" +
+                "         800.0\n" +
+                "         1000.0\n" +
+                "         1300.0\n" +
+                "         1600.0\n" +
+                "         1900.0\n" +
+                "         2300.0\n" +
+                "         2700.0\n" +
+                "         3100.0\n" +
+                "         3500.0\n" +
+                "         4000.0\n" +
+                "         4500.0\n" +
+                "         5000.0\n" +
+                "         5500.0\n" +
+                "         6000.0\n" +
+                "         7250.0\n" +
+                "         8500.0\n",
+            prevBinsValue.getValue()
+        );
+        assertEquals("0", prevBinsValue.getDigits());
+        assertEquals("16", prevBinsValue.getRows());
+        assertEquals("1", prevBinsValue.getCols());
+
+        final ArrayIniField updatedTableIniField = (ArrayIniField) result.getUpdatedIniFile().getIniField(
+            LAMBDA_TABLE_FIELD_NAME
+        );
+        assertEquals(FieldType.UINT8, updatedTableIniField.getType());
+        assertEquals(33580, updatedTableIniField.getOffset());
+        assertEquals(24, updatedTableIniField.getCols());
+        assertEquals(16, updatedTableIniField.getRows());
+        assertEquals("afr", updatedTableIniField.getUnits());
+        assertEquals(0.1, updatedTableIniField.getMultiplier());
+        assertEquals("0", updatedTableIniField.getMin());
+        assertEquals("25", updatedTableIniField.getMax());
+        assertEquals("1", updatedTableIniField.getDigits());
+
+        final ArrayIniField updatedBinsIniField = (ArrayIniField) result.getUpdatedIniFile().getIniField(
+            LAMBDA_RPM_BINS_FIELD_NAME
+        );
+        assertEquals(FieldType.UINT16, updatedBinsIniField.getType());
+        assertEquals(33996, updatedBinsIniField.getOffset());
+        assertEquals(1, updatedBinsIniField.getCols());
+        assertEquals(24, updatedBinsIniField.getRows());
+        assertEquals("RPM", updatedBinsIniField.getUnits());
+        assertEquals(1.0, updatedBinsIniField.getMultiplier());
+        assertEquals("0", updatedBinsIniField.getMin());
+        assertEquals("18000", updatedBinsIniField.getMax());
+        assertEquals("0", updatedBinsIniField.getDigits());
+
+        final Constant updatedTableValue = result.getUpdatedTune().getConstantsAsMap().get(LAMBDA_TABLE_FIELD_NAME);
+        assertEquals(LAMBDA_TABLE_FIELD_NAME, updatedTableValue.getName());
+        assertEquals(
+            "\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n" +
+                "         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0\n",
+            updatedTableValue.getValue()
+        );
+        assertEquals("1", updatedTableValue.getDigits());
+        assertEquals("16", updatedTableValue.getRows());
+        assertEquals("24", updatedTableValue.getCols());
+
+        final Constant updatedBinsValue = result.getUpdatedTune().getConstantsAsMap().get(LAMBDA_RPM_BINS_FIELD_NAME);
+        assertEquals(LAMBDA_RPM_BINS_FIELD_NAME, updatedBinsValue.getName());
+        assertEquals("RPM", updatedBinsValue.getUnits());
+        assertEquals(
+            "\n" +
+                "         650.0\n" +
+                "         800.0\n" +
+                "         950.0\n" +
+                "         1100.0\n" +
+                "         1250.0\n" +
+                "         1400.0\n" +
+                "         1550.0\n" +
+                "         1700.0\n" +
+                "         1850.0\n" +
+                "         2000.0\n" +
+                "         2150.0\n" +
+                "         2300.0\n" +
+                "         2450.0\n" +
+                "         2600.0\n" +
+                "         2750.0\n" +
+                "         2900.0\n" +
+                "         3050.0\n" +
+                "         3200.0\n" +
+                "         3350.0\n" +
+                "         3500.0\n" +
+                "         3650.0\n" +
+                "         3800.0\n" +
+                "         3950.0\n" +
+                "         7000.0\n",
+            updatedBinsValue.getValue()
+        );
+        assertEquals("0", updatedBinsValue.getDigits());
+        assertEquals("24", updatedBinsValue.getRows());
+        assertEquals("1", updatedBinsValue.getCols());
     }
 }
