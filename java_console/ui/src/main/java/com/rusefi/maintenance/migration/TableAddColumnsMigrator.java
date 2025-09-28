@@ -44,18 +44,10 @@ public class TableAddColumnsMigrator implements TuneMigrator {
     public void migrateTune(final TuneMigrationContext context) {
         final Optional<IniField> prevField = context.getPrevIniFile().findIniField(tableFieldName);
         if (!prevField.isPresent()) {
-            context.getCallbacks().logLine(String.format(
-                "WARNING!!! Missed `%s` ini field in previous .ini file.",
-                tableFieldName
-            ));
             return;
         }
         final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(tableFieldName);
         if (!updatedField.isPresent()) {
-            context.getCallbacks().logLine(String.format(
-                "WARNING!!! Missed `%s` ini field in updated .ini file.",
-                tableFieldName
-            ));
             return;
         }
         final Optional<ArrayIniField> prevArrayIniField = getValidatedTableArrayIniField(
