@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.migration.ve_table_extension;
+package com.rusefi.maintenance.migration.table_add_columns_migration;
 
 import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.config.FieldType;
@@ -7,18 +7,16 @@ import com.rusefi.tune.xml.Constant;
 
 import javax.xml.bind.JAXBException;
 
-import java.io.FileNotFoundException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class VeTableExtensionTestTuneMigrationContext {
+public class TableAddColumnsMigrationContext {
     public static final String VE_TABLE_FIELD_NAME = "veTable";
     public static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
 
     public static TestTuneMigrationContext load() throws JAXBException {
         final TestTuneMigrationContext result = TestTuneMigrationContext.load(
-            "src/test/java/com/rusefi/maintenance/migration/ve_table_extension/test_data"
+            "src/test/java/com/rusefi/maintenance/migration/table_add_columns_migration/test_data"
         );
 
         final ArrayIniField prevVeTableIniField = (ArrayIniField) result.getPrevIniFile().getIniField(

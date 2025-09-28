@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.migration.ve_table_extension;
+package com.rusefi.maintenance.migration.table_add_columns_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.ComposedTuneMigrator;
@@ -9,14 +9,14 @@ import javax.xml.bind.JAXBException;
 
 import java.util.Map;
 
-import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_RPM_BINS_FIELD_NAME;
-import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_TABLE_FIELD_NAME;
+import static com.rusefi.maintenance.migration.table_add_columns_migration.TableAddColumnsMigrationContext.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.table_add_columns_migration.TableAddColumnsMigrationContext.VE_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TableAddColumnsMigratorTest {
     @Test
     void checkVeTableMigration() throws JAXBException {
-        final TestTuneMigrationContext testContext = VeTableExtensionTestTuneMigrationContext.load();
+        final TestTuneMigrationContext testContext = TableAddColumnsMigrationContext.load();
         ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
         final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
         assertEquals(2, migratedConstants.size());
