@@ -156,12 +156,14 @@
 #define BOARD_IGNITION_SETTINGS_FROM_FILE 
 #define BOARD_INDICATORS_FROM_FILE 
 #define BOARD_INJECTION_SETTINGS_FROM_FILE 
+#define BOARD_INJECTOR_SETTINGS_FROM_FILE 
 #define BOARD_PANELS_FROM_FILE 
 #define BOARD_PC_VARIABLES_FROM_FILE 
 #define BOARD_POPULAR_VEHICLES_FILE 
 #define BOARD_TABLES_FROM_FILE 
 #define BOARD_VE_FROM_FILE 
 #define BOARD_VE_MENU_FROM_FILE 
+#define BOARD_VIN_FIELD_FROM_FILE 
 #define BOOST_BLEND_COUNT 2
 #define BOOST_CURVE_SIZE 5
 #define BOOST_LOAD_COUNT 8
@@ -1523,7 +1525,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3234322084
+#define SIGNATURE_HASH 1050254914
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2087,7 +2089,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.09.28.alphax-gold.3234322084"
+#define TS_SIGNATURE "rusEFI master.2025.09.28.alphax-gold.1050254914"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
