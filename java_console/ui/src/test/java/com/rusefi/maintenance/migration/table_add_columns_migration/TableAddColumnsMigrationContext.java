@@ -18,7 +18,12 @@ public class TableAddColumnsMigrationContext {
         final TestTuneMigrationContext result = TestTuneMigrationContext.load(
             "src/test/java/com/rusefi/maintenance/migration/table_add_columns_migration/test_data"
         );
+        validateVeTable(result);
 
+        return result;
+    }
+
+    private static void validateVeTable(final TestTuneMigrationContext result) {
         final ArrayIniField prevVeTableIniField = (ArrayIniField) result.getPrevIniFile().getIniField(
             VE_TABLE_FIELD_NAME
         );
@@ -182,7 +187,5 @@ public class TableAddColumnsMigrationContext {
         assertEquals("0", updatedVeRpmBinsValue.getDigits());
         assertEquals("24", updatedVeRpmBinsValue.getRows());
         assertEquals("1", updatedVeRpmBinsValue.getCols());
-
-        return result;
     }
 }
