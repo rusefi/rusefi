@@ -233,6 +233,21 @@ static const uint8_t vcom_string2[] = {
 /*
  * Serial Number string.
  */
+
+#ifdef BOARD_SERIAL
+static_assert(strlen(BOARD_SERIAL) == 24, "BOARD_SERIAL incorrect length, should be 24 chars");
+static const uint8_t vcom_string3[] = {
+  USB_DESC_BYTE(50),                     /* bLength.                         */
+  USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
+  BOARD_SERIAL[ 0], 0, BOARD_SERIAL[ 1], 0, BOARD_SERIAL[ 2], 0, BOARD_SERIAL[ 3], 0,
+  BOARD_SERIAL[ 4], 0, BOARD_SERIAL[ 5], 0, BOARD_SERIAL[ 6], 0, BOARD_SERIAL[ 7], 0,
+  BOARD_SERIAL[ 8], 0, BOARD_SERIAL[ 9], 0, BOARD_SERIAL[10], 0, BOARD_SERIAL[11], 0,
+  BOARD_SERIAL[12], 0, BOARD_SERIAL[13], 0, BOARD_SERIAL[14], 0, BOARD_SERIAL[15], 0,
+  BOARD_SERIAL[16], 0, BOARD_SERIAL[17], 0, BOARD_SERIAL[18], 0, BOARD_SERIAL[19], 0,
+  BOARD_SERIAL[20], 0, BOARD_SERIAL[21], 0, BOARD_SERIAL[22], 0, BOARD_SERIAL[23], 0,
+  0
+};
+#else
 static uint8_t vcom_string3[] = {
   USB_DESC_BYTE(50),                     /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
@@ -241,6 +256,7 @@ static uint8_t vcom_string3[] = {
   '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0, '6', 0, '7', 0,
   0
 };
+#endif
 
 /*
  * Strings wrappers array.
@@ -252,6 +268,7 @@ static const USBDescriptor vcom_strings[] = {
   {sizeof vcom_string3, vcom_string3}
 };
 
+#ifndef BOARD_SERIAL
 static char nib2char(uint8_t nibble) {
 	if (nibble > 0x9) {
 		return nibble - 0xA + 'A';
@@ -279,6 +296,7 @@ void usbPopulateSerialNumber(const uint8_t* serialNumber, size_t bytes) {
 		dst[4 * i + 2] = nib2char(lowNibble);
 	}
 }
+#endif // BOARD_SERIAL
 
 /*
  * Handles the GET_DESCRIPTOR callback. All required descriptors must be
