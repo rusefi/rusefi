@@ -21,7 +21,10 @@ static bool isUsbSerialInitialized = false;
  * start USB serial using hard-coded communications pins (see comments inside the code)
  */
 void usb_serial_start() {
+#ifndef BOARD_SERIAL
+	// populate serial number based on chip unique number
 	usbPopulateSerialNumber(MCU_SERIAL_NUMBER_LOCATION, MCU_SERIAL_NUMBER_BYTES);
+#endif
 
 	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
 	efiSetPadMode("USB DP", EFI_USB_SERIAL_DP, PAL_MODE_ALTERNATE(EFI_USB_AF));
