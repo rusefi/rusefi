@@ -9,13 +9,21 @@ import com.rusefi.tune.xml.Constant;
 import java.util.Optional;
 
 public class TableAddColumnsMigrator implements TuneMigrator {
-    private static final String VE_TABLE_FIELD_NAME = "veTable";
-    static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
+    public static final String VE_TABLE_FIELD_NAME = "veTable";
+    public static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
+    public static final String LAMBDA_TABLE_FIELD_NAME = "lambdaTable";
+    public static final String LAMBDA_RPM_BINS_FIELD_NAME = "lambdaRpmBins";
 
     public static final TableAddColumnsMigrator VE_TABLE_MIGRATOR = new TableAddColumnsMigrator(
         VE_TABLE_FIELD_NAME,
         FieldType.UINT16,
         VE_RPM_BINS_FIELD_NAME
+    );
+
+    public static final TableAddColumnsMigrator LAMBDA_TABLE_MIGRATOR = new TableAddColumnsMigrator(
+        LAMBDA_TABLE_FIELD_NAME,
+        FieldType.UINT8,
+        LAMBDA_RPM_BINS_FIELD_NAME
     );
 
     private final String tableFieldName;
