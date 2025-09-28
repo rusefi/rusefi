@@ -4,11 +4,9 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 
 import javax.xml.bind.JAXBException;
 
-import java.io.FileNotFoundException;
-
 import static com.rusefi.maintenance.migration.CltIdleCorrMigrator.*;
-import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_RPM_BINS_FIELD_NAME;
-import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_TABLE_FIELD_NAME;
+import static com.rusefi.maintenance.migration.table_add_columns_migration.TableAddColumnsMigrationContext.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.table_add_columns_migration.TableAddColumnsMigrationContext.VE_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
