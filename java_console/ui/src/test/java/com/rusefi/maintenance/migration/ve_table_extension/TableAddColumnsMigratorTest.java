@@ -13,7 +13,7 @@ import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensi
 import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class VeTableExtensionMigratorTest {
+public class TableAddColumnsMigratorTest {
     @Test
     void checkVeTableMigration() throws JAXBException {
         final TestTuneMigrationContext testContext = VeTableExtensionTestTuneMigrationContext.load();
