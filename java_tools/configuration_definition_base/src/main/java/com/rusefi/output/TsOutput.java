@@ -28,9 +28,9 @@ public class TsOutput {
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
     private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-    private final String metricUnitsConditionalStart = "#if USE_METRIC_UNITS" + EOL;
-    private final String metricUnitsConditionalElse = "#else" + EOL;
-    private final String metricUnitsConditionalEnd = "#endif" + EOL;
+//    private final String metricUnitsConditionalStart = "#if USE_METRIC_UNITS" + EOL;
+//    private final String metricUnitsConditionalElse = "#else" + EOL;
+//    private final String metricUnitsConditionalEnd = "#endif" + EOL;
     private final String temperatureCelsiusUnit = quote("C");
     private final String temperatureFahrenheitUnit = quote("F");
     private final Double temperatureToFahrenheitScale = 1.8;
@@ -172,38 +172,38 @@ public class TsOutput {
                 if (originalUnits.startsWith("SPECIAL_CASE_TEMPERATURE")) {
                     // first the Celsius case, and save the index after writing the field
                     configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, false));
-                    tsHeader.append(metricUnitsConditionalStart);
+  //                  tsHeader.append(metricUnitsConditionalStart);
                     int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
-                    tsHeader.append(metricUnitsConditionalElse);
-                    // now the fahrenheit case:
-                    configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, true));
-                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
-                    tsHeader.append(metricUnitsConditionalEnd);
+//                    tsHeader.append(metricUnitsConditionalElse);
+//                    // now the fahrenheit case:
+//                    configField.setTsInfo(formatTemperatureTsInfo(originalTsInfo, true));
+//                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+//                    tsHeader.append(metricUnitsConditionalEnd);
                     configField.setTsInfo(originalTsInfo);
                     return newIndex;
                 }
                 // equal structure as temperature case, now with kPa and psi as units
                 if (originalUnits.startsWith("SPECIAL_CASE_PRESSURE")) {
                     configField.setTsInfo(formatPressureTsInfo(originalTsInfo, false));
-                    tsHeader.append(metricUnitsConditionalStart);
+//                    tsHeader.append(metricUnitsConditionalStart);
                     int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
-                    tsHeader.append(metricUnitsConditionalElse);
-                    // now the psi case:
-                    configField.setTsInfo(formatPressureTsInfo(originalTsInfo, true));
-                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
-                    tsHeader.append(metricUnitsConditionalEnd);
+//                    tsHeader.append(metricUnitsConditionalElse);
+//                    // now the psi case:
+//                    configField.setTsInfo(formatPressureTsInfo(originalTsInfo, true));
+//                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+//                    tsHeader.append(metricUnitsConditionalEnd);
                     configField.setTsInfo(originalTsInfo);
                     return newIndex;
                 }
                 if (originalUnits.startsWith("SPECIAL_CASE_SPEED")) {
                     configField.setTsInfo(formatSpeedTsInfo(originalTsInfo, false));
-                    tsHeader.append(metricUnitsConditionalStart);
+//                    tsHeader.append(metricUnitsConditionalStart);
                     int newIndex = writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
-                    tsHeader.append(metricUnitsConditionalElse);
-                    // now the psi case:
-                    configField.setTsInfo(formatSpeedTsInfo(originalTsInfo, true));
-                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
-                    tsHeader.append(metricUnitsConditionalEnd);
+//                    tsHeader.append(metricUnitsConditionalElse);
+//                    // now the psi case:
+//                    configField.setTsInfo(formatSpeedTsInfo(originalTsInfo, true));
+//                    writeFieldJob(nameWithPrefix, configField, next, tsPosition, bitIndex, nameWithPrefix, cs);
+//                    tsHeader.append(metricUnitsConditionalEnd);
                     configField.setTsInfo(originalTsInfo);
                     return newIndex;
                 }
