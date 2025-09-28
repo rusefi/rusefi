@@ -28,6 +28,7 @@
 #include "can_rx.h"
 #include "value_lookup.h"
 #include "can_msg_tx.h"
+#include "board_overrides.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -602,7 +603,8 @@ static void applyPreset(int index) {
 #endif // EFI_TUNER_STUDIO
 }
 
-PUBLIC_API_WEAK void boardTsAction(uint16_t index) { UNUSED(index); }
+// placeholder to force custom_board_ts_command migration
+void boardTsAction(uint16_t index) { UNUSED(index); }
 
 #if EFI_CAN_SUPPORT
 /**
@@ -671,6 +673,8 @@ void processCanEcuControl(const CANRxFrame& frame) {
 }
 
 #endif // EFI_CAN_SUPPORT
+
+std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
 
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);
@@ -767,7 +771,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
   case TS_BOARD_ACTION:
-    boardTsAction(index);
+	  if (custom_board_ts_command.has_value()) {
+		  custom_board_ts_command.value()(subsystem, index);
+	  }
 		break;
 
 	case TS_SET_DEFAULT_ENGINE:

@@ -29,6 +29,9 @@
 // function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
 
+using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
+extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
+
 #if EFI_CAN_SUPPORT
 #include "can_msg_tx.h"
 using board_can_rx_type = void (*)(const size_t, const CANRxFrame &, efitick_t);
