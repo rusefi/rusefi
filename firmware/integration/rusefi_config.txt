@@ -202,6 +202,7 @@ struct_no_prefix engine_configuration_s
 #define GEAR_DETECTION_DIALOG_NAME "Gear Detection"
 #define ts_show_final_ratio true
 #define ts_show_vehicle_name true
+#define ts_show_cranking_rpm true
 #define ts_show_map_averaging_enabled true
 #define ts_show_ecu_stimulator true
 #define ts_show_linear_thermistors true
