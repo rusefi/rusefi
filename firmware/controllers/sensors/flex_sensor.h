@@ -58,6 +58,8 @@ private:
 
 	Timer flexFreq, flexPulse;
 
+	bool gotRising = false;
+
 	int lowFlexCallbackCounter = 0;
 	int flexCallbackCounter = 0;
 
