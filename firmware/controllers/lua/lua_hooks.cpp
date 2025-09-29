@@ -174,8 +174,7 @@ uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size)
 
 static int validateCanChannelAndConvertFromHumanIntoZeroIndex(lua_State* l) {
 	lua_Integer channel = luaL_checkinteger(l, 1);
-	// TODO: support multiple channels
-	luaL_argcheck(l, channel == 1 || channel == 2, 1, "only buses 1 and 2 currently supported");
+	luaL_argcheck(l, channel >= 1 && channel <= CANBUS_COUNT, 1, "Invalid bus index");
 	return channel - HUMAN_OFFSET;
 }
 
