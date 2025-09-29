@@ -20,6 +20,7 @@ CONTROLLERS_SENSORS_SRC_CPP = \
 	$(PROJECT_DIR)/controllers/sensors/redundant_sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/redundant_ford_tps.cpp \
 	$(PROJECT_DIR)/controllers/sensors/frequency_sensor.cpp \
+	$(PROJECT_DIR)/controllers/sensors/flex_sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/hella_oil_level.cpp \
 	$(PROJECT_DIR)/controllers/sensors/impl/software_knock.cpp \
 	$(PROJECT_DIR)/controllers/sensors/converters/linear_func.cpp \

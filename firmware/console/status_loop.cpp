@@ -500,11 +500,6 @@ static void updateRawSensors() {
 	engine->outputChannels.rawAuxAnalog3 = Sensor::getRaw(SensorType::AuxAnalog3);
 	engine->outputChannels.rawAuxAnalog4 = Sensor::getRaw(SensorType::AuxAnalog4);
 
-#if EFI_PROD_CODE
-extern int flexCallbackCounter;
-	engine->outputChannels.rawFlexFreq = flexCallbackCounter;
-#endif // EFI_PROD_CODE
-
   for (size_t i = 0;i<LUA_GAUGE_COUNT;i++) {
 	  engine->outputChannels.luaGauges[i] = Sensor::getOrZero(luaGaugeTypes[i]);
   }
