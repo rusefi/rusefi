@@ -159,6 +159,7 @@
 #define BOARD_INJECTOR_SETTINGS_FROM_FILE 
 #define BOARD_OPTIONS_FROM_FILE 
 #define BOARD_PC_VARIABLES_FROM_FILE 
+#define BOARD_PRIMING_PULSE_PANEL_FROM_FILE 
 #define BOARD_VE_FROM_FILE 
 #define BOARD_VE_MENU_FROM_FILE 
 #define BOARD_VIN_FIELD_FROM_FILE 
@@ -1522,7 +1523,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1138364352
+#define SIGNATURE_HASH 3288972016
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2087,7 +2088,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.09.28.uaefi.1138364352"
+#define TS_SIGNATURE "rusEFI master.2025.09.29.uaefi.3288972016"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
