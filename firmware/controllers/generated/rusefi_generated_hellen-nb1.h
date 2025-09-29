@@ -281,6 +281,7 @@
 #define can_wbo_type_e_DISABLED 2
 #define can_wbo_type_e_enum "RusEFI", "AEM X-series", "Disabled/Analog"
 #define can_wbo_type_e_RUSEFI 0
+#define CANBUS_COUNT 2
 #define CanGpioType_auto_enum 0="NONE",1="DRT",2="MS"
 #define CanGpioType_DRT 1
 #define CanGpioType_enum "None", "DRT protocol", "MS protocol"
@@ -1529,7 +1530,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2811859215
+#define SIGNATURE_HASH 2638007373
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2093,7 +2094,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.09.29.hellen-nb1.2811859215"
+#define TS_SIGNATURE "rusEFI master.2025.09.30.hellen-nb1.2638007373"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

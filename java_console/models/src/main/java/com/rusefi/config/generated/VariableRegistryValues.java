@@ -242,6 +242,7 @@ public class VariableRegistryValues {
 	public static final int can_wbo_type_e_AEM = 1;
 	public static final int can_wbo_type_e_DISABLED = 2;
 	public static final int can_wbo_type_e_RUSEFI = 0;
+	public static final int CANBUS_COUNT = 2;
 	public static final int CanGpioType_DRT = 1;
 	public static final int CanGpioType_MS = 2;
 	public static final int CanGpioType_NONE = 0;
@@ -1724,7 +1725,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.09.29.stm32h743_nucleo.2671883556";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.09.30.stm32h743_nucleo.2783242342";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2060;
