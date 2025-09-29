@@ -143,6 +143,7 @@ TESTS_SRC_CPP = \
 	tests/test_sticky_pps.cpp \
 	tests/test_knock.cpp \
 	tests/test_lambda_monitor.cpp \
+	tests/test_flex_sensor.cpp \
 	tests/sensor/basic_sensor.cpp \
 	tests/sensor/func_sensor.cpp \
 	tests/sensor/function_pointer_sensor.cpp \
