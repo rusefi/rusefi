@@ -70,7 +70,7 @@ public class ConfigDefinition {
         log.info(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
-        List<String> softPrePrendsFileNames = new ArrayList<>();
+        List<String> softPrePrependsFileNames = new ArrayList<>();
 
         DefinitionsState parseState = state.getEnumsReader().parseState;
         String signatureDestination = null;
@@ -142,7 +142,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_SOFT_PREPEND: {
                     String softPrependFileName = args[i + 1].trim();
-                    softPrePrendsFileNames.add(softPrependFileName);
+                    softPrePrependsFileNames.add(softPrependFileName);
                     state.addSoftPrepend(softPrependFileName);
                 }
                     break;
@@ -183,8 +183,8 @@ public class ConfigDefinition {
         }
 
         FieldsApiGenerator.run();
-        handlePage(state, 1, softPrePrendsFileNames);
-        handlePage(state, 2, softPrePrendsFileNames);
+        handlePage(state, 1, softPrePrependsFileNames);
+        handlePage(state, 2, softPrePrependsFileNames);
 
         if (tsInputFileFolder != null) {
             // used to update .ini files
