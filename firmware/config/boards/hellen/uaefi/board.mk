@@ -11,7 +11,14 @@ endif
 
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"uaefi\" $(VAR_DEF_ENGINE_TYPE)
-DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
+
+#Knock is available on F4 and F7
+ifeq ($(PROJECT_CPU),ARCH_STM32H7)
+	# nop
+else
+	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
+endif
+
 # EGT chip
 DDEFS += -DEFI_MAX_31855=TRUE
 
