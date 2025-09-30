@@ -158,10 +158,12 @@ struct_no_prefix engine_configuration_s
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define CRANKING_ADVANCE_CURVE_SIZE 4
 #define TRAILING_SPARK_SIZE 4
+#define TRAILING_SPARK_RPM_SIZE 4
 
 #define ENGINE_NOISE_CURVE_SIZE 16
 #define CLT_TIMING_CURVE_SIZE 5
 #define IDLE_VE_SIZE 4
+#define IDLE_VE_SIZE_RPM 4
 #define RE_auto_update_root_url "https://rusefi.com/build_server"
 #define RE_obfuscated "false"
 
@@ -1991,9 +1993,9 @@ uint16_t[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDuration;This is th
 
 uint8_t[IDLE_ADVANCE_CURVE_SIZE] autoscale idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", 50, 0, 0, 12000, 0
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg", 1, 0, -20, 90, 1
-uint8_t[IDLE_VE_SIZE] autoscale idleVeRpmBins;;"RPM", 10, 0, 0, 2500, 0
+uint8_t[IDLE_VE_SIZE_RPM] autoscale idleVeRpmBins;;"RPM", 10, 0, 0, 2500, 0
 uint8_t[IDLE_VE_SIZE] idleVeLoadBins;;"load", 1, 0, 0, 100, 0
-uint16_t[IDLE_VE_SIZE x IDLE_VE_SIZE] autoscale idleVeTable;;"%", 0.1, 0, 0, 999, 1
+uint16_t[IDLE_VE_SIZE x IDLE_VE_SIZE_RPM] autoscale idleVeTable;;"%", 0.1, 0, 0, 999, 1
 
 #define LUA_SCRIPT_SIZE 8000
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
@@ -2161,18 +2163,19 @@ uint8_t[KNOCK_TABLE_SIZE] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
 uint8_t[KNOCK_TABLE_SIZE] autoscale maxKnockRetardRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
 #define ALS_SIZE 4
+#define ALS_RPM_SIZE 4
 
-int16_t[ALS_SIZE x ALS_SIZE] autoscale ALSTimingRetardTable;;"deg", 0.1, 0, -60, 0, 1
+int16_t[ALS_SIZE x ALS_RPM_SIZE] autoscale ALSTimingRetardTable;;"deg", 0.1, 0, -60, 0, 1
 uint16_t[ALS_SIZE] alsIgnRetardLoadBins;;"TPS", 1, 0, 0, 100, 0
-uint16_t[ALS_SIZE] alsIgnRetardrpmBins;;"RPM",	   1, 0, 0, 25000, 0
+uint16_t[ALS_RPM_SIZE] alsIgnRetardrpmBins;;"RPM",	   1, 0, 0, 25000, 0
 
-int16_t[ALS_SIZE x ALS_SIZE] autoscale ALSFuelAdjustment;;"percent", 0.1, 0, 0, 50, 1
+int16_t[ALS_SIZE x ALS_RPM_SIZE] autoscale ALSFuelAdjustment;;"percent", 0.1, 0, 0, 50, 1
 uint16_t[ALS_SIZE] alsFuelAdjustmentLoadBins;;"TPS", 1, 0, 0, 100, 0
-uint16_t[ALS_SIZE] alsFuelAdjustmentrpmBins;;"RPM",	1, 0, 0, 25000, 0
+uint16_t[ALS_RPM_SIZE] alsFuelAdjustmentrpmBins;;"RPM",	1, 0, 0, 25000, 0
 
-int16_t[ALS_SIZE x ALS_SIZE] autoscale ALSIgnSkipTable;;"ratio", 10, 0, 0, 50, 1
+int16_t[ALS_SIZE x ALS_RPM_SIZE] autoscale ALSIgnSkipTable;;"ratio", 10, 0, 0, 50, 1
 uint16_t[ALS_SIZE] alsIgnSkipLoadBins;;"TPS", 1, 0, 0, 100, 0
-uint16_t[ALS_SIZE] alsIgnSkiprpmBins;;"RPM",	   1, 0, 0, 25000, 0
+uint16_t[ALS_RPM_SIZE] alsIgnSkiprpmBins;;"RPM",	   1, 0, 0, 25000, 0
 
 #define BLEND_TABLE_COUNT 8
 
@@ -2215,16 +2218,18 @@ float[RANGE_INPUT_COUNT] tcu_rangeMinus;;"level", 1, 0, 0, 200000, 0
 float[RANGE_INPUT_COUNT] tcu_rangeLow;;"level", 1, 0, 0, 200000, 0
 
 #define LAM_SIZE 4
+#define LAM_RPM_SIZE 4
 
-uint8_t[LAM_SIZE x LAM_SIZE] autoscale lambdaMaxDeviationTable;;"lambda", 0.01, 0, 0, 1, 2
+uint8_t[LAM_SIZE x LAM_RPM_SIZE] autoscale lambdaMaxDeviationTable;;"lambda", 0.01, 0, 0, 1, 2
 uint16_t[LAM_SIZE] lambdaMaxDeviationLoadBins;;"", 1, 0, 0, 1000, 0
-uint16_t[LAM_SIZE] lambdaMaxDeviationRpmBins;;"RPM",  1, 0, 0, 18000, 0
+uint16_t[LAM_RPM_SIZE] lambdaMaxDeviationRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
 #define INJ_STAGING_COUNT 6
+#define INJ_STAGING_RPM_SIZE 6
 
-uint8_t[INJ_STAGING_COUNT x INJ_STAGING_COUNT] injectorStagingTable;;"%", 1, 0, 0, 90, 0
+uint8_t[INJ_STAGING_COUNT x INJ_STAGING_RPM_SIZE] injectorStagingTable;;"%", 1, 0, 0, 90, 0
 uint16_t[INJ_STAGING_COUNT] injectorStagingLoadBins;;"", 1, 0, 0, 1000, 0
-uint16_t[INJ_STAGING_COUNT] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
+uint16_t[INJ_STAGING_RPM_SIZE] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
 #define WWAE_TABLE_SIZE 8
 
@@ -2288,9 +2293,11 @@ uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed43;;"SPECIAL_CASE_SPEED", 1, 0, 0, 255, 0
 float tcu_shiftTime;;"ms", 1, 0, 0, 3000, 0
 
 #define ALTERNATOR_VOLTAGE_TARGET_SIZE 4
-int16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE x ALTERNATOR_VOLTAGE_TARGET_SIZE] autoscale alternatorVoltageTargetTable;;"volts", 0.1, 0, 0, 30, 1
+#define ALTERNATOR_VOLTAGE_RPM_SIZE 4
+
+int16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE x ALTERNATOR_VOLTAGE_RPM_SIZE] autoscale alternatorVoltageTargetTable;;"volts", 0.1, 0, 0, 30, 1
 uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetLoadBins;;"Load", 1, 0, 0, 1000, 0
-uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 1, 0, 0, 18000, 0
+uint16_t[ALTERNATOR_VOLTAGE_RPM_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 #define BOOST_CURVE_SIZE 5
 include_file controllers/actuators/boost_control_config.txt
@@ -2356,8 +2363,8 @@ float   autoscale dynoCarCoeffOfDrag;@@DYNO_CAR_COEFF_OF_DRAG_TOOLTIP@@;@@DYNO_C
 #define DYNO_CAR_FRONTAL_AREA_TOOLTIP "The frontal area A represents the frontal projection of the car's area"
 float   autoscale dynoCarFrontalAreaM2;@@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@;@@DYNO_CAR_FRONTAL_AREA_UNITS@@, 1, 0, 0, 100, 2
 
-int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_SIZE] autoscale trailingSparkTable;;"deg", 0.1, 0, 0, 12, 1
-uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12000, 0
+int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_RPM_SIZE] autoscale trailingSparkTable;;"deg", 0.1, 0, 0, 12, 1
+uint8_t[TRAILING_SPARK_RPM_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12000, 0
 uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
 uint8_t[4] autoscale maximumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
