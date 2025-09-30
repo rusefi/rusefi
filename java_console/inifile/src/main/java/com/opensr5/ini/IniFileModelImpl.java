@@ -53,7 +53,7 @@ public class IniFileModelImpl implements IniFileModel {
     private boolean isInsidePageDefinition;
     private int blockingFactor;
     // useful when connecting remotely via TCP/IP, if CUSTOM_TS_BUFFER_SIZE is available
-	// For proteus_f7 recommended to set blockingFactorOverride=32000
+	// For proteus_f7 over TCP/IP recommended to set blockingFactorOverride=32000
 	// java -jar -DblockingFactorOverride=32000 rusefi_console.jar host:port
     private static final Integer blockingFactorOverride = Integer.getInteger("blockingFactorOverride");
 
