@@ -427,6 +427,8 @@
 
 #define STM32_SYSCLK STM32_SYS_CK
 
-#define ENABLE_AUTO_DETECT_HSE              TRUE
+#ifndef ENABLE_AUTO_DETECT_HSE
+    #define ENABLE_AUTO_DETECT_HSE          TRUE
+#endif
 
 #endif /* MCUCONF_H */
