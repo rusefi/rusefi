@@ -14,6 +14,15 @@
     limitations under the License.
 */
 
+/* change address & length if bootloader */
+bootloader_size = 32k;
+flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
+flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 1M;
+image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
+
+/* OpenBLT <-> main FW shared area */
+_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
+
 /*
  * STM32H723xG (64k ITCM) generic setup.
  * 
@@ -26,7 +35,7 @@
  */
 MEMORY
 {
-    flash0 (rx) : org = 0x08000000, len = 1M        /* Flash bank1 */
+    flash0 (rx) : org = flash_start, len = flash_size    /* Flash bank1 */
     flash1 (rx) : org = 0x00000000, len = 0
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
@@ -34,7 +43,8 @@ MEMORY
     flash5 (rx) : org = 0x00000000, len = 0
     flash6 (rx) : org = 0x00000000, len = 0
     flash7 (rx) : org = 0x00000000, len = 0
-    ram0   (wx) : org = 0x24000000, len = 320k      /* AXI SRAM */
+    shared      : org = 0x24000000, len = _OpenBLT_Shared_Params_Size
+    ram0   (wx) : org = 0x24000000 + _OpenBLT_Shared_Params_Size, len = 320k - _OpenBLT_Shared_Params_Size      /* AXI SRAM */
     ram1   (wx) : org = 0x30000000, len = 32k       /* AHB SRAM1+SRAM2 */
     ram2   (wx) : org = 0x30000000, len = 16k       /* AHB SRAM1 */
     ram3   (wx) : org = 0x30002000, len = 16k       /* AHB SRAM2 */
@@ -43,6 +53,8 @@ MEMORY
     ram6   (wx) : org = 0x00000000, len = 64k       /* ITCM-RAM */
     ram7   (wx) : org = 0x38800000, len = 4k        /* BCKP SRAM */
 }
+
+__backup_sram_addr__ = ORIGIN(ram7);
 
 /* For each data/text section two region are defined, a virtual region
    and a load region (_LMA suffix).*/
@@ -102,6 +114,9 @@ REGION_ALIAS("NOCACHE_RAM", ram3);
 /* RAM region to be used for eth segment.*/
 REGION_ALIAS("ETH_RAM", ram3);
 
+/* RAM region to be used for battery backuped data */
+REGION_ALIAS("BKUP_RAM", ram7);
+
 SECTIONS
 {
     /* Special section for non cache-able areas.*/
@@ -125,6 +140,11 @@ SECTIONS
         . = ALIGN(4);
         __eth_end__ = .;
     } > ETH_RAM
+
+    .bkup_ram_noinit (NOLOAD):
+    {
+        *(.bkup_ram_noinit)
+    } > BKUP_RAM
 }
 
 /* Code rules inclusion.*/
