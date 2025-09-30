@@ -55,7 +55,7 @@
  * @brief   Enables the ICU subsystem.
  */
 #if !defined(HAL_USE_ICU) || defined(__DOXYGEN__)
-#define HAL_USE_ICU                         FALSE
+#define HAL_USE_ICU                         TRUE
 #endif
 
 /**
@@ -99,7 +99,12 @@
  * @brief   Enables the UART subsystem.
  */
 #if !defined(HAL_USE_UART) || defined(__DOXYGEN__)
-#define HAL_USE_UART                        FALSE
+/* Configured in efifeatures.h */
+#if defined(TS_PRIMARY_UxART_PORT)
+#define HAL_USE_UART                TRUE
+#else
+#define HAL_USE_UART                FALSE
+#endif
 #endif
 
 /**
@@ -217,7 +222,12 @@
  * @note    Disabling this option saves both code and data space.
  */
 #if !defined(UART_USE_WAIT) || defined(__DOXYGEN__)
-#define UART_USE_WAIT                       FALSE
+/* Configured in efifeatures.h */
+#if defined(TS_PRIMARY_UxART_PORT)
+#define UART_USE_WAIT               TRUE
+#else
+#define UART_USE_WAIT               FALSE
+#endif
 #endif
 
 

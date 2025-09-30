@@ -333,7 +333,10 @@
 /*
  * ICU driver system settings.
  */
+#ifndef STM32_ICU_USE_TIM1
 #define STM32_ICU_USE_TIM1                  FALSE
+#endif
+
 #define STM32_ICU_USE_TIM2                  FALSE
 #define STM32_ICU_USE_TIM3                  FALSE
 #define STM32_ICU_USE_TIM4                  FALSE
@@ -409,8 +412,8 @@
  * SERIAL driver system settings.
  */
 #define STM32_SERIAL_USE_USART1             TRUE
-#define STM32_SERIAL_USE_USART2             TRUE
-#define STM32_SERIAL_USE_USART3             TRUE
+#define STM32_SERIAL_USE_USART2             FALSE
+#define STM32_SERIAL_USE_USART3             FALSE
 #define STM32_SERIAL_USE_UART4              FALSE
 #define STM32_SERIAL_USE_UART5              FALSE
 #define STM32_SERIAL_USE_USART6             TRUE
@@ -481,7 +484,11 @@
  * UART driver system settings.
  */
 #define STM32_UART_USE_USART1               FALSE
+
+#ifndef STM32_UART_USE_USART2
 #define STM32_UART_USE_USART2               FALSE
+#endif
+
 #define STM32_UART_USE_USART3               TRUE
 #define STM32_UART_USE_UART4                FALSE
 #define STM32_UART_USE_UART5                FALSE
