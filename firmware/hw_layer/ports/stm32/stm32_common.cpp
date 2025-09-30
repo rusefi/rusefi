@@ -48,7 +48,11 @@ static void reset_and_jump(void) {
 		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
 		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
 		// See https://community.st.com/s/question/0D53W00000vQEWsSAO/stm32h743-dfu-entry-doesnt-work-unless-boot0-held-high-at-poweron
+	#ifdef STM32H723xx
+		RCC->AHB1ENR &= ~(RCC_AHB1ENR_USB1OTGHSEN);
+	#else
 		RCC->AHB1ENR &= ~(RCC_AHB1ENR_USB1OTGHSEN | RCC_AHB1ENR_USB2OTGFSEN);
+	#endif
 	#endif
 
 	// and now reboot
