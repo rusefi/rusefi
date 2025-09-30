@@ -20,6 +20,7 @@ ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# We are developing on WeAct devkit with 25 MHz ocsilator
 	# TODO: fix!
 	DDEFS += -DSTM32_HSECLK=25000000
+	DDEFS += -DENABLE_AUTO_DETECT_HSE=FALSE
 else
 	#Knock is available on F4 and F7 only
 	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
