@@ -68,8 +68,8 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
   CPU_STARTUP = startup_stm32h7xx.mk
   # next file is included through Contrib's platform.ml
-  #CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32H7xx/platform.mk
-  CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32H7xx/platform.mk
+  CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32H7xx/platform_type2.mk
+  #CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32H7xx/platform.mk
   CPU_HWLAYER = ports/stm32/stm32h7
 else ifeq ($(PROJECT_CPU),ARCH_AT32F4)
   CPU_STARTUP = startup_at32f4xx.mk

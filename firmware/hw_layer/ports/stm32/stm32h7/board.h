@@ -73,13 +73,6 @@
 #define STM32_VDD                   330U
 
 /*
- * MCU type as defined in the ST header.
- */
-#ifndef STM32H743xx
-#define STM32H743xx
-#endif
-
-/*
  * IO pins assignments.
  */
 #define GPIOA_SWDIO                 13
