@@ -19,10 +19,21 @@
 #include <string.h>
 
 #ifdef STM32H7XX
-	// Use bank 2 on H7
-	#define FLASH_CR FLASH->CR2
-	#define FLASH_SR FLASH->SR2
-	#define FLASH_KEYR FLASH->KEYR2
+	#ifdef STM32H743xx
+		// Use bank 2 on H743
+		#define FLASH_CR FLASH->CR2
+		#define FLASH_SR FLASH->SR2
+		#define FLASH_KEYR FLASH->KEYR2
+		#define FLASH_CCR FLASH->CCR2
+	#endif
+
+	#ifdef STM32H723xx
+		// H723 is single banked
+		#define FLASH_CR FLASH->CR1
+		#define FLASH_SR FLASH->SR1
+		#define FLASH_KEYR FLASH->KEYR1
+		#define FLASH_CCR FLASH->CCR1
+	#endif
 
 	// I have no idea why ST changed the register name from STRT -> START
 	#define FLASH_CR_STRT FLASH_CR_START
@@ -64,7 +75,7 @@ flashsector_t intFlashSectorAt(flashaddr_t address) {
 
 static void intFlashClearErrors() {
 #ifdef STM32H7XX
-	FLASH->CCR2 = 0xffffffff;
+	FLASH_CCR = 0xffffffff;
 #else
 	FLASH_SR = 0x0000ffff;
 #endif
