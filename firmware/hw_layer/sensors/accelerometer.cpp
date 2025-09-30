@@ -57,9 +57,14 @@ static SPIConfig accelerometerSpiCfg = {
 	/* HW dependent part.*/
 	.ssport = NULL,
 	.sspad = 0,
+#ifdef STM32H7XX
+	.cfg1 = SPI_CFG1_8BIT_MODE | SPI_CFG1_MBR_0 | SPI_CFG1_MBR_1,
+	.cfg2 = SPI_CFG2_8BIT_MODE | SPI_CFG2_CPOL | SPI_CFG2_CPHA
+#else
 	.cr1 = SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_CPOL | SPI_CR1_CPHA |
 		SPI_CR1_8BIT_MODE,
 	.cr2 = SPI_CR2_8BIT_MODE
+#endif
 };
 
 OutputPin accelerometerChipSelect;
