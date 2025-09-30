@@ -46,7 +46,7 @@ void UartTsChannel::start(uint32_t baud) {
 		.rxchar_cb		= NULL,
 		.rxerr_cb		= NULL,
 		.timeout_cb		= NULL,
-#if defined(STM32F7XX)
+#if defined(STM32F7XX) || defined(STM32H7XX)
 		.timeout        = 0,
 #endif
 		.speed 			= baud,
