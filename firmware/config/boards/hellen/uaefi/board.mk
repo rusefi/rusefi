@@ -17,6 +17,9 @@ ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	CHIBIOS_MCU_TYPE = STM32H723xx
 	# Default H743 linker script is not compatible
 	LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/STM32H723xG_ITCM64k.ld
+	# We are developing on WeAct devkit with 25 MHz ocsilator
+	# TODO: fix!
+	DDEFS += -DSTM32_HSECLK=25000000
 else
 	#Knock is available on F4 and F7 only
 	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
