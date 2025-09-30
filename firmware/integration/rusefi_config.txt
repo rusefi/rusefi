@@ -280,6 +280,9 @@ struct_no_prefix engine_configuration_s
 #define TABLE_3_RPM_SIZE 8
 #define TABLE_3_LOAD_SIZE 8
 
+#define TABLE_4_RPM_SIZE 10
+#define TABLE_4_LOAD_SIZE 8
+
 #define SCRIPT_CURVE_8 8
 #define SCRIPT_CURVE_16 16
 
@@ -2094,15 +2097,13 @@ float[TABLE_2_LOAD_SIZE x TABLE_2_RPM_SIZE] scriptTable2;;"value", 1, 0, -100000
 int16_t[TABLE_2_LOAD_SIZE] scriptTable2LoadBins;;"L", 1, 0, -32000, 32000, 0
 int16_t[TABLE_2_RPM_SIZE] scriptTable2RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
-uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable3;;"value", 1, 0, 0, 255, 0
-int16_t[SCRIPT_TABLE_8] scriptTable3LoadBins;;"L", 1, 0, -32000, 32000, 0
-int16_t[SCRIPT_TABLE_8] scriptTable3RpmBins;;"RPM", 1, 0, -32000, 32000, 0
+uint8_t[TABLE_3_LOAD_SIZE x TABLE_3_RPM_SIZE] scriptTable3;;"value", 1, 0, 0, 255, 0
+int16_t[TABLE_3_LOAD_SIZE] scriptTable3LoadBins;;"L", 1, 0, -32000, 32000, 0
+int16_t[TABLE_3_RPM_SIZE] scriptTable3RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
-#define TABLE_4_RPM 10
-
-uint8_t[SCRIPT_TABLE_8 x TABLE_4_RPM] scriptTable4;;"value", 1, 0, 0, 255, 0
-int16_t[SCRIPT_TABLE_8] scriptTable4LoadBins;;"L", 1, 0, -32000, 32000, 0
-int16_t[TABLE_4_RPM] scriptTable4RpmBins;;"RPM", 1, 0, -32000, 32000, 0
+uint8_t[TABLE_4_LOAD_SIZE x TABLE_4_RPM_SIZE] scriptTable4;;"value", 1, 0, 0, 255, 0
+int16_t[TABLE_4_LOAD_SIZE] scriptTable4LoadBins;;"L", 1, 0, -32000, 32000, 0
+int16_t[TABLE_4_RPM_SIZE] scriptTable4RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
 #define IGN_TRIM_SIZE 4
 #define FUEL_TRIM_SIZE 4
