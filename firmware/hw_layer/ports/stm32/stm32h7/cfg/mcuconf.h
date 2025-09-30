@@ -227,11 +227,30 @@
 #define STM32_ICU_USE_TIM1                  FALSE
 #endif
 
-#define STM32_ICU_USE_TIM2                  FALSE
+#ifndef STM32_ICU_USE_TIM2
+#define STM32_ICU_USE_TIM2                  TRUE
+#endif
+
+#ifndef STM32_ICU_USE_TIM3
 #define STM32_ICU_USE_TIM3                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM4
 #define STM32_ICU_USE_TIM4                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM5
 #define STM32_ICU_USE_TIM5                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM8
 #define STM32_ICU_USE_TIM8                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM9
+#define STM32_ICU_USE_TIM9                  FALSE
+#endif
+
 #define STM32_ICU_USE_TIM12                 FALSE
 #define STM32_ICU_USE_TIM13                 FALSE
 #define STM32_ICU_USE_TIM14                 FALSE
