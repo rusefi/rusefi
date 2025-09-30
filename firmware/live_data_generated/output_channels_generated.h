@@ -172,17 +172,17 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> speedToRpmRatio = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_VVS@@
-	 * units: kph
-	 * offset 10
-	 */
-	uint8_t unusedVehicleSpeedKph = (uint8_t)0;
-	/**
 	 * @@GAUGE_NAME_CPU_TEMP@@
 	 * units: deg C
-	 * offset 11
+	 * offset 10
 	 */
 	int8_t internalMcuTemperature = (int8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 11
+	 */
+	uint8_t alignmentFill_at_11[1] = {};
 	/**
 	 * units: V
 	 * offset 12
