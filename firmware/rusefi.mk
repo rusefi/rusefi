@@ -55,21 +55,24 @@ endif
 # CPU-dependent defs
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
   CPU_STARTUP = startup_stm32f7xx.mk
-  # next file is included through Contrib's platform.ml
+  # next file is included through Contrib's platform.mk
   #CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32F7xx/platform.mk
   CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32F7xx/platform.mk
   CPU_HWLAYER = ports/stm32/stm32f7
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   CPU_STARTUP = startup_stm32f4xx.mk
-  # next file is included through Contrib's platform.ml
+  # next file is included through Contrib's platform.mk
   #CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32F4xx/platform.mk
   CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32F4xx/platform.mk
   CPU_HWLAYER = ports/stm32/stm32f4
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
   CPU_STARTUP = startup_stm32h7xx.mk
-  # next file is included through Contrib's platform.ml
-  CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32H7xx/platform_type2.mk
-  #CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32H7xx/platform.mk
+  # TODO: why different platform.mk for different H7?
+  ifeq ($(CHIBIOS_MCU_TYPE),STM32H723xx)
+    CPU_PLATFORM = $(CHIBIOS)/os/hal/ports/STM32/STM32H7xx/platform_type2.mk
+  else
+    CPU_PLATFORM = ${CHIBIOS_CONTRIB}/os/hal/ports/STM32/STM32H7xx/platform.mk
+  endif
   CPU_HWLAYER = ports/stm32/stm32h7
 else ifeq ($(PROJECT_CPU),ARCH_AT32F4)
   CPU_STARTUP = startup_at32f4xx.mk
