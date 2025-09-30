@@ -79,7 +79,9 @@ public class VariableRegistryValues {
 	public static final int air_pressure_sensor_type_e_MT_MPXH6400 = 14;
 	public static final int air_pressure_sensor_type_e_MT_SUBY_DENSO = 5;
 	public static final int air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 = 8;
+	public static final int ALS_RPM_SIZE = 4;
 	public static final int ALS_SIZE = 4;
+	public static final int ALTERNATOR_VOLTAGE_RPM_SIZE = 4;
 	public static final int ALTERNATOR_VOLTAGE_TARGET_SIZE = 4;
 	public static final int antiLagActivationMode_e_ALWAYS_ON_ANTILAG = 1;
 	public static final int antiLagActivationMode_e_LUA_ANTILAG = 2;
@@ -1211,6 +1213,7 @@ public class VariableRegistryValues {
 	public static final int idle_state_e_RPM_DEAD_ZONE = 2;
 	public static final int idle_state_e_TPS_THRESHOLD = 1;
 	public static final int IDLE_VE_SIZE = 4;
+	public static final int IDLE_VE_SIZE_RPM = 4;
 	public static final int IGN_BLEND_COUNT = 4;
 	public static final int ign_cyl_trim_s_size = 16;
 	public static final int IGN_LOAD_COUNT = 16;
@@ -1238,6 +1241,7 @@ public class VariableRegistryValues {
 	public static final int INJ_PHASE_LOAD_COUNT = 16;
 	public static final int INJ_PHASE_RPM_COUNT = 16;
 	public static final int INJ_STAGING_COUNT = 6;
+	public static final int INJ_STAGING_RPM_SIZE = 6;
 	public static final int injection_mode_e_IM_BATCH = 2;
 	public static final int injection_mode_e_IM_SEQUENTIAL = 1;
 	public static final int injection_mode_e_IM_SIMULTANEOUS = 0;
@@ -1259,6 +1263,7 @@ public class VariableRegistryValues {
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
 	public static final String KNOCK_RPM_TABLE_NAME = "Engine Knock Threshold RPM Based";
 	public static final int KNOCK_TABLE_SIZE = 6;
+	public static final int LAM_RPM_SIZE = 4;
 	public static final int LAM_SIZE = 4;
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
 	public static final int launchActivationMode_e_CLUTCH_INPUT_LAUNCH = 1;
@@ -1421,6 +1426,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 12369955;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1495,6 +1501,7 @@ public class VariableRegistryValues {
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int TRACTION_CONTROL_ETB_DROP_SLIP_SIZE = 6;
 	public static final int TRACTION_CONTROL_ETB_DROP_SPEED_SIZE = 6;
+	public static final int TRAILING_SPARK_RPM_SIZE = 4;
 	public static final int TRAILING_SPARK_SIZE = 4;
 	public static final int TransmissionControllerMode_Generic4 = 2;
 	public static final int TransmissionControllerMode_Gm4l6x = 3;
@@ -1725,7 +1732,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.09.30.stm32h743_nucleo.2783242342";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.09.30.stm32h743_nucleo.12369955";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2060;

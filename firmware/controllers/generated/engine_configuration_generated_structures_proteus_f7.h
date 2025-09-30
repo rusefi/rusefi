@@ -4982,7 +4982,7 @@ struct engine_configuration_s {
 	 * units: %
 	 * offset 3492
 	 */
-	int8_t tractionControlEtbDrop[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE][TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] = {};
+	int8_t tractionControlEtbDrop[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE][TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] = {};
 	/**
 	 * This sets an immediate limit on injector duty cycle. If this threshold is reached, the system will immediately cut the injectors.
 	 * units: %
@@ -5015,12 +5015,12 @@ struct engine_configuration_s {
 	 * units: Deg
 	 * offset 3556
 	 */
-	int8_t tractionControlTimingDrop[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE][TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] = {};
+	int8_t tractionControlTimingDrop[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE][TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 3592
 	 */
-	int8_t tractionControlIgnitionSkip[TRACTION_CONTROL_ETB_DROP_SLIP_SIZE][TRACTION_CONTROL_ETB_DROP_SPEED_SIZE] = {};
+	int8_t tractionControlIgnitionSkip[TRACTION_CONTROL_ETB_DROP_SPEED_SIZE][TRACTION_CONTROL_ETB_DROP_SLIP_SIZE] = {};
 	/**
 	 * offset 3628
 	 */
@@ -5990,7 +5990,7 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 5680
 	 */
-	scaled_channel<uint8_t, 1, 10> idleVeRpmBins[IDLE_VE_SIZE] = {};
+	scaled_channel<uint8_t, 1, 10> idleVeRpmBins[IDLE_VE_SIZE_RPM] = {};
 	/**
 	 * units: load
 	 * offset 5684
@@ -6000,7 +6000,7 @@ struct persistent_config_s {
 	 * units: %
 	 * offset 5688
 	 */
-	scaled_channel<uint16_t, 10, 1> idleVeTable[IDLE_VE_SIZE][IDLE_VE_SIZE] = {};
+	scaled_channel<uint16_t, 10, 1> idleVeTable[IDLE_VE_SIZE][IDLE_VE_SIZE_RPM] = {};
 	/**
 	 * offset 5720
 	 */
@@ -6452,7 +6452,7 @@ struct persistent_config_s {
 	 * units: deg
 	 * offset 59444
 	 */
-	scaled_channel<int16_t, 10, 1> ALSTimingRetardTable[ALS_SIZE][ALS_SIZE] = {};
+	scaled_channel<int16_t, 10, 1> ALSTimingRetardTable[ALS_SIZE][ALS_RPM_SIZE] = {};
 	/**
 	 * units: TPS
 	 * offset 59476
@@ -6462,12 +6462,12 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 59484
 	 */
-	uint16_t alsIgnRetardrpmBins[ALS_SIZE] = {};
+	uint16_t alsIgnRetardrpmBins[ALS_RPM_SIZE] = {};
 	/**
 	 * units: percent
 	 * offset 59492
 	 */
-	scaled_channel<int16_t, 10, 1> ALSFuelAdjustment[ALS_SIZE][ALS_SIZE] = {};
+	scaled_channel<int16_t, 10, 1> ALSFuelAdjustment[ALS_SIZE][ALS_RPM_SIZE] = {};
 	/**
 	 * units: TPS
 	 * offset 59524
@@ -6477,12 +6477,12 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 59532
 	 */
-	uint16_t alsFuelAdjustmentrpmBins[ALS_SIZE] = {};
+	uint16_t alsFuelAdjustmentrpmBins[ALS_RPM_SIZE] = {};
 	/**
 	 * units: ratio
 	 * offset 59540
 	 */
-	scaled_channel<int16_t, 1, 10> ALSIgnSkipTable[ALS_SIZE][ALS_SIZE] = {};
+	scaled_channel<int16_t, 1, 10> ALSIgnSkipTable[ALS_SIZE][ALS_RPM_SIZE] = {};
 	/**
 	 * units: TPS
 	 * offset 59572
@@ -6492,7 +6492,7 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 59580
 	 */
-	uint16_t alsIgnSkiprpmBins[ALS_SIZE] = {};
+	uint16_t alsIgnSkiprpmBins[ALS_RPM_SIZE] = {};
 	/**
 	 * offset 59588
 	 */
@@ -6579,7 +6579,7 @@ struct persistent_config_s {
 	 * units: lambda
 	 * offset 62156
 	 */
-	scaled_channel<uint8_t, 100, 1> lambdaMaxDeviationTable[LAM_SIZE][LAM_SIZE] = {};
+	scaled_channel<uint8_t, 100, 1> lambdaMaxDeviationTable[LAM_SIZE][LAM_RPM_SIZE] = {};
 	/**
 	 * offset 62172
 	 */
@@ -6588,12 +6588,12 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 62180
 	 */
-	uint16_t lambdaMaxDeviationRpmBins[LAM_SIZE] = {};
+	uint16_t lambdaMaxDeviationRpmBins[LAM_RPM_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 62188
 	 */
-	uint8_t injectorStagingTable[INJ_STAGING_COUNT][INJ_STAGING_COUNT] = {};
+	uint8_t injectorStagingTable[INJ_STAGING_COUNT][INJ_STAGING_RPM_SIZE] = {};
 	/**
 	 * offset 62224
 	 */
@@ -6602,7 +6602,7 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 62236
 	 */
-	uint16_t injectorStagingRpmBins[INJ_STAGING_COUNT] = {};
+	uint16_t injectorStagingRpmBins[INJ_STAGING_RPM_SIZE] = {};
 	/**
 	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 62248
@@ -6814,7 +6814,7 @@ struct persistent_config_s {
 	 * units: volts
 	 * offset 63076
 	 */
-	scaled_channel<int16_t, 10, 1> alternatorVoltageTargetTable[ALTERNATOR_VOLTAGE_TARGET_SIZE][ALTERNATOR_VOLTAGE_TARGET_SIZE] = {};
+	scaled_channel<int16_t, 10, 1> alternatorVoltageTargetTable[ALTERNATOR_VOLTAGE_TARGET_SIZE][ALTERNATOR_VOLTAGE_RPM_SIZE] = {};
 	/**
 	 * units: Load
 	 * offset 63108
@@ -6824,7 +6824,7 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 63116
 	 */
-	uint16_t alternatorVoltageTargetRpmBins[ALTERNATOR_VOLTAGE_TARGET_SIZE] = {};
+	uint16_t alternatorVoltageTargetRpmBins[ALTERNATOR_VOLTAGE_RPM_SIZE] = {};
 	/**
 	 * units: C
 	 * offset 63124
@@ -6971,12 +6971,12 @@ struct persistent_config_s {
 	 * units: deg
 	 * offset 63712
 	 */
-	scaled_channel<int8_t, 10, 1> trailingSparkTable[TRAILING_SPARK_SIZE][TRAILING_SPARK_SIZE] = {};
+	scaled_channel<int8_t, 10, 1> trailingSparkTable[TRAILING_SPARK_SIZE][TRAILING_SPARK_RPM_SIZE] = {};
 	/**
 	 * units: rpm
 	 * offset 63728
 	 */
-	scaled_channel<uint8_t, 1, 50> trailingSparkRpmBins[TRAILING_SPARK_SIZE] = {};
+	scaled_channel<uint8_t, 1, 50> trailingSparkRpmBins[TRAILING_SPARK_RPM_SIZE] = {};
 	/**
 	 * units: Load
 	 * offset 63732
