@@ -14,6 +14,9 @@ tpsSensor : setTimeout(timeout)
 cltSensor = Sensor.new("clt")
 cltSensor : setTimeout(timeout)
 
+FuelLevel = Sensor.new("FuelLevel")
+FuelLevel : setTimeout(timeout)
+
 iatSensor = Sensor.new("iat")
 iatSensor : setTimeout(timeout)
 
@@ -41,6 +44,7 @@ function onTickDashSweep()
   iatSensor : set( 100 -   dashSweepCounter)
   mapSensor : set( dashSweepCounter / 2)
   oilP      : set( dashSweepCounter / 3)
+  FuelLevel : set( dashSweepCounter)
   --print()
 
   gearSensor: set( dashSweepCounter / 20)
