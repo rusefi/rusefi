@@ -5,7 +5,7 @@ timeout = 3000
 rpmSensor = Sensor.new("rpm")
 rpmSensor : setTimeout(timeout)
 
-ppsSensor = Sensor.new("AcceleratorPedal")
+ppsSensor = Sensor.new("AcceleratorPedalUnfiltered")
 ppsSensor : setTimeout(timeout)
 
 tpsSensor = Sensor.new("tps1")
