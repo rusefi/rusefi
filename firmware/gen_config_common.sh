@@ -19,6 +19,7 @@ set_board_file BOARD_CONFIG_FILE "${BOARD_DIR}/board_config.txt"
 set_board_file BOARD_OPTIONS_FILE "${BOARD_DIR}/board_options.ini"
 set_board_file BOARD_MENU_FILE "${BOARD_DIR}/board_menu.ini"
 set_board_file BOARD_VE_MENU_FILE "${BOARD_DIR}/board_ve_menu.ini"
+set_board_file BOARD_IGNITION_ADVANCE_MENU_FILE "${BOARD_DIR}/board_ignition_advance_menu.ini"
 set_board_file BOARD_TABLES_FILE "${BOARD_DIR}/board_tables.ini"
 set_board_file BOARD_CURVES_FILE "${BOARD_DIR}/board_curves.ini"
 set_board_file BOARD_PANELS_FILE "${BOARD_DIR}/board_panels.ini"
@@ -29,9 +30,19 @@ set_board_file BOARD_CONSTANTS_EXTENSIONS_FILE "${BOARD_DIR}/board_constants_ext
 set_board_file BOARD_COMMANDS_FILE "${BOARD_DIR}/board_commands.ini"
 set_board_file BOARD_POPULAR_VEHICLES_FILE "${BOARD_DIR}/board_popular_vehicles.ini"
 set_board_file BOARD_ENGINE_METADATA_FILE "${BOARD_DIR}/board_engine_metadata.ini"
+set_board_file BOARD_VIN_FIELD_FILE "${BOARD_DIR}/board_vin_field.ini"
+set_board_file BOARD_INJECTOR_SETTINGS_FILE "${BOARD_DIR}/board_injector_settings.ini"
+set_board_file BOARD_PRIMING_PULSE_PANEL_FILE "${BOARD_DIR}/board_priming_pulse_panel.ini"
+set_board_file BOARD_CAM_SETTINGS_FILE "${BOARD_DIR}/board_cam_settings.ini"
 set_board_file BOARD_DIAG_PANEL1_FILE "${BOARD_DIR}/board_diag_panel1.ini"
 set_board_file BOARD_DIAG_PANEL2_FILE "${BOARD_DIR}/board_diag_panel2.ini"
 set_board_file BOARD_VE_FILE "${BOARD_DIR}/board_ve.ini"
+set_board_file BOARD_INJECTION_SETTINGS_FILE "${BOARD_DIR}/board_injection_settings.ini"
+set_board_file BOARD_IGNITION_SETTINGS_FILE "${BOARD_DIR}/board_ignition_settings.ini"
+
+
+# most static arguments go first
+# reading into VariableRegistry and overrides go next
 
 COMMON_GEN_CONFIG="
  -prepend integration/ts_protocol.txt \
@@ -45,7 +56,11 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_OPTIONS_FROM_FILE ${BOARD_OPTIONS_FILE} \
  -readfile BOARD_MENU_FROM_FILE ${BOARD_MENU_FILE} \
  -readfile BOARD_VE_MENU_FROM_FILE ${BOARD_VE_MENU_FILE} \
+ -readfile BOARD_IGNITION_ADVANCE_MENU_FROM_FILE ${BOARD_IGNITION_ADVANCE_MENU_FILE} \
  -readfile BOARD_TABLES_FROM_FILE ${BOARD_TABLES_FILE} \
+ -readfile BOARD_VIN_FIELD_FROM_FILE ${BOARD_VIN_FIELD_FILE} \
+ -readfile BOARD_INJECTOR_SETTINGS_FROM_FILE ${BOARD_INJECTOR_SETTINGS_FILE} \
+ -readfile BOARD_PRIMING_PULSE_PANEL_FROM_FILE ${BOARD_PRIMING_PULSE_PANEL_FILE} \
  -readfile BOARD_CURVES_FROM_FILE ${BOARD_CURVES_FILE} \
  -readfile BOARD_CONSTANTS_EXTENSIONS_FROM_FILE ${BOARD_CONSTANTS_EXTENSIONS_FILE} \
  -readfile BOARD_DIAG_PANEL1_FROM_FILE ${BOARD_DIAG_PANEL1_FILE} \
@@ -55,6 +70,8 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_INDICATORS_FROM_FILE ${BOARD_INDICATORS_FILE} \
  -readfile BOARD_GAUGES_FROM_FILE ${BOARD_GAUGES_FILE} \
  -readfile BOARD_VE_FROM_FILE ${BOARD_VE_FILE} \
+ -readfile BOARD_INJECTION_SETTINGS_FROM_FILE ${BOARD_INJECTION_SETTINGS_FILE} \
+ -readfile BOARD_IGNITION_SETTINGS_FROM_FILE ${BOARD_IGNITION_SETTINGS_FILE} \
  -readfile COMMANDS_FROM_FILE ${BOARD_COMMANDS_FILE} \
  -readfile BOARD_POPULAR_VEHICLES_FILE ${BOARD_POPULAR_VEHICLES_FILE} \
  -readfile BOARD_ENGINE_METADATA_FILE ${BOARD_ENGINE_METADATA_FILE} \
