@@ -1613,6 +1613,7 @@ uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
 
 	vin_number_t vinNumber;Individual characters are accessible using vin(index) Lua function
+$VIN
 	int8_t torqueReductionActivationTemperature;;"SPECIAL_CASE_TEMPERATURE", 1, 0, 0, 90, 0
 
 #define fuel_pressure_sensor_mode_e_enum "Absolute", "Gauge", "Differential", "INVALID"
@@ -1633,7 +1634,10 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 250, 0
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
 	float ALSSkipRatio;;"", 1, 0, 0, 1, 1
-	uint8_t autoscale acPressureEnableHyst;Hysterisis: if Pressure High Disable is 240kpa, and acPressureEnableHyst is 20, when the ECU sees 240kpa, A/C will be disabled, and stay disabled until 240-20=220kpa is reached;"SPECIAL_CASE_PRESSURE", 0.5, 0, 0, 125, 1
+	uint8_t autoscale acPressureEnableHyst;;"SPECIAL_CASE_PRESSURE", 0.5, 0, 0, 125, 1
+$A/C Pressure Enable Hysteresis
+  $$Hysterisis: if Pressure High Disable is 240kpa, and acPressureEnableHyst is 20, when the ECU sees 240kpa, A/C will be disabled, and stay disabled until 240-20=220kpa is reached
+
 	pin_input_mode_e ALSActivatePinMode;
 
 	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%;"%", 0.5, 0, 0, 100, 1
@@ -1648,7 +1652,9 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	uint8_t autoscale rpmSoftLimitWindowSize;Window that the correction will be added throughout (example, if rpm limit is 7000, and rpmSoftLimitWindowSize is 200, the corrections activate at 6800RPM, creating a 200rpm window);"RPM", 10, 0, 0, 2500, 0
 	uint8_t autoscale rpmSoftLimitTimingRetard;Degrees of timing REMOVED from actual timing during soft RPM limit window;"deg", 0.2, 0, 0, 50, 1
 	uint8_t autoscale rpmSoftLimitFuelAdded;% of fuel ADDED during window;"%", 0.2, 0, 0, 50, 1
-	uint8_t autoscale rpmHardLimitHyst;Sets a buffer below the RPM hard limit, helping avoid rapid cycling of cut actions by defining a range within which RPM must drop before cut actions are re-enabled.\nHysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached;"RPM", 10, 0, 0, 2500, 0
+	uint8_t autoscale rpmHardLimitHyst;;"RPM", 10, 0, 0, 2500, 0
+$$Sets a buffer below the RPM hard limit, helping avoid rapid cycling of cut actions by defining a range within which RPM must drop before cut actions are re-enabled.
+$$Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
 	uint16_t autoscale benchTestOffTime;Time between bench test pulses;"ms", 0.1, 0, 5, 2000, 1
 	uint8_t autoscale boostCutPressureHyst;Defines a pressure range below the cut limit at which boost can resume, providing smoother control over boost cut actions.\nFor example: if hard cut is 240kpa, and boost cut hysteresis is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached;"SPECIAL_CASE_PRESSURE", 0.5, 0, 0, 125, 1
 	int8_t[TCU_GEAR_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle modified by gear;"%", 0.5, 0, -63, 63, 1
