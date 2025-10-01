@@ -1,5 +1,6 @@
 package com.rusefi.maintenance.migration;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.CompatibilitySet;
 import com.rusefi.config.FieldType;
 import org.jetbrains.annotations.Nullable;
@@ -9,9 +10,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.rusefi.config.FieldType.*;
+import static com.devexperts.logging.Logging.getLogging;
 
 public class IniFieldMigrationUtils {
+    private static final Logging log = getLogging(IniFieldMigrationUtils.class);
+
     public static boolean checkIfTypeCanBeMigrated(final FieldType prevType, final FieldType newType) {
         if (Objects.equals(prevType, newType)) {
             return true;
@@ -75,10 +78,18 @@ public class IniFieldMigrationUtils {
         return false;
     }
 
-    public static boolean checkIfDigitsCanBeMigrated(final String prevDigits, final String newDigits) {
+    public static boolean checkIfDigitsCanBeMigrated(final String prevDigits, final String newDigits, String name) {
         if (Objects.equals(prevDigits, newDigits)) {
             return true;
         } else {
+            if (prevDigits == null) {
+                log.warn(name + " no prevDigits");
+                return false;
+            }
+            if (newDigits == null) {
+                log.warn(name + " no newDigits");
+                return false;
+            }
             final int prevDecimalCount = Integer.parseInt(prevDigits);
             final int newDecimalCount = Integer.parseInt(newDigits);
             return prevDecimalCount <= newDecimalCount;

@@ -93,7 +93,7 @@ public enum DefaultIniFieldMigrator {
                 prevField,
                 newField
             ));
-        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits())) {
+        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits(), prevField.getName())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because digits are updated: `%s` -> `%s`",
                 prevField.getName(),
@@ -133,7 +133,7 @@ public enum DefaultIniFieldMigrator {
                 prevField.getRows(),
                 newField.getRows()
             ));
-        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits())) {
+        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits(), prevField.getName())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because digits are updated: `%s` -> `%s`",
                 prevField.getName(),

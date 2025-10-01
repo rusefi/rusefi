@@ -76,7 +76,7 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                                             prevValue.getUnits(),
                                             newValue.getUnits()
                                         ));
-                                    } else if (!checkIfDigitsCanBeMigrated(prevValue.getDigits(), newValue.getDigits())) {
+                                    } else if (!checkIfDigitsCanBeMigrated(prevValue.getDigits(), newValue.getDigits(), prevFieldName)) {
                                         callbacks.logLine(String.format(
                                             "WARNING! Field `%s` cannot be updated because its digits are updated: `%s` -> `%s`",
                                             prevFieldName,
