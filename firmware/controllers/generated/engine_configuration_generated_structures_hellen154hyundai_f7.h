@@ -6152,7 +6152,7 @@ struct persistent_config_s {
 	 * units: value
 	 * offset 23036
 	 */
-	int8_t vvtTable1[VVT_TABLE_SIZE][VVT_TABLE_SIZE] = {};
+	int8_t vvtTable1[VVT_TABLE_SIZE][VVT_TABLE_RPM_SIZE] = {};
 	/**
 	 * units: L
 	 * offset 23100
@@ -6162,12 +6162,12 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 23116
 	 */
-	uint16_t vvtTable1RpmBins[VVT_TABLE_SIZE] = {};
+	uint16_t vvtTable1RpmBins[VVT_TABLE_RPM_SIZE] = {};
 	/**
 	 * units: value
 	 * offset 23132
 	 */
-	int8_t vvtTable2[VVT_TABLE_SIZE][VVT_TABLE_SIZE] = {};
+	int8_t vvtTable2[VVT_TABLE_SIZE][VVT_TABLE_RPM_SIZE] = {};
 	/**
 	 * units: L
 	 * offset 23196
@@ -6177,7 +6177,7 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 23212
 	 */
-	uint16_t vvtTable2RpmBins[VVT_TABLE_SIZE] = {};
+	uint16_t vvtTable2RpmBins[VVT_TABLE_RPM_SIZE] = {};
 	/**
 	 * units: deg
 	 * offset 23228
@@ -6271,32 +6271,32 @@ struct persistent_config_s {
 	 * units: value
 	 * offset 25596
 	 */
-	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8] = {};
+	uint8_t scriptTable3[TABLE_3_LOAD_SIZE][TABLE_3_RPM_SIZE] = {};
 	/**
 	 * units: L
 	 * offset 25660
 	 */
-	int16_t scriptTable3LoadBins[SCRIPT_TABLE_8] = {};
+	int16_t scriptTable3LoadBins[TABLE_3_LOAD_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 25676
 	 */
-	int16_t scriptTable3RpmBins[SCRIPT_TABLE_8] = {};
+	int16_t scriptTable3RpmBins[TABLE_3_RPM_SIZE] = {};
 	/**
 	 * units: value
 	 * offset 25692
 	 */
-	uint8_t scriptTable4[SCRIPT_TABLE_8][TABLE_4_RPM] = {};
+	uint8_t scriptTable4[TABLE_4_LOAD_SIZE][TABLE_4_RPM_SIZE] = {};
 	/**
 	 * units: L
 	 * offset 25772
 	 */
-	int16_t scriptTable4LoadBins[SCRIPT_TABLE_8] = {};
+	int16_t scriptTable4LoadBins[TABLE_4_LOAD_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 25788
 	 */
-	int16_t scriptTable4RpmBins[TABLE_4_RPM] = {};
+	int16_t scriptTable4RpmBins[TABLE_4_RPM_SIZE] = {};
 	/**
 	 * offset 25808
 	 */
@@ -6422,7 +6422,7 @@ struct persistent_config_s {
 	 * units: %
 	 * offset 26384
 	 */
-	scaled_channel<int8_t, 10, 1> throttle2TrimTable[ETB2_TRIM_SIZE][ETB2_TRIM_SIZE] = {};
+	scaled_channel<int8_t, 10, 1> throttle2TrimTable[ETB2_TRIM_SIZE][ETB2_TRIM_RPM_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 26420
@@ -6432,12 +6432,12 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 26426
 	 */
-	scaled_channel<uint8_t, 1, 100> throttle2TrimRpmBins[ETB2_TRIM_SIZE] = {};
+	scaled_channel<uint8_t, 1, 100> throttle2TrimRpmBins[ETB2_TRIM_RPM_SIZE] = {};
 	/**
 	 * units: deg
 	 * offset 26432
 	 */
-	scaled_channel<uint8_t, 4, 1> maxKnockRetardTable[KNOCK_TABLE_SIZE][KNOCK_TABLE_SIZE] = {};
+	scaled_channel<uint8_t, 4, 1> maxKnockRetardTable[KNOCK_TABLE_SIZE][KNOCK_TABLE_RPM_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 26468
@@ -6447,7 +6447,7 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 26474
 	 */
-	scaled_channel<uint8_t, 1, 100> maxKnockRetardRpmBins[KNOCK_TABLE_SIZE] = {};
+	scaled_channel<uint8_t, 1, 100> maxKnockRetardRpmBins[KNOCK_TABLE_RPM_SIZE] = {};
 	/**
 	 * units: deg
 	 * offset 26480
@@ -6668,7 +6668,7 @@ struct persistent_config_s {
 	 * units: %
 	 * offset 29626
 	 */
-	int8_t hpfpCompensation[HPFP_COMPENSATION_SIZE][HPFP_COMPENSATION_SIZE] = {};
+	int8_t hpfpCompensation[HPFP_COMPENSATION_SIZE][HPFP_COMPENSATION_RPM_SIZE] = {};
 	/**
 	 * units: cc/lobe
 	 * offset 29726
@@ -6678,7 +6678,7 @@ struct persistent_config_s {
 	 * units: RPM
 	 * offset 29746
 	 */
-	scaled_channel<uint8_t, 1, 50> hpfpCompensationRpmBins[HPFP_COMPENSATION_SIZE] = {};
+	scaled_channel<uint8_t, 1, 50> hpfpCompensationRpmBins[HPFP_COMPENSATION_RPM_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 29756

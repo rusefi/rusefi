@@ -558,6 +558,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_WASTEGATE_PROTEUS_TEST = 96;
 	public static final String ENGINE_TYPES_DIALOG_NAME = "Base Tunes";
+	public static final int ETB2_TRIM_RPM_SIZE = 6;
 	public static final int ETB2_TRIM_SIZE = 6;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
@@ -1191,6 +1192,7 @@ public class VariableRegistryValues {
 	public static final int hpfp_cam_e_HPFP_CAM_IN1 = 1;
 	public static final int hpfp_cam_e_HPFP_CAM_IN2 = 3;
 	public static final int hpfp_cam_e_HPFP_CAM_NONE = 0;
+	public static final int HPFP_COMPENSATION_RPM_SIZE = 10;
 	public static final int HPFP_COMPENSATION_SIZE = 10;
 	public static final int HPFP_DEADTIME_SIZE = 8;
 	public static final int HPFP_FUEL_MASS_COMPENSATION_SIZE = 8;
@@ -1262,6 +1264,7 @@ public class VariableRegistryValues {
 	public static final int InjectorNonlinearMode_INJ_None = 0;
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
 	public static final String KNOCK_RPM_TABLE_NAME = "Engine Knock Threshold RPM Based";
+	public static final int KNOCK_TABLE_RPM_SIZE = 6;
 	public static final int KNOCK_TABLE_SIZE = 6;
 	public static final int LAM_RPM_SIZE = 4;
 	public static final int LAM_SIZE = 4;
@@ -1426,6 +1429,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 110720308;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1460,7 +1464,8 @@ public class VariableRegistryValues {
 	public static final int TABLE_2_RPM_SIZE = 8;
 	public static final int TABLE_3_LOAD_SIZE = 8;
 	public static final int TABLE_3_RPM_SIZE = 8;
-	public static final int TABLE_4_RPM = 10;
+	public static final int TABLE_4_LOAD_SIZE = 8;
+	public static final int TABLE_4_RPM_SIZE = 10;
 	public static final int TARGET_AFR_BLEND_COUNT = 2;
 	public static final int tChargeMode_e_TCHARGE_MODE_AIR_INTERP = 1;
 	public static final int tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE = 2;
@@ -1731,7 +1736,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.09.30.stm32h743_nucleo.2285057771";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.10.01.stm32h743_nucleo.110720308";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2060;
@@ -1827,6 +1832,7 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_UNUSED_17 = 17;
 	public static final String VVT_OFFSET_1_1_NAME = "VVT offset bank 1 intake";
 	public static final String VVT_OUTPUTS_NAME = "VVT outputs and PID";
+	public static final int VVT_TABLE_RPM_SIZE = 8;
 	public static final int VVT_TABLE_SIZE = 8;
 	public static final int VVT_TRACKING_LENGTH = 4;
 	public static final int WARNING_BUFFER_SIZE = 120;
