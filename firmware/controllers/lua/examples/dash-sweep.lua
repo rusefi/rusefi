@@ -8,7 +8,7 @@
 -- endinclude
 
 function onDashAlive(bus, id, dlc, data)
-	print('With dash')
+	print('CAN RX: dash says it is connected!')
 end
 
 canRxAdd(0x77000F, onDashAlive)

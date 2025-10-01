@@ -31,7 +31,8 @@ oilP : setTimeout(timeout)
 
 function onTickDashSweep()
 
-  dashSweepCounter = 20
+-- uncomment line below if want static state
+-- dashSweepCounter = 20
 
   speedSensor : set(    3 * dashSweepCounter)
   ppsSensor : set( 10 +   dashSweepCounter)
