@@ -611,6 +611,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->module<BoostController>()->luaTargetMult, "Boost: Lua target mult", "", 1, "Boost Control"},
 	{engine->module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
 	{engine->module<BoostController>()->openLoopPart, "Boost: Open loop", "percent", 1, "Boost Control"},
+	{engine->module<BoostController>()->openLoopYAxis, "openLoopYAxis", "", 1},
 	{engine->module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "percent", 1, "Boost Control"},
 	{engine->module<BoostController>()->boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
 	{engine->module<BoostController>()->boostOutput, "Boost: Output", "percent", 2, "Boost Control"},

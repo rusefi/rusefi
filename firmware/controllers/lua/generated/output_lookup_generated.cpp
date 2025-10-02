@@ -1262,6 +1262,9 @@ float getOutputValueByHash(const int hash) {
 // openLoopPart
 		case -1481117304:
 			return engine->module<BoostController>()->openLoopPart;
+// openLoopYAxis
+		case -1621551201:
+			return engine->module<BoostController>()->openLoopYAxis;
 // luaOpenLoopAdd
 		case 1944984220:
 			return engine->module<BoostController>()->luaOpenLoopAdd;
