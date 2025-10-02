@@ -73,6 +73,7 @@ struct_no_prefix engine_state_s
 	float ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@
 
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
+	int16_t autoscale veTableIdleYAxis;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t overDwellCounter
 	uint8_t overDwellNotScheduledCounter
 	uint8_t sparkOutOfOrderCounter
