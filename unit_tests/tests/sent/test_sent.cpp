@@ -166,6 +166,46 @@ TEST(sent, testVagMap) {
 	#endif
 }
 
+// Mercedes A 000 905 31 01 EGT sensor
+TEST(sent, testMbEgt) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/mb_A_000_905_31_01-ambient.csv");
+	ASSERT_TRUE(lineCount > 100);
+	bool isError = channel.GetMsg(nullptr) != 0;
+	ASSERT_FALSE(isError);
+	#if SENT_STATISTIC_COUNTERS
+		sent_channel_stat &statistic = channel.statistic;
+		/* TODO: bad captured data or real problem? */
+		ASSERT_TRUE(statistic.RestartCnt <= 1u);
+	#endif
+}
+
+TEST(sent, testMbEgtCold) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/mb_A_000_905_31_01-water-ice.csv");
+	ASSERT_TRUE(lineCount > 100);
+	bool isError = channel.GetMsg(nullptr) != 0;
+	ASSERT_FALSE(isError);
+	#if SENT_STATISTIC_COUNTERS
+		sent_channel_stat &statistic = channel.statistic;
+		/* TODO: bad captured data or real problem? */
+		ASSERT_TRUE(statistic.RestartCnt <= 1u);
+	#endif
+}
+
+TEST(sent, testMbEgtHot) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/mb_A_000_905_31_01-boiling-water.csv");
+	ASSERT_TRUE(lineCount > 100);
+	bool isError = channel.GetMsg(nullptr) != 0;
+	ASSERT_FALSE(isError);
+	#if SENT_STATISTIC_COUNTERS
+		sent_channel_stat &statistic = channel.statistic;
+		/* TODO: bad captured data or real problem? */
+		ASSERT_TRUE(statistic.RestartCnt <= 1u);
+	#endif
+}
+
 TEST(sent, testNoMessages) {
     static sent_channel channel;
    	bool isError = channel.GetMsg(nullptr) != 0;
