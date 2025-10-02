@@ -7,11 +7,15 @@
 #define TIMER_CLOCK				(CORE_CLOCK / 4)
 #define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / TIMER_CLOCK)
 
+#ifndef SENT_STATISTIC_COUNTERS
+#define SENT_STATISTIC_COUNTERS 0
+#endif
+
 static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 {
 	int msgCount = 0;
 	int lineCount = 0;
-	int printDebug = 0;
+	int printDebug = SENT_STATISTIC_COUNTERS;
 	CsvReader reader(1, 0);
 
 	reader.open(file);
