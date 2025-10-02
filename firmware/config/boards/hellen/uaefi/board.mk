@@ -16,9 +16,8 @@ DDEFS += -DFIRMWARE_ID=\"uaefi\" $(VAR_DEF_ENGINE_TYPE)
 ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# Default H743 linker script is not compatible
 	LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/STM32H723xG_ITCM64k.ld
-	# We are developing on WeAct devkit with 25 MHz ocsilator
-	# TODO: fix!
-	DDEFS += -DSTM32_HSECLK=25000000
+	# Do not use HSE autodetection
+	DDEFS += -DSTM32_HSECLK=20000000
 	DDEFS += -DENABLE_AUTO_DETECT_HSE=FALSE
 else
 	#Knock is available on F4 and F7 only
