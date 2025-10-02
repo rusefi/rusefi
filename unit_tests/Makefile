@@ -17,6 +17,9 @@ endif
 
 BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
+# Uncomment if you want a lot of debug from SENT decoder
+# DDEFS += -DSENT_STATISTIC_COUNTERS=1
+
 # Imported source files and paths
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
