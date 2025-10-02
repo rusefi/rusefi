@@ -138,6 +138,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
     efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_iatBoostCorrMap != nullptr, "boost IAT multiplier", unexpected);
 
 	percent_t openLoop = luaOpenLoopAdd + getBoostControlDutyCycleWithTemperatureCorrections(rpm, driverIntent.Value);
+	openLoopYAxis = driverIntent.Value;
 
 #if EFI_ENGINE_CONTROL
 	// Add any blends if configured
