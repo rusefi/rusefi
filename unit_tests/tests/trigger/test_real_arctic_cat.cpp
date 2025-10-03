@@ -18,6 +18,7 @@ TEST(arctic, realStartFromFile) {
 		reader.processLine(&eth);
 	}
 
-	ASSERT_EQ( 1u, eth.recentWarnings()->getCount())<< "warningCounter#arcticRealCranking";
+	// C9007 and C9008
+	ASSERT_EQ( 2u, eth.recentWarnings()->getCount())<< "warningCounter#arcticRealCranking";
 	ASSERT_EQ(2165, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
