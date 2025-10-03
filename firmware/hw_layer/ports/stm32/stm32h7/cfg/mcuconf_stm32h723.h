@@ -36,6 +36,8 @@
  */
 #define STM32_PLLSRC                        STM32_PLLSRC_HSE_CK
 #define STM32_PLLCFGR_MASK                  ~0
+
+/* PLL1 output clock is 520MHz */
 #define STM32_PLL1_ENABLED                  TRUE
 #define STM32_PLL1_P_ENABLED                TRUE
 #define STM32_PLL1_Q_ENABLED                TRUE
@@ -46,6 +48,8 @@
 #define STM32_PLL1_DIVP_VALUE               1
 #define STM32_PLL1_DIVQ_VALUE               10
 #define STM32_PLL1_DIVR_VALUE               4
+
+/* PLL2 output clock is 800 MHz */
 #define STM32_PLL2_ENABLED                  TRUE
 #define STM32_PLL2_P_ENABLED                TRUE
 #define STM32_PLL2_Q_ENABLED                TRUE
@@ -54,8 +58,10 @@
 #define STM32_PLL2_DIVN_VALUE               160
 #define STM32_PLL2_FRACN_VALUE              0
 #define STM32_PLL2_DIVP_VALUE               40
-#define STM32_PLL2_DIVQ_VALUE               8
+#define STM32_PLL2_DIVQ_VALUE               10
 #define STM32_PLL2_DIVR_VALUE               8
+
+/* PLL3 output clock is 480MHz */
 #define STM32_PLL3_ENABLED                  TRUE
 #define STM32_PLL3_P_ENABLED                TRUE
 #define STM32_PLL3_Q_ENABLED                TRUE
@@ -98,7 +104,7 @@
 #define STM32_OCTOSPISEL                    STM32_OCTOSPISEL_HCLK
 #define STM32_FMCSEL                        STM32_FMCSEL_HCLK
 #define STM32_SWPSEL                        STM32_SWPSEL_PCLK1
-#define STM32_FDCANSEL                      STM32_FDCANSEL_HSE_CK
+#define STM32_FDCANSEL                      STM32_FDCANSEL_PLL2_Q_CK
 #define STM32_DFSDM1SEL                     STM32_DFSDM1SEL_PCLK2
 #define STM32_SPDIFSEL                      STM32_SPDIFSEL_PLL1_Q_CK
 #define STM32_SPI45SEL                      STM32_SPI45SEL_PCLK2
