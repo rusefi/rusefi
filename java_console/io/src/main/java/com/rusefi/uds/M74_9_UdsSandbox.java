@@ -9,11 +9,13 @@ import java.nio.ByteOrder;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public class UdsSandbox {
+public class M74_9_UdsSandbox {
     public static final byte RND = (byte) 0xA1;
-    private static final Logging log = getLogging(UdsSandbox.class);
+    private static final Logging log = getLogging(M74_9_UdsSandbox.class);
 
     private static final int UDS_OUT = 0x7E0;
+    private static final int OX27 = 0x27;
+    private static final int OX67 = 0x67;
 
     public static void main(String[] args) {
         boolean useSocketCan = args.length > 0 && args[0].toLowerCase().contains("socket");
@@ -46,7 +48,7 @@ public class UdsSandbox {
                     if (isProgramAck(data)) {
                         log.info("Program Request ACK");
                         // technically this is IsoTP
-                        connector.send(UDS_OUT, new byte[]{0x03, 0x27, 0x01, RND, 0x00, 0x00, 0x00, 0x00});
+                        connector.send(UDS_OUT, new byte[]{0x03, OX27, 0x01, RND, 0x00, 0x00, 0x00, 0x00});
 
 
                     } else if (isSeed(data)) {
@@ -56,20 +58,20 @@ public class UdsSandbox {
                         int seed = byteBuffer.getInt();
                         log.info(String.format("SECURITY_ACCESS REQUEST_SEED %x from %s", seed, HexBinary.printByteArray(data)));
 
-                        int key = SeedKeyCalculator.Uds_Security_CalcKey(SeedKeyCalculator.BOOTLOADER_SECRET, seed, RND);
+                        int key = M74_9_SeedKeyCalculator.Uds_Security_CalcKey(M74_9_SeedKeyCalculator.BOOTLOADER_SECRET, seed, RND);
 
                         // technically this is IsoTP
-                        byte[] keyResponse = new byte[]{0x06, 0x27, 0x02, 0, 0, 0, 0, 0x00};
+                        byte[] keyResponse = new byte[]{0x06, OX27, 0x02, 0, 0, 0, 0, 0x00};
                         ByteBuffer responseBuffer = ByteBuffer.wrap(keyResponse, 3, 4);
                         responseBuffer.putInt(key);
 
                         log.info(String.format("SECURITY_ACCESS SEND_KEY %x from %s", key, HexBinary.printByteArray(keyResponse)));
                         connector.send(UDS_OUT, keyResponse);
 
-                    } else if (startsWith(data, new byte[]{0x03, 0x7F, 0x27, 0x35})) {
+                    } else if (startsWith(data, new byte[]{0x03, 0x7F, OX27, 0x35})) {
                         log.error("UNHAPPY :(");
                         System.exit(-1);
-                    } else if (startsWith(data, new byte[]{0x02, 0x67, 0x02})) {
+                    } else if (startsWith(data, new byte[]{0x02, OX67, 0x02})) {
                         log.error("HAPPILY UNLOCKED :)");
                         System.exit(0);
                     }
@@ -82,7 +84,7 @@ public class UdsSandbox {
     }
 
     private static boolean isSeed(byte[] data) {
-        return startsWith(data, new byte[]{0x06, 0x67, 0x01});
+        return startsWith(data, new byte[]{0x06, OX67, 0x01});
     }
 
     private static boolean isProgramAck(byte[] data) {

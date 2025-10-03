@@ -5,7 +5,7 @@ import com.rusefi.util.HexBinary;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @see IsoTpCanDecoder
+ * @see IsoTpCanDecoder for RX operations
  */
 public abstract class IsoTpConnector {
     private final static Logging log = Logging.getLogging(IsoTpConnector.class);
