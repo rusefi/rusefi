@@ -365,21 +365,25 @@ struct engine_state_s {
 	/**
 	 * offset 134
 	 */
+	scaled_channel<int16_t, 10, 1> veTableIdleYAxis = (int16_t)0;
+	/**
+	 * offset 136
+	 */
 	uint8_t overDwellCounter = (uint8_t)0;
 	/**
-	 * offset 135
+	 * offset 137
 	 */
 	uint8_t overDwellNotScheduledCounter = (uint8_t)0;
 	/**
-	 * offset 136
+	 * offset 138
 	 */
 	uint8_t sparkOutOfOrderCounter = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 137
+	 * offset 139
 	 */
-	uint8_t alignmentFill_at_137[3] = {};
+	uint8_t alignmentFill_at_139[1] = {};
 	/**
 	 * STFT: Bank
 	 * units: %

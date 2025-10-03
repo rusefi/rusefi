@@ -587,6 +587,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->engineState.fuelingLoad, "Fuel: Load", "", 0},
 	{engine->engineState.ignitionLoad, "Ignition: load", "", 0},
 	{engine->engineState.veTableYAxis, "veTableYAxis", "%", 0},
+	{engine->engineState.veTableIdleYAxis, "veTableIdleYAxis", "", 1},
 	{engine->engineState.overDwellCounter, "overDwellCounter", "", 0},
 	{engine->engineState.overDwellNotScheduledCounter, "overDwellNotScheduledCounter", "", 0},
 	{engine->engineState.sparkOutOfOrderCounter, "sparkOutOfOrderCounter", "", 0},

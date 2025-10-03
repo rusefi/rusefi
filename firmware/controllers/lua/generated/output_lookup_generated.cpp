@@ -1198,6 +1198,9 @@ float getOutputValueByHash(const int hash) {
 // veTableYAxis
 		case 1568071542:
 			return engine->engineState.veTableYAxis;
+// veTableIdleYAxis
+		case -860328524:
+			return engine->engineState.veTableIdleYAxis;
 // overDwellCounter
 		case 1513852665:
 			return engine->engineState.overDwellCounter;
