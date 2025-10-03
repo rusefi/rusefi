@@ -44,7 +44,7 @@
 // FDCAN driver has different bit timing registers (yes, different format)
 // for the arbitration and data phases
 
-static_assert(STM32_FDCANCLK == 80'000'000, "CANFD baudrates calculated for 60MHz clock!");
+static_assert(STM32_FDCANCLK == 80'000'000, "CANFD baudrates calculated for 80MHz clock!");
 
 // 87.5% sample point
 #define CAN_NBTP_33 0x06950c01
