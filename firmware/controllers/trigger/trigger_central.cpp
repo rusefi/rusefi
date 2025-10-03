@@ -739,6 +739,8 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 			angleError += cycle;
 		}
 
+		// positive value - tooth received earlier than expected
+		// negative value - tooth received later than expected
 		triggerToothAngleError = angleError;
 
 		// Only perform checks if engine is spinning quickly
@@ -768,7 +770,8 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 			// TODO: configurable threshold
 			if (isRpmEnough && absError > 10 && absError < 180) {
 				// This tooth came at a very unexpected time, ignore it
-				warning(ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
+				warning((angleError > 0) ? ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_EARLY : ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING_LATE,
+					"tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
 
 				// TODO: this causes issues with some real engine logs, should it?
 				// return false;

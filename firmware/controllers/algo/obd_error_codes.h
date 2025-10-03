@@ -2150,7 +2150,9 @@ enum class ObdCode : uint16_t {
 	CUSTOM_PRIMARY_DOUBLED_EDGE = 9006,
 
 	// A trigger tooth arrived at an unexpected time
-	CUSTOM_PRIMARY_BAD_TOOTH_TIMING = 9007,
+	CUSTOM_PRIMARY_BAD_TOOTH_TIMING_EARLY = 9007,
+	CUSTOM_PRIMARY_BAD_TOOTH_TIMING_LATE = 9008,
+
 
 	/**
 	 * This is not engine miss detection - this is only internal scheduler state validation
