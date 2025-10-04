@@ -3,6 +3,8 @@ package com.opensr5.ini.field;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.tune.xml.Constant;
 
+import java.util.Objects;
+
 public abstract class IniField {
     private final String name;
     private final int offset;
@@ -50,5 +52,26 @@ public abstract class IniField {
 
     public void setValue(ConfigurationImage image, Constant constant) {
         throw new UnsupportedOperationException("On " + getClass());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IniField iniField = (IniField) o;
+        return getOffset() == iniField.getOffset() && Objects.equals(getName(), iniField.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getOffset());
+    }
+
+    @Override
+    public String toString() {
+        return "IniField{" +
+            "name='" + name + '\'' +
+            ", offset=" + offset +
+            '}';
     }
 }
