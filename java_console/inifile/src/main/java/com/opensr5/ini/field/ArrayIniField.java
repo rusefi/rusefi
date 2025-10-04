@@ -150,12 +150,16 @@ public class ArrayIniField extends IniField {
     @Override
     public String toString() {
         return "ArrayIniField{" +
-                "name=" + getName() +
-                ", offset=" + getOffset() +
-                ", type=" + type +
-                ", cols=" + cols +
-                ", rows=" + rows +
-                '}';
+            "super='" + super.toString() + '\'' +
+            ", unit='" + unit + '\'' +
+            ", type=" + type +
+            ", cols=" + cols +
+            ", rows=" + rows +
+            ", multiplier=" + multiplier +
+            ", min='" + min + '\'' +
+            ", max='" + max + '\'' +
+            ", digits='" + digits + '\'' +
+            '}';
     }
 
     public static IniField parse(LinkedList<String> list) {
@@ -184,5 +188,36 @@ public class ArrayIniField extends IniField {
         }
 
         return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier, min, max, digits);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArrayIniField)) return false;
+        if (!super.equals(o)) return false;
+        ArrayIniField that = (ArrayIniField) o;
+        return getCols() == that.getCols()
+            && getRows() == that.getRows()
+            && Double.compare(getMultiplier(), that.getMultiplier()) == 0
+            && Objects.equals(unit, that.unit)
+            && getType() == that.getType()
+            && Objects.equals(getMin(), that.getMin())
+            && Objects.equals(getMax(), that.getMax())
+            && Objects.equals(getDigits(), that.getDigits());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+            super.hashCode(),
+            unit,
+            getType(),
+            getCols(),
+            getRows(),
+            getMultiplier(),
+            getMin(),
+            getMax(),
+            getDigits()
+        );
     }
 }

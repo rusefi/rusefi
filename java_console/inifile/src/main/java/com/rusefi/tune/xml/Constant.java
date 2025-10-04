@@ -96,9 +96,13 @@ public class Constant {
     @Override
     public String toString() {
         return "Constant{" +
-                "name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                '}';
+            "name='" + name + '\'' +
+            ", units='" + units + '\'' +
+            ", value='" + value + '\'' +
+            ", digits='" + digits + '\'' +
+            ", rows='" + rows + '\'' +
+            ", cols='" + cols + '\'' +
+            '}';
     }
 
     @Override
