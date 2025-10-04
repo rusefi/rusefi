@@ -5,6 +5,7 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.field.IniField;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
@@ -14,6 +15,8 @@ import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestTuneMigrationContext extends TuneMigrationContext {
     public static TestTuneMigrationContext load(final String testDataFolder) throws JAXBException {
@@ -53,6 +56,26 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
 
     public Constant getUpdatedValue(final String fieldName) {
         return getValue(getUpdatedTune(), fieldName);
+    }
+
+    public void checkPrevAndUpdatedIniFields(
+        final String iniFieldName,
+        final IniField prevIniField,
+        final IniField updatedIniField
+    ) {
+        assertEquals(prevIniField, getPrevIniFile().getIniField(iniFieldName));
+        assertEquals(updatedIniField, getUpdatedIniFile().getIniField(iniFieldName));
+    }
+
+    public void checkValueMigration(
+        final String iniFieldName,
+        final Constant prevValue,
+        final Constant updatedValue,
+        final Constant migratedValue
+    ) {
+        assertEquals(prevValue, getPrevValue(iniFieldName));
+        assertEquals(updatedValue, getUpdatedValue(iniFieldName));
+        assertEquals(migratedValue, getMigratedConstants().get(iniFieldName));
     }
 
     private static CalibrationsInfo getCalibrationsInfo(final Msq msq, final IniFileModel ini) {
