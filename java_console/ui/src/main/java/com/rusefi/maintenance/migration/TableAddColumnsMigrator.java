@@ -202,9 +202,10 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         final FieldType arrayFieldType = arrayField.getType();
         if (arrayFieldType != tableFieldType) {
             callbacks.logLine(String.format(
-                "WARNING! `%s` ini-field is expected to be `ArrayIniField` instead of %s",
+                "WARNING! `%s` ini-field is expected to be `%s` instead of `%s`",
                 tableFieldName,
-                field.getClass().getName()
+                tableFieldType,
+                arrayFieldType
             ));
             return Optional.empty();
         }
