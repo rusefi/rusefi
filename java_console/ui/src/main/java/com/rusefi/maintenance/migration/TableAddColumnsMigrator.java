@@ -13,7 +13,10 @@ public class TableAddColumnsMigrator implements TuneMigrator {
     public static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
     public static final String LAMBDA_TABLE_FIELD_NAME = "lambdaTable";
     public static final String LAMBDA_RPM_BINS_FIELD_NAME = "lambdaRpmBins";
-
+    public static final String IGNITION_TABLE_FIELD_NAME = "ignitionTable";
+    public static final String IGNITION_RPM_BINS_FIELD_NAME = "ignitionRpmBins";
+    public static final String INJECTION_PHASE_FIELD_NAME = "injectionPhase";
+    public static final String INJECTION_PHASE_RPM_BINS_FIELD_NAME = "injPhaseRpmBins";
     public static final TableAddColumnsMigrator VE_TABLE_MIGRATOR = new TableAddColumnsMigrator(
         VE_TABLE_FIELD_NAME,
         FieldType.UINT16,
@@ -24,6 +27,18 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         LAMBDA_TABLE_FIELD_NAME,
         FieldType.UINT8,
         LAMBDA_RPM_BINS_FIELD_NAME
+    );
+
+    public static final TableAddColumnsMigrator IGNITION_TABLE_MIGRATOR = new TableAddColumnsMigrator(
+        IGNITION_TABLE_FIELD_NAME,
+        FieldType.INT16,
+        IGNITION_RPM_BINS_FIELD_NAME
+    );
+
+    public static final TableAddColumnsMigrator INJECTION_PHASE_MIGRATOR = new TableAddColumnsMigrator(
+        INJECTION_PHASE_FIELD_NAME ,
+        FieldType.INT16,
+        INJECTION_PHASE_RPM_BINS_FIELD_NAME
     );
 
     private final String tableFieldName;

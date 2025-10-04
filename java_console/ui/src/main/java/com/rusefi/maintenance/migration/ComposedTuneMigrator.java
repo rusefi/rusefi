@@ -12,6 +12,8 @@ public enum ComposedTuneMigrator implements TuneMigrator {
     private final List<TuneMigrator> tuneMigrators = Arrays.asList(
         TableAddColumnsMigrator.VE_TABLE_MIGRATOR,
         TableAddColumnsMigrator.LAMBDA_TABLE_MIGRATOR,
+        TableAddColumnsMigrator.IGNITION_TABLE_MIGRATOR,
+        TableAddColumnsMigrator.INJECTION_PHASE_MIGRATOR,
         BattLagCorrExtensionMigrator.INSTANCE,
         CltIdleCorrMigrator.INSTANCE,
         DisplacementIniFieldMigrator.INSTANCE,
