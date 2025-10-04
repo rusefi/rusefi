@@ -3,6 +3,7 @@ package com.rusefi.maintenance.migration.table_add_columns_migration;
 import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
@@ -13,10 +14,16 @@ import static com.rusefi.maintenance.migration.TableAddColumnsMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TableAddColumnsMigratorTest {
-    @Test
-    void checkVeTableMigration() throws JAXBException {
-        final TestTuneMigrationContext testContext = TableAddColumnsMigrationContext.load();
+    private TestTuneMigrationContext testContext;
+
+    @BeforeEach
+    void setUp() throws JAXBException {
+        testContext = TableAddColumnsMigrationContext.load();
         ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
+    }
+
+    @Test
+    void checkVeTableMigration() {
         final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
         assertEquals(4, migratedConstants.size());
 
@@ -120,9 +127,7 @@ public class TableAddColumnsMigratorTest {
     }
 
     @Test
-    void checkLambdaTableMigration() throws JAXBException {
-        final TestTuneMigrationContext testContext = TableAddColumnsMigrationContext.load();
-        ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
+    void checkLambdaTableMigration() {
         final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
         assertEquals(4, migratedConstants.size());
 
