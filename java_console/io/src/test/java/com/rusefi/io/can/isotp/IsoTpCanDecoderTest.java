@@ -1,11 +1,15 @@
 package com.rusefi.io.can.isotp;
 
+import com.rusefi.io.can.IsoTpConnectorTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * @see IsoTpConnectorTest for opposite
+ */
 public class IsoTpCanDecoderTest {
     @Test
     public void decodeSingleFrame() {
@@ -17,10 +21,27 @@ public class IsoTpCanDecoderTest {
     @Test
     public void decodeMultiFrame() {
         IsoTpCanDecoder decoder = new IsoTpCanDecoder();
-        byte[] result1 = decoder.decodePacket(new byte[]{0x10, 0x0B, 0x59, 0x02, (byte) 0x89, (byte) 0xA1, 0x41, 0x00  });
-        assertTrue(Arrays.equals(result1, new byte[]{ 0x59, 0x02, (byte) 0x89, (byte) 0xA1, 0x41, 0x00}));
+        byte[] result1 = decoder.decodePacket(new byte[]{0x10, 0x0B, 0x59, 0x02, (byte) 0x89, (byte) 0xA1, 0x41, 0x00});
+        assertTrue(Arrays.equals(result1, new byte[]{0x59, 0x02, (byte) 0x89, (byte) 0xA1, 0x41, 0x00}));
 
-        byte[] result2 = decoder.decodePacket(new byte[]{0x21, 0x08, (byte) 0xA1, 0x46, 0x00, 0x08, 0x00, 0x00  });
-        assertTrue(Arrays.equals(result2, new byte[]{ 0x08, (byte) 0xA1, 0x46, 0x00, 0x08}));
+        byte[] result2 = decoder.decodePacket(new byte[]{0x21, 0x08, (byte) 0xA1, 0x46, 0x00, 0x08, 0x00, 0x00});
+        assertTrue(Arrays.equals(result2, new byte[]{0x08, (byte) 0xA1, 0x46, 0x00, 0x08}));
+    }
+
+    @Test
+    public void decodeSingleFrameExt() {
+        IsoTpCanDecoder decoder = new IsoTpCanDecoder(1);
+        byte[] result1 = decoder.decodePacket(new byte[]{0x18, 0x03, 0x22, (byte) 0xF1, (byte) 0x90, 0x00, 0, 0});
+        assertTrue(Arrays.equals(result1, new byte[]{0x22, (byte) 0xF1, (byte) 0x90}));
+    }
+
+    @Test
+    public void decodeMultiFrameExt() {
+        IsoTpCanDecoder decoder = new IsoTpCanDecoder(1);
+        byte[] result1 = decoder.decodePacket(new byte[]{(byte) 0xF1, 0x10, 0x14, 0x62, (byte) 0xF1, (byte) 0x90, 0x57, 0x42});
+        assertTrue(Arrays.equals(result1, new byte[]{0x62, (byte) 0xF1, (byte) 0x90, 0x57, 0x42}));
+
+        byte[] result2 = decoder.decodePacket(new byte[]{(byte) 0xF1, 0x21, 0x41, 0x33, 0x43, 0x31, 0x43, 0x35});
+        assertTrue(Arrays.equals(result2, new byte[]{0x41, 0x33, 0x43, 0x31, 0x43, 0x35}));
     }
 }

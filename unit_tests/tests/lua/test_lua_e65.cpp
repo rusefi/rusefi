@@ -2,6 +2,7 @@
 #include "rusefi_lua.h"
 #include "lua_lib.h"
 
+// see also BmwChecksumTest
 #define BMW_CHECKSUM "	function bmwChecksum(canID, data, offset, length) \
 		checksum = canID   \
 		for i = offset, offset + length - 1,1 \

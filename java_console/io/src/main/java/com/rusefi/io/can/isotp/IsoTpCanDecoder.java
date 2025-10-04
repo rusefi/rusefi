@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 /**
  * ISO 15765-2 or ISO-TP (Transport Layer) CAN multi-frame decoder state
+ *
  * @see IsoTpConnector
  */
 public class IsoTpCanDecoder {
@@ -20,49 +21,58 @@ public class IsoTpCanDecoder {
     private final static int ISO_TP_FRAME_FLOW_CONTROL = 3;
 
     private final static int FC_ContinueToSend = 0;
+    private final int isoHeaderByteIndex;
 
     private int waitingForNumBytes = 0;
     private int waitingForFrameIndex = 0;
 
+    public IsoTpCanDecoder() {
+        this(0);
+    }
+
+    public IsoTpCanDecoder(int isoHeaderByteIndex) {
+        this.isoHeaderByteIndex = isoHeaderByteIndex;
+    }
+
     public byte[] decodePacket(byte[] data) {
-        int frameType = (data[0] >> 4) & 0xf;
+        int frameType = (data[isoHeaderByteIndex] >> 4) & 0xf;
         int numBytesAvailable;
         int frameIdx;
         int dataOffset;
         switch (frameType) {
             case IsoTpConstants.ISO_TP_FRAME_SINGLE:
-                numBytesAvailable = data[0] & 0xf;
-                dataOffset = 1;
+                numBytesAvailable = data[isoHeaderByteIndex] & 0xf;
+                dataOffset = isoHeaderByteIndex + 1;
                 this.waitingForNumBytes = 0;
                 if (log.debugEnabled())
                     log.debug("ISO_TP_FRAME_SINGLE " + numBytesAvailable);
                 break;
             case IsoTpConstants.ISO_TP_FRAME_FIRST:
-                this.waitingForNumBytes = ((data[0] & 0xf) << 8) | data[1];
+                this.waitingForNumBytes = ((data[isoHeaderByteIndex] & 0xf) << 8) | data[isoHeaderByteIndex + 1];
                 if (log.debugEnabled())
                     log.debug("Total expected: " + waitingForNumBytes);
                 this.waitingForFrameIndex = 1;
-                numBytesAvailable = Math.min(this.waitingForNumBytes, 6);
+                numBytesAvailable = Math.min(this.waitingForNumBytes, 6 - isoHeaderByteIndex);
                 waitingForNumBytes -= numBytesAvailable;
-                dataOffset = 2;
+                dataOffset = isoHeaderByteIndex + 2;
                 onTpFirstFrame();
                 break;
             case IsoTpConstants.ISO_TP_FRAME_CONSECUTIVE:
-                frameIdx = data[0] & 0xf;
+                frameIdx = data[isoHeaderByteIndex] & 0xf;
                 if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
                     throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? waitingForNumBytes=" + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
                 }
                 this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
-                numBytesAvailable = Math.min(this.waitingForNumBytes, 7);
-                dataOffset = 1;
+                numBytesAvailable = Math.min(this.waitingForNumBytes, 7 - isoHeaderByteIndex);
+                dataOffset = isoHeaderByteIndex + 1;
                 waitingForNumBytes -= numBytesAvailable;
                 if (log.debugEnabled())
                     log.debug("ISO_TP_FRAME_CONSECUTIVE Got " + numBytesAvailable + " byte(s), still expecting: " + waitingForNumBytes + " byte(s)");
                 break;
             case ISO_TP_FRAME_FLOW_CONTROL:
-                int flowStatus = data[0] & 0xf;
-                int blockSize = data[1];
-                int separationTime = data[2];
+                int flowStatus = data[isoHeaderByteIndex] & 0xf;
+                int blockSize = data[isoHeaderByteIndex + 1];
+                int separationTime = data[isoHeaderByteIndex + 2];
                 if (flowStatus == FC_ContinueToSend && blockSize == 0 && separationTime == 0)
                     return new byte[0];
                 throw new IllegalStateException("ISO_TP_FRAME_FLOW_CONTROL: should we just ignore the FC frame? " + flowStatus + " " + blockSize + " " + separationTime);

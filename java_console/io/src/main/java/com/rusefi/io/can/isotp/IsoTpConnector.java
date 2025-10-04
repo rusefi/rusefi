@@ -39,7 +39,8 @@ public abstract class IsoTpConnector {
         connector.receiveData();
 
         // send the rest of the data
-        int idx = 1, offset = 6;
+        int idx = 1;
+        int offset = 6;
         int remaining = bytes.length - 6;
         while (remaining > 0) {
             int len = Math.min(remaining, 7);
