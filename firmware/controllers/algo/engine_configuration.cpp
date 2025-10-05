@@ -69,6 +69,7 @@
 
 std::optional<setup_custom_board_overrides_type> custom_board_DefaultConfiguration;
 std::optional<setup_custom_board_overrides_type> custom_board_ConfigOverrides;
+std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange;
 
 /**
  * Current engine configuration. On firmware start we assign empty configuration, then
@@ -147,6 +148,7 @@ void incrementGlobalConfigurationVersion(const char * msg) {
 	applyNewHardwareSettings();
 
 	boardOnConfigurationChange(&activeConfiguration);
+	call_board_override(custom_board_OnConfigurationChange, &activeConfiguration);
 
 	engine->preCalculate();
 

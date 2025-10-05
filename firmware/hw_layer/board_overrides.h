@@ -25,9 +25,12 @@
 #pragma once
 #include <functional>
 #include <optional>
+#include "engine_configuration.h"
 
 // function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
+using setup_custom_board_config_type = void (*)(engine_configuration_s * /*previousConfiguration*/);
+using setup_custom_board_output_type = int (*)();
 
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
@@ -53,6 +56,11 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_boardSayHel
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareEarly;
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardware;
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
+extern std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange;
+
+// Board hardware related:
+extern std::optional<setup_custom_board_output_type> custom_board_getMetaOutputsCount;
+extern std::optional<setup_custom_board_output_type> custom_board_getMetaLowSideOutputs;
 
 // LTFT to VE table custom apply algo
 extern std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
