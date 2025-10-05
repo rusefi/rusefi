@@ -771,6 +771,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
   case TS_BOARD_ACTION:
+      // TODO: use call_board_override
 	  if (custom_board_ts_command.has_value()) {
 		  custom_board_ts_command.value()(subsystem, index);
 	  }

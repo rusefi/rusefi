@@ -614,6 +614,7 @@ std::optional<board_can_update_dash_type> custom_board_update_dash;
 PUBLIC_API_WEAK void boardUpdateDash(CanCycle cycle) { UNUSED(cycle); }
 
 void updateDash(CanCycle cycle) {
+	// TODO: use call_board_override
 	if (custom_board_update_dash.has_value()) {
 		custom_board_update_dash.value()(cycle);
 	}
