@@ -84,11 +84,11 @@ pins:
     color: blue
 
   - pin: C15
-    id: [MM100_IN_AUX3_ANALOG, MM100_IN_AUX3]
+    id: [MM100_IN_AUX3_ANALOG, MM100_IN_AUX3, MM100_IN_AUX3]
     color: grey
-    class: [analog_inputs, switch_inputs]
+    class: [analog_inputs, switch_inputs, event_inputs]
     ts_name: ___ Fuel Pressure / AUX3
-    function: Fuel Pressure / Auxiliary analog input 3
+    function: Fuel Pressure / Auxiliary analog input 3 PullDown 500K
 
   - pin: C16
     function: VR2+ max9924 best for normal 12+ tooth wheels

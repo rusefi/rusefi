@@ -2,11 +2,11 @@ meta: config/boards/hellen_mm100_meta.h
 
 pins:
   - pin: D1
-    meta: MM100_IN_O2S_ANALOG
-    class: analog_inputs
+    id: [MM100_IN_O2S_ANALOG, MM100_IN_O2S, MM100_IN_O2S]
+    class: [analog_inputs, switch_inputs, event_inputs]
     color: orange
     ts_name: ___ AUX1
-    function: Auxiliary analog input 1
+    function: Auxiliary analog input 1 PullDown 500K
 
   - pin: D2
     id: [MM100_IN_CRANK_ANALOG, MM100_IN_CRANK, MM100_IN_CRANK]
