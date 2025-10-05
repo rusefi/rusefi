@@ -32,7 +32,8 @@
 #define PIN_C5 MM100_IN_D1
 #define PIN_C6 MM100_IN_D2
 #define PIN_C7 MM100_IN_D3
-#define PIN_C9 MM100_IN_D4
+#define PIN_C9_switch_inputs MM100_IN_D4
+#define PIN_C9_event_inputs MM100_IN_D4
 #define PIN_C14 MM100_IN_AUX1_ANALOG
 #define PIN_C15_analog_inputs MM100_IN_AUX3_ANALOG
 #define PIN_C15_switch_inputs MM100_IN_AUX3
@@ -41,11 +42,13 @@
 #define PIN_D1 MM100_IN_O2S_ANALOG
 #define PIN_D2_analog_inputs MM100_IN_CRANK_ANALOG
 #define PIN_D2_switch_inputs MM100_IN_CRANK
+#define PIN_D2_event_inputs MM100_IN_CRANK
 #define PIN_D5 MM100_IN_VSS
 #define PIN_D6 MM100_IN_PPS_ANALOG
 #define PIN_D9 MM100_IN_MAP1_ANALOG
 #define PIN_D10_analog_inputs MM100_IN_CAM_ANALOG
 #define PIN_D10_switch_inputs MM100_IN_CAM
+#define PIN_D10_event_inputs MM100_IN_CAM
 #define PIN_D13 MM100_IN_TPS_ANALOG
 #define PIN_D15 MM100_IN_IAT_ANALOG
 #define PIN_D16 MM100_IN_CLT_ANALOG

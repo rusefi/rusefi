@@ -172,8 +172,8 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define brain_input_pin_e_enum 0="NONE",67="C17 VR2-/HALL max9924 best for normal 12+ tooth wheels",66="C18 VR1+ Discrete for low count wheel",78="C5 CAM 1 / HALL1",79="C6 CAM 2 / HALL2",80="C7 HALL3",77="D5 FLEX"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C18 VR1+ Discrete for low count wheel","C17 VR2-/HALL max9924 best for normal 12+ tooth wheels","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D5 FLEX","C5 CAM 1 / HALL1","C6 CAM 2 / HALL2","C7 HALL3"
+#define brain_input_pin_e_enum 0="NONE",67="C17 VR2-/HALL max9924 best for normal 12+ tooth wheels",66="C18 VR1+ Discrete for low count wheel",78="C5 CAM 1 / HALL1",79="C6 CAM 2 / HALL2",80="C7 HALL3",81="C9 BUTTON3",8="D10 A/C Request / BUTTON2",19="D2 BUTTON1",77="D5 FLEX"
+#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D10 A/C Request / BUTTON2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D2 BUTTON1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C18 VR1+ Discrete for low count wheel","C17 VR2-/HALL max9924 best for normal 12+ tooth wheels","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D5 FLEX","C5 CAM 1 / HALL1","C6 CAM 2 / HALL2","C7 HALL3","C9 BUTTON3"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_OK 0
@@ -1532,7 +1532,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3778249577
+#define SIGNATURE_HASH 4231640988
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2099,7 +2099,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.10.04.uaefi_pro_h7.3778249577"
+#define TS_SIGNATURE "rusEFI master.2025.10.05.uaefi_pro_h7.4231640988"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
