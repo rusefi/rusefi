@@ -11,6 +11,7 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::A0: return "D1 AUX1";
 		case Gpio::A1: return "C3 AUX2";
 		case Gpio::A6: return "D10 A/C Request / BUTTON2";
 		case Gpio::A7: return "C15 Fuel Pressure / AUX3";

@@ -37,9 +37,12 @@
 #define PIN_C14 MM100_IN_AUX1_ANALOG
 #define PIN_C15_analog_inputs MM100_IN_AUX3_ANALOG
 #define PIN_C15_switch_inputs MM100_IN_AUX3
+#define PIN_C15_event_inputs MM100_IN_AUX3
 #define PIN_C17 MM100_UART8_TX
 #define PIN_C18 MM100_UART8_RX
-#define PIN_D1 MM100_IN_O2S_ANALOG
+#define PIN_D1_analog_inputs MM100_IN_O2S_ANALOG
+#define PIN_D1_switch_inputs MM100_IN_O2S
+#define PIN_D1_event_inputs MM100_IN_O2S
 #define PIN_D2_analog_inputs MM100_IN_CRANK_ANALOG
 #define PIN_D2_switch_inputs MM100_IN_CRANK
 #define PIN_D2_event_inputs MM100_IN_CRANK
