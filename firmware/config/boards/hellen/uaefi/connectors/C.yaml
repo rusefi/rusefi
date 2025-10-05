@@ -53,11 +53,11 @@ pins:
     color: black
 
   - pin: C9
-    meta: MM100_IN_D4
-    class: switch_inputs
+    id: [MM100_IN_D4, MM100_IN_D4]
+    class: [switch_inputs, event_inputs]
     color: grey
     ts_name: ___ BUTTON3
-    function: Button input 3
+    function: Button input 3 PullDown 10K
 
   - pin: C10
     ts_name: ___ EGT+
