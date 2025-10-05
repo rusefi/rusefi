@@ -65,9 +65,10 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_ConfigOverr
  * This function checks if an override is present and calls it if available.
  * Return true if override is present and was called
  */
-static inline bool call_board_override(std::optional<setup_custom_board_overrides_type> board_override){
+template<typename FuncType, typename... Args>
+static inline bool call_board_override(std::optional<FuncType> board_override, Args&&... args){
     if (board_override.has_value()) {
-        std::invoke(board_override.value());
+        std::invoke(board_override.value(), std::forward<Args>(args)...);
         return true;
     }
     return false;
