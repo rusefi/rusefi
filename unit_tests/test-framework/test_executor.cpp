@@ -16,7 +16,11 @@ TestExecutor::~TestExecutor() {
 }
 
 int TestExecutor::executeAll(efitimeus_t nowUs) {
-	return schedulingQueue.executeAll(US2NT(nowUs));
+	return executeAllNt(US2NT(nowUs));
+}
+
+int TestExecutor::executeAllNt(efitick_t nowNt) {
+	return schedulingQueue.executeAll(nowNt);
 }
 
 void TestExecutor::clear() {
