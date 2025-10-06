@@ -34,10 +34,6 @@ import static java.util.Collections.emptySet;
 public class CalibrationsHelper {
     private static final Logging log = getLogging(CalibrationsHelper.class);
 
-    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT = "prev_calibrations";
-    private static final String UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT = "updated_calibrations";
-    private static final String MERGED_CALIBRATIONS_FILE_NAME_COMPONENT = "merged_calibrations";
-
     static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
     private static final String RUSEFI_FORCE_CALIBRATIONS_RESTORE = System.getenv("RUSEFI_FORCE_CALIBRATIONS_RESTORE");
 
@@ -69,10 +65,10 @@ public class CalibrationsHelper {
         final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
             ecuPort,
             callbacks,
-            getFileNameWithoutExtension(timestampFileNameComponent, PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
+            getFileNameWithoutExtension(timestampFileNameComponent, "backup_from_ecu"), connectivityContext
         );
         if (!prevCalibrations.isPresent()) {
-            callbacks.logLine("Failed to back up current calibrations...");
+            callbacks.logLine("Failed to back up current tune from ECU...");
             return false;
         }
 
@@ -83,10 +79,10 @@ public class CalibrationsHelper {
         final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
             ecuPort,
             callbacks,
-            getFileNameWithoutExtension(timestampFileNameComponent, UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT), connectivityContext
+            getFileNameWithoutExtension(timestampFileNameComponent, "after_firmware_update"), connectivityContext
         );
         if (!updatedCalibrations.isPresent()) {
-            callbacks.logLine("Failed to back up updated calibrations...");
+            callbacks.logLine("Failed to back up tune from ECU after firmware update...");
             return false;
         }
         final Optional<CalibrationsInfo> mergedCalibrations = mergeCalibrations(
@@ -99,10 +95,10 @@ public class CalibrationsHelper {
         if (mergedCalibrations.isPresent() && MigrateSettingsCheckboxState.isMigrationNeeded) {
             if (!backUpCalibrationsInfo(
                 mergedCalibrations.get(),
-                getFileNameWithoutExtension(timestampFileNameComponent, MERGED_CALIBRATIONS_FILE_NAME_COMPONENT),
+                getFileNameWithoutExtension(timestampFileNameComponent, "merged_to_write"),
                 callbacks
             )) {
-                callbacks.logLine("Failed to back up merged calibrations...");
+                callbacks.logLine("Failed to back up merged tune before writing to ECU...");
                 return false;
             }
             return CalibrationsUpdater.INSTANCE.updateCalibrations(
@@ -145,10 +141,10 @@ public class CalibrationsHelper {
         final Optional<CalibrationsInfo> prevTune = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
             ecuPort,
             callbacks,
-            getFileNameWithoutExtension(timestampFileNameComponent, "prev_tune"), connectivityContext
+            getFileNameWithoutExtension(timestampFileNameComponent, "backup_from_ecu"), connectivityContext
         );
         if (!prevTune.isPresent()) {
-            callbacks.logLine("Failed to back up current tune...");
+            callbacks.logLine("Failed to back up current tune from ECU...");
             return false;
         }
 
@@ -163,7 +159,7 @@ public class CalibrationsHelper {
         if (mergedTune.isPresent()) {
             if (!backUpCalibrationsInfo(
                 mergedTune.get(),
-                getFileNameWithoutExtension(timestampFileNameComponent, "merged_tune"),
+                getFileNameWithoutExtension(timestampFileNameComponent, "merged_to_write"),
                 callbacks
             )) {
                 callbacks.logLine("Failed to back up merged tune...");
