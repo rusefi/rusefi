@@ -55,7 +55,9 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 
 			ret = channel.GetSignals(&stat, &sig0, &sig1);
 			if (ret == 0) {
+#if 0
 				printf("%d: SENT status 0x%01x, signals: 0x%03x, 0x%03x: %d\n", msgCount, stat, sig0, sig1, ret);
+#endif
 				msgCount++;
 			}
 		}
