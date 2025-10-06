@@ -5,11 +5,11 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.CompatibilitySet;
 import com.rusefi.config.FieldType;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -97,7 +97,7 @@ class BinsIniFieldMigrator {
         // add missed bins with recommended step:
         for (int i = prevCount; i < newCount; i++) {
             lastBin += recommendedStep.get();
-            newValues[i] = new String[] { String.format(Locale.US, "%.1f", (double)lastBin) };
+            newValues[i] = new String[] { String.format(Msq.TS_INTEGRATION_LOCALE, "%.1f", (double)lastBin) };
         }
         return newValues;
     }

@@ -13,13 +13,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @XmlRootElement
 public class Msq {
+    public static final Locale TS_INTEGRATION_LOCALE = Locale.US;
     private static final Logging log = Logging.getLogging(Msq.class);
 
     public List<Page> page = new ArrayList<>();
@@ -36,6 +34,9 @@ public class Msq {
         log.info("java=" + System.getProperty("java.version"));
     }
 
+    /**
+     * @see #asImage
+     */
     @NotNull
     public static Msq valueOf(ConfigurationImage image, int totalConfigSize, String tsSignature, IniFileModel ini) {
         Objects.requireNonNull(image, "image valueOf");
@@ -55,6 +56,9 @@ public class Msq {
         return tune;
     }
 
+    /**
+     * @see #valueOf for opposite operation
+     */
     public ConfigurationImage asImage(IniFileModel instance) {
         Objects.requireNonNull(instance, "ini model");
         ConfigurationImage ci = new ConfigurationImage(instance.getMetaInfo().getPageSize(0));
