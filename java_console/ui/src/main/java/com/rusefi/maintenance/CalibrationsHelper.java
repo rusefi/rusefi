@@ -101,14 +101,27 @@ public class CalibrationsHelper {
                 callbacks.logLine("Failed to back up merged tune before writing to ECU...");
                 return false;
             }
-            return CalibrationsUpdater.INSTANCE.updateCalibrations(
+            if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
                 ecuPort,
                 mergedCalibrations.get().getImage().getConfigurationImage(),
-                callbacks, connectivityContext
+                callbacks,
+                connectivityContext
+            )) {
+                callbacks.logLine("Failed to write merged tune to ECU...");
+                return false;
+            }
+            final Optional<CalibrationsInfo> mergedTuneFromEcu = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                ecuPort,
+                callbacks,
+                getFileNameWithoutExtension(timestampFileNameComponent, "merged_from_ecu"),
+                connectivityContext
             );
-        } else {
-            return true;
+            if (!mergedTuneFromEcu.isPresent()) {
+                callbacks.logLine("Failed to back up merged tune from ECU...");
+                return false;
+            }
         }
+        return true;
     }
 
     public static boolean importTune(
@@ -165,15 +178,27 @@ public class CalibrationsHelper {
                 callbacks.logLine("Failed to back up merged tune...");
                 return false;
             }
-            return CalibrationsUpdater.INSTANCE.updateCalibrations(
+            if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
                 ecuPort,
                 mergedTune.get().getImage().getConfigurationImage(),
                 callbacks,
                 connectivityContext
+            )) {
+                callbacks.logLine("Failed to write merged tune to ECU...");
+                return false;
+            }
+            final Optional<CalibrationsInfo> mergedTuneFromEcu = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                ecuPort,
+                callbacks,
+                getFileNameWithoutExtension(timestampFileNameComponent, "merged_from_ecu"),
+                connectivityContext
             );
-        } else {
-            return true;
+            if (!mergedTuneFromEcu.isPresent()) {
+                callbacks.logLine("Failed to back up merged tune from ECU...");
+                return false;
+            }
         }
+        return true;
     }
 
     static String getFileNameWithoutExtension(
