@@ -436,7 +436,11 @@ public class CalibrationsHelper {
                 final Constant migratedValue = valueToUpdate.getValue();
                 final Optional<IniField> fieldToUpdate = newIniFile.findIniField(migratedFieldName);
                 if (fieldToUpdate.isPresent()) {
-                    fieldToUpdate.get().setValue(mergedImage, migratedValue);
+                    try {
+                        fieldToUpdate.get().setValue(mergedImage, migratedValue);
+                    } catch (Throwable e) {
+                        throw new IllegalStateException("Unexpected during " + migratedValue, e);
+                    }
                     callbacks.logLine(String.format(
                         "To restore previous calibrations we are going to update the field `%s` with a value `%s`",
                         migratedFieldName,
