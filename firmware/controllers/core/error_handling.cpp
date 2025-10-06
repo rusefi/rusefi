@@ -516,11 +516,7 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 	chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, args);
 
 	engine->engineState.warnings.addWarningCode(code, reportToTs ? warningBuffer : nullptr);
-#if EFI_SIMULATOR || EFI_PROD_CODE
 	efiPrintf("WARNING: %s", warningBuffer);
-#else
-	printf("unit_test_warning: %s\n", warningBuffer);
-#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 	return false;
 }
