@@ -334,7 +334,7 @@ struct pid_s
 	float pFactor;;"", 1, 0, -10000, 10000, 4
 	float iFactor;;"", 1, 0, -10000, 10000, 4
 	float dFactor;;"", 1, 0, -10000, 10000, 4
-	int16_t offset;Linear addition to PID logic;"", 1, 0, -1000, 1000, 0
+	int16_t offset;Linear addition to PID logic\nAlso known as feedforward.;"", 1, 0, -1000, 1000, 0
 	int16_t periodMs;PID dTime;"ms", 1, 0, 0, 3000, 0
 	int16_t minValue;Output Min Duty Cycle;"", 1, 0, -30000, 30000, 0
 	int16_t maxValue;Output Max Duty Cycle;"", 1, 0, -30000, 30000, 0
