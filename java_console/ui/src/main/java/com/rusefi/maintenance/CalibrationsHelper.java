@@ -439,6 +439,10 @@ public class CalibrationsHelper {
                     try {
                         fieldToUpdate.get().setValue(mergedImage, migratedValue);
                     } catch (Throwable e) {
+                        log.error(
+                            String.format("We failed to set value %s for ini-field %s", migratedValue, fieldToUpdate),
+                            e
+                        );
                         throw new IllegalStateException("Unexpected during " + migratedValue, e);
                     }
                     callbacks.logLine(String.format(
