@@ -78,7 +78,7 @@ public class TuneReadWriteTest {
         ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE).getConfigurationImage();
 
         int mismatchCounter = compareImages(tsBinaryData, fileBinaryData, model);
-        assertEquals(3, mismatchCounter);
+        assertEquals(4, mismatchCounter);
     }
 
     @Test

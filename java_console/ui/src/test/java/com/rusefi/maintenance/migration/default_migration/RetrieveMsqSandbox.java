@@ -6,15 +6,12 @@ import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.tune.xml.Msq;
-import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
-/* Sandbox test for debugging msq-file retrieving: */
 public class RetrieveMsqSandbox {
-    //@Test
-    void retrievePrevCalibrationsMsq() throws IOException, JAXBException {
+    public static void main(String[] args) throws IOException, JAXBException {
         final ConfigurationImageWithMeta image = ConfigurationImageFile.readFromFile(
             "src/test/java/com/rusefi/maintenance/migration/sandbox/test_data/prev_calibrations.zip"
         );

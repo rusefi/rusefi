@@ -1338,6 +1338,7 @@
 <constant name="tle6240spiDevice">"Off"</constant>
 <constant digits="0" name="idlerpmpid_iTermMax">200.0</constant>
 <constant name="mc33972spiDevice">"Off"</constant>
+        <constant digits="0" name="cylinderBankSelect1" units="">1.0</constant>
 <constant digits="0" name="etbIdleThrottleRange" units="%">5.0</constant>
 <constant digits="2" name="triggerCompCenterVolt" units="V">0.0</constant>
 <constant digits="2" name="triggerCompHystMin" units="V">0.0</constant>
