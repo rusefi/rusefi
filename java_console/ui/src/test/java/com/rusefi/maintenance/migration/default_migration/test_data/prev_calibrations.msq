@@ -521,8 +521,8 @@
         <constant digits="1" name="stft_minAfr" units="afr">12.0</constant>
         <constant digits="1" name="stft_maxAfr" units="afr">17.0</constant>
         <constant digits="0" name="stft_startupDelay" units="seconds">60.0</constant>
-        <constant digits="0" name="stft_cellCfgs1_maxAdd" units="%">5.0</constant>
-        <constant digits="0" name="stft_cellCfgs1_maxRemove" units="%">-5.0</constant>
+        <constant digits="0" name="stft_cellCfgs1_maxAdd" units="%">1.0</constant>
+        <constant digits="0" name="stft_cellCfgs1_maxRemove" units="%">-3.0</constant>
         <constant digits="2" name="stft_cellCfgs1_timeConstant" units="sec">30.0</constant>
         <constant digits="0" name="stft_cellCfgs2_maxAdd" units="%">5.0</constant>
         <constant digits="0" name="stft_cellCfgs2_maxRemove" units="%">-5.0</constant>
