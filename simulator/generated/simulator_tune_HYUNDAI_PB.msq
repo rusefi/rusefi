@@ -874,18 +874,18 @@
         <constant digits="0" name="customSentTpsMin" units="">0.0</constant>
         <constant name="cutFuelOnHardLimit">"yes"</constant>
         <constant name="cutSparkOnHardLimit">"yes"</constant>
-        <constant digits="0" name="cylinderBankSelect1" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect10" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect11" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect12" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect2" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect3" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect4" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect5" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect6" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect7" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect8" units="">0.0</constant>
-        <constant digits="0" name="cylinderBankSelect9" units="">0.0</constant>
+        <constant digits="0" name="cylinderBankSelect1" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect10" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect11" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect12" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect2" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect3" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect4" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect5" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect6" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect7" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect8" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect9" units="">1.0</constant>
         <constant digits="2" name="cylinderBore" units="mm">87.5</constant>
         <constant digits="0" name="cylindersCount" units="">4.0</constant>
         <constant name="dacOutputPins1">"NONE"</constant>
@@ -4485,7 +4485,7 @@ end</constant>
         <constant digits="3" name="triggerVVTGapOverrideTo4" units="ratio">0.0</constant>
         <constant digits="0" name="tuneHidingKey" units="">0.0</constant>
         <constant digits="0" name="tunerStudioSerialSpeed" units="BPs">38400.0</constant>
-        <constant digits="0" name="tuningDetector" units="seconds">21.0</constant>
+        <constant digits="0" name="tuningDetector" units="seconds">20.0</constant>
         <constant digits="0" name="turbochargerFilter" units="">0.01</constant>
         <constant name="turboSpeedSensorInputPin">"NONE"</constant>
         <constant digits="3" name="turboSpeedSensorMultiplier" units="mult">1.0</constant>
