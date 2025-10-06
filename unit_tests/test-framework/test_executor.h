@@ -20,6 +20,7 @@ public:
 
 	void clear();
 	int executeAll(efitimeus_t nowUs);
+	int executeAllNt(efitick_t nowNt);
 	int size();
 	scheduling_s * getHead();
 	scheduling_s * getForUnitTest(int index);

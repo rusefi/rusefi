@@ -350,20 +350,19 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 	int counter = 0;
 	while (true) {
-	  criticalAssertVoid(counter++ < 100'000, "EngineTestHelper: failing to setTimeAndInvokeEventsUs");
+		criticalAssertVoid(counter++ < 100'000, "EngineTestHelper: failing to setTimeAndInvokeEventsUs");
 		scheduling_s* nextScheduledEvent = engine.scheduler.getHead();
 		if (nextScheduledEvent == nullptr) {
 			// nothing pending - we are done here
 			break;
 		}
-		int nextEventTime = nextScheduledEvent->getMomentUs();
-		if (nextEventTime > targetTimeUs) {
+		efitick_t nextEventNt = nextScheduledEvent->getMomentNt();
+		if (nextEventNt > US2NT(targetTimeUs)) {
 			// next event is too far in the future
 			break;
 		}
-		setTimeNowUs(nextEventTime);
-		extern bool unitTestTaskPrecisionHack;
-		engine.scheduler.executeAll(getTimeNowUs());
+		setTimeNowNt(nextEventNt);
+		engine.scheduler.executeAllNt(getTimeNowNt());
 	}
 
 	setTimeNowUs(targetTimeUs);
