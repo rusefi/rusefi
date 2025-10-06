@@ -19,7 +19,8 @@ public class DisplacementIniFieldMigratorTest {
         "L",
         FieldType.UINT16,
         0.001,
-        "3"
+        "3",
+        0
     );
     private static final IniField TEST_DISPLACEMENT_INI_FIELD_IN_CUBIC_INCHES = new ScalarIniField(
         DISPLACEMENT_FIELD_NAME,
@@ -27,7 +28,8 @@ public class DisplacementIniFieldMigratorTest {
         "cubic inches",
         FieldType.FLOAT,
         61.0236100347,
-        "1"
+        "1",
+        0
     );
 
     private static final String TEST_DISPLACEMENT_IN_LITERS = "1.917";

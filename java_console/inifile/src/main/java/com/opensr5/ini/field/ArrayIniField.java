@@ -141,7 +141,8 @@ public class ArrayIniField extends IniField {
                     type,
                     values[rowIndex][colIndex],
                     Field.NO_BIT_OFFSET,
-                    multiplier
+                    multiplier,
+                    0
                 );
             }
         }

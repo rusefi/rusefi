@@ -39,7 +39,7 @@ public class TestHelper extends MockitoTestHelper {
 
     @NotNull
     public static ScalarIniField createIniField(Field field) {
-        return new ScalarIniField(field.getName(), field.getOffset(), "", field.getType(), 1, "0");
+        return new ScalarIniField(field.getName(), field.getOffset(), "", field.getType(), 1, "0", 0);
     }
 
     @NotNull
