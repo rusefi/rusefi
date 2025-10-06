@@ -2174,4 +2174,20 @@ enum class ObdCode : uint16_t {
 	 * GPIO chip errors
 	 */
 	CUSTOM_GPIO_CHIP_FAILED_PWM = 9014,
+
+	/**
+	 * Coil did not receive discharge/fire signal in safe time
+	 */
+	CUSTOM_Ignition_Coil_Overcharge_1 = 9351,
+	CUSTOM_Ignition_Coil_Overcharge_2 = 9352,
+	CUSTOM_Ignition_Coil_Overcharge_3 = 9353,
+	CUSTOM_Ignition_Coil_Overcharge_4 = 9354,
+	CUSTOM_Ignition_Coil_Overcharge_5 = 9355,
+	CUSTOM_Ignition_Coil_Overcharge_6 = 9356,
+	CUSTOM_Ignition_Coil_Overcharge_7 = 9357,
+	CUSTOM_Ignition_Coil_Overcharge_8 = 9358,
+	CUSTOM_Ignition_Coil_Overcharge_9 = 9359,
+	CUSTOM_Ignition_Coil_Overcharge_10 = 9360,
+	CUSTOM_Ignition_Coil_Overcharge_11 = 9361,
+	CUSTOM_Ignition_Coil_Overcharge_12 = 9362,
 };
