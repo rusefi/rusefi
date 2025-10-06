@@ -68,90 +68,96 @@ public enum DefaultTuneMigrator implements TuneMigrator {
             return;
         }
 
+        if (prevValue == null) {
+            // nothing to migrate - there was no value
+            return;
+        }
 
         final Constant newValue = newValues.get(prevFieldName);
-        if (prevValue != null) {
-            if (newValue == null) { // new value is empty
-                log.info(String.format(
-                    "Field `%s` is going to be restored: <none> -> `%s`",
-                    prevFieldName,
-                    prevValue.getValue()
-                ));
+        if (newValue == null) { // new value is empty
+            log.info(String.format(
+                "Field `%s` is going to be restored: <none> -> `%s`",
+                prevFieldName,
+                prevValue.getValue()
+            ));
 
-                context.addMigration(prevFieldName, prevValue);
-            } else {
-                if (!Objects.equals(prevValue.getValue(), newValue.getValue())) {
-                    if (!Objects.equals(prevValue.getName(), newValue.getName())) {
-                        callbacks.logLine(String.format(
-                            "WARNING! Field `%s` cannot be updated because its name is updated: `%s` -> `%s`",
-                            prevFieldName,
-                            prevValue.getName(),
-                            newValue.getName()
-                        ));
-                    } else if (!checkIfUnitsCanBeMigrated(prevValue.getUnits(), newValue.getUnits())) {
-                        callbacks.logLine(String.format(
-                            "WARNING! Field `%s` cannot be updated because its units are updated: `%s` -> `%s`",
-                            prevFieldName,
-                            prevValue.getUnits(),
-                            newValue.getUnits()
-                        ));
-                    } else if (!checkIfDigitsCanBeMigrated(prevValue.getDigits(), newValue.getDigits(), prevFieldName)) {
-                        callbacks.logLine(String.format(
-                            "WARNING! Field `%s` cannot be updated because its digits are updated: `%s` -> `%s`",
-                            prevFieldName,
-                            prevValue.getDigits(),
-                            newValue.getDigits()
-                        ));
-                    } else if (!Objects.equals(prevValue.getCols(), newValue.getCols())) {
-                        callbacks.logLine(String.format(
-                            "WARNING! Field `%s` cannot be updated because its column count is updated: `%s` -> `%s`",
-                            prevFieldName,
-                            prevValue.getCols(),
-                            newValue.getCols()
-                        ));
-                    } else if (!Objects.equals(prevValue.getRows(), newValue.getRows())) {
-                        callbacks.logLine(String.format(
-                            "WARNING! Field `%s` cannot be updated because its row count is updated: `%s` -> `%s`",
-                            prevFieldName,
-                            prevValue.getRows(),
-                            newValue.getRows()
-                        ));
-                    } else {
-                        final Optional<String> migratedValue = DefaultIniFieldMigrator.INSTANCE.tryMigrateValue(
-                            prevFieldEntry.getValue(),
-                            newField,
-                            prevValue.getValue(),
-                            callbacks
-                        );
-                        if (migratedValue.isPresent()) {
-                            final String valueToRestore = migratedValue.get();
-                            if (!valueToRestore.equals(newValue.getValue())) {
-                                log.info(String.format(
-                                    "Field `%s` is going to be restored: `%s` -> `%s`",
-                                    prevFieldName,
-                                    newValue.getValue(),
-                                    prevValue.getValue()
-                                ));
+            context.addMigration(prevFieldName, prevValue);
+            return;
+        }
 
-                                context.addMigration(prevFieldName, newValue.cloneWithValue(valueToRestore));
-                            } else {
-                                callbacks.logLine(String.format(
-                                    "We aren't going to restore field `%s`: it looks like its value is just renamed: `%s` -> `%s`",
-                                    prevFieldName,
-                                    prevValue.getValue(),
-                                    newValue.getValue()
-                                ));
-                            }
-                        } else {
-                            log.warn(String.format(
-                                "Field `%s` cannot be updated: `%s` -> `%s`",
-                                prevFieldName,
-                                prevFieldEntry.getValue(),
-                                newField
-                            ));
-                        }
-                    }
+        if (Objects.equals(prevValue.getValue(), newValue.getValue())) {
+            // values are already the same
+            return;
+        }
+
+        if (!Objects.equals(prevValue.getName(), newValue.getName())) {
+            callbacks.logLine(String.format(
+                "WARNING! Field `%s` cannot be updated because its name is updated: `%s` -> `%s`",
+                prevFieldName,
+                prevValue.getName(),
+                newValue.getName()
+            ));
+        } else if (!checkIfUnitsCanBeMigrated(prevValue.getUnits(), newValue.getUnits())) {
+            callbacks.logLine(String.format(
+                "WARNING! Field `%s` cannot be updated because its units are updated: `%s` -> `%s`",
+                prevFieldName,
+                prevValue.getUnits(),
+                newValue.getUnits()
+            ));
+        } else if (!checkIfDigitsCanBeMigrated(prevValue.getDigits(), newValue.getDigits(), prevFieldName)) {
+            callbacks.logLine(String.format(
+                "WARNING! Field `%s` cannot be updated because its digits are updated: `%s` -> `%s`",
+                prevFieldName,
+                prevValue.getDigits(),
+                newValue.getDigits()
+            ));
+        } else if (!Objects.equals(prevValue.getCols(), newValue.getCols())) {
+            callbacks.logLine(String.format(
+                "WARNING! Field `%s` cannot be updated because its column count is updated: `%s` -> `%s`",
+                prevFieldName,
+                prevValue.getCols(),
+                newValue.getCols()
+            ));
+        } else if (!Objects.equals(prevValue.getRows(), newValue.getRows())) {
+            callbacks.logLine(String.format(
+                "WARNING! Field `%s` cannot be updated because its row count is updated: `%s` -> `%s`",
+                prevFieldName,
+                prevValue.getRows(),
+                newValue.getRows()
+            ));
+        } else {
+            final Optional<String> migratedValue = DefaultIniFieldMigrator.INSTANCE.tryMigrateValue(
+                prevFieldEntry.getValue(),
+                newField,
+                prevValue.getValue(),
+                callbacks
+            );
+            if (migratedValue.isPresent()) {
+                final String valueToRestore = migratedValue.get();
+                if (!valueToRestore.equals(newValue.getValue())) {
+                    log.info(String.format(
+                        "Field `%s` is going to be restored: `%s` -> `%s`",
+                        prevFieldName,
+                        newValue.getValue(),
+                        prevValue.getValue()
+                    ));
+
+                    context.addMigration(prevFieldName, newValue.cloneWithValue(valueToRestore));
+                } else {
+                    callbacks.logLine(String.format(
+                        "We aren't going to restore field `%s`: it looks like its value is just renamed: `%s` -> `%s`",
+                        prevFieldName,
+                        prevValue.getValue(),
+                        newValue.getValue()
+                    ));
                 }
+            } else {
+                log.warn(String.format(
+                    "Field `%s` cannot be updated: `%s` -> `%s`",
+                    prevFieldName,
+                    prevFieldEntry.getValue(),
+                    newField
+                ));
             }
         }
     }
