@@ -677,7 +677,7 @@ Print incoming and outgoing second bus CAN messages in rusEFI console
 
 
 ### boostPid.offset
-Linear addition to PID logic
+Linear addition to PID logic\nAlso known as feedforward.
 
 ### boostPid.periodMs
 PID dTime
@@ -986,7 +986,7 @@ Length of time the deposited wall fuel takes to dissipate after the start of acc
 
 
 ### alternatorControl.offset
-Linear addition to PID logic
+Linear addition to PID logic\nAlso known as feedforward.
 
 ### alternatorControl.periodMs
 PID dTime
@@ -1007,7 +1007,7 @@ Output Max Duty Cycle
 
 
 ### etb.offset
-Linear addition to PID logic
+Linear addition to PID logic\nAlso known as feedforward.
 
 ### etb.periodMs
 PID dTime
@@ -1052,7 +1052,7 @@ This sets the dwell time for subsequent sparks. The main spark's dwell is set by
 
 
 ### idleRpmPid.offset
-Linear addition to PID logic
+Linear addition to PID logic\nAlso known as feedforward.
 
 ### idleRpmPid.periodMs
 PID dTime
@@ -1343,7 +1343,7 @@ Pull-up resistor value on your board
 
 
 ### etbWastegatePid.offset
-Linear addition to PID logic
+Linear addition to PID logic\nAlso known as feedforward.
 
 ### etbWastegatePid.periodMs
 PID dTime
@@ -1454,7 +1454,7 @@ iTerm max value
 
 
 ### idleTimingPid.offset
-Linear addition to PID logic
+Linear addition to PID logic\nAlso known as feedforward.
 
 ### idleTimingPid.periodMs
 PID dTime

@@ -257,6 +257,7 @@ struct pid_s {
 	float dFactor;
 	/**
 	 * Linear addition to PID logic
+	 * Also known as feedforward.
 	 * offset 12
 	 */
 	int16_t offset;
