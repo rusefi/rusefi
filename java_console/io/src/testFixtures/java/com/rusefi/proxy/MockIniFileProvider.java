@@ -34,7 +34,8 @@ public class MockIniFileProvider {
             "mocked units",
             FieldType.UINT16,
             1.0,
-            "0"
+            "0",
+            0
         );
         when(mockModel.getAllIniFields()).thenReturn(Map.of(
             mockedStringIniField.getName(), mockedStringIniField,

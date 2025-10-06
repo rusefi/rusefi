@@ -329,7 +329,7 @@ public class IniFileModelImpl implements IniFileModel {
                 String scalarType = list.get(2);
                 int offset = Integer.parseInt(list.get(3));
                 // todo: reuse ScalarIniField#parse but would need changes?
-                allOutputChannels.put(name, new ScalarIniField(name, offset, scalarType, null, 1, "0"));
+                allOutputChannels.put(name, new ScalarIniField(name, offset, scalarType, null, 1, "0", 0));
             }
         }
     }

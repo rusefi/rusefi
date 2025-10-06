@@ -42,7 +42,7 @@ public class BurnCommandTest extends RusefiTestBase {
                 BinaryProtocol bp = linkManager.getBinaryProtocol();
                 ScalarIniField displacementField = (ScalarIniField) bp.getIniFile().getIniField("displacement");
                 ByteBuffer bb = wrap(new byte[4]);
-                ScalarIniField.setValue(bb, displacementField.getType(), "3", Field.NO_BIT_OFFSET, 1);
+                ScalarIniField.setValue(bb, displacementField.getType(), "3", Field.NO_BIT_OFFSET, 1, 0);
                 log.info("assertWrite writeData " + Arrays.toString(bb.array()) + " " + displacementField);
                 // here we assert that write command do not break protocol
                 bp.writeInBlocks(bb.array(), 0, displacementField.getOffset(), displacementField.getSize());

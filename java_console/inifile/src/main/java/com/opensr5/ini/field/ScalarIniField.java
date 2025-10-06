@@ -15,13 +15,16 @@ public class ScalarIniField extends IniField {
     private final String unit;
     private final FieldType type;
     private final String digits;
+    private final double serializationOffset;
     private final double multiplier;
 
-    public ScalarIniField(String name, int offset, String unit, FieldType type, double multiplier, String digits) {
+    public ScalarIniField(String name, int offset, String unit, FieldType type, double multiplier, String digits,
+                          double serializationOffset) {
         super(name, offset);
         this.unit = unit;
         this.type = type;
         this.digits = digits;
+        this.serializationOffset = serializationOffset;
         if (multiplier == 0)
             throw new IllegalArgumentException("Multiplier should not be zero");
         this.multiplier = multiplier;
@@ -50,7 +53,7 @@ public class ScalarIniField extends IniField {
     public String getValue(ConfigurationImage image) {
         Field f = new Field(getName(), getOffset(), getType());
         try {
-            Double value = f.getValue(image, multiplier);
+            Double value = f.getValue(image, multiplier) + serializationOffset;
             return Field.niceToString(value, Field.FIELD_PRECISION);
         } catch (Throwable e) {
             throw new IllegalStateException("While getting " + getName(), e);
@@ -62,11 +65,11 @@ public class ScalarIniField extends IniField {
         Objects.requireNonNull(image, "image for setter");
         Field f = new Field(getName(), getOffset(), getType());
         ByteBuffer wrapped = image.getByteBuffer(getOffset(), type.getStorageSize());
-        setValue(wrapped, type, constant.getValue(), f.getBitOffset(), multiplier);
+        setValue(wrapped, type, constant.getValue(), f.getBitOffset(), multiplier, serializationOffset);
     }
 
-    public static void setValue(ByteBuffer wrapped, FieldType type, String value, int bitOffset, double multiplier) {
-        double v = Double.parseDouble(value) / multiplier;
+    public static void setValue(ByteBuffer wrapped, FieldType type, String value, int bitOffset, double multiplier, double serializationOffset) {
+        double v = (Double.parseDouble(value) - serializationOffset)/ multiplier;
         if (bitOffset != Field.NO_BIT_OFFSET) {
             throw new UnsupportedOperationException("For " + value);
 //            int packed = wrapped.getInt();
@@ -95,12 +98,13 @@ public class ScalarIniField extends IniField {
     public static ScalarIniField parse(LinkedList<String> list) {
         String name = list.get(0);
         FieldType type = FieldType.parseTs(list.get(2));
-        int offset = Integer.parseInt(list.get(3));
+        int offsetWithinConfigurationImage = Integer.parseInt(list.get(3));
         String digits = list.get(9);
 
         String unit = list.get(4);
         double multiplier = IniField.parseDouble(list.get(5));
+        double serializationOffset = IniField.parseDouble(list.get(6));
 
-        return new ScalarIniField(name, offset, unit, type, multiplier, digits);
+        return new ScalarIniField(name, offsetWithinConfigurationImage, unit, type, multiplier, digits, serializationOffset);
     }
 }

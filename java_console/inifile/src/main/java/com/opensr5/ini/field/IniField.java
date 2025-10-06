@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public abstract class IniField {
     private final String name;
+    // offset within binary page
     private final int offset;
 
     public IniField(String name, int offset) {

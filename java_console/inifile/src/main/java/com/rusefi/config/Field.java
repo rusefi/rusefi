@@ -22,6 +22,7 @@ public class Field {
     public static final int FIELD_PRECISION = 5;
 
     private final String name;
+    // offset within binary page
     private final int offset;
     private final int stringSize;
     private final FieldType type;

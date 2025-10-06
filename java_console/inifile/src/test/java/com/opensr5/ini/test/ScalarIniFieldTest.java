@@ -18,7 +18,7 @@ public class ScalarIniFieldTest {
 
     @Test
     public void updateShort() {
-        ScalarIniField testField = new ScalarIniField(TEST_FIELD, 0, TEST_UNIT, TEST_TYPE, TEST_MULTIPLIER, TEST_DIGITS);
+        ScalarIniField testField = new ScalarIniField(TEST_FIELD, 0, TEST_UNIT, TEST_TYPE, TEST_MULTIPLIER, TEST_DIGITS, 0);
         ConfigurationImage image = new ConfigurationImage(2);
         testField.setValue(image, new Constant(TEST_FIELD, TEST_UNIT, TEST_VALUE, TEST_DIGITS));
         assertEquals(TEST_VALUE, testField.getValue(image));

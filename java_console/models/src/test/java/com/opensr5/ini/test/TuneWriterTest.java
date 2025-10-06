@@ -14,7 +14,7 @@ public class TuneWriterTest {
     @Test
     public void testFloatRounding() {
         ConfigurationImage image = new ConfigurationImage(200);
-        IniField floatField = new ScalarIniField("test", 0, "test", FieldType.FLOAT, 1, "2");
+        IniField floatField = new ScalarIniField("test", 0, "test", FieldType.FLOAT, 1, "2", 0);
         double value = 0.9;
         floatField.setValue(image, new Constant("x", "y", Double.toString(value), "2"));
 
