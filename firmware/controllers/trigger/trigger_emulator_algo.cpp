@@ -237,8 +237,6 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 }
 
 void initTriggerEmulator() {
-	efiPrintf("Emulating %s", getEngine_type_e(engineConfiguration->engineType));
-
 	startTriggerEmulatorPins();
 
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
