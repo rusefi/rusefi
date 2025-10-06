@@ -415,12 +415,21 @@ public class CalibrationsHelper {
                 final Constant migratedValue = valueToUpdate.getValue();
                 final Optional<IniField> fieldToUpdate = newIniFile.findIniField(migratedFieldName);
                 if (fieldToUpdate.isPresent()) {
-                    fieldToUpdate.get().setValue(mergedImage, migratedValue);
-                    callbacks.logLine(String.format(
-                        "To restore previous calibrations we are going to update the field `%s` with a value `%s`",
-                        migratedFieldName,
-                        migratedValue.getValue()
-                    ));
+                    try {
+                        fieldToUpdate.get().setValue(mergedImage, migratedValue);
+                        callbacks.logLine(String.format(
+                            "To restore previous calibrations we are going to update the field `%s` with a value `%s`",
+                            migratedFieldName,
+                            migratedValue.getValue()
+                        ));
+                    } catch (final Exception e) {
+                        log.error(String.format(
+                            "We failed to set constant %s for ini-field %s",
+                            migratedValue,
+                            fieldToUpdate
+                        ), e);
+                        throw e;
+                    }
                 } else if (null == migratedValue) {
                     log.info(String.format(
                         "Disappeared `%s` field has been already migrated by one of migrators",
