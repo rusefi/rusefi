@@ -251,6 +251,7 @@ void EngineState::periodicFastCallback() {
 	// Now apply that to per-cylinder fueling and timing
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[i];
+    efiAssertVoid(ObdCode::CUSTOM_OBD_BAD_BANK_INDEX, bankIndex < STFT_BANK_COUNT, "bankIndex");
 		auto bankTrim = engine->engineState.stftCorrection[bankIndex];
 		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
 		auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
