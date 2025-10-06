@@ -241,6 +241,7 @@ void EngineState::periodicFastCallback() {
 	// Now apply that to per-cylinder fueling and timing
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->cylindersCount; cylinderIndex++) {
 		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[cylinderIndex];
+    efiAssertVoid(ObdCode::CUSTOM_OBD_BAD_BANK_INDEX, bankIndex < FT_BANK_COUNT, "bankIndex");
 		/* TODO: add LTFT trims when ready */
 		auto bankTrim = clResult.banks[bankIndex] * ltftResult.banks[bankIndex];
 		auto cylinderTrim = getCylinderFuelTrim(cylinderIndex, rpm, fuelLoad);
