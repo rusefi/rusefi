@@ -1750,7 +1750,7 @@ enum class ObdCode : uint16_t {
 	CUSTOM_ZERO_DWELL = 6032,
 	CUSTOM_DWELL_TOO_LONG = 6033,
 	CUSTOM_SKIPPING_STROKE = 6034,
-	CUSTOM_6037 = 6037,
+	CUSTOM_OBD_impossibly_short_INJECTION = 6037,
 	/**
 	 * This error happens if some pinout configuration changes were applied but ECU was not reset afterwards.
 	 */

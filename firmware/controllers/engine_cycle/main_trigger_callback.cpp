@@ -155,6 +155,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	// see https://github.com/rusefi/rusefi/pull/596 for more details
 	if (injectionDurationStage1 < 0.050f)
 	{
+		warning(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION, "Short pulse %.2f", injectionDurationStage1);
 		return;
 	}
 
