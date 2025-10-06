@@ -363,11 +363,7 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 		}
 		setTimeNowUs(nextEventTime);
 		extern bool unitTestTaskPrecisionHack;
-		if (unitTestTaskPrecisionHack) {
-			engine.scheduler.executeAll(getTimeNowUs());
-		} else {
-			engine.scheduler.executeAll(getTimeNowNt());
-		}
+		engine.scheduler.executeAll(getTimeNowUs());
 	}
 
 	setTimeNowUs(targetTimeUs);
