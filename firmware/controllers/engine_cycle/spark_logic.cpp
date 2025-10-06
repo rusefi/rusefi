@@ -42,7 +42,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 
 	if (!output->currentLogicValue && !event->wasSparkLimited) {
 #if SPARK_EXTREME_LOGGING
-		printf("out-of-order coil off %s", output->getName());
+		efiPrintf("out-of-order coil off %s", output->getName());
 #endif /* SPARK_EXTREME_LOGGING */
 		warning(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
 	}
@@ -161,7 +161,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
-		printf("addIgnitionEvent %s angle=%.1f\n", output->getName(), dwellStartAngle);
+		efiPrintf("addIgnitionEvent %s angle=%.1f", output->getName(), dwellStartAngle);
 	}
 	//	efiPrintf("addIgnitionEvent %s ind=%d", output->name, event->dwellPosition->eventIndex);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
@@ -452,7 +452,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
-		printf("spark dwell@ %.1f spark@ %.2f id=%d sparkCounter=%d\r\n", event->dwellAngle,
+		efiPrintf("spark dwell@ %.1f spark@ %.2f id=%d sparkCounter=%d", event->dwellAngle,
 			event->sparkEvent.getAngle(),
 			event->coilIndex,
 			event->sparkCounter);
