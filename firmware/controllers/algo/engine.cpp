@@ -426,8 +426,9 @@ static void assertTimeIsLinear() {
 
 void Engine::efiWatchdog() {
     assertTimeIsLinear();
-	if (isRunningPwmTest)
+	if (isRunningPwmTest) {
 		return;
+	}
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (module<PrimeController>()->isPriming() || triggerCentral.engineMovedRecently()) {
