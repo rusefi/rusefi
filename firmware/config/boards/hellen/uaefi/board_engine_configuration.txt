@@ -1,0 +1,3 @@
+	can_baudrate_e can3BaudRate
+	Gpio can3TxPin
+	Gpio can3RxPin
