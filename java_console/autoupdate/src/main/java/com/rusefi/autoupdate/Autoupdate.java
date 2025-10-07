@@ -209,6 +209,9 @@ public class Autoupdate {
         }
     }
 
+    /**
+     * @return empty if we already have latest, or in case of error
+     */
     public static Optional<DownloadedAutoupdateFileInfo> downloadAutoupdateZipFile(
         final BundleInfo info,
         final String baseUrl,
