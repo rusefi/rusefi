@@ -205,6 +205,8 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		printPacket(busIndex, frame);
 	} else if (engineConfiguration->verboseCan2 && busIndex == 1) {
 		printPacket(busIndex, frame);
+	} else if (engineConfiguration->verboseCan3 && busIndex == 2) {
+		printPacket(busIndex, frame);
 	}
 // TODO use call_board_override
   if (custom_board_can_rx.has_value()) {
