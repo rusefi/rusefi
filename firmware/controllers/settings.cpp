@@ -378,6 +378,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseCan = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseCan2")) {
 		engineConfiguration->verboseCan2 = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseCan3")) {
+		engineConfiguration->verboseCan3 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseIsoTp")) {
 		engineConfiguration->verboseIsoTp = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {

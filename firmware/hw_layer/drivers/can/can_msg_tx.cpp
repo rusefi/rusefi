@@ -90,10 +90,11 @@ CanTxMessage::~CanTxMessage() {
 		return;
 	}
 
-	bool verboseCan0 = engineConfiguration->verboseCan && busIndex == 0;
-	bool verboseCan1 = engineConfiguration->verboseCan2 && busIndex == 1;
+	bool verboseCan = engineConfiguration->verboseCan && busIndex == 0;
+	verboseCan |= engineConfiguration->verboseCan2 && busIndex == 1;
+	verboseCan |= engineConfiguration->verboseCan3 && busIndex == 2;
 
-	if (verboseCan0 || verboseCan1) {
+	if (verboseCan) {
 		efiPrintf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
 				getCanCategory(category),
 				busIndex + 1,
