@@ -155,11 +155,15 @@ void startCanPins() {
 
 static void applyListenOnly(CANConfig* canConfig, bool isListenOnly) {
 #if defined(STM32F4XX) || defined(STM32F7XX)
-    if (isListenOnly)
-    	canConfig->btr += CAN_BTR_SILM;
-#else
-    if (isListenOnly)
-        criticalError("CAN:ListenOnly not implemented yet");
+	if (isListenOnly) {
+		canConfig->btr |= CAN_BTR_SILM;
+	}
+#elif defined(STM32H7XX)
+	// TODO: move to ChibiOS stm32_fdcan.h
+	#define FDCAN_CONFIG_CCCR_MON	(1u << 5)
+	if (isListenOnly) {
+		canConfig->CCCR |= FDCAN_CONFIG_CCCR_MON;
+	}
 #endif
 }
 
