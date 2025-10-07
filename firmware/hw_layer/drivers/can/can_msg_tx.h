@@ -47,7 +47,7 @@ public:
 	/**
 	 * Configures the device for all messages to transmit from.
 	 */
-	static void setDevice(CANDriver* device1, CANDriver* device2);
+	static void setDevice(size_t idx, CANDriver* device);
 #endif // EFI_CAN_SUPPORT
 
 	size_t busIndex = 0;
@@ -102,7 +102,7 @@ protected:
 
 private:
 #if EFI_CAN_SUPPORT
-	static CANDriver* s_devices[2];
+	static CANDriver* s_devices[3];
 #endif // EFI_CAN_SUPPORT
 };
 

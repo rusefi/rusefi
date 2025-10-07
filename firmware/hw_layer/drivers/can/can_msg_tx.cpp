@@ -20,11 +20,14 @@ fifo_buffer<CANTxFrame, 1024> txCanBuffer;
 #endif // EFI_SIMULATOR
 
 #if EFI_CAN_SUPPORT
-/*static*/ CANDriver* CanTxMessage::s_devices[2] = {nullptr, nullptr};
+/*static*/ CANDriver* CanTxMessage::s_devices[3] = {nullptr, nullptr, nullptr};
 
-/*static*/ void CanTxMessage::setDevice(CANDriver* device1, CANDriver* device2) {
-	s_devices[0] = device1;
-	s_devices[1] = device2;
+/*static*/ void CanTxMessage::setDevice(size_t idx, CANDriver* device) {
+	if (idx > efi::size(s_devices)) {
+		criticalError("Attemp to install CAN%d bus!", idx + 1);
+		return;
+	}
+	s_devices[idx] = device;
 }
 #endif // EFI_CAN_SUPPORT
 

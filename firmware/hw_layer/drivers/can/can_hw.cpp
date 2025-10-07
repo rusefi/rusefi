@@ -80,6 +80,7 @@ private:
 
 CCM_OPTIONAL static CanRead canRead1(0);
 CCM_OPTIONAL static CanRead canRead2(1);
+CCM_OPTIONAL static CanRead canRead3(2);
 static CanWrite canWrite CCM_OPTIONAL;
 
 static void canInfo() {
@@ -198,14 +199,17 @@ void initCan() {
 	// Determine physical CAN peripherals based on selected pins
 	auto device1 = detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
 	auto device2 = detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
+	auto device3 = detectCanDevice(engineConfiguration->can3RxPin, engineConfiguration->can3TxPin);
 
-	// If both devices are null, a firmware error was already thrown by detectCanDevice, but we shouldn't continue
-	if (!device1 && !device2) {
+	// If all devices are null, a firmware error was already thrown by detectCanDevice, but we shouldn't continue
+	if (!device1 && !device2 && !device3) {
 		return;
 	}
 
 	// Devices can't be the same!
-	if (device1 == device2) {
+	if (((device1 == device2) && device1) ||
+		((device2 == device3) && device2) ||
+		((device3 == device1) && device3)) {
 		criticalError("CAN pins must be set to different devices");
 		return;
 	}
@@ -219,6 +223,9 @@ void initCan() {
 	    memcpy(&canConfig, findCanConfig(engineConfiguration->canBaudRate), sizeof(canConfig));
 	    applyListenOnly(&canConfig, engineConfiguration->can1ListenMode);
 		canStart(device1, &canConfig);
+
+		// Plumb CAN devices to tx system
+		CanTxMessage::setDevice(0, device1);
 	}
 
 	if (device2) {
@@ -226,10 +233,20 @@ void initCan() {
 	    memcpy(&canConfig, findCanConfig(engineConfiguration->can2BaudRate), sizeof(canConfig));
 	    applyListenOnly(&canConfig, engineConfiguration->can2ListenMode);
 		canStart(device2, &canConfig);
+
+		// Plumb CAN devices to tx system
+		CanTxMessage::setDevice(1, device2);
 	}
 
-	// Plumb CAN devices to tx system
-	CanTxMessage::setDevice(device1, device2);
+	if (device3) {
+	    CANConfig canConfig;
+	    memcpy(&canConfig, findCanConfig(engineConfiguration->can3BaudRate), sizeof(canConfig));
+	    applyListenOnly(&canConfig, engineConfiguration->can3ListenMode);
+		canStart(device3, &canConfig);
+
+		// Plumb CAN devices to tx system
+		CanTxMessage::setDevice(2, device3);
+	}
 
 	// fire up threads, as necessary
 	if (engineConfiguration->canWriteEnabled) {
@@ -239,6 +256,7 @@ void initCan() {
 	if (engineConfiguration->canReadEnabled) {
 		canRead1.start(device1);
 		canRead2.start(device2);
+		canRead3.start(device3);
 	}
 
 	isCanEnabled = true;
