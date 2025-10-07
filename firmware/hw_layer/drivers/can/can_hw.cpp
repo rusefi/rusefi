@@ -170,6 +170,7 @@ void startCanPins() {
 #endif // EFI_PROD_CODE
 }
 
+// Move to port CAN helpers file
 static void applyListenOnly(CANConfig* canConfig, bool isListenOnly) {
 #if defined(STM32F4XX) || defined(STM32F7XX)
 	if (isListenOnly) {
@@ -212,6 +213,8 @@ void initCan() {
 	// Initialize peripherals
 	if (device1) {
 	    // Config based on baud rate
+	    // Pointer to this local canConfig is stored inside CANDriver
+	    // even it is used only during canStart this is wierd
 	    CANConfig canConfig;
 	    memcpy(&canConfig, findCanConfig(engineConfiguration->canBaudRate), sizeof(canConfig));
 	    applyListenOnly(&canConfig, engineConfiguration->can1ListenMode);
