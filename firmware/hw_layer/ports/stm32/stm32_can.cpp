@@ -230,22 +230,42 @@ static bool isValidCan2TxPin(brain_pin_e pin) {
 	return pin == Gpio::B6 || pin == Gpio::B13;
 }
 
-#if STM32_CAN_USE_CAN3 || STM32_CAN_USE_FDCAN3
+#if STM32_CAN_USE_CAN3
+// this is about STM32F413
 static bool isValidCan3RxPin(brain_pin_e pin) {
-   return pin == Gpio::A8 || pin == Gpio::B3;
+	return pin == Gpio::A8 || pin == Gpio::B3;
 }
 
 static bool isValidCan3TxPin(brain_pin_e pin) {
-   return pin == Gpio::A15 || pin == Gpio::B4;
+	return pin == Gpio::A15 || pin == Gpio::B4;
+}
+#elif STM32_CAN_USE_FDCAN3
+// STM32H723
+static bool isValidCan3RxPin(brain_pin_e pin) {
+	return pin == Gpio::D12 || pin == Gpio::F6 || pin == Gpio::G10;
+}
+
+static bool isValidCan3TxPin(brain_pin_e pin) {
+	return pin == Gpio::D13 || pin == Gpio::F7 || pin == Gpio::G9;
+}
+#else
+static __attribute__((unused)) bool isValidCan3RxPin(brain_pin_e) {
+	return false;
+}
+
+static __attribute__((unused)) bool isValidCan3TxPin(brain_pin_e) {
+	return false;
 }
 #endif
 
 bool isValidCanTxPin(brain_pin_e pin) {
-   return isValidCan1TxPin(pin) || isValidCan2TxPin(pin);
+	// Note: different AF for CAN3 and CANFD3, so check for CAN1/CANFD1 and CAN2/CANFD2 only
+	// see startCanPins()
+	return isValidCan1TxPin(pin) || isValidCan2TxPin(pin) /* || isValidCan3TxPin(pin) */;
 }
 
 bool isValidCanRxPin(brain_pin_e pin) {
-   return isValidCan1RxPin(pin) || isValidCan2RxPin(pin);
+	return isValidCan1RxPin(pin) || isValidCan2RxPin(pin) /* || isValidCan3RxPin(pin) */;
 }
 
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
