@@ -1040,6 +1040,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	bit useRawOutputToDriveIdleStepper;If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 	bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
 	bit verboseCan3,"Print all","Do not print";Print incoming and outgoing CAN3 bus messages in rusEFI console
+	bit can3ListenMode
 
 
 	dc_io[ETB_COUNT iterate] etbIo
