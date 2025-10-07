@@ -122,6 +122,8 @@ void stopCanPins() {
 	efiSetPadUnusedIfConfigurationChanged(canRxPin);
 	efiSetPadUnusedIfConfigurationChanged(can2TxPin);
 	efiSetPadUnusedIfConfigurationChanged(can2RxPin);
+	efiSetPadUnusedIfConfigurationChanged(can3TxPin);
+	efiSetPadUnusedIfConfigurationChanged(can3RxPin);
 }
 
 // at the moment we support only very limited runtime configuration change, still not supporting online CAN toggle
@@ -156,6 +158,15 @@ void startCanPins() {
 
 	efiSetPadModeIfConfigurationChanged("CAN2 TX", can2TxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadModeIfConfigurationChanged("CAN2 RX", can2RxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+
+#if STM32_CAN_USE_CAN3
+	efiSetPadModeIfConfigurationChanged("CAN3 TX", can3TxPin, PAL_MODE_ALTERNATE(EFI_CAN3_TX_AF));
+	efiSetPadModeIfConfigurationChanged("CAN3 RX", can3RxPin, PAL_MODE_ALTERNATE(EFI_CAN3_RX_AF));
+#endif // STM32_CAN_USE_CAN3
+#if STM32_CAN_USE_FDCAN3
+	efiSetPadModeIfConfigurationChanged("CAN3 TX", can3TxPin, PAL_MODE_ALTERNATE(EFI_FDCAN3_TX_AF));
+	efiSetPadModeIfConfigurationChanged("CAN3 RX", can3RxPin, PAL_MODE_ALTERNATE(EFI_FDCAN3_RX_AF));
+#endif // STM32_CAN_USE_FDCAN3
 #endif // EFI_PROD_CODE
 }
 

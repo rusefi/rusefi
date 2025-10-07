@@ -57,6 +57,14 @@ typedef enum {
 #define EFI_CAN_RX_AF 9
 #define EFI_CAN_TX_AF 9
 
+// not lucky with CAN3
+#define EFI_CAN3_RX_AF 11
+#define EFI_CAN3_TX_AF 11
+
+// not lucky with FDCAN3
+#define EFI_FDCAN3_RX_AF 2
+#define EFI_FDCAN3_TX_AF 2
+
 #ifndef GPIO_AF_TIM1
 #define GPIO_AF_TIM1 1
 #endif
