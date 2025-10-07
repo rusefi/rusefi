@@ -227,7 +227,6 @@ void initWaveChart(WaveChart *chart) {
 #endif /* EFI_HISTOGRAMS */
 
 #if ! EFI_UNIT_TEST
-	printStatus();
 	addConsoleActionI("chartsize", setChartSize);
 	// this is used by HW CI
 	addConsoleAction(CMD_RESET_ENGINE_SNIFFER, resetNow);
