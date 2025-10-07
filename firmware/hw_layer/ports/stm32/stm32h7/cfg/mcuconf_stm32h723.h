@@ -127,6 +127,11 @@
 #define STM32_LPUART1SEL                    STM32_LPUART1SEL_PCLK4
 
 /*
+ * CAN driver system settings.
+ */
+#define STM32_CAN_USE_FDCAN3                TRUE
+
+/*
  * USB driver system settings.
  */
 #define STM32_USB_USE_OTG2                  TRUE
