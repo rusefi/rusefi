@@ -199,7 +199,7 @@ public class Autoupdate {
         }
     }
 
-    private static class DownloadedAutoupdateFileInfo {
+    public static class DownloadedAutoupdateFileInfo {
         final String zipFileName;
         final long lastModified;
 
