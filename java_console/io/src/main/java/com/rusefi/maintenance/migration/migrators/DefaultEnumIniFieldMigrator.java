@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.io.UpdateOperationCallbacks;

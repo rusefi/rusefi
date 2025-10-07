@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-class BinsIniFieldMigrator {
+class BinsIniFieldMigratorStrategy {
     private static final int BINS_INI_FIELD_COLS = 1;
     private static final double BINS_INI_FIELD_MULTIPLIER = 1;
     private static final String BINS_INI_FIELD_DIGITS = "0";
@@ -23,7 +23,7 @@ class BinsIniFieldMigrator {
     private final int prevCount;
     private final int newCount;
 
-    BinsIniFieldMigrator(final String binsIniFieldName, final int prevBinsCount, final int newBinsCount) {
+    BinsIniFieldMigratorStrategy(final String binsIniFieldName, final int prevBinsCount, final int newBinsCount) {
         iniFieldName = binsIniFieldName;
         prevCount = prevBinsCount;
         newCount = newBinsCount;

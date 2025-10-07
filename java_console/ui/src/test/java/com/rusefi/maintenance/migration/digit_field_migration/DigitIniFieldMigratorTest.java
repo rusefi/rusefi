@@ -1,8 +1,7 @@
 package com.rusefi.maintenance.migration.digit_field_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
-import com.rusefi.maintenance.migration.ComposedTuneMigrator;
-import com.rusefi.maintenance.migration.digit_field_migration.DigitIniFieldMigrationContext;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
 

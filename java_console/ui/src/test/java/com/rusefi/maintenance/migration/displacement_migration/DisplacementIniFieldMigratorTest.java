@@ -4,11 +4,11 @@ import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.maintenance.TestTuneMigrationContext;
-import com.rusefi.maintenance.migration.ComposedTuneMigrator;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
 
-import static com.rusefi.maintenance.migration.DisplacementIniFieldMigrator.DISPLACEMENT_FIELD_NAME;
+import static com.rusefi.maintenance.migration.migrators.DisplacementIniFieldMigrator.DISPLACEMENT_FIELD_NAME;
 import static com.rusefi.maintenance.migration.TestTuneMigrationContextFactory.createTestMigrationContext;
 import static org.junit.jupiter.api.Assertions.*;
 

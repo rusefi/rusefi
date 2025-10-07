@@ -1,8 +1,9 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.Optional;
@@ -54,7 +55,7 @@ public enum BooleanIniFieldMigrator implements TuneMigrator {
 
             final Constant prevBooleanConst = context.getPrevTune().getConstantsAsMap().get(field.getFieldName());
             final Constant updatedBooleanConst = context.getUpdatedTune().getConstantsAsMap().get(field.getFieldName());
-            
+
             // used to check if the migration is possible/valid:
             final String prevBooleanValue = prevBooleanConst.getValue();
             final String updatedBooleanFalse = ((EnumIniField) updatedBooleanIniField.get()).getEnums().get(0);

@@ -2,7 +2,7 @@ package com.rusefi.maintenance.migration.boolean_field_migration;
 
 import org.junit.jupiter.api.Test;
 
-import com.rusefi.maintenance.migration.BooleanField;
+import com.rusefi.maintenance.migration.migrators.BooleanField;
 
 import java.util.Optional;
 

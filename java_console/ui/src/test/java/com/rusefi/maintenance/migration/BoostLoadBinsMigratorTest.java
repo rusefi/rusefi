@@ -5,6 +5,7 @@ import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.maintenance.TestCallbacks;
 import com.rusefi.maintenance.TestTuneMigrationContext;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.rusefi.config.FieldType.UINT16;
-import static com.rusefi.maintenance.migration.BoostLoadBinsMigrator.*;
-import static com.rusefi.maintenance.migration.VeBlends1BlendParameterMigrator.VE_BLENDS_1_BLEND_PARAMETER_FIELD_NAME;
+import static com.rusefi.maintenance.migration.migrators.BoostLoadBinsMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

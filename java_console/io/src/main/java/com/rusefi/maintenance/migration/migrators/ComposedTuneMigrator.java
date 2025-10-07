@@ -1,6 +1,6 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
-import com.rusefi.maintenance.DefaultTuneMigrator;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.ts.TsProjectUpdater;
 
 import java.util.Arrays;

@@ -1,10 +1,11 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.Map;

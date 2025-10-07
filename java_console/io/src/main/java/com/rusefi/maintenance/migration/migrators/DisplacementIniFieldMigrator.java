@@ -1,7 +1,8 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.Optional;

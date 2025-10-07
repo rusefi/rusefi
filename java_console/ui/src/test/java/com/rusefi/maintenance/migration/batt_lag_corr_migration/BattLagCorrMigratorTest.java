@@ -1,7 +1,7 @@
 package com.rusefi.maintenance.migration.batt_lag_corr_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
-import com.rusefi.maintenance.migration.ComposedTuneMigrator;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 import java.util.Map;
 
-import static com.rusefi.maintenance.migration.BattLagCorrExtensionMigrator.INJECTOR_BATT_LAG_CORR_BATT_BINS_FIELD_NAME;
-import static com.rusefi.maintenance.migration.BattLagCorrExtensionMigrator.INJECTOR_BATT_LAG_CORR_TABLE_FIELD_NAME;
+import static com.rusefi.maintenance.migration.migrators.BattLagCorrExtensionMigrator.INJECTOR_BATT_LAG_CORR_BATT_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.migrators.BattLagCorrExtensionMigrator.INJECTOR_BATT_LAG_CORR_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BattLagCorrMigratorTest {

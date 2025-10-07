@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
@@ -10,11 +10,11 @@ import java.util.Optional;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.*;
 
-public enum DefaultIniFieldMigrator {
+enum DefaultIniFieldMigrationStrategy {
     INSTANCE;
-    private static final Logging log = getLogging(DefaultIniFieldMigrator.class);
+    private static final Logging log = getLogging(DefaultIniFieldMigrationStrategy.class);
 
-    public Optional<String> tryMigrateValue(
+    Optional<String> tryMigrateValue(
         final IniField prevField,
         final IniField newField,
         final String prevValue,

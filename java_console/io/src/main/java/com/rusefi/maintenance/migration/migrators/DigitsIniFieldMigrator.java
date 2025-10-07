@@ -1,15 +1,14 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.Locale;
 import java.util.Optional;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static javax.management.ObjectName.quote;
-import static javax.management.ObjectName.unquote;
 
 import java.text.MessageFormat;
 
@@ -49,13 +48,13 @@ class IntDigitField {
     public String migrateField(String oldTuneFieldValue) {
         // "12" => 12
         Double fieldValue =  Double.parseDouble(oldTuneFieldValue);
-        
+
         // 12 => 12.456
         Double migratedField = this.migrator.doMigration(fieldValue);
-        
+
         // migratedField = 12.456; expectedNewDigits = 2; => 12.45
         String migratedValue = String.format(Locale.ROOT, MessageFormat.format("%.{0}f", this.expectedNewDigits), migratedField);
-        
+
         return migratedValue;
     }
 

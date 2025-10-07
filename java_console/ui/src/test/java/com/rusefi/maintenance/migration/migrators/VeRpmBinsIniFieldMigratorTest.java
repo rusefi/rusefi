@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.config.FieldType;
@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static com.rusefi.maintenance.migration.TableAddColumnsMigrator.*;
+import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VeRpmBinsIniFieldMigratorTest {
     private TestCallbacks testCallbacks;
-    private BinsIniFieldMigrator testMigrator;
+    private BinsIniFieldMigratorStrategy testMigrator;
 
     private static final int OLD_VE_TABLE_COLS = 16;
     private static final int NEW_VE_TABLE_COLS = 24;
@@ -22,7 +22,7 @@ public class VeRpmBinsIniFieldMigratorTest {
     @BeforeEach
     void setUp() {
         testCallbacks = new TestCallbacks();
-        testMigrator = new BinsIniFieldMigrator(VE_RPM_BINS_FIELD_NAME, OLD_VE_TABLE_COLS, NEW_VE_TABLE_COLS);
+        testMigrator = new BinsIniFieldMigratorStrategy(VE_RPM_BINS_FIELD_NAME, OLD_VE_TABLE_COLS, NEW_VE_TABLE_COLS);
     }
 
     @Test

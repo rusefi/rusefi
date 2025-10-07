@@ -1,7 +1,7 @@
 package com.rusefi.maintenance.migration.boolean_field_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
-import com.rusefi.maintenance.migration.ComposedTuneMigrator;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 import java.util.Map;
 
-import static com.rusefi.maintenance.migration.BooleanIniFieldMigrator.*;
+import static com.rusefi.maintenance.migration.migrators.BooleanIniFieldMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static javax.management.ObjectName.quote;
 

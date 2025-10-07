@@ -11,7 +11,7 @@ import javax.xml.bind.JAXBException;
 
 import java.util.Map;
 
-import static com.rusefi.maintenance.migration.CltIdleCorrMigrator.*;
+import static com.rusefi.maintenance.migration.migrators.CltIdleCorrMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CltIdleCorrMigrationTestTuneMigrationContext {

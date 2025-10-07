@@ -4,13 +4,13 @@ import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.maintenance.TestTuneMigrationContext;
-import com.rusefi.maintenance.migration.ComposedTuneMigrator;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static com.rusefi.maintenance.migration.CltIdleCorrMigrator.OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME;
+import static com.rusefi.maintenance.migration.migrators.CltIdleCorrMigrator.OVERRIDE_CRANKING_IAC_SETTING_FIELD_NAME;
 import static com.rusefi.maintenance.migration.TestTuneMigrationContextFactory.createTestMigrationContextWithDisappearedConst;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.migrators;
 
 import java.util.Optional;
 import static javax.management.ObjectName.quote;

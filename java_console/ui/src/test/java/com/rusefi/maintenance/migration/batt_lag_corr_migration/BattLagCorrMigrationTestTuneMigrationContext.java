@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBException;
 
 import java.util.Map;
 
-import static com.rusefi.maintenance.migration.BattLagCorrExtensionMigrator.*;
+import static com.rusefi.maintenance.migration.migrators.BattLagCorrExtensionMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BattLagCorrMigrationTestTuneMigrationContext {

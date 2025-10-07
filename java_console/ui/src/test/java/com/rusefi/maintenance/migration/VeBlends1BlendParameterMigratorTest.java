@@ -3,6 +3,7 @@ package com.rusefi.maintenance.migration;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.maintenance.TestTuneMigrationContext;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 
 import static com.rusefi.config.FieldType.UINT8;
 import static com.rusefi.maintenance.migration.TestTuneMigrationContextFactory.createTestMigrationContext;
-import static com.rusefi.maintenance.migration.VeBlends1BlendParameterMigrator.VE_BLENDS_1_BLEND_PARAMETER_FIELD_NAME;
+import static com.rusefi.maintenance.migration.migrators.VeBlends1BlendParameterMigrator.VE_BLENDS_1_BLEND_PARAMETER_FIELD_NAME;
 import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -70,7 +71,7 @@ public class VeBlends1BlendParameterMigratorTest {
             TEST_VE_BLENDS1_BLEND_PARAMETER_INI_FIELD
         );
 
-        ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
+        com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
 
         final Constant migratedValue = testContext.getMigratedConstants().get(VE_BLENDS_1_BLEND_PARAMETER_FIELD_NAME);
         assertNotNull(migratedValue);
