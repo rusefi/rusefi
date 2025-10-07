@@ -96,6 +96,12 @@ static void canInfo() {
 	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
 	canHwInfo(detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin));
 
+#if STM32_CAN_USE_CAN3 || STM32_CAN_USE_FDCAN3
+	efiPrintf("CAN3 TX %s %s", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate));
+	efiPrintf("CAN3 RX %s", hwPortname(engineConfiguration->can3RxPin));
+	canHwInfo(detectCanDevice(engineConfiguration->can3RxPin, engineConfiguration->can3TxPin));
+#endif
+
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
