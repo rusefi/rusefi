@@ -42,31 +42,31 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 	CanTxMessage txmsg(CanCategory::SERIAL, CAN_ECU_SERIAL_TX_ID, dlc, /*bus*/0, IS_EXT_RANGE_ID(CAN_ECU_SERIAL_TX_ID));
 
 	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
-	txmsg[0] = (uint8_t)((header.frameType & 0xf) << 4);
+	txmsg[isoHeaderByteIndex] = (uint8_t)((header.frameType & 0xf) << 4);
 	int offset, maxNumBytes;
 	switch (header.frameType) {
 	case ISO_TP_FRAME_SINGLE:
 		offset = 1;
 		maxNumBytes = minI(header.numBytes, dlc - offset);
-		txmsg[0] |= maxNumBytes;
+		txmsg[isoHeaderByteIndex] |= maxNumBytes;
 		break;
 	case ISO_TP_FRAME_FIRST:
-		txmsg[0] |= (header.numBytes >> 8) & 0xf;
-		txmsg[1] = (uint8_t)(header.numBytes & 0xff);
-		offset = 2;
+		txmsg[isoHeaderByteIndex] |= (header.numBytes >> 8) & 0xf;
+		txmsg[isoHeaderByteIndex + 1] = (uint8_t)(header.numBytes & 0xff);
+		offset = isoHeaderByteIndex + 2;
 		maxNumBytes = minI(header.numBytes, dlc - offset);
 		break;
 	case ISO_TP_FRAME_CONSECUTIVE:
-		txmsg[0] |= header.index & 0xf;
-		offset = 1;
+		txmsg[isoHeaderByteIndex] |= header.index & 0xf;
+		offset = isoHeaderByteIndex + 1;
 		// todo: is it correct?
 		maxNumBytes = dlc - offset;
 		break;
 	case ISO_TP_FRAME_FLOW_CONTROL:
-		txmsg[0] |= header.fcFlag & 0xf;
-		txmsg[1] = (uint8_t)(header.blockSize);
-		txmsg[2] = (uint8_t)(header.separationTime);
-		offset = 3;
+		txmsg[isoHeaderByteIndex] |= header.fcFlag & 0xf;
+		txmsg[isoHeaderByteIndex + 1] = (uint8_t)(header.blockSize);
+		txmsg[isoHeaderByteIndex + 2] = (uint8_t)(header.separationTime);
+		offset = isoHeaderByteIndex + 3;
 		maxNumBytes = 0;	// no data is sent with 'flow control' frame
 		break;
 	default:

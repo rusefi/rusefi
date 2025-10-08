@@ -71,12 +71,14 @@ public:
     uint8_t tmpRxBuf[13];
 #endif
 
+  int isoHeaderByteIndex = 0;
+
 	// used for multi-frame ISO-TP packets
 	int waitingForNumBytes = 0;
 	int waitingForFrameIndex = 0;
 
 	ICanStreamer *streamer;
-	
+
 public:
 	CanStreamerState(ICanStreamer *s) : streamer(s) {}
 
