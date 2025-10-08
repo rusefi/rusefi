@@ -102,7 +102,7 @@ protected:
 
 private:
 #if EFI_CAN_SUPPORT
-	static CANDriver* s_devices[3];
+	static CANDriver* s_devices[EFI_CAN_BUS_COUNT];
 #endif // EFI_CAN_SUPPORT
 };
 
