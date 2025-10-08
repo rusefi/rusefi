@@ -174,7 +174,7 @@ uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size)
 
 static int validateCanChannelAndConvertFromHumanIntoZeroIndex(lua_State* l) {
 	lua_Integer channel = luaL_checkinteger(l, 1);
-	luaL_argcheck(l, channel >= 1 && channel <= CANBUS_COUNT, 1, "Invalid bus index");
+	luaL_argcheck(l, channel >= 1 && channel <= EFI_CAN_BUS_COUNT, 1, "Invalid bus index");
 	return channel - HUMAN_OFFSET;
 }
 
