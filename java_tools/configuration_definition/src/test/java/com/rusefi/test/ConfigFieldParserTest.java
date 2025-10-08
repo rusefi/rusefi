@@ -537,7 +537,7 @@ public class ConfigFieldParserTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(test, consumer, javaFieldsConsumer);
 
-        assertEquals(32, state.getDefaultBitNameCounter());
+        assertEquals(1, state.getDefaultBitNameCounter());
 
         assertEquals("\tpublic static final Field BYTE1 = Field.create(\"BYTE1\", 0, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n" +
                         "\tpublic static final Field ALIGNMENTFILL_AT_1 = Field.create(\"ALIGNMENTFILL_AT_1\", 1, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n" +

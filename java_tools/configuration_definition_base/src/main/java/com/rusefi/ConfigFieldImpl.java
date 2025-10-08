@@ -5,6 +5,7 @@ import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.core.Pair;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.output.ConfigStructure;
+import com.rusefi.output.ConfigStructureImpl;
 import com.rusefi.output.JavaFieldsConsumer;
 
 import java.util.Arrays;
@@ -78,13 +79,13 @@ public class ConfigFieldImpl implements ConfigField {
                            String trueName,
                            String falseName) {
         this.hasAutoscale = hasAutoscale;
-        if (TypesHelper.isBoolean(type) && trueName == null)
-            state.intDefaultBitNameCounter();
         this.trueName = trueName == null ? "true" : trueName;
         this.falseName = falseName == null ? "false" : falseName;
         Objects.requireNonNull(name, comment + " " + type);
         assertNoWhitespaces(name);
         this.name = name;
+        if (TypesHelper.isBoolean(type) && trueName == null && !getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX))
+            state.intDefaultBitNameCounter();
 
         if (!isVoid())
             Objects.requireNonNull(state);
