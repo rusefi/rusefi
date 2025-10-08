@@ -28,6 +28,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
 
+/**
+ * @see BasicStartupFrame#main dedicated sandbox not needed?
+ */
 public class TuneManagementTab {
     private static final Logging log = getLogging(TuneManagementTab.class);
 
