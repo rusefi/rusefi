@@ -34,7 +34,10 @@ import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
 public class TuneManagementTab {
     private static final Logging log = getLogging(TuneManagementTab.class);
 
+    private static final int MAP_ID_INDEX = 0;
+    private static final int SIZE_INDEX = 2;
     private static final int BUTTON_COLUMN = 3;
+
     private final JPanel totalContent = new JPanel(new BorderLayout());
     private final JLabel status = new JLabel("Downloading tunes...");
     private final JTable table = new JTable(new MyTableModel());
@@ -82,10 +85,11 @@ public class TuneManagementTab {
                 }
             }).start();
         }
-        table.getColumnModel().getColumn(0).setPreferredWidth(450);
-        table.getColumnModel().getColumn(1).setPreferredWidth(10);
+        table.getColumnModel().getColumn(MAP_ID_INDEX).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setPreferredWidth(450);
+        table.getColumnModel().getColumn(SIZE_INDEX).setPreferredWidth(40);
 
-        TableColumn buttonColumn = table.getColumnModel().getColumn(2);
+        TableColumn buttonColumn = table.getColumnModel().getColumn(BUTTON_COLUMN);
         buttonColumn.setPreferredWidth(100);
 
         buttonColumn.setCellRenderer(new ButtonRenderer());
@@ -125,7 +129,11 @@ public class TuneManagementTab {
     }
 
     class MyTableModel extends AbstractTableModel {
-        private final String[] columnNames = {"Notes", "Second", "3rd"};
+        private final String[] columnNames = {"MapID", "Name", "Size", ""};
+
+        public String getColumnName(int column) {
+            return columnNames[column];
+        }
 
         @Override
         public int getColumnCount() {
@@ -137,10 +145,16 @@ public class TuneManagementTab {
             if (rowIndex == 0)
                 return columnNames[columnIndex];
             TuneModel model = tunes.get(rowIndex - 1);
-            if (columnIndex == 0) {
-                return model.getNotes();
+            if (columnIndex == MAP_ID_INDEX) {
+                return model.getMapId();
             }
-            if (columnIndex == BUTTON_COLUMN - 1) {
+            if (columnIndex == 1) {
+                return model.getFileName();
+            }
+            if (columnIndex == SIZE_INDEX) {
+                return model.getSize();
+            }
+            if (columnIndex == BUTTON_COLUMN) {
                 return model.isError() ? "Failed to Download" : "Load Tune";
             }
             return rowIndex + " " + columnIndex;
@@ -155,7 +169,7 @@ public class TuneManagementTab {
         public boolean isCellEditable(int row, int column) {
             if (row == 0)
                 return false;
-            return column == BUTTON_COLUMN - 1;
+            return column == BUTTON_COLUMN;
         }
 
         @Override
