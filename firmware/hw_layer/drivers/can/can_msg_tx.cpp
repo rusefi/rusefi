@@ -20,7 +20,13 @@ fifo_buffer<CANTxFrame, 1024> txCanBuffer;
 #endif // EFI_SIMULATOR
 
 #if EFI_CAN_SUPPORT
-/*static*/ CANDriver* CanTxMessage::s_devices[3] = {nullptr, nullptr, nullptr};
+/*static*/ CANDriver* CanTxMessage::s_devices[EFI_CAN_BUS_COUNT] = {
+	nullptr,
+	nullptr,
+#if (EFI_CAN_BUS_COUNT >= 3)
+	nullptr
+#endif
+};
 
 /*static*/ void CanTxMessage::setDevice(size_t idx, CANDriver* device) {
 	if (idx > efi::size(s_devices)) {
