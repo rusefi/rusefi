@@ -28,15 +28,17 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20250926; // separate from rusEFIVersion#CONSOLE_VERSION
-    private static final String KEY = "Autoupdate.do_not_download";
-    private static final boolean doNotDownload;
+    private static final int AUTOUPDATE_VERSION = 20251007; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final String DO_NOT_UPDATE_PROPERTY_KEY = "Autoupdate.do_not_download";
+    private static final boolean doNotDownloadPropertyValue;
+    private static final String SUPPRESS_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + "donotdownload";
+    private static final boolean suppressDownloadViaFlagFile = new File(SUPPRESS_FILE_NAME).exists();
 
     static {
-        doNotDownload = Boolean.getBoolean(KEY);
-        log.info(KEY + "=" + doNotDownload);
+        doNotDownloadPropertyValue = Boolean.getBoolean(DO_NOT_UPDATE_PROPERTY_KEY);
+        log.info(DO_NOT_UPDATE_PROPERTY_KEY + "=" + doNotDownloadPropertyValue);
+        log.info(SUPPRESS_FILE_NAME + " exists: " + suppressDownloadViaFlagFile);
     }
-
 
     private static final String TITLE = getTitle();
 
@@ -89,7 +91,7 @@ public class Autoupdate {
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
         final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
-        if (doNotDownload) {
+        if (doNotDownloadPropertyValue || suppressDownloadViaFlagFile) {
             downloadedAutoupdateFile = Optional.empty();
         } else {
             downloadedAutoupdateFile = downloadFreshZipFile(firstArgument, bundleInfo);
