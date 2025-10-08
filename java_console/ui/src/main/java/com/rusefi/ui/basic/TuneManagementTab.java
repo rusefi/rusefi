@@ -141,7 +141,7 @@ public class TuneManagementTab {
                 return model.getNotes();
             }
             if (columnIndex == BUTTON_COLUMN - 1) {
-                return model.isError() ? "Failed to Download" : "Import Tune";
+                return model.isError() ? "Failed to Download" : "Load Tune";
             }
             return rowIndex + " " + columnIndex;
         }

@@ -18,7 +18,7 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
     private final ConnectivityContext connectivityContext;
 
     public ImportTuneJob(final PortResult port, final Msq tuneToImport, final ConnectivityContext connectivityContext) {
-        super("Import tune", new ImportTuneJobContext(port, tuneToImport));
+        super("Load Tune", new ImportTuneJobContext(port, tuneToImport));
         this.connectivityContext = connectivityContext;
     }
 

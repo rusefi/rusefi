@@ -20,7 +20,7 @@ public class LogoLabelPopupMenu extends JPopupMenu {
             e -> InstanceNameEditor.INSTANCE.editInstanceName(instanceNameMenuItem)
         );
 
-        JMenuItem importTune = new JMenuItem("Import Tune");
+        JMenuItem importTune = new JMenuItem("Load Tune");
         add(importTune);
         importTune.addActionListener(new AbstractAction() {
             @Override
