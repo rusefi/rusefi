@@ -53,17 +53,19 @@ typedef enum {
 } BOR_Level_t;
 #endif
 
-// we are lucky - all CAN pins use the same AF
+// we are lucky - all CAN1/CAN2 pins use the same AF
 #define EFI_CAN_RX_AF 9
 #define EFI_CAN_TX_AF 9
 
-// not lucky with CAN3
+// not lucky with CAN3 and FDCAN3
+#if STM32_CAN_USE_CAN3
 #define EFI_CAN3_RX_AF 11
 #define EFI_CAN3_TX_AF 11
-
-// not lucky with FDCAN3
-#define EFI_FDCAN3_RX_AF 2
-#define EFI_FDCAN3_TX_AF 2
+#endif
+#if STM32_CAN_USE_FDCAN3
+#define EFI_CAN3_RX_AF 2
+#define EFI_CAN3_TX_AF 2
+#endif
 
 #ifndef GPIO_AF_TIM1
 #define GPIO_AF_TIM1 1

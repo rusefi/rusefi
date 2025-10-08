@@ -326,9 +326,12 @@ static void setDefaultEngineNoiseTable() {
 #endif // EFI_ENGINE_CONTROL
 
 static void setDefaultCanSettings() {
-  // OBD-II default rate is 500kbps
-  engineConfiguration->canBaudRate = B500KBPS;
-  engineConfiguration->can2BaudRate = B500KBPS;
+	// OBD-II default rate is 500kbps
+	engineConfiguration->canBaudRate = B500KBPS;
+	engineConfiguration->can2BaudRate = B500KBPS;
+#if (EFI_CAN_BUS_COUNT >= 3)
+	engineConfiguration->can3BaudRate = B500KBPS;
+#endif
 
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canReadEnabled = true;
