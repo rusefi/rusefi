@@ -88,6 +88,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/tcu \
 	$(CONTROLLERS_DIR)/trigger \
 	$(CONTROLLERS_DIR)/can \
+	$(CONTROLLERS_DIR)/can/isotp \
 	$(CONTROLLERS_DIR)/core \
 	$(CONTROLLERS_DIR)/gauges \
 	$(CONTROLLERS_DIR)/math \

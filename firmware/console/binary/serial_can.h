@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include "fifo_buffer.h"
+#include "isotp.h"
 #include "can_listener.h"
-#include "can_msg_tx.h"
 
 #if EFI_PROD_CODE | EFI_SIMULATOR
 #define can_msg_t msg_t
@@ -27,32 +26,6 @@
 // most efficient sizes are 6 + x * 7 that way whole buffer is transmitted as (x+1) full packets
 #define CAN_FIFO_BUF_SIZE 76
 #define CAN_FIFO_FRAME_SIZE 8
-
-#define CAN_FLOW_STATUS_OK 0
-#define CAN_FLOW_STATUS_WAIT_MORE 1
-#define CAN_FLOW_STATUS_ABORT 2
-
-
-enum IsoTpFrameType {
-	ISO_TP_FRAME_SINGLE = 0,
-	ISO_TP_FRAME_FIRST = 1,
-	ISO_TP_FRAME_CONSECUTIVE = 2,
-	ISO_TP_FRAME_FLOW_CONTROL = 3,
-};
-
-class IsoTpFrameHeader {
-public:
-	IsoTpFrameType frameType;
-
-	// used for 'single' or 'first' frames
-	int numBytes;
-	// used for 'consecutive' frames
-	int index;
-	// used for 'flow control' frames
-	int fcFlag;
-	int blockSize;
-	int separationTime;
-};
 
 // We need an abstraction layer for unit-testing
 class ICanTransport {

@@ -18,7 +18,7 @@
 
 using namespace std::string_literals;
 
-class TestCanStreamer : public ICanStreamer {
+class TestCanTransport : public ICanTransport {
 public:
 	virtual can_msg_t transmit(canmbx_t mailbox, const CanTxMessage *ctfp, can_sysinterval_t timeout) override {
 		const CANTxFrame * frame = ctfp->getFrame();
@@ -67,7 +67,7 @@ public:
 
 			streamAddToTxTimeout(&np, (uint8_t *)data.c_str(), 0);
 		}
-		
+
 		// check the FIFO buf size
 		EXPECT_EQ(fifoLeftoverSize, txFifoBuf.getCount());
 
@@ -76,14 +76,14 @@ public:
 
 		// check if correct the TX frames were sent
 		EXPECT_EQ(frames.size(), streamer.ctfList.size());
-		
+
 		auto it1 = streamer.ctfList.begin();
 		int frameIndex = 0;
 		auto it2 = frames.begin();
 		for (; it1 != streamer.ctfList.end() && it2 != frames.end(); it1++, it2++) {
 			streamer.checkFrame(*it1, *it2, frameIndex++);
 		}
-	
+
 		// copy transmitted data back into the receive buffer
 		for (auto f : streamer.ctfList) {
 			CANRxFrame rf;
@@ -120,7 +120,7 @@ public:
 	}
 
 protected:
-	TestCanStreamer streamer;
+	TestCanTransport streamer;
 };
 
 TEST(testCanSerial, test1Frame) {
