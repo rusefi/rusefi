@@ -83,7 +83,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
         logTextArea.setText("");
         logTextArea.setBackground(Color.WHITE);
         logLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
-        logLine(FileLog.getOsName() + " " + System.getProperty("os.version"));
+        log.info(FileLog.getOsName() + " " + System.getProperty("os.version"));
         logLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
     }
 
