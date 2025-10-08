@@ -227,8 +227,6 @@ public class DefaultTuneMigratorTest {
                 "We aren't going to restore field `showHumanReadableWarning`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `skipADC12bitAssert`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `skipBoardCanDash`: it is missed in new .ini file\r\n" +
-                "WARNING! Field `stft_cellCfgs1_maxAdd` cannot be migrated because type is updated: `ScalarIniField{name=stft_cellCfgs1_maxAdd, offset=1020, unit='%', type=INT8}` -> `ScalarIniField{name=stft_cellCfgs1_maxAdd, offset=1032, unit='%', type=UINT8}`\r\n" +
-                "WARNING! Field `stft_cellCfgs1_maxRemove` cannot be migrated because type is updated: `ScalarIniField{name=stft_cellCfgs1_maxRemove, offset=1021, unit='%', type=INT8}` -> `ScalarIniField{name=stft_cellCfgs1_maxRemove, offset=1033, unit='%', type=UINT8}`\r\n" +
                 "We aren't going to restore field `targetVBatt`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `test557pin`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `throttlePedalUpPin`: it is missed in new .ini file\r\n" +
