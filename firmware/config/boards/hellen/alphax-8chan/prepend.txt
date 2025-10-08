@@ -29,7 +29,5 @@
 
 #define VR_THRESHOLD_COUNT 3
 
-#define TRUE_FALSE_COUNT_LIMIT 360
-
 !                                             1                                        5
 #define canReWidebandHwIndex_enum "INVALID", "First", "INVALID", "INVALID", "INVALID", "Second", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"

@@ -35,5 +35,3 @@
 #define ts_show_cylinder_12 false
 
 #define CLT_IDLE_TABLE_RPM_SIZE 6
-
-#define TRUE_FALSE_COUNT_LIMIT 370
