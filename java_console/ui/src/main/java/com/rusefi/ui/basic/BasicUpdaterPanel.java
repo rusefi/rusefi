@@ -123,7 +123,7 @@ never used?
         migrateSettings.setSelected(true);
         migrateSettings.addActionListener(e -> updateMigrateSettingState());
 
-        verboseMessages.setSelected(true);
+        verboseMessages.setSelected(false);
         verboseMessages.addActionListener(e -> updateMigrateSettingState());
 
         updateMigrateSettingState();
