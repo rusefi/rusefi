@@ -30,7 +30,7 @@
 
 
 #if HAL_USE_CAN
-static CanStreamer streamer;
+static CanTransport streamer;
 static CanStreamerState state(&streamer);
 static CanTsListener listener;
 #endif // HAL_USE_CAN
@@ -372,16 +372,16 @@ void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
 
 #if HAL_USE_CAN
 
-void CanStreamer::init() {
+void CanTransport::init() {
 	registerCanListener(listener);
 }
 
-can_msg_t CanStreamer::transmit(canmbx_t /*mailbox*/, const CanTxMessage */*ctfp*/, can_sysinterval_t /*timeout*/) {
+can_msg_t CanTransport::transmit(canmbx_t /*mailbox*/, const CanTxMessage */*ctfp*/, can_sysinterval_t /*timeout*/) {
 	// we do nothing here - see CanTxMessage::~CanTxMessage()
 	return CAN_MSG_OK;
 }
 
-can_msg_t CanStreamer::receive(canmbx_t /*mailbox*/, CANRxFrame *crfp, can_sysinterval_t timeout) {
+can_msg_t CanTransport::receive(canmbx_t /*mailbox*/, CANRxFrame *crfp, can_sysinterval_t timeout) {
 	// see CanTsListener and processCanRxMessage()
 	CanRxMessage msg;
 	if (listener.get(msg, timeout)) {

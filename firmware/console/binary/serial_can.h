@@ -55,7 +55,7 @@ public:
 };
 
 // We need an abstraction layer for unit-testing
-class ICanStreamer {
+class ICanTransport {
 public:
 	virtual can_msg_t transmit(canmbx_t mailbox, const CanTxMessage *ctfp, can_sysinterval_t timeout) = 0;
 	virtual can_msg_t receive(canmbx_t mailbox, CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
@@ -77,10 +77,10 @@ public:
 	int waitingForNumBytes = 0;
 	int waitingForFrameIndex = 0;
 
-	ICanStreamer *streamer;
+	ICanTransport *streamer;
 
 public:
-	CanStreamerState(ICanStreamer *s) : streamer(s) {}
+	CanStreamerState(ICanTransport *s) : streamer(s) {}
 
 	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
 	int receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can_sysinterval_t timeout);
@@ -128,7 +128,7 @@ protected:
 };
 
 #if HAL_USE_CAN
-class CanStreamer : public ICanStreamer {
+class CanTransport : public ICanTransport {
 public:
 	void init();
 
