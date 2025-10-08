@@ -201,17 +201,20 @@ void boardProcessCanRxMessage(const size_t, const CANRxFrame &, efitick_t) {
 std::optional<board_can_rx_type> custom_board_can_rx;
 
 void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
-	if ((engineConfiguration->verboseCan && busIndex == 0) || verboseRxCan) {
-		printPacket(busIndex, frame);
-	} else if (engineConfiguration->verboseCan2 && busIndex == 1) {
-		printPacket(busIndex, frame);
-	} else if (engineConfiguration->verboseCan3 && busIndex == 2) {
+	if (verboseRxCan ||
+		(engineConfiguration->verboseCan && busIndex == 0) ||
+		(engineConfiguration->verboseCan2 && busIndex == 1) ||
+#if (EFI_CAN_BUS_COUNT >= 3)
+		(engineConfiguration->verboseCan3 && busIndex == 2) ||
+#endif
+		0) {
 		printPacket(busIndex, frame);
 	}
-// TODO use call_board_override
-  if (custom_board_can_rx.has_value()) {
-      custom_board_can_rx.value()(busIndex, frame, nowNt);
-  }
+
+	// TODO use call_board_override
+	if (custom_board_can_rx.has_value()) {
+		custom_board_can_rx.value()(busIndex, frame, nowNt);
+	}
 
     // see AemXSeriesWideband as an example of CanSensorBase/CanListener
 	serviceCanSubscribers(busIndex, frame, nowNt);

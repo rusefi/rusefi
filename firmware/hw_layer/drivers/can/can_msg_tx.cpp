@@ -101,7 +101,9 @@ CanTxMessage::~CanTxMessage() {
 
 	bool verboseCan = engineConfiguration->verboseCan && busIndex == 0;
 	verboseCan |= engineConfiguration->verboseCan2 && busIndex == 1;
+#if (EFI_CAN_BUS_COUNT >= 3)
 	verboseCan |= engineConfiguration->verboseCan3 && busIndex == 2;
+#endif
 
 	if (verboseCan) {
 		efiPrintf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
