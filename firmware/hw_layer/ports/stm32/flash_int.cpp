@@ -19,12 +19,17 @@
 #include <string.h>
 
 #ifdef STM32H7XX
+	#undef FLASH_BASE
+
 	#ifdef STM32H743xx
 		// Use bank 2 on H743
 		#define FLASH_CR FLASH->CR2
 		#define FLASH_SR FLASH->SR2
 		#define FLASH_KEYR FLASH->KEYR2
 		#define FLASH_CCR FLASH->CCR2
+
+		// This is the start of the second bank, since H7 sector numbers are bank relative
+		#define FLASH_BASE 0x08100000
 	#endif
 
 	#ifdef STM32H723xx
@@ -33,14 +38,13 @@
 		#define FLASH_SR FLASH->SR1
 		#define FLASH_KEYR FLASH->KEYR1
 		#define FLASH_CCR FLASH->CCR1
+
+		// This is the start of the bank, since H7 sector numbers are bank relative
+		#define FLASH_BASE 0x08000000
 	#endif
 
 	// I have no idea why ST changed the register name from STRT -> START
 	#define FLASH_CR_STRT FLASH_CR_START
-
-	#undef FLASH_BASE
-	// This is the start of the second bank, since H7 sector numbers are bank relative
-	#define FLASH_BASE 0x08100000
 
 	// QW bit supercedes the older BSY bit
 	#define intFlashWaitWhileBusy() do { __DSB(); } while (FLASH_SR & FLASH_SR_QW);
@@ -79,6 +83,7 @@ static void intFlashClearErrors() {
 #else
 	FLASH_SR = 0x0000ffff;
 #endif
+	__DSB();
 }
 
 static int intFlashCheckErrors() {
@@ -105,6 +110,22 @@ static int intFlashCheckErrors() {
 #ifdef FLASH_SR_PGSERR
 	if (sr & FLASH_SR_PGSERR)
 		return FLASH_RETURN_PSEQERROR;
+#endif
+#ifdef FLASH_SR_RDSERR
+	if (sr & FLASH_SR_RDSERR)
+		return FLASH_RETURN_SECURITYERROR;
+#endif
+#ifdef FLASH_SR_RDPERR
+	if (sr & FLASH_SR_RDPERR)
+		return FLASH_RETURN_SECURITYERROR;
+#endif
+#ifdef FLASH_SR_WRPERR
+	if (sr & FLASH_SR_WRPERR)
+		return FLASH_RETURN_SECURITYERROR;
+#endif
+#ifdef FLASH_SR_CRCRDERR
+	if (sr & FLASH_SR_CRCRDERR)
+		return FLASH_RETURN_CRCERROR;
 #endif
 
 	return FLASH_RETURN_SUCCESS;
@@ -326,7 +347,9 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 		__ISB();
 		__DSB();
 
-		// Write 32 bytes
+		static_assert(sizeof(*pWrite) == 4, "Driver supports only 32bit PSIZE");
+
+		// Write 32 bytes/256bits
 		for (size_t i = 0; i < 8; i++) {
 			*pWrite++ = *pRead++;
 		}
