@@ -34,6 +34,10 @@
 /** @brief Flash operation error because of bad flash, corrupted memory */
 #define FLASH_RETURN_BAD_FLASH -11
 
+#define FLASH_RETURN_SECURITYERROR -12
+
+#define FLASH_RETURN_CRCERROR -13
+
 /**
  * @brief Maximum program/erase parallelism
  *
