@@ -10,8 +10,11 @@
 #include "flash_int.h"
 
 bool mcuCanFlashWhileRunning() {
-	// We only support dual bank H7, so always allow flash while running.
+#ifdef STM32H723xx
+	return false;
+#else
 	return true;
+#endif
 }
 
 size_t flashSectorSize(flashsector_t /* sector */) {
