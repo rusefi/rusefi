@@ -22,6 +22,8 @@ size_t flashSectorSize(flashsector_t /* sector */) {
 	return 128 * 1024;
 }
 
+static_assert(sizeof(persistent_config_container_s) <= 128 * 1024, "Settings does not fit into flash sector");
+
 uintptr_t getFlashAddrFirstCopy() {
 #ifdef STM32H723xx
 	return 0x080E0000;
