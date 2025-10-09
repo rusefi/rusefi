@@ -4217,7 +4217,7 @@ end</constant>
         <constant digits="2" name="tpsMax" units="V">4.882813</constant>
         <constant digits="2" name="tpsMin" units="V">0.0</constant>
         <constant digits="1" name="tpsSecondaryMaximum" units="%">0.0</constant>
-        <constant cols="1" digits="2" name="tpsTpsAccelFromRpmBins" rows="8" units="from">
+        <constant cols="1" digits="2" name="tpsTpsAccelFromRpmBins" rows="8" units="%">
          0.0
          10.0
          30.0
@@ -4237,7 +4237,7 @@ end</constant>
          35.0 32.0 28.0 23.0 17.0 10.0 0.0 0.0
          37.0 35.0 32.0 28.0 23.0 17.0 10.0 0.0
 </constant>
-        <constant cols="1" digits="2" name="tpsTpsAccelToRpmBins" rows="8" units="to">
+        <constant cols="1" digits="2" name="tpsTpsAccelToRpmBins" rows="8" units="%">
          0.0
          10.0
          30.0
@@ -4933,7 +4933,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20251001" nPages="1" signature="rusEFI master.2025.10.09.f407-discovery.4238608418" version="5.0"/>
+    <versionInfo firmwareInfo="20251001" nPages="1" signature="rusEFI master.2025.10.09.f407-discovery.4152942675" version="5.0"/>
     <bibliography author="rusEFI 20251001" writeDate="date"/>
     <settings/>
     <userComments/>
