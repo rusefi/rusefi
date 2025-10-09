@@ -147,6 +147,7 @@ void Pid::postState(pid_status_s& pidStatus) const {
 	pidStatus.pTerm = parameters == nullptr ? 0 : parameters->pFactor * previousError;
 	pidStatus.iTerm = iTerm;
 	pidStatus.dTerm = dTerm;
+	pidStatus.resetCounter = resetCounter;
 }
 #endif /* EFI_TUNER_STUDIO */
 
