@@ -39,10 +39,12 @@ public:
 	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> rxFifoBuf;
 	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> txFifoBuf;
 
+/*
 #if defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
 	// used to restore the original packet with CRC
-    uint8_t tmpRxBuf[13];
+    uint8_t shortCrcPacketStagingArea[13];
 #endif
+*/
 
   int isoHeaderByteIndex = 0;
 
@@ -50,10 +52,10 @@ public:
 	int waitingForNumBytes = 0;
 	int waitingForFrameIndex = 0;
 
-	ICanTransport *streamer;
+	ICanTransport *transport;
 
 public:
-	CanStreamerState(ICanTransport *s) : streamer(s) {}
+	CanStreamerState(ICanTransport *p_transport) : transport(p_transport) {}
 
 	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
 	int receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can_sysinterval_t timeout);
@@ -109,7 +111,7 @@ public:
 	virtual can_msg_t receive(canmbx_t mailbox, CANRxFrame *crfp, can_sysinterval_t timeout) override;
 };
 
-void canStreamInit(void);
+void tsOverCanInit();
 
 // we don't have canStreamSendTimeout() because we need to "bufferize" the stream and send it in fixed-length packets
 msg_t canStreamAddToTxTimeout(size_t *np, const uint8_t *txbuf, sysinterval_t timeout);

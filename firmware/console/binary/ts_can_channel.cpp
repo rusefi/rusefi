@@ -103,7 +103,7 @@ static CanTsThread canTsThread;
 
 void startCanConsole() {
 	canTsThread.start();
-	canStreamInit();
+	tsOverCanInit();
 }
 
 #endif // EFI_CAN_SERIAL

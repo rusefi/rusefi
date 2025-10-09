@@ -30,8 +30,8 @@
 
 
 #if HAL_USE_CAN
-static CanTransport streamer;
-static CanStreamerState state(&streamer);
+static CanTransport transport;
+static CanStreamerState state(&transport);
 static CanTsListener listener;
 #endif // HAL_USE_CAN
 
@@ -83,7 +83,7 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 	}
 
 	// send the frame!
-	if (streamer->transmit(CAN_ANY_MAILBOX, &txmsg, timeout) == CAN_MSG_OK)
+	if (transport->transmit(CAN_ANY_MAILBOX, &txmsg, timeout) == CAN_MSG_OK)
 		return numBytes;
 	return 0;
 }
@@ -126,6 +126,8 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 		return 0;
 	}
 
+/** performance optimization specific to TS over CAN tunnelling
+TODO: refactor into child class if we ever choose to revive this logic
 #if defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
 	if (frameType == ISO_TP_FRAME_SINGLE) {
 		// restore the CRC on the whole packet
@@ -135,19 +137,19 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 		*(uint32_t *) (crcBuffer) = SWAP_UINT32(crc);
 
 		// now set the packet size
-		*(uint16_t *) tmpRxBuf = SWAP_UINT16(numBytesAvailable);
+		*(uint16_t *) shortCrcPacketStagingArea = SWAP_UINT16(numBytesAvailable);
 		// copy the data
 		if (numBytesAvailable > 0)
-			memcpy(tmpRxBuf + sizeof(uint16_t), srcBuf, numBytesAvailable);
+			memcpy(shortCrcPacketStagingArea + sizeof(uint16_t), srcBuf, numBytesAvailable);
 		// copy the crc to the end
-		memcpy(tmpRxBuf + sizeof(uint16_t) + numBytesAvailable, crcBuffer, sizeof(crcBuffer));
+		memcpy(shortCrcPacketStagingArea + sizeof(uint16_t) + numBytesAvailable, crcBuffer, sizeof(crcBuffer));
 
 		// use the reconstructed tmp buffer as a source buffer
-		srcBuf = tmpRxBuf;
+		srcBuf = shortCrcPacketStagingArea;
 		// we added the 16-bit size & 32-bit crc bytes
 		numBytesAvailable += sizeof(uint16_t) + sizeof(crcBuffer);
 	}
-#endif /* TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME */
+#endif *//* TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME */
 
 	int numBytesToCopy = minI(num, numBytesAvailable);
 	if (buf != nullptr) {
@@ -207,7 +209,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
 	CANRxFrame rxmsg;
 	for (int numFcReceived = 0; ; numFcReceived++) {
-		if (streamer->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) != CAN_MSG_OK) {
+		if (transport->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
 			PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
@@ -331,7 +333,7 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 	// if even more data is needed, then we receive more CAN frames
 	while (availableBufferSpace > 0) {
 		CANRxFrame rxmsg;
-		if (streamer->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) == CAN_MSG_OK) {
+		if (transport->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) == CAN_MSG_OK) {
 			int numReceived = receiveFrame(&rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
 
 			if (numReceived < 1)
@@ -391,8 +393,8 @@ can_msg_t CanTransport::receive(canmbx_t /*mailbox*/, CANRxFrame *crfp, can_sysi
 	return CAN_MSG_TIMEOUT;
 }
 
-void canStreamInit(void) {
-	streamer.init();
+void tsOverCanInit() {
+	transport.init();
 }
 
 msg_t canStreamAddToTxTimeout(size_t *np, const uint8_t *txbuf, sysinterval_t timeout) {
