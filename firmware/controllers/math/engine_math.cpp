@@ -187,4 +187,47 @@ BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
 	return { value.Value, blendFactor, 0.01f * blendFactor * tableValue, load };
 }
 
+// Add torque estimation functions
+float getAirmassFromMap(float map_kpa, int rpm, float intake_temp_c) {
+    // Calculate theoretical air mass per stroke based on MAP
+    float displacement_per_stroke = engineConfiguration->displacement / 
+                                   engineConfiguration->cylindersCount / 2.0f; // cc per stroke
+    
+    // Convert to liters
+    displacement_per_stroke *= 0.001f;
+    
+    // Air density calculation (ideal gas law approximation)
+    float air_density_kg_m3 = (map_kpa * 1000.0f) / (287.0f * (intake_temp_c + 273.15f));
+    
+    // Air mass per stroke in mg
+    float air_mass_mg = displacement_per_stroke * air_density_kg_m3 * 1000000.0f;
+    
+    // Apply volumetric efficiency
+    float ve = getVeFromMap(rpm, map_kpa);
+    
+    return air_mass_mg * ve;
+}
+
+float calculateTorqueFromAirmass(float airmass_mg_per_stroke, int rpm) {
+    // Simplified torque calculation
+    // Energy per stroke = Air mass * Fuel energy density * Combustion efficiency
+    
+    float fuel_energy_mj_per_kg = 44.0f; // Gasoline energy content
+    float combustion_efficiency = 0.35f;  // Typical gasoline engine efficiency
+    float mechanical_efficiency = 0.85f;  // Mechanical losses
+    
+    // Convert air mass to fuel energy (assuming stoichiometric mixture)
+    float fuel_mass_mg = airmass_mg_per_stroke / 14.7f; // Stoichiometric ratio
+    float fuel_mass_kg = fuel_mass_mg * 0.000001f;
+    
+    // Energy per stroke in Joules
+    float energy_per_stroke = fuel_mass_kg * fuel_energy_mj_per_kg * 1000000.0f * 
+                             combustion_efficiency * mechanical_efficiency;
+    
+    // Convert to torque: Torque = Energy / (2 * pi)
+    float torque_nm = energy_per_stroke / (2.0f * 3.14159f);
+    
+    return torque_nm;
+}
+
 #endif /* EFI_ENGINE_CONTROL */

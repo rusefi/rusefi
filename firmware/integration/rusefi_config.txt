@@ -149,6 +149,8 @@ struct_no_prefix engine_configuration_s
 #define TORQUE_TABLE_X_SIZE 6
 #define TORQUE_TABLE_Y_SIZE 2
 
+
+
 #define CLT_CURVE_SIZE 16
 #define CLT_LIMITER_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
@@ -306,6 +308,32 @@ struct stft_cell_cfg_s
 	uint8_t autoscale maxRemove;Maximum % that the short term fuel trim can remove;"%", 0.1, 0, 0, 25, 1
 	uint16_t autoscale timeConstant;Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.\nLower values makes the correction more sensitive, higher values slow the correction down.;"sec", 0.1, 0, 0.1, 100, 2
 end_struct
+
+[TorqueControl]
+dialog = torqueControlDialog, "Torque-Based Engine Control"
+
+field = "Enable Torque Control", isTorqueControlEnabled
+field = "Maximum Engine Torque (Nm)", torqueModelConfig.maxTorqueNm, {isTorqueControlEnabled}
+field = "Idle Torque Requirement (Nm)", torqueModelConfig.idleTorqueNm, {isTorqueControlEnabled}
+field = "Base Friction Losses (Nm)", torqueModelConfig.frictionBaseNm, {isTorqueControlEnabled}
+
+panel = torqueRateLimits, {isTorqueControlEnabled}
+field = "Air Path Rate Limit (Nm/s)", torqueModelConfig.maxAirPathRateNmPerS
+field = "Ignition Path Rate Limit (Nm/s)", torqueModelConfig.maxIgnitionPathRateNmPerS
+field = "Fuel Path Rate Limit (Nm/s)", torqueModelConfig.maxFuelPathRateNmPerS
+
+panel = torqueReserve, {isTorqueControlEnabled}
+field = "Default Positive Reserve (Nm)", torqueModelConfig.defaultPositiveReserveNm
+field = "Default Negative Reserve (Nm)", torqueModelConfig.defaultNegativeReserveNm
+
+panel = transmissionInterface, {isTorqueControlEnabled}
+field = "Enable Transmission Interface", torqueModelConfig.enableTransmissionTorqueInterface
+field = "Torque Message CAN ID", torqueModelConfig.torqueMessageCanId
+field = "Message Format", torqueModelConfig.torqueMessageFormat, {torqueModelConfig.enableTransmissionTorqueInterface}
+
+[TorqueCalibration]
+table = torqueVsRpmLoadTbl, torqueVsRpmLoadMap, "Torque vs RPM/Load", 1
+topicHelp = "torqueCalibrationHelp", "Base engine torque map used for torque estimation and control"
 
 struct stft_s
 	uint8_t autoscale maxIdleRegionRpm;Below this RPM, the idle region is active, idle+300 would be a good value;"RPM", 50, 0, 0, 12000, 0
@@ -2389,6 +2417,16 @@ gppwm_channel_e torqueReductionIgnitionRetardXaxis;Selects the X axis to use for
 float[TORQUE_TABLE_Y_SIZE x TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardTable;How many degrees of timing advance will be reduced during the Torque Reduction Time;"deg", 1, 0, -180, 180, 2
 int16_t[TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardXBins;;"", 1, 0, -30000, 30000, 0
 int8_t[TORQUE_TABLE_Y_SIZE] torqueReductionIgnitionRetardGearBins ;;"gear N°", 1, 0, 0, 20, 0
+
+! Torque calibration tables
+table = torqueVsRpmLoadTbl, torqueVsRpmLoad, "Base Torque Map", 1
+    xBins = rpmBins, rpm
+    yBins = loadBins, engineLoad
+    zBins = torqueVsRpmLoad, torqueOutput
+
+table = frictionVsRpmTbl, frictionVsRpm, "Friction Losses vs RPM", 1
+    xBins = rpmBins, rpm
+    yBins = frictionVsRpm, frictionTorque
 
 split_lines@@BOARD_CONFIG_FROM_FILE@@
 
