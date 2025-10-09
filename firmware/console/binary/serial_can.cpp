@@ -86,7 +86,7 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 	}
 
 	// send the frame!
-	if (transport->transmit(CAN_ANY_MAILBOX, &txmsg, timeout) == CAN_MSG_OK)
+	if (transport->transmit(&txmsg, timeout) == CAN_MSG_OK)
 		return numBytes;
 	return 0;
 }
@@ -212,7 +212,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
 	CANRxFrame rxmsg;
 	for (int numFcReceived = 0; ; numFcReceived++) {
-		if (transport->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) != CAN_MSG_OK) {
+		if (transport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
 			PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
@@ -336,7 +336,7 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 	// if even more data is needed, then we receive more CAN frames
 	while (availableBufferSpace > 0) {
 		CANRxFrame rxmsg;
-		if (transport->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) == CAN_MSG_OK) {
+		if (transport->receive(&rxmsg, timeout) == CAN_MSG_OK) {
 			int numReceived = receiveFrame(&rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
 
 			if (numReceived < 1)
@@ -381,12 +381,12 @@ void CanTransport::init() {
 	registerCanListener(listener);
 }
 
-can_msg_t CanTransport::transmit(canmbx_t /*mailbox*/, const CanTxMessage */*ctfp*/, can_sysinterval_t /*timeout*/) {
+can_msg_t CanTransport::transmit(const CanTxMessage */*ctfp*/, can_sysinterval_t /*timeout*/) {
 	// we do nothing here - see CanTxMessage::~CanTxMessage()
 	return CAN_MSG_OK;
 }
 
-can_msg_t CanTransport::receive(canmbx_t /*mailbox*/, CANRxFrame *crfp, can_sysinterval_t timeout) {
+can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {
 	// see CanTsListener and processCanRxMessage()
 	CanRxMessage msg;
 	if (listener.get(msg, timeout)) {

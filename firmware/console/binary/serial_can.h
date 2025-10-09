@@ -30,8 +30,8 @@
 // We need an abstraction layer for unit-testing
 class ICanTransport {
 public:
-	virtual can_msg_t transmit(canmbx_t mailbox, const CanTxMessage *ctfp, can_sysinterval_t timeout) = 0;
-	virtual can_msg_t receive(canmbx_t mailbox, CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
+	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) = 0;
+	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
 };
 
 class CanStreamerState {
@@ -119,8 +119,8 @@ class CanTransport : public ICanTransport {
 public:
 	void init();
 
-	virtual can_msg_t transmit(canmbx_t mailbox, const CanTxMessage *ctfp, can_sysinterval_t timeout) override;
-	virtual can_msg_t receive(canmbx_t mailbox, CANRxFrame *crfp, can_sysinterval_t timeout) override;
+	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) override;
+	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override;
 };
 
 void tsOverCanInit();

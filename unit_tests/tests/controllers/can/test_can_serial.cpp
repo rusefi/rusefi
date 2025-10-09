@@ -20,7 +20,7 @@ using namespace std::string_literals;
 
 class TestCanTransport : public ICanTransport {
 public:
-	virtual can_msg_t transmit(canmbx_t mailbox, const CanTxMessage *ctfp, can_sysinterval_t timeout) override {
+	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) override {
 		const CANTxFrame * frame = ctfp->getFrame();
 		// invoke copy constructor to clone frame
 		CANTxFrame localCopy = *frame;
@@ -29,7 +29,7 @@ public:
 		return CAN_MSG_OK;
 	}
 
-	virtual can_msg_t receive(canmbx_t mailbox, CANRxFrame *crfp, can_sysinterval_t timeout) override {
+	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override {
 		if (crfList.empty())
 			return CAN_MSG_TIMEOUT;
 		*crfp = *crfList.begin();
