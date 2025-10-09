@@ -2088,8 +2088,8 @@ uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
 
 float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0, 0, 30000, 2
-float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
-float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;;"to",	  1, 0, 0, 25500, 2
+float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"%",	  1, 0, 0, 30000, 2
+float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;;"%",	  1, 0, 0, 25500, 2
 
 float[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable1;;"value", 1, 0, -100000, 100000, 2
 int16_t[SCRIPT_TABLE_8] scriptTable1LoadBins;;"L", 1, 0, -32000, 32000, 0
