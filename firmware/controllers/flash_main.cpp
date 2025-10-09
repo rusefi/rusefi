@@ -65,7 +65,9 @@ bool writeToFlashNowImpl() {
 
 	resetMaxValues();
 
-	return ((result1 == StorageStatus::Ok) && (result2 == StorageStatus::Ok));
+	// Some MCU have no enough flash to store two copies. First one is mandatory.
+	return ((result1 == StorageStatus::Ok) &&
+			((result2 == StorageStatus::Ok) || (result2 == StorageStatus::NotSupported)));
 }
 
 static StorageStatus validatePersistentState() {
