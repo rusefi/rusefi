@@ -54,8 +54,16 @@ public:
 
 	ICanTransport *transport;
 
+	int busIndex;
+	int txFrameId;
+
 public:
-	CanStreamerState(ICanTransport *p_transport) : transport(p_transport) {}
+	CanStreamerState(ICanTransport *p_transport, int p_busIndex, int p_txFrameId)
+	 :
+	 transport(p_transport),
+	 busIndex(p_busIndex),
+	 txFrameId(p_txFrameId)
+	  {}
 
 	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
 	int receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can_sysinterval_t timeout);
@@ -72,11 +80,15 @@ public:
 class CanRxMessage {
 public:
 	CanRxMessage() {}
+
 	CanRxMessage(const CANRxFrame &f) {
 		frame = f;
 	}
+
 	CanRxMessage(const CanRxMessage& msg) : frame(msg.frame) {}
+
 	CanRxMessage& operator=(const CanRxMessage& msg) {
+    // full content copy
 		frame = msg.frame;
 		return *this;
 	}

@@ -7,7 +7,6 @@
 #define CAN_FLOW_STATUS_WAIT_MORE 1
 #define CAN_FLOW_STATUS_ABORT 2
 
-
 enum IsoTpFrameType {
 	ISO_TP_FRAME_SINGLE = 0,
 	ISO_TP_FRAME_FIRST = 1,

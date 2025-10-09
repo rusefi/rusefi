@@ -4,6 +4,7 @@ LUA_EXT=$(PROJECT_DIR)/ext/lua
 ALLCPPSRC += $(LUA_DIR)/lua.cpp \
 			 $(LUA_DIR)/lua_heap.cpp \
 			 $(LUA_DIR)/lua_hooks.cpp \
+			 $(LUA_DIR)/lua_hooks_ext.cpp \
 			 $(LUA_DIR)/can_filter.cpp \
 			 $(LUA_DIR)/lua_hooks_util.cpp \
 			 $(LUA_DIR)/script_impl.cpp \

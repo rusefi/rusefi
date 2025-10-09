@@ -640,6 +640,7 @@ static tinymt32_t tinymt;
 
 void configureRusefiLuaHooks(lua_State* lState) {
   boardConfigureLuaHooks(lState);
+  configureRusefiLuaHooksExt(lState);
 
   tinymt32_init(&tinymt, 1534525); // todo: share instance with launch_control? probably not?
 	lua_register(lState, "random", [](lua_State* l) {

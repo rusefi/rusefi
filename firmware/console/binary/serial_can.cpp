@@ -30,16 +30,19 @@
 
 
 #if HAL_USE_CAN
-static CanTransport transport;
-static CanStreamerState state(&transport);
+// this one installs itself as top level CAN bus listener with static frame ID
 static CanTsListener listener;
+// for RX, this one delegates to above FIFO via global field
+static CanTransport transport;
+
+static CanStreamerState state(&transport, /*bus*/0, CAN_ECU_SERIAL_TX_ID);
 #endif // HAL_USE_CAN
 
 #if HAL_USE_CAN || EFI_UNIT_TEST
 
 int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout) {
 	int dlc = 8; // standard 8 bytes
-	CanTxMessage txmsg(CanCategory::SERIAL, CAN_ECU_SERIAL_TX_ID, dlc, /*bus*/0, IS_EXT_RANGE_ID(CAN_ECU_SERIAL_TX_ID));
+	CanTxMessage txmsg(CanCategory::SERIAL, txFrameId, dlc, busIndex, IS_EXT_RANGE_ID(txFrameId));
 
 	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
 	txmsg[isoHeaderByteIndex] = (uint8_t)((header.frameType & 0xf) << 4);
