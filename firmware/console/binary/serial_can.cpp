@@ -96,29 +96,29 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 	if (rxmsg == nullptr || rxmsg->DLC < 1)
 		return 0;
 	engine->pauseCANdueToSerial = true;
-	int frameType = (rxmsg->data8[0] >> 4) & 0xf;
+	int frameType = (rxmsg->data8[isoHeaderByteIndex] >> 4) & 0xf;
 	int numBytesAvailable, frameIdx;
 	uint8_t *srcBuf = rxmsg->data8;
 	switch (frameType) {
 	case ISO_TP_FRAME_SINGLE:
-		numBytesAvailable = rxmsg->data8[0] & 0xf;
+		numBytesAvailable = rxmsg->data8[isoHeaderByteIndex] & 0xf;
 		srcBuf = rxmsg->data8 + 1;
 		this->waitingForNumBytes = -1;
 		break;
 	case ISO_TP_FRAME_FIRST:
-		this->waitingForNumBytes = ((rxmsg->data8[0] & 0xf) << 8) | rxmsg->data8[1];
+		this->waitingForNumBytes = ((rxmsg->data8[isoHeaderByteIndex] & 0xf) << 8) | rxmsg->data8[isoHeaderByteIndex + 1];
 		this->waitingForFrameIndex = 1;
-		numBytesAvailable = minI(this->waitingForNumBytes, 6);
-		srcBuf = rxmsg->data8 + 2;
+		numBytesAvailable = minI(this->waitingForNumBytes, 6 - isoHeaderByteIndex);
+		srcBuf = rxmsg->data8 + 2 + isoHeaderByteIndex;
 		break;
 	case ISO_TP_FRAME_CONSECUTIVE:
-		frameIdx = rxmsg->data8[0] & 0xf;
+		frameIdx = rxmsg->data8[isoHeaderByteIndex] & 0xf;
 		if (this->waitingForNumBytes < 0 || this->waitingForFrameIndex != frameIdx) {
 			// todo: that's an abnormal situation, and we probably should react?
 			return 0;
 		}
-		numBytesAvailable = minI(this->waitingForNumBytes, 7);
-		srcBuf = rxmsg->data8 + 1;
+		numBytesAvailable = minI(this->waitingForNumBytes, 7 - isoHeaderByteIndex);
+		srcBuf = rxmsg->data8 + 1 + isoHeaderByteIndex;
 		this->waitingForFrameIndex = (this->waitingForFrameIndex + 1) & 0xf;
 		break;
 	case ISO_TP_FRAME_FLOW_CONTROL:
