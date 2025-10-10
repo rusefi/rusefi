@@ -3,6 +3,14 @@
 #include "fifo_buffer.h"
 #include "can_msg_tx.h"
 
+#if EFI_UNIT_TEST
+#define PRINT printf
+#define PRINT_EOL "\n"
+#else
+#define PRINT efiPrintf
+#define PRINT_EOL ""
+#endif
+
 #if EFI_PROD_CODE | EFI_SIMULATOR
 #define can_msg_t msg_t
 #define can_sysinterval_t sysinterval_t
