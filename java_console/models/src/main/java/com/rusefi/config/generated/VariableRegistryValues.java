@@ -244,7 +244,6 @@ public class VariableRegistryValues {
 	public static final int can_wbo_type_e_AEM = 1;
 	public static final int can_wbo_type_e_DISABLED = 2;
 	public static final int can_wbo_type_e_RUSEFI = 0;
-	public static final int CANBUS_COUNT = 2;
 	public static final int CanGpioType_DRT = 1;
 	public static final int CanGpioType_MS = 2;
 	public static final int CanGpioType_NONE = 0;
@@ -423,6 +422,7 @@ public class VariableRegistryValues {
 	public static final String DYNO_SAE_RELATIVE_HUMIDITY_UNITS = "%";
 	public static final String DYNO_SAE_TEMPERATURE_C_TOOLTIP = "Air temperature";
 	public static final String DYNO_SAE_TEMPERATURE_C_UNITS = "C";
+	public static final int EFI_CAN_BUS_COUNT = 2;
 	public static final int ego_sensor_e_ES_14Point7_Free = 2;
 	public static final int ego_sensor_e_ES_AEM = 6;
 	public static final int ego_sensor_e_ES_BPSX_D1 = 0;
@@ -1735,7 +1735,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.10.10.stm32h743_nucleo.2847105693";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.10.11.stm32h743_nucleo.4193070506";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2064;
