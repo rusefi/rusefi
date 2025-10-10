@@ -241,12 +241,13 @@ static bool isValidCan3TxPin(brain_pin_e pin) {
 }
 #elif STM32_CAN_USE_FDCAN3
 // STM32H723
+// See different AF for PD12/PD13 vs PF6/PF7 and PG9/PG10
 static bool isValidCan3RxPin(brain_pin_e pin) {
-	return pin == Gpio::D12 || pin == Gpio::F6 || pin == Gpio::G10;
+	return pin == Gpio::D12 /* || pin == Gpio::F6 || pin == Gpio::G10 */;
 }
 
 static bool isValidCan3TxPin(brain_pin_e pin) {
-	return pin == Gpio::D13 || pin == Gpio::F7 || pin == Gpio::G9;
+	return pin == Gpio::D13 /* || pin == Gpio::F7 || pin == Gpio::G9 */;
 }
 #else
 static __attribute__((unused)) bool isValidCan3RxPin(brain_pin_e) {
