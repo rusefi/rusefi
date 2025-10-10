@@ -103,6 +103,11 @@ static void uaefi_boardDefaultConfiguration() {
 	setHellenCan2();
 #endif
 
+#if (EFI_CAN_BUS_COUNT >= 3)
+	engineConfiguration->can3TxPin = Gpio::MM100_CAN3_TX;
+	engineConfiguration->can3RxPin = Gpio::MM100_CAN3_RX;
+#endif
+
   engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
  	engineConfiguration->fanPin = Gpio::MM100_IGN8;
 	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM2;
