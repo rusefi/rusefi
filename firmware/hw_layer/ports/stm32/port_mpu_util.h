@@ -63,8 +63,12 @@ typedef enum {
 #define EFI_CAN3_TX_AF 11
 #endif
 #if STM32_CAN_USE_FDCAN3
-#define EFI_CAN3_RX_AF 2
-#define EFI_CAN3_TX_AF 2
+// PD12/PD13
+#define EFI_CAN3_RX_AF 5
+#define EFI_CAN3_TX_AF 5
+// TODO: PG9/PG10 and PF6/PF7
+//#define EFI_CAN3_RX_AF 2
+//#define EFI_CAN3_TX_AF 2
 #endif
 
 #ifndef GPIO_AF_TIM1
