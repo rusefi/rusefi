@@ -11,93 +11,7 @@
 #include "isotp.h"
 #include "can_listener.h"
 
-#if EFI_PROD_CODE | EFI_SIMULATOR
-#define can_msg_t msg_t
-#define can_sysinterval_t sysinterval_t
-#define CAN_MSG_OK MSG_OK
-#define CAN_MSG_TIMEOUT MSG_TIMEOUT
-#else
-#include "can_mocks.h"
-#endif /* EFI_UNIT_TEST */
-
-
-#define CAN_TIME_IMMEDIATE ((can_sysinterval_t)0)
-
-// most efficient sizes are 6 + x * 7 that way whole buffer is transmitted as (x+1) full packets
-#define CAN_FIFO_BUF_SIZE 76
-#define CAN_FIFO_FRAME_SIZE 8
-
-// We need an abstraction layer for unit-testing
-class ICanTransport {
-public:
-	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) = 0;
-	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
-};
-
-class CanStreamerState {
-public:
-	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> rxFifoBuf;
-	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> txFifoBuf;
-
-/*
-#if defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
-	// used to restore the original packet with CRC
-    uint8_t shortCrcPacketStagingArea[13];
-#endif
-*/
-
-  int isoHeaderByteIndex = 0;
-
-	// used for multi-frame ISO-TP packets
-	int waitingForNumBytes = 0;
-	int waitingForFrameIndex = 0;
-
-	ICanTransport *transport;
-
-	int busIndex;
-	int txFrameId;
-
-public:
-	CanStreamerState(ICanTransport *p_transport, int p_busIndex, int p_txFrameId)
-	 :
-	 transport(p_transport),
-	 busIndex(p_busIndex),
-	 txFrameId(p_txFrameId)
-	  {}
-
-	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
-	int receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can_sysinterval_t timeout);
-	int getDataFromFifo(uint8_t *rxbuf, size_t &numBytes);
-	// returns the number of bytes sent
-	int sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sysinterval_t timeout);
-
-	// streaming support for TS I/O (see tunerstudio_io.cpp)
-	can_msg_t streamAddToTxTimeout(size_t *np, const uint8_t *txbuf, can_sysinterval_t timeout);
-	can_msg_t streamFlushTx(can_sysinterval_t timeout);
-	can_msg_t streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can_sysinterval_t timeout);
-};
-
-class CanRxMessage {
-public:
-	CanRxMessage() {}
-
-	CanRxMessage(const CANRxFrame &f) {
-		frame = f;
-	}
-
-	CanRxMessage(const CanRxMessage& msg) : frame(msg.frame) {}
-
-	CanRxMessage& operator=(const CanRxMessage& msg) {
-    // full content copy
-		frame = msg.frame;
-		return *this;
-	}
-
-public:
-	CANRxFrame frame;
-};
-
-class CanTsListener : public CanListener {
+class CanTsListener : public CanListener, public CanRxMessageSource {
 public:
 	CanTsListener()
 		: CanListener(CAN_ECU_SERIAL_RX_ID)
@@ -117,10 +31,13 @@ protected:
 #if HAL_USE_CAN
 class CanTransport : public ICanTransport {
 public:
+  CanTransport(CanRxMessageSource *p_source) : source(p_source) {}
 	void init();
 
 	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) override;
 	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override;
+
+	CanRxMessageSource *source;
 };
 
 void tsOverCanInit();
