@@ -54,6 +54,11 @@ public class ArrayIniField extends IniField {
         return type;
     }
 
+    /**
+     * todo: spell out if 'cols' is first or second dimension of C arrays
+     * @return 10 in case of TS definition [10x6]
+     * @return 1 for curves
+     */
     public int getCols() {
         return cols;
     }
