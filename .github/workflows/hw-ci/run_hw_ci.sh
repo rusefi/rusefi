@@ -8,9 +8,7 @@ export SIMULATOR_INI_FILE=$2
 
 set -e
 
-cd java_tools
 ./gradlew :autotest:shadowJar
-cd ..
 
 if [ -n "$HARDWARE_CI_SERIAL" ]; then
 	for t in /sys/class/tty/tty*/device/../serial; do

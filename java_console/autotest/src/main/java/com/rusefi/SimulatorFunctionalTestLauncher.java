@@ -62,7 +62,7 @@ public class SimulatorFunctionalTestLauncher {
     }
 
     private static void buildSimulator() throws IOException, InterruptedException {
-        Process makeProcess = Runtime.getRuntime().exec("make -j8", null, new File("../simulator"));
+        Process makeProcess = Runtime.getRuntime().exec("make -j8", null, new File("simulator"));
         SimulatorExecHelper.dumpProcessOutput(makeProcess, null);
         makeProcess.waitFor();
     }
