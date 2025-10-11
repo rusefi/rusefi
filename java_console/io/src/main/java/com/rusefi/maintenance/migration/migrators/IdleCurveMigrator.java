@@ -50,10 +50,13 @@ public enum IdleCurveMigrator implements TuneMigrator {
 			context.addMigration(IDLE_CURVE_NAME, IDLE_TABLE_NAME,
 					generateConstant(updatedTableField, updatedTableField.formatValue(migratedTableValues)));
 		} else if (prevCurveRowSize < columnSize) {
+/*
 			// newer table has more bins
 			final String[][] prevValues = prevCurveField.getValues(prevIdleCurveData.getValue());
 			final String[][] migratedTableValues = upsampleCurveToTable(prevValues, prevCurveRowSize, columnSize,
 					updatedTableField.getCols(), prevCurveField.getDigits());
+todo: finish this branch one day?
+*/
 		} else {
 			// newer table has less bins, keep values from the start, middle, and end of the curve
 			final String[][] prevValues = prevCurveField.getValues(prevIdleCurveData.getValue());
