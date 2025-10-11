@@ -14,11 +14,8 @@ public enum IdleCurveMigrator implements TuneMigrator {
 	INSTANCE;
 
 	public static final String IDLE_CURVE_NAME = "cltIdleCorr";
-	public static final String IDLE_CURVE_CLT_BINS = "cltIdleCorrBins";
 
 	public static final String IDLE_TABLE_NAME = "cltIdleCorrTable";
-	public static final String IDLE_TABLE_RPM_BINS = "rpmIdleCorrBins";
-	public static final String IDLE_TABLE_CLT_BINS = "cltIdleCorrBins";
 
 	@Override
 	public void migrateTune(final TuneMigrationContext context) {
@@ -41,12 +38,12 @@ public enum IdleCurveMigrator implements TuneMigrator {
 			final String[][] prevValues = prevCurveField.getValues(prevIdleCurveData.getValue());
 			final int colCount = updatedTableField.getCols();
 
-			final String[][] migratedTableValues = new String[prevCurveRowSize][colCount];
+			final String[][] migratedTableValues = new String[updatedTableField.getRows()][colCount];
 
 			//TODO: extract if useful for another new migration?
-			for (int row = 0; row < prevCurveRowSize; row++) {
+			for (int row = 0; row < updatedTableField.getRows(); row++) {
 				for (int col = 0; col < colCount; col++) {
-					migratedTableValues[row][col] = prevValues[row][0];
+					migratedTableValues[row][col] = prevValues[col][0];
 				}
 			}
 
@@ -56,12 +53,15 @@ public enum IdleCurveMigrator implements TuneMigrator {
 			// newer table has more bins
 			final String[][] prevValues = prevCurveField.getValues(prevIdleCurveData.getValue());
 			final String[][] migratedTableValues = upsampleCurveToTable(prevValues, prevCurveRowSize, columnSize,
-					updatedTableField.getCols(), prevCurveField.getDigits());
+					updatedTableField.getRows(), prevCurveField.getDigits());
+			
+			context.addMigration(IDLE_CURVE_NAME, IDLE_TABLE_NAME,
+					generateConstant(updatedTableField, updatedTableField.formatValue(migratedTableValues)));
 		} else {
 			// newer table has less bins, keep values from the start, middle, and end of the curve
 			final String[][] prevValues = prevCurveField.getValues(prevIdleCurveData.getValue());
 			final String[][] migratedTableValues = downsampleCurveToTable(prevValues, prevCurveRowSize,
-					columnSize, updatedTableField.getCols());
+					columnSize, updatedTableField.getRows());
 
 			context.addMigration(IDLE_CURVE_NAME, IDLE_TABLE_NAME,
 					generateConstant(updatedTableField, updatedTableField.formatValue(migratedTableValues)));
