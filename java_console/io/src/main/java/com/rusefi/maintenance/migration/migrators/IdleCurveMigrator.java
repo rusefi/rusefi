@@ -14,11 +14,8 @@ public enum IdleCurveMigrator implements TuneMigrator {
 	INSTANCE;
 
 	public static final String IDLE_CURVE_NAME = "cltIdleCorr";
-	public static final String IDLE_CURVE_CLT_BINS = "cltIdleCorrBins";
 
 	public static final String IDLE_TABLE_NAME = "cltIdleCorrTable";
-	public static final String IDLE_TABLE_RPM_BINS = "rpmIdleCorrBins";
-	public static final String IDLE_TABLE_CLT_BINS = "cltIdleCorrBins";
 
 	@Override
 	public void migrateTune(final TuneMigrationContext context) {
