@@ -1,8 +1,11 @@
 package com.rusefi.maintenance.migration;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.CompatibilitySet;
 import com.rusefi.config.FieldType;
+import com.rusefi.tune.xml.Constant;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -95,4 +98,10 @@ public class IniFieldMigrationUtils {
             return prevDecimalCount <= newDecimalCount;
         }
     }
+
+    //TODO: reuse on BattLagCorrExtensionMigrator.java
+	public static Constant generateConstant(final ArrayIniField iniField, final String value) {
+		return new Constant(iniField.getName(), iniField.getUnits(), value, iniField.getDigits(),
+				String.valueOf(iniField.getRows()), String.valueOf(iniField.getCols()));
+	}
 }
