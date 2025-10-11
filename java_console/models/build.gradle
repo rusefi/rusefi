@@ -1,5 +1,5 @@
 
-apply from: '../../java_tools/dependencies.gradle'
+apply from: dependenciesPath
 
 dependencies {
     api project(':inifile')

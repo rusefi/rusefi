@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
- apply from: '../../java_tools/dependencies.gradle'
+apply from: dependenciesPath
 
 dependencies {
     implementation global_libs.jsr305
