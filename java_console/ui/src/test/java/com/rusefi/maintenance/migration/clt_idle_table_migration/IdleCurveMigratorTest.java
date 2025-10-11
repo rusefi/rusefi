@@ -29,17 +29,11 @@ public class IdleCurveMigratorTest {
 		final String expectedMigratedTable = "73.0 73.0 63.0 63.0 58.0 58.0 48.0 48.0\n"
 				+ "         73.0 73.0 63.0 63.0 58.0 58.0 48.0 48.0\n"
 				+ "         73.0 73.0 63.0 63.0 58.0 58.0 48.0 48.0\n"
-				+ "         73.0 73.0 63.0 63.0 58.0 58.0 48.0 48.0\n"
-				+ "         73.0 73.0 63.0 63.0 58.0 58.0 48.0 48.0\n"
-				+ "         73.0 73.0 63.0 63.0 58.0 58.0 48.0 48.0\n"
-				+ "         73.0 73.0 63.0 63.0 58.0 58.0 48.0 48.0\n"
 				+ "         73.0 73.0 63.0 63.0 58.0 58.0 48.0 48.0";
 
 		assertNotNull(migratedcltIdleCorrTableName);
 		assertEquals(expectedMigratedTable, migratedcltIdleCorrTableName.getValue().trim());
 
-		/* TODO: this raises an IllegalStateException! */
-		Assertions.assertThrows(IllegalStateException.class, () -> {
 		final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(testContext.getPrevIniFile(),
 				testContext.getPrevTune(), testContext.getUpdatedCalibrationsInfo(), testContext.getCallbacks(),
 				emptySet());
@@ -48,7 +42,6 @@ public class IdleCurveMigratorTest {
 
 		final Map<String, Constant> mergedConstants = mergedCalibrations.generateMsq().getConstantsAsMap();
 		assertEquals(expectedMigratedTable, mergedConstants.get("cltIdleCorrTable").getValue().trim());
-		});
 	}
 
 	@Test
@@ -69,12 +62,7 @@ public class IdleCurveMigratorTest {
 				+ "         73.0 70.86 68.71 65.14 60.86 56.57 52.29 48.0\n"
 				+ "         73.0 70.86 68.71 65.14 60.86 56.57 52.29 48.0";
 
-		// This should't be null here!
-		assertNull(migratedcltIdleCorrTableName);
-		
-		// remove this after fixing the migrator
-		assertNotEquals(expectedMigratedTable, expectedMergedTable);
-		/*
+		assertNotNull(migratedcltIdleCorrTableName);
 		assertEquals(expectedMigratedTable, migratedcltIdleCorrTableName.getValue().trim());
 
 		final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(testContext.getPrevIniFile(),
@@ -85,7 +73,6 @@ public class IdleCurveMigratorTest {
 
 		final Map<String, Constant> mergedConstants = mergedCalibrations.generateMsq().getConstantsAsMap();
 		assertEquals(expectedMergedTable, mergedConstants.get("cltIdleCorrTable").getValue().trim());
-		*/
 	}
 
 	@Test
@@ -96,20 +83,14 @@ public class IdleCurveMigratorTest {
 
 		final Constant migratedcltIdleCorrTableName = migratedConstants.get("cltIdleCorrTable");
 
-		final String expectedMigratedTable = "73.0 73.0 73.0 73.0 73.0 73.0 73.0 73.0\n"
-				+ "         68.0 68.0 68.0 68.0 68.0 68.0 68.0 68.0\n"
-				+ "         68.0 68.0 68.0 68.0 68.0 68.0 68.0 68.0\n"
-				+ "         63.0 63.0 63.0 63.0 63.0 63.0 63.0 63.0\n"
-				+ "         58.0 58.0 58.0 58.0 58.0 58.0 58.0 58.0\n"
-				+ "         53.0 53.0 53.0 53.0 53.0 53.0 53.0 53.0\n"
-				+ "         53.0 53.0 53.0 53.0 53.0 53.0 53.0 53.0\n"
-				+ "         48.0 48.0 48.0 48.0 48.0 48.0 48.0 48.0";
+		final String expectedMigratedTable = "73.0 68.0 68.0 63.0 58.0 53.0 53.0 48.0\n"
+				+ "         73.0 68.0 68.0 63.0 58.0 53.0 53.0 48.0\n"
+				+ "         73.0 68.0 68.0 63.0 58.0 53.0 53.0 48.0\n"
+				+ "         73.0 68.0 68.0 63.0 58.0 53.0 53.0 48.0";
 
 		assertNotNull(migratedcltIdleCorrTableName);
 		assertEquals(expectedMigratedTable, migratedcltIdleCorrTableName.getValue().trim());
-		
-		/* TODO: this raises an IllegalStateException! */
-		Assertions.assertThrows(IllegalStateException.class, () -> {
+
 		final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(testContext.getPrevIniFile(),
 				testContext.getPrevTune(), testContext.getUpdatedCalibrationsInfo(), testContext.getCallbacks(),
 				emptySet());
@@ -118,7 +99,6 @@ public class IdleCurveMigratorTest {
 
 		final Map<String, Constant> mergedConstants = mergedCalibrations.generateMsq().getConstantsAsMap();
 		assertEquals(expectedMigratedTable, mergedConstants.get("cltIdleCorrTable").getValue().trim());
-		});
 	}
 
 	@Test
