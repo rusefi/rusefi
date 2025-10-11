@@ -41,7 +41,7 @@ jobs:
       run: make docs-enums
 
     - name: Gradle autotest java Using freshly generated java code
-      working-directory: ./java_tools
+      working-directory: .
       run: ./gradlew :autotest:shadowJar :tune-tools:shadowJar
 
     - name: Compile Linux Simulator
@@ -49,7 +49,7 @@ jobs:
       run: make -j$(nproc) -r
 
     - name: Run Simulator Functional Test
-      working-directory: ./java_tools/
+      working-directory: .
       run: ./gradlew simulatorFunctionalTestLauncherWithSimulator
 
     - name: Run Linux Simulator for 10 seconds
