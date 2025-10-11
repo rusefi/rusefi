@@ -30,11 +30,11 @@ public enum IdleCurveMigrator implements TuneMigrator {
 		}
 
 		final Constant prevIdleCurveData = context.getPrevTune().getConstantsAsMap().get(IDLE_CURVE_NAME);
-		final int prevCurveRowSize = ((ArrayIniField) prevIdleCurve.get()).getRows();
-		final ArrayIniField prevCurveField = (ArrayIniField) prevIdleCurve.get();
+        final ArrayIniField prevCurveField = (ArrayIniField) prevIdleCurve.get();
+		final int prevCurveRowSize = prevCurveField.getRows();
 
-		final int columnSize = ((ArrayIniField) updatedIdleTable.get()).getCols();
-		final ArrayIniField updatedTableField = (ArrayIniField) updatedIdleTable.get();
+        final ArrayIniField updatedTableField = (ArrayIniField) updatedIdleTable.get();
+		final int columnSize = updatedTableField.getCols();
 
 		if (prevCurveRowSize == columnSize) {
 			// same bin size, so we copy as-is
