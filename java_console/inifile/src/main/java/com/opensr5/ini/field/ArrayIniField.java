@@ -116,7 +116,7 @@ public class ArrayIniField extends IniField {
     public String[][] getValues(final String value) {
         final String[] values = value.trim().split("\\s+");
         if (values.length != rows * cols) {
-            throw new IllegalStateException(values.length + " values while expecting " + getRows() + " by " + getCols() + " total " + rows * cols);
+            throw new IllegalStateException(getName() + ": " + values.length + " values while expecting " + getRows() + " by " + getCols() + " total " + rows * cols);
         } else {
             final String[][] result = new String[rows][cols];
             for (int i = 0; i < values.length; i++) {
