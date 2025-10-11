@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<msq xmlns="http://www.msefi.com/:msq">
+    <page/>
+    <page number="0" size="46496">
+          <constant cols="1" digits="2" name="cltIdleCorrBins" rows="8" units="C">
+                 -40.0
+                 -10.0
+                 10.0
+                 40.0
+                 60.0
+                 90.0
+                 110.0
+                 140.0
+              </constant>
+                <constant cols="8" digits="2" name="cltIdleCorrTable" rows="4" units="%">
+                 75.0 70.0 70.0 65.0 60.0 55.0 55.0 50.0
+                 75.0 70.0 70 65.0 60.0 55.0 55.0 50.0
+                 75.0 70.0 70 65.0 60.0 55.0 55.0 50.0
+                 75.0 70.0 70 65.0 60.0 55.0 55.0 50.0
+              </constant>
+                <constant cols="1" digits="0" name="rpmIdleCorrBins" rows="4" units="Target RPM">
+                 700.0
+                 7000.0
+              </constant>
+    </page>
+</msq>
