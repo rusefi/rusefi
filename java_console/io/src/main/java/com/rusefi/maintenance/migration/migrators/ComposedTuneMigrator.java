@@ -22,6 +22,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         BooleanIniFieldMigrator.INSTANCE,
         DigitsIniFieldMigrator.INSTANCE,
         STFTFieldMigrator.INSTANCE,
+        IdleCurveMigrator.INSTANCE,
 
         // leave the default as the final migrator!
         DefaultTuneMigrator.INSTANCE
