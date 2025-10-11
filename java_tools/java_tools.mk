@@ -1,4 +1,4 @@
-GRADLE_ROOT = $(PROJECT_DIR)/../java_tools
+GRADLE_ROOT = $(PROJECT_DIR)/..
 JAVA_TOOLS = $(PROJECT_DIR)/../java_tools
 
 # We run multiple processes in parallel by passing the -j option to Make.
