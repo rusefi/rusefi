@@ -34,7 +34,7 @@ public class PCanIoStream extends AbstractIoStream {
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
         protected void onTpFirstFrame() {
-            sendCanPacket(FLOW_CONTROL);
+            sendCanPacket(getFlowControl());
         }
     };
 

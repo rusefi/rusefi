@@ -22,16 +22,22 @@ public class IsoTpCanDecoder {
 
     private final static int FC_ContinueToSend = 0;
     private final int isoHeaderByteIndex;
+    private final byte[] flowControl;
 
     private int waitingForNumBytes = 0;
     private int waitingForFrameIndex = 0;
 
     public IsoTpCanDecoder() {
-        this(0);
+        this(0, FLOW_CONTROL);
     }
 
-    public IsoTpCanDecoder(int isoHeaderByteIndex) {
+    public IsoTpCanDecoder(int isoHeaderByteIndex, byte[] flowControl) {
         this.isoHeaderByteIndex = isoHeaderByteIndex;
+        this.flowControl = flowControl;
+    }
+
+    public byte[] getFlowControl() {
+        return flowControl;
     }
 
     public byte[] decodePacket(byte[] data) {

@@ -30,14 +30,14 @@ public class IsoTpCanDecoderTest {
 
     @Test
     public void decodeSingleFrameExt() {
-        IsoTpCanDecoder decoder = new IsoTpCanDecoder(1);
+        IsoTpCanDecoder decoder = new IsoTpCanDecoder(1, IsoTpCanDecoder.FLOW_CONTROL);
         byte[] result1 = decoder.decodePacket(new byte[]{0x18, 0x03, 0x22, (byte) 0xF1, (byte) 0x90, 0x00, 0, 0});
         assertTrue(Arrays.equals(result1, new byte[]{0x22, (byte) 0xF1, (byte) 0x90}));
     }
 
     @Test
     public void decodeMultiFrameExt() {
-        IsoTpCanDecoder decoder = new IsoTpCanDecoder(1);
+        IsoTpCanDecoder decoder = new IsoTpCanDecoder(1, IsoTpCanDecoder.FLOW_CONTROL);
         byte[] result1 = decoder.decodePacket(new byte[]{(byte) 0xF1, 0x10, 0x14, 0x62, (byte) 0xF1, (byte) 0x90, 0x57, 0x42});
         assertTrue(Arrays.equals(result1, new byte[]{0x62, (byte) 0xF1, (byte) 0x90, 0x57, 0x42}));
 
