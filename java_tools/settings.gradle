@@ -6,10 +6,14 @@ plugins {
 var rootRelativePath='../'
 
 include ':trigger-image'
+project(':trigger-image').projectDir = new File(rootRelativePath + 'java_tools/trigger-image')
 include ':tune-tools'
+project(':tune-tools').projectDir = new File(rootRelativePath + 'java_tools/tune-tools')
+
 include ':proxy_server'
 // gradle naming convention does not like '_' symbol
 project(':proxy_server').projectDir = new File(rootRelativePath + 'java_tools/proxy_server')
+
 include ':core_io'
 project(':core_io').projectDir = new File(rootRelativePath + 'java_console/shared_io')
 include ':core_ui'
@@ -23,8 +27,11 @@ project(':logging-api').projectDir = new File(rootRelativePath + 'java_console/l
 include ':gcc_map_reader'
 
 include ':enum_to_string'
+project(':enum_to_string').projectDir = new File(rootRelativePath + 'java_tools/enum_to_string')
 
 include ':bin2header'
+project(':bin2header').projectDir = new File(rootRelativePath + 'java_tools/bin2header')
+
 include ':config_definition_base'
 project(':config_definition_base').projectDir = new File(rootRelativePath + 'java_tools/configuration_definition_base')
 include ':config_definition'
