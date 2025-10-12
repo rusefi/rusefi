@@ -31,7 +31,7 @@ public enum AfrMsqImportMigrator implements TuneMigrator {
 		final Constant prevStoichRatioConstant = context.getPrevTune().getConstantsAsMap().get(STOICH_RATIO_NAME);
 
 		if (prevAfrTableData != null && updatedAfrTableData != null && prevStoichRatioConstant != null) {
-			
+
 			final String prevLambdaTableUnits = prevAfrTableData.getUnits();
 			final String updatedLambdaTableUnits = updatedAfrTableData.getUnits();
 
@@ -50,6 +50,7 @@ public enum AfrMsqImportMigrator implements TuneMigrator {
 			final String[][] migratedValues = prevTableField.getValues(prevAfrTableData.getValue());
 			final Double prevStoichRatioValue = Double.parseDouble(prevStoichRatioConstant.getValue());
 
+            // we check the previous units as a way to know what the user configuration was (since only one of the two branches of the #if LAMBDA is saved on the msq)
 			if (prevLambdaTableUnits.contains("afr")) {
 				for (int row = 0; row < migratedValues.length; row++) {
 					for (int column = 0; column < migratedValues[0].length; column++) {
