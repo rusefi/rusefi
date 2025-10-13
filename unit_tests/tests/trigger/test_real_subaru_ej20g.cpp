@@ -169,3 +169,47 @@ TEST(real, SubaruEj20gDefaultCrankingSeparateTrigger) {
 		}
 	}
 }
+
+// Following test loses hasFullSync twice
+// Test also has RPM falling to zero twice
+// While real car was runnig fine while capturing this CSV
+// TODO: investigate
+TEST(real, SubaruEj20gDefaultRev) {
+	EngineCsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 1);
+
+	/* 1 - cam
+	 * 0 - crank */
+	reader.open("tests/trigger/resources/subaru_6_7_rev.csv");
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	//setVerboseTrigger(true);
+	engineConfiguration->vvtMode[0] = VVT_SUBARU_7TOOTH;
+	eth.setTriggerType(trigger_type_e::TT_SUBARU_7_6_CRANK);
+	engineConfiguration->invertPrimaryTriggerSignal = false;
+	engineConfiguration->invertCamVVTSignal = false;
+
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->alwaysInstantRpm = true;
+
+	bool gotFullSync = false;
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
+		bool hasFullSync = getTriggerCentral()->triggerState.hasSynchronizedPhase();
+
+		//reader.assertFirstRpm(182, /*expectedFirstRpmAtIndex*/13);
+		if (0) {
+			float vvt = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+			printf("%5d: RPM %f, hasFullSync %d, vvt = %f\n", reader.lineIndex(), Sensor::getOrZero(SensorType::Rpm), hasFullSync, vvt);
+		}
+
+		if (!gotFullSync && hasFullSync && rpm) {
+			gotFullSync = true;
+
+			// Should get full sync and non-zero RPM
+			EXPECT_EQ(reader.lineIndex(), 37);
+			EXPECT_NEAR(rpm, 2174.0f, 1.0f);
+		}
+	}
+}
