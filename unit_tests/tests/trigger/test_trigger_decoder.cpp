@@ -1140,9 +1140,10 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireFall(20);
 	eth.executeActions();
 	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #8";
-	ASSERT_EQ( 2u, getRecentWarnings()->getCount()) << "warningCounter#SparkReverseOrderBug319";
+	ASSERT_EQ( 3u, getRecentWarnings()->getCount()) << "warningCounter#SparkReverseOrderBug319";
 	ASSERT_EQ(ObdCode::CUSTOM_DWELL_TOO_LONG, getRecentWarnings()->get(0).Code) << "warning @0";
 	ASSERT_EQ(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, getRecentWarnings()->get(1).Code);
+	ASSERT_EQ(ObdCode::CUSTOM_Ignition_Coil_Overcharge_1, getRecentWarnings()->get(2).Code);
 }
 
 // https://sourceforge.net/p/rusefi/tickets/299/
