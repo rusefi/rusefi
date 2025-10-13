@@ -6,3 +6,5 @@ log
 # PTrace files
 *.json
 triggers
+
+PCAN*.dll
