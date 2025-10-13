@@ -107,8 +107,8 @@
 #define STM32_FDCANSEL                      STM32_FDCANSEL_PLL2_Q_CK
 #define STM32_DFSDM1SEL                     STM32_DFSDM1SEL_PCLK2
 #define STM32_SPDIFSEL                      STM32_SPDIFSEL_PLL1_Q_CK
-#define STM32_SPI45SEL                      STM32_SPI45SEL_PCLK2
-#define STM32_SPI123SEL                     STM32_SPI123SEL_PLL1_Q_CK
+#define STM32_SPI45SEL                      STM32_SPI45SEL_PLL2_Q_CK
+#define STM32_SPI123SEL                     STM32_SPI123SEL_PLL2_P_CK
 #define STM32_SAI1SEL                       STM32_SAI1SEL_PLL1_Q_CK
 #define STM32_LPTIM1SEL                     STM32_LPTIM1SEL_PCLK1
 #define STM32_CECSEL                        STM32_CECSEL_LSE_CK
@@ -117,7 +117,7 @@
 #define STM32_RNGSEL                        STM32_RNGSEL_HSI48_CK
 #define STM32_USART16910SEL                 STM32_USART16910SEL_PCLK2
 #define STM32_USART234578SEL                STM32_USART234578SEL_PCLK1
-#define STM32_SPI6SEL                       STM32_SPI6SEL_PCLK4
+#define STM32_SPI6SEL                       STM32_SPI6SEL_PLL2_Q_CK
 #define STM32_SAI4BSEL                      STM32_SAI4BSEL_PLL1_Q_CK
 #define STM32_SAI4ASEL                      STM32_SAI4ASEL_PLL1_Q_CK
 #define STM32_ADCSEL                        STM32_ADCSEL_PLL2_P_CK
