@@ -434,7 +434,6 @@ void initHardwareNoConfig() {
 #endif
 
 #if EFI_PROD_CODE
-	boardInitHardwareEarly();
 	call_board_override(custom_board_InitHardwareEarly);
 #endif
 
@@ -546,13 +545,12 @@ void initHardware() {
 	}
 #endif // STM32_I2C_USE_I2C3
 
-	boardInitHardware();
 	call_board_override(custom_board_InitHardware);
 #if EFI_PROD_CODE
 	// this applies some board configurations
 	boardOnConfigurationChange(nullptr);
 #endif // EFI_PROD_CODE
-	boardInitHardwareExtra();
+
 	call_board_override(custom_board_InitHardwareExtra);
 
 #if HAL_USE_ADC
