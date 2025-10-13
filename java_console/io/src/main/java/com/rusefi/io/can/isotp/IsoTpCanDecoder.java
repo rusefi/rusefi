@@ -5,12 +5,14 @@ import com.rusefi.util.HexBinary;
 
 import java.util.Arrays;
 
+import static com.rusefi.util.HexBinary.printHexBinary;
+
 /**
  * ISO 15765-2 or ISO-TP (Transport Layer) CAN multi-frame decoder state
  *
  * @see IsoTpConnector
  */
-public class IsoTpCanDecoder {
+public abstract class IsoTpCanDecoder {
     public static final byte[] FLOW_CONTROL = {0x30, 0, 0, 0, 0, 0, 0, 0};
     private static final Logging log = Logging.getLogging(IsoTpCanDecoder.class);
 
@@ -26,6 +28,7 @@ public class IsoTpCanDecoder {
 
     private int waitingForNumBytes = 0;
     private int waitingForFrameIndex = 0;
+    private boolean isComplete;
 
     public IsoTpCanDecoder() {
         this(0, FLOW_CONTROL);
@@ -40,7 +43,13 @@ public class IsoTpCanDecoder {
         return flowControl;
     }
 
+    @Deprecated // warning: PCAN driver is an example of larger data buffer
     public byte[] decodePacket(byte[] data) {
+        return decodePacket(data, data.length);
+    }
+
+   public byte[] decodePacket(byte[] data, int dataSize) {
+//        log.info("Decoding " + printHexBinary(data));
         int frameType = (data[isoHeaderByteIndex] >> 4) & 0xf;
         int numBytesAvailable;
         int frameIdx;
@@ -52,13 +61,14 @@ public class IsoTpCanDecoder {
                 this.waitingForNumBytes = 0;
                 if (log.debugEnabled())
                     log.debug("ISO_TP_FRAME_SINGLE " + numBytesAvailable);
+                setComplete(true);
                 break;
             case IsoTpConstants.ISO_TP_FRAME_FIRST:
                 this.waitingForNumBytes = ((data[isoHeaderByteIndex] & 0xf) << 8) | data[isoHeaderByteIndex + 1];
                 if (log.debugEnabled())
                     log.debug("Total expected: " + waitingForNumBytes);
                 this.waitingForFrameIndex = 1;
-                numBytesAvailable = Math.min(this.waitingForNumBytes, 6 - isoHeaderByteIndex);
+                numBytesAvailable = Math.min(this.waitingForNumBytes, dataSize - 2 - isoHeaderByteIndex);
                 waitingForNumBytes -= numBytesAvailable;
                 dataOffset = isoHeaderByteIndex + 2;
                 onTpFirstFrame();
@@ -69,11 +79,12 @@ public class IsoTpCanDecoder {
                     throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? waitingForNumBytes=" + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
                 }
                 this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
-                numBytesAvailable = Math.min(this.waitingForNumBytes, 7 - isoHeaderByteIndex);
+                numBytesAvailable = Math.min(this.waitingForNumBytes, dataSize - 1 - isoHeaderByteIndex);
                 dataOffset = isoHeaderByteIndex + 1;
                 waitingForNumBytes -= numBytesAvailable;
                 if (log.debugEnabled())
                     log.debug("ISO_TP_FRAME_CONSECUTIVE Got " + numBytesAvailable + " byte(s), still expecting: " + waitingForNumBytes + " byte(s)");
+                setComplete(waitingForNumBytes == 0);
                 break;
             case ISO_TP_FRAME_FLOW_CONTROL:
                 int flowStatus = data[isoHeaderByteIndex] & 0xf;
@@ -91,6 +102,13 @@ public class IsoTpCanDecoder {
         return bytes;
     }
 
-    protected void onTpFirstFrame() {
+    protected abstract void onTpFirstFrame();
+
+    public void setComplete(boolean isComplete) {
+        this.isComplete = isComplete;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
     }
 }
