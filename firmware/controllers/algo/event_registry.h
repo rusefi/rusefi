@@ -65,6 +65,9 @@ public:
 	// Track whether coil charge was intentionally skipped (spark limiter)
 	bool wasSparkLimited = false;
 
+	// Track whether coil charge was canceled due to overcharge
+	bool wasSparkCanceled = false;
+
 	/**
 	 * Desired timing advance
 	 */

@@ -40,7 +40,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	 */
 	output->signalFallSparkId = event->sparkCounter;
 
-	if (!output->currentLogicValue && !event->wasSparkLimited) {
+	if (!output->currentLogicValue && !event->wasSparkLimited && !event->wasSparkCanceled) {
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("out-of-order coil off %s", output->getName());
 #endif /* SPARK_EXTREME_LOGGING */
@@ -185,7 +185,14 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("overFireSparkAndPrepareNextSchedule %s", event->outputs[0]->getName());
 #endif /* SPARK_EXTREME_LOGGING */
-  engine->engineState.overDwellCounter++;
+	float actualDwellMs = event->actualDwellTimer.getElapsedSeconds() * 1e3;
+
+	warning((ObdCode)((int)ObdCode::CUSTOM_Ignition_Coil_Overcharge_1 + event->cylinderIndex),
+		"coil %s overcharge %f ms",
+		event->outputs[0]->getName(), actualDwellMs);
+
+	engine->engineState.overDwellCounter++;
+	event->wasSparkCanceled = true;
 	fireSparkAndPrepareNextSchedule(event);
 }
 
@@ -219,7 +226,9 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	 */
 	float ratio = actualDwellMs / event->sparkDwell;
 	if (ratio < 0.8 || ratio > 1.2) {
-    engine->outputChannels.sadDwellRatioCounter++;
+		if (!event->wasSparkCanceled) {
+			engine->outputChannels.sadDwellRatioCounter++;
+		}
 	}
 
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
@@ -282,6 +291,9 @@ static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	efiPrintf("spark goes high revolution=%d [%s] %d current=%d id=%d", getRevolutionCounter(), output->getName(), time2print(getTimeNowUs()),
 			output->currentLogicValue, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
+
+	// Reset error flag(s)
+	event->wasSparkCanceled = false;
 
 	if (output->signalFallSparkId >= event->sparkCounter) {
 	  /**
