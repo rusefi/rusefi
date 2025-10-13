@@ -74,9 +74,11 @@ struct_no_prefix engine_state_s
 
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 	int16_t autoscale veTableIdleYAxis;;"", 0.1, 0, -1000, 1000, 1
-	uint8_t overDwellCounter
-	uint8_t overDwellNotScheduledCounter
-	uint8_t sparkOutOfOrderCounter
+	uint8_t overDwellCanceledCounter;"Ignition: overcharge canceled";"", 1, 0, 0, 255, 0
+	uint8_t overDwellNotScheduledCounter;"Ignition: overDwellNotScheduled";"", 1, 0, 0, 255, 0
+	uint8_t sparkOutOfOrderCounter;"Ignition: sparkOutOfOrder";"", 1, 0, 0, 255, 0
+	uint8_t dwellUnderChargeCounter;"Ignition: undecharge warnings";"", 1, 0, 0, 255, 0
+	uint8_t dwellOverChargeCounter;"Ignition: overcharge warnings";"", 1, 0, 0, 255, 0
 
 	! todo: extract to injection.txt?
 	float[FT_BANK_COUNT iterate] stftCorrection;STFT: Bank; "%", 100, -1.0, 50, 150, 1

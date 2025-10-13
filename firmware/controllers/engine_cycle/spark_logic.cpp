@@ -198,7 +198,7 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	// kill pending fire
 	engine->module<TriggerScheduler>()->cancel(&event->sparkEvent);
 
-	engine->engineState.overDwellCounter++;
+	engine->engineState.overDwellCanceledCounter++;
 	event->wasSparkCanceled = true;
 	fireSparkAndPrepareNextSchedule(event);
 }
@@ -232,9 +232,11 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
 	 */
 	float ratio = actualDwellMs / event->sparkDwell;
-	if (ratio < 0.8 || ratio > 1.2) {
-		if (!event->wasSparkCanceled) {
-			engine->outputChannels.sadDwellRatioCounter++;
+	if (!event->wasSparkCanceled) {
+		if (ratio > 1.2) {
+			engine->engineState.dwellOverChargeCounter++;
+		} else if (ratio < 0.8) {
+			engine->engineState.dwellUnderChargeCounter++;
 		}
 	}
 
