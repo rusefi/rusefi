@@ -188,8 +188,8 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	float actualDwellMs = event->actualDwellTimer.getElapsedSeconds() * 1e3;
 
 	warning((ObdCode)((int)ObdCode::CUSTOM_Ignition_Coil_Overcharge_1 + event->cylinderIndex),
-		"coil %s overcharge %f ms",
-		event->outputs[0]->getName(), actualDwellMs);
+		"cylinder %d %s overcharge %f ms",
+		event->cylinderIndex + 1, event->outputs[0]->getName(), actualDwellMs);
 
 	engine->engineState.overDwellCounter++;
 	event->wasSparkCanceled = true;
