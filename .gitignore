@@ -26,6 +26,8 @@ log.txt
 *.kicad_prl
 .*-sentinel
 
+.gradle
+
 # Eclipse
 .metadata/
 
