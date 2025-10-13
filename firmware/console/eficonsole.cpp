@@ -50,7 +50,8 @@ static void printUid() {
  * But it looks like our manner of __attribute__((weak)) declaration works at well, and I hope it will not cause
  * problems in the future.
  */
-PUBLIC_API_WEAK void boardSayHello() {
+void boardSayHello() {
+  // please use custom_board_boardSayHello
 }
 
 static void sayHello() {
@@ -63,7 +64,6 @@ static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " with OPENBLT");
 #endif
 
-  boardSayHello();
   call_board_override(custom_board_boardSayHello);
 
 #if EFI_PROD_CODE && ENABLE_AUTO_DETECT_HSE
