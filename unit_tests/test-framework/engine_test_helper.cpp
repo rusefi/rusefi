@@ -351,6 +351,25 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 	setTimeAndInvokeEventsUs(getTimeNowUs() + deltaTimeUs);
 }
 
+void EngineTestHelper::setTimeNtAndInvokeCallBacks(efitick_t nt)
+{
+	// we need to call fast callback every FAST_CALLBACK_PERIOD_MS
+	efitick_t step = MS2US(FAST_CALLBACK_PERIOD_MS) * US_TO_NT_MULTIPLIER;
+
+	while (getTimeNowNt() < nt) {
+		// get next FAST_CALLBACK_PERIOD_MS tick time
+		efitick_t nextStep = (getTimeNowNt() + step) / step * step;
+
+		if (nextStep > nt) {
+			setTimeNowNt(nt);
+			return;
+		}
+
+		setTimeNowNt(nextStep);
+		engine.periodicFastCallback();
+	}
+}
+
 void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 	int counter = 0;
 	while (true) {
@@ -365,11 +384,11 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 			// next event is too far in the future
 			break;
 		}
-		setTimeNowNt(nextEventNt);
+		setTimeNtAndInvokeCallBacks(nextEventNt);
 		engine.scheduler.executeAllNt(getTimeNowNt());
 	}
 
-	setTimeNowUs(targetTimeUs);
+	setTimeNtAndInvokeCallBacks(US_TO_NT_MULTIPLIER * targetTimeUs);
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {
