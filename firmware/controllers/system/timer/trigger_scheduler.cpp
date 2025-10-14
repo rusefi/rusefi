@@ -87,6 +87,12 @@ void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_
 	}
 }
 
+void TriggerScheduler::cancel(AngleBasedEvent* event) {
+	chibios_rt::CriticalSectionLocker csl;
+
+	LL_DELETE2(m_angleBasedEventsHead, event, nextToothEvent);
+}
+
 void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
 							   efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 

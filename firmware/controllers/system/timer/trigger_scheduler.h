@@ -15,6 +15,8 @@ public:
 			     action_s action,
 				 float currentPhase, float nextPhase);
 
+	void cancel(AngleBasedEvent* event);
+
     // scheduleForActualTimeBasedExecution using underlying time-base scheduler
 	void scheduleEventsUntilNextTriggerTooth(float rpm,
 						 efitick_t edgeTimestamp,
