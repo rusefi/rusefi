@@ -1,5 +1,7 @@
 package com.rusefi.maintenance.migration.afr_msq_import_migration;
 
+//Disabled!, see #8718
+/*
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.maintenance.TestTuneMigrationContext;
@@ -14,6 +16,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static java.util.Collections.emptySet;
+
 
 public class AfrMsqImportMigrationTest {
 
@@ -84,3 +87,4 @@ public class AfrMsqImportMigrationTest {
 		assertTrue(result.isPresent());
 	}
 }
+*/
