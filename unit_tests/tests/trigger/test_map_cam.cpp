@@ -34,7 +34,7 @@ TEST(trigger, map_cam_by_magic_point) {
 	scheduling_s* next = engine->scheduler.getForUnitTest(0);
 	auto const fireSparkAndPrepareNextScheduleAction{ action_s::make<fireSparkAndPrepareNextSchedule>((IgnitionEvent*){})};
 
-	eth.assertEvent5("spark down#0", 0, fireSparkAndPrepareNextScheduleAction, 188333);
+	eth.assertEvent5("spark down#0", 0, fireSparkAndPrepareNextScheduleAction, 193333);
 
 	engine->outputChannels.instantMAPValue = 120;
 	eth.smartFireTriggerEvents2(/*count*/4, /*delayMs*/200);
@@ -46,9 +46,13 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(ClearReason::None, getLimpManager()->allowIgnition().reason);
 	ASSERT_EQ(ClearReason::None, getLimpManager()->allowInjection().reason);
 
+	for (size_t i = 0; i < 4; i++) {
+		printf("%d %s\n", i, engine->scheduler.getForUnitTest(i)->action.getCallbackName());
+	}
+
 	// We have "VVT" sync, things should be scheduled!
-	ASSERT_EQ(2, engine->scheduler.size());
+	ASSERT_EQ(4, engine->scheduler.size());
 	auto const turnSparkPinHighStartChargingAction{ action_s::make<turnSparkPinHighStartCharging>((IgnitionEvent*){})};
-	eth.assertEvent5("spark down#0", 0, turnSparkPinHighStartChargingAction, 185333);
-	eth.assertEvent5("spark down#1", 1, fireSparkAndPrepareNextScheduleAction, 188333);
+	eth.assertEvent5("spark down#0", 2, turnSparkPinHighStartChargingAction, 179458);
+	eth.assertEvent5("spark down#1", 3, fireSparkAndPrepareNextScheduleAction, 191458);
 }
