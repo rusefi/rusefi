@@ -195,6 +195,9 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 		"cylinder %d %s overcharge %f ms",
 		event->cylinderIndex + 1, event->outputs[0]->getName(), actualDwellMs);
 
+	// kill pending fire
+	engine->module<TriggerScheduler>()->cancel(&event->sparkEvent);
+
 	engine->engineState.overDwellCounter++;
 	event->wasSparkCanceled = true;
 	fireSparkAndPrepareNextSchedule(event);
