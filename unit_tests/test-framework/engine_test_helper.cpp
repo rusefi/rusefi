@@ -168,6 +168,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 
+	setVerboseTrigger(false);
+
 	initHardware();
 	rememberCurrentConfiguration();
 }
