@@ -367,31 +367,50 @@ struct engine_state_s {
 	 */
 	scaled_channel<int16_t, 10, 1> veTableIdleYAxis = (int16_t)0;
 	/**
+	 * "Ignition: overcharge canceled"
 	 * offset 136
 	 */
-	uint8_t overDwellCounter = (uint8_t)0;
+	uint8_t overDwellCanceledCounter = (uint8_t)0;
 	/**
+	 * "Ignition: overDwellNotScheduled"
 	 * offset 137
 	 */
 	uint8_t overDwellNotScheduledCounter = (uint8_t)0;
 	/**
+	 * "Ignition: sparkOutOfOrder"
 	 * offset 138
 	 */
 	uint8_t sparkOutOfOrderCounter = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * "Ignition: undecharge warnings"
 	 * offset 139
 	 */
-	uint8_t alignmentFill_at_139[1] = {};
+	uint8_t dwellUnderChargeCounter = (uint8_t)0;
+	/**
+	 * "Ignition: overcharge warnings"
+	 * offset 140
+	 */
+	uint8_t dwellOverChargeCounter = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 141
+	 */
+	uint8_t alignmentFill_at_141[3] = {};
+	/**
+	 * "Ignition: Dwell deviation"
+	 * units: %
+	 * offset 144
+	 */
+	float dwellActualRatio = (float)0;
 	/**
 	 * STFT: Bank
 	 * units: %
-	 * offset 140
+	 * offset 148
 	 */
 	float stftCorrection[FT_BANK_COUNT] = {};
 };
-static_assert(sizeof(engine_state_s) == 148);
+static_assert(sizeof(engine_state_s) == 156);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt

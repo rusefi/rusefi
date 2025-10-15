@@ -799,9 +799,6 @@ float getOutputValueByHash(const int hash) {
 // mc33810spiErrorCounter
 		case -1225980502:
 			return engine->outputChannels.mc33810spiErrorCounter;
-// sadDwellRatioCounter
-		case -2146292012:
-			return engine->outputChannels.sadDwellRatioCounter;
 // injectionPrimingCounter
 		case 1526237246:
 			return engine->outputChannels.injectionPrimingCounter;
@@ -1201,15 +1198,24 @@ float getOutputValueByHash(const int hash) {
 // veTableIdleYAxis
 		case -860328524:
 			return engine->engineState.veTableIdleYAxis;
-// overDwellCounter
-		case 1513852665:
-			return engine->engineState.overDwellCounter;
+// overDwellCanceledCounter
+		case -1327994008:
+			return engine->engineState.overDwellCanceledCounter;
 // overDwellNotScheduledCounter
 		case 1629214715:
 			return engine->engineState.overDwellNotScheduledCounter;
 // sparkOutOfOrderCounter
 		case -1595596945:
 			return engine->engineState.sparkOutOfOrderCounter;
+// dwellUnderChargeCounter
+		case -1256359963:
+			return engine->engineState.dwellUnderChargeCounter;
+// dwellOverChargeCounter
+		case 1221247747:
+			return engine->engineState.dwellOverChargeCounter;
+// dwellActualRatio
+		case -175046954:
+			return engine->engineState.dwellActualRatio;
 // dcOutput0
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;

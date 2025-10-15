@@ -1369,172 +1369,162 @@ struct output_channels_s {
 	/**
 	 * offset 810
 	 */
-	uint8_t sadDwellRatioCounter = (uint8_t)0;
+	uint8_t injectionPrimingCounter = (uint8_t)0;
 	/**
 	 * offset 811
 	 */
-	uint8_t injectionPrimingCounter = (uint8_t)0;
-	/**
-	 * offset 812
-	 */
 	uint8_t tempLogging2 = (uint8_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 813
-	 */
-	uint8_t alignmentFill_at_813[3] = {};
 	/**
 	 * @@GAUGE_NAME_AC_PRESSURE@@
 	 * units: kPa
-	 * offset 816
+	 * offset 812
 	 */
 	float acPressure = (float)0;
 	/**
 	 * units: V
-	 * offset 820
+	 * offset 816
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAuxAnalog1 = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 822
+	 * offset 818
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAuxAnalog2 = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 824
+	 * offset 820
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAuxAnalog3 = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 826
+	 * offset 822
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAuxAnalog4 = (int16_t)0;
 	/**
 	 * ECU: Fast ADC errors
-	 * offset 828
+	 * offset 824
 	 */
 	uint8_t fastAdcErrorCount = (uint8_t)0;
 	/**
 	 * ECU: Slow ADC errors
-	 * offset 829
+	 * offset 825
 	 */
 	uint8_t slowAdcErrorCount = (uint8_t)0;
 	/**
 	 * units: V
-	 * offset 830
+	 * offset 826
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAuxTemp1 = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 832
+	 * offset 828
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAuxTemp2 = (int16_t)0;
 	/**
 	 * units: V
-	 * offset 834
+	 * offset 830
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAmbientTemp = (int16_t)0;
 	/**
-	 * offset 836
+	 * offset 832
 	 */
 	uint32_t rtcUnixEpochTime = (uint32_t)0;
 	/**
-	 * offset 840
+	 * offset 836
 	 */
 	int8_t sparkCutReasonBlinker = (int8_t)0;
 	/**
-	 * offset 841
+	 * offset 837
 	 */
 	int8_t fuelCutReasonBlinker = (int8_t)0;
 	/**
-	 * offset 842
+	 * offset 838
 	 */
 	int16_t hp = (int16_t)0;
 	/**
-	 * offset 844
+	 * offset 840
 	 */
 	int16_t torque = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 846
+	 * offset 842
 	 */
-	uint8_t alignmentFill_at_846[2] = {};
+	uint8_t alignmentFill_at_842[2] = {};
 	/**
-	 * offset 848
+	 * offset 844
 	 */
 	float throttlePressureRatio = (float)0;
 	/**
-	 * offset 852
+	 * offset 848
 	 */
 	float throttleEffectiveAreaOpening = (float)0;
 	/**
-	 * offset 856
+	 * offset 852
 	 */
 	uint32_t mcuSerial = (uint32_t)0;
 	/**
-	 * offset 860
+	 * offset 856
 	 */
 	uint8_t sd_error = (uint8_t)0;
 	/**
 	 * ECU: Fast ADC overruns
-	 * offset 861
+	 * offset 857
 	 */
 	uint8_t fastAdcOverrunCount = (uint8_t)0;
 	/**
 	 * ECU: Slow ADC overruns
-	 * offset 862
+	 * offset 858
 	 */
 	uint8_t slowAdcOverrunCount = (uint8_t)0;
 	/**
 	 * ECU: Fast ADC error type
-	 * offset 863
+	 * offset 859
 	 */
 	uint8_t fastAdcLastError = (uint8_t)0;
 	/**
 	 * ECU: Fast ADC period
 	 * units: ticks
-	 * offset 864
+	 * offset 860
 	 */
 	uint16_t fastAdcPeriod = (uint16_t)0;
 	/**
 	 * ECU: Fast ADC conversions
 	 * units: N
-	 * offset 866
+	 * offset 862
 	 */
 	uint16_t fastAdcConversionCount = (uint16_t)0;
 	/**
-	 * offset 868
+	 * offset 864
 	 */
 	uint8_t canReWidebandVersion = (uint8_t)0;
 	/**
-	 * offset 869
+	 * offset 865
 	 */
 	uint8_t canReWidebandFwDay = (uint8_t)0;
 	/**
-	 * offset 870
+	 * offset 866
 	 */
 	uint8_t canReWidebandFwMon = (uint8_t)0;
 	/**
-	 * offset 871
+	 * offset 867
 	 */
 	uint8_t canReWidebandFwYear = (uint8_t)0;
 	/**
-	 * offset 872
+	 * offset 868
 	 */
 	uint16_t transitionEventCode = (uint16_t)0;
 	/**
-	 * offset 874
+	 * offset 870
 	 */
 	uint16_t transitionEventsCounter = (uint16_t)0;
 	/**
 	 * units: kPa
-	 * offset 876
+	 * offset 872
 	 */
 	uint8_t mapPerCylinder[MAX_CYLINDER_COUNT] = {};
 };
-static_assert(sizeof(output_channels_s) == 888);
+static_assert(sizeof(output_channels_s) == 884);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt
