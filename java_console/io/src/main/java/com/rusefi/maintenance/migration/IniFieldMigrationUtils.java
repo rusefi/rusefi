@@ -21,36 +21,9 @@ public class IniFieldMigrationUtils {
     public static boolean checkIfTypeCanBeMigrated(final FieldType prevType, final FieldType newType) {
         if (Objects.equals(prevType, newType)) {
             return true;
+        } else if (prevType.isNumeric() && newType.isNumeric()) {
+            return true;
         } else {
-            switch (prevType) {
-                case INT8: {
-                    switch (newType) {
-                        case INT16:
-                        case INT:
-                        case FLOAT: {
-                            return true;
-                        }
-                    }
-                }
-                case INT16: {
-                    switch (newType) {
-                        case INT:
-                        case FLOAT: {
-                            return true;
-                        }
-                    }
-                }
-                case UINT8: {
-                    switch (newType) {
-                        case UINT16:
-                        case INT16:
-                        case INT:
-                        case FLOAT: {
-                            return true;
-                        }
-                    }
-                }
-            }
             return false;
         }
     }

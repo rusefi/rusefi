@@ -80,4 +80,20 @@ public enum FieldType {
     public boolean isString() {
         return this == STRING;
     }
+
+    public boolean isNumeric() {
+        switch (this) {
+            case INT8:
+            case INT16:
+            case INT:
+            case UINT8:
+            case UINT16:
+            case FLOAT: {
+                return true;
+            }
+            default: {
+                return false;
+            }
+        }
+    }
 }
