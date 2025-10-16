@@ -79,16 +79,16 @@ public class TuneMigrationContext {
         final Constant migratedValue
     ) {
         migratedFields.add(originalFieldName);
-        final Constant existingMigration = migratedConstants.get(migratedFieldName);
-        if (existingMigration != null) {
+
+        final Constant prevMigratedValue = migratedConstants.put(migratedFieldName, migratedValue);
+        if (prevMigratedValue != null) {
             callbacks.logLine(String.format(
                 "WARNING!!! We are overwriting already migrated constant `%s`: `%s` -> `%s`",
                 migratedFieldName,
-                existingMigration,
-                migratedFieldName
+                prevMigratedValue,
+                migratedValue
             ));
         }
-        migratedConstants.put(migratedFieldName, migratedValue);
     }
 
     public void logWarn(final String warning) {
