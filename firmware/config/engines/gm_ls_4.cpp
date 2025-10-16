@@ -44,7 +44,7 @@ void setGmLs4() {
   engineConfiguration->camInputs[3] = Gpio::Unassigned;
 #endif
 
-#if HW_HELLEN_UAEFI
+#ifdef HW_HELLEN_UAEFI
 	engineConfiguration->injectionPins[6] = Gpio::MM100_OUT_PWM1;
 	engineConfiguration->injectionPins[7] = Gpio::MM100_INJ8;
 
