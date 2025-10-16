@@ -19,4 +19,10 @@ public class AfrMsqImportMigrationContext {
         );
         return result;
     }
+    public static TestTuneMigrationContext loadSmallAfrToBigLambda() throws JAXBException {
+            final TestTuneMigrationContext result = TestTuneMigrationContext.load(
+                "src/test/java/com/rusefi/maintenance/migration/afr_msq_import_migration/test_data/SmallAfrToBigLambda"
+            );
+            return result;
+        }
 }

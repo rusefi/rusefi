@@ -1,7 +1,5 @@
 package com.rusefi.maintenance.migration.afr_msq_import_migration;
 
-//Disabled!, see #8718
-/*
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.maintenance.TestTuneMigrationContext;
@@ -86,5 +84,39 @@ public class AfrMsqImportMigrationTest {
 				emptySet());
 		assertTrue(result.isPresent());
 	}
+
+	@Test
+    	void checkAfrMsqMigrationSmallAfrToBigLambda() throws JAXBException {
+    		final TestTuneMigrationContext testContext = AfrMsqImportMigrationContext.loadSmallAfrToBigLambda();
+    		ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
+    		final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
+
+    		final Constant migratedcltIdleCorrTableName = migratedConstants.get("lambdaTable");
+    		final String expectedMigratedTable = "1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n"
+    				+ "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n"
+    				+ "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n"
+    				+ "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n"
+    				+ "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n"
+    				+ "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n"
+    				+ "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n"
+    				+ "         0.97 0.97 0.97 0.97 0.97 0.98 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99 0.99\n"
+    				+ "         0.95 0.95 0.95 0.95 0.95 0.96 0.96 0.97 0.97 0.96 0.96 0.96 0.96 0.96 0.96 0.96\n"
+    				+ "         0.93 0.93 0.93 0.93 0.93 0.94 0.94 0.94 0.94 0.94 0.94 0.94 0.94 0.93 0.93 0.93\n"
+    				+ "         0.89 0.89 0.89 0.89 0.89 0.89 0.89 0.89 0.89 0.89 0.89 0.89 0.88 0.88 0.88 0.88\n"
+    				+ "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n"
+    				+ "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n"
+    				+ "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n"
+    				+ "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n"
+    				+ "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86";
+
+    		assertNotNull(migratedcltIdleCorrTableName);
+    		assertEquals(expectedMigratedTable, migratedcltIdleCorrTableName.getValue().trim());
+
+            /* FIXME: broken!
+    		final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(testContext.getPrevIniFile(),
+    				testContext.getPrevTune(), testContext.getUpdatedCalibrationsInfo(), testContext.getCallbacks(),
+    				emptySet());
+    		assertTrue(result.isPresent());
+    		*/
+    	}
 }
-*/

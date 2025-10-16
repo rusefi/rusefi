@@ -23,8 +23,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         DigitsIniFieldMigrator.INSTANCE,
         STFTFieldMigrator.INSTANCE,
         IdleCurveMigrator.INSTANCE,
-        // Disabled!, see #8718
-        // AfrMsqImportMigrator.INSTANCE,
+        AfrMsqImportMigrator.INSTANCE,
 
         // leave the default as the final migrator!
         DefaultTuneMigrator.INSTANCE
