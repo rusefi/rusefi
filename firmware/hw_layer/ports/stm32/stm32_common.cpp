@@ -196,7 +196,11 @@ void baseMCUInit() {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT->CYCCNT = 0;
 
+
+#ifndef EFI_SKIP_BOR
 	BOR_Set(BOR_Level_1); // one step above default value
+#endif
+
 #ifndef EFI_BOOTLOADER
 	engine->outputChannels.mcuSerial = getMcuSerial();
 #endif // EFI_BOOTLOADER
