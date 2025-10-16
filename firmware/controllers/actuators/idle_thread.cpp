@@ -254,12 +254,11 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	auto idlePid = getIdlePid();
 
 	if (shouldResetPid && !wasResetPid) {
-		needReset = idlePid->getIntegration() <= 0 || mustResetPid;
+		needReset = idlePid->getIntegration() <= 0 || shouldResetPid;
 		// this is not-so valid since we have open loop first for this?
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
 		if (needReset) {
 			idlePid->reset();
-			mustResetPid = false;
 		}
 		shouldResetPid = false;
 		wasResetPid = true;
@@ -277,7 +276,6 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.¿
 		shouldResetPid = true;
-		mustResetPid = true;
 		idleState = TPS_THRESHOLD;
 
 		// We aren't idling, so don't apply any correction.  A positive correction could inhibit a return to idle.
@@ -475,7 +473,6 @@ void IdleController::onEngineStop() {
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 #if ! EFI_UNIT_TEST
 	shouldResetPid = !previousConfiguration || !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
-	mustResetPid = shouldResetPid;
 #endif
 }
 

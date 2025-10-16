@@ -10,9 +10,8 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 
     bit mightResetPid;idle: mightResetPid\nThe idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.\nThe throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).\nWe set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.\nSee automaticIdleController().
 
-	bit shouldResetPid;Idle: shouldResetPid
+	bit shouldResetPid;Idle: shouldResetPid\nThis is used when the PID configuration is changed, to guarantee the reset
 	bit wasResetPid;Idle: wasResetPid\nThis is needed to slowly turn on the PID back after it was reset.
-	bit mustResetPid;Idle: mustResetPid\nThis is used when the PID configuration is changed, to guarantee the reset
     bit isCranking;Idle: cranking
     bit isIacTableForCoasting
 

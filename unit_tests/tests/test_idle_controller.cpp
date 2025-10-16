@@ -461,7 +461,7 @@ TEST(idle_v2, RunningToIdleTransition) {
   EXPECT_EQ(0, dut.getClosedLoop(ICP::Running, expectedTps.Value, 950, 1100));
   dut.getIdlePid()->postState(engine->outputChannels.idleStatus);
 
-  // first cycle we set shouldResetPid / mustResetPid, now we test the reset:
+  // first cycle we set shouldResetPid, now we test the reset:
   EXPECT_EQ(0, dut.getClosedLoop(ICP::Running, expectedTps.Value, 400, 1100));
   dut.getIdlePid()->postState(engine->outputChannels.idleStatus);
 
