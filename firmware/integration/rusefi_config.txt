@@ -2578,6 +2578,7 @@ end_struct
 
 ! some board files override this value using prepend file
 #define ts_show_ign_key_switch false
+#define ts_show_baroSettings true
 #define ts_show_ford_toyota_tps_pps true
 #define ts_show_primary_trigger true
 #define ts_show_ign_key_analog_input false
