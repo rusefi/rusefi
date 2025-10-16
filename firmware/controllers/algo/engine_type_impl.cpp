@@ -212,7 +212,7 @@ void applyEngineType(engine_type_e engineType) {
 	  setGmSbcGen5();
 		break;
 
-#if defined(HW_HELLEN_8CHAN) || HW_PROTEUS || EFI_SIMULATOR
+#if defined(HW_HELLEN_UAEFI) || defined(HW_HELLEN_UAEFI121) || defined(HW_HELLEN_SUPER_UAEFI) || defined(HW_HELLEN_8CHAN) || HW_PROTEUS || EFI_SIMULATOR
 	case engine_type_e::GM_SBC_GEN4:
 		setGmLs4();
 		break;
