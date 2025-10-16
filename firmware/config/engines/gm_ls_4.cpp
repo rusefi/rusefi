@@ -44,6 +44,19 @@ void setGmLs4() {
   engineConfiguration->camInputs[3] = Gpio::Unassigned;
 #endif
 
+#if HW_HELLEN_UAEFI
+	engineConfiguration->injectionPins[6] = Gpio::MM100_OUT_PWM1;
+	engineConfiguration->injectionPins[7] = Gpio::MM100_INJ8;
+
+  engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
+	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN2;
+	engineConfiguration->ignitionPins[2] = Gpio::MM100_IGN3;
+	engineConfiguration->ignitionPins[3] = Gpio::MM100_IGN4;
+	engineConfiguration->ignitionPins[4] = Gpio::MM100_IGN5;
+	engineConfiguration->ignitionPins[5] = Gpio::MM100_IGN6;
+#endif
+
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 	engineConfiguration->injector.flow = 440;

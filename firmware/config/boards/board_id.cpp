@@ -62,6 +62,13 @@ board_id_t getBoardId() {
     }
 #endif
 
+#if HW_HELLEN_UAEFI
+    if (engineConfiguration->engineType == engine_type_e::GM_SBC_GEN4) {
+        // a way to test harness patch cord
+        return STATIC_BOARD_ID_UAEFI_GM_GEN4;
+    }
+#endif
+
 #if HW_MICRO_RUSEFI
     if (engineConfiguration->engineType == engine_type_e::MERCEDES_M111) {
         return STATIC_BOARD_ID_MRE_M111;
