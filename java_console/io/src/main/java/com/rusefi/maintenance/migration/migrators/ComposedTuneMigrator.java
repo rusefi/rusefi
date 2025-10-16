@@ -24,6 +24,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         STFTFieldMigrator.INSTANCE,
         IdleCurveMigrator.INSTANCE,
         AfrMsqImportMigrator.INSTANCE,
+        CrankingIdleMigrator.INSTANCE,
 
         // leave the default as the final migrator!
         DefaultTuneMigrator.INSTANCE

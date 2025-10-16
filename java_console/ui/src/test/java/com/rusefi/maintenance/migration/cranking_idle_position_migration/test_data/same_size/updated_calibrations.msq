@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<msq xmlns="http://www.msefi.com/:msq">
+    <page/>
+    <page number="0" size="46496">
+        <constant cols="1" digits="2" name="cltCrankingCorr" rows="8" units="percent">
+         50.0
+         50.0
+         50.0
+         50.0
+         50.0
+         50.0
+         50.0
+         50.0
+      </constant>
+    </page>
+</msq>
