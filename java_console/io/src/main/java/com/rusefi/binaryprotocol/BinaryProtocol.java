@@ -180,7 +180,11 @@ public class BinaryProtocol {
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
-        iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
+        try {
+            iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
+        } catch (IniNotFoundException e) {
+            return "Failed to located .ini";
+        }
         if (isSinglePageController()) {
             log.info("*** COMPATIBILITY MODE: older single-page firmware");
         }

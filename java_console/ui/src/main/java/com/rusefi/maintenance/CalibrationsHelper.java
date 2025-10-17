@@ -9,6 +9,7 @@ import com.opensr5.ini.field.*;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
+import com.rusefi.binaryprotocol.IniNotFoundException;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
@@ -133,8 +134,10 @@ public class CalibrationsHelper {
         AutoupdateUtil.assertNotAwtThread();
 
         final String signature = msqToImport.versionInfo.getSignature();
-        final IniFileModel iniFileToImport = iniFileProvider.provide(signature);
-        if (iniFileToImport == null) {
+        final IniFileModel iniFileToImport;
+        try {
+            iniFileToImport = BinaryProtocol.iniFileProvider.provide(signature);
+        } catch (IniNotFoundException e) {
             callbacks.logLine(String.format("We failed to get .ini file for signature `%s`", signature));
             return false;
         }
@@ -222,7 +225,12 @@ public class CalibrationsHelper {
                 return Optional.empty();
             }
             callbacks.logLine(String.format("Received a signature %s", signature));
-            final IniFileModel iniFile = iniFileProvider.provide(signature);
+            final IniFileModel iniFile;
+            try {
+                iniFile = BinaryProtocol.iniFileProvider.provide(signature);
+            } catch (IniNotFoundException e) {
+                throw new RuntimeException(e);
+            }
             Objects.requireNonNull(iniFile);
             final int pageSize = iniFile.getMetaInfo().getPageSize(0);
             callbacks.logLine(String.format("Page size is %d", pageSize));

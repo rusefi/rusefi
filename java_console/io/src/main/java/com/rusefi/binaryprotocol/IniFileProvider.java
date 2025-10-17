@@ -5,5 +5,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface IniFileProvider {
     @NotNull
-    IniFileModel provide(String signature);
+    IniFileModel provide(String signature) throws IniNotFoundException;
 }
