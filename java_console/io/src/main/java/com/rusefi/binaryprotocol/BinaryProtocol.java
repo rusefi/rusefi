@@ -183,6 +183,7 @@ public class BinaryProtocol {
         try {
             iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
         } catch (IniNotFoundException e) {
+            close();
             return "Failed to located .ini";
         }
         if (isSinglePageController()) {
