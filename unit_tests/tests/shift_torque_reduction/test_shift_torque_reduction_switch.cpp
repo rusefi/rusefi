@@ -175,19 +175,12 @@ namespace {
 				/* description = */ "LUA_CLUTCH_DOWN (pinMode = PI_INVERTED_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
-					/* inputPin = */ TestSwitchPin::CLUTCH_UP,
-					/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
-						.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH),
-					/* expectedIsTorqueReductionTriggerPinValid = */ true,
-					/* description = */ "CLUTCH_UP"
-			},
-			ShiftTorqueReductionSwitchParams {
-					/* inputPin = */ TestSwitchPin::CLUTCH_UP,
-					/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
-						.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH)
-						.setClutchUpPinMode(PI_DEFAULT),
-					/* expectedIsTorqueReductionTriggerPinValid = */ true,
-					/* description = */ "CLUTCH_UP (pinMode = PI_DEFAULT)"
+				/* inputPin = */ TestSwitchPin::CLUTCH_UP,
+				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
+					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH)
+					.setClutchUpPinMode(PI_INVERTED_DEFAULT),
+				/* expectedIsTorqueReductionTriggerPinValid = */ true,
+				/* description = */ "CLUTCH_UP"
 			},
 			ShiftTorqueReductionSwitchParams {
 					/* inputPin = */ TestSwitchPin::LUA_CLUTCH_UP,
