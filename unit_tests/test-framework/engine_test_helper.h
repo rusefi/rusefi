@@ -66,6 +66,7 @@ public:
 	void smartFireRise(float delayMs);
 	void smartFireFall(float delayMs);
 	void moveTimeForwardAndInvokeEventsUs(int deltaTimeUs);
+	void setTimeNtAndInvokeCallBacks(efitick_t nt);
 	void setTimeAndInvokeEventsUs(int timeNowUs);
 	void moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds);
 	/**
