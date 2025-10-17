@@ -199,6 +199,8 @@ void baseMCUInit() {
 
 #ifndef EFI_SKIP_BOR
 	BOR_Set(BOR_Level_1); // one step above default value
+#else
+  BOR_Set(BOR_Level_None);
 #endif
 
 #ifndef EFI_BOOTLOADER
