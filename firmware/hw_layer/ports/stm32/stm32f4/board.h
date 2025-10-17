@@ -202,15 +202,15 @@
 #define VAL_GPIOA_OSPEEDR           VAL_GPIO_OSPEEDR_ALL_DEFAULT
 #define VAL_GPIOA_PUPDR             VAL_GPIO_PUPDR_ALL_DEFAULT
 #define VAL_GPIOA_ODR               VAL_GPIO_ODR_ALL_DEFAULT
-#define VAL_GPIOA_AFRL              (PIN_AFIO_AF(0, 0U) |        \
-                                     PIN_AFIO_AF(1, 0U) |          \
-                                     PIN_AFIO_AF(2, 0U) |          \
-                                     PIN_AFIO_AF(3, 0U) |          \
-                                     PIN_AFIO_AF(4, 6U) |          \
-                                     PIN_AFIO_AF(5, 5U) |           \
-                                     PIN_AFIO_AF(6, 5U) |           \
-                                     PIN_AFIO_AF(7, 5U))
-#define VAL_GPIOA_AFRH              VAL_GPIO_AF_ALL_DEFAULT
+#define VAL_GPIOA_AFRL              VAL_GPIO_AF_ALL_DEFAULT
+#define VAL_GPIOA_AFRH              (PIN_AFIO_AF(8, 0U) |        \
+                                     PIN_AFIO_AF(9, 0U) |          \
+                                     PIN_AFIO_AF(10, 0U) |          \
+                                     PIN_AFIO_AF(11, 10U) |          \
+                                     PIN_AFIO_AF(12, 10U) |          \
+                                     PIN_AFIO_AF(GPIOA_SWDIO, 0U) |           \
+                                     PIN_AFIO_AF(GPIOA_SWCLK, 0U) |           \
+                                     PIN_AFIO_AF(15, 0U))
 
 /*
  * GPIOB setup:
