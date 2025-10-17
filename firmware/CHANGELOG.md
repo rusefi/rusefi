@@ -28,6 +28,8 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## October 2025 "Day 1332"
+
 ### Added
  - OilTempGauge
  - LUA_USER_HEAP is no longer used
