@@ -16,6 +16,19 @@ void setGmLs4() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 	strcpy(engineConfiguration->engineCode, "gen4");
 	engineConfiguration->globalTriggerAngleOffset = 86;
+	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+
+  engineConfiguration->etbIdleThrottleRange = 30;
+
+    engineConfiguration->cranking.rpm = 400;
+    engineConfiguration->rpmHardLimit = 6000;
+
+      engineConfiguration->etb.pFactor = 7.320831;
+      engineConfiguration->etb.iFactor = 116.5986;
+      engineConfiguration->etb.dFactor = 0.0765;
+      engineConfiguration->etb.minValue = -90;
+      engineConfiguration->etb.maxValue = 90;
+
 
 #if HW_PROTEUS
 	engineConfiguration->etbFunctions[1] = DC_None;
@@ -61,6 +74,14 @@ void setGmLs4() {
 	engineConfiguration->ignitionPins[6] = Gpio::MM100_IGN4;
 	// cylinders 2 and 3
 	engineConfiguration->ignitionPins[7] = Gpio::MM100_IGN2;
+
+
+	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_D1; // HALL1
+	engineConfiguration->invertPrimaryTriggerSignal = true;
+
+	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D2; // HALL2
+	engineConfiguration->camInputs[1] = Gpio::Unassigned;
+
 #endif
 
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
@@ -71,6 +92,7 @@ void setGmLs4() {
 	setLeftRightBanksNeedBetterName();
 	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->displacement = 6.2;
+	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 
 	engineConfiguration->tChargeAirIncrLimit = 5;
 	engineConfiguration->tChargeAirDecrLimit = 15;
