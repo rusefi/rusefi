@@ -1585,9 +1585,6 @@ float getOutputValueByHash(const int hash) {
 // wasResetPid
 		case 1830486000:
 			return engine->module<IdleController>().unmock().wasResetPid;
-// mustResetPid
-		case 1685322158:
-			return engine->module<IdleController>().unmock().mustResetPid;
 // isCranking
 		case -1055526802:
 			return engine->module<IdleController>().unmock().isCranking;
