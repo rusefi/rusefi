@@ -140,7 +140,7 @@ void initSoftwareKnock() {
 			engine->module<KnockController>()->m_knockFrequencyStep = freqStep;
 		}
   #else // KNOCK_SPECTROGRAM
-    criticalAssert(!engineConfiguration->enableKnockSpectrogram, "KNOCK_SPECTROGRAM not enabled");
+    criticalAssertVoid(!engineConfiguration->enableKnockSpectrogram, "KNOCK_SPECTROGRAM not enabled");
 	#endif // KNOCK_SPECTROGRAM
 
   // fun fact: we do not offer any ADC channel flexibility like we have for many other kinds of inputs
