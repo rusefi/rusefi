@@ -81,19 +81,20 @@ public class TableAddColumnsMigrator implements TuneMigrator {
             final int updatedTableFieldCols = updatedTableField.getCols();
             final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
             if (prevValue != null) {
-                final Optional<String> migratedValue = tryMigrateTable(
+                final String[][] prevValues = prevTableField.getValues(prevValue.getValue());
+                final Optional<String[][]> migratedValues = tryMigrateTable(
                     prevTableField,
                     updatedTableField,
-                    prevValue.getValue(),
+                    prevValues,
                     context.getCallbacks()
                 );
-                if (migratedValue.isPresent()) {
+                if (migratedValues.isPresent()) {
                     context.addMigration(
                         tableFieldName,
                         new Constant(
                             tableFieldName,
                             updatedTableField.getUnits(),
-                            migratedValue.get(),
+                            updatedTableField.formatValue(migratedValues.get()),
                             updatedTableField.getDigits(),
                             Integer.toString(updatedTableField.getRows()),
                             Integer.toString(updatedTableFieldCols)
@@ -151,19 +152,18 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         }
     }
 
-    private Optional<String> tryMigrateTable(
+    private Optional<String[][]> tryMigrateTable(
         final ArrayIniField prevField,
         final ArrayIniField newField,
-        final String prevValue,
+        final String[][] prevValues,
         final UpdateOperationCallbacks callbacks
     ) {
-        Optional<String> result = Optional.empty();
+        Optional<String[][]> result = Optional.empty();
         final int tableFieldRows = prevField.getRows();
         if (newField.getRows() == tableFieldRows) {
             final int prevTableFieldCols = prevField.getCols();
             final int newTableFieldCols = newField.getCols();
             if (prevTableFieldCols < newTableFieldCols) {
-                final String[][] prevValues = prevField.getValues(prevValue);
                 final String[][] newValues = new String[tableFieldRows][newTableFieldCols];
                 for (int rowIdx = 0; rowIdx < tableFieldRows; rowIdx++) {
                     // copy prev values:
@@ -175,7 +175,7 @@ public class TableAddColumnsMigrator implements TuneMigrator {
                         newValues[rowIdx][colIdx] = prevValues[rowIdx][prevTableFieldCols - 1];
                     }
                 }
-                result = Optional.of(newField.formatValue(newValues));
+                result = Optional.of(newValues);
             }
         } else {
             callbacks.logLine(String.format(
