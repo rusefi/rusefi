@@ -23,7 +23,7 @@ pins:
     meta: MM100_IN_AUX2_ANALOG
     class: analog_inputs
     ts_name: ___ PPS2
-    function: PPS input 2
+    function: Universal analog input. Suggested PPS input 2
     type: av
     color: orange/brown
 
@@ -80,7 +80,7 @@ pins:
     meta: MM100_IN_AUX1_ANALOG
     class: analog_inputs
     ts_name: ___ TPS2
-    function: TPS input 2
+    function: Universal analog input. Suggested TPS input 2
     type: av
     color: blue
 

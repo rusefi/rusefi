@@ -37,7 +37,7 @@ pins:
     meta: MM100_IN_PPS_ANALOG
     class: analog_inputs
     ts_name: ___ PPS1
-    function: PPS input 1
+    function: Universal analog input. Suggested PPS input 1
     type: av
     color: white
 
@@ -55,7 +55,7 @@ pins:
     meta: MM100_IN_MAP1_ANALOG
     class: analog_inputs
     ts_name: ___ MAP
-    function: MAP input
+    function: Universal analog input. Suggested MAP input
     type: av
     color: yellow
 
@@ -78,7 +78,7 @@ pins:
     meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
     ts_name: ___ TPS1
-    function: TPS input 1
+    function: Universal analog input. Suggested TPS input 1
     type: av
     color: green
 

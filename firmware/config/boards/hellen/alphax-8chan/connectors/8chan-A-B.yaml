@@ -4,6 +4,7 @@ pins:
   - pin: On-board MAP
     meta: MM176_IN_MAP3_ANALOG
     class: analog_inputs
+    type: av
     function: MAP Sensor Input
     ts_name: On-board MAP
     color: orange
@@ -11,6 +12,7 @@ pins:
   - pin: 1A
     meta: MM176_IN_CRANK_ANALOG
     function: Aux Analog 1 / External MAP
+    type: av
     class: analog_inputs
     ts_name: 1A - Aux Analog 1
     color: blue
@@ -18,6 +20,7 @@ pins:
   - pin: 2A
     meta: MM176_IN_MAP1_ANALOG
     function: Aux Analog 4
+    type: av
     class: analog_inputs
     ts_name: 2A - Aux Analog 4
     color: violet
@@ -25,12 +28,14 @@ pins:
   - pin: 3A
     meta: MM176_IN_O2S_ANALOG
     function: Aux Analog 2
+    type: av
     class: analog_inputs
     ts_name: 3A - Aux Analog 2
     color: yellow
 
   - pin: 4A
     meta: MM176_IN_AUX2_ANALOG
+    type: av
     function: Aux Analog 7
     class: analog_inputs
     ts_name: 4A - Aux Analog 7
@@ -72,6 +77,7 @@ pins:
   - pin: 10A
     meta: MM176_IN_MAP2_ANALOG
     function: Aux Analog 5
+    type: av
     class: analog_inputs
     ts_name: 10A - Aux Analog 5
     color: yellow
@@ -79,6 +85,7 @@ pins:
   - pin: 11A
     meta: MM176_IN_O2S2_ANALOG
     function: Aux Analog 3
+    type: av
     class: analog_inputs
     ts_name: 11A - Aux Analog 3
     color: yellow
@@ -86,6 +93,7 @@ pins:
   - pin: 12A
     meta: MM176_IN_AUX3_ANALOG
     function: Aux Analog 8
+    type: av
     class: analog_inputs
     ts_name: 12A - Aux Analog 8
     color: yellow
@@ -132,6 +140,7 @@ pins:
   - pin: 19A
     meta: MM176_IN_AUX1_ANALOG
     function: Aux Analog 6
+    type: av
     class: analog_inputs
     ts_name: 19A - Aux Analog 6
     color: blue
@@ -139,6 +148,7 @@ pins:
   - pin: 20A
     meta: MM176_IN_AUX4_ANALOG
     function: Aux Analog 9
+    type: av
     class: analog_inputs
     ts_name: 20A - Aux Analog 9
     color: blue
@@ -221,7 +231,7 @@ pins:
   - pin: 31A
     meta: MM176_IN_TPS_ANALOG
     class: analog_inputs
-    function: TPS Sensor Input
+    function: Universal analog input. Suggested TPS Sensor Input
     color: green
     type: av
     ts_name: 31A - TPS Sensor Input
@@ -229,7 +239,7 @@ pins:
   - pin: 32A
     meta: MM176_IN_PPS1_ANALOG
     class: analog_inputs
-    function: PPS Sensor Input
+    function: Universal analog input. Suggested PPS Sensor Input
     ts_name: ___ - PPS Sensor Input
     type: av
     color: orange
@@ -239,14 +249,14 @@ pins:
     class: analog_inputs
     color: blue
     type: av
-    function: TPS2 Sensor Input
+    function: Universal analog input. Suggested TPS2 Sensor Input
     ts_name: ___ - TPS2 Sensor Input
 
   - pin: 34A
     meta: MM176_IN_PPS2_ANALOG
     class: analog_inputs
     type: av
-    function: PPS2 Sensor Input
+    function: Universal analog input. Suggested PPS2 Sensor Input
     ts_name: 34A - PPS2 Sensor Input
     color: white
 
