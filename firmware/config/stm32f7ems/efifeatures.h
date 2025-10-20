@@ -18,6 +18,10 @@
 #define EFI_EMBED_INI_MSD FALSE
 #endif
 
+#ifndef KNOCK_SPECTROGRAM
+#define KNOCK_SPECTROGRAM TRUE
+#endif
+
 #ifndef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE TRUE
 #endif
