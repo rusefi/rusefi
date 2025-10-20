@@ -28,6 +28,7 @@ public class KnockAnalyzerTab {
     public static final String ENABLE_KNOCK_SPECTROGRAM = "enableKnockSpectrogram";
     private static final int MAG_WIDTH = 760;
     private static final int MAG_HEIGHT = 200;
+    public static final int VALUE_COUNT = 64;
 
     private enum CanvasType {
         COMBINED,
@@ -49,7 +50,7 @@ public class KnockAnalyzerTab {
     private int currentChannel = 0;
     private int currentCylinder = 0;
 
-    private final float[] values = new float[64];
+    private final float[] values = new float[VALUE_COUNT];
 
     private int cylindersCount = 0;
 

@@ -8,8 +8,8 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
+import static com.rusefi.ts_plugin.knock.KnockAnalyzerTab.VALUE_COUNT;
 import static org.apache.commons.math3.util.Precision.round;
-
 
 public class KnockMagnitudeCanvas {
 
@@ -25,36 +25,15 @@ public class KnockMagnitudeCanvas {
         }
     };
 
-    private ComponentListener componentListener = new ComponentListener() {
-        @Override
-        public void componentHidden(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentMoved(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentResized(ComponentEvent e) {
-            bufferedImage = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
-            bufferedGraphics = bufferedImage.createGraphics();
-        }
-
-        @Override
-        public void componentShown(ComponentEvent e) {
-        }
-    };
-
     private BufferedImage bufferedImage;
     private Graphics2D bufferedGraphics;
 
-    public double[] yAxisHz;
-    int yAxisFequencyStart = -1;
-    float yAxisFequencyStep = -1;
+    private final double[] yAxisHz;
+    private int yAxisFrequencyStart = -1;
+    private float yAxisFrequencyStep = -1;
 
-
-    int[] xPoints = new int[66]; // + 2 last points for polygon
-    int[] yPoints = new int[66]; // + 2 last points for polygon
+    private final int[] xPoints = new int[VALUE_COUNT + 2]; // + 2 last points for polygon
+    private final int[] yPoints = new int[VALUE_COUNT + 2]; // + 2 last points for polygon
 
     public KnockMagnitudeCanvas() {
 
@@ -64,6 +43,13 @@ public class KnockMagnitudeCanvas {
 
         bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
         bufferedGraphics = bufferedImage.createGraphics();
+        ComponentListener componentListener = new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                bufferedImage = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                bufferedGraphics = bufferedImage.createGraphics();
+            }
+        };
         component.addComponentListener(componentListener);
 
         yAxisHz = new double[64]; // protocol size
@@ -75,9 +61,9 @@ public class KnockMagnitudeCanvas {
     }
 
     public void setFrequencyStart(int start) {
-        boolean needSetup = this.yAxisFequencyStart < 0;
+        boolean needSetup = this.yAxisFrequencyStart < 0;
 
-        this.yAxisFequencyStart = start;
+        this.yAxisFrequencyStart = start;
 
         if (needSetup) {
             setupFrequencyyAxis();
@@ -86,9 +72,9 @@ public class KnockMagnitudeCanvas {
 
     public void setFrequencyStep(float step) {
 
-        boolean needSetup = this.yAxisFequencyStep < 0;
+        boolean needSetup = this.yAxisFrequencyStep < 0;
 
-        this.yAxisFequencyStep = step;
+        this.yAxisFrequencyStep = step;
 
         if (needSetup) {
             setupFrequencyyAxis();
@@ -97,12 +83,12 @@ public class KnockMagnitudeCanvas {
 
     public void setupFrequencyyAxis() {
 
-        if (this.yAxisFequencyStep < 0 || this.yAxisFequencyStart < 0) {
+        if (this.yAxisFrequencyStep < 0 || this.yAxisFrequencyStart < 0) {
             return;
         }
 
         for (int i = 0; i < 64; ++i) {
-            float y = (float) this.yAxisFequencyStart + (this.yAxisFequencyStep * (float) i);
+            float y = (float) this.yAxisFrequencyStart + (this.yAxisFrequencyStep * (float) i);
             this.yAxisHz[i] = y;
         }
     }
