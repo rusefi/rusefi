@@ -92,11 +92,13 @@ static KnockThread kt;
 void initSoftwareKnock() {
 	if (engineConfiguration->enableSoftwareKnock) {
 
-		float frequencyHz = 1000 * bore2frequency(engineConfiguration->cylinderBore);
-		frequencyHz = engineConfiguration->knockDetectionUseDoubleFrequency ? 2 * frequencyHz : frequencyHz;
+		float frequencyHz;
 
 		if (engineConfiguration->knockFrequency > 0.01) {
 			frequencyHz = engineConfiguration->knockFrequency;
+		} else {
+		  frequencyHz = 1000 * bore2frequency(engineConfiguration->cylinderBore);
+      frequencyHz = engineConfiguration->knockDetectionUseDoubleFrequency ? 2 * frequencyHz : frequencyHz;
 		}
 
 		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, frequencyHz, 3);
