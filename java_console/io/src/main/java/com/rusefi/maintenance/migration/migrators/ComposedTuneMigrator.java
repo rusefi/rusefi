@@ -14,6 +14,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         TableAddColumnsMigrator.LAMBDA_TABLE_MIGRATOR,
         TableAddColumnsMigrator.IGNITION_TABLE_MIGRATOR,
         TableAddColumnsMigrator.INJECTION_PHASE_MIGRATOR,
+        AfrLambdaTableMigrator.INSTANCE,
         BattLagCorrExtensionMigrator.INSTANCE,
         CltIdleCorrMigrator.INSTANCE,
         DisplacementIniFieldMigrator.INSTANCE,
