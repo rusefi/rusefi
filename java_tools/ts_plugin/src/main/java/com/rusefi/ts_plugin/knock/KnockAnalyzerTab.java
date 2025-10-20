@@ -26,6 +26,8 @@ public class KnockAnalyzerTab {
 
     public static final String CYLINDERS_COUNT = "cylindersCount";
     public static final String ENABLE_KNOCK_SPECTROGRAM = "enableKnockSpectrogram";
+    private static final int MAG_WIDTH = 760;
+    private static final int MAG_HEIGHT = 200;
 
     private enum CanvasType {
         COMBINED,
@@ -115,8 +117,8 @@ public class KnockAnalyzerTab {
         magnitudes.setFocusTraversalKeysEnabled(false);
         magnitudes.setFocusable(true);
         magnitudes.setDoubleBuffered(true);
-        magnitudes.setPreferredSize(new Dimension(760, 200));
-        magnitudes.setMinimumSize(new Dimension(760, 200));
+        magnitudes.setPreferredSize(new Dimension(MAG_WIDTH, MAG_HEIGHT));
+        magnitudes.setMinimumSize(new Dimension(MAG_WIDTH, MAG_HEIGHT));
         allDraw.add(magnitudes);
 
         createCanvas();
