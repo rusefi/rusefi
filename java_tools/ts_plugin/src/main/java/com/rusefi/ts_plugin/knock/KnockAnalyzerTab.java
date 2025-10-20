@@ -314,7 +314,15 @@ public class KnockAnalyzerTab {
         this.refreshCanvases();
     }
 
+    private long refreshThrottle;
+
     private void refreshCanvases() {
+        long now = System.currentTimeMillis();
+        boolean withRecentRefresh = now - refreshThrottle < 500/*ms*/;
+        refreshThrottle = now;
+        if (withRecentRefresh) {
+            return;
+        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
