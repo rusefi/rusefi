@@ -21,39 +21,61 @@ public class TableAddColumnsMigrator implements TuneMigrator {
     public static final TableAddColumnsMigrator VE_TABLE_MIGRATOR = new TableAddColumnsMigrator(
         VE_TABLE_FIELD_NAME,
         FieldType.UINT16,
-        VE_RPM_BINS_FIELD_NAME
+        VE_RPM_BINS_FIELD_NAME,
+        RetainTableValuesConverter.INSTANCE
     );
 
     public static final TableAddColumnsMigrator LAMBDA_TABLE_MIGRATOR = new TableAddColumnsMigrator(
         LAMBDA_TABLE_FIELD_NAME,
         FieldType.UINT8,
-        LAMBDA_RPM_BINS_FIELD_NAME
+        LAMBDA_RPM_BINS_FIELD_NAME,
+        AfrLambdaTableValuesConverter.INSTANCE
     );
 
     public static final TableAddColumnsMigrator IGNITION_TABLE_MIGRATOR = new TableAddColumnsMigrator(
         IGNITION_TABLE_FIELD_NAME,
         FieldType.INT16,
-        IGNITION_RPM_BINS_FIELD_NAME
+        IGNITION_RPM_BINS_FIELD_NAME,
+        RetainTableValuesConverter.INSTANCE
     );
 
     public static final TableAddColumnsMigrator INJECTION_PHASE_MIGRATOR = new TableAddColumnsMigrator(
         INJECTION_PHASE_FIELD_NAME ,
         FieldType.INT16,
-        INJECTION_PHASE_RPM_BINS_FIELD_NAME
+        INJECTION_PHASE_RPM_BINS_FIELD_NAME,
+        RetainTableValuesConverter.INSTANCE
     );
 
     private final String tableFieldName;
     private final FieldType tableFieldType;
     private final String columnsBinFieldName;
+    private final TableValuesConverter prevTableValueConverter;
+
+    private static class RetainTableValuesConverter implements TableValuesConverter {
+        static RetainTableValuesConverter INSTANCE = new RetainTableValuesConverter();
+
+        private RetainTableValuesConverter() {}
+
+        @Override
+        public Optional<String[][]> convertTableValues(
+            final String[][] prevValues,
+            final TuneMigrationContext context
+        ) {
+            // default implementation does not modify previous table values:
+            return Optional.of(prevValues);
+        }
+    }
 
     private TableAddColumnsMigrator(
         final String tableIniFieldName,
         final FieldType tableIniFieldType,
-        final String columnsIniBinFieldName
+        final String columnsIniBinFieldName,
+        final TableValuesConverter tableValuesConverter
     ) {
         tableFieldName = tableIniFieldName;
         tableFieldType = tableIniFieldType;
         columnsBinFieldName = columnsIniBinFieldName;
+        prevTableValueConverter = tableValuesConverter;
     }
 
     @Override
@@ -81,25 +103,30 @@ public class TableAddColumnsMigrator implements TuneMigrator {
             final int updatedTableFieldCols = updatedTableField.getCols();
             final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(tableFieldName);
             if (prevValue != null) {
-                final String[][] prevValues = prevTableField.getValues(prevValue.getValue());
-                final Optional<String[][]> migratedValues = tryMigrateTable(
-                    prevTableField,
-                    updatedTableField,
-                    prevValues,
-                    context.getCallbacks()
+                final Optional<String[][]> convertedPrevValues = prevTableValueConverter.convertTableValues(
+                    prevTableField.getValues(prevValue.getValue()),
+                    context
                 );
-                if (migratedValues.isPresent()) {
-                    context.addMigration(
-                        tableFieldName,
-                        new Constant(
-                            tableFieldName,
-                            updatedTableField.getUnits(),
-                            updatedTableField.formatValue(migratedValues.get()),
-                            updatedTableField.getDigits(),
-                            Integer.toString(updatedTableField.getRows()),
-                            Integer.toString(updatedTableFieldCols)
-                        )
+                if (convertedPrevValues.isPresent()) {
+                    final Optional<String[][]> migratedValues = tryMigrateTable(
+                        prevTableField,
+                        updatedTableField,
+                        convertedPrevValues.get(),
+                        context.getCallbacks()
                     );
+                    if (migratedValues.isPresent()) {
+                        context.addMigration(
+                            tableFieldName,
+                            new Constant(
+                                tableFieldName,
+                                updatedTableField.getUnits(),
+                                updatedTableField.formatValue(migratedValues.get()),
+                                updatedTableField.getDigits(),
+                                Integer.toString(updatedTableField.getRows()),
+                                Integer.toString(updatedTableFieldCols)
+                            )
+                        );
+                    }
                 }
             }
             migrateBins(context, prevTableFieldCols, updatedTableFieldCols);
