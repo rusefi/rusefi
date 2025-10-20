@@ -54,6 +54,6 @@ jobs:
       - name: Print make version
         run: make -v
 
-      - name: Compile
+      - name: Compile Firmware
         working-directory: firmware
         run: make -j4

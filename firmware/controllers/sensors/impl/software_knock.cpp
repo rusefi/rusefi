@@ -8,6 +8,7 @@
 #include "software_knock.h"
 #include "knock_config.h"
 #include "ch.hpp"
+#include "error_handling.h"
 
 #ifdef KNOCK_SPECTROGRAM
 #include "fft/fft.hpp"
@@ -138,7 +139,9 @@ void initSoftwareKnock() {
 			engine->module<KnockController>()->m_knockFrequencyStart = (uint16_t)freqStart;
 			engine->module<KnockController>()->m_knockFrequencyStep = freqStep;
 		}
-	#endif
+  #else // KNOCK_SPECTROGRAM
+    criticalAssert(!engineConfiguration->enableKnockSpectrogram, "KNOCK_SPECTROGRAM not enabled");
+	#endif // KNOCK_SPECTROGRAM
 
   // fun fact: we do not offer any ADC channel flexibility like we have for many other kinds of inputs
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
