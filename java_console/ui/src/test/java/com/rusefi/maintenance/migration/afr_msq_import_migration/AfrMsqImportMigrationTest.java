@@ -21,7 +21,7 @@ public class AfrMsqImportMigrationTest {
 	@Test
 	void checkAfrMsqMigrationAfrToLambda() throws JAXBException {
 		final TestTuneMigrationContext testContext = AfrMsqImportMigrationContext.loadAfrToLambda();
-		ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
+		AfrMsqImportMigrator.INSTANCE.migrateTune(testContext);
 		final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
 
 		final Constant migratedcltIdleCorrTableName = migratedConstants.get("lambdaTable");
@@ -54,7 +54,7 @@ public class AfrMsqImportMigrationTest {
 	@Test
 	void checkAfrMsqMigrationLambdaToAfr() throws JAXBException {
 		final TestTuneMigrationContext testContext = AfrMsqImportMigrationContext.loadLambdaToAfr();
-		ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
+		AfrMsqImportMigrator.INSTANCE.migrateTune(testContext);
 		final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
 
 		final Constant migratedcltIdleCorrTableName = migratedConstants.get("lambdaTable");
@@ -87,7 +87,7 @@ public class AfrMsqImportMigrationTest {
 	@Test
 	void checkAfrMsqMigrationSmallAfrToBigLambda() throws JAXBException {
 		final TestTuneMigrationContext testContext = AfrMsqImportMigrationContext.loadSmallAfrToBigLambda();
-		ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
+		AfrMsqImportMigrator.INSTANCE.migrateTune(testContext);
 		final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
 
 		final Constant migratedcltIdleCorrTableName = migratedConstants.get("lambdaTable");
