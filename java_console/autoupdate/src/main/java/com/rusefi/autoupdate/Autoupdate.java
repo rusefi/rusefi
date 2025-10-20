@@ -138,7 +138,7 @@ public class Autoupdate {
                 new File(srecFile == null ? firmwareFile : srecFile)
                     .setLastModified(autoupdateFile.lastModified);
 
-                TsPluginInstaller.installTsPlugin();
+                tryInstallTsPlugin();
             } catch (IOException e) {
                 log.error("Error unzipping autoupdate from bundle: " + e);
                 if (!AutoupdateUtil.runHeadless) {
@@ -146,6 +146,14 @@ public class Autoupdate {
                 }
             }
         });
+    }
+
+    private static void tryInstallTsPlugin() {
+        try {
+            TsPluginInstaller.installTsPlugin();
+        } catch (NoClassDefFoundError e) {
+            log.warn("Error installTsPlugin: " + e);
+        }
     }
 
     private static void unzipFreshConsole(DownloadedAutoupdateFileInfo autoupdateFile) {
