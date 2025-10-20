@@ -4,7 +4,7 @@ pins:
   - pin: On-board MAP
     meta: MM100_IN_MAP2_ANALOG
     class: analog_inputs
-    function: MAP Sensor Input
+    function: Optional MAP Sensor Input
     ts_name: On-board MAP
     color: orange
 
@@ -240,6 +240,7 @@ pins:
     class: analog_inputs
     meta: MM100_IN_MAP1_ANALOG
     ts_name: MAP
+    type: av
     function: MAP signal
     color: yellow
 
@@ -262,12 +263,14 @@ pins:
   - pin: 40a
     class: analog_inputs
     meta: MM100_IN_O2S_ANALOG
+    type: av
     ts_name: AIN 1
     function: AUX1 analog input
 
   - pin: 41a
     class: analog_inputs
     meta: MM100_IN_O2S2_ANALOG
+    type: av
     ts_name: AIN 2
     function: AUX2 analog input
 

@@ -15,6 +15,7 @@ pins:
     id: [MM100_IN_O2S2_ANALOG, MM100_IN_O2S2]
     class: [analog_inputs, switch_inputs]
     color: yellow
+    type: av
     ts_name: ___ AUX2
     function: Auxiliary analog input 2
 
@@ -86,6 +87,7 @@ pins:
   - pin: C15
     id: [MM100_IN_AUX3_ANALOG, MM100_IN_AUX3, MM100_IN_AUX3]
     color: grey
+    type: av
     class: [analog_inputs, switch_inputs, event_inputs]
     ts_name: ___ Fuel Pressure / AUX3
     function: Fuel Pressure / Auxiliary analog input 3 PullDown 500K

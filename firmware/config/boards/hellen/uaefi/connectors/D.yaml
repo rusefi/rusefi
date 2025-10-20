@@ -6,6 +6,7 @@ pins:
     class: [analog_inputs, switch_inputs, event_inputs]
     color: orange
     ts_name: ___ AUX1
+    type: av
     function: Auxiliary analog input 1 PullDown 500K
 
   - pin: D2
