@@ -314,7 +314,7 @@ public class KnockAnalyzerTab {
         this.refreshCanvases();
     }
 
-    public void refreshCanvases() {
+    private void refreshCanvases() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
