@@ -64,6 +64,10 @@ static SemaphoreHandle_t Mutex[FF_VOLUMES + 1];	/* Table of mutex handle */
 #include "cmsis_os.h"
 static osMutexId Mutex[FF_VOLUMES + 1];	/* Table of mutex ID */
 
+#elif OS_TYPE == 5 /* ChibiOS */
+#include "hal.h"
+static semaphore_t ff_sem[FF_VOLUMES + 1]; /* Table of semapthores */
+
 #endif
 
 
@@ -106,6 +110,12 @@ int ff_mutex_create (	/* Returns 1:Function succeeded or 0:Could not create the 
 	Mutex[vol] = osMutexCreate(osMutex(cmsis_os_mutex));
 	return (int)(Mutex[vol] != NULL);
 
+#elif OS_TYPE == 5 /* ChibiOS */
+	semaphore_t *sobj = &ff_sem[vol];
+
+	chSemObjectInit(sobj, 1);
+	return 1;
+
 #endif
 }
 
@@ -137,6 +147,11 @@ void ff_mutex_delete (	/* Returns 1:Function succeeded or 0:Could not delete due
 
 #elif OS_TYPE == 4	/* CMSIS-RTOS */
 	osMutexDelete(Mutex[vol]);
+
+#elif OS_TYPE == 5 /* ChibiOS */
+	semaphore_t *sobj = &ff_sem[vol];
+
+	chSemReset(sobj, 0);
 
 #endif
 }
@@ -171,6 +186,12 @@ int ff_mutex_take (	/* Returns 1:Succeeded or 0:Timeout */
 #elif OS_TYPE == 4	/* CMSIS-RTOS */
 	return (int)(osMutexWait(Mutex[vol], FF_FS_TIMEOUT) == osOK);
 
+#elif OS_TYPE == 5 /* ChibiOS */
+	semaphore_t *sobj = &ff_sem[vol];
+
+	msg_t msg = chSemWaitTimeout(sobj, (systime_t)FF_FS_TIMEOUT);
+	return (int)(msg == MSG_OK);
+
 #endif
 }
 
@@ -200,6 +221,10 @@ void ff_mutex_give (
 
 #elif OS_TYPE == 4	/* CMSIS-RTOS */
 	osMutexRelease(Mutex[vol]);
+
+#elif OS_TYPE == 5 /* ChibiOS */
+	semaphore_t *sobj = &ff_sem[vol];
+	chSemSignal(sobj);
 
 #endif
 }
