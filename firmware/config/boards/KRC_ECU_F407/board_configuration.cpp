@@ -16,7 +16,6 @@ static void KRC_ECU_F407_boardDefaultConfiguration() {
 
 	//Digital out
 	engineConfiguration->boostControlPin = Gpio::A8;
-	engineConfiguration->fanPin = Gpio::B7;
 	engineConfiguration->mainRelayPin = Gpio::C13;
 	engineConfiguration->tachOutputPin = Gpio::D7;
 	engineConfiguration->fuelPumpPin = Gpio::E11;
@@ -28,20 +27,11 @@ static void KRC_ECU_F407_boardDefaultConfiguration() {
 
 	//Idle configuration
   engineConfiguration->useStepperIdle = false;
-  engineConfiguration->isDoubleSolenoidIdle = true;
-  engineConfiguration->idle.solenoidPin = Gpio::B9;
-  engineConfiguration->secondSolenoidPin = Gpio::B8;
 
 	//Analog
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
 	engineConfiguration->iat.adcChannel = EFI_ADC_1;
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_3;
-	
-  //Map and baro sensor
-	engineConfiguration->map.sensor.type = MT_MPXH6400;
-	engineConfiguration->baroSensor.type = MT_MPXH6400;
 
 	//DBW throotle
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::C6;   // DIR pin
@@ -55,7 +45,7 @@ static void KRC_ECU_F407_boardDefaultConfiguration() {
 	engineConfiguration->iat.config.bias_resistor = 2200;
 
 	//Analog calc
-   engineConfiguration->analogInputDividerCoefficient = 1.55f;
+  engineConfiguration->analogInputDividerCoefficient = 1.55f;
   engineConfiguration->vbattDividerCoeff = (7.47f / 1.0f);
   engineConfiguration->adcVcc = 3.12f;
 
@@ -74,7 +64,7 @@ static void KRC_ECU_F407_boardDefaultConfiguration() {
 	engineConfiguration->spi1sckPin = Gpio::B13;
 	engineConfiguration->max31855_cs[0] = Gpio::B12;
 
-        //SPI3 SD card
+  //SPI3 SD card
 	engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
@@ -94,7 +84,6 @@ static void KRC_ECU_F407_boardDefaultConfiguration() {
 
 	//Engine configuration
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
-	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	
 	//Knock 
