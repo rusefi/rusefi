@@ -1538,7 +1538,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 796762444
+#define SIGNATURE_HASH 1163068714
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2080,6 +2080,7 @@
 #define ts_show_throttle_switch true
 #define ts_show_tle8888 false
 #define ts_show_top_level_can_menu true
+#define ts_show_torque_model true
 #define ts_show_tps2 true
 #define ts_show_tps_sent false
 #define ts_show_trigger_advanced true
@@ -2098,6 +2099,7 @@
 #define ts_show_veBlends4 true
 #define ts_show_vehicle_name true
 #define ts_show_vehicle_speed_sensor true
+#define ts_show_virtual_dyno false
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
@@ -2108,7 +2110,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.10.21.proteus_f7.796762444"
+#define TS_SIGNATURE "rusEFI master.2025.10.21.proteus_f7.1163068714"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
