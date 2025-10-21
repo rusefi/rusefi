@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "defaults.h"
+#include "board_overrides.h"
 
 Gpio getCommsLedPin() {
     return Gpio::Unassigned;
@@ -10,7 +12,7 @@ Gpio getWarningLedPin() {
     return Gpio::Unassigned;
 }
 
-void setBoardDefaultConfiguration() {
+static void KRC_ECU_V3_boardDefaultConfiguration() {
 
 	//Digital out
 	engineConfiguration->boostControlPin = Gpio::A8;
@@ -70,7 +72,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->max31855_cs[0] = Gpio::B12;
 
   //SPI3 SD card
-	engineConfiguration->isSdCardEnabled = true;
+  engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	engineConfiguration->spi3mosiPin = Gpio::C10;
@@ -87,7 +89,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canBaudRate = B500KBPS;
 	
-  //CAN2 bus overwrites
+        //CAN2 bus overwrites
 	engineConfiguration->can2RxPin = Gpio::B5;
 	engineConfiguration->can2TxPin = Gpio::B6;
 	engineConfiguration->can2BaudRate = B500KBPS;
@@ -100,4 +102,9 @@ void setBoardDefaultConfiguration() {
 	//Knock 
 	engineConfiguration->enableSoftwareKnock = true;
 
+}
+
+void setup_custom_board_overrides() {
+
+	custom_board_DefaultConfiguration = KRC_ECU_V3_boardDefaultConfiguration;
 }
