@@ -214,6 +214,8 @@ struct_no_prefix engine_configuration_s
 #define ts_show_ign_key_menu true
 #define ts_show_map_estimate true
 #define ts_show_wall_wetting true
+#define ts_show_complexWallModel true
+#define ts_show_adv_wall_wetting true
 #define ts_show_gasoline_scale true
 #define ts_show_crankingTpsCurve true
 #define ts_show_etb_frequency true
