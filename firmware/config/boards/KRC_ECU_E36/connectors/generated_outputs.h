@@ -4,22 +4,19 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::D8, // OUT_1A
-	Gpio::D9, // OUT_2A
-	Gpio::D10, // OUT_3A
-	Gpio::D11, // OUT_4A
-	Gpio::D12, // OUT_5A
-	Gpio::D13, // OUT_6A
-	Gpio::D14, // OUT_7A
-	Gpio::D15, // OUT_8A
-	Gpio::E0, // OUT_1B
-	Gpio::E1, // OUT_2B
-	Gpio::E2, // OUT_3B
-	Gpio::E3, // OUT_4B
-	Gpio::E4, // OUT_5B
-	Gpio::E5, // OUT_6B
-	Gpio::E6, // OUT_7B
-	Gpio::E7, // OUT_8B
+	Gpio::D8, // IGN1
+	Gpio::D9, // IGN2
+	Gpio::D10, // IGN3
+	Gpio::D11, // IGN4
+	Gpio::D12, // IGN5
+	Gpio::D13, // IGN6
+	Gpio::E0, // INJ1
+	Gpio::E1, // INJ2
+	Gpio::E2, // INJ3
+	Gpio::E3, // INJ4
+	Gpio::E4, // INJ5
+	Gpio::E5, // INJ6
+	Gpio::E6, // VANOS
 	Gpio::E11, // FUEL_PUMP
 	Gpio::D7, // TACHO
 	Gpio::B9, // IDLE1
@@ -30,22 +27,19 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::D6, // SPARE
 	Gpio::E10, // A/C_RLY
 	Gpio::C13, // MAIN_RLY
-// "OUT_1A",
-// "OUT_2A",
-// "OUT_3A",
-// "OUT_4A",
-// "OUT_5A",
-// "OUT_6A",
-// "OUT_7A",
-// "OUT_8A",
-// "OUT_1B",
-// "OUT_2B",
-// "OUT_3B",
-// "OUT_4B",
-// "OUT_5B",
-// "OUT_6B",
-// "OUT_7B",
-// "OUT_8B",
+// "IGN1",
+// "IGN2",
+// "IGN3",
+// "IGN4",
+// "IGN5",
+// "IGN6",
+// "INJ1",
+// "INJ2",
+// "INJ3",
+// "INJ4",
+// "INJ5",
+// "INJ6",
+// "VANOS",
 // "FUEL_PUMP",
 // "TACHO",
 // "IDLE1",
