@@ -1537,7 +1537,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2038874596
+#define SIGNATURE_HASH 3957391777
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2009,6 +2009,7 @@
 #define ts_show_ign_key_analog_input false
 #define ts_show_ign_key_menu true
 #define ts_show_ign_key_switch false
+#define ts_show_ignitionMode true
 #define ts_show_ignitionOutputs true
 #define ts_show_ignitionPinMode false
 #define ts_show_inj_diag false
@@ -2052,6 +2053,7 @@
 #define ts_show_second_bank false
 #define ts_show_sent true
 #define ts_show_software_knock true
+#define ts_show_sparkHardwareLatencyCorrection true
 #define ts_show_speedo_settings false
 #define ts_show_spi false
 #define ts_show_spi1_enable true
@@ -2084,6 +2086,7 @@
 #define ts_show_tps2 false
 #define ts_show_tps_sent false
 #define ts_show_trigger_advanced true
+#define ts_show_trigger_console true
 #define ts_show_trigger_gap_override_flag true
 #define ts_show_trigger_overrides true
 #define ts_show_trigger_pins true
@@ -2110,7 +2113,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.10.21.hellen154hyundai.2038874596"
+#define TS_SIGNATURE "rusEFI master.2025.10.21.hellen154hyundai.3957391777"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

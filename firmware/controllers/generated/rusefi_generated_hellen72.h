@@ -1539,7 +1539,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4260565429
+#define SIGNATURE_HASH 1872024048
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2011,6 +2011,7 @@
 #define ts_show_ign_key_analog_input false
 #define ts_show_ign_key_menu true
 #define ts_show_ign_key_switch false
+#define ts_show_ignitionMode true
 #define ts_show_ignitionOutputs true
 #define ts_show_ignitionPinMode true
 #define ts_show_inj_diag false
@@ -2054,6 +2055,7 @@
 #define ts_show_second_bank true
 #define ts_show_sent true
 #define ts_show_software_knock true
+#define ts_show_sparkHardwareLatencyCorrection true
 #define ts_show_speedo_settings true
 #define ts_show_spi true
 #define ts_show_spi1_enable true
@@ -2086,6 +2088,7 @@
 #define ts_show_tps2 true
 #define ts_show_tps_sent false
 #define ts_show_trigger_advanced true
+#define ts_show_trigger_console true
 #define ts_show_trigger_gap_override_flag true
 #define ts_show_trigger_overrides true
 #define ts_show_trigger_pins true
@@ -2112,7 +2115,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.10.21.hellen72.4260565429"
+#define TS_SIGNATURE "rusEFI master.2025.10.21.hellen72.1872024048"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
