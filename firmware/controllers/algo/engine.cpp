@@ -143,9 +143,18 @@ void Engine::updateTriggerConfiguration() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-PUBLIC_API_WEAK void boardPeriodicSlowCallback() { }
+#include "board_overrides.h"
 
-PUBLIC_API_WEAK void boardPeriodicFastCallback() { }
+std::optional<setup_custom_board_overrides_type> custom_board_periodicSlowCallback;
+std::optional<setup_custom_board_overrides_type> custom_board_periodicFastCallback;
+
+void boardPeriodicSlowCallback() {
+  // placeholder to force upgrade
+}
+
+void boardPeriodicFastCallback() {
+  // placeholder to force upgrade
+}
 
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
@@ -199,6 +208,7 @@ void Engine::periodicSlowCallback() {
 	baroLps25Update();
 #endif // EFI_PROD_CODE
   boardPeriodicSlowCallback();
+  call_board_override(custom_board_periodicSlowCallback);
 }
 
 /**
@@ -558,6 +568,7 @@ void Engine::periodicFastCallback() {
 	ScopePerf pc(PE::EnginePeriodicFastCallback);
 
 	boardPeriodicFastCallback();
+	call_board_override(custom_board_periodicFastCallback);
 
 
 	engineState.periodicFastCallback();

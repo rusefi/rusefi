@@ -58,6 +58,9 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwar
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
 extern std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange;
 
+extern std::optional<setup_custom_board_overrides_type> custom_board_periodicSlowCallback;
+extern std::optional<setup_custom_board_overrides_type> custom_board_periodicFastCallback;
+
 // Board hardware related:
 extern std::optional<setup_custom_board_output_type> custom_board_getMetaOutputsCount;
 extern std::optional<setup_custom_board_output_type> custom_board_getMetaLowSideOutputs;
