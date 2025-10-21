@@ -1537,7 +1537,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4004371356
+#define SIGNATURE_HASH 2337640544
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1887,6 +1887,7 @@
 #define TS_SET_LOGGER_SWITCH 'l'
 #define TS_SET_LOGGER_SWITCH_char l
 #define ts_show_acr_pins true
+#define ts_show_adv_wall_wetting true
 #define ts_show_AdvanceCorrectionsForCranking true
 #define ts_show_air_conditioning true
 #define ts_show_alternator true
@@ -1918,6 +1919,7 @@
 #define ts_show_clutch_up true
 #define ts_show_clutch_up_pin true
 #define ts_show_communityCommsLedPin false
+#define ts_show_complexWallModel true
 #define ts_show_compression_ratio false
 #define ts_show_compressor_sensor true
 #define ts_show_console_settings true
@@ -2114,7 +2116,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.10.21.proteus_f4.4004371356"
+#define TS_SIGNATURE "rusEFI master.2025.10.21.proteus_f4.2337640544"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
