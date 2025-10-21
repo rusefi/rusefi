@@ -407,6 +407,7 @@ info:
   cid: main
   title: super-uaefi
   name: super-uaefi
+  board_url: https://github.com/rusefi/rusefi/wiki/super-uaEFI
   image:
     file: 60pins.jpg
   pins:
