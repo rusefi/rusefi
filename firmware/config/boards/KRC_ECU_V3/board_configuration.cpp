@@ -16,7 +16,6 @@ static void KRC_ECU_V3_boardDefaultConfiguration() {
 
 	//Digital out
 	engineConfiguration->boostControlPin = Gpio::A8;
-	engineConfiguration->fanPin = Gpio::B7;
 	engineConfiguration->mainRelayPin = Gpio::C13;
 	engineConfiguration->tachOutputPin = Gpio::D7;
 	engineConfiguration->fuelPumpPin = Gpio::E11;
@@ -28,19 +27,11 @@ static void KRC_ECU_V3_boardDefaultConfiguration() {
 
 	//Idle configuration
   engineConfiguration->useStepperIdle = false;
-  engineConfiguration->isDoubleSolenoidIdle = true;
-  engineConfiguration->idle.solenoidPin = Gpio::B9;
-  engineConfiguration->secondSolenoidPin = Gpio::B8;
 
 	//Analog
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
 	engineConfiguration->iat.adcChannel = EFI_ADC_1;
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
-	
-  //Map sensor
-  engineConfiguration->map.sensor.hwChannel = EFI_ADC_3;
-	engineConfiguration->map.sensor.type = MT_MPXH6400;
 
   //Baro sensor
   engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
@@ -96,7 +87,6 @@ static void KRC_ECU_V3_boardDefaultConfiguration() {
 
 	//Engine configuration
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	
 	//Knock 
