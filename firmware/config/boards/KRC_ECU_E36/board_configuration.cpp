@@ -29,8 +29,6 @@ static void KRC_ECU_E36_boardDefaultConfiguration() {
 	engineConfiguration->iat.adcChannel = EFI_ADC_1;
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
   engineConfiguration->tps2_2AdcChannel = EFI_ADC_13;
-  engineConfiguration->pps1_1AdcChannel = EFI_ADC_14;
-  engineConfiguration->pps2_2AdcChannel = EFI_ADC_15;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_3;
 	
