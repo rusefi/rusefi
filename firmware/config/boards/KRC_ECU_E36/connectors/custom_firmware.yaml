@@ -1,67 +1,55 @@
 pins:
   - id: D8
     class: outputs
-    ts_name: OUT_1A
+    ts_name: IGN1
 
   - id: D9
     class: outputs
-    ts_name: OUT_2A
+    ts_name: IGN2
 
   - id: D10
     class: outputs
-    ts_name: OUT_3A
+    ts_name: IGN3
 
   - id: D11
     class: outputs
-    ts_name: OUT_4A
+    ts_name: IGN4
 
   - id: D12
     class: outputs
-    ts_name: OUT_5A
+    ts_name: IGN5
 
   - id: D13
     class: outputs
-    ts_name: OUT_6A
-
-  - id: D14
-    class: outputs
-    ts_name: OUT_7A
-
-  - id: D15
-    class: outputs
-    ts_name: OUT_8A
+    ts_name: IGN6
 
   - id: E0
     class: outputs
-    ts_name: OUT_1B
+    ts_name: INJ1
 
   - id: E1
     class: outputs
-    ts_name: OUT_2B
+    ts_name: INJ2
 
   - id: E2
     class: outputs
-    ts_name: OUT_3B
+    ts_name: INJ3
 
   - id: E3
     class: outputs
-    ts_name: OUT_4B
+    ts_name: INJ4
 
   - id: E4
     class: outputs
-    ts_name: OUT_5B
+    ts_name: INJ5
 
   - id: E5
     class: outputs
-    ts_name: OUT_6B
+    ts_name: INJ6
 
   - id: E6
     class: outputs
-    ts_name: OUT_7B
-
-  - id: E7
-    class: outputs
-    ts_name: OUT_8B
+    ts_name: VANOS
 
   - id: E11
     class: outputs
