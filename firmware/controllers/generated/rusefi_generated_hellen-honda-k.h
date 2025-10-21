@@ -1537,7 +1537,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 463841901
+#define SIGNATURE_HASH 580133983
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2095,6 +2095,7 @@
 #define ts_show_trigger_pins true
 #define ts_show_tsp_pps_limits true
 #define ts_show_tunerstudio_port false
+#define ts_show_twoWireBatchIgnition true
 #define ts_show_useRunningMathForCranking true
 #define ts_show_useSeparateVeForIdle true
 #define ts_show_vbatt false
@@ -2116,7 +2117,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.10.21.hellen-honda-k.463841901"
+#define TS_SIGNATURE "rusEFI master.2025.10.21.hellen-honda-k.580133983"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
