@@ -1,0 +1,216 @@
+pins:
+  - id: D8
+    class: outputs
+    ts_name: OUT_1A
+
+  - id: D9
+    class: outputs
+    ts_name: OUT_2A
+
+  - id: D10
+    class: outputs
+    ts_name: OUT_3A
+
+  - id: D11
+    class: outputs
+    ts_name: OUT_4A
+
+  - id: D12
+    class: outputs
+    ts_name: OUT_5A
+
+  - id: D13
+    class: outputs
+    ts_name: OUT_6A
+
+  - id: D14
+    class: outputs
+    ts_name: OUT_7A
+
+  - id: D15
+    class: outputs
+    ts_name: OUT_8A
+
+  - id: E0
+    class: outputs
+    ts_name: OUT_1B
+
+  - id: E1
+    class: outputs
+    ts_name: OUT_2B
+
+  - id: E2
+    class: outputs
+    ts_name: OUT_3B
+
+  - id: E3
+    class: outputs
+    ts_name: OUT_4B
+
+  - id: E4
+    class: outputs
+    ts_name: OUT_5B
+
+  - id: E5
+    class: outputs
+    ts_name: OUT_6B
+
+  - id: E6
+    class: outputs
+    ts_name: OUT_7B
+
+  - id: E7
+    class: outputs
+    ts_name: OUT_8B
+
+  - id: E11
+    class: outputs
+    ts_name: FUEL_PUMP
+
+  - id: D7
+    class: outputs
+    ts_name: TACHO
+
+  - id: B9
+    class: outputs
+    ts_name: IDLE1
+
+  - id: B8
+    class: outputs
+    ts_name: IDLE2
+
+  - id: B7
+    class: outputs
+    ts_name: FAN
+
+  - id: D5
+    class: outputs
+    ts_name: CEL
+
+  - id: D6
+    class: outputs
+    ts_name: SPARE <V2.4
+
+  - id: A7
+    class: outputs
+    ts_name: SPARE
+
+  - id: A8
+    class: outputs
+    ts_name: BOOST
+
+  - id: E10
+    class: outputs
+    ts_name: A/C_RLY
+
+  - id: C13
+    class: outputs
+    ts_name: MAIN_RLY
+
+  - id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: CLT
+
+  - id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: IAT
+
+  - id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: MAF
+
+  - id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: MAP
+
+  - id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: BATT
+
+  - id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: BARO
+
+  - id: EFI_ADC_6
+    class: analog_inputs
+    ts_name: TPS
+
+  - id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: TPS1
+
+  - id: EFI_ADC_9
+    class: analog_inputs
+    ts_name: TPS2
+
+  - id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: ANALOG_A9
+
+  - id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: ANALOG_A10
+
+  - id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: ANALOG_A11
+
+  - id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: ANALOG_A12
+
+  - id: [D0, D0]
+    class: [switch_inputs, event_inputs]
+    ts_name: CAN_RX
+
+  - id: [D1, D1]
+    class: [switch_inputs, event_inputs]
+    ts_name: CAN_TX
+
+  - id: [A9, A9]
+    class: [switch_inputs, event_inputs]
+    ts_name: UART_TX
+
+  - id: [A10, A10]
+    class: [switch_inputs, event_inputs]
+    ts_name: UART_RX
+    
+  - id: [D2, D2]
+    class: [switch_inputs, event_inputs]
+    ts_name: SD_CS
+
+  - id: [D3, D3]
+    class: [switch_inputs, event_inputs]
+    ts_name: CRANK
+
+  - id: [D4, D4]
+    class: [switch_inputs, event_inputs]
+    ts_name: CAM
+
+  - id: [B6, B6]
+    class: [switch_inputs, event_inputs]
+    ts_name: VSS
+
+  - id: [B12, B12]
+    class: [switch_inputs, event_inputs]
+    ts_name: EGT_CS
+
+  - id: [E9, E9]
+    class: [switch_inputs, event_inputs]
+    ts_name: A/C_SW
+
+  - id: [E12, E12]
+    class: [switch_inputs, event_inputs]
+    ts_name: IN1
+
+  - id: [E13, E13]
+    class: [switch_inputs, event_inputs]
+    ts_name: IN2
+
+  - id: [E14, E14]
+    class: [switch_inputs, event_inputs]
+    ts_name: FLEX
+
+  - id: [E15, E15]
+    class: [switch_inputs, event_inputs]
+    ts_name: LAUNCH
