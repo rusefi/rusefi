@@ -39,7 +39,7 @@ void ff_memfree (
 /* Definitions of Mutex                                                   */
 /*------------------------------------------------------------------------*/
 
-#define OS_TYPE	0	/* 0:Win32, 1:uITRON4.0, 2:uC/OS-II, 3:FreeRTOS, 4:CMSIS-RTOS */
+#define OS_TYPE	5	/* 0:Win32, 1:uITRON4.0, 2:uC/OS-II, 3:FreeRTOS, 4:CMSIS-RTOS, 5:ChibiOS */
 
 
 #if   OS_TYPE == 0	/* Win32 */
