@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "defaults.h"
+#include "board_overrides.h"
 
 Gpio getCommsLedPin() {
     return Gpio::Unassigned;
@@ -10,7 +12,7 @@ Gpio getWarningLedPin() {
     return Gpio::Unassigned;
 }
 
-void setBoardDefaultConfiguration() {
+static void KRC_ECU_E36_boardDefaultConfiguration() {
 
 	//Digital out
 	engineConfiguration->boostControlPin = Gpio::A8;
@@ -25,10 +27,10 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->camInputs[0] = Gpio::D4;
 
 	// Idle configuration
-        engineConfiguration->useStepperIdle = false;
-        engineConfiguration->isDoubleSolenoidIdle = true;
-        engineConfiguration->idle.solenoidPin = Gpio::B9;
-        engineConfiguration->secondSolenoidPin = Gpio::B8;
+  engineConfiguration->useStepperIdle = false;
+  engineConfiguration->isDoubleSolenoidIdle = true;
+  engineConfiguration->idle.solenoidPin = Gpio::B9;
+  engineConfiguration->secondSolenoidPin = Gpio::B8;
 
 	//Analog
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
@@ -53,9 +55,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->iat.config.bias_resistor = 2200;
 
 	//Analog calc
-        engineConfiguration->analogInputDividerCoefficient = 1.55f;
-        engineConfiguration->vbattDividerCoeff = (7.47f / 1.0f);
-        engineConfiguration->adcVcc = 3.12f;
+  engineConfiguration->analogInputDividerCoefficient = 1.55f;
+  engineConfiguration->vbattDividerCoeff = (7.47f / 1.0f);
+  engineConfiguration->adcVcc = 3.12f;
 
 	// SPI1 AUX
 	engineConfiguration->is_enabled_spi_1 = true;
@@ -85,7 +87,7 @@ void setBoardDefaultConfiguration() {
 	//CAN bus overwrites
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;
-        engineConfiguration->canWriteEnabled = true;
+  engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canSleepPeriodMs = 50;
 	engineConfiguration->canBaudRate = B500KBPS;
@@ -98,4 +100,8 @@ void setBoardDefaultConfiguration() {
 	//Knock 
 	engineConfiguration->enableSoftwareKnock = true;
 
+}
+
+void setup_custom_board_overrides() {
+	custom_board_ConfigOverrides = KRC_ECU_E36_boardDefaultConfiguration;
 }
