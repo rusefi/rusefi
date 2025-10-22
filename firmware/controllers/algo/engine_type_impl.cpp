@@ -50,8 +50,8 @@ static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD void applyUnknownEngineType(engine_type_e engineType) {
-		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
+void applyUnknownEngineType(engine_type_e engineType) {
+		// placeholder
 }
 
 void boardAfterTuneDefaults(engine_type_e engineType) {
@@ -428,7 +428,6 @@ void applyEngineType(engine_type_e engineType) {
 	  } else {
 		  firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 	  }
-	  applyUnknownEngineType(engineType);
 	}
 	boardAfterTuneDefaults(engineType);
   call_board_override(custom_board_AfterTuneDefaults, engineType);
