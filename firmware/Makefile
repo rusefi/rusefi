@@ -268,6 +268,13 @@ ifeq ($(USE_OPENBLT),yes)
   DDEFS += -DEFI_USE_OPENBLT=TRUE
 endif
 
+ifneq ($(CUSTOMFW_CPPSRC),)
+  DDEFS += -DRUSEFI_CUSTOMFW=TRUE
+else
+  DDEFS += -DRUSEFI_CUSTOMFW=FALSE
+endif
+
+$(info CUSTOMFW_CPPSRC: $(CUSTOMFW_CPPSRC))
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
 $(info BOARD_DIR:     $(BOARD_DIR))
 $(info PROJECT_CPU:   $(PROJECT_CPU))
@@ -313,6 +320,7 @@ CPPSRC = \
   $(CONSOLE_SRC_CPP) \
   $(RUSEFI_LIB_CPP) \
   $(MODULES_CPPSRC) \
+  $(CUSTOMFW_CPPSRC) \
   rusefi.cpp \
   main.cpp
 

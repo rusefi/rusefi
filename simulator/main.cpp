@@ -139,6 +139,13 @@ bool verboseMode = true;
 
 static virtual_timer_t exitTimer;
 
+// this is for setup of custom firmware overrides
+#if (RUSEFI_CUSTOMFW == TRUE)
+void setup_custom_fw_overrides();
+#else
+void setup_custom_fw_overrides() {}
+#endif
+
 // board override demo:
 static inline void myCustomHello(){
 	efiPrintf("custom board hello from simulator");
@@ -148,11 +155,13 @@ void setup_custom_board_overrides(){
 	custom_board_boardSayHello = myCustomHello;
 }
 
+
 /*------------------------------------------------------------------------*
  * Simulator main.                                                        *
  *------------------------------------------------------------------------*/
 int main(int argc, char** argv) {
 	setbuf(stdout, NULL);
+	setup_custom_fw_overrides();
 	setup_custom_board_overrides();
 	/*
 	 * System initializations.
