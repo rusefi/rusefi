@@ -31,6 +31,7 @@
 using setup_custom_board_overrides_type = void (*)();
 using setup_custom_board_config_type = void (*)(engine_configuration_s * /*previousConfiguration*/);
 using setup_custom_board_output_type = int (*)();
+using setup_custom_board_engine_type_type = void (*)(engine_type_e);
 
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
@@ -57,6 +58,9 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwar
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardware;
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
 extern std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange;
+
+extern std::optional<setup_custom_board_engine_type_type> custom_board_AfterTuneDefaults;
+extern std::optional<setup_custom_board_engine_type_type> custom_board_applyUnknownType;
 
 extern std::optional<setup_custom_board_overrides_type> custom_board_periodicSlowCallback;
 extern std::optional<setup_custom_board_overrides_type> custom_board_periodicFastCallback;
