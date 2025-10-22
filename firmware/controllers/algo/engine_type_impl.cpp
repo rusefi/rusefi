@@ -429,7 +429,7 @@ void applyEngineType(engine_type_e engineType) {
 		  firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 	  }
 	}
-	boardAfterTuneDefaults(engineType);
+
   call_board_override(custom_board_AfterTuneDefaults, engineType);
 }
 
