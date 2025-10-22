@@ -76,6 +76,7 @@
 std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareEarly;
 std::optional<setup_custom_board_overrides_type> custom_board_InitHardware;
 std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
+std::optional<setup_custom_board_overrides_type> custom_board_BeforeTuneDefaults;
 
 std::optional<setup_custom_board_engine_type_type> custom_board_AfterTuneDefaults;
 std::optional<setup_custom_board_engine_type_type> custom_board_applyUnknownType;

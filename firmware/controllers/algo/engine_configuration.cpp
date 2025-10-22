@@ -122,10 +122,13 @@ void onBurnRequest() {
  * this hook is about https://github.com/rusefi/rusefi/wiki/Custom-Firmware and https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process
  * todo: why two hooks? is one already dead?
  */
-PUBLIC_API_WEAK void boardBeforeTuneDefaults() { }
+void boardBeforeTuneDefaults() {
+  // placeholder
+}
 
-// Weak link a stub so that every board doesn't have to implement this function
-PUBLIC_API_WEAK void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
+void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) {
+  // placeholder
+}
 
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
@@ -147,7 +150,6 @@ void incrementGlobalConfigurationVersion(const char * msg) {
 
 	applyNewHardwareSettings();
 
-	boardOnConfigurationChange(&activeConfiguration);
 	call_board_override(custom_board_OnConfigurationChange, &activeConfiguration);
 
 	engine->preCalculate();
@@ -667,7 +669,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	/**
 	 * custom board engine defaults. Yes, this overlaps with (older) engine_type_e approach.
 	 */
-	boardBeforeTuneDefaults();
+	call_board_override(custom_board_BeforeTuneDefaults);
 
 	// set initial pin groups
 	setDefaultBasePins();
