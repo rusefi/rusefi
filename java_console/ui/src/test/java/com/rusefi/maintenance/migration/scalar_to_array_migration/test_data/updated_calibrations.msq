@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<msq xmlns="http://www.msefi.com/:msq">
+    <page/>
+    <page number="0" size="46496">
+<constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
+               200.0
+               200.0
+               200.0
+               200.0
+               200.0
+               200.0
+               </constant>
+    </page>
+</msq>
