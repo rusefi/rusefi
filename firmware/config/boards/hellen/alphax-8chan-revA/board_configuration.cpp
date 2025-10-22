@@ -84,7 +84,7 @@ static void alphax_8chan_reva_boardInitHardware() {
 	//alphaD5PullDown.initPin("a-d5", Gpio::H144_LS_8);
 }
 
-void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void customBoardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
 	alphaTachPullUp.setValue(config->boardUseTachPullUp);
 	alphaTempPullUp.setValue(config->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(config->boardUseCrankPullUp);
@@ -172,4 +172,6 @@ void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_8chan_reva_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_8chan_reva_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = alphax_8chan_reva_boardConfigOverrides;
+
+	custom_board_OnConfigurationChange = customBoardOnConfigurationChange;
 }

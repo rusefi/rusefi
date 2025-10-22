@@ -67,7 +67,6 @@ void rememberCurrentConfiguration();
 void setBoardDefaultConfiguration();
 void setBoardConfigOverrides();
 void onBoardStandBy();
-void boardOnConfigurationChange(engine_configuration_s *previousConfiguration);
 Gpio getCommsLedPin();
 Gpio getWarningLedPin();
 Gpio getRunningLedPin();

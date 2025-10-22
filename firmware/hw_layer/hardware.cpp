@@ -551,7 +551,7 @@ void initHardware() {
 	call_board_override(custom_board_InitHardware);
 #if EFI_PROD_CODE
 	// this applies some board configurations
-	boardOnConfigurationChange(nullptr);
+	call_board_override(custom_board_OnConfigurationChange, nullptr);
 #endif // EFI_PROD_CODE
 
 	call_board_override(custom_board_InitHardwareExtra);
