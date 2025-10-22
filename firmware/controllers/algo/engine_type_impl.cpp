@@ -44,6 +44,8 @@
 #include "mitsubishi_3A92.h"
 #include "ford_festiva.h"
 
+#include "board_overrides.h"
+
 static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
@@ -52,7 +54,9 @@ PUBLIC_API_WEAK_SOMETHING_WEIRD void applyUnknownEngineType(engine_type_e engine
 		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 }
 
-PUBLIC_API_WEAK void boardAfterTuneDefaults(engine_type_e engineType) { UNUSED(engineType); }
+void boardAfterTuneDefaults(engine_type_e engineType) {
+  // placeholder
+}
 
 void applyEngineType(engine_type_e engineType) {
 	/**
@@ -419,9 +423,15 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 #endif //HW_SUBARU_EG33
 	default:
+	  if (custom_board_applyUnknownType.has_value()) {
+	    call_board_override(custom_board_applyUnknownType, engineType);
+	  } else {
+		  firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
+	  }
 	  applyUnknownEngineType(engineType);
 	}
 	boardAfterTuneDefaults(engineType);
+  call_board_override(custom_board_AfterTuneDefaults, engineType);
 }
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {
