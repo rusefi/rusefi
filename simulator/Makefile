@@ -178,6 +178,21 @@ include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/common.mk
 include $(PROJECT_DIR)/controllers/modules/modules.mk
 
+ifneq ($(BOARD_DIR),)
+  # used by custom board custom live data
+  INCDIR += $(BOARD_DIR)/firmware
+  ifneq ("$(wildcard $(BOARD_DIR)/board_common.mk)","")
+    # part common between PROD, simulator and unit tests
+    include $(BOARD_DIR)/board_common.mk
+  endif
+endif
+
+ifneq ($(CUSTOMFW_CPPSRC),)
+  DDEFS += -DRUSEFI_CUSTOMFW=TRUE
+else
+  DDEFS += -DRUSEFI_CUSTOMFW=FALSE
+endif
+
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
@@ -201,20 +216,12 @@ CPPSRC = $(ALLCPPSRC) \
   $(TEST_SRC_CPP) \
   $(MODULES_CPPSRC) \
   $(RUSEFI_LIB_CPP) \
+  $(CUSTOMFW_CPPSRC) \
   main.cpp
 
 
 # List ASM source files here
 ASMSRC = $(PORTASM)
-
-ifneq ($(BOARD_DIR),)
-  # used by custom board custom live data
-  INCDIR += $(BOARD_DIR)/firmware
-  ifneq ("$(wildcard $(BOARD_DIR)/board_common.mk)","")
-    # part common between PROD, simulator and unit tests
-    include $(BOARD_DIR)/board_common.mk
-  endif
-endif
 
 INCDIR += . \
   $(PCH_DIR) \
