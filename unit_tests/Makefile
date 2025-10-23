@@ -34,6 +34,12 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
   include $(BOARD_DIR)/board_unit_tests.mk
 endif
 
+ifneq ($(CUSTOMFW_CPPSRC),)
+  DDEFS += -DRUSEFI_CUSTOMFW=TRUE
+else
+  DDEFS += -DRUSEFI_CUSTOMFW=FALSE
+endif
+
 include $(PROJECT_DIR)/common_libfirmware.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
@@ -62,6 +68,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(RUSEFI_LIB)/mock/lib-time-mocks.cpp \
 	$(RUSEFI_LIB_CPP) \
 	$(MODULES_CPPSRC) \
+	$(CUSTOMFW_CPPSRC) \
 	$(RUSEFI_LIB_CPP_TEST) \
 
 INCDIR += \
