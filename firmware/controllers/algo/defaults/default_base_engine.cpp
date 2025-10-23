@@ -4,7 +4,6 @@
 #include "vr_pwm.h"
 #include "kline.h"
 #include "engine_configuration_defaults.h"
-#include "tuner_detector_utils.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
 #include "proteus_meta.h"
@@ -132,10 +131,6 @@ void defaultsOrFixOnBurn() {
     setDynoDefaults();
   }
 
-	if (TunerDetectorUtils::isTuningDetectorUndefined()) {
-		TunerDetectorUtils::setUserEnteredTuningDetector(20);
-	}
-
 	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
 	  engineConfiguration->mapExpAverageAlpha = 1;
 	}
@@ -172,6 +167,8 @@ void setDefaultBaseEngine() {
   // todo: invoke more complete one cylinder default?
   engineConfiguration->cylindersCount = 1;
 #endif
+
+  engineConfiguration->isTuningDetectorEnabled = true;
 
   for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
     // one knock sensor by default. See also 'setLeftRightBanksNeedBetterName()'

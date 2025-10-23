@@ -84,7 +84,6 @@
 #include "bench_test.h"
 #include "status_loop.h"
 #include "mmc_card.h"
-#include "tuner_detector_utils.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -1037,8 +1036,8 @@ static char tsErrorBuff[80];
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 bool isTuningVeNow() {
-	return (!TunerDetectorUtils::isTuningDetectorUndefined()) &&
-		!calibrationsVeWriteTimer.hasElapsedSec(TunerDetectorUtils::getUserEnteredTuningDetector());
+  int tuningDetector = engineConfiguration->isTuningDetectorEnabled ? 0 : 20;
+	return !calibrationsVeWriteTimer.hasElapsedSec(tuningDetector);
 }
 
 void startTunerStudioConnectivity() {

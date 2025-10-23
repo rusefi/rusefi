@@ -612,9 +612,6 @@ ThermistorConf iat;
 
 	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
 	uint8_t autoscale idleMaximumAirmass;Maximum commanded airmass for the idle controller.;"mg", 2, 0, 0, 500, 1
-! we use this offset to increase changes of default value during configuration migration
-#define TUNING_DETECTOR_PERSISTENCE_OFFSET -1
-	uint8_t tuningDetector;Zero value means do not detect tuning, set at least 15 if you are using TunerStudio autotune;"seconds", 1, @@TUNING_DETECTOR_PERSISTENCE_OFFSET@@, 0, 250, 0
 	int16_t alternator_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t alternator_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 
@@ -914,6 +911,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 ! technical debt 'enableAemXSeries' should probably be renamed to enableCanWideband one day once we improve calibration migration toolset
 	bit enableAemXSeries;AEM X-Series or rusEFI Wideband
 	bit modeledFlowIdle
+	bit isTuningDetectorEnabled,"yes","no"
 	! bits 30, 31 are free to use
 	! 'unused32nd' is the 32nd bit here, you would need another bit region if more bits are desired
 

@@ -60,8 +60,6 @@
 #include "vr_pwm.h"
 #include "adc_subscription.h"
 #include "gc_generic.h"
-#include "tuner_detector_utils.h"
-
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
