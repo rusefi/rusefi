@@ -28,19 +28,14 @@ bool unitTestTaskPrecisionHack;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
+#include "fw_configuration.h"
+
 extern engine_configuration_s & activeConfiguration;
 extern PinRepository pinRepository;
 extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
-
-// this is for setup of custom firmware overrides
-#if (RUSEFI_CUSTOMFW == TRUE)
-void setup_custom_fw_overrides();
-#else
-void setup_custom_fw_overrides() {}
-#endif
 
 EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine

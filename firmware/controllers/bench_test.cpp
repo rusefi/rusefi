@@ -28,6 +28,8 @@
 #include "can_rx.h"
 #include "value_lookup.h"
 #include "can_msg_tx.h"
+
+#include "fw_configuration.h"
 #include "board_overrides.h"
 
 static bool isRunningBench = false;
