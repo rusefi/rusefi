@@ -76,3 +76,5 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 else
 $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
+
+DDEFS += -DBOARD_SERIAL="\"000000000000010000000000\""
