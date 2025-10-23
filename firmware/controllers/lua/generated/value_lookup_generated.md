@@ -250,9 +250,6 @@ Pull-up resistor value on your board
 ### idleMaximumAirmass
 Maximum commanded airmass for the idle controller.
 
-### tuningDetector
-Zero value means do not detect tuning, set at least 15 if you are using TunerStudio autotune
-
 ### alternator_iTermMin
 iTerm min value
 
@@ -518,6 +515,9 @@ Disable the electronic throttle motor and DC idle motor for testing.\nThis mode 
 AEM X-Series or rusEFI Wideband
 
 ### modeledFlowIdle
+
+
+### isTuningDetectorEnabled
 
 
 ### verboseCanBaseAddress

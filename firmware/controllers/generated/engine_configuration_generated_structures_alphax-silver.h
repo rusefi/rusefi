@@ -1398,11 +1398,11 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 2> idleMaximumAirmass;
 	/**
-	 * Zero value means do not detect tuning, set at least 15 if you are using TunerStudio autotune
-	 * units: seconds
+	 * need 4 byte alignment
+	 * units: units
 	 * offset 425
 	 */
-	uint8_t tuningDetector;
+	uint8_t alignmentFill_at_425[1] = {};
 	/**
 	 * iTerm min value
 	 * offset 426
@@ -2284,16 +2284,16 @@ struct engine_configuration_s {
 	bool modeledFlowIdle : 1 {};
 	/**
 	offset 768 bit 28 */
-	bool unusedBit_310_28 : 1 {};
+	bool isTuningDetectorEnabled : 1 {};
 	/**
 	offset 768 bit 29 */
-	bool unusedBit_310_29 : 1 {};
+	bool unusedBit_311_29 : 1 {};
 	/**
 	offset 768 bit 30 */
-	bool unusedBit_310_30 : 1 {};
+	bool unusedBit_311_30 : 1 {};
 	/**
 	offset 768 bit 31 */
-	bool unusedBit_310_31 : 1 {};
+	bool unusedBit_311_31 : 1 {};
 	/**
 	 * offset 772
 	 */

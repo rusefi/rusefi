@@ -256,9 +256,6 @@ float getConfigValueByHash(const int hash) {
 // idleMaximumAirmass
 		case -1671871759:
 			return engineConfiguration->idleMaximumAirmass;
-// tuningDetector
-		case 1082602292:
-			return engineConfiguration->tuningDetector;
 // alternator_iTermMin
 		case 107641733:
 			return engineConfiguration->alternator_iTermMin;
@@ -526,6 +523,9 @@ float getConfigValueByHash(const int hash) {
 // modeledFlowIdle
 		case 600643125:
 			return engineConfiguration->modeledFlowIdle;
+// isTuningDetectorEnabled
+		case 1997151643:
+			return engineConfiguration->isTuningDetectorEnabled;
 // verboseCanBaseAddress
 		case 6238478:
 			return engineConfiguration->verboseCanBaseAddress;
@@ -2468,11 +2468,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->idleMaximumAirmass = (int)value;
 		return 1;
 	}
-		case 1082602292:
-	{
-		engineConfiguration->tuningDetector = (int)value;
-		return 1;
-	}
 		case 107641733:
 	{
 		engineConfiguration->alternator_iTermMin = (int)value;
@@ -2916,6 +2911,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 600643125:
 	{
 		engineConfiguration->modeledFlowIdle = (int)value;
+		return 1;
+	}
+		case 1997151643:
+	{
+		engineConfiguration->isTuningDetectorEnabled = (int)value;
 		return 1;
 	}
 		case 6238478:

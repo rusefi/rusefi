@@ -1735,7 +1735,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.10.23.stm32h743_nucleo.3937371361";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.10.23.stm32h743_nucleo.4037567754";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2068;
@@ -1760,7 +1760,6 @@ public class VariableRegistryValues {
 	public static final int TsCalMode_Tps2Min = 9;
 	public static final int TsCalMode_Tps2SecondaryMax = 10;
 	public static final int TsCalMode_Tps2SecondaryMin = 11;
-	public static final int TUNING_DETECTOR_PERSISTENCE_OFFSET = -1;
 	public static final int uart_device_e_UART_DEVICE_1 = 1;
 	public static final int uart_device_e_UART_DEVICE_2 = 2;
 	public static final int uart_device_e_UART_DEVICE_3 = 3;
