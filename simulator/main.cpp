@@ -24,6 +24,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "fw_configuration.h"
 #include "board_overrides.h"
 
 #define CONSOLE_WA_SIZE     THD_WORKING_AREA_SIZE(4096)
@@ -138,13 +139,6 @@ static evhandler_t fhandlers[] = { termination_handler, sd1_handler, sd2_handler
 bool verboseMode = true;
 
 static virtual_timer_t exitTimer;
-
-// this is for setup of custom firmware overrides
-#if (RUSEFI_CUSTOMFW == TRUE)
-void setup_custom_fw_overrides();
-#else
-void setup_custom_fw_overrides() {}
-#endif
 
 // board override demo:
 static inline void myCustomHello(){

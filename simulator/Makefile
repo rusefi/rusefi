@@ -180,12 +180,6 @@ ifneq ($(BOARD_DIR),)
   endif
 endif
 
-ifneq ($(CUSTOMFW_CPPSRC),)
-  DDEFS += -DRUSEFI_CUSTOMFW=TRUE
-else
-  DDEFS += -DRUSEFI_CUSTOMFW=FALSE
-endif
-
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
@@ -209,7 +203,6 @@ CPPSRC = $(ALLCPPSRC) \
   $(TEST_SRC_CPP) \
   $(MODULES_CPPSRC) \
   $(RUSEFI_LIB_CPP) \
-  $(CUSTOMFW_CPPSRC) \
   main.cpp
 
 

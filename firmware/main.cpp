@@ -15,13 +15,6 @@
 #include "mpu_util.h"
 #include "board_overrides.h"
 
-// this is for setup of custom firmware overrides
-#if (RUSEFI_CUSTOMFW == TRUE)
-void setup_custom_fw_overrides();
-#else
-void setup_custom_fw_overrides() {}
-#endif
-
 // this function is used to link all the possibles overrides of the bord, is one of the first func call, before any hw init!
 // use ONLY for the setup of the overrides!!
 void setup_custom_board_overrides();
