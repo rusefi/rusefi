@@ -23,7 +23,11 @@ endif
 ifneq ("$(wildcard ../firmware/$(BOARD_DIR)/default_tune.cpp)","")
 	BOARDCPPSRC += ../firmware/$(BOARD_DIR)/default_tune.cpp
 endif
+else
+	# default setup_custom_fw_overrides() even no BOARD_DIR is defined (unit tests)
+	ALLCPPSRC += $(FW_CONFIG_DIR)/fw_default_configuration.cpp
 endif
+
 
 ALLCSRC += \
 	$(UTILSRC)
