@@ -301,13 +301,6 @@ CSRC =  gcc_version_check.c \
   $(RUSEFI_LIB_C) \
   $(PROJECT_DIR)/hw_layer/main_hardfault.c
 
-# todo: reduce copy/paste between all three Makefiles!
-ifneq ($(BOARD_DIR),)
-ifneq ("$(wildcard ../firmware/$(BOARD_DIR)/default_tune.cpp)","")
-  BOARDCPPSRC += ../firmware/$(BOARD_DIR)/default_tune.cpp
-endif
-endif
-
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = \
