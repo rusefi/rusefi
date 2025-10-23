@@ -101,9 +101,9 @@ TEST(EventQueue, complex) {
 
 	ASSERT_EQ(4, eq.size());
 	ASSERT_EQ(10, eq.getHead()->getMomentNt());
-	ASSERT_EQ(10, eq.getHead()->nextScheduling_s->getMomentNt());
-	ASSERT_EQ(11, eq.getHead()->nextScheduling_s->nextScheduling_s->getMomentNt());
-	ASSERT_EQ(12, eq.getHead()->nextScheduling_s->nextScheduling_s->nextScheduling_s->getMomentNt());
+	ASSERT_EQ(10, eq.getHead()->next->getMomentNt());
+	ASSERT_EQ(11, eq.getHead()->next->next->getMomentNt());
+	ASSERT_EQ(12, eq.getHead()->next->next->next->getMomentNt());
 
 	callbackCounter = 0;
 	eq.executeAll(10);
