@@ -220,14 +220,14 @@ int EventQueue::executeAll(efitick_t now) {
 	return executionCounter;
 }
 
-bool EventQueue::executeOne(efitick_t now) {
+scheduling_s* EventQueue::pickOne(efitick_t now) {
 	// Read the head every time - a previously executed event could
 	// have inserted something new at the head
 	scheduling_s* current = m_head;
 
 	// Queue is empty - bail
 	if (!current) {
-		return false;
+		return nullptr;
 	}
 
 	// If the next event is far in the future, we'll reschedule
@@ -237,6 +237,21 @@ bool EventQueue::executeOne(efitick_t now) {
 	// waiting for the time to arrive.  On current CPUs, this is reasonable to set
 	// around 10 microseconds.
 	if (current->getMomentNt() > now + m_lateDelay) {
+		return nullptr;
+	}
+
+	// step the head forward, unlink this element
+	// TODO: LL_DELETE(m_head, current);
+	m_head = current->next;
+	current->next = nullptr;
+
+	return current;
+}
+
+bool EventQueue::executeOne(efitick_t now) {
+	scheduling_s* current = pickOne(now);
+
+	if (!current) {
 		return false;
 	}
 
@@ -260,10 +275,6 @@ extern bool unitTestBusyWaitHack;
 #endif
 		UNIT_TEST_BUSY_WAIT_CALLBACK();
 	}
-
-	// step the head forward, unlink this element, clear scheduled flag
-	m_head = current->next;
-	current->next = nullptr;
 
 	// Grab the action but clear it in the event so we can reschedule from the action's execution
 	auto const action{ std::move(current->action) };
