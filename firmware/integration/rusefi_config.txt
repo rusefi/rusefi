@@ -1330,7 +1330,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit kLineDoHondaSend
 	bit can1ListenMode;ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
 	bit can2ListenMode
-	uint8_t camDecoder2jzPosition;Angle of tooth detection within engine phase cycle;"angle", 1, 0, 0, 255, 0
+	uint16_t camDecoder2jzPosition;Angle of tooth detection within engine phase cycle;"angle", 1, 0, 0, 360, 0
 	custom mc33810maxDwellTimer_e 1 bits, U08, @OFFSET@, [0:2], "2 mS", "4 mS", "8 mS", "16 mS", "32 mS", "64 mS"
 	mc33810maxDwellTimer_e mc33810maxDwellTimer;
 	uint16_t autoscale benchTestOnTime;Duration of each test pulse;"ms", 0.01, 0, 1, 500, 2
