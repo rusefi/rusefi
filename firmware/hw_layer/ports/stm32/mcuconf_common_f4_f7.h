@@ -134,6 +134,10 @@
 #define STM32_IRQ_EXTI22_PRIORITY           15  /* why? */
 #define STM32_IRQ_EXTI23_PRIORITY           15
 
+/*
+ * GPT driver system settings.
+ */
+/* This actually defines TIM IRQ priorities independently of driver used */
 #define STM32_IRQ_TIM1_BRK_TIM9_PRIORITY    7
 #define STM32_IRQ_TIM1_UP_TIM10_PRIORITY    7
 #define STM32_IRQ_TIM1_TRGCO_TIM11_PRIORITY 7
@@ -141,7 +145,8 @@
 #define STM32_IRQ_TIM2_PRIORITY             7
 #define STM32_IRQ_TIM3_PRIORITY             7
 #define STM32_IRQ_TIM4_PRIORITY             7
-#define STM32_IRQ_TIM5_PRIORITY             7
+/* TIM5 is used for high resolution scheduling, PWM driver is used */
+#define STM32_IRQ_TIM5_PRIORITY             PRECISE_SCHEDULING_TIMER_PRIORITY
 #define STM32_IRQ_TIM6_PRIORITY             7
 #define STM32_IRQ_TIM7_PRIORITY             7
 #define STM32_IRQ_TIM8_BRK_TIM12_PRIORITY   7
@@ -287,6 +292,15 @@
 #define STM32_PWM_USE_TIM9                  FALSE
 #endif
 
+/* NOTE: following does not set TIM IRQ priority in PWM mode
+ * F4/F7 share IRQ lines between few timers...
+ * See:
+ * - ChibiOS/os/hal/ports/STM32/STM32F4xx/stm32_isr.h
+ * - ChibiOS/os/hal/ports/STM32/STM32F7xx/stm32_isr.h
+ * STM32_TIMx_SUPPRESS_ISR is defined for all TIMs
+ * Timers IRQ priority setup is done in stm32_tim*.inc
+ * files. See also tim_irq_mapping.txt for irq collision map.
+ */
 #define STM32_PWM_TIM1_IRQ_PRIORITY         7
 #define STM32_PWM_TIM2_IRQ_PRIORITY         7
 #define STM32_PWM_TIM3_IRQ_PRIORITY         7
