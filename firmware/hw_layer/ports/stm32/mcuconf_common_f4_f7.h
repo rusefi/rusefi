@@ -134,6 +134,9 @@
 #define STM32_IRQ_EXTI22_PRIORITY           15  /* why? */
 #define STM32_IRQ_EXTI23_PRIORITY           15
 
+/*
+ * GPT driver system settings.
+ */
 /* This actually defines TIM IRQ priorities independently of driver used */
 #define STM32_IRQ_TIM1_BRK_TIM9_PRIORITY    7
 #define STM32_IRQ_TIM1_UP_TIM10_PRIORITY    7
