@@ -34,6 +34,7 @@ public class TsPluginUiImpl implements TsPluginUi {
         this(ControllerAccess::getInstance);
     }
 
+    // default singleton implementation is not amazing, let's have a safer option available for test code
     public TsPluginUiImpl(Supplier<ControllerAccess> controllerAccessSupplier) {
         System.out.println("PluginEntry init " + this);
 

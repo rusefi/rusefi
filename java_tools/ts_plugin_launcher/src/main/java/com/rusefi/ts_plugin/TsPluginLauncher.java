@@ -31,7 +31,9 @@ public class TsPluginLauncher implements ApplicationPlugin {
     public TsPluginLauncher() {
         log.info("init " + this);
         Thread pluginFetchThread = new Thread(() -> {
+            // first download current version of actual plugin
             TsPluginBodyFetcher.downloadLatestIfNeeded();
+            // now run background logic
             TsHeadlessPlugin.start();
         }, "pluginFetchThread");
         pluginFetchThread.start();

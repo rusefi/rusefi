@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin.headless;
 
+import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.RusEfiSignature;
@@ -7,8 +8,10 @@ import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleInfoStrategy;
 import com.rusefi.updater.PlainSerialPortScanner;
+import com.rusefi.wizard.BackgroundWizard;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * this class is invoked by TsHeadlessPlugin via reflection
@@ -23,6 +26,7 @@ public class TsHeadlessPluginImpl implements TsHeadlessPlugin {
 
     @Override
     public void run() {
+        BackgroundWizard.start(ControllerAccess::getInstance);
         PlainSerialPortScanner.findEcu(TsHeadlessPluginImpl::onEcuDiscoveredAction, 5000);
     }
 

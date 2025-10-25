@@ -9,7 +9,6 @@ dependencies {
     implementation project(':autoupdate')
     testImplementation global_libs.mockito
     testImplementation testFixtures( project(':ecu_io'))
-    implementation files('../ts_plugin_launcher/lib/TunerStudioPluginAPI.jar')
 }
 
 jar {
