@@ -7,6 +7,8 @@ TEST(crankingGm24x_5, gmRealCrankingFromFile) {
 
 	reader.open("tests/trigger/resources/gm_24x_cranking.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 

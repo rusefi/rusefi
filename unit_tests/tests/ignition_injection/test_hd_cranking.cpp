@@ -32,6 +32,8 @@ TEST(harley, hdCrankingWithCam1) {
 
 TEST(harley, hdCrankingWithCam3) {
 	HdCranking test("tests/ignition_injection/resources/hd-req-sync_3.csv");
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
 	EngineCsvReader &reader = test.reader;
 

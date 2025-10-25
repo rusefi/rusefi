@@ -7,6 +7,8 @@ static void doTest(const char* testFile, int expectedRpm) {
 
 	reader.open(testFile);
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 

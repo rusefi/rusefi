@@ -9,6 +9,9 @@ static void runCoyoteIntakeCam(bool invertPrimaryTriggerSignal, uint32_t warning
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	eth.setTriggerType(trigger_type_e::TT_VVT_FORD_COYOTE);
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
+
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 	reader.flipOnRead = invertPrimaryTriggerSignal;
@@ -34,6 +37,9 @@ static void runCoyoteExhaustCam(bool invertPrimaryTriggerSignal, uint32_t warnin
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	eth.setTriggerType(trigger_type_e::TT_VVT_FORD_COYOTE);
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
+
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	reader.flipOnRead = invertPrimaryTriggerSignal;
 	engineConfiguration->alwaysInstantRpm = true;

@@ -4,6 +4,9 @@
 TEST(Toyota3ToothCam, RealEngineRunning) {
 	extern bool unitTestTaskPrecisionHack;
 	unitTestTaskPrecisionHack = true;
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
+
 	CsvReader reader(1, /* vvtCount */ 1);
 
 	reader.open("tests/trigger/resources/toyota_3_tooth_cam.csv");
@@ -41,11 +44,14 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 	ASSERT_EQ(3078, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// TODO: why warnings?
-	ASSERT_EQ(1u, eth.recentWarnings()->getCount());
-	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(0).Code);
+	// C6103 C9002
+	ASSERT_EQ(2u, eth.recentWarnings()->getCount());
+	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(1).Code);
 }
 
 static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectSync, int expectCamResyncCounter) {
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->vvtMode[0] = VVT_TOYOTA_3_TOOTH;
 	engineConfiguration->skippedWheelOnCam = false;
