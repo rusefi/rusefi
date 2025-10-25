@@ -74,7 +74,7 @@ void Generic4TransmissionController::setTccState(gear_e gear) {
 }
 
 void Generic4TransmissionController::setPcState(gear_e gear) {
-	uint8_t (*pcts)[efi::size(config->tcu_pcAirmassBins)];
+	uint8_t (*pcts)[TCU_TABLE_WIDTH];
 
 	switch (gear) {
 	case REVERSE:
