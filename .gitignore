@@ -31,6 +31,9 @@ log.txt
 # Eclipse
 .metadata/
 
+# LSP server
+compile_commands.json
+
 # rusEFI simulator makes logs, ignore those
 rusefi_simulator_log.mlg
 
