@@ -174,7 +174,11 @@ TEST(real, SubaruEj20gDefaultCrankingSeparateTrigger) {
 // Test also has RPM falling to zero twice
 // While real car was runnig fine while capturing this CSV
 // TODO: investigate
+// TODO: this test also triggers a watchdog warning after clearing the EngineTestHelper!
 TEST(real, SubaruEj20gDefaultRev) {
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
+
 	EngineCsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 1);
 
 	/* 1 - cam
