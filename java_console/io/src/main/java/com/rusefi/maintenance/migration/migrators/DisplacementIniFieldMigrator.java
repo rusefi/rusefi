@@ -15,6 +15,8 @@ public enum DisplacementIniFieldMigrator implements TuneMigrator {
 
     private static final Logging log = getLogging(DisplacementIniFieldMigrator.class);
     public static final String DISPLACEMENT_FIELD_NAME = "displacement";
+    public static final String L_UNITS = "L";
+    public static final String CUBIC_INCHES_UNITS = "cubic inches";
 
     @Override
     public void migrateTune(final TuneMigrationContext context) {
@@ -26,7 +28,7 @@ public enum DisplacementIniFieldMigrator implements TuneMigrator {
 
         final String prevDisplacementUnits = prevDisplacementIniField.get().getUnits();
         final String updatedDisplacementUnits = updatedDisplacementIniField.get().getUnits();
-        if (!"L".equals(prevDisplacementUnits) || !"cubic inches".equals(updatedDisplacementUnits)) {
+        if (!L_UNITS.equals(prevDisplacementUnits) || !CUBIC_INCHES_UNITS.equals(updatedDisplacementUnits)) {
             return;
         }
 

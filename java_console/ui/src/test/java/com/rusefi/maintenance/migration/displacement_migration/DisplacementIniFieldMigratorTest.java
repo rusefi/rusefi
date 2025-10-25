@@ -8,15 +8,15 @@ import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
 
-import static com.rusefi.maintenance.migration.migrators.DisplacementIniFieldMigrator.DISPLACEMENT_FIELD_NAME;
 import static com.rusefi.maintenance.migration.TestTuneMigrationContextFactory.createTestMigrationContext;
+import static com.rusefi.maintenance.migration.migrators.DisplacementIniFieldMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DisplacementIniFieldMigratorTest {
     private static final IniField TEST_DISPLACEMENT_INI_FIELD_IN_LITERS = new ScalarIniField(
         DISPLACEMENT_FIELD_NAME,
         432,
-        "L",
+        L_UNITS,
         FieldType.UINT16,
         0.001,
         "3",
@@ -25,7 +25,7 @@ public class DisplacementIniFieldMigratorTest {
     private static final IniField TEST_DISPLACEMENT_INI_FIELD_IN_CUBIC_INCHES = new ScalarIniField(
         DISPLACEMENT_FIELD_NAME,
         412,
-        "cubic inches",
+        CUBIC_INCHES_UNITS,
         FieldType.FLOAT,
         61.0236100347,
         "1",
@@ -35,8 +35,18 @@ public class DisplacementIniFieldMigratorTest {
     private static final String TEST_DISPLACEMENT_IN_LITERS = "1.917";
     private static final String DISPLACEMENT_IN_CUBIC_INCHES = "120.9997";
 
-    private static final Constant DISPLACEMENT_VALUE_IN_LITERS = new Constant(DISPLACEMENT_FIELD_NAME, "L", TEST_DISPLACEMENT_IN_LITERS, "3");
-    private static final Constant DISPLACEMENT_VALUE_IN_CUBIC_INCHES = new Constant(DISPLACEMENT_FIELD_NAME, "cubic inches", DISPLACEMENT_IN_CUBIC_INCHES, "1");
+    private static final Constant DISPLACEMENT_VALUE_IN_LITERS = new Constant(
+        DISPLACEMENT_FIELD_NAME,
+        L_UNITS,
+        TEST_DISPLACEMENT_IN_LITERS,
+        "3"
+    );
+    private static final Constant DISPLACEMENT_VALUE_IN_CUBIC_INCHES = new Constant(
+        DISPLACEMENT_FIELD_NAME,
+        CUBIC_INCHES_UNITS,
+        DISPLACEMENT_IN_CUBIC_INCHES,
+        "1"
+    );
 
     @Test
     void testMigrationFromLitersToCubicInches() {
