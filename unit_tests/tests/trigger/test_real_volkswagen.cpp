@@ -31,6 +31,8 @@ TEST(crankingVW, crankingTwiceWithGap) {
 	extern bool unitTestTaskPrecisionHack;
 	unitTestTaskPrecisionHack = true;
 	EngineTestHelper eth (engine_type_e::VW_ABA);
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 	engineConfiguration->alwaysInstantRpm = true;
 	eth.setTriggerType(trigger_type_e::TT_60_2_WRONG_POLARITY);
 

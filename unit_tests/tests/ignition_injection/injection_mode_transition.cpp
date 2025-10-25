@@ -33,6 +33,8 @@ TEST(fuelControl, transitionIssue1592) {
 	extern bool unitTestTaskPrecisionHack;
 	unitTestTaskPrecisionHack = true;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 	engine->tdcMarkEnabled = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
