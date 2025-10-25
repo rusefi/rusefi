@@ -22,6 +22,7 @@
 
 bool unitTestBusyWaitHack;
 bool unitTestTaskPrecisionHack;
+bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -231,6 +232,7 @@ EngineTestHelper::~EngineTestHelper() {
 	enginePins.unregisterPins();
 	Sensor::resetRegistry();
 	memset(mockPinStates, 0, sizeof(mockPinStates));
+	unitTestTaskNoFastCallWhileAdvancingTimeHack = false;
 }
 
 void EngineTestHelper::writeEventsLogicData(const char *fileName) {
@@ -386,11 +388,19 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 			// next event is too far in the future
 			break;
 		}
-		setTimeNtAndInvokeCallBacks(nextEventNt);
+		// see #8725 for details
+		if (unitTestTaskNoFastCallWhileAdvancingTimeHack) {
+			setTimeNowNt(nextEventNt);
+		} else {
+			setTimeNtAndInvokeCallBacks(nextEventNt);
+		}
 		engine.scheduler.executeAllNt(getTimeNowNt());
 	}
-
-	setTimeNtAndInvokeCallBacks(US_TO_NT_MULTIPLIER * targetTimeUs);
+	if (unitTestTaskNoFastCallWhileAdvancingTimeHack) {
+		setTimeNowUs(targetTimeUs);
+	} else {
+		setTimeNtAndInvokeCallBacks(US_TO_NT_MULTIPLIER * targetTimeUs);
+	}
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {
