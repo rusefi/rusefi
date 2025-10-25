@@ -58,6 +58,10 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
         return getValue(getUpdatedTune(), fieldName);
     }
 
+    public Constant getMigratedValue(final String fieldName) {
+        return getMigratedConstants().get(fieldName);
+    }
+
     public void checkPrevAndUpdatedIniFields(
         final String iniFieldName,
         final IniField prevIniField,
