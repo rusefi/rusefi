@@ -166,6 +166,7 @@ TESTS_SRC_CPP = \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \
+	tests/test_tcu.cpp \
 	tests/test_hellen_board_id.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
 	tests/sensor/test_turbocharger_speed_converter.cpp \
