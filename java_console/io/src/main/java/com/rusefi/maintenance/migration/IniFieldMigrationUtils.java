@@ -54,24 +54,6 @@ public class IniFieldMigrationUtils {
         return false;
     }
 
-    public static boolean checkIfDigitsCanBeMigrated(final String prevDigits, final String newDigits, String name) {
-        if (Objects.equals(prevDigits, newDigits)) {
-            return true;
-        } else {
-            if (prevDigits == null) {
-                log.warn(name + " no prevDigits");
-                return false;
-            }
-            if (newDigits == null) {
-                log.warn(name + " no newDigits");
-                return false;
-            }
-            final int prevDecimalCount = Integer.parseInt(prevDigits);
-            final int newDecimalCount = Integer.parseInt(newDigits);
-            return prevDecimalCount <= newDecimalCount;
-        }
-    }
-
     //TODO: reuse on BattLagCorrExtensionMigrator.java
 	public static Constant generateConstant(final ArrayIniField iniField, final String value) {
 		return new Constant(iniField.getName(), iniField.getUnits(), value, iniField.getDigits(),

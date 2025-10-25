@@ -93,13 +93,6 @@ enum DefaultIniFieldMigrationStrategy {
                 prevField,
                 newField
             ));
-        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits(), prevField.getName())) {
-            callbacks.logLine(String.format(
-                "WARNING! Field `%s` cannot be migrated because digits are updated: `%s` -> `%s`",
-                prevField.getName(),
-                prevField,
-                newField
-            ));
         } else {
             result = true;
         }
@@ -132,13 +125,6 @@ enum DefaultIniFieldMigrationStrategy {
                 prevField.getName(),
                 prevField.getRows(),
                 newField.getRows()
-            ));
-        } else if (!checkIfDigitsCanBeMigrated(prevField.getDigits(), newField.getDigits(), prevField.getName())) {
-            callbacks.logLine(String.format(
-                "WARNING! Field `%s` cannot be migrated because digits are updated: `%s` -> `%s`",
-                prevField.getName(),
-                prevField.getDigits(),
-                newField.getDigits()
             ));
         } else {
             result = true;

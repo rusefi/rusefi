@@ -13,7 +13,6 @@ import com.rusefi.tune.xml.Constant;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfDigitsCanBeMigrated;
 import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
 
 public enum DefaultTuneMigrator implements TuneMigrator {
@@ -101,13 +100,6 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                 prevFieldName,
                 prevValue.getUnits(),
                 newValue.getUnits()
-            ));
-        } else if (!checkIfDigitsCanBeMigrated(prevValue.getDigits(), newValue.getDigits(), prevFieldName)) {
-            callbacks.logLine(String.format(
-                "WARNING! Field `%s` cannot be updated because its digits are updated: `%s` -> `%s`",
-                prevFieldName,
-                prevValue.getDigits(),
-                newValue.getDigits()
             ));
         } else if (!Objects.equals(prevValue.getCols(), newValue.getCols())) {
             callbacks.logLine(String.format(
