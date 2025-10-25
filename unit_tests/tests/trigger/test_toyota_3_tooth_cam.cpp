@@ -2,8 +2,6 @@
 #include "logicdata_csv_reader.h"
 
 TEST(Toyota3ToothCam, RealEngineRunning) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
 	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
@@ -44,9 +42,9 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 	ASSERT_EQ(3078, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// TODO: why warnings?
-	// C6103 C9002
-	ASSERT_EQ(2u, eth.recentWarnings()->getCount());
-	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(1).Code);
+	// C9002
+	ASSERT_EQ(1u, eth.recentWarnings()->getCount());
+	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(0).Code);
 }
 
 static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectSync, int expectCamResyncCounter) {
