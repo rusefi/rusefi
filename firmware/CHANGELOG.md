@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - FatFS update to R0.16
+
 ## October 2025 "Day 1333"
 
 ### Added
