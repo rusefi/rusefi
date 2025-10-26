@@ -64,16 +64,16 @@ void setGmLs4() {
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	// cylinders 1 and 6
 	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
-	// cylinders 8 and 5
-	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN3;
+	// cylinders 2 and 3
+	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN2;
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[4] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[5] = Gpio::Unassigned;
 	// cylinders 7 and 4
 	engineConfiguration->ignitionPins[6] = Gpio::MM100_IGN4;
-	// cylinders 2 and 3
-	engineConfiguration->ignitionPins[7] = Gpio::MM100_IGN2;
+	// cylinders 8 and 5
+	engineConfiguration->ignitionPins[7] = Gpio::MM100_IGN3;
 
 
 	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_D1; // HALL1
@@ -86,7 +86,15 @@ void setGmLs4() {
 
 	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
-	engineConfiguration->injector.flow = 440;
+	engineConfiguration->injector.flow = 400;
+
+  engineConfiguration->tpsAccelLookback = 0.3;
+  engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+  engineConfiguration->tpsDecelEnleanmentThreshold = 7;
+  engineConfiguration->tpsAccelFractionPeriod = 3;
+  engineConfiguration->tpsAccelFractionDivisor = 1.5;
+  engineConfiguration->wwaeTau = 0;
+  engineConfiguration->wwaeBeta = 0;
 
 	engineConfiguration->cylindersCount = 8;
 	setLeftRightBanksNeedBetterName();
