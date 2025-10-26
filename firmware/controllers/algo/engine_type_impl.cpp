@@ -21,7 +21,7 @@
 #include "GY6_139QMB.h"
 
 #include "nissan_vq.h"
-#include "tc_4l6x.h"
+#include "tc_4.h"
 #include "../board_id/qc_stim_meta.h"
 
 #include "mazda_miata_1_6.h"
