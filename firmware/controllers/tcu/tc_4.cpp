@@ -133,7 +133,7 @@ Generic4TransmissionController* getGeneric4TransmissionController() {
 void configureTcu4R70W() {
 	engineConfiguration->tcuUpshiftButtonPin = Gpio::A15;
 	engineConfiguration->tcuUpshiftButtonPinMode = PI_PULLUP;
-	engineConfiguration->tcuDownshiftButtonPin = Gpio::A15;
+	engineConfiguration->tcuDownshiftButtonPin = Gpio::A14;
 	engineConfiguration->tcuDownshiftButtonPinMode = PI_PULLUP;
 }
 
