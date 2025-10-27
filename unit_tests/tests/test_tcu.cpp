@@ -25,13 +25,13 @@ void blipGearControllerPin(EngineTestHelper* eth, brain_pin_e pin, int time) {
 }
 
 TEST(tcu, testButtonshift) {
-  EngineTestHelper eth(engine_type_e::TCU_4R70W);
-  engineConfiguration->gearControllerMode = GearControllerMode::ButtonShift;
-  initGearController();
+	EngineTestHelper eth(engine_type_e::TCU_4R70W);
+	engineConfiguration->gearControllerMode = GearControllerMode::ButtonShift;
+	initGearController();
 
 	// pinMode is PI_PULLUP, so true = off
-  setMockState(engineConfiguration->tcuUpshiftButtonPin, true);
-  setMockState(engineConfiguration->tcuDownshiftButtonPin, true);
+	setMockState(engineConfiguration->tcuUpshiftButtonPin, true);
+	setMockState(engineConfiguration->tcuDownshiftButtonPin, true);
 
 	ASSERT_NE(nullptr, engine->gearController);
 	ASSERT_EQ(NEUTRAL, engine->gearController->getDesiredGear());
