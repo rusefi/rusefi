@@ -48,7 +48,7 @@ void LtftState::fillRandom() {
 	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
 		for (size_t loadIndex = 0; loadIndex < VE_LOAD_COUNT; loadIndex++) {
 			for (size_t rpmIndex = 0; rpmIndex < VE_RPM_COUNT; rpmIndex++) {
-				trims[bank][loadIndex][rpmIndex] = 0.01 * (loadIndex + rpmIndex * 0.1);
+				trims[bank][loadIndex][rpmIndex] = PERCENT_DIV * (loadIndex + rpmIndex * 0.1);
 			}
 		}
 	}
@@ -96,7 +96,7 @@ float LongTermFuelTrim::getIntegratorGain() const
 float LongTermFuelTrim::getMaxAdjustment() const {
 	const auto& cfg = engineConfiguration->ltft;
 
-	float raw = 0.01 * cfg.maxAdd;
+	float raw = PERCENT_DIV * cfg.maxAdd;
 	// Don't allow maximum less than 0, or more than maximum add adjustment
 	return clampF(0, raw, MAX_ADJ);
 }
@@ -104,7 +104,7 @@ float LongTermFuelTrim::getMaxAdjustment() const {
 float LongTermFuelTrim::getMinAdjustment() const {
 	const auto& cfg = engineConfiguration->ltft;
 
-	float raw = -0.01f * cfg.maxRemove;
+	float raw = -PERCENT_DIV * cfg.maxRemove;
 	// Don't allow minimum more than 0, or less than maximum remove adjustment
 	return clampF(-MAX_ADJ, raw, 0);
 }
@@ -144,7 +144,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		float lambdaCorrection = clResult.banks[bank] - 1.0;
 
 		// If we're within the deadband, make no adjustment.
-		if (std::abs(lambdaCorrection) < 0.01f * cfg.deadband) {
+		if (std::abs(lambdaCorrection) < PERCENT_DIV * cfg.deadband) {
 			continue;
 		}
 
