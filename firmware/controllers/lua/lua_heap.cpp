@@ -169,9 +169,10 @@ void* luaHeapAlloc(void* /*ud*/, void* optr, size_t osize, size_t nsize) {
 	}
 
 	if (optr) {
+		chDbgAssert(osize <= chHeapGetSize(optr), "Lua lost track of allocated mem");
 		// An old pointer was passed in, copy the old data in, then free
 		if (nptr != nullptr) {
-			memcpy(nptr, optr, chHeapGetSize(optr) > nsize ? nsize : chHeapGetSize(optr));
+			memcpy(nptr, optr, osize > nsize ? nsize : osize);
 		}
 		// chHeapFree will find correct heap to return memory to
 		chHeapFree(optr);
