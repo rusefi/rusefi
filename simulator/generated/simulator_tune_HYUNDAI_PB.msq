@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22856">
+    <page number="0" size="22860">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -2562,7 +2562,10 @@
         <constant name="ltft_enabled">"yes"</constant>
         <constant digits="1" name="ltft_maxAdd" units="%">12.5</constant>
         <constant digits="1" name="ltft_maxRemove" units="%">12.5</constant>
-        <constant digits="0" name="ltft_timeConstant" units="sec">3000.0</constant>
+        <constant digits="0" name="ltft_timeConstant1" units="sec">3000.0</constant>
+        <constant digits="0" name="ltft_timeConstant2" units="sec">1500.0</constant>
+        <constant digits="0" name="ltft_timeConstant3" units="sec">30.0</constant>
+        <constant digits="0" name="ltft_timeConstant4" units="sec">300.0</constant>
         <constant digits="1" name="ltitClampMax" units="%">0.0</constant>
         <constant digits="1" name="ltitClampMin" units="%">0.0</constant>
         <constant digits="0" name="ltitCorrectionRate" units="%/s">0.0</constant>
@@ -5025,7 +5028,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20251017" nPages="1" signature="rusEFI master.2025.10.27.f407-discovery.4082696755" version="5.0"/>
+    <versionInfo firmwareInfo="20251017" nPages="1" signature="rusEFI master.2025.10.27.f407-discovery.1218464597" version="5.0"/>
     <bibliography author="rusEFI 20251017" writeDate="date"/>
     <settings/>
     <userComments/>
