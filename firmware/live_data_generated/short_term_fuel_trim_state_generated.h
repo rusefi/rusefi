@@ -7,16 +7,14 @@
 struct short_term_fuel_trim_state_s {
 	/**
 	 * STFT: used bin
-	 * units: Bin
 	 * offset 0
 	 */
-	uint8_t stftCorrectionBinIdx = (uint8_t)0;
+	ft_region_e stftCorrectionBinIdx;
 	/**
 	 * STFT: learning bin
-	 * units: Bin
 	 * offset 1
 	 */
-	uint8_t stftLearningBinIdx = (uint8_t)0;
+	ft_region_e stftLearningBinIdx;
 	/**
 	 * offset 2
 	 */

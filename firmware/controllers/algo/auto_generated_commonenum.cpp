@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Aug 23 12:26:08 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Oct 27 13:11:54 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -549,6 +549,19 @@ case ES_Innovate_MTX_L:
   return "ES_Innovate_MTX_L";
 case ES_PLX:
   return "ES_PLX";
+  }
+ return NULL;
+}
+const char *getFt_region_e(ft_region_e value){
+switch(value) {
+case ftRegionCruise:
+  return "ftRegionCruise";
+case ftRegionIdle:
+  return "ftRegionIdle";
+case ftRegionOverrun:
+  return "ftRegionOverrun";
+case ftRegionPower:
+  return "ftRegionPower";
   }
  return NULL;
 }

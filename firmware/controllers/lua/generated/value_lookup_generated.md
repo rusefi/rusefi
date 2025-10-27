@@ -772,9 +772,6 @@ Maximum % that the long term fuel trim can add
 ### ltft.maxRemove
 Maximum % that the long term fuel trim can remove
 
-### ltft.timeConstant
-Commonly referred as Integral gain.\nTime constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 30.0 means it will try to make most of the correction within 30 seconds, and a value of 300.0 will try to correct within 5 minutes.\nLower values makes the correction more sensitive, higher values slow the correction down.
-
 ### tps2SecondaryMin
 
 

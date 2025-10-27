@@ -778,9 +778,6 @@ float getConfigValueByHash(const int hash) {
 // ltft.maxRemove
 		case -269110527:
 			return engineConfiguration->ltft.maxRemove;
-// ltft.timeConstant
-		case 1941168166:
-			return engineConfiguration->ltft.timeConstant;
 // tps2SecondaryMin
 		case 18659930:
 			return engineConfiguration->tps2SecondaryMin;
@@ -3336,11 +3333,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -269110527:
 	{
 		engineConfiguration->ltft.maxRemove = (int)value;
-		return 1;
-	}
-		case 1941168166:
-	{
-		engineConfiguration->ltft.timeConstant = (int)value;
 		return 1;
 	}
 		case 18659930:
