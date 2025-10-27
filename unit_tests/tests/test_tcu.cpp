@@ -83,3 +83,28 @@ TEST(tcu, testButtonshift) {
 
 	ASSERT_EQ(GEAR_1, engine->gearController->getDesiredGear());
 }
+
+TEST(tcu, testGenericGC) {
+	EngineTestHelper eth(engine_type_e::TCU_4R70W);
+	engineConfiguration->gearControllerMode = GearControllerMode::Generic;
+	initGearController();
+
+	// Need to set some engine settings for airmass calc
+	engineConfiguration->cylindersCount = 8.0;
+
+	// pinMode is PI_PULLUP, so true = off
+	setMockState(engineConfiguration->tcuUpshiftButtonPin, true);
+	setMockState(engineConfiguration->tcuDownshiftButtonPin, true);
+
+	ASSERT_NE(nullptr, engine->gearController);
+	ASSERT_EQ(NEUTRAL, engine->gearController->getDesiredGear());
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 55);
+	Sensor::setMockValue(SensorType::Rpm, 2500);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 15);
+	Sensor::setMockValue(SensorType::Maf, 0.1f);
+
+	engine->gearController->update();
+	// Make sure we stay in neutral with undefined range selector pins
+	ASSERT_EQ(NEUTRAL, engine->gearController->getDesiredGear());
+}
