@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.VariableRegistryValues;
+import com.rusefi.io.can.isotp.DefaultFlowControl;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.can.isotp.IsoTpCanDecoder;
 import com.rusefi.io.can.isotp.IsoTpConnector;
@@ -34,7 +35,7 @@ public class PCanIoStream extends AbstractIoStream {
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
         protected void onTpFirstFrame() {
-            sendCanPacket(getFlowControl());
+            sendCanPacket(DefaultFlowControl.FLOW_CONTROL);
         }
     };
 

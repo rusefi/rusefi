@@ -4,8 +4,8 @@ public class TestIsoTpCanDecoder extends IsoTpCanDecoder {
     public TestIsoTpCanDecoder() {
     }
 
-    public TestIsoTpCanDecoder(int isoHeaderByteIndex, byte[] flowControl) {
-        super(isoHeaderByteIndex, flowControl);
+    public TestIsoTpCanDecoder(int isoHeaderByteIndex) {
+        super(isoHeaderByteIndex);
     }
 
     @Override

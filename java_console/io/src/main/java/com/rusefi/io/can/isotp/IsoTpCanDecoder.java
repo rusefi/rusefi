@@ -24,23 +24,17 @@ public abstract class IsoTpCanDecoder {
 
     private final static int FC_ContinueToSend = 0;
     private final int isoHeaderByteIndex;
-    private final byte[] flowControl;
 
     private int waitingForNumBytes = 0;
     private int waitingForFrameIndex = 0;
     private boolean isComplete;
 
     public IsoTpCanDecoder() {
-        this(0, FLOW_CONTROL);
+        this(0);
     }
 
-    public IsoTpCanDecoder(int isoHeaderByteIndex, byte[] flowControl) {
+    public IsoTpCanDecoder(int isoHeaderByteIndex) {
         this.isoHeaderByteIndex = isoHeaderByteIndex;
-        this.flowControl = flowControl;
-    }
-
-    public byte[] getFlowControl() {
-        return flowControl;
     }
 
     @Deprecated // warning: PCAN driver is an example of larger data buffer
