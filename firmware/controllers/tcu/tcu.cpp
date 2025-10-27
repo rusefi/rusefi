@@ -49,7 +49,7 @@ float TransmissionControllerBase::isShiftCompleted() {
 	auto detected = Sensor::get(SensorType::DetectedGear);
 	auto iss = Sensor::get(SensorType::InputShaftSpeed);
 	// If gear detection is set up and the gear we are trying to shift into has been detected
-	if (detected.Valid && m_shiftTime && m_shiftTimeGear == detected.Value) {
+	if (detected.Valid && m_shiftTime && (int)m_shiftTimeGear == detected.Value) {
 		m_shiftTime = false;
 		return m_shiftTimer.getElapsedSeconds();
 		// If ISS isn't configured, we want to use a fixed value.
