@@ -86,27 +86,19 @@ void LongTermFuelTrim::init(LtftState *state) {
 #endif
 }
 
-float LongTermFuelTrim::getIntegratorGain() const
+float LongTermFuelTrim::getIntegratorGain(const ltft_s& cfg) const
 {
-	const auto& cfg = engineConfiguration->ltft;
-
 	return 1 / clampF(30, cfg.timeConstant, 3000);
 }
 
-float LongTermFuelTrim::getMaxAdjustment() const {
-	const auto& cfg = engineConfiguration->ltft;
-
-	float raw = PERCENT_DIV * cfg.maxAdd;
+float LongTermFuelTrim::getMaxAdjustment(const ltft_s& cfg) const {
 	// Don't allow maximum less than 0, or more than maximum add adjustment
-	return clampF(0, raw, MAX_ADJ);
+	return clampF(0, PERCENT_DIV * cfg.maxAdd, MAX_ADJ);
 }
 
-float LongTermFuelTrim::getMinAdjustment() const {
-	const auto& cfg = engineConfiguration->ltft;
-
-	float raw = -PERCENT_DIV * cfg.maxRemove;
+float LongTermFuelTrim::getMinAdjustment(const ltft_s& cfg) const {
 	// Don't allow minimum more than 0, or less than maximum remove adjustment
-	return clampF(-MAX_ADJ, raw, 0);
+	return clampF(-MAX_ADJ, -PERCENT_DIV * cfg.maxRemove, 0);
 }
 
 void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad) {
@@ -138,7 +130,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	// calculate weight depenting on distance from cell center
 	// Is this too heavy?
 	float weight = 1.0 - hypotf(x.Frac, y.Frac) / hypotf(0.5, 0.5);
-	float k = getIntegratorGain() * integrator_dt * weight;
+	float k = getIntegratorGain(cfg) * integrator_dt * weight;
 
 	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
 		float lambdaCorrection = clResult.banks[bank] - 1.0;
@@ -158,7 +150,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 		// rise OBD code if we hit trim limit
 
 		// Clamp to bounds and save
-		newTrim = clampF(getMinAdjustment(), newTrim, getMaxAdjustment());
+		newTrim = clampF(getMinAdjustment(cfg), newTrim, getMaxAdjustment(cfg));
 
 		// accumulate
 		ltftAccummulatedCorrection[bank] += newTrim - trim;
