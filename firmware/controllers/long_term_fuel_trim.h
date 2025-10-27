@@ -41,7 +41,7 @@ private:
 	bool veNeedRefresh = false;
 	bool showUpdateToUser = false;
 
-	float getIntegratorGain(const ltft_s& cfg) const;
+	float getIntegratorGain(const ltft_s& cfg, ft_region_e region) const;
 	float getMaxAdjustment(const ltft_s& cfg) const;
 	float getMinAdjustment(const ltft_s& cfg) const;
 

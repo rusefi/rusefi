@@ -86,9 +86,9 @@ void LongTermFuelTrim::init(LtftState *state) {
 #endif
 }
 
-float LongTermFuelTrim::getIntegratorGain(const ltft_s& cfg) const
+float LongTermFuelTrim::getIntegratorGain(const ltft_s& cfg, ft_region_e region) const
 {
-	return 1 / clampF(30, cfg.timeConstant, 3000);
+	return 1 / clampF(1, cfg.timeConstant[region], 3000);
 }
 
 float LongTermFuelTrim::getMaxAdjustment(const ltft_s& cfg) const {
@@ -130,7 +130,7 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	// calculate weight depenting on distance from cell center
 	// Is this too heavy?
 	float weight = 1.0 - hypotf(x.Frac, y.Frac) / hypotf(0.5, 0.5);
-	float k = getIntegratorGain(cfg) * integrator_dt * weight;
+	float k = getIntegratorGain(cfg, clResult.region) * integrator_dt * weight;
 
 	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
 		float lambdaCorrection = clResult.banks[bank] - 1.0;

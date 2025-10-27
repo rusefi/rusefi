@@ -195,8 +195,11 @@ static void setDefaultLtftSettings() {
 	cfg.enabled = true;
 	cfg.correctionEnabled = false;
 
-	// Default to very slow learning
-	cfg.timeConstant = 3000;
+	// Default to slow learning
+	cfg.timeConstant[ftRegionIdle] = 3000;
+	cfg.timeConstant[ftRegionOverrun] = 1500;
+	cfg.timeConstant[ftRegionPower] = 30;
+	cfg.timeConstant[ftRegionCruise] = 300;
 
 	// 0.5% deadband
 	cfg.deadband = 0.5f;

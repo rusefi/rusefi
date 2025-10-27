@@ -36,13 +36,17 @@ TEST(LTFT, testLearning)
 	engineConfiguration->ltft.deadband = 0.5; // %
 	engineConfiguration->ltft.maxAdd = 15.0; // %
 	engineConfiguration->ltft.maxRemove = 5; // %
-	engineConfiguration->ltft.timeConstant = 30; // seconds
+	engineConfiguration->ltft.timeConstant[ftRegionIdle] = 30; // seconds
+	engineConfiguration->ltft.timeConstant[ftRegionOverrun] = 30; // seconds
+	engineConfiguration->ltft.timeConstant[ftRegionPower] = 30; // seconds
+	engineConfiguration->ltft.timeConstant[ftRegionCruise] = 30; // seconds
 
 	float rpm = config->veRpmBins[0];
 	float load = config->veLoadBins[0];
 	ClosedLoopFuelResult clInput;
 	ClosedLoopFuelResult clResult;
 
+	clInput.region = ftRegionIdle;
 	clInput.banks[0] = clInput.banks[1] = 1.5;
 	// Run for 100 sec
 	ITERATE_TIME(100, ltft.learn(clInput, rpm, load))
