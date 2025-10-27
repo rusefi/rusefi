@@ -125,9 +125,9 @@ ClosedLoopFuelResult ShortTermFuelTrim::getCorrection(float rpm, float fuelLoad)
 		return {};
 	}
 
-	stftCorrectionBinIdx = computeStftBin(rpm, fuelLoad, engineConfiguration->stft);
-
 	ClosedLoopFuelResult result;
+
+	result.region = stftCorrectionBinIdx = computeStftBin(rpm, fuelLoad, engineConfiguration->stft);
 
 	for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
 		auto& cell = banks[bank].cells[stftCorrectionBinIdx];

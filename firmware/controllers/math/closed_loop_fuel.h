@@ -14,9 +14,11 @@ struct ClosedLoopFuelResult {
 		for (size_t i = 0; i < FT_BANK_COUNT; i++) {
 			banks[i] = 1.0f;
 		}
+		region = ftRegionIdle;
 	}
 
 	float banks[FT_BANK_COUNT];
+	ft_region_e region;
 };
 
 struct FuelingBank {
