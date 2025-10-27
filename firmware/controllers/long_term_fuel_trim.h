@@ -41,9 +41,9 @@ private:
 	bool veNeedRefresh = false;
 	bool showUpdateToUser = false;
 
-	float getIntegratorGain() const;
-	float getMaxAdjustment() const;
-	float getMinAdjustment() const;
+	float getIntegratorGain(const ltft_s& cfg) const;
+	float getMaxAdjustment(const ltft_s& cfg) const;
+	float getMinAdjustment(const ltft_s& cfg) const;
 
 	Timer pageRefreshTimer{};
 };
