@@ -100,7 +100,7 @@ jobs:
         branch: ${{ github.ref }}
 
     - name: Upload Linux built simulator
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: rusefi_simulator_linux
         path: ./simulator/build/rusefi_simulator
