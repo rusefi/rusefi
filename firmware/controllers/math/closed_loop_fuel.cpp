@@ -13,27 +13,27 @@ SensorType ShortTermFuelTrim::getSensorForBankIndex(size_t index) {
 	}
 }
 
-size_t ShortTermFuelTrim::computeStftBin(float rpm, float load, stft_s& cfg) {
+ft_region_e ShortTermFuelTrim::computeStftBin(float rpm, float load, stft_s& cfg) {
 	// Low RPM -> idle
 	if (idleDeadband.lt(rpm, cfg.maxIdleRegionRpm))
 	{
-		return 0;
+		return ftRegionIdle;
 	}
 
 	// Low load -> overrun
 	if (overrunDeadband.lt(load, cfg.maxOverrunLoad))
 	{
-		return 1;
+		return ftRegionOverrun;
 	}
 
 	// High load -> power
 	if (loadDeadband.gt(load, cfg.minPowerLoad))
 	{
-		return 2;
+		return ftRegionPower;
 	}
 
 	// Default -> normal "in the middle" cell
-	return 3;
+	return ftRegionCruise;
 }
 
 stft_state_e ShortTermFuelTrim::getCorrectionState() {

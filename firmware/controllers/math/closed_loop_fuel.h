@@ -42,7 +42,7 @@ private:
 	Deadband<2> loadDeadband;
 
 	SensorType getSensorForBankIndex(size_t index);
-	size_t computeStftBin(float rpm, float load, stft_s& cfg);
+	ft_region_e computeStftBin(float rpm, float load, stft_s& cfg);
 	stft_state_e getCorrectionState();
 	stft_state_e getLearningState(SensorType sensor);
 };
