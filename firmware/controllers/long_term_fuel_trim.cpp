@@ -64,7 +64,7 @@ void LtftState::applyToVe() {
 		for (size_t rpmIndex = 0; rpmIndex < VE_RPM_COUNT; rpmIndex++) {
 			float k = 0;
 
-			/* We have single VE table, but two banks of trims */
+			/* We have single VE table, but FT_BANK_COUNT banks of trims */
 			for (size_t bank = 0; bank < FT_BANK_COUNT; bank++) {
 				k += 1.0f + trims[bank][loadIndex][rpmIndex];
 			}
