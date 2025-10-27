@@ -1,6 +1,7 @@
 struct_no_prefix short_term_fuel_trim_state_s
-	uint8_t stftCorrectionBinIdx;STFT: used bin;"Bin", 1, 0, 0, 0, 0
-	uint8_t stftLearningBinIdx;STFT: learning bin;"Bin", 1, 0, 0, 0, 0
+	custom ft_region_e 1 bits, U08, @OFFSET@, [0:1], "Bin"
+	ft_region_e stftCorrectionBinIdx;STFT: used bin
+	ft_region_e stftLearningBinIdx;STFT: learning bin
 
 	custom stft_state_e 1 bits, U08, @OFFSET@, [0:2], "STFT state"
 	stft_state_e stftCorrectionState

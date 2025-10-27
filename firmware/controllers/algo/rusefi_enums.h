@@ -872,6 +872,13 @@ typedef enum __attribute__ ((__packed__)) {
 	stftDisabledFuelCut = 9
 } stft_state_e;
 
+typedef enum __attribute__((__packed__)) {
+	ftRegionIdle = 0,
+	ftRegionOverrun = 1,
+	ftRegionPower = 2,
+	ftRegionCruise = 3,
+} ft_region_e;
+
 #endif // __cplusplus
 
 #include "generated/enums/rusefi_config_generated_enums.h"
