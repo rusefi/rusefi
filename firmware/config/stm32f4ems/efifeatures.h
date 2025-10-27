@@ -495,7 +495,7 @@
  */
 
 #ifndef EFI_USE_UART_DMA
-#define EFI_USE_UART_DMA TRUE
+#define EFI_USE_UART_DMA FALSE
 #endif
 
 #ifndef AUX_SERIAL_DEVICE
