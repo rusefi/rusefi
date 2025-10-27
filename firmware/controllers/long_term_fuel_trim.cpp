@@ -112,7 +112,9 @@ float LongTermFuelTrim::getMinAdjustment() const {
 void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fuelLoad) {
 	const auto& cfg = engineConfiguration->ltft;
 
-	if ((!cfg.enabled) || (ltftSavePending) || (ltftLoadPending)) {
+	// LTFT uses STFT output, so if STFT is not correcting for some reason - LTFT also should not learn
+	if ((!cfg.enabled) || (ltftSavePending) || (ltftLoadPending) ||
+		(engine->module<ShortTermFuelTrim>()->stftCorrectionState != stftEnabled)) {
 		ltftLearning = false;
 		return;
 	}
