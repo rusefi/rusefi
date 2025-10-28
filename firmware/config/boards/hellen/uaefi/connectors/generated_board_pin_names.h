@@ -30,8 +30,10 @@
 #define PIN_C3_switch_inputs MM100_IN_O2S2
 #define PIN_C4 MM100_IN_AUX2_ANALOG
 #define PIN_C5 MM100_IN_D1
-#define PIN_C6 MM100_IN_D2
-#define PIN_C7 MM100_IN_D3
+#define PIN_C6_event_inputs MM100_IN_D2
+#define PIN_C6_sent_inputs MM100_IN_D2
+#define PIN_C7_event_inputs MM100_IN_D3
+#define PIN_C7_sent_inputs MM100_IN_D3
 #define PIN_C9_switch_inputs MM100_IN_D4
 #define PIN_C9_event_inputs MM100_IN_D4
 #define PIN_C14 MM100_IN_AUX1_ANALOG
