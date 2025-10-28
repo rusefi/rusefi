@@ -129,13 +129,14 @@ bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icu
 			RETURN_ICU5(ICU_CHANNEL_2);
 			return false;
 		case Gpio::A2:
+			RETURN_ICU2(ICU_CHANNEL_3);
+			RETURN_ICU5(ICU_CHANNEL_3);
 			RETURN_ICU9(ICU_CHANNEL_1);
 			return false;
 		case Gpio::A3:
+			RETURN_ICU2(ICU_CHANNEL_4);
+			RETURN_ICU5(ICU_CHANNEL_4);
 			RETURN_ICU9(ICU_CHANNEL_2);
-			return false;
-		case Gpio::A5:
-			RETURN_ICU2(ICU_CHANNEL_1);
 			return false;
 		case Gpio::A6:
 			RETURN_ICU3(ICU_CHANNEL_1);
@@ -151,8 +152,20 @@ bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icu
 		case Gpio::A9:
 			RETURN_ICU1(ICU_CHANNEL_2);
 			return false;
+		case Gpio::A10:
+			RETURN_ICU1(ICU_CHANNEL_3);
+			return false;
+		case Gpio::A11:
+			RETURN_ICU1(ICU_CHANNEL_4);
+			return false;
 		case Gpio::A15:
 			RETURN_ICU2(ICU_CHANNEL_1);
+			return false;
+		case Gpio::B0:
+			RETURN_ICU3(ICU_CHANNEL_3);
+			return false;
+		case Gpio::B1:
+			RETURN_ICU3(ICU_CHANNEL_4);
 			return false;
 		case Gpio::B3:
 			RETURN_ICU2(ICU_CHANNEL_2);
@@ -170,10 +183,18 @@ bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icu
 			RETURN_ICU4(ICU_CHANNEL_2);
 			return false;
 		case Gpio::B8:
+			RETURN_ICU3(ICU_CHANNEL_3);
 			RETURN_ICU10(ICU_CHANNEL_1);
 			return false;
 		case Gpio::B9:
+			RETURN_ICU3(ICU_CHANNEL_4);
 			RETURN_ICU11(ICU_CHANNEL_1);
+			return false;
+		case Gpio::B10:
+			RETURN_ICU2(ICU_CHANNEL_3);
+			return false;
+		case Gpio::B11:
+			RETURN_ICU2(ICU_CHANNEL_4);
 			return false;
 		case Gpio::B14:
 			RETURN_ICU12(ICU_CHANNEL_1);
@@ -189,11 +210,25 @@ bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icu
 			RETURN_ICU3(ICU_CHANNEL_2);
 			RETURN_ICU8(ICU_CHANNEL_2);
 			return false;
+		case Gpio::C8:
+			RETURN_ICU3(ICU_CHANNEL_3);
+			RETURN_ICU8(ICU_CHANNEL_3);
+			return false;
+		case Gpio::C9:
+			RETURN_ICU3(ICU_CHANNEL_4);
+			RETURN_ICU8(ICU_CHANNEL_4);
+			return false;
 		case Gpio::D12:
 			RETURN_ICU4(ICU_CHANNEL_1);
 			return false;
 		case Gpio::D13:
 			RETURN_ICU4(ICU_CHANNEL_2);
+			return false;
+		case Gpio::D14:
+			RETURN_ICU4(ICU_CHANNEL_3);
+			return false;
+		case Gpio::D15:
+			RETURN_ICU4(ICU_CHANNEL_4);
 			return false;
 		case Gpio::E5:
 			RETURN_ICU9(ICU_CHANNEL_1);
@@ -206,6 +241,9 @@ bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icu
 			return false;
 		case Gpio::E11:
 			RETURN_ICU1(ICU_CHANNEL_2);
+			return false;
+		case Gpio::E13:
+			RETURN_ICU1(ICU_CHANNEL_3);
 			return false;
 		case Gpio::E14:
 			RETURN_ICU1(ICU_CHANNEL_4);
@@ -234,11 +272,23 @@ bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icu
 		case Gpio::H11:
 			RETURN_ICU5(ICU_CHANNEL_2);
 			return false;
+		case Gpio::H12:
+			RETURN_ICU5(ICU_CHANNEL_3);
+			return false;
+		case Gpio::I0:
+			RETURN_ICU5(ICU_CHANNEL_4);
+			return false;
+		case Gpio::I2:
+			RETURN_ICU8(ICU_CHANNEL_4);
+			return false;
 		case Gpio::I5:
 			RETURN_ICU8(ICU_CHANNEL_1);
 			return false;
 		case Gpio::I6:
 			RETURN_ICU8(ICU_CHANNEL_2);
+			return false;
+		case Gpio::I7:
+			RETURN_ICU8(ICU_CHANNEL_3);
 			return false;
 
 		default:
