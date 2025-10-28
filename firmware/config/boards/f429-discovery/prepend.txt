@@ -18,6 +18,9 @@
 #define TORQUE_CURVE_RPM_SIZE 8
 
 ! asserting that rectangular configuration works
+#define CLT_TIMING_TEMP_AXIS_SIZE 8
+
+! asserting that rectangular configuration works
 #define CRANKING_ENRICH_COUNT 6
 #define CRANKING_ENRICH_CLT_COUNT 8
 

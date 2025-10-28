@@ -161,7 +161,8 @@ struct_no_prefix engine_configuration_s
 #define TRAILING_SPARK_RPM_SIZE 4
 
 #define ENGINE_NOISE_CURVE_SIZE 16
-#define CLT_TIMING_CURVE_SIZE 5
+#define CLT_TIMING_TEMP_AXIS_SIZE 5
+#define CLT_TIMING_LOAD_AXIS_SIZE 5
 #define IDLE_VE_SIZE 4
 #define IDLE_VE_SIZE_RPM 4
 #define RE_auto_update_root_url "https://rusefi.com/build_server"
@@ -1950,9 +1951,9 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_RPM_SIZE] autoscale torqueTable;;"Nm", 
 	int16_t[CLT_CURVE_SIZE] autoscale cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
 	uint8_t[CLT_CURVE_SIZE] autoscale cltIdleRpm;See idleRpmPid;"RPM", 20, 0, 0, 5000, 0
 
-	int16_t[CLT_TIMING_CURVE_SIZE x CLT_TIMING_CURVE_SIZE] autoscale ignitionCltCorrTable;;"deg", 0.1, 0, -50, 50, 1
-    int16_t[CLT_TIMING_CURVE_SIZE] autoscale ignitionCltCorrTempBins;CLT-based timing correction;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
-    uint8_t[CLT_TIMING_CURVE_SIZE] autoscale ignitionCltCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+	int16_t[CLT_TIMING_LOAD_AXIS_SIZE x CLT_TIMING_TEMP_AXIS_SIZE] autoscale ignitionCltCorrTable;;"deg", 0.1, 0, -50, 50, 1
+    int16_t[CLT_TIMING_TEMP_AXIS_SIZE] autoscale ignitionCltCorrTempBins;CLT-based timing correction;"SPECIAL_CASE_TEMPERATURE", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+    uint8_t[CLT_TIMING_LOAD_AXIS_SIZE] autoscale ignitionCltCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
 
 	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -10000, 10000, 3
