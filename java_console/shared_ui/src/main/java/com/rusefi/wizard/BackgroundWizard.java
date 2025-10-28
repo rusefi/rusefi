@@ -4,15 +4,28 @@ import java.util.function.Supplier;
 
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
+import com.efiAnalytics.plugin.ecu.OutputChannelClient;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class BackgroundWizard {
     private static final Logging log = Logging.getLogging(BackgroundWizard.class);
     private static Supplier<ControllerAccess> controllerAccessSupplier;
+    static OutputChannelClient onlineListener = new EcuOnlineListener();
+
+    private static int CURRENT_STATE_UNKNOWN = -1;
+    private static int CURRENT_STATE_OFFLINE = 0;
+    private static int CURRENT_STATE_ONLINE = 1;
+    private static int currentState = -1;
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
         BackgroundWizard.controllerAccessSupplier = controllerAccessSupplier;
+        try {
+            BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe("AppEvent", "controllerOnline", onlineListener);
+        } catch(Exception e) {
+            log.error("error on onlineListener " + e, e);
+        }
+
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
@@ -28,9 +41,26 @@ public class BackgroundWizard {
         thread.start();
     }
 
+    static class EcuOnlineListener implements OutputChannelClient {
+        public void setCurrentOutputChannelValue(String string, double d) {
+            int newState = (int)d;
+            if(currentState == 0 ^ newState == 0){
+                currentState = newState;
+            }
+        }
+    }
+
     private static void periodicWizardLogic() {
         // todo: check if ECU is connected
         // todo: run logic
         // todo: use something based on TunerStudioIntegration to actually open dialog!
+
+        if (currentState == CURRENT_STATE_UNKNOWN) {
+            log.info("ECU is not connected / no updates from TS");
+        } else if (currentState == CURRENT_STATE_OFFLINE) {
+            log.info("ECU is offline");
+        } else if (currentState == CURRENT_STATE_ONLINE) {
+            log.info("ECU is online");
+        }
     }
 }
