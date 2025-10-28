@@ -90,12 +90,14 @@ static void perfEventImpl(PE event, EPhase phase) {
 	entry.Phase = phase;
 	// Get the current active interrupt - this is the "process ID"
 	auto isr = static_cast<uint8_t>(SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk);
-	entry.IsrId = isr - 16;
 
 	// Get the current thread (if not interrupt) and use as the thread ID
 	if (isr == 0) {
 		entry.ThreadId = chThdGetSelfX()->threadId;
+		entry.IsrId = 0;
 	} else {
+		entry.IsrId = isr - 16;
+
 		// Interrupts have no thread - all are T0
 		entry.ThreadId = 0;
 	}
