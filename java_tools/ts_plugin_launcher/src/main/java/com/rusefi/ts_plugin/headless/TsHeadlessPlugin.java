@@ -21,5 +21,17 @@ public interface TsHeadlessPlugin {
         }
     }
 
+    static boolean displayPlugin(String signature) {
+        try {
+            Class clazz = getPluginClass(PLUGIN_HEADLESS_IMPL_CLASS);
+            TsHeadlessPlugin instance = (TsHeadlessPlugin) clazz.newInstance();
+            instance.getDisplayPlugin(signature);
+        } catch (ClassNotFoundException | MalformedURLException | InstantiationException | IllegalAccessException e) {
+            log.warn("Error " + e, e);
+        }
+        return true;
+    }
+
     void run();
+    boolean getDisplayPlugin(String serialSignature);
 }

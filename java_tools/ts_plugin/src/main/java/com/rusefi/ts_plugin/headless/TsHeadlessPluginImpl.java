@@ -10,9 +10,6 @@ import com.rusefi.core.io.BundleInfoStrategy;
 import com.rusefi.updater.PlainSerialPortScanner;
 import com.rusefi.wizard.BackgroundWizard;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 /**
  * this class is invoked by TsHeadlessPlugin via reflection
  */
@@ -43,5 +40,10 @@ public class TsHeadlessPluginImpl implements TsHeadlessPlugin {
         BundleInfo bi = s.asBundleInfo();
         String downloadFrom = BundleInfoStrategy.getDownloadUrl(bi, updateUrl, BundleInfo::getBranchName);
         Autoupdate.downloadAutoupdateZipFile(bi, downloadFrom, Boolean.parseBoolean(isObfuscated));
+    }
+
+    @Override
+    public boolean getDisplayPlugin(String serialSignature) {
+        return BackgroundWizard.displayPlugin(serialSignature);
     }
 }
