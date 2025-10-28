@@ -338,6 +338,8 @@ static void knockCompletionCallback(ADCDriver* adcp) {
 	if (adcIsBufferComplete(adcp)) {
 		onKnockSamplingComplete();
 	}
+
+	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
 }
 
 static void knockErrorCallback(ADCDriver*, adcerror_t) {

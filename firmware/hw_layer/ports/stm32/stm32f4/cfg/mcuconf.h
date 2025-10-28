@@ -87,7 +87,7 @@
 #define STM32_GPT_TIM3_IRQ_PRIORITY         7
 #define STM32_GPT_TIM4_IRQ_PRIORITY         7
 #define STM32_GPT_TIM5_IRQ_PRIORITY         7
-#define STM32_GPT_TIM6_IRQ_PRIORITY         7
+// GPT TIM6 is in mcuconf_common_f4_f7.h
 #define STM32_GPT_TIM7_IRQ_PRIORITY         7
 #define STM32_GPT_TIM8_IRQ_PRIORITY         7
 #define STM32_GPT_TIM9_IRQ_PRIORITY         7
