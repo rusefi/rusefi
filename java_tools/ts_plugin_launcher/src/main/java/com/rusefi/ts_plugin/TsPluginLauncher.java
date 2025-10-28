@@ -67,6 +67,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
     public boolean displayPlugin(String signature) {
         log.info("displayPlugin " + signature);
         // todo: smarter implementation one day
+        TsHeadlessPlugin.displayPlugin(signature);
         return true;
     }
 

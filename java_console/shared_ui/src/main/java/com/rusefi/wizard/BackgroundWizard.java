@@ -18,6 +18,8 @@ public class BackgroundWizard {
     private static int CURRENT_STATE_ONLINE = 1;
     private static int currentState = -1;
     private static int lastState = -1;
+    private static boolean pluginEnabled = false;
+
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
         BackgroundWizard.controllerAccessSupplier = controllerAccessSupplier;
@@ -61,9 +63,24 @@ public class BackgroundWizard {
             } else if (currentState == CURRENT_STATE_OFFLINE) {
                 log.info("ECU is offline");
             } else if (currentState == CURRENT_STATE_ONLINE) {
-                log.info("ECU is online");
+                if (pluginEnabled){
+                   log.info("ECU is online and we can run the wizard");
+                } else {
+                    log.info("ECU is online");
+                }
             }
             lastState = currentState;
         }
+    }
+
+    public static boolean displayPlugin(String serialSignature) {
+        boolean signatureValid = serialSignature != null && !serialSignature.isEmpty();
+
+        if (signatureValid){
+            pluginEnabled = serialSignature.contains("hd81");
+            return pluginEnabled;
+        }
+
+        return false;
     }
 }
