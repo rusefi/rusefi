@@ -295,7 +295,8 @@
 #define CLT_IDLE_TABLE_CLT_SIZE 8
 #define CLT_IDLE_TABLE_RPM_SIZE 2
 #define CLT_LIMITER_CURVE_SIZE 4
-#define CLT_TIMING_CURVE_SIZE 5
+#define CLT_TIMING_LOAD_AXIS_SIZE 5
+#define CLT_TIMING_TEMP_AXIS_SIZE 5
 #define CLT_UPPER_LIMIT 125
 #define CMD_AC_RELAY_BENCH "acrelaybench"
 #define CMD_ALTERNATOR_PIN "set_alternator_pin"
@@ -1541,7 +1542,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1128698254
+#define SIGNATURE_HASH 2382674026
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2121,7 +2122,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.10.28.hellen154hyundai.1128698254"
+#define TS_SIGNATURE "rusEFI master.2025.10.28.hellen154hyundai.2382674026"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
