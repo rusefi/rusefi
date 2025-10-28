@@ -86,7 +86,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeNt, action_s
 	}
 
 	assertListIsSorted();
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, action.getCallback() != NULL, "NULL callback", false);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, action.getCallback() != nullptr, "NULL callback", false);
 
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
 
@@ -111,7 +111,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeNt, action_s
 	} else {
 		// here we know we are not in the head of the list, let's find the position - linear search
 		scheduling_s *insertPosition = m_head;
-		while (insertPosition->next != NULL && insertPosition->next->getMomentNt() < timeNt) {
+		while (insertPosition->next != nullptr && insertPosition->next->getMomentNt() < timeNt) {
 			insertPosition = insertPosition->next;
 		}
 
@@ -303,7 +303,7 @@ void EventQueue::assertListIsSorted() const {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	int counter = 0;
 	scheduling_s *current = m_head;
-	while (current != NULL && current->next != NULL) {
+	while (current != nullptr && current->next != nullptr) {
 		efiAssertVoid(ObdCode::CUSTOM_ERR_6623, current->getMomentNt() <= current->next->getMomentNt(), "list order");
 		current = current->next;
 		if (counter++ > 1'000'000'000)
@@ -328,7 +328,7 @@ scheduling_s *EventQueue::getElementAtIndexForUnitText(int index) {
 		index--;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void EventQueue::clear() {
