@@ -4,11 +4,15 @@ import java.util.function.Supplier;
 
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
+import com.efiAnalytics.plugin.ecu.ControllerException;
+import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.OutputChannelClient;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class BackgroundWizard {
+    private static final String ECU_VIN_KEY = "vinNumber";
+
     private static final Logging log = Logging.getLogging(BackgroundWizard.class);
     private static Supplier<ControllerAccess> controllerAccessSupplier;
     static OutputChannelClient onlineListener = new EcuOnlineListener();
@@ -19,6 +23,7 @@ public class BackgroundWizard {
     private static int currentState = -1;
     private static int lastState = -1;
     private static boolean pluginEnabled = false;
+    private static String ecuVin = null;
 
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
@@ -53,18 +58,22 @@ public class BackgroundWizard {
         }
     }
 
-    private static void periodicWizardLogic() {
+    private static void periodicWizardLogic() throws ControllerException {
         // todo: check if ECU is connected
         // todo: run logic
         // todo: use something based on TunerStudioIntegration to actually open dialog!
-        if(currentState != lastState) {
+        if (currentState != lastState) {
             if (currentState == CURRENT_STATE_UNKNOWN) {
                 log.info("ECU is not connected / no updates from TS");
             } else if (currentState == CURRENT_STATE_OFFLINE) {
                 log.info("ECU is offline");
             } else if (currentState == CURRENT_STATE_ONLINE) {
-                if (pluginEnabled){
-                   log.info("ECU is online and we can run the wizard");
+                if (pluginEnabled) {
+                    log.info("ECU is online and we can run the wizard");
+                    String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
+                    ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_VIN_KEY);
+                    ecuVin = currentVin.getStringValue();
+                    log.info("ECU vin is " + ecuVin);
                 } else {
                     log.info("ECU is online");
                 }
