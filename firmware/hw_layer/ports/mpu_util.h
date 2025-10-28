@@ -122,6 +122,8 @@ int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t 
 int at32GetRamSizeKb(void);
 #endif
 
+void assertInterruptPriority(const char* func, uint8_t expectedPrio);
+
 extern "C"
 {
 #endif /* __cplusplus */

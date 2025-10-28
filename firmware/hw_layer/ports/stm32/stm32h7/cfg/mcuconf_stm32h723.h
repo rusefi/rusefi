@@ -135,7 +135,6 @@
  * USB driver system settings.
  */
 #define STM32_USB_USE_OTG2                  TRUE
-#define STM32_USB_OTG2_IRQ_PRIORITY         14
 #define STM32_USB_OTG2_RX_FIFO_SIZE         1024
 #define STM32_USB_HOST_WAKEUP_DURATION      2
 

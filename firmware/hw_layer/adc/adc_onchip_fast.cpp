@@ -143,6 +143,8 @@ static void fastAdcDoneCB(ADCDriver *adcp) {
 
 		onFastAdcComplete(adcp->samples);
 	}
+
+	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
 }
 
 static void fastAdcErrorCB(ADCDriver *, adcerror_t err) {
@@ -185,6 +187,7 @@ static void fastAdcStartTrigger(GPTDriver*)
 	 */
 	fastAdc.startConversionI();
 #endif /* EFI_INTERNAL_ADC */
+	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
 }
 
 static const GPTConfig fast_adc_config = {
