@@ -17,6 +17,7 @@ public class BackgroundWizard {
     private static int CURRENT_STATE_OFFLINE = 0;
     private static int CURRENT_STATE_ONLINE = 1;
     private static int currentState = -1;
+    private static int lastState = -1;
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
         BackgroundWizard.controllerAccessSupplier = controllerAccessSupplier;
@@ -54,13 +55,15 @@ public class BackgroundWizard {
         // todo: check if ECU is connected
         // todo: run logic
         // todo: use something based on TunerStudioIntegration to actually open dialog!
-
-        if (currentState == CURRENT_STATE_UNKNOWN) {
-            log.info("ECU is not connected / no updates from TS");
-        } else if (currentState == CURRENT_STATE_OFFLINE) {
-            log.info("ECU is offline");
-        } else if (currentState == CURRENT_STATE_ONLINE) {
-            log.info("ECU is online");
+        if(currentState != lastState) {
+            if (currentState == CURRENT_STATE_UNKNOWN) {
+                log.info("ECU is not connected / no updates from TS");
+            } else if (currentState == CURRENT_STATE_OFFLINE) {
+                log.info("ECU is offline");
+            } else if (currentState == CURRENT_STATE_ONLINE) {
+                log.info("ECU is online");
+            }
+            lastState = currentState;
         }
     }
 }
