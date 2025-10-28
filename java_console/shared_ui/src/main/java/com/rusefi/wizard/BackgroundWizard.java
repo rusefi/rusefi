@@ -70,6 +70,7 @@ public class BackgroundWizard {
             } else if (currentState == CURRENT_STATE_ONLINE) {
                 if (pluginEnabled) {
                     log.info("ECU is online and we can run the wizard");
+                    // weird way of getting the equivalent of "page = 1" on the ini file
                     String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
                     ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_VIN_KEY);
                     ecuVin = currentVin.getStringValue();
