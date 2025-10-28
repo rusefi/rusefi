@@ -72,6 +72,8 @@ static void adc_callback(ADCDriver *adcp) {
 	  // here we invoke 'fast' from slow ADC due to https://github.com/rusefi/rusefi/issues/3301
 		onFastAdcComplete(adcp->samples);
 	}
+
+	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
 }
 
 // ADC Clock is 25MHz
@@ -208,6 +210,8 @@ static void knockCompletionCallback(ADCDriver* adcp) {
 	if (adcIsBufferComplete(adcp)) {
 		onKnockSamplingComplete();
 	}
+
+	assertInterruptPriority(__func__, EFI_IRQ_ADC_PRIORITY);
 }
 
 static void knockErrorCallback(ADCDriver*, adcerror_t) {

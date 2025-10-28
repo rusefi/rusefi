@@ -30,6 +30,8 @@ void portSetHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 static void hwTimerCallback(PWMDriver*) {
 	pwmDisableChannelNotificationI(&SCHEDULER_PWM_DEVICE, 0);
 	portMicrosecondTimerCallback();
+
+	assertInterruptPriority(__func__, EFI_IRQ_SCHEDULING_TIMER_PRIORITY);
 }
 
 static constexpr PWMConfig timerConfig = {
