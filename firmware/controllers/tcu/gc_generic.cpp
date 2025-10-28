@@ -49,20 +49,16 @@ void GenericGearController::update() {
 			//  so we need to check which is valid.
 			if (isAdcChannelValid(engineConfiguration->tcu_rangeAnalogInput[p])) {
 				float pinState = Sensor::getOrZero(getAnalogSensorType(p));
-				if (isNearest(pinState, p, rangeStates)) {
+				if (getRangeStateArray(i)[p] == 0 || isNearest(pinState, p, rangeStates)) {
 					// Set the gear to the one we're checking, and continue to the next pin
 					gear = static_cast<SelectedGear>(i);
 				} else {
 					// This possibility doesn't match, set to invalid
 					gear = SelectedGear::Invalid;
-				}
-			} else if (isBrainPinValid(engineConfiguration->tcu_rangeInput[p])) {
-				// If we've locked out this range with 3 in a cell
-				if (cellState == 3) {
-					gear = SelectedGear::Invalid;
 					break;
 				}
-				bool pinState = efiReadPin(engineConfiguration->tcu_rangeInput[p]);
+			} else if (isBrainPinValid(engineConfiguration->tcu_rangeInput[p])) {
+				bool pinState = efiReadPin(engineConfiguration->tcu_rangeInput[p]) ^ (engineConfiguration->tcu_rangeInputMode[p] == PI_PULLUP);
 				// If the pin doesn't matter, or if it matches the cellState
 				if (cellState == 2 || (pinState && cellState == 1) || (!pinState && cellState == 0)) {
 					// Set the gear to the one we're checking, and continue to the next pin
@@ -70,6 +66,7 @@ void GenericGearController::update() {
 				} else {
 					// This possibility doesn't match, set to invalid
 					gear = SelectedGear::Invalid;
+					break;
 				}
 			}
 		}
