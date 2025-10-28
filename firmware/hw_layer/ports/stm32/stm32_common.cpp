@@ -288,7 +288,7 @@ void assertInterruptPriority(const char* func, uint8_t expectedPrio) {
 	auto expectedMask = NVIC_PRIORITY_MASK(expectedPrio);
 
 	if (actualMask != expectedMask) {
-		firmwareError("bad isr priority at %s expected %02x got %02x", func, expectedMask, actualMask);
+		firmwareError(ObdCode::RUNTIME_CRITICAL_WRONG_IRQ_PRIORITY, "bad isr priority at %s expected %02x got %02x", func, expectedMask, actualMask);
 	}
 }
 
