@@ -68,7 +68,9 @@ void setBoardDefaultConfiguration();
 void setBoardConfigOverrides();
 void onBoardStandBy();
 Gpio getCommsLedPin();
+// fun fact: the red LED for critical error is defined via LED_CRITICAL_ERROR_BRAIN_PIN
 Gpio getWarningLedPin();
+// technical debt: only used to blink from bootloader?
 Gpio getRunningLedPin();
 
 int hackHellenBoardId(int detectedId);
