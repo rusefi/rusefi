@@ -95,6 +95,8 @@ TEST(tcu, testGenericGC) {
 	// pinMode is PI_PULLUP, so true = off
 	setMockState(engineConfiguration->tcuUpshiftButtonPin, true);
 	setMockState(engineConfiguration->tcuDownshiftButtonPin, true);
+	setMockState(engineConfiguration->tcu_rangeInput[1], true);
+	setMockState(engineConfiguration->tcu_rangeInput[2], true);
 
 	ASSERT_NE(nullptr, engine->gearController);
 	ASSERT_EQ(NEUTRAL, engine->gearController->getDesiredGear());
@@ -107,4 +109,8 @@ TEST(tcu, testGenericGC) {
 	engine->gearController->update();
 	// Make sure we stay in neutral with undefined range selector pins
 	ASSERT_EQ(NEUTRAL, engine->gearController->getDesiredGear());
+
+	Sensor::setMockValue(SensorType::RangeInput1, 2000);
+	engine->gearController->update();
+	ASSERT_EQ(GEAR_2, engine->gearController->getDesiredGear());
 }
