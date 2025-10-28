@@ -22,8 +22,8 @@ public class JsonOutput {
      * (those process IDs are interrupt numbers, and the name is the name of the interrupt handler)
      */
     private static final String FORMATTING_SETTINGS =
-            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":-16,\"tid\":0,\"args\":{\"name\":\"Main\"}}," +
-            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":-1,\"tid\":0,\"args\":{\"name\":\"SysTick\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":0,\"tid\":0,\"args\":{\"name\":\"Threads\"}}," +
+            "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":255,\"tid\":0,\"args\":{\"name\":\"SysTick\"}}," +
             "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":18,\"tid\":0,\"args\":{\"name\":\"ADC\"}}," +
             "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":19,\"tid\":0,\"args\":{\"name\":\"CAN1 TX\"}}," +
             "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":20,\"tid\":0,\"args\":{\"name\":\"CAN1 RX 0\"}}," +
