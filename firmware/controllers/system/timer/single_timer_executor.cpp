@@ -112,25 +112,29 @@ void SingleTimerExecutor::executeAllPendingActions() {
 	// starts at -1 because do..while will run a minimum of once
 	executeCounter = -1;
 
-	bool didExecute;
+	scheduling_s* current = nullptr;
 	do {
 		efitick_t nowNt = getTimeNowNt();
-		didExecute = queue.executeOne(nowNt);
+		current = queue.pickOne(nowNt);
 
-		// if we're stuck in a loop executing lots of events, panic!
-		if (executeCounter++ == 500) {
-			firmwareError(ObdCode::CUSTOM_ERR_LOCK_ISSUE, "Maximum scheduling run length exceeded - CPU load too high");
+		if (current) {
+			// now it is time to execute
+			queue.executeAndFree(current);
 		}
-
-	} while (didExecute);
+	} while ((current) && (++executeCounter < 500));
 
 	maxExecuteCounter = maxI(maxExecuteCounter, executeCounter);
 
+	reentrantFlag = false;
+
+	// if we're stuck in a loop executing lots of events, panic!
+	if (executeCounter >= 500) {
+		firmwareError(ObdCode::CUSTOM_ERR_LOCK_ISSUE, "Maximum scheduling run length exceeded - CPU load too high");
+	}
+
 	if (!isLocked()) {
 		firmwareError(ObdCode::CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
-		return;
 	}
-	reentrantFlag = false;
 }
 
 /**
