@@ -118,6 +118,27 @@ void SingleTimerExecutor::executeAllPendingActions() {
 		current = queue.pickOne(nowNt);
 
 		if (current) {
+#if EFI_UNIT_TEST
+			//	efitick_t spinDuration = current->getMomentNt() - getTimeNowNt();
+			//	if (spinDuration > 0) {
+			//		throw std::runtime_error("Time Spin in unit test");
+			//	}
+#endif
+
+			// near future - spin wait for the event to happen and avoid the
+			// overhead of rescheduling the timer.
+			// yes, that's a busy wait but that's what we need here
+			while (current->getMomentNt() > getTimeNowNt()) {
+#if EFI_UNIT_TEST
+				// todo: remove this hack see https://github.com/rusefi/rusefi/issues/6457
+extern bool unitTestBusyWaitHack;
+				if (unitTestBusyWaitHack) {
+					break;
+				}
+#endif
+				UNIT_TEST_BUSY_WAIT_CALLBACK();
+			}
+
 			// now it is time to execute
 			queue.executeAndFree(current);
 		}

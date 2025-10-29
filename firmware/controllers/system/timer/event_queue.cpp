@@ -249,27 +249,6 @@ scheduling_s* EventQueue::pickOne(efitick_t now) {
 }
 
 void EventQueue::executeAndFree(scheduling_s* current) {
-#if EFI_UNIT_TEST
-	//efitick_t spinDuration = current->getMomentNt() - getTimeNowNt();
-	//if (spinDuration > 0) {
-	//	throw std::runtime_error("Time Spin in unit test");
-	//}
-#endif
-
-	// near future - spin wait for the event to happen and avoid the
-	// overhead of rescheduling the timer.
-	// yes, that's a busy wait but that's what we need here
-	while (current->getMomentNt() > getTimeNowNt()) {
-#if EFI_UNIT_TEST
-		// todo: remove this hack see https://github.com/rusefi/rusefi/issues/6457
-extern bool unitTestBusyWaitHack;
-		if (unitTestBusyWaitHack) {
-			break;
-		}
-#endif
-		UNIT_TEST_BUSY_WAIT_CALLBACK();
-	}
-
 	// Grab the action but clear it in the event so we can reschedule from the action's execution
 	auto const action{ std::move(current->action) };
 
