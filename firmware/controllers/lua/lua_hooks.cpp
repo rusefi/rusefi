@@ -142,10 +142,9 @@ uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size)
 
 	luaL_checktype(l, paramIndex, LUA_TTABLE);
 	while (true) {
-		lua_pushnumber(l, result + 1);
-		auto elementType = lua_gettable(l, paramIndex);
-		auto val = lua_tonumber(l, -1);
-		lua_pop(l, 1);
+		//lua_pushnumber(l, result + 1);
+		//auto elementType = lua_gettable(l, paramIndex);
+		auto elementType = lua_rawgeti(l, paramIndex, result + 1);
 
 		if (elementType == LUA_TNIL) {
 			// we're done, this is the end of the array.
@@ -157,6 +156,8 @@ uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size)
 			luaL_error(l, "Unexpected data at position %d: %s", result, lua_tostring(l, -1));
 		}
 
+		auto val = lua_tonumber(l, -1);
+		lua_pop(l, 1);
 		// This element is valid, increment DLC
 		result++;
 
