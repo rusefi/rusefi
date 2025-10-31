@@ -17,7 +17,7 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 	int offset, maxNumBytes;
 	switch (header.frameType) {
 	case ISO_TP_FRAME_SINGLE:
-		offset = 1;
+		offset = isoHeaderByteIndex + 1;
 		maxNumBytes = minI(header.numBytes, dlc - offset);
 		txmsg[isoHeaderByteIndex] |= maxNumBytes;
 		break;
@@ -158,7 +158,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 		return 0;
 
 	// 1 frame
-	if (numBytes <= 7) {
+	if (numBytes <= 7 - isoHeaderByteIndex) {
 		IsoTpFrameHeader header;
 		header.frameType = ISO_TP_FRAME_SINGLE;
 		header.numBytes = numBytes;

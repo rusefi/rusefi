@@ -97,7 +97,9 @@ public:
 #endif
 */
 
-  int isoHeaderByteIndex = 0;
+	// Offset of first ISO-TP byte, usualy 0
+	// but some vendors add some specific data in first CAN byte
+	size_t isoHeaderByteIndex = 0;
 
 	// used for multi-frame ISO-TP packets
 	int waitingForNumBytes = 0;
