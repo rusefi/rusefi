@@ -189,7 +189,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 		}
 		receiveFrame(&rxmsg, nullptr, 0, timeout);
 		uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
-		uint8_t flowStatus = rxmsg.data8[0] & 0xf;
+		uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 		// if something is not ok
 		if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) || (flowStatus != CAN_FLOW_STATUS_OK)) {
 			// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
@@ -202,8 +202,8 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
 			return 0;
 		}
-		uint8_t blockSize = rxmsg.data8[1];
-		uint8_t minSeparationTime = rxmsg.data8[2];
+		uint8_t blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
+		uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
 		if (blockSize != 0 || minSeparationTime != 0) {
 			// todo: process other Flow Control fields (see ISO 15765-2)
 #ifdef SERIAL_CAN_DEBUG
