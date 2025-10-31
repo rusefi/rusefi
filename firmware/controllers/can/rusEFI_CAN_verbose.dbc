@@ -140,14 +140,12 @@ CM_ SG_ 512 CurrentGear "Current detected gear. 0 means neutral, 1 means first, 
 CM_ SG_ 512 DistanceTraveled "Distance traveled since reset";
 CM_ SG_ 513 RPM "Current RPM";
 CM_ SG_ 513 IgnitionTiming "Current Ignition Timing. Positive is advance.";
-CM_ SG_ 513 InjDuty "Injection Duty
-";
+CM_ SG_ 513 InjDuty "Injection Duty";
 CM_ SG_ 513 IgnDuty "Ignition Duty";
 CM_ SG_ 513 VehicleSpeed "Current Vehicle Speed";
 CM_ SG_ 513 FlexPct "Ethanol percent";
 CM_ BO_ 514 "Throttle positions";
-CM_ SG_ 514 PPS "Current Accelerator Pedal Position
-";
+CM_ SG_ 514 PPS "Current Accelerator Pedal Position";
 CM_ SG_ 514 TPS1 "Throttle Body 1 Position";
 CM_ SG_ 514 TPS2 "Throttle Body 2 Position";
 CM_ SG_ 514 Wastegate "Wastegate actuator position";
@@ -161,8 +159,7 @@ CM_ SG_ 515 FuelLevel "Current Fuel Level";
 CM_ SG_ 516 OilPress "Current Oil Pressure Reading";
 CM_ SG_ 516 BattVolt "Current Battery Voltage Reading";
 CM_ SG_ 517 CylAM "Current Estmated Cylinder Airmass";
-CM_ SG_ 517 EstMAF "Currrent Estimated Total Airflow
-";
+CM_ SG_ 517 EstMAF "Current Estimated Total Airflow";
 CM_ SG_ 517 InjPW "Current Commanded Injector Pulsewidth";
 CM_ SG_ 517 KnockCt "Knock detection counter";
 CM_ SG_ 518 FuelUsed "Total fuel consumed";
