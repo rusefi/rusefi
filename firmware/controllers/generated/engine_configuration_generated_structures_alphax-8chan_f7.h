@@ -2652,7 +2652,7 @@ struct engine_configuration_s {
 	offset 1012 bit 12 */
 	bool invertCamVVTSignal : 1 {};
 	/**
-	 * When set to true, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
+	 * When set to yes, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
 	offset 1012 bit 13 */
 	bool alphaNUseIat : 1 {};
 	/**

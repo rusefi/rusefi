@@ -617,7 +617,7 @@ Verbose info in console below engineSnifferRpmThreshold
 
 
 ### alphaNUseIat
-When set to true, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
+When set to yes, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
 
 ### knockBankCyl1
 
