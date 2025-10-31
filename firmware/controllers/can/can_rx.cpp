@@ -82,8 +82,10 @@ void serviceCanSubscribers(const size_t busIndex, const CANRxFrame &frame, efiti
 }
 
 void registerCanListener(CanListener& listener) {
+	// Do this under lock?
+
 	// If the listener already has a next, it's already registered
-	if (!listener.hasNext()) {
+	if (!listener.getNext()) {
 		listener.setNext(canListeners_head);
 		canListeners_head = &listener;
 	}
