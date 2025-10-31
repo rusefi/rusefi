@@ -13,6 +13,16 @@ end
 
 canRxAdd(0x77000F, onDashAlive)
 
+t = Timer.new()
+t : reset()
+
 function onTick()
+  -- timer allows below 1hz rate
+   if t : getElapsedSeconds() > 2 then
+     t : reset()
+   else
+     return
+   end
+
     onTickDashSweep()
 end
