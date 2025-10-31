@@ -62,7 +62,7 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 
 // returns the number of copied bytes
 int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destinationBuff, int availableAtBuffer, can_sysinterval_t timeout) {
-	if (rxmsg.DLC < 1)
+	if (rxmsg.DLC < 1 + isoHeaderByteIndex)
 		return 0;
 	engine->pauseCANdueToSerial = true;
 	int frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
@@ -233,7 +233,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	// send the rest of the data
 	int idx = 1;
 	while (numBytes > 0) {
-		int len = minI(numBytes, 7);
+		int len = minI(numBytes, 7 - isoHeaderByteIndex);
 		// send the consecutive frames
 		header.frameType = ISO_TP_FRAME_CONSECUTIVE;
 		header.index = ((idx++) & 0x0f);
