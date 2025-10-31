@@ -74,7 +74,7 @@
 </constant>
         <constant digits="0" name="airTaperRpmRange" units="RPM">0.0</constant>
         <constant name="allowIdenticalPps">"false"</constant>
-        <constant name="alphaNUseIat">"false"</constant>
+        <constant name="alphaNUseIat">"no"</constant>
         <constant name="ALSActivatePin">"NONE"</constant>
         <constant name="ALSActivatePinMode">"DEFAULT"</constant>
         <constant digits="2" name="ALSEtbAdd" units="%">0.0</constant>
@@ -173,7 +173,7 @@
          14.0 14.0 14.0 14.0
 </constant>
         <constant name="alwaysInstantRpm">"false"</constant>
-        <constant name="alwaysWriteSdCard">"false"</constant>
+        <constant name="alwaysWriteSdCard">"no"</constant>
         <constant name="ambientTempSensor_adcChannel">"Disabled"</constant>
         <constant digits="1" name="ambientTempSensor_bias_resistor" units="Ohm">0.0</constant>
         <constant digits="1" name="ambientTempSensor_resistance_1" units="Ohm">0.0</constant>
@@ -280,7 +280,7 @@
         <constant digits="2" name="benchTestOnTime" units="ms">4.0</constant>
         <constant name="binarySerialRxPin">"PC11"</constant>
         <constant name="binarySerialTxPin">"PC10"</constant>
-        <constant name="boardUseCanTerminator">"true"</constant>
+        <constant name="boardUseCanTerminator">"yes"</constant>
         <constant cols="1" digits="1" name="boostClosedLoopBlends1_blendBins" rows="8" units="">
          0.0
          0.0
@@ -571,10 +571,10 @@
         <constant name="camSimulatorPin">"NONE"</constant>
         <constant name="camSimulatorPinMode">"default"</constant>
         <constant name="camSyncOnSecondCrankRevolution">"first"</constant>
-        <constant name="can1ListenMode">"false"</constant>
+        <constant name="can1ListenMode">"no"</constant>
         <constant name="can2BaudRate">"500kbps"</constant>
-        <constant name="can2ListenMode">"false"</constant>
-        <constant name="can2OpenBLT">"false"</constant>
+        <constant name="can2ListenMode">"no"</constant>
+        <constant name="can2OpenBLT">"no"</constant>
         <constant name="can2RxPin">"NONE"</constant>
         <constant name="can2TxPin">"NONE"</constant>
         <constant name="canBaudRate">"500kbps"</constant>
@@ -582,7 +582,7 @@
         <constant name="canGpioType">"None"</constant>
         <constant name="canInputBCM">"false"</constant>
         <constant name="canNbcType">"None"</constant>
-        <constant name="canOpenBLT">"false"</constant>
+        <constant name="canOpenBLT">"no"</constant>
         <constant name="canReadEnabled">"true"</constant>
         <constant name="canRxPin">"NONE"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
@@ -590,12 +590,12 @@
         <constant name="canVssNbcType">"BMW_e46"</constant>
         <constant digits="4" name="canVssScaling" units="ratio">1.0</constant>
         <constant name="canWbo1_aemId">"ID1 0x0000180"</constant>
-        <constant name="canWbo1_enableRemap">"false"</constant>
+        <constant name="canWbo1_enableRemap">"no"</constant>
         <constant name="canWbo1_reHwidx">"Idx 0"</constant>
         <constant name="canWbo1_reId">"ID1 0x190/191"</constant>
         <constant name="canWbo1_type">"RusEFI"</constant>
         <constant name="canWbo2_aemId">"ID2 0x0000181"</constant>
-        <constant name="canWbo2_enableRemap">"false"</constant>
+        <constant name="canWbo2_enableRemap">"no"</constant>
         <constant name="canWbo2_reHwidx">"Idx 0"</constant>
         <constant name="canWbo2_reId">"ID2 0x192/193"</constant>
         <constant name="canWbo2_type">"RusEFI"</constant>
@@ -781,7 +781,7 @@
         <constant digits="1" name="compressorDischargeTemperature_tempC_2" units="*C">0.0</constant>
         <constant digits="1" name="compressorDischargeTemperature_tempC_3" units="*C">0.0</constant>
         <constant name="consoleUartDevice">"Off"</constant>
-        <constant name="consumeObdSensors">"false"</constant>
+        <constant name="consumeObdSensors">"no"</constant>
         <constant digits="0" name="cranking_rpm" units="RPM">550.0</constant>
         <constant cols="1" digits="2" name="crankingAdvance" rows="4" units="deg">
          0.0
@@ -981,17 +981,17 @@
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
         <constant name="electronicThrottlePin1Mode">"default"</constant>
         <constant name="enableAemXSeries">"true"</constant>
-        <constant name="enableAemXSeriesEgt">"false"</constant>
-        <constant name="enableCanVss">"false"</constant>
+        <constant name="enableAemXSeriesEgt">"no"</constant>
+        <constant name="enableCanVss">"no"</constant>
         <constant name="enabledStep1Limiter">"false"</constant>
         <constant name="enableExtendedCanBroadcast">"true"</constant>
         <constant name="enableFan1WithAc">"false"</constant>
         <constant name="enableFan2WithAc">"false"</constant>
         <constant name="enableKline">"false"</constant>
         <constant name="enableKnockSpectrogram">"no"</constant>
-        <constant name="enableKnockSpectrogramFilter">"false"</constant>
+        <constant name="enableKnockSpectrogramFilter">"no"</constant>
         <constant name="enableLaunchRetard">"no"</constant>
-        <constant name="enableOilPressureProtect">"false"</constant>
+        <constant name="enableOilPressureProtect">"no"</constant>
         <constant name="enableSoftwareKnock">"enabled"</constant>
         <constant name="enableStagedInjection">"false"</constant>
         <constant name="enableTrailingSparks">"false"</constant>
@@ -2379,11 +2379,11 @@
         <constant name="isIgnitionEnabled">"enabled"</constant>
         <constant name="isInjectionEnabled">"enabled"</constant>
         <constant name="isMapAveragingEnabled">"enabled"</constant>
-        <constant name="isPhaseSyncRequiredForIgnition">"true"</constant>
+        <constant name="isPhaseSyncRequiredForIgnition">"yes"</constant>
         <constant name="isSdCardEnabled">"disabled"</constant>
         <constant digits="0" name="issFilterReciprocal" units="">2.0</constant>
         <constant name="isTuningDetectorEnabled">"yes"</constant>
-        <constant name="isWaveAnalyzerEnabled">"true"</constant>
+        <constant name="isWaveAnalyzerEnabled">"yes"</constant>
         <constant digits="0" name="justATempTest" units="">0.0</constant>
         <constant name="kickStartCranking">"false"</constant>
         <constant digits="0" name="kLineBaudRate" units="">10400.0</constant>
@@ -2540,12 +2540,12 @@
         <constant name="launchFuelCutEnable">"no"</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
         <constant digits="0" name="launchRpmWindow" units="RPM">500.0</constant>
-        <constant name="launchSmoothRetard">"false"</constant>
+        <constant name="launchSmoothRetard">"disabled"</constant>
         <constant name="launchSparkCutEnable">"no"</constant>
         <constant digits="0" name="launchSpeedThreshold" units="kmh">30.0</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="launchTpsThreshold" units="">0.0</constant>
-        <constant name="limitTorqueReductionTime">"false"</constant>
+        <constant name="limitTorqueReductionTime">"no"</constant>
         <constant name="logicAnalyzerPins1">"NONE"</constant>
         <constant name="logicAnalyzerPins2">"NONE"</constant>
         <constant name="logicAnalyzerPins3">"NONE"</constant>
@@ -2570,7 +2570,7 @@
         <constant digits="1" name="ltitClampMin" units="%">0.0</constant>
         <constant digits="0" name="ltitCorrectionRate" units="%/s">0.0</constant>
         <constant digits="0" name="ltitEmaAlpha" units="0-255">0.0</constant>
-        <constant name="ltitEnabled">"false"</constant>
+        <constant name="ltitEnabled">"no"</constant>
         <constant digits="0" name="ltitIgnitionOffSaveDelay" units="s">0.0</constant>
         <constant digits="0" name="ltitIgnitionOnDelay" units="s">0.0</constant>
         <constant digits="0" name="ltitIntegratorThreshold" units="%">0.0</constant>
@@ -3008,7 +3008,7 @@ end</constant>
         <constant name="msIoBox0_id">"Off"</constant>
         <constant name="msIoBox0_vss">"Off"</constant>
         <constant digits="2" name="multisparkDwell" units="ms">2.0</constant>
-        <constant name="multisparkEnable">"false"</constant>
+        <constant name="multisparkEnable">"no"</constant>
         <constant digits="0" name="multisparkMaxExtraSparkCount" units="count">2.0</constant>
         <constant digits="0" name="multisparkMaxRpm" units="rpm">1500.0</constant>
         <constant digits="0" name="multisparkMaxSparkingAngle" units="deg">30.0</constant>
@@ -3520,12 +3520,12 @@ end</constant>
         <constant name="startStopButtonMode">"DEFAULT"</constant>
         <constant name="startStopButtonPin">"NONE"</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
-        <constant name="stepper_dc_use_two_wires">"false"</constant>
+        <constant name="stepper_dc_use_two_wires">"no"</constant>
         <constant name="stepper_raw_output1">"NONE"</constant>
         <constant name="stepper_raw_output2">"NONE"</constant>
         <constant name="stepper_raw_output3">"NONE"</constant>
         <constant name="stepper_raw_output4">"NONE"</constant>
-        <constant name="stepperDcInvertedPins">"false"</constant>
+        <constant name="stepperDcInvertedPins">"no"</constant>
         <constant name="stepperDcIo1_controlPin">"NONE"</constant>
         <constant name="stepperDcIo1_directionPin1">"NONE"</constant>
         <constant name="stepperDcIo1_directionPin2">"NONE"</constant>
@@ -4104,7 +4104,7 @@ end</constant>
 </constant>
         <constant name="tcuDownshiftButtonPin">"NONE"</constant>
         <constant name="tcuDownshiftButtonPinMode">"DEFAULT"</constant>
-        <constant name="tcuEnabled">"false"</constant>
+        <constant name="tcuEnabled">"disabled"</constant>
         <constant name="tcuInputSpeedSensorPin">"NONE"</constant>
         <constant digits="0" name="tcuInputSpeedSensorTeeth" units="">1.0</constant>
         <constant cols="10" digits="0" name="tcuSolenoidTable" rows="6" units="onoff">
@@ -4234,7 +4234,7 @@ end</constant>
          0.0
          0.0
 </constant>
-        <constant name="torqueReductionEnabled">"false"</constant>
+        <constant name="torqueReductionEnabled">"disabled"</constant>
         <constant cols="6" digits="0" name="torqueReductionIgnitionCutTable" rows="2" units="%">
          0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0
@@ -4493,7 +4493,7 @@ end</constant>
         <constant name="turboSpeedSensorInputPin">"NONE"</constant>
         <constant digits="3" name="turboSpeedSensorMultiplier" units="mult">1.0</constant>
         <constant name="twoStroke">"Four Stroke"</constant>
-        <constant name="twoWireBatchIgnition">"false"</constant>
+        <constant name="twoWireBatchIgnition">"no"</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant name="uiMode">"Full"</constant>
         <constant name="unusedFancy10">"false"</constant>
@@ -4528,25 +4528,25 @@ end</constant>
         <constant name="unusedFancy9">"false"</constant>
         <constant name="unusedFlipWboChannels">"false"</constant>
         <constant name="useAdvanceCorrectionsForCranking">"no"</constant>
-        <constant name="useAuxSpeedForSlipRatio">"false"</constant>
-        <constant name="useBiQuadOnAuxSpeedSensors">"false"</constant>
+        <constant name="useAuxSpeedForSlipRatio">"no"</constant>
+        <constant name="useBiQuadOnAuxSpeedSensors">"no"</constant>
         <constant name="useCicPidForIdle">"false"</constant>
         <constant name="useCltBasedRpmLimit">"no"</constant>
         <constant name="useEeprom">"false"</constant>
-        <constant name="useFixedBaroCorrFromMap">"false"</constant>
+        <constant name="useFixedBaroCorrFromMap">"no"</constant>
         <constant name="useFordRedundantPps">"false"</constant>
         <constant name="useFordRedundantTps">"false"</constant>
-        <constant name="useHardSkipInTraction">"false"</constant>
+        <constant name="useHardSkipInTraction">"no"</constant>
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
-        <constant name="useIacPidMultTable">"false"</constant>
+        <constant name="useIacPidMultTable">"no"</constant>
         <constant name="useIacTableForCoasting">"disabled"</constant>
         <constant name="useIdleAdvanceWhileCoasting">"no"</constant>
         <constant name="useIdleTimingPidControl">"false"</constant>
-        <constant name="useInjectorFlowLinearizationTable">"false"</constant>
-        <constant name="useLinearCltSensor">"false"</constant>
-        <constant name="useLinearIatSensor">"false"</constant>
+        <constant name="useInjectorFlowLinearizationTable">"no"</constant>
+        <constant name="useLinearCltSensor">"no"</constant>
+        <constant name="useLinearIatSensor">"no"</constant>
         <constant name="useNoiselessTriggerDecoder">"false"</constant>
-        <constant name="useRawOutputToDriveIdleStepper">"false"</constant>
+        <constant name="useRawOutputToDriveIdleStepper">"no"</constant>
         <constant name="useRunningMathForCranking">"Fixed"</constant>
         <constant name="usescriptTableForCanSniffingFiltering">"false"</constant>
         <constant name="useSeparateAdvanceForCranking">"Fixed (auto taper)"</constant>
@@ -4557,7 +4557,7 @@ end</constant>
         <constant name="useStepperIdle">"false"</constant>
         <constant name="useTLE8888_cranking_hack">"true"</constant>
         <constant name="useTLE8888_stepper">"false"</constant>
-        <constant name="useVssAsSecondWheelSpeed">"false"</constant>
+        <constant name="useVssAsSecondWheelSpeed">"no"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
         <constant cols="1" digits="1" name="veBlends1_blendBins" rows="8" units="">
@@ -4796,7 +4796,7 @@ end</constant>
         <constant name="verboseQuad">"false"</constant>
         <constant name="verboseTLE8888">"false"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
-        <constant name="verboseVVTDecoding">"false"</constant>
+        <constant name="verboseVVTDecoding">"disabled"</constant>
         <constant cols="1" digits="0" name="veRpmBins" rows="16" units="RPM">
          650.0
          800.0
@@ -5028,7 +5028,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20251017" nPages="1" signature="rusEFI master.2025.10.31.f407-discovery.37657877" version="5.0"/>
+    <versionInfo firmwareInfo="20251017" nPages="1" signature="rusEFI master.2025.10.31.f407-discovery.1735143829" version="5.0"/>
     <bibliography author="rusEFI 20251017" writeDate="date"/>
     <settings/>
     <userComments/>
