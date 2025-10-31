@@ -179,7 +179,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	// get a flow control (FC) frame
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
 	CANRxFrame rxmsg;
-	for (int numFcReceived = 0; ; numFcReceived++) {
+	for (size_t numFcReceived = 0; ; numFcReceived++) {
 		if (transport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
 			PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
@@ -188,11 +188,12 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 			return 0;
 		}
 		receiveFrame(&rxmsg, nullptr, 0, timeout);
-		int flowStatus = rxmsg.data8[0] & 0xf;
+		uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
+		uint8_t flowStatus = rxmsg.data8[0] & 0xf;
 		// if something is not ok
-		if (flowStatus != CAN_FLOW_STATUS_OK) {
+		if ((frameType != ISO_TP_FRAME_FLOW_CONTROL) || (flowStatus != CAN_FLOW_STATUS_OK)) {
 			// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
-			if (flowStatus == CAN_FLOW_STATUS_WAIT_MORE && numFcReceived < 3) {
+			if ((frameType == ISO_TP_FRAME_FLOW_CONTROL) && (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) && (numFcReceived < 3)) {
 				continue;
 			}
 #ifdef SERIAL_CAN_DEBUG
@@ -201,8 +202,8 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control mode not supported");
 			return 0;
 		}
-		int blockSize = rxmsg.data8[1];
-		int minSeparationTime = rxmsg.data8[2];
+		uint8_t blockSize = rxmsg.data8[1];
+		uint8_t minSeparationTime = rxmsg.data8[2];
 		if (blockSize != 0 || minSeparationTime != 0) {
 			// todo: process other Flow Control fields (see ISO 15765-2)
 #ifdef SERIAL_CAN_DEBUG
