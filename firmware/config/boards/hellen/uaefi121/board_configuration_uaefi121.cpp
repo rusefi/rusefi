@@ -126,5 +126,5 @@ Gpio* getBoardMetaOutputs() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = uaefi_121boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  setMegaUaefiBoardConfigOverrides;
+	custom_board_ConfigOverrides = setMegaUaefiBoardConfigOverrides;
 }
