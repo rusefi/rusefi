@@ -33,10 +33,11 @@ public:
 	}
 
 	virtual CanListener* request() {
-		return m_next;
+		// NOP and return next in list
+		return getNext();
 	}
 
-	bool hasNext() const {
+	CanListener* getNext() const {
 		return m_next;
 	}
 
