@@ -5,7 +5,6 @@ import com.rusefi.*;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.maintenance.jobs.*;
@@ -19,20 +18,19 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortType.OpenBlt;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.maintenance.CalibrationsHelper.*;
+import static com.rusefi.maintenance.CallbacksWaitingUtil.TOTAL_WAIT_SECONDS;
+import static com.rusefi.maintenance.CallbacksWaitingUtil.waitForPredicate;
 import static com.rusefi.maintenance.UpdateMode.*;
 import static java.lang.Boolean.parseBoolean;
 
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
-    private static final int ONE_DOT_DURATION_MS = 200;
-    private static final int TOTAL_WAIT_SECONDS = 60;
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
@@ -143,28 +141,6 @@ public class ProgramSelector {
             callbacks.error();
         } finally {
             OpenbltJni.stop(cb);
-        }
-    }
-
-    private static boolean waitForPredicate(
-        final String waitingMessage,
-        final Supplier<Boolean> shouldFinish,
-        final UpdateOperationCallbacks callbacks
-    ) {
-        callbacks.log(waitingMessage, false, true);
-        try {
-            for (int attemptsCount = 0; attemptsCount < TOTAL_WAIT_SECONDS * 1000 / ONE_DOT_DURATION_MS; attemptsCount++) {
-                // Give the bootloader sec to enumerate
-                BinaryProtocol.sleep(ONE_DOT_DURATION_MS);
-                if (shouldFinish.get()) {
-                    return true;
-                } else {
-                    callbacks.log(".", false, false);
-                }
-            }
-            return false;
-        } finally {
-            callbacks.log("", true, false);
         }
     }
 
