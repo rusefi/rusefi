@@ -53,7 +53,10 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame& msg, efitick_t
 #endif // EFI_CAN_SUPPORT
 
 void registerCanListener(CanListener& listener);
+void unregisterCanListener(CanListener& listener);
+
 void registerCanSensor(CanSensorBase& sensor);
+// TODO: unregisterCanSensor()?
 
 class CanWrite final : public PeriodicController</*TStackSize*/512> {
 public:

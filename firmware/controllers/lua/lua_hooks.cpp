@@ -142,10 +142,9 @@ uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size)
 
 	luaL_checktype(l, paramIndex, LUA_TTABLE);
 	while (true) {
-		lua_pushnumber(l, result + 1);
-		auto elementType = lua_gettable(l, paramIndex);
-		auto val = lua_tonumber(l, -1);
-		lua_pop(l, 1);
+		//lua_pushnumber(l, result + 1);
+		//auto elementType = lua_gettable(l, paramIndex);
+		auto elementType = lua_rawgeti(l, paramIndex, result + 1);
 
 		if (elementType == LUA_TNIL) {
 			// we're done, this is the end of the array.
@@ -157,6 +156,8 @@ uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size)
 			luaL_error(l, "Unexpected data at position %d: %s", result, lua_tostring(l, -1));
 		}
 
+		auto val = lua_tonumber(l, -1);
+		lua_pop(l, 1);
 		// This element is valid, increment DLC
 		result++;
 
@@ -206,38 +207,7 @@ static int lua_txCan(lua_State* l) {
 	// conform ext parameter to true/false
 	CanTxMessage msg(CanCategory::LUA, id, 8, bus, ext == 0 ? false : true);
 
-	// Unfortunately there is no way to inspect the length of a table,
-	// so we have to just iterate until we run out of numbers
-	uint8_t dlc = 0;
-
-	// todo: reduce code duplication with getLuaArray
-	luaL_checktype(l, dataIndex, LUA_TTABLE);
-	while (true) {
-		lua_pushnumber(l, dlc + 1);
-		auto elementType = lua_gettable(l, dataIndex);
-		auto val = lua_tonumber(l, -1);
-		lua_pop(l, 1);
-
-		if (elementType == LUA_TNIL) {
-			// we're done, this is the end of the array.
-			break;
-		}
-
-		if (elementType != LUA_TNUMBER) {
-			// We're not at the end, but this isn't a number!
-			luaL_error(l, "Unexpected CAN data at position %d: %s", dlc, lua_tostring(l, -1));
-		}
-
-		// This element is valid, increment DLC
-		dlc++;
-
-		if (dlc > 8) {
-			luaL_error(l, "CAN frame length cannot be longer than 8");
-		}
-
-		msg[dlc - 1] = val;
-	}
-
+	auto dlc = getLuaArray(l, dataIndex, &msg[0], 8);
 	msg.setDlc(dlc);
 
 	// no return value
