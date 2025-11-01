@@ -7,6 +7,8 @@ import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
 import com.rusefi.ConnectivityContext;
+import com.rusefi.PortResult;
+import com.rusefi.SerialPortType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.binaryprotocol.IniNotFoundException;
@@ -25,9 +27,10 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
+import static com.rusefi.maintenance.CallbacksWaitingUtil.waitForPredicate;
 import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.Collections.emptySet;
@@ -54,17 +57,36 @@ public class CalibrationsHelper {
         }
     }
 
-    public static boolean updateFirmwareAndRestorePreviousCalibrations(
-        final String ecuPort,
+    private static List<PortResult> waitForPortAppeared(
+        final SerialPortType desiredPortType,
         final UpdateOperationCallbacks callbacks,
-        final Supplier<Boolean> updateFirmware, ConnectivityContext connectivityContext
+        final ConnectivityContext connectivityContext
+    ) {
+        final List<PortResult> foundPorts = new ArrayList<>();
+        waitForPredicate(
+            String.format("Waiting for %s port to appear...", desiredPortType),
+            () -> {
+                foundPorts.addAll(connectivityContext.getCurrentHardware().getKnownPorts(desiredPortType));
+                return !foundPorts.isEmpty();
+            },
+            callbacks
+        );
+        return foundPorts;
+    }
+
+
+    public static boolean updateFirmwareAndRestorePreviousCalibrations(
+        final PortResult originalEcuPort,
+        final UpdateOperationCallbacks callbacks,
+        final Supplier<Boolean> updateFirmware,
+        final ConnectivityContext connectivityContext
     ) {
         AutoupdateUtil.assertNotAwtThread();
 
         final String timestampFileNameComponent = DATE_FORMAT.format(new Date());
 
         final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
-            ecuPort,
+            originalEcuPort.port,
             callbacks,
             getFileNameWithoutExtension(timestampFileNameComponent, "backup_from_ecu"), connectivityContext
         );
@@ -77,52 +99,80 @@ public class CalibrationsHelper {
             return false;
         }
 
-        final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
-            ecuPort,
+        final List<PortResult> ecuPortsAfterFirmwareUpdate = waitForPortAppeared(
+            originalEcuPort.type,
             callbacks,
-            getFileNameWithoutExtension(timestampFileNameComponent, "after_firmware_update"), connectivityContext
+            connectivityContext
         );
-        if (!updatedCalibrations.isPresent()) {
-            callbacks.logLine("Failed to back up tune from ECU after firmware update...");
-            return false;
+        switch (ecuPortsAfterFirmwareUpdate.size()) {
+            case 0: {
+                callbacks.logLine("No ECU found after firmware update...");
+                return false;
+            }
+            case 1: {
+                final PortResult newEcuPort = ecuPortsAfterFirmwareUpdate.get(0);
+                callbacks.logLine(String.format(
+                    "ECU is found on port %s after firmware update.",
+                    newEcuPort.port
+                ));
+
+                final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                    newEcuPort.port,
+                    callbacks,
+                    getFileNameWithoutExtension(timestampFileNameComponent, "after_firmware_update"), connectivityContext
+                );
+                if (!updatedCalibrations.isPresent()) {
+                    callbacks.logLine("Failed to back up tune from ECU after firmware update...");
+                    return false;
+                }
+                final Optional<CalibrationsInfo> mergedCalibrations = mergeCalibrations(
+                    prevCalibrations.get().getIniFile(),
+                    prevCalibrations.get().generateMsq(),
+                    updatedCalibrations.get(),
+                    callbacks,
+                    emptySet()
+                );
+                if (mergedCalibrations.isPresent() && MigrateSettingsCheckboxState.isMigrationNeeded) {
+                    if (!backUpCalibrationsInfo(
+                        mergedCalibrations.get(),
+                        getFileNameWithoutExtension(timestampFileNameComponent, "merged_to_write"),
+                        callbacks
+                    )) {
+                        callbacks.logLine("Failed to back up merged tune before writing to ECU...");
+                        return false;
+                    }
+                    if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
+                        newEcuPort.port,
+                        mergedCalibrations.get().getImage().getConfigurationImage(),
+                        callbacks,
+                        connectivityContext
+                    )) {
+                        callbacks.logLine("Failed to write merged tune to ECU...");
+                        return false;
+                    }
+                    final Optional<CalibrationsInfo> mergedTuneFromEcu = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                        newEcuPort.port,
+                        callbacks,
+                        getFileNameWithoutExtension(timestampFileNameComponent, "merged_from_ecu"),
+                        connectivityContext
+                    );
+                    if (!mergedTuneFromEcu.isPresent()) {
+                        callbacks.logLine("Failed to back up merged tune from ECU...");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            default: {
+                callbacks.logLine(String.format(
+                    "Multiple ECU-s are found after firmware update on ports %s...",
+                    ecuPortsAfterFirmwareUpdate.stream()
+                        .map(portResult -> portResult.port)
+                        .collect(Collectors.joining(", "))
+                ));
+                return false;
+            }
         }
-        final Optional<CalibrationsInfo> mergedCalibrations = mergeCalibrations(
-            prevCalibrations.get().getIniFile(),
-            prevCalibrations.get().generateMsq(),
-            updatedCalibrations.get(),
-            callbacks,
-            emptySet()
-        );
-        if (mergedCalibrations.isPresent() && MigrateSettingsCheckboxState.isMigrationNeeded) {
-            if (!backUpCalibrationsInfo(
-                mergedCalibrations.get(),
-                getFileNameWithoutExtension(timestampFileNameComponent, "merged_to_write"),
-                callbacks
-            )) {
-                callbacks.logLine("Failed to back up merged tune before writing to ECU...");
-                return false;
-            }
-            if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
-                ecuPort,
-                mergedCalibrations.get().getImage().getConfigurationImage(),
-                callbacks,
-                connectivityContext
-            )) {
-                callbacks.logLine("Failed to write merged tune to ECU...");
-                return false;
-            }
-            final Optional<CalibrationsInfo> mergedTuneFromEcu = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
-                ecuPort,
-                callbacks,
-                getFileNameWithoutExtension(timestampFileNameComponent, "merged_from_ecu"),
-                connectivityContext
-            );
-            if (!mergedTuneFromEcu.isPresent()) {
-                callbacks.logLine("Failed to back up merged tune from ECU...");
-                return false;
-            }
-        }
-        return true;
     }
 
     public static boolean importTune(
