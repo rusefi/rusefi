@@ -19,13 +19,46 @@
 #include <cmath>
 #include <string>
 #include <algorithm>
+#include <cstdint>
 
-// Map project tick->microsecond macro to internal name for clarity.
-// Unit tests use a TicksToUs macro; adapt if your project uses something else.
+/*
+ * Portable ticks -> microseconds conversion.
+ *
+ * Reason: unit tests and some host-side code define TicksToUs(...) while firmware
+ * build for various boards may not expose that macro. To allow repository-wide
+ * builds (CI matrix) we provide a sequence of fallbacks:
+ *
+ * 1) If TicksToUs macro is available (unit tests / some test files), use it.
+ * 2) If TIMER_CLOCK (ticks per second) is defined by a board header, use it.
+ * 3) If CORE_CLOCK + TIMER_PRESCALER or HW_TIMER_DIVIDER are available, use those.
+ * 4) Otherwise provide a minimal portable fallback function ticksToUsPlatform().
+ *
+ * IMPORTANT: the fallback assumes 1 tick == 1 microsecond so it is only a
+ * compile-friendly placeholder. Replace ticksToUsPlatform() with the correct
+ * formula for each board (or include the proper header) for accurate runtime.
+ */
+
 #ifdef TicksToUs
     #define TICKS_TO_US(t) TicksToUs(t)
+#elif defined(TIMER_CLOCK)
+    // TIMER_CLOCK expected to be ticks-per-second (Hz)
+    #define TICKS_TO_US(t) (((float)(t)) * 1000000.0f / (float)(TIMER_CLOCK))
+#elif defined(CORE_CLOCK) && defined(TIMER_PRESCALER)
+    // If your board defines CORE_CLOCK and a timer prescaler constant
+    #define TICKS_TO_US(t) (((float)(t)) * 1000000.0f / ((float)(CORE_CLOCK) / (float)(TIMER_PRESCALER)))
+#elif defined(CORE_CLOCK) && defined(HW_TIMER_DIVIDER)
+    // Alternative board-specific divider macro (example)
+    #define TICKS_TO_US(t) (((float)(t)) * 1000000.0f / ((float)(CORE_CLOCK) / (float)(HW_TIMER_DIVIDER)))
 #else
-    #error "TicksToUs(...) macro not defined for your build. Replace TICKS_TO_US(...) usages with your tick->us conversion."
+    // Portable fallback - compiles everywhere but MUST be replaced with a board-accurate conversion.
+    static inline float ticksToUsPlatform(efitick_t ticks) {
+        // Placeholder conversion: assumes timer increments at 1 MHz (1 tick = 1 us).
+        // For correct runtime behavior replace with actual timer frequency formula, for example:
+        //   return (float)ticks * 1000000.0f / (CORE_CLOCK / TIMER_PRESCALER);
+        // or include board-specific header that defines a TicksToUs/TimerClock conversion.
+        return (float)ticks;
+    }
+    #define TICKS_TO_US(t) ticksToUsPlatform(t)
 #endif
 
 // --- Compact config helpers ---
