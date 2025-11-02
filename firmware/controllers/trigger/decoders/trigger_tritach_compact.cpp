@@ -31,7 +31,6 @@ void configureTriTachCompact(TriggerWaveform *s) {
 	
 	int totalTeethCount = 135;
 	int skippedCount = 1; // One position has a reference marker/gap
-	float toothWidth = 0.5f;
 	
 	// Initialize as a skipped tooth trigger (135-1)
 	// This will add a representative pattern without storing all teeth
