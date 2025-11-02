@@ -71,6 +71,7 @@ static void startAveraging(sampler* s) {
 	averager.start();
 
 	mapAveragingPin.setHigh();
+	engine->outputChannels.isMapAveraging = true;
 
 	scheduleByAngle(&s->endTimer, getTimeNowNt(), engine->engineState.mapAveragingDuration,
 		{ endAveraging, &averager });
@@ -165,6 +166,7 @@ void mapAveragingAdcCallback(float instantVoltage) {
 static void endAveraging(MapAverager* arg) {
 	arg->stop();
 
+	engine->outputChannels.isMapAveraging = false;
 	mapAveragingPin.setLow();
 }
 #endif

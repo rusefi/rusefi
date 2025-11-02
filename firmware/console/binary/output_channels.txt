@@ -364,6 +364,7 @@ bit vvtChannel1;bank 1 intake cam input
 bit vvtChannel2;bank 1 exhaust cam input
 bit vvtChannel3;bank 2 intake cam input
 bit vvtChannel4;bank 2 exhaust cam input
+bit isMapAveraging
 
 uint32_t outputRequestPeriod
 float mapFast
