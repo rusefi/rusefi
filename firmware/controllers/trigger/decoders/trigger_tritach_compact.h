@@ -4,12 +4,6 @@
  * Memory-efficient TriTach configuration, export helper and runtime decoder skeleton.
  *
  * Add to: firmware/controllers/trigger/decoders/
- *
- * Intended usage:
- * - At initialization (trigger_structure.cpp) call configureTriTachCompact(this) instead of configureTriTach(this)
- *   (this populates metadata but does not allocate 135+ events).
- * - For visualization / unit tests call exportTriTachToWaveform(s, maxEvents).
- * - For runtime edges, use TriTachRuntimeDecoder::onEdge(...) — integrate this with TriggerCentral handling.
  */
 
 #pragma once
