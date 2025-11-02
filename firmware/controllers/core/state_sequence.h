@@ -36,6 +36,7 @@ typedef enum {
 // we can probably reduce RAM usage if we have more custom logic of triggers with large number of tooth while
 // pretty easy logic. like we do not need to REALLY have an array to remember the shape of evenly spaces 360 or 60/2 trigger :)
 // todo https://github.com/rusefi/rusefi/issues/3003
+// as of 2025, stm32f4 is kind of on the way out - we are focusing on stm32*7 where we have double the RAM amount
 #define PWM_PHASE_MAX_COUNT 280
 #endif /* PWM_PHASE_MAX_COUNT */
 // todo: rename to TRIGGER_CHANNEL_COUNT?
