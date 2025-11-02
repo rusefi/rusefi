@@ -171,6 +171,7 @@ enum class trigger_type_e : uint32_t {
 	TT_NISSAN_MR18_CAM_VVT = 52,
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
 	TT_TRI_TACH = 53,
+  TT_TRI_TACH_BETA = 96,
 	TT_GM_60_2_2_2 = 54,
 	// * https://rusefi.com/forum/viewtopic.php?f=5&t=1937
 	// * HALL sensor, and can be used on all Skoda's engines (from 1000MB to 130, Favorit, Felicia)
