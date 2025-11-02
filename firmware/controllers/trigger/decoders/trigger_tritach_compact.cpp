@@ -8,8 +8,11 @@
  * - 1 reference marker/gap for synchronization (secondary crank sensor)
  * - Optional cam sensor for phase detection (handled separately)
  *
- * To avoid memory overflow from 135 teeth × 2 edges = 270 events,
- * we use the skipped tooth mechanism (135-1 pattern).
+ * Memory Analysis:
+ * - System limit: PWM_PHASE_MAX_COUNT = 280 events
+ * - Old implementation: 135 teeth × 2 edges + 4 extra = 274 events (6 margin)
+ * - This implementation: (135-1-1) × 2 + 2 = 268 events (12 margin)
+ * - Using 135-1 skipped tooth pattern is safer and uses standard decoder
  *
  * Place in: firmware/controllers/trigger/decoders/
  */
@@ -18,7 +21,7 @@
 #include "trigger_tritach_compact.h"
 #include "trigger_universal.h"
 
-// --- configureTriTachCompact (keeps TriggerWaveform metadata compact) ---
+// --- configureTriTachCompact (memory-efficient skipped tooth approach) ---
 void configureTriTachCompact(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 	
