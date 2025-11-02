@@ -38,6 +38,7 @@
 #include "trigger_vw.h"
 #include "trigger_universal.h"
 #include "trigger_mercedes.h"
+#include "trigger_tritach_compact.h"
 #include "engine_state.h"
 
 void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
@@ -798,7 +799,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_TRI_TACH:
-		configureTriTach(this);
+		configureTriTachCompact(this);
 		break;
 
 	case trigger_type_e::TT_TRI_TACH_BETA:
