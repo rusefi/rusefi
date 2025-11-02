@@ -101,4 +101,5 @@ public enum trigger_type_e {
 	TT_JEEPRENIX_66_2_2_2,
 	TT_SUBARU_7_6_CRANK,
 	TT_UNUSED,
+	TT_TRI_TACH_BETA,
 }
