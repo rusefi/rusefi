@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 // Configure TriTach trigger using memory-efficient skipped tooth approach
-void configureTriTachCompact(TriggerWaveform *s);
+void configureTriTachCompact(TriggerWaveform * s);
