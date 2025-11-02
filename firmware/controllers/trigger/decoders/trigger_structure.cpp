@@ -801,6 +801,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureTriTach(this);
 		break;
 
+	case trigger_type_e::TT_TRI_TACH_BETA:
+		configureTriTachCompact(this);
+		break;
+
 	case trigger_type_e::TT_GM_24x_5:
 		initGmLS24_5deg(this);
 		break;
