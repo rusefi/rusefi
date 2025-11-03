@@ -23,6 +23,7 @@ public class BackgroundWizard {
     private static int currentState = -1;
     private static int lastState = -1;
     private static boolean pluginEnabled = false;
+    private static boolean ecuVinToogle = true;
     private static String ecuVin = null;
 
 
@@ -68,18 +69,20 @@ public class BackgroundWizard {
             } else if (currentState == CURRENT_STATE_OFFLINE) {
                 log.info("ECU is offline");
             } else if (currentState == CURRENT_STATE_ONLINE) {
-                if (pluginEnabled) {
-                    log.info("ECU is online and we can run the wizard");
-                    // weird way of getting the equivalent of "page = 1" on the ini file
-                    String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-                    ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_VIN_KEY);
-                    ecuVin = currentVin.getStringValue();
-                    log.info("ECU vin is " + ecuVin);
-                } else {
-                    log.info("ECU is online");
-                }
+                log.info("ECU is online");
+                ecuVinToogle = true;
             }
             lastState = currentState;
+        }
+
+         if (pluginEnabled && ecuVinToogle) {
+            log.info("ECU is online and we can run the wizard");
+            // weird way of getting the equivalent of "page = 1" on the ini file
+            String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
+            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_VIN_KEY);
+            ecuVin = currentVin.getStringValue();
+            log.info("ECU vin is " + ecuVin);
+            ecuVinToogle = false;
         }
     }
 
@@ -88,9 +91,10 @@ public class BackgroundWizard {
 
         if (signatureValid){
             pluginEnabled = serialSignature.contains("hd81");
-            return pluginEnabled;
+        } else {
+            log.info("ECU signature invalid for this plugin: " + serialSignature);
         }
 
-        return false;
+        return pluginEnabled;
     }
 }
