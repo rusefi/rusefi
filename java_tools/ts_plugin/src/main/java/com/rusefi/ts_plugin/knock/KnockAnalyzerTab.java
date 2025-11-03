@@ -8,8 +8,8 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -56,7 +56,7 @@ public class KnockAnalyzerTab {
 
     private CanvasType canvasType = CanvasType.COMBINED;
 
-    private final ArrayList<KnockCanvas> canvases = new ArrayList<>();
+    private final java.util.List<KnockCanvas> canvases = new CopyOnWriteArrayList<>();
     private final KnockMagnitudeCanvas magnitudes = new KnockMagnitudeCanvas();
 
     public KnockAnalyzerTab(Supplier<ControllerAccess> controllerAccessSupplier) {
