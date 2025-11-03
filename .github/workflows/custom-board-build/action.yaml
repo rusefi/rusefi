@@ -205,7 +205,7 @@ runs:
         fi
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.11.0
       with:
         release: '14.2.Rel1'
 
