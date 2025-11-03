@@ -75,7 +75,7 @@ public class BackgroundWizard {
             lastState = currentState;
         }
 
-         if (pluginEnabled && ecuVinToogle) {
+         if (currentState == CURRENT_STATE_ONLINE && pluginEnabled && ecuVinToogle) {
             log.info("ECU is online and we can run the wizard");
             // weird way of getting the equivalent of "page = 1" on the ini file
             String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
