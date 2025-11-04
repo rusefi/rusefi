@@ -18,8 +18,6 @@ void setStepperHw() {
 	engineConfiguration->stepper_dc_use_two_wires = false;
 	engineConfiguration->stepperDcInvertedPins = false; // or true?
 
-    // for instance IWP069
-	engineConfiguration->injector.flow = 482.5;
   setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
 
 #ifdef HW_HELLEN_8CHAN
@@ -131,6 +129,9 @@ void setGmSbc() {
     setGmCltSensor(&engineConfiguration->clt);
 #endif // HW_PROTEUS
 	engineConfiguration->mainRelayPin = Gpio::Unassigned; // vehicle controls main relay
+
+    // for instance IWP069
+	engineConfiguration->injector.flow = 482.5;
 
  	setStepperHw();
 
