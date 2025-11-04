@@ -33,6 +33,9 @@ using setup_custom_board_config_type = void (*)(engine_configuration_s * /*previ
 using setup_custom_board_output_type = int (*)();
 using setup_custom_board_engine_type_type = void (*)(engine_type_e);
 
+// todo: migrate 'validateBoardConfig'
+using custom_validate_config_type = bool (*)();
+
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
 
