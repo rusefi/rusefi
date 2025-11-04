@@ -318,9 +318,9 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	}
 
 	float sanitizedPedal = getSanitizedPedal();
-
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-  percent_t preBoard = m_pedalProvider->getValue(rpm, sanitizedPedal);
+
+	percent_t preBoard = m_pedalProvider->getValue(rpm, sanitizedPedal);
 	etbCurrentTarget = boardAdjustEtbTarget(preBoard);
 	boardEtbAdjustment = etbCurrentTarget - preBoard;
 

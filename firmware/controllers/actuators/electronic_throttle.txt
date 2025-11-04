@@ -14,8 +14,11 @@ struct_no_prefix electronic_throttle_s
 
 	percent_t etbFeedForward
 	float integralError;Integral error; "", 1, 0, 0, 100, 3,@@GAUGE_CATEGORY_ETB@@
-	float etbCurrentTarget;ETB: target for current pedal;"%", 1, 0, -10000, 10000, 3
-	int16_t autoscale m_adjustedTarget;Adjusted target;"%", 0.01, 0, -100, 100, 2
+
+	! Note: this is already after board adjust!
+	float etbCurrentTarget;ETB: target for current pedal;"%", 1, 0, -10000, 10000, 2
+	int16_t autoscale adjustedEtbTarget;ETB: target with adjustments;"%", 0.01, 0, 0, 100, 2
+	int16_t autoscale m_adjustedTarget;ETB: final target;"%", 0.01, 0, -100, 100, 2
 
 	bit etbRevLimitActive
 	bit jamDetected
@@ -29,7 +32,6 @@ struct_no_prefix electronic_throttle_s
 	int8_t tcEtbDrop;ETB traction control;"%", 1, 0, 0, 100, 0
 
 	uint16_t autoscale jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2
-	int8_t adjustedEtbTarget;ETB with adjustments;"%", 1, 0, 0, 100, 0
 	uint8_t state
 
 end_struct
