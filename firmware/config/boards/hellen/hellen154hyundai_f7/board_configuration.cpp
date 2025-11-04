@@ -93,7 +93,7 @@ static void hellen154hyundai_f7_boardConfigOverrides() {
 /**
  * @brief   Board-specific configuration defaults.
  *
- * See also setDefaultEngineConfiguration
+
  *
 
  */

@@ -77,7 +77,7 @@ static void hellen81_boardConfigOverrides() {
 /**
  * @brief   Board-specific configuration defaults.
  *
- * See also setDefaultEngineConfiguration
+
  *
 
  */

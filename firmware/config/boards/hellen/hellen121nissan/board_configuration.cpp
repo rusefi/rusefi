@@ -70,7 +70,7 @@ static void hellen121_nissan_boardConfigOverrides() {
 /**
  * @brief   Board-specific configuration defaults.
  *
- * See also setDefaultEngineConfiguration
+
  *
 
  */

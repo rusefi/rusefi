@@ -119,7 +119,7 @@ static void alphax_2chan_ConfigOverrides() {
 /**
  * @brief   Board-specific configuration defaults.
  *
- * See also setDefaultEngineConfiguration
+
  *
  */
 static void  alphax_2chan_defaultConfiguration() {

@@ -133,7 +133,7 @@ static void alphax_4chan_ConfigOverrides() {
 /**
  * @brief   Board-specific configuration defaults.
  *
- * See also setDefaultEngineConfiguration
+
  *
 
  */

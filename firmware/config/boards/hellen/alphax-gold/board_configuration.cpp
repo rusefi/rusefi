@@ -98,7 +98,7 @@ static void setDefaultETBPins() {
 /**
  * @brief   Board-specific configuration defaults.
  *
- * See also setDefaultEngineConfiguration
+
  *
  */
 static void alphax_gold_boardDefaultConfiguration() {

@@ -73,7 +73,7 @@ void setUaefiDefaultETBPins() {
 /**
  * @brief   Board-specific configuration defaults.
  *
- * See also setDefaultEngineConfiguration
+
  *
  */
 static void super_uaefi_boardDefaultConfiguration() {

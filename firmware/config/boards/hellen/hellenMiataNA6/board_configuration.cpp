@@ -66,7 +66,7 @@ static void hellen_MiataNA6_boardConfigOverrides() {
 /**
  * @brief   Board-specific configuration defaults.
  *
- * See also setDefaultEngineConfiguration
+
  *
 
  */
