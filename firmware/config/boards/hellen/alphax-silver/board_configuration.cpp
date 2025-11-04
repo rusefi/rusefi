@@ -252,7 +252,7 @@ Gpio* getBoardMetaOutputs() {
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = alphax_silver_boardInitHardware;
 	custom_board_DefaultConfiguration = alphax_silver_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  alphax_silver_boardConfigOverrides;
+	custom_board_ConfigOverrides = alphax_silver_boardConfigOverrides;
 
 	custom_board_OnConfigurationChange = customBoardOnConfigurationChange;
 }

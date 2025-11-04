@@ -156,5 +156,5 @@ int getBoardMetaDcOutputsCount() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = hellen112_17_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  hellen112_17_boardConfigOverrides;
+	custom_board_ConfigOverrides = hellen112_17_boardConfigOverrides;
 }

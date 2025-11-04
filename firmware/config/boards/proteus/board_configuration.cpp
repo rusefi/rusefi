@@ -377,5 +377,5 @@ Gpio* getBoardMetaOutputs() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = proteus_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  proteus_boardConfigOverrides;
+	custom_board_ConfigOverrides = proteus_boardConfigOverrides;
 }

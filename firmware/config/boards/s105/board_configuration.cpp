@@ -155,5 +155,5 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = s105_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  s105_boardConfigOverrides;
+	custom_board_ConfigOverrides = s105_boardConfigOverrides;
 }

@@ -125,5 +125,5 @@ int setjmp(jmp_buf /*env*/) {
 }
 
 void setup_custom_board_overrides() {
-	custom_board_ConfigOverrides =  kinetis_boardConfigOverrides;
+	custom_board_ConfigOverrides = kinetis_boardConfigOverrides;
 }

@@ -370,5 +370,5 @@ void boardInit() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = subaru_eg33_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  subaru_eg33_boardConfigOverrides;
+	custom_board_ConfigOverrides = subaru_eg33_boardConfigOverrides;
 }

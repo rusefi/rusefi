@@ -192,6 +192,6 @@ int getBoardMetaDcOutputsCount() {
 }
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = m74_9_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  m74_9_boardConfigOverrides;
+	custom_board_ConfigOverrides = m74_9_boardConfigOverrides;
 }
 

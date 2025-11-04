@@ -123,5 +123,5 @@ static void hellen_gm_e67_boardDefaultConfiguration() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = hellen_gm_e67_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  hellen_gm_e67_boardConfigOverrides;
+	custom_board_ConfigOverrides = hellen_gm_e67_boardConfigOverrides;
 }

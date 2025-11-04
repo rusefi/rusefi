@@ -32,5 +32,5 @@ static void small_can_board_boardDefaultConfiguration() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = small_can_board_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  small_can_board_boardConfigOverrides;
+	custom_board_ConfigOverrides = small_can_board_boardConfigOverrides;
 }

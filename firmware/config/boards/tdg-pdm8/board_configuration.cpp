@@ -54,6 +54,6 @@ static void tdg_pdm8_boardInitHardware() {
 
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = tdg_pdm8_boardInitHardware;
-	custom_board_ConfigOverrides =  tdg_pdm8_boardConfigOverrides;
+	custom_board_ConfigOverrides = tdg_pdm8_boardConfigOverrides;
 }
 

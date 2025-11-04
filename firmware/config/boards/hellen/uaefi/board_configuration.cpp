@@ -190,7 +190,7 @@ int getBoardMetaDcOutputsCount() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = uaefi_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  uaefi_boardConfigOverrides;
+	custom_board_ConfigOverrides = uaefi_boardConfigOverrides;
 }
 
 int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {

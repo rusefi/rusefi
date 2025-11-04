@@ -199,5 +199,5 @@ Gpio* getBoardMetaOutputs() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = hellen154_hyundai_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  hellen154_hyundai_boardConfigOverrides;
+	custom_board_ConfigOverrides = hellen154_hyundai_boardConfigOverrides;
 }

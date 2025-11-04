@@ -100,5 +100,5 @@ static void hellen_MiataNA6_boardDefaultConfiguration() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = hellen_MiataNA6_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  hellen_MiataNA6_boardConfigOverrides;
+	custom_board_ConfigOverrides = hellen_MiataNA6_boardConfigOverrides;
 }

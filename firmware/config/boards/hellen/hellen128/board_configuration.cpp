@@ -169,5 +169,5 @@ static void hellen128_boardDefaultConfiguration() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = hellen128_boardDefaultConfiguration;
-	custom_board_ConfigOverrides =  hellen128_boardConfigOverrides;
+	custom_board_ConfigOverrides = hellen128_boardConfigOverrides;
 }
