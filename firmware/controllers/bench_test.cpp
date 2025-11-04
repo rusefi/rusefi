@@ -28,6 +28,7 @@
 #include "can_rx.h"
 #include "value_lookup.h"
 #include "can_msg_tx.h"
+#include "gm_sbc.h" // setStepperHw
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
@@ -476,6 +477,9 @@ int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
 static void handleCommandX14(uint16_t index) {
 // todo: define ts_14_command magic constants and use those in tunerstudio.template.ini file!
 	switch (index) {
+	case TS_SET_STEPPER_IDLE:
+	  setStepperHw();
+		return;
 	case TS_GRAB_PEDAL_UP:
 		grabPedalIsUp();
 		return;
