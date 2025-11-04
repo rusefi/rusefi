@@ -181,8 +181,6 @@ static void cancelBenchTest() {
 	isRunningBench = false;
 }
 
-/*==========================================================================*/
-
 static void doRunFuelInjBench(size_t humanIndex, float onTimeMs, float offTimeMs, int count) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
@@ -475,10 +473,10 @@ int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
 }
 
 static void handleCommandX14(uint16_t index) {
-// todo: define ts_14_command magic constants and use those in tunerstudio.template.ini file!
 	switch (index) {
 	case TS_SET_STEPPER_IDLE:
 	  setStepperHw();
+	  onApplyPreset();
 		return;
 	case TS_GRAB_PEDAL_UP:
 		grabPedalIsUp();

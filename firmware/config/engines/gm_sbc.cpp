@@ -16,21 +16,18 @@ void setStepperHw() {
 	engineConfiguration->useStepperIdle = true;
 	engineConfiguration->useHbridgesToDriveIdleStepper = true;
 	engineConfiguration->stepper_dc_use_two_wires = false;
-	engineConfiguration->stepperDcInvertedPins = false; // or true?
+	engineConfiguration->stepperDcInvertedPins = false;
+
+  for (size_t i = 0;i<ETB_COUNT;i++) {
+	  engineConfiguration->etbFunctions[i] = DC_None;
+	}
 
   setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
 
 #ifdef HW_HELLEN_8CHAN
-	// using 8chan pinout for DC1: A26 (OUT_DC1+ AH pin "D") and A27 (OUT_DC1- AL pin "C")
-	engineConfiguration->stepperDcIo[0].controlPin = Gpio::H144_GP_IO4; // DC1_PWM
-	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::H144_GP_IO3; // DC1_DIR
-	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
-	engineConfiguration->stepperDcIo[0].disablePin = Gpio::H144_GP_IO5; // ETB_DIS
-	// using 8chan pinout for DC2: A28 (OUT_DC2+ BL pin "A") and A29 (OUT_DC2- BH pin "B")
-	engineConfiguration->stepperDcIo[1].controlPin = Gpio::H144_UART8_TX; // DC2_PWM
-	engineConfiguration->stepperDcIo[1].directionPin1 = H_SPI3_CS; // DC2_DIR
-	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
-#endif // HW_HELLEN
+  void set8chanDefaultETBPins();
+  set8chanDefaultETBPins();
+#endif // HW_HELLEN_8CHAN
 
 #ifdef HW_HELLEN_UAEFI
 void setUaefiDefaultETBPins();
@@ -79,9 +76,6 @@ void setGmSbc() {
     // if injectors are wired in groups of four best to use channels 1 and 4
     engineConfiguration->crankingInjectionMode = IM_BATCH;
     engineConfiguration->injectionMode = IM_BATCH;
-
-	engineConfiguration->etbFunctions[0] = DC_None;
-	engineConfiguration->etbFunctions[1] = DC_None;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 	strcpy(engineConfiguration->engineCode, "SBC");
