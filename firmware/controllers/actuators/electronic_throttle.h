@@ -20,6 +20,8 @@ void setEtbLuaAdjustment(percent_t adjustment);
 void setEwgLuaAdjustment(percent_t pos);
 void setHitachiEtbCalibration();
 
+void pickEtbOrStepper();
+
 void blinkEtbErrorCodes(bool blinkPhase);
 
 // same plug as 18919 AM810 but have different calibrations

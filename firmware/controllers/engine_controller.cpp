@@ -520,6 +520,10 @@ bool validateConfigOnStartUpOrBurn() {
   if (!validateBoardConfig()) {
     return false;
   }
+#if defined(HW_HELLEN_UAEFI)
+  // todo: make this board-specific validation callback!
+  pickEtbOrStepper();
+#endif
   if (!validateGdi()) {
     return false;
   }

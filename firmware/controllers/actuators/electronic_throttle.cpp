@@ -1092,3 +1092,15 @@ const electronic_throttle_s* getLiveData(size_t idx) {
 	return nullptr;
 #endif
 }
+
+// root cause: we have poor usability around DC function and h-bridge stepper
+void pickEtbOrStepper() {
+  if (!engineConfiguration->useHbridgesToDriveIdleStepper) {
+    return;
+  }
+  for (size_t i = 0;i<ETB_COUNT;i++) {
+	  if (engineConfiguration->etbFunctions[i] != DC_None) {
+      criticalError("Cannot use H-bridge for stepper while DC function is selected");
+	  }
+	}
+}
