@@ -17,14 +17,13 @@ public class BackgroundWizard {
     private static Supplier<ControllerAccess> controllerAccessSupplier;
     static OutputChannelClient onlineListener = new EcuOnlineListener();
 
-    private static int CURRENT_STATE_UNKNOWN = -1;
-    private static int CURRENT_STATE_OFFLINE = 0;
-    private static int CURRENT_STATE_ONLINE = 1;
-    private static int currentState = -1;
-    private static int lastState = -1;
+    private static final int CURRENT_STATE_UNKNOWN = -1;
+    private static final int CURRENT_STATE_OFFLINE = 0;
+    private static final int CURRENT_STATE_ONLINE = 1;
+    private static int currentState = CURRENT_STATE_UNKNOWN;
+    private static int lastState = CURRENT_STATE_UNKNOWN;
     private static boolean pluginEnabled = false;
     private static boolean ecuVinToogle = true;
-    private static String ecuVin = null;
 
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
@@ -60,9 +59,6 @@ public class BackgroundWizard {
     }
 
     private static void periodicWizardLogic() throws ControllerException {
-        // todo: check if ECU is connected
-        // todo: run logic
-        // todo: use something based on TunerStudioIntegration to actually open dialog!
         if (currentState != lastState) {
             if (currentState == CURRENT_STATE_UNKNOWN) {
                 log.info("ECU is not connected / no updates from TS");
@@ -80,10 +76,18 @@ public class BackgroundWizard {
             // weird way of getting the equivalent of "page = 1" on the ini file
             String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
             ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_VIN_KEY);
-            ecuVin = currentVin.getStringValue();
+            String ecuVin = currentVin.getStringValue();
+            if (ecuVin == null || ecuVin.isEmpty()){
+                launchVinUI();
+            }
             log.info("ECU vin is " + ecuVin);
             ecuVinToogle = false;
         }
+    }
+
+    private static void launchVinUI() {
+        // todo: use something based on TunerStudioIntegration to actually open dialog!
+        log.info("Launching VIN UI");
     }
 
     public static boolean displayPlugin(String serialSignature) {
