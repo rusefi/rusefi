@@ -33,15 +33,8 @@ void setStepperHw() {
 #endif // HW_HELLEN
 
 #ifdef HW_HELLEN_UAEFI
-  // TODO: all the copy-pasting here begs the question: "shall we rename etbIo to hBridgeIo and reuse for stepper"?
-	engineConfiguration->stepperDcIo[0].controlPin = Gpio::MM100_OUT_PWM3;
-	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::MM100_OUT_PWM4;
-	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
-	engineConfiguration->stepperDcIo[0].disablePin = Gpio::MM100_SPI2_MISO;
-
-	engineConfiguration->stepperDcIo[1].controlPin = Gpio::MM100_OUT_PWM5;
-	engineConfiguration->stepperDcIo[1].directionPin1 = Gpio::MM100_SPI2_MOSI;
-	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::MM100_USB1ID;
+void setUaefiDefaultETBPins();
+  setUaefiDefaultETBPins();
 #endif // HW_HELLEN_UAEFI
 
 #ifdef HW_PROTEUS
