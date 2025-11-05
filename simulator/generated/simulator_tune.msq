@@ -4435,6 +4435,7 @@ end</constant>
         <constant name="unusedFancy8">"false"</constant>
         <constant name="unusedFancy9">"false"</constant>
         <constant name="unusedFlipWboChannels">"false"</constant>
+        <constant name="useAbsolutePressureForLagTime">"no"</constant>
         <constant name="useAdvanceCorrectionsForCranking">"no"</constant>
         <constant name="useAuxSpeedForSlipRatio">"no"</constant>
         <constant name="useBiQuadOnAuxSpeedSensors">"no"</constant>
@@ -4936,7 +4937,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20251103" nPages="1" signature="rusEFI master.2025.11.05.f407-discovery.145351258" version="5.0"/>
+    <versionInfo firmwareInfo="20251103" nPages="1" signature="rusEFI master.2025.11.05.f407-discovery.1567676572" version="5.0"/>
     <bibliography author="rusEFI 20251103" writeDate="date"/>
     <settings/>
     <userComments/>
