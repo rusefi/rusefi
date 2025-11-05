@@ -526,6 +526,9 @@ float getConfigValueByHash(const int hash) {
 // isTuningDetectorEnabled
 		case 1997151643:
 			return engineConfiguration->isTuningDetectorEnabled;
+// useAbsolutePressureForLagTime
+		case -1155937004:
+			return engineConfiguration->useAbsolutePressureForLagTime;
 // verboseCanBaseAddress
 		case 6238478:
 			return engineConfiguration->verboseCanBaseAddress;
@@ -2913,6 +2916,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1997151643:
 	{
 		engineConfiguration->isTuningDetectorEnabled = (int)value;
+		return 1;
+	}
+		case -1155937004:
+	{
+		engineConfiguration->useAbsolutePressureForLagTime = (int)value;
 		return 1;
 	}
 		case 6238478:

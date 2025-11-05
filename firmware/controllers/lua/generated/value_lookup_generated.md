@@ -520,6 +520,9 @@ AEM X-Series or rusEFI Wideband
 ### isTuningDetectorEnabled
 
 
+### useAbsolutePressureForLagTime
+
+
 ### verboseCanBaseAddress
 
 

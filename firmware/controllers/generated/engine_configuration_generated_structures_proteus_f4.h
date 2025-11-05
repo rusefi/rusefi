@@ -2281,13 +2281,13 @@ struct engine_configuration_s {
 	bool isTuningDetectorEnabled : 1 {};
 	/**
 	offset 768 bit 29 */
-	bool unusedBit_311_29 : 1 {};
+	bool useAbsolutePressureForLagTime : 1 {};
 	/**
 	offset 768 bit 30 */
-	bool unusedBit_311_30 : 1 {};
+	bool unusedBit_312_30 : 1 {};
 	/**
 	offset 768 bit 31 */
-	bool unusedBit_311_31 : 1 {};
+	bool unusedBit_312_31 : 1 {};
 	/**
 	 * offset 772
 	 */
