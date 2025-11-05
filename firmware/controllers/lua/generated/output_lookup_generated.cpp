@@ -1427,18 +1427,27 @@ float getOutputValueByHash(const int hash) {
 			return engine->module<NitrousController>()->isNitrousCondition;
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-// etb1targetWithIdlePosition
-		case 99356871:
-			return getLiveDataConstexpr<electronic_throttle_s, 0>()->targetWithIdlePosition;
-// etb1trim
-		case 2069994349:
-			return getLiveDataConstexpr<electronic_throttle_s, 0>()->trim;
+// etb1etbCurrentTarget
+		case -1044288778:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbCurrentTarget;
 // etb1boardEtbAdjustment
 		case 1055284435:
 			return getLiveDataConstexpr<electronic_throttle_s, 0>()->boardEtbAdjustment;
+// etb1targetWithIdlePosition
+		case 99356871:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->targetWithIdlePosition;
 // etb1luaAdjustment
 		case 1246430386:
 			return getLiveDataConstexpr<electronic_throttle_s, 0>()->luaAdjustment;
+// etb1trim
+		case 2069994349:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->trim;
+// etb1adjustedEtbTarget
+		case -762743481:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->adjustedEtbTarget;
+// etb1m_adjustedTarget
+		case 28274136:
+			return getLiveDataConstexpr<electronic_throttle_s, 0>()->m_adjustedTarget;
 // etb1m_wastegatePosition
 		case 561614935:
 			return getLiveDataConstexpr<electronic_throttle_s, 0>()->m_wastegatePosition;
@@ -1451,12 +1460,6 @@ float getOutputValueByHash(const int hash) {
 // etb1integralError
 		case -1507281103:
 			return getLiveDataConstexpr<electronic_throttle_s, 0>()->integralError;
-// etb1etbCurrentTarget
-		case -1044288778:
-			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbCurrentTarget;
-// etb1m_adjustedTarget
-		case 28274136:
-			return getLiveDataConstexpr<electronic_throttle_s, 0>()->m_adjustedTarget;
 // etb1etbRevLimitActive
 		case -1808516876:
 			return getLiveDataConstexpr<electronic_throttle_s, 0>()->etbRevLimitActive;
@@ -1484,24 +1487,30 @@ float getOutputValueByHash(const int hash) {
 // etb1jamTimer
 		case -213258422:
 			return getLiveDataConstexpr<electronic_throttle_s, 0>()->jamTimer;
-// etb1adjustedEtbTarget
-		case -762743481:
-			return getLiveDataConstexpr<electronic_throttle_s, 0>()->adjustedEtbTarget;
 // etb1state
 		case -410785646:
 			return getLiveDataConstexpr<electronic_throttle_s, 0>()->state;
-// etb2targetWithIdlePosition
-		case -836653176:
-			return getLiveDataConstexpr<electronic_throttle_s, 1>()->targetWithIdlePosition;
-// etb2trim
-		case 2071180270:
-			return getLiveDataConstexpr<electronic_throttle_s, 1>()->trim;
+// etb2etbCurrentTarget
+		case 1419463927:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbCurrentTarget;
 // etb2boardEtbAdjustment
 		case -272579820:
 			return getLiveDataConstexpr<electronic_throttle_s, 1>()->boardEtbAdjustment;
+// etb2targetWithIdlePosition
+		case -836653176:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->targetWithIdlePosition;
 // etb2luaAdjustment
 		case -2054472109:
 			return getLiveDataConstexpr<electronic_throttle_s, 1>()->luaAdjustment;
+// etb2trim
+		case 2071180270:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->trim;
+// etb2adjustedEtbTarget
+		case -1063282840:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->adjustedEtbTarget;
+// etb2m_adjustedTarget
+		case -1802940455:
+			return getLiveDataConstexpr<electronic_throttle_s, 1>()->m_adjustedTarget;
 // etb2m_wastegatePosition
 		case -308232520:
 			return getLiveDataConstexpr<electronic_throttle_s, 1>()->m_wastegatePosition;
@@ -1514,12 +1523,6 @@ float getOutputValueByHash(const int hash) {
 // etb2integralError
 		case -513216302:
 			return getLiveDataConstexpr<electronic_throttle_s, 1>()->integralError;
-// etb2etbCurrentTarget
-		case 1419463927:
-			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbCurrentTarget;
-// etb2m_adjustedTarget
-		case -1802940455:
-			return getLiveDataConstexpr<electronic_throttle_s, 1>()->m_adjustedTarget;
 // etb2etbRevLimitActive
 		case -2109056235:
 			return getLiveDataConstexpr<electronic_throttle_s, 1>()->etbRevLimitActive;
@@ -1547,9 +1550,6 @@ float getOutputValueByHash(const int hash) {
 // etb2jamTimer
 		case 1741054027:
 			return getLiveDataConstexpr<electronic_throttle_s, 1>()->jamTimer;
-// etb2adjustedEtbTarget
-		case -1063282840:
-			return getLiveDataConstexpr<electronic_throttle_s, 1>()->adjustedEtbTarget;
 // etb2state
 		case -371650253:
 			return getLiveDataConstexpr<electronic_throttle_s, 1>()->state;

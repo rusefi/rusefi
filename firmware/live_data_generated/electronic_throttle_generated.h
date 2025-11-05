@@ -6,20 +6,23 @@
 // start of electronic_throttle_s
 struct electronic_throttle_s {
 	/**
-	 * "ETB: target with idle"
+	 * ETB: target for current pedal
 	 * units: %
 	 * offset 0
 	 */
-	float targetWithIdlePosition = (float)0;
+	float etbCurrentTarget = (float)0;
 	/**
-	 * "ETB: trim"
+	 * ETB: board adjustment
+	 * units: %
 	 * offset 4
 	 */
-	float trim = (float)0;
+	float boardEtbAdjustment = (float)0;
 	/**
+	 * "ETB: target with idle"
+	 * units: %
 	 * offset 8
 	 */
-	float boardEtbAdjustment = (float)0;
+	float targetWithIdlePosition = (float)0;
 	/**
 	 * "ETB: luaAdjustment"
 	 * units: %
@@ -27,44 +30,44 @@ struct electronic_throttle_s {
 	 */
 	float luaAdjustment = (float)0;
 	/**
-	 * "DC: wastegatePosition"
+	 * "ETB: trim"
 	 * units: %
 	 * offset 16
+	 */
+	float trim = (float)0;
+	/**
+	 * ETB: target with adjustments
+	 * units: %
+	 * offset 20
+	 */
+	scaled_channel<int16_t, 100, 1> adjustedEtbTarget = (int16_t)0;
+	/**
+	 * ETB: final target
+	 * units: %
+	 * offset 22
+	 */
+	scaled_channel<int16_t, 100, 1> m_adjustedTarget = (int16_t)0;
+	/**
+	 * "DC: wastegatePosition"
+	 * units: %
+	 * offset 24
 	 */
 	float m_wastegatePosition = (float)0;
 	/**
 	 * "EBT: last PID dT"
 	 * units: mS
-	 * offset 20
+	 * offset 28
 	 */
 	float m_lastPidDtMs = (float)0;
 	/**
-	 * offset 24
+	 * offset 32
 	 */
 	percent_t etbFeedForward = (percent_t)0;
 	/**
 	 * Integral error
-	 * offset 28
-	 */
-	float integralError = (float)0;
-	/**
-	 * ETB: target for current pedal
-	 * units: %
-	 * offset 32
-	 */
-	float etbCurrentTarget = (float)0;
-	/**
-	 * Adjusted target
-	 * units: %
 	 * offset 36
 	 */
-	scaled_channel<int16_t, 100, 1> m_adjustedTarget = (int16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 38
-	 */
-	uint8_t alignmentFill_at_38[2] = {};
+	float integralError = (float)0;
 	/**
 	offset 40 bit 0 */
 	bool etbRevLimitActive : 1 {};
@@ -200,15 +203,15 @@ struct electronic_throttle_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> jamTimer = (uint16_t)0;
 	/**
-	 * ETB with adjustments
-	 * units: %
 	 * offset 54
 	 */
-	int8_t adjustedEtbTarget = (int8_t)0;
+	uint8_t state = (uint8_t)0;
 	/**
+	 * need 4 byte alignment
+	 * units: units
 	 * offset 55
 	 */
-	uint8_t state = (uint8_t)0;
+	uint8_t alignmentFill_at_55[1] = {};
 };
 static_assert(sizeof(electronic_throttle_s) == 56);
 
