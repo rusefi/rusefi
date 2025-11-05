@@ -35,7 +35,8 @@ do
   echo "File '$file' is added to the image."
 done
 
-if [ "${COMPRESS_IMAGE,,}" = "true" ]; then
+# macOS bash 3.x compatible version.
+if [ "$(printf '%s' "$COMPRESS_IMAGE" | tr '[:upper:]' '[:lower:]')" = "true" ]; then
   # Compress the image as DEFLATE with gzip
   gzip $IMAGE
   IMAGE_TO_OUTPUT=$IMAGE.gz
