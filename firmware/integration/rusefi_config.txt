@@ -913,7 +913,9 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit enableAemXSeries;AEM X-Series or rusEFI Wideband
 	bit modeledFlowIdle
 	bit isTuningDetectorEnabled,"yes","no"
-	! bits 30, 31 are free to use
+	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
+	bit useAbsolutePressureForLagTime,"yes","no"
+	! bit 31 is free to use
 	! 'unused32nd' is the 32nd bit here, you would need another bit region if more bits are desired
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;

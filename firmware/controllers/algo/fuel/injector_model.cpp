@@ -78,7 +78,13 @@ InjectorNonlinearMode InjectorModelSecondary::getNonlinearMode() const {
 }
 
 void InjectorModelWithConfig::updateState() {
-  pressureCorrectionReference = getFuelDifferentialPressure().Value;
+	// TODO: remove at the end of 2025
+	// hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
+	if (engineConfiguration->useAbsolutePressureForLagTime) {
+		pressureCorrectionReference = getFuelPressure().Value;
+	} else {
+		pressureCorrectionReference = getFuelDifferentialPressure().Value;
+	}
 }
 
 expected<float> InjectorModelWithConfig::getFuelPressure() const {
