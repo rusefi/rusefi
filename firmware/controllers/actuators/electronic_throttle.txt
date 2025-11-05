@@ -1,10 +1,15 @@
 ! units,scale,offset,min,max,digits
 
 struct_no_prefix electronic_throttle_s
-	float targetWithIdlePosition;"ETB: target with idle";"%", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
-	float trim;"ETB: trim"
-	float boardEtbAdjustment
-	float luaAdjustment;"ETB: luaAdjustment";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
+	! Note: this is already after board adjust!
+	float etbCurrentTarget;ETB: target for current pedal;"%", 1, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float boardEtbAdjustment;ETB: board adjustment;"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float targetWithIdlePosition;"ETB: target with idle";"%", 1, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float luaAdjustment;"ETB: luaAdjustment";"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	float trim;"ETB: trim";"%", 1, 0, -100, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	int16_t autoscale adjustedEtbTarget;ETB: target with adjustments;"%", 0.01, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
+	! final position after rev limiter and min max position clamping
+	int16_t autoscale m_adjustedTarget;ETB: final target;"%", 0.01, 0, 0, 100, 2,@@GAUGE_CATEGORY_ETB@@
 
 	float m_wastegatePosition;"DC: wastegatePosition";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
 
@@ -14,11 +19,6 @@ struct_no_prefix electronic_throttle_s
 
 	percent_t etbFeedForward
 	float integralError;Integral error; "", 1, 0, 0, 100, 3,@@GAUGE_CATEGORY_ETB@@
-
-	! Note: this is already after board adjust!
-	float etbCurrentTarget;ETB: target for current pedal;"%", 1, 0, -10000, 10000, 2
-	int16_t autoscale adjustedEtbTarget;ETB: target with adjustments;"%", 0.01, 0, 0, 100, 2
-	int16_t autoscale m_adjustedTarget;ETB: final target;"%", 0.01, 0, -100, 100, 2
 
 	bit etbRevLimitActive
 	bit jamDetected
