@@ -58,7 +58,7 @@ static void my_log_handler(std::map<const std::string, float>& snapshot) {
 	firstRun = false;
 }
 
-void runSandbox() {
+void runLtftSandbox() {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	BinarySensorReader reader;
