@@ -192,7 +192,7 @@ public class ConsoleTools {
         stream.sendPacket(commandBytes);
         return stream;
     }
-
+/*
     private static void sleepAndPrintNonDaemons(final int millis) {
         new Thread(null, new Runnable() {
             @Override
@@ -213,7 +213,7 @@ public class ConsoleTools {
             }
         }, "test").start();
     }
-
+*/
     private static void setAuthToken(String[] args) {
         String newToken = args[1];
         System.out.println("Saving auth token " + newToken);
