@@ -6,6 +6,8 @@
  *
  * https://www.efianalytics.com/TunerStudio/docs/MLG_Binary_LogFormat_1.0.pdf
  * https://www.efianalytics.com/TunerStudio/docs/MLG_Binary_LogFormat_2.0.pdf
+ *
+ * for opposite see mlg_reader.cpp
  */
 
 #include "pch.h"
