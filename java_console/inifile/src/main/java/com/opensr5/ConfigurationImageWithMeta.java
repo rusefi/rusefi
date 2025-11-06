@@ -1,5 +1,6 @@
 package com.opensr5;
 
+import com.opensr5.ini.IniFileModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +22,14 @@ public class ConfigurationImageWithMeta {
     public ConfigurationImageWithMeta(final ConfigurationImageMeta meta, final byte[] content) {
         image = new ConfigurationImage(content);
         this.meta = meta;
+    }
+
+    public static @NotNull ConfigurationImageWithMeta valueOf(IniFileModel ini, ConfigurationImage image) {
+        ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(
+            image.getSize(),
+            ini.getSignature()
+        );
+        return new ConfigurationImageWithMeta(meta, image.getContent());
     }
 
     public ConfigurationImageMeta getMeta() {

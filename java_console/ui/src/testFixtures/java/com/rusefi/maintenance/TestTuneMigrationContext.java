@@ -1,7 +1,6 @@
 package com.rusefi.maintenance;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
@@ -85,11 +84,7 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
     private static CalibrationsInfo getCalibrationsInfo(final Msq msq, final IniFileModel ini) {
         Objects.requireNonNull(ini);
         final ConfigurationImage image = msq.asImage(ini);
-        final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(
-            image.getSize(),
-            ini.getSignature()
-        );
-        final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta, image.getContent());
+        ConfigurationImageWithMeta imageWithMeta = ConfigurationImageWithMeta.valueOf(ini, image);
         return new CalibrationsInfo(ini, imageWithMeta);
     }
 
