@@ -1,6 +1,8 @@
 -- https://rusefi.com/forum/viewtopic.php?f=4&t=2325
 -- tested on 9286699
 
+IDRIVE_BUS = 1
+
 -- CAN Rx Channels
 IDRIVE_BUTTONS_615_267 = 0x267
 IDRIVE_ROTARY = 0x264
@@ -12,16 +14,14 @@ IDRIVE_ROTARY_INIT = 0x273
 
 brighness = 0
 
-canRxAdd(IDRIVE_ROTARY) -- rotation
-canRxAdd(IDRIVE_BUTTONS) -- buttons
 
 setTickRate(5) -- set tick rate to 5hz
 
 -- One time rotary initialisation
 
-txCan(1, IDRIVE_ROTARY_INIT, 0, { 0x1D, 0xE1, 0x00, 0xF0, 0xFF, 0x7F, 0xDE, 0x04 })
+txCan(IDRIVE_BUS, IDRIVE_ROTARY_INIT, 0, { 0x1D, 0xE1, 0x00, 0xF0, 0xFF, 0x7F, 0xDE, 0x04 })
 
-function onCanRx(bus, id, dlc, data)
+function onIdriveCanRx(bus, id, dlc, data)
 	-- 	print('got CAN id=' ..id ..' dlc=' ..dlc)
 
 	if id == IDRIVE_BUTTONS_615_267 then
@@ -54,9 +54,14 @@ function onCanRx(bus, id, dlc, data)
 
 end
 
+
+canRxAdd(IDRIVE_BUS, IDRIVE_ROTARY, onIdriveCanRx) -- rotation
+canRxAdd(IDRIVE_BUS, IDRIVE_BUTTONS, onIdriveCanRx) -- buttons
+
+
 function onTick()
 	-- wake up, need to send once every 1.5 second but we can send more often because why not
-	txCan(1, IDRIVE_HEARBEAT_1376_560, 0, { 3 })
-	txCan(1, IDRIVE_BRIGHTNESS_514_202, 0, { brighness * 16 + 0xd })
+	txCan(IDRIVE_BUS, IDRIVE_HEARBEAT_1376_560, 0, { 3 })
+	txCan(IDRIVE_BUS, IDRIVE_BRIGHTNESS_514_202, 0, { brighness * 16 + 0xd })
 end
 
