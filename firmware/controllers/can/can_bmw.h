@@ -18,8 +18,8 @@
 #define CAN_BMW_E46_SPEED             0x153
 #define CAN_BMW_E46_RPM               0x316
 #define CAN_BMW_E46_DME2              0x329
-#define CAN_BMW_E46_CLUSTER_STATUS    0x613
-#define CAN_BMW_E46_CLUSTER_STATUS_2  0x615
+// unused #define CAN_BMW_E46_CLUSTER_STATUS    0x613
+// unused #define CAN_BMW_E46_CLUSTER_STATUS_2  0x615
 
 #define CAN_BMW_E90_TORQUE_BRAKE      0x0A8
 // 10ms period
