@@ -65,7 +65,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	// 10 cylinder
 	FO_1_10_9_4_3_6_5_8_7_2 = 14, // dodge and viper ram v10
-	FO_1_6_5_10_2_7_3_8_4_9 = 33, // BMW S85, also Audi 5.2 R8 and huracan GDI
+	FO_1_6_5_10_2_7_3_8_4_9 = 33, // BMW S85, also Audi 5.2 R8 and huracan GDI. Ford Triton 6.8L V10
 
 	// 12 cylinder
 	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // bmw M70 & M73, Ferrari 456M GT V12
