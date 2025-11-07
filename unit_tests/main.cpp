@@ -19,6 +19,13 @@ GTEST_API_ int main(int argc, char **argv) {
     return 0;
   }
 
+  if (argc == 2 && strcmp(argv[1], "replay_log") == 0) {
+    void runLogReplay();
+	// feed real log sensor data into our logic
+    runLogReplay();
+    return 0;
+  }
+
 	hasInitGtest = true;
 
 	testing::InitGoogleTest(&argc, argv);

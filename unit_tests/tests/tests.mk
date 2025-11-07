@@ -1,5 +1,6 @@
 TESTS_SRC_CPP = \
 	tests/ltft_sandbox.cpp \
+	tests/log_replay_sandbox.cpp \
 	tests/trigger/test_all_triggers.cpp \
 	tests/trigger/test_trigger_sequence_finder.cpp \
 	tests/trigger/test_2_stroke.cpp \
