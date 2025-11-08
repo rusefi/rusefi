@@ -121,11 +121,11 @@ public class BackgroundWizard {
                         JDialog dialog = TsReflectionHelper.waitForDialogWithTitle(BASE_ENGINE_SETTINGS_TITLE, 3, TimeUnit.SECONDS);
                         if (dialog != null) {
                             TsReflectionHelper.bringToFront(dialog);
-                            log.info("Engine Metadata dialog opened");
+                            log.info(BASE_ENGINE_SETTINGS_TITLE + " dialog opened");
                             return;
                         }
                     } catch (Exception e) {
-                        log.info("Failed to invoke Engine Metadata menu: " + e);
+                        log.info("Failed to invoke" + BASE_ENGINE_SETTINGS_TITLE + e);
                     }
                 }
             }
