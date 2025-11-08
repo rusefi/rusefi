@@ -12,10 +12,6 @@ import java.util.function.Consumer;
  * Utilities for reflecting into TunerStudio Swing UI.
  */
 final class TsReflectionHelper {
-    // These class names are based on TS 3.3.x and mirror TunerStudioIntegration
-    private static final String TS_TOP_LEVEL_BUTTON_CLASS = "bq.b";
-    private static final String TS_POPUP_MAIN_MENU_CLASS_SUFFIX = "aP.gX";
-    private static final String TS_TITLE_FRAGMENT = "TunerStudio";
 
     private TsReflectionHelper() {
     }
@@ -26,7 +22,7 @@ final class TsReflectionHelper {
             for (Frame f : JFrame.getFrames()) {
                 try {
                     String title = f.getTitle();
-                    if (title != null && title.contains(TS_TITLE_FRAGMENT)) {
+                    if (title != null && title.contains(TsAccess.TS_TITLE_FRAGMENT)) {
                         return f;
                     }
                 } catch (Throwable ignore) {
@@ -42,7 +38,7 @@ final class TsReflectionHelper {
         visitComponents(frame, c -> {
             if (c instanceof AbstractButton) {
                 String cn = c.getClass().getName();
-                if (TS_TOP_LEVEL_BUTTON_CLASS.equals(cn)) {
+                if (TsAccess.getTsTopLevelButtonClass().equals(cn)) {
                     result.add((AbstractButton) c);
                 }
             }
@@ -57,7 +53,7 @@ final class TsReflectionHelper {
                 JMenuItem mi = (JMenuItem) c;
                 String cls = c.getClass().getName();
                 // Prefer TS-specific popup menu class when available
-                boolean isTsMenu = cls.endsWith(TS_POPUP_MAIN_MENU_CLASS_SUFFIX);
+                boolean isTsMenu = cls.endsWith(TsAccess.getTsPopupMainMenuClassSuffix());
                 boolean textMatches = Objects.equals(mi.getText(), text);
                 if (textMatches && (isTsMenu || candidates.isEmpty())) {
                     candidates.add(mi);
