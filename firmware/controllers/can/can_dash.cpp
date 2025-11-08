@@ -43,7 +43,9 @@
 #define E90_RPM              0x175
 #define E90_BRAKE_COUNTER    0x19E
 #define E90_SPEED            0x1A6
+// https://github.com/HeinrichG-V12/E65_ReverseEngineering/blob/main/docs/0x1D0.md
 #define E90_TEMP             0x1D0
+// MECH Anzeige Getriebedaten
 #define E90_GEAR             0x1D2
 #define E90_FUEL             0x349
 #define E90_EBRAKE           0x34F

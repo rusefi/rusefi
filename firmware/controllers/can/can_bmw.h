@@ -48,11 +48,6 @@
 // MECH Getriebedaten 2
 #define CAN_BMW_E90_GEARBOX_DATA_2    0x1A2
 
-// Engine data
-// https://github.com/HeinrichG-V12/E65_ReverseEngineering/blob/main/docs/0x1D0.md
-#define CAN_BMW_E90_COOLANT           0x1D0
-// MECH Anzeige Getriebedaten
-#define CAN_BMW_E90_TRANSMISSION_DISP 0x1D2
 
 // SEAT_BELT 2FA
 // DOOR_STATUS 2FC
