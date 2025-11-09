@@ -27,7 +27,9 @@
 #define STM32_CSI_ENABLED                   TRUE
 #define STM32_HSI48_ENABLED                 TRUE
 #define STM32_HSE_ENABLED                   TRUE
+#ifndef STM32_LSE_ENABLED
 #define STM32_LSE_ENABLED                   TRUE
+#endif
 #define STM32_HSIDIV                        STM32_HSIDIV_DIV1
 
 /*
@@ -78,7 +80,11 @@
  * Reading STM32 Reference Manual is required.
  */
 #define STM32_SW                            STM32_SW_PLL1_P_CK
+#if (STM32_LSE_ENABLED == TRUE)
 #define STM32_RTCSEL                        STM32_RTCSEL_LSE_CK
+#else
+#define STM32_RTCSEL                        STM32_RTCSEL_LSI_CK
+#endif
 #define STM32_D1CPRE                        STM32_D1CPRE_DIV1
 #define STM32_D1HPRE                        STM32_D1HPRE_DIV2
 #define STM32_D1PPRE3                       STM32_D1PPRE3_DIV2
