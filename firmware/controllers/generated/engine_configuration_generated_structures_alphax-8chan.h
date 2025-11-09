@@ -2707,10 +2707,10 @@ struct engine_configuration_s {
 	bool verboseCan2 : 1 {};
 	/**
 	offset 932 bit 30 */
-	bool unusedBit_409_30 : 1 {};
+	bool vinIsEmpty : 1 {};
 	/**
 	offset 932 bit 31 */
-	bool unusedBit_409_31 : 1 {};
+	bool unusedBit_410_31 : 1 {};
 	/**
 	 * offset 936
 	 */
