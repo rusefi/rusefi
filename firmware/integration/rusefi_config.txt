@@ -1044,7 +1044,10 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	bit tcuEnabled,"enabled","disabled"
 bit canBroadcastUseChannelTwo,"second","first"
 	bit useRawOutputToDriveIdleStepper,"yes","no";If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
+! bit 29
 bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
+! TS plugin string support seems to be limited, this is our work-around
+bit vinIsEmpty
 
 
 	dc_io[ETB_COUNT iterate] etbIo
