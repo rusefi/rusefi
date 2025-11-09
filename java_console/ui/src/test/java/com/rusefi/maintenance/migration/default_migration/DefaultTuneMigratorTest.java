@@ -1,17 +1,24 @@
 package com.rusefi.maintenance.migration.default_migration;
 
-import com.rusefi.maintenance.TestTuneMigrationContext;
-import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
-import com.rusefi.tune.xml.Constant;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static com.rusefi.maintenance.migration.default_migration.CalibrationsTestHelpers.checkField;
+import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
+import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_TABLE_FIELD_NAME;
+import static java.util.Collections.emptySet;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Optional;
 
 import javax.xml.bind.JAXBException;
 
-import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_RPM_BINS_FIELD_NAME;
-import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_TABLE_FIELD_NAME;
-import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.rusefi.maintenance.CalibrationsHelper;
+import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.maintenance.TestTuneMigrationContext;
+import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
+import com.rusefi.tune.xml.Constant;
 
 public class DefaultTuneMigratorTest {
     private TestTuneMigrationContext testContext;
@@ -49,7 +56,17 @@ public class DefaultTuneMigratorTest {
 
     @Test
     public void testSpi3sckPin() {
-        checkValueToUpdateExist("spi3sckPin", "\"NONE\"", "\"PC10\"");
+    	 final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
+                 testContext.getPrevIniFile(),
+                 testContext.getPrevTune(),
+                 testContext.getUpdatedCalibrationsInfo(),
+                 testContext.getCallbacks(),
+                 emptySet()
+             );
+
+             assertTrue(result.isPresent());
+
+        checkField(testContext, result.get(), "spi3sckPin", "\"NONE\"", "\"PC10\"");
     }
 
     @Test
@@ -219,11 +236,13 @@ public class DefaultTuneMigratorTest {
                 "We aren't going to restore field `etbExpAverageLength`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `etbJamIntegratorLimit`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `etbRocExpAverageLength`: it is missed in new .ini file\r\n" +
-                "We aren't going to restore field `isManualSpinningMode`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `isManualSpinningMode`: it is missed in new .ini file\r\n"+
+                "We aren't going to restore field `kickStartCranking`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +                
                 "We aren't going to restore field `knockBandCustom`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `mapAveragingSchedulingAtIndex`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `noAccelAfterHardLimitPeriodSecs`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `oddFireEngine`: it is missed in new .ini file\r\n" +
+                "We aren't going to restore field `pauseEtbControl`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
                 "We aren't going to restore field `showHumanReadableWarning`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `skipADC12bitAssert`: it is missed in new .ini file\r\n" +
                 "We aren't going to restore field `skipBoardCanDash`: it is missed in new .ini file\r\n" +
