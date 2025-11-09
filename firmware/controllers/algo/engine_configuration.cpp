@@ -618,7 +618,9 @@ static void setDefaultEngineConfiguration() {
 
 	setLinearCurve(config->throttleEstimateEffectiveAreaBins, 0, 100);
 #endif // EFI_ENGINE_CONTROL
-    #include "default_script.lua"
+	// Allow custom default_script.lua to be provided by BOARDINC
+	// see https://gcc.gnu.org/onlinedocs/gcc-2.95.3/cpp_1.html#SEC6
+	#include <default_script.lua>
 }
 
 #if defined(STM32F7) && defined(HARDWARE_CI)
