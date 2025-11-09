@@ -114,7 +114,7 @@ struct_no_prefix engine_configuration_s
 #define SENT_INPUT_COUNT 1
 
 ! more normal people are tired of us using 'true'/'false', we need to start removing. At least we have to stop adding :)
-#define TRUE_FALSE_COUNT_LIMIT 147
+#define TRUE_FALSE_COUNT_LIMIT 71
 
 #define TRACTION_CONTROL_ETB_DROP_SLIP_SIZE 6
 #define TRACTION_CONTROL_ETB_DROP_SPEED_SIZE 6
