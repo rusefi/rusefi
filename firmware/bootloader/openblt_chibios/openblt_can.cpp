@@ -76,7 +76,7 @@ extern "C" void CanInit(void) {
 extern "C" void CanTransmitPacket(blt_int8u *data, blt_int8u len)
 {
 	blt_int32u txMsgId = BOOT_COM_CAN_TX_MSG_ID;
-	CANTxFrame frame;
+	CANTxFrame frame = {};
 
 	if ((txMsgId & 0x80000000) == 0)
 	{
