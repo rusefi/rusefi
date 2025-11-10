@@ -195,20 +195,13 @@ $(BOOTLOADER_BIN_OUT): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_
 $(FIRMWARE_BIN_OUT) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 	ln -rfs $< $@
 
-HEX_BASE_ADDRESS = "0x$(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')"
-ifeq ($(USE_OPENBLT),yes)
-  # note how bootloader_size from .ld file is hard-coded here!
-	CHECKSUM_ADDRESS = 0x0800801C
-else
-  # by the way '1C' is the magic address of first reserved DWORD in vector table
-  # by the way hex2dfu lower-case '-c' would also write binary length in second DWORD
-	CHECKSUM_ADDRESS = 0x0800001C
-endif
+HEX_BASE_ADDRESS = $(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')
+CHECKSUM_ADDRESS = 0x$(shell echo "ibase=16; obase=10; ${HEX_BASE_ADDRESS} + 1C" | bc)
 
 $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	# make sure we create the srec from a binary with crc
 	$(H2D) -i $< -c $(CHECKSUM_ADDRESS) -b $(DBIN_CRC)
-	$(CP) -I binary -O srec --change-addresses=$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
+	$(CP) -I binary -O srec --change-addresses=0x$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
 
 # The DFU is currently not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
 # If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
