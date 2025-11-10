@@ -17,21 +17,21 @@ extern "C" {
 // CAN2_RX: { PB5, PB12 }, CAN2_TX: { PB6, PB13 }
 
 #ifndef BOOT_COM_CAN_CHANNEL_INDEX
-  #error BOOT_COM_CAN_CHANNEL_INDEX is not defined.
+	#error BOOT_COM_CAN_CHANNEL_INDEX is not defined.
 #elif (BOOT_COM_CAN_CHANNEL_INDEX == 0)
-  #ifndef STM32_CAN_USE_CAN1
-  #error STM32_CAN_USE_CAN1 is not enabled for CAN index 0
-  #endif
-  #undef OPENBLT_CAND
-  #define OPENBLT_CAND CAND1
+	#if defined(STM32_CAN_USE_CAN1) || defined(STM32_CAN_USE_FDCAN1)
+		#define OPENBLT_CAND CAND1
+	#else
+		#error STM32_CAN_USE_CAN1/STM32_CAN_USE_FDCAN1 is not enabled for CAN index 0
+	#endif
 #elif (BOOT_COM_CAN_CHANNEL_INDEX == 1)
-  #ifndef STM32_CAN_USE_CAN2
-  #error STM32_CAN_USE_CAN2 is not enabled for CAN index 1
-  #endif
-  #undef OPENBLT_CAND
-  #define OPENBLT_CAND CAND2
+	#if defined(STM32_CAN_USE_CAN2) || defined(STM32_CAN_USE_FDCAN2)
+		#define OPENBLT_CAND CAND2
+	#else
+		#error STM32_CAN_USE_CAN2/STM32_CAN_USE_FDCAN2 is not enabled for CAN index 1
+	#endif
 #else
-  #error Unknown BOOT_COM_CAN_CHANNEL_INDEX.
+	#error Unknown BOOT_COM_CAN_CHANNEL_INDEX.
 #endif
 
 #ifndef CAN_IDE_STD
