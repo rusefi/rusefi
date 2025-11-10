@@ -15,7 +15,8 @@
 */
 
 /* change address & length if bootloader */
-bootloader_size = 32k;
+/* H723/733 has all sectors 128K size */
+bootloader_size = 128k;
 flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
 flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 1M;
 image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
@@ -35,7 +36,7 @@ _OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) 
  */
 MEMORY
 {
-    flash0 (rx) : org = flash_start, len = flash_size    /* Flash bank1 */
+    flash0 (rx) : org = flash_start, len = image_size    /* Flash bank1 */
     flash1 (rx) : org = 0x00000000, len = 0
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
