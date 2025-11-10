@@ -13,9 +13,12 @@
 
 /sbin/ifconfig can0 | grep RUNNING
 
+# see efi_blt_ids.h
+CAN_ARGS="-tid=10667h -rid=107e1h -xid=1"
+
 echo This script assumes that you are using can0 interface and it is ready, otherwise read comments inside
 echo This script assumes that you have BootCommander somewhere in your PATH, otherwise read comments inside
-BootCommander -t=xcp_can -d=can0 build/rusefi.srec
+BootCommander -t=xcp_can -d=can0 $CAN_ARGS build/rusefi.srec
 
 # OR
 # You can build it from sources with:
@@ -23,4 +26,4 @@ BootCommander -t=xcp_can -d=can0 build/rusefi.srec
 # and
 # (cd ext/openblt/Host/Source/BootCommander/ ; mkdir build ; cd build ; cmake .. ; make -j )
 # And run:
-# ext/openblt/Host/BootCommander -t=xcp_can -d=can0 build/rusefi.srec
+# ext/openblt/Host/BootCommander -t=xcp_can -d=can0 $CAN_ARGS build/rusefi.srec
