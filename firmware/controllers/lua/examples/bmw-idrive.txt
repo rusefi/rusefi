@@ -1,6 +1,8 @@
 -- https://rusefi.com/forum/viewtopic.php?f=4&t=2325
 -- tested on 9286699
 
+global_can_data = {}
+
 IDRIVE_BUS = 1
 
 -- CAN Rx Channels
@@ -56,7 +58,7 @@ end
 
 
 canRxAdd(IDRIVE_BUS, IDRIVE_ROTARY, onIdriveCanRx) -- rotation
-canRxAdd(IDRIVE_BUS, IDRIVE_BUTTONS, onIdriveCanRx) -- buttons
+canRxAdd(IDRIVE_BUS, IDRIVE_BUTTONS_615_267, onIdriveCanRx) -- buttons
 
 
 function onTick()
