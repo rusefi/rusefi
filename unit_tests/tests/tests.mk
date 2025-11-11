@@ -94,6 +94,7 @@ TESTS_SRC_CPP = \
 	tests/test_fft.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_bit_range_msb.cpp \
+	tests/lua/test_bit_range.cpp \
 	tests/lua/test_lua_dbc.cpp \
 	tests/lua/test_motorola_dbc.cpp \
 	tests/lua/test_lua_bit_range_msb.cpp \
