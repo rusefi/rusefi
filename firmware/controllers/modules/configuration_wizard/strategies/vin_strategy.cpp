@@ -24,7 +24,7 @@ void vinStrategy() {
     if (vinStateChanged) {
         engineConfiguration->vinIsEmpty = !isVinFilled;
         // trigger page reset, see [tag:popular_vehicle]
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && !EFI_UNIT_TEST
         onApplyPreset();
 #endif // EFI_TUNER_STUDIO
     }
