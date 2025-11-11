@@ -11,14 +11,9 @@
 class ConfigurationWizardTest : public TestBase<> {
 };
 
-static void setVin(const char* value) {
-    strncpy(engineConfiguration->vinNumber, value, VIN_NUMBER_SIZE);
-    engineConfiguration->vinNumber[VIN_NUMBER_SIZE - 1] = '\0';
-}
-
 TEST_F(ConfigurationWizardTest, VinFilledWasEmpty_ShouldBecomeNotEmpty) {
     // given: VIN string is non-empty, but flag currently says empty
-    setVin("1M8GDM9AXKP042788");
+    strcpy(engineConfiguration->vinNumber, "1M8GDM9AXKP042788");
     engineConfiguration->vinIsEmpty = true;
 
     // when
@@ -30,7 +25,7 @@ TEST_F(ConfigurationWizardTest, VinFilledWasEmpty_ShouldBecomeNotEmpty) {
 
 TEST_F(ConfigurationWizardTest, VinFilledWasNotEmpty_ShouldStayNotEmpty) {
     // given: VIN string is non-empty, and flag already says not empty
-    setVin("JM1NA3512R0512345");
+    strcpy(engineConfiguration->vinNumber, "1M8GDM9AXKP042788");
     engineConfiguration->vinIsEmpty = false;
 
     // when
@@ -42,7 +37,7 @@ TEST_F(ConfigurationWizardTest, VinFilledWasNotEmpty_ShouldStayNotEmpty) {
 
 TEST_F(ConfigurationWizardTest, VinEmptyWasEmpty_ShouldStayEmpty) {
     // given: VIN string is empty, and flag already says empty
-    setVin("");
+    strcpy(engineConfiguration->vinNumber, "");
     engineConfiguration->vinIsEmpty = true;
 
     // when
@@ -54,7 +49,7 @@ TEST_F(ConfigurationWizardTest, VinEmptyWasEmpty_ShouldStayEmpty) {
 
 TEST_F(ConfigurationWizardTest, VinEmptyWasNotEmpty_ShouldBecomeEmpty) {
     // given: VIN string is empty, but flag currently says not empty
-    setVin("");
+    strcpy(engineConfiguration->vinNumber, "");
     engineConfiguration->vinIsEmpty = false;
 
     // when

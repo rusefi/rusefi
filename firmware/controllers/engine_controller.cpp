@@ -702,6 +702,8 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscending("Oil pressure protection", config->minimumOilPressureBins);
 	}
 
+	ConfigurationWizard::onConfigOnStartUpOrBurn();
+
 	return true;
 }
 
