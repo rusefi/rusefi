@@ -192,28 +192,49 @@ bool isPhaseInRange(float test, float current, float next) {
 	}
 }
 
-static int getBitRangeCommon(const uint8_t data[], int bitIndex, int bitWidth, int secondByteOffset) {
-	int byteIndex = bitIndex >> 3;
-	int shift = bitIndex - byteIndex * 8;
-	int value = data[byteIndex];
-	if (shift + bitWidth > 8) {
-		value = value + data[secondByteOffset + byteIndex] * 256;
-	}
-	int mask = (1 << bitWidth) - 1;
-	return (value >> shift) & mask;
+static uint32_t getBitRangeCommon(const uint8_t data[], int bitIndex, int bitWidth, int secondByteOffset) {
+    int byteIndex = bitIndex >> 3;
+    int shift = bitIndex - byteIndex * 8;
+    uint32_t value = 0;
+    uint32_t dataShift = 0;
+    int remainWidth = shift + bitWidth;
+    while (remainWidth > 0) {
+        value += data[byteIndex] << dataShift;
+        byteIndex += secondByteOffset;
+        dataShift += 8;
+        remainWidth -= 8;
+    }
+    uint32_t mask = (uint64_t(1) << bitWidth) - 1;
+    return (value >> shift) & mask;
 }
 
 // see also getBitRange in lua_lib.h
-int getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth) {
+uint32_t getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth) {
   return getBitRangeCommon(data, bitIndex, bitWidth, 1);
 }
 
 // see also getBitRangeMsb in lua_lib.h
-int getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth) {
+uint32_t getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth) {
   return getBitRangeCommon(data, bitIndex, bitWidth, -1);
 }
 
-void setBitRangeMsb(uint8_t data[], const int totalBitIndex, const int bitWidth, const int value) {
+void setBitRangeLsb(uint8_t data[], const int totalBitIndex, const int bitWidth, const uint32_t value) {
+	int leftBitWidth = bitWidth;
+	const int byteIndex = totalBitIndex >> 3;
+	const int bitInByteIndex = totalBitIndex - byteIndex * 8;
+	if (bitInByteIndex + bitWidth > 8) {
+		const int bitsToHandleNow = 8 - bitInByteIndex;
+		setBitRangeLsb(data, totalBitIndex + bitsToHandleNow, leftBitWidth - bitsToHandleNow, value >> bitsToHandleNow);
+		leftBitWidth = bitsToHandleNow;
+    }
+	uint32_t mask = (uint64_t(1) << leftBitWidth) - 1;
+	data[byteIndex] = data[byteIndex] & (~(mask << bitInByteIndex));
+	const uint32_t maskedValue = value & mask;
+	const uint32_t shiftedValue = maskedValue << bitInByteIndex;
+	data[byteIndex] = data[byteIndex] | shiftedValue;
+}
+
+void setBitRangeMsb(uint8_t data[], const int totalBitIndex, const int bitWidth, const uint32_t value) {
 	int leftBitWidh = bitWidth;
 	const int byteIndex = totalBitIndex >> 3;
 	const int bitInByteIndex = totalBitIndex - byteIndex * 8;
@@ -222,10 +243,10 @@ void setBitRangeMsb(uint8_t data[], const int totalBitIndex, const int bitWidth,
 		setBitRangeMsb(data, (byteIndex - 1) * 8, leftBitWidh - bitsToHandleNow, value >> bitsToHandleNow);
 		leftBitWidh = bitsToHandleNow;
 	}
-	const int mask = (1 << leftBitWidh) - 1;
+	const uint32_t mask = (uint64_t(1) << leftBitWidh) - 1;
 	data[byteIndex] = data[byteIndex] & (~(mask << bitInByteIndex));
-	const int maskedValue = value & mask;
-	const int shiftedValue = maskedValue << bitInByteIndex;
+	const uint32_t maskedValue = value & mask;
+	const uint32_t shiftedValue = maskedValue << bitInByteIndex;
 	data[byteIndex] = data[byteIndex] | shiftedValue;
 }
 
@@ -240,12 +261,12 @@ int motorolaMagicFromDbc(int b, int length) {
     return b;
 }
 
-int getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth) {
+uint32_t getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth) {
 	const int b = motorolaMagicFromDbc(bitIndex, bitWidth);
 	return getBitRangeMsb(data, b, bitWidth);
 }
 
-void setBitRangeMoto(uint8_t data[], const int totalBitIndex, const int bitWidth, const int value) {
+void setBitRangeMoto(uint8_t data[], const int totalBitIndex, const int bitWidth, const uint32_t value) {
 	const int b = motorolaMagicFromDbc(totalBitIndex, bitWidth);
 	return setBitRangeMsb(data, b, bitWidth, value);
 }
