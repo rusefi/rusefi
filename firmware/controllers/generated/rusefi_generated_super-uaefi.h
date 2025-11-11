@@ -147,6 +147,7 @@
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 1024
 #define BOARD_CAM_SETTINGS_FILE 
+#define BOARD_CAN_BUS_FROM_FILE 
 #define BOARD_CONFIG_FROM_FILE 
 #define BOARD_CONSTANTS_EXTENSIONS_FROM_FILE 
 #define BOARD_CURVES_FROM_FILE 
@@ -1542,7 +1543,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1293922377
+#define SIGNATURE_HASH 3490691305
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2122,7 +2123,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.11.11.super-uaefi.1293922377"
+#define TS_SIGNATURE "rusEFI master.2025.11.11.super-uaefi.3490691305"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
