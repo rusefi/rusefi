@@ -1,0 +1,32 @@
+/*
+ * @file vin_strategy.cpp
+ *
+ * @date: nov 11, 2025
+ * @author FDSoftware
+ */
+#include <cstring>
+
+#include "pch.h"
+#include "../configuration_wizard.h"
+
+#if EFI_TUNER_STUDIO
+#include "tunerstudio.h"
+#endif
+
+/*
+ * here we need to track if the wizard is active (vin is empty) and trigger TS page refresh
+ */
+void vinStrategy() {
+    bool isVinFilled = static_cast<bool>(strlen(engineConfiguration->vinNumber));
+
+    bool vinStateChanged = isVinFilled == engineConfiguration->vinIsEmpty;
+
+    if (vinStateChanged) {
+        engineConfiguration->vinIsEmpty = !isVinFilled;
+        // trigger page reset, see [tag:popular_vehicle]
+#if EFI_TUNER_STUDIO
+        onApplyPreset();
+#endif // EFI_TUNER_STUDIO
+    }
+
+}
