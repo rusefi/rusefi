@@ -6,8 +6,65 @@ extern "C" {
 	#include "flash.h"
 }
 
+#ifdef STM32H7XX
+//Since a 10-bit ECC code is associated to each 256-bit data Flash word,
+//only write operations by 256 bits are executed in the non-volatile memory.
+#define FLASH_ECC_LINE_SIZE 	(256 / 8)
+
+static blt_int8u flashBuffer[FLASH_ECC_LINE_SIZE];
+static blt_addr flashAddr = 0x0;
+
+#define FLASH_WRITE_STEP		FLASH_ECC_LINE_SIZE
+#define FLASH_WRITE_ADDR_MASK	(~(FLASH_WRITE_STEP - 1))
+
+static void FlashBufferReset()
+{
+	memset(flashBuffer, 0xff, sizeof(flashBuffer));
+	flashAddr = 0;
+}
+
+static blt_bool FlashBufferFlush()
+{
+	if (flashAddr == 0x0) {
+		return BLT_TRUE;
+	}
+
+	int result = intFlashWrite(flashAddr, (const char*)flashBuffer, sizeof(flashBuffer));
+
+	FlashBufferReset();
+
+	return (result == FLASH_RETURN_SUCCESS) ? BLT_TRUE : BLT_FALSE;
+}
+
+static blt_bool FlashBufferedWrite(blt_addr addr, blt_int32u len, blt_int8u *data)
+{
+	while (len) {
+		if ((addr & FLASH_WRITE_ADDR_MASK) != flashAddr) {
+			// crossing ECC line boundary
+			FlashBufferFlush();
+
+			flashAddr = addr & FLASH_WRITE_ADDR_MASK;
+		}
+
+		off_t off = addr - flashAddr;
+		size_t chunk = minI(sizeof(flashBuffer) - off, len);
+		memcpy(flashBuffer + off, data, chunk);
+
+		addr += chunk;
+		data += chunk;
+		len -= chunk;
+	}
+
+	return BLT_TRUE;
+}
+
+#endif
+
 void FlashInit() {
 	// Flash already init by ChibiOS
+#ifdef STM32H7XX
+	FlashBufferReset();
+#endif
 }
 
 blt_addr FlashGetUserProgBaseAddress() {
@@ -24,9 +81,11 @@ blt_bool FlashWrite(blt_addr addr, blt_int32u len, blt_int8u *data) {
 		return BLT_FALSE;
 	}
 
+#ifdef STM32H7XX
+	return FlashBufferedWrite(addr, len, data);
+#else // not STM32H7
 	return (FLASH_RETURN_SUCCESS == intFlashWrite(addr, (const char*)data, len)) ? BLT_TRUE : BLT_FALSE;
-
-	return BLT_TRUE;
+#endif
 }
 
 blt_bool FlashErase(blt_addr addr, blt_int32u len) {
@@ -43,6 +102,9 @@ blt_bool FlashErase(blt_addr addr, blt_int32u len) {
 }
 
 blt_bool FlashDone() {
+#ifdef STM32H7XX
+	FlashBufferFlush();
+#endif
 	return BLT_TRUE;
 }
 
