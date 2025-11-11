@@ -7,3 +7,4 @@
 #include "map_averaging.h"
 #include "example_module.h"
 #include "vvl_controller.h"
+#include "configuration_wizard.h"
