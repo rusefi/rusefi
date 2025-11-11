@@ -23,6 +23,7 @@ set_board_file BOARD_IGNITION_ADVANCE_MENU_FILE "${BOARD_DIR}/board_ignition_adv
 set_board_file BOARD_TABLES_FILE "${BOARD_DIR}/board_tables.ini"
 set_board_file BOARD_CURVES_FILE "${BOARD_DIR}/board_curves.ini"
 set_board_file BOARD_PANELS_FILE "${BOARD_DIR}/board_panels.ini"
+set_board_file BOARD_CAN_BUS_FILE "${BOARD_DIR}/board_panel_can_main.ini"
 set_board_file BOARD_PC_VARIABLES_FROM_FILE "${BOARD_DIR}/board_pc_variables.ini"
 set_board_file BOARD_INDICATORS_FILE "${BOARD_DIR}/board_indicators.ini"
 set_board_file BOARD_GAUGES_FILE "${BOARD_DIR}/board_gauges.ini"
@@ -68,6 +69,7 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_DIAG_PANEL1_FROM_FILE ${BOARD_DIAG_PANEL1_FILE} \
  -readfile BOARD_DIAG_PANEL2_FROM_FILE ${BOARD_DIAG_PANEL2_FILE} \
  -readfile BOARD_PANELS_FROM_FILE ${BOARD_PANELS_FILE} \
+ -readfile BOARD_CAN_BUS_FROM_FILE ${BOARD_CAN_BUS_FILE} \
  -readfile BOARD_PC_VARIABLES_FROM_FILE ${BOARD_PC_VARIABLES_FROM_FILE} \
  -readfile BOARD_INDICATORS_FROM_FILE ${BOARD_INDICATORS_FILE} \
  -readfile BOARD_GAUGES_FROM_FILE ${BOARD_GAUGES_FILE} \
