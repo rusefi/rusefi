@@ -561,7 +561,7 @@ mapVvt_min_point_counter("mapVvt_min_point_counter", SensorCategory.SENSOR_INPUT
 alignmentFill_at_39("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1527, 1.0, 0.0, 100.0, "units"),
 temp_mapVvt_index("temp_mapVvt_index", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1528, 1.0, -1.0, -1.0, ""),
 mapVvt_CycleDelta("mapVvt_CycleDelta", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1532, 1.0, -1.0, -1.0, ""),
-currentEngineDecodedPhase("Sync: Engine Phase", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1536, 1.0, 0.0, 0.0, "deg"),
+currentEngineDecodedPhase("Sync: TDC Engine Phase", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1536, 1.0, 0.0, 0.0, "deg"),
 triggerToothAngleError("Sync: trigger angle error", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1540, 1.0, -30.0, 30.0, "deg"),
 triggerIgnoredToothCount("triggerIgnoredToothCount", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1544, 1.0, -1.0, -1.0, ""),
 alignmentFill_at_57("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1545, 1.0, 0.0, 100.0, "units"),

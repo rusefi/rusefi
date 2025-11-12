@@ -761,7 +761,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->triggerCentral.mapVvt_min_point_counter, "mapVvt_min_point_counter", "", 0},
 	{engine->triggerCentral.temp_mapVvt_index, "temp_mapVvt_index", "", 0},
 	{engine->triggerCentral.mapVvt_CycleDelta, "mapVvt_CycleDelta", "", 0},
-	{engine->triggerCentral.currentEngineDecodedPhase, "Sync: Engine Phase", "deg", 0, "Sync"},
+	{engine->triggerCentral.currentEngineDecodedPhase, "Sync: TDC Engine Phase", "deg", 0, "Sync"},
 	{engine->triggerCentral.triggerToothAngleError, "Sync: trigger angle error", "deg", 2},
 	{engine->triggerCentral.triggerIgnoredToothCount, "triggerIgnoredToothCount", "", 0},
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
