@@ -147,6 +147,20 @@ SECTIONS
     {
         *(.bkup_ram_noinit)
     } > BKUP_RAM
+
+    /* shared between main FW and OpenBLT */
+    .shared (NOLOAD) :
+    {
+        . = ALIGN(4);
+        _sshared = .;
+        __shared_start__ = _sshared;
+        *(.shared)
+        *(.shared.*)
+        KEEP(*(.shared))
+        . = ALIGN(4);
+        _eshared = .;
+        __shared_end__ = _eshared;
+    } > shared
 }
 
 /* Code rules inclusion.*/
