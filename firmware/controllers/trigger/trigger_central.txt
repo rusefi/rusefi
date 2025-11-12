@@ -16,7 +16,7 @@ struct_no_prefix trigger_central_s
     uint32_t temp_mapVvt_index
     float mapVvt_CycleDelta
 
-    float currentEngineDecodedPhase;Sync: Engine Phase;"deg",1, 0, 0, 0, 0, "Sync"
+    float currentEngineDecodedPhase;Sync: TDC Engine Phase;"deg",1, 0, 0, 0, 0, "Sync"
 
 	float triggerToothAngleError;Sync: trigger angle error;"deg", 1, 0, -30, 30, 2
 
