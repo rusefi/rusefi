@@ -156,6 +156,11 @@ bool SharedParamsWriteByIndex(uint32_t idx, uint8_t value)
     SharedParamsWriteChecksum();
     /* Update the result. */
     result = true;
+
+    // Flush pipelines
+    __ISB();
+    __DSB();
+
     #if CORTEX_MODEL == 7
       // If we have a cache, drop the relevant cache lines.
       SCB_CleanDCache_by_Addr((uint32_t*)&sharedParamsBuffer, sizeof(sharedParamsBuffer));
