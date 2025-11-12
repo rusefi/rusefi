@@ -21,6 +21,9 @@ ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# Do not use HSE autodetection
 	DDEFS += -DSTM32_HSECLK=20000000
 	DDEFS += -DENABLE_AUTO_DETECT_HSE=FALSE
+	# We are limited in flash
+	DDEFS += -DRAMDISK_INVALID
+	DEBUG_LEVEL_OPT = -Os -ggdb -g
 else
 	#Knock is available on F4 and F7 only
 	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
