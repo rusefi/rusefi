@@ -1545,7 +1545,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3144281375
+#define SIGNATURE_HASH 3489853696
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2043,8 +2043,10 @@
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_map_averaging_enabled true
 #define ts_show_map_estimate true
+#define ts_show_mapMinBufferLength true
 #define ts_show_mc33810 false
 #define ts_show_mc33810_cs false
+#define ts_show_measureMapOnlyInOneCylinder true
 #define ts_show_multispark true
 #define ts_show_number_of_cylinders true
 #define ts_show_odd_fire true
@@ -2125,7 +2127,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.11.14.proteus_f7.3144281375"
+#define TS_SIGNATURE "rusEFI master.2025.11.14.proteus_f7.3489853696"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
