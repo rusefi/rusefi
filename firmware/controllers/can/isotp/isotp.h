@@ -97,7 +97,7 @@ public:
 #endif
 */
 
-	// Offset of first ISO-TP byte, usualy 0
+	// Offset of first ISO-TP byte, usually 0
 	// but some vendors add some specific data in first CAN byte
 	size_t isoHeaderByteIndex = 0;
 
