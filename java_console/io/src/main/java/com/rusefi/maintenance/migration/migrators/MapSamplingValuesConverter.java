@@ -10,7 +10,7 @@ import java.util.Optional;
 public enum MapSamplingValuesConverter implements TableValuesConverter {
     INSTANCE;
     private static final String MAP_SAMPLING_CURVE_FIELD_NAME = "map_samplingAngle";
-    private static final Double MAP_SAMPING_CORRECTION = 45.0;
+    private static final Double MAP_SAMPLING_CORRECTION = 45.0;
 
     @Override
     public Optional<String[][]> convertTableValues(final String[][] prevValues, final TuneMigrationContext context) {
@@ -33,7 +33,7 @@ public enum MapSamplingValuesConverter implements TableValuesConverter {
                 for (int i = 0; i < prevValuesRowCount; i++) {
                     for (int j = 0; j < prevValuesColumnCount; j++) {
                         final String prevValue = prevValues[i][j];
-                        final double prevElement = Double.parseDouble(prevValue) - MAP_SAMPING_CORRECTION;
+                        final double prevElement = Double.parseDouble(prevValue) - MAP_SAMPLING_CORRECTION;
                         final Optional<String> convertedValue = Optional.of( String.format(Locale.US, "%." + updatedFieldValue.getDigits() + "f", prevElement));
                         convertedValues[i][j] = convertedValue.get();
                     }
