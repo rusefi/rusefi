@@ -2172,6 +2172,8 @@ uint8_t[ETB2_TRIM_RPM_SIZE] autoscale throttle2TrimRpmBins;;"RPM", @@RPM_AS_BYTE
 #define KNOCK_TABLE_SIZE 6
 #define KNOCK_TABLE_RPM_SIZE 6
 #define ts_show_enableKnockSpectrogram true
+#define ts_show_measureMapOnlyInOneCylinder true
+#define ts_show_mapMinBufferLength true
 #define ts_show_virtual_dyno false
 #define ts_show_torque_model true
 #define ts_show_injTest true
