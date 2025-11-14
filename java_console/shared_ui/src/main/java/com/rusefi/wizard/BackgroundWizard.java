@@ -17,7 +17,7 @@ import com.efiAnalytics.plugin.ecu.*;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class BackgroundWizard {
-    private static final String ECU_VIN_KEY = "vinNumber";
+    private static final String ECU_VIN_EMPTY = "vinIsEmpty";
 
     private static final Logging log = Logging.getLogging(BackgroundWizard.class);
     private static final int CURRENT_STATE_UNKNOWN = -1;
@@ -74,13 +74,12 @@ public class BackgroundWizard {
             log.info("ECU is online and we can run the wizard");
             // weird way of getting the equivalent of "page = 1" on the ini file
             String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_VIN_KEY);
+            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_VIN_EMPTY);
 
-            String ecuVin = currentVin.getStringValue();
-            if (ecuVin == null || ecuVin.isEmpty()) {
+            String ecuVinEmpty = currentVin.getStringValue();
+            if (ecuVinEmpty.contains("true") || ecuVinEmpty.contains("yes")) {
                 launchVinUI();
             }
-            log.info("ECU vin is " + ecuVin);
             WizardVinToggle = false;
         }
     }
