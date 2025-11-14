@@ -60,13 +60,13 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 }
 
 // returns the number of copied bytes
-int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can_sysinterval_t timeout) {
+int CanStreamerState::receiveFrame(const CANRxFrame *rxmsg, uint8_t *destinationBuff, int availableAtBuffer, can_sysinterval_t timeout) {
 	if (rxmsg == nullptr || rxmsg->DLC < 1)
 		return 0;
 	engine->pauseCANdueToSerial = true;
 	int frameType = (rxmsg->data8[isoHeaderByteIndex] >> 4) & 0xf;
 	int numBytesAvailable, frameIdx;
-	uint8_t *srcBuf = rxmsg->data8;
+	const uint8_t *srcBuf;
 	switch (frameType) {
 	case ISO_TP_FRAME_SINGLE:
 		numBytesAvailable = rxmsg->data8[isoHeaderByteIndex] & 0xf;
@@ -122,9 +122,9 @@ TODO: refactor into child class if we ever choose to revive this logic
 	}
 #endif *//* TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME */
 
-	int numBytesToCopy = minI(num, numBytesAvailable);
-	if (buf != nullptr) {
-		memcpy(buf, srcBuf, numBytesToCopy);
+	int numBytesToCopy = minI(availableAtBuffer, numBytesAvailable);
+	if (destinationBuff != nullptr) {
+		memcpy(destinationBuff, srcBuf, numBytesToCopy);
 	}
 	srcBuf += numBytesToCopy;
 	waitingForNumBytes -= numBytesAvailable;
