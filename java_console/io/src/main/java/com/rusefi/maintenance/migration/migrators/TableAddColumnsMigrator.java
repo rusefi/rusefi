@@ -18,6 +18,9 @@ public class TableAddColumnsMigrator implements TuneMigrator {
     public static final String IGNITION_RPM_BINS_FIELD_NAME = "ignitionRpmBins";
     public static final String INJECTION_PHASE_FIELD_NAME = "injectionPhase";
     public static final String INJECTION_PHASE_RPM_BINS_FIELD_NAME = "injPhaseRpmBins";
+    public static final String MAP_SAMPLING_FIELD_NAME = "map_samplingAngle";
+    public static final String MAP_SAMPLING_RPM_BINS_NAME = "map_samplingAngleBins";
+
     public static final TableAddColumnsMigrator VE_TABLE_MIGRATOR = new TableAddColumnsMigrator(
         VE_TABLE_FIELD_NAME,
         FieldType.UINT16,
@@ -44,6 +47,13 @@ public class TableAddColumnsMigrator implements TuneMigrator {
         FieldType.INT16,
         INJECTION_PHASE_RPM_BINS_FIELD_NAME,
         RetainTableValuesConverter.INSTANCE
+    );
+
+    public static final TableAddColumnsMigrator MAP_SAMPLING_MIGRATOR = new TableAddColumnsMigrator(
+        MAP_SAMPLING_FIELD_NAME ,
+        FieldType.FLOAT,
+        MAP_SAMPLING_RPM_BINS_NAME,
+        MapSamplingValuesConverter.INSTANCE
     );
 
     private final String tableFieldName;
