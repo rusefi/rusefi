@@ -3,7 +3,7 @@ from pathlib import Path
 import shutil
 
 XML_FILE = "uaefi-screenshots-and-XML-2025-09-ScreenGeneratorTool.xml"
-OUTPUT_HTML = "guide.html"
+OUTPUT_HTML = "index.html"
 IMAGES_DIR = "images"  # target folder for copied images
 SOURCE_IMAGES_DIR = Path("images")  # source folder where your images really are
 

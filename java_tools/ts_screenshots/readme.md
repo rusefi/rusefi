@@ -28,13 +28,16 @@ step 2:
 
 cp ts_screenshots\build\libs\ts_screenshots-all.jar "C:\Program Files (x86)\EFIAnalytics\TunerStudioMS"
 
-Copy ScreenShots.jar inside TS install folder
+MAKE SURE TO USE EXACTLY SUPPORTED VERSION OF TS see TsAccess.java
 
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005 -cp lib/*;ts_screenshots-all.jar ScreenCaptureLauncher C:\stuff\rusefi\firmware\tunerstudio\generated\rusefi_uaefi.ini
+Copy ScreenShots.jar inside TS install folder
 
 java -cp lib/*;ts_screenshots-all.jar ScreenCaptureLauncher C:\stuff\rusefi\firmware\tunerstudio\generated\rusefi_uaefi.ini
 
-## python prototype to convert above into static .html
+alternative command with debugging
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005 -cp lib/*;ts_screenshots-all.jar ScreenCaptureLauncher C:\stuff\rusefi\firmware\tunerstudio\generated\rusefi_uaefi.ini
+
+## python prototype to convert above XML into static .html
 
 See bin/
 
