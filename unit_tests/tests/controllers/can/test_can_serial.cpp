@@ -18,6 +18,7 @@
 
 using namespace std::string_literals;
 
+// todo: split into TX and RX parts?
 class TestCanTransport : public ICanTransport {
 public:
 	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) override {
@@ -52,7 +53,7 @@ public:
 
 class TestCanStreamerState : public CanStreamerState {
 public:
-	TestCanStreamerState() : CanStreamerState(&streamer, 0, 10) {}
+	TestCanStreamerState() : CanStreamerState(&streamer, &streamer, 0, 10) {}
 
 	void test(const std::vector<std::string> & dataList, const std::vector<std::string> & frames, int fifoLeftoverSize, const std::vector<size_t> & receiveChunks) {
 		EngineTestHelper eth(engine_type_e::TEST_ENGINE);

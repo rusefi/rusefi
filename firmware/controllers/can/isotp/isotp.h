@@ -71,11 +71,19 @@ public:
   virtual bool get(CanRxMessage &item, int timeout) = 0;
 };
 
-// We need an abstraction layer for unit-testing
-class ICanTransport {
+class ICanTransmitter {
 public:
-	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) = 0;
-	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
+  virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) = 0;
+};
+
+class ICanReceiver {
+public:
+  virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
+};
+
+// We need an abstraction layer for unit-testing
+// todo: no reason for composite entity to exist, keep splitting CanStreamerState into RX and TX!
+class ICanTransport : public ICanTransmitter, public ICanReceiver {
 };
 
 // most efficient sizes are 6 + x * 7 that way whole buffer is transmitted as (x+1) full packets
@@ -105,15 +113,17 @@ public:
 	int waitingForNumBytes = 0;
 	int waitingForFrameIndex = 0;
 
-	ICanTransport *transport;
+	ICanTransmitter *txTransport;
+	ICanReceiver *rxTransport;
 
 	int busIndex;
 	int txFrameId;
 
 public:
-	CanStreamerState(ICanTransport *p_transport, int p_busIndex, int p_txFrameId)
+	CanStreamerState(ICanTransmitter *p_txTransport, ICanReceiver *p_rxTransport, int p_busIndex, int p_txFrameId)
 	 :
-	 transport(p_transport),
+	 txTransport(p_txTransport),
+	 rxTransport(p_rxTransport),
 	 busIndex(p_busIndex),
 	 txFrameId(p_txFrameId)
 	  {}

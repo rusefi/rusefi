@@ -54,7 +54,7 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 	}
 
 	// send the frame!
-	if (transport->transmit(&txmsg, timeout) == CAN_MSG_OK)
+	if (txTransport->transmit(&txmsg, timeout) == CAN_MSG_OK)
 		return numBytes;
 	return 0;
 }
@@ -180,7 +180,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
 	CANRxFrame rxmsg;
 	for (size_t numFcReceived = 0; ; numFcReceived++) {
-		if (transport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
+		if (rxTransport->receive(&rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
 			PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
@@ -305,7 +305,7 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 	// if even more data is needed, then we receive more CAN frames
 	while (availableBufferSpace > 0) {
 		CANRxFrame rxmsg;
-		if (transport->receive(&rxmsg, timeout) == CAN_MSG_OK) {
+		if (rxTransport->receive(&rxmsg, timeout) == CAN_MSG_OK) {
 			int numReceived = receiveFrame(&rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
 
 			if (numReceived < 1)
