@@ -65,6 +65,9 @@ int CanStreamerState::receiveFrame(const CANRxFrame *rxmsg, uint8_t *destination
 		return 0;
 	engine->pauseCANdueToSerial = true;
 	int frameType = (rxmsg->data8[isoHeaderByteIndex] >> 4) & 0xf;
+	if (engineConfiguration->debugIsoTp) {
+	  efiPrintf("receiveFrame frameType=%d", frameType);
+	}
 	int numBytesAvailable, frameIdx;
 	const uint8_t *srcBuf;
 	switch (frameType) {

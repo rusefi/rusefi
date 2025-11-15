@@ -1781,7 +1781,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
 	bit nitrousControlEnabled,"enabled","disabled"
 	bit vvlControlEnabled,"enabled","disabled"
-	bit unusedFancy3
+	bit debugIsoTp
 	bit unusedFancy4
 	bit unusedFancy5
 	bit unusedFancy6
