@@ -128,7 +128,7 @@ never used?
 
         updateMigrateSettingState();
         content.add(migrateSettings);
-        content.add(verboseMessages);
+//        content.add(verboseMessages);
     }
 
     public ImportTuneControl getImportTuneButton() {
