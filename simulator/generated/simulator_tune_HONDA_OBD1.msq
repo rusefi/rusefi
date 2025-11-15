@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0251114E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0251115E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -910,6 +910,7 @@
          22.0
          25.0
 </constant>
+        <constant name="debugIsoTp">"false"</constant>
         <constant name="debugMode">"Executor"</constant>
         <constant name="debugTriggerSync">"NONE"</constant>
         <constant name="devBit0">"false"</constant>
@@ -4425,7 +4426,6 @@ end</constant>
         <constant name="unusedFancy27">"false"</constant>
         <constant name="unusedFancy28">"false"</constant>
         <constant name="unusedFancy29">"false"</constant>
-        <constant name="unusedFancy3">"false"</constant>
         <constant name="unusedFancy30">"false"</constant>
         <constant name="unusedFancy31">"false"</constant>
         <constant name="unusedFancy32">"false"</constant>
@@ -4939,7 +4939,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20251103" nPages="1" signature="rusEFI master.2025.11.14.f407-discovery.3929332113" version="5.0"/>
+    <versionInfo firmwareInfo="20251103" nPages="1" signature="rusEFI master.2025.11.15.f407-discovery.779235763" version="5.0"/>
     <bibliography author="rusEFI 20251103" writeDate="date"/>
     <settings/>
     <userComments/>
