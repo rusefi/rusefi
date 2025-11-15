@@ -73,8 +73,8 @@ int CanStreamerState::receiveFrame(const CANRxFrame *rxmsg, uint8_t *destination
 	switch (frameType) {
 	case ISO_TP_FRAME_SINGLE:
 		numBytesAvailable = rxmsg->data8[isoHeaderByteIndex] & 0xf;
+		this->waitingForNumBytes = numBytesAvailable;
 		srcBuf = rxmsg->data8 + 1;
-		this->waitingForNumBytes = -1;
 		break;
 	case ISO_TP_FRAME_FIRST:
 		this->waitingForNumBytes = ((rxmsg->data8[isoHeaderByteIndex] & 0xf) << 8) | rxmsg->data8[isoHeaderByteIndex + 1];
@@ -132,6 +132,7 @@ TODO: refactor into child class if we ever choose to revive this logic
 	}
 	srcBuf += numBytesToCopy;
 	waitingForNumBytes -= numBytesAvailable;
+	isComplete = (waitingForNumBytes == 0);
 	numBytesAvailable -= numBytesToCopy;
 	// if there are some more bytes left, we save them for the next time
 	for (int i = 0; i < numBytesAvailable; i++) {

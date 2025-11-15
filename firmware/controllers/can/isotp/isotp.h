@@ -129,6 +129,8 @@ public:
 	 txFrameId(p_txFrameId)
 	  {}
 
+  bool isComplete{};
+
 	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
 	int receiveFrame(const CANRxFrame *rxmsg, uint8_t *buf, int num, can_sysinterval_t timeout);
 	int getDataFromFifo(uint8_t *rxbuf, size_t &numBytes);
