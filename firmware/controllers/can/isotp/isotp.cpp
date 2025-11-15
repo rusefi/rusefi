@@ -152,6 +152,12 @@ TODO: refactor into child class if we ever choose to revive this logic
 	return numBytesToCopy;
 }
 
+void CanStreamerState::reset() {
+  waitingForNumBytes = 0;
+  waitingForFrameIndex = 0;
+  isComplete = false;
+}
+
 int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sysinterval_t timeout) {
 	int offset = 0;
 
