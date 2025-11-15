@@ -13,8 +13,8 @@
 
 class CanTsListener : public CanListener, public CanRxMessageSource {
 public:
-	CanTsListener()
-		: CanListener(CAN_ECU_SERIAL_RX_ID)
+	CanTsListener(uint32_t id)
+		: CanListener(id)
 	{
 	}
 
@@ -31,14 +31,18 @@ protected:
 #if HAL_USE_CAN
 class CanTransport : public ICanTransport {
 public:
-  CanTransport(CanRxMessageSource *p_source) : source(p_source) {}
+	CanTransport(uint32_t p_rxFrameId, uint32_t p_txFrameId)
+		: source(p_rxFrameId), txFrameId(p_txFrameId)
+	{
+	}
 	void init();
 
 	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) override;
 	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override;
 	virtual void onTpFirstFrame() override;
 
-	CanRxMessageSource *source;
+	CanTsListener source;
+	uint32_t txFrameId;
 };
 
 void tsOverCanInit();

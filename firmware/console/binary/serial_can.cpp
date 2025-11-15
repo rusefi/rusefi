@@ -22,9 +22,9 @@
 
 #if HAL_USE_CAN
 // this one installs itself as top level CAN bus listener with static frame ID
-static CanTsListener g_listener;
+//static CanTsListener g_listener(CAN_ECU_SERIAL_RX_ID);
 // for RX, this one delegates to above FIFO via global field
-static CanTransport transport(&g_listener);
+static CanTransport transport(CAN_ECU_SERIAL_RX_ID, CAN_ECU_SERIAL_TX_ID);
 
 static CanStreamerState state(&transport, &transport, /*bus*/0, CAN_ECU_SERIAL_TX_ID);
 #endif // HAL_USE_CAN
@@ -51,10 +51,11 @@ void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
 #if HAL_USE_CAN
 
 void CanTransport::init() {
-	registerCanListener(g_listener);
+	registerCanListener(source);
 }
 
 can_msg_t CanTransport::transmit(const CanTxMessage */*ctfp*/, can_sysinterval_t /*timeout*/) {
+	// TODO: set correct txFrameId and EID here!
 	// we do nothing here - see CanTxMessage::~CanTxMessage()
 	return CAN_MSG_OK;
 }
@@ -66,7 +67,7 @@ void CanTransport::onTpFirstFrame() {
 can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {
 	// see CanTsListener and processCanRxMessage()
 	CanRxMessage msg;
-	if (this->source->get(msg, timeout)) {
+	if (source.get(msg, timeout)) {
 		*crfp = msg.frame;
 		return CAN_MSG_OK;
 	}

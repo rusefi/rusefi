@@ -32,12 +32,13 @@ public:
 		m_next = next;
 	}
 
-	virtual CanListener* request() {
+	CanListener* getNext() const {
 		return m_next;
 	}
 
-	bool hasNext() const {
-		return m_next;
+	virtual CanListener* request() {
+		// NOP and return next in list
+		return getNext();
 	}
 
 	// Return true if the provided frame should be accepted for processing by the listener.

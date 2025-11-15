@@ -81,12 +81,36 @@ void serviceCanSubscribers(const size_t busIndex, const CANRxFrame &frame, efiti
 	}
 }
 
+// TODO: rework to use utlist.h helpers
+
 void registerCanListener(CanListener& listener) {
+	// Do this under lock?
+
 	// If the listener already has a next, it's already registered
-	if (!listener.hasNext()) {
+	if (!listener.getNext()) {
 		listener.setNext(canListeners_head);
 		canListeners_head = &listener;
 	}
+}
+
+void unregisterCanListener(CanListener& listener) {
+	// Do this under lock?
+
+	// listener is at head of list...
+	if (canListeners_head == &listener) {
+		canListeners_head = listener.getNext();
+	} else {
+		CanListener *current = canListeners_head;
+
+		while (current->getNext() && (current->getNext() != &listener)) {
+			current = current->getNext();
+		}
+		if (current->getNext()) {
+			current->setNext(listener.getNext());
+		}
+	}
+
+	listener.setNext(nullptr);
 }
 
 void registerCanSensor(CanSensorBase& sensor) {
