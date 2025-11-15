@@ -35,6 +35,11 @@ void setUaefiDefaultETBPins();
 #endif // HW_HELLEN_UAEFI
 
 #ifdef HW_PROTEUS
+//Coil 1 - Pin 15 DC2 positive Pin A 	Toyota iac pin 4
+//Coil 1 - Pin 8  DC2 negative Pin B	Toyota iac pin 6
+//Coil 2 - Pin 7  DC1 positive Pin C	Toyota iac pin 1
+//Coil 2 - Pin 6  DC1 negative Pin D	Toyota iac pin 3
+
 	// coil #1 = proteus pin 15 (DC2 positive) to BL pin "A", pin B to pin 8 (DC2 negative)
 	// PWM pin
 	engineConfiguration->stepperDcIo[0].controlPin = Gpio::D13;
