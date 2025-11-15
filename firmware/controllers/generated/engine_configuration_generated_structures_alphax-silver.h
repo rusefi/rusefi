@@ -5385,7 +5385,7 @@ struct engine_configuration_s {
 	bool vvlControlEnabled : 1 {};
 	/**
 	offset 3812 bit 2 */
-	bool unusedFancy3 : 1 {};
+	bool debugIsoTp : 1 {};
 	/**
 	offset 3812 bit 3 */
 	bool unusedFancy4 : 1 {};
