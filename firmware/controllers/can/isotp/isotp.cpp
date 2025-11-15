@@ -81,6 +81,7 @@ int CanStreamerState::receiveFrame(const CANRxFrame *rxmsg, uint8_t *destination
 		this->waitingForFrameIndex = 1;
 		numBytesAvailable = minI(this->waitingForNumBytes, 6 - isoHeaderByteIndex);
 		srcBuf = rxmsg->data8 + 2 + isoHeaderByteIndex;
+		rxTransport->onTpFirstFrame(); // used to send flow control message
 		break;
 	case ISO_TP_FRAME_CONSECUTIVE:
 		frameIdx = rxmsg->data8[isoHeaderByteIndex] & 0xf;

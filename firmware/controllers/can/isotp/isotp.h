@@ -79,6 +79,7 @@ public:
 class ICanReceiver {
 public:
   virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
+  virtual void onTpFirstFrame() = 0;
 };
 
 // We need an abstraction layer for unit-testing

@@ -59,6 +59,10 @@ can_msg_t CanTransport::transmit(const CanTxMessage */*ctfp*/, can_sysinterval_t
 	return CAN_MSG_OK;
 }
 
+void CanTransport::onTpFirstFrame() {
+  // todo: why nothing? broken iso-tp on ECU side?
+}
+
 can_msg_t CanTransport::receive(CANRxFrame *crfp, can_sysinterval_t timeout) {
 	// see CanTsListener and processCanRxMessage()
 	CanRxMessage msg;

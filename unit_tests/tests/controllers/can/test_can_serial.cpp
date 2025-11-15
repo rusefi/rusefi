@@ -30,6 +30,10 @@ public:
 		return CAN_MSG_OK;
 	}
 
+  virtual void onTpFirstFrame() override {
+    // todo: add coverage?
+  }
+
 	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override {
 		if (crfList.empty())
 			return CAN_MSG_TIMEOUT;

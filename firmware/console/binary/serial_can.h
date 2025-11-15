@@ -36,6 +36,7 @@ public:
 
 	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) override;
 	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override;
+	virtual void onTpFirstFrame() override;
 
 	CanRxMessageSource *source;
 };
