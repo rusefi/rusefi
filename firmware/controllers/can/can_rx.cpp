@@ -26,7 +26,7 @@
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
-static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
+void printCANRxFrame(const size_t busIndex, const CANRxFrame &rx) {
 	// only print info if we're in can debug mode
 
 	int id = CAN_ID(rx);
@@ -208,7 +208,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		(engineConfiguration->verboseCan3 && busIndex == 2) ||
 #endif
 		0) {
-		printPacket(busIndex, frame);
+		printCANRxFrame(busIndex, frame);
 	}
 
 	// TODO use call_board_override

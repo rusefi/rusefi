@@ -5,6 +5,7 @@
 
 #include "pch.h"
 #include "isotp.h"
+#include "can_rx.h"
 
 #if HAL_USE_CAN || EFI_UNIT_TEST
 
@@ -60,37 +61,38 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 }
 
 // returns the number of copied bytes
-int CanStreamerState::receiveFrame(const CANRxFrame *rxmsg, uint8_t *destinationBuff, int availableAtBuffer, can_sysinterval_t timeout) {
-	if (rxmsg == nullptr || rxmsg->DLC < 1)
+int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destinationBuff, int availableAtBuffer, can_sysinterval_t timeout) {
+	if (rxmsg.DLC < 1)
 		return 0;
 	engine->pauseCANdueToSerial = true;
-	int frameType = (rxmsg->data8[isoHeaderByteIndex] >> 4) & 0xf;
-	if (engineConfiguration->debugIsoTp) {
+	int frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
+	if (engineConfiguration->verboseIsoTp) {
 	  efiPrintf("receiveFrame frameType=%d", frameType);
+//	  printCANRxFrame(-1, rxmsg);
 	}
 	int numBytesAvailable, frameIdx;
 	const uint8_t *srcBuf;
 	switch (frameType) {
 	case ISO_TP_FRAME_SINGLE:
-		numBytesAvailable = rxmsg->data8[isoHeaderByteIndex] & 0xf;
+		numBytesAvailable = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 		this->waitingForNumBytes = numBytesAvailable;
-		srcBuf = rxmsg->data8 + 1;
+		srcBuf = rxmsg.data8 + 1;
 		break;
 	case ISO_TP_FRAME_FIRST:
-		this->waitingForNumBytes = ((rxmsg->data8[isoHeaderByteIndex] & 0xf) << 8) | rxmsg->data8[isoHeaderByteIndex + 1];
+		this->waitingForNumBytes = ((rxmsg.data8[isoHeaderByteIndex] & 0xf) << 8) | rxmsg.data8[isoHeaderByteIndex + 1];
 		this->waitingForFrameIndex = 1;
 		numBytesAvailable = minI(this->waitingForNumBytes, 6 - isoHeaderByteIndex);
-		srcBuf = rxmsg->data8 + 2 + isoHeaderByteIndex;
+		srcBuf = rxmsg.data8 + 2 + isoHeaderByteIndex;
 		rxTransport->onTpFirstFrame(); // used to send flow control message
 		break;
 	case ISO_TP_FRAME_CONSECUTIVE:
-		frameIdx = rxmsg->data8[isoHeaderByteIndex] & 0xf;
+		frameIdx = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 		if (this->waitingForNumBytes < 0 || this->waitingForFrameIndex != frameIdx) {
 			// todo: that's an abnormal situation, and we probably should react?
 			return 0;
 		}
 		numBytesAvailable = minI(this->waitingForNumBytes, 7 - isoHeaderByteIndex);
-		srcBuf = rxmsg->data8 + 1 + isoHeaderByteIndex;
+		srcBuf = rxmsg.data8 + 1 + isoHeaderByteIndex;
 		this->waitingForFrameIndex = (this->waitingForFrameIndex + 1) & 0xf;
 		break;
 	case ISO_TP_FRAME_FLOW_CONTROL:
@@ -198,7 +200,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
 			return 0;
 		}
-		receiveFrame(&rxmsg, nullptr, 0, timeout);
+		receiveFrame(rxmsg, nullptr, 0, timeout);
 		uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
 		uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 		// if something is not ok
@@ -317,7 +319,7 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 	while (availableBufferSpace > 0) {
 		CANRxFrame rxmsg;
 		if (rxTransport->receive(&rxmsg, timeout) == CAN_MSG_OK) {
-			int numReceived = receiveFrame(&rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
+			int numReceived = receiveFrame(rxmsg, rxbuf + receivedSoFar, availableBufferSpace, timeout);
 
 			if (numReceived < 1)
 				break;
