@@ -68,7 +68,9 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 	int frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
 	if (engineConfiguration->verboseIsoTp) {
 	  efiPrintf("receiveFrame frameType=%d", frameType);
-//	  printCANRxFrame(-1, rxmsg);
+#if EFI_PROD_CODE
+	  printCANRxFrame(-1, rxmsg);
+#endif // EFI_PROD_CODE
 	}
 	int numBytesAvailable, frameIdx;
 	const uint8_t *srcBuf;
