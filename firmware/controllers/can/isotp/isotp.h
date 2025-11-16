@@ -96,6 +96,7 @@ class ICanTransport : public ICanTransmitter, public ICanReceiver {
 
 class CanStreamerState {
 public:
+  // serial_can uses fifo_buffer_sync, unify?
 	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> rxFifoBuf;
 	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> txFifoBuf;
 

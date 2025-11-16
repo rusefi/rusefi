@@ -25,6 +25,7 @@ public:
 	}
 
 protected:
+  // CanStreamerState has non-sync fifo, unify?
 	fifo_buffer_sync<CanRxMessage, CAN_FIFO_FRAME_SIZE> rxFifo;
 };
 
