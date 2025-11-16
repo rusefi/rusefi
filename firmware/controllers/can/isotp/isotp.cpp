@@ -78,7 +78,7 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 	case ISO_TP_FRAME_SINGLE:
 		numBytesAvailable = rxmsg.data8[isoHeaderByteIndex] & 0xf;
 		this->waitingForNumBytes = numBytesAvailable;
-		srcBuf = rxmsg.data8 + 1;
+		srcBuf = rxmsg.data8 + 1 + isoHeaderByteIndex;
 		break;
 	case ISO_TP_FRAME_FIRST:
 		this->waitingForNumBytes = ((rxmsg.data8[isoHeaderByteIndex] & 0xf) << 8) | rxmsg.data8[isoHeaderByteIndex + 1];
