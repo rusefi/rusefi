@@ -21,8 +21,8 @@ using namespace std::string_literals;
 // todo: split into TX and RX parts?
 class TestCanTransport : public ICanTransport {
 public:
-	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) override {
-		const CANTxFrame * frame = ctfp->getFrame();
+	virtual can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) override {
+		const CANTxFrame * frame = ctfp.getFrame();
 		// invoke copy constructor to clone frame
 		CANTxFrame localCopy = *frame;
 		localCopy.DLC = 8;

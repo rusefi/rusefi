@@ -54,7 +54,7 @@ void CanTransport::init() {
 	registerCanListener(g_listener);
 }
 
-can_msg_t CanTransport::transmit(const CanTxMessage */*ctfp*/, can_sysinterval_t /*timeout*/) {
+can_msg_t CanTransport::transmit(CanTxMessage &/*ctfp*/, can_sysinterval_t /*timeout*/) {
 	// we do nothing here - see CanTxMessage::~CanTxMessage()
 	return CAN_MSG_OK;
 }

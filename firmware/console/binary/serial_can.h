@@ -34,7 +34,7 @@ public:
   CanTransport(CanRxMessageSource *p_source) : source(p_source) {}
 	void init();
 
-	virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) override;
+	virtual can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) override;
 	virtual can_msg_t receive(CANRxFrame *crfp, can_sysinterval_t timeout) override;
 	virtual void onTpFirstFrame() override;
 

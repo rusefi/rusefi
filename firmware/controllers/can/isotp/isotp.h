@@ -73,7 +73,7 @@ public:
 
 class ICanTransmitter {
 public:
-  virtual can_msg_t transmit(const CanTxMessage *ctfp, can_sysinterval_t timeout) = 0;
+  virtual can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) = 0;
 };
 
 class ICanReceiver {

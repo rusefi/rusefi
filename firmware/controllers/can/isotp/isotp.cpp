@@ -55,7 +55,7 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 	}
 
 	// send the frame!
-	if (txTransport->transmit(&txmsg, timeout) == CAN_MSG_OK)
+	if (txTransport->transmit(txmsg, timeout) == CAN_MSG_OK)
 		return numBytes;
 	return 0;
 }
