@@ -58,7 +58,7 @@ struct sampler {
 
 static sampler samplers[MAX_CYLINDER_COUNT][2];
 
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+#if EFI_ENGINE_CONTROL
 static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
@@ -76,7 +76,7 @@ static void startAveraging(sampler* s) {
 	scheduleByAngle(&s->endTimer, getTimeNowNt(), engine->engineState.mapAveragingDuration,
 		{ endAveraging, &averager });
 }
-#endif // EFI_ENGINE_CONTROL && EFI_PROD_CODE
+#endif // EFI_ENGINE_CONTROL
 
 void MapAverager::start() {
 	chibios_rt::CriticalSectionLocker csl;
@@ -162,7 +162,7 @@ void mapAveragingAdcCallback(float instantVoltage) {
 }
 #endif
 
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+#if EFI_ENGINE_CONTROL
 static void endAveraging(MapAverager* arg) {
 	arg->stop();
 
@@ -218,7 +218,7 @@ void refreshMapAveragingPreCalc() {
  */
 void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp) {
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+#if EFI_ENGINE_CONTROL
 	// update only once per engine cycle
 	if (index != 0) {
 		return;
@@ -270,7 +270,7 @@ void mapAveragingTriggerCallback(
 		scheduleByAngle(&s->startTimer, edgeTimestamp, samplingStart,
 				{ startAveraging, s });
 	}
-#endif // EFI_ENGINE_CONTROL && EFI_PROD_CODE
+#endif // EFI_ENGINE_CONTROL
 }
 
 void initMapAveraging() {

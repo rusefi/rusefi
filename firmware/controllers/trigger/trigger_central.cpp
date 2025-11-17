@@ -850,11 +850,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// Schedule the TDC mark
 		tdcMarkCallback(triggerIndexForListeners, timestamp);
 
-#if !EFI_UNIT_TEST
 #if EFI_MAP_AVERAGING
 		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp);
 #endif /* EFI_MAP_AVERAGING */
-#endif /* EFI_UNIT_TEST */
 
 #if EFI_LOGIC_ANALYZER
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp);
