@@ -2625,6 +2625,7 @@ end_struct
 #define ts_show_etb_pins true
 #define ts_show_forced_induction false
 #define ts_show_compression_ratio false
+#define ts_show_injection true
 #define ts_show_injection_mode true
 #define ts_show_maf true
 #define ts_show_full_pinout true
@@ -2734,6 +2735,7 @@ end_struct
 #define ts_show_hardware_simulator true
 #define ts_show_sd_pins true
 #define ts_show_injectionPinMode false
+#define ts_show_ignition true
 #define ts_show_ignitionPinMode true
 #define ts_show_vr_threshold_pins true
 
