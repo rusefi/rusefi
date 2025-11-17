@@ -17,12 +17,13 @@ jobs:
     - uses: actions/checkout@v5
 
     - name: Generate Pinouts
-      uses: chuckwagoncomputing/interactive-pinout@2.15
+      uses: chuckwagoncomputing/interactive-pinout@2.16
       with:
         mapping-path: firmware/config/boards/*/connectors/*.yaml
         warnings: "false"
         warning-no-pins: "skip"
         warning-dupe: "error"
+        warning-parse: "error"
         columns: |
           {
           "pin":"Pin Number",
