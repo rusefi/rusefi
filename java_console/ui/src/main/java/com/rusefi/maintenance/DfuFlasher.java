@@ -5,6 +5,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -32,6 +33,7 @@ public class DfuFlasher {
     private static final String DFU_CMD_TOOL_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
     private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
+    private static final String WMIC_DFU_QUERY_H7_COMMAND = "wmic path win32_pnpentity where \"Caption like '%DFU%' and Caption like '%FS Mode%'\" get Caption,ConfigManagerErrorCode /format:list";
     public static boolean dfuEnabledInCaseOfError = true;
 
     public static boolean haveBootloaderBinFile() {
@@ -227,7 +229,8 @@ public class DfuFlasher {
     }
 
     public static boolean detectSTM32BootloaderDriverState(UpdateOperationCallbacks callbacks) {
-        return MaintenanceUtil.detectDevice(callbacks, WMIC_DFU_QUERY_COMMAND, "ConfigManagerErrorCode=0", dfuEnabledInCaseOfError);
+        String command = ConnectionAndMeta.getBoolean("is_h7") ? WMIC_DFU_QUERY_H7_COMMAND : WMIC_DFU_QUERY_COMMAND;
+        return MaintenanceUtil.detectDevice(callbacks, command, "ConfigManagerErrorCode=0", dfuEnabledInCaseOfError);
     }
 
     private static void appendWindowsVersion(UpdateOperationCallbacks callbacks) {

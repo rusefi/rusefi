@@ -50,11 +50,11 @@ public class ConnectionAndMeta {
         signatureWhiteLabel = signatureWhiteLabel == null ? null : signatureWhiteLabel.trim();
         return signatureWhiteLabel;
     }
-
+/*
     public static boolean showUpdateCalibrations() {
         return getBoolean("show_update_calibrations");
     }
-
+*/
     public static boolean getBoolean(String propertyName) {
         return getBoolean(propertyName, getProperties());
     }
@@ -114,11 +114,11 @@ public class ConnectionAndMeta {
     public static boolean saveReadmeHtmlToFile() {
         return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(getProperties(), "write_readme_html", "false"));
     }
-
+/*
     public static boolean startConsoleInAutoupdateProcess() {
         return false;
     }
-
+*/
     public static Set<String> getNonMigratableIniFields() {
         final String nonMergeableIniFields = getStringProperty(getProperties(), "non_migratable_ini_fields", "");
         return Arrays.stream(nonMergeableIniFields.split(","))
