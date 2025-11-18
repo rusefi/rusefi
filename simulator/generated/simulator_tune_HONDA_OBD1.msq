@@ -3382,7 +3382,7 @@ end</constant>
 </constant>
         <constant digits="0" name="sparkHardwareLatencyCorrection" units="uS">0.0</constant>
         <constant name="speedometerOutputPin">"NONE"</constant>
-        <constant digits="0" name="speedometerPulsePerKm" units="">0.0</constant>
+        <constant digits="0" name="speedometerPulsePerKm" units="">2485.0</constant>
         <constant name="spi1MisoMode">"default"</constant>
         <constant name="spi1misoPin">"NONE"</constant>
         <constant name="spi1MosiMode">"default"</constant>
