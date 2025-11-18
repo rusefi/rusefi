@@ -560,8 +560,8 @@
         <constant digits="0" name="brakeMeanEffectivePressureDifferential" units="">0.0</constant>
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0251117E7</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0251117E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0251118E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0251118E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -4938,7 +4938,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20251114" nPages="1" signature="rusEFI master.2025.11.17.f407-discovery.322458555" version="5.0"/>
+    <versionInfo firmwareInfo="20251114" nPages="1" signature="rusEFI master.2025.11.18.f407-discovery.322458555" version="5.0"/>
     <bibliography author="rusEFI 20251114" writeDate="date"/>
     <settings/>
     <userComments/>
