@@ -234,6 +234,7 @@ void setDefaultBaseEngine() {
 	// let's have valid default while we still have the field
 	engineConfiguration->debugMode = DBG_EXECUTOR;
 
+  engineConfiguration->speedometerPulsePerKm = 2485; // GM GMT800 platform
 
 	engineConfiguration->primingDelay = 0.5;
 	// this should not be below default rpm! maybe even make them equal?
