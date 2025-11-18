@@ -2435,6 +2435,8 @@ end_struct
 #define ts_show_jam_detection true
 #define ts_show_acr_pins true
 #define ts_show_can_wbo_type true
+#define ts_show_can_weird true
+#define ts_show_can_verbose true
 #define VE_MENU_NAME "VE"
 #define VE_TABLE_NAME "VE Table"
 #define VE_MENU_MAP_NAME "VE 3D view"
