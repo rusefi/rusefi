@@ -495,6 +495,11 @@ static void handleCommandX14(uint16_t index) {
 			tle8888_req_init();
 		#endif
 		return;
+	case TS_TCU_UPSHIFT_REQUEST:
+	case TS_TCU_DOWNSHIFT_REQUEST:
+	  // do nothing, we are catching with Lua
+	  // this is temporary uaDASH API
+		return;
 	case TS_RESET_MC33810:
 		#if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 			mc33810_req_init();
