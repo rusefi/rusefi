@@ -55,6 +55,10 @@ bool is_usb_serial_ready() {
 	return isUsbSerialInitialized && SDU1.config->usbp->state == USB_ACTIVE;
 }
 
+void usb_serial_flush() {
+	usbTransmitWait(serusbcfg.usbp, serusbcfg.bulk_in);
+}
+
 #else
 bool is_usb_serial_ready() {
 	return false;
