@@ -2609,6 +2609,7 @@ end_struct
 #define ts_show_mc33810 false
 #define ts_show_mc33810_cs false
 #define ts_show_tps_sent false
+#define ts_show_fan_settings true
 #define ts_show_fan2_settings true
 #define ts_show_inj_diag false
 #define ts_show_analog_diag false
@@ -2725,6 +2726,7 @@ end_struct
 #define ts_show_can_pins true
 #define ts_show_can_bitrate true
 #define ts_show_vbatt true
+#define ts_show_clt true
 #define ts_show_clt_iat_pullup true
 #define ts_show_iat true
 #define ts_show_tunerstudio_port true
