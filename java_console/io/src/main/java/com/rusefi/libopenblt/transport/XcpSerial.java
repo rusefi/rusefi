@@ -106,7 +106,7 @@ public class XcpSerial implements IXcpTransport {
                 log.info("actualRead " + actualRead);
             }
             if (actualRead != 1) {
-                throw new IOException("XcpSerial: Cannot read response " + actualRead + "; " + request.length + ", timeoutMs=" + timeoutMs);
+                throw new IOException("XcpSerial: Cannot read response actual read=" + actualRead + "; request length was " + request.length + ", timeoutMs=" + timeoutMs);
             }
             if (VERBOSE) {
                 log.info("actualRead responseLen " + HexBinary.printHexBinary(responseLen));
