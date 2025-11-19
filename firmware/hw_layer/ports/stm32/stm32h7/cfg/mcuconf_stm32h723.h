@@ -5,7 +5,7 @@
 #define STM32_NOCACHE_ENABLE                TRUE
 #endif
 #define STM32_NOCACHE_MPU_REGION            MPU_REGION_6
-#define STM32_NOCACHE_RBAR                  0x30020000U
+#define STM32_NOCACHE_RBAR                  0x30002000U
 #define STM32_NOCACHE_RASR                  MPU_RASR_SIZE_16K
 
 /*
