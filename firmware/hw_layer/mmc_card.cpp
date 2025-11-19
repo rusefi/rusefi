@@ -196,12 +196,6 @@ static SD_MODE sdTargetMode = SD_MODE_ECU;
 
 static bool sdNeedRemoveReports = false;
 
-/**
- * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
- * which will cause disaster (usually multiple-unlock of the same mutex in UNLOCK_SD_SPI)
- */
-static spi_device_e mmcSpiDevice = SPI_NONE;
-
 #define RUSEFI_LOG_PREFIX "re_"
 #define PREFIX_LEN 3
 #define SHORT_TIME_LEN 13
@@ -209,6 +203,12 @@ static spi_device_e mmcSpiDevice = SPI_NONE;
 #define FILE_LIST_MAX_COUNT 20
 
 #if HAL_USE_MMC_SPI
+/**
+ * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
+ * which will cause disaster (usually multiple-unlock of the same mutex in UNLOCK_SD_SPI)
+ */
+static spi_device_e mmcSpiDevice = SPI_NONE;
+
 /**
  * MMC driver instance.
  */
