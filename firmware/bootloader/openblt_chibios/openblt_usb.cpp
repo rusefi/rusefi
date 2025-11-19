@@ -41,6 +41,9 @@ void Rs232TransmitPacket(blt_int8u *data, blt_int8u len)
   Rs232TransmitByte(len);
 
   chnWriteTimeout(&SDU1, data, len, TIME_INFINITE);
+
+  /* wait for transmission ends */
+  usb_serial_flush();
 } /*** end of Rs232TransmitPacket ***/
 
 PUBLIC_API_WEAK void openBltUnexpectedByte(blt_int8u firstByte) {
