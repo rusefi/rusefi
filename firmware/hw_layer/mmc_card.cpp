@@ -296,21 +296,31 @@ extern int logFileIndex;
 static char logName[_MAX_FILLER + 20];
 
 static void printMmcPinout() {
+#if HAL_USE_MMC_SPI
 	efiPrintf("MMC CS %s", hwPortname(engineConfiguration->sdCardCsPin));
 	// todo: we need to figure out the right SPI pinout, not just SPI2
 //	efiPrintf("MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
 //	efiPrintf("MMC MISO %s:%d", portname(EFI_SPI2_MISO_PORT), EFI_SPI2_MISO_PIN);
 //	efiPrintf("MMC MOSI %s:%d", portname(EFI_SPI2_MOSI_PORT), EFI_SPI2_MOSI_PIN);
+#else
+  // not sure if we need to print SDIO pinout
+#endif
 }
 
 static void sdStatistics() {
 	printMmcPinout();
 	efiPrintf("SD enabled=%s status=%s", boolToString(engineConfiguration->isSdCardEnabled),
 			sdStatusName(sdStatus));
+#if HAL_USE_MMC_SPI
 	printSpiConfig("SD", mmcSpiDevice);
-#if HAL_USE_MMC_SPI && (defined(STM32F4XX) || defined(STM32F7XX))
+ #if defined(STM32F4XX) || defined(STM32F7XX)
 	efiPrintf("HS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_hs_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
 	efiPrintf("LS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_ls_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
+ #else
+  efiPrintf("not implemented");
+ #endif
+#else
+ efiPrintf("SDIO mode");
 #endif
 	if (sdLoggerIsReady()) {
 		efiPrintf("filename=%s size=%d", logName, logBuffer.writen());
