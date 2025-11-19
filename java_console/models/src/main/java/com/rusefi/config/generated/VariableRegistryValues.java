@@ -1634,8 +1634,6 @@ public class VariableRegistryValues {
 	public static final int ts_14_command_COMMAND_X14_UNUSED_1 = 0x01;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_15 = 0x15;
 	public static final int ts_14_command_COMMAND_X14_UNUSED_2 = 0x02;
-	public static final int ts_14_command_COMMAND_X14_UNUSED_3 = 0x03;
-	public static final int ts_14_command_COMMAND_X14_UNUSED_4 = 0x04;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0 = 0x0E;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0_FAST = 0x1C;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_1 = 0x11;
@@ -1660,6 +1658,8 @@ public class VariableRegistryValues {
 	public static final int ts_14_command_TS_SD_UNMOUNT = 0x19;
 	public static final int ts_14_command_TS_SET_STEPPER_IDLE = 0x05;
 	public static final int ts_14_command_TS_START_STOP_ENGINE = 0x09;
+	public static final int ts_14_command_TS_TCU_DOWNSHIFT_REQUEST = 0x04;
+	public static final int ts_14_command_TS_TCU_UPSHIFT_REQUEST = 0x03;
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_DISABLE = 0x0F;
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_ENABLE = 0x0D;
 	public static final int ts_14_command_TS_WIDEBAND_UPDATE = 0x12;
