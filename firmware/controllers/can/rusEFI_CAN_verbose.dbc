@@ -127,6 +127,9 @@ BO_ 522 BASE10: 8 Vector__XXX
  SG_ knock6 : 48|8@1- (1,0) [-60|10] "db" Vector__XXX
  SG_ knock7 : 56|8@1- (1,0) [-60|10] "db" Vector__XXX
 
+BO_ 523 BASE11: 8 Vector__XXX
+ SG_ BrakePedal : 0|1@1+ (1,0) [0|0] "" Vector__XXX
+
 
 CM_ SG_ 512 WarningCounter "Total warnings since ECU start time";
 CM_ SG_ 512 LastError "Last error code";

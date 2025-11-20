@@ -67,6 +67,14 @@ static void populateFrame(Status& msg) {
 #endif // MODULE_ODOMETER
 }
 
+struct Status11 {
+  uint8_t brakePedal : 1;
+};
+
+static void populateFrame(Status11& msg) {
+  msg.brakePedal = engine->engineState.brakePedalState;
+}
+
 struct Speeds {
 	uint16_t rpm;
 	scaled_angle timing;
@@ -263,6 +271,7 @@ void sendCanVerbose() {
 
 	transmitStruct<Egts>	(CanCategory::VERBOSE, base + 9, isExt, canChannel);
 	transmitStruct<PerCylinderKnock>	(CanCategory::VERBOSE, base + 10, isExt, canChannel);
+	transmitStruct<Status11>	(CanCategory::VERBOSE, base + 11, isExt, canChannel);
 }
 
 #endif // EFI_CAN_SUPPORT
