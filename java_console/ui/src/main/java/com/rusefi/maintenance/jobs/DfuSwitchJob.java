@@ -5,6 +5,7 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.ProgramSelector;
 
 import javax.swing.*;
+import java.util.Objects;
 
 public class DfuSwitchJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
     public DfuSwitchJob(final PortResult port, final JComponent parent) {
@@ -14,7 +15,11 @@ public class DfuSwitchJob extends AsyncJobWithContext<SerialPortWithParentCompon
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         JobHelper.doJob(
-            () -> ProgramSelector.rebootToDfu(context.getParent(), context.getPort().port, callbacks),
+            () -> {
+                PortResult port = context.getPort();
+                Objects.requireNonNull(port, "port");
+                ProgramSelector.rebootToDfu(context.getParent(), port.port, callbacks);
+            },
             onJobFinished
         );
     }
