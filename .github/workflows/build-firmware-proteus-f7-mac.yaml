@@ -20,7 +20,7 @@ jobs:
         with:
           release: '14.2.Rel1'
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Checkout Submodules
         run: |

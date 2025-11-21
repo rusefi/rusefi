@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
 # todo: how to reduce code duplication of submodules list?
     - name: Checkout Submodules

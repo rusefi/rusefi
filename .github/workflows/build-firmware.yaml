@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -131,7 +131,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Set matrix
       id: set-matrix
@@ -185,7 +185,7 @@ jobs:
           echo "upload=gha_artifact" >> $GITHUB_ENV
         fi
 
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Checkout Submodules
       run: |
