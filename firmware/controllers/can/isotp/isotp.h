@@ -82,6 +82,40 @@ public:
   virtual void onTpFirstFrame() = 0;
 };
 
+class IsoTpBase {
+public:
+	IsoTpBase(ICanTransmitter *p_txTransport, size_t p_busIndex, uint32_t p_rxFrameId, uint32_t p_txFrameId)
+		:
+		txTransport(p_txTransport),
+		busIndex(p_busIndex),
+		rxFrameId(p_rxFrameId),
+		txFrameId(p_txFrameId)
+		{}
+
+	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
+
+	can_msg_t transmit(CanTxMessage &ctfp, can_sysinterval_t timeout) {
+		if (isoHeaderByteIndex) {
+			// yes that would be truncated to byte, that's expected
+			ctfp[0] = rxFrameId & 0xff;
+		}
+		if (txTransport) {
+			return txTransport->transmit(ctfp, timeout);
+		}
+		return CAN_MSG_OK;
+	}
+
+	// Offset of first ISO-TP byte, usually 0
+	// but some vendors add some specific data in first CAN byte
+	size_t isoHeaderByteIndex = 0;
+
+	ICanTransmitter *txTransport;
+
+	size_t busIndex;
+	uint32_t rxFrameId;
+	uint32_t txFrameId;
+};
+
 // We need an abstraction layer for unit-testing
 // todo: no reason for composite entity to exist, keep splitting CanStreamerState into RX and TX!
 class ICanTransport : public ICanTransmitter, public ICanReceiver {
@@ -94,7 +128,7 @@ class ICanTransport : public ICanTransmitter, public ICanReceiver {
 
 #define CAN_FIFO_FRAME_SIZE 8
 
-class CanStreamerState {
+class CanStreamerState : public IsoTpBase {
 public:
   // serial_can uses fifo_buffer_sync, unify?
 	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> rxFifoBuf;
@@ -106,33 +140,22 @@ public:
     uint8_t shortCrcPacketStagingArea[13];
 #endif
 */
-
-	// Offset of first ISO-TP byte, usually 0
-	// but some vendors add some specific data in first CAN byte
-	size_t isoHeaderByteIndex = 0;
-
 	// used for multi-frame ISO-TP packets
 	int waitingForNumBytes = 0;
 	int waitingForFrameIndex = 0;
 
-	ICanTransmitter *txTransport;
 	ICanReceiver *rxTransport;
 
-	int busIndex;
-	int txFrameId;
-
 public:
-	CanStreamerState(ICanTransmitter *p_txTransport, ICanReceiver *p_rxTransport, int p_busIndex, int p_txFrameId)
-	 :
-	 txTransport(p_txTransport),
-	 rxTransport(p_rxTransport),
-	 busIndex(p_busIndex),
-	 txFrameId(p_txFrameId)
-	  {}
+	CanStreamerState(ICanTransmitter *p_txTransport, ICanReceiver *p_rxTransport, size_t p_busIndex, uint32_t p_rxFrameId, uint32_t p_txFrameId)
+		:
+		IsoTpBase(p_txTransport, p_busIndex, p_rxFrameId, p_txFrameId),
+		rxTransport(p_rxTransport)
+	{}
 
-  bool isComplete{};
+	bool isComplete{};
 
-  void reset();
+	void reset();
 
 	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
 	int receiveFrame(const CANRxFrame &rxmsg, uint8_t *buf, int num, can_sysinterval_t timeout);

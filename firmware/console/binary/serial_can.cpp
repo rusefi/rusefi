@@ -26,7 +26,7 @@ static CanTsListener g_listener;
 // for RX, this one delegates to above FIFO via global field
 static CanTransport transport(&g_listener);
 
-static CanStreamerState state(&transport, &transport, /*bus*/0, CAN_ECU_SERIAL_TX_ID);
+static CanStreamerState state(&transport, &transport, /*bus*/0, CAN_ECU_SERIAL_RX_ID, CAN_ECU_SERIAL_TX_ID);
 #endif // HAL_USE_CAN
 
 #if HAL_USE_CAN || EFI_UNIT_TEST
