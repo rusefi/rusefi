@@ -9,7 +9,7 @@
 
 #if HAL_USE_CAN || EFI_UNIT_TEST
 
-int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout) {
+int IsoTpBase::sendFrame(const IsoTpFrameHeader &header, const uint8_t *data, int num, can_sysinterval_t timeout) {
 	int dlc = 8; // standard 8 bytes
 	CanTxMessage txmsg(CanCategory::SERIAL, txFrameId, dlc, busIndex, IS_EXT_RANGE_ID(txFrameId));
 
@@ -55,7 +55,7 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 	}
 
 	// send the frame!
-	if (txTransport->transmit(txmsg, timeout) == CAN_MSG_OK)
+	if (transmit(txmsg, timeout) == CAN_MSG_OK)
 		return numBytes;
 	return 0;
 }
@@ -85,7 +85,9 @@ int CanStreamerState::receiveFrame(const CANRxFrame &rxmsg, uint8_t *destination
 		this->waitingForFrameIndex = 1;
 		numBytesAvailable = minI(this->waitingForNumBytes, 6 - isoHeaderByteIndex);
 		srcBuf = rxmsg.data8 + 2 + isoHeaderByteIndex;
-		rxTransport->onTpFirstFrame(); // used to send flow control message
+		if (rxTransport) {
+			rxTransport->onTpFirstFrame(); // used to send flow control message
+		}
 		break;
 	case ISO_TP_FRAME_CONSECUTIVE:
 		frameIdx = rxmsg.data8[isoHeaderByteIndex] & 0xf;
@@ -150,7 +152,7 @@ TODO: refactor into child class if we ever choose to revive this logic
 		header.fcFlag = 0;			// = "continue to send"
 		header.blockSize = 0;		// = the remaining "frames" to be sent without flow control or delay
 		header.separationTime = 0;	// = wait 0 milliseconds, send immediately
-		sendFrame(header, nullptr, 0, timeout);
+		IsoTpBase::sendFrame(header, nullptr, 0, timeout);
 	}
 
 	return numBytesToCopy;
@@ -177,7 +179,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 		IsoTpFrameHeader header;
 		header.frameType = ISO_TP_FRAME_SINGLE;
 		header.numBytes = numBytes;
-		return sendFrame(header, txbuf, numBytes, timeout);
+		return IsoTpBase::sendFrame(header, txbuf, numBytes, timeout);
 	}
 
 	// multiple frames
@@ -186,7 +188,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	IsoTpFrameHeader header;
 	header.frameType = ISO_TP_FRAME_FIRST;
 	header.numBytes = numBytes;
-	int numSent = sendFrame(header, txbuf + offset, numBytes, timeout);
+	int numSent = IsoTpBase::sendFrame(header, txbuf + offset, numBytes, timeout);
 	offset += numSent;
 	numBytes -= numSent;
 	int totalNumSent = numSent;
@@ -238,7 +240,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 		header.frameType = ISO_TP_FRAME_CONSECUTIVE;
 		header.index = ((idx++) & 0x0f);
 		header.numBytes = len;
-		numSent = sendFrame(header, txbuf + offset, len, timeout);
+		numSent = IsoTpBase::sendFrame(header, txbuf + offset, len, timeout);
 		if (numSent < 1)
 			break;
 		totalNumSent += numSent;
