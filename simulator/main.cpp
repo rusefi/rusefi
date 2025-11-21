@@ -145,10 +145,7 @@ static inline void myCustomHello(){
 	efiPrintf("custom board hello from simulator");
 }
 
-void setup_custom_board_overrides(){
-	custom_board_boardSayHello = myCustomHello;
-}
-
+extern void setup_custom_board_overrides();
 
 /*------------------------------------------------------------------------*
  * Simulator main.                                                        *
@@ -156,6 +153,7 @@ void setup_custom_board_overrides(){
 int main(int argc, char** argv) {
 	setbuf(stdout, NULL);
 	setup_custom_fw_overrides();
+	custom_board_boardSayHello = myCustomHello;
 	setup_custom_board_overrides();
 	/*
 	 * System initializations.
