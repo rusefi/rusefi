@@ -57,7 +57,7 @@ public:
 
 class TestCanStreamerState : public CanStreamerState {
 public:
-	TestCanStreamerState() : CanStreamerState(&streamer, &streamer, 0, 10) {}
+	TestCanStreamerState() : CanStreamerState(&streamer, &streamer, 0, 10, 10) {}
 
 	void test(const std::vector<std::string> & dataList, const std::vector<std::string> & frames, int fifoLeftoverSize, const std::vector<size_t> & receiveChunks) {
 		EngineTestHelper eth(engine_type_e::TEST_ENGINE);
