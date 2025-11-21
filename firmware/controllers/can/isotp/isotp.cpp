@@ -345,4 +345,209 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 	return CAN_MSG_OK;
 }
 
+int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
+{
+	//is fxbuf is too small?
+	bool overflow = false;
+	bool isFirstFrame = true;
+	size_t availableAtBuffer = *size;
+	uint8_t *buf = rxbuf;
+
+	do {
+		CANRxFrame rxmsg;
+
+		// TODO: adjust timeout!
+		if (!rxFifoBuf.get(rxmsg, timeout)) {
+			// TODO: error codes
+			efiPrintf("IsoTP: rx timeout, %d left to receive", waitingForNumBytes);
+			return -1;
+		}
+
+		uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
+		if (engineConfiguration->verboseIsoTp) {
+			efiPrintf("receiveFrame frameType=%d", frameType);
+	#if EFI_PROD_CODE
+			printCANRxFrame(-1, rxmsg);
+	#endif // EFI_PROD_CODE
+		}
+		size_t numBytesAvailable;
+		uint8_t frameIdx;
+		const uint8_t *srcBuf;
+		switch (frameType) {
+		case ISO_TP_FRAME_SINGLE:
+			// TODO: check that this is first packet! see isFirstFrame
+			numBytesAvailable = rxmsg.data8[isoHeaderByteIndex] & 0xf;
+			waitingForNumBytes = numBytesAvailable;
+			srcBuf = rxmsg.data8 + 1 + isoHeaderByteIndex;
+			break;
+		case ISO_TP_FRAME_FIRST:
+			// TODO: check that this is first packet! see isFirstFrame
+			waitingForNumBytes = ((rxmsg.data8[isoHeaderByteIndex] & 0xf) << 8) | rxmsg.data8[isoHeaderByteIndex + 1];
+			waitingForFrameIndex = 1;
+			numBytesAvailable = minI(waitingForNumBytes, 6 - isoHeaderByteIndex);
+			srcBuf = rxmsg.data8 + 2 + isoHeaderByteIndex;
+//			rxTransport->onTpFirstFrame(); // used to send flow control message
+			break;
+		case ISO_TP_FRAME_CONSECUTIVE:
+			frameIdx = rxmsg.data8[isoHeaderByteIndex] & 0xf;
+			if (waitingForNumBytes < 0 || waitingForFrameIndex != frameIdx) {
+				// todo: that's an abnormal situation, and we probably should react?
+				// TODO: error codes
+				return -2;
+			}
+			numBytesAvailable = minI(waitingForNumBytes, 7 - isoHeaderByteIndex);
+			srcBuf = rxmsg.data8 + 1 + isoHeaderByteIndex;
+			waitingForFrameIndex = (waitingForFrameIndex + 1) & 0xf;
+			break;
+		case ISO_TP_FRAME_FLOW_CONTROL:
+			// todo: currently we just ignore the FC frame
+			// TODO: we should not receive FC frame while receiving data
+			break;
+		default:
+			// bad frame type
+			// TODO: error codes
+			return -3;
+		}
+
+		if (isFirstFrame) {
+			if ((buf) && (waitingForNumBytes > availableAtBuffer)) {
+				efiPrintf("receive buffer is not enough %d > %d", waitingForNumBytes, availableAtBuffer);
+			}
+			isFirstFrame = false;
+		}
+
+		if (buf != nullptr) {
+			int numBytesToCopy = minI(availableAtBuffer, numBytesAvailable);
+
+			memcpy(buf, srcBuf, numBytesToCopy);
+			buf += numBytesToCopy;
+			availableAtBuffer -= numBytesToCopy;
+
+			// if there are some more bytes left, receive and drop
+			if (numBytesAvailable > numBytesToCopy) {
+				overflow = true;
+			}
+		}
+
+		// according to the specs, we need to acknowledge the received multi-frame start frame
+		if (frameType == ISO_TP_FRAME_FIRST) {
+			IsoTpFrameHeader header;
+			header.frameType = ISO_TP_FRAME_FLOW_CONTROL;
+			header.fcFlag = 0;			// = "continue to send"
+			header.blockSize = 0;		// = the remaining "frames" to be sent without flow control or delay
+			header.separationTime = 0;	// = wait 0 milliseconds, send immediately
+			sendFrame(header, nullptr, 0, timeout);
+		}
+
+		waitingForNumBytes -= numBytesAvailable;
+	} while (waitingForNumBytes > 0);
+
+	// received size
+	*size = buf - rxbuf;
+
+	return overflow ? 1 : 0;
+}
+
+int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t timeout) {
+	int offset = 0;
+
+	if (engineConfiguration->verboseIsoTp) {
+		PRINT("*** INFO: sendDataTimeout %d" PRINT_EOL, size);
+	}
+
+	if (size < 1)
+		return 0;
+
+	// 1 frame
+	if (size <= 7 - isoHeaderByteIndex) {
+		IsoTpFrameHeader header;
+		header.frameType = ISO_TP_FRAME_SINGLE;
+		header.numBytes = size;
+		return IsoTpBase::sendFrame(header, txbuf, size, timeout);
+	}
+
+	// multiple frames
+
+	// send the first header frame (FF)
+	IsoTpFrameHeader header;
+	header.frameType = ISO_TP_FRAME_FIRST;
+	header.numBytes = size;
+	int numSent = IsoTpBase::sendFrame(header, txbuf + offset, size, timeout);
+	offset += numSent;
+	size -= numSent;
+
+	// get a flow control (FC) frame
+#if !EFI_UNIT_TEST // todo: add FC to unit-tests?
+	CANRxFrame rxmsg;
+	size_t numFcReceived = 0;
+	while (numFcReceived < 3) {
+		// TODO: adjust timeout!
+		if (!rxFifoBuf.get(rxmsg, timeout)) {
+			efiPrintf("IsoTp: Flow Control frame not received");
+			//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
+			return 0;
+		}
+		uint8_t frameType = (rxmsg.data8[isoHeaderByteIndex] >> 4) & 0xf;
+
+		// if something is not ok
+		if (frameType != ISO_TP_FRAME_FLOW_CONTROL) {
+			// should we expect only FC here?
+			continue;
+		}
+
+		// Ok, frame is FC
+		numFcReceived++;
+		uint8_t flowStatus = rxmsg.data8[isoHeaderByteIndex] & 0xf;
+
+		if (flowStatus == CAN_FLOW_STATUS_ABORT) {
+			efiPrintf("IsoTp: Flow Control ABORT");
+			// TODO: error codes
+			return -4;
+		}
+
+		if (flowStatus == CAN_FLOW_STATUS_WAIT_MORE) {
+			// if the receiver is not ready yet and asks to wait for the next FC frame (give it 3 attempts)
+			if (numFcReceived < 3) {
+				continue;
+			}
+			// TODO: error codes
+			return -5;
+		}
+
+		if (flowStatus != CAN_FLOW_STATUS_OK) {
+			efiPrintf("IsoTp: Flow Control unknown Status %d", flowStatus);
+			// TODO: error codes
+			return -6;
+		}
+
+		uint8_t blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
+		uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
+		if (blockSize != 0 || minSeparationTime != 0) {
+			// todo: process other Flow Control fields (see ISO 15765-2)
+			efiPrintf("IsoTp: Flow Control fields not supported");
+			// TODO: error codes
+			return -7;
+		}
+
+		break;
+	}
+#endif /* EFI_UNIT_TEST */
+
+	// send the rest of the data
+	uint8_t idx = 1;
+	while (size > 0) {
+		int len = minI(size, 7 - isoHeaderByteIndex);
+		// send the consecutive frames
+		header.frameType = ISO_TP_FRAME_CONSECUTIVE;
+		header.index = ((idx++) & 0x0f);
+		header.numBytes = len;
+		numSent = IsoTpBase::sendFrame(header, txbuf + offset, len, timeout);
+		if (numSent < 1)
+			break;
+		offset += numSent;
+		size -= numSent;
+	}
+	return offset;
+}
+
 #endif // HAL_USE_CAN || EFI_UNIT_TEST

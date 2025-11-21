@@ -1,7 +1,9 @@
 #pragma once
 
 #include "fifo_buffer.h"
+#include "can.h"
 #include "can_msg_tx.h"
+#include "can_listener.h"
 
 #if EFI_UNIT_TEST
 #define PRINT printf
@@ -167,4 +169,68 @@ public:
 	can_msg_t streamAddToTxTimeout(size_t *np, const uint8_t *txbuf, can_sysinterval_t timeout);
 	can_msg_t streamFlushTx(can_sysinterval_t timeout);
 	can_msg_t streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can_sysinterval_t timeout);
+};
+
+#define ISOTP_RX_QUEUE_LEN	4
+
+class IsoTpRx : public CanListener, public IsoTpBase {
+public:
+	IsoTpRx(size_t p_busIndex, uint32_t p_rxFrameId, uint32_t p_txFrameId)
+	:
+		CanListener(p_rxFrameId),
+		IsoTpBase(nullptr, p_busIndex, p_rxFrameId, p_txFrameId)
+	{
+		rxFifoBuf.clear();
+		registerCanListener(*this);
+	}
+
+	~IsoTpRx() {
+		unregisterCanListener(*this);
+	}
+
+	void reset() {
+		rxFifoBuf.clear();
+		waitingForNumBytes = 0;
+		waitingForFrameIndex = 0;
+	}
+
+	/* CAN messages entry point */
+	virtual void decodeFrame(const CANRxFrame& frame, efitick_t nowNt)
+	{
+		if (frame.DLC < 1 + isoHeaderByteIndex) {
+			// invalid++;
+			return;
+		}
+
+		if (isoHeaderByteIndex) {
+			if (frame.data8[0] != (txFrameId & 0xff)) {
+				return;
+			}
+		}
+
+		if (!rxFifoBuf.put(frame)) {
+			// overruns++;
+		}
+	}
+
+	/* User app entry point */
+	int readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout);
+
+private:
+	// used for multi-frame ISO-TP packets
+	int waitingForNumBytes = 0;
+	uint8_t waitingForFrameIndex = 0;
+
+protected:
+	fifo_buffer_sync<CANRxFrame, ISOTP_RX_QUEUE_LEN> rxFifoBuf;
+};
+
+class IsoTpRxTx : public IsoTpRx {
+public:
+	IsoTpRxTx(size_t p_busIndex, uint32_t p_rxFrameId, uint32_t p_txFrameId)
+	:
+		IsoTpRx(p_busIndex, p_rxFrameId, p_txFrameId)
+		{}
+
+	int writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t timeout);
 };
