@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<msq xmlns="http://www.msefi.com/:msq">
+    <page/>
+    <page number="0" size="46496">
+      <constant digits="1" name="cranking_baseFuel" units="mg">27.0</constant>
+        <constant cols="1" digits="0" name="crankingCycleBins" rows="8" units="counter">
+         1.0
+         2.0
+         3.0
+         4.0
+         5.0
+         6.0
+         7.0
+         8.0
+      </constant>
+        <constant cols="1" digits="2" name="crankingCycleFuelCltBins" rows="4" units="C">
+         0.0
+         20.0
+         40.0
+         60.0
+      </constant>
+        <constant cols="8" digits="2" name="crankingCycleFuelCoef" rows="4" units="mult">
+         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
+         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
+         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
+         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
+      </constant>
+    </page>
+</msq>
