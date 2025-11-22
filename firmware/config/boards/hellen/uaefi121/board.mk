@@ -20,7 +20,7 @@ DDEFS += -DEFI_SKIP_BOR=TRUE
 
 
 
-
+DDEFS += -DBOARD_SERIAL="\"000200000000000000000000\""
 
 include $(BOARD_DIR)/mega-uaefi.mk
 
