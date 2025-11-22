@@ -27,7 +27,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         DigitsIniFieldMigrator.INSTANCE,
         STFTFieldMigrator.INSTANCE,
         IdleCurveMigrator.INSTANCE,
-        CrankingIdleMigrator.INSTANCE,
+        MultiplierToTableMigrator.INSTANCE,
         ScalarToArrayMigrator.INSTANCE,
         MapSamplingValuesMigrator.INSTANCE,
 
