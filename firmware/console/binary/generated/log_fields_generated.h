@@ -660,6 +660,9 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->shiftTorqueReductionController, 0, 4, "isAppConditionSatisfied", ""},
 	{engine->shiftTorqueReductionController, 0, 5, "isFlatShiftConditionSatisfied", ""},
 	{engine->shiftTorqueReductionController, 0, 6, "isBelowTemperatureThreshold", ""},
+	{engine->shiftTorqueReductionController.trqRedCutXaxisValue, "trqRedCutXaxisValue", "", 0},
+	{engine->shiftTorqueReductionController.trqRedTimeXaxisValue, "trqRedTimeXaxisValue", "", 0},
+	{engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue, "trqRedIgnRetXaxisValue", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveDataConstexpr<electronic_throttle_s, 0>()->etbCurrentTarget, "etb1ETB: target for current pedal", "%", 2, "ETB more"},

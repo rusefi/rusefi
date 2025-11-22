@@ -1401,6 +1401,15 @@ float getOutputValueByHash(const int hash) {
 // isBelowTemperatureThreshold
 		case 319978869:
 			return engine->shiftTorqueReductionController.isBelowTemperatureThreshold;
+// trqRedCutXaxisValue
+		case 468022861:
+			return engine->shiftTorqueReductionController.trqRedCutXaxisValue;
+// trqRedTimeXaxisValue
+		case 1227553104:
+			return engine->shiftTorqueReductionController.trqRedTimeXaxisValue;
+// trqRedIgnRetXaxisValue
+		case 892591242:
+			return engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue;
 // isNitrousArmed
 		case 595683774:
 			return engine->module<NitrousController>()->isNitrousArmed;
