@@ -26,7 +26,7 @@
 [submodule "firmware/ext/lua"]
 	path = firmware/ext/lua
 	url = https://github.com/rusefi/lua
-	branch = rusefi-5.4.6
+	branch = rusefi-5.4.8
 [submodule "firmware/controllers/lua/luaaa"]
 	path = firmware/controllers/lua/luaaa
 	url = https://github.com/rusefi/luaaa
