@@ -1,1 +1,1 @@
-https://github.com/rusefi/rusefi/wiki/Hellen-Honda-K
+https://wiki.rusefi.com/Hellen-Honda-K

@@ -37,7 +37,7 @@ public class PerformanceTraceHelper {
             File outputFile = new File(fileName);
             JsonOutput.writeToStream(data, new FileOutputStream(outputFile));
             MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "Saved to " + outputFile.getAbsolutePath());
-            MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "See https://github.com/rusefi/rusefi/wiki/Developer-Performance-Tracing");
+            MessagesCentral.getInstance().postMessage(PerformanceTraceHelper.class, "See https://wiki.rusefi.com/Developer-Performance-Tracing");
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

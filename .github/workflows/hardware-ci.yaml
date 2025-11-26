@@ -1,5 +1,5 @@
 #
-# https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control#hardware-continuous-integration
+# https://wiki.rusefi.com/Dev-Quality-Control#hardware-continuous-integration
 #
 
 name: HW CI
@@ -28,7 +28,7 @@ jobs:
         include:
           - build-target: f407-discovery
             runs-on: hw-ci-f4-discovery
-            # see HwCiF4Discovery.java or https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control#stm32f407g-disc1 for wiring documentation
+            # see HwCiF4Discovery.java or https://wiki.rusefi.com/Dev-Quality-Control#stm32f407g-disc1 for wiring documentation
             test-suite: com.rusefi.HwCiF4Discovery
             test-suite-ini: firmware/tunerstudio/generated/rusefi_f407-discovery.ini
             folder: config/boards/f407-discovery

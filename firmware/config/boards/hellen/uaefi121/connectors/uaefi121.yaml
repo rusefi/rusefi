@@ -702,7 +702,7 @@ info:
   name: uaEFI 121
   cid: main
   order: 0
-  board_url: https://github.com/rusefi/rusefi/wiki/uaefi121
+  board_url: https://wiki.rusefi.com/uaefi121
   directory: hellen/uaefi121
   image:
     file: 121pin.jpg

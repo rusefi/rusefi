@@ -1,7 +1,7 @@
 End users should be able to use pre-built firmware. They should not need to build or modify the source code.
-See https://github.com/rusefi/rusefi/wiki/Download
+See https://wiki.rusefi.com/Download
 
-See also https://github.com/rusefi/rusefi/wiki/Dev-Quick-Start
+See also https://wiki.rusefi.com/Dev-Quick-Start
 
 [Doxygen](https://rusefi.com/docs/html/) <<< landing page has best implementation introduction.
 

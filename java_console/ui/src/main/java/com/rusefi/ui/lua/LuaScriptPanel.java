@@ -116,7 +116,7 @@ public class LuaScriptPanel {
         upperPanel.add(burnButton);
         upperPanel.add(moreButton);
         upperPanel.add(command.getContent());
-        upperPanel.add(new URLLabel("Lua Wiki", "https://github.com/rusefi/rusefi/wiki/Lua-Scripting"));
+        upperPanel.add(new URLLabel("Lua Wiki", "https://wiki.rusefi.com/Lua-Scripting"));
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());

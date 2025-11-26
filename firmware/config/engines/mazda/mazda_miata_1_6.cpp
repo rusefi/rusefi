@@ -2,7 +2,7 @@
  * @file mazda_miata_1_6.cpp
  *
  *
- * https://github.com/rusefi/rusefi/wiki/Frankenso_MazdaMiataNA6_pnp
+ * https://wiki.rusefi.com/Frankenso_MazdaMiataNA6_pnp
  *
  *
  * Frankenso board

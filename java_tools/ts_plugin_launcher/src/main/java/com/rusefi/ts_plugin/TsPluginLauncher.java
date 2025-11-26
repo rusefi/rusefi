@@ -24,7 +24,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
     public static final int BUILD_VERSION = 7;
     static final String VERSION = "2025.alpha." + BUILD_VERSION;
     private static final Logging log = getLogging(TsPluginLauncher.class);
-    private static final String HELP_URL = "https://github.com/rusefi/rusefi/wiki/TS-Plugin";
+    private static final String HELP_URL = "https://wiki.rusefi.com/TS-Plugin";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
 

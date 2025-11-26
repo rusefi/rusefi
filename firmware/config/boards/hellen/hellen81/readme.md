@@ -1,5 +1,5 @@
 
-https://github.com/rusefi/rusefi/wiki/Hellen81
+https://wiki.rusefi.com/Hellen81
 
 https://github.com/andreika-git/hellen81/
 

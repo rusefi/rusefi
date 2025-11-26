@@ -119,7 +119,7 @@ void onBurnRequest() {
 }
 
 /**
- * this hook is about https://github.com/rusefi/rusefi/wiki/Custom-Firmware and https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process
+ * this hook is about https://wiki.rusefi.com/Custom-Firmware and https://wiki.rusefi.com/Canned-Tune-Process
  * todo: why two hooks? is one already dead?
  */
 void boardBeforeTuneDefaults() {

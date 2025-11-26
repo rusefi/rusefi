@@ -395,7 +395,7 @@ pins:
 
 
 info:
-  board_url: https://github.com/rusefi/rusefi/wiki/Hellen-Hyundai-PB
+  board_url: https://wiki.rusefi.com/Hellen-Hyundai-PB
   cid: main
   directory: hellen/hellen-hyundai-pb-mt
   title: Hellen Hyundai PB MT

@@ -46,7 +46,7 @@ import static com.rusefi.ui.util.UiUtils.createOnTopParent;
 public class ConsoleUI {
     private static final Logging log = getLogging(ConsoleUI.class);
     private static final int DEFAULT_TAB_INDEX = 0;
-    private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
+    private static final String WIKI_URL = "https://wiki.rusefi.com/rusEFI-logs-folder";
 
     public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";

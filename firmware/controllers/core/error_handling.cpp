@@ -117,7 +117,7 @@ void errorHandlerInit() {
 	}
 #endif // EFI_PROD_CODE
 
-	// see https://github.com/rusefi/rusefi/wiki/Resilience
+	// see https://wiki.rusefi.com/Resilience
 	addConsoleAction("chibi_fault", [](){ chDbgCheck(0); } );
 	addConsoleAction("soft_fault", [](){ firmwareError(ObdCode::RUNTIME_CRITICAL_TEST_ERROR, "firmwareError: %d", getRusEfiVersion()); });
 	addConsoleAction("hard_fault", [](){ causeHardFault(); } );
