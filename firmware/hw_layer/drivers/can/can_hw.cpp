@@ -85,6 +85,22 @@ CCM_OPTIONAL static CanRead canRead3(2);
 #endif
 static CanWrite canWrite CCM_OPTIONAL;
 
+#if EFI_PROD_CODE
+static CANDriver* getCanDevice(size_t index)
+{
+	switch (index) {
+	case 0:
+		return detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
+	case 1:
+		return detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
+	case 2:
+		return detectCanDevice(engineConfiguration->can3RxPin, engineConfiguration->can3TxPin);
+	}
+
+	return nullptr;
+}
+#endif
+
 static void canInfo() {
 	if (!isCanEnabled) {
 		efiPrintf("CAN is not enabled, please enable & restart");
@@ -93,16 +109,16 @@ static void canInfo() {
 
 	efiPrintf("CAN1 TX %s %s", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate));
 	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
-	canHwInfo(detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin));
+	canHwInfo(getCanDevice(0));
 
 	efiPrintf("CAN2 TX %s %s", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate));
 	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
-	canHwInfo(detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin));
+	canHwInfo(getCanDevice(1));
 
 #if (EFI_CAN_BUS_COUNT >= 3)
 	efiPrintf("CAN3 TX %s %s", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate));
 	efiPrintf("CAN3 RX %s", hwPortname(engineConfiguration->can3RxPin));
-	canHwInfo(detectCanDevice(engineConfiguration->can3RxPin, engineConfiguration->can3TxPin));
+	canHwInfo(getCanDevice(2));
 #endif
 
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
@@ -197,10 +213,10 @@ void initCan() {
 	}
 
 	// Determine physical CAN peripherals based on selected pins
-	auto device1 = detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
-	auto device2 = detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
+	auto device1 = getCanDevice(0);
+	auto device2 = getCanDevice(1);
 #if (EFI_CAN_BUS_COUNT >= 3)
-	auto device3 = detectCanDevice(engineConfiguration->can3RxPin, engineConfiguration->can3TxPin);
+	auto device3 = getCanDevice(2);
 #endif
 
 	// If all devices are null, a firmware error was already thrown by detectCanDevice, but we shouldn't continue

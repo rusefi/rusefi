@@ -165,6 +165,8 @@ typedef struct {
 } CANRxFrame;
 
 extern CANDriver CAND1;
+extern CANDriver CAND2;
+extern CANDriver CAND3;
 
 #ifdef __cplusplus
 extern "C" {
