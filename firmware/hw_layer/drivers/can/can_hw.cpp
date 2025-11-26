@@ -93,8 +93,10 @@ static CANDriver* getCanDevice(size_t index)
 		return detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
 	case 1:
 		return detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
+#if (EFI_CAN_BUS_COUNT >= 3)
 	case 2:
 		return detectCanDevice(engineConfiguration->can3RxPin, engineConfiguration->can3TxPin);
+#endif
 	}
 
 	return nullptr;
