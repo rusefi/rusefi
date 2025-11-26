@@ -1,7 +1,7 @@
 /**
  * @file perf_trace.cpp
  *
- * https://github.com/rusefi/rusefi/wiki/Developer-Performance-Tracing
+ * https://wiki.rusefi.com/Developer-Performance-Tracing
  *
  * See JsonOutput.java in rusEfi console
  */

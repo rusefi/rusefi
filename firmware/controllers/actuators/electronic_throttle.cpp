@@ -7,7 +7,7 @@
  * PPS=pedal position sensor=AcceleratorPedal
  * TPS=throttle position sensor, this one is inside ETB=electronic throttle body
  *
- * Limited user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
+ * Limited user documentation at https://wiki.rusefi.com/HOWTO_electronic_throttle_body
  *
  *
  *  ETB is controlled according to pedal position input (pedal position sensor is a potentiometer)

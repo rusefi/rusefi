@@ -513,7 +513,7 @@ pins:
 
 info:
   cid: main
-  board_url: https://github.com/rusefi/rusefi/wiki/Hellen81
+  board_url: https://wiki.rusefi.com/Hellen81
   title: Hellen 81
   directory: hellen/hellen81
   image:

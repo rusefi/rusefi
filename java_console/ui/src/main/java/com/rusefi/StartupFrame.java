@@ -222,7 +222,7 @@ public class StartupFrame {
 
         if (ConsoleBundleUtil.readBundleFullNameNotNull().getTarget().contains("proteus_f7")) {
             String text = "WARNING: Proteus F7";
-            URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
+            URLLabel urlLabel = new URLLabel(text, "https://wiki.rusefi.com/F7-requires-full-erase");
             new Timer(500, new ActionListener() {
                 int counter;
                 @Override

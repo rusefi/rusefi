@@ -9,7 +9,7 @@ package com.rusefi.ts_plugin.ui;
 /*
 public class RemoteTab {
     private static final String APPLICATION_PORT = "application_port";
-    public static final String HOWTO_REMOTE_TUNING = "https://github.com/rusefi/rusefi/wiki/HOWTO-Remote-Tuning";
+    public static final String HOWTO_REMOTE_TUNING = "https://wiki.rusefi.com/HOWTO-Remote-Tuning";
     private final JComponent content = new JPanel(new BorderLayout());
     private final JScrollPane scroll = new JScrollPane(content, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 

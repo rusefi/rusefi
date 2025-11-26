@@ -363,7 +363,7 @@ info:
   name: Hellen 121 Nissan
   cid: main
   order: 0
-  board_url: https://github.com/rusefi/rusefi/wiki/Hellen-121-Nissan
+  board_url: https://wiki.rusefi.com/Hellen-121-Nissan
   directory: hellen/hellen121nissan
   image:
     file: 121pin.jpg

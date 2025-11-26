@@ -395,7 +395,7 @@ pins:
     function: BK2 DC Wastegate Neg
 
 info:
-  board_url: https://github.com/rusefi/rusefi/wiki/Hellen-154-Hyundai
+  board_url: https://wiki.rusefi.com/Hellen-154-Hyundai
   directory: hellen/hellen154hyundai
   title: Hellen 154 Hyundai
   cid: main

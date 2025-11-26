@@ -37,7 +37,7 @@ import static com.rusefi.config.Field.niceToString;
  * <p>
  * [CannedTunes]
  * <p>
- * see <a href="https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process">...</a>
+ * see <a href="https://wiki.rusefi.com/Canned-Tune-Process">...</a>
  */
 public class TuneCanTool {
     private static final Logging log = getLogging(TuneCanTool.class);

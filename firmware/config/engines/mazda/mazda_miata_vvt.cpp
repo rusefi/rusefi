@@ -396,7 +396,7 @@ static void setMazdaMiataEngineNB2Defaults() {
 #endif // HW_HELLEN
 
 /**
- * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
+ * https://wiki.rusefi.com/HOWTO-TCU-A42DE-on-Proteus
  */
 #if HW_PROTEUS
 void setMiataNB2_Proteus_TCU() {

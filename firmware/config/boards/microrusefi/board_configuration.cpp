@@ -13,7 +13,7 @@
  * MRE_BOARD_NEW_TEST
  * set engine_type 31
  *
- * See https://github.com/rusefi/rusefi/wiki/Hardware-microRusEfi-wiring
+ * See https://wiki.rusefi.com/Hardware-microRusEfi-wiring
  *
  * @author Matthew Kennedy, (c) 2019
  */

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Here we generate C++ code for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getcalibrationname
+ * Here we generate C++ code for https://wiki.rusefi.com/Lua-Scripting#getcalibrationname
  * @see GetOutputValueConsumer
  * @see GetConfigValueConsumerTest
  */

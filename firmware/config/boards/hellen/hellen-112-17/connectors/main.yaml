@@ -379,7 +379,7 @@ info:
   cid: H-112
   title: H-112
   directory: hellen/hellen-112-17
-  board_url: https://github.com/rusefi/rusefi/wiki/Hellen112-17
+  board_url: https://wiki.rusefi.com/Hellen112-17
   name: H-112
   image:
     file: main.jpg

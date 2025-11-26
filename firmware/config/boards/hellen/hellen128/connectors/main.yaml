@@ -617,7 +617,7 @@ pins:
   - pin: F13
 # OUT_IGN4 Q3
 # CLK230
-# used as Coil#1 on M104 https://github.com/rusefi/rusefi/wiki/1997-e320
+# used as Coil#1 on M104 https://wiki.rusefi.com/1997-e320
     id: E3
     class: outputs
     ts_name: F13 - IGN 4

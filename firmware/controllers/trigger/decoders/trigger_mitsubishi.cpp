@@ -118,7 +118,7 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 }
 
 // Mitsubishi 4B11
-// https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#36-2-1
+// https://wiki.rusefi.com/All-Supported-Triggers#36-2-1
 void initialize36_2_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 90;

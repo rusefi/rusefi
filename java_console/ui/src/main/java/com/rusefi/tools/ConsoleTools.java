@@ -229,7 +229,7 @@ public class ConsoleTools {
         String authToken = AuthTokenPanel.getAuthToken();
         if (authToken.trim().isEmpty()) {
             System.out.println("Auth token not defined. Please use " + SET_AUTH_TOKEN + " command");
-            System.out.println("\tPlease see https://github.com/rusefi/rusefi/wiki/Online");
+            System.out.println("\tPlease see https://wiki.rusefi.com/Online");
             return;
         }
         System.out.println("Auth token: " + authToken);

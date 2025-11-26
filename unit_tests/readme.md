@@ -1,4 +1,4 @@
-See https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control
+See https://wiki.rusefi.com/Dev-Quality-Control
 
 TL, DR: just follow [tests](tests) folder as examples. [tests/nitrous_control](tests/nitrous_control) is a great starting point!
 
@@ -23,11 +23,11 @@ for make the coverage locally you need to install [gcovr](https://gcovr.com/en/s
 build the test with `make COVERAGE=yes`, run `build/rusefi_test` then finally `unit_tests/ci_gcov.sh`
 the report will be on `unit_tests/gcov_working_area/gcov/index.html`
 
-See also [https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation](https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation)
+See also [https://wiki.rusefi.com/Build-Server-and-Automation](https://wiki.rusefi.com/Build-Server-and-Automation)
 
 # Triggers Images
 
-[Trigger images](https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers) generation is still a two-step manual process:
+[Trigger images](https://wiki.rusefi.com/All-Supported-Triggers) generation is still a two-step manual process:
 
 Step 1: Invoke unit_tests. One of the unit_tests artifacts is triggers.txt
 

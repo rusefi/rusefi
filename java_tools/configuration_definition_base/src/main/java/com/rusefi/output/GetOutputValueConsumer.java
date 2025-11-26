@@ -16,7 +16,7 @@ import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 import static com.rusefi.output.SdCardFieldsContent.getNamePrefix;
 
 /**
- * here we generate C++ code needed for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getoutputname implementation
+ * here we generate C++ code needed for https://wiki.rusefi.com/Lua-Scripting#getoutputname implementation
  *
  * @see GetConfigValueConsumer
  */

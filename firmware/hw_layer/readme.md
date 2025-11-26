@@ -1,2 +1,2 @@
 # Hardware Layer
-https://github.com/rusefi/rusefi/wiki/ASIC
+https://wiki.rusefi.com/ASIC

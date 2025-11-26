@@ -201,7 +201,7 @@ void helpCommand(void) {
 		TokenCallback *current = &consoleActions[i];
 		efiPrintf("  %s: %d parameters", current->token, getParameterCount(current->parameterType));
 	}
-	efiPrintf("For more visit https://github.com/rusefi/rusefi/wiki/Dev-Console-Commands");
+	efiPrintf("For more visit https://wiki.rusefi.com/Dev-Console-Commands");
 }
 
 int findEndOfToken(const char *line) {

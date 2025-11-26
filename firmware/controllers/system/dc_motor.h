@@ -1,7 +1,7 @@
 /**
  *  @file dc_motor.h
  *
- * ETB user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
+ * ETB user documentation at https://wiki.rusefi.com/HOWTO_electronic_throttle_body
  *
  *
  *  @date Dec 22, 2018
