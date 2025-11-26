@@ -588,6 +588,8 @@ void initHardware() {
 #if EFI_SIMULATOR
 	// Set CAN device name
 	CAND1.deviceName = "can0";
+	CAND2.deviceName = "can1";
+	CAND3.deviceName = "can2";
 #endif
 
 	initCan();

@@ -49,6 +49,16 @@
  */
 CANDriver CAND1;
 
+/**
+ * @brief   CAN2 driver identifier.
+ */
+CANDriver CAND2;
+
+/**
+ * @brief   CAN3 driver identifier.
+ */
+CANDriver CAND3;
+
 /*===========================================================================*/
 /* Driver local variables and types.                                         */
 /*===========================================================================*/
@@ -73,8 +83,12 @@ CANDriver CAND1;
 void can_lld_init(void) {
 	/* Driver initialization.*/
 	canObjectInit(&CAND1);
+	canObjectInit(&CAND2);
+	canObjectInit(&CAND3);
 
 	CAND1.sock = -1;
+	CAND2.sock = -1;
+	CAND3.sock = -1;
 }
 
 static std::vector<CANDriver*> instances;
@@ -110,30 +124,33 @@ void can_lld_start(CANDriver *canp) {
 	memset(&addr, 0, sizeof(addr));
 	addr.can_family = AF_CAN;
 
-	{
-		// Determine index of the CAN device with the requested name
-		ifreq ifr;
-		strcpy(ifr.ifr_name, canp->deviceName);
-		ioctl(sock, SIOCGIFINDEX, &ifr);
+	// Determine index of the CAN device with the requested name
+	ifreq ifr;
+	strcpy(ifr.ifr_name, canp->deviceName);
+	int ret = ioctl(sock, SIOCGIFINDEX, &ifr);
+
+	if (ret >= 0) {
 		addr.can_ifindex = ifr.ifr_ifindex;
+
+		if (bind(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
+			// TODO: handle
+			printf("can_lld_start error binding!\n");
+			return;
+		}
+
+		canp->sock = sock;
+
+		// Initialize the rx queue
+		canp->rx = new std::queue<can_frame>;
+
+		// Add this instance so it will have receive listened to by the "interrupt handler"
+		instances.push_back(canp);
+
+		// TODO: can we even set bitrate from userspace?
+		printf("can_lld_start %s OK!\n", canp->deviceName);
+	} else {
+		printf("can_lld_start %s inteface is not available, redirecting to null\n", canp->deviceName);
 	}
-
-	if (bind(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
-		// TODO: handle
-		printf("can_lld_start error binding!\n");
-		return;
-	}
-
-	canp->sock = sock;
-
-	// Initialize the rx queue
-	canp->rx = new std::queue<can_frame>;
-
-	// Add this instance so it will have receive listened to by the "interrupt handler"
-	instances.push_back(canp);
-
-	// TODO: can we even set bitrate from userspace?
-		printf("can_lld_start OK!\n");
 #endif /* !EFI_SIM_IS_WINDOWS */
 }
 
@@ -151,12 +168,14 @@ void can_lld_stop(CANDriver *canp) {
 	// Remove from the "interrupt handler" list
 	(void)std::remove(instances.begin(), instances.end(), canp);
 
-	// Close the socket.
-	close(canp->sock);
-	canp->sock = -1;
+	if (canp->sock >= 0) {
+		// Close the socket.
+		close(canp->sock);
+		canp->sock = -1;
 
-	// Free the rx queue
-	delete reinterpret_cast<std::queue<can_frame>*>(canp->rx);
+		// Free the rx queue
+		delete reinterpret_cast<std::queue<can_frame>*>(canp->rx);
+	}
 #endif /* !EFI_SIM_IS_WINDOWS */
 }
 
@@ -200,6 +219,10 @@ void can_lld_transmit(CANDriver *canp,
 	(void)mailbox;
 
 #if !EFI_SIM_IS_WINDOWS
+	if (canp->sock < 0) {
+		// to null
+		return;
+	}
 	can_frame frame;
 
 	memcpy(frame.data, ctfp->data8, 8);
@@ -254,6 +277,10 @@ bool check_can_isr() {
 #if !EFI_SIM_IS_WINDOWS
 	for (auto canp : instances) {
 		can_frame frame;
+
+		if (canp->sock < 0) {
+			continue;
+		}
 
 		// nonblocking read so it fails instantly in case no frame is queued
 		int result = recv(canp->sock, &frame, sizeof(frame), MSG_DONTWAIT);
