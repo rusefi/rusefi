@@ -114,6 +114,9 @@ struct CANDriver {
 
 	// This contains a std::queue of received frames
 	void* rx;
+
+	// RE hack
+	int                       waiting_ms;
 };
 
 typedef struct {
