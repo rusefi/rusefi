@@ -87,6 +87,9 @@ static bool storageWriteID(uint32_t id) {
 	} else if (id == EFI_LTFT_RECORD_ID) {
 		engine->module<LongTermFuelTrim>()->store();
 		return true;
+	} else if (id == EFI_LUA_RECORD_ID) {
+		saveLuaToMemory();
+		return true;
 	} else {
 		efiPrintf("Requested to write unknown record id %ld", id);
 		// to clear pending bit

@@ -10,6 +10,10 @@
 #include "lua_hooks.h"
 #include "can_filter.h"
 
+#if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
+#include "storage.h"
+#endif
+
 #define TAG "LUA "
 
 static bool withErrorLoading = false;
@@ -20,6 +24,8 @@ static int recentRxCount = 0;
 static int totalRxCount = 0;
 static int rxTime;
 #endif // EFI_CAN_SUPPORT
+
+page3_s luaScriptContainer;
 
 static int lua_setTickRate(lua_State* l) {
 	float userFreq = luaL_checknumber(l, 1);
@@ -248,9 +254,35 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	return true;
 }
 
+bool loadLuaFromMemory() {
+#if EFI_PROD_CODE
+	return storageRead(EFI_LUA_RECORD_ID, reinterpret_cast<uint8_t*>(&luaScriptContainer.luaScript), sizeof(luaScriptContainer.luaScript)) == StorageStatus::Ok;
+#else
+	return true;
+#endif //EFI_PROD_CODE
+}
+
+void saveLuaToMemory() {
+#if EFI_PROD_CODE
+	storageWrite(EFI_LUA_RECORD_ID, reinterpret_cast<const uint8_t*>(luaScriptContainer.luaScript), sizeof(luaScriptContainer.luaScript));
+#endif //EFI_PROD_CODE
+}
+
+void *getLuaTsPage() {
+	return luaScriptContainer.luaScript;
+}
+
+size_t luaGetTsPageSize() {
+	return sizeof(luaScriptContainer.luaScript);
+}
+
 void LuaThread::ThreadTask() {
 	while (!chThdShouldTerminateX()) {
-		bool wasOk = runOneLua(luaHeapAlloc, config->luaScript);
+		if (!loadLuaFromMemory()) {
+			chThdSleepMilliseconds(100);
+			continue;
+		}
+		bool wasOk = runOneLua(luaHeapAlloc, luaScriptContainer.luaScript);
 
 		auto usedAfterRun = luaHeapUsed();
 		if (usedAfterRun != 0) {
