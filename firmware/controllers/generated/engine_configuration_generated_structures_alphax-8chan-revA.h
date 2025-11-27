@@ -571,7 +571,7 @@ static_assert(sizeof(injector_s) == 60);
 // start of trigger_config_s
 struct trigger_config_s {
 	/**
-	 * https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers
+	 * https://wiki.rusefi.com/All-Supported-Triggers
 	 * offset 0
 	 */
 	trigger_type_e type;

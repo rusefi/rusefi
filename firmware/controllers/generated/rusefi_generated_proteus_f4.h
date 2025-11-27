@@ -1390,7 +1390,7 @@
 #define LUA_PWM_COUNT 8
 #define LUA_SCRIPT_SIZE 12000
 #define MAF_DECODING_COUNT 32
-#define MAIN_HELP_URL "https://github.com/rusefi/rusefi/wiki/Proteus-Manual"
+#define MAIN_HELP_URL "https://wiki.rusefi.com/Proteus-Manual"
 #define MAP_ANGLE_SIZE 8
 #define MAP_EST_LOAD_COUNT 6
 #define MAP_EST_RPM_COUNT 6
@@ -1544,7 +1544,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2309243039
+#define SIGNATURE_HASH 4154203575
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2132,7 +2132,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.11.26.proteus_f4.2309243039"
+#define TS_SIGNATURE "rusEFI master.2025.11.27.proteus_f4.4154203575"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
