@@ -359,7 +359,11 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 		// TODO: adjust timeout!
 		if (!rxFifoBuf.get(rxmsg, timeout)) {
 			// TODO: error codes
-			efiPrintf("IsoTP: rx timeout, %d left to receive", waitingForNumBytes);
+			if (isFirstFrame) {
+				efiPrintf("IsoTp: rx timeout, nothing received");
+			} else {
+				efiPrintf("IsoTP: rx timeout, %d left to receive", waitingForNumBytes);
+			}
 			return -1;
 		}
 
