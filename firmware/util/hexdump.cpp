@@ -46,9 +46,9 @@ void hexdump(const void *mem, size_t len, unsigned int prefix, bool printChar) {
 						offset += sprintf(buffer + offset, ".");
 					}
 				}
+				offset += sprintf(buffer + offset, "|");
 			}
 
-			offset += sprintf(buffer + offset, "|");
 			buffer[offset] = '\0';
 			efiPrintf("%s", buffer);
 			offset = 0;
