@@ -3,7 +3,6 @@
 #pragma once
 
 #include "lua.hpp"
-#include "page_3_generated.h"
 
 class LuaHandle final {
 public:
@@ -66,7 +65,6 @@ int doLuaCanRx(LuaHandle& ls);
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame);
 size_t getLuaCanRxDropped();
 
-extern page3_s luaScriptContainer;
 void *getLuaTsPage();
 void saveLuaToMemory();
 size_t luaGetTsPageSize();

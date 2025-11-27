@@ -46,7 +46,6 @@
 #endif // EFI_BOOTLOADER
 #include "signature.h"
 #include "pin_repository.h"
-#include "rusefi_lua.h"
 
 #if EFI_UNIT_TEST
 #include <gtest/gtest.h>

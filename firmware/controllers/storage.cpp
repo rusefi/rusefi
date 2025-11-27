@@ -9,6 +9,7 @@
 #include "pch.h"
 
 #include "storage.h"
+#include "rusefi_lua.h"
 
 #if EFI_CONFIGURATION_STORAGE
 #include "mpu_util.h"
