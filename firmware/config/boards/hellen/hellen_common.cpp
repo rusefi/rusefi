@@ -8,12 +8,13 @@ void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
-// same for MM100, 144 and 176
+// same for MM100, 144 and 176 - but different for 64 see 'setHellen64Can'
 void setHellenCan() {
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
+// same for lqfp64
 void setHellenCan2() {
 	engineConfiguration->can2RxPin = Gpio::B12;
 	engineConfiguration->can2TxPin = Gpio::B13;
