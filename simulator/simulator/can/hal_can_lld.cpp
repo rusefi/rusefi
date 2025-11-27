@@ -30,6 +30,7 @@
 #include <linux/can.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
+#include <errno.h>
 #endif /* !EFI_SIM_IS_WINDOWS */
 
 #include <algorithm>
@@ -130,6 +131,7 @@ void can_lld_start(CANDriver *canp) {
 	int ret = ioctl(sock, SIOCGIFINDEX, &ifr);
 
 	if (ret >= 0) {
+		addr.can_family = AF_CAN;
 		addr.can_ifindex = ifr.ifr_ifindex;
 
 		if (bind(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
@@ -219,6 +221,8 @@ void can_lld_transmit(CANDriver *canp,
 	(void)mailbox;
 
 #if !EFI_SIM_IS_WINDOWS
+	const int can_wait_timeout = 100; // mS
+
 	if (canp->sock < 0) {
 		// to null
 		return;
@@ -232,12 +236,41 @@ void can_lld_transmit(CANDriver *canp,
 	// bit 31 is 1 for extended, 0 for standard
 	frame.can_id |= ctfp->IDE ? (1 << 31) : 0;
 
-	int res = write(canp->sock, &frame, sizeof(frame));
+	int res = 0;
+	do {
+		res = write(canp->sock, &frame, sizeof(frame));
+		if (res < 0) {
+			// bus is already in error state, do not wait more...
+			if (canp->waiting_ms >= can_wait_timeout) {
+				return;
+			}
+			if (errno == ENOBUFS) {
+				/* If no space available, wait for 5 ms and try again */
+				usleep(5000);
+				canp->waiting_ms += 5;
+			} else if(errno == EAGAIN || errno == EINTR) {
+				/* Acceptable, since something interrupted us, try again */
+				canp->waiting_ms += 5;
+			} else {
+				printf("%s: write() failed, encountered an error during write(). %d - '%s'\n",
+					canp->deviceName, errno, strerror(errno));
+				return;
+			}
 
-	if (res != sizeof(frame)) {
-		// TODO: handle err
-		return;
+			if (canp->waiting_ms >= can_wait_timeout) {
+				/* We finally got tired of waiting, give up */
+				printf("%s: write() failed, we have been waiting for CAN buffers for too long (>%d ms)\n",
+					canp->deviceName, can_wait_timeout);
+				return;
+			}
+		}
+	} while (res < 0);
+
+	if (canp->waiting_ms >= can_wait_timeout) {
+		printf("%s: recovered from error state\n", canp->deviceName);
 	}
+
+	canp->waiting_ms = 0;
 #else
 	(void)canp;
 	(void)ctfp;
