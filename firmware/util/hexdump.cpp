@@ -9,7 +9,7 @@
 	#define HEXDUMP_COLS 16
 #endif
 
-void hexdump(void *mem, size_t len, unsigned int prefix, bool printChar) {
+void hexdump(const void *mem, size_t len, unsigned int prefix, bool printChar) {
 	char buffer[128];
 	size_t offset = 0;
 
