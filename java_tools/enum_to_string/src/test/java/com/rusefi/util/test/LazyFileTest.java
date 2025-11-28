@@ -8,6 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LazyFileTest {
     @Test
     public void testUnifySpaces() {
-        assertEquals("abc", LazyFileImpl.unifySpaces("a\r\n\r\nb\n\n\nc"));
+        assertEquals("a\nb\nc", LazyFileImpl.unifySpaces("a\r\n\r\nb\n\n\nc"));
     }
 }

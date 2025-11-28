@@ -76,7 +76,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
         // File.getPath() would eliminate potential separator at the end of the path
         String fileName = getTsFileOutputName(new File(ConfigDefinitionRootOutputFolder.getValue() + tsPath).getPath());
-        Output tsHeader = new LazyFileImpl(fileName);
+        Output tsHeader = new LazyFileImpl(fileName, ConfigDefinitionRootOutputFolder.getValue() + "generated.patch");
         writeContent(fieldsSection, tsContent, tsHeader);
         try {
             testFreshlyProducedIniFile(fileName);
