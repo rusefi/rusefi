@@ -757,3 +757,7 @@ void setEngineType(int value, bool isWriteToFlash) {
 	printConfiguration();
 #endif // ! EFI_UNIT_TEST
 }
+
+void setLuaScript(const char *luaScript) {
+	strncpy(config->luaScript, luaScript, efi::size(config->luaScript) - 1);
+}
