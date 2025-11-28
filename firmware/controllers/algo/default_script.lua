@@ -1,4 +1,4 @@
-	strncpy(config->luaScript, R"(
+	setLuaScript(R"(
 
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
@@ -36,4 +36,4 @@ end
 function onTick()
 end
 
-)", efi::size(config->luaScript));
+)");

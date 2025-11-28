@@ -74,7 +74,7 @@ void setHarley() {
 	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_4, PROTEUS_IN_ANALOG_VOLT_5);
 
 
-	strncpy(config->luaScript, R"(
+	setLuaScript( R"(
 --outputIndex = 0
 --startPwm(outputIndex, 100, 0)
 
@@ -183,6 +183,6 @@ function onTick()
     end
   end
 end
-)", efi::size(config->luaScript));
+)");
 #endif
 }

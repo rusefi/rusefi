@@ -7,6 +7,7 @@
 #include "defaults.h"
 #include <rusefi/arrays.h>
 #include "proteus_meta.h"
+#include "settings.h"
 
 #ifdef HW_HELLEN
 #include "hellen_meta.h"
@@ -106,7 +107,7 @@ void setGmLs4() {
 	engineConfiguration->tChargeAirDecrLimit = 15;
 
 // see https://github.com/rusefi/rusefi_documentation/tree/master/OEM-Docs/GM/Tahoe-2011
-    strncpy(config->luaScript, R"(
+    setLuaScript( R"(
 
 function getBitRange(data, bitIndex, bitWidth)
 	byteIndex = bitIndex >> 3
@@ -210,7 +211,7 @@ function onTick()
     end
 end
 
-    )", efi::size(config->luaScript));
+    )");
 
 	setPPSCalibration(0.51, 2.11, 1.01, 4.23);
 	setTPS1Calibration(880, 129, 118, 870);
