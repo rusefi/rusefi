@@ -56,6 +56,14 @@ PCHSUB = firmware
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
 
+SUBMODULES = $(CHIBIOS) $(CHIBIOS_CONTRIB) libfirmware
+
+ifneq ($(filter 1,$(foreach d,$(SUBMODULES),$(if $(wildcard $(d)/*),,1))),)
+$(info Submodule not found. Chibios: Invoking "git submodule update --init")
+DISCARD := $(shell git submodule update --init)
+$(info Invoked "git submodule update --init")
+endif
+
 include $(PROJECT_DIR)/common_libfirmware.mk
 
 include rusefi.mk
