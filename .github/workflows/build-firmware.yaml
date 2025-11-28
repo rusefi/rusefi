@@ -258,6 +258,10 @@ jobs:
         bash bin/compile.sh ${{env.BOARD_META_PATH}} docs-enums
         bash bin/compile.sh ${{env.BOARD_META_PATH}} config
 
+    - name: Check config diff
+      working-directory: ./firmware/
+      run: colordiff <generated.patch
+
     - name: Building Windows simulator separately just to make github logs more readable
       working-directory: ./firmware/
       run: |
