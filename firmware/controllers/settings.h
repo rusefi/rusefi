@@ -21,3 +21,5 @@ void readPin(const char *pinName);
 
 void printDateTime();
 void setDateTime(const char * const isoDateTime);
+
+void setLuaScript(const char *luaScript);
