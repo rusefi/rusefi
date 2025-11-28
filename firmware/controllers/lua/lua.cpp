@@ -438,6 +438,24 @@ void testLuaExecString(const char* script) {
 #endif // EFI_UNIT_TEST
 #endif // EFI_LUA
 
+#if EFI_UNIT_TEST || !EFI_LUA
+bool loadLuaFromMemory() {
+	return true;
+}
+
+void saveLuaToMemory() {
+}
+
+void *getLuaTsPage() {
+	return luaScriptContainer.luaScript;
+}
+
+size_t luaGetTsPageSize() {
+	return sizeof(luaScriptContainer.luaScript);
+}
+#endif
+
+
 // This is technically non-compliant, but it's only used for lua float parsing.
 // It doesn't properly handle very small and very large numbers, and doesn't
 // parse numbers in the format 1.3e5 at all.

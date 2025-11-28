@@ -65,8 +65,8 @@ int doLuaCanRx(LuaHandle& ls);
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame);
 size_t getLuaCanRxDropped();
 
+#endif // EFI_CAN_SUPPORT
+
 void *getLuaTsPage();
 void saveLuaToMemory();
 size_t luaGetTsPageSize();
-
-#endif // EFI_CAN_SUPPORT
