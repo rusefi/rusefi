@@ -1,5 +1,5 @@
 	// by definition this should be a copy-paste of https://github.com/rusefi/rusefi/blob/master/firmware/controllers/lua/examples/350z-ac.txt
-	strncpy(config->luaScript, R"(
+	setLuaScript( R"(
 
 IN_284 = 0x284 -- 644
 IN_285 = 0x285 -- 645
@@ -200,4 +200,4 @@ canRxAdd(IN_285, onCanRxWheelSpeed2)
 canRxAdd(IN_35D, onCanRxAbs1)
 canRxAdd(IN_35D, onCanRxAc)
 
-)", efi::size(config->luaScript));
+)");

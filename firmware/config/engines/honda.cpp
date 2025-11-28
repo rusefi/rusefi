@@ -15,7 +15,7 @@ void setHondaCivicBcm() {
     engineConfiguration->isBoostControlEnabled = true;
 
 #ifdef HW_SMALL_CAN_BOARD
-strncpy(config->luaScript, R"(
+setLuaScript( R"(
 -- this controls onCanRx rate as well!
 setTickRate(300)
 
@@ -82,6 +82,6 @@ function onTick()
 		mcu_standby()
 	end
 end
-)", efi::size(config->luaScript));
+)");
 #endif // HW_SMALL_CAN_BOARD
 }
