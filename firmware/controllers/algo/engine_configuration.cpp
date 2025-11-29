@@ -109,6 +109,7 @@ static void wipeStrings() {
 	fillAfterString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
 	fillAfterString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
 	fillAfterString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
+	fillAfterString(engineConfiguration->vinNumber, sizeof(vin_number_t));
 }
 
 void onBurnRequest() {
