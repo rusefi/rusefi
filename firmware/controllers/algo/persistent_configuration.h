@@ -11,6 +11,7 @@
 
 #include "rusefi/crc.h"
 
+// todo: ChibiOS has pretty similar functionality for persistent container, we probably should reuse it one day?
 struct persistent_config_container_s {
 	int version{};
 	int size{};
