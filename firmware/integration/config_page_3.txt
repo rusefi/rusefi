@@ -2,5 +2,5 @@
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
 
 struct_no_prefix page3_s
-lua_script_t luaScript;    1, noMsqSave,controllerPriority
+lua_script_t luaScript;
 end_struct
