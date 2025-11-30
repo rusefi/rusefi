@@ -76,7 +76,7 @@ jobs:
 
       # TODO: address `Acquire GCC` version copy paste, maybe a tiny action to acquire specific version?
     - name: Acquire Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1.11.0
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.11.1
       with:
         release: '14.2.Rel1'
 

@@ -16,7 +16,7 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - uses: carlosperate/arm-none-eabi-gcc-action@v1.11.0
+      - uses: carlosperate/arm-none-eabi-gcc-action@v1.11.1
         with:
           release: '14.2.Rel1'
 
