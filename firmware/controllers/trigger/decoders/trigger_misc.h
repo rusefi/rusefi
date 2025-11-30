@@ -25,3 +25,8 @@ void configureBenelli(TriggerWaveform *s);
  */
 void configure60degSingleTooth(TriggerWaveform *s);
 void configureArcticCat(TriggerWaveform *s);
+/**
+ * @brief Audi 5 cylinder 135-tooth crank with reference pin and CAM HALL gating
+ * @param s Trigger waveform visitor to config
+ */
+void configureAudi5Cyl135_1_1(TriggerWaveform *s);
