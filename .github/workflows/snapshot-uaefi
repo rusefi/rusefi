@@ -4,8 +4,6 @@ on:
   workflow_dispatch:       # Manual trigger
   pull_request:
   push:
-    branches:
-      - singleboardactions              # Optional auto-trigger on pushes to main
 
 jobs:
   snapshot:
