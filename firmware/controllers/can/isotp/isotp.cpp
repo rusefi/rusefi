@@ -560,9 +560,11 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 		offset += numSent;
 		size -= numSent;
 
+#if ! EFI_UNIT_TEST
 		if (separationTimeUs) {
 			chThdSleepMicroseconds(separationTimeUs);
 		}
+#endif // EFI_UNIT_TEST
 	}
 	return offset;
 }
