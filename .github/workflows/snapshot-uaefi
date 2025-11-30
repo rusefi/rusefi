@@ -1,0 +1,43 @@
+name: uaEFI Snapshot Build
+
+on:
+  workflow_dispatch:       # Manual trigger
+  pull_request:
+  push:
+    branches:
+      - singleboardactions              # Optional auto-trigger on pushes to main
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update BUILD_DATE.txt
+        run: |
+          # Use UTC date + epoch for snapshot version string
+          date -u +"%Y%m%d@%s" > firmware/BUILD_DATE.txt
+          cat firmware/BUILD_DATE.txt
+
+      - name: Set up ARM GCC Toolchain
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: '12.2.Rel1'
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc-arm-none-eabi
+
+      - name: Build uaEFI firmware
+        run: |
+          ./firmware/build.sh uaefi
+
+      - name: Upload snapshot artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: uaefi-snapshot
+          path: |
+            firmware/build/uaefi/**
