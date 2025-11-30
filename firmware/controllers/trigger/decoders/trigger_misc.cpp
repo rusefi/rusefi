@@ -222,3 +222,60 @@ void configureArcticCat(TriggerWaveform *s) {
 
 
 }
+
+/**
+ * Audi 5 cylinder trigger wheel implementation
+ *
+ * Physical trigger system (Motronic sensor designations):
+ * - G28: VR 135 crankteeth - Engine Speed sensor on flywheel/starter ring
+ * - G4:  VR crank home - Ignition Timing Reference, single tooth at 62° BTDC #1
+ * - G40: CAM HALL sensor - Single window per cam rotation, used for 720° sync
+ *
+ * Wiring:
+ * - G28 (T55/47) → Primary Trigger Input (135 teeth for RPM)
+ * - G4  (T55/49) → Secondary Trigger Input (1 tooth timing reference)
+ * - G40          → CAM Input 0 (HALL sensor, single window)
+ * - T55/48       → VR Ground (shared by G28 and G4)
+ *
+ * The G40 CAM HALL signal acts as a software gate for the G4 timing reference:
+ * - When G40 CAM HALL is HIGH: G4 crank home pulse is PROCESSED
+ * - When G40 CAM HALL is LOW: G4 crank home pulse is IGNORED
+ *
+ * Software gating: G40 CAM HALL gates the G4 timing reference signal
+ * to produce 1 crank-precise sync pulse per cam rotation (720°)
+ *
+ * Based on VEMS documentation for Audi 5 cylinder engines.
+ * 135 teeth per 360° crank rotation = 2.667° per tooth
+ * G4 crank home at 62° BTDC cylinder #1
+ *
+ * Note: This trigger uses the primary channel for the G28 135-tooth wheel only.
+ * The G4 secondary signal and G40 CAM HALL gating are handled by software gating
+ * logic in trigger_central.cpp when useAudiTriggerGating is enabled.
+ */
+void configureAudi5Cyl135_1_1(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
+
+	// The G28 135-tooth wheel has no missing teeth (no gaps), so there's no gap-based
+	// sync pattern to detect. isSynchronizationNeeded refers to gap detection in
+	// the primary trigger signal, which is not applicable here.
+	s->isSynchronizationNeeded = false;
+	// shapeWithoutTdc indicates the primary wheel pattern doesn't provide
+	// a unique TDC reference point - TDC sync comes from G4 via software gating
+	s->shapeWithoutTdc = true;
+	// needSecondTriggerInput enables processing of the G4 secondary signal,
+	// which is used with G40 CAM HALL software gating for cycle synchronization
+	s->needSecondTriggerInput = true;
+	s->tdcPosition = 62;                 // G4 crank home is 62° BTDC cylinder #1
+
+	float engineCycle = FOUR_STROKE_ENGINE_CYCLE; // 720°
+	float toothWidth = 0.5;
+	int totalTeethCount = 135;
+
+	// PRIMARY: 135 evenly-spaced teeth from G28 sensor
+	// Over 720° engine cycle, this means 270 tooth events
+	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0,
+		toothWidth, 0, engineCycle, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+
+	// Note: Secondary (G4) and G40 CAM HALL gating are implemented in software
+	// via useAudiTriggerGating configuration option in trigger_central.cpp
+}
