@@ -488,6 +488,22 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 		return;
 	}
 
+	// Software gating for Audi 5-cylinder trigger (TT_AUDI_5CYL_135_1_1)
+	// When enabled, the secondary trigger (G4 timing reference) is gated by the G40 CAM HALL signal
+	// Only process secondary trigger events when G40 CAM HALL is in the active state
+	bool useAudiTriggerGating = TODO compare trigger setting to TRI_TACH
+	if (!isPrimary && useAudiTriggerGating) {
+		bool camHallState = engine->outputChannels.vvtChannel1;
+		bool audiCamGateInverted = todo triple check if existing 'invertXXX' setting would work just fine
+		if (audiCamGateInverted) {
+			camHallState = !camHallState;
+		}
+		if (!camHallState) {
+			// Gate is closed - ignore this G4 crank home pulse
+			return;
+		}
+	}
+
 	trigger_event_e signal;
 	// todo: add support for 3rd channel
 	if (isRising) {
