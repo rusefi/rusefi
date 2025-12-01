@@ -25,32 +25,6 @@ void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->setTriggerSynchronizationGap(3);
 }
 
-// TT_TRI_TACH
-void configureTriTach(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
-
-	s->isSynchronizationNeeded = false;
-
-	float toothWidth = 0.5;
-
-	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
-
-	int totalTeethCount = 135;
-	float offset = 0;
-
-	float angleDown = engineCycle / totalTeethCount * (0 + (1 - toothWidth));
-	float angleUp = engineCycle / totalTeethCount * (0 + 1);
-	s->addEventClamped(offset + angleDown, TriggerValue::RISE, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleDown + 0.1, TriggerValue::RISE, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleUp, TriggerValue::FALL, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleUp + 0.1, TriggerValue::FALL, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-
-
-	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, /* skipped */ 0, toothWidth, offset, engineCycle,
-			1.0 * FOUR_STROKE_ENGINE_CYCLE / 135,
-			NO_RIGHT_FILTER);
-}
-
 /**
  * based on https://fordsix.com/threads/understanding-standard-and-signature-pip-thick-film-ignition.81515/
  * based on https://www.w8ji.com/distributor_stabbing.htm
