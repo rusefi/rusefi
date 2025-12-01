@@ -29,7 +29,8 @@ jobs:
 
       - name: Build uaEFI firmware
         run: |
-          ./firmware/build.sh uaefi
+          chmod +x firmware/config/boards/hellen/uaefi/compile_uaefi-bundle.sh
+          ./firmware/config/boards/hellen/uaefi/compile_uaefi-bundle.sh
 
       - name: Upload snapshot artifacts
         uses: actions/upload-artifact@v4
