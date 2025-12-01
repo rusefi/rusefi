@@ -207,7 +207,7 @@ runs:
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
       uses: carlosperate/arm-none-eabi-gcc-action@v1.11.1
       with:
-        release: '14.2.Rel1'
+        release: '14.3.Rel1'
 
     - uses: actions/setup-java@v4
       with:
