@@ -40,6 +40,7 @@ set_board_file BOARD_DIAG_PANEL2_FILE "${BOARD_DIR}/board_diag_panel2.ini"
 set_board_file BOARD_VE_FILE "${BOARD_DIR}/board_ve.ini"
 set_board_file BOARD_INJECTION_SETTINGS_FILE "${BOARD_DIR}/board_injection_settings.ini"
 set_board_file BOARD_IGNITION_SETTINGS_FILE "${BOARD_DIR}/board_ignition_settings.ini"
+set_board_file BOARD_FRONT_PAGE_FILE "${BOARD_DIR}/board_front_page.ini"
 
 
 # most static arguments go first
@@ -76,6 +77,7 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_VE_FROM_FILE ${BOARD_VE_FILE} \
  -readfile BOARD_INJECTION_SETTINGS_FROM_FILE ${BOARD_INJECTION_SETTINGS_FILE} \
  -readfile BOARD_IGNITION_SETTINGS_FROM_FILE ${BOARD_IGNITION_SETTINGS_FILE} \
+ -readfile BOARD_FRONT_PAGE_FROM_FILE ${BOARD_FRONT_PAGE_FILE} \
  -readfile COMMANDS_FROM_FILE ${BOARD_COMMANDS_FILE} \
  -readfile BOARD_POPULAR_VEHICLES_FILE ${BOARD_POPULAR_VEHICLES_FILE} \
  -readfile BOARD_ENGINE_METADATA_FILE ${BOARD_ENGINE_METADATA_FILE} \

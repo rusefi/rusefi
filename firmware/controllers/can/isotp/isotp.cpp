@@ -484,6 +484,7 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
 	CANRxFrame rxmsg;
 	size_t numFcReceived = 0;
+	int separationTimeUs = 0;
 	while (numFcReceived < 3) {
 		// TODO: adjust timeout!
 		if (!rxFifoBuf.get(rxmsg, timeout)) {
@@ -526,11 +527,19 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 
 		uint8_t blockSize = rxmsg.data8[isoHeaderByteIndex + 1];
 		uint8_t minSeparationTime = rxmsg.data8[isoHeaderByteIndex + 2];
-		if (blockSize != 0 || minSeparationTime != 0) {
+		if (blockSize != 0) {
 			// todo: process other Flow Control fields (see ISO 15765-2)
-			efiPrintf("IsoTp: Flow Control fields not supported");
+			efiPrintf("IsoTp: Flow Control blockSize is not supported %d", blockSize);
 			// TODO: error codes
 			return -7;
+		}
+
+		if (minSeparationTime <= 0x7f) {
+			// mS units
+			separationTimeUs = minSeparationTime * 1000;
+		} else if ((minSeparationTime >= 0xf1) && (minSeparationTime <= 0xf9)) {
+			// 100 uS units
+			separationTimeUs = (minSeparationTime - 0xf0) * 100;
 		}
 
 		break;
@@ -550,6 +559,12 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 			break;
 		offset += numSent;
 		size -= numSent;
+
+#if ! EFI_UNIT_TEST
+		if (separationTimeUs) {
+			chThdSleepMicroseconds(separationTimeUs);
+		}
+#endif // EFI_UNIT_TEST
 	}
 	return offset;
 }
