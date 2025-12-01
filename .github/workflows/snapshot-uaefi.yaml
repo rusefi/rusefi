@@ -2,8 +2,6 @@ name: uaEFI Snapshot Build
 
 on:
   workflow_dispatch:       # Manual trigger
-  pull_request:
-  push:
 
 jobs:
   snapshot:
