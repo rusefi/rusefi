@@ -154,6 +154,7 @@
 #define BOARD_DIAG_PANEL1_FROM_FILE 
 #define BOARD_DIAG_PANEL2_FROM_FILE 
 #define BOARD_ENGINE_METADATA_FILE 
+#define BOARD_FRONT_PAGE_FROM_FILE 
 #define BOARD_GAUGES_FROM_FILE 
 #define BOARD_IGNITION_ADVANCE_MENU_FROM_FILE 
 #define BOARD_IGNITION_SETTINGS_FROM_FILE 
@@ -1542,7 +1543,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2303902968
+#define SIGNATURE_HASH 420232792
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2130,7 +2131,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.01.alphax-gold.2303902968"
+#define TS_SIGNATURE "rusEFI master.2025.12.01.alphax-gold.420232792"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
