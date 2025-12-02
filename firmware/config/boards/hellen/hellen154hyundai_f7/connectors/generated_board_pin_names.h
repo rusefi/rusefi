@@ -32,7 +32,7 @@
 #define PIN_K32 H144_IN_TPS2
 #define PIN_K33 H144_IN_CLT
 #define PIN_K35 H144_IN_PPS2
-#define PIN_K40 H144_IN_VSS
+#define PIN_K40 H144_IN_D_4
 #define PIN_K47 H144_LS_7
 #define PIN_K48 H144_LS_8
 #define PIN_K53 H144_IN_IAT
