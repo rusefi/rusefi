@@ -149,7 +149,7 @@ pins:
     function: Analog Ground
 
   - pin: K40
-    meta: H144_IN_VSS
+    meta: H144_IN_D_4
     class: event_inputs
     ts_name: K40 VSS
     function: Vehicle Speed Sensor
