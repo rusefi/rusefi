@@ -589,8 +589,9 @@ bit useSpiImu,"yes","no";If enabled - use onboard SPI Accelerometer, otherwise l
 bit enableStagedInjection,"enabled","disabled"
 bit useIdleAdvanceWhileCoasting,"yes","no"
 
-! note: 0.00489 mult is correct for "faking" 10 bit ADC with 5V Vref
-custom tps_limit_t 2 scalar, S16, @OFFSET@, "V", 0.0048828125, 0, 0, 5, 2
+! note: 0.00489 mult is correct for "faking" 10 bit ADC with 5V Vref - NOPE!
+! note: see TPS_TS_CONVERSION, this is TS related legacy stuff that should be removed someday. 1000 units for 0..5V range
+custom tps_limit_t 2 scalar, S16, @OFFSET@, "V", 0.005, 0, 0, 5, 2
 tps_limit_t tpsMin;Closed voltage for primary throttle position sensor
 tps_limit_t tpsMax;Fully opened voltage for primary throttle position sensor
 
