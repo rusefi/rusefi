@@ -1,0 +1,108 @@
+name: Minimal Firmware Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - meta-info: config/boards/f407-discovery/meta-info.env
+            build-target: f407-discovery
+
+          - meta-info: config/boards/hellen/uaefi/meta-info.env
+            build-target: hellen-uaefi
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+
+      - name: Initialize submodules
+        run: misc/git_scripts/common_submodule_init.sh
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install build tools (ARM GCC + dependencies)
+        run: |
+          sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
+          sudo bash misc/actions/ubuntu-install-tools.sh
+
+      - name: Install Arm GCC
+        uses: carlosperate/arm-none-eabi-gcc-action@v1.11.1
+        with:
+          release: '14.2.Rel1'
+
+      - name: Verify compiler
+        run: arm-none-eabi-gcc -v
+
+      - name: Set build environment variables
+        working-directory: ./firmware/
+        run: |
+          echo BOARD_META_PATH=${{ matrix.meta-info }} >> $GITHUB_ENV
+          echo WHITE_LABEL=rusefi >> $GITHUB_ENV
+
+      - name: Clean (just in case)
+        working-directory: ./firmware/
+        run: make clean
+
+      - name: Build configs
+        working-directory: ./firmware/
+        run: |
+          bash bin/compile.sh ${{ env.BOARD_META_PATH }} docs-enums
+          bash bin/compile.sh ${{ env.BOARD_META_PATH }} config
+
+      - name: Build firmware
+        working-directory: ./firmware/
+        run: |
+          bash bin/compile.sh ${{ env.BOARD_META_PATH }} build_both_bundles --output-sync=recurse
+
+      - name: Create objdump text file
+        working-directory: ./firmware/build
+        run: arm-none-eabi-objdump -d rusefi.elf > rusefi.txt
+
+      - name: Upload ELF
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.build-target }}.elf
+          path: firmware/build/rusefi.elf
+
+      - name: Upload BIN
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.build-target }}.bin
+          path: firmware/deliver/rusefi*.bin
+
+      - name: Upload HEX
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.build-target }}.hex
+          path: firmware/build/rusefi*.hex
+
+      - name: Upload DFU
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.build-target }}.dfu
+          path: firmware/deliver/rusefi*.dfu
+
+      - name: Upload bundle ZIP
+        uses: actions/upload-artifact@v5
+        with:
+          name: rusefi_bundle_${{ matrix.build-target }}.zip
+          path: artifacts/rusefi_bundle_${{ matrix.build-target }}.zip
+
+      - name: Upload objdump text
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.build-target }}.txt
+          path: firmware/build/rusefi.txt
