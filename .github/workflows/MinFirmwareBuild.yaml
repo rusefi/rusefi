@@ -96,18 +96,14 @@ jobs:
           path: firmware/deliver/rusefi*.dfu
 
       - name: Upload bundle ZIP
-        working-directory: ./artifacts
-        run: |
-          source ../firmware/config/boards/common_script_read_meta_env.inc ../firmware/${{ matrix.meta-info }}
-          echo "Bundle name: ${BUNDLE_NAME}"
-          ls -al .
-        shell: bash
-
-      - name: Upload bundle artifact
         uses: actions/upload-artifact@v5
         with:
-          name: bundle_${{ matrix.build-target }}
-          path: artifacts/*.zip
+          name: rusefi_bundle_hellen-uaefi
+          path: |
+            firmware/build/hellen-uaefi/rusefi_bundle_hellen-uaefi.zip
+            firmware/build/hellen-uaefi/*.bin
+            firmware/build/hellen-uaefi/*.hex
+          if-no-files-found: error
 
       - name: Upload objdump text
         uses: actions/upload-artifact@v5
