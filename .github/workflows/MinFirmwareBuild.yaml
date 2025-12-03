@@ -76,3 +76,9 @@ jobs:
         with:
           name: rusefi_bundle_${{matrix.build-target}}.zip
           path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
+          
+      - name: Upload github action autoupdate artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+          path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
