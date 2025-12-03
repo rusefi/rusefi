@@ -96,10 +96,18 @@ jobs:
           path: firmware/deliver/rusefi*.dfu
 
       - name: Upload bundle ZIP
+        working-directory: ./artifacts
+        run: |
+          source ../firmware/config/boards/common_script_read_meta_env.inc ../firmware/${{ matrix.meta-info }}
+          echo "Bundle name: ${BUNDLE_NAME}"
+          ls -al .
+        shell: bash
+
+      - name: Upload bundle artifact
         uses: actions/upload-artifact@v5
         with:
-          name: rusefi_bundle_${{ matrix.build-target }}.zip
-          path: artifacts/rusefi_bundle_${{ matrix.build-target }}.zip
+          name: bundle_${{ matrix.build-target }}
+          path: artifacts/*.zip
 
       - name: Upload objdump text
         uses: actions/upload-artifact@v5
