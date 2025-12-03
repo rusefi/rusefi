@@ -95,15 +95,11 @@ jobs:
           name: ${{ matrix.build-target }}.dfu
           path: firmware/deliver/rusefi*.dfu
 
-      - name: Upload bundle ZIP
+      - name: Upload bundle artifact
         uses: actions/upload-artifact@v5
         with:
-          name: rusefi_bundle_hellen-uaefi
-          path: |
-            firmware/build/hellen-uaefi/rusefi_bundle_hellen-uaefi.zip
-            firmware/build/hellen-uaefi/*.bin
-            firmware/build/hellen-uaefi/*.hex
-          if-no-files-found: error
+          name: rusefi_bundle_${{matrix.build-target}}.zip
+          path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
 
       - name: Upload objdump text
         uses: actions/upload-artifact@v5
