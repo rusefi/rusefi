@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Fixed
+ -ETB: calibration, wrong scale 3% calibration error #8863
+
 ### Added
  - FatFS update to R0.16
 
