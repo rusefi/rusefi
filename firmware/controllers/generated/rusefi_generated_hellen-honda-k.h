@@ -2135,7 +2135,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.02.hellen-honda-k.3151342224"
+#define TS_SIGNATURE "rusEFI master.2025.12.03.hellen-honda-k.3151342224"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
