@@ -71,38 +71,8 @@ jobs:
         working-directory: ./firmware/build
         run: arm-none-eabi-objdump -d rusefi.elf > rusefi.txt
 
-      - name: Upload ELF
-        uses: actions/upload-artifact@v5
-        with:
-          name: ${{ matrix.build-target }}.elf
-          path: firmware/build/rusefi.elf
-
-      - name: Upload BIN
-        uses: actions/upload-artifact@v5
-        with:
-          name: ${{ matrix.build-target }}.bin
-          path: firmware/deliver/rusefi*.bin
-
-      - name: Upload HEX
-        uses: actions/upload-artifact@v5
-        with:
-          name: ${{ matrix.build-target }}.hex
-          path: firmware/build/rusefi*.hex
-
-      - name: Upload DFU
-        uses: actions/upload-artifact@v5
-        with:
-          name: ${{ matrix.build-target }}.dfu
-          path: firmware/deliver/rusefi*.dfu
-
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v5
         with:
           name: rusefi_bundle_${{matrix.build-target}}.zip
           path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
-
-      - name: Upload objdump text
-        uses: actions/upload-artifact@v5
-        with:
-          name: ${{ matrix.build-target }}.txt
-          path: firmware/build/rusefi.txt
