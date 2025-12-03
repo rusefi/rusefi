@@ -217,8 +217,8 @@ pins:
 
   - pin: 34a
     function: CAM Sensor Exhaust
-    meta: MM100_IN_D3
-    class: event_inputs
+    id: [MM100_IN_D3, MM100_IN_D3]
+    class: [switch_inputs, event_inputs]
     ts_name: ___ HALL3
     type: hall
 
@@ -230,8 +230,8 @@ pins:
     type: hall
 
   - pin: 36a
-    meta: MEGA_UAEFI_IN_HALL1
-    class: event_inputs
+    id: [MEGA_UAEFI_IN_HALL1, MEGA_UAEFI_IN_HALL1]
+    class: [switch_inputs, event_inputs]
     function: VSS / HALL1 Sensor
     ts_name: ___ HALL1 / VSS
     type: hall
@@ -276,8 +276,8 @@ pins:
 
   - pin: 42a
     function: FLEX
-    class: event_inputs
-    meta: MM100_IN_VSS
+    class: [switch_inputs, event_inputs]
+    id: [MM100_IN_VSS, MM100_IN_VSS]
     ts_name: FLEX
 
   - pin: 43a
