@@ -16,7 +16,7 @@ jobs:
             build-target: f407-discovery
 
           - meta-info: config/boards/hellen/uaefi/meta-info.env
-            build-target: hellen-uaefi
+            build-target: uaefi
 
     steps:
       - name: Checkout repository
