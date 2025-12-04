@@ -15,6 +15,7 @@ public class TsAccess {
          */
         // todo: does same work for 3.3.01?
         TS_3_3_0("3.3.0", "aP.gX", "bq.b"),
+        TS_3_3_01("3.3.01", "aP.gX", "bq.b"),
         UNKNOWN(null, null, null),
         ;
 
