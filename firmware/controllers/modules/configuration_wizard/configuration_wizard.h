@@ -9,7 +9,9 @@
 
 class ConfigurationWizard {
 public:
-    static void onConfigOnStartUpOrBurn();
+    static void onConfigOnStartUpOrBurn(bool isRunningOnBurn);
+    static void onSlowCallback();
 };
 
-void vinStrategy(void);
+void vinStrategy(bool isRunningOnBurn);
+void vinStrategyOnSlowCallback();

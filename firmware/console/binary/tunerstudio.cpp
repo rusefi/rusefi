@@ -365,6 +365,8 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
 	efiPrintf("TS <- Get CRC page %d offset %d count %d result %08x", page, offset, count, (unsigned int)crc);
+	// todo: rename to onConfigCrc?
+	ConfigurationWizard::onConfigOnStartUpOrBurn(false);
 }
 
 #if EFI_TS_SCATTER
@@ -467,7 +469,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 		tsState.burnCommandCounter++;
 
 		efiPrintf("TS -> Burn");
-		validateConfigOnStartUpOrBurn();
+		validateConfigOnStartUpOrBurn(true);
 
 		// problem: 'popular vehicles' dialog has 'Burn' which is very NOT helpful on that dialog
 		// since users often click both buttons producing a conflict between ECU desire to change settings
@@ -475,6 +477,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 		// Skip the burn if a preset was just loaded - we don't want to overwrite it
 		// [tag:popular_vehicle]
 		if (!needToTriggerTsRefresh()) {
+			efiPrintf("TS -> Burn, we are allowed to burn");
 			requestBurn();
 		}
 		efiPrintf("Burned in %.1fms", t.getElapsedSeconds() * 1e3);
