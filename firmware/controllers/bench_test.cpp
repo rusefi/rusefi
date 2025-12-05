@@ -331,7 +331,9 @@ private:
 			if (widebandUpdatePending) {
 	#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 				if (widebandUpdateFromFile) {
-					updateWidebandFirmwareFromFile(widebandUpdateHwId);
+					#if EFI_PROD_CODE
+						updateWidebandFirmwareFromFile(widebandUpdateHwId);
+					#endif
 				} else {
 					updateWidebandFirmware(widebandUpdateHwId);
 				}

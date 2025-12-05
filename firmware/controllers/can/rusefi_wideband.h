@@ -36,7 +36,9 @@ void setWidebandSensorType(uint8_t hwIndex, uint8_t type);
 // Update the firmware on any (hwIndex = 0xff) or hwIndex defined connected wideband controller
 // Support of hwIndex require WBO bootloader 09.2025+
 void updateWidebandFirmware(uint8_t hwIndex);
+#if EFI_PROD_CODE
 // Same, but loads FW from file
 void updateWidebandFirmwareFromFile(uint8_t hwIndex);
+#endif
 
 #endif //EFI_WIDEBAND_FIRMWARE_UPDATE

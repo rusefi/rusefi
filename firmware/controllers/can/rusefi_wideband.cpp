@@ -18,7 +18,6 @@
 #pragma GCC diagnostic ignored "-Wunused-function"
 #include "wideband_firmware/for_rusefi/wideband_can.h"
 #pragma GCC diagnostic pop
-#include "ff.h"
 
 size_t getWidebandBus() {
 	return engineConfiguration->widebandOnSecondBus ? 1 : 0;
@@ -212,6 +211,8 @@ void sendWidebandInfo() {
 	counter++;
 }
 
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
+
 // reboots to bootloader and erases FW area
 static int updateWidebandFirmwarePrepare(size_t bus, uint8_t hwIndex) {
 	int ret = -1;
@@ -300,6 +301,8 @@ static int updateWidebandFirmwareFinalize(size_t bus, uint8_t /* hwIndex */) {
 	return 0;
 }
 
+#if EFI_PROD_CODE
+#include "ff.h"
 
 // Yes, this file also contains bootloader, but this is how it was historicaly released in 2023
 static const char wboFileName[] = "fw/wbo/wideband_image_with_bl.bin";
@@ -371,9 +374,7 @@ exit:
 	waitingBootloaderThread = nullptr;
 	f_close(&fil);
 }
-
-
-#if EFI_WIDEBAND_FIRMWARE_UPDATE
+#endif
 
 // This file contains an array called build_wideband_noboot_bin
 // This array contains the firmware image for the wideband contoller
