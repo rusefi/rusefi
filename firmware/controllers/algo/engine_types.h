@@ -288,6 +288,7 @@ typedef enum {
 	TS_EWG_AUTOCAL_0_FAST = 0x1F,
 	TS_GRAB_TPS_CLOSED = 0x20,
 	TS_GRAB_TPS_OPEN = 0x21,
+	TS_WIDEBAND_UPDATE_FILE = 0x22,
 } ts_14_command;
 
 typedef enum {
@@ -330,6 +331,7 @@ typedef enum {
 	TS_WIDEBAND_FLASH_BY_ID = 35,
 	TS_STOP_ENGINE = 36,
 	TS_WIDEBAND_SET_SENS_BY_ID = 37,
+	TS_WIDEBAND_FLASH_BY_ID_FILE = 38,
 } ts_command_e;
 
 typedef enum {
