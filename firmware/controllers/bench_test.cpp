@@ -313,7 +313,7 @@ static void requestWidebandUpdate(int hwIndex, bool fromFile)
 	benchSemaphore.signal();
 }
 
-class BenchController : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
+class BenchController : public ThreadController<4 * UTILITY_THREAD_STACK_SIZE> {
 public:
 	BenchController() : ThreadController("BenchTest", PRIO_BENCH_TEST) { }
 private:
