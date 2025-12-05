@@ -302,7 +302,10 @@ static int updateWidebandFirmwareFinalize(size_t bus, uint8_t /* hwIndex */) {
 }
 
 #if EFI_PROD_CODE
+
+#if EFI_FILE_LOGGING
 #include "ff.h"
+#endif
 
 // Yes, this file also contains bootloader, but this is how it was historicaly released in 2023
 static const char wboFileName[] = "fw/wbo/wideband_image_with_bl.bin";
@@ -312,6 +315,7 @@ static const size_t wboFwMaxSize = 32 * 1024;
 
 void updateWidebandFirmwareFromFile(uint8_t hwIndex)
 {
+#if EFI_FILE_LOGGING
 	int ret = 0;
 	size_t totalSize = 0;
 	size_t bus = 0;
@@ -373,6 +377,9 @@ void updateWidebandFirmwareFromFile(uint8_t hwIndex)
 exit:
 	waitingBootloaderThread = nullptr;
 	f_close(&fil);
+#else
+	// Not supported
+#endif
 }
 #endif
 
