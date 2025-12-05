@@ -7,6 +7,6 @@
 
 #include "configuration_wizard.h"
 
-void ConfigurationWizard::onConfigOnStartUpOrBurn() {
-    vinStrategy();
+void ConfigurationWizard::onConfigOnStartUpOrBurn(bool isRunningOnBurn) {
+    vinStrategy(isRunningOnBurn);
 }
