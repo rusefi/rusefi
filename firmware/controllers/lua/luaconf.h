@@ -55,6 +55,16 @@
 #define LUA_PATH_MARK           "?"
 #define LUA_EXEC_DIR            "!"
 
+/*
+** LUA_IGMARK is a mark to ignore all after it when building the
+** module name (e.g., used to build the luaopen_ function name).
+** Typically, the suffix after the mark is the module version,
+** as in "mod-v1.2.so".
+*/
+#ifndef LUA_IGMARK
+#define LUA_IGMARK              "-"
+#endif
+
 
 /*
 @@ LUA_PATH_DEFAULT is the default path that Lua uses to look for
