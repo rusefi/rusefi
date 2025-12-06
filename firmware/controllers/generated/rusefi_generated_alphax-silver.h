@@ -1543,7 +1543,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2573982213
+#define SIGNATURE_HASH 2528941266
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1924,7 +1924,7 @@
 #define ts_show_charge_estimation true
 #define ts_show_check_engine true
 #define ts_show_clt true
-#define ts_show_clt_iat_pullup false
+#define ts_show_clt_iat_pullup true
 #define ts_show_clutch_down true
 #define ts_show_clutch_down_pin true
 #define ts_show_clutch_up true
@@ -1959,14 +1959,14 @@
 #define ts_show_enableKnockSpectrogram true
 #define ts_show_engine_code true
 #define ts_show_engine_make true
-#define ts_show_etb false
+#define ts_show_etb true
 #define ts_show_etb_bias_curve true
 #define ts_show_etb_extra_monitoring 
 #define ts_show_etb_frequency true
 #define ts_show_etb_min_max true
 #define ts_show_etb_pid true
 #define ts_show_etb_pid_autotune true
-#define ts_show_etb_pins false
+#define ts_show_etb_pins true
 #define ts_show_exhaust_vvt true
 #define ts_show_experimental true
 #define ts_show_fan2_settings true
@@ -2101,7 +2101,7 @@
 #define ts_show_tle8888 false
 #define ts_show_top_level_can_menu true
 #define ts_show_torque_model true
-#define ts_show_tps2 false
+#define ts_show_tps2 true
 #define ts_show_tps_sent false
 #define ts_show_trigger_advanced true
 #define ts_show_trigger_console true
@@ -2134,7 +2134,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.06.alphax-silver.2573982213"
+#define TS_SIGNATURE "rusEFI master.2025.12.06.alphax-silver.2528941266"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
