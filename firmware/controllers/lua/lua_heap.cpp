@@ -136,48 +136,67 @@ void luaHeapInit()
 static size_t luaMemoryUsed = 0;
 
 void* luaHeapAlloc(void* /*ud*/, void* optr, size_t osize, size_t nsize) {
-	void *nptr = nullptr;
+    // If new size is zero, this is a free. Do not allocate.
+    if (nsize == 0) {
+        if (optr) {
+            size_t oldSize = chHeapGetSize(optr);
+            chHeapFree(optr);
+            luaMemoryUsed -= oldSize;
+        }
+        return nullptr;
+    }
 
-	if (nsize) {
-		// [tag:multi-step-lua-alloc]
-		// First try dedicated Lua heap(s)
-		#if (LUA_EXTRA_HEAP > 0)
-			if (nptr == nullptr) {
-				nptr = luaExtraHeap.alloc(nsize);
-			}
-		#endif
-		#if defined(STM32F4)
-			if (nptr == nullptr) {
-				nptr = luaOptionalHeap.alloc(nsize);
-			}
-		#endif
-		#if MCU_HAS_CCM_RAM
-			if (nptr == nullptr) {
-				nptr = luaCcmHeap.alloc(nsize);
-			}
-		#endif
+    void *nptr = nullptr;
 
-		// [tag:multi-step-lua-alloc]
-		// then try ChibiOS default heap
-		if (nptr == nullptr) {
-			nptr = chHeapAlloc(NULL, nsize);
-		}
+	// [tag:multi-step-lua-alloc]
+	// First try dedicated Lua heap(s)
+#if (LUA_EXTRA_HEAP > 0)
+	if (nptr == nullptr) {
+		nptr = luaExtraHeap.alloc(nsize);
 	}
-
-	if (nptr) {
-		luaMemoryUsed += nsize;
+#endif
+#if defined(STM32F4)
+	if (nptr == nullptr) {
+		nptr = luaOptionalHeap.alloc(nsize);
 	}
-
-	if (optr) {
-		chDbgAssert(osize <= chHeapGetSize(optr), "Lua lost track of allocated mem");
-		// An old pointer was passed in, copy the old data in, then free
-		if (nptr != nullptr) {
-			memcpy(nptr, optr, osize > nsize ? nsize : osize);
-		}
-		// chHeapFree will find correct heap to return memory to
-		chHeapFree(optr);
-		luaMemoryUsed -= osize;
+#endif
+#if MCU_HAS_CCM_RAM
+	if (nptr == nullptr) {
+		nptr = luaCcmHeap.alloc(nsize);
 	}
+#endif
+
+    // [tag:multi-step-lua-alloc]
+    // then try ChibiOS default heap
+    if (nptr == nullptr) {
+        nptr = chHeapAlloc(NULL, nsize);
+    }
+
+    size_t newSize = 0;
+    if (nptr) {
+        // Account for newly allocated memory by actual block size
+        newSize = chHeapGetSize(nptr);
+        chDbgAssert(newSize >= nsize, "Lua allocator returned smaller block than requested");
+        luaMemoryUsed += newSize;
+    }
+
+    if (optr) {
+        // An old pointer was passed in. Only free it if we successfully allocated a new one.
+        size_t oldSize = chHeapGetSize(optr);
+        if (nptr != nullptr) {
+            // Copy the minimum of old and new block sizes
+            size_t copySize = (oldSize < newSize) ? oldSize : newSize;
+            memcpy(nptr, optr, copySize);
+            // chHeapFree will find correct heap to return memory to
+            chHeapFree(optr);
+            luaMemoryUsed -= oldSize;
+        } else {
+            if (nsize <= oldSize) {
+                return optr; // shrink must not fail per Lua's assumption
+            }
+            return nullptr; // grow failed
+        }
+    }
 
 	if (engineConfiguration->debugMode == DBG_LUA) {
 		engine->outputChannels.debugIntField1 = luaHeapUsed();
