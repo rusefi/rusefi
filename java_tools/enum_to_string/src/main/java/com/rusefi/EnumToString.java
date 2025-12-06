@@ -68,11 +68,11 @@ public class EnumToString {
     }
 
     private void writeCppAndHeaderFiles(String outFileName) throws IOException {
-        LazyFile bw = new LazyFileImpl(outFileName + ".cpp");
+        LazyFile bw = new LazyFileImpl(outFileName + ".cpp", "generated.patch");
         bw.write(cppFileContent.toString());
         bw.close();
 
-        bw = new LazyFileImpl(outFileName + ".h");
+        bw = new LazyFileImpl(outFileName + ".h", "generated.patch");
         bw.write(headerFileContent.toString());
         bw.close();
     }
