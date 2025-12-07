@@ -1541,7 +1541,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 710461044
+#define SIGNATURE_HASH 1281008089
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1788,6 +1788,7 @@
 #define ts_14_command_TS_TRIGGER_STIMULATOR_DISABLE 0x0F
 #define ts_14_command_TS_TRIGGER_STIMULATOR_ENABLE 0x0D
 #define ts_14_command_TS_WIDEBAND_UPDATE 0x12
+#define ts_14_command_TS_WIDEBAND_UPDATE_FILE 0x22
 #define ts_14_command_TS_WRITE_FLASH 0x0A
 #define TS_BLOCK_READ_TIMEOUT 3000
 #define TS_BURN_COMMAND 'B'
@@ -1829,6 +1830,7 @@
 #define ts_command_e_TS_UNUSED_24 24
 #define ts_command_e_TS_WIDEBAND 21
 #define ts_command_e_TS_WIDEBAND_FLASH_BY_ID 35
+#define ts_command_e_TS_WIDEBAND_FLASH_BY_ID_FILE 38
 #define ts_command_e_TS_WIDEBAND_PING_BY_ID 34
 #define ts_command_e_TS_WIDEBAND_SET_IDX_BY_ID 33
 #define ts_command_e_TS_WIDEBAND_SET_SENS_BY_ID 37
@@ -2106,6 +2108,7 @@
 #define ts_show_trigger_pins true
 #define ts_show_tsp_pps_limits true
 #define ts_show_tunerstudio_port true
+#define ts_show_turbo_sensors true
 #define ts_show_twoWireBatchIgnition true
 #define ts_show_useNoiselessTriggerDecoder true
 #define ts_show_useRunningMathForCranking true
@@ -2129,7 +2132,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.02.alphax-8chan.710461044"
+#define TS_SIGNATURE "rusEFI master.2025.12.07.alphax-8chan.1281008089"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

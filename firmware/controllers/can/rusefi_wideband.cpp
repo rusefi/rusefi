@@ -213,13 +213,9 @@ void sendWidebandInfo() {
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 
-// This file contains an array called build_wideband_noboot_bin
-// This array contains the firmware image for the wideband contoller
-#include "wideband_firmware/for_rusefi/wideband_image.h"
-
-void updateWidebandFirmware(uint8_t hwIndex) {
-	size_t bus = getWidebandBus();
-	size_t totalSize = sizeof(build_wideband_image_bin);
+// reboots to bootloader and erases FW area
+static int updateWidebandFirmwarePrepare(size_t bus, uint8_t hwIndex) {
+	int ret = -1;
 
 	setStatus(WBO_RE_BUSY);
 
@@ -280,6 +276,127 @@ void updateWidebandFirmware(uint8_t hwIndex) {
 		goto exit;
 	}
 
+	ret = 0;
+
+exit:
+	return ret;
+}
+
+
+// reboots to bootloader and erases FW area
+static int updateWidebandFirmwareFinalize(size_t bus, uint8_t /* hwIndex */) {
+	efiPrintf("Wideband Update: Update complete! Rebooting controller.");
+
+	{
+		// Reboot to firmware!
+		CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_REBOOT, 0, bus, true);
+	}
+
+	if (!waitAck()) {
+		efiPrintf("Wideband Update ERROR: No ack on reboot command");
+		waitingBootloaderThread = nullptr;
+		return -1;
+	}
+
+	return 0;
+}
+
+#if EFI_PROD_CODE
+
+#if EFI_FILE_LOGGING
+#include "ff.h"
+#endif
+
+// Yes, this file also contains bootloader, but this is how it was historicaly released in 2023
+static const char wboFileName[] = "fw/wbo/wideband_image_with_bl.bin";
+// FW goes after 6K bootloader
+static const size_t wboFwOffset = 6 * 1024;
+static const size_t wboFwMaxSize = 32 * 1024;
+
+void updateWidebandFirmwareFromFile(uint8_t hwIndex)
+{
+#if EFI_FILE_LOGGING
+	int ret = 0;
+	size_t totalSize = 0;
+	size_t bus = 0;
+	FIL fil;
+
+	if (f_open(&fil, wboFileName, FA_READ) != FR_OK) {
+		efiPrintf("Wideband Update: filed to open %s", wboFileName);
+		return;
+	}
+
+	if (f_lseek(&fil, wboFwOffset) != FR_OK) {
+		efiPrintf("Wideband Update: filed to seek");
+		goto exit;
+	}
+
+	totalSize = f_size(&fil) - wboFwOffset;
+	bus = getWidebandBus();
+
+	// this also sets waitingBootloaderThread
+	ret = updateWidebandFirmwarePrepare(bus, hwIndex);
+	if (ret < 0) {
+		goto exit;
+	}
+
+	for (size_t i = 0; i < totalSize; i += 8) {
+		UINT br;
+		uint8_t tmp[8];
+
+		if (f_read(&fil, tmp, sizeof(tmp), &br) != FR_OK) {
+			efiPrintf("Wideband Update: filed to read");
+			setStatus(WBO_RE_FAILED);
+			goto exit;
+		}
+
+		if (br == 0) {
+			// EOF
+			break;
+		}
+
+		{
+			CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_DATA_BASE | i, 8, bus, true);
+			memcpy(&m[0], tmp, 8);
+		}
+
+		if (!waitAck()) {
+			efiPrintf("Wideband Update ERROR: Expected ACK from data write, didn't get one.");
+			setStatus(WBO_RE_FAILED);
+			goto exit;
+		}
+	}
+
+	ret = updateWidebandFirmwareFinalize(bus, hwIndex);
+	if (ret) {
+		goto exit;
+	}
+
+	setStatus(WBO_RE_DONE);
+
+exit:
+	waitingBootloaderThread = nullptr;
+	f_close(&fil);
+#else
+	// Not supported
+#endif
+}
+#endif
+
+// This file contains an array called build_wideband_noboot_bin
+// This array contains the firmware image for the wideband contoller
+#include "wideband_firmware/for_rusefi/wideband_image.h"
+
+void updateWidebandFirmware(uint8_t hwIndex) {
+	size_t bus = getWidebandBus();
+	size_t totalSize = sizeof(build_wideband_image_bin);
+
+	// this also sets waitingBootloaderThread
+	int ret = updateWidebandFirmwarePrepare(bus, hwIndex);
+	if (ret < 0) {
+		goto exit;
+	}
+
 	efiPrintf("Wideband Update: Flash erased! Sending %d bytes...", totalSize);
 
 	// Send flash data 8 bytes at a time
@@ -296,15 +413,10 @@ void updateWidebandFirmware(uint8_t hwIndex) {
 		}
 	}
 
-	efiPrintf("Wideband Update: Update complete! Rebooting controller.");
-
-	{
-		// Reboot to firmware!
-		CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_REBOOT, 0, bus, true);
+	ret = updateWidebandFirmwareFinalize(bus, hwIndex);
+	if (ret) {
+		goto exit;
 	}
-
-	// TODO:
-	waitAck();
 
 	setStatus(WBO_RE_DONE);
 

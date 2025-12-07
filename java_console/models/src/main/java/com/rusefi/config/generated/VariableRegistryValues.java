@@ -1662,6 +1662,7 @@ public class VariableRegistryValues {
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_DISABLE = 0x0F;
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_ENABLE = 0x0D;
 	public static final int ts_14_command_TS_WIDEBAND_UPDATE = 0x12;
+	public static final int ts_14_command_TS_WIDEBAND_UPDATE_FILE = 0x22;
 	public static final int ts_14_command_TS_WRITE_FLASH = 0x0A;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
 	public static final char TS_BURN_COMMAND = 'B';
@@ -1700,6 +1701,7 @@ public class VariableRegistryValues {
 	public static final int ts_command_e_TS_UNUSED_24 = 24;
 	public static final int ts_command_e_TS_WIDEBAND = 21;
 	public static final int ts_command_e_TS_WIDEBAND_FLASH_BY_ID = 35;
+	public static final int ts_command_e_TS_WIDEBAND_FLASH_BY_ID_FILE = 38;
 	public static final int ts_command_e_TS_WIDEBAND_PING_BY_ID = 34;
 	public static final int ts_command_e_TS_WIDEBAND_SET_IDX_BY_ID = 33;
 	public static final int ts_command_e_TS_WIDEBAND_SET_SENS_BY_ID = 37;
@@ -1740,7 +1742,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.12.02.stm32h743_nucleo.2576393965";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.12.07.stm32h743_nucleo.4287807808";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2076;

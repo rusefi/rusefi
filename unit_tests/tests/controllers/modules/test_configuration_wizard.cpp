@@ -17,7 +17,7 @@ TEST_F(ConfigurationWizardTest, VinFilledWasEmpty_ShouldBecomeNotEmpty) {
     engineConfiguration->vinIsEmpty = true;
 
     // when
-    ConfigurationWizard::onConfigOnStartUpOrBurn();
+    ConfigurationWizard::onConfigOnStartUpOrBurn(false);
 
     // then: since VIN is filled, flag should flip to false
     ASSERT_FALSE(engineConfiguration->vinIsEmpty);
@@ -29,7 +29,7 @@ TEST_F(ConfigurationWizardTest, VinFilledWasNotEmpty_ShouldStayNotEmpty) {
     engineConfiguration->vinIsEmpty = false;
 
     // when
-    ConfigurationWizard::onConfigOnStartUpOrBurn();
+    ConfigurationWizard::onConfigOnStartUpOrBurn(false);
 
     // then: no change expected
     ASSERT_FALSE(engineConfiguration->vinIsEmpty);
@@ -41,7 +41,7 @@ TEST_F(ConfigurationWizardTest, VinEmptyWasEmpty_ShouldStayEmpty) {
     engineConfiguration->vinIsEmpty = true;
 
     // when
-    ConfigurationWizard::onConfigOnStartUpOrBurn();
+    ConfigurationWizard::onConfigOnStartUpOrBurn(false);
 
     // then: no change expected
     ASSERT_TRUE(engineConfiguration->vinIsEmpty);
@@ -53,7 +53,7 @@ TEST_F(ConfigurationWizardTest, VinEmptyWasNotEmpty_ShouldBecomeEmpty) {
     engineConfiguration->vinIsEmpty = false;
 
     // when
-    ConfigurationWizard::onConfigOnStartUpOrBurn();
+    ConfigurationWizard::onConfigOnStartUpOrBurn(false);
 
     // then: since VIN is empty, flag should flip to true
     ASSERT_TRUE(engineConfiguration->vinIsEmpty);

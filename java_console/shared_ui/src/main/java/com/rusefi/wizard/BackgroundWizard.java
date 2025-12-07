@@ -24,8 +24,8 @@ public class BackgroundWizard {
     private static final int CURRENT_STATE_OFFLINE = 0;
     private static final int CURRENT_STATE_ONLINE = 1;
     // setting to search on wizard
-    private static final String BASE_ENGINE_SETTINGS_TITLE = "Base Engine Settings";
-    private static final String BASE_ENGINE_BUTTON_TITLE = "Base engine";
+    private static final String BASE_ENGINE_SETTINGS_TITLE = "Vehicle Information";
+    private static final String BASE_ENGINE_BUTTON_TITLE = "Vehicle Information";
     // listener for ecu online state
     static OutputChannelClient onlineListener = new EcuOnlineListener();
     private static Supplier<ControllerAccess> controllerAccessSupplier;
@@ -87,7 +87,7 @@ public class BackgroundWizard {
     private static void launchVinUI() {
         log.info("Launching VIN UI");
         try {
-            Frame mainFrame = TsReflectionHelper.findTsMainFrame(10, TimeUnit.SECONDS);
+            Frame mainFrame = TsAccess.findTsMainFrame();
             if (mainFrame == null) {
                 throw new IllegalStateException("Could not find TunerStudio frame to launch wizard");
             }
