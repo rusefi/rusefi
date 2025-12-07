@@ -33,7 +33,7 @@ jobs:
           sudo bash misc/actions/ubuntu-install-tools.sh
 
       - name: Build All Java
-        working-directory: ./java_tools/
+        working-directory: .
         run: |
           ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar
 
@@ -46,7 +46,7 @@ jobs:
 
       - name: All Java Tests
         # at the moment 'jar' task does not depend on tests?! maybe because tests take some time?
-        working-directory: ./java_tools
+        working-directory: .
         run: ./gradlew test
 
       - name: Publish Gradle Test Report
