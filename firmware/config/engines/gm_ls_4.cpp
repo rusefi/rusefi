@@ -60,6 +60,16 @@ void setGmLs4() {
 
 #ifdef HW_HELLEN_UAEFI121
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
+	// cylinders 1 and 6
+	// cylinders 2 and 3
+  engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
+  engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
+  engineConfiguration->ignitionPins[4] = Gpio::Unassigned;
+  engineConfiguration->ignitionPins[5] = Gpio::Unassigned;
+	// cylinders 7 and 4
+	engineConfiguration->ignitionPins[6] = Gpio::MM100_IGN4;
+	// cylinders 8 and 5
+	engineConfiguration->ignitionPins[7] = Gpio::MM100_IGN3;
 #endif
 
 #ifdef HW_HELLEN_UAEFI
