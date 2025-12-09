@@ -29,7 +29,8 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Fixed
- -ETB: calibration, wrong scale 3% calibration error #8863
+ - ETB: calibration, wrong scale 3% calibration error #8863
+ - luaHeapAlloc crashed when not enough RAM #8874
 
 ### Added
  - FatFS update to R0.16

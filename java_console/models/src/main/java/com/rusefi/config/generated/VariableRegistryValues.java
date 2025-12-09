@@ -679,8 +679,8 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2 = "Fuel: Last inj pulse width stg 2";
 	public static final String GAUGE_NAME_FUEL_LEVEL = "Fuel level";
 	public static final String GAUGE_NAME_FUEL_LOAD = "Fuel: Load";
-	public static final String GAUGE_NAME_FUEL_LTFT_1 = "Long Term Fuel Trim: Bank 1";
-	public static final String GAUGE_NAME_FUEL_LTFT_2 = "Long Term Fuel Trim: Bank 2";
+	public static final String GAUGE_NAME_FUEL_LTFT_1 = "Long Term Fuel Trim Bank 1";
+	public static final String GAUGE_NAME_FUEL_LTFT_2 = "Long Term Fuel Trim Bank 2";
 	public static final String GAUGE_NAME_FUEL_LTFT_ACC_1 = "LTFT learned accumulator: Bank 1";
 	public static final String GAUGE_NAME_FUEL_LTFT_ACC_2 = "LTFT learned accumulator: Bank 2";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_HIGH = "Fuel pressure (high)";
@@ -1434,6 +1434,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 2064342706;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1742,7 +1743,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.12.07.stm32h743_nucleo.4287807808";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.12.08.stm32h743_nucleo.2064342706";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2076;
