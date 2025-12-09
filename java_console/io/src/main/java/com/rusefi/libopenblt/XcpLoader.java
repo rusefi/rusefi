@@ -161,7 +161,7 @@ public class XcpLoader {
         byte[] response = mTransport.sendPacket(request, mSettings.timeoutT4, 1);
 
         if (response.length != 1 || response[0] != XCPLOADER_CMD_PID_RES) {
-            throw new IOException("programClear failed for address=" + address + " length=" + len);
+            throw new IOException("programClear failed for address=0x" + Integer.toString(address, 16) + " length=" + len);
         }
     }
 
