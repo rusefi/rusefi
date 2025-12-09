@@ -64,4 +64,9 @@ int doLuaCanRx(LuaHandle& ls);
 // Called from the CAN RX thread to queue a frame for Lua consumption
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame);
 size_t getLuaCanRxDropped();
+
 #endif // EFI_CAN_SUPPORT
+
+void *getLuaTsPage();
+void saveLuaToMemory();
+size_t luaGetTsPageSize();
