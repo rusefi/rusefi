@@ -32,6 +32,10 @@ ifneq ("$(wildcard $(BOARD_DIR)/extra.txt)","")
   DOCS_ENUMS_INPUTS += $(BOARD_DIR)/extra.txt
 endif
 
+ifneq ("$(wildcard $(BOARD_DIR)/firmware/extra.txt)","")
+  DOCS_ENUMS_INPUTS += $(BOARD_DIR)/firmware/extra.txt
+endif
+
 ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
   DOCS_ENUMS_INPUTS += $(BOARD_DIR)/board_config.txt
 endif
