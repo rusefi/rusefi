@@ -86,7 +86,7 @@ jobs:
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         fi
 
-    - uses: mukunku/tag-exists-action@v1.6.0
+    - uses: mukunku/tag-exists-action@v1.7.0
       id: checkTag
       with:
         tag: ${{ env.date }}
