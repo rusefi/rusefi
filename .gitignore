@@ -25,6 +25,7 @@ log.txt
 *.rusefi_binary
 *.kicad_prl
 .*-sentinel
+*generated.patch
 
 .gradle
 
