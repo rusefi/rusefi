@@ -343,6 +343,9 @@ float getConfigValueByHash(const int hash) {
 // disableFan2WhenStopped
 		case -311454863:
 			return engineConfiguration->disableFan2WhenStopped;
+// wizardPanelToShow
+		case 727066858:
+			return engineConfiguration->wizardPanelToShow;
 // driveWheelRevPerKm
 		case 991724096:
 			return engineConfiguration->driveWheelRevPerKm;
@@ -2614,6 +2617,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -311454863:
 	{
 		engineConfiguration->disableFan2WhenStopped = (int)value;
+		return 1;
+	}
+		case 727066858:
+	{
+		engineConfiguration->wizardPanelToShow = (int)value;
 		return 1;
 	}
 		case 991724096:
