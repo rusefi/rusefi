@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include "generated_rusefi_config_hashes.h"
+
+
 class ConfigurationWizard {
 public:
     static void onConfigOnStartUpOrBurn(bool isRunningOnBurn);

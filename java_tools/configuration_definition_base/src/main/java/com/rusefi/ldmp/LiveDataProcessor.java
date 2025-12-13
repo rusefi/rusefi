@@ -357,6 +357,8 @@ public class LiveDataProcessor {
 
         GetConfigValueConsumer.writeStringToFile(STATE_DICTIONARY_FACTORY_JAVA, stateDictionaryGenerator.getCompleteClass(), fileFactory);
 
+        SharedStringHashGenerator.run(fileFactory);
+
         writeFiles();
 
         return startingPosition.get();
