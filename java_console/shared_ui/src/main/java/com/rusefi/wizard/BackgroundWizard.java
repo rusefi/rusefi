@@ -13,26 +13,32 @@ import javax.swing.SwingUtilities;
 
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.*;
+import com.rusefi.output.HashUtil;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
+import static com.rusefi.config.generated.VariableRegistryValues.DIALOG_NAME_VEHICLE_INFORMATION;
 
 public class BackgroundWizard {
-    private static final String ECU_VIN_EMPTY = "vinIsEmpty";
+    private static final String ECU_WIZARD_KEY = "wizardPanelToShow";
 
     private static final Logging log = Logging.getLogging(BackgroundWizard.class);
     private static final int CURRENT_STATE_UNKNOWN = -1;
     private static final int CURRENT_STATE_OFFLINE = 0;
     private static final int CURRENT_STATE_ONLINE = 1;
-    // setting to search on wizard
-    private static final String BASE_ENGINE_SETTINGS_TITLE = "Vehicle Information";
-    private static final String BASE_ENGINE_BUTTON_TITLE = "Vehicle Information";
+
     // listener for ecu online state
     static OutputChannelClient onlineListener = new EcuOnlineListener();
     private static Supplier<ControllerAccess> controllerAccessSupplier;
     private static int currentState = CURRENT_STATE_UNKNOWN;
     private static int lastState = CURRENT_STATE_UNKNOWN;
     private static boolean pluginEnabled = false;
-    private static boolean WizardVinToggle = true;
+    private static boolean WizardRunToogle = true;
+
+
+    /**
+     * Represents the panels enabled for use in the BackgroundWizard
+     */
+    private static final String[] WizardEnabledPanels = {DIALOG_NAME_VEHICLE_INFORMATION};
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
         BackgroundWizard.controllerAccessSupplier = controllerAccessSupplier;
@@ -57,7 +63,7 @@ public class BackgroundWizard {
         thread.start();
     }
 
-    private static void periodicWizardLogic() throws ControllerException, MathException {
+    private static void periodicWizardLogic() throws ControllerException {
         if (currentState != lastState) {
             if (currentState == CURRENT_STATE_UNKNOWN) {
                 log.info("ECU is not connected / no updates from TS");
@@ -65,26 +71,40 @@ public class BackgroundWizard {
                 log.info("ECU is offline");
             } else if (currentState == CURRENT_STATE_ONLINE) {
                 log.info("ECU is online");
-                WizardVinToggle = true;
+                WizardRunToogle = true;
             }
             lastState = currentState;
         }
 
-        if (currentState == CURRENT_STATE_ONLINE && pluginEnabled && WizardVinToggle) {
+        if (currentState == CURRENT_STATE_ONLINE && pluginEnabled && WizardRunToogle) {
             log.info("ECU is online and we can run the wizard");
+
             // weird way of getting the equivalent of "page = 1" on the ini file
             String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_VIN_EMPTY);
+            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_WIZARD_KEY);
+            int panelToShow = (int)currentVin.getScalarValue();
 
-            String ecuVinEmpty = currentVin.getStringValue();
-            if (ecuVinEmpty.contains("true") || ecuVinEmpty.contains("yes")) {
-                launchVinUI();
+            if(panelToShow == -1){
+                WizardRunToogle = false;
+                return;
             }
-            WizardVinToggle = false;
+
+            for(String enabledPanel : WizardEnabledPanels){
+                int hash = HashUtil.hash(enabledPanel);
+
+                if (panelToShow == hash) {
+                    launchVinUI(enabledPanel);
+                    WizardRunToogle = false;
+                    return;
+                }
+            }
+
+            log.info("FW requested a panel to show, but we can't find it in the list of enabled panels");
+            WizardRunToogle = false;
         }
     }
 
-    private static void launchVinUI() {
+    private static void launchVinUI(String panelToOpen) {
         log.info("Launching VIN UI");
         try {
             Frame mainFrame = TsAccess.findTsMainFrame();
@@ -112,19 +132,19 @@ public class BackgroundWizard {
                     }
                 }
 
-                JMenuItem engineMetaItem = TsReflectionHelper.findMenuItem(mainFrame, BASE_ENGINE_BUTTON_TITLE);
+                JMenuItem engineMetaItem = TsReflectionHelper.findMenuItem(mainFrame, panelToOpen);
                 if (engineMetaItem != null) {
                     try {
                         SwingUtilities.invokeAndWait(engineMetaItem::doClick);
                         sleep(200);
-                        JDialog dialog = TsReflectionHelper.waitForDialogWithTitle(BASE_ENGINE_SETTINGS_TITLE, 3, TimeUnit.SECONDS);
+                        JDialog dialog = TsReflectionHelper.waitForDialogWithTitle(panelToOpen, 3, TimeUnit.SECONDS);
                         if (dialog != null) {
                             TsReflectionHelper.bringToFront(dialog);
-                            log.info(BASE_ENGINE_SETTINGS_TITLE + " dialog opened");
+                            log.info(panelToOpen + " dialog opened");
                             return;
                         }
                     } catch (Exception e) {
-                        log.info("Failed to invoke" + BASE_ENGINE_SETTINGS_TITLE + e);
+                        log.info("Failed to invoke" + panelToOpen + e);
                     }
                 }
             }
