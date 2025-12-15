@@ -242,3 +242,4 @@
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
+#define DIALOG_NAME_VEHICLE_INFORMATION "Vehicle Information"

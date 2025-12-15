@@ -24,6 +24,14 @@ void vinStrategy(bool isRunningOnBurn) {
     if (vinStateChanged && !isRunningOnBurn) {
         efiPrintf("VinStrategy, reseting flag");
         engineConfiguration->vinIsEmpty = !isVinFilled;
+
+        if (!isVinFilled) {
+            engineConfiguration->wizardPanelToShow = djb2lowerCase(DIALOG_NAME_VEHICLE_INFORMATION);
+        } else {
+            engineConfiguration->wizardPanelToShow = -1;
+        }
+
+
         // trigger page reset, see [tag:popular_vehicle]
 #if EFI_TUNER_STUDIO && !EFI_UNIT_TEST
         onApplyPreset();

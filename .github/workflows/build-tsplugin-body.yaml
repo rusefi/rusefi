@@ -35,7 +35,7 @@ jobs:
         run: ./gradlew :ts_plugin:shadowJar
 
       - name: Upload plugin artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: rusefi_plugin_body.jar
           path: java_tools/ts_plugin/build/libs/rusefi_plugin_body.jar

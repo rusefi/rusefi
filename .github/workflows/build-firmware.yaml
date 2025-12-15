@@ -61,7 +61,7 @@ jobs:
           cp ./firmware/ext/openblt/Host/libopenblt.so deliver/
           cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
 
-#      - uses: actions/upload-artifact@v5
+#      - uses: actions/upload-artifact@v6
 #        if: 0
 #        name: libopenblt-linux
 #        path: |
@@ -86,7 +86,7 @@ jobs:
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         fi
 
-    - uses: mukunku/tag-exists-action@v1.6.0
+    - uses: mukunku/tag-exists-action@v1.7.0
       id: checkTag
       with:
         tag: ${{ env.date }}
@@ -119,7 +119,7 @@ jobs:
         cp ./firmware/ext/openblt/Host/libopenblt.dylib deliver/
         cp ./misc/libopenblt_jni/build/libopenblt_jni.dylib deliver/
 
-#    - uses: actions/upload-artifact@v5
+#    - uses: actions/upload-artifact@v6
 #      with:
 #        name: bootcommander-linux
 #        path: |
@@ -310,35 +310,35 @@ jobs:
 
     - name: Upload github action text artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_${{matrix.build-target}}.txt
         path: ./firmware/build/rusefi.txt
 
     - name: Upload github action elf artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload github action map artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_${{matrix.build-target}}.map
         path: ./firmware/build/rusefi.map
 
     - name: Upload github action bin artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload github action hex artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_${{matrix.build-target}}.hex
 # we have a bit of a mess - this file from 'build' folder is only legit for not-BLT builds
@@ -347,19 +347,19 @@ jobs:
 
     - name: Upload github action dfu artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle artifact
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
 
     - name: Upload github action autoupdate artifact
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
