@@ -608,6 +608,9 @@ int Mc33810::chip_init()
 			(engineConfiguration->mc33810Gpgd2Mode << 6) |
 			(engineConfiguration->mc33810Gpgd3Mode << 7);
 
+		// TODO: add check of o_direct_mask against o_gpgd_mask
+		// Check is some of IGN mode channels have no direct drive gpio assigned
+
 		uint16_t mode_select_cmd =
 			/* set IGN/GP mode for GPx outputs: [7:4] to [11:8] */
 			((o_gpgd_mask & 0xf0) << 4) |
@@ -969,10 +972,13 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 			chip.o_direct_mask |= BIT(i);
 	}
 
+#if 0
+	// Some Ignition channels may be unused, so skip this check for now
 	/* GPGD mode is not supported yet, ignition mode does not support spi on/off commands
 	 * so ignition signals should be directly driven */
 	if ((chip.o_direct_mask & 0xf0) != 0xf0)
 		return -4;
+#endif
 
 	/* register, return gpio chip base */
 	int ret = gpiochip_register(base, DRIVER_NAME, chip, MC33810_OUTPUTS);
