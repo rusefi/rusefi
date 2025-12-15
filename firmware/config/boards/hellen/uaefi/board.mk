@@ -58,8 +58,8 @@ DDEFS += -DWITH_LUA_STOP_ENGINE=FALSE
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
- DDEFS += -DUSB_DESCRIPTOR_B_LENGTH=32
- DDEFS += -DUSB_DESCRIPTOR_STRING_CONTENT="'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'u', 0, 'a', 0, 'E', 0, 'F', 0, 'I', 0", '1', 0", '2', 0", '1', 0"
+ DDEFS += -DUSB_DESCRIPTOR_B_LENGTH=34
+ DDEFS += -DUSB_DESCRIPTOR_STRING_CONTENT="'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'u', 0, 'a', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'P', 0, 'R', 0, 'O', 0"
 else
  DDEFS += -DUSB_DESCRIPTOR_B_LENGTH=26
  DDEFS += -DUSB_DESCRIPTOR_STRING_CONTENT="'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'u', 0, 'a', 0, 'E', 0, 'F', 0, 'I', 0"
