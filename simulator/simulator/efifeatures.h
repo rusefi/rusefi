@@ -189,3 +189,8 @@
 #ifndef TRUE
  fail("Truth not found");
 #endif
+
+#ifndef EFI_PULSE_INPUT
+#define EFI_PULSE_INPUT    FALSE
+#endif
+
