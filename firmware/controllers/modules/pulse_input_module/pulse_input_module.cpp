@@ -2,7 +2,7 @@
 #include "pulse_input.h"
 
 // Called once at engine initialization
-void PulseInputModule::onInit() {
+void PulseInputModule::Init() {
     pulseInputInit();
 }
 
