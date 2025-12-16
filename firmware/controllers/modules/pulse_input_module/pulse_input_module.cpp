@@ -1,12 +1,11 @@
 #include "pulse_input_module.h"
 #include "pulse_input.h"
 
-// Called once at engine initialization
-void PulseInputModule::init() {
+void PulseInputModule::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
+    // Configure pin + EXTI based on current TS selection
     pulseInputInit();
 }
 
-// Called periodically in fast loop
 void PulseInputModule::onFastCallback() {
     pulseInputUpdate();
 }

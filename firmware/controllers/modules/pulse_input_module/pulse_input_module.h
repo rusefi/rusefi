@@ -1,12 +1,9 @@
 #pragma once
 
-#include "engine_module.h"
+#include "controllers/core/engine_module.h"
 
 class PulseInputModule : public EngineModule {
 public:
-    // Called once at engine initialization
-    void init() override;
-
-    // Called periodically in fast loop
+    void onConfigurationChange(engine_configuration_s const * previousConfig) override;
     void onFastCallback() override;
 };
