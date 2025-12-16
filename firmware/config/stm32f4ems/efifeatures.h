@@ -550,3 +550,7 @@
 #ifndef EFI_SENT_SUPPORT
 #define EFI_SENT_SUPPORT        FALSE
 #endif
+
+#ifndef EFI_PULSE_INPUT
+#define EFI_PULSE_INPUT    TRUE
+#endif
