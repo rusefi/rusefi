@@ -16,7 +16,7 @@ name: Firmware at GHA
 #
 
 on:
-  push:
+  # push:
   # pull_request:
   # schedule:
     # this produces GitHub nightly releases https://github.com/rusefi/rusefi/releases
