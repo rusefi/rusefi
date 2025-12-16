@@ -494,6 +494,9 @@ void commonInitEngineController() {
 #if EFI_LTFT_CONTROL
 	initLtft();
 #endif
+
+engineModules.registerModule(&pulseInputModule);
+
 }
 
 PUBLIC_API_WEAK bool validateBoardConfig() {
