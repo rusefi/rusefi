@@ -60,6 +60,7 @@
 #include "vr_pwm.h"
 #include "adc_subscription.h"
 #include "gc_generic.h"
+#include "modules/pulse_input_module/pulse_input_module.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -495,7 +496,7 @@ void commonInitEngineController() {
 	initLtft();
 #endif
 
-engineModules.registerModule(&pulseInputModule);
+engine->engineModules.registerModule(&pulseInputModule);
 
 }
 
