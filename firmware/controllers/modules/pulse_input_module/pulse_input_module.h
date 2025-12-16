@@ -5,7 +5,7 @@
 class PulseInputModule : public EngineModule {
 public:
     // Called once at engine initialization
-    void Init() override;
+    void init() override;
 
     // Called periodically in fast loop
     void onFastCallback() override;
