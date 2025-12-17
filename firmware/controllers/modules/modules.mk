@@ -12,3 +12,4 @@ include $(PROJECT_DIR)/controllers/modules/ethernet_console/ethernet_console.mk
 include $(PROJECT_DIR)/controllers/modules/example_module/example_module.mk
 include $(PROJECT_DIR)/controllers/modules/vvl_controller/vvl_controller.mk
 include $(PROJECT_DIR)/controllers/modules/configuration_wizard/configuration_wizard.mk
+include $(PROJECT_DIR)/controllers/modules/pulse_input_module/pulse_input_module.mk
