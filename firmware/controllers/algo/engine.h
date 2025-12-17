@@ -62,7 +62,6 @@
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
 
-#include "tunerstudio/tunerstudio.h"       // TunerStudioOutputChannels
 #include "controllers/core/engine_module.h"
 #include "controllers/trigger/trigger_central.h"
 
