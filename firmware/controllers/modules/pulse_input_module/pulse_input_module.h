@@ -1,6 +1,6 @@
 #pragma once
 
-#include "controllers/core/engine_module.h"
+#include "../../core/engine_module.h"
 
 class PulseInputModule : public EngineModule {
 public:
