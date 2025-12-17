@@ -62,7 +62,7 @@
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
 
-#include "util/math/fast_math.h"            // clampF
+#include "util/fast_math.h"            // clampF
 #include "tunerstudio/tunerstudio.h"       // TunerStudioOutputChannels
 #include "controllers/core/engine_module.h"
 #include "controllers/trigger/trigger_central.h"
