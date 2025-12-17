@@ -9,24 +9,7 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
-#ifndef HW_HELLEN_UAEFI121
-// normal uaefi here
 #include "hellen_leds_100.cpp"
-#else
-// uaefi121
-Gpio getCommsLedPin() {
-	return Gpio::MM100_LED3_BLUE;
-}
-
-Gpio getRunningLedPin() {
-	// this one is used to drive tach pin 43
-	return Gpio::Unassigned;
-}
-
-Gpio getWarningLedPin() {
-	return Gpio::MM100_LED4_YELLOW;
-}
-#endif
 #include "board_overrides.h"
 #include "connectors/generated_board_pin_names.h"
 
@@ -80,12 +63,9 @@ static void uaefi_boardConfigOverrides() {
 }
 
 bool validateBoardConfig() {
-#ifndef HW_HELLEN_UAEFI121
-  // this same file is used for both uaefi and uaefi121
   if (engineConfiguration->can2RxPin != Gpio::B12) {
 	  setHellenCan2();
   }
-#endif
   return true;
 }
 
@@ -115,10 +95,8 @@ static void uaefi_boardDefaultConfiguration() {
 
 	engineConfiguration->canTxPin = Gpio::MM100_CAN_TX;
 	engineConfiguration->canRxPin = Gpio::MM100_CAN_RX;
-#ifndef HW_HELLEN_UAEFI121
-  // this same file is used for both uaefi and uaefi121
+
 	setHellenCan2();
-#endif
 
 #if (EFI_CAN_BUS_COUNT >= 3)
 	engineConfiguration->can3TxPin = Gpio::MM100_CAN3_TX;
