@@ -9,7 +9,24 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
+#ifndef HW_HELLEN_UAEFI121
+// normal uaefi here
 #include "hellen_leds_100.cpp"
+#else
+// uaefi121
+Gpio getCommsLedPin() {
+	return Gpio::MM100_LED3_BLUE;
+}
+
+Gpio getRunningLedPin() {
+	// this one is used to drive tach pin 43
+	return Gpio::Unassigned;
+}
+
+Gpio getWarningLedPin() {
+	return Gpio::MM100_LED4_YELLOW;
+}
+#endif
 #include "board_overrides.h"
 #include "connectors/generated_board_pin_names.h"
 
