@@ -62,9 +62,6 @@
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
 
-#include "controllers/core/engine_module.h"
-#include "controllers/trigger/trigger_central.h"
-
 #if EFI_PULSE_INPUT
 #include "modules/pulse_input_module/pulse_input_module.h"
 #endif
