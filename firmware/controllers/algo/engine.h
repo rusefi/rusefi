@@ -61,8 +61,11 @@
 #include "long_term_fuel_trim.h"
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
-#include "util/math/fast_math.h"            // for clampF
-#include "tunerstudio/tunerstudio.h"       // for TunerStudioOutputChannels
+
+#include "../../util/math/fast_math.h"           // clampF
+#include "../../tunerstudio/tunerstudio.h"      // TunerStudioOutputChannels
+#include "../core/engine_module.h"              // EngineModule
+#include "../trigger/trigger_central.h"         // trigger functions
 
 #if EFI_PULSE_INPUT
 #include "modules/pulse_input_module/pulse_input_module.h"
