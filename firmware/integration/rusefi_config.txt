@@ -1912,6 +1912,10 @@ end_struct
 
 ! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
 
+!Pulse Input (experimental)
+    pulseInputPin = none
+    pulseInputAveragingMs = 100
+
 ! end of engine_configuration_s
 end_struct
 
