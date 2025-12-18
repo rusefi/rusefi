@@ -1,12 +1,35 @@
 #include "pulse_input_module.h"
-#include "../../core/engine_module.h"
-#include "pulse_input.h"
+#include "engine_configuration.h"
+#include "digital_input_exti.h"
 
-void PulseInputModule::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
-    // Configure pin + EXTI based on current TS selection
-    pulseInputInit();
+static PulseInputModule pulseInputModule;
+
+void PulseInputModule::onConfigurationChange(engine_configuration_s* config) {
+    enabled = false;
+
+    // User must select a pin in TS
+    if (config->pulseInputPin == GPIO_UNASSIGNED) {
+        return;
+    }
+
+    // Attach interrupt
+    enableDigitalInputExti(
+        config->pulseInputPin,
+        [&]() {
+            pulse.onEdge(getTimeNowUs());
+        },
+        PAL_EVENT_MODE_BOTH_EDGES
+    );
+
+    pulse.setAveragingWindowMs(config->pulseInputAveragingMs);
+
+    enabled = true;
 }
 
 void PulseInputModule::onFastCallback() {
-    pulseInputUpdate();
+    if (!enabled) {
+        return;
+    }
+
+    pulse.update(getTimeNowUs());
 }

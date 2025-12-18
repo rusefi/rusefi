@@ -2755,3 +2755,8 @@ end_struct
 #define ts_show_disable_etb false
 
 #define poke false
+
+
+! Pulse Input
+pulseInputPin = none
+pulseInputAveragingMs = 100
