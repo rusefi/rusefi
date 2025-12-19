@@ -16,6 +16,7 @@
 #include "pin_repository.h"
 #include "local_version_holder.h"
 #include "cyclic_buffer.h"
+#include <algorithm>
 
 #define MAP_CAM_BUFFER 64
 
@@ -148,7 +149,7 @@ public:
 		auto maxAllowedGap = maxAverageToothTime * 10;
 
 		// Clamp between 0.1 seconds ("instant" for a human) and worst case of one engine cycle on low tooth count wheel
-		maxAllowedGap = clamp(0.1f, maxAllowedGap, oneRevolutionLimitInSeconds);
+		maxAllowedGap = std::clamp(maxAllowedGap, 0.1f, oneRevolutionLimitInSeconds);
 
 		return (getSecondsSinceTriggerEvent(nowNt) < maxAllowedGap) || directSelfStimulation;
 	}
