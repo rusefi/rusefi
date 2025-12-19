@@ -115,6 +115,6 @@ int getBoardMetaDcOutputsCount();
 
 struct engine_configuration_custom : public engine_configuration_s {
     // Pulse Input Settings
-    brain_pin_e pulseInputPin = GPIO_UNASSIGNED;        // User-selected pin
-    uint16_t pulseInputAveragingMs = 100;              // Averaging window in milliseconds
+    brain_pin_e pulseInputPin;        // User-selected pin
+    uint16_t pulseInputAveragingMs;              // Averaging window in milliseconds
 };
