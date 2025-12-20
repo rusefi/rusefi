@@ -821,7 +821,7 @@ static int sdModeSwitcher()
 	case SD_MODE_IDLE:
 		return 0;
 	case SD_MODE_UNMOUNT:
-		// everithing is done in sdModeSwitchToIdle();
+		// everything is done in sdModeSwitchToIdle();
 		sdMode = SD_MODE_UNMOUNT;
 		sdTargetMode = SD_MODE_IDLE;
 		return 0;
@@ -1028,6 +1028,8 @@ void initEarlyMmcCard() {
 
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("del", removeFile);
+	// sdmode pc
+	// sdmode ecu
 	addConsoleActionS("sdmode", sdSetMode);
 	addConsoleAction("delreports", sdCardRemoveReportFiles);
 	//incLogFileName() use same shared FDLogFile, calling it while FDLogFile is used by log writer will cause damage
