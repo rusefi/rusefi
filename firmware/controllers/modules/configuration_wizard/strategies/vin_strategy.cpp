@@ -23,11 +23,14 @@ void vinStrategy(bool isRunningOnBurn) {
     }
 
     bool isVinFilled = static_cast<bool>(strlen(engineConfiguration->vinNumber));
+    int vinWizard = djb2lowerCase(DIALOG_NAME_VEHICLE_INFORMATION);
 
-    if (!isVinFilled) {
+    // the check with wizardPanelToShow is for not overriding an existing panel
+    // (i.e., we need to run more than one wizard with the current ecu configuration)
+    if (!isVinFilled && engineConfiguration->wizardPanelToShow == -1) {
         efiPrintf("VinStrategy, reseting flag");
-        engineConfiguration->wizardPanelToShow = djb2lowerCase(DIALOG_NAME_VEHICLE_INFORMATION);
-    } else {
+        engineConfiguration->wizardPanelToShow = vinWizard;
+    } else if (isVinFilled && engineConfiguration->wizardPanelToShow == vinWizard) {
         engineConfiguration->wizardPanelToShow = -1;
     }
 
