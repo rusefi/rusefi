@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 251211
+#define FLASH_DATA_VERSION 251221
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -1049,8 +1049,6 @@ bit canBroadcastUseChannelTwo,"second","first"
 	bit useRawOutputToDriveIdleStepper,"yes","no";If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 ! bit 29
 bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
-! TS plugin string support seems to be limited, this is our work-around
-bit vinIsEmpty
 
 
 	dc_io[ETB_COUNT iterate] etbIo
