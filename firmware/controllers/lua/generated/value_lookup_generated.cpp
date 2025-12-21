@@ -679,9 +679,6 @@ float getConfigValueByHash(const int hash) {
 // verboseCan2
 		case -1056203297:
 			return engineConfiguration->verboseCan2;
-// vinIsEmpty
-		case 69606941:
-			return engineConfiguration->vinIsEmpty;
 // boostPid.pFactor
 		case 1421783686:
 			return engineConfiguration->boostPid.pFactor;
@@ -3177,11 +3174,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1056203297:
 	{
 		engineConfiguration->verboseCan2 = (int)value;
-		return 1;
-	}
-		case 69606941:
-	{
-		engineConfiguration->vinIsEmpty = (int)value;
 		return 1;
 	}
 		case 1421783686:

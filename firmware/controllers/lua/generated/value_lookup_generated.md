@@ -673,9 +673,6 @@ If enabled we use four Push-Pull outputs to directly drive stepper idle air valv
 ### verboseCan2
 Print incoming and outgoing second bus CAN messages in rusEFI console
 
-### vinIsEmpty
-
-
 ### boostPid.pFactor
 
 
