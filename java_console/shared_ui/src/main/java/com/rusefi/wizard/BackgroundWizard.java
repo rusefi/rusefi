@@ -28,6 +28,7 @@ public class BackgroundWizard {
 
     // listener for ecu online state
     static OutputChannelClient onlineListener = new EcuOnlineListener();
+    static OutputChannelClient ecuTimeListener = new EcuTimeListener();
     private static Supplier<ControllerAccess> controllerAccessSupplier;
     private static int currentState = CURRENT_STATE_UNKNOWN;
     private static int lastState = CURRENT_STATE_UNKNOWN;
@@ -45,6 +46,14 @@ public class BackgroundWizard {
         try {
             BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe("AppEvent", "controllerOnline", onlineListener);
         } catch (Exception e) {
+            // fallback to a random ecu channel (ecu epochTime)
+            try {
+                String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
+                BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe(mainConfigName, "rtcUnixEpochTime", ecuTimeListener);
+            } catch (Exception e2) {
+                log.error("error on onlineListener fallback " + e2, e2);
+            }
+
             log.error("error on onlineListener " + e, e);
         }
 
@@ -171,6 +180,14 @@ public class BackgroundWizard {
             if (currentState == 0 ^ newState == 0) {
                 currentState = newState;
             }
+        }
+    }
+
+    static class EcuTimeListener implements OutputChannelClient {
+        public void setCurrentOutputChannelValue(String string, double d) {
+           if(d != 0){
+               currentState = CURRENT_STATE_ONLINE;
+           }
         }
     }
 }
