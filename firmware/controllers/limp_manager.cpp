@@ -268,9 +268,9 @@ void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
 	m_ignitionOn = ignitionOn;
 }
 
-void LimpManager::reportEtbProblem() {
+void LimpManager::reportEtbJammed() {
 	m_allowEtb.clear(ClearReason::EtbProblem);
-	setFaultRevLimit(/*rpm*/1500, ClearReason::EtbFaultRevLimit);
+	setFaultRevLimit(/*rpm*/1500, ClearReason::EtbJammedRevLimit);
 }
 
 void LimpManager::fatalError() {

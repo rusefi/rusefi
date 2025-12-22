@@ -11,7 +11,7 @@ enum class ClearReason : uint8_t {
 	Fatal, // 1
 	Settings, // 2
 	HardLimit, // 3
-	EtbFaultRevLimit, // 4 means 1500 RPM limit in case of ETB fault
+	EtbJammedRevLimit, // 4 means 1500 RPM limit in ETB jam was detected
 	BoostCut, // 5
 	OilPressure, // 6
 	StopRequested, // 7
@@ -114,7 +114,7 @@ public:
 	float getLimitingFuelCorrection() const;
 
 	// Other subsystems call these APIs to indicate a problem has occurred
-	void reportEtbProblem();
+	void reportEtbJammed();
 	void fatalError();
 	Timer externalGdiCanBusComms;
 
