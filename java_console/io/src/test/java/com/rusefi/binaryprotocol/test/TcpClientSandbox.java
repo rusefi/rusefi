@@ -13,6 +13,7 @@ import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 
 /**
  * @see TcpServerSandbox
+ * @see SandboxCommon
  */
 public class TcpClientSandbox {
     public static void main(String[] args) throws IOException {
@@ -21,7 +22,7 @@ public class TcpClientSandbox {
         Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
         TcpIoStream tsStream = new TcpIoStream("sandbox", s);
 
-        LinkManager linkManager = new LinkManager();
+//        LinkManager linkManager = new LinkManager();
 //        SandboxCommon.verifyCrcNoPending(tsStream, linkManager);
 
         for (int i = 0; i < 3; i++) {
@@ -31,11 +32,16 @@ public class TcpClientSandbox {
 
 
         {
+            int warmUp = 5;
+            for (int i = 0; i < warmUp; i++) {
+                // warm-up cycles just for fun
+                String signature = BinaryProtocol.getSignature(tsStream);
+                System.out.println("Warm up got " + signature);
+            }
             int count = 10000;
             long startMs = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {
-                // warm-up cycles just for fun
-                String signature = BinaryProtocol.getSignature(tsStream);
+                /*String signature = */BinaryProtocol.getSignature(tsStream);
             }
             long time = System.currentTimeMillis() - startMs;
             double timePerCommand = 1.0 * time / count;
