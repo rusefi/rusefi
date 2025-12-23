@@ -90,6 +90,7 @@
 #endif /* EFI_SIMULATOR */
 
 #include "board_overrides.h"
+#include "rusefi_lua.h"
 
 #if EFI_TUNER_STUDIO
 
@@ -180,6 +181,9 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 	case TS_PAGE_LTFT_TRIMS:
 		return (uint8_t *)ltftGetTsPage() + offset;
 #endif
+	case TS_PAGE_LUA:
+		// Lua script is exposed via dedicated TS page buffer
+		return static_cast<uint8_t*>(getLuaTsPage()) + offset;
 	default:
 // technical dept: TS seems to try to read the 3 pages sequentially, does not look like we properly handle 'EFI_TS_SCATTER=FALSE'
 		tunerStudioError(tsChannel, "ERROR: page address out of range");
@@ -199,9 +203,11 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 	case TS_PAGE_LTFT_TRIMS:
 		return ltftGetTsPageSize();
 #endif
-	default:
-		return 0;
-	}
+    case TS_PAGE_LUA:
+        return luaGetTsPageSize();
+    default:
+        return 0;
+    }
 }
 
 // Validate whether the specified offset and count would cause an overrun in the tune.
