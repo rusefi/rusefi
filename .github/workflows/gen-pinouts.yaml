@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v6
 
     - name: Generate Pinouts
-      uses: chuckwagoncomputing/interactive-pinout@2.16
+      uses: chuckwagoncomputing/interactive-pinout@2.17
       with:
         mapping-path: firmware/config/boards/*/connectors/*.yaml
         warnings: "false"
@@ -43,8 +43,8 @@ jobs:
           }
         colors: |
           {
-          "12v":"yellow";
-          "12V":"yellow";
+          "12v":"yellow",
+          "12V":"yellow",
           "5v":"red",
           "5V":"red",
           "at":"green",
