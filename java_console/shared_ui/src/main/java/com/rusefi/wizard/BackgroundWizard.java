@@ -2,6 +2,7 @@ package com.rusefi.wizard;
 
 import java.awt.Frame;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -28,7 +29,6 @@ public class BackgroundWizard {
 
     // listener for ecu online state
     static OutputChannelClient onlineListener = new EcuOnlineListener();
-    static OutputChannelClient ecuTimeListener = new EcuTimeListener();
     private static Supplier<ControllerAccess> controllerAccessSupplier;
     private static int currentState = CURRENT_STATE_UNKNOWN;
     private static int lastState = CURRENT_STATE_UNKNOWN;
@@ -43,26 +43,31 @@ public class BackgroundWizard {
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
         BackgroundWizard.controllerAccessSupplier = controllerAccessSupplier;
-        try {
-            BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe("AppEvent", "controllerOnline", onlineListener);
-        } catch (Exception e) {
-            // fallback to a random ecu channel (ecu epochTime)
-            try {
-                String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-                BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe(mainConfigName, "rtcUnixEpochTime", ecuTimeListener);
-            } catch (Exception e2) {
-                log.error("error on onlineListener fallback " + e2, e2);
-            }
-
-            log.error("error on onlineListener " + e, e);
-        }
 
         Thread thread = new Thread(() -> {
+            boolean subscribed = false;
+            // due to TS 3.2.03 and prior unable to subscribe to AppEvent event, we have to busy-wait (or retry) until we get and ecu online status
+            // triggered by onEcuDiscovery
+            while (!subscribed) {
+                try {
+                    BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe("AppEvent", "controllerOnline", onlineListener);
+                    subscribed = true;
+                } catch (Exception e) {
+                    log.error("Error subscribing to controllerOnline event: " + e, e);
+                    if (currentState == CURRENT_STATE_ONLINE) {
+                        subscribed = true;
+                    } else {
+                        sleep(5000);
+                    }
+                }
+            }
+
             while (true) {
                 try {
                     periodicWizardLogic();
                 } catch (Throwable e) {
-                    log.error("error " + e, e);
+                    log.error("Wizard crash, error " + e, e);
+                    WizardRunToogle = true;
                 }
                 sleep(300);
             }
@@ -89,8 +94,9 @@ public class BackgroundWizard {
             log.info("ECU is online and we can run the wizard");
 
             // weird way of getting the equivalent of "page = 1" on the ini file
-            String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_WIZARD_KEY);
+            String[] mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames();
+            log.debug("mainConfig: {}" + Arrays.toString(mainConfigName));
+            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName[0], ECU_WIZARD_KEY);
             int panelToShow = (int)currentVin.getScalarValue();
 
             if(panelToShow == -1){
@@ -159,6 +165,8 @@ public class BackgroundWizard {
             }
         } catch (Throwable t) {
             log.error("Error launching VIN UI: " + t, t);
+            sleep(5000);
+            launchVinUI(panelToOpen);
         }
     }
 
@@ -174,20 +182,17 @@ public class BackgroundWizard {
         return pluginEnabled;
     }
 
+    public static void onEcuDiscovery(String serialSignature){
+        displayPlugin(serialSignature);
+        currentState = CURRENT_STATE_ONLINE;
+    }
+
     static class EcuOnlineListener implements OutputChannelClient {
         public void setCurrentOutputChannelValue(String string, double d) {
             int newState = (int) d;
             if (currentState == 0 ^ newState == 0) {
                 currentState = newState;
             }
-        }
-    }
-
-    static class EcuTimeListener implements OutputChannelClient {
-        public void setCurrentOutputChannelValue(String string, double d) {
-           if(d != 0){
-               currentState = CURRENT_STATE_ONLINE;
-           }
         }
     }
 }
