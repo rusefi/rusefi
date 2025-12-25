@@ -18,16 +18,22 @@ SHORT_BOARD_NAME=$4
 BOARD_SPECIFIC_URL=$5
 
 ZIP=rusefi.ini.zip
+ZIP7=rusefi.ini.7z
 
 # mkfs.fat and fatlabel are privileged on some systems
 PATH="$PATH:/usr/sbin"
 
 echo "create_ini_image: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARD_NAME [$BOARD_SPECIFIC_URL]"
 
-rm -f $ZIP $IMAGE
+rm -f $ZIP $ZIP7 $IMAGE
 
 # -j option dumps all files in the root of the zip (instead of inside directories)
 zip -j $ZIP $FULL_INI
+
+# also create 7z archive
+7z a -mx9 $ZIP7 $FULL_INI
+
+ls -ls $ZIP $ZIP7
 
 if [[ $OSTYPE == 'darwin'* ]]; then
   # Mac OS comes with Bash version 3 which is quite limiting and lack key features
@@ -60,7 +66,7 @@ else
   exit 1
 fi
 
-hw_layer/mass_storage/create_image.sh $H_OUTPUT $FS_SIZE false $ZIP "${README_FILE_PATH}" "${EXTRA_FILES_TO_COPY_ON_IMAGE[@]}"
+hw_layer/mass_storage/create_image.sh $H_OUTPUT $FS_SIZE false $ZIP7 "${README_FILE_PATH}" "${EXTRA_FILES_TO_COPY_ON_IMAGE[@]}"
 
 rm $ZIP "${README_FILE_PATH}" "${WIKI_FILE_PATH}"
 exit 0
