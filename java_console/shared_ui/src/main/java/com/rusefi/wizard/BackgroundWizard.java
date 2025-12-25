@@ -47,7 +47,8 @@ public class BackgroundWizard {
         Thread thread = new Thread(() -> {
             boolean subscribed = false;
             // due to TS 3.2.03 and prior unable to subscribe to AppEvent event, we have to busy-wait (or retry) until we get and ecu online status
-            // triggered by onEcuDiscovery
+            // triggered by onEcuDiscovery, also TS tries to load the outputChannel server *before* reading the .ini file, so we can't also do the
+            // getEcuConfigurationNames()[0] like on the wizard loop logic
             while (!subscribed) {
                 try {
                     BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe("AppEvent", "controllerOnline", onlineListener);
