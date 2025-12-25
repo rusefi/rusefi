@@ -2,7 +2,6 @@ package com.rusefi.wizard;
 
 import java.awt.Frame;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -96,7 +95,6 @@ public class BackgroundWizard {
 
             // weird way of getting the equivalent of "page = 1" on the ini file
             String[] mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames();
-            log.debug("mainConfig: {}" + Arrays.toString(mainConfigName));
             ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName[0], ECU_WIZARD_KEY);
             int panelToShow = (int)currentVin.getScalarValue();
 
