@@ -35,6 +35,10 @@ Release template (copy/paste this for new release):
 
 ### Added
  - FatFS update to R0.16
+ - WBO: update from sd #8870
+
+### Breaking Changes
+ - CAN bitrare 666k #8784
 
 ## October 2025 "Day 1333"
 
