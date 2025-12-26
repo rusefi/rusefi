@@ -195,16 +195,17 @@
 #define CAM_INPUT_1_1_NAME "Cam sensor bank 1 intake"
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
-#define can_baudrate_e_auto_enum 0="B33KBPS",3="B100KBPS",4="B125KBPS",7="B1MBPS",5="B250KBPS",6="B500KBPS",1="B50KBPS",2="B83KBPS"
+#define can_baudrate_e_auto_enum 0="B33KBPS",3="B100KBPS",4="B125KBPS",8="B1MBPS",5="B250KBPS",6="B500KBPS",1="B50KBPS",7="B666KBPS",2="B83KBPS"
 #define can_baudrate_e_B100KBPS 3
 #define can_baudrate_e_B125KBPS 4
-#define can_baudrate_e_B1MBPS 7
+#define can_baudrate_e_B1MBPS 8
 #define can_baudrate_e_B250KBPS 5
 #define can_baudrate_e_B33KBPS 0
 #define can_baudrate_e_B500KBPS 6
 #define can_baudrate_e_B50KBPS 1
+#define can_baudrate_e_B666KBPS 7
 #define can_baudrate_e_B83KBPS 2
-#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
+#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "666kbps", "1Mbps"
 #define CAN_BENCH_HEADER2 0x66
 #define CAN_DEFAULT_BASE 0x200
 #define CAN_ECU_SERIAL_RX_ID 0x710
@@ -1547,7 +1548,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1693886486
+#define SIGNATURE_HASH 1650834352
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2138,7 +2139,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.25.hellen72.1693886486"
+#define TS_SIGNATURE "rusEFI master.2025.12.26.hellen72.1650834352"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

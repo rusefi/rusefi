@@ -165,11 +165,12 @@ public class VariableRegistryValues {
 	public static final int CAMS_PER_BANK = 2;
 	public static final int can_baudrate_e_B100KBPS = 3;
 	public static final int can_baudrate_e_B125KBPS = 4;
-	public static final int can_baudrate_e_B1MBPS = 7;
+	public static final int can_baudrate_e_B1MBPS = 8;
 	public static final int can_baudrate_e_B250KBPS = 5;
 	public static final int can_baudrate_e_B33KBPS = 0;
 	public static final int can_baudrate_e_B500KBPS = 6;
 	public static final int can_baudrate_e_B50KBPS = 1;
+	public static final int can_baudrate_e_B666KBPS = 7;
 	public static final int can_baudrate_e_B83KBPS = 2;
 	public static final int CAN_BENCH_HEADER2 = 0x66;
 	public static final int CAN_DEFAULT_BASE = 0x200;
@@ -1435,7 +1436,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 847437814;
+	public static final int SIGNATURE_HASH = 873581648;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1744,7 +1745,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.12.25.stm32h743_nucleo.847437814";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.12.26.stm32h743_nucleo.873581648";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2076;
