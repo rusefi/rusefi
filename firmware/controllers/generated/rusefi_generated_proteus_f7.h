@@ -1482,6 +1482,7 @@
 #define pin_output_mode_e_OM_INVERTED 1
 #define pin_output_mode_e_OM_OPENDRAIN 2
 #define pin_output_mode_e_OM_OPENDRAIN_INVERTED 3
+#define PINOUT_URL "https://rusefi.com/docs/pinouts/proteus/"
 #define poke false
 #define ppsExpAverageAlpha_NAME "Accelerator Exp Average"
 #define PRIME_CURVE_COUNT 8
@@ -1548,7 +1549,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2827369622
+#define SIGNATURE_HASH 2131078492
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2139,7 +2140,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.26.proteus_f7.2827369622"
+#define TS_SIGNATURE "rusEFI master.2025.12.26.proteus_f7.2131078492"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
