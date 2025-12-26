@@ -127,6 +127,11 @@ static const CANConfig canConfig500 = {
    .btr = CAN_BTR_500
 };
 
+static const CANConfig canConfig666 = {
+   .mcr = STM32FxMCR,
+   .btr = CAN_BTR_500
+};
+
 static const CANConfig canConfig1000 = {
     .mcr = STM32FxMCR,
    .btr = CAN_BTR_1k0
@@ -194,6 +199,16 @@ static const CANConfig canConfig250 = {
 };
 
 static const CANConfig canConfig500 = {
+   .op_mode = OPMODE_CAN,
+   .NBTP = CAN_NBTP_500,
+   .DBTP = CAN_DBTP_500,
+   .TDCR = 0,
+   .CCCR = 0,
+   .TEST = 0,
+   .RXGFC = 0,
+};
+
+static const CANConfig canConfig666 = {
    .op_mode = OPMODE_CAN,
    .NBTP = CAN_NBTP_500,
    .DBTP = CAN_DBTP_500,
@@ -303,6 +318,8 @@ const CANConfig * findCanConfig(can_baudrate_e rate) {
       return &canConfig125;
    case B250KBPS:
       return &canConfig250;
+   case B666KBPS:
+      return &canConfig666;
    case B1MBPS:
       return &canConfig1000;
    case B500KBPS:
