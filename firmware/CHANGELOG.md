@@ -36,6 +36,7 @@ Release template (copy/paste this for new release):
 ### Added
  - FatFS update to R0.16
  - WBO: update from sd #8870
+ - Switch to 7z for ini file compression on MSD #8895
 
 ### Breaking Changes
  - CAN bitrare 666k #8784
