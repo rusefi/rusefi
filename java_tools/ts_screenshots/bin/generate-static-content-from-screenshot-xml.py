@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 import shutil
 
-XML_FILE = "uaefi-screenshots-and-XML-2025-09-ScreenGeneratorTool.xml"
+XML_FILE = "images/ScreenGeneratorTool.xml"
 OUTPUT_HTML = "index.html"
 IMAGES_DIR = "images"  # target folder for copied images
 SOURCE_IMAGES_DIR = Path("images")  # source folder where your images really are
@@ -119,7 +119,7 @@ def main():
                 content_parts.append("<div class='field'>")
                 content_parts.append(f"<strong>{ui_name}</strong>")
                 if tooltip:
-                    tooltipHtml = "<br>".join(tooltip.split("\n"))
+                    tooltipHtml = "<br>".join(tooltip.split("\\n"))
                     content_parts.append(f"<div class='tooltip'>{tooltipHtml}</div>")
                 if img:
                     img_path = copy_image(img)
