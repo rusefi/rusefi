@@ -46,6 +46,7 @@ h3 { margin-top: 15px; color: #0066cc; }
     background: white; border-radius: 8px; padding: 10px; margin: 8px 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+.field:target { outline: 3px solid green; }
 .field img { max-width: 100%; display: block; margin-top: 10px; }
 .tooltip { font-size: 0.9em; color: #555; margin-top: 4px; }
 """
@@ -114,10 +115,11 @@ def main():
 
             for field in dialog.findall(".//field"):
                 ui_name = field.attrib.get("uiName", "Field")
+                tag = dialog_title.lower().replace(' ', '_') + "_" + ui_name.lower().replace(' ', '_')
                 img = field.attrib.get("imageName", "")
                 tooltip = field.attrib.get("tooltip", "")
 
-                content_parts.append("<div class='field' id='{}'>")
+                content_parts.append(f"<div class='field' id='{tag}'>")
                 content_parts.append(f"<strong>{ui_name}</strong>")
                 if tooltip:
                     tooltipHtml = "<br>".join(tooltip.split("\\n"))
