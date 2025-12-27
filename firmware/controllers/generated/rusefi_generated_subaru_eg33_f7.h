@@ -2140,7 +2140,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.26.subaru_eg33_f7.3287601387"
+#define TS_SIGNATURE "rusEFI master.2025.12.27.subaru_eg33_f7.3287601387"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
