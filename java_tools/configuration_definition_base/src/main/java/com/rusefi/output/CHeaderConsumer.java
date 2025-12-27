@@ -38,7 +38,7 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
     public static void writeDefinesToFile(VariableRegistry variableRegistry, String fileName, String headerComment) throws IOException {
 
         log.info("Writing to " + fileName);
-        LazyFile cHeader = new LazyFileImpl(fileName);
+        LazyFile cHeader = new LazyFileImpl(fileName, ConfigDefinitionRootOutputFolder.getValue() + "generated.patch");
 
         cHeader.write("//\n// " + CHeaderConsumer.class.getSimpleName() + " " + ToolUtil.getGeneratedAutomaticallyTag() + headerComment + "\n//\n\n");
         cHeader.write(variableRegistry.getDefinesSection());
