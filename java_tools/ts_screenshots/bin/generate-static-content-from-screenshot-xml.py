@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 from pathlib import Path
 import shutil
+import urllib.parse
 
 XML_FILE = "images/ScreenGeneratorTool.xml"
 OUTPUT_HTML = "index.html"
@@ -109,14 +110,14 @@ def main():
             if dialog_img:
                 img_path = copy_image(dialog_img)
                 if img_path:
-                    content_parts.append(f"<img src='{img_path}' alt='{dialog_title}'>")
+                    content_parts.append(f"<img src='{urllib.parse.quote_plus(img_path)}' alt='{dialog_title}'>")
 
             for field in dialog.findall(".//field"):
                 ui_name = field.attrib.get("uiName", "Field")
                 img = field.attrib.get("imageName", "")
                 tooltip = field.attrib.get("tooltip", "")
 
-                content_parts.append("<div class='field'>")
+                content_parts.append("<div class='field' id='{}'>")
                 content_parts.append(f"<strong>{ui_name}</strong>")
                 if tooltip:
                     tooltipHtml = "<br>".join(tooltip.split("\\n"))
@@ -124,7 +125,7 @@ def main():
                 if img:
                     img_path = copy_image(img)
                     if img_path:
-                        content_parts.append(f"<img src='{img_path}' alt='{ui_name}'>")
+                        content_parts.append(f"<img src='{urllib.parse.quote_plus(img_path)}' alt='{ui_name}'>")
                 content_parts.append("</div>")
 
         toc_parts.append("</ul></li>")
