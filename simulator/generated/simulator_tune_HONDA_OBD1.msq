@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0251227E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0251229E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -2831,27 +2831,27 @@ end</constant>
         <constant digits="1" name="maxInjectorDutySustainedTimeout" units="sec">0.5</constant>
         <constant cols="1" digits="0" name="maxKnockRetardLoadBins" rows="6" units="%">
          0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         20.0
+         40.0
+         60.0
+         80.0
+         100.0
 </constant>
         <constant cols="1" digits="0" name="maxKnockRetardRpmBins" rows="6" units="RPM">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         700.0
+         800.0
+         2200.0
+         3600.0
+         5000.0
+         7000.0
 </constant>
         <constant cols="6" digits="2" name="maxKnockRetardTable" rows="6" units="deg">
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
+         20.0 20.0 20.0 20.0 20.0 20.0
 </constant>
         <constant digits="1" name="maxOilPressureTimeout" units="sec">0.0</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
@@ -4939,7 +4939,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20251209" nPages="1" signature="rusEFI master.2025.12.27.f407-discovery.1781157534" version="5.0"/>
+    <versionInfo firmwareInfo="20251209" nPages="1" signature="rusEFI master.2025.12.29.f407-discovery.1781157534" version="5.0"/>
     <bibliography author="rusEFI 20251209" writeDate="date"/>
     <settings/>
     <userComments/>
