@@ -38,7 +38,7 @@ pins:
     color: grey
     class: outputs
     type: ls
-    id: TLE9104_2_OUT_0
+    id: TLE9104_2_OUT_1
     ts_name: ___ Fuel Pump Relay
     color: white
 
@@ -47,7 +47,7 @@ pins:
     function: Idle Output
     class: outputs
     type: ls
-    id: TLE9104_2_OUT_1
+    id: TLE9104_2_OUT_0
     ts_name: ___ Idle Output
     color: yellow
 
@@ -95,8 +95,16 @@ pins:
     class: outputs
     color: yellow
     type: ls
-    id: TLE9104_2_OUT_3
+    id: TLE9104_2_OUT_4
     ts_name: ___ - Tachometer Output
+
+  - pin: NONE
+    function: Extra Output P1
+    class: outputs
+    color: yellow
+    type: ls
+    id: TLE9104_2_OUT_3
+    ts_name: ___ - Extra Out
 
   - pin: 15B
     meta: H144_IN_SENS1
