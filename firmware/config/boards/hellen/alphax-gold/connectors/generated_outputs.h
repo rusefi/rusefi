@@ -17,9 +17,10 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::TLE9104_0_OUT_2, // 2B - Injector 3
 	Gpio::TLE9104_0_OUT_1, // 3B - Injector 2
 	Gpio::TLE9104_0_OUT_0, // 4B - Injector 1
-	Gpio::TLE9104_2_OUT_0, // 5B Fuel Pump Relay
-	Gpio::TLE9104_2_OUT_1, // 6B Idle Output
+	Gpio::TLE9104_2_OUT_1, // 5B Fuel Pump Relay
+	Gpio::TLE9104_2_OUT_0, // 6B Idle Output
 	Gpio::TLE9104_2_OUT_3, // 14B - Tachometer Output
+	Gpio::TLE9104_2_OUT_2, // NONE - Extra Out
 	Gpio::H144_IGN_8, // 10A Coil 8
 	Gpio::H144_IGN_7, // 11A Coil 7
 	Gpio::H144_IGN_6, // 12A Coil 6
@@ -43,6 +44,7 @@ Gpio GENERATED_OUTPUTS = {
 // "5B Fuel Pump Relay",
 // "6B Idle Output",
 // "14B - Tachometer Output",
+// "NONE - Extra Out",
 // "10A Coil 8",
 // "11A Coil 7",
 // "12A Coil 6",
