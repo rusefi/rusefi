@@ -13,6 +13,7 @@
 
 #define DOT_MLG ".mlg"
 
+// see also SD_STATUS
 typedef enum {
 	SD_MODE_IDLE = 0,
 	SD_MODE_ECU,
@@ -24,13 +25,13 @@ typedef enum {
 void initEarlyMmcCard();
 void initMmcCard();
 
-void onUsbConnectedNotifyMmcI(void);
+void onUsbConnectedNotifyMmcI();
 
-void updateSdCardLiveFlags(void);
+void updateSdCardLiveFlags();
 
 struct USBDriver;
 bool msd_request_hook_new(USBDriver *usbp);
 
 void sdCardRequestMode(SD_MODE mode);
-SD_MODE sdCardGetCurrentMode(void);
+SD_MODE sdCardGetCurrentMode();
 void sdCardRemoveReportFiles();
