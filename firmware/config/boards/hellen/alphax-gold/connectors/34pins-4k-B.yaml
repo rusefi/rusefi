@@ -95,7 +95,7 @@ pins:
     class: outputs
     color: yellow
     type: ls
-    id: TLE9104_2_OUT_4
+    id: TLE9104_2_OUT_3
     ts_name: ___ - Tachometer Output
 
   - pin: NONE
@@ -103,7 +103,7 @@ pins:
     class: outputs
     color: yellow
     type: ls
-    id: TLE9104_2_OUT_3
+    id: TLE9104_2_OUT_2
     ts_name: ___ - Extra Out
 
   - pin: 15B
