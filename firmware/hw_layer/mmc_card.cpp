@@ -153,6 +153,7 @@ extern void errorHandlerWriteReportFile(FIL *fd);
 extern int errorHandlerCheckReportFiles();
 extern void errorHandlerDeleteReports();
 
+// see also SD_MODE
 typedef enum {
 	SD_STATUS_INIT = 0,
 	SD_STATUS_MOUNTED,
@@ -236,7 +237,7 @@ static void sdLoggerSetReady(bool value) {
 	sdLoggerReady = value;
 }
 
-static bool sdLoggerIsReady(void) {
+static bool sdLoggerIsReady() {
 	return sdLoggerReady;
 }
 
@@ -697,7 +698,7 @@ static int sdLogger(FIL *fd)
 	return ret;
 }
 
-static void sdLoggerStart(void)
+static void sdLoggerStart()
 {
 	sdLoggerInitDone = false;
 	sdLoggerFailed = false;
@@ -710,7 +711,7 @@ static void sdLoggerStart(void)
 #endif
 }
 
-static void sdLoggerStop(void)
+static void sdLoggerStop()
 {
 	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
@@ -1039,7 +1040,7 @@ void sdCardRequestMode(SD_MODE mode)
 	}
 }
 
-SD_MODE sdCardGetCurrentMode(void)
+SD_MODE sdCardGetCurrentMode()
 {
 	return sdMode;
 }
