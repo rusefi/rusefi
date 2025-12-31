@@ -3026,6 +3026,7 @@ struct engine_configuration_s {
 	offset 1448 bit 19 */
 	bool torqueReductionEnabled : 1 {};
 	/**
+	 * When we sync cam sensor is that first or second full engine revolution of the four stroke cycle?
 	offset 1448 bit 20 */
 	bool camSyncOnSecondCrankRevolution : 1 {};
 	/**

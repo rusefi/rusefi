@@ -845,7 +845,7 @@ This is the Cut Mode normally used
 
 
 ### camSyncOnSecondCrankRevolution
-
+When we sync cam sensor is that first or second full engine revolution of the four stroke cycle?
 
 ### limitTorqueReductionTime
 
