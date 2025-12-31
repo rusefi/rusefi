@@ -983,7 +983,7 @@
         <constant name="enableAemXSeries">"no"</constant>
         <constant name="enableAemXSeriesEgt">"no"</constant>
         <constant name="enableCanVss">"no"</constant>
-        <constant name="enableExtendedCanBroadcast">"true"</constant>
+        <constant name="enableExtendedCanBroadcast">"yes"</constant>
         <constant name="enableFan1WithAc">"no"</constant>
         <constant name="enableFan2WithAc">"no"</constant>
         <constant name="enableKline">"disabled"</constant>
@@ -4936,7 +4936,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2025.12.31.f407-discovery.31061949" version="5.0"/>
+    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2025.12.31.f407-discovery.1889154231" version="5.0"/>
     <bibliography author="rusEFI 20260101" writeDate="date"/>
     <settings/>
     <userComments/>
