@@ -28,7 +28,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20251007; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20260101; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String DO_NOT_UPDATE_PROPERTY_KEY = "Autoupdate.do_not_download";
     private static final boolean doNotDownloadPropertyValue;
     private static final String SUPPRESS_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + "donotdownload";
