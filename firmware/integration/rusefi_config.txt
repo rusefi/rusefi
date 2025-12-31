@@ -569,14 +569,14 @@ bit etb_use_two_wires,"yes","no";TLE7209 and L6205 use two-wire mode. TLE9201 an
 bit isDoubleSolenoidIdle,"yes","no";Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 bit useEeprom,"yes","no"
 bit useCicPidForIdle,"Cic","Industrial";Switch between Industrial and Cic PID implementation
-bit useTLE8888_cranking_hack;
+bit useTLE8888_cranking_hack,"yes","no"
 bit kickStartCranking,"yes","no"
 bit useSeparateIdleTablesForCrankingTaper,"enabled","disabled";This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled,"enabled","disabled"
 bit antiLagEnabled,"enabled","disabled"
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit displayLogicLevelsInEngineSniffer,"yes","no";Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
-bit useTLE8888_stepper
+bit useTLE8888_stepper,"yes","no"
 bit usescriptTableForCanSniffingFiltering,"yes","no"
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
@@ -888,9 +888,9 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit verboseQuad,"yes","no"
 
 	! bit 8
-	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	bit enabledStep1Limiter
-	bit lambdaProtectionEnable
+	bit useStepperIdle,"yes","no";This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
+	bit unusedEna
+	bit lambdaProtectionEnable,"enabled","disabled"
 	bit verboseTLE8888,"yes","no"
 	bit enableVerboseCanTx,"yes","no";CAN broadcast using custom rusEFI protocol
 	bit externalRusEfiGdiModule,"yes","no"
@@ -1151,7 +1151,7 @@ bit launchSparkCutEnable,"yes","no";This is the Cut Mode normally used
 	bit torqueReductionEnabled,"enabled","disabled"
 	bit camSyncOnSecondCrankRevolution,"second","first";When we sync cam sensor is that first or second full engine revolution of the four stroke cycle?
 	bit limitTorqueReductionTime,"yes","no"
-bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
+bit verboseIsoTp,"yes","no";Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs;In this mode only trigger events go into engine sniffer and not coils/injectors etc
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skipped wheel located?
