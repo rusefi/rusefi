@@ -887,15 +887,14 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit rethrowHardFault,"yes","no"
 	bit verboseQuad,"yes","no"
 
-	! bit 8
-	bit useStepperIdle,"yes","no";This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
+		bit useStepperIdle,"yes","no";This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	bit lambdaProtectionEnable,"enabled","disabled"
 	bit verboseTLE8888,"yes","no"
 	bit enableVerboseCanTx,"yes","no";CAN broadcast using custom rusEFI protocol
 	bit externalRusEfiGdiModule,"yes","no"
 	bit measureMapOnlyInOneCylinder,"yes","no";Useful for individual intakes
 
-	! bit 16
+	! bit 13
 	bit stepperForceParkingEveryRestart,"yes","no"
 	bit isFasterEngineSpinUpEnabled,"enabled","disabled";If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	bit coastingFuelCutEnabled;This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
@@ -905,7 +904,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit disableEtbWhenEngineStopped;Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	bit is_enabled_spi_4,"yes","no"
 
-	! bit 24
+	! bit 21
 	bit pauseEtbControl,"yes","no";Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 
 	bit verboseKLine,"yes","no"
@@ -916,8 +915,10 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit isTuningDetectorEnabled,"yes","no"
 	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
 	bit useAbsolutePressureForLagTime,"yes","no"
-	! bit 31 is free to use
-	! 'unused32nd' is the 32nd bit here, you would need another bit region if more bits are desired
+	bit unusedBit_311_28
+	bit unusedBit_311_29
+	bit unusedBit_311_30
+	bit unusedBit_311_31
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
