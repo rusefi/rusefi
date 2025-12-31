@@ -889,12 +889,10 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 
 	! bit 8
 	bit useStepperIdle,"yes","no";This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	bit unusedEna
 	bit lambdaProtectionEnable,"enabled","disabled"
 	bit verboseTLE8888,"yes","no"
 	bit enableVerboseCanTx,"yes","no";CAN broadcast using custom rusEFI protocol
 	bit externalRusEfiGdiModule,"yes","no"
-	bit unusedFlipWboChannels
 	bit measureMapOnlyInOneCylinder,"yes","no";Useful for individual intakes
 
 	! bit 16
@@ -1659,7 +1657,6 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	UiMode uiMode
 	int16_t hpfpPeakPos;Crank angle ATDC of first lobe peak;"deg", 1, 0, -719, 719, 0
 	int16_t kLinePeriodUs;;"us", 1, 0, 0, 30000, 0
-	uint8_t autoscale rpmSoftLimitWindowSize;Window that the correction will be added throughout (example, if rpm limit is 7000, and rpmSoftLimitWindowSize is 200, the corrections activate at 6800RPM, creating a 200rpm window);"RPM", 10, 0, 0, 2500, 0
 	uint8_t autoscale rpmSoftLimitTimingRetard;Degrees of timing REMOVED from actual timing during soft RPM limit window;"deg", 0.2, 0, 0, 50, 1
 	uint8_t autoscale rpmSoftLimitFuelAdded;% of fuel ADDED during window;"%", 0.2, 0, 0, 50, 1
 	uint8_t autoscale rpmHardLimitHyst;Sets a buffer below the RPM hard limit, helping avoid rapid cycling of cut actions by defining a range within which RPM must drop before cut actions are re-enabled.\nHysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached;"RPM", 10, 0, 0, 2500, 0

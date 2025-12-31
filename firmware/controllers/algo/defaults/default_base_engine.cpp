@@ -258,7 +258,6 @@ void setDefaultBaseEngine() {
 
   engineConfiguration->tpsAccelFractionDivisor = 1;
 
-  engineConfiguration->rpmSoftLimitWindowSize = 200;
   engineConfiguration->rpmSoftLimitTimingRetard = 4;
 
 	// CLT RPM limit table - just the X axis
