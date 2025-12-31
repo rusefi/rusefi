@@ -52,6 +52,19 @@ public class UiUtils {
         // call the Component's paint method, using
         // the Graphics object of the image.
         component.paint(image.getGraphics()); // alternately use .printAll(..)
+
+        // Remove black bars from dialogs
+        if (component instanceof JDialog) {
+            Insets insets = ((JDialog) component).getInsets();
+
+            int x = insets.left;
+            int y = insets.top;
+            int w = image.getWidth() - insets.left - insets.right;
+            int h = image.getHeight() - insets.top - insets.bottom;
+
+            BufferedImage cropped = image.getSubimage(x, y, w, h);
+            return cropped;            
+        }
         return image;
     }
 }
