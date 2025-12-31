@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - ETB: calibration, wrong scale 3% calibration error #8863
  - luaHeapAlloc crashed when not enough RAM #8874
  - uaefi121: pin 43 conflict with green LED #8884
+ - TS: annoying numeric values after proper named values #8898
 
 ### Added
  - FatFS update to R0.16
