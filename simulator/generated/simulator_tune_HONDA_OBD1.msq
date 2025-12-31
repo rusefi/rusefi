@@ -3059,7 +3059,6 @@ end</constant>
 </constant>
         <constant digits="1" name="rpmSoftLimitFuelAdded" units="%">0.0</constant>
         <constant digits="1" name="rpmSoftLimitTimingRetard" units="deg">4.0</constant>
-        <constant digits="0" name="rpmSoftLimitWindowSize" units="RPM">200.0</constant>
         <constant name="rusefiVerbose29b">"11 bit"</constant>
         <constant cols="1" digits="3" name="scriptCurve1" rows="16" units="y">
          0.0
@@ -4404,7 +4403,6 @@ end</constant>
         <constant name="twoWireBatchIgnition">"no"</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant name="uiMode">"Full"</constant>
-        <constant name="unusedEna">"false"</constant>
         <constant name="unusedFancy10">"false"</constant>
         <constant name="unusedFancy11">"false"</constant>
         <constant name="unusedFancy12">"false"</constant>
@@ -4435,7 +4433,6 @@ end</constant>
         <constant name="unusedFancy7">"false"</constant>
         <constant name="unusedFancy8">"false"</constant>
         <constant name="unusedFancy9">"false"</constant>
-        <constant name="unusedFlipWboChannels">"false"</constant>
         <constant name="useAbsolutePressureForLagTime">"no"</constant>
         <constant name="useAdvanceCorrectionsForCranking">"no"</constant>
         <constant name="useAuxSpeedForSlipRatio">"no"</constant>
@@ -4939,7 +4936,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2025.12.31.f407-discovery.3803331410" version="5.0"/>
+    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2025.12.31.f407-discovery.146043280" version="5.0"/>
     <bibliography author="rusEFI 20260101" writeDate="date"/>
     <settings/>
     <userComments/>
