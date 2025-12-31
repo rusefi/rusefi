@@ -1149,7 +1149,7 @@ bit cutSparkOnHardLimit,"yes","no";When selected, this option cuts the spark to 
 bit launchFuelCutEnable,"yes","no"
 bit launchSparkCutEnable,"yes","no";This is the Cut Mode normally used
 	bit torqueReductionEnabled,"enabled","disabled"
-	bit camSyncOnSecondCrankRevolution,"second","first"
+	bit camSyncOnSecondCrankRevolution,"second","first";When we sync cam sensor is that first or second full engine revolution of the four stroke cycle?
 	bit limitTorqueReductionTime,"yes","no"
 bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs;In this mode only trigger events go into engine sniffer and not coils/injectors etc
