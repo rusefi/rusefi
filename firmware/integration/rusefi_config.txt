@@ -1262,7 +1262,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit mc33810Gpgd1Mode
 	bit mc33810Gpgd2Mode
 	bit mc33810Gpgd3Mode
-	bit enableExtendedCanBroadcast;Send out board statistics
+	bit enableExtendedCanBroadcast,"yes","no";Send out board statistics
 ! temporary for too much CAN RX processing kills Lua script #5841
 	bit luaCanRxWorkaround;global_can_data performance hack
 	bit flexSensorInverted,"Inverted","Normal"
