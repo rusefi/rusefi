@@ -119,7 +119,7 @@ class CanTxTyped final : public CanTxMessage
 public:
 	explicit CanTxTyped(CanCategory p_category, uint32_t p_id, bool p_isExtended, size_t canChannel) : CanTxMessage(p_category, p_id, sizeof(TData), canChannel, p_isExtended) { }
 
-#if EFI_CAN_SUPPORT
+#if HAS_CAN_FRAME
 	/**
 	 * Access members of the templated type.
 	 *
@@ -134,7 +134,7 @@ public:
 	TData& get() {
 		return *reinterpret_cast<TData*>(&m_frame.data8);
 	}
-#endif // EFI_CAN_SUPPORT
+#endif // HAS_CAN_FRAME
 };
 
 template <typename TData>
