@@ -463,9 +463,6 @@ Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 ### useStepperIdle
 This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 
-### enabledStep1Limiter
-
-
 ### lambdaProtectionEnable
 
 

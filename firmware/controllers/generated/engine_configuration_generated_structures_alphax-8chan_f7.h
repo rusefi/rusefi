@@ -2213,7 +2213,7 @@ struct engine_configuration_s {
 	bool useStepperIdle : 1 {};
 	/**
 	offset 852 bit 8 */
-	bool enabledStep1Limiter : 1 {};
+	bool unusedEna : 1 {};
 	/**
 	offset 852 bit 9 */
 	bool lambdaProtectionEnable : 1 {};

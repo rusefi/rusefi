@@ -469,9 +469,6 @@ float getConfigValueByHash(const int hash) {
 // useStepperIdle
 		case -920116109:
 			return engineConfiguration->useStepperIdle;
-// enabledStep1Limiter
-		case -2068213709:
-			return engineConfiguration->enabledStep1Limiter;
 // lambdaProtectionEnable
 		case 1451020756:
 			return engineConfiguration->lambdaProtectionEnable;
@@ -2824,11 +2821,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -920116109:
 	{
 		engineConfiguration->useStepperIdle = (int)value;
-		return 1;
-	}
-		case -2068213709:
-	{
-		engineConfiguration->enabledStep1Limiter = (int)value;
 		return 1;
 	}
 		case 1451020756:
