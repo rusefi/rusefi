@@ -39,7 +39,7 @@ using custom_validate_config_type = bool (*)();
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 using board_can_rx_type = void (*)(const size_t, const CANRxFrame &, efitick_t);
 extern std::optional<board_can_rx_type> custom_board_can_rx;
