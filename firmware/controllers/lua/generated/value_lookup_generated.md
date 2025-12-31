@@ -1669,9 +1669,6 @@ Crank angle ATDC of first lobe peak
 ### kLinePeriodUs
 
 
-### rpmSoftLimitWindowSize
-Window that the correction will be added throughout (example, if rpm limit is 7000, and rpmSoftLimitWindowSize is 200, the corrections activate at 6800RPM, creating a 200rpm window)
-
 ### rpmSoftLimitTimingRetard
 Degrees of timing REMOVED from actual timing during soft RPM limit window
 

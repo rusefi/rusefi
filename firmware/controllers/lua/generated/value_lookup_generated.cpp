@@ -1675,9 +1675,6 @@ float getConfigValueByHash(const int hash) {
 // kLinePeriodUs
 		case 1915146851:
 			return engineConfiguration->kLinePeriodUs;
-// rpmSoftLimitWindowSize
-		case 1092207266:
-			return engineConfiguration->rpmSoftLimitWindowSize;
 // rpmSoftLimitTimingRetard
 		case -543684839:
 			return engineConfiguration->rpmSoftLimitTimingRetard;
@@ -4831,11 +4828,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1915146851:
 	{
 		engineConfiguration->kLinePeriodUs = (int)value;
-		return 1;
-	}
-		case 1092207266:
-	{
-		engineConfiguration->rpmSoftLimitWindowSize = (int)value;
 		return 1;
 	}
 		case -543684839:

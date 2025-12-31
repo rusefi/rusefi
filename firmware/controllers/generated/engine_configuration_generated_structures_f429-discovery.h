@@ -2213,85 +2213,85 @@ struct engine_configuration_s {
 	bool useStepperIdle : 1 {};
 	/**
 	offset 772 bit 8 */
-	bool unusedEna : 1 {};
-	/**
-	offset 772 bit 9 */
 	bool lambdaProtectionEnable : 1 {};
 	/**
-	offset 772 bit 10 */
+	offset 772 bit 9 */
 	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
-	offset 772 bit 11 */
+	offset 772 bit 10 */
 	bool enableVerboseCanTx : 1 {};
 	/**
-	offset 772 bit 12 */
+	offset 772 bit 11 */
 	bool externalRusEfiGdiModule : 1 {};
 	/**
-	offset 772 bit 13 */
-	bool unusedFlipWboChannels : 1 {};
-	/**
 	 * Useful for individual intakes
-	offset 772 bit 14 */
+	offset 772 bit 12 */
 	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
-	offset 772 bit 15 */
+	offset 772 bit 13 */
 	bool stepperForceParkingEveryRestart : 1 {};
 	/**
 	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	offset 772 bit 16 */
+	offset 772 bit 14 */
 	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
 	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	offset 772 bit 17 */
+	offset 772 bit 15 */
 	bool coastingFuelCutEnabled : 1 {};
 	/**
 	 * Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
-	offset 772 bit 18 */
+	offset 772 bit 16 */
 	bool useIacTableForCoasting : 1 {};
 	/**
-	offset 772 bit 19 */
+	offset 772 bit 17 */
 	bool useNoiselessTriggerDecoder : 1 {};
 	/**
-	offset 772 bit 20 */
+	offset 772 bit 18 */
 	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	offset 772 bit 21 */
+	offset 772 bit 19 */
 	bool disableEtbWhenEngineStopped : 1 {};
 	/**
-	offset 772 bit 22 */
+	offset 772 bit 20 */
 	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	offset 772 bit 23 */
+	offset 772 bit 21 */
 	bool pauseEtbControl : 1 {};
 	/**
-	offset 772 bit 24 */
+	offset 772 bit 22 */
 	bool verboseKLine : 1 {};
 	/**
-	offset 772 bit 25 */
+	offset 772 bit 23 */
 	bool idleIncrementalPidCic : 1 {};
 	/**
 	 * AEM X-Series or rusEFI Wideband
-	offset 772 bit 26 */
+	offset 772 bit 24 */
 	bool enableAemXSeries : 1 {};
 	/**
-	offset 772 bit 27 */
+	offset 772 bit 25 */
 	bool modeledFlowIdle : 1 {};
 	/**
-	offset 772 bit 28 */
+	offset 772 bit 26 */
 	bool isTuningDetectorEnabled : 1 {};
 	/**
-	offset 772 bit 29 */
+	offset 772 bit 27 */
 	bool useAbsolutePressureForLagTime : 1 {};
 	/**
+	offset 772 bit 28 */
+	bool unusedBit_311_28 : 1 {};
+	/**
+	offset 772 bit 29 */
+	bool unusedBit_311_29 : 1 {};
+	/**
 	offset 772 bit 30 */
-	bool unusedBit_313_30 : 1 {};
+	bool unusedBit_311_30 : 1 {};
 	/**
 	offset 772 bit 31 */
-	bool unusedBit_313_31 : 1 {};
+	bool unusedBit_311_31 : 1 {};
 	/**
 	 * offset 776
 	 */
@@ -4821,30 +4821,30 @@ struct engine_configuration_s {
 	 */
 	int16_t kLinePeriodUs;
 	/**
-	 * Window that the correction will be added throughout (example, if rpm limit is 7000, and rpmSoftLimitWindowSize is 200, the corrections activate at 6800RPM, creating a 200rpm window)
-	 * units: RPM
-	 * offset 3294
-	 */
-	scaled_channel<uint8_t, 1, 10> rpmSoftLimitWindowSize;
-	/**
 	 * Degrees of timing REMOVED from actual timing during soft RPM limit window
 	 * units: deg
-	 * offset 3295
+	 * offset 3294
 	 */
 	scaled_channel<uint8_t, 5, 1> rpmSoftLimitTimingRetard;
 	/**
 	 * % of fuel ADDED during window
 	 * units: %
-	 * offset 3296
+	 * offset 3295
 	 */
 	scaled_channel<uint8_t, 5, 1> rpmSoftLimitFuelAdded;
 	/**
 	 * Sets a buffer below the RPM hard limit, helping avoid rapid cycling of cut actions by defining a range within which RPM must drop before cut actions are re-enabled.
 	 * Hysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached
 	 * units: RPM
-	 * offset 3297
+	 * offset 3296
 	 */
 	scaled_channel<uint8_t, 1, 10> rpmHardLimitHyst;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 3297
+	 */
+	uint8_t alignmentFill_at_3297[1] = {};
 	/**
 	 * Time between bench test pulses
 	 * units: ms
