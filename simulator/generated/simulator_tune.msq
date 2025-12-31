@@ -983,7 +983,6 @@
         <constant name="enableAemXSeries">"no"</constant>
         <constant name="enableAemXSeriesEgt">"no"</constant>
         <constant name="enableCanVss">"no"</constant>
-        <constant name="enabledStep1Limiter">"false"</constant>
         <constant name="enableExtendedCanBroadcast">"true"</constant>
         <constant name="enableFan1WithAc">"no"</constant>
         <constant name="enableFan2WithAc">"no"</constant>
@@ -2484,7 +2483,7 @@
          0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0
 </constant>
-        <constant name="lambdaProtectionEnable">"false"</constant>
+        <constant name="lambdaProtectionEnable">"disabled"</constant>
         <constant digits="0" name="lambdaProtectionMinLoad" units="%">60.0</constant>
         <constant digits="0" name="lambdaProtectionMinRpm" units="RPM">2500.0</constant>
         <constant digits="0" name="lambdaProtectionMinTps" units="%">50.0</constant>
@@ -4404,6 +4403,7 @@ end</constant>
         <constant name="twoWireBatchIgnition">"no"</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant name="uiMode">"Full"</constant>
+        <constant name="unusedEna">"false"</constant>
         <constant name="unusedFancy10">"false"</constant>
         <constant name="unusedFancy11">"false"</constant>
         <constant name="unusedFancy12">"false"</constant>
@@ -4463,9 +4463,9 @@ end</constant>
         <constant name="useSeparateIdleTablesForCrankingTaper">"disabled"</constant>
         <constant name="useSeparateVeForIdle">"disabled"</constant>
         <constant name="useSpiImu">"no"</constant>
-        <constant name="useStepperIdle">"false"</constant>
-        <constant name="useTLE8888_cranking_hack">"true"</constant>
-        <constant name="useTLE8888_stepper">"false"</constant>
+        <constant name="useStepperIdle">"no"</constant>
+        <constant name="useTLE8888_cranking_hack">"yes"</constant>
+        <constant name="useTLE8888_stepper">"no"</constant>
         <constant name="useVssAsSecondWheelSpeed">"no"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
@@ -4700,7 +4700,7 @@ end</constant>
         <constant name="verboseCan">"Do not print"</constant>
         <constant name="verboseCan2">"Do not print"</constant>
         <constant digits="0" name="verboseCanBaseAddress" units="">512.0</constant>
-        <constant name="verboseIsoTp">"false"</constant>
+        <constant name="verboseIsoTp">"no"</constant>
         <constant name="verboseKLine">"no"</constant>
         <constant name="verboseQuad">"no"</constant>
         <constant name="verboseTLE8888">"no"</constant>
@@ -4938,7 +4938,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2025.12.31.f407-discovery.1371987672" version="5.0"/>
+    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2025.12.31.f407-discovery.3803331410" version="5.0"/>
     <bibliography author="rusEFI 20260101" writeDate="date"/>
     <settings/>
     <userComments/>
