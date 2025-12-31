@@ -59,7 +59,7 @@
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
 #define adc_channel_e_enum 0="NONE",16="Analog 3E",8="Analog 3G",7="Analog 3H",5="Analog 3I",4="Analog 3J",2="Analog 3L",3="Analog 3M",14="Analog 3N",1="Analog 3O",12="Analog 3P",13="Analog 3Q",15="Analog VBatt"
-#define adc_channel_e_fullenum "NONE","Analog 3O","Analog 3L","Analog 3M","Analog 3J","Analog 3I","INVALID","Analog 3H","Analog 3G","INVALID","INVALID","INVALID","Analog 3P","Analog 3Q","Analog 3N","Analog VBatt","Analog 3E"
+#define adc_channel_e_fullenum "NONE","Analog 3O","Analog 3L","Analog 3M","Analog 3J","Analog 3I","INVALID","Analog 3H","Analog 3G","INVALID","INVALID","INVALID","Analog 3P","Analog 3Q","Analog 3N","Analog VBatt","Analog 3E","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1441,7 +1441,7 @@
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
 #define output_pin_e_enum 0="NONE",43="Coil 1F",80="Coil 1G",41="Coil 1H",76="Coil 1I",74="Coil 1L",78="Coil 1M",58="Coil 1O",59="Coil 1P",47="Injector 2M",57="Injector 2N",71="Injector 2O",72="Injector 2P",69="Injector 3S",70="Injector 3T",53="Injector 3U",68="Injector 3V",27="Injector 3W",55="Injector 3X",26="Injector 3Y",25="Injector 3Z"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3Z","Injector 3Y","Injector 3W","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Coil 1H","INVALID","Coil 1F","INVALID","INVALID","INVALID","Injector 2M","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3U","INVALID","Injector 3X","INVALID","Injector 2N","Coil 1O","Coil 1P","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3V","Injector 3S","Injector 3T","Injector 2O","Injector 2P","INVALID","Coil 1L","INVALID","Coil 1I","INVALID","Coil 1M","INVALID","Coil 1G"
+#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3Z","Injector 3Y","Injector 3W","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Coil 1H","INVALID","Coil 1F","INVALID","INVALID","INVALID","Injector 2M","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3U","INVALID","Injector 3X","INVALID","Injector 2N","Coil 1O","Coil 1P","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3V","Injector 3S","Injector 3T","Injector 2O","Injector 2P","INVALID","Coil 1L","INVALID","Coil 1I","INVALID","Coil 1M","INVALID","Coil 1G","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1548,7 +1548,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3883063222
+#define SIGNATURE_HASH 1907141707
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2139,7 +2139,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.31.frankenso_na6.3883063222"
+#define TS_SIGNATURE "rusEFI master.2025.12.31.frankenso_na6.1907141707"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
