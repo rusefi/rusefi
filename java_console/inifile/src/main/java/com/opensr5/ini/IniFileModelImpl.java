@@ -445,7 +445,12 @@ public class IniFileModelImpl implements IniFileModel {
 
         if (key != null) {
             fieldsOfCurrentDialog.add(field);
-            fieldsInUiOrder.put(key, field);
+            // If the field hasn't been registered yet,
+            //  or if it has been but without a UI name (name will be the same as the key)
+            // This isn't necessarily more correct, but it's more likely to be correct in dialogs that are more user-visible
+            if (! fieldsInUiOrder.containsKey(key) || fieldsInUiOrder.get(key).getUiName() == key) {
+                fieldsInUiOrder.put(key, field);
+            }
         }
     }
 
