@@ -188,9 +188,6 @@ public:
 #endif
         ShortTermFuelTrim,
 
-#if EFI_PULSE_INPUT
-    PulseInputModule,
-#endif // EFI_PULSE_INPUT
 
 #include "modules_list_generated.h"
 
