@@ -62,10 +62,6 @@
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
 
-#if EFI_PULSE_INPUT
-#include "modules/pulse_input_module/pulse_input_module.h"
-#endif
-
 #include <functional>
 
 #ifndef EFI_BOOTLOADER
