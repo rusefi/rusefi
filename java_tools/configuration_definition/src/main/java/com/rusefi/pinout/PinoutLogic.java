@@ -117,11 +117,20 @@ public class PinoutLogic {
 
         Map<Integer, String> pinMap = new HashMap<>();
 
-        for (int i = 0; i < values.size(); i++) {
+        // Calculate target size by rounding up values.size() to the next power of 2
+        // 17 values -> 32 (2^5), 33 values -> 64 (2^6), etc.
+        int targetSize = values.size();
+        if (values.size() > 1) {
+            // Find the next power of 2 that can hold all values
+            int bits = 32 - Integer.numberOfLeadingZeros(values.size() - 1);
+            targetSize = 1 << bits;
+        }
+
+        for (int i = 0; i < targetSize; i++) {
             appendCommaIfNeeded(arrayFormat);
             String key = enumList.findByValue(i);
 
-            String value = values.get(i);
+            String value = i < values.size() ? values.get(i) : null;
             if (i == 0) {
                 pinMap.put(i, NONE);
             } else if (value != null) {

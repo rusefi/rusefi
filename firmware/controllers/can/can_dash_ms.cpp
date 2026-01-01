@@ -9,7 +9,7 @@
 
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can.h"
 #include "can_msg_tx.h"
 
@@ -31,7 +31,7 @@ struct ms1512 {
 	scaled_channel<int16_t, 10> Tps;
 };
 
-static void populateFrame(ms1512& msg)
+void populateFrame(ms1512& msg)
 {
 	msg.Map = Sensor::getOrZero(SensorType::Map);
 	msg.Rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -48,7 +48,7 @@ struct ms1513 {
 	scaled_channel<int16_t, 10> adv_deg;
 };
 
-static void populateFrame(ms1513& msg)
+void populateFrame(ms1513& msg)
 {
 	/* TODO: per-bank */
 	msg.pw1 = msg.pw2 = engine->engineState.injectionDuration;
@@ -66,7 +66,7 @@ struct ms1514 {
 	scaled_channel<int16_t, 10> pwseq1;
 };
 
-static void populateFrame(ms1514& msg)
+void populateFrame(ms1514& msg)
 {
 #if EFI_ENGINE_CONTROL
 	msg.afrtgt1 = (float)engine->fuelComputer.targetLambda * STOICH_RATIO;
@@ -87,7 +87,7 @@ struct ms1515 {
 	uint8_t unused;	/* do we need this? */
 };
 
-static void populateFrame(ms1515& msg)
+void populateFrame(ms1515& msg)
 {
 	msg.Vbat = Sensor::getOrZero(SensorType::BatteryVoltage);
 	/* TODO */
@@ -104,7 +104,7 @@ struct ms1516 {
 	uint16_t unsused;
 };
 
-static void populateFrame(ms1516& msg)
+void populateFrame(ms1516& msg)
 {
 	/* ms-1 ??? */
 	msg.VSS1 = Sensor::getOrZero(SensorType::VehicleSpeed);

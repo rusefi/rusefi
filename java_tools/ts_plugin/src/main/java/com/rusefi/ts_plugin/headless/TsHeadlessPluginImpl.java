@@ -31,7 +31,7 @@ public class TsHeadlessPluginImpl implements TsHeadlessPlugin {
         RusEfiSignature s = SignatureHelper.parse(iniFileModel.getSignature());
         System.out.println(port + " with OpenBlt, signature=" + s);
 
-        BackgroundWizard.displayPlugin(s.getBundleTarget());
+        BackgroundWizard.onEcuDiscovery(s.getBundleTarget());
 
         String updateUrl = TsHeadlessPluginImpl.getUpdateUrl(iniFileModel);
         String isObfuscated = iniFileModel.getProtocolMeta().get("RE_obfuscated");

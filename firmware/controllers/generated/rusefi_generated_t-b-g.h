@@ -58,8 +58,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
-#define adc_channel_e_fullenum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
+#define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define adc_channel_e_fullenum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -195,16 +195,17 @@
 #define CAM_INPUT_1_1_NAME "Cam sensor bank 1 intake"
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
-#define can_baudrate_e_auto_enum 0="B33KBPS",3="B100KBPS",4="B125KBPS",7="B1MBPS",5="B250KBPS",6="B500KBPS",1="B50KBPS",2="B83KBPS"
+#define can_baudrate_e_auto_enum 0="B33KBPS",3="B100KBPS",4="B125KBPS",8="B1MBPS",5="B250KBPS",6="B500KBPS",1="B50KBPS",7="B666KBPS",2="B83KBPS"
 #define can_baudrate_e_B100KBPS 3
 #define can_baudrate_e_B125KBPS 4
-#define can_baudrate_e_B1MBPS 7
+#define can_baudrate_e_B1MBPS 8
 #define can_baudrate_e_B250KBPS 5
 #define can_baudrate_e_B33KBPS 0
 #define can_baudrate_e_B500KBPS 6
 #define can_baudrate_e_B50KBPS 1
+#define can_baudrate_e_B666KBPS 7
 #define can_baudrate_e_B83KBPS 2
-#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
+#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "666kbps", "1Mbps"
 #define CAN_BENCH_HEADER2 0x66
 #define CAN_DEFAULT_BASE 0x200
 #define CAN_ECU_SERIAL_RX_ID 0x710
@@ -624,7 +625,7 @@
 #define FIELD_DISPLACEMENT displacement
 #define FIELD_INJECTOR_FLOW injector.flow
 #define firing_order_e_enum "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8 Mustang", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8 HO", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "1-6-5-4-3-2", "1-4-5-2-3-6", "1-5-4-8-3-7-2-6 Voodoo", "1-6-5-10-2-7-3-8-4-9", "1-8-6-2-7-3-4-5 F136", "fo35", "fo36", "fo37"
-#define FLASH_DATA_VERSION 251211
+#define FLASH_DATA_VERSION 251221
 #define FLOW_LINEARIZATION_MASS_SIZE 2
 #define FLOW_LINEARIZATION_PRESSURE_SIZE 2
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
@@ -1547,7 +1548,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2480922012
+#define SIGNATURE_HASH 782349945
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2138,7 +2139,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.15.t-b-g.2480922012"
+#define TS_SIGNATURE "rusEFI master.2026.01.01.t-b-g.782349945"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

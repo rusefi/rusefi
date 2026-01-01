@@ -59,7 +59,7 @@
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
 #define adc_channel_e_enum 0="NONE",15="Analog Temp 1",16="Analog Temp 2",9="Analog Temp 3",10="Analog Temp 4",11="Analog Volt 1",6="Analog Volt 10",7="Analog Volt 11",12="Analog Volt 2",13="Analog Volt 3",14="Analog Volt 4",1="Analog Volt 5",2="Analog Volt 6",3="Analog Volt 7",4="Analog Volt 8",5="Analog Volt 9",8="Battery Sense"
-#define adc_channel_e_fullenum "NONE","Analog Volt 5","Analog Volt 6","Analog Volt 7","Analog Volt 8","Analog Volt 9","Analog Volt 10","Analog Volt 11","Battery Sense","Analog Temp 3","Analog Temp 4","Analog Volt 1","Analog Volt 2","Analog Volt 3","Analog Volt 4","Analog Temp 1","Analog Temp 2"
+#define adc_channel_e_fullenum "NONE","Analog Volt 5","Analog Volt 6","Analog Volt 7","Analog Volt 8","Analog Volt 9","Analog Volt 10","Analog Volt 11","Battery Sense","Analog Temp 3","Analog Temp 4","Analog Volt 1","Analog Volt 2","Analog Volt 3","Analog Volt 4","Analog Temp 1","Analog Temp 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -179,7 +179,7 @@
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
 #define brain_input_pin_e_enum 0="NONE",40="Digital 1",77="Digital 2",78="Digital 3",80="Digital 4",79="Digital 5",81="Digital 6",73="VR 1",74="VR 2"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Digital 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","VR 1","VR 2","INVALID","INVALID","Digital 2","Digital 3","Digital 5","Digital 4","Digital 6"
+#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Digital 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","VR 1","VR 2","INVALID","INVALID","Digital 2","Digital 3","Digital 5","Digital 4","Digital 6","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_OK 0
@@ -194,16 +194,17 @@
 #define CAM_INPUT_1_1_NAME "Cam sensor bank 1 intake"
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
-#define can_baudrate_e_auto_enum 0="B33KBPS",3="B100KBPS",4="B125KBPS",7="B1MBPS",5="B250KBPS",6="B500KBPS",1="B50KBPS",2="B83KBPS"
+#define can_baudrate_e_auto_enum 0="B33KBPS",3="B100KBPS",4="B125KBPS",8="B1MBPS",5="B250KBPS",6="B500KBPS",1="B50KBPS",7="B666KBPS",2="B83KBPS"
 #define can_baudrate_e_B100KBPS 3
 #define can_baudrate_e_B125KBPS 4
-#define can_baudrate_e_B1MBPS 7
+#define can_baudrate_e_B1MBPS 8
 #define can_baudrate_e_B250KBPS 5
 #define can_baudrate_e_B33KBPS 0
 #define can_baudrate_e_B500KBPS 6
 #define can_baudrate_e_B50KBPS 1
+#define can_baudrate_e_B666KBPS 7
 #define can_baudrate_e_B83KBPS 2
-#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
+#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "666kbps", "1Mbps"
 #define CAN_BENCH_HEADER2 0x66
 #define CAN_DEFAULT_BASE 0x200
 #define CAN_ECU_SERIAL_RX_ID 0x710
@@ -623,7 +624,7 @@
 #define FIELD_DISPLACEMENT displacement
 #define FIELD_INJECTOR_FLOW injector.flow
 #define firing_order_e_enum "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8 Mustang", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8 HO", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "1-6-5-4-3-2", "1-4-5-2-3-6", "1-5-4-8-3-7-2-6 Voodoo", "1-6-5-10-2-7-3-8-4-9", "1-8-6-2-7-3-4-5 F136", "fo35", "fo36", "fo37"
-#define FLASH_DATA_VERSION 251211
+#define FLASH_DATA_VERSION 251221
 #define FLOW_LINEARIZATION_MASS_SIZE 2
 #define FLOW_LINEARIZATION_PRESSURE_SIZE 2
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
@@ -1439,7 +1440,7 @@
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
 #define output_pin_e_enum 0="NONE",11="Highside 1",10="Highside 2",65="Highside 3",64="Highside 4",54="Ign 1",102="Ign 10",101="Ign 11",100="Ign 12",53="Ign 2",43="Ign 3",42="Ign 4",41="Ign 5",106="Ign 6",105="Ign 7",104="Ign 8",103="Ign 9",57="Lowside 1",24="Lowside 10",25="Lowside 11",26="Lowside 12",27="Lowside 13",66="Lowside 14 or starter",67="Lowside 15",68="Lowside 16",107="Lowside 2",108="Lowside 3",109="Lowside 4",110="Lowside 5",111="Lowside 6",112="Lowside 7",22="Lowside 8",23="Lowside 9",60="STM32 PD10",61="STM32 PD11",62="STM32 PD12",63="STM32 PD13",58="STM32 PD8",59="STM32 PD9"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Highside 2","Highside 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Lowside 8","Lowside 9","Lowside 10","Lowside 11","Lowside 12","Lowside 13","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Ign 5","Ign 4","Ign 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Ign 2","Ign 1","INVALID","INVALID","Lowside 1","STM32 PD8","STM32 PD9","STM32 PD10","STM32 PD11","STM32 PD12","STM32 PD13","Highside 4","Highside 3","Lowside 14 or starter","Lowside 15","Lowside 16","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Ign 12","Ign 11","Ign 10","Ign 9","Ign 8","Ign 7","Ign 6","Lowside 2","Lowside 3","Lowside 4","Lowside 5","Lowside 6","Lowside 7"
+#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Highside 2","Highside 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Lowside 8","Lowside 9","Lowside 10","Lowside 11","Lowside 12","Lowside 13","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Ign 5","Ign 4","Ign 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Ign 2","Ign 1","INVALID","INVALID","Lowside 1","STM32 PD8","STM32 PD9","STM32 PD10","STM32 PD11","STM32 PD12","STM32 PD13","Highside 4","Highside 3","Lowside 14 or starter","Lowside 15","Lowside 16","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Ign 12","Ign 11","Ign 10","Ign 9","Ign 8","Ign 7","Ign 6","Lowside 2","Lowside 3","Lowside 4","Lowside 5","Lowside 6","Lowside 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1480,6 +1481,7 @@
 #define pin_output_mode_e_OM_INVERTED 1
 #define pin_output_mode_e_OM_OPENDRAIN 2
 #define pin_output_mode_e_OM_OPENDRAIN_INVERTED 3
+#define PINOUT_URL "https://rusefi.com/docs/pinouts/proteus/"
 #define poke false
 #define ppsExpAverageAlpha_NAME "Accelerator Exp Average"
 #define PRIME_CURVE_COUNT 8
@@ -1546,7 +1548,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2054472364
+#define SIGNATURE_HASH 277428355
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1581,7 +1583,7 @@
 #define stft_state_e_stftDisabledTuning 2
 #define stft_state_e_stftEnabled 0
 #define switch_input_pin_e_enum 0="NONE",38="Analog Temp 1",39="Analog Temp 2",18="Analog Temp 3",19="Analog Temp 4",34="Analog Volt 1",7="Analog Volt 10",8="Analog Volt 11",35="Analog Volt 2",36="Analog Volt 3",37="Analog Volt 4",2="Analog Volt 5",3="Analog Volt 6",4="Analog Volt 7",5="Analog Volt 8",6="Analog Volt 9",40="Digital 1",77="Digital 2",78="Digital 3",80="Digital 4",79="Digital 5",81="Digital 6"
-#define switch_input_pin_e_fullenum "NONE","INVALID","Analog Volt 5","Analog Volt 6","Analog Volt 7","Analog Volt 8","Analog Volt 9","Analog Volt 10","Analog Volt 11","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Analog Temp 3","Analog Temp 4","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Analog Volt 1","Analog Volt 2","Analog Volt 3","Analog Volt 4","Analog Temp 1","Analog Temp 2","Digital 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Digital 2","Digital 3","Digital 5","Digital 4","Digital 6"
+#define switch_input_pin_e_fullenum "NONE","INVALID","Analog Volt 5","Analog Volt 6","Analog Volt 7","Analog Volt 8","Analog Volt 9","Analog Volt 10","Analog Volt 11","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Analog Temp 3","Analog Temp 4","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Analog Volt 1","Analog Volt 2","Analog Volt 3","Analog Volt 4","Analog Temp 1","Analog Temp 2","Digital 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Digital 2","Digital 3","Digital 5","Digital 4","Digital 6","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
 #define TABLE_3_LOAD_SIZE 8
@@ -2137,7 +2139,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.15.proteus_f4.2054472364"
+#define TS_SIGNATURE "rusEFI master.2026.01.01.proteus_f4.277428355"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

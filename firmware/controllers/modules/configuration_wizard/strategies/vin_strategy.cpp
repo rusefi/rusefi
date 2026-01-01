@@ -17,25 +17,27 @@
  * here we need to track if the wizard is active (vin is empty) and trigger TS page refresh
  */
 void vinStrategy(bool isRunningOnBurn) {
+
+    if (isRunningOnBurn) {
+        return;
+    }
+
     bool isVinFilled = static_cast<bool>(strlen(engineConfiguration->vinNumber));
+    int vinWizard = djb2lowerCase(DIALOG_NAME_VEHICLE_INFORMATION);
 
-    bool vinStateChanged = isVinFilled == engineConfiguration->vinIsEmpty;
-
-    if (vinStateChanged && !isRunningOnBurn) {
+    // the check with wizardPanelToShow is for not overriding an existing panel
+    // (i.e., we need to run more than one wizard with the current ecu configuration)
+    if (!isVinFilled && engineConfiguration->wizardPanelToShow == -1) {
         efiPrintf("VinStrategy, reseting flag");
-        engineConfiguration->vinIsEmpty = !isVinFilled;
-
-        if (!isVinFilled) {
-            engineConfiguration->wizardPanelToShow = djb2lowerCase(DIALOG_NAME_VEHICLE_INFORMATION);
-        } else {
-            engineConfiguration->wizardPanelToShow = -1;
-        }
+        engineConfiguration->wizardPanelToShow = vinWizard;
+    } else if (isVinFilled && engineConfiguration->wizardPanelToShow == vinWizard) {
+        engineConfiguration->wizardPanelToShow = -1;
+    }
 
 
         // trigger page reset, see [tag:popular_vehicle]
 #if EFI_TUNER_STUDIO && !EFI_UNIT_TEST
         onApplyPreset();
 #endif // EFI_TUNER_STUDIO
-    }
 
 }

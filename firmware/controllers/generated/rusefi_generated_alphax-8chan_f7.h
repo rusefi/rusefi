@@ -59,7 +59,7 @@
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
 #define adc_channel_e_enum 0="NONE",27="10A - Aux Analog 5",18="11A - Aux Analog 3",16="12A - Aux Analog 8",9="19A - Aux Analog 6",10="1A - Aux Analog 1",32="20A - Aux Analog 9",6="24B - Ignition Key Voltage",14="27A - IAT Sensor Input",30="28A - Aux Temp 1",13="29A - CLT Sensor Input",11="2A - Aux Analog 4",29="30A - Aux Temp 2",5="31A - TPS Sensor Input",4="32A - PPS Sensor Input",21="33A - TPS2 Sensor Input",20="34A - PPS2 Sensor Input",2="3A - Aux Analog 2",25="4A - Aux Analog 7",3="On-board MAP"
-#define adc_channel_e_fullenum "NONE","INVALID","3A - Aux Analog 2","On-board MAP","32A - PPS Sensor Input","31A - TPS Sensor Input","24B - Ignition Key Voltage","INVALID","INVALID","19A - Aux Analog 6","1A - Aux Analog 1","2A - Aux Analog 4","INVALID","29A - CLT Sensor Input","27A - IAT Sensor Input","INVALID","12A - Aux Analog 8","INVALID","11A - Aux Analog 3","INVALID","34A - PPS2 Sensor Input","33A - TPS2 Sensor Input","INVALID","INVALID","INVALID","4A - Aux Analog 7","INVALID","10A - Aux Analog 5","INVALID","30A - Aux Temp 2","28A - Aux Temp 1","INVALID","20A - Aux Analog 9"
+#define adc_channel_e_fullenum "NONE","INVALID","3A - Aux Analog 2","On-board MAP","32A - PPS Sensor Input","31A - TPS Sensor Input","24B - Ignition Key Voltage","INVALID","INVALID","19A - Aux Analog 6","1A - Aux Analog 1","2A - Aux Analog 4","INVALID","29A - CLT Sensor Input","27A - IAT Sensor Input","INVALID","12A - Aux Analog 8","INVALID","11A - Aux Analog 3","INVALID","34A - PPS2 Sensor Input","33A - TPS2 Sensor Input","INVALID","INVALID","INVALID","4A - Aux Analog 7","INVALID","10A - Aux Analog 5","INVALID","30A - Aux Temp 2","28A - Aux Temp 1","INVALID","20A - Aux Analog 9","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -191,16 +191,17 @@
 #define CAM_INPUT_1_1_NAME "Cam sensor bank 1 intake"
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
-#define can_baudrate_e_auto_enum 0="B33KBPS",3="B100KBPS",4="B125KBPS",7="B1MBPS",5="B250KBPS",6="B500KBPS",1="B50KBPS",2="B83KBPS"
+#define can_baudrate_e_auto_enum 0="B33KBPS",3="B100KBPS",4="B125KBPS",8="B1MBPS",5="B250KBPS",6="B500KBPS",1="B50KBPS",7="B666KBPS",2="B83KBPS"
 #define can_baudrate_e_B100KBPS 3
 #define can_baudrate_e_B125KBPS 4
-#define can_baudrate_e_B1MBPS 7
+#define can_baudrate_e_B1MBPS 8
 #define can_baudrate_e_B250KBPS 5
 #define can_baudrate_e_B33KBPS 0
 #define can_baudrate_e_B500KBPS 6
 #define can_baudrate_e_B50KBPS 1
+#define can_baudrate_e_B666KBPS 7
 #define can_baudrate_e_B83KBPS 2
-#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
+#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "666kbps", "1Mbps"
 #define CAN_BENCH_HEADER2 0x66
 #define CAN_DEFAULT_BASE 0x200
 #define CAN_ECU_SERIAL_RX_ID 0x710
@@ -619,7 +620,7 @@
 #define FIELD_DISPLACEMENT displacement
 #define FIELD_INJECTOR_FLOW injector.flow
 #define firing_order_e_enum "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8 Mustang", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8 HO", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "1-6-5-4-3-2", "1-4-5-2-3-6", "1-5-4-8-3-7-2-6 Voodoo", "1-6-5-10-2-7-3-8-4-9", "1-8-6-2-7-3-4-5 F136", "fo35", "fo36", "fo37"
-#define FLASH_DATA_VERSION 251211
+#define FLASH_DATA_VERSION 251221
 #define FLOW_LINEARIZATION_MASS_SIZE 16
 #define FLOW_LINEARIZATION_PRESSURE_SIZE 16
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
@@ -1435,7 +1436,7 @@
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
 #define output_pin_e_enum 0="NONE",57="10D - Fan",47="11C - Ignition 1",54="11D - Main Relay",102="12D - NOS",70="13C - Ignition 3",96="13D - Injector 8",68="14C - Ignition 5",40="14D - VVT 2",72="15C - Ignition 8",104="15D - Tachometer",64="16D - Low Side 1",52="17C - Low Side 5",71="19C - Ignition 2",119="19D - Injector 9",105="1D - Injector 1",69="20C - Ignition 4",41="20D - VVT 3",27="21C - Ignition 7",42="21D - VVT 4",43="22D - Boost",45="23C - Ignition 10",65="23D - Low Side 2",116="24D - Injector 12",109="25C - Low Side 6",117="25D - Injector 11",118="26D - Injector 10",26="28C - Ignition 6",44="29C - Ignition 9",106="2D - Injector 2",46="30C - Ignition 11",17="31C - Ignition 12",101="34C - Low Side 7",61="3D - Injector 3",60="4D - Injector 4",62="5C - High Side 1",59="5D - Injector 5",11="6C - High Side 2",94="6D - Injector 6",53="7C - High Side 3",95="7D - Injector 7",112="8C - Low Side 3",63="8D - VVT 1",103="9C - Low Side 4",108="9D - Fuel Pump"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6C - High Side 2","INVALID","INVALID","INVALID","INVALID","INVALID","31C - Ignition 12","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","28C - Ignition 6","21C - Ignition 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","14D - VVT 2","20D - VVT 3","21D - VVT 4","22D - Boost","29C - Ignition 9","23C - Ignition 10","30C - Ignition 11","11C - Ignition 1","INVALID","INVALID","INVALID","INVALID","17C - Low Side 5","7C - High Side 3","11D - Main Relay","INVALID","INVALID","10D - Fan","INVALID","5D - Injector 5","4D - Injector 4","3D - Injector 3","5C - High Side 1","8D - VVT 1","16D - Low Side 1","23D - Low Side 2","INVALID","INVALID","14C - Ignition 5","20C - Ignition 4","13C - Ignition 3","19C - Ignition 2","15C - Ignition 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6D - Injector 6","7D - Injector 7","13D - Injector 8","INVALID","INVALID","INVALID","INVALID","34C - Low Side 7","12D - NOS","9C - Low Side 4","15D - Tachometer","1D - Injector 1","2D - Injector 2","INVALID","9D - Fuel Pump","25C - Low Side 6","INVALID","INVALID","8C - Low Side 3","INVALID","INVALID","INVALID","24D - Injector 12","25D - Injector 11","26D - Injector 10","19D - Injector 9"
+#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6C - High Side 2","INVALID","INVALID","INVALID","INVALID","INVALID","31C - Ignition 12","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","28C - Ignition 6","21C - Ignition 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","14D - VVT 2","20D - VVT 3","21D - VVT 4","22D - Boost","29C - Ignition 9","23C - Ignition 10","30C - Ignition 11","11C - Ignition 1","INVALID","INVALID","INVALID","INVALID","17C - Low Side 5","7C - High Side 3","11D - Main Relay","INVALID","INVALID","10D - Fan","INVALID","5D - Injector 5","4D - Injector 4","3D - Injector 3","5C - High Side 1","8D - VVT 1","16D - Low Side 1","23D - Low Side 2","INVALID","INVALID","14C - Ignition 5","20C - Ignition 4","13C - Ignition 3","19C - Ignition 2","15C - Ignition 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6D - Injector 6","7D - Injector 7","13D - Injector 8","INVALID","INVALID","INVALID","INVALID","34C - Low Side 7","12D - NOS","9C - Low Side 4","15D - Tachometer","1D - Injector 1","2D - Injector 2","INVALID","9D - Fuel Pump","25C - Low Side 6","INVALID","INVALID","8C - Low Side 3","INVALID","INVALID","INVALID","24D - Injector 12","25D - Injector 11","26D - Injector 10","19D - Injector 9","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1542,7 +1543,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1587336074
+#define SIGNATURE_HASH 3823286383
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1577,7 +1578,7 @@
 #define stft_state_e_stftDisabledTuning 2
 #define stft_state_e_stftEnabled 0
 #define switch_input_pin_e_enum 0="NONE",86="13A - Hall Input 5",77="14A - Switch 2",78="15A - Hall Input 1",87="21A - Flex",88="21B - Knock2 Input",35="22A - Switch 3",79="23A - Hall Input 2",80="24A - Hall Input 3 / SENT",93="26A - VSS Hall",85="5A - Switch 4",75="6A - Switch 1",81="9A - Hall Input 4"
-#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","22A - Switch 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6A - Switch 1","INVALID","14A - Switch 2","15A - Hall Input 1","23A - Hall Input 2","24A - Hall Input 3 / SENT","9A - Hall Input 4","INVALID","INVALID","INVALID","5A - Switch 4","13A - Hall Input 5","21A - Flex","21B - Knock2 Input","INVALID","INVALID","INVALID","INVALID","26A - VSS Hall"
+#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","22A - Switch 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6A - Switch 1","INVALID","14A - Switch 2","15A - Hall Input 1","23A - Hall Input 2","24A - Hall Input 3 / SENT","9A - Hall Input 4","INVALID","INVALID","INVALID","5A - Switch 4","13A - Hall Input 5","21A - Flex","21B - Knock2 Input","INVALID","INVALID","INVALID","INVALID","26A - VSS Hall","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
 #define TABLE_3_LOAD_SIZE 8
@@ -2133,7 +2134,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.12.15.alphax-8chan_f7.1587336074"
+#define TS_SIGNATURE "rusEFI master.2026.01.01.alphax-8chan_f7.3823286383"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

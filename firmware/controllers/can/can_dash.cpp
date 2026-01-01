@@ -9,7 +9,7 @@
 
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_dash.h"
 #include "can_dash_ms.h"
 #include "can_dash_nissan.h"
@@ -51,8 +51,10 @@
 #define E90_EBRAKE           0x34F
 #define E90_TIME             0x39E
 
+#if !EFI_UNIT_TEST
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
+#endif
 
 /**
  * https://docs.google.com/spreadsheets/d/1IkP05ODpjNt-k4YQLYl58_TNlN9U4IBu5z7i0BPVEM4
@@ -403,6 +405,7 @@ static void canDashboardBmwE90(CanCycle cycle) {
 			msg[5] = 0xFF;
 		}
 
+#if !EFI_UNIT_TEST
 		{ //E90_SPEED
 			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 			float mph = vehicleSpeed * 0.6213712;
@@ -422,6 +425,7 @@ static void canDashboardBmwE90(CanCycle cycle) {
 			// todo: what are we packing into what exactly? note the '| 0xF0'
 			msg[7] = (mph_counter >> 8) | 0xF0;
 		}
+#endif
 	}
 
 	{
@@ -458,7 +462,7 @@ struct Aim5f0 {
 	scaled_channel<uint16_t, 100> Vss;
 };
 
-static void populateFrame(Aim5f0& msg) {
+void populateFrame(Aim5f0& msg) {
 	msg.Rpm = Sensor::getOrZero(SensorType::Rpm);
 	msg.Tps = Sensor::getOrZero(SensorType::Tps1);
 	msg.Pps = Sensor::getOrZero(SensorType::AcceleratorPedal);
@@ -472,7 +476,7 @@ struct Aim5f1 {
 	scaled_channel<uint16_t, 10> WheelSpeedRL;
 };
 
-static void populateFrame(Aim5f1& msg) {
+void populateFrame(Aim5f1& msg) {
 	// We don't handle wheel speed, just set to 0?
 	msg.WheelSpeedFR = 0;
 	msg.WheelSpeedFL = 0;
@@ -487,7 +491,7 @@ struct Aim5f2 {
 	scaled_channel<uint16_t, 190> OilT;
 };
 
-static void populateFrame(Aim5f2& msg) {
+void populateFrame(Aim5f2& msg) {
 	msg.Iat = Sensor::getOrZero(SensorType::Iat) + 45;
 	msg.Ect = Sensor::getOrZero(SensorType::Clt) + 45;
 	msg.FuelT = Sensor::getOrZero(SensorType::FuelTemperature) + 45;
@@ -501,7 +505,7 @@ struct Aim5f3 {
 	scaled_channel<uint16_t, 20> FuelP;
 };
 
-static void populateFrame(Aim5f3& msg) {
+void populateFrame(Aim5f3& msg) {
 	// MAP/Baro are sent in millibar -> 10 millibar per kpa
 	msg.Map = 10 * Sensor::getOrZero(SensorType::Map);
 	msg.Baro = 10 * Sensor::getOrZero(SensorType::BarometricPressure);
@@ -518,7 +522,7 @@ struct Aim5f4 {
 	scaled_channel<int16_t, 1> Gear;
 };
 
-static void populateFrame(Aim5f4& msg) {
+void populateFrame(Aim5f4& msg) {
 	float deltaKpa = Sensor::getOrZero(SensorType::Map)
 		- Sensor::get(SensorType::BarometricPressure).value_or(STD_ATMOSPHERE);
 	float boostBar = deltaKpa / 100;
@@ -545,7 +549,7 @@ struct Aim5f5 {
 	scaled_channel<uint16_t, 100> FuelLevel;
 };
 
-static void populateFrame(Aim5f5& msg) {
+void populateFrame(Aim5f5& msg) {
 	msg.FuelLevel = Sensor::getOrZero(SensorType::FuelLevel);
 
 	// Dunno what to do with these
@@ -561,7 +565,7 @@ struct Aim5f6 {
 	scaled_channel<uint16_t, 10> LambdaTemp2;
 };
 
-static void populateFrame(Aim5f6& msg) {
+void populateFrame(Aim5f6& msg) {
 	msg.Lambda1 = Sensor::getOrZero(SensorType::Lambda1);
 	msg.Lambda2 = Sensor::getOrZero(SensorType::Lambda2);
 	msg.LambdaTemp1 = 0;
@@ -575,7 +579,7 @@ struct Aim5f7 {
 	scaled_channel<uint16_t, 2000> LambdaTarget2;
 };
 
-static void populateFrame(Aim5f7& msg) {
+void populateFrame(Aim5f7& msg) {
 #if EFI_ENGINE_CONTROL
 	// We don't handle wheel speed, just set to 0?
 	msg.LambdaErr1 = 0;

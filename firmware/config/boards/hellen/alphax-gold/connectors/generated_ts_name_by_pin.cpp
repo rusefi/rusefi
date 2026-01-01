@@ -39,8 +39,9 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::TLE9104_1_OUT_1: return "3A - Injector 6";
 		case Gpio::TLE9104_1_OUT_2: return "2A - Injector 7";
 		case Gpio::TLE9104_1_OUT_3: return "1A - Injector 8";
-		case Gpio::TLE9104_2_OUT_0: return "5B Fuel Pump Relay";
-		case Gpio::TLE9104_2_OUT_1: return "6B Idle Output";
+		case Gpio::TLE9104_2_OUT_0: return "6B Idle Output";
+		case Gpio::TLE9104_2_OUT_1: return "5B Fuel Pump Relay";
+		case Gpio::TLE9104_2_OUT_2: return "NONE - Extra Out";
 		case Gpio::TLE9104_2_OUT_3: return "14B - Tachometer Output";
 		case Gpio::TLE9104_3_OUT_0: return "8A LS5";
 		case Gpio::TLE9104_3_OUT_1: return "6A LS3";

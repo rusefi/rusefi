@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 251211
+#define FLASH_DATA_VERSION 251221
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -453,7 +453,7 @@ custom air_pressure_sensor_type_e 1 bits, U08, @OFFSET@, [0:4], "Custom", "DENSO
 !
 ! lower 16 values are used on stm32 rusEFI, values above 16 are related to Kinetis work in progress
 !
-#define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
+#define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define adc_channel_e_fullenum @@adc_channel_e_enum@@
 custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5], $adc_channel_e_list
 
@@ -569,14 +569,14 @@ bit etb_use_two_wires,"yes","no";TLE7209 and L6205 use two-wire mode. TLE9201 an
 bit isDoubleSolenoidIdle,"yes","no";Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 bit useEeprom,"yes","no"
 bit useCicPidForIdle,"Cic","Industrial";Switch between Industrial and Cic PID implementation
-bit useTLE8888_cranking_hack;
+bit useTLE8888_cranking_hack,"yes","no"
 bit kickStartCranking,"yes","no"
 bit useSeparateIdleTablesForCrankingTaper,"enabled","disabled";This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled,"enabled","disabled"
 bit antiLagEnabled,"enabled","disabled"
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit displayLogicLevelsInEngineSniffer,"yes","no";Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
-bit useTLE8888_stepper
+bit useTLE8888_stepper,"yes","no"
 bit usescriptTableForCanSniffingFiltering,"yes","no"
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
@@ -887,17 +887,14 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit rethrowHardFault,"yes","no"
 	bit verboseQuad,"yes","no"
 
-	! bit 8
-	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	bit enabledStep1Limiter
-	bit lambdaProtectionEnable
+		bit useStepperIdle,"yes","no";This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
+	bit lambdaProtectionEnable,"enabled","disabled"
 	bit verboseTLE8888,"yes","no"
 	bit enableVerboseCanTx,"yes","no";CAN broadcast using custom rusEFI protocol
 	bit externalRusEfiGdiModule,"yes","no"
-	bit unusedFlipWboChannels
 	bit measureMapOnlyInOneCylinder,"yes","no";Useful for individual intakes
 
-	! bit 16
+	! bit 13
 	bit stepperForceParkingEveryRestart,"yes","no"
 	bit isFasterEngineSpinUpEnabled,"enabled","disabled";If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	bit coastingFuelCutEnabled;This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
@@ -907,7 +904,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit disableEtbWhenEngineStopped;Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	bit is_enabled_spi_4,"yes","no"
 
-	! bit 24
+	! bit 21
 	bit pauseEtbControl,"yes","no";Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 
 	bit verboseKLine,"yes","no"
@@ -918,8 +915,10 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit isTuningDetectorEnabled,"yes","no"
 	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
 	bit useAbsolutePressureForLagTime,"yes","no"
-	! bit 31 is free to use
-	! 'unused32nd' is the 32nd bit here, you would need another bit region if more bits are desired
+	bit unusedBit_311_28
+	bit unusedBit_311_29
+	bit unusedBit_311_30
+	bit unusedBit_311_31
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
@@ -1049,8 +1048,6 @@ bit canBroadcastUseChannelTwo,"second","first"
 	bit useRawOutputToDriveIdleStepper,"yes","no";If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 ! bit 29
 bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
-! TS plugin string support seems to be limited, this is our work-around
-bit vinIsEmpty
 
 
 	dc_io[ETB_COUNT iterate] etbIo
@@ -1151,9 +1148,9 @@ bit cutSparkOnHardLimit,"yes","no";When selected, this option cuts the spark to 
 bit launchFuelCutEnable,"yes","no"
 bit launchSparkCutEnable,"yes","no";This is the Cut Mode normally used
 	bit torqueReductionEnabled,"enabled","disabled"
-	bit camSyncOnSecondCrankRevolution,"second","first"
+	bit camSyncOnSecondCrankRevolution,"second","first";When we sync cam sensor is that first or second full engine revolution of the four stroke cycle?
 	bit limitTorqueReductionTime,"yes","no"
-bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
+bit verboseIsoTp,"yes","no";Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs;In this mode only trigger events go into engine sniffer and not coils/injectors etc
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skipped wheel located?
@@ -1265,7 +1262,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit mc33810Gpgd1Mode
 	bit mc33810Gpgd2Mode
 	bit mc33810Gpgd3Mode
-	bit enableExtendedCanBroadcast;Send out board statistics
+	bit enableExtendedCanBroadcast,"yes","no";Send out board statistics
 ! temporary for too much CAN RX processing kills Lua script #5841
 	bit luaCanRxWorkaround;global_can_data performance hack
 	bit flexSensorInverted,"Inverted","Normal"
@@ -1314,8 +1311,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float throttlePedalSecondaryUpVoltage;;"volts", 1, 0, -6, 6, 2
 	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2
 
-	#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
-	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:2], @@can_baudrate_e_enum@@
+	#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "666kbps", "1Mbps"
+	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:3], @@can_baudrate_e_enum@@
 	can_baudrate_e canBaudRate
 
 	ve_override_e veOverrideMode;Override the Y axis (load) value used for the VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
@@ -1661,7 +1658,6 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	UiMode uiMode
 	int16_t hpfpPeakPos;Crank angle ATDC of first lobe peak;"deg", 1, 0, -719, 719, 0
 	int16_t kLinePeriodUs;;"us", 1, 0, 0, 30000, 0
-	uint8_t autoscale rpmSoftLimitWindowSize;Window that the correction will be added throughout (example, if rpm limit is 7000, and rpmSoftLimitWindowSize is 200, the corrections activate at 6800RPM, creating a 200rpm window);"RPM", 10, 0, 0, 2500, 0
 	uint8_t autoscale rpmSoftLimitTimingRetard;Degrees of timing REMOVED from actual timing during soft RPM limit window;"deg", 0.2, 0, 0, 50, 1
 	uint8_t autoscale rpmSoftLimitFuelAdded;% of fuel ADDED during window;"%", 0.2, 0, 0, 50, 1
 	uint8_t autoscale rpmHardLimitHyst;Sets a buffer below the RPM hard limit, helping avoid rapid cycling of cut actions by defining a range within which RPM must drop before cut actions are re-enabled.\nHysterisis: if the hard limit is 7200rpm and rpmHardLimitHyst is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached;"RPM", 10, 0, 0, 2500, 0

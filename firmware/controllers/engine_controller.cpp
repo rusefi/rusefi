@@ -586,6 +586,9 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscendingOrDefault("STFT Rpm", config->fuelTrimRpmBins);
 		ensureArrayIsAscendingOrDefault("STFT Load", config->fuelTrimLoadBins);
 
+		ensureArrayIsAscendingOrDefault("knock rpm", config->maxKnockRetardRpmBins);
+		ensureArrayIsAscendingOrDefault("knock tps", config->maxKnockRetardLoadBins);
+
 		ensureArrayIsAscendingOrDefault("TC slip", engineConfiguration->tractionControlSlipBins);
 		ensureArrayIsAscendingOrDefault("TC speed", engineConfiguration->tractionControlSpeedBins);
 

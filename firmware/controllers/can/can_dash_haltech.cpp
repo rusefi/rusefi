@@ -6,7 +6,7 @@
 
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can.h"
 #include "can_msg_tx.h"
 #include "fuel_math.h"

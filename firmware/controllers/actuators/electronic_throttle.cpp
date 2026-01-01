@@ -701,7 +701,7 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 				efiPrintf(" ************* ETB is jammed! ***************");
 				jamDetected = true;
 
-				getLimpManager()->reportEtbProblem();
+				getLimpManager()->reportEtbJammed();
 			}
 		} else {
 			m_jamDetectTimer.reset(nowNt);

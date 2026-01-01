@@ -9,10 +9,13 @@
 
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can.h"
-#include "can_hw.h"
 #include "can_dash.h"
+#endif
+
+#if EFI_CAN_SUPPORT
+#include "can_hw.h"
 #include "obd2.h"
 #include "can_sensor.h"
 #include "can_bench_test.h"
@@ -102,6 +105,10 @@ void CanWrite::PeriodicTask(efitick_t) {
 
 	m_cycleCount++;
 }
+
+#endif
+
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 
 CanInterval CanCycle::computeFlags(uint32_t cycleCount) {
 	CanInterval cycleMask = CanInterval::_5ms;

@@ -31,9 +31,16 @@ Release template (copy/paste this for new release):
 ### Fixed
  - ETB: calibration, wrong scale 3% calibration error #8863
  - luaHeapAlloc crashed when not enough RAM #8874
+ - uaefi121: pin 43 conflict with green LED #8884
+ - TS: annoying numeric values after proper named values #8898
 
 ### Added
  - FatFS update to R0.16
+ - WBO: update from sd #8870
+ - Switch to 7z for ini file compression on MSD #8895
+
+### Breaking Changes
+ - CAN bitrare 666k #8784
 
 ## October 2025 "Day 1333"
 

@@ -40,4 +40,13 @@ public enum PinType {
         }
         throw new IllegalArgumentException(key + " not expected, possible keys are " + Arrays.toString(values()));
     }
+
+    public static PinType findByOutputEnum(String key) {
+        for (PinType pinType : values()) {
+            if (pinType.getOutputEnumName().equalsIgnoreCase(key)) {
+                return pinType;
+            }
+        }
+        return null;
+    }
 }

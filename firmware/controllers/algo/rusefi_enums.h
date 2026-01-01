@@ -658,7 +658,8 @@ typedef enum __attribute__ ((__packed__)) {
 	B125KBPS = 4, // 125kbps
 	B250KBPS = 5, // 250kbps
 	B500KBPS = 6, // 500kbps
-	B1MBPS = 7, // 1Mbps
+	B666KBPS = 7, // 666kbps
+	B1MBPS = 8, // 1Mbps
 } can_baudrate_e;
 
 typedef enum __attribute__ ((__packed__)) {

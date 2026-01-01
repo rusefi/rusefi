@@ -42,18 +42,32 @@ public class BackgroundWizard {
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
         BackgroundWizard.controllerAccessSupplier = controllerAccessSupplier;
-        try {
-            BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe("AppEvent", "controllerOnline", onlineListener);
-        } catch (Exception e) {
-            log.error("error on onlineListener " + e, e);
-        }
 
         Thread thread = new Thread(() -> {
+            boolean subscribed = false;
+            // due to TS 3.2.03 and prior unable to subscribe to AppEvent event, we have to busy-wait (or retry) until we get and ecu online status
+            // triggered by onEcuDiscovery, also TS tries to load the outputChannel server *before* reading the .ini file, so we can't also do the
+            // getEcuConfigurationNames()[0] like on the wizard loop logic
+            while (!subscribed) {
+                try {
+                    BackgroundWizard.controllerAccessSupplier.get().getOutputChannelServer().subscribe("AppEvent", "controllerOnline", onlineListener);
+                    subscribed = true;
+                } catch (Exception e) {
+                    log.error("Error subscribing to controllerOnline event: " + e, e);
+                    if (currentState == CURRENT_STATE_ONLINE) {
+                        subscribed = true;
+                    } else {
+                        sleep(5000);
+                    }
+                }
+            }
+
             while (true) {
                 try {
                     periodicWizardLogic();
                 } catch (Throwable e) {
-                    log.error("error " + e, e);
+                    log.error("Wizard crash, error " + e, e);
+                    WizardRunToogle = true;
                 }
                 sleep(300);
             }
@@ -80,8 +94,8 @@ public class BackgroundWizard {
             log.info("ECU is online and we can run the wizard");
 
             // weird way of getting the equivalent of "page = 1" on the ini file
-            String mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName, ECU_WIZARD_KEY);
+            String[] mainConfigName = controllerAccessSupplier.get().getEcuConfigurationNames();
+            ControllerParameter currentVin = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(mainConfigName[0], ECU_WIZARD_KEY);
             int panelToShow = (int)currentVin.getScalarValue();
 
             if(panelToShow == -1){
@@ -150,6 +164,8 @@ public class BackgroundWizard {
             }
         } catch (Throwable t) {
             log.error("Error launching VIN UI: " + t, t);
+            sleep(5000);
+            launchVinUI(panelToOpen);
         }
     }
 
@@ -163,6 +179,11 @@ public class BackgroundWizard {
         }
 
         return pluginEnabled;
+    }
+
+    public static void onEcuDiscovery(String serialSignature){
+        displayPlugin(serialSignature);
+        currentState = CURRENT_STATE_ONLINE;
     }
 
     static class EcuOnlineListener implements OutputChannelClient {

@@ -157,6 +157,7 @@ extern void errorHandlerWriteReportFile(FIL *fd);
 extern int errorHandlerCheckReportFiles();
 extern void errorHandlerDeleteReports();
 
+// see also SD_MODE
 typedef enum {
 	SD_STATUS_INIT = 0,
 	SD_STATUS_MOUNTED,
@@ -241,7 +242,7 @@ static void sdLoggerSetReady(bool value) {
 	sdLoggerReady = value;
 }
 
-static bool sdLoggerIsReady(void) {
+static bool sdLoggerIsReady() {
 	return sdLoggerReady;
 }
 
@@ -715,7 +716,7 @@ static int sdLogger(FIL *fd)
 	return ret;
 }
 
-static void sdLoggerStart(void)
+static void sdLoggerStart()
 {
 	sdLoggerInitDone = false;
 	sdLoggerFailed = false;
@@ -728,7 +729,7 @@ static void sdLoggerStart(void)
 #endif
 }
 
-static void sdLoggerStop(void)
+static void sdLoggerStop()
 {
 	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
@@ -821,7 +822,7 @@ static int sdModeSwitcher()
 	case SD_MODE_IDLE:
 		return 0;
 	case SD_MODE_UNMOUNT:
-		// everithing is done in sdModeSwitchToIdle();
+		// everything is done in sdModeSwitchToIdle();
 		sdMode = SD_MODE_UNMOUNT;
 		sdTargetMode = SD_MODE_IDLE;
 		return 0;
@@ -1028,6 +1029,8 @@ void initEarlyMmcCard() {
 
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("del", removeFile);
+	// sdmode pc
+	// sdmode ecu
 	addConsoleActionS("sdmode", sdSetMode);
 	addConsoleAction("delreports", sdCardRemoveReportFiles);
 	//incLogFileName() use same shared FDLogFile, calling it while FDLogFile is used by log writer will cause damage
@@ -1056,7 +1059,7 @@ void sdCardRequestMode(SD_MODE mode)
 	}
 }
 
-SD_MODE sdCardGetCurrentMode(void)
+SD_MODE sdCardGetCurrentMode()
 {
 	return sdMode;
 }

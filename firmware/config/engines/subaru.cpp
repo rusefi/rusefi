@@ -78,7 +78,6 @@ void setSubaruEG33Defaults() {
 	engineConfiguration->stepperDirectionPinMode = OM_INVERTED;
 	engineConfiguration->useLinearCltSensor = true;
 
-	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = false;
 
 	/* Fully closed - 0.9V, fully opened - 4.7 (?) */

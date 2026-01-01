@@ -463,9 +463,6 @@ Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 ### useStepperIdle
 This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 
-### enabledStep1Limiter
-
-
 ### lambdaProtectionEnable
 
 
@@ -673,9 +670,6 @@ If enabled we use four Push-Pull outputs to directly drive stepper idle air valv
 ### verboseCan2
 Print incoming and outgoing second bus CAN messages in rusEFI console
 
-### vinIsEmpty
-
-
 ### boostPid.pFactor
 
 
@@ -848,7 +842,7 @@ This is the Cut Mode normally used
 
 
 ### camSyncOnSecondCrankRevolution
-
+When we sync cam sensor is that first or second full engine revolution of the four stroke cycle?
 
 ### limitTorqueReductionTime
 
@@ -1674,9 +1668,6 @@ Crank angle ATDC of first lobe peak
 
 ### kLinePeriodUs
 
-
-### rpmSoftLimitWindowSize
-Window that the correction will be added throughout (example, if rpm limit is 7000, and rpmSoftLimitWindowSize is 200, the corrections activate at 6800RPM, creating a 200rpm window)
 
 ### rpmSoftLimitTimingRetard
 Degrees of timing REMOVED from actual timing during soft RPM limit window

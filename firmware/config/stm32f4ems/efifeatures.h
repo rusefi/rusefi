@@ -362,7 +362,7 @@
 #endif
 
 #ifndef EFI_EMBED_INI_MSD
-#define EFI_EMBED_INI_MSD TRUE
+#define EFI_EMBED_INI_MSD FALSE
 #endif
 
 #ifndef EFI_USB_SERIAL

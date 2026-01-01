@@ -1,6 +1,6 @@
 #define MAIN_HELP_URL "https://rusefi.com/s/uaefi"
 
-
+#define PINOUT_URL "https://rusefi.com/docs/pinouts/hellen/uaefi/"
 
 
 #define ts_show_vbatt false
