@@ -181,7 +181,7 @@ public class ScreenGenerator {
             int toY = sorted.get(i + 1);
 
             String sectionNameWithSpecialCharacters = yCoordinates.get(sorted.get(i));
-            String sectionName = cleanName(sectionNameWithSpecialCharacters);
+            String sectionName = cleanName(stripUnits(sectionNameWithSpecialCharacters));
 
             BufferedImage slice;
             try {
@@ -269,6 +269,15 @@ public class ScreenGenerator {
 
             saveSlices(dialogTitle, yCoordinates, panelImage, dialogModel);
         }
+    }
+
+    private static String stripUnits(String title) {
+        // Units are added without a space.
+        // This removes all trailing parentheticals without a leading space.
+        // If you want a parenthetical, be sure to separate it with a space.
+        // e.g. `Cam mode (intake)`
+        String reUnit = "(?<! )\\([^()]+\\)$";
+        return title.replaceFirst(reUnit, "");
     }
 
     private static String cleanName(String title) {
