@@ -170,7 +170,7 @@ public class ScreenGenerator {
         });
     }
 
-    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, Map<Integer, Integer> heights, BufferedImage dialogScreenShot, DialogModel dialogModel) {
+    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, Integer xCoordinate, Map<Integer, Integer> heights, BufferedImage dialogScreenShot, DialogModel dialogModel) {
         System.out.println("Label Y coordinates: " + yCoordinates);
         yCoordinates.put(0, "top");
         // not sure about this
@@ -208,7 +208,7 @@ public class ScreenGenerator {
             String fieldName = f.getKey();
             String tooltip = iniFileModel.getTooltips().get(fieldName);
 
-            dialogModel.fields.add(new FieldModel(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip));
+            dialogModel.fields.add(new FieldModel(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip, xCoordinate, fromY));
 
             File output = new File(IMG_DESTINATION + fileName);
             if (output == null) {
@@ -232,7 +232,7 @@ public class ScreenGenerator {
                     ((JPanel) component).getLayout() instanceof BoxLayout &&
                     ((BoxLayout) ((JPanel) component).getLayout()).getAxis() != BoxLayout.X_AXIS) {
                     JPanel panel = (JPanel) component;
-                    handleBox(dialog.getTitle(), panel, dialogModel);
+                    handleBox(dialog, panel, dialogModel);
                     return false;
                 }
                 return true;
@@ -240,7 +240,9 @@ public class ScreenGenerator {
         });
     }
 
-    private static void handleBox(String dialogTitle, JPanel panel, DialogModel dialogModel) {
+    private static void handleBox(JDialog dialog, JPanel panel, DialogModel dialogModel) {
+        String dialogTitle = dialog.getTitle();
+
         BoxLayout layout = (BoxLayout) panel.getLayout();
         if (layout.getAxis() == BoxLayout.X_AXIS)
             return;
@@ -254,6 +256,7 @@ public class ScreenGenerator {
         Map<Integer, String> yCoordinates = new TreeMap<>();
         Map<Integer, Integer> heights = new TreeMap<>();
         int relativeY = panel.getLocationOnScreen().y;
+        int xCoordinate = panel.getLocationOnScreen().x - dialog.getLocationOnScreen().x;
 
         UiUtils.visitComponents(panel, "Looking inside the box", new Callback() {
                 @Override
@@ -277,7 +280,7 @@ public class ScreenGenerator {
                 }
             });
 
-        saveSlices(dialogTitle, yCoordinates, heights, panelImage, dialogModel);
+        saveSlices(dialogTitle, yCoordinates, xCoordinate, heights, panelImage, dialogModel);
     }
 
     private static String stripUnits(String title) {
