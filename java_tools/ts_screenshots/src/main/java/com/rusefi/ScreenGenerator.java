@@ -170,23 +170,26 @@ public class ScreenGenerator {
         });
     }
 
-    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, BufferedImage dialogScreenShot, DialogModel dialogModel) {
+    private static void saveSlices(String dialogTitle, Map<Integer, String> yCoordinates, Map<Integer, Integer> heights, BufferedImage dialogScreenShot, DialogModel dialogModel) {
         System.out.println("Label Y coordinates: " + yCoordinates);
         yCoordinates.put(0, "top");
+        // not sure about this
+        heights.put(0, 0);
         yCoordinates.put(dialogScreenShot.getHeight(), "bottom");
+        heights.put(dialogScreenShot.getHeight(), 0);
 
         List<Integer> sorted = new ArrayList<>(yCoordinates.keySet());
 
         for (int i = 0; i < sorted.size() - 1; i++) {
             int fromY = sorted.get(i);
-            int toY = sorted.get(i + 1);
 
             String sectionNameWithSpecialCharacters = yCoordinates.get(sorted.get(i));
             String sectionName = cleanName(stripUnits(sectionNameWithSpecialCharacters));
+            int sectionHeight = heights.get(sorted.get(i));
 
             BufferedImage slice;
             try {
-                slice = dialogScreenShot.getSubimage(0, fromY, dialogScreenShot.getWidth(), toY - fromY);
+                slice = dialogScreenShot.getSubimage(0, fromY, dialogScreenShot.getWidth(), sectionHeight);
             } catch (RasterFormatException e) {
                 System.out.println("Dialog does not fit screen? " + sectionNameWithSpecialCharacters);
                 continue;
@@ -249,6 +252,7 @@ public class ScreenGenerator {
         }
 
         Map<Integer, String> yCoordinates = new TreeMap<>();
+        Map<Integer, Integer> heights = new TreeMap<>();
         int relativeY = panel.getLocationOnScreen().y;
 
         UiUtils.visitComponents(panel, "Looking inside the box", new Callback() {
@@ -262,6 +266,7 @@ public class ScreenGenerator {
                         if (labelText.length() > 0) {
                             System.out.println("Looking at " + label);
                             try {
+                                heights.put(label.getLocationOnScreen().y - relativeY, label.getSize().height);
                                 yCoordinates.put(label.getLocationOnScreen().y - relativeY, labelText);
                             } catch (IllegalComponentStateException e) {
                                 System.out.printf("Did not go well for " + label);
@@ -272,7 +277,7 @@ public class ScreenGenerator {
                 }
             });
 
-        saveSlices(dialogTitle, yCoordinates, panelImage, dialogModel);
+        saveSlices(dialogTitle, yCoordinates, heights, panelImage, dialogModel);
     }
 
     private static String stripUnits(String title) {
