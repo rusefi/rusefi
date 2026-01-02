@@ -253,15 +253,15 @@ public:
 
 				if (!m_isAutocalTs) {
 					if (myFunction == DC_Throttle1) {
-						engineConfiguration->tpsMin = convertVoltageTo10bitADC(m_primaryMin);
-						engineConfiguration->tpsMax = convertVoltageTo10bitADC(m_primaryMax);
-						engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(m_secondaryMin);
-						engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(m_secondaryMax);
+						engineConfiguration->tpsMin = m_primaryMin;
+						engineConfiguration->tpsMax = m_primaryMax;
+						engineConfiguration->tps1SecondaryMin = m_secondaryMin;
+						engineConfiguration->tps1SecondaryMax = m_secondaryMax;
 					} else if (myFunction == DC_Throttle2) {
-						engineConfiguration->tps2Min = convertVoltageTo10bitADC(m_primaryMin);
-						engineConfiguration->tps2Max = convertVoltageTo10bitADC(m_primaryMax);
-						engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(m_secondaryMin);
-						engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(m_secondaryMax);
+						engineConfiguration->tps2Min = m_primaryMin;
+						engineConfiguration->tps2Max = m_primaryMax;
+						engineConfiguration->tps2SecondaryMin = m_secondaryMin;
+						engineConfiguration->tps2SecondaryMax = m_secondaryMax;
 					} else if (myFunction == DC_Wastegate) {
 						engineConfiguration->wastegatePositionClosedVoltage = m_primaryMin;
 						engineConfiguration->wastegatePositionOpenedVoltage = m_primaryMax;
