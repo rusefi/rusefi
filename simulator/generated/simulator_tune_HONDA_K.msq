@@ -4206,10 +4206,10 @@ end</constant>
         <constant digits="2" name="tps1SecondaryMin" units="V">5.0</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
         <constant name="tps2_2AdcChannel">"Disabled"</constant>
-        <constant digits="0" name="tps2Max" units="ADC">1000.0</constant>
-        <constant digits="0" name="tps2Min" units="ADC">0.0</constant>
-        <constant digits="0" name="tps2SecondaryMax" units="ADC">0.0</constant>
-        <constant digits="0" name="tps2SecondaryMin" units="ADC">1000.0</constant>
+        <constant digits="2" name="tps2Max" units="V">5.0</constant>
+        <constant digits="2" name="tps2Min" units="V">0.0</constant>
+        <constant digits="2" name="tps2SecondaryMax" units="V">0.0</constant>
+        <constant digits="2" name="tps2SecondaryMin" units="V">5.0</constant>
         <constant digits="1" name="tpsAccelEnrichmentThreshold" units="roc">40.0</constant>
         <constant digits="2" name="tpsAccelFractionDivisor" units="coef">1.0</constant>
         <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0.0</constant>
@@ -4937,7 +4937,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2026.01.02.f407-discovery.1889154231" version="5.0"/>
+    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2026.01.02.f407-discovery.2854821646" version="5.0"/>
     <bibliography author="rusEFI 20260101" writeDate="date"/>
     <settings/>
     <userComments/>
