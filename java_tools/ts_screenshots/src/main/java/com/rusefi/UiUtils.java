@@ -28,9 +28,11 @@ public class UiUtils {
         }
 
         System.out.println(prefix + " I see " + component.getClass());
-        callback.onComponent(parent, component);
+        boolean shouldRecurse = callback.onComponent(parent, component);
         Container container = (Container) component;
 
+        if (!shouldRecurse)
+            return;
         // Go visit and add all children
         for (Component subComponent : container.getComponents()) {
             if (subComponent == null)
