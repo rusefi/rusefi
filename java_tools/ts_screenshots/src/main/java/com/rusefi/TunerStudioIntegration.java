@@ -47,6 +47,7 @@ public class TunerStudioIntegration {
                     menuItems.add(menuItem);
                 }
             }
+            return true;
         });
         return menuItems;
     }

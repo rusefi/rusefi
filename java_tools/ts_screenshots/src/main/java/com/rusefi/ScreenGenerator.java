@@ -85,6 +85,7 @@ public class ScreenGenerator {
                         topLevelButtons.add(ab);
                     }
                 }
+                return true;
             });
             Thread.sleep(WAITING_FOR_FRAME_PERIOD);
         }
@@ -223,37 +224,40 @@ public class ScreenGenerator {
     private static void findSlices(JDialog dialog, DialogModel dialogModel) {
         UiUtils.visitComponents(dialog, "Dynamic dialog", new Callback() {
             @Override
-            public void onComponent(Component parent, Component component) {
-                if (component instanceof JPanel) {
+            public boolean onComponent(Component parent, Component component) {
+                if (component instanceof JPanel &&
+                    ((JPanel) component).getLayout() instanceof BoxLayout &&
+                    ((BoxLayout) ((JPanel) component).getLayout()).getAxis() != BoxLayout.X_AXIS) {
                     JPanel panel = (JPanel) component;
                     handleBox(dialog.getTitle(), panel, dialogModel);
+                    return false;
                 }
+                return true;
             }
         });
     }
 
     private static void handleBox(String dialogTitle, JPanel panel, DialogModel dialogModel) {
-        if (panel.getLayout() instanceof BoxLayout) {
-            BoxLayout layout = (BoxLayout) panel.getLayout();
-            if (layout.getAxis() == BoxLayout.X_AXIS)
-                return;
+        BoxLayout layout = (BoxLayout) panel.getLayout();
+        if (layout.getAxis() == BoxLayout.X_AXIS)
+            return;
 
-            BufferedImage panelImage = UiUtils.getScreenShot(panel);
-            if (panelImage == null) {
-                System.out.println("Skipping empty panel");
-                return;
-            }
+        BufferedImage panelImage = UiUtils.getScreenShot(panel);
+        if (panelImage == null) {
+            System.out.println("Skipping empty panel");
+            return;
+        }
 
-            Map<Integer, String> yCoordinates = new TreeMap<>();
-            int relativeY = panel.getLocationOnScreen().y;
+        Map<Integer, String> yCoordinates = new TreeMap<>();
+        int relativeY = panel.getLocationOnScreen().y;
 
-            UiUtils.visitComponents(panel, "Looking inside the box", new Callback() {
+        UiUtils.visitComponents(panel, "Looking inside the box", new Callback() {
                 @Override
-                public void onComponent(Component parent, Component component) {
+                public boolean onComponent(Component parent, Component component) {
                     if (component instanceof JLabel) {
                         JLabel label = (JLabel) component;
                         if (!label.isVisible() || label.getSize().width == 0)
-                            return;
+                            return false;
                         String labelText = label.getText();
                         if (labelText.length() > 0) {
                             System.out.println("Looking at " + label);
@@ -264,11 +268,11 @@ public class ScreenGenerator {
                             }
                         }
                     }
+                    return true;
                 }
             });
 
-            saveSlices(dialogTitle, yCoordinates, panelImage, dialogModel);
-        }
+        saveSlices(dialogTitle, yCoordinates, panelImage, dialogModel);
     }
 
     private static String stripUnits(String title) {
