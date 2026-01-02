@@ -252,6 +252,7 @@ public:
 				}
 
 				if (!m_isAutocalTs) {
+					// configuration on ECU side is in ADC, TS sees Volts, see "tps_limit_t"
 					if (myFunction == DC_Throttle1) {
 						engineConfiguration->tpsMin = convertVoltageTo10bitADC(m_primaryMin);
 						engineConfiguration->tpsMax = convertVoltageTo10bitADC(m_primaryMax);
