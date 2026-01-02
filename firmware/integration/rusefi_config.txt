@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 251221
+#define FLASH_DATA_VERSION 260102
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -1124,8 +1124,8 @@ end_struct
 
     gppwm_note_t[GPPWM_CHANNELS iterate] gpPwmNote;
 
-	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
-	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
+	tps_limit_t tps2SecondaryMin;Closed voltage for secondary throttle position sensor
+	tps_limit_t tps2SecondaryMax;Fully opened voltage for secondary throttle position sensor
 
 	bit widebandOnSecondBus,"CAN2","CAN1";Select which bus the wideband controller is attached to.
 	bit fuelClosedLoopCorrectionEnabled,"enabled","disabled";Enables lambda sensor closed loop feedback for fuelling.
@@ -1224,8 +1224,9 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], $pin_mode_e_enum
 	pid_s etb;
 	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper;"RPM", 1, 0, 0, 1500, 0
 	brain_input_pin_e turboSpeedSensorInputPin;
-int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
-int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
+	!todo: extract these two fields into a structure\nSee also tps2_1AdcChannel
+tps_limit_t tps2Min;Closed voltage for primary throttle position sensor
+tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	output_pin_e starterControlPin;See also startStopButtonPin
 	pin_input_mode_e startStopButtonMode;
 	Gpio mc33816_flag0;
