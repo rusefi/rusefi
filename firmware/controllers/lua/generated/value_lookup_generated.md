@@ -775,12 +775,6 @@ Maximum % that the long term fuel trim can add
 ### ltft.maxRemove
 Maximum % that the long term fuel trim can remove
 
-### tps2SecondaryMin
-
-
-### tps2SecondaryMax
-
-
 ### widebandOnSecondBus
 Select which bus the wideband controller is attached to.
 
@@ -1020,12 +1014,6 @@ Output Max Duty Cycle
 
 ### airTaperRpmRange
 RPM range above upper limit for extra air taper
-
-### tps2Min
-Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel
-
-### tps2Max
-Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel
 
 ### tachPulsePerRev
 

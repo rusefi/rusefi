@@ -781,12 +781,6 @@ float getConfigValueByHash(const int hash) {
 // ltft.maxRemove
 		case -269110527:
 			return engineConfiguration->ltft.maxRemove;
-// tps2SecondaryMin
-		case 18659930:
-			return engineConfiguration->tps2SecondaryMin;
-// tps2SecondaryMax
-		case 18659676:
-			return engineConfiguration->tps2SecondaryMax;
 // widebandOnSecondBus
 		case 1445062086:
 			return engineConfiguration->widebandOnSecondBus;
@@ -1027,12 +1021,6 @@ float getConfigValueByHash(const int hash) {
 // airTaperRpmRange
 		case -174866119:
 			return engineConfiguration->airTaperRpmRange;
-// tps2Min
-		case -224184878:
-			return engineConfiguration->tps2Min;
-// tps2Max
-		case -224185132:
-			return engineConfiguration->tps2Max;
 // tachPulsePerRev
 		case -2142425790:
 			return engineConfiguration->tachPulsePerRev;
@@ -3340,16 +3328,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->ltft.maxRemove = (int)value;
 		return 1;
 	}
-		case 18659930:
-	{
-		engineConfiguration->tps2SecondaryMin = (int)value;
-		return 1;
-	}
-		case 18659676:
-	{
-		engineConfiguration->tps2SecondaryMax = (int)value;
-		return 1;
-	}
 		case 1445062086:
 	{
 		engineConfiguration->widebandOnSecondBus = (int)value;
@@ -3748,16 +3726,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -174866119:
 	{
 		engineConfiguration->airTaperRpmRange = (int)value;
-		return 1;
-	}
-		case -224184878:
-	{
-		engineConfiguration->tps2Min = (int)value;
-		return 1;
-	}
-		case -224185132:
-	{
-		engineConfiguration->tps2Max = (int)value;
 		return 1;
 	}
 		case -2142425790:

@@ -2939,15 +2939,15 @@ struct engine_configuration_s {
 	 */
 	gppwm_note_t gpPwmNote[GPPWM_CHANNELS] = {};
 	/**
-	 * units: ADC
+	 * Closed voltage for secondary throttle position sensor
 	 * offset 1348
 	 */
-	uint16_t tps2SecondaryMin;
+	tps_limit_t tps2SecondaryMin;
 	/**
-	 * units: ADC
+	 * Fully opened voltage for secondary throttle position sensor
 	 * offset 1350
 	 */
-	uint16_t tps2SecondaryMax;
+	tps_limit_t tps2SecondaryMax;
 	/**
 	 * Select which bus the wideband controller is attached to.
 	offset 1352 bit 0 */
@@ -3281,19 +3281,15 @@ struct engine_configuration_s {
 	 */
 	brain_input_pin_e turboSpeedSensorInputPin;
 	/**
-	 * Closed throttle#2. todo: extract these two fields into a structure
-	 * See also tps2_1AdcChannel
-	 * units: ADC
+	 * Closed voltage for primary throttle position sensor
 	 * offset 1448
 	 */
-	int16_t tps2Min;
+	tps_limit_t tps2Min;
 	/**
-	 * Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!
-	 * See also tps1_1AdcChannel
-	 * units: ADC
+	 * Fully opened voltage for primary throttle position sensor
 	 * offset 1450
 	 */
-	int16_t tps2Max;
+	tps_limit_t tps2Max;
 	/**
 	 * See also startStopButtonPin
 	 * offset 1452
