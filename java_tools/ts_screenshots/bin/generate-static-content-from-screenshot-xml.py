@@ -75,7 +75,7 @@ def copy_image(image_name: str):
         dst = Path(IMAGES_DIR) / src.name
         if not dst.exists():
             shutil.copy(src, dst)
-        return f"{IMAGES_DIR}/{src.name}"
+        return f"{IMAGES_DIR}/{urllib.parse.quote_plus(src.name)}"
     return None  # not found
 
 def main():
@@ -112,7 +112,7 @@ def main():
             if dialog_img:
                 img_path = copy_image(dialog_img)
                 if img_path:
-                    content_parts.append(f"<img src='{urllib.parse.quote_plus(img_path)}' alt='{dialog_title}'>")
+                    content_parts.append(f"<img src='{img_path}' alt='{dialog_title}'>")
 
             for field in dialog.findall(".//field"):
                 ui_name = re.sub(r'(?<! )\([^()]+\)$', '', field.attrib.get("uiName", "Field"))
@@ -128,7 +128,7 @@ def main():
                 if img:
                     img_path = copy_image(img)
                     if img_path:
-                        content_parts.append(f"<img src='{urllib.parse.quote_plus(img_path)}' alt='{ui_name}'>")
+                        content_parts.append(f"<img src='{img_path}' alt='{ui_name}'>")
                 content_parts.append("</div>")
 
         toc_parts.append("</ul></li>")
