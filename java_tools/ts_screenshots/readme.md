@@ -47,6 +47,11 @@ cp -r %USERPROFILE%/.rusEFI/images .
 
 python generate-static-content-from-screenshot-xml.py
 
+pip install drawsvg
+pip install Pillow
+
+python generate-svgs.py
+
 ## questionable java which converts above into static .md
 
 see Xml2MdTransformerTool.java
