@@ -50,6 +50,10 @@ public interface TsHeadlessPlugin {
     static boolean displayPlugin(String signature) {
         try {
             TsHeadlessPlugin instance = getOrCreateInstance();
+            if (instance == null) {
+                log.error("Unexpected null instance of TsHeadlessPlugin");
+                return false;
+            }
             return instance.getDisplayPlugin(signature);
         } catch (Exception e) {
             log.warn("Error " + e, e);

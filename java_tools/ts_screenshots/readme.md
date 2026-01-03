@@ -28,6 +28,8 @@ step 2:
 
 cp ts_screenshots\build\libs\ts_screenshots-all.jar "C:\Program Files (x86)\EFIAnalytics\TunerStudioMS"
 
+cd "C:\Program Files (x86)\EFIAnalytics\TunerStudioMS"
+
 MAKE SURE TO USE EXACTLY SUPPORTED VERSION OF TS see TsAccess.java
 
 Copy ScreenShots.jar inside TS install folder
@@ -40,6 +42,10 @@ java -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005 -cp li
 ## python prototype to convert above XML into static .html
 
 See bin/
+
+cp -r %USERPROFILE%/.rusEFI/images .
+
+python generate-static-content-from-screenshot-xml.py
 
 ## questionable java which converts above into static .md
 
