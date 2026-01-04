@@ -60,9 +60,9 @@ void PulseInput::update(efitick_t nowUs) {
 
     // Publish to TunerStudio outputs
     auto* out = getTunerStudioOutputChannels();
-    out->pulseInputAvgOnTimeMs = avgPulseWidthUs * 0.001f;
+    out->pulseInputOnTimeMs = avgPulseWidthUs * 0.001f;
     out->pulseInputDutyCycle = dutyCycle * 100.0f;
-    out->pulseInputFrequencyHz = frequencyHz;
+    out->pulseInputHz = frequencyHz;
 
     // Reset window
     windowStartTime = nowUs;
