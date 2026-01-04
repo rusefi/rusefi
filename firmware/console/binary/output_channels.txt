@@ -458,4 +458,10 @@ float mapFast
   uint16_t transitionEventsCounter
 
   uint8_t[MAX_CYLINDER_COUNT iterate] mapPerCylinder;;"kPa", 1, 0, 0, 0, 0
+
+	! PulseInput values
+	float pulseInputOnTimeUs;   ! pulse average on-time in microseconds
+    float pulseInputDutyCycle;  ! pulse duty cycle in percent (0–100)
+    float pulseInputHz;   		! pulse frequency in Hz
+
 end_struct
