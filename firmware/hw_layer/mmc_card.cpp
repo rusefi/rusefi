@@ -577,7 +577,7 @@ static void deinitMmc() {
 // Mount the SD card.
 // Returns true if the filesystem was successfully mounted for writing.
 static bool mountMmc() {
-	bool ret = false;
+	FRESULT ret = FR_NOT_READY;
 
 	// if no card, don't try to mount FS
 	if (cardBlockDevice != nullptr) {
@@ -585,29 +585,30 @@ static bool mountMmc() {
 		memset(&resources, 0x00, sizeof(resources));
 		// We were able to connect the SD card, mount the filesystem
 		memset(&MMC_FS, 0, sizeof(FATFS));
-		ret = (f_mount(&MMC_FS, "", /* Mount immediately */ 1) == FR_OK);
+		ret = f_mount(&MMC_FS, "", /* Mount immediately */ 1);
 
-		if (ret == false) {
+		if (ret != FR_OK) {
 			sdStatus = SD_STATUS_MOUNT_FAILED;
-			efiPrintf("SD card mount failed!");
+			printFatFsError("Mount failed", ret);
+		} else {
+			sdStatus = SD_STATUS_MOUNTED;
+			efiPrintf("SD card mounted!");
 		}
 	}
 
-	if (ret) {
-		sdStatus = SD_STATUS_MOUNTED;
-		efiPrintf("SD card mounted!");
-	}
-
 #if EFI_STORAGE_SD == TRUE
-	// notificate storage subsystem
-	initStorageSD();
+	if (ret == FR_OK) {
+		// notificate storage subsystem
+		initStorageSD();
+	}
 #endif // EFI_STORAGE_SD
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.sd_logging_internal = ret;
+	engine->outputChannels.sd_error = (uint8_t) ret;
+	engine->outputChannels.sd_logging_internal = (ret == FR_OK);
 #endif
 
-	return ret;
+	return (ret == FR_OK);
 }
 
 /*
@@ -629,6 +630,7 @@ static void unmountMmc() {
 	}
 
 #if EFI_TUNER_STUDIO
+	engine->outputChannels.sd_error = (uint8_t) ret;
 	engine->outputChannels.sd_logging_internal = false;
 #endif
 
