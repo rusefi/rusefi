@@ -70,7 +70,7 @@ include rusefi.mk
 
 ifeq ($(DEBUG_LEVEL_OPT),)
   # Default to a release build - but leave in debug info.  It doesn't change the hex/bin output.
-  DEBUG_LEVEL_OPT = -O2 -ggdb -g
+  DEBUG_LEVEL_OPT = -Os -ggdb -g
   # Comment the above and uncomment the line below if you want to debug the firmware (it's difficult-to-impossible
   # to debug firmware with optimization enabled).
   # DEBUG_LEVEL_OPT = -O0 -ggdb -g
