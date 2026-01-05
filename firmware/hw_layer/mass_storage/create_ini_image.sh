@@ -31,7 +31,8 @@ rm -f $ZIP $ZIP7 $IMAGE
 zip -j $ZIP $FULL_INI
 
 # also create 7z archive
-7z a -mx9 $ZIP7 $FULL_INI
+# giving full path to file will put fule in archive root
+7z a -mx9 $ZIP7 $(pwd)/$FULL_INI
 
 ls -ls $ZIP $ZIP7
 
