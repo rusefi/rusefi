@@ -529,6 +529,7 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->iacCoastingRpmBins, 0, 8000, 1);
 
 #if !EFI_UNIT_TEST
+  // todo: remove from *engine* defaults, move into boards?
 	engineConfiguration->analogInputDividerCoefficient = 2;
 #endif
 
@@ -565,6 +566,7 @@ static void setDefaultEngineConfiguration() {
 
 	setEgoSensor(ES_14Point7_Free);
 
+	// todo: remove from *engine* defaults, move into boards?
 	engineConfiguration->adcVcc = 3.0;
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
