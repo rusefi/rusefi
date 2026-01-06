@@ -10,13 +10,13 @@
 #if defined(AT32F4XX)
 #define CCM_OPTIONAL
 #define SDRAM_OPTIONAL
-#define NO_CACHE
+#define NO_CACHE __attribute__((aligned(4)))
 #define BKUP_RAM_NOINIT
 #else
 // CCM memory is 64k
 #define CCM_OPTIONAL __attribute__((section(".ram4")))
 #define SDRAM_OPTIONAL __attribute__((section(".ram7")))
-#define NO_CACHE	// F4 has no cache, do nothing
+#define NO_CACHE __attribute__((aligned(4)))	// F4 has no cache, do nothing
 #define BKUP_RAM_NOINIT __attribute__((section(".bkup_ram_noinit")))
 #define MCU_HAS_CCM_RAM	TRUE
 #endif
