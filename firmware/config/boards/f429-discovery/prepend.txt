@@ -25,7 +25,7 @@
 #define CRANKING_ENRICH_CLT_COUNT 8
 
 ! asserting that rectangular configuration works
-#define IAT_IGN_CORR_COUNT 8
+#define IAT_IGN_CORR_TEMP_COUNT 8
 #define IAT_IGN_CORR_LOAD_COUNT 4
 
 ! asserting that rectangular configuration works

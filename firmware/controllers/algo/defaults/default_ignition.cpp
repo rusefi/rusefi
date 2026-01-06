@@ -17,11 +17,11 @@ static void setDefaultMultisparkParameters() {
 
 static void setDefaultIatTimingCorrection() {
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from=*/ 0, /*to*/ 140, 1);
-#if IAT_IGN_CORR_COUNT == 8
+#if IAT_IGN_CORR_TEMP_COUNT == 8
 	copyArray(config->ignitionIatCorrTempBins, { -40, 0, 10, 20, 30, 40, 50, 60});
 
 	// top 5 rows are the same
-	for (size_t i = 3; i < IAT_IGN_CORR_COUNT; i++) {
+	for (size_t i = 3; i < IAT_IGN_CORR_TEMP_COUNT; i++) {
 		//                                                         40  50  60 deg C
 		copyArray(config->ignitionIatCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0, -3.0});
 	}

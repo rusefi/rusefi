@@ -25,4 +25,4 @@
 #define ts_show_onboard_accelerometer true
 
 #define CLT_TIMING_CURVE_SIZE 3
-#define IAT_IGN_CORR_COUNT 4
+#define IAT_IGN_CORR_TEMP_COUNT 4
