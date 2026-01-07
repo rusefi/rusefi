@@ -182,6 +182,9 @@ public:
 		CanListener(p_rxFrameId),
 		IsoTpBase(nullptr, p_busIndex, p_rxFrameId, p_txFrameId)
 	{
+	  // not cool: this would invoke ChibiOS meaning we have to be careful where instances are declared in order to avoid
+	  // initialization too soon
+	  // todo: https://github.com/rusefi/rusefi/issues/8938
 		rxFifoBuf.clear();
 		registerCanListener(*this);
 	}
