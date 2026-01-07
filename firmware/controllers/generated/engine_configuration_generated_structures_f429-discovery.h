@@ -6107,12 +6107,12 @@ struct persistent_config_s {
 	 * units: deg
 	 * offset 15016
 	 */
-	scaled_channel<int16_t, 10, 1> ignitionIatCorrTable[IAT_IGN_CORR_LOAD_COUNT][IAT_IGN_CORR_COUNT] = {};
+	scaled_channel<int16_t, 10, 1> ignitionIatCorrTable[IAT_IGN_CORR_LOAD_COUNT][IAT_IGN_CORR_TEMP_COUNT] = {};
 	/**
 	 * units: SPECIAL_CASE_TEMPERATURE
 	 * offset 15080
 	 */
-	int8_t ignitionIatCorrTempBins[IAT_IGN_CORR_COUNT] = {};
+	int8_t ignitionIatCorrTempBins[IAT_IGN_CORR_TEMP_COUNT] = {};
 	/**
 	 * units: Load
 	 * offset 15088
