@@ -2042,14 +2042,14 @@
          140.0
 </constant>
         <constant cols="8" digits="1" name="ignitionIatCorrTable" rows="8" units="deg">
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
+         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
+         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
+         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
+         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
+         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
+         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
          0.0 0.0 0.0 0.0 0.0 0.0 -1.0 -2.0
-         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
-         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
-         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
-         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
-         0.0 0.0 0.0 0.0 0.0 -1.0 -2.0 -3.0
 </constant>
         <constant cols="1" digits="0" name="ignitionIatCorrTempBins" rows="8" units="C">
          -40.0
@@ -4937,7 +4937,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2026.01.07.f407-discovery.1525974156" version="5.0"/>
+    <versionInfo firmwareInfo="20260101" nPages="1" signature="rusEFI master.2026.01.07.f407-discovery.2315642619" version="5.0"/>
     <bibliography author="rusEFI 20260101" writeDate="date"/>
     <settings/>
     <userComments/>
