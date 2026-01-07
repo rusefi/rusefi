@@ -1,6 +1,7 @@
 name: Configs & Live Docs
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
