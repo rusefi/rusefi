@@ -46,6 +46,20 @@ final class TsReflectionHelper {
         return result;
     }
 
+    static List<AbstractButton> findAlternativeButtons(Frame frame) {
+        List<AbstractButton> result = new ArrayList<>();
+        visitComponents(frame, c -> {
+            if (c instanceof AbstractButton) {
+                AbstractButton b = (AbstractButton) c;
+                String text = b.getText();
+                if ("Setup".equals(text) || "Fuel".equals(text)) {
+                    result.add(b);
+                }
+            }
+        });
+        return result;
+    }
+
     static JMenuItem findMenuItem(Frame frame, String text) {
         final List<JMenuItem> candidates = new ArrayList<>();
         visitComponents(frame, c -> {
