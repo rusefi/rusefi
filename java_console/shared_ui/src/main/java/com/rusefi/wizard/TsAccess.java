@@ -13,8 +13,7 @@ public class TsAccess {
          * http://www.tunerstudio.com/downloads2/TunerStudioMS_Setup_v3.3.00.exe
          * https://github.com/rusefi/rusefi_external_utils/blob/master/TunerStudio/TunerStudioMS_Setup_v3.1.02.exe
          */
-        // todo: does same work for 3.3.01?
-        TS_3_2_03("3.2.03", "aP.gX", "bq.b"), //TODO: placeholder
+        TS_3_2_03("3.2.03", "aP.gX", "bl.b"),
         TS_3_3_0("3.3.0", "aP.gX", "bq.b"),
         TS_3_3_01("3.3.01", "aP.gX", "bq.b"),
         // TODO: maybe better use 3.3 as default value?, in case of a upgrade we broke the wizard even if the clases are not updated on TS side

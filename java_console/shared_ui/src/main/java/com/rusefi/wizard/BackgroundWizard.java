@@ -129,6 +129,14 @@ public class BackgroundWizard {
             // Discover top level menu buttons first (TS shows menu items only after a top level is selected)
             List<AbstractButton> topButtons = TsReflectionHelper.findTopLevelButtons(mainFrame);
             if (topButtons.isEmpty()) {
+                // find here the class that has a button with "Setup" text
+                topButtons = TsReflectionHelper.findAlternativeButtons(mainFrame);
+                for (AbstractButton b : topButtons) {
+                    log.info("Found alternative button class: " + b.getClass().getName() + " for text: " + b.getText());
+                }
+            }
+
+            if (topButtons.isEmpty()) {
                 throw new IllegalStateException("no TS top-level buttons");
             }
 
