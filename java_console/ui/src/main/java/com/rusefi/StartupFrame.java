@@ -77,6 +77,7 @@ public class StartupFrame {
     private boolean isProceeding;
     private final JLabel noPortsMessage = new JLabel();
     private final StatusAnimation status;
+    private final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
     private ProgramSelector selector;
     private boolean firstTimeHasEcuWithOpenBlt = true;
 
@@ -115,7 +116,6 @@ public class StartupFrame {
         comboSpeeds.setToolTipText("For 'STMicroelectronics Virtual COM Port' device any speed setting would work the same");
         connectPanel.add(comboSpeeds);
 
-        final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
         setToolTip(connectButton, "Connect to real hardware");
 
         JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Always auto-connect port");
@@ -324,6 +324,10 @@ public class StartupFrame {
         return jLabel;
     }
 
+    private boolean hasOnlyBltConnected(List<PortResult> ports){
+        return ports.stream().allMatch(portResult -> portResult.type == OpenBlt);
+    }
+
     private void applyKnownPorts(AvailableHardware currentHardware) {
         List<PortResult> ports = currentHardware.getKnownPorts();
         log.info("Rendering available ports: " + ports);
@@ -336,6 +340,8 @@ public class StartupFrame {
         } else {
             noPortsMessage.setText("Make sure you are disconnected from TunerStudio");
         }
+
+        connectButton.setEnabled(!hasOnlyBltConnected(ports));
 
         noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
 
