@@ -42,7 +42,7 @@ def gen_svgs():
                 sw, sh = img.size
 
                 tag = dialog_title.lower().replace(' ', '-') + "-" + ui_name.lower().replace(' ', '-')
-                link = Hyperlink("#" + tag, target="_blank")
+                link = Hyperlink("#" + tag)
                 link.append(drawsvg.Rectangle(x, y, sw, sh, fill='#00000000', stroke='blue', stroke_with='1px'))
                 svg.append(link)
 
