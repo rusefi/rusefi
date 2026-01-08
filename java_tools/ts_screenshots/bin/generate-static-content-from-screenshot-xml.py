@@ -98,13 +98,13 @@ def main():
 
     for keyword in root.findall(".//keyword"):
         menu_title = keyword.attrib.get("title", "Untitled Menu")
-        menu_id = f"menu_{menu_title.replace(' ', '_')}"
+        menu_id = f"menu-{menu_title.replace(' ', '-')}"
         toc_parts.append(f"<li><a href='#{menu_id}'>{menu_title}</a><ul>")
         content_parts.append(f"<h2 id='{menu_id}'>{menu_title}</h2>")
 
         for dialog in keyword.findall(".//dialog"):
             dialog_title = dialog.attrib.get("dialogTitle", "Dialog")
-            dialog_id = f"{menu_id}_{dialog_title.replace(' ', '_')}"
+            dialog_id = f"{menu_id}-{dialog_title.replace(' ', '-')}"
             toc_parts.append(f"<li><a href='#{dialog_id}'>{dialog_title}</a></li>")
 
             dialog_img = dialog.attrib.get("imageName", "")
@@ -116,7 +116,7 @@ def main():
 
             for field in dialog.findall(".//field"):
                 ui_name = re.sub(r'(?<! )\([^()]+\)$', '', field.attrib.get("uiName", "Field"))
-                tag = dialog_title.lower().replace(' ', '_') + "_" + ui_name.lower().replace(' ', '_')
+                tag = dialog_title.lower().replace(' ', '-') + "-" + ui_name.lower().replace(' ', '-')
                 img = field.attrib.get("imageName", "")
                 tooltip = field.attrib.get("tooltip", "")
 
