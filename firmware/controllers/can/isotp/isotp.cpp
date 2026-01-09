@@ -477,11 +477,13 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 }
 
 void IsoTpRx::resetRxVerbose() {
+#if EFI_PROD_CODE || SIMULATOR
 	CANRxFrame rxmsg;
 
 	while (rxFifoBuf.get(rxmsg, 0)) {
 		printCANRxFrame(busIndex, rxmsg);
 	}
+#endif
 
 	waitingForNumBytes = 0;
 	waitingForFrameIndex = 0;
