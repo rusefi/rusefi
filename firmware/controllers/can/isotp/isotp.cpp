@@ -9,42 +9,53 @@
 
 #if HAL_USE_CAN || EFI_UNIT_TEST
 
+static const size_t maxDlc = 8;
+
 int IsoTpBase::sendFrame(const IsoTpFrameHeader &header, const uint8_t *data, int num, can_sysinterval_t timeout) {
-	int dlc = 8; // standard 8 bytes
-	CanTxMessage txmsg(CanCategory::SERIAL, txFrameId, dlc, busIndex, IS_EXT_RANGE_ID(txFrameId));
-
-	//Fill with 0xAA padding
-	for (size_t i = isoHeaderByteIndex; i < dlc; i++) {
-		txmsg[i] = 0xAA;
-	}
-
-	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
-	txmsg[isoHeaderByteIndex] = (uint8_t)((header.frameType & 0xf) << 4);
+	// Calculate needed DLC and maximum payload
 	int offset, numBytes;
 	switch (header.frameType) {
 	case ISO_TP_FRAME_SINGLE:
 		offset = isoHeaderByteIndex + 1;
-		numBytes = minI(num, dlc - offset);
+		numBytes = minI(num, maxDlc - offset);
+		break;
+	case ISO_TP_FRAME_FIRST:
+		offset = isoHeaderByteIndex + 2;
+		numBytes = minI(num, maxDlc - offset);
+		break;
+	case ISO_TP_FRAME_CONSECUTIVE:
+		offset = isoHeaderByteIndex + 1;
+		numBytes = minI(num, maxDlc - offset);
+		break;
+	case ISO_TP_FRAME_FLOW_CONTROL:
+		offset = isoHeaderByteIndex + 3;
+		numBytes = 0;	// no data is sent with 'flow control' frame
+		break;
+	default:
+		// bad frame type
+		return 0;
+	}
+
+	int dlc = offset + numBytes;
+	CanTxMessage txmsg(CanCategory::SERIAL, txFrameId, dlc, busIndex, IS_EXT_RANGE_ID(txFrameId));
+
+	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
+	txmsg[isoHeaderByteIndex] = (uint8_t)((header.frameType & 0xf) << 4);
+	switch (header.frameType) {
+	case ISO_TP_FRAME_SINGLE:
 		txmsg[isoHeaderByteIndex] |= numBytes;
 		break;
 	case ISO_TP_FRAME_FIRST:
 		txmsg[isoHeaderByteIndex] |= (header.numBytes >> 8) & 0xf;
 		txmsg[isoHeaderByteIndex + 1] = (uint8_t)(header.numBytes & 0xff);
-		offset = isoHeaderByteIndex + 2;
-		numBytes = minI(num, dlc - offset);
 		break;
 	case ISO_TP_FRAME_CONSECUTIVE:
 		txmsg[isoHeaderByteIndex] |= header.index & 0xf;
-		offset = isoHeaderByteIndex + 1;
-		// todo: is it correct?
-		numBytes = minI(num, dlc - offset);
 		break;
 	case ISO_TP_FRAME_FLOW_CONTROL:
 		txmsg[isoHeaderByteIndex] |= header.fcFlag & 0xf;
 		txmsg[isoHeaderByteIndex + 1] = (uint8_t)(header.blockSize);
 		txmsg[isoHeaderByteIndex + 2] = (uint8_t)(header.separationTime);
-		offset = isoHeaderByteIndex + 3; // actually don't care
-		numBytes = 0;	// no data is sent with 'flow control' frame
 		break;
 	default:
 		// bad frame type
@@ -59,8 +70,10 @@ int IsoTpBase::sendFrame(const IsoTpFrameHeader &header, const uint8_t *data, in
 	}
 
 	// send the frame!
-	if (transmit(txmsg, timeout) == CAN_MSG_OK)
+	if (transmit(txmsg, timeout) == CAN_MSG_OK) {
 		return numBytes;
+	}
+
 	return 0;
 }
 
