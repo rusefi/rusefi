@@ -20,38 +20,37 @@ int IsoTpBase::sendFrame(const IsoTpFrameHeader &header, const uint8_t *data, in
 
 	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
 	txmsg[isoHeaderByteIndex] = (uint8_t)((header.frameType & 0xf) << 4);
-	int offset, maxNumBytes;
+	int offset, numBytes;
 	switch (header.frameType) {
 	case ISO_TP_FRAME_SINGLE:
 		offset = isoHeaderByteIndex + 1;
-		maxNumBytes = minI(header.numBytes, dlc - offset);
-		txmsg[isoHeaderByteIndex] |= maxNumBytes;
+		numBytes = minI(num, dlc - offset);
+		txmsg[isoHeaderByteIndex] |= numBytes;
 		break;
 	case ISO_TP_FRAME_FIRST:
 		txmsg[isoHeaderByteIndex] |= (header.numBytes >> 8) & 0xf;
 		txmsg[isoHeaderByteIndex + 1] = (uint8_t)(header.numBytes & 0xff);
 		offset = isoHeaderByteIndex + 2;
-		maxNumBytes = minI(header.numBytes, dlc - offset);
+		numBytes = minI(num, dlc - offset);
 		break;
 	case ISO_TP_FRAME_CONSECUTIVE:
 		txmsg[isoHeaderByteIndex] |= header.index & 0xf;
 		offset = isoHeaderByteIndex + 1;
 		// todo: is it correct?
-		maxNumBytes = dlc - offset;
+		numBytes = minI(num, dlc - offset);
 		break;
 	case ISO_TP_FRAME_FLOW_CONTROL:
 		txmsg[isoHeaderByteIndex] |= header.fcFlag & 0xf;
 		txmsg[isoHeaderByteIndex + 1] = (uint8_t)(header.blockSize);
 		txmsg[isoHeaderByteIndex + 2] = (uint8_t)(header.separationTime);
-		offset = isoHeaderByteIndex + 3;
-		maxNumBytes = 0;	// no data is sent with 'flow control' frame
+		offset = isoHeaderByteIndex + 3; // actually don't care
+		numBytes = 0;	// no data is sent with 'flow control' frame
 		break;
 	default:
 		// bad frame type
 		return 0;
 	}
 
-	int numBytes = minI(maxNumBytes, num);
 	// copy the contents
 	if (data != nullptr) {
 		for (int i = 0; i < numBytes; i++) {
@@ -200,7 +199,6 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	int numSent = IsoTpBase::sendFrame(header, txbuf + offset, numBytes, timeout);
 	offset += numSent;
 	numBytes -= numSent;
-	int totalNumSent = numSent;
 
 	// get a flow control (FC) frame
 #if !EFI_UNIT_TEST // todo: add FC to unit-tests?
@@ -252,11 +250,10 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 		numSent = IsoTpBase::sendFrame(header, txbuf + offset, len, timeout);
 		if (numSent < 1)
 			break;
-		totalNumSent += numSent;
 		offset += numSent;
 		numBytes -= numSent;
 	}
-	return totalNumSent;
+	return offset;
 }
 
 int CanStreamerState::getDataFromFifo(uint8_t *rxbuf, size_t &numBytes) {
