@@ -402,9 +402,15 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 			break;
 		case ISO_TP_FRAME_CONSECUTIVE:
 			frameIdx = rxmsg.data8[isoHeaderByteIndex] & 0xf;
-			if (waitingForNumBytes < 0 || waitingForFrameIndex != frameIdx) {
+			if (waitingForNumBytes < 0) {
+				// Should not happen
+				return -4;
+			}
+			if (waitingForFrameIndex != frameIdx) {
 				// todo: that's an abnormal situation, and we probably should react?
 				// TODO: error codes
+				efiPrintf("received frame index %d is not what expected %d",
+					frameIdx, waitingForFrameIndex);
 				return -2;
 			}
 			numBytesAvailable = minI(waitingForNumBytes, 7 - isoHeaderByteIndex);
