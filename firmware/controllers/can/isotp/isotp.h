@@ -199,6 +199,10 @@ public:
 		waitingForFrameIndex = 0;
 	}
 
+	bool isRxEmpty() {
+		return rxFifoBuf.isEmpty();
+	}
+
 	/* CAN messages entry point */
 	virtual void decodeFrame(const CANRxFrame& frame, efitick_t nowNt)
 	{
@@ -221,6 +225,7 @@ public:
 	/* User app entry point */
 	int readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout);
 
+	void resetRxVerbose();
 private:
 	// used for multi-frame ISO-TP packets
 	int waitingForNumBytes = 0;
