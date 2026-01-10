@@ -1808,6 +1808,7 @@ public class VariableRegistryValues {
 	public static final String VVT_25_NAME = "INVALID";
 	public static final String VVT_26_NAME = "INVALID";
 	public static final int vvt_mode_e_VVT_BARRA_3_PLUS_1 = 8;
+	public static final int vvt_mode_e_VVT_BMW_N63TU = 17;
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
 	public static final int vvt_mode_e_VVT_CHRYSLER_PHASER = 14;
 	public static final int vvt_mode_e_VVT_CUSTOM_1 = 29;
@@ -1837,7 +1838,6 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_TOYOTA_3_TOOTH = 2;
 	public static final int vvt_mode_e_VVT_TOYOTA_3TOOTH_UZ = 27;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
-	public static final int vvt_mode_e_VVT_UNUSED_17 = 17;
 	public static final String VVT_OFFSET_1_1_NAME = "VVT offset bank 1 intake";
 	public static final String VVT_OUTPUTS_NAME = "VVT outputs and PID";
 	public static final int VVT_TABLE_RPM_SIZE = 8;
