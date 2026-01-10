@@ -102,7 +102,12 @@ public class OpenBltFlasher {
         mCallbacks.setPhase("Erase", true);
         final ProgressUpdater pu = new ProgressUpdater();
 
-        forEachFirmwareChunk(32768, (Chunk c) -> {
+        // Some bootloaders in the wild (F7 1MB, in particular) have a bug that they might not
+        // erase the 2nd page if an erase request is made across a page boundary. Because of
+        // that, erase very small chunks, which will result in an aligned erase request with the
+        // beginning of every page. Most of these requests will instantly return as it was already
+        // erased by a previous request erasing a full page.
+        forEachFirmwareChunk(4096, (Chunk c) -> {
             mLoader.clearMemory(c.address, c.data.length);
 
             pu.processBytes(c.data.length);
