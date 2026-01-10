@@ -30,7 +30,7 @@ jobs:
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo bash misc/actions/ubuntu-install-tools.sh
         sudo apt-get install python3-pip valgrind
-        pip install gcovr==8.3
+        pip install gcovr==8.5
 
     - name: Install required software (macos)
       if: ${{ matrix.os == 'macos-latest' }}
