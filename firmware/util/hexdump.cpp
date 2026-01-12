@@ -10,7 +10,7 @@
 #endif
 
 void hexdump(const void *mem, size_t len, unsigned int prefix, bool printChar) {
-	char buffer[128];
+	char buffer[10 + HEXDUMP_COLS * 3 + (1 + HEXDUMP_COLS + 2)];
 	size_t offset = 0;
 
 	for (unsigned i = 0; i < len + ((len % HEXDUMP_COLS) ? (HEXDUMP_COLS - len % HEXDUMP_COLS) : 0); i++) {
