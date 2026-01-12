@@ -10,6 +10,7 @@ public class PageToolSandbox {
 
         doRun("integration/config_page_1.txt", 1);
         doRun("integration/config_page_2.txt", 2);
+        doRun("integration/config_page_3.txt", 3);
     }
 
     private static void doRun(String definitionInputFile, int pageIndex) throws IOException {

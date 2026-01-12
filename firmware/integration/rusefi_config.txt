@@ -2011,8 +2011,6 @@ uint8_t[IDLE_VE_SIZE] idleVeLoadBins;;"load", 1, 0, 0, 100, 0
 uint16_t[IDLE_VE_SIZE x IDLE_VE_SIZE_RPM] autoscale idleVeTable;;"%", 0.1, 0, 0, 999, 1
 
 #define LUA_SCRIPT_SIZE 8000
-custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
-lua_script_t luaScript;
 
 #define CLT_FUEL_CURVE_SIZE 16
 float[CLT_FUEL_CURVE_SIZE] cltFuelCorrBins;;"SPECIAL_CASE_TEMPERATURE", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
