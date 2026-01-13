@@ -58,8 +58,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",13="11A CLT Coolant",14="12A IAT",4="13A PPS1",9="15A TPS2",6="1C Voltage From Key",5="5A TPS1",15="7A PPS2",1="AIN 1",2="AIN 2",11="MAP"
-#define adc_channel_e_fullenum "NONE","AIN 1","AIN 2","INVALID","13A PPS1","5A TPS1","1C Voltage From Key","INVALID","INVALID","15A TPS2","INVALID","MAP","INVALID","11A CLT Coolant","12A IAT","7A PPS2"
+#define adc_channel_e_enum 0="NONE",13="11A CLT Coolant",14="12A IAT",4="13A PPS1",1="14A AIN 1",9="15A TPS2",6="1C Voltage From Key",5="5A TPS1",2="6A AIN 2",15="7A PPS2",11="MAP"
+#define adc_channel_e_fullenum "NONE","14A AIN 1","6A AIN 2","INVALID","13A PPS1","5A TPS1","1C Voltage From Key","INVALID","INVALID","15A TPS2","INVALID","MAP","INVALID","11A CLT Coolant","12A IAT","7A PPS2"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1546,7 +1546,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 113681017
+#define SIGNATURE_HASH 3233137829
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2137,7 +2137,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2026.01.13.super-uaefi.113681017"
+#define TS_SIGNATURE "rusEFI master.2026.01.13.super-uaefi.3233137829"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
