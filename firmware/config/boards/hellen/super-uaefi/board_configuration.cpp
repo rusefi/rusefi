@@ -7,9 +7,21 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
-#include "hellen_leds_100.cpp"
 #include "board_overrides.h"
 //#include "connectors/generated_board_pin_names.h"
+
+Gpio getCommsLedPin() {
+	return Gpio::MM100_LED3_BLUE;
+}
+
+Gpio getRunningLedPin() {
+	// this one is used to drive 20D - High side output
+	return Gpio::Unassigned;
+}
+
+Gpio getWarningLedPin() {
+	return Gpio::MM100_LED4_YELLOW;
+}
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
