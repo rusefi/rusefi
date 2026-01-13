@@ -290,12 +290,6 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 #endif
 
-#if defined(HW_HELLEN_8CHAN) || defined(HW_HELLEN_UAEFI121) || defined(HW_HELLEN_UAEFI)
-	case engine_type_e::GM_SBC:
-	    setGmSbc();
-        break;
-#endif
-
 #if defined(HW_HELLEN_121_VAG) || defined(HW_HELLEN_UAEFI) || defined(HW_HELLEN_UAEFI121) || EFI_SIMULATOR
 	case engine_type_e::VAG_5_CYL:
 	    setVag_5_cyl();
