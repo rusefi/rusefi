@@ -73,6 +73,9 @@ void setGmLs4() {
 #endif
 
 #ifdef HW_HELLEN_SUPER_UAEFI
+	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_D2; // HALL2
+
+	engineConfiguration->camInputs[1] = Gpio::Unassigned;
 #endif
 
 #ifdef HW_HELLEN_UAEFI

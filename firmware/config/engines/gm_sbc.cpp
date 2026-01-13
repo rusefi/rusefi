@@ -105,6 +105,11 @@ void setGmSbc() {
 	  engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 #endif // HW_HELLEN_UAEFI121
 
+#ifdef HW_HELLEN_SUPER_UAEFI
+	engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_D2; // HALL2
+	engineConfiguration->camInputs[1] = Gpio::Unassigned;
+#endif // HW_HELLEN_SUPER_UAEFI
+
 #if HW_PROTEUS
     // tan wire with a black trace - "HEI B", plug pin B
     ignOverride->pin = Gpio::PROTEUS_IGN_12;
