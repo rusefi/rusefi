@@ -72,6 +72,9 @@ void setGmLs4() {
 	engineConfiguration->ignitionPins[7] = Gpio::MM100_IGN3;
 #endif
 
+#ifdef HW_HELLEN_SUPER_UAEFI
+#endif
+
 #ifdef HW_HELLEN_UAEFI
 	engineConfiguration->injectionPins[6] = Gpio::MM100_OUT_PWM1;
 	engineConfiguration->injectionPins[7] = Gpio::MM100_INJ8;

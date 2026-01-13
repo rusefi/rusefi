@@ -220,6 +220,9 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::GM_SBC_GEN4:
 		setGmLs4();
 		break;
+	case engine_type_e::GM_SBC:
+	  setGmSbc();
+    break;
 #endif
 
 #if HW_PROTEUS || EFI_SIMULATOR
@@ -248,9 +251,6 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::PROTEUS_STIM_QC:
 	    proteusStimQc();
 		break;
-	case engine_type_e::GM_SBC:
-	    setGmSbc();
-        break;
 #if defined(HARDWARE_CI) || EFI_SIMULATOR
 	case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
     #if defined(HARDWARE_CI)
