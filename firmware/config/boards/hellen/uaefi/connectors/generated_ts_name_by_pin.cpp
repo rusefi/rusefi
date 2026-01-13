@@ -24,8 +24,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::C6: return "B16 Low Side output 4 / Fuel Pump Relay (has flyback D5)";
 		case Gpio::D10: return "B3 injector output 4";
 		case Gpio::D11: return "B4 injector output 3";
-		case Gpio::D12: return "B18 VVT2 or Idle or Low Side output 2 (has flyback D3)";
-		case Gpio::D13: return "B17 Low Side output 3 (has flyback D4)";
+		case Gpio::D12: return "B18 VVT2 or Idle or Low Side output 2 or injector 8 (has flyback D3)";
+		case Gpio::D13: return "B17 Low Side output 3 or injector 7 (has flyback D4)";
 		case Gpio::D15: return "B7 VVT1 or Low Side output 1 (has flyback D2)";
 		case Gpio::D2: return "B2 injector output 5";
 		case Gpio::D3: return "B6 injector output 1";
