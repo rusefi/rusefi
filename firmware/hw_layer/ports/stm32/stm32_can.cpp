@@ -417,4 +417,28 @@ void canHwInfo(CANDriver* cand) {
 #endif
 }
 
+void canHwRecover(const size_t busIndex, CANDriver *cand)
+{
+#if STM32_CAN_USE_FDCAN1 || STM32_CAN_USE_FDCAN2 || STM32_CAN_USE_FDCAN3
+	// equal to TIMEOUT_INIT_MS
+	#define TIMEOUT_RECOVER_MS	250U
+
+	// mostly copy-paste of static bool fdcan_active_mode(CANDriver *canp) from ChibiOS hal_can_lld.c
+	if (cand->fdcan->CCCR & FDCAN_CCCR_INIT) {
+		systime_t start, end;
+
+		/* Going in active mode then waiting for it to happen.*/
+		cand->fdcan->CCCR &= ~FDCAN_CCCR_INIT;
+		start = osalOsGetSystemTimeX();
+		end = osalTimeAddX(start, TIME_MS2I(TIMEOUT_RECOVER_MS));
+		while ((cand->fdcan->CCCR & FDCAN_CCCR_INIT) != 0U) {
+			if (!osalTimeIsInRangeX(osalOsGetSystemTimeX(), start, end)) {
+				return;
+			}
+			osalThreadSleep(1);
+		}
+	}
+#endif
+}
+
 #endif /* EFI_CAN_SUPPORT */

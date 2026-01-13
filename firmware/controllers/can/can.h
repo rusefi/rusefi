@@ -19,7 +19,8 @@
 
 #include "periodic_thread_controller.h"
 
-#define CAN_TIMEOUT MS2NT(100)
+// Try to recover CAN after following timeout
+#define CAN_RX_TIMEOUT	TIME_MS2I(100)
 
 //can tx periodic task cycle time in frequency, 200hz -> 5ms period
 #define CAN_CYCLE_FREQ		(200.0f)

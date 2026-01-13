@@ -59,9 +59,10 @@ public:
 	void ThreadTask() override {
 		while (true) {
 			// Block until we get a message
-			msg_t result = canReceiveTimeout(m_device, CAN_ANY_MAILBOX, &m_buffer, TIME_INFINITE);
+			msg_t result = canReceiveTimeout(m_device, CAN_ANY_MAILBOX, &m_buffer, CAN_RX_TIMEOUT);
 
 			if (result != MSG_OK) {
+				canHwRecover(m_index, m_device);
 				continue;
 			}
 
