@@ -132,4 +132,9 @@ void canHwInfo(CANDriver* cand)
    (void)cand;
 }
 
+void canHwRecover(const size_t, CANDriver *)
+{
+	/* TODO: */
+}
+
 #endif /* EFI_CAN_SUPPORT */

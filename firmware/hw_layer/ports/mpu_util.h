@@ -50,6 +50,7 @@ bool isValidCanTxPin(brain_pin_e pin);
 bool isValidCanRxPin(brain_pin_e pin);
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
 void canHwInfo(CANDriver* cand);
+void canHwRecover(const size_t busIndex, CANDriver *cand);
 #endif // HAL_USE_CAN
 
 // Serial
