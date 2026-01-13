@@ -32,7 +32,7 @@ pins:
   - pin: 6A
     class: analog_inputs
     meta: MM100_IN_O2S2_ANALOG
-    ts_name: AIN 2
+    ts_name: ___ AIN 2
     function: AUX2 analog input
 
   - pin: 7A
@@ -90,7 +90,7 @@ pins:
   - pin: 14A
     class: analog_inputs
     meta: MM100_IN_O2S_ANALOG
-    ts_name: AIN 1
+    ts_name: ___ AIN 1
     function: AUX1 analog input
 
   - pin: 15A
