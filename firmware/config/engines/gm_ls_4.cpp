@@ -85,7 +85,7 @@ void setGmLs4() {
 #ifdef HW_HELLEN_UAEFI
 	engineConfiguration->injectionPins[6] = Gpio::MM100_OUT_PWM1;
 	engineConfiguration->injectionPins[7] = Gpio::MM100_INJ8;
-engine_type_impl.cpp
+
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	// cylinders 1 and 6
 	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
