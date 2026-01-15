@@ -8,6 +8,7 @@
 #include <rusefi/arrays.h>
 #include "proteus_meta.h"
 #include "settings.h"
+#include "thermistors.h"
 
 #ifdef HW_HELLEN
 #include "hellen_meta.h"
@@ -20,6 +21,10 @@ void setGmLs4() {
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 
   engineConfiguration->etbIdleThrottleRange = 30;
+  setGmCltSensor(&engineConfiguration->clt);
+  engineConfiguration->crankingInjectionMode = IM_BATCH;
+  engineConfiguration->injectionMode = IM_BATCH;
+
 
     engineConfiguration->cranking.rpm = 400;
     engineConfiguration->rpmHardLimit = 6000;
@@ -70,6 +75,7 @@ void setGmLs4() {
 	engineConfiguration->ignitionPins[6] = Gpio::MM100_IGN4;
 	// cylinders 8 and 5
 	engineConfiguration->ignitionPins[7] = Gpio::MM100_IGN3;
+	engineConfiguration->invertPrimaryTriggerSignal = true;
 #endif
 
 #ifdef HW_HELLEN_SUPER_UAEFI
@@ -89,6 +95,7 @@ void setGmLs4() {
 	engineConfiguration->ignitionPins[6] = Gpio::MM100_IGN4;
 	// cylinders 8 and 5
 	engineConfiguration->ignitionPins[7] = Gpio::MM100_IGN5;
+	engineConfiguration->invertPrimaryTriggerSignal = true;
 #endif
 
 #ifdef HW_HELLEN_UAEFI
