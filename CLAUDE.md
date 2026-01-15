@@ -8,6 +8,8 @@ rusEFI is an open-source engine control unit firmware for STM32 microcontrollers
 
 ## Build Commands
 
+Default to building with 12 threads unless otherwise specified (-j12 etc).
+
 ### Building Firmware
 
 Each board+chip combination has its own compile script in `firmware/config/boards/<board>/`:
@@ -74,6 +76,16 @@ firmware/gen_enum_to_string.sh
 - **Angle-based scheduling**: Events scheduled by crank angle, not just time
 - **Configuration-driven**: Board and engine parameters externalized; firmware adapts via configuration
 - **ChibiOS RTOS**: Real-time operating system foundation
+
+#### Generated configuration layout
+
+- `firmware/rusefi_config.txt` defines the parameters stored in persistent configuration (both "configuration", ie which pins do what, and the "calibration" or "tune", like the VE table, timing, etc.)
+- That file is processed by the java tool at `java_tools/configuration_definition` to generate several outputs. It is critical that these match, so that each part of the system can communicate and agree about the in-memory config format.
+  - C/C++ headers in `firmware/generated`
+  - Along with `firmware/tunerstudio/tunerstudio.template.ini`, generates the ini file used by TunerStudio to communicate with the ECU. All tuner-adjustable parameters **MUST** appear in this file to be useful.
+- `firmware/integration/LiveData.yaml` defines objects processed by the same tool to be transmitted from the ECU about the current state of the world. For example sensors, output values, and intermediate calculations useful for logging.
+
+These are all automatically regenerated as part of running `make`, so no direct script invocation is required. Do not attempt to commit any generated files.
 
 ### Compiler Flags
 
