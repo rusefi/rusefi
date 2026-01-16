@@ -40,6 +40,7 @@ int getAdcChannelPin(adc_channel_e hwChannel);
 void portInitAdc();
 float getMcuTemperature();
 float getMcuVrefVoltage();
+float getMcuVbatVoltage();
 // Convert all slow ADC inputs.  Returns true if the conversion succeeded, false if a failure occured.
 bool readSlowAnalogInputs(adcsample_t* convertedSamples);
 #endif
