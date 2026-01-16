@@ -38,7 +38,6 @@ void applyIACposition(percent_t position) {
 		duty = 1.0f - duty;
 	}
 
-
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setEtbIdlePosition(position);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
