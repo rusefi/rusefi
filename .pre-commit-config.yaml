@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: tunerstudio-ini-validator
+        name: TunerStudio INI Validator
+        entry: python3 firmware/tunerstudio/validate_ini.py
+        language: system
+        files: firmware/tunerstudio/tunerstudio\.template\.ini$
+        pass_filenames: true

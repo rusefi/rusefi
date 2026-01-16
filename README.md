@@ -47,6 +47,12 @@ Important note - we now use submodules:
 
 `git submodule update --init`
 
+# Pre-commit hooks
+This project uses the pre-commit framework. To install it:
+
+Install pre-commit via pip: `pip install pre-commit`
+Run `pre-commit install` from the project root.
+
 # Building the Code
 
 See [gcc_version_check.c](https://github.com/rusefi/rusefi/blob/master/firmware/gcc_version_check.c) for recommended version of GCC.
