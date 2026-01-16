@@ -54,6 +54,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	int8_t internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;"deg C",1, 0, 0, 0, 0
 	int16_t autoscale internalVref;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale internalVbat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int16_t autoscale coolant;@@GAUGE_NAME_CLT@@;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
 	int16_t autoscale intake;@@GAUGE_NAME_IAT@@;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
