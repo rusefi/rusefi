@@ -17,6 +17,7 @@ import java.io.*;
 import java.util.List;
 
 import static com.rusefi.ReaderStateImpl.INCLUDE_FILE;
+import static com.rusefi.VariableRegistry.unquote;
 import static com.rusefi.util.IoUtils.CHARSET;
 
 /**
@@ -139,6 +140,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         while ((line = r.readLine()) != null) {
             if (line.startsWith(INCLUDE_FILE)) {
                 String fileName = line.substring(INCLUDE_FILE.length()).trim();
+                fileName = unquote(state.getVariableRegistry().applyVariables(fileName));
                 log.info("Including " + fileName);
                 List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
                 for (String includedLine : lines) {

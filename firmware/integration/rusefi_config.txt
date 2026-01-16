@@ -2751,4 +2751,6 @@ end_struct
 ! who needs this feature when?!
 #define ts_show_disable_etb false
 
+#define MAIN_PAGE_GAUGES_FILE "tunerstudio/main_page_gauges.ini"
+
 #define poke false
