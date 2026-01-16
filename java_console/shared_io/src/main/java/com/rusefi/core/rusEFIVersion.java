@@ -10,7 +10,7 @@ public interface rusEFIVersion {
      * *** BE CAREFUL WE HAVE SEPARATE AUTOUPDATE_VERSION also managed manually ***
      * @see com.rusefi.autoupdate.Autoupdate#AUTOUPDATE_VERSION
      */
-    int CONSOLE_VERSION = 20260101;
+    int CONSOLE_VERSION = 20260115;
     AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     static long classBuildTimeMillis() {
