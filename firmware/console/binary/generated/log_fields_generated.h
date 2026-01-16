@@ -43,6 +43,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
 	{engine->outputChannels.internalMcuTemperature, "ECU: CPU Temperature", "deg C", 0},
 	{engine->outputChannels.internalVref, "internalVref", "V", 3},
+	{engine->outputChannels.internalVbat, "internalVbat", "V", 3},
 	{engine->outputChannels.coolant, "CLT", "deg C", 1},
 	{engine->outputChannels.intake, "IAT", "deg C", 1},
 	{engine->outputChannels.auxTemp1, "auxTemp1", "deg C", 1},

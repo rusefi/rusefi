@@ -189,102 +189,101 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 1000, 1> internalVref = (int16_t)0;
 	/**
+	 * units: V
+	 * offset 14
+	 */
+	scaled_channel<int16_t, 1000, 1> internalVbat = (int16_t)0;
+	/**
 	 * @@GAUGE_NAME_CLT@@
 	 * units: deg C
-	 * offset 14
+	 * offset 16
 	 */
 	scaled_channel<int16_t, 100, 1> coolant = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_IAT@@
 	 * units: deg C
-	 * offset 16
+	 * offset 18
 	 */
 	scaled_channel<int16_t, 100, 1> intake = (int16_t)0;
 	/**
 	 * units: deg C
-	 * offset 18
+	 * offset 20
 	 */
 	scaled_channel<int16_t, 100, 1> auxTemp1 = (int16_t)0;
 	/**
 	 * units: deg C
-	 * offset 20
+	 * offset 22
 	 */
 	scaled_channel<int16_t, 100, 1> auxTemp2 = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TPS@@
 	 * units: %
-	 * offset 22
+	 * offset 24
 	 */
 	scaled_channel<int16_t, 100, 1> TPSValue = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_THROTTLE_PEDAL@@
 	 * units: %
-	 * offset 24
+	 * offset 26
 	 */
 	scaled_channel<int16_t, 100, 1> throttlePedalPosition = (int16_t)0;
 	/**
 	 * units: ADC
-	 * offset 26
+	 * offset 28
 	 */
 	uint16_t tpsADC = (uint16_t)0;
 	/**
 	 * units: V
-	 * offset 28
+	 * offset 30
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawMaf = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_MEASURED@@
 	 * units: kg/h
-	 * offset 30
+	 * offset 32
 	 */
 	scaled_channel<uint16_t, 10, 1> mafMeasured = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_MAP@@
 	 * units: kPa
-	 * offset 32
+	 * offset 34
 	 */
 	scaled_channel<uint16_t, 30, 1> MAPValue = (uint16_t)0;
 	/**
 	 * units: kPa
-	 * offset 34
+	 * offset 36
 	 */
 	scaled_channel<uint16_t, 30, 1> baroPressure = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_LAMBDA@@
-	 * offset 36
+	 * offset 38
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambdaValue = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_VBAT@@
 	 * units: V
-	 * offset 38
+	 * offset 40
 	 */
 	scaled_channel<uint16_t, 1000, 1> VBatt = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_OIL_PRESSURE@@
 	 * units: kPa
-	 * offset 40
+	 * offset 42
 	 */
 	scaled_channel<uint16_t, 30, 1> oilPressure = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_VVT_B1I@@
 	 * units: deg
-	 * offset 42
+	 * offset 44
 	 */
 	scaled_channel<int16_t, 50, 1> vvtPositionB1I = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LAST_INJECTION@@
 	 * Actual last injection time - including all compensation and injection mode
 	 * units: ms
-	 * offset 44
-	 */
-	scaled_channel<uint16_t, 300, 1> actualLastInjection = (uint16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 46
 	 */
-	uint8_t alignmentFill_at_46[2] = {};
+	scaled_channel<uint16_t, 300, 1> actualLastInjection = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LAST_INJECTION_RATIO@@
 	 * Last injection time divided to previous injection time

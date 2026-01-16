@@ -118,6 +118,9 @@ float getOutputValueByHash(const int hash) {
 // internalVref
 		case -1221814987:
 			return engine->outputChannels.internalVref;
+// internalVbat
+		case -1221832529:
+			return engine->outputChannels.internalVbat;
 // coolant
 		case -746111499:
 			return engine->outputChannels.coolant;
