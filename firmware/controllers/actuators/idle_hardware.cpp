@@ -34,6 +34,11 @@ void applyIACposition(percent_t position) {
 	 */
 	float duty = PERCENT_TO_DUTY(position);
 
+	if (engineConfiguration->idleSolenoidInvertPwm) {
+		duty = 1.0f - duty;
+	}
+
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setEtbIdlePosition(position);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
