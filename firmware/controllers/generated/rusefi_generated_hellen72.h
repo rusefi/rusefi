@@ -1395,6 +1395,7 @@
 #define LUA_SCRIPT_SIZE 8000
 #define MAF_DECODING_COUNT 32
 #define MAIN_HELP_URL "https://rusefi.com/s/hellen72"
+#define MAIN_PAGE_GAUGES_FILE "tunerstudio/main_page_gauges.ini"
 #define MAP_ANGLE_SIZE 8
 #define MAP_EST_LOAD_COUNT 16
 #define MAP_EST_RPM_COUNT 16
@@ -1548,7 +1549,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2637401699
+#define SIGNATURE_HASH 695842292
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2139,7 +2140,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2026.01.16.hellen72.2637401699"
+#define TS_SIGNATURE "rusEFI master.2026.01.16.hellen72.695842292"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
