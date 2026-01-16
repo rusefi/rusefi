@@ -135,11 +135,16 @@ float getMcuVbatVoltage() {
 		sum += aux2SensorSamples[0 + adcAux2ChannelCount * i];
 	}
 
+#if defined(STM32F4XX)
 	// VBAT/2 on STM32F40xx and STM32F41xx devices, VBAT/4 on STM32F42xx and STM32F43xx devices
 	int mult = 2;
 	if (isStm32F42x()) {
 		mult = 4;
 	}
+#endif
+#if defined(STM32F7XX)
+	int mult = 4;
+#endif
 
 	float Vbat = (float)sum * mult / (ADC_MAX_VALUE * auxSensorOversample);
 	Vbat *= engineConfiguration->adcVcc;
