@@ -567,6 +567,7 @@ bit enableFan2WithAc,"yes","no";Turn on this fan when AC is on.
 bit enableTrailingSparks,"yes","no";Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 bit etb_use_two_wires,"yes","no";TLE7209 and L6205 use two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle,"yes","no";Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
+bit idleSolenoidInvertPwm,"inverted","normal";Invert PWM logic for valves that are normally open.
 bit useEeprom,"yes","no"
 bit useCicPidForIdle,"Cic","Industrial";Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack,"yes","no"
