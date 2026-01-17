@@ -662,8 +662,13 @@ static int sdTriggerLogger();
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
-static int sdLogger(FIL *fd)
-{
+static bool sdLoggedSuppressed = false;
+
+// actually write logs on SD card
+static int sdLogger(FIL *fd) {
+  if (sdLoggedSuppressed) {
+    return 0;
+  }
 	int ret = 0;
 
 	if (!sdLoggerInitDone) {
@@ -1030,6 +1035,10 @@ void initEarlyMmcCard() {
 	logName[0] = 0;
 
 	addConsoleAction("sdinfo", sdStatistics);
+	addConsoleAction("sdsuppresslogging",  [](){
+	  sdLoggedSuppressed = true;
+    efiPrintf("Suppressed!");
+  });
 	addConsoleActionS("del", removeFile);
 	// sdmode pc
 	// sdmode ecu
