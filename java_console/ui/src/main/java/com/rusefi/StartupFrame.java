@@ -136,6 +136,8 @@ public class StartupFrame {
         connectPanel.add(connectButton);
         connectPanel.setVisible(false);
 
+        portsComboBox.getComboPorts().addActionListener(e -> updateConnectButtonState());
+
         frame.getRootPane().setDefaultButton(connectButton);
         connectButton.addKeyListener(new KeyAdapter() {
             @Override
@@ -324,8 +326,9 @@ public class StartupFrame {
         return jLabel;
     }
 
-    private boolean hasOnlyBltConnected(List<PortResult> ports){
-        return ports.stream().allMatch(portResult -> portResult.type == OpenBlt);
+    private void updateConnectButtonState() {
+        PortResult selectedItem = (PortResult) portsComboBox.getComboPorts().getSelectedItem();
+        connectButton.setEnabled(selectedItem != null && selectedItem.type != OpenBlt);
     }
 
     private void applyKnownPorts(AvailableHardware currentHardware) {
@@ -341,7 +344,7 @@ public class StartupFrame {
             noPortsMessage.setText("Make sure you are disconnected from TunerStudio");
         }
 
-        connectButton.setEnabled(!hasOnlyBltConnected(ports));
+        updateConnectButtonState();
 
         noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
 
