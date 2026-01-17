@@ -378,7 +378,7 @@ runs:
       shell: bash
       run: |
         : Add Config to Commit
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
         : # TODO handle extra headers but only if those exist
         : #if [ -d firmware ]; then
         : #  git add firmware/extra*
