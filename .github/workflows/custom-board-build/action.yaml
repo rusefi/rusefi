@@ -273,6 +273,9 @@ runs:
       run: |
         : Add Config to Commit Regardless of firmware build status
         git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*h
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
         OUT=$(git commit -m "Quick Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Configs: looks like nothing to commit"
@@ -379,6 +382,9 @@ runs:
       run: |
         : Add Config to Commit
         git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*h
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
         : # TODO handle extra headers but only if those exist
         : #if [ -d firmware ]; then
         : #  git add firmware/extra*
