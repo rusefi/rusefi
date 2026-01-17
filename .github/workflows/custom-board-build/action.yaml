@@ -272,7 +272,7 @@ runs:
       shell: bash
       run: |
         : Add Config to Commit Regardless of firmware build status
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
         OUT=$(git commit -m "Quick Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Configs: looks like nothing to commit"
