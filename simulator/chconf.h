@@ -548,8 +548,15 @@
  *
  * @note    The default is @p FALSE.
  */
+
+// as 2026, the simulator is broken if we are on Windows and we have this check enable (triggers SV#6), for now is only disabled for windows
+// see #8247
 #if !defined(CH_DBG_SYSTEM_STATE_CHECK)
+#if EFI_SIM_IS_WINDOWS
+#define CH_DBG_SYSTEM_STATE_CHECK           FALSE
+#else
 #define CH_DBG_SYSTEM_STATE_CHECK           TRUE
+#endif
 #endif
 
   #define ON_LOCK_HOOK
