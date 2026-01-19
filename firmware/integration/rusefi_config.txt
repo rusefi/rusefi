@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260102
+#define FLASH_DATA_VERSION 260119
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -1906,6 +1906,12 @@ struct vvl_s
 end_struct
 
     vvl_s vvlController;
+
+struct rotational_idle_s
+include_file controllers/engine_cycle/rotational_idle.txt
+end_struct
+
+    rotational_idle_s rotationalIdleController;
 
 ! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
 
