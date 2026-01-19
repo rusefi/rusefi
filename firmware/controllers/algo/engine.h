@@ -62,6 +62,10 @@
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
 
+#if ROTATIONAL_IDLE_CONTROLLER
+#include "rotational_idle.h"
+#endif
+
 #include <functional>
 
 #ifndef EFI_BOOTLOADER
@@ -235,6 +239,10 @@ public:
 #if EFI_SHAFT_POSITION_INPUT
     LambdaMonitor lambdaMonitor{};
 #endif // EFI_ENGINE_CONTROL
+
+#if ROTATIONAL_IDLE_CONTROLLER
+    RotationalIdle rotationalIdleController{};
+#endif // ROTATIONAL_IDLE_CONTROLLER
 
     IgnitionState ignitionState{};
     void resetLua();
