@@ -1,0 +1,27 @@
+name: Validate TunerStudio INI
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'firmware/tunerstudio/**'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'firmware/tunerstudio/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run INI Validation
+        run: |
+          python firmware/tunerstudio/validate_ini.py firmware/tunerstudio/tunerstudio.template.ini
