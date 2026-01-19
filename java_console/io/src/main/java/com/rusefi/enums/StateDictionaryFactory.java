@@ -1,5 +1,5 @@
 package com.rusefi.enums;
-//was generated automatically by rusEFI tool config_definition_base-all.jar based on StateDictionaryGenerator integration/LiveData.yaml on Mon Jan 19 04:32:29 UTC 2026n
+//was generated automatically by rusEFI tool config_definition_base-all.jar based on StateDictionaryGenerator integration/LiveData.yaml on Mon Jan 19 06:17:53 UTC 2026n
 import com.rusefi.config.generated.*;
 import com.rusefi.ldmp.StateDictionary;
 
@@ -49,5 +49,6 @@ public class StateDictionaryFactory {
         stateDictionary.register(live_data_e.LDS_long_term_fuel_trim_state, "long_term_fuel_trim");
         stateDictionary.register(live_data_e.LDS_short_term_fuel_trim_state, "short_term_fuel_trim");
         stateDictionary.register(live_data_e.LDS_vvl_controller_state, "vvl_controller_state");
+        stateDictionary.register(live_data_e.LDS_live_data_rotational_idle, "live_data_rotational_idle");
     }
 }

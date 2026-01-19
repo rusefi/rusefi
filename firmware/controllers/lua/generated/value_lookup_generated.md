@@ -1972,6 +1972,21 @@ Retard timing to remove from actual final timing (after all corrections) due to 
 ### vvlController.deactivationRpmWindow
 
 
+### rotationalIdleController.enabled
+rotational idle enable feature
+
+### rotationalIdleController.auto_engage
+Automatic engagement of rotational idle
+
+### rotationalIdleController.max_tps
+Engage rotational idle under this Driver Intent.
+
+### rotationalIdleController.auto_engage_clt_enable
+Rotational Idle Auto engage CLT
+
+### rotationalIdleController.auto_engage_clt
+Rotational Idle Auto engage CLT.
+
 ### tcu_shiftTime
 
 

@@ -1978,6 +1978,21 @@ float getConfigValueByHash(const int hash) {
 // vvlController.deactivationRpmWindow
 		case 1849727793:
 			return engineConfiguration->vvlController.deactivationRpmWindow;
+// rotationalIdleController.enabled
+		case -1765427939:
+			return engineConfiguration->rotationalIdleController.enabled;
+// rotationalIdleController.auto_engage
+		case 38426001:
+			return engineConfiguration->rotationalIdleController.auto_engage;
+// rotationalIdleController.max_tps
+		case -505201426:
+			return engineConfiguration->rotationalIdleController.max_tps;
+// rotationalIdleController.auto_engage_clt_enable
+		case 203921593:
+			return engineConfiguration->rotationalIdleController.auto_engage_clt_enable;
+// rotationalIdleController.auto_engage_clt
+		case 602046867:
+			return engineConfiguration->rotationalIdleController.auto_engage_clt;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5321,6 +5336,31 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1849727793:
 	{
 		engineConfiguration->vvlController.deactivationRpmWindow = (int)value;
+		return 1;
+	}
+		case -1765427939:
+	{
+		engineConfiguration->rotationalIdleController.enabled = (int)value;
+		return 1;
+	}
+		case 38426001:
+	{
+		engineConfiguration->rotationalIdleController.auto_engage = (int)value;
+		return 1;
+	}
+		case -505201426:
+	{
+		engineConfiguration->rotationalIdleController.max_tps = (int)value;
+		return 1;
+	}
+		case 203921593:
+	{
+		engineConfiguration->rotationalIdleController.auto_engage_clt_enable = (int)value;
+		return 1;
+	}
+		case 602046867:
+	{
+		engineConfiguration->rotationalIdleController.auto_engage_clt = (int)value;
 		return 1;
 	}
 		case -1658957891:
