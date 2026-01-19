@@ -165,6 +165,9 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
+// use this array for any disabled pages on TS
+uint8_t ts_blank_page_placeholder[256];
+
 static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t offset) {
 	// TODO: validate offset?
 	switch (page) {
@@ -175,13 +178,15 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
 		return (uint8_t *)tsChannel->page1.highSpeedOffsets + offset;
+#else
+	case TS_PAGE_SCATTER_OFFSETS:
+		return (uint8_t *)&ts_blank_page_placeholder;
 #endif
 #if EFI_LTFT_CONTROL
 	case TS_PAGE_LTFT_TRIMS:
 		return (uint8_t *)ltftGetTsPage() + offset;
 #endif
 	default:
-// technical dept: TS seems to try to read the 3 pages sequentially, does not look like we properly handle 'EFI_TS_SCATTER=FALSE'
 		tunerStudioError(tsChannel, "ERROR: page address out of range");
 		return nullptr;
 	}
@@ -194,6 +199,10 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
 		return PAGE_SIZE_1;
+#else
+	case TS_PAGE_SCATTER_OFFSETS:
+		// min read from TS seems to be 256b?
+		return 256;
 #endif
 #if EFI_LTFT_CONTROL
 	case TS_PAGE_LTFT_TRIMS:
@@ -481,10 +490,8 @@ static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 			requestBurn();
 		}
 		efiPrintf("Burned in %.1fms", t.getElapsedSeconds() * 1e3);
-#if EFI_TS_SCATTER
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		/* do nothing */
-#endif
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: Burn invalid page");
 		return;
