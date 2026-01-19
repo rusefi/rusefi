@@ -189,3 +189,5 @@
 #ifndef TRUE
  fail("Truth not found");
 #endif
+
+#define ROTATIONAL_IDLE_CONTROLLER TRUE

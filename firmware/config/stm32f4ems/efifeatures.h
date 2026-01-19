@@ -197,6 +197,10 @@
 
 #define TRIGGER_EXTREME_LOGGING FALSE
 
+#ifndef ROTATIONAL_IDLE_CONTROLLER
+#define ROTATIONAL_IDLE_CONTROLLER TRUE
+#endif
+
 /**
  * Store configuration as raw binary to internal flash (two copies if there is enough flash)
  * No wear leveling, one copy occupie whole sector erased on each update
