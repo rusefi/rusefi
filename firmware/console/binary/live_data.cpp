@@ -319,3 +319,12 @@ const vvl_controller_state_s* getLiveData(size_t) {
 	return nullptr;
 #endif
 }
+
+template<>
+const live_data_rotational_idle_s* getLiveData(size_t) {
+#if ROTATIONAL_IDLE_CONTROLLER
+	return &engine->rotationalIdleController;
+#else
+	return nullptr;
+#endif
+}

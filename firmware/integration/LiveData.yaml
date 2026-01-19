@@ -274,3 +274,10 @@ Usages:
     output_name: vvl
     engineModule: VvlController
     conditional_compilation: "MODULE_VVL_CONTROLLER"
+
+  - name: live_data_rotational_idle
+    java: RotationalIdle.java
+    folder: controllers/engine_cycle
+    prepend: integration/rusefi_config_shared.txt
+    output_name: live_data_rotational_idle
+    conditional_compilation: "ROTATIONAL_IDLE_CONTROLLER"
