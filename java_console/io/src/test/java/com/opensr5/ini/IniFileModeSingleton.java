@@ -5,7 +5,7 @@ public class IniFileModeSingleton {
 
     public static synchronized IniFileModelImpl getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = IniFileModelImpl.findAndReadIniFile(IniFileModelImpl.INI_FILE_PATH);
+            INSTANCE = IniFileModelTestHelper.findAndReadIniFile(IniFileModelImpl.INI_FILE_PATH);
         }
         return INSTANCE;
     }

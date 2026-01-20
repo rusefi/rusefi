@@ -30,6 +30,7 @@ dependencies {
     api ts_plugin_libs.httpcore
 
     testFixturesApi global_libs.mockito
+    testFixturesApi testFixtures(project(':inifile'))
     testFixturesApi global_libs.annotations
     testFixturesApi global_libs.junit5api
 }

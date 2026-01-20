@@ -64,15 +64,6 @@ public class IniFileModelImpl implements IniFileModel {
 
     private int currentPageIndex;
 
-    public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
-        final String fileName = findMetaInfoFile(iniFilePath);
-        try {
-            return IniFileModelImpl.readIniFile(fileName);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo, final String iniFilePath) {
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
@@ -187,13 +178,6 @@ public class IniFileModelImpl implements IniFileModel {
         }
         result.finishDialog();
         return result;
-    }
-
-    private static String findMetaInfoFile(String iniFilePath) {
-        String iniFileName = findIniFile(iniFilePath);
-        if (iniFileName == null)
-            throw new IllegalStateException("Not found " + RUSEFI_INI_PREFIX + "*" + RUSEFI_INI_SUFFIX + " in " + iniFilePath);
-        return iniFileName;
     }
 
     public static @Nullable String findIniFile(String iniFilePath) {
