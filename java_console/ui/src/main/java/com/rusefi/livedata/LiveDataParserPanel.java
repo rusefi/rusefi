@@ -26,6 +26,8 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -64,7 +66,7 @@ public class LiveDataParserPanel {
 
             for (Token setting : parseResult.getConfigTokens()) {
                 // todo: something like binaryProtocol.getIniFile().getFieldsInUiOrder().values()?
-                Field field = Field.findFieldOrNull(null, "", setting.getText());
+                Field field = findFieldOrNull(null, "", setting.getText());
                 if (field == null)
                     continue;
                 if (field.getType().isString())
@@ -104,6 +106,26 @@ public class LiveDataParserPanel {
         } catch (IOException | URISyntaxException e) {
             log.warn("Error reading: " + e);
         }
+    }
+
+    /**
+     * Finds field by name, ignoring case
+     */
+    public static Field findFieldOrNull(Collection<Field> values, String instancePrefix, String fieldName) {
+        Objects.requireNonNull(fieldName);
+        for (Field f : values) {
+            if (fieldName.equalsIgnoreCase(f.getName()))
+                return f;
+        }
+        // 2nd pass - let's try to find field with prefix if it was not found without prefix
+        if (!instancePrefix.isEmpty()) {
+            fieldName = instancePrefix + "_" + fieldName;
+            for (Field f : values) {
+                if (fieldName.equalsIgnoreCase(f.getName()))
+                    return f;
+            }
+        }
+        return null;
     }
 
     public ParseResult getParseResult() {
@@ -201,7 +223,7 @@ public class LiveDataParserPanel {
             byte[] bytes = reference.get();
             if (bytes == null)
                 return null;
-            Field f = Field.findFieldOrNull(null, "", name);
+            Field f = findFieldOrNull(null, "", name);
             if (f == null) {
                 //log.error("BAD condition, should be variable: " + name);
                 return null;

@@ -1,14 +1,9 @@
 package com.rusefi.config;
 
-import com.macfaq.io.LittleEndianOutputStream;
 import com.opensr5.ConfigurationImage;
-import com.rusefi.core.ByteBufferUtil;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Collection;
 import java.util.Objects;
 
 import static com.rusefi.config.FieldType.*;
@@ -38,7 +33,7 @@ public class Field {
     }
      */
 
-    public Field(String name, int offset, FieldType type, int bitOffset) {
+    private Field(String name, int offset, FieldType type, int bitOffset) {
         this(name, offset, type, bitOffset, null);
     }
 
@@ -50,26 +45,6 @@ public class Field {
         this.type = type;
         this.bitOffset = bitOffset;
         this.options = options;
-    }
-
-    /**
-     * Finds field by name, ignoring case
-     */
-    public static Field findFieldOrNull(Collection<Field> values, String instancePrefix, String fieldName) {
-        Objects.requireNonNull(fieldName);
-        for (Field f : values) {
-            if (fieldName.equalsIgnoreCase(f.getName()))
-                return f;
-        }
-        // 2nd pass - let's try to find field with prefix if it was not found without prefix
-        if (!instancePrefix.isEmpty()) {
-            fieldName = instancePrefix + "_" + fieldName;
-            for (Field f : values) {
-                if (fieldName.equalsIgnoreCase(f.getName()))
-                    return f;
-            }
-        }
-        return null;
     }
 
     public String getName() {
@@ -118,7 +93,7 @@ public class Field {
         int ordinal = ci.getByteBuffer(offset, type.getStorageSize()).get();
         return options[ordinal];
     }
-
+/*
     public void setValue(byte[] content, boolean value) {
         ByteBuffer wrapped = ByteBufferUtil.littleEndianWrap(content, 0, content.length);
         if (bitOffset != NO_BIT_OFFSET) {
@@ -140,7 +115,7 @@ public class Field {
             }
         }
     }
-
+*/
     /**
      * each usage is a potential bug?! we are supposed to have explicit multiplier for each field
      */
