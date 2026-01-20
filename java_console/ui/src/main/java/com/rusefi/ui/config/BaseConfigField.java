@@ -3,6 +3,7 @@ package com.rusefi.ui.config;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.BitHelper;
 import com.rusefi.config.Field;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.UIContext;
@@ -50,7 +51,7 @@ public abstract class BaseConfigField {
     }
 
     protected void sendValue(Field field, String newValue) {
-        String msg = field.setCommand() + " " + newValue;
+        String msg = BitHelper.setCommand(field) + " " + newValue;
         log.info("Sending " + msg);
         uiContext.getCommandQueue().write(msg);
         status.setText("S");

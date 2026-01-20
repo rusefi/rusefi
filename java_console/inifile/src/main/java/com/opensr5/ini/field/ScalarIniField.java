@@ -3,6 +3,7 @@ package com.opensr5.ini.field;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
+import com.rusefi.config.StringFormatter;
 import com.rusefi.tune.xml.Constant;
 
 import java.nio.ByteBuffer;
@@ -54,7 +55,7 @@ public class ScalarIniField extends IniField {
         Field f = new Field(getName(), getOffset(), getType());
         try {
             Double value = f.getValue(image, multiplier) + serializationOffset;
-            return Field.niceToString(value, Field.FIELD_PRECISION);
+            return StringFormatter.niceToString(value, StringFormatter.FIELD_PRECISION);
         } catch (Throwable e) {
             throw new IllegalStateException("While getting " + getName(), e);
         }

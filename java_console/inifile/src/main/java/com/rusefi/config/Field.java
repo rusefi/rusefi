@@ -13,13 +13,8 @@ import java.util.Objects;
 
 import static com.rusefi.config.FieldType.*;
 
-/**
- * See Fields
- */
-
 public class Field {
     public static final int NO_BIT_OFFSET = -1;
-    public static final int FIELD_PRECISION = 5;
 
     private final String name;
     // offset within binary page
@@ -77,40 +72,8 @@ public class Field {
         return null;
     }
 
-    public static String niceToString(Number value) {
-        return niceToString(value, FIELD_PRECISION);
-    }
-
-    public static String niceToString(Number value, int precision) {
-        // not enum field
-        if (value instanceof Float)
-            return niceToString(value.floatValue(), precision);
-        if (value instanceof Double)
-            return niceToString(value.doubleValue(), precision);
-        return value.toString();
-    }
-
-    public static String niceToString(double value, int precision) {
-        int scale = (int) Math.log10(value);
-        int places = 1 + Math.max(0, precision - scale);
-        double toScale = Math.pow(10, places);
-        return Double.toString(Math.round(value * toScale) / toScale);
-    }
-
     public String getName() {
         return name;
-    }
-
-    public String setCommand() {
-        if (type == FieldType.BIT)
-            return "set_bit " + getOffset() + " " + bitOffset;
-        return getType().getStoreCommand() + " " + getOffset();
-    }
-
-    public String getCommand() {
-        if (type == FieldType.BIT)
-            return "get_bit " + getOffset() + " " + bitOffset;
-        return type.getLoadCommand() + " " + getOffset();
     }
 
     /**
@@ -148,7 +111,7 @@ public class Field {
     public String getAnyValue(ConfigurationImage ci, double multiplier) {
         if (options == null) {
             // we are here for non-enum types
-            return niceToString(getValue(ci, multiplier));
+            return StringFormatter.niceToString(getValue(ci, multiplier));
         }
         if (type != INT8)
             throw new IllegalStateException("Unsupported enum " + type);

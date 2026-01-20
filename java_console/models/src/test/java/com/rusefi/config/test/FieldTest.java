@@ -1,7 +1,7 @@
 package com.rusefi.config.test;
 
-import com.rusefi.config.Field;
 import com.rusefi.config.FieldCommandResponse;
+import com.rusefi.config.StringFormatter;
 import com.rusefi.core.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -29,16 +29,16 @@ public class FieldTest {
 
     @Test
     public void testPrecisionDependingOnScale() {
-        assertEquals("0.12302", Field.niceToString(0.12302, 4));
-        assertEquals("0.1232", Field.niceToString(0.12317, 3));
+        assertEquals("0.12302", StringFormatter.niceToString(0.12302, 4));
+        assertEquals("0.1232", StringFormatter.niceToString(0.12317, 3));
 
-        assertEquals("1234567.1", Field.niceToString(1234567.123, 4));
-        assertEquals("10000.0", Field.niceToString(10000.00002, 4));
-        assertEquals("0.002", Field.niceToString(0.002, 4));
-        assertEquals("12.302", Field.niceToString(12.302, 4));
-        assertEquals("12.302", Field.niceToString(12.302, 3));
-        assertEquals("12.31", Field.niceToString(12.312, 2));
-        assertEquals("123.02", Field.niceToString(123.02, 4));
+        assertEquals("1234567.1", StringFormatter.niceToString(1234567.123, 4));
+        assertEquals("10000.0", StringFormatter.niceToString(10000.00002, 4));
+        assertEquals("0.002", StringFormatter.niceToString(0.002, 4));
+        assertEquals("12.302", StringFormatter.niceToString(12.302, 4));
+        assertEquals("12.302", StringFormatter.niceToString(12.302, 3));
+        assertEquals("12.31", StringFormatter.niceToString(12.312, 2));
+        assertEquals("123.02", StringFormatter.niceToString(123.02, 4));
     }
 
 }
