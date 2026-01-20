@@ -1,6 +1,5 @@
 package com.rusefi.tune;
 
-import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.IniMemberNotFound;
@@ -17,12 +16,10 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import static com.devexperts.logging.Logging.getLogging;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoadOlderTuneTest {
-    private static final Logging log = getLogging(LoadOlderTuneTest.class);
 
     @Test
     public void loadOlderTuneAgainstCurrentIni() throws Exception {
