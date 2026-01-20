@@ -6,9 +6,9 @@ import java.nio.ByteBuffer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FileUtilTest {
+public class ByteBufferUtilTest {
 
-    static void setShortValue(byte[] data8, int value, int offset) {
+    private static void setShortValue(byte[] data8, int value, int offset) {
         data8[offset] = (byte) (value & 0xFF);
         data8[offset + 1] = (byte) (value >> 8);
     }
@@ -17,7 +17,7 @@ public class FileUtilTest {
     public void damnItWhichOneIsLittleEndian() {
         byte[] testArrayForLittleEndianByteBuffer = new byte[2];
         // LSB Little-endian System, "Intel"
-        ByteBuffer littleEndianBuffer = FileUtil.littleEndianWrap(testArrayForLittleEndianByteBuffer, 0, 2);
+        ByteBuffer littleEndianBuffer = ByteBufferUtil.littleEndianWrap(testArrayForLittleEndianByteBuffer, 0, 2);
         short testValue = 0x1122;
         littleEndianBuffer.putShort(testValue);
         assertEquals(testArrayForLittleEndianByteBuffer[0], 0x22);

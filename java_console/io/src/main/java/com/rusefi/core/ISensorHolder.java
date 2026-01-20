@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
-import static com.rusefi.core.FileUtil.littleEndianWrap;
+import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
 
 public interface ISensorHolder {
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini) {

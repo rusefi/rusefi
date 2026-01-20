@@ -1,6 +1,6 @@
 package com.opensr5;
 
-import com.rusefi.core.FileUtil;
+import com.rusefi.core.ByteBufferUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
@@ -26,7 +26,7 @@ public class ConfigurationImage {
 
     @NotNull
     public ByteBuffer getByteBuffer(int offset, int size) {
-        return FileUtil.littleEndianWrap(content, offset, size);
+        return ByteBufferUtil.littleEndianWrap(content, offset, size);
     }
 
     public boolean isEmpty() {

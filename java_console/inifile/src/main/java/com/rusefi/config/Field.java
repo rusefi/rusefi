@@ -2,7 +2,7 @@ package com.rusefi.config;
 
 import com.macfaq.io.LittleEndianOutputStream;
 import com.opensr5.ConfigurationImage;
-import com.rusefi.core.FileUtil;
+import com.rusefi.core.ByteBufferUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
@@ -182,7 +182,7 @@ public class Field {
     }
 
     public void setValue(byte[] content, boolean value) {
-        ByteBuffer wrapped = FileUtil.littleEndianWrap(content, 0, content.length);
+        ByteBuffer wrapped = ByteBufferUtil.littleEndianWrap(content, 0, content.length);
         if (bitOffset != NO_BIT_OFFSET) {
             int packed = wrapped.getInt();
             int thisBit = (value ? 1 : 0) << bitOffset;
