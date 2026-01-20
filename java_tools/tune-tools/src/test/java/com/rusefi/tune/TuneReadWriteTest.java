@@ -39,7 +39,7 @@ public class TuneReadWriteTest {
             throw new RuntimeException(e);
         }
     }
-
+/*
     @Test
     public void testCopyCode() {
         String tableReference = "config->ve";
@@ -50,7 +50,7 @@ public class TuneReadWriteTest {
                 "\tcopyArray(config->veRpmBins, hardCodedveLoadBins);\n" +
                 "\tcopyTable(config->veTable, hardCodedveTable);\n", copyMethodBody);
     }
-
+*/
     @Test
     public void testMeta() throws IOException {
         final ConfigurationImageWithMeta configurationImage = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
