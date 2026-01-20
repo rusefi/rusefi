@@ -16,7 +16,7 @@ public class PrimeTunerStudioCache {
 
     private static final Logging log = Logging.getLogging(PrimeTunerStudioCache.class);
 
-    public static void prime(IniFileModelImpl iniFileModel, String localIniFile) {
+    public static void prime(IniFileModel iniFileModel, String localIniFile) {
         if (new File(ECU_DEF_FOLDER).isDirectory()) {
             log.info("Trying to prime " + ECU_DEF_FOLDER);
         } else {
@@ -48,7 +48,7 @@ public class PrimeTunerStudioCache {
                 return;
             }
         }
-        IniFileModelImpl iniFileModel;
+        IniFileModel iniFileModel;
         try {
             iniFileModel = IniFileReader.readIniFile(localIniFile);
         } catch (FileNotFoundException e) {

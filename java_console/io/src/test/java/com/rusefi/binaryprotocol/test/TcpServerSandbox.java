@@ -1,28 +1,6 @@
 package com.rusefi.binaryprotocol.test;
 
-import com.macfaq.io.LittleEndianOutputStream;
 import com.opensr5.ini.IniFileModeSingleton;
-import com.rusefi.CompatibleFunction;
-import com.rusefi.Listener;
-import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.config.generated.Integration;
-import com.rusefi.config.generated.VariableRegistryValues;
-import com.rusefi.io.IoStream;
-import com.rusefi.io.commands.ByteRange;
-import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.io.commands.WriteChunkCommand;
-import com.rusefi.io.tcp.BinaryProtocolServer;
-import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.ui.StatusConsumer;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-
-import static com.rusefi.config.generated.VariableRegistryValues.TS_PROTOCOL;
-import static com.rusefi.io.tcp.BinaryProtocolServer.TS_OK;
-import static com.rusefi.io.tcp.BinaryProtocolServer.getOutputCommandResponse;
 
 /**
  * Fully self-contained fake TCP-IP 'ECU' side of TS protocol
