@@ -10,8 +10,6 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Objects;
 
-import static com.rusefi.config.FieldType.*;
-
 public class ScalarIniField extends IniField {
     private final String unit;
     private final FieldType type;
@@ -66,24 +64,7 @@ public class ScalarIniField extends IniField {
         Objects.requireNonNull(image, "image for setter");
         Field f = new Field(getName(), getOffset(), getType());
         ByteBuffer wrapped = image.getByteBuffer(getOffset(), type.getStorageSize());
-        setValue(wrapped, type, constant.getValue(), f.getBitOffset(), multiplier, serializationOffset);
-    }
-
-    public static void setValue(ByteBuffer wrapped, FieldType type, String value, int bitOffset, double multiplier, double serializationOffset) {
-        double v = (Double.parseDouble(value) - serializationOffset)/ multiplier;
-        if (bitOffset != Field.NO_BIT_OFFSET) {
-            throw new UnsupportedOperationException("For " + value);
-//            int packed = wrapped.getInt();
-//            value = (packed >> bitOffset) & 1;
-        } else if (type == INT8 || type == UINT8) {
-            wrapped.put((byte) Math.round(v));
-        } else if (type == INT) {
-            wrapped.putInt((int) Math.round(v));
-        } else if (type == INT16 || type == UINT16) {
-            wrapped.putShort((short) Math.round(v));
-        } else {
-            wrapped.putFloat((float) v);
-        }
+        ConfigurationImage.setScalarValue(wrapped, type, constant.getValue(), f.getBitOffset(), multiplier, serializationOffset);
     }
 
     @Override

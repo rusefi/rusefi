@@ -38,9 +38,16 @@ public class EnumIniReaderHelper {
 
     @NotNull
     public static String getEnumValuesSection(String rawText) {
-        int interestingIndex = EnumIniField.ordinalIndexOf(rawText, ",", 4);
+        int interestingIndex = ordinalIndexOf(rawText, ",", 4);
         // yes that could have been done with a regex as well
         return rawText.substring(interestingIndex + /*skipping comma*/1).trim();
+    }
+
+    private static int ordinalIndexOf(String str, String substr, int n) {
+        int pos = str.indexOf(substr);
+        while (--n > 0 && pos != -1)
+            pos = str.indexOf(substr, pos + 1);
+        return pos;
     }
 
     public static class ParseBitRange {

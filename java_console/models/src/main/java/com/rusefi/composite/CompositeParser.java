@@ -1,7 +1,7 @@
 package com.rusefi.composite;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ConfigurationImage;
 import com.rusefi.config.generated.Integration;
 
 import java.nio.ByteBuffer;
@@ -30,12 +30,12 @@ public class CompositeParser {
             byte flags = byteBuffer.get(ptr + 4);
 //            log.debug(timestamp + " " + flags);
 
-            boolean primaryTrigger = EnumIniField.getBit(flags, 0);
-            boolean secondaryTrigger = EnumIniField.getBit(flags, 1);
-            boolean trg = EnumIniField.getBit(flags, 2);
-            boolean sync = EnumIniField.getBit(flags, 3);
-            boolean coil = EnumIniField.getBit(flags, 4);
-            boolean injector  = EnumIniField.getBit(flags, 5);
+            boolean primaryTrigger = ConfigurationImage.getBit(flags, 0);
+            boolean secondaryTrigger = ConfigurationImage.getBit(flags, 1);
+            boolean trg = ConfigurationImage.getBit(flags, 2);
+            boolean sync = ConfigurationImage.getBit(flags, 3);
+            boolean coil = ConfigurationImage.getBit(flags, 4);
+            boolean injector  = ConfigurationImage.getBit(flags, 5);
 
             ptr += Integration.COMPOSITE_PACKET_SIZE;
 

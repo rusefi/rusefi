@@ -141,7 +141,7 @@ public class ArrayIniField extends IniField {
             final String[] row = values[rowIndex];
             for (int colIndex = 0; colIndex < row.length; colIndex++) {
                 ByteBuffer wrapped = image.getByteBuffer(getOffset(rowIndex, colIndex), type.getStorageSize());
-                ScalarIniField.setValue(
+                ConfigurationImage.setScalarValue(
                     wrapped,
                     type,
                     values[rowIndex][colIndex],

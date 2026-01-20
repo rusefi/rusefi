@@ -1,5 +1,6 @@
 package com.opensr5.ini.test;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.*;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
@@ -292,15 +293,15 @@ public class IniFileReaderTest {
 
     @Test
     public void testBitLogic() {
-        assertEquals(4, EnumIniField.getBitRange(4, 0, 8));
-        assertEquals(4, EnumIniField.getBitRange(4, 0, 3));
-        assertEquals(0, EnumIniField.getBitRange(4, 0, 2));
-        assertEquals(3, EnumIniField.getBitRange(7, 0, 2));
+        assertEquals(4, ConfigurationImage.getBitRange(4, 0, 8));
+        assertEquals(4, ConfigurationImage.getBitRange(4, 0, 3));
+        assertEquals(0, ConfigurationImage.getBitRange(4, 0, 2));
+        assertEquals(3, ConfigurationImage.getBitRange(7, 0, 2));
 
-        assertEquals(true, EnumIniField.getBit(0xff, 0));
+        assertEquals(true, ConfigurationImage.getBit(0xff, 0));
 
-        assertEquals(true, EnumIniField.getBit(0xf0, 4));
-        assertEquals(2, EnumIniField.getBitRange(0xf0, 3, 2));
+        assertEquals(true, ConfigurationImage.getBit(0xf0, 4));
+        assertEquals(2, ConfigurationImage.getBitRange(0xf0, 3, 2));
     }
 
     @Test

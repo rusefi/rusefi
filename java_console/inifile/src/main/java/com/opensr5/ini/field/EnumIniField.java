@@ -5,10 +5,8 @@ import com.rusefi.ini.reader.EnumIniReaderHelper;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
-import org.jetbrains.annotations.NotNull;
 
 import javax.management.ObjectName;
-import java.nio.ByteBuffer;
 import java.util.*;
 
 public class EnumIniField extends IniField {
@@ -49,20 +47,12 @@ public class EnumIniField extends IniField {
 
     @Override
     public String getValue(ConfigurationImage image) {
-        int ordinal = getByteBuffer(image).getInt();
-        ordinal = getBitRange(ordinal, bitPosition, bitSize0 + 1);
+        int ordinal = image.getByteBuffer(this).getInt();
+        ordinal = ConfigurationImage.getBitRange(ordinal, bitPosition, bitSize0 + 1);
 
         if (ordinal >= enums.size())
             throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + getName() + " while " + enums.size() + " " + type);
         return "\"" + enums.get(ordinal) + "\"";
-    }
-
-    @NotNull
-    private ByteBuffer getByteBuffer(ConfigurationImage image) {
-        Objects.requireNonNull(image, "image enum getter");
-        if (image.getSize() < getOffset() + 4)
-            throw new IllegalArgumentException("OutOfBounds while " + getName() + " " + getOffset());
-        return image.getByteBuffer(getOffset(), 4);
     }
 
     public static boolean isQuoted(String q) {
@@ -76,9 +66,7 @@ public class EnumIniField extends IniField {
         int ordinal = enums.indexOf(v);
         if (ordinal == -1)
             throw new IllegalArgumentException(constant.getName() + ": Enum name not found " + v);
-        int value = getByteBuffer(image).getInt();
-        value = setBitRange(value, ordinal, bitPosition, bitSize0 + 1);
-        getByteBuffer(image).putInt(value);
+        image.setBitValue(this, ordinal);
     }
 
     @Override
@@ -99,23 +87,6 @@ public class EnumIniField extends IniField {
         int num = ((1 << bitSize) - 1) << bitPosition;
         int clearBitRange = value & ~num;
         return (clearBitRange + (ordinal << bitPosition));
-    }
-
-    public static boolean getBit(int ordinal, int bitPosition) {
-        return getBitRange(ordinal, bitPosition, 1) == 1;
-    }
-
-    public static int getBitRange(int ordinal, int bitPosition, int bitSize) {
-        ordinal = ordinal >> bitPosition;
-        ordinal = ordinal & ((1 << (bitSize)) - 1);
-        return ordinal;
-    }
-
-    public static int ordinalIndexOf(String str, String substr, int n) {
-        int pos = str.indexOf(substr);
-        while (--n > 0 && pos != -1)
-            pos = str.indexOf(substr, pos + 1);
-        return pos;
     }
 
     public static class EnumKeyValueMap {
