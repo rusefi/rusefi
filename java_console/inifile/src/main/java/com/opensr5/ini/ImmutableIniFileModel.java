@@ -58,6 +58,8 @@ public class ImmutableIniFileModel implements IniFileModel {
 
     @Override
     public int getBlockingFactor() {
+        if (blockingFactor == 0)
+            throw new IllegalStateException("blockingFactor not found in " + iniFilePath);
         return blockingFactor;
     }
 
