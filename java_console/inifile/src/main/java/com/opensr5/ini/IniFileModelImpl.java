@@ -2,7 +2,6 @@ package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
-import com.rusefi.config.Field;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -11,7 +10,23 @@ import java.util.*;
  * Andrey Belomutskiy, (c) 2013-2020
  * 12/23/2015.
  */
-public class IniFileModelImpl implements IniFileModel {
+public class IniFileModelImpl {
+    public IniFileModel getIniFileModel() {
+        return new ImmutableIniFileModel(metaInfo.getSignature(),
+                getBlockingFactor(),
+                defines,
+                allIniFields,
+                secondaryIniFields,
+                allOutputChannels,
+                protocolMeta,
+                getMetaInfo(),
+                getIniFilePath(),
+                tooltips,
+                fieldsInUiOrder,
+                xBinsByZBins,
+                yBinsByZBins,
+                dialogs);
+    }
     private static final Logging log = Logging.getLogging(IniFileModelImpl.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
     public static final String RUSEFI_INI_SUFFIX = ".ini";
@@ -66,84 +81,20 @@ public class IniFileModelImpl implements IniFileModel {
         this.iniFilePath = iniFilePath;
     }
 
-    @Override
-    public String getSignature() {
-        return metaInfo.getSignature();
-    }
-
-    @Override
     public int getBlockingFactor() {
         if (blockingFactorOverride != null)
             return blockingFactorOverride;
-        if (blockingFactor == 0)
-            throw new IllegalStateException("blockingFactor not found in " + iniFilePath);
         return blockingFactor;
     }
 
-    @Override
-    public Map<String, List<String>> getDefines() {
-        return defines;
-    }
 
-    @Override
-    // todo: rename to 'getPrimaryPageIniFields()'?
-    public Map<String, IniField> getAllIniFields() {
-        return Collections.unmodifiableMap(allIniFields);
-    }
-
-    @Override
-    public Map<String, IniField> getSecondaryIniFields() {
-        return Collections.unmodifiableMap(secondaryIniFields);
-    }
-
-    @Override
-    public Optional<IniField> findIniField(final String key) {
-        return Optional.ofNullable(allIniFields.get(key));
-    }
-
-    @Override
-    public IniField getIniField(Field field) {
-        return getIniField(field.getName());
-    }
-
-    @Override
-    public IniField getIniField(String key) {
-        IniField result = allIniFields.get(key);
-        return Objects.requireNonNull(result, () -> key + " field not found");
-    }
-
-    @Override
-    public IniField getOutputChannel(String key) throws IniMemberNotFound {
-        IniField result = allOutputChannels.get(key);
-        if (result == null)
-            throw new IniMemberNotFound(key + " field not found");
-        return result;
-    }
-
-    @Override
-    public Map<String, String> getProtocolMeta() {
-        return protocolMeta;
-    }
-
-    @Override
     public IniFileMetaInfo getMetaInfo() {
         // pageSize lives inside!
         return Objects.requireNonNull(metaInfo, "metaInfo");
     }
 
-    @Override
     public String getIniFilePath() {
         return Objects.requireNonNull(iniFilePath, "iniFilePath");
-    }
-
-    @Override
-    public Map<String, String> getTooltips() {
-        return tooltips;
-    }
-
-    @Override
-    public Map<String, DialogModel.Field> getFieldsInUiOrder() {
-        return fieldsInUiOrder;
     }
 
     void finishDialog() {
@@ -288,21 +239,6 @@ public class IniFileModelImpl implements IniFileModel {
         yBinsByZBins.put(zBins, currentYBins);
     }
 
-    @Override
-    public String getXBin(String tableName) {
-        return xBinsByZBins.get(tableName);
-    }
-
-    @Override
-    public Set<String> getTables() {
-        return xBinsByZBins.keySet();
-    }
-
-    @Override
-    public String getYBin(String tableName) {
-        return yBinsByZBins.get(tableName);
-    }
-
     private void handleYBins(LinkedList<String> list) {
         list.removeFirst();
         currentYBins = list.removeFirst();
@@ -348,11 +284,13 @@ public class IniFileModelImpl implements IniFileModel {
         if (currentPageIndex != 1) {
             log.info("Skipping field from secondary page: " + field);
             secondaryIniFields.put(field.getName(), field);
+            secondaryIniFields.put(field.getName().toUpperCase(), field);
             return;
         }
         if (allIniFields.containsKey(field.getName()))
             return;
         allIniFields.put(field.getName(), field);
+        allIniFields.put(field.getName().toUpperCase(), field);
     }
 
     private void handleSlider(LinkedList<String> list) {
@@ -414,18 +352,5 @@ public class IniFileModelImpl implements IniFileModel {
     private void trim(LinkedList<String> list) {
         while (!list.isEmpty() && list.getFirst().isEmpty())
             list.removeFirst();
-    }
-
-    public IniField findByOffset(int i) {
-        for (IniField field : allIniFields.values()) {
-            if (i >= field.getOffset() && i < field.getOffset() + field.getSize())
-                return field;
-        }
-        return null;
-    }
-
-    @Override
-    public Map<String, DialogModel> getDialogs() {
-        return dialogs;
     }
 }

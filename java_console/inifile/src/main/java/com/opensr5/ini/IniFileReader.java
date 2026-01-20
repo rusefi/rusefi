@@ -123,7 +123,7 @@ public class IniFileReader {
             result.handleLine(line);
         }
         result.finishDialog();
-        return result;
+        return result.getIniFileModel();
     }
 
     @NotNull
