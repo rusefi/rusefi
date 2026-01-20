@@ -25,6 +25,11 @@ public class EnumIniField extends IniField {
     }
 
     @Override
+    public <T> T accept(IniFieldVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public int getSize() {
         return type.getStorageSize();
     }
@@ -43,16 +48,6 @@ public class EnumIniField extends IniField {
 
     public FieldType getType() {
         return type;
-    }
-
-    @Override
-    public String getValue(ConfigurationImage image) {
-        int ordinal = image.getByteBuffer(this).getInt();
-        ordinal = ConfigurationImage.getBitRange(ordinal, bitPosition, bitSize0 + 1);
-
-        if (ordinal >= enums.size())
-            throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + getName() + " while " + enums.size() + " " + type);
-        return "\"" + enums.get(ordinal) + "\"";
     }
 
     public static boolean isQuoted(String q) {

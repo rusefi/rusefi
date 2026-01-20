@@ -85,6 +85,11 @@ public class ArrayIniField extends IniField {
     }
 
     @Override
+    public <T> T accept(IniFieldVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     public int getSize() {
         return type.getStorageSize() * cols * rows;
     }
@@ -102,19 +107,7 @@ public class ArrayIniField extends IniField {
         return sb.toString();
     }
 
-    @Override
-    public String getValue(final ConfigurationImage image) {
-        final String[][] values = new String[rows][cols];
-        for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
-            for (int colIndex = 0; colIndex < cols; colIndex++) {
-                final Field f = new Field(getName() + "_" + colIndex, getOffset(rowIndex, colIndex), getType());
-                values[rowIndex][colIndex] = f.getAnyValue(image, multiplier);
-            }
-        }
-        return formatValue(values);
-    }
-
-    private int getOffset(int rowIndex, int colIndex) {
+    public int getOffset(int rowIndex, int colIndex) {
         return getOffset() + (rowIndex * cols + colIndex) * getType().getStorageSize();
     }
 

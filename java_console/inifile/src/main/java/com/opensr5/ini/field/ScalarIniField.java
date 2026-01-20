@@ -43,20 +43,22 @@ public class ScalarIniField extends IniField {
         return type;
     }
 
-    @Override
-    public int getSize() {
-        return type.getStorageSize();
+    public double getMultiplier() {
+        return multiplier;
+    }
+
+    public double getSerializationOffset() {
+        return serializationOffset;
     }
 
     @Override
-    public String getValue(ConfigurationImage image) {
-        Field f = new Field(getName(), getOffset(), getType());
-        try {
-            Double value = f.getValue(image, multiplier) + serializationOffset;
-            return StringFormatter.niceToString(value, StringFormatter.FIELD_PRECISION);
-        } catch (Throwable e) {
-            throw new IllegalStateException("While getting " + getName(), e);
-        }
+    public <T> T accept(IniFieldVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public int getSize() {
+        return type.getStorageSize();
     }
 
     @Override
