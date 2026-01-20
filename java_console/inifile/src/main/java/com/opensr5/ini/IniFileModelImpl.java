@@ -284,13 +284,11 @@ public class IniFileModelImpl {
         if (currentPageIndex != 1) {
             log.info("Skipping field from secondary page: " + field);
             secondaryIniFields.put(field.getName(), field);
-            secondaryIniFields.put(field.getName().toUpperCase(), field);
             return;
         }
         if (allIniFields.containsKey(field.getName()))
             return;
         allIniFields.put(field.getName(), field);
-        allIniFields.put(field.getName().toUpperCase(), field);
     }
 
     private void handleSlider(LinkedList<String> list) {
