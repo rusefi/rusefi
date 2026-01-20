@@ -373,7 +373,6 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
-	efiPrintf("TS <- Get CRC page %d offset %d count %d result %08x", page, offset, count, (unsigned int)crc);
 	// todo: rename to onConfigCrc?
 	ConfigurationWizard::onConfigOnStartUpOrBurn(false);
 }
@@ -427,7 +426,6 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
-	efiPrintf("TS <- Page %d read chunk offset %d count %d", page, offset, count);
 
 	if (validateOffsetCount(page, offset, count, tsChannel)) {
 		tunerStudioError(tsChannel, "ERROR: RD out of range");
@@ -573,7 +571,6 @@ void TunerStudio::handleQueryCommand(TsChannelBase* tsChannel, ts_response_forma
 	tsState.queryCommandCounter++;
 	const char *signature = getTsSignature();
 
-	efiPrintf("TS <- Query signature: %s", signature);
 	tsChannel->sendResponse(mode, (const uint8_t *)signature, strlen(signature) + 1);
 }
 
@@ -862,7 +859,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #endif // EFI_TS_SCATTER
 		break;
 	case TS_HELLO_COMMAND:
-		tunerStudioDebug(tsChannel, "got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
 		break;
 	case TS_GET_FIRMWARE_VERSION:
