@@ -1,5 +1,6 @@
 package com.rusefi.maintenance.migration;
 
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
@@ -125,7 +126,7 @@ public class BoostLoadBinsMigratorTest {
             TEST_BOOST_LOAD_BINS_VALUE
         ));
 
-        final IniFileModelImpl updatedIniFile = mock(IniFileModelImpl.class);
+        final IniFileModel updatedIniFile = mock(IniFileModelImpl.class);
         when(updatedIniFile.findIniField(TEST_BOOST_LOAD_BINS_VALUE.getName())).thenReturn(Optional.empty());
         when(updatedIniFile.findIniField(TEST_BOOST_OPEN_LOOP_LOAD_BINS_INI_FIELD.getName())).thenReturn(Optional.of(
             TEST_BOOST_OPEN_LOOP_LOAD_BINS_INI_FIELD

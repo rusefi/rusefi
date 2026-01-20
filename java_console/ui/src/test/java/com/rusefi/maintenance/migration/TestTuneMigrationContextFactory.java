@@ -1,5 +1,6 @@
 package com.rusefi.maintenance.migration;
 
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.maintenance.TestCallbacks;
@@ -23,7 +24,7 @@ public class TestTuneMigrationContextFactory {
         final Constant updatedConst,
         final IniField updatedIniField
     ) {
-        final IniFileModelImpl prevIniFile = mock(IniFileModelImpl.class);
+        final IniFileModel prevIniFile = mock(IniFileModelImpl.class);
         when(prevIniFile.findIniField(not(eq(prevIniField.getName())))).thenReturn(Optional.empty());
         when(prevIniFile.findIniField(prevIniField.getName())).thenReturn(Optional.of(prevIniField));
         when(prevIniFile.getAllIniFields()).thenReturn(Map.of(prevIniField.getName(), prevIniField));
@@ -31,7 +32,7 @@ public class TestTuneMigrationContextFactory {
         final Msq prevMsq = mock(Msq.class);
         when(prevMsq.getConstantsAsMap()).thenReturn(Map.of(prevConst.getName(), prevConst));
 
-        final IniFileModelImpl updatedIniFile = mock(IniFileModelImpl.class);
+        final IniFileModel updatedIniFile = mock(IniFileModelImpl.class);
         when(updatedIniFile.findIniField(not(eq(updatedIniField.getName())))).thenReturn(Optional.empty());
         when(updatedIniFile.findIniField(updatedIniField.getName())).thenReturn(Optional.of(updatedIniField));
         when(updatedIniFile.getAllIniFields()).thenReturn(Map.of(updatedIniField.getName(), updatedIniField));

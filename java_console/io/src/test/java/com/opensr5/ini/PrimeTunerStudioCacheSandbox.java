@@ -13,7 +13,7 @@ public class PrimeTunerStudioCacheSandbox {
                 throw new IllegalStateException();
             }, true);
         System.out.println("Working with " + localIniFile);
-        IniFileModelImpl iniFileModel = IniFileReader.readIniFile(localIniFile);
+        IniFileModel iniFileModel = IniFileReader.readIniFile(localIniFile);
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
     }
 }

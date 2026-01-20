@@ -3,7 +3,7 @@ package com.opensr5.ini;
 import java.io.FileNotFoundException;
 
 public class IniFileModelTestHelper {
-    public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
+    public static IniFileModel findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
         try {
             return IniFileReader.readIniFile(fileName);

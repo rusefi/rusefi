@@ -3,7 +3,7 @@ package com.rusefi.ts_plugin.ui;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameterChangeListener;
-import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.NamedThreadFactory;
@@ -181,7 +181,7 @@ public class TuneUploadTab {
     }
 
     private void subscribeToUpdates(String configurationName, ControllerAccess controllerAccess) {
-        IniFileModelImpl model = null;
+        IniFileModel model;
         try {
             model = IniFileReader.readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
         } catch (FileNotFoundException e) {

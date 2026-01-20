@@ -33,7 +33,7 @@ public class WriteSimulatorConfiguration {
         if (args.length != 1)
             throw new IllegalArgumentException("One argument expected: .ini file name");
         String iniFileName = args[0];
-        IniFileModelImpl ini = IniFileReader.readIniFile(iniFileName);
+        IniFileModel ini = IniFileReader.readIniFile(iniFileName);
         BinaryProtocol.iniFileProvider = signature -> ini;
 
         log.info("ROOT_FOLDER=" + ROOT_FOLDER);
@@ -56,7 +56,7 @@ public class WriteSimulatorConfiguration {
         }
     }
 
-    private static void writeSpecificEngineType(String iniFileName, engine_type_e engineType, IniFileModelImpl ini) {
+    private static void writeSpecificEngineType(String iniFileName, engine_type_e engineType, IniFileModel ini) {
         try {
             String in = Integration.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + "_" + engineType.ordinal() + Integration.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX;
             readBinaryWriteXmlTune(iniFileName, in,
