@@ -495,7 +495,7 @@ public class CalibrationsHelper {
                 final Optional<IniField> fieldToUpdate = newIniFile.findIniField(migratedFieldName);
                 if (fieldToUpdate.isPresent()) {
                     try {
-                        fieldToUpdate.get().setValue(mergedImage, migratedValue);
+                        IniField.setValue(fieldToUpdate.get(), mergedImage, migratedValue);
                     } catch (Throwable e) {
                         log.error(
                             String.format("We failed to set value %s for ini-field %s", migratedValue, fieldToUpdate),

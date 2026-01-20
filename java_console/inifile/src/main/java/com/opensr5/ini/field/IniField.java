@@ -49,8 +49,8 @@ public abstract class IniField {
     /**
      * @see com.rusefi.config.Field#getValue
      */
-    public String getValue(ConfigurationImage image) {
-        return accept(new IniFieldVisitor<String>() {
+    public static String getValue(IniField iniField, ConfigurationImage image) {
+        return iniField.accept(new IniFieldVisitor<String>() {
             @Override
             public String visit(ScalarIniField field) {
                 com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName(), field.getOffset(), field.getType());
@@ -106,8 +106,8 @@ public abstract class IniField {
         });
     }
 
-    public void setValue(ConfigurationImage image, Constant constant) {
-        accept(new IniFieldVisitor<Void>() {
+    public static void setValue(IniField iniField, ConfigurationImage image, Constant constant) {
+        iniField.accept(new IniFieldVisitor<Void>() {
             @Override
             public Void visit(ScalarIniField field) {
                 java.util.Objects.requireNonNull(image, "image for setter");

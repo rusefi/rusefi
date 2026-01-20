@@ -16,8 +16,8 @@ public class TuneWriterTest {
         ConfigurationImage image = new ConfigurationImage(200);
         IniField floatField = new ScalarIniField("test", 0, "test", FieldType.FLOAT, 1, "2", 0);
         double value = 0.9;
-        floatField.setValue(image, new Constant("x", "y", Double.toString(value), "2"));
+        IniField.setValue(floatField, image, new Constant("x", "y", Double.toString(value), "2"));
 
-        assertEquals("0.9", floatField.getValue(image));
+        assertEquals("0.9", IniField.getValue(floatField, image));
     }
 }

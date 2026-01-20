@@ -138,8 +138,8 @@ public class TuneReadWriteTest {
             if (tsByte != fileByte) {
                 IniField field = ini.findByOffset(i);
                 if (field instanceof ScalarIniField) {
-                    System.out.println("    Image " + field.getValue(image1));
-                    System.out.println("FileImage " + field.getValue(fileData));
+                    System.out.println("    Image " + IniField.getValue(field, image1));
+                    System.out.println("FileImage " + IniField.getValue(field, fileData));
                 }
                 System.out.println("Mismatch at offset=" + i + ", " + (field == null ? "(no field)" : field) + " runtime=" + tsByte + "/file=" + fileByte);
                 mismatchCounter++;

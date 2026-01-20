@@ -1,6 +1,7 @@
 package com.opensr5.ini.test;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
@@ -20,7 +21,7 @@ public class ScalarIniFieldTest {
     public void updateShort() {
         ScalarIniField testField = new ScalarIniField(TEST_FIELD, 0, TEST_UNIT, TEST_TYPE, TEST_MULTIPLIER, TEST_DIGITS, 0);
         ConfigurationImage image = new ConfigurationImage(2);
-        testField.setValue(image, new Constant(TEST_FIELD, TEST_UNIT, TEST_VALUE, TEST_DIGITS));
-        assertEquals(TEST_VALUE, testField.getValue(image));
+        IniField.setValue(testField, image, new Constant(TEST_FIELD, TEST_UNIT, TEST_VALUE, TEST_DIGITS));
+        assertEquals(TEST_VALUE, IniField.getValue(testField, image));
     }
 }

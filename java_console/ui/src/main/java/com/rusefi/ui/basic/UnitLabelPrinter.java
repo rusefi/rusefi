@@ -138,7 +138,7 @@ public enum UnitLabelPrinter {
             if (!iniField.isPresent()) {
                 callbacks.logLine(String.format("Calibrations don't contain `%s` field", fieldName));
             }
-            return iniField.map(field -> field.getValue(calibrationsInfo.getImage().getConfigurationImage()));
+            return iniField.map(field -> IniField.getValue(field, calibrationsInfo.getImage().getConfigurationImage()));
         }
 
         @Override

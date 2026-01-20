@@ -73,7 +73,7 @@ public class Msq {
             IniField field = instance.getAllIniFields().get(constant.getName());
             Objects.requireNonNull(field, "Field for " + constant.getName());
             log.debug("Setting " + field);
-            field.setValue(ci, constant);
+            IniField.setValue(field, ci, constant);
         }
         return ci;
     }
@@ -93,7 +93,7 @@ public class Msq {
 
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.getAllIniFields().get(key);
-        String value = field.getValue(image);
+        String value = IniField.getValue(field, image);
         Page page = findPage();
         if (page == null) {
             log.error("Msq: No page");
