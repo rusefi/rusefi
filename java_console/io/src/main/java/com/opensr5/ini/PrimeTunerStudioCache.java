@@ -39,10 +39,10 @@ public class PrimeTunerStudioCache {
     }
 
     public static void primeWithLocalFile() {
-        @Nullable String localIniFile = IniFileModelImpl.findIniFile(".");
+        @Nullable String localIniFile = IniLocator.findIniFile(".");
         if (localIniFile == null) {
             // another option: one level up or environment variable direction
-            localIniFile = IniFileModelImpl.findIniFile(IniFileModelImpl.INI_FILE_PATH);
+            localIniFile = IniLocator.findIniFile(IniFileModelImpl.INI_FILE_PATH);
             if (localIniFile == null) {
                 log.warn("No .ini");
                 return;

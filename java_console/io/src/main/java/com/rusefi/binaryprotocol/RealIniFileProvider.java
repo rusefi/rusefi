@@ -24,11 +24,11 @@ public class RealIniFileProvider implements IniFileProvider {
         if (localIniFile == null) {
             log.info("Failed to download " + signature + " maybe custom board?");
             // 4th option: current folder
-            localIniFile = IniFileModelImpl.findIniFile(".");
+            localIniFile = IniLocator.findIniFile(".");
         }
         if (localIniFile == null) {
             // 5th option: one level up or environment variable direction
-            localIniFile = IniFileModelImpl.findIniFile(IniFileModelImpl.INI_FILE_PATH);
+            localIniFile = IniLocator.findIniFile(IniFileModelImpl.INI_FILE_PATH);
         }
         if (localIniFile == null)
             throw new IniNotFoundException("Failed to locate .ini file in five different places!");

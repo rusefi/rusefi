@@ -3,7 +3,6 @@ package com.opensr5.ini;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
 import com.rusefi.config.Field;
-import com.rusefi.core.FindFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -178,12 +177,6 @@ public class IniFileModelImpl implements IniFileModel {
         }
         result.finishDialog();
         return result;
-    }
-
-    public static @Nullable String findIniFile(String iniFilePath) {
-        return FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX, (fileDirectory, fileName) -> {
-            throw new IllegalStateException("Unique match expected " + fileName);
-        }, true);
     }
 
     private void finishDialog() {
