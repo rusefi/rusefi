@@ -5,7 +5,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.*;
-import com.rusefi.binaryprotocol.MsqFactory;
+import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tools.tune.FileLinesHelper;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.util.LazyFileImpl;

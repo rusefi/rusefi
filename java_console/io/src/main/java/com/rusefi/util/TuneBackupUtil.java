@@ -6,7 +6,7 @@ import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.opensr5.io.ConfigurationImageFile;
-import com.rusefi.binaryprotocol.MsqFactory;
+import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,12 +1,8 @@
 package com.opensr5.ini.field;
 
-import com.opensr5.ConfigurationImage;
-import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
-import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Objects;
 

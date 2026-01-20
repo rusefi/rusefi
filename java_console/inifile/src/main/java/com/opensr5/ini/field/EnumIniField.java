@@ -1,10 +1,8 @@
 package com.opensr5.ini.field;
 
-import com.opensr5.ConfigurationImage;
 import com.rusefi.ini.reader.EnumIniReaderHelper;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.config.FieldType;
-import com.rusefi.tune.xml.Constant;
 
 import javax.management.ObjectName;
 import java.util.*;

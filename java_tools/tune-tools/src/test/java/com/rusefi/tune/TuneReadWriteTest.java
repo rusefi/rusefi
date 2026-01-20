@@ -6,7 +6,7 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.io.ConfigurationImageFile;
-import com.rusefi.binaryprotocol.MsqFactory;
+import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;

@@ -3,6 +3,7 @@ package com.rusefi.tune.xml;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
+import com.rusefi.tune.ConfigurationImageGetterSetter2;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
@@ -74,7 +75,7 @@ public class Msq {
             IniField field = instance.getAllIniFields().get(constant.getName());
             Objects.requireNonNull(field, "Field for " + constant.getName());
             log.debug("Setting " + field);
-            ConfigurationImageGetterSetter.setValue(field, ci, constant);
+            ConfigurationImageGetterSetter2.setValue(field, ci, constant);
         }
         return ci;
     }

@@ -1,7 +1,6 @@
 package com.opensr5;
 
 import com.opensr5.ini.field.*;
-import com.rusefi.tune.xml.Constant;
 
 public class ConfigurationImageGetterSetter {
     /**
@@ -64,23 +63,23 @@ public class ConfigurationImageGetterSetter {
         });
     }
 
-    public static void setValue(IniField iniField, ConfigurationImage image, Constant constant) {
+    public static void setValue2(IniField iniField, ConfigurationImage image, final String name, final String value) {
         iniField.accept(new IniFieldVisitor<Void>() {
             @Override
             public Void visit(ScalarIniField field) {
                 java.util.Objects.requireNonNull(image, "image for setter");
                 com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName(), field.getOffset(), field.getType());
                 java.nio.ByteBuffer wrapped = image.getByteBuffer(field.getOffset(), field.getType().getStorageSize());
-                ConfigurationImage.setScalarValue(wrapped, field.getType(), constant.getValue(), f.getBitOffset(), field.getMultiplier(), field.getSerializationOffset());
+                ConfigurationImage.setScalarValue(wrapped, field.getType(), value, f.getBitOffset(), field.getMultiplier(), field.getSerializationOffset());
                 return null;
             }
 
             @Override
             public Void visit(EnumIniField field) {
-                String v = constant.getValue();
+                String v = value;
                 int ordinal = field.getEnums().indexOf(v);
                 if (ordinal == -1)
-                    throw new IllegalArgumentException(constant.getName() + ": Enum name not found " + v);
+                    throw new IllegalArgumentException(name + ": Enum name not found " + v);
                 image.setBitValue(field, ordinal);
                 return null;
             }
@@ -88,7 +87,7 @@ public class ConfigurationImageGetterSetter {
             @Override
             public Void visit(ArrayIniField field) {
                 java.util.Objects.requireNonNull(image, "image array setter");
-                final String[][] values = field.getValues(constant.getValue());
+                final String[][] values = field.getValues(value);
                 for (int rowIndex = 0; rowIndex < values.length; rowIndex++) {
                     final String[] row = values[rowIndex];
                     for (int colIndex = 0; colIndex < row.length; colIndex++) {
@@ -108,7 +107,6 @@ public class ConfigurationImageGetterSetter {
 
             @Override
             public Void visit(StringIniField field) {
-                String value = constant.getValue();
                 for (int i = 0; i < value.length(); i++)
                     image.getContent()[field.getOffset() + i] = (byte) value.charAt(i);
                 return null;

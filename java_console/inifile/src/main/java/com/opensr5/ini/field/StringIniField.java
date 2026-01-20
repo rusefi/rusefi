@@ -1,9 +1,5 @@
 package com.opensr5.ini.field;
 
-import com.opensr5.ConfigurationImage;
-import com.rusefi.tune.xml.Constant;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.LinkedList;
 
 public class StringIniField extends IniField {
