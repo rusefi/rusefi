@@ -4,6 +4,7 @@ apply from: '../../android/dependencies.gradle'
 
 dependencies {
   api project(':logging-api')
+  api project(':version')
 }
 
 java {

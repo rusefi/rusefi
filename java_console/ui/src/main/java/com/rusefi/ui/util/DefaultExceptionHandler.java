@@ -1,6 +1,7 @@
 package com.rusefi.ui.util;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.Version;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.Launcher.*;
 
 /**
  * 6/30/13
@@ -57,7 +57,7 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
 
         content.add(scrollPane, BorderLayout.CENTER);
 
-        JOptionPane.showConfirmDialog(findActiveFrame(), content, CONSOLE_VERSION + ": Exception Occurred", JOptionPane.DEFAULT_OPTION);
+        JOptionPane.showConfirmDialog(findActiveFrame(), content, Version.CONSOLE_VERSION + ": Exception Occurred", JOptionPane.DEFAULT_OPTION);
         log.info("handleException: " + baos.toString());
     }
 

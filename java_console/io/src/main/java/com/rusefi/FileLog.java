@@ -1,11 +1,5 @@
 package com.rusefi;
 
-import com.devexperts.logging.FileLogger;
-import com.opensr5.Logger;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.*;
-
 /**
  * what the hell is this anyway? rename this utility class?
  * 6/30/13
@@ -13,14 +7,9 @@ import java.io.*;
  */
 public class FileLog {
 
-    public static final String LOG_INFO_TEXT = "Writing logs to '" + FileLogger.DIR + "'";
     public static final String OS_VERSION = "os.version";
 
     FileLog() {
-    }
-
-    public static String getDate() {
-        return FileLogger.getDate();
     }
 
     public static boolean isLinux() {

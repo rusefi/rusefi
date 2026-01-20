@@ -16,7 +16,6 @@ import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.lua.LuaScriptPanel;
-import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.util.LazyFile;
@@ -36,7 +35,6 @@ import java.util.Map;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
-import static com.rusefi.core.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 import static com.rusefi.ui.util.UiUtils.createOnTopParent;
 
@@ -81,7 +79,7 @@ public class ConsoleUI {
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
         setFrameIcon(ConsoleUI.staticFrame);
-        log.info("Console " + CONSOLE_VERSION);
+        log.info("Console " + Version.CONSOLE_VERSION);
 
         log.info("Hardware: " + StLinkFlasher.getHardwareKind());
 

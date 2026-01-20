@@ -1,6 +1,6 @@
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
-import com.rusefi.core.rusEFIVersion;
+import com.rusefi.Version;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.DfuManualJob;
@@ -24,7 +24,7 @@ public class MassUpdater {
     private final Set<String> knownBlts = new HashSet<>();
 
     public MassUpdater(ConnectivityContext connectivityContext) {
-        mainStatus.showFrame("Mass Updater " + rusEFIVersion.CONSOLE_VERSION);
+        mainStatus.showFrame("Mass Updater " + Version.CONSOLE_VERSION);
 
         final AtomicBoolean previousDfuState = new AtomicBoolean();
         AtomicBoolean isUsingDfu = new AtomicBoolean(); // it seems like DFU detection is not 100% reliable? a work-around to avoid double-DFU

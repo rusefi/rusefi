@@ -7,7 +7,7 @@ import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
-import com.rusefi.util.IoUtils;
+import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -90,14 +90,14 @@ public class PortHolder {
     public void packAndSend(final String command, boolean fireEvent) throws InterruptedException {
         if (bp == null) {
             if (GraphicsEnvironment.isHeadless()) {
-                IoUtils.exit("No connectivity, will close", -1);
+                ExitUtil.exit("No connectivity, will close", -1);
             } else {
                 SwingUtilities.invokeLater(() -> {
                     Window[] windows = JDialog.getWindows();
                     Window window = windows.length == 0 ? null : windows[0];
                     JOptionPane.showMessageDialog(window, "No connectivity, will close",
                             "Error", JOptionPane.ERROR_MESSAGE);
-                    IoUtils.exit("No connectivity, will close", -1);
+                    ExitUtil.exit("No connectivity, will close", -1);
                 });
             }
             return;

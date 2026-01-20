@@ -3,7 +3,7 @@ package com.rusefi.ts_plugin;
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ApplicationPlugin;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
-import com.rusefi.core.rusEFIVersion;
+import com.rusefi.Version;
 import com.rusefi.ts_plugin.headless.TsHeadlessPlugin;
 import org.putgemin.VerticalFlowLayout;
 
@@ -87,7 +87,7 @@ public class TsPluginLauncher implements ApplicationPlugin {
             // lazy initialization since TunerStudio creates one instance only to get version information without any
             // intentions to display the UI
             if (content.getComponents().length == 0) {
-                log.info("Create Updater " + this + " " + rusEFIVersion.CONSOLE_VERSION);
+                log.info("Create Updater " + this + " " + Version.CONSOLE_VERSION);
                 Updater updater = new Updater();
                 content.add(updater.getContent());
             }

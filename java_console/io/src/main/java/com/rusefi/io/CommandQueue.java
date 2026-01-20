@@ -3,7 +3,7 @@ package com.rusefi.io;
 import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.util.IoUtils;
+import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -98,7 +98,7 @@ public class CommandQueue {
         }
     }
 
-    public static Listener<Throwable> ERROR_HANDLER = parameter -> IoUtils.exit("CommandQueue error: " + parameter, -2);
+    public static Listener<Throwable> ERROR_HANDLER = parameter -> ExitUtil.exit("CommandQueue error: " + parameter, -2);
 
     public CommandQueue(LinkManager linkManager) {
         this.linkManager = linkManager;

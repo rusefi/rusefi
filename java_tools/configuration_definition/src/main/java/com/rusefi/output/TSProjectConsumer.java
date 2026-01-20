@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.rusefi.ReaderStateImpl.INCLUDE_FILE;
 import static com.rusefi.VariableRegistry.unquote;
-import static com.rusefi.util.IoUtils.CHARSET;
+import static com.rusefi.util.LazyFile.CHARSET;
 
 /**
  * [Constants]

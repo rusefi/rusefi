@@ -1,9 +1,8 @@
 package com.rusefi.sensor_logs;
 
 import com.devexperts.logging.FileLogger;
-import com.rusefi.FileLog;
+import com.rusefi.Version;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.core.rusEFIVersion;
 
 import java.io.*;
 import java.util.*;
@@ -47,7 +46,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
     public void writeSensorLogLine() {
         if (stream == null) {
             FileLogger.createFolderIfNeeded();
-            fileName = FileLogger.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".mlg";
+            fileName = FileLogger.DIR + "rusEFI_gauges_" + FileLogger.getDate() + ".mlg";
 
             try {
                 stream = new DataOutputStream(new FileOutputStream(fileName));
@@ -94,7 +93,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
     }
 
     private void writeHeader() throws IOException {
-        String headerText = "\"rusEFI " + rusEFIVersion.CONSOLE_VERSION + "\"\n" +
+        String headerText = "\"rusEFI " + Version.CONSOLE_VERSION + "\"\n" +
                 "\"Capture Date: " + new Date() + "\"\n";
 
         for (char c : "MLVLG\0".toCharArray()) {

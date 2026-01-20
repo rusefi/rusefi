@@ -1,5 +1,6 @@
 package com.rusefi.stream;
 
+import com.rusefi.Version;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.core.rusEFIVersion;
 
@@ -15,7 +16,7 @@ public class TSHighSpeedLog extends StreamFile {
     }
 
     private static void writeHeader(Writer writer) throws IOException {
-        writer.write("#Firmware: console" + rusEFIVersion.CONSOLE_VERSION + " firmware " + rusEFIVersion.firmwareVersion.get() + "\n");
+        writer.write("#Firmware: console" + Version.CONSOLE_VERSION + " firmware " + rusEFIVersion.firmwareVersion.get() + "\n");
         writer.write("PriLevel,SecLevel,Trigger,Sync,Time,ToothTime,coil,inj\n" +
                 "Flag,Flag,Flag,Flag,ms,ms,Flag,Flag\n");
     }

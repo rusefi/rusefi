@@ -4,6 +4,7 @@ apply from: dependenciesPath
 dependencies {
     api project(':inifile')
     api project(':logging')
+    api project(':core_io')
     api global_libs.snakeyaml
     api 'org.apache.commons:commons-math3:3.6.1'
 }

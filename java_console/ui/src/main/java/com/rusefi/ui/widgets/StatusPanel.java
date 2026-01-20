@@ -2,8 +2,8 @@ package com.rusefi.ui.widgets;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
+import com.rusefi.Version;
 import com.rusefi.core.io.BundleUtil;
-import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.StatusWindow;
@@ -82,7 +82,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     public void clear() {
         logTextArea.setText("");
         logTextArea.setBackground(Color.WHITE);
-        logLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
+        logLine("Console version " + Version.CONSOLE_VERSION);
         log.info(FileLog.getOsName() + " " + System.getProperty("os.version"));
         logLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
     }

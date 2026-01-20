@@ -4,15 +4,10 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IniNotFoundException;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.VariableRegistryValues;
-import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.LinkConnector;
-import com.rusefi.io.LinkManager;
-import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ControllerInfo;
@@ -106,7 +101,7 @@ public class TestHelper extends MockitoTestHelper {
     public static SessionDetails createTestSession(String authToken, String signature) {
         ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
 
-        return new SessionDetails(NetworkConnector.Implementation.Unknown, ci, authToken, SessionDetails.createOneTimeCode(), rusEFIVersion.CONSOLE_VERSION);
+        return new SessionDetails(NetworkConnector.Implementation.Unknown, ci, authToken, SessionDetails.createOneTimeCode(), Version.CONSOLE_VERSION);
     }
 
     public static void assertLatch(String message, CountDownLatch reconnectCounter) throws InterruptedException {

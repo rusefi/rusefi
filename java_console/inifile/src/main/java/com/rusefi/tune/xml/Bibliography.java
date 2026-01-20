@@ -1,6 +1,6 @@
 package com.rusefi.tune.xml;
 
-import com.rusefi.core.rusEFIVersion;
+import com.rusefi.Version;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
@@ -9,7 +9,7 @@ public class Bibliography {
 
     @XmlAttribute
     public String getAuthor() {
-        return "rusEFI " + rusEFIVersion.CONSOLE_VERSION;
+        return "rusEFI " + Version.CONSOLE_VERSION;
     }
 
     @XmlAttribute

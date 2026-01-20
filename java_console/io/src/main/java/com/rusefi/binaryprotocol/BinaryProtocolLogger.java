@@ -1,7 +1,6 @@
 package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.FileLogger;
-import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
@@ -72,7 +71,7 @@ public class BinaryProtocolLogger {
 
     @NotNull
     public static String getFileName(String prefix, String fileType) {
-        return FileLogger.DIR + prefix + FileLog.getDate() + fileType;
+        return FileLogger.DIR + prefix + FileLogger.getDate() + fileType;
     }
 
     public void compositeLogic(BinaryProtocol binaryProtocol) {

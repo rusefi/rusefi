@@ -1,16 +1,13 @@
 package com.rusefi.core;
 
+import com.rusefi.Version;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
-public interface rusEFIVersion {
-    /**
-     * *** BE CAREFUL WE HAVE SEPARATE AUTOUPDATE_VERSION also managed manually ***
-     * @see com.rusefi.autoupdate.Autoupdate#AUTOUPDATE_VERSION
-     */
-    int CONSOLE_VERSION = 20260115;
+public interface rusEFIVersion extends Version {
     AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     static long classBuildTimeMillis() {

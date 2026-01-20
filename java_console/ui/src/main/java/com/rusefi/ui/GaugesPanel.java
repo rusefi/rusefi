@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.rusefi.FileLog;
+import com.devexperts.logging.FileLogger;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -203,7 +203,7 @@ public class GaugesPanel {
     private JButton createSaveImageButton() {
         JButton saveImageButton = UiUtils.createSaveImageButton();
         saveImageButton.addActionListener(e -> {
-            String fileName = FileLog.getDate() + "_gauges.png";
+            String fileName = FileLogger.getDate() + "_gauges.png";
 
             UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
         });

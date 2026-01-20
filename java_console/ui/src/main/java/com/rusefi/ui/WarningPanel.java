@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.rusefi.FileLog;
+import com.devexperts.logging.FileLogger;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.preferences.storage.Node;
@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 
 public class WarningPanel {
 
+    public static final String LOG_INFO_TEXT = "Writing logs to '" + FileLogger.DIR + "'";
     private static final String WARNING = "WARNING";
     private static final String ERROR = "firmware error";
     private final JPanel panel = new JPanel(new FlowLayout());
@@ -65,7 +66,7 @@ public class WarningPanel {
         });
         panel.add(reset);
         // todo: only display label if logs are being recorded
-        panel.add(new JLabel(FileLog.LOG_INFO_TEXT));
+        panel.add(new JLabel(LOG_INFO_TEXT));
         panel.add(new LogSizeControl(config).getContent());
     }
 

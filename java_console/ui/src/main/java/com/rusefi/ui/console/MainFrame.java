@@ -11,7 +11,7 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.util.IoUtils;
+import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -145,6 +145,6 @@ public class MainFrame {
         BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
         if (bp != null && !bp.isClosed())
             bp.close(); // it could be that serial driver wants to be closed explicitly
-        IoUtils.exit("windowClosedHandler", 0);
+        ExitUtil.exit("windowClosedHandler", 0);
     }
 }
