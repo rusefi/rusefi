@@ -337,7 +337,7 @@ public class IniFileReaderTest {
         assertEquals(8, field.getRows());
     }
 
-    private static @NotNull IniFileModelImpl readLines(RawIniFile lines) {
+    private static @NotNull IniFileModel readLines(RawIniFile lines) {
         return IniFileReader.readIniFile(lines, "", null);
     }
 
