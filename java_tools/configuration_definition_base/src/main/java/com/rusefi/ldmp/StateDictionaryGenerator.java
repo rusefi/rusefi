@@ -42,7 +42,7 @@ import static com.rusefi.VariableRegistry.quote;
         ToolUtil.TOOL = getClass().getSimpleName();
 
         return "package com.rusefi.enums;\n" +
-            "//" + ToolUtil.getGeneratedAutomaticallyTag() + yamlFileName + " on " + new Date() + "n" +
+            "//" + ToolUtil.getGeneratedAutomaticallyTag() + yamlFileName + " on " + new Date() + "\n" +
             "\n" +
             "import com.rusefi.config.generated.*;\n" +
             "import com.rusefi.ldmp.StateDictionary;\n" +
