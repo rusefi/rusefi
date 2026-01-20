@@ -1,6 +1,7 @@
 package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
@@ -138,7 +139,7 @@ public enum UnitLabelPrinter {
             if (!iniField.isPresent()) {
                 callbacks.logLine(String.format("Calibrations don't contain `%s` field", fieldName));
             }
-            return iniField.map(field -> IniField.getValue(field, calibrationsInfo.getImage().getConfigurationImage()));
+            return iniField.map(field -> ConfigurationImageGetterSetter.getValue(field, calibrationsInfo.getImage().getConfigurationImage()));
         }
 
         @Override

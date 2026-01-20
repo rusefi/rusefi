@@ -2,6 +2,7 @@ package com.rusefi.tune.xml;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
@@ -73,7 +74,7 @@ public class Msq {
             IniField field = instance.getAllIniFields().get(constant.getName());
             Objects.requireNonNull(field, "Field for " + constant.getName());
             log.debug("Setting " + field);
-            IniField.setValue(field, ci, constant);
+            ConfigurationImageGetterSetter.setValue(field, ci, constant);
         }
         return ci;
     }
@@ -93,7 +94,7 @@ public class Msq {
 
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.getAllIniFields().get(key);
-        String value = IniField.getValue(field, image);
+        String value = ConfigurationImageGetterSetter.getValue(field, image);
         Page page = findPage();
         if (page == null) {
             log.error("Msq: No page");

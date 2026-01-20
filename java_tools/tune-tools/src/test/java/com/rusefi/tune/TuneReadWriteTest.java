@@ -1,9 +1,6 @@
 package com.rusefi.tune;
 
-import com.opensr5.ConfigurationImage;
-import com.opensr5.ConfigurationImageMeta;
-import com.opensr5.ConfigurationImageMetaVersion0_0;
-import com.opensr5.ConfigurationImageWithMeta;
+import com.opensr5.*;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.opensr5.ini.field.IniField;
@@ -138,8 +135,8 @@ public class TuneReadWriteTest {
             if (tsByte != fileByte) {
                 IniField field = ini.findByOffset(i);
                 if (field instanceof ScalarIniField) {
-                    System.out.println("    Image " + IniField.getValue(field, image1));
-                    System.out.println("FileImage " + IniField.getValue(field, fileData));
+                    System.out.println("    Image " + ConfigurationImageGetterSetter.getValue(field, image1));
+                    System.out.println("FileImage " + ConfigurationImageGetterSetter.getValue(field, fileData));
                 }
                 System.out.println("Mismatch at offset=" + i + ", " + (field == null ? "(no field)" : field) + " runtime=" + tsByte + "/file=" + fileByte);
                 mismatchCounter++;

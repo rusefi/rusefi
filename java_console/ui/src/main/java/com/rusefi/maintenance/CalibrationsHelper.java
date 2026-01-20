@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
@@ -495,7 +496,7 @@ public class CalibrationsHelper {
                 final Optional<IniField> fieldToUpdate = newIniFile.findIniField(migratedFieldName);
                 if (fieldToUpdate.isPresent()) {
                     try {
-                        IniField.setValue(fieldToUpdate.get(), mergedImage, migratedValue);
+                        ConfigurationImageGetterSetter.setValue(fieldToUpdate.get(), mergedImage, migratedValue);
                     } catch (Throwable e) {
                         log.error(
                             String.format("We failed to set value %s for ini-field %s", migratedValue, fieldToUpdate),
