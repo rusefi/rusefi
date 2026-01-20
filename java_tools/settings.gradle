@@ -8,6 +8,9 @@ var rootRelativePath='../'
 include ':version'
 project(':version').projectDir = new File(rootRelativePath + 'java_tools/version')
 
+include ':msq-file'
+project(':msq-file').projectDir = new File(rootRelativePath + 'java_tools/msq-file')
+
 include ':trigger-image'
 project(':trigger-image').projectDir = new File(rootRelativePath + 'java_tools/trigger-image')
 include ':tune-tools'

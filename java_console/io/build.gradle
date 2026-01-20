@@ -15,6 +15,7 @@ dependencies {
     api global_libs.jcip
 
     api project(':models')
+    api project(':msq-file')
     api project(':peak-can-basic')
 
     api group: 'com.fazecast', name: 'jSerialComm', version: '2.11.2'
