@@ -5,7 +5,6 @@ import com.opensr5.ConfigurationImageMeta;
 import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
