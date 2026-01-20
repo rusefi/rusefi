@@ -21,6 +21,12 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, String> yBinsByZBins;
     private final Map<String, DialogModel> dialogs;
 
+    private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
+        TreeMap<String, V> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        result.putAll(source);
+        return Collections.unmodifiableMap(result);
+    }
+
     public ImmutableIniFileModel(String signature,
                                  int blockingFactor,
                                  Map<String, List<String>> defines,
@@ -38,16 +44,16 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
-        this.allIniFields = Collections.unmodifiableMap(new TreeMap<>(allIniFields));
-        this.secondaryIniFields = Collections.unmodifiableMap(new TreeMap<>(secondaryIniFields));
-        this.allOutputChannels = Collections.unmodifiableMap(new TreeMap<>(allOutputChannels));
+        this.allIniFields = copyWithCaseInsensitiveKeys(allIniFields);
+        this.secondaryIniFields = copyWithCaseInsensitiveKeys(secondaryIniFields);
+        this.allOutputChannels = copyWithCaseInsensitiveKeys(allOutputChannels);
         this.protocolMeta = Collections.unmodifiableMap(new TreeMap<>(protocolMeta));
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
         this.tooltips = Collections.unmodifiableMap(new TreeMap<>(tooltips));
         this.fieldsInUiOrder = Collections.unmodifiableMap(new LinkedHashMap<>(fieldsInUiOrder));
-        this.xBinsByZBins = Collections.unmodifiableMap(new TreeMap<>(xBinsByZBins));
-        this.yBinsByZBins = Collections.unmodifiableMap(new TreeMap<>(yBinsByZBins));
+        this.xBinsByZBins = copyWithCaseInsensitiveKeys(xBinsByZBins);
+        this.yBinsByZBins = copyWithCaseInsensitiveKeys(yBinsByZBins);
         this.dialogs = Collections.unmodifiableMap(new TreeMap<>(dialogs));
     }
 
