@@ -1,6 +1,7 @@
-package com.opensr5.ini;
+package com.rusefi.ini.reader;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.*;
 import com.opensr5.ini.field.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +11,7 @@ import java.util.*;
  * Andrey Belomutskiy, (c) 2013-2020
  * 12/23/2015.
  */
-public class IniFileModelImpl {
+public class IniFileReader {
     public IniFileModel getIniFileModel() {
         return new ImmutableIniFileModel(metaInfo.getSignature(),
                 getBlockingFactor(),
@@ -27,7 +28,7 @@ public class IniFileModelImpl {
                 yBinsByZBins,
                 dialogs);
     }
-    private static final Logging log = Logging.getLogging(IniFileModelImpl.class);
+    private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
     public static final String RUSEFI_INI_SUFFIX = ".ini";
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
@@ -76,7 +77,7 @@ public class IniFileModelImpl {
 
     private int currentPageIndex;
 
-    IniFileModelImpl(@Nullable final IniFileMetaInfo metaInfo, final String iniFilePath) {
+    IniFileReader(@Nullable final IniFileMetaInfo metaInfo, final String iniFilePath) {
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
     }
@@ -273,7 +274,7 @@ public class IniFileModelImpl {
                 registerField(ArrayIniField.parse(list));
                 break;
             case FIELD_TYPE_BITS:
-                registerField(EnumIniField.parse(list, line, defines));
+                registerField(EnumIniReaderHelper.parse(list, line, defines));
                 break;
             default:
                 throw new IllegalStateException("Unexpected " + list);
