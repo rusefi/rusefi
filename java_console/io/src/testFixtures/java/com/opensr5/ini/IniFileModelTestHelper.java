@@ -6,7 +6,7 @@ public class IniFileModelTestHelper {
     public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
         try {
-            return IniFileModelImpl.readIniFile(fileName);
+            return IniFileReader.readIniFile(fileName);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

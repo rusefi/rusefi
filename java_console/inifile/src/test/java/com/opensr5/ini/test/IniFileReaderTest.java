@@ -134,7 +134,7 @@ public class IniFileReaderTest {
                 "\t\tyBins\t\t= scriptCurve1\n" +
                 "\t\tshowTextValues = true\n";
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
         // technically these are constants?!
         assertEquals(2, model.getAllIniFields().size());
         assertEquals(2, model.getFieldsInUiOrder().size());
@@ -162,7 +162,7 @@ public class IniFileReaderTest {
                 "" +
                 "";
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
         assertEquals(1, model.getAllIniFields().size());
         assertEquals(2, model.getDialogs().size());
     }
@@ -179,7 +179,7 @@ public class IniFileReaderTest {
             "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n "
     ;
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
 
         assertEquals(2, model.getAllIniFields().size());
         assertEquals(2, model.getSecondaryIniFields().size());
@@ -201,7 +201,7 @@ public class IniFileReaderTest {
                 "\t\tyBins\t\t= tpsTpsAccelToRpmBins,  TPSValue\n" +
                 "\t\tzBins\t\t= tpsTpsAccelTable";
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
         assertEquals(3, model.getAllIniFields().size());
         assertEquals(3, model.getFieldsInUiOrder().size());
         assertTrue(model.getFieldsInUiOrder().containsKey("tpsTpsAccelToRpmBins"));
@@ -219,7 +219,7 @@ public class IniFileReaderTest {
                 "\tlambdaTable\t\t\t\t\t = array, U08, 18592, [16x16],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
                 "#endif\n";
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getAllIniFields().size());
         assertEquals(0, model.getFieldsInUiOrder().size()); // no UI for the field
@@ -234,7 +234,7 @@ public class IniFileReaderTest {
                         "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1.0, 0, -40, 200, 1\n" +
                         "";
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
         assertEquals(1, model.getAllIniFields().size());
 
         String crcProtocol = model.getProtocolMeta().get("crc32CheckCommand");
@@ -253,7 +253,7 @@ public class IniFileReaderTest {
                 "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\", \"PA5\", \"PA6\", \"PA7\", \"PB0\", \"PB1\", \"PC0\", \"PC1\", \"PC2\", \"PC3\", \"PC4\", \"PC5\", \"Disabled\", \"PB12\", \"PB13\", \"PC14\", \"PC15\", \"PC16\", \"PC17\", \"PD3\", \"PD4\", \"PE2\", \"PE6\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\"\n";
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
 
         assertEquals(2, model.getAllIniFields().size());
     }
@@ -267,7 +267,7 @@ public class IniFileReaderTest {
                 "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] $gpio_list\n";
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
         assertEquals(1, model.getDefines().size());
 
         EnumIniField field = (EnumIniField) model.getAllIniFields().get("iat_adcChannel");
@@ -308,7 +308,7 @@ public class IniFileReaderTest {
                 "\tname\t= bits,    U32,   \t744, [3:5], \"false\", \"true\"";
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getAllIniFields().size());
 
@@ -328,13 +328,17 @@ public class IniFileReaderTest {
                 " \tname3\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getAllIniFields().size());
         ArrayIniField field = (ArrayIniField) model.getAllIniFields().get("name");
         assertNotNull(field);
         assertEquals(1, field.getCols());
         assertEquals(8, field.getRows());
+    }
+
+    private static @NotNull IniFileModelImpl readLines(RawIniFile lines) {
+        return IniFileReader.readIniFile(lines, "", null);
     }
 
     @Test
@@ -348,7 +352,7 @@ public class IniFileReaderTest {
                 "#endif";
 
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = IniFileModelImpl.readIniFile(lines, false, "");
+        IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getAllIniFields().size());
 

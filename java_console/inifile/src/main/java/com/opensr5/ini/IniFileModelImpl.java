@@ -3,10 +3,8 @@ package com.opensr5.ini;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
 import com.rusefi.config.Field;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
 import java.util.*;
 
 /**
@@ -63,7 +61,7 @@ public class IniFileModelImpl implements IniFileModel {
 
     private int currentPageIndex;
 
-    private IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo, final String iniFilePath) {
+    IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo, final String iniFilePath) {
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
     }
@@ -148,38 +146,7 @@ public class IniFileModelImpl implements IniFileModel {
         return fieldsInUiOrder;
     }
 
-    @NotNull
-    public static IniFileModelImpl readIniFile(String fileName) throws FileNotFoundException {
-        Objects.requireNonNull(fileName, "fileName");
-        log.info("Reading " + fileName);
-        File input = new File(fileName);
-        RawIniFile content = IniFileReader.read(input);
-        return readIniFile(content, true, fileName);
-    }
-
-    /**
-     * @param initMeta - part of our tests do not use `getMetaInfo` getter and will throw MandatoryLineMissing exception
-     *                 on attempt to create IniFileMetaInfoImpl instance from test data; to avoid this exception such
-     *                 tests should use `false` as value for this parameter
-     */
-    @NotNull
-    public static IniFileModelImpl readIniFile(
-        final RawIniFile content,
-        final boolean initMeta,
-        final String iniFilePath
-    ) {
-        final IniFileModelImpl result = new IniFileModelImpl(
-            initMeta ? new IniFileMetaInfoImpl(content) : null,
-            iniFilePath
-        );
-        for (RawIniFile.Line line : content.getLines()) {
-            result.handleLine(line);
-        }
-        result.finishDialog();
-        return result;
-    }
-
-    private void finishDialog() {
+    void finishDialog() {
         if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
@@ -191,7 +158,7 @@ public class IniFileModelImpl implements IniFileModel {
         commandsOfCurrentDialog.clear();
     }
 
-    private void handleLine(RawIniFile.Line line) {
+    void handleLine(RawIniFile.Line line) {
 
         String rawText = line.getRawText();
         try {

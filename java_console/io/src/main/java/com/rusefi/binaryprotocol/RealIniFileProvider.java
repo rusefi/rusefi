@@ -34,7 +34,7 @@ public class RealIniFileProvider implements IniFileProvider {
             throw new IniNotFoundException("Failed to locate .ini file in five different places!");
         IniFileModelImpl iniFileModel = null;
         try {
-            iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+            iniFileModel = IniFileReader.readIniFile(localIniFile);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

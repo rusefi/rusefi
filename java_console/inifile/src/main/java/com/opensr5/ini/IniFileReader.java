@@ -1,14 +1,20 @@
 package com.opensr5.ini;
 
+import com.devexperts.logging.Logging;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/1/2017
  */
 public class IniFileReader {
+    private static final Logging log = Logging.getLogging(IniFileReader.class);
+
     private IniFileReader() {
     }
 
@@ -106,5 +112,26 @@ public class IniFileReader {
     public static RawIniFile read(File input) throws FileNotFoundException {
         InputStream in = new FileInputStream(input);
         return read(in, input.getAbsolutePath());
+    }
+
+    public static @NotNull IniFileModelImpl readIniFile(RawIniFile content, String iniFilePath, IniFileMetaInfoImpl metaInfo) {
+        final IniFileModelImpl result = new IniFileModelImpl(
+            metaInfo,
+            iniFilePath
+        );
+        for (RawIniFile.Line line : content.getLines()) {
+            result.handleLine(line);
+        }
+        result.finishDialog();
+        return result;
+    }
+
+    @NotNull
+    public static IniFileModelImpl readIniFile(String fileName) throws FileNotFoundException {
+        Objects.requireNonNull(fileName, "fileName");
+        log.info("Reading " + fileName);
+        File input = new File(fileName);
+        RawIniFile content = read(input);
+        return readIniFile(content, fileName, new IniFileMetaInfoImpl(content));
     }
 }

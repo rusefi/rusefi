@@ -4,14 +4,12 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageMeta;
 import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.MsqFactory;
-import com.rusefi.tools.tune.CurveData;
-import com.rusefi.tools.tune.TS2C;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;
@@ -34,7 +32,7 @@ public class TuneReadWriteTest {
 
     {
         try {
-            model = IniFileModelImpl.readIniFile(TEST_INI);
+            model = IniFileReader.readIniFile(TEST_INI);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

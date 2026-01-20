@@ -2,7 +2,7 @@ package com.rusefi.tune;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.ini.field.StringIniField;
@@ -32,7 +32,7 @@ public class LoadOlderTuneTest {
 
         Msq lessOldDefaultTune = Msq.readTune(LoadOlderTuneTest.class.getResource("/simulator_tune-2023-06.xml").getFile());
 
-        IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
+        IniFileModel ini = IniFileReader.readIniFile(TuneReadWriteTest.TEST_INI);
         assertEquals(256, ini.getBlockingFactor());
         assertFalse(ini.getFieldsInUiOrder().isEmpty());
 
@@ -167,7 +167,7 @@ public class LoadOlderTuneTest {
 
     @Test
     public void findFieldByName() throws IniMemberNotFound, FileNotFoundException {
-        IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
+        IniFileModel ini = IniFileReader.readIniFile(TuneReadWriteTest.TEST_INI);
         StringIniField make = (StringIniField) ini.getIniField("ENGINEMAKE");
         assertNotNull(make);
         ScalarIniField tps = (ScalarIniField) ini.getOutputChannel("RPMVALUE");

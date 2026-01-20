@@ -1,7 +1,7 @@
 package com.rusefi.io.pin_output_mode_with_and_without_dollar;
 
 import com.opensr5.ConfigurationImageWithMeta;
-import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.IniFileReader;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.tune.xml.Msq;
@@ -26,7 +26,7 @@ public class PinOutputModeWithAndWithoutDollarTest {
         );
 
         final CalibrationsInfo calibrationsInfoWithDollars = new CalibrationsInfo(
-            IniFileModelImpl.readIniFile(String.format("%s/rusefi_uaefi.ini", TEST_DATA_FOLDER_PATH)),
+            IniFileReader.readIniFile(String.format("%s/rusefi_uaefi.ini", TEST_DATA_FOLDER_PATH)),
             testConfigurationImage
         );
 
@@ -37,7 +37,7 @@ public class PinOutputModeWithAndWithoutDollarTest {
         );
 
         final CalibrationsInfo calibrationsInfoWithoutDollars = new CalibrationsInfo(
-            IniFileModelImpl.readIniFile(String.format("%s/rusefi_uaefi_without_dollar.ini", TEST_DATA_FOLDER_PATH)),
+            IniFileReader.readIniFile(String.format("%s/rusefi_uaefi_without_dollar.ini", TEST_DATA_FOLDER_PATH)),
             testConfigurationImage
         );
         final Msq msqWithoutDollar = calibrationsInfoWithoutDollars.generateMsq();

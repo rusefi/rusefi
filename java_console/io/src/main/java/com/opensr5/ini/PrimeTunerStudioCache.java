@@ -50,7 +50,7 @@ public class PrimeTunerStudioCache {
         }
         IniFileModelImpl iniFileModel;
         try {
-            iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+            iniFileModel = IniFileReader.readIniFile(localIniFile);
         } catch (FileNotFoundException e) {
             log.warn("error " + e);
             return;
