@@ -6,6 +6,7 @@ plugins {
 var rootRelativePath='../'
 
 include ':version'
+project(':version').projectDir = new File(rootRelativePath + 'java_tools/version')
 
 include ':trigger-image'
 project(':trigger-image').projectDir = new File(rootRelativePath + 'java_tools/trigger-image')

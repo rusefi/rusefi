@@ -24,7 +24,6 @@ public class Field {
     private final String name;
     // offset within binary page
     private final int offset;
-    private final int stringSize;
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
@@ -38,24 +37,21 @@ public class Field {
         this(name, offset, type, NO_BIT_OFFSET);
     }
 
+    /*
     public Field(String name, int offset, FieldType type, String... options) {
         this(name, offset, type, NO_BIT_OFFSET, options);
     }
+     */
 
     public Field(String name, int offset, FieldType type, int bitOffset) {
         this(name, offset, type, bitOffset, null);
     }
 
     public Field(String name, int offset, FieldType type, int bitOffset, String[] options) {
-        this(name, offset, 0, type, bitOffset, options);
-    }
-
-    public Field(String name, int offset, int stringSize, FieldType type, int bitOffset, String... options) {
-      this.name = Objects.requireNonNull(name);
-      if (name.trim().isEmpty())
-        throw new IllegalStateException("Empty field name");
+        this.name = Objects.requireNonNull(name);
+        if (name.trim().isEmpty())
+            throw new IllegalStateException("Empty field name");
         this.offset = offset;
-        this.stringSize = stringSize;
         this.type = type;
         this.bitOffset = bitOffset;
         this.options = options;
@@ -81,25 +77,17 @@ public class Field {
         return null;
     }
 
-    public static int getStructureSize(Field[] values) {
-        Field last = values[values.length - 1];
-        // todo: at the moment we do not support arrays and
-        // todo: a lot of information is missing for example for Bit type, but this implementation is good enough for now
-        return last.offset + 4;
-    }
-
     public static String niceToString(Number value) {
         return niceToString(value, FIELD_PRECISION);
     }
 
     public static String niceToString(Number value, int precision) {
         // not enum field
-        Number number = value;
-        if (number instanceof Float)
-            return niceToString(number.floatValue(), precision);
-        if (number instanceof Double)
-            return niceToString(number.doubleValue(), precision);
-        return number.toString();
+        if (value instanceof Float)
+            return niceToString(value.floatValue(), precision);
+        if (value instanceof Double)
+            return niceToString(value.doubleValue(), precision);
+        return value.toString();
     }
 
     public static String niceToString(double value, int precision) {
@@ -166,19 +154,6 @@ public class Field {
             throw new IllegalStateException("Unsupported enum " + type);
         int ordinal = ci.getByteBuffer(offset, type.getStorageSize()).get();
         return options[ordinal];
-    }
-
-    // todo: move universal setValue one day
-    public void setValueU32(byte[] content, int value) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        LittleEndianOutputStream dout = new LittleEndianOutputStream(baos);
-        try {
-            dout.writeInt(value);
-            byte[] src = baos.toByteArray();
-            System.arraycopy(src, 0, content, getOffset(), 4);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void setValue(byte[] content, boolean value) {
@@ -254,7 +229,7 @@ public class Field {
     public static Field create(String name, int offset, FieldType type, int bitOffset) {
         return new Field(name, offset, type, bitOffset);
     }
-
+/*
     public static Field create(String name, int offset, FieldType type, String... options) {
         return new Field(name, offset, type, options);
     }
@@ -262,27 +237,10 @@ public class Field {
     public static Field create(String name, int offset, int stringSize, FieldType type) {
         return new Field(name, offset, stringSize, type, 0);
     }
+*/
 
     public static Field create(String name, int offset, FieldType type) {
         return new Field(name, offset, type);
-    }
-
-    public String getStringValue(ConfigurationImage image) {
-        Objects.requireNonNull(image, "image");
-        if (type != STRING)
-            throw new IllegalStateException("Not a string parameter " + name);
-        return getString(image, offset, stringSize);
-    }
-
-    public static @NotNull String getString(ConfigurationImage image, int offset, int size) {
-        ByteBuffer bb = image.getByteBuffer(offset, size);
-        byte[] bytes = new byte[size];
-        bb.get(bytes);
-        return new String(bytes).trim();
-    }
-
-    public boolean getBooleanValue(ConfigurationImage ci) {
-        return getValue(ci).doubleValue() != 0.0;
     }
 
     public Field setScale(double scale) {

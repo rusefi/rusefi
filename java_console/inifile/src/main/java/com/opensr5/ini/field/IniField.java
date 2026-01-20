@@ -47,13 +47,9 @@ public abstract class IniField {
     /**
      * @see com.rusefi.config.Field#getValue
      */
-    public String getValue(ConfigurationImage image) {
-        return null;
-    }
+    public abstract String getValue(ConfigurationImage image);
 
-    public void setValue(ConfigurationImage image, Constant constant) {
-        throw new UnsupportedOperationException("On " + getClass());
-    }
+    public abstract void setValue(ConfigurationImage image, Constant constant);
 
     @Override
     public boolean equals(Object o) {
