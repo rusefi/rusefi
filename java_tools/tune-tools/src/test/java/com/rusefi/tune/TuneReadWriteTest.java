@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageMeta;
 import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.field.IniField;
@@ -28,7 +29,7 @@ public class TuneReadWriteTest {
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.binary_image";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
 
-    private final IniFileModelImpl model;
+    private final IniFileModel model;
 
     {
         try {
@@ -126,7 +127,7 @@ public class TuneReadWriteTest {
         Files.delete(path);
     }
 
-    private static int compareImages(ConfigurationImage image1, ConfigurationImage fileData, IniFileModelImpl ini) {
+    private static int compareImages(ConfigurationImage image1, ConfigurationImage fileData, IniFileModel ini) {
         byte[] tsBinaryDataContent = image1.getContent();
         byte[] fileBinaryDataContent = fileData.getContent();
 

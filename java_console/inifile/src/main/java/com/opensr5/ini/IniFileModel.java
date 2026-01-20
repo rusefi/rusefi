@@ -46,4 +46,6 @@ public interface IniFileModel {
     String getYBin(String tableName);
 
     Map<String, DialogModel> getDialogs();
+
+    IniField findByOffset(int i);
 }
