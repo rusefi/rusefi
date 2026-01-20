@@ -61,7 +61,7 @@ public class IniFileModelImpl implements IniFileModel {
 
     private int currentPageIndex;
 
-    IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo, final String iniFilePath) {
+    IniFileModelImpl(@Nullable final IniFileMetaInfo metaInfo, final String iniFilePath) {
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
     }

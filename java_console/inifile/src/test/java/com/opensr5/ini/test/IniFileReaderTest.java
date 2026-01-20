@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -338,7 +339,8 @@ public class IniFileReaderTest {
     }
 
     private static @NotNull IniFileModel readLines(RawIniFile lines) {
-        return IniFileReader.readIniFile(lines, "", null);
+        IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
+        return IniFileReader.readIniFile(lines, "", metaInfo);
     }
 
     @Test
