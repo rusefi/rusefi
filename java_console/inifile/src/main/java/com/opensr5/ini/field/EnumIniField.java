@@ -86,13 +86,13 @@ public class EnumIniField extends IniField {
     @Override
     public String toString() {
         return "EnumIniField{" +
-                "name=" + getName() +
-                ", offset=" + getOffset() +
-                ", type=" + type +
-                ", enums=" + enums +
-                ", bitPosition=" + bitPosition +
-                ", bitSize=" + bitSize0 +
-                '}';
+            "name=" + getName() +
+            ", offset=" + getOffset() +
+            ", type=" + type +
+            ", enums=" + enums +
+            ", bitPosition=" + bitPosition +
+            ", bitSize=" + bitSize0 +
+            '}';
     }
 
     public static int setBitRange(int value, int ordinal, int bitPosition, int bitSize) {
@@ -113,7 +113,7 @@ public class EnumIniField extends IniField {
         return ordinal;
     }
 
-    public static EnumIniField parse(LinkedList<String> list, RawIniFile.Line line, IniFileModel iniFileModel) {
+    public static EnumIniField parse(LinkedList<String> list, RawIniFile.Line line, Map<String, List<String>> defines) {
         String name = list.get(0);
         FieldType type = FieldType.parseTs(list.get(2));
         int offset = Integer.parseInt(list.get(3));
@@ -123,7 +123,7 @@ public class EnumIniField extends IniField {
         int bitPosition = parseBitRange.getBitPosition();
         int bitSize0 = parseBitRange.getBitSize0();
 
-        EnumKeyValueMap enums = EnumKeyValueMap.valueOf(line.getRawText(), iniFileModel);
+        EnumKeyValueMap enums = EnumKeyValueMap.valueOf(line.getRawText(), defines);
         return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0);
     }
 
@@ -172,7 +172,7 @@ public class EnumIniField extends IniField {
                 && (keyValues.keySet().stream().allMatch(ordinal -> (0 <= ordinal) && (ordinal <= 1)));
         }
 
-        public static EnumKeyValueMap valueOf(String rawText, IniFileModel iniFileModel) {
+        public static EnumKeyValueMap valueOf(String rawText, Map<String, List<String>> defines) {
             Map<Integer, String> keyValues = new TreeMap<>();
 
             boolean isKeyValueSyntax = isKeyValueSyntax(rawText);
@@ -190,7 +190,7 @@ public class EnumIniField extends IniField {
                 String trimmed = firstValue.trim();
                 if (trimmed.startsWith("$")) {
                     String key = trimmed.substring(1);
-                    List<String> elements = iniFileModel.getDefines().get(key);
+                    List<String> elements = defines.get(key);
                     Objects.requireNonNull(elements, "Elements for " + key);
                     for (int i = 0; i < elements.size(); i++) {
                         keyValues.put(i, elements.get(i));

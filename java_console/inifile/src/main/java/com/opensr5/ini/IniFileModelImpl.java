@@ -337,7 +337,7 @@ public class IniFileModelImpl implements IniFileModel {
                 registerField(ArrayIniField.parse(list));
                 break;
             case FIELD_TYPE_BITS:
-                registerField(EnumIniField.parse(list, line, this));
+                registerField(EnumIniField.parse(list, line, defines));
                 break;
             default:
                 throw new IllegalStateException("Unexpected " + list);
