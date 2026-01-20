@@ -106,7 +106,57 @@ public abstract class IniField {
         });
     }
 
-    public abstract void setValue(ConfigurationImage image, Constant constant);
+    public void setValue(ConfigurationImage image, Constant constant) {
+        accept(new IniFieldVisitor<Void>() {
+            @Override
+            public Void visit(ScalarIniField field) {
+                java.util.Objects.requireNonNull(image, "image for setter");
+                com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName(), field.getOffset(), field.getType());
+                java.nio.ByteBuffer wrapped = image.getByteBuffer(field.getOffset(), field.getType().getStorageSize());
+                ConfigurationImage.setScalarValue(wrapped, field.getType(), constant.getValue(), f.getBitOffset(), field.getMultiplier(), field.getSerializationOffset());
+                return null;
+            }
+
+            @Override
+            public Void visit(EnumIniField field) {
+                String v = constant.getValue();
+                int ordinal = field.getEnums().indexOf(v);
+                if (ordinal == -1)
+                    throw new IllegalArgumentException(constant.getName() + ": Enum name not found " + v);
+                image.setBitValue(field, ordinal);
+                return null;
+            }
+
+            @Override
+            public Void visit(ArrayIniField field) {
+                java.util.Objects.requireNonNull(image, "image array setter");
+                final String[][] values = field.getValues(constant.getValue());
+                for (int rowIndex = 0; rowIndex < values.length; rowIndex++) {
+                    final String[] row = values[rowIndex];
+                    for (int colIndex = 0; colIndex < row.length; colIndex++) {
+                        java.nio.ByteBuffer wrapped = image.getByteBuffer(field.getOffset(rowIndex, colIndex), field.getType().getStorageSize());
+                        ConfigurationImage.setScalarValue(
+                            wrapped,
+                            field.getType(),
+                            values[rowIndex][colIndex],
+                            com.rusefi.config.Field.NO_BIT_OFFSET,
+                            field.getMultiplier(),
+                            0
+                        );
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public Void visit(StringIniField field) {
+                String value = constant.getValue();
+                for (int i = 0; i < value.length(); i++)
+                    image.getContent()[field.getOffset() + i] = (byte) value.charAt(i);
+                return null;
+            }
+        });
+    }
 
     @Override
     public boolean equals(Object o) {

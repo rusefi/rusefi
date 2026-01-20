@@ -61,13 +61,6 @@ public class ScalarIniField extends IniField {
         return type.getStorageSize();
     }
 
-    @Override
-    public void setValue(ConfigurationImage image, Constant constant) {
-        Objects.requireNonNull(image, "image for setter");
-        Field f = new Field(getName(), getOffset(), getType());
-        ByteBuffer wrapped = image.getByteBuffer(getOffset(), type.getStorageSize());
-        ConfigurationImage.setScalarValue(wrapped, type, constant.getValue(), f.getBitOffset(), multiplier, serializationOffset);
-    }
 
     @Override
     public String toString() {

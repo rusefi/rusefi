@@ -32,12 +32,6 @@ public class StringIniField extends IniField {
             '}';
     }
 
-    @Override
-    public void setValue(ConfigurationImage image, Constant constant) {
-        String value = constant.getValue();
-        for (int i = 0; i < value.length(); i++)
-            image.getContent()[getOffset() + i] = (byte) value.charAt(i);
-    }
 
     public static IniField parse(LinkedList<String> list) {
         String name = list.get(0);

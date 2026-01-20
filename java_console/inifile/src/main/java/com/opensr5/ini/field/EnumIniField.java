@@ -55,14 +55,6 @@ public class EnumIniField extends IniField {
         return (len >= 2 && q.charAt(0) == '"' && q.charAt(len - 1) == '"');
     }
 
-    @Override
-    public void setValue(ConfigurationImage image, Constant constant) {
-        String v = constant.getValue();
-        int ordinal = enums.indexOf(v);
-        if (ordinal == -1)
-            throw new IllegalArgumentException(constant.getName() + ": Enum name not found " + v);
-        image.setBitValue(this, ordinal);
-    }
 
     @Override
     public String toString() {

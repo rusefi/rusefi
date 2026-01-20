@@ -126,25 +126,6 @@ public class ArrayIniField extends IniField {
         }
     }
 
-    @Override
-    public void setValue(ConfigurationImage image, Constant constant) {
-        Objects.requireNonNull(image, "image array setter");
-        final String[][] values = getValues(constant.getValue());
-        for (int rowIndex = 0; rowIndex < values.length; rowIndex++) {
-            final String[] row = values[rowIndex];
-            for (int colIndex = 0; colIndex < row.length; colIndex++) {
-                ByteBuffer wrapped = image.getByteBuffer(getOffset(rowIndex, colIndex), type.getStorageSize());
-                ConfigurationImage.setScalarValue(
-                    wrapped,
-                    type,
-                    values[rowIndex][colIndex],
-                    Field.NO_BIT_OFFSET,
-                    multiplier,
-                    0
-                );
-            }
-        }
-    }
 
     @Override
     public String toString() {
