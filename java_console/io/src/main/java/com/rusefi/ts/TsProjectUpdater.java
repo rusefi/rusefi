@@ -2,7 +2,7 @@ package com.rusefi.ts;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileReader;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 
 import java.io.File;
@@ -35,7 +35,7 @@ public enum TsProjectUpdater {
         log.info("lastProjectPath=" + lastProjectPath + ", lastConnectedFirmwareSignature=" + lastConnectedFirmwareSignature);
 
         String projectIniFile = lastProjectPath + File.separator + TsHelper.MAIN_CONTROLLER_PATH;
-        IniFileModel tsProjectIni = IniFileReader.readIniFile(projectIniFile);
+        IniFileModel tsProjectIni = IniFileReaderUtil.readIniFile(projectIniFile);
         String tsProjectSignature = tsProjectIni.getSignature();
         if (!tsProjectSignature.equals(context.getPrevIniFile().getSignature())) {
             log.info(tsProjectSignature + " does not match " + context.getPrevIniFile().getSignature());

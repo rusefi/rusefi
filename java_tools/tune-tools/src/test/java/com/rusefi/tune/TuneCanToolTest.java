@@ -2,7 +2,7 @@ package com.rusefi.tune;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileReader;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.*;
 import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tune.xml.Constant;
@@ -36,7 +36,7 @@ public class TuneCanToolTest {
 
         Msq lessOldDefaultTune = Msq.readTune(TuneCanToolTest.class.getResource("/simulator_tune-2023-06.xml").getFile());
 
-        IniFileModel ini = IniFileReader.readIniFile(TuneReadWriteTest.TEST_INI);
+        IniFileModel ini = IniFileReaderUtil.readIniFile(TuneReadWriteTest.TEST_INI);
         assertEquals(256, ini.getBlockingFactor());
         assertFalse(ini.getFieldsInUiOrder().isEmpty());
 

@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.opensr5.ini.IniFileReader;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.simulator.SimulatorFunctionalTest;
@@ -24,7 +24,7 @@ public class SimulatorFunctionalTestLauncher {
         String iniFileName = args[0];
         BinaryProtocol.iniFileProvider = signature -> {
             try {
-                return IniFileReader.readIniFile(iniFileName);
+                return IniFileReaderUtil.readIniFile(iniFileName);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }

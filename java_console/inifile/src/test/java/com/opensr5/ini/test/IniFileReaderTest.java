@@ -4,6 +4,7 @@ import com.opensr5.ini.*;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -33,11 +34,11 @@ public class IniFileReaderTest {
     @Test
     public void testSplitWithEmptyUnits() {
         {
-            String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= \"\", 1");
+            String[] s = IniFileReaderUtil.splitTokens("\tverboseCanBaseAddress\t\t\t= \"\", 1");
             assertArrayEquals(new String[] { "verboseCanBaseAddress", "", "1" }, s);
         }
         {
-            String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= scalar, U32,\t756,\t\"\", 1, 0, 0, 536870911, 0");
+            String[] s = IniFileReaderUtil.splitTokens("\tverboseCanBaseAddress\t\t\t= scalar, U32,\t756,\t\"\", 1, 0, 0, 536870911, 0");
             assertArrayEquals(new String[] { "verboseCanBaseAddress", "scalar", "U32", "756", "", "1", "0", "0", "536870911", "0" }, s);
         }
     }
@@ -45,19 +46,19 @@ public class IniFileReaderTest {
     @Test
     public void testSplit() {
         {
-            String[] s = IniFileReader.splitTokens("1");
+            String[] s = IniFileReaderUtil.splitTokens("1");
             assertArrayEquals(new String[] { "1" }, s);
         }
         {
-            String[] s = IniFileReader.splitTokens("hello");
+            String[] s = IniFileReaderUtil.splitTokens("hello");
             assertArrayEquals(new String[] { "hello" }, s);
         }
         {
-            String[] s = IniFileReader.splitTokens("\"hello\"");
+            String[] s = IniFileReaderUtil.splitTokens("\"hello\"");
             assertArrayEquals(new String[] { "hello" }, s);
         }
         {
-            String[] s = IniFileReader.splitTokens("\"hello\",\"w\"");
+            String[] s = IniFileReaderUtil.splitTokens("\"hello\",\"w\"");
             assertArrayEquals(new String[] { "hello", "w" }, s);
         }
     }
@@ -65,7 +66,7 @@ public class IniFileReaderTest {
     @Test
     public void testBraces() {
         {
-            String[] result = IniFileReader.splitTokens(
+            String[] result = IniFileReaderUtil.splitTokens(
                 "veLoadBins = array, U16, 17056, [16], {bitStringValue(fuelUnits, fuelAlgorithm) }, 1, 0, 0, 1000, 0"
             );
             assertArrayEquals(new String[] {
@@ -77,7 +78,7 @@ public class IniFileReaderTest {
 
     @Test
     public void testRealLine() {
-        String[] result = IniFileReader.splitTokens("\tdialog = engineChars,\t\"Base Engine Settings\"");
+        String[] result = IniFileReaderUtil.splitTokens("\tdialog = engineChars,\t\"Base Engine Settings\"");
         assertArrayEquals(new String[] { "dialog", "engineChars", "Base Engine Settings" }, result);
         assertEquals(result.length, 3);
     }
@@ -85,7 +86,7 @@ public class IniFileReaderTest {
     @Test
     public void testQuotedTokens() {
         {
-            String[] result = IniFileReader.splitTokens("\"hel  lo\"");
+            String[] result = IniFileReaderUtil.splitTokens("\"hel  lo\"");
             assertArrayEquals(new String[] { "hel  lo" }, result);
         }
     }
@@ -115,7 +116,7 @@ public class IniFileReaderTest {
 
     @NotNull
     private RawIniFile fromString(String string) {
-        return IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        return IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
     }
 
     @Test
@@ -134,7 +135,7 @@ public class IniFileReaderTest {
                 "\t\txBins\t\t= scriptCurve1Bins\n" +
                 "\t\tyBins\t\t= scriptCurve1\n" +
                 "\t\tshowTextValues = true\n";
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
         // technically these are constants?!
         assertEquals(2, model.getAllIniFields().size());
@@ -162,7 +163,7 @@ public class IniFileReaderTest {
                 "\t\tcommandButton = \"Reset to factory tune\", cmd_set_engine_type_default\n" +
                 "" +
                 "";
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
         assertEquals(1, model.getAllIniFields().size());
         assertEquals(2, model.getDialogs().size());
@@ -179,7 +180,7 @@ public class IniFileReaderTest {
             "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
             "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n "
     ;
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
         assertEquals(2, model.getAllIniFields().size());
@@ -201,7 +202,7 @@ public class IniFileReaderTest {
                 "\t\txBins\t\t= tpsTpsAccelFromRpmBins,  TPSValue\n" +
                 "\t\tyBins\t\t= tpsTpsAccelToRpmBins,  TPSValue\n" +
                 "\t\tzBins\t\t= tpsTpsAccelTable";
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
         assertEquals(3, model.getAllIniFields().size());
         assertEquals(3, model.getFieldsInUiOrder().size());
@@ -219,7 +220,7 @@ public class IniFileReaderTest {
                 "#else\n" +
                 "\tlambdaTable\t\t\t\t\t = array, U08, 18592, [16x16],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
                 "#endif\n";
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getAllIniFields().size());
@@ -234,7 +235,7 @@ public class IniFileReaderTest {
                         "page = 1\n" +
                         "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1.0, 0, -40, 200, 1\n" +
                         "";
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
         assertEquals(1, model.getAllIniFields().size());
 
@@ -253,7 +254,7 @@ public class IniFileReaderTest {
                 "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
                 "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\", \"PA5\", \"PA6\", \"PA7\", \"PB0\", \"PB1\", \"PC0\", \"PC1\", \"PC2\", \"PC3\", \"PC4\", \"PC5\", \"Disabled\", \"PB12\", \"PB13\", \"PC14\", \"PC15\", \"PC16\", \"PC17\", \"PD3\", \"PD4\", \"PE2\", \"PE6\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\"\n";
 
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
         assertEquals(2, model.getAllIniFields().size());
@@ -267,7 +268,7 @@ public class IniFileReaderTest {
                 "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
                 "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] $gpio_list\n";
 
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
         assertEquals(1, model.getDefines().size());
 
@@ -308,7 +309,7 @@ public class IniFileReaderTest {
                 "[Constants]\n" +
                 "\tname\t= bits,    U32,   \t744, [3:5], \"false\", \"true\"";
 
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getAllIniFields().size());
@@ -328,7 +329,7 @@ public class IniFileReaderTest {
                 "[PcVariables]\n" +
                 " \tname3\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
 
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getAllIniFields().size());
@@ -340,7 +341,7 @@ public class IniFileReaderTest {
 
     private static @NotNull IniFileModel readLines(RawIniFile lines) {
         IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
-        return IniFileReader.readIniFile(lines, "", metaInfo);
+        return IniFileReaderUtil.readIniFile(lines, "", metaInfo);
     }
 
     @Test
@@ -353,7 +354,7 @@ public class IniFileReaderTest {
                 "\tname\t= bits,    U32,   \t744, [3:4], \"false\", \"true\"\n" +
                 "#endif";
 
-        RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getAllIniFields().size());

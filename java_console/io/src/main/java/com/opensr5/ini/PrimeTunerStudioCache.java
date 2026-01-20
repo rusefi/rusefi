@@ -2,6 +2,8 @@ package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.core.FileUtil;
+import com.rusefi.ini.reader.IniFileReader;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ts.TsHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +44,7 @@ public class PrimeTunerStudioCache {
         @Nullable String localIniFile = IniLocator.findIniFile(".");
         if (localIniFile == null) {
             // another option: one level up or environment variable direction
-            localIniFile = IniLocator.findIniFile(IniFileModelImpl.INI_FILE_PATH);
+            localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH);
             if (localIniFile == null) {
                 log.warn("No .ini");
                 return;
@@ -50,7 +52,7 @@ public class PrimeTunerStudioCache {
         }
         IniFileModel iniFileModel;
         try {
-            iniFileModel = IniFileReader.readIniFile(localIniFile);
+            iniFileModel = IniFileReaderUtil.readIniFile(localIniFile);
         } catch (FileNotFoundException e) {
             log.warn("error " + e);
             return;

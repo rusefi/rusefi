@@ -6,7 +6,7 @@ import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.efiAnalytics.plugin.ecu.servers.OutputChannelServer;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileReader;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.TsTuneReader;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ts_plugin.knock.KnockAnalyzerTab;
@@ -42,7 +42,7 @@ public class PluginBodySandbox {
 
     public static void main(String[] args) throws ControllerException, FileNotFoundException {
         String iniFile = TsTuneReader.getProjectModeFileName(PROJECT_NAME);
-        IniFileModel model = IniFileReader.readIniFile(iniFile);
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniFile);
         Objects.requireNonNull(model, "model");
         java.util.List<String> fieldNamesList = new ArrayList<>(model.getAllIniFields().keySet());
         String[] parameterNames = fieldNamesList.toArray(new String[0]);

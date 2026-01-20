@@ -1,7 +1,7 @@
 package com.rusefi;
 
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileReader;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.xml.*;
 
 import javax.imageio.ImageIO;
@@ -40,7 +40,7 @@ public class ScreenGenerator {
         }
         String iniFileName = args[0];
 
-        iniFileModel = IniFileReader.readIniFile(iniFileName);
+        iniFileModel = IniFileReaderUtil.readIniFile(iniFileName);
 
         for (Map.Entry<String, com.opensr5.ini.DialogModel.Field> a : iniFileModel.getFieldsInUiOrder().entrySet()) {
             String cleanUiName = cleanName(a.getValue().getUiName());

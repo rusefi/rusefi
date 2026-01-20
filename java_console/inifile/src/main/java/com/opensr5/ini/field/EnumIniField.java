@@ -1,9 +1,8 @@
 package com.opensr5.ini.field;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileReader;
-import com.opensr5.ini.RawIniFile;
+import com.rusefi.ini.reader.EnumIniReaderHelper;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.management.ObjectName;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class EnumIniField extends IniField {
     private final FieldType type;
@@ -113,20 +111,6 @@ public class EnumIniField extends IniField {
         return ordinal;
     }
 
-    public static EnumIniField parse(LinkedList<String> list, RawIniFile.Line line, Map<String, List<String>> defines) {
-        String name = list.get(0);
-        FieldType type = FieldType.parseTs(list.get(2));
-        int offset = Integer.parseInt(list.get(3));
-
-        String bitRange = list.get(4);
-        ParseBitRange parseBitRange = new ParseBitRange().invoke(bitRange);
-        int bitPosition = parseBitRange.getBitPosition();
-        int bitSize0 = parseBitRange.getBitSize0();
-
-        EnumKeyValueMap enums = EnumKeyValueMap.valueOf(line.getRawText(), defines);
-        return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0);
-    }
-
     public static int ordinalIndexOf(String str, String substr, int n) {
         int pos = str.indexOf(substr);
         while (--n > 0 && pos != -1)
@@ -134,32 +118,7 @@ public class EnumIniField extends IniField {
         return pos;
     }
 
-    public static class ParseBitRange {
-        private int bitPosition;
-        private int bitSize0;
-
-        public int getBitPosition() {
-            return bitPosition;
-        }
-
-        public int getBitSize0() {
-            return bitSize0;
-        }
-
-        public ParseBitRange invoke(String bitRange) {
-            bitRange = bitRange.replaceAll("[\\]\\[:]", " ").trim();
-            String bitPositions[] = bitRange.split(" ");
-            if (bitPositions.length != 2)
-                throw new IllegalStateException("Bit position " + bitRange);
-            bitPosition = Integer.parseInt(bitPositions[0]);
-            bitSize0 = Integer.parseInt(bitPositions[1]) - bitPosition;
-            return this;
-        }
-    }
-
     public static class EnumKeyValueMap {
-        private static final String STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS = "^\\d+\\s*=.*";
-        private static final Pattern IS_KEY_VALUE_SYNTAX = Pattern.compile(STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS);
 
         private final Map<Integer, String> keyValues;
 
@@ -175,9 +134,9 @@ public class EnumIniField extends IniField {
         public static EnumKeyValueMap valueOf(String rawText, Map<String, List<String>> defines) {
             Map<Integer, String> keyValues = new TreeMap<>();
 
-            boolean isKeyValueSyntax = isKeyValueSyntax(rawText);
+            boolean isKeyValueSyntax = EnumIniReaderHelper.isKeyValueSyntax(rawText);
             int offset = 5;
-            String[] tokens = IniFileReader.splitTokens(rawText);
+            String[] tokens = IniFileReaderUtil.splitTokens(rawText);
 
             if (isKeyValueSyntax) {
                 for (int i = 0; i < tokens.length - offset; i += 2) {
@@ -206,11 +165,6 @@ public class EnumIniField extends IniField {
             return new EnumKeyValueMap(keyValues);
         }
 
-        public static boolean isKeyValueSyntax(String rawText) {
-            String interestingPart = getEnumValuesSection(rawText);
-            return IS_KEY_VALUE_SYNTAX.matcher(interestingPart).matches();
-        }
-
         public int size() {
             return keyValues.size();
         }
@@ -229,10 +183,4 @@ public class EnumIniField extends IniField {
         }
     }
 
-    @NotNull
-    public static String getEnumValuesSection(String rawText) {
-        int interestingIndex = EnumIniField.ordinalIndexOf(rawText, ",", 4);
-        // yes that could have been done with a regex as well
-        return rawText.substring(interestingIndex + /*skipping comma*/1).trim();
-    }
 }

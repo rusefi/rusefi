@@ -8,6 +8,7 @@ import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.enums.engine_type_e;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
@@ -33,7 +34,7 @@ public class WriteSimulatorConfiguration {
         if (args.length != 1)
             throw new IllegalArgumentException("One argument expected: .ini file name");
         String iniFileName = args[0];
-        IniFileModel ini = IniFileReader.readIniFile(iniFileName);
+        IniFileModel ini = IniFileReaderUtil.readIniFile(iniFileName);
         BinaryProtocol.iniFileProvider = signature -> ini;
 
         log.info("ROOT_FOLDER=" + ROOT_FOLDER);

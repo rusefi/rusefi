@@ -5,7 +5,7 @@ import com.opensr5.ConfigurationImageMeta;
 import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileReader;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.io.ConfigurationImageFile;
@@ -32,7 +32,7 @@ public class TuneReadWriteTest {
 
     {
         try {
-            model = IniFileReader.readIniFile(TEST_INI);
+            model = IniFileReaderUtil.readIniFile(TEST_INI);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

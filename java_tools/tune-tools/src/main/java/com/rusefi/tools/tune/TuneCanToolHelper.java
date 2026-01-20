@@ -1,6 +1,6 @@
 package com.rusefi.tools.tune;
 
-import com.opensr5.ini.IniFileReader;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
@@ -15,7 +15,7 @@ public class TuneCanToolHelper {
 
     protected static void initialize(String iniFileName) {
         try {
-            TuneCanTool.ini = IniFileReader.readIniFile(iniFileName);
+            TuneCanTool.ini = IniFileReaderUtil.readIniFile(iniFileName);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

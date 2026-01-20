@@ -2,10 +2,10 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
-import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.Pair;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.ini.reader.EnumIniReaderHelper;
 import com.rusefi.output.*;
 import com.rusefi.parse.TokenUtil;
 import com.rusefi.parse.TypesHelper;
@@ -196,10 +196,10 @@ public class ReaderStateImpl implements ReaderState {
             FieldType typeInTsString = FieldType.parseTs(tsTypeString);
             if (size != typeInTsString.getStorageSize())
                 throw new SizeMismatchException("Size mismatch " + customSize + " vs " + tsTypeString + " in " + customLineWithPrefix);
-            EnumIniField.ParseBitRange bitRange = new EnumIniField.ParseBitRange().invoke(rawLine.getTokens()[3]);
+            EnumIniReaderHelper.ParseBitRange bitRange = new EnumIniReaderHelper.ParseBitRange().invoke(rawLine.getTokens()[3]);
             int totalCount = 1 << (bitRange.getBitSize0() + 1);
             List<String> enums = Arrays.asList(rawLine.getTokens()).subList(4, rawLine.getTokens().length);
-            boolean isKeyValueSyntax = EnumIniField.EnumKeyValueMap.isKeyValueSyntax(EnumIniField.getEnumValuesSection(tunerStudioLine));
+            boolean isKeyValueSyntax = EnumIniReaderHelper.isKeyValueSyntax(EnumIniReaderHelper.getEnumValuesSection(tunerStudioLine));
             int enumCount = isKeyValueSyntax ? enums.size() / 2 : enums.size();
             if (enumCount > totalCount)
                 throw new IllegalStateException(name + ": Too many options in " + tunerStudioLine + " capacity=" + totalCount + "/size=" + enums.size());

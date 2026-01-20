@@ -1,5 +1,6 @@
 package com.opensr5.ini;
 
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,7 +43,7 @@ public class RawIniFile {
     }
 
     public static RawIniFile read(String fileName) throws FileNotFoundException {
-        return IniFileReader.read(new FileInputStream(fileName));
+        return IniFileReaderUtil.read(new FileInputStream(fileName));
     }
 
     @NotNull
@@ -94,7 +95,7 @@ public class RawIniFile {
 
         public Line(String rawText) {
             this.rawText = rawText;
-            tokens = IniFileReader.splitTokens(rawText);
+            tokens = IniFileReaderUtil.splitTokens(rawText);
         }
 
         public String[] getTokens() {

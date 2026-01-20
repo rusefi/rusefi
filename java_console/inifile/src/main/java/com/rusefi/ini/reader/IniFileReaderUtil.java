@@ -1,6 +1,7 @@
-package com.opensr5.ini;
+package com.rusefi.ini.reader;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -12,10 +13,10 @@ import java.util.Objects;
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/1/2017
  */
-public class IniFileReader {
-    private static final Logging log = Logging.getLogging(IniFileReader.class);
+public class IniFileReaderUtil {
+    private static final Logging log = Logging.getLogging(IniFileReaderUtil.class);
 
-    private IniFileReader() {
+    private IniFileReaderUtil() {
     }
 
     /**
@@ -115,7 +116,7 @@ public class IniFileReader {
     }
 
     public static @NotNull IniFileModel readIniFile(RawIniFile content, String iniFilePath, IniFileMetaInfo metaInfo) {
-        final IniFileModelImpl result = new IniFileModelImpl(
+        final IniFileReader result = new IniFileReader(
             metaInfo,
             iniFilePath
         );
