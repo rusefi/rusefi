@@ -48,4 +48,10 @@ public interface IniFileModel {
     Map<String, DialogModel> getDialogs();
 
     IniField findByOffset(int i);
+
+    Map<String, GaugeCategoryModel> getGaugeCategories();
+
+    Map<String, GaugeModel> getGauges();
+
+    GaugeModel getGauge(String name);
 }
