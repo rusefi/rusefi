@@ -384,6 +384,12 @@ public class IniFileReader {
             return;
         }
 
+        // Gauge definition requires at minimum: name, channel, title, units, lowValue, highValue (6 fields)
+        if (list.size() < 6) {
+            log.warn("Skipping incomplete gauge definition: " + gaugeName + " (expected at least 6 fields, got " + list.size() + ")");
+            return;
+        }
+
         try {
             GaugeModel gauge = getGaugeModel(list, gaugeName);
 
@@ -391,6 +397,8 @@ public class IniFileReader {
             allGauges.put(gaugeName, gauge);
 
         } catch (NumberFormatException e) {
+            log.warn("Failed to parse gauge: " + gaugeName + ": " + e.getMessage());
+        } catch (IndexOutOfBoundsException e) {
             log.warn("Failed to parse gauge: " + gaugeName + ": " + e.getMessage());
         }
     }
@@ -401,12 +409,13 @@ public class IniFileReader {
         String units = list.get(3);
         double lowValue = parseDouble(list.get(4));
         double highValue = parseDouble(list.get(5));
-        double lowDangerValue = parseDouble(list.get(6));
-        double lowWarningValue = parseDouble(list.get(7));
-        double highWarningValue = parseDouble(list.get(8));
-        double highDangerValue = parseDouble(list.get(9));
-        int valueDecimalPlaces = parseInt(list.get(10));
-        int labelDecimalPlaces = parseInt(list.get(11));
+
+        double lowDangerValue = list.size() > 6 ? parseDouble(list.get(6)) : lowValue;
+        double lowWarningValue = list.size() > 7 ? parseDouble(list.get(7)) : lowValue;
+        double highWarningValue = list.size() > 8 ? parseDouble(list.get(8)) : highValue;
+        double highDangerValue = list.size() > 9 ? parseDouble(list.get(9)) : highValue;
+        int valueDecimalPlaces = list.size() > 10 ? parseInt(list.get(10)) : 0;
+        int labelDecimalPlaces = list.size() > 11 ? parseInt(list.get(11)) : 0;
 
         return new GaugeModel(gaugeName, channel, title, units,
                 lowValue, highValue, lowDangerValue, lowWarningValue, highWarningValue, highDangerValue,

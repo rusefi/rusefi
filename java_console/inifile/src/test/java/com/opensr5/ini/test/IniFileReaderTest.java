@@ -492,4 +492,56 @@ public class IniFileReaderTest {
             // Expected behavior - list should be immutable
         }
     }
+
+    @Test
+    public void testIncompleteGaugeConfiguration() {
+        // Test gauge with only required fields: name, channel, title, units, lowValue, highValue
+        String string = "[GaugeConfigurations]\n" +
+                "egt1Gauge = egt1, \"EGT#1\", \"C\", 0, 2000\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        // Gauge should be parsed successfully
+        assertEquals(1, model.getGauges().size());
+        assertTrue(model.getGauges().containsKey("egt1Gauge"));
+
+        GaugeModel gauge = model.getGauge("egt1Gauge");
+        assertNotNull(gauge);
+        assertEquals("egt1Gauge", gauge.getName());
+        assertEquals("egt1", gauge.getChannel());
+        assertEquals("EGT#1", gauge.getTitle());
+        assertEquals("C", gauge.getUnits());
+        assertEquals(0.0, gauge.getLowValue(), EPS);
+        assertEquals(2000.0, gauge.getHighValue(), EPS);
+
+        // Missing fields should default to sensible values
+        assertEquals(0.0, gauge.getLowDangerValue(), EPS);  // defaults to lowValue
+        assertEquals(0.0, gauge.getLowWarningValue(), EPS);  // defaults to lowValue
+        assertEquals(2000.0, gauge.getHighWarningValue(), EPS);  // defaults to highValue
+        assertEquals(2000.0, gauge.getHighDangerValue(), EPS);  // defaults to highValue
+        assertEquals(0, gauge.getValueDecimalPlaces());  // defaults to 0
+        assertEquals(0, gauge.getLabelDecimalPlaces());  // defaults to 0
+    }
+
+    @Test
+    public void testPartialGaugeConfiguration() {
+        // Test gauge with some optional fields provided
+        String string = "[GaugeConfigurations]\n" +
+                "testGauge = channel, \"Test\", \"units\", 0, 100, 5, 10, 90\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        GaugeModel gauge = model.getGauge("testGauge");
+        assertNotNull(gauge);
+        assertEquals(0.0, gauge.getLowValue(), EPS);
+        assertEquals(100.0, gauge.getHighValue(), EPS);
+        assertEquals(5.0, gauge.getLowDangerValue(), EPS);
+        assertEquals(10.0, gauge.getLowWarningValue(), EPS);
+        assertEquals(90.0, gauge.getHighWarningValue(), EPS);
+        assertEquals(100.0, gauge.getHighDangerValue(), EPS);  // defaults to highValue
+        assertEquals(0, gauge.getValueDecimalPlaces());  // defaults to 0
+        assertEquals(0, gauge.getLabelDecimalPlaces());  // defaults to 0
+    }
 }
