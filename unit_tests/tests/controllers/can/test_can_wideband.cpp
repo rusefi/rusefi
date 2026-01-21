@@ -293,7 +293,7 @@ TEST(CanWideband, DecodeRusefiStandard)
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
 
 	// ...but no error until egine is runnig
-	EXPECT_EQ((uint8_t)wbo::Fault::NotAllowed, dut.faultCode);
+	EXPECT_EQ((uint8_t)wbo::Status::NotAllowed, dut.faultCode);
 
 	// Now driver should handle valid bit and error states from wbo
 	engine->engineState.heaterControlEnabled = true;
@@ -303,10 +303,10 @@ TEST(CanWideband, DecodeRusefiStandard)
 
 	// make valid again, but report WBO error in diagnostic frame
 	frame.data8[1] = 1;
-	diagFrame.data8[5] = (uint8_t)wbo::Fault::SensorNoHeatSupply;
+	diagFrame.data8[5] = (uint8_t)wbo::Status::SensorUnderheat;
 	dut.processFrame(0, frame, getTimeNowNt());
 	dut.processFrame(0, diagFrame, getTimeNowNt());
-	EXPECT_EQ((uint8_t)wbo::Fault::SensorNoHeatSupply, dut.faultCode);
+	EXPECT_EQ((uint8_t)wbo::Status::SensorUnderheat, dut.faultCode);
 	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::Lambda1).value_or(-1));
 }
 
