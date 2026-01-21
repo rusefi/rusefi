@@ -111,8 +111,13 @@ public class LazyFileImpl implements LazyFile {
         String line;
         StringBuilder sb = new StringBuilder();
         while ((line = in.findWithinHorizon(pat, 0)) != null) {
-            if (!line.toLowerCase().contains(LazyFile.LAZY_FILE_TAG_LOWER))
-                sb.append(line);
+            // Split and process each line the same way write() does
+            String[] lines = line.split("\\r?\\n");
+            for (String subLine : lines) {
+                if (!subLine.toLowerCase().contains(LazyFile.LAZY_FILE_TAG_LOWER)) {
+                    sb.append(subLine).append("\n");
+                }
+            }
         }
         return sb.toString();
     }
