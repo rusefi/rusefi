@@ -365,4 +365,131 @@ public class IniFileReaderTest {
         assertEquals(2, field.getBitSize0());
         assertEquals(1, field.getEnums().size());
     }
+
+    @Test
+    public void testGaugeConfiguration() {
+        String string = "[GaugeConfigurations]\n" +
+                "gaugeCategory = Engine\n" +
+                "rpmGauge = RPMValue, \"Engine Speed\", \"RPM\", 0, 8000, 0, 0, 6000, 8000, 0, 0\n" +
+                "cltGauge = coolant, \"Coolant Temp\", \"°C\", -40, 120, -40, 0, 100, 120, 1, 0\n" +
+                "gaugeCategory = Sensors\n" +
+                "tpsGauge = TPSValue, \"Throttle Position\", \"%\", 0, 100, 0, 0, 90, 100, 1, 1\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        // Test gauge categories
+        assertEquals(2, model.getGaugeCategories().size());
+        assertTrue(model.getGaugeCategories().containsKey("Engine"));
+        assertTrue(model.getGaugeCategories().containsKey("Sensors"));
+
+        // Test Engine category
+        GaugeCategoryModel engineCategory = model.getGaugeCategories().get("Engine");
+        assertNotNull(engineCategory);
+        assertEquals("Engine", engineCategory.getName());
+        assertEquals(2, engineCategory.getGauges().size());
+
+        // Test Sensors category
+        GaugeCategoryModel sensorsCategory = model.getGaugeCategories().get("Sensors");
+        assertNotNull(sensorsCategory);
+        assertEquals("Sensors", sensorsCategory.getName());
+        assertEquals(1, sensorsCategory.getGauges().size());
+
+        // Test all gauges map
+        assertEquals(3, model.getGauges().size());
+        assertTrue(model.getGauges().containsKey("rpmGauge"));
+        assertTrue(model.getGauges().containsKey("cltGauge"));
+        assertTrue(model.getGauges().containsKey("tpsGauge"));
+
+        // Test individual gauge retrieval
+        GaugeModel rpmGauge = model.getGauge("rpmGauge");
+        assertNotNull(rpmGauge);
+        assertEquals("rpmGauge", rpmGauge.getName());
+        assertEquals("RPMValue", rpmGauge.getChannel());
+        assertEquals("Engine Speed", rpmGauge.getTitle());
+        assertEquals("RPM", rpmGauge.getUnits());
+        assertEquals(0.0, rpmGauge.getLowValue(), EPS);
+        assertEquals(8000.0, rpmGauge.getHighValue(), EPS);
+        assertEquals(0.0, rpmGauge.getLowDangerValue(), EPS);
+        assertEquals(0.0, rpmGauge.getLowWarningValue(), EPS);
+        assertEquals(6000.0, rpmGauge.getHighWarningValue(), EPS);
+        assertEquals(8000.0, rpmGauge.getHighDangerValue(), EPS);
+        assertEquals(0, rpmGauge.getValueDecimalPlaces());
+        assertEquals(0, rpmGauge.getLabelDecimalPlaces());
+
+        // Test coolant gauge with different decimal places
+        GaugeModel cltGauge = model.getGauge("cltGauge");
+        assertNotNull(cltGauge);
+        assertEquals("cltGauge", cltGauge.getName());
+        assertEquals("coolant", cltGauge.getChannel());
+        assertEquals("Coolant Temp", cltGauge.getTitle());
+        assertEquals("°C", cltGauge.getUnits());
+        assertEquals(-40.0, cltGauge.getLowValue(), EPS);
+        assertEquals(120.0, cltGauge.getHighValue(), EPS);
+        assertEquals(-40.0, cltGauge.getLowDangerValue(), EPS);
+        assertEquals(0.0, cltGauge.getLowWarningValue(), EPS);
+        assertEquals(100.0, cltGauge.getHighWarningValue(), EPS);
+        assertEquals(120.0, cltGauge.getHighDangerValue(), EPS);
+        assertEquals(1, cltGauge.getValueDecimalPlaces());
+        assertEquals(0, cltGauge.getLabelDecimalPlaces());
+
+        // Test TPS gauge
+        GaugeModel tpsGauge = model.getGauge("tpsGauge");
+        assertNotNull(tpsGauge);
+        assertEquals("tpsGauge", tpsGauge.getName());
+        assertEquals("TPSValue", tpsGauge.getChannel());
+        assertEquals("Throttle Position", tpsGauge.getTitle());
+        assertEquals("%", tpsGauge.getUnits());
+        assertEquals(1, tpsGauge.getValueDecimalPlaces());
+        assertEquals(1, tpsGauge.getLabelDecimalPlaces());
+    }
+
+    @Test
+    public void testGaugeConfigurationWithoutCategory() {
+        String string = "[GaugeConfigurations]\n" +
+                "rpmGauge = RPMValue, \"Engine Speed\", \"RPM\", 0, 8000, 0, 0, 6000, 8000, 0, 0\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        // Gauges without a category should still be in the all gauges map
+        assertEquals(1, model.getGauges().size());
+        assertTrue(model.getGauges().containsKey("rpmGauge"));
+
+        GaugeModel rpmGauge = model.getGauge("rpmGauge");
+        assertNotNull(rpmGauge);
+        assertEquals("rpmGauge", rpmGauge.getName());
+    }
+
+    @Test
+    public void testEmptyGaugeConfiguration() {
+        String string = "[GaugeConfigurations]\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertEquals(0, model.getGaugeCategories().size());
+        assertEquals(0, model.getGauges().size());
+    }
+
+    @Test
+    public void testGaugeCategoryModelImmutability() {
+        String string = "[GaugeConfigurations]\n" +
+                "gaugeCategory = TestCategory\n" +
+                "testGauge = channel, \"Title\", \"units\", 0, 100, 0, 10, 90, 100, 1, 1\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        GaugeCategoryModel category = model.getGaugeCategories().get("TestCategory");
+        assertNotNull(category);
+
+        // The list returned should be unmodifiable
+        try {
+            category.getGauges().clear();
+            fail("Expected UnsupportedOperationException when modifying gauge list");
+        } catch (UnsupportedOperationException e) {
+            // Expected behavior - list should be immutable
+        }
+    }
 }
