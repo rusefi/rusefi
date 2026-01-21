@@ -28,10 +28,13 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## January 2026 "Day 1428"
+
 ### Fixed
  - ETB: calibration, wrong scale 3% calibration error #8863
  - luaHeapAlloc crashed when not enough RAM #8874
  - uaefi121: pin 43 conflict with green LED #8884
+ - super-uaefi: high side 43 conflict with green LED
  - TS: annoying numeric values after proper named values #8898
 
 ### Added
