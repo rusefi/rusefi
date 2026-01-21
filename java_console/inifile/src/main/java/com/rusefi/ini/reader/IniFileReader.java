@@ -3,6 +3,7 @@ package com.rusefi.ini.reader;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
 import com.opensr5.ini.field.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -26,7 +27,9 @@ public class IniFileReader {
                 fieldsInUiOrder,
                 xBinsByZBins,
                 yBinsByZBins,
-                dialogs);
+                dialogs,
+                gaugeCategories,
+                allGauges);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -61,6 +64,12 @@ public class IniFileReader {
     private final Map<String, String> yBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
+
+    private boolean isGaugeConfigurationsSection = false;
+    private String currentGaugeCategory = null;
+    private final Map<String, GaugeCategoryModel> gaugeCategories = new LinkedHashMap<>();
+    private final List<GaugeModel> currentCategoryGauges = new ArrayList<>();
+    private final Map<String, GaugeModel> allGauges = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -159,13 +168,20 @@ public class IniFileReader {
 
             if (first.startsWith("[") && first.endsWith("]")) {
                 log.info("Section " + first);
+
+                boolean wasGaugeSection = isGaugeConfigurationsSection;
+
                 if (first.contains("[SettingContextHelp]")) {
                     isInsidePageDefinition = false;
                     isInSettingContextHelp = true;
-                    return;
                 }
                 isConstantsSection = first.equals("[Constants]");
                 isOutputChannelsSection = first.equals("[OutputChannels]");
+                isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
+
+                if (wasGaugeSection && !isGaugeConfigurationsSection) {
+                    finishGaugeCategory();
+                }
             }
 
             if (isConstantsSection) {
@@ -180,6 +196,9 @@ public class IniFileReader {
                 }
             } else if (isOutputChannelsSection) {
                 handleOutputChannelDefinition(list);
+                return;
+            } else if (isGaugeConfigurationsSection) {
+                handleGaugeConfiguration(list);
                 return;
             }
 
@@ -351,5 +370,63 @@ public class IniFileReader {
     private void trim(LinkedList<String> list) {
         while (!list.isEmpty() && list.getFirst().isEmpty())
             list.removeFirst();
+    }
+
+    private void handleGaugeConfiguration(LinkedList<String> list) {
+        if (list.size() < 2)
+            return;
+
+        String gaugeName = list.get(0);
+
+        if (gaugeName.equalsIgnoreCase("gaugeCategory")) {
+            finishGaugeCategory();
+            currentGaugeCategory = list.get(1);
+            return;
+        }
+
+        try {
+            GaugeModel gauge = getGaugeModel(list, gaugeName);
+
+            currentCategoryGauges.add(gauge);
+            allGauges.put(gaugeName, gauge);
+
+        } catch (NumberFormatException e) {
+            log.warn("Failed to parse gauge: " + gaugeName + ": " + e.getMessage());
+        }
+    }
+
+    private @NotNull GaugeModel getGaugeModel(LinkedList<String> list, String gaugeName) {
+        String channel = list.get(1);
+        String title = list.get(2);
+        String units = list.get(3);
+        double lowValue = parseDouble(list.get(4));
+        double highValue = parseDouble(list.get(5));
+        double lowDangerValue = parseDouble(list.get(6));
+        double lowWarningValue = parseDouble(list.get(7));
+        double highWarningValue = parseDouble(list.get(8));
+        double highDangerValue = parseDouble(list.get(9));
+        int valueDecimalPlaces = parseInt(list.get(10));
+        int labelDecimalPlaces = parseInt(list.get(11));
+
+        return new GaugeModel(gaugeName, channel, title, units,
+                lowValue, highValue, lowDangerValue, lowWarningValue, highWarningValue, highDangerValue,
+                valueDecimalPlaces, labelDecimalPlaces);
+    }
+
+    void finishGaugeCategory() {
+        if (currentGaugeCategory != null && !currentCategoryGauges.isEmpty()) {
+            gaugeCategories.put(currentGaugeCategory,
+                    new GaugeCategoryModel(currentGaugeCategory, new ArrayList<>(currentCategoryGauges)));
+            currentCategoryGauges.clear();
+        }
+        currentGaugeCategory = null;
+    }
+
+    private double parseDouble(String s) {
+        return Double.parseDouble(s);
+    }
+
+    private int parseInt(String s) {
+        return Integer.parseInt(s);
     }
 }

@@ -20,6 +20,8 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, String> xBinsByZBins;
     private final Map<String, String> yBinsByZBins;
     private final Map<String, DialogModel> dialogs;
+    private final Map<String, GaugeCategoryModel> gaugeCategories;
+    private final Map<String, GaugeModel> gauges;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         TreeMap<String, V> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -40,7 +42,9 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, DialogModel.Field> fieldsInUiOrder,
                                  Map<String, String> xBinsByZBins,
                                  Map<String, String> yBinsByZBins,
-                                 Map<String, DialogModel> dialogs) {
+                                 Map<String, DialogModel> dialogs,
+                                 Map<String, GaugeCategoryModel> gaugeCategories,
+                                 Map<String, GaugeModel> gauges) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -55,6 +59,8 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.xBinsByZBins = copyWithCaseInsensitiveKeys(xBinsByZBins);
         this.yBinsByZBins = copyWithCaseInsensitiveKeys(yBinsByZBins);
         this.dialogs = Collections.unmodifiableMap(new TreeMap<>(dialogs));
+        this.gaugeCategories = Collections.unmodifiableMap(new LinkedHashMap<>(gaugeCategories));
+        this.gauges = copyWithCaseInsensitiveKeys(gauges);
     }
 
     @Override
@@ -160,5 +166,20 @@ public class ImmutableIniFileModel implements IniFileModel {
                 return field;
         }
         return null;
+    }
+
+    @Override
+    public Map<String, GaugeCategoryModel> getGaugeCategories() {
+        return gaugeCategories;
+    }
+
+    @Override
+    public Map<String, GaugeModel> getGauges() {
+        return gauges;
+    }
+
+    @Override
+    public GaugeModel getGauge(String name) {
+        return gauges.get(name);
     }
 }

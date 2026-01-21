@@ -124,6 +124,7 @@ public class IniFileReaderUtil {
             result.handleLine(line);
         }
         result.finishDialog();
+        result.finishGaugeCategory();
         return result.getIniFileModel();
     }
 
