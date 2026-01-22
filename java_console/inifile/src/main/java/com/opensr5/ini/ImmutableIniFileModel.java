@@ -22,6 +22,8 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, DialogModel> dialogs;
     private final Map<String, GaugeCategoryModel> gaugeCategories;
     private final Map<String, GaugeModel> gauges;
+    private final Map<String, String> topicHelp;
+    private final Map<String, ContextHelpModel> contextHelp;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         TreeMap<String, V> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -44,7 +46,9 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, String> yBinsByZBins,
                                  Map<String, DialogModel> dialogs,
                                  Map<String, GaugeCategoryModel> gaugeCategories,
-                                 Map<String, GaugeModel> gauges) {
+                                 Map<String, GaugeModel> gauges,
+                                 Map<String, String> topicHelp,
+                                 Map<String, ContextHelpModel> contextHelp) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -61,6 +65,8 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.dialogs = Collections.unmodifiableMap(new TreeMap<>(dialogs));
         this.gaugeCategories = Collections.unmodifiableMap(new LinkedHashMap<>(gaugeCategories));
         this.gauges = copyWithCaseInsensitiveKeys(gauges);
+        this.topicHelp = Collections.unmodifiableMap(new TreeMap<>(topicHelp));
+        this.contextHelp = Collections.unmodifiableMap(new LinkedHashMap<>(contextHelp));
     }
 
     @Override
@@ -181,5 +187,20 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public GaugeModel getGauge(String name) {
         return gauges.get(name);
+    }
+
+    @Override
+    public Map<String, String> getTopicHelp() {
+        return topicHelp;
+    }
+
+    @Override
+    public Map<String, ContextHelpModel> getContextHelp() {
+        return contextHelp;
+    }
+
+    @Override
+    public ContextHelpModel getContextHelp(String referenceName) {
+        return contextHelp.get(referenceName);
     }
 }

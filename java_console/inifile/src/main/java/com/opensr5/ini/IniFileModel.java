@@ -54,4 +54,10 @@ public interface IniFileModel {
     Map<String, GaugeModel> getGauges();
 
     GaugeModel getGauge(String name);
+
+    Map<String, String> getTopicHelp();
+
+    Map<String, ContextHelpModel> getContextHelp();
+
+    ContextHelpModel getContextHelp(String referenceName);
 }
