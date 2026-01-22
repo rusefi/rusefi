@@ -95,7 +95,7 @@ static void hellen_honda_k_boardDefaultConfiguration() {
 
 	setHellenCan();
 
-    engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM4;
+    engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM5; // B23 VTC VVT
 
   gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
   vtsControl->pin = Gpio::H144_OUT_IO6;
