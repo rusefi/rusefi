@@ -69,6 +69,8 @@ public:
 
 	void assertPacketSize(size_t size, bool allowLongPackets);
 	uint32_t writePacketHeader(const uint8_t responseCode, const size_t size);
+	uint32_t writePacketBody(const uint8_t* buf, const size_t size, uint32_t crc);
+	void writeCrcPacketTail(uint32_t crc);
 	void crcAndWriteBuffer(const uint8_t responseCode, const size_t size);
 	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 

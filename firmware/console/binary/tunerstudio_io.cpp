@@ -88,6 +88,25 @@ void TsChannelBase::writeCrcPacketLarge(const uint8_t responseCode, const uint8_
 	flush();
 }
 
+uint32_t TsChannelBase::writePacketBody(const uint8_t* buf, const size_t size, uint32_t crc) {
+	if ((size) && (buf)) {
+		write(buf, size, /*isEndOfPacket*/false);
+		crc = crc32inc((void *)buf, crc, size);
+	}
+
+	// return updated CRC
+	return crc;
+}
+
+void TsChannelBase::writeCrcPacketTail(uint32_t crc) {
+	uint8_t crcBuffer[4];
+
+	*(uint32_t *)crcBuffer = SWAP_UINT32(crc);
+
+	write(crcBuffer, sizeof(crcBuffer), /*isEndOfPacket*/true);
+	flush();
+}
+
 TsChannelBase::TsChannelBase(const char *p_name) {
 	this->name = p_name;
 }
