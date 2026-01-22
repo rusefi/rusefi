@@ -85,7 +85,7 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		startWatchdog();
 	}
 
-	efiPrintf("SD: Write done after %d mS", elapsed_Ms);
+	efiPrintf("Flash: Write done after %d mS", elapsed_Ms);
 
 	return status;
 }
