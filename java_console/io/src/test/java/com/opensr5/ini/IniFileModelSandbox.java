@@ -35,5 +35,15 @@ public class IniFileModelSandbox {
         } else {
             log.warn("Gauge category 'Idle' not found in the INI file");
         }
+
+        ContextHelpModel contextHelp = iniFile.getContextHelp("veTableDialogHelp");
+        if (contextHelp != null) {
+            log.info("Context help for 'veTableDialogHelp':");
+            log.info("Title: " + contextHelp.getTitle());
+            log.info("Text: " + contextHelp.getTextLines());
+            log.info("Web Help: " + contextHelp.getWebHelp());
+        } else {
+            log.warn("Context help for 'veTableDialogHelp' not found in the INI file");
+        }
     }
 }

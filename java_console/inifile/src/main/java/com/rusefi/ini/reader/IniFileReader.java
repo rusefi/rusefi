@@ -14,6 +14,9 @@ import java.util.*;
  */
 public class IniFileReader {
     public IniFileModel getIniFileModel() {
+        // Finish any pending context help entry before building the model
+        finishContextHelp();
+
         return new ImmutableIniFileModel(metaInfo.getSignature(),
                 getBlockingFactor(),
                 defines,
@@ -29,7 +32,9 @@ public class IniFileReader {
                 yBinsByZBins,
                 dialogs,
                 gaugeCategories,
-                allGauges);
+                allGauges,
+                topicHelpMap,
+                contextHelp);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -45,6 +50,7 @@ public class IniFileReader {
 
     private String dialogId;
     private String dialogUiName;
+    private String dialogTopicHelp;
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
@@ -70,6 +76,13 @@ public class IniFileReader {
     private final Map<String, GaugeCategoryModel> gaugeCategories = new LinkedHashMap<>();
     private final List<GaugeModel> currentCategoryGauges = new ArrayList<>();
     private final Map<String, GaugeModel> allGauges = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, String> topicHelpMap = new TreeMap<>();
+
+    private final Map<String, ContextHelpModel> contextHelp = new LinkedHashMap<>();
+    private String currentHelpReferenceName;
+    private String currentHelpTitle;
+    private final List<String> currentHelpTextLines = new ArrayList<>();
+    private String currentHelpWebHelp;
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -112,9 +125,10 @@ public class IniFileReader {
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
-        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog));
+        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, dialogTopicHelp));
 
         dialogId = null;
+        dialogTopicHelp = null;
         fieldsOfCurrentDialog.clear();
         commandsOfCurrentDialog.clear();
     }
@@ -141,10 +155,10 @@ public class IniFileReader {
             if (isInSettingContextHelp) {
                 // todo: use TSProjectConsumer constant
                 if (rawText.contains("SettingContextHelpEnd")) {
+                    finishContextHelp();
                     isInSettingContextHelp = false;
                 }
-                if (list.size() == 2)
-                    tooltips.put(list.get(0), list.get(1));
+                handleSettingContextHelpLine(list);
                 return;
             }
 
@@ -215,6 +229,21 @@ public class IniFileReader {
                     break;
                 case "dialog":
                     handleDialog(list);
+                    break;
+                case "topicHelp":
+                    handleTopicHelp(list);
+                    break;
+                case "help":
+                    // Handle help entries anywhere (they can appear after dialogs)
+                    handleHelpEntry(list);
+                    break;
+                case "text":
+                    // Handle text lines for help entries
+                    handleHelpText(list);
+                    break;
+                case "webHelp":
+                    // Handle webHelp for help entries
+                    handleHelpWebHelp(list);
                     break;
                 case "table":
                     handleTable(list);
@@ -367,6 +396,20 @@ public class IniFileReader {
         log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "]");
     }
 
+    private void handleTopicHelp(LinkedList<String> list) {
+        list.removeFirst(); // "topicHelp"
+        if (!list.isEmpty()) {
+            String topicHelpValue = list.removeFirst();
+            dialogTopicHelp = topicHelpValue;
+
+            // Store topicHelp in the map with the current dialog ID as key
+            if (dialogId != null) {
+                topicHelpMap.put(dialogId, topicHelpValue);
+                log.debug("IniFileModel: topicHelp=[" + topicHelpValue + "] for dialog=[" + dialogId + "]");
+            }
+        }
+    }
+
     private void trim(LinkedList<String> list) {
         while (!list.isEmpty() && list.getFirst().isEmpty())
             list.removeFirst();
@@ -429,6 +472,80 @@ public class IniFileReader {
             currentCategoryGauges.clear();
         }
         currentGaugeCategory = null;
+    }
+
+    private void handleSettingContextHelpLine(LinkedList<String> list) {
+        if (list.isEmpty())
+            return;
+
+        String first = list.get(0);
+
+        // Skip comment
+        if (first.startsWith(";"))
+            return;
+
+        // help = referenceName, "Title"
+        if (first.equals("help") && list.size() >= 3) {
+            finishContextHelp();
+            currentHelpReferenceName = list.get(1);
+            currentHelpTitle = list.get(2);
+            return;
+        }
+
+        // text = "text line"
+        if (first.equals("text") && list.size() >= 2 && currentHelpReferenceName != null) {
+            currentHelpTextLines.add(list.get(1));
+            return;
+        }
+
+        // webHelp = "url"
+        if (first.equals("webHelp") && list.size() >= 2 && currentHelpReferenceName != null) {
+            currentHelpWebHelp = list.get(1);
+            return;
+        }
+
+        // Simple tooltip entries: fieldName = "tooltip text"
+        // Only process as tooltip if not help/text/webHelp and has exactly 2 elements
+        if (list.size() == 2) {
+            tooltips.put(first, list.get(1));
+        }
+    }
+
+    void finishContextHelp() {
+        if (currentHelpReferenceName != null) {
+            ContextHelpModel helpModel = new ContextHelpModel(
+                    currentHelpReferenceName,
+                    currentHelpTitle,
+                    currentHelpTextLines,
+                    currentHelpWebHelp
+            );
+            contextHelp.put(currentHelpReferenceName, helpModel);
+
+            currentHelpReferenceName = null;
+            currentHelpTitle = null;
+            currentHelpTextLines.clear();
+            currentHelpWebHelp = null;
+        }
+    }
+
+    private void handleHelpEntry(LinkedList<String> list) {
+        if (list.size() >= 3) {
+            finishContextHelp();
+            currentHelpReferenceName = list.get(1);
+            currentHelpTitle = list.get(2);
+        }
+    }
+
+    private void handleHelpText(LinkedList<String> list) {
+        if (list.size() >= 2 && currentHelpReferenceName != null) {
+            currentHelpTextLines.add(list.get(1));
+        }
+    }
+
+    private void handleHelpWebHelp(LinkedList<String> list) {
+        if (list.size() >= 2 && currentHelpReferenceName != null) {
+            currentHelpWebHelp = list.get(1);
+        }
     }
 
     private double parseDouble(String s) {

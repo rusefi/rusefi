@@ -12,16 +12,26 @@ public class DialogModel {
     private final String uiName;
     private final List<Field> fields;
     private final List<Command> commandsOfCurrentDialog;
+    private final String topicHelp;
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog) {
+        this(key, uiName, fields, commandsOfCurrentDialog, null);
+    }
+
+    public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, String topicHelp) {
         this.key = key;
         this.uiName = uiName;
         this.fields = new ArrayList<>(fields);
         this.commandsOfCurrentDialog = new ArrayList<>(commandsOfCurrentDialog);
+        this.topicHelp = topicHelp;
     }
 
     public List<Field> getFields() {
         return fields;
+    }
+
+    public String getTopicHelp() {
+        return topicHelp;
     }
 
     @Override
@@ -30,6 +40,7 @@ public class DialogModel {
                 "key='" + key + '\'' +
                 ", uiName='" + uiName + '\'' +
                 ", fields=" + fields.size() +
+                ", topicHelp='" + topicHelp + '\'' +
                 '}';
     }
 
