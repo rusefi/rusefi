@@ -1,11 +1,13 @@
 struct_no_prefix wideband_state_s
 ! see also 'Fault' enum in wideband source code
-	uint8_t faultCode;WBO: Fault code
+	uint8_t stateCode;WBO: State code
 
 	uint8_t heaterDuty;WBO: Heater duty;"%", 1, 0, 0, 100, 0
 	uint8_t pumpDuty;WBO: Pump duty;"%", 1, 0, 0, 100, 0
 
 	bit isValid;
+	bit canSilent;
+	bit allowed;
 	bit fwUnsupported;
 	bit fwOutdated;
 

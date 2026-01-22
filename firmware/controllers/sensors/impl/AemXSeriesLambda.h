@@ -40,7 +40,7 @@ private:
 
 	const uint8_t m_sensorIndex;
 	// raw fault code from sensor
-	uint8_t m_faultCode;
+	uint8_t m_stateCode;
 	// Used by both AEM and rusEFI WBO
 	bool m_afrIsValid;
 	// Used for AEM sensor only
