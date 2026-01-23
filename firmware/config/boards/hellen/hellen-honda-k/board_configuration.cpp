@@ -117,7 +117,7 @@ static void hellen_honda_k_boardDefaultConfiguration() {
     config->hondaKcltGaugeAdder = 50;
     engineConfiguration->kLineBaudRate = 9600;
 	engineConfiguration->hondaK = true;
-	engineConfiguration->verboseKLine = true;
+	engineConfiguration->verboseKLine = false;
 
 	engineConfiguration->brakePedalPin = Gpio::H144_IN_CAM;
 	engineConfiguration->acRelayPin = Gpio::H144_LS_5;
