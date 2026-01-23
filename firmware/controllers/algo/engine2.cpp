@@ -196,9 +196,10 @@ void EngineState::periodicFastCallback() {
 
 	auto clResult = engine->module<ShortTermFuelTrim>()->getCorrection(rpm, fuelLoad);
 
+#if EFI_LTFT_CONTROL
 	engine->module<LongTermFuelTrim>()->learn(clResult, rpm, fuelLoad);
-
 	auto ltftResult = engine->module<LongTermFuelTrim>()->getTrims(rpm, fuelLoad);
+#endif
 
 	injectionStage2Fraction = getStage2InjectionFraction(rpm, engine->fuelComputer.afrTableYAxis);
 	float stage2InjectionMass = untrimmedInjectionMass * injectionStage2Fraction;
@@ -243,7 +244,11 @@ void EngineState::periodicFastCallback() {
 		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[cylinderIndex];
     efiAssertVoid(ObdCode::CUSTOM_OBD_BAD_BANK_INDEX, bankIndex < FT_BANK_COUNT, "bankIndex");
 		/* TODO: add LTFT trims when ready */
-		auto bankTrim = clResult.banks[bankIndex] * ltftResult.banks[bankIndex];
+		auto bankTrim = clResult.banks[bankIndex] *
+#if EFI_LTFT_CONTROL
+			ltftResult.banks[bankIndex] *
+#endif
+			1.0;
 		auto cylinderTrim = getCylinderFuelTrim(cylinderIndex, rpm, fuelLoad);
 		auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
 
