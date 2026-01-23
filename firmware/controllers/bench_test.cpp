@@ -780,6 +780,11 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 			requestWidebandUpdate(widebandUpdateHwId, subsystem == TS_WIDEBAND_FLASH_BY_ID_FILE);
 		}
 		break;
+
+	case TS_WIDEBAND_RESTART:
+		restartWideband();
+		break;
+
 #endif // EFI_CAN_SUPPORT
 	case TS_BENCH_CATEGORY:
 		handleBenchCategory(index);

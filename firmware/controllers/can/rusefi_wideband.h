@@ -18,6 +18,9 @@ void pingWideband(uint8_t hwIndex);
 // Set CAN index to given wideband controller, does not wait for ack, does not block calling thread
 void setWidebandOffsetNoWait(uint8_t hwIndex, uint8_t index);
 
+// Stops sending heating enabled bit for 0.5 sec
+void restartWideband();
+
 // WARNING:
 // Two following functions can block thread execution while waiting for ACK from WBO
 // Do not call from critical tasks!

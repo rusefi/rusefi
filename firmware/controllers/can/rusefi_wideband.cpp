@@ -26,6 +26,7 @@ size_t getWidebandBus() {
 #define EVT_BOOTLOADER_ACK EVENT_MASK(0)
 
 static thread_t* waitingBootloaderThread = nullptr;
+static char widebandRestart = 0;
 
 void handleWidebandCan(const size_t busIndex, const CANRxFrame& frame) {
 	// wrong bus
@@ -184,6 +185,11 @@ void pingWideband(uint8_t hwIndex) {
 	waitingBootloaderThread = nullptr;
 }
 
+void restartWideband() {
+	// 10 times of 50 mS
+	widebandRestart = 10;
+}
+
 // Called with 50mS interval and only if CAN and (on-boards) WBO(s) are enabled
 void sendWidebandInfo() {
 	static int counter = 0;
@@ -195,7 +201,12 @@ void sendWidebandInfo() {
 	m[0] = vbatt;
 
 	// Offset 1 bit 0 = heater enable
-	m[1] = engine->engineState.heaterControlEnabled ? 0x01 : 0x00;
+	if (widebandRestart) {
+		m[1] = 0x00;
+		widebandRestart--;
+	} else {
+		m[1] = engine->engineState.heaterControlEnabled ? 0x01 : 0x00;
+	}
 
 	// 10 * 50 = 0.5S delay
 	if (counter == 10) {
