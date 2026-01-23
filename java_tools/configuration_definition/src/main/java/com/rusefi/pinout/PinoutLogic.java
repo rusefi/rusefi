@@ -357,7 +357,7 @@ public class PinoutLogic {
             outputs.append(header);
             outputs.write("#pragma once\n\n");
 
-            outputs.write("Gpio GENERATED_OUTPUTS = {\n");
+            outputs.write("Gpio GENERATED_OUTPUTS[] = {\n");
 
             for (String output : lowSideOutputs) {
                 String tsName = tsNameByMeta.get(output);
