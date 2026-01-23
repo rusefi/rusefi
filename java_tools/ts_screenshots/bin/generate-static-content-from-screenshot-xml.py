@@ -3,6 +3,7 @@ from pathlib import Path
 import shutil
 import urllib.parse
 import re
+import base64
 
 XML_FILE = "images/ScreenGeneratorTool.xml"
 OUTPUT_HTML = "index.html"
@@ -50,6 +51,7 @@ h3 { margin-top: 15px; color: #0066cc; }
 .field:target { outline: 3px solid green; }
 .field img { max-width: 100%; display: block; margin-top: 10px; }
 .tooltip { font-size: 0.9em; color: #555; margin-top: 4px; }
+.topic-help { font-size: 1em; }
 """
 
 JS_SCRIPT = """
@@ -108,11 +110,15 @@ def main():
             toc_parts.append(f"<li><a href='#{dialog_id}'>{dialog_title}</a></li>")
 
             dialog_img = dialog.attrib.get("imageName", "")
+            topicHelp = dialog.attrib.get("topicHelp", "")
             content_parts.append(f"<h3 id='{dialog_id}'>{dialog_title}</h3>")
             if dialog_img:
                 img_path = copy_image(dialog_img)
                 if img_path:
                     content_parts.append(f"<img src='{img_path}' alt='{dialog_title}'>")
+            if topicHelp:
+                topicHelpHtml = base64.b64decode(topicHelp).decode('utf-8')
+                content_parts.append(topicHelpHtml)
 
             for field in dialog.findall(".//field"):
                 ui_name = re.sub(r'(?<! )\([^()]+\)$', '', field.attrib.get("uiName", "Field"))
