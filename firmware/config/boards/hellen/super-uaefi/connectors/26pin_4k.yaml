@@ -50,7 +50,7 @@ pins:
   - pin: 9D
     class: analog_inputs
     ts_name: KNOCK
-    function: KNOCK sensor
+    function: KNOCK sensor (other sensor pin goes to analog ground)
 
   - pin: 10D
     ts_name: VR_9924-

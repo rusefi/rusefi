@@ -84,7 +84,7 @@ pins:
 
   - pin: D14
     color: yellow
-    function: Knock Input
+    function: Knock Input (other sensor pin goes to analog ground)
 
   - pin: D15
     meta: MM100_IN_IAT_ANALOG

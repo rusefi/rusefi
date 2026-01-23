@@ -400,7 +400,7 @@ pins:
     color: black
 
   - pin: 62a
-    function: GNDA KNOCK sensor
+    function: GNDA
     type: gnd
     color: black
 
@@ -430,10 +430,10 @@ pins:
     type: gnd
     color: black
 
-  - pin: 67a
-    class: analog_inputs
-    ts_name: KNOCK2
-    function: KNOCK2 UNUSED sensor
+#  - pin: 67a
+#    class: analog_inputs
+#    ts_name: KNOCK2
+#    function: KNOCK2 UNUSED sensor
 
   - pin: 68a
     function: GNDA KNOCK2 sensor
@@ -492,7 +492,7 @@ pins:
   - pin: 81a
     class: analog_inputs
     ts_name: KNOCK
-    function: KNOCK sensor
+    function: KNOCK sensor (other sensor pin goes to analog ground)
 
   - pin: 82a
     function: CAN bus high
