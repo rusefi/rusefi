@@ -1131,7 +1131,7 @@ end_struct
 	bit fuelClosedLoopCorrectionEnabled,"enabled","disabled";Enables lambda sensor closed loop feedback for fuelling.
 	bit alwaysWriteSdCard,"yes","no";Write SD card log even when powered by USB
 	bit knockDetectionUseDoubleFrequency,"second harmonic","first harmonic";Second harmonic (aka double) is usually quieter background noise
-	bit yesUnderstandLocking,"yes","no"
+	bit yesUnderstandLocking,"yes","no";Unlocking only via rusEFI console using 'unlock PICODEBUG' command. Use 'reset to default firmware' if pincode is lost.
 	bit silentTriggerError;Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor,"yes","no"
 	bit canReadEnabled;enable can_read/disable can_read
@@ -2178,6 +2178,7 @@ uint8_t[ETB2_TRIM_RPM_SIZE] autoscale throttle2TrimRpmBins;;"RPM", @@RPM_AS_BYTE
 #define KNOCK_TABLE_SIZE 6
 #define KNOCK_TABLE_RPM_SIZE 6
 #define ts_show_enableKnockSpectrogram true
+#define ts_ecu_locking true
 #define ts_show_measureMapOnlyInOneCylinder true
 #define ts_show_mapMinBufferLength true
 #define ts_show_virtual_dyno false
