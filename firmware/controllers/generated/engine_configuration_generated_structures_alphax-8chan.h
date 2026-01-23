@@ -2053,7 +2053,7 @@ struct engine_configuration_s {
 	 */
 	int byFirmwareVersion;
 	/**
-	 * First throttle body, first sensor. See also pedalPositionAdcChannel
+	 * First analog throttle body, first sensor. See also pedalPositionAdcChannel
 	 * Analog TPS inputs have 200Hz low-pass cutoff.
 	 * offset 540
 	 */
@@ -4991,7 +4991,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
 	/**
-	 * If you have SENT TPS sensor please select type. For analog TPS leave None
+	 * If you have digital SENT TPS sensor please select type. For analog TPS leave None
 	 * offset 3251
 	 */
 	SentEtbType sentEtbType;
