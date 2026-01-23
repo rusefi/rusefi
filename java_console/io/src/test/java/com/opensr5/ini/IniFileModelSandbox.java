@@ -42,8 +42,17 @@ public class IniFileModelSandbox {
             log.info("Title: " + contextHelp.getTitle());
             log.info("Text: " + contextHelp.getTextLines());
             log.info("Web Help: " + contextHelp.getWebHelp());
+            log.info("HTML: " + contextHelp.toHtml());
         } else {
             log.warn("Context help for 'veTableDialogHelp' not found in the INI file");
+        }
+
+        // Test getDialogKeyByTitle
+        String dialogKey = iniFile.getDialogKeyByTitle("Volumetric Efficiency");
+        if (dialogKey != null) {
+            log.info("Dialog key for 'Volumetric Efficiency': " + dialogKey);
+        } else {
+            log.warn("Dialog with title 'Volumetric Efficiency' not found");
         }
     }
 }
