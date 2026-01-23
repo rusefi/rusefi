@@ -2144,7 +2144,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2026.01.22.proteus_f7.2953278000"
+#define TS_SIGNATURE "rusEFI master.2026.01.23.proteus_f7.2953278000"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
