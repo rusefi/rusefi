@@ -28,13 +28,12 @@ public class IniFileReader {
                 getIniFilePath(),
                 tooltips,
                 fieldsInUiOrder,
-                xBinsByZBins,
-                yBinsByZBins,
                 dialogs,
                 gaugeCategories,
                 allGauges,
                 topicHelpMap,
-                contextHelp);
+                contextHelp,
+                allTables);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -64,10 +63,6 @@ public class IniFileReader {
     private final Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private boolean isOutputChannelsSection;
-    private String currentYBins;
-    private String currentXBins;
-    private final Map<String, String> xBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private final Map<String, String> yBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
 
@@ -83,6 +78,10 @@ public class IniFileReader {
     private String currentHelpTitle;
     private final List<String> currentHelpTextLines = new ArrayList<>();
     private String currentHelpWebHelp;
+
+    private boolean isTableEditorSection = false;
+    private final Map<String, TableModel> allTables = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final TableBuilder tableBuilder = new TableBuilder();
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -184,6 +183,7 @@ public class IniFileReader {
                 log.info("Section " + first);
 
                 boolean wasGaugeSection = isGaugeConfigurationsSection;
+                boolean wasTableSection = isTableEditorSection;
 
                 if (first.contains("[SettingContextHelp]")) {
                     isInsidePageDefinition = false;
@@ -192,9 +192,13 @@ public class IniFileReader {
                 isConstantsSection = first.equals("[Constants]");
                 isOutputChannelsSection = first.equals("[OutputChannels]");
                 isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
+                isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
 
                 if (wasGaugeSection && !isGaugeConfigurationsSection) {
                     finishGaugeCategory();
+                }
+                if (wasTableSection && !isTableEditorSection) {
+                    finishTable();
                 }
             }
 
@@ -213,6 +217,9 @@ public class IniFileReader {
                 return;
             } else if (isGaugeConfigurationsSection) {
                 handleGaugeConfiguration(list);
+                return;
+            } else if (isTableEditorSection) {
+                tableBuilder.handleLine(list, this::addField, this::finishTable);
                 return;
             }
 
@@ -245,17 +252,11 @@ public class IniFileReader {
                     // Handle webHelp for help entries
                     handleHelpWebHelp(list);
                     break;
-                case "table":
-                    handleTable(list);
-                    break;
                 case "xBins":
-                    handleXBins(list);
-                    break;
                 case "yBins":
-                    handleYBins(list);
-                    break;
-                case "zBins":
-                    handleZBins(list);
+                    // Handle xBins/yBins for CurveEditor and other non-TableEditor sections
+                    // In TableEditor section, these are handled by TableBuilder
+                    handleBins(list);
                     break;
             }
         } catch (RuntimeException e) {
@@ -278,36 +279,19 @@ public class IniFileReader {
         }
     }
 
-    private void handleZBins(LinkedList<String> list) {
-        list.removeFirst();
-        String zBins = list.removeFirst();
-        addField(zBins);
-        if (currentXBins == null || currentYBins == null)
-            throw new IllegalStateException("X or Y missing for " + zBins);
-        xBinsByZBins.put(zBins, currentXBins);
-        yBinsByZBins.put(zBins, currentYBins);
-    }
-
-    private void handleYBins(LinkedList<String> list) {
-        list.removeFirst();
-        currentYBins = list.removeFirst();
-        addField(currentYBins);
-    }
-
-    private void handleXBins(LinkedList<String> list) {
-        list.removeFirst();
-        currentXBins = list.removeFirst();
-        addField(currentXBins);
-    }
-
     private void addField(String key) {
         DialogModel.Field field = new DialogModel.Field(key, key);
         fieldsInUiOrder.put(key, field);
     }
 
-    private void handleTable(LinkedList<String> list) {
-        list.removeFirst();
-        String tableName = list.removeFirst();
+    private void handleBins(LinkedList<String> list) {
+        // Handle xBins/yBins for CurveEditor and other sections (not TableEditor)
+        // Just register the constant name in fieldsInUiOrder
+        if (list.size() >= 2) {
+            list.removeFirst(); // remove "xBins" or "yBins"
+            String binsConstant = list.removeFirst();
+            addField(binsConstant);
+        }
     }
 
     private void handleConstantFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
@@ -554,5 +538,18 @@ public class IniFileReader {
 
     private int parseInt(String s) {
         return Integer.parseInt(s);
+    }
+
+    void finishTable() {
+        // Create table if we have all required fields
+        if (tableBuilder.isComplete()) {
+            TableModel table = tableBuilder.build();
+            allTables.put(tableBuilder.getTableId(), table);
+            String tableId = tableBuilder.getTableId();
+            if (tableId != null && !tableId.isEmpty()) {
+                allTables.put(tableId, table);
+            }
+        }
+        tableBuilder.reset();
     }
 }

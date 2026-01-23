@@ -125,6 +125,7 @@ public class IniFileReaderUtil {
         }
         result.finishDialog();
         result.finishGaugeCategory();
+        result.finishTable();
         return result.getIniFileModel();
     }
 
