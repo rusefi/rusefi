@@ -722,7 +722,7 @@ float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 
-	adc_channel_e tps1_1AdcChannel;First throttle body, first sensor. See also pedalPositionAdcChannel\nAnalog TPS inputs have 200Hz low-pass cutoff.
+	adc_channel_e tps1_1AdcChannel;First analog throttle body, first sensor. See also pedalPositionAdcChannel\nAnalog TPS inputs have 200Hz low-pass cutoff.
 adc_channel_e vbattAdcChannel;This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB.
 adc_channel_e fuelLevelSensor;This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined.
 	adc_channel_e tps2_1AdcChannel;Second throttle body position sensor, single channel so far
@@ -1642,7 +1642,7 @@ int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 250, 0
 uint8_t alsEtbPosition;;"", 1, 0, 0, 250, 0
     uint8_t acRelayAlternatorDutyAdder;;"%", 1, 0, 0, 100, 0
-	SentEtbType sentEtbType;If you have SENT TPS sensor please select type. For analog TPS leave None
+	SentEtbType sentEtbType;If you have digital SENT TPS sensor please select type. For analog TPS leave None
 	uint16_t customSentTpsMin
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
