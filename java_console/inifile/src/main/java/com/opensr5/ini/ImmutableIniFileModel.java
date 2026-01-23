@@ -166,6 +166,12 @@ public class ImmutableIniFileModel implements IniFileModel {
     }
 
     @Override
+    public String getDialogKeyByTitle(String dialogTitle) {
+        DialogModel dialog = dialogs.get(dialogTitle);
+        return dialog != null ? dialog.getKey() : null;
+    }
+
+    @Override
     public IniField findByOffset(int i) {
         for (IniField field : allIniFields.values()) {
             if (i >= field.getOffset() && i < field.getOffset() + field.getSize())
