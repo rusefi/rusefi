@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 import static com.rusefi.core.FileUtil.RUSEFI_SETTINGS_FOLDER;
 
@@ -138,9 +140,17 @@ public class ScreenGenerator {
         }
 
         String dialogTitle = dialog.getTitle();
+        String dialogName = iniFileModel.getDialogKeyByTitle(dialogTitle);
+        com.opensr5.ini.DialogModel iniDialog = iniFileModel.getDialogs().get(dialogName);
+
+        // we need to parse this HTML to b64 to correctly store on the
+        String helpText = iniFileModel.getContextHelp().get(iniDialog.getTopicHelp()).toHtml();
+        if (helpText != null) {
+            helpText = Base64.getEncoder().encodeToString(helpText.getBytes(StandardCharsets.UTF_8));
+        }
 
         String imageName = "dialog_" + cleanName(dialogTitle) + "." + PNG;
-        DialogModel dialogModel = new DialogModel(dialogTitle, imageName);
+        DialogModel dialogModel = new DialogModel(dialogTitle, imageName, helpText);
         topLevelMenuModel.getDialogs().add(dialogModel);
 
         SwingUtilities.invokeAndWait(() -> {
@@ -207,6 +217,7 @@ public class ScreenGenerator {
 
             String fieldName = f.getKey();
             String tooltip = iniFileModel.getTooltips().get(fieldName);
+
 
             dialogModel.fields.add(new FieldModel(sectionNameWithSpecialCharacters, fieldName, fileName, tooltip, xCoordinate, fromY));
 

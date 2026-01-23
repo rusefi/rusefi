@@ -30,6 +30,10 @@ public class DialogModel {
         return fields;
     }
 
+    public String getKey() {
+        return key;
+    }
+
     public String getTopicHelp() {
         return topicHelp;
     }

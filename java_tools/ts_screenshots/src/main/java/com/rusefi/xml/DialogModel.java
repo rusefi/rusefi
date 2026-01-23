@@ -9,6 +9,7 @@ import java.util.List;
 public class DialogModel {
     private String dialogTitle;
     private String imageName;
+    private String topicHelp;
     @XmlElementWrapper
     @XmlElement(name = "field")
     public List<FieldModel> fields = new ArrayList<>();
@@ -16,9 +17,10 @@ public class DialogModel {
     public DialogModel() {
     }
 
-    public DialogModel(String dialogTitle, String imageName) {
+    public DialogModel(String dialogTitle, String imageName, String topicHelp) {
         this.dialogTitle = dialogTitle;
         this.imageName = imageName;
+        this.topicHelp = topicHelp;
     }
 
     @XmlAttribute
@@ -37,6 +39,11 @@ public class DialogModel {
 
     public void setDialogTitle(String dialogTitle) {
         this.dialogTitle = dialogTitle;
+    }
+
+    @XmlAttribute
+    public String getTopicHelp() {
+        return topicHelp;
     }
 
     @Override

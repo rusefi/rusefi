@@ -839,4 +839,48 @@ public class IniFileReaderTest {
         assertEquals("Volumetric Efficiency", fullHelp.getTitle());
         assertEquals("https://rusefi.com/s/fuel", fullHelp.getWebHelp());
     }
+
+    @Test
+    public void testGetDialogKeyByTitle() {
+        String string = "[Constants]\n" +
+                "page = 1\n" +
+                "veTable = array, F32, 0, [16x16], \"value\", 1, 0, 0, 100, 2\n" +
+                "field1 = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
+                "[SettingContextHelp]\n" +
+                "; SettingContextHelpEnd\n" +
+                "\thelp = veTableDialogHelp, \"Volumetric Efficiency\"\n" +
+                "\t\ttext = \"VE help text\"\n" +
+                "\t\twebHelp = \"https://rusefi.com/s/fuel\"\n" +
+                "\n" +
+                "\tdialog = veTableDialog, \"VE Table\"\n" +
+                "\t\ttopicHelp = \"veTableDialogHelp\"\n" +
+                "\t\tfield = \"VE Table\", veTable\n" +
+                "\n" +
+                "\tdialog = engineChars, \"Base Engine Settings\"\n" +
+                "\t\tfield = \"Field 1\", field1\n" +
+                "\n" +
+                "\tdialog = idleSettings, \"Idle Control\"\n" +
+                "\t\tfield = \"Field 1\", field1\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        // Test finding dialog key by title
+        String veDialogKey = model.getDialogKeyByTitle("VE Table");
+        assertEquals("veTableDialog", veDialogKey);
+
+        String engineCharsKey = model.getDialogKeyByTitle("Base Engine Settings");
+        assertEquals("engineChars", engineCharsKey);
+
+        String idleSettingsKey = model.getDialogKeyByTitle("Idle Control");
+        assertEquals("idleSettings", idleSettingsKey);
+
+        // Test with non-existent title
+        String nonExistent = model.getDialogKeyByTitle("Non Existent Dialog");
+        assertNull(nonExistent);
+
+        // Test with empty title
+        String emptyTitle = model.getDialogKeyByTitle("");
+        assertNull(emptyTitle);
+    }
 }

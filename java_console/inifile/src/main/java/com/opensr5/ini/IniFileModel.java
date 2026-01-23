@@ -47,6 +47,8 @@ public interface IniFileModel {
 
     Map<String, DialogModel> getDialogs();
 
+    String getDialogKeyByTitle(String dialogTitle);
+
     IniField findByOffset(int i);
 
     Map<String, GaugeCategoryModel> getGaugeCategories();

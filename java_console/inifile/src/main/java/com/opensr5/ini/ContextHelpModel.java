@@ -49,4 +49,16 @@ public class ContextHelpModel {
                 ", webHelp='" + webHelp + '\'' +
                 '}';
     }
+
+    public String toHtml(){
+        StringBuilder html = new StringBuilder();
+        html.append("<div class='context-help'>");
+        html.append("<h2>").append(title).append("</h2>");
+        html.append("<p>").append(String.join("<br>", textLines)).append("</p>");
+        if (webHelp != null) {
+            html.append("<a href='").append(webHelp).append("'>Read more</a>");
+        }
+        html.append("</div>");
+        return html.toString();
+    }
 }
