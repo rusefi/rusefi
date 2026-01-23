@@ -3220,6 +3220,7 @@ struct engine_configuration_s {
 	offset 1448 bit 3 */
 	bool knockDetectionUseDoubleFrequency : 1 {};
 	/**
+	 * Unlocking only via rusEFI console using 'unlock PICODEBUG' command. Use 'reset to default firmware' if pincode is lost.
 	offset 1448 bit 4 */
 	bool yesUnderstandLocking : 1 {};
 	/**
