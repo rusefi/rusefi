@@ -138,3 +138,59 @@ TEST_F(RotationalIdleTest, shouldSkipSpark)
 	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=2: (2 % 2) + 1 = 1 < 2
 	
 }
+
+TEST_F(RotationalIdleTest, multipleAccumulators)
+{
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	RotationalIdle rotIdle;
+
+	engineConfiguration->rotationalIdleController.enabled = true;
+	engineConfiguration->rotationalIdleController.auto_engage = true;
+	engineConfiguration->rotationalIdleController.max_tps = 5;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 3);
+	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Spark;
+
+	// Accumulator 0: skip every 2nd (1, 3, 5...)
+	engineConfiguration->rotationalIdleController.accumulators[0].acc_max = 2;
+	engineConfiguration->rotationalIdleController.accumulators[0].acc_adder = 1;
+	engineConfiguration->rotationalIdleController.accumulators[0].acc_offset = 0;
+
+	// Accumulator 1: skip every 3rd (2, 5, 8...)
+	engineConfiguration->rotationalIdleController.accumulators[1].acc_max = 3;
+	engineConfiguration->rotationalIdleController.accumulators[1].acc_adder = 1;
+	engineConfiguration->rotationalIdleController.accumulators[1].acc_offset = 0;
+
+	// globalSparkCounter = 0
+	// Acc 0: (0%2)+1 = 1 < 2 (Fire)
+	// Acc 1: (0%3)+1 = 1 < 3 (Fire)
+	engine->engineState.globalSparkCounter = 0;
+	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle());
+
+	// globalSparkCounter = 1
+	// Acc 0: (1%2)+1 = 2 >= 2 (Skip)
+	// Acc 1: (1%3)+1 = 2 < 3 (Fire)
+	// Result: Skip
+	engine->engineState.globalSparkCounter = 1;
+	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());
+
+	// globalSparkCounter = 2
+	// Acc 0: (2%2)+1 = 1 < 2 (Fire)
+	// Acc 1: (2%3)+1 = 3 >= 3 (Skip)
+	// Result: Skip
+	engine->engineState.globalSparkCounter = 2;
+	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());
+
+	// globalSparkCounter = 3
+	// Acc 0: (3%2)+1 = 2 >= 2 (Skip)
+	// Acc 1: (3%3)+1 = 1 < 3 (Fire)
+	// Result: Skip
+	engine->engineState.globalSparkCounter = 3;
+	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());
+
+	// globalSparkCounter = 4
+	// Acc 0: (4%2)+1 = 1 < 2 (Fire)
+	// Acc 1: (4%3)+1 = 2 < 3 (Fire)
+	// Result: Fire
+	engine->engineState.globalSparkCounter = 4;
+	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle());
+}
