@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22892">
+    <page number="0" size="22900">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -3148,6 +3148,7 @@ end</constant>
         <constant name="rotationalIdleController_auto_engage">"disabled"</constant>
         <constant digits="0" name="rotationalIdleController_auto_engage_clt" units="C">0.0</constant>
         <constant name="rotationalIdleController_auto_engage_clt_enable">"disabled"</constant>
+        <constant name="rotationalIdleController_cut_mode">"Spark"</constant>
         <constant name="rotationalIdleController_enabled">"disabled"</constant>
         <constant digits="0" name="rotationalIdleController_max_tps" units="%TPS">0.0</constant>
         <constant digits="0" name="rpmHardLimit" units="rpm">7000.0</constant>
