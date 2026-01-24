@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jan 10 05:30:04 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jan 24 04:28:30 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -74,6 +74,17 @@ case MsIoBoxVss::OFF:
   return "OFF";
 case MsIoBoxVss::VR12:
   return "VR12";
+  }
+ return NULL;
+}
+const char *getRotationalCutMode(RotationalCutMode value){
+switch(value) {
+case RotationalCutMode::Both:
+  return "Both";
+case RotationalCutMode::Fuel:
+  return "Fuel";
+case RotationalCutMode::Spark:
+  return "Spark";
   }
  return NULL;
 }

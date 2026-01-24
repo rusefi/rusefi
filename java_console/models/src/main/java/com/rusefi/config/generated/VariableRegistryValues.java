@@ -434,7 +434,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final String egoSettings_NAME = "CAN O2 sensors";
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int engine_configuration_s_size = 4004;
+	public static final int engine_configuration_s_size = 4012;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
@@ -1369,7 +1369,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 23848;
+	public static final int persistent_config_s_size = 23856;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1402,7 +1402,10 @@ public class VariableRegistryValues {
 	public static final String RE_obfuscated = "false";
 	public static final int REBOOT_COMMAND = 0xbb;
 	public static final int rotational_idle_accumulator_s_size = 4;
-	public static final int rotational_idle_s_size = 28;
+	public static final int rotational_idle_s_size = 36;
+	public static final int RotationalCutMode_Both = 2;
+	public static final int RotationalCutMode_Fuel = 1;
+	public static final int RotationalCutMode_Spark = 0;
 	public static final int RPM_AS_BYTE_LIMIT = 25000;
 	public static final int RPM_AS_BYTE_SCALE = 100;
 	public static final int SCRIPT_CURVE_16 = 16;
@@ -1507,7 +1510,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 23848;
+	public static final int TOTAL_CONFIG_SIZE = 23856;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;

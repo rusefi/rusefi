@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Oct 27 13:11:54 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jan 24 04:28:30 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -20,6 +20,9 @@ const char *getMsIoBoxId(MsIoBoxId value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getMsIoBoxVss(MsIoBoxVss value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getRotationalCutMode(RotationalCutMode value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getSelectedGear(SelectedGear value);

@@ -480,7 +480,7 @@
 #define ego_sensor_e_ES_PLX 4
 #define egoSettings_NAME "CAN O2 sensors"
 #define EGT_CHANNEL_COUNT 8
-#define engine_configuration_s_size 4016
+#define engine_configuration_s_size 4024
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",1="LM_REAL_MAF",4="UNSUPPORTED_ENUM_VALUE"
 #define engine_load_mode_e_LM_ALPHA_N 2
 #define engine_load_mode_e_LM_LUA 3
@@ -1462,7 +1462,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 63904
+#define persistent_config_s_size 63912
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",4="PI_INVERTED_DEFAULT",6="PI_INVERTED_PULLDOWN",5="PI_INVERTED_PULLUP",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_PI_DEFAULT 0
@@ -1499,7 +1499,12 @@
 #define RE_obfuscated "false"
 #define REBOOT_COMMAND 0xbb
 #define rotational_idle_accumulator_s_size 4
-#define rotational_idle_s_size 28
+#define rotational_idle_s_size 36
+#define RotationalCutMode_auto_enum 0="Spark",2="Both",1="Fuel"
+#define RotationalCutMode_Both 2
+#define RotationalCutMode_e_enum "Spark", "Fuel", "Both"
+#define RotationalCutMode_Fuel 1
+#define RotationalCutMode_Spark 0
 #define RPM_AS_BYTE_LIMIT 25000
 #define RPM_AS_BYTE_SCALE 100
 #define SCRIPT_CURVE_16 16
@@ -1627,7 +1632,7 @@
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
-#define TOTAL_CONFIG_SIZE 63904
+#define TOTAL_CONFIG_SIZE 63912
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
