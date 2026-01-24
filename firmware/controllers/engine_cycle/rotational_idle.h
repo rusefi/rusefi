@@ -13,5 +13,5 @@ class RotationalIdle: public live_data_rotational_idle_s {
 public:
     RotationalIdle();
     bool shouldEngageRotationalIdle();
-    bool shouldSkipSparkRotationalIdle(int8_t offset);
+    bool shouldSkipSparkRotationalIdle();
 };

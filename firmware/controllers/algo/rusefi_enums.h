@@ -859,6 +859,12 @@ enum class SelectedGear : uint8_t {
 	Low = 11,
 };
 
+enum class RotationalCutMode : uint8_t {
+	Spark = 0,
+	Fuel = 1,
+	Both = 2,
+};
+
 #define SC_Exhaust_First 1
 
 typedef enum __attribute__ ((__packed__)) {

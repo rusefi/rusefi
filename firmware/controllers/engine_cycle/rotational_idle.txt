@@ -5,7 +5,12 @@ uint8_t acc_offset;Rotational pattern shift;
 end_struct
 
 
+#define RotationalCutMode_e_enum "Spark", "Fuel", "Both"
+custom RotationalCutMode 1 bits, U08, @OFFSET@, [0:1], @@RotationalCutMode_e_enum@@
+
+
 bit enabled,"enabled","disabled";rotational idle enable feature
+RotationalCutMode cut_mode;rotational idle cut mode
 
 bit auto_engage,"enabled","disabled";Automatic engagement of rotational idle
 uint8_t max_tps;Engage rotational idle under this Driver Intent.;"%TPS", 1, 0, 0, 100, 0
