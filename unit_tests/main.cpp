@@ -40,6 +40,7 @@ GTEST_API_ int main(int argc, char **argv) {
 	//::testing::GTEST_FLAG(filter) = "*AllTriggersFixture*";
 	int result = RUN_ALL_TESTS();
 	// windows ERRORLEVEL in Jenkins batch file seems to want negative value to detect failure
+	// TODO: Jenkins is long gone! Can we remove this returnCode hack?
 	int returnCode = result == 0 ? 0 : -1;
 	printf("DONE returning %d\n", returnCode);
 	return returnCode;
