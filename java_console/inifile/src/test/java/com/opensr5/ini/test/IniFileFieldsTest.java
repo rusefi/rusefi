@@ -2,6 +2,7 @@ package com.opensr5.ini.test;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
+import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class IniFileFieldsTest {
     @Test
@@ -62,5 +64,41 @@ public class IniFileFieldsTest {
         EnumIniField field = (EnumIniField) model.getAllIniFields().get("iat_adcChannel");
         assertEquals(7, field.getEnums().size());
         assertEquals(2, model.getAllIniFields().size());
+    }
+
+    @Test
+    public void testBitField() {
+        String string = "page = 1\n" +
+            "[Constants]\n" +
+            "\tname\t= bits,    U32,   \t744, [3:5], \"false\", \"true\"";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+
+        assertEquals(1, model.getAllIniFields().size());
+
+        EnumIniField field = (EnumIniField) model.getAllIniFields().get("name");
+        assertEquals(3, field.getBitPosition());
+        assertEquals(2, field.getBitSize0());
+        assertEquals(2, field.getEnums().size());
+    }
+
+    @Test
+    public void testCurveField() {
+        String string = "page = 1\n" +
+            " \tname2\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n" +
+            "[Constants]\n" +
+            " \tname\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n" +
+            "[PcVariables]\n" +
+            " \tname3\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+
+        assertEquals(1, model.getAllIniFields().size());
+        ArrayIniField field = (ArrayIniField) model.getAllIniFields().get("name");
+        assertNotNull(field);
+        assertEquals(1, field.getCols());
+        assertEquals(8, field.getRows());
     }
 }
