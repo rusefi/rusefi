@@ -33,66 +33,6 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testSplitWithEmptyUnits() {
-        {
-            String[] s = IniFileReaderUtil.splitTokens("\tverboseCanBaseAddress\t\t\t= \"\", 1");
-            assertArrayEquals(new String[] { "verboseCanBaseAddress", "", "1" }, s);
-        }
-        {
-            String[] s = IniFileReaderUtil.splitTokens("\tverboseCanBaseAddress\t\t\t= scalar, U32,\t756,\t\"\", 1, 0, 0, 536870911, 0");
-            assertArrayEquals(new String[] { "verboseCanBaseAddress", "scalar", "U32", "756", "", "1", "0", "0", "536870911", "0" }, s);
-        }
-    }
-
-    @Test
-    public void testSplit() {
-        {
-            String[] s = IniFileReaderUtil.splitTokens("1");
-            assertArrayEquals(new String[] { "1" }, s);
-        }
-        {
-            String[] s = IniFileReaderUtil.splitTokens("hello");
-            assertArrayEquals(new String[] { "hello" }, s);
-        }
-        {
-            String[] s = IniFileReaderUtil.splitTokens("\"hello\"");
-            assertArrayEquals(new String[] { "hello" }, s);
-        }
-        {
-            String[] s = IniFileReaderUtil.splitTokens("\"hello\",\"w\"");
-            assertArrayEquals(new String[] { "hello", "w" }, s);
-        }
-    }
-
-    @Test
-    public void testBraces() {
-        {
-            String[] result = IniFileReaderUtil.splitTokens(
-                "veLoadBins = array, U16, 17056, [16], {bitStringValue(fuelUnits, fuelAlgorithm) }, 1, 0, 0, 1000, 0"
-            );
-            assertArrayEquals(new String[] {
-                "veLoadBins", "array", "U16", "17056", "[16]", "{bitStringValue(fuelUnits, fuelAlgorithm) }", "1", "0",
-                "0", "1000", "0"
-            }, result);
-        }
-    }
-
-    @Test
-    public void testRealLine() {
-        String[] result = IniFileReaderUtil.splitTokens("\tdialog = engineChars,\t\"Base Engine Settings\"");
-        assertArrayEquals(new String[] { "dialog", "engineChars", "Base Engine Settings" }, result);
-        assertEquals(result.length, 3);
-    }
-
-    @Test
-    public void testQuotedTokens() {
-        {
-            String[] result = IniFileReaderUtil.splitTokens("\"hel  lo\"");
-            assertArrayEquals(new String[] { "hel  lo" }, result);
-        }
-    }
-
-    @Test
     public void testTotalPagesSize() {
         String string = "   nPages              = 3\n" +
                 SIGNATURE_UNIT_TEST +
@@ -118,29 +58,6 @@ public class IniFileReaderTest {
     @NotNull
     private RawIniFile fromString(String string) {
         return IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-    }
-
-    @Test
-    public void testCurve() {
-        String string =
-            "   ; generates [SettingContextHelp]\n" +
-                "[Constants]\n" +
-                "page = 1\n" +
-                "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
-                "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n " +
-                "[CurveEditor]\n" +
-                "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
-                "\t\tcolumnLabel = \"X\", \"Y\"\n" +
-                "\t\txAxis\t\t=  0, 128, 10\n" +
-                "\t\tyAxis\t\t= -155,  150, 10\n" +
-                "\t\txBins\t\t= scriptCurve1Bins\n" +
-                "\t\tyBins\t\t= scriptCurve1\n" +
-                "\t\tshowTextValues = true\n";
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-        // technically these are constants?!
-        assertEquals(2, model.getAllIniFields().size());
-        assertEquals(2, model.getFieldsInUiOrder().size());
     }
 
     @Test
@@ -249,36 +166,6 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testEasyFields() {
-        String string = "page = 1\n" +
-                "[Constants]\n" +
-                "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
-                "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\", \"PA5\", \"PA6\", \"PA7\", \"PB0\", \"PB1\", \"PC0\", \"PC1\", \"PC2\", \"PC3\", \"PC4\", \"PC5\", \"Disabled\", \"PB12\", \"PB13\", \"PC14\", \"PC15\", \"PC16\", \"PC17\", \"PD3\", \"PD4\", \"PE2\", \"PE6\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\"\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(2, model.getAllIniFields().size());
-    }
-
-    @Test
-    public void testEnumListFields() {
-        String string = "#define gpio_list=\"NONE\", \"INVALID\", \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\"\n" +
-                "page = 1\n" +
-                "[Constants]\n" +
-                "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
-                "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] $gpio_list\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-        assertEquals(1, model.getDefines().size());
-
-        EnumIniField field = (EnumIniField) model.getAllIniFields().get("iat_adcChannel");
-        assertEquals(7, field.getEnums().size());
-        assertEquals(2, model.getAllIniFields().size());
-    }
-
-    @Test
     public void testSetBits() {
         assertEquals(0xFE, EnumIniField.setBitRange(0xFF, 0, 0, 1));
         assertEquals(0xF0, EnumIniField.setBitRange(0xFF, 0, 0, 4));
@@ -340,7 +227,7 @@ public class IniFileReaderTest {
         assertEquals(8, field.getRows());
     }
 
-    private static @NotNull IniFileModel readLines(RawIniFile lines) {
+    static @NotNull IniFileModel readLines(RawIniFile lines) {
         IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
         return IniFileReaderUtil.readIniFile(lines, "", metaInfo);
     }
