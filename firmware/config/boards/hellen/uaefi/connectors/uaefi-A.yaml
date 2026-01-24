@@ -10,7 +10,7 @@ pins:
     color: orange
 
   - pin: A1
-    function: DC1-
+    function: DC1- (usually electronic throttle body)
     type: etb
     color: white
 
@@ -30,7 +30,7 @@ pins:
     type: gnd
 
   - pin: A5
-    function: DC1+
+    function: DC1+ (usually electronic throttle body)
     type: etb
     color: blue
 

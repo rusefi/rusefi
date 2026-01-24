@@ -31,14 +31,14 @@ pins:
   - pin: 6D
     class: outputs
     ts_name: DC1-
-    function: DC1- output
+    function: DC1- output (usually electronic throttle body)
     color: white
     type: etb
 
   - pin: 7D
     class: outputs
     ts_name: DC1+
-    function: DC1+ output
+    function: DC1+ output (usually electronic throttle body)
     color: blue
     type: etb
 
