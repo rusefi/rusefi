@@ -815,26 +815,52 @@ public class IniFileReaderTest {
 
     @Test
     public void testGaugeConfigurationWithComplexExpressions() {
-        // Note: Complex expressions with variables and operators like +, -, * are NOT currently
-        // supported by IniField.parseDouble(). These will fail to parse and gauges will be skipped.
-        // This test documents this current limitation.
+        // Complex expressions with variables and operators like +, -, * are stored as expressions
+        // and marked as needing runtime evaluation via needsOutputChannelEvaluation()
         String string = "[Constants]\n" +
                 "page = 1\n" +
                 "rpmHardLimit = scalar, U16, 100, \"rpm\", 1, 0, 0, 10000, 0\n" +
                 "[GaugeConfigurations]\n" +
                 "gaugeCategory = TestComplexExpressions\n" +
-                // This gauge will fail to parse due to complex expression with variable reference
-                "complexGauge = RPMValue, \"RPM\", \"RPM\", 0, {rpmHardLimit + 2000}, 0, 0, 100, 100, 0, 0\n";
+                // This gauge has complex expressions that will be stored for runtime evaluation
+                "complexGauge = RPMValue, \"RPM\", \"RPM\", 0, {rpmHardLimit + 2000}, 0, {cranking_rpm}, {rpmHardLimit - 500}, {rpmHardLimit}, 0, 0\n";
 
         RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
-        // The gauge category is still created even if individual gauges fail to parse
-        // However, since all gauges in the category failed, the category will be empty
-        assertEquals(0, model.getGaugeCategories().size());
+        // The gauge category should be created and contain the gauge
+        assertEquals(1, model.getGaugeCategories().size());
+        assertTrue(model.getGaugeCategories().containsKey("TestComplexExpressions"));
 
-        // The gauge with complex expression should not be in the model
-        assertNull(model.getGauge("complexGauge"));
+        GaugeCategoryModel category = model.getGaugeCategories().get("TestComplexExpressions");
+        assertNotNull(category);
+        assertEquals(1, category.getGauges().size());
+
+        // The gauge with complex expressions should be in the model
+        GaugeModel complexGauge = model.getGauge("complexGauge");
+        assertNotNull(complexGauge);
+        assertEquals("complexGauge", complexGauge.getName());
+        assertEquals("RPMValue", complexGauge.getChannel());
+
+        // The gauge should indicate it needs runtime evaluation
+        assertTrue(complexGauge.needsOutputChannelEvaluation());
+
+        // Numeric getters should return 0.0 for expression values
+        assertEquals(0.0, complexGauge.getLowValue(), EPS);
+        assertEquals(0.0, complexGauge.getHighValue(), EPS);  // Expression: {rpmHardLimit + 2000}
+        assertEquals(0.0, complexGauge.getLowWarningValue(), EPS);  // Expression: {cranking_rpm}
+        assertEquals(0.0, complexGauge.getHighWarningValue(), EPS);  // Expression: {rpmHardLimit - 500}
+        assertEquals(0.0, complexGauge.getHighDangerValue(), EPS);  // Expression: {rpmHardLimit}
+
+        // IniValue getters should preserve the expressions
+        assertTrue(complexGauge.getHighValueValue().isExpression());
+        assertEquals("{rpmHardLimit + 2000}", complexGauge.getHighValueValue().getStringValue());
+
+        assertTrue(complexGauge.getLowWarningValueValue().isExpression());
+        assertEquals("{cranking_rpm}", complexGauge.getLowWarningValueValue().getStringValue());
+
+        assertTrue(complexGauge.getHighWarningValueValue().isExpression());
+        assertEquals("{rpmHardLimit - 500}", complexGauge.getHighWarningValueValue().getStringValue());
     }
 
     @Test
@@ -854,12 +880,28 @@ public class IniFileReaderTest {
         assertNotNull(gauge);
         assertEquals("gppwmGauge1", gauge.getName());
         assertEquals("gppwmOutput1", gauge.getChannel());
+
         // Title should keep the expression as-is (evaluation happens at runtime)
         assertEquals("{ stringValue(gpPwmNote1) }", gauge.getTitle());
+
+        // Units is a plain string (no expression)
         assertEquals("%", gauge.getUnits());
+
+        // Numeric values
         assertEquals(0.0, gauge.getLowValue(), EPS);
         assertEquals(100.0, gauge.getHighValue(), EPS);
         assertEquals(1, gauge.getValueDecimalPlaces());
         assertEquals(1, gauge.getLabelDecimalPlaces());
+
+        // Gauge should indicate it needs runtime evaluation due to stringValue() in title
+        assertTrue(gauge.needsOutputChannelEvaluation());
+
+        // Check that title is stored as an expression (contains function call)
+        assertTrue(gauge.getTitleValue().isExpression());
+        assertEquals("{ stringValue(gpPwmNote1) }", gauge.getTitleValue().getStringValue());
+
+        // Units is stored as a plain string (no expression markers)
+        assertTrue(gauge.getUnitsValue().isString());
+        assertEquals("%", gauge.getUnitsValue().getStringValue());
     }
 }
