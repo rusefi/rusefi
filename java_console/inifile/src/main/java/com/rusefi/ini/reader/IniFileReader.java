@@ -533,11 +533,11 @@ public class IniFileReader {
     }
 
     private double parseDouble(String s) {
-        return Double.parseDouble(s);
+        return IniField.parseDouble(s);
     }
 
     private int parseInt(String s) {
-        return Integer.parseInt(s);
+        return (int) IniField.parseDouble(s);
     }
 
     void finishTable() {
