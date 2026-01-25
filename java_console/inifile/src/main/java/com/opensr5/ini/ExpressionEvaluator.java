@@ -1,14 +1,12 @@
 package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.jetbrains.annotations.Nullable;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
 /**
- * Evaluates mathematical expressions using ScriptEngine.
+ * Evaluates mathematical expressions using exp4j.
  * This provides a unified way to evaluate expressions without depending on IniField.parseDouble.
  *
  * Supports:
@@ -19,11 +17,9 @@ import javax.script.ScriptException;
  * Does NOT support (these require runtime context):
  * - Variable references (e.g., rpmHardLimit)
  * - Function calls (e.g., stringValue(), bitStringValue())
- * TODO: move to exp4j?, we can use it for variable references and function calls
  */
 public class ExpressionEvaluator {
     private static final Logging log = Logging.getLogging(ExpressionEvaluator.class);
-    private static final ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 
     /**
      * Try to evaluate an expression as a numeric value.
@@ -41,17 +37,15 @@ public class ExpressionEvaluator {
         // Remove braces if present
         String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*\\}$", "").trim();
 
-        // Check if it contains variable names or function calls - these can't be evaluated without context
+        // Check if it contains variable names or custom function calls - these can't be evaluated without context
         if (containsVariableOrFunction(cleaned)) {
             return null;
         }
 
         try {
-            Object result = engine.eval(cleaned);
-            if (result instanceof Number) {
-                return ((Number) result).doubleValue();
-            }
-        } catch (ScriptException e) {
+            Expression e = new ExpressionBuilder(cleaned).build();
+            return e.evaluate();
+        } catch (Exception e) {
             log.debug("Failed to evaluate expression: " + expression + " - " + e.getMessage());
         }
 
@@ -59,21 +53,27 @@ public class ExpressionEvaluator {
     }
 
     /**
-     * Check if the expression contains variable names or function calls that require runtime context.
+     * Check if the expression contains variable names or custom function calls that require runtime context.
      *
      * @param expression the cleaned expression (without braces)
-     * @return true if it contains variables or functions
+     * @return true if it contains variables or custom functions
      */
     private static boolean containsVariableOrFunction(String expression) {
-        // Check for function calls like stringValue(), bitStringValue()
-        if (expression.matches(".*\\w+\\s*\\(.*")) {
+        // Check for custom function calls like stringValue(), bitStringValue()
+        // These are not standard math functions
+        if (expression.matches(".*(stringValue|bitStringValue|getValue)\\s*\\(.*")) {
             return true;
         }
 
         // Check for identifiers that look like variable names (not just operators and numbers)
-        // Allow: digits, operators (+, -, *, /), parentheses, decimal points, whitespace
-        // Disallow: alphabetic characters (which indicate variable names)
-        if (expression.matches(".*[a-zA-Z_].*")) {
+        // Allow: digits, operators (+, -, *, /, ^), parentheses, decimal points, whitespace, e/E for scientific notation
+
+        // Remove known exp4j function names to check for variables
+        String withoutFunctions = expression
+            .replaceAll("\\b(sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|abs|log|log10|log2|sqrt|cbrt|ceil|floor|exp)\\b", "");
+
+        // Now check if there are any remaining alphabetic characters (variables)
+        if (withoutFunctions.matches(".*[a-zA-Z_].*")) {
             return true;
         }
 

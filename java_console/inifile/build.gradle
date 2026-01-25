@@ -6,4 +6,5 @@ dependencies {
 
     testImplementation global_libs.mockito
     api 'javax.activation:activation:1.1.1'
+    api 'net.objecthunter:exp4j:0.4.8'
 }
