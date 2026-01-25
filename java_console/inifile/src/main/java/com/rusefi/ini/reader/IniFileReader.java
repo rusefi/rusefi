@@ -432,17 +432,20 @@ public class IniFileReader {
 
     private @NotNull GaugeModel getGaugeModel(LinkedList<String> list, String gaugeName) {
         String channel = list.get(1);
-        String title = list.get(2);
-        String units = list.get(3);
-        double lowValue = parseDouble(list.get(4));
-        double highValue = parseDouble(list.get(5));
+        // Title and units: parse as string or expression (never numeric)
+        IniValue title = IniValue.parseString(list.get(2));
+        IniValue units = IniValue.parseString(list.get(3));
+        // Numeric fields can be either numbers or expressions
+        IniValue lowValue = IniValue.parseNumeric(list.get(4));
+        IniValue highValue = IniValue.parseNumeric(list.get(5));
 
-        double lowDangerValue = list.size() > 6 ? parseDouble(list.get(6)) : lowValue;
-        double lowWarningValue = list.size() > 7 ? parseDouble(list.get(7)) : lowValue;
-        double highWarningValue = list.size() > 8 ? parseDouble(list.get(8)) : highValue;
-        double highDangerValue = list.size() > 9 ? parseDouble(list.get(9)) : highValue;
-        int valueDecimalPlaces = list.size() > 10 ? parseInt(list.get(10)) : 0;
-        int labelDecimalPlaces = list.size() > 11 ? parseInt(list.get(11)) : 0;
+        // For optional fields, use the same value as lowValue/highValue if not specified
+        IniValue lowDangerValue = list.size() > 6 ? IniValue.parseNumeric(list.get(6)) : lowValue;
+        IniValue lowWarningValue = list.size() > 7 ? IniValue.parseNumeric(list.get(7)) : lowValue;
+        IniValue highWarningValue = list.size() > 8 ? IniValue.parseNumeric(list.get(8)) : highValue;
+        IniValue highDangerValue = list.size() > 9 ? IniValue.parseNumeric(list.get(9)) : highValue;
+        IniValue valueDecimalPlaces = list.size() > 10 ? IniValue.parseNumeric(list.get(10)) : IniValue.ofNumeric(0);
+        IniValue labelDecimalPlaces = list.size() > 11 ? IniValue.parseNumeric(list.get(11)) : IniValue.ofNumeric(0);
 
         return new GaugeModel(gaugeName, channel, title, units,
                 lowValue, highValue, lowDangerValue, lowWarningValue, highWarningValue, highDangerValue,
