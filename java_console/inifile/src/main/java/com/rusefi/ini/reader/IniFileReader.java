@@ -125,7 +125,8 @@ public class IniFileReader {
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
-        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, dialogTopicHelp));
+        // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, dialogTopicHelp));
 
         dialogId = null;
         dialogTopicHelp = null;

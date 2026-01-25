@@ -51,15 +51,7 @@ public class PanelModel {
         if (panelName == null) {
             return null;
         }
-
-        // Panel names reference dialogs by their key, not UI name
-        // TODO: refactor dialog to expose the dialogs by key?
-        for (DialogModel dialog : model.getDialogs().values()) {
-            if (panelName.equals(dialog.getKey())) {
-                return dialog;
-            }
-        }
-        return null;
+        return model.getDialogs().get(panelName);
     }
 
     @Override

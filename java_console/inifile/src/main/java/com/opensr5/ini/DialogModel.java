@@ -44,6 +44,10 @@ public class DialogModel {
         return key;
     }
 
+    public String getUiName() {
+        return uiName;
+    }
+
     public String getTopicHelp() {
         return topicHelp;
     }

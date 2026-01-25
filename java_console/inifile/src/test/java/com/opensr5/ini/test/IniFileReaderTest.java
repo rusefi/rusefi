@@ -254,10 +254,11 @@ public class IniFileReaderTest {
 
         // Test that dialog was created with topicHelp
         assertEquals(1, model.getDialogs().size());
-        assertTrue(model.getDialogs().containsKey("Trigger Settings"));
+        assertTrue(model.getDialogs().containsKey("triggerDialog"));
 
-        DialogModel dialog = model.getDialogs().get("Trigger Settings");
+        DialogModel dialog = model.getDialogs().get("triggerDialog");
         assertNotNull(dialog);
+        assertEquals("triggerDialog", dialog.getKey());
         assertEquals("triggerHelp", dialog.getTopicHelp());
 
         // Test that topicHelp was also stored in the topicHelp map
@@ -280,7 +281,7 @@ public class IniFileReaderTest {
         IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getDialogs().size());
-        DialogModel dialog = model.getDialogs().get("Basic Settings");
+        DialogModel dialog = model.getDialogs().get("basicDialog");
         assertNotNull(dialog);
         assertNull(dialog.getTopicHelp());
 
@@ -310,15 +311,15 @@ public class IniFileReaderTest {
 
         assertEquals(3, model.getDialogs().size());
 
-        DialogModel dialog1 = model.getDialogs().get("Dialog One");
+        DialogModel dialog1 = model.getDialogs().get("dialog1");
         assertNotNull(dialog1);
         assertEquals("helpOne", dialog1.getTopicHelp());
 
-        DialogModel dialog2 = model.getDialogs().get("Dialog Two");
+        DialogModel dialog2 = model.getDialogs().get("dialog2");
         assertNotNull(dialog2);
         assertEquals("helpTwo", dialog2.getTopicHelp());
 
-        DialogModel dialog3 = model.getDialogs().get("Dialog Three");
+        DialogModel dialog3 = model.getDialogs().get("dialog3");
         assertNotNull(dialog3);
         assertNull(dialog3.getTopicHelp());
 
@@ -483,21 +484,21 @@ public class IniFileReaderTest {
         RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
-        // Verify dialogs were created
+        // Verify dialogs were created (now stored by dialog key, not UI name)
         assertEquals(4, model.getDialogs().size());
-        assertTrue(model.getDialogs().containsKey("MS IO box 1"));
-        assertTrue(model.getDialogs().containsKey("MS IO box Container"));
-        assertTrue(model.getDialogs().containsKey(""));
-        assertTrue(model.getDialogs().containsKey("VE Table"));
+        assertTrue(model.getDialogs().containsKey("msIoBox1"));
+        assertTrue(model.getDialogs().containsKey("msIoBox"));
+        assertTrue(model.getDialogs().containsKey("veTableDialog"));
+        assertTrue(model.getDialogs().containsKey("veTableDialog3D"));
 
         // Verify the msIoBox1 dialog has fields but no panels
-        DialogModel msIoBoxDialog = model.getDialogs().get("MS IO box 1");
+        DialogModel msIoBoxDialog = model.getDialogs().get("msIoBox1");
         assertNotNull(msIoBoxDialog);
         assertEquals(2, msIoBoxDialog.getFields().size());
         assertEquals(0, msIoBoxDialog.getPanels().size());
 
         // Verify the msIoBox container dialog has a panel reference
-        DialogModel msIoBoxContainer = model.getDialogs().get("MS IO box Container");
+        DialogModel msIoBoxContainer = model.getDialogs().get("msIoBox");
         assertNotNull(msIoBoxContainer);
         assertEquals(0, msIoBoxContainer.getFields().size());
         assertEquals(1, msIoBoxContainer.getPanels().size());
@@ -505,15 +506,15 @@ public class IniFileReaderTest {
         assertEquals("msIoBox1", panel.getPanelName());
         assertNull(panel.getPlacement());
 
-        // Verify the dialog with empty name is the veTableDialog with topicHelp
-        DialogModel veDialog = model.getDialogs().get("");
+        // Verify the veTableDialog with topicHelp
+        DialogModel veDialog = model.getDialogs().get("veTableDialog");
         assertNotNull(veDialog);
         assertEquals("veTableDialogHelp", veDialog.getTopicHelp());
         assertEquals(1, veDialog.getFields().size());
         assertEquals(0, veDialog.getPanels().size());
 
-        // Verify dialog with "VE Table" name also has topicHelp
-        DialogModel veDialog3D = model.getDialogs().get("VE Table");
+        // Verify dialog veTableDialog3D also has topicHelp
+        DialogModel veDialog3D = model.getDialogs().get("veTableDialog3D");
         assertNotNull(veDialog3D);
         assertEquals("veTableDialogHelp", veDialog3D.getTopicHelp());
 
@@ -908,8 +909,8 @@ public class IniFileReaderTest {
         // Verify dialogs were created
         assertEquals(4, model.getDialogs().size());
 
-        // Test mainDialog with panels
-        DialogModel mainDialog = model.getDialogs().get("Main Dialog");
+        // Test mainDialog with panels (use dialog key, not UI name)
+        DialogModel mainDialog = model.getDialogs().get("mainDialog");
         assertNotNull(mainDialog);
         assertEquals(2, mainDialog.getPanels().size());
         assertEquals(0, mainDialog.getFields().size());
@@ -928,8 +929,8 @@ public class IniFileReaderTest {
         assertNull(panel2.getEnableExpression());
         assertNull(panel2.getVisibleExpression());
 
-        // Test complexDialog with panels with expressions
-        DialogModel complexDialog = model.getDialogs().get("Complex Dialog");
+        // Test complexDialog with panels with expressions (use dialog key)
+        DialogModel complexDialog = model.getDialogs().get("complexDialog");
         assertNotNull(complexDialog);
         assertEquals(2, complexDialog.getPanels().size());
 
@@ -979,8 +980,8 @@ public class IniFileReaderTest {
         // Verify all dialogs were created
         assertEquals(3, model.getDialogs().size());
 
-        // Get the parent dialog (contains panels)
-        DialogModel fuelSystemTab = model.getDialogs().get("Fuel System");
+        // Get the parent dialog (contains panels) - use dialog key
+        DialogModel fuelSystemTab = model.getDialogs().get("fuelSystemTab");
         assertNotNull(fuelSystemTab);
         assertEquals("fuelSystemTab", fuelSystemTab.getKey());
         assertEquals(0, fuelSystemTab.getFields().size()); // Parent has no direct fields
@@ -993,8 +994,8 @@ public class IniFileReaderTest {
         PanelModel panel2 = fuelSystemTab.getPanels().get(1);
         assertEquals("engineSpecs", panel2.getPanelName());
 
-        // Get the first child dialog via panel reference
-        DialogModel injectorSettings = model.getDialogs().get("Injector Configuration");
+        // Get the first child dialog via panel reference (use dialog key)
+        DialogModel injectorSettings = model.getDialogs().get("injectorSettings");
         assertNotNull(injectorSettings);
         assertEquals("injectorSettings", injectorSettings.getKey());
         assertEquals(2, injectorSettings.getFields().size()); // Child has fields
@@ -1009,8 +1010,8 @@ public class IniFileReaderTest {
         assertEquals("injectorPressure", field2.getKey());
         assertEquals("Pressure", field2.getUiName());
 
-        // Get the second child dialog via panel reference
-        DialogModel engineSpecs = model.getDialogs().get("Engine Specifications");
+        // Get the second child dialog via panel reference (use dialog key)
+        DialogModel engineSpecs = model.getDialogs().get("engineSpecs");
         assertNotNull(engineSpecs);
         assertEquals("engineSpecs", engineSpecs.getKey());
         assertEquals(2, engineSpecs.getFields().size());
