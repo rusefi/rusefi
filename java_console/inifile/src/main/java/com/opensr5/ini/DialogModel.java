@@ -12,17 +12,23 @@ public class DialogModel {
     private final String uiName;
     private final List<Field> fields;
     private final List<Command> commandsOfCurrentDialog;
+    private final List<PanelModel> panels;
     private final String topicHelp;
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog) {
-        this(key, uiName, fields, commandsOfCurrentDialog, null);
+        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, String topicHelp) {
+        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), topicHelp);
+    }
+
+    public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, String topicHelp) {
         this.key = key;
         this.uiName = uiName;
         this.fields = new ArrayList<>(fields);
         this.commandsOfCurrentDialog = new ArrayList<>(commandsOfCurrentDialog);
+        this.panels = new ArrayList<>(panels);
         this.topicHelp = topicHelp;
     }
 
@@ -30,8 +36,16 @@ public class DialogModel {
         return fields;
     }
 
+    public List<PanelModel> getPanels() {
+        return panels;
+    }
+
     public String getKey() {
         return key;
+    }
+
+    public String getUiName() {
+        return uiName;
     }
 
     public String getTopicHelp() {
@@ -44,6 +58,7 @@ public class DialogModel {
                 "key='" + key + '\'' +
                 ", uiName='" + uiName + '\'' +
                 ", fields=" + fields.size() +
+                ", panels=" + panels.size() +
                 ", topicHelp='" + topicHelp + '\'' +
                 '}';
     }

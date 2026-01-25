@@ -149,8 +149,14 @@ public class ImmutableIniFileModel implements IniFileModel {
 
     @Override
     public String getDialogKeyByTitle(String dialogTitle) {
-        DialogModel dialog = dialogs.get(dialogTitle);
-        return dialog != null ? dialog.getKey() : null;
+        // TODO, if this is used heavily, we maybe need to implement a multiple-key map for the dialogs,
+        //  since some ops use the key and the screen generator uses the title
+        for (DialogModel dialog : dialogs.values()) {
+            if (dialogTitle.equals(dialog.getUiName())) {
+                return dialog.getKey();
+            }
+        }
+        return null;
     }
 
     @Override
