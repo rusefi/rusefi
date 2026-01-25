@@ -14,6 +14,7 @@ public abstract class IniField {
 
     public static double parseDouble(String s) {
         // todo: real implementation
+        // TODO: replace with new ExpressionEvaluator
         s = s.replaceAll("\\{", "").replaceAll("\\}", "");
         int dividerIndex = s.indexOf('/');
         if (dividerIndex != -1) {
