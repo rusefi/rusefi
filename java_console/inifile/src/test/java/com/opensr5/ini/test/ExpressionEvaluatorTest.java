@@ -253,8 +253,8 @@ public class ExpressionEvaluatorTest {
     @Test
     public void testTryEvaluate_DivisionByZero() {
         Double result = ExpressionEvaluator.tryEvaluate("10 / 0");
-        assertNotNull(result);
-        assertTrue(Double.isInfinite(result)); // JavaScript returns Infinity
+        // exp4j throws an exception for division by zero, so we get null
+        assertNull(result);
     }
 
     @Test
