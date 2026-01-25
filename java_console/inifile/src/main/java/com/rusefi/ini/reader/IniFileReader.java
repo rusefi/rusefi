@@ -54,6 +54,7 @@ public class IniFileReader {
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
     private final List<DialogModel.Command> commandsOfCurrentDialog = new ArrayList<>();
+    private final List<PanelModel> panelsOfCurrentDialog = new ArrayList<>();
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -120,16 +121,17 @@ public class IniFileReader {
     }
 
     void finishDialog() {
-        if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty())
+        if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty() && panelsOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
-        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, dialogTopicHelp));
+        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, dialogTopicHelp));
 
         dialogId = null;
         dialogTopicHelp = null;
         fieldsOfCurrentDialog.clear();
         commandsOfCurrentDialog.clear();
+        panelsOfCurrentDialog.clear();
     }
 
     void handleLine(RawIniFile.Line line) {
@@ -236,6 +238,9 @@ public class IniFileReader {
                     break;
                 case "dialog":
                     handleDialog(list);
+                    break;
+                case "panel":
+                    handlePanel(list);
                     break;
                 case "topicHelp":
                     handleTopicHelp(list);
@@ -378,6 +383,21 @@ public class IniFileReader {
         dialogId = keyword;
         dialogUiName = name;
         log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "]");
+    }
+
+    private void handlePanel(LinkedList<String> list) {
+        list.removeFirst(); // "panel"
+
+        String panelName = list.isEmpty() ? null : list.removeFirst();
+        String placement = list.isEmpty() ? null : list.removeFirst();
+        String enableExpression = list.isEmpty() ? null : list.removeFirst();
+        String visibleExpression = list.isEmpty() ? null : list.removeFirst();
+
+        if (panelName != null) {
+            PanelModel panel = new PanelModel(panelName, placement, enableExpression, visibleExpression);
+            panelsOfCurrentDialog.add(panel);
+            log.debug("IniFileModel: Panel name=[" + panelName + "] placement=[" + placement + "]");
+        }
     }
 
     private void handleTopicHelp(LinkedList<String> list) {
