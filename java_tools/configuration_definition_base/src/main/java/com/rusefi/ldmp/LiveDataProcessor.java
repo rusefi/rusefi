@@ -227,6 +227,8 @@ public class LiveDataProcessor {
                 } else if (engineModule != null) {
                     outputValueConsumer.currentEngineModule = engineModule;
                     outputValueConsumer.moduleMode = true;
+                    outputValueConsumer.expressions = new String[] {""};
+                    outputValueConsumer.names = outputNames;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
                     state.addDestination(outputValueConsumer::handleEndStruct);
