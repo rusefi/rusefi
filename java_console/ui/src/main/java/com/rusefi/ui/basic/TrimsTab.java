@@ -2,6 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
+import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.ConnectivityContext;
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class TrimsTab {
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JTable table = new JTable();
+    private final JTable jTable = new JTable();
     private final JButton loadButton = new JButton("Load Trims");
     private final StatusPanel statusPanel;
     private final ConnectivityContext connectivityContext;
@@ -33,7 +34,7 @@ public class TrimsTab {
 
         loadButton.addActionListener(e -> loadTrims());
 
-        content.add(new JScrollPane(table), BorderLayout.CENTER);
+        content.add(new JScrollPane(jTable), BorderLayout.CENTER);
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(loadButton, BorderLayout.WEST);
         bottomPanel.add(statusPanel, BorderLayout.CENTER);
@@ -67,36 +68,38 @@ public class TrimsTab {
 
     private void displayTrims(CalibrationsInfo info) {
         ConfigurationImage image = info.getImage().getConfigurationImage();
-        Optional<IniField> ltftField = info.getIniFile().findIniField("ltft_table_bank1");
-        if (!ltftField.isPresent()) {
-            ltftField = info.getIniFile().findIniField("longTermFuelTrimCustomTable");
+        TableModel iniTable = info.getIniFile().getTable("ltftBank1Tbl");
+        if (iniTable == null) {
+            statusPanel.logLine("Trims table not found or not an array");
+            return;
         }
-        Optional<IniField> rpmBinsField = info.getIniFile().findIniField("veRpmBins");
-        Optional<IniField> loadBinsField = info.getIniFile().findIniField("veLoadBins");
+        Optional<IniField> content = info.getIniFile().findIniField(iniTable.getZBinsConstant());
+        Optional<IniField> xBinsField = info.getIniFile().findIniField(iniTable.getXBinsConstant());
+        Optional<IniField> tBinsField = info.getIniFile().findIniField(iniTable.getYBinsConstant());
 
-        if (!ltftField.isPresent() || !(ltftField.get() instanceof ArrayIniField)) {
+        if (!content.isPresent() || !(content.get() instanceof ArrayIniField)) {
             statusPanel.logLine("Trims table not found or not an array");
             return;
         }
 
-        ArrayIniField ltft = (ArrayIniField) ltftField.get();
+        ArrayIniField ltft = (ArrayIniField) content.get();
         String[][] ltftValues = ltft.getValues(ConfigurationImageGetterSetter.getValue(ltft, image));
 
         String[] rpmBins = null;
-        if (rpmBinsField.isPresent() && rpmBinsField.get() instanceof ArrayIniField) {
-            ArrayIniField rpm = (ArrayIniField) rpmBinsField.get();
+        if (xBinsField.isPresent() && xBinsField.get() instanceof ArrayIniField) {
+            ArrayIniField rpm = (ArrayIniField) xBinsField.get();
             String[][] values = rpm.getValues(ConfigurationImageGetterSetter.getValue(rpm, image));
             if (values.length > 0) rpmBins = values[0];
         }
 
         String[] loadBins = null;
-        if (loadBinsField.isPresent() && loadBinsField.get() instanceof ArrayIniField) {
-            ArrayIniField load = (ArrayIniField) loadBinsField.get();
+        if (tBinsField.isPresent() && tBinsField.get() instanceof ArrayIniField) {
+            ArrayIniField load = (ArrayIniField) tBinsField.get();
             String[][] values = load.getValues(ConfigurationImageGetterSetter.getValue(load, image));
             if (values.length > 0) loadBins = values[0];
         }
 
-        table.setModel(new TrimsTableModel(ltftValues, rpmBins, loadBins));
+        jTable.setModel(new TrimsTableModel(ltftValues, rpmBins, loadBins));
     }
 
     public Component getContent() {

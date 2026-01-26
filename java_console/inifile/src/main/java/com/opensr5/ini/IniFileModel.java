@@ -2,11 +2,11 @@ package com.opensr5.ini;
 
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.Field;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 public interface IniFileModel {
     String getSignature();
@@ -60,5 +60,6 @@ public interface IniFileModel {
 
     Map<String, TableModel> getTables();
 
+    @Nullable
     TableModel getTable(String name);
 }
