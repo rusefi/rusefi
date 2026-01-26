@@ -1042,29 +1042,17 @@ float getOutputValueByHash(const int hash) {
 // fan2radiatorFanStatus
 		case -1778606949:
 			return engine->module<FanControl2>()->radiatorFanStatus;
-// fan1isPrime
-		case -2088993020:
+// isPrime
+		case -1429286498:
 			return engine->module<FuelPumpController>()->isPrime;
-// fan1engineTurnedRecently
-		case -2137243687:
+// engineTurnedRecently
+		case -1270448973:
 			return engine->module<FuelPumpController>()->engineTurnedRecently;
-// fan1isFuelPumpOn
-		case -1297204398:
+// isFuelPumpOn
+		case -344048084:
 			return engine->module<FuelPumpController>()->isFuelPumpOn;
-// fan1ignitionOn
-		case -35327159:
-			return engine->module<FuelPumpController>()->ignitionOn;
-// fan2isPrime
-		case 1874744293:
-			return engine->module<FuelPumpController>()->isPrime;
-// fan2engineTurnedRecently
-		case -777438630:
-			return engine->module<FuelPumpController>()->engineTurnedRecently;
-// fan2isFuelPumpOn
-		case 34424019:
-			return engine->module<FuelPumpController>()->isFuelPumpOn;
-// fan2ignitionOn
-		case -2092849014:
+// ignitionOn
+		case -381519965:
 			return engine->module<FuelPumpController>()->ignitionOn;
 // lua.fuelAdd
 		case 1649801578:
