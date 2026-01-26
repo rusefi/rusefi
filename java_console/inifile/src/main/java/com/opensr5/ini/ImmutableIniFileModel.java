@@ -96,7 +96,11 @@ public class ImmutableIniFileModel implements IniFileModel {
 
     @Override
     public Optional<IniField> findIniField(String key) {
-        return Optional.ofNullable(allIniFields.get(key));
+        IniField field = allIniFields.get(key);
+        if (field == null) {
+            field = secondaryIniFields.get(key);
+        }
+        return Optional.ofNullable(field);
     }
 
     @Override
