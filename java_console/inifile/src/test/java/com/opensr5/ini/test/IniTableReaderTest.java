@@ -12,7 +12,7 @@ import static com.opensr5.ini.test.IniFileReaderTest.readLines;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class InitTableReaderTest {
+public class IniTableReaderTest {
     @Test
     public void testTable() {
         String string =
