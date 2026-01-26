@@ -18,7 +18,7 @@ public class ImportTuneControl implements EnableableControl {
     );
     private final JButton exportTuneButton = new JButton(
         "Save Tune To File...",
-        AutoupdateUtil.loadIcon("writeconfig48.png")
+        AutoupdateUtil.loadIcon("download48.jpg")
     );
 
     private final ImportTuneFileChooser importTune;
