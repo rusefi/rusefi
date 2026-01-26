@@ -51,6 +51,7 @@ public class BasicStartupFrame {
         final JPanel firmwareUpdateContent = new JPanel();
         StatusPanel statusPanelFirmwareTab = new StatusPanel(500);
         StatusPanel statusPanelTuneTab = new StatusPanel(250);
+        StatusPanel statusPanelTrimsTab = new StatusPanel(250);
         SingleAsyncJobExecutor singleAsyncJobExecutor = new SingleAsyncJobExecutor(new DoubleCallbacks(statusPanelFirmwareTab, statusPanelTuneTab));
 
         AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
@@ -73,6 +74,11 @@ public class BasicStartupFrame {
             basicUpdaterPanel.getImportTuneButton().getContent(),
             singleAsyncJobExecutor,
             statusPanelTuneTab
+        ).getContent());
+        tabbedPane.addTab("Trims", new TrimsTab(
+            connectivityContext,
+            ecuPortToUse,
+            statusPanelTrimsTab
         ).getContent());
 
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
