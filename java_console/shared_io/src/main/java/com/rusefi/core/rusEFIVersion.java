@@ -1,13 +1,13 @@
 package com.rusefi.core;
 
-import com.rusefi.Version;
+import com.rusefi.UiVersion;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
-public interface rusEFIVersion extends Version {
+public interface rusEFIVersion extends UiVersion {
     AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     static long classBuildTimeMillis() {

@@ -1,7 +1,7 @@
 package com.rusefi.sensor_logs;
 
 import com.devexperts.logging.FileLogger;
-import com.rusefi.Version;
+import com.rusefi.UiVersion;
 import com.rusefi.config.generated.Integration;
 
 import java.io.*;
@@ -93,7 +93,7 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
     }
 
     private void writeHeader() throws IOException {
-        String headerText = "\"rusEFI " + Version.CONSOLE_VERSION + "\"\n" +
+        String headerText = "\"rusEFI " + UiVersion.CONSOLE_VERSION + "\"\n" +
                 "\"Capture Date: " + new Date() + "\"\n";
 
         for (char c : "MLVLG\0".toCharArray()) {

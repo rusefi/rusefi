@@ -33,7 +33,7 @@ public class Launcher implements rusEFIVersion {
      */
     public static void main(final String[] args) throws Exception {
         FileLogger.init();
-        log.info("rusEFI UI console " + Version.CONSOLE_VERSION);
+        log.info("rusEFI UI console " + UiVersion.CONSOLE_VERSION);
         log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis()));
         log.info("\n\n");
         PersistentConfiguration.registerShutdownHook();

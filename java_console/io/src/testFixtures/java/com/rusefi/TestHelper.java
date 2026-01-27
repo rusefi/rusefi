@@ -101,7 +101,7 @@ public class TestHelper extends MockitoTestHelper {
     public static SessionDetails createTestSession(String authToken, String signature) {
         ControllerInfo ci = new ControllerInfo("vehicle", "make", "code", signature);
 
-        return new SessionDetails(NetworkConnector.Implementation.Unknown, ci, authToken, SessionDetails.createOneTimeCode(), Version.CONSOLE_VERSION);
+        return new SessionDetails(NetworkConnector.Implementation.Unknown, ci, authToken, SessionDetails.createOneTimeCode(), UiVersion.CONSOLE_VERSION);
     }
 
     public static void assertLatch(String message, CountDownLatch reconnectCounter) throws InterruptedException {

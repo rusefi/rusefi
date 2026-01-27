@@ -79,7 +79,7 @@ public class ConsoleUI {
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
         setFrameIcon(ConsoleUI.staticFrame);
-        log.info("Console " + Version.CONSOLE_VERSION);
+        log.info("Console " + UiVersion.CONSOLE_VERSION);
 
         log.info("Hardware: " + StLinkFlasher.getHardwareKind());
 
