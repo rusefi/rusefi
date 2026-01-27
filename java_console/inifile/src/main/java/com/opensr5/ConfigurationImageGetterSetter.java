@@ -1,19 +1,21 @@
 package com.opensr5;
 
 import com.opensr5.ini.field.*;
+import com.rusefi.config.Field;
+import com.rusefi.config.StringFormatter;
 
 public class ConfigurationImageGetterSetter {
     /**
-     * @see com.rusefi.config.Field#getValue
+     * @see Field#getValue
      */
     public static String getStringValue(IniField iniField, ConfigurationImage image) {
         return iniField.accept(new IniFieldVisitor<String>() {
             @Override
             public String visit(ScalarIniField field) {
-                com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName(), field.getOffset(), field.getType());
+                Field f = new Field(field.getName(), field.getOffset(), field.getType());
                 try {
                     Double value = f.getValue(image, field.getMultiplier()) + field.getSerializationOffset();
-                    return com.rusefi.config.StringFormatter.niceToString(value, com.rusefi.config.StringFormatter.FIELD_PRECISION);
+                    return StringFormatter.niceToString(value, StringFormatter.FIELD_PRECISION);
                 } catch (Throwable e) {
                     throw new IllegalStateException("While getting " + field.getName(), e);
                 }
@@ -34,7 +36,7 @@ public class ConfigurationImageGetterSetter {
                 final String[][] values = new String[field.getRows()][field.getCols()];
                 for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
                     for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
-                        final com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName() + "_" + colIndex, field.getOffset(rowIndex, colIndex), field.getType());
+                        final Field f = new Field(field.getName() + "_" + colIndex, field.getOffset(rowIndex, colIndex), field.getType());
                         values[rowIndex][colIndex] = f.getAnyValue(image, field.getMultiplier());
                     }
                 }
@@ -68,7 +70,7 @@ public class ConfigurationImageGetterSetter {
             @Override
             public Void visit(ScalarIniField field) {
                 java.util.Objects.requireNonNull(image, "image for setter");
-                com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName(), field.getOffset(), field.getType());
+                Field f = new Field(field.getName(), field.getOffset(), field.getType());
                 java.nio.ByteBuffer wrapped = image.getByteBuffer(field.getOffset(), field.getType().getStorageSize());
                 ConfigurationImage.setScalarValue(wrapped, field.getType(), value, f.getBitOffset(), field.getMultiplier(), field.getSerializationOffset());
                 return null;
@@ -96,7 +98,7 @@ public class ConfigurationImageGetterSetter {
                             wrapped,
                             field.getType(),
                             values[rowIndex][colIndex],
-                            com.rusefi.config.Field.NO_BIT_OFFSET,
+                            Field.NO_BIT_OFFSET,
                             field.getMultiplier(),
                             0
                         );
