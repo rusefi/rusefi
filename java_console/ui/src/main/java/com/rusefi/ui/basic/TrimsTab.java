@@ -190,13 +190,15 @@ public class TrimsTab {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
+            // traditionally low values are displayed on the bottom and high line on top
+            int reversedRowIndex = data.length - 1 - rowIndex;
             if (columnIndex == 0) {
-                if (yBins != null && rowIndex < yBins.length) {
-                    return formatNumber(yBins[rowIndex]);
+                if (yBins != null && reversedRowIndex < yBins.length) {
+                    return formatNumber(yBins[reversedRowIndex]);
                 }
                 return "Row " + rowIndex;
             }
-            return formatNumber(data[rowIndex][columnIndex - 1]);
+            return formatNumber(data[reversedRowIndex][columnIndex - 1]);
         }
 
         private String formatNumber(String value) {
