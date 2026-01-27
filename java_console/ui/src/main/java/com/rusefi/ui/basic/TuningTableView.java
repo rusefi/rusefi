@@ -10,6 +10,7 @@ import com.rusefi.maintenance.CalibrationsInfo;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.Optional;
 
@@ -17,10 +18,13 @@ public class TuningTableView {
     private final JTable table = new JTable();
     private final JPanel content = new JPanel();
     private final String title;
+    private double minValue = Double.MAX_VALUE;
+    private double maxValue = -Double.MAX_VALUE;
 
     public TuningTableView(String title) {
         this.title = title;
         table.getTableHeader().setReorderingAllowed(false);
+        table.setDefaultRenderer(Object.class, new GradientRenderer());
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(new JLabel(title));
@@ -49,7 +53,26 @@ public class TuningTableView {
         String[] xBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), page1Image);
         String[] yBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), page1Image);
 
+        calculateMinMax(dataValues);
+
         table.setModel(new TuningTableModel(dataValues, xBins, yBins));
+    }
+
+    private void calculateMinMax(String[][] dataValues) {
+        double min = Double.MAX_VALUE;
+        double max = -Double.MAX_VALUE;
+        for (String[] row : dataValues) {
+            for (String val : row) {
+                try {
+                    double v = Double.parseDouble(val);
+                    min = Math.min(min, v);
+                    max = Math.max(max, v);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+        this.minValue = min;
+        this.maxValue = max;
     }
 
     private String[] extractAxisBins(IniFileModel iniFile,
@@ -135,6 +158,45 @@ public class TuningTableView {
             } catch (NumberFormatException e) {
                 return value;
             }
+        }
+    }
+
+    private class GradientRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (column == 0 || isSelected) {
+                c.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                return c;
+            }
+
+            if (value instanceof String) {
+                try {
+                    double val = Double.parseDouble((String) value);
+                    applyGradient(c, val);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+            return c;
+        }
+
+        private void applyGradient(Component c, double value) {
+            if (maxValue <= minValue) {
+                c.setBackground(Color.WHITE);
+                c.setForeground(Color.BLACK);
+                return;
+            }
+            double ratio = (value - minValue) / (maxValue - minValue);
+            ratio = Math.max(0, Math.min(1, ratio));
+
+            // Dark Blue (0, 0, 128) to Red (255, 0, 0)
+            int red = (int) (ratio * 255);
+            int blue = (int) ((1 - ratio) * 128);
+            Color background = new Color(red, 0, blue);
+            c.setBackground(background);
+            // Ensure text is readable against dark backgrounds
+            double brightness = (red * 0.299 + blue * 0.114) / 255.0;
+            c.setForeground(brightness < 0.5 ? Color.WHITE : Color.BLACK);
         }
     }
 }
