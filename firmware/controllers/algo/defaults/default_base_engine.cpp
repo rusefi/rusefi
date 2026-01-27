@@ -142,6 +142,16 @@ void defaultsOrFixOnBurn() {
 	  engineConfiguration->afrExpAverageAlpha = 1;
 	}
 
+	if (engineConfiguration->referenceTorqueForGenerator == 0) {
+  	engineConfiguration->referenceTorqueForGenerator = 250;
+	}
+	if (engineConfiguration->referenceMapForGenerator == 0) {
+  	engineConfiguration->referenceMapForGenerator = 100;
+	}
+	if (engineConfiguration->referenceVeForGenerator == 0) {
+  	engineConfiguration->referenceVeForGenerator = 75;
+	}
+
 	if (engineConfiguration->alternator_iTermMin == 0) {
   	engineConfiguration->alternator_iTermMin = -1000;
 	}
