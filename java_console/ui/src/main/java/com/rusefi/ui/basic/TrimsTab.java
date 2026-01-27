@@ -75,7 +75,7 @@ public class TrimsTab {
         }
         Optional<IniField> content = info.getIniFile().findIniField(iniTable.getZBinsConstant());
         Optional<IniField> xBinsField = info.getIniFile().findIniField(iniTable.getXBinsConstant());
-        Optional<IniField> tBinsField = info.getIniFile().findIniField(iniTable.getYBinsConstant());
+        Optional<IniField> yBinsField = info.getIniFile().findIniField(iniTable.getYBinsConstant());
 
         if (!content.isPresent() || !(content.get() instanceof ArrayIniField)) {
             statusPanel.logLine("Trims table not found or not an array");
@@ -93,8 +93,8 @@ public class TrimsTab {
         }
 
         String[] loadBins = null;
-        if (tBinsField.isPresent() && tBinsField.get() instanceof ArrayIniField) {
-            ArrayIniField load = (ArrayIniField) tBinsField.get();
+        if (yBinsField.isPresent() && yBinsField.get() instanceof ArrayIniField) {
+            ArrayIniField load = (ArrayIniField) yBinsField.get();
             String[][] values = load.getValues(ConfigurationImageGetterSetter.getValue(load, image));
             if (values.length > 0) loadBins = values[0];
         }
