@@ -130,11 +130,6 @@ public class TrimsTab {
         String[] rpmBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), page1Image, "X");
         String[] loadBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), page1Image, "Y");
 
-        statusPanel.logLine(String.format("Creating table: data=%dx%d, xBins=%s, yBins=%s",
-            ltftValues.length, ltftValues[0].length,
-            rpmBins == null ? "null" : rpmBins.length + " values",
-            loadBins == null ? "null" : loadBins.length + " values"));
-
         jTable.setModel(new TrimsTableModel(ltftValues, rpmBins, loadBins));
         statusPanel.logLine("LTFT tables loaded successfully");
     }
