@@ -6,6 +6,8 @@ void estimateTorqueTable() {
       float rpmValue = config->torqueRpmBins[rpmIndex];
 
       // let's assume speed density for now
+      // here we assume load is MAP while older parts of codebase have TPS, maybe for no good reason
+      // TODO: clean this up, see 'torqueLoadBins' usages
       float mapValue = config->torqueLoadBins[loadIndex];
 
       percent_t veValue = interpolate3d(

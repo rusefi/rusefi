@@ -238,6 +238,7 @@ void setDefaultBaseEngine() {
 	mc33810defaults();
 
  	setRpmTableBin(config->torqueRpmBins);
+ 	// here we assume load is TPS
  	setLinearCurve(config->torqueLoadBins, 0, 100, 1);
 
 	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_SPEED_DENSITY;
