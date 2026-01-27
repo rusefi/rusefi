@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22900">
+    <page number="0" size="22912">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -3141,6 +3141,9 @@ end</constant>
          40.0
 </constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
+        <constant digits="0" name="referenceMapForGenerator" units="">0.0</constant>
+        <constant digits="0" name="referenceTorqueForGenerator" units="">0.0</constant>
+        <constant digits="0" name="referenceVeForGenerator" units="">0.0</constant>
         <constant name="rethrowHardFault">"yes"</constant>
         <constant digits="0" name="rotationalIdleController_acc_adder" units="">0.0</constant>
         <constant digits="0" name="rotationalIdleController_acc_max" units="">0.0</constant>
@@ -5036,7 +5039,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260125" nPages="1" signature="rusEFI master.2026.01.27.f407-discovery.4294647796" version="5.0"/>
+    <versionInfo firmwareInfo="20260125" nPages="1" signature="rusEFI master.2026.01.27.f407-discovery.3584579087" version="5.0"/>
     <bibliography author="rusEFI 20260125" writeDate="date"/>
     <settings/>
     <userComments/>
