@@ -10,14 +10,15 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.PageReader;
+import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.BinaryProtocolExecutor;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.CalibrationsInfo;
-import com.rusefi.ui.widgets.StatusPanel;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.awt.event.HierarchyEvent;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,43 +26,37 @@ import java.util.concurrent.atomic.AtomicReference;
 public class TrimsTab {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JTable jTable = new JTable();
-    private final JButton loadButton = new JButton("Load Trims");
-    private final StatusPanel statusPanel;
     private final ConnectivityContext connectivityContext;
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
 
     public TrimsTab(ConnectivityContext connectivityContext,
-                    AtomicReference<Optional<PortResult>> ecuPortToUse,
-                    StatusPanel statusPanel) {
+                    AtomicReference<Optional<PortResult>> ecuPortToUse) {
         this.connectivityContext = connectivityContext;
         this.ecuPortToUse = ecuPortToUse;
-        this.statusPanel = statusPanel;
-
-        loadButton.addActionListener(e -> loadTrims());
 
         // Prevent column reordering
         jTable.getTableHeader().setReorderingAllowed(false);
 
         content.add(new JScrollPane(jTable), BorderLayout.CENTER);
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(loadButton, BorderLayout.WEST);
-        bottomPanel.add(statusPanel, BorderLayout.CENTER);
-        content.add(bottomPanel, BorderLayout.SOUTH);
+
+        content.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && content.isShowing()) {
+                loadTrims();
+            }
+        });
     }
 
     private void loadTrims() {
         Optional<PortResult> portResult = ecuPortToUse.get();
         if (!portResult.isPresent()) {
-            statusPanel.logLine("Not connected?");
             return;
         }
 
         new Thread(() -> {
-            SwingUtilities.invokeLater(() -> loadButton.setEnabled(false));
             try {
                 Optional<CalibrationsInfo> info = CalibrationsHelper.readCurrentCalibrations(
                         portResult.get().port,
-                        statusPanel,
+                        UpdateOperationCallbacks.DUMMY,
                         connectivityContext
                 );
 
@@ -71,7 +66,7 @@ public class TrimsTab {
 
                     Optional<byte[]> ltftData = BinaryProtocolExecutor.executeWithSuspendedPortScanner(
                         port,
-                        statusPanel,
+                        UpdateOperationCallbacks.DUMMY,
                         (binaryProtocol) -> {
 
                             // TODO: get this from the .ini file
@@ -94,12 +89,9 @@ public class TrimsTab {
                         SwingUtilities.invokeLater(() -> {
                             displayTrims(calibInfo, ltftData.get());
                         });
-                    } else {
-                        statusPanel.logLine("Failed to read LTFT data");
                     }
                 }
             } finally {
-                SwingUtilities.invokeLater(() -> loadButton.setEnabled(true));
             }
         }).start();
     }
@@ -110,13 +102,11 @@ public class TrimsTab {
 
         TableModel iniTable = info.getIniFile().getTable("ltftBank1Tbl");
         if (iniTable == null) {
-            statusPanel.logLine("Trims table not found");
             return;
         }
 
         Optional<IniField> zBinsField = info.getIniFile().findIniField(iniTable.getZBinsConstant());
         if (!zBinsField.isPresent() || !(zBinsField.get() instanceof ArrayIniField)) {
-            statusPanel.logLine("LTFT table field not found");
             return;
         }
 
@@ -131,7 +121,6 @@ public class TrimsTab {
         String[] loadBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), page1Image, "Y");
 
         jTable.setModel(new TrimsTableModel(ltftValues, rpmBins, loadBins));
-        statusPanel.logLine("LTFT tables loaded successfully");
     }
 
     private String[] extractAxisBins(IniFileModel iniFile,
@@ -140,7 +129,6 @@ public class TrimsTab {
                                      String axisName) {
         Optional<IniField> binsField = iniFile.findIniField(binConstant);
         if (!binsField.isPresent() || !(binsField.get() instanceof ArrayIniField)) {
-            statusPanel.logLine(axisName + " bins field not found: " + binConstant);
             return null;
         }
 
@@ -155,7 +143,6 @@ public class TrimsTab {
                         (values[0].length == 1) ? extractColumn(values) :
                         values[0];
 
-        statusPanel.logLine(String.format("%s bins: %s has %d values", axisName, binConstant, bins.length));
         return bins;
     }
 
