@@ -586,6 +586,8 @@ static void handleCommandX14(uint16_t index) {
 		// broadcast, for old WBO FWs
 		requestWidebandUpdate(0xff, index == TS_WIDEBAND_UPDATE_FILE);
 		return;
+	case TS_ESTIMATE_TORQUE_TABLE:
+		return;
 	case COMMAND_X14_UNUSED_15:
 		return;
 

@@ -289,6 +289,7 @@ typedef enum {
 	TS_GRAB_TPS_CLOSED = 0x20,
 	TS_GRAB_TPS_OPEN = 0x21,
 	TS_WIDEBAND_UPDATE_FILE = 0x22,
+	TS_ESTIMATE_TORQUE_TABLE = 0x23,
 } ts_14_command;
 
 typedef enum {
