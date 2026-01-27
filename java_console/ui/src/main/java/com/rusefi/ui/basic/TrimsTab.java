@@ -25,7 +25,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class TrimsTab {
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JTable jTable = new JTable();
+    private final JTable jTable1 = new JTable();
+    private final JTable jTable2 = new JTable();
     private final ConnectivityContext connectivityContext;
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
 
@@ -35,9 +36,20 @@ public class TrimsTab {
         this.ecuPortToUse = ecuPortToUse;
 
         // Prevent column reordering
-        jTable.getTableHeader().setReorderingAllowed(false);
+        jTable1.getTableHeader().setReorderingAllowed(false);
+        jTable2.getTableHeader().setReorderingAllowed(false);
 
-        content.add(new JScrollPane(jTable), BorderLayout.CENTER);
+        JPanel tablesPanel = new JPanel();
+        tablesPanel.setLayout(new BoxLayout(tablesPanel, BoxLayout.Y_AXIS));
+        tablesPanel.add(new JLabel("Bank 1"));
+        tablesPanel.add(jTable1.getTableHeader());
+        tablesPanel.add(jTable1);
+        tablesPanel.add(Box.createVerticalStrut(20));
+        tablesPanel.add(new JLabel("Bank 2"));
+        tablesPanel.add(jTable2.getTableHeader());
+        tablesPanel.add(jTable2);
+
+        content.add(new JScrollPane(tablesPanel), BorderLayout.CENTER);
 
         content.addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && content.isShowing()) {
@@ -100,7 +112,12 @@ public class TrimsTab {
         // Page 1 contains the axis bins (RPM and load)
         ConfigurationImage page1Image = info.getImage().getConfigurationImage();
 
-        TableModel iniTable = info.getIniFile().getTable("ltftBank1Tbl");
+        displayTable(info, zBinsBuffer, page1Image, "ltftBank1Tbl", jTable1);
+        displayTable(info, zBinsBuffer, page1Image, "ltftBank2Tbl", jTable2);
+    }
+
+    private void displayTable(CalibrationsInfo info, byte[] zBinsBuffer, ConfigurationImage page1Image, String tableName, JTable table) {
+        TableModel iniTable = info.getIniFile().getTable(tableName);
         if (iniTable == null) {
             return;
         }
@@ -120,7 +137,7 @@ public class TrimsTab {
         String[] rpmBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), page1Image, "X");
         String[] loadBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), page1Image, "Y");
 
-        jTable.setModel(new TrimsTableModel(ltftValues, rpmBins, loadBins));
+        table.setModel(new TrimsTableModel(ltftValues, rpmBins, loadBins));
     }
 
     private String[] extractAxisBins(IniFileModel iniFile,
