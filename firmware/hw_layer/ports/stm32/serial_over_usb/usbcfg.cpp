@@ -209,16 +209,15 @@ static const uint8_t vcom_string1[] = {
   'L', 0, 'C', 0
 };
 
-// STRING_CONTENT length + 2?
-#ifndef USB_DESCRIPTOR_B_LENGTH
-#define USB_DESCRIPTOR_B_LENGTH (56 + 2)
-#endif
-
 #ifndef USB_DESCRIPTOR_STRING_CONTENT
 #define USB_DESCRIPTOR_STRING_CONTENT 'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'E', 0, \
   'n', 0, 'g', 0, 'i', 0, 'n', 0, 'e', 0, ' ', 0, 'M', 0, 'a', 0, \
   'n', 0, 'a', 0, 'g', 0, 'e', 0, 'm', 0, 'e', 0, 'n', 0, 't', 0, \
   ' ', 0, 'E', 0, 'C', 0, 'U', 0
+#endif
+
+#ifndef USB_DESCRIPTOR_B_LENGTH
+#define USB_DESCRIPTOR_B_LENGTH (sizeof((uint8_t[]){ USB_DESCRIPTOR_STRING_CONTENT }) + 2)
 #endif
 
 /*
