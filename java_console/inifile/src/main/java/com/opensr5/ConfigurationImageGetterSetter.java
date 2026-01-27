@@ -33,14 +33,14 @@ public class ConfigurationImageGetterSetter {
 
             @Override
             public String visit(ArrayIniField field) {
-                final String[][] values = new String[field.getRows()][field.getCols()];
+                Double[][] values = getArrayValues(field, image);
+                final String[][] stringValues = new String[field.getRows()][field.getCols()];
                 for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
                     for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
-                        final Field f = new Field(field.getName() + "_" + colIndex, field.getOffset(rowIndex, colIndex), field.getType());
-                        values[rowIndex][colIndex] = f.getAnyValue(image, field.getMultiplier());
+                        stringValues[rowIndex][colIndex] = StringFormatter.niceToString(values[rowIndex][colIndex], StringFormatter.FIELD_PRECISION);
                     }
                 }
-                return field.formatValue(values);
+                return field.formatValue(stringValues);
             }
 
             @Override
@@ -63,6 +63,17 @@ public class ConfigurationImageGetterSetter {
                 return value;
             }
         });
+    }
+
+    public static Double[][] getArrayValues(ArrayIniField field, ConfigurationImage image) {
+        Double[][] values = new Double[field.getRows()][field.getCols()];
+        for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
+            for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
+                Field f = new Field(field.getName() + "_" + colIndex, field.getOffset(rowIndex, colIndex), field.getType());
+                values[rowIndex][colIndex] = f.getValue(image, field.getMultiplier());
+            }
+        }
+        return values;
     }
 
     public static void setValue2(IniField iniField, ConfigurationImage image, final String name, final String value) {

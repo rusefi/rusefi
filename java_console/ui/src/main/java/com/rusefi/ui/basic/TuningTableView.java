@@ -47,7 +47,7 @@ public class TuningTableView {
 
         // Extract data from outputs buffer using the field's offset
         ConfigurationImage outputsImage = new ConfigurationImage(zBinsBuffer);
-        String[][] dataValues = ltft.getValues(ConfigurationImageGetterSetter.getStringValue(ltft, outputsImage));
+        Double[][] dataValues = ConfigurationImageGetterSetter.getArrayValues(ltft, outputsImage);
 
         // X and Y bins (RPM and load) are on page 1
         String[] xBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), page1Image);
@@ -58,16 +58,14 @@ public class TuningTableView {
         table.setModel(new TuningTableModel(dataValues, xBins, yBins));
     }
 
-    private void calculateMinMax(String[][] dataValues) {
+    private void calculateMinMax(Double[][] dataValues) {
         double min = Double.MAX_VALUE;
         double max = -Double.MAX_VALUE;
-        for (String[] row : dataValues) {
-            for (String val : row) {
-                try {
-                    double v = Double.parseDouble(val);
+        for (Double[] row : dataValues) {
+            for (Double v : row) {
+                if (v != null) {
                     min = Math.min(min, v);
                     max = Math.max(max, v);
-                } catch (NumberFormatException ignored) {
                 }
             }
         }
@@ -108,11 +106,11 @@ public class TuningTableView {
     }
 
     private static class TuningTableModel extends AbstractTableModel {
-        private final String[][] data;
+        private final Double[][] data;
         private final String[] xBins;
         private final String[] yBins;
 
-        public TuningTableModel(String[][] data, String[] xBins, String[] yBins) {
+        public TuningTableModel(Double[][] data, String[] xBins, String[] yBins) {
             this.data = data;
             this.xBins = xBins;
             this.yBins = yBins;
@@ -150,13 +148,18 @@ public class TuningTableView {
             return formatNumber(data[reversedRowIndex][columnIndex - 1]);
         }
 
-        private String formatNumber(String value) {
+        private String formatNumber(Object value) {
+            if (value instanceof Number) {
+                double num = ((Number) value).doubleValue();
+                return String.format("%.1f", num);
+            }
+            if (value == null) return "";
+            String strValue = value.toString();
             try {
-                double num = Double.parseDouble(value);
-                // Format to 1 decimal place to match INI specification
+                double num = Double.parseDouble(strValue);
                 return String.format("%.1f", num);
             } catch (NumberFormatException e) {
-                return value;
+                return strValue;
             }
         }
     }
