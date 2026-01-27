@@ -47,7 +47,7 @@ public class TuningTableView {
 
         // Extract data from outputs buffer using the field's offset
         ConfigurationImage outputsImage = new ConfigurationImage(zBinsBuffer);
-        String[][] dataValues = ltft.getValues(ConfigurationImageGetterSetter.getValue(ltft, outputsImage));
+        String[][] dataValues = ltft.getValues(ConfigurationImageGetterSetter.getStringValue(ltft, outputsImage));
 
         // X and Y bins (RPM and load) are on page 1
         String[] xBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), page1Image);
@@ -84,7 +84,7 @@ public class TuningTableView {
         }
 
         ArrayIniField field = (ArrayIniField) binsField.get();
-        String[][] values = field.getValues(ConfigurationImageGetterSetter.getValue(field, image));
+        String[][] values = field.getValues(ConfigurationImageGetterSetter.getStringValue(field, image));
 
         if (values.length == 0 || values[0].length == 0) {
             return null;

@@ -6,7 +6,7 @@ public class ConfigurationImageGetterSetter {
     /**
      * @see com.rusefi.config.Field#getValue
      */
-    public static String getValue(IniField iniField, ConfigurationImage image) {
+    public static String getStringValue(IniField iniField, ConfigurationImage image) {
         return iniField.accept(new IniFieldVisitor<String>() {
             @Override
             public String visit(ScalarIniField field) {

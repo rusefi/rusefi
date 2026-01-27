@@ -43,7 +43,7 @@ public class ALSTimingRetardTableTest {
         prevImage = prevCalibrations.getImage().getConfigurationImage();
         assertEquals(
             PREV_ALS_TIMING_RETARD_TABLE,
-            ConfigurationImageGetterSetter.getValue(alsTimingRetardTableField, prevImage)
+            ConfigurationImageGetterSetter.getStringValue(alsTimingRetardTableField, prevImage)
         );
         prevValue = testContext.getPrevValue(ALS_TIMING_RETARD_TABLE_FIELD_NAME);
         assertEquals(PREV_ALS_TIMING_RETARD_TABLE,
@@ -58,6 +58,6 @@ public class ALSTimingRetardTableTest {
         ConfigurationImageGetterSetter2.setValue(alsTimingRetardTableField, testImage, prevValue.cloneWithValue(TEST_ALS_TIMING_RETARD_TABLE));
 
         /* We are expecting to read the value that we have just set: */
-        assertEquals(TEST_ALS_TIMING_RETARD_TABLE, ConfigurationImageGetterSetter.getValue(alsTimingRetardTableField, testImage));
+        assertEquals(TEST_ALS_TIMING_RETARD_TABLE, ConfigurationImageGetterSetter.getStringValue(alsTimingRetardTableField, testImage));
     }
 }

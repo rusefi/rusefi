@@ -20,6 +20,6 @@ public class TuneWriterTest {
         double value = 0.9;
         ConfigurationImageGetterSetter2.setValue(floatField, image, new Constant("x", "y", Double.toString(value), "2"));
 
-        assertEquals("0.9", ConfigurationImageGetterSetter.getValue(floatField, image));
+        assertEquals("0.9", ConfigurationImageGetterSetter.getStringValue(floatField, image));
     }
 }

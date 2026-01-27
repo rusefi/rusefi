@@ -95,7 +95,7 @@ public class Msq {
 
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.getAllIniFields().get(key);
-        String value = ConfigurationImageGetterSetter.getValue(field, image);
+        String value = ConfigurationImageGetterSetter.getStringValue(field, image);
         Page page = findPage();
         if (page == null) {
             log.error("Msq: No page");

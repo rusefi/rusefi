@@ -77,7 +77,7 @@ public class PortResult {
 
     public Optional<String> getFirmwareHash() {
         final Optional<IniField> hash3IniField = calibrations.getIniFile().findIniField(HASH3_FIELD_NAME);
-        return hash3IniField.map(field -> ConfigurationImageGetterSetter.getValue(field, calibrations.getImage().getConfigurationImage()));
+        return hash3IniField.map(field -> ConfigurationImageGetterSetter.getStringValue(field, calibrations.getImage().getConfigurationImage()));
     }
 
     public CalibrationsInfo getCalibrations() {
