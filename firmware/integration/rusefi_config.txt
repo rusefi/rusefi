@@ -2759,6 +2759,7 @@ end_struct
 #define ts_show_disable_etb false
 
 #define MAIN_PAGE_GAUGES_FILE "tunerstudio/main_page_gauges.ini"
+#define GAUGES_DECLARATIONS_FILE "tunerstudio/gauge_declarations.ini"
 #define TOP_LEVEL_MENU_FILE "tunerstudio/top_level_menu.ini"
 
 #define poke false
