@@ -962,7 +962,16 @@ set warningPeriod X
 
 
 ### torqueReductionArmingApp
-Pedal position to realize that we need to reduce torque when the trigger pin is uuuh triggered
+Pedal position to realize that we need to reduce torque when the trigger pin is triggered
+
+### referenceTorqueForGenerator
+null
+
+### referenceMapForGenerator
+null
+
+### referenceVeForGenerator
+null
 
 ### tachPulseDuractionMs
 Duration in ms or duty cycle depending on selected mode

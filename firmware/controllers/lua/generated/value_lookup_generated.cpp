@@ -970,6 +970,15 @@ float getConfigValueByHash(const int hash) {
 // torqueReductionArmingApp
 		case -763838959:
 			return engineConfiguration->torqueReductionArmingApp;
+// referenceTorqueForGenerator
+		case 1979839970:
+			return engineConfiguration->referenceTorqueForGenerator;
+// referenceMapForGenerator
+		case -1373131840:
+			return engineConfiguration->referenceMapForGenerator;
+// referenceVeForGenerator
+		case 931823549:
+			return engineConfiguration->referenceVeForGenerator;
 // tachPulseDuractionMs
 		case 58931511:
 			return engineConfiguration->tachPulseDuractionMs;
@@ -3656,6 +3665,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case -763838959:
 	{
 		engineConfiguration->torqueReductionArmingApp = (int)value;
+		return 1;
+	}
+		case 1979839970:
+	{
+		engineConfiguration->referenceTorqueForGenerator = value;
+		return 1;
+	}
+		case -1373131840:
+	{
+		engineConfiguration->referenceMapForGenerator = value;
+		return 1;
+	}
+		case 931823549:
+	{
+		engineConfiguration->referenceVeForGenerator = value;
 		return 1;
 	}
 		case 58931511:
