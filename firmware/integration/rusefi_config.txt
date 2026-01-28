@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260119
+#define FLASH_DATA_VERSION 260127
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -915,7 +915,8 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit isTuningDetectorEnabled,"yes","no"
 	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
 	bit useAbsolutePressureForLagTime,"yes","no"
-	bit unusedBit_311_28
+	! see #8650, only used on the UI
+	bit useLambdaOnInterface,"Lambda","AFR"
 	bit unusedBit_311_29
 	bit unusedBit_311_30
 	bit unusedBit_311_31
@@ -2092,16 +2093,7 @@ uint16_t[VE_LOAD_COUNT x VE_RPM_COUNT] autoscale veTable;;"%", 0.1, 0, 0, 999, 1
 uint16_t[VE_LOAD_COUNT] veLoadBins;;{bitStringValue(fuelUnits, fuelAlgorithm) },	1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 uint16_t[VE_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
-#if LAMBDA
-uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;"lambda", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
-#else
-uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;"afr", {1/@@PACK_MULT_AFR_CFG@@}, 0, 0, 25, 1
-#endif
-
-! union
-!	lambda_table_t lambdaTable
-!	afr_table_t afrTable
-! end_union
+uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;{useLambdaOnInterface ? "lambda" : "afr"}, { useLambdaOnInterface ? 1/@@PACK_MULT_LAMBDA_CFG@@ : 1/@@PACK_MULT_AFR_CFG@@ }, 0, {useLambdaOnInterface ? 0.6 : 0}, {useLambdaOnInterface ? 1.5 : 25}, {useLambdaOnInterface ? 2 : 1}
 
 uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
