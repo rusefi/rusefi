@@ -523,6 +523,9 @@ AEM X-Series or rusEFI Wideband
 ### useAbsolutePressureForLagTime
 
 
+### useLambdaOnInterface
+
+
 ### verboseCanBaseAddress
 
 

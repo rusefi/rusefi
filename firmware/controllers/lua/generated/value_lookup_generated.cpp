@@ -529,6 +529,9 @@ float getConfigValueByHash(const int hash) {
 // useAbsolutePressureForLagTime
 		case -1155937004:
 			return engineConfiguration->useAbsolutePressureForLagTime;
+// useLambdaOnInterface
+		case 1514634753:
+			return engineConfiguration->useLambdaOnInterface;
 // verboseCanBaseAddress
 		case 6238478:
 			return engineConfiguration->verboseCanBaseAddress;
@@ -2930,6 +2933,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1155937004:
 	{
 		engineConfiguration->useAbsolutePressureForLagTime = (int)value;
+		return 1;
+	}
+		case 1514634753:
+	{
+		engineConfiguration->useLambdaOnInterface = (int)value;
 		return 1;
 	}
 		case 6238478:

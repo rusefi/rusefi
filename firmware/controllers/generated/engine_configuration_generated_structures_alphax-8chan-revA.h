@@ -2644,7 +2644,7 @@ struct engine_configuration_s {
 	bool useAbsolutePressureForLagTime : 1 {};
 	/**
 	offset 772 bit 28 */
-	bool unusedBit_311_28 : 1 {};
+	bool useLambdaOnInterface : 1 {};
 	/**
 	offset 772 bit 29 */
 	bool unusedBit_311_29 : 1 {};
@@ -6590,7 +6590,7 @@ struct persistent_config_s {
 	 */
 	uint16_t veRpmBins[VE_RPM_COUNT] = {};
 	/**
-	 * units: lambda
+	 * units: {useLambdaOnInterface ? "lambda" : "afr"}
 	 * offset 17308
 	 */
 	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {};
