@@ -897,11 +897,11 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	! bit 13
 	bit stepperForceParkingEveryRestart,"yes","no"
 	bit isFasterEngineSpinUpEnabled,"enabled","disabled";If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	bit coastingFuelCutEnabled;This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
+	bit coastingFuelCutEnabled,"enabled","disabled";This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
 	bit useIacTableForCoasting,"enabled","disabled";Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
 	bit useNoiselessTriggerDecoder,"yes","no"
 	bit useIdleTimingPidControl,"yes","no"
-	bit disableEtbWhenEngineStopped;Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
+	bit disableEtbWhenEngineStopped,"yes","no";Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	bit is_enabled_spi_4,"yes","no"
 
 	! bit 21
@@ -1020,14 +1020,14 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 
 	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 	bit useInjectorFlowLinearizationTable,"yes","no"
-	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
+	bit useHbridgesToDriveIdleStepper,"yes","no";If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable,"yes","no"
 	bit enableLaunchRetard,"yes","no"
-	bit canInputBCM
+	bit canInputBCM,"enabled","disabled"
 	bit consumeObdSensors,"yes","no";This property is useful if using rusEFI as TCM or BCM only
 	bit enableCanVss,"yes","no";Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit stftIgnoreErrorMagnitude,"yes","no";If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
-	bit vvtBooleanForVerySpecialCases
+	bit vvtBooleanForVerySpecialCases,"true","false"
 	bit enableSoftwareKnock,"enabled","disabled"
 	bit verboseVVTDecoding,"enabled","disabled";Verbose info in console below engineSnifferRpmThreshold
 	bit invertCamVVTSignal,"Falling","Rising"
@@ -1133,14 +1133,14 @@ end_struct
 	bit alwaysWriteSdCard,"yes","no";Write SD card log even when powered by USB
 	bit knockDetectionUseDoubleFrequency,"second harmonic","first harmonic";Second harmonic (aka double) is usually quieter background noise
 	bit yesUnderstandLocking,"yes","no";Unlocking only via rusEFI console using 'unlock PICODEBUG' command. Use 'reset to default firmware' if pincode is lost.
-	bit silentTriggerError;Sometimes we have a performance issue while printing error
+	bit silentTriggerError,"don't print","print";Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor,"yes","no"
-	bit canReadEnabled;enable can_read/disable can_read
-	bit canWriteEnabled;enable can_write/disable can_write. See also can1ListenMode
+	bit canReadEnabled,"enable","disable";enable can_read/disable can_read
+	bit canWriteEnabled,"enable","disable";enable can_write/disable can_write. See also can1ListenMode
 	bit useLinearIatSensor,"yes","no"
 	bit enableOilPressureProtect,"yes","no"
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
-	bit isAlternatorControlEnabled;This enables smart alternator control and activates the extra alternator settings.
+	bit isAlternatorControlEnabled,"enable","disable";This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal,"Falling","Rising";https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the primary engine speed sensor.
 	bit invertSecondaryTriggerSignal,"Falling","Rising";https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the secondary engine speed sensor.
 
@@ -1152,7 +1152,7 @@ bit launchSparkCutEnable,"yes","no";This is the Cut Mode normally used
 	bit camSyncOnSecondCrankRevolution,"second","first";When we sync cam sensor is that first or second full engine revolution of the four stroke cycle?
 	bit limitTorqueReductionTime,"yes","no"
 bit verboseIsoTp,"yes","no";Are you a developer troubleshooting TS over CAN ISO/TP?
-bit engineSnifferFocusOnInputs;In this mode only trigger events go into engine sniffer and not coils/injectors etc
+bit engineSnifferFocusOnInputs,"yes","no";In this mode only trigger events go into engine sniffer and not coils/injectors etc
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skipped wheel located?
 
@@ -1168,13 +1168,13 @@ custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Ope
 	bit isIgnitionEnabled,"enabled","disabled"
 	bit isCylinderCleanupEnabled,"enabled","disabled";When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
 	bit complexWallModel,"Advanced (tables)","Basic (constants)";Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
-	bit alwaysInstantRpm;RPM is measured based on last 720 degrees while instant RPM is measured based on the last 90 degrees of crank revolution
+	bit alwaysInstantRpm,"yes","no";RPM is measured based on last 720 degrees while instant RPM is measured based on the last 90 degrees of crank revolution
 	bit isMapAveragingEnabled,"enabled","disabled"
 	bit useSeparateAdvanceForIdle,"enabled","disabled";This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra advance at low idle speeds will prevent stalling and extra retard at high idle speeds can help reduce engine power and slow the idle speed.
 	bit isWaveAnalyzerEnabled,"yes","no"
 	bit useSeparateVeForIdle,"enabled","disabled";This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
-	bit verboseTriggerSynchDetails;Verbose info in console below engineSnifferRpmThreshold
-	bit hondaK
+	bit verboseTriggerSynchDetails,"yes","no";Verbose info in console below engineSnifferRpmThreshold
+	bit hondaK,"enable","disable"
 	bit twoWireBatchIgnition,"yes","no";This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 bit useFixedBaroCorrFromMap,"yes","no";Read MAP sensor on ECU start-up to use as baro value.
 bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
@@ -1191,7 +1191,7 @@ bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle incre
 bit useBiQuadOnAuxSpeedSensors,"yes","no"
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 bit stepper_dc_use_two_wires,"yes","no"
-bit watchOutForLinearTime
+bit watchOutForLinearTime,"yes","no"
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 
@@ -1263,14 +1263,14 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 
 
 
-	bit mc33810DisableRecoveryMode;See Over/Undervoltage Shutdown/Retry bit in documentation
-	bit mc33810Gpgd0Mode
-	bit mc33810Gpgd1Mode
-	bit mc33810Gpgd2Mode
-	bit mc33810Gpgd3Mode
+	bit mc33810DisableRecoveryMode,"yes","no";See Over/Undervoltage Shutdown/Retry bit in documentation
+	bit mc33810Gpgd0Mode,"yes","no"
+	bit mc33810Gpgd1Mode,"yes","no"
+	bit mc33810Gpgd2Mode,"yes","no"
+	bit mc33810Gpgd3Mode,"yes","no"
 	bit enableExtendedCanBroadcast,"yes","no";Send out board statistics
 ! temporary for too much CAN RX processing kills Lua script #5841
-	bit luaCanRxWorkaround;global_can_data performance hack
+	bit luaCanRxWorkaround,"enable","disable";global_can_data performance hack
 	bit flexSensorInverted,"Inverted","Normal"
 	bit useHardSkipInTraction,"yes","no"
 	bit useAuxSpeedForSlipRatio,"yes","no";Use Aux Speed 1 as one of speeds for wheel slip ratio?
@@ -1279,7 +1279,7 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	bit is_enabled_spi_6,"yes","no"
 	bit enableAemXSeriesEgt,"yes","no";AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 	bit startRequestPinInverted,"Inverted","Normal"
-	bit tcu_rangeSensorPulldown
+	bit tcu_rangeSensorPulldown,"yes","no"
 	bit devBit01
 	bit devBit0
 	bit devBit1
