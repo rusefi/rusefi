@@ -23,6 +23,7 @@ public class BootloaderHelper {
         String fileSystemBundleTarget = BundleUtil.getBundleTarget();
         if (fileSystemBundleTarget != null && controllerSignature != null) {
             // hack: QC firmware self-identifies as "normal" not QC firmware :(
+            // [tag:QC_firmware]
             if (!UiProperties.skipEcuTypeDetection() &&
                 !fileSystemBundleTarget.equalsIgnoreCase(controllerSignature.getBundleTarget()) && !fileSystemBundleTarget.contains("_QC_")) {
                 String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", controllerSignature.getBundleTarget(), fileSystemBundleTarget);
