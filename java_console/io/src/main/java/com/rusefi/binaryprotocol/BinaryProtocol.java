@@ -14,7 +14,10 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.core.Pair;
+import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.*;
@@ -180,6 +183,28 @@ public class BinaryProtocol {
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
+
+        // Check for bundle/ECU mismatch before attempting to read configuration
+        RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
+        String bundleTarget = BundleUtil.getBundleTarget();
+        if (ecuSignature != null && bundleTarget != null) {
+            // [tag:QC_firmware]
+            if (!bundleTarget.equalsIgnoreCase(ecuSignature.getBundleTarget()) && !bundleTarget.contains("_QC_")) {
+                String errorMsg = String.format(
+                    "Bundle/ECU mismatch detected!\n\n" +
+                    "Connected ECU: %s\n" +
+                    "Bundle target: %s\n\n" +
+                    "Please download the correct bundle for your ECU from:\n" +
+                    "https://wiki.rusefi.com/Download/\n\n" +
+                    "The .ini file in this bundle is not compatible with your ECU's memory layout.",
+                    ecuSignature.getBundleTarget(), bundleTarget
+                );
+                log.info(errorMsg);
+                close();
+                return errorMsg;
+            }
+        }
+
         try {
             iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
         } catch (IniNotFoundException e) {
@@ -342,7 +367,17 @@ public class BinaryProtocol {
 
             if (!checkResponseCode(response) || response.length != requestSize + 1) {
                 if (extractCode(response) == TS_RESPONSE_OUT_OF_RANGE) {
-                    throw new IllegalStateException("TS_RESPONSE_OUT_OF_RANGE ECU/console version mismatch? " + offset + "/" + requestSize);
+                    RusEfiSignature ecuSig = SignatureHelper.parse(signature);
+                    String bundleTgt = BundleUtil.getBundleTarget();
+                    String mismatchInfo = "";
+                    if (ecuSig != null && bundleTgt != null && !bundleTgt.equalsIgnoreCase(ecuSig.getBundleTarget())) {
+                        mismatchInfo = String.format(" Bundle/ECU mismatch: bundle=%s, ECU=%s.", bundleTgt, ecuSig.getBundleTarget());
+                    }
+                    throw new IllegalStateException(
+                        "TS_RESPONSE_OUT_OF_RANGE: ECU rejected memory read at offset=" + offset + " size=" + requestSize + "." +
+                        mismatchInfo +
+                        " This usually means the .ini file doesn't match your ECU. Download the correct bundle from https://rusefi.com/online/"
+                    );
                 }
                 String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
