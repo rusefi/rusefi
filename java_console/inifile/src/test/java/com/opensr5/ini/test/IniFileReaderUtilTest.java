@@ -66,4 +66,37 @@ public class IniFileReaderUtilTest {
             assertArrayEquals(new String[] { "hel  lo" }, result);
         }
     }
+
+    @Test
+    public void testExpressionsWithQuotesInsideBraces() {
+        {
+            // Test ternary expression with string literals inside braces
+            String[] result = IniFileReaderUtil.splitTokens(
+                "lambdaTable = array, U08, 16348, [16x16], {useLambdaOnInterface ? \"lambda\" : \"afr\"}, 0.1, 0, {useLambdaOnInterface ? 1.5 : 0}, {useLambdaOnInterface ? 1.5 : 25}, {useLambdaOnInterface ? 2 : 1}"
+            );
+            assertArrayEquals(new String[] {
+                "lambdaTable", "array", "U08", "16348", "[16x16]",
+                "{useLambdaOnInterface ? \"lambda\" : \"afr\"}",
+                "0.1", "0",
+                "{useLambdaOnInterface ? 1.5 : 0}",
+                "{useLambdaOnInterface ? 1.5 : 25}",
+                "{useLambdaOnInterface ? 2 : 1}"
+            }, result);
+        }
+        {
+            // Test simple expression with quotes inside braces
+            String[] result = IniFileReaderUtil.splitTokens("field = {someVar ? \"yes\" : \"no\"}");
+            assertArrayEquals(new String[] { "field", "{someVar ? \"yes\" : \"no\"}" }, result);
+        }
+        {
+            // Test nested braces with quotes
+            String[] result = IniFileReaderUtil.splitTokens("value = {outer ? {inner ? \"a\" : \"b\"} : \"c\"}");
+            assertArrayEquals(new String[] { "value", "{outer ? {inner ? \"a\" : \"b\"} : \"c\"}" }, result);
+        }
+        {
+            // Test expression with function call and quotes
+            String[] result = IniFileReaderUtil.splitTokens("units = {bitStringValue(mode, \"on\", \"off\")}");
+            assertArrayEquals(new String[] { "units", "{bitStringValue(mode, \"on\", \"off\")}" }, result);
+        }
+    }
 }

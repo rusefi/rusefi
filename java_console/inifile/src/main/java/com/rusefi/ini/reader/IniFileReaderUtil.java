@@ -42,7 +42,9 @@ public class IniFileReaderUtil {
         int openedBraceCount = 0;
         StringBuilder sb = new StringBuilder();
         for (final char c: str.toCharArray()) {
-            if (c == '\"' || (isTokenSeparator(c) && !inQuote && (openedBraceCount == 0))) {
+            // When inside braces (expressions), treat quotes as regular characters
+            // and don't use them for tokenization - expressions handle their own quotes
+            if ((c == '\"' && openedBraceCount == 0) || (isTokenSeparator(c) && !inQuote && (openedBraceCount == 0))) {
                 if (c == '\"') {
                     inQuote = !inQuote;
                     if (!inQuote) {

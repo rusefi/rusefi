@@ -124,6 +124,9 @@ public class ConfigFieldImpl implements ConfigField {
         String[] tokens = getTokens();
         if (tokens.length < 4)
             return;
+        // Skip validation if min or max are expressions - see #8650
+        if (isExpression(tokens[3]) || (tokens.length >= 5 && isExpression(tokens[4])))
+            return;
         double scale = autoscaleSpecNumber();
         double min = getMin();
         double minValue = scale * TypesHelper.getMinValue(type);
@@ -135,6 +138,15 @@ public class ConfigFieldImpl implements ConfigField {
             throw new FieldOutOfRangeException(name + ": max value " + max + " outside of range. Type " + type + " maxValue " + maxValue);
     }
 
+    /**
+     * Check if a string is an expression
+     */
+    private static boolean isExpression(String str) {
+        if (str == null)
+            return false;
+        String trimmed = str.trim();
+        return trimmed.startsWith("{") && trimmed.endsWith("}");
+    }
 
     @Override
     public ConfigStructure getParentStructureType() {
@@ -393,11 +405,16 @@ public class ConfigFieldImpl implements ConfigField {
     public static @NotNull Pair<Integer, Integer> getScaleSpec(String scale, String name) {
         double factor;
         if (scale.startsWith("{") && scale.endsWith("}")) {
+            String innerExpression = scale.substring(1, scale.length() - 1);
+            if (innerExpression.contains("?")) {
+                // Complex expression with ternary operator - will be evaluated at runtime
+                // Return a default scale factor of 1:1
+                return new Pair<>(1, 1);
+            }
             // Handle just basic division, not a full fledged eval loop
-            scale = scale.substring(1, scale.length() - 1);
-            String[] parts = scale.split("/");
+            String[] parts = innerExpression.split("/");
             if (parts.length != 2)
-                throw new IllegalArgumentException(name + ": Two parts of division expected in " + scale);
+                throw new IllegalArgumentException(name + ": Two parts of division expected in " + innerExpression);
             factor = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
         } else {
             factor = Double.parseDouble(scale);
@@ -414,7 +431,7 @@ public class ConfigFieldImpl implements ConfigField {
         double factor2 = ((double) div) / mul;
         double accuracy = Math.abs((factor2 / factor) - 1.);
         if (accuracy > 0.0000001) {
-            // Don't want to deal with exception propogation; this should adequately not compile
+            // Don't want to deal with exception propagation; this should adequately not compile
             throw new IllegalStateException("$*@#$* Cannot accurately represent autoscale for [" + scale + "] got " + accuracy);
         }
 
@@ -438,6 +455,8 @@ public class ConfigFieldImpl implements ConfigField {
         String[] tokens = getTokens();
         if (tokens.length < 4)
             return -1;
+        if (isExpression(tokens[3]))
+            return 0;
         return Double.parseDouble(tokens[3]);
     }
 
@@ -446,6 +465,8 @@ public class ConfigFieldImpl implements ConfigField {
         String[] tokens = getTokens();
         if (tokens.length < 5)
             return -1;
+        if (isExpression(tokens[4]))
+            return 255;
         return Double.parseDouble(tokens[4]);
     }
 
@@ -454,6 +475,8 @@ public class ConfigFieldImpl implements ConfigField {
         String[] tokens = getTokens();
         if (tokens.length < 6)
             return 0;
+        if (isExpression(tokens[5]))
+            return 2;
         return Integer.parseInt(tokens[5].trim());
     }
 
