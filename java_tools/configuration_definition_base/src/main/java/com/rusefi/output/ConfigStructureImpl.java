@@ -6,6 +6,7 @@ import com.rusefi.parse.TypesHelper;
 import java.util.*;
 
 import static com.rusefi.ConfigFieldImpl.BOOLEAN_T;
+import static com.rusefi.ConfigFieldImpl.VOID_BIT;
 
 /**
  * Mutable representation of a list of related {@link ConfigFieldImpl}
@@ -136,7 +137,7 @@ public class ConfigStructureImpl implements ConfigStructure {
             return;
         int sizeAtStartOfPadding = cFields.size();
         while (readingBitState.get() < 32) {
-            ConfigFieldImpl bitField = new ConfigFieldImpl(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, null, null);
+            ConfigFieldImpl bitField = new ConfigFieldImpl(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, VOID_BIT, VOID_BIT);
             addBitField(bitField);
         }
         readingBitState.reset();

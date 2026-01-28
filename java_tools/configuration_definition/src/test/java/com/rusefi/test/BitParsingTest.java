@@ -16,7 +16,7 @@ public class BitParsingTest {
         ReaderStateImpl state = new ReaderStateImpl();
 
         String inputString = "struct pid_s\n" +
-                ReaderStateImpl.BIT + " fieldName\n" +
+                ReaderStateImpl.BIT + " fieldName,\"true\",\"false\"\n" +
                 ReaderStateImpl.BIT + " fieldName2,\"si\",\"nada\";comment\n" +
                 "end_struct\n";
 
