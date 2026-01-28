@@ -20,7 +20,7 @@ AUTOUPDATE_JAR = $(PROJECT_DIR)/../console/rusefi_autoupdate.jar
 # We use .FORCE to always rebuild these tools. Gradle won't actually touch the jars if it doesn't need to,
 # so we don't have to worry about triggering rebuilds of things that have these tools as a prerequisite.
 
-$(CONFIG_DEFINITION_JAR): .FORCE
+$(CONFIG_DEFINITION_JAR): .docsenums-sentinel .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :config_definition:shadowJar
 
 $(CONFIG_DEFINITION_BASE_JAR): .FORCE
@@ -35,7 +35,7 @@ $(ENUM_TO_STRING_JAR): .FORCE
 $(TS_PLUGIN_LAUNCHER_JAR): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :ts_plugin_launcher:shadowJar
 
-$(CONSOLE_JAR): .FORCE
+$(CONSOLE_JAR): .docsenums-sentinel .config-sentinel .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :ui:shadowJar
 
 $(AUTOUPDATE_JAR): .FORCE
