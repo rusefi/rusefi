@@ -882,7 +882,7 @@ public class ConfigFieldParserTest {
     @Test
     public void testExpressionWithTernaryInMultiplier() {
         String test = "struct pid_s\n" +
-                "\tuint8_t autoscale field;;\"units\", {useLambdaOnInterface ? 1/147 : 1/10}, 0, 0, 25, 1\n" +
+                "\tuint8_t autoscale field;;\"units\", {useLambdaOnInterface ? 1/4 : 1/10}, 0, 0, 25, 1\n" +
                 "end_struct\n";
 
         ReaderStateImpl state = new ReaderStateImpl();
@@ -892,7 +892,7 @@ public class ConfigFieldParserTest {
 
         // When scale contains a ternary expression, it should be preserved as-is
         // and autoscale should default to 1:1
-        assertEquals("field = scalar, U08, 0, \"units\", {useLambdaOnInterface ? 1/147 : 1/10}, 0, 0, 25, 1\n" +
+        assertEquals("field = scalar, U08, 0, \"units\", {useLambdaOnInterface ? 1/4 : 1/10}, 0, 0, 25, 1\n" +
                 "; total TS size = 4\n", tsProjectConsumer.getContent());
     }
 
