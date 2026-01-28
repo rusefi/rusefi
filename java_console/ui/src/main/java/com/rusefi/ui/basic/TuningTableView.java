@@ -192,13 +192,17 @@ public class TuningTableView {
             double ratio = (value - minValue) / (maxValue - minValue);
             ratio = Math.max(0, Math.min(1, ratio));
 
-            // Dark Blue (0, 0, 128) to Red (255, 0, 0)
-            int red = (int) (ratio * 255);
-            int blue = (int) ((1 - ratio) * 128);
-            Color background = new Color(red, 0, blue);
+            // Pastel Blue (173, 216, 230) to Pastel Red (255, 182, 193)
+            int r1 = 173, g1 = 216, b1 = 230; // Min value color
+            int r2 = 255, g2 = 182, b2 = 193; // Max value color
+
+            int red = (int) (r1 + ratio * (r2 - r1));
+            int green = (int) (g1 + ratio * (g2 - g1));
+            int blue = (int) (b1 + ratio * (b2 - b1));
+            Color background = new Color(red, green, blue);
             c.setBackground(background);
-            // Ensure text is readable against dark backgrounds
-            double brightness = (red * 0.299 + blue * 0.114) / 255.0;
+            // Ensure text is readable - pastel colors are generally light, so black text should be fine
+            double brightness = (red * 0.299 + green * 0.587 + blue * 0.114) / 255.0;
             c.setForeground(brightness < 0.5 ? Color.WHITE : Color.BLACK);
         }
     }
