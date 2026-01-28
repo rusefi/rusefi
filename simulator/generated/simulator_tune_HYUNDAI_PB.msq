@@ -172,7 +172,7 @@
          14.0 14.0 14.0 14.0
          14.0 14.0 14.0 14.0
 </constant>
-        <constant name="alwaysInstantRpm">"false"</constant>
+        <constant name="alwaysInstantRpm">"no"</constant>
         <constant name="alwaysWriteSdCard">"no"</constant>
         <constant name="ambientTempSensor_adcChannel">"Disabled"</constant>
         <constant digits="1" name="ambientTempSensor_bias_resistor" units="Ohm">0.0</constant>
@@ -580,10 +580,10 @@
         <constant name="canBaudRate">"500kbps"</constant>
         <constant name="canBroadcastUseChannelTwo">"first"</constant>
         <constant name="canGpioType">"None"</constant>
-        <constant name="canInputBCM">"false"</constant>
+        <constant name="canInputBCM">"disabled"</constant>
         <constant name="canNbcType">"None"</constant>
         <constant name="canOpenBLT">"no"</constant>
-        <constant name="canReadEnabled">"true"</constant>
+        <constant name="canReadEnabled">"enable"</constant>
         <constant name="canRxPin">"NONE"</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant name="canTxPin">"NONE"</constant>
@@ -599,7 +599,7 @@
         <constant name="canWbo2_reHwidx">"Idx 0"</constant>
         <constant name="canWbo2_reId">"ID2 0x192/193"</constant>
         <constant name="canWbo2_type">"RusEFI"</constant>
-        <constant name="canWriteEnabled">"true"</constant>
+        <constant name="canWriteEnabled">"enable"</constant>
         <constant name="cdmInputPin">"NONE"</constant>
         <constant name="clt_adcChannel">"Disabled"</constant>
         <constant digits="1" name="clt_bias_resistor" units="Ohm">1500.0</constant>
@@ -761,7 +761,7 @@
         <constant name="clutchUpPin">"NONE"</constant>
         <constant name="clutchUpPinMode">"PULLUP"</constant>
         <constant digits="0" name="coastingFuelCutClt" units="C">60.0</constant>
-        <constant name="coastingFuelCutEnabled">"false"</constant>
+        <constant name="coastingFuelCutEnabled">"disabled"</constant>
         <constant digits="0" name="coastingFuelCutMap" units="kPa">30.0</constant>
         <constant digits="0" name="coastingFuelCutRpmHigh" units="rpm">1500.0</constant>
         <constant digits="0" name="coastingFuelCutRpmLow" units="rpm">1300.0</constant>
@@ -932,7 +932,7 @@
         <constant name="digitalPotentiometerChipSelect3">"NONE"</constant>
         <constant name="digitalPotentiometerChipSelect4">"NONE"</constant>
         <constant name="digitalPotentiometerSpiDevice">"Off"</constant>
-        <constant name="disableEtbWhenEngineStopped">"true"</constant>
+        <constant name="disableEtbWhenEngineStopped">"yes"</constant>
         <constant digits="0" name="disableFan1AtSpeed" units="">0.0</constant>
         <constant name="disableFan1WhenStopped">"false"</constant>
         <constant digits="0" name="disableFan2AtSpeed" units="">0.0</constant>
@@ -998,7 +998,7 @@
         <constant digits="0" name="engineChartSize" units="count">400.0</constant>
         <constant name="engineCode">Gamma</constant>
         <constant name="engineMake">Hyundai</constant>
-        <constant name="engineSnifferFocusOnInputs">"false"</constant>
+        <constant name="engineSnifferFocusOnInputs">"no"</constant>
         <constant digits="0" name="engineSnifferRpmThreshold" units="RPM">2500.0</constant>
         <constant name="engineSyncCam">"Intake First Bank"</constant>
         <constant name="engineType">"HYUNDAI_PB"</constant>
@@ -1390,7 +1390,7 @@
         <constant digits="2" name="highPressureFuel_v2" units="volts">4.5</constant>
         <constant digits="2" name="highPressureFuel_value1" units="">0.0</constant>
         <constant digits="2" name="highPressureFuel_value2" units="">20000.0</constant>
-        <constant name="hondaK">"false"</constant>
+        <constant name="hondaK">"disable"</constant>
         <constant digits="0" name="hpfpActivationAngle" units="deg">30.0</constant>
         <constant name="hpfpCam">"NONE"</constant>
         <constant digits="0" name="hpfpCamLobes" units="lobes/cam">4.0</constant>
@@ -2369,7 +2369,7 @@
         <constant name="is_enabled_spi_4">"no"</constant>
         <constant name="is_enabled_spi_5">"no"</constant>
         <constant name="is_enabled_spi_6">"no"</constant>
-        <constant name="isAlternatorControlEnabled">"false"</constant>
+        <constant name="isAlternatorControlEnabled">"disable"</constant>
         <constant name="isBoostControlEnabled">"disabled"</constant>
         <constant name="isCylinderCleanupEnabled">"enabled"</constant>
         <constant name="isDoubleSolenoidIdle">"no"</constant>
@@ -2586,7 +2586,7 @@
          0.0
          0.0
 </constant>
-        <constant name="luaCanRxWorkaround">"false"</constant>
+        <constant name="luaCanRxWorkaround">"disable"</constant>
         <constant name="luaDigitalInputPinModes1">"DEFAULT"</constant>
         <constant name="luaDigitalInputPinModes2">"DEFAULT"</constant>
         <constant name="luaDigitalInputPinModes3">"DEFAULT"</constant>
@@ -2946,11 +2946,11 @@ end</constant>
         <constant digits="1" name="maxOilPressureTimeout" units="sec">0.0</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
         <constant name="mc33810_csPinMode">"default"</constant>
-        <constant name="mc33810DisableRecoveryMode">"false"</constant>
-        <constant name="mc33810Gpgd0Mode">"false"</constant>
-        <constant name="mc33810Gpgd1Mode">"false"</constant>
-        <constant name="mc33810Gpgd2Mode">"false"</constant>
-        <constant name="mc33810Gpgd3Mode">"false"</constant>
+        <constant name="mc33810DisableRecoveryMode">"no"</constant>
+        <constant name="mc33810Gpgd0Mode">"no"</constant>
+        <constant name="mc33810Gpgd1Mode">"no"</constant>
+        <constant name="mc33810Gpgd2Mode">"no"</constant>
+        <constant name="mc33810Gpgd3Mode">"no"</constant>
         <constant name="mc33810maxDwellTimer">"8 mS"</constant>
         <constant digits="0" name="mc33810Maxi" units="A">14.0</constant>
         <constant digits="2" name="mc33810Nomi" units="A">5.5</constant>
@@ -3455,7 +3455,7 @@ end</constant>
         <constant name="secondSolenoidPin">"NONE"</constant>
         <constant name="sentEtbType">"None"</constant>
         <constant name="sentInputPins1">"NONE"</constant>
-        <constant name="silentTriggerError">"true"</constant>
+        <constant name="silentTriggerError">"don't print"</constant>
         <constant digits="0" name="simulatorCamPosition1" units="">23.0</constant>
         <constant digits="0" name="simulatorCamPosition2" units="">0.0</constant>
         <constant digits="0" name="simulatorCamPosition3" units="">0.0</constant>
@@ -3993,7 +3993,7 @@ end</constant>
          0.0
 </constant>
         <constant digits="1" name="tcu_rangeSensorBiasResistor" units="Ohm">0.0</constant>
-        <constant name="tcu_rangeSensorPulldown">"false"</constant>
+        <constant name="tcu_rangeSensorPulldown">"no"</constant>
         <constant cols="1" digits="0" name="tcu_shiftSpeed12" rows="8" units="kmh">
          0.0
          0.0
@@ -4547,7 +4547,7 @@ end</constant>
         <constant name="useFordRedundantPps">"no"</constant>
         <constant name="useFordRedundantTps">"no"</constant>
         <constant name="useHardSkipInTraction">"no"</constant>
-        <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
+        <constant name="useHbridgesToDriveIdleStepper">"no"</constant>
         <constant name="useIacPidMultTable">"no"</constant>
         <constant name="useIacTableForCoasting">"disabled"</constant>
         <constant name="useIdleAdvanceWhileCoasting">"no"</constant>
@@ -4806,7 +4806,7 @@ end</constant>
         <constant name="verboseKLine">"no"</constant>
         <constant name="verboseQuad">"no"</constant>
         <constant name="verboseTLE8888">"no"</constant>
-        <constant name="verboseTriggerSynchDetails">"false"</constant>
+        <constant name="verboseTriggerSynchDetails">"no"</constant>
         <constant name="verboseVVTDecoding">"disabled"</constant>
         <constant cols="1" digits="0" name="veRpmBins" rows="16" units="RPM">
          650.0
@@ -4973,7 +4973,7 @@ end</constant>
         <constant digits="2" name="wastegatePositionClosedVoltage" units="v">0.0</constant>
         <constant digits="2" name="wastegatePositionOpenedVoltage" units="v">5.0</constant>
         <constant name="wastegatePositionSensor">"Disabled"</constant>
-        <constant name="watchOutForLinearTime">"true"</constant>
+        <constant name="watchOutForLinearTime">"yes"</constant>
         <constant name="widebandOnSecondBus">"CAN1"</constant>
         <constant digits="0" name="wizardPanelToShow" units="">0.0</constant>
         <constant digits="2" name="wwaeBeta" units="Fraction">0.0</constant>
@@ -5040,7 +5040,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260127" nPages="1" signature="rusEFI master.2026.01.28.f407-discovery.70236985" version="5.0"/>
+    <versionInfo firmwareInfo="20260127" nPages="1" signature="rusEFI master.2026.01.28.f407-discovery.893249216" version="5.0"/>
     <bibliography author="rusEFI 20260127" writeDate="date"/>
     <settings/>
     <userComments/>
