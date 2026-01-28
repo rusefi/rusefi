@@ -185,9 +185,10 @@ public class BinaryProtocol {
         }
 
         // Check for bundle/ECU mismatch before attempting to read configuration
+        // Skip check if bundle target is unknown (e.g., simulator, local development)
         RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
         String bundleTarget = BundleUtil.getBundleTarget();
-        if (ecuSignature != null && bundleTarget != null) {
+        if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)) {
             // [tag:QC_firmware]
             if (!bundleTarget.equalsIgnoreCase(ecuSignature.getBundleTarget()) && !bundleTarget.contains("_QC_")) {
                 String errorMsg = String.format(
@@ -370,7 +371,8 @@ public class BinaryProtocol {
                     RusEfiSignature ecuSig = SignatureHelper.parse(signature);
                     String bundleTgt = BundleUtil.getBundleTarget();
                     String mismatchInfo = "";
-                    if (ecuSig != null && bundleTgt != null && !bundleTgt.equalsIgnoreCase(ecuSig.getBundleTarget())) {
+                    if (ecuSig != null && bundleTgt != null && !"unknown".equalsIgnoreCase(bundleTgt)
+                        && !bundleTgt.equalsIgnoreCase(ecuSig.getBundleTarget())) {
                         mismatchInfo = String.format(" Bundle/ECU mismatch: bundle=%s, ECU=%s.", bundleTgt, ecuSig.getBundleTarget());
                     }
                     throw new IllegalStateException(
