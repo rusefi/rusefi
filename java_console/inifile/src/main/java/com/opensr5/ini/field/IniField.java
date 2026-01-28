@@ -16,6 +16,11 @@ public abstract class IniField {
         // todo: real implementation
         // TODO: replace with new ExpressionEvaluator
         s = s.replaceAll("\\{", "").replaceAll("\\}", "");
+        // If this is a complex expression with ternary operator, we can't evaluate it
+        // Return a default value of 1.0
+        if (s.contains("?")) {
+            return 1.0;
+        }
         int dividerIndex = s.indexOf('/');
         if (dividerIndex != -1) {
             return Double.parseDouble(s.substring(0, dividerIndex)) / Double.parseDouble(s.substring(dividerIndex + 1));

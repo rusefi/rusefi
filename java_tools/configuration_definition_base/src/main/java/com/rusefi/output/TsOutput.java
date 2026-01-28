@@ -337,14 +337,19 @@ public class TsOutput {
                  * Evaluate static math on .ini layer to simplify rusEFI java and rusEFI PHP project consumers
                  * https://github.com/rusefi/web_backend/issues/97
                  */
-                double val = IniField.parseDouble(fields[multiplierIndex]);
+                String multiplierField = fields[multiplierIndex];
+                // Skip evaluation if this is a complex expression (e.g., ternary operator)
+                // These will be evaluated at runtime by TunerStudio
+                if (!multiplierField.contains("?")) {
+                    double val = IniField.parseDouble(multiplierField);
 
-                if (val == 0) {
-                    fields[multiplierIndex] = " 0";
-                } else if (val == 1) {
-                    fields[multiplierIndex] = " 1";
-                } else {
-                    fields[multiplierIndex] = " " + val;
+                    if (val == 0) {
+                        fields[multiplierIndex] = " 0";
+                    } else if (val == 1) {
+                        fields[multiplierIndex] = " 1";
+                    } else {
+                        fields[multiplierIndex] = " " + val;
+                    }
                 }
             }
 

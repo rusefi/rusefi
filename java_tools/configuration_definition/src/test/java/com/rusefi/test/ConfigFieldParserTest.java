@@ -878,4 +878,39 @@ public class ConfigFieldParserTest {
         assertEquals("x\"\n" +
                 "\"y", ConfigFieldImpl.unquote("\"x\"\n\"y\""));
     }
+
+    @Test
+    public void testExpressionWithTernaryInMultiplier() {
+        String test = "struct pid_s\n" +
+                "\tuint8_t autoscale field;;\"units\", {useLambdaOnInterface ? 1/147 : 1/10}, 0, 0, 25, 1\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        // When scale contains a ternary expression, it should be preserved as-is
+        // and autoscale should default to 1:1
+        assertEquals("field = scalar, U08, 0, \"units\", {useLambdaOnInterface ? 1/147 : 1/10}, 0, 0, 25, 1\n" +
+                "; total TS size = 4\n", tsProjectConsumer.getContent());
+    }
+
+    @Test
+    public void testExpressionWithTernaryInLimits() {
+        String test = "struct pid_s\n" +
+                "\tuint8_t[16 x 16] autoscale lambdaTable;;{useLambdaOnInterface ? \"lambda\" : \"afr\"}, {1/@@PACK_MULT_AFR_CFG@@}, 0, {useLambdaOnInterface ? 1.5 : 0}, {useLambdaOnInterface ? 1.5 : 25}, {useLambdaOnInterface ? 2 : 1}\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().register("PACK_MULT_AFR_CFG", 10);
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        // Expressions in units, min, max, and digits should be preserved
+        String expected = "lambdaTable = array, U08, 0, [16x16], {useLambdaOnInterface ? \"lambda\" : \"afr\"}, 0.1, 0, {useLambdaOnInterface ? 1.5 : 0}, {useLambdaOnInterface ? 1.5 : 25}, {useLambdaOnInterface ? 2 : 1}\n" +
+                "; total TS size = 256\n";
+        assertEquals(expected, tsProjectConsumer.getContent());
+    }
 }
