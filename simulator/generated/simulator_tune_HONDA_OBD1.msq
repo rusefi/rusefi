@@ -2510,7 +2510,7 @@
          4700.0
          7000.0
 </constant>
-        <constant cols="16" digits="2" name="lambdaTable" rows="16" units="lambda">
+        <constant cols="16" digits="{useLambdaOnInterface ? 2 : 1}" name="lambdaTable" rows="16" units="{useLambdaOnInterface ? &quot;lambda&quot; : &quot;afr&quot;}">
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
          1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
@@ -4462,6 +4462,7 @@ end</constant>
         <constant name="useIdleAdvanceWhileCoasting">"no"</constant>
         <constant name="useIdleTimingPidControl">"no"</constant>
         <constant name="useInjectorFlowLinearizationTable">"no"</constant>
+        <constant name="useLambdaOnInterface">"AFR"</constant>
         <constant name="useLinearCltSensor">"no"</constant>
         <constant name="useLinearIatSensor">"no"</constant>
         <constant name="useNoiselessTriggerDecoder">"no"</constant>
@@ -4948,7 +4949,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260127" nPages="1" signature="rusEFI master.2026.01.28.f407-discovery.3584579087" version="5.0"/>
+    <versionInfo firmwareInfo="20260127" nPages="1" signature="rusEFI master.2026.01.28.f407-discovery.70236985" version="5.0"/>
     <bibliography author="rusEFI 20260127" writeDate="date"/>
     <settings/>
     <userComments/>
