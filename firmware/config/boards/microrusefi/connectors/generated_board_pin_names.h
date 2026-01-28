@@ -10,10 +10,10 @@
 #define PIN_6 B9
 #define PIN_10 C12
 #define PIN_7 A15
-#define PIN_9 MSIOBOX_0_OUT_1
-#define PIN_10 MSIOBOX_0_OUT_2
-#define PIN_7 MSIOBOX_0_OUT_3
-#define PIN_8 MSIOBOX_0_OUT_4
+#define PIN_canbus_1 MSIOBOX_0_OUT_1
+#define PIN_canbus_2 MSIOBOX_0_OUT_2
+#define PIN_canbus_3 MSIOBOX_0_OUT_3
+#define PIN_canbus_4 MSIOBOX_0_OUT_4
 #define PIN_16 MSIOBOX_0_OUT_5
 #define PIN_17 MSIOBOX_0_OUT_6
 #define PIN_35 MSIOBOX_0_OUT_7

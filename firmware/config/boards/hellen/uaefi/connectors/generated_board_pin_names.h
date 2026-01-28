@@ -57,9 +57,9 @@
 #define PIN_D13 MM100_IN_TPS_ANALOG
 #define PIN_D15 MM100_IN_IAT_ANALOG
 #define PIN_D16 MM100_IN_CLT_ANALOG
-#define PIN_9 MSIOBOX_0_OUT_1
-#define PIN_10 MSIOBOX_0_OUT_2
-#define PIN_7 MSIOBOX_0_OUT_3
-#define PIN_8 MSIOBOX_0_OUT_4
+#define PIN_canbus_1 MSIOBOX_0_OUT_1
+#define PIN_canbus_2 MSIOBOX_0_OUT_2
+#define PIN_canbus_3 MSIOBOX_0_OUT_3
+#define PIN_canbus_4 MSIOBOX_0_OUT_4
 #define PIN_On_board_MAP MM100_IN_MAP2_ANALOG
 #define PIN_A7 MM100_IN_VBATT
