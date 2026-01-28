@@ -143,33 +143,6 @@ uintptr_t getFlashAddrSecondCopy() {
 	}
 }
 
-#define FLASH_ACR           (*(volatile uint32_t *)(FLASH_BASE + 0x00))
-#define FLASH_KEYR          (*(volatile uint32_t *)(FLASH_BASE + 0x04))
-#define FLASH_OPTKEYR       (*(volatile uint32_t *)(FLASH_BASE + 0x08))
-#define FLASH_SR            (*(volatile uint32_t *)(FLASH_BASE + 0x0C))
-#define FLASH_CR            (*(volatile uint32_t *)(FLASH_BASE + 0x10))
-#define FLASH_OPTCR         (*(volatile uint32_t *)(FLASH_BASE + 0x14))
-
-#define FLASH_OPTCR_STRT                       (1 << 1)
-
-#define FLASH_OPTKEY1                         (0x08192A3B)
-#define FLASH_OPTKEY2                         (0x4C5D6E7F)
-
-/*
-static void flash_wait_complete()
-{
-	do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
-}
-
-static void stm32f7_flash_mass_erase_dual_block()
-{
-    FLASH_CR |= FLASH_CR_MER1 | FLASH_CR_MER2;
-    FLASH_CR |= FLASH_CR_STRT;
-    flash_wait_complete();
-    FLASH_CR &= ~(FLASH_CR_MER1 | FLASH_CR_MER2);
-}
-*/
-
 /*
 Standby for both F4 & F7 works perfectly, with very little current consumption. Downside is that theres a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
 Cannot be used for CAN wakeup without hardware modifications.
