@@ -4464,6 +4464,7 @@ end</constant>
         <constant name="useLambdaOnInterface">"AFR"</constant>
         <constant name="useLinearCltSensor">"no"</constant>
         <constant name="useLinearIatSensor">"no"</constant>
+        <constant name="useMetricOnInterface">"Metric"</constant>
         <constant name="useNoiselessTriggerDecoder">"no"</constant>
         <constant name="useRawOutputToDriveIdleStepper">"no"</constant>
         <constant name="useRunningMathForCranking">"Fixed"</constant>
@@ -4948,7 +4949,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260127" nPages="1" signature="rusEFI master.2026.01.29.f407-discovery.3245718784" version="5.0"/>
+    <versionInfo firmwareInfo="20260127" nPages="1" signature="rusEFI master.2026.01.29.f407-discovery.454761660" version="5.0"/>
     <bibliography author="rusEFI 20260127" writeDate="date"/>
     <settings/>
     <userComments/>
