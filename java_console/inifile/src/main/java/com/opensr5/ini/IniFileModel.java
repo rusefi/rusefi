@@ -62,4 +62,8 @@ public interface IniFileModel {
 
     @Nullable
     TableModel getTable(String name);
+
+    String getMenuDialog();
+
+    List<MenuModel> getMenus();
 }

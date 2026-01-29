@@ -24,6 +24,8 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, TableModel> tables;
     private final Map<String, String> topicHelp;
     private final Map<String, ContextHelpModel> contextHelp;
+    private final String menuDialog;
+    private final List<MenuModel> menus;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         TreeMap<String, V> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -47,7 +49,9 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, GaugeModel> gauges,
                                  Map<String, String> topicHelp,
                                  Map<String, ContextHelpModel> contextHelp,
-                                 Map<String, TableModel> tables) {
+                                 Map<String, TableModel> tables,
+                                 String menuDialog,
+                                 List<MenuModel> menus) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -65,6 +69,8 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.topicHelp = Collections.unmodifiableMap(new TreeMap<>(topicHelp));
         this.contextHelp = Collections.unmodifiableMap(new LinkedHashMap<>(contextHelp));
         this.tables = copyWithCaseInsensitiveKeys(tables);
+        this.menuDialog = menuDialog;
+        this.menus = Collections.unmodifiableList(new ArrayList<>(menus));
     }
 
     @Override
@@ -209,8 +215,17 @@ public class ImmutableIniFileModel implements IniFileModel {
     }
 
     @Override
-    @Nullable
     public TableModel getTable(String name) {
         return tables.get(name);
+    }
+
+    @Override
+    public String getMenuDialog() {
+        return menuDialog;
+    }
+
+    @Override
+    public List<MenuModel> getMenus() {
+        return menus;
     }
 }

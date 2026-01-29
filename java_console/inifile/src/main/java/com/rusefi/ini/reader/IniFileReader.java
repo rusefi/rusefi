@@ -33,7 +33,9 @@ public class IniFileReader {
                 allGauges,
                 topicHelpMap,
                 contextHelp,
-                allTables);
+                allTables,
+                menuDialogString,
+                menus);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -75,12 +77,18 @@ public class IniFileReader {
     private final Map<String, String> topicHelpMap = new TreeMap<>();
 
     private final Map<String, ContextHelpModel> contextHelp = new LinkedHashMap<>();
+    private String menuDialog;
     private String currentHelpReferenceName;
     private String currentHelpTitle;
     private final List<String> currentHelpTextLines = new ArrayList<>();
     private String currentHelpWebHelp;
 
     private boolean isTableEditorSection = false;
+    private boolean isMenuSection = false;
+    private final List<MenuModel> menus = new ArrayList<>();
+    private MenuModel currentMenu;
+    private GroupMenuModel currentGroup;
+    private String menuDialogString;
     private final Map<String, TableModel> allTables = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final TableBuilder tableBuilder = new TableBuilder();
 
@@ -196,6 +204,7 @@ public class IniFileReader {
                 isOutputChannelsSection = first.equals("[OutputChannels]");
                 isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
+                isMenuSection = first.equalsIgnoreCase("[Menu]");
 
                 if (wasGaugeSection && !isGaugeConfigurationsSection) {
                     finishGaugeCategory();
@@ -223,6 +232,9 @@ public class IniFileReader {
                 return;
             } else if (isTableEditorSection) {
                 tableBuilder.handleLine(list, this::addField, this::finishTable);
+                return;
+            } else if (isMenuSection) {
+                handleMenu(list);
                 return;
             }
 
@@ -398,6 +410,43 @@ public class IniFileReader {
             PanelModel panel = new PanelModel(panelName, placement, enableExpression, visibleExpression);
             panelsOfCurrentDialog.add(panel);
             log.debug("IniFileModel: Panel name=[" + panelName + "] placement=[" + placement + "]");
+        }
+    }
+
+    private void handleMenu(LinkedList<String> list) {
+        String keyword = list.removeFirst();
+        switch (keyword) {
+            case "menuDialog":
+                menuDialogString = list.get(0);
+                break;
+            case "menu":
+                currentMenu = new MenuModel(list.get(0));
+                menus.add(currentMenu);
+                currentGroup = null;
+                break;
+            case "subMenu":
+                if (currentMenu != null) {
+                    String name = list.size() > 1 ? list.get(1) : "";
+                    SubMenuModel subMenu = new SubMenuModel(list.get(0), name);
+                    if (currentGroup != null) {
+                        currentGroup.getItems().add(subMenu);
+                    } else {
+                        currentMenu.getItems().add(subMenu);
+                    }
+                }
+                break;
+            case "groupMenu":
+                if (currentMenu != null) {
+                    currentGroup = new GroupMenuModel(list.get(0));
+                    currentMenu.getItems().add(currentGroup);
+                }
+                break;
+            case "groupChildMenu":
+                if (currentGroup != null) {
+                    String name = list.size() > 1 ? list.get(1) : "";
+                    currentGroup.getItems().add(new SubMenuModel(list.get(0), name));
+                }
+                break;
         }
     }
 
