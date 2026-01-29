@@ -428,11 +428,8 @@ public class IniFileReader {
                 if (currentMenu != null) {
                     String name = list.size() > 1 ? list.get(1) : "";
                     SubMenuModel subMenu = new SubMenuModel(list.get(0), name);
-                    if (currentGroup != null) {
-                        currentGroup.getItems().add(subMenu);
-                    } else {
-                        currentMenu.getItems().add(subMenu);
-                    }
+                    currentMenu.getItems().add(subMenu);
+                    currentGroup = null;
                 }
                 break;
             case "groupMenu":
