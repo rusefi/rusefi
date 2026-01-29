@@ -2093,6 +2093,9 @@ uint16_t[VE_LOAD_COUNT x VE_RPM_COUNT] autoscale veTable;;"%", 0.1, 0, 0, 999, 1
 uint16_t[VE_LOAD_COUNT] veLoadBins;;{bitStringValue(fuelUnits, fuelAlgorithm) },	1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 uint16_t[VE_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
+! TODO at some point we need to flip this table to use AFR on the affected tests, since otherwise we get some no-to-nice fields as consequence
+! see #9035 for details
+! [tag:lambdaTable]
 uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;{useLambdaOnInterface ? "lambda" : "afr"}, { useLambdaOnInterface ? 1/@@PACK_MULT_LAMBDA_CFG@@ : 1/@@PACK_MULT_AFR_CFG@@ }, 0, {useLambdaOnInterface ? 0.6 : 0}, {useLambdaOnInterface ? 1.5 : 25}, {useLambdaOnInterface ? 2 : 1}
 
 uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 1000, 0
