@@ -2647,7 +2647,7 @@ struct engine_configuration_s {
 	bool useLambdaOnInterface : 1 {};
 	/**
 	offset 852 bit 29 */
-	bool unusedBit_311_29 : 1 {};
+	bool useMetricOnInterface : 1 {};
 	/**
 	offset 852 bit 30 */
 	bool unusedBit_311_30 : 1 {};

@@ -526,6 +526,9 @@ AEM X-Series or rusEFI Wideband
 ### useLambdaOnInterface
 
 
+### useMetricOnInterface
+
+
 ### verboseCanBaseAddress
 
 

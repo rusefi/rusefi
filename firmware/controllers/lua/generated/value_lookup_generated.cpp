@@ -532,6 +532,9 @@ float getConfigValueByHash(const int hash) {
 // useLambdaOnInterface
 		case 1514634753:
 			return engineConfiguration->useLambdaOnInterface;
+// useMetricOnInterface
+		case 934247460:
+			return engineConfiguration->useMetricOnInterface;
 // verboseCanBaseAddress
 		case 6238478:
 			return engineConfiguration->verboseCanBaseAddress;
@@ -2938,6 +2941,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1514634753:
 	{
 		engineConfiguration->useLambdaOnInterface = (int)value;
+		return 1;
+	}
+		case 934247460:
+	{
+		engineConfiguration->useMetricOnInterface = (int)value;
 		return 1;
 	}
 		case 6238478:
