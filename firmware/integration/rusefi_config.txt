@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260127
+#define FLASH_DATA_VERSION 260129
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -917,7 +917,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit useAbsolutePressureForLagTime,"yes","no"
 	! see #8650, only used on the UI
 	bit useLambdaOnInterface,"Lambda","AFR"
-	bit unusedBit_311_29
+	bit useMetricOnInterface,"Metric","Imperial"
 	bit unusedBit_311_30
 	bit unusedBit_311_31
 
