@@ -112,7 +112,7 @@ public class IniFileReaderUtil {
         return new RawIniFile(lines, msg);
     }
 
-    public static RawIniFile read(File input) throws FileNotFoundException {
+    private static RawIniFile read(File input) throws FileNotFoundException {
         InputStream in = new FileInputStream(input);
         return read(in, input.getAbsolutePath());
     }

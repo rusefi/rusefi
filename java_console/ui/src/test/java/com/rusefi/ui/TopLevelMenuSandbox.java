@@ -1,23 +1,27 @@
 package com.rusefi.ui;
 
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ui.widgets.MainMenuTreeWidget;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 
 public class TopLevelMenuSandbox {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         commonUiStartup();
 
-        
+        String iniPath = "../firmware/tunerstudio/generated/rusefi_uaefi121.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
 
-        SwingUtilities.invokeLater(TopLevelMenuSandbox::runAwt);
+        SwingUtilities.invokeLater(() -> runAwt(model));
     }
 
-    private static void runAwt() {
+    private static void runAwt(IniFileModel model) {
         FrameHelper frameHelper = new FrameHelper(JDialog.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new GridBagLayout());
