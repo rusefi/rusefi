@@ -30,6 +30,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         MultiplierToTableMigrator.INSTANCE,
         ScalarToArrayMigrator.INSTANCE,
         MapSamplingValuesMigrator.INSTANCE,
+        ImperialUnitsMigrator.INSTANCE,
 
         // leave the default as the final migrator!
         DefaultTuneMigrator.INSTANCE
