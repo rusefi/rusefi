@@ -17,6 +17,8 @@ public abstract class IniField {
         // TODO: replace with new ExpressionEvaluator
         s = s.replaceAll("\\{", "").replaceAll("\\}", "");
         // If this is a complex expression with ternary operator, try to extract the true branch
+        // this is related to the lambdaTable using the true branch as default on the fuel tests
+        // [tag:lambdaTable]
         if (s.contains("?")) {
             int questionIndex = s.indexOf('?');
             int colonIndex = s.lastIndexOf(':');
