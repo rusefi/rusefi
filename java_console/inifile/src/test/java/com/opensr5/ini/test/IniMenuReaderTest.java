@@ -60,17 +60,4 @@ public class IniMenuReaderTest {
             assertEquals(name, subMenu.getName(), "SubMenu name for " + key);
         }
     }
-
-    private void printMenuItem(MenuItem item, String indent) {
-        if (item instanceof SubMenuModel) {
-            SubMenuModel subMenu = (SubMenuModel) item;
-            System.out.println(indent + "SubMenu: " + subMenu.getName() + " (" + subMenu.getKey() + ")");
-        } else if (item instanceof GroupMenuModel) {
-            GroupMenuModel group = (GroupMenuModel) item;
-            System.out.println(indent + "Group: " + group.getName());
-            for (MenuItem child : group.getItems()) {
-                printMenuItem(child, indent + "  ");
-            }
-        }
-    }
 }
