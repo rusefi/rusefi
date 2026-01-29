@@ -12,15 +12,6 @@ void TimerReset() { }
 
 void TimerUpdate() { }
 
-// See also STM32_NOCACHE_ENABLE option will enable MPU init
-extern "C" void __cpu_init() {
-  // *** this is about specifically stm32f7 ***
-	// This overrides the built-in __cpu_init() function
-	// We do this to avoid enabling the D/I caches, which
-	// we'll immediately have to turn back off when jumping
-	// to the main firmware (which will then enable them itself)
-}
-
 blt_int32u TimerGet() {
 	return 0;
 }
@@ -33,6 +24,14 @@ void CpuMemCopy(blt_addr dest, blt_addr src, blt_int16u len)
 void CpuMemSet(blt_addr dest, blt_int8u value, blt_int16u len)
 {
 	memset((void*)dest, value, len);
+}
+
+/* See crt1.c for __cpu_init() */
+void __cpu_deinit(void) {
+#if CORTEX_MODEL == 7
+  SCB_DisableICache();
+  SCB_DisableDCache();
+#endif
 }
 
 /** \brief Pointer to the user program's reset vector. */
@@ -82,6 +81,10 @@ void CpuStartUserProgram(void)
   chSysDisable();
   /* reset the timer */
   TimerReset();
+
+  /* Core deinitialization to jump into Prog in fresh state.*/
+  __cpu_deinit();
+
   /* remap user program's vector table */
   SCB->VTOR = CPU_USER_PROGRAM_VECTABLE_OFFSET & (blt_int32u)0x1FFFFF80;
   /* set the address where the bootloader needs to jump to. this is the address of
