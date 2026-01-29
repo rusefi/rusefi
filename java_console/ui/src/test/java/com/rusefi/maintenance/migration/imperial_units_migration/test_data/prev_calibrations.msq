@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<msq xmlns="http://www.msefi.com/:msq">
+    <page/>
+    <page number="0" size="22656">
+        <constant name="vehicleName">"Test Imperial Vehicle"</constant>
+        <constant name="launchControlEnabled">"disabled"</constant>
+    </page>
+</msq>
