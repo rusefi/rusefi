@@ -45,6 +45,10 @@ public class IniMenuReaderTest {
 
         // 6. Verify "injectorConfig" sub-menu exists in Fuel
         assertSubMenu(fuelMenu.getItems(), "injectorConfig", "Injection configuration");
+
+        // 7. Verify "VE" exists in Fuel, NOT inside "Cylinder fuel trims" group
+        // The group is defined before VE in the INI
+        assertSubMenu(fuelMenu.getItems(), "veTableDialog", "VE");
     }
 
     private void assertSubMenu(List<MenuItem> items, String key, String name) {
