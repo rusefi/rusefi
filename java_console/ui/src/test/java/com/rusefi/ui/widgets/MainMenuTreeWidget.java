@@ -5,9 +5,11 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.MenuItem;
 import com.opensr5.ini.MenuModel;
 import com.opensr5.ini.SubMenuModel;
+import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
 public class MainMenuTreeWidget {
@@ -26,7 +28,33 @@ public class MainMenuTreeWidget {
         }
 
         JTree tree = new JTree(root);
+        Font font = tree.getFont();
+        tree.setFont(new Font(font.getName(), font.getStyle(), font.getSize() * 2));
         tree.setRootVisible(false);
+
+        ImageIcon setupIcon = AutoupdateUtil.loadIcon("setup48.png");
+        ImageIcon fuelIcon = AutoupdateUtil.loadIcon("fuel48.png");
+        ImageIcon ignitionIcon = AutoupdateUtil.loadIcon("ignition48.png");
+
+        tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+                if (value instanceof DefaultMutableTreeNode) {
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                    Object userObject = node.getUserObject();
+                    if ("Setup".equals(userObject)) {
+                        setIcon(setupIcon);
+                    } else if ("Fuel".equals(userObject)) {
+                        setIcon(fuelIcon);
+                    } else if ("Ignition".equals(userObject)) {
+                        setIcon(ignitionIcon);
+                    }
+                }
+                return this;
+            }
+        });
+
         contentPane.add(new JScrollPane(tree), BorderLayout.CENTER);
     }
 
