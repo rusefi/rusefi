@@ -22,7 +22,7 @@ public class IniMenuReaderTest {
         assertFalse(menus.isEmpty(), "Menus should not be empty");
 
         // 1. Verify "Setup" menu exists
-        MenuModel setupMenu = menus.stream().filter(m -> m.getName().equals("&Setup")).findFirst().orElse(null);
+        MenuModel setupMenu = menus.stream().filter(m -> m.getName().equals("Setup")).findFirst().orElse(null);
         assertNotNull(setupMenu, "Setup menu should exist");
 
         // 2. Verify "Vehicle Information" sub-menu exists in Setup

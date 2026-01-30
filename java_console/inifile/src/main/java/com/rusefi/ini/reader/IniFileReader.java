@@ -420,28 +420,28 @@ public class IniFileReader {
                 menuDialogString = list.get(0);
                 break;
             case "menu":
-                currentMenu = new MenuModel(list.get(0));
+                currentMenu = new MenuModel(IniFileReaderUtil.removeMenuAmpersand(list.get(0)));
                 menus.add(currentMenu);
                 currentGroup = null;
                 break;
             case "subMenu":
                 if (currentMenu != null) {
                     String name = list.size() > 1 ? list.get(1) : "";
-                    SubMenuModel subMenu = new SubMenuModel(list.get(0), name);
+                    SubMenuModel subMenu = new SubMenuModel(list.get(0), IniFileReaderUtil.removeMenuAmpersand(name));
                     currentMenu.getItems().add(subMenu);
                     currentGroup = null;
                 }
                 break;
             case "groupMenu":
                 if (currentMenu != null) {
-                    currentGroup = new GroupMenuModel(list.get(0));
+                    currentGroup = new GroupMenuModel(IniFileReaderUtil.removeMenuAmpersand(list.get(0)));
                     currentMenu.getItems().add(currentGroup);
                 }
                 break;
             case "groupChildMenu":
                 if (currentGroup != null) {
                     String name = list.size() > 1 ? list.get(1) : "";
-                    currentGroup.getItems().add(new SubMenuModel(list.get(0), name));
+                    currentGroup.getItems().add(new SubMenuModel(list.get(0), IniFileReaderUtil.removeMenuAmpersand(name)));
                 }
                 break;
         }

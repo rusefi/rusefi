@@ -88,6 +88,13 @@ public class IniFileReaderUtil {
         return c == ' ' || c == '\t' || c == '=' || c == ',';
     }
 
+    public static String removeMenuAmpersand(String name) {
+        if (name == null) {
+            return null;
+        }
+        return name.replace("&", "");
+    }
+
     public static RawIniFile read(InputStream in) {
         return read(in, "unknown");
     }
