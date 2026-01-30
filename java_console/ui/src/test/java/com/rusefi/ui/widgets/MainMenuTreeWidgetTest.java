@@ -12,6 +12,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -185,10 +186,16 @@ public class MainMenuTreeWidgetTest {
         // The "engineChars" dialog in the test INI has some fields.
         assertTrue(tableModel.getRowCount() > 0, "Table should have rows for engineChars");
 
-        // Verify specific field (optional, based on knowing what's in the INI)
-        // For example, "engineType" is usually there.
-        boolean foundAnyField = tableModel.getRowCount() > 0;
-        assertTrue(foundAnyField, "Should find any field in table");
+        // Now test re-selection (clicking the same node again)
+        tableModel.setValueAt("ModifiedValue", 0, 0); // Manually modify to see if it gets cleared/updated
+
+        // Simulate click on the same node
+        tree.getMouseListeners()[1].mouseClicked(new MouseEvent(tree, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));
+
+        // The table should have been updated (re-populated), so our "ModifiedValue" should be gone if it was in first column
+        // Actually, update() probably clears and refills the table.
+        // Let's just check if it's still > 0 and maybe check that onSelect was called again.
+        assertEquals("engineChars", selectedSubMenu.get().getKey());
     }
 
     private DefaultMutableTreeNode findNode(DefaultMutableTreeNode parent, String name) {

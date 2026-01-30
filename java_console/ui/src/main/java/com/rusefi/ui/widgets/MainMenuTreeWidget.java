@@ -15,6 +15,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.function.Consumer;
 
@@ -40,31 +42,22 @@ public class MainMenuTreeWidget {
         }
 
         tree = new JTree(root);
+        tree.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+                if (path != null) {
+                    handleSelection(path);
+                }
+            }
+        });
         tree.addTreeSelectionListener(e -> {
             if (isUpdatingModel) {
                 return;
             }
             TreePath path = e.getPath();
             if (path != null) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-                if (node.getUserObject() instanceof SubMenuModel) {
-                    if (onSelect != null) {
-                        onSelect.accept((SubMenuModel) node.getUserObject());
-                    }
-                }
-
-                if (!searchField.getText().isEmpty()) {
-                    SwingUtilities.invokeLater(() -> {
-                        searchField.setText("");
-                        expandAll(tree, true);
-                        tree.setSelectionPath(path);
-                        // Make sure the tree is laid out so it knows its new size after expansion
-                        trueLayoutAndRepaint(tree);
-                        tree.scrollPathToVisible(path);
-                    });
-                } else {
-                    tree.scrollPathToVisible(path);
-                }
+                handleSelection(path);
             }
         });
         Font font = tree.getFont();
@@ -143,6 +136,28 @@ public class MainMenuTreeWidget {
 
         contentPane.add(topPanel, BorderLayout.NORTH);
         contentPane.add(new JScrollPane(tree), BorderLayout.CENTER);
+    }
+
+    private void handleSelection(TreePath path) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+        if (node.getUserObject() instanceof SubMenuModel) {
+            if (onSelect != null) {
+                onSelect.accept((SubMenuModel) node.getUserObject());
+            }
+        }
+
+        if (!searchField.getText().isEmpty()) {
+            SwingUtilities.invokeLater(() -> {
+                searchField.setText("");
+                expandAll(tree, true);
+                tree.setSelectionPath(path);
+                // Make sure the tree is laid out so it knows its new size after expansion
+                trueLayoutAndRepaint(tree);
+                tree.scrollPathToVisible(path);
+            });
+        } else {
+            tree.scrollPathToVisible(path);
+        }
     }
 
     /**
