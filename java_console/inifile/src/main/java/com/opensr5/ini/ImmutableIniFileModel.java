@@ -2,7 +2,6 @@ package com.opensr5.ini;
 
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.Field;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -24,7 +23,6 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, TableModel> tables;
     private final Map<String, String> topicHelp;
     private final Map<String, ContextHelpModel> contextHelp;
-    private final String menuDialog;
     private final List<MenuModel> menus;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
@@ -69,7 +67,6 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.topicHelp = Collections.unmodifiableMap(new TreeMap<>(topicHelp));
         this.contextHelp = Collections.unmodifiableMap(new LinkedHashMap<>(contextHelp));
         this.tables = copyWithCaseInsensitiveKeys(tables);
-        this.menuDialog = menuDialog;
         this.menus = Collections.unmodifiableList(new ArrayList<>(menus));
     }
 
@@ -217,11 +214,6 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public TableModel getTable(String name) {
         return tables.get(name);
-    }
-
-    @Override
-    public String getMenuDialog() {
-        return menuDialog;
     }
 
     @Override

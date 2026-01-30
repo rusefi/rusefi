@@ -16,8 +16,6 @@ public class IniMenuReaderTest {
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
         assertNotNull(model);
-        // This is what we are looking for
-        assertEquals("main", model.getMenuDialog(), "menuDialog should be loaded");
 
         List<MenuModel> menus = model.getMenus();
         assertNotNull(menus);
