@@ -54,6 +54,7 @@ public class MainMenuTreeWidget {
                 if (!searchField.getText().isEmpty()) {
                     SwingUtilities.invokeLater(() -> {
                         searchField.setText("");
+                        expandAll(tree, true);
                         tree.setSelectionPath(path);
                         tree.scrollPathToVisible(path);
                     });
@@ -145,7 +146,7 @@ public class MainMenuTreeWidget {
      * element path as top menu name + potential submenu name + element name
      *
      * display only matching tree elements and their parents. when user clicks on an element during search,
-     * reset search text to empty, show all elements, make sure that clicked element is visible
+     * reset search text to empty, expand all elements, make sure that clicked element is visible
      */
     private void updateSearch(String text) {
         isUpdatingModel = true;
