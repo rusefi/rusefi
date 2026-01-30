@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.FileNotFoundException;
 
@@ -76,6 +77,45 @@ public class MainMenuTreeWidgetTest {
         DefaultMutableTreeNode limitsNode = findNode(setupNode, "Limits and protection");
         assertNotNull(limitsNode, "Limits and protection node should exist");
         assertTrue(limitsNode.getChildCount() > 0, "Limits group should have children");
+    }
+
+    @Test
+    public void testSearchLogic() throws FileNotFoundException {
+        String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        MainMenuTreeWidget widget = new MainMenuTreeWidget(model);
+        JPanel content = widget.getContentPane();
+
+        JPanel topPanel = (JPanel) content.getComponent(0);
+        JTextField searchField = (JTextField) topPanel.getComponent(0);
+        JScrollPane scrollPane = (JScrollPane) content.getComponent(1);
+        JTree tree = (JTree) scrollPane.getViewport().getView();
+
+        // 1. Initial state
+        assertEquals(model.getMenus().size(), ((DefaultMutableTreeNode) tree.getModel().getRoot()).getChildCount());
+
+        // 2. Search for "setup limit"
+        searchField.setText("setup limit");
+        DefaultMutableTreeNode filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        // Should only have "Setup" at top level
+        assertEquals(1, filteredRoot.getChildCount());
+        DefaultMutableTreeNode setupNode = (DefaultMutableTreeNode) filteredRoot.getChildAt(0);
+        assertEquals("Setup", setupNode.getUserObject());
+
+        // Inside Setup, should have "Limits and protection"
+        DefaultMutableTreeNode limitsNode = findNode(setupNode, "Limits and protection");
+        assertNotNull(limitsNode);
+
+        // 3. Reset search by clicking (simulated)
+        tree.setSelectionPath(new TreePath(limitsNode.getPath()));
+        // Selection listener should trigger search reset
+        try {
+            SwingUtilities.invokeAndWait(() -> {});
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        assertTrue(searchField.getText().isEmpty(), "Search field should be empty after click");
+        assertEquals(model.getMenus().size(), ((DefaultMutableTreeNode) tree.getModel().getRoot()).getChildCount(), "Tree should be fully restored");
     }
 
     private DefaultMutableTreeNode findNode(DefaultMutableTreeNode parent, String name) {

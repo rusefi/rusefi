@@ -12,6 +12,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.Enumeration;
@@ -20,6 +21,8 @@ public class MainMenuTreeWidget {
     private final JPanel contentPane = new JPanel(new BorderLayout());
     private final JTree tree;
     private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("Menus");
+
+    private final JTextField searchField = new JTextField();
 
     public MainMenuTreeWidget(IniFileModel model) {
         for (MenuModel menu : model.getMenus()) {
@@ -32,6 +35,16 @@ public class MainMenuTreeWidget {
         }
 
         tree = new JTree(root);
+        tree.addTreeSelectionListener(e -> {
+            TreePath path = e.getPath();
+            if (path != null && !searchField.getText().isEmpty()) {
+                SwingUtilities.invokeLater(() -> {
+                    searchField.setText("");
+                    tree.setSelectionPath(path);
+                    tree.scrollPathToVisible(path);
+                });
+            }
+        });
         Font font = tree.getFont();
         tree.setFont(new Font(font.getName(), font.getStyle(), font.getSize() * 2));
         tree.setRootVisible(false);
@@ -66,7 +79,6 @@ public class MainMenuTreeWidget {
         });
 
         JPanel topPanel = new JPanel(new BorderLayout());
-        JTextField searchField = new JTextField();
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -105,23 +117,60 @@ public class MainMenuTreeWidget {
         contentPane.add(new JScrollPane(tree), BorderLayout.CENTER);
     }
 
+    /**
+     * [search logic]: display all elements if text is empty
+     *
+     * if text is not empty, split into tokens by whitespace. match all tokens to concatenation of full
+     * element path as top menu name + potential submenu name + element name
+     *
+     * display only matching tree elements and their parents. when user clicks on an element during search,
+     * reset search text to empty, show all elements, make sure that clicked element is visible
+     */
     private void updateSearch(String text) {
-        // For now, let's just expand the nodes that match the search text
-        if (text.isEmpty()) {
+        if (text == null || text.isEmpty()) {
+            tree.setModel(new DefaultTreeModel(root));
             return;
         }
-        searchAndExpand(root, text.toLowerCase());
+
+        String[] tokens = text.toLowerCase().split("\\s+");
+        DefaultMutableTreeNode filteredRoot = new DefaultMutableTreeNode("Menus");
+        filterNode(root, filteredRoot, tokens, "");
+
+        tree.setModel(new DefaultTreeModel(filteredRoot));
+        expandAll(tree, true);
     }
 
-    private void searchAndExpand(DefaultMutableTreeNode node, String text) {
-        for (int i = 0; i < node.getChildCount(); i++) {
-            DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
-            String nodeText = child.getUserObject().toString().toLowerCase();
-            if (nodeText.contains(text)) {
-                tree.makeVisible(new TreePath(child.getPath()));
+    private boolean filterNode(DefaultMutableTreeNode originalNode, DefaultMutableTreeNode filteredNode, String[] tokens, String path) {
+        String nodeText = originalNode.getUserObject().toString();
+        String currentPath = path.isEmpty() ? nodeText : path + " " + nodeText;
+
+        boolean matchFound = false;
+
+        if (originalNode != root) {
+            String currentPathLower = currentPath.toLowerCase();
+            boolean allTokensMatch = true;
+            for (String token : tokens) {
+                if (!currentPathLower.contains(token)) {
+                    allTokensMatch = false;
+                    break;
+                }
             }
-            searchAndExpand(child, text);
+
+            if (allTokensMatch) {
+                matchFound = true;
+            }
         }
+
+        for (int i = 0; i < originalNode.getChildCount(); i++) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) originalNode.getChildAt(i);
+            DefaultMutableTreeNode filteredChild = new DefaultMutableTreeNode(child.getUserObject());
+            if (filterNode(child, filteredChild, tokens, currentPath)) {
+                filteredNode.add(filteredChild);
+                matchFound = true;
+            }
+        }
+
+        return matchFound;
     }
 
     private void expandAll(JTree tree, boolean expand) {
