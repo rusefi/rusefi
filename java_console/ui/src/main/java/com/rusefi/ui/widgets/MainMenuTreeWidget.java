@@ -56,8 +56,18 @@ public class MainMenuTreeWidget {
                         searchField.setText("");
                         expandAll(tree, true);
                         tree.setSelectionPath(path);
-                        tree.scrollPathToVisible(path);
+                        tree.revalidate();
+                        // double-invokeLater to make sure things are visible after expandAll
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                tree.scrollPathToVisible(path);
+                            }
+                        });
+
                     });
+                } else {
+                    tree.scrollPathToVisible(path);
                 }
             }
         });
@@ -146,7 +156,7 @@ public class MainMenuTreeWidget {
      * element path as top menu name + potential submenu name + element name
      *
      * display only matching tree elements and their parents. when user clicks on an element during search,
-     * reset search text to empty, expand all elements, make sure that clicked element is visible
+     * reset search text to empty, expand all elements, make sure that clicked JTree element is visible
      */
     private void updateSearch(String text) {
         isUpdatingModel = true;
