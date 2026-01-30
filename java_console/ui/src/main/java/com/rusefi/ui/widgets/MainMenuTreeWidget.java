@@ -42,6 +42,7 @@ public class MainMenuTreeWidget {
         }
 
         tree = new JTree(root);
+        tree.setToggleClickCount(1);
         tree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
