@@ -18,6 +18,8 @@ import java.awt.*;
 import java.util.Enumeration;
 import java.util.function.Consumer;
 
+import static com.rusefi.core.ui.AutoupdateUtil.trueLayoutAndRepaint;
+
 public class MainMenuTreeWidget {
     private final JPanel contentPane = new JPanel(new BorderLayout());
     private final JTree tree;
@@ -56,15 +58,9 @@ public class MainMenuTreeWidget {
                         searchField.setText("");
                         expandAll(tree, true);
                         tree.setSelectionPath(path);
-                        tree.revalidate();
-                        // double-invokeLater to make sure things are visible after expandAll
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                tree.scrollPathToVisible(path);
-                            }
-                        });
-
+                        // Make sure the tree is laid out so it knows its new size after expansion
+                        trueLayoutAndRepaint(tree);
+                        tree.scrollPathToVisible(path);
                     });
                 } else {
                     tree.scrollPathToVisible(path);
