@@ -58,6 +58,16 @@ public class MainMenuTreeWidgetTest {
         assertNotNull(ignitionNode, "Ignition node should exist");
         verifyIcon(tree, ignitionNode, "Ignition");
 
+        // Find "Idle" menu
+        DefaultMutableTreeNode idleNode = findNode(root, "Idle");
+        assertNotNull(idleNode, "Idle node should exist");
+        verifyIcon(tree, idleNode, "Idle");
+
+        // Find "Cranking" menu
+        DefaultMutableTreeNode crankingNode = findNode(root, "Cranking");
+        assertNotNull(crankingNode, "Cranking node should exist");
+        verifyIcon(tree, crankingNode, "Cranking");
+
         // Find "Limits and protection" group in Setup
         DefaultMutableTreeNode limitsNode = findNode(setupNode, "Limits and protection");
         assertNotNull(limitsNode, "Limits and protection node should exist");

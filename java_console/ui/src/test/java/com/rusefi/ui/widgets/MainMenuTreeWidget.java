@@ -35,6 +35,8 @@ public class MainMenuTreeWidget {
         ImageIcon setupIcon = AutoupdateUtil.loadIcon("setup48.png");
         ImageIcon fuelIcon = AutoupdateUtil.loadIcon("fuel48.png");
         ImageIcon ignitionIcon = AutoupdateUtil.loadIcon("ignition48.png");
+        ImageIcon idleIcon = AutoupdateUtil.loadIcon("idle48.png");
+        ImageIcon crankingIcon = AutoupdateUtil.loadIcon("cranking48.png");
 
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
             @Override
@@ -49,6 +51,10 @@ public class MainMenuTreeWidget {
                         setIcon(fuelIcon);
                     } else if ("Ignition".equals(userObject)) {
                         setIcon(ignitionIcon);
+                    } else if ("Idle".equals(userObject)) {
+                        setIcon(idleIcon);
+                    } else if ("Cranking".equals(userObject)) {
+                        setIcon(crankingIcon);
                     }
                 }
                 return this;
