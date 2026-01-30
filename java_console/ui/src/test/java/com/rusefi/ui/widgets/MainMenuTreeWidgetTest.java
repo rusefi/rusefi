@@ -24,7 +24,11 @@ public class MainMenuTreeWidgetTest {
         JPanel content = widget.getContentPane();
         assertNotNull(content);
 
-        JScrollPane scrollPane = (JScrollPane) content.getComponent(0);
+        JPanel topPanel = (JPanel) content.getComponent(0);
+        assertNotNull(topPanel);
+        assertTrue(topPanel.getComponent(0) instanceof JTextField);
+
+        JScrollPane scrollPane = (JScrollPane) content.getComponent(1);
         JTree tree = (JTree) scrollPane.getViewport().getView();
         TreeModel treeModel = tree.getModel();
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
