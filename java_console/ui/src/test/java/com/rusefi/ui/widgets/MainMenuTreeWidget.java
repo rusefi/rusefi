@@ -16,6 +16,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.util.Enumeration;
+import java.util.function.Consumer;
 
 public class MainMenuTreeWidget {
     private final JPanel contentPane = new JPanel(new BorderLayout());
@@ -24,6 +25,7 @@ public class MainMenuTreeWidget {
 
     private final JTextField searchField = new JTextField();
     private boolean isUpdatingModel = false;
+    private Consumer<SubMenuModel> onSelect;
 
     public MainMenuTreeWidget(IniFileModel model) {
         for (MenuModel menu : model.getMenus()) {
@@ -41,12 +43,21 @@ public class MainMenuTreeWidget {
                 return;
             }
             TreePath path = e.getPath();
-            if (path != null && !searchField.getText().isEmpty()) {
-                SwingUtilities.invokeLater(() -> {
-                    searchField.setText("");
-                    tree.setSelectionPath(path);
-                    tree.scrollPathToVisible(path);
-                });
+            if (path != null) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+                if (node.getUserObject() instanceof SubMenuModel) {
+                    if (onSelect != null) {
+                        onSelect.accept((SubMenuModel) node.getUserObject());
+                    }
+                }
+
+                if (!searchField.getText().isEmpty()) {
+                    SwingUtilities.invokeLater(() -> {
+                        searchField.setText("");
+                        tree.setSelectionPath(path);
+                        tree.scrollPathToVisible(path);
+                    });
+                }
             }
         });
         Font font = tree.getFont();
@@ -66,15 +77,21 @@ public class MainMenuTreeWidget {
                 if (value instanceof DefaultMutableTreeNode) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                     Object userObject = node.getUserObject();
-                    if ("Setup".equals(userObject)) {
+                    String name = userObject.toString();
+                    if (userObject instanceof SubMenuModel) {
+                        name = ((SubMenuModel) userObject).getName();
+                    }
+                    setText(name);
+
+                    if ("Setup".equals(name)) {
                         setIcon(setupIcon);
-                    } else if ("Fuel".equals(userObject)) {
+                    } else if ("Fuel".equals(name)) {
                         setIcon(fuelIcon);
-                    } else if ("Ignition".equals(userObject)) {
+                    } else if ("Ignition".equals(name)) {
                         setIcon(ignitionIcon);
-                    } else if ("Idle".equals(userObject)) {
+                    } else if ("Idle".equals(name)) {
                         setIcon(idleIcon);
-                    } else if ("Cranking".equals(userObject)) {
+                    } else if ("Cranking".equals(name)) {
                         setIcon(crankingIcon);
                     }
                 }
@@ -150,7 +167,11 @@ public class MainMenuTreeWidget {
     }
 
     private boolean filterNode(DefaultMutableTreeNode originalNode, DefaultMutableTreeNode filteredNode, String[] tokens, String path) {
-        String nodeText = originalNode.getUserObject().toString();
+        Object userObject = originalNode.getUserObject();
+        String nodeText = userObject.toString();
+        if (userObject instanceof SubMenuModel) {
+            nodeText = ((SubMenuModel) userObject).getName();
+        }
         String currentPath = path.isEmpty() ? nodeText : path + " " + nodeText;
 
         boolean matchFound = false;
@@ -215,8 +236,12 @@ public class MainMenuTreeWidget {
             }
         } else if (item instanceof SubMenuModel) {
             SubMenuModel subMenu = (SubMenuModel) item;
-            parent.add(new DefaultMutableTreeNode(subMenu.getName()));
+            parent.add(new DefaultMutableTreeNode(subMenu));
         }
+    }
+
+    public void setOnSelect(Consumer<SubMenuModel> onSelect) {
+        this.onSelect = onSelect;
     }
 
     public JPanel getContentPane() {

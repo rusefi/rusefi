@@ -1,16 +1,19 @@
 package com.rusefi.ui.widgets;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.SubMenuModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,16 +41,7 @@ public class MainMenuTreeWidgetTest {
         assertTrue(root.getChildCount() > 0, "Tree should have top-level menus");
 
         // Find "Setup" menu
-        DefaultMutableTreeNode setupNode = null;
-        int setupRow = -1;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) root.getChildAt(i);
-            if (node.getUserObject().equals("Setup")) {
-                setupNode = node;
-                setupRow = i; // This is NOT the row in the tree, but let's find it properly
-                break;
-            }
-        }
+        DefaultMutableTreeNode setupNode = findNode(root, "Setup");
         assertNotNull(setupNode, "Setup node should exist");
 
         // Verify icon for Setup
@@ -127,14 +121,7 @@ public class MainMenuTreeWidgetTest {
         filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
         assertTrue(filteredRoot.getChildCount() > 0, "Filtered root should have children");
         // Verify we found "Fuel"
-        boolean foundFuel2 = false;
-        for (int i = 0; i < filteredRoot.getChildCount(); i++) {
-            if (((DefaultMutableTreeNode) filteredRoot.getChildAt(i)).getUserObject().equals("Fuel")) {
-                foundFuel2 = true;
-                break;
-            }
-        }
-        assertTrue(foundFuel2, "Should find 'Fuel' in second search");
+        assertNotNull(findNode(filteredRoot, "Fuel"), "Should find 'Fuel' in second search");
 
         // 5. Search for something non-existent
         searchField.setText("nonexistentstuff");
@@ -157,10 +144,56 @@ public class MainMenuTreeWidgetTest {
         assertTrue(filteredRoot.getChildCount() > 0, "Should have results again");
     }
 
+    @Test
+    public void testIntegration() throws FileNotFoundException {
+        String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+
+        MainMenuTreeWidget left = new MainMenuTreeWidget(model);
+        CalibrationDialogWidget right = new CalibrationDialogWidget();
+
+        AtomicReference<SubMenuModel> selectedSubMenu = new AtomicReference<>();
+        left.setOnSelect(subMenu -> {
+            selectedSubMenu.set(subMenu);
+            right.update(model.getDialogs().get(subMenu.getKey()));
+        });
+
+        JTree tree = (JTree) ((JScrollPane) left.getContentPane().getComponent(1)).getViewport().getView();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        DefaultMutableTreeNode setupNode = findNode(root, "Setup");
+        DefaultMutableTreeNode vehicleInfoNode = findNode(setupNode, "Vehicle Information");
+        assertNotNull(vehicleInfoNode);
+
+        // Simulate selection
+        tree.setSelectionPath(new TreePath(vehicleInfoNode.getPath()));
+
+        assertNotNull(selectedSubMenu.get());
+        assertEquals("engineChars", selectedSubMenu.get().getKey());
+
+        // Verify JTable content
+        JPanel contentPane = right.getContentPane();
+        JScrollPane scrollPane = (JScrollPane) contentPane.getComponent(0);
+        JTable table = (JTable) scrollPane.getViewport().getView();
+        TableModel tableModel = table.getModel();
+
+        // The "engineChars" dialog in the test INI has some fields.
+        assertTrue(tableModel.getRowCount() > 0, "Table should have rows for engineChars");
+
+        // Verify specific field (optional, based on knowing what's in the INI)
+        // For example, "engineType" is usually there.
+        boolean foundAnyField = tableModel.getRowCount() > 0;
+        assertTrue(foundAnyField, "Should find any field in table");
+    }
+
     private DefaultMutableTreeNode findNode(DefaultMutableTreeNode parent, String name) {
         for (int i = 0; i < parent.getChildCount(); i++) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) parent.getChildAt(i);
-            if (node.getUserObject().equals(name)) {
+            Object userObject = node.getUserObject();
+            String nodeName = userObject.toString();
+            if (userObject instanceof SubMenuModel) {
+                nodeName = ((SubMenuModel) userObject).getName();
+            }
+            if (name.equals(nodeName)) {
                 return node;
             }
         }

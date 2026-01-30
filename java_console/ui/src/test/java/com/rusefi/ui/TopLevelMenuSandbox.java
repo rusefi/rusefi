@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ui.widgets.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.MainMenuTreeWidget;
 
 import javax.swing.*;
@@ -27,12 +28,15 @@ public class TopLevelMenuSandbox {
         JPanel panel = new JPanel(new GridBagLayout());
 
         MainMenuTreeWidget left = new MainMenuTreeWidget(model);
-
         panel.add(left.getContentPane(), new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-        JPanel right = new JPanel();
-        right.setBackground(Color.BLUE);
-        panel.add(right, new GridBagConstraints(1, 0, 1, 1, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        CalibrationDialogWidget right = new CalibrationDialogWidget();
+        panel.add(right.getContentPane(), new GridBagConstraints(1, 0, 1, 1, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+        left.setOnSelect(subMenu -> {
+            String dialogKey = subMenu.getKey();
+            right.update(model.getDialogs().get(dialogKey));
+        });
 
         frameHelper.showFrame(panel);
     }
