@@ -13,13 +13,22 @@ public class PanelModel {
     private final String enableExpression;
     private final String visibleExpression;
 
-    public PanelModel(String panelName, String placement) {
-        this(panelName, placement, null, null);
-    }
-
     public PanelModel(String panelName, String placement, String enableExpression, String visibleExpression) {
         this.panelName = panelName;
         this.placement = placement;
+        if (placement != null) {
+            placement = placement.trim().toLowerCase();
+            boolean isExpression = placement.charAt(0) == '{';
+            if (!isExpression) {
+                if (!"west".equals(placement)
+                    && !"north".equals(placement)
+                    && !"south".equals(placement)
+                    && !"center".equals(placement)
+                    && !"east".equals(placement)) {
+                    throw new IllegalArgumentException("Unexpected placement: " + placement);
+                }
+            }
+        }
         this.enableExpression = enableExpression;
         this.visibleExpression = visibleExpression;
     }
