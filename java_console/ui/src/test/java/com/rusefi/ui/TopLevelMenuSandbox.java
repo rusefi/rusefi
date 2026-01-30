@@ -26,7 +26,7 @@ public class TopLevelMenuSandbox {
 
         JPanel panel = new JPanel(new GridBagLayout());
 
-        MainMenuTreeWidget left = new MainMenuTreeWidget();
+        MainMenuTreeWidget left = new MainMenuTreeWidget(model);
 
         panel.add(left.getContentPane(), new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
