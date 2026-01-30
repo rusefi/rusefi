@@ -774,6 +774,8 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_WARNING_COUNTER = "Warning: counter";
 	public static final String GAUGE_NAME_WARNING_LAST = "Warning: last";
 	public static final String GAUGE_NAME_WG_POSITION = "Wastegate position sensor";
+	public static final int GAUGE_PRECISION_TEMPERATURE_C = 1;
+	public static final int GAUGE_PRECISION_TEMPERATURE_F = 2;
 	public static final String GAUGES_DECLARATIONS_FILE = "tunerstudio/gauge_declarations.ini";
 	public static final String GEAR_DETECTION_DIALOG_NAME = "Gear Detection";
 	public static final int gear_e_GEAR_1 = 1;
@@ -1443,7 +1445,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 790076963;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1755,7 +1756,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.01.30.stm32h743_nucleo.790076963";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.01.30.stm32h743_nucleo.3110070777";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2080;
