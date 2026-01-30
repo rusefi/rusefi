@@ -23,6 +23,7 @@ public class MainMenuTreeWidget {
     private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("Menus");
 
     private final JTextField searchField = new JTextField();
+    private boolean isUpdatingModel = false;
 
     public MainMenuTreeWidget(IniFileModel model) {
         for (MenuModel menu : model.getMenus()) {
@@ -36,6 +37,9 @@ public class MainMenuTreeWidget {
 
         tree = new JTree(root);
         tree.addTreeSelectionListener(e -> {
+            if (isUpdatingModel) {
+                return;
+            }
             TreePath path = e.getPath();
             if (path != null && !searchField.getText().isEmpty()) {
                 SwingUtilities.invokeLater(() -> {
@@ -127,17 +131,22 @@ public class MainMenuTreeWidget {
      * reset search text to empty, show all elements, make sure that clicked element is visible
      */
     private void updateSearch(String text) {
-        if (text == null || text.isEmpty()) {
-            tree.setModel(new DefaultTreeModel(root));
-            return;
+        isUpdatingModel = true;
+        try {
+            if (text == null || text.isEmpty()) {
+                tree.setModel(new DefaultTreeModel(root));
+                return;
+            }
+
+            String[] tokens = text.toLowerCase().split("\\s+");
+            DefaultMutableTreeNode filteredRoot = new DefaultMutableTreeNode("Menus");
+            filterNode(root, filteredRoot, tokens, "");
+
+            tree.setModel(new DefaultTreeModel(filteredRoot));
+            expandAll(tree, true);
+        } finally {
+            isUpdatingModel = false;
         }
-
-        String[] tokens = text.toLowerCase().split("\\s+");
-        DefaultMutableTreeNode filteredRoot = new DefaultMutableTreeNode("Menus");
-        filterNode(root, filteredRoot, tokens, "");
-
-        tree.setModel(new DefaultTreeModel(filteredRoot));
-        expandAll(tree, true);
     }
 
     private boolean filterNode(DefaultMutableTreeNode originalNode, DefaultMutableTreeNode filteredNode, String[] tokens, String path) {

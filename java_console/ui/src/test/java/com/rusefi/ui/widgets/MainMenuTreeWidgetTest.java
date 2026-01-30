@@ -116,6 +116,45 @@ public class MainMenuTreeWidgetTest {
         }
         assertTrue(searchField.getText().isEmpty(), "Search field should be empty after click");
         assertEquals(model.getMenus().size(), ((DefaultMutableTreeNode) tree.getModel().getRoot()).getChildCount(), "Tree should be fully restored");
+
+        // 4. Second search
+        searchField.setText("fuel");
+        try {
+            SwingUtilities.invokeAndWait(() -> {});
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        assertTrue(filteredRoot.getChildCount() > 0, "Filtered root should have children");
+        // Verify we found "Fuel"
+        boolean foundFuel2 = false;
+        for (int i = 0; i < filteredRoot.getChildCount(); i++) {
+            if (((DefaultMutableTreeNode) filteredRoot.getChildAt(i)).getUserObject().equals("Fuel")) {
+                foundFuel2 = true;
+                break;
+            }
+        }
+        assertTrue(foundFuel2, "Should find 'Fuel' in second search");
+
+        // 5. Search for something non-existent
+        searchField.setText("nonexistentstuff");
+        try {
+            SwingUtilities.invokeAndWait(() -> {});
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        assertEquals(0, filteredRoot.getChildCount(), "Should have no results");
+
+        // 6. Backspace/Remove some text
+        searchField.setText("fuel");
+        try {
+            SwingUtilities.invokeAndWait(() -> {});
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        assertTrue(filteredRoot.getChildCount() > 0, "Should have results again");
     }
 
     private DefaultMutableTreeNode findNode(DefaultMutableTreeNode parent, String name) {
