@@ -19,9 +19,9 @@ public class TopLevelMenuSandbox {
     public static void main(String[] args) throws JAXBException, FileNotFoundException {
         commonUiStartup();
 
-        String iniPath = "src/test/resources/january.ini";
+        String iniPath = "../java_console/ui/src/test/resources/january.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
-        Msq msq = Msq.readTune("src/test/resources/january_tune.msq");
+        Msq msq = Msq.readTune("../java_console/ui/src/test/resources/january_tune.msq");
         ConfigurationImage ci = msq.asImage(model);
 
         SwingUtilities.invokeLater(() -> runAwt(model, ci));
