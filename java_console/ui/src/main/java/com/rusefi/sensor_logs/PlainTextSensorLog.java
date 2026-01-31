@@ -1,6 +1,8 @@
 package com.rusefi.sensor_logs;
 
 import com.devexperts.logging.FileLogger;
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.Launcher;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
@@ -10,6 +12,7 @@ import com.rusefi.ui.UIContext;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 
 /**
  * Legacy human readable CSV log file
@@ -47,16 +50,37 @@ public class PlainTextSensorLog implements SensorLog {
             logFile.write("Captured " + FileLogger.getDate() + "\r\n");
 
             BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
+            Map<String, GaugeModel> gauges = null;
+            if (bp != null) {
+                IniFileModel iniFile = bp.getIniFileNullable();
+                if (iniFile != null) {
+                    gauges = iniFile.getGauges();
+                }
+            }
 
             logFile.write("Time\t");
-            for (Sensor sensor : SensorLogger.SENSORS) {
-                logFile.write(SensorLogger.getSensorName(sensor, -1) + "\t");
+            for (BinaryLogEntry sensor : SensorLogger.getSensors(uiContext)) {
+                String name = sensor.getName();
+                if (gauges != null) {
+                    GaugeModel gm = gauges.get(sensor.getName());
+                    if (gm != null) {
+                        name = gm.getTitle();
+                    }
+                }
+                logFile.write(name + "\t");
             }
             logFile.write("\r\n");
 
             logFile.write("Time\t");
-            for (Sensor sensor : SensorLogger.SENSORS) {
-                logFile.write(sensor.getUnits() + "\t");
+            for (BinaryLogEntry sensor : SensorLogger.getSensors(uiContext)) {
+                String units = sensor.getUnit();
+                if (gauges != null) {
+                    GaugeModel gm = gauges.get(sensor.getName());
+                    if (gm != null) {
+                        units = gm.getUnits();
+                    }
+                }
+                logFile.write(units + "\t");
             }
             logFile.write("\r\n");
             logFile.flush();
@@ -82,8 +106,18 @@ public class PlainTextSensorLog implements SensorLog {
 
         try {
             logFile.write(getSecondsSinceFileStart() + "\t");
-            for (Sensor sensor : SensorLogger.SENSORS) {
-                logFile.write( sensor.getLogValue(SensorCentral.getInstance().getValue(sensor)) + "\t");
+            byte[] response = SensorCentral.getInstance().getResponse();
+            for (BinaryLogEntry sensor : SensorLogger.getSensors(uiContext)) {
+                double value;
+                if (sensor instanceof Sensor) {
+                    value = SensorCentral.getInstance().getValue((Sensor) sensor);
+                    value = ((Sensor) sensor).translateValue(value);
+                } else if (sensor instanceof CustomBinaryLogEntry && response != null) {
+                    value = ((CustomBinaryLogEntry) sensor).getValue(response);
+                } else {
+                    value = 0;
+                }
+                logFile.write(value + "\t");
             }
             logFile.write("\r\n");
             logFile.flush();

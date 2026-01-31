@@ -1,5 +1,8 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
@@ -49,7 +52,26 @@ public class SensorGauge {
 
     public static void createGaugeBody(UIContext uiContext, final Sensor sensor, final JPanelWithListener wrapper, final GaugeChangeListener listener,
                                        final JMenuItem extraMenuItem) {
-        final Radial gauge = createRadial(sensor.getName(), sensor.getUnits(), sensor.getMaxValue(), sensor.getMinValue());
+        String title = sensor.getName();
+        String units = sensor.getUnits();
+        double maxValue = sensor.getMaxValue();
+        double minValue = sensor.getMinValue();
+
+        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
+        if (bp != null) {
+            IniFileModel iniFile = bp.getIniFileNullable();
+            if (iniFile != null) {
+                GaugeModel gaugeModel = iniFile.getGauges().get(sensor.getName());
+                if (gaugeModel != null) {
+                    units = gaugeModel.getUnits();
+                    maxValue = gaugeModel.getHighValue();
+                    minValue = gaugeModel.getLowValue();
+                    title = gaugeModel.getTitle();
+                }
+            }
+        }
+
+        final Radial gauge = createRadial(title, units, maxValue, minValue);
 
         UiUtils.setToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
         UiUtils.setToolTip(wrapper, HINT_LINE_1, HINT_LINE_2);

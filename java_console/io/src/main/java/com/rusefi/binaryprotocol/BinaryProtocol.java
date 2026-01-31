@@ -73,6 +73,10 @@ public class BinaryProtocol {
         return Objects.requireNonNull(iniFile);
     }
 
+    public @Nullable IniFileModel getIniFileNullable() {
+        return iniFile;
+    }
+
     public static String findCommand(byte command) {
         switch (command) {
             case Integration.TS_COMMAND_F:
@@ -208,6 +212,10 @@ public class BinaryProtocol {
 
         try {
             iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
+            // SensorLogger is in the UI module, we can't easily access it from the IO module if it's not on the classpath
+            // However, BinaryProtocol is often used in the context where UI is also present.
+            // Let's check if we can use reflection or if there is a better way.
+            // For now, let's try to fix the import or use the full name if it's available.
         } catch (IniNotFoundException e) {
             close();
             return "Failed to located .ini";

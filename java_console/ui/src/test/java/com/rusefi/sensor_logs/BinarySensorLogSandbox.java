@@ -20,7 +20,7 @@ public class BinarySensorLogSandbox {
 
         BinarySensorLog l = new BinarySensorLog(valueProvider,
                 Arrays.asList(
-                Sensor.SECONDS,
+/*                Sensor.SECONDS,
                 Sensor.RPMValue,
                 Sensor.VEHICLESPEEDKPH,
                 Sensor.TPSVALUE,
@@ -33,7 +33,9 @@ public class BinarySensorLogSandbox {
                 Sensor.LAMBDAVALUE,
 //                Sensor.TARGET_AFR,
                 Sensor.FIRMWAREVERSION,
-                Sensor.COOLANT));
+                Sensor.COOLANT
+ */
+                ));
 
         values.put(Sensor.SECONDS, 1.0);
         values.put(Sensor.RPMValue, 0.0);

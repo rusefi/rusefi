@@ -10,6 +10,7 @@ import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ui.UIContext;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,10 +25,15 @@ import static com.devexperts.logging.Logging.getLogging;
 public class BinarySensorLogRestarter implements SensorLog {
     private static final Logging log = getLogging(BinarySensorLogRestarter.class);
     private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("BinarySensorLogRestarter"));
+    private final UIContext uiContext;
 
     private BinarySensorLog logger;
 
     private long seenRunning;
+
+    public BinarySensorLogRestarter(UIContext uiContext) {
+        this.uiContext = uiContext;
+    }
 
     @Override
     public double getSecondsSinceFileStart() {
@@ -46,15 +52,17 @@ public class BinarySensorLogRestarter implements SensorLog {
         }
 
         if (logger == null) {
-            Collection<Sensor> sensorsForLogging = filterOutSensorsWithoutType(SensorLogger.SENSORS);
-
-            logger = new BinarySensorLog<>(sensor -> SensorCentral.getInstance().getValue(sensor), sensorsForLogging);
+            byte[] response = SensorCentral.getInstance().getResponse();
+            logger = new BinarySensorLog<>(sensor -> {
+                if (sensor instanceof Sensor) {
+                    return SensorCentral.getInstance().getValue((Sensor) sensor);
+                } else if (sensor instanceof CustomBinaryLogEntry && response != null) {
+                    return ((CustomBinaryLogEntry) sensor).getValue(response);
+                }
+                return 0.0;
+            }, SensorLogger.getSensors(uiContext));
         }
         logger.writeSensorLogLine();
-    }
-
-    private static Collection<Sensor> filterOutSensorsWithoutType(Sensor[] sensors) {
-        return Arrays.stream(sensors).filter(sensor -> sensor.getType() != null).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

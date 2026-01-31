@@ -1,6 +1,9 @@
 package com.rusefi.ui;
 
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
@@ -29,6 +32,7 @@ public class SensorLiveGraph extends JPanel {
     private static final String LOWER = "lower";
 
     private final LinkedList<Double> values = new LinkedList<>();
+    private final UIContext uiContext;
     private final Node config;
     private final JMenuItem extraItem;
     @NotNull
@@ -38,7 +42,8 @@ public class SensorLiveGraph extends JPanel {
     private double customUpper;
     private double customLower;
 
-    public SensorLiveGraph(Node config, final Sensor defaultSensor, JMenuItem extraItem) {
+    public SensorLiveGraph(UIContext uiContext, Node config, final Sensor defaultSensor, JMenuItem extraItem) {
+        this.uiContext = uiContext;
         this.config = config;
         this.extraItem = extraItem;
         String gaugeName = config.getProperty(SENSOR_TYPE, defaultSensor.name());
@@ -270,8 +275,23 @@ public class SensorLiveGraph extends JPanel {
         if (autoScale) {
             range = VisibleRange.findRange(values);
         } else {
-            range = new VisibleRange(Double.isNaN(customLower) ? sensor.getMinValue() : customLower,
-                    Double.isNaN(customUpper) ? sensor.getMaxValue() : customUpper);
+            double maxValue = sensor.getMaxValue();
+            double minValue = sensor.getMinValue();
+
+            BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
+            if (bp != null) {
+                IniFileModel iniFile = bp.getIniFileNullable();
+                if (iniFile != null) {
+                    GaugeModel gaugeModel = iniFile.getGauges().get(sensor.getName());
+                    if (gaugeModel != null) {
+                        maxValue = gaugeModel.getHighValue();
+                        minValue = gaugeModel.getLowValue();
+                    }
+                }
+            }
+
+            range = new VisibleRange(Double.isNaN(customLower) ? minValue : customLower,
+                    Double.isNaN(customUpper) ? maxValue : customUpper);
         }
         return range;
     }

@@ -47,8 +47,8 @@ public class GaugesGridElement {
             }
         });
 
-        wrapper.add(new SensorLiveGraph(config.getChild("top"), defaultSensor, switchToGauge));
-        wrapper.add(new SensorLiveGraph(config.getChild("bottom"), Sensor.RPMValue, switchToGauge));
+        wrapper.add(new SensorLiveGraph(uiContext, config.getChild("top"), defaultSensor, switchToGauge));
+        wrapper.add(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMValue, switchToGauge));
         return wrapper;
     }
 

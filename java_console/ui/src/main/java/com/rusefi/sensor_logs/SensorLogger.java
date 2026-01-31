@@ -1,12 +1,20 @@
 package com.rusefi.sensor_logs;
 
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniMemberNotFound;
+import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.UIContext;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,105 +22,35 @@ import java.util.List;
  * 4/15/2016.
  */
 public class SensorLogger {
-    protected static Sensor[] SENSORS = {Sensor.RPMValue,
-            Sensor.SECONDS,
-            Sensor.INTERNALMCUTEMPERATURE,
+    public static List<BinaryLogEntry> getSensors(UIContext uiContext) {
+        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
+        if (bp == null)
+            return Collections.emptyList();
+        return getIniFileModel(bp.getIniFileNullable());
+    }
 
-//            Sensor.engineMode,
-            Sensor.COOLANT,
-            Sensor.TPSVALUE,
-            Sensor.VBATT,
-            Sensor.INTAKE,
-            Sensor.MAFMEASURED,
-            Sensor.MAPVALUE,
-            Sensor.INSTANTMAPVALUE,
-            Sensor.LAMBDAVALUE,
-
-            Sensor.THROTTLEPEDALPOSITION,
-              Sensor.etb1DutyCycle,
-//
-//            Sensor.idlePosition,
-
-//            Sensor.TARGET_AFR,
-//            Sensor.tCharge,
-            Sensor.veValue,
-
-//            Sensor.DWELL,
-//
-//            Sensor.baseFuel,
-//            Sensor.actualLastInjection,
-//            Sensor.ignitionAdvance,
-//
-//            Sensor.deltaTps,
-//            Sensor.tpsAccelFuel,
-//            Sensor.engineLoadAccelDelta,
-//            Sensor.injectorDutyCycle,
-//            Sensor.coilDutyCycle,
-//
-//            Sensor.wallFuelAmount,
-//            Sensor.wallFuelCorrection,
-//
-//            Sensor.iatCorrection,
-//            Sensor.cltCorrection,
-//
-//            Sensor.CHARGE_AIR_MASS,
-//            Sensor.runningFuel,
-//            Sensor.injectorLagMs,
-//
-//            Sensor.vvtPositionB1I,
-            Sensor.vvtPositionB1E,
-            Sensor.vvtPositionB2I,
-            Sensor.vvtPositionB2E,
-
-            Sensor.VVTTARGETS1,
-            Sensor.VVTTARGETS2,
-            Sensor.VVTTARGETS3,
-            Sensor.VVTTARGETS4,
-
-//            Sensor.vehicleSpeedKph,
-//            Sensor.speedToRpmRatio,
-            Sensor.turboSpeed,
-
-//            Sensor.accelerationX,
-//            Sensor.accelerationY,
-//            Sensor.accelerationZ,
-//            Sensor.accelerationRoll,
-//            Sensor.accelerationYaw,
-
-            Sensor.debugFloatField1,
-            Sensor.debugFloatField2,
-            Sensor.debugFloatField3,
-            Sensor.debugFloatField4,
-            Sensor.debugFloatField5,
-            Sensor.debugFloatField6,
-            Sensor.debugFloatField7,
-            Sensor.debugIntField1,
-            Sensor.debugIntField2,
-            Sensor.debugIntField3,
-            Sensor.debugIntField4,
-            Sensor.debugIntField5,
-
-//            Sensor.knockLevel,
-            Sensor.WASTEGATEPOSITIONSENSOR,
-            Sensor.IDLEPOSITIONSENSOR,
-//            Sensor.airFuelRatio,
-//            Sensor.airFuelRatio2,
-            Sensor.RAWLOWFUELPRESSURE,
-            Sensor.HIGHFUELPRESSURE,
-
-            Sensor.totalTriggerErrorCounter,
-            Sensor.lastErrorCode,
-
-//            Sensor.engineMakeCodeNameCrc16,
-            Sensor.tuneCrc16,
-    };
+    private static List<BinaryLogEntry> getIniFileModel(IniFileModel iniFileModel) {
+        List<BinaryLogEntry> sensors = new ArrayList<>();
+        for (GaugeModel gaugeModel : iniFileModel.getGauges().values()) {
+            IniField field = null;
+            try {
+                field = iniFileModel.getOutputChannel(gaugeModel.getChannel());
+            } catch (IniMemberNotFound e) {
+                throw new RuntimeException(e);
+            }
+            if (field instanceof ScalarIniField) {
+                sensors.add(new CustomBinaryLogEntry(gaugeModel, (ScalarIniField) field));
+            }
+        }
+        return sensors;
+    }
 
     private final List<SensorLog> sensorLogs;
 
     private boolean isInitialized;
 
     public SensorLogger(UIContext uiContext) {
-        sensorLogs = Arrays.asList(new PlainTextSensorLog(uiContext), new BinarySensorLogRestarter());
+        sensorLogs = Arrays.asList(new PlainTextSensorLog(uiContext), new BinarySensorLogRestarter(uiContext));
     }
 
     public synchronized void init() {
@@ -129,53 +67,4 @@ public class SensorLogger {
             });
     }
 
-    public double getSecondsSinceFileStart() {
-        return sensorLogs.get(0).getSecondsSinceFileStart();
-    }
-
-    static String getSensorName(Sensor sensor, int debugMode) {
-        if (sensor == Sensor.debugFloatField1 && isPidDebugMode(debugMode)) {
-            return "PID: output";
-        }
-        if (sensor == Sensor.debugFloatField2 && isPidDebugMode(debugMode)) {
-            return "PID: I-term";
-        }
-        if (sensor == Sensor.debugFloatField3 && isPidDebugMode(debugMode)) {
-            return "PID: prevError";
-        }
-        if (sensor == Sensor.debugFloatField4 && isPidDebugMode(debugMode)) {
-            return "PID: I setting";
-        }
-        if (sensor == Sensor.debugFloatField5 && isPidDebugMode(debugMode)) {
-            return "PID: D setting";
-        }
-        if (sensor == Sensor.debugFloatField6 && isPidDebugMode(debugMode)) {
-            return "PID: D-term";
-        }
-        if (sensor == Sensor.debugIntField1 && isPidDebugMode(debugMode)) {
-            return "PID: P setting";
-        }
-        if (sensor == Sensor.debugIntField2 && isPidDebugMode(debugMode)) {
-            return "PID: offset";
-        }
-        if (sensor == Sensor.debugIntField3 && isPidDebugMode(debugMode)) {
-            return "PID: counter";
-        }
-        if (sensor == Sensor.debugIntField4 && isPidDebugMode(debugMode)) {
-            return "PID: period";
-        }
-        if (sensor == Sensor.debugIntField5 && isPidDebugMode(debugMode)) {
-            return "PID: feed forward";
-        }
-        return sensor.getName();
-    }
-
-    private static boolean isPidDebugMode(int debugMode) {
-        // nasty implementation hard-coded debug_mode_e values
-        return debugMode == 0
-                || debugMode == 3
-                || debugMode == 7
-                || debugMode == 11
-                || debugMode == 17;
-    }
 }
