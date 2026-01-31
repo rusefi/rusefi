@@ -44,5 +44,6 @@ public class TopLevelMenuSandbox {
         });
 
         frameHelper.showFrame(panel);
+        left.selectSubMenu("dwellSettings");
     }
 }

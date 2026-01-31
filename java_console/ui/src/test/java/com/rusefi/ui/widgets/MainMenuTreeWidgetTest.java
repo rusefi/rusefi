@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ini.AxisModel;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileMetaInfo;
@@ -18,8 +19,17 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ImageObserver;
+import java.awt.image.RenderedImage;
+import java.awt.image.renderable.RenderableImage;
+import java.awt.geom.AffineTransform;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -373,6 +383,118 @@ public class MainMenuTreeWidgetTest {
         assertNotNull(table);
         assertEquals(16, table.getRowCount());
         assertEquals(2, table.getColumnCount());
+    }
+
+    @Test
+    public void testCurveWidgetGridLines() {
+        AxisModel xAxis = new AxisModel(0, 100, 10); // 11 lines expected: 0, 10, ..., 100
+        AxisModel yAxis = new AxisModel(0, 200, 20); // 11 lines expected: 0, 20, ..., 200
+        CurveModel curveModel = new CurveModel("id", "title", xAxis, yAxis, "xBins", "yBins");
+
+        com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget();
+        widget.update(curveModel, null, null);
+
+        // Find the CurveCanvas
+        com.rusefi.ui.widgets.tune.CurveWidget.CurveCanvas canvas = null;
+        for (Component c : widget.getContentPane().getComponents()) {
+            if (c.getClass().getName().endsWith("CurveCanvas")) {
+                canvas = (com.rusefi.ui.widgets.tune.CurveWidget.CurveCanvas) c;
+                break;
+            }
+        }
+        assertNotNull(canvas);
+        canvas.setSize(500, 500);
+
+        BufferedImage img = new BufferedImage(500, 500, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D realG2 = img.createGraphics();
+
+        final int[] verticalLines = {0};
+        final int[] horizontalLines = {0};
+
+        Graphics2D spyG2 = new Graphics2D() {
+            private Color color;
+            @Override public void drawLine(int x1, int y1, int x2, int y2) {
+                if (new Color(200, 200, 200, 100).equals(this.color)) {
+                    if (x1 == x2) verticalLines[0]++;
+                    else if (y1 == y2) horizontalLines[0]++;
+                }
+                realG2.drawLine(x1, y1, x2, y2);
+            }
+            @Override public void setColor(Color c) { this.color = c; realG2.setColor(c); }
+            @Override public Color getColor() { return realG2.getColor(); }
+            @Override public void setStroke(Stroke s) { realG2.setStroke(s); }
+            @Override public Stroke getStroke() { return realG2.getStroke(); }
+            @Override public void setRenderingHint(RenderingHints.Key hintKey, Object hintValue) { realG2.setRenderingHint(hintKey, hintValue); }
+            @Override public Object getRenderingHint(RenderingHints.Key hintKey) { return realG2.getRenderingHint(hintKey); }
+            @Override public void setRenderingHints(Map<?, ?> hints) { realG2.setRenderingHints(hints); }
+            @Override public void addRenderingHints(Map<?, ?> hints) { realG2.addRenderingHints(hints); }
+            @Override public RenderingHints getRenderingHints() { return realG2.getRenderingHints(); }
+            @Override public void translate(int x, int y) { realG2.translate(x, y); }
+            @Override public void translate(double tx, double ty) { realG2.translate(tx, ty); }
+            @Override public void rotate(double theta) { realG2.rotate(theta); }
+            @Override public void rotate(double theta, double x, double y) { realG2.rotate(theta, x, y); }
+            @Override public void scale(double sx, double sy) { realG2.scale(sx, sy); }
+            @Override public void shear(double shx, double shy) { realG2.shear(shx, shy); }
+            @Override public void transform(AffineTransform Tx) { realG2.transform(Tx); }
+            @Override public void setTransform(AffineTransform Tx) { realG2.setTransform(Tx); }
+            @Override public AffineTransform getTransform() { return realG2.getTransform(); }
+            @Override public Paint getPaint() { return realG2.getPaint(); }
+            @Override public void setPaint(Paint paint) { realG2.setPaint(paint); }
+            @Override public Composite getComposite() { return realG2.getComposite(); }
+            @Override public void setComposite(Composite comp) { realG2.setComposite(comp); }
+            @Override public void setBackground(Color color) { realG2.setBackground(color); }
+            @Override public Color getBackground() { return realG2.getBackground(); }
+            @Override public Font getFont() { return realG2.getFont(); }
+            @Override public void setFont(Font font) { realG2.setFont(font); }
+            @Override public FontMetrics getFontMetrics(Font f) { return realG2.getFontMetrics(f); }
+            @Override public void clip(Shape s) { realG2.clip(s); }
+            @Override public Shape getClip() { return realG2.getClip(); }
+            @Override public void setClip(int x, int y, int width, int height) { realG2.setClip(x, y, width, height); }
+            @Override public void setClip(Shape clip) { realG2.setClip(clip); }
+            @Override public void copyArea(int x, int y, int width, int height, int dx, int dy) { realG2.copyArea(x, y, width, height, dx, dy); }
+            @Override public void fillRect(int x, int y, int width, int height) { realG2.fillRect(x, y, width, height); }
+            @Override public void clearRect(int x, int y, int width, int height) { realG2.clearRect(x, y, width, height); }
+            @Override public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) { realG2.drawRoundRect(x, y, width, height, arcWidth, arcHeight); }
+            @Override public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) { realG2.fillRoundRect(x, y, width, height, arcWidth, arcHeight); }
+            @Override public void drawOval(int x, int y, int width, int height) { realG2.drawOval(x, y, width, height); }
+            @Override public void fillOval(int x, int y, int width, int height) { realG2.fillOval(x, y, width, height); }
+            @Override public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) { realG2.drawArc(x, y, width, height, startAngle, arcAngle); }
+            @Override public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) { realG2.fillArc(x, y, width, height, startAngle, arcAngle); }
+            @Override public void drawPolyline(int[] xPoints, int[] yPoints, int nPoints) { realG2.drawPolyline(xPoints, yPoints, nPoints); }
+            @Override public void drawPolygon(int[] xPoints, int[] yPoints, int nPoints) { realG2.drawPolygon(xPoints, yPoints, nPoints); }
+            @Override public void fillPolygon(int[] xPoints, int[] yPoints, int nPoints) { realG2.fillPolygon(xPoints, yPoints, nPoints); }
+            @Override public void draw(Shape s) { realG2.draw(s); }
+            @Override public boolean drawImage(Image img, AffineTransform xform, ImageObserver obs) { return realG2.drawImage(img, xform, obs); }
+            @Override public void drawImage(BufferedImage img, BufferedImageOp op, int x, int y) { realG2.drawImage(img, op, x, y); }
+            @Override public void drawRenderedImage(RenderedImage img, AffineTransform xform) { realG2.drawRenderedImage(img, xform); }
+            @Override public void drawRenderableImage(RenderableImage img, AffineTransform xform) { realG2.drawRenderableImage(img, xform); }
+            @Override public void drawString(String str, int x, int y) { realG2.drawString(str, x, y); }
+            @Override public void drawString(String str, float x, float y) { realG2.drawString(str, x, y); }
+            @Override public void drawString(java.text.AttributedCharacterIterator iterator, int x, int y) { realG2.drawString(iterator, x, y); }
+            @Override public void drawString(java.text.AttributedCharacterIterator iterator, float x, float y) { realG2.drawString(iterator, x, y); }
+            @Override public void drawGlyphVector(java.awt.font.GlyphVector g, float x, float y) { realG2.drawGlyphVector(g, x, y); }
+            @Override public void fill(Shape s) { realG2.fill(s); }
+            @Override public boolean hit(Rectangle rect, Shape s, boolean onStroke) { return realG2.hit(rect, s, onStroke); }
+            @Override public GraphicsConfiguration getDeviceConfiguration() { return realG2.getDeviceConfiguration(); }
+            @Override public void setXORMode(Color c1) { realG2.setXORMode(c1); }
+            @Override public void setPaintMode() { realG2.setPaintMode(); }
+            @Override public Graphics create() { return realG2.create(); }
+            @Override public void dispose() { realG2.dispose(); }
+            @Override public void clipRect(int x, int y, int width, int height) { realG2.clipRect(x, y, width, height); }
+            @Override public Rectangle getClipBounds() { return realG2.getClipBounds(); }
+            @Override public java.awt.font.FontRenderContext getFontRenderContext() { return realG2.getFontRenderContext(); }
+            @Override public boolean drawImage(Image img, int x, int y, ImageObserver observer) { return realG2.drawImage(img, x, y, observer); }
+            @Override public boolean drawImage(Image img, int x, int y, int width, int height, ImageObserver observer) { return realG2.drawImage(img, x, y, width, height, observer); }
+            @Override public boolean drawImage(Image img, int x, int y, Color bgcolor, ImageObserver observer) { return realG2.drawImage(img, x, y, bgcolor, observer); }
+            @Override public boolean drawImage(Image img, int x, int y, int width, int height, Color bgcolor, ImageObserver observer) { return realG2.drawImage(img, x, y, width, height, bgcolor, observer); }
+            @Override public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, ImageObserver observer) { return realG2.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer); }
+            @Override public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Color bgcolor, ImageObserver observer) { return realG2.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, bgcolor, observer); }
+        };
+
+        canvas.drawGrid(spyG2);
+
+        assertEquals(11, verticalLines[0], "Should have 11 vertical grid lines");
+        assertEquals(11, horizontalLines[0], "Should have 11 horizontal grid lines");
     }
 
     private JTable findTable(Container container) {

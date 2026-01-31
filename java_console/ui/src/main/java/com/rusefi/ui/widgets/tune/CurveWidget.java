@@ -64,6 +64,8 @@ public class CurveWidget {
     }
 
     private Double[] readArray(String key, IniFileModel iniFile, ConfigurationImage ci) {
+        if (iniFile == null)
+            return new Double[0];
         Optional<IniField> field = iniFile.findIniField(key);
         if (field.isPresent() && field.get() instanceof ArrayIniField) {
             ArrayIniField arrayField = (ArrayIniField) field.get();
@@ -94,7 +96,7 @@ public class CurveWidget {
         return content;
     }
 
-    private class CurveCanvas extends JPanel {
+    public class CurveCanvas extends JPanel {
         private CurveModel curve;
         private Double[] x;
         private Double[] y;
@@ -156,7 +158,7 @@ public class CurveWidget {
         }
 
         @Override
-        protected void paintComponent(Graphics g) {
+        public void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (curve == null) return;
 
@@ -167,32 +169,42 @@ public class CurveWidget {
             drawCurve(g2);
         }
 
-        private void drawGrid(Graphics2D g2) {
-            g2.setColor(Color.DARK_GRAY);
+        public void drawGrid(Graphics2D g2) {
+            Color gridColor = new Color(200, 200, 200, 100); // light grey, semi-transparent
+            g2.setStroke(new BasicStroke(0.5f));
             AxisModel xAxis = curve.getxAxis();
             AxisModel yAxis = curve.getyAxis();
+
+            FontMetrics fm = g2.getFontMetrics();
 
             // Draw vertical grid lines
             for (double val = xAxis.getMin(); val <= xAxis.getMax(); val += xAxis.getStep()) {
                 Point p1 = worldToCanvas(val, yAxis.getMin());
                 Point p2 = worldToCanvas(val, yAxis.getMax());
+
+                g2.setColor(gridColor);
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
                 g2.setColor(Color.RED);
-                g2.drawString(String.format("%.1f", val), p1.x, p1.y - 5);
-                g2.setColor(Color.DARK_GRAY);
+                String label = String.format("%.1f", val);
+                int labelWidth = fm.stringWidth(label);
+                g2.drawString(label, p1.x - labelWidth / 2, p1.y + fm.getAscent() + 2);
             }
 
             // Draw horizontal grid lines
             for (double val = yAxis.getMin(); val <= yAxis.getMax(); val += yAxis.getStep()) {
                 Point p1 = worldToCanvas(xAxis.getMin(), val);
                 Point p2 = worldToCanvas(xAxis.getMax(), val);
+
+                g2.setColor(gridColor);
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
                 g2.setColor(Color.RED);
-                g2.drawString(String.format("%.1f", val), p1.x + 5, p1.y);
-                g2.setColor(Color.DARK_GRAY);
+                String label = String.format("%.1f", val);
+                int labelWidth = fm.stringWidth(label);
+                g2.drawString(label, p1.x - labelWidth - 5, p1.y + fm.getAscent() / 2);
             }
+            g2.setStroke(new BasicStroke(1.0f));
         }
 
         private void drawCurve(Graphics2D g2) {
@@ -218,13 +230,17 @@ public class CurveWidget {
             double yMin = curve.getyAxis().getMin();
             double yMax = curve.getyAxis().getMax();
 
-            int padding = 30;
-            int width = getWidth() - 2 * padding;
-            int height = getHeight() - 2 * padding;
+            int leftPadding = 50;
+            int rightPadding = 20;
+            int topPadding = 20;
+            int bottomPadding = 40;
 
-            int cx = padding + (int) ((wx - xMin) / (xMax - xMin) * width);
+            int width = getWidth() - leftPadding - rightPadding;
+            int height = getHeight() - topPadding - bottomPadding;
+
+            int cx = leftPadding + (int) ((wx - xMin) / (xMax - xMin) * width);
             // y axis is displayed in descending order
-            int cy = padding + height - (int) ((wy - yMin) / (yMax - yMin) * height);
+            int cy = topPadding + height - (int) ((wy - yMin) / (yMax - yMin) * height);
 
             return new Point(cx, cy);
         }
@@ -235,12 +251,16 @@ public class CurveWidget {
             double yMin = curve.getyAxis().getMin();
             double yMax = curve.getyAxis().getMax();
 
-            int padding = 30;
-            int width = getWidth() - 2 * padding;
-            int height = getHeight() - 2 * padding;
+            int leftPadding = 50;
+            int rightPadding = 20;
+            int topPadding = 20;
+            int bottomPadding = 40;
 
-            double wx = xMin + (double) (p.x - padding) / width * (xMax - xMin);
-            double wy = yMin + (double) (padding + height - p.y) / height * (yMax - yMin);
+            int width = getWidth() - leftPadding - rightPadding;
+            int height = getHeight() - topPadding - bottomPadding;
+
+            double wx = xMin + (double) (p.x - leftPadding) / width * (xMax - xMin);
+            double wy = yMin + (double) (topPadding + height - p.y) / height * (yMax - yMin);
 
             return new Point2D(wx, wy);
         }

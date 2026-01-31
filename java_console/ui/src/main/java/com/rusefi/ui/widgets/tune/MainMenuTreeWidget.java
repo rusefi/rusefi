@@ -267,6 +267,33 @@ public class MainMenuTreeWidget {
         this.onSelect = onSelect;
     }
 
+    public void selectSubMenu(String subMenuKey) {
+        DefaultMutableTreeNode node = findSubMenuNode(root, subMenuKey);
+        if (node != null) {
+            TreePath path = new TreePath(node.getPath());
+            tree.setSelectionPath(path);
+            tree.scrollPathToVisible(path);
+            handleSelection(path);
+        }
+    }
+
+    private DefaultMutableTreeNode findSubMenuNode(DefaultMutableTreeNode parent, String subMenuKey) {
+        Enumeration<javax.swing.tree.TreeNode> enumeration = parent.breadthFirstEnumeration();
+        while (enumeration.hasMoreElements()) {
+            javax.swing.tree.TreeNode treeNode = enumeration.nextElement();
+            if (treeNode instanceof DefaultMutableTreeNode) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeNode;
+                if (node.getUserObject() instanceof SubMenuModel) {
+                    SubMenuModel subMenu = (SubMenuModel) node.getUserObject();
+                    if (subMenuKey.equals(subMenu.getKey())) {
+                        return node;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public JPanel getContentPane() {
         return contentPane;
     }
