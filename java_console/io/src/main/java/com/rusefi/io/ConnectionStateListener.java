@@ -1,6 +1,9 @@
 package com.rusefi.io;
 
 /**
+ * there is only one instance of this per ECU connector
+ * for business logic level UI code see {@link ConnectionStatusLogic#addListener}
+ *
  * @author Andrey Belomutskiy
  *         3/1/2017
  * @see ConnectionStatusValue
