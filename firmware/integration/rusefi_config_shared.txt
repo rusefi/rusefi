@@ -221,6 +221,9 @@
 #define GAUGE_PRECISION_TEMPERATURE_C 1
 #define GAUGE_PRECISION_TEMPERATURE_F 2
 
+#define UNITS_KPA_TO_PSI 0.145038
+#define UNITS_KMH_TO_MPH 0.62137119
+
 #define GAUGE_NAME_ADJUSTED_TIMING "Timing: ignition"
 #define GAUGE_NAME_TIMING_ADVANCE "Timing: base ignition"
 #define GAUGE_NAME_DWELL_DUTY "Ignition: coil duty cycle"
