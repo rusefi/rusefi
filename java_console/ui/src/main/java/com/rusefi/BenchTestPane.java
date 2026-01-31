@@ -53,7 +53,7 @@ public class BenchTestPane {
     private Component grabPerformanceTrace() {
         JButton button = new JButton("Grab PTrace");
         ActionListener actionListener = e -> uiContext.getLinkManager().COMMUNICATION_EXECUTOR.execute(() -> {
-            BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
+            BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
             PerformanceTraceHelper.grabPerformanceTrace(button, bp);
         });
         button.addActionListener(actionListener);

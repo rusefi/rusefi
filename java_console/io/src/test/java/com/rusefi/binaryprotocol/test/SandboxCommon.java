@@ -38,7 +38,7 @@ public class SandboxCommon {
             public void onConnectionEstablished() {
                 log.info("onConnectionEstablished");
 
-                BinaryProtocol currentStreamState = linkManager.getCurrentStreamState();
+                BinaryProtocol currentStreamState = linkManager.getBinaryProtocol();
                 if (currentStreamState == null) {
                     log.info("No BinaryProtocol");
                 } else {

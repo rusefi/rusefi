@@ -68,7 +68,7 @@ public class LuaScriptPanel {
             LinkManager linkManager = context.getLinkManager();
 
             linkManager.submit(() -> {
-                BinaryProtocol bp = linkManager.getCurrentStreamState();
+                BinaryProtocol bp = linkManager.getBinaryProtocol();
                 bp.burn();
             });
         });
@@ -191,7 +191,7 @@ public class LuaScriptPanel {
                 }
             });
 
-            BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
+            BinaryProtocol bp = context.getLinkManager().getBinaryProtocol();
             StringIniField luaScript = getLuaScriptField(bp);
 
             if (newLua.length() >= luaScript.getSize()) {
@@ -253,7 +253,7 @@ public class LuaScriptPanel {
     }
 
     void readFromECU() {
-        BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
+        BinaryProtocol bp = context.getLinkManager().getBinaryProtocol();
 
         if (bp == null) {
             setText("No ECU located");
@@ -296,7 +296,7 @@ public class LuaScriptPanel {
         LinkManager linkManager = context.getLinkManager();
 
         linkManager.submit(() -> {
-            BinaryProtocol bp = linkManager.getCurrentStreamState();
+            BinaryProtocol bp = linkManager.getBinaryProtocol();
 
             StringIniField field = getLuaScriptField(bp);
 

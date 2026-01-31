@@ -34,7 +34,7 @@ public abstract class BaseConfigField {
     }
 
     private void processInitialValue(Field field) {
-        BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
+        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
         if (bp == null)
             return;
         ConfigurationImage ci = bp.getControllerConfiguration();

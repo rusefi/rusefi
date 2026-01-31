@@ -49,7 +49,7 @@ public class PlainTextSensorLog implements SensorLog {
             logFile.write("\"rusEFI console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
             logFile.write("Captured " + FileLogger.getDate() + "\r\n");
 
-            BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
+            BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
             Map<String, GaugeModel> gauges = null;
             if (bp != null) {
                 IniFileModel iniFile = bp.getIniFileNullable();

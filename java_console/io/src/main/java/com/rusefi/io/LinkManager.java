@@ -112,10 +112,6 @@ public class LinkManager implements Closeable {
     }
 
     public BinaryProtocol getBinaryProtocol() {
-        return getCurrentStreamState();
-    }
-
-    public BinaryProtocol getCurrentStreamState() {
         Objects.requireNonNull(connector, "connector");
         return connector.getBinaryProtocol();
     }

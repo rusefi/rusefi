@@ -36,7 +36,7 @@ public class MiscTest extends RusefiTestBase {
         }
 
         System.out.println("MCU temperature is " + mcuTemp + " deg C");
-        BinaryProtocol bp = ecu.getLinkManager().getCurrentStreamState();
+        BinaryProtocol bp = ecu.getLinkManager().getBinaryProtocol();
         assertTrue("Happy OutputChannels expected", bp.isGoodOutputChannels);
 
         // You are probably indoors and not on fire
