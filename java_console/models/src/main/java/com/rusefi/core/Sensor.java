@@ -157,7 +157,7 @@ public enum Sensor implements BinaryLogEntry {
     }
 
     public double getValueForChannel(ByteBuffer bb) {
-        switch (getType()) {
+        switch (type) {
             case FLOAT:
                 return bb.getFloat();
             case INT:
@@ -175,7 +175,7 @@ public enum Sensor implements BinaryLogEntry {
                 // cast - retain sign
                 return (byte)(bb.getInt() & 0xFF);
             default:
-                throw new UnsupportedOperationException("type " + getType());
+                throw new UnsupportedOperationException("type " + type);
         }
     }
 
@@ -195,7 +195,7 @@ public enum Sensor implements BinaryLogEntry {
 
     @Override
     public int getByteSize() {
-        switch (getType()) {
+        switch (type) {
             case UINT8:
                 return 0;
             case INT8:
@@ -209,7 +209,7 @@ public enum Sensor implements BinaryLogEntry {
             case FLOAT:
                 return 7;
             default:
-                throw new UnsupportedOperationException("" + getType());
+                throw new UnsupportedOperationException("" + type);
         }
     }
 
@@ -217,26 +217,6 @@ public enum Sensor implements BinaryLogEntry {
     @Override
     public SensorCategory getCategory() {
         return category;
-    }
-
-    public String getUnits() {
-        return units;
-    }
-
-    public double getMinValue() {
-        return minValue;
-    }
-
-    public double getMaxValue() {
-        return maxValue;
-    }
-
-    public double getScale() {
-        return scale;
-    }
-
-    public FieldType getType() {
-        return type;
     }
 
     public double translateValue(double value) {
