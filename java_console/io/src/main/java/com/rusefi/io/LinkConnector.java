@@ -24,31 +24,6 @@ public interface LinkConnector extends LinkDecoder {
         }
     };
 
-    @NotNull
-    static LinkConnector getDetachedConnector(BinaryProtocolState state) {
-        return new LinkConnector() {
-            @Override
-            public BinaryProtocolState getBinaryProtocolState() {
-                return state;
-            }
-
-            @Override
-            public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void send(String command, boolean fireEvent) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public BinaryProtocol getBinaryProtocol() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
     void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
