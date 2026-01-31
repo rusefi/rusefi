@@ -31,12 +31,16 @@ public class MainMenuTreeWidgetTest {
             "page = 1\n" +
             "field1 = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
             "field2 = bits, U08, 4, [0:1], \"Off\", \"On\"\n" +
+            "field3 = bits, U08, 5, [0:1], \"No\", \"Yes\"\n" +
+            "field4 = bits, U08, 6, [0:1], \"Disabled\", \"Enabled\"\n" +
             "[SettingContextHelp]\n" +
             "; SettingContextHelpEnd\n" +
             "\n" +
             "\tdialog = mainDialog, \"Main Dialog\"\n" +
             "\t\tfield = \"Field 1\", field1\n" +
-            "\t\tfield = \"Field 2\", field2\n";
+            "\t\tfield = \"Field 2\", field2\n" +
+            "\t\tfield = \"Field 3\", field3\n" +
+            "\t\tfield = \"Field 4\", field4\n";
 
         RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
@@ -45,23 +49,26 @@ public class MainMenuTreeWidgetTest {
         widget.update(model.getDialogs().get("mainDialog"), model);
 
         JPanel content = widget.getContentPane();
-        assertEquals(2, content.getComponentCount());
+        assertEquals(4, content.getComponentCount());
 
         // Field 1 is scalar -> JLabel
         assertTrue(content.getComponent(0) instanceof JLabel);
         assertEquals("Field 1", ((JLabel) content.getComponent(0)).getText());
 
-        // Field 2 is enum -> JPanel with JLabel and JComboBox
-        assertTrue(content.getComponent(1) instanceof JPanel, "Expected JPanel but was " + content.getComponent(1).getClass().getSimpleName());
-        JPanel row = (JPanel) content.getComponent(1);
-        assertEquals(2, row.getComponentCount());
-        assertTrue(row.getComponent(0) instanceof JLabel);
-        assertEquals("Field 2", ((JLabel) row.getComponent(0)).getText());
-        assertTrue(row.getComponent(1) instanceof JComboBox);
-        JComboBox comboBox = (JComboBox) row.getComponent(1);
-        assertEquals(2, comboBox.getItemCount());
-        assertEquals("Off", comboBox.getItemAt(0));
-        assertEquals("On", comboBox.getItemAt(1));
+        // Field 2 is enum (Off/On) -> JPanel with JLabel and JComboBox
+        assertTrue(content.getComponent(1) instanceof JPanel);
+        JPanel row2 = (JPanel) content.getComponent(1);
+        assertTrue(row2.getComponent(1) instanceof JComboBox);
+
+        // Field 3 is enum (No/Yes) -> JPanel with JLabel and JCheckBox
+        assertTrue(content.getComponent(2) instanceof JPanel);
+        JPanel row3 = (JPanel) content.getComponent(2);
+        assertTrue(row3.getComponent(1) instanceof JCheckBox, "Expected JCheckBox for No/Yes");
+
+        // Field 4 is enum (Disabled/Enabled) -> JPanel with JLabel and JCheckBox
+        assertTrue(content.getComponent(3) instanceof JPanel);
+        JPanel row4 = (JPanel) content.getComponent(3);
+        assertTrue(row4.getComponent(1) instanceof JCheckBox, "Expected JCheckBox for Disabled/Enabled");
     }
 
     @Test

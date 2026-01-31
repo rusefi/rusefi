@@ -7,6 +7,7 @@ import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 
 import javax.swing.*;
+import java.util.List;
 import java.util.Optional;
 
 public class CalibrationDialogWidget {
@@ -33,9 +34,17 @@ public class CalibrationDialogWidget {
                 JPanel row = new JPanel();
                 row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
                 row.add(new JLabel(field.getUiName()));
-                JComboBox<String> comboBox = new JComboBox<>(enumField.getEnums().values().toArray(new String[0]));
-                comboBox.setMaximumSize(comboBox.getPreferredSize());
-                row.add(comboBox);
+
+                boolean isCheckBox = isCheckboxEnum(enumField);
+
+                if (isCheckBox) {
+                    JCheckBox checkBox = new JCheckBox();
+                    row.add(checkBox);
+                } else {
+                    JComboBox<String> comboBox = new JComboBox<>(enumField.getEnums().values().toArray(new String[0]));
+                    comboBox.setMaximumSize(comboBox.getPreferredSize());
+                    row.add(comboBox);
+                }
                 container.add(row);
             } else {
                 container.add(new JLabel(field.getUiName()));
@@ -53,6 +62,21 @@ public class CalibrationDialogWidget {
                 fillPanel(panelWidget, subDialog, iniFileModel);
             }
         }
+    }
+
+    private static boolean isCheckboxEnum(EnumIniField enumField) {
+        boolean isCheckBox = false;
+        if (enumField.getEnums().size() == 2) {
+            List<String> values = new java.util.ArrayList<>(enumField.getEnums().values());
+            String v1 = values.get(0).toLowerCase();
+            String v2 = values.get(1).toLowerCase();
+
+            if ((v1.equals("yes") && v2.equals("no")) || (v1.equals("no") && v2.equals("yes")) ||
+                    (v1.equals("enabled") && v2.equals("disabled")) || (v1.equals("disabled") && v2.equals("enabled"))) {
+                isCheckBox = true;
+            }
+        }
+        return isCheckBox;
     }
 
     public JPanel getContentPane() {
