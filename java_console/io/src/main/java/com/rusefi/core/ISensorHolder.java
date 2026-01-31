@@ -17,7 +17,7 @@ public interface ISensorHolder {
                 continue;
             }
             IniField sensorField;
-            String sensorInternalName = sensor.name();
+            String sensorInternalName = sensor.getNativeName();
             try {
                 sensorField = ini.getOutputChannel(sensorInternalName);
             } catch (IniMemberNotFound e) {

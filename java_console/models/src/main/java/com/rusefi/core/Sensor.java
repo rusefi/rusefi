@@ -1,6 +1,5 @@
 package com.rusefi.core;
 
-import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.sensor_logs.BinaryLogEntry;
 import org.jetbrains.annotations.Nullable;
@@ -25,71 +24,71 @@ public enum Sensor implements BinaryLogEntry {
      */
 
     // RPM, vss
-    RPMGauge(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1, 0, 8000, "RPM"),
+    RPMGauge("RPMValue", GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1, 0, 8000, "RPM"),
 //    rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM/s"),
 //    speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
-    VEHICLESPEEDKPH("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VSS, 0.0, 0.0, "kph"),
+    VEHICLESPEEDKPH("VEHICLESPEEDKPH", "Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VSS, 0.0, 0.0, "kph"),
 
     // Temperatures
-    INTERNALMCUTEMPERATURE(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 1, 0, 5, "C"),
-    CLTGauge(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
-    IATGauge(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    INTERNALMCUTEMPERATURE("INTERNALMCUTEMPERATURE", GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 1, 0, 5, "C"),
+    CLTGauge("COOLANT", GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    IATGauge("INTAKE", GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 //    AuxT1("AuxT1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 //    AuxT2("AuxT2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 18, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 
     // throttle, pedal
-    TPSVALUE(GAUGE_NAME_TPS, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
+    TPSVALUE("TPSValue", GAUGE_NAME_TPS, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
 
     // air flow/mass measurement
-    MAFMEASURED(GAUGE_NAME_MAF, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
-    MAPVALUE(GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+    MAFMEASURED("MAFMeasured", GAUGE_NAME_MAF, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
+    MAPVALUE("MAPValue", GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
-    LAMBDAVALUE(GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
+    LAMBDAVALUE("LambdaValue", GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
 
-    VBATT(GAUGE_NAME_VBAT, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_VOLTAGE, 4, 18, "Volts"),
+    VBATT("VBatt", GAUGE_NAME_VBAT, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_VOLTAGE, 4, 18, "Volts"),
 //    oilPressure(GAUGE_NAME_OIL_PRESSURE, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 40, 1.0 / PACK_MULT_PRESSURE, 0, 5, "X"),
 //    vvtPositionB1I(GAUGE_NAME_VVT_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 42, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
 //
 
-
 //
     // Mode, firmware, protocol, run time
-    SECONDS(GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, 1, 0, 5, ""),
+    SECONDS("Seconds", GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, 1, 0, 5, ""),
 //    engineMode("mode", SensorCategory.OPERATIONS, FieldType.INT, 116, 0, 5),
-    FIRMWAREVERSION(GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, 1, 0, 100, "version_f"),
+    FIRMWAREVERSION("FirmwareVersion", GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, 1, 0, 100, "version_f"),
 
 //    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
-    totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 0, 5),
-    lastErrorCode(GAUGE_NAME_WARNING_LAST, SensorCategory.STATUS, FieldType.INT, 0, 5),
+    totalTriggerErrorCounter("totalTriggerErrorCounter", GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 0, 5),
+    lastErrorCode("lastErrorCode", GAUGE_NAME_WARNING_LAST, SensorCategory.STATUS, FieldType.INT, 0, 5),
 
     // Debug
-    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
-    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
-    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
-    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
-    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
-    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
-    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
-    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, 0, 5),
-    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.DEBUG, FieldType.INT, 0, 5),
-    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 0, 5),
+    debugFloatField1("debugFloatField1", GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
+    debugFloatField2("debugFloatField2", GAUGE_NAME_DEBUG_F2, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
+    debugFloatField3("debugFloatField3", GAUGE_NAME_DEBUG_F3, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
+    debugFloatField4("debugFloatField4", GAUGE_NAME_DEBUG_F4, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
+    debugFloatField5("debugFloatField5", GAUGE_NAME_DEBUG_F5, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
+    debugFloatField6("debugFloatField6", GAUGE_NAME_DEBUG_F6, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
+    debugFloatField7("debugFloatField7", GAUGE_NAME_DEBUG_F7, SensorCategory.DEBUG, FieldType.FLOAT, 0, 5),
+    debugIntField1("debugIntField1", GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, 0, 5),
+    debugIntField2("debugIntField2", GAUGE_NAME_DEBUG_I2, SensorCategory.DEBUG, FieldType.INT, 0, 5),
+    debugIntField3("debugIntField3", GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 0, 5),
 
     // Raw sensors
-    rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
-    rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+    rawClt("rawClt", "raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+    rawIat("rawIat", "raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
 
 
 //    airFuelRatio(GAUGE_NAME_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 282, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
 //    airFuelRatio2(GAUGE_NAME_AFR2, SensorCategory.OPERATIONS, FieldType.INT16, 288, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
 
-    vvtPositionB1I(GAUGE_NAME_VVT_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
-    vvtPositionB1E(GAUGE_NAME_VVT_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
-    vvtPositionB2E(GAUGE_NAME_VVT_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
+    vvtPositionB1I("vvtPositionB1I", GAUGE_NAME_VVT_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
+    vvtPositionB1E("vvtPositionB1E", GAUGE_NAME_VVT_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
+    vvtPositionB2E("vvtPositionB2E", GAUGE_NAME_VVT_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
 
     ;
 
     private final String name;
+    private final String nativeName;
     private final SensorCategory category;
     private final String units;
     private final double minValue;
@@ -107,7 +106,8 @@ public enum Sensor implements BinaryLogEntry {
         }
     }
 
-    Sensor(String name, SensorCategory category, FieldType type, double scale, double minValue, double maxValue, String units) {
+    Sensor(String nativeName, String name, SensorCategory category, FieldType type, double scale, double minValue, double maxValue, String units) {
+        this.nativeName = nativeName;
         this.name = name == null ? name() : name;
         this.type = type;
         this.scale = scale;
@@ -117,12 +117,8 @@ public enum Sensor implements BinaryLogEntry {
         this.maxValue = maxValue;
     }
 
-    Sensor(String name, SensorCategory category, FieldType type, double minValue, double maxValue) {
-        this(name, category, type, 1.0, minValue, maxValue, "n/a");
-    }
-
-    Sensor(SensorCategory category, Field field) {
-        this(field.getName(), category, field.getType(), 0, 100);
+    Sensor(String nativeName, String name, SensorCategory category, FieldType type, double minValue, double maxValue) {
+        this(nativeName, name, category, type, 1.0, minValue, maxValue, "n/a");
     }
 
     /**
@@ -136,6 +132,7 @@ public enum Sensor implements BinaryLogEntry {
      * This constructor is used for virtual sensors which do not directly come from ECU
      */
     Sensor(String name, SensorCategory category, String units, double minValue, double maxValue) {
+        this.nativeName = name;
         this.name = name;
         this.category = category;
         this.units = units;
@@ -200,6 +197,10 @@ public enum Sensor implements BinaryLogEntry {
     @Override
     public String getName() {
         return name;
+    }
+
+    public String getNativeName() {
+        return nativeName;
     }
 
     @Override
