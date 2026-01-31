@@ -235,10 +235,6 @@ public enum Sensor implements BinaryLogEntry {
         return sensors;
     }
 
-    public static double processAdvance(double advance) {
-        return advance > 360 ? advance - 720 : advance;
-    }
-
     public static Sensor lookup(String gaugeName, Sensor defaultValue) {
         Sensor sensor;
         try {
