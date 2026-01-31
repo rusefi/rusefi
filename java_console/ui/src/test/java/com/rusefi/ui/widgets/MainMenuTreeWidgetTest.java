@@ -21,6 +21,50 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MainMenuTreeWidgetTest {
     @Test
+    public void testEnumFieldInCalibrationWidget() {
+        String string = "[Constants]\n" +
+            "signature = \"rusEFI\"\n" +
+            "ochBlockSize = 100\n" +
+            "nPages = 1\n" +
+            "pageSize = 100\n" +
+            "pageReadCommand = \"r\"\n" +
+            "page = 1\n" +
+            "field1 = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
+            "field2 = bits, U08, 4, [0:1], \"Off\", \"On\"\n" +
+            "[SettingContextHelp]\n" +
+            "; SettingContextHelpEnd\n" +
+            "\n" +
+            "\tdialog = mainDialog, \"Main Dialog\"\n" +
+            "\t\tfield = \"Field 1\", field1\n" +
+            "\t\tfield = \"Field 2\", field2\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        widget.update(model.getDialogs().get("mainDialog"), model);
+
+        JPanel content = widget.getContentPane();
+        assertEquals(2, content.getComponentCount());
+
+        // Field 1 is scalar -> JLabel
+        assertTrue(content.getComponent(0) instanceof JLabel);
+        assertEquals("Field 1", ((JLabel) content.getComponent(0)).getText());
+
+        // Field 2 is enum -> JPanel with JLabel and JComboBox
+        assertTrue(content.getComponent(1) instanceof JPanel, "Expected JPanel but was " + content.getComponent(1).getClass().getSimpleName());
+        JPanel row = (JPanel) content.getComponent(1);
+        assertEquals(2, row.getComponentCount());
+        assertTrue(row.getComponent(0) instanceof JLabel);
+        assertEquals("Field 2", ((JLabel) row.getComponent(0)).getText());
+        assertTrue(row.getComponent(1) instanceof JComboBox);
+        JComboBox comboBox = (JComboBox) row.getComponent(1);
+        assertEquals(2, comboBox.getItemCount());
+        assertEquals("Off", comboBox.getItemAt(0));
+        assertEquals("On", comboBox.getItemAt(1));
+    }
+
+    @Test
     public void testRecursiveCalibrationWidget() {
         String string = "[MegaTune]\n" +
             "signature = \"rusEFI\"\n" +

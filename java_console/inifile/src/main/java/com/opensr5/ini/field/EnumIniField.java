@@ -121,6 +121,10 @@ public class EnumIniField extends IniField {
             return new EnumKeyValueMap(keyValues);
         }
 
+        public Collection<String> values() {
+            return keyValues.values();
+        }
+
         public int size() {
             return keyValues.size();
         }
