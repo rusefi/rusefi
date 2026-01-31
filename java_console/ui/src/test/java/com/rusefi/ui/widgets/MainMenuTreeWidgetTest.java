@@ -410,13 +410,20 @@ public class MainMenuTreeWidgetTest {
 
         final int[] verticalLines = {0};
         final int[] horizontalLines = {0};
+        final List<Integer> xPositions = new ArrayList<>();
+        final List<Integer> yPositions = new ArrayList<>();
 
         Graphics2D spyG2 = new Graphics2D() {
             private Color color;
             @Override public void drawLine(int x1, int y1, int x2, int y2) {
                 if (new Color(200, 200, 200, 100).equals(this.color)) {
-                    if (x1 == x2) verticalLines[0]++;
-                    else if (y1 == y2) horizontalLines[0]++;
+                    if (x1 == x2) {
+                        verticalLines[0]++;
+                        xPositions.add(x1);
+                    } else if (y1 == y2) {
+                        horizontalLines[0]++;
+                        yPositions.add(y1);
+                    }
                 }
                 realG2.drawLine(x1, y1, x2, y2);
             }
@@ -493,8 +500,25 @@ public class MainMenuTreeWidgetTest {
 
         canvas.drawGrid(spyG2);
 
-        assertEquals(6, verticalLines[0], "Should have 6 vertical grid lines");
-        assertEquals(11, horizontalLines[0], "Should have 11 horizontal grid lines");
+        assertEquals(5, verticalLines[0], "Should have 5 vertical grid lines");
+        assertEquals(10, horizontalLines[0], "Should have 10 horizontal grid lines");
+
+        // Verify that the last vertical line is at the right edge of the graph
+        // leftPadding = 50, rightPadding = 20, width = 500
+        // graph width = 500 - 50 - 20 = 430
+        // last x should be 50 + 430 = 480
+        assertEquals(480, xPositions.get(xPositions.size() - 1), "Last vertical line should be at x=480");
+
+        // Verify that the last horizontal line is at the top edge of the graph (which is the min value)
+        // Actually i=0 is yMin, i=step-1 is yMax
+        // worldToCanvas(x, yMin) -> cy = topPadding + height - 0 = 20 + (500-20-40) = 460
+        // worldToCanvas(x, yMax) -> cy = topPadding + 0 = 20
+        // So horizontal lines are drawn from bottom to top?
+        // Loop: for (int i = 0; i < yAxis.getStep(); i++)
+        // i=0 -> val = yMin -> worldToCanvas(xAxis.getMin(), yMin) -> p1.y = 460
+        // i=yAxis.getStep()-1 -> val = yMax -> worldToCanvas(xAxis.getMin(), yMax) -> p1.y = 20
+        assertEquals(460, yPositions.get(0), "First horizontal line should be at y=460");
+        assertEquals(20, yPositions.get(yPositions.size() - 1), "Last horizontal line should be at y=20");
     }
 
     private JTable findTable(Container container) {
