@@ -2,7 +2,6 @@ package com.rusefi.ui.widgets;
 
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
@@ -20,11 +19,12 @@ import java.awt.event.*;
 
 /**
  * Round gauge
- *
+ * <p>
  * On double-click a {@link DetachedSensor} is created
- *
+ * <p>
  * Date: 7/9/14
  * Andrey Belomutskiy, (c) 2013-2020
+ *
  * @see GaugesPanel
  */
 
@@ -52,26 +52,23 @@ public class SensorGauge {
 
     public static void createGaugeBody(UIContext uiContext, final Sensor sensor, final JPanelWithListener wrapper, final GaugeChangeListener listener,
                                        final JMenuItem extraMenuItem) {
-        String title = sensor.getName();
-        String units = sensor.getUnits();
-        double maxValue = sensor.getMaxValue();
-        double minValue = sensor.getMinValue();
 
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
-        if (bp != null) {
-            IniFileModel iniFile = bp.getIniFileNullable();
-            if (iniFile != null) {
-                GaugeModel gaugeModel = iniFile.getGauges().get(sensor.getName());
-                if (gaugeModel != null) {
-                    units = gaugeModel.getUnits();
-                    maxValue = gaugeModel.getHighValue();
-                    minValue = gaugeModel.getLowValue();
-                    title = gaugeModel.getTitle();
-                }
+        IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
+        if (iniFile != null) {
+            GaugeModel gaugeModel = iniFile.getGauges().get(sensor.name());
+            if (gaugeModel != null) {
+                createRadial(uiContext, sensor, wrapper, listener, extraMenuItem, gaugeModel);
+                return;
             }
         }
 
-        final Radial gauge = createRadial(title, units, maxValue, minValue);
+        // gauge not found
+        wrapper.removeAllChildrenAndListeners();
+        wrapper.add(new JLabel("Connecting..."));
+    }
+
+    private static void createRadial(UIContext uiContext, Sensor sensor, JPanelWithListener wrapper, GaugeChangeListener listener, JMenuItem extraMenuItem, GaugeModel gaugeModel) {
+        final Radial gauge = createRadial(gaugeModel.getHighValue(), gaugeModel.getLowValue(), gaugeModel);
 
         UiUtils.setToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
         UiUtils.setToolTip(wrapper, HINT_LINE_1, HINT_LINE_2);
@@ -141,10 +138,10 @@ public class SensorGauge {
         ds.show(e);
     }
 
-    public static Radial createRadial(String title, String units, double maxValue, double minValue) {
+    public static Radial createRadial(double maxValue, double minValue, GaugeModel gaugeModel) {
         Radial radial1 = new Radial();
-        radial1.setTitle(title);
-        radial1.setUnitString(units);
+        radial1.setTitle(gaugeModel.getTitle());
+        radial1.setUnitString(gaugeModel.getUnits());
 
         radial1.setMinValue(minValue);
         if (minValue == maxValue) {

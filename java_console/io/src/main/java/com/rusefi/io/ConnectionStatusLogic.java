@@ -67,10 +67,16 @@ public class ConnectionStatusLogic {
     /**
      * todo: note that we do not have removeListener! in general we are not great in terms of memory leaks in
      * case of dynamic UI elements like detachable gauges
+     *
      * @see #setValue
      */
     public void addListener(Listener listener) {
         listeners.add(listener);
+    }
+
+    public void addAndFireListener(Listener listener) {
+        listeners.add(listener);
+        listener.onConnectionStatus(isConnected());
     }
 
     public interface Listener {
