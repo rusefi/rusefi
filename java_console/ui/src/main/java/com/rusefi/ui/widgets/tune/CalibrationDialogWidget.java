@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
@@ -52,6 +53,14 @@ public class CalibrationDialogWidget {
         }
 
         for (PanelModel panel : dialogModel.getPanels()) {
+            CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
+            if (curve != null) {
+                CurveWidget curveWidget = new CurveWidget();
+                curveWidget.update(curve, iniFileModel);
+                container.add(curveWidget.getContentPane());
+                continue;
+            }
+
             JPanel panelWidget = new JPanel();
             panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.Y_AXIS));
             panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));

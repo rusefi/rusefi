@@ -10,6 +10,7 @@ import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.StatusPanel;
+import com.rusefi.ui.widgets.tune.TrimsTab;
 
 import javax.swing.*;
 

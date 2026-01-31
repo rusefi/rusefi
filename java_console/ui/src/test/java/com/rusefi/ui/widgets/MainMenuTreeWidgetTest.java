@@ -1,5 +1,8 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ini.CurveModel;
+import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.SubMenuModel;
@@ -15,12 +18,29 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MainMenuTreeWidgetTest {
+    private static IniFileModel readLines(RawIniFile lines) {
+        IniFileMetaInfo metaInfo = new IniFileMetaInfo() {
+            @Override
+            public int getnPages() { return 1; }
+            @Override
+            public int getOchBlockSize() { return 0; }
+            @Override
+            public String getSignature() { return "test"; }
+            @Override
+            public String getPageReadCommand(int pageIndex) { return "r"; }
+            @Override
+            public int getPageSize(int pageIndex) { return 100; }
+        };
+        return IniFileReaderUtil.readIniFile(lines, "test", metaInfo);
+    }
+
     @Test
     public void testEnumFieldInCalibrationWidget() {
         String string = "[Constants]\n" +
@@ -311,5 +331,56 @@ public class MainMenuTreeWidgetTest {
         assertNotNull(label.getIcon(), name + " should have an icon");
         assertEquals(48, label.getIcon().getIconWidth(), name + " icon width");
         assertEquals(48, label.getIcon().getIconHeight(), name + " icon height");
+    }
+    @Test
+    public void testCurveWidgetInCalibrationWidget() {
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "scriptCurve1Bins = array, F32, 0, [16], \"x\", 1, 0, 0, 100, 3\n" +
+            "scriptCurve1 = array, F32, 64, [16], \"y\", 1, 0, 0, 100, 3\n " +
+            "[CurveEditor]\n" +
+            "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+            "\t\txAxis\t\t=  0, 100, 10\n" +
+            "\t\tyAxis\t\t=  0, 200, 20\n" +
+            "\t\txBins\t\t= scriptCurve1Bins\n" +
+            "\t\tyBins\t\t= scriptCurve1\n" +
+            "[DummySection]\n" +
+            "dialog = curveDialog, \"Curve Dialog\"\n" +
+            "\t\tfield = \"Dummy\", dummy\n" +
+            "\t\tpanel = scriptCurve1\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        DialogModel dialog = model.getDialogs().get("curveDialog");
+        assertNotNull(dialog, "dialog curveDialog should exist");
+        widget.update(dialog, model);
+
+        JPanel content = widget.getContentPane();
+        // Should have two components: one for "Dummy" field and one for the CurveWidget's content panel
+        assertEquals(2, content.getComponentCount());
+        JPanel curvePanel = (JPanel) content.getComponent(1);
+
+        // CurveWidget content has BorderLayout: Center (Canvas) and East (Table panel)
+        assertTrue(curvePanel.getLayout() instanceof BorderLayout);
+        assertEquals(2, curvePanel.getComponentCount());
+
+        // Find JTable
+        JTable table = findTable(curvePanel);
+        assertNotNull(table);
+        assertEquals(16, table.getRowCount());
+        assertEquals(2, table.getColumnCount());
+    }
+
+    private JTable findTable(Container container) {
+        for (Component c : container.getComponents()) {
+            if (c instanceof JTable) return (JTable) c;
+            if (c instanceof Container) {
+                JTable t = findTable((Container) c);
+                if (t != null) return t;
+            }
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.rusefi.ui.basic;
+package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
@@ -9,6 +9,7 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.BinaryProtocolExecutor;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.ui.basic.TuningTableView;
 
 import javax.swing.*;
 import java.awt.*;
