@@ -60,6 +60,8 @@ public interface IniFileModel {
 
     Map<String, TableModel> getTables();
 
+    Map<String, CurveModel> getCurves();
+
     @Nullable
     TableModel getTable(String name);
 

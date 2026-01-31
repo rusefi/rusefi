@@ -21,6 +21,7 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, GaugeCategoryModel> gaugeCategories;
     private final Map<String, GaugeModel> gauges;
     private final Map<String, TableModel> tables;
+    private final Map<String, CurveModel> curves;
     private final Map<String, String> topicHelp;
     private final Map<String, ContextHelpModel> contextHelp;
     private final List<MenuModel> menus;
@@ -48,6 +49,7 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, String> topicHelp,
                                  Map<String, ContextHelpModel> contextHelp,
                                  Map<String, TableModel> tables,
+                                 Map<String, CurveModel> curves,
                                  String menuDialog,
                                  List<MenuModel> menus) {
         this.signature = signature;
@@ -67,6 +69,7 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.topicHelp = Collections.unmodifiableMap(new TreeMap<>(topicHelp));
         this.contextHelp = Collections.unmodifiableMap(new LinkedHashMap<>(contextHelp));
         this.tables = copyWithCaseInsensitiveKeys(tables);
+        this.curves = copyWithCaseInsensitiveKeys(curves);
         this.menus = Collections.unmodifiableList(new ArrayList<>(menus));
     }
 
@@ -209,6 +212,11 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public Map<String, TableModel> getTables() {
         return tables;
+    }
+
+    @Override
+    public Map<String, CurveModel> getCurves() {
+        return curves;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.opensr5.ini.test;
 
+import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.ArrayIniField;
@@ -25,7 +26,7 @@ public class IniFileFieldsTest {
                 "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
                 "\t\tcolumnLabel = \"X\", \"Y\"\n" +
                 "\t\txAxis\t\t=  0, 128, 10\n" +
-                "\t\tyAxis\t\t= -155,  150, 10\n" +
+                "\t\tyAxis\t\t= -155,  150, 12\n" +
                 "\t\txBins\t\t= scriptCurve1Bins\n" +
                 "\t\tyBins\t\t= scriptCurve1\n" +
                 "\t\tshowTextValues = true\n";
@@ -34,6 +35,17 @@ public class IniFileFieldsTest {
         // technically these are constants?!
         assertEquals(2, model.getAllIniFields().size());
         assertEquals(2, model.getFieldsInUiOrder().size());
+
+        assertNotNull(model.getCurves());
+        CurveModel curve = model.getCurves().get("scriptCurve1");
+        assertNotNull(curve);
+        assertEquals(0, curve.getxAxis().getMin());
+        assertEquals(128, curve.getxAxis().getMax());
+        assertEquals(10, curve.getxAxis().getStep());
+
+        assertEquals(-155, curve.getyAxis().getMin());
+        assertEquals(150, curve.getyAxis().getMax());
+        assertEquals(12, curve.getyAxis().getStep());
     }
 
     @Test

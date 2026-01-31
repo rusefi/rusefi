@@ -34,6 +34,7 @@ public class IniFileReader {
                 topicHelpMap,
                 contextHelp,
                 allTables,
+                allCurves,
                 menuDialogString,
                 menus);
     }
@@ -91,6 +92,10 @@ public class IniFileReader {
     private String menuDialogString;
     private final Map<String, TableModel> allTables = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final TableBuilder tableBuilder = new TableBuilder();
+
+    private boolean isCurveEditorSection = false;
+    private final Map<String, CurveModel> allCurves = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final CurveBuilder curveBuilder = new CurveBuilder();
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -204,6 +209,7 @@ public class IniFileReader {
                 isOutputChannelsSection = first.equals("[OutputChannels]");
                 isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
+                isCurveEditorSection = first.equalsIgnoreCase("[CurveEditor]");
                 isMenuSection = first.equalsIgnoreCase("[Menu]");
 
                 if (wasGaugeSection && !isGaugeConfigurationsSection) {
@@ -211,6 +217,9 @@ public class IniFileReader {
                 }
                 if (wasTableSection && !isTableEditorSection) {
                     finishTable();
+                }
+                if (first.startsWith("[") && !isCurveEditorSection) {
+                    finishCurve();
                 }
             }
 
@@ -232,6 +241,9 @@ public class IniFileReader {
                 return;
             } else if (isTableEditorSection) {
                 tableBuilder.handleLine(list, this::addField, this::finishTable);
+                return;
+            } else if (isCurveEditorSection) {
+                curveBuilder.handleLine(list, this::addField, this::finishCurve);
                 return;
             } else if (isMenuSection) {
                 handleMenu(list);
@@ -586,6 +598,13 @@ public class IniFileReader {
             currentHelpTextLines.clear();
             currentHelpWebHelp = null;
         }
+    }
+
+    public void finishCurve() {
+        if (curveBuilder.isComplete()) {
+            allCurves.put(curveBuilder.getCurveId(), curveBuilder.build());
+        }
+        curveBuilder.reset();
     }
 
     private void handleHelpEntry(LinkedList<String> list) {

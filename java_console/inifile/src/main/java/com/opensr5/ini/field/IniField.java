@@ -15,7 +15,7 @@ public abstract class IniField {
     public static double parseDouble(String s) {
         // todo: real implementation
         // TODO: replace with new ExpressionEvaluator
-        s = s.replaceAll("\\{", "").replaceAll("\\}", "");
+        s = s.replaceAll("\\{", "").replaceAll("\\}", "").trim();
         // If this is a complex expression with ternary operator, try to extract the true branch
         // this is related to the lambdaTable using the true branch as default on the fuel tests
         // [tag:lambdaTable]
@@ -32,9 +32,13 @@ public abstract class IniField {
         }
         int dividerIndex = s.indexOf('/');
         if (dividerIndex != -1) {
-            return Double.parseDouble(s.substring(0, dividerIndex)) / Double.parseDouble(s.substring(dividerIndex + 1));
+            return Double.parseDouble(s.substring(0, dividerIndex).trim()) / Double.parseDouble(s.substring(dividerIndex + 1).trim());
         } else {
-            return Double.parseDouble(s);
+            try {
+                return Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
         }
     }
 
