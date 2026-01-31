@@ -143,7 +143,7 @@ public class LuaScriptPanel {
                     try {
                         readFromECU();
                     } catch (Throwable e) {
-                        System.out.println(e);
+                        log.error("Unexpected" + e, e);
                     }
                 }
             });
@@ -278,7 +278,9 @@ public class LuaScriptPanel {
     static StringIniField getLuaScriptField(BinaryProtocol bp) {
         Objects.requireNonNull(bp, "BinaryProtocol");
         // todo: do we have "luaScript" as code-generated constant anywhere?
-        IniFileModel iniFile = bp.getIniFile();
+        IniFileModel iniFile = bp.getIniFileNullable();
+        if (iniFile == null)
+            return null;
         Objects.requireNonNull(iniFile, "iniFile");
         return (StringIniField) iniFile.getIniField("LUASCRIPT");
     }
