@@ -1,34 +1,64 @@
 package com.rusefi.core;
 
+import com.devexperts.logging.Logging;
+import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.binaryprotocol.RealIniFileProvider;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
+import java.util.Map;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
 
 public interface ISensorHolder {
+    Logging log = getLogging(ISensorHolder.class);
+
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini) {
-        for (Sensor sensor : Sensor.values()) {
-            if (sensor.getType() == null) {
-                // for example ETB_CONTROL_QUALITY, weird use-case
-                continue;
-            }
-            IniField sensorField;
-            String sensorInternalName = sensor.getNativeName();
+        for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
             try {
-                sensorField = ini.getOutputChannel(sensorInternalName);
-            } catch (IniMemberNotFound e) {
-                throw new RuntimeException("Not found by " + sensorInternalName, e);
+                String gaugeName = e.getKey();
+                GaugeModel gaugeModel = e.getValue();
+                IniField sensorField = ini.getOutputChannel(gaugeModel.getChannel());
+                if (sensorField instanceof ScalarIniField) {
+                    ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
+                    ScalarIniField scalarField = (ScalarIniField) sensorField;
+                    double rawValue = getRawValue(bb, scalarField.getType());
+                    double scaledValue = rawValue * scalarField.getMultiplier();
+                    setValue(scaledValue, gaugeName);
+                } else {
+                    log.warn("Not found for " + e);
+                }
+            } catch (IniMemberNotFound ex) {
+                // todo: suddenly we need expressions here
+//                coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }
+//                intakeTemperature = { intake }
+                log.warn("Member not found for " + e);
+//                throw new IllegalStateException(ex);
             }
+        }
+    }
 
-            ByteBuffer bb = getByteBuffer(response, sensor.toString(), sensorField.getOffset());
-
-            double rawValue = sensor.getValueForChannel(bb);
-            double scaledValue = rawValue * sensor.getScale();
-            setValue(scaledValue, sensor);
+    static double getRawValue(ByteBuffer bb, com.rusefi.config.FieldType type) {
+        switch (type) {
+            case FLOAT:
+                return bb.getFloat();
+            case INT:
+                return bb.getInt();
+            case UINT16:
+                return bb.getInt() & 0xFFFF;
+            case INT16:
+                return (short) (bb.getInt() & 0xFFFF);
+            case UINT8:
+                return bb.getInt() & 0xFF;
+            case INT8:
+                return (byte) (bb.getInt() & 0xFF);
+            default:
+                throw new UnsupportedOperationException("type " + type);
         }
     }
 
