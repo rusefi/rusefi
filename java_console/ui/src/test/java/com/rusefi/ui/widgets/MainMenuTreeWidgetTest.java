@@ -443,8 +443,7 @@ public class MainMenuTreeWidgetTest {
             @Override public List<com.opensr5.ini.MenuModel> getMenus() { return null; }
         };
 
-        com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget();
-        widget.update(curveModel, model, null);
+        com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget(curveModel, model, null);
 
         // Find the CurveCanvas
         com.rusefi.ui.widgets.tune.CurveWidget.CurveCanvas canvas = null;

@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,11 +39,11 @@ public class CurveWidget {
     private CurveModel curveModel;
     private Double[] xValues;
     private Double[] yValues;
-    private String xUnits = "";
-    private int xDigits = 1;
-    private int yDigits = 1;
+    private String xUnits;
+    private int xDigits;
+    private int yDigits;
 
-    public CurveWidget() {
+    public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         table.getTableHeader().setReorderingAllowed(false);
         table.setDefaultRenderer(Object.class, new GradientRenderer());
 
@@ -63,33 +63,21 @@ public class CurveWidget {
         gbc.gridx = 1;
         gbc.weightx = 0.2;
         content.add(rightPanel, gbc);
+
+        update(curveModel, iniFileModel, ci);
     }
 
-    public void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage ci) {
-        this.curveModel = curveModel;
+    private void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage ci) {
+        this.curveModel = Objects.requireNonNull(curveModel);
         this.xValues = readArray(curveModel.getxBins(), iniFile, ci);
         this.yValues = readArray(curveModel.getyBins(), iniFile, ci);
 
-        if (iniFile != null) {
-            Optional<IniField> xField = iniFile.findIniField(curveModel.getxBins());
-            if (xField.isPresent()) {
-                this.xUnits = xField.get().getUnits();
-                this.xDigits = parseDigits(xField.get().getDigits());
-            } else {
-                this.xUnits = "";
-                this.xDigits = 1;
-            }
-            Optional<IniField> yField = iniFile.findIniField(curveModel.getyBins());
-            if (yField.isPresent()) {
-                this.yDigits = parseDigits(yField.get().getDigits());
-            } else {
-                this.yDigits = 1;
-            }
-        } else {
-            this.xUnits = "";
-            this.xDigits = 1;
-            this.yDigits = 1;
-        }
+        IniField xField = iniFile.findIniField(curveModel.getxBins()).get();
+        this.xUnits = xField.getUnits();
+        this.xDigits = parseDigits(xField.getDigits());
+
+        IniField yField = iniFile.findIniField(curveModel.getyBins()).get();
+        this.yDigits = parseDigits(yField.getDigits());
 
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());

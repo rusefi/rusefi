@@ -70,8 +70,7 @@ public class CalibrationDialogWidget {
         for (PanelModel panel : dialogModel.getPanels()) {
             CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
             if (curve != null) {
-                CurveWidget curveWidget = new CurveWidget();
-                curveWidget.update(curve, iniFileModel, ci);
+                CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, ci);
                 container.add(curveWidget.getContentPane());
                 continue;
             }
