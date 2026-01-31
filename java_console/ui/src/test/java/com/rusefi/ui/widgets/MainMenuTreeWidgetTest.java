@@ -4,10 +4,11 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
+import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
-import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
@@ -45,7 +46,7 @@ public class MainMenuTreeWidgetTest {
         RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        com.rusefi.ui.widgets.tune.CalibrationDialogWidget widget = new com.rusefi.ui.widgets.tune.CalibrationDialogWidget();
         widget.update(model.getDialogs().get("mainDialog"), model);
 
         JPanel content = widget.getContentPane();
@@ -94,7 +95,7 @@ public class MainMenuTreeWidgetTest {
         RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        com.rusefi.ui.widgets.tune.CalibrationDialogWidget widget = new com.rusefi.ui.widgets.tune.CalibrationDialogWidget();
         widget.update(model.getDialogs().get("mainDialog"), model);
 
         JPanel content = widget.getContentPane();
@@ -120,7 +121,7 @@ public class MainMenuTreeWidgetTest {
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
         assertNotNull(model);
 
-        MainMenuTreeWidget widget = new MainMenuTreeWidget(model);
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(model);
         JPanel content = widget.getContentPane();
         assertNotNull(content);
 
@@ -173,7 +174,7 @@ public class MainMenuTreeWidgetTest {
     public void testSearchLogic() throws FileNotFoundException {
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
-        MainMenuTreeWidget widget = new MainMenuTreeWidget(model);
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(model);
         JPanel content = widget.getContentPane();
 
         JPanel topPanel = (JPanel) content.getComponent(0);
@@ -251,8 +252,8 @@ public class MainMenuTreeWidgetTest {
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
 
-        MainMenuTreeWidget left = new MainMenuTreeWidget(model);
-        CalibrationDialogWidget right = new CalibrationDialogWidget();
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget left = new MainMenuTreeWidget(model);
+        com.rusefi.ui.widgets.tune.CalibrationDialogWidget right = new CalibrationDialogWidget();
 
         AtomicReference<SubMenuModel> selectedSubMenu = new AtomicReference<>();
         left.setOnSelect(subMenu -> {

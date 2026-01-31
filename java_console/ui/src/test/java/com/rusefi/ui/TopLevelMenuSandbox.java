@@ -3,8 +3,8 @@ package com.rusefi.ui;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ini.reader.IniFileReaderUtil;
-import com.rusefi.ui.widgets.CalibrationDialogWidget;
-import com.rusefi.ui.widgets.MainMenuTreeWidget;
+import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
+import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package com.rusefi.ui.widgets;
+package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
