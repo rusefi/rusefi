@@ -40,15 +40,20 @@ public class PrimeTunerStudioCache {
         log.info("Done " + fullEcuDefFileName);
     }
 
-    public static void primeWithLocalFile() {
+    private static String findLocalIniFile() {
         @Nullable String localIniFile = IniLocator.findIniFile(".");
         if (localIniFile == null) {
             // another option: one level up or environment variable direction
             localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH);
-            if (localIniFile == null) {
-                log.warn("No .ini");
-                return;
-            }
+        }
+        return localIniFile;
+    }
+
+    public static void primeWithLocalFile() {
+        @Nullable String localIniFile = findLocalIniFile();
+        if (localIniFile == null) {
+            log.warn(".ini file not located located");
+            return;
         }
         IniFileModel iniFileModel;
         try {

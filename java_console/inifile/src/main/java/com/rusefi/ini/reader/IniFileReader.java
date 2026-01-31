@@ -40,7 +40,7 @@ public class IniFileReader {
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
-    public static final String RUSEFI_INI_SUFFIX = ".ini";
+    public static final String INI_FILE_SUFFIX = ".ini";
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     private static final String SECTION_PAGE = "page";
     private static final String FIELD_TYPE_SCALAR = "scalar";

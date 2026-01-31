@@ -18,7 +18,7 @@ public class IniFileModelTestHelper {
     private static String findMetaInfoFile(String iniFilePath) {
         String iniFileName = IniLocator.findIniFile(iniFilePath);
         if (iniFileName == null)
-            throw new IllegalStateException("Not found " + IniFileReader.RUSEFI_INI_PREFIX + "*" + IniFileReader.RUSEFI_INI_SUFFIX + " in " + iniFilePath);
+            throw new IllegalStateException("Not found " + IniFileReader.RUSEFI_INI_PREFIX + "*" + IniFileReader.INI_FILE_SUFFIX + " in " + iniFilePath);
         return iniFileName;
     }
 }
