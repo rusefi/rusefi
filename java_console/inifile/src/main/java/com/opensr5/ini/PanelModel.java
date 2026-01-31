@@ -17,20 +17,26 @@ public class PanelModel {
         this.panelName = panelName;
         this.placement = placement;
         if (placement != null) {
-            placement = placement.trim().toLowerCase();
-            boolean isExpression = placement.charAt(0) == '{';
-            if (!isExpression) {
-                if (!"west".equals(placement)
-                    && !"north".equals(placement)
-                    && !"south".equals(placement)
-                    && !"center".equals(placement)
-                    && !"east".equals(placement)) {
+            if (!isExpression(placement)) {
+                if (!isValidPlacement(placement)) {
                     throw new IllegalArgumentException("Unexpected placement: " + placement);
                 }
             }
         }
         this.enableExpression = enableExpression;
         this.visibleExpression = visibleExpression;
+    }
+
+    public static boolean isExpression(String string) {
+        return string.trim().startsWith("{") && string.endsWith("}");
+    }
+
+    public static boolean isValidPlacement(String placement) {
+        return "west".equalsIgnoreCase(placement)
+            || "north".equalsIgnoreCase(placement)
+            || "south".equalsIgnoreCase(placement)
+            || "center".equalsIgnoreCase(placement)
+            || "east".equalsIgnoreCase(placement);
     }
 
     public String getPanelName() {
