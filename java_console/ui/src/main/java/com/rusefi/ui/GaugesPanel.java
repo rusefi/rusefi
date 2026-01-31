@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.devexperts.logging.FileLogger;
+import com.devexperts.logging.Logging;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -15,7 +16,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 
 /**
@@ -25,17 +29,16 @@ import java.util.List;
  * @see GaugesGridElement
  */
 public class GaugesPanel {
-    private static final Sensor[] DEFAULT_LAYOUT = {
-            Sensor.RPMGauge,
-            Sensor.internalMcuTemperatureGauge,
-            Sensor.CLTGauge,
-            Sensor.IATGauge,
-            Sensor.TPSGauge,
-
-            Sensor.MAPGauge,
-            Sensor.lastErrorCode,
-            Sensor.VBatt,
-            Sensor.vehicleSpeedKph,
+    private static final String[] DEFAULT_LAYOUT = {
+        "RPMGauge",
+        "internalMcuTemperatureGauge",
+        "Sensor.CLTGauge",
+        "Sensor.IATGauge",
+        "TPSGauge",
+        "MAPGauge",
+        "lastErrorCode",
+        "VBatt",
+        "vehicleSpeedKph",
 
     };
     private static final String GAUGES_ROWS = "gauges_rows";
@@ -71,7 +74,7 @@ public class GaugesPanel {
 
         prepareMessagesPanel();
 
-        lowerRpmPanel.add(new RpmLabel(uiContext,15, false).getContent());
+        lowerRpmPanel.add(new RpmLabel(uiContext, 15, false).getContent());
 
         int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
@@ -207,15 +210,20 @@ public class GaugesPanel {
     private void setSensorGridDimensions(int rows, int columns) {
         gauges.setLayout(rows, columns);
 
+        List<String> defaultLayout = getDefaultLayout();
         for (int i = 0; i < rows * columns; i++) {
             // sometimes grid is quite large so we shall be careful with default sensor index
-            Sensor defaultSensor = DEFAULT_LAYOUT[Math.min(i, DEFAULT_LAYOUT.length - 1)];
-            Component element = GaugesGridElement.create(uiContext, config.getChild("element_" + i), defaultSensor);
+            String defaultGaugeName = defaultLayout.get(Math.min(i, defaultLayout.size() - 1));
+            Component element = GaugesGridElement.create(uiContext, config.getChild("element_" + i), defaultGaugeName);
 
             gauges.panel.add(element);
         }
 
         saveConfig(rows, columns);
+    }
+
+    private List<String> getDefaultLayout() {
+        return Arrays.asList(DEFAULT_LAYOUT);
     }
 
     private void saveConfig(int rows, int columns) {

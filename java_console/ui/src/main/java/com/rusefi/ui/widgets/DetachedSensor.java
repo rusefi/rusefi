@@ -64,17 +64,17 @@ public class DetachedSensor {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JFrame frame;
     private final JPanel mockControlPanel = new JPanel(new BorderLayout());
-    private Sensor sensor;
+    private String gaugeName;
     @NotNull
     private final UIContext uiContext;
     private final int width;
 
-    public DetachedSensor(UIContext uiContext, Sensor sensor, int width) {
+    public DetachedSensor(UIContext uiContext, String gaugeName, int width) {
         this.uiContext = uiContext;
         this.width = width;
         frame = new JFrame();
         frame.setAlwaysOnTop(true);
-        onChange(sensor);
+        onChange(gaugeName);
 
         uiContext.DetachedRepositoryINSTANCE.add(this);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -88,9 +88,11 @@ public class DetachedSensor {
         create();
     }
 
-    void create() {
-        SensorGauge.GaugeChangeListener listener = this::onChange;
-        content.add(SensorGauge.createGauge(uiContext, sensor, listener, null), BorderLayout.CENTER);
+    private void create() {
+        if (1 == 1)
+            throw new IllegalStateException("fix detached gauges");
+//        SensorGauge.GaugeChangeListener listener = this::onChange;
+//         content.add(SensorGauge.createGauge(uiContext, gaugeName, wrapper, listener, null, gaugeModel), BorderLayout.CENTER);
         content.add(mockControlPanel, BorderLayout.SOUTH);
 
         frame.add(content);
@@ -101,15 +103,16 @@ public class DetachedSensor {
         frame.setLocation(e.getXOnScreen(), e.getYOnScreen());
     }
 
-    public void onChange(Sensor sensor) {
-        this.sensor = sensor;
-        frame.setTitle(sensor.getName());
+    public void onChange(String gaugeName) {
+        this.gaugeName = gaugeName;
+        frame.setTitle(gaugeName);
         showMockControl();
     }
 
     public void showMockControl() {
         mockControlPanel.removeAll();
-        boolean isMockable = isMockable();
+        Sensor sensor = Sensor.lookup(gaugeName, null);
+        boolean isMockable = sensor != null && isMockable(sensor);
         if (isMockable) {
             Component mockComponent = createMockValueSlider(uiContext.getCommandQueue(), sensor);
             mockControlPanel.add(mockComponent);
@@ -120,7 +123,7 @@ public class DetachedSensor {
         frame.setSize(size, h);
     }
 
-    private boolean isMockable() {
+    private boolean isMockable(Sensor sensor) {
         return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
     }
 
@@ -175,7 +178,7 @@ public class DetachedSensor {
     }
 
     public void saveConfig(Node child) {
-        child.setProperty(NAME, sensor.name());
+        child.setProperty(NAME, gaugeName);
         child.setProperty(WIDTH, frame.getWidth());
         child.setProperty(XPOS, frame.getLocation().x);
         child.setProperty(YPOS, frame.getLocation().y);
@@ -186,7 +189,7 @@ public class DetachedSensor {
         int width = child.getIntProperty(WIDTH, 256);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);
-        DetachedSensor ds = new DetachedSensor(uiContext, sensor, width);
+        DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, width);
         ds.frame.setLocation(xpos, ypos);
         ds.frame.setVisible(true);
     }

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_RPM;
 
 public class BinaryProtocolLogger {
     private static final int HIGH_RPM_DELAY = Integer.getInteger("high_speed_logger_time", 10);

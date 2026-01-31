@@ -23,9 +23,9 @@ public class GaugesGridElement {
     private final JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
     private final UIContext uiContext;
     private final Node config;
-    private final Sensor gaugeName;
+    private final String gaugeName;
 
-    private GaugesGridElement(UIContext uiContext, Node config, Sensor gaugeName) {
+    private GaugesGridElement(UIContext uiContext, Node config, String gaugeName) {
         this.uiContext = uiContext;
         this.config = config;
         this.gaugeName = gaugeName;
@@ -37,7 +37,7 @@ public class GaugesGridElement {
         JMenuItem switchToGauge = getJMenuItem("Switch to Gauge Mode", false);
 
         wrapper.add(new SensorLiveGraph(uiContext, config.getChild("top"), gaugeName, switchToGauge));
-        wrapper.add(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge, switchToGauge));
+        wrapper.add(new SensorLiveGraph(uiContext, config.getChild("bottom"), Sensor.RPMGauge.name(), switchToGauge));
     }
 
     private void rebuild() {
@@ -53,8 +53,8 @@ public class GaugesGridElement {
     private void rebuildAsCircleGauge() {
         SensorGauge.GaugeChangeListener gaugeChangeListener = new SensorGauge.GaugeChangeListener() {
             @Override
-            public void onSensorChange(Sensor sensor) {
-                config.setProperty(GAUGE_TYPE, sensor.name());
+            public void onSensorChange(String gaugeName) {
+                config.setProperty(GAUGE_TYPE, gaugeName);
             }
         };
 
@@ -80,7 +80,7 @@ public class GaugesGridElement {
         return wrapper;
     }
 
-    public static JComponent create(UIContext uiContext, final Node config, Sensor gaugeName) {
+    public static JComponent create(UIContext uiContext, final Node config, String gaugeName) {
         GaugesGridElement gaugesGridElement = new GaugesGridElement(uiContext, config, gaugeName);
         ConnectionStatusLogic.INSTANCE.addAndFireListener(new ConnectionStatusLogic.Listener() {
             @Override
