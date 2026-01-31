@@ -374,9 +374,14 @@ public class MainMenuTreeWidgetTest {
         assertEquals(2, content.getComponentCount());
         JPanel curvePanel = (JPanel) content.getComponent(1);
 
-        // CurveWidget content has BorderLayout: Center (Canvas) and East (Table panel)
-        assertTrue(curvePanel.getLayout() instanceof BorderLayout);
+        // CurveWidget content has GridBagLayout: Canvas (weightx=0.8) and Table panel (weightx=0.2)
+        assertTrue(curvePanel.getLayout() instanceof GridBagLayout);
         assertEquals(2, curvePanel.getComponentCount());
+
+        // Verify weights
+        GridBagLayout gbl = (GridBagLayout) curvePanel.getLayout();
+        assertEquals(0.8, gbl.getConstraints(curvePanel.getComponent(0)).weightx, 0.001);
+        assertEquals(0.2, gbl.getConstraints(curvePanel.getComponent(1)).weightx, 0.001);
 
         // Find JTable
         JTable table = findTable(curvePanel);

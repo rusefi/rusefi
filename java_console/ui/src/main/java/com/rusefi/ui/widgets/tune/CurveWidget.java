@@ -48,8 +48,18 @@ public class CurveWidget {
         rightPanel.add(table.getTableHeader(), BorderLayout.NORTH);
         rightPanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-        content.add(canvas, BorderLayout.CENTER);
-        content.add(rightPanel, BorderLayout.EAST);
+        content.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weighty = 1.0;
+
+        gbc.gridx = 0;
+        gbc.weightx = 0.8;
+        content.add(canvas, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 0.2;
+        content.add(rightPanel, gbc);
     }
 
     public void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage ci) {
