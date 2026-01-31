@@ -40,7 +40,7 @@ public class PrimeTunerStudioCache {
         log.info("Done " + fullEcuDefFileName);
     }
 
-    private static String findLocalIniFile() {
+    public static String findLocalIniFile() {
         @Nullable String localIniFile = IniLocator.findIniFile(".");
         if (localIniFile == null) {
             // another option: one level up or environment variable direction
