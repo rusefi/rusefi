@@ -39,6 +39,7 @@ public class CurveWidget {
     private CurveModel curveModel;
     private Double[] xValues;
     private Double[] yValues;
+    private String xUnits = "";
 
     public CurveWidget() {
         table.getTableHeader().setReorderingAllowed(false);
@@ -66,6 +67,17 @@ public class CurveWidget {
         this.curveModel = curveModel;
         this.xValues = readArray(curveModel.getxBins(), iniFile, ci);
         this.yValues = readArray(curveModel.getyBins(), iniFile, ci);
+
+        if (iniFile != null) {
+            Optional<IniField> field = iniFile.findIniField(curveModel.getxBins());
+            if (field.isPresent()) {
+                this.xUnits = field.get().getUnits();
+            } else {
+                this.xUnits = "";
+            }
+        } else {
+            this.xUnits = "";
+        }
 
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());
@@ -177,6 +189,16 @@ public class CurveWidget {
 
             drawGrid(g2);
             drawCurve(g2);
+
+            g2.setColor(Color.WHITE);
+            String title = curve.getTitle();
+            int titleWidth = g2.getFontMetrics().stringWidth(title);
+            g2.drawString(title, (getWidth() - titleWidth) / 2, 15);
+
+            if (xUnits != null && !xUnits.isEmpty()) {
+                int unitsWidth = g2.getFontMetrics().stringWidth(xUnits);
+                g2.drawString(xUnits, (getWidth() - unitsWidth) / 2, getHeight() - 5);
+            }
         }
 
         public void drawGrid(Graphics2D g2) {

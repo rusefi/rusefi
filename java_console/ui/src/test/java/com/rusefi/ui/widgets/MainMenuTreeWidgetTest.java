@@ -392,12 +392,56 @@ public class MainMenuTreeWidgetTest {
 
     @Test
     public void testCurveWidgetGridLines() {
+        String iniContent = "[MegaTune]\n" +
+                "  signature = \"rusEFI\"\n" +
+                "[Constants]\n" +
+                "  nPages = 1\n" +
+                "  ochBlockSize = 100\n" +
+                "  pageSize = 100\n" +
+                "  pageReadCommand = \"r\"\n" +
+                "  xBins = array, F32, 0, [16], \"RPM\", 1, 0, 0, 8000, 0\n" +
+                "  yBins = array, F32, 64, [16], \"Deg\", 1, 0, 0, 100, 0\n";
         AxisModel xAxis = new AxisModel(0, 100, 5); // 6 lines expected: 0, 20, 40, 60, 80, 100
         AxisModel yAxis = new AxisModel(0, 200, 10); // 11 lines expected: 0, 20, ..., 200
         CurveModel curveModel = new CurveModel("id", "title", xAxis, yAxis, "xBins", "yBins");
 
+        IniFileModel model = new com.opensr5.ini.IniFileModel() {
+            @Override public String getSignature() { return null; }
+            @Override public int getBlockingFactor() { return 0; }
+            @Override public Map<String, List<String>> getDefines() { return null; }
+            @Override public Map<String, com.opensr5.ini.field.IniField> getAllIniFields() { return null; }
+            @Override public Map<String, com.opensr5.ini.field.IniField> getSecondaryIniFields() { return null; }
+            @Override public java.util.Optional<com.opensr5.ini.field.IniField> findIniField(String key) {
+                if ("xBins".equals(key)) {
+                    return java.util.Optional.of(new com.opensr5.ini.field.ScalarIniField("xBins", 0, "RPM", com.rusefi.config.FieldType.FLOAT, 1.0, "0", 0.0));
+                }
+                return java.util.Optional.empty();
+            }
+            @Override public com.opensr5.ini.field.IniField getIniField(com.rusefi.config.Field field) { return null; }
+            @Override public com.opensr5.ini.field.IniField getIniField(String key) { return null; }
+            @Override public com.opensr5.ini.field.IniField getOutputChannel(String key) { return null; }
+            @Override public Map<String, String> getProtocolMeta() { return null; }
+            @Override public com.opensr5.ini.IniFileMetaInfo getMetaInfo() { return null; }
+            @Override public String getIniFilePath() { return null; }
+            @Override public Map<String, String> getTooltips() { return null; }
+            @Override public Map<String, com.opensr5.ini.DialogModel.Field> getFieldsInUiOrder() { return null; }
+            @Override public Map<String, com.opensr5.ini.DialogModel> getDialogs() { return null; }
+            @Override public String getDialogKeyByTitle(String dialogTitle) { return null; }
+            @Override public com.opensr5.ini.field.IniField findByOffset(int i) { return null; }
+            @Override public Map<String, com.opensr5.ini.GaugeCategoryModel> getGaugeCategories() { return null; }
+            @Override public Map<String, com.opensr5.ini.GaugeModel> getGauges() { return null; }
+            @Override public com.opensr5.ini.GaugeModel getGauge(String name) { return null; }
+            @Override public Map<String, String> getTopicHelp() { return null; }
+            @Override public Map<String, com.opensr5.ini.ContextHelpModel> getContextHelp() { return null; }
+            @Override public com.opensr5.ini.ContextHelpModel getContextHelp(String referenceName) { return null; }
+            @Override public Map<String, com.opensr5.ini.TableModel> getTables() { return null; }
+            @Override public Map<String, CurveModel> getCurves() { return null; }
+            @Override public com.opensr5.ini.TableModel getTable(String name) { return null; }
+            @Override public List<com.opensr5.ini.MenuModel> getMenus() { return null; }
+        };
+
         com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget();
-        widget.update(curveModel, null, null);
+        widget.update(curveModel, model, null);
 
         // Find the CurveCanvas
         com.rusefi.ui.widgets.tune.CurveWidget.CurveCanvas canvas = null;
@@ -418,8 +462,14 @@ public class MainMenuTreeWidgetTest {
         final List<Integer> xPositions = new ArrayList<>();
         final List<Integer> yPositions = new ArrayList<>();
 
+        final List<String> drawnStrings = new ArrayList<>();
+
         Graphics2D spyG2 = new Graphics2D() {
             private Color color;
+            @Override public void drawString(String str, int x, int y) {
+                drawnStrings.add(str);
+                realG2.drawString(str, x, y);
+            }
             @Override public void drawLine(int x1, int y1, int x2, int y2) {
                 if (new Color(200, 200, 200, 100).equals(this.color)) {
                     if (x1 == x2) {
@@ -480,7 +530,6 @@ public class MainMenuTreeWidgetTest {
             @Override public void drawImage(BufferedImage img, BufferedImageOp op, int x, int y) { realG2.drawImage(img, op, x, y); }
             @Override public void drawRenderedImage(RenderedImage img, AffineTransform xform) { realG2.drawRenderedImage(img, xform); }
             @Override public void drawRenderableImage(RenderableImage img, AffineTransform xform) { realG2.drawRenderableImage(img, xform); }
-            @Override public void drawString(String str, int x, int y) { realG2.drawString(str, x, y); }
             @Override public void drawString(String str, float x, float y) { realG2.drawString(str, x, y); }
             @Override public void drawString(java.text.AttributedCharacterIterator iterator, int x, int y) { realG2.drawString(iterator, x, y); }
             @Override public void drawString(java.text.AttributedCharacterIterator iterator, float x, float y) { realG2.drawString(iterator, x, y); }
@@ -503,7 +552,10 @@ public class MainMenuTreeWidgetTest {
             @Override public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Color bgcolor, ImageObserver observer) { return realG2.drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, bgcolor, observer); }
         };
 
-        canvas.drawGrid(spyG2);
+        canvas.paintComponent(spyG2);
+
+        assertTrue(drawnStrings.contains("title"), "Should draw title");
+        assertTrue(drawnStrings.contains("RPM"), "Should draw units");
 
         assertEquals(5, verticalLines[0], "Should have 5 vertical grid lines");
         assertEquals(10, horizontalLines[0], "Should have 10 horizontal grid lines");
