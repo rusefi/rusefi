@@ -18,7 +18,6 @@ public class TabbedPanel {
 
 //    public final SettingsTab settingsTab;
     public final LogDownloader logsManager;
-    public final PaneSettings paneSettings = new PaneSettings(getConfig().getRoot().getChild("panes"));
 
     public final JTabbedPane tabbedPane = new JTabbedPane() {
         @Override
