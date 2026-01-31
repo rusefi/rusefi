@@ -40,7 +40,10 @@ public class IniFileState {
     public IniFileModel getIniFileModel() {
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         if (bp != null) {
-            iniFileModel = bp.getIniFile();
+            // do not lose reference on disconnect
+            IniFileModel current = bp.getIniFileNullable();
+            if (current != null)
+                iniFileModel = current;
         }
         return iniFileModel;
     }
