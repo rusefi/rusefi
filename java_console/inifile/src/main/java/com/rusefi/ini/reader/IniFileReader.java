@@ -402,7 +402,13 @@ public class IniFileReader {
         list.removeFirst(); // "panel"
 
         String panelName = list.isEmpty() ? null : list.removeFirst();
-        String placement = list.isEmpty() ? null : list.removeFirst();
+        String placement;
+        // placement is optional, we need to recognize what type of token comes in
+        if (!list.isEmpty() && !PanelModel.isExpression(list.getFirst())) {
+            placement = list.isEmpty() ? null : list.removeFirst();
+        } else {
+            placement = null;
+        }
         String enableExpression = list.isEmpty() ? null : list.removeFirst();
         String visibleExpression = list.isEmpty() ? null : list.removeFirst();
 

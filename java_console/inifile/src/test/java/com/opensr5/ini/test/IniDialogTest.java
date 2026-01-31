@@ -34,7 +34,10 @@ public class IniDialogTest {
             "\n" +
             "\tdialog = complexDialog, \"Complex Dialog\", border\n" +
             "\t\tpanel = subDialog1, West\n" +
-            "\t\tpanel = subDialog2, Center, {field1 > 50}, {field2 < 100}\n";
+            "\t\tpanel = subDialog2, Center, {field1 > 50}, {field2 < 100}\n" +
+            "\t\tpanel = subDialog3, {field1 > 50}, {field2 < 100}\n" +
+            ""
+            ;
 
         RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
@@ -65,7 +68,7 @@ public class IniDialogTest {
         // Test complexDialog with panels with expressions (use dialog key)
         DialogModel complexDialog = model.getDialogs().get("complexDialog");
         assertNotNull(complexDialog);
-        assertEquals(2, complexDialog.getPanels().size());
+        assertEquals(3, complexDialog.getPanels().size());
 
         // Check first panel (West placement, no expressions)
         PanelModel complexPanel1 = complexDialog.getPanels().get(0);
@@ -73,6 +76,13 @@ public class IniDialogTest {
         assertEquals("West", complexPanel1.getPlacement());
         assertNull(complexPanel1.getEnableExpression());
         assertNull(complexPanel1.getVisibleExpression());
+
+        // Check third panel (Center placement, with enable and visible expressions)
+        PanelModel complexPanel3 = complexDialog.getPanels().get(2);
+        assertEquals("subDialog3", complexPanel3.getPanelName());
+        assertEquals(null, complexPanel3.getPlacement());
+        assertEquals("{field1 > 50}", complexPanel3.getEnableExpression());
+        assertEquals("{field2 < 100}", complexPanel3.getVisibleExpression());
 
         // Check second panel (Center placement, with enable and visible expressions)
         PanelModel complexPanel2 = complexDialog.getPanels().get(1);

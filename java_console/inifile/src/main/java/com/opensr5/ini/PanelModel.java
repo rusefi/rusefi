@@ -4,7 +4,7 @@ package com.opensr5.ini;
  * Represents a panel reference within a dialog.
  * Panels allow dialogs to include other dialogs, table editors, curve editors, etc.
  *
- * Syntax: panel = panelName, placement, {enableExpression}, {visibleExpression}
+ * Syntax: panel = panelName, [placement], {enableExpression}, {visibleExpression}
  *
  */
 public class PanelModel {
