@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
 
 import javax.swing.*;
@@ -12,21 +13,31 @@ public class CalibrationDialogWidget {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
     }
 
-    public void update(DialogModel dialogModel) {
+    public void update(DialogModel dialogModel, IniFileModel iniFileModel) {
         contentPane.removeAll();
         if (dialogModel != null) {
-            for (DialogModel.Field field : dialogModel.getFields()) {
-                contentPane.add(new JLabel(field.getUiName()));
-            }
-
-            for (PanelModel panel : dialogModel.getPanels()) {
-                JPanel panelWidget = new JPanel();
-                panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));
-                contentPane.add(panelWidget);
-            }
+            fillPanel(contentPane, dialogModel, iniFileModel);
         }
         contentPane.revalidate();
         contentPane.repaint();
+    }
+
+    private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel) {
+        for (DialogModel.Field field : dialogModel.getFields()) {
+            container.add(new JLabel(field.getUiName()));
+        }
+
+        for (PanelModel panel : dialogModel.getPanels()) {
+            JPanel panelWidget = new JPanel();
+            panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.Y_AXIS));
+            panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));
+            container.add(panelWidget);
+
+            DialogModel subDialog = panel.resolveDialog(iniFileModel);
+            if (subDialog != null) {
+                fillPanel(panelWidget, subDialog, iniFileModel);
+            }
+        }
     }
 
     public JPanel getContentPane() {

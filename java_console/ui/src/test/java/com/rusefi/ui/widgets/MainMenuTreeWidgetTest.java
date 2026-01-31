@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,49 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MainMenuTreeWidgetTest {
+    @Test
+    public void testRecursiveCalibrationWidget() {
+        String string = "[MegaTune]\n" +
+            "signature = \"rusEFI\"\n" +
+            "[Constants]\n" +
+            "ochBlockSize = 100\n" +
+            "nPages = 1\n" +
+            "pageSize = 100\n" +
+            "pageReadCommand = \"r\"\n" +
+            "field1 = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
+            "field2 = scalar, F32, 4, \"unit\", 1, 0, 0, 100, 1\n" +
+            "[SettingContextHelp]\n" +
+            "; SettingContextHelpEnd\n" +
+            "\tdialog = subDialog1, \"Sub Dialog 1\"\n" +
+            "\t\tfield = \"Field 1\", field1\n" +
+            "\n" +
+            "\tdialog = mainDialog, \"Main Dialog\"\n" +
+            "\t\tpanel = subDialog1\n" +
+            "\t\tfield = \"Field 2\", field2\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        widget.update(model.getDialogs().get("mainDialog"), model);
+
+        JPanel content = widget.getContentPane();
+        // Should have: JLabel(Field 2), and JPanel(subDialog1)
+        // Wait, order in fillPanel is: fields then panels.
+        // mainDialog has 1 field (field2) and 1 panel (subDialog1)
+        assertEquals(2, content.getComponentCount());
+
+        assertTrue(content.getComponent(0) instanceof JLabel);
+        assertEquals("Field 2", ((JLabel) content.getComponent(0)).getText());
+
+        assertTrue(content.getComponent(1) instanceof JPanel);
+        JPanel subPanel = (JPanel) content.getComponent(1);
+        // subDialog1 has 1 field (field1)
+        assertEquals(1, subPanel.getComponentCount());
+        assertTrue(subPanel.getComponent(0) instanceof JLabel);
+        assertEquals("Field 1", ((JLabel) subPanel.getComponent(0)).getText());
+    }
+
     @Test
     public void testTreeStructure() throws FileNotFoundException {
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
@@ -162,7 +206,7 @@ public class MainMenuTreeWidgetTest {
         AtomicReference<SubMenuModel> selectedSubMenu = new AtomicReference<>();
         left.setOnSelect(subMenu -> {
             selectedSubMenu.set(subMenu);
-            right.update(model.getDialogs().get(subMenu.getKey()));
+            right.update(model.getDialogs().get(subMenu.getKey()), model);
         });
 
         JTree tree = (JTree) ((JScrollPane) left.getContentPane().getComponent(1)).getViewport().getView();

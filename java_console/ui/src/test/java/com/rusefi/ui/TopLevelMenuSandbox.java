@@ -35,7 +35,7 @@ public class TopLevelMenuSandbox {
 
         left.setOnSelect(subMenu -> {
             String dialogKey = subMenu.getKey();
-            right.update(model.getDialogs().get(dialogKey));
+            right.update(model.getDialogs().get(dialogKey), model);
         });
 
         frameHelper.showFrame(panel);
