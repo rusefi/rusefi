@@ -387,8 +387,8 @@ public class MainMenuTreeWidgetTest {
 
     @Test
     public void testCurveWidgetGridLines() {
-        AxisModel xAxis = new AxisModel(0, 100, 10); // 11 lines expected: 0, 10, ..., 100
-        AxisModel yAxis = new AxisModel(0, 200, 20); // 11 lines expected: 0, 20, ..., 200
+        AxisModel xAxis = new AxisModel(0, 100, 5); // 6 lines expected: 0, 20, 40, 60, 80, 100
+        AxisModel yAxis = new AxisModel(0, 200, 10); // 11 lines expected: 0, 20, ..., 200
         CurveModel curveModel = new CurveModel("id", "title", xAxis, yAxis, "xBins", "yBins");
 
         com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget();
@@ -493,7 +493,7 @@ public class MainMenuTreeWidgetTest {
 
         canvas.drawGrid(spyG2);
 
-        assertEquals(11, verticalLines[0], "Should have 11 vertical grid lines");
+        assertEquals(6, verticalLines[0], "Should have 6 vertical grid lines");
         assertEquals(11, horizontalLines[0], "Should have 11 horizontal grid lines");
     }
 

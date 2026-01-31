@@ -178,7 +178,8 @@ public class CurveWidget {
             FontMetrics fm = g2.getFontMetrics();
 
             // Draw vertical grid lines
-            for (double val = xAxis.getMin(); val <= xAxis.getMax(); val += xAxis.getStep()) {
+            for (int i = 0; i <= xAxis.getStep(); i++) {
+                double val = xAxis.getMin() + (xAxis.getMax() - xAxis.getMin()) * i / xAxis.getStep();
                 Point p1 = worldToCanvas(val, yAxis.getMin());
                 Point p2 = worldToCanvas(val, yAxis.getMax());
 
@@ -192,7 +193,8 @@ public class CurveWidget {
             }
 
             // Draw horizontal grid lines
-            for (double val = yAxis.getMin(); val <= yAxis.getMax(); val += yAxis.getStep()) {
+            for (int i = 0; i <= yAxis.getStep(); i++) {
+                double val = yAxis.getMin() + (yAxis.getMax() - yAxis.getMin()) * i / yAxis.getStep();
                 Point p1 = worldToCanvas(xAxis.getMin(), val);
                 Point p2 = worldToCanvas(xAxis.getMax(), val);
 
