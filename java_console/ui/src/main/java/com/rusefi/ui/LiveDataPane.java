@@ -4,14 +4,12 @@ import com.camick.RXTextUtilities;
 import com.devexperts.logging.Logging;
 import com.rusefi.CodeWalkthrough;
 import com.rusefi.config.Field;
-import com.rusefi.core.Sensor;
 import com.rusefi.enums.live_data_e;
 import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.livedata.ParseResult;
 import com.rusefi.livedata.generated.CPP14Parser;
 import com.rusefi.ui.util.UiUtils;
-import com.rusefi.ui.widgets.IntGaugeLabel;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
@@ -133,11 +131,6 @@ public class LiveDataPane {
 // todo: implement this        topButtonsPanel.add(pauseButton);
         content.add(topButtonsPanel, BorderLayout.NORTH);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.add(new IntGaugeLabel("count", Sensor.totalTriggerErrorCounter));
-        bottomPanel.add(new IntGaugeLabel("error", Sensor.lastErrorCode));
-
-        content.add(bottomPanel, BorderLayout.SOUTH);
         log.info("created in " + (System.currentTimeMillis() - start) + "ms");
     }
 
