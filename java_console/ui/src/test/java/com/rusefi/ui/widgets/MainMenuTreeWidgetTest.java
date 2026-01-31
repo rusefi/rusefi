@@ -67,14 +67,16 @@ public class MainMenuTreeWidgetTest {
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
 
         com.rusefi.ui.widgets.tune.CalibrationDialogWidget widget = new com.rusefi.ui.widgets.tune.CalibrationDialogWidget();
-        widget.update(model.getDialogs().get("mainDialog"), model);
+        widget.update(model.getDialogs().get("mainDialog"), model, null);
 
         JPanel content = widget.getContentPane();
         assertEquals(4, content.getComponentCount());
 
-        // Field 1 is scalar -> JLabel
-        assertTrue(content.getComponent(0) instanceof JLabel);
-        assertEquals("Field 1", ((JLabel) content.getComponent(0)).getText());
+        // Field 1 is scalar -> JPanel with JLabel and JTextField
+        assertTrue(content.getComponent(0) instanceof JPanel);
+        JPanel row1 = (JPanel) content.getComponent(0);
+        assertEquals("Field 1", ((JLabel) row1.getComponent(0)).getText());
+        assertTrue(row1.getComponent(1) instanceof JTextField);
 
         // Field 2 is enum (Off/On) -> JPanel with JLabel and JComboBox
         assertTrue(content.getComponent(1) instanceof JPanel);
@@ -116,23 +118,23 @@ public class MainMenuTreeWidgetTest {
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
 
         com.rusefi.ui.widgets.tune.CalibrationDialogWidget widget = new com.rusefi.ui.widgets.tune.CalibrationDialogWidget();
-        widget.update(model.getDialogs().get("mainDialog"), model);
+        widget.update(model.getDialogs().get("mainDialog"), model, null);
 
         JPanel content = widget.getContentPane();
-        // Should have: JLabel(Field 2), and JPanel(subDialog1)
+        // Should have: JPanel(Field 2), and JPanel(subDialog1)
         // Wait, order in fillPanel is: fields then panels.
         // mainDialog has 1 field (field2) and 1 panel (subDialog1)
         assertEquals(2, content.getComponentCount());
 
-        assertTrue(content.getComponent(0) instanceof JLabel);
+        assertTrue(content.getComponent(0) instanceof JLabel, "Expected JLabel for Field 2 row, but was " + content.getComponent(0).getClass().getName());
         assertEquals("Field 2", ((JLabel) content.getComponent(0)).getText());
 
-        assertTrue(content.getComponent(1) instanceof JPanel);
-        JPanel subPanel = (JPanel) content.getComponent(1);
+        assertTrue(content.getComponent(1) instanceof JPanel, "Expected JPanel for subDialog1");
+        JPanel subDialog1Panel = (JPanel) content.getComponent(1);
         // subDialog1 has 1 field (field1)
-        assertEquals(1, subPanel.getComponentCount());
-        assertTrue(subPanel.getComponent(0) instanceof JLabel);
-        assertEquals("Field 1", ((JLabel) subPanel.getComponent(0)).getText());
+        assertEquals(1, subDialog1Panel.getComponentCount());
+        assertTrue(subDialog1Panel.getComponent(0) instanceof JLabel, "Expected JLabel for Field 1 row");
+        assertEquals("Field 1", ((JLabel) subDialog1Panel.getComponent(0)).getText());
     }
 
     @Test
@@ -278,7 +280,7 @@ public class MainMenuTreeWidgetTest {
         AtomicReference<SubMenuModel> selectedSubMenu = new AtomicReference<>();
         left.setOnSelect(subMenu -> {
             selectedSubMenu.set(subMenu);
-            right.update(model.getDialogs().get(subMenu.getKey()), model);
+            right.update(model.getDialogs().get(subMenu.getKey()), model, null);
         });
 
         JTree tree = (JTree) ((JScrollPane) left.getContentPane().getComponent(1)).getViewport().getView();
@@ -355,7 +357,7 @@ public class MainMenuTreeWidgetTest {
         CalibrationDialogWidget widget = new CalibrationDialogWidget();
         DialogModel dialog = model.getDialogs().get("curveDialog");
         assertNotNull(dialog, "dialog curveDialog should exist");
-        widget.update(dialog, model);
+        widget.update(dialog, model, null);
 
         JPanel content = widget.getContentPane();
         // Should have two components: one for "Dummy" field and one for the CurveWidget's content panel

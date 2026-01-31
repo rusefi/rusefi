@@ -1,5 +1,7 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
@@ -18,33 +20,46 @@ public class CalibrationDialogWidget {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
     }
 
-    public void update(DialogModel dialogModel, IniFileModel iniFileModel) {
+    public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         contentPane.removeAll();
         if (dialogModel != null) {
-            fillPanel(contentPane, dialogModel, iniFileModel);
+            fillPanel(contentPane, dialogModel, iniFileModel, ci);
         }
         contentPane.revalidate();
         contentPane.repaint();
     }
 
-    private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel) {
+    private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         for (DialogModel.Field field : dialogModel.getFields()) {
             Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
-            if (iniField.isPresent() && iniField.get() instanceof EnumIniField) {
-                EnumIniField enumField = (EnumIniField) iniField.get();
+            if (iniField.isPresent()) {
+                IniField f = iniField.get();
                 JPanel row = new JPanel();
                 row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
                 row.add(new JLabel(field.getUiName()));
 
-                boolean isCheckBox = isCheckboxEnum(enumField);
+                if (f instanceof EnumIniField) {
+                    EnumIniField enumField = (EnumIniField) f;
 
-                if (isCheckBox) {
-                    JCheckBox checkBox = new JCheckBox();
-                    row.add(checkBox);
+                    boolean isCheckBox = isCheckboxEnum(enumField);
+
+                    String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(f, ci);
+
+                    if (isCheckBox) {
+                        JCheckBox checkBox = new JCheckBox();
+                        checkBox.setSelected(currentValue.equalsIgnoreCase("\"Enabled\"") || currentValue.equalsIgnoreCase("\"Yes\""));
+                        row.add(checkBox);
+                    } else {
+                        JComboBox<String> comboBox = new JComboBox<>(enumField.getEnums().values().toArray(new String[0]));
+                        comboBox.setSelectedItem(currentValue.replace("\"", ""));
+                        comboBox.setMaximumSize(comboBox.getPreferredSize());
+                        row.add(comboBox);
+                    }
                 } else {
-                    JComboBox<String> comboBox = new JComboBox<>(enumField.getEnums().values().toArray(new String[0]));
-                    comboBox.setMaximumSize(comboBox.getPreferredSize());
-                    row.add(comboBox);
+                    String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(f, ci);
+                    JTextField textField = new JTextField(currentValue);
+                    textField.setMaximumSize(textField.getPreferredSize());
+                    row.add(textField);
                 }
                 container.add(row);
             } else {
@@ -56,7 +71,7 @@ public class CalibrationDialogWidget {
             CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
             if (curve != null) {
                 CurveWidget curveWidget = new CurveWidget();
-                curveWidget.update(curve, iniFileModel);
+                curveWidget.update(curve, iniFileModel, ci);
                 container.add(curveWidget.getContentPane());
                 continue;
             }
@@ -68,7 +83,7 @@ public class CalibrationDialogWidget {
 
             DialogModel subDialog = panel.resolveDialog(iniFileModel);
             if (subDialog != null) {
-                fillPanel(panelWidget, subDialog, iniFileModel);
+                fillPanel(panelWidget, subDialog, iniFileModel, ci);
             }
         }
     }

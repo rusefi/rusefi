@@ -1,28 +1,33 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 
 import javax.swing.*;
+import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.FileNotFoundException;
 
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 
 public class TopLevelMenuSandbox {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws JAXBException, FileNotFoundException {
         commonUiStartup();
 
-        String iniPath = "../firmware/tunerstudio/generated/rusefi_uaefi121.ini";
+        String iniPath = "src/test/resources/january.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        Msq msq = Msq.readTune("src/test/resources/january_tune.msq");
+        ConfigurationImage ci = msq.asImage(model);
 
-        SwingUtilities.invokeLater(() -> runAwt(model));
+        SwingUtilities.invokeLater(() -> runAwt(model, ci));
     }
 
-    private static void runAwt(IniFileModel model) {
+    private static void runAwt(IniFileModel model, ConfigurationImage ci) {
         FrameHelper frameHelper = new FrameHelper(JDialog.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new GridBagLayout());
@@ -35,7 +40,7 @@ public class TopLevelMenuSandbox {
 
         left.setOnSelect(subMenu -> {
             String dialogKey = subMenu.getKey();
-            right.update(model.getDialogs().get(dialogKey), model);
+            right.update(model.getDialogs().get(dialogKey), model, ci);
         });
 
         frameHelper.showFrame(panel);

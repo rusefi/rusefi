@@ -1,5 +1,7 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.AxisModel;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.IniFileModel;
@@ -12,6 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.Optional;
 
 /**
@@ -49,10 +52,10 @@ public class CurveWidget {
         content.add(rightPanel, BorderLayout.EAST);
     }
 
-    public void update(CurveModel curveModel, IniFileModel iniFile) {
+    public void update(CurveModel curveModel, IniFileModel iniFile, ConfigurationImage ci) {
         this.curveModel = curveModel;
-        this.xValues = readArray(curveModel.getxBins(), iniFile);
-        this.yValues = readArray(curveModel.getyBins(), iniFile);
+        this.xValues = readArray(curveModel.getxBins(), iniFile, ci);
+        this.yValues = readArray(curveModel.getyBins(), iniFile, ci);
 
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());
@@ -60,13 +63,23 @@ public class CurveWidget {
         content.repaint();
     }
 
-    private Double[] readArray(String key, IniFileModel iniFile) {
+    private Double[] readArray(String key, IniFileModel iniFile, ConfigurationImage ci) {
         Optional<IniField> field = iniFile.findIniField(key);
         if (field.isPresent() && field.get() instanceof ArrayIniField) {
             ArrayIniField arrayField = (ArrayIniField) field.get();
-            // Since we don't have real data here yet, let's use some dummy values based on field size
-            // or maybe we should have some default data source.
-            // For now, let's just create an array of appropriate size.
+            if (ci != null) {
+                Double[][] arrayValues = ConfigurationImageGetterSetter.getArrayValues(arrayField, ci);
+                Double[] result = new Double[arrayField.getRows() * arrayField.getCols()];
+                int index = 0;
+                for (int r = 0; r < arrayField.getRows(); r++) {
+                    for (int c = 0; c < arrayField.getCols(); c++) {
+                        result[index++] = arrayValues[r][c];
+                    }
+                }
+                return result;
+            }
+
+            // Fallback for when ci is null
             int size = arrayField.getRows() * arrayField.getCols();
             Double[] values = new Double[size];
             for (int i = 0; i < size; i++) {
