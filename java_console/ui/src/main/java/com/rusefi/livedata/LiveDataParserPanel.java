@@ -52,7 +52,7 @@ public class LiveDataParserPanel {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
-            BinaryProtocol binaryProtocol = uiContext.getLinkManager().getConnector().getBinaryProtocol();
+            BinaryProtocol binaryProtocol = uiContext.getBinaryProtocol();
             if (binaryProtocol == null)
                 return;
             BinaryProtocolState bps = binaryProtocol.getBinaryProtocolState();

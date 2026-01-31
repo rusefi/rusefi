@@ -278,7 +278,7 @@ public class SensorLiveGraph extends JPanel {
             double maxValue = sensor.getMaxValue();
             double minValue = sensor.getMinValue();
 
-            BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
             if (bp != null) {
                 IniFileModel iniFile = bp.getIniFileNullable();
                 if (iniFile != null) {

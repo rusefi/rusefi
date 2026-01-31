@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class SensorLogger {
     public static List<BinaryLogEntry> getSensors(UIContext uiContext) {
-        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
         if (bp == null)
             return Collections.emptyList();
         return getIniFileModel(bp.getIniFileNullable());
