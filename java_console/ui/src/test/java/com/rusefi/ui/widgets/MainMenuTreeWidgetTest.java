@@ -415,6 +415,9 @@ public class MainMenuTreeWidgetTest {
                 if ("xBins".equals(key)) {
                     return java.util.Optional.of(new com.opensr5.ini.field.ScalarIniField("xBins", 0, "RPM", com.rusefi.config.FieldType.FLOAT, 1.0, "0", 0.0));
                 }
+                if ("yBins".equals(key)) {
+                    return java.util.Optional.of(new com.opensr5.ini.field.ScalarIniField("yBins", 0, "Deg", com.rusefi.config.FieldType.FLOAT, 1.0, "2", 0.0));
+                }
                 return java.util.Optional.empty();
             }
             @Override public com.opensr5.ini.field.IniField getIniField(com.rusefi.config.Field field) { return null; }
@@ -556,6 +559,10 @@ public class MainMenuTreeWidgetTest {
 
         assertTrue(drawnStrings.contains("title"), "Should draw title");
         assertTrue(drawnStrings.contains("RPM"), "Should draw units");
+        assertTrue(drawnStrings.contains("0"), "Should draw 0 for X axis");
+        assertTrue(drawnStrings.contains("100"), "Should draw 100 for X axis");
+        assertTrue(drawnStrings.contains("0.00"), "Should draw 0.00 for Y axis with 2 digits");
+        assertTrue(drawnStrings.contains("200.00"), "Should draw 200.00 for Y axis with 2 digits");
 
         assertEquals(5, verticalLines[0], "Should have 5 vertical grid lines");
         assertEquals(10, horizontalLines[0], "Should have 10 horizontal grid lines");

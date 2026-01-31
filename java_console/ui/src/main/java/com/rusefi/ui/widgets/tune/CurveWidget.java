@@ -40,6 +40,8 @@ public class CurveWidget {
     private Double[] xValues;
     private Double[] yValues;
     private String xUnits = "";
+    private int xDigits = 1;
+    private int yDigits = 1;
 
     public CurveWidget() {
         table.getTableHeader().setReorderingAllowed(false);
@@ -69,20 +71,41 @@ public class CurveWidget {
         this.yValues = readArray(curveModel.getyBins(), iniFile, ci);
 
         if (iniFile != null) {
-            Optional<IniField> field = iniFile.findIniField(curveModel.getxBins());
-            if (field.isPresent()) {
-                this.xUnits = field.get().getUnits();
+            Optional<IniField> xField = iniFile.findIniField(curveModel.getxBins());
+            if (xField.isPresent()) {
+                this.xUnits = xField.get().getUnits();
+                this.xDigits = parseDigits(xField.get().getDigits());
             } else {
                 this.xUnits = "";
+                this.xDigits = 1;
+            }
+            Optional<IniField> yField = iniFile.findIniField(curveModel.getyBins());
+            if (yField.isPresent()) {
+                this.yDigits = parseDigits(yField.get().getDigits());
+            } else {
+                this.yDigits = 1;
             }
         } else {
             this.xUnits = "";
+            this.xDigits = 1;
+            this.yDigits = 1;
         }
 
         canvas.setCurve(curveModel, xValues, yValues);
         table.setModel(new CurveTableModel());
         content.revalidate();
         content.repaint();
+    }
+
+    private int parseDigits(String digits) {
+        if (digits == null || digits.isEmpty()) {
+            return 1;
+        }
+        try {
+            return Integer.parseInt(digits);
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
     private Double[] readArray(String key, IniFileModel iniFile, ConfigurationImage ci) {
@@ -219,7 +242,7 @@ public class CurveWidget {
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
                 g2.setColor(Color.RED);
-                String label = String.format("%.1f", val);
+                String label = String.format("%." + xDigits + "f", val);
                 int labelWidth = fm.stringWidth(label);
                 g2.drawString(label, p1.x - labelWidth / 2, p1.y + fm.getAscent() + 2);
             }
@@ -234,7 +257,7 @@ public class CurveWidget {
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
                 g2.setColor(Color.RED);
-                String label = String.format("%.1f", val);
+                String label = String.format("%." + yDigits + "f", val);
                 int labelWidth = fm.stringWidth(label);
                 g2.drawString(label, p1.x - labelWidth - 5, p1.y + fm.getAscent() / 2);
             }
@@ -323,7 +346,9 @@ public class CurveWidget {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            return columnIndex == 0 ? xValues[rowIndex] : yValues[rowIndex];
+            double val = columnIndex == 0 ? xValues[rowIndex] : yValues[rowIndex];
+            int digits = columnIndex == 0 ? xDigits : yDigits;
+            return String.format("%." + digits + "f", val);
         }
 
         @Override
@@ -343,6 +368,7 @@ public class CurveWidget {
                 } else {
                     yValues[rowIndex] = Math.max(curveModel.getyAxis().getMin(), Math.min(curveModel.getyAxis().getMax(), val));
                 }
+                fireTableCellUpdated(rowIndex, columnIndex);
                 canvas.repaint();
             } catch (NumberFormatException ignored) {}
         }
@@ -354,18 +380,26 @@ public class CurveWidget {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (isSelected) return c;
 
+            double doubleValue;
             if (value instanceof Double) {
-                double val = (Double) value;
-                double min, max;
-                if (column == 0) {
-                    min = curveModel.getxAxis().getMin();
-                    max = curveModel.getxAxis().getMax();
-                } else {
-                    min = curveModel.getyAxis().getMin();
-                    max = curveModel.getyAxis().getMax();
+                doubleValue = (Double) value;
+            } else {
+                try {
+                    doubleValue = Double.parseDouble(value.toString());
+                } catch (NumberFormatException e) {
+                    return c;
                 }
-                applyGradient(c, val, min, max);
             }
+
+            double min, max;
+            if (column == 0) {
+                min = curveModel.getxAxis().getMin();
+                max = curveModel.getxAxis().getMax();
+            } else {
+                min = curveModel.getyAxis().getMin();
+                max = curveModel.getyAxis().getMax();
+            }
+            applyGradient(c, doubleValue, min, max);
             return c;
         }
 
