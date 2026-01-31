@@ -1,27 +1,32 @@
 package com.rusefi.ui.widgets;
 
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.PanelModel;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 
 public class CalibrationDialogWidget {
-    private final JPanel contentPane = new JPanel(new BorderLayout());
-    private final DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Key", "Name"}, 0);
-    private final JTable table = new JTable(tableModel);
+    private final JPanel contentPane = new JPanel();
 
     public CalibrationDialogWidget() {
-        contentPane.add(new JScrollPane(table), BorderLayout.CENTER);
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
     }
 
     public void update(DialogModel dialogModel) {
-        tableModel.setRowCount(0);
+        contentPane.removeAll();
         if (dialogModel != null) {
             for (DialogModel.Field field : dialogModel.getFields()) {
-                tableModel.addRow(new Object[]{field.getKey(), field.getUiName()});
+                contentPane.add(new JLabel(field.getUiName()));
+            }
+
+            for (PanelModel panel : dialogModel.getPanels()) {
+                JPanel panelWidget = new JPanel();
+                panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));
+                contentPane.add(panelWidget);
             }
         }
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     public JPanel getContentPane() {

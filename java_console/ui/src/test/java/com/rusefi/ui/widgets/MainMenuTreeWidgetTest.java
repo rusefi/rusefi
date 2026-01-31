@@ -177,17 +177,11 @@ public class MainMenuTreeWidgetTest {
         assertNotNull(selectedSubMenu.get());
         assertEquals("engineChars", selectedSubMenu.get().getKey());
 
-        // Verify JTable content
+        // Verify UI content
         JPanel contentPane = right.getContentPane();
-        JScrollPane scrollPane = (JScrollPane) contentPane.getComponent(0);
-        JTable table = (JTable) scrollPane.getViewport().getView();
-        TableModel tableModel = table.getModel();
-
-        // The "engineChars" dialog in the test INI has some fields.
-        assertTrue(tableModel.getRowCount() > 0, "Table should have rows for engineChars");
+        assertTrue(contentPane.getComponentCount() > 0, "Content pane should have components for engineChars");
 
         // Now test re-selection (clicking the same node again)
-        tableModel.setValueAt("ModifiedValue", 0, 0); // Manually modify to see if it gets cleared/updated
 
         // Simulate click on the same node
         tree.getMouseListeners()[1].mouseClicked(new MouseEvent(tree, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false));
