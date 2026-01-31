@@ -45,7 +45,7 @@ public class EcuTestHelper {
         AtomicReference<String> result = new AtomicReference<>();
         long start = System.currentTimeMillis();
 
-        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPMValue, actualRpm -> {
+        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPMGauge, actualRpm -> {
             if (!isCloseEnough(rpm, actualRpm)) {
                 long seconds = (System.currentTimeMillis() - start) / 1000;
                 result.set("Got " + actualRpm + " while trying to stay at " + rpm + " after " + seconds + " seconds");

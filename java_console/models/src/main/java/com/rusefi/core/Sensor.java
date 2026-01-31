@@ -25,15 +25,15 @@ public enum Sensor implements BinaryLogEntry {
      */
 
     // RPM, vss
-    RPMValue(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1, 0, 8000, "RPM"),
+    RPMGauge(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1, 0, 8000, "RPM"),
 //    rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM/s"),
 //    speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
     VEHICLESPEEDKPH("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VSS, 0.0, 0.0, "kph"),
 
     // Temperatures
     INTERNALMCUTEMPERATURE(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 1, 0, 5, "C"),
-    COOLANT(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
-    INTAKE(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    CLTGauge(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    IATGauge(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 //    AuxT1("AuxT1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 //    AuxT2("AuxT2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 18, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 

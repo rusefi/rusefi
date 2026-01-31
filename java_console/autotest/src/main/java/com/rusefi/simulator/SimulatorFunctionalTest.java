@@ -67,7 +67,7 @@ public class SimulatorFunctionalTest {
     }
 
     private void assertVvtPosition() {
-        assertNear("RPM", SensorCentral.getInstance().getValue(Sensor.RPMValue), 1200, 5);
+        assertNear("RPM", SensorCentral.getInstance().getValue(Sensor.RPMGauge), 1200, 5);
         assertNear("VVT", SensorCentral.getInstance().getValue(Sensor.vvtPositionB1I), 90, 15);
     }
 

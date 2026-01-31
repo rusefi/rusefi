@@ -52,7 +52,7 @@ public class RpmLabel {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 if (isConnected) {
-                    rpmValue.setText("" + SensorCentral.getInstance().getValue(Sensor.RPMValue));
+                    rpmValue.setText("" + SensorCentral.getInstance().getValue(Sensor.RPMGauge));
                     rpmValue.setForeground(Color.green);
                 } else {
                     rpmValue.setText(NO_CONNECTION);

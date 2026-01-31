@@ -1,24 +1,18 @@
 package com.rusefi.sensor_logs;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.UIContext;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -42,7 +36,7 @@ public class BinarySensorLogRestarter implements SensorLog {
 
     @Override
     public synchronized void writeSensorLogLine() {
-        double rpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
+        double rpm = SensorCentral.getInstance().getValue(Sensor.RPMGauge);
         if (rpm > 200) {
             seenRunning = System.currentTimeMillis();
         }

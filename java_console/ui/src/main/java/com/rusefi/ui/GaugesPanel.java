@@ -26,10 +26,10 @@ import java.util.List;
  */
 public class GaugesPanel {
     private static final Sensor[] DEFAULT_LAYOUT = {
-            Sensor.RPMValue,
+            Sensor.RPMGauge,
             Sensor.MAFMEASURED,
-            Sensor.COOLANT,
-            Sensor.INTAKE,
+            Sensor.CLTGauge,
+            Sensor.IATGauge,
             Sensor.TPSVALUE,
 
             Sensor.MAPVALUE,
