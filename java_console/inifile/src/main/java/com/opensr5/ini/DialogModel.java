@@ -32,6 +32,10 @@ public class DialogModel {
         this.topicHelp = topicHelp;
     }
 
+    public List<Command> getCommandsOfCurrentDialog() {
+        return commandsOfCurrentDialog;
+    }
+
     public List<Field> getFields() {
         return fields;
     }

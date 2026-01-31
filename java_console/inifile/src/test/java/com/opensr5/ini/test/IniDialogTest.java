@@ -27,6 +27,8 @@ public class IniDialogTest {
             "\n" +
             "\tdialog = subDialog2, \"Sub Dialog 2\"\n" +
             "\t\tfield = \"Field 2\", field2\n" +
+            "\t\tcommandButton = \"Enable internal trigger simulation\", cmd_enable_self_stim\n" +
+            "\t\tcommandButton = \"Enable external trigger simulation\", cmd_enable_ext_stim" +
             "\n" +
             "\tdialog = mainDialog, \"Main Dialog\", yAxis\n" +
             "\t\tpanel = subDialog1\n" +
@@ -64,6 +66,13 @@ public class IniDialogTest {
         assertEquals("Center", panel2.getPlacement());
         assertNull(panel2.getEnableExpression());
         assertNull(panel2.getVisibleExpression());
+
+        DialogModel subDialog2 = model.getDialogs().get("subDialog2");
+        assertEquals(2, subDialog2.getCommandsOfCurrentDialog().size());
+        assertEquals("Enable internal trigger simulation", subDialog2.getCommandsOfCurrentDialog().get(0).getUiName());
+        assertEquals("cmd_enable_self_stim", subDialog2.getCommandsOfCurrentDialog().get(0).getCommand());
+        assertEquals("Enable external trigger simulation", subDialog2.getCommandsOfCurrentDialog().get(1).getUiName());
+        assertEquals("cmd_enable_ext_stim", subDialog2.getCommandsOfCurrentDialog().get(1).getCommand());
 
         // Test complexDialog with panels with expressions (use dialog key)
         DialogModel complexDialog = model.getDialogs().get("complexDialog");
