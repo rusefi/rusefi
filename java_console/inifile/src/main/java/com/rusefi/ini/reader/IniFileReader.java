@@ -3,6 +3,7 @@ package com.rusefi.ini.reader;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
 import com.opensr5.ini.field.*;
+import com.rusefi.config.FieldType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -301,10 +302,11 @@ public class IniFileReader {
         String channelType = list.get(1);
         switch (channelType) {
             case FIELD_TYPE_SCALAR: {
-                String scalarType = list.get(2);
+                FieldType scalarType = FieldType.parseTs(list.get(2));
+                String unit = list.size() > 4 ? list.get(4) : "";
                 int offset = Integer.parseInt(list.get(3));
                 // todo: reuse ScalarIniField#parse but would need changes?
-                allOutputChannels.put(name, new ScalarIniField(name, offset, scalarType, null, 1, "0", 0));
+                allOutputChannels.put(name, new ScalarIniField(name, offset, unit, scalarType, 1, "0", 0));
             }
         }
     }

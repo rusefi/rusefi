@@ -6,6 +6,7 @@ import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -72,21 +73,18 @@ public class IniFileReaderTest {
 
         ScalarIniField stftCorrection2 = (ScalarIniField) model.getOutputChannel("stftCorrection2");
         assertEquals(1444, stftCorrection2.getOffset());
-        // wow, things are broken!
-        assertEquals("F32", stftCorrection2.getUnits());
+        assertEquals("%", stftCorrection2.getUnits());
         assertEquals(1.0, stftCorrection2.getMultiplier());
         assertEquals(0.0, stftCorrection2.getSerializationOffset());
-        assertEquals(null, stftCorrection2.getType());
+        assertEquals(FieldType.FLOAT, stftCorrection2.getType());
 
         ScalarIniField tpsFrom = (ScalarIniField) model.getOutputChannel("tpsFrom");
         assertEquals(1448, tpsFrom.getOffset());
-        // wow, things are broken!
-        assertEquals("F32", tpsFrom.getUnits());
+        assertEquals("", tpsFrom.getUnits());
         assertEquals(1.0, tpsFrom.getMultiplier());
         assertEquals(0.0, tpsFrom.getSerializationOffset());
-        assertEquals(null, stftCorrection2.getType());
+        assertEquals(FieldType.FLOAT, stftCorrection2.getType());
     }
-
 
     @Test
     public void testReadDialogCommandsCurve() {
