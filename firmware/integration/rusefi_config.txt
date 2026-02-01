@@ -122,6 +122,7 @@ struct_no_prefix engine_configuration_s
 ! air cooled engines go up to 250, see community board firmware which has that
 ! PnP boards for liquid cooled engines should override with '120'
 #define CLT_UPPER_LIMIT 250
+#define CLT_UPPER_VALIDATION_LIMIT 250
 
 #define MAP_UPPER_LIMIT 650
 
