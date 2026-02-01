@@ -8,6 +8,7 @@ import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.UIContext;
@@ -58,7 +59,7 @@ public class SensorLogger {
             return;
         }
         isInitialized = true;
-        SensorCentral.getInstance().addListener(Sensor.SECONDS,
+        SensorCentral.getInstance().addListener(WellKnownGauges.SECONDS.name(),
             value -> {
                 if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
                     return;

@@ -5,6 +5,7 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ui.AuthTokenPanel;
@@ -36,7 +37,7 @@ public class BinarySensorLogRestarter implements SensorLog {
 
     @Override
     public synchronized void writeSensorLogLine() {
-        double rpm = SensorCentral.getInstance().getValue(Sensor.RPMGauge);
+        double rpm = SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.name());
         if (rpm > 200) {
             seenRunning = System.currentTimeMillis();
         }

@@ -2,6 +2,7 @@ package com.rusefi.ui.widgets;
 
 import com.rusefi.SensorTypeHelper;
 import com.rusefi.core.Sensor;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.enums.SensorType;
 import com.rusefi.io.CommandQueue;
@@ -181,7 +182,7 @@ public class DetachedSensor {
     }
 
     public static void create(UIContext uiContext, Node child) {
-        Sensor sensor = Sensor.lookup(child.getProperty(NAME, Sensor.RPMGauge.name()), Sensor.RPMGauge);
+        Sensor sensor = Sensor.lookup(child.getProperty(NAME, WellKnownGauges.RPMGauge.name()), Sensor.RPMGauge);
         int width = child.getIntProperty(WIDTH, 256);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);

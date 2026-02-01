@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.io.ConnectionStatusLogic;
 
 import javax.swing.*;
@@ -52,7 +53,7 @@ public class RpmLabel {
             @Override
             public void onConnectionStatus(boolean isConnected) {
                 if (isConnected) {
-                    rpmValue.setText("" + SensorCentral.getInstance().getValue(Sensor.RPMGauge));
+                    rpmValue.setText("" + SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.name()));
                     rpmValue.setForeground(Color.green);
                 } else {
                     rpmValue.setText(NO_CONNECTION);
