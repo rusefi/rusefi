@@ -79,23 +79,28 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public ListenerToken addListener(Sensor sensor, SensorListener listener) {
-        List<SensorListener> listeners;
-        synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor.name());
-            if (listeners == null)
-                listeners = new CopyOnWriteArrayList<>();
-            sensorListeners.put(sensor.name(), listeners);
-        }
-        listeners.add(listener);
-
-        return new SensorCentral.ListenerToken(this, sensor, listener);
+        return addListener(sensor.name(), listener);
     }
 
     @Override
-    public void removeListener(Sensor sensor, SensorListener listener) {
+    public ListenerToken addListener(String sensorName, SensorListener listener) {
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor.name());
+            listeners = sensorListeners.get(sensorName);
+            if (listeners == null)
+                listeners = new CopyOnWriteArrayList<>();
+            sensorListeners.put(sensorName, listeners);
+        }
+        listeners.add(listener);
+
+        return new SensorCentral.ListenerToken(this, sensorName, listener);
+    }
+
+    @Override
+    public void removeListener(String sensorName, SensorListener listener) {
+        List<SensorListener> listeners;
+        synchronized (sensorListeners) {
+            listeners = sensorListeners.get(sensorName);
         }
         if (listeners != null)
             listeners.remove(listener);
@@ -103,7 +108,12 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public ValueSource getValueSource(Sensor sensor) {
-        return () -> SensorCentral.this.getValue(sensor);
+        return getValueSource(sensor.name());
+    }
+
+    @Override
+    public ValueSource getValueSource(String sensorName) {
+        return () -> SensorCentral.this.getValue(sensorName);
     }
 
     public interface SensorListener {

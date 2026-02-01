@@ -113,7 +113,7 @@ public class BinaryProtocolLogger {
     }
 
     public void close() {
-        SensorCentral.getInstance().removeListener(Sensor.RPMGauge, rpmListener);
+        SensorCentral.getInstance().removeListener(Sensor.RPMGauge.getName(), rpmListener);
         closeComposites();
         Runtime.getRuntime().removeShutdownHook(hook);
     }
