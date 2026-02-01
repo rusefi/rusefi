@@ -5,6 +5,7 @@ import com.opensr5.ini.*;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -59,6 +60,33 @@ public class IniFileReaderTest {
     private RawIniFile fromString(String string) {
         return IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
     }
+
+    @Test
+    public void testOutputChannels() throws IniMemberNotFound {
+        String string = "[OutputChannels]\n" +
+            "stftCorrection2 = scalar, F32, 1444,  \"%\", 100.0, -1.0\n" +
+            "; total TS size = 1448\n" +
+            "tpsFrom = scalar, F32, 1448\n";
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        ScalarIniField stftCorrection2 = (ScalarIniField) model.getOutputChannel("stftCorrection2");
+        assertEquals(1444, stftCorrection2.getOffset());
+        // wow, things are broken!
+        assertEquals("F32", stftCorrection2.getUnits());
+        assertEquals(1.0, stftCorrection2.getMultiplier());
+        assertEquals(0.0, stftCorrection2.getSerializationOffset());
+        assertEquals(null, stftCorrection2.getType());
+
+        ScalarIniField tpsFrom = (ScalarIniField) model.getOutputChannel("tpsFrom");
+        assertEquals(1448, tpsFrom.getOffset());
+        // wow, things are broken!
+        assertEquals("F32", tpsFrom.getUnits());
+        assertEquals(1.0, tpsFrom.getMultiplier());
+        assertEquals(0.0, tpsFrom.getSerializationOffset());
+        assertEquals(null, stftCorrection2.getType());
+    }
+
 
     @Test
     public void testReadDialogCommandsCurve() {
