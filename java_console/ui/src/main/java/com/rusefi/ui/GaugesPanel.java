@@ -32,7 +32,7 @@ public class GaugesPanel {
             Sensor.IATGauge,
             Sensor.TPSVALUE,
 
-            Sensor.MAPVALUE,
+            Sensor.MAPGauge,
 //            Sensor.tCharge,
 //            Sensor.baseFuel,
 //            Sensor.runningFuel,
@@ -40,7 +40,7 @@ public class GaugesPanel {
 //            Sensor.etbTarget,
             Sensor.lastErrorCode,
             Sensor.LAMBDAVALUE,
-            Sensor.VBATT,
+            Sensor.VBatt,
             Sensor.VEHICLESPEEDKPH,
 
     };

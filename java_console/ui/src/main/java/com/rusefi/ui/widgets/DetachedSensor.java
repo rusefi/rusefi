@@ -39,7 +39,7 @@ public class DetachedSensor {
             Sensor.LAMBDAVALUE,
             Sensor.IATGauge,
             Sensor.MAFMEASURED,
-            Sensor.MAPVALUE,
+            Sensor.MAPGauge,
             Sensor.TPSVALUE);
 
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();

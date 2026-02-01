@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 public class ProteusAnalogTest extends RusefiTestBase {
     @Test
     public void testVbatt() {
-        double vbatt = SensorCentral.getInstance().getValue(Sensor.VBATT);
+        double vbatt = SensorCentral.getInstance().getValue(Sensor.VBatt);
         String expectedVbattString = System.getenv("HARDWARE_CI_VBATT");
         double expectedVbatt = expectedVbattString == null ? 12 : Double.parseDouble(expectedVbattString);
 
