@@ -6,6 +6,7 @@ import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.enums.bench_mode_e;
 import com.rusefi.enums.bench_test_magic_numbers_e;
 import com.rusefi.enums.bench_test_packet_ids_e;
@@ -67,7 +68,7 @@ public class SimulatorFunctionalTest {
     }
 
     private void assertVvtPosition() {
-        assertNear("RPM", SensorCentral.getInstance().getValue(Sensor.RPMGauge), 1200, 5);
+        assertNear("RPM", SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.name()), 1200, 5);
         assertNear("VVT", SensorCentral.getInstance().getValue(Sensor.vvtPositionB1I), 90, 15);
     }
 

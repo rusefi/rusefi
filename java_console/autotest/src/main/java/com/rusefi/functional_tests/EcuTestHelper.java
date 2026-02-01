@@ -8,6 +8,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -45,7 +46,7 @@ public class EcuTestHelper {
         AtomicReference<String> result = new AtomicReference<>();
         long start = System.currentTimeMillis();
 
-        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPMGauge, actualRpm -> {
+        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.name(), actualRpm -> {
             if (!isCloseEnough(rpm, actualRpm)) {
                 long seconds = (System.currentTimeMillis() - start) / 1000;
                 result.set("Got " + actualRpm + " while trying to stay at " + rpm + " after " + seconds + " seconds");

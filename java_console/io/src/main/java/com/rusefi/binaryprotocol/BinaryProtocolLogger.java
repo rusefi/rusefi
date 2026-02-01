@@ -7,6 +7,7 @@ import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.io.LinkManager;
 import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
@@ -109,11 +110,11 @@ public class BinaryProtocolLogger {
     }
 
     public void start() {
-        SensorCentral.getInstance().addListener(Sensor.RPMGauge, rpmListener);
+        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.name(), rpmListener);
     }
 
     public void close() {
-        SensorCentral.getInstance().removeListener(Sensor.RPMGauge.getName(), rpmListener);
+        SensorCentral.getInstance().removeListener(WellKnownGauges.RPMGauge.name(), rpmListener);
         closeComposites();
         Runtime.getRuntime().removeShutdownHook(hook);
     }

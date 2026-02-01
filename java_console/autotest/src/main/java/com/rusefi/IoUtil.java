@@ -2,10 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.core.EngineState;
-import com.rusefi.core.ISensorCentral;
-import com.rusefi.core.Sensor;
-import com.rusefi.core.SensorCentral;
+import com.rusefi.core.*;
 import com.rusefi.enums.trigger_type_e;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.ConnectionStateListener;
@@ -81,7 +78,7 @@ public class IoUtil {
 
         awaitRpm(rpm);
 
-        double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPMGauge);
+        double actualRpm = SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.name());
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
@@ -92,7 +89,7 @@ public class IoUtil {
     public static void awaitRpm(int rpm) {
         final CountDownLatch rpmLatch = new CountDownLatch(1);
 
-        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(Sensor.RPMGauge, actualRpm -> {
+        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.name(), actualRpm -> {
             if (isCloseEnough(rpm, actualRpm))
                 rpmLatch.countDown();
         });
@@ -112,7 +109,7 @@ public class IoUtil {
         final CountDownLatch startup = new CountDownLatch(1);
         long waitStart = System.currentTimeMillis();
 
-        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPMGauge, value -> startup.countDown());
+        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.name(), value -> startup.countDown());
         boolean haveResponse = startup.await(60, TimeUnit.SECONDS);
         if (!haveResponse)
             throw new IllegalStateException("No response from simulator");
