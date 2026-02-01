@@ -799,8 +799,11 @@ angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
 			nextToothAngle = getTriggerCentral()->triggerFormDetails.eventAngles[currentToothIndex] - tdcPosition();
 			wrapAngle(nextToothAngle, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
 		} while (nextToothAngle == currentEngineDecodedPhase && --loopAllowance > 0); // '==' for float works here since both values come from 'eventAngles' array
-		if (nextToothAngle != 0 && loopAllowance == 0) {
+		if (loopAllowance == 0 && nextToothAngle != currentEngineDecodedPhase) {
 		  // HW CI fails here, looks like we sometimes change trigger while still handling it?
+		  // Note: for single-tooth triggers, all eventAngles map to the same engine phase,
+		  // so nextToothAngle == currentEngineDecodedPhase is expected and not an error.
+			// see #9045 for report of this problem
 			firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "handleShaftSignal unexpected loop end %d %d %f %f", p_currentToothIndex, engineCycleEventCount, nextToothAngle, currentEngineDecodedPhase);
 		}
 		return nextToothAngle;
