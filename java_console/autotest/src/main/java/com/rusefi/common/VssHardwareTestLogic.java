@@ -26,7 +26,7 @@ public class VssHardwareTestLogic {
         ecu.sendCommand(CMD_IDLE_PIN + " " + idlePin);
         ecu.sendCommand("set idle_solenoid_freq 100");
 
-        EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VEHICLESPEEDKPH));
+        EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
 
         // attaching VSS to idle output since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " " + vssPin);
@@ -35,7 +35,7 @@ public class VssHardwareTestLogic {
 
         // todo: this command does not seem to work for whatever reasons :( cAsE? else?
         ecu.sendCommand("set " + "driveWheelRevPerKm" + " " + "500");
-        EcuTestHelper.assertSomewhatClose("VSS with input", 145.58, SensorCentral.getInstance().getValue(Sensor.VEHICLESPEEDKPH));
+        EcuTestHelper.assertSomewhatClose("VSS with input", 145.58, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
 
         // not related to VSS test, just need to validate this somewhere, so this random test is as good as any
         if (ControllerConnectorState.firmwareVersion == null)

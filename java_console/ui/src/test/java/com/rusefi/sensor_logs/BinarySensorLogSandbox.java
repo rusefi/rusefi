@@ -39,8 +39,8 @@ public class BinarySensorLogSandbox {
 
         values.put(Sensor.SECONDS, 1.0);
         values.put(Sensor.RPMGauge, 0.0);
-        values.put(Sensor.VEHICLESPEEDKPH, 60.0);
-        values.put(Sensor.FIRMWAREVERSION, 20200101.0);
+        values.put(Sensor.vehicleSpeedKph, 60.0);
+        values.put(Sensor.firmwareVersionGauge, 20200101.0);
         values.put(Sensor.CLTGauge, 29.0);
 
         l.writeSensorLogLine();
@@ -48,7 +48,7 @@ public class BinarySensorLogSandbox {
         for (int i = 2; i < 10; i++) {
             values.put(Sensor.SECONDS, (double) i);
             values.put(Sensor.RPMGauge, 180.0 + i);
-            values.put(Sensor.FIRMWAREVERSION, 20200101.0);
+            values.put(Sensor.firmwareVersionGauge, 20200101.0);
             values.put(Sensor.CLTGauge, 39.0);
             l.writeSensorLogLine();
         }

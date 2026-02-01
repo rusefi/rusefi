@@ -27,21 +27,15 @@ import java.util.List;
 public class GaugesPanel {
     private static final Sensor[] DEFAULT_LAYOUT = {
             Sensor.RPMGauge,
-            Sensor.MAFMEASURED,
+            Sensor.internalMcuTemperatureGauge,
             Sensor.CLTGauge,
             Sensor.IATGauge,
-            Sensor.TPSVALUE,
+            Sensor.TPSGauge,
 
             Sensor.MAPGauge,
-//            Sensor.tCharge,
-//            Sensor.baseFuel,
-//            Sensor.runningFuel,
-
-//            Sensor.etbTarget,
             Sensor.lastErrorCode,
-            Sensor.LAMBDAVALUE,
             Sensor.VBatt,
-            Sensor.VEHICLESPEEDKPH,
+            Sensor.vehicleSpeedKph,
 
     };
     private static final String GAUGES_ROWS = "gauges_rows";

@@ -40,7 +40,7 @@ public class DetachedSensor {
             Sensor.IATGauge,
             Sensor.MAFMEASURED,
             Sensor.MAPGauge,
-            Sensor.TPSVALUE);
+            Sensor.TPSGauge);
 
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
     public static final String XPOS = "xpos";
