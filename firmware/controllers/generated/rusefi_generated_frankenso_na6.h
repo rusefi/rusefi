@@ -302,6 +302,7 @@
 #define CLT_TIMING_LOAD_AXIS_SIZE 5
 #define CLT_TIMING_TEMP_AXIS_SIZE 5
 #define CLT_UPPER_LIMIT 250
+#define CLT_UPPER_VALIDATION_LIMIT 250
 #define CMD_AC_RELAY_BENCH "acrelaybench"
 #define CMD_ALTERNATOR_PIN "set_alternator_pin"
 #define CMD_BOOST_PIN "set_boost_pin"
@@ -1557,7 +1558,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 509445436
+#define SIGNATURE_HASH 4022273240
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2152,7 +2153,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2026.02.01.frankenso_na6.509445436"
+#define TS_SIGNATURE "rusEFI master.2026.02.01.frankenso_na6.4022273240"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
