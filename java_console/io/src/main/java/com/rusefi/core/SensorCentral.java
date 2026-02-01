@@ -3,7 +3,7 @@ package com.rusefi.core;
 import com.opensr5.ini.IniFileModel;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,15 +14,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p/>
  * Date: 1/6/13
  * Andrey Belomutskiy, (c) 2013-2020
- *
- * @see SensorLog
  */
 public class SensorCentral implements ISensorCentral {
     private static final SensorCentral INSTANCE = new SensorCentral();
 
     private final SensorsHolder sensorsHolder = new SensorsHolder();
 
-    private final Map<Sensor, List<SensorListener>> sensorListeners = new EnumMap<>(Sensor.class);
+    private final Map<String, List<SensorListener>> sensorListeners = new HashMap<>();
     private final List<ResponseListener> listeners = new CopyOnWriteArrayList<>();
     private byte[] response;
 
@@ -47,15 +45,25 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public double getValue(Sensor sensor) {
-        return sensorsHolder.getValue(sensor);
+        return getValue(sensor.name());
+    }
+
+    @Override
+    public double getValue(String sensorName) {
+        return sensorsHolder.getValue(sensorName);
     }
 
     @Override
     public boolean setValue(double value, final Sensor sensor) {
-        boolean isUpdated = sensorsHolder.setValue(value, sensor);
+        return setValue(value, sensor.name());
+    }
+
+    @Override
+    public boolean setValue(double value, String sensorName) {
+        boolean isUpdated = sensorsHolder.setValue(value, sensorName);
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor);
+            listeners = sensorListeners.get(sensorName);
         }
 
         if (listeners == null)
@@ -73,10 +81,10 @@ public class SensorCentral implements ISensorCentral {
     public ListenerToken addListener(Sensor sensor, SensorListener listener) {
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor);
+            listeners = sensorListeners.get(sensor.name());
             if (listeners == null)
                 listeners = new CopyOnWriteArrayList<>();
-            sensorListeners.put(sensor, listeners);
+            sensorListeners.put(sensor.name(), listeners);
         }
         listeners.add(listener);
 
@@ -87,7 +95,7 @@ public class SensorCentral implements ISensorCentral {
     public void removeListener(Sensor sensor, SensorListener listener) {
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor);
+            listeners = sensorListeners.get(sensor.name());
         }
         if (listeners != null)
             listeners.remove(listener);
