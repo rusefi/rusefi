@@ -27,7 +27,8 @@ dependencies {
 
 shadowJar {
     base {
-        archivesName = "${rootDir}/../console/rusefi_console"
+        archiveFileName = 'rusefi_console.jar'
+        destinationDirectory = file("${rootDir}/../console")
         archiveClassifier = ''
     }
 
