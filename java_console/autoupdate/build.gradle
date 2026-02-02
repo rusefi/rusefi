@@ -21,6 +21,7 @@ evaluationDependsOn(':core_io')
 shadowJar {
   duplicatesStrategy = DuplicatesStrategy.FAIL
   base {
+    // [dark-magic-jar] see https://github.com/rusefi/rusefi/pull/9051 for important very not obvious issue
     archiveFileName = 'rusefi_autoupdate.jar'
     destinationDirectory = file("${rootDir}/../console")
     archiveClassifier = ''
