@@ -209,6 +209,18 @@ TEST(ignition_state, testCrankingAdvance) {
   // Using getState instead of isCranking to make failure more informative
 	EXPECT_EQ(CRANKING, engine->rpmCalculator.getState());
 
+  EXPECT_EQ(rpm, engine->rpmCalculator.getMinCrankingRpm());
+
+  engine->rpmCalculator.setRpmValue(0);
+
+	EXPECT_EQ(STOPPED, engine->rpmCalculator.getState());
+
+  engine->rpmCalculator.setRpmValue(rpm + 10);
+
+	EXPECT_EQ(CRANKING, engine->rpmCalculator.getState());
+
+  EXPECT_EQ(rpm + 10, engine->rpmCalculator.getMinCrankingRpm());
+
   auto correction = getCrankingAdvance(rpm, load);
   EXPECT_NEAR(6, correction, EPS2D);
 }
