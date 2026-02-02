@@ -189,3 +189,26 @@ TEST(ignition_state, tsAdvanceIndicators) {
   EXPECT_EQ(load, engine->ignitionState.loadForIgnitionTableDot);
   EXPECT_EQ(-1, engine->ignitionState.rpmForIgnitionIdleTableDot);
 }
+
+TEST(ignition_state, testCrankingAdvance) {
+  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+  const float rpm = 100;
+  const float load = 10;
+
+  engineConfiguration->useSeparateAdvanceForCranking = false;
+
+  Sensor::setMockValue(SensorType::Clt, 35);
+  Sensor::setMockValue(SensorType::VehicleSpeed, 0);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 0);
+
+  setWholeTimingTable(10);
+  initIgnitionAdvanceControl();
+
+  engine->rpmCalculator.setRpmValue(rpm);
+
+  // Using getState instead of isCranking to make failure more informative
+	EXPECT_EQ(CRANKING, engine->rpmCalculator.getState());
+
+  auto correction = getCrankingAdvance(rpm, load);
+  EXPECT_NEAR(6, correction, EPS2D);
+}
