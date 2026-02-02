@@ -21,7 +21,8 @@ evaluationDependsOn(':core_io')
 shadowJar {
   duplicatesStrategy = DuplicatesStrategy.FAIL
   base {
-    archivesName = "${rootDir}/../console/rusefi_autoupdate"
+    archiveFileName = 'rusefi_autoupdate.jar'
+    destinationDirectory = file("${rootDir}/../console")
     archiveClassifier = ''
   }
 
