@@ -26,10 +26,6 @@
 
 #if EFI_ENGINE_CONTROL
 
-// TODO: wow move this into engineState at least for context not to leak from test to test!
-// todo: reset this between cranking attempts?! #2735
-float minCrankingRpm = 0;
-
 static Map3D<TRACTION_CONTROL_ETB_DROP_SLIP_SIZE, TRACTION_CONTROL_ETB_DROP_SPEED_SIZE, int8_t, uint16_t, uint8_t> tcTimingDropTable{"tct"};
 static Map3D<TRACTION_CONTROL_ETB_DROP_SLIP_SIZE, TRACTION_CONTROL_ETB_DROP_SPEED_SIZE, int8_t, uint16_t, uint8_t> tcSparkSkipTable{"tcs"};
 
@@ -208,9 +204,7 @@ angle_t getCrankingAdvance(float rpm, float engineLoad) {
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
 	angle_t crankingToRunningTransitionAngle = getRunningAdvance(engineConfiguration->cranking.rpm, engineLoad);
 	// interpolate not from zero, but starting from min. possible rpm detected
-	if (rpm < minCrankingRpm || minCrankingRpm == 0)
-		minCrankingRpm = rpm;
-	return interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, engineConfiguration->cranking.rpm, crankingToRunningTransitionAngle, rpm);
+	return interpolateClamped(engine->rpmCalculator.getMinCrankingRpm(), engineConfiguration->crankingTimingAngle, engineConfiguration->cranking.rpm, crankingToRunningTransitionAngle, rpm);
 }
 #endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 

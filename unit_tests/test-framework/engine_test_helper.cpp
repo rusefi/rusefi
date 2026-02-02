@@ -36,12 +36,10 @@ extern PinRepository pinRepository;
 extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
-extern int minCrankingRpm;
 
 EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
-	minCrankingRpm = 0;
 	ButtonDebounce::resetForUnitTests();
 	unitTestBusyWaitHack = false;
 	EnableToothLogger();
