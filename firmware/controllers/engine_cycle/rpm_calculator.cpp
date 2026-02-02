@@ -50,6 +50,10 @@ float RpmCalculator::getCachedRpm() const {
 	return cachedRpmValue;
 }
 
+float RpmCalculator::getMinCrankingRpm() const {
+	return minCrankingRpm;
+}
+
 operation_mode_e lookupOperationMode() {
 	if (engineConfiguration->twoStroke) {
 		return TWO_STROKE;
@@ -174,6 +178,8 @@ void RpmCalculator::setRpmValue(float value) {
 		 * We are here if RPM is above zero but we have not seen running RPM yet.
 		 * This gives us cranking hysteresis - a drop of RPM during running is still running, not cranking.
 		 */
+		if (value < minCrankingRpm || minCrankingRpm == 0)
+			minCrankingRpm = value;
 		state = CRANKING;
 	}
 #if EFI_ENGINE_CONTROL
