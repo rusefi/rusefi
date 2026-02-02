@@ -50,12 +50,6 @@ public enum Sensor implements BinaryLogEntry {
 //    vvtPositionB1I(GAUGE_NAME_VVT_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 42, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
 //
 
-//
-    // Mode, firmware, protocol, run time
-    SECONDS("Seconds", GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, 1, 0, 5, ""),
-//    engineMode("mode", SensorCategory.OPERATIONS, FieldType.INT, 116, 0, 5),
-    firmwareVersionGauge("FirmwareVersion", GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, 1, 0, 100, "version_f"),
-
 //    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
     totalTriggerErrorCounter("totalTriggerErrorCounter", GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 0, 5),
