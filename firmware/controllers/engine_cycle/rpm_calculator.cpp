@@ -165,6 +165,8 @@ void RpmCalculator::setRpmValue(float value) {
 	spinning_state_e oldState = state;
 	// Change state
 	if (cachedRpmValue == 0) {
+		// Reset minCrankingRpm between attempts
+		minCrankingRpm = 0;
 		state = STOPPED;
 	} else if (cachedRpmValue >= engineConfiguration->cranking.rpm) {
 		if (state != RUNNING) {
