@@ -80,25 +80,25 @@ public class ConfigFieldImpl implements ConfigField {
                            String trueName,
                            String falseName) {
         this.hasAutoscale = hasAutoscale;
-        /*
-        TODO prohibit default true and false bit names #9032
-        if (trueName == null || falseName == null) {
-            throw new IllegalArgumentException("trueName and falseName must be non-null");
-        }
-         */
         this.trueName = trueName == null ? "true" : trueName;
         this.falseName = falseName == null ? "false" : falseName;
         Objects.requireNonNull(name, comment + " " + type);
         assertNoWhitespaces(name);
         this.name = name;
-        if (TypesHelper.isBoolean(type) && trueName == null && !getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX))
-            state.intDefaultBitNameCounter();
 
         if (!isVoid())
             Objects.requireNonNull(state);
         this.state = state;
         this.parentType = state == null ? null : (state.isStackEmpty() ? null : state.peek());
         this.comment = comment;
+
+        if (TypesHelper.isBoolean(type) && (trueName == null || falseName == null) && !getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
+            if (this.isWithinStruct("persistent_config_s")) {
+                throw new IllegalArgumentException("trueName and falseName must be non-null: " + name);
+            } else {
+                state.intDefaultBitNameCounter();
+            }
+        }
 
         if (!isVoid())
             Objects.requireNonNull(type);
@@ -600,6 +600,21 @@ public class ConfigFieldImpl implements ConfigField {
         public FieldOutOfRangeException(String s) {
             super(s);
         }
+    }
+
+    @Override
+    public boolean isWithinStruct(String structName) {
+        if (this.state == null || this.state.isStackEmpty())
+            return false;
+        ConfigStructure parent = this.state.peek();
+        String parentName = parent.getName();
+        while(!parentName.equals(structName)) {
+            parent = parent.getParent();
+            if (parent == null)
+                return false;
+            parentName = parent.getName();
+        }
+        return true;
     }
 }
 
