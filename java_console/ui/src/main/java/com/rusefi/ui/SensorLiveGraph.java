@@ -282,7 +282,11 @@ public class SensorLiveGraph extends JPanel {
             if (bp != null) {
                 IniFileModel iniFile = bp.getIniFileNullable();
                 if (iniFile != null) {
-                    GaugeModel gaugeModel = iniFile.getGauges().get(sensor.getName());
+                    // Find gauge by channel name (e.g., "TPSValue" maps to gauge "TPSGauge")
+                    GaugeModel gaugeModel = iniFile.findGaugeByChannel(sensor.getNativeName());
+                    if (gaugeModel == null) {
+                        gaugeModel = iniFile.getGauges().get(sensor.name());
+                    }
                     if (gaugeModel != null) {
                         maxValue = gaugeModel.getHighValue();
                         minValue = gaugeModel.getLowValue();
