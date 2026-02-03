@@ -24,6 +24,7 @@ public class IniFileReader {
                 allIniFields,
                 secondaryIniFields,
                 allOutputChannels,
+                expressionOutputChannels,
                 protocolMeta,
                 getMetaInfo(),
                 getIniFilePath(),
@@ -62,6 +63,8 @@ public class IniFileReader {
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    // Expression-based output channels like: coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }
+    private final Map<String, String> expressionOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
     private final Map</*field name*/String, String> tooltips = new TreeMap<>();
@@ -300,6 +303,20 @@ public class IniFileReader {
             return;
         String name = list.get(0);
         String channelType = list.get(1);
+
+        // Check if it's an expression channel (starts with { or the second element looks like an expression)
+        if (channelType.startsWith("{") || ExpressionEvaluator.looksLikeExpression(channelType)) {
+            // Expression-based output channel like: coolantTemperature = { useMetricOnInterface ? coolant : ... }
+            // Reconstruct the full expression from the parsed list
+            StringBuilder expr = new StringBuilder();
+            for (int i = 1; i < list.size(); i++) {
+                if (i > 1) expr.append(", ");
+                expr.append(list.get(i));
+            }
+            expressionOutputChannels.put(name, expr.toString().trim());
+            return;
+        }
+
         switch (channelType) {
             case FIELD_TYPE_SCALAR: {
                 FieldType scalarType = FieldType.parseTs(list.get(2));
