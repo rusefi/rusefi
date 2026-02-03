@@ -38,6 +38,7 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, IniField> allIniFields,
                                  Map<String, IniField> secondaryIniFields,
                                  Map<String, IniField> allOutputChannels,
+                                 Map<String, String> expressionOutputChannels,
                                  Map<String, String> protocolMeta,
                                  IniFileMetaInfo metaInfo,
                                  String iniFilePath,
@@ -58,6 +59,7 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.allIniFields = copyWithCaseInsensitiveKeys(allIniFields);
         this.secondaryIniFields = copyWithCaseInsensitiveKeys(secondaryIniFields);
         this.allOutputChannels = copyWithCaseInsensitiveKeys(allOutputChannels);
+        this.expressionOutputChannels = copyWithCaseInsensitiveKeys(expressionOutputChannels);
         this.protocolMeta = Collections.unmodifiableMap(new TreeMap<>(protocolMeta));
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
@@ -126,6 +128,16 @@ public class ImmutableIniFileModel implements IniFileModel {
         if (result == null)
             throw new IniMemberNotFound(key + " field not found");
         return result;
+    }
+
+    @Override
+    public String getExpressionOutputChannel(String key) {
+        return expressionOutputChannels.get(key);
+    }
+
+    @Override
+    public Map<String, String> getExpressionOutputChannels() {
+        return expressionOutputChannels;
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -74,8 +75,8 @@ public class IniFileReaderTest {
         ScalarIniField stftCorrection2 = (ScalarIniField) model.getOutputChannel("stftCorrection2");
         assertEquals(1444, stftCorrection2.getOffset());
         assertEquals("%", stftCorrection2.getUnits());
-        assertEquals(1.0, stftCorrection2.getMultiplier());
-        assertEquals(0.0, stftCorrection2.getSerializationOffset());
+        assertEquals(100.0, stftCorrection2.getMultiplier());  // multiplier from INI file
+        assertEquals(-1.0, stftCorrection2.getSerializationOffset());  // serialization offset from INI file
         assertEquals(FieldType.FLOAT, stftCorrection2.getType());
 
         ScalarIniField tpsFrom = (ScalarIniField) model.getOutputChannel("tpsFrom");
@@ -554,6 +555,53 @@ public class IniFileReaderTest {
         assertEquals("https://rusefi.com/s/fuel", fullHelp.getWebHelp());
     }
 
+
+    @Test
+    public void testExpressionOutputChannels() throws IniMemberNotFound {
+        String string = "[OutputChannels]\n" +
+            "; Scalar output channels\n" +
+            "coolant = scalar, S16, 20, \"C\", 0.01, 0\n" +
+            "intake = scalar, S16, 22, \"C\", 0.01, 0\n" +
+            "; Expression output channels (virtual channels calculated from expressions)\n" +
+            "coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }\n" +
+            "intakeTemperature = { intake }\n" +
+            "lambdaValue = { isLambdaDisplay ? lambda1 : (lambda1 * 14.7) }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        // Test that scalar output channels are parsed
+        ScalarIniField coolant = (ScalarIniField) model.getOutputChannel("coolant");
+        assertEquals(20, coolant.getOffset());
+        assertEquals("C", coolant.getUnits());
+
+        ScalarIniField intake = (ScalarIniField) model.getOutputChannel("intake");
+        assertEquals(22, intake.getOffset());
+
+        // Test that expression output channels are stored separately
+        Map<String, String> exprChannels = model.getExpressionOutputChannels();
+        assertEquals(3, exprChannels.size());
+
+        // Test that expression output channels can be looked up by name
+        String coolantTempExpr = model.getExpressionOutputChannel("coolantTemperature");
+        assertNotNull(coolantTempExpr);
+        assertTrue(coolantTempExpr.contains("useMetricOnInterface"));
+        assertTrue(coolantTempExpr.contains("coolant"));
+
+        String intakeTempExpr = model.getExpressionOutputChannel("intakeTemperature");
+        assertNotNull(intakeTempExpr);
+        assertEquals("{ intake }", intakeTempExpr);
+
+        String lambdaExpr = model.getExpressionOutputChannel("lambdaValue");
+        assertNotNull(lambdaExpr);
+        assertTrue(lambdaExpr.contains("isLambdaDisplay"));
+        assertTrue(lambdaExpr.contains("lambda1"));
+
+        // Verify expression channels are not in the scalar output channels
+        assertThrows(IniMemberNotFound.class, () -> model.getOutputChannel("coolantTemperature"));
+        assertThrows(IniMemberNotFound.class, () -> model.getOutputChannel("intakeTemperature"));
+        assertThrows(IniMemberNotFound.class, () -> model.getOutputChannel("lambdaValue"));
+    }
 
     @Test
     public void testGaugeConfigurationWithSimpleExpressions() {
