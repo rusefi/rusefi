@@ -28,7 +28,7 @@ public class RpmModel {
     }
 
     private RpmModel() {
-        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.name(), value -> setValue((int) value));
+        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.getOutputChannelName(), value -> setValue((int) value));
     }
 
     public void setValue(int rpm) {

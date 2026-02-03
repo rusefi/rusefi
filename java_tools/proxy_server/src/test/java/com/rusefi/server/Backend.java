@@ -300,7 +300,7 @@ public class Backend implements Closeable {
         for (ControllerConnectionState client : clients) {
             // todo: at the moment we use current OutputChannel layout - a better way would be to take
             // todo: OutputChannel from .ini file based on controller signature
-            int rpm = (int) client.getSensorsHolder().getValue(WellKnownGauges.RPMGauge.name());
+            int rpm = (int) client.getSensorsHolder().getValue(WellKnownGauges.RPMGauge.getOutputChannelName());
             double clt = client.getSensorsHolder().getValue(Sensor.CLTGauge);
             UserDetails owner = client.getTwoKindSemaphore().getOwner();
             SessionDetails sessionDetails = client.getSessionDetails();

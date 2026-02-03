@@ -182,7 +182,7 @@ public class DetachedSensor {
     }
 
     public static void create(UIContext uiContext, Node child) {
-        Sensor sensor = Sensor.lookup(child.getProperty(NAME, WellKnownGauges.RPMGauge.name()), Sensor.RPMGauge);
+        Sensor sensor = Sensor.lookup(child.getProperty(NAME, WellKnownGauges.RPMGauge.getOutputChannelName()), Sensor.RPMGauge);
         int width = child.getIntProperty(WIDTH, 256);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);

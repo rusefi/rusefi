@@ -37,7 +37,7 @@ public class BinarySensorLogRestarter implements SensorLog {
 
     @Override
     public synchronized void writeSensorLogLine() {
-        double rpm = SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.name());
+        double rpm = SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.getOutputChannelName());
         if (rpm > 200) {
             seenRunning = System.currentTimeMillis();
         }
