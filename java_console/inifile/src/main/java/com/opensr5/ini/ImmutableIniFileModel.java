@@ -12,6 +12,7 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, IniField> allIniFields;
     private final Map<String, IniField> secondaryIniFields;
     private final Map<String, IniField> allOutputChannels;
+    private final Map<String, String> expressionOutputChannels;
     private final Map<String, String> protocolMeta;
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
@@ -204,6 +205,19 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public GaugeModel getGauge(String name) {
         return gauges.get(name);
+    }
+
+    @Override
+    public GaugeModel findGaugeByChannel(String channelName) {
+        if (channelName == null) {
+            return null;
+        }
+        for (GaugeModel gauge : gauges.values()) {
+            if (channelName.equalsIgnoreCase(gauge.getChannel())) {
+                return gauge;
+            }
+        }
+        return null;
     }
 
     @Override
