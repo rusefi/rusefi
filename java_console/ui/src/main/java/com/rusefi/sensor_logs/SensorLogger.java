@@ -59,7 +59,7 @@ public class SensorLogger {
             return;
         }
         isInitialized = true;
-        SensorCentral.getInstance().addListener(WellKnownGauges.SECONDS.name(),
+        SensorCentral.getInstance().addListener(WellKnownGauges.SECONDS.getOutputChannelName(),
             value -> {
                 if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED)
                     return;
