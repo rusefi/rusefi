@@ -35,11 +35,6 @@ public class SensorCentral implements ISensorCentral {
     }
 
     @Override
-    public void grabSensorValues(byte[] response, @NotNull IniFileModel ini) {
-        grabSensorValues(response, ini, null);
-    }
-
-    @Override
     public void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
         this.response = response;
         ISensorCentral.super.grabSensorValues(response, ini, configImage);
