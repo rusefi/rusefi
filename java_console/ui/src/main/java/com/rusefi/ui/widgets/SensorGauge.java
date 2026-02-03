@@ -55,7 +55,12 @@ public class SensorGauge {
 
         IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
         if (iniFile != null) {
-            GaugeModel gaugeModel = iniFile.getGauges().get(sensor.name());
+            // First try to find gauge by channel name (e.g., "TPSValue" maps to gauge "TPSGauge")
+            GaugeModel gaugeModel = iniFile.findGaugeByChannel(sensor.getNativeName());
+            if (gaugeModel == null) {
+                // Fall back to looking up by sensor enum name (for sensors like RPMGauge where name matches)
+                gaugeModel = iniFile.getGauges().get(sensor.name());
+            }
             if (gaugeModel != null) {
                 createRadial(uiContext, sensor, wrapper, listener, extraMenuItem, gaugeModel);
                 return;
