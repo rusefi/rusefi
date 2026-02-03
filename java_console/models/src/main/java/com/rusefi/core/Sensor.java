@@ -21,6 +21,7 @@ import static com.rusefi.config.generated.VariableRegistryValues.*;
 public enum Sensor implements BinaryLogEntry {
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
+     * TODO: we should match this names within the .ini for better consistency on SensorsHolder
      */
 
     // RPM, vss
