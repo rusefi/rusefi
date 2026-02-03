@@ -1,13 +1,14 @@
 package com.rusefi.core;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class SensorsHolder implements ISensorHolder {
-    private final Map<String, Double> values = new HashMap<>();
+    // ini file uses "TPSValue" but Sensor enum uses "TPSVALUE"
+    private final Map<String, Double> values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public double getValue(Sensor sensor) {
-        return getValue(sensor.name());
+        return getValue(sensor.getNativeName());
     }
 
     public double getValue(String sensorName) {
@@ -18,7 +19,8 @@ public class SensorsHolder implements ISensorHolder {
     }
 
     public boolean setValue(double value, final Sensor sensor) {
-        return setValue(value, sensor.name());
+        // "RPMGauge" => "RPMValue"
+        return setValue(value, sensor.getNativeName());
     }
 
     public boolean setValue(double value, String sensorName) {
