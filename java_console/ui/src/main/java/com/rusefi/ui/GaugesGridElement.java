@@ -41,6 +41,8 @@ public class GaugesGridElement {
     }
 
     private void rebuild() {
+        // Clear existing components before rebuilding to prevent duplication on reconnect
+        wrapper.removeAllChildrenAndListeners();
         if (config.getBoolProperty(IS_LIVE_GRAPH)) {
             rebuildAsLiveBarElement();
         } else {
