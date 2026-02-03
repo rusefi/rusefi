@@ -110,11 +110,11 @@ public class BinaryProtocolLogger {
     }
 
     public void start() {
-        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.name(), rpmListener);
+        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.RPMGauge.getOutputChannelName(), rpmListener);
     }
 
     public void close() {
-        SensorCentral.getInstance().removeListener(WellKnownGauges.RPMGauge.name(), rpmListener);
+        SensorCentral.getInstance().removeListener(WellKnownGauges.RPMGauge.getOutputChannelName(), rpmListener);
         closeComposites();
         Runtime.getRuntime().removeShutdownHook(hook);
     }
