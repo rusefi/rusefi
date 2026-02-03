@@ -11,5 +11,5 @@ int16_t fan2OffTemperature;Cooling fan turn-off temperature threshold, in Celsiu
 int8_t disableFan1AtSpeed
 int8_t disableFan2AtSpeed
 
-bit disableFan1WhenStopped;Inhibit operation of this fan while the engine is not running.
-bit disableFan2WhenStopped;Inhibit operation of this fan while the engine is not running.
+bit disableFan1WhenStopped,"yes","no";Inhibit operation of this fan while the engine is not running.
+bit disableFan2WhenStopped,"yes","no";Inhibit operation of this fan while the engine is not running.
