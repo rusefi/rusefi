@@ -47,7 +47,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS4;
 
-	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1_ANALOG);
 
 	setPPSInputs(H144_IN_PPS, H144_IN_AUX2_ANALOG);
 
