@@ -10,7 +10,6 @@ void MainRelayController::onSlowCallback() {
 		m_lastIgnitionTime.reset();
 	}
 
-#if EFI_MAIN_RELAY_CONTROL
 	if (hasIgnitionVoltage) {
 		delayedShutoffRequested = false;
 	} else {
@@ -20,9 +19,6 @@ void MainRelayController::onSlowCallback() {
 	// TODO: delayed shutoff timeout?
 
 	mainRelayState = hasIgnitionVoltage | delayedShutoffRequested;
-#else // not EFI_MAIN_RELAY_CONTROL
-	mainRelayState = true;
-#endif
 
 	enginePins.mainRelay.setValue("mr", mainRelayState);
 }

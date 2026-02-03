@@ -5,9 +5,6 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 BOARDINC  = $(BOARD_DIR)
 
-# TLE8888 has it's own main relay control output, we are not involved
-DDEFS += -DEFI_MAIN_RELAY_CONTROL=FALSE
-
 # see also openblt/board.mk STATUS_LED
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
 
