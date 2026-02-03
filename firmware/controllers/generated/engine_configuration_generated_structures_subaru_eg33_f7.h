@@ -5665,94 +5665,94 @@ struct engine_configuration_s {
 	bool vvlControlEnabled : 1 {};
 	/**
 	offset 3824 bit 2 */
-	bool unusedFancy3 : 1 {};
+	bool unusedBit_Fancy3 : 1 {};
 	/**
 	offset 3824 bit 3 */
-	bool unusedFancy4 : 1 {};
+	bool unusedBit_Fancy4 : 1 {};
 	/**
 	offset 3824 bit 4 */
-	bool unusedFancy5 : 1 {};
+	bool unusedBit_Fancy5 : 1 {};
 	/**
 	offset 3824 bit 5 */
-	bool unusedFancy6 : 1 {};
+	bool unusedBit_Fancy6 : 1 {};
 	/**
 	offset 3824 bit 6 */
-	bool unusedFancy7 : 1 {};
+	bool unusedBit_Fancy7 : 1 {};
 	/**
 	offset 3824 bit 7 */
-	bool unusedFancy8 : 1 {};
+	bool unusedBit_Fancy8 : 1 {};
 	/**
 	offset 3824 bit 8 */
-	bool unusedFancy9 : 1 {};
+	bool unusedBit_Fancy9 : 1 {};
 	/**
 	offset 3824 bit 9 */
-	bool unusedFancy10 : 1 {};
+	bool unusedBit_Fancy10 : 1 {};
 	/**
 	offset 3824 bit 10 */
-	bool unusedFancy11 : 1 {};
+	bool unusedBit_Fancy11 : 1 {};
 	/**
 	offset 3824 bit 11 */
-	bool unusedFancy12 : 1 {};
+	bool unusedBit_Fancy12 : 1 {};
 	/**
 	offset 3824 bit 12 */
-	bool unusedFancy13 : 1 {};
+	bool unusedBit_Fancy13 : 1 {};
 	/**
 	offset 3824 bit 13 */
-	bool unusedFancy14 : 1 {};
+	bool unusedBit_Fancy14 : 1 {};
 	/**
 	offset 3824 bit 14 */
-	bool unusedFancy15 : 1 {};
+	bool unusedBit_Fancy15 : 1 {};
 	/**
 	offset 3824 bit 15 */
-	bool unusedFancy16 : 1 {};
+	bool unusedBit_Fancy16 : 1 {};
 	/**
 	offset 3824 bit 16 */
-	bool unusedFancy17 : 1 {};
+	bool unusedBit_Fancy17 : 1 {};
 	/**
 	offset 3824 bit 17 */
-	bool unusedFancy18 : 1 {};
+	bool unusedBit_Fancy18 : 1 {};
 	/**
 	offset 3824 bit 18 */
-	bool unusedFancy19 : 1 {};
+	bool unusedBit_Fancy19 : 1 {};
 	/**
 	offset 3824 bit 19 */
-	bool unusedFancy20 : 1 {};
+	bool unusedBit_Fancy20 : 1 {};
 	/**
 	offset 3824 bit 20 */
-	bool unusedFancy21 : 1 {};
+	bool unusedBit_Fancy21 : 1 {};
 	/**
 	offset 3824 bit 21 */
-	bool unusedFancy22 : 1 {};
+	bool unusedBit_Fancy22 : 1 {};
 	/**
 	offset 3824 bit 22 */
-	bool unusedFancy23 : 1 {};
+	bool unusedBit_Fancy23 : 1 {};
 	/**
 	offset 3824 bit 23 */
-	bool unusedFancy24 : 1 {};
+	bool unusedBit_Fancy24 : 1 {};
 	/**
 	offset 3824 bit 24 */
-	bool unusedFancy25 : 1 {};
+	bool unusedBit_Fancy25 : 1 {};
 	/**
 	offset 3824 bit 25 */
-	bool unusedFancy26 : 1 {};
+	bool unusedBit_Fancy26 : 1 {};
 	/**
 	offset 3824 bit 26 */
-	bool unusedFancy27 : 1 {};
+	bool unusedBit_Fancy27 : 1 {};
 	/**
 	offset 3824 bit 27 */
-	bool unusedFancy28 : 1 {};
+	bool unusedBit_Fancy28 : 1 {};
 	/**
 	offset 3824 bit 28 */
-	bool unusedFancy29 : 1 {};
+	bool unusedBit_Fancy29 : 1 {};
 	/**
 	offset 3824 bit 29 */
-	bool unusedFancy30 : 1 {};
+	bool unusedBit_Fancy30 : 1 {};
 	/**
 	offset 3824 bit 30 */
-	bool unusedFancy31 : 1 {};
+	bool unusedBit_Fancy31 : 1 {};
 	/**
 	offset 3824 bit 31 */
-	bool unusedFancy32 : 1 {};
+	bool unusedBit_Fancy32 : 1 {};
 	/**
 	 * offset 3828
 	 */
