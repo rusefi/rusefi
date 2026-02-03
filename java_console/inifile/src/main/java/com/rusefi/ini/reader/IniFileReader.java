@@ -322,8 +322,10 @@ public class IniFileReader {
                 FieldType scalarType = FieldType.parseTs(list.get(2));
                 String unit = list.size() > 4 ? list.get(4) : "";
                 int offset = Integer.parseInt(list.get(3));
-                // todo: reuse ScalarIniField#parse but would need changes?
-                allOutputChannels.put(name, new ScalarIniField(name, offset, unit, scalarType, 1, "0", 0));
+                // Output channel format: name = scalar, type, offset, units, multiplier, digits
+                double multiplier = list.size() > 5 ? IniField.parseDouble(list.get(5)) : 1.0;
+                double digits = list.size() > 6 ? IniField.parseDouble(list.get(6)) : 0.0;
+                allOutputChannels.put(name, new ScalarIniField(name, offset, unit, scalarType, multiplier, "0", digits));
             }
         }
     }
