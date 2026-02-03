@@ -423,6 +423,8 @@ public class MainMenuTreeWidgetTest {
             @Override public com.opensr5.ini.field.IniField getIniField(com.rusefi.config.Field field) { return null; }
             @Override public com.opensr5.ini.field.IniField getIniField(String key) { return null; }
             @Override public com.opensr5.ini.field.IniField getOutputChannel(String key) { return null; }
+            @Override public String getExpressionOutputChannel(String key) { return null; }
+            @Override public Map<String, String> getExpressionOutputChannels() { return java.util.Collections.emptyMap(); }
             @Override public Map<String, String> getProtocolMeta() { return null; }
             @Override public com.opensr5.ini.IniFileMetaInfo getMetaInfo() { return null; }
             @Override public String getIniFilePath() { return null; }
@@ -434,6 +436,7 @@ public class MainMenuTreeWidgetTest {
             @Override public Map<String, com.opensr5.ini.GaugeCategoryModel> getGaugeCategories() { return null; }
             @Override public Map<String, com.opensr5.ini.GaugeModel> getGauges() { return null; }
             @Override public com.opensr5.ini.GaugeModel getGauge(String name) { return null; }
+            @Override public com.opensr5.ini.GaugeModel findGaugeByChannel(String channelName) { return null; }
             @Override public Map<String, String> getTopicHelp() { return null; }
             @Override public Map<String, com.opensr5.ini.ContextHelpModel> getContextHelp() { return null; }
             @Override public com.opensr5.ini.ContextHelpModel getContextHelp(String referenceName) { return null; }
