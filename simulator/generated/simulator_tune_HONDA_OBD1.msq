@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0260202E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0260203E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -934,9 +934,9 @@
         <constant name="digitalPotentiometerSpiDevice">"Off"</constant>
         <constant name="disableEtbWhenEngineStopped">"no"</constant>
         <constant digits="0" name="disableFan1AtSpeed" units="">0.0</constant>
-        <constant name="disableFan1WhenStopped">"false"</constant>
+        <constant name="disableFan1WhenStopped">"no"</constant>
         <constant digits="0" name="disableFan2AtSpeed" units="">0.0</constant>
-        <constant name="disableFan2WhenStopped">"false"</constant>
+        <constant name="disableFan2WhenStopped">"no"</constant>
         <constant digits="3" name="displacement" units="L">1.645</constant>
         <constant name="displayLogicLevelsInEngineSniffer">"no"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
@@ -4415,36 +4415,6 @@ end</constant>
         <constant name="twoWireBatchIgnition">"no"</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant name="uiMode">"Full"</constant>
-        <constant name="unusedFancy10">"false"</constant>
-        <constant name="unusedFancy11">"false"</constant>
-        <constant name="unusedFancy12">"false"</constant>
-        <constant name="unusedFancy13">"false"</constant>
-        <constant name="unusedFancy14">"false"</constant>
-        <constant name="unusedFancy15">"false"</constant>
-        <constant name="unusedFancy16">"false"</constant>
-        <constant name="unusedFancy17">"false"</constant>
-        <constant name="unusedFancy18">"false"</constant>
-        <constant name="unusedFancy19">"false"</constant>
-        <constant name="unusedFancy20">"false"</constant>
-        <constant name="unusedFancy21">"false"</constant>
-        <constant name="unusedFancy22">"false"</constant>
-        <constant name="unusedFancy23">"false"</constant>
-        <constant name="unusedFancy24">"false"</constant>
-        <constant name="unusedFancy25">"false"</constant>
-        <constant name="unusedFancy26">"false"</constant>
-        <constant name="unusedFancy27">"false"</constant>
-        <constant name="unusedFancy28">"false"</constant>
-        <constant name="unusedFancy29">"false"</constant>
-        <constant name="unusedFancy3">"false"</constant>
-        <constant name="unusedFancy30">"false"</constant>
-        <constant name="unusedFancy31">"false"</constant>
-        <constant name="unusedFancy32">"false"</constant>
-        <constant name="unusedFancy4">"false"</constant>
-        <constant name="unusedFancy5">"false"</constant>
-        <constant name="unusedFancy6">"false"</constant>
-        <constant name="unusedFancy7">"false"</constant>
-        <constant name="unusedFancy8">"false"</constant>
-        <constant name="unusedFancy9">"false"</constant>
         <constant name="useAbsolutePressureForLagTime">"no"</constant>
         <constant name="useAdvanceCorrectionsForCranking">"no"</constant>
         <constant name="useAuxSpeedForSlipRatio">"no"</constant>
@@ -4950,7 +4920,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260127" nPages="1" signature="rusEFI master.2026.02.02.f407-discovery.3486873163" version="5.0"/>
+    <versionInfo firmwareInfo="20260127" nPages="1" signature="rusEFI master.2026.02.03.f407-discovery.287100652" version="5.0"/>
     <bibliography author="rusEFI 20260127" writeDate="date"/>
     <settings/>
     <userComments/>
