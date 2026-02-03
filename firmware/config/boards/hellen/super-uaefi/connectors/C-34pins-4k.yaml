@@ -138,16 +138,6 @@ pins:
     function: Low-Side 4 output
     type: ls
 
-#  - pin: 32C
-#    class: analog_inputs
-#    ts_name: KNOCK2
-#    function: KNOCK2 UNUSED sensor
-
-#  - pin: 33C
-#    function:
-
-#  - pin: 34C
-#    function:
 
 info:
   cid: 34-4

@@ -86,7 +86,6 @@ pins:
 
   - pin: 16D
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
@@ -121,7 +120,6 @@ pins:
 
   - pin: 23D
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 

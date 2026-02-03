@@ -146,73 +146,61 @@ pins:
 
   - pin: 23A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 24A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 25A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 26A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 27A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 28A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 29A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 30A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 31A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 32A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 33A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 34A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
@@ -380,13 +368,13 @@ pins:
 
   - pin: 23B
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+
     type: gnd
     color: black
 
   - pin: 24B
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+
     type: gnd
     color: black
 
