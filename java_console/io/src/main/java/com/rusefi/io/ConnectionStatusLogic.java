@@ -32,7 +32,7 @@ public class ConnectionStatusLogic {
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
     private ConnectionStatusLogic() {
-        SensorCentral.getInstance().addListener(WellKnownGauges.SECONDS.name(), value -> markConnected());
+        SensorCentral.getInstance().addListener(WellKnownGauges.SECONDS.getOutputChannelName(), value -> markConnected());
 
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override

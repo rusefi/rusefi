@@ -78,7 +78,7 @@ public class IoUtil {
 
         awaitRpm(rpm);
 
-        double actualRpm = SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.name());
+        double actualRpm = SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.getOutputChannelName());
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
@@ -89,7 +89,7 @@ public class IoUtil {
     public static void awaitRpm(int rpm) {
         final CountDownLatch rpmLatch = new CountDownLatch(1);
 
-        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.name(), actualRpm -> {
+        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.getOutputChannelName(), actualRpm -> {
             if (isCloseEnough(rpm, actualRpm))
                 rpmLatch.countDown();
         });
@@ -109,7 +109,7 @@ public class IoUtil {
         final CountDownLatch startup = new CountDownLatch(1);
         long waitStart = System.currentTimeMillis();
 
-        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.name(), value -> startup.countDown());
+        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.getOutputChannelName(), value -> startup.countDown());
         boolean haveResponse = startup.await(60, TimeUnit.SECONDS);
         if (!haveResponse)
             throw new IllegalStateException("No response from simulator");
