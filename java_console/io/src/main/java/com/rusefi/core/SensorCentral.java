@@ -82,18 +82,17 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public ListenerToken addListener(Sensor sensor, SensorListener listener) {
-        return addListener(sensor.name(), listener);
+        return addListener(sensor.getNativeName(), listener);
     }
 
     @Override
     public ListenerToken addListener(String sensorName, SensorListener listener) {
         List<SensorListener> listeners;
-        String sensorKey = sensor.getNativeName();
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensorKey);
+            listeners = sensorListeners.get(sensorName);
             if (listeners == null)
                 listeners = new CopyOnWriteArrayList<>();
-            sensorListeners.put(sensorKey, listeners);
+            sensorListeners.put(sensorName, listeners);
         }
         listeners.add(listener);
 
@@ -104,7 +103,7 @@ public class SensorCentral implements ISensorCentral {
     public void removeListener(String sensorName, SensorListener listener) {
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor.getNativeName());
+            listeners = sensorListeners.get(sensorName);
         }
         if (listeners != null)
             listeners.remove(listener);
