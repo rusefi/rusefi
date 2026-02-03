@@ -1281,15 +1281,15 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	bit enableAemXSeriesEgt,"yes","no";AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 	bit startRequestPinInverted,"Inverted","Normal"
 	bit tcu_rangeSensorPulldown,"yes","no"
-	bit devBit01
-	bit devBit0
-	bit devBit1
-	bit devBit2
-	bit devBit3
-	bit devBit4
-	bit devBit5
-	bit devBit6
-	bit devBit7
+	bit devBit01,"true","false"
+	bit devBit0,"true","false"
+	bit devBit1,"true","false"
+	bit devBit2,"true","false"
+	bit devBit3,"true","false"
+	bit devBit4,"true","false"
+	bit devBit5,"true","false"
+	bit devBit6,"true","false"
+	bit devBit7,"true","false"
 	bit invertExhaustCamVVTSignal,"Falling","Rising"
 	bit enableKnockSpectrogram,"yes","no";"Available via TS Plugin see https://rusefi.com/s/knock"
 	bit enableKnockSpectrogramFilter,"yes","no"
@@ -1787,36 +1787,36 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
 	bit nitrousControlEnabled,"enabled","disabled"
 	bit vvlControlEnabled,"enabled","disabled"
-	bit unusedFancy3
-	bit unusedFancy4
-	bit unusedFancy5
-	bit unusedFancy6
-	bit unusedFancy7
-	bit unusedFancy8
-	bit unusedFancy9
-	bit unusedFancy10
-	bit unusedFancy11
-	bit unusedFancy12
-	bit unusedFancy13
-	bit unusedFancy14
-	bit unusedFancy15
-	bit unusedFancy16
-	bit unusedFancy17
-	bit unusedFancy18
-	bit unusedFancy19
-	bit unusedFancy20
-	bit unusedFancy21
-	bit unusedFancy22
-	bit unusedFancy23
-	bit unusedFancy24
-	bit unusedFancy25
-	bit unusedFancy26
-	bit unusedFancy27
-	bit unusedFancy28
-	bit unusedFancy29
-	bit unusedFancy30
-	bit unusedFancy31
-	bit unusedFancy32
+	bit unusedBit_Fancy3
+	bit unusedBit_Fancy4
+	bit unusedBit_Fancy5
+	bit unusedBit_Fancy6
+	bit unusedBit_Fancy7
+	bit unusedBit_Fancy8
+	bit unusedBit_Fancy9
+	bit unusedBit_Fancy10
+	bit unusedBit_Fancy11
+	bit unusedBit_Fancy12
+	bit unusedBit_Fancy13
+	bit unusedBit_Fancy14
+	bit unusedBit_Fancy15
+	bit unusedBit_Fancy16
+	bit unusedBit_Fancy17
+	bit unusedBit_Fancy18
+	bit unusedBit_Fancy19
+	bit unusedBit_Fancy20
+	bit unusedBit_Fancy21
+	bit unusedBit_Fancy22
+	bit unusedBit_Fancy23
+	bit unusedBit_Fancy24
+	bit unusedBit_Fancy25
+	bit unusedBit_Fancy26
+	bit unusedBit_Fancy27
+	bit unusedBit_Fancy28
+	bit unusedBit_Fancy29
+	bit unusedBit_Fancy30
+	bit unusedBit_Fancy31
+	bit unusedBit_Fancy32
     ! 'unusedFancy32' is the 32nd bit here, you would need another bit region if more bits are desired
 
 	#define nitrous_arming_method_e_enum "Digital Switch Input", "Lua Gauge"
