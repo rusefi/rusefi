@@ -173,7 +173,6 @@ void Engine::periodicSlowCallback() {
 
 	efiWatchdog();
 	updateSlowSensors();
-	checkShutdown();
 
 	module<TpsAccelEnrichment>()->onNewValue(Sensor::getOrZero(SensorType::Tps1));
 
@@ -474,77 +473,6 @@ void Engine::onEngineHasStopped() {
 
     // this invocation should be the last layer of defence in terms of making sure injectors/coils are not active
 	enginePins.stopPins();
-}
-
-void Engine::checkShutdown() {
-#if EFI_MAIN_RELAY_CONTROL
-	// if we are already in the "ignition_on" mode, then do nothing
-/* this logic is not alive
-	if (ignitionOnTimeNt > 0) {
-		return;
-	}
-todo: move to shutdown_controller.cpp
-*/
-
-	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
-/* this needs work or tests
-	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
-	// in shutdown mode, we need a small cooldown time between the ignition off and on
-todo: move to shutdown_controller.cpp
-	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
-		// if the ignition key is turned on again,
-		// we cancel the shutdown mode, but only if all shutdown procedures are complete
-		const float vBattThresholdOn = 8.0f;
-		// we fallback into zero instead of VBAT_FALLBACK_VALUE because it's not safe to false-trigger the "ignition on" event,
-		// and we want to turn on the main relay only when 100% sure.
-		if ((Sensor::getOrZero(SensorType::BatteryVoltage) > vBattThresholdOn) && !isInShutdownMode()) {
-			ignitionOnTimeNt = getTimeNowNt();
-			efiPrintf("Ignition voltage detected!");
-			if (stopEngineRequestTimeNt != 0) {
-				efiPrintf("Cancel the engine shutdown!");
-				stopEngineRequestTimeNt = 0;
-			}
-		}
-	}
-*/
-#endif /* EFI_MAIN_RELAY_CONTROL */
-}
-
-bool Engine::isInShutdownMode() const {
-	// TODO: this logic is currently broken
-#if 0 && EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
-	// if we are in "ignition_on" mode and not in shutdown mode
-	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
-		const float vBattThresholdOff = 5.0f;
-		// start the shutdown process if the ignition voltage dropped low
-		if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) <= vBattThresholdOff) {
-			doScheduleStopEngine();
-		}
-	}
-
-	// we are not in the shutdown mode?
-	if (stopEngineRequestTimeNt == 0) {
-		return false;
-	}
-
-	const efitick_t turnOffWaitTimeoutNt = NT_PER_SECOND;
-	// We don't want any transients to step in, so we wait at least 1 second whatever happens.
-	// Also it's good to give the stepper motor some time to start moving to the initial position (or parking)
-	if ((getTimeNowNt() - stopEngineRequestTimeNt) < turnOffWaitTimeoutNt)
-		return true;
-
-	const efitick_t engineSpinningWaitTimeoutNt = 5 * NT_PER_SECOND;
-	// The engine is still spinning! Give it some time to stop (but wait no more than 5 secs)
-	if (isSpinning && (getTimeNowNt() - stopEngineRequestTimeNt) < engineSpinningWaitTimeoutNt)
-		return true;
-
-	// The idle motor valve is still moving! Give it some time to park (but wait no more than 10 secs)
-	// Usually it can move to the initial 'cranking' position or zero 'parking' position.
-	const efitick_t idleMotorWaitTimeoutNt = 10 * NT_PER_SECOND;
-	if (isIdleMotorBusy() && (getTimeNowNt() - stopEngineRequestTimeNt) < idleMotorWaitTimeoutNt)
-		return true;
-#endif /* EFI_MAIN_RELAY_CONTROL */
-	return false;
 }
 
 bool Engine::isMainRelayEnabled() const {
