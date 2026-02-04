@@ -29,6 +29,8 @@ public class MainMenuTreeWidget {
 
     private final JTextField searchField = new JTextField();
     private boolean isUpdatingModel = false;
+    private boolean isProcessingSearchSelection = false;
+    private String lastSearchSelectedKey = null;
     private Consumer<SubMenuModel> onSelect;
 
     public MainMenuTreeWidget(IniFileModel model) {
@@ -140,23 +142,72 @@ public class MainMenuTreeWidget {
     }
 
     private void handleSelection(TreePath path) {
+        // Prevent duplicate processing during search selection
+        if (isProcessingSearchSelection) {
+            return;
+        }
+
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+        SubMenuModel selectedSubMenu = null;
         if (node.getUserObject() instanceof SubMenuModel) {
-            if (onSelect != null) {
-                onSelect.accept((SubMenuModel) node.getUserObject());
-            }
+            selectedSubMenu = (SubMenuModel) node.getUserObject();
         }
 
         if (!searchField.getText().isEmpty()) {
+            // When search is active, defer everything to after tree restoration
+            final SubMenuModel subMenuToSelect = selectedSubMenu;
+            isProcessingSearchSelection = true;
+            // Clear search immediately to prevent duplicate processing
+            isUpdatingModel = true;
+            searchField.setText("");
+            isUpdatingModel = false;
             SwingUtilities.invokeLater(() -> {
-                searchField.setText("");
-                expandAll(tree, true);
-                tree.setSelectionPath(path);
-                // Make sure the tree is laid out so it knows its new size after expansion
-                trueLayoutAndRepaint(tree);
-                tree.scrollPathToVisible(path);
+                try {
+                    expandAll(tree, true);
+                    // Find the node in the restored original tree model (the old path is invalid after model change)
+                    if (subMenuToSelect != null) {
+                        DefaultMutableTreeNode originalNode = findSubMenuNode(root, subMenuToSelect.getKey());
+                        if (originalNode != null) {
+                            TreePath newPath = new TreePath(originalNode.getPath());
+
+                            // Temporarily disable listener to prevent multiple onSelect calls
+                            isUpdatingModel = true;
+                            tree.setSelectionPath(newPath);
+                            isUpdatingModel = false;
+
+                            // Make sure the tree is laid out so it knows its new size after expansion
+                            trueLayoutAndRepaint(tree);
+
+                            // call onSelect
+                            if (onSelect != null) {
+                                onSelect.accept(subMenuToSelect);
+                                lastSearchSelectedKey = subMenuToSelect.getKey();
+                            }
+
+                            // Defer scroll to after all other events are processed
+                            SwingUtilities.invokeLater(() -> {
+                                Rectangle rect = tree.getPathBounds(newPath);
+                                if (rect != null) {
+                                    rect.height = tree.getVisibleRect().height;
+                                    tree.scrollRectToVisible(rect);
+                                }
+                            });
+                        }
+                    }
+                } finally {
+                    SwingUtilities.invokeLater(() -> isProcessingSearchSelection = false);
+                }
             });
         } else {
+            if (selectedSubMenu != null && onSelect != null) {
+                // Skip if this is a spurious selection after search (e.g., first menu item auto-selected by the JTree)
+                if (lastSearchSelectedKey != null && !lastSearchSelectedKey.equals(selectedSubMenu.getKey())) {
+                    lastSearchSelectedKey = null;
+                    return;
+                }
+                lastSearchSelectedKey = null;
+                onSelect.accept(selectedSubMenu);
+            }
             tree.scrollPathToVisible(path);
         }
     }
