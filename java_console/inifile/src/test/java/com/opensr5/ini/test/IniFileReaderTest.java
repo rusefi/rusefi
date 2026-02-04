@@ -555,6 +555,44 @@ public class IniFileReaderTest {
         assertEquals("https://rusefi.com/s/fuel", fullHelp.getWebHelp());
     }
 
+    @Test
+    public void testTextFieldsInDialog() {
+        String string = "[Constants]\n" +
+                "page = 1\n" +
+                "field1 = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
+                "[SettingContextHelp]\n" +
+                "; SettingContextHelpEnd\n" +
+                "dialog = canReWidebandLegacyTools, \"Legacy\"\n" +
+                "    field = \"!Please connect \"\n" +
+                "    field = \"!Please do \"\n" +
+                "    field = \"\"\n" +
+                "    field = \"Just text\"\n" +
+                "    field = \"Real Field\", field1\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        DialogModel dialog = model.getDialogs().get("canReWidebandLegacyTools");
+        assertNotNull(dialog);
+        assertEquals(5, dialog.getFields().size());
+
+        // Text-only fields (start with !) have key same as UI name
+        assertEquals("!Please connect ", dialog.getFields().get(0).getUiName());
+        assertEquals("!Please connect ", dialog.getFields().get(0).getKey());
+
+        assertEquals("!Please do ", dialog.getFields().get(1).getUiName());
+        assertEquals("!Please do ", dialog.getFields().get(1).getKey());
+
+        assertEquals("", dialog.getFields().get(2).getUiName());
+        assertEquals("", dialog.getFields().get(2).getKey());
+
+        assertEquals("Just text", dialog.getFields().get(3).getUiName());
+        assertEquals("Just text", dialog.getFields().get(3).getKey());
+
+        assertEquals("Real Field", dialog.getFields().get(4).getUiName());
+        assertEquals("field1", dialog.getFields().get(4).getKey());
+    }
+
 
     @Test
     public void testExpressionOutputChannels() throws IniMemberNotFound {

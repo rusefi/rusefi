@@ -402,6 +402,10 @@ public class IniFileReader {
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
+        if (key == null || uiFieldName.startsWith("!")) {
+            key = uiFieldName;
+        }
+
         registerUiField(key, uiFieldName);
         log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
