@@ -240,8 +240,9 @@ public class MainMenuTreeWidgetTest {
         assertTrue(searchField.getText().isEmpty(), "Search field should be empty after click");
         assertEquals(model.getMenus().size(), ((DefaultMutableTreeNode) tree.getModel().getRoot()).getChildCount(), "Tree should be fully restored");
 
-        // Verify that all nodes are expanded
-        assertTrue(tree.isExpanded(new TreePath(setupNode.getPath())), "Setup node should be expanded");
+        // Verify that all nodes are expanded (get nodes from current model, not the old filtered model)
+        DefaultMutableTreeNode currentSetupNode = findNode((DefaultMutableTreeNode) tree.getModel().getRoot(), "Setup");
+        assertTrue(tree.isExpanded(new TreePath(currentSetupNode.getPath())), "Setup node should be expanded");
         // Also check some other node to be sure
         DefaultMutableTreeNode fuelNode = findNode((DefaultMutableTreeNode) tree.getModel().getRoot(), "Fuel");
         assertTrue(tree.isExpanded(new TreePath(fuelNode.getPath())), "Fuel node should be expanded");

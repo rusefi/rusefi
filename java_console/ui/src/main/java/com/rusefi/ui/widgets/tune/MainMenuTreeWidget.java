@@ -194,7 +194,7 @@ public class MainMenuTreeWidget {
                         }
                     }
                 } finally {
-                    SwingUtilities.invokeLater(() -> isProcessingSearchSelection = false);
+                    isProcessingSearchSelection = false;
                 }
             });
         } else {
