@@ -1,8 +1,12 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
+import com.opensr5.ini.TableModel;
+import com.opensr5.ini.field.ArrayIniField;
+import com.rusefi.config.FieldType;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -134,5 +138,52 @@ public class CalibrationDialogWidgetTest {
 
         assertTrue(subPanel.getLayout() instanceof BoxLayout);
         assertEquals(BoxLayout.X_AXIS, ((BoxLayout) subPanel.getLayout()).getAxis(), "Sub-panel should be horizontal due to layout hint");
+    }
+
+    @Test
+    public void testTableModelPanel() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        // Mock TableModel
+        TableModel tableModel = new TableModel("table1", "map1", "Table Title",
+                null, "X", "Y", "xBins", null, false, "yBins", null, false, "zBins",
+                null, null, null, null);
+        Map<String, TableModel> tables = new HashMap<>();
+        tables.put("table1", tableModel);
+        when(iniFileModel.getTables()).thenReturn(tables);
+        when(iniFileModel.getTable("table1")).thenReturn(tableModel);
+
+        // Mock Bins and Data fields
+        ArrayIniField xBinsField = new ArrayIniField("xBins", 0, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1");
+        ArrayIniField yBinsField = new ArrayIniField("yBins", 4, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1");
+        ArrayIniField zBinsField = new ArrayIniField("zBins", 8, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1");
+
+        when(iniFileModel.findIniField("xBins")).thenReturn(java.util.Optional.of(xBinsField));
+        when(iniFileModel.findIniField("yBins")).thenReturn(java.util.Optional.of(yBinsField));
+        when(iniFileModel.findIniField("zBins")).thenReturn(java.util.Optional.of(zBinsField));
+
+        List<PanelModel> panels = new ArrayList<>();
+        panels.add(new PanelModel("table1", null, null, null));
+
+        DialogModel mainDialog = new DialogModel("main", "Main", new ArrayList<DialogModel.Field>(), new ArrayList<DialogModel.Command>(), panels, (String) null, (String) null);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
+        widget.update(mainDialog, iniFileModel, ci);
+
+        JPanel content = widget.getContentPane();
+        assertEquals(1, content.getComponentCount());
+        JPanel tablePanel = (JPanel) content.getComponent(0);
+
+        // TuningTableView content contains a JLabel and a JTable (via JTableHeader and JTable)
+        // See TuningTableView constructor
+        boolean foundLabel = false;
+        for (Component c : tablePanel.getComponents()) {
+            if (c instanceof JLabel && ((JLabel) c).getText().equals("Table Title")) {
+                foundLabel = true;
+            }
+        }
+        assertTrue(foundLabel, "Should find table title label");
     }
 }

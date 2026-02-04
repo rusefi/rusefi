@@ -98,8 +98,8 @@ public class TrimsTab {
         // Page 1 contains the axis bins (RPM and load)
         ConfigurationImage page1Image = info.getImage().getConfigurationImage();
 
-        view1.displayTable(info, zBinsBuffer, page1Image, "ltftBank1Tbl");
-        view2.displayTable(info, zBinsBuffer, page1Image, "ltftBank2Tbl");
+        view1.displayTable(info.getIniFile(), "ltftBank1Tbl", new ConfigurationImage(zBinsBuffer), page1Image);
+        view2.displayTable(info.getIniFile(), "ltftBank2Tbl", new ConfigurationImage(zBinsBuffer), page1Image);
     }
 
     public Component getContent() {

@@ -32,13 +32,13 @@ public class TuningTableView {
         content.add(table);
     }
 
-    public void displayTable(CalibrationsInfo info, byte[] zBinsBuffer, ConfigurationImage image, String tableName) {
-        TableModel iniTable = info.getIniFile().getTable(tableName);
+    public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage, ConfigurationImage axisImage) {
+        TableModel iniTable = iniFile.getTable(tableName);
         if (iniTable == null) {
             return;
         }
 
-        Optional<IniField> zBinsField = info.getIniFile().findIniField(iniTable.getZBinsConstant());
+        Optional<IniField> zBinsField = iniFile.findIniField(iniTable.getZBinsConstant());
         if (!zBinsField.isPresent() || !(zBinsField.get() instanceof ArrayIniField)) {
             return;
         }
@@ -46,16 +46,24 @@ public class TuningTableView {
         ArrayIniField ltft = (ArrayIniField) zBinsField.get();
 
         // Extract data from outputs buffer using the field's offset
-        ConfigurationImage outputsImage = new ConfigurationImage(zBinsBuffer);
-        Double[][] dataValues = ConfigurationImageGetterSetter.getArrayValues(ltft, outputsImage);
+        Double[][] dataValues = ConfigurationImageGetterSetter.getArrayValues(ltft, zImage);
 
         // X and Y bins (RPM and load) are on page 1
-        Double[] xBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), image);
-        Double[] yBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), image);
+        Double[] xBins = extractAxisBins(iniFile, iniTable.getXBinsConstant(), axisImage);
+        Double[] yBins = extractAxisBins(iniFile, iniTable.getYBinsConstant(), axisImage);
 
         calculateMinMax(dataValues);
 
         table.setModel(new TuningTableModel(dataValues, xBins, yBins));
+    }
+
+    public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage image) {
+        displayTable(iniFile, tableName, image, image);
+    }
+
+    @Deprecated
+    public void displayTable(CalibrationsInfo info, byte[] zBinsBuffer, ConfigurationImage image, String tableName) {
+        displayTable(info.getIniFile(), tableName, new ConfigurationImage(zBinsBuffer), image);
     }
 
     private void calculateMinMax(Double[][] dataValues) {

@@ -6,6 +6,7 @@ import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
+import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 
@@ -95,6 +96,14 @@ public class CalibrationDialogWidget {
             if (curve != null) {
                 CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, ci);
                 targetContainer.add(curveWidget.getContentPane());
+                continue;
+            }
+
+            TableModel table = iniFileModel.getTable(panel.getPanelName());
+            if (table != null) {
+                TuningTableView tuningTableView = new TuningTableView(table.getTitle());
+                tuningTableView.displayTable(iniFileModel, table.getTableId(), ci);
+                targetContainer.add(tuningTableView.getContent());
                 continue;
             }
 
