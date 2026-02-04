@@ -2760,6 +2760,7 @@ end_struct
 
 #define MAIN_PAGE_GAUGES_FILE "tunerstudio/main_page_gauges.ini"
 #define GAUGES_DECLARATIONS_FILE "tunerstudio/gauge_declarations.ini"
+#define SECONDARY_PANELS_FILE "tunerstudio/secondary_panels.ini"
 #define TOP_LEVEL_MENU_FILE "tunerstudio/top_level_menu.ini"
 
 #define poke false
