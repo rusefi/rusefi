@@ -96,13 +96,17 @@ public class CalibrationDialogWidget {
             panelWidget.setName(panel.getPanelName());
             panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.Y_AXIS));
             panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));
-            targetContainer.add(panelWidget);
 
             DialogModel subDialog = panel.resolveDialog(iniFileModel);
             if (subDialog != null) {
                 panelWidget.setName(subDialog.getUiName());
+                panelWidget.setBorder(BorderFactory.createTitledBorder(subDialog.getUiName()));
                 fillPanel(panelWidget, subDialog, iniFileModel, ci);
+            } else {
+                panelWidget.setName(panel.getPanelName());
+                panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));
             }
+            targetContainer.add(panelWidget);
         }
     }
 
