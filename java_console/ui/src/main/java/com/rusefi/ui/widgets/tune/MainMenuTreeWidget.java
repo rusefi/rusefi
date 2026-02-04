@@ -157,11 +157,10 @@ public class MainMenuTreeWidget {
             // When search is active, defer everything to after tree restoration
             final SubMenuModel subMenuToSelect = selectedSubMenu;
             isProcessingSearchSelection = true;
-            // Clear search immediately to prevent duplicate processing
-            isUpdatingModel = true;
-            searchField.setText("");
-            isUpdatingModel = false;
             SwingUtilities.invokeLater(() -> {
+                isUpdatingModel = true;
+                searchField.setText("");
+                isUpdatingModel = false;
                 try {
                     expandAll(tree, true);
                     // Find the node in the restored original tree model (the old path is invalid after model change)
