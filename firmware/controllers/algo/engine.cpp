@@ -476,12 +476,12 @@ void Engine::onEngineHasStopped() {
 }
 
 bool Engine::isMainRelayEnabled() const {
-#if EFI_MAIN_RELAY_CONTROL
+	// If the relay is unconfigured, we'll just assume it's on because either it's not controlled by the ECU,
+	// or it's controlled by another part (e.g. TLE8888) of the ECU.
+	if (engineConfiguration->mainRelayPin == Gpio::Unassigned)
+		return true;
+
 	return enginePins.mainRelay.getLogicValue();
-#else
-	// if no main relay control, we assume it's always turned on
-	return true;
-#endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
 injection_mode_e getCurrentInjectionMode() {
