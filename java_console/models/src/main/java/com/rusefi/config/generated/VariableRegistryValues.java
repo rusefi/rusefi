@@ -1419,6 +1419,7 @@ public class VariableRegistryValues {
 	public static final int SCRIPT_TABLE_8 = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
 	public static final String SD_CARD_LABEL = "rusEFI logs";
+	public static final String SECONDARY_PANELS_FILE = "tunerstudio/secondary_panels.ini";
 	public static final int SelectedGear_Drive = 6;
 	public static final int SelectedGear_Invalid = 0;
 	public static final int SelectedGear_Low = 11;
@@ -1446,7 +1447,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1327975458;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1758,7 +1758,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.02.04.stm32h743_nucleo.1327975458";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.02.04.stm32h743_nucleo.3764862011";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2080;
