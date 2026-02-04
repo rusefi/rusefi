@@ -102,6 +102,15 @@ public class CalibrationDialogWidget {
             }
         }
 
+        for (DialogModel.Command command : dialogModel.getCommandsOfCurrentDialog()) {
+            JButton button = new JButton(command.getUiName());
+            button.addActionListener(e -> {
+                // TODO: implement command execution
+                System.out.println("Executing command: " + command.getCommand());
+            });
+            container.add(button);
+        }
+
         List<PanelModel> panels = dialogModel.getPanels();
         JPanel horizontalPanel = null;
         for (PanelModel panel : panels) {
@@ -145,8 +154,12 @@ public class CalibrationDialogWidget {
             }
 
             if (subDialog != null) {
-                panelWidget.setName(subDialog.getUiName());
-                panelWidget.setBorder(BorderFactory.createTitledBorder(subDialog.getUiName()));
+                String uiName = subDialog.getUiName();
+                if (uiName == null || uiName.isEmpty()) {
+                    uiName = subDialog.getKey();
+                }
+                panelWidget.setName(uiName);
+                panelWidget.setBorder(BorderFactory.createTitledBorder(uiName));
                 fillPanel(panelWidget, subDialog, iniFileModel, ci);
             } else {
                 panelWidget.setName(panel.getPanelName());

@@ -224,4 +224,45 @@ public class CalibrationDialogWidgetTest {
         }
         assertTrue(foundLabel, "Should find table title label when updating by key");
     }
+    @Test
+    public void testCommandButtonAndPanelTitle() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        // Sub-dialog with commands and NO UI name (but a key)
+        List<DialogModel.Command> commands = new ArrayList<>();
+        commands.add(new DialogModel.Command("Spark #1", "cmd_test_spk1"));
+
+        // Use key "testSpark" and uiName "" (empty string) to mimic "dialog = testSpark, """
+        DialogModel subDialog = new DialogModel("testSpark", "", Collections.emptyList(), commands, new ArrayList<>(), null);
+        Map<String, DialogModel> dialogs = new HashMap<>();
+        dialogs.put("testSpark", subDialog);
+        when(iniFileModel.getDialogs()).thenReturn(dialogs);
+
+        // Main dialog with the panel
+        List<PanelModel> panels = new ArrayList<>();
+        panels.add(new PanelModel("testSpark", null, null, null));
+        DialogModel mainDialog = new DialogModel("main", "Main", Collections.emptyList(), Collections.emptyList(), panels, null);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        widget.update(mainDialog, iniFileModel, null);
+
+        JPanel content = widget.getContentPane();
+        assertEquals(1, content.getComponentCount());
+        JPanel panelWidget = (JPanel) content.getComponent(0);
+
+        // Check title - it should fall back to key "testSpark"
+        assertTrue(panelWidget.getBorder() instanceof javax.swing.border.TitledBorder);
+        String title = ((javax.swing.border.TitledBorder) panelWidget.getBorder()).getTitle();
+        assertEquals("testSpark", title, "Title should fall back to key if UI name is empty");
+
+        // Check command button
+        boolean foundButton = false;
+        for (Component c : panelWidget.getComponents()) {
+            if (c instanceof JButton && ((JButton) c).getText().equals("Spark #1")) {
+                foundButton = true;
+            }
+        }
+        assertTrue(foundButton, "Should find command button 'Spark #1'");
+    }
 }
