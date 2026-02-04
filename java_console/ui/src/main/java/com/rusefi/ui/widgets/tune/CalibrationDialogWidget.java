@@ -23,6 +23,12 @@ public class CalibrationDialogWidget {
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         contentPane.removeAll();
         if (dialogModel != null) {
+            String layoutHint = dialogModel.getLayoutHint();
+            if ("xAxis".equalsIgnoreCase(layoutHint)) {
+                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
+            } else {
+                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+            }
             fillPanel(contentPane, dialogModel, iniFileModel, ci);
         }
         contentPane.revalidate();
@@ -93,11 +99,14 @@ public class CalibrationDialogWidget {
             }
 
             JPanel panelWidget = new JPanel();
-            panelWidget.setName(panel.getPanelName());
-            panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.Y_AXIS));
-            panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));
-
             DialogModel subDialog = panel.resolveDialog(iniFileModel);
+            String subLayoutHint = subDialog != null ? subDialog.getLayoutHint() : null;
+            if ("xAxis".equalsIgnoreCase(subLayoutHint)) {
+                panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.X_AXIS));
+            } else {
+                panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.Y_AXIS));
+            }
+
             if (subDialog != null) {
                 panelWidget.setName(subDialog.getUiName());
                 panelWidget.setBorder(BorderFactory.createTitledBorder(subDialog.getUiName()));

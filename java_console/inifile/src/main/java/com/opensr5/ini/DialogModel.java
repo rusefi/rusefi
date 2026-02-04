@@ -14,22 +14,28 @@ public class DialogModel {
     private final List<Command> commandsOfCurrentDialog;
     private final List<PanelModel> panels;
     private final String topicHelp;
+    private final String layoutHint;
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog) {
-        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), null);
+        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), null, null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, String topicHelp) {
-        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), topicHelp);
+        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), topicHelp, null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, String topicHelp) {
+        this(key, uiName, fields, commandsOfCurrentDialog, panels, topicHelp, null);
+    }
+
+    public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, String topicHelp, String layoutHint) {
         this.key = key;
         this.uiName = uiName;
         this.fields = new ArrayList<>(fields);
         this.commandsOfCurrentDialog = new ArrayList<>(commandsOfCurrentDialog);
         this.panels = new ArrayList<>(panels);
         this.topicHelp = topicHelp;
+        this.layoutHint = layoutHint;
     }
 
     public List<Command> getCommandsOfCurrentDialog() {
@@ -56,6 +62,10 @@ public class DialogModel {
         return topicHelp;
     }
 
+    public String getLayoutHint() {
+        return layoutHint;
+    }
+
     @Override
     public String toString() {
         return "DialogModel{" +
@@ -64,6 +74,7 @@ public class DialogModel {
                 ", fields=" + fields.size() +
                 ", panels=" + panels.size() +
                 ", topicHelp='" + topicHelp + '\'' +
+                ", layoutHint='" + layoutHint + '\'' +
                 '}';
     }
 

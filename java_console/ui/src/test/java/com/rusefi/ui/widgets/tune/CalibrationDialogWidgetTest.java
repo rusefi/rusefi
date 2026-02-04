@@ -85,4 +85,54 @@ public class CalibrationDialogWidgetTest {
         assertEquals(1, hPanel3.getComponentCount(), "Third horizontal panel should have 1 sub-panel");
         assertEquals("h5", hPanel3.getComponent(0).getName());
     }
+
+    @Test
+    public void testXAxisLayoutHint() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        List<PanelModel> panels = new ArrayList<>();
+        panels.add(new PanelModel("p1", null, null, null));
+        panels.add(new PanelModel("p2", null, null, null));
+
+        // Dialog with xAxis layout hint
+        DialogModel mainDialog = new DialogModel("main", "Main", new ArrayList<DialogModel.Field>(), new ArrayList<DialogModel.Command>(), panels, (String) null, "xAxis");
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        widget.update(mainDialog, iniFileModel, null);
+
+        JPanel content = widget.getContentPane();
+        assertTrue(content.getLayout() instanceof BoxLayout);
+        assertEquals(BoxLayout.X_AXIS, ((BoxLayout) content.getLayout()).getAxis(), "Top level should be horizontal");
+        assertEquals(2, content.getComponentCount());
+    }
+
+    @Test
+    public void testSubDialogTitleAndLayout() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        DialogModel subDialog = new DialogModel("sub", "Sub Dialog UI Name", new ArrayList<DialogModel.Field>(), new ArrayList<DialogModel.Command>(), new ArrayList<PanelModel>(), (String) null, "xAxis");
+        Map<String, DialogModel> dialogs = new HashMap<>();
+        dialogs.put("sub", subDialog);
+        when(iniFileModel.getDialogs()).thenReturn(dialogs);
+
+        List<PanelModel> panels = new ArrayList<>();
+        panels.add(new PanelModel("sub", null, null, null));
+
+        DialogModel mainDialog = new DialogModel("main", "Main", new ArrayList<DialogModel.Field>(), new ArrayList<DialogModel.Command>(), panels, (String) null, (String) null);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        widget.update(mainDialog, iniFileModel, null);
+
+        JPanel content = widget.getContentPane();
+        JPanel subPanel = (JPanel) content.getComponent(0);
+
+        assertEquals("Sub Dialog UI Name", subPanel.getName());
+        assertTrue(subPanel.getBorder() instanceof javax.swing.border.TitledBorder);
+        assertEquals("Sub Dialog UI Name", ((javax.swing.border.TitledBorder) subPanel.getBorder()).getTitle());
+
+        assertTrue(subPanel.getLayout() instanceof BoxLayout);
+        assertEquals(BoxLayout.X_AXIS, ((BoxLayout) subPanel.getLayout()).getAxis(), "Sub-panel should be horizontal due to layout hint");
+    }
 }

@@ -55,6 +55,7 @@ public class IniFileReader {
     private String dialogId;
     private String dialogUiName;
     private String dialogTopicHelp;
+    private String dialogLayoutHint;
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
@@ -143,10 +144,11 @@ public class IniFileReader {
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
-        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, dialogTopicHelp));
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, dialogTopicHelp, dialogLayoutHint));
 
         dialogId = null;
         dialogTopicHelp = null;
+        dialogLayoutHint = null;
         fieldsOfCurrentDialog.clear();
         commandsOfCurrentDialog.clear();
         panelsOfCurrentDialog.clear();
@@ -425,10 +427,12 @@ public class IniFileReader {
         String keyword = list.removeFirst();
 //                    trim(list);
         String name = list.isEmpty() ? null : list.removeFirst();
+        String layoutHint = list.isEmpty() ? null : list.removeFirst();
 
         dialogId = keyword;
         dialogUiName = name;
-        log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "]");
+        dialogLayoutHint = layoutHint;
+        log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "] layoutHint=[" + layoutHint + "]");
     }
 
     private void handlePanel(LinkedList<String> list) {

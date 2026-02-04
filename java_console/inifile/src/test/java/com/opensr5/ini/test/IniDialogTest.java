@@ -67,6 +67,8 @@ public class IniDialogTest {
         assertNull(panel2.getEnableExpression());
         assertNull(panel2.getVisibleExpression());
 
+        assertEquals("yAxis", mainDialog.getLayoutHint());
+
         DialogModel subDialog2 = model.getDialogs().get("subDialog2");
         assertEquals(2, subDialog2.getCommandsOfCurrentDialog().size());
         assertEquals("Enable internal trigger simulation", subDialog2.getCommandsOfCurrentDialog().get(0).getUiName());
@@ -99,6 +101,8 @@ public class IniDialogTest {
         assertEquals("Center", complexPanel2.getPlacement());
         assertEquals("{field1 > 50}", complexPanel2.getEnableExpression());
         assertEquals("{field2 < 100}", complexPanel2.getVisibleExpression());
+
+        assertEquals("border", complexDialog.getLayoutHint());
     }
 
     @Test
