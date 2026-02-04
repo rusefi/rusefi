@@ -9,6 +9,7 @@ import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.ui.laf.GradientTitleBorder;
 
 import javax.swing.*;
 import java.util.List;
@@ -159,11 +160,11 @@ public class CalibrationDialogWidget {
                     uiName = subDialog.getKey();
                 }
                 panelWidget.setName(uiName);
-                panelWidget.setBorder(BorderFactory.createTitledBorder(uiName));
+                panelWidget.setBorder(new GradientTitleBorder(uiName));
                 fillPanel(panelWidget, subDialog, iniFileModel, ci);
             } else {
                 panelWidget.setName(panel.getPanelName());
-                panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));
+                panelWidget.setBorder(new GradientTitleBorder(panel.getPanelName()));
             }
             targetContainer.add(panelWidget);
         }

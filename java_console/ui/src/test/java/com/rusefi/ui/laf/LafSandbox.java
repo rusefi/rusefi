@@ -20,13 +20,20 @@ public class LafSandbox {
         JPanel panel = new JPanel(new GridBagLayout());
 
         JPanel leftPanel = new JPanel();
-        leftPanel.setBorder(BorderFactory.createTitledBorder("Left Panel"));
+        leftPanel.setBorder(new GradientTitleBorder("Left Panel"));
         leftPanel.add(new JCheckBox("Sample Checkbox"));
+        JCheckBox disabledCheckBox = new JCheckBox("Disabled Checkbox");
+        disabledCheckBox.setEnabled(false);
+        leftPanel.add(disabledCheckBox);
         panel.add(leftPanel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 
         JPanel rightPanel = new JPanel();
-        rightPanel.setBorder(BorderFactory.createTitledBorder("Right Panel"));
+        rightPanel.setBorder(new GradientTitleBorder("Right Panel"));
         rightPanel.add(new JButton("Sample Button"));
+        rightPanel.add(new JComboBox<>(new String[]{"Enabled Combo"}));
+        JComboBox<String> disabledCombo = new JComboBox<>(new String[]{"Disabled Combo"});
+        disabledCombo.setEnabled(false);
+        rightPanel.add(disabledCombo);
         panel.add(rightPanel, new GridBagConstraints(1, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
 
         frameHelper.showFrame(panel);

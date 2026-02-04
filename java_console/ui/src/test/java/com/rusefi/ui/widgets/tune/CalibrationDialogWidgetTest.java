@@ -7,6 +7,7 @@ import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.ui.laf.GradientTitleBorder;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -133,8 +134,8 @@ public class CalibrationDialogWidgetTest {
         JPanel subPanel = (JPanel) content.getComponent(0);
 
         assertEquals("Sub Dialog UI Name", subPanel.getName());
-        assertTrue(subPanel.getBorder() instanceof javax.swing.border.TitledBorder);
-        assertEquals("Sub Dialog UI Name", ((javax.swing.border.TitledBorder) subPanel.getBorder()).getTitle());
+        assertTrue(subPanel.getBorder() instanceof GradientTitleBorder);
+        assertEquals("Sub Dialog UI Name", ((GradientTitleBorder) subPanel.getBorder()).getTitle());
 
         assertTrue(subPanel.getLayout() instanceof BoxLayout);
         assertEquals(BoxLayout.X_AXIS, ((BoxLayout) subPanel.getLayout()).getAxis(), "Sub-panel should be horizontal due to layout hint");
@@ -252,8 +253,8 @@ public class CalibrationDialogWidgetTest {
         JPanel panelWidget = (JPanel) content.getComponent(0);
 
         // Check title - it should fall back to key "testSpark"
-        assertTrue(panelWidget.getBorder() instanceof javax.swing.border.TitledBorder);
-        String title = ((javax.swing.border.TitledBorder) panelWidget.getBorder()).getTitle();
+        assertTrue(panelWidget.getBorder() instanceof GradientTitleBorder);
+        String title = ((GradientTitleBorder) panelWidget.getBorder()).getTitle();
         assertEquals("testSpark", title, "Title should fall back to key if UI name is empty");
 
         // Check command button
