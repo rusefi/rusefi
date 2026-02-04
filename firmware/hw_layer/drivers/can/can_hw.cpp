@@ -157,8 +157,6 @@ void startCanPins() {
 		return;
 	}
 
-// TODO multiple issues with isValidCanTxPin #9063
-#ifndef STM32H7XX
 	// Validate pins
 	if (!isValidCanTxPin(engineConfiguration->canTxPin)) {
 		if (!isBrainPinValid(engineConfiguration->canTxPin)) {
@@ -177,7 +175,6 @@ void startCanPins() {
 		firmwareError(ObdCode::CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(engineConfiguration->canRxPin));
 		return;
 	}
-#endif // STM32H7XX
 
 #if EFI_PROD_CODE
 	efiSetPadModeIfConfigurationChanged("CAN TX", canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
