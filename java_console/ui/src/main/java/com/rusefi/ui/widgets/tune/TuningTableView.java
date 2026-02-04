@@ -50,8 +50,8 @@ public class TuningTableView {
         Double[][] dataValues = ConfigurationImageGetterSetter.getArrayValues(ltft, outputsImage);
 
         // X and Y bins (RPM and load) are on page 1
-        String[] xBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), image);
-        String[] yBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), image);
+        Double[] xBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), image);
+        Double[] yBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), image);
 
         calculateMinMax(dataValues);
 
@@ -73,7 +73,7 @@ public class TuningTableView {
         this.maxValue = max;
     }
 
-    private String[] extractAxisBins(IniFileModel iniFile,
+    private Double[] extractAxisBins(IniFileModel iniFile,
                                      String binConstant,
                                      ConfigurationImage image) {
         Optional<IniField> binsField = iniFile.findIniField(binConstant);
@@ -82,7 +82,7 @@ public class TuningTableView {
         }
 
         ArrayIniField field = (ArrayIniField) binsField.get();
-        String[][] values = field.getValues(ConfigurationImageGetterSetter.getStringValue(field, image));
+        Double[][] values = ConfigurationImageGetterSetter.getArrayValues(field, image);
 
         if (values.length == 0 || values[0].length == 0) {
             return null;
@@ -93,8 +93,8 @@ public class TuningTableView {
                         values[0];
     }
 
-    private String[] extractColumn(String[][] values) {
-        String[] column = new String[values.length];
+    private Double[] extractColumn(Double[][] values) {
+        Double[] column = new Double[values.length];
         for (int i = 0; i < values.length; i++) {
             column[i] = values[i][0];
         }
@@ -107,10 +107,10 @@ public class TuningTableView {
 
     private static class TuningTableModel extends AbstractTableModel {
         private final Double[][] data;
-        private final String[] xBins;
-        private final String[] yBins;
+        private final Double[] xBins;
+        private final Double[] yBins;
 
-        public TuningTableModel(Double[][] data, String[] xBins, String[] yBins) {
+        public TuningTableModel(Double[][] data, Double[] xBins, Double[] yBins) {
             this.data = data;
             this.xBins = xBins;
             this.yBins = yBins;
@@ -174,10 +174,13 @@ public class TuningTableView {
             }
 
             if (value instanceof String) {
-                try {
-                    double val = Double.parseDouble((String) value);
-                    applyGradient(c, val);
-                } catch (NumberFormatException ignored) {
+                String strValue = (String) value;
+                if (!strValue.isEmpty()) {
+                    try {
+                        double val = Double.parseDouble(strValue);
+                        applyGradient(c, val);
+                    } catch (NumberFormatException ignored) {
+                    }
                 }
             }
             return c;
