@@ -186,4 +186,42 @@ public class CalibrationDialogWidgetTest {
         }
         assertTrue(foundLabel, "Should find table title label");
     }
+
+    @Test
+    public void testUpdateWithTableKey() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+        when(iniFileModel.getDialogs()).thenReturn(Collections.emptyMap());
+
+        // Mock TableModel
+        TableModel tableModel = new TableModel("table1", "map1", "Table Title",
+                null, "X", "Y", "xBins", null, false, "yBins", null, false, "zBins",
+                null, null, null, null);
+        when(iniFileModel.getTable("table1")).thenReturn(tableModel);
+
+        // Mock Bins and Data fields
+        ArrayIniField xBinsField = new ArrayIniField("xBins", 0, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1");
+        ArrayIniField yBinsField = new ArrayIniField("yBins", 4, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1");
+        ArrayIniField zBinsField = new ArrayIniField("zBins", 8, FieldType.FLOAT, 1, 1, "unit", 1, "0", "100", "1");
+
+        when(iniFileModel.findIniField("xBins")).thenReturn(java.util.Optional.of(xBinsField));
+        when(iniFileModel.findIniField("yBins")).thenReturn(java.util.Optional.of(yBinsField));
+        when(iniFileModel.findIniField("zBins")).thenReturn(java.util.Optional.of(zBinsField));
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
+        widget.update("table1", iniFileModel, ci);
+
+        JPanel content = widget.getContentPane();
+        assertEquals(1, content.getComponentCount());
+        JPanel tablePanel = (JPanel) content.getComponent(0);
+
+        boolean foundLabel = false;
+        for (Component c : tablePanel.getComponents()) {
+            if (c instanceof JLabel && ((JLabel) c).getText().equals("Table Title")) {
+                foundLabel = true;
+            }
+        }
+        assertTrue(foundLabel, "Should find table title label when updating by key");
+    }
 }

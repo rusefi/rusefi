@@ -291,7 +291,7 @@ public class MainMenuTreeWidgetTest {
         AtomicReference<SubMenuModel> selectedSubMenu = new AtomicReference<>();
         left.setOnSelect(subMenu -> {
             selectedSubMenu.set(subMenu);
-            right.update(model.getDialogs().get(subMenu.getKey()), model, null);
+            right.update(subMenu.getKey(), model, null);
         });
 
         JTree tree = (JTree) ((JScrollPane) left.getContentPane().getComponent(1)).getViewport().getView();

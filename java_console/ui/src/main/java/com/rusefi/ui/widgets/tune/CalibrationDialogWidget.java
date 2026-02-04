@@ -36,6 +36,34 @@ public class CalibrationDialogWidget {
         contentPane.repaint();
     }
 
+    public void update(String key, IniFileModel iniFileModel, ConfigurationImage ci) {
+        contentPane.removeAll();
+        if (key != null) {
+            DialogModel dialog = iniFileModel.getDialogs().get(key);
+            if (dialog != null) {
+                update(dialog, iniFileModel, ci);
+                return;
+            }
+
+            TableModel table = iniFileModel.getTable(key);
+            if (table != null) {
+                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                TuningTableView tuningTableView = new TuningTableView(table.getTitle());
+                tuningTableView.displayTable(iniFileModel, table.getTableId(), ci);
+                contentPane.add(tuningTableView.getContent());
+            } else {
+                CurveModel curve = iniFileModel.getCurves().get(key);
+                if (curve != null) {
+                    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                    CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, ci);
+                    contentPane.add(curveWidget.getContentPane());
+                }
+            }
+        }
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
     private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         for (DialogModel.Field field : dialogModel.getFields()) {
             Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());

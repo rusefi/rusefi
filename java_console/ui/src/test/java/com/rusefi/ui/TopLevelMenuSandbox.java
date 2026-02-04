@@ -39,8 +39,7 @@ public class TopLevelMenuSandbox {
         panel.add(right.getContentPane(), new GridBagConstraints(1, 0, 1, 1, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
         left.setOnSelect(subMenu -> {
-            String dialogKey = subMenu.getKey();
-            right.update(model.getDialogs().get(dialogKey), model, ci);
+            right.update(subMenu.getKey(), model, ci);
         });
 
         frameHelper.showFrame(panel);
