@@ -32,7 +32,7 @@ public class TuningTableView {
         content.add(table);
     }
 
-    public void displayTable(CalibrationsInfo info, byte[] zBinsBuffer, ConfigurationImage page1Image, String tableName) {
+    public void displayTable(CalibrationsInfo info, byte[] zBinsBuffer, ConfigurationImage image, String tableName) {
         TableModel iniTable = info.getIniFile().getTable(tableName);
         if (iniTable == null) {
             return;
@@ -50,8 +50,8 @@ public class TuningTableView {
         Double[][] dataValues = ConfigurationImageGetterSetter.getArrayValues(ltft, outputsImage);
 
         // X and Y bins (RPM and load) are on page 1
-        String[] xBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), page1Image);
-        String[] yBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), page1Image);
+        String[] xBins = extractAxisBins(info.getIniFile(), iniTable.getXBinsConstant(), image);
+        String[] yBins = extractAxisBins(info.getIniFile(), iniTable.getYBinsConstant(), image);
 
         calculateMinMax(dataValues);
 
