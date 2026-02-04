@@ -160,11 +160,11 @@ public class CalibrationDialogWidget {
                     uiName = subDialog.getKey();
                 }
                 panelWidget.setName(uiName);
-                panelWidget.setBorder(new GradientTitleBorder(uiName));
+                GradientTitleBorder.installBorder(uiName, panelWidget);
                 fillPanel(panelWidget, subDialog, iniFileModel, ci);
             } else {
                 panelWidget.setName(panel.getPanelName());
-                panelWidget.setBorder(new GradientTitleBorder(panel.getPanelName()));
+                GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
             }
             targetContainer.add(panelWidget);
         }
