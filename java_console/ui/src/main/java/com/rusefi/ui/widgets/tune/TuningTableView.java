@@ -16,6 +16,9 @@ import java.util.Optional;
 
 public class TuningTableView {
     private final JTable table = new JTable();
+    private final Surface3DView surface3DView = new Surface3DView();
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel tableContainer = new JPanel(cardLayout);
     private final JPanel content = new JPanel();
     private final String title;
     private double minValue = Double.MAX_VALUE;
@@ -26,10 +29,18 @@ public class TuningTableView {
         table.getTableHeader().setReorderingAllowed(false);
         table.setDefaultRenderer(Object.class, new GradientRenderer());
 
+        tableContainer.add(new JScrollPane(table), "table");
+        tableContainer.add(surface3DView, "3d");
+
+        JCheckBox view3d = new JCheckBox("3D view");
+        view3d.addActionListener(e -> {
+            cardLayout.show(tableContainer, view3d.isSelected() ? "3d" : "table");
+        });
+
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(new JLabel(title));
-        content.add(table.getTableHeader());
-        content.add(table);
+        content.add(view3d);
+        content.add(tableContainer);
     }
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage, ConfigurationImage axisImage) {
@@ -55,6 +66,7 @@ public class TuningTableView {
         calculateMinMax(dataValues);
 
         table.setModel(new TuningTableModel(dataValues, xBins, yBins));
+        surface3DView.setData(dataValues, xBins, yBins, minValue, maxValue);
     }
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage image) {
