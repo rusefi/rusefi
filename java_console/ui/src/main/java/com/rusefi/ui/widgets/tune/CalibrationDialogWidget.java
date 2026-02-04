@@ -67,21 +67,40 @@ public class CalibrationDialogWidget {
             }
         }
 
-        for (PanelModel panel : dialogModel.getPanels()) {
+        List<PanelModel> panels = dialogModel.getPanels();
+        JPanel horizontalPanel = null;
+        for (PanelModel panel : panels) {
+            String placement = panel.getPlacement();
+            boolean isHorizontal = "west".equalsIgnoreCase(placement) || "center".equalsIgnoreCase(placement) || "east".equalsIgnoreCase(placement);
+
+            if (isHorizontal) {
+                if (horizontalPanel == null) {
+                    horizontalPanel = new JPanel();
+                    horizontalPanel.setLayout(new BoxLayout(horizontalPanel, BoxLayout.X_AXIS));
+                    container.add(horizontalPanel);
+                }
+            } else {
+                horizontalPanel = null;
+            }
+
+            JPanel targetContainer = isHorizontal ? horizontalPanel : container;
+
             CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
             if (curve != null) {
                 CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, ci);
-                container.add(curveWidget.getContentPane());
+                targetContainer.add(curveWidget.getContentPane());
                 continue;
             }
 
             JPanel panelWidget = new JPanel();
+            panelWidget.setName(panel.getPanelName());
             panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.Y_AXIS));
             panelWidget.setBorder(BorderFactory.createTitledBorder(panel.getPanelName()));
-            container.add(panelWidget);
+            targetContainer.add(panelWidget);
 
             DialogModel subDialog = panel.resolveDialog(iniFileModel);
             if (subDialog != null) {
+                panelWidget.setName(subDialog.getUiName());
                 fillPanel(panelWidget, subDialog, iniFileModel, ci);
             }
         }
