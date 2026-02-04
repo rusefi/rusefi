@@ -1,4 +1,4 @@
-package com.rusefi.ui.basic;
+package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
