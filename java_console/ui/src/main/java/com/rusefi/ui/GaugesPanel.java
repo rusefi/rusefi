@@ -32,14 +32,13 @@ public class GaugesPanel {
     private static final String[] DEFAULT_LAYOUT = {
         "RPMGauge",
         "internalMcuTemperatureGauge",
-        "Sensor.CLTGauge",
-        "Sensor.IATGauge",
+        "CLTGauge",
+        "IATGauge",
         "TPSGauge",
         "MAPGauge",
-        "lastErrorCode",
-        "VBatt",
-        "vehicleSpeedKph",
-
+        "lastErrorCodeGauge",
+        "VBattGauge",
+        "VSSGauge",
     };
     private static final String GAUGES_ROWS = "gauges_rows";
     private static final String GAUGES_COLUMNS = "gauges_cols";
