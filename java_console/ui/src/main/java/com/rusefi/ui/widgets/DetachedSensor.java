@@ -33,6 +33,7 @@ import static com.rusefi.config.generated.Integration.CMD_SET_SENSOR_MOCK;
 public class DetachedSensor {
     private static final String NAME = "name";
     private static final String WIDTH = "width";
+    public static final int DEFAULT_WIDTH = 256;
 
     private static final Collection<Sensor> MOCKABLE = Arrays.asList(
             Sensor.CLTGauge,
@@ -71,9 +72,10 @@ public class DetachedSensor {
     public DetachedSensor(UIContext uiContext, String gaugeName, int width) {
         this.uiContext = uiContext;
         this.width = width;
+        this.gaugeName = gaugeName;
         frame = new JFrame();
         frame.setAlwaysOnTop(true);
-        onChange(gaugeName);
+        frame.setTitle(gaugeName);
 
         uiContext.DetachedRepositoryINSTANCE.add(this);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -85,6 +87,7 @@ public class DetachedSensor {
             }
         });
         create();
+        showMockControl();
     }
 
     private void create() {
@@ -117,9 +120,8 @@ public class DetachedSensor {
             mockControlPanel.add(mockComponent);
         }
         AutoupdateUtil.trueLayoutAndRepaint(content);
-        int size = width;
-        int h = isMockable ? (int) (size * 1.5) : size;
-        frame.setSize(size, h);
+        int h = isMockable ? (int) (width * 1.5) : width;
+        frame.setSize(width, h);
     }
 
     private boolean isMockable(Sensor sensor) {
@@ -185,7 +187,7 @@ public class DetachedSensor {
 
     public static void create(UIContext uiContext, Node child) {
         String gaugeName = child.getProperty(NAME, Sensor.RPMGauge.name());
-        int width = child.getIntProperty(WIDTH, 256);
+        int width = child.getIntProperty(WIDTH, DEFAULT_WIDTH);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);
         DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, width);
