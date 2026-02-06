@@ -460,8 +460,7 @@ public class ConfigFieldImpl implements ConfigField {
                 // Try to extract and evaluate the true branch
                 String trueBranch = extractTrueBranch(scale);
                 try {
-                    // Don't wrap in braces again - the true branch is already evaluated
-                    return getScaleSpec(trueBranch, name);
+                    return getScaleSpec("{" + trueBranch + "}", name);
                 } catch (Exception e) {
                     // If we can't evaluate the true branch, fall back to 1:1
                     return new Pair<>(1, 1);
