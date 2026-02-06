@@ -2,7 +2,6 @@ package com.rusefi.ui.widgets;
 
 import com.rusefi.SensorTypeHelper;
 import com.rusefi.core.Sensor;
-import com.rusefi.core.WellKnownGauges;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.enums.SensorType;
 import com.rusefi.io.CommandQueue;
@@ -89,10 +88,10 @@ public class DetachedSensor {
     }
 
     private void create() {
-        if (1 == 1)
-            throw new IllegalStateException("fix detached gauges");
-//        SensorGauge.GaugeChangeListener listener = this::onChange;
-//         content.add(SensorGauge.createGauge(uiContext, gaugeName, wrapper, listener, null, gaugeModel), BorderLayout.CENTER);
+        JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
+        SensorGauge.GaugeChangeListener listener = this::onChange;
+        SensorGauge.createGaugeBody(uiContext, gaugeName, wrapper, listener, null);
+        content.add(wrapper, BorderLayout.CENTER);
         content.add(mockControlPanel, BorderLayout.SOUTH);
 
         frame.add(content);
@@ -185,7 +184,7 @@ public class DetachedSensor {
     }
 
     public static void create(UIContext uiContext, Node child) {
-        Sensor sensor = Sensor.lookup(child.getProperty(NAME, WellKnownGauges.RPMGauge.getOutputChannelName()), Sensor.RPMGauge);
+        String gaugeName = child.getProperty(NAME, Sensor.RPMGauge.name());
         int width = child.getIntProperty(WIDTH, 256);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);

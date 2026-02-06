@@ -37,18 +37,7 @@ public class SensorGauge {
 
     private static final String HINT_LINE_1 = "Double-click to detach";
     private static final String HINT_LINE_2 = "Right-click to change";
-    private static UIContext uiContext;
 
-/*
-    public static Component createGauge(UIContext uiContext, String gaugeName, JPanelWithListener wrapper, GaugeChangeListener listener, JMenuItem extraMenuItem, String title, String units, double maxValue, double minValue, GaugeModel gaugeModel) {
-        SensorGauge.uiContext = uiContext;
-        JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
-
-        createGaugeBody(uiContext, gaugeName, wrapper, listener, extraMenuItem);
-
-        return wrapper;
-    }
-*/
     public interface GaugeChangeListener {
         /**
          * This event happens when user decides to switch the kind of gauge
@@ -64,12 +53,7 @@ public class SensorGauge {
 
         IniFileModel iniFile = uiContext.iniFileState.getIniFileModel();
         if (iniFile != null) {
-            // First try to find gauge by channel name (e.g., "TPSValue" maps to gauge "TPSGauge")
-            GaugeModel gaugeModel = iniFile.findGaugeByChannel(sensor.getNativeName());
-            if (gaugeModel == null) {
-                // Fall back to looking up by sensor enum name (for sensors like RPMGauge where name matches)
-                gaugeModel = iniFile.getGauges().get(sensor.name());
-            }
+            GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
             if (gaugeModel != null) {
                 createGauge(uiContext, gaugeName, wrapper, listener, extraMenuItem, gaugeModel);
             }
@@ -80,8 +64,8 @@ public class SensorGauge {
         }
     }
 
-    private static void createGauge(UIContext uiContext, String gaugeName, JPanelWithListener wrapper, GaugeChangeListener listener, JMenuItem extraMenuItem,
-                                    GaugeModel gaugeModel ) {
+    static void createGauge(UIContext uiContext, String gaugeName, JPanelWithListener wrapper, GaugeChangeListener listener, JMenuItem extraMenuItem,
+                            GaugeModel gaugeModel) {
         final Radial gauge = createRadial(gaugeModel.getHighValue(), gaugeModel.getLowValue(), gaugeModel);
 
         UiUtils.setToolTip(gauge, HINT_LINE_1, HINT_LINE_2);
@@ -89,7 +73,8 @@ public class SensorGauge {
 
         gauge.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
 
-        SensorCentral.getInstance().addListener(gaugeName,
+        String channelName = gaugeModel.getChannel();
+        SensorCentral.getInstance().addListener(channelName,
             value -> {
                 if (GaugesPanel.IS_PAUSED)
                     return;
@@ -97,7 +82,7 @@ public class SensorGauge {
             }
         );
 
-        gauge.setValue(SensorCentral.getInstance().getValue(gaugeName));
+        gauge.setValue(SensorCentral.getInstance().getValue(channelName));
         gauge.setLcdDecimals(2);
 
         MouseListener mouseListener = new MouseAdapter() {

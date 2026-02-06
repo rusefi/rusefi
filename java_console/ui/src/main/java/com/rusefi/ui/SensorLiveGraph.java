@@ -97,6 +97,7 @@ public class SensorLiveGraph extends JPanel {
 
     private void grabNewValue() {
         double value = Double.NaN;
+        String channelName = null;
         BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
         byte[] response = SensorCentral.getInstance().getResponse();
         if (bp != null && response != null) {
@@ -105,20 +106,21 @@ public class SensorLiveGraph extends JPanel {
                 try {
                     GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
                     if (gaugeModel != null) {
-                        IniField field = iniFile.getOutputChannel(gaugeModel.getChannel());
+                        channelName = gaugeModel.getChannel();
+                        IniField field = iniFile.getOutputChannel(channelName);
                         if (field instanceof ScalarIniField) {
                             CustomBinaryLogEntry entry = new CustomBinaryLogEntry(gaugeModel, (ScalarIniField) field);
                             value = entry.getValue(response);
                         }
                     }
                 } catch (Exception e) {
-                    // fall back to sensor
+                    // fall back to sensor central
                 }
             }
         }
 
-        if (Double.isNaN(value)) {
-            value = SensorCentral.getInstance().getValue(gaugeName);
+        if (Double.isNaN(value) && channelName != null) {
+            value = SensorCentral.getInstance().getValue(channelName);
         }
 
         addValue(value);
@@ -348,11 +350,7 @@ public class SensorLiveGraph extends JPanel {
             if (bp != null) {
                 IniFileModel iniFile = bp.getIniFileNullable();
                 if (iniFile != null) {
-                    // Find gauge by channel name (e.g., "TPSValue" maps to gauge "TPSGauge")
-                    GaugeModel gaugeModel = iniFile.findGaugeByChannel(sensor.getNativeName());
-                    if (gaugeModel == null) {
-                        gaugeModel = iniFile.getGauges().get(sensor.name());
-                    }
+                    GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
                     if (gaugeModel != null) {
                         maxValue = gaugeModel.getHighValue();
                         minValue = gaugeModel.getLowValue();
