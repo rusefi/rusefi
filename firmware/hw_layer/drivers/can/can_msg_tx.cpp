@@ -16,7 +16,7 @@
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 #include "fifo_buffer.h"
-fifo_buffer<CANTxFrame, 1024> txCanBuffer;
+fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
 
 #if EFI_CAN_SUPPORT

@@ -30,7 +30,7 @@
 #include "script_impl.h"
 #include <vector>
 
-extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
+extern fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500

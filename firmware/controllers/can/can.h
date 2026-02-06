@@ -17,6 +17,11 @@
 #include "hal.h"
 #endif // EFI_UNIT_TEST
 
+#if EFI_SIMULATOR || EFI_UNIT_TEST
+// todo: smarter typedef declaration?
+#define TEST_CAN_BUFFER_SIZE 4096
+#endif // EFI_SIMULATOR
+
 #include "periodic_thread_controller.h"
 
 // Try to recover CAN after following timeout
