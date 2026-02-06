@@ -56,6 +56,8 @@ public class SensorGauge {
             GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
             if (gaugeModel != null) {
                 createGauge(uiContext, gaugeName, wrapper, listener, extraMenuItem, gaugeModel);
+            } else {
+                log.warn("Gauge not found: " + gaugeName);
             }
         } else {
             wrapper.removeAllChildrenAndListeners();
