@@ -154,8 +154,7 @@ public class SensorGauge {
     }
 
     private static void handleDoubleClick(UIContext uiContext, MouseEvent e, Radial gauge, String gaugeName) {
-        int width = gauge.getSize().width;
-        final DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, width);
+        final DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, DetachedSensor.DEFAULT_WIDTH);
 
         ds.show(e);
     }
