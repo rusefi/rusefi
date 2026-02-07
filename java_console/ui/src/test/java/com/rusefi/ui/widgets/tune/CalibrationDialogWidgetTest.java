@@ -262,9 +262,15 @@ public class CalibrationDialogWidgetTest {
         // Check command button
         boolean foundButton = false;
         for (Component c : panelWidget.getComponents()) {
-            if (c instanceof JButton && ((JButton) c).getText().equals("Spark #1")) {
-                foundButton = true;
+            if (c instanceof JPanel) {
+                for (Component sub : ((JPanel) c).getComponents()) {
+                    if (sub instanceof JButton && ((JButton) sub).getText().equals("Spark #1")) {
+                        foundButton = true;
+                        break;
+                    }
+                }
             }
+            if (foundButton) break;
         }
         assertTrue(foundButton, "Should find command button 'Spark #1'");
     }
@@ -417,22 +423,29 @@ public class CalibrationDialogWidgetTest {
         JPanel content = widget.getContentPane();
         assertEquals(3, content.getComponentCount());
 
-        JLabel redLabel = (JLabel) content.getComponent(0);
+        JLabel redLabel = getLabelFromRow((JPanel) content.getComponent(0));
         assertEquals("!Red Label", redLabel.getText());
         assertEquals(Color.RED, redLabel.getBackground());
         assertEquals(Color.WHITE, redLabel.getForeground());
         assertTrue(redLabel.isOpaque());
 
-        JLabel blueLabel = (JLabel) content.getComponent(1);
+        JLabel blueLabel = getLabelFromRow((JPanel) content.getComponent(1));
         assertEquals("#Blue Label", blueLabel.getText());
         assertEquals(Color.BLUE, blueLabel.getBackground());
         assertEquals(Color.WHITE, blueLabel.getForeground());
         assertTrue(blueLabel.isOpaque());
 
-        JLabel normalLabel = (JLabel) content.getComponent(2);
+        JLabel normalLabel = getLabelFromRow((JPanel) content.getComponent(2));
         assertEquals("Normal Label", normalLabel.getText());
         assertNotEquals(Color.RED, normalLabel.getBackground());
         assertNotEquals(Color.BLUE, normalLabel.getBackground());
+    }
+
+    private JLabel getLabelFromRow(JPanel row) {
+        for (Component c : row.getComponents()) {
+            if (c instanceof JLabel) return (JLabel) c;
+        }
+        return null;
     }
 
     @Test
@@ -451,7 +464,7 @@ public class CalibrationDialogWidgetTest {
         JPanel content = widget.getContentPane();
         assertEquals(1, content.getComponentCount());
 
-        JLabel linkLabel = (JLabel) content.getComponent(0);
+        JLabel linkLabel = getLabelFromRow((JPanel) content.getComponent(0));
         assertEquals("https://rusefi.com/s/vvt", linkLabel.getText());
         assertEquals(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR), linkLabel.getCursor());
         assertEquals(1, linkLabel.getMouseListeners().length);
