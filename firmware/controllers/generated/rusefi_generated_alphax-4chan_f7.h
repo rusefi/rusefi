@@ -1556,7 +1556,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1276258060
+#define SIGNATURE_HASH 1357619524
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2152,7 +2152,7 @@
 #define ts_show_wbo_can_menu true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2026.02.06.alphax-4chan_f7.1276258060"
+#define TS_SIGNATURE "rusEFI master.2026.02.07.alphax-4chan_f7.1357619524"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
@@ -2193,7 +2193,9 @@
 #define UNITS_CELSIUS "C"
 #define UNITS_FAHRENHEIT "F"
 #define UNITS_KMH "kmh"
+#define UNITS_KMH_TO_MPH 0.62137119
 #define UNITS_KPA "kPa"
+#define UNITS_KPA_TO_PSI 0.145038
 #define UNITS_MPH "mph"
 #define UNITS_PSI "psi"
 #define VBAT_INJECTOR_CURVE_PRESSURE_SIZE 2

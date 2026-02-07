@@ -64,7 +64,7 @@ struct stft_s {
 	scaled_channel<uint8_t, 10, 1> deadband;
 	/**
 	 * Minimum coolant temperature before closed loop operation is allowed.
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 7
 	 */
 	int8_t minClt;
@@ -386,13 +386,13 @@ static_assert(sizeof(gppwm_channel) == 108);
 struct air_pressure_sensor_config_s {
 	/**
 	 * kPa/psi value at low volts
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 0
 	 */
 	float lowValue;
 	/**
 	 * kPa/psi value at high volts
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 4
 	 */
 	float highValue;
@@ -555,7 +555,7 @@ struct injector_s {
 	scaled_channel<int16_t, 100, 1> battLagCorrBattBins[VBAT_INJECTOR_CURVE_SIZE] = {};
 	/**
 	 * Injector correction pressure
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 20
 	 */
 	scaled_channel<uint32_t, 10, 1> battLagCorrPressBins[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] = {};
@@ -847,12 +847,12 @@ struct vvl_s {
 	 */
 	int minimumTps;
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 12
 	 */
 	int16_t minimumClt;
 	/**
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 14
 	 */
 	int16_t maximumMap;
@@ -1304,7 +1304,7 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_13[1] = {};
 	/**
 	 * Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 14
 	 */
 	int16_t maxAcClt;
@@ -1807,7 +1807,7 @@ struct engine_configuration_s {
 	uint8_t justATempTest;
 	/**
 	 * Delta kPa/psi for MAP sync
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 526
 	 */
 	uint8_t mapSyncThreshold;
@@ -1908,7 +1908,7 @@ struct engine_configuration_s {
 	int8_t gapTrackingLengthOverride;
 	/**
 	 * Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 554
 	 */
 	uint8_t maxIdleVss;
@@ -1919,7 +1919,7 @@ struct engine_configuration_s {
 	uint8_t camDecoder2jzPrecision;
 	/**
 	 * Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 556
 	 */
 	uint16_t minOilPressureAfterStart;
@@ -2686,7 +2686,7 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_873[1] = {};
 	/**
 	 * Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 874
 	 */
 	uint16_t minimumBoostClosedLoopMap;
@@ -3165,7 +3165,7 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_1083[1] = {};
 	/**
 	 * Launch disabled above this speed if setting is above zero
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 1084
 	 */
 	int launchSpeedThreshold;
@@ -3690,13 +3690,13 @@ struct engine_configuration_s {
 	scaled_channel<uint16_t, 1000, 1> tachPulsePerRev;
 	/**
 	 * kPa/psi value which is too low to be true
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 1568
 	 */
 	float mapErrorDetectionTooLow;
 	/**
 	 * kPa/psi value which is too high to be true
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 1572
 	 */
 	float mapErrorDetectionTooHigh;
@@ -3893,13 +3893,13 @@ struct engine_configuration_s {
 	Gpio accelerometerCsPin;
 	/**
 	 * Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 1640
 	 */
 	uint8_t coastingFuelCutVssLow;
 	/**
 	 * Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 1641
 	 */
 	uint8_t coastingFuelCutVssHigh;
@@ -4184,7 +4184,7 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_1701[3] = {};
 	/**
 	 * Specifies the boost pressure allowed before triggering a cut. Setting this to 0 will DISABLE overboost cut.
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 1704
 	 */
 	float boostCutPressure;
@@ -4314,7 +4314,7 @@ struct engine_configuration_s {
 	 * This is the pressure at which your injector flow is known.
 	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa/50.7psi here.
 	 * This is gauge pressure/in reference to atmospheric.
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 1816
 	 */
 	float fuelReferencePressure;
@@ -4374,7 +4374,7 @@ struct engine_configuration_s {
 	float idlePidActivationTime;
 	/**
 	 * Minimum coolant temperature to activate VVT
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 1964
 	 */
 	int16_t vvtControlMinClt;
@@ -4450,7 +4450,7 @@ struct engine_configuration_s {
 	 */
 	float injectorCorrectionPolynomial[8] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 2056
 	 */
 	scaled_channel<int16_t, 1, 1> primeBins[PRIME_CURVE_COUNT] = {};
@@ -4525,7 +4525,7 @@ struct engine_configuration_s {
 	int16_t coastingFuelCutTps;
 	/**
 	 * Fuel cutoff is disabled when the engine is cold.
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 2116
 	 */
 	int16_t coastingFuelCutClt;
@@ -4537,7 +4537,7 @@ struct engine_configuration_s {
 	int16_t pidExtraForLowRpm;
 	/**
 	 * MAP value above which fuel injection is re-enabled.
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 2120
 	 */
 	int16_t coastingFuelCutMap;
@@ -5053,7 +5053,7 @@ struct engine_configuration_s {
 	 */
 	vin_number_t vinNumber;
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 3313
 	 */
 	int8_t torqueReductionActivationTemperature;
@@ -5087,12 +5087,12 @@ struct engine_configuration_s {
 	 */
 	int16_t ALSMaxDuration;
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 3338
 	 */
 	int8_t ALSMinCLT;
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 3339
 	 */
 	int8_t ALSMaxCLT;
@@ -5140,7 +5140,7 @@ struct engine_configuration_s {
 	float ALSSkipRatio;
 	/**
 	 * Hysterisis: if Pressure High Disable is 240kpa, and acPressureEnableHyst is 20, when the ECU sees 240kpa, A/C will be disabled, and stay disabled until 240-20=220kpa is reached
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 3360
 	 */
 	scaled_channel<uint8_t, 2, 1> acPressureEnableHyst;
@@ -5225,7 +5225,7 @@ struct engine_configuration_s {
 	/**
 	 * Defines a pressure range below the cut limit at which boost can resume, providing smoother control over boost cut actions.
 	 * For example: if hard cut is 240kpa, and boost cut hysteresis is 20, when the ECU sees 240kpa, fuel/ign will cut, and stay cut until 240-20=220kpa is reached
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 3388
 	 */
 	scaled_channel<uint8_t, 2, 1> boostCutPressureHyst;
@@ -5551,13 +5551,13 @@ struct engine_configuration_s {
 	linear_sensor_s acPressure;
 	/**
 	 * value of A/C pressure in kPa/psi before that compressor is disengaged
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 3848
 	 */
 	uint16_t minAcPressure;
 	/**
 	 * value of A/C pressure in kPa/psi after that compressor is disengaged
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 3850
 	 */
 	uint16_t maxAcPressure;
@@ -5632,7 +5632,7 @@ struct engine_configuration_s {
 	/**
 	 * This is the pressure at which your injector flow is known.
 	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 3912
 	 */
 	float secondaryInjectorFuelReferencePressure;
@@ -5795,12 +5795,12 @@ struct engine_configuration_s {
 	 */
 	int nitrousMinimumTps;
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 3940
 	 */
 	int16_t nitrousMinimumClt;
 	/**
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 3942
 	 */
 	int16_t nitrousMaximumMap;
@@ -5868,7 +5868,7 @@ struct engine_configuration_s {
 	 */
 	float nitrousIgnitionRetard;
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 3964
 	 */
 	uint16_t nitrousMinimumVehicleSpeed;
@@ -6096,7 +6096,7 @@ struct persistent_config_s {
 	 */
 	uint16_t postCrankingDurationBins[CRANKING_ENRICH_COUNT] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 4368
 	 */
 	int16_t postCrankingCLTBins[CRANKING_ENRICH_CLT_COUNT] = {};
@@ -6153,7 +6153,7 @@ struct persistent_config_s {
 	scaled_channel<uint16_t, 100, 1> sparkDwellValues[DWELL_CURVE_SIZE] = {};
 	/**
 	 * CLT-based target RPM for automatic idle controller
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 4580
 	 */
 	scaled_channel<int16_t, 1, 1> cltIdleRpmBins[CLT_CURVE_SIZE] = {};
@@ -6170,7 +6170,7 @@ struct persistent_config_s {
 	scaled_channel<int16_t, 10, 1> ignitionCltCorrTable[CLT_TIMING_LOAD_AXIS_SIZE][CLT_TIMING_TEMP_AXIS_SIZE] = {};
 	/**
 	 * CLT-based timing correction
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 4678
 	 */
 	scaled_channel<int16_t, 1, 1> ignitionCltCorrTempBins[CLT_TIMING_TEMP_AXIS_SIZE] = {};
@@ -6246,7 +6246,7 @@ struct persistent_config_s {
 	 */
 	float scriptCurve6[SCRIPT_CURVE_8] = {};
 	/**
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 5208
 	 */
 	float baroCorrPressureBins[BARO_CORR_SIZE] = {};
@@ -6333,7 +6333,7 @@ struct persistent_config_s {
 	scaled_channel<uint8_t, 1, 100> pedalToTpsRpmBins[PEDAL_TO_TPS_RPM_SIZE] = {};
 	/**
 	 * CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 5664
 	 */
 	float cltCrankingCorrBins[CLT_CRANKING_CURVE_SIZE] = {};
@@ -6344,7 +6344,7 @@ struct persistent_config_s {
 	 */
 	float cltCrankingCorr[CLT_CRANKING_CURVE_SIZE] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 5728
 	 */
 	float afterCrankingIACtaperDurationBins[CLT_CRANKING_TAPER_CURVE_SIZE] = {};
@@ -6387,7 +6387,7 @@ struct persistent_config_s {
 	 */
 	lua_script_t luaScript;
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 45844
 	 */
 	float cltFuelCorrBins[CLT_FUEL_CURVE_SIZE] = {};
@@ -6397,7 +6397,7 @@ struct persistent_config_s {
 	 */
 	float cltFuelCorr[CLT_FUEL_CURVE_SIZE] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 45972
 	 */
 	float iatFuelCorrBins[IAT_CURVE_SIZE] = {};
@@ -6412,7 +6412,7 @@ struct persistent_config_s {
 	 */
 	float crankingFuelCoef[CRANKING_CURVE_SIZE] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 46132
 	 */
 	float crankingFuelBins[CRANKING_CURVE_SIZE] = {};
@@ -6422,7 +6422,7 @@ struct persistent_config_s {
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 46196
 	 */
 	int16_t crankingCycleFuelCltBins[CRANKING_CYCLE_CLT_SIZE] = {};
@@ -6436,7 +6436,7 @@ struct persistent_config_s {
 	float crankingCycleBaseFuel[CRANKING_CYCLE_CLT_SIZE][CRANKING_CURVE_SIZE] = {};
 	/**
 	 * CLT-based idle position for simple manual idle controller
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 46332
 	 */
 	float cltIdleCorrBins[CLT_IDLE_TABLE_CLT_SIZE] = {};
@@ -6476,7 +6476,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<int16_t, 10, 1> ignitionIatCorrTable[IAT_IGN_CORR_LOAD_COUNT][IAT_IGN_CORR_TEMP_COUNT] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 46852
 	 */
 	int8_t ignitionIatCorrTempBins[IAT_IGN_CORR_TEMP_COUNT] = {};
@@ -6509,7 +6509,7 @@ struct persistent_config_s {
 	 * This table represents MAP at a given TPS vs RPM, which we use if our MAP sensor has failed, or if we are using MAP Prediciton. 
 	 *  This table should be a direct representation of MAP, you can tune it manually by disconnecting MAP sensor, and filling out the table with values that match an external gauge that shows MAP.
 	 * Additionally, you can also use MLV to get the map values and/or generate the table for you
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 47504
 	 */
 	scaled_channel<uint16_t, 100, 1> mapEstimateTable[MAP_EST_LOAD_COUNT][MAP_EST_RPM_COUNT] = {};
@@ -6774,17 +6774,17 @@ struct persistent_config_s {
 	 */
 	uint8_t tcu_tccTpsBins[8] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 51396
 	 */
 	uint8_t tcu_tccLockSpeed[8] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 51404
 	 */
 	uint8_t tcu_tccUnlockSpeed[8] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 51412
 	 */
 	uint8_t tcu_32SpeedBins[8] = {};
@@ -6979,7 +6979,7 @@ struct persistent_config_s {
 	 */
 	uint16_t injectorStagingRpmBins[INJ_STAGING_RPM_SIZE] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 54328
 	 */
 	int16_t wwCltBins[WWAE_TABLE_SIZE] = {};
@@ -6992,7 +6992,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 100, 1> wwBetaCltValues[WWAE_TABLE_SIZE] = {};
 	/**
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 54360
 	 */
 	uint8_t wwMapBins[WWAE_TABLE_SIZE] = {};
@@ -7116,7 +7116,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 50, 1> predictiveMapBlendDurationValues[TPS_TPS_ACCEL_CLT_CORR_TABLE] = {};
 	/**
-	 * units: SPECIAL_CASE_TEMPERATURE
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 55600
 	 */
 	scaled_channel<int16_t, 1, 1> cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE] = {};
@@ -7151,32 +7151,32 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> tcu_shiftTpsBins[TCU_TABLE_WIDTH] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 55664
 	 */
 	uint8_t tcu_shiftSpeed12[TCU_TABLE_WIDTH] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 55672
 	 */
 	uint8_t tcu_shiftSpeed23[TCU_TABLE_WIDTH] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 55680
 	 */
 	uint8_t tcu_shiftSpeed34[TCU_TABLE_WIDTH] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 55688
 	 */
 	uint8_t tcu_shiftSpeed21[TCU_TABLE_WIDTH] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 55696
 	 */
 	uint8_t tcu_shiftSpeed32[TCU_TABLE_WIDTH] = {};
 	/**
-	 * units: SPECIAL_CASE_SPEED
+	 * units: {bitStringValue(velocityUnitsLabels, useMetricOnInterface)}
 	 * offset 55704
 	 */
 	uint8_t tcu_shiftSpeed43[TCU_TABLE_WIDTH] = {};
@@ -7244,7 +7244,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 100> minimumOilPressureBins[8] = {};
 	/**
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 55932
 	 */
 	scaled_channel<uint8_t, 1, 10> minimumOilPressureValues[8] = {};
@@ -7363,7 +7363,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 100> maximumOilPressureBins[4] = {};
 	/**
-	 * units: SPECIAL_CASE_PRESSURE
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 56380
 	 */
 	scaled_channel<uint8_t, 1, 10> maximumOilPressureValues[4] = {};
