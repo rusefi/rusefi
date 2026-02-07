@@ -70,6 +70,7 @@ pins:
     type: ign
     color: grey
     ts_name: ___ Coil 6
+    function: coil 6 (5v)
 
   - pin: B11
     meta: MM100_IGN4
@@ -105,6 +106,7 @@ pins:
     type: ign
     color: green
     ts_name: ___ Coil 1
+    function: coil 1 (5v)
 
   - pin: B16
     meta: MM100_OUT_PWM2

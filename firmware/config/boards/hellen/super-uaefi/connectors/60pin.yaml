@@ -214,7 +214,7 @@ pins:
     class: outputs
     meta: MM100_IGN1
     ts_name: Coil 1
-    function: Coil 1
+    function: Coil 1 (5v)
     type: ign
     color: green
 
