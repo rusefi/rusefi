@@ -137,12 +137,6 @@ public class TsOutput {
                     return it.adjustSize(tsPosition);
                 }
 
-                if (configField.isDirective() && configField.getComment() != null) {
-                    tsHeader.append(configField.getComment());
-                    tsHeader.append(EOL);
-                    return tsPosition;
-                }
-
                 if (cs == null) {
                     String comment = "";
 
