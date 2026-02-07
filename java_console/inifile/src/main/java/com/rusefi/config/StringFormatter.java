@@ -13,8 +13,15 @@ public class StringFormatter {
     }
 
     public static String niceToString(double value, int precision) {
+        if (precision <= 0) {
+            return Integer.toString((int) Math.round(value));
+        }
         double toScale = Math.pow(10, precision);
-        return Double.toString(Math.round(value * toScale) / toScale);
+        String result = Double.toString(Math.round(value * toScale) / toScale);
+        if (result.endsWith(".0")) {
+            return result.substring(0, result.length() - 2);
+        }
+        return result;
     }
 
     public static String niceToString(Number value) {
