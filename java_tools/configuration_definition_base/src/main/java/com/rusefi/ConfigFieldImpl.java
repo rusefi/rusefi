@@ -57,11 +57,6 @@ public class ConfigFieldImpl implements ConfigField {
     private String iterateOriginalName;
     private int iterateIndex;
 
-    // this is used to override the units used on rusefi_config.txt
-    // only used to replace "SPECIAL_CASE_TEMPERATURE" to "C" and "F", and apply the correct scale
-    @Nullable
-    private String mockedTsInfo;
-
     /**
      * todo: one day someone should convert this into a builder
      */
@@ -395,15 +390,7 @@ public class ConfigFieldImpl implements ConfigField {
 
     @Override
     public String getTsInfo() {
-        if (mockedTsInfo != null) {
-            return mockedTsInfo;
-        }
         return tsInfo;
-    }
-
-    @Override
-    public void setTsInfo(String newTsInfo) {
-    	mockedTsInfo = newTsInfo;
     }
 
     @Override
