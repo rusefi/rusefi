@@ -56,7 +56,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         if (cf.isUnusedField())
             return "";
 
-        if (cf.isArray() || cf.isFromIterate() || cf.isDirective())
+        if (cf.isArray() || cf.isFromIterate())
             return "";
         if (!TypesHelper.isPrimitive(cf.getTypeName()) && !TypesHelper.isBoolean(cf.getTypeName())) {
             return "";
