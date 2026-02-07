@@ -434,4 +434,26 @@ public class CalibrationDialogWidgetTest {
         assertNotEquals(Color.RED, normalLabel.getBackground());
         assertNotEquals(Color.BLUE, normalLabel.getBackground());
     }
+
+    @Test
+    public void testLinkLabel() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        List<DialogModel.Field> fields = new ArrayList<>();
+        fields.add(new DialogModel.Field("key1", "!<html><a href=https://rusefi.com/s/vvt>https://rusefi.com/s/vvt</a></html>"));
+
+        DialogModel mainDialog = new DialogModel("main", "Main", fields, Collections.emptyList());
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(mainDialog, iniFileModel, null);
+
+        JPanel content = widget.getContentPane();
+        assertEquals(1, content.getComponentCount());
+
+        JLabel linkLabel = (JLabel) content.getComponent(0);
+        assertEquals("https://rusefi.com/s/vvt", linkLabel.getText());
+        assertEquals(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR), linkLabel.getCursor());
+        assertEquals(1, linkLabel.getMouseListeners().length);
+    }
 }

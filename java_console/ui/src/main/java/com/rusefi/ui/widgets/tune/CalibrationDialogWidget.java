@@ -13,8 +13,14 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CalibrationDialogWidget {
     private final JPanel contentPane = new JPanel();
@@ -106,6 +112,7 @@ public class CalibrationDialogWidget {
                 JLabel label = new JLabel(field.getUiName());
                 label.setOpaque(true);
                 applyBackgroundColor(label, field.getUiName());
+                applyLinkLogic(label, field.getUiName());
                 container.add(label);
             }
         }
@@ -184,6 +191,31 @@ public class CalibrationDialogWidget {
         } else if (value.startsWith("!")) {
             component.setBackground(java.awt.Color.RED);
             component.setForeground(java.awt.Color.WHITE);
+        }
+    }
+
+    private static void applyLinkLogic(JLabel label, String text) {
+        if (text == null) {
+            return;
+        }
+        // Basic pattern to match <a href=URL>text</a>
+        Pattern pattern = Pattern.compile("href=([^> ]+)>([^<]+)</a>");
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            String url = matcher.group(1);
+            String visibleText = matcher.group(2);
+            label.setText(visibleText);
+            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        Desktop.getDesktop().browse(new URI(url));
+                    } catch (Exception ex) {
+                        System.err.println("Failed to open URL: " + url);
+                    }
+                }
+            });
         }
     }
 
