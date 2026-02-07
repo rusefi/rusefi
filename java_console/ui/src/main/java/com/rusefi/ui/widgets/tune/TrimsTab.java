@@ -51,7 +51,6 @@ public class TrimsTab {
         }
 
         new Thread(() -> {
-            try {
                 Optional<CalibrationsInfo> info = CalibrationsHelper.readCurrentCalibrations(
                         portResult.get().port,
                         UpdateOperationCallbacks.DUMMY,
@@ -89,8 +88,6 @@ public class TrimsTab {
                         });
                     }
                 }
-            } finally {
-            }
         }).start();
     }
 
