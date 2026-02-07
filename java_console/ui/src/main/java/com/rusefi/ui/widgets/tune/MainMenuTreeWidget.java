@@ -6,6 +6,7 @@ import com.opensr5.ini.MenuItem;
 import com.opensr5.ini.MenuModel;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -33,7 +34,7 @@ public class MainMenuTreeWidget {
     private String lastSearchSelectedKey = null;
     private Consumer<SubMenuModel> onSelect;
 
-    public MainMenuTreeWidget(IniFileModel model) {
+    public MainMenuTreeWidget(UIContext uiContext, IniFileModel model) {
         for (MenuModel menu : model.getMenus()) {
             DefaultMutableTreeNode menuNode = new DefaultMutableTreeNode(menu.getName());
             root.add(menuNode);

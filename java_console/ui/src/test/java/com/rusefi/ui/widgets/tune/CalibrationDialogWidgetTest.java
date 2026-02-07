@@ -7,6 +7,7 @@ import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +49,7 @@ public class CalibrationDialogWidgetTest {
 
         DialogModel mainDialog = new DialogModel("main", "Main", Collections.emptyList(), Collections.emptyList(), panels, null);
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         widget.update(mainDialog, iniFileModel, null);
 
         JPanel content = widget.getContentPane();
@@ -103,7 +104,7 @@ public class CalibrationDialogWidgetTest {
         // Dialog with xAxis layout hint
         DialogModel mainDialog = new DialogModel("main", "Main", new ArrayList<DialogModel.Field>(), new ArrayList<DialogModel.Command>(), panels, (String) null, "xAxis");
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         widget.update(mainDialog, iniFileModel, null);
 
         JPanel content = widget.getContentPane();
@@ -127,7 +128,7 @@ public class CalibrationDialogWidgetTest {
 
         DialogModel mainDialog = new DialogModel("main", "Main", new ArrayList<DialogModel.Field>(), new ArrayList<DialogModel.Command>(), panels, (String) null, (String) null);
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         widget.update(mainDialog, iniFileModel, null);
 
         JPanel content = widget.getContentPane();
@@ -169,7 +170,7 @@ public class CalibrationDialogWidgetTest {
 
         DialogModel mainDialog = new DialogModel("main", "Main", new ArrayList<DialogModel.Field>(), new ArrayList<DialogModel.Command>(), panels, (String) null, (String) null);
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
         widget.update(mainDialog, iniFileModel, ci);
 
@@ -209,7 +210,7 @@ public class CalibrationDialogWidgetTest {
         when(iniFileModel.findIniField("yBins")).thenReturn(java.util.Optional.of(yBinsField));
         when(iniFileModel.findIniField("zBins")).thenReturn(java.util.Optional.of(zBinsField));
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         ConfigurationImage ci = new ConfigurationImage(new byte[1000]);
         widget.update("table1", iniFileModel, ci);
 
@@ -245,7 +246,7 @@ public class CalibrationDialogWidgetTest {
         panels.add(new PanelModel("testSpark", null, null, null));
         DialogModel mainDialog = new DialogModel("main", "Main", Collections.emptyList(), Collections.emptyList(), panels, null);
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         widget.update(mainDialog, iniFileModel, null);
 
         JPanel content = widget.getContentPane();

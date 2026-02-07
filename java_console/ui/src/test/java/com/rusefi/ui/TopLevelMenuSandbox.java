@@ -71,12 +71,14 @@ public class TopLevelMenuSandbox {
 
         JPanel panel = new JPanel(new GridBagLayout());
 
-        MainMenuTreeWidget left = new MainMenuTreeWidget(model);
+        // todo: can we not require model here? make MainMenuTreeWidget more dynamic in terms of model?
+        MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext, model);
         panel.add(left.getContentPane(), new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-        CalibrationDialogWidget right = new CalibrationDialogWidget();
+        CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
         panel.add(right.getContentPane(), new GridBagConstraints(1, 0, 1, 1, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
+        // todo: things should be integrated via uiContext
         left.setOnSelect(subMenu -> {
             right.update(subMenu.getKey(), model, ci);
         });

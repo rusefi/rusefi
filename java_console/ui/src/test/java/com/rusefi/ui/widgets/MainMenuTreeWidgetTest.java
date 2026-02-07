@@ -8,6 +8,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ import java.awt.image.renderable.RenderableImage;
 import java.awt.geom.AffineTransform;
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +78,7 @@ public class MainMenuTreeWidgetTest {
         RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
 
-        com.rusefi.ui.widgets.tune.CalibrationDialogWidget widget = new com.rusefi.ui.widgets.tune.CalibrationDialogWidget();
+        com.rusefi.ui.widgets.tune.CalibrationDialogWidget widget = new com.rusefi.ui.widgets.tune.CalibrationDialogWidget(new UIContext());
         widget.update(model.getDialogs().get("mainDialog"), model, null);
 
         JPanel content = widget.getContentPane();
@@ -127,7 +129,7 @@ public class MainMenuTreeWidgetTest {
         RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
 
-        com.rusefi.ui.widgets.tune.CalibrationDialogWidget widget = new com.rusefi.ui.widgets.tune.CalibrationDialogWidget();
+        com.rusefi.ui.widgets.tune.CalibrationDialogWidget widget = new com.rusefi.ui.widgets.tune.CalibrationDialogWidget(new UIContext());
         widget.update(model.getDialogs().get("mainDialog"), model, null);
 
         JPanel content = widget.getContentPane();
@@ -149,11 +151,12 @@ public class MainMenuTreeWidgetTest {
 
     @Test
     public void testTreeStructure() throws FileNotFoundException {
+        UIContext uiContext = new UIContext();
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
         assertNotNull(model);
 
-        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(model);
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(uiContext, model);
         JPanel content = widget.getContentPane();
         assertNotNull(content);
 
@@ -203,10 +206,12 @@ public class MainMenuTreeWidgetTest {
     }
 
     @Test
-    public void testSearchLogic() throws FileNotFoundException {
+    public void testSearchLogic() throws FileNotFoundException, InterruptedException, InvocationTargetException {
+        UIContext uiContext = new UIContext();
+
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
-        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(model);
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(uiContext, model);
         JPanel content = widget.getContentPane();
 
         JPanel topPanel = (JPanel) content.getComponent(0);
@@ -232,11 +237,7 @@ public class MainMenuTreeWidgetTest {
         // 3. Reset search by clicking (simulated)
         tree.setSelectionPath(new TreePath(limitsNode.getPath()));
         // Selection listener should trigger search reset
-        try {
             SwingUtilities.invokeAndWait(() -> {});
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         assertTrue(searchField.getText().isEmpty(), "Search field should be empty after click");
         assertEquals(model.getMenus().size(), ((DefaultMutableTreeNode) tree.getModel().getRoot()).getChildCount(), "Tree should be fully restored");
 
@@ -282,11 +283,12 @@ public class MainMenuTreeWidgetTest {
 
     @Test
     public void testIntegration() throws FileNotFoundException {
+        UIContext uiContext = new UIContext();
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
 
-        com.rusefi.ui.widgets.tune.MainMenuTreeWidget left = new MainMenuTreeWidget(model);
-        com.rusefi.ui.widgets.tune.CalibrationDialogWidget right = new CalibrationDialogWidget();
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext, model);
+        com.rusefi.ui.widgets.tune.CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
 
         AtomicReference<SubMenuModel> selectedSubMenu = new AtomicReference<>();
         left.setOnSelect(subMenu -> {
@@ -365,7 +367,7 @@ public class MainMenuTreeWidgetTest {
         RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
-        CalibrationDialogWidget widget = new CalibrationDialogWidget();
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
         DialogModel dialog = model.getDialogs().get("curveDialog");
         assertNotNull(dialog, "dialog curveDialog should exist");
         widget.update(dialog, model, null);
@@ -393,15 +395,6 @@ public class MainMenuTreeWidgetTest {
 
     @Test
     public void testCurveWidgetGridLines() {
-        String iniContent = "[MegaTune]\n" +
-                "  signature = \"rusEFI\"\n" +
-                "[Constants]\n" +
-                "  nPages = 1\n" +
-                "  ochBlockSize = 100\n" +
-                "  pageSize = 100\n" +
-                "  pageReadCommand = \"r\"\n" +
-                "  xBins = array, F32, 0, [16], \"RPM\", 1, 0, 0, 8000, 0\n" +
-                "  yBins = array, F32, 64, [16], \"Deg\", 1, 0, 0, 100, 0\n";
         AxisModel xAxis = new AxisModel(0, 100, 5); // 6 lines expected: 0, 20, 40, 60, 80, 100
         AxisModel yAxis = new AxisModel(0, 200, 10); // 11 lines expected: 0, 20, ..., 200
         CurveModel curveModel = new CurveModel("id", "title", xAxis, yAxis, "xBins", "yBins");

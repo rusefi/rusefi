@@ -7,6 +7,9 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.sensor_logs.SensorLogger;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * key frontend app state singleton
+ */
 public class UIContext {
     private final LinkManager linkManager = new LinkManager();
 

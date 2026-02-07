@@ -9,6 +9,7 @@ import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ import java.util.Optional;
 public class CalibrationDialogWidget {
     private final JPanel contentPane = new JPanel();
 
-    public CalibrationDialogWidget() {
+    public CalibrationDialogWidget(UIContext uiContext) {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
     }
 
