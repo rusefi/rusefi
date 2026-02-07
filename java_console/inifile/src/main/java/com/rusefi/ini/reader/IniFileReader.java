@@ -186,9 +186,6 @@ public class IniFileReader {
             if (RawIniFile.Line.isCommentLine(rawText))
                 return;
 
-            if (RawIniFile.Line.isPreprocessorDirective(rawText))
-                return;
-
             trim(list);
 
             if (list.isEmpty())

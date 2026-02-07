@@ -44,11 +44,6 @@ public interface ConfigField {
         }
 
         @Override
-        public boolean isDirective() {
-            return false;
-        }
-
-        @Override
         public int getSize(ConfigField next) {
             return 0;
         }
@@ -193,8 +188,6 @@ public interface ConfigField {
     String getFalseName();
 
     boolean isBit();
-
-    boolean isDirective();
 
     int getSize(ConfigField next);
 
