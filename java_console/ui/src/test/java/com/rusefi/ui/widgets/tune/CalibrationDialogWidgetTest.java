@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
+import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
@@ -266,5 +267,36 @@ public class CalibrationDialogWidgetTest {
             }
         }
         assertTrue(foundButton, "Should find command button 'Spark #1'");
+    }
+
+    @Test
+    public void testIsCheckboxEnum() {
+        assertCheckbox("No", "Yes", true);
+        assertCheckbox("Yes", "No", true);
+        assertCheckbox("Disabled", "Enabled", true);
+        assertCheckbox("Enabled", "Disabled", true);
+
+        assertCheckbox("false", "true", false);
+        assertCheckbox("No", "Maybe", false);
+        assertCheckbox("No", "Yes", "Third", false);
+    }
+
+    private void assertCheckbox(String v1, String v2, boolean expected) {
+        EnumIniField field = createEnumField(v1, v2);
+        assertEquals(expected, CalibrationDialogWidget.isCheckboxEnum(field), "Values: " + v1 + ", " + v2);
+    }
+
+    private void assertCheckbox(String v1, String v2, String v3, boolean expected) {
+        EnumIniField field = createEnumField(v1, v2, v3);
+        assertEquals(expected, CalibrationDialogWidget.isCheckboxEnum(field), "Values: " + v1 + ", " + v2 + ", " + v3);
+    }
+
+    private EnumIniField createEnumField(String... values) {
+        Map<Integer, String> map = new HashMap<>();
+        for (int i = 0; i < values.length; i++) {
+            map.put(i, values[i]);
+        }
+        EnumIniField.EnumKeyValueMap enumMap = new EnumIniField.EnumKeyValueMap(map);
+        return new EnumIniField("test", 0, FieldType.INT8, enumMap, 0, 0);
     }
 }

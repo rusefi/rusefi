@@ -171,7 +171,7 @@ public class CalibrationDialogWidget {
         }
     }
 
-    private static boolean isCheckboxEnum(EnumIniField enumField) {
+    public static boolean isCheckboxEnum(EnumIniField enumField) {
         boolean isCheckBox = false;
         if (enumField.getEnums().size() == 2) {
             List<String> values = new java.util.ArrayList<>(enumField.getEnums().values());
