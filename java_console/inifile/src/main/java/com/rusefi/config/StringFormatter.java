@@ -13,9 +13,7 @@ public class StringFormatter {
     }
 
     public static String niceToString(double value, int precision) {
-        int scale = (int) Math.log10(value);
-        int places = 1 + Math.max(0, precision - scale);
-        double toScale = Math.pow(10, places);
+        double toScale = Math.pow(10, precision);
         return Double.toString(Math.round(value * toScale) / toScale);
     }
 

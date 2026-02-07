@@ -15,7 +15,8 @@ public class ConfigurationImageGetterSetter {
                 Field f = new Field(field.getName(), field.getOffset(), field.getType());
                 try {
                     Double value = f.getValue(image, field.getMultiplier()) + field.getSerializationOffset();
-                    return StringFormatter.niceToString(value, StringFormatter.FIELD_PRECISION);
+                    int precision = IniField.parseDigits(field.getDigits());
+                    return StringFormatter.niceToString(value, precision);
                 } catch (Throwable e) {
                     throw new IllegalStateException("While getting " + field.getName(), e);
                 }
@@ -35,9 +36,10 @@ public class ConfigurationImageGetterSetter {
             public String visit(ArrayIniField field) {
                 Double[][] values = getArrayValues(field, image);
                 final String[][] stringValues = new String[field.getRows()][field.getCols()];
+                int precision = IniField.parseDigits(field.getDigits());
                 for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
                     for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
-                        stringValues[rowIndex][colIndex] = StringFormatter.niceToString(values[rowIndex][colIndex], StringFormatter.FIELD_PRECISION);
+                        stringValues[rowIndex][colIndex] = StringFormatter.niceToString(values[rowIndex][colIndex], precision);
                     }
                 }
                 return field.formatValue(stringValues);

@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.config.StringFormatter;
 import com.rusefi.maintenance.CalibrationsInfo;
 
 import javax.swing.*;
@@ -55,6 +56,7 @@ public class TuningTableView {
         }
 
         ArrayIniField ltft = (ArrayIniField) zBinsField.get();
+        int precision = IniField.parseDigits(ltft.getDigits());
 
         // Extract data from outputs buffer using the field's offset
         Double[][] dataValues = ConfigurationImageGetterSetter.getArrayValues(ltft, zImage);
@@ -65,7 +67,7 @@ public class TuningTableView {
 
         calculateMinMax(dataValues);
 
-        table.setModel(new TuningTableModel(dataValues, xBins, yBins));
+        table.setModel(new TuningTableModel(dataValues, xBins, yBins, precision));
         surface3DView.setData(dataValues, xBins, yBins, minValue, maxValue);
     }
 
@@ -129,11 +131,13 @@ public class TuningTableView {
         private final Double[][] data;
         private final Double[] xBins;
         private final Double[] yBins;
+        private final int precision;
 
-        public TuningTableModel(Double[][] data, Double[] xBins, Double[] yBins) {
+        public TuningTableModel(Double[][] data, Double[] xBins, Double[] yBins, int precision) {
             this.data = data;
             this.xBins = xBins;
             this.yBins = yBins;
+            this.precision = precision;
         }
 
         @Override
@@ -170,17 +174,9 @@ public class TuningTableView {
 
         private String formatNumber(Object value) {
             if (value instanceof Number) {
-                double num = ((Number) value).doubleValue();
-                return String.format("%.1f", num);
+                return StringFormatter.niceToString((Number) value, precision);
             }
-            if (value == null) return "";
-            String strValue = value.toString();
-            try {
-                double num = Double.parseDouble(strValue);
-                return String.format("%.1f", num);
-            } catch (NumberFormatException e) {
-                return strValue;
-            }
+            return String.valueOf(value);
         }
     }
 

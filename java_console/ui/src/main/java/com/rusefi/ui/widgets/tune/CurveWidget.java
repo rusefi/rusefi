@@ -7,6 +7,7 @@ import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.config.StringFormatter;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -336,7 +337,7 @@ public class CurveWidget {
         public Object getValueAt(int rowIndex, int columnIndex) {
             double val = columnIndex == 0 ? xValues[rowIndex] : yValues[rowIndex];
             int digits = columnIndex == 0 ? xDigits : yDigits;
-            return String.format("%." + digits + "f", val);
+            return StringFormatter.niceToString(val, digits);
         }
 
         @Override

@@ -29,10 +29,10 @@ public class FieldTest {
 
     @Test
     public void testPrecisionDependingOnScale() {
-        assertEquals("0.12302", StringFormatter.niceToString(0.12302, 4));
-        assertEquals("0.1232", StringFormatter.niceToString(0.12317, 3));
+        assertEquals("0.123", StringFormatter.niceToString(0.12302, 3));
+        assertEquals("0.1232", StringFormatter.niceToString(0.12317, 4));
 
-        assertEquals("1234567.1", StringFormatter.niceToString(1234567.123, 4));
+        assertEquals("1234567.123", StringFormatter.niceToString(1234567.123, 3));
         assertEquals("10000.0", StringFormatter.niceToString(10000.00002, 4));
         assertEquals("0.002", StringFormatter.niceToString(0.002, 4));
         assertEquals("12.302", StringFormatter.niceToString(12.302, 4));

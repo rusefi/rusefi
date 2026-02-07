@@ -54,6 +54,14 @@ public abstract class IniField {
         return null;
     }
 
+    public static int parseDigits(String digits) {
+        try {
+            return Integer.parseInt(digits);
+        } catch (NumberFormatException e) {
+            return 3;
+        }
+    }
+
     public int getOffset() {
         return offset;
     }
