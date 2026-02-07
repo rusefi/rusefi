@@ -152,9 +152,6 @@ public interface ConfigField {
             return null;
         }
         @Override
-        public void setTsInfo(String newtsInfo) {
-        }
-        @Override
         public boolean isWithinStruct(String structName) {
             return false;
         }
@@ -233,8 +230,6 @@ public interface ConfigField {
     boolean isFromIterate();
 
     String getCommentTemplated();
-
-    void setTsInfo(String tsInfo);
 
     boolean isWithinStruct(String structName);
 }
