@@ -37,6 +37,11 @@ public class IniFileState {
         }
     }
 
+    // todo: proper design? mock?
+    public void setIniFileModelForTest(IniFileModel iniFileModel) {
+        this.iniFileModel = iniFileModel;
+    }
+
     public IniFileModel getIniFileModel() {
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         if (bp != null) {

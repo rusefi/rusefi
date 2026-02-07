@@ -105,6 +105,24 @@ public class LinkManager implements Closeable {
         SerialPort[] findPorts();
     }
 
+    // todo: proper design? mock?
+    public void setBinaryProtocolForTests(BinaryProtocol binaryProtocol) {
+        this.connector = new LinkConnector() {
+            @Override
+            public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
+            }
+
+            @Override
+            public void send(String command, boolean fireEvent) {
+            }
+
+            @Override
+            public BinaryProtocol getBinaryProtocol() {
+                return binaryProtocol;
+            }
+        };
+    }
+
     public static Set<String> getCommPorts() {
         SerialPort[] ports = SerialPortSource.REAL.findPorts();
         // wow sometimes driver returns same port name more than once?!
