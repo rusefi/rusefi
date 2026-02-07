@@ -87,20 +87,26 @@ public class CalibrationDialogWidget {
                         checkBox.setSelected(currentValue.equalsIgnoreCase("\"Enabled\"") || currentValue.equalsIgnoreCase("\"Yes\""));
                         row.add(checkBox);
                     } else {
+                        String cleanValue = currentValue.replace("\"", "");
                         JComboBox<String> comboBox = new JComboBox<>(enumField.getEnums().values().toArray(new String[0]));
-                        comboBox.setSelectedItem(currentValue.replace("\"", ""));
+                        comboBox.setSelectedItem(cleanValue);
+                        applyBackgroundColor(comboBox, cleanValue);
                         comboBox.setMaximumSize(comboBox.getPreferredSize());
                         row.add(comboBox);
                     }
                 } else {
                     String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(f, ci);
                     JTextField textField = new JTextField(currentValue);
+                    applyBackgroundColor(textField, currentValue);
                     textField.setMaximumSize(textField.getPreferredSize());
                     row.add(textField);
                 }
                 container.add(row);
             } else {
-                container.add(new JLabel(field.getUiName()));
+                JLabel label = new JLabel(field.getUiName());
+                label.setOpaque(true);
+                applyBackgroundColor(label, field.getUiName());
+                container.add(label);
             }
         }
 
@@ -168,6 +174,16 @@ public class CalibrationDialogWidget {
                 GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
             }
             targetContainer.add(panelWidget);
+        }
+    }
+
+    private static void applyBackgroundColor(JComponent component, String value) {
+        if (value.startsWith("#")) {
+            component.setBackground(java.awt.Color.BLUE);
+            component.setForeground(java.awt.Color.WHITE);
+        } else if (value.startsWith("!")) {
+            component.setBackground(java.awt.Color.RED);
+            component.setForeground(java.awt.Color.WHITE);
         }
     }
 
