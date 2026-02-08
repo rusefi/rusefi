@@ -336,6 +336,7 @@ public class TuneCanTool {
             if (isInteger) {
                 sb.append(TuneTools.getAssignmentCode(defaultValue, parentReference, cName, Integer.toString(intValue)));
             } else {
+                // todo: use precision here?
                 sb.append(TuneTools.getAssignmentCode(defaultValue, parentReference, cName, niceToString(doubleValue)));
             }
 

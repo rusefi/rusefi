@@ -33,14 +33,14 @@ public class FieldTest {
         assertEquals("0.1232", StringFormatter.niceToString(0.12317, 4));
 
         assertEquals("1234567.123", StringFormatter.niceToString(1234567.123, 3));
-        assertEquals("10000", StringFormatter.niceToString(10000.00002, 4));
+        assertEquals("10000.0", StringFormatter.niceToString(10000.00002, 4));
         assertEquals("0.002", StringFormatter.niceToString(0.002, 4));
         assertEquals("12.302", StringFormatter.niceToString(12.302, 4));
         assertEquals("12.302", StringFormatter.niceToString(12.302, 3));
         assertEquals("12.31", StringFormatter.niceToString(12.312, 2));
         assertEquals("123.02", StringFormatter.niceToString(123.02, 4));
         assertEquals("60", StringFormatter.niceToString(60.0, 0));
-        assertEquals("60", StringFormatter.niceToString(60.0, 1));
+        assertEquals("60.0", StringFormatter.niceToString(60.0, 1));
     }
 
 }

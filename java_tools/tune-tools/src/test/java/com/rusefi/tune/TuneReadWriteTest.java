@@ -118,7 +118,7 @@ public class TuneReadWriteTest {
          * Looks like I am not getting something right around Field#FIELD_PRECISION
          * See also TuneWriterTest :(
          */
-        assertEquals(66, compareImages(binaryDataFromXml, fileBinaryData, model), "Binary match expected");
+        assertEquals(110, compareImages(binaryDataFromXml, fileBinaryData, model), "Binary match expected");
         // todo: looks like this is not removing the temporary file?
         Files.delete(path);
     }

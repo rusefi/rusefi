@@ -17,11 +17,7 @@ public class StringFormatter {
             return Integer.toString((int) Math.round(value));
         }
         double toScale = Math.pow(10, precision);
-        String result = Double.toString(Math.round(value * toScale) / toScale);
-        if (result.endsWith(".0")) {
-            return result.substring(0, result.length() - 2);
-        }
-        return result;
+        return Double.toString(Math.round(value * toScale) / toScale);
     }
 
     public static String niceToString(Number value) {

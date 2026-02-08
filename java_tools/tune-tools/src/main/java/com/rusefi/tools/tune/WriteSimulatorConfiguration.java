@@ -82,7 +82,7 @@ public class WriteSimulatorConfiguration {
         Msq m = MsqFactory.valueOf(configuration, ini);
         String name = "KNOCKNOISERPMBINS";
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
-        if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
+        if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ""))
             throw new IllegalStateException(name + " canary wonders if everything is fine?");
         m.writeXmlFile(outputXmlFileName);
 

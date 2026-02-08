@@ -83,6 +83,7 @@ public class Field {
                 '}';
     }
 
+/*
     public String getAnyValue(ConfigurationImage ci, double multiplier) {
         if (options == null) {
             // we are here for non-enum types
@@ -93,7 +94,7 @@ public class Field {
         int ordinal = ci.getByteBuffer(offset, type.getStorageSize()).get();
         return options[ordinal];
     }
-/*
+
     public void setValue(byte[] content, boolean value) {
         ByteBuffer wrapped = ByteBufferUtil.littleEndianWrap(content, 0, content.length);
         if (bitOffset != NO_BIT_OFFSET) {
