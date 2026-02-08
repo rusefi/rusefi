@@ -32,7 +32,7 @@ public class PinoutLogic {
     private final ArrayList<PinState> globalList = new ArrayList<>();
     private final Map</*id*/String, /*tsName*/String> tsNameById = new TreeMap<>();
     private final Map</*id*/String, /*tsName*/String> tsNameByMeta = new TreeMap<>();
-    private final StringBuilder header = new StringBuilder("//DO NOT EDIT MANUALLY, let automation work hard.\n\n");
+    private final StringBuilder header = new StringBuilder("// DO NOT EDIT MANUALLY, let automation work hard.\n\n");
     private final StringBuffer pinNames = new StringBuffer();
     private final BoardInputs boardInputs;
     private final List<String> lowSideOutputs = new ArrayList<>();
@@ -330,16 +330,16 @@ public class PinoutLogic {
 
             getTsNameByIdFile.append("#include \"pch.h\"\n\n");
             getTsNameByIdFile.append("// see comments at declaration in pin_repository.h\n");
-            getTsNameByIdFile.append("const char * getBoardSpecificPinName(brain_pin_e brainPin) {\n");
-            getTsNameByIdFile.append("\tswitch(brainPin) {\n");
+            getTsNameByIdFile.append("const char* getBoardSpecificPinName(brain_pin_e brainPin) {\n");
+            getTsNameByIdFile.append("\tswitch (brainPin) {\n");
 
             for (Map.Entry</*id*/String, /*tsName*/String> e : tsNameById.entrySet()) {
                 if (e.getKey().contains("ADC")) // we only support GPIO pins at the moment no support for ADC
                     continue;
-                getTsNameByIdFile.append("\t\tcase Gpio::" + e.getKey() + ": return " + quote(e.getValue()) + ";\n");
+                getTsNameByIdFile.append("\t\tcase Gpio::" + e.getKey() + ":\n\t\t\treturn " + quote(e.getValue()) + ";\n");
             }
 
-            getTsNameByIdFile.append("\t\tdefault: return nullptr;\n");
+            getTsNameByIdFile.append("\t\tdefault:\n\t\t\treturn nullptr;\n");
             getTsNameByIdFile.append("\t}\n");
 
             getTsNameByIdFile.append("\treturn nullptr;\n}\n");
