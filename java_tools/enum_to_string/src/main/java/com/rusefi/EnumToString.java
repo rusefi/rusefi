@@ -107,21 +107,21 @@ public class EnumToString {
     private static String makeCode(String enumName, EnumsReader.EnumState enumState) {
         StringBuilder sb = new StringBuilder();
         Collection<Value> values = enumState.values.values();
-        sb.append(getMethodSignature(enumName) + "{\n");
+        sb.append(getMethodSignature(enumName) + " {\n");
 
-        sb.append("switch(value) {\n");
+        sb.append("\tswitch (value) {\n");
 
         for (Value e : values) {
-            sb.append("case ");
+            sb.append("\t\tcase ");
             if (enumState.isEnumClass) {
                 sb.append(enumState.enumName).append("::");
             }
             sb.append(e.getName() + ":\n");
-            sb.append("  return \"" + e.getName() + "\";\n");
+            sb.append("\t\t\treturn \"" + e.getName() + "\";\n");
         }
 
-        sb.append("  }\n");
-        sb.append(" return NULL;\n");
+        sb.append("\t}\n");
+        sb.append("\treturn NULL;\n");
         sb.append("}\n");
 
         return sb.toString();
