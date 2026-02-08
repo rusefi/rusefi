@@ -79,6 +79,41 @@ public class TuningTableViewTest {
         assertFalse(table.isCellSelected(0, 1), "Selection should be cleared on new table");
     }
 
+    @Test
+    public void testEqualsButton() {
+        TuningTableView view = new TuningTableView("Test");
+        JTable table = findTable(view.getContent());
+        Double[][] data = {{1.0, 2.0}, {3.0, 4.0}};
+        table.setModel(new TuningTableView.TuningTableModel(data, new Double[]{100.0, 200.0}, new Double[]{10.0, 20.0}, 1));
+
+        // Select row 0, col 1 (which is data[1][0] due to reversal)
+        table.setRowSelectionInterval(0, 0);
+        table.setColumnSelectionInterval(1, 1);
+
+        // We can't easily test JOptionPane.showConfirmDialog in a headless unit test
+        // but we can test the underlying logic if we extract it or if we mock JOptionPane.
+        // For now, I'll just verify the button exists.
+        JButton equalsButton = findButton(view.getContent(), "=");
+        assertNotNull(equalsButton);
+    }
+
+    @Test
+    public void testEqualsButtonLogic() {
+        TuningTableView view = new TuningTableView("Test");
+        JTable table = findTable(view.getContent());
+        Double[][] data = {{1.0, 2.0}, {3.0, 4.0}};
+        table.setModel(new TuningTableView.TuningTableModel(data, new Double[]{100.0, 200.0}, new Double[]{10.0, 20.0}, 1));
+
+        // Select row 0, col 1 (reversedRowIndex 1, dataCol 0) -> currently 3.0
+        table.setRowSelectionInterval(0, 0);
+        table.setColumnSelectionInterval(1, 1);
+
+        view.setValue(70.0, table.getSelectedRows(), table.getSelectedColumns());
+
+        assertEquals(70.0, data[1][0], 0.001);
+        assertTrue(table.isCellSelected(0, 1), "Selection should be preserved after SetValue");
+    }
+
     private JTable findTable(JComponent c) {
         if (c instanceof JTable) return (JTable) c;
         for (int i = 0; i < c.getComponentCount(); i++) {

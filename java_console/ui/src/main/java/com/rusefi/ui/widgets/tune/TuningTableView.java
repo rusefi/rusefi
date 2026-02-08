@@ -68,9 +68,11 @@ public class TuningTableView {
         deltaField.setMaximumSize(new Dimension(100, 30));
         JButton upButton = new JButton("Up");
         JButton downButton = new JButton("Down");
+        JButton equalsButton = new JButton("=");
 
         upButton.addActionListener(e -> applyDelta(deltaField, 1));
         downButton.addActionListener(e -> applyDelta(deltaField, -1));
+        equalsButton.addActionListener(e -> showSetDialog());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
@@ -83,10 +85,63 @@ public class TuningTableView {
         topPanel.add(deltaField);
         topPanel.add(upButton);
         topPanel.add(downButton);
+        topPanel.add(equalsButton);
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(topPanel);
         content.add(tableContainer);
+    }
+
+    protected int showConfirmDialog(JPanel panel) {
+        return JOptionPane.showConfirmDialog(table, panel, "Set Value", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    private void showSetDialog() {
+        int[] selectedRows = table.getSelectedRows();
+        int[] selectedCols = table.getSelectedColumns();
+
+        if (selectedRows.length == 0 || selectedCols.length == 0) {
+            return;
+        }
+
+        JTextField valueField = new JTextField("70", 10);
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JLabel("Value:"));
+        panel.add(valueField);
+
+        int result = showConfirmDialog(panel);
+        if (result == JOptionPane.OK_OPTION) {
+            try {
+                double value = Double.parseDouble(valueField.getText());
+                setValue(value, selectedRows, selectedCols);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+    }
+
+    protected void setValue(double value, int[] selectedRows, int[] selectedCols) {
+        TuningTableModel model = (TuningTableModel) table.getModel();
+
+        for (int row : selectedRows) {
+            for (int col : selectedCols) {
+                if (col == 0) continue; // Skip axis column
+                int reversedRowIndex = model.data.length - 1 - row;
+                model.data[reversedRowIndex][col - 1] = value;
+            }
+        }
+        calculateMinMax(model.data);
+        model.fireTableDataChanged();
+
+        // Restore selection
+        table.clearSelection();
+        for (int row : selectedRows) {
+            table.addRowSelectionInterval(row, row);
+        }
+        for (int col : selectedCols) {
+            table.addColumnSelectionInterval(col, col);
+        }
+
+        surface3DView.setData(model.data, model.xBins, model.yBins, minValue, maxValue);
     }
 
     private void applyDelta(JTextField deltaField, int sign) {
