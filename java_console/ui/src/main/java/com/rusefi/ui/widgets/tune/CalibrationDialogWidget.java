@@ -22,6 +22,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @see TuningTableView
+ */
 public class CalibrationDialogWidget {
     private final JPanel contentPane = new JPanel();
 

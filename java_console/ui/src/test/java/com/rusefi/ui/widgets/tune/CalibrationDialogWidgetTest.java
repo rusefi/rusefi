@@ -179,13 +179,18 @@ public class CalibrationDialogWidgetTest {
         assertEquals(1, content.getComponentCount());
         JPanel tablePanel = (JPanel) content.getComponent(0);
 
-        // TuningTableView content contains a JLabel and a JTable (via JTableHeader and JTable)
-        // See TuningTableView constructor
+        // TuningTableView content contains a topPanel which contains a JLabel
         boolean foundLabel = false;
         for (Component c : tablePanel.getComponents()) {
-            if (c instanceof JLabel && ((JLabel) c).getText().equals("Table Title")) {
-                foundLabel = true;
+            if (c instanceof JPanel) {
+                for (Component sub : ((JPanel) c).getComponents()) {
+                    if (sub instanceof JLabel && ((JLabel) sub).getText().equals("Table Title")) {
+                        foundLabel = true;
+                        break;
+                    }
+                }
             }
+            if (foundLabel) break;
         }
         assertTrue(foundLabel, "Should find table title label");
     }
@@ -221,9 +226,15 @@ public class CalibrationDialogWidgetTest {
 
         boolean foundLabel = false;
         for (Component c : tablePanel.getComponents()) {
-            if (c instanceof JLabel && ((JLabel) c).getText().equals("Table Title")) {
-                foundLabel = true;
+            if (c instanceof JPanel) {
+                for (Component sub : ((JPanel) c).getComponents()) {
+                    if (sub instanceof JLabel && ((JLabel) sub).getText().equals("Table Title")) {
+                        foundLabel = true;
+                        break;
+                    }
+                }
             }
+            if (foundLabel) break;
         }
         assertTrue(foundLabel, "Should find table title label when updating by key");
     }
