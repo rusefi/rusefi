@@ -1,0 +1,64 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
+UseTab: Always
+TabWidth: 4
+IndentWidth: 4
+ContinuationIndentWidth: 8
+
+ColumnLimit: 120
+
+# K&R / 1TBS brace style
+BreakBeforeBraces: Attach
+
+# case labels at same indent as switch
+IndentCaseLabels: true
+
+# Pointer/reference: left-aligned (const char* name)
+PointerAlignment: Left
+ReferenceAlignment: Left
+DerivePointerAlignment: false
+
+# Template on its own line
+BreakTemplateDeclarations: Yes
+
+# Constructor initializer lists: break before comma
+#   Foo()
+#       : m_a(a)
+#       , m_b(b)
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerIndentWidth: 4
+
+# Don't reorder #includes (pch.h must stay first)
+SortIncludes: Never
+
+# Short form control
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+
+# Spaces
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyBlock: false
+
+# Access modifiers (public/private) not indented
+AccessModifierOffset: -4
+
+# Preprocessor
+IndentPPDirectives: None
+
+# Namespaces
+NamespaceIndentation: None
+
+# Align
+AlignAfterOpenBracket: AlwaysBreak
+AlignOperands: AlignAfterOperator
+AlignTrailingComments: true
+
+# Packing
+BinPackArguments: false
+BinPackParameters: false
