@@ -114,6 +114,23 @@ public class TuningTableViewTest {
         assertTrue(table.isCellSelected(0, 1), "Selection should be preserved after SetValue");
     }
 
+    @Test
+    public void testDecimalPoints() {
+        TuningTableView view = new TuningTableView("Test");
+        JTable table = findTable(view.getContent());
+        Double[][] data = {{1.0, 2.55}, {3.0, 4.0}};
+        // Precision 2
+        TuningTableView.TuningTableModel model = new TuningTableView.TuningTableModel(data, new Double[]{100.0, 200.0}, new Double[]{10.0, 20.0}, 2);
+        table.setModel(model);
+
+        // data[1][0] is 3.0, with precision 2 it should be "3.00"
+        assertEquals("3.00", table.getValueAt(0, 1));
+        // data[1][1] is 4.0, with precision 2 it should be "4.00"
+        assertEquals("4.00", table.getValueAt(0, 2));
+        // data[0][1] is 2.55, with precision 2 it should be "2.55"
+        assertEquals("2.55", table.getValueAt(1, 2));
+    }
+
     private JTable findTable(JComponent c) {
         if (c instanceof JTable) return (JTable) c;
         for (int i = 0; i < c.getComponentCount(); i++) {

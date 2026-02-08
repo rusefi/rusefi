@@ -315,7 +315,7 @@ public class TuningTableView {
 
         private String formatNumber(Object value) {
             if (value instanceof Number) {
-                return StringFormatter.niceToString((Number) value, precision);
+                return String.format("%." + precision + "f", ((Number) value).doubleValue()).replace(',', '.');
             }
             return String.valueOf(value);
         }
