@@ -36,6 +36,8 @@ ifneq ("$(wildcard $(BOARD_DIR)/connectors)","")
   PIN_FILES = \
     $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_outputs.h \
     $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
+
+  ALLCPPSRC += $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
 endif
 
 RAMDISK = \
