@@ -2333,6 +2333,8 @@ uint16_t[ALTERNATOR_VOLTAGE_RPM_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 1, 
 #define BOOST_CURVE_SIZE 5
 include_file controllers/actuators/boost_control_config.txt
 
+include_file controllers/modules/check_engine_light/check_engine_config.txt
+
 uint8_t[8] autoscale minimumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint8_t[8] autoscale minimumOilPressureValues;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 10 : 1.45038}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 1000 : 145}, 0
 
