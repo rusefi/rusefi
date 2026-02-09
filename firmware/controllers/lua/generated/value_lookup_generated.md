@@ -2005,6 +2005,30 @@ Rotational Idle Auto engage CLT.
 ### tcu_shiftTime
 
 
+### cel_battery_min_v
+"Minimum Battery Voltage"
+
+### cel_battery_max_v
+"Maximum Battery Voltage"
+
+### cel_map_min_v
+"Minimum MAP V"
+
+### cel_map_max_v
+"Maximum MAP V"
+
+### cel_iat_min_v
+"Minimum IAT V"
+
+### cel_iat_max_v
+"Maximum IAT V"
+
+### cel_tps_min_v
+"Minimum TPS V"
+
+### cel_tps_max_v
+"Maximum TPS V"
+
 ### dynoRpmStep
 @@DYNO_RPM_STEP_TOOLTIP@@
 

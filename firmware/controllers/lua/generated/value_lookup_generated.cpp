@@ -2011,6 +2011,30 @@ float getConfigValueByHash(const int hash) {
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
+// cel_battery_min_v
+		case -1794416277:
+			return config->cel_battery_min_v;
+// cel_battery_max_v
+		case -1794692883:
+			return config->cel_battery_max_v;
+// cel_map_min_v
+		case -491094482:
+			return config->cel_map_min_v;
+// cel_map_max_v
+		case -491371088:
+			return config->cel_map_max_v;
+// cel_iat_min_v
+		case 1152494894:
+			return config->cel_iat_min_v;
+// cel_iat_max_v
+		case 1152218288:
+			return config->cel_iat_max_v;
+// cel_tps_min_v
+		case -789855065:
+			return config->cel_tps_min_v;
+// cel_tps_max_v
+		case -790131671:
+			return config->cel_tps_max_v;
 // dynoRpmStep
 		case -1085712470:
 			return config->dynoRpmStep;
@@ -5406,6 +5430,46 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1658957891:
 	{
 		config->tcu_shiftTime = value;
+		return 1;
+	}
+		case -1794416277:
+	{
+		config->cel_battery_min_v = (int)value;
+		return 1;
+	}
+		case -1794692883:
+	{
+		config->cel_battery_max_v = (int)value;
+		return 1;
+	}
+		case -491094482:
+	{
+		config->cel_map_min_v = (int)value;
+		return 1;
+	}
+		case -491371088:
+	{
+		config->cel_map_max_v = (int)value;
+		return 1;
+	}
+		case 1152494894:
+	{
+		config->cel_iat_min_v = (int)value;
+		return 1;
+	}
+		case 1152218288:
+	{
+		config->cel_iat_max_v = (int)value;
+		return 1;
+	}
+		case -789855065:
+	{
+		config->cel_tps_min_v = (int)value;
+		return 1;
+	}
+		case -790131671:
+	{
+		config->cel_tps_max_v = (int)value;
 		return 1;
 	}
 		case -1085712470:
