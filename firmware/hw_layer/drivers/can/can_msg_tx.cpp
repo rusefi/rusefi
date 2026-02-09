@@ -123,7 +123,9 @@ CanTxMessage::~CanTxMessage() {
 	if (msg == MSG_OK) {
 		engine->outputChannels.canWriteOk++;
 	} else {
+extern int txErrorCount[EFI_CAN_BUS_COUNT];
 		engine->outputChannels.canWriteNotOk++;
+		txErrorCount[busIndex]++;
 	}
 #endif // EFI_TUNER_STUDIO
 #endif /* EFI_CAN_SUPPORT */

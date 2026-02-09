@@ -104,22 +104,24 @@ static CANDriver* getCanDevice(size_t index)
 }
 #endif
 
+int txErrorCount[EFI_CAN_BUS_COUNT] = {};
+
 static void canInfo() {
 	if (!isCanEnabled) {
 		efiPrintf("CAN is not enabled, please enable & restart");
 		return;
 	}
 
-	efiPrintf("CAN1 TX %s %s", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate));
+	efiPrintf("CAN1 TX %s %s err=%d", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate), txErrorCount[0]);
 	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
 	canHwInfo(getCanDevice(0));
 
-	efiPrintf("CAN2 TX %s %s", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate));
+	efiPrintf("CAN2 TX %s %s err=%d", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate), txErrorCount[1]);
 	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
 	canHwInfo(getCanDevice(1));
 
 #if (EFI_CAN_BUS_COUNT >= 3)
-	efiPrintf("CAN3 TX %s %s", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate));
+	efiPrintf("CAN3 TX %s %s err=%d", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate), txErrorCount[2]);
 	efiPrintf("CAN3 RX %s", hwPortname(engineConfiguration->can3RxPin));
 	canHwInfo(getCanDevice(2));
 #endif
