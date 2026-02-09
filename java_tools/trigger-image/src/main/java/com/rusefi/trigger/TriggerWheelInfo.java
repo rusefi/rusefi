@@ -486,6 +486,10 @@ public class TriggerWheelInfo {
         return shapeWithoutTdc;
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
     public TriggerGaps getGaps() {
         return gaps;
     }
