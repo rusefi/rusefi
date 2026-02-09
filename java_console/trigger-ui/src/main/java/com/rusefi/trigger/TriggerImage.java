@@ -15,6 +15,7 @@ import java.awt.*;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.util.Date;
 import java.util.List;
 
@@ -320,14 +321,13 @@ public class TriggerImage {
     @NotNull
     static List<WaveState> convertSignalsToWaves(List<TriggerSignal> signals) {
         /**
-         * todo: what does this code do? does this work?
-         * looks to be repeating trigger share couple of times? but not visible on images somehow?
+         * Duplicates the waveform so that several rotations are shown in the graph.
          */
         List<TriggerSignal> toShow = new ArrayList<>(signals);
         for (int i = 1; i <= 2 + EXTRA_COUNT; i++) {
             for (TriggerSignal s : signals)
-                toShow.add(new TriggerSignal(s.getWaveIndex(), s.getState(), s.getAngle() + i * 720,
-                    s.getGap()));
+                // Offset each iteration by 360
+                toShow.add(new TriggerSignal(s.getWaveIndex(), s.getAngle() + i * 360, s.getState(), s.getGap()));
         }
 
         List<WaveState> waves = new ArrayList<>();

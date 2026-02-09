@@ -1,43 +1,38 @@
 package com.rusefi.trigger;
 
 import org.jetbrains.annotations.NotNull;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public class TriggerSignalReader {
     @NotNull
-    public static List<TriggerSignal> readSignals(BufferedReader reader, int count) throws IOException {
-        String line;
-        String[] tokens;
-        List<TriggerSignal> signals = new ArrayList<>();
-
-        int index = 0;
-        while (index < count) {
-            line = reader.readLine();
-            if (line.trim().startsWith("#"))
-                continue;
-            tokens = line.split(" ");
-            if (tokens.length < 4)
-                throw new IllegalStateException("Unexpected [" + line + "]");
-            int signalIndex = Integer.parseInt(tokens[2]);
-            int signalState = Integer.parseInt(tokens[3]);
-            double angle = Double.parseDouble(tokens[4]);
-            double gap = parseDoubleMaybeNaN(tokens[5]);
-
-            TriggerSignal s = new TriggerSignal(signalIndex, signalState, angle, gap);
-//            System.out.println(s);
-            signals.add(s);
-            index++;
+    public static List<ComplexTriggerSignal> readSignals(List<Map<String, Object>> events) {
+        if (events == null || events.size() == 0) {
+            throw new IllegalStateException("Got no events.");
         }
-        return signals;
-    }
 
-    private static double parseDoubleMaybeNaN(String doubleString) {
-        if ("nan".equalsIgnoreCase(doubleString))
-            return Double.NaN;
-        return Double.parseDouble(doubleString);
+        List<ComplexTriggerSignal> signals = new ArrayList<>();
+
+        // Read events from object parsed from YAML
+        for (Map<String, Object> event : events) {
+            int channel = Integer.parseInt(event.get("channel").toString());
+            double angle = Double.parseDouble(event.get("angle").toString());
+            // Default to 0.0 width and no repetition
+            double width = Double.parseDouble(Objects.toString(event.get("width"), "0.0"));
+            int count = Integer.parseInt(Objects.toString(event.get("count"), "1"));
+            double lastAngle = Double.parseDouble(Objects.toString(event.get("lastAngle"), event.get("angle").toString()));
+
+            ComplexTriggerSignal s = new ComplexTriggerSignal(channel, angle, width, count, lastAngle);
+            signals.add(s);
+        }
+
+        return signals;
     }
 }
