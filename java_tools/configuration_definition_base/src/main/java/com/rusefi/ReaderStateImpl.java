@@ -437,9 +437,6 @@ public class ReaderStateImpl implements ReaderState {
         destinations.add(new CHeaderConsumer(this, ConfigDefinitionRootOutputFolder.getValue() + cHeaderFileName, withC_Defines, fileFactory));
     }
 
-    public void addJavaDestination(String fileName) {
-    }
-
     @Override
     public void addPrepend(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
