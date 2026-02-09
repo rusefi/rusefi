@@ -11,4 +11,5 @@ include $(PROJECT_DIR)/controllers/modules/map_averaging/map_averaging.mk
 include $(PROJECT_DIR)/controllers/modules/ethernet_console/ethernet_console.mk
 include $(PROJECT_DIR)/controllers/modules/example_module/example_module.mk
 include $(PROJECT_DIR)/controllers/modules/vvl_controller/vvl_controller.mk
+include $(PROJECT_DIR)/controllers/modules/check_engine_light/check_engine_light.mk
 include $(PROJECT_DIR)/controllers/modules/configuration_wizard/configuration_wizard.mk
