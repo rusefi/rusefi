@@ -7,7 +7,7 @@ import com.rusefi.Timeouts;
 import com.rusefi.UiVersion;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.io.AbstractConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
@@ -70,10 +70,14 @@ public class NetworkConnector implements Closeable {
                 .setNeedPullData(false);
 
         CountDownLatch onConnected = new CountDownLatch(1);
-        controllerConnector.startAndConnect(controllerPort, new AbstractConnectionStateListener() {
+        controllerConnector.startAndConnect(controllerPort, new ConnectionStatusLogic.ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 onConnected.countDown();
+            }
+
+            @Override
+            public void onConnectionFailed(String s) {
             }
         });
 

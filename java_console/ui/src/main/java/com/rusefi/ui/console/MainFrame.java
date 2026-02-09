@@ -53,13 +53,12 @@ public class MainFrame {
         }
     };
 
-    public final ConnectionFailedListener listener;
+    public final ConnectionStatusLogic.ConnectionStateListener listener;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
-        listener = (String s) -> {
-        };
+        listener = ConnectionStatusLogic.ConnectionStateListener.VOID;
     }
 
     private void windowOpenedHandler() {
@@ -78,7 +77,7 @@ public class MainFrame {
         }));
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
-        linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStateListener() {
+        linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStatusLogic.ConnectionStateListener() {
             @Override
             public void onConnectionFailed(String errorMessage) {
                 log.error("onConnectionFailed " + errorMessage);

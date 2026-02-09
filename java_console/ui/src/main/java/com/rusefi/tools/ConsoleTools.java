@@ -10,7 +10,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.*;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -270,7 +270,7 @@ public class ConsoleTools {
             return;
         }
         LinkManager linkManager = new LinkManager();
-        linkManager.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+        linkManager.startAndConnect(autoDetectedPort, new ConnectionStatusLogic.ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 onConnectionEstablished.apply(linkManager);

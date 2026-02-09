@@ -51,7 +51,7 @@ import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.DfuLogic;
 import com.rusefi.dfu.android.AndroidDfuConnection;
 import com.rusefi.dfu.android.DfuDeviceLocator;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -308,7 +308,7 @@ public class rusEFI extends Activity {
                 }
             }));
             linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true),
-                    new ConnectionStateListener() {
+                    new ConnectionStatusLogic.ConnectionStateListener() {
                         @Override
                         public void onConnectionEstablished() {
                             mResultView.post(() -> visibleLogAppend(new Date() + " On connection established\n"));

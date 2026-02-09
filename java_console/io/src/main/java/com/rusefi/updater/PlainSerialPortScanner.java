@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.ScannerHelper;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
@@ -32,10 +32,9 @@ public class PlainSerialPortScanner {
                     .setNeedPullText(false)
                     .setNeedPullLiveData(false)
                 ) {
-                    linkManager.start(port, s -> {
-                    });
+                    linkManager.start(port, ConnectionStatusLogic.ConnectionStateListener.VOID);
                     linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(false, false),
-                        new ConnectionStateListener() {
+                        new ConnectionStatusLogic.ConnectionStateListener() {
                             @Override
                             public void onConnectionEstablished() {
                                 System.out.println("onConnectionEstablished " + port);

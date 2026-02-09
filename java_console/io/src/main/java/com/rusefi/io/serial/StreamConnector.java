@@ -3,7 +3,7 @@ package com.rusefi.io.serial;
 import com.devexperts.logging.Logging;
 import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
@@ -29,7 +29,7 @@ public class StreamConnector implements LinkConnector {
     }
 
     @Override
-    public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
+    public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.ConnectionStateListener listener) {
         Objects.requireNonNull(arguments);
         log.info("StreamConnector: connecting");
         portHolder.listener = listener;
