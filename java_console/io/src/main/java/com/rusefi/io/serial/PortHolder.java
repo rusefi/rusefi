@@ -3,7 +3,7 @@ package com.rusefi.io.serial;
 import com.devexperts.logging.Logging;
 import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -29,7 +29,7 @@ public class PortHolder {
     private final Callable<IoStream> ioStreamFactory;
     private final LinkManager linkManager;
 
-    public ConnectionStateListener listener;
+    public ConnectionStatusLogic.ConnectionStateListener listener;
     private final Object portLock = new Object();
 
     @Nullable

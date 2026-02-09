@@ -5,7 +5,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.core.*;
 import com.rusefi.enums.trigger_type_e;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
 import org.jetbrains.annotations.NotNull;
@@ -148,7 +148,7 @@ public class IoUtil {
         /**
          * TCP connector is blocking
          */
-        linkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
+        linkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStatusLogic.ConnectionStateListener.VOID);
         linkManager.getEngineState().registerStringValueAction(Integration.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         waitForFirstResponse();
     }

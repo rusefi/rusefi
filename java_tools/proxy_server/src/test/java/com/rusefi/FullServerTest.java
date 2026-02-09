@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.rusEFIVersion;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
@@ -132,7 +132,7 @@ public class FullServerTest {
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
             // connect to proxy and read virtual controller through it
-            clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + localApplicationProxyContext.authenticatorPort(), new ConnectionStateListener() {
+            clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + localApplicationProxyContext.authenticatorPort(), new ConnectionStatusLogic.ConnectionStateListener() {
                 @Override
                 public void onConnectionEstablished() {
                     connectionEstablishedCountDownLatch.countDown();

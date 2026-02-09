@@ -2,7 +2,7 @@ package com.rusefi.ts_plugin.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 
 import javax.swing.*;
@@ -27,7 +27,7 @@ public class ConnectPanel {
     private final JButton disconnect = new JButton("Disconnect");
     private boolean isFirstAttempt = true;
 
-    public ConnectPanel(final ConnectionStateListener connectionStateListener) {
+    public ConnectPanel(final ConnectionStatusLogic.ConnectionStateListener connectionStateListener) {
         JPanel flow = new JPanel(new FlowLayout());
 
         disconnect.setEnabled(false);
@@ -101,13 +101,13 @@ public class ConnectPanel {
         content.add(status, BorderLayout.SOUTH);
     }
 
-    private void tryToConnect(ConnectionStateListener connectionStateListener) {
+    private void tryToConnect(ConnectionStatusLogic.ConnectionStateListener connectionStateListener) {
         String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             status.setText("rusEFI not found");
             connect.setEnabled(true);
         } else {
-            controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStateListener() {
+            controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStatusLogic.ConnectionStateListener() {
                 public void onConnectionEstablished() {
                     SwingUtilities.invokeLater(() -> {
                         status.setText("Connected to rusEFI " + autoDetectedPort);

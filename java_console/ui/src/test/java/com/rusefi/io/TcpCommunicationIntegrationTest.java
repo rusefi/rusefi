@@ -34,7 +34,7 @@ public class TcpCommunicationIntegrationTest {
         CountDownLatch failedCountDownLatch = new CountDownLatch(1);
 
         LinkManager clientManager = new LinkManager();
-        clientManager.startAndConnect(Integer.toString(port), new ConnectionStateListener() {
+        clientManager.startAndConnect(Integer.toString(port), new ConnectionStatusLogic.ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 System.out.println("Established");
@@ -63,7 +63,7 @@ public class TcpCommunicationIntegrationTest {
         // todo: remove CONFIGURATION_RUSEFI_BINARY or nicer API to disable local file load
 
         LinkManager clientManager = new LinkManager();
-        clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + port, new ConnectionStateListener() {
+        clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + port, new ConnectionStatusLogic.ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();
@@ -107,7 +107,7 @@ public class TcpCommunicationIntegrationTest {
 
         // connect to proxy and read virtual controller through it
         LinkManager clientManager = new LinkManager();
-        clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + proxyPort, new ConnectionStateListener() {
+        clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + proxyPort, new ConnectionStatusLogic.ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 connectionEstablishedCountDownLatch.countDown();
