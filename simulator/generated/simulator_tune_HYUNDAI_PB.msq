@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22912">
+    <page number="0" size="22920">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -601,6 +601,14 @@
         <constant name="canWbo2_type">"RusEFI"</constant>
         <constant name="canWriteEnabled">"enable"</constant>
         <constant name="cdmInputPin">"NONE"</constant>
+        <constant digits="1" name="cel_battery_max_v" units="#">0.0</constant>
+        <constant digits="1" name="cel_battery_min_v" units="#">0.0</constant>
+        <constant digits="2" name="cel_iat_max_v" units="V">0.0</constant>
+        <constant digits="2" name="cel_iat_min_v" units="V">0.0</constant>
+        <constant digits="2" name="cel_map_max_v" units="V">0.0</constant>
+        <constant digits="2" name="cel_map_min_v" units="V">0.0</constant>
+        <constant digits="2" name="cel_tps_max_v" units="V">0.0</constant>
+        <constant digits="2" name="cel_tps_min_v" units="V">0.0</constant>
         <constant name="clt_adcChannel">"Disabled"</constant>
         <constant digits="1" name="clt_bias_resistor" units="Ohm">1500.0</constant>
         <constant digits="1" name="clt_resistance_1" units="Ohm">9500.0</constant>
@@ -5011,7 +5019,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260206" nPages="1" signature="rusEFI master.2026.02.09.f407-discovery.810781753" version="5.0"/>
+    <versionInfo firmwareInfo="20260206" nPages="1" signature="rusEFI master.2026.02.09.f407-discovery.1109626656" version="5.0"/>
     <bibliography author="rusEFI 20260206" writeDate="date"/>
     <settings/>
     <userComments/>
