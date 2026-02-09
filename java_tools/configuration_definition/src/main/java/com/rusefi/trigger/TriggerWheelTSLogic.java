@@ -13,6 +13,7 @@ public class TriggerWheelTSLogic {
     private static final String TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION = "TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION";
     private static final String TRIGGER_TYPE_WITH_SECOND_WHEEL = "TRIGGER_TYPE_WITH_SECOND_WHEEL";
     private static final String TRIGGER_CRANK_BASED = "TRIGGER_CRANK_BASED";
+    private static final String TRIGGER_TYPE_NAMES = "trigger_type_e_enum";
 
     TriggerWheelInit triggerWheelInit = new TriggerWheelInit();
 
@@ -31,7 +32,7 @@ public class TriggerWheelTSLogic {
         StringBuilder triggerTypesWithoutKnownLocation = new StringBuilder("trigger_type == 0");
         StringBuilder triggerTypesWithSecondWheel = new StringBuilder();
         StringBuilder triggerTypesCrankBased = new StringBuilder();
-
+        StringBuilder triggerTypeNames = new StringBuilder("\"custom toothed wheel\"");
 
         TriggerWheelInfo.readWheels(folder, wheelInfo -> {
 //            System.out.println("onWheel " + wheelInfo.getTriggerName());
@@ -51,7 +52,14 @@ public class TriggerWheelTSLogic {
                 triggerTypesCrankBased.append("trigger_type == ").append(wheelInfo.getId());
             }
 
-            triggerWheelInit.process(wheelInfo);
+            appendCommaIfNotEmpty(triggerTypeNames);
+            if (wheelInfo.getTriggerHumanName() != "" && ! wheelInfo.isHidden()) {
+                triggerTypeNames.append("\"").append(wheelInfo.getTriggerHumanName()).append("\"");
+            } else {
+                triggerTypeNames.append("\"INVALID\"");
+            }
+
+						triggerWheelInit.process(wheelInfo);
         });
 
         try {
@@ -69,10 +77,16 @@ public class TriggerWheelTSLogic {
         variableRegistry.register(TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION, triggerTypesWithoutKnownLocation.toString());
         variableRegistry.register(TRIGGER_TYPE_WITH_SECOND_WHEEL, triggerTypesWithSecondWheel.toString());
         variableRegistry.register(TRIGGER_CRANK_BASED, triggerTypesCrankBased.toString());
+        variableRegistry.register(TRIGGER_TYPE_NAMES, triggerTypeNames.toString());
     }
 
-    private void appendOrIfNotEmpty(StringBuilder triggerTypesWithSecondWheel) {
-        if (triggerTypesWithSecondWheel.length() > 0)
-            triggerTypesWithSecondWheel.append(" || ");
+    private void appendOrIfNotEmpty(StringBuilder builder) {
+        if (builder.length() > 0)
+            builder.append(" || ");
+    }
+
+    private void appendCommaIfNotEmpty(StringBuilder builder) {
+        if (builder.length() > 0)
+            builder.append(", ");
     }
 }
