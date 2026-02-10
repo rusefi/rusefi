@@ -270,7 +270,10 @@ public class ConsoleTools {
             return;
         }
         LinkManager linkManager = new LinkManager();
-        linkManager.startAndConnect(autoDetectedPort, new ConnectionStatusLogic.ConnectionStateListener() {
+        linkManager.startAndConnect(autoDetectedPort, new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
             @Override
             public void onConnectionEstablished() {
                 onConnectionEstablished.apply(linkManager);

@@ -132,7 +132,10 @@ public class FullServerTest {
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
             // connect to proxy and read virtual controller through it
-            clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + localApplicationProxyContext.authenticatorPort(), new ConnectionStatusLogic.ConnectionStateListener() {
+            clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + localApplicationProxyContext.authenticatorPort(), new ConnectionStatusLogic.Listener() {
+                @Override
+                public void onConnectionStatus(boolean isConnected) {}
+
                 @Override
                 public void onConnectionEstablished() {
                     connectionEstablishedCountDownLatch.countDown();

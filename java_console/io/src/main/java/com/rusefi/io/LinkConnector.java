@@ -24,7 +24,7 @@ public interface LinkConnector extends LinkDecoder {
         }
     };
 
-    void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.ConnectionStateListener listener);
+    void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.Listener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
 

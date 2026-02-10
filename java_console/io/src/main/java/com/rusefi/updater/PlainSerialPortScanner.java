@@ -34,7 +34,10 @@ public class PlainSerialPortScanner {
                 ) {
                     linkManager.start(port, ConnectionStatusLogic.Listener.VOID);
                     linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(false, false),
-                        new ConnectionStatusLogic.ConnectionStateListener() {
+                        new ConnectionStatusLogic.Listener() {
+                            @Override
+                            public void onConnectionStatus(boolean isConnected) {}
+
                             @Override
                             public void onConnectionEstablished() {
                                 System.out.println("onConnectionEstablished " + port);

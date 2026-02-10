@@ -70,7 +70,10 @@ public class NetworkConnector implements Closeable {
                 .setNeedPullData(false);
 
         CountDownLatch onConnected = new CountDownLatch(1);
-        controllerConnector.startAndConnect(controllerPort, new ConnectionStatusLogic.ConnectionStateListener() {
+        controllerConnector.startAndConnect(controllerPort, new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
             @Override
             public void onConnectionEstablished() {
                 onConnected.countDown();

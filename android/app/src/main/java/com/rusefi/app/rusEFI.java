@@ -308,7 +308,10 @@ public class rusEFI extends Activity {
                 }
             }));
             linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true),
-                    new ConnectionStatusLogic.ConnectionStateListener() {
+                    new ConnectionStatusLogic.Listener() {
+                        @Override
+                        public void onConnectionStatus(boolean isConnected) {}
+
                         @Override
                         public void onConnectionEstablished() {
                             mResultView.post(() -> visibleLogAppend(new Date() + " On connection established\n"));

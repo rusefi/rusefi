@@ -107,7 +107,10 @@ public class ConnectPanel {
             status.setText("rusEFI not found");
             connect.setEnabled(true);
         } else {
-            controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStatusLogic.ConnectionStateListener() {
+            controllerConnector.startAndConnect(autoDetectedPort, new ConnectionStatusLogic.Listener() {
+                @Override
+                public void onConnectionStatus(boolean isConnected) {}
+
                 public void onConnectionEstablished() {
                     SwingUtilities.invokeLater(() -> {
                         status.setText("Connected to rusEFI " + autoDetectedPort);
