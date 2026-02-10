@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * @see TuningTableView
  */
 public class CalibrationDialogWidget {
-    private final JPanel contentPane = new JPanel();
+    private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
 
     public CalibrationDialogWidget(UIContext uiContext) {
@@ -38,19 +38,22 @@ public class CalibrationDialogWidget {
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         contentPane.removeAll();
         if (dialogModel != null) {
-            String layoutHint = dialogModel.getLayoutHint();
-            if ("border".equalsIgnoreCase(layoutHint)) {
-                contentPane.setLayout(new BorderLayout());
-            } else if ("xAxis".equalsIgnoreCase(layoutHint)) {
-                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
-            } else {
-                contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-            }
+            applyLayout(contentPane, dialogModel.getLayoutHint());
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
             fillPanel(contentPane, dialogModel, iniFileModel, ci);
         }
         contentPane.revalidate();
         contentPane.repaint();
+        // After the initial layout gives children their actual widths,
+        // WrapLayout can compute correct wrapped heights on the second pass.
+        // invalidateTree is needed because revalidate() only invalidates the
+        // component and its ancestors, not children — so children return
+        // stale cached preferred sizes computed before wrapping.
+        SwingUtilities.invokeLater(() -> {
+            invalidateTree(contentPane);
+            contentPane.revalidate();
+            contentPane.repaint();
+        });
     }
 
     public void update(String key) {
@@ -99,6 +102,7 @@ public class CalibrationDialogWidget {
                 JLabel label = new JLabel(field.getUiName());
                 applyStyle(label);
                 row.add(label);
+                row.add(Box.createHorizontalStrut(16));
 
                 if (f instanceof EnumIniField) {
                     EnumIniField enumField = (EnumIniField) f;
@@ -129,6 +133,7 @@ public class CalibrationDialogWidget {
                     textField.setMaximumSize(textField.getPreferredSize());
                     row.add(textField);
                 }
+                fixRowHeight(row);
                 container.add(row);
             } else {
                 JLabel label = new JLabel(field.getUiName());
@@ -143,6 +148,7 @@ public class CalibrationDialogWidget {
                 row.setAlignmentX(Component.LEFT_ALIGNMENT);
                 row.add(Box.createHorizontalStrut(10));
                 row.add(label);
+                fixRowHeight(row);
                 container.add(row);
             }
         }
@@ -160,10 +166,11 @@ public class CalibrationDialogWidget {
             row.setAlignmentX(Component.LEFT_ALIGNMENT);
             row.add(Box.createHorizontalStrut(10));
             row.add(button);
+            fixRowHeight(row);
             container.add(row);
         }
 
-        boolean isBorderLayout = container.getLayout() instanceof BorderLayout;
+        boolean isGridLayout = container.getLayout() instanceof GridLayout;
         List<PanelModel> panels = dialogModel.getPanels();
         JPanel horizontalPanel = null;
         for (PanelModel panel : panels) {
@@ -171,12 +178,11 @@ public class CalibrationDialogWidget {
             boolean isHorizontal = "west".equalsIgnoreCase(placement) || "center".equalsIgnoreCase(placement) || "east".equalsIgnoreCase(placement);
 
             JPanel targetContainer;
-            if (isBorderLayout) {
+            if (isGridLayout) {
                 targetContainer = container;
             } else if (isHorizontal) {
                 if (horizontalPanel == null) {
-                    horizontalPanel = new JPanel();
-                    horizontalPanel.setLayout(new BoxLayout(horizontalPanel, BoxLayout.X_AXIS));
+                    horizontalPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 0, 0));
                     horizontalPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
                     container.add(horizontalPanel);
                 }
@@ -192,7 +198,7 @@ public class CalibrationDialogWidget {
                 JComponent content = curveWidget.getContentPane();
                 applyStyle(content);
                 content.setAlignmentX(Component.LEFT_ALIGNMENT);
-                addToContainer(targetContainer, content, placement, isBorderLayout);
+                targetContainer.add(content);
                 continue;
             }
 
@@ -203,7 +209,7 @@ public class CalibrationDialogWidget {
                 JComponent content = tuningTableView.getContent();
                 applyStyle(content);
                 content.setAlignmentX(Component.LEFT_ALIGNMENT);
-                addToContainer(targetContainer, content, placement, isBorderLayout);
+                targetContainer.add(content);
                 continue;
             }
 
@@ -211,13 +217,7 @@ public class CalibrationDialogWidget {
             panelWidget.setAlignmentX(Component.LEFT_ALIGNMENT);
             DialogModel subDialog = panel.resolveDialog(iniFileModel);
             String subLayoutHint = subDialog != null ? subDialog.getLayoutHint() : null;
-            if ("border".equalsIgnoreCase(subLayoutHint)) {
-                panelWidget.setLayout(new BorderLayout());
-            } else if ("xAxis".equalsIgnoreCase(subLayoutHint)) {
-                panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.X_AXIS));
-            } else {
-                panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.Y_AXIS));
-            }
+            applyLayout(panelWidget, subLayoutHint);
 
             if (subDialog != null) {
                 String uiName = subDialog.getUiName();
@@ -231,30 +231,39 @@ public class CalibrationDialogWidget {
                 panelWidget.setName(panel.getPanelName());
                 GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
             }
-            addToContainer(targetContainer, panelWidget, placement, isBorderLayout);
+            targetContainer.add(panelWidget);
         }
     }
 
-    private static void addToContainer(JPanel container, JComponent component, String placement, boolean isBorderLayout) {
-        if (isBorderLayout && placement != null) {
-            container.add(component, toBorderLayoutConstraint(placement));
+    private static void invalidateTree(Component c) {
+        c.invalidate();
+        if (c instanceof Container) {
+            for (Component child : ((Container) c).getComponents()) {
+                invalidateTree(child);
+            }
+        }
+    }
+
+    private static void fixRowHeight(JPanel row) {
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height + 5));
+    }
+
+    private static void applyLayout(JPanel panel, String layoutHint) {
+        if ("border".equalsIgnoreCase(layoutHint)) {
+            // Equal-width columns keep the .ini West/East intent;
+            // children wrap inside their allocated width via WrapLayout.
+            panel.setLayout(new GridLayout(1, 0));
+        } else if ("xAxis".equalsIgnoreCase(layoutHint)) {
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         } else {
-            container.add(component);
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         }
-    }
-
-    private static String toBorderLayoutConstraint(String placement) {
-        if ("west".equalsIgnoreCase(placement)) return BorderLayout.WEST;
-        if ("east".equalsIgnoreCase(placement)) return BorderLayout.EAST;
-        if ("north".equalsIgnoreCase(placement)) return BorderLayout.NORTH;
-        if ("south".equalsIgnoreCase(placement)) return BorderLayout.SOUTH;
-        return BorderLayout.CENTER;
     }
 
     private static void applyStyle(JComponent component) {
         Font font = component.getFont();
         if (font != null) {
-            component.setFont(font.deriveFont(font.getSize() * 2.0f));
+            component.setFont(font.deriveFont(font.getSize() * 1.2f));
         }
     }
 
@@ -310,5 +319,118 @@ public class CalibrationDialogWidget {
 
     public JPanel getContentPane() {
         return contentPane;
+    }
+
+    /**
+     * A JPanel that implements Scrollable to track viewport width,
+     * preventing horizontal scrollbars while allowing vertical scrolling.
+     *
+     * On width changes, schedules a revalidation so that WrapLayout containers
+     * recalculate their preferred heights based on the actual available width.
+     */
+    private static class ScrollablePanel extends JPanel implements Scrollable {
+        private int lastWidth = -1;
+
+        @Override
+        public void setBounds(int x, int y, int width, int height) {
+            boolean widthChanged = width != lastWidth;
+            lastWidth = width;
+            super.setBounds(x, y, width, height);
+            if (widthChanged && width > 0) {
+                SwingUtilities.invokeLater(this::revalidate);
+            }
+        }
+
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return getPreferredSize();
+        }
+
+        @Override
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 16;
+        }
+
+        @Override
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return orientation == SwingConstants.VERTICAL ? visibleRect.height : visibleRect.width;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
+
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return false;
+        }
+    }
+
+    /**
+     * A FlowLayout that wraps components to the next line when they exceed the container width,
+     * and correctly reports preferred size based on the wrapped layout.
+     */
+    static class WrapLayout extends FlowLayout {
+        WrapLayout(int align, int hgap, int vgap) {
+            super(align, hgap, vgap);
+        }
+
+        @Override
+        public Dimension preferredLayoutSize(Container target) {
+            return computeSize(target, true);
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(Container target) {
+            return computeSize(target, false);
+        }
+
+        private Dimension computeSize(Container target, boolean preferred) {
+            synchronized (target.getTreeLock()) {
+                int targetWidth = target.getWidth();
+                if (targetWidth == 0) {
+                    targetWidth = Integer.MAX_VALUE;
+                }
+
+                Insets insets = target.getInsets();
+                int maxWidth = targetWidth - insets.left - insets.right;
+                int hgap = getHgap();
+                int vgap = getVgap();
+
+                int rowWidth = 0;
+                int rowHeight = 0;
+                int totalHeight = 0;
+                int totalWidth = 0;
+
+                for (int i = 0; i < target.getComponentCount(); i++) {
+                    Component c = target.getComponent(i);
+                    if (!c.isVisible()) continue;
+
+                    Dimension d = preferred ? c.getPreferredSize() : c.getMinimumSize();
+
+                    if (rowWidth > 0 && rowWidth + hgap + d.width > maxWidth) {
+                        totalHeight += rowHeight + vgap;
+                        totalWidth = Math.max(totalWidth, rowWidth);
+                        rowWidth = 0;
+                        rowHeight = 0;
+                    }
+
+                    if (rowWidth > 0) {
+                        rowWidth += hgap;
+                    }
+                    rowWidth += d.width;
+                    rowHeight = Math.max(rowHeight, d.height);
+                }
+
+                totalHeight += rowHeight;
+                totalWidth = Math.max(totalWidth, rowWidth);
+
+                return new Dimension(
+                    totalWidth + insets.left + insets.right,
+                    totalHeight + insets.top + insets.bottom
+                );
+            }
+        }
     }
 }
