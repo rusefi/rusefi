@@ -66,7 +66,7 @@ public class MainMenuTreeWidget {
             }
         });
         Font font = tree.getFont();
-        tree.setFont(new Font(font.getName(), font.getStyle(), font.getSize() * 2));
+        tree.setFont(new Font(font.getName(), font.getStyle(), (int)(font.getSize() * 1.2)));
         tree.setRootVisible(false);
 
         ImageIcon setupIcon = AutoupdateUtil.loadIcon("setup48.png");
