@@ -161,8 +161,9 @@ todo: spllit into smaller tests?
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
         assertNotNull(model);
+        uiContext.iniFileState.setIniFileModelForTest(model);
 
-        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(uiContext, model);
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(uiContext);
         JPanel content = widget.getContentPane();
         assertNotNull(content);
 
@@ -217,7 +218,8 @@ todo: spllit into smaller tests?
 
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
-        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(uiContext, model);
+        uiContext.iniFileState.setIniFileModelForTest(model);
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new com.rusefi.ui.widgets.tune.MainMenuTreeWidget(uiContext);
         JPanel content = widget.getContentPane();
 
         JPanel topPanel = (JPanel) content.getComponent(0);
@@ -292,8 +294,9 @@ todo: spllit into smaller tests?
         UIContext uiContext = new UIContext();
         String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        uiContext.iniFileState.setIniFileModelForTest(model);
 
-        com.rusefi.ui.widgets.tune.MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext, model);
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext);
         com.rusefi.ui.widgets.tune.CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
 
         AtomicReference<SubMenuModel> selectedSubMenu = new AtomicReference<>();

@@ -18,6 +18,7 @@ import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 
 public class TopLevelMenuSandbox {
@@ -65,25 +66,21 @@ public class TopLevelMenuSandbox {
     }
 
     private static void runAwt(UIContext uiContext) {
-        IniFileModel model = uiContext.iniFileState.getIniFileModel();
-        ConfigurationImage ci = uiContext.getLinkManager().getBinaryProtocol().getControllerConfiguration();
         FrameHelper frameHelper = new FrameHelper(JDialog.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridBagLayout());
-
-        // todo: can we not require model here? make MainMenuTreeWidget more dynamic in terms of model?
-        MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext, model);
-        panel.add(left.getContentPane(), new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext);
 
         CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
-        panel.add(right.getContentPane(), new GridBagConstraints(1, 0, 1, 1, 2, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+        JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
 
-        // todo: things should be integrated via uiContext
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
+        splitPane.setResizeWeight(0.3);
+
         left.setOnSelect(subMenu -> {
-            right.update(subMenu.getKey(), model, ci);
+            right.update(subMenu.getKey());
         });
 
-        frameHelper.showFrame(panel);
+        frameHelper.showFrame(splitPane);
         left.selectSubMenu("dwellSettings");
     }
 }

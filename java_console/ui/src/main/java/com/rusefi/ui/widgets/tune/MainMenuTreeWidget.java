@@ -34,7 +34,8 @@ public class MainMenuTreeWidget {
     private String lastSearchSelectedKey = null;
     private Consumer<SubMenuModel> onSelect;
 
-    public MainMenuTreeWidget(UIContext uiContext, IniFileModel model) {
+    public MainMenuTreeWidget(UIContext uiContext) {
+        IniFileModel model = uiContext.iniFileState.getIniFileModel();
         for (MenuModel menu : model.getMenus()) {
             DefaultMutableTreeNode menuNode = new DefaultMutableTreeNode(menu.getName());
             root.add(menuNode);

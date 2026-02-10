@@ -27,8 +27,10 @@ import java.util.regex.Pattern;
  */
 public class CalibrationDialogWidget {
     private final JPanel contentPane = new JPanel();
+    private final UIContext uiContext;
 
     public CalibrationDialogWidget(UIContext uiContext) {
+        this.uiContext = uiContext;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
@@ -37,7 +39,9 @@ public class CalibrationDialogWidget {
         contentPane.removeAll();
         if (dialogModel != null) {
             String layoutHint = dialogModel.getLayoutHint();
-            if ("xAxis".equalsIgnoreCase(layoutHint)) {
+            if ("border".equalsIgnoreCase(layoutHint)) {
+                contentPane.setLayout(new BorderLayout());
+            } else if ("xAxis".equalsIgnoreCase(layoutHint)) {
                 contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
             } else {
                 contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
@@ -47,6 +51,12 @@ public class CalibrationDialogWidget {
         }
         contentPane.revalidate();
         contentPane.repaint();
+    }
+
+    public void update(String key) {
+        IniFileModel iniFileModel = uiContext.iniFileState.getIniFileModel();
+        ConfigurationImage ci = uiContext.getBinaryProtocol().getControllerConfiguration();
+        update(key, iniFileModel, ci);
     }
 
     public void update(String key, IniFileModel iniFileModel, ConfigurationImage ci) {
@@ -153,24 +163,28 @@ public class CalibrationDialogWidget {
             container.add(row);
         }
 
+        boolean isBorderLayout = container.getLayout() instanceof BorderLayout;
         List<PanelModel> panels = dialogModel.getPanels();
         JPanel horizontalPanel = null;
         for (PanelModel panel : panels) {
             String placement = panel.getPlacement();
             boolean isHorizontal = "west".equalsIgnoreCase(placement) || "center".equalsIgnoreCase(placement) || "east".equalsIgnoreCase(placement);
 
-            if (isHorizontal) {
+            JPanel targetContainer;
+            if (isBorderLayout) {
+                targetContainer = container;
+            } else if (isHorizontal) {
                 if (horizontalPanel == null) {
                     horizontalPanel = new JPanel();
                     horizontalPanel.setLayout(new BoxLayout(horizontalPanel, BoxLayout.X_AXIS));
                     horizontalPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
                     container.add(horizontalPanel);
                 }
+                targetContainer = horizontalPanel;
             } else {
                 horizontalPanel = null;
+                targetContainer = container;
             }
-
-            JPanel targetContainer = isHorizontal ? horizontalPanel : container;
 
             CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
             if (curve != null) {
@@ -178,7 +192,7 @@ public class CalibrationDialogWidget {
                 JComponent content = curveWidget.getContentPane();
                 applyStyle(content);
                 content.setAlignmentX(Component.LEFT_ALIGNMENT);
-                targetContainer.add(content);
+                addToContainer(targetContainer, content, placement, isBorderLayout);
                 continue;
             }
 
@@ -189,7 +203,7 @@ public class CalibrationDialogWidget {
                 JComponent content = tuningTableView.getContent();
                 applyStyle(content);
                 content.setAlignmentX(Component.LEFT_ALIGNMENT);
-                targetContainer.add(content);
+                addToContainer(targetContainer, content, placement, isBorderLayout);
                 continue;
             }
 
@@ -197,7 +211,9 @@ public class CalibrationDialogWidget {
             panelWidget.setAlignmentX(Component.LEFT_ALIGNMENT);
             DialogModel subDialog = panel.resolveDialog(iniFileModel);
             String subLayoutHint = subDialog != null ? subDialog.getLayoutHint() : null;
-            if ("xAxis".equalsIgnoreCase(subLayoutHint)) {
+            if ("border".equalsIgnoreCase(subLayoutHint)) {
+                panelWidget.setLayout(new BorderLayout());
+            } else if ("xAxis".equalsIgnoreCase(subLayoutHint)) {
                 panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.X_AXIS));
             } else {
                 panelWidget.setLayout(new BoxLayout(panelWidget, BoxLayout.Y_AXIS));
@@ -215,8 +231,24 @@ public class CalibrationDialogWidget {
                 panelWidget.setName(panel.getPanelName());
                 GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
             }
-            targetContainer.add(panelWidget);
+            addToContainer(targetContainer, panelWidget, placement, isBorderLayout);
         }
+    }
+
+    private static void addToContainer(JPanel container, JComponent component, String placement, boolean isBorderLayout) {
+        if (isBorderLayout && placement != null) {
+            container.add(component, toBorderLayoutConstraint(placement));
+        } else {
+            container.add(component);
+        }
+    }
+
+    private static String toBorderLayoutConstraint(String placement) {
+        if ("west".equalsIgnoreCase(placement)) return BorderLayout.WEST;
+        if ("east".equalsIgnoreCase(placement)) return BorderLayout.EAST;
+        if ("north".equalsIgnoreCase(placement)) return BorderLayout.NORTH;
+        if ("south".equalsIgnoreCase(placement)) return BorderLayout.SOUTH;
+        return BorderLayout.CENTER;
     }
 
     private static void applyStyle(JComponent component) {
