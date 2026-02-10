@@ -77,6 +77,9 @@ public class LinkManager implements Closeable {
 
         startAndConnect(port, new ConnectionStatusLogic.Listener() {
             @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
+            @Override
             public void onConnectionFailed(String s) {
                 if (!isScanningForEcu)
                     ExitUtil.exit("TERMINATING: CONNECTION FAILED, did you specify the right port name? " + s, -1);

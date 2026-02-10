@@ -33,7 +33,10 @@ public class SandboxCommon {
 
         StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
         linkManager.setConnector(streamConnector);
-        streamConnector.connectAndReadConfiguration(new BinaryProtocol.Arguments(false), new ConnectionStatusLogic.ConnectionStateListener() {
+        streamConnector.connectAndReadConfiguration(new BinaryProtocol.Arguments(false), new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
             @Override
             public void onConnectionEstablished() {
                 log.info("onConnectionEstablished");
