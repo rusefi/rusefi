@@ -13,7 +13,7 @@ bool isIgnVoltage() {
 		// If we have separate ignition sensing input
 		ignVoltage = Sensor::getOrZero(SensorType::IgnKeyVoltage);
 	} else {
-		// No, we assume that ignition is ON while we are powered with resonable voltage
+		// No, we assume that ignition is ON while we are powered with reasonable voltage
 		ignVoltage = Sensor::getOrZero(SensorType::BatteryVoltage);
 	}
 
