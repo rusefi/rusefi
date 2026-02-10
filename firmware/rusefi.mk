@@ -27,11 +27,9 @@ endif
 
 -include $(BOARD_DIR)/config.mk
 
-PIN_NAMES_FILE=$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
-
-ifneq ("$(wildcard $(PIN_NAMES_FILE))","")
-$(info found $(PIN_NAMES_FILE) )
-ALLCPPSRC += $(PIN_NAMES_FILE)
+# Build the generated pin code only if the connector directory exists
+ifneq ("$(wildcard $(BOARD_DIR)/connectors)","")
+  ALLCPPSRC += $(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
 endif
 
 # CPU-dependent defs
