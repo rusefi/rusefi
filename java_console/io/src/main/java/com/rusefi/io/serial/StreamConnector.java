@@ -29,7 +29,7 @@ public class StreamConnector implements LinkConnector {
     }
 
     @Override
-    public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.ConnectionStateListener listener) {
+    public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.Listener listener) {
         Objects.requireNonNull(arguments);
         log.info("StreamConnector: connecting");
         portHolder.listener = listener;

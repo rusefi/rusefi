@@ -29,7 +29,7 @@ public class PortHolder {
     private final Callable<IoStream> ioStreamFactory;
     private final LinkManager linkManager;
 
-    public ConnectionStatusLogic.ConnectionStateListener listener;
+    public ConnectionStatusLogic.Listener listener;
     private final Object portLock = new Object();
 
     @Nullable

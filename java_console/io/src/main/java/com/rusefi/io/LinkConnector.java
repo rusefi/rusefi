@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public interface LinkConnector extends LinkDecoder {
     LinkConnector VOID = new LinkConnector() {
         @Override
-        public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.ConnectionStateListener listener) {
+        public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStatusLogic.Listener listener) {
         }
 
         @Override

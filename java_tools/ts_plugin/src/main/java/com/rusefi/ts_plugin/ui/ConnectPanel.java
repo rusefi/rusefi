@@ -27,7 +27,7 @@ public class ConnectPanel {
     private final JButton disconnect = new JButton("Disconnect");
     private boolean isFirstAttempt = true;
 
-    public ConnectPanel(final ConnectionStatusLogic.ConnectionStateListener connectionStateListener) {
+    public ConnectPanel(final ConnectionStatusLogic.Listener connectionStateListener) {
         JPanel flow = new JPanel(new FlowLayout());
 
         disconnect.setEnabled(false);
@@ -101,7 +101,7 @@ public class ConnectPanel {
         content.add(status, BorderLayout.SOUTH);
     }
 
-    private void tryToConnect(ConnectionStatusLogic.ConnectionStateListener connectionStateListener) {
+    private void tryToConnect(ConnectionStatusLogic.Listener connectionStateListener) {
         String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             status.setText("rusEFI not found");

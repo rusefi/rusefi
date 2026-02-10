@@ -53,12 +53,12 @@ public class MainFrame {
         }
     };
 
-    public final ConnectionStatusLogic.ConnectionStateListener listener;
+    public final ConnectionStatusLogic.Listener listener;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
-        listener = ConnectionStatusLogic.ConnectionStateListener.VOID;
+        listener = ConnectionStatusLogic.Listener.VOID;
     }
 
     private void windowOpenedHandler() {

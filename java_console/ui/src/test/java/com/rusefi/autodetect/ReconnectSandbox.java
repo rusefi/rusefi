@@ -38,7 +38,7 @@ public class ReconnectSandbox {
         String autoDetectedPort = detectPortUntilDetected();
         System.out.println("First time port detected: " + autoDetectedPort);
 
-        linkManager.startAndConnect(autoDetectedPort, ConnectionStatusLogic.ConnectionStateListener.VOID);
+        linkManager.startAndConnect(autoDetectedPort, ConnectionStatusLogic.Listener.VOID);
 
         ConnectionWatchdog.init(linkManager);
     }
