@@ -11,6 +11,9 @@ import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
+import com.rusefi.ui.util.ScrollablePanel;
+import com.rusefi.ui.util.SwingUtil;
+import com.rusefi.ui.util.WrapLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +53,7 @@ public class CalibrationDialogWidget {
         // component and its ancestors, not children — so children return
         // stale cached preferred sizes computed before wrapping.
         SwingUtilities.invokeLater(() -> {
-            invalidateTree(contentPane);
+            SwingUtil.invalidateTree(contentPane);
             contentPane.revalidate();
             contentPane.repaint();
         });
@@ -235,15 +238,6 @@ public class CalibrationDialogWidget {
         }
     }
 
-    private static void invalidateTree(Component c) {
-        c.invalidate();
-        if (c instanceof Container) {
-            for (Component child : ((Container) c).getComponents()) {
-                invalidateTree(child);
-            }
-        }
-    }
-
     private static void fixRowHeight(JPanel row) {
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height + 5));
     }
@@ -319,118 +313,5 @@ public class CalibrationDialogWidget {
 
     public JPanel getContentPane() {
         return contentPane;
-    }
-
-    /**
-     * A JPanel that implements Scrollable to track viewport width,
-     * preventing horizontal scrollbars while allowing vertical scrolling.
-     *
-     * On width changes, schedules a revalidation so that WrapLayout containers
-     * recalculate their preferred heights based on the actual available width.
-     */
-    private static class ScrollablePanel extends JPanel implements Scrollable {
-        private int lastWidth = -1;
-
-        @Override
-        public void setBounds(int x, int y, int width, int height) {
-            boolean widthChanged = width != lastWidth;
-            lastWidth = width;
-            super.setBounds(x, y, width, height);
-            if (widthChanged && width > 0) {
-                SwingUtilities.invokeLater(this::revalidate);
-            }
-        }
-
-        @Override
-        public Dimension getPreferredScrollableViewportSize() {
-            return getPreferredSize();
-        }
-
-        @Override
-        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-            return 16;
-        }
-
-        @Override
-        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-            return orientation == SwingConstants.VERTICAL ? visibleRect.height : visibleRect.width;
-        }
-
-        @Override
-        public boolean getScrollableTracksViewportWidth() {
-            return true;
-        }
-
-        @Override
-        public boolean getScrollableTracksViewportHeight() {
-            return false;
-        }
-    }
-
-    /**
-     * A FlowLayout that wraps components to the next line when they exceed the container width,
-     * and correctly reports preferred size based on the wrapped layout.
-     */
-    static class WrapLayout extends FlowLayout {
-        WrapLayout(int align, int hgap, int vgap) {
-            super(align, hgap, vgap);
-        }
-
-        @Override
-        public Dimension preferredLayoutSize(Container target) {
-            return computeSize(target, true);
-        }
-
-        @Override
-        public Dimension minimumLayoutSize(Container target) {
-            return computeSize(target, false);
-        }
-
-        private Dimension computeSize(Container target, boolean preferred) {
-            synchronized (target.getTreeLock()) {
-                int targetWidth = target.getWidth();
-                if (targetWidth == 0) {
-                    targetWidth = Integer.MAX_VALUE;
-                }
-
-                Insets insets = target.getInsets();
-                int maxWidth = targetWidth - insets.left - insets.right;
-                int hgap = getHgap();
-                int vgap = getVgap();
-
-                int rowWidth = 0;
-                int rowHeight = 0;
-                int totalHeight = 0;
-                int totalWidth = 0;
-
-                for (int i = 0; i < target.getComponentCount(); i++) {
-                    Component c = target.getComponent(i);
-                    if (!c.isVisible()) continue;
-
-                    Dimension d = preferred ? c.getPreferredSize() : c.getMinimumSize();
-
-                    if (rowWidth > 0 && rowWidth + hgap + d.width > maxWidth) {
-                        totalHeight += rowHeight + vgap;
-                        totalWidth = Math.max(totalWidth, rowWidth);
-                        rowWidth = 0;
-                        rowHeight = 0;
-                    }
-
-                    if (rowWidth > 0) {
-                        rowWidth += hgap;
-                    }
-                    rowWidth += d.width;
-                    rowHeight = Math.max(rowHeight, d.height);
-                }
-
-                totalHeight += rowHeight;
-                totalWidth = Math.max(totalWidth, rowWidth);
-
-                return new Dimension(
-                    totalWidth + insets.left + insets.right,
-                    totalHeight + insets.top + insets.bottom
-                );
-            }
-        }
     }
 }
