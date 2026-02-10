@@ -32,7 +32,7 @@ public class PlainSerialPortScanner {
                     .setNeedPullText(false)
                     .setNeedPullLiveData(false)
                 ) {
-                    linkManager.start(port, ConnectionStatusLogic.ConnectionStateListener.VOID);
+                    linkManager.start(port, ConnectionStatusLogic.Listener.VOID);
                     linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(false, false),
                         new ConnectionStatusLogic.ConnectionStateListener() {
                             @Override
