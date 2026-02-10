@@ -81,19 +81,10 @@ public class ConnectionStatusLogic {
     }
 
     public interface Listener {
+        Listener VOID = isConnected -> {};
+
         void onConnectionStatus(boolean isConnected);
-    }
-
-    //TODO: unify with plain Listener?
-    public interface ConnectionStateListener {
-        ConnectionStateListener VOID = new ConnectionStateListener() {
-            @Override
-            public void onConnectionEstablished() {}
-            @Override
-            public void onConnectionFailed(String s) {}
-        };
-
-        void onConnectionEstablished();
-        void onConnectionFailed(String s);
+        default void onConnectionEstablished() {}
+        default void onConnectionFailed(String s) {}
     }
 }
