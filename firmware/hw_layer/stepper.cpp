@@ -173,10 +173,6 @@ void StepDirectionStepper::setDirection(bool isIncrementing) {
 }
 
 bool StepDirectionStepper::pulse() {
-	// we move the motor only of it is powered from the main relay
-	if (!engine->isMainRelayEnabled())
-		return false;
-
 	enablePin.setValue(false); // enable stepper
 
 	stepPin.setValue(true);
