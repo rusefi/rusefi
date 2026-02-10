@@ -74,7 +74,7 @@ public class CalibrationDialogWidgetTest {
         assertEquals("h1", hPanel1.getComponent(0).getName());
         assertEquals("h2", hPanel1.getComponent(1).getName());
         assertEquals("h3", hPanel1.getComponent(2).getName());
-        assertTrue(hPanel1.getLayout() instanceof CalibrationDialogWidget.WrapLayout, "Should be wrap layout");
+        assertTrue(hPanel1.getLayout() instanceof com.rusefi.ui.util.WrapLayout, "Should be wrap layout");
 
         assertTrue(components[2] instanceof JPanel);
         assertEquals("v2", components[2].getName());
