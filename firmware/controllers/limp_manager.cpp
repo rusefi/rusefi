@@ -235,14 +235,6 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 	}
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	if (!engine->isMainRelayEnabled()) {
-/*
-todo AndreiKA this change breaks 22 unit tests?
-		allowFuel.clear();
-		allowSpark.clear();
-*/
-	}
-
 #if EFI_LAUNCH_CONTROL
 	// Fuel cut if launch control engaged
 	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {
