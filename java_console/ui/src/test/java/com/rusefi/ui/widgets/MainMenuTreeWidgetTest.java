@@ -353,8 +353,8 @@ todo: spllit into smaller tests?
         assertTrue(rendererComponent instanceof JLabel, name + " renderer should be a JLabel");
         JLabel label = (JLabel) rendererComponent;
         assertNotNull(label.getIcon(), name + " should have an icon");
-        assertEquals(48, label.getIcon().getIconWidth(), name + " icon width");
-        assertEquals(48, label.getIcon().getIconHeight(), name + " icon height");
+        assertEquals(24, label.getIcon().getIconWidth(), name + " icon width");
+        assertEquals(24, label.getIcon().getIconHeight(), name + " icon height");
     }
     @Test
     public void testCurveWidgetInCalibrationWidget() {
