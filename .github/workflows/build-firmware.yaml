@@ -202,7 +202,6 @@ jobs:
         sudo bash misc/actions/ubuntu-install-tools.sh
 
     - name: Set Build Env Variables
-      working-directory: ./firmware/
       run: |
         echo AUTOMATION_LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
         echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
