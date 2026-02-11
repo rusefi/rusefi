@@ -4927,7 +4927,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260206" nPages="1" signature="rusEFI master.2026.02.11.f407-discovery.1109626656" version="5.0"/>
+    <versionInfo firmwareInfo="20260206" nPages="1" signature="rusEFI master.2026.02.11.f407-discovery.507610133" version="5.0"/>
     <bibliography author="rusEFI 20260206" writeDate="date"/>
     <settings/>
     <userComments/>
