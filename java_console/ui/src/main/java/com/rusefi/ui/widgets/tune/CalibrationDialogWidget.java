@@ -16,10 +16,13 @@ import com.rusefi.ui.util.SwingUtil;
 import com.rusefi.ui.util.WrapLayout;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -31,6 +34,7 @@ import java.util.regex.Pattern;
 public class CalibrationDialogWidget {
     private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
+    private ConfigurationImage workingImage;
 
     public CalibrationDialogWidget(UIContext uiContext) {
         this.uiContext = uiContext;
@@ -38,7 +42,12 @@ public class CalibrationDialogWidget {
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
 
+    public ConfigurationImage getWorkingImage() {
+        return workingImage;
+    }
+
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        workingImage = ci != null ? ci.clone() : null;
         contentPane.removeAll();
         if (dialogModel != null) {
             applyLayout(contentPane, dialogModel.getLayoutHint());
@@ -118,6 +127,17 @@ public class CalibrationDialogWidget {
                         JCheckBox checkBox = new JCheckBox();
                         applyStyle(checkBox);
                         checkBox.setSelected(currentValue.equalsIgnoreCase("\"Enabled\"") || currentValue.equalsIgnoreCase("\"Yes\""));
+                        checkBox.addItemListener(e -> {
+                            if (workingImage == null) return;
+                            List<String> values = new ArrayList<>(enumField.getEnums().values());
+                            String v1 = values.get(0).toLowerCase();
+                            // Determine which ordinal is the "on" value
+                            boolean firstIsOn = v1.equals("yes") || v1.equals("enabled");
+                            String selected = checkBox.isSelected()
+                                    ? (firstIsOn ? values.get(0) : values.get(1))
+                                    : (firstIsOn ? values.get(1) : values.get(0));
+                            ConfigurationImageGetterSetter.setValue2(f, workingImage, f.getName(), selected);
+                        });
                         row.add(checkBox);
                     } else {
                         String cleanValue = currentValue.replace("\"", "");
@@ -126,6 +146,13 @@ public class CalibrationDialogWidget {
                         comboBox.setSelectedItem(cleanValue);
                         applyBackgroundColor(comboBox, cleanValue);
                         comboBox.setMaximumSize(comboBox.getPreferredSize());
+                        comboBox.addActionListener(e -> {
+                            if (workingImage == null) return;
+                            String selected = (String) comboBox.getSelectedItem();
+                            if (selected != null) {
+                                ConfigurationImageGetterSetter.setValue2(f, workingImage, f.getName(), selected);
+                            }
+                        });
                         row.add(comboBox);
                     }
                 } else {
@@ -134,6 +161,19 @@ public class CalibrationDialogWidget {
                     applyStyle(textField);
                     applyBackgroundColor(textField, currentValue);
                     textField.setMaximumSize(textField.getPreferredSize());
+                    textField.getDocument().addDocumentListener(new DocumentListener() {
+                        private void sync() {
+                            if (workingImage == null) return;
+                            try {
+                                ConfigurationImageGetterSetter.setValue2(f, workingImage, f.getName(), textField.getText());
+                            } catch (Exception ignored) {
+                                // invalid input while typing
+                            }
+                        }
+                        @Override public void insertUpdate(DocumentEvent e) { sync(); }
+                        @Override public void removeUpdate(DocumentEvent e) { sync(); }
+                        @Override public void changedUpdate(DocumentEvent e) { sync(); }
+                    });
                     row.add(textField);
                 }
                 fixRowHeight(row);
