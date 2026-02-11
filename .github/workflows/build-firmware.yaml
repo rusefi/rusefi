@@ -142,7 +142,7 @@ jobs:
         ${{ github.event.head_commit.message }}
         EOM
         export COMMIT_MESSAGE
-        echo "matrix=$(bash firmware/bin/generate_matrix.sh)" >> $GITHUB_OUTPUT
+        echo "matrix=$(bash firmware/bin/generate_matrix.sh config/boards)" >> $GITHUB_OUTPUT
 
   build-firmware:
     runs-on: ubuntu-latest

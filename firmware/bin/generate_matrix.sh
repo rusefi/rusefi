@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+SCAN_DIR=$1
+
 # The full path of the firmware directory
 FDIR=$(cd "$(dirname "$0")/.."; pwd -P)
 
@@ -21,7 +24,7 @@ getTarget ()
 }
 
 echo -n '{"include": ['
-find config/boards -name "meta-info*.env" -print0 | while IFS= read -r -d '' f; do
+find ${SCAN_DIR} -name "meta-info*.env" -print0 | while IFS= read -r -d '' f; do
 	echo -n "$(getTarget $f)"
 done
 echo "]}"
