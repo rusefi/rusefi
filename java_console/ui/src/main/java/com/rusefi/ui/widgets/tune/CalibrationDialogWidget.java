@@ -1,13 +1,11 @@
 package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
-import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
@@ -16,19 +14,14 @@ import com.rusefi.ui.util.SwingUtil;
 import com.rusefi.ui.util.WrapLayout;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
+ * Orchestrates layout of calibration dialogs by composing UI widgets
+ * created by {@link CalibrationFieldFactory}.
+ *
  * @see TuningTableView
  */
 public class CalibrationDialogWidget {
@@ -40,6 +33,18 @@ public class CalibrationDialogWidget {
         this.uiContext = uiContext;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+    }
+
+    private static void applyLayout(JPanel panel, String layoutHint) {
+        if ("border".equalsIgnoreCase(layoutHint)) {
+            // Equal-width columns keep the .ini West/East intent;
+            // children wrap inside their allocated width via WrapLayout.
+            panel.setLayout(new GridLayout(1, 0));
+        } else if ("xAxis".equalsIgnoreCase(layoutHint)) {
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        } else {
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        }
     }
 
     public ConfigurationImage getWorkingImage() {
@@ -106,111 +111,14 @@ public class CalibrationDialogWidget {
         for (DialogModel.Field field : dialogModel.getFields()) {
             Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
             if (iniField.isPresent()) {
-                IniField f = iniField.get();
-                JPanel row = new JPanel();
-                row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
-                row.setAlignmentX(Component.LEFT_ALIGNMENT);
-                row.add(Box.createHorizontalStrut(10));
-                JLabel label = new JLabel(field.getUiName());
-                applyStyle(label);
-                row.add(label);
-                row.add(Box.createHorizontalStrut(16));
-
-                if (f instanceof EnumIniField) {
-                    EnumIniField enumField = (EnumIniField) f;
-
-                    boolean isCheckBox = isCheckboxEnum(enumField);
-
-                    String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(f, ci);
-
-                    if (isCheckBox) {
-                        JCheckBox checkBox = new JCheckBox();
-                        applyStyle(checkBox);
-                        checkBox.setSelected(currentValue.equalsIgnoreCase("\"Enabled\"") || currentValue.equalsIgnoreCase("\"Yes\""));
-                        checkBox.addItemListener(e -> {
-                            if (workingImage == null) return;
-                            List<String> values = new ArrayList<>(enumField.getEnums().values());
-                            String v1 = values.get(0).toLowerCase();
-                            // Determine which ordinal is the "on" value
-                            boolean firstIsOn = v1.equals("yes") || v1.equals("enabled");
-                            String selected = checkBox.isSelected()
-                                    ? (firstIsOn ? values.get(0) : values.get(1))
-                                    : (firstIsOn ? values.get(1) : values.get(0));
-                            ConfigurationImageGetterSetter.setValue2(f, workingImage, f.getName(), selected);
-                        });
-                        row.add(checkBox);
-                    } else {
-                        String cleanValue = currentValue.replace("\"", "");
-                        JComboBox<String> comboBox = new JComboBox<>(enumField.getEnums().values().toArray(new String[0]));
-                        applyStyle(comboBox);
-                        comboBox.setSelectedItem(cleanValue);
-                        applyBackgroundColor(comboBox, cleanValue);
-                        comboBox.setMaximumSize(comboBox.getPreferredSize());
-                        comboBox.addActionListener(e -> {
-                            if (workingImage == null) return;
-                            String selected = (String) comboBox.getSelectedItem();
-                            if (selected != null) {
-                                ConfigurationImageGetterSetter.setValue2(f, workingImage, f.getName(), selected);
-                            }
-                        });
-                        row.add(comboBox);
-                    }
-                } else {
-                    String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(f, ci);
-                    JTextField textField = new JTextField(currentValue);
-                    applyStyle(textField);
-                    applyBackgroundColor(textField, currentValue);
-                    textField.setMaximumSize(textField.getPreferredSize());
-                    textField.getDocument().addDocumentListener(new DocumentListener() {
-                        private void sync() {
-                            if (workingImage == null) return;
-                            try {
-                                ConfigurationImageGetterSetter.setValue2(f, workingImage, f.getName(), textField.getText());
-                            } catch (Exception ignored) {
-                                // invalid input while typing
-                            }
-                        }
-                        @Override public void insertUpdate(DocumentEvent e) { sync(); }
-                        @Override public void removeUpdate(DocumentEvent e) { sync(); }
-                        @Override public void changedUpdate(DocumentEvent e) { sync(); }
-                    });
-                    row.add(textField);
-                }
-                fixRowHeight(row);
-                container.add(row);
+                container.add(CalibrationFieldFactory.createFieldRow(field, iniField.get(), ci, workingImage));
             } else {
-                JLabel label = new JLabel(field.getUiName());
-                applyStyle(label);
-                label.setOpaque(true);
-                label.setAlignmentX(Component.LEFT_ALIGNMENT);
-                applyBackgroundColor(label, field.getUiName());
-                applyLinkLogic(label, field.getUiName());
-
-                JPanel row = new JPanel();
-                row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
-                row.setAlignmentX(Component.LEFT_ALIGNMENT);
-                row.add(Box.createHorizontalStrut(10));
-                row.add(label);
-                fixRowHeight(row);
-                container.add(row);
+                container.add(CalibrationFieldFactory.createLabelRow(field));
             }
         }
 
         for (DialogModel.Command command : dialogModel.getCommandsOfCurrentDialog()) {
-            JButton button = new JButton(command.getUiName());
-            applyStyle(button);
-            button.setAlignmentX(Component.LEFT_ALIGNMENT);
-            button.addActionListener(e -> {
-                // TODO: implement command execution
-                System.out.println("Executing command: " + command.getCommand());
-            });
-            JPanel row = new JPanel();
-            row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
-            row.setAlignmentX(Component.LEFT_ALIGNMENT);
-            row.add(Box.createHorizontalStrut(10));
-            row.add(button);
-            fixRowHeight(row);
-            container.add(row);
+            container.add(CalibrationFieldFactory.createCommandRow(command));
         }
 
         boolean isGridLayout = container.getLayout() instanceof GridLayout;
@@ -239,7 +147,7 @@ public class CalibrationDialogWidget {
             if (curve != null) {
                 CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, ci);
                 JComponent content = curveWidget.getContentPane();
-                applyStyle(content);
+                CalibrationFieldFactory.applyStyle(content);
                 content.setAlignmentX(Component.LEFT_ALIGNMENT);
                 targetContainer.add(content);
                 continue;
@@ -250,7 +158,7 @@ public class CalibrationDialogWidget {
                 TuningTableView tuningTableView = new TuningTableView(table.getTitle());
                 tuningTableView.displayTable(iniFileModel, table.getTableId(), ci);
                 JComponent content = tuningTableView.getContent();
-                applyStyle(content);
+                CalibrationFieldFactory.applyStyle(content);
                 content.setAlignmentX(Component.LEFT_ALIGNMENT);
                 targetContainer.add(content);
                 continue;
@@ -276,79 +184,6 @@ public class CalibrationDialogWidget {
             }
             targetContainer.add(panelWidget);
         }
-    }
-
-    private static void fixRowHeight(JPanel row) {
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height + 5));
-    }
-
-    private static void applyLayout(JPanel panel, String layoutHint) {
-        if ("border".equalsIgnoreCase(layoutHint)) {
-            // Equal-width columns keep the .ini West/East intent;
-            // children wrap inside their allocated width via WrapLayout.
-            panel.setLayout(new GridLayout(1, 0));
-        } else if ("xAxis".equalsIgnoreCase(layoutHint)) {
-            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        } else {
-            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        }
-    }
-
-    private static void applyStyle(JComponent component) {
-        Font font = component.getFont();
-        if (font != null) {
-            component.setFont(font.deriveFont(font.getSize() * 1.2f));
-        }
-    }
-
-    private static void applyBackgroundColor(JComponent component, String value) {
-        if (value.startsWith("#")) {
-            component.setBackground(java.awt.Color.BLUE);
-            component.setForeground(java.awt.Color.WHITE);
-        } else if (value.startsWith("!")) {
-            component.setBackground(java.awt.Color.RED);
-            component.setForeground(java.awt.Color.WHITE);
-        }
-    }
-
-    private static void applyLinkLogic(JLabel label, String text) {
-        if (text == null) {
-            return;
-        }
-        // Basic pattern to match <a href=URL>text</a>
-        Pattern pattern = Pattern.compile("href=([^> ]+)>([^<]+)</a>");
-        Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            String url = matcher.group(1);
-            String visibleText = matcher.group(2);
-            label.setText(visibleText);
-            label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            label.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    try {
-                        Desktop.getDesktop().browse(new URI(url));
-                    } catch (Exception ex) {
-                        System.err.println("Failed to open URL: " + url);
-                    }
-                }
-            });
-        }
-    }
-
-    public static boolean isCheckboxEnum(EnumIniField enumField) {
-        boolean isCheckBox = false;
-        if (enumField.getEnums().size() == 2) {
-            List<String> values = new java.util.ArrayList<>(enumField.getEnums().values());
-            String v1 = values.get(0).toLowerCase();
-            String v2 = values.get(1).toLowerCase();
-
-            if ((v1.equals("yes") && v2.equals("no")) || (v1.equals("no") && v2.equals("yes")) ||
-                    (v1.equals("enabled") && v2.equals("disabled")) || (v1.equals("disabled") && v2.equals("enabled"))) {
-                isCheckBox = true;
-            }
-        }
-        return isCheckBox;
     }
 
     public JPanel getContentPane() {
