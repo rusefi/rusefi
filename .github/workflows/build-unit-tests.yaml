@@ -61,6 +61,7 @@ jobs:
         TIMEFORMAT=%R
         time make -j4 COVERAGE=yes
 
+      # This is expected to fail if run after UTC midnight and the last step was run before UTC midnight
     - name: Build Tests again to assert incremental
       working-directory: ./unit_tests/
       run: |
