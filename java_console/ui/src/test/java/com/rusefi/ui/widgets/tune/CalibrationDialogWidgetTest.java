@@ -300,12 +300,12 @@ public class CalibrationDialogWidgetTest {
 
     private void assertCheckbox(String v1, String v2, boolean expected) {
         EnumIniField field = createEnumField(v1, v2);
-        assertEquals(expected, CalibrationDialogWidget.isCheckboxEnum(field), "Values: " + v1 + ", " + v2);
+        assertEquals(expected, CalibrationFieldFactory.isCheckboxEnum(field), "Values: " + v1 + ", " + v2);
     }
 
     private void assertCheckbox(String v1, String v2, String v3, boolean expected) {
         EnumIniField field = createEnumField(v1, v2, v3);
-        assertEquals(expected, CalibrationDialogWidget.isCheckboxEnum(field), "Values: " + v1 + ", " + v2 + ", " + v3);
+        assertEquals(expected, CalibrationFieldFactory.isCheckboxEnum(field), "Values: " + v1 + ", " + v2 + ", " + v3);
     }
 
     private EnumIniField createEnumField(String... values) {
