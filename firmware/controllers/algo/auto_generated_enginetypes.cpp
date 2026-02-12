@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jan 27 01:58:17 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Feb 12 14:15:45 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -311,6 +311,8 @@ case trigger_type_e::TT_NISSAN_HR:
   return "TT_NISSAN_HR";
 case trigger_type_e::TT_NISSAN_HR_CAM_IN:
   return "TT_NISSAN_HR_CAM_IN";
+case trigger_type_e::TT_NISSAN_K11:
+  return "TT_NISSAN_K11";
 case trigger_type_e::TT_NISSAN_MR18_CAM_VVT:
   return "TT_NISSAN_MR18_CAM_VVT";
 case trigger_type_e::TT_NISSAN_MR18_CRANK:
@@ -365,8 +367,6 @@ case trigger_type_e::TT_TRI_TACH:
   return "TT_TRI_TACH";
 case trigger_type_e::TT_UNUSED:
   return "TT_UNUSED";
-case trigger_type_e::TT_UNUSED29:
-  return "TT_UNUSED29";
 case trigger_type_e::TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case trigger_type_e::TT_VVT_BOSCH_QUICK_START:

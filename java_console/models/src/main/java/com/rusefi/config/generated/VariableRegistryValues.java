@@ -1597,6 +1597,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_NARROW_SINGLE_TOOTH = 11;
 	public static final int trigger_type_e_TT_NISSAN_HR = 84;
 	public static final int trigger_type_e_TT_NISSAN_HR_CAM_IN = 86;
+	public static final int trigger_type_e_TT_NISSAN_K11 = 29;
 	public static final int trigger_type_e_TT_NISSAN_MR18_CAM_VVT = 52;
 	public static final int trigger_type_e_TT_NISSAN_MR18_CRANK = 68;
 	public static final int trigger_type_e_TT_NISSAN_QR25 = 61;
@@ -1624,7 +1625,6 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_TOYOTA_3_TOOTH_UZ = 91;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
 	public static final int trigger_type_e_TT_UNUSED = 95;
-	public static final int trigger_type_e_TT_UNUSED29 = 29;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int trigger_type_e_TT_VVT_FORD_COYOTE = 4;
@@ -1758,7 +1758,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.02.12.stm32h743_nucleo.3986405920";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.02.12.stm32h743_nucleo.3250509942";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2080;
