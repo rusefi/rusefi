@@ -140,16 +140,19 @@ constexpr remove_reference_t<_Ty>&& move(_Ty&& _Arg) noexcept {
 // Intel byte order, bitIndex is the least significant bit of the value
 // DBC sample: 0|16@1+
 uint32_t getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth);
+int32_t getBitRangeLsbSigned(const uint8_t data[], int bitIndex, int bitWidth);
 void setBitRangeLsb(uint8_t data[], int totalBitIndex, int bitWidth, uint32_t value);
 
 // Motorola byte order, bitIndex is the least significant bit of the value
 // not used in DBC
 uint32_t getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth);
+int32_t getBitRangeMsbSigned(const uint8_t data[], int bitIndex, int bitWidth);
 void setBitRangeMsb(uint8_t data[], int totalBitIndex, int bitWidth, uint32_t value);
 
 // Motorola byte order, bitIndex is the most significant bit of the value
 // DBC sample: 7|16@0+
 uint32_t getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth);
+int32_t getBitRangeMotoSigned(const uint8_t data[], int bitIndex, int bitWidth);
 void setBitRangeMoto(uint8_t data[], int totalBitIndex, int bitWidth, uint32_t value);
 
 // convert bitIndex from LSB to MSB style
