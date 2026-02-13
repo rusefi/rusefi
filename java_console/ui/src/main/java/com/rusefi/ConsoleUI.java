@@ -157,7 +157,6 @@ console live data tab is broken #8402
         https://github.com/rusefi/rusefi/issues/5956
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 */
-        tabbedPane.addTab("Connection", new ConnectionTab(uiContext).getContent());
 
         if (false) {
             // this feature is not totally happy safer to disable to reduce user confusion

@@ -4,8 +4,8 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
-import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
@@ -44,7 +44,7 @@ public class LuaScriptPanel {
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
         this.config = config;
-        ConnectionTab.installConnectAndDisconnect(context, mainPanel);
+        ShortcutsHelper.installConnectAndDisconnect(context, mainPanel);
         command = AnyCommand.createField(context, config, true, true);
 
         // Upper panel: command entry, etc

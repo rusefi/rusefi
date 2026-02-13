@@ -30,7 +30,7 @@ public class ConnectionStatusIcon extends JButton {
 
         Runnable updateButton = () -> {
             boolean isConnected = ConnectionStatusLogic.INSTANCE.isConnected();
-            setToolTipText(isConnected ? "Connected. Click to disconnect." : "Disconnected. Click to connect.");
+            setToolTipText(isConnected ? "Connected. Click or Ctrl+D to disconnect." : "Disconnected. Click or Ctrl+R to connect.");
             repaint();
         };
 
