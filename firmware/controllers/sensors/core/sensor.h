@@ -43,6 +43,10 @@
 
 #include <cstddef>
 
+#ifndef VERBOSE_SENSOR_DEBUG
+#define VERBOSE_SENSOR_DEBUG false
+#endif
+
 using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
