@@ -36,13 +36,9 @@ public class MainMenuTreeWidget {
 
     public MainMenuTreeWidget(UIContext uiContext) {
         IniFileModel model = uiContext.iniFileState.getIniFileModel();
-        for (MenuModel menu : model.getMenus()) {
-            DefaultMutableTreeNode menuNode = new DefaultMutableTreeNode(menu.getName());
-            root.add(menuNode);
-
-            for (MenuItem item : menu.getItems()) {
-                addMenuItem(menuNode, item);
-            }
+        // todo: do we fail if UI is re-launchd? with tuning tab active?
+        if (model != null) {
+            populate(model);
         }
 
         tree = new JTree(root);
@@ -141,6 +137,17 @@ public class MainMenuTreeWidget {
 
         contentPane.add(topPanel, BorderLayout.NORTH);
         contentPane.add(new JScrollPane(tree), BorderLayout.CENTER);
+    }
+
+    private void populate(IniFileModel model) {
+        for (MenuModel menu : model.getMenus()) {
+            DefaultMutableTreeNode menuNode = new DefaultMutableTreeNode(menu.getName());
+            root.add(menuNode);
+
+            for (MenuItem item : menu.getItems()) {
+                addMenuItem(menuNode, item);
+            }
+        }
     }
 
     private void handleSelection(TreePath path) {
