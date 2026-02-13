@@ -64,4 +64,12 @@ public class TabbedPanel {
     public void addTab(String title, Component component) {
         tabbedPane.addTab(title, component);
     }
+
+    public JComponent getContent() {
+        return tabbedPane;
+    }
+
+    public void setCornerComponent(JComponent component) {
+        tabbedPane.putClientProperty("JTabbedPane.trailingComponent", component);
+    }
 }

@@ -7,6 +7,7 @@ import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.StLinkFlasher;
@@ -17,6 +18,7 @@ import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.JustOneInstance;
+import com.rusefi.ui.widgets.ConnectionStatusIcon;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.LazyFileImpl;
@@ -69,12 +71,16 @@ public class ConsoleUI {
     }
 
     public ConsoleUI(String port) {
+        LinkManager linkManager = uiContext.getLinkManager();
+
         CommandQueue.ERROR_HANDLER = e -> SwingUtilities.invokeLater(() -> {
             throw new IllegalStateException("Connectivity error", e);
         });
 
-        log.info("init...");
+        ConnectionStatusIcon connectionStatus = new ConnectionStatusIcon(linkManager);
+
         tabbedPane = new TabbedPanel(uiContext);
+        tabbedPane.setCornerComponent(connectionStatus);
         this.port = port;
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
@@ -86,7 +92,6 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
-        LinkManager linkManager = uiContext.getLinkManager();
         // todo: this blocking IO operation should NOT be happening on the UI thread
         linkManager.start(port, mainFrame.listener);
 
@@ -182,7 +187,8 @@ console live data tab is broken #8402
 
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
         log.info("showFrame");
-        mainFrame.getFrame().showFrame(tabbedPane.tabbedPane);
+
+        mainFrame.getFrame().showFrame(tabbedPane.getContent());
     }
 
     public String getPort() {
