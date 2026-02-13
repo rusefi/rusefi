@@ -44,7 +44,6 @@ public class LuaScriptPanel {
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
         this.config = config;
-        ShortcutsHelper.installConnectAndDisconnect(context, mainPanel);
         command = AnyCommand.createField(context, config, true, true);
 
         // Upper panel: command entry, etc

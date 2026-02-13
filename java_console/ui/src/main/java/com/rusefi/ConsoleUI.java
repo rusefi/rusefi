@@ -4,6 +4,7 @@ import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
+import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.CommandQueue;
@@ -184,6 +185,7 @@ console live data tab is broken #8402
             }
         });
 
+        ShortcutsHelper.installConnectAndDisconnect(uiContext, tabbedPane.tabbedPane);
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
         log.info("showFrame");
 
