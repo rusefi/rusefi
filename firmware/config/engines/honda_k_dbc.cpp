@@ -44,10 +44,12 @@ void setHondaK() {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	setArrayValues(config->cltCrankingCorr, 70);
+#if CRANKING_ENRICH_COUNT == 6
 	static const uint16_t defaultPostCrankinDurationBins[] = {
 		0, 65, 100, 125, 150, 250
 	};
 	copyArray(config->postCrankingDurationBins, defaultPostCrankinDurationBins);
+#endif // CRANKING_ENRICH_COUNT
 	setTable(config->postCrankingFactor, 1.25f);
     engineConfiguration->useRunningMathForCranking = true;
 
