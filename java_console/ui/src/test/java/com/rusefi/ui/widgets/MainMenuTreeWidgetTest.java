@@ -446,6 +446,7 @@ todo: spllit into smaller tests?
             @Override public Map<String, com.opensr5.ini.TableModel> getTables() { return null; }
             @Override public Map<String, CurveModel> getCurves() { return null; }
             @Override public com.opensr5.ini.TableModel getTable(String name) { return null; }
+            @Override public com.opensr5.ini.FrontPageModel getFrontPage() { return null; }
             @Override public List<com.opensr5.ini.MenuModel> getMenus() { return null; }
         };
 

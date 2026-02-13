@@ -38,7 +38,8 @@ public class IniFileReader {
                 allTables,
                 allCurves,
                 menuDialogString,
-                menus);
+                menus,
+                frontPage);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -99,6 +100,8 @@ public class IniFileReader {
     private final TableBuilder tableBuilder = new TableBuilder();
 
     private boolean isCurveEditorSection = false;
+    private boolean isFrontPageSection = false;
+    private final FrontPageModel frontPage = new FrontPageModel();
     private final Map<String, CurveModel> allCurves = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final CurveBuilder curveBuilder = new CurveBuilder();
 
@@ -217,6 +220,7 @@ public class IniFileReader {
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
                 isCurveEditorSection = first.equalsIgnoreCase("[CurveEditor]");
                 isMenuSection = first.equalsIgnoreCase("[Menu]");
+                isFrontPageSection = first.equalsIgnoreCase("[FrontPage]");
 
                 if (wasGaugeSection && !isGaugeConfigurationsSection) {
                     finishGaugeCategory();
@@ -253,6 +257,9 @@ public class IniFileReader {
                 return;
             } else if (isMenuSection) {
                 handleMenu(list);
+                return;
+            } else if (isFrontPageSection) {
+                handleFrontPage(list);
                 return;
             }
 
@@ -662,6 +669,29 @@ public class IniFileReader {
 
     private int parseInt(String s) {
         return (int) IniField.parseDouble(s);
+    }
+
+    private void handleFrontPage(LinkedList<String> list) {
+        String first = list.getFirst();
+        if (first.startsWith("gauge")) {
+            if (list.size() >= 2) {
+                frontPage.getGaugeNames().add(list.get(1));
+            }
+        } else if (first.equalsIgnoreCase("indicator")) {
+            if (list.size() >= 8) {
+                // indicator = expression, offLabel, onLabel, offBg, offFg, onBg, onFg
+                IndicatorModel indicator = new IndicatorModel(
+                        list.get(1),
+                        list.get(2),
+                        list.get(3),
+                        list.get(4),
+                        list.get(5),
+                        list.get(6),
+                        list.get(7)
+                );
+                frontPage.getIndicators().add(indicator);
+            }
+        }
     }
 
     void finishTable() {

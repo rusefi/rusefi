@@ -88,5 +88,7 @@ public interface IniFileModel {
     @Nullable
     TableModel getTable(String name);
 
+    FrontPageModel getFrontPage();
+
     List<MenuModel> getMenus();
 }
