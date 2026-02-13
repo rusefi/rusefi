@@ -30,7 +30,7 @@ public class ConfigFieldImpl implements ConfigField {
     public static final String VOID_BIT = "void";
     public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, VOID_BIT, VOID_BIT);
 
-    private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
+    private static final String typePattern = "([\\w\\d_]+)(\\s*\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
     private static final String namePattern = "[[@\\w\\d\\s_]]+";
     private static final String commentPattern = ";([^;]*)";

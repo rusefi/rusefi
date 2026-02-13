@@ -103,12 +103,12 @@ public class CustomFieldTest {
     }
 
     @Test
-    public void testCustomTypeArrayTs() {
+    public void testCustomTypeArrayTsWithSpace() {
         ReaderStateImpl state = new ReaderStateImpl();
         String test = "struct pid_s\n" +
             "#define ERROR_BUFFER_SIZE 120\n" +
             "\tcustom critical_error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@\n" +
-            "\tcritical_error_message_t[2 iterate] var;\n" +
+            "\tcritical_error_message_t [2 iterate] var;\n" +
             "end_struct\n" +
             "";
 
