@@ -92,6 +92,12 @@ CanTxMessage::~CanTxMessage() {
 		return;
 	}
 
+	if (busIndex >= EFI_CAN_BUS_COUNT) {
+		// Error already throuwn from CanTxMessage::setBus
+		// just do not access out of bounds
+		return;
+	}
+
 	auto device = s_devices[busIndex];
 	if (!device) {
 		criticalError("Send: CAN%d device not configured %s %x", busIndex + 1, getCanCategory(category),
@@ -133,10 +139,21 @@ extern int txErrorCount[EFI_CAN_BUS_COUNT];
 
 #if HAS_CAN_FRAME
 void CanTxMessage::setDlc(uint8_t dlc) {
+	// TODO: CAN vs CANFD
+	if (dlc > sizeof(m_frame.data8)) {
+		criticalError("CAN: incorrect DLC %d", dlc);
+		return;
+	}
+
 	m_frame.DLC = dlc;
 }
 
 void CanTxMessage::setBus(size_t bus) {
+	if (bus >= EFI_CAN_BUS_COUNT) {
+		criticalError("CAN: CAN%d incorect bus", bus + 1);
+		return;
+	}
+
 	busIndex = bus;
 }
 
