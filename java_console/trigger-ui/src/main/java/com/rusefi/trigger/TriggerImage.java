@@ -47,60 +47,15 @@ public class TriggerImage {
     private static trigger_type_e onlyOneTrigger = null;
 
     /**
-     * todo: https://github.com/rusefi/rusefi/issues/2077
      *
      * @see TriggerWheelInfo#isCrankBased
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
-        switch (findByOrdinal(triggerName.getId())) {
-            case TT_FORD_ASPIRE:
-                return "Ford Aspire";
-            case TT_VVT_BOSCH_QUICK_START:
-                return "Bosch Quick Start";
-            case TT_MAZDA_MIATA_NA:
-                return "Miata NA";
-            case TT_SUBARU_SVX:
-                return "Subaru SVX";
-            case TT_HONDA_K_CRANK_12_1:
-                return "Honda K 1/12";
-            case TT_SUBARU_7_6:
-                return "Subaru 7/6";
-            case TT_GM_24x_3:
-                return "GM 24x 3";
-            case TT_GM_24x_5:
-                return "GM 24x 5";
-            case TT_DODGE_NEON_1995:
-                return "Dodge Neon 1995";
-            case TT_SKODA_FAVORIT:
-                return "Skoda Favorit";
-            case TT_GM_7X:
-                return "GM 7x";
-            case TT_CHRYSLER_NGC_36_2_2:
-                return "Chrysler NGC 36/2/2";
-            case TT_HALF_MOON:
-                return "Half Moon";
-            case TT_NARROW_SINGLE_TOOTH:
-                return "Narrow Single Tooth";
-            case TT_JEEP_4_CYL:
-                return "Jeep 4 cylinder";
-            case TT_JEEP_18_2_2_2:
-                return "18/2/2/2";
-            case TT_RENIX_44_2_2:
-                return "44/2/2";
-            case TT_RENIX_66_2_2_2:
-                return "66/2/2/2";
-            case TT_TOOTHED_WHEEL_36_1:
-                return "36/1";
-            case TT_TOOTHED_WHEEL_36_2:
-                return "36/2";
-            case TT_TRI_TACH:
-                return "TriTach";
-            case TT_TOOTHED_WHEEL_60_2:
-                return "60/2";
-            case TT_GM_60_2_2_2:
-                return "GM 60/2/2/2";
-        }
-        return triggerName.getTriggerName();
+        String name = triggerName.getTriggerHumanName();
+				if (name == null || name.equals("")) {
+						name = triggerName.getTriggerName();
+				}
+				return name;
     }
 
     public static void main(String[] args) throws Exception {
