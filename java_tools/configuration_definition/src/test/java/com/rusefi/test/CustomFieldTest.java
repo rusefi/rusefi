@@ -85,6 +85,42 @@ public class CustomFieldTest {
     }
 
     @Test
+    public void testCustomTypeArray() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        String test = "struct pid_s\n" +
+            "#define ERROR_BUFFER_SIZE 120\n" +
+            "\tcustom critical_error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@\n" +
+            "\tcritical_error_message_t[2 iterate] var;\n" +
+            "end_struct\n" +
+            "";
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(test, javaFieldsConsumer);
+
+        assertEquals("\tpublic static final Field VAR1 = Field.create(\"VAR1\", 0, 120, FieldType.STRING).setScale(1.0).setBaseOffset(0);\n" +
+                "\tpublic static final Field VAR2 = Field.create(\"VAR2\", 120, 120, FieldType.STRING).setScale(1.0).setBaseOffset(0);\n",
+            javaFieldsConsumer.getContent());
+    }
+
+    @Test
+    public void testCustomTypeArrayTs() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        String test = "struct pid_s\n" +
+            "#define ERROR_BUFFER_SIZE 120\n" +
+            "\tcustom critical_error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@\n" +
+            "\tcritical_error_message_t[2 iterate] var;\n" +
+            "end_struct\n" +
+            "";
+
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        assertEquals("var1 = string, ASCII, 0, 120\n" +
+            "var2 = string, ASCII, 120, 120\n" +
+            "; total TS size = 240\n", tsProjectConsumer.getContent());
+    }
+
+    @Test
     public void test2byteCustomEnum() {
         String test = "struct pid_s\n" +
             "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
