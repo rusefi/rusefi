@@ -10,7 +10,6 @@ import com.rusefi.maintenance.*;
 import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
-import com.rusefi.ui.TunerStudioPanel;
 import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
@@ -250,31 +249,7 @@ public class StartupFrame {
         content.add(leftPanel, BorderLayout.WEST);
         content.add(rightPanel, BorderLayout.EAST);
 
-        TunerStudioHelper.factory.newThread(new Runnable() {
-            @Override
-            public void run() {
-                if (!PersistentConfiguration.getBoolProperty(StartupFrame.CHECK_TS_RUNNING, true)) {
-                    return;
-                }
-                boolean isTsRunning = TunerStudioHelper.isTsRunning();
-                if (isTsRunning) {
-                    if (PersistentConfiguration.getBoolProperty(StartupFrame.AUTO_CLOSE_TS, false)) {
-                        TunerStudioHelper.attemptClosingTunerStudio();
-                        return;
-                    }
-
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            frame.getContentPane().removeAll();
-                            frame.add(new TunerStudioPanel(() -> restoreContent(content)));
-                            frame.validate();
-                            frame.repaint();
-                        }
-                    });
-                }
-            }
-        }).start();
+        TunerStudioHelper.checkTunerStudio(frame.getContentPane(), () -> restoreContent(content));
 
         frame.add(content);
         frame.pack();
