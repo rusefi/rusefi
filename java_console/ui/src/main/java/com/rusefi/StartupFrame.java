@@ -27,6 +27,7 @@ import java.awt.event.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,7 @@ public class StartupFrame {
     private final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
     private ProgramSelector selector;
     private boolean firstTimeHasEcuWithOpenBlt = true;
+    private boolean firstTimeAutoConnect = true;
 
     public StartupFrame(ConnectivityContext connectivityContext) {
         this.connectivityContext = connectivityContext;
@@ -345,6 +347,17 @@ public class StartupFrame {
 
     private void applyKnownPorts(AvailableHardware currentHardware) {
         List<PortResult> ports = currentHardware.getKnownPorts();
+/*
+        List<PortResult> ecuPorts = ports.stream().filter(portResult -> portResult.type == EcuWithOpenblt || portResult.type == SerialPortType.Ecu).collect(Collectors.toList());
+        if (!ecuPorts.isEmpty() && firstTimeAutoConnect) {
+            firstTimeAutoConnect = false;
+            PortResult target = ecuPorts.get(0);
+            log.info("Ecu detected, connecting automatically: " + target);
+            // combo box selection is already updated by applyPortSelectionToUIcontrol
+            connect(target);
+            return;
+        }
+*/
         log.info("Rendering available ports: " + ports);
         connectPanel.setVisible(!ports.isEmpty());
 
@@ -360,7 +373,7 @@ public class StartupFrame {
 
         noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
 
-        boolean hasEcuWithOpenBlt = !currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == EcuWithOpenblt).collect(Collectors.toList()).isEmpty();
+        boolean hasEcuWithOpenBlt = !ports.stream().filter(portResult -> portResult.type == EcuWithOpenblt).collect(Collectors.toList()).isEmpty();
         if (hasEcuWithOpenBlt && firstTimeHasEcuWithOpenBlt) {
             selector.setMode(UpdateMode.OPENBLT_AUTO);
             firstTimeHasEcuWithOpenBlt = false;
@@ -376,10 +389,14 @@ public class StartupFrame {
 
     private void connectButtonAction() {
 /*
-        make baud rate selection much less visible #9103
+        make baud rate combo box much less visible #9103
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
 */
         PortResult selectedPort = ((PortResult)portsComboBox.getComboPorts().getSelectedItem());
+        connect(selectedPort);
+    }
+
+    private void connect(PortResult selectedPort) {
         disposeFrameAndProceed();
         new ConsoleUI(selectedPort.port);
     }
