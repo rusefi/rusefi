@@ -348,6 +348,7 @@ public class StartupFrame {
     private void applyKnownPorts(AvailableHardware currentHardware) {
         List<PortResult> ports = currentHardware.getKnownPorts();
 /*
+todo: enable auto-connect once we have 'Device' tab
         List<PortResult> ecuPorts = ports.stream().filter(portResult -> portResult.type == EcuWithOpenblt || portResult.type == SerialPortType.Ecu).collect(Collectors.toList());
         if (!ecuPorts.isEmpty() && firstTimeAutoConnect) {
             firstTimeAutoConnect = false;
