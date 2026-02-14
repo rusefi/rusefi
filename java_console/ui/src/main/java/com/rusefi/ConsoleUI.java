@@ -55,8 +55,6 @@ public class ConsoleUI {
     public static final String TITLE = "rusEFI";
     public static EngineSnifferPanel engineSnifferPanel;
 
-    static Frame staticFrame;
-
     private final TabbedPanel tabbedPane;
     private final String port;
 
@@ -66,10 +64,6 @@ public class ConsoleUI {
      * We can listen to tab activation event if we so desire
      */
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
-
-    public static Frame getFrame() {
-        return staticFrame;
-    }
 
     public ConsoleUI(String port) {
         LinkManager linkManager = uiContext.getLinkManager();
@@ -84,8 +78,8 @@ public class ConsoleUI {
         tabbedPane.setCornerComponent(connectionStatus);
         this.port = port;
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
-        ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
-        setFrameIcon(ConsoleUI.staticFrame);
+        JFrame frame = mainFrame.getFrame().getFrame();
+        setFrameIcon(frame);
         log.info("Console " + UiVersion.CONSOLE_VERSION);
 
         log.info("Hardware: " + StLinkFlasher.getHardwareKind());
