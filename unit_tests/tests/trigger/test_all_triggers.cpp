@@ -95,6 +95,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 
 	fprintf(fp, "%s=%s\n", TRIGGER_KNOWN_OPERATION_MODE, shape->knownOperationMode ? "true" : "false");
 	operation_mode_e mode = shape->getWheelOperationMode();
+	fprintf(fp, "%s=%s\n", TRIGGER_MODE, getOperation_mode_e(mode));
 	bool isOneOfCrankShapes = mode == FOUR_STROKE_CRANK_SENSOR ||
 			mode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
 			mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
@@ -107,6 +108,8 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	fprintf(fp, "%s=%d\n", TRIGGER_GAPS_COUNT, shape->gapTrackingLength);
 	fprintf(fp, "%s=%s\n", TRIGGER_SYNC_EDGE, getSyncEdge(shape->syncEdge));
 	fprintf(fp, "%s=%d\n", TRIGGER_WITH_SYNC, shape->isSynchronizationNeeded);
+	fprintf(fp, "%s=%s\n", TRIGGER_ONLY_PRIMARY, shape->useOnlyPrimaryForSync ? "true" : "false");
+	fprintf(fp, "%s=%s\n", TRIGGER_WITHOUT_TDC, shape->shapeWithoutTdc ? "true" : "false");
 	for (int i = 0; i < shape->gapTrackingLength; i++) {
 		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_FROM, i, shape->synchronizationRatioFrom[i]);
 		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_TO, i, shape->synchronizationRatioTo[i]);
