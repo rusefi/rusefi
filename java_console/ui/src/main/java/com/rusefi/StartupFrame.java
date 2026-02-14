@@ -10,6 +10,7 @@ import com.rusefi.maintenance.*;
 import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
+import com.rusefi.ui.TunerStudioPanel;
 import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
@@ -107,15 +108,6 @@ public class StartupFrame {
     }
 
     public void showUi() {
-        new NamedThreadFactory("TSScanner").newThread(new Runnable() {
-            @Override
-            public void run() {
-                boolean isTsRunning = TunerStudioHelper.isTsRunning();
-
-            }
-        }).start();
-
-
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
         connectPanel.add(portsComboBox.getComboPorts());
@@ -255,6 +247,25 @@ public class StartupFrame {
         JPanel content = new JPanel(new BorderLayout());
         content.add(leftPanel, BorderLayout.WEST);
         content.add(rightPanel, BorderLayout.EAST);
+
+        new NamedThreadFactory("TSScanner").newThread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isTsRunning = TunerStudioHelper.isTsRunning();
+                if (isTsRunning) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            frame.getContentPane().removeAll();
+                            frame.add(new TunerStudioPanel(() -> restoreContent(content)));
+                            frame.validate();
+                            frame.repaint();
+                        }
+                    });
+                }
+            }
+        }).start();
+
         frame.add(content);
         frame.pack();
         setFrameIcon(frame);
@@ -333,6 +344,13 @@ public class StartupFrame {
         }
 
         return jLabel;
+    }
+
+    private void restoreContent(JPanel content) {
+        frame.getContentPane().removeAll();
+        frame.add(content);
+        frame.validate();
+        frame.repaint();
     }
 
     private void updateConnectButtonState() {
