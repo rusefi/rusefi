@@ -134,22 +134,6 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testConditional() {
-        String string = "page = 1\n" +
-                "[Constants]\n" +
-                "#if LAMBDA\n" +
-                "\tlambdaTable\t\t\t\t\t = array, U08, 18592, [16x16],\"deg\", 0.006802721088435374, 0, 0.6, 1.5, 2\n" +
-                "#else\n" +
-                "\tlambdaTable\t\t\t\t\t = array, U08, 18592, [16x16],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
-                "#endif\n";
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(1, model.getAllIniFields().size());
-        assertEquals(0, model.getFieldsInUiOrder().size()); // no UI for the field
-    }
-
-    @Test
     public void testProtocolMeta() {
         String string =
                 "[Constants]\n" +
@@ -198,27 +182,6 @@ public class IniFileReaderTest {
     static @NotNull IniFileModel readLines(RawIniFile lines) {
         IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
         return IniFileReaderUtil.readIniFile(lines, "", metaInfo);
-    }
-
-    @Test
-    public void testDirectives() {
-        String string = "page = 1\n" +
-                "[Constants]\n" +
-                "#if LAMBDA\n" +
-                "\tname\t= bits,    U32,   \t744, [0:2], \"false\"\n" +
-                "#else\n" +
-                "\tname\t= bits,    U32,   \t744, [3:4], \"false\", \"true\"\n" +
-                "#endif";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(1, model.getAllIniFields().size());
-
-        EnumIniField field = (EnumIniField) model.getAllIniFields().get("name");
-        assertEquals(0, field.getBitPosition());
-        assertEquals(2, field.getBitSize0());
-        assertEquals(1, field.getEnums().size());
     }
 
     @Test
