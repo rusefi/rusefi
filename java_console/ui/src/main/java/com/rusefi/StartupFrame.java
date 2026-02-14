@@ -112,10 +112,12 @@ public class StartupFrame {
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
         connectPanel.add(portsComboBox.getComboPorts());
+/*
+    make baud rate selection much less visible #9103
         final JComboBox<String> comboSpeeds = createSpeedCombo();
         comboSpeeds.setToolTipText("For 'STMicroelectronics Virtual COM Port' device any speed setting would work the same");
         connectPanel.add(comboSpeeds);
-
+*/
         setToolTip(connectButton, "Connect to real hardware");
 
         JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Always auto-connect port");
@@ -143,12 +145,12 @@ public class StartupFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    connectButtonAction(comboSpeeds);
+                    connectButtonAction();
                 }
             }
         });
 
-        connectButton.addActionListener(e -> connectButtonAction(comboSpeeds));
+        connectButton.addActionListener(e -> connectButtonAction());
 
         final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
             "rusefi_autoupdate.exe",
@@ -362,8 +364,11 @@ public class StartupFrame {
         BasicLogoHelper.setFrameIcon(frame, icon);
     }
 
-    private void connectButtonAction(JComboBox<String> comboSpeeds) {
+    private void connectButtonAction() {
+/*
+        make baud rate selection much less visible #9103
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
+*/
         PortResult selectedPort = ((PortResult)portsComboBox.getComboPorts().getSelectedItem());
         disposeFrameAndProceed();
         new ConsoleUI(selectedPort.port);
