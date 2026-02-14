@@ -1,6 +1,7 @@
 package com.rusefi.ui.basic;
 
 import com.rusefi.*;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.DoubleCallbacks;
@@ -8,6 +9,7 @@ import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.StatusAnimation;
 import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
+import com.rusefi.ui.TunerStudioPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.TrimsTab;
@@ -46,7 +48,6 @@ public class BasicStartupFrame {
 
     private BasicStartupFrame(ConnectivityContext connectivityContext) {
         DfuFlasher.dfuEnabledInCaseOfError = false;
-        TunerStudioHelper.maybeCloseTs();
 
         JTabbedPane tabbedPane = new JTabbedPane();
         final JPanel firmwareUpdateContent = new JPanel();
@@ -82,6 +83,33 @@ public class BasicStartupFrame {
 
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
         frame.showFrame(tabbedPane, false);
+
+        TunerStudioHelper.factory.newThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!PersistentConfiguration.getBoolProperty(StartupFrame.CHECK_TS_RUNNING, true)) {
+                    return;
+                }
+                boolean isTsRunning = TunerStudioHelper.isTsRunning();
+                if (isTsRunning) {
+                    if (PersistentConfiguration.getBoolProperty(StartupFrame.AUTO_CLOSE_TS, false)) {
+                        TunerStudioHelper.attemptClosingTunerStudio();
+                        return;
+                    }
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            frame.getFrame().getContentPane().removeAll();
+                            frame.getFrame().add(new TunerStudioPanel(() -> restoreContent(tabbedPane)));
+                            frame.getFrame().validate();
+                            frame.getFrame().repaint();
+                        }
+                    });
+                }
+            }
+        }).start();
+
         UiUtils.centerWindow(frame.getFrame());
         packFrame();
 
@@ -90,6 +118,13 @@ public class BasicStartupFrame {
 
     private void packFrame() {
         frame.getFrame().pack();
+    }
+
+    private void restoreContent(JComponent content) {
+        frame.getFrame().getContentPane().removeAll();
+        frame.getFrame().add(content);
+        frame.getFrame().validate();
+        frame.getFrame().repaint();
     }
 
     private void updateStatus(final String niceStatus) {

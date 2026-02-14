@@ -250,7 +250,7 @@ public class StartupFrame {
         content.add(leftPanel, BorderLayout.WEST);
         content.add(rightPanel, BorderLayout.EAST);
 
-        new NamedThreadFactory("TSScanner").newThread(new Runnable() {
+        TunerStudioHelper.factory.newThread(new Runnable() {
             @Override
             public void run() {
                 if (!PersistentConfiguration.getBoolProperty(StartupFrame.CHECK_TS_RUNNING, true)) {
