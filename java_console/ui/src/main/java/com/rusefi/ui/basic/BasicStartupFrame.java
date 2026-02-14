@@ -2,6 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.rusefi.*;
 import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.DoubleCallbacks;
 import com.rusefi.maintenance.DfuFlasher;
@@ -97,8 +98,7 @@ public class BasicStartupFrame {
     private void restoreContent(JComponent content) {
         frame.getFrame().getContentPane().removeAll();
         frame.getFrame().add(content);
-        frame.getFrame().validate();
-        frame.getFrame().repaint();
+        AutoupdateUtil.pack(frame.getFrame());
     }
 
     private void updateStatus(final String niceStatus) {

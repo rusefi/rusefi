@@ -336,8 +336,7 @@ public class StartupFrame {
     private void restoreContent(JPanel content) {
         frame.getContentPane().removeAll();
         frame.add(content);
-        frame.validate();
-        frame.repaint();
+        AutoupdateUtil.pack(frame);
     }
 
     private void updateConnectButtonState() {
@@ -399,7 +398,7 @@ todo: enable auto-connect once we have 'Device' tab
 
     private void connect(PortResult selectedPort) {
         disposeFrameAndProceed();
-        new ConsoleUI(selectedPort.port);
+        new ConsoleUI(selectedPort.port, selectedPort.type);
     }
 
     /**
