@@ -63,7 +63,7 @@ public class ConsoleUI {
      */
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
-    public ConsoleUI(String port) {
+    public ConsoleUI(String port, SerialPortType serialPortType) {
         LinkManager linkManager = uiContext.getLinkManager();
 
         CommandQueue.ERROR_HANDLER = e -> SwingUtilities.invokeLater(() -> {
@@ -134,6 +134,7 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             tabbedPane.addTab("Tuning", new TuningPane(uiContext).getContent());
+            tabbedPane.addTab("Device", new DevicePane(uiContext, serialPortType).getContent());
         }
 
         if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
@@ -242,7 +243,7 @@ console live data tab is broken #8402
             }
 
             if (isPortDefined) {
-                new ConsoleUI(port);
+                new ConsoleUI(port, SerialPortType.Unknown);
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
