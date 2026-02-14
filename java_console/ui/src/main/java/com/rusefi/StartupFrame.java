@@ -107,8 +107,6 @@ public class StartupFrame {
     }
 
     public void showUi() {
-        String panelTitle = UiProperties.useSimulator() ? "Real stm32" : "";
-        realHardwarePanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), panelTitle));
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
         connectPanel.add(portsComboBox.getComboPorts());
