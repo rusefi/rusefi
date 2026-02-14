@@ -173,9 +173,6 @@ void onEcuStartDoSomethingTriggerInputPins() {
 	if (isBrainPinValid(engineConfiguration->triggerInputPins[0])) {
 	    // todo: we have another 'rpmCalculator.Register' for UNIT_TEST would be great to unify
 		engine->rpmCalculator.Register();
-	} else {
-		// if we do not have primary input channel maybe it's BCM mode and we inject RPM value via Lua?
-		engine->rpmCalculator.unregister();
 	}
 #endif /* EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT */
 }
