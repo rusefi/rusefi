@@ -6,8 +6,8 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
+import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.duplicates.ConsoleBundleUtil;
@@ -107,6 +107,15 @@ public class StartupFrame {
     }
 
     public void showUi() {
+        new NamedThreadFactory("TSScanner").newThread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isTsRunning = TunerStudioHelper.isTsRunning();
+
+            }
+        }).start();
+
+
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
         connectPanel.add(portsComboBox.getComboPorts());
