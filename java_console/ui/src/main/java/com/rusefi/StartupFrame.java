@@ -52,6 +52,8 @@ public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);
 
     public static final String ALWAYS_AUTO_PORT = "always_auto_port";
+    public static final String AUTO_CLOSE_TS = "auto_close_ts";
+    public static final String CHECK_TS_RUNNING = "check_ts_running";
     private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
     public static final String SCANNING_PORTS = "Scanning ports";
 
@@ -251,8 +253,16 @@ public class StartupFrame {
         new NamedThreadFactory("TSScanner").newThread(new Runnable() {
             @Override
             public void run() {
+                if (!PersistentConfiguration.getBoolProperty(StartupFrame.CHECK_TS_RUNNING, true)) {
+                    return;
+                }
                 boolean isTsRunning = TunerStudioHelper.isTsRunning();
                 if (isTsRunning) {
+                    if (PersistentConfiguration.getBoolProperty(StartupFrame.AUTO_CLOSE_TS, false)) {
+                        TunerStudioHelper.attemptClosingTunerStudio();
+                        return;
+                    }
+
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
@@ -286,7 +296,7 @@ public class StartupFrame {
         final Supplier<Integer> minWidthSupplier
     ) {
         final String nextBranchName = ConsoleBundleUtil.readBundleFullNameNotNull().getNextBranchName();
-        if (nextBranchName != null && !nextBranchName.isBlank()) {
+        if (nextBranchName != null && nextBranchName.trim().length() > 0) {
             final JLabel newReleaseAmmomceMessage = new JLabel(
                 String.format(
                     "<html><p style=\"text-align: %s;font-weight: bold;color:red\">New release `%s` is available!<br/>To upgrade please restart `%s`.</p></html>",

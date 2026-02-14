@@ -1,5 +1,7 @@
 package com.rusefi.ui;
 
+import com.rusefi.StartupFrame;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.tools.TunerStudioHelper;
 import org.putgemin.VerticalFlowLayout;
 
@@ -30,6 +32,17 @@ public class TunerStudioPanel extends JPanel {
         buttons.add(yes);
         buttons.add(no);
         container.add(buttons);
+
+        JCheckBox autoClose = new JCheckBox("Auto-close TS");
+        autoClose.setSelected(PersistentConfiguration.getBoolProperty(StartupFrame.AUTO_CLOSE_TS, false));
+        autoClose.addActionListener(e -> PersistentConfiguration.setBoolProperty(StartupFrame.AUTO_CLOSE_TS, autoClose.isSelected()));
+
+        JCheckBox checkTs = new JCheckBox("Check if TS is running");
+        checkTs.setSelected(PersistentConfiguration.getBoolProperty(StartupFrame.CHECK_TS_RUNNING, true));
+        checkTs.addActionListener(e -> PersistentConfiguration.setBoolProperty(StartupFrame.CHECK_TS_RUNNING, checkTs.isSelected()));
+
+        container.add(autoClose);
+        container.add(checkTs);
 
         add(container);
     }
