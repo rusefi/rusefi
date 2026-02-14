@@ -107,7 +107,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	fprintf(fp, "%s=%d\n", TRIGGER_CYCLE_DURATION, (int)shape->getCycleDuration());
 	fprintf(fp, "%s=%d\n", TRIGGER_GAPS_COUNT, shape->gapTrackingLength);
 	fprintf(fp, "%s=%s\n", TRIGGER_SYNC_EDGE, getSyncEdge(shape->syncEdge));
-	fprintf(fp, "%s=%d\n", TRIGGER_WITH_SYNC, shape->isSynchronizationNeeded);
+	fprintf(fp, "%s=%s\n", TRIGGER_WITH_SYNC, shape->isSynchronizationNeeded ? "true" : "false");
 	fprintf(fp, "%s=%s\n", TRIGGER_ONLY_PRIMARY, shape->useOnlyPrimaryForSync ? "true" : "false");
 	fprintf(fp, "%s=%s\n", TRIGGER_WITHOUT_TDC, shape->shapeWithoutTdc ? "true" : "false");
 	for (int i = 0; i < shape->gapTrackingLength; i++) {
