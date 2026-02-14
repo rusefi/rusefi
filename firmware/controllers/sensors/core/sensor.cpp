@@ -53,7 +53,11 @@ public:
 
 	void unregister() {
 #if VERBOSE_SENSOR_DEBUG
-  efiPrintf("Unregistering sensor");
+	  if (m_sensor) {
+      efiPrintf("Unregistering sensor %s", m_sensor->getSensorName());
+	  } else {
+	    efiPrintf("Unregistering null sensor");
+	  }
 #endif
 		m_sensor = nullptr;
 	}
