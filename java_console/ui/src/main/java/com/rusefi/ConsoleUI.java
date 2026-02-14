@@ -98,18 +98,14 @@ public class ConsoleUI {
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
         uiContext.DetachedRepositoryINSTANCE.load();
-        if (!linkManager.isLogViewer())
+        if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges")).getContent());
 
-        if (!linkManager.isLogViewer()) {
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
-        }
-        if (!linkManager.isLogViewer()) {
-            tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
-        }
 
-        if (!linkManager.isLogViewer()) {
+            tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
+
             LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
             tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
         }

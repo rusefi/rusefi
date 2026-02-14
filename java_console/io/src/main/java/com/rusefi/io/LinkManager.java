@@ -327,6 +327,7 @@ public class LinkManager implements Closeable {
         return port.equals(LOG_VIEWER);
     }
 
+    @Deprecated // kill this? we do not plan a any log viewers any time soon?
     public boolean isLogViewer() {
         return connector == LinkConnector.VOID;
     }
