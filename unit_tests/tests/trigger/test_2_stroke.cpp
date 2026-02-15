@@ -22,6 +22,7 @@ TEST(trigger, twoStrokeSingleToothTrigger) {
 	ASSERT_EQ(750, Sensor::getOrZero(SensorType::Rpm));
 }
 
+// See #9108 and #9045
 TEST(trigger, twoStrokeSingleToothWith30DegOffset_sparkOutOfOrder) {
 	EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
 	engineConfiguration->twoStroke = true;
@@ -35,13 +36,12 @@ TEST(trigger, twoStrokeSingleToothWith30DegOffset_sparkOutOfOrder) {
 	eth.smartFireTriggerEvents2(/*count*/20, /*delay*/ 40);
 	ASSERT_EQ(750, Sensor::getOrZero(SensorType::Rpm));
 
-	// the bug doesn't appear immediately - need more revolutions for it to manifest
+	// run some more revolutions
 	eth.smartFireTriggerEvents2(/*count*/200, /*delay*/ 40);
 
-	// continue running to accumulate more out-of-order events
 	eth.smartFireTriggerEvents2(/*count*/200, /*delay*/ 40);
 
-	EXPECT_NE(0, engine->engineState.sparkOutOfOrderCounter) << "demonstrates sparkOutOfOrder bug with single tooth + 30deg offset";
+	ASSERT_EQ(0, engine->engineState.sparkOutOfOrderCounter) << "sparkOutOfOrder should be 0 during normal operation";
 }
 
 TEST(trigger, twoStrokeSingleToothWith72DegOffset) {

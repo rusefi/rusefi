@@ -385,6 +385,17 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		angleOffset += engine->engineState.engineCycle;
 	}
 
+	// For single-tooth triggers (currentPhase == nextPhase), all dwell angles map to the
+	// same trigger tooth. When the dwell angle is just below the current phase, the offset
+	// wraps to nearly a full engine cycle, scheduling the dwell far in the future
+	// Clamp to 0 so the spark starts immediately.
+	if (currentPhase == nextPhase && angleOffset > engine->engineState.engineCycle / 2) {
+		angleOffset = 0;
+#if SPARK_EXTREME_LOGGING
+	    efiPrintf("Clamping spark dwell to current phase due to single-tooth trigger");
+#endif /* SPARK_EXTREME_LOGGING */
+	}
+
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 * [tag:duration_limit]
