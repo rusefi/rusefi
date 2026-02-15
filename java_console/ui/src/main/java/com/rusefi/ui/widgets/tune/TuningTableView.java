@@ -28,6 +28,10 @@ public class TuningTableView {
     private double maxValue = -Double.MAX_VALUE;
 
     public TuningTableView(String title) {
+        this(title, false);
+    }
+
+    public TuningTableView(String title, boolean viewMode) {
         this.title = title;
         table.getTableHeader().setReorderingAllowed(false);
         table.setSelectionBackground(Color.ORANGE);
@@ -80,12 +84,15 @@ public class TuningTableView {
         topPanel.add(new JLabel(title));
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(view3d);
-        topPanel.add(Box.createHorizontalStrut(10));
-        topPanel.add(new JLabel("delta:"));
-        topPanel.add(deltaField);
-        topPanel.add(upButton);
-        topPanel.add(downButton);
-        topPanel.add(equalsButton);
+
+        if (!viewMode) {
+            topPanel.add(Box.createHorizontalStrut(10));
+            topPanel.add(new JLabel("delta:"));
+            topPanel.add(deltaField);
+            topPanel.add(upButton);
+            topPanel.add(downButton);
+            topPanel.add(equalsButton);
+        }
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(topPanel);

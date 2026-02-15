@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class TrimsTab {
     private final JPanel content = new JPanel(new BorderLayout());
-    private final TuningTableView view1 = new TuningTableView("Bank 1");
-    private final TuningTableView view2 = new TuningTableView("Bank 2");
+    private final TuningTableView view1 = new TuningTableView("Bank 1", true);
+    private final TuningTableView view2 = new TuningTableView("Bank 2", true);
     private final ConnectivityContext connectivityContext;
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
 

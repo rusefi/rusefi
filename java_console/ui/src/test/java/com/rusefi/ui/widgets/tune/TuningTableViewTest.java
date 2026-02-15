@@ -131,6 +131,15 @@ public class TuningTableViewTest {
         assertEquals("2.55", table.getValueAt(1, 2));
     }
 
+    @Test
+    public void testViewModeHidesButtons() {
+        TuningTableView view = new TuningTableView("Test", true);
+        assertNull(findButton(view.getContent(), "Up"), "Up button should be hidden in viewMode");
+        assertNull(findButton(view.getContent(), "Down"), "Down button should be hidden in viewMode");
+        assertNull(findButton(view.getContent(), "="), "Equals button should be hidden in viewMode");
+        assertNull(findTextField(view.getContent(), "0.5"), "Delta field should be hidden in viewMode");
+    }
+
     private JTable findTable(JComponent c) {
         if (c instanceof JTable) return (JTable) c;
         for (int i = 0; i < c.getComponentCount(); i++) {
