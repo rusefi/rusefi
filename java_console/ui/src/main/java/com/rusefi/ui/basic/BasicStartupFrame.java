@@ -72,11 +72,13 @@ public class BasicStartupFrame {
             singleAsyncJobExecutor,
             statusPanelTuneTab
         ).getContent());
+/*
+todo: fix TrimsTab so that it does not enlarge frame
         tabbedPane.addTab("Trims", new TrimsTab(
             connectivityContext,
             ecuPortToUse
         ).getContent());
-
+*/
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
         frame.showFrame(tabbedPane, false);
 

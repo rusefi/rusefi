@@ -10,8 +10,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FirmwareUpdateTab {
-    private final JPanel content = new JPanel();
+    private final JPanel content = new JPanel(new BorderLayout());
     private final BasicUpdaterPanel basicUpdaterPanel;
+    private final JProgressBar progressBar = new JProgressBar();
 
     public FirmwareUpdateTab(ConnectivityContext connectivityContext,
                              String whiteLabel,
@@ -23,8 +24,18 @@ public class FirmwareUpdateTab {
             statusPanelFirmwareTab,
             singleAsyncJobExecutor, ecuPortToUse
         );
-        content.add(basicUpdaterPanel.getContent());
-        content.add(statusPanelFirmwareTab);
+
+        progressBar.setIndeterminate(false);
+        progressBar.setStringPainted(true);
+        progressBar.setBorder(BorderFactory.createLineBorder(Color.RED));
+
+        JPanel statusAndProgress = new JPanel();
+        statusAndProgress.setLayout(new BoxLayout(statusAndProgress, BoxLayout.Y_AXIS));
+        statusAndProgress.add(statusPanelFirmwareTab);
+        statusAndProgress.add(progressBar);
+
+        content.add(basicUpdaterPanel.getContent(), BorderLayout.WEST);
+        content.add(statusAndProgress, BorderLayout.EAST);
     }
 
     public BasicUpdaterPanel getBasicUpdaterPanel() {
