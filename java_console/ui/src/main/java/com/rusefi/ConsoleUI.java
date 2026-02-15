@@ -134,7 +134,7 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             tabbedPane.addTab("Tuning", new TuningPane(uiContext).getContent());
-            tabbedPane.addTab("Device", new DevicePane(uiContext, serialPortType).getContent());
+            tabbedPane.addTab("Device", new DevicePane(uiContext, port, serialPortType).getContent());
         }
 
         if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
