@@ -2157,7 +2157,7 @@
 #define ts_show_wbo_can_menu true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2026.02.14.frankenso_na6.2568544122"
+#define TS_SIGNATURE "rusEFI master.2026.02.15.frankenso_na6.2568544122"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
