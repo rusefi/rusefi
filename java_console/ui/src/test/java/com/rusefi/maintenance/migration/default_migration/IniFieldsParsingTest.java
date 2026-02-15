@@ -7,7 +7,7 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import java.io.FileNotFoundException;
 
@@ -66,3 +66,4 @@ public class IniFieldsParsingTest {
         assertEquals("0", veTableIniField.getDigits());
     }
 }
+

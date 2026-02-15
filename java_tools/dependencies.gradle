@@ -13,7 +13,8 @@ ext {
           snakeyaml      : "org.yaml:snakeyaml:1.26",
           commons_logging: "commons-logging:commons-logging:1.2",
           jcip           : 'net.jcip:jcip-annotations:1.0',
-          jaxb           : 'org.glassfish.jaxb:jaxb-runtime:2.3.9',
+          jaxb           : 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2',
+          jaxb_runtime   : 'org.glassfish.jaxb:jaxb-runtime:4.0.5',
   ]
 
   ts_plugin_libs = [

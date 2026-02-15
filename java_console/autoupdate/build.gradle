@@ -12,6 +12,7 @@ dependencies {
 
     // xml binding drama #7430 we do not understand this hack but it seems to help :(
     api global_libs.jaxb
+    runtimeOnly global_libs.jaxb_runtime
 }
 
 // yes nasty sorry

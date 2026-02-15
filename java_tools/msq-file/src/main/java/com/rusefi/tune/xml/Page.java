@@ -1,6 +1,6 @@
 package com.rusefi.tune.xml;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -69,3 +69,4 @@ public class Page {
         return asMap;
     }
 }
+

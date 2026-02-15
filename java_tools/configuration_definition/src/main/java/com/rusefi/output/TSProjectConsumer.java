@@ -12,7 +12,7 @@ import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.Output;
 import org.jetbrains.annotations.NotNull;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.*;
 import java.util.List;
 
@@ -230,3 +230,4 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return consumerState.tsOutput.getContent();
     }
 }
+

@@ -11,7 +11,7 @@ import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -61,3 +61,4 @@ public class ALSTimingRetardTableTest {
         assertEquals(TEST_ALS_TIMING_RETARD_TABLE, ConfigurationImageGetterSetter.getStringValue(alsTimingRetardTableField, testImage));
     }
 }
+
