@@ -246,7 +246,7 @@ public class ProgramSelector {
 
             @Override
             public void updateProgress(int percent) {
-                callbacks.logLine("Progress: " + percent + "%");
+                callbacks.updateProgress(percent);
             }
 
             @Override

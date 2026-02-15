@@ -49,7 +49,7 @@ public class BasicStartupFrame {
         DfuFlasher.dfuEnabledInCaseOfError = false;
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        StatusPanel statusPanelFirmwareTab = new StatusPanel(500);
+        StatusPanelWithProgressBar statusPanelFirmwareTab = new StatusPanelWithProgressBar();
         StatusPanel statusPanelTuneTab = new StatusPanel(250);
         SingleAsyncJobExecutor singleAsyncJobExecutor = new SingleAsyncJobExecutor(new DoubleCallbacks(statusPanelFirmwareTab, statusPanelTuneTab));
 
