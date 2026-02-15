@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class BasicStartupFrame {
     private final String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
 
-    private final BasicUpdaterPanel basicUpdaterPanel;
+    private final FirmwareUpdateTab firmwareUpdateTab;
     private final FrameHelper frame = FrameHelper.createFrame(
         whiteLabel + " basic console " + Launcher.CONSOLE_VERSION
     );
@@ -49,29 +49,26 @@ public class BasicStartupFrame {
         DfuFlasher.dfuEnabledInCaseOfError = false;
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        final JPanel firmwareUpdateContent = new JPanel();
         StatusPanel statusPanelFirmwareTab = new StatusPanel(500);
         StatusPanel statusPanelTuneTab = new StatusPanel(250);
         SingleAsyncJobExecutor singleAsyncJobExecutor = new SingleAsyncJobExecutor(new DoubleCallbacks(statusPanelFirmwareTab, statusPanelTuneTab));
 
         AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
-        basicUpdaterPanel = new BasicUpdaterPanel(connectivityContext,
-            ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
+        firmwareUpdateTab = new FirmwareUpdateTab(connectivityContext,
+            whiteLabel,
             statusPanelFirmwareTab,
             singleAsyncJobExecutor, ecuPortToUse
         );
-        firmwareUpdateContent.add(basicUpdaterPanel.getContent());
-        firmwareUpdateContent.add(statusPanelFirmwareTab);
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             onHardwareUpdated();
         }));
 
-        tabbedPane.addTab("Firmware", firmwareUpdateContent);
+        tabbedPane.addTab("Firmware", firmwareUpdateTab.getContent());
         tabbedPane.addTab("Tunes", new TuneManagementTab(
             connectivityContext,
             ecuPortToUse,
-            basicUpdaterPanel.getImportTuneButton().getContent(),
+            firmwareUpdateTab.getBasicUpdaterPanel().getImportTuneButton().getContent(),
             singleAsyncJobExecutor,
             statusPanelTuneTab
         ).getContent());
@@ -102,7 +99,7 @@ public class BasicStartupFrame {
     }
 
     private void updateStatus(final String niceStatus) {
-        basicUpdaterPanel.updateStatus(niceStatus);
+        firmwareUpdateTab.getBasicUpdaterPanel().updateStatus(niceStatus);
 
         // I'm not sure why it works, but it looks like the following frame packing helps to avoid displaying of logo on
         // the right side of frame
@@ -112,7 +109,7 @@ public class BasicStartupFrame {
     public void onHardwareUpdated() {
         status.stop();
 
-        basicUpdaterPanel.onHardwareUpdated();
+        firmwareUpdateTab.getBasicUpdaterPanel().onHardwareUpdated();
 
         // I'm not sure if the following frame packing is really necessary, but I'm adding it just in case if frame was
         // not packed in updateStatus method
