@@ -2420,6 +2420,13 @@ float[TORQUE_TABLE_Y_SIZE x TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardTa
 int16_t[TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardXBins;;"", 1, 0, -30000, 30000, 0
 int8_t[TORQUE_TABLE_Y_SIZE] torqueReductionIgnitionRetardGearBins ;;"gear N°", 1, 0, 0, 20, 0
 
+bit wizardNumberOfCylinders,"yes","no"
+bit wizardFiringOrder,"yes","no"
+bit wizardMapSensorType,"yes","no"
+bit wizardCrankTrigger,"yes","no"
+bit wizardCamTrigger,"yes","no"
+bit wizardInjectorFlow,"yes","no"
+
 split_lines@@BOARD_CONFIG_FROM_FILE@@
 
 end_struct
