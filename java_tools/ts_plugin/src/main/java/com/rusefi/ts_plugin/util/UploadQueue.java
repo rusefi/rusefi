@@ -9,7 +9,7 @@ import com.rusefi.ts_plugin.ui.TuneUploder;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -139,3 +139,4 @@ public class UploadQueue {
         }
     }
 }
+

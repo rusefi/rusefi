@@ -13,7 +13,7 @@ import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -84,3 +84,4 @@ public class TopLevelMenuSandbox {
         left.selectSubMenu("dwellSettings");
     }
 }
+

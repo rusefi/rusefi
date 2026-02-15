@@ -23,7 +23,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -110,3 +110,4 @@ public class Online {
         return result;
     }
 }
+

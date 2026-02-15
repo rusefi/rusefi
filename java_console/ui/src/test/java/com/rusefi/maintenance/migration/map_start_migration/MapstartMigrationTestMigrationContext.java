@@ -2,7 +2,7 @@ package com.rusefi.maintenance.migration.map_start_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 public class MapstartMigrationTestMigrationContext {
 
@@ -20,3 +20,4 @@ public class MapstartMigrationTestMigrationContext {
         return result;
     }
 }
+

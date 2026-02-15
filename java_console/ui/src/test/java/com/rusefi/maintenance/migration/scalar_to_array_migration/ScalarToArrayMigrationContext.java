@@ -2,7 +2,7 @@ package com.rusefi.maintenance.migration.scalar_to_array_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 
 public class ScalarToArrayMigrationContext {

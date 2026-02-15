@@ -2,7 +2,7 @@ package com.rusefi.maintenance.migration.imperial_units_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import static com.rusefi.maintenance.migration.migrators.ImperialUnitsMigrator.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,3 +30,4 @@ public class ImperialUnitsMigrationContextWithExistingField {
         return result;
     }
 }
+

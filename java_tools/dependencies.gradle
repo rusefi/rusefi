@@ -13,7 +13,10 @@ ext {
           snakeyaml      : "org.yaml:snakeyaml:1.26",
           commons_logging: "commons-logging:commons-logging:1.2",
           jcip           : 'net.jcip:jcip-annotations:1.0',
-          jaxb           : 'org.glassfish.jaxb:jaxb-runtime:2.3.9',
+    // jakarta 3 works with java 8 which we keep for TS plugin
+    // one day once we give up on TS plugin we shall go jakarta 4 which would require java 11
+          jaxb           : 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1',
+          jaxb_runtime   : 'org.glassfish.jaxb:jaxb-runtime:3.0.2',
   ]
 
   ts_plugin_libs = [

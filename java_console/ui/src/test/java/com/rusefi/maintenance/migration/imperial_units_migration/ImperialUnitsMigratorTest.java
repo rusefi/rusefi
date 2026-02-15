@@ -5,7 +5,7 @@ import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.util.Map;
 
 import static com.rusefi.maintenance.migration.migrators.ImperialUnitsMigrator.*;
@@ -34,3 +34,4 @@ public class ImperialUnitsMigratorTest {
         assertNull(migratedConstants.get(USE_METRIC_FIELD_NAME));
     }
 }
+
