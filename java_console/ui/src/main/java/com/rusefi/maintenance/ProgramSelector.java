@@ -36,13 +36,6 @@ public class ProgramSelector {
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
     private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
     private final ConnectivityContext connectivityContext;
-    private final static boolean USE_JAVA_SERIAL;
-
-    static {
-        String KEY = "USE_JAVA_OPENBLT_SERIAL";
-        USE_JAVA_SERIAL = parseBoolean(System.getProperty(KEY, "true"));
-        log.info(KEY + "=" + USE_JAVA_SERIAL);
-    }
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
@@ -288,11 +281,7 @@ public class ProgramSelector {
         }
         try {
             callbacks.logLine("flashSerial " + fileName);
-            if (USE_JAVA_SERIAL) {
-                OpenBltFlasher.flashSerial(fileName, port, cb);
-            } else {
-                OpenbltJni.flashSerial(fileName, port, cb);
-            }
+            OpenBltFlasher.flashSerial(fileName, port, cb);
 
             callbacks.logLine("Update completed successfully!");
             return true;
@@ -300,10 +289,6 @@ public class ProgramSelector {
             callbacks.logLine("flashOpenbltSerial Error: " + e);
             log.error("flashOpenbltSerial " + e, e);
             return false;
-        } finally {
-            if (!USE_JAVA_SERIAL) {
-                OpenbltJni.stop(cb);
-            }
         }
     }
 

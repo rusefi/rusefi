@@ -49,16 +49,6 @@ public final class OpenbltJni {
         System.loadLibrary("openblt_jni");
     }
 
-    public static void flashSerial(String filename, String serialPort, OpenbltCallbacks callbacks) {
-        Objects.requireNonNull(filename);
-        // On non-Windows, prepend "/dev/" to the serial port name if it's missing
-        if (!OS_NAME.contains("win") && !serialPort.startsWith("/dev/")) {
-            serialPort = "/dev/" + serialPort;
-        }
-
-        flashSerialNative(filename, serialPort, callbacks);
-    }
-
     public static void flashCan(String filename, OpenbltCallbacks callbacks) {
         flashCanNative(filename, callbacks);
     }
