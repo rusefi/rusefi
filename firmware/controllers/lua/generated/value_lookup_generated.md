@@ -2071,3 +2071,21 @@ Rotational Idle Auto engage CLT.
 ### dynoCarFrontalAreaM2
 @@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@
 
+### wizardNumberOfCylinders
+
+
+### wizardFiringOrder
+
+
+### wizardMapSensorType
+
+
+### wizardCrankTrigger
+
+
+### wizardCamTrigger
+
+
+### wizardInjectorFlow
+
+

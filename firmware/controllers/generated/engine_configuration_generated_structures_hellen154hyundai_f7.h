@@ -7505,8 +7505,104 @@ struct persistent_config_s {
 	 * offset 31006
 	 */
 	uint8_t alignmentFill_at_31006[2] = {};
+	/**
+	offset 31008 bit 0 */
+	bool wizardNumberOfCylinders : 1 {};
+	/**
+	offset 31008 bit 1 */
+	bool wizardFiringOrder : 1 {};
+	/**
+	offset 31008 bit 2 */
+	bool wizardMapSensorType : 1 {};
+	/**
+	offset 31008 bit 3 */
+	bool wizardCrankTrigger : 1 {};
+	/**
+	offset 31008 bit 4 */
+	bool wizardCamTrigger : 1 {};
+	/**
+	offset 31008 bit 5 */
+	bool wizardInjectorFlow : 1 {};
+	/**
+	offset 31008 bit 6 */
+	bool unusedBit_289_6 : 1 {};
+	/**
+	offset 31008 bit 7 */
+	bool unusedBit_289_7 : 1 {};
+	/**
+	offset 31008 bit 8 */
+	bool unusedBit_289_8 : 1 {};
+	/**
+	offset 31008 bit 9 */
+	bool unusedBit_289_9 : 1 {};
+	/**
+	offset 31008 bit 10 */
+	bool unusedBit_289_10 : 1 {};
+	/**
+	offset 31008 bit 11 */
+	bool unusedBit_289_11 : 1 {};
+	/**
+	offset 31008 bit 12 */
+	bool unusedBit_289_12 : 1 {};
+	/**
+	offset 31008 bit 13 */
+	bool unusedBit_289_13 : 1 {};
+	/**
+	offset 31008 bit 14 */
+	bool unusedBit_289_14 : 1 {};
+	/**
+	offset 31008 bit 15 */
+	bool unusedBit_289_15 : 1 {};
+	/**
+	offset 31008 bit 16 */
+	bool unusedBit_289_16 : 1 {};
+	/**
+	offset 31008 bit 17 */
+	bool unusedBit_289_17 : 1 {};
+	/**
+	offset 31008 bit 18 */
+	bool unusedBit_289_18 : 1 {};
+	/**
+	offset 31008 bit 19 */
+	bool unusedBit_289_19 : 1 {};
+	/**
+	offset 31008 bit 20 */
+	bool unusedBit_289_20 : 1 {};
+	/**
+	offset 31008 bit 21 */
+	bool unusedBit_289_21 : 1 {};
+	/**
+	offset 31008 bit 22 */
+	bool unusedBit_289_22 : 1 {};
+	/**
+	offset 31008 bit 23 */
+	bool unusedBit_289_23 : 1 {};
+	/**
+	offset 31008 bit 24 */
+	bool unusedBit_289_24 : 1 {};
+	/**
+	offset 31008 bit 25 */
+	bool unusedBit_289_25 : 1 {};
+	/**
+	offset 31008 bit 26 */
+	bool unusedBit_289_26 : 1 {};
+	/**
+	offset 31008 bit 27 */
+	bool unusedBit_289_27 : 1 {};
+	/**
+	offset 31008 bit 28 */
+	bool unusedBit_289_28 : 1 {};
+	/**
+	offset 31008 bit 29 */
+	bool unusedBit_289_29 : 1 {};
+	/**
+	offset 31008 bit 30 */
+	bool unusedBit_289_30 : 1 {};
+	/**
+	offset 31008 bit 31 */
+	bool unusedBit_289_31 : 1 {};
 };
-static_assert(sizeof(persistent_config_s) == 31008);
+static_assert(sizeof(persistent_config_s) == 31012);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

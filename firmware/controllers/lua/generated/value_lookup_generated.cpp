@@ -2077,6 +2077,24 @@ float getConfigValueByHash(const int hash) {
 // dynoCarFrontalAreaM2
 		case -1661556925:
 			return config->dynoCarFrontalAreaM2;
+// wizardNumberOfCylinders
+		case -1547587839:
+			return config->wizardNumberOfCylinders;
+// wizardFiringOrder
+		case 346390417:
+			return config->wizardFiringOrder;
+// wizardMapSensorType
+		case 554586032:
+			return config->wizardMapSensorType;
+// wizardCrankTrigger
+		case -221893735:
+			return config->wizardCrankTrigger;
+// wizardCamTrigger
+		case -717549157:
+			return config->wizardCamTrigger;
+// wizardInjectorFlow
+		case -1499796020:
+			return config->wizardInjectorFlow;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -5540,6 +5558,36 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1661556925:
 	{
 		config->dynoCarFrontalAreaM2 = value;
+		return 1;
+	}
+		case -1547587839:
+	{
+		config->wizardNumberOfCylinders = (int)value;
+		return 1;
+	}
+		case 346390417:
+	{
+		config->wizardFiringOrder = (int)value;
+		return 1;
+	}
+		case 554586032:
+	{
+		config->wizardMapSensorType = (int)value;
+		return 1;
+	}
+		case -221893735:
+	{
+		config->wizardCrankTrigger = (int)value;
+		return 1;
+	}
+		case -717549157:
+	{
+		config->wizardCamTrigger = (int)value;
+		return 1;
+	}
+		case -1499796020:
+	{
+		config->wizardInjectorFlow = (int)value;
 		return 1;
 	}
 	}
