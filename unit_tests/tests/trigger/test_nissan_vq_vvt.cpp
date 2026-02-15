@@ -6,7 +6,6 @@
  */
 
 #include "pch.h"
-#include "trigger_nissan.h"
 #include "nissan_vq.h"
 
 class TriggerCallback {
@@ -80,7 +79,9 @@ TEST(nissan, vq_vvt) {
 
 	{
 		static TriggerWaveform crank;
-		initializeNissanVQ35crank(&crank);
+		trigger_config_s triggerConfig;
+		triggerConfig.type = trigger_type_e::TT_NISSAN_VQ35;
+		crank.initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 
 		scheduleTriggerEvents(&crank,
 				/* timeScale */ 1,
@@ -92,7 +93,9 @@ TEST(nissan, vq_vvt) {
 
 	{
 		static TriggerWaveform vvt;
-		initializeNissanVQvvt(&vvt);
+		trigger_config_s triggerConfig;
+		triggerConfig.type = trigger_type_e::TT_VVT_NISSAN_VQ35;
+		vvt.initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 
 		scheduleTriggerEvents(&vvt,
 				/* timeScale */ vvtTimeScale,
@@ -104,7 +107,9 @@ TEST(nissan, vq_vvt) {
 
 	{
 		static TriggerWaveform vvt;
-		initializeNissanVQvvt(&vvt);
+		trigger_config_s triggerConfig;
+		triggerConfig.type = trigger_type_e::TT_VVT_NISSAN_VQ35;
+		vvt.initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 
 		scheduleTriggerEvents(&vvt,
 				/* timeScale */ vvtTimeScale,

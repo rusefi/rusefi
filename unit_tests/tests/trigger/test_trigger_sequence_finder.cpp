@@ -1,11 +1,9 @@
 #include "pch.h"
 #include "trigger_simulator.h"
 #include "mock_trigger_configuration.h"
-#include "trigger_gm.h"
-#include "trigger_universal.h"
-#include "trigger_mitsubishi.h"
+#include "trigger_structure.h"
 
-typedef void (*TriggerWaveformFunctionPtr)(TriggerWaveform*);
+typedef void (*TriggerWaveformFunctionPtr)(TriggerWaveform*, const trigger_config_s&);
 
 static float wrap(float angle, float cycle) {
 	if (angle < 0)
@@ -77,7 +75,7 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength, size_t st
 	triggerConfig.type = t;
 
 	TriggerWaveform form;
-	function(&form);
+	function(&form, triggerConfig);
 	toothOffset = (form.syncEdge == SyncEdge::Rise || form.syncEdge == SyncEdge::Both ? 0 : 1);
 
 	operation_mode_e om = form.getWheelOperationMode();
@@ -109,18 +107,18 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength, size_t st
 	return happySequenceCounter;
 }
 
+static size_t findAllSyncSequencesDefault(trigger_type_e t, size_t maxLength, size_t step) {
+	return findAllSyncSequences(t, maxLength, step, [] (TriggerWaveform* form, const trigger_config_s& config) {
+		form->initializeTriggerWaveform(OM_NONE, config, false);
+	});
+}
+
 TEST(trigger, finder) {
     // step - 1 - for both, 2 - for rise/fall only
 
-	ASSERT_EQ(9u, findAllSyncSequences(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, 2, [] (TriggerWaveform* form) {
-						configureQuickStartSenderWheel(form);
-					}));
+	ASSERT_EQ(9u, findAllSyncSequencesDefault(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, 2));
 
-	ASSERT_EQ(27u, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, 2, [] (TriggerWaveform* form) {
-						initGmLS24_3deg(form);
-					}));
+	ASSERT_EQ(27u, findAllSyncSequencesDefault(trigger_type_e::TT_GM_24x_3, 3, 2));
 
-    ASSERT_EQ(44u, findAllSyncSequences(trigger_type_e::TT_VVT_MITSU_6G72, 8, 1, [] (TriggerWaveform* form) {
-        initializeVvt6G72(form);
-    }));
+	ASSERT_EQ(44u, findAllSyncSequencesDefault(trigger_type_e::TT_VVT_MITSU_6G72, 8, 1));
 }
