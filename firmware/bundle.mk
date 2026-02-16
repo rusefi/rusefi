@@ -161,16 +161,16 @@ BUNDLE_FILES = \
   $(UPDATE_BUNDLE_FILES) \
   $(FULL_BUNDLE_CONTENT)
 
-$(SIMULATOR_EXE): $(CONFIG_FILES) .FORCE
+$(SIMULATOR_EXE): $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE
 	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes
 
 # make sure not to invoke in parallel with SIMULATOR_EXE rule above
-../simulator/build/rusefi_simulator.linux: $(CONFIG_FILES) .FORCE
+../simulator/build/rusefi_simulator.linux: $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE
 	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
 
 # make Windows simulator a prerequisite so that we don't try compiling them concurrently
 # that also means no incremental compilation making that rule less useful. See 'rusefi_simulator.linux' above
-../simulator/build/rusefi_simulator.both: $(CONFIG_FILES) .FORCE | $(SIMULATOR_EXE)
+../simulator/build/rusefi_simulator.both: $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE | $(SIMULATOR_EXE)
 	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;

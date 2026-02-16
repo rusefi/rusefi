@@ -34,6 +34,7 @@ endif
 # Build the generated pin code only if the connector directory exists
 ifneq ("$(wildcard $(BOARD_DIR)/connectors)","")
   PIN_FILES = \
+    $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_board_pin_names.h \
     $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_outputs.h \
     $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
 endif
@@ -47,6 +48,12 @@ CONFIG_FILES = \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/rusefi_generated_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/signature_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/generated_fields_api_header.h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_1_generated.h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_2_generated.h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.cpp \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.md \
+  $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java \
   $(FIELDS) \
   $(PIN_FILES)
 
@@ -74,7 +81,7 @@ $(RAMDISK): .ramdisk-sentinel ;
 	bash $(PROJECT_DIR)/bin/gen_image_board.sh $(BOARD_DIR) $(SHORT_BOARD_NAME)
 	@touch $@
 
-$(CONFIG_FILES): .config-sentinel ;
+$(CONFIG_FILES): .config-sentinel;
 
 # CONFIG_DEFINITION is always rebuilt, but the file will only be updated if it needs to be,
 # so it won't trigger a config file generation unless it needs to.
