@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.util;
 
 import java.util.Optional;
 import java.util.function.Consumer;

@@ -23,6 +23,9 @@ import java.util.function.Consumer;
 
 import static com.rusefi.core.ui.AutoupdateUtil.trueLayoutAndRepaint;
 
+/**
+ * see TopLevelMenuSandbox
+ */
 public class MainMenuTreeWidget {
     private final JPanel contentPane = new JPanel(new BorderLayout());
     private final JTree tree;

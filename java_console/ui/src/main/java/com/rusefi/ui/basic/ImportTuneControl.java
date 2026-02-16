@@ -1,6 +1,6 @@
 package com.rusefi.ui.basic;
 
-import com.rusefi.CompatibilityOptional;
+import com.rusefi.util.CompatibilityOptional;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.core.ui.AutoupdateUtil;
