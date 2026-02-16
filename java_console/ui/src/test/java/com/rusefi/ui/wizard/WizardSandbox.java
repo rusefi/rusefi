@@ -1,16 +1,25 @@
 package com.rusefi.ui.wizard;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.UiHelper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 import static com.rusefi.core.ui.FrameHelper.createFrame;
 
 public class WizardSandbox {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
+        UIContext uiContext = new UIContext();
+        String iniPath = "../java_console/ui/src/test/resources/january.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        uiContext.iniFileState.setIniFileModelForTest(model);
+
         UiHelper.configureLaf();
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -18,17 +27,9 @@ public class WizardSandbox {
             public void run() {
                 FrameHelper fh = createFrame("Wizard Sandbox");
 
-                JPanel content = new JPanel(new BorderLayout());
-                content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-                content.add(new JLabel("This is a modern Wizard Sandbox"), BorderLayout.NORTH);
+                NumberOfCylindersPanel content = new NumberOfCylindersPanel(uiContext);
 
-                JPanel buttons = new JPanel();
-                buttons.add(new JButton("Previous"));
-                buttons.add(new JButton("Next"));
-                buttons.add(new JButton("Finish"));
-                content.add(buttons, BorderLayout.SOUTH);
-
-                fh.getFrame().add(content);
+                fh.getFrame().add(content.getPanel());
 
                 fh.getFrame().setSize(800, 600);
                 fh.getFrame().setLocationRelativeTo(null);
