@@ -2,6 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.rusefi.FileLog;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 
@@ -54,6 +55,7 @@ public class UiHelper {
         JFrame.setDefaultLookAndFeelDecorated(true);
         JDialog.setDefaultLookAndFeelDecorated(true);
 
-        FlatDarkLaf.setup();
+        // console messages/status areas are not ready for FlatDarkLaf - colors are weird
+        FlatLightLaf.setup();
     }
 }
