@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-TEST(instantRpm, singleToothTriggerInstantRpmIsZero) {
+TEST(instantRpm, singleToothTrigger) {
 	EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
 	engineConfiguration->twoStroke = true;
 
@@ -24,6 +24,6 @@ TEST(instantRpm, singleToothTriggerInstantRpmIsZero) {
 
 	float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 
-	// should be close to the regular RPM (~750).
-	EXPECT_EQ(0, instantRpm) << "instantRpm should not be zero with a single-tooth trigger";
+	// instantRpm should be close to the regular RPM (~750)
+	EXPECT_NEAR(750, instantRpm, 1) << "instantRpm should match RPM with a single-tooth trigger";
 }
