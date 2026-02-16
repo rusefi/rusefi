@@ -38,16 +38,28 @@ public class TabbedPanel {
                 switch (ConnectionStatusLogic.INSTANCE.getValue()) {
                     case NOT_CONNECTED:
                         text = "Not connected";
+                        g.setColor(Color.white);
                         break;
                     case LOADING:
                         text = "Loading";
+                        g.setColor(Color.white);
                         break;
                     default:
                         text = "";
                 }
             }
-            int labelWidth = g.getFontMetrics().stringWidth(text);
-            g.drawString(text, (d.width - labelWidth) / 2, d.height / 2);
+            if (text.isEmpty())
+                return;
+            FontMetrics fm = g.getFontMetrics();
+            int labelWidth = fm.stringWidth(text);
+            int x = (d.width - labelWidth) / 2;
+            int y = d.height / 2;
+            int padding = 12;
+            Color textColor = g.getColor();
+            g.setColor(new Color(0, 0, 0, 180));
+            g.fillRoundRect(x - padding, y - fm.getAscent() - padding, labelWidth + padding * 2, fm.getHeight() + padding * 2, 16, 16);
+            g.setColor(textColor);
+            g.drawString(text, x, y);
         }
     };
 
