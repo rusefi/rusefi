@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
@@ -34,117 +33,114 @@ public interface ISensorHolder {
      * @param configImage optional configuration image for resolving config values in expressions
      */
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
-        // Context for expression evaluation - maps output channel names to their values
         Map<String, Double> outputChannelValues = new HashMap<>();
-        // Gauges that need expression evaluation (deferred to second pass)
         List<Map.Entry<String, GaugeModel>> expressionGauges = new ArrayList<>();
 
-        // First pass: process direct output channel references and collect values
+        // First pass: resolve direct output channel references
         for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
             String gaugeName = e.getKey();
-            GaugeModel gaugeModel = e.getValue();
-            String channel = gaugeModel.getChannel();
+            String channel = e.getValue().getChannel();
 
-            try {
-                IniField sensorField = ini.getOutputChannel(channel);
-                Double value = readFieldValue(response, gaugeName, sensorField);
-                if (value != null) {
-                    setValue(value, channel);
-                    outputChannelValues.put(channel, value);
-                } else {
-                    log.warn("Unsupported field type for " + e);
-                }
-            } catch (IniMemberNotFound ex) {
-                // Channel might be:
-                // 1. An expression like "{ intake }" or "{ coolant * 1.8 + 32 }"
-                // 2. An expression output channel name like "coolantTemperature" which is defined as an expression
-                if (ExpressionEvaluator.looksLikeExpression(channel)) {
-                    // Check if it's a simple wrapped variable like "{ intake }"
-                    String simpleVar = ExpressionEvaluator.extractSimpleVariableName(channel);
-                    if (simpleVar != null) {
-                        // Try to look up the unwrapped variable name
-                        try {
-                            IniField sensorField = ini.getOutputChannel(simpleVar);
-                            Double value = readFieldValue(response, gaugeName, sensorField);
-                            if (value != null) {
-                                setValue(value, simpleVar);
-                                outputChannelValues.put(simpleVar, value);
-                                continue;
-                            }
-                        } catch (IniMemberNotFound ignored) {
-                            // Will be handled in expression pass
-                        }
-                    }
-                    // Defer to second pass for complex expressions
-                    expressionGauges.add(e);
-                } else {
-                    if (ini.getExpressionOutputChannel(channel) != null) {
-                        // It's an expression output channel - defer to second pass
-                        expressionGauges.add(e);
-                    } else {
-                        log.warn("Member not found for " + e);
+            // Try the channel name directly
+            Double value = tryReadOutputChannel(response, gaugeName, ini, channel);
+            if (value != null) {
+                setValue(value, channel);
+                outputChannelValues.put(channel, value);
+                continue;
+            }
+
+            // For simple wrapped expressions like "{ intake }", try the inner variable
+            if (ExpressionEvaluator.looksLikeExpression(channel)) {
+                String simpleVar = ExpressionEvaluator.extractSimpleVariableName(channel);
+                if (simpleVar != null) {
+                    value = tryReadOutputChannel(response, gaugeName, ini, simpleVar);
+                    if (value != null) {
+                        setValue(value, simpleVar);
+                        outputChannelValues.put(simpleVar, value);
+                        continue;
                     }
                 }
+                expressionGauges.add(e);
+            } else if (ini.getExpressionOutputChannel(channel) != null) {
+                expressionGauges.add(e);
+            } else {
+                log.warn("Member not found for " + e);
             }
         }
 
-        // Second pass: evaluate expression-based gauges using collected output channel values
-        // plus any configuration values needed for ternary expressions
+        // Second pass: evaluate expression-based gauges
         for (Map.Entry<String, GaugeModel> e : expressionGauges) {
             String gaugeName = e.getKey();
-            GaugeModel gaugeModel = e.getValue();
-            String channel = gaugeModel.getChannel();
+            String channel = e.getValue().getChannel();
 
-            // Determine the actual expression to evaluate
-            String expression;
-            if (ExpressionEvaluator.looksLikeExpression(channel)) {
-                expression = channel;
-            } else {
-                // Channel might reference an expression output channel
-                String exprChannel = ini.getExpressionOutputChannel(channel);
-                if (exprChannel != null) {
-                    expression = exprChannel;
-                } else {
-                    log.warn("No expression found for gauge " + gaugeName + ": " + channel);
-                    continue;
-                }
+            String expression = resolveExpression(ini, channel);
+            if (expression == null) {
+                log.warn("No expression found for gauge " + gaugeName + ": " + channel);
+                continue;
             }
 
-            // Build context with output channel values and any needed config values
             Map<String, Double> context = new HashMap<>(outputChannelValues);
-
-            // Extract variables needed for this expression
-            Set<String> neededVars = ExpressionEvaluator.extractVariables(expression);
-            for (String varName : neededVars) {
-                if (!context.containsKey(varName)) {
-                    // First try to read from output channels (for raw values like "coolant", "intake")
-                    try {
-                        IniField sensorField = ini.getOutputChannel(varName);
-                        Double value = readFieldValue(response, varName, sensorField);
-                        if (value != null) {
-                            context.put(varName, value);
-                            setValue(value, varName);
-                            outputChannelValues.put(varName, value);
-                        }
-                    } catch (IniMemberNotFound ignored) {
-                        // Not a direct output channel, try config
-                    }
-
-                    // If still not found, and we have a config image, try configuration (for example, useMetricOnInterface)
-                    if (!context.containsKey(varName) && configImage != null) {
-                        Double configValue = getConfigValue(varName, ini, configImage);
-                        if (configValue != null) {
-                            context.put(varName, configValue);
-                        }
-                    }
-                }
-            }
+            resolveExpressionVariables(response, ini, configImage, expression, context, outputChannelValues);
 
             Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, context);
             if (result != null) {
                 setValue(result, channel);
             } else {
                 log.warn("Could not evaluate expression for gauge " + gaugeName + ": " + expression);
+            }
+        }
+    }
+
+    /**
+     * Try to read a named output channel from the response bytes.
+     * @return the value, or null if the channel doesn't exist or has an unsupported type
+     */
+    @Nullable
+    static Double tryReadOutputChannel(byte[] response, String label, IniFileModel ini, String channelName) {
+        try {
+            IniField field = ini.getOutputChannel(channelName);
+            return readFieldValue(response, label, field);
+        } catch (IniMemberNotFound e) {
+            return null;
+        }
+    }
+
+    /**
+     * Resolve a gauge channel reference to its expression string.
+     * The channel may already be an expression like "{ coolant * 1.8 + 32 }",
+     * or it may be the name of an expression output channel.
+     */
+    @Nullable
+    static String resolveExpression(IniFileModel ini, String channel) {
+        if (ExpressionEvaluator.looksLikeExpression(channel))
+            return channel;
+        return ini.getExpressionOutputChannel(channel);
+    }
+
+    /**
+     * Populate the expression context with any missing variables needed for evaluation,
+     * reading from output channels first, then falling back to config values.
+     */
+    default void resolveExpressionVariables(byte[] response, IniFileModel ini,
+            @Nullable ConfigurationImage configImage, String expression,
+            Map<String, Double> context, Map<String, Double> outputChannelValues) {
+        for (String varName : ExpressionEvaluator.extractVariables(expression)) {
+            if (context.containsKey(varName))
+                continue;
+
+            Double value = tryReadOutputChannel(response, varName, ini, varName);
+            if (value != null) {
+                context.put(varName, value);
+                setValue(value, varName);
+                outputChannelValues.put(varName, value);
+                continue;
+            }
+
+            if (configImage != null) {
+                Double configValue = getConfigValue(varName, ini, configImage);
+                if (configValue != null) {
+                    context.put(varName, configValue);
+                }
             }
         }
     }
