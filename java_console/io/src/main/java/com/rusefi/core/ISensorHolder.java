@@ -9,8 +9,6 @@ import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
-import com.rusefi.binaryprotocol.RealIniFileProvider;
-import com.rusefi.config.Field;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
@@ -35,154 +33,114 @@ public interface ISensorHolder {
      * @param configImage optional configuration image for resolving config values in expressions
      */
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
-        // Context for expression evaluation - maps output channel names to their values
         Map<String, Double> outputChannelValues = new HashMap<>();
-        // Gauges that need expression evaluation (deferred to second pass)
         List<Map.Entry<String, GaugeModel>> expressionGauges = new ArrayList<>();
 
-        // First pass: process direct output channel references and collect values
+        // First pass: resolve direct output channel references
         for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
             String gaugeName = e.getKey();
-            GaugeModel gaugeModel = e.getValue();
-            String channel = gaugeModel.getChannel();
+            String channel = e.getValue().getChannel();
 
-            try {
-                IniField sensorField = ini.getOutputChannel(channel);
-                if (sensorField instanceof ScalarIniField) {
-                    ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
-                    ScalarIniField scalarField = (ScalarIniField) sensorField;
-                    double rawValue = getRawValue(bb, scalarField.getType());
-                    double scaledValue = rawValue * scalarField.getMultiplier();
-                    // Use output channel name (e.g., "TPSValue") as the key, not gauge name
-                    setValue(scaledValue, channel);
-                    // Store in context for expression evaluation
-                    outputChannelValues.put(channel, scaledValue);
-                } else if (sensorField instanceof EnumIniField) {
-                    EnumIniField enumField = (EnumIniField) sensorField;
-                    ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
-                    double rawValue = getRawValue(bb, enumField.getType());
-                    double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
-                    setValue(scaledValue, channel);
-                    outputChannelValues.put(channel, scaledValue);
-                } else {
-                    log.warn("Not scalar field for " + e);
-                }
-            } catch (IniMemberNotFound ex) {
-                // Channel might be:
-                // 1. An expression like "{ intake }" or "{ coolant * 1.8 + 32 }"
-                // 2. An expression output channel name like "coolantTemperature" which is defined as an expression
-                if (ExpressionEvaluator.looksLikeExpression(channel)) {
-                    // Check if it's a simple wrapped variable like "{ intake }"
-                    String simpleVar = ExpressionEvaluator.extractSimpleVariableName(channel);
-                    if (simpleVar != null) {
-                        // Try to look up the unwrapped variable name
-                        try {
-                            IniField sensorField = ini.getOutputChannel(simpleVar);
-                            if (sensorField instanceof ScalarIniField) {
-                                ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
-                                ScalarIniField scalarField = (ScalarIniField) sensorField;
-                                double rawValue = getRawValue(bb, scalarField.getType());
-                                double scaledValue = rawValue * scalarField.getMultiplier();
+            // Try the channel name directly
+            Double value = tryReadOutputChannel(response, gaugeName, ini, channel);
+            if (value != null) {
+                setValue(value, channel);
+                outputChannelValues.put(channel, value);
+                continue;
+            }
 
-                                setValue(scaledValue, simpleVar);
-                                outputChannelValues.put(simpleVar, scaledValue);
-                                continue;
-                            } else if (sensorField instanceof EnumIniField) {
-                                EnumIniField enumField = (EnumIniField) sensorField;
-                                ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
-                                double rawValue = getRawValue(bb, enumField.getType());
-                                double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
-
-                                setValue(scaledValue, simpleVar);
-                                outputChannelValues.put(simpleVar, scaledValue);
-                                continue;
-                            }
-                        } catch (IniMemberNotFound ignored) {
-                            // Will be handled in expression pass
-                        }
-                    }
-                    // Defer to second pass for complex expressions
-                    expressionGauges.add(e);
-                } else {
-                    if (ini.getExpressionOutputChannel(channel) != null) {
-                        // It's an expression output channel - defer to second pass
-                        expressionGauges.add(e);
-                    } else {
-                        log.warn("Member not found for " + e);
+            // For simple wrapped expressions like "{ intake }", try the inner variable
+            if (ExpressionEvaluator.looksLikeExpression(channel)) {
+                String simpleVar = ExpressionEvaluator.extractSimpleVariableName(channel);
+                if (simpleVar != null) {
+                    value = tryReadOutputChannel(response, gaugeName, ini, simpleVar);
+                    if (value != null) {
+                        setValue(value, simpleVar);
+                        outputChannelValues.put(simpleVar, value);
+                        continue;
                     }
                 }
+                expressionGauges.add(e);
+            } else if (ini.getExpressionOutputChannel(channel) != null) {
+                expressionGauges.add(e);
+            } else {
+                log.warn("Member not found for " + e);
             }
         }
 
-        // Second pass: evaluate expression-based gauges using collected output channel values
-        // plus any configuration values needed for ternary expressions
+        // Second pass: evaluate expression-based gauges
         for (Map.Entry<String, GaugeModel> e : expressionGauges) {
             String gaugeName = e.getKey();
-            GaugeModel gaugeModel = e.getValue();
-            String channel = gaugeModel.getChannel();
+            String channel = e.getValue().getChannel();
 
-            // Determine the actual expression to evaluate
-            String expression;
-            if (ExpressionEvaluator.looksLikeExpression(channel)) {
-                expression = channel;
-            } else {
-                // Channel might reference an expression output channel
-                String exprChannel = ini.getExpressionOutputChannel(channel);
-                if (exprChannel != null) {
-                    expression = exprChannel;
-                } else {
-                    log.warn("No expression found for gauge " + gaugeName + ": " + channel);
-                    continue;
-                }
+            String expression = resolveExpression(ini, channel);
+            if (expression == null) {
+                log.warn("No expression found for gauge " + gaugeName + ": " + channel);
+                continue;
             }
 
-            // Build context with output channel values and any needed config values
             Map<String, Double> context = new HashMap<>(outputChannelValues);
-
-            // Extract variables needed for this expression
-            Set<String> neededVars = ExpressionEvaluator.extractVariables(expression);
-            for (String varName : neededVars) {
-                if (!context.containsKey(varName)) {
-                    // First try to read from output channels (for raw values like "coolant", "intake")
-                    try {
-                        IniField sensorField = ini.getOutputChannel(varName);
-                        if (sensorField instanceof ScalarIniField) {
-                            ByteBuffer bb = getByteBuffer(response, varName, sensorField.getOffset());
-                            ScalarIniField scalarField = (ScalarIniField) sensorField;
-                            double rawValue = getRawValue(bb, scalarField.getType());
-                            double scaledValue = rawValue * scalarField.getMultiplier();
-                            context.put(varName, scaledValue);
-                            // Also store in sensor values for direct lookup
-                            setValue(scaledValue, varName);
-                            outputChannelValues.put(varName, scaledValue);
-                        } else if (sensorField instanceof EnumIniField) {
-                            EnumIniField enumField = (EnumIniField) sensorField;
-                            ByteBuffer bb = getByteBuffer(response, varName, sensorField.getOffset());
-                            double rawValue = getRawValue(bb, enumField.getType());
-                            double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
-                            context.put(varName, scaledValue);
-                            setValue(scaledValue, varName);
-                            outputChannelValues.put(varName, scaledValue);
-                        }
-                    } catch (IniMemberNotFound ignored) {
-                        // Not a direct output channel, try config
-                    }
-
-                    // If still not found, and we have a config image, try configuration (for example, useMetricOnInterface)
-                    if (!context.containsKey(varName) && configImage != null) {
-                        Double configValue = getConfigValue(varName, ini, configImage);
-                        if (configValue != null) {
-                            context.put(varName, configValue);
-                        }
-                    }
-                }
-            }
+            resolveExpressionVariables(response, ini, configImage, expression, context, outputChannelValues);
 
             Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, context);
             if (result != null) {
                 setValue(result, channel);
             } else {
                 log.warn("Could not evaluate expression for gauge " + gaugeName + ": " + expression);
+            }
+        }
+    }
+
+    /**
+     * Try to read a named output channel from the response bytes.
+     * @return the value, or null if the channel doesn't exist or has an unsupported type
+     */
+    @Nullable
+    static Double tryReadOutputChannel(byte[] response, String label, IniFileModel ini, String channelName) {
+        try {
+            IniField field = ini.getOutputChannel(channelName);
+            return readFieldValue(response, label, field);
+        } catch (IniMemberNotFound e) {
+            return null;
+        }
+    }
+
+    /**
+     * Resolve a gauge channel reference to its expression string.
+     * The channel may already be an expression like "{ coolant * 1.8 + 32 }",
+     * or it may be the name of an expression output channel.
+     */
+    @Nullable
+    static String resolveExpression(IniFileModel ini, String channel) {
+        if (ExpressionEvaluator.looksLikeExpression(channel))
+            return channel;
+        return ini.getExpressionOutputChannel(channel);
+    }
+
+    /**
+     * Populate the expression context with any missing variables needed for evaluation,
+     * reading from output channels first, then falling back to config values.
+     */
+    default void resolveExpressionVariables(byte[] response, IniFileModel ini,
+            @Nullable ConfigurationImage configImage, String expression,
+            Map<String, Double> context, Map<String, Double> outputChannelValues) {
+        for (String varName : ExpressionEvaluator.extractVariables(expression)) {
+            if (context.containsKey(varName))
+                continue;
+
+            Double value = tryReadOutputChannel(response, varName, ini, varName);
+            if (value != null) {
+                context.put(varName, value);
+                setValue(value, varName);
+                outputChannelValues.put(varName, value);
+                continue;
+            }
+
+            if (configImage != null) {
+                Double configValue = getConfigValue(varName, ini, configImage);
+                if (configValue != null) {
+                    context.put(varName, configValue);
+                }
             }
         }
     }
@@ -197,10 +155,11 @@ public interface ISensorHolder {
      */
     @Nullable
     static Double getConfigValue(String fieldName, IniFileModel ini, ConfigurationImage configImage) {
-        IniField iniField = ini.getIniField(fieldName);
-        if (iniField == null) {
+        Optional<IniField> optField = ini.findIniField(fieldName);
+        if (!optField.isPresent()) {
             return null;
         }
+        IniField iniField = optField.get();
 
         if (iniField instanceof ScalarIniField) {
             ScalarIniField scalarField = (ScalarIniField) iniField;
@@ -209,15 +168,39 @@ public interface ISensorHolder {
             return rawValue * scalarField.getMultiplier();
         }
 
-        // For bit fields, we need to extract the bit value
-        // The IniField may have bit information
-        try {
-            Field field = new Field(fieldName, iniField.getOffset(), com.rusefi.config.FieldType.INT);
-            return field.getValue(configImage);
-        } catch (Exception e) {
-            log.debug("Failed to get config value for " + fieldName + ": " + e.getMessage());
-            return null;
+        if (iniField instanceof EnumIniField) {
+            EnumIniField enumField = (EnumIniField) iniField;
+            ByteBuffer bb = configImage.getByteBuffer(enumField.getOffset(), enumField.getType().getStorageSize());
+            int rawValue = (int) getRawValue(bb, enumField.getType());
+            int bitCount = enumField.getBitSize0() + 1;
+            int mask = (1 << bitCount) - 1;
+            return (double) ((rawValue >> enumField.getBitPosition()) & mask);
         }
+
+        return null;
+    }
+
+    /**
+     * Read the numeric value of an output channel field from the response bytes.
+     * Handles both ScalarIniField and EnumIniField (bits).
+     *
+     * @return the scaled value, or null if the field type is not supported
+     */
+    @Nullable
+    static Double readFieldValue(byte[] response, String label, IniField field) {
+        ByteBuffer bb = getByteBuffer(response, label, field.getOffset());
+        if (field instanceof ScalarIniField) {
+            ScalarIniField scalarField = (ScalarIniField) field;
+            double rawValue = getRawValue(bb, scalarField.getType());
+            return rawValue * scalarField.getMultiplier();
+        } else if (field instanceof EnumIniField) {
+            EnumIniField enumField = (EnumIniField) field;
+            int rawValue = (int) getRawValue(bb, enumField.getType());
+            int bitCount = enumField.getBitSize0() + 1;
+            int mask = (1 << bitCount) - 1;
+            return (double) ((rawValue >> enumField.getBitPosition()) & mask);
+        }
+        return null;
     }
 
     /**

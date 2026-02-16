@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
@@ -156,29 +155,6 @@ public enum Sensor implements BinaryLogEntry {
         throw new IllegalStateException("Sensor not found: " + value);
     }
 
-    public double getValueForChannel(ByteBuffer bb) {
-        switch (type) {
-            case FLOAT:
-                return bb.getFloat();
-            case INT:
-                return bb.getInt();
-            case UINT16:
-                // no cast - we want to discard sign
-                return bb.getInt() & 0xFFFF;
-            case INT16:
-                // cast - we want to retain sign
-                return  (short)(bb.getInt() & 0xFFFF);
-            case UINT8:
-                // no cast - discard sign
-                return bb.getInt() & 0xFF;
-            case INT8:
-                // cast - retain sign
-                return (byte)(bb.getInt() & 0xFF);
-            default:
-                throw new UnsupportedOperationException("type " + type);
-        }
-    }
-
     @Override
     public String getName() {
         return name;
@@ -245,18 +221,4 @@ public enum Sensor implements BinaryLogEntry {
         }
     }
 
-    public String getLogValue(double value) {
-        if (scale == 1 && type != null) {
-            // only handle sensors without scale, i.e. not packed floats
-            switch (type) {
-                case UINT16: {
-                    int v = ((int) value) & 0xFFFF;
-                    return Integer.toString(v);
-                }
-            }
-
-        }
-
-        return Double.toString(value);
-    }
 }
