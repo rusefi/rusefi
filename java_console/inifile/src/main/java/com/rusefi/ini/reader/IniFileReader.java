@@ -335,6 +335,16 @@ public class IniFileReader {
                 double multiplier = list.size() > 5 ? IniField.parseDouble(list.get(5)) : 1.0;
                 double digits = list.size() > 6 ? IniField.parseDouble(list.get(6)) : 0.0;
                 allOutputChannels.put(name, new ScalarIniField(name, offset, unit, scalarType, multiplier, "0", digits));
+                break;
+            }
+            case FIELD_TYPE_BITS: {
+                // Output channel bits format: name = bits, type, offset, [bitLow:bitHigh], "label"
+                FieldType type = FieldType.parseTs(list.get(2));
+                int offset = Integer.parseInt(list.get(3));
+                String bitRange = list.get(4);
+                EnumIniReaderHelper.ParseBitRange parseBitRange = new EnumIniReaderHelper.ParseBitRange().invoke(bitRange);
+                allOutputChannels.put(name, new EnumIniField(name, offset, type, new EnumIniField.EnumKeyValueMap(Collections.emptyMap()), parseBitRange.getBitPosition(), parseBitRange.getBitSize0()));
+                break;
             }
         }
     }
