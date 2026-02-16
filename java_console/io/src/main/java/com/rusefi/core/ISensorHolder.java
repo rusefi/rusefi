@@ -203,6 +203,19 @@ public interface ISensorHolder {
         return null;
     }
 
+    /**
+     * Extract a bit range from a raw integer value.
+     * @param rawValue the full integer value read from the response
+     * @param bitPosition the starting bit position
+     * @param bitSize0 the bit size in TunerStudio format (0 means 1 bit, 1 means 2 bits, etc.)
+     * @return the extracted numeric value
+     */
+    static double extractBitRange(int rawValue, int bitPosition, int bitSize0) {
+        int bitCount = bitSize0 + 1;
+        int mask = (1 << bitCount) - 1;
+        return (rawValue >> bitPosition) & mask;
+    }
+
     static double getRawValue(ByteBuffer bb, com.rusefi.config.FieldType type) {
         switch (type) {
             case FLOAT:
