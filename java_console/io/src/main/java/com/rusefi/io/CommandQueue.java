@@ -94,7 +94,7 @@ public class CommandQueue {
         if (cl.getCount() == 0) {
             commandRequest.getListener().onCommandConfirmation();
         } else {
-			throw new IllegalStateException("No confirmation received after timeout of " + timeoutMs + " ms");
+            log.warn("No confirmation received for command '" + command + "' after timeout of " + timeoutMs + " ms");
         }
     }
 
