@@ -33,8 +33,6 @@ public class TriggerImage {
     private static final int SMALL_DIAMETER = WHEEL_DIAMETER - 80;
     private static final int _180 = 180;
     public static final int MIN_TIME = 720;
-    private static final int FRAME_WIDTH = 900;
-    private static final int FRAME_HEIGHT = 700;
     private static final int PANEL_HEIGHT = 480;
     private static final boolean DEBUG = false;
 
@@ -153,7 +151,6 @@ public class TriggerImage {
             f.showFrame(content);
             if (DEBUG)
                 f.getFrame().setBackground(Color.cyan);
-            f.getFrame().setSize(FRAME_WIDTH, FRAME_HEIGHT);
 
             AutoupdateUtil.trueLayoutAndRepaint(content);
         });
