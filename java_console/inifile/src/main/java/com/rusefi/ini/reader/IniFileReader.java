@@ -73,6 +73,7 @@ public class IniFileReader {
     private final Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private boolean isOutputChannelsSection;
+    private boolean isPcVariablesSection;
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
 
@@ -216,6 +217,7 @@ public class IniFileReader {
                 }
                 isConstantsSection = first.equals("[Constants]");
                 isOutputChannelsSection = first.equals("[OutputChannels]");
+                isPcVariablesSection = first.equalsIgnoreCase("[PcVariables]");
                 isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
                 isCurveEditorSection = first.equalsIgnoreCase("[CurveEditor]");
@@ -245,6 +247,9 @@ public class IniFileReader {
                 }
             } else if (isOutputChannelsSection) {
                 handleOutputChannelDefinition(list);
+                return;
+            } else if (isPcVariablesSection) {
+                handlePcVariableDefinition(list, line);
                 return;
             } else if (isGaugeConfigurationsSection) {
                 handleGaugeConfiguration(list);
@@ -362,6 +367,37 @@ public class IniFileReader {
             String binsConstant = list.removeFirst();
             addField(binsConstant);
         }
+    }
+
+    /**
+     * Parse [PcVariables] section fields. These are TunerStudio-local variables (no ECU offset).
+     * We only handle 'bits' type for now
+     */
+    private void handlePcVariableDefinition(LinkedList<String> list, RawIniFile.Line line) {
+        if (list.size() < 4)
+            return;
+        if (!FIELD_TYPE_BITS.equals(list.get(1)))
+            return;
+
+        // PcVariables bits format: name = bits, U08, [0:7], "opt1", "opt2", ...
+        String name = list.get(0);
+        FieldType type = FieldType.parseTs(list.get(2));
+        String bitRange = list.get(3);
+        EnumIniReaderHelper.ParseBitRange parseBitRange = new EnumIniReaderHelper.ParseBitRange().invoke(bitRange);
+
+        // Parse enum values from tokens starting at index 4 (after name, bits, type, bitrange)
+        String[] tokens = IniFileReaderUtil.splitTokens(line.getRawText());
+        Map<Integer, String> keyValues = new TreeMap<>();
+        int enumStartIndex = 4; // PcVariables has no offset, so enums start one position earlier than Constants
+        for (int i = 0; i < tokens.length - enumStartIndex; i++) {
+            keyValues.put(i, tokens[i + enumStartIndex]);
+        }
+
+        EnumIniField field = new EnumIniField(name, 0, type, new EnumIniField.EnumKeyValueMap(keyValues),
+            parseBitRange.getBitPosition(), parseBitRange.getBitSize0());
+
+        // Store in secondary fields so they're findable via findIniField() but don't conflict with real config fields
+        secondaryIniFields.put(field.getName(), field);
     }
 
     private void handleConstantFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
