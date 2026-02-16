@@ -6,6 +6,7 @@ import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniMemberNotFound;
+import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.RealIniFileProvider;
@@ -56,6 +57,13 @@ public interface ISensorHolder {
                     setValue(scaledValue, channel);
                     // Store in context for expression evaluation
                     outputChannelValues.put(channel, scaledValue);
+                } else if (sensorField instanceof EnumIniField) {
+                    EnumIniField enumField = (EnumIniField) sensorField;
+                    ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
+                    double rawValue = getRawValue(bb, enumField.getType());
+                    double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
+                    setValue(scaledValue, channel);
+                    outputChannelValues.put(channel, scaledValue);
                 } else {
                     log.warn("Not scalar field for " + e);
                 }
@@ -75,6 +83,15 @@ public interface ISensorHolder {
                                 ScalarIniField scalarField = (ScalarIniField) sensorField;
                                 double rawValue = getRawValue(bb, scalarField.getType());
                                 double scaledValue = rawValue * scalarField.getMultiplier();
+
+                                setValue(scaledValue, simpleVar);
+                                outputChannelValues.put(simpleVar, scaledValue);
+                                continue;
+                            } else if (sensorField instanceof EnumIniField) {
+                                EnumIniField enumField = (EnumIniField) sensorField;
+                                ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
+                                double rawValue = getRawValue(bb, enumField.getType());
+                                double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
 
                                 setValue(scaledValue, simpleVar);
                                 outputChannelValues.put(simpleVar, scaledValue);
@@ -138,6 +155,14 @@ public interface ISensorHolder {
                             // Also store in sensor values for direct lookup
                             setValue(scaledValue, varName);
                             outputChannelValues.put(varName, scaledValue);
+                        } else if (sensorField instanceof EnumIniField) {
+                            EnumIniField enumField = (EnumIniField) sensorField;
+                            ByteBuffer bb = getByteBuffer(response, varName, sensorField.getOffset());
+                            double rawValue = getRawValue(bb, enumField.getType());
+                            double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
+                            context.put(varName, scaledValue);
+                            setValue(scaledValue, varName);
+                            outputChannelValues.put(varName, scaledValue);
                         }
                     } catch (IniMemberNotFound ignored) {
                         // Not a direct output channel, try config
@@ -193,6 +218,19 @@ public interface ISensorHolder {
             log.debug("Failed to get config value for " + fieldName + ": " + e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * Extract a bit range from a raw integer value.
+     * @param rawValue the full integer value read from the response
+     * @param bitPosition the starting bit position
+     * @param bitSize0 the bit size in TunerStudio format (0 means 1 bit, 1 means 2 bits, etc.)
+     * @return the extracted numeric value
+     */
+    static double extractBitRange(int rawValue, int bitPosition, int bitSize0) {
+        int bitCount = bitSize0 + 1;
+        int mask = (1 << bitCount) - 1;
+        return (rawValue >> bitPosition) & mask;
     }
 
     static double getRawValue(ByteBuffer bb, com.rusefi.config.FieldType type) {
