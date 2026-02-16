@@ -57,7 +57,11 @@ public class FrameHelper {
     }
 
     public void initFrame(JComponent content, final boolean maximizeOnStart) {
-        frame.setSize(800, 500);
+        if (maximizeOnStart) {
+            frame.setSize(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getSize());
+        } else if (frame.getSize().getWidth() < 1 || frame.getSize().getHeight() < 1){
+            frame.setSize(800, 500);
+        }
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
