@@ -9,7 +9,6 @@ import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
-import com.rusefi.binaryprotocol.RealIniFileProvider;
 import com.rusefi.config.Field;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,24 +47,12 @@ public interface ISensorHolder {
 
             try {
                 IniField sensorField = ini.getOutputChannel(channel);
-                if (sensorField instanceof ScalarIniField) {
-                    ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
-                    ScalarIniField scalarField = (ScalarIniField) sensorField;
-                    double rawValue = getRawValue(bb, scalarField.getType());
-                    double scaledValue = rawValue * scalarField.getMultiplier();
-                    // Use output channel name (e.g., "TPSValue") as the key, not gauge name
-                    setValue(scaledValue, channel);
-                    // Store in context for expression evaluation
-                    outputChannelValues.put(channel, scaledValue);
-                } else if (sensorField instanceof EnumIniField) {
-                    EnumIniField enumField = (EnumIniField) sensorField;
-                    ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
-                    double rawValue = getRawValue(bb, enumField.getType());
-                    double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
-                    setValue(scaledValue, channel);
-                    outputChannelValues.put(channel, scaledValue);
+                Double value = readFieldValue(response, gaugeName, sensorField);
+                if (value != null) {
+                    setValue(value, channel);
+                    outputChannelValues.put(channel, value);
                 } else {
-                    log.warn("Not scalar field for " + e);
+                    log.warn("Unsupported field type for " + e);
                 }
             } catch (IniMemberNotFound ex) {
                 // Channel might be:
@@ -78,23 +65,10 @@ public interface ISensorHolder {
                         // Try to look up the unwrapped variable name
                         try {
                             IniField sensorField = ini.getOutputChannel(simpleVar);
-                            if (sensorField instanceof ScalarIniField) {
-                                ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
-                                ScalarIniField scalarField = (ScalarIniField) sensorField;
-                                double rawValue = getRawValue(bb, scalarField.getType());
-                                double scaledValue = rawValue * scalarField.getMultiplier();
-
-                                setValue(scaledValue, simpleVar);
-                                outputChannelValues.put(simpleVar, scaledValue);
-                                continue;
-                            } else if (sensorField instanceof EnumIniField) {
-                                EnumIniField enumField = (EnumIniField) sensorField;
-                                ByteBuffer bb = getByteBuffer(response, gaugeName, sensorField.getOffset());
-                                double rawValue = getRawValue(bb, enumField.getType());
-                                double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
-
-                                setValue(scaledValue, simpleVar);
-                                outputChannelValues.put(simpleVar, scaledValue);
+                            Double value = readFieldValue(response, gaugeName, sensorField);
+                            if (value != null) {
+                                setValue(value, simpleVar);
+                                outputChannelValues.put(simpleVar, value);
                                 continue;
                             }
                         } catch (IniMemberNotFound ignored) {
@@ -146,23 +120,11 @@ public interface ISensorHolder {
                     // First try to read from output channels (for raw values like "coolant", "intake")
                     try {
                         IniField sensorField = ini.getOutputChannel(varName);
-                        if (sensorField instanceof ScalarIniField) {
-                            ByteBuffer bb = getByteBuffer(response, varName, sensorField.getOffset());
-                            ScalarIniField scalarField = (ScalarIniField) sensorField;
-                            double rawValue = getRawValue(bb, scalarField.getType());
-                            double scaledValue = rawValue * scalarField.getMultiplier();
-                            context.put(varName, scaledValue);
-                            // Also store in sensor values for direct lookup
-                            setValue(scaledValue, varName);
-                            outputChannelValues.put(varName, scaledValue);
-                        } else if (sensorField instanceof EnumIniField) {
-                            EnumIniField enumField = (EnumIniField) sensorField;
-                            ByteBuffer bb = getByteBuffer(response, varName, sensorField.getOffset());
-                            double rawValue = getRawValue(bb, enumField.getType());
-                            double scaledValue = extractBitRange((int) rawValue, enumField.getBitPosition(), enumField.getBitSize0());
-                            context.put(varName, scaledValue);
-                            setValue(scaledValue, varName);
-                            outputChannelValues.put(varName, scaledValue);
+                        Double value = readFieldValue(response, varName, sensorField);
+                        if (value != null) {
+                            context.put(varName, value);
+                            setValue(value, varName);
+                            outputChannelValues.put(varName, value);
                         }
                     } catch (IniMemberNotFound ignored) {
                         // Not a direct output channel, try config
@@ -221,16 +183,26 @@ public interface ISensorHolder {
     }
 
     /**
-     * Extract a bit range from a raw integer value.
-     * @param rawValue the full integer value read from the response
-     * @param bitPosition the starting bit position
-     * @param bitSize0 the bit size in TunerStudio format (0 means 1 bit, 1 means 2 bits, etc.)
-     * @return the extracted numeric value
+     * Read the numeric value of an output channel field from the response bytes.
+     * Handles both ScalarIniField and EnumIniField (bits).
+     *
+     * @return the scaled value, or null if the field type is not supported
      */
-    static double extractBitRange(int rawValue, int bitPosition, int bitSize0) {
-        int bitCount = bitSize0 + 1;
-        int mask = (1 << bitCount) - 1;
-        return (rawValue >> bitPosition) & mask;
+    @Nullable
+    static Double readFieldValue(byte[] response, String label, IniField field) {
+        ByteBuffer bb = getByteBuffer(response, label, field.getOffset());
+        if (field instanceof ScalarIniField) {
+            ScalarIniField scalarField = (ScalarIniField) field;
+            double rawValue = getRawValue(bb, scalarField.getType());
+            return rawValue * scalarField.getMultiplier();
+        } else if (field instanceof EnumIniField) {
+            EnumIniField enumField = (EnumIniField) field;
+            int rawValue = (int) getRawValue(bb, enumField.getType());
+            int bitCount = enumField.getBitSize0() + 1;
+            int mask = (1 << bitCount) - 1;
+            return (double) ((rawValue >> enumField.getBitPosition()) & mask);
+        }
+        return null;
     }
 
     static double getRawValue(ByteBuffer bb, com.rusefi.config.FieldType type) {
