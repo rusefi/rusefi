@@ -119,7 +119,6 @@ public class TsStringFunction {
 
         int index = indexValue.intValue();
         String result = enumField.getEnums().get(index);
-        log.info("bitStringValue(" + enumName + ", " + indexExpr + "): indexValue=" + indexValue + " index=" + index + " result=" + result);
         if (result == null) {
             log.debug("bitStringValue: no enum value at index " + index + " for " + enumName);
             return null;
