@@ -85,7 +85,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
             iterator.start(i);
             content.append(getHeaderText(iterator));
 
-            iterator.currentOffset += iterator.cf.getSize(iterator.next);
+            iterator.currentOffset = iterator.adjustSize(iterator.currentOffset);
             iterator.end(0);
         }
 

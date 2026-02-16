@@ -75,7 +75,7 @@ public class ConfigStructureImpl implements ConfigStructure {
             @Override
             public void end(int currentPosition) {
                 super.end(currentPosition);
-                currentOffset += cf.getSize(next);
+                currentOffset = adjustSize(currentOffset);
             }
         };
         iterator.loop(0);
