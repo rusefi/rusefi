@@ -57,6 +57,8 @@ public class TabbedPanel {
                 criticalError = message;
         });
 
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(tabbedPane::repaint));
+
 //        settingsTab = new SettingsTab(uiContext);
         logsManager = new LogDownloader(uiContext);
     }
