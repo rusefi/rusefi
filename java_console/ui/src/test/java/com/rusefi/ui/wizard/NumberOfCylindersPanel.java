@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Consumer;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -21,6 +22,11 @@ public class NumberOfCylindersPanel {
     };
 
     private final UIContext uiContext;
+    private Consumer<Integer> onCylindersSelected;
+
+    public void setOnCylindersSelected(Consumer<Integer> onCylindersSelected) {
+        this.onCylindersSelected = onCylindersSelected;
+    }
 
     public NumberOfCylindersPanel(UIContext uiContext) {
         this.uiContext = uiContext;
@@ -78,6 +84,15 @@ public class NumberOfCylindersPanel {
                             "? If you <i>really</i> have an engine like that,<br>please give us a call!</center></html>");
                         overlayPanel.setVisible(true);
                         updateOverlayBounds();
+                    }
+                });
+            } else {
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (onCylindersSelected != null) {
+                            onCylindersSelected.accept(option);
+                        }
                     }
                 });
             }

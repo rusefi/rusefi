@@ -29,6 +29,14 @@ public class WizardSandbox {
 
                 NumberOfCylindersPanel content = new NumberOfCylindersPanel(uiContext);
 
+                content.setOnCylindersSelected(cylindersCount -> {
+                    fh.getFrame().getContentPane().removeAll();
+                    FiringOrderPanel firingOrderPanel = new FiringOrderPanel(uiContext, cylindersCount);
+                    fh.getFrame().add(firingOrderPanel.getPanel());
+                    fh.getFrame().revalidate();
+                    fh.getFrame().repaint();
+                });
+
                 fh.getFrame().add(content.getPanel());
 
                 fh.getFrame().setSize(800, 600);
