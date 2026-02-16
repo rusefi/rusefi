@@ -5,6 +5,7 @@ import com.opensr5.ini.IniFileModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -25,6 +26,7 @@ public class SensorCentral implements ISensorCentral {
     // ini uses "coolant" but Sensor enum uses "COOLANT"
     private final Map<String, List<SensorListener>> sensorListeners = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final List<ResponseListener> listeners = new CopyOnWriteArrayList<>();
+    private volatile Map<String, ResolvedGaugeLabels> resolvedGaugeLabels = Collections.emptyMap();
     private byte[] response;
 
     public static SensorCentral getInstance() {
@@ -40,6 +42,28 @@ public class SensorCentral implements ISensorCentral {
         ISensorCentral.super.grabSensorValues(response, ini, configImage);
         for (ResponseListener listener : listeners)
             listener.onSensorUpdate();
+    }
+
+    @Override
+    public void onGaugeLabelsResolved(Map<String, ResolvedGaugeLabels> labels) {
+        this.resolvedGaugeLabels = labels;
+    }
+
+    /**
+     * Get the resolved gauge labels from the most recent update cycle.
+     * @return map of gauge name to resolved title/units
+     */
+    public Map<String, ResolvedGaugeLabels> getResolvedGaugeLabels() {
+        return resolvedGaugeLabels;
+    }
+
+    /**
+     * Get resolved labels for a specific gauge.
+     * @return resolved labels, or null if no string functions were resolved for this gauge
+     */
+    @Nullable
+    public ResolvedGaugeLabels getResolvedLabels(String gaugeName) {
+        return resolvedGaugeLabels.get(gaugeName);
     }
 
     public byte[] getResponse() {

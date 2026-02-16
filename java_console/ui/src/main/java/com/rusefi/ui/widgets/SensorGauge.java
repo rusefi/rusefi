@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
@@ -84,6 +85,20 @@ public class SensorGauge {
             }
         );
 
+        // For expression-based labels, show empty placeholder until resolved by the data cycle
+        if (gaugeModel.getTitleValue().isExpression()) {
+            gauge.setTitle("");
+        }
+        if (gaugeModel.getUnitsValue().isExpression()) {
+            gauge.setUnitString("");
+        }
+
+        if (gaugeModel.getTitleValue().isExpression() || gaugeModel.getUnitsValue().isExpression()) {
+            SensorCentral.getInstance().addListener((SensorCentral.ResponseListener) () ->
+                SwingUtilities.invokeLater(() -> applyResolvedLabels(gauge, gaugeName))
+            );
+        }
+
         gauge.setValue(SensorCentral.getInstance().getValue(channelName));
         gauge.setLcdDecimals(2);
 
@@ -159,6 +174,15 @@ public class SensorGauge {
         final DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, DetachedSensor.DEFAULT_WIDTH);
 
         ds.show(e);
+    }
+
+    private static void applyResolvedLabels(Radial gauge, String gaugeName) {
+        ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(gaugeName);
+        if (labels != null) {
+            gauge.setTitle(labels.getTitle());
+            gauge.setUnitString(labels.getUnits());
+            gauge.repaint();
+        }
     }
 
     public static Radial createRadial(double maxValue, double minValue, GaugeModel gaugeModel) {

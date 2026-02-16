@@ -6,6 +6,7 @@ import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniMemberNotFound;
+import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
@@ -89,6 +90,15 @@ public interface ISensorHolder {
                 log.warn("Could not evaluate expression for gauge " + gaugeName + ": " + expression);
             }
         }
+
+        // Third pass: resolve string-valued gauge labels (bitStringValue, stringValue)
+        onGaugeLabelsResolved(resolveGaugeLabels(ini, configImage, outputChannelValues));
+    }
+
+    /**
+     * Called after gauge labels have been resolved. Override to store or react to resolved labels.
+     */
+    default void onGaugeLabelsResolved(Map<String, ResolvedGaugeLabels> labels) {
     }
 
     /**
@@ -159,25 +169,7 @@ public interface ISensorHolder {
         if (!optField.isPresent()) {
             return null;
         }
-        IniField iniField = optField.get();
-
-        if (iniField instanceof ScalarIniField) {
-            ScalarIniField scalarField = (ScalarIniField) iniField;
-            ByteBuffer bb = configImage.getByteBuffer(scalarField.getOffset(), scalarField.getType().getStorageSize());
-            double rawValue = getRawValue(bb, scalarField.getType());
-            return rawValue * scalarField.getMultiplier();
-        }
-
-        if (iniField instanceof EnumIniField) {
-            EnumIniField enumField = (EnumIniField) iniField;
-            ByteBuffer bb = configImage.getByteBuffer(enumField.getOffset(), enumField.getType().getStorageSize());
-            int rawValue = (int) getRawValue(bb, enumField.getType());
-            int bitCount = enumField.getBitSize0() + 1;
-            int mask = (1 << bitCount) - 1;
-            return (double) ((rawValue >> enumField.getBitPosition()) & mask);
-        }
-
-        return null;
+        return configImage.readNumericValue(optField.get());
     }
 
     /**
@@ -191,48 +183,16 @@ public interface ISensorHolder {
         ByteBuffer bb = getByteBuffer(response, label, field.getOffset());
         if (field instanceof ScalarIniField) {
             ScalarIniField scalarField = (ScalarIniField) field;
-            double rawValue = getRawValue(bb, scalarField.getType());
+            double rawValue = scalarField.getType().readRawValue(bb);
             return rawValue * scalarField.getMultiplier();
         } else if (field instanceof EnumIniField) {
             EnumIniField enumField = (EnumIniField) field;
-            int rawValue = (int) getRawValue(bb, enumField.getType());
+            int rawValue = (int) enumField.getType().readRawValue(bb);
             int bitCount = enumField.getBitSize0() + 1;
             int mask = (1 << bitCount) - 1;
             return (double) ((rawValue >> enumField.getBitPosition()) & mask);
         }
         return null;
-    }
-
-    /**
-     * Extract a bit range from a raw integer value.
-     * @param rawValue the full integer value read from the response
-     * @param bitPosition the starting bit position
-     * @param bitSize0 the bit size in TunerStudio format (0 means 1 bit, 1 means 2 bits, etc.)
-     * @return the extracted numeric value
-     */
-    static double extractBitRange(int rawValue, int bitPosition, int bitSize0) {
-        int bitCount = bitSize0 + 1;
-        int mask = (1 << bitCount) - 1;
-        return (rawValue >> bitPosition) & mask;
-    }
-
-    static double getRawValue(ByteBuffer bb, com.rusefi.config.FieldType type) {
-        switch (type) {
-            case FLOAT:
-                return bb.getFloat();
-            case INT:
-                return bb.getInt();
-            case UINT16:
-                return bb.getInt() & 0xFFFF;
-            case INT16:
-                return (short) (bb.getInt() & 0xFFFF);
-            case UINT8:
-                return bb.getInt() & 0xFF;
-            case INT8:
-                return (byte) (bb.getInt() & 0xFF);
-            default:
-                throw new UnsupportedOperationException("type " + type);
-        }
     }
 
     static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset) {
@@ -251,4 +211,56 @@ public interface ISensorHolder {
     boolean setValue(double value, Sensor sensor);
 
     boolean setValue(double value, String sensorName);
+
+    /**
+     * Resolve string-valued gauge labels (title, units) that contain bitStringValue() or stringValue() calls.
+     *
+     * @param ini the INI file model
+     * @param configImage the configuration image for reading string/enum fields
+     * @param outputChannelValues accumulated output channel numeric values
+     * @return map of gauge name to resolved labels
+     */
+    static Map<String, ResolvedGaugeLabels> resolveGaugeLabels(IniFileModel ini,
+            @Nullable ConfigurationImage configImage, Map<String, Double> outputChannelValues) {
+        Map<String, ResolvedGaugeLabels> result = new HashMap<>();
+
+        for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
+            GaugeModel gauge = e.getValue();
+            String resolvedTitle = null;
+            String resolvedUnits = null;
+
+            if (gauge.getTitleValue().isExpression() && TsStringFunction.containsStringFunction(gauge.getTitle())) {
+                resolvedTitle = TsStringFunction.resolve(gauge.getTitle(), ini, configImage, outputChannelValues);
+            }
+            if (gauge.getUnitsValue().isExpression() && TsStringFunction.containsStringFunction(gauge.getUnits())) {
+                resolvedUnits = TsStringFunction.resolve(gauge.getUnits(), ini, configImage, outputChannelValues);
+            }
+
+            if (resolvedTitle != null || resolvedUnits != null) {
+                result.put(e.getKey(), new ResolvedGaugeLabels(
+                    resolvedTitle != null ? resolvedTitle : gauge.getTitle(),
+                    resolvedUnits != null ? resolvedUnits : gauge.getUnits()
+                ));
+            }
+        }
+        return result;
+    }
+
+    class ResolvedGaugeLabels {
+        private final String title;
+        private final String units;
+
+        public ResolvedGaugeLabels(String title, String units) {
+            this.title = title;
+            this.units = units;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getUnits() {
+            return units;
+        }
+    }
 }
