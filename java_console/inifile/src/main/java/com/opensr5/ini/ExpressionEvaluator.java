@@ -133,8 +133,12 @@ public class ExpressionEvaluator {
         // Remove braces if present
         String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*\\}$", "").trim();
 
-        // Check for unsupported constructs (function calls)
+        // For string function calls, extract variables from the expression argument
         if (containsUnsupportedConstruct(cleaned)) {
+            String innerExpr = TsStringFunction.extractBitStringValueExpression(cleaned);
+            if (innerExpr != null) {
+                return extractVariablesFromSimpleExpr(innerExpr);
+            }
             return variables;
         }
 
