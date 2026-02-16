@@ -9,7 +9,6 @@ import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
-import com.rusefi.config.Field;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
@@ -155,10 +155,11 @@ public interface ISensorHolder {
      */
     @Nullable
     static Double getConfigValue(String fieldName, IniFileModel ini, ConfigurationImage configImage) {
-        IniField iniField = ini.getIniField(fieldName);
-        if (iniField == null) {
+        Optional<IniField> optField = ini.findIniField(fieldName);
+        if (!optField.isPresent()) {
             return null;
         }
+        IniField iniField = optField.get();
 
         if (iniField instanceof ScalarIniField) {
             ScalarIniField scalarField = (ScalarIniField) iniField;
@@ -167,15 +168,16 @@ public interface ISensorHolder {
             return rawValue * scalarField.getMultiplier();
         }
 
-        // For bit fields, we need to extract the bit value
-        // The IniField may have bit information
-        try {
-            Field field = new Field(fieldName, iniField.getOffset(), com.rusefi.config.FieldType.INT);
-            return field.getValue(configImage);
-        } catch (Exception e) {
-            log.debug("Failed to get config value for " + fieldName + ": " + e.getMessage());
-            return null;
+        if (iniField instanceof EnumIniField) {
+            EnumIniField enumField = (EnumIniField) iniField;
+            ByteBuffer bb = configImage.getByteBuffer(enumField.getOffset(), enumField.getType().getStorageSize());
+            int rawValue = (int) getRawValue(bb, enumField.getType());
+            int bitCount = enumField.getBitSize0() + 1;
+            int mask = (1 << bitCount) - 1;
+            return (double) ((rawValue >> enumField.getBitPosition()) & mask);
         }
+
+        return null;
     }
 
     /**
