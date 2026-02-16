@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.ts_plugin.ui.AuthTokenPanel;
 import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;

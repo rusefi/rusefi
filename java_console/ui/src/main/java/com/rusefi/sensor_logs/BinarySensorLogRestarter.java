@@ -8,7 +8,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.core.WellKnownGauges;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
-import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ts_plugin.ui.AuthTokenPanel;
 import com.rusefi.ui.UIContext;
 
 import java.io.File;

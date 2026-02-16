@@ -1,15 +1,6 @@
 package com.rusefi.tools;
 
-import com.devexperts.logging.Logging;
-import com.rusefi.auth.AuthTokenUtil;
-import com.rusefi.autodetect.PortDetector;
-import com.rusefi.proxy.NetworkConnector;
-import com.rusefi.proxy.NetworkConnectorContext;
-import com.rusefi.tools.online.HttpUtil;
-import com.rusefi.tools.online.ProxyClient;
-import com.rusefi.ui.AuthTokenPanel;
-
-import java.io.IOException;
+import com.rusefi.ts_plugin.ui.AuthTokenPanel;
 
 /*
 public class NetworkConnectorStartup {

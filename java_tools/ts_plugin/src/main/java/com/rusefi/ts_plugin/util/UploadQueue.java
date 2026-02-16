@@ -7,7 +7,7 @@ import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ts_plugin.ui.TuneUploder;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ts_plugin.ui.AuthTokenPanel;
 
 import jakarta.xml.bind.JAXBException;
 import java.io.File;

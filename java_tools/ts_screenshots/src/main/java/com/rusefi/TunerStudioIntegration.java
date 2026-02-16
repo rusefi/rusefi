@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rusefi.wizard.*;
+import com.rusefi.ts_plugin.wizard.TsAccess;
 
 public class TunerStudioIntegration {
 

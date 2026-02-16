@@ -1,4 +1,4 @@
-package com.rusefi.wizard;
+package com.rusefi.ts_plugin.wizard;
 
 import java.awt.Frame;
 import java.util.ArrayList;

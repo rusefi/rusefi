@@ -3,7 +3,7 @@ package com.rusefi.tools.online;
 import com.devexperts.logging.Logging;
 import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ts_plugin.ui.AuthTokenPanel;
 
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
