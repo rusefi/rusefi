@@ -51,6 +51,7 @@ public class BitParsingTest {
                 for (int i = 0; i < 35; i++) {
                     input.append(ReaderStateImpl.BIT).append(" fieldName").append(i).append(",\"true\",\"false\"\n");
                 }
+                input.append("int16_t maxValue;Output Max Duty Cycle;\"\", 1, 0, -30000, 30000, 0\n");
                 input.append("end_struct\n");
 
                 StringWriter sw = new StringWriter();
@@ -71,6 +72,7 @@ public class BitParsingTest {
                 assertTrue(result.contains("fieldName31 = bits, U32, 0, [31:31], \"false\", \"true\""));
                 assertTrue(result.contains("fieldName32 = bits, U32, 4, [0:0], \"false\", \"true\""));
                 assertTrue(result.contains("fieldName34 = bits, U32, 4, [2:2], \"false\", \"true\""));
+                assertTrue(result.contains("maxValue = scalar, S16, 8, \"\", 1, 0, -30000, 30000, 0"));
             }
         });
     }
