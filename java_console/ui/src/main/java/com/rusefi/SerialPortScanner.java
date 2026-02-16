@@ -8,6 +8,7 @@ import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.*;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.updater.OpenbltDetectorStrategy;
+import com.rusefi.util.CompatibilityOptional;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
