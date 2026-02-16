@@ -66,9 +66,10 @@ public class ConsoleUI {
     public ConsoleUI(String port, SerialPortType serialPortType) {
         LinkManager linkManager = uiContext.getLinkManager();
 
-        CommandQueue.ERROR_HANDLER = e -> SwingUtilities.invokeLater(() -> {
-            throw new IllegalStateException("Connectivity error", e);
-        });
+        CommandQueue.ERROR_HANDLER = e -> {
+            log.error("Connectivity error", e);
+            linkManager.restart();
+        };
 
         ConnectionStatusIcon connectionStatus = new ConnectionStatusIcon(linkManager);
 

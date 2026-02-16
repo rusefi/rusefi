@@ -7,11 +7,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
-import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-import java.awt.*;
 import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -89,18 +85,8 @@ public class PortHolder {
      */
     public void packAndSend(final String command, boolean fireEvent) throws InterruptedException {
         if (bp == null) {
-            if (GraphicsEnvironment.isHeadless()) {
-                ExitUtil.exit("No connectivity, will close", -1);
-            } else {
-                SwingUtilities.invokeLater(() -> {
-                    Window[] windows = JDialog.getWindows();
-                    Window window = windows.length == 0 ? null : windows[0];
-                    JOptionPane.showMessageDialog(window, "No connectivity, will close",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    ExitUtil.exit("No connectivity, will close", -1);
-                });
-            }
-            return;
+            log.warn("packAndSend: no active connection, dropping command '" + command + "'");
+            throw new InterruptedException("No connectivity");
         }
 
         bp.doSend(command, fireEvent);
