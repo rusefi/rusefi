@@ -250,6 +250,76 @@ public class IniDialogTest {
     }
 
     @Test
+    public void testFieldWithExpressions() {
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "trigger_type = bits, U32, 0, [0:6], \"custom\", \"type1\"\n" +
+            "trigger_customTotalToothCount = scalar, S32, 4, \"teeth\", 1, 0, 0, 500, 0\n" +
+            "trigger_customSkippedToothCount = scalar, S32, 8, \"teeth\", 1, 0, 0, 500, 0\n" +
+            "[SettingContextHelp]\n" +
+            "; SettingContextHelpEnd\n" +
+            "\n" +
+            "\tdialog = triggerSettings, \"Trigger Settings\"\n" +
+            "\t\tfield = \"Trigger type\", trigger_type\n" +
+            "\t\tfield = \"Total tooth count\", trigger_customTotalToothCount, {trigger_type == 0}, {trigger_type == 0}\n" +
+            "\t\tfield = \"Skipped tooth count\", trigger_customSkippedToothCount, {trigger_type == 0}\n" +
+            "";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        DialogModel triggerDialog = model.getDialogs().get("triggerSettings");
+        assertNotNull(triggerDialog);
+        assertEquals(3, triggerDialog.getFields().size());
+
+        // First field - no expressions
+        DialogModel.Field field1 = triggerDialog.getFields().get(0);
+        assertEquals("trigger_type", field1.getKey());
+        assertNull(field1.getEnableExpression());
+        assertNull(field1.getVisibleExpression());
+
+        // Second field - both enable and visible expressions
+        DialogModel.Field field2 = triggerDialog.getFields().get(1);
+        assertEquals("trigger_customTotalToothCount", field2.getKey());
+        assertEquals("{trigger_type == 0}", field2.getEnableExpression());
+        assertEquals("{trigger_type == 0}", field2.getVisibleExpression());
+
+        // Third field - only enable expression
+        DialogModel.Field field3 = triggerDialog.getFields().get(2);
+        assertEquals("trigger_customSkippedToothCount", field3.getKey());
+        assertEquals("{trigger_type == 0}", field3.getEnableExpression());
+        assertNull(field3.getVisibleExpression());
+    }
+
+    @Test
+    public void testFieldWithNumericTokensAndExpressions() {
+        // Test that numeric tokens like "1" are not treated as expressions
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "myField = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
+            "otherField = scalar, F32, 4, \"unit\", 1, 0, 0, 100, 1\n" +
+            "[SettingContextHelp]\n" +
+            "; SettingContextHelpEnd\n" +
+            "\n" +
+            "\tdialog = testDialog, \"Test Dialog\"\n" +
+            "\t\tfield = \"My Field\", myField, 1, {otherField > 0}\n" +
+            "";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        DialogModel dialog = model.getDialogs().get("testDialog");
+        assertNotNull(dialog);
+        assertEquals(1, dialog.getFields().size());
+
+        // Numeric "1" should be skipped; only {otherField > 0} is an expression
+        DialogModel.Field field = dialog.getFields().get(0);
+        assertEquals("myField", field.getKey());
+        assertEquals("{otherField > 0}", field.getEnableExpression());
+        assertNull(field.getVisibleExpression());
+    }
+
+    @Test
     public void testGetDialogKeyByTitle() {
         String string = "[Constants]\n" +
             "page = 1\n" +

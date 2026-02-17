@@ -437,7 +437,7 @@ public class IniFileReader {
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
-        registerUiField(key, uiFieldName);
+        registerUiField(key, uiFieldName, null, null);
         log.debug("IniFileModel: Slider label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
@@ -459,12 +459,26 @@ public class IniFileReader {
             key = uiFieldName;
         }
 
-        registerUiField(key, uiFieldName);
+        // Scan remaining tokens for {…} expressions
+        String enableExpression = null;
+        String visibleExpression = null;
+        for (String token : list) {
+            if (PanelModel.isExpression(token)) {
+                if (enableExpression == null) {
+                    enableExpression = token;
+                } else if (visibleExpression == null) {
+                    visibleExpression = token;
+                    break;
+                }
+            }
+        }
+
+        registerUiField(key, uiFieldName, enableExpression, visibleExpression);
         log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
-    private void registerUiField(String key, String uiFieldName) {
-        DialogModel.Field field = new DialogModel.Field(key, uiFieldName);
+    private void registerUiField(String key, String uiFieldName, String enableExpression, String visibleExpression) {
+        DialogModel.Field field = new DialogModel.Field(key, uiFieldName, enableExpression, visibleExpression);
 
         if (key != null) {
             fieldsOfCurrentDialog.add(field);

@@ -786,4 +786,170 @@ public class ExpressionEvaluatorTest {
         assertNotNull(result);
         assertEquals(14.4, result, EPS);
     }
+
+    // ========== evaluateBooleanExpression() - Comparison Operators ==========
+
+    @Test
+    public void testBooleanExpression_EqualTrue() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("trigger_type", 0.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{trigger_type == 0}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_EqualFalse() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("trigger_type", 5.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{trigger_type == 0}", context);
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void testBooleanExpression_NotEqual() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("trigger_type", 5.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{trigger_type != 0}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_GreaterThan() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("field1", 60.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{field1 > 50}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_LessThan() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("field2", 80.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{field2 < 100}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_GreaterOrEqual() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("x", 50.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{x >= 50}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_LessOrEqual() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("x", 100.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{x <= 100}", context);
+        assertEquals(true, result);
+    }
+
+    // ========== evaluateBooleanExpression() - Logical Operators ==========
+
+    @Test
+    public void testBooleanExpression_And() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("field1", 60.0);
+        context.put("field2", 80.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{field1 > 50 && field2 < 100}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_AndFalse() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("field1", 40.0);
+        context.put("field2", 80.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{field1 > 50 && field2 < 100}", context);
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void testBooleanExpression_Or() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("a", 0.0);
+        context.put("b", 1.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{a || b}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_OrBothFalse() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("a", 0.0);
+        context.put("b", 0.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{a || b}", context);
+        assertEquals(false, result);
+    }
+
+    // ========== evaluateBooleanExpression() - Negation ==========
+
+    @Test
+    public void testBooleanExpression_Negation() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("enabled", 0.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{!enabled}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_NegationTrue() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("enabled", 1.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{!enabled}", context);
+        assertEquals(false, result);
+    }
+
+    // ========== evaluateBooleanExpression() - Parentheses ==========
+
+    @Test
+    public void testBooleanExpression_Parentheses() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("a", 1.0);
+        context.put("b", 0.0);
+        context.put("c", 1.0);
+        // (a && b) || c => (true && false) || true => false || true => true
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{(a && b) || c}", context);
+        assertEquals(true, result);
+    }
+
+    // ========== evaluateBooleanExpression() - Bare Variable ==========
+
+    @Test
+    public void testBooleanExpression_BareVariableTruthy() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("myVar", 5.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{myVar}", context);
+        assertEquals(true, result);
+    }
+
+    @Test
+    public void testBooleanExpression_BareVariableFalsy() {
+        Map<String, Double> context = new HashMap<>();
+        context.put("myVar", 0.0);
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{myVar}", context);
+        assertEquals(false, result);
+    }
+
+    // ========== evaluateBooleanExpression() - Missing Variables ==========
+
+    @Test
+    public void testBooleanExpression_MissingVariable() {
+        Map<String, Double> context = new HashMap<>();
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("{trigger_type == 0}", context);
+        assertNull(result);
+    }
+
+    @Test
+    public void testBooleanExpression_NullExpression() {
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression(null, new HashMap<>());
+        assertNull(result);
+    }
+
+    @Test
+    public void testBooleanExpression_EmptyExpression() {
+        Boolean result = ExpressionEvaluator.evaluateBooleanExpression("", new HashMap<>());
+        assertNull(result);
+    }
 }
