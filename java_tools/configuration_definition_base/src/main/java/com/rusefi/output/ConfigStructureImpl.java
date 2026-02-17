@@ -4,6 +4,8 @@ import com.rusefi.*;
 import com.rusefi.parse.TypesHelper;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.rusefi.ConfigFieldImpl.BOOLEAN_T;
 import static com.rusefi.ConfigFieldImpl.VOID_BIT;
@@ -170,6 +172,77 @@ public class ConfigStructureImpl implements ConfigStructure {
     @Override
     public String getComment() {
         return comment;
+    }
+
+    private static final Pattern EXPRESSION_BLOCK = Pattern.compile("\\{([^}]+)}");
+    private static final Pattern IDENTIFIER = Pattern.compile("\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b");
+    private static final Set<String> KNOWN_FUNCTIONS;
+
+    //TODO: use set.of once we migrate from java 8
+    static {
+        KNOWN_FUNCTIONS = new HashSet<>();
+        KNOWN_FUNCTIONS.add("bitStringValue");
+        KNOWN_FUNCTIONS.add("stringValue");
+        KNOWN_FUNCTIONS.add("getValue");
+    }
+
+    /**
+     * Validates that no field's tsInfo expressions reference fields defined later in the flattened
+     * structure hierarchy. Forward references cause issues because TunerStudio processes fields in order.
+     * This must be called on a top-level struct to be effective.
+     */
+    public void validateNoForwardReferences() {
+        Set<String> allFieldNames = new LinkedHashSet<>();
+        getFlattenedFieldNames(this, allFieldNames);
+
+        // Now iterate in order, checking for forward references
+        Set<String> definedSoFar = new HashSet<>();
+        checkForwardReferences(this, allFieldNames, definedSoFar);
+    }
+
+    private static void getFlattenedFieldNames(ConfigStructure structure, Set<String> allNames) {
+        for (ConfigField field : structure.getTsFields()) {
+            ConfigStructure subStruct = field.getStructureType();
+            if (subStruct != null) {
+                getFlattenedFieldNames(subStruct, allNames);
+            } else {
+                allNames.add(field.getName());
+            }
+        }
+    }
+
+    private static void checkForwardReferences(ConfigStructure structure, Set<String> allFieldNames, Set<String> definedSoFar) {
+        for (ConfigField field : structure.getTsFields()) {
+            ConfigStructure subStruct = field.getStructureType();
+            if (subStruct != null) {
+                checkForwardReferences(subStruct, allFieldNames, definedSoFar);
+                continue;
+            }
+
+            String tsInfo = field.getTsInfo();
+            if (tsInfo != null) {
+                Matcher exprMatcher = EXPRESSION_BLOCK.matcher(tsInfo);
+                while (exprMatcher.find()) {
+                    String expression = exprMatcher.group(1);
+                    Matcher idMatcher = IDENTIFIER.matcher(expression);
+                    while (idMatcher.find()) {
+                        String identifier = idMatcher.group(1);
+                        // TODO: we should check in this case?
+                        if (KNOWN_FUNCTIONS.contains(identifier))
+                            continue;
+                        // used but not yet defined
+                        if (allFieldNames.contains(identifier) && !definedSoFar.contains(identifier)) {
+                            throw new IllegalStateException(
+                                "Field '" + field.getName() + "' references '" + identifier +
+                                "' which is defined later in the structure " +
+                                "Reorder fields in rusefi_config.txt so that '" + identifier +
+                                "' is defined before it is used.");
+                        }
+                    }
+                }
+            }
+            definedSoFar.add(field.getName());
+        }
     }
 
     @Override

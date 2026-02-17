@@ -253,6 +253,10 @@ public class ReaderStateImpl implements ReaderState {
         if (log.debugEnabled())
             log.debug("Ending structure " + structure.getName());
         structure.addAlignmentFill(this, 4);
+        // Validate only on top-level structs
+        if (isStackEmpty()) {
+            structure.validateNoForwardReferences();
+        }
 
         ConfigStructureImpl existing = structures.put(structure.getName(), structure);
         if (existing != null)
