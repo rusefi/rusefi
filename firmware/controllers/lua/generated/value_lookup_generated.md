@@ -10,6 +10,15 @@ set rpm_hard_limit X
 ### engineSnifferRpmThreshold
 Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X
 
+### ltitEnabled
+Enable LTIT (Long Term Idle Trim) learning
+
+### useMetricOnInterface
+
+
+### useLambdaOnInterface
+
+
 ### multisparkMaxRpm
 Disable multispark above this engine speed.
 
@@ -30,9 +39,6 @@ Voltage when the idle valve is closed.\nYou probably don't have one of these!
 
 ### idlePositionMax
 Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units
-
-### ltitEnabled
-Enable LTIT (Long Term Idle Trim) learning
 
 ### ltitEmaAlpha
 EMA filter constant for LTIT (0-255)
@@ -521,12 +527,6 @@ AEM X-Series or rusEFI Wideband
 
 
 ### useAbsolutePressureForLagTime
-
-
-### useLambdaOnInterface
-
-
-### useMetricOnInterface
 
 
 ### verboseCanBaseAddress

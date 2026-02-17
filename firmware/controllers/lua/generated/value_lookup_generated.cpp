@@ -16,6 +16,15 @@ float getConfigValueByHash(const int hash) {
 // engineSnifferRpmThreshold
 		case 46918724:
 			return engineConfiguration->engineSnifferRpmThreshold;
+// ltitEnabled
+		case 1049828813:
+			return engineConfiguration->ltitEnabled;
+// useMetricOnInterface
+		case 934247460:
+			return engineConfiguration->useMetricOnInterface;
+// useLambdaOnInterface
+		case 1514634753:
+			return engineConfiguration->useLambdaOnInterface;
 // multisparkMaxRpm
 		case -775882810:
 			return engineConfiguration->multisparkMaxRpm;
@@ -37,9 +46,6 @@ float getConfigValueByHash(const int hash) {
 // idlePositionMax
 		case -1256791970:
 			return engineConfiguration->idlePositionMax;
-// ltitEnabled
-		case 1049828813:
-			return engineConfiguration->ltitEnabled;
 // ltitEmaAlpha
 		case -1008029221:
 			return engineConfiguration->ltitEmaAlpha;
@@ -529,12 +535,6 @@ float getConfigValueByHash(const int hash) {
 // useAbsolutePressureForLagTime
 		case -1155937004:
 			return engineConfiguration->useAbsolutePressureForLagTime;
-// useLambdaOnInterface
-		case 1514634753:
-			return engineConfiguration->useLambdaOnInterface;
-// useMetricOnInterface
-		case 934247460:
-			return engineConfiguration->useMetricOnInterface;
 // verboseCanBaseAddress
 		case 6238478:
 			return engineConfiguration->verboseCanBaseAddress;
@@ -2125,6 +2125,21 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->engineSnifferRpmThreshold = (int)value;
 		return 1;
 	}
+		case 1049828813:
+	{
+		engineConfiguration->ltitEnabled = (int)value;
+		return 1;
+	}
+		case 934247460:
+	{
+		engineConfiguration->useMetricOnInterface = (int)value;
+		return 1;
+	}
+		case 1514634753:
+	{
+		engineConfiguration->useLambdaOnInterface = (int)value;
+		return 1;
+	}
 		case -775882810:
 	{
 		engineConfiguration->multisparkMaxRpm = (int)value;
@@ -2158,11 +2173,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1256791970:
 	{
 		engineConfiguration->idlePositionMax = (int)value;
-		return 1;
-	}
-		case 1049828813:
-	{
-		engineConfiguration->ltitEnabled = (int)value;
 		return 1;
 	}
 		case -1008029221:
@@ -2978,16 +2988,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1155937004:
 	{
 		engineConfiguration->useAbsolutePressureForLagTime = (int)value;
-		return 1;
-	}
-		case 1514634753:
-	{
-		engineConfiguration->useLambdaOnInterface = (int)value;
-		return 1;
-	}
-		case 934247460:
-	{
-		engineConfiguration->useMetricOnInterface = (int)value;
 		return 1;
 	}
 		case 6238478:
