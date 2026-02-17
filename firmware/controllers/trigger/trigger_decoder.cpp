@@ -122,8 +122,6 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 	angle_t firstAngle = shape->getAngle(triggerShapeSynchPointIndex);
 	assertAngleRange(firstAngle, "firstAngle", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE);
 
-	int riseOnlyIndex = 0;
-
 	size_t length = shape->getLength();
 
 	setArrayValues(eventAngles, 0);
@@ -161,9 +159,8 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 
 				// In case this is a rising event, replace the following fall event with the rising as well
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
-					riseOnlyIndex += 2;
-					eventAngles[riseOnlyIndex] = angle;
-					eventAngles[riseOnlyIndex + 1] = angle;
+					eventAngles[eventIndex] = angle;
+					eventAngles[eventIndex + 1] = angle;
 				}
 			} else {
 				eventAngles[eventIndex] = angle;
