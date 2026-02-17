@@ -81,10 +81,18 @@ public class DialogModel {
     public static class Field {
         private final String key;
         private final String uiName;
+        private final String enableExpression;
+        private final String visibleExpression;
 
         public Field(String key, String uiName) {
+            this(key, uiName, null, null);
+        }
+
+        public Field(String key, String uiName, String enableExpression, String visibleExpression) {
             this.key = key;
             this.uiName = uiName;
+            this.enableExpression = enableExpression;
+            this.visibleExpression = visibleExpression;
         }
 
         public String getKey() {
@@ -95,11 +103,21 @@ public class DialogModel {
             return uiName;
         }
 
+        public String getEnableExpression() {
+            return enableExpression;
+        }
+
+        public String getVisibleExpression() {
+            return visibleExpression;
+        }
+
         @Override
         public String toString() {
             return "Field{" +
                     "key='" + key + '\'' +
                     ", uiName='" + uiName + '\'' +
+                    ", enableExpression='" + enableExpression + '\'' +
+                    ", visibleExpression='" + visibleExpression + '\'' +
                     '}';
         }
     }
