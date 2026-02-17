@@ -32,7 +32,7 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
 endif
 
 # Build the generated pin code only if the connector directory exists
-ifneq ("$(wildcard $(BOARD_DIR)/connectors)","")
+ifneq ("$(wildcard $(BOARD_DIR)/connectors/*.yaml)","")
   PIN_FILES = \
     $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_board_pin_names.h \
     $(PROJECT_DIR)/$(BOARD_DIR)/connectors/generated_outputs.h \

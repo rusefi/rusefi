@@ -28,7 +28,7 @@ endif
 -include $(BOARD_DIR)/config.mk
 
 # Build the generated pin code only if the connector directory exists
-ifneq ("$(wildcard $(BOARD_DIR)/connectors)","")
+ifneq ("$(wildcard $(BOARD_DIR)/connectors/*.yaml)","")
   ALLCPPSRC += $(BOARD_DIR)/connectors/generated_ts_name_by_pin.cpp
 endif
 
