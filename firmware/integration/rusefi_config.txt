@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260129
+#define FLASH_DATA_VERSION 260215
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -507,6 +507,10 @@ uint16_t launchRpm;A secondary Rev limit engaged by the driver to help launch th
 uint16_t rpmHardLimit;set rpm_hard_limit X;"rpm", 1, 0, 0, 20000, 0
 uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM", 1, 0, 0, 30000, 0
 
+	bit ltitEnabled,"yes","no";Enable LTIT (Long Term Idle Trim) learning
+	bit useMetricOnInterface,"Metric","Imperial"
+	bit useLambdaOnInterface,"Lambda","AFR"
+
 	uint8_t autoscale multisparkMaxRpm;Disable multispark above this engine speed.;"rpm", 50, 0, 0, 3000, 0
 	uint8_t autoscale maxAcRpm;Above this RPM, disable AC. Set to 0 to disable check.;"rpm", 50, 0, 0, 10000, 0
 	uint8_t maxAcTps;Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
@@ -516,7 +520,6 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 
-	bit ltitEnabled,"yes","no";Enable LTIT (Long Term Idle Trim) learning
 	uint8_t ltitEmaAlpha;EMA filter constant for LTIT (0-255);"0-255",1,0,1,255,0
 	uint8_t ltitStableRpmThreshold;RPM range to consider stable idle;"rpm",1,0,1,100,0
 	uint8_t ltitStableTime;Minimum time of stable idle before learning;"s",1,0,1,30,0
@@ -918,8 +921,6 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
 	bit useAbsolutePressureForLagTime,"yes","no"
 	! see #8650, only used on the UI
-	bit useLambdaOnInterface,"Lambda","AFR"
-	bit useMetricOnInterface,"Metric","Imperial"
 	bit unusedBit_311_30
 	bit unusedBit_311_31
 
