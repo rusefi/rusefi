@@ -33,6 +33,10 @@ public class CalibrationFieldFactory {
     };
 
     public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage) {
+        return createFieldRow(field, iniField, ci, workingImage, null);
+    }
+
+    public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange) {
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));
 
@@ -46,13 +50,13 @@ public class CalibrationFieldFactory {
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
 
             if (isCheckboxEnum(enumField)) {
-                row.add(createCheckBox(enumField, iniField, currentValue, workingImage));
+                row.add(createCheckBox(enumField, iniField, currentValue, workingImage, onChange));
             } else {
-                row.add(createComboBox(enumField, iniField, currentValue, workingImage));
+                row.add(createComboBox(enumField, iniField, currentValue, workingImage, onChange));
             }
         } else {
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
-            row.add(createTextField(iniField, currentValue, workingImage));
+            row.add(createTextField(iniField, currentValue, workingImage, onChange));
         }
 
         fixRowHeight(row);
@@ -97,7 +101,7 @@ public class CalibrationFieldFactory {
         return row;
     }
 
-    private static JCheckBox createCheckBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage) {
+    private static JCheckBox createCheckBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
         JCheckBox checkBox = new JCheckBox();
         applyStyle(checkBox);
         checkBox.setSelected(currentValue.equalsIgnoreCase("\"Enabled\"") || currentValue.equalsIgnoreCase("\"Yes\""));
@@ -110,11 +114,12 @@ public class CalibrationFieldFactory {
                 ? (firstIsOn ? values.get(0) : values.get(1))
                 : (firstIsOn ? values.get(1) : values.get(0));
             ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(), selected);
+            if (onChange != null) onChange.run();
         });
         return checkBox;
     }
 
-    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage) {
+    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
         String cleanValue = currentValue.replace("\"", "");
         String[] comboValues = enumField.getEnums().values().stream().filter(v -> !v.contains("INVALID")).toArray(String[]::new);
         JComboBox<String> comboBox = new JComboBox<>(comboValues);
@@ -127,12 +132,13 @@ public class CalibrationFieldFactory {
             String selected = (String) comboBox.getSelectedItem();
             if (selected != null) {
                 ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(), selected);
+                if (onChange != null) onChange.run();
             }
         });
         return comboBox;
     }
 
-    private static JTextField createTextField(IniField iniField, String currentValue, ConfigurationImage workingImage) {
+    private static JTextField createTextField(IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
         JTextField textField = new JTextField(currentValue);
         applyStyle(textField);
         applyBackgroundColor(textField, currentValue);
@@ -142,6 +148,7 @@ public class CalibrationFieldFactory {
                 if (workingImage == null) return;
                 try {
                     ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(), textField.getText());
+                    if (onChange != null) onChange.run();
                 } catch (Exception ignored) {
                     // invalid input while typing
                 }
