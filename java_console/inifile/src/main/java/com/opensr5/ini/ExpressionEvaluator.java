@@ -62,7 +62,7 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*\\}$", "").trim();
+        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
 
         // Check if it contains variable names or custom function calls - these can't be evaluated without context
         if (containsVariableOrFunction(cleaned)) {
@@ -133,7 +133,7 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*\\}$", "").trim();
+        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
 
         // For string function calls, extract variables from the expression argument
         if (containsUnsupportedConstruct(cleaned)) {
@@ -200,7 +200,7 @@ public class ExpressionEvaluator {
         if (expression == null) {
             return false;
         }
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*\\}$", "").trim();
+        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
         return cleaned.contains("?") && cleaned.contains(":");
     }
 
@@ -218,7 +218,7 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*\\}$", "").trim();
+        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
 
         // Find the ? operator
         int questionMark = findOperatorOutsideParens(cleaned, '?');
@@ -364,7 +364,7 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*\\}$", "").trim();
+        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
 
         if (cleaned.isEmpty()) {
             return null;
