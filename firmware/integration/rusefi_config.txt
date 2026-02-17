@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260129
+#define FLASH_DATA_VERSION 260216
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -306,6 +306,51 @@ struct_no_prefix engine_configuration_s
 #define GPPWM_NOTE_SIZE 16
 
 #define CAN_WBO_COUNT 2
+
+! see #9139 #9138 for reason of why this bit field has to be on top of all the config
+! bit 0
+	bit is_enabled_spi_1,"yes","no"
+	bit is_enabled_spi_2,"yes","no"
+	bit is_enabled_spi_3,"yes","no"
+	bit isSdCardEnabled,"enabled","disabled"
+	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
+	bit rethrowHardFault,"yes","no"
+	bit verboseQuad,"yes","no"
+
+		bit useStepperIdle,"yes","no";This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
+	bit lambdaProtectionEnable,"enabled","disabled"
+	bit verboseTLE8888,"yes","no"
+	bit enableVerboseCanTx,"yes","no";CAN broadcast using custom rusEFI protocol
+	bit externalRusEfiGdiModule,"yes","no"
+	bit measureMapOnlyInOneCylinder,"yes","no";Useful for individual intakes
+
+	! bit 13
+	bit stepperForceParkingEveryRestart,"yes","no"
+	bit isFasterEngineSpinUpEnabled,"enabled","disabled";If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
+	bit coastingFuelCutEnabled,"enabled","disabled";This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
+	bit useIacTableForCoasting,"enabled","disabled";Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
+	bit useNoiselessTriggerDecoder,"yes","no"
+	bit useIdleTimingPidControl,"yes","no"
+	bit disableEtbWhenEngineStopped,"yes","no";Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
+	bit is_enabled_spi_4,"yes","no"
+
+	! bit 21
+	bit pauseEtbControl,"yes","no";Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
+
+	bit verboseKLine,"yes","no"
+	bit idleIncrementalPidCic,"yes","no"
+! technical debt 'enableAemXSeries' should probably be renamed to enableCanWideband one day once we improve calibration migration toolset
+	bit enableAemXSeries,"yes","no";AEM X-Series or rusEFI Wideband
+	bit modeledFlowIdle,"yes","no"
+	bit isTuningDetectorEnabled,"yes","no"
+	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
+	bit useAbsolutePressureForLagTime,"yes","no"
+	! see #8650, only used on the UI
+	bit useLambdaOnInterface,"Lambda","AFR"
+	bit useMetricOnInterface,"Metric","Imperial"
+	bit unusedBit_311_30
+	bit unusedBit_311_31
+
 
 struct stft_cell_cfg_s
 	uint8_t autoscale maxAdd;Maximum % that the short term fuel trim can add;"%", 0.1, 0, 0, 25, 1
@@ -879,49 +924,6 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 
 	uint8_t autoscale lambdaProtectionMinRpm;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 	uint8_t autoscale lambdaProtectionMinLoad;;"%", 10, 0, 0, @@MAP_UPPER_LIMIT@@, 0
-
-	! bit 0
-	bit is_enabled_spi_1,"yes","no"
-	bit is_enabled_spi_2,"yes","no"
-	bit is_enabled_spi_3,"yes","no"
-	bit isSdCardEnabled,"enabled","disabled"
-	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
-	bit rethrowHardFault,"yes","no"
-	bit verboseQuad,"yes","no"
-
-		bit useStepperIdle,"yes","no";This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	bit lambdaProtectionEnable,"enabled","disabled"
-	bit verboseTLE8888,"yes","no"
-	bit enableVerboseCanTx,"yes","no";CAN broadcast using custom rusEFI protocol
-	bit externalRusEfiGdiModule,"yes","no"
-	bit measureMapOnlyInOneCylinder,"yes","no";Useful for individual intakes
-
-	! bit 13
-	bit stepperForceParkingEveryRestart,"yes","no"
-	bit isFasterEngineSpinUpEnabled,"enabled","disabled";If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	bit coastingFuelCutEnabled,"enabled","disabled";This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	bit useIacTableForCoasting,"enabled","disabled";Override the IAC position during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars or engines that have trouble returning to idle.
-	bit useNoiselessTriggerDecoder,"yes","no"
-	bit useIdleTimingPidControl,"yes","no"
-	bit disableEtbWhenEngineStopped,"yes","no";Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	bit is_enabled_spi_4,"yes","no"
-
-	! bit 21
-	bit pauseEtbControl,"yes","no";Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-
-	bit verboseKLine,"yes","no"
-	bit idleIncrementalPidCic,"yes","no"
-! technical debt 'enableAemXSeries' should probably be renamed to enableCanWideband one day once we improve calibration migration toolset
-	bit enableAemXSeries,"yes","no";AEM X-Series or rusEFI Wideband
-	bit modeledFlowIdle,"yes","no"
-	bit isTuningDetectorEnabled,"yes","no"
-	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
-	bit useAbsolutePressureForLagTime,"yes","no"
-	! see #8650, only used on the UI
-	bit useLambdaOnInterface,"Lambda","AFR"
-	bit useMetricOnInterface,"Metric","Imperial"
-	bit unusedBit_311_30
-	bit unusedBit_311_31
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
