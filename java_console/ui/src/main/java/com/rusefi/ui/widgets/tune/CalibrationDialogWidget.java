@@ -3,6 +3,7 @@ package com.rusefi.ui.widgets.tune;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
@@ -15,8 +16,8 @@ import com.rusefi.ui.util.WrapLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Orchestrates layout of calibration dialogs by composing UI widgets
@@ -28,6 +29,23 @@ public class CalibrationDialogWidget {
     private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
     private ConfigurationImage workingImage;
+    private IniFileModel currentIniFileModel;
+    private final List<ExpressionRow> expressionRows = new ArrayList<>();
+
+    /**
+     * Tracks a field row that has visibility or enabled expressions to re-evaluate on config changes.
+     */
+    private static class ExpressionRow {
+        final JPanel row;
+        final String enableExpression;
+        final String visibleExpression;
+
+        ExpressionRow(JPanel row, String enableExpression, String visibleExpression) {
+            this.row = row;
+            this.enableExpression = enableExpression;
+            this.visibleExpression = visibleExpression;
+        }
+    }
 
     public CalibrationDialogWidget(UIContext uiContext) {
         this.uiContext = uiContext;
@@ -53,6 +71,8 @@ public class CalibrationDialogWidget {
 
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         workingImage = ci != null ? ci.clone() : null;
+        currentIniFileModel = iniFileModel;
+        expressionRows.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
             applyLayout(contentPane, dialogModel.getLayoutHint());
@@ -108,13 +128,26 @@ public class CalibrationDialogWidget {
     }
 
     private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        Runnable onChange = this::refreshExpressions;
+
         for (DialogModel.Field field : dialogModel.getFields()) {
+            JPanel row;
             Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
-            if (iniField.isPresent()) {
-                container.add(CalibrationFieldFactory.createFieldRow(field, iniField.get(), ci, workingImage));
-            } else {
-                container.add(CalibrationFieldFactory.createLabelRow(field));
+            row = iniField.map(value -> CalibrationFieldFactory.createFieldRow(field, value, ci, workingImage, onChange)).orElseGet(() -> CalibrationFieldFactory.createLabelRow(field));
+
+            boolean hasExpressions = field.getEnableExpression() != null || field.getVisibleExpression() != null;
+            if (hasExpressions) {
+                ExpressionRow exprRow = new ExpressionRow(row, field.getEnableExpression(), field.getVisibleExpression());
+                expressionRows.add(exprRow);
+
+                // Initial evaluation against workingImage
+                ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
+                if (evalImage != null) {
+                    applyExpressionState(exprRow, iniFileModel, evalImage);
+                }
             }
+
+            container.add(row);
         }
 
         for (DialogModel.Command command : dialogModel.getCommandsOfCurrentDialog()) {
@@ -183,6 +216,56 @@ public class CalibrationDialogWidget {
                 GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
             }
             targetContainer.add(panelWidget);
+        }
+    }
+
+    /**
+     * Re-evaluates all expression-controlled rows against the current workingImage.
+     * Called whenever any field value changes.
+     */
+    private void refreshExpressions() {
+        if (workingImage == null || currentIniFileModel == null) return;
+        for (ExpressionRow exprRow : expressionRows) {
+            applyExpressionState(exprRow, currentIniFileModel, workingImage);
+        }
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
+    private void applyExpressionState(ExpressionRow exprRow, IniFileModel iniFileModel, ConfigurationImage ci) {
+        // Visibility
+        if (exprRow.visibleExpression != null) {
+            Boolean visible = evaluateFieldExpression(exprRow.visibleExpression, iniFileModel, ci);
+            exprRow.row.setVisible(visible == null || visible);
+        }
+        // Enabled
+        if (exprRow.enableExpression != null) {
+            Boolean enabled = evaluateFieldExpression(exprRow.enableExpression, iniFileModel, ci);
+            setComponentsEnabled(exprRow.row, enabled == null || enabled);
+        }
+    }
+
+    private Boolean evaluateFieldExpression(String expression, IniFileModel iniFileModel, ConfigurationImage ci) {
+        Set<String> varNames = ExpressionEvaluator.extractVariables(expression);
+        Map<String, Double> context = new HashMap<>();
+        for (String varName : varNames) {
+            Optional<IniField> varField = iniFileModel.findIniField(varName);
+            if (varField.isPresent()) {
+                Double value = ci.readNumericValue(varField.get());
+                if (value != null) {
+                    context.put(varName, value);
+                }
+            }
+        }
+        return ExpressionEvaluator.evaluateBooleanExpression(expression, context);
+    }
+
+    private static void setComponentsEnabled(Container container, boolean enabled) {
+        for (Component comp : container.getComponents()) {
+            comp.setEnabled(enabled);
+            if (comp instanceof Container) {
+                setComponentsEnabled((Container) comp, enabled);
+            }
         }
     }
 
