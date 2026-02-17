@@ -14,11 +14,11 @@ gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
 event 0 0 1 0.00 3.000000
-event 1 1 1 0.00 nan
+event 1 1 1 52.76 nan
 event 2 1 0 52.76 nan
-event 3 1 1 52.76 nan
+event 3 1 1 232.76 nan
 event 4 1 0 232.76 nan
-event 5 0 0 232.76 nan
+event 5 0 0 0.00 nan
 event 6 1 1 412.76 nan
 event 7 1 0 412.76 nan
 event 8 1 1 592.76 nan
@@ -668,9 +668,9 @@ gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
 event 0 0 1 0.00 1.000000
-event 1 1 1 0.00 nan
+event 1 1 1 14.88 nan
 event 2 1 0 14.88 nan
-event 3 0 0 14.88 nan
+event 3 0 0 0.00 nan
 event 4 1 1 192.38 nan
 event 5 1 0 192.38 nan
 event 6 1 1 373.06 nan
@@ -2066,31 +2066,31 @@ gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
 event 0 0 1 0.00 11.000000
-event 1 1 1 0.00 nan
+event 1 1 1 26.00 nan
 event 2 1 0 26.00 nan
-event 3 1 1 26.00 nan
+event 3 1 1 46.00 nan
 event 4 1 0 46.00 nan
-event 5 1 1 46.00 nan
+event 5 1 1 66.00 nan
 event 6 1 0 66.00 nan
-event 7 1 1 66.00 nan
+event 7 1 1 86.00 nan
 event 8 1 0 86.00 nan
-event 9 1 1 86.00 nan
+event 9 1 1 146.00 nan
 event 10 1 0 146.00 nan
-event 11 1 1 146.00 nan
+event 11 1 1 166.00 nan
 event 12 1 0 166.00 nan
-event 13 1 1 166.00 nan
+event 13 1 1 186.00 nan
 event 14 1 0 186.00 nan
-event 15 1 1 186.00 nan
+event 15 1 1 206.00 nan
 event 16 1 0 206.00 nan
-event 17 1 1 206.00 nan
+event 17 1 1 266.00 nan
 event 18 1 0 266.00 nan
-event 19 1 1 266.00 nan
+event 19 1 1 286.00 nan
 event 20 1 0 286.00 nan
-event 21 1 1 286.00 nan
+event 21 1 1 306.00 nan
 event 22 1 0 306.00 nan
-event 23 1 1 306.00 nan
+event 23 1 1 326.00 nan
 event 24 1 0 326.00 nan
-event 25 0 0 326.00 nan
+event 25 0 0 0.00 nan
 event 26 1 1 386.00 nan
 event 27 1 0 386.00 nan
 event 28 1 1 406.00 nan
@@ -2240,23 +2240,23 @@ gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
 event 0 0 1 0.00 3.250000
-event 1 1 1 0.00 nan
+event 1 1 1 58.00 nan
 event 2 1 0 58.00 nan
-event 3 1 1 58.00 nan
+event 3 1 1 78.00 nan
 event 4 1 0 78.00 nan
-event 5 1 1 78.00 nan
+event 5 1 1 98.00 nan
 event 6 1 0 98.00 nan
-event 7 1 1 98.00 nan
+event 7 1 1 118.00 nan
 event 8 1 0 118.00 nan
-event 9 1 1 118.00 nan
+event 9 1 1 238.00 nan
 event 10 1 0 238.00 nan
-event 11 1 1 238.00 nan
+event 11 1 1 258.00 nan
 event 12 1 0 258.00 nan
-event 13 1 1 258.00 nan
+event 13 1 1 278.00 nan
 event 14 1 0 278.00 nan
-event 15 1 1 278.00 nan
+event 15 1 1 298.00 nan
 event 16 1 0 298.00 nan
-event 17 0 0 298.00 nan
+event 17 0 0 0.00 nan
 event 18 1 1 418.00 nan
 event 19 1 0 418.00 nan
 event 20 1 1 438.00 nan
@@ -3118,9 +3118,9 @@ gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
 event 0 0 1 0.00 4.294117
-event 1 1 1 0.00 nan
+event 1 1 1 0.05 nan
 event 2 0 0 0.05 nan
-event 3 1 0 0.05 nan
+event 3 1 0 0.00 nan
 event 4 1 1 2.67 nan
 event 5 1 0 2.67 nan
 event 6 1 1 5.33 nan
@@ -3390,9 +3390,9 @@ event 269 1 0 354.67 nan
 event 270 1 1 357.33 nan
 event 271 1 0 357.33 nan
 event 272 0 1 360.00 nan
-event 273 1 1 360.00 nan
+event 273 1 1 360.05 nan
 event 274 0 0 360.05 nan
-event 275 1 0 360.05 nan
+event 275 1 0 0.00 nan
 event 276 1 1 362.67 nan
 event 277 1 0 362.67 nan
 event 278 1 1 365.33 nan
@@ -3674,9 +3674,9 @@ gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
 event 0 0 1 0.00 4.294117
-event 1 1 1 0.00 nan
+event 1 1 1 2.00 nan
 event 2 1 0 2.00 nan
-event 3 0 0 2.00 nan
+event 3 0 0 0.00 nan
 event 4 1 1 14.00 nan
 event 5 1 0 14.00 nan
 event 6 1 1 26.00 nan
