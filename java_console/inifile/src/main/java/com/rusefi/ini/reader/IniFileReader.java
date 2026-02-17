@@ -466,7 +466,7 @@ public class IniFileReader {
             if (PanelModel.isExpression(token)) {
                 if (enableExpression == null) {
                     enableExpression = token;
-                } else if (visibleExpression == null) {
+                } else {
                     visibleExpression = token;
                     break;
                 }
@@ -604,9 +604,7 @@ public class IniFileReader {
             currentCategoryGauges.add(gauge);
             allGauges.put(gaugeName, gauge);
 
-        } catch (NumberFormatException e) {
-            log.warn("Failed to parse gauge: " + gaugeName + ": " + e.getMessage());
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
             log.warn("Failed to parse gauge: " + gaugeName + ": " + e.getMessage());
         }
     }
@@ -721,14 +719,6 @@ public class IniFileReader {
         if (list.size() >= 2 && currentHelpReferenceName != null) {
             currentHelpWebHelp = list.get(1);
         }
-    }
-
-    private double parseDouble(String s) {
-        return IniField.parseDouble(s);
-    }
-
-    private int parseInt(String s) {
-        return (int) IniField.parseDouble(s);
     }
 
     private void handleFrontPage(LinkedList<String> list) {
