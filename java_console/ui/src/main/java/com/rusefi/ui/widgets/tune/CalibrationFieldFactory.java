@@ -116,7 +116,8 @@ public class CalibrationFieldFactory {
 
     private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage) {
         String cleanValue = currentValue.replace("\"", "");
-        JComboBox<String> comboBox = new JComboBox<>(enumField.getEnums().values().toArray(new String[0]));
+        String[] comboValues = enumField.getEnums().values().stream().filter(v -> !v.contains("INVALID")).toArray(String[]::new);
+        JComboBox<String> comboBox = new JComboBox<>(comboValues);
         applyStyle(comboBox);
         comboBox.setSelectedItem(cleanValue);
         applyBackgroundColor(comboBox, cleanValue);
