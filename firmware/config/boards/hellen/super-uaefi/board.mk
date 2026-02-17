@@ -34,7 +34,6 @@ include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
 
 include $(BOARDS_DIR)/hellen/hellen-common100.mk
 
-DDEFS += -DEFI_SKIP_BOR=TRUE
 
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 

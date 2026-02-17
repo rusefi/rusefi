@@ -28,8 +28,6 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
-## January 2026 "Day 1428"
-
 ### Fixed
  - ETB: calibration, wrong scale 3% calibration error #8863
  - luaHeapAlloc crashed when not enough RAM #8874
@@ -41,6 +39,7 @@ Release template (copy/paste this for new release):
  - FatFS update to R0.16
  - WBO: update from sd #8870
  - Switch to 7z for ini file compression on MSD #8895
+ - stm32: flash: abort erase/write in case of undervoltage #9137
 
 ### Breaking Changes
  - CAN bitrare 666k #8784

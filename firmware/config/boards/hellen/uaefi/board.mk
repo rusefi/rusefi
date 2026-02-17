@@ -12,8 +12,6 @@ endif
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"uaefi\" $(VAR_DEF_ENGINE_TYPE)
 
-DDEFS += -DEFI_SKIP_BOR=TRUE
-
 #Knock is available on F4 and F7
 ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# Default H743 linker script is not compatible
