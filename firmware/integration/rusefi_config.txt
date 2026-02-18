@@ -2090,11 +2090,11 @@ uint16_t[VVT_TABLE_SIZE] vvtTable2LoadBins;;"L", 1, 0, 0,  @@MAP_UPPER_LIMIT@@, 
 uint16_t[VVT_TABLE_RPM_SIZE] vvtTable2RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 int16_t[IGN_LOAD_COUNT x IGN_RPM_COUNT] autoscale ignitionTable;;"deg", 0.1, 0, -20, 90, 1
-uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {(ignOverrideMode != 0 && ignOverrideMode != 1) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 0 || ignOverrideMode == 1 ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
 uint16_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint16_t[VE_LOAD_COUNT x VE_RPM_COUNT] autoscale veTable;;"%", 0.1, 0, 0, 999, 1
-uint16_t[VE_LOAD_COUNT] veLoadBins;;{bitStringValue(fuelUnits, fuelAlgorithm) },	1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+uint16_t[VE_LOAD_COUNT] veLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : (veOverrideMode == 2 ? 100 : @@MAP_UPPER_LIMIT@@)}, 0
 uint16_t[VE_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 ! TODO at some point we need to flip this table to use AFR on the affected tests, since otherwise we get some no-to-nice fields as consequence
