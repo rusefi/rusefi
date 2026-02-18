@@ -9,12 +9,11 @@ fi
 
 BOARD_META_PATH=./$1
 
-# magical version of BOARD_META_DIR=$(dirname "$BOARD_META_PATH")
-BOARD_META_DIR=${BOARD_META_PATH%/*}
 
 if [ -z "${BOARD_DIR}" ]; then
-    export BOARD_DIR="$BOARD_META_DIR"
-    echo "common_script_read_meta_env.inc: BOARD_DIR was empty. Setting to fallback: $BOARD_DIR (from BOARD_META_DIR)"
+    # magical version of BOARD_DIR=$(dirname "$BOARD_META_PATH")
+    export BOARD_DIR="${BOARD_META_PATH%/*}"
+    echo "common_script_read_meta_env.inc: BOARD_DIR was empty. Setting to fallback: $BOARD_DIR"
 fi
 
 if [ ! -f ${BOARD_META_PATH} ]; then
