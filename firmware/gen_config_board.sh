@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_NAME=$(basename "$0")
+
 # file gen_config_board.sh
 #        for example ./gen_config_board.sh config/boards/hellen/hellen128 hellen128
 #                    ./gen_config_board.sh config/boards/hellen/hellen-honda-k hellen-honda-k
@@ -15,9 +17,23 @@ set -e
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
 echo "the storage section of rusefiXXX.ini is updated as well"
 
-BOARD_DIR=${1:-$BOARD_DIR}
-SHORT_BOARD_NAME=${2:-$SHORT_BOARD_NAME}
-INI=${3:-"rusefi_$SHORT_BOARD_NAME.ini"}
+if [ -n "$1" ]; then
+    BOARD_DIR="$1"
+    echo "$SCRIPT_NAME: Argument was provided, BOARD_DIR is now $BOARD_DIR"
+fi
+
+if [ -n "$2" ]; then
+    SHORT_BOARD_NAME="$2"
+    echo "$SCRIPT_NAME: Argument 2 was provided, SHORT_BOARD_NAME is now $SHORT_BOARD_NAME"
+fi
+if [ -n "$3" ]; then
+    INI="$3"
+    echo "$SCRIPT_NAME: Argument 3 was provided, INI is now $INI"
+else
+    # If $3 is empty, construct the default filename using the name we just determined
+    INI="rusefi_${SHORT_BOARD_NAME}.ini"
+    echo "$SCRIPT_NAME: Argument 3 was NOT provided, using default INI: $INI"
+fi
 
 if [ -z "$BOARD_DIR" ]; then
 	echo "Board dir parameter expected"
@@ -29,7 +45,7 @@ if [ -z "$SHORT_BOARD_NAME" ]; then
 	exit 1
 fi
 
-echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARD_NAME=${SHORT_BOARD_NAME}"
+echo "$SCRIPT_NAME: BOARD_DIR=${BOARD_DIR} SHORT_BOARD_NAME=${SHORT_BOARD_NAME}"
 
 shopt -s expand_aliases
 if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
