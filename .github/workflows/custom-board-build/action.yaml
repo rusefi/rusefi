@@ -176,11 +176,13 @@ runs:
         source ${{inputs.rusefi_dir}}/firmware/config/boards/common_script_read_meta_env.inc "${{inputs.meta_info}}"
         cd ${{inputs.rusefi_dir}}/firmware
         ABSOLUTE_BOARD_DIR=${{github.workspace}}/$BOARD_DIR
+        echo "ABSOLUTE_BOARD_DIR=[$ABSOLUTE_BOARD_DIR]"
         # sometimes absolute path is simpler
         echo "ABSOLUTE_BOARD_DIR=$ABSOLUTE_BOARD_DIR" >> $GITHUB_ENV
         # todo: why do we require relative path exactly?
         BOARD_DIR=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_DIR")
         BOARD_META_PATH=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_META_PATH")
+        echo "BOARD_META_PATH=[BOARD_META_PATH]"
         echo "BOARD_DIR=$BOARD_DIR" >> $GITHUB_ENV
         echo "BOARD_META_PATH=$BOARD_META_PATH" >> $GITHUB_ENV
         echo "SHORT_BOARD_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
