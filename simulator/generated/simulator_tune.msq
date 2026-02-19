@@ -2069,7 +2069,7 @@
 </constant>
         <constant name="ignitionKeyDigitalPin">"NONE"</constant>
         <constant name="ignitionKeyDigitalPinMode">"DEFAULT"</constant>
-        <constant cols="1" digits="0" name="ignitionLoadBins" rows="16" units="Load">
+        <constant cols="1" digits="0" name="ignitionLoadBins" rows="16" units="{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}">
          21
          27
          33
@@ -4667,7 +4667,7 @@ end</constant>
 </constant>
         <constant name="veBlends4_yAxisOverride">"Zero"</constant>
         <constant name="vehicleSpeedSensorInputPin">"NONE"</constant>
-        <constant cols="1" digits="0" name="veLoadBins" rows="16" units="{bitStringValue(fuelUnits, fuelAlgorithm) }">
+        <constant cols="1" digits="0" name="veLoadBins" rows="16" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}">
          10
          20
          30
@@ -4933,7 +4933,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260214" nPages="1" signature="rusEFI master.2026.02.19.f407-discovery.3749750037" version="5.0"/>
+    <versionInfo firmwareInfo="20260214" nPages="1" signature="rusEFI master.2026.02.19.f407-discovery.428014686" version="5.0"/>
     <bibliography author="rusEFI 20260214" writeDate="date"/>
     <settings/>
     <userComments/>
