@@ -177,7 +177,7 @@ runs:
         cd ${{inputs.rusefi_dir}}/firmware
         # BOARD_DIR value is assigned within sourced common_script_read_meta_env.inc based on meta_info location
         ABSOLUTE_BOARD_DIR=${{github.workspace}}/$BOARD_DIR
-        echo "ABSOLUTE_BOARD_DIR=[$ABSOLUTE_BOARD_DIR]"
+        echo "ABSOLUTE_BOARD_DIR=[$ABSOLUTE_BOARD_DIR] META_OUTPUT_ROOT_FOLDER=[$META_OUTPUT_ROOT_FOLDER]"
         # sometimes absolute path is simpler
         echo "ABSOLUTE_BOARD_DIR=$ABSOLUTE_BOARD_DIR" >> $GITHUB_ENV
         # todo: why do we require relative path exactly?
@@ -361,7 +361,7 @@ runs:
         cd ${{inputs.rusefi_dir}}/simulator/
         ./build/rusefi_simulator 10
         mkdir -p ${{inputs.sim_output}}canned-tunes
-        ./write_tune.sh ${ABSOLUTE_BOARD_DIR}/generated/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
+        ./write_tune.sh ${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
 
     - name: Add Tune to Commit
       if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
