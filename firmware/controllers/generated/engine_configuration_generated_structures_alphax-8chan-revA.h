@@ -6577,7 +6577,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<int16_t, 10, 1> ignitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT] = {};
 	/**
-	 * units: Load
+	 * units: {bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}
 	 * offset 16672
 	 */
 	uint16_t ignitionLoadBins[IGN_LOAD_COUNT] = {};
@@ -6592,7 +6592,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> veTable[VE_LOAD_COUNT][VE_RPM_COUNT] = {};
 	/**
-	 * units: {bitStringValue(fuelUnits, fuelAlgorithm) }
+	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}
 	 * offset 17248
 	 */
 	uint16_t veLoadBins[VE_LOAD_COUNT] = {};
