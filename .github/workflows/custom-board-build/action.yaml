@@ -416,6 +416,7 @@ runs:
 
     - name: Quick Rebase
       if: ${{ inputs.push == 'true' }}
+      shell: bash
       run: |
         ${{inputs.rusefi_dir}}/.github/workflows/bin/git-fast-clean-update.sh
 
