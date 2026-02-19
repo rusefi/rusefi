@@ -4,7 +4,7 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 
-# Add them all together
+DDEFS += -DKNOCK_SPECTROGRAM=TRUE
 
 # pretty temporary?
 DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
