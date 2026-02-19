@@ -1,0 +1,6 @@
+#define LUA_SCRIPT_SIZE 8000
+custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
+
+struct_no_prefix page3_s
+lua_script_t luaScript;
+end_struct
