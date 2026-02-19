@@ -76,8 +76,8 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
                 if (configField.isBit()) {
                     if (isUsefulField(configField)) {
-                        writeJavaFieldName(nameWithPrefix, tsPosition);
-                        content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
+                        writeJavaFieldName(nameWithPrefix, tsPosition + iterator.bitState.getByteOffset());
+                        content.append("FieldType.BIT, " + iterator.bitState.getBitIndex() + ")" + terminateField());
                     }
                     return iterator.adjustSize(tsPosition);
                 }
