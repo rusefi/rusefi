@@ -36,6 +36,10 @@ WaveChart waveChart;
 
 #if EFI_SHAFT_POSITION_INPUT
 
+PUBLIC_API_WEAK_SOMETHING_WEIRD Gpio getBoardCamInput(size_t index) {
+  return engineConfiguration->camInputs[index];
+}
+
 TriggerCentral::TriggerCentral() :
 		vvtPosition(),
 		triggerState("TRG")
@@ -421,7 +425,7 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	}
 
 #if EFI_PROD_CODE
-  if (!isBrainPinValid(engineConfiguration->camInputs[engineConfiguration->engineSyncCam]) &&
+  if (!isBrainPinValid(getBoardCamInput(engineConfiguration->engineSyncCam)) &&
       engineConfiguration->vvtMode[engineConfiguration->engineSyncCam] != VVT_MAP_V_TWIN) {
     criticalError("Selected engine sync input not configured: %d", engineConfiguration->engineSyncCam);
   }
@@ -1022,9 +1026,9 @@ void triggerInfo(void) {
 
 
 	for (int camInputIndex = 0; camInputIndex<CAM_INPUTS_COUNT;camInputIndex++) {
-		if (isBrainPinValid(engineConfiguration->camInputs[camInputIndex])) {
+		if (isBrainPinValid(getBoardCamInput(camInputIndex))) {
 			int camLogicalIndex = camInputIndex % CAMS_PER_BANK;
-			efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[camInputIndex]),
+			efiPrintf("VVT input: %s mode %s", hwPortname(getBoardCamInput(camInputIndex)),
 					getVvt_mode_e(engineConfiguration->vvtMode[camLogicalIndex]));
 			efiPrintf("VVT %d event counters: %d/%d",
 					camInputIndex,
@@ -1070,7 +1074,7 @@ void onConfigurationChangeTriggerCallback() {
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->triggerInputPins); i++) {
 		changed |= isConfigurationChanged(triggerInputPins[i]);
-		Gpio pin = engineConfiguration->camInputs[i];
+		Gpio pin = getBoardCamInput(i);
 		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN && isBrainPinValid(pin)) {
 		    criticalError("Please no physical sensors in CAM by MAP mode index=%d %s", i, hwPortname(pin));
 		}
@@ -1267,7 +1271,7 @@ void validateTriggerInputs() {
 		criticalError("First trigger channel not configured while second one is.");
 	}
 
-	if (!isBrainPinValid(engineConfiguration->camInputs[0]) && isBrainPinValid(engineConfiguration->camInputs[2])) {
+	if (!isBrainPinValid(getBoardCamInput(0)) && isBrainPinValid(getBoardCamInput(2))) {
 		criticalError("First bank cam input is required if second bank specified");
 	}
 }
