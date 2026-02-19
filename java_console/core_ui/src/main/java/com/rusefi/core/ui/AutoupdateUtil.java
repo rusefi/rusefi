@@ -2,6 +2,7 @@ package com.rusefi.core.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.autoupdate.ReportedIOException;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,18 +34,44 @@ public class AutoupdateUtil {
         return result;
     }
 
-    private static ProgressView doCreateProgressView(String title) {
+    public static ProgressView doCreateProgressView(String title) {
         if (runHeadless) {
-            return new ProgressView(null, null);
+            return new ProgressView(null, null, null);
         } else {
             FrameHelper frameHelper = new FrameHelper();
             setAppIcon(frameHelper.getFrame());
-            JProgressBar jProgressBar = new JProgressBar();
-
             frameHelper.getFrame().setTitle(title);
+
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+
+            ImageIcon logoIcon = loadIcon("/com/rusefi/logo.png");
+            if (logoIcon != null) {
+                JLabel logoLabel = new JLabel(logoIcon);
+                logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                panel.add(logoLabel);
+                panel.add(Box.createVerticalStrut(20));
+            }
+
+            JLabel branchLabel = new JLabel(BundleUtil.readBundleFullNameNotNull().getUiLabel());
+            branchLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            branchLabel.setFont(branchLabel.getFont().deriveFont(12f));
+            panel.add(branchLabel);
+            panel.add(Box.createVerticalStrut(20));
+
+            JProgressBar jProgressBar = new JProgressBar();
             jProgressBar.setMaximum(ConnectionAndMeta.CENTUM);
-            frameHelper.showFrame(jProgressBar, true);
-            return new ProgressView(frameHelper, jProgressBar);
+            jProgressBar.setStringPainted(true);
+            jProgressBar.setMaximumSize(new Dimension(400, 25));
+            jProgressBar.setPreferredSize(new Dimension(400, 25));
+            jProgressBar.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(jProgressBar);
+
+            frameHelper.getFrame().setSize(480, 400);
+            frameHelper.getFrame().setLocationRelativeTo(null);
+            frameHelper.showFrame(panel, false);
+            return new ProgressView(frameHelper, jProgressBar, panel);
         }
     }
 
@@ -52,26 +79,28 @@ public class AutoupdateUtil {
         ProgressView view = createProgressView(title);
 
         try {
-            ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
-                if (!runHeadless) {
-                    SwingUtilities.invokeLater(() -> view.getProgressBar().setValue(currentProgress));
+            while (true) {
+                try {
+                    ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
+                        if (!runHeadless) {
+                            SwingUtilities.invokeLater(() -> view.getProgressBar().setValue(currentProgress));
+                        }
+                    };
+                    ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
+                    return;
+                } catch (IOException e) {
+                    if (view.getProgressBar() == null) {
+                        throw e;
+                    }
+                    String message = (e instanceof UnknownHostException)
+                        ? "Please fix your internet connection"
+                        : "Error downloading: " + e;
+                    boolean retry = view.showErrorAndWaitForRetry(message);
+                    if (!retry) {
+                        throw new ReportedIOException(e);
+                    }
+                    view.resetForRetry();
                 }
-            };
-
-            ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
-        } catch (IOException e) {
-            if (view.getProgressBar() != null) {
-                String message;
-                if (e instanceof UnknownHostException) {
-                    message = "Please fix your internet connection";
-                } else {
-                    message = "Error downloading: " + e;
-                }
-
-                JOptionPane.showMessageDialog(view.getProgressBar(), message, "Error", JOptionPane.ERROR_MESSAGE);
-                throw new ReportedIOException(e);
-            } else {
-                throw e;
             }
         } finally {
             view.dispose();
