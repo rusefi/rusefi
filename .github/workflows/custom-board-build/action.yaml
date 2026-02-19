@@ -441,35 +441,35 @@ runs:
       if: ${{ contains(inputs.artifacts, 'bin') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.bin
+        name: rusefi_${{env.SHORT_BOARD_NAME}}.bin
         path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.bin
 
     - name: Upload github action srec artifact
       if: ${{ contains(inputs.artifacts, 'srec') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_update.srec
+        name: rusefi_update_${{env.SHORT_BOARD_NAME}}.srec
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi.srec
 
     - name: Upload github action hex artifact
       if: ${{ contains(inputs.artifacts, 'hex') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.hex
+        name: rusefi_${{env.SHORT_BOARD_NAME}}.hex
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.hex
 
     - name: Upload github action list artifact
       if: ${{ contains(inputs.artifacts, 'list') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.list
+        name: rusefi_${{env.PROJECT_BOARD}}.list
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.list
 
     - name: Upload github action map artifact
       if: ${{ contains(inputs.artifacts, 'map') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.map
+        name: rusefi_${{env.PROJECT_BOARD}}.map
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.map
 
     # sad: we have duplication with build-firmware.yaml :(
@@ -485,14 +485,14 @@ runs:
       if: ${{ contains(inputs.artifacts, 'elf') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.txt
+        name: rusefi_${{env.PROJECT_BOARD}}.txt
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.txt
 
     - name: Upload github action elf artifact
       if: ${{ contains(inputs.artifacts, 'elf') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.elf
+        name: rusefi_${{env.PROJECT_BOARD}}.elf
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.elf
 
     - name: Upload github action bootloader bin artifact
