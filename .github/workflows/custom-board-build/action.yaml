@@ -182,7 +182,7 @@ runs:
         # todo: why do we require relative path exactly?
         BOARD_DIR=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_DIR")
         BOARD_META_PATH=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_META_PATH")
-        echo "BOARD_META_PATH=[BOARD_META_PATH]"
+        echo "BOARD_META_PATH=[$BOARD_META_PATH] BOARD_DIR=[$BOARD_DIR]"
         echo "BOARD_DIR=$BOARD_DIR" >> $GITHUB_ENV
         echo "BOARD_META_PATH=$BOARD_META_PATH" >> $GITHUB_ENV
         echo "SHORT_BOARD_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
