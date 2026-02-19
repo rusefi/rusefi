@@ -115,17 +115,10 @@ jobs:
           exit 1
         fi
 
-    - name: Git Pull 1/2
+    - name: Quick Rebase
       if: ${{env.COMMIT == 'true'}}
       run: |
-        git stash
-
-    - name: Git Pull 2/2
-      if: ${{env.COMMIT == 'true'}}
-      run: |
-        echo Fetching only current branch to make things quicker
-        git fetch $(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} | sed 's!/! !')
-        git rebase
+        .github/workflows/bin/git-fast-clean-update.sh
 
     - name: Push fresh triggers.txt
       if: ${{env.COMMIT == 'true'}}

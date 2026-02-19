@@ -414,6 +414,11 @@ runs:
         fi
         echo "[$OUT]"
 
+    - name: Quick Rebase
+      if: ${{ inputs.push == 'true' }}
+      run: |
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/git-fast-clean-update.sh
+
     - name: Push
       if: ${{ inputs.push == 'true' }}
       uses: ad-m/github-push-action@master

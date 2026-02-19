@@ -42,10 +42,11 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub set-date Action"
         git commit -m "Update date" -a 2>&1 | grep -E '(nothing to commit|changed)'
-        git stash
-        echo Fetching only current branch to make things quicker
-        git fetch $(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} | sed 's!/! !')
-        git rebase
+
+    - name: Quick Rebase
+      if: ${{ env.skip != 'true' }}
+      run: |
+        .github/workflows/bin/git-fast-clean-update.sh
 
     - name: Push changed date file
       if: ${{ env.skip != 'true' }}

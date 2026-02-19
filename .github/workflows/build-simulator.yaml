@@ -87,10 +87,11 @@ jobs:
           echo "default tune: looks like something unexpected: [$OUT]"
           exit 1
         fi
-        git stash
-        echo Fetching only current branch to make things quicker
-        git fetch $(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} | sed 's!/! !')
-        git rebase
+
+    - name: Quick Rebase
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master'}}
+      run: |
+        .github/workflows/bin/git-fast-clean-update.sh
 
     - name: Push fresh default tune
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.COMMIT == 'true'}}
