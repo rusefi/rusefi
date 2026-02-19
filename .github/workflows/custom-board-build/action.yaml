@@ -175,6 +175,7 @@ runs:
         echo "DEFAULT_TUNE_OUTPUT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.sim_output}})/" >> $GITHUB_ENV
         source ${{inputs.rusefi_dir}}/firmware/config/boards/common_script_read_meta_env.inc "${{inputs.meta_info}}"
         cd ${{inputs.rusefi_dir}}/firmware
+        # BOARD_DIR value is assigned within sourced common_script_read_meta_env.inc based on meta_info location
         ABSOLUTE_BOARD_DIR=${{github.workspace}}/$BOARD_DIR
         echo "ABSOLUTE_BOARD_DIR=[$ABSOLUTE_BOARD_DIR]"
         # sometimes absolute path is simpler
