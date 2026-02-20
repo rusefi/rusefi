@@ -160,7 +160,9 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 				// In case this is a rising event, replace the following fall event with the rising as well
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
 					eventAngles[eventIndex] = angle;
-					eventAngles[eventIndex + 1] = angle;
+					// How many events away is the next event on this channel?
+					int nextCount = shape->findNextChannelEvent(triggerDefinitionIndex) - triggerDefinitionIndex;
+					eventAngles[eventIndex + nextCount] = angle;
 				}
 			} else {
 				eventAngles[eventIndex] = angle;

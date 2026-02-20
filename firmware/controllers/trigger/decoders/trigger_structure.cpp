@@ -416,6 +416,17 @@ uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t ta
 	return left;
 }
 
+int TriggerWaveform::findNextChannelEvent(size_t index) {
+#if EFI_UNIT_TEST
+	for (int i = index + 1; i < efi::size(triggerSignalIndeces); i++) {
+		if (triggerSignalIndeces[index] == triggerSignalIndeces[i]) {
+			return i;
+		}
+	}
+#endif
+	return index;
+}
+
 void TriggerWaveform::setShapeDefinitionError(bool value) {
 	shapeDefinitionError = value;
 }
