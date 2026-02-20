@@ -132,6 +132,9 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 	assertAngleRange(triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE2);
 	efiAssertVoid(ObdCode::CUSTOM_TRIGGER_CYCLE, getTriggerCentral()->engineCycleEventCount != 0, "zero engineCycleEventCount");
 
+	float lastAnglePrimary = 0.0;
+	float lastAngleSecondary = 0.0;
+
 	for (size_t eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
@@ -156,11 +159,20 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 			if (shape->useOnlyRisingEdges) {
 				criticalAssertVoid(triggerDefinitionIndex < triggerShapeLength, "trigger shape fail");
 				assertIsInBounds(triggerDefinitionIndex, shape->isRiseEvent, "isRise");
-
-				// In case this is a rising event, replace the following fall event with the rising as well
+				bool primary = shape->getWheel(triggerDefinitionIndex) == TriggerWheel::T_PRIMARY ? true : false;
+				// In case this is a rising event, store the angle to be used for the next falling event.
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
 					eventAngles[eventIndex] = angle;
-					eventAngles[eventIndex + 1] = angle;
+					if (primary) {
+						lastAnglePrimary = angle;
+					} else {
+						lastAngleSecondary = angle;
+					}
+					// If this is a falling event, apply the angle of the last rising event on this channel.
+				} else if (primary) {
+					eventAngles[eventIndex] = lastAnglePrimary;
+				} else {
+					eventAngles[eventIndex] = lastAngleSecondary;
 				}
 			} else {
 				eventAngles[eventIndex] = angle;

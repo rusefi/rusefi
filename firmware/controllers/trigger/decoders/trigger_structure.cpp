@@ -416,6 +416,13 @@ uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t ta
 	return left;
 }
 
+TriggerWheel TriggerWaveform::getWheel(size_t index) {
+#if EFI_UNIT_TEST
+	return triggerSignalIndeces[index];
+#endif
+	return TriggerWheel::T_PRIMARY;
+}
+
 void TriggerWaveform::setShapeDefinitionError(bool value) {
 	shapeDefinitionError = value;
 }
