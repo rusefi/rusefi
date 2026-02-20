@@ -102,8 +102,14 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	}
 	fprintf(fp, "# end of meta section\n");
 
+	int zeroCount = 0;
+
 	for (size_t i = 0; i < shape->getLength(); i++) {
 		int triggerDefinitionCoordinate = (shape->getTriggerWaveformSynchPointIndex() + i) % shape->getSize();
+
+		if (triggerFormDetails->eventAngles[i] == 0.0f && shape->triggerSignalStates[triggerDefinitionCoordinate] == TriggerValue::FALL){
+			zeroCount++;
+		}
 
 		fprintf(fp, "event %d %d %d %.2f %f\n",
 				i,
@@ -113,4 +119,11 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 				initState.gapRatio[i]
 				);
 	}
+
+  if (tt == trigger_type_e::TT_TRI_TACH) {
+    // wow, something goes on here?!
+	  ASSERT_LE(zeroCount, 2);
+  } else {
+	  ASSERT_LE(zeroCount, 1);
+  }
 }
