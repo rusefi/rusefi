@@ -34,12 +34,14 @@ Release template (copy/paste this for new release):
  - uaefi121: pin 43 conflict with green LED #8884
  - super-uaefi: high side 43 conflict with green LED
  - TS: annoying numeric values after proper named values #8898
+ - true/false? is that French? #8530
 
 ### Added
  - FatFS update to R0.16
  - WBO: update from sd #8870
  - Switch to 7z for ini file compression on MSD #8895
  - stm32: flash: abort erase/write in case of undervoltage #9137
+ - freedom units progress# 9029
 
 ### Breaking Changes
  - CAN bitrare 666k #8784
