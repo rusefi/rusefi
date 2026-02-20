@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - super-uaefi: high side 43 conflict with green LED
  - TS: annoying numeric values after proper named values #8898
  - true/false? is that French? #8530
+ - STM32: option bytes corruption when power is cut during settings save to flash #8926
 
 ### Added
  - FatFS update to R0.16
