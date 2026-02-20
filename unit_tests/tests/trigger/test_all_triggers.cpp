@@ -120,5 +120,5 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 				);
 	}
 
-	ASSERT_LE(zeroCount, 1);
+  ASSERT_LE(zeroCount, 1);
 }
