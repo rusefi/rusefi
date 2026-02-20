@@ -120,10 +120,5 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 				);
 	}
 
-  if (tt == trigger_type_e::TT_TRI_TACH) {
-    // wow, something goes on here?!
-	  ASSERT_LE(zeroCount, 2);
-  } else {
-	  ASSERT_LE(zeroCount, 1);
-  }
+	ASSERT_LE(zeroCount, 1);
 }
