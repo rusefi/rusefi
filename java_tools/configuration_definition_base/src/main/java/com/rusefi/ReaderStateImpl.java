@@ -373,13 +373,7 @@ public class ReaderStateImpl implements ReaderState {
         }
 
         if (cf == null) {
-            if (ConfigFieldImpl.isPreprocessorDirective(line)) {
-                cf = new ConfigFieldImpl(state, "", line, null,
-                        ConfigFieldImpl.DIRECTIVE_T, new int[0], null, false, false,
-                        null, null);
-            } else {
-                throw new IllegalStateException("Cannot parse line [" + line + "]");
-            }
+            throw new IllegalStateException("Cannot parse line [" + line + "]");
         }
 
         if (state.isStackEmpty())
@@ -408,8 +402,6 @@ public class ReaderStateImpl implements ReaderState {
                 element.setFromIterate(cf.getName(), i);
                 structure.addTs(element);
             }
-        } else if (cf.isDirective()) {
-            structure.addTs(cf);
         } else {
             structure.addBoth(cf);
         }
