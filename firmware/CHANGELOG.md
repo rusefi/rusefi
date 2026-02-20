@@ -41,7 +41,7 @@ Release template (copy/paste this for new release):
  - WBO: update from sd #8870
  - Switch to 7z for ini file compression on MSD #8895
  - stm32: flash: abort erase/write in case of undervoltage #9137
- - freedom units progress# 9029
+ - freedom units progress #9029
 
 ### Breaking Changes
  - CAN bitrare 666k #8784
