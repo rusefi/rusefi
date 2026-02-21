@@ -4,11 +4,17 @@ import com.rusefi.VariableRegistry;
 
 import static com.rusefi.trigger.TriggerWheelInfo.DEFAULT_WORK_FOLDER;
 
+import com.devexperts.logging.Logging;
+import java.io.IOException;
+
 public class TriggerWheelTSLogic {
+    private final static Logging log = Logging.getLogging(TriggerWheelTSLogic.class);
 
     private static final String TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION = "TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION";
     private static final String TRIGGER_TYPE_WITH_SECOND_WHEEL = "TRIGGER_TYPE_WITH_SECOND_WHEEL";
     private static final String TRIGGER_CRANK_BASED = "TRIGGER_CRANK_BASED";
+
+    TriggerWheelInit triggerWheelInit = new TriggerWheelInit();
 
     public static void main(String[] args) {
         // sandbox code
@@ -45,7 +51,16 @@ public class TriggerWheelTSLogic {
                 triggerTypesCrankBased.append("trigger_type == ").append(wheelInfo.getId());
             }
 
+            triggerWheelInit.process(wheelInfo);
         });
+
+        try {
+            triggerWheelInit.write();
+        } catch (IOException e) {
+            log.error("unexpected", e);
+            e.printStackTrace();
+            System.exit(-1);
+        }
 
         /*
          * these are templated into tunerstudio.template.ini file
