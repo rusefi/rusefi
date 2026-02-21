@@ -12,8 +12,6 @@
 #include "dodge_neon.h"
 #include "ford_1995_inline_6.h"
 #include "event_queue.h"
-#include "trigger_mazda.h"
-#include "trigger_chrysler.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "spark_logic.h"

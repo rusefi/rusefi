@@ -34,6 +34,14 @@ inline angle_t wrapAngleMethod(angle_t param, const char *msg = "", ObdCode code
 	return param;
 }
 
+struct ComplexTriggerSignal {
+  TriggerWheel wheel;
+  float angle;
+  float width;
+	int count;
+	float lastAngle;
+};
+
 class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
@@ -254,6 +262,14 @@ private:
 	 * this is part of performance optimization
 	 */
 	operation_mode_e operationMode;
+
+	void setEvents(const ComplexTriggerSignal* events, size_t length);
+
+	void addPendingFall(ComplexTriggerSignal* pendingFall, angle_t angle);
+
+	void initializePre(trigger_type_e type);
+
+	void initializePost(trigger_type_e type, bool isCrankWheel);
 };
 
 /**
@@ -269,3 +285,5 @@ public:
 	 */
 	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
+
+PUBLIC_API_WEAK void customTrigger(operation_mode_e triggerOperationMode, TriggerWaveform *s, trigger_type_e type);
