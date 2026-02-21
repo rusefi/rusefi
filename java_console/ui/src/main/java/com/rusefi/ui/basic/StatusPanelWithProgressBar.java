@@ -56,6 +56,6 @@ public class StatusPanelWithProgressBar implements UpdateOperationCallbacks {
 
     @Override
     public void updateProgress(int percent) {
-        progressBar.setValue(percent);
+        SwingUtilities.invokeLater(() -> progressBar.setValue(percent));
     }
 }
