@@ -329,6 +329,9 @@ public class BinaryProtocol {
             ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
             if (image.isEmpty()) {
+                // Drop any stale bytes (e.g. a duplicate error code left in the buffer by a prior failed CRC-check command)
+                // prior 2026 we have a bug sending duplicate error codes from validateOffsetCount, see #9145
+                dropPending(stream);
                 image = readFullImageFromController(arguments, meta);
                 if (image.isEmpty())
                     return;
