@@ -1060,6 +1060,9 @@ float getOutputValueByHash(const int hash) {
 // lua.fuelMult
 		case -1390672637:
 			return engine->engineState.lua.fuelMult;
+// lua.engineTorque
+		case 958239307:
+			return engine->engineState.lua.engineTorque;
 // lua.clutchUpState
 		case -427776066:
 			return engine->engineState.lua.clutchUpState;
