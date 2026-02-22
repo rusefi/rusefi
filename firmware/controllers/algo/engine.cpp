@@ -291,9 +291,7 @@ extern bool kAcRequestState;
 }
 
 Engine::Engine() {
-	// Everything else has default initializers setup in generated file
-	engineState.lua.fuelMult = 1;
-	ignitionState.luaTimingMult = 1;
+	resetLua();
 }
 
 int Engine::getGlobalConfigurationVersion() const {
