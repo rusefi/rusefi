@@ -3,6 +3,7 @@ struct_no_prefix engine_state_s
 	struct LuaAdjustments
 		float fuelAdd;Lua: Fuel add;"g", 1, 0, 0, 1, 3
 		float fuelMult;Lua: Fuel mult;
+		float engineTorque;Lua: torque
 
 		bit clutchUpState
 		bit brakePedalState
