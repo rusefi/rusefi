@@ -275,10 +275,10 @@ runs:
       shell: bash
       run: |
         : Add Config to Commit Regardless of firmware build status
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
         OUT=$(git commit -m "Quick Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Configs: looks like nothing to commit"
@@ -371,7 +371,7 @@ runs:
         echo "Current directory: $PWD"
         ls ${{inputs.sim_output}}
         git config advice.addIgnoredFile false
-        git add ${{inputs.sim_output}}*msq
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh '${{inputs.sim_output}}*msq'
         OUT=$(git commit -m "Auto-generated Default Tune (custom board)" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Tune: looks like nothing to commit"
@@ -384,10 +384,10 @@ runs:
       shell: bash
       run: |
         : Add Config to Commit
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
         : # TODO handle extra headers but only if those exist
         : #if [ -d firmware ]; then
         : #  git add firmware/extra*
@@ -405,8 +405,9 @@ runs:
       run: |
         : Add Connectors to Commit
         if [ -d connectors ]; then
-          git add connectors/*
+          ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh 'connectors/*'
         fi
+        git status
         OUT=$(git commit -m "Auto-generated Connectors" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Connectors: looks like nothing to commit"
