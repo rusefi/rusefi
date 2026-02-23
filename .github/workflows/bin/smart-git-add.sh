@@ -2,11 +2,12 @@
 
 # Check if an argument is provided
 if [ -z "$1" ]; then
-    echo "Usage: $0 <pattern>"
+    echo "Usage: $0 <pattern> [numberOfChangedLinesThreshold]"
     exit 1
 fi
 
 pattern=$1
+threshold=$2
 
 # Expand the pattern and iterate over files
 # We use a loop to handle potential multiple files matching the pattern
@@ -67,14 +68,22 @@ get_changed_lines() {
 for file in $pattern; do
     if [ -f "$file" ]; then
         total_changed=$(get_changed_lines "$file")
-        echo "adding $file file into commit: $total_changed lines changed"
-        git add "$file"
+        if [ -n "$threshold" ] && [ "$total_changed" -lt "$threshold" ]; then
+            echo "skipping $file: $total_changed lines changed (threshold $threshold)"
+        else
+            echo "adding $file file into commit: $total_changed lines changed"
+            git add "$file"
+        fi
     elif [ -d "$file" ]; then
         # If it's a directory, find all files and process them
         find "$file" -type f | while read -r subfile; do
             total_changed=$(get_changed_lines "$subfile")
-            echo "adding $subfile file into commit: $total_changed lines changed"
-            git add "$subfile"
+            if [ -n "$threshold" ] && [ "$total_changed" -lt "$threshold" ]; then
+                echo "skipping $subfile: $total_changed lines changed (threshold $threshold)"
+            else
+                echo "adding $subfile file into commit: $total_changed lines changed"
+                git add "$subfile"
+            fi
         done
     fi
 done
