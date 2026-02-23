@@ -1387,7 +1387,7 @@
 #define lua_gauge_e_LUA_GAUGE_7 6
 #define lua_gauge_e_LUA_GAUGE_8 7
 #define lua_gauge_meaning_e_auto_enum 0="LUA_GAUGE_LOWER_BOUND",1="LUA_GAUGE_UPPER_BOUND"
-#define lua_gauge_meaning_e_enum "Lower Bound", "Upper Bound"
+#define lua_gauge_meaning_e_enum "greater than", "less than"
 #define lua_gauge_meaning_e_LUA_GAUGE_LOWER_BOUND 0
 #define lua_gauge_meaning_e_LUA_GAUGE_UPPER_BOUND 1
 #define LUA_PWM_COUNT 8
@@ -1556,7 +1556,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1107241274
+#define SIGNATURE_HASH 1376176281
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2154,7 +2154,7 @@
 #define ts_show_wbo_can_menu true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2026.02.22.f407-discovery.1107241274"
+#define TS_SIGNATURE "rusEFI master.2026.02.23.f407-discovery.1376176281"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
