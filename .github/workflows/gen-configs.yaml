@@ -57,15 +57,15 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-configs Action"
-        git add firmware/tunerstudio/generated
-        git add firmware/controllers/generated
-        git add 'firmware/*/*generated*.cpp'
-        git add 'firmware/*/*generated*.h'
-        git add 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
-        git add 'firmware/console/binary/generated/*.ini'
-        git add 'firmware/controllers/lua/generated/*.md'
-        git add *.java
-        git add *_generated.h
+        .github/workflows/bin/smart-git-add.sh firmware/tunerstudio/generated
+        .github/workflows/bin/smart-git-add.sh firmware/controllers/generated
+        .github/workflows/bin/smart-git-add.sh 'firmware/*/*generated*.cpp'
+        .github/workflows/bin/smart-git-add.sh 'firmware/*/*generated*.h'
+        .github/workflows/bin/smart-git-add.sh 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
+        .github/workflows/bin/smart-git-add.sh 'firmware/console/binary/generated/*.ini'
+        .github/workflows/bin/smart-git-add.sh 'firmware/controllers/lua/generated/*.md'
+        .github/workflows/bin/smart-git-add.sh '*.java'
+        .github/workflows/bin/smart-git-add.sh '*_generated.h'
         git status
         OUT=$(git commit -m "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit\|no changes added'; then
@@ -99,7 +99,7 @@ jobs:
         git status
         git remote -v
         echo See https://github.com/rusefi/rusefi/issues/2446
-        git add unit_tests/triggers.txt
+        .github/workflows/bin/smart-git-add.sh unit_tests/triggers.txt
         git status
         OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
         echo "$OUT"
