@@ -1834,7 +1834,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	custom lua_gauge_e  1 bits, S08, @OFFSET@, [0:2], @@lua_gauge_e_enum@@
 	lua_gauge_e nitrousLuaGauge;
 
-	#define lua_gauge_meaning_e_enum "Lower Bound", "Upper Bound"
+	#define lua_gauge_meaning_e_enum "greater than", "less than"
 	custom lua_gauge_meaning_e  1 bits, S08, @OFFSET@, [3:3], @@lua_gauge_meaning_e_enum@@
 	lua_gauge_meaning_e nitrousLuaGaugeMeaning;
 
