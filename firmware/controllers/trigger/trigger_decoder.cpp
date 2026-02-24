@@ -274,6 +274,11 @@ void PrimaryTriggerDecoder::onNotEnoughTeeth(int /*actual*/, int /*expected*/) {
 		currentCycle.eventCount[1]);
 }
 
+#if EFI_UNIT_TEST
+// weird: we count trigger error on next sync, but if we never sync - counter does not increase?!
+int tooManyTeethCounter = 0;
+#endif // EFI_UNIT_TEST
+
 void PrimaryTriggerDecoder::onTooManyTeeth(int /*actual*/, int /*expected*/) {
 	warning(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, "primary trigger error: too many teeth between sync points: expected %d/%d got %d/%d",
 			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY),
@@ -644,6 +649,10 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		setShaftSynchronized(false);
 
 		return unexpected;
+	} else if (!isValidIndex(triggerShape)) {
+#if EFI_UNIT_TEST
+		tooManyTeethCounter++;
+#endif // EFI_UNIT_TEST
 	}
 
 	triggerStateIndex = currentCycle.current_index;
