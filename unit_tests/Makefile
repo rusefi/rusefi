@@ -9,7 +9,7 @@ NUMJOBS=${NUMJOBS:-" -j4 "}
 MAKEFLAGS += ${NUMJOBS}
 
 # less disk, more RAM
-MAKEFLAGS += -pipe
+# MAKEFLAGS += -pipe
 
 PROJECT_DIR = ../firmware
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests

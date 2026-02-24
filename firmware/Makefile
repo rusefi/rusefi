@@ -187,7 +187,7 @@ NUMJOBS=${NUMJOBS:-" -j4 "}
 MAKEFLAGS += ${NUMJOBS} -r
 
 # less disk, more RAM
-MAKEFLAGS += -pipe
+# MAKEFLAGS += -pipe
 
 #
 # Architecture or project specific options
