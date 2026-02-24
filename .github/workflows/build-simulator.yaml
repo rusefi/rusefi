@@ -73,8 +73,8 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-default-tune Action"
-        git add "simulator/generated/*msq"
-        git add "simulator/generated/canned-tunes/*md"
+        .github/workflows/bin/smart-git-add.sh "simulator/generated/*msq" 4
+        .github/workflows/bin/smart-git-add.sh "simulator/generated/canned-tunes/*md" 4
         OUT=$(git commit -m "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit\|no changes added'; then
           echo "default tune: looks like nothing to commit"
