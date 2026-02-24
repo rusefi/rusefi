@@ -186,7 +186,7 @@ endif
 # use -j4 unless some value was specified
 NUMJOBS=${NUMJOBS:-" -j4 "}
 
-MAKEFLAGS += ${NUMJOBS}
+MAKEFLAGS += ${NUMJOBS} -r
 
 #
 # Architecture or project specific options
