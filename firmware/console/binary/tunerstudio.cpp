@@ -214,13 +214,11 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 }
 
 // Validate whether the specified offset and count would cause an overrun in the tune.
-// Returns true if an overrun would occur.
-static bool validateOffsetCount(size_t page, size_t offset, size_t count, TsChannelBase* tsChannel) {
+// Returns true if an overrun would occur. Callers are responsible for sending the error code.
+static bool validateOffsetCount(size_t page, size_t offset, size_t count) {
 	size_t allowedSize = getTunerStudioPageSize(page);
 	if (offset + count > allowedSize) {
 		efiPrintf("TS: Project mismatch? Too much configuration requested %d+%d>%d", offset, count, allowedSize);
-		tunerStudioError(tsChannel, "ERROR: out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "bad_offset");
 		return true;
 	}
 
@@ -312,7 +310,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		page, offset, count, tsState.outputChannelsCommandCounter);
 
 
-	if (validateOffsetCount(page, offset, count, tsChannel)) {
+	if (validateOffsetCount(page, offset, count)) {
 		tunerStudioError(tsChannel, "ERROR: WR out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
@@ -359,7 +357,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
-	if (validateOffsetCount(page, offset, count, tsChannel)) {
+	if (validateOffsetCount(page, offset, count)) {
 		tunerStudioError(tsChannel, "ERROR: CRC out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
@@ -427,7 +425,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
-	if (validateOffsetCount(page, offset, count, tsChannel)) {
+	if (validateOffsetCount(page, offset, count)) {
 		tunerStudioError(tsChannel, "ERROR: RD out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;

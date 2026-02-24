@@ -102,10 +102,10 @@ TEST(TunerstudioCommands, outOfRangePageReadSendsExactlyOneError) {
 	TunerStudio ts;
 	ts.handlePageReadCommand(&channel, TS_PAGE_SETTINGS, 0, OVERSIZED_COUNT);
 
-	EXPECT_EQ(channel.writeIdx, 2 * TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
 	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OUT_OF_RANGE);
-	// Bug #9145: errorOutOfRange counter is incremented twice per out-of-range command; should be 1.
-	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 2);
+
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
 }
 
 TEST(TunerstudioCommands, outOfRangeCrc32CheckSendsExactlyOneError) {
@@ -116,10 +116,10 @@ TEST(TunerstudioCommands, outOfRangeCrc32CheckSendsExactlyOneError) {
 	TunerStudio ts;
 	ts.handleCrc32Check(&channel, TS_PAGE_SETTINGS, 0, OVERSIZED_COUNT);
 
-	EXPECT_EQ(channel.writeIdx, 2 * TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
 	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OUT_OF_RANGE);
-	// Bug #9145: errorOutOfRange counter is incremented twice per out-of-range command; should be 1.
-	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 2);
+
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
 }
 
 TEST(TunerstudioCommands, outOfRangeWriteChunkSendsExactlyOneError) {
@@ -131,8 +131,8 @@ TEST(TunerstudioCommands, outOfRangeWriteChunkSendsExactlyOneError) {
 	TunerStudio ts;
 	ts.handleWriteChunkCommand(&channel, TS_PAGE_SETTINGS, 0, OVERSIZED_COUNT, dummy);
 
-	EXPECT_EQ(channel.writeIdx, 2 * TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
 	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OUT_OF_RANGE);
-	// Bug #9145: errorOutOfRange counter is incremented twice per out-of-range command; should be 1.
-	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 2);
+
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
 }
