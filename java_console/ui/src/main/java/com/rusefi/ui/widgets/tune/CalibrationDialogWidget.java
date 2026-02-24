@@ -18,6 +18,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Orchestrates layout of calibration dialogs by composing UI widgets
@@ -31,6 +32,12 @@ public class CalibrationDialogWidget {
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
+    /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
+    private Consumer<ConfigurationImage> onConfigChange;
+
+    public void setOnConfigChange(Consumer<ConfigurationImage> onConfigChange) {
+        this.onConfigChange = onConfigChange;
+    }
 
     /**
      * Tracks a field row that has visibility or enabled expressions to re-evaluate on config changes.
@@ -230,6 +237,9 @@ public class CalibrationDialogWidget {
         }
         contentPane.revalidate();
         contentPane.repaint();
+        if (onConfigChange != null) {
+            onConfigChange.accept(workingImage);
+        }
     }
 
     private void applyExpressionState(ExpressionRow exprRow, IniFileModel iniFileModel, ConfigurationImage ci) {
@@ -245,19 +255,9 @@ public class CalibrationDialogWidget {
         }
     }
 
+    //TODO: inline
     private Boolean evaluateFieldExpression(String expression, IniFileModel iniFileModel, ConfigurationImage ci) {
-        Set<String> varNames = ExpressionEvaluator.extractVariables(expression);
-        Map<String, Double> context = new HashMap<>();
-        for (String varName : varNames) {
-            Optional<IniField> varField = iniFileModel.findIniField(varName);
-            if (varField.isPresent()) {
-                Double value = ci.readNumericValue(varField.get());
-                if (value != null) {
-                    context.put(varName, value);
-                }
-            }
-        }
-        return ExpressionEvaluator.evaluateBooleanExpression(expression, context);
+        return ExpressionEvaluator.evaluateBooleanExpression(expression, iniFileModel, ci);
     }
 
     private static void setComponentsEnabled(Container container, boolean enabled) {

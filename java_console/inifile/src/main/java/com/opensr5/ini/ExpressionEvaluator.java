@@ -1,14 +1,18 @@
 package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.field.IniField;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +30,8 @@ import java.util.regex.Pattern;
  * <p>
  * Does NOT support:
  * - Function calls (e.g., stringValue(), bitStringValue())
+ * TODO:
+ * we should considering moving this to a factory-thing, since we are passing and evaluating too many times the same ini file/configuration image
  */
 public class ExpressionEvaluator {
     private static final Logging log = Logging.getLogging(ExpressionEvaluator.class);
@@ -347,6 +353,28 @@ public class ExpressionEvaluator {
         }
 
         return null;
+    }
+
+    /**
+     * Convenience overload: resolves variable values from an INI model and config image, then evaluates.
+     *
+     * @param expression the expression to evaluate
+     * @param ini the INI file model used to look up field offsets
+     * @param ci the configuration image to read field values from
+     * @return true/false based on the expression, or null if it cannot be evaluated
+     */
+    @Nullable
+    public static Boolean evaluateBooleanExpression(String expression, IniFileModel ini, ConfigurationImage ci) {
+        Set<String> varNames = extractVariables(expression);
+        Map<String, Double> context = new HashMap<>();
+        for (String varName : varNames) {
+            Optional<IniField> field = ini.findIniField(varName);
+            if (field.isPresent()) {
+                Double value = ci.readNumericValue(field.get());
+                if (value != null) context.put(varName, value);
+            }
+        }
+        return evaluateBooleanExpression(expression, context);
     }
 
     /**
