@@ -38,6 +38,7 @@ extern PinRepository pinRepository;
 extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
+extern bool hasRememberedConfiguration;
 
 EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
@@ -128,6 +129,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	}
 
 	activeConfiguration = engine_configuration_s{};
+	hasRememberedConfiguration = false;
 
 	enginePins.reset();
 	enginePins.unregisterPins();

@@ -77,8 +77,9 @@ std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange
  * This is useful to compare old/current (activeConfiguration) and new/future (engineConfiguration) configurations in order to apply new settings.
  *
  * todo: place this field next to 'engineConfiguration'?
+ * todo: not great that it's a global variable which we have to clean, move to 'engine' somewhere?
  */
-static bool hasRememberedConfiguration = false;
+bool hasRememberedConfiguration = false;
 #if EFI_ACTIVE_CONFIGURATION_IN_FLASH
 #include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
