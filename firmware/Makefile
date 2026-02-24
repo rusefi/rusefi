@@ -182,11 +182,12 @@ ifeq ($(USE_EXCEPTIONS_STACKSIZE),)
   USE_EXCEPTIONS_STACKSIZE = 0x1000
 endif
 
-# and this is not working for be :( See https://github.com/rusefi/rusefi/issues/638
 # use -j4 unless some value was specified
 NUMJOBS=${NUMJOBS:-" -j4 "}
-
 MAKEFLAGS += ${NUMJOBS} -r
+
+# less disk, more RAM
+MAKEFLAGS += -pipe
 
 #
 # Architecture or project specific options

@@ -4,6 +4,12 @@
 #
 
 MAKEFLAGS += -r
+# use -j4 unless some value was specified
+NUMJOBS=${NUMJOBS:-" -j4 "}
+MAKEFLAGS += ${NUMJOBS}
+
+# less disk, more RAM
+MAKEFLAGS += -pipe
 
 PROJECT_DIR = ../firmware
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
