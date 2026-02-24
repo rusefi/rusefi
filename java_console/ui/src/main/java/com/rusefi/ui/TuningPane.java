@@ -37,6 +37,8 @@ public class TuningPane {
             right.update(subMenu.getKey());
         });
 
+        right.setOnConfigChange(left::refreshExpressions);
+
         content.add(toolbar, BorderLayout.NORTH);
         content.add(splitPane, BorderLayout.CENTER);
     }
