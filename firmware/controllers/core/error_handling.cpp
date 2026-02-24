@@ -490,6 +490,10 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 }
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
+#if EFI_UNIT_TEST
+bool silentUnitTest = true; // performance optimization since console output is pricey
+#endif // EFI_UNIT_TEST
+
 /**
  * @returns TRUE in case there were warnings recently
  */
@@ -519,7 +523,9 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 #if EFI_SIMULATOR || EFI_PROD_CODE
 	efiPrintf("WARNING: %s", warningBuffer);
 #else
-	printf("WARNING: %s\n", warningBuffer);
+	if (!silentUnitTest) {
+		printf("WARNING: %s\n", warningBuffer);
+	}
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 	return false;
