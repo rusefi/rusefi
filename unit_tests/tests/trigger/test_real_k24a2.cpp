@@ -1,25 +1,15 @@
 #include "pch.h"
-
-#include "logicdata_csv_reader.h"
+#include "real_trigger_helper.h"
 
 static void doTest(const char* testFile, int expectedRpm) {
-	CsvReader reader(/* triggerCount */ 1, /* vvtCount */ 0);
-
-	reader.open(testFile);
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
-	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(trigger_type_e::TT_HONDA_K_CRANK_12_1);
+	RealTriggerHelper helper;
+	helper.runTest(testFile, trigger_type_e::TT_HONDA_K_CRANK_12_1);
 
-	while (reader.haveMore()) {
-		reader.processLine(&eth);
-	}
-
-	ASSERT_EQ(0u, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-	ASSERT_EQ(expectedRpm, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	ASSERT_EQ(0u, helper.eth.recentWarnings()->getCount()) << "warningCounter#vwRealCranking";
+	ASSERT_EQ(expectedRpm, round(Sensor::getOrZero(SensorType::Rpm)));
 }
 
 TEST(realk24, crankingNoPlugs1) {
