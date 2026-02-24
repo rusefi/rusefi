@@ -1,11 +1,15 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GroupMenuModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.MenuItem;
 import com.opensr5.ini.MenuModel;
 import com.opensr5.ini.SubMenuModel;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
@@ -18,7 +22,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Enumeration;
+import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 import static com.rusefi.core.ui.AutoupdateUtil.trueLayoutAndRepaint;
@@ -37,12 +42,38 @@ public class MainMenuTreeWidget {
     private String lastSearchSelectedKey = null;
     private Consumer<SubMenuModel> onSelect;
 
+    private final UIContext uiContext;
+    /** Nodes whose SubMenuModel has at least one enable/visible expression. */
+    private final List<ExpressionEntry> expressionEntries = new ArrayList<>();
+    /** Nodes currently evaluated as disabled (expression false). Used by renderer and click guard. */
+    private final Set<DefaultMutableTreeNode> disabledNodes = new HashSet<>();
+    /** Keys of currently disabled submenus for a quick lookup during click handling. */
+    private final Set<String> disabledKeys = new HashSet<>();
+
+    private static class ExpressionEntry {
+        final DefaultMutableTreeNode node;
+        final SubMenuModel subMenu;
+
+        ExpressionEntry(DefaultMutableTreeNode node, SubMenuModel subMenu) {
+            this.node = node;
+            this.subMenu = subMenu;
+        }
+    }
+
     public MainMenuTreeWidget(UIContext uiContext) {
+        this.uiContext = uiContext;
         IniFileModel model = uiContext.iniFileState.getIniFileModel();
         // todo: do we fail if UI is re-launchd? with tuning tab active?
         if (model != null) {
             populate(model);
         }
+
+        // Refresh the disabled state as soon as the tune is read from the ECU.
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (isConnected) {
+                SwingUtilities.invokeLater(this::refreshExpressions);
+            }
+        });
 
         tree = new JTree(root);
         tree.setToggleClickCount(1);
@@ -97,6 +128,10 @@ public class MainMenuTreeWidget {
                         setIcon(idleIcon);
                     } else if ("Cranking".equals(name)) {
                         setIcon(crankingIcon);
+                    }
+
+                    if (disabledNodes.contains(node)) {
+                        setForeground(UIManager.getColor("Label.disabledForeground"));
                     }
                 }
                 return this;
@@ -189,8 +224,8 @@ public class MainMenuTreeWidget {
                             // Make sure the tree is laid out so it knows its new size after expansion
                             trueLayoutAndRepaint(tree);
 
-                            // call onSelect
-                            if (onSelect != null) {
+                            // call onSelect only if not disabled
+                            if (onSelect != null && !disabledKeys.contains(subMenuToSelect.getKey())) {
                                 onSelect.accept(subMenuToSelect);
                                 lastSearchSelectedKey = subMenuToSelect.getKey();
                             }
@@ -217,6 +252,10 @@ public class MainMenuTreeWidget {
                     return;
                 }
                 lastSearchSelectedKey = null;
+                // Skip disabled items
+                if (disabledKeys.contains(selectedSubMenu.getKey())) {
+                    return;
+                }
                 onSelect.accept(selectedSubMenu);
             }
             tree.scrollPathToVisible(path);
@@ -321,9 +360,69 @@ public class MainMenuTreeWidget {
             }
         } else if (item instanceof SubMenuModel) {
             SubMenuModel subMenu = (SubMenuModel) item;
-            parent.add(new DefaultMutableTreeNode(subMenu));
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(subMenu);
+            parent.add(node);
+            if (subMenu.getEnableExpression() != null || subMenu.getVisibleExpression() != null) {
+                expressionEntries.add(new ExpressionEntry(node, subMenu));
+            }
         }
     }
+
+    /**
+     * Evaluates all enable/visible expressions against the current ECU configuration and updates
+     * the disabled state of menu items. Called at connection time via the ConnectionStatusLogic listener.
+     */
+    public void refreshExpressions() {
+        if (expressionEntries.isEmpty()) return;
+
+        IniFileModel iniFileModel = uiContext.iniFileState.getIniFileModel();
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        ConfigurationImage ci = (bp != null) ? bp.getControllerConfiguration() : null;
+
+        if (iniFileModel == null || ci == null) return;
+        refreshExpressions(iniFileModel, ci);
+    }
+
+    /**
+     * Evaluates all enable/visible expressions against the provided config image and updates
+     * the disabled state of menu items. Use this variant when evaluating against a working
+     * (locally edited) image rather than the last-read ECU image.
+     * Small progress of #9159
+     */
+    public void refreshExpressions(ConfigurationImage ci) {
+        if (expressionEntries.isEmpty()) return;
+
+        IniFileModel iniFileModel = uiContext.iniFileState.getIniFileModel();
+        if (iniFileModel == null || ci == null) return;
+        refreshExpressions(iniFileModel, ci);
+    }
+
+    private void refreshExpressions(IniFileModel iniFileModel, ConfigurationImage ci) {
+        disabledNodes.clear();
+        disabledKeys.clear();
+
+        for (ExpressionEntry entry : expressionEntries) {
+            if (isDisabledByExpressions(entry.subMenu, iniFileModel, ci)) {
+                disabledNodes.add(entry.node);
+                disabledKeys.add(entry.subMenu.getKey());
+            }
+        }
+
+        tree.repaint();
+    }
+
+    private boolean isDisabledByExpressions(SubMenuModel subMenu, IniFileModel iniFileModel, ConfigurationImage ci) {
+        if (subMenu.getEnableExpression() != null) {
+            Boolean enabled = ExpressionEvaluator.evaluateBooleanExpression(subMenu.getEnableExpression(), iniFileModel, ci);
+            if (Boolean.FALSE.equals(enabled)) return true;
+        }
+        if (subMenu.getVisibleExpression() != null) {
+            Boolean visible = ExpressionEvaluator.evaluateBooleanExpression(subMenu.getVisibleExpression(), iniFileModel, ci);
+            return Boolean.FALSE.equals(visible);
+        }
+        return false;
+    }
+
 
     public void setOnSelect(Consumer<SubMenuModel> onSelect) {
         this.onSelect = onSelect;
