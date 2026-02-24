@@ -3,6 +3,8 @@
 # NOTE: Can be overridden externally.
 #
 
+MAKEFLAGS += -r
+
 PROJECT_DIR = ../firmware
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
