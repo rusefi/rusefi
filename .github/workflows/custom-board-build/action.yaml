@@ -277,7 +277,7 @@ runs:
         : Add Config to Commit Regardless of firmware build status
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h 4
-        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini 4
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
         OUT=$(git commit -m "Quick Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
@@ -371,7 +371,7 @@ runs:
         echo "Current directory: $PWD"
         ls ${{inputs.sim_output}}
         git config advice.addIgnoredFile false
-        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh '${{inputs.sim_output}}*msq'
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh '${{inputs.sim_output}}*msq' 4
         OUT=$(git commit -m "Auto-generated Default Tune (custom board)" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Tune: looks like nothing to commit"
@@ -384,7 +384,7 @@ runs:
       shell: bash
       run: |
         : Add Config to Commit
-        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq 4
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h 4
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
