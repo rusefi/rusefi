@@ -1,6 +1,12 @@
 ### Project Structure and Module Locations
 
-This project uses a multi-repo-like structure where some modules are located outside the current root (`java_tools`).
+rusEFI is an open-source engine control unit firmware for STM32 microcontrollers.
+
+Main firmware is located in `firmware` folder (relative to project root). This is C++ code.
+
+Unit tests are located in `unit_tests` folder (relative to project root). This is C++ code.
+
+This Java Gradle project has some build tools; it's a multi-repo-like structure where some modules are located outside the current root (`java_tools`).
 
 #### Key Module Locations:
 - `:ui` is located in `../java_console/ui`
