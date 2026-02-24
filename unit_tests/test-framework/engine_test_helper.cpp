@@ -20,6 +20,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+static bool unitTestsCreateLogs = false;
+
 bool unitTestBusyWaitHack;
 bool unitTestTaskPrecisionHack;
 bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
@@ -96,7 +98,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 		#else
 		  mkdir(TEST_RESULTS_DIR, 0777);
 		#endif
-		createUnitTestLog();
+		if (unitTestsCreateLogs) {
+			// this logging is pretty heavy, not running unless specifically requested
+			createUnitTestLog();
+		}
 
 		std::stringstream filePath;
 		filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
