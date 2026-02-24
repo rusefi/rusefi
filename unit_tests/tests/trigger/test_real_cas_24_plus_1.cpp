@@ -3,16 +3,12 @@
 // Cam: Single tooth (half moon)
 
 #include "pch.h"
-
-#include "engine_csv_reader.h"
+#include "real_trigger_helper.h"
 
 TEST(realCas24Plus1, spinningOnBench) {
 	extern bool unitTestTaskPrecisionHack;
 	unitTestTaskPrecisionHack = true;
-	EngineCsvReader reader(/*triggerCount*/1, /* vvtCount */ 1);
-
-	reader.open("tests/trigger/resources/cas_nissan_24_plus_1.csv");
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	RealTriggerHelper helper;
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
@@ -22,20 +18,18 @@ TEST(realCas24Plus1, spinningOnBench) {
 	// 24 teeth at cam speed + 1 tooth
 	// AKA 12 teeth at crank speed + 1 cam tooth
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
-	eth.setTriggerType(trigger_type_e::TT_12_TOOTH_CRANK);
 
 	bool gotFullSync = false;
 
-	while (reader.haveMore()) {
-		reader.processLine(&eth);
+	helper.expectedFirstRpm = 808;
+	helper.expectedFirstRpmLineIndex = 7;
 
+	helper.runTest("tests/trigger/resources/cas_nissan_24_plus_1.csv", trigger_type_e::TT_12_TOOTH_CRANK, 1, 1, false, 0.0, [&](CsvReader& reader) {
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;
 		EXPECT_TRUE(angleError < 3 && angleError > -3) << "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-			// We should get first RPM on exactly the first (primary) sync point - this means the instant RPM pre-sync event copy all worked OK
-		reader.assertFirstRpm(808, 7);
 
 		bool hasFullSync = getTriggerCentral()->triggerState.hasSynchronizedPhase();
 		if (!gotFullSync && hasFullSync) {
@@ -51,7 +45,7 @@ TEST(realCas24Plus1, spinningOnBench) {
 			// cam position should never be reported outside of correct range
 			EXPECT_TRUE(vvt > -10 && vvt < -9);
 		}
-	}
+	});
 
-	ASSERT_EQ(0u, eth.recentWarnings()->getCount());
+	ASSERT_EQ(0u, helper.eth.recentWarnings()->getCount());
 }

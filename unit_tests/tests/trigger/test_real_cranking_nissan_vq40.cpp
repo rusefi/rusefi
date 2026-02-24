@@ -6,16 +6,12 @@
  */
 
 #include "pch.h"
-#include "logicdata_csv_reader.h"
+#include "real_trigger_helper.h"
 
 static void test(int engineSyncCam, float camOffsetAdd) {
-	CsvReader reader(1, /* vvtCount */ 2);
-
-	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv");
-	EngineTestHelper eth (engine_type_e::HELLEN_121_NISSAN_6_CYL);
+	RealTriggerHelper helper(engine_type_e::HELLEN_121_NISSAN_6_CYL);
 	setTable(config->ignitionIatCorrTable, 0);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
-	engineConfiguration->alwaysInstantRpm = true;
 
 	// Different sync cam may result in different TDC point, so we might need different cam offsets.
 	engineConfiguration->vvtOffsets[0] += camOffsetAdd;
@@ -24,8 +20,11 @@ static void test(int engineSyncCam, float camOffsetAdd) {
 
 	bool hasSeenFirstVvt = false;
 
+	CsvReader reader(1, 2);
+	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv");
+
 	while (reader.haveMore()) {
-		reader.processLine(&eth);
+		reader.processLine(&helper.eth);
 		float vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
 		float vvt2 = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
 
@@ -47,11 +46,11 @@ static void test(int engineSyncCam, float camOffsetAdd) {
 
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), 1.351, 1e-2);
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), 1.548, 1e-2);
-	ASSERT_EQ(102, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	ASSERT_EQ(102, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// TODO: why warnings?
-	ASSERT_EQ(1u, eth.recentWarnings()->getCount());
-	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(0).Code);
+	ASSERT_EQ(1u, helper.eth.recentWarnings()->getCount());
+	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, helper.eth.recentWarnings()->get(0).Code);
 }
 
 // On Nissan VQ, all cams have the same pattern, so all should be equally good for engine sync. Check them all!
