@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 public class CommonFunctionalTest extends RusefiTestBase {
     @Test
     public void testChangingIgnitionMode() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(engine_type_e.MINIMAL_PINS);
         ecu.changeRpm(2000);
 
         // First is wasted spark
@@ -109,7 +109,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testRevLimiter() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(engine_type_e.MINIMAL_PINS);
         ecu.changeRpm(2000);
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
