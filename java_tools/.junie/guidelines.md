@@ -6,7 +6,7 @@ Main firmware is located in `firmware` folder (relative to project root). This i
 
 Unit tests are located in `unit_tests` folder (relative to project root). This is C++ code.
 
-This Java Gradle project has some build tools; it's a multi-repo-like structure where some modules are located outside the current root (`java_tools`).
+This Java Gradle project has some build tools and our frontend application; it's a multi-repo-like structure where some modules are located outside the current root (`java_tools`).
 
 #### Key Module Locations:
 - `:ui` is located in `../java_console/ui`
@@ -26,3 +26,8 @@ This Java Gradle project has some build tools; it's a multi-repo-like structure 
 - When running Gradle commands from `java_tools`, you can refer to these modules by their simple names (e.g., `:ui`, `:ecu_io`) as they are included in `settings.gradle`.
 - When navigating the file system, remember that `java_console` is a sibling directory to `java_tools`.
 - Source code for `:ui` is in `../java_console/ui/src/main/java`.
+
+#### UI entry points
+- rusefi_updater.exe (see console_launcher folder for launch4j) invokes Autoupdate#main with args="basic-ui" which points at BasicStartupFrame::runTool: Focuses on firmware updater
+- rusefi_autoupdate.exe entry point is Autoupdate#main
+- rusefi_console.exe invokes Launcher#main with empty args

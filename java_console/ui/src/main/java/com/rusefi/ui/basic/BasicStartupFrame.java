@@ -11,7 +11,6 @@ import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.StatusPanel;
-import com.rusefi.ui.widgets.tune.TrimsTab;
 
 import javax.swing.*;
 
@@ -108,7 +107,7 @@ todo: fix TrimsTab so that it does not enlarge frame
         packFrame();
     }
 
-    public void onHardwareUpdated() {
+    private void onHardwareUpdated() {
         status.stop();
 
         firmwareUpdateTab.getBasicUpdaterPanel().onHardwareUpdated();

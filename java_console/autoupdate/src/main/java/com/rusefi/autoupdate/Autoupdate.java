@@ -26,9 +26,16 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.FindFileHelper.findSrecFile;
 import static com.rusefi.core.FindFileHelper.findFirmwareFile;
 
+/**
+ * entry point of rusefi_autoupdate.exe
+ *
+ * We've given up on complex classloader logic for auto-update and ended up with startConsoleAsANewProcess approach
+ * @see com.rusefi.core.ui.ProgressView
+ */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
     private static final int AUTOUPDATE_VERSION = 20260101; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
     private static final String DO_NOT_UPDATE_PROPERTY_KEY = "Autoupdate.do_not_download";
     private static final boolean doNotDownloadPropertyValue;
     private static final String SUPPRESS_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + "donotdownload";
@@ -181,6 +188,9 @@ public class Autoupdate {
         return downloadAutoupdateZipFile(bundleInfo, branchUrl, FindFileHelper.isObfuscated());
     }
 
+    /**
+     * rusefi_console.exe/invokes rusefi_console.jar - entry point is Launcher#main
+     */
     private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
         if (!Files.exists(Paths.get(consoleExeFileName))) {
             log.error(String.format("File `%s` to launch isn't found", consoleExeFileName));
@@ -229,7 +239,7 @@ public class Autoupdate {
         try {
             String suffix = isObfuscated ? "_obfuscated_public" : "";
             String folderName = info.getTarget() + "_" + info.getBranchName();
-            String localFolder = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator + folderName + File.separator;
+            String localFolder = userHomeSubDirectory + folderName + File.separator;
             new File(localFolder).mkdirs();
 
             String fileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
