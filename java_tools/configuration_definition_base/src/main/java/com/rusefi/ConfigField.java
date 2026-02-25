@@ -44,11 +44,6 @@ public interface ConfigField {
         }
 
         @Override
-        public boolean isDirective() {
-            return false;
-        }
-
-        @Override
         public int getSize(ConfigField next) {
             return 0;
         }
@@ -157,9 +152,6 @@ public interface ConfigField {
             return null;
         }
         @Override
-        public void setTsInfo(String newtsInfo) {
-        }
-        @Override
         public boolean isWithinStruct(String structName) {
             return false;
         }
@@ -193,8 +185,6 @@ public interface ConfigField {
     String getFalseName();
 
     boolean isBit();
-
-    boolean isDirective();
 
     int getSize(ConfigField next);
 
@@ -240,8 +230,6 @@ public interface ConfigField {
     boolean isFromIterate();
 
     String getCommentTemplated();
-
-    void setTsInfo(String tsInfo);
 
     boolean isWithinStruct(String structName);
 }
