@@ -49,10 +49,10 @@ static void prepareToScheduleOverdwellSparkDown(EngineTestHelper& eth) {
 
 TEST(coil, testOverdwellProtection) {
 	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
 	printf("*************************************************** testOverdwellProtection\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	unitTestTaskPrecisionHack = true;
 	engine->onScheduleOverFireSparkAndPrepareNextSchedule = [&](const IgnitionEvent&, efitick_t) -> void {
 		FAIL() << "Unexpected scheduling of overFireSparkAndPrepareNextSchedule";
 	};
