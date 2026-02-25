@@ -554,6 +554,7 @@ void IgnitionOutputPin::setLow() {
 
 void IgnitionOutputPin::reset() {
 	signalFallSparkId = 0;
+	currentLogicValue = INITIAL_PIN_STATE;
 }
 
 bool OutputPin::isInitialized() const {
