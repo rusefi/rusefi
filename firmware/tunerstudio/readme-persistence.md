@@ -30,4 +30,4 @@ On Windows this may be run with ```gen_config.bat```.
 
 Q: how do I offer my changes to TS project?
 
-A: please PR only tunerstudio.template.ini. Once merged, gen_config.bat would be executed automatically and results would be pushed by automation.
+A: please PR only .txt and .ini like tunerstudio.template.ini. Once merged, gen_config.bat would be executed automatically and results would be pushed by automation.
