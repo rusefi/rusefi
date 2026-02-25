@@ -14,7 +14,6 @@
 #define DEFAULT_ENGINE_TYPE engine_type_e::MINIMAL_PINS
 #endif
 
-#define WARMUP_CLT_EXTRA_FUEL_CURVE config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE
 #define IAT_FUEL_CORRECTION_CURVE config->iatFuelCorrBins, config->iatFuelCorr, IAT_CURVE_SIZE
 
 #define MOCK_UNDEFINED -1
