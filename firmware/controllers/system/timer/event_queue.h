@@ -30,6 +30,8 @@ public:
 	void remove(scheduling_s* scheduling);
 
 	int executeAll(efitick_t now);
+	scheduling_s* pickOne(efitick_t now);
+	void executeAndFree(scheduling_s* current);
 	bool executeOne(efitick_t now);
 
 	expected<efitick_t> getNextEventTime(efitick_t nowUs) const;

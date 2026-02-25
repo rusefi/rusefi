@@ -220,14 +220,14 @@ int EventQueue::executeAll(efitick_t now) {
 	return executionCounter;
 }
 
-bool EventQueue::executeOne(efitick_t now) {
+scheduling_s* EventQueue::pickOne(efitick_t now) {
 	// Read the head every time - a previously executed event could
 	// have inserted something new at the head
 	scheduling_s* current = m_head;
 
 	// Queue is empty - bail
 	if (!current) {
-		return false;
+		return nullptr;
 	}
 
 	// If the next event is far in the future, we'll reschedule
@@ -237,49 +237,32 @@ bool EventQueue::executeOne(efitick_t now) {
 	// waiting for the time to arrive.  On current CPUs, this is reasonable to set
 	// around 10 microseconds.
 	if (current->getMomentNt() > now + m_lateDelay) {
-		return false;
+		return nullptr;
 	}
 
-#if EFI_UNIT_TEST
-//	efitick_t spinDuration = current->getMomentNt() - getTimeNowNt();
-//	if (spinDuration > 0) {
-//		throw std::runtime_error("Time Spin in unit test");
-//	}
-#endif
-
-	// near future - spin wait for the event to happen and avoid the
-	// overhead of rescheduling the timer.
-	// yes, that's a busy wait but that's what we need here
-	while (current->getMomentNt() > getTimeNowNt()) {
-#if EFI_UNIT_TEST
-  // todo: remove this hack see https://github.com/rusefi/rusefi/issues/6457
-extern bool unitTestBusyWaitHack;
-    if (unitTestBusyWaitHack) {
-	    break;
-	  }
-#endif
-		UNIT_TEST_BUSY_WAIT_CALLBACK();
-	}
-
-	// step the head forward, unlink this element, clear scheduled flag
+	// step the head forward, unlink this element
+	// TODO: LL_DELETE(m_head, current);
 	m_head = current->next;
 	current->next = nullptr;
 
+	return current;
+}
+
+void EventQueue::executeAndFree(scheduling_s* current) {
 	// Grab the action but clear it in the event so we can reschedule from the action's execution
 	auto const action{ std::move(current->action) };
-
-	tryReturnScheduling(current);
-	current = nullptr;
 
 #if EFI_DETAILED_LOGGING
 	printf("QUEUE: execute current=%d param=%d\r\n", reinterpret_cast<uintptr_t>(current), action.getArgumentRaw());
 #endif
 
+	tryReturnScheduling(current);
+
 	// Execute the current element
 	{
 		ScopePerf perf2(PE::EventQueueExecuteCallback);
 #if EFI_DETAILED_LOGGING && EFI_UNIT_TEST_VERBOSE_ACTION
-		std::cout << "EventQueue::executeOne: " << action.getCallbackName() << "(" << reinterpret_cast<uintptr_t>(action.getCallback()) << ") with raw arg = " << action.getArgumentRaw() << std::endl;
+		std::cout << "EventQueue::executeAndFree: " << action.getCallbackName() << "(" << reinterpret_cast<uintptr_t>(action.getCallback()) << ") with raw arg = " << action.getArgumentRaw() << std::endl;
 #endif
 		action.execute();
 
@@ -289,6 +272,18 @@ extern bool unitTestBusyWaitHack;
 	}
 
 	assertListIsSorted();
+}
+
+bool EventQueue::executeOne(efitick_t now) {
+	scheduling_s* current = pickOne(now);
+
+	if (!current) {
+		return false;
+	}
+
+	// now it is time to execute
+	executeAndFree(current);
+
 	return true;
 }
 
