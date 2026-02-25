@@ -25,30 +25,31 @@ void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->setTriggerSynchronizationGap(3);
 }
 
-// TT_TRI_TACH
+// TT_TRI_TACH - Audi 5 Cylinder / Tri Tach
 void configureTriTach(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
-	s->isSynchronizationNeeded = false;
+	constexpr int CRANK_TEETH = 135;
+	constexpr float REF_PIN_ANGLE = 360.0f - 62.0f;  // 62° BTDC = 298° in first 360°
 
-	float toothWidth = 0.5;
+	// 135 teeth per 360° crank, spacing = 2.6667°
+	constexpr float TOOTH_SPACING = 360.0f / CRANK_TEETH;
 
-	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
+	// Add 135 primary (crank) teeth + 1 secondary (reference pin) pulse in chronological order
+	float angle = TOOTH_SPACING;
+	for (int i = 0; i < CRANK_TEETH; i++, angle += TOOTH_SPACING) {
+		// Insert secondary pulse at 62° BTDC (298°) when angle crosses it
+		if (angle > REF_PIN_ANGLE && (angle - TOOTH_SPACING) < REF_PIN_ANGLE) {
+			s->addEvent360(REF_PIN_ANGLE, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		}
+		s->addEvent360(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	}
 
-	int totalTeethCount = 135;
-	float offset = 0;
-
-	float angleDown = engineCycle / totalTeethCount * (0 + (1 - toothWidth));
-	float angleUp = engineCycle / totalTeethCount * (0 + 1);
-	s->addEventClamped(offset + angleDown, TriggerValue::RISE, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleDown + 0.1, TriggerValue::RISE, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleUp, TriggerValue::FALL, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleUp + 0.1, TriggerValue::FALL, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-
-
-	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, /* skipped */ 0, toothWidth, offset, engineCycle,
-			1.0 * FOUR_STROKE_ENGINE_CYCLE / 135,
-			NO_RIGHT_FILTER);
+	s->tdcPosition = 62.0f;  // Sync (ref pin) is at 62° BTDC
+	s->isSynchronizationNeeded = true;   // Sync on secondary pulse (gap ~0.75x between teeth)
+	s->useOnlyPrimaryForSync = false;    // Secondary (ref pin) defines sync
+	s->setTriggerSynchronizationGap3(0, 0.6f, 0.95f);  // ~0.75x gap when secondary fires
+	s->setSecondTriggerSynchronizationGap2(0.8f, 1.2f);  // Validate normal gaps to reject cranking noise
 }
 
 /**
