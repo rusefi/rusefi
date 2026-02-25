@@ -22,7 +22,7 @@ jobs:
 
       - uses: carlosperate/arm-none-eabi-gcc-action@v1.12.0
         with:
-          release: '14.2.Rel1'
+          release: '14.3.Rel1'
 
       - uses: actions/checkout@v6
 
