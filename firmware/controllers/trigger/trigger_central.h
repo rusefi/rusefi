@@ -257,3 +257,5 @@ constexpr bool isTriggerUpEvent(trigger_event_e event) {
 
 	return false;
 }
+
+Gpio getBoardCamInput(size_t index);

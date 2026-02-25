@@ -93,6 +93,9 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 void rememberCurrentConfiguration() {
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
+#if EFI_SHAFT_POSITION_INPUT
+	activeConfiguration.camInputs[0] = getBoardCamInput(0);
+#endif // EFI_SHAFT_POSITION_INPUT
 #else
 	isActiveConfigurationVoid = false;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
