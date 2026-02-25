@@ -1231,3 +1231,19 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 
 	ASSERT_EQ( 0u,  getRecentWarnings()->getCount()) << "warningCounter#1";
 }
+
+TEST(trigger, audi5cylTriTach) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->trigger.type = trigger_type_e::TT_TRI_TACH;
+	eth.applyTriggerWaveform();
+
+	TriggerWaveform& t = eth.engine.triggerCentral.triggerShape;
+
+	EXPECT_EQ(136u, t.getSize()) << "135 primary + 1 secondary";
+	EXPECT_EQ(272u, t.getLength()) << "FOUR_STROKE_CRANK_SENSOR: 2x per 720°";
+	EXPECT_NEAR(62.0f, t.tdcPosition, 0.1f) << "ref pin at 62 BTDC";
+	EXPECT_TRUE(t.needSecondTriggerInput) << "needs reference pin on Trigger 2";
+	EXPECT_TRUE(t.isSynchronizationNeeded) << "sync on secondary pulse";
+	EXPECT_FALSE(t.useOnlyPrimaryForSync) << "secondary defines sync";
+	EXPECT_EQ(360, t.getCycleDuration()) << "360 degree crank cycle";
+}
