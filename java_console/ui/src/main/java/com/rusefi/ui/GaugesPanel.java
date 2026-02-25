@@ -42,9 +42,6 @@ public class GaugesPanel {
     };
     private static final String GAUGES_ROWS = "gauges_rows";
     private static final String GAUGES_COLUMNS = "gauges_cols";
-    private static final String SHOW_MESSAGES = "show_messages";
-    private static final String SHOW_RPM = "show_rpm";
-    private static final String SPLIT_LOCATION = "SPLIT_LOCATION";
     public static final String DISABLE_LOGS = "DISABLE_LOGS";
     private static final int DEFAULT_ROWS = 3;
     private static final int DEFAULT_COLUMNS = 3;
@@ -55,59 +52,28 @@ public class GaugesPanel {
     private final Node config;
     private final UIContext uiContext;
 
-    private boolean showRpmPanel;
-    private boolean showMessagesPanel;
-    private final JPanel lowerRpmPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-    /**
-     * this panel is displayed on the right
-     */
-    private final JPanel messagesPanel = new JPanel(new BorderLayout());
-    private final JSplitPane middleSplitPanel;
-
     public GaugesPanel(UIContext uiContext, final Node config) {
         this.uiContext = uiContext;
         gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
-        showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
-        showMessagesPanel = config.getBoolProperty(SHOW_MESSAGES, true);
-
-        prepareMessagesPanel();
-
-        lowerRpmPanel.add(new RpmLabel(uiContext, 15, false).getContent());
 
         int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
 
         setSensorGridDimensions(rows, columns);
 
-        middleSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createMiddleLeftPanel(), messagesPanel);
 
         content.add(createTopPanel(config), BorderLayout.NORTH);
 
-        content.add(middleSplitPanel, BorderLayout.CENTER);
+        content.add(createMiddleLeftPanel(), BorderLayout.CENTER);
 
         content.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
-
-        applyShowFlags();
-        final int splitLocation = config.getIntProperty(SPLIT_LOCATION, -1);
-        if (splitLocation != -1) {
-            // this does not work. maybe because panel is not displayed yet? todo: fix it so that splitter location
-            // would be persisted in the config
-            middleSplitPanel.setDividerLocation(splitLocation);
-        }
-        middleSplitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent pce) {
-                config.setProperty(SPLIT_LOCATION, middleSplitPanel.getDividerLocation());
-            }
-        });
     }
 
     @NotNull
     private JPanel createMiddleLeftPanel() {
         JPanel middleLeftPanel = new JPanel(new BorderLayout());
         middleLeftPanel.add(gauges.panel, BorderLayout.CENTER);
-        middleLeftPanel.add(lowerRpmPanel, BorderLayout.SOUTH);
         return middleLeftPanel;
     }
 
@@ -136,42 +102,8 @@ public class GaugesPanel {
         });
         rightUpperPanel.add(selector);
 
-        JButton menuButton = new PopupMenuButton("#", createMenu(config));
-        rightUpperPanel.add(menuButton);
+
         return rightUpperPanel;
-    }
-
-    @NotNull
-    private JPopupMenu createMenu(final Node config) {
-        JPopupMenu menu = new JPopupMenu();
-
-        final JCheckBoxMenuItem showRpmItem = new JCheckBoxMenuItem("Show RPM");
-        final JCheckBoxMenuItem showCommandsItem = new JCheckBoxMenuItem("Show Commands");
-        showRpmItem.setSelected(showRpmPanel);
-        ActionListener showCheckboxListener = e -> {
-            showRpmPanel = showRpmItem.isSelected();
-            showMessagesPanel = showCommandsItem.isSelected();
-            config.setProperty(SHOW_RPM, showRpmPanel);
-            config.setProperty(SHOW_MESSAGES, showMessagesPanel);
-            applyShowFlags();
-            // todo: this is not needed if we show/hide RPM panel. TODO: split into two different listeners
-            middleSplitPanel.setDividerLocation(0.5);
-        };
-        showRpmItem.addActionListener(showCheckboxListener);
-        showCommandsItem.addActionListener(showCheckboxListener);
-
-        menu.add(showRpmItem);
-        showCommandsItem.setSelected(showMessagesPanel);
-        menu.add(showCommandsItem);
-        menu.add(new JPopupMenu.Separator());
-        menu.add(new JPopupMenu("Reset Config")); // todo looks like not working
-        return menu;
-    }
-
-    private void prepareMessagesPanel() {
-        MessagesPanel mp = new MessagesPanel(null, config);
-        messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
-        messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
     }
 
     @NotNull
@@ -228,11 +160,6 @@ public class GaugesPanel {
     private void saveConfig(int rows, int columns) {
         config.setProperty(GAUGES_ROWS, rows);
         config.setProperty(GAUGES_COLUMNS, columns);
-    }
-
-    private void applyShowFlags() {
-        lowerRpmPanel.setVisible(showRpmPanel);
-        messagesPanel.setVisible(showMessagesPanel);
     }
 
     public JComponent getContent() {
