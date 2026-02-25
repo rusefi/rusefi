@@ -45,6 +45,7 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 	setTimeNowUs(0);
 	ButtonDebounce::resetForUnitTests();
 	unitTestBusyWaitHack = false;
+	unitTestTaskPrecisionHack = false;
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault,
