@@ -34,22 +34,23 @@ void configureTriTach(TriggerWaveform * s) {
 
 	// 135 teeth per 360° crank, spacing = 2.6667°
 	constexpr float TOOTH_SPACING = 360.0f / CRANK_TEETH;
+	constexpr float TOOTH_WIDTH = 2.0f;  // Must be < TOOTH_SPACING so teeth don't overlap
 
-	// Add 135 primary (crank) teeth + 1 secondary (reference pin) pulse in chronological order
-	float angle = TOOTH_SPACING;
-	for (int i = 0; i < CRANK_TEETH; i++, angle += TOOTH_SPACING) {
-		// Insert secondary pulse at 62° BTDC (298°) when angle crosses it
-		if (angle > REF_PIN_ANGLE && (angle - TOOTH_SPACING) < REF_PIN_ANGLE) {
-			s->addEvent360(REF_PIN_ANGLE, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	// Add 135 primary teeth (RISE+FALL each) + 1 secondary pulse. Use addToothRiseFall so the
+	// stimulator sees proper channel transitions (needEvent requires RISE after FALL).
+	for (int i = 0; i < CRANK_TEETH; i++) {
+		const float toothAngle = (i == CRANK_TEETH - 1) ? 360.0f : (TOOTH_SPACING * (i + 1));
+		// Insert secondary pulse at 62° BTDC (298°) between crank teeth
+		if (toothAngle > REF_PIN_ANGLE && (toothAngle - TOOTH_SPACING) < REF_PIN_ANGLE) {
+			s->addToothRiseFall(REF_PIN_ANGLE + 0.5f, 0.5f, TriggerWheel::T_SECONDARY);
 		}
-		s->addEvent360(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addToothRiseFall(toothAngle, TOOTH_WIDTH, TriggerWheel::T_PRIMARY);
 	}
 
 	s->tdcPosition = 62.0f;  // Sync (ref pin) is at 62° BTDC
 	s->isSynchronizationNeeded = true;   // Sync on secondary pulse (gap ~0.75x between teeth)
 	s->useOnlyPrimaryForSync = false;    // Secondary (ref pin) defines sync
 	s->setTriggerSynchronizationGap3(0, 0.6f, 0.95f);  // ~0.75x gap when secondary fires
-	s->setSecondTriggerSynchronizationGap2(0.8f, 1.2f);  // Validate normal gaps to reject cranking noise
 }
 
 /**
