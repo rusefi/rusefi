@@ -29,12 +29,15 @@ public class UiHelper {
     }
 
     public static void configureLaf() {
+/*
+todo: re-apply only for dark L&F
         // Use a more modern dark color scheme
         UIManager.put("TitlePane.background", new Color(40, 44, 52));
         UIManager.put("TitlePane.foreground", Color.WHITE);
         UIManager.put("TitlePane.buttonHoverBackground", new Color(60, 64, 72));
         UIManager.put("TitlePane.closeHoverBackground", new Color(232, 17, 35));
         UIManager.put("TitlePane.closeHoverForeground", Color.WHITE);
+ */
 
         // Custom icons for window controls can be configured via UIManager if needed,
         // but FlatLaf's default vector icons are already quite modern.
