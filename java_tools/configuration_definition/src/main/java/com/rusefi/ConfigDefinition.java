@@ -185,6 +185,7 @@ public class ConfigDefinition {
         FieldsApiGenerator.run();
         handlePage(state, 1, softPrePrependsFileNames);
         handlePage(state, 2, softPrePrependsFileNames);
+        handlePage(state, 3, softPrePrependsFileNames);
 
         if (tsInputFileFolder != null) {
             // used to update .ini files

@@ -7,6 +7,7 @@
  */
 
 #pragma once
+#include "page_3_generated.h"
 
 void initSettings();
 void printSpiState();
@@ -22,4 +23,5 @@ void readPin(const char *pinName);
 void printDateTime();
 void setDateTime(const char * const isoDateTime);
 
+extern page3_s luaScriptContainer;
 void setLuaScript(const char *luaScript);
