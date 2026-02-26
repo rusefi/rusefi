@@ -786,6 +786,17 @@ void etbAutocal(dc_function_e function, bool reportToTs) {
 	}
 }
 
+void etbBenchTestStart(size_t throttleIndex) {
+	if (throttleIndex >= ETB_COUNT) {
+		efiPrintf("ETB bench test: invalid index %d", (int)throttleIndex);
+		return;
+	}
+	if (auto controller = etbControllers[throttleIndex]) {
+		assertNotNullVoid(controller);
+		controller->startBenchTest();
+	}
+}
+
 EtbStatus etbGetState(size_t throttleIndex)
 {
 	if (throttleIndex >= ETB_COUNT) {

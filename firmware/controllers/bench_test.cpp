@@ -561,7 +561,13 @@ static void handleCommandX14(uint16_t index) {
 			etbAutocal(DC_Throttle1, false);
 		return;
 	case TS_ETB_AUTOCAL_1_FAST:
-			etbAutocal(DC_Throttle2, false);
+		etbAutocal(DC_Throttle2, false);
+		return;
+	case TS_ETB_BENCH_TEST_0:
+		etbBenchTestStart(0);
+		return;
+	case TS_ETB_BENCH_TEST_1:
+		etbBenchTestStart(1);
 		return;
 	case TS_ETB_START_AUTOTUNE:
 			engine->etbAutoTune = true;

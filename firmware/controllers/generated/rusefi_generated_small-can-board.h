@@ -1557,7 +1557,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3778424239
+#define SIGNATURE_HASH 405997350
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1783,6 +1783,8 @@
 #define ts_14_command_TS_ETB_AUTOCAL_0_FAST 0x1C
 #define ts_14_command_TS_ETB_AUTOCAL_1 0x11
 #define ts_14_command_TS_ETB_AUTOCAL_1_FAST 0x1D
+#define ts_14_command_TS_ETB_BENCH_TEST_0 0x24
+#define ts_14_command_TS_ETB_BENCH_TEST_1 0x25
 #define ts_14_command_TS_ETB_DISABLE_JAM_DETECT 0x14
 #define ts_14_command_TS_ETB_RESET 0x0B
 #define ts_14_command_TS_ETB_START_AUTOTUNE 0x0C
@@ -2156,7 +2158,7 @@
 #define ts_show_wbo_can_menu true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2026.02.23.small-can-board.3778424239"
+#define TS_SIGNATURE "rusEFI master.2026.02.26.small-can-board.405997350"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
