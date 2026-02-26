@@ -125,7 +125,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 			zeroCount++;
 		}
 
-		fprintf(fp, "event %d %d %d %.2f %f\n",
+		fprintf(fp, "event %d %d %d %.6f %f\n",
 				i,
 				shape->triggerSignalIndeces[triggerDefinitionCoordinate],
 				shape->triggerSignalStates[triggerDefinitionCoordinate],
