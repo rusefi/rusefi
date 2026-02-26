@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Feb 12 16:02:28 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Feb 26 01:02:18 EST 2026
 // see also gen_config_and_enums.bat
 
 
@@ -420,6 +420,10 @@ case TS_ETB_AUTOCAL_1:
   return "TS_ETB_AUTOCAL_1";
 case TS_ETB_AUTOCAL_1_FAST:
   return "TS_ETB_AUTOCAL_1_FAST";
+case TS_ETB_BENCH_TEST_0:
+  return "TS_ETB_BENCH_TEST_0";
+case TS_ETB_BENCH_TEST_1:
+  return "TS_ETB_BENCH_TEST_1";
 case TS_ETB_DISABLE_JAM_DETECT:
   return "TS_ETB_DISABLE_JAM_DETECT";
 case TS_ETB_RESET:

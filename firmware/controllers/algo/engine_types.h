@@ -294,6 +294,8 @@ typedef enum {
 	TS_GRAB_TPS_OPEN = 0x21,
 	TS_WIDEBAND_UPDATE_FILE = 0x22,
 	TS_ESTIMATE_TORQUE_TABLE = 0x23,
+	TS_ETB_BENCH_TEST_0 = 0x24,
+	TS_ETB_BENCH_TEST_1 = 0x25,
 } ts_14_command;
 
 typedef enum {
