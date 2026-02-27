@@ -206,8 +206,10 @@ public enum SerialPortScanner {
             stLinkConnected = false;
             PCANConnected = false;
         }
+/*
         if (PCANConnected)
             ports.add(new PortResult(LinkManager.PCAN, SerialPortType.CAN));
+ */
 /*
         if (SHOW_SOCKETCAN)
             ports.add(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN));
