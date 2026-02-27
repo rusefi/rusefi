@@ -14,6 +14,8 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -230,12 +232,25 @@ public class Autoupdate {
     }
 
     /**
+     * sad fact: java does not have a way to poll 'shift' key state, modifiers are only available via InputEvents!
+     */
+    private static boolean isSkipUpdater() {
+        return Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+    }
+
+
+    /**
      * @return empty if we already have latest, or in case of error
      */
     public static Optional<DownloadedAutoupdateFileInfo> downloadAutoupdateZipFile(
         final BundleInfo info,
         final String baseUrl,
         boolean isObfuscated) {
+        if (isSkipUpdater()) {
+            log.info("User wants to skip auto-update");
+            return Optional.empty();
+        }
+
         try {
             String suffix = isObfuscated ? "_obfuscated_public" : "";
             String folderName = info.getTarget() + "_" + info.getBranchName();
