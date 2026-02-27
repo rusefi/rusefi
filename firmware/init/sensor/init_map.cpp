@@ -62,7 +62,7 @@ static MapCfg getMapCfg(air_pressure_sensor_type_e sensorType) {
 	case MT_GM_2_BAR:
 		return {0, 8.8, 5, 208};
 	case MT_GM_1_BAR:
-		return {0, 10, 5, 105};
+		return {0/*v*/, 10/*kpa*/, 5/*v*/, 105/*kpa*/};
 	case MT_TOYOTA_89420_02010:
 		return {3.7 - 2, 33.32, 3.7, 100};
 	case MT_MAZDA_1_BAR:
