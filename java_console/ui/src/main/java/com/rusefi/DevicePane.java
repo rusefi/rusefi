@@ -14,12 +14,16 @@ public class DevicePane {
     private final JPanel content = new JPanel();
 
     public DevicePane(UIContext uiContext, String port, SerialPortType serialPortType) {
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         JCheckBox autoUpdateBundle = new JCheckBox("Auto-update bundle", PersistentConfiguration.getBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, true));
         autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));
         content.add(autoUpdateBundle);
 
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        content.add(buttons);
+
         if (serialPortType == SerialPortType.Ecu) {
-            content.add(new JLabel("Legacy Device Without OpenBLT"));
+            buttons.add(new JLabel("Legacy Device Without OpenBLT"));
         } else if (serialPortType == SerialPortType.EcuWithOpenblt) {
             JButton switchButton = new JButton("OpenBltSwitchJob");
             switchButton.addActionListener(e -> {
@@ -30,7 +34,7 @@ public class DevicePane {
                     });
                 }).start();
             });
-            content.add(switchButton);
+            buttons.add(switchButton);
 
             JButton autoButton = new JButton("OpenBltAutoJob");
             autoButton.addActionListener(e -> {
@@ -41,7 +45,7 @@ public class DevicePane {
                     });
                 }).start();
             });
-            content.add(autoButton);
+            buttons.add(autoButton);
         }
     }
 
