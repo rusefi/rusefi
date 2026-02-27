@@ -1,5 +1,9 @@
 package com.rusefi.core.ui;
 
+import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.net.ConnectionAndMeta;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -36,7 +40,8 @@ public class ProgressView {
             retryButton.setVisible(false);
             retryButton.addActionListener(e -> {
                 retryRequested.set(true);
-                if (retryLatch != null) retryLatch.countDown();
+                if (retryLatch != null)
+                    retryLatch.countDown();
             });
 
             panel.add(Box.createVerticalStrut(10));
@@ -48,7 +53,8 @@ public class ProgressView {
                 frameHelper.getFrame().addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
-                        if (retryLatch != null) retryLatch.countDown();
+                        if (retryLatch != null)
+                            retryLatch.countDown();
                     }
                 });
             }
@@ -56,6 +62,43 @@ public class ProgressView {
             errorLabel = null;
             retryButton = null;
         }
+    }
+
+    static @NotNull ProgressView create(String title) {
+        FrameHelper frameHelper = new FrameHelper();
+        AutoupdateUtil.setAppIcon(frameHelper.getFrame());
+        frameHelper.getFrame().setTitle(title);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+
+        ImageIcon logoIcon = AutoupdateUtil.loadIcon("/com/rusefi/logo.png");
+        if (logoIcon != null) {
+            JLabel logoLabel = new JLabel(logoIcon);
+            logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(logoLabel);
+            panel.add(Box.createVerticalStrut(20));
+        }
+
+        JLabel branchLabel = new JLabel(BundleUtil.readBundleFullNameNotNull().getUiLabel());
+        branchLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        branchLabel.setFont(branchLabel.getFont().deriveFont(12f));
+        panel.add(branchLabel);
+        panel.add(Box.createVerticalStrut(20));
+
+        JProgressBar jProgressBar = new JProgressBar();
+        jProgressBar.setMaximum(ConnectionAndMeta.CENTUM);
+        jProgressBar.setStringPainted(true);
+        jProgressBar.setMaximumSize(new Dimension(400, 25));
+        jProgressBar.setPreferredSize(new Dimension(400, 25));
+        jProgressBar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(jProgressBar);
+
+        frameHelper.getFrame().setSize(480, 400);
+        frameHelper.getFrame().setLocationRelativeTo(null);
+        frameHelper.showFrame(panel, false);
+        return new ProgressView(frameHelper, jProgressBar, panel);
     }
 
     public JProgressBar getProgressBar() {

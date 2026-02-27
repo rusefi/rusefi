@@ -2,7 +2,6 @@ package com.rusefi.core.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.autoupdate.ReportedIOException;
-import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,40 +37,7 @@ public class AutoupdateUtil {
         if (runHeadless) {
             return new ProgressView(null, null, null);
         } else {
-            FrameHelper frameHelper = new FrameHelper();
-            setAppIcon(frameHelper.getFrame());
-            frameHelper.getFrame().setTitle(title);
-
-            JPanel panel = new JPanel();
-            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-            panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
-
-            ImageIcon logoIcon = loadIcon("/com/rusefi/logo.png");
-            if (logoIcon != null) {
-                JLabel logoLabel = new JLabel(logoIcon);
-                logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-                panel.add(logoLabel);
-                panel.add(Box.createVerticalStrut(20));
-            }
-
-            JLabel branchLabel = new JLabel(BundleUtil.readBundleFullNameNotNull().getUiLabel());
-            branchLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            branchLabel.setFont(branchLabel.getFont().deriveFont(12f));
-            panel.add(branchLabel);
-            panel.add(Box.createVerticalStrut(20));
-
-            JProgressBar jProgressBar = new JProgressBar();
-            jProgressBar.setMaximum(ConnectionAndMeta.CENTUM);
-            jProgressBar.setStringPainted(true);
-            jProgressBar.setMaximumSize(new Dimension(400, 25));
-            jProgressBar.setPreferredSize(new Dimension(400, 25));
-            jProgressBar.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(jProgressBar);
-
-            frameHelper.getFrame().setSize(480, 400);
-            frameHelper.getFrame().setLocationRelativeTo(null);
-            frameHelper.showFrame(panel, false);
-            return new ProgressView(frameHelper, jProgressBar, panel);
+            return ProgressView.create(title);
         }
     }
 
