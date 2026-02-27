@@ -8,6 +8,16 @@ Unit tests are located in `unit_tests` folder (relative to project root). This i
 
 This Java Gradle project has some build tools and our frontend application; it's a multi-repo-like structure where some modules are located outside the current root (`java_tools`).
 
+## Frontend
+
+rusEFI console frontend application scans serial ports and well-known local TCP port 29001 to locate an engine control unit embedded device.
+
+An ECU would respond to a HELLO command with a signature String which identifies ECU kind, model and firmware version  (see BundleInfo)
+
+Based on that signature, UI frontend would pull an .ini file with all the metadata related to the exact ECU we have connected to from the internet, and cache it locally in user.home
+
+That .ini file would be parsed into IniFileModel instance giving java code knowledge of desired calibration memory and user interface layout.
+
 #### Key Module Locations:
 - `:ui` is located in `../java_console/ui`
 - `:shared_io` is located in `../java_console/shared_io`
