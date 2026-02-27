@@ -3,7 +3,7 @@ package com.rusefi.core;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SensorsHolder implements ISensorHolder {
+public class SensorsHolder {
     // ini file uses "TPSValue" but Sensor enum uses "TPSVALUE"
     private final Map<String, Double> values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
