@@ -29,7 +29,7 @@ static FunctionPointerSensor lambdaSensor2(SensorType::Lambda2,
 #include "AemXSeriesLambda.h"
 
 #if EFI_CAN_SUPPORT
-static AemXSeriesWideband aem1(0, SensorType::Lambda1);
+AemXSeriesWideband aem1(0, SensorType::Lambda1);
 static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
