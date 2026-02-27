@@ -29,7 +29,7 @@ shadowJar {
     base {
       // [dark-magic-jar] see https://github.com/rusefi/rusefi/pull/9051 for important very not obvious issue
         archiveFileName = 'rusefi_console.jar'
-        destinationDirectory = file("${rootDir}/../console")
+        destinationDirectory = file("${rootDir}/console")
         archiveClassifier = ''
     }
 
