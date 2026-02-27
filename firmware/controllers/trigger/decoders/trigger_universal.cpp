@@ -77,6 +77,7 @@ void configureOnePlusOne(TriggerWaveform *s) {
 	s->addEvent360(270, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
+	s->isSecondWheelCam = true;
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
 }
