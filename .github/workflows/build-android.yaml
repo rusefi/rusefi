@@ -45,14 +45,14 @@ jobs:
 
       - name: Upload APK - release
         if: ${{ github.event_name == 'push' }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: rusEFI-release
           path: ./android/app/build/outputs/apk/release/rusEFI-release.apk
 
       - name: Upload APK - unsigned
         if: ${{ github.event_name != 'push' }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: rusEFI-release-unsigned
           path: ./android/app/build/outputs/bundle/debug/rusEFI-debug.aab
