@@ -9,5 +9,5 @@
  */
 dependencies {
     api project(':logging-api')
-    api project(':core_io')
+    api project(':shared_io')
 }

@@ -10,7 +10,7 @@ This Java Gradle project has some build tools and our frontend application; it's
 
 #### Key Module Locations:
 - `:ui` is located in `../java_console/ui`
-- `:core_io` is located in `../java_console/shared_io`
+- `:shared_io` is located in `../java_console/shared_io`
 - `:core_ui` is located in `../java_console/core_ui`
 - `:autoupdate` is located in `../java_console/autoupdate`
 - `:shared_ui` is located in `../java_console/shared_ui`

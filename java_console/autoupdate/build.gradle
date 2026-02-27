@@ -17,7 +17,7 @@ dependencies {
 
 // yes nasty sorry
 evaluationDependsOn(':core_ui')
-evaluationDependsOn(':core_io')
+evaluationDependsOn(':shared_io')
 
 shadowJar {
   duplicatesStrategy = DuplicatesStrategy.FAIL
