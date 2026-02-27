@@ -11,12 +11,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DevicePane {
-    private static final String AUTO_UPDATE_BUNDLE_PROPERTY = "AUTO_UPDATE_BUNDLE";
     private final JPanel content = new JPanel();
 
     public DevicePane(UIContext uiContext, String port, SerialPortType serialPortType) {
-        JCheckBox autoUpdateBundle = new JCheckBox("Auto-update bundle", PersistentConfiguration.getBoolProperty(AUTO_UPDATE_BUNDLE_PROPERTY, true));
-        autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));
+        JCheckBox autoUpdateBundle = new JCheckBox("Auto-update bundle", PersistentConfiguration.getBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, true));
+        autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));
         content.add(autoUpdateBundle);
 
         if (serialPortType == SerialPortType.Ecu) {

@@ -2,6 +2,7 @@ package com.rusefi.autoupdate;
 
 import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
+import com.rusefi.AutoupdateProperty;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleInfoStrategy;
@@ -9,6 +10,7 @@ import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
 import com.rusefi.core.net.PropertiesHolder;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
@@ -38,16 +40,6 @@ public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
     private static final int AUTOUPDATE_VERSION = 20260101; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
-    private static final String DO_NOT_UPDATE_PROPERTY_KEY = "Autoupdate.do_not_download";
-    private static final boolean doNotDownloadPropertyValue;
-    private static final String SUPPRESS_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + "donotdownload";
-    private static final boolean suppressDownloadViaFlagFile = new File(SUPPRESS_FILE_NAME).exists();
-
-    static {
-        doNotDownloadPropertyValue = Boolean.getBoolean(DO_NOT_UPDATE_PROPERTY_KEY);
-        log.info(DO_NOT_UPDATE_PROPERTY_KEY + "=" + doNotDownloadPropertyValue);
-        log.info(SUPPRESS_FILE_NAME + " exists: " + suppressDownloadViaFlagFile);
-    }
 
     private static final String TITLE = getTitle();
 
@@ -100,7 +92,7 @@ public class Autoupdate {
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
         final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
-        if (doNotDownloadPropertyValue || suppressDownloadViaFlagFile) {
+        if (!PersistentConfiguration.getBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY)) {
             downloadedAutoupdateFile = Optional.empty();
         } else {
             downloadedAutoupdateFile = downloadFreshZipFile(firstArgument, bundleInfo);
