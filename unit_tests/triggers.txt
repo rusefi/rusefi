@@ -681,7 +681,7 @@ TRIGGERTYPE 16 4 TT_ONE_PLUS_ONE 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
-isSecondWheelCam=false
+isSecondWheelCam=true
 cycleDuration=720
 gapsCount=1
 syncEdge=Rise
