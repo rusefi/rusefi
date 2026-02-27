@@ -208,9 +208,10 @@ public enum SerialPortScanner {
         }
         if (PCANConnected)
             ports.add(new PortResult(LinkManager.PCAN, SerialPortType.CAN));
+/*
         if (SHOW_SOCKETCAN)
             ports.add(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN));
-
+*/
         boolean isListUpdated;
         AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, stLinkConnected, PCANConnected);
         synchronized (lock) {
