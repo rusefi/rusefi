@@ -58,7 +58,7 @@ jobs:
 
       - name: Attach Gradle junit results
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: gradle junit
           path: '**/build/test-results/test/TEST-*.xml'
