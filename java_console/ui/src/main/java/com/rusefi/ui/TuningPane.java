@@ -23,7 +23,10 @@ public class TuningPane {
 
         final String[] currentKey = {null};
 
-        JPanel toolbar = getToolbar(uiContext, right, currentKey);
+        // Accumulated tune edits across all dialogs for this session.
+        final ConfigurationImage[] sessionImage = {null};
+
+        JPanel toolbar = getToolbar(uiContext, right, currentKey, sessionImage);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
         splitPane.setResizeWeight(0.3);
@@ -33,8 +36,19 @@ public class TuningPane {
             if (bp == null || bp.getControllerConfiguration() == null) {
                 return;
             }
+
+            // On first navigation, seed the session image from the live ECU state.
+            // On subsequent navigations, carry forward whatever the user has edited so far
+            // so that changes made in one dialog are not lost when opening another.
+            ConfigurationImage pending = right.getWorkingImage();
+            if (pending != null) {
+                sessionImage[0] = pending;
+            } else if (sessionImage[0] == null) {
+                sessionImage[0] = bp.getControllerConfiguration();
+            }
+
             currentKey[0] = subMenu.getKey();
-            right.update(subMenu.getKey());
+            right.update(subMenu.getKey(), uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
         });
 
         right.setOnConfigChange(left::refreshExpressions);
@@ -43,19 +57,31 @@ public class TuningPane {
         content.add(splitPane, BorderLayout.CENTER);
     }
 
-    private static @NotNull JPanel getToolbar(UIContext uiContext, CalibrationDialogWidget right, String[] currentKey) {
+    private static @NotNull JPanel getToolbar(UIContext uiContext, CalibrationDialogWidget right,
+                                              String[] currentKey, ConfigurationImage[] sessionImage) {
         JButton burnButton = new JButton("Burn to ECU");
         burnButton.addActionListener(e -> {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
-            ConfigurationImage workingImage = right.getWorkingImage();
-            if (bp == null || workingImage == null) return;
-            uiContext.getLinkManager().submit(() -> bp.uploadChanges(workingImage));
+            // Prefer the dialog's working image (has the current-dialog edits on top of session),
+            // fall back to the session image when viewing a table or curve (which don't set workingImage).
+            ConfigurationImage toBurn = right.getWorkingImage();
+            if (toBurn == null) toBurn = sessionImage[0];
+            if (bp == null || toBurn == null) return;
+            final ConfigurationImage image = toBurn;
+            sessionImage[0] = image;
+            uiContext.getLinkManager().submit(() -> bp.uploadChanges(image));
         });
 
         JButton discardButton = new JButton("Discard Changes");
         discardButton.addActionListener(e -> {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp == null) return;
+            // Reset session to the snapshot captured when we connected to this ECU.
+            ConfigurationImage baseline = bp.getCachedImage();
+            if (baseline == null) baseline = bp.getControllerConfiguration();
+            sessionImage[0] = baseline;
             if (currentKey[0] != null) {
-                right.update(currentKey[0]);
+                right.update(currentKey[0], uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
             }
         });
 
