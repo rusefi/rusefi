@@ -315,7 +315,7 @@ runs:
         ls -l bootloader/blbuild
 
     - name: Gradle tune-tools separately
-      working-directory: ${{inputs.rusefi_dir}}/java_tools
+      working-directory: ${{inputs.rusefi_dir}}
       shell: bash
       run: ./gradlew :tune-tools:shadowJar
 
