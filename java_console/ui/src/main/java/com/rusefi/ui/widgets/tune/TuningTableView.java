@@ -26,6 +26,8 @@ public class TuningTableView {
     private final String title;
     private double minValue = Double.MAX_VALUE;
     private double maxValue = -Double.MAX_VALUE;
+    private ConfigurationImage imageTarget;
+    private ArrayIniField zBinsField;
 
     public TuningTableView(String title) {
         this(title, false);
@@ -138,6 +140,7 @@ public class TuningTableView {
         }
         calculateMinMax(model.data);
         model.fireTableDataChanged();
+        writeBackZBins(model);
 
         // Restore selection
         table.clearSelection();
@@ -149,6 +152,11 @@ public class TuningTableView {
         }
 
         surface3DView.setData(model.data, model.xBins, model.yBins, minValue, maxValue);
+    }
+
+    private void writeBackZBins(TuningTableModel model) {
+        if (imageTarget == null || zBinsField == null) return;
+        ConfigurationImageGetterSetter.setArrayValues(zBinsField, imageTarget, model.data);
     }
 
     private void applyDelta(JTextField deltaField, int sign) {
@@ -171,11 +179,8 @@ public class TuningTableView {
             }
             calculateMinMax(model.data);
 
-            // Save selection
-            ListSelectionModel rowSel = table.getSelectionModel();
-            ListSelectionModel colSel = table.getColumnModel().getSelectionModel();
-
             model.fireTableDataChanged();
+            writeBackZBins(model);
 
             // Restore selection
             table.clearSelection();
@@ -213,6 +218,9 @@ public class TuningTableView {
         Double[] yBins = extractAxisBins(iniFile, iniTable.getYBinsConstant(), axisImage);
 
         calculateMinMax(dataValues);
+
+        this.imageTarget = zImage;
+        this.zBinsField = ltft;
 
         table.setModel(new TuningTableModel(dataValues, xBins, yBins, precision));
         table.clearSelection();

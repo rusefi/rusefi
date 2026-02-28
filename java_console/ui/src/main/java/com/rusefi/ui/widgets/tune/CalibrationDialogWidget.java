@@ -114,18 +114,19 @@ public class CalibrationDialogWidget {
                 update(dialog, iniFileModel, ci);
                 return;
             }
+            workingImage = ci != null ? ci.clone() : null;
 
             TableModel table = iniFileModel.getTable(key);
             if (table != null) {
                 contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
                 TuningTableView tuningTableView = new TuningTableView(table.getTitle());
-                tuningTableView.displayTable(iniFileModel, table.getTableId(), ci);
+                tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
                 contentPane.add(tuningTableView.getContent());
             } else {
                 CurveModel curve = iniFileModel.getCurves().get(key);
                 if (curve != null) {
                     contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-                    CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, ci);
+                    CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
                     contentPane.add(curveWidget.getContentPane());
                 }
             }
@@ -185,7 +186,7 @@ public class CalibrationDialogWidget {
 
             CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
             if (curve != null) {
-                CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, ci);
+                CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
                 JComponent content = curveWidget.getContentPane();
                 CalibrationFieldFactory.applyStyle(content);
                 content.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -196,7 +197,7 @@ public class CalibrationDialogWidget {
             TableModel table = iniFileModel.getTable(panel.getPanelName());
             if (table != null) {
                 TuningTableView tuningTableView = new TuningTableView(table.getTitle());
-                tuningTableView.displayTable(iniFileModel, table.getTableId(), ci);
+                tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
                 JComponent content = tuningTableView.getContent();
                 CalibrationFieldFactory.applyStyle(content);
                 content.setAlignmentX(Component.LEFT_ALIGNMENT);

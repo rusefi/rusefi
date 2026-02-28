@@ -39,7 +39,7 @@ public class TuningPane {
 
             // On first navigation, seed the session image from the live ECU state.
             // On subsequent navigations, carry forward whatever the user has edited so far
-            // so that changes made in one dialog are not lost when opening another.
+            // so that changes made in dialogs, tables, or curves are not lost when opening another.
             ConfigurationImage pending = right.getWorkingImage();
             if (pending != null) {
                 sessionImage[0] = pending;
@@ -62,8 +62,8 @@ public class TuningPane {
         JButton burnButton = new JButton("Burn to ECU");
         burnButton.addActionListener(e -> {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
-            // Prefer the dialog's working image (has the current-dialog edits on top of session),
-            // fall back to the session image when viewing a table or curve (which don't set workingImage).
+            // Use the working image
+            // fall back to the session image if no content has been opened yet.
             ConfigurationImage toBurn = right.getWorkingImage();
             if (toBurn == null) toBurn = sessionImage[0];
             if (bp == null || toBurn == null) return;
