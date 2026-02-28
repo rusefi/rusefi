@@ -28,6 +28,7 @@ public class TuningTableView {
     private double maxValue = -Double.MAX_VALUE;
     private ConfigurationImage imageTarget;
     private ArrayIniField zBinsField;
+    private Runnable onEdit;
 
     public TuningTableView(String title) {
         this(title, false);
@@ -154,9 +155,14 @@ public class TuningTableView {
         surface3DView.setData(model.data, model.xBins, model.yBins, minValue, maxValue);
     }
 
+    public void setOnEdit(Runnable onEdit) {
+        this.onEdit = onEdit;
+    }
+
     private void writeBackZBins(TuningTableModel model) {
         if (imageTarget == null || zBinsField == null) return;
         ConfigurationImageGetterSetter.setArrayValues(zBinsField, imageTarget, model.data);
+        if (onEdit != null) onEdit.run();
     }
 
     private void applyDelta(JTextField deltaField, int sign) {
