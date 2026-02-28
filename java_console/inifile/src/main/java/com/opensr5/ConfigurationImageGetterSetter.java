@@ -78,6 +78,32 @@ public class ConfigurationImageGetterSetter {
         return values;
     }
 
+    public static void setArrayValues(ArrayIniField field, ConfigurationImage image, Double[][] data) {
+        for (int rowIndex = 0; rowIndex < data.length; rowIndex++) {
+            for (int colIndex = 0; colIndex < data[rowIndex].length; colIndex++) {
+                java.nio.ByteBuffer wrapped = image.getByteBuffer(
+                        field.getOffset(rowIndex, colIndex), field.getType().getStorageSize());
+                ConfigurationImage.setScalarValue(wrapped, field.getType(),
+                        String.valueOf(data[rowIndex][colIndex]),
+                        Field.NO_BIT_OFFSET, field.getMultiplier(), 0);
+            }
+        }
+    }
+
+    public static void setArrayValues(ArrayIniField field, ConfigurationImage image, Double[] data) {
+        int index = 0;
+        for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
+            for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
+                if (index >= data.length) return;
+                java.nio.ByteBuffer wrapped = image.getByteBuffer(
+                        field.getOffset(rowIndex, colIndex), field.getType().getStorageSize());
+                ConfigurationImage.setScalarValue(wrapped, field.getType(),
+                        String.valueOf(data[index++]),
+                        Field.NO_BIT_OFFSET, field.getMultiplier(), 0);
+            }
+        }
+    }
+
     public static void setValue2(IniField iniField, ConfigurationImage image, final String name, final String value) {
         iniField.accept(new IniFieldVisitor<Void>() {
             @Override
