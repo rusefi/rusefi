@@ -4,6 +4,7 @@ import com.rusefi.PaneSettings;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
 
@@ -69,7 +70,13 @@ public class TabbedPanel {
                 criticalError = message;
         });
 
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(tabbedPane::repaint));
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
+            // clear the overlay so the UI becomes usable again
+            if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
+                criticalError = null;
+            }
+            tabbedPane.repaint();
+        }));
 
 //        settingsTab = new SettingsTab(uiContext);
         logsManager = new LogDownloader(uiContext);
