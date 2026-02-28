@@ -193,7 +193,7 @@ extern AemXSeriesWideband aem1;
     Gpio green = getRunningLedPin();
 		auto greenPort = getBrainPinPort(green);
 		auto greenPin = getBrainPinIndex(green);
-    palSetPad(greenPort, greenPin);
+    palClearPad(greenPort, greenPin); // Hellen has inverted LED control
   }
 #endif // EFI_BOOTLOADER
 }
