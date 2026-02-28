@@ -336,7 +336,9 @@ public class BinaryProtocol {
                 if (image.isEmpty())
                     return;
             }
-            setConfigurationImage(image.getConfigurationImage());
+            ConfigurationImage loadedImage = image.getConfigurationImage();
+            setConfigurationImage(loadedImage);
+            state.setCachedImage(loadedImage);
             log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
         }
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
@@ -598,19 +600,19 @@ public class BinaryProtocol {
             return;
         log.info("Need to burn");
 
-        while (true) {
-            if (stream.isClosed())
+        long start = System.currentTimeMillis();
+        while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
+            if (BurnCommand.execute(this)) {
+                log.info("BURN OK");
+                isBurnPending = false;
                 return;
-            boolean isGoodBurn = BurnCommand.execute(this);
-            if (!isGoodBurn) {
-                log.warn("BURN HAS FAILED?! Will retry");
-                continue;
             }
-            log.info("BURN OK");
-            break;
+            log.warn("BURN HAS FAILED?! Will retry");
         }
-        log.info("DONE");
-        isBurnPending = false;
+        // Burn did not succeed within the timeout — close the stream so the watchdog
+        // can trigger a reconnection rather than leaving the executor permanently blocked.
+        log.error("Burn timed out or stream closed, giving up");
+        stream.close();
     }
 
     public void setConfigurationImage(ConfigurationImage configurationImage) {
@@ -622,6 +624,33 @@ public class BinaryProtocol {
      */
     public ConfigurationImage getControllerConfiguration() {
         return state.getConfigurationImage();
+    }
+
+    /**
+     * @return the cached baseline image (snapshot taken when the tune was loaded), or null if not set
+     */
+    @Nullable
+    public ConfigurationImage getCachedImage() {
+        return state.getCachedImage();
+    }
+
+    /**
+     * Snapshot the current in-memory image as the new diff baseline.
+     */
+    public void cacheCurrentImage() {
+        ConfigurationImage current = state.getConfigurationImage();
+        if (current != null)
+            state.setCachedImage(current);
+    }
+
+    /**
+     * Reset the current in-memory image back to the cached baseline.
+     * Does NOT write to the ECU — call burn separately if needed.
+     *
+     * @return true if a cached image existed and the reset was applied
+     */
+    public boolean resetToCachedImage() {
+        return state.resetToCached();
     }
 
     /**
