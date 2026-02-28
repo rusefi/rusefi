@@ -12,7 +12,9 @@
 #include "hellen_leds_100.cpp"
 #include "board_overrides.h"
 #include "connectors/generated_board_pin_names.h"
+#ifndef EFI_BOOTLOADER
 #include "AemXSeriesLambda.h"
+#endif // EFI_BOOTLOADER
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
@@ -185,6 +187,7 @@ int getBoardMetaDcOutputsCount() {
 }
 
 static void uaefi_slowCallback() {
+#ifndef EFI_BOOTLOADER
 extern AemXSeriesWideband aem1;
   if (aem1.hasSeenRx) {
     Gpio green = getRunningLedPin();
@@ -192,6 +195,7 @@ extern AemXSeriesWideband aem1;
 		auto greenPin = getBrainPinIndex(green);
     palSetPad(greenPort, greenPin);
   }
+#endif // EFI_BOOTLOADER
 }
 
 void setup_custom_board_overrides() {
