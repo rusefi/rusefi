@@ -46,6 +46,7 @@ public class CurveWidget {
     private ConfigurationImage imageTarget;
     private ArrayIniField xBinsField;
     private ArrayIniField yBinsField;
+    private Runnable onEdit;
 
     public CurveWidget(CurveModel curveModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         table.getTableHeader().setReorderingAllowed(false);
@@ -91,6 +92,10 @@ public class CurveWidget {
         table.setModel(new CurveTableModel());
         content.revalidate();
         content.repaint();
+    }
+
+    public void setOnEdit(Runnable onEdit) {
+        this.onEdit = onEdit;
     }
 
     private void writeBackToImage() {
@@ -149,6 +154,7 @@ public class CurveWidget {
         private Double[] y;
 
         private Integer draggingIndex = null;
+        private boolean dragged = false;
 
         public CurveCanvas() {
             setBackground(Color.BLACK);
@@ -156,20 +162,26 @@ public class CurveWidget {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     draggingIndex = findIndex(e.getPoint());
+                    dragged = false;
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
+                    if (dragged) {
+                        writeBackToImage();
+                        if (onEdit != null) onEdit.run();
+                    }
                     draggingIndex = null;
+                    dragged = false;
                 }
 
                 @Override
                 public void mouseDragged(MouseEvent e) {
                     if (draggingIndex != null) {
                         updatePoint(draggingIndex, e.getPoint());
+                        dragged = true;
                         repaint();
                         table.repaint();
-                        writeBackToImage();
                     }
                 }
             };
@@ -374,6 +386,7 @@ public class CurveWidget {
                 fireTableCellUpdated(rowIndex, columnIndex);
                 canvas.repaint();
                 writeBackToImage();
+                if (onEdit != null) onEdit.run();
             } catch (NumberFormatException ignored) {}
         }
     }
