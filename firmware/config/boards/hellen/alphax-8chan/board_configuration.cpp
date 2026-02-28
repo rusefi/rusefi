@@ -260,7 +260,7 @@ void setup_custom_board_overrides() {
 }
 
 int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {
-	/* we do not check voltage for valid ragne yet */
+	/* we do not check voltage for valid range yet */
 	(void)voltage;
 
 	switch (hwChannel) {
