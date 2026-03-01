@@ -84,9 +84,11 @@ static bool storageWriteID(uint32_t id) {
 	// Do the actual flash write operation for given ID
 	if (id == EFI_SETTINGS_RECORD_ID) {
 		return writeToFlashNowImpl();
+#if EFI_LTFT_CONTROL
 	} else if (id == EFI_LTFT_RECORD_ID) {
 		engine->module<LongTermFuelTrim>()->store();
 		return true;
+#endif
 	} else {
 		efiPrintf("Requested to write unknown record id %ld", id);
 		// to clear pending bit
@@ -98,14 +100,20 @@ static bool storageWriteID(uint32_t id) {
 static bool storageReadID(uint32_t id) {
 	// Do actual read and call consumers callback
 
-	if (id == EFI_LTFT_RECORD_ID) {
+	if (id == EFI_SETTINGS_RECORD_ID) {
+		/* TODO */
+		return true;
+#if EFI_LTFT_CONTROL
+	} else if (id == EFI_LTFT_RECORD_ID) {
 		engine->module<LongTermFuelTrim>()->load();
 		return true;
+#endif
 	} else {
 		efiPrintf("Requested to read unknown record id %ld", id);
 		// to clear pending bit
 		return true;
 	}
+	return true;
 }
 
 static const char *storageTypeToName(StorageType type) {
