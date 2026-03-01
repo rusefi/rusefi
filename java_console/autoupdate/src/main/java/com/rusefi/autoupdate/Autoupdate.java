@@ -38,7 +38,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20260101; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20260228; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
 
     private static final String TITLE = getTitle();
@@ -93,6 +93,7 @@ public class Autoupdate {
 
         final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
         if (!PersistentConfiguration.getBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY)) {
+            log.info(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY + " says 'do not update'");
             downloadedAutoupdateFile = Optional.empty();
         } else {
             downloadedAutoupdateFile = downloadFreshZipFile(firstArgument, bundleInfo);
@@ -105,7 +106,7 @@ public class Autoupdate {
         // java lazy class-loader would get broken if we replace rusefi_autoupdate.jar file
         // ATTENTION! To avoid `ClassNotFoundException` we need to load all necessary classes before unzipping
         // autoupdate archive
-        safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
+        unzipAutoUpdate(downloadedAutoupdateFile);
         startConsoleAsANewProcess(consoleExeFileName, args);
     }
 
@@ -123,7 +124,8 @@ public class Autoupdate {
         return downloadedAutoupdateFile;
     }
 
-    private static void safeUnzipMakingSureClassloaderIsHappy(Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile) {
+    private static void unzipAutoUpdate(Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile) {
+        log.info("unzipAutoUpdate " + downloadedAutoupdateFile);
         // todo: we still have technical debt here! https://github.com/rusefi/rusefi/issues/7971
         downloadedAutoupdateFile.ifPresent(Autoupdate::unzipFreshConsole);
         downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
