@@ -287,9 +287,10 @@ public class BinaryProtocol {
     }
 
     /**
-     * this method patches configuration inside ECU by writing only regions with different content
+     * Patches configuration inside ECU RAM by writing only regions with different content.
+     * Does not burn to flash or update the local configuration image.
      */
-    public void uploadChanges(ConfigurationImage newVersion) {
+    public void uploadChangesWithoutBurn(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
@@ -310,6 +311,13 @@ public class BinaryProtocol {
 
             offset = range.second;
         }
+    }
+
+    /**
+     * this method patches configuration inside ECU by writing only regions with different content
+     */
+    public void uploadChanges(ConfigurationImage newVersion) {
+        uploadChangesWithoutBurn(newVersion);
         burn();
         setConfigurationImage(newVersion);
     }
