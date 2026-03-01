@@ -16,6 +16,7 @@ import java.util.ArrayDeque;
 public class TuningPane {
     private static final int MAX_UNDO = 15;
     private static final int IDLE_TIMEOUT_MS = 300;
+    private static final int UPLOAD_DELAY_MS = 100;
 
     private final JPanel content = new JPanel(new BorderLayout());
 
@@ -59,6 +60,15 @@ public class TuningPane {
         // Debounce timer: coalesces rapid edits (e.g., per-keystroke text field events) into a single undo point
         Timer undoCommitTimer = new Timer(IDLE_TIMEOUT_MS, e -> flushUndoBaseline.run());
         undoCommitTimer.setRepeats(false);
+
+        // The actual burn to flash is deferred until the user explicitly clicks "Burn to ECU".
+        Timer uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp == null || sessionImage[0] == null) return;
+            final ConfigurationImage snapshot = sessionImage[0].clone();
+            uiContext.getLinkManager().submit(() -> bp.uploadChangesWithoutBurn(snapshot));
+        });
+        uploadTimer.setRepeats(false);
 
         Runnable onDiscardExtra = () -> {
             undoCommitTimer.stop();
@@ -113,6 +123,7 @@ public class TuningPane {
             sessionImage[0] = image.clone();
             left.refreshExpressions(image);
             undoCommitTimer.restart();
+            uploadTimer.restart();
         });
 
         undoButton.addActionListener(e -> {
@@ -159,7 +170,10 @@ public class TuningPane {
             if (bp == null || toBurn == null) return;
             final ConfigurationImage image = toBurn;
             sessionImage[0] = image;
-            uiContext.getLinkManager().submit(() -> bp.uploadChanges(image));
+            uiContext.getLinkManager().submit(() -> {
+                bp.burn();
+                bp.setConfigurationImage(image);
+            });
         });
 
         JButton discardButton = new JButton("Discard Changes");
