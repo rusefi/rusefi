@@ -176,8 +176,8 @@ public class TsOutput {
                 if (configField.isBit()) {
                     if (!configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
                         tsHeader.append(temporaryLineComment + nameWithPrefix + " = bits, U32,");
-                        tsHeader.append(" " + tsPosition + ", [");
-                        tsHeader.append(bitIndex + ":" + bitIndex);
+                        tsHeader.append(" " + (tsPosition + it.bitState.getByteOffset()) + ", [");
+                        tsHeader.append(it.bitState.getBitIndex() + ":" + it.bitState.getBitIndex());
                         tsHeader.append("]");
                         if (isConstantsSection)
                             tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");

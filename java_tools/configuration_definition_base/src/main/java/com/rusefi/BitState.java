@@ -12,13 +12,19 @@ public class BitState {
             bitIndex = 0;
             return;
         }
-        incrementBitIndex(cf);
+        bitIndex++;
     }
 
     public void incrementBitIndex(ConfigField cf) {
-        if (bitIndex == 32)
-            throw new TooManyBitsInARow("Too many bits in a row: " + cf.getName());
         bitIndex++;
+    }
+
+    public int getByteOffset() {
+        return (bitIndex / 32) * 4;
+    }
+
+    public int getBitIndex() {
+        return bitIndex % 32;
     }
 
     public void reset() {
