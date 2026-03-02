@@ -3,7 +3,10 @@ package com.rusefi.core;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.ExpressionEvaluator;
+import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.FrontPageModel;
 import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.TsStringFunction;
@@ -16,9 +19,11 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
@@ -91,7 +96,29 @@ public interface ISensorHolder {
             }
         }
 
-        // Third pass: resolve string-valued gauge labels (bitStringValue, stringValue)
+        // Third pass: read output channels referenced by any indicator (front-page or dialog
+        // indicatorPanels) that were not already covered by a gauge definition.
+        Set<String> indicatorVars = new HashSet<>();
+        FrontPageModel frontPage = ini.getFrontPage();
+        if (frontPage != null) {
+            for (IndicatorModel indicator : frontPage.getIndicators())
+                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
+        }
+        for (DialogModel dialog : ini.getDialogs().values()) {
+            for (IndicatorModel indicator : dialog.getIndicators())
+                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
+        }
+        for (String varName : indicatorVars) {
+            if (!outputChannelValues.containsKey(varName)) {
+                Double value = tryReadOutputChannel(response, varName, ini, varName);
+                if (value != null) {
+                    setValue(value, varName);
+                    outputChannelValues.put(varName, value);
+                }
+            }
+        }
+
+        // Fourth pass: resolve string-valued gauge labels (bitStringValue, stringValue)
         onGaugeLabelsResolved(resolveGaugeLabels(ini, configImage, outputChannelValues));
     }
 
