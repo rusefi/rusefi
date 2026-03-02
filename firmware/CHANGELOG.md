@@ -31,7 +31,7 @@ Release template (copy/paste this for new release):
 ### Added
  - ETB bench test button: open throttle 300ms without sensors (#9171)
 
-## February 2025 "Day 1458"
+## February 2026 "Day 1458"
 
 ### Fixed
  - ETB: calibration, wrong scale 3% calibration error #8863
