@@ -15,7 +15,8 @@ import java.util.*;
  */
 public class IniFileReader {
     public IniFileModel getIniFileModel() {
-        // Finish any pending context help entry before building the model
+        // Finish any pending dialog/indicatorPanel and context help before building the model
+        finishDialog();
         finishContextHelp();
 
         return new ImmutableIniFileModel(metaInfo.getSignature(),
