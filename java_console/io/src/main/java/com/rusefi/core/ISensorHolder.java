@@ -130,7 +130,7 @@ public interface ISensorHolder {
 
     /**
      * Try to read a named output channel from the response bytes.
-     * @return the value, or null if the channel doesn't exist or has an unsupported type
+     * @return the value, or null if the channel doesn't exist, has an unsupported type, or is out of bounds
      */
     @Nullable
     static Double tryReadOutputChannel(byte[] response, String label, IniFileModel ini, String channelName) {
@@ -138,6 +138,9 @@ public interface ISensorHolder {
             IniField field = ini.getOutputChannel(channelName);
             return readFieldValue(response, label, field);
         } catch (IniMemberNotFound e) {
+            return null;
+        } catch (IllegalArgumentException e) {
+            log.warn("Out of bounds reading output channel " + channelName + ": " + e.getMessage());
             return null;
         }
     }
