@@ -347,7 +347,8 @@ public class ExpressionEvaluator {
                 e.setVariable(var, variables.get(var));
             }
 
-            return e.evaluate();
+            double result = e.evaluate();
+            return Double.isNaN(result) ? null : result;
         } catch (Exception e) {
             log.debug("Failed to evaluate expression: " + expression + " - " + e.getMessage());
         }
