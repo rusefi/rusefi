@@ -7,6 +7,7 @@ import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.ReadoutModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
@@ -421,7 +422,11 @@ public class CalibrationDialogWidget {
 
     private static void applyIndicatorState(JLabel label, IndicatorModel indicator, IniFileModel ini, ConfigurationImage ci) {
         // Build evaluation context: config image fields first, then live sensor/output-channel values.
-        Set<String> vars = ExpressionEvaluator.extractVariables(indicator.getExpression());
+        // Include variables from the labels so bitStringValue() index args are resolved.
+        Set<String> vars = new HashSet<>();
+        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
+        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
+        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
         Map<String, Double> context = new HashMap<>();
         for (String var : vars) {
             Optional<IniField> field = ini.findIniField(var);
@@ -434,15 +439,24 @@ public class CalibrationDialogWidget {
         }
         Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), context);
         if (Boolean.TRUE.equals(active)) {
-            label.setText(stripBraces(indicator.getOnLabel()));
+            label.setText(resolveLabel(indicator.getOnLabel(), ini, context));
             label.setBackground(parseDialogIndicatorColor(indicator.getOnBg()));
             label.setForeground(parseDialogIndicatorColor(indicator.getOnFg()));
         } else {
-            String offText = stripBraces(indicator.getOffLabel());
+            String offText = resolveLabel(indicator.getOffLabel(), ini, context);
             label.setText(offText.isEmpty() ? " " : offText);
             label.setBackground(parseDialogIndicatorColor(indicator.getOffBg()));
             label.setForeground(parseDialogIndicatorColor(indicator.getOffFg()));
         }
+    }
+
+    private static String resolveLabel(String label, IniFileModel ini, Map<String, Double> context) {
+        if (label == null) return "";
+        if (TsStringFunction.containsStringFunction(label)) {
+            String resolved = TsStringFunction.resolve(label, ini, null, context);
+            return resolved != null ? resolved : "";
+        }
+        return stripBraces(label);
     }
 
     private static String stripBraces(String s) {
