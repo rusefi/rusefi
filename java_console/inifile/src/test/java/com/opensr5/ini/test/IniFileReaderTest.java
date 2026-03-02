@@ -696,5 +696,36 @@ public class IniFileReaderTest {
         assertEquals(2, mathGauge.getLabelDecimalPlaces());
     }
 
+    @Test
+    public void testIndicatorPanelAndDialogWithPanels() {
+        // Reproduces IgnitionTableDialog: a dialog that only has panel references (no fields/commands),
+        // preceded by an indicatorPanel definition. The last dialog in the file must be correctly saved.
+        String string =
+            "indicatorPanel = ignitionTableIndicators, 1\n" +
+            "    indicator = { isIdling && useSeparateAdvanceForIdle == 1 }, \"Using normal ignition table\", \"Using idle ignition table\",  white,  black,  green,  black\n" +
+            "\n" +
+            "dialog = IgnitionTableDialog, \"\"\n" +
+            "    panel = ignitionTableIndicators\n" +
+            "    panel = ignitionTableTbl\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        // The indicatorPanel definition should be saved as a dialog with indicators
+        assertTrue(model.getDialogs().containsKey("ignitionTableIndicators"));
+        DialogModel indicatorPanelDialog = model.getDialogs().get("ignitionTableIndicators");
+        assertNotNull(indicatorPanelDialog);
+        assertEquals(1, indicatorPanelDialog.getIndicators().size());
+        assertEquals(0, indicatorPanelDialog.getPanels().size());
+
+        // IgnitionTableDialog should be saved with 2 panel references (no fields)
+        assertTrue(model.getDialogs().containsKey("IgnitionTableDialog"));
+        DialogModel ignitionTableDialog = model.getDialogs().get("IgnitionTableDialog");
+        assertNotNull(ignitionTableDialog);
+        assertEquals(0, ignitionTableDialog.getFields().size());
+        assertEquals(2, ignitionTableDialog.getPanels().size());
+        assertEquals("ignitionTableIndicators", ignitionTableDialog.getPanels().get(0).getPanelName());
+        assertEquals("ignitionTableTbl", ignitionTableDialog.getPanels().get(1).getPanelName());
+    }
 
 }
