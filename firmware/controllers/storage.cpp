@@ -16,6 +16,10 @@
 
 /* If any setting storage is exist or we are in unit test */
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
+
+/* TODO: no weak please */
+__attribute__((weak)) bool boardAllowFlashNow() { return true; }
+
 bool storageAllowWriteID(StorageItemId id)
 {
 #if (EFI_STORAGE_INT_FLASH == TRUE) || defined(EFI_UNIT_TEST)
@@ -27,6 +31,10 @@ bool storageAllowWriteID(StorageItemId id)
 		// check if HW support flash writing while executing
 		if (mcuCanFlashWhileRunning()) {
 			return true;
+		}
+
+		if (!boardAllowFlashNow()) {
+			return false;
 		}
 
 #if EFI_SHAFT_POSITION_INPUT
