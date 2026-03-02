@@ -527,10 +527,15 @@ public class IniFileReader {
 
     private void handleDialogIndicator(LinkedList<String> list) {
         if (dialogId == null) return;
-        // format: indicator, expression, offLabel, onLabel, offBg, offFg, onBg, onFg
-        if (list.size() < 8) return;
+        // format: indicator, expression, offLabel, onLabel[, offBg, offFg, onBg, onFg]
+        // Colors are optional
+        if (list.size() < 4) return;
         IndicatorModel indicator = new IndicatorModel(
-                list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
+                list.get(1), list.get(2), list.get(3),
+                list.size() > 4 ? list.get(4) : null,
+                list.size() > 5 ? list.get(5) : "black",
+                list.size() > 6 ? list.get(6) : "green",
+                list.size() > 7 ? list.get(7) : "black");
         indicatorsOfCurrentDialog.add(indicator);
     }
 
@@ -764,16 +769,16 @@ public class IniFileReader {
                 frontPage.getGaugeNames().add(list.get(1));
             }
         } else if (first.equalsIgnoreCase("indicator")) {
-            if (list.size() >= 8) {
-                // indicator = expression, offLabel, onLabel, offBg, offFg, onBg, onFg
+            // format: indicator, expression, offLabel, onLabel[, offBg, offFg, onBg, onFg]
+            if (list.size() >= 4) {
                 IndicatorModel indicator = new IndicatorModel(
                         list.get(1),
                         list.get(2),
                         list.get(3),
-                        list.get(4),
-                        list.get(5),
-                        list.get(6),
-                        list.get(7)
+                        list.size() > 4 ? list.get(4) : null,
+                        list.size() > 5 ? list.get(5) : "black",
+                        list.size() > 6 ? list.get(6) : "green",
+                        list.size() > 7 ? list.get(7) : "black"
                 );
                 frontPage.getIndicators().add(indicator);
             }

@@ -228,7 +228,7 @@ public class TuningPane {
             label.setOpaque(true);
             label.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(Color.GRAY, 1),
-                    BorderFactory.createEmptyBorder(1, 4, 1, 4)));
+                BorderFactory.createEmptyBorder(4, 8, 4, 8)));
             label.setBackground(parseIndicatorColor(model.getOffBg()));
             label.setForeground(parseIndicatorColor(model.getOffFg()));
             panel.add(label);
