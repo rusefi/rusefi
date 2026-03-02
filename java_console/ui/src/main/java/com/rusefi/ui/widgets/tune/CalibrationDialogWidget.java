@@ -94,6 +94,7 @@ public class CalibrationDialogWidget {
         workingImage = ci != null ? ci.clone() : null;
         currentIniFileModel = iniFileModel;
         expressionRows.clear();
+        indicatorEntries.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
             applyLayout(contentPane, dialogModel.getLayoutHint());
