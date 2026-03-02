@@ -98,15 +98,22 @@ public interface ISensorHolder {
 
         // Third pass: read output channels referenced by any indicator (front-page or dialog
         // indicatorPanels) that were not already covered by a gauge definition.
+        // Include label variables so bitStringValue() index args (e.g. fuelCutReason) are fetched.
         Set<String> indicatorVars = new HashSet<>();
         FrontPageModel frontPage = ini.getFrontPage();
         if (frontPage != null) {
-            for (IndicatorModel indicator : frontPage.getIndicators())
+            for (IndicatorModel indicator : frontPage.getIndicators()) {
                 indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
+                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
+                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
+            }
         }
         for (DialogModel dialog : ini.getDialogs().values()) {
-            for (IndicatorModel indicator : dialog.getIndicators())
+            for (IndicatorModel indicator : dialog.getIndicators()) {
                 indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
+                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
+                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
+            }
         }
         for (String varName : indicatorVars) {
             if (!outputChannelValues.containsKey(varName)) {
