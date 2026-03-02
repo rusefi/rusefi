@@ -9,13 +9,15 @@ fi
 pattern=$1
 threshold=$2
 
+echo "Pattern: [$pattern], threshold: [$threshold]"
+
 # Expand the pattern and iterate over files
 # We use a loop to handle potential multiple files matching the pattern
 # and to print the required message.
 # Note: we should handle cases where the pattern might not match anything
 # or where it's a directory.
 
-# Using find to handle potential globbing issues if needed, 
+# Using find to handle potential globbing issues if needed,
 # but simple expansion might be enough if passed with quotes or if handled by shell.
 # However, the requirement says "going over individual files matching pattern".
 
