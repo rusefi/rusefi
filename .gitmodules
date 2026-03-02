@@ -53,3 +53,6 @@
 	path = .github/workflows/hw-ci/gethla
 	url = https://github.com/rusefi/gethla/
 	branch = prod
+[submodule "firmware/ext/rusefi-gha"]
+	path = firmware/ext/rusefi-gha
+	url = https://github.com/rusefi/rusefi-gha
