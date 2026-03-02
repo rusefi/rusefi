@@ -64,6 +64,8 @@ public class IniFileReader {
     private final List<DialogModel.Command> commandsOfCurrentDialog = new ArrayList<>();
     private final List<PanelModel> panelsOfCurrentDialog = new ArrayList<>();
     private final List<IndicatorModel> indicatorsOfCurrentDialog = new ArrayList<>();
+    private final List<ReadoutModel> readoutsOfCurrentDialog = new ArrayList<>();
+    private int currentReadoutColumns = 1;
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -146,12 +148,13 @@ public class IniFileReader {
 
     void finishDialog() {
         if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty()
-                && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty())
+                && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty()
+                && readoutsOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
-        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, dialogTopicHelp, dialogLayoutHint));
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, dialogTopicHelp, dialogLayoutHint));
         dialogId = null;
         dialogTopicHelp = null;
         dialogLayoutHint = null;
@@ -159,6 +162,8 @@ public class IniFileReader {
         commandsOfCurrentDialog.clear();
         panelsOfCurrentDialog.clear();
         indicatorsOfCurrentDialog.clear();
+        readoutsOfCurrentDialog.clear();
+        currentReadoutColumns = 1;
     }
 
     void handleLine(RawIniFile.Line line) {
@@ -290,6 +295,12 @@ public class IniFileReader {
                     break;
                 case "indicator":
                     handleDialogIndicator(list);
+                    break;
+                case "readoutPanel":
+                    handleReadoutPanel(list);
+                    break;
+                case "readout":
+                    handleReadout(list);
                     break;
                 case "panel":
                     handlePanel(list);
@@ -537,6 +548,55 @@ public class IniFileReader {
                 list.size() > 6 ? list.get(6) : "green",
                 list.size() > 7 ? list.get(7) : "black");
         indicatorsOfCurrentDialog.add(indicator);
+    }
+
+    private void handleReadoutPanel(LinkedList<String> list) {
+        finishDialog();
+        list.removeFirst(); // "readoutPanel"
+        if (list.isEmpty()) return;
+        String key = list.removeFirst();
+        // optional: numberOfColumns, [enableExpression]
+        int cols = 1;
+        if (!list.isEmpty()) {
+            try { cols = Integer.parseInt(list.removeFirst()); } catch (NumberFormatException ignored) { }
+        }
+        dialogId = key;
+        dialogUiName = "";
+        dialogLayoutHint = null;
+        currentReadoutColumns = cols;
+    }
+
+    private void handleReadout(LinkedList<String> list) {
+        if (dialogId == null) return;
+        if (list.size() < 2) return;
+        // format 1: readout = name  (gauge ref or channel ref, 2 tokens)
+        // format 2: readout = channel, title, units, min, max, loD, loW, hiW, hiD, valDig, lblDig  (12 tokens)
+        if (list.size() == 2) {
+            readoutsOfCurrentDialog.add(ReadoutModel.ofRef(list.get(1)));
+            return;
+        }
+        String channel = list.get(1);
+        String title   = list.size() > 2  ? list.get(2)  : null;
+        String units   = list.size() > 3  ? list.get(3)  : null;
+        Double min     = parseOptionalDouble(list, 4);
+        Double max     = parseOptionalDouble(list, 5);
+        Double lowD    = parseOptionalDouble(list, 6);
+        Double lowW    = parseOptionalDouble(list, 7);
+        Double hiW     = parseOptionalDouble(list, 8);
+        Double hiD     = parseOptionalDouble(list, 9);
+        int valDig     = list.size() > 10 ? parseIntSafe(list.get(10)) : 1;
+        int lblDig     = list.size() > 11 ? parseIntSafe(list.get(11)) : 0;
+        readoutsOfCurrentDialog.add(new ReadoutModel(channel, title, units, min, max, lowD, lowW, hiW, hiD, valDig, lblDig));
+    }
+
+    //TODO: this is usefull for varius ui things, move to a more generic place
+    private static Double parseOptionalDouble(List<String> list, int index) {
+        if (list.size() <= index) return null;
+        try { return Double.parseDouble(list.get(index)); } catch (NumberFormatException e) { return null; }
+    }
+
+    private static int parseIntSafe(String s) {
+        try { return Integer.parseInt(s); } catch (NumberFormatException e) { return 0; }
     }
 
     private void handlePanel(LinkedList<String> list) {
