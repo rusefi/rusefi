@@ -253,6 +253,7 @@ bool storagRequestUnregisterStorage(StorageType id)
 	return storageManagerSendCmd(MSG_CMD_UNREG, (uint32_t)id);
 }
 
+// bitmap of flags per pageId. Reminder that page numbers start from 1, see StorageItemId
 static uint32_t pendingWrites = 0;
 static uint32_t pendingReads = 0;
 
@@ -335,9 +336,10 @@ static void storageManagerThread(void*) {
 			}
 		}
 
-		// check if we can write some of pendind IDs...
+		// check if we can write some of pending IDs...
 		for (size_t i = 0; (i < EFI_STORAGE_TOTAL_ITEMS) && pendingWrites; i++) {
 			if ((pendingWrites & BIT(i)) == 0) {
+			  // not for this page
 				continue;
 			}
 
