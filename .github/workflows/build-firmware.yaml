@@ -34,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+# we are not using 'recursive' here, we have common_submodule_init.sh instead probably as a performance optimization?
       - uses: actions/checkout@v6
         with:
           submodules: true
