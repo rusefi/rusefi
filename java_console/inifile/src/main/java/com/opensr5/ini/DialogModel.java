@@ -13,27 +13,33 @@ public class DialogModel {
     private final List<Field> fields;
     private final List<Command> commandsOfCurrentDialog;
     private final List<PanelModel> panels;
+    private final List<IndicatorModel> indicators;
     private final String topicHelp;
     private final String layoutHint;
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog) {
-        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), null, null);
+        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), new ArrayList<>(), null, null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, String topicHelp) {
-        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), topicHelp, null);
+        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), new ArrayList<>(), topicHelp, null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, String topicHelp) {
-        this(key, uiName, fields, commandsOfCurrentDialog, panels, topicHelp, null);
+        this(key, uiName, fields, commandsOfCurrentDialog, panels, new ArrayList<>(), topicHelp, null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, String topicHelp, String layoutHint) {
+        this(key, uiName, fields, commandsOfCurrentDialog, panels, new ArrayList<>(), topicHelp, layoutHint);
+    }
+
+    public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, List<IndicatorModel> indicators, String topicHelp, String layoutHint) {
         this.key = key;
         this.uiName = uiName;
         this.fields = new ArrayList<>(fields);
         this.commandsOfCurrentDialog = new ArrayList<>(commandsOfCurrentDialog);
         this.panels = new ArrayList<>(panels);
+        this.indicators = new ArrayList<>(indicators);
         this.topicHelp = topicHelp;
         this.layoutHint = layoutHint;
     }
@@ -48,6 +54,10 @@ public class DialogModel {
 
     public List<PanelModel> getPanels() {
         return panels;
+    }
+
+    public List<IndicatorModel> getIndicators() {
+        return indicators;
     }
 
     public String getKey() {
