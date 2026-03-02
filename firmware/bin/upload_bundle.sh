@@ -54,11 +54,14 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
     DESTINATION_SUBFOLDER=""
  fi
 
+# todo: why does upload_ini.sh just invokes a bunch of mkdir from one sshpass invocation, but here we seem to do something else?
+
  DESTINATION_FOLDER="${bundle_upload_folder}"
+ SSHPASS_RETRY=$(realpath $(dirname "$0"))/sshpass-retry.sh
  # sftp does not support -p flag on mkdir :(
- sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
-mkdir ${DESTINATION_FOLDER}
-SSHCMD
+ $SSHPASS_RETRY $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+ mkdir ${DESTINATION_FOLDER}
+ SSHCMD
 
  readarray -d "/" -t SUBFOLDER_ARRAY <<< "${DESTINATION_SUBFOLDER}"
  for ((n=0; n < ${#SUBFOLDER_ARRAY[*]}; n++))
@@ -66,14 +69,14 @@ SSHCMD
     SUBFOLDER_COMPONENT="${SUBFOLDER_ARRAY[n]}"
     if [ -n "${SUBFOLDER_COMPONENT}" ]; then
       DESTINATION_FOLDER="${DESTINATION_FOLDER}/${SUBFOLDER_COMPONENT}"
-      sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+      $SSHPASS_RETRY $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
 mkdir ${DESTINATION_FOLDER}
 SSHCMD
     fi
  done
 
      # sftp does not support -p flag on mkdir :(
-     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+     $SSHPASS_RETRY $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
 dir
 cd ${DESTINATION_FOLDER}
 put $FULL_BUNDLE_FILE
