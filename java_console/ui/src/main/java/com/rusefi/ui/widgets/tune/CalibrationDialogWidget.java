@@ -4,10 +4,12 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ExpressionEvaluator;
+import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ScrollablePanel;
@@ -32,6 +34,7 @@ public class CalibrationDialogWidget {
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
+    private final List<IndicatorLabelEntry> indicatorEntries = new ArrayList<>();
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
 
@@ -51,6 +54,17 @@ public class CalibrationDialogWidget {
             this.row = row;
             this.enableExpression = enableExpression;
             this.visibleExpression = visibleExpression;
+        }
+    }
+
+    /** Tracks an indicator label inside a dialog indicatorPanel for config-driven refresh. */
+    private static class IndicatorLabelEntry {
+        final JLabel label;
+        final IndicatorModel indicator;
+
+        IndicatorLabelEntry(JLabel label, IndicatorModel indicator) {
+            this.label = label;
+            this.indicator = indicator;
         }
     }
 
@@ -146,7 +160,14 @@ public class CalibrationDialogWidget {
         for (DialogModel.Field field : dialogModel.getFields()) {
             JPanel row;
             Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
-            row = iniField.map(value -> CalibrationFieldFactory.createFieldRow(field, value, ci, workingImage, onChange)).orElseGet(() -> CalibrationFieldFactory.createLabelRow(field));
+            row = iniField.map(value -> {
+                try {
+                    return CalibrationFieldFactory.createFieldRow(field, value, ci, workingImage, onChange);
+                } catch (OrdinalOutOfRangeException e) {
+                    log.warn("Skipping field " + field.getKey() + " with out-of-range ordinal: " + e.getMessage());
+                    return CalibrationFieldFactory.createLabelRow(field);
+                }
+            }).orElseGet(() -> CalibrationFieldFactory.createLabelRow(field));
 
             boolean hasExpressions = field.getEnableExpression() != null || field.getVisibleExpression() != null;
             if (hasExpressions) {
@@ -165,6 +186,19 @@ public class CalibrationDialogWidget {
 
         for (DialogModel.Command command : dialogModel.getCommandsOfCurrentDialog()) {
             container.add(CalibrationFieldFactory.createCommandRow(command));
+        }
+
+        for (IndicatorModel indicator : dialogModel.getIndicators()) {
+            JLabel label = new JLabel();
+            label.setOpaque(true);
+            label.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Color.GRAY, 1),
+                    BorderFactory.createEmptyBorder(1, 4, 1, 4)));
+            label.setAlignmentX(Component.LEFT_ALIGNMENT);
+            ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
+            applyIndicatorState(label, indicator, iniFileModel, evalImage);
+            indicatorEntries.add(new IndicatorLabelEntry(label, indicator));
+            container.add(label);
         }
 
         boolean isGridLayout = container.getLayout() instanceof GridLayout;
@@ -243,6 +277,9 @@ public class CalibrationDialogWidget {
         for (ExpressionRow exprRow : expressionRows) {
             applyExpressionState(exprRow, currentIniFileModel, workingImage);
         }
+        for (IndicatorLabelEntry entry : indicatorEntries) {
+            applyIndicatorState(entry.label, entry.indicator, currentIniFileModel, workingImage);
+        }
         contentPane.revalidate();
         contentPane.repaint();
         if (onConfigChange != null) {
@@ -274,6 +311,40 @@ public class CalibrationDialogWidget {
             if (comp instanceof Container) {
                 setComponentsEnabled((Container) comp, enabled);
             }
+        }
+    }
+
+    private static void applyIndicatorState(JLabel label, IndicatorModel indicator, IniFileModel ini, ConfigurationImage ci) {
+        Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), ini, ci);
+        if (Boolean.TRUE.equals(active)) {
+            label.setText(stripBraces(indicator.getOnLabel()));
+            label.setBackground(parseDialogIndicatorColor(indicator.getOnBg()));
+            label.setForeground(parseDialogIndicatorColor(indicator.getOnFg()));
+        } else {
+            String offText = stripBraces(indicator.getOffLabel());
+            label.setText(offText.isEmpty() ? " " : offText);
+            label.setBackground(parseDialogIndicatorColor(indicator.getOffBg()));
+            label.setForeground(parseDialogIndicatorColor(indicator.getOffFg()));
+        }
+    }
+
+    private static String stripBraces(String s) {
+        if (s == null) return "";
+        String t = s.trim();
+        if (t.startsWith("{")) t = t.replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        return t;
+    }
+
+    private static Color parseDialogIndicatorColor(String name) {
+        if (name == null) return Color.LIGHT_GRAY;
+        switch (name.toLowerCase().trim()) {
+            case "white":  return Color.WHITE;
+            case "black":  return Color.BLACK;
+            case "red":    return Color.RED;
+            case "yellow": return Color.YELLOW;
+            case "green":  return Color.GREEN;
+            case "blue":   return Color.BLUE;
+            default:       return Color.LIGHT_GRAY;
         }
     }
 
