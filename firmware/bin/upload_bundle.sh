@@ -60,8 +60,8 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
  SSHPASS_RETRY=$(realpath $(dirname "$0"))/sshpass-retry.sh
  # sftp does not support -p flag on mkdir :(
  $SSHPASS_RETRY $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
- mkdir ${DESTINATION_FOLDER}
- SSHCMD
+mkdir ${DESTINATION_FOLDER}
+SSHCMD
 
  readarray -d "/" -t SUBFOLDER_ARRAY <<< "${DESTINATION_SUBFOLDER}"
  for ((n=0; n < ${#SUBFOLDER_ARRAY[*]}; n++))
