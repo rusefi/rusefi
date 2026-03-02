@@ -10,6 +10,7 @@ import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.OrdinalOutOfRangeException;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ScrollablePanel;
@@ -72,6 +73,12 @@ public class CalibrationDialogWidget {
         this.uiContext = uiContext;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        // Refresh dialog indicators whenever the ECU sends new output-channel data.
+        SensorCentral.getInstance().addListener(() -> {
+            if (!indicatorEntries.isEmpty()) {
+                SwingUtilities.invokeLater(this::refreshIndicators);
+            }
+        });
     }
 
     private static void applyLayout(JPanel panel, String layoutHint) {
@@ -278,14 +285,23 @@ public class CalibrationDialogWidget {
         for (ExpressionRow exprRow : expressionRows) {
             applyExpressionState(exprRow, currentIniFileModel, workingImage);
         }
+        refreshIndicators();
+        if (onConfigChange != null) {
+            onConfigChange.accept(workingImage);
+        }
+    }
+
+    /**
+     * Re-evaluates indicator labels using both the current config image and live sensor values.
+     * Called from the SensorCentral listener (on EDT via invokeLater) and from refreshExpressions.
+     */
+    private void refreshIndicators() {
+        if (currentIniFileModel == null) return;
         for (IndicatorLabelEntry entry : indicatorEntries) {
             applyIndicatorState(entry.label, entry.indicator, currentIniFileModel, workingImage);
         }
         contentPane.revalidate();
         contentPane.repaint();
-        if (onConfigChange != null) {
-            onConfigChange.accept(workingImage);
-        }
     }
 
     private void applyExpressionState(ExpressionRow exprRow, IniFileModel iniFileModel, ConfigurationImage ci) {
@@ -316,7 +332,19 @@ public class CalibrationDialogWidget {
     }
 
     private static void applyIndicatorState(JLabel label, IndicatorModel indicator, IniFileModel ini, ConfigurationImage ci) {
-        Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), ini, ci);
+        // Build evaluation context: config image fields first, then live sensor/output-channel values.
+        Set<String> vars = ExpressionEvaluator.extractVariables(indicator.getExpression());
+        Map<String, Double> context = new HashMap<>();
+        for (String var : vars) {
+            Optional<IniField> field = ini.findIniField(var);
+            if (field.isPresent() && ci != null) {
+                Double val = ci.readNumericValue(field.get());
+                if (val != null) { context.put(var, val); continue; }
+            }
+            double sensorVal = SensorCentral.getInstance().getValue(var);
+            if (!Double.isNaN(sensorVal)) context.put(var, sensorVal);
+        }
+        Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), context);
         if (Boolean.TRUE.equals(active)) {
             label.setText(stripBraces(indicator.getOnLabel()));
             label.setBackground(parseDialogIndicatorColor(indicator.getOnBg()));
