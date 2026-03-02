@@ -4,8 +4,10 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ExpressionEvaluator;
+import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.ReadoutModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.IniField;
@@ -41,6 +43,7 @@ public class CalibrationDialogWidget {
     private IniFileModel currentIniFileModel;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
     private final List<IndicatorLabelEntry> indicatorEntries = new ArrayList<>();
+    private final List<ReadoutLabelEntry> readoutEntries = new ArrayList<>();
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
 
@@ -74,14 +77,32 @@ public class CalibrationDialogWidget {
         }
     }
 
+    /** Tracks a readout value label for live update from SensorCentral. */
+    private static class ReadoutLabelEntry {
+        final JLabel valueLabel;
+        final String channel;
+        final String units;
+        final int valDigits;
+
+        ReadoutLabelEntry(JLabel valueLabel, String channel, String units, int valDigits) {
+            this.valueLabel = valueLabel;
+            this.channel = channel;
+            this.units = units;
+            this.valDigits = valDigits;
+        }
+    }
+
     public CalibrationDialogWidget(UIContext uiContext) {
         this.uiContext = uiContext;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-        // Refresh dialog indicators whenever the ECU sends new output-channel data.
+        // Refresh dialog indicators and readouts whenever the ECU sends new output-channel data.
         SensorCentral.getInstance().addListener(() -> {
-            if (!indicatorEntries.isEmpty()) {
-                SwingUtilities.invokeLater(this::refreshIndicators);
+            if (!indicatorEntries.isEmpty() || !readoutEntries.isEmpty()) {
+                SwingUtilities.invokeLater(() -> {
+                    refreshIndicators();
+                    refreshReadouts();
+                });
             }
         });
     }
@@ -107,6 +128,7 @@ public class CalibrationDialogWidget {
         currentIniFileModel = iniFileModel;
         expressionRows.clear();
         indicatorEntries.clear();
+        readoutEntries.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
             applyLayout(contentPane, dialogModel.getLayoutHint());
@@ -214,6 +236,18 @@ public class CalibrationDialogWidget {
             container.add(label);
         }
 
+        List<ReadoutModel> readouts = dialogModel.getReadouts();
+        if (!readouts.isEmpty()) {
+            int cols = Math.max(1, dialogModel.getReadoutColumns());
+            JPanel grid = new JPanel(new GridLayout(0, cols, 4, 4));
+            grid.setAlignmentX(Component.LEFT_ALIGNMENT);
+            for (ReadoutModel readout : readouts) {
+                JPanel cell = buildReadoutCell(readout, iniFileModel);
+                grid.add(cell);
+            }
+            container.add(grid);
+        }
+
         boolean isGridLayout = container.getLayout() instanceof GridLayout;
         List<PanelModel> panels = dialogModel.getPanels();
         JPanel horizontalPanel = null;
@@ -307,6 +341,55 @@ public class CalibrationDialogWidget {
         }
         contentPane.revalidate();
         contentPane.repaint();
+    }
+
+    private void refreshReadouts() {
+        for (ReadoutLabelEntry entry : readoutEntries) {
+            double val = SensorCentral.getInstance().getValue(entry.channel);
+            String text = Double.isNaN(val) ? "---" :
+                    String.format("%." + entry.valDigits + "f", val) +
+                    (entry.units != null && !entry.units.isEmpty() ? " " + entry.units : "");
+            entry.valueLabel.setText(text);
+        }
+    }
+
+    private JPanel buildReadoutCell(ReadoutModel readout, IniFileModel ini) {
+        // Resolve gauge ref → actual channel + metadata
+        String channel = readout.getChannelOrGaugeName();
+        String title   = readout.getTitle();
+        String units   = readout.getUnits();
+        int    valDig  = readout.getValDigits();
+
+        GaugeModel gauge = ini.getGauge(channel);
+        if (gauge != null && title == null) {
+            // Single-name ref matched a gauge — use gauge metadata
+            channel = gauge.getChannel();
+            title   = gauge.getTitle();
+            units   = gauge.getUnits();
+            valDig  = gauge.getValueDecimalPlaces();
+        }
+        if (title == null || title.isEmpty()) title = channel;
+        if (units == null) units = "";
+
+        JPanel cell = new JPanel();
+        cell.setLayout(new BoxLayout(cell, BoxLayout.Y_AXIS));
+        cell.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY, 1),
+                BorderFactory.createEmptyBorder(4, 8, 4, 8)));
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.PLAIN, 10f));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel valueLabel = new JLabel("---");
+        valueLabel.setFont(valueLabel.getFont().deriveFont(Font.BOLD, 13f));
+        valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        cell.add(titleLabel);
+        cell.add(valueLabel);
+
+        readoutEntries.add(new ReadoutLabelEntry(valueLabel, channel, units, valDig));
+        return cell;
     }
 
     private void applyExpressionState(ExpressionRow exprRow, IniFileModel iniFileModel, ConfigurationImage ci) {
