@@ -17,11 +17,15 @@ import com.rusefi.ui.util.ScrollablePanel;
 import com.rusefi.ui.util.SwingUtil;
 import com.rusefi.ui.util.WrapLayout;
 
+import com.devexperts.logging.Logging;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * Orchestrates layout of calibration dialogs by composing UI widgets
@@ -30,6 +34,7 @@ import java.util.function.Consumer;
  * @see TuningTableView
  */
 public class CalibrationDialogWidget {
+    private static final Logging log = getLogging(CalibrationDialogWidget.class);
     private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
     private ConfigurationImage workingImage;
