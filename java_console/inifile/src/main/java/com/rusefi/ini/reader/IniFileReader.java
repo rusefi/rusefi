@@ -63,6 +63,7 @@ public class IniFileReader {
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
     private final List<DialogModel.Command> commandsOfCurrentDialog = new ArrayList<>();
     private final List<PanelModel> panelsOfCurrentDialog = new ArrayList<>();
+    private final List<IndicatorModel> indicatorsOfCurrentDialog = new ArrayList<>();
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -144,19 +145,20 @@ public class IniFileReader {
     }
 
     void finishDialog() {
-        if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty() && panelsOfCurrentDialog.isEmpty())
+        if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty()
+                && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
-        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, dialogTopicHelp, dialogLayoutHint));
-
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, dialogTopicHelp, dialogLayoutHint));
         dialogId = null;
         dialogTopicHelp = null;
         dialogLayoutHint = null;
         fieldsOfCurrentDialog.clear();
         commandsOfCurrentDialog.clear();
         panelsOfCurrentDialog.clear();
+        indicatorsOfCurrentDialog.clear();
     }
 
     void handleLine(RawIniFile.Line line) {
@@ -282,6 +284,12 @@ public class IniFileReader {
                     break;
                 case "dialog":
                     handleDialog(list);
+                    break;
+                case "indicatorPanel":
+                    handleIndicatorPanel(list);
+                    break;
+                case "indicator":
+                    handleDialogIndicator(list);
                     break;
                 case "panel":
                     handlePanel(list);
@@ -505,6 +513,25 @@ public class IniFileReader {
         dialogUiName = name;
         dialogLayoutHint = layoutHint;
         log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "] layoutHint=[" + layoutHint + "]");
+    }
+
+    private void handleIndicatorPanel(LinkedList<String> list) {
+        finishDialog();
+        list.removeFirst(); // "indicatorPanel"
+        if (list.isEmpty()) return;
+        String key = list.removeFirst();
+        dialogId = key;
+        dialogUiName = "";
+        dialogLayoutHint = null;
+    }
+
+    private void handleDialogIndicator(LinkedList<String> list) {
+        if (dialogId == null) return;
+        // format: indicator, expression, offLabel, onLabel, offBg, offFg, onBg, onFg
+        if (list.size() < 8) return;
+        IndicatorModel indicator = new IndicatorModel(
+                list.get(1), list.get(2), list.get(3), list.get(4), list.get(5), list.get(6), list.get(7));
+        indicatorsOfCurrentDialog.add(indicator);
     }
 
     private void handlePanel(LinkedList<String> list) {
