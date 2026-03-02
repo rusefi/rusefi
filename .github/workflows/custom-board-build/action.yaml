@@ -384,10 +384,10 @@ runs:
       shell: bash
       run: |
         : Add Config to Commit
-        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq 4
-        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h 4
-        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*ini 4
-        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*txt 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh '${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq' 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh '${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h' 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh '${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*ini' 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh '${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*txt' 4
         : # TODO handle extra headers but only if those exist
         : #if [ -d firmware ]; then
         : #  git add firmware/extra*
