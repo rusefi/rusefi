@@ -206,7 +206,7 @@ public class CalibrationDialogWidget {
             label.setOpaque(true);
             label.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(Color.GRAY, 1),
-                    BorderFactory.createEmptyBorder(1, 4, 1, 4)));
+                    BorderFactory.createEmptyBorder(8, 16, 8, 16)));
             label.setAlignmentX(Component.LEFT_ALIGNMENT);
             ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
             applyIndicatorState(label, indicator, iniFileModel, evalImage);
