@@ -10,7 +10,6 @@ import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
 import com.rusefi.core.net.PropertiesHolder;
-import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
@@ -38,7 +37,7 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20260228; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20260303; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
 
     private static final String TITLE = getTitle();
@@ -92,7 +91,7 @@ public class Autoupdate {
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
         final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
-        if (!PersistentConfiguration.getBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY)) {
+        if (!AutoupdateProperty.get()) {
             log.info(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY + " says 'do not update'");
             downloadedAutoupdateFile = Optional.empty();
         } else {
