@@ -47,47 +47,39 @@ public class GradientTitleBorder extends AbstractBorder {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Draw title background gradient
-        GradientPaint gp = new GradientPaint(x, y, Color.BLACK, x + width, y, Color.ORANGE);
-        g2.setPaint(gp);
-        g2.fillRect(x, y, width, TITLE_HEIGHT);
+        Color borderColor = mouseOver ? new Color(180, 120, 0) : Color.GRAY;
+        g2.setColor(borderColor);
 
-        // Draw title text
-        g2.setColor(Color.WHITE);
+        // Draw outer rectangle (TitledBorder style)
+        g2.drawRect(x, y, width - 1, height - 1);
+
+        // Measure title text so we can blank the top-border line behind it
+        Font titleFont = g2.getFont().deriveFont(Font.PLAIN, 12f);
+        g2.setFont(titleFont);
         FontMetrics fm = g2.getFontMetrics();
-        int textY = y + ((TITLE_HEIGHT - fm.getHeight()) / 2) + fm.getAscent();
-        g2.drawString(title, x + HORIZONTAL_PADDING, textY);
+        int textX = x + HORIZONTAL_PADDING + 2;
+        int textY = y + fm.getAscent();
 
-        // Draw border lines (left, right, bottom)
-        g2.setColor(Color.GRAY);
-        // Left
-        g2.drawLine(x, y + TITLE_HEIGHT, x, y + height - 1);
+        // White-fill gap behind title string to "cut" through the top border line
+        int textWidth = fm.stringWidth(title);
+        g2.setColor(c.getBackground() != null ? c.getBackground() : Color.WHITE);
+        g2.fillRect(textX - 2, y, textWidth + 4, 1);
 
-        if (mouseOver) {
-            g2.setColor(Color.ORANGE);
-        }
-        // Right
-        g2.drawLine(x + width - 1, y + TITLE_HEIGHT, x + width - 1, y + height - 1);
-
-        if (mouseOver) {
-            g2.setPaint(gp);
-        } else {
-            g2.setColor(Color.GRAY);
-        }
-        // Bottom
-        g2.drawLine(x, y + height - 1, x + width - 1, y + height - 1);
+        // Draw title text in dark gray
+        g2.setColor(new Color(60, 60, 60));
+        g2.drawString(title, textX, textY);
 
         g2.dispose();
     }
 
     @Override
     public Insets getBorderInsets(Component c) {
-        return new Insets(TITLE_HEIGHT + 2, 2, 2, 2);
+        return new Insets(18, 4, 4, 4);
     }
 
     @Override
     public Insets getBorderInsets(Component c, Insets insets) {
-        insets.set(TITLE_HEIGHT + 2, 2, 2, 2);
+        insets.set(18, 4, 4, 4);
         return insets;
     }
 }

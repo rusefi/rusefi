@@ -131,9 +131,7 @@ public class CalibrationDialogWidget {
 
     private static void applyLayout(JPanel panel, String layoutHint) {
         if ("border".equalsIgnoreCase(layoutHint)) {
-            // Equal-width columns keep the .ini West/East intent;
-            // children wrap inside their allocated width via WrapLayout.
-            panel.setLayout(new GridLayout(1, 0));
+            panel.setLayout(new BorderLayout(4, 4));
         } else if ("xAxis".equalsIgnoreCase(layoutHint)) {
             panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         } else {
@@ -212,53 +210,217 @@ public class CalibrationDialogWidget {
     }
 
     private void fillPanel(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
-        Runnable onChange = this::refreshExpressions;
         Runnable notifyEdit = () -> { if (onConfigChange != null) onConfigChange.accept(workingImage); };
 
-        for (DialogModel.Field field : dialogModel.getFields()) {
-            JPanel row;
-            Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
-            row = iniField.map(value -> {
-                try {
-                    return CalibrationFieldFactory.createFieldRow(field, value, ci, workingImage, onChange);
-                } catch (OrdinalOutOfRangeException e) {
-                    log.warn("Skipping field " + field.getKey() + " with out-of-range ordinal: " + e.getMessage());
-                    return CalibrationFieldFactory.createLabelRow(field);
-                }
-            }).orElseGet(() -> CalibrationFieldFactory.createLabelRow(field));
+        List<DialogModel.DialogEntry> entries = dialogModel.getOrderedEntries();
+        if (entries.isEmpty()) {
+            entries = synthesizeOrderedEntries(dialogModel);
+        }
+        if (entries.isEmpty()) {
+            // readoutPanel dialogs: only have readouts (no fields/commands/panels/etc.)
+            renderReadouts(container, dialogModel, iniFileModel);
+            return;
+        }
 
-            boolean hasExpressions = field.getEnableExpression() != null || field.getVisibleExpression() != null;
-            if (hasExpressions) {
-                ExpressionRow exprRow = new ExpressionRow(row, field.getEnableExpression(), field.getVisibleExpression());
-                expressionRows.add(exprRow);
+        boolean isBorderLayout = container.getLayout() instanceof BorderLayout;
+        JPanel[] horizontalPanelRef = {null};
+        List<IndicatorModel> pendingIndicators = new ArrayList<>();
+        List<String> pendingGauges = new ArrayList<>();
 
-                // Initial evaluation against workingImage
-                ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
-                if (evalImage != null) {
-                    applyExpressionState(exprRow, iniFileModel, evalImage);
-                }
+        for (DialogModel.DialogEntry entry : entries) {
+            // Flush accumulated groups when the run of same-type entries ends
+            if (entry.kind != DialogModel.DialogEntry.Kind.INDICATOR && !pendingIndicators.isEmpty()) {
+                renderIndicatorGroup(container, pendingIndicators, iniFileModel, ci, dialogModel.getReadoutColumns());
+                pendingIndicators.clear();
+            }
+            if (entry.kind != DialogModel.DialogEntry.Kind.GAUGE && !pendingGauges.isEmpty()) {
+                renderGaugeGroup(container, pendingGauges, iniFileModel);
+                pendingGauges.clear();
+            }
+            // Non-panel entries break any ongoing horizontal panel group (for non-border layouts)
+            if (entry.kind != DialogModel.DialogEntry.Kind.PANEL && !isBorderLayout) {
+                horizontalPanelRef[0] = null;
             }
 
-            container.add(row);
+            switch (entry.kind) {
+                case FIELD:
+                    renderField(container, entry.getAs(DialogModel.Field.class), iniFileModel, ci);
+                    break;
+                case COMMAND:
+                    container.add(CalibrationFieldFactory.createCommandRow(entry.getAs(DialogModel.Command.class)));
+                    break;
+                case INDICATOR:
+                    pendingIndicators.add(entry.getAs(IndicatorModel.class));
+                    break;
+                case GAUGE:
+                    pendingGauges.add(entry.getAs(String.class));
+                    break;
+                case PANEL:
+                    renderPanelEntry(container, entry.getAs(PanelModel.class), iniFileModel, ci,
+                            isBorderLayout, horizontalPanelRef, notifyEdit);
+                    break;
+            }
         }
 
-        for (DialogModel.Command command : dialogModel.getCommandsOfCurrentDialog()) {
-            container.add(CalibrationFieldFactory.createCommandRow(command));
+        // Flush any remaining accumulated groups
+        if (!pendingIndicators.isEmpty()) {
+            renderIndicatorGroup(container, pendingIndicators, iniFileModel, ci, dialogModel.getReadoutColumns());
         }
+        if (!pendingGauges.isEmpty()) {
+            renderGaugeGroup(container, pendingGauges, iniFileModel);
+        }
+    }
 
-        for (IndicatorModel indicator : dialogModel.getIndicators()) {
+    private void renderField(JPanel container, DialogModel.Field field, IniFileModel iniFileModel, ConfigurationImage ci) {
+        Runnable onChange = this::refreshExpressions;
+        Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
+        JPanel row = iniField.map(value -> {
+            try {
+                return CalibrationFieldFactory.createFieldRow(field, value, ci, workingImage, onChange);
+            } catch (OrdinalOutOfRangeException e) {
+                log.warn("Skipping field " + field.getKey() + " with out-of-range ordinal: " + e.getMessage());
+                return CalibrationFieldFactory.createLabelRow(field);
+            }
+        }).orElseGet(() -> CalibrationFieldFactory.createLabelRow(field));
+
+        boolean hasExpressions = field.getEnableExpression() != null || field.getVisibleExpression() != null;
+        if (hasExpressions) {
+            ExpressionRow exprRow = new ExpressionRow(row, field.getEnableExpression(), field.getVisibleExpression());
+            expressionRows.add(exprRow);
+            ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
+            if (evalImage != null) {
+                applyExpressionState(exprRow, iniFileModel, evalImage);
+            }
+        }
+        container.add(row);
+    }
+
+    private void renderIndicatorGroup(JPanel container, List<IndicatorModel> indicators, IniFileModel iniFileModel, ConfigurationImage ci, int cols) {
+        int columns = Math.max(1, cols);
+        JPanel indicatorWrapper = new JPanel(new GridLayout(0, columns, 4, 4));
+        indicatorWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
+        ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
+        for (IndicatorModel indicator : indicators) {
             JLabel label = new JLabel();
             label.setOpaque(true);
             label.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(Color.GRAY, 1),
-                    BorderFactory.createEmptyBorder(8, 16, 8, 16)));
-            label.setAlignmentX(Component.LEFT_ALIGNMENT);
-            ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
+                    BorderFactory.createEmptyBorder(4, 8, 4, 8)));
             applyIndicatorState(label, indicator, iniFileModel, evalImage);
             indicatorEntries.add(new IndicatorLabelEntry(label, indicator));
-            container.add(label);
+            indicatorWrapper.add(label);
+        }
+        container.add(indicatorWrapper);
+    }
+
+    private void renderGaugeGroup(JPanel container, List<String> gaugeNames, IniFileModel iniFileModel) {
+        JPanel gaugePanel = new JPanel(new GridLayout(0, 2, 4, 4));
+        gaugePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        for (String gaugeName : gaugeNames) {
+            GaugeModel gaugeModel = iniFileModel.getGauge(gaugeName);
+            if (gaugeModel != null) {
+                gaugePanel.add(buildGaugeCell(gaugeModel));
+            }
+        }
+        container.add(gaugePanel);
+    }
+
+    private static String toBorderConstraint(String placement) {
+        if (placement == null) return BorderLayout.CENTER;
+        switch (placement.toLowerCase()) {
+            case "north": return BorderLayout.NORTH;
+            case "south": return BorderLayout.SOUTH;
+            case "west":  return BorderLayout.WEST;
+            case "east":  return BorderLayout.EAST;
+            default:      return BorderLayout.CENTER;
+        }
+    }
+
+    private void renderPanelEntry(JPanel container, PanelModel panel, IniFileModel iniFileModel, ConfigurationImage ci,
+                                  boolean isBorderLayout, JPanel[] horizontalPanelRef, Runnable notifyEdit) {
+        String placement = panel.getPlacement();
+
+        JPanel targetContainer;
+        String constraint = null;
+        if (isBorderLayout) {
+            targetContainer = container;
+            constraint = toBorderConstraint(placement);
+        } else {
+            boolean isHorizontal = "west".equalsIgnoreCase(placement) || "center".equalsIgnoreCase(placement) || "east".equalsIgnoreCase(placement);
+            if (isHorizontal) {
+                if (horizontalPanelRef[0] == null) {
+                    horizontalPanelRef[0] = new JPanel(new WrapLayout(FlowLayout.LEFT, 0, 0));
+                    horizontalPanelRef[0].setAlignmentX(Component.LEFT_ALIGNMENT);
+                    container.add(horizontalPanelRef[0]);
+                }
+                targetContainer = horizontalPanelRef[0];
+            } else {
+                horizontalPanelRef[0] = null;
+                targetContainer = container;
+            }
         }
 
+        CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
+        if (curve != null) {
+            CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
+            curveWidget.setOnEdit(notifyEdit);
+            JComponent content = curveWidget.getContentPane();
+            CalibrationFieldFactory.applyStyle(content);
+            content.setAlignmentX(Component.LEFT_ALIGNMENT);
+            if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
+            return;
+        }
+
+        TableModel table = iniFileModel.getTable(panel.getPanelName());
+        if (table != null) {
+            TuningTableView tuningTableView = new TuningTableView(table.getTitle());
+            tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
+            tuningTableView.setOnEdit(notifyEdit);
+            JComponent content = tuningTableView.getContent();
+            CalibrationFieldFactory.applyStyle(content);
+            content.setAlignmentX(Component.LEFT_ALIGNMENT);
+            if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);
+            return;
+        }
+
+        JPanel panelWidget = new JPanel();
+        panelWidget.setAlignmentX(Component.LEFT_ALIGNMENT);
+        DialogModel subDialog = panel.resolveDialog(iniFileModel);
+        String subLayoutHint = subDialog != null ? subDialog.getLayoutHint() : null;
+        applyLayout(panelWidget, subLayoutHint);
+
+        if (subDialog != null) {
+            String uiName = subDialog.getUiName();
+            if (uiName == null || uiName.isEmpty()) {
+                uiName = subDialog.getKey();
+            }
+            panelWidget.setName(uiName);
+            GradientTitleBorder.installBorder(uiName, panelWidget);
+            fillPanel(panelWidget, subDialog, iniFileModel, ci);
+        } else {
+            panelWidget.setName(panel.getPanelName());
+            GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
+        }
+        if (constraint != null) targetContainer.add(panelWidget, constraint); else targetContainer.add(panelWidget);
+    }
+
+    /** older render logic, used only for test, TODO: refactor the test and remove */
+    private static List<DialogModel.DialogEntry> synthesizeOrderedEntries(DialogModel dialog) {
+        List<DialogModel.DialogEntry> list = new ArrayList<>();
+        for (DialogModel.Field f : dialog.getFields())
+            list.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.FIELD, f));
+        for (DialogModel.Command c : dialog.getCommandsOfCurrentDialog())
+            list.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.COMMAND, c));
+        for (IndicatorModel i : dialog.getIndicators())
+            list.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.INDICATOR, i));
+        for (String g : dialog.getGaugeNames())
+            list.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.GAUGE, g));
+        for (PanelModel p : dialog.getPanels())
+            list.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.PANEL, p));
+        return list;
+    }
+
+    private void renderReadouts(JPanel container, DialogModel dialogModel, IniFileModel iniFileModel) {
         List<ReadoutModel> readouts = dialogModel.getReadouts();
         if (!readouts.isEmpty()) {
             int cols = Math.max(1, dialogModel.getReadoutColumns());
@@ -269,85 +431,6 @@ public class CalibrationDialogWidget {
                 grid.add(cell);
             }
             container.add(grid);
-        }
-
-        List<String> gaugeNames = dialogModel.getGaugeNames();
-        if (!gaugeNames.isEmpty()) {
-            JPanel gaugePanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 4, 4));
-            gaugePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-            for (String gaugeName : gaugeNames) {
-                GaugeModel gaugeModel = iniFileModel.getGauge(gaugeName);
-                if (gaugeModel != null) {
-                    gaugePanel.add(buildGaugeCell(gaugeModel));
-                }
-            }
-            container.add(gaugePanel);
-        }
-
-        boolean isGridLayout = container.getLayout() instanceof GridLayout;
-        List<PanelModel> panels = dialogModel.getPanels();
-        JPanel horizontalPanel = null;
-        for (PanelModel panel : panels) {
-            String placement = panel.getPlacement();
-            boolean isHorizontal = "west".equalsIgnoreCase(placement) || "center".equalsIgnoreCase(placement) || "east".equalsIgnoreCase(placement);
-
-            JPanel targetContainer;
-            if (isGridLayout) {
-                targetContainer = container;
-            } else if (isHorizontal) {
-                if (horizontalPanel == null) {
-                    horizontalPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 0, 0));
-                    horizontalPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                    container.add(horizontalPanel);
-                }
-                targetContainer = horizontalPanel;
-            } else {
-                horizontalPanel = null;
-                targetContainer = container;
-            }
-
-            CurveModel curve = iniFileModel.getCurves().get(panel.getPanelName());
-            if (curve != null) {
-                CurveWidget curveWidget = new CurveWidget(curve, iniFileModel, workingImage);
-                curveWidget.setOnEdit(notifyEdit);
-                JComponent content = curveWidget.getContentPane();
-                CalibrationFieldFactory.applyStyle(content);
-                content.setAlignmentX(Component.LEFT_ALIGNMENT);
-                targetContainer.add(content);
-                continue;
-            }
-
-            TableModel table = iniFileModel.getTable(panel.getPanelName());
-            if (table != null) {
-                TuningTableView tuningTableView = new TuningTableView(table.getTitle());
-                tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
-                tuningTableView.setOnEdit(notifyEdit);
-                JComponent content = tuningTableView.getContent();
-                CalibrationFieldFactory.applyStyle(content);
-                content.setAlignmentX(Component.LEFT_ALIGNMENT);
-                targetContainer.add(content);
-                continue;
-            }
-
-            JPanel panelWidget = new JPanel();
-            panelWidget.setAlignmentX(Component.LEFT_ALIGNMENT);
-            DialogModel subDialog = panel.resolveDialog(iniFileModel);
-            String subLayoutHint = subDialog != null ? subDialog.getLayoutHint() : null;
-            applyLayout(panelWidget, subLayoutHint);
-
-            if (subDialog != null) {
-                String uiName = subDialog.getUiName();
-                if (uiName == null || uiName.isEmpty()) {
-                    uiName = subDialog.getKey();
-                }
-                panelWidget.setName(uiName);
-                GradientTitleBorder.installBorder(uiName, panelWidget);
-                fillPanel(panelWidget, subDialog, iniFileModel, ci);
-            } else {
-                panelWidget.setName(panel.getPanelName());
-                GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
-            }
-            targetContainer.add(panelWidget);
         }
     }
 
