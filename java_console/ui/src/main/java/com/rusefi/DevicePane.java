@@ -15,7 +15,7 @@ public class DevicePane {
 
     public DevicePane(UIContext uiContext, String port, SerialPortType serialPortType) {
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        JCheckBox autoUpdateBundle = new JCheckBox("Auto-update bundle", PersistentConfiguration.getBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, true));
+        JCheckBox autoUpdateBundle = new JCheckBox("Auto-update bundle", AutoupdateProperty.get());
         autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));
         content.add(autoUpdateBundle);
 
