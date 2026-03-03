@@ -67,6 +67,7 @@ public class IniFileReader {
     private final List<ReadoutModel> readoutsOfCurrentDialog = new ArrayList<>();
     private int currentReadoutColumns = 1;
     private final List<String> gaugeNamesOfCurrentDialog = new ArrayList<>();
+    private final List<DialogModel.DialogEntry> orderedEntriesOfCurrentDialog = new ArrayList<>();
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -155,7 +156,7 @@ public class IniFileReader {
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
-        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, gaugeNamesOfCurrentDialog, dialogTopicHelp, dialogLayoutHint));
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, gaugeNamesOfCurrentDialog, dialogTopicHelp, dialogLayoutHint, orderedEntriesOfCurrentDialog));
         dialogId = null;
         dialogTopicHelp = null;
         dialogLayoutHint = null;
@@ -166,6 +167,7 @@ public class IniFileReader {
         readoutsOfCurrentDialog.clear();
         currentReadoutColumns = 1;
         gaugeNamesOfCurrentDialog.clear();
+        orderedEntriesOfCurrentDialog.clear();
     }
 
     void handleLine(RawIniFile.Line line) {
@@ -470,7 +472,9 @@ public class IniFileReader {
         list.removeFirst(); // "commandButton"
         String uiName = list.removeFirst();
         String command = list.removeFirst();
-        commandsOfCurrentDialog.add(new DialogModel.Command(uiName, command));
+        DialogModel.Command cmd = new DialogModel.Command(uiName, command);
+        commandsOfCurrentDialog.add(cmd);
+        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.COMMAND, cmd));
     }
 
     private void handleField(LinkedList<String> list) {
@@ -507,12 +511,16 @@ public class IniFileReader {
 
         if (key != null) {
             fieldsOfCurrentDialog.add(field);
+            orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.FIELD, field));
             // If the field hasn't been registered yet,
             //  or if it has been but without a UI name (name will be the same as the key)
             // This isn't necessarily more correct, but it's more likely to be correct in dialogs that are more user-visible
             if (! fieldsInUiOrder.containsKey(key) || fieldsInUiOrder.get(key).getUiName() == key) {
                 fieldsInUiOrder.put(key, field);
             }
+        } else {
+            // Label-only field (no backing config key) — still add to ordered entries
+            orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.FIELD, field));
         }
     }
 
@@ -536,9 +544,15 @@ public class IniFileReader {
         list.removeFirst(); // "indicatorPanel"
         if (list.isEmpty()) return;
         String key = list.removeFirst();
+        // optional: numberOfColumns, [enableExpression]
+        int cols = 1;
+        if (!list.isEmpty()) {
+            try { cols = Integer.parseInt(list.peek()); list.removeFirst(); } catch (NumberFormatException ignored) { }
+        }
         dialogId = key;
         dialogUiName = "";
         dialogLayoutHint = null;
+        currentReadoutColumns = cols;
     }
 
     private void handleDialogIndicator(LinkedList<String> list) {
@@ -553,13 +567,16 @@ public class IniFileReader {
                 list.size() > 6 ? list.get(6) : "green",
                 list.size() > 7 ? list.get(7) : "black");
         indicatorsOfCurrentDialog.add(indicator);
+        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.INDICATOR, indicator));
     }
 
     private void handleDialogGauge(LinkedList<String> list) {
         if (dialogId == null) return;
         // format: gauge = gaugeName
         if (list.size() < 2) return;
-        gaugeNamesOfCurrentDialog.add(list.get(1));
+        String gaugeName = list.get(1);
+        gaugeNamesOfCurrentDialog.add(gaugeName);
+        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.GAUGE, gaugeName));
     }
 
     private void handleReadoutPanel(LinkedList<String> list) {
@@ -628,6 +645,7 @@ public class IniFileReader {
         if (panelName != null) {
             PanelModel panel = new PanelModel(panelName, placement, enableExpression, visibleExpression);
             panelsOfCurrentDialog.add(panel);
+            orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.PANEL, panel));
             log.debug("IniFileModel: Panel name=[" + panelName + "] placement=[" + placement + "]");
         }
     }
