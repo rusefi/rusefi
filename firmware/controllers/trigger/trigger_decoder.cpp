@@ -740,7 +740,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 	resetState();
 
 	if (shape.shapeDefinitionError) {
-		return 0;
+		return EFI_ERROR_CODE;
 	}
 
 	expected<uint32_t> syncIndex = TriggerStimulatorHelper::findTriggerSyncPoint(shape,
