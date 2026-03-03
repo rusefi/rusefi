@@ -436,6 +436,70 @@ public class IniDialogTest {
         assertEquals(1, other.getFields().size());
     }
 
+    // -------------------------------------------------------------------------
+    // dialog gauge entries (gauge = gaugeName)
+    // -------------------------------------------------------------------------
+
+    @Test
+    public void testDialogGaugeEntries() {
+        // Mirrors real-world usage like "dialog = uegoCan0Gauges" with gauge = entries
+        String string =
+            "[GaugeConfigurations]\n" +
+            "gaugeCategory = O2\n" +
+            "afr1Gauge    = afr1,    \"AFR 1\",    \"afr\", 10, 20, 10, 11, 18, 19, 2, 1\n" +
+            "wb1tempGauge = wb1tempC, \"WBO2 Temp\", \"C\",   0, 900, 0,  50, 800, 850, 0, 0\n" +
+            "[SettingContextHelp]\n" +
+            "; SettingContextHelpEnd\n" +
+            "dialog = uegoCan0Gauges\n" +
+            "    gauge = afr1Gauge\n" +
+            "    gauge = wb1tempGauge\n" +
+            "\n" +
+            "dialog = otherDialog, \"Other\"\n" +
+            "    field = \"Some Field\", someField\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        DialogModel gaugeDialog = model.getDialogs().get("uegoCan0Gauges");
+        assertNotNull(gaugeDialog);
+        assertEquals(2, gaugeDialog.getGaugeNames().size());
+        assertEquals("afr1Gauge",    gaugeDialog.getGaugeNames().get(0));
+        assertEquals("wb1tempGauge", gaugeDialog.getGaugeNames().get(1));
+        assertTrue(gaugeDialog.getFields().isEmpty());
+        assertTrue(gaugeDialog.getReadouts().isEmpty());
+        assertTrue(gaugeDialog.getIndicators().isEmpty());
+
+        // Gauge names must not bleed into the adjacent dialog
+        DialogModel other = model.getDialogs().get("otherDialog");
+        assertNotNull(other);
+        assertTrue(other.getGaugeNames().isEmpty());
+        assertEquals(1, other.getFields().size());
+
+        // The referenced gauge models must be resolvable
+        assertNotNull(model.getGauge("afr1Gauge"));
+        assertEquals("afr1", model.getGauge("afr1Gauge").getChannel());
+        assertNotNull(model.getGauge("wb1tempGauge"));
+        assertEquals("wb1tempC", model.getGauge("wb1tempGauge").getChannel());
+    }
+
+    @Test
+    public void testDialogWithoutGaugesHasEmptyList() {
+        // A plain dialog must return an empty (not null) gaugeNames list
+        String string =
+            "[SettingContextHelp]\n" +
+            "; SettingContextHelpEnd\n" +
+            "dialog = plainDialog, \"Plain\"\n" +
+            "    field = \"F\", f\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        DialogModel plain = model.getDialogs().get("plainDialog");
+        assertNotNull(plain);
+        assertNotNull(plain.getGaugeNames());
+        assertTrue(plain.getGaugeNames().isEmpty());
+    }
+
     @Test
     public void testGetDialogKeyByTitle() {
         String string = "[Constants]\n" +

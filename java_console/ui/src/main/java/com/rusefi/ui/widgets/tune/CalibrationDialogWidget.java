@@ -13,8 +13,12 @@ import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.OrdinalOutOfRangeException;
+import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.widgets.SensorGauge;
+import eu.hansolo.steelseries.gauges.Radial;
+import eu.hansolo.steelseries.tools.BackgroundColor;
 import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ScrollablePanel;
 import com.rusefi.ui.util.SwingUtil;
@@ -45,6 +49,8 @@ public class CalibrationDialogWidget {
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
     private final List<IndicatorLabelEntry> indicatorEntries = new ArrayList<>();
     private final List<ReadoutLabelEntry> readoutEntries = new ArrayList<>();
+    private final List<GaugeReadoutEntry> gaugeReadoutEntries = new ArrayList<>();
+    private static final int READOUT_GAUGE_SIZE = 150;
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
 
@@ -93,13 +99,28 @@ public class CalibrationDialogWidget {
         }
     }
 
+    /** Tracks a gauge-ref readout rendered as a small Radial gauge for live update. */
+    private static class GaugeReadoutEntry {
+        final Radial radial;
+        final String channel;
+        final String gaugeName;
+        final boolean hasExpressionLabels;
+
+        GaugeReadoutEntry(Radial radial, String channel, String gaugeName, boolean hasExpressionLabels) {
+            this.radial = radial;
+            this.channel = channel;
+            this.gaugeName = gaugeName;
+            this.hasExpressionLabels = hasExpressionLabels;
+        }
+    }
+
     public CalibrationDialogWidget(UIContext uiContext) {
         this.uiContext = uiContext;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
         // Refresh dialog indicators and readouts whenever the ECU sends new output-channel data.
         SensorCentral.getInstance().addListener(() -> {
-            if (!indicatorEntries.isEmpty() || !readoutEntries.isEmpty()) {
+            if (!indicatorEntries.isEmpty() || !readoutEntries.isEmpty() || !gaugeReadoutEntries.isEmpty()) {
                 SwingUtilities.invokeLater(() -> {
                     refreshIndicators();
                     refreshReadouts();
@@ -130,6 +151,7 @@ public class CalibrationDialogWidget {
         expressionRows.clear();
         indicatorEntries.clear();
         readoutEntries.clear();
+        gaugeReadoutEntries.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
             applyLayout(contentPane, dialogModel.getLayoutHint());
@@ -249,6 +271,19 @@ public class CalibrationDialogWidget {
             container.add(grid);
         }
 
+        List<String> gaugeNames = dialogModel.getGaugeNames();
+        if (!gaugeNames.isEmpty()) {
+            JPanel gaugePanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 4, 4));
+            gaugePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            for (String gaugeName : gaugeNames) {
+                GaugeModel gaugeModel = iniFileModel.getGauge(gaugeName);
+                if (gaugeModel != null) {
+                    gaugePanel.add(buildGaugeCell(gaugeModel));
+                }
+            }
+            container.add(gaugePanel);
+        }
+
         boolean isGridLayout = container.getLayout() instanceof GridLayout;
         List<PanelModel> panels = dialogModel.getPanels();
         JPanel horizontalPanel = null;
@@ -352,10 +387,20 @@ public class CalibrationDialogWidget {
                     (entry.units != null && !entry.units.isEmpty() ? " " + entry.units : "");
             entry.valueLabel.setText(text);
         }
+        for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
+            double val = SensorCentral.getInstance().getValue(entry.channel);
+            if (!Double.isNaN(val)) entry.radial.setValue(val);
+            if (entry.hasExpressionLabels) {
+                ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(entry.gaugeName);
+                if (labels != null) {
+                    entry.radial.setTitle(labels.getTitle());
+                    entry.radial.setUnitString(labels.getUnits());
+                }
+            }
+        }
     }
 
     private JPanel buildReadoutCell(ReadoutModel readout, IniFileModel ini) {
-        // Resolve gauge ref → actual channel + metadata
         String channel = readout.getChannelOrGaugeName();
         String title   = readout.getTitle();
         String units   = readout.getUnits();
@@ -391,6 +436,24 @@ public class CalibrationDialogWidget {
 
         readoutEntries.add(new ReadoutLabelEntry(valueLabel, channel, units, valDig));
         return cell;
+    }
+
+    private JComponent buildGaugeCell(GaugeModel gaugeModel) {
+        Radial radial = SensorGauge.createRadial(gaugeModel.getHighValue(), gaugeModel.getLowValue(), gaugeModel);
+        radial.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
+        radial.setLcdDecimals(gaugeModel.getValueDecimalPlaces());
+        Dimension size = new Dimension(READOUT_GAUGE_SIZE, READOUT_GAUGE_SIZE);
+        radial.setPreferredSize(size);
+        radial.setMinimumSize(size);
+        radial.setMaximumSize(size);
+        boolean exprTitle = gaugeModel.getTitleValue().isExpression() && TsStringFunction.containsStringFunction(gaugeModel.getTitle());
+        boolean exprUnits = gaugeModel.getUnitsValue().isExpression() && TsStringFunction.containsStringFunction(gaugeModel.getUnits());
+        if (exprTitle) radial.setTitle("");
+        if (exprUnits) radial.setUnitString("");
+        double initialVal = SensorCentral.getInstance().getValue(gaugeModel.getChannel());
+        if (!Double.isNaN(initialVal)) radial.setValue(initialVal);
+        gaugeReadoutEntries.add(new GaugeReadoutEntry(radial, gaugeModel.getChannel(), gaugeModel.getName(), exprTitle || exprUnits));
+        return radial;
     }
 
     private void applyExpressionState(ExpressionRow exprRow, IniFileModel iniFileModel, ConfigurationImage ci) {

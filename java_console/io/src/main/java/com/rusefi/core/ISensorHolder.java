@@ -125,7 +125,25 @@ public interface ISensorHolder {
             }
         }
 
-        // Fourth pass: resolve string-valued gauge labels (bitStringValue, stringValue)
+        // Fourth pass: fetch output channels referenced by gauge label expressions
+        for (GaugeModel gauge : ini.getGauges().values()) {
+            Set<String> labelVars = new HashSet<>();
+            if (gauge.getTitleValue().isExpression())
+                labelVars.addAll(ExpressionEvaluator.extractVariables(gauge.getTitle()));
+            if (gauge.getUnitsValue().isExpression())
+                labelVars.addAll(ExpressionEvaluator.extractVariables(gauge.getUnits()));
+            for (String varName : labelVars) {
+                if (!outputChannelValues.containsKey(varName)) {
+                    Double value = tryReadOutputChannel(response, varName, ini, varName);
+                    if (value != null) {
+                        setValue(value, varName);
+                        outputChannelValues.put(varName, value);
+                    }
+                }
+            }
+        }
+
+        // Fifth pass: resolve string-valued gauge labels (bitStringValue, stringValue)
         onGaugeLabelsResolved(resolveGaugeLabels(ini, configImage, outputChannelValues));
     }
 
