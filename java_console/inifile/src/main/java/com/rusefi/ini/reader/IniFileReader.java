@@ -66,6 +66,7 @@ public class IniFileReader {
     private final List<IndicatorModel> indicatorsOfCurrentDialog = new ArrayList<>();
     private final List<ReadoutModel> readoutsOfCurrentDialog = new ArrayList<>();
     private int currentReadoutColumns = 1;
+    private final List<String> gaugeNamesOfCurrentDialog = new ArrayList<>();
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -149,12 +150,12 @@ public class IniFileReader {
     void finishDialog() {
         if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty()
                 && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty()
-                && readoutsOfCurrentDialog.isEmpty())
+                && readoutsOfCurrentDialog.isEmpty() && gaugeNamesOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
-        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, dialogTopicHelp, dialogLayoutHint));
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, gaugeNamesOfCurrentDialog, dialogTopicHelp, dialogLayoutHint));
         dialogId = null;
         dialogTopicHelp = null;
         dialogLayoutHint = null;
@@ -164,6 +165,7 @@ public class IniFileReader {
         indicatorsOfCurrentDialog.clear();
         readoutsOfCurrentDialog.clear();
         currentReadoutColumns = 1;
+        gaugeNamesOfCurrentDialog.clear();
     }
 
     void handleLine(RawIniFile.Line line) {
@@ -301,6 +303,9 @@ public class IniFileReader {
                     break;
                 case "readout":
                     handleReadout(list);
+                    break;
+                case "gauge":
+                    handleDialogGauge(list);
                     break;
                 case "panel":
                     handlePanel(list);
@@ -548,6 +553,13 @@ public class IniFileReader {
                 list.size() > 6 ? list.get(6) : "green",
                 list.size() > 7 ? list.get(7) : "black");
         indicatorsOfCurrentDialog.add(indicator);
+    }
+
+    private void handleDialogGauge(LinkedList<String> list) {
+        if (dialogId == null) return;
+        // format: gauge = gaugeName
+        if (list.size() < 2) return;
+        gaugeNamesOfCurrentDialog.add(list.get(1));
     }
 
     private void handleReadoutPanel(LinkedList<String> list) {

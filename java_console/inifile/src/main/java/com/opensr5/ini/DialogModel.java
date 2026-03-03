@@ -16,30 +16,31 @@ public class DialogModel {
     private final List<IndicatorModel> indicators;
     private final List<ReadoutModel> readouts;
     private final int readoutColumns;
+    private final List<String> gaugeNames;
     private final String topicHelp;
     private final String layoutHint;
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog) {
-        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, null, null);
+        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>(), null, null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, String topicHelp) {
-        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, topicHelp, null);
+        this(key, uiName, fields, commandsOfCurrentDialog, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>(), topicHelp, null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, String topicHelp) {
-        this(key, uiName, fields, commandsOfCurrentDialog, panels, new ArrayList<>(), new ArrayList<>(), 1, topicHelp, null);
+        this(key, uiName, fields, commandsOfCurrentDialog, panels, new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>(), topicHelp, null);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, String topicHelp, String layoutHint) {
-        this(key, uiName, fields, commandsOfCurrentDialog, panels, new ArrayList<>(), new ArrayList<>(), 1, topicHelp, layoutHint);
+        this(key, uiName, fields, commandsOfCurrentDialog, panels, new ArrayList<>(), new ArrayList<>(), 1, new ArrayList<>(), topicHelp, layoutHint);
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, List<IndicatorModel> indicators, String topicHelp, String layoutHint) {
-        this(key, uiName, fields, commandsOfCurrentDialog, panels, indicators, new ArrayList<>(), 1, topicHelp, layoutHint);
+        this(key, uiName, fields, commandsOfCurrentDialog, panels, indicators, new ArrayList<>(), 1, new ArrayList<>(), topicHelp, layoutHint);
     }
 
-    public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, List<IndicatorModel> indicators, List<ReadoutModel> readouts, int readoutColumns, String topicHelp, String layoutHint) {
+    public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, List<IndicatorModel> indicators, List<ReadoutModel> readouts, int readoutColumns, List<String> gaugeNames, String topicHelp, String layoutHint) {
         this.key = key;
         this.uiName = uiName;
         this.fields = new ArrayList<>(fields);
@@ -48,6 +49,7 @@ public class DialogModel {
         this.indicators = new ArrayList<>(indicators);
         this.readouts = new ArrayList<>(readouts);
         this.readoutColumns = readoutColumns;
+        this.gaugeNames = new ArrayList<>(gaugeNames);
         this.topicHelp = topicHelp;
         this.layoutHint = layoutHint;
     }
@@ -74,6 +76,10 @@ public class DialogModel {
 
     public int getReadoutColumns() {
         return readoutColumns;
+    }
+
+    public List<String> getGaugeNames() {
+        return gaugeNames;
     }
 
     public String getKey() {
