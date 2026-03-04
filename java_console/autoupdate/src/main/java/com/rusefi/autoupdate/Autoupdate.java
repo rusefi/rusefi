@@ -51,6 +51,10 @@ public class Autoupdate {
         }
     }
 
+    static {
+        log.info("java=" + System.getProperty("java.version"));
+    }
+
     public static void main(String[] args) {
         try {
             FileLogger.init();
