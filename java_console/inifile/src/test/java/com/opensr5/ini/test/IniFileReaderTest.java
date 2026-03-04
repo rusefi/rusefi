@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -726,6 +727,71 @@ public class IniFileReaderTest {
         assertEquals(2, ignitionTableDialog.getPanels().size());
         assertEquals("ignitionTableIndicators", ignitionTableDialog.getPanels().get(0).getPanelName());
         assertEquals("ignitionTableTbl", ignitionTableDialog.getPanels().get(1).getPanelName());
+    }
+
+    @Test
+    public void testIndicatorPanelWithoutColors() {
+        // Defaults: offBg=null, offFg="black", onBg="green", onFg="black"
+        String string =
+            "indicatorPanel = statusPanel, 1\n" +
+            "    indicator = { isIdling }, \"Not idling\", \"Idling\"\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertTrue(model.getDialogs().containsKey("statusPanel"));
+        DialogModel panel = model.getDialogs().get("statusPanel");
+        assertNotNull(panel);
+        assertEquals(1, panel.getIndicators().size());
+
+        IndicatorModel indicator = panel.getIndicators().get(0);
+        assertEquals("{ isIdling }", indicator.getExpression());
+        assertEquals("Not idling", indicator.getOffLabel());
+        assertEquals("Idling", indicator.getOnLabel());
+        // Default colors when omitted
+        assertNull(indicator.getOffBg());
+        assertEquals("black", indicator.getOffFg());
+        assertEquals("green", indicator.getOnBg());
+        assertEquals("black", indicator.getOnFg());
+    }
+
+    @Test
+    public void testIndicatorPanelWithTooFewTokensIsIgnored() {
+        // An indicator with fewer than 4 tokens (expression + offLabel + onLabel) must be silently skipped
+        String string =
+            "indicatorPanel = statusPanel, 1\n" +
+            "    indicator = { isIdling }, \"Not idling\"\n" +  // only 3 tokens — should be ignored
+            "    indicator = { isCranking }, \"Not cranking\", \"Cranking\"\n"; // valid 4-token indicator
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        DialogModel panel = model.getDialogs().get("statusPanel");
+        assertNotNull(panel);
+        assertEquals(1, panel.getIndicators().size()); // only the valid one
+        assertEquals("{ isCranking }", panel.getIndicators().get(0).getExpression());
+    }
+
+    @Test
+    public void testFrontPageIndicatorWithoutColors() {
+        String string =
+            "[FrontPage]\n" +
+            "indicator = { coolant > 90 }, \"Cold\", \"Warm\"\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<IndicatorModel> indicators = model.getFrontPage().getIndicators();
+        assertEquals(1, indicators.size());
+
+        IndicatorModel indicator = indicators.get(0);
+        assertEquals("{ coolant > 90 }", indicator.getExpression());
+        assertEquals("Cold", indicator.getOffLabel());
+        assertEquals("Warm", indicator.getOnLabel());
+        assertNull(indicator.getOffBg());
+        assertEquals("black", indicator.getOffFg());
+        assertEquals("green", indicator.getOnBg());
+        assertEquals("black", indicator.getOnFg());
     }
 
 }
