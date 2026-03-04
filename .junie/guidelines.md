@@ -39,4 +39,5 @@ That .ini file would be parsed into IniFileModel instance giving java code knowl
 
 #### UI entry points
 - rusefi_updater.exe (see console_launcher folder for launch4j) invokes Autoupdate#main with args="basic-ui" which points at BasicStartupFrame::runTool: Focuses on firmware updater
-- console.exe entry point is Autoupdate#main
+- rusefi_autoupdate.exe entry point is Autoupdate#main
+- rusefi_console.exe invokes Launcher#main with empty args
