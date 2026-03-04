@@ -475,9 +475,9 @@ air_pressure_sensor_config_s sensor
 end_struct
 
 struct_no_prefix thermistor_conf_s @brief Thermistor known values
-float tempC_1;these values are in Celcius;"*C", 1, 0, -55, 200, 1
-float tempC_2;;"*C", 1, 0, -55, 200, 1
-float tempC_3;;"*C", 1, 0, -55, 200, 1
+float tempC_1;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
+float tempC_2;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
+float tempC_3;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -55 : -67}, {useMetricOnInterface ? 200 : 392}, 1
 float resistance_1;;"Ohm", 1, 0, 0, 1000000, 1
 float resistance_2;;"Ohm", 1, 0, 0, 1000000, 1
 float resistance_3;;"Ohm", 1, 0, 0, 1000000, 1
