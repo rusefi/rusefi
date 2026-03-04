@@ -45,16 +45,17 @@ public class AutoupdateUtil {
         ProgressView view = createProgressView(title);
 
         try {
+            ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
+                if (!runHeadless) {
+                    SwingUtilities.invokeLater(() -> view.getProgressBar().setValue(currentProgress));
+                }
+            };
             while (true) {
                 try {
-                    ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
-                        if (!runHeadless) {
-                            SwingUtilities.invokeLater(() -> view.getProgressBar().setValue(currentProgress));
-                        }
-                    };
                     ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
                     return;
                 } catch (IOException e) {
+                    log.error("downloadAutoupdateFile: " + e, e);
                     if (view.getProgressBar() == null) {
                         throw e;
                     }
