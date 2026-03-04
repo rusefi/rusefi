@@ -89,8 +89,7 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
 # todo: remove BootCommander.exe once https://github.com/rusefi/rusefi/issues/6358 is done
 
 CONSOLE_FOLDER_SOURCES = \
-  ../misc/console_launcher/rusefi_autoupdate.exe \
-  ../misc/console_launcher/rusefi_console.exe \
+  ../misc/console_launcher/console.exe \
   $(SIMULATOR_EXE)
 
 #  $(wildcard ../java_console/*.dll) \
