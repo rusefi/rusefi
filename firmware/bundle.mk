@@ -130,7 +130,7 @@ ifeq ($(INCLUDE_ELF),yes)
 endif
 endif
 
-ST_DRIVERS_DOWNLOAD_UNUSED = $(DRIVERS_FOLDER)/silent_st_drivers2.exe
+ST_DRIVERS = $(DRIVERS_FOLDER)/silent_st_drivers2.exe
 
 # We're kinda doing things backwards from the normal Make way.
 # We're listing some files we want to get copied from the bundle,
@@ -153,7 +153,7 @@ FOLDER_TARGETS = $(addprefix $(FOLDER)/,$(notdir $(FOLDER_SOURCES)))
 CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(CONSOLE_FOLDER_SOURCES)))
 
 FULL_BUNDLE_CONTENT = \
-  ext/rusefi-gha/static-content/silent_st_drivers2.exe \
+  $(ST_DRIVERS) \
   $(FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
@@ -232,8 +232,8 @@ $(OBFUSCATED_OUT): .obfuscated-sentinel
 	[ -z "$(POST_BUILD_SCRIPT)" ] || bash $(POST_BUILD_SCRIPT) $(BUILDDIR)/$(PROJECT).bin $(OBFUSCATED_OUT)
 	@touch $@
 
-$(ST_DRIVERS_DOWNLOAD_UNUSED): | $(DRIVERS_FOLDER)
-	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
+$(ST_DRIVERS): | $(DRIVERS_FOLDER)
+	cp ext/rusefi-gha/static-content/silent_st_drivers2.exe $(DRIVERS_FOLDER)
 
 $(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
 	mkdir -p $@
