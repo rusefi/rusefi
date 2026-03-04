@@ -209,7 +209,7 @@ kPa/psi value at low volts
 kPa/psi value at high volts
 
 ### clt.config.tempC_1
-these values are in Celcius
+
 
 ### clt.config.tempC_2
 
@@ -230,7 +230,7 @@ these values are in Celcius
 Pull-up resistor value on your board
 
 ### iat.config.tempC_1
-these values are in Celcius
+
 
 ### iat.config.tempC_2
 
@@ -1289,7 +1289,7 @@ Delay to allow fuel pressure to build before firing the priming pulse.
 This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa/50.7psi here.\nThis is gauge pressure/in reference to atmospheric.
 
 ### auxTempSensor1.config.tempC_1
-these values are in Celcius
+
 
 ### auxTempSensor1.config.tempC_2
 
@@ -1310,7 +1310,7 @@ these values are in Celcius
 Pull-up resistor value on your board
 
 ### auxTempSensor2.config.tempC_1
-these values are in Celcius
+
 
 ### auxTempSensor2.config.tempC_2
 
@@ -1700,7 +1700,7 @@ How long it takes to remove initial IAC adder to return to normal idle.
 Scale the reported vehicle speed value from CAN. Example: Parameter set to 1.1, CAN VSS reports 50kph, ECU will report 55kph instead.
 
 ### oilTempSensor.config.tempC_1
-these values are in Celcius
+
 
 ### oilTempSensor.config.tempC_2
 
@@ -1721,7 +1721,7 @@ these values are in Celcius
 Pull-up resistor value on your board
 
 ### fuelTempSensor.config.tempC_1
-these values are in Celcius
+
 
 ### fuelTempSensor.config.tempC_2
 
@@ -1742,7 +1742,7 @@ these values are in Celcius
 Pull-up resistor value on your board
 
 ### ambientTempSensor.config.tempC_1
-these values are in Celcius
+
 
 ### ambientTempSensor.config.tempC_2
 
@@ -1763,7 +1763,7 @@ these values are in Celcius
 Pull-up resistor value on your board
 
 ### compressorDischargeTemperature.config.tempC_1
-these values are in Celcius
+
 
 ### compressorDischargeTemperature.config.tempC_2
 

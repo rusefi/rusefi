@@ -449,18 +449,17 @@ static_assert(sizeof(MAP_sensor_config_s) == 140);
 // start of thermistor_conf_s
 struct thermistor_conf_s {
 	/**
-	 * these values are in Celcius
-	 * units: *C
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 0
 	 */
 	float tempC_1;
 	/**
-	 * units: *C
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 4
 	 */
 	float tempC_2;
 	/**
-	 * units: *C
+	 * units: {bitStringValue(unitsLabels, useMetricOnInterface)}
 	 * offset 8
 	 */
 	float tempC_3;
