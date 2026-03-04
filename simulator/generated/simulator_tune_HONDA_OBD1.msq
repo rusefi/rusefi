@@ -179,9 +179,9 @@
         <constant digits="1" name="ambientTempSensor_resistance_1" units="Ohm">0.0</constant>
         <constant digits="1" name="ambientTempSensor_resistance_2" units="Ohm">0.0</constant>
         <constant digits="1" name="ambientTempSensor_resistance_3" units="Ohm">0.0</constant>
-        <constant digits="1" name="ambientTempSensor_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="ambientTempSensor_tempC_2" units="*C">0.0</constant>
-        <constant digits="1" name="ambientTempSensor_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="ambientTempSensor_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="2" name="analogInputDividerCoefficient" units="coef">2.0</constant>
         <constant digits="0" name="anotherCiTest" units="">0</constant>
         <constant name="antiLagActivationMode">"Switch Input"</constant>
@@ -240,17 +240,17 @@
         <constant digits="1" name="auxTempSensor1_resistance_1" units="Ohm">0.0</constant>
         <constant digits="1" name="auxTempSensor1_resistance_2" units="Ohm">0.0</constant>
         <constant digits="1" name="auxTempSensor1_resistance_3" units="Ohm">0.0</constant>
-        <constant digits="1" name="auxTempSensor1_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="auxTempSensor1_tempC_2" units="*C">0.0</constant>
-        <constant digits="1" name="auxTempSensor1_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="auxTempSensor1_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="auxTempSensor1_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="auxTempSensor1_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant name="auxTempSensor2_adcChannel">"Disabled"</constant>
         <constant digits="1" name="auxTempSensor2_bias_resistor" units="Ohm">0.0</constant>
         <constant digits="1" name="auxTempSensor2_resistance_1" units="Ohm">0.0</constant>
         <constant digits="1" name="auxTempSensor2_resistance_2" units="Ohm">0.0</constant>
         <constant digits="1" name="auxTempSensor2_resistance_3" units="Ohm">0.0</constant>
-        <constant digits="1" name="auxTempSensor2_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="auxTempSensor2_tempC_2" units="*C">0.0</constant>
-        <constant digits="1" name="auxTempSensor2_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="auxTempSensor2_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="auxTempSensor2_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="auxTempSensor2_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant name="auxValves1">"NONE"</constant>
         <constant name="auxValves2">"NONE"</constant>
         <constant cols="1" digits="2" name="baroCorrPressureBins" rows="4" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
@@ -614,9 +614,9 @@
         <constant digits="1" name="clt_resistance_1" units="Ohm">9500.0</constant>
         <constant digits="1" name="clt_resistance_2" units="Ohm">2100.0</constant>
         <constant digits="1" name="clt_resistance_3" units="Ohm">1000.0</constant>
-        <constant digits="1" name="clt_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="clt_tempC_2" units="*C">23.9</constant>
-        <constant digits="1" name="clt_tempC_3" units="*C">48.9</constant>
+        <constant digits="1" name="clt_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="clt_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">23.9</constant>
+        <constant digits="1" name="clt_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">48.9</constant>
         <constant cols="1" digits="2" name="cltBoostAdder" rows="5" units="">
          0.0
          0.0
@@ -785,9 +785,9 @@
         <constant digits="1" name="compressorDischargeTemperature_resistance_1" units="Ohm">0.0</constant>
         <constant digits="1" name="compressorDischargeTemperature_resistance_2" units="Ohm">0.0</constant>
         <constant digits="1" name="compressorDischargeTemperature_resistance_3" units="Ohm">0.0</constant>
-        <constant digits="1" name="compressorDischargeTemperature_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="compressorDischargeTemperature_tempC_2" units="*C">0.0</constant>
-        <constant digits="1" name="compressorDischargeTemperature_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="compressorDischargeTemperature_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant name="consoleUartDevice">"Off"</constant>
         <constant name="consumeObdSensors">"no"</constant>
         <constant digits="0" name="cranking_rpm" units="RPM">550</constant>
@@ -1127,9 +1127,9 @@
         <constant digits="1" name="fuelTempSensor_resistance_1" units="Ohm">0.0</constant>
         <constant digits="1" name="fuelTempSensor_resistance_2" units="Ohm">0.0</constant>
         <constant digits="1" name="fuelTempSensor_resistance_3" units="Ohm">0.0</constant>
-        <constant digits="1" name="fuelTempSensor_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="fuelTempSensor_tempC_2" units="*C">0.0</constant>
-        <constant digits="1" name="fuelTempSensor_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="fuelTempSensor_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant cols="1" digits="0" name="fuelTrimLoadBins" rows="4" units="">
          20
          50
@@ -1643,9 +1643,9 @@
         <constant digits="1" name="iat_resistance_1" units="Ohm">18000.0</constant>
         <constant digits="1" name="iat_resistance_2" units="Ohm">2100.0</constant>
         <constant digits="1" name="iat_resistance_3" units="Ohm">100.0</constant>
-        <constant digits="1" name="iat_tempC_1" units="*C">-20.0</constant>
-        <constant digits="1" name="iat_tempC_2" units="*C">23.9</constant>
-        <constant digits="1" name="iat_tempC_3" units="*C">120.0</constant>
+        <constant digits="1" name="iat_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">-20.0</constant>
+        <constant digits="1" name="iat_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">23.9</constant>
+        <constant digits="1" name="iat_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">120.0</constant>
         <constant cols="1" digits="2" name="iatBoostAdder" rows="5" units="">
          0.0
          0.0
@@ -2962,9 +2962,9 @@ end</constant>
         <constant digits="1" name="oilTempSensor_resistance_1" units="Ohm">0.0</constant>
         <constant digits="1" name="oilTempSensor_resistance_2" units="Ohm">0.0</constant>
         <constant digits="1" name="oilTempSensor_resistance_3" units="Ohm">0.0</constant>
-        <constant digits="1" name="oilTempSensor_tempC_1" units="*C">0.0</constant>
-        <constant digits="1" name="oilTempSensor_tempC_2" units="*C">0.0</constant>
-        <constant digits="1" name="oilTempSensor_tempC_3" units="*C">0.0</constant>
+        <constant digits="1" name="oilTempSensor_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="oilTempSensor_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
+        <constant digits="1" name="oilTempSensor_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant name="overrideTriggerGaps">"no"</constant>
         <constant name="overrideVvtTriggerGaps">"no"</constant>
         <constant name="pauseEtbControl">"no"</constant>
@@ -4934,7 +4934,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260227" nPages="1" signature="rusEFI master.2026.03.04.f407-discovery.2869158416" version="5.0"/>
+    <versionInfo firmwareInfo="20260227" nPages="1" signature="rusEFI master.2026.03.04.f407-discovery.3064863302" version="5.0"/>
     <bibliography author="rusEFI 20260227" writeDate="date"/>
     <settings/>
     <userComments/>
