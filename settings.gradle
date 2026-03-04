@@ -71,3 +71,4 @@ include ':luaformatter'
 project(':luaformatter').projectDir = new File(rootRelativePath + 'java_console/luaformatter_module')
 include ':enum_generator'
 project(':enum_generator').projectDir = new File(rootRelativePath + 'java_tools/enum_generator')
+
