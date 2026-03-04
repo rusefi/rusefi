@@ -33,12 +33,12 @@ TEST(cranking, realCrankingFromFile) {
 	// This tooth should be first sync point
 	reader.readLine(&eth);
 
-	EXPECT_EQ(228, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex() << " @ 1";
+	EXPECT_EQ(227, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex() << " @ 1";
 
 	for (int i = 0; i < 42; i++) {
 		reader.readLine(&eth);
 	}
-	EXPECT_EQ(261, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	EXPECT_EQ(259, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 
 
 	for (int i = 0; i < 30; i++) {

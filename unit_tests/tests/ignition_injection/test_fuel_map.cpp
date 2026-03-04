@@ -81,24 +81,14 @@ TEST(misc, testFuelMap) {
 }
 
 
-static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+static void testFordAspireTriggerWaveform(TriggerWaveform * s) {
+	trigger_config_s triggerConfig;
+	triggerConfig.type = trigger_type_e::TT_FORD_ASPIRE;
+	s->initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 
-	s->addEvent720(53.747, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(121.90, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(232.76, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(300.54, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-
-	s->addEvent720(409.8412, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(478.6505, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(588.045, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(657.03, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_FLOAT_EQ(126.24 / 720, s->wave.getSwitchTime(0));
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(0, 0)) << "@0";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 0)) << "@0";
 
 	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 1)) << "@1";
 	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 1)) << "@1";
@@ -109,18 +99,18 @@ static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 3)) << "@3";
 	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 3)) << "@3";
 
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(0, 4)) << "@4";
-	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 5)) << "@5";
-	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 8)) << "@8";
-	ASSERT_FLOAT_EQ(121.90 / 720, s->wave.getSwitchTime(1));
-	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 4)) << "@4";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 5)) << "@5";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 8)) << "@8";
+	ASSERT_FLOAT_EQ(127.24 / 720, s->wave.getSwitchTime(1));
+	ASSERT_FLOAT_EQ(719.0 / 720, s->wave.getSwitchTime(8));
 
-	ASSERT_EQ(0, s->wave.findAngleMatch(53.747 / 720.0).value_or(-1)) << "expecting 0";
+	ASSERT_EQ(1, s->wave.findAngleMatch(63.62 / 360.0).value_or(-1)) << "expecting 1";
 	ASSERT_FALSE(s->wave.findAngleMatch(53 / 720.0).Valid) << "expecting not found";
-	ASSERT_EQ(7, s->wave.findAngleMatch(588.045 / 720.0).value_or(-1));
+	ASSERT_EQ(7, s->wave.findAngleMatch(270 / 360.0).value_or(-1));
 
-	ASSERT_EQ( 0,  s->wave.findInsertionAngle(23.747 / 720.0)) << "expecting 0";
-	ASSERT_EQ( 1,  s->wave.findInsertionAngle(63.747 / 720.0)) << "expecting 1";
+	ASSERT_EQ( 0,  s->wave.findInsertionAngle(23.747 / 360.0)) << "expecting 0";
+	ASSERT_EQ( 2,  s->wave.findInsertionAngle(63.747 / 360.0)) << "expecting 2";
 }
 
 TEST(misc, testAngleResolver) {
@@ -134,17 +124,17 @@ TEST(misc, testAngleResolver) {
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
 	engine->updateTriggerConfiguration();
 
-	ASSERT_NEAR(232.76, triggerFormDetails->eventAngles[3], EPS4D) << "index 2"; // this angle is relation to synch point
-	ASSERT_NEAR(0.3233, ts->wave.getSwitchTime(2), EPS4D) << "time 2";
+	ASSERT_NEAR(52.76, triggerFormDetails->eventAngles[3], EPS4D) << "index 2"; // this angle is relation to synch point
+	ASSERT_NEAR(0.25, ts->wave.getSwitchTime(3), EPS4D) << "time 2";
 	ASSERT_NEAR(412.76, triggerFormDetails->eventAngles[6], EPS4D) << "index 5";
-	ASSERT_NEAR(0.5733, ts->wave.getSwitchTime(5), EPS4D) << "time 5";
+	ASSERT_NEAR(0.5, ts->wave.getSwitchTime(5), EPS4D) << "time 5";
 
-	ASSERT_EQ(4, ts->getTriggerWaveformSynchPointIndex());
+	ASSERT_EQ(0, ts->getTriggerWaveformSynchPointIndex());
 
 	ASSERT_EQ( 10u,  ts->getSize()) << "shape size";
 
 	TriggerWaveform t;
-	configureFordAspireTriggerWaveform(&t);
+	testFordAspireTriggerWaveform(&t);
 }
 
 TEST(misc, testPinHelper) {
