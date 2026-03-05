@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 import static com.rusefi.AssertCompatibility.assertThrows;
+import static com.rusefi.AssertCompatibility.assertTrue;
 
 public class OutputsTest {
     @Test
@@ -192,6 +193,23 @@ public class OutputsTest {
 "\ttriggerSimulatorPins1 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different. 1\"\n" +
         "\ttriggerSimulatorPins2 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different. 2\"\n" +
         "\ttriggerSimulatorPins3 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different. 3\"\n", tsProjectConsumer.getSettingContextHelpForUnitTest());
+    }
+
+    @Test
+    public void iteratedStructNoPrefixUniqueNames() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        String test = "struct_no_prefix acc_s\n" +
+                "uint8_t acc_max;Max accumulator value;\"\", 1, 0, 0, 255, 0\n" +
+                "end_struct\n" +
+                "struct total\n" +
+                "acc_s[3 iterate] accumulators;Accumulators\n" +
+                "end_struct\n";
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, tsProjectConsumer);
+        String content = tsProjectConsumer.getContent();
+        assertTrue("Expected accumulators1_acc_max but got: " + content, content.contains("accumulators1_acc_max"));
+        assertTrue("Expected accumulators2_acc_max but got: " + content, content.contains("accumulators2_acc_max"));
+        assertTrue("Expected accumulators3_acc_max but got: " + content, content.contains("accumulators3_acc_max"));
     }
 
     @Test
