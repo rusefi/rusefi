@@ -4,6 +4,7 @@ name = "rusefi"
 channels = ["conda-forge", "xtitoris"]
 platforms = ["win-64", "linux-64", "osx-arm64"]
 
+# pixi global install arm-gnu-toolchain --channel xtitoris
 [dependencies]
 make = ">=4.4.1,<5"
 arm-gnu-toolchain = ">=15,<16"
