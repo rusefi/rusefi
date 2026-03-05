@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260304</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260305</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -1071,12 +1071,12 @@
         <constant name="externalRusEfiGdiModule">"no"</constant>
         <constant digits="0" name="fan1ExtraIdle" units="%">2</constant>
         <constant digits="0" name="fan2ExtraIdle" units="%">2</constant>
-        <constant digits="0" name="fan2OffTemperature" units="C">91</constant>
-        <constant digits="0" name="fan2OnTemperature" units="C">95</constant>
+        <constant digits="0" name="fan2OffTemperature" units="SPECIAL_CASE_TEMPERATURE">91</constant>
+        <constant digits="0" name="fan2OnTemperature" units="SPECIAL_CASE_TEMPERATURE">95</constant>
         <constant name="fan2Pin">"NONE"</constant>
         <constant name="fan2PinMode">"default"</constant>
-        <constant digits="0" name="fanOffTemperature" units="C">88</constant>
-        <constant digits="0" name="fanOnTemperature" units="C">92</constant>
+        <constant digits="0" name="fanOffTemperature" units="SPECIAL_CASE_TEMPERATURE">88</constant>
+        <constant digits="0" name="fanOnTemperature" units="SPECIAL_CASE_TEMPERATURE">92</constant>
         <constant name="fanPin">"NONE"</constant>
         <constant name="fanPinMode">"default"</constant>
         <constant digits="2" name="finalGearRatio" units="ratio">1.0</constant>
@@ -4935,7 +4935,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260227" nPages="1" signature="rusEFI master.2026.03.04.f407-discovery.3064863302" version="5.0"/>
+    <versionInfo firmwareInfo="20260227" nPages="1" signature="rusEFI master.2026.03.05.f407-discovery.3064863302" version="5.0"/>
     <bibliography author="rusEFI 20260227" writeDate="date"/>
     <settings/>
     <userComments/>
