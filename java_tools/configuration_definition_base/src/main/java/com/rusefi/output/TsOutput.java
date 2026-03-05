@@ -140,7 +140,9 @@ public class TsOutput {
                 }
 
                 if (cs != null) {
-                    String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
+                    // For iterated structs, always include the field name (which carries the index) as prefix
+                    // even if the struct is struct_no_prefix, to avoid duplicate field names across iterations.
+                    String extraPrefix = (cs.isWithPrefix() || configField.isFromIterate()) ? configField.getName() + "_" : "";
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
                 }
 
