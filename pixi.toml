@@ -1,0 +1,9 @@
+[project]
+name = "rusefi"
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "osx-64", "osx-arm64"]
+
+[dependencies]
+gcc-arm-none-eabi = "14"
+make = "*"
+cmake = "*"
