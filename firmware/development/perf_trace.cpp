@@ -103,6 +103,8 @@ static void perfEventImpl(PE event, EPhase phase) {
 	}
 
 	entry.Timestamp = timestamp;
+#else
+  UNUSED(event);UNUSED(phase);
 #endif // EFI_PROD_CODE
 }
 

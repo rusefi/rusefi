@@ -204,6 +204,9 @@ static void applyListenOnly(CANConfig* canConfig, bool isListenOnly) {
 	if (isListenOnly) {
 		canConfig->CCCR |= FDCAN_CONFIG_CCCR_MON;
 	}
+#else
+  UNUSED(canConfig);
+  UNUSED(isListenOnly);
 #endif
 }
 
