@@ -27,6 +27,8 @@ TODO: this code is similar to AdcSubscription::SubscribeSensor, what is the plan
 	    return;
 	}
 	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
+#else
+  UNUSED(msg);UNUSED(channel);
 #endif // EFI_PROD_CODE && HAL_USE_ADC
 }
 
@@ -38,6 +40,8 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 #if EFI_PROD_CODE && HAL_USE_ADC
 	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
 	efiSetPadUnused(pin);
+#else
+  UNUSED(msg);UNUSED(channel);
 #endif // EFI_PROD_CODE && HAL_USE_ADC
 }
 

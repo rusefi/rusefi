@@ -726,6 +726,7 @@ void setDateTime(const char * const isoDateTime) {
 	}
 	efiPrintf("date_set Date parameter %s is wrong", isoDateTime);
 #else // EFI_RTC
+  UNUSED(isoDateTime);
 	efiPrintf("Cannot set time: RTC not supported");
 #endif // EFI_RTC
 }

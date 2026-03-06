@@ -32,6 +32,8 @@ void initFlexSensor(bool isFirstTime) {
 			flexSensor.debug();
 		});
 	}
+#else
+  UNUSED(isFirstTime);
 #endif // EFI_PROD_CODE
 
 	// If an analog fuel temp sensor is configured, don't use the flex sensor for fuel temp

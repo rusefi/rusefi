@@ -320,11 +320,10 @@ const char *getPinFunction(brain_input_pin_e brainPin) {
 	return getBrainUsedPin(index);
 }
 #else
-const char *hwPhysicalPinName(Gpio brainPin) {
+const char *hwPhysicalPinName(Gpio /*brainPin*/) {
 	return "N/A";
 }
-const char *hwPortname(Gpio brainPin) {
-	(void)brainPin;
+const char *hwPortname(Gpio /*brainPin*/) {
 	return "N/A";
 }
 #endif /* EFI_PROD_CODE */

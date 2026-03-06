@@ -33,7 +33,7 @@ extern const CANConfig *findCanConfig(can_baudrate_e rate);
 // It's impossible to set CAN bitrate from userspace, so we can't set it.
 static const CANConfig canConfig_dummy;
 
-static const CANConfig * findCanConfig(can_baudrate_e rate)
+static const CANConfig * findCanConfig(can_baudrate_e /*rate*/)
 {
 	return &canConfig_dummy;
 }
