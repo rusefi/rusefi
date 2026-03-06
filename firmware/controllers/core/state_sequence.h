@@ -90,6 +90,8 @@ public:
 
 	void reset() {
 		waveCount = 0;
+		memset(switchTimes, 0, sizeof(switchTimes));
+		memset(waveForm, 0, sizeof(waveForm));
 	}
 
 	void setSwitchTime(const int phaseIndex, const float value) {
