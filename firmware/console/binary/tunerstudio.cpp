@@ -162,6 +162,8 @@ static void setTsSpeed(int value) {
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
 	efiPrintf("%s: %s", tsChannel->name, msg);
+#else
+  UNUSED(tsChannel);UNUSED(msg);
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 

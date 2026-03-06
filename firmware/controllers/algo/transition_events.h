@@ -20,5 +20,7 @@ inline void onTransitionEvent(TransitionEvent event) {
 #if EFI_PROD_CODE
   engine->outputChannels.transitionEventCode = (int)event;
   engine->outputChannels.transitionEventsCounter++;
+#else
+  UNUSED(event);
 #endif
 }
