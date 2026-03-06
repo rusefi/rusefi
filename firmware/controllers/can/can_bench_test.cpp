@@ -58,7 +58,7 @@ void setHwQcMode() {
 
 #if EFI_CAN_SUPPORT
 
-static void directWritePad(Gpio pin, int value, const char *msg = "") {
+static void directWritePad(Gpio pin, [[maybe_unused]] int value, const char *msg = "") {
   if (!isBrainPinValid(pin)) {
     criticalError("QC of invalid pin %d %s", (int)pin, msg);
     return;
@@ -96,8 +96,8 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
   }
 }
 
-static void setPin(const CANRxFrame& frame, int value) {
-		size_t outputIndex = frame.data8[2];
+static void setPin(const CANRxFrame& frame, [[maybe_unused]] int value) {
+		int outputIndex = frame.data8[2];
 		if (outputIndex >= getBoardMetaOutputsCount()) {
 		  criticalError("QC pin index %d out of range", outputIndex);
 			return;
@@ -218,7 +218,7 @@ void sendQcBenchRawAnalogValues(size_t bus) {
 	}
 }
 
-static void sendOutBoardMeta(size_t bus) {
+static void sendOutBoardMeta([[maybe_unused]] size_t bus) {
 #if EFI_PROD_CODE
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::IO_META_INFO, 8, bus, /*isExtended*/true);
 	msg[0] = (int)bench_test_magic_numbers_e::BENCH_HEADER;
@@ -229,7 +229,7 @@ static void sendOutBoardMeta(size_t bus) {
 #endif // EFI_PROD_CODE
 }
 
-void sendQcBenchBoardStatus(size_t bus) {
+void sendQcBenchBoardStatus([[maybe_unused]] size_t bus) {
 #if EFI_PROD_CODE
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::BOARD_STATUS, 8, bus, /*isExtended*/true);
 
@@ -242,7 +242,7 @@ void sendQcBenchBoardStatus(size_t bus) {
 	msg[3] = TRUNCATE_TO_BYTE(numSecondsSinceReset >> 8);
 	msg[4] = TRUNCATE_TO_BYTE(numSecondsSinceReset);
 
-    int engineType = (int) engineConfiguration->engineType;
+	int engineType = (int) engineConfiguration->engineType;
 	msg[5] = engineType >> 8;
 	msg[6] = engineType;
 	sendOutBoardMeta(bus);

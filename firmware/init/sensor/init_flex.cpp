@@ -19,7 +19,7 @@ static void flexExtiCallback(void*, efitick_t nowNt) {
 
 // https://rusefi.com/forum/viewtopic.php?p=37452#p37452
 
-void initFlexSensor(bool isFirstTime) {
+void initFlexSensor([[maybe_unused]] bool isFirstTime) {
 #if EFI_PROD_CODE
 	if (efiExtiEnablePin("flex", engineConfiguration->flexSensorPin,
 		PAL_EVENT_MODE_BOTH_EDGES, flexExtiCallback, nullptr) < 0) {

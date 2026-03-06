@@ -26,7 +26,7 @@ InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 	injectorIndex = -1;
 }
 
-void InjectorOutputPin::open(efitick_t nowNt) {
+void InjectorOutputPin::open([[maybe_unused]] efitick_t nowNt) {
 	// per-output counter for error detection
 	overlappingCounter++;
 	// global counter for logging
@@ -56,7 +56,7 @@ void InjectorOutputPin::open(efitick_t nowNt) {
 	}
 }
 
-void InjectorOutputPin::close(efitick_t nowNt) {
+void InjectorOutputPin::close([[maybe_unused]] efitick_t nowNt) {
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
 		printf("InjectorOutputPin::close %s %d %d\r\n", getName(), overlappingCounter, time2print(getTimeNowUs()));

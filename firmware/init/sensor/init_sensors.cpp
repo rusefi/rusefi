@@ -11,7 +11,7 @@
 
 static void initSensorCli();
 
-void initIfValid(const char* msg, adc_channel_e channel) {
+void initIfValid([[maybe_unused]] const char* msg, adc_channel_e channel) {
 	if (!isAdcChannelValid(channel)) {
 		return;
 	}
@@ -30,7 +30,7 @@ TODO: this code is similar to AdcSubscription::SubscribeSensor, what is the plan
 #endif // EFI_PROD_CODE && HAL_USE_ADC
 }
 
-void deInitIfValid(const char* msg, adc_channel_e channel) {
+void deInitIfValid([[maybe_unused]] const char* msg, adc_channel_e channel) {
 	if (!isAdcChannelValid(channel)) {
 		return;
 	}

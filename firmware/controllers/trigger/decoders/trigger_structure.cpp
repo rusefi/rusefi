@@ -416,7 +416,7 @@ uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t ta
 	return left;
 }
 
-TriggerWheel TriggerWaveform::getWheel(size_t index) {
+TriggerWheel TriggerWaveform::getWheel([[maybe_unused]] size_t index) {
 #if EFI_UNIT_TEST
 	return triggerSignalIndeces[index];
 #endif

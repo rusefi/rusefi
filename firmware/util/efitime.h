@@ -30,6 +30,7 @@ constexpr bool constexpr_isfinite(float f) {
   return std::isfinite(f);
 #elif defined(_WIN32) || defined(__APPLE__) || defined(__CYGWIN__) || defined(__MINGW32__) || defined(__MINGW64__)
   // On Windows and macOS, std::isfinite might not be constexpr pre-C++23
+  (void)f;
   return true;
 #else
   // This is meant to correspond to normal/target platforms

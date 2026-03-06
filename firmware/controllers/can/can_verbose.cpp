@@ -208,7 +208,7 @@ struct PerCylinderKnock {
 };
 
 void populateFrame(PerCylinderKnock& msg) {
-  for (size_t index = 0;index<std::min(8, MAX_CYLINDER_COUNT);index++) {
+  for (int index = 0; index<std::min(8, MAX_CYLINDER_COUNT); index++) {
 	  msg.knock[index] = engine->module<KnockController>()->m_knockCyl[index];
   }
 }

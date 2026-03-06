@@ -417,7 +417,7 @@ void canHwInfo(CANDriver* cand) {
 #endif
 }
 
-void canHwRecover(const size_t busIndex, CANDriver *cand)
+void canHwRecover([[maybe_unused]] const size_t busIndex, [[maybe_unused]] CANDriver *cand)
 {
 #if STM32_CAN_USE_FDCAN1 || STM32_CAN_USE_FDCAN2 || STM32_CAN_USE_FDCAN3
 	// equal to TIMEOUT_INIT_MS

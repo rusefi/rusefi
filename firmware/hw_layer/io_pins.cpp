@@ -77,7 +77,9 @@ void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brain
 		}
 	#endif
 
-#endif /* EFI_PROD_CODE */
+#else /* EFI_PROD_CODE */
+	UNUSED(msg); UNUSED(brainPin); UNUSED(mode);
+#endif
 }
 
 #if EFI_PROD_CODE

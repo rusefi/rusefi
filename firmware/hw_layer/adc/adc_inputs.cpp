@@ -25,7 +25,7 @@ ObdCode PUBLIC_API_WEAK boardGetAnalogDiagnostic() {
 }
 
 /* simple implementation if board does not provide advanced diagnostic */
-int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) {
+int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic([[maybe_unused]] adc_channel_e channel, float /*voltage*/) {
 #if EFI_PROD_CODE
 	/* for on-chip ADC inputs we check common analog health */
 	if (isAdcChannelOnChip(channel)) {

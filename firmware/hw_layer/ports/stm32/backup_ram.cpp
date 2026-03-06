@@ -6,7 +6,7 @@
 
 #include "backup_ram.h"
 
-uint32_t backupRamLoad(backup_ram_e idx) {
+uint32_t backupRamLoad([[maybe_unused]] backup_ram_e idx) {
 #if HAL_USE_RTC
 	switch (idx) {
 	case backup_ram_e::StepperPosition:
@@ -22,7 +22,7 @@ uint32_t backupRamLoad(backup_ram_e idx) {
 #endif /* HAL_USE_RTC */
 }
 
-void backupRamSave(backup_ram_e idx, uint32_t value) {
+void backupRamSave([[maybe_unused]] backup_ram_e idx, [[maybe_unused]] uint32_t value) {
 #if HAL_USE_RTC
 	switch (idx) {
 	case backup_ram_e::StepperPosition:

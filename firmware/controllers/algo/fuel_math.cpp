@@ -448,7 +448,7 @@ float getBaroCorrection() {
 	}
 }
 
-percent_t getFuelALSCorrection(float rpm) {
+percent_t getFuelALSCorrection([[maybe_unused]] float rpm) {
 #if EFI_ANTILAG_SYSTEM
 		if (engine->antilagController.isAntilagCondition) {
 			float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);

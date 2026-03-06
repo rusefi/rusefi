@@ -196,7 +196,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 		return 0;
 
 	// 1 frame
-	if (numBytes <= 7 - isoHeaderByteIndex) {
+	if (numBytes <= 7 - (int)isoHeaderByteIndex) {
 		IsoTpFrameHeader header;
 		header.frameType = ISO_TP_FRAME_SINGLE;
 		header.numBytes = numBytes;
@@ -443,7 +443,7 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 		}
 
 		if (isFirstFrame) {
-			if ((buf) && (waitingForNumBytes > availableAtBuffer)) {
+			if ((buf) && (waitingForNumBytes > (int)availableAtBuffer)) {
 				efiPrintf("receive buffer is not enough %d > %d", waitingForNumBytes, availableAtBuffer);
 			}
 			isFirstFrame = false;
@@ -457,7 +457,7 @@ int IsoTpRx::readTimeout(uint8_t *rxbuf, size_t *size, sysinterval_t timeout)
 			availableAtBuffer -= numBytesToCopy;
 
 			// if there are some more bytes left, receive and drop
-			if (numBytesAvailable > numBytesToCopy) {
+			if ((int)numBytesAvailable > numBytesToCopy) {
 				overflow = true;
 			}
 		}

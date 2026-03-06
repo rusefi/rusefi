@@ -16,7 +16,7 @@ enum class TransitionEvent : char
 	CruiseControl = 6,
 };
 
-inline void onTransitionEvent(TransitionEvent event) {
+inline void onTransitionEvent([[maybe_unused]] TransitionEvent event) {
 #if EFI_PROD_CODE
   engine->outputChannels.transitionEventCode = (int)event;
   engine->outputChannels.transitionEventsCounter++;

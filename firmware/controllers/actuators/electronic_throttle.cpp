@@ -1100,6 +1100,7 @@ const electronic_throttle_s* getLiveData(size_t idx) {
 
 	return etbControllers[idx];
 #else
+	UNUSED(idx);
 	return nullptr;
 #endif
 }

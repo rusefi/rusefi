@@ -46,7 +46,7 @@ void Rs232TransmitPacket(blt_int8u *data, blt_int8u len)
   usb_serial_flush();
 } /*** end of Rs232TransmitPacket ***/
 
-PUBLIC_API_WEAK void openBltUnexpectedByte(blt_int8u firstByte) {
+PUBLIC_API_WEAK void openBltUnexpectedByte([[maybe_unused]] blt_int8u firstByte) {
 #if defined(OPEN_BLT_TEST_COMMAND)
 // 'z' is right at the end of 128 ascii range
 static_assert(BOOT_COM_RS232_RX_MAX_DATA < 'z');

@@ -34,7 +34,7 @@ void BitbangI2c::scl_low() {
 #endif
 }
 
-bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
+bool BitbangI2c::init([[maybe_unused]] brain_pin_e scl, [[maybe_unused]] brain_pin_e sda) {
 #if EFI_PROD_CODE
 	if (m_sdaPort) {
 	    return false;

@@ -6,7 +6,7 @@
 
 #if defined(TS_PRIMARY_UxART_PORT) || defined(TS_SECONDARY_UxART_PORT)
 #if HAL_USE_SERIAL
-void SerialTsChannel::start(uint32_t baud) {
+void SerialTsChannel::start([[maybe_unused]] uint32_t baud) {
 	SerialConfig cfg = {
 		#if EFI_PROD_CODE
 			.speed = baud,

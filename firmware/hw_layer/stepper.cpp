@@ -32,7 +32,7 @@ void StepperMotorBase::initialize(StepperHw *hardware, int totalSteps) {
 // todo: EFI_STEPPER macro
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-void StepperMotorBase::saveStepperPos(int pos) {
+void StepperMotorBase::saveStepperPos([[maybe_unused]] int pos) {
 	// use backup-power RTC registers to store the data
 #if EFI_PROD_CODE && EFI_BACKUP_SRAM
 	backupRamSave(backup_ram_e::StepperPosition, pos + 1);
