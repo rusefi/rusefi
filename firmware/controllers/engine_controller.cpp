@@ -218,6 +218,7 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 		snprintf(buffer, bufferSize, "%s%d", name ? name : "null", getAdcChannelPin(hwChannel));
 	}
 #else
+  UNUSED(msg);
 	snprintf(buffer, bufferSize, "NONE");
 #endif /* HAL_USE_ADC */
 	return buffer;
