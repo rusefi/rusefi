@@ -300,11 +300,11 @@ void fuelPumpBench() {
 	fuelPumpBenchExt(BENCH_FUEL_PUMP_DURATION);
 }
 
-static void vvtValveBench(int vvtIndex) {
 #if EFI_VVT_PID
+static void vvtValveBench(int vvtIndex) {
 	pinbench(BENCH_VVT_DURATION, 100.0, 1, getVvtOutputPin(vvtIndex));
-#endif // EFI_VVT_PID
 }
+#endif // EFI_VVT_PID
 
 static void requestWidebandUpdate(int hwIndex, bool fromFile)
 {
@@ -363,6 +363,7 @@ int luaCommandCounters[LUA_BUTTON_COUNT] = {};
 
 void handleBenchCategory(uint16_t index) {
 	switch(index) {
+#if EFI_VVT_PID
 	case BENCH_VVT0_VALVE:
 	    vvtValveBench(0);
 		return;
@@ -375,6 +376,7 @@ void handleBenchCategory(uint16_t index) {
 	case BENCH_VVT3_VALVE:
 	    vvtValveBench(3);
 		return;
+#endif // EFI_VVT_PID
 	case BENCH_AUXOUT0:
 	    auxOutBench(0);
 		return;

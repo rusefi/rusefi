@@ -438,6 +438,8 @@ void canHwRecover(const size_t busIndex, CANDriver *cand)
 			osalThreadSleep(1);
 		}
 	}
+#else
+  UNUSED(busIndex);UNUSED(cand);
 #endif
 }
 

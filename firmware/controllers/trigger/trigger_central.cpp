@@ -238,6 +238,8 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 
 #if EFI_TOOTH_LOGGER
 		LogTriggerCamTooth(front == TriggerValue::RISE, nowNt, index);
+#else
+  UNUSED(nowNt);
 #endif /* EFI_TOOTH_LOGGER */
 	} else {
 		if (isImportantFront) {

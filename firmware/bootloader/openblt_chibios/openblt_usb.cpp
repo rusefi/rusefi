@@ -54,6 +54,8 @@ static_assert(BOOT_COM_RS232_RX_MAX_DATA < 'z');
   const char * bltTest = "openblt\n";
     chnWriteTimeout(&SDU1, (const uint8_t*)bltTest, sizeof(bltTest), TIME_INFINITE);
   }
+#else
+  UNUSED(firstByte);
 #endif // OPEN_BLT_TEST_COMMAND
 }
 
