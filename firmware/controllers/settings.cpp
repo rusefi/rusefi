@@ -648,7 +648,7 @@ void initSettings() {
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 #endif // EFI_ENGINE_CONTROL
 
-	addConsoleAction("stopengine", (Void) scheduleStopEngine);
+	addConsoleAction("stopengine", scheduleStopEngine);
 
 	// todo: refactor this - looks like all boolean flags should be controlled with less code duplication
 	addConsoleActionI("enable_spi", enableSpi);
@@ -674,7 +674,7 @@ void initSettings() {
 	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
 	addConsoleAction("hw_qc_mode", [](){
-  	setHwQcMode();
+	setHwQcMode();
   });
 	addConsoleActionS("bench_set_output_mode", [](const char *pinName){
 	  brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
@@ -705,13 +705,14 @@ void setDateTime(const char * const isoDateTime) {
 	printRtcDateTime();
 	if (strlen(isoDateTime) >= 19 && isoDateTime[10] == 'T') {
 		efidatetime_t dateTime;
-		dateTime.year = atoi(isoDateTime);
+    int32_t year = atoi(isoDateTime);
+		dateTime.year = year;   // may overflow in case of ATOI_ERROR_CODE
 		dateTime.month = atoi(isoDateTime + 5);
 		dateTime.day = atoi(isoDateTime + 8);
 		dateTime.hour = atoi(isoDateTime + 11);
 		dateTime.minute = atoi(isoDateTime + 14);
 		dateTime.second = atoi(isoDateTime + 17);
-		if (dateTime.year != ATOI_ERROR_CODE &&
+		if (year != ATOI_ERROR_CODE &&
 				dateTime.month >= 1 && dateTime.month <= 12 &&
 				dateTime.day >= 1 && dateTime.day <= 31 &&
 				dateTime.hour <= 23 &&
