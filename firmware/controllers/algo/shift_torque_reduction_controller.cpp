@@ -95,10 +95,10 @@ static bool isShiftTorqueBelowTemperatureThreshold() {
 
 // todo: rename method since we now check temperature not just pin state
 void ShiftTorqueReductionController::updateTriggerPinState(
-    const switch_input_pin_e pin,
-    const pin_input_mode_e mode,
-    const bool invertPhysicalPin,
-    const bool invalidPinState
+    [[maybe_unused]] const switch_input_pin_e pin,
+    [[maybe_unused]] const pin_input_mode_e mode,
+    [[maybe_unused]] const bool invertPhysicalPin,
+    [[maybe_unused]] const bool invalidPinState
 ) {
   if (!torqueReductionTriggerPinState) {
     isBelowTemperatureThreshold = isShiftTorqueBelowTemperatureThreshold();

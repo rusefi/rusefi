@@ -36,7 +36,8 @@ extern "C" {
 #define ALLOW_JUMP_WITH_IGNITION_VOLTAGE TRUE
 #endif
 
-static void reset_and_jump(void) {
+[[maybe_unused]]
+static void reset_and_jump() {
 #if !ALLOW_JUMP_WITH_IGNITION_VOLTAGE
   if (isIgnVoltage()) {
     criticalError("Not allowed with ignition power");
@@ -119,7 +120,7 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
 	return BOR_Result_Ok;
 }
 
-void startWatchdog(int timeoutMs) {
+void startWatchdog([[maybe_unused]] int timeoutMs) {
 #if HAL_USE_WDG
 	// RL is a 12-bit value so we use a "2 ms" prescaler to support long timeouts (> 4.095 sec)
 	static WDGConfig wdgcfg;

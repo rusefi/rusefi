@@ -38,7 +38,7 @@ LoopPeriod MainLoop::makePeriodFlags() {
 	return lp;
 }
 
-void MainLoop::PeriodicTask(efitick_t nowNt) {
+void MainLoop::PeriodicTask([[maybe_unused]] efitick_t nowNt) {
 	ScopePerf perf(PE::MainLoop);
 
 	LoopPeriod currentLoopPeriod = makePeriodFlags();

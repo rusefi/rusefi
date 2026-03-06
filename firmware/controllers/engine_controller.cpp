@@ -209,7 +209,7 @@ void initPeriodicEvents() {
 	fastController.start();
 }
 
-char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer, size_t bufferSize) {
+char * getPinNameByAdcChannel([[maybe_unused]] const char *msg, [[maybe_unused]] adc_channel_e hwChannel, char *buffer, size_t bufferSize) {
 #if HAL_USE_ADC
 	if (!isAdcChannelValid(hwChannel)) {
 		snprintf(buffer, bufferSize, "NONE");

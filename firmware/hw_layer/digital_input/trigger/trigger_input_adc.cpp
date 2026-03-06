@@ -241,13 +241,12 @@ void TriggerAdcDetector::reset() {
 	prevStamp = 0;
 }
 
-void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool rise) {
+void TriggerAdcDetector::digitalCallback(
+		[[maybe_unused]] efitick_t stamp, [[maybe_unused]] bool isPrimary, [[maybe_unused]] bool rise) {
 #if !EFI_SIMULATOR && EFI_SHAFT_POSITION_INPUT
 	if (curAdcMode != TRIGGER_ADC_EXTI) {
 		return;
 	}
-
-	UNUSED(isPrimary);
 
 	onTriggerChanged(stamp, isPrimary, rise);
 
@@ -425,7 +424,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 #endif // ! EFI_SIMULATOR && ((HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || EFI_UNIT_TEST)
 }
 
-void TriggerAdcDetector::setWeakSignal(bool isWeak) {
+void TriggerAdcDetector::setWeakSignal([[maybe_unused]] bool isWeak) {
 #if HAL_USE_ADC || EFI_UNIT_TEST
 	isSignalWeak = isWeak;
 	if (!isSignalWeak) {

@@ -666,6 +666,7 @@ static void firmwareErrorV(ObdCode code, const char *fmt, va_list ap) {
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
 #else // EFI_PROD_CODE
 
+	UNUSED(code);
 	// large buffer on stack is risky we better use normal memory
 	static char errorBuffer[200];
 

@@ -76,7 +76,7 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 	setKeyCycleCounter(ignSwitchCounter + 1);
 }
 
-void PrimeController::setKeyCycleCounter(uint32_t count) {
+void PrimeController::setKeyCycleCounter([[maybe_unused]] uint32_t count) {
 #if EFI_BACKUP_SRAM
 	backupRamSave(backup_ram_e::IgnCounter, count);
 #endif // EFI_BACKUP_SRAM

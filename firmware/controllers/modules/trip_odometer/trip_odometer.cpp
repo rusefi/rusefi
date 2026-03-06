@@ -12,7 +12,7 @@ void TripOdometer::reset() {
 	m_ignitionOnSeconds = 0;
 }
 
-void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
+void TripOdometer::consumeFuel([[maybe_unused]] float grams, [[maybe_unused]] efitick_t nowNt) {
 // we have some drama with simulator busy loop in reality :(
 #if EFI_PROD_CODE || EFI_UNIT_TEST
 	m_consumedRemainder += grams;

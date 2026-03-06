@@ -300,7 +300,7 @@ void fuelPumpBench() {
 	fuelPumpBenchExt(BENCH_FUEL_PUMP_DURATION);
 }
 
-static void vvtValveBench(int vvtIndex) {
+static void vvtValveBench([[maybe_unused]] int vvtIndex) {
 #if EFI_VVT_PID
 	pinbench(BENCH_VVT_DURATION, 100.0, 1, getVvtOutputPin(vvtIndex));
 #endif // EFI_VVT_PID
@@ -666,7 +666,7 @@ static void processCanSetCalibration(const CANRxFrame& frame) {
  * see fields_api.txt for well-known fields
  * see generated_fields_api_header.h for corresponding hashes
  */
-static void processCanRequestCalibration(const CANRxFrame& frame) {
+static void processCanRequestCalibration([[maybe_unused]] const CANRxFrame& frame) {
 #if EFI_LUA_LOOKUP
   int hash = getFourBytesLsb(frame, 2);
   efiPrintf("processCanRequestCalibration=%x", hash);

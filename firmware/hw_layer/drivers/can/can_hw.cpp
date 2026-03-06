@@ -33,7 +33,7 @@ extern const CANConfig *findCanConfig(can_baudrate_e rate);
 // It's impossible to set CAN bitrate from userspace, so we can't set it.
 static const CANConfig canConfig_dummy;
 
-static const CANConfig * findCanConfig(can_baudrate_e rate)
+static const CANConfig * findCanConfig(can_baudrate_e /*rate*/)
 {
 	return &canConfig_dummy;
 }
@@ -193,7 +193,7 @@ void startCanPins() {
 }
 
 // Move to port CAN helpers file
-static void applyListenOnly(CANConfig* canConfig, bool isListenOnly) {
+static void applyListenOnly([[maybe_unused]] CANConfig* canConfig, [[maybe_unused]] bool isListenOnly) {
 #if defined(STM32F4XX) || defined(STM32F7XX)
 	if (isListenOnly) {
 		canConfig->btr |= CAN_BTR_SILM;

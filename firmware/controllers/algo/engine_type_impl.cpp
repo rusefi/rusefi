@@ -50,11 +50,11 @@ static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
-void applyUnknownEngineType(engine_type_e engineType) {
+void applyUnknownEngineType(engine_type_e /*engineType*/) {
 		// placeholder
 }
 
-void boardAfterTuneDefaults(engine_type_e engineType) {
+void boardAfterTuneDefaults(engine_type_e /*engineType*/) {
   // placeholder
 }
 

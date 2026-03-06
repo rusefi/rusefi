@@ -45,7 +45,7 @@ static void stopTrace() {
 	s_nextIdx = 0;
 }
 
-static void perfEventImpl(PE event, EPhase phase) {
+static void perfEventImpl([[maybe_unused]] PE event, [[maybe_unused]] EPhase phase) {
 #if EFI_PROD_CODE
 	// Bail if we aren't allowed to trace
 	if constexpr (!ENABLE_PERF_TRACE) {
