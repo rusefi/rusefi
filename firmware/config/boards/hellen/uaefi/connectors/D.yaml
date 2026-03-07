@@ -27,8 +27,8 @@ pins:
     type: 5v
 
   - pin: D5
-    meta: MM100_IN_VSS
-    class: event_inputs
+    id: [MM100_IN_VSS, MM100_IN_VSS]
+    class: [switch_inputs, event_inputs]
     ts_name: ___ FLEX
     color: orange
     function: Flex input (10K PU)
