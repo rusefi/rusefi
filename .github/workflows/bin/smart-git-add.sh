@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Check if an argument is provided
+# Threshold: if total_changed >= threshold, then git add.
 if [ -z "$1" ]; then
     echo "Usage: $0 <pattern> [numberOfChangedLinesThreshold]"
     exit 1
@@ -70,6 +71,7 @@ get_changed_lines() {
 for file in $pattern; do
     if [ -f "$file" ]; then
         total_changed=$(get_changed_lines "$file")
+        # Threshold: if total_changed is greater or equal to threshold, then git add.
         if [ -n "$threshold" ] && [ "$total_changed" -lt "$threshold" ]; then
             echo "skipping $file: $total_changed lines changed (threshold $threshold)"
         else
@@ -80,6 +82,7 @@ for file in $pattern; do
         # If it's a directory, find all files and process them
         find "$file" -type f | while read -r subfile; do
             total_changed=$(get_changed_lines "$subfile")
+            # Threshold: if total_changed is greater or equal to threshold, then git add.
             if [ -n "$threshold" ] && [ "$total_changed" -lt "$threshold" ]; then
                 echo "skipping $subfile: $total_changed lines changed (threshold $threshold)"
             else
