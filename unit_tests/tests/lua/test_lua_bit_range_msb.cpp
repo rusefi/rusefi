@@ -19,7 +19,7 @@ namespace {
 	function testFunc()
 		data = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 		setBitRangeMsb(data, %d, %d, %d)
-		return getBitRangeMsb(data, %d, %d)
+		return getBitRangeMsbInternal(data, %d, %d)
 	end)";
 		char luaCode[4096];
 		std::snprintf(luaCode, sizeof(luaCode), luaCodeFormatString, bitStart, length, testValue, bitStart, length);
@@ -44,7 +44,7 @@ namespace {
 	function testFunc()
 		data = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 		setBitRangeMsb(data, 22, 8, 0xB3)
-		return getBitRangeMsb(data, 22, 8)
+		return getBitRangeMsbInternal(data, 22, 8)
 	end)";
 
 		EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0xB3);

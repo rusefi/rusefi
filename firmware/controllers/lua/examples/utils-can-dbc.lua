@@ -29,16 +29,16 @@ function setBitRangeLsb(data, totalBitIndex, bitWidth, value)
 end
 
 -- big endian byte order, but bitIndex differs from used in DBC
-function getBitRangeMsb(data, bitIndex, bitWidth) 
-	local byteIndex = bitIndex >> 3 
-	local shift = bitIndex - byteIndex * 8 
-	local value = data[1 + byteIndex] 
-	if (shift + bitWidth > 8) then 
+function getBitRangeMsbInternal(data, bitIndex, bitWidth)
+	local byteIndex = bitIndex >> 3
+	local shift = bitIndex - byteIndex * 8
+	local value = data[1 + byteIndex]
+	if (shift + bitWidth > 8) then
 		value = value + data[0 + byteIndex] * 256
-	end 
-	local mask = (1 << bitWidth) - 1 
-	return (value >> shift) & mask 
-end 
+	end
+	local mask = (1 << bitWidth) - 1
+	return (value >> shift) & mask
+end
 
 -- big endian byte order, but bitIndex differs from used in DBC
 function setBitRangeMsb(data, totalBitIndex, bitWidth, value)
@@ -73,5 +73,5 @@ end
 -- big endian byte order
 function getBitRangeMoto(data, bitIndex, bitWidth)
     local moto = motoMagic(bitIndex, bitWidth)
-    return getBitRangeMsb(data, moto, bitWidth)
+    return getBitRangeMsbInternal(data, moto, bitWidth)
 end

@@ -101,7 +101,7 @@ TEST(LuaE65, offtopicTestGetBitRangeMsb) {
 
 	function testFunc()
 		data = {0x9F, 0x41, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
-		return getBitRangeMsb(data, 12, 12)
+		return getBitRangeMsbInternal(data, 12, 12)
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x9F4);
@@ -112,7 +112,7 @@ TEST(LuaE65, offtopicTestGetBitRangeMsb2) {
 
 	function testFunc()
 		data = {0x70, 0x04, 0x1F}
-		return getBitRangeMsb(data, 16, 16)
+		return getBitRangeMsbInternal(data, 16, 16)
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x41f);
@@ -164,7 +164,7 @@ TEST(LuaE65, getBitRangeMsbTest) {
 
 	function testFunc()
 		data = {0x9F, 0x01, 0x32, 0x20, 0x23, 0x67, 0x40, 0x00}
-		return getBitRangeMsb(data, 6 * 8, 13)
+		return getBitRangeMsbInternal(data, 6 * 8, 13)
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x740);

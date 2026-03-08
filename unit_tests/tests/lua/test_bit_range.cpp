@@ -5,9 +5,9 @@
 TEST(BitRangeTest, getBitRangeMsb) {
 
     uint8_t data[] = {0xAA, 0xBB, 0xCC, 0xDD};
-    EXPECT_EQ(getBitRangeMsb(data, 24, 32), 0xAA'BB'CC'DDul);
-    EXPECT_EQ(getBitRangeMsb(data, 24, 28), 0x0A'BB'CC'DDul);
-    EXPECT_EQ(getBitRangeMsb(data, 28, 28), 0xAA'BB'CC'Dul);
+    EXPECT_EQ(getBitRangeMsbInternal(data, 24, 32), 0xAA'BB'CC'DDul);
+    EXPECT_EQ(getBitRangeMsbInternal(data, 24, 28), 0x0A'BB'CC'DDul);
+    EXPECT_EQ(getBitRangeMsbInternal(data, 28, 28), 0xAA'BB'CC'Dul);
 }
 
 TEST(BitRangeTest, setBitRangeMsb) {
