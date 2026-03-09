@@ -17,6 +17,7 @@
 #include "defaults.h"
 #include "m111.h"
 #include "board_overrides.h"
+#include "pca_board_id.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
@@ -57,25 +58,12 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
-static bool isFirstInvocation = true;
-
 static void setHellen128ETBConfig() {
-	BitbangI2c m_i2c;
-	uint8_t variant[2] = {0xff, 0xff};
-
-	//same pins as for LPS25
-	if (isFirstInvocation) {
-		isFirstInvocation = false;
-		m_i2c.init(Gpio::B10, Gpio::B11);
-
-		/* TODO: release pis for LPS25 */
-	}
-	// looks like we support PCF8575 i2c I/O expander
-	m_i2c.read(/*address*/0x20, variant, sizeof(variant));
+	uint32_t variant = getBoardRevisionPcf8575();
 
 	//Rev C is different then Rev A/B
-	if ((variant[0] == 0x63) && (variant[1] == 0x00)) {
-	  efiPrintf("rev C Board Detected");
+	if (variant == 0x0063) {
+		efiPrintf("rev C Board Detected");
 		// TLE9201 driver
 		// This chip has three control pins:
 		// DIR - sets direction of the motor
@@ -103,7 +91,7 @@ static void setHellen128ETBConfig() {
 		engineConfiguration->etb_use_two_wires = false;
 
 	} else {
-	  efiPrintf("A/B BoardID [%02x%02x] ", variant[0], variant[1]);
+	  efiPrintf("A/B BoardID [%04x] ", (int)variant);
 		//Set default ETB config
 		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
 		engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
