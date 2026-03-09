@@ -8,6 +8,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ini.reader.IniParsingException;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
@@ -50,11 +51,15 @@ public class MainMenuTreeWidgetTest {
             @Override
             public int getPageSize(int pageIndex) { return 100; }
         };
-        return IniFileReaderUtil.readIniFile(lines, "test", metaInfo);
+        try {
+            return IniFileReaderUtil.readIniFile(lines, "test", metaInfo);
+        } catch (IniParsingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-    public void testEnumFieldInCalibrationWidget() {
+    public void testEnumFieldInCalibrationWidget() throws IniParsingException {
         String string = "[Constants]\n" +
             "signature = \"rusEFI\"\n" +
             "ochBlockSize = 100\n" +
@@ -109,7 +114,7 @@ public class MainMenuTreeWidgetTest {
     }
 
     @Test
-    public void testRecursiveCalibrationWidget() {
+    public void testRecursiveCalibrationWidget() throws IniParsingException {
         String string = "[MegaTune]\n" +
             "signature = \"rusEFI\"\n" +
             "[Constants]\n" +

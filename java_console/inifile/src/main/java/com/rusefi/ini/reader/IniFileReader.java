@@ -170,7 +170,7 @@ public class IniFileReader {
         orderedEntriesOfCurrentDialog.clear();
     }
 
-    void handleLine(RawIniFile.Line line) {
+    void handleLine(RawIniFile.Line line) throws IniParsingException {
 
         String rawText = line.getRawText();
         try {
@@ -335,7 +335,7 @@ public class IniFileReader {
                     break;
             }
         } catch (RuntimeException e) {
-            throw new IllegalStateException("Failed to handle [" + rawText + "]: " + e, e);
+            throw new IniParsingException("Failed to handle [" + rawText + "]: " + e, e);
         }
     }
 

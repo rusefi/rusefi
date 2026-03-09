@@ -8,6 +8,7 @@ import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -198,7 +199,11 @@ public class IniFileReaderTest {
 
     static @NotNull IniFileModel readLines(RawIniFile lines) {
         IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
-        return IniFileReaderUtil.readIniFile(lines, "", metaInfo);
+        try {
+            return IniFileReaderUtil.readIniFile(lines, "", metaInfo);
+        } catch (IniParsingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

@@ -124,7 +124,7 @@ public class IniFileReaderUtil {
         return read(in, input.getAbsolutePath());
     }
 
-    public static @NotNull IniFileModel readIniFile(RawIniFile content, String iniFilePath, IniFileMetaInfo metaInfo) {
+    public static @NotNull IniFileModel readIniFile(RawIniFile content, String iniFilePath, IniFileMetaInfo metaInfo) throws IniParsingException {
         final IniFileReader result = new IniFileReader(
             metaInfo,
             iniFilePath
@@ -139,8 +139,16 @@ public class IniFileReaderUtil {
         return result.getIniFileModel();
     }
 
-    @NotNull
     public static IniFileModel readIniFile(String fileName) throws FileNotFoundException {
+        try {
+            return readIniFileChecked(fileName);
+        } catch (IniParsingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    public static IniFileModel readIniFileChecked(String fileName) throws FileNotFoundException, IniParsingException {
         Objects.requireNonNull(fileName, "fileName");
         log.info("Reading " + fileName);
         File input = new File(fileName);
