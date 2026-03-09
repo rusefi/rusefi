@@ -245,7 +245,7 @@ enum class trigger_type_e : uint32_t {
 	// symmetrical crank
 	TT_SUBARU_7_6_CRANK = 94,
 
-	TT_UNUSED_95 = 95,
+	TT_SUZUKI_G16B = 95,
 	TT_UNUSED_96 = 96,
 
 	// before you add a new trigger: did you have a chance to capture digital signal with a logic analyzer?
