@@ -23,12 +23,18 @@ public class FieldIterator {
         this.fields = fields;
     }
 
+    /**
+     * return previous field which is not a directive
+     */
     public ConfigField getPrev() {
         return prev;
     }
 
     public void start(int index) {
         int nextIndex = index + 1;
+        while (nextIndex < fields.size() && fields.get(nextIndex).isDirective())
+            nextIndex++;
+
         next = nextIndex >= fields.size() ? ConfigField.VOID : fields.get(nextIndex);
         cf = fields.get(index);
     }
@@ -38,7 +44,8 @@ public class FieldIterator {
     }
 
     public void end(int currentPosition) {
-        prev = cf;
+        if (!cf.isDirective())
+            prev = cf;
         bitState.incrementBitIndex(cf, next);
     }
 

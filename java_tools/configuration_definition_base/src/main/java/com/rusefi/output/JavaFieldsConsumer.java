@@ -60,6 +60,8 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 ConfigField next = iterator.next;
                 int bitIndex = iterator.bitState.get();
 
+                if (configField.isDirective())
+                    return tsPosition;
                 // skip duplicate names which happens in case of conditional compilation
                 if (configField.getName().equals(prev.getName())) {
                     return tsPosition;
