@@ -40,7 +40,7 @@ static uint32_t getBoardRevision() {
 	return variant;
 }
 
-static uint32_t getBoardRevisionPcf8575() {
+[[maybe_unused]] static uint32_t getBoardRevisionPcf8575() {
 	static bool isFirstInvocation = true;
 	static uint32_t variant;
 
