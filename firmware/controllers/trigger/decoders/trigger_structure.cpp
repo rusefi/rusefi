@@ -487,6 +487,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	case trigger_type_e::TT_SUZUKI_G13B:
 		initializeSuzukiG13B(this);
 		break;
+	
+	case trigger_type_e::TT_SUZUKI_G16B:
+		initializeSuzukiG16B(this);
+		break;
 
 	case trigger_type_e::TT_FORD_TFI_PIP:
 		configureFordPip(this);

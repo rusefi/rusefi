@@ -245,7 +245,7 @@ enum class trigger_type_e : uint32_t {
 	// symmetrical crank
 	TT_SUBARU_7_6_CRANK = 94,
 
-	TT_UNUSED_95 = 95,
+	TT_SUZUKI_G16B = 95,
 	TT_UNUSED_96 = 96,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
