@@ -2,6 +2,7 @@ package com.rusefi.output;
 
 import com.rusefi.ini.reader.IniFileReader;
 import com.rusefi.*;
+import com.rusefi.compatibility.ini.ConfigDirective;
 import com.rusefi.parse.TypesHelper;
 
 import java.io.IOException;
@@ -60,7 +61,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 ConfigField next = iterator.next;
                 int bitIndex = iterator.bitState.get();
 
-                if (configField.isDirective())
+                if (ConfigDirective.isDirective(configField))
                     return tsPosition;
                 // skip duplicate names which happens in case of conditional compilation
                 if (configField.getName().equals(prev.getName())) {

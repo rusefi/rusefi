@@ -37,11 +37,8 @@ public class ConfigFieldImpl implements ConfigField {
 
     private static final Pattern FIELD = Pattern.compile(typePattern + "\\s(" + namePattern + ")(" + commentPattern + ")?(;(.*))?");
 
-    private static final Pattern DIRECTIVE = Pattern.compile("#(if\\s" + namePattern + "|else|elif\\s\" + namePattern + \"|endif)");
-
     public static final String VOID_NAME = "";
     public static final String BOOLEAN_T = "boolean";
-    public static final String DIRECTIVE_T = "directive";
 
     private final String name;
     private final String comment;
@@ -60,8 +57,6 @@ public class ConfigFieldImpl implements ConfigField {
     private String iterateOriginalName;
     private int iterateIndex;
 
-    // this is used to override the units used on rusefi_config.txt
-    // only used to replace "SPECIAL_CASE_TEMPERATURE" to "C" and "F", and apply the correct scale
     @Nullable
     private String mockedTsInfo;
 
@@ -240,11 +235,6 @@ public class ConfigFieldImpl implements ConfigField {
         return BOOLEAN_T.equalsIgnoreCase(type);
     }
 
-    @Override
-    public boolean isDirective() {
-        return DIRECTIVE_T.equalsIgnoreCase(type);
-    }
-
     private boolean isVoid() {
         return name.equals(VOID_NAME);
     }
@@ -322,11 +312,6 @@ public class ConfigFieldImpl implements ConfigField {
             return;
         if (comment.charAt(0) == '"' && !EnumIniField.isQuoted(comment))
             throw new MaybeSemicolonWasMissedException("This comment looks like semicolon was missed: " + comment);
-    }
-
-    public static boolean isPreprocessorDirective(String line) {
-        Matcher matcher = DIRECTIVE.matcher(line);
-        return matcher.matches();
     }
 
     @Override

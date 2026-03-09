@@ -2,6 +2,7 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
+import com.rusefi.compatibility.ini.ConfigDirective;
 import com.rusefi.parse.TypesHelper;
 import com.rusefi.output.variables.VariableRecord;
 import com.rusefi.util.LazyFile;
@@ -94,7 +95,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (cf.isUnusedField())
             return "";
 
-        if (cf.isArray() || cf.isFromIterate() || cf.isDirective())
+        if (cf.isArray() || cf.isFromIterate() || ConfigDirective.isDirective(cf))
             return "";
         if (!TypesHelper.isPrimitive(cf.getTypeName()) && !TypesHelper.isBoolean(cf.getTypeName())) {
             return "";
