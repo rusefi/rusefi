@@ -92,15 +92,15 @@ public class IniPreprocessor {
     }
 
     private static boolean isIfDirective(String trimmed) {
-        // matches "#if IDENTIFIER" (with at least one space after #if)
-        return trimmed.contains("#if");
+        // Require a space after #if to avoid matching #ifdef, #ifndef
+        return trimmed.startsWith("#if ") || trimmed.equals("#if");
     }
 
     private static boolean isElseOrElifDirective(String trimmed) {
-        return trimmed.contains("#else") || trimmed.contains("#elif");
+        return trimmed.equals("#else") || trimmed.startsWith("#elif ") || trimmed.equals("#elif");
     }
 
     private static boolean isEndifDirective(String trimmed) {
-        return trimmed.contains("#endif");
+        return trimmed.equals("#endif");
     }
 }
