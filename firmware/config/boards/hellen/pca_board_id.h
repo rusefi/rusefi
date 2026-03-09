@@ -20,7 +20,7 @@ static uint32_t getBoardRevision() {
 		m_i2c.init(Gpio::B10, Gpio::B11);
 
 		// configuration registers:
-		// after reset all IO pins should be configured as output, so ttis step can be skipped
+		// after reset all IO pins should be configured as output, so this step can be skipped
 		m_i2c.write(PCA9555_I2C_ADDR, set_out, sizeof(set_out));
 
 		// read registers 0 and 1: Input port registers
@@ -32,7 +32,7 @@ static uint32_t getBoardRevision() {
 
 		isFirstInvocation = false;
 
-		// release gpios for baso LPS25 driver
+		// release gpios for baro LPS25 driver
 		m_i2c.deinit();
 	}
 
