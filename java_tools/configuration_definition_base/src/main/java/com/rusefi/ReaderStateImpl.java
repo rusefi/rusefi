@@ -2,6 +2,8 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
+import com.rusefi.compatibility.ini.ConfigDirective;
+import com.rusefi.compatibility.ini.IniPreprocessor;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.Pair;
 import com.rusefi.enum_reader.Value;
@@ -373,10 +375,8 @@ public class ReaderStateImpl implements ReaderState {
         }
 
         if (cf == null) {
-            if (ConfigFieldImpl.isPreprocessorDirective(line)) {
-                cf = new ConfigFieldImpl(state, "", line, null,
-                        ConfigFieldImpl.DIRECTIVE_T, new int[0], null, false, false,
-                        null, null);
+            if (IniPreprocessor.isDirectiveLine(line.trim())) {
+                cf = ConfigDirective.makeDirectiveField(state, line);
             } else {
                 throw new IllegalStateException("Cannot parse line [" + line + "]");
             }
@@ -408,7 +408,7 @@ public class ReaderStateImpl implements ReaderState {
                 element.setFromIterate(cf.getName(), i);
                 structure.addTs(element);
             }
-        } else if (cf.isDirective()) {
+        } else if (ConfigDirective.isDirective(cf)) {
             structure.addTs(cf);
         } else {
             structure.addBoth(cf);

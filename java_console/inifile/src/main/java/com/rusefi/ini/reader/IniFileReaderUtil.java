@@ -2,6 +2,7 @@ package com.rusefi.ini.reader;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
+import com.rusefi.compatibility.ini.IniPreprocessor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -102,7 +103,7 @@ public class IniFileReaderUtil {
      * Just grabs an collection of lines, no parsing logic here
      */
     public static RawIniFile read(InputStream in, String msg) {
-        List<RawIniFile.Line> lines = new ArrayList<>();
+        List<String> rawLines = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         try {
@@ -111,10 +112,19 @@ public class IniFileReaderUtil {
                 if (line.trim().isEmpty()) {
                     continue;
                 }
-                lines.add(new RawIniFile.Line(line));
+                rawLines.add(line);
             }
         } catch (IOException e) {
             throw new IllegalStateException(e);
+        }
+
+        // Resolve #if/#else/#endif directives before further parsing:
+        // always take the first (#if) branch for compatibility with older INI files.
+        List<String> processedLines = IniPreprocessor.preprocessLines(rawLines);
+
+        List<RawIniFile.Line> lines = new ArrayList<>(processedLines.size());
+        for (String line : processedLines) {
+            lines.add(new RawIniFile.Line(line));
         }
         return new RawIniFile(lines, msg);
     }
