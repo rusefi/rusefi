@@ -595,7 +595,7 @@ bit useIdleAdvanceWhileCoasting,"yes","no"
 
 ! note: 0.00489 mult is correct for "faking" 10 bit ADC with 5V Vref - NOPE!
 ! note: see TPS_TS_CONVERSION, this is TS related legacy stuff that should be removed someday. 1000 units for 0..5V range
-custom tps_limit_t 2 scalar, S16, @OFFSET@, "V", 0.005, 0, 0, 5, 2
+custom tps_limit_t 2 scalar, S16, @OFFSET@, "V", @@PACK_MULT_RAW_VOLTAGE@@, 0, 0, 5, 2
 tps_limit_t tpsMin;Closed voltage for primary throttle position sensor
 tps_limit_t tpsMax;Fully opened voltage for primary throttle position sensor
 
@@ -1382,10 +1382,10 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;VVT output solenoid pin for this cam
 
 
-	uint8_t autoscale tChargeMinRpmMinTps;;"", 0.005, 0, 0, 1, 3
-	uint8_t autoscale tChargeMinRpmMaxTps;;"", 0.005, 0, 0, 1, 3
-	uint8_t autoscale tChargeMaxRpmMinTps;;"", 0.005, 0, 0, 1, 3
-	uint8_t autoscale tChargeMaxRpmMaxTps;;"", 0.005, 0, 0, 1, 3
+	uint8_t autoscale tChargeMinRpmMinTps;;"", @@PACK_MULT_RAW_VOLTAGE@@, 0, 0, 1, 3
+	uint8_t autoscale tChargeMinRpmMaxTps;;"", @@PACK_MULT_RAW_VOLTAGE@@, 0, 0, 1, 3
+	uint8_t autoscale tChargeMaxRpmMinTps;;"", @@PACK_MULT_RAW_VOLTAGE@@, 0, 0, 1, 3
+	uint8_t autoscale tChargeMaxRpmMaxTps;;"", @@PACK_MULT_RAW_VOLTAGE@@, 0, 0, 1, 3
 
 custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	pwm_freq_t vvtOutputFrequency
