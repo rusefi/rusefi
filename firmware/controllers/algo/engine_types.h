@@ -248,8 +248,11 @@ enum class trigger_type_e : uint32_t {
 	TT_UNUSED_95 = 95,
 	TT_UNUSED_96 = 96,
 
-	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
-	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
+	// before you add a new trigger: did you have a chance to capture digital signal with a logic analyzer?
+	// see unit_tests/tests/trigger/resources/readme.md for some details
+	//
+	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propagate new value to rusefi.ini TS project
+	//
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
