@@ -12,6 +12,8 @@
 #define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
+! see TPS_TS_CONVERSION, this is related on how TS handles voltage for TPS calibration
+#define PACK_MULT_RAW_VOLTAGE 0.005
 #define PACK_MULT_MASS_FLOW 10
 #define TPS_2_BYTE_PACKING_MULT 100
 #define PACK_MULT_AFR_CFG 10
