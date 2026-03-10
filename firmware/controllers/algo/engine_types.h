@@ -248,6 +248,8 @@ enum class trigger_type_e : uint32_t {
 	TT_SUZUKI_G16B = 95,
 	TT_UNUSED_96 = 96,
 
+	// TL,DR https://github.com/rusefi/rusefi/commit/523805138589585cc8889d6afd9305d120180902 example of new trigger commit
+	//
 	// before you add a new trigger: did you have a chance to capture digital signal with a logic analyzer?
 	// see unit_tests/tests/trigger/resources/readme.md for some details
 	//
