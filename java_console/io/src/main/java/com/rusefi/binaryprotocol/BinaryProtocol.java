@@ -292,6 +292,11 @@ public class BinaryProtocol {
      */
     public void uploadChangesWithoutBurn(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
+        if (current.getSize() != newVersion.getSize()) {
+            throw new IllegalStateException("Calibration size mismatch: ECU has " + current.getSize()
+                + " bytes but image has " + newVersion.getSize()
+                + " bytes. Calibrations may be from a different firmware version.");
+        }
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
         int offset = 0;
