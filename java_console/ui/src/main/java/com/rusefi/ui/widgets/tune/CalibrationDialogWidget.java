@@ -143,6 +143,17 @@ public class CalibrationDialogWidget {
         return workingImage;
     }
 
+    /**
+     * Drops any in-progress edits. Called when the ECU disconnects so stale calibrations
+     * from the previous board are not carried over to the next connection.
+     */
+    public void reset() {
+        workingImage = null;
+        contentPane.removeAll();
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
         workingImage = ci != null ? ci.clone() : null;
         currentIniFileModel = iniFileModel;
