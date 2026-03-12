@@ -133,6 +133,7 @@ public class TuningPane {
             // Clone because workingImage is mutated in-place by further edits.
             sessionImage[0] = image.clone();
             left.refreshExpressions(image);
+            uiContext.fireConfigImageChanged(image);
             undoCommitTimer.restart();
             uploadTimer.restart();
         });
