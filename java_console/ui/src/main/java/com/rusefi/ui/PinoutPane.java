@@ -10,6 +10,8 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.ui.util.PinColors;
+import com.rusefi.ui.util.YamlUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.imageio.ImageIO;
@@ -28,6 +30,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import static com.rusefi.ui.util.PinColors.COLOR_HIGHLIGHT;
+import static com.rusefi.ui.util.PinColors.FALLBACK_NORMAL;
 
 /**
  * Displays ECU connector pinouts for the currently connected board.
@@ -56,26 +61,7 @@ public class PinoutPane {
     enum ColorMode { TYPE, PIGTAIL }
     private ColorMode colorMode = ColorMode.TYPE;
 
-    // ---- Legend data (mirrors the color lookup methods) ----
-
-    private static class LegendEntry {
-        final String label;
-        final Color color;
-        LegendEntry(String label, Color color) { this.label = label; this.color = color; }
-    }
-
-    private static final List<LegendEntry> TYPE_LEGEND = Arrays.asList(
-            new LegendEntry("ign",  new Color(0xFF, 0x00, 0xFF)),
-            new LegendEntry("inj",  new Color(0x80, 0x00, 0x00)),
-            new LegendEntry("ls",   new Color(0x90, 0xEE, 0x90)),
-            new LegendEntry("mr",   new Color(0xB2, 0x22, 0x22)),
-            new LegendEntry("pgnd", new Color(0xFF, 0x7F, 0x50)),
-            new LegendEntry("sgnd", new Color(0x80, 0x80, 0x00)),
-            new LegendEntry("usb",  new Color(0x20, 0xB2, 0xAA)),
-            new LegendEntry("vr",   new Color(0xA0, 0x52, 0x2D))
-    );
-
-    // ---- Legend panel (always shows Type mode colors) ----
+    // ---- Legend panel  ----
 
     private static class LegendPanel extends JPanel {
         private static final int SWATCH  = 12;
@@ -92,9 +78,9 @@ public class PinoutPane {
         public Dimension getPreferredSize() {
             FontMetrics fm = getFontMetrics(getFont().deriveFont(Font.PLAIN, 10f));
             int maxW = 0;
-            for (LegendEntry e : TYPE_LEGEND) maxW = Math.max(maxW, fm.stringWidth(e.label));
+            for (PinColors.TypeEntry e : PinColors.TYPE_ENTRIES) maxW = Math.max(maxW, fm.stringWidth(e.keyword));
             int w = PAD_X * 2 + SWATCH + GAP + maxW + 4;
-            int h = PAD_Y * 2 + 16 + TYPE_LEGEND.size() * ROW_H;
+            int h = PAD_Y * 2 + 16 + PinColors.TYPE_ENTRIES.size() * ROW_H;
             return new Dimension(Math.max(w, 80), h);
         }
 
@@ -121,7 +107,7 @@ public class PinoutPane {
             FontMetrics rowFm = g2.getFontMetrics();
 
             int y = PAD_Y + titleFm.getHeight() + 2;
-            for (LegendEntry e : TYPE_LEGEND) {
+            for (PinColors.TypeEntry e : PinColors.TYPE_ENTRIES) {
                 int swatchY = y + (ROW_H - SWATCH) / 2;
 
                 // Swatch
@@ -133,7 +119,7 @@ public class PinoutPane {
 
                 // Label
                 g2.setColor(getForeground());
-                g2.drawString(e.label, PAD_X + SWATCH + GAP,
+                g2.drawString(e.keyword, PAD_X + SWATCH + GAP,
                         y + (ROW_H + rowFm.getAscent() - rowFm.getDescent()) / 2);
 
                 y += ROW_H;
@@ -174,74 +160,6 @@ public class PinoutPane {
             this.rows = rows;
         }
     }
-
-    // ---- Color lookup ----
-
-    /**
-     * Maps type string to marker color using the same substring-match rules as the web CSS:
-     * ign=#f0f, inj=maroon, ls=#90ee90, mr=#b22222, pgnd=coral, sgnd=olive, usb=#20b2aa, vr=sienna
-     */
-    private static Color typeToColor(String type) {
-        if (type == null || type.isEmpty()) return null;
-        String t = type.toLowerCase();
-        // Check longer/more-specific strings first to avoid partial overlaps
-        if (t.contains("pgnd")) return new Color(0xFF, 0x7F, 0x50); // coral
-        if (t.contains("sgnd")) return new Color(0x80, 0x80, 0x00); // olive
-        if (t.contains("ign"))  return new Color(0xFF, 0x00, 0xFF); // #f0f
-        if (t.contains("inj"))  return new Color(0x80, 0x00, 0x00); // maroon
-        if (t.contains("ls"))   return new Color(0x90, 0xEE, 0x90); // #90ee90
-        if (t.contains("mr"))   return new Color(0xB2, 0x22, 0x22); // #b22222
-        if (t.contains("usb"))  return new Color(0x20, 0xB2, 0xAA); // #20b2aa
-        if (t.contains("vr"))   return new Color(0xA0, 0x52, 0x2D); // sienna
-        return null;
-    }
-
-    /** Maps a single pigtail wire color token (no slashes) to a Color. */
-    private static Color pigtailTokenToColor(String token) {
-        if (token == null) return null;
-        switch (token.toLowerCase().trim()) {
-            case "black":  return new Color(30, 30, 30);
-            case "red":    return new Color(200, 0, 0);
-            case "white":  return new Color(230, 230, 230);
-            case "yellow": return new Color(220, 200, 0);
-            case "green":  return new Color(0, 150, 0);
-            case "blue":   return new Color(0, 60, 200);
-            case "orange": return new Color(255, 140, 0);
-            case "purple":
-            case "violet": return new Color(128, 0, 128);
-            case "brown":  return new Color(139, 69, 19);
-            case "grey":
-            case "gray":   return new Color(120, 120, 120);
-            case "pink":   return new Color(255, 160, 160);
-            default:       return null;
-        }
-    }
-
-    /**
-     * Returns 1 or 2 colors for a pigtail wire color string.
-     * Strings like "white/red" produce two colors (left half, right half).
-     * Unknown or empty strings return null.
-     */
-    private static Color[] pigtailToColors(String wireColor) {
-        if (wireColor == null || wireColor.isEmpty()) return null;
-        String[] tokens = wireColor.split("[/,]");
-        Color c1 = pigtailTokenToColor(tokens[0].trim());
-        if (tokens.length >= 2) {
-            Color c2 = pigtailTokenToColor(tokens[1].trim());
-            if (c1 != null && c2 != null) return new Color[]{c1, c2};
-        }
-        return c1 != null ? new Color[]{c1} : null;
-    }
-
-    /** Returns whether a color is perceived as light (needs dark text). */
-    private static boolean isLight(Color c) {
-        // Standard luminance formula
-        double lum = 0.299 * c.getRed() + 0.587 * c.getGreen() + 0.114 * c.getBlue();
-        return lum > 160;
-    }
-
-    private static final Color FALLBACK_NORMAL = new Color(0, 120, 255, 200);
-    private static final Color COLOR_HIGHLIGHT  = new Color(255, 80, 0, 230);
 
     // ---- Image panel with clickable pin markers ----
 
@@ -328,7 +246,7 @@ public class PinoutPane {
         private Color[] markerFillColors(PinCoord c) {
             if (c.pin.equals(highlightedPin)) return new Color[]{COLOR_HIGHLIGHT};
             if (colorMode == ColorMode.PIGTAIL) {
-                Color[] cols = pigtailToColors(c.wireColor);
+                Color[] cols = PinColors.pigtailToColors(c.wireColor);
                 if (cols != null) {
                     Color[] result = new Color[cols.length];
                     for (int i = 0; i < cols.length; i++) {
@@ -338,7 +256,7 @@ public class PinoutPane {
                 }
                 return new Color[]{FALLBACK_NORMAL};
             }
-            Color base = typeToColor(c.type);
+            Color base = PinColors.typeToColor(c.type);
             Color fill = base != null ? new Color(base.getRed(), base.getGreen(), base.getBlue(), 200) : FALLBACK_NORMAL;
             return new Color[]{fill};
         }
@@ -399,8 +317,8 @@ public class PinoutPane {
                 int textX = sx - textW / 2;
                 int textY = sy + fm.getAscent() / 2 - 1;
 
-                Color textColor = isLight(fills[0]) ? Color.BLACK : Color.WHITE;
-                Color shadowColor = isLight(fills[0]) ? new Color(200, 200, 200, 120) : new Color(0, 0, 0, 120);
+                Color textColor = PinColors.isLight(fills[0]) ? Color.BLACK : Color.WHITE;
+                Color shadowColor = PinColors.isLight(fills[0]) ? new Color(200, 200, 200, 120) : new Color(0, 0, 0, 120);
 
                 g2.setColor(shadowColor);
                 g2.drawString(label, textX + 1, textY + 1);
@@ -631,16 +549,17 @@ public class PinoutPane {
         List<Map<String, Object>> pins = (List<Map<String, Object>>) doc.get("pins");
         if (pins != null) {
             for (Map<String, Object> pin : pins) {
-                String pinName = str(pin.get("pin"));
-                String type    = str(pin.get("type"));
-                String color   = str(pin.get("color"));
+                String pinName = YamlUtil.toStr(pin.get("pin"));
+                String type    = YamlUtil.toStr(pin.get("type"));
+                String color   = YamlUtil.toStr(pin.get("color"));
                 if (!pinName.isEmpty()) pinMeta.put(pinName, new String[]{type, color});
                 rows.add(new Object[]{
                         pinName,
-                        str(pin.get("function")),
+                        YamlUtil.toStr(pin.get("function")),
                         type,
-                        classStr(pin.get("class")),
-                        str(pin.get("ts_name")).replace("___", pinName).trim(),
+                        YamlUtil.toCommaSeparated(pin.get("class")),
+                        // original yaml has ___ has placeholder for the pin
+                        YamlUtil.toStr(pin.get("ts_name")).replace("___", pinName).trim(),
                         color,
                         "",  // "Tune use" — filled in by buildConnectorPanel
                 });
@@ -654,13 +573,13 @@ public class PinoutPane {
         List<PinCoord> coords = new ArrayList<>();
 
         if (info != null) {
-            String t = str(info.get("title"));
-            if (t.isEmpty()) t = str(info.get("name"));
+            String t = YamlUtil.toStr(info.get("title"));
+            if (t.isEmpty()) t = YamlUtil.toStr(info.get("name"));
             if (!t.isEmpty()) title = t;
 
             Map<String, Object> imageInfo = (Map<String, Object>) info.get("image");
             if (imageInfo != null) {
-                String imageFile = str(imageInfo.get("file"));
+                String imageFile = YamlUtil.toStr(imageInfo.get("file"));
                 if (!imageFile.isEmpty()) {
                     String dir = yamlPath.substring(0, yamlPath.lastIndexOf('/') + 1);
                     image = loadImageFromZip(zip, dir + imageFile);
@@ -670,10 +589,10 @@ public class PinoutPane {
             List<Map<String, Object>> coordList = (List<Map<String, Object>>) info.get("pins");
             if (coordList != null) {
                 for (Map<String, Object> c : coordList) {
-                    String pin = str(c.get("pin"));
+                    String pin = YamlUtil.toStr(c.get("pin"));
                     if (pin.isEmpty()) continue;
-                    int x = toInt(c.get("x"));
-                    int y = toInt(c.get("y"));
+                    int x = YamlUtil.toInt(c.get("x"));
+                    int y = YamlUtil.toInt(c.get("y"));
                     String[] meta = pinMeta.getOrDefault(pin, new String[]{"", ""});
                     coords.add(new PinCoord(pin, x, y, meta[0], meta[1]));
                 }
@@ -692,8 +611,8 @@ public class PinoutPane {
         int tuneUseCol = COLUMNS.length - 1; // last column
         for (DefaultTableModel model : activeTableModels) {
             for (int row = 0; row < model.getRowCount(); row++) {
-                String pinName = str(model.getValueAt(row, 0));
-                String tsName  = str(model.getValueAt(row, 4));
+                String pinName = YamlUtil.toStr(model.getValueAt(row, 0));
+                String tsName  = YamlUtil.toStr(model.getValueAt(row, 4));
                 String iniKey  = tsName.replace("___", pinName).trim();
                 model.setValueAt(tuneUseMap.getOrDefault(iniKey, ""), row, tuneUseCol);
             }
@@ -789,27 +708,6 @@ public class PinoutPane {
         } catch (IOException e) {
             return null;
         }
-    }
-
-    private static String str(Object val) {
-        return val == null ? "" : val.toString();
-    }
-
-    private static int toInt(Object val) {
-        if (val instanceof Number) return ((Number) val).intValue();
-        if (val instanceof String) {
-            try { return Integer.parseInt((String) val); } catch (NumberFormatException ignored) {}
-        }
-        return 0;
-    }
-
-    private static String classStr(Object val) {
-        if (val == null) return "";
-        if (val instanceof List) {
-            List<?> list = (List<?>) val;
-            return String.join(", ", list.stream().map(Object::toString).toArray(String[]::new));
-        }
-        return val.toString();
     }
 
     private static File findFile(String relativePath) {
