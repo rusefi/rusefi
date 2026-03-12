@@ -1,5 +1,11 @@
 package com.rusefi.ui;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
+import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.IniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.RusEfiSignature;
@@ -33,13 +39,14 @@ import java.util.zip.ZipFile;
 public class PinoutPane {
     private static final String BOARDS_META = "pinouts_raw/boards_meta.yaml";
     private static final String CONNECTORS_ZIP = "pinouts_raw/connectors.zip";
-    private static final String[] COLUMNS = {"Pin", "Function", "Type", "Class", "TS Name", "Pigtail color"};
+    private static final String[] COLUMNS = {"Pin", "Function", "Type", "Class", "TS Name", "Pigtail color", "Tune use"};
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel statusLabel = new JLabel("Not connected", SwingConstants.CENTER);
     private JComponent centerPanel;
 
     private final Map<String, List<String>> boardsData;
+    private final UIContext uiContext;
     /** All image panels currently displayed — updated when a board's tabs are built. */
     private final List<ConnectorImagePanel> activeImagePanels = new ArrayList<>();
 
@@ -282,6 +289,7 @@ public class PinoutPane {
     // ---- Main pane ----
 
     public PinoutPane(UIContext uiContext) {
+        this.uiContext = uiContext;
         boardsData = loadBoardsMeta();
 
         statusLabel.setFont(statusLabel.getFont().deriveFont(Font.BOLD, 13f));
@@ -390,19 +398,26 @@ public class PinoutPane {
             return;
         }
 
+        Map<String, String> tuneUseMap = buildTuneUseMap();
+
         JTabbedPane tabs = new JTabbedPane();
         for (ConnectorData cd : connectors) {
-            tabs.addTab(cd.title, buildConnectorPanel(cd));
+            tabs.addTab(cd.title, buildConnectorPanel(cd, tuneUseMap));
         }
         setCenterPanel(tabs);
     }
 
-    private JPanel buildConnectorPanel(ConnectorData cd) {
+    private JPanel buildConnectorPanel(ConnectorData cd, Map<String, String> tuneUseMap) {
         DefaultTableModel model = new DefaultTableModel(COLUMNS, 0) {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
-        for (Object[] row : cd.rows) model.addRow(row);
+        // ts_name is at index 4; tune use goes at index 6
+        for (Object[] row : cd.rows) {
+            String tsName = row[4] != null ? row[4].toString() : "";
+            row[6] = tuneUseMap.getOrDefault(tsName, "");
+            model.addRow(row);
+        }
 
         JTable table = new JTable(model);
         table.setAutoCreateRowSorter(true);
@@ -484,6 +499,7 @@ public class PinoutPane {
                         classStr(pin.get("class")),
                         str(pin.get("ts_name")),
                         color,
+                        "",  // "Tune use" — filled in by buildConnectorPanel
                 });
             }
         }
@@ -522,6 +538,48 @@ public class PinoutPane {
         }
 
         return new ConnectorData(title, image, coords, rows);
+    }
+
+    /**
+     * Builds a map from TunerStudio pin name (ts_name) to the human-readable label(s) of
+     * any tune field currently assigned to that pin.
+     * Fields are identified by name ending in "pin" or "pins" (case-insensitive), matching
+     * the convention used throughout rusEFI for pin-selector enum fields.
+     */
+    private Map<String, String> buildTuneUseMap() {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        if (bp == null || ini == null) return Collections.emptyMap();
+        ConfigurationImage ci = bp.getControllerConfiguration();
+        if (ci == null) return Collections.emptyMap();
+
+        Map<String, DialogModel.Field> fieldsInOrder = ini.getFieldsInUiOrder();
+        Map<String, String> result = new HashMap<>();
+
+        for (Map.Entry<String, IniField> entry : ini.getAllIniFields().entrySet()) {
+            IniField field = entry.getValue();
+            if (!(field instanceof EnumIniField)) continue;
+            String key = entry.getKey();
+            String keyLower = key.toLowerCase();
+            if (!keyLower.endsWith("pin") && !keyLower.endsWith("pins")) continue;
+
+            String rawValue;
+            try {
+                rawValue = ConfigurationImageGetterSetter.getStringValue(field, ci);
+            } catch (Exception ignored) {
+                continue;
+            }
+            String value = rawValue.replace("\"", "").trim();
+            if (value.isEmpty() || "NONE".equalsIgnoreCase(value)) continue;
+
+            DialogModel.Field meta = fieldsInOrder.get(key);
+            String displayName = (meta != null && meta.getUiName() != null && !meta.getUiName().isEmpty())
+                    ? meta.getUiName()
+                    : key;
+
+            result.merge(value, displayName, (a, b) -> a + ", " + b);
+        }
+        return result;
     }
 
     private static BufferedImage loadImageFromZip(ZipFile zip, String imagePath) {
