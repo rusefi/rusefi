@@ -49,6 +49,8 @@ public class PinoutPane {
     private final UIContext uiContext;
     /** All image panels currently displayed — updated when a board's tabs are built. */
     private final List<ConnectorImagePanel> activeImagePanels = new ArrayList<>();
+    /** All table models currently displayed — updated alongside activeImagePanels. */
+    private final List<DefaultTableModel> activeTableModels = new ArrayList<>();
 
     // ---- Color mode ----
 
@@ -320,6 +322,8 @@ public class PinoutPane {
                 showBoard(signature);
             }
         }));
+
+        uiContext.addConfigImageListener(ci -> SwingUtilities.invokeLater(() -> refreshTuneUse(ci)));
     }
 
     public JPanel getContent() {
@@ -337,6 +341,7 @@ public class PinoutPane {
     private void showDisconnected() {
         statusLabel.setText("Not connected");
         activeImagePanels.clear();
+        activeTableModels.clear();
         setCenterPanel(null);
     }
 
@@ -376,6 +381,7 @@ public class PinoutPane {
 
     private void buildConnectorTabs(List<String> connectorPaths) {
         activeImagePanels.clear();
+        activeTableModels.clear();
 
         File zipFile = findFile(CONNECTORS_ZIP);
         if (zipFile == null) {
@@ -412,12 +418,18 @@ public class PinoutPane {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
-        // ts_name is at index 4; tune use goes at index 6
+        // ts_name is at index 4, pin at index 0, tune use at index 6.
+        // ts_names may contain "___" as a placeholder for the pin ID (e.g. "___ injector output 1"
+        // on pin B6 → ini enum value "B6 injector output 1"), so expand before lookup.
         for (Object[] row : cd.rows) {
-            String tsName = row[4] != null ? row[4].toString() : "";
-            row[6] = tuneUseMap.getOrDefault(tsName, "");
+            String pinName = row[0] != null ? row[0].toString() : "";
+            String tsName  = row[4] != null ? row[4].toString() : "";
+            String iniKey  = tsName.replace("___", pinName).trim();
+            row[6] = tuneUseMap.getOrDefault(iniKey, "");
             model.addRow(row);
         }
+
+        activeTableModels.add(model);
 
         JTable table = new JTable(model);
         table.setAutoCreateRowSorter(true);
@@ -540,6 +552,23 @@ public class PinoutPane {
         return new ConnectorData(title, image, coords, rows);
     }
 
+    /** Updates only the "Tune use" column in every active table without rebuilding the tabs. */
+    private void refreshTuneUse(ConfigurationImage ci) {
+        if (activeTableModels.isEmpty()) return;
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        if (ini == null || ci == null) return;
+        Map<String, String> tuneUseMap = buildTuneUseMap(ini, ci);
+        int tuneUseCol = COLUMNS.length - 1; // last column
+        for (DefaultTableModel model : activeTableModels) {
+            for (int row = 0; row < model.getRowCount(); row++) {
+                String pinName = str(model.getValueAt(row, 0));
+                String tsName  = str(model.getValueAt(row, 4));
+                String iniKey  = tsName.replace("___", pinName).trim();
+                model.setValueAt(tuneUseMap.getOrDefault(iniKey, ""), row, tuneUseCol);
+            }
+        }
+    }
+
     /**
      * Builds a map from TunerStudio pin name (ts_name) to the human-readable label(s) of
      * any tune field currently assigned to that pin.
@@ -552,7 +581,15 @@ public class PinoutPane {
         if (bp == null || ini == null) return Collections.emptyMap();
         ConfigurationImage ci = bp.getControllerConfiguration();
         if (ci == null) return Collections.emptyMap();
+        return buildTuneUseMap(ini, ci);
+    }
 
+    /**
+     * Builds a reverse map: expanded ts_name → human-readable label(s) of the tune field(s)
+     * currently assigned to that pin. Fields are matched by name pattern .*pins?\d*
+     * (rusEFI convention: mainRelayPin, injectionPins1, ignitionPins12, fuelPumpPin, etc.).
+     */
+    private static Map<String, String> buildTuneUseMap(IniFileModel ini, ConfigurationImage ci) {
         Map<String, DialogModel.Field> fieldsInOrder = ini.getFieldsInUiOrder();
         Map<String, String> result = new HashMap<>();
 
@@ -560,8 +597,7 @@ public class PinoutPane {
             IniField field = entry.getValue();
             if (!(field instanceof EnumIniField)) continue;
             String key = entry.getKey();
-            String keyLower = key.toLowerCase();
-            if (!keyLower.endsWith("pin") && !keyLower.endsWith("pins")) continue;
+            if (!key.toLowerCase().matches(".*pins?\\d*")) continue;
 
             String rawValue;
             try {
@@ -570,7 +606,7 @@ public class PinoutPane {
                 continue;
             }
             String value = rawValue.replace("\"", "").trim();
-            if (value.isEmpty() || "NONE".equalsIgnoreCase(value)) continue;
+            if (value.isEmpty() || "NONE".equalsIgnoreCase(value) || "INVALID".equalsIgnoreCase(value)) continue;
 
             DialogModel.Field meta = fieldsInOrder.get(key);
             String displayName = (meta != null && meta.getUiName() != null && !meta.getUiName().isEmpty())
