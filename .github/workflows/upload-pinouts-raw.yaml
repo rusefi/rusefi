@@ -1,0 +1,40 @@
+name: Upload Raw Pinouts for console
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'firmware/config/boards/**/connectors/*.yaml'
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Build packager jar
+        run: ./gradlew :config_definition:shadowJar
+
+      - name: Collect and package pinouts_raw
+        run: java -cp java_tools/configuration_definition/build/libs/config_definition-all.jar com.rusefi.output.PinoutsRawPackager
+
+      - name: Show output structure
+        run: find pinouts_raw -type f | sort
+
+      - name: Upload pinouts_raw to server
+        env:
+          pass: ${{ secrets.RUSEFI_SSH_PASS }}
+        if: ${{ env.pass != '' }}
+        run: |
+          run: tar -czf - pinouts_raw | sshpass -p "${{ secrets.RUSEFI_SSH_PASS }}" ssh -o StrictHostKeyChecking=no "${{ secrets.RUSEFI_SSH_USER }}"@"${{ secrets.RUSEFI_SSH_SERVER }}" "tar -xzf - -C docs"
