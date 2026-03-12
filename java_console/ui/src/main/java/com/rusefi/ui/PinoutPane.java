@@ -51,11 +51,96 @@ public class PinoutPane {
     private final List<ConnectorImagePanel> activeImagePanels = new ArrayList<>();
     /** All table models currently displayed — updated alongside activeImagePanels. */
     private final List<DefaultTableModel> activeTableModels = new ArrayList<>();
-
     // ---- Color mode ----
 
     enum ColorMode { TYPE, PIGTAIL }
     private ColorMode colorMode = ColorMode.TYPE;
+
+    // ---- Legend data (mirrors the color lookup methods) ----
+
+    private static class LegendEntry {
+        final String label;
+        final Color color;
+        LegendEntry(String label, Color color) { this.label = label; this.color = color; }
+    }
+
+    private static final List<LegendEntry> TYPE_LEGEND = Arrays.asList(
+            new LegendEntry("ign",  new Color(0xFF, 0x00, 0xFF)),
+            new LegendEntry("inj",  new Color(0x80, 0x00, 0x00)),
+            new LegendEntry("ls",   new Color(0x90, 0xEE, 0x90)),
+            new LegendEntry("mr",   new Color(0xB2, 0x22, 0x22)),
+            new LegendEntry("pgnd", new Color(0xFF, 0x7F, 0x50)),
+            new LegendEntry("sgnd", new Color(0x80, 0x80, 0x00)),
+            new LegendEntry("usb",  new Color(0x20, 0xB2, 0xAA)),
+            new LegendEntry("vr",   new Color(0xA0, 0x52, 0x2D))
+    );
+
+    // ---- Legend panel (always shows Type mode colors) ----
+
+    private static class LegendPanel extends JPanel {
+        private static final int SWATCH  = 12;
+        private static final int ROW_H   = 18;
+        private static final int PAD_X   = 8;
+        private static final int PAD_Y   = 6;
+        private static final int GAP     = 5;
+
+        LegendPanel() {
+            setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, UIManager.getColor("Separator.foreground")));
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            FontMetrics fm = getFontMetrics(getFont().deriveFont(Font.PLAIN, 10f));
+            int maxW = 0;
+            for (LegendEntry e : TYPE_LEGEND) maxW = Math.max(maxW, fm.stringWidth(e.label));
+            int w = PAD_X * 2 + SWATCH + GAP + maxW + 4;
+            int h = PAD_Y * 2 + 16 + TYPE_LEGEND.size() * ROW_H;
+            return new Dimension(Math.max(w, 80), h);
+        }
+
+        @Override
+        public Dimension getMinimumSize() { return getPreferredSize(); }
+        @Override
+        public Dimension getMaximumSize() { return new Dimension(getPreferredSize().width, Integer.MAX_VALUE); }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,      RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            Font titleFont = getFont().deriveFont(Font.BOLD, 11f);
+            g2.setFont(titleFont);
+            FontMetrics titleFm = g2.getFontMetrics();
+            g2.setColor(getForeground());
+            g2.drawString("Type", PAD_X, PAD_Y + titleFm.getAscent());
+
+            Font rowFont = getFont().deriveFont(Font.PLAIN, 10f);
+            g2.setFont(rowFont);
+            FontMetrics rowFm = g2.getFontMetrics();
+
+            int y = PAD_Y + titleFm.getHeight() + 2;
+            for (LegendEntry e : TYPE_LEGEND) {
+                int swatchY = y + (ROW_H - SWATCH) / 2;
+
+                // Swatch
+                g2.setColor(e.color);
+                g2.fillRoundRect(PAD_X, swatchY, SWATCH, SWATCH, 4, 4);
+                g2.setColor(Color.GRAY);
+                g2.setStroke(new BasicStroke(0.5f));
+                g2.drawRoundRect(PAD_X, swatchY, SWATCH, SWATCH, 4, 4);
+
+                // Label
+                g2.setColor(getForeground());
+                g2.drawString(e.label, PAD_X + SWATCH + GAP,
+                        y + (ROW_H + rowFm.getAscent() - rowFm.getDescent()) / 2);
+
+                y += ROW_H;
+            }
+            g2.dispose();
+        }
+    }
 
     // ---- Data models ----
 
@@ -111,11 +196,10 @@ public class PinoutPane {
         return null;
     }
 
-    /** Maps pigtail wire color string (first token before "/" or space) to a Color. */
-    private static Color pigtailToColor(String wireColor) {
-        if (wireColor == null || wireColor.isEmpty()) return null;
-        String c = wireColor.toLowerCase().split("[/,\\s]+")[0].trim();
-        switch (c) {
+    /** Maps a single pigtail wire color token (no slashes) to a Color. */
+    private static Color pigtailTokenToColor(String token) {
+        if (token == null) return null;
+        switch (token.toLowerCase().trim()) {
             case "black":  return new Color(30, 30, 30);
             case "red":    return new Color(200, 0, 0);
             case "white":  return new Color(230, 230, 230);
@@ -131,6 +215,22 @@ public class PinoutPane {
             case "pink":   return new Color(255, 160, 160);
             default:       return null;
         }
+    }
+
+    /**
+     * Returns 1 or 2 colors for a pigtail wire color string.
+     * Strings like "white/red" produce two colors (left half, right half).
+     * Unknown or empty strings return null.
+     */
+    private static Color[] pigtailToColors(String wireColor) {
+        if (wireColor == null || wireColor.isEmpty()) return null;
+        String[] tokens = wireColor.split("[/,]");
+        Color c1 = pigtailTokenToColor(tokens[0].trim());
+        if (tokens.length >= 2) {
+            Color c2 = pigtailTokenToColor(tokens[1].trim());
+            if (c1 != null && c2 != null) return new Color[]{c1, c2};
+        }
+        return c1 != null ? new Color[]{c1} : null;
     }
 
     /** Returns whether a color is perceived as light (needs dark text). */
@@ -225,15 +325,22 @@ public class PinoutPane {
             return nearest;
         }
 
-        private Color markerFillColor(PinCoord c) {
-            if (c.pin.equals(highlightedPin)) return COLOR_HIGHLIGHT;
-            Color base;
+        private Color[] markerFillColors(PinCoord c) {
+            if (c.pin.equals(highlightedPin)) return new Color[]{COLOR_HIGHLIGHT};
             if (colorMode == ColorMode.PIGTAIL) {
-                base = pigtailToColor(c.wireColor);
-            } else {
-                base = typeToColor(c.type);
+                Color[] cols = pigtailToColors(c.wireColor);
+                if (cols != null) {
+                    Color[] result = new Color[cols.length];
+                    for (int i = 0; i < cols.length; i++) {
+                        result[i] = new Color(cols[i].getRed(), cols[i].getGreen(), cols[i].getBlue(), 200);
+                    }
+                    return result;
+                }
+                return new Color[]{FALLBACK_NORMAL};
             }
-            return base != null ? new Color(base.getRed(), base.getGreen(), base.getBlue(), 200) : FALLBACK_NORMAL;
+            Color base = typeToColor(c.type);
+            Color fill = base != null ? new Color(base.getRed(), base.getGreen(), base.getBlue(), 200) : FALLBACK_NORMAL;
+            return new Color[]{fill};
         }
 
         @Override
@@ -259,25 +366,41 @@ public class PinoutPane {
             for (PinCoord c : coords) {
                 int sx = screenX(c);
                 int sy = screenY(c);
+                int r  = MARKER_RADIUS;
                 boolean hl = c.pin.equals(highlightedPin);
 
-                Color fill = markerFillColor(c);
-                g2.setColor(fill);
-                g2.fillOval(sx - MARKER_RADIUS, sy - MARKER_RADIUS, MARKER_RADIUS * 2, MARKER_RADIUS * 2);
+                Color[] fills = markerFillColors(c);
+                Shape savedClip = g2.getClip();
+
+                if (fills.length == 2) {
+                    // Left half — color[0]
+                    g2.clip(new Rectangle(sx - r, sy - r, r, r * 2));
+                    g2.setColor(fills[0]);
+                    g2.fillOval(sx - r, sy - r, r * 2, r * 2);
+                    g2.setClip(savedClip);
+                    // Right half — color[1]
+                    g2.clip(new Rectangle(sx, sy - r, r, r * 2));
+                    g2.setColor(fills[1]);
+                    g2.fillOval(sx - r, sy - r, r * 2, r * 2);
+                    g2.setClip(savedClip);
+                } else {
+                    g2.setColor(fills[0]);
+                    g2.fillOval(sx - r, sy - r, r * 2, r * 2);
+                }
 
                 // Border: white normally, bright orange when highlighted
                 g2.setColor(hl ? Color.ORANGE : Color.WHITE);
                 g2.setStroke(new BasicStroke(hl ? 2f : 1f));
-                g2.drawOval(sx - MARKER_RADIUS, sy - MARKER_RADIUS, MARKER_RADIUS * 2, MARKER_RADIUS * 2);
+                g2.drawOval(sx - r, sy - r, r * 2, r * 2);
 
-                // Pin label: pick black or white for contrast, draw with a thin shadow
+                // Pin label: pick contrast color from the first (dominant) fill
                 String label = c.pin;
                 int textW = fm.stringWidth(label);
                 int textX = sx - textW / 2;
                 int textY = sy + fm.getAscent() / 2 - 1;
 
-                Color textColor = isLight(fill) ? Color.BLACK : Color.WHITE;
-                Color shadowColor = isLight(fill) ? new Color(200, 200, 200, 120) : new Color(0, 0, 0, 120);
+                Color textColor = isLight(fills[0]) ? Color.BLACK : Color.WHITE;
+                Color shadowColor = isLight(fills[0]) ? new Color(200, 200, 200, 120) : new Color(0, 0, 0, 120);
 
                 g2.setColor(shadowColor);
                 g2.drawString(label, textX + 1, textY + 1);
@@ -435,6 +558,8 @@ public class PinoutPane {
         table.setAutoCreateRowSorter(true);
         table.getTableHeader().setReorderingAllowed(false);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        packColumns(table);
 
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -471,7 +596,13 @@ public class PinoutPane {
                 imagePanel.setHighlightedPin(v != null ? v.toString() : null);
             });
 
-            JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, imagePanel, new JScrollPane(table));
+            LegendPanel legend = new LegendPanel();
+
+            JPanel imageRow = new JPanel(new BorderLayout());
+            imageRow.add(imagePanel, BorderLayout.CENTER);
+            imageRow.add(legend, BorderLayout.EAST);
+
+            JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, imageRow, new JScrollPane(table));
             split.setResizeWeight(0.6);
             panel.add(split, BorderLayout.CENTER);
         } else {
@@ -509,7 +640,7 @@ public class PinoutPane {
                         str(pin.get("function")),
                         type,
                         classStr(pin.get("class")),
-                        str(pin.get("ts_name")),
+                        str(pin.get("ts_name")).replace("___", pinName).trim(),
                         color,
                         "",  // "Tune use" — filled in by buildConnectorPanel
                 });
@@ -616,6 +747,26 @@ public class PinoutPane {
             result.merge(value, displayName, (a, b) -> a + ", " + b);
         }
         return result;
+    }
+
+    /**
+     * Sets each column's preferred width to the widest of its header and cell content.
+     */
+    private static void packColumns(JTable table) {
+        for (int col = 0; col < table.getColumnCount(); col++) {
+            javax.swing.table.TableColumn column = table.getColumnModel().getColumn(col);
+            javax.swing.table.TableCellRenderer hr = column.getHeaderRenderer();
+            if (hr == null) hr = table.getTableHeader().getDefaultRenderer();
+            int width = hr.getTableCellRendererComponent(
+                    table, column.getHeaderValue(), false, false, -1, col)
+                    .getPreferredSize().width;
+            for (int row = 0; row < table.getRowCount(); row++) {
+                width = Math.max(width,
+                        table.prepareRenderer(table.getCellRenderer(row, col), row, col)
+                             .getPreferredSize().width);
+            }
+            column.setPreferredWidth(width + 6);
+        }
     }
 
     private static BufferedImage loadImageFromZip(ZipFile zip, String imagePath) {
