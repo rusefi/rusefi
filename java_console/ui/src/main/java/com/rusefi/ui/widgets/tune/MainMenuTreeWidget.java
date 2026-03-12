@@ -68,13 +68,6 @@ public class MainMenuTreeWidget {
             populate(model);
         }
 
-        // Refresh the disabled state as soon as the tune is read from the ECU.
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
-            if (isConnected) {
-                SwingUtilities.invokeLater(this::refreshExpressions);
-            }
-        });
-
         tree = new JTree(root);
         tree.setToggleClickCount(1);
         tree.addMouseListener(new MouseAdapter() {
@@ -175,6 +168,23 @@ public class MainMenuTreeWidget {
 
         contentPane.add(topPanel, BorderLayout.NORTH);
         contentPane.add(new JScrollPane(tree), BorderLayout.CENTER);
+
+        // Refresh the disabled state as soon as the tune is read from the ECU.
+        // If the tree was not populated at startup (no local ini file), populate it now.
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (isConnected) {
+                SwingUtilities.invokeLater(() -> {
+                    if (root.getChildCount() == 0) {
+                        IniFileModel iniModel = uiContext.iniFileState.getIniFileModel();
+                        if (iniModel != null) {
+                            populate(iniModel);
+                            ((DefaultTreeModel) tree.getModel()).nodeStructureChanged(root);
+                        }
+                    }
+                    refreshExpressions();
+                });
+            }
+        });
     }
 
     private void populate(IniFileModel model) {
