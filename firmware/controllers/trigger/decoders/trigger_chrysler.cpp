@@ -32,8 +32,14 @@ void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s) {
 	// 16 teeth, then larger gap, 14 teeth, then smaller gap
 	// each tooth is 10 degrees (5 high, 5 low)
 	// total: 16*10 + 30 + 14*10 + 30 = 360
-	// sync on the larger gap using gap ratio + second gap check
+	// sync on the gap using gap ratio checks for all teeth in the window
+	// index 0: the gap itself, ratio ~3.0
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/2.0, 4.0);
+	// indices 1-13: normal teeth before the gap, ratio ~1.0
+	for (int i = 1; i <= 13; i++) {
+		s->setTriggerSynchronizationGap3(/*gapIndex*/i, /*from*/0.75, 1.25);
+	}
+	// index 14: from correct gap this is a normal tooth (~1.0), disambiguates from wrong gap (~0.29)
 	s->setTriggerSynchronizationGap3(/*gapIndex*/14, /*from*/0.5, 1.5);
 
 	// 16 teeth: 5 to 160 degrees

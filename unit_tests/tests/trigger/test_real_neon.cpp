@@ -37,8 +37,8 @@ TEST(realNeon, srt4_crank) {
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		reader.assertFirstRpm(172, 97);
+		reader.assertFirstRpm(75, 168);
 	}
 
-	ASSERT_NEAR(58, Sensor::getOrZero(SensorType::Rpm), 1);
+	ASSERT_NEAR(67, Sensor::getOrZero(SensorType::Rpm), 1);
 }
