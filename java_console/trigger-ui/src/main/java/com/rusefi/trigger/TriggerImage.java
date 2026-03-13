@@ -382,7 +382,7 @@ public class TriggerImage {
 
             int h = getHeight();
 
-            g.drawString(name, 50, (int) (h * 0.75));
+            g.drawString(name, 50, (int) (h - f.getSize() * 3));
             if (id != null)
                 g.drawString(id, 0, (int) (h * 0.9));
 
