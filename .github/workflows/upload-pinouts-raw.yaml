@@ -37,4 +37,4 @@ jobs:
           pass: ${{ secrets.RUSEFI_SSH_PASS }}
         if: ${{ env.pass != '' }}
         run: |
-          run: tar -czf - pinouts_raw | sshpass -p "${{ secrets.RUSEFI_SSH_PASS }}" ssh -o StrictHostKeyChecking=no "${{ secrets.RUSEFI_SSH_USER }}"@"${{ secrets.RUSEFI_SSH_SERVER }}" "tar -xzf - -C docs"
+          tar -czf - pinouts_raw | sshpass -p "${{ secrets.RUSEFI_SSH_PASS }}" ssh -o StrictHostKeyChecking=no "${{ secrets.RUSEFI_SSH_USER }}"@"${{ secrets.RUSEFI_SSH_SERVER }}" "tar -xzf - -C docs"
