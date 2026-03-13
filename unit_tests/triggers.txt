@@ -1889,34 +1889,6 @@ event 6 1 1 530.00 nan
 event 7 1 0 530.00 nan
 event 8 1 1 650.00 nan
 event 9 1 0 650.00 nan
-TRIGGERTYPE 32 14 TT_DODGE_NEON_2003_CRANK 496.00
-knownOperationMode=true
-crankBased=false
-hasSecondChannel=false
-isSecondWheelCam=false
-cycleDuration=720
-gapsCount=2
-syncEdge=Rise
-isSynchronizationNeeded=1
-gapFrom.0=0.750000
-gapTo.0=1.500000
-gapFrom.1=0.650000
-gapTo.1=1.250000
-# end of meta section
-event 0 0 1 0.00 1.000000
-event 1 0 0 144.00 nan
-event 2 0 1 180.00 2.500000
-event 3 0 0 216.00 nan
-event 4 0 1 252.00 0.400000
-event 5 0 0 288.00 nan
-event 6 0 1 324.00 1.000000
-event 7 0 0 360.00 nan
-event 8 0 1 504.00 2.500000
-event 9 0 0 540.00 nan
-event 10 0 1 576.00 0.400000
-event 11 0 0 612.00 nan
-event 12 0 1 648.00 1.000000
-event 13 0 0 684.00 nan
 TRIGGERTYPE 33 16 TT_MIATA_VVT 715.00
 knownOperationMode=true
 crankBased=true
@@ -2177,7 +2149,7 @@ event 44 0 1 660.00 nan
 event 45 0 0 660.00 nan
 event 46 0 1 690.00 nan
 event 47 0 0 690.00 nan
-TRIGGERTYPE 39 32 TT_DODGE_NEON_1995_ONLY_CRANK 279.00
+TRIGGERTYPE 39 32 TT_UNUSED_39 279.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
