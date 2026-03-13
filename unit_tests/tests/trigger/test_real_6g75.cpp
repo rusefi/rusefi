@@ -41,6 +41,8 @@ TEST(real6g75, realWithSparkPlugs) {
         reader.processLine(&eth);
     }
 
+    // https://github.com/rusefi/rusefi/issues/8827
+    // huge 'tooManyTeethCounter' is the indicator of trouble
     ASSERT_EQ(382, tooManyTeethCounter);
     ASSERT_EQ(1, eth.recentWarnings()->getCount());
     ASSERT_NEAR(143.40, Sensor::getOrZero(SensorType::Rpm), 0.1);

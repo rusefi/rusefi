@@ -39,6 +39,7 @@ void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s) {
 	for (int i = 1; i <= 13; i++) {
 		s->setTriggerSynchronizationGap3(/*gapIndex*/i, /*from*/0.75, 1.25);
 	}
+	// TODO: how come we are not able to define shape with non-1 gap at the end? Do not care to keep same sync point
 	// index 14: from correct gap this is a normal tooth (~1.0), disambiguates from wrong gap (~0.29)
 	s->setTriggerSynchronizationGap3(/*gapIndex*/14, /*from*/0.5, 1.5);
 
