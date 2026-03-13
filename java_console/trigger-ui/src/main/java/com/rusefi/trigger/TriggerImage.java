@@ -172,7 +172,7 @@ public class TriggerImage {
 
         topPanel.removeAll();
 
-        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true,
+        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), !triggerWheelInfo.isShapeWithoutTdc(),
             triggerWheelInfo);
         if (DEBUG) {
             firstWheelControl.setBorder(BorderFactory.createLineBorder(Color.green));
@@ -197,6 +197,7 @@ public class TriggerImage {
         triggerPanel.syncEdge = triggerWheelInfo.getSyncEdge();
         triggerPanel.isKnown = triggerWheelInfo.isKnownOperationMode();
         triggerPanel.isCrankBased = triggerWheelInfo.isCrankBased();
+        triggerPanel.shapeWithoutTdc = triggerWheelInfo.isShapeWithoutTdc();
 
         EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
@@ -364,6 +365,7 @@ public class TriggerImage {
         public String syncEdge;
         public boolean isKnown;
         public boolean isCrankBased;
+        public boolean shapeWithoutTdc;
         public UpDownImage image;
         public TriggerWheelInfo.TriggerGaps gaps;
 
@@ -392,43 +394,49 @@ public class TriggerImage {
                 g.drawString(id, 0, (int) (h * 0.9));
 
             g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
-            int tdcFontSize = (int) (f.getSize() * 1.5);
-            g.setFont(new Font(f.getName(), Font.BOLD, tdcFontSize));
-            String tdcMessage;
-            if (tdcPosition != 0) {
-                tdcMessage = "TDC " + formatTdcPosition() + " degree from synchronization point";
-            } else {
-                tdcMessage = "TDC at synchronization point";
-            }
-            int y = tdcFontSize;
-            String prefix = "     ";
-            g.drawString(prefix + tdcMessage, 0, y);
-            y += tdcFontSize;
-            g.setColor(Color.darkGray);
-            if (image == null)
-                return;
-            for (int i = 0; i < gaps.gapFrom.length; i++) {
-                String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
-                g.drawString(prefix + "       " + message, 0, y);
-                y += tdcFontSize;
-            }
 
-            if (isKnown) {
-                g.drawString(prefix + (isCrankBased ? "On crankshaft" : "On camshaft"), 0, y);
-                y += tdcFontSize;
-            }
+						int tdcFontSize = (int) (f.getSize() * 1.5);
+						int y = tdcFontSize;
+						String prefix = "     ";
+						g.setFont(new Font(f.getName(), Font.BOLD, tdcFontSize));
 
-            if (syncEdge != null) {
-                g.drawString(prefix + syncEdge, 0, y);
-                y += tdcFontSize;
-            }
+						if (!shapeWithoutTdc) {
+								String tdcMessage;
+								if (tdcPosition != 0) {
+										tdcMessage = "TDC " + formatTdcPosition() + " degree from synchronization point";
+								} else {
+										tdcMessage = "TDC at synchronization point";
+								}
+								g.drawString(prefix + tdcMessage, 0, y);
+								y += tdcFontSize;
 
-            int tdcX = image.engineReport.getTimeAxisTranslator().timeToScreen(MIN_TIME + tdcPosition, w);
-            g.drawLine(tdcX, 0, tdcX, h);
-            Graphics2D g2 = (Graphics2D) g;
-            g2.rotate(Math.PI / 2);
-            g2.drawString("TDC", 160, -tdcX - 3);
-            g2.rotate(-Math.PI / 2);
+								g.setColor(Color.darkGray);
+								if (image == null)
+										return;
+								for (int i = 0; i < gaps.gapFrom.length; i++) {
+										String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
+										g.drawString(prefix + "       " + message, 0, y);
+										y += tdcFontSize;
+								}
+
+								int tdcX = image.engineReport.getTimeAxisTranslator().timeToScreen(MIN_TIME + tdcPosition, w);
+								g.drawLine(tdcX, 0, tdcX, h);
+								Graphics2D g2 = (Graphics2D) g;
+								g2.rotate(Math.PI / 2);
+								g2.drawString("TDC", 160, -tdcX - 3);
+								g2.rotate(-Math.PI / 2);
+						}
+
+						g.setColor(Color.darkGray);
+						if (isKnown) {
+								g.drawString(prefix + (isCrankBased ? "On crankshaft" : "On camshaft"), 0, y);
+								y += tdcFontSize;
+						}
+
+						if (syncEdge != null) {
+								g.drawString(prefix + syncEdge, 0, y);
+								y += tdcFontSize;
+						}
         }
 
         private String formatTdcPosition() {
