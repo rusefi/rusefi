@@ -6679,6 +6679,40 @@ event 20 0 1 595.00 nan
 event 21 0 0 595.00 nan
 event 22 0 1 688.00 nan
 event 23 0 0 688.00 nan
+TRIGGERTYPE 95 22 TT_SUZUKI_G16B 0.00
+knownOperationMode=true
+crankBased=false
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=1
+syncEdge=RiseOnly
+isSynchronizationNeeded=1
+gapFrom.0=1.177500
+gapTo.0=1.962500
+# end of meta section
+event 0 0 1 0.00 1.571429
+event 1 0 0 0.00 nan
+event 2 0 1 70.00 0.636364
+event 3 0 0 70.00 nan
+event 4 0 1 150.00 1.142857
+event 5 0 0 150.00 nan
+event 6 0 1 180.00 0.375000
+event 7 0 0 180.00 nan
+event 8 0 1 250.00 2.333333
+event 9 0 0 250.00 nan
+event 10 0 1 280.00 0.428571
+event 11 0 0 280.00 nan
+event 12 0 1 360.00 2.666667
+event 13 0 0 360.00 nan
+event 14 0 1 430.00 0.875000
+event 15 0 0 430.00 nan
+event 16 0 1 510.00 1.142857
+event 17 0 0 510.00 nan
+event 18 0 1 540.00 0.375000
+event 19 0 0 540.00 nan
+event 20 0 1 610.00 2.333333
+event 21 0 0 610.00 nan
 TRIGGERTYPE 96 24 TT_UNUSED_96 65.00
 knownOperationMode=true
 crankBased=true
