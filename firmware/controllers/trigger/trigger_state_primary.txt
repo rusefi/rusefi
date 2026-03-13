@@ -1,4 +1,5 @@
 struct_no_prefix trigger_state_primary_s
 	uint8_t camResyncCounter;sync: Phase Re-Sync Counter
+	uint16_t m_phaseAdjustment;sync: phase adjustment
 	bit m_hasSynchronizedPhase;sync: We Know Engine Phase
 end_struct
