@@ -133,8 +133,7 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             tabbedPane.addTab("Tuning", new TuningPane(uiContext).getContent());
-            // commented out until we download the .zip from rusefi server
-            // tabbedPane.addTab("Pinout", new PinoutPane(uiContext).getContent());
+            tabbedPane.addTab("Pinout", new PinoutPane(uiContext).getContent());
             tabbedPane.addTab("Device", new DevicePane(uiContext, port, serialPortType).getContent());
         }
 
