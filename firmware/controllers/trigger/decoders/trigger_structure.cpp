@@ -530,8 +530,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_DODGE_NEON_2003_CRANK:
-		configureNeon2003TriggerWaveformCam(this);
-//		configureNeon2003TriggerWaveformCrank(triggerShape);
+		configureNeon2003TriggerWaveformCrank(this);
 		break;
 
 	case trigger_type_e::TT_FORD_ASPIRE:
