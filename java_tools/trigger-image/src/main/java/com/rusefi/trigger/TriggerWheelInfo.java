@@ -76,7 +76,7 @@ public class TriggerWheelInfo {
             String value = keyValue[1];
             if (key.startsWith(TRIGGER_GAP_FROM)) {
                 int index = getIndex(key);
-                gaps.gapFrom[index] = Double.parseDouble(value);
+                gaps.gapFrom[index] = "nan".equalsIgnoreCase(value) ? Double.NaN : Double.parseDouble(value);
                 continue;
             }
             if (key.startsWith(TRIGGER_GAP_TO)) {
