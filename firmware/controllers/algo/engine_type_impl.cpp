@@ -354,7 +354,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration();
 		break;
-	case engine_type_e::DODGE_NEON_2003_CRANK:
+	case engine_type_e::ET_DODGE_NEON_2003:
 		setDodgeNeonNGCEngineConfiguration();
 		break;
 	case engine_type_e::FORD_ASPIRE_1996:

@@ -389,10 +389,10 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoder2("test1+1", engine_type_e::DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
-	testTriggerDecoder2("neon NGC4", engine_type_e::DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder2("neon NGC4", engine_type_e::ET_DODGE_NEON_2003, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
-		EngineTestHelper eth(engine_type_e::DODGE_NEON_2003_CRANK);
+		EngineTestHelper eth(engine_type_e::ET_DODGE_NEON_2003);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 
