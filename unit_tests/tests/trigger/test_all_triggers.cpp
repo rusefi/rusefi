@@ -83,12 +83,12 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	try {
 		engine->updateTriggerConfiguration();
 	} catch (...) {
-		GTEST_SKIP() << "Trigger type " << (int)tt << " threw exception during initialization (not implemented)";
+		GTEST_FAIL() << "Trigger type " << (int)tt << " threw exception during initialization.";
 	}
 
 	if (shape->shapeDefinitionError) {
 		// Some trigger types are not yet implemented - skip them
-		GTEST_SKIP() << "Trigger type " << (int)tt << " has shapeDefinitionError (not implemented)";
+		GTEST_FAIL() << "Trigger type " << (int)tt << " has shapeDefinitionError.";
 	}
 
 	fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", tt, shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
