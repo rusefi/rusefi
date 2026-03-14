@@ -532,7 +532,7 @@ void initializeIgnitionActions() {
 static void prepareIgnitionSchedule() {
 	ScopePerf perf(PE::PrepareIgnitionSchedule);
 
-	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
+	operation_mode_e operationMode = getOperationMode();
 	float maxAllowedDwellAngle;
 
 	if (getCurrentIgnitionMode() == IM_ONE_COIL) {
@@ -697,7 +697,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
  */
 percent_t getCoilDutyCycle(float rpm) {
 	floatms_t totalPerCycle = engine->ignitionState.getDwell() * getNumberOfSparks(getCurrentIgnitionMode());
-	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
+	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
 

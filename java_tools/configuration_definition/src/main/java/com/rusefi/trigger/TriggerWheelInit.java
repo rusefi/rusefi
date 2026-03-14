@@ -61,6 +61,7 @@ public class TriggerWheelInit {
 				// Set boolean properties if they don't match the default.
         setFlag("useOnlyPrimaryForSync", wheelInfo.isUseOnlyPrimaryForSync());
         setFlag("isSecondWheelCam", wheelInfo.isSecondWheelCam());
+        setFlag("knownOperationMode", wheelInfo.isKnownOperationMode());
         setFlag("isSynchronizationNeeded", wheelInfo.isSynchronizationNeeded());
         setFlag("shapeWithoutTdc", wheelInfo.isShapeWithoutTdc());
 

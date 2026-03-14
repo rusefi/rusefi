@@ -62,7 +62,7 @@ angle_t HpfpLobe::findNextLobe() {
 	angle_t vvt = 0;
 	if (engineConfiguration->hpfpCam != HPFP_CAM_NONE) {
 		// pump operates in cam-angle domain which is different speed from crank-angle domain on 4 stroke engines
-		int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
+		int mult = (int)getEngineCycle(getOperationMode()) / 360;
 		int camIndex = engineConfiguration->hpfpCam - 1;
 		// TODO: Is the sign correct here?  + means ATDC?
 		vvt = engine->triggerCentral.getVVTPosition(
