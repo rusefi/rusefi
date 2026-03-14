@@ -60,8 +60,8 @@ jobs:
         # per-board .ini
         .github/workflows/bin/smart-git-add.sh 'firmware/tunerstudio/generated/*.ini' 4
         .github/workflows/bin/smart-git-add.sh firmware/controllers/generated 4
-        .github/workflows/bin/smart-git-add.sh 'firmware/*/*generated*.cpp'
-        .github/workflows/bin/smart-git-add.sh 'firmware/*/*generated*.h'
+        .github/workflows/bin/smart-git-add.sh 'firmware/**/*generated*.cpp'
+        .github/workflows/bin/smart-git-add.sh 'firmware/**/*generated*.h'
         .github/workflows/bin/smart-git-add.sh 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
         # misc live data etc. reference files TODO change extention since not really .ini?
         .github/workflows/bin/smart-git-add.sh 'firmware/console/binary/generated/*.ini' 4
