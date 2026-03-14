@@ -28,6 +28,7 @@
 #include "auto_generated_commonenum.h"
 #include "auto_generated_enginetypes.h"
 #include "auto_generated_engine_type_e.h"
+#include "auto_generated_triggertypes.h"
 #include "efilib.h"
 #include "efitime.h"
 

@@ -27,6 +27,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/hw_layer/drivers/can/can_category.h \
   $(PROJECT_DIR)/config/boards/cypress/rusefi_hw_enums.h \
   $(PROJECT_DIR)/config/boards/kinetis/rusefi_hw_enums.h \
+  $(PROJECT_DIR)/controllers/algo/generated_trigger_type_e.h \
 
 DOCS_ENUMS = \
   $(PROJECT_DIR)/controllers/algo/auto_generated_engine_type_e.cpp \
@@ -37,6 +38,8 @@ DOCS_ENUMS = \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/algo/auto_generated_enums.h \
   $(PROJECT_DIR)/controllers/algo/auto_generated_enginetypes.cpp \
   $(PROJECT_DIR)/controllers/algo/auto_generated_enginetypes.h \
+  $(PROJECT_DIR)/controllers/algo/auto_generated_triggertypes.cpp \
+  $(PROJECT_DIR)/controllers/algo/auto_generated_triggertypes.h \
   $(PROJECT_DIR)/controllers/trigger/decoders/auto_generated_sync_edge.cpp \
   $(PROJECT_DIR)/controllers/trigger/decoders/auto_generated_sync_edge.h \
   $(PROJECT_DIR)/controllers/sensors/auto_generated_sensor.cpp \
@@ -70,6 +73,15 @@ DOCS_ENUMS = \
   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/enums/ts_14_command.java \
   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/enums/ts_command_e.java \
   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/tracing/EnumNames.java
+
+YAML_ENUM = \
+  $(PROJECT_DIR)/controllers/algo/generated_trigger_type_e.h \
+
+YAML_ENUM_INPUTS = \
+  $(PROJECT_DIR)/config/triggers.yaml
+
+$(YAML_ENUM): $(YAML_ENUM_INPUTS) $(ENUM_TO_STRING_JAR)
+	bash $(PROJECT_DIR)/bin/trigger_yaml_to_enum.sh $@ $(TRIGGER_FILES)
 
 ifneq ("$(wildcard $(BOARD_DIR)/extra.txt)","")
   DOCS_ENUMS_INPUTS += $(BOARD_DIR)/extra.txt
