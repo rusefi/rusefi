@@ -70,7 +70,7 @@ jobs:
         run: ./gen_enum_to_string.sh
 
       - name: Run TriggerImage
-        run: xvfb-run java -cp java_console/trigger-ui/build/libs/trigger-ui-all.jar com.rusefi.trigger.TriggerImage firmware/config
+        run: xvfb-run java -cp java_console/trigger-ui/build/libs/trigger-ui-all.jar com.rusefi.trigger.TriggerImage firmware/config/triggers.yaml
 
       - name: Upload trigger images
         uses: actions/upload-artifact@v7

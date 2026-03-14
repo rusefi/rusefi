@@ -1,5 +1,4 @@
 
-#define TRIGGERS_FILE_NAME "triggers.yaml"
 #define TRIGGER_IS_CRANK_KEY "crankBased"
 #define TRIGGER_CYCLE_DURATION "cycleDuration"
 #define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
