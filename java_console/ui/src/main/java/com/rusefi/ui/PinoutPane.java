@@ -43,14 +43,14 @@ import static com.rusefi.ui.util.PinColors.FALLBACK_NORMAL;
  */
 public class PinoutPane {
     private static final String BOARDS_META = "pinouts_raw/boards_meta.yaml";
-    private static final String CONNECTORS_ZIP = "pinouts_raw/connectors.zip";
+    private static final String PINOUTS_DIR = "pinouts_raw";
     private static final String[] COLUMNS = {"Pin", "Function", "Type", "Class", "TS Name", "Pigtail color", "Tune use"};
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel statusLabel = new JLabel("Not connected", SwingConstants.CENTER);
     private JComponent centerPanel;
 
-    private final Map<String, List<String>> boardsData;
+    private final Map<String, Map<String, Object>> boardsData;
     private final UIContext uiContext;
     /** All image panels currently displayed — updated when a board's tabs are built. */
     private final List<ConnectorImagePanel> activeImagePanels = new ArrayList<>();
@@ -410,23 +410,27 @@ public class PinoutPane {
             return;
         }
 
-        List<String> connectorFiles = boardsData.get(boardKey);
-        if (connectorFiles == null) {
+        Map<String, Object> boardEntry = boardsData.get(boardKey);
+        if (boardEntry == null) {
             statusLabel.setText("Board: " + boardKey + "  [no pinout available]");
             activeImagePanels.clear();
             setCenterPanel(null);
             return;
         }
-        buildConnectorTabs(connectorFiles);
+        @SuppressWarnings("unchecked")
+        List<String> connectorFiles = (List<String>) boardEntry.get("files");
+        String zipName = boardEntry.get("zip_file") instanceof String
+                ? (String) boardEntry.get("zip_file") : "connectors.zip";
+        buildConnectorTabs(connectorFiles, zipName);
     }
 
-    private void buildConnectorTabs(List<String> connectorPaths) {
+    private void buildConnectorTabs(List<String> connectorPaths, String zipName) {
         activeImagePanels.clear();
         activeTableModels.clear();
 
-        File zipFile = findFile(CONNECTORS_ZIP);
+        File zipFile = findFile(PINOUTS_DIR + "/" + zipName);
         if (zipFile == null) {
-            setCenterPanel(new JLabel("connectors.zip not found", SwingConstants.CENTER));
+            setCenterPanel(new JLabel(zipName + " not found", SwingConstants.CENTER));
             return;
         }
 
@@ -699,12 +703,12 @@ public class PinoutPane {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, List<String>> loadBoardsMeta() {
+    private Map<String, Map<String, Object>> loadBoardsMeta() {
         File metaFile = findFile(BOARDS_META);
         if (metaFile == null) return null;
         try (InputStream is = Files.newInputStream(metaFile.toPath())) {
             Map<String, Object> root = new Yaml().load(is);
-            return (Map<String, List<String>>) root.get("data");
+            return (Map<String, Map<String, Object>>) root.get("data");
         } catch (IOException e) {
             return null;
         }
