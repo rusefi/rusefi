@@ -14,7 +14,7 @@ CONFIG_INPUTS = \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_content.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/gauges.ini \
-  $(PROJECT_DIR)/config/triggers.yaml
+  $(PROJECT_DIR)/controllers/algo/generated_trigger_type_e.h \
 
 ifneq ("$(wildcard $(BOARD_DIR)/prepend.txt)","")
   CONFIG_INPUTS += $(BOARD_DIR)/prepend.txt

@@ -6,6 +6,8 @@ controllers/algo/engine_type_e.h
 controllers/algo/rusefi_enums.h
 -enumInputFile
 controllers/generated/enums/rusefi_config_generated_enums.h
+-enumInputFile
+controllers/algo/generated_trigger_type_e.h
 -enumsConfig
 integration/rusefi_config_enums_definitions.json
 -definition
