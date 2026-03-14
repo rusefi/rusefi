@@ -42,6 +42,14 @@ set_board_file BOARD_INJECTION_SETTINGS_FILE "${BOARD_DIR}/board_injection_setti
 set_board_file BOARD_IGNITION_SETTINGS_FILE "${BOARD_DIR}/board_ignition_settings.ini"
 set_board_file BOARD_FRONT_PAGE_FILE "${BOARD_DIR}/board_front_page.ini"
 
+TRIGGERS=()
+if [ "$TRIGGER_FILES" == "" ]; then
+	TRIGGERS+=(-triggerInputFile config/triggers.yaml)
+else
+  for f in "${TRIGGER_FILES[@]}"; do
+    TRIGGERS+=(-triggerInputFile "$f")
+  done
+fi
 
 # most static arguments go first
 # reading into VariableRegistry and overrides go next
@@ -93,7 +101,7 @@ COMMON_GEN_CONFIG="
  -ignore_gauges_file tunerstudio/global_ignore_gauges.txt \
  -ignore_gauges_file ${BOARD_DIR}/ignore_gauges.txt \
  -ts_destination tunerstudio \
- -triggerInputFolder config \
+ ${TRIGGERS[@]} \
  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \
  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/ \
  -signature ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt \

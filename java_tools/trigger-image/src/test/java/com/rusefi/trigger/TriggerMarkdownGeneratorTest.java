@@ -50,7 +50,7 @@ public class TriggerMarkdownGeneratorTest {
         Files.write(Paths.get(triggersFile), content.getBytes());
 
         String outputFile = "test_report.md";
-        TriggerMarkdownGenerator.generate(testFolder, outputFile);
+        TriggerMarkdownGenerator.generate(triggersFile, outputFile);
 
         assertTrue(new File(outputFile).exists());
         List<String> lines = Files.readAllLines(Paths.get(outputFile));

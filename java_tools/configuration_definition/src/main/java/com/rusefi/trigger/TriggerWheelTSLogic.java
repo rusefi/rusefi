@@ -2,10 +2,12 @@ package com.rusefi.trigger;
 
 import com.rusefi.VariableRegistry;
 
-import static com.rusefi.trigger.TriggerWheelInfo.DEFAULT_WORK_FOLDER;
+import static com.rusefi.trigger.TriggerWheelInfo.DEFAULT_FILE;
 
 import com.devexperts.logging.Logging;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class TriggerWheelTSLogic {
     private final static Logging log = Logging.getLogging(TriggerWheelTSLogic.class);
@@ -20,12 +22,12 @@ public class TriggerWheelTSLogic {
     public static void main(String[] args) {
         // sandbox code
         VariableRegistry variableRegistry = new VariableRegistry();
-        new TriggerWheelTSLogic().execute(DEFAULT_WORK_FOLDER, variableRegistry);
+        new TriggerWheelTSLogic().execute(Arrays.asList(DEFAULT_FILE), variableRegistry);
     }
 
-    public void execute(String folder, VariableRegistry variableRegistry) {
-        if (folder == null) {
-            System.out.println(getClass() + ": Folder not specified");
+    public void execute(List<String> files, VariableRegistry variableRegistry) {
+        if (files == null) {
+            System.out.println(getClass() + ": Input files not specified");
             return;
         }
         // initial value has special provision for TT_CUSTOM_WHEEL
@@ -34,7 +36,7 @@ public class TriggerWheelTSLogic {
         StringBuilder triggerTypesCrankBased = new StringBuilder();
         StringBuilder triggerTypeNames = new StringBuilder("\"custom toothed wheel\"");
 
-        TriggerWheelInfo.readWheels(folder, wheelInfo -> {
+        TriggerWheelInfo.readWheels(files, wheelInfo -> {
 //            System.out.println("onWheel " + wheelInfo.getTriggerName());
 
             if (!wheelInfo.isKnownOperationMode()) {

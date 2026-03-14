@@ -36,8 +36,8 @@ public class MetaHelper {
         options.add(ConfigDefinition.KEY_PREPEND);
         options.add(boardPath + "prepend.txt");
 
-        options.add("-triggerInputFolder");
-        options.add("../../firmware/config");
+        options.add("-triggerInputFile");
+        options.add("../../firmware/config/triggers.yaml");
 
         // add board config
         // TODO: this is not correctly registered, see hack below on "state.getVariableRegistry().register"

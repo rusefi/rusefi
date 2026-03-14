@@ -21,7 +21,7 @@ import static com.rusefi.config.generated.TriggerVariableRegistryValues.*;
 
 public class TriggerWheelInfo {
     private static final Logging log = Logging.getLogging(TriggerWheelInfo.class);
-    static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "firmware/config";
+    static final String DEFAULT_FILE = ".." + File.separator + "firmware/config/triggers.yaml";
 
     private final int id;
     private final boolean isSecondWheelCam;
@@ -150,9 +150,13 @@ public class TriggerWheelInfo {
         );
     }
 
-    static void readWheels(String workingFolder, TriggerWheelInfoConsumer consumer) {
-        String fileName = workingFolder + File.separator + TRIGGERS_FILE_NAME;
+    static void readWheels(List<String> files, TriggerWheelInfoConsumer consumer) {
+        for (String file : files) {
+            readWheels(file, consumer);
+        }
+    }
 
+    static void readWheels(String fileName, TriggerWheelInfoConsumer consumer) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             Yaml yaml = new Yaml();
 

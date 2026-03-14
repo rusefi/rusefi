@@ -59,8 +59,8 @@ public class TriggerImage {
     }
 
     public static void main(String[] args) throws Exception {
-        String workingFolder = args.length > 0 ? args[0] : TriggerWheelInfo.DEFAULT_WORK_FOLDER;
-        TriggerMarkdownGenerator.generate(workingFolder, "triggers.md");
+        String inputFile = args.length > 0 ? args[0] : TriggerWheelInfo.DEFAULT_FILE;
+        TriggerMarkdownGenerator.generate(inputFile, "triggers.md");
 
         SwingUtilities2.invokeAndWait(() -> {
             try {
@@ -72,11 +72,11 @@ public class TriggerImage {
     }
 
     private static void runAwt(String[] args) throws InterruptedException, InvocationTargetException {
-        final String workingFolder;
+        final String inputFile;
         if (args.length < 1) {
-            workingFolder = TriggerWheelInfo.DEFAULT_WORK_FOLDER;
+            inputFile = TriggerWheelInfo.DEFAULT_FILE;
         } else {
-            workingFolder = args[0];
+            inputFile = args[0];
         }
 
         if (args.length > 1)
@@ -115,7 +115,7 @@ public class TriggerImage {
         });
 
         SwingUtilities2.invokeAndWait(() -> {
-            TriggerWheelInfo.readWheels(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
+            TriggerWheelInfo.readWheels(inputFile, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
         });
         Thread.sleep(1000L * sleepAtEnd);
         System.exit(0);
