@@ -13,14 +13,21 @@ import java.util.zip.*;
 
 /**
  * Collects connector YAML files, images, and meta-info from all boards,
- * zips them all into connectors.zip, computes its SHA256, then produces
+ * zips them all into a zip file, computes its SHA256, then produces/updates
  * boards_meta.yaml with the structure:
  * <p>
- *   sha: <sha256 of connectors.zip>
  *   data:
- *     <short_board_name>:
- *       - path/to/connector.yaml
- *
+ *     &lt;short_board_name&gt;:
+ *       files:
+ *         - path/to/connector.yaml
+ *       sha: &lt;sha256 of zip&gt;
+ *       zip_file: connectors.zip
+ * <p>
+ * If boards_meta.yaml already exists, only the boards found in this run are
+ * updated; other entries are preserved (allowing multiple repos to each
+ * contribute their own board entries).
+ * <p>
+ * Optional CLI argument: --zip-name &lt;filename&gt;  (default: connectors.zip)
  */
 public class PinoutsRawPackager {
     private static final String BOARDS_ROOT = "firmware/config/boards";
@@ -28,20 +35,31 @@ public class PinoutsRawPackager {
     private static final String ZIP_NAME = "connectors.zip";
 
     public static void main(String[] args) throws Exception {
-        List<Path> yamls = findConnectorYamls();
-        List<Path> images = findConnectorImages();
-        List<Path> metaEnvs = findMetaEnvs();
+        String zipName = ZIP_NAME;
+        String boardsRoot = BOARDS_ROOT;
+        String outputDir = OUTPUT_DIR;
+        for (int i = 0; i < args.length - 1; i++) {
+            switch (args[i]) {
+                case "--zip-name":   zipName    = args[i + 1]; break;
+                case "--boards-root": boardsRoot = args[i + 1]; break;
+                case "--output-dir": outputDir  = args[i + 1]; break;
+            }
+        }
+
+        List<Path> yamls = findConnectorYamls(boardsRoot);
+        List<Path> images = findConnectorImages(boardsRoot);
+        List<Path> metaEnvs = findMetaEnvs(boardsRoot);
 
         System.out.println("Found " + yamls.size() + " connector YAML files");
         System.out.println("Found " + images.size() + " connector images");
         System.out.println("Found " + metaEnvs.size() + " meta-info env files");
 
-        prepareOutput(yamls, images, metaEnvs);
+        prepareOutput(yamls, images, metaEnvs, zipName, outputDir);
     }
 
-    private static List<Path> findConnectorYamls() throws IOException {
+    private static List<Path> findConnectorYamls(String boardsRoot) throws IOException {
         List<Path> result = new ArrayList<>();
-        Files.walkFileTree(Paths.get(BOARDS_ROOT), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(Paths.get(boardsRoot), new SimpleFileVisitor<Path>() {
             @Override
             public @NotNull FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) {
                 String name = file.getFileName().toString();
@@ -58,10 +76,10 @@ public class PinoutsRawPackager {
         return result;
     }
 
-    private static List<Path> findConnectorImages() throws IOException {
+    private static List<Path> findConnectorImages(String boardsRoot) throws IOException {
         Set<String> exts = new HashSet<>(Arrays.asList(".png", ".jpg", ".jpeg", ".svg"));
         List<Path> result = new ArrayList<>();
-        Files.walkFileTree(Paths.get(BOARDS_ROOT), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(Paths.get(boardsRoot), new SimpleFileVisitor<Path>() {
             @Override
             public @NotNull FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) {
                 String lowerName = file.getFileName().toString().toLowerCase();
@@ -80,9 +98,9 @@ public class PinoutsRawPackager {
         return result;
     }
 
-    private static List<Path> findMetaEnvs() throws IOException {
+    private static List<Path> findMetaEnvs(String boardsRoot) throws IOException {
         List<Path> result = new ArrayList<>();
-        Files.walkFileTree(Paths.get(BOARDS_ROOT), new SimpleFileVisitor<Path>() {
+        Files.walkFileTree(Paths.get(boardsRoot), new SimpleFileVisitor<Path>() {
             @Override
             public @NotNull FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) {
                 String name = file.getFileName().toString();
@@ -106,7 +124,8 @@ public class PinoutsRawPackager {
         return null;
     }
 
-    private static Map<String, List<String>> buildData(List<Path> yamls, List<Path> metaEnvs) throws IOException {
+    private static Map<String, Map<String, Object>> buildData(
+            List<Path> yamls, List<Path> metaEnvs, String sha, String zipFile) throws IOException {
         Map<Path, List<String>> boardYamls = new LinkedHashMap<>();
         for (Path yaml : yamls) {
             Path boardDir = yaml.getParent().getParent();
@@ -122,7 +141,7 @@ public class PinoutsRawPackager {
             }
         }
 
-        Map<String, List<String>> data = new TreeMap<>();
+        Map<String, Map<String, Object>> data = new TreeMap<>();
         List<Path> sortedDirs = new ArrayList<>(boardYamls.keySet());
         Collections.sort(sortedDirs);
         for (Path boardDir : sortedDirs) {
@@ -133,7 +152,11 @@ public class PinoutsRawPackager {
                     ? Collections.singletonList(boardDir.getFileName().toString())
                     : new ArrayList<>(names);
             for (String name : namesList) {
-                data.put(name, new ArrayList<>(yamlsList));
+                Map<String, Object> entry = new LinkedHashMap<>();
+                entry.put("files", new ArrayList<>(yamlsList));
+                entry.put("sha", sha);
+                entry.put("zip_file", zipFile);
+                data.put(name, entry);
             }
         }
         return data;
@@ -164,36 +187,18 @@ public class PinoutsRawPackager {
         return sb.toString();
     }
 
-    private static void prepareOutput(List<Path> yamls, List<Path> images, List<Path> metaEnvs) throws Exception {
-        Path outDir = Paths.get(OUTPUT_DIR);
-        if (Files.exists(outDir)) {
-            Files.walkFileTree(outDir, new SimpleFileVisitor<Path>() {
-                @Override
-                public @NotNull FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public @NotNull FileVisitResult postVisitDirectory(@NotNull Path dir, IOException exc) throws IOException {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        }
+    @SuppressWarnings("unchecked")
+    private static void prepareOutput(List<Path> yamls, List<Path> images, List<Path> metaEnvs, String zipName, String outputDir) throws Exception {
+        Path outDir = Paths.get(outputDir);
         Files.createDirectories(outDir);
 
-        Path zipPath = outDir.resolve(ZIP_NAME);
+        Path zipPath = outDir.resolve(zipName);
         buildZip(yamls, images, zipPath);
 
         String sha = sha256File(zipPath);
-        System.out.println("SHA256(" + ZIP_NAME + ") = " + sha);
+        System.out.println("SHA256(" + zipName + ") = " + sha);
 
-        Map<String, List<String>> data = buildData(yamls, metaEnvs);
-
-        Map<String, Object> boardsMeta = new LinkedHashMap<>();
-        boardsMeta.put("sha", sha);
-        boardsMeta.put("data", data);
+        Map<String, Map<String, Object>> newEntries = buildData(yamls, metaEnvs, sha, zipName);
 
         DumperOptions opts = new DumperOptions();
         opts.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -201,9 +206,31 @@ public class PinoutsRawPackager {
         Yaml yaml = new Yaml(opts);
 
         Path metaPath = outDir.resolve("boards_meta.yaml");
+
+        // Load existing yaml if present so we can merge (other repos may have written their boards)
+        Map<String, Object> boardsMeta = new LinkedHashMap<>();
+        Map<String, Object> existingData = new TreeMap<>();
+        if (Files.exists(metaPath)) {
+            try (Reader r = Files.newBufferedReader(metaPath)) {
+                Map<String, Object> loaded = yaml.load(r);
+                if (loaded != null) {
+                    boardsMeta.putAll(loaded);
+                    Object d = boardsMeta.get("data");
+                    if (d instanceof Map) {
+                        existingData.putAll((Map<String, Object>) d);
+                    }
+                }
+            }
+        }
+
+        // Update only the entries produced in this run; leave everything else intact
+        existingData.putAll(newEntries);
+        boardsMeta.put("data", new TreeMap<>(existingData));
+
         try (Writer w = Files.newBufferedWriter(metaPath)) {
             yaml.dump(boardsMeta, w);
         }
-        System.out.println("Wrote " + metaPath + " (" + data.size() + " board entries)");
+        System.out.println("Wrote " + metaPath + " (" + newEntries.size() + " board entries updated, "
+                + existingData.size() + " total)");
     }
 }
