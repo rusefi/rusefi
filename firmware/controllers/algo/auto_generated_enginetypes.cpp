@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Feb 26 01:02:18 EST 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Mar 14 11:16:40 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -243,8 +243,6 @@ case trigger_type_e::TT_DEV:
   return "TT_DEV";
 case trigger_type_e::TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
-case trigger_type_e::TT_DODGE_NEON_1995_ONLY_CRANK:
-  return "TT_DODGE_NEON_1995_ONLY_CRANK";
 case trigger_type_e::TT_DODGE_NEON_2003_CAM:
   return "TT_DODGE_NEON_2003_CAM";
 case trigger_type_e::TT_DODGE_NEON_2003_CRANK:
@@ -349,6 +347,8 @@ case trigger_type_e::TT_SUBARU_SVX_CRANK_1:
   return "TT_SUBARU_SVX_CRANK_1";
 case trigger_type_e::TT_SUZUKI_G13B:
   return "TT_SUZUKI_G13B";
+case trigger_type_e::TT_SUZUKI_G16B:
+  return "TT_SUZUKI_G16B";
 case trigger_type_e::TT_SUZUKI_K6A:
   return "TT_SUZUKI_K6A";
 case trigger_type_e::TT_TOOTHED_WHEEL:
@@ -367,8 +367,8 @@ case trigger_type_e::TT_TRI_TACH:
   return "TT_TRI_TACH";
 case trigger_type_e::TT_UNUSED:
   return "TT_UNUSED";
-case trigger_type_e::TT_UNUSED_95:
-  return "TT_UNUSED_95";
+case trigger_type_e::TT_UNUSED_39:
+  return "TT_UNUSED_39";
 case trigger_type_e::TT_UNUSED_96:
   return "TT_UNUSED_96";
 case trigger_type_e::TT_VVT_BARRA_3_PLUS_1:
