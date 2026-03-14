@@ -131,6 +131,8 @@ public:
 	// If true, falling edges should be fully ignored on this trigger shape.
 	bool useOnlyRisingEdges;
 
+	bool knownOperationMode = true;
+
 	void calculateExpectedEventCounts();
 
 	size_t getExpectedEventCount(TriggerWheel channelIndex) const;
@@ -146,9 +148,6 @@ public:
 	 */
 	TriggerWheel triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
 	TriggerValue triggerSignalStates[PWM_PHASE_MAX_COUNT];
-	// see also 'doesTriggerImplyOperationMode'
-	// todo: reuse doesTriggerImplyOperationMode instead of separate field only which is only used for metadata anyway?
-	bool knownOperationMode = true;
 #endif
 
 	/**
@@ -198,6 +197,7 @@ public:
 	 */
 	void addEventClamped(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex, float filterLeft, float filterRight);
 	operation_mode_e getWheelOperationMode() const;
+	operation_mode_e getAmbiguousOperationMode();
 
 	void initialize(operation_mode_e operationMode, SyncEdge syncEdge);
 	void setTriggerSynchronizationGap(float syncRatio);

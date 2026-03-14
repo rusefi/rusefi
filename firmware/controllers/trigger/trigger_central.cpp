@@ -134,7 +134,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 }
 
 angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
-	angle_t engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
+	angle_t engineCycle = getEngineCycle(getOperationMode());
 
 	angle_t totalShift = triggerState.syncEnginePhase(divider, remainder, engineCycle);
 	if (totalShift != 0) {
@@ -161,7 +161,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 		return 0;
 	}
 
-	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
+	operation_mode_e operationMode = getOperationMode();
 
 	auto crankDivider = getCrankDivider(operationMode);
 	if (crankDivider == 1) {
@@ -1296,3 +1296,19 @@ bool TriggerCentral::isTriggerDecoderError() {
 }
 
 #endif // EFI_SHAFT_POSITION_INPUT
+
+operation_mode_e lookupOperationMode() {
+	if (engineConfiguration->twoStroke) {
+		return TWO_STROKE;
+	} else {
+		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
+	}
+}
+
+operation_mode_e getOperationMode() {
+#if EFI_SHAFT_POSITION_INPUT
+	return engine->triggerCentral.triggerShape.getAmbiguousOperationMode();
+#else
+	return lookupOperationMode();
+#endif // EFI_SHAFT_POSITION_INPUT
+}

@@ -58,6 +58,7 @@ void TriggerWaveform::initialize(operation_mode_e p_operationMode, SyncEdge p_sy
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
 	useOnlyPrimaryForSync = false;
+	knownOperationMode = true;
 
 	// If RiseOnly, ignore falling edges completely.
 	useOnlyRisingEdges = syncEdge == SyncEdge::RiseOnly;
@@ -82,7 +83,6 @@ void TriggerWaveform::initialize(operation_mode_e p_operationMode, SyncEdge p_sy
 #if EFI_UNIT_TEST
 	memset(triggerSignalIndeces, 0, sizeof(triggerSignalIndeces));
 	memset(&triggerSignalStates, 0, sizeof(triggerSignalStates));
-	knownOperationMode = true;
 #endif // EFI_UNIT_TEST
 }
 
@@ -187,6 +187,17 @@ void TriggerWaveform::addEventClamped(angle_t angle, TriggerValue const statePar
  * needed to resolve precise mode for vague wheels
  */
 operation_mode_e TriggerWaveform::getWheelOperationMode() const {
+	return operationMode;
+}
+
+/**
+ * At the time of this writing, this only differs from getWheelOperationMode for 36-2-2-2,
+ * which is initialized as FOUR_STROKE_CRANK_SENSOR, but we pretend it's not when used on a rotary.
+ */
+operation_mode_e TriggerWaveform::getAmbiguousOperationMode() {
+	if (!knownOperationMode) {
+		return lookupOperationMode();
+	}
 	return operationMode;
 }
 

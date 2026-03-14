@@ -222,6 +222,10 @@ private:
 	expected<float> expectedNextPhase = unexpected;
 };
 
+operation_mode_e lookupOperationMode();
+
+operation_mode_e getOperationMode();
+
 void triggerInfo(void);
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);

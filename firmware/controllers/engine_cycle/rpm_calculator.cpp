@@ -54,49 +54,6 @@ float RpmCalculator::getMinCrankingRpm() const {
 	return minCrankingRpm;
 }
 
-operation_mode_e lookupOperationMode() {
-	if (engineConfiguration->twoStroke) {
-		return TWO_STROKE;
-	} else {
-		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
-	}
-}
-
-#if EFI_SHAFT_POSITION_INPUT
-// see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
-// this is related to 'knownOperationMode' flag
-static bool doesTriggerImplyOperationMode(trigger_type_e type) {
-	switch (type) {
-		case trigger_type_e::TT_TOOTHED_WHEEL:
-		case trigger_type_e::TT_HALF_MOON:
-		case trigger_type_e::TT_3_1_CAM:   // huh why is this trigger with CAM suffix right in the name on this exception list?!
-		case trigger_type_e::TT_36_2_2_2:	// this trigger is special due to rotary application https://github.com/rusefi/rusefi/issues/5566
-		case trigger_type_e::TT_TOOTHED_WHEEL_60_2:
-		case trigger_type_e::TT_TOOTHED_WHEEL_36_1:
-			// These modes could be either cam or crank speed
-			return false;
-		default:
-			return true;
-	}
-}
-#endif // EFI_SHAFT_POSITION_INPUT
-
-// todo: move to triggerCentral/triggerShape since has nothing to do with rotation state!
-operation_mode_e RpmCalculator::getOperationMode() const {
-#if EFI_SHAFT_POSITION_INPUT
-	// Ignore user-provided setting for well known triggers.
-	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
-		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-		return engine->triggerCentral.triggerShape.getWheelOperationMode();
-	} else
-#endif // EFI_SHAFT_POSITION_INPUT
-	{
-		// For example 36-1, could be on either cam or crank, so we have to ask the user
-		return lookupOperationMode();
-	}
-}
-
-
 #if EFI_SHAFT_POSITION_INPUT
 
 RpmCalculator::RpmCalculator() :
@@ -289,7 +246,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 					rpmState->rpmRate = 0;
 				} else {
 				  // todo: extract utility method? see duplication with high_pressure_pump.cpp
-					int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
+					int mult = (int)getEngineCycle(getOperationMode()) / 360;
 					float rpm = 60 * mult / periodSeconds;
 
 					auto rpmDelta = rpm - rpmState->previousRpmValue;

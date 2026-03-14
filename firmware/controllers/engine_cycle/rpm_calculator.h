@@ -43,8 +43,6 @@ class RpmCalculator : public StoredValueSensor, public EngineRotationState {
 public:
 	RpmCalculator();
 
-	operation_mode_e getOperationMode() const override;
-
 	void onSlowCallback();
 
 	/**
@@ -172,8 +170,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t trgEventIn
 
 void tdcMarkCallback(
 		uint32_t trgEventIndex, efitick_t edgeTimestamp);
-
-operation_mode_e lookupOperationMode();
 
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 
