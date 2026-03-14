@@ -171,6 +171,20 @@ enum class trigger_type_e : uint32_t {
 	TT_NISSAN_MR18_CAM_VVT = 52,
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
 	// also known as Audi 5 Cyl
+	/**
+	Audi 5 Cyl Tri Tach is the most known example of early EFI reading flywheel gear teeth as crank trigger wheel
+	French had a 145 tooth version
+  these do not fit universal rusEFI trigger decoder well
+  see FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR for one incompatibility
+  see PWM_PHASE_MAX_COUNT for another problematic area
+
+  a solution could be a hardware or software pre-scaler which would have to be reset at well known points, probably meaning by cam shaft
+  and some custom code to approach synchronization point differently
+
+  while we have half a dozen of interests regarding 1980s compatibility, this ares is definitely not a priority
+
+  for any contribution to be taken seriously it has to start with logic analyzer data as described at unit_tests/tests/trigger/resources/readme.md
+	*/
 	TT_TRI_TACH = 53,
 	TT_GM_60_2_2_2 = 54,
 	// * https://rusefi.com/forum/viewtopic.php?f=5&t=1937
