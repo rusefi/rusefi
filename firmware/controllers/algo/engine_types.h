@@ -21,8 +21,8 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_0 = 0,
 	DBG_1 = 1,
 	DBG_2 = 2,
-	DBG_STEPPER_IDLE_CONTROL = 3,
-	DBG_EL_ACCEL = 4,
+	DBG_3 = 3,
+	DBG_4 = 4,
 	DBG_5 = 5,
 	DBG_6 = 6,
 	DBG_7 = 7,
@@ -32,7 +32,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_11 = 11,
 	DBG_12 = 12,
 	DBG_13 = 13,
-	DBG_SR5_PROTOCOL = 14,
+	DBG_14 = 14,
 	DBG_KNOCK = 15,
 	DBG_16 = 16,
 	/**
@@ -318,7 +318,7 @@ typedef enum {
 } ts_14_command;
 
 typedef enum {
-	TS_DEBUG_MODE = 0,
+	TS_UNUSED_0 = 0,
 	TS_COMMAND_1 = 1,
 	TS_COMMAND_2 = 2,
 	TS_COMMAND_3 = 3,
