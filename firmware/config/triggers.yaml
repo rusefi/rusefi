@@ -1102,6 +1102,8 @@
   teeth:
     - channel: 0
       angle: 0
+      # Move the fall so it's not too close to the first event on the second channel
+      width: 0.2
     - channel: 1
       angle: 0.05
       count: 2
