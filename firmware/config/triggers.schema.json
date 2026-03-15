@@ -1,0 +1,198 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "pattern": "^TT_"
+      },
+      "humanName": {
+        "type": "string"
+      },
+      "hidden": {
+        "type": "boolean"
+      },
+      "offset": {
+        "type": "number"
+      },
+      "operationMode": {
+        "type": "string",
+        "enum": [
+          "FOUR_STROKE_CRANK_SENSOR",
+          "FOUR_STROKE_CAM_SENSOR",
+          "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR",
+          "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR",
+          "FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR",
+          "FOUR_STROKE_SIX_TIMES_CRANK_SENSOR",
+          "TWO_STROKE"
+        ]
+      },
+      "knownOperationMode": {
+        "type": "boolean"
+      },
+      "isSecondWheelCam": {
+        "type": "boolean"
+      },
+      "syncEdge": {
+        "type": "string",
+        "enum": [
+          "RiseOnly",
+          "Rise",
+          "Fall",
+          "Both"
+        ]
+      },
+      "isSynchronizationNeeded": {
+        "type": "boolean"
+      },
+      "useOnlyPrimaryForSync": {
+        "type": "boolean"
+      },
+      "shapeWithoutTdc": {
+        "type": "boolean"
+      },
+      "syncGaps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "number"
+            },
+            "to": {
+              "type": "number"
+            }
+          },
+          "required": ["from", "to"]
+        }
+      },
+      "teeth": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "channel": {
+              "type": "integer",
+              "minimum": 0,
+							"maximum": 1
+            },
+            "angle": {
+              "type": "number",
+              "minimum": 0,
+							"maximum": 360
+            },
+            "width": {
+              "type": "number",
+              "minimum": 0,
+							"maximum": 360
+            },
+            "times": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "every": {
+              "type": "number",
+              "minimum": 0,
+							"maximum": 360
+            }
+          },
+          "required": ["angle"],
+          "dependentSchemas": {
+            "times": {
+              "required": ["every"]
+            },
+            "every": {
+              "required": ["times"]
+            }
+          }
+        }
+      }
+    },
+    "required": [
+      "name",
+      "syncEdge",
+      "teeth"
+    ],
+    "allOf": [
+			{
+				"if": {
+					"properties": {
+            "hidden": {
+              "not": {
+                "const": true
+              }
+            }
+          },
+          "required": ["hidden"]
+        },
+        "then": {
+					"required": ["humanName"]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "syncEdge": {
+              "not": {
+                "const": "RiseOnly"
+              }
+            }
+          },
+          "required": ["syncEdge"]
+        },
+        "then": {
+          "properties": {
+            "teeth": {
+              "type": "array",
+              "items": {
+                "required": ["width"]
+              }
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "teeth": {
+              "type": "array",
+              "not": {
+                "contains": {
+                  "properties": {
+                    "channel": {
+                      "const": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": ["teeth"]
+        },
+        "then": {
+          "not": {
+            "anyOf": [
+              { "required": ["isSecondWheelCam"] },
+              { "required": ["useOnlyPrimaryForSync"] }
+            ]
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "knownOperationMode": {
+              "const": true
+            }
+          },
+          "required": ["knownOperationMode"]
+        },
+        "then": {
+          "required": ["operationMode"]
+        }
+      }
+    ]
+  }
+}
