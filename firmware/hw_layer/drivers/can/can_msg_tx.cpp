@@ -72,7 +72,7 @@ CanTxMessage::~CanTxMessage() {
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 	txCanBuffer.put(m_frame);
 
-#if EFI_UNIT_TEST
+#if 0 && EFI_UNIT_TEST
 	printf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x \n",
 		   getCanCategory(category),
 		   busIndex + 1,
