@@ -65,6 +65,25 @@ SubMenuModel: A concrete menu entry that links a display name to a specific key 
 
 TableModel: A metadata container (POJO) that stores a table's configuration, such as its ID, titles, axis labels, and bin constants.
 
-CalibrationDialogWidget: The UI manager that orchestrates the layout of the right-side panel, dynamically creating fields and table views.
+UIContext: Acts as the main application state singleton, providing access to essential components like the link manager and the INI file state.
+
+IniFileState: Manages the current state and availability of the INI configuration model within the application lifecycle.CalibrationDialogWidget: The UI manager that orchestrates the layout of the right-side panel, dynamically creating fields and table views.
+
+Node: A hierarchical data structure used to store and retrieve UI configuration and layout preferences.
+
+SensorGauge: The primary factory and logic handler for instantiating individual gauge widgets based on model definitions.
+
+GaugeModel: Represents the technical template for a single gauge, holding its output channel, display limits, and unit labels.
 
 TuningTableView: The core visual component for 3D table editing, managing the JTable rendering and the gradient color logic.
+
+GaugesPanel: Manages the overall layout, rendering, and container logic for the dashboard's collection of gauges.
+
+WellKnownGauges: Provides an enumeration of standard gauges and their associated output channel names for consistent data mapping.
+
+BinaryProtocol Encapsulates the logical state of the connection and handles the retrieval of the configuration image from the controller.
+
+GaugesGrid: Manages the visual container by wrapping a JPanel with a GridLayout and handling its dimensional resets.
+
+GaugesGridElement: Acts as a factory wrapper for individual slots, toggling between gauge and graph modes based on persistent Node configuration.
+
