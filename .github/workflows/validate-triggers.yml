@@ -1,0 +1,21 @@
+name: Validate triggers.yaml
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'firmware/config/triggers.yaml'
+      - 'firmware/config/triggers.schema.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install check-jsonschema
+        run: pip install check-jsonschema
+
+      - name: Validate triggers.yaml against schema
+        run: check-jsonschema --schemafile firmware/config/triggers.schema.json firmware/config/triggers.yaml
