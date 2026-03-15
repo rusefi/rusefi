@@ -275,22 +275,21 @@ static const char* tle8888_pin_names[TLE8888_SIGNALS] = {
 };
 
 #if EFI_TUNER_STUDIO
-// set debug_mode 31
+
 void tle8888PostState() {
-	Tle8888 *chip = &chips[0];
+//	Tle8888 *chip = &chips[0];
 
-	engine->outputChannels.debugIntField1 = chip->wwd_err_cnt;
-	engine->outputChannels.debugIntField2 = chip->fwd_err_cnt;
-	engine->outputChannels.debugIntField3 = chip->tot_err_cnt;
-	//engine->outputChannels.debugIntField1 = chip->spi_cnt;
-	//engine->outputChannels.debugIntField2 = chip->tx;
-	//engine->outputChannels.debugIntField3 = chip->rx;
-	engine->outputChannels.debugIntField5 = chip->init_cnt;
+//	engine->outputChannels.debugIntField1 = chip->wwd_err_cnt;
+//	engine->outputChannels.debugIntField2 = chip->fwd_err_cnt;
+//	engine->outputChannels.debugIntField3 = chip->tot_err_cnt;
+//	//engine->outputChannels.debugIntField1 = chip->spi_cnt;
+//	//engine->outputChannels.debugIntField2 = chip->tx;
+//	//engine->outputChannels.debugIntField3 = chip->rx;
+//	engine->outputChannels.debugIntField5 = chip->init_cnt;
 
-	engine->outputChannels.debugFloatField3 = chip->OpStat[1];
-	engine->outputChannels.debugFloatField4 = chip->por_cnt * 1000000 + chip->init_req_cnt * 10000;
-	engine->outputChannels.debugFloatField5 = 0;
-	engine->outputChannels.debugFloatField6 = 0;
+//	engine->outputChannels.debugFloatField3 = chip->OpStat[1];
+//	= chip->por_cnt * 1000000 + chip->init_req_cnt * 10000;
+
 }
 #endif /* EFI_TUNER_STUDIO */
 
