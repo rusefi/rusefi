@@ -90,6 +90,7 @@ COMMON_GEN_CONFIG="
  -prepend integration/fields_api.txt \
  -firing_order \
  controllers/algo/firing_order.h \
+ -ignore_gauges_file tunerstudio/global_ignore_gauges.txt \
  -ignore_gauges_file ${BOARD_DIR}/ignore_gauges.txt \
  -ts_destination tunerstudio \
  -triggerInputFolder ../unit_tests \
