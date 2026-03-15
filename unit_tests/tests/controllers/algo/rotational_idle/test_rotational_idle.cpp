@@ -78,65 +78,174 @@ TEST_F(RotationalIdleTest, autoEngageByTps)
 TEST_F(RotationalIdleTest, shouldSkipSpark)
 {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	RotationalIdle rotIdle;
 
 	// Should not skip when feature is disabled
-	engineConfiguration->rotationalIdleController.enabled = false;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle());
+	{
+		RotationalIdle rotIdle;
+		engineConfiguration->rotationalIdleController.enabled = false;
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle());
+	}
 
-	// Enable rotational idle
 	engineConfiguration->rotationalIdleController.enabled = true;
 	engineConfiguration->rotationalIdleController.auto_engage = true;
 	engineConfiguration->rotationalIdleController.max_tps = 5;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 3);
 
-	// Should not skip when acc_max is 0 (disabled)
-	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Spark;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle());
+	// Should not skip when acc_max is 0 (disabled) - fresh instance, counter starts at 1
+	{
+		RotationalIdle rotIdle;
+		engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Spark;
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // acc_max=0, always fire
+	}
 
-	// Test cut_mode = 1 (Fuel only) - should never skip spark
+	// cut_mode = Fuel: should never skip spark regardless of pattern
+	{
+		RotationalIdle rotIdle;
+		engineConfiguration->rotationalIdleController.accumulators[0].acc_max = 2;
+		engineConfiguration->rotationalIdleController.accumulators[0].acc_adder = 1;
+		engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Fuel;
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // Fuel mode never skips spark
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle());
+	}
+
+	// cut_mode = Spark: counter advances on each call, pattern applies
+	// sparkPatternCounter starts at 1; with acc_max=2, acc_adder=1:
+	//   counter=1: (1%2)+1=2>=2 -> skip
+	//   counter=2: (2%2)+1=1<2  -> fire
+	{
+		RotationalIdle rotIdle;
+		engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Spark;
+		engineConfiguration->rotationalIdleController.accumulators[0].acc_max = 2;
+		engineConfiguration->rotationalIdleController.accumulators[0].acc_adder = 1;
+		engineConfiguration->rotationalIdleController.accumulators[0].acc_offset = 0;
+		EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());  // counter=1: skip
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=2: fire
+		EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());  // counter=3: skip
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=4: fire
+	}
+
+	// cut_mode = Both: same spark skip behavior
+	{
+		RotationalIdle rotIdle;
+		engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Both;
+		EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());  // counter=1: skip
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=2: fire
+	}
+
+	// adder=0: never skips (counter % max never reaches max when adder=0)
+	{
+		RotationalIdle rotIdle;
+		engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Spark;
+		engineConfiguration->rotationalIdleController.accumulators[0].acc_max = 2;
+		engineConfiguration->rotationalIdleController.accumulators[0].acc_adder = 0;
+		engineConfiguration->rotationalIdleController.accumulators[0].acc_offset = 0;
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=1: (1%2)+0=1<2
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=2: (2%2)+0=0<2
+		EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=3: (3%2)+0=1<2
+	}
+}
+
+TEST_F(RotationalIdleTest, diagnosticFlags)
+{
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	RotationalIdle rotIdle;
+
+	engineConfiguration->rotationalIdleController.enabled = true;
+
+	// No engage method configured: all flags false
+	EXPECT_FALSE(rotIdle.shouldEngageRotationalIdle());
+	EXPECT_FALSE(rotIdle.rotIdleTpsTooHigh);
+	EXPECT_FALSE(rotIdle.rotIdleEngineTooLowClt);
+
+	// CLT method enabled but CLT is too cold
+	engineConfiguration->rotationalIdleController.auto_engage_clt_enable = true;
+	engineConfiguration->rotationalIdleController.auto_engage_clt = 80;
+	Sensor::setMockValue(SensorType::Clt, 60);
+	EXPECT_FALSE(rotIdle.shouldEngageRotationalIdle());
+	EXPECT_TRUE(rotIdle.rotIdleEngineTooLowClt);
+	EXPECT_FALSE(rotIdle.rotIdleTpsTooHigh);
+
+	// CLT is warm enough - engaged, no flags
+	Sensor::setMockValue(SensorType::Clt, 90);
+	EXPECT_TRUE(rotIdle.shouldEngageRotationalIdle());
+	EXPECT_FALSE(rotIdle.rotIdleEngineTooLowClt);
+	EXPECT_FALSE(rotIdle.rotIdleTpsTooHigh);
+	engineConfiguration->rotationalIdleController.auto_engage_clt_enable = false;
+
+	// TPS method enabled but throttle is too high
+	engineConfiguration->rotationalIdleController.auto_engage = true;
+	engineConfiguration->rotationalIdleController.max_tps = 5;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20);
+	EXPECT_FALSE(rotIdle.shouldEngageRotationalIdle());
+	EXPECT_FALSE(rotIdle.rotIdleEngineTooLowClt);
+	EXPECT_TRUE(rotIdle.rotIdleTpsTooHigh);
+
+	// TPS within threshold - engaged, no flags
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 3);
+	EXPECT_TRUE(rotIdle.shouldEngageRotationalIdle());
+	EXPECT_FALSE(rotIdle.rotIdleTpsTooHigh);
+}
+
+TEST_F(RotationalIdleTest, shouldSkipFuel)
+{
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	RotationalIdle rotIdle;
+
+	engineConfiguration->rotationalIdleController.enabled = true;
+	engineConfiguration->rotationalIdleController.auto_engage = true;
+	engineConfiguration->rotationalIdleController.max_tps = 5;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 3);
+
+	// cut_mode = Spark: should never skip fuel
+	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Spark;
 	engineConfiguration->rotationalIdleController.accumulators[0].acc_max = 2;
 	engineConfiguration->rotationalIdleController.accumulators[0].acc_adder = 1;
+	EXPECT_FALSE(rotIdle.shouldSkipFuelRotationalIdle());
+	EXPECT_FALSE(rotIdle.shouldSkipFuelRotationalIdle());
+
+	// cut_mode = Fuel: should skip based on accumulator pattern
+	// Fresh RotationalIdle instance so fuelPatternCounter starts at 1
+	RotationalIdle rotIdle2;
 	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Fuel;
-	engine->engineState.globalSparkCounter = 1;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // Fuel mode never skips spark
-
-	// Test cut_mode = 0 (Spark mode) - should skip spark based on pattern
-	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Spark;
-	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=1: (1 % 2) + 1 = 2 >= 2
-
-	// Test cut_mode = 2 (Both mode) - should skip spark based on pattern
-	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Both;
-	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=1: (1 % 2) + 1 = 2 >= 2
-
-	// Configure skip pattern: test with various counter values (cut_mode = 0)
-	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Spark;
 	engineConfiguration->rotationalIdleController.accumulators[0].acc_max = 2;
-	engineConfiguration->rotationalIdleController.accumulators[0].acc_adder = 0;
+	engineConfiguration->rotationalIdleController.accumulators[0].acc_adder = 1;
 	engineConfiguration->rotationalIdleController.accumulators[0].acc_offset = 0;
 
-	// Set global spark counter to test pattern
-	engine->engineState.globalSparkCounter = 0;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=0: (0 % 2) + 0 = 0 < 2
+	// counter=1: (1%2)+1=2>=2 → skip
+	EXPECT_TRUE(rotIdle2.shouldSkipFuelRotationalIdle());
+	// counter=2: (2%2)+1=1<2 → fire
+	EXPECT_FALSE(rotIdle2.shouldSkipFuelRotationalIdle());
+	// counter=3: (3%2)+1=2>=2 → skip
+	EXPECT_TRUE(rotIdle2.shouldSkipFuelRotationalIdle());
+	// counter=4: (4%2)+1=1<2 → fire
+	EXPECT_FALSE(rotIdle2.shouldSkipFuelRotationalIdle());
 
-	engine->engineState.globalSparkCounter = 1;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=1: (1 % 2) + 0 = 1 < 2
+	// cut_mode = Both: should also skip fuel
+	RotationalIdle rotIdle3;
+	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Both;
+	// counter=1: skip
+	EXPECT_TRUE(rotIdle3.shouldSkipFuelRotationalIdle());
+	// counter=2: fire
+	EXPECT_FALSE(rotIdle3.shouldSkipFuelRotationalIdle());
 
-	engine->engineState.globalSparkCounter = 2;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=2: (2 % 2) + 0 = 0 < 2
+	// Fuel skip disabled when feature is disabled
+	RotationalIdle rotIdle4;
+	engineConfiguration->rotationalIdleController.enabled = false;
+	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Fuel;
+	EXPECT_FALSE(rotIdle4.shouldSkipFuelRotationalIdle());
 
-	// Test with adder to create skip pattern
-	engineConfiguration->rotationalIdleController.accumulators[0].acc_adder = 1;
-
-	engine->engineState.globalSparkCounter = 0;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=0: (0 % 2) + 1 = 1 < 2
-
-	engine->engineState.globalSparkCounter = 1;
-	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=1: (1 % 2) + 1 = 2 >= 2
-
-	engine->engineState.globalSparkCounter = 2;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle()); // counter=2: (2 % 2) + 1 = 1 < 2
-	
+	// Fuel counter advances even when not engaged (TPS too high), maintaining pattern consistency
+	RotationalIdle rotIdle5;
+	engineConfiguration->rotationalIdleController.enabled = true;
+	engineConfiguration->rotationalIdleController.cut_mode = RotationalCutMode::Fuel;
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 50); // throttle open - not engaged
+	EXPECT_FALSE(rotIdle5.shouldSkipFuelRotationalIdle()); // counter=1 consumed, not engaged
+	EXPECT_FALSE(rotIdle5.shouldSkipFuelRotationalIdle()); // counter=2 consumed, not engaged
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 3); // back to idle
+	// counter=3: (3%2)+1=2>=2 → engaged and skip
+	EXPECT_TRUE(rotIdle5.shouldSkipFuelRotationalIdle());
+	// counter=4: (4%2)+1=1<2 → engaged and fire
+	EXPECT_FALSE(rotIdle5.shouldSkipFuelRotationalIdle());
 }
 
 TEST_F(RotationalIdleTest, multipleAccumulators)
@@ -160,31 +269,24 @@ TEST_F(RotationalIdleTest, multipleAccumulators)
 	engineConfiguration->rotationalIdleController.accumulators[1].acc_adder = 1;
 	engineConfiguration->rotationalIdleController.accumulators[1].acc_offset = 0;
 
-	// globalSparkCounter = 0
-	// Acc 0: (0%2)+1 = 1 < 2 (Fire)
-	// Acc 1: (0%3)+1 = 1 < 3 (Fire)
-	engine->engineState.globalSparkCounter = 0;
-	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle());
+	// sparkPatternCounter starts at 1 and auto-increments each call.
 
 	// globalSparkCounter = 1
 	// Acc 0: (1%2)+1 = 2 >= 2 (Skip)
 	// Acc 1: (1%3)+1 = 2 < 3 (Fire)
 	// Result: Skip
-	engine->engineState.globalSparkCounter = 1;
 	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());
 
 	// globalSparkCounter = 2
 	// Acc 0: (2%2)+1 = 1 < 2 (Fire)
 	// Acc 1: (2%3)+1 = 3 >= 3 (Skip)
 	// Result: Skip
-	engine->engineState.globalSparkCounter = 2;
 	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());
 
 	// globalSparkCounter = 3
 	// Acc 0: (3%2)+1 = 2 >= 2 (Skip)
 	// Acc 1: (3%3)+1 = 1 < 3 (Fire)
 	// Result: Skip
-	engine->engineState.globalSparkCounter = 3;
 	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());
 
 	// globalSparkCounter = 4
@@ -193,4 +295,7 @@ TEST_F(RotationalIdleTest, multipleAccumulators)
 	// Result: Fire
 	engine->engineState.globalSparkCounter = 4;
 	EXPECT_FALSE(rotIdle.shouldSkipSparkRotationalIdle());
+
+	// counter=5: Acc0: (5%2)+1=2>=2 (Skip), Acc1: (5%3)+1=3>=3 (Skip) -> Skip
+	EXPECT_TRUE(rotIdle.shouldSkipSparkRotationalIdle());
 }
