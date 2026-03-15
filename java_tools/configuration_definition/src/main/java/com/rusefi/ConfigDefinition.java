@@ -177,7 +177,7 @@ public class ConfigDefinition {
                         state.addInputFile(inputFile);
                     break;
                 case KEY_IGNORE_GAUGES_FILE:
-                    ignoreList = GaugeIgnoreList.load(args[i + 1]);
+                    ignoreList.addPatternsFrom(args[i + 1]);
                     break;
                 case KEY_ENUMS_CONFIG_PATH:
                     String enumsDefinitionsFilePath = args[i + 1];
