@@ -196,7 +196,6 @@
   humanName: Narrow Single Tooth
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
@@ -332,7 +331,6 @@
   humanName: Half Moon
   syncEdge: Rise
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
@@ -833,7 +831,6 @@
   humanName: 12 Crank/24 Cam
   operationMode: FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
-  useOnlyPrimaryForSync: true
   shapeWithoutTdc: true
   syncGaps:
     - from: 0.2
@@ -1476,7 +1473,6 @@
   humanName: 3/0
   operationMode: FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
-  useOnlyPrimaryForSync: true
   shapeWithoutTdc: true
   syncGaps:
     - from: 0.5
@@ -1579,7 +1575,6 @@
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
@@ -1592,7 +1587,6 @@
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 1.5
       to: 2.5
@@ -1653,7 +1647,6 @@
   humanName: 6/0
   operationMode: FOUR_STROKE_SIX_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
-  useOnlyPrimaryForSync: true
   shapeWithoutTdc: true
   syncGaps:
     - from: 0.7
@@ -1843,7 +1836,6 @@
   humanName: trg88
   syncEdge: Rise
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
@@ -1855,7 +1847,6 @@
   humanName: trg89
   syncEdge: Rise
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
