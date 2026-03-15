@@ -1,2 +1,7 @@
 ; hellen154hyundai_f7 does not have alternator control
 *@Alternator PID
+
+vvtTargets3Gauge@VVT
+vvtTargets4Gauge@VVT
+vvtOutput3Gauge@VVT
+vvtOutput4Gauge@VVT
