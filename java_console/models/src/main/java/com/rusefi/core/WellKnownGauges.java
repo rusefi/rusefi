@@ -1,5 +1,8 @@
 package com.rusefi.core;
 
+/**
+ * see also SensorNames, which class should stay?
+ */
 public enum WellKnownGauges {
     RPMGauge("RPMValue"),
     SECONDS("seconds"),
