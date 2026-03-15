@@ -29,7 +29,6 @@ public enum Sensor implements BinaryLogEntry {
     RPMGauge("RPMValue", GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1, 0, 8000, "RPM"),
 //    rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM/s"),
 //    speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
-    vehicleSpeedKph(SensorNames.VEHICLESPEEDKPH, "Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VSS, 0.0, 0.0, "kph"),
 
     // Temperatures
     internalMcuTemperatureGauge("INTERNALMCUTEMPERATURE", GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 1, 0, 5, "C"),
