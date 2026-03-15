@@ -184,10 +184,10 @@ static void processLastKnockEvent() {
 		float volts = ratio * sampleBuffer[i];
 
 		float filtered = knockFilter.filter(volts);
-		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
-			engine->outputChannels.debugFloatField1 = volts;
-			engine->outputChannels.debugFloatField2 = filtered;
-		}
+//		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
+//			engine->outputChannels.debugFloatField1 = volts;
+//			engine->outputChannels.debugFloatField2 = filtered;
+//		}
 
 		sumSq += filtered * filtered;
 	}

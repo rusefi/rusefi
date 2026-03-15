@@ -392,26 +392,6 @@ static int lua_getAuxDigital(lua_State* l) {
 	return 1;
 }
 
-static int lua_setDebug(lua_State* l) {
-	// wrong debug mode, ignore
-	if (engineConfiguration->debugMode != DBG_LUA) {
-		return 0;
-	}
-
-	auto idx = luaL_checkinteger(l, 1);
-	auto val = luaL_checknumber(l, 2);
-
-	// invalid index, ignore
-	if (idx < 1 || idx > 7) {
-		return 0;
-	}
-
-	auto firstDebugField = &engine->outputChannels.debugFloatField1;
-	firstDebugField[idx - 1] = val;
-
-	return 0;
-}
-
 #if EFI_ENGINE_CONTROL
 static auto lua_getAirmassResolveMode(lua_State* l) {
 	if (lua_gettop(l) == 0) {
@@ -1134,7 +1114,6 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
                                  	});
 	lua_register(lState, "getDigital", lua_getDigital);
 	lua_register(lState, "getAuxDigital", lua_getAuxDigital);
-	lua_register(lState, "setDebug", lua_setDebug);
 #if EFI_ENGINE_CONTROL
 	lua_register(lState, "getAirmass", lua_getAirmass);
 	lua_register(lState, "setAirmass", lua_setAirmass);
