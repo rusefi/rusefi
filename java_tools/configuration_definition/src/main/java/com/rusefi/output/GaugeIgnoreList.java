@@ -49,19 +49,27 @@ public class GaugeIgnoreList {
      */
     public static GaugeIgnoreList load(String filePath) throws IOException {
         GaugeIgnoreList list = new GaugeIgnoreList();
+        list.addPatternsFrom(filePath);
+        return list;
+    }
+
+    /**
+     * Append patterns from the given file into this list. No-op if the file does not exist.
+     * Allows multiple files (e.g. global + per-board) to be merged into one list.
+     */
+    public void addPatternsFrom(String filePath) throws IOException {
         File file = new File(filePath);
         if (!file.exists())
-            return list;
+            return;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
                 if (line.isEmpty() || line.startsWith(";") || line.startsWith("#"))
                     continue;
-                list.patterns.add(line);
+                patterns.add(line);
             }
         }
-        return list;
     }
 
     /** Construct a list directly from patterns — useful in tests. */
