@@ -407,6 +407,37 @@ public class GaugeIgnoreListTest {
         assertTrue(result.contains("gaugeCategory = Boost PID"), "boost category header should survive");
     }
 
+    //  multi-file accumulation
+
+    @Test
+    public void addPatternsFromAccumulatesAcrossFiles(@TempDir Path tempDir) throws Exception {
+        File globalFile = tempDir.resolve("global_ignore_gauges.txt").toFile();
+        File boardFile = tempDir.resolve("ignore_gauges.txt").toFile();
+
+        try (PrintWriter w = new PrintWriter(globalFile)) {
+            w.println("knockSpectrum*");
+        }
+        try (PrintWriter w = new PrintWriter(boardFile)) {
+            w.println("*@Alternator PID");
+        }
+
+        GaugeIgnoreList list = new GaugeIgnoreList();
+        list.addPatternsFrom(globalFile.getAbsolutePath());
+        list.addPatternsFrom(boardFile.getAbsolutePath());
+
+        assertTrue(list.shouldIgnore("knockSpectrum5", "Knock"));
+        assertTrue(list.shouldIgnore("alternatorStatus_output", "Alternator PID"));
+        assertFalse(list.shouldIgnore("knockLevelGauge", "Knock"));
+        assertFalse(list.shouldIgnore("boostStatus_iTerm", "Boost PID"));
+    }
+
+    @Test
+    public void addPatternsFromNonExistentFileIsNoop() throws Exception {
+        GaugeIgnoreList list = new GaugeIgnoreList();
+        list.addPatternsFrom("/nonexistent/global_ignore_gauges.txt");
+        assertTrue(list.isEmpty());
+    }
+
     //  helpers
 
     private static GaugeIgnoreList listOf(String... patterns) {
