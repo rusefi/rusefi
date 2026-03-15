@@ -41,3 +41,30 @@ That .ini file would be parsed into IniFileModel instance giving java code knowl
 - rusefi_updater.exe (see console_launcher folder for launch4j) invokes Autoupdate#main with args="basic-ui" which points at BasicStartupFrame::runTool: Focuses on firmware updater
 - rusefi_autoupdate.exe entry point is Autoupdate#main
 - rusefi_console.exe invokes Launcher#main with empty args
+
+#### Key frontend java application classes
+AbstractIoStream: Base class for communication streams that manages byte counters, activity tracking, and listener notification.
+
+IniFileModel: The primary interface for accessing configuration data, including fields, tables, menus, and gauges parsed from the INI.
+
+ArrayIniField: A specialized field for handling multidimensional data arrays, managing their rows, columns, offsets, and multipliers.
+
+FieldType: Enum defining the data types (FLOAT, INT16, etc.) and their specific storage sizes and binary reading logic.
+
+GroupMenuModel: A container used to nest multiple menu items together under a single parent group.
+
+IniField: The abstract foundation for every configuration parameter. It defines the core identity (name) and the specific memory address (offset) where a value resides within the controller's binary image.
+
+MenuItem: A marker interface implemented by sub-menus and groups to be part of the navigation hierarchy.
+
+MenuModel: Represents the top-level menu structure used to build the navigation tree in the UI.
+
+SensorCentral: The central singleton hub that tracks real-time sensor values and dispatches updates to registered listeners.
+
+SubMenuModel: A concrete menu entry that links a display name to a specific key (like a table ID).
+
+TableModel: A metadata container (POJO) that stores a table's configuration, such as its ID, titles, axis labels, and bin constants.
+
+CalibrationDialogWidget: The UI manager that orchestrates the layout of the right-side panel, dynamically creating fields and table views.
+
+TuningTableView: The core visual component for 3D table editing, managing the JTable rendering and the gradient color logic.
