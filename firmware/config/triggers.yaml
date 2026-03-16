@@ -1,3 +1,68 @@
+#  Metadata
+#  --------
+#
+#  Some fields have default values. If your trigger matches the default value, you don't need to supply the field.
+#
+#  | Field                   | Details                                          | Default Value                                      |
+#  |-------------------------|--------------------------------------------------|----------------------------------------------------|
+#  | name                    | Name used in the code; start with TT_            |                                                    |
+#  | humanName               | Name used in user-facing places                  |                                                    |
+#  | hidden                  | Hide the trigger from user-facing places         | false                                              |
+#  | offset                  | Position of TDC relative to the sync point       | 0                                                  |
+#  | operationMode           | See "Operation Modes" below                      |                                                    |
+#  | knownOperationMode      | Prevent user from configuring the operation mode | true if operationMode is provided, otherwise false |
+#  | syncEdge                | One of `RiseOnly`, `Rise`, `Fall`, `Both`        |                                                    |
+#  | isSynchronizationNeeded |                                                  | True                                               |
+#  | knownOperationMode      |                                                  | True                                               |
+#  | isSecondWheelCam        |                                                  | False                                              |
+#  | useOnlyPrimaryForSync   |                                                  | False                                              |
+#  | shapeWithoutTdc         |                                                  | False                                              |
+#
+#  Operation Modes
+#  ---------------
+#
+#  `FOUR_STROKE_CRANK_SENSOR`
+#  `FOUR_STROKE_CAM_SENSOR`
+#  `FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR`
+#  `FOUR_STROKE_THREE_TIMES_CRANK_SENSOR`
+#  `FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR`
+#  `FOUR_STROKE_SIX_TIMES_CRANK_SENSOR`
+#  `TWO_STROKE`
+#
+#  Sync Gaps
+#  ---------
+#
+#  The ECU uses sync gaps to find the trigger sync point, and by extension TDC.
+#
+#  Calculate the gap in degrees between each tooth. Then pick the most distinct gap - often the largest gap, but not necessarily.
+#
+#  Divide this gap by the gap before it, and you have your sync gap ratio.
+#
+#  When the engine is spinning, and especially when cranking, the speed of rotation varies rapidly. This means that the theoretical gap ratio will never occur. So instead of defining a single number, we will define a range. Make your range small enough to reduce the chance that another gap is mistaken for the sync gap, yet large enough that in extreme scenarios, for example cranking with a low battery, the sync gap will still fall inside the specified range.
+#
+#  This isn't always possible. If not, we can define ranges for the gaps preceeding the gap we have chosen as the sync gap.
+#
+#  In the `syncGap` list, the first gap defined is the sync gap, the next is the gap just before the sync gap, and so on.
+#
+#  Teeth 
+#  -----
+#
+#  Teeth don't need to be in order, so you can define two wheels separately and it'll all be sorted out.
+#
+#  If `syncEdge` is set to `RiseOnly`, you do not need to define `width` for the teeth.
+#
+#  Repeating triggers can be defined with `count` and `lastAngle` values. Note that `count`includes the first instance. Also note that `lastAngle` is the rising edge of the last tooth, not the falling edge.
+#
+#  For example, this will produce 3 teeth, 6 degrees wide, with 4 degree gaps between them:
+#
+#  ```
+#  - channel: 0
+#    angle: 10
+#    width: 6
+#    count: 3
+#    lastAngle: 30
+#  ```
+
 - name: TT_FORD_ASPIRE
   humanName: Ford Aspire
   operationMode: FOUR_STROKE_CAM_SENSOR
