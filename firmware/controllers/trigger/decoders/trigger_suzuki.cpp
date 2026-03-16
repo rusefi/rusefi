@@ -37,26 +37,29 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 void initializeSuzukiG16B(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	
-	float w = 5; // width of tooth in degrees
-
+	float w = 5.754; // width of tooth in degrees
+	
+	s->addToothRiseFall(15, w);
+	s->addToothRiseFall(55, w);
+	s->addToothRiseFall(90, w);
+	s->addToothRiseFall(130, w);
+	s->addToothRiseFall(145, w);
+	s->addToothRiseFall(180, w);
+	s->addToothRiseFall(235, w);
+	s->addToothRiseFall(270, w);
+	s->addToothRiseFall(310, w);
+	s->addToothRiseFall(325, w);
+	s->addToothRiseFall(360, w);
+	
+	/*
 	angle_t teethAngles[] = { 0, 15, 55, 90, 130, 145, 180, 235, 270, 310, 325 }; // angle center of tooth
-
-	int size = sizeof(teethAngles) / sizeof(teethAngles[0]);
-	angle_t offset = 360 - teethAngles[size - 1];
-
-	for(int i = 0; i < size; i++) {
-		angle_t pos = teethAngles[i];
-		s->addToothRiseFall(pos + offset, w);
-	}
+	for(angle_t pos : teethAngles) {  // Range-based for: no indices, auto-type safe
+		s->addToothRiseFall(pos, w);
+	} */
+	 
+	s->setTriggerSynchronizationGap(2.667); // unique gap ratio
+	s->setSecondTriggerSynchronizationGap(0.875); // gap ratio that follows a unique gap ratio
 	
-	// Set sync gap based on largest gap between teeth
-	// Calculate gaps: 15,40,35,40,15,35,55,35,40,15,35 (degrees)
-	// Largest is 55° between 180-235, one before is 35°
-	// Ratio largest/previous 1.57
-	s->setTriggerSynchronizationGap(1.57);
-	
-	// Optional second gap if needed for reliable sync
-	// s->setSecondTriggerSynchronizationGap(2.3);
 }
 
 void initializeSuzukiK6A(TriggerWaveform *s) {
