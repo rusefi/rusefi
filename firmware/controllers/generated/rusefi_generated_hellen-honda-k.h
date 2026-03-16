@@ -380,13 +380,14 @@
 #define dc_function_e_DC_Wastegate 4
 #define dc_io_size 8
 #define DC_PER_STEPPER 2
-#define debug_mode_e_auto_enum 0="DBG_0",1="DBG_1",10="DBG_10",11="DBG_11",12="DBG_12",13="DBG_13",16="DBG_16",19="DBG_19",2="DBG_2",20="DBG_20",21="DBG_21",22="DBG_22",24="DBG_24",25="DBG_25",26="DBG_26",27="DBG_27",29="DBG_29",32="DBG_32",33="DBG_33",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",5="DBG_5",6="DBG_6",7="DBG_7",8="DBG_8",9="DBG_9",40="DBG_COMPOSITE_LOG",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",28="DBG_METRICS",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",41="DBG_UNUSED41",42="DBG_UNUSED_42",23="UNUSED23"
+#define debug_mode_e_auto_enum 0="DBG_0",1="DBG_1",10="DBG_10",11="DBG_11",12="DBG_12",13="DBG_13",14="DBG_14",16="DBG_16",19="DBG_19",2="DBG_2",20="DBG_20",21="DBG_21",22="DBG_22",24="DBG_24",25="DBG_25",26="DBG_26",27="DBG_27",29="DBG_29",3="DBG_3",32="DBG_32",33="DBG_33",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",4="DBG_4",43="DBG_43",46="DBG_46",5="DBG_5",6="DBG_6",7="DBG_7",8="DBG_8",9="DBG_9",40="DBG_COMPOSITE_LOG",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",28="DBG_METRICS",47="DBG_TCU",31="DBG_TLE8888",41="DBG_UNUSED41",42="DBG_UNUSED_42",23="UNUSED23"
 #define debug_mode_e_DBG_0 0
 #define debug_mode_e_DBG_1 1
 #define debug_mode_e_DBG_10 10
 #define debug_mode_e_DBG_11 11
 #define debug_mode_e_DBG_12 12
 #define debug_mode_e_DBG_13 13
+#define debug_mode_e_DBG_14 14
 #define debug_mode_e_DBG_16 16
 #define debug_mode_e_DBG_19 19
 #define debug_mode_e_DBG_2 2
@@ -398,6 +399,7 @@
 #define debug_mode_e_DBG_26 26
 #define debug_mode_e_DBG_27 27
 #define debug_mode_e_DBG_29 29
+#define debug_mode_e_DBG_3 3
 #define debug_mode_e_DBG_32 32
 #define debug_mode_e_DBG_33 33
 #define debug_mode_e_DBG_34 34
@@ -405,6 +407,7 @@
 #define debug_mode_e_DBG_36 36
 #define debug_mode_e_DBG_37 37
 #define debug_mode_e_DBG_38 38
+#define debug_mode_e_DBG_4 4
 #define debug_mode_e_DBG_43 43
 #define debug_mode_e_DBG_46 46
 #define debug_mode_e_DBG_5 5
@@ -414,7 +417,6 @@
 #define debug_mode_e_DBG_9 9
 #define debug_mode_e_DBG_COMPOSITE_LOG 40
 #define debug_mode_e_DBG_DYNO_VIEW 44
-#define debug_mode_e_DBG_EL_ACCEL 4
 #define debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID 17
 #define debug_mode_e_DBG_ETB_AUTOTUNE 39
 #define debug_mode_e_DBG_EXECUTOR 18
@@ -423,8 +425,6 @@
 #define debug_mode_e_DBG_LOGIC_ANALYZER 45
 #define debug_mode_e_DBG_LUA 48
 #define debug_mode_e_DBG_METRICS 28
-#define debug_mode_e_DBG_SR5_PROTOCOL 14
-#define debug_mode_e_DBG_STEPPER_IDLE_CONTROL 3
 #define debug_mode_e_DBG_TCU 47
 #define debug_mode_e_DBG_TLE8888 31
 #define debug_mode_e_DBG_UNUSED41 41
@@ -1841,7 +1841,6 @@
 #define ts_command_e_TS_COMMAND_7 7
 #define ts_command_e_TS_COMMAND_8 8
 #define ts_command_e_TS_COMMAND_9 9
-#define ts_command_e_TS_DEBUG_MODE 0
 #define ts_command_e_TS_IGNITION_CATEGORY 18
 #define ts_command_e_TS_INJECTOR_CATEGORY 19
 #define ts_command_e_TS_LUA_OUTPUT_CATEGORY 32
@@ -1849,6 +1848,7 @@
 #define ts_command_e_TS_SET_ENGINE_TYPE 30
 #define ts_command_e_TS_SOLENOID_CATEGORY 25
 #define ts_command_e_TS_STOP_ENGINE 36
+#define ts_command_e_TS_UNUSED_0 0
 #define ts_command_e_TS_UNUSED_23 23
 #define ts_command_e_TS_UNUSED_24 24
 #define ts_command_e_TS_WIDEBAND 21
