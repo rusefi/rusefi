@@ -2473,11 +2473,13 @@ crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=180
-gapsCount=1
+gapsCount=2
 syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=1.500000
-gapTo.0=2.500000
+gapFrom.0=1.250000
+gapTo.0=2.250000
+gapFrom.1=0.750000
+gapTo.1=1.250000
 # end of meta section
 event 0 0 1 0.00 1.500046
 event 1 0 0 0.00 nan
@@ -2653,11 +2655,13 @@ crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=120
-gapsCount=1
+gapsCount=2
 syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=1.500000
-gapTo.0=2.500000
+gapFrom.0=1.250000
+gapTo.0=2.250000
+gapFrom.1=0.750000
+gapTo.1=1.250000
 # end of meta section
 event 0 0 1 0.00 1.500015
 event 1 0 0 0.00 nan
