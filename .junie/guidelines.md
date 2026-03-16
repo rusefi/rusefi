@@ -87,3 +87,4 @@ GaugesGrid: Manages the visual container by wrapping a JPanel with a GridLayout 
 
 GaugesGridElement: Acts as a factory wrapper for individual slots, toggling between gauge and graph modes based on persistent Node configuration.
 
+See CLAUDE.md
