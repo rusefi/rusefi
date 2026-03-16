@@ -28,6 +28,9 @@ static void commonRenix(TriggerWaveform *s) {
 
 	// float math error accumulates at this point so we have to spell out 180
 	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL);
+
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.25, 2.25);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.75, 1.25);
 }
 
 // TT_RENIX_44_2_2
