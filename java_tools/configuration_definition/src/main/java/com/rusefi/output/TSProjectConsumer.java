@@ -58,11 +58,17 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private boolean dropComments;
     private final ReaderStateImpl state;
     private final String tsPath;
+    private final GaugeIgnoreList ignoreList;
 
     public TSProjectConsumer(String tsPath, ReaderStateImpl state) {
+        this(tsPath, state, new GaugeIgnoreList());
+    }
+
+    public TSProjectConsumer(String tsPath, ReaderStateImpl state, GaugeIgnoreList ignoreList) {
         this.tsPath = tsPath;
         consumerState = new TSProjectConsumerState(state, new TsOutput(true));
         this.state = state;
+        this.ignoreList = ignoreList;
     }
 
     // also known as TS tooltips
@@ -174,7 +180,13 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             line = removeToken(line);
         }
 
-        line = state.getVariableRegistry().applyVariables(line) + ToolUtil.EOL;
+        line = state.getVariableRegistry().applyVariables(line);
+
+        line = ignoreList.filterGauges(line);
+        if (line == null)
+            return;
+
+        line = line + ToolUtil.EOL;
 
         if (isBeforeStartTag)
             prefix.append(line);
