@@ -132,6 +132,7 @@ pins:
 info:
   cid: b
   title: uaefi
+  name: connector B
   directory: hellen/uaefi
   board_url: https://wiki.rusefi.com/uaefi
   image:

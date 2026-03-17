@@ -105,6 +105,7 @@ pins:
 info:
   cid: d
   title: uaefi
+  name: connector D
   directory: hellen/uaefi
   board_url: https://wiki.rusefi.com/uaefi
   image:
