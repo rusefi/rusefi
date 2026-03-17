@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.DialogModel;
@@ -7,8 +8,11 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.FileUtil;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.util.PinColors;
 import com.rusefi.ui.util.YamlUtil;
@@ -24,12 +28,15 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 import static com.rusefi.ui.util.PinColors.COLOR_HIGHLIGHT;
 import static com.rusefi.ui.util.PinColors.FALLBACK_NORMAL;
@@ -42,15 +49,21 @@ import static com.rusefi.ui.util.PinColors.FALLBACK_NORMAL;
  * Pin marker color can be switched between type-based and pigtail wire color.
  */
 public class PinoutPane {
+    private static final Logging log = getLogging(PinoutPane.class);
+
     private static final String BOARDS_META = "pinouts_raw/boards_meta.yaml";
     private static final String PINOUTS_DIR = "pinouts_raw";
     private static final String[] COLUMNS = {"Pin", "Function", "Type", "Class", "TS Name", "Pigtail color", "Tune use"};
+
+    private static final String PINOUT_BASE_URL = "https://rusefi.com/docs/";
+    private static final String REMOTE_META_PATH = "pinouts_raw/boards_meta.yaml";
+    private static final String PINOUT_CACHE_DIR = FileUtil.RUSEFI_SETTINGS_FOLDER + "pinouts" + File.separator;
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel statusLabel = new JLabel("Not connected", SwingConstants.CENTER);
     private JComponent centerPanel;
 
-    private final Map<String, Map<String, Object>> boardsData;
+    private Map<String, Map<String, Object>> boardsData;
     private final UIContext uiContext;
     /** All image panels currently displayed — updated when a board's tabs are built. */
     private final List<ConnectorImagePanel> activeImagePanels = new ArrayList<>();
@@ -335,6 +348,10 @@ public class PinoutPane {
         this.uiContext = uiContext;
         boardsData = loadBoardsMeta();
 
+        Thread updater = new Thread(this::checkAndUpdatePinoutData, "pinout-updater");
+        updater.setDaemon(true);
+        updater.start();
+
         statusLabel.setFont(statusLabel.getFont().deriveFont(Font.BOLD, 13f));
 
         JComboBox<String> colorCombo = new JComboBox<>(new String[]{"Type", "Pigtail"});
@@ -577,8 +594,8 @@ public class PinoutPane {
         List<PinCoord> coords = new ArrayList<>();
 
         if (info != null) {
-            String t = YamlUtil.toStr(info.get("title"));
-            if (t.isEmpty()) t = YamlUtil.toStr(info.get("name"));
+            String t = YamlUtil.toStr(info.get("name"));
+            if (t.isEmpty()) t = YamlUtil.toStr(info.get("title"));
             if (!t.isEmpty()) title = t;
 
             Map<String, Object> imageInfo = (Map<String, Object>) info.get("image");
@@ -705,11 +722,13 @@ public class PinoutPane {
     @SuppressWarnings("unchecked")
     private Map<String, Map<String, Object>> loadBoardsMeta() {
         File metaFile = findFile(BOARDS_META);
+        log.info("loadBoardsMeta: metaFile=" + (metaFile != null ? metaFile.getAbsolutePath() : "not found"));
         if (metaFile == null) return null;
         try (InputStream is = Files.newInputStream(metaFile.toPath())) {
             Map<String, Object> root = new Yaml().load(is);
             return (Map<String, Map<String, Object>>) root.get("data");
         } catch (IOException e) {
+            log.warn("loadBoardsMeta failed: " + e);
             return null;
         }
     }
@@ -719,6 +738,128 @@ public class PinoutPane {
         if (f.exists()) return f;
         f = new File("../" + relativePath);
         if (f.exists()) return f;
+        // Check the pinout cache in ~/.rusEFI/pinouts/
+        f = new File(PINOUT_CACHE_DIR, new File(relativePath).getName());
+        if (f.exists()) return f;
         return null;
+    }
+
+    // ---- Remote update ----
+
+    private void checkAndUpdatePinoutData() {
+        File cacheDir = new File(PINOUT_CACHE_DIR);
+        log.info("Pinout cache dir: " + cacheDir.getAbsolutePath());
+        cacheDir.mkdirs();
+        File cachedYaml = new File(cacheDir, "boards_meta.yaml");
+
+        log.info("Fetching remote pinout yaml from " + PINOUT_BASE_URL + REMOTE_META_PATH);
+        String remoteYaml;
+        try {
+            remoteYaml = downloadText(REMOTE_META_PATH);
+            log.info("Remote pinout yaml fetched, length=" + remoteYaml.length());
+        } catch (IOException e) {
+            log.warn("Could not fetch remote pinout metadata: " + e, e);
+            return;
+        }
+
+        // zip_file -> sha from the remote yaml
+        Map<String, String> remoteZipShas = extractZipShas(remoteYaml);
+        log.info("Remote zip/sha entries: " + remoteZipShas);
+        if (remoteZipShas.isEmpty()) {
+            log.warn("Remote pinout yaml has no zip/sha entries");
+            return;
+        }
+
+        // zip_file -> sha from the local cached yaml (if present)
+        Map<String, String> localZipShas = new HashMap<>();
+        if (cachedYaml.exists()) {
+            try {
+                String localYaml = new String(Files.readAllBytes(cachedYaml.toPath()), StandardCharsets.UTF_8);
+                localZipShas = extractZipShas(localYaml);
+                log.info("Local cached zip/sha entries: " + localZipShas);
+            } catch (IOException e) {
+                log.warn("Could not read local pinout yaml: " + e);
+            }
+        } else {
+            log.info("No local cached yaml found at " + cachedYaml.getAbsolutePath());
+        }
+
+        // Save the updated yaml first so that on the next run we don't re-download zips
+        // that were already fetched (presence check handles partially-failed downloads)
+        try {
+            Files.write(cachedYaml.toPath(), remoteYaml.getBytes(StandardCharsets.UTF_8));
+            log.info("Saved pinout yaml to " + cachedYaml.getAbsolutePath());
+        } catch (IOException e) {
+            log.warn("Could not save pinout yaml: " + e, e);
+            return;
+        }
+
+        for (Map.Entry<String, String> entry : remoteZipShas.entrySet()) {
+            String zipName = entry.getKey();
+            String remoteSha = entry.getValue();
+            File cachedZip = new File(cacheDir, zipName);
+            String localSha = localZipShas.get(zipName);
+            log.info("Zip " + zipName + ": remoteSha=" + remoteSha + " localSha=" + localSha + " cachedZipExists=" + cachedZip.exists());
+            if (remoteSha.equals(localSha) && cachedZip.exists()) {
+                log.info("Pinout zip " + zipName + " is up to date");
+                continue;
+            }
+            log.info("Downloading pinout zip " + zipName + " to " + cachedZip.getAbsolutePath());
+            try {
+                ConnectionAndMeta meta = new ConnectionAndMeta("pinouts_raw/" + zipName).invoke(PINOUT_BASE_URL);
+                log.info("Zip " + zipName + " remote size=" + meta.getCompleteFileSize());
+                AutoupdateUtil.downloadAutoupdateFile(cachedZip.getAbsolutePath(), meta, "Updating pinout data: " + zipName);
+                log.info("Pinout zip " + zipName + " downloaded successfully");
+            } catch (IOException e) {
+                log.warn("Could not download pinout zip " + zipName + ": " + e, e);
+            }
+        }
+
+        log.info("Pinout update complete, scheduling UI refresh");
+        SwingUtilities.invokeLater(this::reloadAndRefresh);
+    }
+
+    private void reloadAndRefresh() {
+        boardsData = loadBoardsMeta();
+        log.info("reloadAndRefresh: boardsData=" + (boardsData != null ? boardsData.size() + " boards" : "null")
+            + " connected=" + ConnectionStatusLogic.INSTANCE.isConnected());
+        if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            showBoard(bp != null ? bp.signature : null);
+        }
+    }
+
+    private static String downloadText(String remotePath) throws IOException {
+        ConnectionAndMeta meta = new ConnectionAndMeta(remotePath).invoke(PINOUT_BASE_URL);
+        try (InputStream in = meta.getHttpConnection().getInputStream()) {
+            return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
+
+    /** Returns a map of zip_file name → sha extracted from the yaml, deduplicating by zip name. */
+    @SuppressWarnings("unchecked")
+    private static Map<String, String> extractZipShas(String yamlText) {
+        Map<String, String> result = new LinkedHashMap<>();
+        if (yamlText == null) return result;
+        try {
+            Map<String, Object> root = new Yaml().load(yamlText);
+            log.info("extractZipShas: root keys=" + root.keySet());
+            Object dataObj = root.get("data");
+            log.info("extractZipShas: data type=" + (dataObj != null ? dataObj.getClass().getName() : "null"));
+            Map<String, Map<String, Object>> data = (Map<String, Map<String, Object>>) dataObj;
+            if (data == null) return result;
+            // Log the first board entry to check field types
+            Map.Entry<String, Map<String, Object>> firstEntry = data.entrySet().iterator().next();
+            log.info("extractZipShas: first board=" + firstEntry.getKey() + " fields=" + firstEntry.getValue());
+            for (Map<String, Object> board : data.values()) {
+                Object zipFile = board.get("zip_file");
+                Object sha = board.get("sha");
+                if (zipFile instanceof String && sha instanceof String)
+                    result.putIfAbsent((String) zipFile, (String) sha);
+            }
+        } catch (Exception e) {
+            log.warn("extractZipShas failed: " + e, e);
+        }
+        return result;
     }
 }
