@@ -15,6 +15,7 @@ import static com.rusefi.config.generated.VariableRegistryValues.*;
 
 /**
  * this class is on the way out: most of info should be taken from Gauge meta model
+ * @see SensorNames
  * @author Andrey Belomutskiy
  * 2/11/13
  */
@@ -34,8 +35,6 @@ public enum Sensor implements BinaryLogEntry {
     internalMcuTemperatureGauge("INTERNALMCUTEMPERATURE", GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 1, 0, 5, "C"),
     CLTGauge("COOLANT", GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     IATGauge("INTAKE", GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
-//    AuxT1("AuxT1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
-//    AuxT2("AuxT2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 18, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 
     // throttle, pedal
     TPSGauge("TPSValue", GAUGE_NAME_TPS, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
@@ -47,11 +46,7 @@ public enum Sensor implements BinaryLogEntry {
     LAMBDAVALUE("LambdaValue", GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
 
     VBatt("VBatt", GAUGE_NAME_VBAT, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_VOLTAGE, 4, 18, "Volts"),
-//    oilPressure(GAUGE_NAME_OIL_PRESSURE, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 40, 1.0 / PACK_MULT_PRESSURE, 0, 5, "X"),
-//    vvtPositionB1I(GAUGE_NAME_VVT_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 42, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
-//
 
-//    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
     totalTriggerErrorCounter("totalTriggerErrorCounter", GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 0, 5),
     lastErrorCode("lastErrorCode", GAUGE_NAME_WARNING_LAST, SensorCategory.STATUS, FieldType.INT, 0, 5),
@@ -60,13 +55,6 @@ public enum Sensor implements BinaryLogEntry {
     debugIntField1("debugIntField1", GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, 0, 5),
     debugIntField2("debugIntField2", GAUGE_NAME_DEBUG_I2, SensorCategory.DEBUG, FieldType.INT, 0, 5),
 
-    // Raw sensors
-    rawClt("rawClt", "raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
-    rawIat("rawIat", "raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
-
-
-//    airFuelRatio(GAUGE_NAME_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 282, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
-//    airFuelRatio2(GAUGE_NAME_AFR2, SensorCategory.OPERATIONS, FieldType.INT16, 288, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
 
     vvtPositionB1I("vvtPositionB1I", GAUGE_NAME_VVT_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
 
