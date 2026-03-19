@@ -45,8 +45,6 @@ public class BasicStartupFrame {
     }
 
     private BasicStartupFrame(ConnectivityContext connectivityContext) {
-        DfuFlasher.dfuEnabledInCaseOfError = false;
-
         JTabbedPane tabbedPane = new JTabbedPane();
         StatusPanelWithProgressBar statusPanelFirmwareTab = new StatusPanelWithProgressBar();
         StatusPanel statusPanelTuneTab = new StatusPanel(250);

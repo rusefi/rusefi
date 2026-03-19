@@ -79,6 +79,9 @@ public class StartupFrame {
      */
     private boolean isProceeding;
     private final JLabel noPortsMessage = new JLabel();
+    private final JLabel dfuErrorMessage = new JLabel(
+        "Failed to check for DFU devices. Try 'Run as Administrator'");
+    private boolean hasSeenEcuOrSimulator = false;
     private final StatusAnimation status;
     private final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
     private ProgramSelector selector;
@@ -181,6 +184,21 @@ public class StartupFrame {
         realHardwarePanel.add(noPortsMessage, "right, wrap");
         noPortsMessage.setToolTipText("Check you cables. Check your drivers. Do you want to start simulator maybe?");
 
+        dfuErrorMessage.setForeground(Color.red);
+        dfuErrorMessage.setVisible(false);
+        realHardwarePanel.add(dfuErrorMessage, "right, wrap");
+
+        // After a grace period, warn the user if DFU scanning failed and no ECU was ever seen.
+        // This typically means the console needs to be run as Administrator on Windows.
+        Timer dfuErrorTimer = new Timer(15_000, e -> {
+            if (DfuFlasher.dfuDetectionCommandFailed && !hasSeenEcuOrSimulator) {
+                dfuErrorMessage.setVisible(true);
+                frame.pack();
+            }
+        });
+        dfuErrorTimer.setRepeats(false);
+        dfuErrorTimer.start();
+
         selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
 
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
@@ -204,6 +222,13 @@ public class StartupFrame {
             status.stop();
             selector.apply(currentHardware);
             applyKnownPorts(currentHardware);
+            if (!hasSeenEcuOrSimulator) {
+                boolean ecuOrSimSeen = currentHardware.getKnownPorts().stream()
+                    .anyMatch(p -> p.type == SerialPortType.Ecu || p.type == SerialPortType.EcuWithOpenblt);
+                if (ecuOrSimSeen) {
+                    hasSeenEcuOrSimulator = true;
+                }
+            }
             frame.pack();
         }));
 
