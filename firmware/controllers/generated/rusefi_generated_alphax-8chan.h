@@ -2156,7 +2156,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.03.19.alphax-8chan.4271727628"
+#define TS_SIGNATURE "rusEFI master.2026.03.20.alphax-8chan.4271727628"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
