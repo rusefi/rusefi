@@ -343,6 +343,42 @@ Inhibit operation of this fan while the engine is not running.
 ### disableFan2WhenStopped
 Inhibit operation of this fan while the engine is not running.
 
+### fan1PwmEnabled
+Enable PWM mode for Fan 1. When enabled, the fan output is driven by the PWM curve instead of on/off relay logic.
+
+### fan2PwmEnabled
+Enable PWM mode for Fan 2. When enabled, the fan output is driven by the PWM curve instead of on/off relay logic.
+
+### fan1PwmFrequency
+Fan 1 PWM frequency
+
+### fan2PwmFrequency
+Fan 2 PWM frequency
+
+### fan1MinPwm
+Minimum PWM output clamp (Fan 1)
+
+### fan1MaxPwm
+Maximum PWM output clamp (Fan 1)
+
+### fan2MinPwm
+Minimum PWM output clamp (Fan 2)
+
+### fan2MaxPwm
+Maximum PWM output clamp (Fan 2)
+
+### fan1AcAdder
+PWM adder when AC compressor is active (Fan 1)
+
+### fan2AcAdder
+PWM adder when AC compressor is active (Fan 2)
+
+### fan1SoftStartSec
+Soft-start ramp time ? how long to ramp from 0 to target PWM (Fan 1)
+
+### fan2SoftStartSec
+Soft-start ramp time ? how long to ramp from 0 to target PWM (Fan 2)
+
 ### wizardPanelToShow
 
 

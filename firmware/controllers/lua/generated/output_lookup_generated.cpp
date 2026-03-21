@@ -1012,6 +1012,18 @@ float getOutputValueByHash(const int hash) {
 // fan1radiatorFanStatus
 		case -1478067590:
 			return engine->module<FanControl1>()->radiatorFanStatus;
+// fan1pwmCurvePwm
+		case 86008152:
+			return engine->module<FanControl1>()->pwmCurvePwm;
+// fan1pwmTargetPwm
+		case -850386982:
+			return engine->module<FanControl1>()->pwmTargetPwm;
+// fan1pwmAppliedPwm
+		case -1368130286:
+			return engine->module<FanControl1>()->pwmAppliedPwm;
+// fan1pwmActive
+		case 638039515:
+			return engine->module<FanControl1>()->pwmActive;
 // fan2cranking
 		case 1841224793:
 			return engine->module<FanControl2>()->cranking;
@@ -1042,6 +1054,18 @@ float getOutputValueByHash(const int hash) {
 // fan2radiatorFanStatus
 		case -1778606949:
 			return engine->module<FanControl2>()->radiatorFanStatus;
+// fan2pwmCurvePwm
+		case 907263673:
+			return engine->module<FanControl2>()->pwmCurvePwm;
+// fan2pwmTargetPwm
+		case 481241435:
+			return engine->module<FanControl2>()->pwmTargetPwm;
+// fan2pwmAppliedPwm
+		case -374065485:
+			return engine->module<FanControl2>()->pwmAppliedPwm;
+// fan2pwmActive
+		case 705840892:
+			return engine->module<FanControl2>()->pwmActive;
 // isPrime
 		case -1429286498:
 			return engine->module<FuelPumpController>()->isPrime;

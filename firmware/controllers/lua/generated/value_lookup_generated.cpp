@@ -349,6 +349,42 @@ float getConfigValueByHash(const int hash) {
 // disableFan2WhenStopped
 		case -311454863:
 			return engineConfiguration->disableFan2WhenStopped;
+// fan1PwmEnabled
+		case 859066570:
+			return engineConfiguration->fan1PwmEnabled;
+// fan2PwmEnabled
+		case -1198455285:
+			return engineConfiguration->fan2PwmEnabled;
+// fan1PwmFrequency
+		case 1318639761:
+			return engineConfiguration->fan1PwmFrequency;
+// fan2PwmFrequency
+		case -1644699118:
+			return engineConfiguration->fan2PwmFrequency;
+// fan1MinPwm
+		case 992359619:
+			return engineConfiguration->fan1MinPwm;
+// fan1MaxPwm
+		case 983231621:
+			return engineConfiguration->fan1MaxPwm;
+// fan2MinPwm
+		case -2011139708:
+			return engineConfiguration->fan2MinPwm;
+// fan2MaxPwm
+		case -2020267706:
+			return engineConfiguration->fan2MaxPwm;
+// fan1AcAdder
+		case -180298801:
+			return engineConfiguration->fan1AcAdder;
+// fan2AcAdder
+		case -511528784:
+			return engineConfiguration->fan2AcAdder;
+// fan1SoftStartSec
+		case 1115446416:
+			return engineConfiguration->fan1SoftStartSec;
+// fan2SoftStartSec
+		case -1847892463:
+			return engineConfiguration->fan2SoftStartSec;
 // wizardPanelToShow
 		case 727066858:
 			return engineConfiguration->wizardPanelToShow;
@@ -2678,6 +2714,66 @@ bool setConfigValueByName(const char *name, float value) {
 		case -311454863:
 	{
 		engineConfiguration->disableFan2WhenStopped = (int)value;
+		return 1;
+	}
+		case 859066570:
+	{
+		engineConfiguration->fan1PwmEnabled = (int)value;
+		return 1;
+	}
+		case -1198455285:
+	{
+		engineConfiguration->fan2PwmEnabled = (int)value;
+		return 1;
+	}
+		case 1318639761:
+	{
+		engineConfiguration->fan1PwmFrequency = (int)value;
+		return 1;
+	}
+		case -1644699118:
+	{
+		engineConfiguration->fan2PwmFrequency = (int)value;
+		return 1;
+	}
+		case 992359619:
+	{
+		engineConfiguration->fan1MinPwm = (int)value;
+		return 1;
+	}
+		case 983231621:
+	{
+		engineConfiguration->fan1MaxPwm = (int)value;
+		return 1;
+	}
+		case -2011139708:
+	{
+		engineConfiguration->fan2MinPwm = (int)value;
+		return 1;
+	}
+		case -2020267706:
+	{
+		engineConfiguration->fan2MaxPwm = (int)value;
+		return 1;
+	}
+		case -180298801:
+	{
+		engineConfiguration->fan1AcAdder = (int)value;
+		return 1;
+	}
+		case -511528784:
+	{
+		engineConfiguration->fan2AcAdder = (int)value;
+		return 1;
+	}
+		case 1115446416:
+	{
+		engineConfiguration->fan1SoftStartSec = value;
+		return 1;
+	}
+		case -1847892463:
+	{
+		engineConfiguration->fan2SoftStartSec = value;
 		return 1;
 	}
 		case 727066858:
