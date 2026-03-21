@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - ETB bench test button: open throttle 300ms without sensors (#9171)
+ - PWM support for fan control #5407
 
 ### Breaking Changes
  - Dodge Neon 2003 crank actually uses crank decoder #8977
