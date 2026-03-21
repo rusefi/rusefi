@@ -122,7 +122,9 @@ jobs:
 #        echo "HARDWARE_CI_VBATT=${{matrix.vbatt_supply}}" >> $GITHUB_ENV
     - name: Set EXTRA env
       run: |
-        echo "Nothing"
+        if [ -f "/opt/actions-runner/rusefi-env" ]; then
+        	cat /opt/actions-runner/rusefi-env >> $GITHUB_ENV
+        fi
 
 # (cat .github/workflows/openocd_ci_f4_discovery.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
 # (cat .github/workflows/openocd_ci_proteus_f7.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
