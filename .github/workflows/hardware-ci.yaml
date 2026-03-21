@@ -23,7 +23,7 @@ jobs:
             nucleo_f767
           #proteus F7 HW CI is not 100% reliable #6002          proteus_f7,
         #  proteus_f4
-        ]
+          ]
 
         include:
           - build-target: f407-discovery
