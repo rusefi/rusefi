@@ -13,3 +13,25 @@ int8_t disableFan2AtSpeed
 
 bit disableFan1WhenStopped,"yes","no";Inhibit operation of this fan while the engine is not running.
 bit disableFan2WhenStopped,"yes","no";Inhibit operation of this fan while the engine is not running.
+bit fan1PwmEnabled,"yes","no";Enable PWM mode for Fan 1. When enabled, the fan output is driven by the PWM curve instead of on/off relay logic.
+bit fan2PwmEnabled,"yes","no";Enable PWM mode for Fan 2. When enabled, the fan output is driven by the PWM curve instead of on/off relay logic.
+
+#define FAN_PWM_CURVE_SIZE 8
+
+uint16_t fan1PwmFrequency;Fan 1 PWM frequency;"Hz", 1, 0, 1, 30000, 0
+uint16_t fan2PwmFrequency;Fan 2 PWM frequency;"Hz", 1, 0, 1, 30000, 0
+
+int16_t[FAN_PWM_CURVE_SIZE] fan1TempBins;Fan 1 PWM curve temperature bins;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
+uint8_t[FAN_PWM_CURVE_SIZE] fan1PwmValues;Fan 1 PWM curve output values;"%", 1, 0, 0, 100, 0
+int16_t[FAN_PWM_CURVE_SIZE] fan2TempBins;Fan 2 PWM curve temperature bins;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
+uint8_t[FAN_PWM_CURVE_SIZE] fan2PwmValues;Fan 2 PWM curve output values;"%", 1, 0, 0, 100, 0
+
+uint8_t fan1MinPwm;Minimum PWM output clamp (Fan 1);"%", 1, 0, 0, 100, 0
+uint8_t fan1MaxPwm;Maximum PWM output clamp (Fan 1);"%", 1, 0, 0, 100, 0
+uint8_t fan2MinPwm;Minimum PWM output clamp (Fan 2);"%", 1, 0, 0, 100, 0
+uint8_t fan2MaxPwm;Maximum PWM output clamp (Fan 2);"%", 1, 0, 0, 100, 0
+uint8_t fan1AcAdder;PWM adder when AC compressor is active (Fan 1);"%", 1, 0, 0, 100, 0
+uint8_t fan2AcAdder;PWM adder when AC compressor is active (Fan 2);"%", 1, 0, 0, 100, 0
+
+float fan1SoftStartSec;Soft-start ramp time – how long to ramp from 0 to target PWM (Fan 1);"s", 1, 0, 0, 30, 1
+float fan2SoftStartSec;Soft-start ramp time – how long to ramp from 0 to target PWM (Fan 2);"s", 1, 0, 0, 30, 1
