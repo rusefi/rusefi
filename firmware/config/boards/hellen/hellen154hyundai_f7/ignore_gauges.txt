@@ -22,3 +22,6 @@ rawMafGauge
 etb2*@ETB more
 rawTps2PrimaryGauge
 rawTps2SecondaryGauge
+
+; TODO move to global ignore list once HW CI does not depend on it
+*@Debug

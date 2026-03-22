@@ -1,4 +1,4 @@
 ; hide raw FFT spectrum data
 knockSpectrum*
-*@Debug
+
 *@DynoView
