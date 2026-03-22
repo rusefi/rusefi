@@ -181,7 +181,10 @@ public class UpDownImage extends JPanel {
         AtomicInteger gapIndex = new AtomicInteger();
 
         for (EngineReport.UpDown upDown : engineReport.getList())
-            paintUpDown(d, upDown, g, gapIndex);
+            paintUpDown(d, upDown, g);
+
+				for (EngineReport.UpDown upDown : engineReport.getList())
+            paintGap(d, upDown, g, gapIndex);
 
         g2.setColor(Color.black);
 
@@ -264,7 +267,29 @@ public class UpDownImage extends JPanel {
         g2.setStroke(oldStroke);
     }
 
-    private void paintUpDown(Dimension d, EngineReport.UpDown upDown, Graphics g, AtomicInteger gapIndex) {
+    private void paintGap(Dimension d, EngineReport.UpDown upDown, Graphics g, AtomicInteger gapIndex) {
+        int x1 = translator.timeToScreen(upDown.upTime, d.width);
+        int x2 = translator.timeToScreen(upDown.downTime, d.width);
+
+        // No text if shorter than 25px
+        if (d.height < 25) {
+            return;
+        }
+
+        g.setColor(Color.black);
+
+        // '-1' actually means 'not first wheel' it's coming from
+        if (!Double.isNaN(upDown.prevGap)) {
+            gapIndex.set(gapIndex.incrementAndGet() % GAP_POSITIONS);
+            g.drawString(String.format("gap %.2f", upDown.prevGap), x1, d.height / 2 + gapIndex.get() * g.getFont().getSize());
+        }
+        if (!Double.isNaN(upDown.gap)) {
+            gapIndex.set(gapIndex.incrementAndGet() % GAP_POSITIONS);
+            g.drawString(String.format("gap %.2f", upDown.gap), x2, d.height / 2 + gapIndex.get() * g.getFont().getSize());
+        }
+		}
+
+		private void paintUpDown(Dimension d, EngineReport.UpDown upDown, Graphics g) {
         int x1 = translator.timeToScreen(upDown.upTime, d.width);
         int x2 = translator.timeToScreen(upDown.downTime, d.width);
 
@@ -282,16 +307,6 @@ public class UpDownImage extends JPanel {
         // No text if shorter than 25px
         if (d.height < 25) {
             return;
-        }
-
-        // '-1' actually means 'not first wheel' it's coming from
-        if (!Double.isNaN(upDown.prevGap)) {
-            gapIndex.set(gapIndex.incrementAndGet() % GAP_POSITIONS);
-            g.drawString(String.format("gap %.2f", upDown.prevGap), x1, d.height / 2 + gapIndex.get() * g.getFont().getSize());
-        }
-        if (!Double.isNaN(upDown.gap)) {
-            gapIndex.set(gapIndex.incrementAndGet() % GAP_POSITIONS);
-            g.drawString(String.format("gap %.2f", upDown.gap), x2, d.height / 2 + gapIndex.get() * g.getFont().getSize());
         }
 
         if (!this.renderText) {

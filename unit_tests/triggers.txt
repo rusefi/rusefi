@@ -1889,34 +1889,170 @@ event 6 1 1 530.00 nan
 event 7 1 0 530.00 nan
 event 8 1 1 650.00 nan
 event 9 1 0 650.00 nan
-TRIGGERTYPE 32 14 TT_DODGE_NEON_2003_CRANK 496.00
+TRIGGERTYPE 32 124 TT_DODGE_NEON_2003_CRANK 0.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-cycleDuration=720
-gapsCount=2
-syncEdge=Rise
+cycleDuration=360
+gapsCount=15
+syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=0.750000
-gapTo.0=1.500000
-gapFrom.1=0.650000
+gapFrom.0=2.000000
+gapTo.0=4.000000
+gapFrom.1=0.750000
 gapTo.1=1.250000
+gapFrom.2=0.750000
+gapTo.2=1.250000
+gapFrom.3=0.750000
+gapTo.3=1.250000
+gapFrom.4=0.750000
+gapTo.4=1.250000
+gapFrom.5=0.750000
+gapTo.5=1.250000
+gapFrom.6=0.750000
+gapTo.6=1.250000
+gapFrom.7=0.750000
+gapTo.7=1.250000
+gapFrom.8=0.750000
+gapTo.8=1.250000
+gapFrom.9=0.750000
+gapTo.9=1.250000
+gapFrom.10=0.750000
+gapTo.10=1.250000
+gapFrom.11=0.750000
+gapTo.11=1.250000
+gapFrom.12=0.750000
+gapTo.12=1.250000
+gapFrom.13=0.750000
+gapTo.13=1.250000
+gapFrom.14=0.500000
+gapTo.14=1.500000
 # end of meta section
-event 0 0 1 0.00 1.000000
-event 1 0 0 144.00 nan
-event 2 0 1 180.00 2.500000
-event 3 0 0 216.00 nan
-event 4 0 1 252.00 0.400000
-event 5 0 0 288.00 nan
-event 6 0 1 324.00 1.000000
-event 7 0 0 360.00 nan
-event 8 0 1 504.00 2.500000
-event 9 0 0 540.00 nan
-event 10 0 1 576.00 0.400000
-event 11 0 0 612.00 nan
-event 12 0 1 648.00 1.000000
-event 13 0 0 684.00 nan
+event 0 0 1 0.00 3.500000
+event 1 0 0 0.00 nan
+event 2 0 1 10.00 0.285714
+event 3 0 0 10.00 nan
+event 4 0 1 20.00 1.000000
+event 5 0 0 20.00 nan
+event 6 0 1 30.00 1.000000
+event 7 0 0 30.00 nan
+event 8 0 1 40.00 1.000000
+event 9 0 0 40.00 nan
+event 10 0 1 50.00 0.999950
+event 11 0 0 50.00 nan
+event 12 0 1 60.00 1.000100
+event 13 0 0 60.00 nan
+event 14 0 1 70.00 0.999950
+event 15 0 0 70.00 nan
+event 16 0 1 80.00 1.000000
+event 17 0 0 80.00 nan
+event 18 0 1 90.00 1.000000
+event 19 0 0 90.00 nan
+event 20 0 1 100.00 1.000000
+event 21 0 0 100.00 nan
+event 22 0 1 110.00 1.000000
+event 23 0 0 110.00 nan
+event 24 0 1 120.00 1.000000
+event 25 0 0 120.00 nan
+event 26 0 1 130.00 1.000000
+event 27 0 0 130.00 nan
+event 28 0 1 165.00 3.500000
+event 29 0 0 165.00 nan
+event 30 0 1 175.00 0.285714
+event 31 0 0 175.00 nan
+event 32 0 1 185.00 1.000000
+event 33 0 0 185.00 nan
+event 34 0 1 195.00 1.000000
+event 35 0 0 195.00 nan
+event 36 0 1 205.00 1.000000
+event 37 0 0 205.00 nan
+event 38 0 1 215.00 1.000000
+event 39 0 0 215.00 nan
+event 40 0 1 225.00 1.000000
+event 41 0 0 225.00 nan
+event 42 0 1 235.00 1.000000
+event 43 0 0 235.00 nan
+event 44 0 1 245.00 1.000000
+event 45 0 0 245.00 nan
+event 46 0 1 255.00 1.000000
+event 47 0 0 255.00 nan
+event 48 0 1 265.00 1.000000
+event 49 0 0 265.00 nan
+event 50 0 1 275.00 1.000000
+event 51 0 0 275.00 nan
+event 52 0 1 285.00 1.000000
+event 53 0 0 285.00 nan
+event 54 0 1 295.00 1.000000
+event 55 0 0 295.00 nan
+event 56 0 1 305.00 1.000000
+event 57 0 0 305.00 nan
+event 58 0 1 315.00 1.000000
+event 59 0 0 315.00 nan
+event 60 0 1 325.00 1.000000
+event 61 0 0 325.00 nan
+event 62 0 1 360.00 nan
+event 63 0 0 360.00 nan
+event 64 0 1 370.00 nan
+event 65 0 0 370.00 nan
+event 66 0 1 380.00 nan
+event 67 0 0 380.00 nan
+event 68 0 1 390.00 nan
+event 69 0 0 390.00 nan
+event 70 0 1 400.00 nan
+event 71 0 0 400.00 nan
+event 72 0 1 410.00 nan
+event 73 0 0 410.00 nan
+event 74 0 1 420.00 nan
+event 75 0 0 420.00 nan
+event 76 0 1 430.00 nan
+event 77 0 0 430.00 nan
+event 78 0 1 440.00 nan
+event 79 0 0 440.00 nan
+event 80 0 1 450.00 nan
+event 81 0 0 450.00 nan
+event 82 0 1 460.00 nan
+event 83 0 0 460.00 nan
+event 84 0 1 470.00 nan
+event 85 0 0 470.00 nan
+event 86 0 1 480.00 nan
+event 87 0 0 480.00 nan
+event 88 0 1 490.00 nan
+event 89 0 0 490.00 nan
+event 90 0 1 525.00 nan
+event 91 0 0 525.00 nan
+event 92 0 1 535.00 nan
+event 93 0 0 535.00 nan
+event 94 0 1 545.00 nan
+event 95 0 0 545.00 nan
+event 96 0 1 555.00 nan
+event 97 0 0 555.00 nan
+event 98 0 1 565.00 nan
+event 99 0 0 565.00 nan
+event 100 0 1 575.00 nan
+event 101 0 0 575.00 nan
+event 102 0 1 585.00 nan
+event 103 0 0 585.00 nan
+event 104 0 1 595.00 nan
+event 105 0 0 595.00 nan
+event 106 0 1 605.00 nan
+event 107 0 0 605.00 nan
+event 108 0 1 615.00 nan
+event 109 0 0 615.00 nan
+event 110 0 1 625.00 nan
+event 111 0 0 625.00 nan
+event 112 0 1 635.00 nan
+event 113 0 0 635.00 nan
+event 114 0 1 645.00 nan
+event 115 0 0 645.00 nan
+event 116 0 1 655.00 nan
+event 117 0 0 655.00 nan
+event 118 0 1 665.00 nan
+event 119 0 0 665.00 nan
+event 120 0 1 675.00 nan
+event 121 0 0 675.00 nan
+event 122 0 1 685.00 nan
+event 123 0 0 685.00 nan
 TRIGGERTYPE 33 16 TT_MIATA_VVT 715.00
 knownOperationMode=true
 crankBased=true
@@ -2177,7 +2313,7 @@ event 44 0 1 660.00 nan
 event 45 0 0 660.00 nan
 event 46 0 1 690.00 nan
 event 47 0 0 690.00 nan
-TRIGGERTYPE 39 32 TT_DODGE_NEON_1995_ONLY_CRANK 279.00
+TRIGGERTYPE 39 32 TT_UNUSED_39 279.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
@@ -2337,11 +2473,13 @@ crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=180
-gapsCount=1
+gapsCount=2
 syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=1.500000
-gapTo.0=2.500000
+gapFrom.0=1.250000
+gapTo.0=2.250000
+gapFrom.1=0.750000
+gapTo.1=1.250000
 # end of meta section
 event 0 0 1 0.00 1.500046
 event 1 0 0 0.00 nan
@@ -2517,11 +2655,13 @@ crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=120
-gapsCount=1
+gapsCount=2
 syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=1.500000
-gapTo.0=2.500000
+gapFrom.0=1.250000
+gapTo.0=2.250000
+gapFrom.1=0.750000
+gapTo.1=1.250000
 # end of meta section
 event 0 0 1 0.00 1.500015
 event 1 0 0 0.00 nan
@@ -6543,42 +6683,40 @@ event 20 0 1 595.00 nan
 event 21 0 0 595.00 nan
 event 22 0 1 688.00 nan
 event 23 0 0 688.00 nan
-TRIGGERTYPE 95 24 TT_UNUSED_95 65.00
+TRIGGERTYPE 95 22 TT_SUZUKI_G16B 0.00
 knownOperationMode=true
-crankBased=true
+crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-cycleDuration=180
+cycleDuration=720
 gapsCount=1
 syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=0.172000
-gapTo.0=0.688000
+gapFrom.0=1.177500
+gapTo.0=1.962500
 # end of meta section
-event 0 0 1 0.00 0.344086
+event 0 0 1 0.00 1.571429
 event 1 0 0 0.00 nan
-event 2 0 1 55.00 1.718750
-event 3 0 0 55.00 nan
-event 4 0 1 148.00 1.690909
-event 5 0 0 148.00 nan
-event 6 0 1 180.00 nan
+event 2 0 1 70.00 0.636364
+event 3 0 0 70.00 nan
+event 4 0 1 150.00 1.142857
+event 5 0 0 150.00 nan
+event 6 0 1 180.00 0.375000
 event 7 0 0 180.00 nan
-event 8 0 1 235.00 nan
-event 9 0 0 235.00 nan
-event 10 0 1 328.00 nan
-event 11 0 0 328.00 nan
-event 12 0 1 360.00 nan
+event 8 0 1 250.00 2.333333
+event 9 0 0 250.00 nan
+event 10 0 1 280.00 0.428571
+event 11 0 0 280.00 nan
+event 12 0 1 360.00 2.666667
 event 13 0 0 360.00 nan
-event 14 0 1 415.00 nan
-event 15 0 0 415.00 nan
-event 16 0 1 508.00 nan
-event 17 0 0 508.00 nan
-event 18 0 1 540.00 nan
+event 14 0 1 430.00 0.875000
+event 15 0 0 430.00 nan
+event 16 0 1 510.00 1.142857
+event 17 0 0 510.00 nan
+event 18 0 1 540.00 0.375000
 event 19 0 0 540.00 nan
-event 20 0 1 595.00 nan
-event 21 0 0 595.00 nan
-event 22 0 1 688.00 nan
-event 23 0 0 688.00 nan
+event 20 0 1 610.00 2.333333
+event 21 0 0 610.00 nan
 TRIGGERTYPE 96 24 TT_UNUSED_96 65.00
 knownOperationMode=true
 crankBased=true

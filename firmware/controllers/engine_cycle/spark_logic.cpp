@@ -634,6 +634,12 @@ void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentP
 				warning(ObdCode::CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->engineState.globalSparkCounter);
 				continue;
 			}
+#if ROTATIONAL_IDLE_CONTROLLER
+		if (engine->rotationalIdleController.shouldSkipSparkRotationalIdle()) {
+			continue;
+		}
+#endif // ROTATIONAL_IDLE_CONTROLLER
+
 #if EFI_LAUNCH_CONTROL
             bool sparkLimited = engine->softSparkLimiter.shouldSkip() || engine->hardSparkLimiter.shouldSkip();
             engine->ignitionState.luaIgnitionSkip = sparkLimited;

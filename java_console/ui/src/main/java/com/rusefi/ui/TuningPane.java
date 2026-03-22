@@ -8,6 +8,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TsStringFunction;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import org.jetbrains.annotations.NotNull;
@@ -132,6 +133,7 @@ public class TuningPane {
             // Clone because workingImage is mutated in-place by further edits.
             sessionImage[0] = image.clone();
             left.refreshExpressions(image);
+            uiContext.fireConfigImageChanged(image);
             undoCommitTimer.restart();
             uploadTimer.restart();
         });
@@ -159,6 +161,34 @@ public class TuningPane {
                 right.update(currentKey[0], uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
             }
             updateUndoRedoButtons.run();
+        });
+
+        // When the ECU disconnects (e.g. after a firmware flash or board swap), drop all stale
+        // session state so the next connection re-reads calibrations fresh from the new board.
+        // Without this, sessionImage/workingImage from the old board (possibly a different config
+        // page size) would be used as the diff baseline in uploadChangesWithoutBurn.
+        // currentKey is preserved so that reconnection can automatically re-render the last section.
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (!isConnected) {
+                SwingUtilities.invokeLater(() -> {
+                    undoCommitTimer.stop();
+                    uploadTimer.stop();
+                    right.reset();
+                    sessionImage[0] = null;
+                    undoStack.clear();
+                    redoStack.clear();
+                    undoBaseline[0] = null;
+                    updateUndoRedoButtons.run();
+                });
+            } else {
+                SwingUtilities.invokeLater(() -> {
+                    if (currentKey[0] == null) return;
+                    BinaryProtocol bp = uiContext.getBinaryProtocol();
+                    if (bp == null || bp.getControllerConfiguration() == null) return;
+                    sessionImage[0] = bp.getControllerConfiguration().clone();
+                    right.update(currentKey[0], uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
+                });
+            }
         });
 
         JPanel northPanel = new JPanel();

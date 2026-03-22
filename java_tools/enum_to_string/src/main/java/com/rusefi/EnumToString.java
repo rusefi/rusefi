@@ -64,7 +64,7 @@ public class EnumToString {
 
         new File(outputPath).mkdirs();
         state.writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
-                InvokeReader.fileSuffix);
+            invokeReader.getFileSuffix());
     }
 
     private void writeCppAndHeaderFiles(String outFileName) throws IOException {

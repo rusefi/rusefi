@@ -28,6 +28,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_ford_coyote.cpp \
 	tests/trigger/test_real_volkswagen.cpp \
 	tests/trigger/test_real_nb2_cranking.cpp \
+	tests/trigger/test_real_neon.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
 	tests/trigger/test_real_nissan_hr.cpp \
 	tests/trigger/test_real_nissan_hr_vvt.cpp \

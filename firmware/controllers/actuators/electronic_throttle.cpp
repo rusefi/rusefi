@@ -489,20 +489,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 			break;
 		}
 
-		// Also output to debug channels if configured
-		if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
-			// a - amplitude of output (TPS %)
-			engine->outputChannels.debugFloatField1 = m_a;
-			// b - amplitude of input (Duty cycle %)
-			engine->outputChannels.debugFloatField2 = b;
-			// Tu - oscillation period (seconds)
-			engine->outputChannels.debugFloatField3 = m_tu;
-
-			engine->outputChannels.debugFloatField4 = ku;
-			engine->outputChannels.debugFloatField5 = kp;
-			engine->outputChannels.debugFloatField6 = ki;
-			engine->outputChannels.debugFloatField7 = kd;
-		}
+		efiPrintf("ETB autotune: a=%.3f b=%.3f Tu=%.3f Ku=%.3f Kp=%.3f Ki=%.3f Kd=%.3f", m_a, b, m_tu, ku, kp, ki, kd);
 #endif
 		// TODO: directly update PID settings in engineConfiguration
 	}

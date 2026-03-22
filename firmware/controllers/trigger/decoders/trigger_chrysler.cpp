@@ -28,8 +28,26 @@ void initDodgeRam(TriggerWaveform *s) {
 void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
-	s->setTriggerSynchronizationGap(3);
+	// real Neon SRT4 crank wheel: 30 teeth + 2 gaps per 360 degrees
+	// 16 teeth, then larger gap, 14 teeth, then smaller gap
+	// each tooth is 10 degrees (5 high, 5 low)
+	// total: 16*10 + 30 + 14*10 + 30 = 360
+	// sync on the gap using gap ratio checks for all teeth in the window
+	// index 0: the gap itself, ratio ~3.0
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/2.0, 4.0);
+	// indices 1-13: normal teeth before the gap, ratio ~1.0
+	for (int i = 1; i <= 13; i++) {
+		s->setTriggerSynchronizationGap3(/*gapIndex*/i, /*from*/0.75, 1.25);
+	}
+	// TODO: how come we are not able to define shape with non-1 gap at the end? Do not care to keep same sync point
+	// index 14: from correct gap this is a normal tooth (~1.0), disambiguates from wrong gap (~0.29)
+	s->setTriggerSynchronizationGap3(/*gapIndex*/14, /*from*/0.5, 1.5);
 
+	// 16 teeth: 5 to 160 degrees
+	s->addEvent360(5, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(10, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(15, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(20, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent360(25, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->addEvent360(30, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent360(35, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
@@ -54,46 +72,42 @@ void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s) {
 	s->addEvent360(130, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent360(135, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->addEvent360(140, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(145,TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(145, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->addEvent360(150, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent360(155, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->addEvent360(160, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent360(165, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(170, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(175, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(180, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(185, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	// gap 25
-	s->addEvent360(210, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(215, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(220, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(225, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(230, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(235, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(240, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(245, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(250, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(255, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(260, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(265, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(270, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(275, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(280, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(285, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(290, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(295, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(300, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(305, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(310, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(315, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(320, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(325, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(330, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(335, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(340, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(345, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent360(350, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(355, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	// gap 30 degrees (missing 3 teeth)
+	// 14 teeth: 195 to 325 degrees
+	s->addEvent360(195, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(200, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(205, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(210, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(215, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(220, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(225, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(230, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(235, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(240, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(245, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(250, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(255, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(260, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(265, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(270, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(275, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(280, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(285, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(290, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(295, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(300, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(305, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(310, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(315, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(320, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(325, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(330, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	// gap 30 degrees (missing 3 teeth) back to start
 	s->addEvent360(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 

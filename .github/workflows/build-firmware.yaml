@@ -103,7 +103,7 @@ jobs:
 
     - name: Create Release
       if: ${{ env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.19.1
+      uses: ncipollo/release-action@v1.21.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
@@ -219,7 +219,7 @@ jobs:
 #
       # TODO: address `Acquire GCC` version copy paste, maybe a tiny action to acquire specific version?
     - name: Acquire Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.0
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.1
       with:
         release: '14.2.Rel1'
 
@@ -287,7 +287,7 @@ jobs:
 
     - name: Add Bundles to Release
       if: ${{ env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.19.1
+      uses: ncipollo/release-action@v1.21.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"

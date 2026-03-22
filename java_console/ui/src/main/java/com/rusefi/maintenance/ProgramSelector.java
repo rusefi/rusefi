@@ -348,6 +348,14 @@ public class ProgramSelector {
             updateModeComboBox.setSelectedItem(updateModeToRestore);
         }
 
+        // When a DFU device is present, prefer DFU_MANUAL over DFU_SWITCH (which is the
+        // default fallback shown before any device is detected). This handles both the first
+        // detection and the case where hasDfuDevice briefly flipped to false then back to true,
+        // leaving DFU_SWITCH restored instead of DFU_MANUAL. see #9157
+        if (hasDfuDevice && updateModeComboBox.getSelectedItem() == DFU_SWITCH) {
+            updateModeComboBox.setSelectedItem(DFU_MANUAL);
+        }
+
         AutoupdateUtil.trueLayoutAndRepaint(updateModeComboBox);
         AutoupdateUtil.trueLayoutAndRepaint(content);
     }

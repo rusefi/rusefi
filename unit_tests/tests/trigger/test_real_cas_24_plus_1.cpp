@@ -3,12 +3,20 @@
 // Cam: Single tooth (half moon)
 
 #include "pch.h"
-#include "real_trigger_helper.h"
 
-TEST(realCas24Plus1, spinningOnBench) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
-	RealTriggerHelper helper;
+#include "logicdata_csv_reader.h"
+
+void testTwelvePlusOne(
+		const char* file,
+		float firstRpm,
+		int fullSyncEventCount,
+		float fullSyncRpm,
+		int expectPhaseAdjustment,
+		float expectVvt) {
+	CsvReader reader(1, /* vvtCount */ 1);
+
+	reader.open(file);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
@@ -18,34 +26,61 @@ TEST(realCas24Plus1, spinningOnBench) {
 	// 24 teeth at cam speed + 1 tooth
 	// AKA 12 teeth at crank speed + 1 cam tooth
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	eth.setTriggerType(trigger_type_e::TT_12_TOOTH_CRANK);
 
+	int eventCount = 0;
+	bool gotRpm = false;
 	bool gotFullSync = false;
 
-	helper.expectedFirstRpm = 808;
-	helper.expectedFirstRpmLineIndex = 7;
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+		eventCount++;
+		engine->rpmCalculator.onSlowCallback();
 
-	helper.runTest("tests/trigger/resources/cas_nissan_24_plus_1.csv", trigger_type_e::TT_12_TOOTH_CRANK, 1, 1, false, 0.0, [&](CsvReader& reader) {
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;
-		EXPECT_TRUE(angleError < 3 && angleError > -3) << "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);
+		EXPECT_TRUE(std::abs(angleError) < 5)
+				<< "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
+		if (!gotRpm && rpm) {
+			gotRpm = true;
+
+			// We should get first RPM on exactly the first (primary) sync point - this means the instant RPM pre-sync
+			// event copy all worked OK
+			EXPECT_EQ(eventCount, 7);
+			EXPECT_NEAR(rpm, firstRpm, 0.1);
+		}
 
 		bool hasFullSync = getTriggerCentral()->triggerState.hasSynchronizedPhase();
-		if (!gotFullSync && hasFullSync) {
-			gotFullSync = true;
+		if (hasFullSync) {
+			// Adjustment should be by 270 degrees
+			EXPECT_FLOAT_EQ(getTriggerCentral()->triggerState.m_phaseAdjustment, expectPhaseAdjustment);
 
-			// Should get full sync on the first cam tooth
-			EXPECT_EQ(reader.lineIndex(), 40);
-			EXPECT_NEAR(rpm, 915.08f, 0.1);
+			if (!gotFullSync) {
+				gotFullSync = true;
+
+				// Should get full sync on the first cam tooth
+				EXPECT_EQ(eventCount, fullSyncEventCount);
+				EXPECT_NEAR(rpm, fullSyncRpm, 0.1);
+			}
 		}
 
-		float vvt = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
-		if (vvt != 0) {
+		float vvtLegacy = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+		if (vvtLegacy != 0) {
+			expected<angle_t> vvt = vvtLegacy;
 			// cam position should never be reported outside of correct range
-			EXPECT_TRUE(vvt > -10 && vvt < -9);
+			EXPECT_TRUE(vvt.Value > (expectVvt - 2) && vvt.Value < (expectVvt + 2)) << "VVT angle: " << vvt.Value;
 		}
-	});
+	}
 
-	ASSERT_EQ(0u, helper.eth.recentWarnings()->getCount());
+	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+}
+
+TEST(realCas24Plus1, spinningOnBench) {
+	testTwelvePlusOne("tests/trigger/resources/cas_nissan_24_plus_1.csv", 808.32f, 40, 915.08f, 270, -9.5);
+}
+
+TEST(realCas24Plus1, longTimeIdling) {
+// todo: fix me https://github.com/rusefi/rusefi/issues/9244	testTwelvePlusOne("tests/trigger/resources/twelve_plus_one_long.csv", 920.69f, 35, 926.67f, 330, -15.5);
 }

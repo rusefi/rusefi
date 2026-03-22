@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Feb 26 01:02:18 EST 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Mon Mar 16 09:26:39 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -110,6 +110,8 @@ case DBG_12:
   return "DBG_12";
 case DBG_13:
   return "DBG_13";
+case DBG_14:
+  return "DBG_14";
 case DBG_16:
   return "DBG_16";
 case DBG_19:
@@ -132,6 +134,8 @@ case DBG_27:
   return "DBG_27";
 case DBG_29:
   return "DBG_29";
+case DBG_3:
+  return "DBG_3";
 case DBG_32:
   return "DBG_32";
 case DBG_33:
@@ -146,6 +150,8 @@ case DBG_37:
   return "DBG_37";
 case DBG_38:
   return "DBG_38";
+case DBG_4:
+  return "DBG_4";
 case DBG_43:
   return "DBG_43";
 case DBG_46:
@@ -166,8 +172,6 @@ case DBG_DYNO_VIEW:
   return "DBG_DYNO_VIEW";
 case DBG_ELECTRONIC_THROTTLE_PID:
   return "DBG_ELECTRONIC_THROTTLE_PID";
-case DBG_EL_ACCEL:
-  return "DBG_EL_ACCEL";
 case DBG_ETB_AUTOTUNE:
   return "DBG_ETB_AUTOTUNE";
 case DBG_EXECUTOR:
@@ -182,10 +186,6 @@ case DBG_LUA:
   return "DBG_LUA";
 case DBG_METRICS:
   return "DBG_METRICS";
-case DBG_SR5_PROTOCOL:
-  return "DBG_SR5_PROTOCOL";
-case DBG_STEPPER_IDLE_CONTROL:
-  return "DBG_STEPPER_IDLE_CONTROL";
 case DBG_TCU:
   return "DBG_TCU";
 case DBG_TLE8888:
@@ -243,8 +243,6 @@ case trigger_type_e::TT_DEV:
   return "TT_DEV";
 case trigger_type_e::TT_DODGE_NEON_1995:
   return "TT_DODGE_NEON_1995";
-case trigger_type_e::TT_DODGE_NEON_1995_ONLY_CRANK:
-  return "TT_DODGE_NEON_1995_ONLY_CRANK";
 case trigger_type_e::TT_DODGE_NEON_2003_CAM:
   return "TT_DODGE_NEON_2003_CAM";
 case trigger_type_e::TT_DODGE_NEON_2003_CRANK:
@@ -349,6 +347,8 @@ case trigger_type_e::TT_SUBARU_SVX_CRANK_1:
   return "TT_SUBARU_SVX_CRANK_1";
 case trigger_type_e::TT_SUZUKI_G13B:
   return "TT_SUZUKI_G13B";
+case trigger_type_e::TT_SUZUKI_G16B:
+  return "TT_SUZUKI_G16B";
 case trigger_type_e::TT_SUZUKI_K6A:
   return "TT_SUZUKI_K6A";
 case trigger_type_e::TT_TOOTHED_WHEEL:
@@ -367,8 +367,8 @@ case trigger_type_e::TT_TRI_TACH:
   return "TT_TRI_TACH";
 case trigger_type_e::TT_UNUSED:
   return "TT_UNUSED";
-case trigger_type_e::TT_UNUSED_95:
-  return "TT_UNUSED_95";
+case trigger_type_e::TT_UNUSED_39:
+  return "TT_UNUSED_39";
 case trigger_type_e::TT_UNUSED_96:
   return "TT_UNUSED_96";
 case trigger_type_e::TT_VVT_BARRA_3_PLUS_1:
@@ -527,8 +527,6 @@ case TS_COMMAND_8:
   return "TS_COMMAND_8";
 case TS_COMMAND_9:
   return "TS_COMMAND_9";
-case TS_DEBUG_MODE:
-  return "TS_DEBUG_MODE";
 case TS_IGNITION_CATEGORY:
   return "TS_IGNITION_CATEGORY";
 case TS_INJECTOR_CATEGORY:
@@ -543,6 +541,8 @@ case TS_SOLENOID_CATEGORY:
   return "TS_SOLENOID_CATEGORY";
 case TS_STOP_ENGINE:
   return "TS_STOP_ENGINE";
+case TS_UNUSED_0:
+  return "TS_UNUSED_0";
 case TS_UNUSED_23:
   return "TS_UNUSED_23";
 case TS_UNUSED_24:

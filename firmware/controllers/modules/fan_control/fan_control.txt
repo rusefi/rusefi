@@ -9,4 +9,8 @@ struct_no_prefix fan_control_s
 	bit disabledBySpeed
 	bit m_state;On
 	uint8_t radiatorFanStatus
+	float pwmCurvePwm;PWM from curve
+	float pwmTargetPwm;PWM target
+	float pwmAppliedPwm;PWM applied
+	bit pwmActive;PWM mode active
 end_struct

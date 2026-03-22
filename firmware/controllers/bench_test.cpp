@@ -713,12 +713,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	bool running = !engine->rpmCalculator.isStopped();
 
 	switch (subsystem) {
+	case TS_UNUSED_0:
 	case TS_CLEAR_WARNINGS:
 		clearWarnings();
-		break;
-
-	case TS_DEBUG_MODE:
-		engineConfiguration->debugMode = (debug_mode_e)index;
 		break;
 
 	case TS_IGNITION_CATEGORY:

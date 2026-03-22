@@ -4,6 +4,7 @@ import com.rusefi.RusefiTestBase;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorNames;
 import com.rusefi.enums.engine_type_e;
 import org.junit.Test;
 
@@ -91,15 +92,15 @@ public class ProteusAnalogTest extends RusefiTestBase {
         setIdlePositionAndAssertTps(98, 0);
     }
 
-    void assertSensorValue(Sensor sensor, double expected) {
+    void assertSensorValue(String sensor, double expected) {
         double actual = SensorCentral.getInstance().getValue(sensor);
-        assertEquals(sensor.toString(), expected, actual, 0.5);
+        assertEquals(sensor, expected, actual, 0.5);
     }
 
     @Test
     public void testUnconnectedInputs() {
         // CLT/IAT inputs should float at ~5 volts
-        assertSensorValue(Sensor.rawClt, 5.0);
-        assertSensorValue(Sensor.rawIat, 5.0);
+        assertSensorValue(SensorNames.rawClt, 5.0);
+        assertSensorValue(SensorNames.rawIat, 5.0);
     }
 }

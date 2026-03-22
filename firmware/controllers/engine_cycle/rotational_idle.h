@@ -14,4 +14,9 @@ public:
     RotationalIdle();
     bool shouldEngageRotationalIdle();
     bool shouldSkipSparkRotationalIdle();
+    bool shouldSkipFuelRotationalIdle();
+
+private:
+    uint32_t sparkPatternCounter = 1;
+    uint32_t fuelPatternCounter = 1;
 };

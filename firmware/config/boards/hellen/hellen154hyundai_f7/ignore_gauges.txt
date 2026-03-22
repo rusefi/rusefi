@@ -1,0 +1,27 @@
+; hellen154hyundai_f7 does not have alternator control
+*@Alternator PID
+
+*@GDI
+
+vvtPositionB2*@VVT
+vvtTargets3Gauge@VVT
+vvtTargets4Gauge@VVT
+vvtOutput3Gauge@VVT
+vvtOutput4Gauge@VVT
+
+; SENT gauges:
+value0Gauge
+value1Gauge
+errorRateGauge
+
+rawMafGauge
+*@Sensors - EGT
+*@Torque
+
+; ETB2 PID gauges (live in "ETB more" category)
+etb2*@ETB more
+rawTps2PrimaryGauge
+rawTps2SecondaryGauge
+
+; TODO move to global ignore list once HW CI does not depend on it
+*@Debug

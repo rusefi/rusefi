@@ -48,7 +48,8 @@
 #define PIN_D2_analog_inputs MM100_IN_CRANK_ANALOG
 #define PIN_D2_switch_inputs MM100_IN_CRANK
 #define PIN_D2_event_inputs MM100_IN_CRANK
-#define PIN_D5 MM100_IN_VSS
+#define PIN_D5_switch_inputs MM100_IN_VSS
+#define PIN_D5_event_inputs MM100_IN_VSS
 #define PIN_D6 MM100_IN_PPS_ANALOG
 #define PIN_D9 MM100_IN_MAP1_ANALOG
 #define PIN_D10_analog_inputs MM100_IN_CAM_ANALOG

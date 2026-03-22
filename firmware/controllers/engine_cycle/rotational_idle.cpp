@@ -7,21 +7,34 @@ RotationalIdle::RotationalIdle(){
 
 bool RotationalIdle::shouldEngageRotationalIdle() {
 	rotationalIdleEngaged = false;
+	rotIdleEngineTooSlow = false;
+	rotIdleEngineTooFast = false;
+	rotIdleEngineTooLowClt = false;
+	rotIdleEngineTooHot = false;
+	rotIdleTpsTooHigh = false;
 
 	if (!engineConfiguration->rotationalIdleController.enabled) {
 		return false;
 	}
 
-	//TODO: we need to use deadbands ond this!! (and on the tps/pps)
-	if (engineConfiguration->rotationalIdleController.auto_engage_clt_enable && Sensor::getOrZero(SensorType::Clt) > engineConfiguration->rotationalIdleController.auto_engage_clt) {
-		rotationalIdleEngaged = true;
-		return true;
+	//TODO: we need to use deadbands on this!! (and on the tps/pps)
+	if (engineConfiguration->rotationalIdleController.auto_engage_clt_enable) {
+		if (Sensor::getOrZero(SensorType::Clt) > engineConfiguration->rotationalIdleController.auto_engage_clt) {
+			rotationalIdleEngaged = true;
+			return true;
+		} else {
+			rotIdleEngineTooLowClt = true;
+		}
 	}
 
 	// TODO: auto_engage sounds too generic, maybe better auto_engage_pps_enable?
-	if (engineConfiguration->rotationalIdleController.auto_engage && Sensor::getOrZero(SensorType::DriverThrottleIntent) <= engineConfiguration->rotationalIdleController.max_tps) {
-		rotationalIdleEngaged = true;
-		return true; // tps is below the maximum
+	if (engineConfiguration->rotationalIdleController.auto_engage) {
+		if (Sensor::getOrZero(SensorType::DriverThrottleIntent) <= engineConfiguration->rotationalIdleController.max_tps) {
+			rotationalIdleEngaged = true;
+			return true; // tps is below the maximum
+		} else {
+			rotIdleTpsTooHigh = true;
+		}
 	}
 
 	return false;
@@ -53,7 +66,8 @@ static bool calculateSkip(uint32_t counter, uint8_t max, uint8_t adder) {
  * @return True if should skip a spark event.
  */
 bool RotationalIdle::shouldSkipSparkRotationalIdle() {
-	bool result = false;
+	uint32_t counter = sparkPatternCounter++;
+
 	auto cutMode = engineConfiguration->rotationalIdleController.cut_mode;
 
 	if (cutMode == RotationalCutMode::Fuel) {
@@ -61,18 +75,46 @@ bool RotationalIdle::shouldSkipSparkRotationalIdle() {
 	}
 
 	if (!shouldEngageRotationalIdle()) {
-		rotationalIdleEngaged = false;
 		return false;
 	}
 
-	rotationalIdleEngaged = true;
-
+	bool result = false;
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->rotationalIdleController.accumulators); i++){
 		const auto& accConfig = engineConfiguration->rotationalIdleController.accumulators[i];
 
-		uint32_t counter = engine->engineState.globalSparkCounter + accConfig.acc_offset;
-		result |= calculateSkip(counter, accConfig.acc_max, accConfig.acc_adder);
+		result |= calculateSkip(counter + accConfig.acc_offset, accConfig.acc_max, accConfig.acc_adder);
+	}
+
+	return result;
+}
+
+/**
+ * Determines whether to skip fuel injection based on rotational idle cut configuration.
+ * Uses the same accumulator pattern as spark skip, but driven by an independent fuel event counter.
+ * The fuel counter always increments on every injection event to keep the pattern consistent.
+ *
+ * @return True if should skip fuel injection for this event.
+ */
+bool RotationalIdle::shouldSkipFuelRotationalIdle() {
+	uint32_t counter = fuelPatternCounter++;
+
+	auto cutMode = engineConfiguration->rotationalIdleController.cut_mode;
+
+	if (cutMode == RotationalCutMode::Spark) {
+		return false;
+	}
+
+	if (!shouldEngageRotationalIdle()) {
+		return false;
+	}
+
+	bool result = false;
+
+	for (size_t i = 0; i < efi::size(engineConfiguration->rotationalIdleController.accumulators); i++) {
+		const auto& accConfig = engineConfiguration->rotationalIdleController.accumulators[i];
+
+		result |= calculateSkip(counter + accConfig.acc_offset, accConfig.acc_max, accConfig.acc_adder);
 	}
 
 	return result;

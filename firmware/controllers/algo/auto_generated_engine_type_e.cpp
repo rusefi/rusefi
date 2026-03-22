@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Fri Jul 04 05:12:55 UTC 2025
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sat Mar 14 11:16:40 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -19,8 +19,6 @@ case engine_type_e::DISCOVERY_PDM:
   return "DISCOVERY_PDM";
 case engine_type_e::DODGE_NEON_1995:
   return "DODGE_NEON_1995";
-case engine_type_e::DODGE_NEON_2003_CRANK:
-  return "DODGE_NEON_2003_CRANK";
 case engine_type_e::DODGE_RAM:
   return "DODGE_RAM";
 case engine_type_e::EEPROM_BENCH_ENGINE:
@@ -29,6 +27,8 @@ case engine_type_e::ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
 case engine_type_e::ET_BOSCH_QUICK_START:
   return "ET_BOSCH_QUICK_START";
+case engine_type_e::ET_DODGE_NEON_2003:
+  return "ET_DODGE_NEON_2003";
 case engine_type_e::ET_TEST_WITH_BOSCH_QUICK_START:
   return "ET_TEST_WITH_BOSCH_QUICK_START";
 case engine_type_e::FORD_ASPIRE_1996:
