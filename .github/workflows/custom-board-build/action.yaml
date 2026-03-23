@@ -205,11 +205,11 @@ runs:
         fi
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1.11.0
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.1
       with:
         release: '14.2.Rel1'
 
-    - uses: actions/setup-java@v4
+    - uses: actions/setup-java@v5
       with:
         distribution: 'zulu'
         java-version: '17'
@@ -430,35 +430,35 @@ runs:
 
     - name: Upload github action bin artifact
       if: ${{ contains(inputs.artifacts, 'bin') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi.bin
         path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.bin
 
     - name: Upload github action srec artifact
       if: ${{ contains(inputs.artifacts, 'srec') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi_update.srec
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi.srec
 
     - name: Upload github action hex artifact
       if: ${{ contains(inputs.artifacts, 'hex') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi.hex
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.hex
 
     - name: Upload github action list artifact
       if: ${{ contains(inputs.artifacts, 'list') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi.list
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.list
 
     - name: Upload github action map artifact
       if: ${{ contains(inputs.artifacts, 'map') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi.map
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.map
@@ -474,35 +474,35 @@ runs:
 
     - name: Upload github action text artifact
       if: ${{ contains(inputs.artifacts, 'elf') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi.txt
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.txt
 
     - name: Upload github action elf artifact
       if: ${{ contains(inputs.artifacts, 'elf') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: rusefi.elf
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.elf
 
     - name: Upload github action bootloader bin artifact
       if: ${{ contains(inputs.artifacts, 'bootloader') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: openblt_${{env.PROJECT_BOARD}}.bin
         path: ${{inputs.rusefi_dir}}/firmware/bootloader/blbuild/openblt_${{env.PROJECT_BOARD}}.bin
 
     - name: Upload github action bundle artifact
       if: ${{ contains(inputs.artifacts, 'bundle') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_${{env.current_date}}.zip.zip
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}.zip
 
     - name: Upload github action bundle autoupdate artifact
       if: ${{ contains(inputs.artifacts, 'autoupdate') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate_${{env.current_date}}.zip.zip
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate.zip
