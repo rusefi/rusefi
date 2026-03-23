@@ -145,6 +145,7 @@ public class ConnectionAndMeta {
         URL url = new URL(baseUrl + zipFileName);
         System.out.println("Connecting to " + url);
         httpConnection = (HttpsURLConnection) url.openConnection();
+        httpConnection.setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate");
         httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
         completeFileSize = httpConnection.getContentLength();
         lastModified = httpConnection.getLastModified();
