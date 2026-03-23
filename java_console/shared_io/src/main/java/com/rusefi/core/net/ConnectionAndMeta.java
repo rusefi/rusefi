@@ -154,6 +154,7 @@ public class ConnectionAndMeta {
         httpConnection = (HttpsURLConnection) url.openConnection();
         String mySecretUA = "RE-Internal-Sync";
         httpConnection.setRequestProperty("User-Agent", mySecretUA);
+        httpConnection.setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate");
         httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
         log.info("Request Headers: " + httpConnection.getRequestProperties());
         int responseCode = httpConnection.getResponseCode();
