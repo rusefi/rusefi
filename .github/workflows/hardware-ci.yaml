@@ -23,7 +23,7 @@ jobs:
             nucleo_f767
           #proteus F7 HW CI is not 100% reliable #6002          proteus_f7,
         #  proteus_f4
-        ]
+          ]
 
         include:
           - build-target: f407-discovery
@@ -122,14 +122,16 @@ jobs:
 #        echo "HARDWARE_CI_VBATT=${{matrix.vbatt_supply}}" >> $GITHUB_ENV
     - name: Set EXTRA env
       run: |
-        echo "Nothing"
+        if [ -f "/opt/actions-runner/rusefi-env" ]; then
+        	cat /opt/actions-runner/rusefi-env >> $GITHUB_ENV
+        fi
 
 # (cat .github/workflows/openocd_ci_f4_discovery.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
 # (cat .github/workflows/openocd_ci_proteus_f7.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
     - name: st-flash wipe & flash STM32
       run: |
-        st-flash --area=main erase
-        st-flash --format=binary --reset --connect-under-reset write firmware/deliver/rusefi.bin 0x08000000
+        st-flash $([ -n "$HARDWARE_CI_STLINK_SERIAL" ] && echo "--serial") $HARDWARE_CI_STLINK_SERIAL --area=main erase
+        st-flash $([ -n "$HARDWARE_CI_STLINK_SERIAL" ] && echo "--serial") $HARDWARE_CI_STLINK_SERIAL --format=binary --reset --connect-under-reset write firmware/deliver/rusefi.bin 0x08000000
 
     - name: Upload build bin artifact
       uses: actions/upload-artifact@v7

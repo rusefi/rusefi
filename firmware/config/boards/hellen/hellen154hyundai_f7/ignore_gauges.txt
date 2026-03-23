@@ -2,6 +2,7 @@
 *@Alternator PID
 
 *@GDI
+rawHighFuelPressureGauge
 
 vvtPositionB2*@VVT
 vvtTargets3Gauge@VVT
