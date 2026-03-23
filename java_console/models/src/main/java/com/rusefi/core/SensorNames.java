@@ -7,4 +7,5 @@ public interface SensorNames {
     String VEHICLESPEEDKPH = "VEHICLESPEEDKPH";
     String rawClt = "rawClt";
     String rawIat = "rawIat";
+    String COOLANT = "COOLANT";
 }
