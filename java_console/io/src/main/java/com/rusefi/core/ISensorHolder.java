@@ -3,10 +3,7 @@ package com.rusefi.core;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.ExpressionEvaluator;
-import com.opensr5.ini.DialogModel;
-import com.opensr5.ini.FrontPageModel;
 import com.opensr5.ini.GaugeModel;
-import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.TsStringFunction;
@@ -17,13 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.TreeMap;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
@@ -39,125 +33,48 @@ public interface ISensorHolder {
      * @param configImage optional configuration image for resolving config values in expressions
      */
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
-        Map<String, Double> outputChannelValues = new HashMap<>();
-        List<Map.Entry<String, GaugeModel>> expressionGauges = new ArrayList<>();
+        // Use case-insensitive map so that gauge channel names like "CLTValue" match
+        // output channel keys regardless of capitalisation differences.
+        Map<String, Double> outputChannelValues = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        // First pass: resolve direct output channel references
-        for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
-            String gaugeName = e.getKey();
-            String channel = e.getValue().getChannel();
-
-            // Try the channel name directly
-            Double value = tryReadOutputChannel(response, gaugeName, ini, channel);
+        // Pass 1: read every direct output channel defined in the ini.
+        // This single pass covers what was previously spread across gauge, indicator,
+        // gauge-label, and datalog-only channels.
+        for (String name : ini.getAllOutputChannels().keySet()) {
+            Double value = tryReadOutputChannel(response, name, ini, name);
             if (value != null) {
-                setValue(value, channel);
-                outputChannelValues.put(channel, value);
-                continue;
-            }
-
-            // For simple wrapped expressions like "{ intake }", try the inner variable
-            if (ExpressionEvaluator.looksLikeExpression(channel)) {
-                String simpleVar = ExpressionEvaluator.extractSimpleVariableName(channel);
-                if (simpleVar != null) {
-                    value = tryReadOutputChannel(response, gaugeName, ini, simpleVar);
-                    if (value != null) {
-                        setValue(value, simpleVar);
-                        outputChannelValues.put(simpleVar, value);
-                        continue;
-                    }
-                }
-                expressionGauges.add(e);
-            } else if (ini.getExpressionOutputChannel(channel) != null) {
-                expressionGauges.add(e);
-            } else {
-                log.warn("Member not found for " + e);
+                setValue(value, name);
+                outputChannelValues.put(name, value);
             }
         }
 
-        // Second pass: evaluate expression-based gauges
-        for (Map.Entry<String, GaugeModel> e : expressionGauges) {
-            String gaugeName = e.getKey();
+        // Pass 2: evaluate expression-based gauge channels (e.g. "{ coolant * 1.8 + 32 }").
+        // These are not in allOutputChannels, so they were not handled by pass 1.
+        for (Map.Entry<String, GaugeModel> e : ini.getGauges().entrySet()) {
             String channel = e.getValue().getChannel();
+            if (outputChannelValues.containsKey(channel))
+                continue;
 
             String expression = resolveExpression(ini, channel);
             if (expression == null) {
-                log.warn("No expression found for gauge " + gaugeName + ": " + channel);
+                log.warn("Member not found for gauge " + e.getKey() + ": " + channel);
                 continue;
             }
 
-            Map<String, Double> context = new HashMap<>(outputChannelValues);
+            Map<String, Double> context = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            context.putAll(outputChannelValues);
             resolveExpressionVariables(response, ini, configImage, expression, context, outputChannelValues);
 
             Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, context);
             if (result != null) {
                 setValue(result, channel);
+                outputChannelValues.put(channel, result);
             } else {
-                log.warn("Could not evaluate expression for gauge " + gaugeName + ": " + expression);
+                log.warn("Could not evaluate expression for gauge " + e.getKey() + ": " + expression);
             }
         }
 
-        // Third pass: read output channels referenced by any indicator (front-page or dialog
-        // indicatorPanels) that were not already covered by a gauge definition.
-        // Include label variables so bitStringValue() index args (e.g. fuelCutReason) are fetched.
-        Set<String> indicatorVars = new HashSet<>();
-        FrontPageModel frontPage = ini.getFrontPage();
-        if (frontPage != null) {
-            for (IndicatorModel indicator : frontPage.getIndicators()) {
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
-            }
-        }
-        for (DialogModel dialog : ini.getDialogs().values()) {
-            for (IndicatorModel indicator : dialog.getIndicators()) {
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
-                indicatorVars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
-            }
-        }
-        for (String varName : indicatorVars) {
-            if (!outputChannelValues.containsKey(varName)) {
-                Double value = tryReadOutputChannel(response, varName, ini, varName);
-                if (value != null) {
-                    setValue(value, varName);
-                    outputChannelValues.put(varName, value);
-                }
-            }
-        }
-
-        // Fourth pass: fetch output channels referenced by gauge label expressions
-        for (GaugeModel gauge : ini.getGauges().values()) {
-            Set<String> labelVars = new HashSet<>();
-            if (gauge.getTitleValue().isExpression())
-                labelVars.addAll(ExpressionEvaluator.extractVariables(gauge.getTitle()));
-            if (gauge.getUnitsValue().isExpression())
-                labelVars.addAll(ExpressionEvaluator.extractVariables(gauge.getUnits()));
-            for (String varName : labelVars) {
-                if (!outputChannelValues.containsKey(varName)) {
-                    Double value = tryReadOutputChannel(response, varName, ini, varName);
-                    if (value != null) {
-                        setValue(value, varName);
-                        outputChannelValues.put(varName, value);
-                    }
-                }
-            }
-        }
-
-        // Fifth pass: all remaining output channels not already read by the gauge/indicator passes.
-        // This covers channels like m_knockSpectrum* that are only listed in [DatalogManager]
-        // and have no gauge definition, so they would otherwise never reach SensorCentral.
-        for (Map.Entry<String, IniField> e : ini.getAllOutputChannels().entrySet()) {
-            String name = e.getKey();
-            if (!outputChannelValues.containsKey(name)) {
-                Double value = tryReadOutputChannel(response, name, ini, name);
-                if (value != null) {
-                    setValue(value, name);
-                    outputChannelValues.put(name, value);
-                }
-            }
-        }
-
-        // Sixth pass: resolve string-valued gauge labels (bitStringValue, stringValue)
+        // Pass 3: resolve string-valued gauge labels (bitStringValue, stringValue).
         onGaugeLabelsResolved(resolveGaugeLabels(ini, configImage, outputChannelValues));
     }
 
