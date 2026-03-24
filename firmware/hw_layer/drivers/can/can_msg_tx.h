@@ -25,6 +25,8 @@ extern fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #define CAN_TX_WITH_DEFAULT_BUS TRUE
 #endif
 
+#define DEFAULT_BUS_INDEX 0
+
 /**
  * Represent a message to be transmitted over CAN.
  *
@@ -39,9 +41,13 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, size_t bus
+	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc
 #if CAN_TX_WITH_DEFAULT_BUS
-	 = 0
+	= 8
+#endif
+	, size_t bus
+#if CAN_TX_WITH_DEFAULT_BUS
+	 = DEFAULT_BUS_INDEX
 #endif
 	 , bool isExtended = false);
 
