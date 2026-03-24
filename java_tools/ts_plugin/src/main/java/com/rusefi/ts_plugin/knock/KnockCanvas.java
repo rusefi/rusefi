@@ -476,7 +476,7 @@ public class KnockCanvas {
 
     }
 */
-    float[] getCurrentMouseMagnitudes() {
+    public float[] getCurrentMouseMagnitudes() {
         int spectrogramSpaceX = this.canvasXToSpectrogramSpace(this.mouse_x, true);
         return spectrogram[spectrogramSpaceX];
     }

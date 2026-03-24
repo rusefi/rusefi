@@ -135,6 +135,11 @@ public class ImmutableIniFileModel implements IniFileModel {
     }
 
     @Override
+    public Map<String, IniField> getAllOutputChannels() {
+        return allOutputChannels;
+    }
+
+    @Override
     public String getExpressionOutputChannel(String key) {
         return expressionOutputChannels.get(key);
     }
