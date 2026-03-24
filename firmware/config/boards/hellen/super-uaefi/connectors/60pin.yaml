@@ -52,8 +52,8 @@ pins:
 
   - pin: 9A
     function: CAM Sensor Exhaust
-    meta: MM100_IN_D3
-    class: event_inputs
+    id: [MM100_IN_D3, MM100_IN_D3]
+    class: [event_inputs, sent_inputs]
     ts_name: ___ HALL3
     type: hall
 
@@ -108,8 +108,8 @@ pins:
     function: Digital input signal
 
   - pin: 17A
-    meta: MM100_IN_D2
-    class: event_inputs
+    id: [MM100_IN_D2, MM100_IN_D2]
+    class: [event_inputs, sent_inputs]
     function: CAM Sensor Intake
     ts_name: ___ HALL2
     type: hall
