@@ -29,6 +29,8 @@ public interface IniFileModel {
 
     IniField getOutputChannel(String key) throws IniMemberNotFound;
 
+    Map<String, IniField> getAllOutputChannels();
+
     /**
      * Get an expression-based output channel by name.
      * These are calculated channels like: coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }

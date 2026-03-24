@@ -4,6 +4,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':ts_plugin')
     implementation project(':trigger-ui')
     implementation project(':autotest')
     implementation project(':luaformatter')

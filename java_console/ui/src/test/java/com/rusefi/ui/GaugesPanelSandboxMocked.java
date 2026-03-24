@@ -172,6 +172,7 @@ public class GaugesPanelSandboxMocked {
         @Override public IniField getIniField(Field f) { return null; }
         @Override public IniField getIniField(String k) { return null; }
         @Override public IniField getOutputChannel(String k) { return null; }
+        @Override public Map<String, IniField> getAllOutputChannels() { return Collections.emptyMap(); }
         @Override public String getExpressionOutputChannel(String k) { return null; }
         @Override public Map<String, String> getExpressionOutputChannels() { return Collections.emptyMap(); }
         @Override public Map<String, String> getProtocolMeta() { return Collections.emptyMap(); }

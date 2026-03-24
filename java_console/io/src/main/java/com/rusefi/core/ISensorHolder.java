@@ -143,7 +143,21 @@ public interface ISensorHolder {
             }
         }
 
-        // Fifth pass: resolve string-valued gauge labels (bitStringValue, stringValue)
+        // Fifth pass: all remaining output channels not already read by the gauge/indicator passes.
+        // This covers channels like m_knockSpectrum* that are only listed in [DatalogManager]
+        // and have no gauge definition, so they would otherwise never reach SensorCentral.
+        for (Map.Entry<String, IniField> e : ini.getAllOutputChannels().entrySet()) {
+            String name = e.getKey();
+            if (!outputChannelValues.containsKey(name)) {
+                Double value = tryReadOutputChannel(response, name, ini, name);
+                if (value != null) {
+                    setValue(value, name);
+                    outputChannelValues.put(name, value);
+                }
+            }
+        }
+
+        // Sixth pass: resolve string-valued gauge labels (bitStringValue, stringValue)
         onGaugeLabelsResolved(resolveGaugeLabels(ini, configImage, outputChannelValues));
     }
 
