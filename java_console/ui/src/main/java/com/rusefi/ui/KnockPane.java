@@ -34,7 +34,8 @@ public class KnockPane {
     private static final int COMPRESSED_SPECTRUM_PROTOCOL_SIZE = 16;
     private static final int MAG_WIDTH = 760;
     private static final int MAG_HEIGHT = 200;
-    private static final int VALUE_COUNT = 64;
+    // Sum of indices 0..COMPRESSED_SPECTRUM_PROTOCOL_SIZE-1; used as a "all packets received" checksum.
+    private static final int SPECTRUM_INDEX_CHECKSUM = COMPRESSED_SPECTRUM_PROTOCOL_SIZE * (COMPRESSED_SPECTRUM_PROTOCOL_SIZE - 1) / 2;
 
     private enum CanvasType {
         COMBINED,
@@ -59,7 +60,7 @@ public class KnockPane {
     private int currentChannel = 0;
     private int currentCylinder = 0;
 
-    private final float[] values = new float[VALUE_COUNT];
+    private final float[] values = new float[COMPRESSED_SPECTRUM_PROTOCOL_SIZE * 4];
 
     private int cylindersCount = 0;
 
@@ -77,36 +78,33 @@ public class KnockPane {
         JComponent buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         buttons.add(statusLabel);
         buttons.add(buttonStartStop);
-
-        JButton buttonAll = new JButton("All");
-        JButton buttonSensors = new JButton("Sensors");
-        JButton buttonCylinders = new JButton("Cylinders");
-        buttons.add(buttonAll);
-        buttons.add(buttonSensors);
-        buttons.add(buttonCylinders);
-
-        buttonAll.addActionListener(e -> {
-            canvasType = CanvasType.COMBINED;
-            createCanvas();
-            toggle();
-        });
-        buttonSensors.addActionListener(e -> {
-            canvasType = CanvasType.CT_SENSORS;
-            createCanvas();
-            toggle();
-        });
-        buttonCylinders.addActionListener(e -> {
-            canvasType = CanvasType.CT_CYLINDERS;
-            createCanvas();
-            toggle();
-        });
-
         content.add(buttons, BorderLayout.NORTH);
 
         JScrollPane canvasScroll = new JScrollPane(canvasesPanel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, canvasScroll, magnitudes.getComponent());
+
+        // Each tab owns a wrapper; the canvas scroll is re-parented to the active tab on switch.
+        JPanel allPanel      = new JPanel(new BorderLayout());
+        JPanel sensorsPanel  = new JPanel(new BorderLayout());
+        JPanel cylPanel      = new JPanel(new BorderLayout());
+        JPanel[] tabPanels   = {allPanel, sensorsPanel, cylPanel};
+        CanvasType[] tabTypes = {CanvasType.COMBINED, CanvasType.CT_SENSORS, CanvasType.CT_CYLINDERS};
+        allPanel.add(canvasScroll, BorderLayout.CENTER); // default tab = All
+
+        JTabbedPane viewTabs = new JTabbedPane();
+        viewTabs.addTab("All",      allPanel);
+        viewTabs.addTab("Sensors",  sensorsPanel);
+        viewTabs.addTab("Cylinders", cylPanel);
+        viewTabs.addChangeListener(e -> {
+            int idx = viewTabs.getSelectedIndex();
+            for (JPanel p : tabPanels) p.remove(canvasScroll);
+            tabPanels[idx].add(canvasScroll, BorderLayout.CENTER);
+            tabPanels[idx].revalidate();
+            switchCanvasType(tabTypes[idx]);
+        });
+
+        JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT, viewTabs, magnitudes.getComponent());
         split.setResizeWeight(0.7);
         split.setDividerSize(4);
         content.add(split, BorderLayout.CENTER);
@@ -219,10 +217,6 @@ public class KnockPane {
             currentCylinder = (int) (packed & 0xFF);
         });
 
-        int checksum = 0;
-        for (int i = 0; i < COMPRESSED_SPECTRUM_PROTOCOL_SIZE; ++i) checksum += i;
-        final int finalChecksum = checksum;
-
         for (int i = 0; i < COMPRESSED_SPECTRUM_PROTOCOL_SIZE; ++i) {
             final int idx = i;
             sc.addListener("m_knockSpectrum" + (i + 1), v -> {
@@ -236,7 +230,7 @@ public class KnockPane {
                 values[idx * 4 + 2] = (raw >>> 8)  & 0xFF;
                 values[idx * 4 + 3] =  raw          & 0xFF;
                 line_sum_index[0] += idx;
-                if (line_sum_index[0] >= finalChecksum) {
+                if (line_sum_index[0] >= SPECTRUM_INDEX_CHECKSUM) {
                     flush();
                     line_sum_index[0] = 0;
                 }
@@ -296,12 +290,10 @@ public class KnockPane {
 
     private void addCanvas(int number, int divider, boolean isCombined) {
         KnockCanvas canvas = new KnockCanvas(number, divider, isCombined);
-        KnockMouseListener kml = new KnockMouseListener(canvas);
-        KnockMotionListener kmml = new KnockMotionListener(canvas, magnitudes);
         JComponent comp = canvas.getComponent();
         comp.setFocusTraversalKeysEnabled(false);
-        comp.addMouseMotionListener(kmml);
-        comp.addMouseListener(kml);
+        comp.addMouseMotionListener(new KnockMotionListener(canvas, magnitudes));
+        comp.addMouseListener(new MouseAdapter() {});
         comp.setFocusable(true);
         comp.setDoubleBuffered(true);
         comp.setPreferredSize(new Dimension(PREFERRED_WIDTH, PREF_HEIGHT));
@@ -327,7 +319,13 @@ public class KnockPane {
             canvases.forEach(KnockCanvas::resetPeak);
     }
 
-    // ---- Toggle helper (used by canvas-type buttons) -------------------------
+    // ---- Canvas-type switch (used by canvas-type buttons) --------------------
+
+    private void switchCanvasType(CanvasType type) {
+        canvasType = type;
+        createCanvas();
+        toggle();
+    }
 
     private void toggle() {
         toggleStartStop();
@@ -370,8 +368,4 @@ public class KnockPane {
         }
     }
 
-    private static class KnockMouseListener extends MouseAdapter {
-        KnockMouseListener(KnockCanvas canvas) {
-        }
-    }
 }
