@@ -35,14 +35,6 @@ public class DetachedSensor {
     private static final String WIDTH = "width";
     public static final int DEFAULT_WIDTH = 256;
 
-    private static final Collection<Sensor> MOCKABLE = Arrays.asList(
-            Sensor.CLTGauge,
-            Sensor.LAMBDAVALUE,
-            Sensor.IATGauge,
-            Sensor.MAFMEASURED,
-            Sensor.MAPGauge,
-            Sensor.TPSGauge);
-
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
     public static final String XPOS = "xpos";
     public static final String YPOS = "ypos";
@@ -87,7 +79,7 @@ public class DetachedSensor {
             }
         });
         create();
-        showMockControl();
+//        showMockControl();
     }
 
     private void create() {
@@ -108,9 +100,10 @@ public class DetachedSensor {
     public void onChange(String gaugeName) {
         this.gaugeName = gaugeName;
         frame.setTitle(gaugeName);
-        showMockControl();
+//        showMockControl();
     }
 
+/*
     public void showMockControl() {
         mockControlPanel.removeAll();
         Sensor sensor = Sensor.lookup(gaugeName, null);
@@ -127,7 +120,6 @@ public class DetachedSensor {
     private boolean isMockable(Sensor sensor) {
         return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
     }
-
     public static Component createMockValueSlider(CommandQueue commandQueue, final Sensor sensor) {
         SensorType sensorType = SensorTypeHelper.valueOfAnyCase(sensor.getName());
 
@@ -172,11 +164,13 @@ public class DetachedSensor {
              * User might be changing slider faster than commands are being send
              * We only add commandSender into the queue only if not already pending in order to only send one command with latest requested value and not a sequence of commands.
              */
+    /*
             commandQueue.addIfNotPresent(commandSender);
         });
 
         return slider;
     }
+        */
 
     public void saveConfig(Node child) {
         child.setProperty(NAME, gaugeName);

@@ -8,4 +8,8 @@ public interface SensorNames {
     String rawClt = "rawClt";
     String rawIat = "rawIat";
     String COOLANT = "COOLANT";
+    String VBatt = "VBatt";
+    String internalMcuTemperatureGauge = "INTERNALMCUTEMPERATURE";
+    String TPSGauge = "TPSValue";
+    String MAPGauge = "MAPValue";
 }
