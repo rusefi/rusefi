@@ -2164,7 +2164,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.03.23.proteus_f4.3332823173"
+#define TS_SIGNATURE "rusEFI master.2026.03.24.proteus_f4.3332823173"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
