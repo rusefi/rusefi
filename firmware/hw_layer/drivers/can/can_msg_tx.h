@@ -20,6 +20,11 @@
 extern fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
 
+// sometimes we want to prohibit default bus index altogether
+#ifndef CAN_TX_WITH_DEFAULT_BUS
+#define CAN_TX_WITH_DEFAULT_BUS TRUE
+#endif
+
 /**
  * Represent a message to be transmitted over CAN.
  *
@@ -34,7 +39,11 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, size_t bus = 0, bool isExtended = false);
+	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, size_t bus
+#if CAN_TX_WITH_DEFAULT_BUS
+	 = 0
+#endif
+	 , bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
