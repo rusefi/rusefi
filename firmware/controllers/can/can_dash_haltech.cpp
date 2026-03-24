@@ -17,7 +17,7 @@ void canDashboardHaltech(CanCycle cycle) {
 	if (cycle.isInterval(CI::_20ms)) {
 		/* 0x360 - 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x360, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x360, 8, DEFAULT_BUS_INDEX);
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm), 0);
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Map) * 10, 2);
 			/* TPS  y = x/10 */
@@ -29,7 +29,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x361 - 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x361, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x361, 8, DEFAULT_BUS_INDEX);
 			/* Fuel pressure */
 			msg.setShortValueMsb((Sensor::getOrZero(SensorType::FuelPressureLow) + STD_ATMOSPHERE) * 10, 0);
 			/* Oil pressure */
@@ -44,7 +44,7 @@ void canDashboardHaltech(CanCycle cycle) {
 #if EFI_ENGINE_CONTROL
 		/* 0x362 - 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x362, 6);
+			CanTxMessage msg(CanCategory::NBC, 0x362, 6, DEFAULT_BUS_INDEX);
 			/* Injection Stage 1 Duty Cycle - y = x/10 */
 			uint16_t rpm = Sensor::getOrZero(SensorType::Rpm);
 			msg.setShortValueMsb(getInjectorDutyCycle(rpm) * 10, 0);
@@ -60,7 +60,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3E5 = 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E5, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3E5, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//Ignition Switch
 			msg[1] = 0x00;				//Turbo Timer - Time Remaining
 			msg[2] = 0x00;				//Turbo Timer - Engine Time Remaining
@@ -73,7 +73,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3EA = 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3EA, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3EA, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Gearbox Line Pressure
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Injection Stage 3 Duty Cycle
@@ -86,7 +86,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3EB = 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3EB, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3EB, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-3 Race Timer
 			msg[1] = 0x00;
 			msg[2] = 0x00;
@@ -99,7 +99,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3EC = 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3EC, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3EC, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Torque Management Driveshaft RPM Target
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Torque Management Driveshaft RPM Target Error
@@ -112,14 +112,14 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3ED = 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3ED, 2);
+			CanTxMessage msg(CanCategory::NBC, 0x3ED, 2, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Torque Management Combined Ignition Correction
 			msg[1] = 0x00;
 		}
 
 		/* todo: 0x471 = 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x471, 6);
+			CanTxMessage msg(CanCategory::NBC, 0x471, 6, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Injector Pressure Differential
 			msg[1] = 0x00;
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::AcceleratorPedal) * 10, 2);
@@ -132,7 +132,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x363 - 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x363, 4);
+			CanTxMessage msg(CanCategory::NBC, 0x363, 4, DEFAULT_BUS_INDEX);
 			/* Wheel Slip */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -143,7 +143,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x368 - 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x368, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x368, 8, DEFAULT_BUS_INDEX);
 			/* Wideband Sensor 1 */
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Lambda1) * 1000, 0);
 			/* Wideband Sensor 2 */
@@ -159,7 +159,7 @@ void canDashboardHaltech(CanCycle cycle) {
 #if EFI_SHAFT_POSITION_INPUT
 		/* 0x369 - 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x369, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x369, 8, DEFAULT_BUS_INDEX);
 			/* Trigger System Error Count */
 			msg.setShortValueMsb(engine->triggerCentral.triggerState.totalTriggerErrorCounter, 0);
 			/* Trigger Counter ?? */
@@ -176,7 +176,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		/* 0x36A - 20Hz rate */
 		/* todo: one day we should split this */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x36A, 4);
+			CanTxMessage msg(CanCategory::NBC, 0x36A, 4, DEFAULT_BUS_INDEX);
 			/* Knock Level 1 */
 			int knock100 = engine->module<KnockController>()->m_knockLevel * 100;
 			msg.setShortValueMsb(knock100, 0);
@@ -186,7 +186,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x36B - 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x36B, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x36B, 8, DEFAULT_BUS_INDEX);
 			/* Break Pressure */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -203,7 +203,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x36C = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x36C, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x36C, 8, DEFAULT_BUS_INDEX);
 			/* Wheel Speed Front Left */
 			auto vehicleSpeed10 = Sensor::getOrZero(SensorType::VehicleSpeed) * 10;
 			msg.setShortValueMsb(vehicleSpeed10, 0);
@@ -217,7 +217,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x36D = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x36D, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x36D, 8, DEFAULT_BUS_INDEX);
 			/* Unused */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -233,7 +233,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x36E = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x36E, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x36E, 8, DEFAULT_BUS_INDEX);
 			/* Engine Limiting Active 0 = off/1=on*/
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -250,7 +250,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x36F = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x36F, 4);
+			CanTxMessage msg(CanCategory::NBC, 0x36F, 4, DEFAULT_BUS_INDEX);
 			/* Generic Output 1 Duty Cycle */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -261,7 +261,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x370 = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x370, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x370, 8, DEFAULT_BUS_INDEX);
 			/* Vehicle Speed */
 			auto vehicleSpeed10 = Sensor::getOrZero(SensorType::VehicleSpeed) * 10;
 			msg.setShortValueMsb(vehicleSpeed10, 0);
@@ -278,7 +278,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3E6 = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E6, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3E6, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 NOS Pressure Sensor 2
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 NOS Pressure Sensor 3
@@ -291,7 +291,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3E7 = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E7, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3E7, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Generic Sensor 1
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Generic Sensor 2
@@ -304,7 +304,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3E8 = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E8, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3E8, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Generic Sensor 5
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Generic Sensor 6
@@ -317,7 +317,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3E9 = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E9, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3E9, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Generic Sensor 9
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Generic Sensor 10
@@ -330,7 +330,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3EE = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3EE, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3EE, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Wideband Sensor 5
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Wideband Sensor 6
@@ -343,7 +343,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3EF = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3EF, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3EF, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Wideband Sensor 9
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Wideband Sensor 10
@@ -356,7 +356,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x470 = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x470, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x470, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Wideband Overall
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Wideband Bank 1
@@ -370,7 +370,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x472 = 20Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x472, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x472, 8, DEFAULT_BUS_INDEX);
 			msg[0] = 0x00;				//0-1 Cruise Control Target Speed
 			msg[1] = 0x00;
 			msg[2] = 0x00;				//2-3 Cruise Control Last Target Speed
@@ -386,7 +386,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x371 = 10Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x371, 4);
+			CanTxMessage msg(CanCategory::NBC, 0x371, 4, DEFAULT_BUS_INDEX);
 			/* Fuel Flow */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -397,7 +397,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x372 = 10Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x372, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x372, 8, DEFAULT_BUS_INDEX);
 			/* Battery Voltage */
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::BatteryVoltage) * 10, 0);
 			/* unused */
@@ -412,7 +412,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x373 = 10Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x373, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x373, 8, DEFAULT_BUS_INDEX);
 			/* EGT1 */
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT1) * 10, 0);
 			/* EGT2 */
@@ -425,7 +425,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x374 = 10Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x374, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x374, 8, DEFAULT_BUS_INDEX);
 			/* EGT5 */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -442,7 +442,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x375 = 10Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x375, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x375, 8, DEFAULT_BUS_INDEX);
 			/* EGT9 */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -459,7 +459,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x376 = 10Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x376, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x376, 8, DEFAULT_BUS_INDEX);
 			/* Ambient Air Temperature */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -478,7 +478,7 @@ void canDashboardHaltech(CanCycle cycle) {
 	if (cycle.isInterval(CI::_200ms)) {
 		/* 0x3E0 = 5Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E0, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3E0, 8, DEFAULT_BUS_INDEX);
 			/* Coolant temperature in K y = x/10 */
 			msg.setShortValueMsb((Sensor::getOrZero(SensorType::Clt) + C_K_OFFSET) * 10, 0);
 			/* Air Temperature */
@@ -492,7 +492,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x3E1 = 5Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E1, 6);
+			CanTxMessage msg(CanCategory::NBC, 0x3E1, 6, DEFAULT_BUS_INDEX);
 			/* Gearbox Oil Temperature */
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -505,14 +505,14 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* 0x3E2 = 5Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E2, 2);
+			CanTxMessage msg(CanCategory::NBC, 0x3E2, 2, DEFAULT_BUS_INDEX);
 			/* Fuel Level in Liters */
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::FuelLevel) * 10, 0);
 		}
 
 		/* 0x3E3 = 5Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x3E3, 8);
+			CanTxMessage msg(CanCategory::NBC, 0x3E3, 8, DEFAULT_BUS_INDEX);
 			/* Fuel Trim Short Term Bank 1*/
 			msg[0] = 0x00;
 			msg[1] = 0x00;
@@ -529,7 +529,7 @@ void canDashboardHaltech(CanCycle cycle) {
 
 		/* todo: 0x3E4 = 5Hz rate */
 		{
-    			CanTxMessage msg(CanCategory::NBC, 0x3E4, 8);
+    			CanTxMessage msg(CanCategory::NBC, 0x3E4, 8, DEFAULT_BUS_INDEX);
     			msg[0] = 0x00; //unused
     			if (engine->engineState.brakePedalState) {
     				msg.setBit(1, 2); // Brake active
