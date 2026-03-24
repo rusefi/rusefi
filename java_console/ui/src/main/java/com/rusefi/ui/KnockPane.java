@@ -121,7 +121,7 @@ public class KnockPane {
         subscribe();
         createCanvas();
 
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> SwingUtilities.invokeLater(() -> {
             if (isConnected) {
                 initFromEcu();
             } else {
@@ -172,8 +172,8 @@ public class KnockPane {
         EnumIniField ef = (EnumIniField) field;
         int raw = image.getByteBuffer(ef).getInt();
         int ordinal = ConfigurationImage.getBitRange(raw, ef.getBitPosition(), ef.getBitSize0() + 1);
-        // ordinal 0 = "yes" (enabled), 1 = "no" (disabled)
-        return ordinal == 0;
+        // ordinal 0 = "no" (disabled), 1 = "yes" (enabled)
+        return ordinal == 1;
     }
 
     private void toggleStartStop() {
@@ -190,8 +190,8 @@ public class KnockPane {
         if (!(field instanceof EnumIniField)) return;
 
         ConfigurationImage modified = image.clone();
-        // ordinal 0 = "yes" (enabled), 1 = "no" (disabled)
-        modified.setBitValue((EnumIniField) field, newEnabled ? 0 : 1);
+        // ordinal 0 = "no" (disabled), 1 = "yes" (enabled)
+        modified.setBitValue((EnumIniField) field, newEnabled ? 1 : 0);
         uiContext.getLinkManager().submit(() -> bp.uploadChanges(modified));
     }
 
@@ -310,6 +310,15 @@ public class KnockPane {
         canvases.add(canvas);
     }
 
+    /** For sandbox/test use: bypass ECU init and start capturing immediately. */
+    public void simulateConnected(int cylinders) {
+        cylindersCount = cylinders;
+        statusLabel.setText("");
+        buttonStartStop.setEnabled(true);
+        setStartState(true);
+        createCanvas();
+    }
+
     public void setStartState(boolean enabled) {
         started = enabled;
         buttonStartStop.setText(started ? "Stop" : "Start");
@@ -333,7 +342,7 @@ public class KnockPane {
 
     // ---- Inner listener classes ----------------------------------------------
 
-    private class KnockMotionListener implements MouseMotionListener {
+    private static class KnockMotionListener implements MouseMotionListener {
         private final KnockCanvas knockCanvas;
         private final KnockMagnitudeCanvas magnitudesCanvas;
 
@@ -349,7 +358,15 @@ public class KnockPane {
         @Override
         public void mouseMoved(MouseEvent e) {
             knockCanvas.setMousePosition(e.getX(), e.getY());
-            magnitudesCanvas.processValues(knockCanvas.getCurrentMouseMagnitudes());
+            float[] mags = knockCanvas.getCurrentMouseMagnitudes();
+            if (hasNonZeroValue(mags))
+                magnitudesCanvas.processValues(mags);
+        }
+
+        private boolean hasNonZeroValue(float[] values) {
+            for (float v : values)
+                if (v != 0f) return true;
+            return false;
         }
     }
 
