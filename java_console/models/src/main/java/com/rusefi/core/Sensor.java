@@ -31,21 +31,7 @@ public enum Sensor implements BinaryLogEntry {
 //    rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM/s"),
 //    speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
 
-    // Temperatures
-    internalMcuTemperatureGauge("INTERNALMCUTEMPERATURE", GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 1, 0, 5, "C"),
-    CLTGauge("COOLANT", GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
-    IATGauge("INTAKE", GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
-
-    // throttle, pedal
-    TPSGauge("TPSValue", GAUGE_NAME_TPS, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // throttle position sensor
-
-    // air flow/mass measurement
-    MAFMEASURED("MAFMeasured", GAUGE_NAME_MAF, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
     MAPGauge("MAPValue", GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
-
-    LAMBDAVALUE("LambdaValue", GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
-
-    VBatt("VBatt", GAUGE_NAME_VBAT, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 1.0 / PACK_MULT_VOLTAGE, 4, 18, "Volts"),
 
     // Errors
     totalTriggerErrorCounter("totalTriggerErrorCounter", GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 0, 5),

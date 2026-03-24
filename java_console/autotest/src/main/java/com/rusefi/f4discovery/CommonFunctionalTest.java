@@ -4,6 +4,7 @@ import com.rusefi.RusefiTestBase;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorNames;
 import com.rusefi.enums.SensorType;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
@@ -188,7 +189,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(200);
         ecu.changeRpm(250); // another approach to artificial delay
         ecu.changeRpm(200);
-        EcuTestHelper.assertSomewhatClose("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBatt));
+        EcuTestHelper.assertSomewhatClose("VBatt", 12, SensorCentral.getInstance().getValue(SensorNames.VBatt));
 
         chart = nextChart();
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
@@ -252,7 +253,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(200);
         String msg = "ProtegeLX cranking";
         chart = nextChart();
-        EcuTestHelper.assertSomewhatClose("", 12, SensorCentral.getInstance().getValue(Sensor.VBatt), 0.1);
+        EcuTestHelper.assertSomewhatClose("", 12, SensorCentral.getInstance().getValue(SensorNames.VBatt), 0.1);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_1);
@@ -327,7 +328,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(200);
 
         chart = nextChart();
-        EcuTestHelper.assertSomewhatClose(12, SensorCentral.getInstance().getValue(Sensor.VBatt));
+        EcuTestHelper.assertSomewhatClose(12, SensorCentral.getInstance().getValue(SensorNames.VBatt));
         assertWaveNotNull("aspire default cranking ", chart, EngineChart.SPARK_1);
 
         ecu.changeRpm(600);
@@ -407,7 +408,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(2400);
         ecu.changeRpm(2000);
         chart = nextChart();
-        EcuTestHelper.assertSomewhatClose("MAP", 69.12, SensorCentral.getInstance().getValue(Sensor.MAPGauge));
+        EcuTestHelper.assertSomewhatClose("MAP", 69.12, SensorCentral.getInstance().getValue(SensorNames.MAPGauge));
         //assertEquals(1, SensorCentral.getInstance().getValue(Sensor.));
 
         assertWaveNotNull(msg + " fuel SD #1", chart, EngineChart.INJECTOR_1);

@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 public class ProteusAnalogTest extends RusefiTestBase {
     @Test
     public void testVbatt() {
-        double vbatt = SensorCentral.getInstance().getValue(Sensor.VBatt);
+        double vbatt = SensorCentral.getInstance().getValue(SensorNames.VBatt);
         String expectedVbattString = System.getenv("HARDWARE_CI_VBATT");
         double expectedVbatt = expectedVbattString == null ? 12 : Double.parseDouble(expectedVbattString);
 
@@ -65,7 +65,7 @@ public class ProteusAnalogTest extends RusefiTestBase {
         // wait a sec for sensors to update
         sleepSeconds(5);
 
-        double actualTps = SensorCentral.getInstance().getValue(Sensor.TPSGauge);
+        double actualTps = SensorCentral.getInstance().getValue(SensorNames.TPSGauge);
 
         // Accept up to 2.5% error - there is an analog filter installed, it should be at least be close
         assertEquals("With idle of " + idle, expectedTps, actualTps, 2.5);

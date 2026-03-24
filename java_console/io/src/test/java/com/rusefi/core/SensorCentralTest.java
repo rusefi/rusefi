@@ -49,8 +49,8 @@ public class SensorCentralTest {
     void addListenerWithSensorEnumAndReceiveNotification() {
         AtomicReference<Double> receivedValue = new AtomicReference<>();
 
-        sensorCentral.addListener(Sensor.MAPGauge, receivedValue::set);
-        sensorCentral.setValue(101.3, Sensor.MAPGauge);
+        sensorCentral.addListener(SensorNames.MAPGauge, receivedValue::set);
+        sensorCentral.setValue(101.3, SensorNames.MAPGauge);
 
         assertEquals(101.3, receivedValue.get(), 0.001);
     }
@@ -130,8 +130,8 @@ public class SensorCentralTest {
 
     @Test
     void getValueSourceBySensorEnum() {
-        sensorCentral.setValue(14.4, Sensor.VBatt);
-        ValueSource source = sensorCentral.getValueSource(Sensor.VBatt);
+        sensorCentral.setValue(14.4, SensorNames.VBatt);
+        ValueSource source = sensorCentral.getValueSource(SensorNames.VBatt);
 
         assertEquals(14.4, source.getValue(), 0.001);
     }
