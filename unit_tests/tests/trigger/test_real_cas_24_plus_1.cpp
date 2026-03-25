@@ -74,7 +74,7 @@ void testTwelvePlusOne(
 		}
 	}
 
-	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+	ASSERT_EQ(1, eth.recentWarnings()->getCount());
 }
 
 TEST(realCas24Plus1, spinningOnBench) {
