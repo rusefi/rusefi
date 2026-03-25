@@ -99,14 +99,15 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::LambdaProtection);
 	}
 
-	if (noFiringUntilVvtSync()
-			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+  if (!engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+	  if (noFiringUntilVvtSync()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// examples:
 		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
 		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
-		allowFuel.clear(ClearReason::EnginePhase);
-		allowSpark.clear(ClearReason::EnginePhase);
+		  allowFuel.clear(ClearReason::EnginePhase);
+		  allowSpark.clear(ClearReason::EnginePhase);
+		}
 	}
 
 	// Force fuel limiting on the fault rev limit
