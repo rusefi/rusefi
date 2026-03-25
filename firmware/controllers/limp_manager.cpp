@@ -13,6 +13,7 @@ static bool noFiringUntilVvtSync() {
 	auto operationMode = getEngineRotationState()->getOperationMode();
 
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
+	  warningTsReport(ObdCode::CUSTOM_NEED_PHASE, "Phase sync required per Setting");
 		// in rare cases engines do not like random sequential mode
 		return true;
 	}
@@ -30,10 +31,14 @@ static bool noFiringUntilVvtSync() {
 	// Symmetrical crank modes require cam sync before firing
 	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
 	// Examples include Nissan MR/VQ, Miata NB, etc
-	return
+	bool result =
 		operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
+  if (result) {
+	  warningTsReport(ObdCode::CUSTOM_SYMMETRICAL_CRANK, "Your crank wheel requires cam sync before firing");
+	}
+	return result;
 }
 #endif // EFI_SHAFT_POSITION_INPUT
 
