@@ -5,6 +5,7 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
@@ -33,16 +34,19 @@ public class PinoutsRawPackager {
     private static final String BOARDS_ROOT = "firmware/config/boards";
     private static final String OUTPUT_DIR = "pinouts_raw";
     private static final String ZIP_NAME = "connectors.zip";
+    private static final String DEFAULT_REMOTE_META_URL = "https://rusefi.com/docs/pinouts_raw/boards_meta.yaml";
 
     public static void main(String[] args) throws Exception {
         String zipName = ZIP_NAME;
         String boardsRoot = BOARDS_ROOT;
         String outputDir = OUTPUT_DIR;
+        String remoteMetaUrl = DEFAULT_REMOTE_META_URL;
         for (int i = 0; i < args.length - 1; i++) {
             switch (args[i]) {
-                case "--zip-name":   zipName    = args[i + 1]; break;
-                case "--boards-root": boardsRoot = args[i + 1]; break;
-                case "--output-dir": outputDir  = args[i + 1]; break;
+                case "--zip-name":        zipName      = args[i + 1]; break;
+                case "--boards-root":     boardsRoot   = args[i + 1]; break;
+                case "--output-dir":      outputDir    = args[i + 1]; break;
+                case "--remote-meta-url": remoteMetaUrl = args[i + 1]; break;
             }
         }
 
@@ -54,7 +58,7 @@ public class PinoutsRawPackager {
         System.out.println("Found " + images.size() + " connector images");
         System.out.println("Found " + metaEnvs.size() + " meta-info env files");
 
-        prepareOutput(yamls, images, metaEnvs, zipName, outputDir);
+        prepareOutput(yamls, images, metaEnvs, zipName, outputDir, remoteMetaUrl);
     }
 
     private static List<Path> findConnectorYamls(String boardsRoot) throws IOException {
@@ -188,7 +192,7 @@ public class PinoutsRawPackager {
     }
 
     @SuppressWarnings("unchecked")
-    private static void prepareOutput(List<Path> yamls, List<Path> images, List<Path> metaEnvs, String zipName, String outputDir) throws Exception {
+    private static void prepareOutput(List<Path> yamls, List<Path> images, List<Path> metaEnvs, String zipName, String outputDir, String remoteMetaUrl) throws Exception {
         Path outDir = Paths.get(outputDir);
         Files.createDirectories(outDir);
 
@@ -207,10 +211,12 @@ public class PinoutsRawPackager {
 
         Path metaPath = outDir.resolve("boards_meta.yaml");
 
-        // Load existing yaml if present so we can merge (other repos may have written their boards)
+        // Load existing yaml so we can merge (other repos may have written their boards).
+        // Prefer a local file if present; otherwise try to download from the remote server.
         Map<String, Object> boardsMeta = new LinkedHashMap<>();
         Map<String, Object> existingData = new TreeMap<>();
         if (Files.exists(metaPath)) {
+            System.out.println("Loading existing local " + metaPath);
             try (Reader r = Files.newBufferedReader(metaPath)) {
                 Map<String, Object> loaded = yaml.load(r);
                 if (loaded != null) {
@@ -220,6 +226,25 @@ public class PinoutsRawPackager {
                         existingData.putAll((Map<String, Object>) d);
                     }
                 }
+            }
+        } else if (remoteMetaUrl != null && !remoteMetaUrl.isEmpty()) {
+            System.out.println("No local boards_meta.yaml found; fetching remote: " + remoteMetaUrl);
+            try {
+                URL url = new URL(remoteMetaUrl);
+                try (InputStream is = url.openStream();
+                     Reader r = new InputStreamReader(is)) {
+                    Map<String, Object> loaded = yaml.load(r);
+                    if (loaded != null) {
+                        boardsMeta.putAll(loaded);
+                        Object d = boardsMeta.get("data");
+                        if (d instanceof Map) {
+                            existingData.putAll((Map<String, Object>) d);
+                        }
+                        System.out.println("Loaded " + existingData.size() + " existing board entries from remote");
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Could not fetch remote boards_meta.yaml (will create fresh): " + e.getMessage());
             }
         }
 
