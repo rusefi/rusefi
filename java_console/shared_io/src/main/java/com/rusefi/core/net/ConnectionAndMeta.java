@@ -149,7 +149,8 @@ public class ConnectionAndMeta {
     public ConnectionAndMeta invoke(String baseUrl) throws IOException {
         SSLContext ctx = acceptAnyCertificate();
 
-        URL url = new URL(baseUrl + zipFileName);
+        String randomSuffix = "?r=" + UUID.randomUUID();
+        URL url = new URL(baseUrl + zipFileName + randomSuffix);
         log.info("Connecting to " + url);
         httpConnection = (HttpsURLConnection) url.openConnection();
         String mySecretUA = "RE-Internal-Sync";
