@@ -87,6 +87,12 @@ void AemXSeriesWideband::refreshState() {
 	if (getTimeNowNt() - sensor_timeout > m_lastUpdate) {
 		canSilent = true;
 		isValid = false;
+		// reset all gauges and indicator not to confuse users
+		heaterDuty = 0;
+		pumpDuty = 0;
+		tempC = 0;
+		nernstVoltage = 0;
+		stateCode = static_cast<uint8_t>(wbo::Status::CanSilent);
 		return;
 	}
 	canSilent = false;
