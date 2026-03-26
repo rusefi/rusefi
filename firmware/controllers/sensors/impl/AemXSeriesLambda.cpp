@@ -119,6 +119,7 @@ void AemXSeriesWideband::refreshState() {
 				static_cast<uint8_t>(wbo::Status::RunningClosedLoop) :
 				static_cast<uint8_t>(wbo::Status::Warmup);
 			isValid = m_afrIsValid;
+			faeDetected = m_faeDetected;
 		}
 		return;
 	} else {
@@ -176,10 +177,16 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 	float lambdaFloat = 0.0001f * lambdaInt;
 
+	// Bytes 2-3 - Oxygen in 0.001% units
+
+	// Byte 4 - "System volts" in 0.1 units
+
 	// bit 6 indicates sensor fault
 	m_isFault = frame.data8[7] & 0x40;
 	// bit 7 indicates valid
 	m_afrIsValid = frame.data8[6] & 0x80;
+	// bit 1 indicate FAE sensor - this is not always true
+	m_faeDetected = frame.data8[6] & 0x02;
 
 	if ((m_isFault) || (!m_afrIsValid)) {
 		invalidate();

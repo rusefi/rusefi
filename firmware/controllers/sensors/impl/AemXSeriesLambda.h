@@ -49,6 +49,7 @@ private:
 	bool m_afrIsValid;
 	// Used for AEM sensor only
 	bool m_isFault;
+	bool m_faeDetected;
 	// Last valid packed received, for wbo::Fault::CanSilent state
 	efitick_t m_lastUpdate = 0;
 };
