@@ -58,24 +58,42 @@ public class PinoutsRawPackager {
         System.out.println("Found " + images.size() + " connector images");
         System.out.println("Found " + metaEnvs.size() + " meta-info env files");
 
-        prepareOutput(yamls, images, metaEnvs, zipName, outputDir, remoteMetaUrl);
+        prepareOutput(yamls, images, metaEnvs, zipName, outputDir, remoteMetaUrl, boardsRoot);
+    }
+
+    private static SimpleFileVisitor<Path> skipSubmodules(Path root, SimpleFileVisitor<Path> delegate) {
+        return new SimpleFileVisitor<Path>() {
+            @Override
+            public @NotNull FileVisitResult preVisitDirectory(@NotNull Path dir, @NotNull BasicFileAttributes attrs) throws IOException {
+                if (!dir.toAbsolutePath().equals(root.toAbsolutePath()) && Files.exists(dir.resolve(".git"))) {
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public @NotNull FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) throws IOException {
+                return delegate.visitFile(file, attrs);
+            }
+        };
     }
 
     private static List<Path> findConnectorYamls(String boardsRoot) throws IOException {
         List<Path> result = new ArrayList<>();
-        Files.walkFileTree(Paths.get(boardsRoot), new SimpleFileVisitor<Path>() {
+        Path root = Paths.get(boardsRoot);
+        Files.walkFileTree(root, skipSubmodules(root, new SimpleFileVisitor<Path>() {
             @Override
             public @NotNull FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) {
                 String name = file.getFileName().toString();
                 if (name.endsWith(".yaml") && "connectors".equals(file.getParent().getFileName().toString())) {
                     String stem = name.substring(0, name.lastIndexOf('.'));
                     if (!stem.equalsIgnoreCase("iobox")) {
-                        result.add(file);
+                        result.add(file.normalize());
                     }
                 }
                 return FileVisitResult.CONTINUE;
             }
-        });
+        }));
         Collections.sort(result);
         return result;
     }
@@ -83,37 +101,39 @@ public class PinoutsRawPackager {
     private static List<Path> findConnectorImages(String boardsRoot) throws IOException {
         Set<String> exts = new HashSet<>(Arrays.asList(".png", ".jpg", ".jpeg", ".svg"));
         List<Path> result = new ArrayList<>();
-        Files.walkFileTree(Paths.get(boardsRoot), new SimpleFileVisitor<Path>() {
+        Path root = Paths.get(boardsRoot);
+        Files.walkFileTree(root, skipSubmodules(root, new SimpleFileVisitor<Path>() {
             @Override
             public @NotNull FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) {
                 String lowerName = file.getFileName().toString().toLowerCase();
                 if ("connectors".equals(file.getParent().getFileName().toString())) {
                     for (String ext : exts) {
                         if (lowerName.endsWith(ext)) {
-                            result.add(file);
+                            result.add(file.normalize());
                             break;
                         }
                     }
                 }
                 return FileVisitResult.CONTINUE;
             }
-        });
+        }));
         Collections.sort(result);
         return result;
     }
 
     private static List<Path> findMetaEnvs(String boardsRoot) throws IOException {
         List<Path> result = new ArrayList<>();
-        Files.walkFileTree(Paths.get(boardsRoot), new SimpleFileVisitor<Path>() {
+        Path root = Paths.get(boardsRoot);
+        Files.walkFileTree(root, skipSubmodules(root, new SimpleFileVisitor<Path>() {
             @Override
             public @NotNull FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) {
                 String name = file.getFileName().toString();
                 if (name.startsWith("meta-info") && name.endsWith(".env") && !name.endsWith("._disabled_env")) {
-                    result.add(file);
+                    result.add(file.normalize());
                 }
                 return FileVisitResult.CONTINUE;
             }
-        });
+        }));
         return result;
     }
 
@@ -129,11 +149,12 @@ public class PinoutsRawPackager {
     }
 
     private static Map<String, Map<String, Object>> buildData(
-            List<Path> yamls, List<Path> metaEnvs, String sha, String zipFile) throws IOException {
+            List<Path> yamls, List<Path> metaEnvs, String sha, String zipFile, Path boardsRoot) throws IOException {
         Map<Path, List<String>> boardYamls = new LinkedHashMap<>();
         for (Path yaml : yamls) {
             Path boardDir = yaml.getParent().getParent();
-            boardYamls.computeIfAbsent(boardDir, k -> new ArrayList<>()).add(yaml.toString().replace('\\', '/'));
+            boardYamls.computeIfAbsent(boardDir, k -> new ArrayList<>())
+                    .add(boardsRoot.relativize(yaml).toString().replace('\\', '/'));
         }
 
         Map<Path, Set<String>> boardNames = new LinkedHashMap<>();
@@ -166,12 +187,12 @@ public class PinoutsRawPackager {
         return data;
     }
 
-    private static void buildZip(List<Path> yamls, List<Path> images, Path zipPath) throws IOException {
+    private static void buildZip(List<Path> yamls, List<Path> images, Path zipPath, Path boardsRoot) throws IOException {
         try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(zipPath.toFile().toPath()))) {
             List<Path> all = new ArrayList<>(yamls);
             all.addAll(images);
             for (Path src : all) {
-                zos.putNextEntry(new ZipEntry(src.toString().replace('\\', '/')));
+                zos.putNextEntry(new ZipEntry(boardsRoot.relativize(src).toString().replace('\\', '/')));
                 Files.copy(src, zos);
                 zos.closeEntry();
             }
@@ -192,17 +213,18 @@ public class PinoutsRawPackager {
     }
 
     @SuppressWarnings("unchecked")
-    private static void prepareOutput(List<Path> yamls, List<Path> images, List<Path> metaEnvs, String zipName, String outputDir, String remoteMetaUrl) throws Exception {
+    private static void prepareOutput(List<Path> yamls, List<Path> images, List<Path> metaEnvs, String zipName, String outputDir, String remoteMetaUrl, String boardsRoot) throws Exception {
         Path outDir = Paths.get(outputDir);
         Files.createDirectories(outDir);
 
         Path zipPath = outDir.resolve(zipName);
-        buildZip(yamls, images, zipPath);
+        Path boardPath = Paths.get(boardsRoot);
+        buildZip(yamls, images, zipPath, boardPath.normalize());
 
         String sha = sha256File(zipPath);
         System.out.println("SHA256(" + zipName + ") = " + sha);
 
-        Map<String, Map<String, Object>> newEntries = buildData(yamls, metaEnvs, sha, zipName);
+        Map<String, Map<String, Object>> newEntries = buildData(yamls, metaEnvs, sha, zipName, boardPath.normalize());
 
         DumperOptions opts = new DumperOptions();
         opts.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
