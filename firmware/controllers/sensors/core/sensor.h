@@ -89,6 +89,26 @@ public:
 	}
 
 	/*
+	 * Get a reading from the specified sensor, or one of limit values depending on error code.
+	 * Returned value can be outside limits if it is valid
+	 */
+	static float getOrDefault(SensorType type, float valueLow, float valueDefault, float valueHigh) {
+		SensorResult res = Sensor::get(type);
+		if (res) {
+			return res.Value;
+		} else {
+			if (res.Code == UnexpectedCode::High) {
+				return valueHigh;
+			}
+			if (res.Code == UnexpectedCode::Low) {
+				return valueLow;
+			}
+			// in all other cases - return low
+			return valueDefault;
+		}
+	}
+
+	/*
 	 * Get a raw (unconverted) value from the sensor, if available.
 	 */
 	static float getRaw(SensorType type);
