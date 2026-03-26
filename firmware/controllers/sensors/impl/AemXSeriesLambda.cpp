@@ -225,7 +225,17 @@ bool AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 	m_afrIsValid = data->Valid & 0x01;
 
 	if (!m_afrIsValid) {
-		invalidate();
+		if (m_stateCode == static_cast<uint8_t>(wbo::Status::RunningClosedLoop)) {
+			if (nernstVoltage < 0.45) {
+				// Too rich
+				invalidate(UnexpectedCode::High);
+			} else {
+				// Too lean
+				invalidate(UnexpectedCode::Low);
+			}
+		} else {
+			invalidate();
+		}
 	} else {
 		setValidValue(lambda, nowNt);
 		refreshSmoothedLambda(lambda);
