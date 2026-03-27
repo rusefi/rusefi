@@ -246,8 +246,6 @@ static bool isTriggerErrorNow() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-extern bool consoleByteArrived;
-
 class CommunicationBlinkingTask : public PeriodicTimerController {
 
 	int getPeriodMs() override {
@@ -292,7 +290,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
-			} else if (consoleByteArrived) {
+			} else if (TunerstudioThread::isAnyConsoleActive()) {
 				offTimeMs = 100;
 				onTimeMs = 33;
 #if EFI_CONFIGURATION_STORAGE

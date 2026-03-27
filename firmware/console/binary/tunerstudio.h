@@ -88,6 +88,15 @@ public:
 
 	void ThreadTask() override;
 
+	static bool isAnyConsoleActive(void);
+
+private:
+	static int getInstanceCounter() {
+		static int instances = 0;
+		return instances++;
+	}
+	static inline uint32_t consoleActiveMask = 0;
+	static void onDataArrived(int instance, bool valid);
 };
 #endif
 
