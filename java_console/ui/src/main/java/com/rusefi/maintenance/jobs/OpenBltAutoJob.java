@@ -38,6 +38,10 @@ public class OpenBltAutoJob extends AsyncJobWithContext<SerialPortWithParentComp
                 } else {
                     callbacks.error();
                 }
+                // if trigger from console, restart the linkManager, even in case of error
+                if (linkManager != null) {
+                    linkManager.reconnect();
+                }
             },
             onJobFinished
         );
