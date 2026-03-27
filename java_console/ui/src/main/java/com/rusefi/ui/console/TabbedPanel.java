@@ -35,6 +35,9 @@ public class TabbedPanel {
             if (criticalError != null) {
                 text = criticalError;
                 g.setColor(Color.red);
+            } else if (Boolean.TRUE.equals(getClientProperty("isUpdating"))) {
+                text = "Updating";
+                g.setColor(Color.orange);
             } else {
                 switch (ConnectionStatusLogic.INSTANCE.getValue()) {
                     case NOT_CONNECTED:

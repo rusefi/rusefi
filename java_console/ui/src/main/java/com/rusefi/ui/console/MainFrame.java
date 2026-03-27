@@ -63,6 +63,7 @@ public class MainFrame {
 
     private void windowOpenedHandler() {
         setTitle();
+        tabbedPane.tabbedPane.addPropertyChangeListener("isUpdating", e -> SwingUtilities.invokeLater(this::setTitle));
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
             setTitle();
             // this would repaint status label
@@ -123,11 +124,12 @@ public class MainFrame {
     private void setTitle() {
         String consoleVersion = "Console " + Launcher.CONSOLE_VERSION;
         String frameTitle;
-        if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+        if (Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))) {
+            frameTitle = "UPDATING " + consoleVersion;
+        } else if (ConnectionStatusLogic.INSTANCE.isConnected()) {
             BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
             String signature = bp == null ? "not loaded" : bp.signature;
             frameTitle = consoleVersion + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature;
-            frame.getFrame().setTitle(frameTitle);
         } else {
             frameTitle = "DISCONNECTED " + consoleVersion;
         }
