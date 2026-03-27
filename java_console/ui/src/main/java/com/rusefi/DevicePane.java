@@ -14,7 +14,7 @@ import java.awt.*;
 public class DevicePane {
     private final JPanel content = new JPanel();
 
-    public DevicePane(UIContext uiContext, String port, SerialPortType serialPortType) {
+    public DevicePane(UIContext uiContext, String port, SerialPortType serialPortType, JTabbedPane tabbedPane) {
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         JCheckBox autoUpdateBundle = new JCheckBox("Auto-update bundle", AutoupdateProperty.get());
         autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));
@@ -53,13 +53,32 @@ public class DevicePane {
                 switchButton.setEnabled(false);
                 autoButton.setEnabled(false);
                 statusPanel.clear();
+                setNonDeviceTabsEnabled(tabbedPane, false);
+                if (tabbedPane != null) {
+                    tabbedPane.putClientProperty("isUpdating", Boolean.TRUE);
+                    tabbedPane.repaint();
+                }
                 OpenBltAutoJob job = new OpenBltAutoJob(new PortResult(port, serialPortType), content, ConnectivityContext.INSTANCE, uiContext.getLinkManager());
                 AsyncJobExecutor.INSTANCE.executeJob(job, statusPanel, () -> SwingUtilities.invokeLater(() -> {
                     switchButton.setEnabled(true);
                     autoButton.setEnabled(true);
+                    setNonDeviceTabsEnabled(tabbedPane, true);
+                    if (tabbedPane != null) {
+                        tabbedPane.putClientProperty("isUpdating", Boolean.FALSE);
+                        tabbedPane.repaint();
+                    }
                 }));
             });
             buttons.add(autoButton);
+        }
+    }
+
+    private static void setNonDeviceTabsEnabled(JTabbedPane tabbedPane, boolean enabled) {
+        if (tabbedPane == null) return;
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            if (!"Device".equals(tabbedPane.getTitleAt(i))) {
+                tabbedPane.setEnabledAt(i, enabled);
+            }
         }
     }
 
