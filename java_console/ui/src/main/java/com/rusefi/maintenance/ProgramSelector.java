@@ -2,9 +2,11 @@ package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.*;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.maintenance.jobs.*;
@@ -115,6 +117,14 @@ public class ProgramSelector {
     public static void rebootToOpenblt(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
         String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
         DfuFlasher.rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_OPENBLT);
+    }
+
+    /**
+     * Send reboot-to-OpenBLT via an already-open BinaryProtocol connection.
+     * Use this from ConsoleUI context where the port is held by LinkManager.
+     */
+    public static void rebootToOpenblt(JComponent parent, BinaryProtocol binaryProtocol, UpdateOperationCallbacks callbacks) {
+        BootloaderHelper.sendBootloaderRebootCommand(parent, binaryProtocol.signature, binaryProtocol.getStream(), callbacks, Integration.CMD_REBOOT_OPENBLT);
     }
 
     public static void flashOpenBltCan(JComponent parent, UpdateOperationCallbacks callbacks) {
