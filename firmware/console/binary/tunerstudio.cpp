@@ -744,6 +744,18 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	return 0;
 }
 
+bool TunerstudioThread::isAnyConsoleActive(void) {
+	return (consoleActiveMask != 0);
+}
+
+void TunerstudioThread::onDataArrived(int instance, bool valid) {
+	if (valid) {
+		consoleActiveMask |= (1 << instance);
+	} else {
+		consoleActiveMask &= ~(1 << instance);
+	}
+}
+
 void TunerstudioThread::ThreadTask() {
 	auto channel = setupChannel();
 
@@ -752,12 +764,15 @@ void TunerstudioThread::ThreadTask() {
 		return;
 	}
 
+	// get our instance...
+	int instance = getInstanceCounter();
+
 	// Until the end of time, process incoming messages.
 	while (true) {
 		if (tsProcessOne(channel) == 0) {
-			onDataArrived(true);
+			onDataArrived(instance, true);
 		} else {
-			onDataArrived(false);
+			onDataArrived(instance, false);
 		}
 	}
 }

@@ -44,12 +44,6 @@
 #include "rusEfiFunctionalTest.h"
 #endif /*EFI_SIMULATOR */
 
-bool consoleByteArrived = false;
-
-void onDataArrived(bool valid) {
-	consoleByteArrived = valid;
-}
-
 CommandHandler console_line_callback;
 
 void startConsole(CommandHandler console_line_callback_p) {
