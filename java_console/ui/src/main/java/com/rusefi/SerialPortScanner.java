@@ -234,6 +234,10 @@ public enum SerialPortScanner {
         portsScanner.stop();
     }
 
+    public void restartTimer() {
+        portsScanner.restart();
+    }
+
     public interface Listener {
         void onChange(AvailableHardware currentHardware);
     }
