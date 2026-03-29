@@ -60,19 +60,35 @@ public class ExpressionEvaluator {
     // Pattern to match variable names (identifiers) in expressions
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b");
     // Pre-compiled patterns reused across calls — never use String.matches/replaceAll with these literals
-    private static final Pattern STRIP_LEADING_BRACE  = Pattern.compile("^\\{\\s*");
-    private static final Pattern STRIP_TRAILING_BRACE = Pattern.compile("\\s*}$");
     private static final Pattern CONTAINS_FUNCTION_CALL = Pattern.compile(".*(stringValue|bitStringValue|getValue)\\s*\\(.*");
     private static final Pattern HAS_ARITHMETIC_OPERATORS = Pattern.compile(".*[+*/()].*");
     private static final Pattern IS_PLAIN_NUMBER       = Pattern.compile("^-?\\d+(\\.\\d+)?$");
     static final Pattern IS_SIMPLE_IDENTIFIER  = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*$");
 
-    /** Strip leading {@code {} and trailing {@code }} (with optional surrounding whitespace). */
+    /**
+     * Strip leading {@code {} and trailing {@code }} (with optional surrounding whitespace).
+     * Implemented as a manual char scan to avoid allocating Matcher objects on every ECU frame.
+     */
     static String stripBraces(String s) {
-        s = s.trim();
-        s = STRIP_LEADING_BRACE.matcher(s).replaceFirst("");
-        s = STRIP_TRAILING_BRACE.matcher(s).replaceFirst("");
-        return s.trim();
+        int start = 0, end = s.length();
+        // trim leading whitespace
+        while (start < end && s.charAt(start) <= ' ') start++;
+        // trim trailing whitespace
+        while (end > start && s.charAt(end - 1) <= ' ') end--;
+        // strip leading '{'
+        if (start < end && s.charAt(start) == '{') {
+            start++;
+            while (start < end && s.charAt(start) <= ' ') start++;
+        }
+        // strip trailing '}'
+        if (end > start && s.charAt(end - 1) == '}') {
+            end--;
+            while (end > start && s.charAt(end - 1) <= ' ') end--;
+        }
+        // final trim (handles e.g. "{ { inner } }" after outer braces removed)
+        while (start < end && s.charAt(start) <= ' ') start++;
+        while (end > start && s.charAt(end - 1) <= ' ') end--;
+        return (start == 0 && end == s.length()) ? s : s.substring(start, end);
     }
 
     /**

@@ -1,20 +1,22 @@
 package com.rusefi.core;
 
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class SensorsHolder {
-    // ini file uses "TPSValue" but Sensor enum uses "TPSVALUE"
+    // Keys are normalized to lower-case (Locale.US) so that "TPSValue", "tpsvalue", "TPSVALUE"
+    // all resolve to the same entry, with O(1) HashMap lookup instead of O(log N) TreeMap comparison.
     // Values stored as single-element double[] to avoid boxing on every update.
     // The array is allocated once per channel name and mutated in place thereafter.
-    private final Map<String, double[]> values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, double[]> values = new HashMap<>();
 
     public double getValue(Sensor sensor) {
         return getValue(sensor.getNativeName());
     }
 
     public double getValue(String sensorName) {
-        double[] cell = values.get(sensorName);
+        double[] cell = values.get(sensorName.toLowerCase(Locale.US));
         return cell == null ? Double.NaN : cell[0];
     }
 
@@ -24,9 +26,10 @@ public class SensorsHolder {
     }
 
     public boolean setValue(double value, String sensorName) {
-        double[] cell = values.get(sensorName);
+        String key = sensorName.toLowerCase(Locale.US);
+        double[] cell = values.get(key);
         if (cell == null) {
-            values.put(sensorName, new double[]{value});
+            values.put(key, new double[]{value});
             return true;
         }
         boolean isUpdated = cell[0] != value;
