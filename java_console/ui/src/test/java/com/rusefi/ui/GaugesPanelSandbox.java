@@ -59,7 +59,7 @@ public class GaugesPanelSandbox {
                 GaugeModel m = ini.findGaugeByChannel(channel);
                 resolvedGauges[i] = (m != null) ? m.getName() : fallback;
 
-                grid.panel.add(GaugesGridElement.create(uiContext, layoutNode.getChild("g" + i), resolvedGauges[i]));
+                grid.panel.add(GaugesGridElement.create(uiContext, layoutNode.getChild("g" + i), resolvedGauges[i]).getContent());
             }
 
             JFrame frame = new JFrame("RusEFI Sandbox - Dual View");
