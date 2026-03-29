@@ -19,6 +19,8 @@
 fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
 
+bool verboseCanTxError = false;
+
 #if EFI_CAN_SUPPORT
 /*static*/ CANDriver* CanTxMessage::s_devices[EFI_CAN_BUS_COUNT] = {
 	nullptr,
@@ -132,6 +134,18 @@ CanTxMessage::~CanTxMessage() {
 extern int txErrorCount[EFI_CAN_BUS_COUNT];
 		engine->outputChannels.canWriteNotOk++;
 		txErrorCount[busIndex]++;
+
+		if (verboseCanTxError) {
+		  efiPrintf("%s TX ERR CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
+				getCanCategory(category),
+				busIndex + 1,
+				(unsigned int)CAN_ID(m_frame),
+				m_frame.DLC,
+				m_frame.data8[0], m_frame.data8[1],
+				m_frame.data8[2], m_frame.data8[3],
+				m_frame.data8[4], m_frame.data8[5],
+				m_frame.data8[6], m_frame.data8[7]);
+		}
 	}
 #endif // EFI_TUNER_STUDIO
 #endif /* EFI_CAN_SUPPORT */
