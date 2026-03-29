@@ -178,7 +178,7 @@ public class TsStringFunction {
                                            @Nullable Map<String, Double> outputChannelValues) {
         // Try as a simple variable name first
         String simpleVar = expr.trim();
-        if (simpleVar.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+        if (ExpressionEvaluator.IS_SIMPLE_IDENTIFIER.matcher(simpleVar).matches()) {
             // Try output channel values first
             if (outputChannelValues != null && outputChannelValues.containsKey(simpleVar)) {
                 return outputChannelValues.get(simpleVar);
@@ -239,7 +239,7 @@ public class TsStringFunction {
     }
 
     private static String stripBraces(String s) {
-        return s.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        return ExpressionEvaluator.stripBraces(s);
     }
 
     private static String trimNulls(String s) {

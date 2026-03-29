@@ -32,10 +32,20 @@ public interface ISensorHolder {
      * @param ini the INI file model with gauge definitions
      * @param configImage optional configuration image for resolving config values in expressions
      */
+    /**
+     * Returns a map to accumulate output channel values during {@link #grabSensorValues}.
+     * The default creates a fresh map each call; override to return a cached instance
+     * (the map will be cleared at the start of each call).
+     */
+    default Map<String, Double> getOutputChannelMap() {
+        return new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    }
+
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
         // Use case-insensitive map so that gauge channel names like "CLTValue" match
         // output channel keys regardless of capitalisation differences.
-        Map<String, Double> outputChannelValues = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        Map<String, Double> outputChannelValues = getOutputChannelMap();
+        outputChannelValues.clear();
 
         // Pass 1: read every direct output channel defined in the ini.
         // This single pass covers what was previously spread across gauge, indicator,
@@ -61,11 +71,9 @@ public interface ISensorHolder {
                 continue;
             }
 
-            Map<String, Double> context = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-            context.putAll(outputChannelValues);
-            resolveExpressionVariables(response, ini, configImage, expression, context, outputChannelValues);
+            resolveExpressionVariables(response, ini, configImage, expression, outputChannelValues, outputChannelValues);
 
-            Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, context);
+            Double result = ExpressionEvaluator.tryEvaluateWithContext(expression, outputChannelValues);
             if (result != null) {
                 setValue(result, channel);
                 outputChannelValues.put(channel, result);
@@ -181,13 +189,26 @@ public interface ISensorHolder {
         return null;
     }
 
+    // Cached ByteBuffer per thread, re-wrapped whenever the response array changes.
+    // This avoids allocating a new HeapByteBuffer for every output channel read per ECU frame.
+    ThreadLocal<ByteBuffer[]> RESPONSE_BB_HOLDER = ThreadLocal.withInitial(() -> new ByteBuffer[1]);
+
     static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset) {
         int offset = fieldOffset + 1; // first byte is response code
         int size = 4;
         if (offset + size > response.length) {
             throw new IllegalArgumentException(message + String.format(" but %d+%d in %d", offset, size, response.length));
         }
-        return littleEndianWrap(response, offset, size);
+        // Re-use a single ByteBuffer per thread per response array; wrap the full array once.
+        ByteBuffer[] holder = RESPONSE_BB_HOLDER.get();
+        ByteBuffer bb = holder[0];
+        if (bb == null || bb.array() != response) {
+            bb = littleEndianWrap(response, 0, response.length);
+            holder[0] = bb;
+        }
+        bb.limit(offset + size);
+        bb.position(offset);
+        return bb;
     }
 
     double getValue(Sensor sensor);
