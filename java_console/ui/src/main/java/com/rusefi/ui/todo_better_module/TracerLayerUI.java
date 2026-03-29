@@ -2,6 +2,8 @@ package com.rusefi.ui.todo_better_module;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorNames;
+
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
 import java.awt.*;
@@ -26,7 +28,7 @@ public class TracerLayerUI extends LayerUI<JPanel> {
 
     // todo: sensors should be defined dynamically based on table/curve axis configuration
     private static final String xAxisName = Sensor.RPMGauge.getNativeName();
-    private static final String yAxisName = Sensor.MAPGauge.getNativeName();
+    private static final String yAxisName = SensorNames.MAPGauge;
 
     private final Double[] xBins;
     private final Double[] yBins;

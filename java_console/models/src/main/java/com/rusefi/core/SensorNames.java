@@ -12,4 +12,5 @@ public interface SensorNames {
     String internalMcuTemperatureGauge = "INTERNALMCUTEMPERATURE";
     String TPSGauge = "TPSValue";
     String MAPGauge = "MAPValue";
+    String RPMValue = "RPMValue";
 }

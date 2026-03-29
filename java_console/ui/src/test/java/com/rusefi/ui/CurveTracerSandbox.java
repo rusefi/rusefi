@@ -122,7 +122,7 @@ public class CurveTracerSandbox {
                 double time = System.currentTimeMillis() / 1000.0;
                 SensorCentral.getInstance().grabSensorValues(outputsBuffer, model, image);
                 double val = 12.0 + 3.0 * Math.sin(time);
-                SensorCentral.getInstance().setValue(val, Sensor.vvtPositionB1I);
+                SensorCentral.getInstance().setValue(val, Sensor.vvtPositionB1I.getNativeName());
             } catch (Exception ignored) {}
         }, 0, SIMULATION_DELAY_MS, TimeUnit.MILLISECONDS);
     }

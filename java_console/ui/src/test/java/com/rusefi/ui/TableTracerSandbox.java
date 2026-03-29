@@ -143,8 +143,8 @@ public class TableTracerSandbox {
                 SensorCentral.getInstance().grabSensorValues(outputsBuffer, model, image);
 
                  //Use the private sensors defined for simulation
-                SensorCentral.getInstance().setValue(4000 + 3500 * Math.sin(time), SIM_RPM_SENSOR);
-                SensorCentral.getInstance().setValue(120 + 80 * Math.cos(time), SIM_LOAD_SENSOR);
+                SensorCentral.getInstance().setValue(4000 + 3500 * Math.sin(time), SIM_RPM_SENSOR.getNativeName());
+                SensorCentral.getInstance().setValue(120 + 80 * Math.cos(time), SIM_LOAD_SENSOR.getNativeName());
             } catch (Exception ignored) {}
         }, 0, SIMULATION_DELAY_MS, TimeUnit.MILLISECONDS);
     }

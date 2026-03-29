@@ -2,6 +2,8 @@ package com.rusefi.ui.todo_better_module;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorNames;
+
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
 import javax.swing.table.TableModel;
@@ -14,8 +16,8 @@ public class TableTracerLayerUI extends LayerUI<JPanel> {
     private static final int DOT_SIZE = 12;
 
      //Private constants for sensor mapping
-    private static final Sensor RPM_SENSOR = Sensor.RPMGauge;
-    private static final Sensor LOAD_SENSOR = Sensor.MAPGauge;
+    private static final String RPM_SENSOR = SensorNames.RPMValue;
+    private static final String LOAD_SENSOR = SensorNames.MAPGauge;
 
     private JComponent owner;
     private double currentRpm = Double.NaN;

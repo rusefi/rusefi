@@ -33,7 +33,7 @@ public class CurveTracerLayerUI extends LayerUI<JPanel> {
             if (owner != null) owner.repaint();
         };
 
-        SensorCentral.getInstance().addListener(targetSensor, listener);
+        SensorCentral.getInstance().addListener(targetSensor.getNativeName(), listener);
     }
 
     public void setOwner(JComponent owner) {

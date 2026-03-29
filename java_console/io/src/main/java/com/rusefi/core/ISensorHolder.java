@@ -215,8 +215,6 @@ public interface ISensorHolder {
 
     double getValue(String sensorName);
 
-    boolean setValue(double value, Sensor sensor);
-
     boolean setValue(double value, String sensorName);
 
     /**

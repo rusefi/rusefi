@@ -106,8 +106,8 @@ public class TableTracerSandboxMocked {
             double mockLoad = 80 + 60 * Math.cos(time * 0.7);
 
             SensorCentral sc = SensorCentral.getInstance();
-            sc.setValue(mockRpm, Sensor.RPMGauge);
-            sc.setValue(mockLoad, Sensor.MAPGauge);
+            sc.setValue(mockRpm, Sensor.RPMGauge.getNativeName());
+            sc.setValue(mockLoad, Sensor.MAPGauge.getNativeName());
 
             // Notify UI listeners
             sc.grabSensorValues(new byte[0], stubModel, stubImage);

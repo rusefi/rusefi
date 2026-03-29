@@ -93,11 +93,6 @@ public class SensorCentral implements ISensorCentral {
     }
 
     @Override
-    public boolean setValue(double value, final Sensor sensor) {
-        return setValue(value, sensor.getNativeName());
-    }
-
-    @Override
     public boolean setValue(double value, String sensorName) {
         boolean isUpdated = sensorsHolder.setValue(value, sensorName);
         if (!isUpdated)
@@ -120,12 +115,6 @@ public class SensorCentral implements ISensorCentral {
 
     public void removeListener(ResponseListener listener) {
         listeners.remove(listener);
-    }
-
-    @Override
-    @Deprecated
-    public ListenerToken addListener(Sensor sensor, SensorListener listener) {
-        return addListener(sensor.getNativeName(), listener);
     }
 
     @Override
