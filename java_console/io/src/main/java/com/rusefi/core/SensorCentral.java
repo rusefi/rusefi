@@ -22,6 +22,8 @@ public class SensorCentral implements ISensorCentral {
     private static final SensorCentral INSTANCE = new SensorCentral();
 
     private final SensorsHolder sensorsHolder = new SensorsHolder();
+    // Reused every grabSensorValues call to avoid allocating a fresh TreeMap each ECU frame.
+    private final Map<String, Double> outputChannelCache = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     // ini uses "coolant" but Sensor enum uses "COOLANT"
     private final Map<String, List<SensorListener>> sensorListeners = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -34,6 +36,11 @@ public class SensorCentral implements ISensorCentral {
     }
 
     private SensorCentral() {
+    }
+
+    @Override
+    public Map<String, Double> getOutputChannelMap() {
+        return outputChannelCache;
     }
 
     @Override
