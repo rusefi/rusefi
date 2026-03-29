@@ -2164,7 +2164,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.03.28.mre-legacy_f4.3726529284"
+#define TS_SIGNATURE "rusEFI master.2026.03.29.mre-legacy_f4.3726529284"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
