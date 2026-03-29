@@ -12,6 +12,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import com.rusefi.io.serial.AbstractIoStream;
+import com.rusefi.ui.todo_better_module.CurveTracerLayerUI;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import javax.swing.*;
 import java.io.InputStream;

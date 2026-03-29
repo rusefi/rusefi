@@ -21,6 +21,7 @@ public interface ISensorCentral extends ISensorHolder {
         }
     }
 
+    @Deprecated // we are moving away from Sensor, everything should be defined dynamically
     SensorCentral.ListenerToken addListener(Sensor sensor, SensorCentral.SensorListener listener);
 
     SensorCentral.ListenerToken addListener(String sensorName, SensorCentral.SensorListener listener);

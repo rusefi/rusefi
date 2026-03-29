@@ -123,6 +123,7 @@ public class SensorCentral implements ISensorCentral {
     }
 
     @Override
+    @Deprecated
     public ListenerToken addListener(Sensor sensor, SensorListener listener) {
         return addListener(sensor.getNativeName(), listener);
     }

@@ -1,4 +1,4 @@
-package com.rusefi.ui.mocked;
+package com.rusefi.ui.todo_better_module;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -7,6 +7,8 @@ import javax.swing.plaf.LayerUI;
 import java.awt.*;
 
 /**
+ * todo: start using this code for real, not just in Sandbox!
+ *
  * Overlay layer that draws a real-time tracer dot on top of TuningTableView.
  * All visual constants and sensor logic are centralized for easy maintenance.
  */
@@ -22,21 +24,23 @@ public class TracerLayerUI extends LayerUI<JPanel> {
     private static final int GLOW_OFFSET = GLOW_SIZE / 2;
     private static final int CORE_OFFSET = CORE_SIZE / 2;
 
-    // --- Sensor Constants ---
-    private static final Sensor RPM_SENSOR = Sensor.RPMGauge;
-    private static final Sensor LOAD_SENSOR = Sensor.MAPGauge;
+    // todo: sensors should be defined dynamically based on table/curve axis configuration
+    private static final String xAxisName = Sensor.RPMGauge.getNativeName();
+    private static final String yAxisName = Sensor.MAPGauge.getNativeName();
 
     private final Double[] xBins;
     private final Double[] yBins;
 
     private JComponent owner;
-    private double currentRpm = Double.NaN;
-    private double currentLoad = Double.NaN;
+    private double currentXValue = Double.NaN;
+    private double currentYValue = Double.NaN;
 
     private final SensorCentral.SensorListener sensorListener = value -> {
-        currentRpm = SensorCentral.getInstance().getValue(RPM_SENSOR);
-        currentLoad = SensorCentral.getInstance().getValue(LOAD_SENSOR);
-        if (owner != null) owner.repaint();
+        currentXValue = SensorCentral.getInstance().getValue(xAxisName);
+        currentYValue = SensorCentral.getInstance().getValue(yAxisName);
+        if (owner != null) {
+            owner.repaint();
+        }
     };
 
     public TracerLayerUI(Double[] xBins, Double[] yBins) {
@@ -45,14 +49,15 @@ public class TracerLayerUI extends LayerUI<JPanel> {
 
         // Listen to live ECU data and trigger repaint
         SensorCentral sc = SensorCentral.getInstance();
-        sc.addListener(Sensor.RPMGauge, sensorListener);
-        sc.addListener(Sensor.MAPGauge, sensorListener);
+        sc.addListener(xAxisName, sensorListener);
+        sc.addListener(yAxisName, sensorListener);
     }
 
+    // todo: this is raising a big question of reliable lifecycle management pattern
     public void dispose() {
         SensorCentral sc = SensorCentral.getInstance();
-        sc.removeListener(Sensor.RPMGauge.getNativeName(), sensorListener);
-        sc.removeListener(Sensor.MAPGauge.getNativeName(), sensorListener);
+        sc.removeListener(xAxisName, sensorListener);
+        sc.removeListener(yAxisName, sensorListener);
         this.owner = null;
     }
 
@@ -69,7 +74,7 @@ public class TracerLayerUI extends LayerUI<JPanel> {
         super.paint(g, c);
 
         // 2. Abort if data is invalid or missing
-        if (Double.isNaN(currentRpm) || Double.isNaN(currentLoad)) return;
+        if (Double.isNaN(currentXValue) || Double.isNaN(currentYValue)) return;
 
         // 3. Find the JTable within the panel hierarchy
         JTable table = findTable(c);
@@ -80,8 +85,8 @@ public class TracerLayerUI extends LayerUI<JPanel> {
 
     private void drawTracer(Graphics g, JTable table, JComponent c) {
         // Calculate raw pixel coordinates relative to the table
-        double posX = getInterpolatedPixels(currentRpm, xBins, table, true);
-        double posY = getInterpolatedPixels(currentLoad, yBins, table, false);
+        double posX = getInterpolatedPixels(currentXValue, xBins, table, true);
+        double posY = getInterpolatedPixels(currentYValue, yBins, table, false);
 
         if (posX < 0 || posY < 0) return;
 

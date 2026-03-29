@@ -1,4 +1,4 @@
-package com.rusefi.ui;
+package com.rusefi.ui.todo_better_module;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.AxisModel;
@@ -6,6 +6,8 @@ import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.ui.UIContext;
+
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
 import java.awt.*;

@@ -13,6 +13,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.todo_better_module.TracerLayerUI;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 
