@@ -88,16 +88,18 @@ public class SensorCentral implements ISensorCentral {
     @Override
     public boolean setValue(double value, String sensorName) {
         boolean isUpdated = sensorsHolder.setValue(value, sensorName);
+        if (!isUpdated)
+            return false;
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
             listeners = sensorListeners.get(sensorName);
         }
 
         if (listeners == null)
-            return isUpdated;
+            return true;
         for (SensorListener listener : listeners)
             listener.onSensorUpdate(value);
-        return isUpdated;
+        return true;
     }
 
     public void addListener(ResponseListener listener) {
