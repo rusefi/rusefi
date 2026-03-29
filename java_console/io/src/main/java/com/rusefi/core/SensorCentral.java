@@ -104,6 +104,10 @@ public class SensorCentral implements ISensorCentral {
         listeners.add(listener);
     }
 
+    public void removeListener(ResponseListener listener) {
+        listeners.remove(listener);
+    }
+
     @Override
     public ListenerToken addListener(Sensor sensor, SensorListener listener) {
         return addListener(sensor.getNativeName(), listener);
