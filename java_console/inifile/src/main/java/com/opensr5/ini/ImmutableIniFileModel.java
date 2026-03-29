@@ -29,7 +29,7 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final FrontPageModel frontPage;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
-        TreeMap<String, V> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
         result.putAll(source);
         return Collections.unmodifiableMap(result);
     }

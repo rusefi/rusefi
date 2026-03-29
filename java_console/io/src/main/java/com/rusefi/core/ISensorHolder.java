@@ -6,6 +6,7 @@ import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniMemberNotFound;
+import com.opensr5.ini.LowercaseHashMap;
 import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
@@ -17,7 +18,6 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ByteBufferUtil.littleEndianWrap;
@@ -38,7 +38,7 @@ public interface ISensorHolder {
      * (the map will be cleared at the start of each call).
      */
     default Map<String, Double> getOutputChannelMap() {
-        return new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        return new LowercaseHashMap<>();
     }
 
     default void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
