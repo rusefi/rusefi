@@ -22,6 +22,8 @@ public class TabbedPanel {
      * Glass pane drawn above all content — always painted last by Swing, so child component
      * repaints (e.g. JProgressBar updates) can never cover it the way a paint() override can.
      * Mouse events pass through so the normal UI remains interactive.
+     * Visibility is toggled instead of trying to clear pixels, since AlphaComposite.Clear
+     * punches through the entire window buffer on most rendering pipelines.
      */
     private final JComponent statusGlassPane = new JComponent() {
         @Override
@@ -31,10 +33,7 @@ public class TabbedPanel {
 
         @Override
         protected void paintComponent(Graphics g) {
-            paintStatusText(g, getSize());
-        }
-
-        private void paintStatusText(Graphics g, Dimension d) {
+            Dimension d = getSize();
             Font f = g.getFont();
             g.setFont(new Font(f.getName(), f.getStyle(), f.getSize() * 4));
             String text;
@@ -78,18 +77,25 @@ public class TabbedPanel {
         if (rootPane == null)
             return;
         statusGlassPane.setOpaque(false);
+        statusGlassPane.setFocusable(false);
         rootPane.setGlassPane(statusGlassPane);
-        statusGlassPane.setVisible(true);
+        refreshOverlay();
+    }
+
+    private boolean hasOverlay() {
+        return criticalError != null
+            || Boolean.TRUE.equals(tabbedPane.getClientProperty("isUpdating"))
+            || ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED;
     }
 
     private void refreshOverlay() {
-        statusGlassPane.repaint();
+        statusGlassPane.setVisible(hasOverlay());
     }
 
     public TabbedPanel(UIContext uiContext) {
         tabbedPane.addHierarchyListener(e -> {
             if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) != 0 && tabbedPane.isShowing())
-                installGlassPane();
+                SwingUtilities.invokeLater(this::installGlassPane);
         });
 
         MessagesCentral.getInstance().addListener((clazz, message) -> {
