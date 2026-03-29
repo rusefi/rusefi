@@ -378,6 +378,13 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseCan = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseCan2")) {
 		engineConfiguration->verboseCan2 = isEnabled;
+
+#if EFI_PROD_CODE
+	} else if (strEqualCaseInsensitive(param, "verboseCanTxErr")) {
+extern bool verboseCanTxError;
+		verboseCanTxError = isEnabled;
+#endif // EFI_PROD_CODE
+
 #if (EFI_CAN_BUS_COUNT >= 3)
 	} else if (strEqualCaseInsensitive(param, "verboseCan3")) {
 		engineConfiguration->verboseCan3 = isEnabled;

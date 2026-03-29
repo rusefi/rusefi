@@ -29,6 +29,17 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final FrontPageModel frontPage;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
+        LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
+        result.putAll(source);
+        return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Case-insensitive lookup via TreeMap's comparator, but preserves original key case on
+     * iteration. Required for maps iterated by callers that use keys as field names
+     * (e.g. DefaultTuneMigrator), unlike copyWithCaseInsensitiveKeys which normalizes to lowercase.
+     */
+    private static <V> Map<String, V> copyWithCaseInsensitiveOrderedKeys(Map<String, V> source) {
         TreeMap<String, V> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         result.putAll(source);
         return Collections.unmodifiableMap(result);
@@ -59,8 +70,11 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
-        this.allIniFields = copyWithCaseInsensitiveKeys(allIniFields);
-        this.secondaryIniFields = copyWithCaseInsensitiveKeys(secondaryIniFields);
+        // allIniFields/secondaryIniFields are iterated with keys used as field names — must
+        // preserve original case on iteration, so use TreeMap(CASE_INSENSITIVE_ORDER) not
+        // LowercaseHashMap (which normalizes keys and breaks callers like DefaultTuneMigrator).
+        this.allIniFields = copyWithCaseInsensitiveOrderedKeys(allIniFields);
+        this.secondaryIniFields = copyWithCaseInsensitiveOrderedKeys(secondaryIniFields);
         this.allOutputChannels = copyWithCaseInsensitiveKeys(allOutputChannels);
         this.expressionOutputChannels = copyWithCaseInsensitiveKeys(expressionOutputChannels);
         this.protocolMeta = Collections.unmodifiableMap(new TreeMap<>(protocolMeta));

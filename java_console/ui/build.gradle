@@ -24,6 +24,7 @@ dependencies {
     implementation files('../lib/dfu/IntelHexParser.jar')
 */
     testFixturesApi testFixtures(project(':ecu_io'))
+    implementation global_libs.jaxb_runtime
 }
 
 shadowJar {

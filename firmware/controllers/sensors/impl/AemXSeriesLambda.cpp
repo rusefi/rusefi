@@ -87,6 +87,12 @@ void AemXSeriesWideband::refreshState() {
 	if (getTimeNowNt() - sensor_timeout > m_lastUpdate) {
 		canSilent = true;
 		isValid = false;
+		// reset all gauges and indicator not to confuse users
+		heaterDuty = 0;
+		pumpDuty = 0;
+		tempC = 0;
+		nernstVoltage = 0;
+		stateCode = static_cast<uint8_t>(wbo::Status::CanSilent);
 		return;
 	}
 	canSilent = false;
@@ -113,6 +119,7 @@ void AemXSeriesWideband::refreshState() {
 				static_cast<uint8_t>(wbo::Status::RunningClosedLoop) :
 				static_cast<uint8_t>(wbo::Status::Warmup);
 			isValid = m_afrIsValid;
+			faeDetected = m_faeDetected;
 		}
 		return;
 	} else {
@@ -170,10 +177,16 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 	float lambdaFloat = 0.0001f * lambdaInt;
 
+	// Bytes 2-3 - Oxygen in 0.001% units
+
+	// Byte 4 - "System volts" in 0.1 units
+
 	// bit 6 indicates sensor fault
 	m_isFault = frame.data8[7] & 0x40;
 	// bit 7 indicates valid
 	m_afrIsValid = frame.data8[6] & 0x80;
+	// bit 1 indicate FAE sensor - this is not always true
+	m_faeDetected = frame.data8[6] & 0x02;
 
 	if ((m_isFault) || (!m_afrIsValid)) {
 		invalidate();
@@ -212,7 +225,17 @@ bool AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 	m_afrIsValid = data->Valid & 0x01;
 
 	if (!m_afrIsValid) {
-		invalidate();
+		if (m_stateCode == static_cast<uint8_t>(wbo::Status::RunningClosedLoop)) {
+			if (nernstVoltage < 0.45) {
+				// Too rich
+				invalidate(UnexpectedCode::High);
+			} else {
+				// Too lean
+				invalidate(UnexpectedCode::Low);
+			}
+		} else {
+			invalidate();
+		}
 	} else {
 		setValidValue(lambda, nowNt);
 		refreshSmoothedLambda(lambda);

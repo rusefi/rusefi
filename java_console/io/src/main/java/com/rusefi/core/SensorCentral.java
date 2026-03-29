@@ -5,10 +5,13 @@ import com.opensr5.ini.IniFileModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.opensr5.ini.LowercaseHashMap;
+
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -22,9 +25,13 @@ public class SensorCentral implements ISensorCentral {
     private static final SensorCentral INSTANCE = new SensorCentral();
 
     private final SensorsHolder sensorsHolder = new SensorsHolder();
+    // Reused every grabSensorValues call to avoid allocating a fresh map each ECU frame.
+    // LowercaseHashMap gives case-insensitive semantics with O(1) lookup vs TreeMap's O(log N).
+    private final Map<String, Double> outputChannelCache = new LowercaseHashMap<>();
 
-    // ini uses "coolant" but Sensor enum uses "COOLANT"
-    private final Map<String, List<SensorListener>> sensorListeners = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    // Keys normalized to lower-case (Locale.US) for O(1) HashMap lookup.
+    // "coolant", "COOLANT", "Coolant" all resolve to the same listener list.
+    private final Map<String, List<SensorListener>> sensorListeners = new HashMap<>();
     private final List<ResponseListener> listeners = new CopyOnWriteArrayList<>();
     private volatile Map<String, ResolvedGaugeLabels> resolvedGaugeLabels = Collections.emptyMap();
     private byte[] response;
@@ -34,6 +41,11 @@ public class SensorCentral implements ISensorCentral {
     }
 
     private SensorCentral() {
+    }
+
+    @Override
+    public Map<String, Double> getOutputChannelMap() {
+        return outputChannelCache;
     }
 
     @Override
@@ -88,20 +100,26 @@ public class SensorCentral implements ISensorCentral {
     @Override
     public boolean setValue(double value, String sensorName) {
         boolean isUpdated = sensorsHolder.setValue(value, sensorName);
+        if (!isUpdated)
+            return false;
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensorName);
+            listeners = sensorListeners.get(sensorName.toLowerCase(Locale.US));
         }
 
         if (listeners == null)
-            return isUpdated;
+            return true;
         for (SensorListener listener : listeners)
             listener.onSensorUpdate(value);
-        return isUpdated;
+        return true;
     }
 
     public void addListener(ResponseListener listener) {
         listeners.add(listener);
+    }
+
+    public void removeListener(ResponseListener listener) {
+        listeners.remove(listener);
     }
 
     @Override
@@ -111,12 +129,13 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public ListenerToken addListener(String sensorName, SensorListener listener) {
+        String key = sensorName.toLowerCase(Locale.US);
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensorName);
+            listeners = sensorListeners.get(key);
             if (listeners == null)
                 listeners = new CopyOnWriteArrayList<>();
-            sensorListeners.put(sensorName, listeners);
+            sensorListeners.put(key, listeners);
         }
         listeners.add(listener);
 
@@ -127,7 +146,7 @@ public class SensorCentral implements ISensorCentral {
     public void removeListener(String sensorName, SensorListener listener) {
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensorName);
+            listeners = sensorListeners.get(sensorName.toLowerCase(Locale.US));
         }
         if (listeners != null)
             listeners.remove(listener);

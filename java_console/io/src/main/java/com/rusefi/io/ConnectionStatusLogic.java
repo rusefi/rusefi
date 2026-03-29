@@ -65,14 +65,12 @@ public class ConnectionStatusLogic {
         return value;
     }
 
-    /**
-     * todo: note that we do not have removeListener! in general we are not great in terms of memory leaks in
-     * case of dynamic UI elements like detachable gauges
-     *
-     * @see #setValue
-     */
     public void addListener(Listener listener) {
         listeners.add(listener);
+    }
+
+    public void removeListener(Listener listener) {
+        listeners.remove(listener);
     }
 
     public void addAndFireListener(Listener listener) {

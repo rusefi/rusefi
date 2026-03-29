@@ -8,12 +8,14 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,8 +38,58 @@ import java.util.regex.Pattern;
 public class ExpressionEvaluator {
     private static final Logging log = Logging.getLogging(ExpressionEvaluator.class);
 
+    private static final class CachedExpression {
+        final Expression expression;
+        final Set<String> variables;
+        CachedExpression(Expression expression, Set<String> variables) {
+            this.expression = expression;
+            this.variables = variables;
+        }
+    }
+
+    /** Per-thread cache of built exp4j Expression objects, keyed by expression string. */
+    private static final ThreadLocal<Map<String, CachedExpression>> EXPRESSION_CACHE =
+        ThreadLocal.withInitial(HashMap::new);
+
+    /**
+     * Global cache of variable sets per expression string.
+     * INI expressions are static after file load, so this never needs invalidation.
+     */
+    private static final ConcurrentHashMap<String, Set<String>> VARIABLE_SET_CACHE = new ConcurrentHashMap<>();
+
     // Pattern to match variable names (identifiers) in expressions
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b");
+    // Pre-compiled patterns reused across calls — never use String.matches/replaceAll with these literals
+    private static final Pattern CONTAINS_FUNCTION_CALL = Pattern.compile(".*(stringValue|bitStringValue|getValue)\\s*\\(.*");
+    private static final Pattern HAS_ARITHMETIC_OPERATORS = Pattern.compile(".*[+*/()].*");
+    private static final Pattern IS_PLAIN_NUMBER       = Pattern.compile("^-?\\d+(\\.\\d+)?$");
+    static final Pattern IS_SIMPLE_IDENTIFIER  = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*$");
+
+    /**
+     * Strip leading {@code {} and trailing {@code }} (with optional surrounding whitespace).
+     * Implemented as a manual char scan to avoid allocating Matcher objects on every ECU frame.
+     */
+    static String stripBraces(String s) {
+        int start = 0, end = s.length();
+        // trim leading whitespace
+        while (start < end && s.charAt(start) <= ' ') start++;
+        // trim trailing whitespace
+        while (end > start && s.charAt(end - 1) <= ' ') end--;
+        // strip leading '{'
+        if (start < end && s.charAt(start) == '{') {
+            start++;
+            while (start < end && s.charAt(start) <= ' ') start++;
+        }
+        // strip trailing '}'
+        if (end > start && s.charAt(end - 1) == '}') {
+            end--;
+            while (end > start && s.charAt(end - 1) <= ' ') end--;
+        }
+        // final trim (handles e.g. "{ { inner } }" after outer braces removed)
+        while (start < end && s.charAt(start) <= ' ') start++;
+        while (end > start && s.charAt(end - 1) <= ' ') end--;
+        return (start == 0 && end == s.length()) ? s : s.substring(start, end);
+    }
 
     /**
      * Represents a parsed ternary expression: condition ? trueExpr : falseExpr
@@ -68,7 +120,7 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        String cleaned = stripBraces(expression);
 
         // Check if it contains variable names or custom function calls - these can't be evaluated without context
         if (containsVariableOrFunction(cleaned)) {
@@ -93,12 +145,17 @@ public class ExpressionEvaluator {
      */
     private static boolean containsVariableOrFunction(String expression) {
         // Check for custom function calls like stringValue(), bitStringValue()
-        if (expression.matches(".*(stringValue|bitStringValue|getValue)\\s*\\(.*")) {
+        if (containsUnsupportedConstruct(expression)) {
             return true;
         }
 
         // Check for identifiers that look like variable names (not just operators and numbers)
-        return expression.matches(".*[a-zA-Z_].*");
+        // yes, this can be a regex, but too many calls on different threads == too much ram used evaluating this (100~mb!)
+        for (int i = 0; i < expression.length(); i++) {
+            char c = expression.charAt(i);
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') return true;
+        }
+        return false;
     }
 
     /**
@@ -118,53 +175,55 @@ public class ExpressionEvaluator {
         }
 
         // Has arithmetic operators or parentheses (and is not just a negative number)
-        if (s.matches(".*[+*/()].*")) {
+        if (HAS_ARITHMETIC_OPERATORS.matcher(s).matches()) {
             return true;
         }
 
         // Has minus not at the start or with multiple parts
-        return s.contains("-") && !s.matches("^-?\\d+(\\.\\d+)?$");
+        return s.contains("-") && !IS_PLAIN_NUMBER.matcher(s).matches();
     }
 
     /**
      * Extract variable names from an expression, including ternary expressions.
+     * Results are cached per expression string (INI expressions are static after file load).
      *
      * @param expression the expression to analyze (e.g., "{coolant * 1.8 + 32}" or "{useMetric ? coolant : coolant * 1.8}")
-     * @return a set of variable names found in the expression
+     * @return an unmodifiable set of variable names found in the expression
      */
     public static Set<String> extractVariables(String expression) {
-        Set<String> variables = new HashSet<>();
         if (expression == null || expression.trim().isEmpty()) {
-            return variables;
+            return Collections.emptySet();
         }
+        return VARIABLE_SET_CACHE.computeIfAbsent(expression, ExpressionEvaluator::computeExtractVariables);
+    }
 
+    private static Set<String> computeExtractVariables(String expression) {
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        String cleaned = stripBraces(expression);
 
         // For string function calls, extract variables from the expression argument
         if (containsUnsupportedConstruct(cleaned)) {
             String innerExpr = TsStringFunction.extractBitStringValueExpression(cleaned);
             if (innerExpr != null) {
-                return extractVariablesFromSimpleExpr(innerExpr);
+                return Collections.unmodifiableSet(extractVariablesFromSimpleExpr(innerExpr));
             }
-            return variables;
+            return Collections.emptySet();
         }
 
+        Set<String> variables = new HashSet<>();
         if (containsTernary(cleaned)) {
             TernaryExpression ternary = parseTernary(cleaned);
             if (ternary != null) {
-                // Extract from condition (remove ! prefix if present)
                 String condition = ternary.condition.startsWith("!") ?
                     ternary.condition.substring(1).trim() : ternary.condition;
                 variables.addAll(extractVariablesFromSimpleExpr(condition));
-                // Extract from both branches
                 variables.addAll(extractVariablesFromSimpleExpr(ternary.trueExpr));
                 variables.addAll(extractVariablesFromSimpleExpr(ternary.falseExpr));
-                return variables;
+                return Collections.unmodifiableSet(variables);
             }
         }
 
-        return extractVariablesFromSimpleExpr(cleaned);
+        return Collections.unmodifiableSet(extractVariablesFromSimpleExpr(cleaned));
     }
 
     /**
@@ -187,13 +246,13 @@ public class ExpressionEvaluator {
 
     /**
      * Check if the expression contains unsupported constructs like function calls.
+     * Uses plain string search to avoid Matcher allocation on every ECU frame.
      *
      * @param expression the cleaned expression (without braces)
      * @return true if it contains unsupported constructs
      */
     private static boolean containsUnsupportedConstruct(String expression) {
-        // Check for custom function calls like stringValue(), bitStringValue()
-        return expression.matches(".*(stringValue|bitStringValue|getValue)\\s*\\(.*");
+        return expression.contains("stringValue") || expression.contains("bitStringValue") || expression.contains("getValue");
     }
 
     /**
@@ -206,7 +265,7 @@ public class ExpressionEvaluator {
         if (expression == null) {
             return false;
         }
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        String cleaned = stripBraces(expression);
         return cleaned.contains("?") && cleaned.contains(":");
     }
 
@@ -224,7 +283,7 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        String cleaned = stripBraces(expression);
 
         // Find the ? operator
         int questionMark = findOperatorOutsideParens(cleaned, '?');
@@ -319,16 +378,30 @@ public class ExpressionEvaluator {
             return null;
         }
 
-        // Extract variable names from the expression
-        Set<String> requiredVars = new HashSet<>();
-        Matcher matcher = VARIABLE_PATTERN.matcher(expression);
-        while (matcher.find()) {
-            String varName = matcher.group(1);
-            requiredVars.add(varName);
+        // Look up or build the cached Expression AST for this expression string.
+        Map<String, CachedExpression> cache = EXPRESSION_CACHE.get();
+        CachedExpression cached = cache.get(expression);
+        if (cached == null) {
+            Set<String> requiredVars = new HashSet<>();
+            Matcher matcher = VARIABLE_PATTERN.matcher(expression);
+            while (matcher.find()) {
+                requiredVars.add(matcher.group(1));
+            }
+            try {
+                ExpressionBuilder builder = new ExpressionBuilder(expression);
+                if (!requiredVars.isEmpty()) {
+                    builder.variables(requiredVars);
+                }
+                cached = new CachedExpression(builder.build(), requiredVars);
+                cache.put(expression, cached);
+            } catch (Exception e) {
+                log.debug("Failed to build expression: " + expression + " - " + e.getMessage());
+                return null;
+            }
         }
 
         // Check if all required variables are provided
-        for (String var : requiredVars) {
+        for (String var : cached.variables) {
             if (!variables.containsKey(var)) {
                 log.debug("Missing variable '" + var + "' for expression: " + expression);
                 return null;
@@ -336,18 +409,11 @@ public class ExpressionEvaluator {
         }
 
         try {
-            ExpressionBuilder builder = new ExpressionBuilder(expression);
-            if (!requiredVars.isEmpty()) {
-                builder.variables(requiredVars);
+            // Set variable values and evaluate
+            for (String var : cached.variables) {
+                cached.expression.setVariable(var, variables.get(var));
             }
-            Expression e = builder.build();
-
-            // Set variable values
-            for (String var : requiredVars) {
-                e.setVariable(var, variables.get(var));
-            }
-
-            double result = e.evaluate();
+            double result = cached.expression.evaluate();
             return Double.isNaN(result) ? null : result;
         } catch (Exception e) {
             log.debug("Failed to evaluate expression: " + expression + " - " + e.getMessage());
@@ -393,7 +459,7 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        String cleaned = stripBraces(expression);
 
         if (cleaned.isEmpty()) {
             return null;
@@ -577,10 +643,10 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces and whitespace
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        String cleaned = stripBraces(expression);
 
         // Check if it's just a simple identifier (no operators)
-        if (cleaned.matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
+        if (IS_SIMPLE_IDENTIFIER.matcher(cleaned).matches()) {
             return cleaned;
         }
 
@@ -602,7 +668,7 @@ public class ExpressionEvaluator {
         }
 
         // Remove braces if present
-        String cleaned = expression.trim().replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
+        String cleaned = stripBraces(expression);
 
         // Check for unsupported constructs
         if (containsUnsupportedConstruct(cleaned)) {

@@ -263,13 +263,20 @@ public class TuningPane {
             label.setForeground(parseIndicatorColor(model.getOffFg()));
             panel.add(label);
 
+            // Pre-compute the variable set once — model fields are immutable after INI load.
+            Set<String> vars = new java.util.HashSet<>();
+            vars.addAll(ExpressionEvaluator.extractVariables(model.getExpression()));
+            vars.addAll(ExpressionEvaluator.extractVariables(model.getOnLabel()));
+            vars.addAll(ExpressionEvaluator.extractVariables(model.getOffLabel()));
+            // Reuse a single context map across frames to avoid per-frame HashMap allocation.
+            Map<String, Double> context = new HashMap<>(vars.size() * 2);
+            // Cache last-rendered state so we only dispatch invokeLater when something changed.
+            final String[] lastText = {null};
+            final Color[] lastBg = {null};
+            final Color[] lastFg = {null};
+
             SensorCentral.getInstance().addListener(() -> {
-                // Gather variables from the condition and both labels (e.g. bitStringValue index args).
-                Set<String> vars = new java.util.HashSet<>();
-                vars.addAll(ExpressionEvaluator.extractVariables(model.getExpression()));
-                vars.addAll(ExpressionEvaluator.extractVariables(model.getOnLabel()));
-                vars.addAll(ExpressionEvaluator.extractVariables(model.getOffLabel()));
-                Map<String, Double> context = new HashMap<>();
+                context.clear();
                 for (String var : vars) {
                     double val = SensorCentral.getInstance().getValue(var);
                     if (!Double.isNaN(val)) context.put(var, val);
@@ -286,8 +293,14 @@ public class TuningPane {
                     bg = parseIndicatorColor(model.getOffBg());
                     fg = parseIndicatorColor(model.getOffFg());
                 }
+                // Skip invokeLater if visual state hasn't changed — avoids per-frame InvocationEvent.
+                String display = text.isEmpty() ? " " : text;
+                if (display.equals(lastText[0]) && bg == lastBg[0] && fg == lastFg[0]) return;
+                lastText[0] = display;
+                lastBg[0] = bg;
+                lastFg[0] = fg;
                 SwingUtilities.invokeLater(() -> {
-                    label.setText(text.isEmpty() ? " " : text);
+                    label.setText(display);
                     label.setBackground(bg);
                     label.setForeground(fg);
                 });

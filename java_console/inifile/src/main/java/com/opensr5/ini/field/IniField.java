@@ -15,7 +15,7 @@ public abstract class IniField {
     public static double parseDouble(String s) {
         // todo: real implementation
         // TODO: replace with new ExpressionEvaluator
-        s = s.replaceAll("\\{", "").replaceAll("\\}", "").trim();
+        s = s.replace("{", "").replace("}", "").trim();
         // If this is a complex expression with ternary operator, try to extract the true branch
         // this is related to the lambdaTable using the true branch as default on the fuel tests
         // [tag:lambdaTable]
