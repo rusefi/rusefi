@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.UiVersion;
 import com.rusefi.core.io.BundleUtil;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.StatusWindow;
 
@@ -45,17 +44,17 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
 
     @Override
     public void done() {
-        setSuccessState();
+        SwingUtilities.invokeLater(this::setSuccessState);
     }
 
     @Override
     public void error() {
-        setErrorState();
+        SwingUtilities.invokeLater(this::setErrorState);
     }
 
     @Override
     public void warning() {
-        logTextArea.setBackground(Color.YELLOW);
+        SwingUtilities.invokeLater(() -> logTextArea.setBackground(Color.YELLOW));
     }
 
     public void setSuccessState() {
@@ -101,7 +100,6 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
                 stringForTestArea += "\r\n";
             }
             logTextArea.append(stringForTestArea);
-            AutoupdateUtil.trueLayoutAndRepaint(logTextArea);
         });
     }
 

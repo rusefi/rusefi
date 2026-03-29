@@ -277,4 +277,25 @@ public enum SerialPortScanner {
     public CountDownLatch suspend() {
         return portsScanner.suspend();
     }
+
+    /**
+     * Pre-populate the port cache with a known result so the scanner does not
+     * re-inspect an actively-used port on the next scan cycle.  Call this
+     * before resuming the scanner after a reconnect to prevent the scanner from
+     * opening the port and competing with an already-established BinaryProtocol
+     * connection on the same serial stream.
+     */
+    public void cachePort(PortResult port) {
+        portCache.put(port);
+    }
+
+    /**
+     * Remove a port from the cache so the scanner re-inspects it on the next
+     * scan cycle.  Call this before sending a reboot-to-OpenBLT command so that
+     * the scanner does not keep reporting the port as {@code EcuWithOpenblt}
+     * after the ECU has already transitioned to OpenBLT mode.
+     */
+    public void invalidatePort(String portName) {
+        portCache.invalidate(portName);
+    }
 }

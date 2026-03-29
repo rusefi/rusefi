@@ -9,8 +9,11 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.updater.OpenbltDetectorStrategy;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -20,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -151,47 +155,84 @@ public class ProgramSelector {
         final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
-        return waitForPredicate(
-            String.format("Waiting for ECU on port %s to reboot to OpenBlt for up to " + TOTAL_WAIT_SECONDS + " seconds...", ecuPort),
-            () -> {
-                final AvailableHardware availableHardware = connectivityContext.getCurrentHardware();
-                log.info(String.format(
-                    "current ports: [%s]",
-                    availableHardware.getKnownPorts().stream()
-                        .map(PortResult::toString)
-                        .collect(Collectors.joining(","))
-                ));
-                return !availableHardware.isPortAvailable(ecuPort);
-            },
-            callbacks
-        );
+        // Suspend the scanner so it does not compete with our direct port probes
+        // and so that stale cache entries cannot interfere with detection.
+        try {
+            connectivityContext.getSerialPortScanner().suspend().await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        try {
+            return waitForPredicate(
+                String.format("Waiting for ECU on port %s to reboot to OpenBlt for up to " + TOTAL_WAIT_SECONDS + " seconds...", ecuPort),
+                () -> {
+                    // Directly probe the port rather than relying on the scanner snapshot.
+                    // The scanner cache would keep reporting EcuWithOpenblt even after the
+                    // ECU has already entered OpenBLT mode (the OS port does not disappear).
+                    try (IoStream stream = BufferedSerialIoStream.openPort(ecuPort.port)) {
+                        if (stream == null) {
+                            log.info("Port " + ecuPort.port + " is unavailable — ECU is rebooting");
+                            return true;
+                        }
+                        if (OpenbltDetectorStrategy.isPortOpenblt(stream)) {
+                            log.info("Port " + ecuPort.port + " is now in OpenBLT mode");
+                            return true;
+                        }
+                    } catch (Exception e) {
+                        log.info("Port " + ecuPort.port + " probe error (ECU transitioning): " + e.getMessage());
+                        return true;
+                    }
+                    log.info("Port " + ecuPort.port + " still responding as ECU firmware");
+                    return false;
+                },
+                callbacks
+            );
+        } finally {
+            // Invalidate any stale cache entry so the scanner re-inspects the port
+            // (now in OpenBLT mode) on its first post-resume cycle.
+            connectivityContext.getSerialPortScanner().invalidatePort(ecuPort.port);
+            connectivityContext.getSerialPortScanner().resume();
+        }
     }
 
     private static List<PortResult> waitForNewOpenBltPortAppeared(
         final List<PortResult> openBltPortsBefore,
+        final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         final List<PortResult> newPorts = new ArrayList<>();
-        waitForPredicate(
-            "Waiting for new OpenBlt port to appear...",
-            () -> {
-                final AvailableHardware availableHardwareAfter = connectivityContext.getCurrentHardware();
-                log.info(String.format(
-                    "ports after reboot to OpenBlt: [%s]",
-                    availableHardwareAfter.getKnownPorts().stream()
-                        .map(PortResult::toString)
-                        .collect(Collectors.joining(","))
-                ));
-                for (final PortResult p : availableHardwareAfter.getKnownPorts(OpenBlt)) {
-                    if (!openBltPortsBefore.contains(p)) {
-                        // This item is in the after list but not before list
-                        newPorts.add(p);
+        // Suspend scanner so stale cache entries do not prevent us from seeing
+        // the OpenBLT port.  We directly probe ecuPort rather than relying on
+        // the scanner snapshot (which updates slowly and may keep returning
+        // EcuWithOpenblt due to cache timing races).
+        try {
+            connectivityContext.getSerialPortScanner().suspend().await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        try {
+            waitForPredicate(
+                "Waiting for new OpenBlt port to appear...",
+                () -> {
+                    // Direct probe: check if ecuPort is now in OpenBLT mode
+                    try (IoStream stream = BufferedSerialIoStream.openPort(ecuPort.port)) {
+                        if (OpenbltDetectorStrategy.isPortOpenblt(stream)) {
+                            log.info("Direct probe: port " + ecuPort.port + " is in OpenBLT mode");
+                            newPorts.add(new PortResult(ecuPort.port, OpenBlt));
+                            return true;
+                        }
+                    } catch (Exception e) {
+                        log.info("waitForNewOpenBltPortAppeared probe error: " + e.getMessage());
                     }
-                }
-                return !newPorts.isEmpty();
-            },
-            callbacks
-        );
+                    log.info("Port " + ecuPort.port + " not yet in OpenBLT mode");
+                    return false;
+                },
+                callbacks
+            );
+        } finally {
+            connectivityContext.getSerialPortScanner().invalidatePort(ecuPort.port);
+            connectivityContext.getSerialPortScanner().resume();
+        }
         return newPorts;
     }
 
@@ -223,7 +264,7 @@ public class ProgramSelector {
             return false;
         }
 
-        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks, connectivityContext);
+        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, ecuPort, callbacks, connectivityContext);
 
         // Check that exactly one thing appeared in the "after" list
         if (newItems.isEmpty()) {
