@@ -80,17 +80,27 @@ public class GaugesGridElement {
         return wrapper;
     }
 
-    public static JComponent create(UIContext uiContext, final Node config, String gaugeName) {
+    /**
+     * Remove this element's {@link ConnectionStatusLogic} listener and tear down its inner components.
+     * Must be called before discarding a {@code GaugesGridElement} (e.g. on grid resize)
+     * to prevent stale listeners from accumulating and keeping Radial gauge images alive.
+     */
+    public void destroy() {
+        if (connectionStatusListener != null) {
+            ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
+            connectionStatusListener = null;
+        }
+        wrapper.removeAllChildrenAndListeners();
+    }
+
+    private ConnectionStatusLogic.Listener connectionStatusListener;
+
+    public static GaugesGridElement create(UIContext uiContext, final Node config, String gaugeName) {
         GaugesGridElement gaugesGridElement = new GaugesGridElement(uiContext, config, gaugeName);
-        ConnectionStatusLogic.INSTANCE.addAndFireListener(new ConnectionStatusLogic.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {
-                SwingUtilities.invokeLater(() -> {
-                    gaugesGridElement.rebuild();
-                });
-            }
-        });
-        return gaugesGridElement.getContent();
+        gaugesGridElement.connectionStatusListener = isConnected ->
+            SwingUtilities.invokeLater(gaugesGridElement::rebuild);
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(gaugesGridElement.connectionStatusListener);
+        return gaugesGridElement;
     }
 
     @Override

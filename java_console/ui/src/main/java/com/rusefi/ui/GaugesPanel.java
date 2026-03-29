@@ -51,6 +51,8 @@ public class GaugesPanel {
     private final GaugesGrid gauges;
     private final Node config;
     private final UIContext uiContext;
+    /** Tracked so we can call destroy() before replacing on grid resize. */
+    private final List<GaugesGridElement> gaugeElements = new ArrayList<>();
 
     public GaugesPanel(UIContext uiContext, final Node config) {
         this.uiContext = uiContext;
@@ -139,15 +141,22 @@ public class GaugesPanel {
     }
 
     private void setSensorGridDimensions(int rows, int columns) {
+        // Destroy old elements before discarding them so their ConnectionStatusLogic
+        // listeners are removed and their Radial BufferedImage data can be GC'd.
+        for (GaugesGridElement element : gaugeElements) {
+            element.destroy();
+        }
+        gaugeElements.clear();
+
         gauges.setLayout(rows, columns);
 
         List<String> defaultLayout = getDefaultLayout();
         for (int i = 0; i < rows * columns; i++) {
             // sometimes grid is quite large so we shall be careful with default sensor index
             String defaultGaugeName = defaultLayout.get(Math.min(i, defaultLayout.size() - 1));
-            Component element = GaugesGridElement.create(uiContext, config.getChild("element_" + i), defaultGaugeName);
-
-            gauges.panel.add(element);
+            GaugesGridElement element = GaugesGridElement.create(uiContext, config.getChild("element_" + i), defaultGaugeName);
+            gaugeElements.add(element);
+            gauges.panel.add(element.getContent());
         }
 
         saveConfig(rows, columns);
