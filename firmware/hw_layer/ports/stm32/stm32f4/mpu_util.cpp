@@ -7,6 +7,7 @@
 #include "pch.h"
 #include "flash_int.h"
 #include "efiprintf.h"
+#include "stm32f4xx_hal_flash.h"
 
 void printWRPBits() {
 	uint32_t optcr = FLASH->OPTCR;
@@ -22,6 +23,31 @@ void printWRPBits() {
 		uint16_t wrp1 = (optcr1 >> 16) & 0xFFF;
 		efiPrintf("OPTCR1: %08lx WRP12-23: %03x", optcr1, wrp1);
 	}
+}
+
+void removeWRP() {
+	FLASH_OBProgramInitTypeDef OBInit;
+	memset(&OBInit, 0, sizeof(OBInit));
+
+	OBInit.OptionType = OPTIONBYTE_WRP;
+	OBInit.WRPState = OB_WRPSTATE_DISABLE;
+	OBInit.WRPSector = OB_WRP_SECTOR_All;
+	OBInit.RDPLevel = OB_RDP_LEVEL_0;
+	if (GET_MCU_REVISION() == STM32_DEVICE_ID_F42x) {
+#define FLASH_BANK_2_hack     ((uint32_t)2) /*!< Bank 2   */
+		OBInit.Banks = FLASH_BANK_1 | FLASH_BANK_2_hack;
+	} else {
+		OBInit.Banks = FLASH_BANK_1;
+	}
+
+	HAL_FLASH_OB_Unlock();
+	HAL_StatusTypeDef status = HAL_FLASHEx_OBProgram(&OBInit);
+	efiPrintf("removeWRP: program status %d", status);
+	if (status == HAL_OK) {
+		efiPrintf("removeWRP: launching...");
+		HAL_FLASH_OB_Launch();
+	}
+	HAL_FLASH_OB_Lock();
 }
 
 bool mcuCanFlashWhileRunning() {

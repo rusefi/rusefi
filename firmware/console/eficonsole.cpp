@@ -253,7 +253,8 @@ void initializeConsole() {
 #endif
 
 #if defined(STM32F4)
-	addConsoleAction("print_ob", [](){ printWRPBits();});
+	addConsoleAction("print_wrp", [](){ printWRPBits();});
+	addConsoleAction("remove_wrp", [](){ removeWRP();});
 #endif
 
 	sayHello();

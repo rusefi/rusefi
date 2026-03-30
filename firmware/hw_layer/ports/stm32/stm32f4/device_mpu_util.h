@@ -22,3 +22,4 @@
 #define ADC_MAX_VALUE 4095
 
 void printWRPBits();
+void removeWRP();
