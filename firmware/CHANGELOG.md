@@ -35,6 +35,9 @@ Release template (copy/paste this for new release):
 ### Breaking Changes
  - Dodge Neon 2003 crank actually uses crank decoder #8977
 
+### Fixed
+ - Idle VE table when using an electronic throttle correctly uses accel pedal to match main idle logic
+
 ## February 2026 "Day 1458"
 
 ### Fixed

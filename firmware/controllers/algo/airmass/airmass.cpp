@@ -60,7 +60,7 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 	float idleVeLoad = load;
 
 #if EFI_IDLE_CONTROL
-	auto tps = Sensor::get(SensorType::Tps1);
+	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 	// get VE from the separate table for Idle if idling
 	if (engine->module<IdleController>()->isIdlingOrTaper() &&
 		tps && engineConfiguration->useSeparateVeForIdle) {
