@@ -157,7 +157,7 @@ public class UpDownImage extends JPanel {
 
         if (!wr.getList().isEmpty()) {
             EngineReport.UpDown last = wr.getList().get(wr.getList().size() - 1);
-            SensorCentral.getInstance().setValue(last.getDuration(), sensor);
+            SensorCentral.getInstance().setValue(last.getDuration(), sensor.getNativeName());
         }
     }
 
