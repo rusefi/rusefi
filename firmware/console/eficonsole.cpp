@@ -252,6 +252,10 @@ void initializeConsole() {
 	addConsoleAction("uid", printUid);
 #endif
 
+#if defined(STM32F4)
+	addConsoleAction("print_ob", [](){ printWRPBits();});
+#endif
+
 	sayHello();
 	addConsoleAction("test", [](){ /* do nothing */});
 	addConsoleActionI("echo", echo);

@@ -6,6 +6,23 @@
  */
 #include "pch.h"
 #include "flash_int.h"
+#include "efiprintf.h"
+
+void printWRPBits() {
+	uint32_t optcr = FLASH->OPTCR;
+	// OPTCR bits [27:16] are nWRP[11:0]
+	uint16_t wrp = (optcr >> 16) & 0xFFF;
+	efiPrintf("OPTCR: %08lx WRP: %03x", optcr, wrp);
+
+	uint16_t deviceId = DBGMCU->IDCODE & DBGMCU_IDCODE_DEV_ID_Msk;
+	if (deviceId == STM32_DEVICE_ID_F42x) {
+		// F427/437 has OPTCR1 at 0x40023C18
+		uint32_t optcr1 = *(__IO uint32_t *)(0x40023C18);
+		// OPTCR1 bits [27:16] are nWRP[23:12]
+		uint16_t wrp1 = (optcr1 >> 16) & 0xFFF;
+		efiPrintf("OPTCR1: %08lx WRP12-23: %03x", optcr1, wrp1);
+	}
+}
 
 bool mcuCanFlashWhileRunning() {
 	// Never allow flash while running on F4, dual bank not implemented.

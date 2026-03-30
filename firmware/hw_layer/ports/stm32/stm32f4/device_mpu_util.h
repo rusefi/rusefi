@@ -20,3 +20,5 @@
 #define SPI_CR2_24BIT_MODE 0
 
 #define ADC_MAX_VALUE 4095
+
+void printWRPBits();
