@@ -20,6 +20,7 @@ void initFlash();
 void writeToFlashNow();
 bool writeToFlashNowImpl();
 void setNeedToWriteConfiguration();
+void suspendLinearTimeWatcher();
 
 bool settingsLtftRequestWriteToFlash();
 

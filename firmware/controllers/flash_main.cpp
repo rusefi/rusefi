@@ -50,9 +50,13 @@ bool settingsLtftRequestWriteToFlash() {
 	return storageRequestWriteID(EFI_LTFT_RECORD_ID, false);
 }
 
+void suspendLinearTimeWatcher() {
+  engine->configBurnTimer.reset();
+}
+
 /* TODO: extract to persistentState method */
 bool writeToFlashNowImpl() {
-	engine->configBurnTimer.reset();
+	suspendLinearTimeWatcher();
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);

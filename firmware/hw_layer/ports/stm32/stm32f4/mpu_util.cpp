@@ -6,6 +6,7 @@
  */
 #include "pch.h"
 #include "flash_int.h"
+#include "flash_main.h"
 #include "efiprintf.h"
 #include "stm32f4xx_hal_flash.h"
 
@@ -26,6 +27,8 @@ void printWRPBits() {
 }
 
 void removeWRP() {
+  suspendLinearTimeWatcher();
+
 	FLASH_OBProgramInitTypeDef OBInit;
 	memset(&OBInit, 0, sizeof(OBInit));
 
