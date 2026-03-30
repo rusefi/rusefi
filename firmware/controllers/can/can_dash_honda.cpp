@@ -48,7 +48,7 @@ void canDashboardHondaK(CanCycle cycle) {
 
     if (cycle.isInterval(CI::_20ms)) {
         // RPM message (HONDA_TACH_1DC)
-        CanTxMessage msg(CanCategory::NBC, HONDA_TACH_1DC, 4, DEFAULT_BUS_INDEX);
+        CanTxMessage msg(CanCategory::HONDA_NBC, HONDA_TACH_1DC, 4, DEFAULT_BUS_INDEX);
         msg[0] = 0x02; //This is constant i think
         msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm), /*offset*/ 1);
         rollingId = (rollingId + 1) & 0x3;
@@ -63,7 +63,7 @@ void canDashboardHondaK(CanCycle cycle) {
         msg[3] |= checksum1 & 0xF;
 
         // Speed message (HONDA_SPEED_158)
-        CanTxMessage msg2(CanCategory::NBC, HONDA_SPEED_158, 8, DEFAULT_BUS_INDEX);
+        CanTxMessage msg2(CanCategory::HONDA_NBC, HONDA_SPEED_158, 8, DEFAULT_BUS_INDEX);
         msg2.setShortValueMsb(Sensor::getOrZero(SensorType::VehicleSpeed) * 160, /*offset*/ 0);
         msg2.setShortValueMsb(Sensor::getOrZero(SensorType::VehicleSpeed) * 160, /*offset*/ 4);
         msg2[7] = (rollingId << 4);
@@ -77,7 +77,7 @@ void canDashboardHondaK(CanCycle cycle) {
         msg2[7] |= checksum2 & 0xF;
 
         // CEL message (HONDA_CEL_17C)
-        CanTxMessage msg3(CanCategory::NBC, HONDA_CEL_17C, 8, DEFAULT_BUS_INDEX);
+        CanTxMessage msg3(CanCategory::HONDA_NBC, HONDA_CEL_17C, 8, DEFAULT_BUS_INDEX);
         msg3[0] = 0x00;
         msg3[1] = 0xEA;
         msg3[2] = 0x00;
@@ -97,7 +97,7 @@ void canDashboardHondaK(CanCycle cycle) {
         msg3[7] |= checksum3 & 0xF;
 
         // IMA message (HONDA_IMA_166)
-        CanTxMessage msg4(CanCategory::NBC, HONDA_IMA_166, 4, DEFAULT_BUS_INDEX);
+        CanTxMessage msg4(CanCategory::HONDA_NBC, HONDA_IMA_166, 4, DEFAULT_BUS_INDEX);
         msg4[0] = 0x50;
         msg4[1] = 0x1d;
         msg4[2] = 0xec;
@@ -112,7 +112,7 @@ void canDashboardHondaK(CanCycle cycle) {
         msg4[3] |= checksum4 & 0xF;
 
         // Airbag message (HONDA_AIRBAG_039)
-        CanTxMessage msg5(CanCategory::NBC, HONDA_AIRBAG_039, 2, DEFAULT_BUS_INDEX);
+        CanTxMessage msg5(CanCategory::HONDA_NBC, HONDA_AIRBAG_039, 2, DEFAULT_BUS_INDEX);
         msg5[0] = 0x00;
         msg5[1] = (rollingId << 4);
 
@@ -125,7 +125,7 @@ void canDashboardHondaK(CanCycle cycle) {
         msg5[1] |= checksum5 & 0xF;
 
         // EPS message (HONDA_EPS_18E)
-        CanTxMessage msg6(CanCategory::NBC, HONDA_EPS_18E, 3, DEFAULT_BUS_INDEX);
+        CanTxMessage msg6(CanCategory::HONDA_NBC, HONDA_EPS_18E, 3, DEFAULT_BUS_INDEX);
         msg6[0] = 0x00;
         msg6[1] = 0x00;
         msg6[2] = (rollingId << 4);
@@ -139,7 +139,7 @@ void canDashboardHondaK(CanCycle cycle) {
         msg6[2] |= checksum6 & 0xF;
 
         // TPMS message (HONDA_TPMS_333)
-        CanTxMessage msg7(CanCategory::NBC, HONDA_TPMS_333, 8, DEFAULT_BUS_INDEX);
+        CanTxMessage msg7(CanCategory::HONDA_NBC, HONDA_TPMS_333, 8, DEFAULT_BUS_INDEX);
         msg7[0] = 0x00;
         msg7[1] = 0x00;
         msg7[2] = 0x00;
@@ -158,7 +158,7 @@ void canDashboardHondaK(CanCycle cycle) {
         msg7[7] |= checksum7 & 0xF;
 
         // VSA message (HONDA_VSA_1A4)
-        CanTxMessage msg8(CanCategory::NBC, HONDA_VSA_1A4, 8, DEFAULT_BUS_INDEX);
+        CanTxMessage msg8(CanCategory::HONDA_NBC, HONDA_VSA_1A4, 8, DEFAULT_BUS_INDEX);
         msg8[7] = (rollingId << 4);
 
         uint8_t tempBuffer8[8];
@@ -170,7 +170,7 @@ void canDashboardHondaK(CanCycle cycle) {
         msg8[7] |= checksum8 & 0xF;
 
         // Temperature message (HONDA_TEMP_324)
-        CanTxMessage msg9(CanCategory::NBC, HONDA_TEMP_324, 8, DEFAULT_BUS_INDEX);
+        CanTxMessage msg9(CanCategory::HONDA_NBC, HONDA_TEMP_324, 8, DEFAULT_BUS_INDEX);
         msg9[0] = Sensor::getOrZero(SensorType::Clt) + 40;
         msg9[1] = Sensor::getOrZero(SensorType::Iat) + 40;
         msg9[7] = (rollingId << 4);
