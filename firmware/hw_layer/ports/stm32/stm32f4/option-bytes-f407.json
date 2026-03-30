@@ -1,0 +1,22 @@
+{
+  "deviceId" : 1043,
+  "bitNameToValue" : {
+    "RDP" : 170,
+    "BOR_LEV" : 2,
+    "WDG_SW" : 1,
+    "nRST_STOP" : 1,
+    "nRST_STDBY" : 1,
+    "WRP0" : 1,
+    "WRP1" : 1,
+    "WRP2" : 1,
+    "WRP3" : 1,
+    "WRP4" : 1,
+    "WRP5" : 1,
+    "WRP6" : 1,
+    "WRP7" : 1,
+    "WRP8" : 1,
+    "WRP9" : 1,
+    "WRP10" : 1,
+    "WRP11" : 1
+  }
+}
