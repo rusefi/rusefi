@@ -306,7 +306,7 @@ TEST(FuelMath, IdleVeTable) {
 	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
 
 	// Set TPS so this works
-	Sensor::setMockValue(SensorType::Tps1, 0);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 
 	// Gets normal VE table
 	idler.isIdling = false;
@@ -317,20 +317,20 @@ TEST(FuelMath, IdleVeTable) {
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
 
 	// Below half threshold, fully use idle VE table
-	Sensor::setMockValue(SensorType::Tps1, 0);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
-	Sensor::setMockValue(SensorType::Tps1, 2);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 2);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
-	Sensor::setMockValue(SensorType::Tps1, 5);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 5);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.4f);
 
 	// As TPS approaches idle threshold, phase-out the idle VE table
 
-	Sensor::setMockValue(SensorType::Tps1, 6);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 6);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.42f);
-	Sensor::setMockValue(SensorType::Tps1, 8);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 8);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.46f);
-	Sensor::setMockValue(SensorType::Tps1, 10);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 10);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
 }
 
