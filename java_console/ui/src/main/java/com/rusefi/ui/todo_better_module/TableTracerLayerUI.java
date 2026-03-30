@@ -1,132 +1,195 @@
 package com.rusefi.ui.todo_better_module;
 
-import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.core.SensorNames;
 
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
-import javax.swing.table.TableModel;
 import java.awt.*;
-import java.lang.reflect.Field;
+import java.awt.geom.Ellipse2D;
 
+/**
+ * A UI Layer responsible for drawing a real-time tracer dot over a JTable.
+ * It interpolates sensor data against provided bin scales to pinpoint the exact engine state.
+ */
 public class TableTracerLayerUI extends LayerUI<JPanel> {
-     //Private constants for UI styling
-    private static final Color TRACER_COLOR = new Color(255, 128, 0);
-    private static final int DOT_SIZE = 12;
+    private static final Color TRACER_HIGHLIGHT_COLOR = new Color(255, 128, 0);
+    private static final int TRACER_DOT_DIAMETER = 12;
 
-     //Private constants for sensor mapping
-    private static final String RPM_SENSOR = SensorNames.RPMValue;
-    private static final String LOAD_SENSOR = SensorNames.MAPGauge;
+    private final String xAxisSensorChannel;
+    private final String yAxisSensorChannel;
+    private final double[] xAxisBinScales;
+    private final double[] yAxisBinScales;
 
-    private JComponent owner;
-    private double currentRpm = Double.NaN;
-    private double currentLoad = Double.NaN;
+    private JComponent parentLayerComponent;
+    private double currentXAxisValue = Double.NaN;
+    private double currentYAxisValue = Double.NaN;
 
-    public TableTracerLayerUI() {
-        SensorCentral.SensorListener listener = value -> {
-             //Updated to use private static final sensors
-            currentRpm = SensorCentral.getInstance().getValue(RPM_SENSOR);
-            currentLoad = SensorCentral.getInstance().getValue(LOAD_SENSOR);
-            if (owner != null) owner.repaint();
-        };
-        SensorCentral.getInstance().addListener(RPM_SENSOR, listener);
-        SensorCentral.getInstance().addListener(LOAD_SENSOR, listener);
+    /**
+     * Listener for X-Axis sensor updates. Triggers a repaint of the decorated component.
+     */
+    private final SensorCentral.SensorListener xAxisSensorListener = newValue -> {
+        currentXAxisValue = newValue;
+        requestRepaint();
+    };
+
+    /**
+     * Listener for Y-Axis sensor updates. Triggers a repaint of the decorated component.
+     */
+    private final SensorCentral.SensorListener yAxisSensorListener = newValue -> {
+        currentYAxisValue = newValue;
+        requestRepaint();
+    };
+
+    public TableTracerLayerUI(String xAxisChannel, String yAxisChannel, double[] xAxisBins, double[] yAxisBins) {
+        this.xAxisSensorChannel = xAxisChannel;
+        this.yAxisSensorChannel = yAxisChannel;
+        this.xAxisBinScales = xAxisBins;
+        this.yAxisBinScales = yAxisBins;
+
+        SensorCentral.getInstance().addListener(xAxisSensorChannel, xAxisSensorListener);
+        SensorCentral.getInstance().addListener(yAxisSensorChannel, yAxisSensorListener);
     }
 
     public void setOwner(JComponent owner) {
-        this.owner = owner;
+        this.parentLayerComponent = owner;
+    }
+
+    private void requestRepaint() {
+        if (parentLayerComponent != null) {
+            parentLayerComponent.repaint();
+        }
     }
 
     @Override
-    public void paint(Graphics g, JComponent c) {
-        super.paint(g, c);
-        if (Double.isNaN(currentRpm) || Double.isNaN(currentLoad)) return;
+    public void paint(Graphics graphics, JComponent layerComponent) {
+        // Paint the underlying components first
+        super.paint(graphics, layerComponent);
 
-        JTable table = findTable(c);
-        if (table == null || !table.isShowing()) return;
+        if (Double.isNaN(currentXAxisValue) || Double.isNaN(currentYAxisValue)) {
+            return;
+        }
 
-        TableModel model = table.getModel();
-        Double[] xBins = getPrivateField(model, "xBins");
-        Double[] yBins = getPrivateField(model, "yBins");
+        JTable targetTable = findTargetTable(layerComponent);
+        if (targetTable == null || !targetTable.isShowing()) {
+            return;
+        }
 
-        if (xBins != null && yBins != null) {
-            drawTracer(g, table, c, xBins, yBins);
+        Point tracerPixelLocation = calculateTracerPixelCoordinates(targetTable, layerComponent);
+        if (tracerPixelLocation != null) {
+            drawTracerDot(graphics, targetTable, layerComponent, tracerPixelLocation);
         }
     }
 
-    private Double[] getPrivateField(Object obj, String fieldName) {
+    private void drawTracerDot(Graphics graphics, JTable table, JComponent layer, Point location) {
+        Graphics2D graphics2D = (Graphics2D) graphics.create();
         try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return (Double[]) field.get(obj);
-        } catch (Exception e) {
-            return null;
+            graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // Restrict drawing to the actual data area to avoid overlapping header/labels
+            Shape originalClip = graphics2D.getClip();
+            Rectangle tableDataArea = calculateTableDataArea(table, layer);
+            graphics2D.setClip(tableDataArea);
+
+            graphics2D.setColor(TRACER_HIGHLIGHT_COLOR);
+            double offset = (double) TRACER_DOT_DIAMETER / 2;
+
+            // Using Ellipse2D for smoother sub-pixel positioning if needed in the future
+            graphics2D.fill(new Ellipse2D.Double(location.x - offset, location.y - offset, TRACER_DOT_DIAMETER, TRACER_DOT_DIAMETER));
+
+            graphics2D.setClip(originalClip);
+        } finally {
+            graphics2D.dispose();
         }
     }
 
-    private void drawTracer(Graphics g, JTable table, JComponent layer, Double[] xBins, Double[] yBins) {
-        double x = getInterpolatedPixels(currentRpm, xBins, table, true);
-        double y = getInterpolatedPixels(currentLoad, yBins, table, false);
-
-        if (x < 0 || y < 0) return;
-
-        Point p = SwingUtilities.convertPoint(table, new Point((int) x, (int) y), layer);
-
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(TRACER_COLOR);
-        g2.fillOval(p.x - DOT_SIZE/2, p.y - DOT_SIZE/2, DOT_SIZE, DOT_SIZE);
-        g2.setColor(Color.WHITE);
-        g2.drawOval(p.x - DOT_SIZE/2, p.y - DOT_SIZE/2, DOT_SIZE, DOT_SIZE);
-        g2.dispose();
+    public void unsubscribe() {
+        SensorCentral.getInstance().removeListener(xAxisSensorChannel, xAxisSensorListener);
+        SensorCentral.getInstance().removeListener(yAxisSensorChannel, yAxisSensorListener);
     }
 
-    private double getInterpolatedPixels(double value, Double[] bins, JTable table, boolean isX) {
-        if (bins.length < 2) return -1;
-
-        int i = 0;
-        if (value <= bins[0]) i = 0;
-        else if (value >= bins[bins.length - 1]) i = bins.length - 2;
-        else while (i < bins.length - 1 && value > bins[i+1]) i++;
-
-        double diff = bins[i+1] - bins[i];
-        double factor = (diff == 0) ? 0 : (value - bins[i]) / diff;
-        factor = Math.max(0, Math.min(1, factor));
-
-        int colCount = table.getColumnCount();
-        int rowCount = table.getRowCount();
-
-        int cell1, cell2;
-        if (isX) {
-            cell1 = i + 1;
-            cell2 = i + 2;
-        } else {
-            cell1 = bins.length - 1 - i;
-            cell2 = bins.length - 2 - i;
-        }
-
-        if (cell1 < 0 || (isX && cell1 >= colCount) || (!isX && cell1 >= rowCount)) return -1;
-
-        Rectangle r1 = isX ? table.getCellRect(0, cell1, true) : table.getCellRect(cell1, 0, true);
-        double p1 = isX ? r1.getCenterX() : r1.getCenterY();
-
-        if (cell2 < 0 || (isX && cell2 >= colCount) || (!isX && cell2 >= rowCount)) return p1;
-
-        Rectangle r2 = isX ? table.getCellRect(0, cell2, true) : table.getCellRect(cell2, 0, true);
-        double p2 = isX ? r2.getCenterX() : r2.getCenterY();
-
-        return p1 + factor * (p2 - p1);
-    }
-
-    private JTable findTable(Container container) {
-        for (Component comp : container.getComponents()) {
-            if (comp instanceof JTable) return (JTable) comp;
-            if (comp instanceof Container) {
-                JTable table = findTable((Container) comp);
-                if (table != null) return table;
+    /**
+     * Recursively searches for the JTable component within the decorated panel.
+     */
+    private JTable findTargetTable(Container container) {
+        for (Component component : container.getComponents()) {
+            if (component instanceof JTable) {
+                return (JTable) component;
+            }
+            if (component instanceof Container) {
+                JTable nestedTable = findTargetTable((Container) component);
+                if (nestedTable != null) {
+                    return nestedTable;
+                }
             }
         }
         return null;
+    }
+
+    /**
+     * Calculates the clipping area that only includes the data cells (ignoring the Y-axis label column).
+     */
+    private Rectangle calculateTableDataArea(JTable table, JComponent layer) {
+        // Data usually starts at Column 1 (Column 0 is labels)
+        Rectangle firstDataCell = table.getCellRect(0, 1, true);
+        Rectangle lastDataCell = table.getCellRect(table.getRowCount() - 1, table.getColumnCount() - 1, true);
+        Rectangle mergedDataArea = firstDataCell.union(lastDataCell);
+
+        return SwingUtilities.convertRectangle(table, mergedDataArea, layer);
+    }
+
+    /**
+     * Computes the screen coordinates for the tracer by interpolating current values against bin scales.
+     */
+    private Point calculateTracerPixelCoordinates(JTable table, JComponent layer) {
+        double fractionalXIndex = findFractionalIndexByValue(xAxisBinScales, currentXAxisValue);
+        double fractionalYIndex = findFractionalIndexByValue(yAxisBinScales, currentYAxisValue);
+
+        if (fractionalXIndex < 0 || fractionalYIndex < 0) {
+            return null;
+        }
+
+        // Inverting Y because row 0 is at the top of the table
+        double invertedRowIndex = (yAxisBinScales.length - 1) - fractionalYIndex;
+
+        // Data starts at Column 1. Adjusting indexes for JTable coordinate system.
+        int dataColumnOffset = 1;
+
+        int firstColumn = (int) Math.floor(fractionalXIndex) + dataColumnOffset;
+        int secondColumn = Math.min(firstColumn + 1, table.getColumnCount() - 1);
+        double xInterpolationFraction = fractionalXIndex - Math.floor(fractionalXIndex);
+
+        int firstRow = (int) Math.floor(invertedRowIndex);
+        int secondRow = Math.min(firstRow + 1, table.getRowCount() - 1);
+        double yInterpolationFraction = invertedRowIndex - firstRow;
+
+        Rectangle cellStart = table.getCellRect(firstRow, firstColumn, true);
+        Rectangle cellEnd = table.getCellRect(secondRow, secondColumn, true);
+
+        // Linear interpolation of pixel centers
+        double pixelX = cellStart.getCenterX() + xInterpolationFraction * (cellEnd.getCenterX() - cellStart.getCenterX());
+        double pixelY = cellStart.getCenterY() + yInterpolationFraction * (cellEnd.getCenterY() - cellStart.getCenterY());
+
+        return SwingUtilities.convertPoint(table, new Point((int) pixelX, (int) pixelY), layer);
+    }
+
+    /**
+     * Finds the fractional index within the bin array for a given value using linear interpolation.
+     */
+    private double findFractionalIndexByValue(double[] binScales, double value) {
+        if (binScales == null || binScales.length < 2) {
+            return -1;
+        }
+
+        // Clamp values to stay visible within table bounds
+        if (value <= binScales[0]) return 0;
+        if (value >= binScales[binScales.length - 1]) return binScales.length - 1;
+
+        for (int i = 0; i < binScales.length - 1; i++) {
+            if (value >= binScales[i] && value <= binScales[i + 1]) {
+                double binRange = binScales[i + 1] - binScales[i];
+                return i + (binRange == 0 ? 0 : (value - binScales[i]) / binRange);
+            }
+        }
+        return -1;
     }
 }
