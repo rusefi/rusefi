@@ -31,7 +31,7 @@ public class SensorCentralTest {
 
     @Test
     void setValueAndGetValueBySensorEnum() {
-        sensorCentral.setValue(2000.0, Sensor.RPMGauge);
+        sensorCentral.setValue(2000.0, Sensor.RPMGauge.getNativeName());
         assertEquals(2000.0, sensorCentral.getValue(Sensor.RPMGauge), 0.001);
     }
 
