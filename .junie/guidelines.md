@@ -1,5 +1,7 @@
 ### Project Structure and Module Locations
 
+See also CLAUDE.md
+
 rusEFI is an open-source engine control unit firmware for STM32 microcontrollers.
 
 Main firmware is located in `firmware` folder (relative to project root). This is C++ code.
