@@ -117,7 +117,7 @@ static void sayHello() {
 #else
 	int mcuRevision = GET_MCU_REVISION();
 	const char *mcuHumanName = getStm32McuName(mcuRevision);
-	efiPrintf("MCU rev=%x %s flashSize=%d", mcuRevision, getStm32McuName(mcuRevision), flashSize);
+	efiPrintf("MCU rev=%x %s flashSize=%d", mcuRevision, mcuHumanName, flashSize);
 #endif
 #endif
 
