@@ -700,6 +700,7 @@ void processCanEcuControl(const CANRxFrame& frame) {
     processCanRequestCalibration(frame);
   } else if (eid == (int)bench_test_packet_ids_e::DASH_ALIVE) {
 	  CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_IMAGE_INFO, 8, /*bus*/0, /*isExtended*/true);
+#if EFI_PROD_CODE
   #ifdef RAMDISK_INVALID
     msg[0] = 0xFF;
   #else
@@ -711,6 +712,7 @@ void processCanEcuControl(const CANRxFrame& frame) {
   #endif // EFI_USE_COMPRESSED_INI_MSD
 
 #endif //EFI_EMBED_INI_MSD
+#endif // EFI_PROD_CODE
 
 
   #endif// RAMDISK_INVALID
