@@ -21,6 +21,20 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 	load = getVeLoadAxis(engineConfiguration->veOverrideMode, load);
 
 	percent_t ve = m_veTable->getValue(rpm, load);
+
+#if EFI_PROD_CODE
+	if (engineConfiguration->enableVeSwitchTable &&
+		isBrainPinValid(config->veSwitchTableInput) &&
+		efiReadPin(config->veSwitchTableInput, config->veSwitchTableInputMode)) {
+
+		ve = interpolate3d(
+			config->veSwitchTable,
+			config->veSwitchLoadBins, load,
+			config->veSwitchRpmBins, rpm
+		);
+	}
+#endif
+
 	float idleVeLoad = load;
 
 #if EFI_IDLE_CONTROL
