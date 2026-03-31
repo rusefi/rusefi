@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.PrimeTunerStudioCache;
+import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -454,6 +455,23 @@ todo: enable auto-connect once we have 'Device' tab
                 JOptionPane.showMessageDialog(null, "Function test passed: " + isSuccess + "\nSee log folder for details.");
             }
         };
+    }
+
+    public void showUpdateBanner(String message) {
+        // Use null parent if StartupFrame was already disposed (user connected to a ecu before update finished)
+        Component parent = frame.isDisplayable() ? frame : null;
+        int choice = JOptionPane.showConfirmDialog(
+            parent,
+            message + "\nRestart now to apply it?",
+            "Update Ready",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        if (choice == JOptionPane.YES_OPTION) {
+            if (frame.isDisplayable())
+                disposeFrameAndProceed();
+            Autoupdate.relaunchConsole();
+        }
     }
 
     public void disposeFrameAndProceed() {
