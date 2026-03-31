@@ -924,7 +924,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
 	bit useAbsolutePressureForLagTime,"yes","no"
 	! see #8650, only used on the UI
-	bit unusedBit_311_30
+	bit enableVeSwitchTable,"enabled","disabled";Enables the switchable VE table
 	bit unusedBit_311_31
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
@@ -2235,6 +2235,14 @@ end_struct
 blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
 blend_table_s[VE_BLEND_COUNT iterate] veBlends
 
+! note this is pretty similar to a blend table!
+uint16_t[VE_LOAD_COUNT x VE_RPM_COUNT] autoscale veSwitchTable;;"%", 0.1, 0, 0, 999, 1
+uint16_t[VE_LOAD_COUNT] veSwitchLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : (veOverrideMode == 2 ? 100 : @@MAP_UPPER_LIMIT@@)}, 0
+uint16_t[VE_RPM_COUNT] veSwitchRpmBins;;"RPM",	   1, 0, 0, 18000, 0
+
+switch_input_pin_e veSwitchTableInput;Pin that activates the switchable VE table
+pin_input_mode_e veSwitchTableInputMode;
+
 #define THR_EST_SIZE 12
 
 uint16_t[THR_EST_SIZE] autoscale throttleEstimateEffectiveAreaBins;;"%", 0.1, 0, 0, 100, 1
@@ -2464,6 +2472,7 @@ end_struct
 #define VE_MENU_NAME "VE"
 #define VE_TABLE_NAME "VE Table"
 #define VE_MENU_MAP_NAME "VE 3D view"
+#define VE_SWITCH_TABLE "Switched VE Table"
 #define IGNITION_ADVANCE_MENU_NAME "Ignition advance"
 #define IGNITION_ADVANCE_TABLE_NAME "Ignition Table"
 #define CAM_1_MODE_NAME "Cam mode (intake)"

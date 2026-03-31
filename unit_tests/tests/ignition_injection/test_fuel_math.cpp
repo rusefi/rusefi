@@ -334,6 +334,38 @@ TEST(FuelMath, IdleVeTable) {
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
 }
 
+TEST(FuelMath, VeSwitchTable) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	MockAirmass dut;
+
+	// Primary VE table returns 50%
+	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
+
+	// Switch VE table returns 80%
+	setTable(config->veSwitchTable, 80);
+
+	config->veSwitchTableInput = Gpio::A0;
+	setMockState(Gpio::A0, true);
+
+	// Feature disabled -> primary table used even with pin configured and HIGH
+	engineConfiguration->enableVeSwitchTable = false;
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
+
+	// Feature enabled, pin LOW -> primary table
+	engineConfiguration->enableVeSwitchTable = true;
+	setMockState(Gpio::A0, false);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
+
+	// Feature enabled, pin HIGH -> switch table
+	setMockState(Gpio::A0, true);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.8f);
+
+	// Feature enabled but no pin configured -> primary table
+	config->veSwitchTableInput = Gpio::Unassigned;
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
+}
+
 TEST(FuelMath, getCycleFuelMassTest) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/8, 1);

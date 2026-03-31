@@ -78,6 +78,8 @@ static void setDefaultWarmupFuelEnrichment() {
 
 static void setDefaultVETable() {
 	setRpmTableBin(config->veRpmBins);
+	setRpmTableBin(config->veSwitchRpmBins);
+
 #if (VE_LOAD_COUNT == 16) && (VE_RPM_COUNT == 16)
 	static const float hardCodedveTable[16][16] = {
 {49.300,	49.300,	49.400,	49.600,	50.200,	51.400,	52.600,	53.800,	54.400,	54.600,	54.400,	53.700,	52.800,	51.800,	50.900,	50.000,	},
@@ -98,8 +100,10 @@ static void setDefaultVETable() {
 {94.700,	100.900,	103.500,	107.700,	111.800,	115.600,	118.400,	120.300,	120.800,	120.300,	118.700,	116.200,	113.300,	110.500,	107.700,	105.000,	},
 };
 	copyTable(config->veTable, hardCodedveTable);
+	copyTable(config->veSwitchTable, hardCodedveTable);
 #else
 	setTable(config->veTable, 80);
+	setTable(config->veSwitchTable, 80);
 #endif
 
 	setRpmTableBin(config->baroCorrRpmBins);
