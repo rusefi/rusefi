@@ -23,10 +23,11 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 	percent_t ve = m_veTable->getValue(rpm, load);
 
 #if EFI_PROD_CODE
-	if (engineConfiguration->enableVeSwitchTable &&
+	const bool switchTableActive = engineConfiguration->enableVeSwitchTable &&
 		isBrainPinValid(config->veSwitchTableInput) &&
-		efiReadPin(config->veSwitchTableInput, config->veSwitchTableInputMode)) {
+		efiReadPin(config->veSwitchTableInput, config->veSwitchTableInputMode);
 
+	if (switchTableActive) {
 		ve = interpolate3d(
 			config->veSwitchTable,
 			config->veSwitchLoadBins, load,
@@ -84,6 +85,9 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 		engine->engineState.currentVe = ve;
 		engine->engineState.veTableYAxis = load;
 		engine->engineState.veTableIdleYAxis = idleVeLoad;
+#if EFI_PROD_CODE
+		engine->engineState.isVeSwitchTableActive = switchTableActive;
+#endif
 	}
 
 	return ve * PERCENT_DIV;
