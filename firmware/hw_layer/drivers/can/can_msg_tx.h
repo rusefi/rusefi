@@ -78,6 +78,11 @@ public:
 	void setShortValue(uint16_t value, size_t offset);
 
 	/**
+	 * @brief Write a 32-bit int value to the buffer. Note: this writes in Intel little endian byte order.
+	 */
+	void setIntValueLsb(uint32_t value, size_t offset);
+
+	/**
 	 Same as above but big endian Motorola
 	 * for instance DBC 8|16@0
 	 */
