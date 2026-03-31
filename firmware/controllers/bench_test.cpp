@@ -698,6 +698,25 @@ void processCanEcuControl(const CANRxFrame& frame) {
     processCanSetCalibration(frame);
   } else if (eid == (int)bench_test_packet_ids_e::ECU_REQ_CALIBRATION) {
     processCanRequestCalibration(frame);
+  } else if (eid == (int)bench_test_packet_ids_e::DASH_ALIVE) {
+	  CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_IMAGE_INFO, 8, /*bus*/0, /*isExtended*/true);
+  #ifdef RAMDISK_INVALID
+    msg[0] = 0xFF;
+  #else
+#if EFI_EMBED_INI_MSD
+  #if EFI_USE_COMPRESSED_INI_MSD
+    msg[0] = 1;
+  #else // EFI_USE_COMPRESSED_INI_MSD
+    msg[0] = 2;
+  #endif // EFI_USE_COMPRESSED_INI_MSD
+
+#endif //EFI_EMBED_INI_MSD
+
+
+  #endif// RAMDISK_INVALID
+
+
+
   } else if (eid == (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
     processCanUserControl(frame);
   }
