@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.io.EOFException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -178,6 +179,10 @@ public class ProgramSelector {
                             log.info("Port " + ecuPort.port + " is now in OpenBLT mode");
                             return true;
                         }
+                    } catch (EOFException e) {
+                        // readByte timed out — keep waiting until a write error or
+                        // null stream indicates the ECU has actually reset.
+                        log.info("Port " + ecuPort.port + " still responding as ECU firmware (XCP ignored)");
                     } catch (Exception e) {
                         log.info("Port " + ecuPort.port + " probe error (ECU transitioning): " + e.getMessage());
                         return true;
