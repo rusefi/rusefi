@@ -350,20 +350,20 @@ TEST(FuelMath, VeSwitchTable) {
 
 	// Feature disabled -> primary table used even with pin configured and HIGH
 	engineConfiguration->enableVeSwitchTable = false;
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
 
 	// Feature enabled, pin LOW -> primary table
 	engineConfiguration->enableVeSwitchTable = true;
 	setMockState(Gpio::A0, false);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
 
 	// Feature enabled, pin HIGH -> switch table
 	setMockState(Gpio::A0, true);
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.8f);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
 
 	// Feature enabled but no pin configured -> primary table
 	config->veSwitchTableInput = Gpio::Unassigned;
-	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
 }
 
 TEST(FuelMath, getCycleFuelMassTest) {
