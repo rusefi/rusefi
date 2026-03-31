@@ -713,6 +713,7 @@ void processCanEcuControl(const CANRxFrame& frame) {
 
 #endif //EFI_EMBED_INI_MSD
 #endif // EFI_PROD_CODE
+  efiPrintf("ECU_IMAGE_INFO %d", msg[0]);
 
 
   #endif// RAMDISK_INVALID
