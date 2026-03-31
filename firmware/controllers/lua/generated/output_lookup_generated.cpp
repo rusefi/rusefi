@@ -1162,6 +1162,9 @@ float getOutputValueByHash(const int hash) {
 // acrActive
 		case -1548941801:
 			return engine->engineState.acrActive;
+// isVeSwitchTableActive
+		case 1393895570:
+			return engine->engineState.isVeSwitchTableActive;
 // acrEngineMovedRecently
 		case -791147982:
 			return engine->engineState.acrEngineMovedRecently;

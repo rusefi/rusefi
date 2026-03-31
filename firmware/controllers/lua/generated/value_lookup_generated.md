@@ -565,6 +565,9 @@ AEM X-Series or rusEFI Wideband
 ### useAbsolutePressureForLagTime
 
 
+### enableVeSwitchTable
+Enables the switchable VE table
+
 ### verboseCanBaseAddress
 
 
