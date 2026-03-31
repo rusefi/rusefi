@@ -18,12 +18,17 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.FindFileHelper.findSrecFile;
@@ -39,6 +44,13 @@ public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
     private static final int AUTOUPDATE_VERSION = 20260325; // separate from rusEFIVersion#CONSOLE_VERSION
     private static final String userHomeSubDirectory = FileUtil.RUSEFI_SETTINGS_FOLDER + "updates" + File.separator;
+
+    /**
+     * Filename used to stage a downloaded rusefi_console.jar before it can replace the running one.
+     * The new process launched by {@link #relaunchConsole()} finalizes the swap via
+     * {@link #finalizePendingUpdate()}.
+     */
+    public static final String PENDING_CONSOLE_JAR = "rusefi_console_pending.jar";
 
     private static final String TITLE = getTitle();
 
@@ -113,6 +125,160 @@ public class Autoupdate {
         startConsoleAsANewProcess(consoleExeFileName, args);
     }
 
+    /**
+     * Relaunches the console as a new process and exits the current JVM.
+     * Call this after {@link #runSilentUpdate} reports a completed update so the freshly
+     * downloaded rusefi_console.jar is picked up by the new process.
+     * <p>
+     * Prefers a direct {@code java -jar} invocation (platform-independent) so that
+     * {@code -DSKIP_ONE_INSTANCE_CHECK=true} can be passed as a JVM arg, preventing
+     * the "already running" dialog that would otherwise appear before the old instance
+     * releases its server socket. Falls back to the platform exe launcher when the
+     * current JAR path cannot be resolved (e.g. running from an IDE class directory).
+     */
+    public static void relaunchConsole() {
+        String jarPath = getCurrentJarPath();
+        if (jarPath != null) {
+            // If a staged update exists, launch from it so the new code is picked up immediately.
+            File pendingJar = new File(new File(jarPath).getParentFile(), PENDING_CONSOLE_JAR);
+            String launchJar = pendingJar.exists() ? pendingJar.getAbsolutePath() : jarPath;
+            String javaExe = Paths.get(System.getProperty("java.home"), "bin", "java").toString();
+            log.info("relaunchConsole: launching " + launchJar);
+            try {
+                new ProcessBuilder(javaExe, "-DSKIP_ONE_INSTANCE_CHECK=true", "-jar", launchJar).start();
+                System.exit(0);
+            } catch (IOException e) {
+                log.error("Direct relaunch failed, falling back to exe launcher: " + e);
+            }
+        }
+        String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
+        startConsoleAsANewProcess(consoleExeFileName, new String[0]);
+        System.exit(0);
+    }
+
+    /**
+     * If the running JAR is {@value PENDING_CONSOLE_JAR}, copies it over {@code rusefi_console.jar}
+     * to complete the update staged during the previous session, then deletes the pending file.
+     * Call this early in startup, before any other code locks class files.
+     */
+    public static void finalizePendingUpdate() {
+        String jarPath = getCurrentJarPath();
+        if (jarPath == null) return;
+        File runningJar = new File(jarPath);
+        if (!runningJar.getName().equals(PENDING_CONSOLE_JAR)) return;
+
+        File targetJar = new File(runningJar.getParentFile(), "rusefi_console.jar");
+        log.info("finalizePendingUpdate: " + runningJar + " -> " + targetJar);
+        try {
+            Files.copy(runningJar.toPath(), targetJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            log.info("finalizePendingUpdate: console JAR replaced successfully");
+        } catch (IOException e) {
+            log.error("finalizePendingUpdate: failed to replace console JAR: " + e);
+        }
+        // On Linux the pending file can be deleted even while open; on Windows this may fail silently.
+        if (!runningJar.delete()) {
+            log.info("finalizePendingUpdate: pending JAR will be cleaned up on next update");
+        }
+    }
+
+    /**
+     * Extracts the console JAR entry from the bundle ZIP to {@value PENDING_CONSOLE_JAR} in the
+     * same {@code ../console/} directory, so the running JAR is not touched.
+     */
+    private static void extractConsoleJarAsPending(String zipFileName) {
+        // ../console/ relative to working dir (console/) is the console directory itself
+        File pendingJar = new File(new File(".."), "console" + File.separator + PENDING_CONSOLE_JAR);
+        log.info("extractConsoleJarAsPending: " + pendingJar);
+        try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(zipFileName)))) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (isConsoleJar.test(entry)) {
+                    pendingJar.getParentFile().mkdirs();
+                    try (FileOutputStream fos = new FileOutputStream(pendingJar)) {
+                        byte[] buffer = new byte[4096];
+                        int len;
+                        while ((len = zis.read(buffer)) > 0)
+                            fos.write(buffer, 0, len);
+                    }
+                    log.info("extractConsoleJarAsPending: done (" + pendingJar.length() + " bytes)");
+                    return;
+                }
+            }
+            log.info("extractConsoleJarAsPending: entry " + consoleJarZipEntry + " not found in bundle");
+        } catch (IOException e) {
+            log.error("extractConsoleJarAsPending: " + e);
+        }
+    }
+
+    /**
+     * @return absolute path to the running JAR file, or {@code null} if running from a class directory.
+     */
+    public static String getCurrentJarPath() {
+        try {
+            URI location = Autoupdate.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+            File file = new File(location);
+            if (file.isFile() && file.getName().endsWith(".jar")) {
+                return file.getAbsolutePath();
+            }
+            log.info("getCurrentJarPath: not a JAR (" + file + ")");
+        } catch (Exception e) {
+            log.error("getCurrentJarPath error: " + e);
+        }
+        return null;
+    }
+
+    /**
+     * Runs a silent background update from within rusefi_console: downloads and unpacks the bundle
+     * (excluding rusefi_console.jar itself, which cannot be replaced while running),
+     * then invokes {@code onComplete} with a non-null restart message when an update was applied,
+     * or with {@code null} when no update was needed.
+     */
+    public static void runSilentUpdate(Consumer<String> onComplete) {
+        try {
+            log.info("runSilentUpdate: starting");
+            BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
+            log.info("runSilentUpdate: bundle=" + bundleInfo);
+            if (BundleInfo.isUndefined(bundleInfo)) {
+                log.info("runSilentUpdate: no bundle info, skipping");
+                onComplete.accept(null);
+                return;
+            }
+            if (!AutoupdateProperty.get()) {
+                log.info("runSilentUpdate: " + AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY + " says 'do not update'");
+                onComplete.accept(null);
+                return;
+            }
+            log.info("runSilentUpdate: checking for update...");
+            Optional<DownloadedAutoupdateFileInfo> downloaded = doDownload(bundleInfo);
+            if (!downloaded.isPresent()) {
+                log.info("runSilentUpdate: no update available or download skipped");
+                onComplete.accept(null);
+                return;
+            }
+            log.info("runSilentUpdate: update downloaded, applying...");
+            ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles();
+            DownloadedAutoupdateFileInfo file = downloaded.get();
+            findSrecFile(false);
+            try {
+                // Unzip everything except the console JAR (cannot replace a running JAR).
+                FileUtil.unzip(file.zipFileName, new File(".."), isConsoleJar.negate());
+                final String srecFile = findSrecFile();
+                final String firmwareFile = findFirmwareFile();
+                new File(srecFile == null ? firmwareFile : srecFile).setLastModified(file.lastModified);
+                tryInstallTsPlugin();
+                // Stage the new console JAR under a different name so relaunchConsole() can
+                // launch from it and finalizePendingUpdate() can swap it in on next startup.
+                extractConsoleJarAsPending(file.zipFileName);
+            } catch (IOException e) {
+                log.error("runSilentUpdate: error unzipping: " + e);
+            }
+            onComplete.accept("Update installed — please restart to apply the new console");
+        } catch (Throwable e) {
+            log.error("runSilentUpdate error: " + e);
+            onComplete.accept(null);
+        }
+    }
+
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String firstArgument, BundleInfo bundleInfo) {
         Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
         if (firstArgument.equalsIgnoreCase("release")) {
@@ -177,8 +343,18 @@ public class Autoupdate {
         }
     }
 
-    private static final String consoleJarZipEntry =
-        String.format("console/%s", ConnectionAndMeta.getRusEfiConsoleJarName());
+    private static final String consoleJarZipEntry = resolveConsoleJarZipEntry();
+
+    private static String resolveConsoleJarZipEntry() {
+        try {
+            return String.format("console/%s", ConnectionAndMeta.getRusEfiConsoleJarName());
+        } catch (Exception e) {
+            // JarFileUtil cannot parse the running JAR filename (e.g. when loaded inside the shadow console JAR).
+            // Fall back to the well-known default name
+            log.info("resolveConsoleJarZipEntry fallback: " + e);
+            return "console/rusefi_console.jar";
+        }
+    }
 
     private static final Predicate<ZipEntry> isConsoleJar = zipEntry -> consoleJarZipEntry.equals(zipEntry.getName());
 

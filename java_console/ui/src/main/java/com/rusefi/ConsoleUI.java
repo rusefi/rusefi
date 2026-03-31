@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
@@ -197,6 +199,10 @@ console live data tab is broken #8402
     }
 
     static void startUi(String[] args) throws InterruptedException, InvocationTargetException {
+        startUi(args, null);
+    }
+
+    static void startUi(String[] args, AtomicReference<Consumer<String>> bannerCallback) throws InterruptedException, InvocationTargetException {
         if (ConnectionAndMeta.saveReadmeHtmlToFile()) {
             new Thread(ConsoleUI::writeReadmeFile).start();
         }
@@ -205,7 +211,7 @@ console live data tab is broken #8402
         AutotestLogging.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         commonUiStartup();
 // not very useful?        VersionChecker.start();
-        SwingUtilities.invokeAndWait(() -> awtCode(args));
+        SwingUtilities.invokeAndWait(() -> awtCode(args, bannerCallback));
     }
 
     /**
@@ -216,7 +222,7 @@ console live data tab is broken #8402
         tabbedPane.addTab(title, component);
     }
 
-    private static void awtCode(String[] args) {
+    private static void awtCode(String[] args, AtomicReference<Consumer<String>> bannerCallback) {
         if (JustOneInstance.isAlreadyRunning()) {
             int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like another instance is already running. Do you really want to start another instance?",
                 TITLE, JOptionPane.YES_NO_OPTION);
@@ -248,7 +254,10 @@ console live data tab is broken #8402
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                new StartupFrame(ConnectivityContext.INSTANCE).showUi();
+                StartupFrame startupFrame = new StartupFrame(ConnectivityContext.INSTANCE);
+                if (bannerCallback != null)
+                    bannerCallback.set(startupFrame::showUpdateBanner);
+                startupFrame.showUi();
             }
 
         } catch (Throwable e) {

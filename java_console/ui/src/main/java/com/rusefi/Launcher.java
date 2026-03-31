@@ -2,12 +2,16 @@ package com.rusefi;
 
 import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
+import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.tools.ConsoleTools;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 
+import javax.swing.*;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -38,12 +42,26 @@ public class Launcher implements rusEFIVersion {
         log.info("\n\n");
         PersistentConfiguration.registerShutdownHook();
 
+        // If this process was launched from rusefi_console_pending.jar, copy it over
+        // rusefi_console.jar now that the previous instance has fully exited.
+        Autoupdate.finalizePendingUpdate();
+
         if (ConsoleTools.runTool(args)) {
             return;
         }
 
         ConsoleTools.printTools();
 
-        ConsoleUI.startUi(args);
+        AtomicReference<Consumer<String>> bannerCallback = new AtomicReference<>();
+        Thread updateThread = new Thread(() ->
+            Autoupdate.runSilentUpdate(msg -> {
+                Consumer<String> cb = bannerCallback.get();
+                if (cb != null && msg != null)
+                    SwingUtilities.invokeLater(() -> cb.accept(msg));
+            }), "autoupdate-background");
+        updateThread.setDaemon(true);
+        updateThread.start();
+
+        ConsoleUI.startUi(args, bannerCallback);
     }
 }
