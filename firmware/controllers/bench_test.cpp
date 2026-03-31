@@ -30,7 +30,9 @@
 #include "value_lookup.h"
 #include "can_msg_tx.h"
 #include "gm_sbc.h" // setStepperHw
+#if EFI_PROD_CODE
 #include "mass_storage_init.h"
+#endif // EFI_PROD_CODE
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
