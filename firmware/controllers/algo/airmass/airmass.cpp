@@ -22,7 +22,7 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 
 	percent_t ve = m_veTable->getValue(rpm, load);
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 	const bool switchTableActive = engineConfiguration->enableVeSwitchTable &&
 		isBrainPinValid(config->veSwitchTableInput) &&
 		efiReadPin(config->veSwitchTableInput, config->veSwitchTableInputMode);
