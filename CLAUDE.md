@@ -148,6 +148,8 @@ Code generation is integrated into the Makefile for all four delivery units: eac
 
 Do not `git checkout`/revert build-regenerated files (e.g. `firmware/controllers/lua/generated/value_lookup_generated.cpp`) to "clean up" the working tree after a build: some checked-in copies are stale relative to the checked-in config inputs, and the checkout stamps the file newer than its generator inputs, so the next `make` considers it fresh, skips regeneration, and the build fails on missing struct members. Leave them modified (just never commit them); if already reverted, recover with `touch firmware/integration/rusefi_config.txt` or `make clean`.
 
+Hooking generation into the build: shared `.mk` rules like `$(TCPPOBJS): $(RAMDISK)` bind to different variables per delivery unit — the ARM(CMx) ChibiOS `rules.mk` (firmware) names C++ objects `TCPPOBJS`/`ACPPOBJS`, while SIMIA32 (simulator) uses `CPPOBJS`. A hook that lists only one of them silently no-ops in the other build (empty target list); always hook all three, as `rusefi_pch.mk` and `rusefi_config.mk` do. Incremental builds can mask a missing hook: gcc `-MD -MP` dep files turn generated headers into known make targets that re-trigger their sentinel rules — only a fresh checkout (no `.dep/`) exposes the gap. The checked-in `ramdisk_image*.h` are declaration-less stubs; if a build fails with `'ramdisk_image[_gz]' was not declared`, the ramdisk sentinel rule did not run for that delivery unit.
+
 ### Compiler Flags
 
 - C99 with GNU extensions for C code
