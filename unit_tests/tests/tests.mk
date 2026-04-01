@@ -195,6 +195,7 @@ TESTS_SRC_CPP = \
 	tests/actuators/boost/test_open_loop_multipliers.cpp \
 	tests/actuators/boost/test_closed_loop_adders.cpp \
 	tests/controllers/can/test_can_rx.cpp \
+	tests/controllers/can/test_can_msg_tx.cpp \
 	tests/controllers/can/test_can_serial.cpp \
 	tests/controllers/can/test_can_wideband.cpp \
 	tests/controllers/can/test_obd2.cpp \
