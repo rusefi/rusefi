@@ -161,27 +161,29 @@ never used?
         final AvailableHardware currentHardware = connectivityContext.getCurrentHardware();
         log.info("updateUpdateFirmwareJob " + currentHardware);
         final List<PortResult> portsToUpdateFirmware = getPortResults(currentHardware);
-        switch (portsToUpdateFirmware.size()) {
-            case 1: {
-                // OpenBlt first preference
-                setUpdateFirmwareJob(getNonDfuUpdateFirmwareJobForPort(portsToUpdateFirmware.get(0)));
-                break;
-            }
-            case 0: {
-                // fallback to DFU which is more fragile
-                setUpdateFirmwareJob(new DfuManualJob());
-                break;
-            }
-            default: {
-                resetUpdateFirmwareJob(String.format(
-                    "Multiple ECUs found on: %s",
-                    portsToUpdateFirmware.stream()
-                        .map(portResult -> portResult.port)
-                        .collect(Collectors.joining(", "))
-                ));
-                break;
-            }
+        int count = portsToUpdateFirmware.size();
+        if (count == 1) {
+            // OpenBlt first preference
+            setUpdateFirmwareJob(getNonDfuUpdateFirmwareJobForPort(portsToUpdateFirmware.get(0)));
+            return;
         }
+        if (currentHardware.isDfuFound()) {
+            setUpdateFirmwareJob(new DfuManualJob());
+            return;
+        }
+        String message;
+        if (count == 0) {
+            message = "No ECUs found";
+        } else {
+            message = String.format(
+                "Multiple ECUs found on: %s",
+                portsToUpdateFirmware.stream()
+                    .map(portResult -> portResult.port)
+                    .collect(Collectors.joining(", "))
+            );
+        }
+
+        resetUpdateFirmwareJob(message);
     }
 
     private AsyncJob getNonDfuUpdateFirmwareJobForPort(final PortResult portToUpdateFirmware) {
