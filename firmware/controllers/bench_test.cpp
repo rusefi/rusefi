@@ -701,10 +701,10 @@ static void sendECU_IMAGE_INFO() {
    #if EFI_EMBED_INI_MSD
     #if EFI_USE_COMPRESSED_INI_MSD
      msg[0] = 1;
-     msg.setIntValueLsb(sizeof(ramdisk_image_gz), /*offset*/4);
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
     #else // EFI_USE_COMPRESSED_INI_MSD
      msg[0] = 2;
-     msg.setIntValueLsb(sizeof(ramdisk_image), /*offset*/4);
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
     #endif // EFI_USE_COMPRESSED_INI_MSD
    #endif //EFI_EMBED_INI_MSD
   #endif // RAMDISK_INVALID

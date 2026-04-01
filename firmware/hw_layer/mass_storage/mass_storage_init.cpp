@@ -80,18 +80,40 @@ void deattachMsdSdCard(void) {
 #endif
 }
 
+#if EFI_EMBED_INI_MSD
+#if EFI_USE_COMPRESSED_INI_MSD
+size_t getStorageImageSize() {
+	return sizeof(ramdisk_image_gz);
+}
+
+const unsigned char *getStorageImage() {
+  return ramdisk_image_gz;
+}
+
+#else // not EFI_USE_COMPRESSED_INI_MSD
+size_t getStorageImageSize() {
+	return sizeof(ramdisk_image);
+}
+
+const unsigned char *getStorageImage() {
+  return ramdisk_image;
+}
+#endif // EFI_USE_COMPRESSED_INI_MSD
+
+#endif // not EFI_EMBED_INI_MSD
+
 static BaseBlockDevice* getRamdiskDevice() {
 #if EFI_EMBED_INI_MSD
 #if EFI_USE_COMPRESSED_INI_MSD
 	uzlib_init();
 	compressedBlockDeviceObjectInit(&cbd);
-	compressedBlockDeviceStart(&cbd, ramdisk_image_gz, sizeof(ramdisk_image_gz));
+	compressedBlockDeviceStart(&cbd, ramdisk_image_gz, getStorageImageSize());
 
 	return (BaseBlockDevice*)&cbd;
 #else // not EFI_USE_COMPRESSED_INI_MSD
 	ramdiskObjectInit(&ramdisk);
 
-	constexpr size_t ramdiskSize = sizeof(ramdisk_image);
+	constexpr size_t ramdiskSize = getStorageImageSize();
 	constexpr size_t blockSize = 512;
 	constexpr size_t blockCount = ramdiskSize / blockSize;
 
