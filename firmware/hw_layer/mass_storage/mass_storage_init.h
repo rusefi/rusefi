@@ -25,5 +25,7 @@ void printMsdDiagnostics();
 	#endif // RAMDISK_INVALID
 #endif // EFI_EMBED_INI_MSD
 
+const unsigned char *getStorageImage();
+size_t getStorageImageSize();
 
 #endif // HAL_USE_USB_MSD
