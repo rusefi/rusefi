@@ -31,7 +31,7 @@ public:
 };
 
 #if EFI_TUNER_STUDIO
-void ionPostState(TunerStudioOutputChannels *tsOutputChannels);
+void ionPostState(output_channels_s *tsOutputChannels);
 #endif
 
 void cdmIonInit(void);

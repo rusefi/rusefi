@@ -109,8 +109,7 @@ public:
 
     StartStopState startStopState{};
 
-
-    TunerStudioOutputChannels outputChannels{};
+    output_channels_s outputChannels{};
 
     /**
      * Sometimes for instance during shutdown we need to completely supress CAN TX

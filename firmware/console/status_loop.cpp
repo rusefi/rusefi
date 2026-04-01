@@ -623,7 +623,7 @@ static void updateFlags() {
 // As of 2022 it's preferred to leverage LiveData where all state is exposed
 // this method is invoked ONLY if we SD card log or have serial connection with some frontend app
 void updateTunerStudioState() {
-	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
+	output_channels_s *tsOutputChannels = &engine->outputChannels;
 #if EFI_USB_SERIAL
   // pretty much SD card logs know if specifically USB serial is active
 	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
