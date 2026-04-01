@@ -79,7 +79,10 @@
 #include "electronic_throttle.h"
 #include "live_data.h"
 #include "efi_quote.h"
+
+#if EFI_PROD_CODE
 #include "mass_storage_init.h"
+#endif // EFI_PROD_CODE
 
 #include <string.h>
 #include "bench_test.h"
@@ -831,6 +834,7 @@ void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int
 }
 
 static void handleGetImageCommand(TsChannelBase* tsChannel, size_t offset32, int count) {
+#if EFI_PROD_CODE
 	if (offset32 + count > getStorageImageSize()) {
 		tsState.errorOutOfRange++;
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: GET_IMAGE out of range");
@@ -839,6 +843,9 @@ static void handleGetImageCommand(TsChannelBase* tsChannel, size_t offset32, int
 
 	const unsigned char* addr = getStorageImage() + offset32;
 	tsChannel->sendResponse(TS_CRC, addr, count);
+#else
+  sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "not implemented");
+#endif // EFI_PROD_CODE
 }
 
 int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
