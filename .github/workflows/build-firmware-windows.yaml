@@ -27,6 +27,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Checkout Submodules
+        # todo: some funny way to reuse common_submodule_init_without_chibios.sh on Windows?
         run: |
           git submodule update --init --depth=1 firmware/ChibiOS
           git submodule update --init --depth=1 firmware/ChibiOS-Contrib
@@ -38,6 +39,7 @@ jobs:
           git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
           git submodule update --init --depth=1 java_console/luaformatter
           git submodule update --init --depth=1 java_console/peak-can-basic
+          git submodule update --init --depth=1 firmware/ext/magic_enum
 
       - name: Set up Cygwin
         uses: cygwin/cygwin-install-action@v6
