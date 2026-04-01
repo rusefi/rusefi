@@ -6,8 +6,7 @@ TEST(CanTxMessage, SetIntValueLsb) {
     // In unit tests, txCanBuffer is used.
 
     // Create a message
-    // CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, size_t bus = 0, bool isExtended = false)
-    CanTxMessage msg(CanCategory::NBC, 0x123, 8);
+    CanTxMessage msg(CanCategory::NBC, 0x123, 8, /*bus*/0);
 
     uint32_t value = 0x12345678;
     msg.setIntValueLsb(value, 0);
