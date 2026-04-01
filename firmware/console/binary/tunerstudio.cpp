@@ -512,6 +512,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_SCATTERED_GET_COMMAND
 #endif
 			|| command == TS_SET_LOGGER_SWITCH
+			|| command == TS_GET_IMAGE_COMMAND
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
@@ -835,8 +836,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	data++;
 
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
+	const uint32_t* data32 = reinterpret_cast<uint16_t*>(data);
 
-	// only few command have page argument, default page is 0
+	// only few commands have page argument, default page is 0
 	uint16_t page = 0;
 	uint16_t offset = 0;
 	uint16_t count = 0;
@@ -912,6 +914,11 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		offset = data16[1];
 		count = data16[2];
 		handlePageReadCommand(tsChannel, page, offset, count);
+		break;
+	case TS_GET_IMAGE_COMMAND:
+		size_t offset32 = data32[0];
+		count = data16[3];
+		handleGetImageCommand(tsChannel, offset32, count);
 		break;
 	case TS_TEST_COMMAND:
 		[[fallthrough]];
