@@ -65,6 +65,7 @@ ALLINC += \
 	$(PROJECT_DIR)/config/engines \
 	$(LIVE_DATA_GENERATED_DIRS) \
 	$(BOARDS_DIR) \
+	$(PROJECT_DIR)/ext/magic_enum/include/magic_enum \
 	$(PROJECT_DIR)/hw_layer/algo \
     $(PROJECT_DIR)/init \
     $(PROJECT_DIR)/ext_algo \
