@@ -50,12 +50,6 @@ size_t getStorageImageSize() {
 		#include "ramdisk.h"
 #endif
 
-	// If the ramdisk image told us not to use it, don't use it.
-	#ifdef RAMDISK_INVALID
-// TODO this 'RAMDISK_INVALID' is nasty, can we make things cleaner/more elegant?
-		#undef EFI_EMBED_INI_MSD
-		#define EFI_EMBED_INI_MSD FALSE
-	#endif
 #endif
 
 

@@ -695,9 +695,6 @@ static void processCanRequestCalibration(const CANRxFrame& frame) {
 static void sendECU_IMAGE_INFO() {
 	  CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_IMAGE_INFO, 8, /*bus*/0, /*isExtended*/true);
 #if EFI_PROD_CODE
-  #ifdef RAMDISK_INVALID
-    msg[0] = 0xFF;
-  #else // RAMDISK_INVALID
    #if EFI_EMBED_INI_MSD
     #if EFI_USE_COMPRESSED_INI_MSD
      msg[0] = 1;
@@ -707,7 +704,6 @@ static void sendECU_IMAGE_INFO() {
      msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
     #endif // EFI_USE_COMPRESSED_INI_MSD
    #endif //EFI_EMBED_INI_MSD
-  #endif // RAMDISK_INVALID
 #endif// EFI_PROD_CODE
   efiPrintf("ECU_IMAGE_INFO %d", msg[0]);
 }
