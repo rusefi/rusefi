@@ -1,8 +1,60 @@
+#include "pch.h"
+
 #include "mass_storage_init.h"
 #include "mass_storage_device.h"
 #include "null_device.h"
 
 #if HAL_USE_USB_MSD
+
+#if EFI_EMBED_INI_MSD
+	#if EFI_USE_COMPRESSED_INI_MSD
+		#include "compressed_block_device.h"
+		#include "ramdisk_image_compressed.h"
+
+	#else
+		#include "ramdisk.h"
+		#include "ramdisk_image.h"
+#endif
+
+	// If the ramdisk image told us not to use it, don't use it.
+	#ifdef RAMDISK_INVALID
+// TODO this 'RAMDISK_INVALID' is nasty, can we make things cleaner/more elegant?
+		#undef EFI_EMBED_INI_MSD
+		#define EFI_EMBED_INI_MSD FALSE
+	#endif
+#endif
+
+
+#if EFI_EMBED_INI_MSD
+#if EFI_USE_COMPRESSED_INI_MSD
+const unsigned char *getStorageImage() {
+	return ramdisk_image_gz;
+}
+
+size_t getStorageImageSize() {
+	return sizeof(ramdisk_image_gz);
+}
+#else
+const unsigned char *getStorageImage() {
+	return ramdisk_image;
+}
+
+size_t getStorageImageSize() {
+	return sizeof(ramdisk_image);
+}
+#endif
+
+
+#else
+const unsigned char *getStorageImage() {
+	return nullptr;
+}
+
+size_t getStorageImageSize() {
+	return 0;
+}
+
+#endif
 
 #if EFI_EMBED_INI_MSD
 	#if EFI_USE_COMPRESSED_INI_MSD
