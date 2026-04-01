@@ -4,16 +4,50 @@
 #include "mass_storage_device.h"
 #include "null_device.h"
 
+#if EFI_EMBED_INI_MSD
+	#if EFI_USE_COMPRESSED_INI_MSD
+	  // image is useful regardless of HAL_USE_USB_MSD
+		#include "ramdisk_image_compressed.h"
+		const unsigned char *getStorageImage() {
+    	return ramdisk_image_gz;
+    }
+
+    size_t getStorageImageSize() {
+    	return sizeof(ramdisk_image_gz);
+    }
+
+	#else // EFI_USE_COMPRESSED_INI_MSD
+		#include "ramdisk_image.h"
+
+		const unsigned char *getStorageImage() {
+    	return ramdisk_image;
+    }
+
+    size_t getStorageImageSize() {
+    	return sizeof(ramdisk_image);
+    }
+
+  #endif //EFI_USE_COMPRESSED_INI_MSD
+
+
+#else // EFI_EMBED_INI_MSD
+const unsigned char *getStorageImage() {
+	return nullptr;
+}
+
+size_t getStorageImageSize() {
+	return 0;
+}
+#endif // EFI_EMBED_INI_MSD
+
+
 #if HAL_USE_USB_MSD
 
 #if EFI_EMBED_INI_MSD
 	#if EFI_USE_COMPRESSED_INI_MSD
 		#include "compressed_block_device.h"
-		#include "ramdisk_image_compressed.h"
-
 	#else
 		#include "ramdisk.h"
-		#include "ramdisk_image.h"
 #endif
 
 	// If the ramdisk image told us not to use it, don't use it.
@@ -25,36 +59,6 @@
 #endif
 
 
-#if EFI_EMBED_INI_MSD
-#if EFI_USE_COMPRESSED_INI_MSD
-const unsigned char *getStorageImage() {
-	return ramdisk_image_gz;
-}
-
-size_t getStorageImageSize() {
-	return sizeof(ramdisk_image_gz);
-}
-#else
-const unsigned char *getStorageImage() {
-	return ramdisk_image;
-}
-
-size_t getStorageImageSize() {
-	return sizeof(ramdisk_image);
-}
-#endif
-
-
-#else
-const unsigned char *getStorageImage() {
-	return nullptr;
-}
-
-size_t getStorageImageSize() {
-	return 0;
-}
-
-#endif
 
 #if EFI_EMBED_INI_MSD
 	#if EFI_USE_COMPRESSED_INI_MSD
