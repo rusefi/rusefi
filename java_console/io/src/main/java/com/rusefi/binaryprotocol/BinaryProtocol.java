@@ -424,8 +424,12 @@ public class BinaryProtocol {
     }
 
     public byte @NotNull [] smartPacketPrefix(int offset, int requestSize) {
+        return smartPacketPrefix2(offset, requestSize, isSinglePageController());
+    }
+
+    static byte @NotNull [] smartPacketPrefix2(int offset, int requestSize, boolean isSinglePageController) {
         byte[] packet;
-        if (isSinglePageController()) {
+        if (isSinglePageController) {
             // older controller, no page index in read command
             // PS: technically we can/shall actually use command syntax as specified by the .ini
             packet = new byte[4];
