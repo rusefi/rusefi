@@ -39,4 +39,13 @@ public class BinaryProtocolTest {
                 (byte) 0x08, 0x52 // size 21000
         }, fullRequest);
     }
+
+    @Test
+    public void testBurnCommand() {
+        byte[] fullRequest = BinaryProtocol.getFullRequest((byte) Integration.TS_BURN_COMMAND, new byte[]{0, 0});
+        assertArrayEquals(new byte[]{
+                'B',
+                0, 0,
+        }, fullRequest);
+    }
 }
