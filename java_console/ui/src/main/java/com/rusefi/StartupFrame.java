@@ -15,6 +15,12 @@ import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.io.DoubleCallbacks;
+import com.rusefi.ui.basic.FirmwareUpdateTab;
+import com.rusefi.ui.basic.SingleAsyncJobExecutor;
+import com.rusefi.ui.basic.StatusPanelWithProgressBar;
+import com.rusefi.ui.basic.TuneManagementTab;
+import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.ToolButtons;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +34,7 @@ import java.awt.event.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -88,6 +95,15 @@ public class StartupFrame {
     private ProgramSelector selector;
     private boolean firstTimeHasEcuWithOpenBlt = true;
     private boolean firstTimeAutoConnect = true;
+
+    private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar();
+    private final StatusPanel tuneStatusPanel = new StatusPanel(250);
+    private final SingleAsyncJobExecutor asyncJobExecutor = new SingleAsyncJobExecutor(
+        new DoubleCallbacks(firmwareStatusPanel, tuneStatusPanel));
+    private final AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
+    private FirmwareUpdateTab firmwareUpdateTab;
+    private StatusAnimation firmwareTabStatus;
+    private JTabbedPane outerTabs;
 
     public StartupFrame(ConnectivityContext connectivityContext) {
         this.connectivityContext = connectivityContext;
@@ -201,23 +217,12 @@ public class StartupFrame {
         dfuErrorTimer.start();
 
         selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
+        selector.setJobExecutor(asyncJobExecutor);
 
+        JButton goToFirmwareTab = new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
+        goToFirmwareTab.addActionListener(e -> outerTabs.setSelectedIndex(1));
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
-        realHardwarePanel.add(selector.getControl(), "right, wrap");
-
-        if (FileLog.isWindows()) {
-
-            // for F7 builds we just build one file at the moment
-//            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
-            JComponent updateHelp = ProgramSelector.createHelpButton();
-
-            JLabel comp = binaryModificationControl();
-            realHardwarePanel.add(comp, "right, wrap");
-            realHardwarePanel.add(updateHelp, "right, wrap");
-
-            // st-link is pretty advanced use-case, real humans do not have st-link as of 2021
-            //realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
-        }
+        realHardwarePanel.add(goToFirmwareTab, "right, wrap");
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             status.stop();
@@ -277,9 +282,54 @@ public class StartupFrame {
         content.add(leftPanel, BorderLayout.WEST);
         content.add(rightPanel, BorderLayout.EAST);
 
-        TunerStudioHelper.checkTunerStudio(frame.getContentPane(), () -> restoreContent(content));
+        JPanel connectTabWrapper = new JPanel(new BorderLayout());
+        connectTabWrapper.add(content, BorderLayout.NORTH);
 
-        frame.add(content);
+        outerTabs = new JTabbedPane() {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension superPref = super.getPreferredSize();
+                Component sel = getSelectedComponent();
+                if (sel == null) return superPref;
+                int connectTabHeight = Math.max(sel.getPreferredSize().height, leftPanel.getPreferredSize().height);
+                return new Dimension(superPref.width, 100 + connectTabHeight);
+            }
+        };
+        outerTabs.addTab("Connect", connectTabWrapper);
+
+        firmwareUpdateTab = new FirmwareUpdateTab(
+            connectivityContext, UiProperties.getWhiteLabel(),
+            firmwareStatusPanel, asyncJobExecutor, ecuPortToUse);
+
+        JPanel firmwareTopPanel = new JPanel(new BorderLayout(0, 0));
+        firmwareTopPanel.add(selector.getControl(), BorderLayout.NORTH);
+        firmwareTopPanel.add(firmwareUpdateTab.getBasicUpdaterPanel().getMigrateSettings(), BorderLayout.SOUTH);
+
+        JPanel firmwareTabPanel = new JPanel(new BorderLayout(0, 0));
+        firmwareTabPanel.add(firmwareTopPanel, BorderLayout.NORTH);
+        firmwareTabPanel.add(firmwareStatusPanel.getContent(), BorderLayout.CENTER);
+        outerTabs.addTab("Update Firmware", firmwareTabPanel);
+        outerTabs.addTab("Manage Tunes", new TuneManagementTab(
+            connectivityContext,
+            ecuPortToUse,
+            firmwareUpdateTab.getBasicUpdaterPanel().getImportTuneButton().getContent(),
+            asyncJobExecutor,
+            tuneStatusPanel
+        ).getContent());
+
+        connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+            if (firmwareTabStatus != null)
+                firmwareTabStatus.stop();
+            firmwareUpdateTab.getBasicUpdaterPanel().onHardwareUpdated();
+        }));
+
+        firmwareTabStatus = new StatusAnimation(
+            msg -> firmwareUpdateTab.getBasicUpdaterPanel().updateStatus(msg),
+            SCANNING_PORTS);
+
+        TunerStudioHelper.checkTunerStudio(frame.getContentPane(), () -> restoreContent(outerTabs));
+
+        frame.add(outerTabs);
         frame.pack();
         setFrameIcon(frame);
         log.info("setVisible");
@@ -359,9 +409,9 @@ public class StartupFrame {
         return jLabel;
     }
 
-    private void restoreContent(JPanel content) {
+    private void restoreContent(JComponent root) {
         frame.getContentPane().removeAll();
-        frame.add(content);
+        frame.add(root);
         AutoupdateUtil.pack(frame);
     }
 
@@ -478,6 +528,8 @@ todo: enable auto-connect once we have 'Device' tab
         isProceeding = true;
         frame.dispose();
         status.stop();
+        if (firmwareTabStatus != null)
+            firmwareTabStatus.stop();
         connectivityContext.getSerialPortScanner().stopTimer();
     }
 
