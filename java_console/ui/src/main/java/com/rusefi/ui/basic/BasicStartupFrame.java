@@ -24,7 +24,11 @@ import java.util.concurrent.atomic.AtomicReference;
  * <p>
  * Focuses on firmware updater
  * Much simpler than {@link com.rusefi.StartupFrame}
+ *
+ * @deprecated Firmware update and tune management tabs are now part of the main
+ *             {@link com.rusefi.StartupFrame}. This class remains for scripted/automated use.
  */
+@Deprecated
 public class BasicStartupFrame {
     private final String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
 
