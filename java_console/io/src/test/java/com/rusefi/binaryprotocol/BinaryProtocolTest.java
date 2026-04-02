@@ -27,4 +27,16 @@ public class BinaryProtocolTest {
                 (byte) 0xE8, 0x03 // size 1000
         }, fullRequest);
     }
+
+    @Test
+    public void testCrcCheck() {
+        byte[] packet = BinaryProtocol.smartPacketPrefix2(0, 21000, false);
+        byte[] fullRequest = BinaryProtocol.getFullRequest((byte) Integration.TS_CRC_CHECK_COMMAND, packet);
+        assertArrayEquals(new byte[]{
+                'k',
+                0, 0, // page
+                0, 0, // offset
+                (byte) 0x08, 0x52 // size 21000
+        }, fullRequest);
+    }
 }
