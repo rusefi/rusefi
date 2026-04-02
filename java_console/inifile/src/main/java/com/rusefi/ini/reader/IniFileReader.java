@@ -560,14 +560,19 @@ public class IniFileReader {
         // format: indicator, expression, offLabel, onLabel[, offBg, offFg, onBg, onFg]
         // Colors are optional
         if (list.size() < 4) return;
-        IndicatorModel indicator = new IndicatorModel(
+
+        IndicatorModel indicator = makeIndicatorFromIniField(list);
+        indicatorsOfCurrentDialog.add(indicator);
+        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.INDICATOR, indicator));
+    }
+
+    private IndicatorModel makeIndicatorFromIniField(LinkedList<String> list) {
+        return new IndicatorModel(
                 list.get(1), list.get(2), list.get(3),
                 list.size() > 4 ? list.get(4) : null,
                 list.size() > 5 ? list.get(5) : "black",
                 list.size() > 6 ? list.get(6) : "green",
                 list.size() > 7 ? list.get(7) : "black");
-        indicatorsOfCurrentDialog.add(indicator);
-        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.INDICATOR, indicator));
     }
 
     private void handleDialogGauge(LinkedList<String> list) {
@@ -861,16 +866,7 @@ public class IniFileReader {
         } else if (first.equalsIgnoreCase("indicator")) {
             // format: indicator, expression, offLabel, onLabel[, offBg, offFg, onBg, onFg]
             if (list.size() >= 4) {
-                IndicatorModel indicator = new IndicatorModel(
-                        list.get(1),
-                        list.get(2),
-                        list.get(3),
-                        list.size() > 4 ? list.get(4) : null,
-                        list.size() > 5 ? list.get(5) : "black",
-                        list.size() > 6 ? list.get(6) : "green",
-                        list.size() > 7 ? list.get(7) : "black"
-                );
-                frontPage.getIndicators().add(indicator);
+                frontPage.getIndicators().add(makeIndicatorFromIniField(list));
             }
         }
     }
