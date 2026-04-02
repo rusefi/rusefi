@@ -47,7 +47,7 @@ public class CalibrationDialogWidget {
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
-    private final List<IndicatorLabelEntry> indicatorEntries = new ArrayList<>();
+    private final List<IndicatorPanel> indicatorPanels = new ArrayList<>();
     private final List<ReadoutLabelEntry> readoutEntries = new ArrayList<>();
     private final List<GaugeReadoutEntry> gaugeReadoutEntries = new ArrayList<>();
     private static final int READOUT_GAUGE_SIZE = 150;
@@ -70,17 +70,6 @@ public class CalibrationDialogWidget {
             this.row = row;
             this.enableExpression = enableExpression;
             this.visibleExpression = visibleExpression;
-        }
-    }
-
-    /** Tracks an indicator label inside a dialog indicatorPanel for config-driven refresh. */
-    private static class IndicatorLabelEntry {
-        final JLabel label;
-        final IndicatorModel indicator;
-
-        IndicatorLabelEntry(JLabel label, IndicatorModel indicator) {
-            this.label = label;
-            this.indicator = indicator;
         }
     }
 
@@ -118,13 +107,11 @@ public class CalibrationDialogWidget {
         this.uiContext = uiContext;
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-        // Refresh dialog indicators and readouts whenever the ECU sends new output-channel data.
+        // Refresh readouts whenever the ECU sends new output-channel data.
+        // Indicator panels register their own SensorCentral listeners independently.
         SensorCentral.getInstance().addListener(() -> {
-            if (!indicatorEntries.isEmpty() || !readoutEntries.isEmpty() || !gaugeReadoutEntries.isEmpty()) {
-                SwingUtilities.invokeLater(() -> {
-                    refreshIndicators();
-                    refreshReadouts();
-                });
+            if (!readoutEntries.isEmpty() || !gaugeReadoutEntries.isEmpty()) {
+                SwingUtilities.invokeLater(this::refreshReadouts);
             }
         });
     }
@@ -158,7 +145,7 @@ public class CalibrationDialogWidget {
         workingImage = ci != null ? ci.clone() : null;
         currentIniFileModel = iniFileModel;
         expressionRows.clear();
-        indicatorEntries.clear();
+        indicatorPanels.clear();
         readoutEntries.clear();
         gaugeReadoutEntries.clear();
         contentPane.removeAll();
@@ -307,21 +294,10 @@ public class CalibrationDialogWidget {
     }
 
     private void renderIndicatorGroup(JPanel container, List<IndicatorModel> indicators, IniFileModel iniFileModel, ConfigurationImage ci, int cols) {
-        int columns = Math.max(1, cols);
-        JPanel indicatorWrapper = new JPanel(new GridLayout(0, columns, 4, 4));
-        indicatorWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
-        ConfigurationImage evalImage = workingImage != null ? workingImage : ci;
-        for (IndicatorModel indicator : indicators) {
-            JLabel label = new JLabel();
-            label.setOpaque(true);
-            label.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Color.GRAY, 1),
-                    BorderFactory.createEmptyBorder(4, 8, 4, 8)));
-            applyIndicatorState(label, indicator, iniFileModel, evalImage);
-            indicatorEntries.add(new IndicatorLabelEntry(label, indicator));
-            indicatorWrapper.add(label);
-        }
-        container.add(indicatorWrapper);
+        IndicatorPanel ip = new IndicatorPanel(indicators, iniFileModel, Math.max(1, cols));
+        ip.refresh(workingImage != null ? workingImage : ci);
+        indicatorPanels.add(ip);
+        container.add(ip.getPanel());
     }
 
     private void renderGaugeGroup(JPanel container, List<String> gaugeNames, IniFileModel iniFileModel) {
@@ -460,17 +436,11 @@ public class CalibrationDialogWidget {
         }
     }
 
-    /**
-     * Re-evaluates indicator labels using both the current config image and live sensor values.
-     * Called from the SensorCentral listener (on EDT via invokeLater) and from refreshExpressions.
-     */
+    /** Pushes the current working image to all indicator panels (called when config fields change). */
     private void refreshIndicators() {
-        if (currentIniFileModel == null) return;
-        for (IndicatorLabelEntry entry : indicatorEntries) {
-            applyIndicatorState(entry.label, entry.indicator, currentIniFileModel, workingImage);
+        for (IndicatorPanel ip : indicatorPanels) {
+            ip.refresh(workingImage);
         }
-        contentPane.revalidate();
-        contentPane.repaint();
     }
 
     private void refreshReadouts() {
@@ -574,65 +544,6 @@ public class CalibrationDialogWidget {
             if (comp instanceof Container) {
                 setComponentsEnabled((Container) comp, enabled);
             }
-        }
-    }
-
-    private static void applyIndicatorState(JLabel label, IndicatorModel indicator, IniFileModel ini, ConfigurationImage ci) {
-        // Build evaluation context: config image fields first, then live sensor/output-channel values.
-        // Include variables from the labels so bitStringValue() index args are resolved.
-        Set<String> vars = new HashSet<>();
-        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getExpression()));
-        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getOnLabel()));
-        vars.addAll(ExpressionEvaluator.extractVariables(indicator.getOffLabel()));
-        Map<String, Double> context = new HashMap<>();
-        for (String var : vars) {
-            Optional<IniField> field = ini.findIniField(var);
-            if (field.isPresent() && ci != null) {
-                Double val = ci.readNumericValue(field.get());
-                if (val != null) { context.put(var, val); continue; }
-            }
-            double sensorVal = SensorCentral.getInstance().getValue(var);
-            if (!Double.isNaN(sensorVal)) context.put(var, sensorVal);
-        }
-        Boolean active = ExpressionEvaluator.evaluateBooleanExpression(indicator.getExpression(), context);
-        if (Boolean.TRUE.equals(active)) {
-            label.setText(resolveLabel(indicator.getOnLabel(), ini, context));
-            label.setBackground(parseDialogIndicatorColor(indicator.getOnBg()));
-            label.setForeground(parseDialogIndicatorColor(indicator.getOnFg()));
-        } else {
-            String offText = resolveLabel(indicator.getOffLabel(), ini, context);
-            label.setText(offText.isEmpty() ? " " : offText);
-            label.setBackground(parseDialogIndicatorColor(indicator.getOffBg()));
-            label.setForeground(parseDialogIndicatorColor(indicator.getOffFg()));
-        }
-    }
-
-    private static String resolveLabel(String label, IniFileModel ini, Map<String, Double> context) {
-        if (label == null) return "";
-        if (TsStringFunction.containsStringFunction(label)) {
-            String resolved = TsStringFunction.resolve(label, ini, null, context);
-            return resolved != null ? resolved : "";
-        }
-        return stripBraces(label);
-    }
-
-    private static String stripBraces(String s) {
-        if (s == null) return "";
-        String t = s.trim();
-        if (t.startsWith("{")) t = t.replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
-        return t;
-    }
-
-    private static Color parseDialogIndicatorColor(String name) {
-        if (name == null) return Color.LIGHT_GRAY;
-        switch (name.toLowerCase().trim()) {
-            case "white":  return Color.WHITE;
-            case "black":  return Color.BLACK;
-            case "red":    return Color.RED;
-            case "yellow": return Color.YELLOW;
-            case "green":  return Color.GREEN;
-            case "blue":   return Color.BLUE;
-            default:       return Color.LIGHT_GRAY;
         }
     }
 

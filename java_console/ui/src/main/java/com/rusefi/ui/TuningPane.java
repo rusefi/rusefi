@@ -1,25 +1,20 @@
 package com.rusefi.ui;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.FrontPageModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.TsStringFunction;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
+import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayDeque;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2026
@@ -251,88 +246,7 @@ public class TuningPane {
         if (frontPage == null) return null;
         List<IndicatorModel> indicators = frontPage.getIndicators();
         if (indicators.isEmpty()) return null;
-
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 2));
-        for (IndicatorModel model : indicators) {
-            JLabel label = new JLabel(model.getOffLabel().isEmpty() ? " " : model.getOffLabel());
-            label.setOpaque(true);
-            label.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Color.GRAY, 1),
-                BorderFactory.createEmptyBorder(4, 8, 4, 8)));
-            label.setBackground(parseIndicatorColor(model.getOffBg()));
-            label.setForeground(parseIndicatorColor(model.getOffFg()));
-            panel.add(label);
-
-            // Pre-compute the variable set once — model fields are immutable after INI load.
-            Set<String> vars = new java.util.HashSet<>();
-            vars.addAll(ExpressionEvaluator.extractVariables(model.getExpression()));
-            vars.addAll(ExpressionEvaluator.extractVariables(model.getOnLabel()));
-            vars.addAll(ExpressionEvaluator.extractVariables(model.getOffLabel()));
-            // Reuse a single context map across frames to avoid per-frame HashMap allocation.
-            Map<String, Double> context = new HashMap<>(vars.size() * 2);
-            // Cache last-rendered state so we only dispatch invokeLater when something changed.
-            final String[] lastText = {null};
-            final Color[] lastBg = {null};
-            final Color[] lastFg = {null};
-
-            SensorCentral.getInstance().addListener(() -> {
-                context.clear();
-                for (String var : vars) {
-                    double val = SensorCentral.getInstance().getValue(var);
-                    if (!Double.isNaN(val)) context.put(var, val);
-                }
-                Boolean active = ExpressionEvaluator.evaluateBooleanExpression(model.getExpression(), context);
-                final String text;
-                final Color bg, fg;
-                if (Boolean.TRUE.equals(active)) {
-                    text = resolveIndicatorLabel(model.getOnLabel(), ini, context);
-                    bg = parseIndicatorColor(model.getOnBg());
-                    fg = parseIndicatorColor(model.getOnFg());
-                } else {
-                    text = resolveIndicatorLabel(model.getOffLabel(), ini, context);
-                    bg = parseIndicatorColor(model.getOffBg());
-                    fg = parseIndicatorColor(model.getOffFg());
-                }
-                // Skip invokeLater if visual state hasn't changed — avoids per-frame InvocationEvent.
-                String display = text.isEmpty() ? " " : text;
-                if (display.equals(lastText[0]) && bg == lastBg[0] && fg == lastFg[0]) return;
-                lastText[0] = display;
-                lastBg[0] = bg;
-                lastFg[0] = fg;
-                SwingUtilities.invokeLater(() -> {
-                    label.setText(display);
-                    label.setBackground(bg);
-                    label.setForeground(fg);
-                });
-            });
-        }
-        return panel;
-    }
-
-    private static String resolveIndicatorLabel(String label, IniFileModel ini, Map<String, Double> context) {
-        if (label == null) return "";
-        if (TsStringFunction.containsStringFunction(label)) {
-            String resolved = TsStringFunction.resolve(label, ini, null, context);
-            return resolved != null ? resolved : "";
-        }
-        String t = label.trim();
-        if (t.startsWith("{")) {
-            return t.replaceAll("^\\{\\s*", "").replaceAll("\\s*}$", "").trim();
-        }
-        return t;
-    }
-
-    private static Color parseIndicatorColor(String name) {
-        if (name == null) return Color.LIGHT_GRAY;
-        switch (name.toLowerCase().trim()) {
-            case "white":  return Color.WHITE;
-            case "black":  return Color.BLACK;
-            case "red":    return Color.RED;
-            case "yellow": return Color.YELLOW;
-            case "green":  return Color.GREEN;
-            case "blue":   return Color.BLUE;
-            default:       return Color.LIGHT_GRAY;
-        }
+        return new IndicatorPanel(indicators, ini, 0).getPanel();
     }
 
     public JPanel getContent() {
