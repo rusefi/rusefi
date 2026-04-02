@@ -78,30 +78,26 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
             this.ecuPortToUse);
 //        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
+        final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
+            "rusefi_updater.exe",
+            "center",
+            () -> 0
+        );
+        newReleaseNotification.ifPresent(content::add);
         if (isWindows()) {
-            final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
-                "rusefi_updater.exe",
-                "center",
-                () -> 0
-            );
-            if (newReleaseNotification.isPresent()) {
-                content.add(newReleaseNotification.get());
-            }
             content.add(ToolButtons.createShowDeviceManagerButton());
-
-            content.add(StartupFrame.binaryModificationControl());
-
-            updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
-            updateFirmwareButton.setEnabled(false);
-
-            statusMessage.setForeground(Color.red);
-            content.add(statusMessage);
-            content.add(updateFirmwareButton);
-
-            importTuneButton.setEnabled(false);
-        } else {
-            content.add(new JLabel("Sorry only works on Windows"));
         }
+
+        content.add(StartupFrame.binaryModificationControl());
+
+        updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
+        updateFirmwareButton.setEnabled(false);
+
+        statusMessage.setForeground(Color.red);
+        content.add(statusMessage);
+        content.add(updateFirmwareButton);
+
+        importTuneButton.setEnabled(false);
 
         content.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
@@ -134,6 +130,10 @@ never used?
 
     public ImportTuneControl getImportTuneButton() {
         return importTuneButton;
+    }
+
+    public JCheckBox getMigrateSettings() {
+        return migrateSettings;
     }
 
     private void updateMigrateSettingState() {

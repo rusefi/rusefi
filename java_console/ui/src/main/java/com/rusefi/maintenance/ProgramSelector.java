@@ -13,9 +13,11 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.maintenance.jobs.*;
+import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.updater.OpenbltDetectorStrategy;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +46,8 @@ public class ProgramSelector {
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
     private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
     private final ConnectivityContext connectivityContext;
+    @Nullable
+    private SingleAsyncJobExecutor jobExecutor;
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
@@ -112,7 +116,15 @@ public class ProgramSelector {
                 throw new IllegalArgumentException("How did you " + selectedMode);
         }
 
-        AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(job);
+        if (jobExecutor != null) {
+            jobExecutor.startJob(job, parent);
+        } else {
+            AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(job);
+        }
+    }
+
+    public void setJobExecutor(@Nullable SingleAsyncJobExecutor jobExecutor) {
+        this.jobExecutor = jobExecutor;
     }
 
     public static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
