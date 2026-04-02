@@ -48,4 +48,23 @@ public class BinaryProtocolTest {
                 0, 0,
         }, fullRequest);
     }
+
+    @Test
+    public void testChunkWrite() {
+        int offset = 123;
+        byte[] content = new byte[]{0x11, 0x22};
+        byte[] header = BinaryProtocol.smartPacketPrefix2(offset, content.length, false);
+        byte[] packet = new byte[header.length + content.length];
+        System.arraycopy(header, 0, packet, 0, header.length);
+        System.arraycopy(content, 0, packet, header.length, content.length);
+
+        byte[] fullRequest = BinaryProtocol.getFullRequest((byte) Integration.TS_CHUNK_WRITE_COMMAND, packet);
+        assertArrayEquals(new byte[]{
+                'C',
+                0, 0, // page
+                0x7B, 0, // offset 123
+                0x02, 0, // size 2
+                0x11, 0x22 // content
+        }, fullRequest);
+    }
 }
