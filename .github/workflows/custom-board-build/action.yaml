@@ -511,15 +511,17 @@ runs:
 
     - name: Upload github action bundle artifact
       if: ${{ contains(inputs.artifacts, 'bundle') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
+        archive: false
         name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_${{env.current_date}}.zip.zip
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}.zip
 
     - name: Upload github action bundle autoupdate artifact
       if: ${{ contains(inputs.artifacts, 'autoupdate') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
+        archive: false
         name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate_${{env.current_date}}.zip.zip
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate.zip
 
