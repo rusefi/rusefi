@@ -119,13 +119,13 @@ public:
 					auto& sensor = egtSensors[i];
 
 					sensor.setValidValue(value, getTimeNowNt());
-
-					// this one is slow
-					if (types[i] == MAX6675_TYPE) {
-						refreshTime = MAX6675_REFRESH_TIME;
-					}
 				} else {
 					/* TODO: report error code? */
+				}
+
+				// this one is slow
+				if (types[i] == MAX6675_TYPE) {
+					refreshTime = MAX6675_REFRESH_TIME;
 				}
 			}
 
@@ -173,7 +173,7 @@ public:
 private:
 	// bits D17 and D3 are always expected to be zero
 	#define MAX31855_RESERVED_BITS	0x20008
-	// bit D3 is always expected to be zero, D15 is dummy sign bit also always zero
+	// bit D1 is always expected to be zero, D15 is dummy sign bit also always zero
 	#define MAX6675_RESERVED_BITS	0x8002
 
 	brain_pin_e m_cs[EGT_CHANNEL_COUNT];
