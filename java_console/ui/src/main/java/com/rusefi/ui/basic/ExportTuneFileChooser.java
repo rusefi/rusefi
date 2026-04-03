@@ -18,7 +18,7 @@ public class ExportTuneFileChooser {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
     }
 
-    void showFileChooserToExportTuneAction(
+    public void showFileChooserToExportTuneAction(
         final PortResult port,
         final JComponent parent,
         final ConnectivityContext connectivityContext
