@@ -171,7 +171,7 @@ public class TuningToolbarWidget {
                                                 String[] currentKey,
                                                 ConfigurationImage[] sessionImage) {
         JFileChooser chooser = createMsqFileChooser();
-        JButton button = new JButton("Load Tune From File...");
+        JButton button = new JButton("Load Tune From File");
         button.addActionListener(e -> {
             if (chooser.showOpenDialog(button) != JFileChooser.APPROVE_OPTION) return;
             IniFileModel ini = uiContext.iniFileState.getIniFileModel();
