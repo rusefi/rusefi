@@ -303,6 +303,12 @@ pins:
     ts_name: Fan Relay HI
     function: Fan relay high
 
+  - pin: K67
+    meta: H144_IGN_7
+    class: outputs
+    ts_name: EVAP Purge
+    function: EVAP Purge
+
   - pin: K92
     meta: H144_OUT_PWM8
     class: outputs
