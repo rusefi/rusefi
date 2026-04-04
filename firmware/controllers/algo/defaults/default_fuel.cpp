@@ -100,9 +100,13 @@ static void setDefaultVETable() {
 {94.700,	100.900,	103.500,	107.700,	111.800,	115.600,	118.400,	120.300,	120.800,	120.300,	118.700,	116.200,	113.300,	110.500,	107.700,	105.000,	},
 };
 	copyTable(config->veTable, hardCodedveTable);
-	copyTable(config->veSwitchTable, hardCodedveTable);
 #else
 	setTable(config->veTable, 80);
+#endif
+
+#if SWITCH_VE_SIZE == 16
+	copyTable(config->veSwitchTable, hardCodedveTable);
+#else
 	setTable(config->veSwitchTable, 80);
 #endif
 
