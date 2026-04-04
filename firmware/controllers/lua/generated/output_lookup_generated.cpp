@@ -628,6 +628,12 @@ float getOutputValueByHash(const int hash) {
 // rawBattery
 		case 1520918538:
 			return engine->outputChannels.rawBattery;
+// veSwitchBlendParameter
+		case 1489502456:
+			return engine->outputChannels.veSwitchBlendParameter;
+// veSwitchBlendBias
+		case 2046587542:
+			return engine->outputChannels.veSwitchBlendBias;
 // coilState1
 		case -1124698530:
 			return engine->outputChannels.coilState1;
