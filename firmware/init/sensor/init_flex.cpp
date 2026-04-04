@@ -21,19 +21,17 @@ static void flexExtiCallback(void*, efitick_t nowNt) {
 
 void initFlexSensor(bool isFirstTime) {
 #if EFI_PROD_CODE
-	if (efiExtiEnablePin("flex", engineConfiguration->flexSensorPin,
-		PAL_EVENT_MODE_BOTH_EDGES, flexExtiCallback, nullptr) < 0) {
+	if (efiExtiEnablePin(
+				"flex", engineConfiguration->flexSensorPin, PAL_EVENT_MODE_BOTH_EDGES, flexExtiCallback, nullptr) < 0) {
 		return;
 	}
 	flexPin = engineConfiguration->flexSensorPin;
 
 	if (isFirstTime) {
-		addConsoleAction("flexinfo", []() {
-			flexSensor.debug();
-		});
+		addConsoleAction("flexinfo", []() { flexSensor.debug(); });
 	}
 #else
-  UNUSED(isFirstTime);
+	UNUSED(isFirstTime);
 #endif // EFI_PROD_CODE
 
 	// If an analog fuel temp sensor is configured, don't use the flex sensor for fuel temp

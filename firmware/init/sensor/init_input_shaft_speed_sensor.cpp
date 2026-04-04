@@ -20,7 +20,8 @@ void initInputShaftSpeedSensor() {
 	}
 
 	float filterParameter = 1.0f / parameter;
-	inputShaftSpeedSensor.initIfValid(engineConfiguration->tcuInputSpeedSensorPin, inputSpeedConverter, filterParameter);
+	inputShaftSpeedSensor.initIfValid(
+			engineConfiguration->tcuInputSpeedSensorPin, inputSpeedConverter, filterParameter);
 }
 
 void deinitInputShaftSpeedSensor() {

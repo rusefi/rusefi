@@ -8,27 +8,26 @@
 // These aux sensors just read voltage - so the converter function has nothing to do
 
 static FunctionalSensor auxSensors[] = {
-	{ SensorType::AuxAnalog1, MS2NT(50) },
-	{ SensorType::AuxAnalog2, MS2NT(50) },
-	{ SensorType::AuxAnalog3, MS2NT(50) },
-	{ SensorType::AuxAnalog4, MS2NT(50) },
-	{ SensorType::AuxAnalog5, MS2NT(50) },
-	{ SensorType::AuxAnalog6, MS2NT(50) },
-	{ SensorType::AuxAnalog7, MS2NT(50) },
-	{ SensorType::AuxAnalog8, MS2NT(50) },
+		{SensorType::AuxAnalog1, MS2NT(50)},
+		{SensorType::AuxAnalog2, MS2NT(50)},
+		{SensorType::AuxAnalog3, MS2NT(50)},
+		{SensorType::AuxAnalog4, MS2NT(50)},
+		{SensorType::AuxAnalog5, MS2NT(50)},
+		{SensorType::AuxAnalog6, MS2NT(50)},
+		{SensorType::AuxAnalog7, MS2NT(50)},
+		{SensorType::AuxAnalog8, MS2NT(50)},
 };
 
 StoredValueSensor luaGauges[] = {
-		{ SensorType::LuaGauge1, MS2NT(5000) },
-		{ SensorType::LuaGauge2, MS2NT(5000) },
-		{ SensorType::LuaGauge3, MS2NT(5000) },
-		{ SensorType::LuaGauge4, MS2NT(5000) },
-		{ SensorType::LuaGauge5, MS2NT(5000) },
-		{ SensorType::LuaGauge6, MS2NT(5000) },
-		{ SensorType::LuaGauge7, MS2NT(5000) },
-		{ SensorType::LuaGauge8, MS2NT(5000) },
+		{SensorType::LuaGauge1, MS2NT(5000)},
+		{SensorType::LuaGauge2, MS2NT(5000)},
+		{SensorType::LuaGauge3, MS2NT(5000)},
+		{SensorType::LuaGauge4, MS2NT(5000)},
+		{SensorType::LuaGauge5, MS2NT(5000)},
+		{SensorType::LuaGauge6, MS2NT(5000)},
+		{SensorType::LuaGauge7, MS2NT(5000)},
+		{SensorType::LuaGauge8, MS2NT(5000)},
 };
-
 
 static_assert(efi::size(auxSensors) == LUA_ANALOG_INPUT_COUNT);
 static_assert(efi::size(luaGauges) == LUA_GAUGE_COUNT);
