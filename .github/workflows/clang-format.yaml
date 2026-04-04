@@ -1,0 +1,22 @@
+name: Code Formatting
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # We don't need submodules - all code to check is in this repo
+        submodules: false
+
+    - name: Install clang-format
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-format
+
+    - name: Check code formatting
+      run: ./format.sh check
