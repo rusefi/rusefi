@@ -21,7 +21,7 @@ ReferenceAlignment: Left
 DerivePointerAlignment: false
 
 # Template on its own line
-BreakTemplateDeclarations: Yes
+# not recognized? BreakTemplateDeclarations: Yes
 
 # Constructor initializer lists: break before comma
 #   Foo()

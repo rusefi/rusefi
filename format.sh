@@ -38,7 +38,7 @@ if [ "$CHECK_ONLY" = true ]; then
         echo "Checking $file..."
 
         # Get the formatted version
-        formatted=$(./firmware/ext/clang-format "$file")
+        formatted=$(clang-format "$file")
 
         # Compare with original
         if ! diff -u "$file" <(echo "$formatted") > /dev/null 2>&1; then
@@ -61,7 +61,7 @@ if [ "$CHECK_ONLY" = true ]; then
 else
     # Format mode: apply changes in-place
     echo "Formatting code..."
-    echo "$files" | xargs -d '\n' ./firmware/ext/clang-format -i
+    echo "$files" | xargs -d '\n' clang-format -i
     echo "Formatting complete"
     exit 0
 fi
