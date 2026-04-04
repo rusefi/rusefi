@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23580">
+    <page number="0" size="23604">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -560,8 +560,8 @@
         <constant digits="0" name="brakeMeanEffectivePressureDifferential" units="">0</constant>
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">20260403</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260403</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">20260404</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260404</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -4772,6 +4772,27 @@ end</constant>
          4700
          7000
 </constant>
+        <constant cols="1" digits="1" name="veSwitchBlendBins" rows="8" units="">
+         0.0
+         14.3
+         28.6
+         42.9
+         57.1
+         71.4
+         85.7
+         100.0
+</constant>
+        <constant name="veSwitchBlendParameter">"Zero"</constant>
+        <constant cols="1" digits="1" name="veSwitchBlendValues" rows="8" units="%">
+         0.0
+         14.5
+         28.5
+         43.0
+         57.0
+         71.5
+         85.5
+         100.0
+</constant>
         <constant cols="1" digits="0" name="veSwitchLoadBins" rows="16" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}">
          10
          20
@@ -5048,7 +5069,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260401" nPages="1" signature="rusEFI master.2026.04.03.f407-discovery.1616294735" version="5.0"/>
+    <versionInfo firmwareInfo="20260401" nPages="1" signature="rusEFI master.2026.04.04.f407-discovery.4004911499" version="5.0"/>
     <bibliography author="rusEFI 20260401" writeDate="date"/>
     <settings/>
     <userComments/>
