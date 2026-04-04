@@ -35,3 +35,4 @@
 #define ts_show_cylinder_12 false
 
 #define CLT_IDLE_TABLE_RPM_SIZE 6
+#define SWITCH_VE_SIZE 8
