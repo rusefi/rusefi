@@ -13,27 +13,15 @@
 #include "can_sensor.h"
 #include "can.h"
 
-ObdCanSensor<2, 0> obdRpmSensor(
-		PID_RPM, ODB_RPM_MULT,
-	SensorType::Rpm
-);
+ObdCanSensor<2, 0> obdRpmSensor(PID_RPM, ODB_RPM_MULT, SensorType::Rpm);
 
-ObdCanSensor<1, ODB_TEMP_EXTRA> obdCltSensor(
-		PID_COOLANT_TEMP, 1,
-	SensorType::Clt
-);
+ObdCanSensor<1, ODB_TEMP_EXTRA> obdCltSensor(PID_COOLANT_TEMP, 1, SensorType::Clt);
 
-ObdCanSensor<1, ODB_TEMP_EXTRA> obdIatSensor(
-		PID_INTAKE_TEMP, 1,
-	SensorType::Iat
-);
+ObdCanSensor<1, ODB_TEMP_EXTRA> obdIatSensor(PID_INTAKE_TEMP, 1, SensorType::Iat);
 
-ObdCanSensor<1, 0> obdTpsSensor(
-		PID_INTAKE_TEMP, ODB_TPS_BYTE_PERCENT,
-	SensorType::Tps1
-);
+ObdCanSensor<1, 0> obdTpsSensor(PID_INTAKE_TEMP, ODB_TPS_BYTE_PERCENT, SensorType::Tps1);
 
-//ObdCanSensor<1, ODB_TPS_BYTE_PERCENT> obdTpsSensor(
+// ObdCanSensor<1, ODB_TPS_BYTE_PERCENT> obdTpsSensor(
 //		PID_ENGINE_LOAD,
 //	SensorType::Tps, TIMEOUT
 //);
