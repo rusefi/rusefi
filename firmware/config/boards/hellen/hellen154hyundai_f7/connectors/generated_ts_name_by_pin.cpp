@@ -9,6 +9,8 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch (brainPin) {
 		case Gpio::A9:
 			return "X2 AuxLS3";
+		case Gpio::B9:
+			return "EVAP Purge";
 		case Gpio::C8:
 			return "wg_pwm";
 		case Gpio::C9:
