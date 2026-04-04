@@ -123,6 +123,10 @@ static void setDefaultVETable() {
   setLinearCurve(config->fuelTrimLoadBins, 20, 100);
 #endif
 
+	// Default axes for switched VE table blend
+	setLinearCurve(config->veSwitchBlendBins, 0, 100);
+	setLinearCurve(config->veSwitchBlendValues, 0, 100);
+
 	// Default axes for VE blends
 	for (size_t i = 0; i < efi::size(config->veBlends); i++) {
 		auto& blend = config->veBlends[i];

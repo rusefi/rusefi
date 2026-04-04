@@ -2,6 +2,7 @@
 
 #include "airmass.h"
 #include "idle_thread.h"
+#include "gppwm_channel_reader.h"
 
 AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
 
@@ -23,16 +24,42 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 	percent_t ve = m_veTable->getValue(rpm, load);
 
 #if EFI_PROD_CODE || EFI_UNIT_TEST
-	const bool switchTableActive = engineConfiguration->enableVeSwitchTable &&
-		isBrainPinValid(config->veSwitchTableInput) &&
-		efiReadPin(config->veSwitchTableInput, config->veSwitchTableInputMode);
+	bool switchTableActive = false;
 
-	if (switchTableActive) {
-		ve = interpolate3d(
-			config->veSwitchTable,
-			config->veSwitchLoadBins, load,
-			config->veSwitchRpmBins, rpm
-		);
+	if (engineConfiguration->enableVeSwitchTable) {
+		const bool pinActive = isBrainPinValid(config->veSwitchTableInput) &&
+			efiReadPin(config->veSwitchTableInput, config->veSwitchTableInputMode);
+
+		const bool blendActive = config->veSwitchBlendParameter != GPPWM_Zero;
+
+		if (pinActive) {
+			// Hard switch: pin overrides everything, replace VE entirely
+			ve = interpolate3d(
+				config->veSwitchTable,
+				config->veSwitchLoadBins, load,
+				config->veSwitchRpmBins, rpm
+			);
+			switchTableActive = true;
+		} else if (blendActive) {
+			auto blendInput = readGppwmChannel(config->veSwitchBlendParameter);
+			if (blendInput) {
+				float blendFactor = interpolate2d(blendInput.Value, config->veSwitchBlendBins, config->veSwitchBlendValues);
+				if (blendFactor > 0) {
+					float switchVe = interpolate3d(
+						config->veSwitchTable,
+						config->veSwitchLoadBins, load,
+						config->veSwitchRpmBins, rpm
+					);
+					ve = interpolateClamped(0, ve, 100, switchVe, blendFactor);
+				}
+				switchTableActive = blendFactor > 0;
+
+				if (postState) {
+					engine->outputChannels.veSwitchBlendParameter = blendInput.Value;
+					engine->outputChannels.veSwitchBlendBias = blendFactor;
+				}
+			}
+		}
 	}
 #endif
 
