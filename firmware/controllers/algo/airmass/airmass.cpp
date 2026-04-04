@@ -2,7 +2,6 @@
 
 #include "airmass.h"
 #include "idle_thread.h"
-#include "gppwm_channel_reader.h"
 
 AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
 
@@ -30,8 +29,6 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 		const bool pinActive = isBrainPinValid(config->veSwitchTableInput) &&
 			efiReadPin(config->veSwitchTableInput, config->veSwitchTableInputMode);
 
-		const bool blendActive = config->veSwitchBlendParameter != GPPWM_Zero;
-
 		if (pinActive) {
 			// Hard switch: pin overrides everything, replace VE entirely
 			ve = interpolate3d(
@@ -40,24 +37,21 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 				config->veSwitchRpmBins, rpm
 			);
 			switchTableActive = true;
-		} else if (blendActive) {
-			auto blendInput = readGppwmChannel(config->veSwitchBlendParameter);
-			if (blendInput) {
-				float blendFactor = interpolate2d(blendInput.Value, config->veSwitchBlendBins, config->veSwitchBlendValues);
-				if (blendFactor > 0) {
-					float switchVe = interpolate3d(
-						config->veSwitchTable,
-						config->veSwitchLoadBins, load,
-						config->veSwitchRpmBins, rpm
-					);
-					ve = interpolateClamped(0, ve, 100, switchVe, blendFactor);
-				}
-				switchTableActive = blendFactor > 0;
-
-				if (postState) {
-					engine->outputChannels.veSwitchBlendParameter = blendInput.Value;
-					engine->outputChannels.veSwitchBlendBias = blendFactor;
-				}
+		} else {
+			auto result = calculateBlend(
+				config->veSwitchBlendParameter,
+				config->veSwitchBlendBins, config->veSwitchBlendValues,
+				config->veSwitchTable,
+				config->veSwitchLoadBins, load,
+				config->veSwitchRpmBins, rpm
+			);
+			if (result.Bias > 0) {
+				ve = interpolateClamped(0, ve, 100, result.Value, result.Bias);
+				switchTableActive = true;
+			}
+			if (postState) {
+				engine->outputChannels.veSwitchBlendParameter = result.BlendParameter;
+				engine->outputChannels.veSwitchBlendBias = result.Bias;
 			}
 		}
 	}

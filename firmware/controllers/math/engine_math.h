@@ -8,6 +8,7 @@
 #pragma once
 
 #include "rusefi_enums.h"
+#include "gppwm_channel_reader.h"
 
 void setAlgorithm(engine_load_mode_e algo);
 
@@ -69,3 +70,30 @@ struct BlendResult {
 };
 
 BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load);
+
+// Overload for tables with flat (non-struct) blend config, e.g. veSwitchTable.
+// Unlike the blend_table_s overload, BlendResult::Value is the raw table lookup
+// (not bias-scaled)
+template<typename TBlendBins, typename TBlendValues, typename TTable, typename TLoadBins, typename TRpmBins>
+BlendResult calculateBlend(
+    gppwm_channel_e blendParameter,
+    const TBlendBins& blendBins,
+    const TBlendValues& blendValues,
+    const TTable& table,
+    const TLoadBins& loadBins, float load,
+    const TRpmBins& rpmBins, float rpm)
+{
+    if (blendParameter == GPPWM_Zero) {
+        return { 0, 0, 0, 0 };
+    }
+
+    auto value = readGppwmChannel(blendParameter);
+    if (!value) {
+        return { 0, 0, 0, 0 };
+    }
+
+    float tableValue = interpolate3d(table, loadBins, load, rpmBins, rpm);
+    float blendFactor = interpolate2d(value.Value, blendBins, blendValues);
+
+    return { value.Value, blendFactor, tableValue, load };
+}
