@@ -56,6 +56,12 @@ void turnOnSpi(spi_device_e device) {
 	brain_pin_e misoPin = getMisoPin(device);
 	brain_pin_e mosiPin = getMosiPin(device);
 
+	if (!isBrainPinValid(sckPin) ||
+	    !isBrainPinValid(misoPin) ||
+	    !isBrainPinValid(mosiPin)) {
+		criticalError("SPI pin(s) are not valid");
+	}
+
 	if (device == SPI_DEVICE_1) {
 // todo: introduce a nice structure with all fields for same SPI
 #if STM32_SPI_USE_SPI1
