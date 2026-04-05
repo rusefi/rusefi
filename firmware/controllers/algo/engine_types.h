@@ -259,6 +259,7 @@ enum class trigger_type_e : uint32_t {
 	// symmetrical crank
 	TT_SUBARU_7_6_CRANK = 94,
 
+	// we assume this is NOT ready/NOT working? https://github.com/rusefi/rusefi/pull/9262
 	TT_SUZUKI_G16B = 95,
 	TT_UNUSED_96 = 96,
 
