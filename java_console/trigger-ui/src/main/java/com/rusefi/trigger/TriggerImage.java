@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * This utility produces images of trigger signals supported by rusEFI
  * <p>
+ *  rusefi_documentation\Images\triggers is the ultimate destination for these files
  * 06/23/15
  * Andrey Belomutskiy, (c) 2013-2020
  */
