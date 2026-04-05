@@ -1,4 +1,4 @@
-name: rusEFI console
+name: rusEFI validate console, also generate trigger images
 
 on:
   push:
@@ -31,11 +31,12 @@ jobs:
         run: |
           sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo bash misc/actions/ubuntu-install-tools.sh
+          sudo apt-get install xvfb
 
       - name: Build All Java
         working-directory: .
         run: |
-          ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar
+          ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar :trigger-ui:shadowJar
 
       - name: Generate Enums & Live Documentation
         working-directory: ./firmware/
@@ -67,6 +68,15 @@ jobs:
       - name: Generate Enums using freshly compiled tool
         working-directory: ./firmware/
         run: ./gen_enum_to_string.sh
+
+      - name: Run TriggerImage
+        run: xvfb-run java -cp java_console/trigger-ui/build/libs/trigger-ui-all.jar com.rusefi.trigger.TriggerImage unit_tests
+
+      - name: Upload trigger images
+        uses: actions/upload-artifact@v7
+        with:
+          name: triggers
+          path: triggers
 
 #      - name: Upload rusEFI server
 #        working-directory: .
