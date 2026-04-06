@@ -25,34 +25,32 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
 	bool switchTableActive = false;
 
-	if (engineConfiguration->enableVeSwitchTable) {
-		const bool pinActive = isBrainPinValid(config->veSwitchTableInput) &&
-			efiReadPin(config->veSwitchTableInput, config->veSwitchTableInputMode);
+	const bool pinActive = isBrainPinValid(config->secondVeTableInput) &&
+		efiReadPin(config->secondVeTableInput, config->secondVeTableInputMode);
 
-		if (pinActive) {
-			// Hard switch: pin overrides everything, replace VE entirely
-			ve = interpolate3d(
-				config->veSwitchTable,
-				config->veSwitchLoadBins, load,
-				config->veSwitchRpmBins, rpm
-			);
+	if (pinActive) {
+		// Hard switch: pin overrides everything, replace VE entirely
+		ve = interpolate3d(
+			config->secondVeTable,
+			config->secondVeLoadBins, load,
+			config->secondVeRpmBins, rpm
+		);
+		switchTableActive = true;
+	} else {
+		auto result = calculateBlend(
+			config->secondVeBlendParameter,
+			config->secondVeBlendBins, config->secondVeBlendValues,
+			config->secondVeTable,
+			config->secondVeLoadBins, load,
+			config->secondVeRpmBins, rpm
+		);
+		if (result.Bias > 0) {
+			ve = interpolateClamped(0, ve, 100, result.Value, result.Bias);
 			switchTableActive = true;
-		} else {
-			auto result = calculateBlend(
-				config->veSwitchBlendParameter,
-				config->veSwitchBlendBins, config->veSwitchBlendValues,
-				config->veSwitchTable,
-				config->veSwitchLoadBins, load,
-				config->veSwitchRpmBins, rpm
-			);
-			if (result.Bias > 0) {
-				ve = interpolateClamped(0, ve, 100, result.Value, result.Bias);
-				switchTableActive = true;
-			}
-			if (postState) {
-				engine->outputChannels.veSwitchBlendParameter = result.BlendParameter;
-				engine->outputChannels.veSwitchBlendBias = result.Bias;
-			}
+		}
+		if (postState) {
+			engine->outputChannels.secondVeBlendParameter = result.BlendParameter;
+			engine->outputChannels.secondVeBlendBias = result.Bias;
 		}
 	}
 #endif
@@ -107,7 +105,7 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 		engine->engineState.veTableYAxis = load;
 		engine->engineState.veTableIdleYAxis = idleVeLoad;
 #if EFI_PROD_CODE
-		engine->engineState.isVeSwitchTableActive = switchTableActive;
+		engine->engineState.isSecondVeTableActive = switchTableActive;
 #endif
 	}
 
