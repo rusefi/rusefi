@@ -342,27 +342,21 @@ TEST(FuelMath, VeSwitchTable) {
 	// Primary VE table returns 50%
 	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
 
-	// Switch VE table returns 80%
-	setTable(config->veSwitchTable, 80);
+	// Second VE table returns 80%
+	setTable(config->secondVeTable, 80);
 
-	config->veSwitchTableInput = Gpio::A0;
-	setMockState(Gpio::A0, true);
+	config->secondVeTableInput = Gpio::A0;
 
-	// Feature disabled -> primary table used even with pin configured and HIGH
-	engineConfiguration->enableVeSwitchTable = false;
-	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
-
-	// Feature enabled, pin LOW -> primary table
-	engineConfiguration->enableVeSwitchTable = true;
-	setMockState(Gpio::A0, false);
-	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
-
-	// Feature enabled, pin HIGH -> switch table
+	// Pin HIGH -> second table
 	setMockState(Gpio::A0, true);
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
 
-	// Feature enabled but no pin configured -> primary table
-	config->veSwitchTableInput = Gpio::Unassigned;
+	// Pin LOW -> primary table
+	setMockState(Gpio::A0, false);
+	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
+
+	// No pin configured -> primary table
+	config->secondVeTableInput = Gpio::Unassigned;
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
 }
 
@@ -373,15 +367,14 @@ TEST(FuelMath, VeSwitchTableBlend) {
 
 	// Primary VE table returns 50%, switch table returns 80%
 	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
-	setTable(config->veSwitchTable, 80);
+	setTable(config->secondVeTable, 80);
 
-	engineConfiguration->enableVeSwitchTable = true;
-	config->veSwitchTableInput = Gpio::Unassigned; // no pin
+	config->secondVeTableInput = Gpio::Unassigned; // no pin, blend controls it
 
 	// Configure blend: TPS controls blend, 0% TPS -> 0% blend, 100% TPS -> 100% blend
-	config->veSwitchBlendParameter = GPPWM_Tps;
-	setLinearCurve(config->veSwitchBlendBins, 0, 100, 1);
-	setLinearCurve(config->veSwitchBlendValues, 0, 100, 1);
+	config->secondVeBlendParameter = GPPWM_Tps;
+	setLinearCurve(config->secondVeBlendBins, 0, 100, 1);
+	setLinearCurve(config->secondVeBlendValues, 0, 100, 1);
 
 	// TPS = 0 -> 0% blend -> primary table (50%)
 	Sensor::setMockValue(SensorType::Tps1, 0);
@@ -396,7 +389,7 @@ TEST(FuelMath, VeSwitchTableBlend) {
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
 
 	// Pin takes priority over blend when active
-	config->veSwitchTableInput = Gpio::A0;
+	config->secondVeTableInput = Gpio::A0;
 	setMockState(Gpio::A0, true);
 	Sensor::setMockValue(SensorType::Tps1, 0); // blend would give primary, but pin forces switch
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
