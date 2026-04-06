@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# This script iterates over files matching a specified pattern (or all files in a directory).
+# For each file, it calculates the total number of changed lines (added + deleted) relative to the HEAD commit.
+# If the number of changes is greater than or equal to an optional threshold, the file is added to the git index.
+# This is useful in CI workflows to only commit generated files if they have meaningful changes.
+
 # Check if an argument is provided
 # Threshold: if total_changed >= threshold, then git add.
 if [ -z "$1" ]; then
