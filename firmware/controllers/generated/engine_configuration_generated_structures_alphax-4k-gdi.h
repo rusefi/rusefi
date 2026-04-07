@@ -2746,9 +2746,8 @@ struct engine_configuration_s {
 	offset 844 bit 27 */
 	bool useAbsolutePressureForLagTime : 1 {};
 	/**
-	 * Enables the switchable VE table
 	offset 844 bit 28 */
-	bool enableVeSwitchTable : 1 {};
+	bool unusedBit_311_30 : 1 {};
 	/**
 	offset 844 bit 29 */
 	bool unusedBit_311_31 : 1 {};
@@ -6990,40 +6989,40 @@ struct persistent_config_s {
 	 * units: %
 	 * offset 39260
 	 */
-	scaled_channel<uint16_t, 10, 1> veSwitchTable[VE_LOAD_COUNT][VE_RPM_COUNT] = {};
+	scaled_channel<uint16_t, 10, 1> secondVeTable[VE_LOAD_COUNT][VE_RPM_COUNT] = {};
 	/**
 	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}
 	 * offset 39772
 	 */
-	uint16_t veSwitchLoadBins[VE_LOAD_COUNT] = {};
+	uint16_t secondVeLoadBins[VE_LOAD_COUNT] = {};
 	/**
 	 * units: RPM
 	 * offset 39804
 	 */
-	uint16_t veSwitchRpmBins[VE_RPM_COUNT] = {};
+	uint16_t secondVeRpmBins[VE_RPM_COUNT] = {};
 	/**
-	 * Pin that activates the switchable VE table (hard switch, overrides blend)
+	 * Pin that activates the second VE table (hard switch, overrides blend)
 	 * offset 39836
 	 */
-	switch_input_pin_e veSwitchTableInput;
+	switch_input_pin_e secondVeTableInput;
 	/**
 	 * offset 39838
 	 */
-	pin_input_mode_e veSwitchTableInputMode;
+	pin_input_mode_e secondVeTableInputMode;
 	/**
-	 * Input that controls the blend ratio between primary and switched VE table
+	 * Input that controls the blend ratio between primary and second VE table
 	 * offset 39839
 	 */
-	gppwm_channel_e veSwitchBlendParameter;
+	gppwm_channel_e secondVeBlendParameter;
 	/**
 	 * offset 39840
 	 */
-	scaled_channel<int16_t, 10, 1> veSwitchBlendBins[BLEND_FACTOR_SIZE] = {};
+	scaled_channel<int16_t, 10, 1> secondVeBlendBins[BLEND_FACTOR_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 39856
 	 */
-	scaled_channel<uint8_t, 2, 1> veSwitchBlendValues[BLEND_FACTOR_SIZE] = {};
+	scaled_channel<uint8_t, 2, 1> secondVeBlendValues[BLEND_FACTOR_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 39864

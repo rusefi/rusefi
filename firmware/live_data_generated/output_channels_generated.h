@@ -1054,12 +1054,12 @@ struct output_channels_s {
 	/**
 	 * offset 648
 	 */
-	scaled_channel<int16_t, 10, 1> veSwitchBlendParameter = (int16_t)0;
+	scaled_channel<int16_t, 10, 1> secondVeBlendParameter = (int16_t)0;
 	/**
 	 * units: %
 	 * offset 650
 	 */
-	scaled_channel<uint8_t, 2, 1> veSwitchBlendBias = (uint8_t)0;
+	scaled_channel<uint8_t, 2, 1> secondVeBlendBias = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units

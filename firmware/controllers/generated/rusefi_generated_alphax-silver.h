@@ -1521,6 +1521,7 @@
 #define SCRIPT_TABLE_8 8
 #define SCRIPT_TABLE_COUNT 4
 #define SD_CARD_LABEL "rusEFI logs"
+#define SECOND_VE_TABLE "Second VE Table"
 #define SECONDARY_PANELS_FILE "tunerstudio/secondary_panels.ini"
 #define SelectedGear_Drive 6
 #define SelectedGear_Invalid 0
@@ -1558,7 +1559,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3651391191
+#define SIGNATURE_HASH 3759021971
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2164,7 +2165,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.04.06.alphax-silver.3651391191"
+#define TS_SIGNATURE "rusEFI master.2026.04.07.alphax-silver.3759021971"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
@@ -2223,7 +2224,6 @@
 #define ve_override_e_VE_None 0
 #define ve_override_e_VE_TPS 2
 #define VE_RPM_COUNT 16
-#define VE_SWITCH_TABLE "Switched VE Table"
 #define VE_TABLE_NAME "VE Table"
 #define VEHICLE_INFO_SIZE 32
 #define VIN_NUMBER_SIZE 17

@@ -232,9 +232,9 @@ struct engine_state_s {
 	offset 96 bit 1 */
 	bool acrActive : 1 {};
 	/**
-	 * VE: Switch table active
+	 * VE: Second table active
 	offset 96 bit 2 */
-	bool isVeSwitchTableActive : 1 {};
+	bool isSecondVeTableActive : 1 {};
 	/**
 	offset 96 bit 3 */
 	bool acrEngineMovedRecently : 1 {};
