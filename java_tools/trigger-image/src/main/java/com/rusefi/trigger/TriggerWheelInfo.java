@@ -45,7 +45,7 @@ public class TriggerWheelInfo {
         this.syncEdge = syncEdge;
     }
 
-    private static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
+    static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
         String[] tokens = line.split(" ");
         String idStr = tokens[1];
         int eventCount = Integer.parseInt(tokens[2]);
