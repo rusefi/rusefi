@@ -31,7 +31,11 @@ public class TriggerMarkdownGenerator {
                 // Sort by name within the group
                 group.sort(Comparator.comparing(TriggerWheelInfo::getTriggerName));
                 for (TriggerWheelInfo info : group) {
-                    writer.println("- " + info.getTriggerName());
+                    String name = info.getTriggerName();
+                    if (name.startsWith("TT_")) {
+                        name = name.substring(3);
+                    }
+                    writer.println("- [" + name + "](#" + name + ")");
                 }
                 writer.println();
             }

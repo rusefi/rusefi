@@ -39,10 +39,10 @@ public class TriggerMarkdownGeneratorTest {
 
         // Check grouping and sorting
         assertTrue(lines.contains("## tooth count 0"));
-        assertTrue(lines.contains("- TEST_C"));
+        assertTrue(lines.contains("- [TEST_C](#TEST_C)"));
         assertTrue(lines.contains("## tooth count 1"));
-        assertTrue(lines.contains("- TEST_A"));
-        assertTrue(lines.contains("- TEST_B"));
+        assertTrue(lines.contains("- [TEST_A](#TEST_A)"));
+        assertTrue(lines.contains("- [TEST_B](#TEST_B)"));
 
         // Clean up
         new File(triggersFile).delete();
