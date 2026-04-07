@@ -3109,8 +3109,8 @@ end</constant>
          40
 </constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
-        <constant digits="0" name="referenceMapForGenerator" units="">100</constant>
-        <constant digits="0" name="referenceTorqueForGenerator" units="">250</constant>
+        <constant digits="0" name="referenceMapForGenerator" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">100</constant>
+        <constant digits="0" name="referenceTorqueForGenerator" units="Nm">250</constant>
         <constant digits="0" name="referenceVeForGenerator" units="">75</constant>
         <constant name="rethrowHardFault">"no"</constant>
         <constant digits="0" name="rotationalIdleController_accumulators1_acc_adder" units="">0</constant>
@@ -5068,7 +5068,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260401" nPages="1" signature="rusEFI master.2026.04.07.f407-discovery.3608922319" version="5.0"/>
+    <versionInfo firmwareInfo="20260401" nPages="1" signature="rusEFI master.2026.04.07.f407-discovery.2761386369" version="5.0"/>
     <bibliography author="rusEFI 20260401" writeDate="date"/>
     <settings/>
     <userComments/>
