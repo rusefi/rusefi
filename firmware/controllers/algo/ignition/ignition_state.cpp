@@ -45,6 +45,38 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	// compute base ignition angle from main table
 	float advanceAngle = IgnitionState::getInterpolatedIgnitionAngle(rpm, engineLoad);
 
+#if EFI_PROD_CODE || EFI_UNIT_TEST
+	bool secondIgnitionTableActive = false;
+
+	const bool ignPinActive = isBrainPinValid(config->secondIgnitionTableInput) &&
+		efiReadPin(config->secondIgnitionTableInput, config->secondIgnitionTableInputMode);
+
+	if (ignPinActive) {
+		// Hard switch: pin overrides everything, replace ignition table entirely
+		advanceAngle = interpolate3d(
+			config->secondIgnitionTable,
+			config->secondIgnitionLoadBins, engineLoad,
+			config->secondIgnitionRpmBins, rpm
+		);
+		secondIgnitionTableActive = true;
+	} else {
+		auto result = calculateBlend(
+			config->secondIgnitionBlendParameter,
+			config->secondIgnitionBlendBins, config->secondIgnitionBlendValues,
+			config->secondIgnitionTable,
+			config->secondIgnitionLoadBins, engineLoad,
+			config->secondIgnitionRpmBins, rpm
+		);
+		if (result.Bias > 0) {
+			advanceAngle = interpolateClamped(0, advanceAngle, 100, result.Value, result.Bias);
+			secondIgnitionTableActive = true;
+		}
+		engine->outputChannels.secondIgnitionBlendParameter = result.BlendParameter;
+		engine->outputChannels.secondIgnitionBlendBias = result.Bias;
+	}
+	engine->engineState.isSecondIgnitionTableActive = secondIgnitionTableActive;
+#endif // EFI_PROD_CODE || EFI_UNIT_TEST
+
   float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
   float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
   engine->ignitionState.tractionAdvanceDrop = tcTimingDropTable.getValue(wheelSlip, vehicleSpeed);

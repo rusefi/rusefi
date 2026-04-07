@@ -190,10 +190,87 @@ TEST(ignition_state, tsAdvanceIndicators) {
   EXPECT_EQ(-1, engine->ignitionState.rpmForIgnitionIdleTableDot);
 }
 
+TEST(ignition_state, secondIgnitionTablePin) {
+  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+  const float rpm = 4500;
+  const float load = 50;
+
+  setWholeTimingTable(10);
+  setTable(config->secondIgnitionTable, 30);
+  initIgnitionAdvanceControl();
+
+  Sensor::setMockValue(SensorType::Clt, 35);
+  Sensor::setMockValue(SensorType::VehicleSpeed, 0);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 0);
+  engineConfiguration->launchControlEnabled = false;
+  engineConfiguration->antiLagEnabled = false;
+  engineConfiguration->torqueReductionEnabled = false;
+  engineConfiguration->nitrousControlEnabled = false;
+  engineConfiguration->useSeparateAdvanceForIdle = false;
+
+  config->secondIgnitionTableInput = Gpio::A0;
+
+  // Pin HIGH -> second table
+  setMockState(Gpio::A0, true);
+  EXPECT_NEAR(30, getRunningAdvance(rpm, load), EPS2D);
+
+  // Pin LOW -> primary table
+  setMockState(Gpio::A0, false);
+  EXPECT_NEAR(10, getRunningAdvance(rpm, load), EPS2D);
+
+  // No pin configured -> primary table
+  config->secondIgnitionTableInput = Gpio::Unassigned;
+  EXPECT_NEAR(10, getRunningAdvance(rpm, load), EPS2D);
+}
+
+TEST(ignition_state, secondIgnitionTableBlend) {
+  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+  constexpr float rpm = 4500;
+  constexpr float load = 50;
+
+  setWholeTimingTable(10);
+  setTable(config->secondIgnitionTable, 30);
+  initIgnitionAdvanceControl();
+
+  Sensor::setMockValue(SensorType::Clt, 35);
+  Sensor::setMockValue(SensorType::VehicleSpeed, 0);
+  Sensor::setMockValue(SensorType::WheelSlipRatio, 0);
+  engineConfiguration->launchControlEnabled = false;
+  engineConfiguration->antiLagEnabled = false;
+  engineConfiguration->torqueReductionEnabled = false;
+  engineConfiguration->nitrousControlEnabled = false;
+  engineConfiguration->useSeparateAdvanceForIdle = false;
+
+  config->secondIgnitionTableInput = Gpio::Unassigned; // no pin, blend controls it
+
+  // Configure blend: TPS controls blend, 0% TPS -> 0% blend, 100% TPS -> 100% blend
+  config->secondIgnitionBlendParameter = GPPWM_Tps;
+  setLinearCurve(config->secondIgnitionBlendBins, 0, 100, 1);
+  setLinearCurve(config->secondIgnitionBlendValues, 0, 100, 1);
+
+  // TPS = 0 -> 0% blend -> primary table (10 deg)
+  Sensor::setMockValue(SensorType::Tps1, 0);
+  EXPECT_NEAR(10, getRunningAdvance(rpm, load), EPS2D);
+
+  // TPS = 50 -> 50% blend -> midpoint between 10 and 30 = 20 deg
+  Sensor::setMockValue(SensorType::Tps1, 50);
+  EXPECT_NEAR(20, getRunningAdvance(rpm, load), EPS2D);
+
+  // TPS = 100 -> 100% blend -> fully switched (30 deg)
+  Sensor::setMockValue(SensorType::Tps1, 100);
+  EXPECT_NEAR(30, getRunningAdvance(rpm, load), EPS2D);
+
+  // Pin takes priority over blend when active
+  config->secondIgnitionTableInput = Gpio::A0;
+  setMockState(Gpio::A0, true);
+  Sensor::setMockValue(SensorType::Tps1, 0); // blend would give primary, but pin forces switch
+  EXPECT_NEAR(30, getRunningAdvance(rpm, load), EPS2D);
+}
+
 TEST(ignition_state, testCrankingAdvance) {
   EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-  const float rpm = 100;
-  const float load = 10;
+  constexpr float rpm = 100;
+  constexpr float load = 10;
 
   engineConfiguration->useSeparateAdvanceForCranking = false;
 
@@ -221,6 +298,6 @@ TEST(ignition_state, testCrankingAdvance) {
 
   EXPECT_EQ(rpm + 10, engine->rpmCalculator.getMinCrankingRpm());
 
-  auto correction = getCrankingAdvance(rpm, load);
+  const auto correction = getCrankingAdvance(rpm, load);
   EXPECT_NEAR(6, correction, EPS2D);
 }

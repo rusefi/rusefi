@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260403
+#define FLASH_DATA_VERSION 260407
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -2248,6 +2248,19 @@ gppwm_channel_e secondVeBlendParameter;Input that controls the blend ratio betwe
 int16_t[BLEND_FACTOR_SIZE] autoscale secondVeBlendBins;;"", 0.1, 0, -3200, 3200, 1
 uint8_t[BLEND_FACTOR_SIZE] autoscale secondVeBlendValues;;"%", 0.5, 0, 0, 100, 1
 
+! note this is pretty similar to a blend table!
+int16_t[IGN_LOAD_COUNT x IGN_RPM_COUNT] autoscale secondIgnitionTable;;"deg", 0.1, 0, -20, 90, 1
+uint16_t[IGN_LOAD_COUNT] secondIgnitionLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {(ignOverrideMode != 0 && ignOverrideMode != 1) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 0 || ignOverrideMode == 1 ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+uint16_t[IGN_RPM_COUNT] secondIgnitionRpmBins;;"RPM",	   1, 0, 0, 18000, 0
+
+switch_input_pin_e secondIgnitionTableInput;Pin that activates the second ignition table (hard switch, overrides blend)
+pin_input_mode_e secondIgnitionTableInputMode;
+
+gppwm_channel_e secondIgnitionBlendParameter;Input that controls the blend ratio between primary and second ignition table
+
+int16_t[BLEND_FACTOR_SIZE] autoscale secondIgnitionBlendBins;;"", 0.1, 0, -3200, 3200, 1
+uint8_t[BLEND_FACTOR_SIZE] autoscale secondIgnitionBlendValues;;"%", 0.5, 0, 0, 100, 1
+
 #define THR_EST_SIZE 12
 
 uint16_t[THR_EST_SIZE] autoscale throttleEstimateEffectiveAreaBins;;"%", 0.1, 0, 0, 100, 1
@@ -2478,6 +2491,7 @@ end_struct
 #define VE_TABLE_NAME "VE Table"
 #define VE_MENU_MAP_NAME "VE 3D view"
 #define SECOND_VE_TABLE "Second VE Table"
+#define SECOND_IGNITION_TABLE "Second Ignition Table"
 #define IGNITION_ADVANCE_MENU_NAME "Ignition advance"
 #define IGNITION_ADVANCE_TABLE_NAME "Ignition Table"
 #define CAM_1_MODE_NAME "Cam mode (intake)"

@@ -51,6 +51,7 @@ struct_no_prefix engine_state_s
 	bit startStopPhysicalState
   bit acrActive;Harley ACR Active
 	bit isSecondVeTableActive;VE: Second table active
+	bit isSecondIgnitionTableActive;IGN: Second table active
 	bit acrEngineMovedRecently
 	! same field is used for narrow band heater enable and wide band enable via CAN
 	bit heaterControlEnabled

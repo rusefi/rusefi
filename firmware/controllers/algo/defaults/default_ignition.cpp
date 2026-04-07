@@ -122,6 +122,15 @@ void setDefaultIgnition() {
 	setTimingRpmBin(800, 7000);
 	buildTimingMap(35);
 
+	// Default for second ignition table - same as primary
+	setRpmTableBin(config->secondIgnitionRpmBins);
+	setLinearCurve(config->secondIgnitionLoadBins, 20, 120, 3);
+	copyTable(config->secondIgnitionTable, config->ignitionTable);
+
+	// Default axes for second ignition table blend
+	setLinearCurve(config->secondIgnitionBlendBins, 0, 100);
+	setLinearCurve(config->secondIgnitionBlendValues, 0, 100);
+
 	setDefaultTrailingSparkTable();
 
 	// CLT correction
