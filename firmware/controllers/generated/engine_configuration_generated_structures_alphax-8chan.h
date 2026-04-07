@@ -3718,10 +3718,14 @@ struct engine_configuration_s {
 	 */
 	int torqueReductionArmingApp;
 	/**
+	 * Reference Torque value
+	 * units: Nm
 	 * offset 1484
 	 */
 	float referenceTorqueForGenerator;
 	/**
+	 * kPa/psi value at which Reference Torque is archived
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 1488
 	 */
 	float referenceMapForGenerator;

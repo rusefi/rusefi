@@ -1007,10 +1007,10 @@ set warningPeriod X
 Pedal position to realize that we need to reduce torque when the trigger pin is triggered
 
 ### referenceTorqueForGenerator
-null
+Reference Torque value
 
 ### referenceMapForGenerator
-null
+kPa/psi value at which Reference Torque is archived
 
 ### referenceVeForGenerator
 null
