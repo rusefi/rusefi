@@ -62,6 +62,7 @@ public class StartupFrame {
     public static final String ALWAYS_AUTO_PORT = "always_auto_port";
     public static final String AUTO_CLOSE_TS = "auto_close_ts";
     public static final String CHECK_TS_RUNNING = "check_ts_running";
+    private static final String STARTUP_TAB_INDEX = "startup_tab_index";
     private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
     public static final String SCANNING_PORTS = "Scanning ports";
 
@@ -122,6 +123,7 @@ public class StartupFrame {
             @Override
             public void windowClosed(WindowEvent ev) {
                 if (!isProceeding) {
+                    saveTabIndex();
                     getConfig().save();
                     log.info("Configuration saved.");
                 }
@@ -220,7 +222,7 @@ public class StartupFrame {
         selector.setJobExecutor(asyncJobExecutor);
 
         JButton goToFirmwareTab = new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
-        goToFirmwareTab.addActionListener(e -> outerTabs.setSelectedIndex(1));
+        goToFirmwareTab.addActionListener(e -> outerTabs.setSelectedIndex(0));
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
         realHardwarePanel.add(goToFirmwareTab, "right, wrap");
 
@@ -295,8 +297,6 @@ public class StartupFrame {
                 return new Dimension(superPref.width, 100 + connectTabHeight);
             }
         };
-        outerTabs.addTab("Connect", connectTabWrapper);
-
         firmwareUpdateTab = new FirmwareUpdateTab(
             connectivityContext, UiProperties.getWhiteLabel(),
             firmwareStatusPanel, asyncJobExecutor, ecuPortToUse);
@@ -316,6 +316,10 @@ public class StartupFrame {
             asyncJobExecutor,
             tuneStatusPanel
         ).getContent());
+        outerTabs.addTab("Connect", connectTabWrapper);
+
+        int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
+        outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             if (firmwareTabStatus != null)
@@ -524,8 +528,15 @@ todo: enable auto-connect once we have 'Device' tab
         }
     }
 
+    private void saveTabIndex() {
+        if (outerTabs != null)
+            getConfig().getRoot().setProperty(STARTUP_TAB_INDEX, outerTabs.getSelectedIndex());
+    }
+
     public void disposeFrameAndProceed() {
         isProceeding = true;
+        saveTabIndex();
+        getConfig().save();
         frame.dispose();
         status.stop();
         if (firmwareTabStatus != null)
