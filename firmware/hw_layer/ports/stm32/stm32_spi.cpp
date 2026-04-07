@@ -58,8 +58,8 @@ void turnOnSpi(spi_device_e device) {
 	brain_pin_e mosiPin = getMosiPin(device);
 
 	if (!isBrainPinValid(sckPin) ||
-	    !isBrainPinValid(misoPin) ||
-	    !isBrainPinValid(mosiPin)) {
+	    !isBrainPinValid(misoPin)
+	    /* EGT is a case when MOSI is not assigned || !isBrainPinValid(mosiPin)*/) {
 		criticalError("SPI%d pin(s) are not valid", device);
 	}
 
