@@ -1220,8 +1220,8 @@ float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
 
 int torqueReductionArmingApp;Pedal position to realize that we need to reduce torque when the trigger pin is triggered;"", 1, 0, 0, 20000, 0
 
-float referenceTorqueForGenerator
-float referenceMapForGenerator
+float referenceTorqueForGenerator;Reference Torque value;"Nm", 1, 0, 0, 1000, 0
+float referenceMapForGenerator;kPa/psi value at which Reference Torque is archived;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 float referenceVeForGenerator
 
 custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], $pin_mode_e_enum
