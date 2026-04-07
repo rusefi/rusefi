@@ -611,6 +611,9 @@ bool validateConfigOnStartUpOrBurn() {
 
 		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
 		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
+
+		ensureArrayIsAscending("Second Ignition load", config->secondIgnitionLoadBins);
+		ensureArrayIsAscending("Second Ignition RPM", config->secondIgnitionRpmBins);
 		ensureArrayIsAscendingOrDefault("Ign Trim Rpm", config->ignTrimRpmBins);
    		ensureArrayIsAscendingOrDefault("Ign Trim Load", config->ignTrimLoadBins);
 

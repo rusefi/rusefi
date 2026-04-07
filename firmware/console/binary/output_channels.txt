@@ -323,6 +323,9 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale secondVeBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t autoscale secondVeBlendBias;;"%", 0.5, 0, 0, 100, 1
 
+	int16_t autoscale secondIgnitionBlendParameter;;"", 0.1, 0, -1000, 1000, 1
+	uint8_t autoscale secondIgnitionBlendBias;;"%", 0.5, 0, 0, 100, 1
+
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int8_t[BOOST_BLEND_COUNT iterate] boostOpenLoopBlendOutput;;"%", 1, 0, -100, 100, 0
