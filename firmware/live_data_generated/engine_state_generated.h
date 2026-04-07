@@ -236,93 +236,94 @@ struct engine_state_s {
 	offset 96 bit 2 */
 	bool isSecondVeTableActive : 1 {};
 	/**
+	 * IGN: Second table active
 	offset 96 bit 3 */
-	bool acrEngineMovedRecently : 1 {};
+	bool isSecondIgnitionTableActive : 1 {};
 	/**
 	offset 96 bit 4 */
-	bool heaterControlEnabled : 1 {};
+	bool acrEngineMovedRecently : 1 {};
 	/**
 	offset 96 bit 5 */
-	bool luaDigitalState0 : 1 {};
+	bool heaterControlEnabled : 1 {};
 	/**
 	offset 96 bit 6 */
-	bool luaDigitalState1 : 1 {};
+	bool luaDigitalState0 : 1 {};
 	/**
 	offset 96 bit 7 */
-	bool luaDigitalState2 : 1 {};
+	bool luaDigitalState1 : 1 {};
 	/**
 	offset 96 bit 8 */
+	bool luaDigitalState2 : 1 {};
+	/**
+	offset 96 bit 9 */
 	bool luaDigitalState3 : 1 {};
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
-	offset 96 bit 9 */
+	offset 96 bit 10 */
 	bool clutchDownState : 1 {};
 	/**
-	offset 96 bit 10 */
-	bool unusedBit_22_10 : 1 {};
-	/**
 	offset 96 bit 11 */
-	bool unusedBit_22_11 : 1 {};
+	bool unusedBit_23_11 : 1 {};
 	/**
 	offset 96 bit 12 */
-	bool unusedBit_22_12 : 1 {};
+	bool unusedBit_23_12 : 1 {};
 	/**
 	offset 96 bit 13 */
-	bool unusedBit_22_13 : 1 {};
+	bool unusedBit_23_13 : 1 {};
 	/**
 	offset 96 bit 14 */
-	bool unusedBit_22_14 : 1 {};
+	bool unusedBit_23_14 : 1 {};
 	/**
 	offset 96 bit 15 */
-	bool unusedBit_22_15 : 1 {};
+	bool unusedBit_23_15 : 1 {};
 	/**
 	offset 96 bit 16 */
-	bool unusedBit_22_16 : 1 {};
+	bool unusedBit_23_16 : 1 {};
 	/**
 	offset 96 bit 17 */
-	bool unusedBit_22_17 : 1 {};
+	bool unusedBit_23_17 : 1 {};
 	/**
 	offset 96 bit 18 */
-	bool unusedBit_22_18 : 1 {};
+	bool unusedBit_23_18 : 1 {};
 	/**
 	offset 96 bit 19 */
-	bool unusedBit_22_19 : 1 {};
+	bool unusedBit_23_19 : 1 {};
 	/**
 	offset 96 bit 20 */
-	bool unusedBit_22_20 : 1 {};
+	bool unusedBit_23_20 : 1 {};
 	/**
 	offset 96 bit 21 */
-	bool unusedBit_22_21 : 1 {};
+	bool unusedBit_23_21 : 1 {};
 	/**
 	offset 96 bit 22 */
-	bool unusedBit_22_22 : 1 {};
+	bool unusedBit_23_22 : 1 {};
 	/**
 	offset 96 bit 23 */
-	bool unusedBit_22_23 : 1 {};
+	bool unusedBit_23_23 : 1 {};
 	/**
 	offset 96 bit 24 */
-	bool unusedBit_22_24 : 1 {};
+	bool unusedBit_23_24 : 1 {};
 	/**
 	offset 96 bit 25 */
-	bool unusedBit_22_25 : 1 {};
+	bool unusedBit_23_25 : 1 {};
 	/**
 	offset 96 bit 26 */
-	bool unusedBit_22_26 : 1 {};
+	bool unusedBit_23_26 : 1 {};
 	/**
 	offset 96 bit 27 */
-	bool unusedBit_22_27 : 1 {};
+	bool unusedBit_23_27 : 1 {};
 	/**
 	offset 96 bit 28 */
-	bool unusedBit_22_28 : 1 {};
+	bool unusedBit_23_28 : 1 {};
 	/**
 	offset 96 bit 29 */
-	bool unusedBit_22_29 : 1 {};
+	bool unusedBit_23_29 : 1 {};
 	/**
 	offset 96 bit 30 */
-	bool unusedBit_22_30 : 1 {};
+	bool unusedBit_23_30 : 1 {};
 	/**
 	offset 96 bit 31 */
-	bool unusedBit_22_31 : 1 {};
+	bool unusedBit_23_31 : 1 {};
 	/**
 	 * offset 100
 	 */

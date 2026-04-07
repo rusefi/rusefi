@@ -634,6 +634,12 @@ float getOutputValueByHash(const int hash) {
 // secondVeBlendBias
 		case 173882720:
 			return engine->outputChannels.secondVeBlendBias;
+// secondIgnitionBlendParameter
+		case 1275938568:
+			return engine->outputChannels.secondIgnitionBlendParameter;
+// secondIgnitionBlendBias
+		case 441036454:
+			return engine->outputChannels.secondIgnitionBlendBias;
 // coilState1
 		case -1124698530:
 			return engine->outputChannels.coilState1;
@@ -1171,6 +1177,9 @@ float getOutputValueByHash(const int hash) {
 // isSecondVeTableActive
 		case 2127810012:
 			return engine->engineState.isSecondVeTableActive;
+// isSecondIgnitionTableActive
+		case -643103326:
+			return engine->engineState.isSecondIgnitionTableActive;
 // acrEngineMovedRecently
 		case -791147982:
 			return engine->engineState.acrEngineMovedRecently;
