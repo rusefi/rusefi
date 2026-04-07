@@ -26,7 +26,7 @@ public class TriggerMarkdownGenerator {
             writer.println();
 
             for (int count : sortedCounts) {
-                writer.println("## Size " + count);
+                writer.println("## tooth count " + (count / 2));
                 List<TriggerWheelInfo> group = groupedByCount.get(count);
                 // Sort by name within the group
                 group.sort(Comparator.comparing(TriggerWheelInfo::getTriggerName));

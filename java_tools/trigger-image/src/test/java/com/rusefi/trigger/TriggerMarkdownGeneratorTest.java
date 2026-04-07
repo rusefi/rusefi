@@ -38,9 +38,9 @@ public class TriggerMarkdownGeneratorTest {
         List<String> lines = Files.readAllLines(Paths.get(outputFile));
 
         // Check grouping and sorting
-        assertTrue(lines.contains("## Size 1"));
+        assertTrue(lines.contains("## tooth count 0"));
         assertTrue(lines.contains("- TEST_C"));
-        assertTrue(lines.contains("## Size 2"));
+        assertTrue(lines.contains("## tooth count 1"));
         assertTrue(lines.contains("- TEST_A"));
         assertTrue(lines.contains("- TEST_B"));
 
