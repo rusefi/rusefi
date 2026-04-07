@@ -48,8 +48,9 @@ static int getSpiAf(SPIDriver *driver) {
 }
 
 void turnOnSpi(spi_device_e device) {
-	if (isSpiInitialized[device])
+	if (isSpiInitialized[device]) {
 		return; // already initialized
+	}
 	isSpiInitialized[device] = true;
 
 	brain_pin_e sckPin = getSckPin(device);
@@ -59,7 +60,7 @@ void turnOnSpi(spi_device_e device) {
 	if (!isBrainPinValid(sckPin) ||
 	    !isBrainPinValid(misoPin) ||
 	    !isBrainPinValid(mosiPin)) {
-		criticalError("SPI pin(s) are not valid");
+		criticalError("SPI%d pin(s) are not valid", device);
 	}
 
 	if (device == SPI_DEVICE_1) {
