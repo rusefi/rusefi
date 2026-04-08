@@ -27,17 +27,25 @@ void vinStrategy(bool isRunningOnBurn) {
 
     // the check with wizardPanelToShow is for not overriding an existing panel
     // (i.e., we need to run more than one wizard with the current ecu configuration)
+    bool changed = false;
     if (!isVinFilled && engineConfiguration->wizardPanelToShow == -1) {
-        efiPrintf("VinStrategy, reseting flag");
+        efiPrintf("VinStrategy, showing VIN wizard");
         engineConfiguration->wizardPanelToShow = vinWizard;
+        changed = true;
     } else if (isVinFilled && engineConfiguration->wizardPanelToShow == vinWizard) {
         engineConfiguration->wizardPanelToShow = -1;
+        changed = true;
     }
 
-
-        // trigger page reset, see [tag:popular_vehicle]
+    // Only trigger page reset when wizard panel actually changed, not on every CRC check.
+    // Unconditional onApplyPreset() here caused TS to reload page 1 on every CRC check,
+    // discarding pending user edits and creating a rapid alternation loop on the burning indicator on TS [tag:popular_vehicle]
 #if EFI_TUNER_STUDIO && !EFI_UNIT_TEST
+    if (changed) {
         onApplyPreset();
+    }
+#else
+    (void)changed;
 #endif // EFI_TUNER_STUDIO
 
 }

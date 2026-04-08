@@ -1085,9 +1085,19 @@ static char tsErrorBuff[80];
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 bool isTuningVeNow() {
-  int tuningDetector = engineConfiguration->isTuningDetectorEnabled ? 0 : 20;
+	// When tuning detection is enabled, suspend STFT/LTFT for 20 s after each VE table write.
+	const int tuningDetector = engineConfiguration->isTuningDetectorEnabled ? 20 : 0;
 	return !calibrationsVeWriteTimer.hasElapsedSec(tuningDetector);
 }
+
+#if EFI_UNIT_TEST
+// Reset the VE-write timer to its initial "always elapsed" state so that tests do not
+// leak state across test cases (EngineTestHelper resets the mock clock to 0 in its
+// constructor, which would make a timer reset at T=0 appear freshly reset again).
+void resetCalibrationTimerForTest() {
+	calibrationsVeWriteTimer.init();
+}
+#endif
 
 void startTunerStudioConnectivity() {
 	// Assert tune & output channel struct sizes

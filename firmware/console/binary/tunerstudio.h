@@ -56,6 +56,9 @@ int getSecondsSinceChannelsRequest();
 void updateTunerStudioState();
 
 bool isTuningVeNow();
+#if EFI_UNIT_TEST
+void resetCalibrationTimerForTest();
+#endif
 void startTunerStudioConnectivity();
 bool needToTriggerTsRefresh();
 void onApplyPreset();
