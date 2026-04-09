@@ -40,12 +40,10 @@ void vinStrategy(bool isRunningOnBurn) {
     // Only trigger page reset when wizard panel actually changed, not on every CRC check.
     // Unconditional onApplyPreset() here caused TS to reload page 1 on every CRC check,
     // discarding pending user edits and creating a rapid alternation loop on the burning indicator on TS [tag:popular_vehicle]
-#if EFI_TUNER_STUDIO && !EFI_UNIT_TEST
+#if EFI_TUNER_STUDIO
     if (changed) {
         onApplyPreset();
     }
-#else
-    (void)changed;
 #endif // EFI_TUNER_STUDIO
 
 }

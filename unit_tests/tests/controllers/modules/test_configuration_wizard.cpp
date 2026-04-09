@@ -7,6 +7,7 @@
 
 #include "pch.h"
 #include "tests/util/test_base.h"
+#include "tunerstudio.h"
 
 class ConfigurationWizardTest : public TestBase<> {
 };
@@ -45,4 +46,61 @@ TEST_F(ConfigurationWizardTest, NoStateChange_ShouldNotTouchPanel) {
 
     // then: panel remains unchanged
     ASSERT_EQ(99, engineConfiguration->wizardPanelToShow);
+}
+
+TEST_F(ConfigurationWizardTest, VinEmpty_PanelNotSet_ShouldCallOnApplyPreset) {
+    // given: VIN is empty and no wizard is active — first-time detection
+    strcpy(engineConfiguration->vinNumber, "");
+    engineConfiguration->wizardPanelToShow = -1;
+
+    // when
+    ConfigurationWizard::onConfigOnStartUpOrBurn(false);
+
+    // then: panel was set (state changed) so onApplyPreset was called → TS refresh pending
+    ASSERT_EQ(djb2lowerCase(DIALOG_NAME_VEHICLE_INFORMATION), engineConfiguration->wizardPanelToShow);
+    ASSERT_TRUE(needToTriggerTsRefresh());
+}
+
+TEST_F(ConfigurationWizardTest, VinEmpty_PanelAlreadySet_ShouldNotCallOnApplyPreset) {
+    // given: wizard already active — no state change on a repeat call (e.g. next CRC check)
+    const int vinPanel = djb2lowerCase(DIALOG_NAME_VEHICLE_INFORMATION);
+    strcpy(engineConfiguration->vinNumber, "");
+    engineConfiguration->wizardPanelToShow = vinPanel;
+
+    // ensure engineTypeChangeTimer is in "already elapsed" state before the call
+    engine->engineTypeChangeTimer.init();
+
+    // when
+    ConfigurationWizard::onConfigOnStartUpOrBurn(false);
+
+    // then: no state change → onApplyPreset must NOT have been called
+    ASSERT_FALSE(needToTriggerTsRefresh());
+}
+
+TEST_F(ConfigurationWizardTest, VinFilled_WizardActive_ShouldCallOnApplyPreset) {
+    // given: VIN just filled while the VIN wizard was showing
+    const int vinPanel = djb2lowerCase(DIALOG_NAME_VEHICLE_INFORMATION);
+    strcpy(engineConfiguration->vinNumber, "1HGBH41JXMN109186");
+    engineConfiguration->wizardPanelToShow = vinPanel;
+
+    // when
+    ConfigurationWizard::onConfigOnStartUpOrBurn(false);
+
+    // then: wizard dismissed (state changed) → onApplyPreset called → TS refresh pending
+    ASSERT_EQ(-1, engineConfiguration->wizardPanelToShow);
+    ASSERT_TRUE(needToTriggerTsRefresh());
+}
+
+TEST_F(ConfigurationWizardTest, VinFilled_PanelAlreadyClear_ShouldNotCallOnApplyPreset) {
+    // given: VIN already filled and panel already cleared — nothing to do
+    strcpy(engineConfiguration->vinNumber, "1HGBH41JXMN109186");
+    engineConfiguration->wizardPanelToShow = -1;
+
+    engine->engineTypeChangeTimer.init();
+
+    // when
+    ConfigurationWizard::onConfigOnStartUpOrBurn(false);
+
+    // then: no state change → onApplyPreset must NOT have been called
+    ASSERT_FALSE(needToTriggerTsRefresh());
 }
