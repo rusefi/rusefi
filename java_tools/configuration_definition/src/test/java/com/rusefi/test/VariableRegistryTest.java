@@ -25,6 +25,14 @@ public class VariableRegistryTest {
     }
 
     @Test
+    public void testDollarSignInValue() {
+        VariableRegistry registry = new VariableRegistry();
+        registry.register("content", "bits, U16, 0, [0:8], $switch_input_pin_e_list");
+        assertEquals("bits, U16, 0, [0:8], $switch_input_pin_e_list",
+                registry.applyVariables("@@content@@"));
+    }
+
+    @Test
     public void testReplace() {
         VariableRegistry registry = new VariableRegistry();
         registry.register("var", 256);
