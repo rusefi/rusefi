@@ -524,6 +524,7 @@ todo: enable auto-connect once we have 'Device' tab
         if (choice == JOptionPane.YES_OPTION) {
             if (frame.isDisplayable())
                 disposeFrameAndProceed();
+            SimulatorHelper.onWindowClosed();
             Autoupdate.relaunchConsole();
         }
     }
