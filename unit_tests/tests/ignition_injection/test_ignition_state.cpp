@@ -196,7 +196,7 @@ TEST(ignition_state, secondIgnitionTablePin) {
   const float load = 50;
 
   setWholeTimingTable(10);
-  setTable(config->secondIgnitionTable, 30);
+  setTable(secondTablesGetState()->secondIgnitionTable, 30);
   initIgnitionAdvanceControl();
 
   Sensor::setMockValue(SensorType::Clt, 35);
@@ -208,7 +208,7 @@ TEST(ignition_state, secondIgnitionTablePin) {
   engineConfiguration->nitrousControlEnabled = false;
   engineConfiguration->useSeparateAdvanceForIdle = false;
 
-  config->secondIgnitionTableInput = Gpio::A0;
+  secondTablesGetState()->secondIgnitionTableInput = Gpio::A0;
 
   // Pin HIGH -> second table
   setMockState(Gpio::A0, true);
@@ -219,7 +219,7 @@ TEST(ignition_state, secondIgnitionTablePin) {
   EXPECT_NEAR(10, getRunningAdvance(rpm, load), EPS2D);
 
   // No pin configured -> primary table
-  config->secondIgnitionTableInput = Gpio::Unassigned;
+  secondTablesGetState()->secondIgnitionTableInput = Gpio::Unassigned;
   EXPECT_NEAR(10, getRunningAdvance(rpm, load), EPS2D);
 }
 
@@ -229,7 +229,7 @@ TEST(ignition_state, secondIgnitionTableBlend) {
   constexpr float load = 50;
 
   setWholeTimingTable(10);
-  setTable(config->secondIgnitionTable, 30);
+  setTable(secondTablesGetState()->secondIgnitionTable, 30);
   initIgnitionAdvanceControl();
 
   Sensor::setMockValue(SensorType::Clt, 35);
@@ -241,12 +241,12 @@ TEST(ignition_state, secondIgnitionTableBlend) {
   engineConfiguration->nitrousControlEnabled = false;
   engineConfiguration->useSeparateAdvanceForIdle = false;
 
-  config->secondIgnitionTableInput = Gpio::Unassigned; // no pin, blend controls it
+  secondTablesGetState()->secondIgnitionTableInput = Gpio::Unassigned; // no pin, blend controls it
 
   // Configure blend: TPS controls blend, 0% TPS -> 0% blend, 100% TPS -> 100% blend
-  config->secondIgnitionBlendParameter = GPPWM_Tps;
-  setLinearCurve(config->secondIgnitionBlendBins, 0, 100, 1);
-  setLinearCurve(config->secondIgnitionBlendValues, 0, 100, 1);
+  secondTablesGetState()->secondIgnitionBlendParameter = GPPWM_Tps;
+  setLinearCurve(secondTablesGetState()->secondIgnitionBlendBins, 0, 100, 1);
+  setLinearCurve(secondTablesGetState()->secondIgnitionBlendValues, 0, 100, 1);
 
   // TPS = 0 -> 0% blend -> primary table (10 deg)
   Sensor::setMockValue(SensorType::Tps1, 0);
@@ -261,7 +261,7 @@ TEST(ignition_state, secondIgnitionTableBlend) {
   EXPECT_NEAR(30, getRunningAdvance(rpm, load), EPS2D);
 
   // Pin takes priority over blend when active
-  config->secondIgnitionTableInput = Gpio::A0;
+  secondTablesGetState()->secondIgnitionTableInput = Gpio::A0;
   setMockState(Gpio::A0, true);
   Sensor::setMockValue(SensorType::Tps1, 0); // blend would give primary, but pin forces switch
   EXPECT_NEAR(30, getRunningAdvance(rpm, load), EPS2D);

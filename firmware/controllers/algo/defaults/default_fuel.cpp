@@ -78,7 +78,6 @@ static void setDefaultWarmupFuelEnrichment() {
 
 static void setDefaultVETable() {
 	setRpmTableBin(config->veRpmBins);
-	setRpmTableBin(config->secondVeRpmBins);
 
 #if (VE_LOAD_COUNT == 16) && (VE_RPM_COUNT == 16)
 	static const float hardCodedveTable[16][16] = {
@@ -100,10 +99,8 @@ static void setDefaultVETable() {
 {94.700,	100.900,	103.500,	107.700,	111.800,	115.600,	118.400,	120.300,	120.800,	120.300,	118.700,	116.200,	113.300,	110.500,	107.700,	105.000,	},
 };
 	copyTable(config->veTable, hardCodedveTable);
-	copyTable(config->secondVeTable, hardCodedveTable);
 #else
 	setTable(config->veTable, 80);
-	setTable(config->secondVeTable, 80);
 #endif
 
 	setRpmTableBin(config->baroCorrRpmBins);
@@ -122,10 +119,6 @@ static void setDefaultVETable() {
   setRpmTableBin(config->fuelTrimRpmBins);
   setLinearCurve(config->fuelTrimLoadBins, 20, 100);
 #endif
-
-	// Default axes for second VE table blend
-	setLinearCurve(config->secondVeBlendBins, 0, 100);
-	setLinearCurve(config->secondVeBlendValues, 0, 100);
 
 	// Default axes for VE blends
 	for (size_t i = 0; i < efi::size(config->veBlends); i++) {

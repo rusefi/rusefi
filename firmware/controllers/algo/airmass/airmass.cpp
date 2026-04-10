@@ -25,24 +25,24 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
 	bool switchTableActive = false;
 
-	const bool pinActive = isBrainPinValid(config->secondVeTableInput) &&
-		efiReadPin(config->secondVeTableInput, config->secondVeTableInputMode);
+	const bool pinActive = isBrainPinValid(secondTablesGetState()->secondVeTableInput) &&
+		efiReadPin(secondTablesGetState()->secondVeTableInput, secondTablesGetState()->secondVeTableInputMode);
 
 	if (pinActive) {
 		// Hard switch: pin overrides everything, replace VE entirely
 		ve = interpolate3d(
-			config->secondVeTable,
-			config->secondVeLoadBins, load,
-			config->secondVeRpmBins, rpm
+			secondTablesGetState()->secondVeTable,
+			secondTablesGetState()->secondVeLoadBins, load,
+			secondTablesGetState()->secondVeRpmBins, rpm
 		);
 		switchTableActive = true;
 	} else {
 		auto result = calculateBlend(
-			config->secondVeBlendParameter,
-			config->secondVeBlendBins, config->secondVeBlendValues,
-			config->secondVeTable,
-			config->secondVeLoadBins, load,
-			config->secondVeRpmBins, rpm
+			secondTablesGetState()->secondVeBlendParameter,
+			secondTablesGetState()->secondVeBlendBins, secondTablesGetState()->secondVeBlendValues,
+			secondTablesGetState()->secondVeTable,
+			secondTablesGetState()->secondVeLoadBins, load,
+			secondTablesGetState()->secondVeRpmBins, rpm
 		);
 		if (result.Bias > 0) {
 			ve = interpolateClamped(0, ve, 100, result.Value, result.Bias);
