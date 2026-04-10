@@ -155,6 +155,7 @@ void setup_custom_board_overrides(){
  *------------------------------------------------------------------------*/
 int main(int argc, char** argv) {
 	setbuf(stdout, NULL);
+	std::filesystem::create_directories("generated");
 	setup_custom_fw_overrides();
 	setup_custom_board_overrides();
 	/*
