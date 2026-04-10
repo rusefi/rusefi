@@ -26,6 +26,11 @@ ifneq ($(OS),Windows_NT)
 endif
 $(info OS is [${OS}])
 
+# Cygwin reports as CYGWIN_NT-* from uname but is still Windows underneath.
+# Detect it so that Windows-specific workarounds (e.g. disabling
+# CH_DBG_SYSTEM_STATE_CHECK) apply on Cygwin builds too.
+IS_CYGWIN = $(if $(findstring CYGWIN,$(OS)),yes,no)
+
 include ../firmware/rusefi.mk
 include ../firmware/rusefi_rules.mk
 -include ${BOARD_DIR}/firmware/firmware.mk
@@ -39,7 +44,11 @@ PCHSUB = simulator
 CONFDIR = .
 
 ifneq ($(OS),Windows_NT)
-  SANITIZE = yes
+  ifeq ($(IS_CYGWIN),yes)
+    SANITIZE = no
+  else
+    SANITIZE = yes
+  endif
 else
   SANITIZE = no
 endif
@@ -55,6 +64,8 @@ ifeq ($(USE_OPT),)
   USE_OPT += -D US_TO_NT_MULTIPLIER=$(US_TO_NT_MULTIPLIER)
 
   ifeq ($(OS),Windows_NT)
+    USE_OPT += -DEFI_SIM_IS_WINDOWS=1 -DIS_WINDOWS_COMPILER=1
+  else ifeq ($(IS_CYGWIN),yes)
     USE_OPT += -DEFI_SIM_IS_WINDOWS=1 -DIS_WINDOWS_COMPILER=1
   else
     USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0 -DIS_WINDOWS_COMPILER=0
