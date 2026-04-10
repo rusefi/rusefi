@@ -35,6 +35,10 @@ public class TriggerMarkdownGenerator {
                     if (name.startsWith("TT_")) {
                         name = name.substring(3);
                     }
+                    String lowerName = name.toLowerCase();
+                    if (lowerName.contains("custom") || lowerName.contains("unused") || lowerName.contains("dev")) {
+                        continue;
+                    }
                     writer.println("- [" + name + "](#" + name + ")");
                 }
                 writer.println();

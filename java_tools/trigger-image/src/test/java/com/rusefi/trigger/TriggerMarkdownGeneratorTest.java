@@ -15,17 +15,17 @@ public class TriggerMarkdownGeneratorTest {
         String testFolder = "test_triggers";
         new File(testFolder).mkdirs();
         String triggersFile = testFolder + File.separator + "triggers.txt";
-        String content = "TRIGGERTYPE 1 2 TEST_A 0.00\n" +
+        String content = "TRIGGERTYPE 1 2 TT_TEST_A 0.00\n" +
                 "knownOperationMode=true\n" +
                 "#\n" +
                 "event 0 0 0 0.0 0.0\n" +
                 "event 0 1 0 10.0 0.0\n" +
-                "TRIGGERTYPE 2 2 TEST_B 0.00\n" +
+                "TRIGGERTYPE 2 2 TT_TEST_B 0.00\n" +
                 "knownOperationMode=true\n" +
                 "#\n" +
                 "event 0 0 0 0.0 0.0\n" +
                 "event 0 1 0 10.0 0.0\n" +
-                "TRIGGERTYPE 3 1 TEST_C 0.00\n" +
+                "TRIGGERTYPE 3 1 TT_TEST_C 0.00\n" +
                 "knownOperationMode=true\n" +
                 "#\n" +
                 "event 0 0 0 0.0 0.0\n";
@@ -40,6 +40,7 @@ public class TriggerMarkdownGeneratorTest {
         // Check grouping and sorting
         assertTrue(lines.contains("## tooth count 0"));
         assertTrue(lines.contains("- [TEST_C](#TEST_C)"));
+        assertFalse(lines.contains("- [TT_TEST_C](#TT_TEST_C)"));
         assertTrue(lines.contains("## tooth count 1"));
         assertTrue(lines.contains("- [TEST_A](#TEST_A)"));
         assertTrue(lines.contains("- [TEST_B](#TEST_B)"));
