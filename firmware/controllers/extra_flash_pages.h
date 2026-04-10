@@ -38,18 +38,12 @@ struct ExtraPageContainer {
 
 /**
  * Load all extra pages from storage into RAM.
- * Called unconditionally at startup (before TunerStudio starts), like the main config.
+ * Called unconditionally at startup (before TunerStudio starts), like the main config
  *
  * To add a new extra page: add one initXxx() call in extra_flash_pages.cpp.
  * rusefi.cpp never needs to change.
  */
 void loadExtraPages();
-
-/**
- * Load a single extra page by storage record ID.
- * Called from storageReadID() when the storage thread processes an on-demand read.
- */
-void loadExtraPage(StorageItemId id);
 
 /**
  * Called from writeToFlashNowImpl() immediately after the main-config sector

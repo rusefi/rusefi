@@ -48,24 +48,24 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
 	bool secondIgnitionTableActive = false;
 
-	const bool ignPinActive = isBrainPinValid(config->secondIgnitionTableInput) &&
-		efiReadPin(config->secondIgnitionTableInput, config->secondIgnitionTableInputMode);
+	const bool ignPinActive = isBrainPinValid(secondTablesGetState()->secondIgnitionTableInput) &&
+		efiReadPin(secondTablesGetState()->secondIgnitionTableInput, secondTablesGetState()->secondIgnitionTableInputMode);
 
 	if (ignPinActive) {
 		// Hard switch: pin overrides everything, replace ignition table entirely
 		advanceAngle = interpolate3d(
-			config->secondIgnitionTable,
-			config->secondIgnitionLoadBins, engineLoad,
-			config->secondIgnitionRpmBins, rpm
+			secondTablesGetState()->secondIgnitionTable,
+			secondTablesGetState()->secondIgnitionLoadBins, engineLoad,
+			secondTablesGetState()->secondIgnitionRpmBins, rpm
 		);
 		secondIgnitionTableActive = true;
 	} else {
 		auto result = calculateBlend(
-			config->secondIgnitionBlendParameter,
-			config->secondIgnitionBlendBins, config->secondIgnitionBlendValues,
-			config->secondIgnitionTable,
-			config->secondIgnitionLoadBins, engineLoad,
-			config->secondIgnitionRpmBins, rpm
+			secondTablesGetState()->secondIgnitionBlendParameter,
+			secondTablesGetState()->secondIgnitionBlendBins, secondTablesGetState()->secondIgnitionBlendValues,
+			secondTablesGetState()->secondIgnitionTable,
+			secondTablesGetState()->secondIgnitionLoadBins, engineLoad,
+			secondTablesGetState()->secondIgnitionRpmBins, rpm
 		);
 		if (result.Bias > 0) {
 			advanceAngle = interpolateClamped(0, advanceAngle, 100, result.Value, result.Bias);

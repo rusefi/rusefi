@@ -343,9 +343,9 @@ TEST(FuelMath, VeSwitchTable) {
 	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
 
 	// Second VE table returns 80%
-	setTable(config->secondVeTable, 80);
+	setTable(secondTablesGetState()->secondVeTable, 80);
 
-	config->secondVeTableInput = Gpio::A0;
+	secondTablesGetState()->secondVeTableInput = Gpio::A0;
 
 	// Pin HIGH -> second table
 	setMockState(Gpio::A0, true);
@@ -356,7 +356,7 @@ TEST(FuelMath, VeSwitchTable) {
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
 
 	// No pin configured -> primary table
-	config->secondVeTableInput = Gpio::Unassigned;
+	secondTablesGetState()->secondVeTableInput = Gpio::Unassigned;
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.5f, EPS4D);
 }
 
@@ -367,14 +367,14 @@ TEST(FuelMath, VeSwitchTableBlend) {
 
 	// Primary VE table returns 50%, switch table returns 80%
 	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
-	setTable(config->secondVeTable, 80);
+	setTable(secondTablesGetState()->secondVeTable, 80);
 
-	config->secondVeTableInput = Gpio::Unassigned; // no pin, blend controls it
+	secondTablesGetState()->secondVeTableInput = Gpio::Unassigned; // no pin, blend controls it
 
 	// Configure blend: TPS controls blend, 0% TPS -> 0% blend, 100% TPS -> 100% blend
-	config->secondVeBlendParameter = GPPWM_Tps;
-	setLinearCurve(config->secondVeBlendBins, 0, 100, 1);
-	setLinearCurve(config->secondVeBlendValues, 0, 100, 1);
+	secondTablesGetState()->secondVeBlendParameter = GPPWM_Tps;
+	setLinearCurve(secondTablesGetState()->secondVeBlendBins, 0, 100, 1);
+	setLinearCurve(secondTablesGetState()->secondVeBlendValues, 0, 100, 1);
 
 	// TPS = 0 -> 0% blend -> primary table (50%)
 	Sensor::setMockValue(SensorType::Tps1, 0);
@@ -389,7 +389,7 @@ TEST(FuelMath, VeSwitchTableBlend) {
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);
 
 	// Pin takes priority over blend when active
-	config->secondVeTableInput = Gpio::A0;
+	secondTablesGetState()->secondVeTableInput = Gpio::A0;
 	setMockState(Gpio::A0, true);
 	Sensor::setMockValue(SensorType::Tps1, 0); // blend would give primary, but pin forces switch
 	EXPECT_NEAR(dut.getVe(1000, 50, false), 0.8f, EPS4D);

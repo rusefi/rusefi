@@ -13,6 +13,7 @@
 // Issue TS zeroes LSB byte of pageIdentifier
 #define TS_PAGE_SCATTER_OFFSETS		0x0100
 #define TS_PAGE_LTFT_TRIMS			0x0200
+#define TS_PAGE_SECOND_TABLES		0x0300
 
 typedef struct {
 	int queryCommandCounter;

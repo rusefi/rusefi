@@ -191,7 +191,6 @@ void setConstantDwell(floatms_t dwellMs) {
 void setFuelTablesLoadBin(float minValue, float maxValue) {
 	setLinearCurve(config->injPhaseLoadBins, minValue, maxValue, 1);
 	setLinearCurve(config->veLoadBins, minValue, maxValue, 1);
-	setLinearCurve(config->secondVeLoadBins, minValue, maxValue, 1);
 	setLinearCurve(config->lambdaLoadBins, minValue, maxValue, 1);
 }
 
