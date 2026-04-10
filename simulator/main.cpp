@@ -23,6 +23,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <csignal>
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
@@ -155,6 +156,11 @@ void setup_custom_board_overrides(){
  *------------------------------------------------------------------------*/
 int main(int argc, char** argv) {
 	setbuf(stdout, NULL);
+#ifdef SIGPIPE
+	// Ignore SIGPIPE so that send() on a broken TCP socket returns EPIPE
+	// instead of killing the process.
+	signal(SIGPIPE, SIG_IGN);
+#endif
 	std::filesystem::create_directories("generated");
 	setup_custom_fw_overrides();
 	setup_custom_board_overrides();
