@@ -7,9 +7,11 @@
 
 #include "pch.h"
 #include "extra_flash_pages.h"
-#include "flash_main.h"
+#include "second_tables.h"
+#include "storage.h"
 
 void loadExtraPages() {
+	initSecondTables();
 
 	// When extracting a new config page from the main config, add an
 	// initXxx() call here
@@ -24,6 +26,10 @@ void loadExtraPage(StorageItemId id) {
 
 void burnExtraFlashPages() {
 #if EFI_PROD_CODE
+	storageWrite(EFI_SECOND_TABLES_RECORD_ID,
+		static_cast<const uint8_t*>(secondTablesGetTsPage()),
+		secondTablesGetTsPageSize());
+
 	// When extracting a new config page from the main config, add a
 	// storageWrite() call here
 #endif // EFI_PROD_CODE
