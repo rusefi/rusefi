@@ -110,6 +110,10 @@ public class TriggerWheelInfo {
                 case TRIGGER_SYNC_EDGE:
                     syncEdge = value;
                     break;
+                case "operationMode":
+                case "useOnlyPrimaryForSync":
+                case "shapeWithoutTdc":
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);
             }
