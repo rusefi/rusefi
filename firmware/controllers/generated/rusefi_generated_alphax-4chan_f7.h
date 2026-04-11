@@ -1560,7 +1560,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4195928498
+#define SIGNATURE_HASH 3488183816
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1668,6 +1668,8 @@
 #define TRIGGER_IS_CRANK_KEY "crankBased"
 #define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
 #define TRIGGER_KNOWN_OPERATION_MODE "knownOperationMode"
+#define TRIGGER_MODE "operationMode"
+#define TRIGGER_ONLY_PRIMARY "useOnlyPrimaryForSync"
 #define TRIGGER_SIMULATOR_PIN_COUNT 2
 #define TRIGGER_SYNC_EDGE "syncEdge"
 #define trigger_type_e_auto_enum 0="TT_TOOTHED_WHEEL",38="TT_12_TOOTH_CRANK",25="TT_2JZ_3_34_SIMULATION_ONLY",70="TT_36_2_1",71="TT_36_2_1_1",23="TT_36_2_2_2",31="TT_3_1_CAM",72="TT_3_TOOTH_CRANK",77="TT_60DEG_TOOTH",75="TT_60_2_2_F3R",20="TT_60_2_WRONG_POLARITY",80="TT_6_TOOTH_CRANK",85="TT_ARCTIC_CAT",21="TT_BENELLI_TRE",30="TT_CHRYSLER_NGC_36_2_2",90="TT_CHRYSLER_PHASER",88="TT_CUSTOM_1",89="TT_CUSTOM_2",6="TT_DAIHATSU_3_CYL",81="TT_DAIHATSU_4_CYL",83="TT_DEV",2="TT_DODGE_NEON_1995",14="TT_DODGE_NEON_2003_CAM",32="TT_DODGE_NEON_2003_CRANK",19="TT_DODGE_RAM",22="TT_DODGE_STRATUS",41="TT_FIAT_IAW_P8",1="TT_FORD_ASPIRE",42="TT_FORD_ST170",65="TT_FORD_TFI_PIP",74="TT_GM_24x_3",27="TT_GM_24x_5",54="TT_GM_60_2_2_2",5="TT_GM_7X",18="TT_HALF_MOON",28="TT_HONDA_CBR_600",87="TT_HONDA_J30A2_24_1_1",67="TT_HONDA_K_CAM_4_1",46="TT_HONDA_K_CRANK_12_1",93="TT_JEEPRENIX_66_2_2_2",37="TT_JEEP_18_2_2_2",40="TT_JEEP_4_CYL",92="TT_JEEP_EVD_36_2_2",57="TT_KAWA_KX450F",15="TT_MAZDA_DOHC_1_4",3="TT_MAZDA_MIATA_NA",35="TT_MAZDA_MIATA_VVT_TEST",7="TT_MAZDA_SOHC_4",10="TT_MERCEDES_2_SEGMENT",33="TT_MIATA_VVT",34="TT_MITSU_4G63_CAM",76="TT_MITSU_4G63_CRANK",11="TT_NARROW_SINGLE_TOOTH",84="TT_NISSAN_HR",86="TT_NISSAN_HR_CAM_IN",29="TT_NISSAN_K11",52="TT_NISSAN_MR18_CAM_VVT",68="TT_NISSAN_MR18_CRANK",61="TT_NISSAN_QR25",24="TT_NISSAN_SR20VE",60="TT_NISSAN_VQ30",58="TT_NISSAN_VQ35",16="TT_ONE_PLUS_ONE",44="TT_RENIX_44_2_2",45="TT_RENIX_66_2_2_2",26="TT_ROVER_K",55="TT_SKODA_FAVORIT",36="TT_SUBARU_7_6",94="TT_SUBARU_7_6_CRANK",12="TT_SUBARU_EZ30",49="TT_SUBARU_SVX",64="TT_SUBARU_SVX_CAM_VVT",63="TT_SUBARU_SVX_CRANK_1",66="TT_SUZUKI_G13B",95="TT_SUZUKI_G16B",50="TT_SUZUKI_K6A",69="TT_TOOTHED_WHEEL_32_2",9="TT_TOOTHED_WHEEL_36_1",48="TT_TOOTHED_WHEEL_36_2",8="TT_TOOTHED_WHEEL_60_2",91="TT_TOYOTA_3_TOOTH_UZ",53="TT_TRI_TACH",97="TT_UNUSED",39="TT_UNUSED_39",96="TT_UNUSED_96",56="TT_VVT_BARRA_3_PLUS_1",47="TT_VVT_BOSCH_QUICK_START",4="TT_VVT_FORD_COYOTE",82="TT_VVT_MAZDA_L",13="TT_VVT_MAZDA_SKYACTIV",43="TT_VVT_MIATA_NB",62="TT_VVT_MITSUBISHI_3A92",78="TT_VVT_MITSUBISHI_4G69",79="TT_VVT_MITSU_6G72",59="TT_VVT_NISSAN_VQ35",51="TT_VVT_SUBARU_7_WITHOUT_6",17="TT_VVT_TOYOTA_3_TOOTH",73="TT_VVT_TOYOTA_4_1"
@@ -1773,6 +1775,7 @@
 #define TRIGGER_TYPE_WITH_SECOND_WHEEL trigger_type == 1 || trigger_type == 3 || trigger_type == 15 || trigger_type == 16 || trigger_type == 19 || trigger_type == 25 || trigger_type == 31 || trigger_type == 35 || trigger_type == 36 || trigger_type == 37 || trigger_type == 40 || trigger_type == 49 || trigger_type == 53 || trigger_type == 54 || trigger_type == 63 || trigger_type == 64
 #define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 0 || trigger_type == 8 || trigger_type == 9 || trigger_type == 11 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69 || trigger_type == 73 || trigger_type == 88 || trigger_type == 89
 #define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
+#define TRIGGER_WITHOUT_TDC "shapeWithoutTdc"
 #define TRIGGERS_FILE_NAME "triggers.txt"
 #define TriggerWheel_T_PRIMARY 0
 #define TriggerWheel_T_SECONDARY 1
@@ -2166,7 +2169,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.04.11.alphax-4chan_f7.4195928498"
+#define TS_SIGNATURE "rusEFI master.2026.04.11.alphax-4chan_f7.3488183816"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
