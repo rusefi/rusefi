@@ -332,7 +332,6 @@ public class ConfigFieldImpl implements ConfigField {
     @Override
     public int getSize(ConfigField next) {
         if (isBit() && next.isBit()) {
-            // we have a protection from 33+ bits in a row in BitState, see BitState.TooManyBitsInARow
             return 0;
         }
         if (isBit())
