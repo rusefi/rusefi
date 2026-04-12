@@ -1558,7 +1558,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1353853307
+#define SIGNATURE_HASH 1661070712
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1656,7 +1656,7 @@
 #define TransmissionControllerMode_SimpleTransmissionController 1
 #define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 12
-#define TRIGGER_CRANK_BASED trigger_type == 2 || trigger_type == 5 || trigger_type == 10 || trigger_type == 12 || trigger_type == 20 || trigger_type == 21 || trigger_type == 26 || trigger_type == 27 || trigger_type == 32 || trigger_type == 33 || trigger_type == 38 || trigger_type == 39 || trigger_type == 44 || trigger_type == 45 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 58 || trigger_type == 61 || trigger_type == 62 || trigger_type == 68 || trigger_type == 70 || trigger_type == 71 || trigger_type == 72 || trigger_type == 74 || trigger_type == 75 || trigger_type == 76 || trigger_type == 77 || trigger_type == 84 || trigger_type == 85 || trigger_type == 87 || trigger_type == 92 || trigger_type == 93 || trigger_type == 94 || trigger_type == 96
+#define TRIGGER_CRANK_BASED trigger_type == 2 || trigger_type == 5 || trigger_type == 10 || trigger_type == 12 || trigger_type == 20 || trigger_type == 21 || trigger_type == 26 || trigger_type == 27 || trigger_type == 32 || trigger_type == 33 || trigger_type == 38 || trigger_type == 39 || trigger_type == 44 || trigger_type == 45 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 58 || trigger_type == 61 || trigger_type == 62 || trigger_type == 68 || trigger_type == 70 || trigger_type == 71 || trigger_type == 72 || trigger_type == 74 || trigger_type == 75 || trigger_type == 76 || trigger_type == 77 || trigger_type == 84 || trigger_type == 87 || trigger_type == 92 || trigger_type == 93 || trigger_type == 94 || trigger_type == 96
 #define TRIGGER_CYCLE_DURATION "cycleDuration"
 #define TRIGGER_GAP_FROM "gapFrom"
 #define TRIGGER_GAP_TO "gapTo"
@@ -1774,7 +1774,7 @@
 #define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 0 || trigger_type == 8 || trigger_type == 9 || trigger_type == 11 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69 || trigger_type == 73 || trigger_type == 88 || trigger_type == 89
 #define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 #define TRIGGER_WITHOUT_TDC "shapeWithoutTdc"
-#define TRIGGERS_FILE_NAME "triggers.yaml"
+#define TRIGGERS_FILE_NAME "triggers.txt"
 #define TriggerWheel_T_PRIMARY 0
 #define TriggerWheel_T_SECONDARY 1
 #define TRUE_FALSE_COUNT_LIMIT 62
@@ -2167,7 +2167,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.04.12.alphax-8chan_f7.1353853307"
+#define TS_SIGNATURE "rusEFI master.2026.04.12.alphax-8chan_f7.1661070712"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
