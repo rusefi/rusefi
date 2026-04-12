@@ -12,7 +12,10 @@ endif
 # ...except these few
 RUSEFI_OPT += -Wno-error=sign-compare
 RUSEFI_OPT += -Wno-error=overloaded-virtual
-RUSEFI_OPT += -Wno-error=unused-parameter
+
+ifeq ($(USE_OPENBLT),yes)
+  RUSEFI_OPT += -Wno-error=unused-parameter
+endif
 
 # todo 'delete-non-abstract-non-virtual-dtor issue or not #8476'
 # reduce clutter while compiling unit tests
