@@ -1,38 +1,40 @@
 package com.rusefi.trigger;
 
-public class TriggerSignal extends TriggerEvent {
+public class TriggerSignal {
+    private final double angle;
     private final int state;
-    private double gap;
+    private final int waveIndex;
+    private final double gap;
 
-    public TriggerSignal(int waveIndex, double angle, int state, double gap) {
-        super(waveIndex, angle);
+    public TriggerSignal(int waveIndex, int state, double angle, double gap) {
+        this.waveIndex = waveIndex;
         this.state = state;
+        this.angle = angle;
         this.gap = gap;
-    }
-
-    public TriggerSignal(int waveIndex, double angle, int state) {
-        this(waveIndex, angle, state, Double.NaN);
     }
 
     @Override
     public String toString() {
         return "Signal{" +
                 "signal=" + getWaveIndex() +
-                ", angle=" + getAngle() +
                 ", state=" + getState() +
-                ", gap=" + getGap() +
+                ", angle=" + getAngle() +
                 '}';
+    }
+
+    public double getAngle() {
+        return angle;
     }
 
     public int getState() {
         return state;
     }
 
-    public double getGap() {
-        return gap;
+    public int getWaveIndex() {
+        return waveIndex;
     }
 
-    public void setGap(double gap) {
-        this.gap = gap;
+    public double getGap() {
+        return gap;
     }
 }

@@ -1,7 +1,4 @@
 
-apply from: dependenciesPath
-
 dependencies {
   api project(':logging-api')
-  api global_libs.snakeyaml
 }
