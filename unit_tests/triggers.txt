@@ -2427,59 +2427,35 @@ event 44 0 1 660.000000 nan
 event 45 0 0 660.000000 nan
 event 46 0 1 690.000000 nan
 event 47 0 0 690.000000 nan
-TRIGGERTYPE 39 32 TT_UNUSED_39 279.00
+TRIGGERTYPE 39 12 TT_FORD_TFI_PIP_6 662.50
 knownOperationMode=true
-operationMode=FOUR_STROKE_CRANK_SENSOR
-crankBased=true
+operationMode=FOUR_STROKE_CAM_SENSOR
+crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-cycleDuration=360
-gapsCount=4
+cycleDuration=720
+gapsCount=2
 syncEdge=Rise
 isSynchronizationNeeded=true
 useOnlyPrimaryForSync=false
 shapeWithoutTdc=false
-gapFrom.0=1.600000
-gapTo.0=4.500000
-gapFrom.1=0.500000
-gapTo.1=1.500000
-gapFrom.2=0.500000
-gapTo.2=1.500000
-gapFrom.3=0.100000
-gapTo.3=0.300000
+gapFrom.0=0.495000
+gapTo.0=0.825000
+gapFrom.1=0.937500
+gapTo.1=1.562500
 # end of meta section
-event 0 0 1 0.000000 3.250000
+event 0 0 1 0.000000 0.600000
 event 1 0 0 60.000000 nan
-event 2 0 1 75.000000 1.153846
-event 3 0 0 82.000000 nan
-event 4 0 1 96.000000 0.280000
-event 5 0 0 102.000000 nan
-event 6 0 1 116.000000 0.952381
-event 7 0 0 121.999985 nan
-event 8 0 1 235.000000 5.950000
-event 9 0 0 242.000000 nan
-event 10 0 1 255.000000 0.168067
-event 11 0 0 261.000000 nan
-event 12 0 1 275.000000 1.000000
-event 13 0 0 281.000000 nan
-event 14 0 1 295.000000 1.000000
-event 15 0 0 301.000000 nan
-event 16 0 1 360.000000 nan
-event 17 0 0 420.000000 nan
-event 18 0 1 435.000000 nan
-event 19 0 0 442.000000 nan
-event 20 0 1 456.000000 nan
-event 21 0 0 462.000000 nan
-event 22 0 1 476.000000 nan
-event 23 0 0 482.000000 nan
-event 24 0 1 595.000000 nan
-event 25 0 0 602.000000 nan
-event 26 0 1 615.000000 nan
-event 27 0 0 621.000000 nan
-event 28 0 1 635.000000 nan
-event 29 0 0 641.000000 nan
-event 30 0 1 655.000000 nan
-event 31 0 0 661.000000 nan
+event 2 0 1 120.000000 1.333333
+event 3 0 0 180.000000 nan
+event 4 0 1 240.000000 1.000000
+event 5 0 0 300.000000 nan
+event 6 0 1 360.000000 1.000000
+event 7 0 0 420.000000 nan
+event 8 0 1 480.000000 1.000000
+event 9 0 0 540.000000 nan
+event 10 0 1 630.000000 1.250000
+event 11 0 0 660.000000 nan
 TRIGGERTYPE 40 34 TT_JEEP_4_CYL 484.00
 knownOperationMode=true
 operationMode=FOUR_STROKE_CAM_SENSOR
@@ -2495,7 +2471,7 @@ shapeWithoutTdc=false
 gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
-event 0 0 1 0.000000 3.250000
+event 0 0 1 0.000000 0.600000
 event 1 1 1 58.000000 nan
 event 2 1 0 58.000000 nan
 event 3 1 1 78.000000 nan
@@ -4761,7 +4737,7 @@ event 46 1 0 680.000000 nan
 event 47 1 1 705.000000 nan
 event 48 1 0 710.000000 nan
 event 49 0 1 715.000000 nan
-TRIGGERTYPE 65 16 TT_FORD_TFI_PIP 662.50
+TRIGGERTYPE 65 16 TT_FORD_TFI_PIP_8 662.50
 knownOperationMode=true
 operationMode=FOUR_STROKE_CAM_SENSOR
 crankBased=false
