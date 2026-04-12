@@ -1,5 +1,4 @@
 - name: TT_FORD_ASPIRE
-  humanName: Ford Aspire
   operationMode: FOUR_STROKE_CAM_SENSOR
   isSecondWheelCam: true
   syncEdge: RiseOnly
@@ -16,7 +15,6 @@
       count: 4
       lastAngle: 296.38
 - name: TT_DODGE_NEON_1995
-  humanName: Dodge Neon 1995
   offset: 279
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
@@ -50,7 +48,6 @@
       count: 3
       lastAngle: 295
 - name: TT_MAZDA_MIATA_NA
-  humanName: Miata NA
   offset: 5.18
   operationMode: FOUR_STROKE_CAM_SENSOR
   isSecondWheelCam: true
@@ -98,7 +95,6 @@
       count: 2
       lastAngle: 270
 - name: TT_GM_7X
-  humanName: GM 7x
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -114,7 +110,6 @@
       count: 2
       lastAngle: 300
 - name: TT_DAIHATSU_3_CYL
-  humanName: Daihatsu 3 cylinder
   offset: 690
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
@@ -131,7 +126,6 @@
       count: 2
       lastAngle: 345
 - name: TT_MAZDA_SOHC_4
-  humanName: Mazda SOHC 4
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Both
   isSynchronizationNeeded: false
@@ -146,7 +140,6 @@
       count: 4
       lastAngle: 270
 - name: TT_TOOTHED_WHEEL_60_2
-  humanName: 60/2
   syncEdge: RiseOnly
   syncGaps:
     - from: 2.25
@@ -159,7 +152,6 @@
       count: 58
       lastAngle: 342
 - name: TT_TOOTHED_WHEEL_36_1
-  humanName: 36/1
   syncEdge: RiseOnly
   syncGaps:
     - from: 1.5
@@ -172,7 +164,6 @@
       count: 35
       lastAngle: 340
 - name: TT_MERCEDES_2_SEGMENT
-  humanName: Mercedes 2 Segment
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
   syncGaps:
@@ -192,7 +183,6 @@
       angle: 180
       width: 10
 - name: TT_NARROW_SINGLE_TOOTH
-  humanName: Narrow Single Tooth
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
   useOnlyPrimaryForSync: true
@@ -203,7 +193,6 @@
     - channel: 0
       angle: 0
 - name: TT_SUBARU_EZ30
-  humanName: EZ30
   offset: 240
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -251,7 +240,6 @@
       count: 2
       lastAngle: 330
 - name: TT_DODGE_NEON_2003_CAM
-  humanName: Dodge Neon 2003 Cam
   offset: 496
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Rise
@@ -275,7 +263,6 @@
       count: 3
       lastAngle: 324
 - name: TT_MAZDA_DOHC_1_4
-  humanName: Mazda DOHC 1+4
   offset: 137.12
   operationMode: FOUR_STROKE_CAM_SENSOR
   isSecondWheelCam: true
@@ -297,7 +284,6 @@
       count: 2
       lastAngle: 277.67
 - name: TT_ONE_PLUS_ONE
-  humanName: 1+1
   operationMode: FOUR_STROKE_CAM_SENSOR
   isSecondWheelCam: true
   syncEdge: Rise
@@ -326,7 +312,6 @@
       count: 3
       lastAngle: 240
 - name: TT_HALF_MOON
-  humanName: Half Moon
   syncEdge: Rise
   isSynchronizationNeeded: false
   useOnlyPrimaryForSync: true
@@ -338,7 +323,6 @@
       angle: 0
       width: 180
 - name: TT_DODGE_RAM
-  humanName: Dodge Ram 1+16
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Rise
   isSynchronizationNeeded: false
@@ -356,7 +340,6 @@
       count: 8
       lastAngle: 332.3
 - name: TT_60_2_WRONG_POLARITY
-  humanName: 60/2 Wrong Polarity
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -376,7 +359,6 @@
       count: 56
       lastAngle: 348
 - name: TT_BENELLI_TRE
-  humanName: Benelli Tre
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -392,7 +374,6 @@
       count: 20
       lastAngle: 330
 - name: TT_DODGE_STRATUS
-  humanName: Dodge Stratus
   offset: 150
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
@@ -423,7 +404,6 @@
     - channel: 0
       angle: 300
 - name: TT_36_2_2_2
-  humanName: 36/2/2/2
   knownOperationMode: false
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -448,7 +428,6 @@
       count: 2
       lastAngle: 350
 - name: TT_NISSAN_SR20VE
-  humanName: Nissan Primavera
   offset: 630
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Both
@@ -484,7 +463,6 @@
       count: 3
       lastAngle: 288
 - name: TT_ROVER_K
-  humanName: Rover K
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -512,7 +490,6 @@
       count: 2
       lastAngle: 340
 - name: TT_GM_24x_5
-  humanName: GM 24x 5
   offset: 50
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
@@ -567,7 +544,6 @@
       angle: 340
       width: 10
 - name: TT_HONDA_CBR_600
-  humanName: Honda CBR 600 Cam
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -581,7 +557,6 @@
     - channel: 0
       angle: 180
 - name: TT_NISSAN_K11
-  humanName: Nissan K11
   offset: 10
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Rise
@@ -598,7 +573,6 @@
       count: 4
       lastAngle: 320
 - name: TT_CHRYSLER_NGC_36_2_2
-  humanName: Chrysler NGC 36/2/2
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -644,7 +618,6 @@
       count: 16
       lastAngle: 325
 - name: TT_3_1_CAM
-  humanName: 3/1 Skipped
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
@@ -660,7 +633,6 @@
       count: 2
       lastAngle: 290
 - name: TT_DODGE_NEON_2003_CRANK
-  humanName: Dodge Neon 2003 Crank
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -704,7 +676,6 @@
       count: 17
       lastAngle: 325
 - name: TT_MIATA_VVT
-  humanName: Miata NB
   offset: 715
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -761,7 +732,6 @@
       angle: 350
       width: 10
 - name: TT_SUBARU_7_6
-  humanName: Subaru 7/6
   offset: 520
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
@@ -799,7 +769,6 @@
       count: 2
       lastAngle: 330
 - name: TT_JEEP_18_2_2_2
-  humanName: 18/2/2/2
   offset: 581
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
@@ -824,7 +793,6 @@
       count: 4
       lastAngle: 326
 - name: TT_12_TOOTH_CRANK
-  humanName: 12 Crank/24 Cam
   operationMode: FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
   useOnlyPrimaryForSync: true
@@ -871,7 +839,6 @@
       count: 3
       lastAngle: 295
 - name: TT_JEEP_4_CYL
-  humanName: Jeep XJ 4 cylinder
   offset: 484
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
@@ -892,7 +859,6 @@
       count: 4
       lastAngle: 298
 - name: TT_FIAT_IAW_P8
-  humanName: Fiat IAW P8
   offset: 60
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Rise
@@ -907,7 +873,6 @@
       angle: 90
       width: 240
 - name: TT_FORD_ST170
-  humanName: Mazda Z5
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -938,7 +903,6 @@
     - channel: 0
       angle: 180
 - name: TT_RENIX_44_2_2
-  humanName: 44/2/2
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -956,7 +920,6 @@
       count: 19
       lastAngle: 167.73
 - name: TT_RENIX_66_2_2_2
-  humanName: 66/2/2/2
   operationMode: FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -974,7 +937,6 @@
       count: 19
       lastAngle: 111.82
 - name: TT_HONDA_K_CRANK_12_1
-  humanName: Honda K 1/12
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -990,7 +952,6 @@
     - channel: 0
       angle: 340
 - name: TT_VVT_BOSCH_QUICK_START
-  humanName: Bosch Quick Start
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Fall
   syncGaps:
@@ -1011,7 +972,6 @@
       angle: 290
       width: 70
 - name: TT_TOOTHED_WHEEL_36_2
-  humanName: 36/2
   syncEdge: RiseOnly
   syncGaps:
     - from: 1.6
@@ -1024,7 +984,6 @@
       count: 34
       lastAngle: 330
 - name: TT_SUBARU_SVX
-  humanName: Subaru SVX
   offset: 690
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Fall
@@ -1043,7 +1002,6 @@
       angle: 357.5
       width: 2.5
 - name: TT_SUZUKI_K6A
-  humanName: Suzuki K6A
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1073,7 +1031,6 @@
       count: 2
       lastAngle: 293
 - name: TT_VVT_SUBARU_7_WITHOUT_6
-  humanName: Subaru 7 Without 6
   offset: 340
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
@@ -1123,7 +1080,6 @@
       count: 2
       lastAngle: 287
 - name: TT_TRI_TACH
-  humanName: TriTach
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
@@ -1145,7 +1101,6 @@
       count: 133
       lastAngle: 357.33
 - name: TT_GM_60_2_2_2
-  humanName: "60/2/2/2"
   operationMode: FOUR_STROKE_CAM_SENSOR
   isSecondWheelCam: true
   syncEdge: RiseOnly
@@ -1174,7 +1129,6 @@
       count: 5
       lastAngle: 355
 - name: TT_SKODA_FAVORIT
-  humanName: Skoda Favorit
   offset: 227
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
@@ -1209,7 +1163,6 @@
       count: 2
       lastAngle: 240
 - name: TT_KAWA_KX450F
-  humanName: Kawa KX450F
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
   syncGaps:
@@ -1225,7 +1178,6 @@
       angle: 332.2
       width: 10.8
 - name: TT_NISSAN_VQ35
-  humanName: Nissan VQ35
   offset: 675
   operationMode: FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -1265,7 +1217,6 @@
       count: 2
       lastAngle: 260
 - name: TT_NISSAN_VQ30
-  humanName: Nissan VQ30
   offset: 120
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
@@ -1302,7 +1253,6 @@
       count: 2
       lastAngle: 308
 - name: TT_NISSAN_QR25
-  humanName: Nissan QR25
   offset: 585
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -1334,7 +1284,6 @@
     - channel: 0
       angle: 252
 - name: TT_SUBARU_SVX_CRANK_1
-  humanName: Subaru SVX Crank 1
   offset: 690
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Fall
@@ -1353,7 +1302,6 @@
       angle: 357.5
       width: 2.5
 - name: TT_SUBARU_SVX_CAM_VVT
-  humanName: Subaru SVX Cam VVT
   offset: 690
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Fall
@@ -1372,7 +1320,6 @@
       angle: 357.5
       width: 2.5
 - name: TT_FORD_TFI_PIP
-  humanName: Ford PIP
   offset: 662.5
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Rise
@@ -1391,7 +1338,6 @@
       angle: 326.25
       width: 11.25
 - name: TT_SUZUKI_G13B
-  humanName: Suzuki G13B
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1409,7 +1355,6 @@
       count: 3
       lastAngle: 340
 - name: TT_HONDA_K_CAM_4_1
-  humanName: Honda K 4+1
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1425,7 +1370,6 @@
     - channel: 0
       angle: 297.5
 - name: TT_NISSAN_MR18_CRANK
-  humanName: Nissan MR18 Crank
   offset: 80
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -1440,7 +1384,6 @@
     - channel: 0
       angle: 170
 - name: TT_TOOTHED_WHEEL_32_2
-  humanName: 32/2
   syncEdge: RiseOnly
   syncGaps:
     - from: 2.25
@@ -1455,7 +1398,6 @@
       count: 30
       lastAngle: 326.25
 - name: TT_36_2_1
-  humanName: 36/2/1
   offset: 90
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -1474,7 +1416,6 @@
       count: 16
       lastAngle: 330
 - name: TT_36_2_1_1
-  humanName: 36/2/1/1
   offset: 90
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -1497,7 +1438,6 @@
       count: 10
       lastAngle: 330
 - name: TT_3_TOOTH_CRANK
-  humanName: 3/0
   operationMode: FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
   useOnlyPrimaryForSync: true
@@ -1523,7 +1463,6 @@
       count: 3
       lastAngle: 180
 - name: TT_GM_24x_3
-  humanName: GM 24x 3 degree
   offset: 48
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
@@ -1578,7 +1517,6 @@
       angle: 336
       width: 12
 - name: TT_60_2_2_F3R
-  humanName: 60/2/2 F3R
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1598,7 +1536,6 @@
       count: 2
       lastAngle: 354
 - name: TT_MITSU_4G63_CRANK
-  humanName: Mitsu 4G63 Crank
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
@@ -1610,7 +1547,6 @@
     - channel: 0
       angle: 0
 - name: TT_60DEG_TOOTH
-  humanName: x2 30 Deg camshaft BTDC
   offset: 60
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
@@ -1671,7 +1607,6 @@
       angle: 262.5
       width: 30
 - name: TT_6_TOOTH_CRANK
-  humanName: 6/0
   operationMode: FOUR_STROKE_SIX_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
   useOnlyPrimaryForSync: true
@@ -1685,7 +1620,6 @@
     - channel: 0
       angle: 0
 - name: TT_DAIHATSU_4_CYL
-  humanName: Daihatsu 4 cylnder
   offset: 690
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
@@ -1723,7 +1657,6 @@
     - channel: 0
       angle: 330
 - name: TT_DEV
-  humanName: dev
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1745,7 +1678,6 @@
       count: 2
       lastAngle: 270
 - name: TT_NISSAN_HR
-  humanName: Nissan HR
   offset: 515
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -1780,7 +1712,6 @@
       count: 10
       lastAngle: 330
 - name: TT_ARCTIC_CAT
-  humanName: Arctic Cat
   operationMode: TWO_STROKE
   syncEdge: Rise
   syncGaps:
@@ -1816,7 +1747,6 @@
       count: 11
       lastAngle: 330
 - name: TT_NISSAN_HR_CAM_IN
-  humanName: HR12 in
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1832,7 +1762,6 @@
       count: 2
       lastAngle: 338
 - name: TT_HONDA_J30A2_24_1_1
-  humanName: Honda J30A2
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1860,7 +1789,6 @@
       count: 7
       lastAngle: 330
 - name: TT_CUSTOM_1
-  humanName: trg88
   syncEdge: Rise
   isSynchronizationNeeded: false
   useOnlyPrimaryForSync: true
@@ -1872,7 +1800,6 @@
       angle: 0
       width: 180
 - name: TT_CUSTOM_2
-  humanName: trg89
   syncEdge: Rise
   isSynchronizationNeeded: false
   useOnlyPrimaryForSync: true
@@ -1884,7 +1811,6 @@
       angle: 0
       width: 180
 - name: TT_CHRYSLER_PHASER
-  humanName: Dodge/Chrysler/Jeep V8 5.7L
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1926,7 +1852,6 @@
     - channel: 0
       angle: 306
 - name: TT_TOYOTA_3_TOOTH_UZ
-  humanName: Toyota UZ 3 Tooth
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1942,7 +1867,6 @@
     - channel: 0
       angle: 225
 - name: TT_JEEP_EVD_36_2_2
-  humanName: Jeep EVD 36/2/2
   offset: 135
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -1993,7 +1917,6 @@
     - channel: 0
       angle: 350
 - name: TT_JEEPRENIX_66_2_2_2
-  humanName: Jeep 66/2/2/2
   operationMode: FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -2011,7 +1934,6 @@
     - channel: 0
       angle: 114.55
 - name: TT_SUBARU_7_6_CRANK
-  humanName: Subaru 6 tooth Crank
   offset: 65
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
@@ -2026,7 +1948,6 @@
     - channel: 0
       angle: 148
 - name: TT_SUZUKI_G16B
-  humanName: Suzuki G16B
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
