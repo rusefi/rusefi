@@ -147,7 +147,7 @@ enum class trigger_type_e : uint32_t {
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
 	TT_JEEP_18_2_2_2 = 37,
 	TT_12_TOOTH_CRANK = 38,
-	TT_UNUSED_39 = 39,
+	TT_FORD_TFI_PIP_6 = 39,
 	// Jeep XJ 2500cc 4 cylinder. See also TT_JEEP_18_2_2_2 for 6 cylinders
 	TT_JEEP_4_CYL = 40,
 	// magneti marelli Fiat/Lancia IAW P8 from the 90', 2.0 16 v turbo engine - Lancia Coupe

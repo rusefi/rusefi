@@ -492,6 +492,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeSuzukiG16B(this);
 		break;
 
+	case trigger_type_e::TT_FORD_TFI_PIP_6:
+		configureFordPip6(this);
+		break;
 	case trigger_type_e::TT_FORD_TFI_PIP_8:
 		configureFordPip8(this);
 		break;
@@ -517,7 +520,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_DODGE_NEON_1995:
-	case trigger_type_e::TT_UNUSED_39:
 		configureNeon1995TriggerWaveformOnlyCrank(this);
 		break;
 
