@@ -257,7 +257,7 @@ const char *getTrigger_type_e(trigger_type_e value) {
 			return "TT_FORD_ASPIRE";
 		case trigger_type_e::TT_FORD_ST170:
 			return "TT_FORD_ST170";
-		case trigger_type_e::TT_FORD_TFI_PIP:
+		case trigger_type_e::TT_FORD_TFI_PIP_8:
 			return "TT_FORD_TFI_PIP";
 		case trigger_type_e::TT_GM_24x_3:
 			return "TT_GM_24x_3";

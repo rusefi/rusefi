@@ -9,3 +9,5 @@
 class TriggerWaveform;
 
 void configureFordCoyote(TriggerWaveform *s);
+void configureFordPip8(TriggerWaveform * s);
+void configureFordST170(TriggerWaveform * s);
