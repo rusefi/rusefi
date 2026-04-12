@@ -16,7 +16,7 @@ import static com.rusefi.core.ui.FrameHelper.createFrame;
 public class WizardSandbox {
     public static void main(String[] args) throws FileNotFoundException {
         UIContext uiContext = new UIContext();
-        String iniPath = "../java_console/ui/src/test/resources/january.ini";
+        String iniPath = "java_console/ui/src/test/resources/january.ini";
         IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
         uiContext.iniFileState.setIniFileModelForTest(model);
 
