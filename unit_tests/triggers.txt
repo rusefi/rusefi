@@ -2427,6 +2427,7 @@ event 44 0 1 660.000000 nan
 event 45 0 0 660.000000 nan
 event 46 0 1 690.000000 nan
 event 47 0 0 690.000000 nan
+
 TRIGGERTYPE 39 12 TT_FORD_TFI_PIP_6 662.50
 knownOperationMode=true
 operationMode=FOUR_STROKE_CAM_SENSOR
