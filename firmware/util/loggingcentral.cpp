@@ -181,6 +181,8 @@ void efiPrintfInternal(const char *format, ...) {
 	 * can have large stack frames that overflow
 	 * the ChibiOS thread working area into adjacent static globals, corrupting
 	 * scheduler data structures
+	 * ChibiOS suggested patch: https://github.com/rusefi/ChibiOS/pull/66
+	 * ChibiOS issue: https://sourceforge.net/p/chibios/bugs/1305/
 	 */
 	if (verboseMode
 #if EFI_SIMULATOR
