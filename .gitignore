@@ -42,3 +42,8 @@ rusefi_simulator_log.mlg
 
 # bundle
 artifacts
+
+# clangd cache
+
+.cache/
+*.idx
