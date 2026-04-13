@@ -176,7 +176,17 @@ namespace priv
 {
 void efiPrintfInternal(const char *format, ...) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
-	if (verboseMode) {
+	/*
+	 * Skip printf to stdout from ISR context — the C runtime's printf/vprintf
+	 * can have large stack frames that overflow
+	 * the ChibiOS thread working area into adjacent static globals, corrupting
+	 * scheduler data structures
+	 */
+	if (verboseMode
+#if EFI_SIMULATOR
+		&& !port_is_isr_context()
+#endif
+	) {
 		printf("[%dus]efiPrintfInternal:", time2print(getTimeNowUs()));
 		va_list ap;
 		va_start(ap, format);
@@ -189,8 +199,23 @@ void efiPrintfInternal(const char *format, ...) {
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
-	{
-		// Acquire a buffer we can write to
+	/*
+	 * efiPrintfInternal can be called from both thread context and ISR
+	 * context (e.g. timer callbacks fired by chVTDoTickI — note that
+	 * ChibiOS releases the lock around callbacks: chSysUnlockFromISR →
+	 * callback → chSysLockFromISR).
+	 *
+	 * In the thread context we use S-class chSysLock/chSysUnlock.
+	 * In ISR context we must use I-class chSysLockFromISR/chSysUnlockFromISR
+	 * — using S-class would corrupt lock_cnt (SV#6) and drop the ISR lock.
+	 */
+	const bool isIsr = port_is_isr_context();
+
+	if (isIsr) {
+		chSysLockFromISR();
+		msg = freeBuffers.fetchI(&lineBuffer);
+		chSysUnlockFromISR();
+	} else {
 		chibios_rt::CriticalSectionLocker csl;
 		msg = freeBuffers.fetchI(&lineBuffer);
 	}
@@ -218,10 +243,12 @@ void efiPrintfInternal(const char *format, ...) {
 			lineBuffer->buffer[i] = ' ';
 	}
 
-	{
-		// Push the buffer in to the written list so it can be written back
+	if (isIsr) {
+		chSysLockFromISR();
+		filledBuffers.postI(lineBuffer);
+		chSysUnlockFromISR();
+	} else {
 		chibios_rt::CriticalSectionLocker csl;
-
 		filledBuffers.postI(lineBuffer);
 	}
 #endif
