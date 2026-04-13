@@ -17,7 +17,7 @@ pins:
     color: yellow
     type: av
     ts_name: ___ AUX2
-    function: Auxiliary analog input 2
+    function: Auxiliary analog input 2 PullDown 500K
 
   - pin: C4
     meta: MM100_IN_AUX2_ANALOG
