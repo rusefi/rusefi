@@ -31,6 +31,15 @@ $(info OS is [${OS}])
 # CH_DBG_SYSTEM_STATE_CHECK) apply on Cygwin builds too.
 IS_CYGWIN = $(if $(findstring CYGWIN,$(OS)),yes,no)
 
+# Windows flag: true for both native Windows_NT and Cygwin.
+ifeq ($(OS),Windows_NT)
+  IS_WIN = yes
+else ifeq ($(IS_CYGWIN),yes)
+  IS_WIN = yes
+else
+  IS_WIN = no
+endif
+
 include ../firmware/rusefi.mk
 include ../firmware/rusefi_rules.mk
 -include ${BOARD_DIR}/firmware/firmware.mk
@@ -43,14 +52,10 @@ PCHSUB = simulator
 # used by USE_SMART_BUILD
 CONFDIR = .
 
-ifneq ($(OS),Windows_NT)
-  ifeq ($(IS_CYGWIN),yes)
-    SANITIZE = no
-  else
-    SANITIZE = yes
-  endif
-else
+ifeq ($(IS_WIN),yes)
   SANITIZE = no
+else
+  SANITIZE = yes
 endif
 
 ifeq ($(SIMULATOR_DEBUG_LEVEL_OPT),)
@@ -63,9 +68,7 @@ ifeq ($(USE_OPT),)
   USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing -Werror=nonnull
   USE_OPT += -D US_TO_NT_MULTIPLIER=$(US_TO_NT_MULTIPLIER)
 
-  ifeq ($(OS),Windows_NT)
-    USE_OPT += -DEFI_SIM_IS_WINDOWS=1 -DIS_WINDOWS_COMPILER=1
-  else ifeq ($(IS_CYGWIN),yes)
+  ifeq ($(IS_WIN),yes)
     USE_OPT += -DEFI_SIM_IS_WINDOWS=1 -DIS_WINDOWS_COMPILER=1
   else
     USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0 -DIS_WINDOWS_COMPILER=0
@@ -147,7 +150,7 @@ endif
 #
 
 # Define project name here
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   PROJECT = rusefi_simulator.exe
 else
   PROJECT = rusefi_simulator
@@ -172,7 +175,7 @@ include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 #include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
 else
   include ${CHIBIOS}/os/hal/ports/simulator/posix/platform.mk
@@ -247,7 +250,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 # Compiler settings
 #
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   # ChibiOS seem to require 32 bit compiler at least on Windows
   # base 32-bit Cygwin is needed with mingw64 32-bit version
   # Cygwin64 would not debug if used with mingw64 32-bit version
@@ -302,7 +305,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
 ULIBS = -lws2_32 -static
 else
 ULIBS =
