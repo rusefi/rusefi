@@ -814,9 +814,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_TRI_TACH:
-		configureTriTach(this);
-		break;
-
+// too dead		configureTriTach(this);
+//		break;
+//
 	case trigger_type_e::TT_GM_24x_5:
 		initGmLS24_5deg(this);
 		break;
