@@ -124,7 +124,6 @@ struct_no_prefix engine_configuration_s
 #define CLT_UPPER_LIMIT 250
 #define CLT_UPPER_VALIDATION_LIMIT 250
 
-#define MAP_UPPER_LIMIT 650
 
 #define LUA_PWM_COUNT 8
 #define LUA_DIGITAL_INPUT_COUNT 8
@@ -195,8 +194,6 @@ struct_no_prefix engine_configuration_s
 
 #define CRANKING_CURVE_SIZE 8
 
-#define IGN_LOAD_COUNT 16
-#define IGN_RPM_COUNT 16
 
 #define DIGIPOT_COUNT 4
 #define TRIGGER_SIMULATOR_PIN_COUNT 2
@@ -2216,8 +2213,6 @@ uint16_t[ALS_SIZE] alsIgnSkipLoadBins;;"TPS", 1, 0, 0, 100, 0
 uint16_t[ALS_RPM_SIZE] alsIgnSkiprpmBins;;"RPM",	   1, 0, 0, 25000, 0
 
 #define BLEND_TABLE_COUNT 8
-
-#define BLEND_FACTOR_SIZE 8
 
 struct blend_table_s
 	int16_t[BLEND_TABLE_COUNT x BLEND_TABLE_COUNT] autoscale table;;"", 0.1, 0, -100, 100, 1

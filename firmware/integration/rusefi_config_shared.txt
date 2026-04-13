@@ -32,6 +32,12 @@
 #define VE_RPM_COUNT 16
 #define VE_LOAD_COUNT 16
 
+#define MAP_UPPER_LIMIT 650
+
+#define IGN_LOAD_COUNT 16
+#define IGN_RPM_COUNT 16
+#define BLEND_FACTOR_SIZE 8
+
 #define TCU_GEAR_COUNT 10
 #define EGT_CHANNEL_COUNT 8
 
