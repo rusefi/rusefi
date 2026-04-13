@@ -200,22 +200,21 @@ void efiPrintfInternal(const char *format, ...) {
 	msg_t msg;
 
 	/*
-	 * efiPrintfInternal can be called from both thread context and ISR
-	 * context (e.g. timer callbacks fired by chVTDoTickI — note that
-	 * ChibiOS releases the lock around callbacks: chSysUnlockFromISR →
-	 * callback → chSysLockFromISR).
-	 *
-	 * In the thread context we use S-class chSysLock/chSysUnlock.
-	 * In ISR context we must use I-class chSysLockFromISR/chSysUnlockFromISR
-	 * — using S-class would corrupt lock_cnt (SV#6) and drop the ISR lock.
+	 * On the win32 simulator port, S-class chSysLock/chSysUnlock from ISR
+	 * context corrupts the cooperative scheduler state (ready-list / delta-list)
+	 * because port_unlock() resets port_irq_sts, breaking the lock invariant.
+	 * On real ARM hardware the S-class and I-class locks are functionally
+	 * identical (both just raise BASEPRI), so the S-class pattern works
 	 */
+#if EFI_SIMULATOR
 	const bool isIsr = port_is_isr_context();
-
 	if (isIsr) {
 		chSysLockFromISR();
 		msg = freeBuffers.fetchI(&lineBuffer);
 		chSysUnlockFromISR();
-	} else {
+	} else
+#endif
+	{
 		chibios_rt::CriticalSectionLocker csl;
 		msg = freeBuffers.fetchI(&lineBuffer);
 	}
@@ -243,11 +242,15 @@ void efiPrintfInternal(const char *format, ...) {
 			lineBuffer->buffer[i] = ' ';
 	}
 
+#if EFI_SIMULATOR
 	if (isIsr) {
 		chSysLockFromISR();
 		filledBuffers.postI(lineBuffer);
 		chSysUnlockFromISR();
-	} else {
+	} else
+#endif
+	{
+		// Push the buffer in to the written list so it can be written back
 		chibios_rt::CriticalSectionLocker csl;
 		filledBuffers.postI(lineBuffer);
 	}
