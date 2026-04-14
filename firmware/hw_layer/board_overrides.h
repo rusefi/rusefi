@@ -32,6 +32,7 @@ using setup_custom_board_overrides_type = void (*)();
 using setup_custom_board_config_type = void (*)(engine_configuration_s * /*previousConfiguration*/);
 using setup_custom_board_output_type = int (*)();
 using setup_custom_board_engine_type_type = void (*)(engine_type_e);
+using setup_custom_get_float_type = float (*)();
 
 // todo: migrate 'validateBoardConfig'
 using custom_validate_config_type = bool (*)();
@@ -79,6 +80,8 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToV
 // specific firmware builds are meant for specific hardware. In order to provide best user experience on well-known boards sometimes we reduce user flexibility.
 extern std::optional<setup_custom_board_overrides_type> custom_board_DefaultConfiguration;
 extern std::optional<setup_custom_board_overrides_type> custom_board_ConfigOverrides;
+
+extern std::optional<setup_custom_get_float_type> custom_board_getFuncPairAllowedSplit;
 
 /**
  * This function checks if an override is present and calls it if available.
