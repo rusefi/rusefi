@@ -88,6 +88,7 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
 
 CONSOLE_FOLDER_SOURCES = \
   ../misc/console_launcher/rusefi_console.exe \
+  ../misc/console_launcher/rusefi_console.sh \
   $(SIMULATOR_EXE)
 
 #  $(wildcard ../java_console/*.dll) \

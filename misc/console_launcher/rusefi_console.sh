@@ -1,0 +1,3 @@
+#!/bin/sh
+
+java -jar ./rusefi_console.jar
