@@ -66,7 +66,7 @@ jobs:
         # misc live data etc. reference files TODO change extention since not really .ini?
         .github/workflows/bin/smart-git-add.sh 'firmware/console/binary/generated/*.ini' 4
         .github/workflows/bin/smart-git-add.sh 'firmware/controllers/lua/generated/*.md'
-        .github/workflows/bin/smart-git-add.sh '*.java'
+        .github/workflows/bin/smart-git-add.sh 'firmware/**/*.java'
         .github/workflows/bin/smart-git-add.sh '*_generated.h'
         git status
         OUT=$(git commit -m "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
