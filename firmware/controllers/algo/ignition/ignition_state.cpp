@@ -285,8 +285,14 @@ angle_t IgnitionState::getWrappedAdvance(const float rpm, const float engineLoad
     return angle;
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD
+#include "board_overrides.h"
+
+std::optional<setup_custom_get_cylinder_ignition_trim_type> custom_board_getCylinderIgnitionTrim;
+
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad) {
+	if (custom_board_getCylinderIgnitionTrim.has_value()) {
+		return custom_board_getCylinderIgnitionTrim.value()(cylinderNumber, rpm, ignitionLoad);
+	}
 	return IgnitionState::getInterpolatedIgnitionTrim(cylinderNumber, rpm, ignitionLoad);
 }
 
