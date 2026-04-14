@@ -33,14 +33,14 @@ jobs:
           sudo bash misc/actions/ubuntu-install-tools.sh
           sudo apt-get install xvfb
 
+      - name: Generate Enums & Live Documentation
+        working-directory: ./firmware/
+        run: bash bin/compile.sh config/boards/f407-discovery/meta-info.env docs-enums
+
       - name: Build All Java
         working-directory: .
         run: |
           ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar :trigger-ui:shadowJar
-
-      - name: Generate Enums & Live Documentation
-        working-directory: ./firmware/
-        run: ./gen_live_documentation.sh
 
       - name: Print GCC version
         run: gcc -v
@@ -70,7 +70,7 @@ jobs:
         run: ./gen_enum_to_string.sh
 
       - name: Run TriggerImage
-        run: xvfb-run java -cp java_console/trigger-ui/build/libs/trigger-ui-all.jar com.rusefi.trigger.TriggerImage unit_tests
+        run: xvfb-run java -cp java_console/trigger-ui/build/libs/trigger-ui-all.jar com.rusefi.trigger.TriggerImage firmware/config/triggers.yaml
 
       - name: Upload trigger images
         uses: actions/upload-artifact@v7

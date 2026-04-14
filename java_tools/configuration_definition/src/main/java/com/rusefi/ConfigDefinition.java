@@ -78,6 +78,7 @@ public class ConfigDefinition {
         String signatureDestination = null;
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
+        List<String> triggersInputFiles = new ArrayList<>();
         PinoutLogic pinoutLogic = null;
 
         for (int i = 0; i < args.length - 1; i += 2) {
@@ -134,9 +135,8 @@ public class ConfigDefinition {
                     state.addInputFile(firingEnumFileName);
                 }
                 break;
-                case "-triggerInputFolder": {
-                    String triggersInputFolder = args[i + 1];
-                    new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
+                case "-triggerInputFile": {
+                    triggersInputFiles.add(args[i + 1]);
                 }
                 break;
                 case KEY_PREPEND:
@@ -206,6 +206,10 @@ public class ConfigDefinition {
 
         if (pinoutLogic != null) {
             pinoutLogic.registerBoardSpecificPinNames(state.getVariableRegistry(), parseState, state.getEnumsReader());
+        }
+
+        if (triggersInputFiles.size() > 0) {
+            new TriggerWheelTSLogic().execute(triggersInputFiles, state.getVariableRegistry());
         }
 
         if (tsInputFileFolder != null) {

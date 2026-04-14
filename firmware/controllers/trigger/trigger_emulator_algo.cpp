@@ -106,7 +106,7 @@ void setTriggerEmulatorRPM(int rpm) {
 		float rPerSecond = NAN;
 		if (rpm != 0) {
 			// use 0.5 multiplier for cam
-			float rpmM = (channel == 0) ? getRpmMultiplier(getEngineRotationState()->getOperationMode()) : 0.5f;
+			float rpmM = (channel == 0) ? getRpmMultiplier(getOperationMode()) : 0.5f;
 			rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
 		}
 		triggerEmulatorSignals[channel].setFrequency(rPerSecond);

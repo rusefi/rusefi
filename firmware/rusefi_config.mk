@@ -13,7 +13,8 @@ CONFIG_INPUTS = \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_content.ini \
-  $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/gauges.ini
+  $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/gauges.ini \
+  $(PROJECT_DIR)/controllers/algo/generated_trigger_type_e.h \
 
 ifneq ("$(wildcard $(BOARD_DIR)/prepend.txt)","")
   CONFIG_INPUTS += $(BOARD_DIR)/prepend.txt
@@ -53,6 +54,7 @@ CONFIG_FILES = \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_2_generated.h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.cpp \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.md \
+  $(PROJECT_DIR)/controllers/trigger/decoders/generated_trigger_init.cpp \
   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config/generated/VariableRegistryValues.java \
   $(FIELDS) \
   $(PIN_FILES)

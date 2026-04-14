@@ -1,3 +1,68 @@
+#  Metadata
+#  --------
+#
+#  Some fields have default values. If your trigger matches the default value, you don't need to supply the field.
+#
+#  | Field                   | Details                                          | Default Value                                      |
+#  |-------------------------|--------------------------------------------------|----------------------------------------------------|
+#  | name                    | Name used in the code; start with TT_            |                                                    |
+#  | humanName               | Name used in user-facing places                  |                                                    |
+#  | hidden                  | Hide the trigger from user-facing places         | false                                              |
+#  | offset                  | Position of TDC relative to the sync point       | 0                                                  |
+#  | operationMode           | See "Operation Modes" below                      |                                                    |
+#  | knownOperationMode      | Prevent user from configuring the operation mode | true if operationMode is provided, otherwise false |
+#  | syncEdge                | One of `RiseOnly`, `Rise`, `Fall`, `Both`        |                                                    |
+#  | isSynchronizationNeeded |                                                  | True                                               |
+#  | knownOperationMode      |                                                  | True                                               |
+#  | isSecondWheelCam        |                                                  | False                                              |
+#  | useOnlyPrimaryForSync   |                                                  | False                                              |
+#  | shapeWithoutTdc         |                                                  | False                                              |
+#
+#  Operation Modes
+#  ---------------
+#
+#  `FOUR_STROKE_CRANK_SENSOR`
+#  `FOUR_STROKE_CAM_SENSOR`
+#  `FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR`
+#  `FOUR_STROKE_THREE_TIMES_CRANK_SENSOR`
+#  `FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR`
+#  `FOUR_STROKE_SIX_TIMES_CRANK_SENSOR`
+#  `TWO_STROKE`
+#
+#  Sync Gaps
+#  ---------
+#
+#  The ECU uses sync gaps to find the trigger sync point, and by extension TDC.
+#
+#  Calculate the gap in degrees between each tooth. Then pick the most distinct gap - often the largest gap, but not necessarily.
+#
+#  Divide this gap by the gap before it, and you have your sync gap ratio.
+#
+#  When the engine is spinning, and especially when cranking, the speed of rotation varies rapidly. This means that the theoretical gap ratio will never occur. So instead of defining a single number, we will define a range. Make your range small enough to reduce the chance that another gap is mistaken for the sync gap, yet large enough that in extreme scenarios, for example cranking with a low battery, the sync gap will still fall inside the specified range.
+#
+#  This isn't always possible. If not, we can define ranges for the gaps preceeding the gap we have chosen as the sync gap.
+#
+#  In the `syncGap` list, the first gap defined is the sync gap, the next is the gap just before the sync gap, and so on.
+#
+#  Teeth 
+#  -----
+#
+#  Teeth don't need to be in order, so you can define two wheels separately and it'll all be sorted out.
+#
+#  If `syncEdge` is set to `RiseOnly`, you do not need to define `width` for the teeth.
+#
+#  Repeating triggers can be defined with `count` and `lastAngle` values. Note that `count`includes the first instance. Also note that `lastAngle` is the rising edge of the last tooth, not the falling edge.
+#
+#  For example, this will produce 3 teeth, 6 degrees wide, with 4 degree gaps between them:
+#
+#  ```
+#  - channel: 0
+#    angle: 10
+#    width: 6
+#    count: 3
+#    lastAngle: 30
+#  ```
+
 - name: TT_FORD_ASPIRE
   humanName: Ford Aspire
   operationMode: FOUR_STROKE_CAM_SENSOR
@@ -77,6 +142,7 @@
       angle: 331.91
       width: 35
 - name: TT_VVT_FORD_COYOTE
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -195,7 +261,6 @@
   humanName: Narrow Single Tooth
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
@@ -228,6 +293,7 @@
       count: 2
       lastAngle: 350
 - name: TT_VVT_MAZDA_SKYACTIV
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -314,6 +380,7 @@
       angle: 180
       width: 90
 - name: TT_VVT_TOYOTA_3_TOOTH
+  hidden: true
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
   shapeWithoutTdc: true
@@ -329,7 +396,6 @@
   humanName: Half Moon
   syncEdge: Rise
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
@@ -465,6 +531,7 @@
       angle: 264
       width: 8
 - name: TT_2JZ_3_34_SIMULATION_ONLY
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Rise
   isSynchronizationNeeded: false
@@ -719,6 +786,7 @@
       count: 2
       lastAngle: 110
 - name: TT_MITSU_4G63_CAM
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Both
   syncGaps:
@@ -734,6 +802,7 @@
       angle: 180
       width: 45
 - name: TT_MAZDA_MIATA_VVT_TEST
+  hidden: true
   offset: 276
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Fall
@@ -827,7 +896,6 @@
   humanName: 12 Crank/24 Cam
   operationMode: FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
-  useOnlyPrimaryForSync: true
   shapeWithoutTdc: true
   syncGaps:
     - from: 0.2
@@ -909,6 +977,7 @@
       count: 2
       lastAngle: 270
 - name: TT_VVT_MIATA_NB
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -976,6 +1045,7 @@
     - channel: 0
       angle: 340
 - name: TT_VVT_BOSCH_QUICK_START
+  hidden: true
   humanName: Bosch Quick Start
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Fall
@@ -1084,6 +1154,7 @@
       count: 2
       lastAngle: 277.5
 - name: TT_NISSAN_MR18_CAM_VVT
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1108,28 +1179,6 @@
       angle: 270
       count: 2
       lastAngle: 287
-- name: TT_TRI_TACH
-  humanName: TriTach
-  operationMode: FOUR_STROKE_CRANK_SENSOR
-  syncEdge: RiseOnly
-  isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
-  syncGaps:
-    - from: 1.5
-      to: 2.5
-  teeth:
-    - channel: 0
-      angle: 0
-      # Move the fall so it's not too close to the first event on the second channel
-      width: 0.2
-    - channel: 1
-      angle: 0.05
-      count: 2
-      lastAngle: 2.67
-    - channel: 1
-      angle: 5.33
-      count: 133
-      lastAngle: 357.33
 - name: TT_GM_60_2_2_2
   humanName: "60/2/2/2"
   operationMode: FOUR_STROKE_CAM_SENSOR
@@ -1178,6 +1227,7 @@
       angle: 227
       width: 3
 - name: TT_VVT_BARRA_3_PLUS_1
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1230,6 +1280,7 @@
     - channel: 0
       angle: 110
 - name: TT_VVT_NISSAN_VQ35
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1305,6 +1356,7 @@
     - channel: 0
       angle: 170
 - name: TT_VVT_MITSUBISHI_3A92
+  hidden: true
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1486,7 +1538,6 @@
   humanName: 3/0
   operationMode: FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
-  useOnlyPrimaryForSync: true
   shapeWithoutTdc: true
   syncGaps:
     - from: 0.5
@@ -1497,6 +1548,7 @@
     - channel: 0
       angle: 0
 - name: TT_VVT_TOYOTA_4_1
+  hidden: true
   syncEdge: RiseOnly
   syncGaps:
     - from: 1.6
@@ -1588,7 +1640,6 @@
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
@@ -1601,7 +1652,6 @@
   operationMode: FOUR_STROKE_CRANK_SENSOR
   syncEdge: Rise
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 1.5
       to: 2.5
@@ -1610,6 +1660,7 @@
       angle: 0
       width: 60
 - name: TT_VVT_MITSUBISHI_4G69
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1631,6 +1682,7 @@
       count: 2
       lastAngle: 270
 - name: TT_VVT_MITSU_6G72
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: Both
   syncGaps:
@@ -1660,7 +1712,6 @@
   humanName: 6/0
   operationMode: FOUR_STROKE_SIX_TIMES_CRANK_SENSOR
   syncEdge: RiseOnly
-  useOnlyPrimaryForSync: true
   shapeWithoutTdc: true
   syncGaps:
     - from: 0.7
@@ -1688,6 +1739,7 @@
       count: 3
       lastAngle: 345
 - name: TT_VVT_MAZDA_L
+  hidden: true
   operationMode: FOUR_STROKE_CAM_SENSOR
   syncEdge: RiseOnly
   syncGaps:
@@ -1849,7 +1901,6 @@
   humanName: trg88
   syncEdge: Rise
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
@@ -1861,7 +1912,6 @@
   humanName: trg89
   syncEdge: Rise
   isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
   syncGaps:
     - from: 0.75
       to: 1.25
