@@ -9,6 +9,7 @@
 #include "tps.h"
 #include "auto_generated_sensor.h"
 #include "defaults.h"
+#include "board_overrides.h"
 
 struct TpsConfig {
 	adc_channel_e channel;
@@ -18,7 +19,12 @@ struct TpsConfig {
 	float max;
 };
 
-PUBLIC_API_WEAK float getFuncPairAllowedSplit() {
+std::optional<setup_custom_get_float_type> custom_board_getFuncPairAllowedSplit;
+
+float getFuncPairAllowedSplit() {
+	if (custom_board_getFuncPairAllowedSplit.has_value()) {
+		return custom_board_getFuncPairAllowedSplit.value()();
+	}
 	return 0.5f;
 }
 
