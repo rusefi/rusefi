@@ -28,6 +28,12 @@ float getFuncPairAllowedSplit() {
 	return 0.5f;
 }
 
+/**
+ * @brief FuncSensPair ties together a LinearFunc and a FunctionalSensor for sensor initialization.
+ *
+ * This class handles the setup of a single sensor that maps a raw ADC voltage to a physical value (like TPS percentage)
+ * using a linear function. It manages ADC subscription, sensor registration, and validation of calibration values.
+ */
 class FuncSensPair {
 public:
 	AdcSubscriptionEntry* adc = nullptr;
@@ -99,6 +105,13 @@ private:
 	FunctionalSensor m_sens;
 };
 
+/**
+ * @brief RedundantPair manages a pair of sensors for redundant input systems like TPS or PPS.
+ *
+ * This class coordinates two `FuncSensPair` instances (primary and secondary) and a `RedundantSensor` logic.
+ * It provides validation to ensure that the two sensors are not electrically identical (to catch wiring errors)
+ * and handles the registration of either a standard redundant sensor or a specialized Ford TPS redundant sensor.
+ */
 struct RedundantPair {
 public:
 	RedundantPair(FuncSensPair& pri, FuncSensPair& sec, SensorType outputType)

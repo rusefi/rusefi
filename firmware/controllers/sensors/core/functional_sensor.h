@@ -11,15 +11,16 @@
 #include "functional_sensor_impl.h"
 
 /**
- * @brief Class for sensors that convert from some raw floating point
- * value (ex: voltage, frequency, pulse width) to a sensor reading.
+ * @brief Concrete sensor class that converts raw inputs into physical readings.
  *
- * To use this class, implement the conversion operation for your sensor
- * as a class that inherits from SensorConverter, and implement convert
- * to convert a raw reading from the sensor to a usable value (and valid bit).
+ * This class uses a `SensorConverter` to map raw values (e.g., voltage from ADC)
+ * to physical measurements (e.g., pressure, percentage, temperature).
  *
- * Register an instance of the new class with an interface
- * that provides and posts raw values so the sensor can update.
+ * Use `postRawValue()` to update the sensor with a raw reading.
+ * Use `get()` (inherited from `StoredValueSensor`) to retrieve the converted result.
+ * Use `getRaw()` (inherited from `FunctionalSensorImpl`) to retrieve the last raw value.
+ *
+ * To use this class, provide a converter that inherits from `SensorConverter`.
  */
 class FunctionalSensor : public FunctionalSensorImpl<SensorConverter> {
 public:
