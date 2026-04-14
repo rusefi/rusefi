@@ -29,15 +29,15 @@ float getFuncPairAllowedSplit() {
 }
 
 /**
- * @brief FuncSensPair ties together a LinearFunc and a FunctionalSensor for sensor initialization.
+ * @brief LinearSensorUnit ties together a LinearFunc and a FunctionalSensor for sensor initialization.
  *
  * This class handles the setup of a single sensor that maps a raw ADC voltage to a physical value (like TPS percentage)
  * using a linear function. It manages ADC subscription, sensor registration, and validation of calibration values.
  */
-class FuncSensPair {
+class LinearSensorUnit {
 public:
 	AdcSubscriptionEntry* adc = nullptr;
-	FuncSensPair(float divideInput, SensorType type)
+	LinearSensorUnit(float divideInput, SensorType type)
 		: m_func(divideInput)
 		, m_sens(type, MS2NT(10)) {
 		m_sens.setFunction(m_func);
@@ -108,13 +108,13 @@ private:
 /**
  * @brief RedundantPair manages a pair of sensors for redundant input systems like TPS or PPS.
  *
- * This class coordinates two `FuncSensPair` instances (primary and secondary) and a `RedundantSensor` logic.
+ * This class coordinates two `LinearSensorUnit` instances (primary and secondary) and a `RedundantSensor` logic.
  * It provides validation to ensure that the two sensors are not electrically identical (to catch wiring errors)
  * and handles the registration of either a standard redundant sensor or a specialized Ford TPS redundant sensor.
  */
 struct RedundantPair {
 public:
-	RedundantPair(FuncSensPair& pri, FuncSensPair& sec, SensorType outputType)
+	RedundantPair(LinearSensorUnit& pri, LinearSensorUnit& sec, SensorType outputType)
 		: m_pri(pri)
 		, m_sec(sec)
 		, m_redund(outputType, m_pri.type(), m_sec.type()) {}
@@ -188,16 +188,16 @@ public:
 	}
 
 private:
-	FuncSensPair& m_pri;
-	FuncSensPair& m_sec;
+	LinearSensorUnit& m_pri;
+	LinearSensorUnit& m_sec;
 
 	RedundantSensor m_redund;
 };
 
-static FuncSensPair tps1p(TPS_TS_CONVERSION, SensorType::Tps1Primary);
-static FuncSensPair tps1s(TPS_TS_CONVERSION, SensorType::Tps1Secondary);
-static FuncSensPair tps2p(TPS_TS_CONVERSION, SensorType::Tps2Primary);
-static FuncSensPair tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
+static LinearSensorUnit tps1p(TPS_TS_CONVERSION, SensorType::Tps1Primary);
+static LinearSensorUnit tps1s(TPS_TS_CONVERSION, SensorType::Tps1Secondary);
+static LinearSensorUnit tps2p(TPS_TS_CONVERSION, SensorType::Tps2Primary);
+static LinearSensorUnit tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
 
 // Used in case of "normal", non-Ford ETB TPS
 static RedundantPair analogTps1(tps1p, tps1s, SensorType::Tps1);
@@ -216,8 +216,8 @@ static RedundantFordTps
 				SensorType::AcceleratorPedalSecondary);
 
 // Pedal sensors and redundancy
-static FuncSensPair pedalPrimary(1, SensorType::AcceleratorPedalPrimary);
-static FuncSensPair pedalSecondary(1, SensorType::AcceleratorPedalSecondary);
+static LinearSensorUnit pedalPrimary(1, SensorType::AcceleratorPedalPrimary);
+static LinearSensorUnit pedalSecondary(1, SensorType::AcceleratorPedalSecondary);
 static RedundantPair pedal(pedalPrimary, pedalSecondary, SensorType::AcceleratorPedalUnfiltered);
 
 void updateUnfilteredRawPedal() {
@@ -229,8 +229,8 @@ static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 static ProxySensor ppsFilterSensor(SensorType::AcceleratorPedal);
 
 // These sensors are TPS-like, so handle them in here too
-static FuncSensPair wastegate(1, SensorType::WastegatePosition);
-static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
+static LinearSensorUnit wastegate(1, SensorType::WastegatePosition);
+static LinearSensorUnit idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 void initTps() {
 	criticalAssertVoid(engineConfiguration != nullptr, "null engineConfiguration");
