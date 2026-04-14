@@ -1108,28 +1108,8 @@
       angle: 270
       count: 2
       lastAngle: 287
-- name: TT_TRI_TACH
-  humanName: TriTach
-  operationMode: FOUR_STROKE_CRANK_SENSOR
-  syncEdge: RiseOnly
-  isSynchronizationNeeded: false
-  useOnlyPrimaryForSync: true
-  syncGaps:
-    - from: 1.5
-      to: 2.5
-  teeth:
-    - channel: 0
-      angle: 0
-      # Move the fall so it's not too close to the first event on the second channel
-      width: 0.2
-    - channel: 1
-      angle: 0.05
-      count: 2
-      lastAngle: 2.67
-    - channel: 1
-      angle: 5.33
-      count: 133
-      lastAngle: 357.33
+- name: TT_UNUSED
+  hidden: true
 - name: TT_GM_60_2_2_2
   humanName: "60/2/2/2"
   operationMode: FOUR_STROKE_CAM_SENSOR
