@@ -137,6 +137,7 @@
 #include "rusefi_lua.h"
 
 #include <setjmp.h>
+#include "extra_flash_pages.h"
 
 #if EFI_ENGINE_EMULATOR
 #include "engine_emulator.h"
@@ -234,6 +235,13 @@ void runRusEfi() {
 
 	// Read configuration from flash memory
 	loadConfiguration();
+
+	// Load all extra pages immediately after main config so they are populated
+	// before TunerStudio connectivity starts.  Without this, a config-validation
+	// failure (e.g. CRC mismatch on first new-firmware boot) would leave extra
+	// page state all-zeros, and any burn from TunerStudio at that point would
+	// persist zeros to every storage backend.
+	loadExtraPages();
 
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();
