@@ -16,7 +16,10 @@ public class TriggerVariableRegistryValues {
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
 	public static final String TRIGGER_KNOWN_OPERATION_MODE = "knownOperationMode";
+	public static final String TRIGGER_MODE = "operationMode";
+	public static final String TRIGGER_ONLY_PRIMARY = "useOnlyPrimaryForSync";
 	public static final String TRIGGER_SYNC_EDGE = "syncEdge";
 	public static final String TRIGGER_WITH_SYNC = "isSynchronizationNeeded";
+	public static final String TRIGGER_WITHOUT_TDC = "shapeWithoutTdc";
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 }
