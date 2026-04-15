@@ -208,7 +208,7 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 		return (uint8_t *)ltftGetTsPage() + offset;
 #endif
 	case TS_PAGE_SECOND_TABLES:
-		return static_cast<uint8_t*>(secondTablesGetTsPage()) + offset;
+		return static_cast<uint8_t*>(getExtraPageAddr(EFI_SECOND_TABLES_RECORD_ID)) + offset;
 	default:
 		tunerStudioError(tsChannel, "ERROR: page address out of range");
 		return nullptr;
@@ -232,7 +232,7 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 		return ltftGetTsPageSize();
 #endif
 	case TS_PAGE_SECOND_TABLES:
-		return secondTablesGetTsPageSize();
+		return getExtraPageSize(EFI_SECOND_TABLES_RECORD_ID);
 	default:
 		return 0;
 	}
