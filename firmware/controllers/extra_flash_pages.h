@@ -17,7 +17,7 @@
  *   static ExtraPageContainer<my_page_s, 1> myContainer;
  */
 template <typename TData, uint32_t DataVersion>
-struct ExtraPageContainer {
+struct alignas(32) ExtraPageContainer {
 	uint32_t version;
 	TData data;
 	uint32_t crc;
