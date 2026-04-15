@@ -55,7 +55,7 @@ void printOptBytes() {
 	HAL_FLASHEx_OBGetConfig(&obConfig);
 
 	if (obConfig.OptionType & OPTIONBYTE_WRP) {
-		efiPrintf("nWRP = 0x%04lx", obConfig.WRPSector >> 16);
+		efiPrintf("nWRP = 0x%04lx", obConfig.WRPSector);
 	}
 
 	if (obConfig.OptionType & OPTIONBYTE_RDP) {
@@ -87,7 +87,7 @@ void printOptBytes() {
 	}
 
 	if (obConfig.OptionType & OPTIONBYTE_BOR) {
-		efiPrintf("BORLevel = 0x%lx", (obConfig.BORLevel >> FLASH_OPTCR_BOR_LEV_Pos) & 0x03);
+		efiPrintf("BORLevel = 0x%lx", obConfig.BORLevel >> FLASH_OPTCR_BOR_LEV_Pos);
 	}
 
 #if defined(STM32F7) || defined(STM32H7)
