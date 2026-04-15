@@ -13,7 +13,9 @@
 #include "os_util.h"
 
 #if EFI_PROD_CODE
+
 #include "mpu_util.h"
+#include "flash_main.h"
 
 #ifdef STM32F4XX
 #include "stm32f4xx_hal_flash.h"
