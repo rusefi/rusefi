@@ -56,7 +56,10 @@ void setHellen64Can() {
 static OutputPin megaEn;
 
 // newer Hellen boards with megamodule have power management for SD cards etc, older Hellen board do not have that
-PUBLIC_API_WEAK bool isBoardWithPowerManagement() {
+bool isBoardWithPowerManagement() {
+  if (custom_board_isBoardWithPowerManagement.has_value()) {
+    return custom_board_isBoardWithPowerManagement.value()();
+  }
   return false;
 }
 

@@ -38,6 +38,7 @@ using setup_custom_on_board_standby_type = void (*)();
 using setup_custom_hack_hellen_board_id_type = int (*)(int /*detectedId*/);
 using setup_custom_get_cylinder_ignition_trim_type = angle_t (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*ignitionLoad*/);
 using setup_custom_get_cylinder_fuel_trim_type = float (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*fuelLoad*/);
+using setup_custom_bool_type = bool (*)();
 
 // todo: migrate 'validateBoardConfig'
 using custom_validate_config_type = bool (*)();
@@ -91,6 +92,8 @@ extern std::optional<setup_custom_on_board_standby_type> custom_board_onBoardSta
 extern std::optional<setup_custom_hack_hellen_board_id_type> custom_board_hackHellenBoardId;
 extern std::optional<setup_custom_get_cylinder_ignition_trim_type> custom_board_getCylinderIgnitionTrim;
 extern std::optional<setup_custom_get_cylinder_fuel_trim_type> custom_board_getCylinderFuelTrim;
+
+extern std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
 
 /**
  * This function checks if an override is present and calls it if available.
