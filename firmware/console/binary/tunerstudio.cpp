@@ -10,7 +10,7 @@
  *
  * Tuner Studio has a really simple protocol, a minimal implementation
  * capable of displaying current engine state on the gauges would
- * require only two commands: queryCommand and ochGetCommand
+ * require only two commands: queryCommand and ochGetCommand (output channels get)
  *
  * queryCommand:
  * 		Communication initialization command. TunerStudio sends a single byte H
@@ -27,6 +27,20 @@
  * tuner studio, three more commands should be implemented:
  *
  * See also https://www.efianalytics.com/TunerStudio/docs/EFI%20Analytics%20ECU%20Definition%20files.pdf
+ *
+ *
+ * Slightly longer explanation:
+ *
+ * we start by one or two commands to establish communication and get controller signature
+ * controller signature is a key to identify proper .ini metadata file
+ * once connection is established and .ini is available
+ * due to packet size limitation, large range operations are broken into multiple 'chunks' meaning we ready from specific offset with specific size around 1-2Kb
+ * we have two kinds of 'read' commands
+ * 'get output channels' to read gauges (dynamic, read only access)
+ * 'read chunks' meaning read of ECU persistent calibration which is organized as a few 'pages' limited to 64K
+ * tuning software also uses 'write chunks' to write calibration data, followed by 'burn' to apply all written chunks. Like 'commit'
+ *
+ * other commands are less important like 'get CRC32' to validate data integrity between ECU and local software snapshot
  *
  *
  * @date Oct 22, 2013
