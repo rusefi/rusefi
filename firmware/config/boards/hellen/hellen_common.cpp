@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "hellen_meta.h"
 #include "adc_subscription.h"
+#include "board_overrides.h"
 #include "mmc_card.h"
 #include "storage.h"
 
