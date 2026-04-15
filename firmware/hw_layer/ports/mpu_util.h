@@ -22,6 +22,12 @@ bool mcuCanFlashWhileRunning();
 bool isStm32F42x();
 #endif // STM32F4
 
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+void printWRPBits();
+void printOptBytes();
+void removeWRP();
+#endif
+
 // ADC
 #if HAL_USE_ADC
 

@@ -10,48 +10,6 @@
 #include "efiprintf.h"
 #include "stm32f4xx_hal_flash.h"
 
-void printWRPBits() {
-	uint32_t optcr = FLASH->OPTCR;
-	// OPTCR bits [27:16] are nWRP[11:0]
-	uint16_t wrp = (optcr >> 16) & 0xFFF;
-	efiPrintf("OPTCR: %08lx WRP: %03x", optcr, wrp);
-
-	if (isStm32F42x()) {
-		// F427/437 has OPTCR1 at 0x40023C18
-		uint32_t optcr1 = *(__IO uint32_t *)(0x40023C18);
-		// OPTCR1 bits [27:16] are nWRP[23:12]
-		uint16_t wrp1 = (optcr1 >> 16) & 0xFFF;
-		efiPrintf("OPTCR1: %08lx WRP12-23: %03x", optcr1, wrp1);
-	}
-}
-
-void removeWRP() {
-	suspendLinearTimeWatcher();
-
-	FLASH_OBProgramInitTypeDef OBInit;
-	memset(&OBInit, 0, sizeof(OBInit));
-
-	OBInit.OptionType = OPTIONBYTE_WRP;
-	OBInit.WRPState = OB_WRPSTATE_DISABLE;
-	OBInit.WRPSector = OB_WRP_SECTOR_All;
-	OBInit.RDPLevel = OB_RDP_LEVEL_0;
-	if (isStm32F42x()) {
-		#define FLASH_BANK_2_hack     ((uint32_t)2) /*!< Bank 2   */
-		OBInit.Banks = FLASH_BANK_1 | FLASH_BANK_2_hack;
-	} else {
-		OBInit.Banks = FLASH_BANK_1;
-	}
-
-	HAL_FLASH_OB_Unlock();
-	HAL_StatusTypeDef status = HAL_FLASHEx_OBProgram(&OBInit);
-	efiPrintf("removeWRP: program status %d", status);
-	if (status == HAL_OK) {
-		efiPrintf("removeWRP: launching...");
-		HAL_FLASH_OB_Launch();
-	}
-	HAL_FLASH_OB_Lock();
-}
-
 bool mcuCanFlashWhileRunning() {
 	// Never allow flash while running on F4, dual bank not implemented.
 	return false;
