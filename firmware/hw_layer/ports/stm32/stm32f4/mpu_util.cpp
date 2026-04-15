@@ -16,8 +16,7 @@ void printWRPBits() {
 	uint16_t wrp = (optcr >> 16) & 0xFFF;
 	efiPrintf("OPTCR: %08lx WRP: %03x", optcr, wrp);
 
-	uint16_t deviceId = DBGMCU->IDCODE & DBGMCU_IDCODE_DEV_ID_Msk;
-	if (deviceId == STM32_DEVICE_ID_F42x) {
+	if (isStm32F42x()) {
 		// F427/437 has OPTCR1 at 0x40023C18
 		uint32_t optcr1 = *(__IO uint32_t *)(0x40023C18);
 		// OPTCR1 bits [27:16] are nWRP[23:12]
@@ -27,7 +26,7 @@ void printWRPBits() {
 }
 
 void removeWRP() {
-  suspendLinearTimeWatcher();
+	suspendLinearTimeWatcher();
 
 	FLASH_OBProgramInitTypeDef OBInit;
 	memset(&OBInit, 0, sizeof(OBInit));
@@ -36,8 +35,8 @@ void removeWRP() {
 	OBInit.WRPState = OB_WRPSTATE_DISABLE;
 	OBInit.WRPSector = OB_WRP_SECTOR_All;
 	OBInit.RDPLevel = OB_RDP_LEVEL_0;
-	if (GET_MCU_REVISION() == STM32_DEVICE_ID_F42x) {
-#define FLASH_BANK_2_hack     ((uint32_t)2) /*!< Bank 2   */
+	if (isStm32F42x()) {
+		#define FLASH_BANK_2_hack     ((uint32_t)2) /*!< Bank 2   */
 		OBInit.Banks = FLASH_BANK_1 | FLASH_BANK_2_hack;
 	} else {
 		OBInit.Banks = FLASH_BANK_1;
