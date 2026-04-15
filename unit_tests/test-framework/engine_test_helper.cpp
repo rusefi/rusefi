@@ -155,8 +155,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	resetConfigurationExt(configurationCallback, engineType);
 
 	// Populate second tables before validation — mirrors the prod boot order
-	// where loadExtraPages() -> initSecondTables() runs before validateConfig.
-	initSecondTables();
+	// where loadExtraPages() runs before validateConfig.
+	secondTablesSetDefaults();
 
 	validateConfigOnStartUpOrBurn();
 

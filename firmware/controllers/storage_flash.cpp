@@ -14,41 +14,27 @@
 
 #include "mpu_util.h"
 #include "flash_int.h"
-#include "persistent_configuration.h"
+#include "extra_flash_pages.h"
 
-// Page 4 lives at a fixed offset within the primary settings sector.
-// A fixed offset is critical: if the offset were derived from sizeof(persistent_config_container_s)
-// it would shift whenever the config struct grows, causing the read address to change across
-// firmware updates and corrupting stored page 4 data.
-// 72 KB (73728 bytes) satisfies STM32H7's 32-byte flash-word alignment (73728 % 32 == 0),
-// fits within a 128 KB flash sector alongside page 4 (73728 + 1208 = 74936 < 131072),
-// and leaves ~8 KB of headroom above the current largest config (proteus_f7 at 65308 bytes)
-// before the assert needs increasing again.
-//
-// NOTE: This piggyback approach requires page 4 to land inside the same flash sector that
-// the main-config write erases.  On STM32F7 DualBank-2MB boards without extended flash
-// (e.g. alphax-4K-GDI, uaefi-pro) the primary-settings region starts at sector 12
-// (16 KB sectors); a 72 KB offset would fall outside the erased range AND inside the
-// region overwritten by the backup copy — making both store and read broken.  Those
-// boards always carry an SD card, so page 4 is persisted there instead.
-// We gate this at compile time with STM32F7XX && !EFI_FLASH_USE_1500_OF_2MB.
-// STM32H743 (also dual-bank / mcuCanFlashWhileRunning) has 128 KB sectors, so the
-// piggyback works there and must NOT be disabled.
-static constexpr size_t PAGE4_SECTOR_OFFSET = 72u * 1024u;
-static_assert(sizeof(persistent_config_container_s) <= PAGE4_SECTOR_OFFSET,
-	"persistent_config_container_s exceeds PAGE4_SECTOR_OFFSET — increase the offset");
+// Compute the flash address for an extra page from its sector offset.
+// Returns 0 (unsupported) on platforms where piggybacking doesn't work.
+static flashaddr_t getExtraPageFlashAddr(StorageItemId id) {
+	size_t offset = getExtraPageFlashOffset(id);
+	if (offset == 0) {
+		return 0;
+	}
 
-static flashaddr_t getFlashAddrPage4() {
 #if defined(STM32F7XX) && !defined(EFI_FLASH_USE_1500_OF_2MB)
 	// STM32F7 DualBank-2MB (without the extended-flash layout) places the primary
-	// settings at sector 12 — a region of 16 KB sectors.  Page 4 at 72 KB would
-	// land outside the sectors erased by the main-config write, AND inside the
-	// region overwritten by the backup copy — so both store and read are broken.
-	// These boards always? carry an SD card; page 4 is persisted there instead.
+	// settings at sector 12 — a region of 16 KB sectors.  Extra pages at 72+ KB
+	// would land outside the sectors erased by the main-config write, AND inside
+	// the region overwritten by the backup copy.
+	// These boards carry an SD card; extra pages are persisted there instead.
+	(void)offset;
 	return 0;
 #else
 	const uintptr_t first = getFlashAddrFirstCopy();
-	return first ? (first + PAGE4_SECTOR_OFFSET) : 0;
+	return first ? (first + offset) : 0;
 #endif
 }
 
@@ -69,8 +55,12 @@ flashaddr_t SettingStorageFlash::getIdAddress(size_t id) {
 		return getFlashAddrFirstCopy();
 	} else if (id == EFI_SETTINGS_BACKUP_RECORD_ID) {
 		return getFlashAddrSecondCopy();
-	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
-		return getFlashAddrPage4();
+	}
+
+	// Extra pages — address computed from their sector offset
+	flashaddr_t extraAddr = getExtraPageFlashAddr(static_cast<StorageItemId>(id));
+	if (extraAddr != 0) {
+		return extraAddr;
 	}
 
 	return 0;
@@ -91,15 +81,22 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		return StorageStatus::NotSupported;
 	}
 
-	if (id == EFI_SECOND_TABLES_RECORD_ID) {
-		// Page 4 shares its sector with the main config. It must only be written
-		// immediately after a main config write has erased the sector.
+	if (getExtraPageFlashOffset(static_cast<StorageItemId>(id)) > 0) {
+#if EFI_SIMULATOR
+		// Simulator: each address maps to a separate file, so there is no
+		// shared-sector constraint — just overwrite directly.
+		const auto err = intFlashWrite(addr, reinterpret_cast<const char*>(ptr), size);
+		return (err == FLASH_RETURN_SUCCESS) ? StorageStatus::Ok : StorageStatus::Failed;
+#else
+		// Extra pages share their sector with the main config. They must only be
+		// written immediately after a main config write has erased the sector.
 		// If the area is not blank, the caller must trigger a full config burn instead.
 		if (!intFlashIsErased(addr, size)) {
 			return StorageStatus::Failed;
 		}
 		const auto err = intFlashWrite(addr, reinterpret_cast<const char*>(ptr), size);
 		return (err == FLASH_RETURN_SUCCESS) ? StorageStatus::Ok : StorageStatus::Failed;
+#endif
 	}
 
 	efiPrintf("Flash: Writing storage ID %d  @0x%x... %d bytes", id, addr, size);
@@ -147,8 +144,8 @@ StorageStatus SettingStorageFlash::read(size_t id, uint8_t *ptr, size_t size) {
 		return StorageStatus::NotSupported;
 	}
 
-	if (id == EFI_SECOND_TABLES_RECORD_ID) {
-		// If the area is still blank, page 4 has never been saved — signal to use defaults.
+	if (getExtraPageFlashOffset(static_cast<StorageItemId>(id)) > 0) {
+		// If the area is still blank, the extra page has never been saved — signal to use defaults.
 		if (intFlashIsErased(addr, size)) {
 			return StorageStatus::NotFound;
 		}
