@@ -13,7 +13,7 @@
 #include "second_tables.h"
 #include <rusefi/crc.h>
 
-// Verify that initSecondTables populates sane defaults (unit-test path).
+// Verify that secondTablesSetDefaults populates sane defaults (unit-test path).
 // The second tables should be copies of the primary tables.
 TEST(SecondTables, DefaultsCopyPrimaryTables) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -62,7 +62,7 @@ TEST(SecondTables, TsAccessorsReturnRawPage) {
 TEST(SecondTables, StorageAccessorsReturnContainer) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	const uint8_t* storagePtr = secondTablesGetStoragePtr();
+	uint8_t* storagePtr = secondTablesGetStoragePtr();
 	size_t storageSize = secondTablesGetStorageSize();
 
 	// Storage size must be larger than raw page (includes version + crc).
@@ -80,7 +80,7 @@ TEST(SecondTables, PrepareForStorageProducesValidCrc) {
 
 	secondTablesPrepareForStorage();
 
-	const uint8_t* ptr = secondTablesGetStoragePtr();
+	uint8_t* ptr = secondTablesGetStoragePtr();
 	size_t size = secondTablesGetStorageSize();
 
 	// Interpret the container: version (4 bytes) + page4_s + crc (4 bytes).
@@ -107,7 +107,7 @@ TEST(SecondTables, CrcDetectsCorruption) {
 	// Stamp valid CRC.
 	secondTablesPrepareForStorage();
 
-	const uint8_t* ptr = secondTablesGetStoragePtr();
+	uint8_t* ptr = secondTablesGetStoragePtr();
 	size_t size = secondTablesGetStorageSize();
 
 	// Read back the stored CRC.
@@ -143,7 +143,7 @@ TEST(SecondTables, ContainerSizeAlignment) {
 }
 
 // Verify reinit after prepare — simulates the boot sequence where
-// initSecondTables is called, then later the data is burned and re-read.
+// defaults are loaded, then later the data is burned and re-read.
 TEST(SecondTables, ReinitPreservesState) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 

@@ -80,3 +80,13 @@ void burnExtraFlashPage(StorageItemId id);
  */
 void* getExtraPageAddr(StorageItemId id);
 size_t getExtraPageSize(StorageItemId id);
+
+/**
+ * Flash storage support — used by storage_flash.cpp for address mapping.
+ * Returns the byte offset within the primary settings sector for the given
+ * extra page, or 0 if the ID is not a flash-backed extra page.
+ *
+ * When adding a new extra page, add its offset here so that
+ * storage_flash.cpp picks it up automatically.
+ */
+size_t getExtraPageFlashOffset(StorageItemId id);

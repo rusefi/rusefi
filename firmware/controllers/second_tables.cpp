@@ -13,7 +13,7 @@ static_assert(sizeof(page4_container_s) % 32 == 0,
 
 static page4_container_s secondTablesContainer;
 
-static void secondTablesSetDefaults() {
+void secondTablesSetDefaults() {
 	secondTablesContainer.data = {};
 
 	// Start with the primary tables/bins as defaults
@@ -32,17 +32,20 @@ static void secondTablesSetDefaults() {
 	setLinearCurve(secondTablesContainer.data.secondIgnitionBlendValues, 0, 100);
 }
 
-void initSecondTables() {
-#if EFI_PROD_CODE
+void loadSecondTables() {
+#if EFI_CONFIGURATION_STORAGE
 	if (storageRead(EFI_SECOND_TABLES_RECORD_ID,
-			(uint8_t*)&secondTablesContainer,
-			sizeof(secondTablesContainer)) == StorageStatus::Ok
-		&& secondTablesContainer.isValid()) {
-		// Valid data loaded from storage.
+			secondTablesGetStoragePtr(),
+			secondTablesGetStorageSize()) == StorageStatus::Ok
+		&& secondTablesIsValid()) {
 		return;
-	}
+		}
 #endif
 	secondTablesSetDefaults();
+}
+
+bool secondTablesIsValid() {
+	return secondTablesContainer.isValid();
 }
 
 page4_s* secondTablesGetState() {
@@ -61,8 +64,8 @@ void secondTablesPrepareForStorage() {
 	secondTablesContainer.prepareForStorage();
 }
 
-const uint8_t* secondTablesGetStoragePtr() {
-	return (const uint8_t*)&secondTablesContainer;
+uint8_t* secondTablesGetStoragePtr() {
+	return (uint8_t*)&secondTablesContainer;
 }
 
 size_t secondTablesGetStorageSize() {
