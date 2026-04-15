@@ -46,6 +46,11 @@ struct ExtraPageContainer {
 void loadExtraPages();
 
 /**
+ * Reload a single extra page from storage by record ID.
+ */
+void loadExtraPage(StorageItemId id);
+
+/**
  * Called from writeToFlashNowImpl() immediately after the main-config sector
  * has been erased and the main config written.  The shared sector region is
  * now blank, so each extra page can be written directly.
