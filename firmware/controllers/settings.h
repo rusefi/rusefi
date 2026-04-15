@@ -22,4 +22,6 @@ void readPin(const char *pinName);
 void printDateTime();
 void setDateTime(const char * const isoDateTime);
 
+// a different mechanism is used to set the default lua script
+// todo: migrate #include <default_script.lua> to board_overrides.h?
 void setLuaScript(const char *luaScript);
