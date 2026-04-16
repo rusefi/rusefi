@@ -204,7 +204,8 @@ CSRC =  $(ALLCSRC) \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/xcp.c \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/cop.c \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/nvm.c \
-	$(PROJECT_DIR)/hw_layer/openblt/hooks.c \
+	$(PROJECT_DIR)/bootloader/openblt_chibios/clock-arch.c \
+	$(PROJECT_DIR)/hw_layer/openblt/hooks.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # todo: reduce code duplication with primary Makefile!!!
