@@ -1,121 +1,28 @@
 #include "pch.h"
 #include "logicdata_csv_reader.h"
-#include <vector>
+#include "bean_decoder.h"
 
-/**
- * Toyota BEAN (Body Electronics Area Network) protocol decoder.
- *
- * BEAN is a single-wire bus running at 10 kbit/s (100us per bit).
- * The protocol uses bit-stuffing (after 5 consecutive same-value bits,
- * a complementary stuff bit is inserted) and marks end-of-message with
- * specific byte values.
- *
- * This decoder processes individual bits from a logic analyzer capture,
- * handles de-stuffing, assembles bytes, and detects message boundaries.
- */
-class BeanDecoder {
-public:
-	/**
-	 * Feed a CSV edge into the decoder. Computes how many bit periods
-	 * elapsed since the last edge, then calls processBit() for each one.
-	 *
-	 * @param timestamp  absolute time in seconds of this edge
-	 * @param value      logic level (true = high) at this edge
-	 */
-	void processEdge(double timestamp, bool value) {
-		if (!m_hasFirstEdge) {
-			m_lastTimestamp = timestamp;
-			m_lastValue = value;
-			m_hasFirstEdge = true;
-			return;
-		}
-
-		double duration = timestamp - m_lastTimestamp;
-		// 100us per bit, with small offset (30us) to compensate for rounding
-		// in logic analyzer sampling
-		int bitCount = (int)((duration + 0.00003) / 0.0001);
-		// Cap unreasonably long gaps (idle bus) to a single bit
-		if (bitCount > 50) bitCount = 1;
-
-		for (int i = 0; i < bitCount; i++) {
-			processBit(m_lastValue);
-		}
-
-		m_lastTimestamp = timestamp;
-		m_lastValue = value;
+static void assertFirst127Bytes(const std::vector<uint8_t>& bytes) {
+	ASSERT_GE(bytes.size(), 127U);
+	static const uint8_t expected[127] = {
+		0x58, 0xC4, 0xF5, 0xC8, 0x06, 0x1F, 0x02, 0xC6, 0x27, 0xAE,
+		0x40, 0x30, 0xF8, 0x16, 0x31, 0x3D, 0x72, 0x01, 0x87, 0xC0,
+		0x00, 0x00, 0x0C, 0x62, 0x7C, 0x82, 0x1A, 0x4F, 0x81, 0x63,
+		0x13, 0xE4, 0x10, 0xD2, 0x7C, 0x0B, 0x18, 0x9F, 0x20, 0x86,
+		0x93, 0xEB, 0x18, 0x9E, 0xB9, 0x00, 0xC3, 0xE0, 0x58, 0xC4,
+		0xF5, 0xC8, 0x06, 0x1F, 0x02, 0xC6, 0x27, 0xAE, 0x40, 0x30,
+		0xF8, 0x00, 0x00, 0x01, 0x8C, 0x4F, 0x90, 0x43, 0x49, 0xF0,
+		0x2C, 0x62, 0x7C, 0x82, 0x1A, 0x4F, 0x81, 0x63, 0x13, 0xE4,
+		0x10, 0xD2, 0x7D, 0x63, 0x13, 0xD7, 0x20, 0x18, 0x7C, 0x0B,
+		0x18, 0x9E, 0xB9, 0x00, 0xC3, 0xE0, 0x58, 0xC4, 0xF5, 0xC8,
+		0x06, 0x1F, 0x00, 0x00, 0x00, 0x31, 0x89, 0xF2, 0x08, 0x69,
+		0x3E, 0x05, 0x8C, 0x4F, 0x90, 0x43, 0x49, 0xF0, 0x2C, 0x62,
+		0x7C, 0x82, 0x1A, 0x4F, 0xAC, 0x62, 0x7A,
+	};
+	for (int i = 0; i < 127; i++) {
+		EXPECT_EQ(bytes[i], expected[i]) << "Mismatch at index " << i;
 	}
-
-	/**
-	 * Total stream of all decoded bytes, including EOM markers and any noise/preamble.
-	 * Used by tests to verify the full decoded output.
-	 */
-	std::vector<uint8_t> m_allBytes;
-
-private:
-	/**
-	 * Process a single decoded bit through the BEAN protocol state machine.
-	 *
-	 * Handles bit-stuffing removal: after 5 consecutive bits of the same
-	 * polarity, the next bit is a stuff bit inserted by the transmitter
-	 * and must be discarded (not shifted into the byte register).
-	 *
-	 * Once 8 data bits are accumulated, the resulting byte is stored and
-	 * checked for end-of-message markers.
-	 */
-	void processBit(bool bit) {
-		if (m_stuffingCount == 5) {
-			// After 5 consecutive same-value bits, this bit is a stuff bit
-			// inserted by the transmitter for clock recovery — discard it
-			m_stuffingCount = 1;
-			m_lastBit = bit;
-			return;
-		}
-
-		if (bit == m_lastBit) {
-			m_stuffingCount++;
-		} else {
-			m_stuffingCount = 1;
-			m_lastBit = bit;
-		}
-
-		m_currentByte = (m_currentByte << 1) | (bit ? 1 : 0);
-		m_bitCount++;
-
-		if (m_bitCount == 8) {
-			m_allBytes.push_back(m_currentByte);
-			m_message.push_back(m_currentByte);
-			/**
-			 * 0x7E is the canonical BEAN End-of-Message (EOM) marker.
-			 * 0x7C and 0x7D are also accepted because logic analyzer
-			 * bit-sampling jitter can cause the last 1-2 bits of the
-			 * EOM byte to be misread (off-by-one in the LSBs).
-			 * All three share the upper 6 bits 0b011111xx.
-			 */
-			if (m_currentByte == 0x7E || m_currentByte == 0x7C || m_currentByte == 0x7D) {
-				// End of message boundary detected
-				m_message.clear();
-			}
-			m_bitCount = 0;
-			m_currentByte = 0;
-		}
-	}
-
-	// Bit assembly state
-	uint8_t m_currentByte = 0;
-	int m_bitCount = 0;
-
-	// Bit-stuffing tracking
-	int m_stuffingCount = 0;
-	bool m_lastBit = false;
-
-	// Current message accumulator (reset on EOM)
-	std::vector<uint8_t> m_message;
-
-	// Edge timing state
-	double m_lastTimestamp = 0;
-	bool m_lastValue = false;
-	bool m_hasFirstEdge = false;
-};
+}
 
 TEST(bean, mr2_cluster) {
 	CsvReader reader(1, /* vvtCount */ 0);
@@ -162,18 +69,5 @@ TEST(bean, mr2_cluster) {
 
 	ASSERT_EQ(decoder.m_allBytes.size(), 786);
 
-	EXPECT_EQ(decoder.m_allBytes[0], 0x58);
-	EXPECT_EQ(decoder.m_allBytes[1], 0xC4);
-	EXPECT_EQ(decoder.m_allBytes[2], 0xF5);
-	EXPECT_EQ(decoder.m_allBytes[3], 0xC8);
-	EXPECT_EQ(decoder.m_allBytes[4], 0x06);
-	EXPECT_EQ(decoder.m_allBytes[5], 0x1F);
-	EXPECT_EQ(decoder.m_allBytes[6], 0x02);
-	EXPECT_EQ(decoder.m_allBytes[7], 0xC6);
-	EXPECT_EQ(decoder.m_allBytes[8], 0x27);
-	EXPECT_EQ(decoder.m_allBytes[9], 0xAE);
-	EXPECT_EQ(decoder.m_allBytes[10], 0x40);
-	for (int i = 0; i < 100 && i < (int)decoder.m_allBytes.size(); i++) {
-		printf("Data at index %d: %02X\n", i, decoder.m_allBytes[i]);
-	}
+	assertFirst127Bytes(decoder.m_allBytes);
 }
