@@ -1,7 +1,7 @@
 name: Proteus F7 Firmware on macos-latest
 
 on:
-# realpath drama sorry  push:
+  push:
 # realpath drama sorry  pull_request:
   workflow_dispatch:
 
