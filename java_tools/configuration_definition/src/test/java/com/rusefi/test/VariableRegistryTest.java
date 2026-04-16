@@ -91,6 +91,15 @@ public class VariableRegistryTest {
     }
 
     @Test
+    public void testEmptyDefineNoTrailingSpace() {
+        VariableRegistry registry = new VariableRegistry();
+        registry.register("BOARD_CAM_SETTINGS_FILE", "");
+        String defines = registry.getDefinesSection();
+        // When value is empty, #define should not have a trailing space
+        assertEquals("#define BOARD_CAM_SETTINGS_FILE\n", defines);
+    }
+
+    @Test
     public void testDefineAndQuotes() throws IOException {
         VariableRegistry registry = new VariableRegistry();
         registry.readPrependValues(new StringReader("#define SINGLE 'L'\n" +

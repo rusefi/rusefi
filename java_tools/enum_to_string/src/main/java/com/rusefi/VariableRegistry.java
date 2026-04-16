@@ -253,7 +253,7 @@ public class VariableRegistry {
         if (!value.contains("\n")) {
             // multi-lines are not supported in C headers
             if (!var.endsWith(_16_HEX_SUFFIX) && !var.endsWith(_HEX_SUFFIX)) {
-                cAllDefinitions.put(var, "#define " + var + " " + value + ToolUtil.EOL);
+                cAllDefinitions.put(var, "#define " + var + (value.isEmpty() ? "" : " " + value) + ToolUtil.EOL);
             }
         }
         return value;
