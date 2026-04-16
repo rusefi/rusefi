@@ -336,6 +336,8 @@ never used?
         importTuneButton.setEnabled(isEcuPortJobPossible);
 //        updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
         if (logoLabelPopupMenu != null) {
+            // getCalibrations() can be null for TCP ports (typically the simulator)
+            // are added in SerialPortScanner.findAllAvailablePorts which leaves calibrations null
             logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
                 isEcuPortJobPossible,
                 ecuPort.map(port -> port.getCalibrations() != null && existsAnyOfUnitIdentifierFields(port.getCalibrations().getIniFile())).orElse(false)
