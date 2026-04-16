@@ -13,7 +13,7 @@ void TimerReset() { }
 void TimerUpdate() { }
 
 blt_int32u TimerGet() {
-	return 0;
+	return chTimeI2MS(chVTGetSystemTime());
 }
 
 void CpuMemCopy(blt_addr dest, blt_addr src, blt_int16u len)
