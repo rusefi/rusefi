@@ -1,6 +1,8 @@
 #include "pch.h"
+#include <cstdio>
 #include "logicdata_csv_reader.h"
 #include "bean_decoder.h"
+#include "bean_encoder.h"
 
 /**
  * Assert that the first 127 bytes in the cyclic buffer match the expected
@@ -54,4 +56,68 @@ TEST(bean, mr2_cluster) {
 	printf("Total bytes decoded: %zu\n", decoder.m_totalBytesDecoded);
 
 	ASSERT_EQ(decoder.m_totalBytesDecoded, 786);
+}
+
+/**
+ * Encoder roundtrip test: encode a known byte sequence into a CSV file,
+ * then decode it back through BeanDecoder and verify the bytes match.
+ */
+TEST(bean, encoder_roundtrip) {
+	static const uint8_t testData[] = {
+		0x58, 0xC4, 0xF5, 0xC8, 0x06, 0x1F, 0x02, 0xC6, 0x27, 0xAE
+	};
+	static const int testLen = sizeof(testData) / sizeof(testData[0]);
+
+	// Write encoded edges to a temporary CSV file
+	const char* csvPath = "tests/bean/resources/bean_encoder_test.csv";
+	FILE* csvFile = fopen(csvPath, "w");
+	ASSERT_NE(csvFile, nullptr) << "Failed to create " << csvPath;
+	fprintf(csvFile, "Time [s],Channel 0\n");
+	// Initial idle state far enough before data that the decoder's
+	// >50 bit cap treats the gap as a single bit (like real captures)
+	fprintf(csvFile, "0.000000000,0\n");
+
+	struct CsvWriter {
+		FILE* file;
+	};
+	CsvWriter writer{csvFile};
+
+	BeanEncoder encoder;
+	encoder.reset(0.010);  // start encoding at 10ms (large gap triggers cap)
+	encoder.setEdgeCallback([](double ts, bool level, void* ud) {
+		CsvWriter* w = static_cast<CsvWriter*>(ud);
+		fprintf(w->file, "%.9f,%d\n", ts, level ? 1 : 0);
+	}, &writer);
+
+	encoder.encodeBytes(testData, testLen);
+
+	// Emit a trailing edge so the decoder can flush the last bit group
+	double endTs = encoder.getNextTimestamp() + BeanEncoder::BIT_PERIOD;
+	fprintf(csvFile, "%.9f,%d\n", endTs, encoder.getCurrentLevel() ? 0 : 1);
+
+	fclose(csvFile);
+
+	printf("Encoder produced %d edges\n", encoder.getEdgeCount());
+
+	// Now decode the generated CSV back
+	CsvReader reader(1, /* vvtCount */ 0);
+	reader.open(csvPath);
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	BeanDecoder decoder;
+	while (reader.haveMore()) {
+		double values[1];
+		double timestamp = reader.readTimestampAndValues(values);
+		bool value = values[0] > 0.5;
+		decoder.processEdge(timestamp, value);
+	}
+
+	printf("Roundtrip decoded %zu bytes\n", decoder.m_totalBytesDecoded);
+	ASSERT_EQ(decoder.m_totalBytesDecoded, (size_t)testLen);
+
+	for (int i = 0; i < testLen; i++) {
+		EXPECT_EQ(decoder.m_allBytes.get(i), testData[i])
+			<< "Mismatch at byte " << i;
+	}
 }
