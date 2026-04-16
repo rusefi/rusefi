@@ -81,8 +81,9 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \
 	$(CONTROLLERS_DIR)/system \
 	$(CONTROLLERS_DIR)/system/timer \
-	$(CONTROLLERS_DIR)/algo \
-	$(CONTROLLERS_DIR)/algo/airmass \
+ $(CONTROLLERS_DIR)/algo \
+ $(CONTROLLERS_DIR)/algo/airmass \
+ $(CONTROLLERS_DIR)/algo/bean \
 	$(CONTROLLERS_DIR)/algo/defaults \
 	$(CONTROLLERS_DIR)/algo/fuel \
 	$(CONTROLLERS_DIR)/algo/ignition \
