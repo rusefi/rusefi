@@ -2,13 +2,70 @@
 #include "logicdata_csv_reader.h"
 #include <vector>
 
-// Toyota BEAN protocol decoder skeleton
+/**
+ * Toyota BEAN (Body Electronics Area Network) protocol decoder.
+ *
+ * BEAN is a single-wire bus running at 10 kbit/s (100us per bit).
+ * The protocol uses bit-stuffing (after 5 consecutive same-value bits,
+ * a complementary stuff bit is inserted) and marks end-of-message with
+ * specific byte values.
+ *
+ * This decoder processes individual bits from a logic analyzer capture,
+ * handles de-stuffing, assembles bytes, and detects message boundaries.
+ */
 class BeanDecoder {
 public:
+	/**
+	 * Feed a CSV edge into the decoder. Computes how many bit periods
+	 * elapsed since the last edge, then calls processBit() for each one.
+	 *
+	 * @param timestamp  absolute time in seconds of this edge
+	 * @param value      logic level (true = high) at this edge
+	 */
+	void processEdge(double timestamp, bool value) {
+		if (!m_hasFirstEdge) {
+			m_lastTimestamp = timestamp;
+			m_lastValue = value;
+			m_hasFirstEdge = true;
+			return;
+		}
+
+		double duration = timestamp - m_lastTimestamp;
+		// 100us per bit, with small offset (30us) to compensate for rounding
+		// in logic analyzer sampling
+		int bitCount = (int)((duration + 0.00003) / 0.0001);
+		// Cap unreasonably long gaps (idle bus) to a single bit
+		if (bitCount > 50) bitCount = 1;
+
+		for (int i = 0; i < bitCount; i++) {
+			processBit(m_lastValue);
+		}
+
+		m_lastTimestamp = timestamp;
+		m_lastValue = value;
+	}
+
+	/**
+	 * Total stream of all decoded bytes, including EOM markers and any noise/preamble.
+	 * Used by tests to verify the full decoded output.
+	 */
+	std::vector<uint8_t> m_allBytes;
+
+private:
+	/**
+	 * Process a single decoded bit through the BEAN protocol state machine.
+	 *
+	 * Handles bit-stuffing removal: after 5 consecutive bits of the same
+	 * polarity, the next bit is a stuff bit inserted by the transmitter
+	 * and must be discarded (not shifted into the byte register).
+	 *
+	 * Once 8 data bits are accumulated, the resulting byte is stored and
+	 * checked for end-of-message markers.
+	 */
 	void processBit(bool bit) {
 		if (m_stuffingCount == 5) {
-			// This is a stuffing bit, verify it's the opposite of previous bits
-			// But for now, just skip it
+			// After 5 consecutive same-value bits, this bit is a stuff bit
+			// inserted by the transmitter for clock recovery — discard it
 			m_stuffingCount = 1;
 			m_lastBit = bit;
 			return;
@@ -27,9 +84,15 @@ public:
 		if (m_bitCount == 8) {
 			m_allBytes.push_back(m_currentByte);
 			m_message.push_back(m_currentByte);
+			/**
+			 * 0x7E is the canonical BEAN End-of-Message (EOM) marker.
+			 * 0x7C and 0x7D are also accepted because logic analyzer
+			 * bit-sampling jitter can cause the last 1-2 bits of the
+			 * EOM byte to be misread (off-by-one in the LSBs).
+			 * All three share the upper 6 bits 0b011111xx.
+			 */
 			if (m_currentByte == 0x7E || m_currentByte == 0x7C || m_currentByte == 0x7D) {
-				// End of message
-				printMessage();
+				// End of message boundary detected
 				m_message.clear();
 			}
 			m_bitCount = 0;
@@ -37,25 +100,21 @@ public:
 		}
 	}
 
-	void printMessage() {
-		// printf("BEAN MSG: ");
-		// for (uint8_t b : m_message) {
-		// 	printf("%02X ", b);
-		// }
-		// printf("\n");
-	}
-
-private:
+	// Bit assembly state
 	uint8_t m_currentByte = 0;
 	int m_bitCount = 0;
+
+	// Bit-stuffing tracking
 	int m_stuffingCount = 0;
 	bool m_lastBit = false;
+
+	// Current message accumulator (reset on EOM)
 	std::vector<uint8_t> m_message;
-public:
-	/**
-	 * Total stream of all decoded bytes, including EOM markers and any noise/preamble.
-	 */
-	std::vector<uint8_t> m_allBytes;
+
+	// Edge timing state
+	double m_lastTimestamp = 0;
+	bool m_lastValue = false;
+	bool m_hasFirstEdge = false;
 };
 
 TEST(bean, mr2_cluster) {
@@ -65,38 +124,18 @@ TEST(bean, mr2_cluster) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	BeanDecoder decoder;
-	double lastTimestamp = 0;
-	bool lastValue = false;
-
-	if (reader.haveMore()) {
-		double values[1];
-		lastTimestamp = reader.readTimestampAndValues(values);
-		lastValue = values[0] > 0.5;
-	}
 
 	while (reader.haveMore()) {
 		double values[1];
 		double timestamp = reader.readTimestampAndValues(values);
 		bool value = values[0] > 0.5;
-
-		double duration = timestamp - lastTimestamp;
-		int bitCount = (int)((duration + 0.00003) / 0.0001); // 100us per bit, with small offset for rounding
-		if (bitCount > 50) bitCount = 1;
-
-		// printf("Duration: %f, bitCount: %d, value: %d\n", duration, bitCount, lastValue);
-
-		for (int i = 0; i < bitCount; i++) {
-			decoder.processBit(lastValue);
-		}
-
-		lastTimestamp = timestamp;
-		lastValue = value;
+		decoder.processEdge(timestamp, value);
 	}
 
 	printf("Total bytes decoded: %zu\n", decoder.m_allBytes.size());
 
-	// Helper to find a sequence of bytes in the total decoded stream (m_allBytes)
-	// Returns the index of the first byte of the sequence, or -1 if not found.
+	// Helper to find a sequence of bytes in the total decoded stream (m_allBytes).
+	// Returns the index of the first occurrence, or -1 if not found.
 	auto findSequence = [&](const std::vector<uint8_t>& seq) {
 		for (size_t i = 0; i <= decoder.m_allBytes.size() - seq.size(); i++) {
 			bool match = true;
@@ -111,12 +150,9 @@ TEST(bean, mr2_cluster) {
 		return -1;
 	};
 
-	// The user mentions these repeating over and over:
+	// The datalog contains these repeating BEAN messages:
 	// 01 63 13 D7 20 18 7E 00
 	// 01 63 13 E4 10 D2 7E 00
-
-	// Let's check for these. Note: sometimes the first bit of 01 might be merged with previous 7E if there's no gap.
-	// Or my decoder might have them slightly shifted.
 
 	int pos1 = findSequence({0x63, 0x13, 0xE4, 0x10, 0xD2});
 	int pos2 = findSequence({0x63, 0x13, 0xD7, 0x20, 0x18});
