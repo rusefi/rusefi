@@ -3,9 +3,7 @@ package com.opensr5;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.util.TreeMap;
 
@@ -18,28 +16,22 @@ public class ConfigurationImageGetterSetterTest {
      */
     @Test
     public void testEnumIniFieldGetValueLastByte() {
-        Assertions.assertThrows(IllegalArgumentException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                // Create a small image where a U08 enum sits at the last byte
-                byte[] data = new byte[]{0x00, 0x02};
-                ConfigurationImage ci = new ConfigurationImage(data);
+        // Create a small image where a U08 enum sits at the last byte
+        byte[] data = new byte[]{0x00, 0x02};
+        ConfigurationImage ci = new ConfigurationImage(data);
 
-                TreeMap<Integer, String> map = new TreeMap<>();
-                map.put(0, "\"Off\"");
-                map.put(1, "\"On\"");
-                map.put(2, "\"Auto\"");
-                EnumIniField.EnumKeyValueMap enumMap = new EnumIniField.EnumKeyValueMap(map);
-                // Enum field at offset 1 (last byte), type U08, bit range [0:7]
-                EnumIniField field = new EnumIniField("communityCommsLedPin", 1, FieldType.UINT8, enumMap, 0, 7);
+        TreeMap<Integer, String> map = new TreeMap<>();
+        map.put(0, "Off");
+        map.put(1, "On");
+        map.put(2, "Auto");
+        EnumIniField.EnumKeyValueMap enumMap = new EnumIniField.EnumKeyValueMap(map);
+        // Enum field at offset 1 (last byte), type U08, bit range [0:7]
+        EnumIniField field = new EnumIniField("communityCommsLedPin", 1, FieldType.UINT8, enumMap, 0, 7);
 
-                // This should NOT throw ArrayOutOfBoundsException
-                String value = ConfigurationImageGetterSetter.getStringValue(field, ci);
-                assertEquals("\"Auto\"", value);
-            }
-        });
+        // This should NOT throw ArrayOutOfBoundsException
+        String value = ConfigurationImageGetterSetter.getStringValue(field, ci);
+        assertEquals("\"Auto\"", value);
     }
-
     @Test
     public void testGetStringValueWithPrecision() {
         ConfigurationImage ci = new ConfigurationImage(new byte[4]);
