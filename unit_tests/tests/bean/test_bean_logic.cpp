@@ -2,8 +2,12 @@
 #include "logicdata_csv_reader.h"
 #include "bean_decoder.h"
 
-static void assertFirst127Bytes(const std::vector<uint8_t>& bytes) {
-	ASSERT_GE(bytes.size(), 127U);
+/**
+ * Assert that the first 127 bytes in the cyclic buffer match the expected
+ * BEAN protocol decode from mr2_cluster_bean_bench1.csv.
+ */
+static void assertFirst127Bytes(cyclic_buffer<uint8_t, BEAN_ALL_BYTES_BUFFER_SIZE>& bytes) {
+	ASSERT_GE(bytes.getCount(), 127);
 	static const uint8_t expected[127] = {
 		0x58, 0xC4, 0xF5, 0xC8, 0x06, 0x1F, 0x02, 0xC6, 0x27, 0xAE,
 		0x40, 0x30, 0xF8, 0x16, 0x31, 0x3D, 0x72, 0x01, 0x87, 0xC0,
@@ -20,7 +24,7 @@ static void assertFirst127Bytes(const std::vector<uint8_t>& bytes) {
 		0x7C, 0x82, 0x1A, 0x4F, 0xAC, 0x62, 0x7A,
 	};
 	for (int i = 0; i < 127; i++) {
-		EXPECT_EQ(bytes[i], expected[i]) << "Mismatch at index " << i;
+		EXPECT_EQ(bytes.get(i), expected[i]) << "Mismatch at index " << i;
 	}
 }
 
@@ -32,42 +36,22 @@ TEST(bean, mr2_cluster) {
 
 	BeanDecoder decoder;
 
+	// Track when we first accumulate 127 bytes to assert the initial decode
+	bool assertedFirst127 = false;
+
 	while (reader.haveMore()) {
 		double values[1];
 		double timestamp = reader.readTimestampAndValues(values);
 		bool value = values[0] > 0.5;
 		decoder.processEdge(timestamp, value);
+
+		if (!assertedFirst127 && decoder.m_totalBytesDecoded >= 127) {
+			assertFirst127Bytes(decoder.m_allBytes);
+			assertedFirst127 = true;
+		}
 	}
 
-	printf("Total bytes decoded: %zu\n", decoder.m_allBytes.size());
+	printf("Total bytes decoded: %zu\n", decoder.m_totalBytesDecoded);
 
-	// Helper to find a sequence of bytes in the total decoded stream (m_allBytes).
-	// Returns the index of the first occurrence, or -1 if not found.
-	auto findSequence = [&](const std::vector<uint8_t>& seq) {
-		for (size_t i = 0; i <= decoder.m_allBytes.size() - seq.size(); i++) {
-			bool match = true;
-			for (size_t j = 0; j < seq.size(); j++) {
-				if (decoder.m_allBytes[i + j] != seq[j]) {
-					match = false;
-					break;
-				}
-			}
-			if (match) return (int)i;
-		}
-		return -1;
-	};
-
-	// The datalog contains these repeating BEAN messages:
-	// 01 63 13 D7 20 18 7E 00
-	// 01 63 13 E4 10 D2 7E 00
-
-	int pos1 = findSequence({0x63, 0x13, 0xE4, 0x10, 0xD2});
-	int pos2 = findSequence({0x63, 0x13, 0xD7, 0x20, 0x18});
-
-	EXPECT_EQ(pos1, 29);
-	EXPECT_EQ(pos2, 83);
-
-	ASSERT_EQ(decoder.m_allBytes.size(), 786);
-
-	assertFirst127Bytes(decoder.m_allBytes);
+	ASSERT_EQ(decoder.m_totalBytesDecoded, 786);
 }
