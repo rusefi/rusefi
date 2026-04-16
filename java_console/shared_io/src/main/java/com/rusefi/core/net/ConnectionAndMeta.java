@@ -22,6 +22,7 @@ public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
     public static final String DEFAULT_WHITE_LABEL = "rusefi";
     public static final String AUTOUPDATE = "/autoupdate/";
+    public static final String RUSEFI_WIKI_DOWNLOAD_PAGE = "https://wiki.rusefi.com/Download/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
     public static final int CENTUM = 100;

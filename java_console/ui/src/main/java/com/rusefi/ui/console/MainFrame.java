@@ -15,6 +15,8 @@ import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
+import java.net.URI;
 import java.util.Objects;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +24,7 @@ import java.time.ZoneOffset;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.net.ConnectionAndMeta.RUSEFI_WIKI_DOWNLOAD_PAGE;
 
 public class MainFrame {
     private static final Logging log = getLogging(Launcher.class);
@@ -85,9 +88,7 @@ public class MainFrame {
             @Override
             public void onConnectionFailed(String errorMessage) {
                 log.error("onConnectionFailed " + errorMessage);
-                String message = "This copy of rusEFI console is not compatible with this version of firmware\r\n" +
-                        errorMessage;
-                JOptionPane.showMessageDialog(frame.getFrame(), message);
+                SwingUtilities.invokeLater(() -> showConnectionFailedDialog(errorMessage));
             }
 
             @Override
@@ -134,6 +135,40 @@ public class MainFrame {
             frameTitle = "DISCONNECTED " + consoleVersion;
         }
         frame.getFrame().setTitle(frameTitle);
+    }
+
+    private void showConnectionFailedDialog(String errorMessage) {
+        JTextArea textArea = new JTextArea(errorMessage);
+        textArea.setEditable(false);
+        textArea.setOpaque(false);
+        textArea.setFont(UIManager.getFont("Label.font"));
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setColumns(50);
+
+        JPanel panel = new JPanel(new BorderLayout(0, 10));
+        panel.add(textArea, BorderLayout.CENTER);
+
+        if (errorMessage.contains(RUSEFI_WIKI_DOWNLOAD_PAGE)) {
+            JButton downloadButton = new JButton("Open Download Page");
+            downloadButton.addActionListener(e -> {
+                try {
+                    Desktop.getDesktop().browse(new URI(RUSEFI_WIKI_DOWNLOAD_PAGE));
+                } catch (Exception ex) {
+                    log.error("Failed to open download URL: " + ex);
+                }
+            });
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            buttonPanel.add(downloadButton);
+            panel.add(buttonPanel, BorderLayout.SOUTH);
+        }
+
+        JOptionPane.showMessageDialog(
+            frame.getFrame(),
+            panel,
+            "Connection Failed",
+            JOptionPane.WARNING_MESSAGE
+        );
     }
 
     private void windowClosedHandler() {
