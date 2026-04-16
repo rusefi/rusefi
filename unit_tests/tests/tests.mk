@@ -216,4 +216,5 @@ TESTS_SRC_CPP = \
 	tests/controllers/modules/vvl_controller/vvl_controller_afr_condition.cpp \
 	tests/controllers/modules/test_configuration_wizard.cpp \
 	tests/controllers/can/dash/test_can_bmw_e46.cpp \
-	tests/controllers/algo/rotational_idle/test_rotational_idle.cpp
+	tests/controllers/algo/rotational_idle/test_rotational_idle.cpp \
+	tests/bean/test_bean_logic.cpp
