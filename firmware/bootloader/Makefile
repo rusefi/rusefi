@@ -29,7 +29,6 @@ DDEFS += -DSTM32_NOCACHE_ENABLE=FALSE
 DDEFS += -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=1 -DEFI_SIMULATOR=0
 
 PROJECT_DIR = ..
-include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -125,6 +124,9 @@ endif
 # Project, sources and paths
 #
 
+BOARDINC = $(BOARD_DIR)
+include $(BOARD_DIR)/board.mk
+
 ifeq ($(PROJECT_BOARD),)
 ifneq ($(SHORT_BOARD_NAME),)
   PROJECT_BOARD = $(SHORT_BOARD_NAME)
@@ -132,6 +134,9 @@ else
   PROJECT_BOARD = f407-discovery
 endif
 endif
+
+# should be after 'board.mk'
+include $(PROJECT_DIR)/rusefi_rules.mk
 
 # Define project name here
 PROJECT = openblt_$(PROJECT_BOARD)
@@ -170,9 +175,6 @@ include $(CHIBIOS)/os/common/ports/ARMv7-M/compilers/GCC/mk/port.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 # EX files (optional).
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
-
-BOARDINC = $(BOARD_DIR)
-include $(BOARD_DIR)/board.mk
 
 ifeq (,$(filter clean,$(MAKECMDGOALS)))
 ifeq ($(SHORT_BOARD_NAME),)
