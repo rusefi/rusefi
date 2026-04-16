@@ -1,7 +1,12 @@
 #pragma once
 
 #include <cstdint>
-#include <vector>
+#include "rusefi/containers/cyclic_buffer.h"
+
+// Message buffer size: longest BEAN message is ~12 bytes
+static const int BEAN_MESSAGE_MAX_SIZE = 16;
+// Rolling buffer of all decoded bytes for diagnostics/testing
+static const int BEAN_ALL_BYTES_BUFFER_SIZE = 128;
 
 /**
  * Toyota BEAN (Body Electronics Area Network) protocol decoder.
@@ -47,10 +52,17 @@ public:
 	}
 
 	/**
-	 * Total stream of all decoded bytes, including EOM markers and any noise/preamble.
-	 * Used by tests to verify the full decoded output.
+	 * Rolling buffer of all decoded bytes, including EOM markers and any noise/preamble.
+	 * Used by tests to verify the decoded output. Being a cyclic buffer of fixed size,
+	 * only the most recent BEAN_ALL_BYTES_BUFFER_SIZE bytes are retained.
 	 */
-	std::vector<uint8_t> m_allBytes;
+	cyclic_buffer<uint8_t, BEAN_ALL_BYTES_BUFFER_SIZE> m_allBytes;
+
+	/**
+	 * Total number of bytes decoded since reset (including those that have
+	 * rolled out of the cyclic buffer).
+	 */
+	size_t m_totalBytesDecoded = 0;
 
 private:
 	/**
@@ -83,8 +95,9 @@ private:
 		m_bitCount++;
 
 		if (m_bitCount == 8) {
-			m_allBytes.push_back(m_currentByte);
-			m_message.push_back(m_currentByte);
+			m_allBytes.add(m_currentByte);
+			m_totalBytesDecoded++;
+			m_message.add(m_currentByte);
 			/**
 			 * 0x7E is the canonical BEAN End-of-Message (EOM) marker.
 			 * 0x7C and 0x7D are also accepted because logic analyzer
@@ -110,7 +123,7 @@ private:
 	bool m_lastBit = false;
 
 	// Current message accumulator (reset on EOM)
-	std::vector<uint8_t> m_message;
+	cyclic_buffer<uint8_t, BEAN_MESSAGE_MAX_SIZE> m_message;
 
 	// Edge timing state
 	double m_lastTimestamp = 0;

@@ -103,7 +103,7 @@ Key preprocessor flags that control compilation:
 
 ## Embedded Code Practices
 
-- **Static allocation**: Prefer static allocation over dynamic (`new`/`malloc`). Memory is limited and fragmentation must be avoided.
+- **Static allocation only**: Embedded firmware uses only static memory allocation. No heap usage (`new`, `malloc`, `std::vector`, `std::string`, `std::map`, etc.) is permitted in production firmware code. Use fixed-size containers like `cyclic_buffer` from `rusefi/containers/cyclic_buffer.h` instead. Memory is limited and fragmentation must be avoided.
 - **Performance matters**: This is a hard real-time application. Fuel and ignition events must fire at precise crank angles. Avoid unnecessary computation in hot paths. Use lower priority threads for expensive computation.
 - **No exceptions**: C++ exceptions are disabled. Use return values or error codes for error handling.
 - **No RTTI**: `dynamic_cast` and `typeid` are unavailable.
