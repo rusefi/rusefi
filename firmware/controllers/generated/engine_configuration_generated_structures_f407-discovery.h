@@ -7794,12 +7794,8 @@ struct persistent_config_s {
 	 * offset 24202
 	 */
 	uint8_t alignmentFill_at_24202[2] = {};
-	/**
-	 * offset 24204
-	 */
-	int technicalDebt7738;
 };
-static_assert(sizeof(persistent_config_s) == 24208);
+static_assert(sizeof(persistent_config_s) == 24204);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
