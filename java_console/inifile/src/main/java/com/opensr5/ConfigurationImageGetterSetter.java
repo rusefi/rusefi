@@ -24,7 +24,7 @@ public class ConfigurationImageGetterSetter {
 
             @Override
             public String visit(EnumIniField field) {
-                int ordinal = image.getByteBuffer(field).getInt();
+                int ordinal = (int) field.getType().readRawValue(image.getByteBuffer(field));
                 ordinal = ConfigurationImage.getBitRange(ordinal, field.getBitPosition(), field.getBitSize0() + 1);
 
                 if (ordinal >= field.getEnums().size())
