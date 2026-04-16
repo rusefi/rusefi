@@ -66,6 +66,13 @@ ifeq ($(SHORT_BOARD_NAME),)
   SHORT_BOARD_NAME = f407-discovery
 endif
 
+# When SHORT_BOARD_NAME is defined, pass override macros so that generated header
+# lookups use a simple string include instead of the QUOTE() token-pasting fallback.
+# This is the primary mechanism for resolving board-specific generated headers.
+DDEFS += -DMETA_GENERATED_H_OVERRIDE=\"rusefi_generated_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DMETA_ENGINE_GENERATED_H_OVERRIDE=\"engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DSIGNATURE_H_OVERRIDE=\"signature_$(SHORT_BOARD_NAME).h\"
+
 ALLINC += \
 	$(FW_CONFIG_DIR) \
 	$(CONSOLE_INC) \
