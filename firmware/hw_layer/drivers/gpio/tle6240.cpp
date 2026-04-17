@@ -371,7 +371,7 @@ static THD_FUNCTION(tle6240_driver_thread, p)
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int Tle6240::writePad(unsigned int pin, int value)
+int Tle6240::writePad(size_t pin, int value)
 {
 	if (pin >= TLE6240_OUTPUTS)
 		return -1;
