@@ -344,9 +344,6 @@ ifeq ($(USE_CLANG),yes)
 endif
 
 ifneq (yes,$(SUBMAKE))
-ifeq ($(SHORT_BOARD_NAME),)
-  SHORT_BOARD_NAME = f407-discovery
-endif
 include $(PROJECT_DIR)/rusefi_config.mk
 include $(PROJECT_DIR)/docs_enums.mk
 endif
