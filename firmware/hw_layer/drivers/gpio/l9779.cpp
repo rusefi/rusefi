@@ -567,7 +567,7 @@ int L9779::setPadMode(unsigned int pin, iomode_t mode) {
 	return 0;
 }
 
-int L9779::writePad(unsigned int pin, int value) {
+int L9779::writePad(size_t pin, int value) {
 	if (pin >= L9779_OUTPUTS)
 		return -1;
 

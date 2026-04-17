@@ -417,7 +417,7 @@ void MsIoBox::decodeFrame(const CANRxFrame& frame, efitick_t) {
 }
 
 /* gpio chip stuff */
-int MsIoBox::writePad(unsigned int pin, int value) {
+int MsIoBox::writePad(size_t pin, int value) {
 	if (pin >= MSIOBOX_OUTPUTS)
 		return -1;
 

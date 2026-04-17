@@ -923,7 +923,7 @@ int Tle8888::setPadMode(unsigned int pin, iomode_t mode) {
 	return 0;
 }
 
-int Tle8888::writePad(unsigned int pin, int value) {
+int Tle8888::writePad(size_t pin, int value) {
 
 	if (pin >= TLE8888_OUTPUTS)
 		return -1;
