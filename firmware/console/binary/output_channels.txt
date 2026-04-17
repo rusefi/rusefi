@@ -166,14 +166,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	uint16_t[8 iterate] recentErrorCode;Warning code;"error", 1, 0, 0, 0, 0
 
-! todo: re-implement enableLogDebugChannels
-	float debugFloatField1;;"val", 1, 0, 0, 0, 3
-	float debugFloatField2;;"val", 1, 0, 0, 0, 3
-	float debugFloatField3;;"val", 1, 0, 0, 0, 3
-	float debugFloatField4;;"val", 1, 0, 0, 0, 3
-	float debugFloatField5;;"val", 1, 0, 0, 0, 3
-	float debugFloatField6;;"val", 1, 0, 0, 0, 3
-	float debugFloatField7;;"val", 1, 0, 0, 0, 3
 
 	uint32_t debugIntField1;;"val", 1, 0, 0, 0, 0
 	uint32_t debugIntField2;;"val", 1, 0, 0, 0, 0
