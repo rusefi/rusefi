@@ -1,4 +1,5 @@
-# rusefi_rules.mk
+# rusefi_rules.mk - this one is shared by all four configurations (bootloader, embedded, simulator and unit_tests)
+
 
 # Warnings-as-errors...
 RUSEFI_OPT = -Werror

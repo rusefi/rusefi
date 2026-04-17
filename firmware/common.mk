@@ -1,5 +1,6 @@
 #
-# this file is shared between embedded, simulator and unit_tests
+# this file is shared between embedded, simulator and unit_tests - BUT NOT BOOTLOADER?
+# see rusefi_rules.mk which is more shared
 #
 
 include $(PROJECT_DIR)/init/init.mk
