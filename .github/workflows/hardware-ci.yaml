@@ -80,6 +80,8 @@ jobs:
       with:
         release: '14.2.Rel1'
 
+# we do not invoke ubuntu-install-tools.sh here, we assume manual install of tools on our HW CI machines
+
     # Make sure the compiler works
     - name: Test/Identify Compiler
       run: arm-none-eabi-gcc -v
