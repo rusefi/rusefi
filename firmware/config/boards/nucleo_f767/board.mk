@@ -17,6 +17,9 @@ endif
 # Both LWIP and uIP cause few shadow errors
 ALLOW_SHADOW = yes
 
+# We need early init for ethernet in OpenBLT
+DDEFS += -DOPENBLT_BOARD_EARLY_INIT=TRUE
+
 DDEFS += -DEFI_ETHERNET=TRUE
 DDEFS += -DEFI_STORAGE_SD=FALSE
 
