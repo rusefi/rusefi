@@ -41,3 +41,9 @@ RUSEFI_OPT += -Wno-delete-non-abstract-non-virtual-dtor
 
 # Build .srec for flash_can.sh and flash_usb.sh helpers
 SREC = true
+
+# Board-specific generated header overrides - shared by all four configurations.
+# SHORT_BOARD_NAME is resolved at build time (deferred expansion).
+DDEFS += -DMETA_GENERATED_H_OVERRIDE=\"rusefi_generated_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DMETA_ENGINE_GENERATED_H_OVERRIDE=\"engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DSIGNATURE_H_OVERRIDE=\"signature_$(SHORT_BOARD_NAME).h\"

@@ -180,9 +180,6 @@ $(error SHORT_BOARD_NAME not set, something wrong with your meta-info.env file)
 endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
-DDEFS += -DMETA_GENERATED_H_OVERRIDE=\"rusefi_generated_$(SHORT_BOARD_NAME).h\"
-DDEFS += -DMETA_ENGINE_GENERATED_H_OVERRIDE=\"engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h\"
-DDEFS += -DSIGNATURE_H_OVERRIDE=\"signature_$(SHORT_BOARD_NAME).h\"
 
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
