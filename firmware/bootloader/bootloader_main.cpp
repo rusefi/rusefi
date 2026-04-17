@@ -160,7 +160,18 @@ static blt_bool checkIfResetLoop(void) {
 	return (wd_counter > maxWdRebootCounter);
 }
 
+#if OPENBLT_BOARD_EARLY_INIT
+extern "C" {
+extern void OpenBLT__early_init(void);
+}
+#endif
+
 int main(void) {
+#if OPENBLT_BOARD_EARLY_INIT
+	// Some specific board init
+	// Like Ethernet pin/gpio init before MAC init is called from halInit();
+	OpenBLT__early_init();
+#endif
 	halInit();
 	chSysInit();
 
