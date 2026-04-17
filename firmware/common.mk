@@ -1,3 +1,7 @@
+#
+# this file is shared between embedded, simulator and unit_tests
+#
+
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
 include $(PROJECT_DIR)/config/engines/engines.mk
