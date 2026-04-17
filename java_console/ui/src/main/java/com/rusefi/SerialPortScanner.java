@@ -189,14 +189,34 @@ public enum SerialPortScanner {
             portCache.put(p);
         }
 
-        portCache.retainAll(serialPorts);
+        final Collection<String> tcpPorts = includeSlowLookup
+            ? TcpConnector.getAvailablePorts()
+            : Collections.emptyList();
+
+        final Set<String> livePortNames = new HashSet<>(serialPorts);
+        livePortNames.addAll(tcpPorts);
+        portCache.retainAll(livePortNames);
 
         // Sort ports by their type to put your ECU at the top
         ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
 
         if (includeSlowLookup) {
-            for (String tcpPort : TcpConnector.getAvailablePorts()) {
-                ports.add(new PortResult(tcpPort, SerialPortType.Ecu));
+            for (String tcpPort : tcpPorts) {
+                final Optional<PortResult> cachedPort = portCache.get(tcpPort);
+                if (cachedPort.isPresent()) {
+                    ports.add(cachedPort.get());
+                } else {
+                    final Optional<CalibrationsInfo> tcpCalibrations = getEcuCalibrations(tcpPort);
+                    final PortResult tcpResult = tcpCalibrations
+                        .map(c -> new PortResult(tcpPort, SerialPortType.Ecu, c))
+                        .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Ecu));
+                    ports.add(tcpResult);
+
+                    // cache port + calibrations
+                    if (tcpCalibrations.isPresent()) {
+                        portCache.put(tcpResult);
+                    }
+                }
             }
             dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
             stLinkConnected = StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
