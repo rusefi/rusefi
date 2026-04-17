@@ -7,10 +7,13 @@ import com.rusefi.ui.UIContext;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class FiringOrderPanel {
+public class FiringOrderPanel implements WizardStep {
     private final JPanel content = new JPanel(new BorderLayout());
+    private Consumer<WizardStepResult> onStepCompleted;
+
     private static final Map<String, String> EXAMPLES = new HashMap<String, String>() {{
         put("1_3_4_2", "typical inline 4");
         put("1_3_2_4", "horizontally opposed engine");
@@ -46,6 +49,7 @@ public class FiringOrderPanel {
         JLabel title = new JLabel("Select Firing Order for " + cylindersCount + " cylinders");
         title.setHorizontalAlignment(SwingConstants.CENTER);
         scaleComponent(title, 2);
+        title.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
         content.add(title, BorderLayout.NORTH);
 
         JPanel ordersPanel = new JPanel();
@@ -84,25 +88,48 @@ public class FiringOrderPanel {
                 JButton button = new JButton(label);
                 scaleComponent(button, 2);
                 button.setAlignmentX(Component.CENTER_ALIGNMENT);
+                button.setMaximumSize(button.getPreferredSize());
                 button.addActionListener(e -> {
-                    System.out.println("Selected firing order: " + order);
+                    if (onStepCompleted != null) {
+                        onStepCompleted.accept(new WizardStepResult("firingOrder", order));
+                    }
                 });
                 ordersPanel.add(Box.createVerticalStrut(10));
                 ordersPanel.add(button);
             }
         } else {
-            ordersPanel.add(new JLabel("Firing order information not found in INI"));
+            JLabel noIni = new JLabel("Firing order information not found in INI");
+            noIni.setAlignmentX(Component.CENTER_ALIGNMENT);
+            ordersPanel.add(noIni);
         }
 
-        content.add(new JScrollPane(ordersPanel), BorderLayout.CENTER);
+        // Wrap ordersPanel so it centers horizontally within the scroll pane
+        JPanel centerWrapper = new JPanel(new GridBagLayout());
+        centerWrapper.add(ordersPanel);
+        content.add(new JScrollPane(centerWrapper), BorderLayout.CENTER);
     }
 
+    @Override
+    public String getTitle() {
+        return "Firing Order";
+    }
+
+    @Override
+    public String getWizardFlagFieldName() {
+        return "wizardFiringOrder";
+    }
+
+    @Override
+    public void setOnStepCompleted(Consumer<WizardStepResult> callback) {
+        this.onStepCompleted = callback;
+    }
 
     private void scaleComponent(JComponent component, float factor) {
         Font font = component.getFont();
         component.setFont(font.deriveFont(font.getSize() * factor));
     }
 
+    @Override
     public JComponent getPanel() {
         return content;
     }

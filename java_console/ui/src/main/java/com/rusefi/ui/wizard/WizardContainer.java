@@ -1,0 +1,380 @@
+package com.rusefi.ui.wizard;
+
+import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.IniField;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.ui.UIContext;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.devexperts.logging.Logging.getLogging;
+
+public class WizardContainer extends JPanel {
+    private static final Logging log = getLogging(WizardContainer.class);
+    private static final int TOTAL_STEPS = 6;
+
+    private static final String[] WIZARD_FLAG_NAMES = {
+        "wizardNumberOfCylinders",
+        "wizardFiringOrder",
+        "wizardMapSensorType",
+        "wizardCrankTrigger",
+        "wizardCamTrigger",
+        "wizardInjectorFlow",
+    };
+
+    private final UIContext uiContext;
+    private final JLabel stepLabel = new JLabel();
+    private final JPanel stepContentPanel = new JPanel(new CardLayout());
+    private final List<WizardStep> steps = new ArrayList<>();
+
+    // Debug panel labels, keyed by flag name
+    private final Map<String, JLabel> debugLabels = new LinkedHashMap<>();
+    private final JPanel debugPanel = new JPanel();
+
+    private Runnable onWizardExit;
+    private int currentStepIndex = 0;
+    private int selectedCylinders = 4; // default, updated by step 0
+
+    public WizardContainer(UIContext uiContext) {
+        super(new BorderLayout());
+        this.uiContext = uiContext;
+
+        // Header panel
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        scaleComponent(stepLabel, 1.5f);
+        headerPanel.add(stepLabel, BorderLayout.CENTER);
+
+        JButton cancelButton = new JButton("Exit Wizard");
+        scaleComponent(cancelButton, 1.5f);
+        cancelButton.addActionListener(e -> exitWizard());
+        headerPanel.add(cancelButton, BorderLayout.EAST);
+
+        add(headerPanel, BorderLayout.NORTH);
+        stepContentPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
+        add(stepContentPanel, BorderLayout.CENTER);
+
+        // Debug panel at the bottom showing wizard flag states
+        buildDebugPanel();
+        add(debugPanel, BorderLayout.SOUTH);
+    }
+
+    private void buildDebugPanel() {
+        debugPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 5));
+        debugPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+
+        JLabel header = new JLabel("Debug flags:");
+        header.setFont(header.getFont().deriveFont(Font.BOLD));
+        debugPanel.add(header);
+
+        for (String flag : WIZARD_FLAG_NAMES) {
+            // Strip "wizard" prefix for a shorter display name
+            String shortName = flag.startsWith("wizard") ? flag.substring(6) : flag;
+            JLabel label = new JLabel(shortName + ": ?");
+            label.setFont(label.getFont().deriveFont(Font.PLAIN));
+            debugLabels.put(flag, label);
+            debugPanel.add(label);
+        }
+
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.addActionListener(e -> refreshDebugFlags());
+        debugPanel.add(refreshButton);
+
+        JButton resetButton = new JButton("Reset All");
+        resetButton.addActionListener(e -> resetAllFlags());
+        debugPanel.add(resetButton);
+    }
+
+    private void resetAllFlags() {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        if (bp == null) return;
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        ConfigurationImage image = bp.getControllerConfiguration();
+        if (ini == null || image == null) return;
+
+        ConfigurationImage modified = image.clone();
+        for (String flagName : WIZARD_FLAG_NAMES) {
+            IniField field = ini.getIniField(flagName);
+            if (field instanceof EnumIniField) {
+                modified.setBitValue((EnumIniField) field, 0);
+            }
+        }
+        uiContext.getLinkManager().submit(() -> {
+            bp.uploadChanges(modified);
+            SwingUtilities.invokeLater(this::refreshDebugFlags);
+        });
+    }
+
+    private void refreshDebugFlags() {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        IniFileModel ini = (bp != null) ? uiContext.iniFileState.getIniFileModel() : null;
+        ConfigurationImage image = (bp != null) ? bp.getControllerConfiguration() : null;
+
+        for (Map.Entry<String, JLabel> entry : debugLabels.entrySet()) {
+            String flagName = entry.getKey();
+            JLabel label = entry.getValue();
+            String shortName = flagName.startsWith("wizard") ? flagName.substring(6) : flagName;
+
+            if (ini == null || image == null) {
+                label.setText(shortName + ": --");
+                label.setForeground(Color.GRAY);
+                continue;
+            }
+
+            IniField field = ini.getIniField(flagName);
+            if (field instanceof EnumIniField) {
+                EnumIniField ef = (EnumIniField) field;
+                int raw = image.getByteBuffer(ef).getInt();
+                int ordinal = ConfigurationImage.getBitRange(raw, ef.getBitPosition(), ef.getBitSize0() + 1);
+                boolean isSet = ordinal == 1;
+                label.setText(shortName + ": " + (isSet ? "yes" : "no"));
+                label.setForeground(isSet ? new Color(0, 160, 0) : Color.RED);
+            } else {
+                label.setText(shortName + ": N/A");
+                label.setForeground(Color.GRAY);
+            }
+        }
+    }
+
+    public void setOnWizardExit(Runnable onWizardExit) {
+        this.onWizardExit = onWizardExit;
+    }
+
+    public void startWizard() {
+        currentStepIndex = 0;
+        steps.clear();
+        stepContentPanel.removeAll();
+
+        // Step 0: Number of Cylinders
+        NumberOfCylindersPanel cylPanel = new NumberOfCylindersPanel(uiContext);
+        cylPanel.setOnStepCompleted(result -> {
+            if (result.value != null) {
+                selectedCylinders = Integer.parseInt(result.value);
+            }
+            // Create FiringOrderPanel lazily now that we know the cylinder count
+            createFiringOrderStep();
+            onStepCompleted(result, steps.get(0));
+        });
+        steps.add(cylPanel);
+        stepContentPanel.add(cylPanel.getPanel(), "step0");
+
+        // Step 1: FiringOrder — placeholder card, replaced lazily in createFiringOrderStep()
+        JPanel firingOrderPlaceholder = new JPanel();
+        stepContentPanel.add(firingOrderPlaceholder, "step1");
+        steps.add(null); // placeholder slot
+
+        // Step 2: MAP Sensor Type
+        MapSensorTypePanel mapPanel = new MapSensorTypePanel(uiContext);
+        wireStep(mapPanel, 2);
+        steps.add(mapPanel);
+        stepContentPanel.add(mapPanel.getPanel(), "step2");
+
+        // Step 3: Crank Trigger
+        CrankTriggerPanel crankPanel = new CrankTriggerPanel(uiContext);
+        wireStep(crankPanel, 3);
+        steps.add(crankPanel);
+        stepContentPanel.add(crankPanel.getPanel(), "step3");
+
+        // Step 4: Cam Trigger
+        CamTriggerPanel camPanel = new CamTriggerPanel(uiContext);
+        wireStep(camPanel, 4);
+        steps.add(camPanel);
+        stepContentPanel.add(camPanel.getPanel(), "step4");
+
+        // Step 5: Injector Flow
+        InjectorFlowPanel injPanel = new InjectorFlowPanel(uiContext);
+        wireStep(injPanel, 5);
+        steps.add(injPanel);
+        stepContentPanel.add(injPanel.getPanel(), "step5");
+
+        // Completion card
+        JPanel completionPanel = new JPanel(new GridBagLayout());
+        JLabel doneLabel = new JLabel("Wizard Complete!");
+        scaleComponent(doneLabel, 3);
+        completionPanel.add(doneLabel);
+        JButton doneButton = new JButton("Return to Console");
+        scaleComponent(doneButton, 2);
+        doneButton.addActionListener(e -> exitWizard());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 1;
+        gbc.insets = new Insets(20, 0, 0, 0);
+        completionPanel.add(doneButton, gbc);
+        stepContentPanel.add(completionPanel, "complete");
+
+        // If step 0 is already done, read cylindersCount from the ECU and create FiringOrderPanel now
+        if (isFlagSet(WIZARD_FLAG_NAMES[0])) {
+            selectedCylinders = readCylindersCountFromEcu();
+            createFiringOrderStep();
+        }
+
+        refreshDebugFlags();
+
+        // Skip to the first incomplete step
+        int firstIncomplete = findFirstIncompleteStep();
+        if (firstIncomplete >= TOTAL_STEPS) {
+            stepLabel.setText("Configuration Complete");
+            CardLayout cl = (CardLayout) stepContentPanel.getLayout();
+            cl.show(stepContentPanel, "complete");
+        } else {
+            showStep(firstIncomplete);
+        }
+    }
+
+    private int readCylindersCountFromEcu() {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        if (bp == null) return 4;
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        ConfigurationImage image = bp.getControllerConfiguration();
+        if (ini == null || image == null) return 4;
+
+        IniField field = ini.getIniField("cylindersCount");
+        if (field == null) return 4;
+
+        String value = ConfigurationImageGetterSetter.getStringValue(field, image);
+        try {
+            int count = (int) Double.parseDouble(value);
+            return count > 0 ? count : 4;
+        } catch (NumberFormatException e) {
+            return 4;
+        }
+    }
+
+    private int findFirstIncompleteStep() {
+        for (int i = 0; i < TOTAL_STEPS; i++) {
+            if (!isFlagSet(WIZARD_FLAG_NAMES[i])) {
+                return i;
+            }
+        }
+        return TOTAL_STEPS;
+    }
+
+    private boolean isFlagSet(String flagName) {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        if (bp == null) return false;
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        ConfigurationImage image = bp.getControllerConfiguration();
+        if (ini == null || image == null) return false;
+
+        IniField field = ini.getIniField(flagName);
+        if (field instanceof EnumIniField) {
+            EnumIniField ef = (EnumIniField) field;
+            int raw = image.getByteBuffer(ef).getInt();
+            int ordinal = ConfigurationImage.getBitRange(raw, ef.getBitPosition(), ef.getBitSize0() + 1);
+            return ordinal == 1;
+        }
+        return false;
+    }
+
+    private void createFiringOrderStep() {
+        FiringOrderPanel firingPanel = new FiringOrderPanel(uiContext, selectedCylinders);
+        wireStep(firingPanel, 1);
+        steps.set(1, firingPanel);
+        // Replace the placeholder card
+        // CardLayout allows adding a new component with the same name — the old one is replaced
+        stepContentPanel.add(firingPanel.getPanel(), "step1");
+    }
+
+    private void wireStep(WizardStep step, int stepIndex) {
+        step.setOnStepCompleted(result -> onStepCompleted(result, steps.get(stepIndex)));
+    }
+
+    private void onStepCompleted(WizardStepResult result, WizardStep step) {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        if (bp == null) {
+            JOptionPane.showMessageDialog(this,
+                "ECU is not connected. Please reconnect and try again.",
+                "Not Connected", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        ConfigurationImage image = bp.getControllerConfiguration();
+        if (ini == null || image == null) {
+            JOptionPane.showMessageDialog(this,
+                "Configuration not loaded. Please reconnect and try again.",
+                "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ConfigurationImage modified = image.clone();
+
+        // Set the actual config value if this step provides one
+        if (result.configFieldName != null && result.value != null) {
+            IniField configField = ini.getIniField(result.configFieldName);
+            if (configField != null) {
+                ConfigurationImageGetterSetter.setValue2(configField, modified, result.configFieldName, result.value);
+                log.info("Wizard: set " + result.configFieldName + " = " + result.value);
+            } else {
+                log.warn("Wizard: INI field not found: " + result.configFieldName);
+            }
+        }
+
+        // Set the wizard progress flag to "yes" (ordinal 1)
+        String flagName = step.getWizardFlagFieldName();
+        IniField flagField = ini.getIniField(flagName);
+        if (flagField instanceof EnumIniField) {
+            modified.setBitValue((EnumIniField) flagField, 1);
+            log.info("Wizard: set flag " + flagName + " = yes");
+        } else {
+            log.warn("Wizard: flag field not found or not enum: " + flagName);
+        }
+
+        // Upload + burn on IO thread, advance step on EDT
+        uiContext.getLinkManager().submit(() -> {
+            bp.uploadChanges(modified);
+            SwingUtilities.invokeLater(() -> {
+                refreshDebugFlags();
+                advanceToNextStep();
+            });
+        });
+    }
+
+    private void advanceToNextStep() {
+        // Skip ahead past any steps whose flag is already set
+        int next = currentStepIndex + 1;
+        while (next < TOTAL_STEPS && isFlagSet(WIZARD_FLAG_NAMES[next])) {
+            log.info("Wizard: skipping already-completed step " + next + " (" + WIZARD_FLAG_NAMES[next] + ")");
+            next++;
+        }
+
+        if (next < TOTAL_STEPS) {
+            showStep(next);
+        } else {
+            stepLabel.setText("Configuration Complete");
+            CardLayout cl = (CardLayout) stepContentPanel.getLayout();
+            cl.show(stepContentPanel, "complete");
+        }
+    }
+
+    private void showStep(int index) {
+        currentStepIndex = index;
+        WizardStep step = steps.get(index);
+        String title = step != null ? step.getTitle() : "...";
+        stepLabel.setText("Step " + (index + 1) + " of " + TOTAL_STEPS + ": " + title);
+        CardLayout cl = (CardLayout) stepContentPanel.getLayout();
+        cl.show(stepContentPanel, "step" + index);
+    }
+
+    private void exitWizard() {
+        if (onWizardExit != null) {
+            onWizardExit.run();
+        }
+    }
+
+    private void scaleComponent(JComponent component, float factor) {
+        Font font = component.getFont();
+        component.setFont(font.deriveFont(font.getSize() * factor));
+    }
+}

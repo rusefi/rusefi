@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class NumberOfCylindersPanel {
+public class NumberOfCylindersPanel implements WizardStep {
     private final JLayeredPane layeredPane = new JLayeredPane();
     private final JPanel mainPanel = new JPanel(new GridBagLayout());
     private final JPanel overlayPanel = new JPanel() {
@@ -23,9 +23,25 @@ public class NumberOfCylindersPanel {
 
     private final UIContext uiContext;
     private Consumer<Integer> onCylindersSelected;
+    private Consumer<WizardStepResult> onStepCompleted;
 
     public void setOnCylindersSelected(Consumer<Integer> onCylindersSelected) {
         this.onCylindersSelected = onCylindersSelected;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Number of Cylinders";
+    }
+
+    @Override
+    public String getWizardFlagFieldName() {
+        return "wizardNumberOfCylinders";
+    }
+
+    @Override
+    public void setOnStepCompleted(Consumer<WizardStepResult> callback) {
+        this.onStepCompleted = callback;
     }
 
     public NumberOfCylindersPanel(UIContext uiContext) {
@@ -92,6 +108,9 @@ public class NumberOfCylindersPanel {
                     public void actionPerformed(ActionEvent e) {
                         if (onCylindersSelected != null) {
                             onCylindersSelected.accept(option);
+                        }
+                        if (onStepCompleted != null) {
+                            onStepCompleted.accept(new WizardStepResult("cylindersCount", String.valueOf(option)));
                         }
                     }
                 });
