@@ -8,8 +8,12 @@
 // todo: sad technical debt: failing to define SHORT_BOARD_NAME for unit_tests and concatenate specifically for mac os?!
 #if defined(SHORT_BOARD_NAME)
 
+#ifdef META_ENGINE_GENERATED_H_OVERRIDE
+#include META_ENGINE_GENERATED_H_OVERRIDE
+#else
 #define META_ENGINE_GENERATED_H_FILENAME QUOTE(META_ENGINE_GENERATED_NAME SHORT_BOARD_NAME META_ENGINE_GENERATED_EXT)
 #include META_ENGINE_GENERATED_H_FILENAME
+#endif
 
 #else
 

@@ -302,6 +302,9 @@ CPPWARN = -Wall -Wextra -Wundef
 # List all user C define here, like -D_DEBUG=1
 UDEFS = -DSIMULATOR
 DDEFS += -DFIRMWARE_ID=\"simulator\" -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
+DDEFS += -DMETA_GENERATED_H_OVERRIDE=\"rusefi_generated_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DMETA_ENGINE_GENERATED_H_OVERRIDE=\"engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DSIGNATURE_H_OVERRIDE=\"signature_$(SHORT_BOARD_NAME).h\"
 
 
 # Define ASM defines here
