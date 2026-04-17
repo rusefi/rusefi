@@ -2,7 +2,7 @@ name: Proteus F7 Firmware on macos-latest
 
 on:
   push:
-# realpath drama sorry  pull_request:
+  pull_request:
   workflow_dispatch:
 
 
@@ -31,7 +31,14 @@ jobs:
           brew install mtools zip dosfstools flock coreutils
 
       - name: Print realpath version
-        run: realpath --version
+        run: |
+          if which grealpath >/dev/null 2>&1; then
+            echo "grealpath is installed"
+            grealpath --version
+          else
+            echo "realpath is installed"
+            realpath --version || true
+          fi
 
       - name: Print bash version
         run: bash --version
@@ -40,6 +47,5 @@ jobs:
         run: javac -version
 
       - name: Build Firmware
-        if: ${{ env.skip != 'true' }}
         working-directory: ./firmware/config/boards/proteus
         run: ./compile_proteus_f7.sh
