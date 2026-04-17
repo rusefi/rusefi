@@ -62,10 +62,6 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
 endif
 LIVE_DATA_GENERATED_DIRS += $(PROJECT_DIR)/live_data_generated
 
-ifeq ($(SHORT_BOARD_NAME),)
-  SHORT_BOARD_NAME = f407-discovery
-endif
-
 ALLINC += \
 	$(FW_CONFIG_DIR) \
 	$(CONSOLE_INC) \

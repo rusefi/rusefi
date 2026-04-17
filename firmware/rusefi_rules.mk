@@ -1,5 +1,8 @@
 # rusefi_rules.mk - this one is shared by all four configurations (bootloader, embedded, simulator and unit_tests)
 
+ifeq ($(SHORT_BOARD_NAME),)
+  SHORT_BOARD_NAME = f407-discovery
+endif
 
 # Warnings-as-errors...
 RUSEFI_OPT = -Werror
