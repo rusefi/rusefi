@@ -203,11 +203,25 @@ CSRC =  $(ALLCSRC) \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/backdoor.c \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/boot.c \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/com.c \
+	$(PROJECT_DIR)/ext/openblt/Target/Source/net.c \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/xcp.c \
 	$(PROJECT_DIR)/ext/openblt/Target/Source/cop.c \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/nvm.c \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/clock-arch.c \
 	$(PROJECT_DIR)/hw_layer/openblt/hooks.c
+
+UIP_DIR = $(PROJECT_DIR)/ext/openblt/Target/Source/third_party/uip
+
+# Collect UIP third party library files
+UIP_CSRC = \
+	$(UIP_DIR)/uip/uip.c \
+	$(UIP_DIR)/uip/uip_arp.c \
+	$(UIP_DIR)/uip/uip_timer.c \
+	$(UIP_DIR)/uip/uiplib.c \
+	$(UIP_DIR)/apps/dhcpc/dhcpc.c \
+	$(PROJECT_DIR)/hw_layer/openblt/netdev.c
+
+CSRC += $(UIP_CSRC)
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # todo: reduce code duplication with primary Makefile!!!
@@ -294,6 +308,8 @@ INCDIR += $(ALLINC) \
 	$(PROJECT_DIR)/hw_layer/openblt \
 	$(PROJECT_DIR)/ext/openblt/Target/Source \
 	$(PROJECT_DIR)/bootloader/openblt_chibios \
+	$(UIP_DIR)/uip \
+	$(UIP_DIR)/apps/dhcpc \
 	config
 
 BUILDDIR=blbuild

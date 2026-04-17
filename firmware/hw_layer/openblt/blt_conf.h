@@ -121,6 +121,62 @@
 /** only USB supported, this is ignored but required */
 #define BOOT_COM_RS232_CHANNEL_INDEX 0
 
+#if (EFI_ETHERNET==TRUE)
+/* The NET communication interface for firmware updates via TCP/IP is selected by setting
+ * the BOOT_COM_NET_ENABLE configurable to 1. The maximum amount of data bytes in a
+ * message for data transmission and reception is set through BOOT_COM_NET_TX_MAX_DATA
+ * and BOOT_COM_NET_RX_MAX_DATA, respectively. The default IP address is configured
+ * with the macros BOOT_COM_NET_IPADDRx. The default netmask is configured with the
+ * macro BOOT_COM_NET_NETMASKx. The default gateway is configured with the macros
+ * BOOT_COM_NET_GATEWAYx. The bootloader acts and a TCP/IP server. The port the server
+ * listen on for connections is configured with BOOT_COM_NET_PORT.
+ * In case the network switch/router supports a DHCP server, you can set configuration
+ * macro BOOT_COM_NET_DHCP_ENABLE to 1 to enable the DHCP client. In this case the
+ * DHCP client handles the automatic IP address assignment. In this case the macros for
+ * configuring the IP address, network mask and gateway address are no longer needed.
+ */
+/** \brief Enable/disable the NET transport layer. */
+#define BOOT_COM_NET_ENABLE               (1)
+/** \brief Configure number of bytes in the target->host data packet. */
+#define BOOT_COM_NET_TX_MAX_DATA          (64)
+/** \brief Configure number of bytes in the host->target data packet. */
+#define BOOT_COM_NET_RX_MAX_DATA          (64)
+/** \brief Configure the port that the TCP/IP server listens on */
+#define BOOT_COM_NET_PORT                 (1000)
+/** \brief Enable/disable DHCP client for automatically obtaining an IP address. */
+#define BOOT_COM_NET_DHCP_ENABLE          (1)
+/** \brief Configure the 1st byte of the IP address */
+#define BOOT_COM_NET_IPADDR0              (192)
+/** \brief Configure the 2nd byte of the IP address */
+#define BOOT_COM_NET_IPADDR1              (168)
+/** \brief Configure the 3rd byte of the IP address */
+#define BOOT_COM_NET_IPADDR2              (178)
+/** \brief Configure the 4th byte of the IP address */
+#define BOOT_COM_NET_IPADDR3              (50)
+/** \brief Configure the 1st byte of the network mask */
+#define BOOT_COM_NET_NETMASK0             (255)
+/** \brief Configure the 2nd byte of the network mask */
+#define BOOT_COM_NET_NETMASK1             (255)
+/** \brief Configure the 3rd byte of the network mask */
+#define BOOT_COM_NET_NETMASK2             (255)
+/** \brief Configure the 4th byte of the network mask */
+#define BOOT_COM_NET_NETMASK3             (0)
+/** \brief Configure the 1st byte of the gateway address */
+#define BOOT_COM_NET_GATEWAY0             (192)
+/** \brief Configure the 2nd byte of the gateway address */
+#define BOOT_COM_NET_GATEWAY1             (168)
+/** \brief Configure the 3rd byte of the gateway address */
+#define BOOT_COM_NET_GATEWAY2             (178)
+/** \brief Configure the 4th byte of the gateway address */
+#define BOOT_COM_NET_GATEWAY3             (1)
+/** \brief Enable/disable the deferred initialization mechanism. When enabled, the
+ *         communication interface is only initialized when: (a) no valid user program
+ *         is detected, or (b) when CpuUserProgramStartHook() returns BLT_FALSE. Your
+ *         bootloader application can explicitly initialize the communication interface
+ *         by calling ComDeferredInit().
+ */
+#define BOOT_COM_NET_DEFERRED_INIT_ENABLE (1)
+#endif // EFI_ETHERNET
 
 /****************************************************************************************
 *   B A C K D O O R   E N T R Y   C O N F I G U R A T I O N
