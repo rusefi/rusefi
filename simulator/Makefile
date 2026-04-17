@@ -261,20 +261,29 @@ else
   TRGT =
 endif
 
-CC   = $(TRGT)gcc
-CPPC = $(TRGT)g++
-# Enable loading with g++ only if you need C++ runtime support.
-# NOTE: You can use C++ even without C++ support if you are careful. C++
-#       runtime support makes code size explode.
-#LD   = $(CC)
-LD   = $(CPPC)
+# Use 'make USE_CLANG=yes' to build with clang/clang++ instead of gcc/g++.
+ifeq ($(USE_CLANG),yes)
+  CC   = clang
+  CPPC = clang++
+  LD   = clang++
+  COV  = llvm-cov gcov
+else
+  CC   = $(TRGT)gcc
+  CPPC = $(TRGT)g++
+  # Enable loading with g++ only if you need C++ runtime support.
+  # NOTE: You can use C++ even without C++ support if you are careful. C++
+  #       runtime support makes code size explode.
+  #LD   = $(CC)
+  LD   = $(CPPC)
+  COV  = gcov
+endif
+
 CP   = $(TRGT)objcopy
 AS   = $(CC) -x assembler-with-cpp
 AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 BIN  = $(CP) -O binary
-COV  = gcov
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wundef -Wstrict-prototypes
@@ -320,6 +329,19 @@ endif
 ##############################################################################
 
 include $(RULESPATH)/rules.mk
+
+# Clang does not support GCC's -Wa,-alms= (assembler listing) option.
+# Re-define the flags without the -Wa, listing options when building with clang.
+ifeq ($(USE_CLANG),yes)
+  CFLAGS   = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) $(DEFS)
+  CPPFLAGS = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) $(DEFS)
+  ASFLAGS  = $(MCFLAGS) $(OPT) $(ADEFS)
+  ASXFLAGS = $(MCFLAGS) $(OPT) $(ADEFS)
+  CFLAGS  += -MD -MP -MF $(DEPDIR)/$(@F).d
+  CPPFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
+  ASFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
+  ASXFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
+endif
 
 ifneq (yes,$(SUBMAKE))
 ifeq ($(SHORT_BOARD_NAME),)
