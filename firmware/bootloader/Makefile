@@ -96,6 +96,8 @@ ifeq ($(USE_SMART_BUILD),)
   USE_SMART_BUILD = no
 endif
 
+include $(PROJECT_DIR)/rusefi.mk
+
 #
 # Build global options
 ##############################################################################
@@ -155,8 +157,6 @@ include $(PROJECT_DIR)/common_libfirmware.mk
 
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
-
-include $(PROJECT_DIR)/rusefi.mk
 
 CONFIG = $(PROJECT_DIR)/config
 
