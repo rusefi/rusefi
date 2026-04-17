@@ -36,6 +36,14 @@ public class Launcher implements rusEFIVersion {
      * @see StartupFrame if no parameters specified
      */
     public static void main(final String[] args) throws Exception {
+        if (!JavaVersionHelper.isAtLeastJava11()) {
+            String version = System.getProperty("java.version");
+            String message = "Java 11 or newer is required to run rusEFI console\n" +
+                    "Your current version is " + version;
+            JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println(message);
+            System.exit(-1);
+        }
         FileLogger.init();
         log.info("rusEFI UI console " + UiVersion.CONSOLE_VERSION);
         log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis()));
