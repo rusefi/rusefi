@@ -30,6 +30,18 @@ jobs:
         run: |
           brew install mtools zip dosfstools flock coreutils
 
+      - name: Compile hex2dfu
+        run: |
+          # Compile hex2dfu because the prebuilt binary in the repo is for Linux
+          # We need to compile it for both locations where it's used
+          curl -L https://raw.githubusercontent.com/rusefi/hex2dfu/rusefi_prod/hex2dfu.c -o misc/encedo_hex2dfu/hex2dfu.c
+          gcc -DED25519_SUPPORT=0 misc/encedo_hex2dfu/hex2dfu.c -o misc/encedo_hex2dfu/hex2dfu.bin
+          chmod +x misc/encedo_hex2dfu/hex2dfu.bin
+
+          # Wideband firmware also has its own copy
+          cp misc/encedo_hex2dfu/hex2dfu.bin firmware/controllers/can/wideband_firmware/firmware/ext/encedo_hex2dfu/hex2dfu.bin
+          chmod +x firmware/controllers/can/wideband_firmware/firmware/ext/encedo_hex2dfu/hex2dfu.bin
+
       - name: Print realpath version
         run: |
           if which grealpath >/dev/null 2>&1; then
