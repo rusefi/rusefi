@@ -308,9 +308,10 @@ public class WizardContainer extends JPanel {
             return;
         }
 
-        ConfigurationImage modified = image.clone();
+        // Use the step's modified image if provided (multi-field dialogs), else clone the current ECU image
+        ConfigurationImage modified = result.modifiedImage != null ? result.modifiedImage.clone() : image.clone();
 
-        // Set the actual config value if this step provides one
+        // Set the actual config value if this step provides a single-field edit
         if (result.configFieldName != null && result.value != null) {
             IniField configField = ini.getIniField(result.configFieldName);
             if (configField != null) {
@@ -365,6 +366,9 @@ public class WizardContainer extends JPanel {
         stepLabel.setText("Step " + (index + 1) + " of " + TOTAL_STEPS + ": " + title);
         CardLayout cl = (CardLayout) stepContentPanel.getLayout();
         cl.show(stepContentPanel, "step" + index);
+        if (step != null) {
+            step.onShow();
+        }
     }
 
     private void exitWizard() {
