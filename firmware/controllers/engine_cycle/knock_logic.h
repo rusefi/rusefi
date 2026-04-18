@@ -19,6 +19,7 @@ public:
     KnockControllerBase() {
 	    // start with threshold higher than any possible knock to avoid recording spurious knocks
 	    m_knockThreshold = 100;
+		memset(m_gain, 0, sizeof(m_gain));
     }
 	// EngineModule implementation
 	void onFastCallback() override;

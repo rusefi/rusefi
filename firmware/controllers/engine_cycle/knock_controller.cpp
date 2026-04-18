@@ -77,6 +77,11 @@ bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 		auto baseTiming = engine->engineState.timingAdvance[cylinderNumber];
 
 		// TODO: 20 configurable? Better explanation why 20?
+		// Calculation order:
+		// 1. Calculate the distance from current timing to the maximum allowed retard.
+		// 2. Multiply by aggression to get this event's retard amount.
+		// 3. Add to total knock retard and CLAMP to maximum.
+		// This order ensures we don't retard more than the maximum even with high aggression.
 		auto distToMinimum = baseTiming - (-20);
 
 		// percent -> ratio = divide by 100
@@ -86,6 +91,11 @@ bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
     // TODO: remove magic 30% m_maximumFuelTrim?
     auto maximumFuelTrim = 0.3f;
 
+		// Calculation order:
+		// 1. Clamp the fuel trim to the maximum configured or hardcoded limit.
+		// 2. Multiply by the aggression factor.
+		// 3. Convert percentage to multiplier ratio.
+		// 4. Update the multiplier and clamp the final value.
 		auto  trimFuelFraction = engineConfiguration->knockFuelTrimAggression * 0.01f;
 		float trimFuelPercent = clampF(0.f, (float)engineConfiguration->knockFuelTrim, maximumFuelTrim * 100.f);
 		float trimFuelAmountPercent = trimFuelPercent * trimFuelFraction;
