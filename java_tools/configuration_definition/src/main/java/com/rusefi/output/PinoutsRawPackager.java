@@ -34,21 +34,35 @@ public class PinoutsRawPackager {
     private static final String BOARDS_ROOT = "firmware/config/boards";
     private static final String OUTPUT_DIR = "pinouts_raw";
     private static final String ZIP_NAME = "connectors.zip";
-    private static final String DEFAULT_REMOTE_META_URL = "https://rusefi.com/docs/pinouts_raw/boards_meta.yaml";
+    private static final String DEFAULT_PINOUT_BASE_URL = "https://rusefi.com/docs/";
+    private static final String DEFAULT_META_NAME = "boards_meta.yaml";
+
+    private static String defaultMetaName() {
+        return System.getProperty("RE_PINOUT_META", DEFAULT_META_NAME);
+    }
+
+    private static String defaultRemoteMetaUrl(String metaName) {
+        String base = System.getProperty("RE_PINOUT_URL", DEFAULT_PINOUT_BASE_URL);
+        if (!base.endsWith("/")) base += "/";
+        return base + "pinouts_raw/" + metaName;
+    }
 
     public static void main(String[] args) throws Exception {
         String zipName = ZIP_NAME;
         String boardsRoot = BOARDS_ROOT;
         String outputDir = OUTPUT_DIR;
-        String remoteMetaUrl = DEFAULT_REMOTE_META_URL;
+        String metaName = defaultMetaName();
+        String remoteMetaUrl = null;
         for (int i = 0; i < args.length - 1; i++) {
             switch (args[i]) {
                 case "--zip-name":        zipName      = args[i + 1]; break;
                 case "--boards-root":     boardsRoot   = args[i + 1]; break;
                 case "--output-dir":      outputDir    = args[i + 1]; break;
+                case "--meta-name":       metaName     = args[i + 1]; break;
                 case "--remote-meta-url": remoteMetaUrl = args[i + 1]; break;
             }
         }
+        if (remoteMetaUrl == null) remoteMetaUrl = defaultRemoteMetaUrl(metaName);
 
         List<Path> yamls = findConnectorYamls(boardsRoot);
         List<Path> images = findConnectorImages(boardsRoot);
@@ -58,7 +72,7 @@ public class PinoutsRawPackager {
         System.out.println("Found " + images.size() + " connector images");
         System.out.println("Found " + metaEnvs.size() + " meta-info env files");
 
-        prepareOutput(yamls, images, metaEnvs, zipName, outputDir, remoteMetaUrl, boardsRoot);
+        prepareOutput(yamls, images, metaEnvs, zipName, outputDir, metaName, remoteMetaUrl, boardsRoot);
     }
 
     private static SimpleFileVisitor<Path> skipSubmodules(Path root, SimpleFileVisitor<Path> delegate) {
@@ -213,7 +227,7 @@ public class PinoutsRawPackager {
     }
 
     @SuppressWarnings("unchecked")
-    private static void prepareOutput(List<Path> yamls, List<Path> images, List<Path> metaEnvs, String zipName, String outputDir, String remoteMetaUrl, String boardsRoot) throws Exception {
+    private static void prepareOutput(List<Path> yamls, List<Path> images, List<Path> metaEnvs, String zipName, String outputDir, String metaName, String remoteMetaUrl, String boardsRoot) throws Exception {
         Path outDir = Paths.get(outputDir);
         Files.createDirectories(outDir);
 
@@ -231,7 +245,7 @@ public class PinoutsRawPackager {
         opts.setPrettyFlow(true);
         Yaml yaml = new Yaml(opts);
 
-        Path metaPath = outDir.resolve("boards_meta.yaml");
+        Path metaPath = outDir.resolve(metaName);
 
         // Load existing yaml so we can merge (other repos may have written their boards).
         // Prefer a local file if present; otherwise try to download from the remote server.
