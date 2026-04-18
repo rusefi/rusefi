@@ -29,4 +29,11 @@ struct_no_prefix page4_s
 
   int16_t[BLEND_FACTOR_SIZE] autoscale secondIgnitionBlendBins;;"", 0.1, 0, -3200, 3200, 1
   uint8_t[BLEND_FACTOR_SIZE] autoscale secondIgnitionBlendValues;;"%", 0.5, 0, 0, 100, 1
+
+#define TORQUE_CURVE_SIZE 6
+#define TORQUE_CURVE_RPM_SIZE 6
+
+  uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_RPM_SIZE] autoscale torqueTable;;"Nm", 10, 0, 0, 255, 0
+  uint16_t[TORQUE_CURVE_RPM_SIZE] torqueRpmBins;;"RPM", 1, 0, 0, 65000, 0
+  uint16_t[TORQUE_CURVE_SIZE] torqueLoadBins;;"Load", 1, 0, 0, 65000, 0
 end_struct

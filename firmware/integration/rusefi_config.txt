@@ -1937,13 +1937,6 @@ float[TMF_RATIO_SIZE x TMF_SIZE] tmfTable;;"", 1, 0, 0, 255, 2
         float[TMF_RATIO_SIZE] tmfRatioBins;;"", 1, 0, 0, 65000, 1
         float[TMF_SIZE] tmfOpeningBins;;"", 1, 0, 0, 65000, 1
 
-#define TORQUE_CURVE_SIZE 6
-#define TORQUE_CURVE_RPM_SIZE 6
-
-uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_RPM_SIZE] autoscale torqueTable;;"Nm", 10, 0, 0, 255, 0
-        uint16_t[TORQUE_CURVE_RPM_SIZE] torqueRpmBins;;"RPM", 1, 0, 0, 65000, 0
-        uint16_t[TORQUE_CURVE_SIZE] torqueLoadBins;;"Load", 1, 0, 0, 65000, 0
-
 #define CRANKING_ENRICH_COUNT 6
 #define CRANKING_ENRICH_CLT_COUNT 6
 
