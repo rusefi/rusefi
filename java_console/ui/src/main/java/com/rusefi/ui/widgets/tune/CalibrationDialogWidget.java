@@ -5,6 +5,7 @@ import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniValue;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TsStringFunction;
@@ -502,8 +503,17 @@ public class CalibrationDialogWidget {
         return cell;
     }
 
+    private double resolveGaugeValue(IniValue v, double fallback) {
+        if (v == null) return fallback;
+        if (!v.isExpression()) return v.getNumericValue();
+        Double evaluated = ExpressionEvaluator.evaluateNumericExpression(v.getRawString(), currentIniFileModel, workingImage);
+        return evaluated != null ? evaluated : fallback;
+    }
+
     private JComponent buildGaugeCell(GaugeModel gaugeModel) {
-        Radial radial = SensorGauge.createRadial(gaugeModel.getHighValue(), gaugeModel.getLowValue(), gaugeModel);
+        double lo = resolveGaugeValue(gaugeModel.getLowValueValue(), gaugeModel.getLowValue());
+        double hi = resolveGaugeValue(gaugeModel.getHighValueValue(), gaugeModel.getHighValue());
+        Radial radial = SensorGauge.createRadial(hi, lo, gaugeModel);
         radial.setBackgroundColor(BackgroundColor.LIGHT_GRAY);
         radial.setLcdDecimals(gaugeModel.getValueDecimalPlaces());
         Dimension size = new Dimension(READOUT_GAUGE_SIZE, READOUT_GAUGE_SIZE);
