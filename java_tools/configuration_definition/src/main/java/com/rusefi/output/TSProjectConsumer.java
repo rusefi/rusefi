@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
 import java.util.List;
+import java.util.TreeSet;
 
 import static com.rusefi.ReaderStateImpl.INCLUDE_FILE;
 import static com.rusefi.VariableRegistry.unquote;
@@ -62,12 +63,20 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private final GaugeIgnoreList ignoreList;
 
     public TSProjectConsumer(String tsPath, ReaderStateImpl state) {
-        this(tsPath, state, new GaugeIgnoreList());
+        this(tsPath, state, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
     }
 
     public TSProjectConsumer(String tsPath, ReaderStateImpl state, GaugeIgnoreList ignoreList) {
+        this(tsPath, state, ignoreList, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
+    }
+
+    public TSProjectConsumer(String tsPath, ReaderStateImpl state, TreeSet<String> usedNames) {
+        this(tsPath, state, new GaugeIgnoreList(), usedNames);
+    }
+
+    public TSProjectConsumer(String tsPath, ReaderStateImpl state, GaugeIgnoreList ignoreList, TreeSet<String> usedNames) {
         this.tsPath = tsPath;
-        consumerState = new TSProjectConsumerState(state, new TsOutput(true));
+        consumerState = new TSProjectConsumerState(state, new TsOutput(true, usedNames));
         this.state = state;
         this.ignoreList = ignoreList;
     }

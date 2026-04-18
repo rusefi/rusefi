@@ -28,7 +28,18 @@ public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
-    private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+    private final TreeSet<String> usedNames;
+    private boolean directiveSeen = false; // pretty lame hack but acceptable since we are moving away from directive anyway
+
+    public TsOutput(boolean longForm) {
+        this(longForm, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
+    }
+
+    public TsOutput(boolean longForm, TreeSet<String> usedNames) {
+        this.isConstantsSection = longForm;
+        this.usedNames = usedNames;
+    }
+
 //    private final String metricUnitsConditionalStart = "#if USE_METRIC_UNITS" + EOL;
 //    private final String metricUnitsConditionalElse = "#else" + EOL;
 //    private final String metricUnitsConditionalEnd = "#endif" + EOL;
@@ -47,9 +58,6 @@ public class TsOutput {
     private final Double KmhToMphScale = 0.62137119;
     private final Double KmhToMphTranslate = 0.0;
 
-    public TsOutput(boolean longForm) {
-        this.isConstantsSection = longForm;
-    }
 
     public String getContent() {
         return tsHeader.toString();
@@ -122,14 +130,18 @@ public class TsOutput {
 				String originalTsInfo = configField.getTsInfo();
                 ConfigStructure cs = configField.getStructureType();
 
-                /**
-                 * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
-                 * A simple solution would be to allow only one variable per each conditional section - would be simpler not to check against previous field
-                 */
-                if (!usedNames.add(nameWithPrefix)
-                        && !isConstantsSection
+                if (configField.isDirective()) {
+                    directiveSeen = true;
+                }
+
+                if (!configField.isDirective() && !usedNames.add(nameWithPrefix)
                         && !configField.isUnusedField()) {
-                    throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
+                    if (isConstantsSection && directiveSeen) {
+                        // In Constants section, we allow re-definitions if they are in different branches of a conditional block.
+                        // For now we use a simple heuristic: if we've seen a directive, we allow a duplicate.
+                    } else {
+                        throw new DuplicateFieldNameException(nameWithPrefix + " already present: " + configField);
+                    }
                 }
 
                 // note that we need to handle account for unused bits size below!

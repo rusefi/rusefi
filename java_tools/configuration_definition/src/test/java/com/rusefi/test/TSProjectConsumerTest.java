@@ -1,16 +1,24 @@
 package com.rusefi.test;
 
+import com.rusefi.ReaderState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.TsFileContent;
 import com.rusefi.output.BaseCHeaderConsumer;
+import com.rusefi.output.ConfigStructure;
+import com.rusefi.output.ConfigurationConsumer;
+import com.rusefi.output.DuplicateFieldNameException;
 import com.rusefi.output.JavaFieldsConsumer;
+import com.rusefi.output.PlainTsProjectConsumer;
 import com.rusefi.output.TSProjectConsumer;
+import com.rusefi.output.TsOutput;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringBufferInputStream;
+import java.util.TreeSet;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TSProjectConsumerTest {
     private static final String smallContent = "hello = \";\"\n" +
@@ -149,4 +157,72 @@ public class TSProjectConsumerTest {
             "world;comment\n" +
             "end\n", content.getPrefix());
         assertEquals("", content.getPostfix());
-    }}
+    }
+
+    @Test
+    public void testDuplicateFieldInConstants() {
+        String test = "struct pid_s\n" +
+                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        assertThrows(DuplicateFieldNameException.class, () -> {
+            state.readBufferedReader(test, tsProjectConsumer);
+        });
+    }
+
+    @Test
+    public void testDuplicateFieldInConstantsWithDirective() {
+        String test = "struct pid_s\n" +
+                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "#if DEBUG\n" +
+                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "#endif\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        // This should NOT throw exception because we allow re-definitions if there is a directive in between
+        state.readBufferedReader(test, tsProjectConsumer);
+    }
+
+    @Test
+    public void testDuplicateAcrossPages() {
+        TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+
+        String page1 = "struct page1\n" +
+                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n";
+
+        String page2 = "struct page2\n" +
+                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state1 = new ReaderStateImpl();
+        // Use isConstantsSection = false to enforce uniqueness check
+        PlainTsProjectConsumer consumer1 = new PlainTsProjectConsumer(state1, usedNames) {
+            @Override
+            public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+                // Manually trigger run with isConstantsSection = false
+                TsOutput tsOutput = new TsOutput(false, usedNames);
+                tsOutput.run(readerState, structure, 0, "", "");
+            }
+        };
+        state1.readBufferedReader(page1, consumer1);
+
+        ReaderStateImpl state2 = new ReaderStateImpl();
+        PlainTsProjectConsumer consumer2 = new PlainTsProjectConsumer(state2, usedNames) {
+            @Override
+            public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+                TsOutput tsOutput = new TsOutput(false, usedNames);
+                tsOutput.run(readerState, structure, 0, "", "");
+            }
+        };
+
+        assertThrows(DuplicateFieldNameException.class, () -> {
+            state2.readBufferedReader(page2, consumer2);
+        });
+    }
+}
