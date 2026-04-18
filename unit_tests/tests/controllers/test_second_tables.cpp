@@ -11,7 +11,11 @@
 #include "pch.h"
 #include "engine_test_helper.h"
 #include "second_tables.h"
+#include "extra_flash_pages.h"
 #include <rusefi/crc.h>
+
+using page4_container_s = ExtraPageContainer<page4_s, 1>;
+static constexpr size_t CRC_OFFSET = offsetof(page4_container_s, crc);
 
 // Verify that secondTablesSetDefaults populates sane defaults (unit-test path).
 // The second tables should be copies of the primary tables.
@@ -91,7 +95,7 @@ TEST(SecondTables, PrepareForStorageProducesValidCrc) {
 	EXPECT_NE(version, 0u);  // Version must be set (PAGE4_DATA_VERSION = 1).
 
 	uint32_t storedCrc;
-	memcpy(&storedCrc, ptr + size - sizeof(storedCrc), sizeof(storedCrc));
+	memcpy(&storedCrc, ptr + CRC_OFFSET, sizeof(storedCrc));
 
 	// Recompute CRC over the page4_s data portion.
 	const uint8_t* dataStart = (const uint8_t*)secondTablesGetTsPage();
@@ -112,7 +116,7 @@ TEST(SecondTables, CrcDetectsCorruption) {
 
 	// Read back the stored CRC.
 	uint32_t crcBefore;
-	memcpy(&crcBefore, ptr + size - sizeof(crcBefore), sizeof(crcBefore));
+	memcpy(&crcBefore, ptr + CRC_OFFSET, sizeof(crcBefore));
 
 	// Corrupt the data by modifying a VE table cell.
 	page4_s* state = secondTablesGetState();
@@ -126,7 +130,7 @@ TEST(SecondTables, CrcDetectsCorruption) {
 	// Re-prepare should produce a new valid CRC.
 	secondTablesPrepareForStorage();
 	uint32_t crcAfter;
-	memcpy(&crcAfter, ptr + size - sizeof(crcAfter), sizeof(crcAfter));
+	memcpy(&crcAfter, ptr + CRC_OFFSET, sizeof(crcAfter));
 	EXPECT_EQ(crcAfter, computedCrc);
 	EXPECT_NE(crcAfter, crcBefore);
 
