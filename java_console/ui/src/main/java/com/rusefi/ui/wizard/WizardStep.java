@@ -15,4 +15,7 @@ public interface WizardStep {
     String getWizardFlagFieldName();
 
     void setOnStepCompleted(Consumer<WizardStepResult> callback);
+
+    /** Called each time this step becomes visible — useful for refreshing against the live ECU config. */
+    default void onShow() {}
 }
