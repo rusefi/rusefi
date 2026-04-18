@@ -432,6 +432,20 @@ public class ExpressionEvaluator {
      */
     @Nullable
     public static Boolean evaluateBooleanExpression(String expression, IniFileModel ini, ConfigurationImage ci) {
+        return evaluateBooleanExpression(expression, buildVariableContext(expression, ini, ci));
+    }
+
+    /**
+     * Evaluate a numeric expression against INI fields read from the given configuration image.
+     * Supports ternary expressions (e.g. "{useMetricOnInterface ? 300 : 43.5}").
+     */
+    @Nullable
+    public static Double evaluateNumericExpression(String expression, IniFileModel ini, ConfigurationImage ci) {
+        if (expression == null || ini == null || ci == null) return null;
+        return tryEvaluateWithContext(expression, buildVariableContext(expression, ini, ci));
+    }
+
+    private static Map<String, Double> buildVariableContext(String expression, IniFileModel ini, ConfigurationImage ci) {
         Set<String> varNames = extractVariables(expression);
         Map<String, Double> context = new HashMap<>();
         for (String varName : varNames) {
@@ -441,7 +455,7 @@ public class ExpressionEvaluator {
                 if (value != null) context.put(varName, value);
             }
         }
-        return evaluateBooleanExpression(expression, context);
+        return context;
     }
 
     /**
