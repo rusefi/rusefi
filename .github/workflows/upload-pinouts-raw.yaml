@@ -7,6 +7,24 @@ on:
     paths:
       - 'firmware/config/boards/**/connectors/*.yaml'
   workflow_dispatch:
+    inputs:
+      pinout_base_url:
+        description: 'Base URL where pinouts_raw is published (used by the packager to merge existing meta yaml)'
+        required: false
+        default: 'https://rusefi.com/docs/'
+      pinout_upload_folder:
+        description: 'Destination folder on the SSH server (parent of pinouts_raw/)'
+        required: false
+        default: 'docs'
+      pinout_meta_name:
+        description: 'Name of the boards meta yaml produced inside pinouts_raw/'
+        required: false
+        default: 'boards_meta.yaml'
+
+env:
+  PINOUT_BASE_URL: ${{ inputs.pinout_base_url || vars.PINOUT_BASE_URL || 'https://rusefi.com/docs/' }}
+  PINOUT_UPLOAD_FOLDER: ${{ inputs.pinout_upload_folder || vars.PINOUT_UPLOAD_FOLDER || 'docs' }}
+  PINOUT_META_NAME: ${{ inputs.pinout_meta_name || vars.PINOUT_META_NAME || 'boards_meta.yaml' }}
 
 jobs:
   upload:
@@ -27,7 +45,7 @@ jobs:
         run: ./gradlew :config_definition:shadowJar
 
       - name: Collect and package pinouts_raw
-        run: java -cp java_tools/configuration_definition/build/libs/config_definition-all.jar com.rusefi.output.PinoutsRawPackager
+        run: java -DRE_PINOUT_URL="${PINOUT_BASE_URL}" -DRE_PINOUT_META="${PINOUT_META_NAME}" -cp java_tools/configuration_definition/build/libs/config_definition-all.jar com.rusefi.output.PinoutsRawPackager
 
       - name: Show output structure
         run: find pinouts_raw -type f | sort
@@ -37,4 +55,4 @@ jobs:
           pass: ${{ secrets.RUSEFI_SSH_PASS }}
         if: ${{ env.pass != '' }}
         run: |
-          tar -czf - pinouts_raw | sshpass -p "${{ secrets.RUSEFI_SSH_PASS }}" ssh -o StrictHostKeyChecking=no "${{ secrets.RUSEFI_SSH_USER }}"@"${{ secrets.RUSEFI_SSH_SERVER }}" "tar -xzf - -C docs"
+          tar -czf - pinouts_raw | sshpass -p "${{ secrets.RUSEFI_SSH_PASS }}" ssh -o StrictHostKeyChecking=no "${{ secrets.RUSEFI_SSH_USER }}"@"${{ secrets.RUSEFI_SSH_SERVER }}" "tar -xzf - -C ${PINOUT_UPLOAD_FOLDER}"

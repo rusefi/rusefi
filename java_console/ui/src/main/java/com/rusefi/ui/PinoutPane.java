@@ -12,6 +12,7 @@ import com.rusefi.core.FileUtil;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.util.PinColors;
@@ -44,20 +45,29 @@ import static com.rusefi.ui.util.PinColors.FALLBACK_NORMAL;
 /**
  * Displays ECU connector pinouts for the currently connected board.
  * Board is identified from the ECU signature (bundleTarget field).
- * Data is loaded from pinouts_raw/boards_meta.yaml and pinouts_raw/connectors.zip.
+ * Data is loaded from pinouts_raw/boards_meta.yaml and pinouts_raw/connectors.zip. if not custom metaname/path are loaded
  * Each connector is shown as a tab with an interactive image (pin markers) above a table.
  * Pin marker color can be switched between type-based and pigtail wire color.
  */
 public class PinoutPane {
     private static final Logging log = getLogging(PinoutPane.class);
 
-    private static final String BOARDS_META = "pinouts_raw/boards_meta.yaml";
     private static final String PINOUTS_DIR = "pinouts_raw";
     private static final String[] COLUMNS = {"Pin", "Function", "Type", "Class", "TS Name", "Pigtail color", "Tune use"};
 
-    private static final String PINOUT_BASE_URL = "https://rusefi.com/docs/";
-    private static final String REMOTE_META_PATH = "pinouts_raw/boards_meta.yaml";
     private static final String PINOUT_CACHE_DIR = FileUtil.RUSEFI_SETTINGS_FOLDER + "pinouts" + File.separator;
+
+    private static String pinoutBaseUrl() {
+        return PropertiesHolder.getPinoutBaseUrl();
+    }
+
+    private static String pinoutMetaName() {
+        return PropertiesHolder.getPinoutMetaName();
+    }
+
+    private static String boardsMetaRelativePath() {
+        return PINOUTS_DIR + "/" + pinoutMetaName();
+    }
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel statusLabel = new JLabel("Not connected", SwingConstants.CENTER);
@@ -421,7 +431,7 @@ public class PinoutPane {
         statusLabel.setText("Board: " + boardKey);
 
         if (boardsData == null) {
-            statusLabel.setText("Board: " + boardKey + "  [pinout data not found — expected: " + new File(BOARDS_META).getAbsolutePath() + "]");
+            statusLabel.setText("Board: " + boardKey + "  [pinout data not found — expected: " + new File(boardsMetaRelativePath()).getAbsolutePath() + "]");
             activeImagePanels.clear();
             setCenterPanel(null);
             return;
@@ -721,7 +731,7 @@ public class PinoutPane {
 
     @SuppressWarnings("unchecked")
     private Map<String, Map<String, Object>> loadBoardsMeta() {
-        File metaFile = findFile(BOARDS_META);
+        File metaFile = findFile(boardsMetaRelativePath());
         log.info("loadBoardsMeta: metaFile=" + (metaFile != null ? metaFile.getAbsolutePath() : "not found"));
         if (metaFile == null) return null;
         try (InputStream is = Files.newInputStream(metaFile.toPath())) {
@@ -750,12 +760,13 @@ public class PinoutPane {
         File cacheDir = new File(PINOUT_CACHE_DIR);
         log.info("Pinout cache dir: " + cacheDir.getAbsolutePath());
         cacheDir.mkdirs();
-        File cachedYaml = new File(cacheDir, "boards_meta.yaml");
+        File cachedYaml = new File(cacheDir, pinoutMetaName());
 
-        log.info("Fetching remote pinout yaml from " + PINOUT_BASE_URL + REMOTE_META_PATH);
+        String remoteMetaPath = boardsMetaRelativePath();
+        log.info("Fetching remote pinout yaml from " + pinoutBaseUrl() + remoteMetaPath);
         String remoteYaml;
         try {
-            remoteYaml = downloadText(REMOTE_META_PATH);
+            remoteYaml = downloadText(remoteMetaPath);
             log.info("Remote pinout yaml fetched, length=" + remoteYaml.length());
         } catch (IOException e) {
             log.warn("Could not fetch remote pinout metadata: " + e, e);
@@ -806,7 +817,7 @@ public class PinoutPane {
             }
             log.info("Downloading pinout zip " + zipName + " to " + cachedZip.getAbsolutePath());
             try {
-                ConnectionAndMeta meta = new ConnectionAndMeta("pinouts_raw/" + zipName).invoke(PINOUT_BASE_URL);
+                ConnectionAndMeta meta = new ConnectionAndMeta("pinouts_raw/" + zipName).invoke(pinoutBaseUrl());
                 log.info("Zip " + zipName + " remote size=" + meta.getCompleteFileSize());
                 AutoupdateUtil.downloadAutoupdateFile(cachedZip.getAbsolutePath(), meta, "Updating pinout data: " + zipName);
                 log.info("Pinout zip " + zipName + " downloaded successfully");
@@ -830,7 +841,7 @@ public class PinoutPane {
     }
 
     private static String downloadText(String remotePath) throws IOException {
-        ConnectionAndMeta meta = new ConnectionAndMeta(remotePath).invoke(PINOUT_BASE_URL);
+        ConnectionAndMeta meta = new ConnectionAndMeta(remotePath).invoke(pinoutBaseUrl());
         try (InputStream in = meta.getHttpConnection().getInputStream()) {
             return new String(in.readAllBytes(), StandardCharsets.UTF_8);
         }
