@@ -27,7 +27,9 @@ class PlainConfigHandler {
 
         readerState.addDestination(tsProjectConsumer);
         readerState.setWithC_Defines(false);
-        readerState.addCHeaderDestination(RootHolder.ROOT + "../firmware/controllers/generated/page_" + pageIndex + "_generated.h");
+        // Path is relative to META_OUTPUT_ROOT_FOLDER (prepended in ReaderStateImpl.addCHeaderDestination)
+        // so it redirects correctly when building custom-fw repos that keep generated files outside the rusefi submodule.
+        readerState.addCHeaderDestination(RootHolder.ROOT + "controllers/generated/page_" + pageIndex + "_generated.h");
     }
 
     public void doJob() throws IOException {
