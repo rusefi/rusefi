@@ -212,6 +212,7 @@ CPPSRC = $(ALLCPPSRC) \
   $(DEV_SRC_CPP) \
   simulator/rusEfiFunctionalTest.cpp \
   simulator/can/hal_can_lld.cpp \
+  simulator/can/pcan_helper.cpp \
   simulator/framework.cpp \
   simulator/system/signal_executor_sleep.cpp \
   simulator/boards.cpp \
