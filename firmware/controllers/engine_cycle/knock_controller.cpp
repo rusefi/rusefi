@@ -1,5 +1,13 @@
-/*
- * @file knock_logic.c
+/**
+ * @file knock_controller.cpp
+ * @brief High-level knock control logic.
+ *
+ * This module handles the response to detected knock events.
+ * Key responsibilities:
+ * 1. Tracking per-cylinder knock levels and peak values.
+ * 2. Comparing current noise levels against an RPM-based threshold.
+ * 3. Calculating ignition timing retard and fuel trim enrichment when knock is detected.
+ * 4. Gradually decaying (re-applying) timing and fuel trims back to base values when no knock is present.
  *
  * @date Apr 04, 2021
  * @author Andrey Gusakov
@@ -40,6 +48,16 @@ int getCylinderKnockBank(uint8_t cylinderNumber) {
 	}
 }
 
+	/**
+	 * Main entry point for a processed knock event.
+	 * 1. Checks if the detected level (dBv) exceeds the threshold.
+	 * 2. Updates per-cylinder and global peak detectors.
+	 * 3. If knock is confirmed:
+	 *    - Increments the total knock count.
+	 *    - Calculates timing retard based on 'knockRetardAggression'.
+	 *    - Calculates fuel trim enrichment based on 'knockFuelTrimAggression'.
+	 *    - Clamps adjustments to configured maximums.
+	 */
 void KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime) {
 	bool isKnock = dbv > m_knockThreshold;
 
@@ -95,6 +113,13 @@ float KnockControllerBase::getFuelTrimMultiplier() const {
 	return 1.0 + m_knockFuelTrimMultiplier;
 }
 
+	/**
+	 * Periodic callback (typically every 10ms via FAST_CALLBACK_PERIOD_MS).
+	 * 1. Updates RPM-dependent thresholds and limits.
+	 * 2. Checks for TPS-based suppression (disables knock control at low TPS).
+	 * 3. Decays the current knock retard and fuel trim back towards zero
+	 *    based on configured 'reapplyRate' parameters.
+	 */
 void KnockControllerBase::onFastCallback() {
 	m_knockThreshold = getKnockThreshold();
 	m_maximumRetard = getMaximumRetard();
@@ -187,6 +212,10 @@ static void startKnockSampling(Engine* p_engine) {
 
 #endif // EFI_SOFTWARE_KNOCK
 
+/**
+ * Triggered when a spark plug fires to schedule the knock detection window.
+ * rusEFI uses a crank-angle based window for knock detection.
+ */
 void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
 #if EFI_SOFTWARE_KNOCK
 	cylinderNumberCopy = cylinderNumber;

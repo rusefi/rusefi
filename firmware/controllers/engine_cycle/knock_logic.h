@@ -1,6 +1,6 @@
-/*
+/**
  * @file knock_logic.h
- *
+ * @brief High-level knock control interface and base class.
  * @date Apr 04, 2021
  * @author Andrey Gusakov
  */
