@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22996">
+    <page number="0" size="22936">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -4284,14 +4284,6 @@ end</constant>
          0.0 0.0
          0.0 0.0
 </constant>
-        <constant cols="1" digits="0" name="torqueLoadBins" rows="6" units="Load">
-         0
-         20
-         40
-         60
-         80
-         100
-</constant>
         <constant name="torqueReductionActivationMode">"Torque Reduction Button"</constant>
         <constant digits="0" name="torqueReductionActivationTemperature" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">60</constant>
         <constant digits="0" name="torqueReductionArmingApp" units="">0</constant>
@@ -4350,22 +4342,6 @@ end</constant>
 </constant>
         <constant name="torqueReductionTriggerPin">"NONE"</constant>
         <constant name="torqueReductionTriggerPinMode">"DEFAULT"</constant>
-        <constant cols="1" digits="0" name="torqueRpmBins" rows="6" units="RPM">
-         650
-         800
-         2200
-         3600
-         5000
-         7000
-</constant>
-        <constant cols="6" digits="0" name="torqueTable" rows="6" units="Nm">
-         0 0 0 0 0 0
-         0 0 0 0 0 0
-         0 0 0 0 0 0
-         0 0 0 0 0 0
-         0 0 0 0 0 0
-         0 0 0 0 0 0
-</constant>
         <constant digits="0" name="totalGearsCount" units="">5</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="tps1_2AdcChannel">"Disabled"</constant>
@@ -5082,7 +5058,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="202604017" nPages="1" signature="rusEFI master.2026.04.18.f407-discovery.2654629786" version="5.0"/>
+    <versionInfo firmwareInfo="202604017" nPages="1" signature="rusEFI master.2026.04.18.f407-discovery.3635137026" version="5.0"/>
     <bibliography author="rusEFI 202604017" writeDate="date"/>
     <settings/>
     <userComments/>
