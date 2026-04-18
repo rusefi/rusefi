@@ -2774,3 +2774,5 @@ end_struct
 #define TOP_LEVEL_MENU_FILE "tunerstudio/top_level_menu.ini"
 
 #define poke false
+
+#define BOARD_ACTION_INJECTOR_PRESET 0x302
