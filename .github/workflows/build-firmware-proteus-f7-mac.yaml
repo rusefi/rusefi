@@ -1,8 +1,8 @@
 name: Proteus F7 Firmware on macos-latest
 
 on:
-# realpath drama sorry  push:
-# realpath drama sorry  pull_request:
+  push:
+  pull_request:
   workflow_dispatch:
 
 
@@ -30,8 +30,27 @@ jobs:
         run: |
           brew install mtools zip dosfstools flock coreutils
 
+      - name: Compile hex2dfu
+        run: |
+          # Compile hex2dfu because the prebuilt binary in the repo is for Linux
+          # We need to compile it for both locations where it's used
+          curl -L https://raw.githubusercontent.com/rusefi/hex2dfu/rusefi_prod/hex2dfu.c -o misc/encedo_hex2dfu/hex2dfu.c
+          gcc -DED25519_SUPPORT=0 misc/encedo_hex2dfu/hex2dfu.c -o misc/encedo_hex2dfu/hex2dfu.bin
+          chmod +x misc/encedo_hex2dfu/hex2dfu.bin
+
+          # Wideband firmware also has its own copy
+          cp misc/encedo_hex2dfu/hex2dfu.bin firmware/controllers/can/wideband_firmware/firmware/ext/encedo_hex2dfu/hex2dfu.bin
+          chmod +x firmware/controllers/can/wideband_firmware/firmware/ext/encedo_hex2dfu/hex2dfu.bin
+
       - name: Print realpath version
-        run: realpath --version
+        run: |
+          if which grealpath >/dev/null 2>&1; then
+            echo "grealpath is installed"
+            grealpath --version
+          else
+            echo "realpath is installed"
+            realpath --version || true
+          fi
 
       - name: Print bash version
         run: bash --version
@@ -40,6 +59,5 @@ jobs:
         run: javac -version
 
       - name: Build Firmware
-        if: ${{ env.skip != 'true' }}
         working-directory: ./firmware/config/boards/proteus
         run: ./compile_proteus_f7.sh
