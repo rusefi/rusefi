@@ -1,8 +1,8 @@
 #include "pch.h"
-
 #include "defaults.h"
 #include "vr_pwm.h"
 #include "kline.h"
+#include "second_tables.h"
 #include "engine_configuration_defaults.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
@@ -237,9 +237,9 @@ void setDefaultBaseEngine() {
 
 	mc33810defaults();
 
- 	setRpmTableBin(config->torqueRpmBins);
+ 	setRpmTableBin(secondTablesGetState()->torqueRpmBins);
  	// here we assume load is TPS
- 	setLinearCurve(config->torqueLoadBins, 0, 100, 1);
+ 	setLinearCurve(secondTablesGetState()->torqueLoadBins, 0, 100, 1);
 
 	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_SPEED_DENSITY;
 	// let's have valid default while we still have the field

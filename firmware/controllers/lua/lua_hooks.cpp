@@ -2,6 +2,7 @@
 
 #include "rusefi_lua.h"
 #include "lua_hooks.h"
+#include "second_tables.h"
 
 #include "lua_biquad.h"
 #include "fuel_math.h"
@@ -1011,9 +1012,9 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 
  	  // here we assume load is TPS
 		auto result = interpolate3d(
-                  		config->torqueTable,
-                  		config->torqueLoadBins, tps,
-                  		config->torqueRpmBins, rpm
+                  		secondTablesGetState()->torqueTable,
+                  		secondTablesGetState()->torqueLoadBins, tps,
+                  		secondTablesGetState()->torqueRpmBins, rpm
                   	);
 		lua_pushnumber(l, result);
 		return 1;
