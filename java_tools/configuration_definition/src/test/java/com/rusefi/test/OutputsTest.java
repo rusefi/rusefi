@@ -4,6 +4,7 @@ import com.rusefi.BitState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.ldmp.TestFileCaptor;
 import com.rusefi.output.DataLogConsumer;
+import com.rusefi.output.DuplicateFieldNameException;
 import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -214,18 +215,14 @@ public class OutputsTest {
 
     @Test
     public void nameDuplicate() {
-      assertThrows(IllegalStateException.class, () -> {
-        System.out.println("run");
+      assertThrows(DuplicateFieldNameException.class, () -> {
         String test = "struct total\n" +
           "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
           "uint8_t afr_type;123;\"ms\",      1,      0,       0, 30,      0\n" +
           "end_struct\n";
 
 
-        String expectedLegacy = "afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
-          "afr_type = scalar, U08, 0, \"ms\", 1, 0\n" +
-          "; total TS size = 1\n";
-        assertEquals(expectedLegacy, runOriginalImplementation(test).getContent());
+        runOriginalImplementation(test);
       });
     }
 
