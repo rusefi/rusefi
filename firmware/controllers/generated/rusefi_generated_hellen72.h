@@ -146,6 +146,7 @@
 #define BLEND_TABLE_COUNT 8
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 1024
+#define BOARD_ACTION_INJECTOR_PRESET 0x302
 #define BOARD_CAM_SETTINGS_FILE
 #define BOARD_CAN_BUS_FROM_FILE
 #define BOARD_CONFIG_FROM_FILE
@@ -1564,7 +1565,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1872996063
+#define SIGNATURE_HASH 1791403191
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2173,7 +2174,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.04.18.hellen72.1872996063"
+#define TS_SIGNATURE "rusEFI master.2026.04.18.hellen72.1791403191"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

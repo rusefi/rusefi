@@ -143,6 +143,7 @@ public class VariableRegistryValues {
 	public static final int BLEND_TABLE_COUNT = 8;
 	public static final int blend_table_s_size = 188;
 	public static final int BLOCKING_FACTOR = 1024;
+	public static final int BOARD_ACTION_INJECTOR_PRESET = 0x302;
 	public static final int BOOST_BLEND_COUNT = 2;
 	public static final int BOOST_CURVE_SIZE = 5;
 	public static final int BOOST_LOAD_COUNT = 8;
@@ -1770,7 +1771,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.04.18.mre-legacy_f4.3437280502";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.04.18.mre-legacy_f4.3380985502";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2124;
