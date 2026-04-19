@@ -18,7 +18,10 @@ import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.ui.widgets.ConnectionStatusIcon;
+import com.rusefi.ui.wizard.WizardCatalog;
 import com.rusefi.ui.wizard.WizardContainer;
+import com.rusefi.ui.wizard.WizardStep;
+import com.rusefi.ui.wizard.WizardStepDescriptor;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -94,6 +97,29 @@ public class ConsoleUI {
         JButton launchWizardButton = getLaunchWizardButton(rootPanel, wizardContainer, rootCardLayout);
 
         wizardContainer.setOnWizardExit(() -> rootCardLayout.show(rootPanel, "console"));
+
+        // On ECU connect, scan the wizard catalog for applicable standalone steps that need attention
+        // (e.g. empty VIN) and auto-launch the first one. Fires on every reconnect; once the user
+        // saves the value, subsequent connects skip this because needsAttention returns false.
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (!isConnected) return;
+            SwingUtilities.invokeLater(() -> {
+                if (!ConnectionStatusLogic.INSTANCE.isConnected()) return;
+                if (uiContext.getBinaryProtocol() == null) return;
+                if (uiContext.getBinaryProtocol().getControllerConfiguration() == null) return;
+                // Don't stomp on an already-visible wizard
+                if (wizardContainer.isShowing()) return;
+
+                for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
+                    if (!d.applicable.test(uiContext)) continue;
+                    if (d.needsAttention == null || !d.needsAttention.test(uiContext)) continue;
+                    WizardStep step = d.factory.apply(uiContext);
+                    wizardContainer.startSingleStep(step);
+                    rootCardLayout.show(rootPanel, "wizard");
+                    return;
+                }
+            });
+        });
 
         JPanel cornerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         cornerPanel.setOpaque(false);
