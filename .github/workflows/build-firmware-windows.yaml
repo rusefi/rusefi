@@ -10,21 +10,13 @@ jobs:
     runs-on: windows-2022
 
     steps:
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+      - uses: ./.github/actions/setup-java
 
       - uses: carlosperate/arm-none-eabi-gcc-action@v1.12.3
         with:
           release: '14.2.Rel1'
-
-      - uses: actions/checkout@v6
 
       - name: Checkout Submodules
         # todo: some funny way to reuse common_submodule_init_without_chibios.sh on Windows?

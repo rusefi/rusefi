@@ -58,12 +58,9 @@ jobs:
     runs-on: ${{matrix.runs-on}}
 
     steps:
-    - uses: actions/setup-java@v5
-      with:
-        distribution: 'zulu'
-        java-version: '17'
-
     - uses: actions/checkout@v6
+
+    - uses: ./.github/actions/setup-java
 
     - name: Checkout Submodules
       run: |

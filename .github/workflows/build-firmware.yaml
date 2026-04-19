@@ -193,10 +193,7 @@ jobs:
       run: |
         misc/git_scripts/common_submodule_init.sh
 
-    - uses: actions/setup-java@v5
-      with:
-        distribution: 'zulu'
-        java-version: '17'
+    - uses: ./.github/actions/setup-java
 
     - name: Install multilib, mingw, sshpass and mtools
       run: |

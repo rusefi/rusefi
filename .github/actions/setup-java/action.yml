@@ -1,0 +1,19 @@
+name: 'rusEFI Setup Java'
+description: 'Shared Java setup configuration for rusEFI'
+inputs:
+  java-version:
+    description: 'Java version'
+    required: false
+    default: '17'
+  distribution:
+    description: 'Java distribution'
+    required: false
+    default: 'zulu'
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-java@v5
+      with:
+        distribution: ${{ inputs.distribution }}
+        java-version: ${{ inputs.java-version }}
+        cache: 'gradle'

@@ -17,9 +17,8 @@ jobs:
       run: |
         misc/git_scripts/common_submodule_init_without_chibios.sh
 
-    - uses: actions/setup-java@v5
+    - uses: ./.github/actions/setup-java
       with:
-        distribution: 'zulu'
         # using version 21 here just for fun. See build-tsplugin-body.yaml
         java-version: '21'
 
