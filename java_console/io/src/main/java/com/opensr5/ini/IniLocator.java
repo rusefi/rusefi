@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class IniLocator {
     public static @Nullable String findIniFile(String iniFilePath) {
-        return FindFileHelper.findFile(iniFilePath, IniFileReader.RUSEFI_INI_PREFIX, IniFileReader.RUSEFI_INI_SUFFIX, (fileDirectory, fileName) -> {
+        return FindFileHelper.findFile(iniFilePath, IniFileReader.RUSEFI_INI_PREFIX, IniFileReader.INI_FILE_SUFFIX, (fileDirectory, fileName) -> {
             throw new IllegalStateException("Unique match expected " + fileName);
         }, true);
     }

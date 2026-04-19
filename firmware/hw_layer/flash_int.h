@@ -38,6 +38,9 @@
 
 #define FLASH_RETURN_CRCERROR -13
 
+/** @brief Flash operation canceled/interrupted because of low Vdd */
+#define FLASH_RETURN_LOWVOLTAGEERROR -14
+
 /**
  * @brief Maximum program/erase parallelism
  *
@@ -55,15 +58,27 @@
 #define FLASH_CR_PSIZE_MASK         (FLASH_CR_PSIZE_0 | FLASH_CR_PSIZE_1)
 #if ((STM32_VDD >= 270) && (STM32_VDD <= 360))
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_1
+// 2.7V
+#define PWR_CR_PLS_VALUE			PWR_CR_PLS_LEV5
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV5
 typedef uint32_t flashdata_t;
 #elif (STM32_VDD >= 240) && (STM32_VDD < 270)
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_0
+// 2.5V
+#define PWR_CR_PLS_VALUE			PWR_CR_PLS_LEV3
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV3
 typedef uint16_t flashdata_t;
 #elif (STM32_VDD >= 210) && (STM32_VDD < 240)
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_0
+// 2.1V
+#define PWR_CR_PLS_VALUE			PWR_CR_PLS_LEV1
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV1
 typedef uint16_t flashdata_t;
 #elif (STM32_VDD >= 180) && (STM32_VDD < 210)
 #define FLASH_CR_PSIZE_VALUE        ((uint32_t)0x00000000)
+// 2.0V
+#define PWR_CR_PLS_VALUE			PWR_CR_PLS_LEV0
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV0
 typedef uint8_t flashdata_t;
 #else
 #error "invalid VDD voltage specified"
@@ -74,12 +89,18 @@ typedef uint8_t flashdata_t;
 #define FLASH_CR_PSIZE_MASK         (FLASH_CR_PSIZE_0 | FLASH_CR_PSIZE_1)
 #if ((STM32_VDD >= 270) && (STM32_VDD <= 300))
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_1
+// 2.7V
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV5
 typedef uint32_t flashdata_t;
 #elif (STM32_VDD >= 210) && (STM32_VDD < 360)
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_0
+// 2.1V
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV1
 typedef uint16_t flashdata_t;
 #elif (STM32_VDD >= 170) && (STM32_VDD < 360)
 #define FLASH_CR_PSIZE_VALUE        ((uint32_t)0x00000000)
+// 2.0V
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV0
 typedef uint8_t flashdata_t;
 #else
 #error "invalid VDD voltage specified"

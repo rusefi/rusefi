@@ -83,6 +83,12 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 		return;
 	}
 
+#if ROTATIONAL_IDLE_CONTROLLER
+	if (engine->rotationalIdleController.shouldSkipFuelRotationalIdle()) {
+		return;
+	}
+#endif // ROTATIONAL_IDLE_CONTROLLER
+
 	// Select fuel mass from the correct cylinder
 	auto injectionMassGrams = getEngineState()->injectionMass[this->cylinderNumber];
 

@@ -628,6 +628,18 @@ float getOutputValueByHash(const int hash) {
 // rawBattery
 		case 1520918538:
 			return engine->outputChannels.rawBattery;
+// secondVeBlendParameter
+		case 778639874:
+			return engine->outputChannels.secondVeBlendParameter;
+// secondVeBlendBias
+		case 173882720:
+			return engine->outputChannels.secondVeBlendBias;
+// secondIgnitionBlendParameter
+		case 1275938568:
+			return engine->outputChannels.secondIgnitionBlendParameter;
+// secondIgnitionBlendBias
+		case 441036454:
+			return engine->outputChannels.secondIgnitionBlendBias;
 // coilState1
 		case -1124698530:
 			return engine->outputChannels.coilState1;
@@ -979,6 +991,12 @@ float getOutputValueByHash(const int hash) {
 // m_knockFuelTrimMultiplier
 		case 95716118:
 			return engine->module<KnockController>()->m_knockFuelTrimMultiplier;
+// hasKnockRecently
+		case -96478755:
+			return engine->module<KnockController>()->hasKnockRecently;
+// hasKnockRetardNow
+		case 1438916461:
+			return engine->module<KnockController>()->hasKnockRetardNow;
 // m_isPriming
 		case -612624925:
 			return engine->module<PrimeController>()->m_isPriming;
@@ -1012,6 +1030,18 @@ float getOutputValueByHash(const int hash) {
 // fan1radiatorFanStatus
 		case -1478067590:
 			return engine->module<FanControl1>()->radiatorFanStatus;
+// fan1pwmCurvePwm
+		case 86008152:
+			return engine->module<FanControl1>()->pwmCurvePwm;
+// fan1pwmTargetPwm
+		case -850386982:
+			return engine->module<FanControl1>()->pwmTargetPwm;
+// fan1pwmAppliedPwm
+		case -1368130286:
+			return engine->module<FanControl1>()->pwmAppliedPwm;
+// fan1pwmActive
+		case 638039515:
+			return engine->module<FanControl1>()->pwmActive;
 // fan2cranking
 		case 1841224793:
 			return engine->module<FanControl2>()->cranking;
@@ -1042,29 +1072,29 @@ float getOutputValueByHash(const int hash) {
 // fan2radiatorFanStatus
 		case -1778606949:
 			return engine->module<FanControl2>()->radiatorFanStatus;
-// fan1isPrime
-		case -2088993020:
+// fan2pwmCurvePwm
+		case 907263673:
+			return engine->module<FanControl2>()->pwmCurvePwm;
+// fan2pwmTargetPwm
+		case 481241435:
+			return engine->module<FanControl2>()->pwmTargetPwm;
+// fan2pwmAppliedPwm
+		case -374065485:
+			return engine->module<FanControl2>()->pwmAppliedPwm;
+// fan2pwmActive
+		case 705840892:
+			return engine->module<FanControl2>()->pwmActive;
+// isPrime
+		case -1429286498:
 			return engine->module<FuelPumpController>()->isPrime;
-// fan1engineTurnedRecently
-		case -2137243687:
+// engineTurnedRecently
+		case -1270448973:
 			return engine->module<FuelPumpController>()->engineTurnedRecently;
-// fan1isFuelPumpOn
-		case -1297204398:
+// isFuelPumpOn
+		case -344048084:
 			return engine->module<FuelPumpController>()->isFuelPumpOn;
-// fan1ignitionOn
-		case -35327159:
-			return engine->module<FuelPumpController>()->ignitionOn;
-// fan2isPrime
-		case 1874744293:
-			return engine->module<FuelPumpController>()->isPrime;
-// fan2engineTurnedRecently
-		case -777438630:
-			return engine->module<FuelPumpController>()->engineTurnedRecently;
-// fan2isFuelPumpOn
-		case 34424019:
-			return engine->module<FuelPumpController>()->isFuelPumpOn;
-// fan2ignitionOn
-		case -2092849014:
+// ignitionOn
+		case -381519965:
 			return engine->module<FuelPumpController>()->ignitionOn;
 // lua.fuelAdd
 		case 1649801578:
@@ -1072,6 +1102,9 @@ float getOutputValueByHash(const int hash) {
 // lua.fuelMult
 		case -1390672637:
 			return engine->engineState.lua.fuelMult;
+// lua.engineTorque
+		case 958239307:
+			return engine->engineState.lua.engineTorque;
 // lua.clutchUpState
 		case -427776066:
 			return engine->engineState.lua.clutchUpState;
@@ -1147,6 +1180,12 @@ float getOutputValueByHash(const int hash) {
 // acrActive
 		case -1548941801:
 			return engine->engineState.acrActive;
+// isSecondVeTableActive
+		case 2127810012:
+			return engine->engineState.isSecondVeTableActive;
+// isSecondIgnitionTableActive
+		case -643103326:
+			return engine->engineState.isSecondIgnitionTableActive;
 // acrEngineMovedRecently
 		case -791147982:
 			return engine->engineState.acrEngineMovedRecently;

@@ -8,6 +8,7 @@ import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.maintenance.*;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.updater.OpenbltDetectorStrategy;
+import com.rusefi.util.CompatibilityOptional;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -188,14 +189,34 @@ public enum SerialPortScanner {
             portCache.put(p);
         }
 
-        portCache.retainAll(serialPorts);
+        final Collection<String> tcpPorts = includeSlowLookup
+            ? TcpConnector.getAvailablePorts()
+            : Collections.emptyList();
+
+        final Set<String> livePortNames = new HashSet<>(serialPorts);
+        livePortNames.addAll(tcpPorts);
+        portCache.retainAll(livePortNames);
 
         // Sort ports by their type to put your ECU at the top
         ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
 
         if (includeSlowLookup) {
-            for (String tcpPort : TcpConnector.getAvailablePorts()) {
-                ports.add(new PortResult(tcpPort, SerialPortType.Ecu));
+            for (String tcpPort : tcpPorts) {
+                final Optional<PortResult> cachedPort = portCache.get(tcpPort);
+                if (cachedPort.isPresent()) {
+                    ports.add(cachedPort.get());
+                } else {
+                    final Optional<CalibrationsInfo> tcpCalibrations = getEcuCalibrations(tcpPort);
+                    final PortResult tcpResult = tcpCalibrations
+                        .map(c -> new PortResult(tcpPort, SerialPortType.Ecu, c))
+                        .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Ecu));
+                    ports.add(tcpResult);
+
+                    // cache port + calibrations
+                    if (tcpCalibrations.isPresent()) {
+                        portCache.put(tcpResult);
+                    }
+                }
             }
             dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
             stLinkConnected = StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
@@ -205,11 +226,14 @@ public enum SerialPortScanner {
             stLinkConnected = false;
             PCANConnected = false;
         }
+/*
         if (PCANConnected)
             ports.add(new PortResult(LinkManager.PCAN, SerialPortType.CAN));
+ */
+/*
         if (SHOW_SOCKETCAN)
             ports.add(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN));
-
+*/
         boolean isListUpdated;
         AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, stLinkConnected, PCANConnected);
         synchronized (lock) {
@@ -228,6 +252,10 @@ public enum SerialPortScanner {
 
     public void stopTimer() {
         portsScanner.stop();
+    }
+
+    public void restartTimer() {
+        portsScanner.restart();
     }
 
     public interface Listener {
@@ -268,5 +296,26 @@ public enum SerialPortScanner {
 
     public CountDownLatch suspend() {
         return portsScanner.suspend();
+    }
+
+    /**
+     * Pre-populate the port cache with a known result so the scanner does not
+     * re-inspect an actively-used port on the next scan cycle.  Call this
+     * before resuming the scanner after a reconnect to prevent the scanner from
+     * opening the port and competing with an already-established BinaryProtocol
+     * connection on the same serial stream.
+     */
+    public void cachePort(PortResult port) {
+        portCache.put(port);
+    }
+
+    /**
+     * Remove a port from the cache so the scanner re-inspects it on the next
+     * scan cycle.  Call this before sending a reboot-to-OpenBLT command so that
+     * the scanner does not keep reporting the port as {@code EcuWithOpenblt}
+     * after the ECU has already transitioned to OpenBLT mode.
+     */
+    public void invalidatePort(String portName) {
+        portCache.invalidate(portName);
     }
 }

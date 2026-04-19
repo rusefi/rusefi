@@ -246,8 +246,6 @@ static bool isTriggerErrorNow() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-extern bool consoleByteArrived;
-
 class CommunicationBlinkingTask : public PeriodicTimerController {
 
 	int getPeriodMs() override {
@@ -292,7 +290,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
-			} else if (consoleByteArrived) {
+			} else if (TunerstudioThread::isAnyConsoleActive()) {
 				offTimeMs = 100;
 				onTimeMs = 33;
 #if EFI_CONFIGURATION_STORAGE
@@ -403,14 +401,14 @@ static void updateThrottles() {
 }
 
 static void updateLambda() {
-	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
+	float lambdaValue = Sensor::getOrDefault(SensorType::Lambda1, 0.5 / STOICH_RATIO, 0.0 / STOICH_RATIO, 30.5 / STOICH_RATIO);
 	engine->outputChannels.lambdaValue = lambdaValue;
 	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
 	// TODO: this can be calculated on PC side!
 	engine->outputChannels.afrGasolineScale = lambdaValue * STOICH_RATIO;
 	engine->outputChannels.SmoothedAFRValue = Sensor::getOrZero(SensorType::SmoothedLambda1);
 
-	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
+	float lambda2Value = Sensor::getOrDefault(SensorType::Lambda2, 0.5 / STOICH_RATIO, 0.0 / STOICH_RATIO, 30.5 / STOICH_RATIO);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
 	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer.stoichiometricRatio;
 	// TODO: this can be calculated on PC side!
@@ -625,7 +623,7 @@ static void updateFlags() {
 // As of 2022 it's preferred to leverage LiveData where all state is exposed
 // this method is invoked ONLY if we SD card log or have serial connection with some frontend app
 void updateTunerStudioState() {
-	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
+	output_channels_s *tsOutputChannels = &engine->outputChannels;
 #if EFI_USB_SERIAL
   // pretty much SD card logs know if specifically USB serial is active
 	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();

@@ -12,9 +12,10 @@ import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.Output;
 import org.jetbrains.annotations.NotNull;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.*;
 import java.util.List;
+import java.util.TreeSet;
 
 import static com.rusefi.ReaderStateImpl.INCLUDE_FILE;
 import static com.rusefi.VariableRegistry.unquote;
@@ -59,11 +60,25 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private boolean dropComments;
     private final ReaderStateImpl state;
     private final String tsPath;
+    private final GaugeIgnoreList ignoreList;
 
     public TSProjectConsumer(String tsPath, ReaderStateImpl state) {
+        this(tsPath, state, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
+    }
+
+    public TSProjectConsumer(String tsPath, ReaderStateImpl state, GaugeIgnoreList ignoreList) {
+        this(tsPath, state, ignoreList, new TreeSet<>(String.CASE_INSENSITIVE_ORDER));
+    }
+
+    public TSProjectConsumer(String tsPath, ReaderStateImpl state, TreeSet<String> usedNames) {
+        this(tsPath, state, new GaugeIgnoreList(), usedNames);
+    }
+
+    public TSProjectConsumer(String tsPath, ReaderStateImpl state, GaugeIgnoreList ignoreList, TreeSet<String> usedNames) {
         this.tsPath = tsPath;
-        consumerState = new TSProjectConsumerState(state, new TsOutput(true));
+        consumerState = new TSProjectConsumerState(state, new TsOutput(true, usedNames));
         this.state = state;
+        this.ignoreList = ignoreList;
     }
 
     // also known as TS tooltips
@@ -176,7 +191,13 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             line = removeToken(line);
         }
 
-        line = state.getVariableRegistry().applyVariables(line) + ToolUtil.EOL;
+        line = state.getVariableRegistry().applyVariables(line);
+
+        line = ignoreList.filterGauges(line);
+        if (line == null)
+            return;
+
+        line = line + ToolUtil.EOL;
 
         if (isBeforeStartTag)
             prefix.append(line);
@@ -230,3 +251,4 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return consumerState.tsOutput.getContent();
     }
 }
+

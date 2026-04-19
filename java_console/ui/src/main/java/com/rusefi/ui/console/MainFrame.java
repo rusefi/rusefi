@@ -15,6 +15,8 @@ import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
+import java.net.URI;
 import java.util.Objects;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +24,7 @@ import java.time.ZoneOffset;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.net.ConnectionAndMeta.RUSEFI_WIKI_DOWNLOAD_PAGE;
 
 public class MainFrame {
     private static final Logging log = getLogging(Launcher.class);
@@ -53,17 +56,17 @@ public class MainFrame {
         }
     };
 
-    public final ConnectionFailedListener listener;
+    public final ConnectionStatusLogic.Listener listener;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
-        listener = (String s) -> {
-        };
+        listener = ConnectionStatusLogic.Listener.VOID;
     }
 
     private void windowOpenedHandler() {
         setTitle();
+        tabbedPane.tabbedPane.addPropertyChangeListener("isUpdating", e -> SwingUtilities.invokeLater(this::setTitle));
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
             setTitle();
             // this would repaint status label
@@ -78,13 +81,14 @@ public class MainFrame {
         }));
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
-        linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStateListener() {
+        linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
             @Override
             public void onConnectionFailed(String errorMessage) {
                 log.error("onConnectionFailed " + errorMessage);
-                String message = "This copy of rusEFI console is not compatible with this version of firmware\r\n" +
-                        errorMessage;
-                JOptionPane.showMessageDialog(frame.getFrame(), message);
+                SwingUtilities.invokeLater(() -> showConnectionFailedDialog(errorMessage));
             }
 
             @Override
@@ -121,15 +125,50 @@ public class MainFrame {
     private void setTitle() {
         String consoleVersion = "Console " + Launcher.CONSOLE_VERSION;
         String frameTitle;
-        if (ConnectionStatusLogic.INSTANCE.isConnected()) {
-            BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
+        if (Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))) {
+            frameTitle = "UPDATING " + consoleVersion;
+        } else if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+            BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
             String signature = bp == null ? "not loaded" : bp.signature;
             frameTitle = consoleVersion + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature;
-            frame.getFrame().setTitle(frameTitle);
         } else {
             frameTitle = "DISCONNECTED " + consoleVersion;
         }
         frame.getFrame().setTitle(frameTitle);
+    }
+
+    private void showConnectionFailedDialog(String errorMessage) {
+        JTextArea textArea = new JTextArea(errorMessage);
+        textArea.setEditable(false);
+        textArea.setOpaque(false);
+        textArea.setFont(UIManager.getFont("Label.font"));
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setColumns(50);
+
+        JPanel panel = new JPanel(new BorderLayout(0, 10));
+        panel.add(textArea, BorderLayout.CENTER);
+
+        if (errorMessage.contains(RUSEFI_WIKI_DOWNLOAD_PAGE)) {
+            JButton downloadButton = new JButton("Open Download Page");
+            downloadButton.addActionListener(e -> {
+                try {
+                    Desktop.getDesktop().browse(new URI(RUSEFI_WIKI_DOWNLOAD_PAGE));
+                } catch (Exception ex) {
+                    log.error("Failed to open download URL: " + ex);
+                }
+            });
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            buttonPanel.add(downloadButton);
+            panel.add(buttonPanel, BorderLayout.SOUTH);
+        }
+
+        JOptionPane.showMessageDialog(
+            frame.getFrame(),
+            panel,
+            "Connection Failed",
+            JOptionPane.WARNING_MESSAGE
+        );
     }
 
     private void windowClosedHandler() {
@@ -142,7 +181,7 @@ public class MainFrame {
         root.setProperty(ConsoleUI.TAB_INDEX, tabbedPane.tabbedPane.getSelectedIndex());
         consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
-        BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
+        BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
         if (bp != null && !bp.isClosed())
             bp.close(); // it could be that serial driver wants to be closed explicitly
         ExitUtil.exit("windowClosedHandler", 0);

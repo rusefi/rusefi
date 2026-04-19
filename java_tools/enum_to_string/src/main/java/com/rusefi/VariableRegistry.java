@@ -212,8 +212,7 @@ public class VariableRegistry {
                 throw new IllegalStateException("Something broken in: [" + line + "]");
             String key = m.group(2);
             String newValue = function.apply(key);
-            newValue = newValue.replace("\\", "\\\\"); // hack out symbol escaping
-            line = m.replaceFirst(newValue);
+            line = m.replaceFirst(Matcher.quoteReplacement(newValue));
         }
         return line;
     }
@@ -254,7 +253,7 @@ public class VariableRegistry {
         if (!value.contains("\n")) {
             // multi-lines are not supported in C headers
             if (!var.endsWith(_16_HEX_SUFFIX) && !var.endsWith(_HEX_SUFFIX)) {
-                cAllDefinitions.put(var, "#define " + var + " " + value + ToolUtil.EOL);
+                cAllDefinitions.put(var, "#define " + var + (value.isEmpty() ? "" : " " + value) + ToolUtil.EOL);
             }
         }
         return value;

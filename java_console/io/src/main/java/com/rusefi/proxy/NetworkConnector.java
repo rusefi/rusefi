@@ -4,10 +4,10 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.Timeouts;
-import com.rusefi.Version;
+import com.rusefi.UiVersion;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.io.AbstractConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
@@ -70,10 +70,17 @@ public class NetworkConnector implements Closeable {
                 .setNeedPullData(false);
 
         CountDownLatch onConnected = new CountDownLatch(1);
-        controllerConnector.startAndConnect(controllerPort, new AbstractConnectionStateListener() {
+        controllerConnector.startAndConnect(controllerPort, new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
             @Override
             public void onConnectionEstablished() {
                 onConnected.countDown();
+            }
+
+            @Override
+            public void onConnectionFailed(String s) {
             }
         });
 
@@ -133,7 +140,7 @@ public class NetworkConnector implements Closeable {
     private static SessionDetails start(Implementation implementation, ActivityListener activityListener, int serverPortForControllers, LinkManager linkManager, String authToken, final TcpIoStream.DisconnectListener disconnectListener, int oneTimeToken, ControllerInfo controllerInfo, final NetworkConnectorContext context) throws IOException {
         IoStream targetEcuSocket = linkManager.getConnector().getBinaryProtocol().getStream();
 
-        SessionDetails deviceSessionDetails = new SessionDetails(implementation, controllerInfo, authToken, oneTimeToken, Version.CONSOLE_VERSION);
+        SessionDetails deviceSessionDetails = new SessionDetails(implementation, controllerInfo, authToken, oneTimeToken, UiVersion.CONSOLE_VERSION);
 
         Socket socket;
         try {

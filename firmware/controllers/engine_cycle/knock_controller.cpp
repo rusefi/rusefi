@@ -1,5 +1,13 @@
-/*
- * @file knock_logic.c
+/**
+ * @file knock_controller.cpp
+ * @brief High-level knock control logic.
+ *
+ * This module handles the response to detected knock events.
+ * Key responsibilities:
+ * 1. Tracking per-cylinder knock levels and peak values.
+ * 2. Comparing current noise levels against an RPM-based threshold.
+ * 3. Calculating ignition timing retard and fuel trim enrichment when knock is detected.
+ * 4. Gradually decaying (re-applying) timing and fuel trims back to base values when no knock is present.
  *
  * @date Apr 04, 2021
  * @author Andrey Gusakov
@@ -40,7 +48,20 @@ int getCylinderKnockBank(uint8_t cylinderNumber) {
 	}
 }
 
-void KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime) {
+	/**
+	 * Main entry point for a processed knock event.
+	 * 1. Checks if the detected level (dBv) exceeds the threshold.
+	 * 2. Updates per-cylinder and global peak detectors.
+	 * 3. If knock is confirmed:
+	 *    - Increments the total knock count.
+	 *    - Calculates timing retard based on 'knockRetardAggression'.
+	 *    - Calculates fuel trim enrichment based on 'knockFuelTrimAggression'.
+	 *    - Clamps adjustments to configured maximums.
+	 */
+bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime) {
+	// Adjust by the user-configured gain for this cylinder
+	dbv += m_gain[cylinderNumber];
+
 	bool isKnock = dbv > m_knockThreshold;
 
 	// Per-cylinder peak detector
@@ -56,6 +77,11 @@ void KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 		auto baseTiming = engine->engineState.timingAdvance[cylinderNumber];
 
 		// TODO: 20 configurable? Better explanation why 20?
+		// Calculation order:
+		// 1. Calculate the distance from current timing to the maximum allowed retard.
+		// 2. Multiply by aggression to get this event's retard amount.
+		// 3. Add to total knock retard and CLAMP to maximum.
+		// This order ensures we don't retard more than the maximum even with high aggression.
 		auto distToMinimum = baseTiming - (-20);
 
 		// percent -> ratio = divide by 100
@@ -65,6 +91,11 @@ void KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
     // TODO: remove magic 30% m_maximumFuelTrim?
     auto maximumFuelTrim = 0.3f;
 
+		// Calculation order:
+		// 1. Clamp the fuel trim to the maximum configured or hardcoded limit.
+		// 2. Multiply by the aggression factor.
+		// 3. Convert percentage to multiplier ratio.
+		// 4. Update the multiplier and clamp the final value.
 		auto  trimFuelFraction = engineConfiguration->knockFuelTrimAggression * 0.01f;
 		float trimFuelPercent = clampF(0.f, (float)engineConfiguration->knockFuelTrim, maximumFuelTrim * 100.f);
 		float trimFuelAmountPercent = trimFuelPercent * trimFuelFraction;
@@ -81,6 +112,8 @@ void KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 			m_knockFuelTrimMultiplier = clampF(0.f, newFuelTrim, maximumFuelTrim);
 		}
 	}
+
+	return isKnock;
 }
 
 float KnockControllerBase::getKnockRetard() const {
@@ -95,10 +128,14 @@ float KnockControllerBase::getFuelTrimMultiplier() const {
 	return 1.0 + m_knockFuelTrimMultiplier;
 }
 
+	/**
+	 * Periodic callback (typically every 10ms via FAST_CALLBACK_PERIOD_MS).
+	 * 1. Updates RPM-dependent thresholds and limits.
+	 * 2. Checks for TPS-based suppression (disables knock control at low TPS).
+	 * 3. Decays the current knock retard and fuel trim back towards zero
+	 *    based on configured 'reapplyRate' parameters.
+	 */
 void KnockControllerBase::onFastCallback() {
-	m_knockThreshold = getKnockThreshold();
-	m_maximumRetard = getMaximumRetard();
-
 	constexpr auto callbackPeriodSeconds = FAST_CALLBACK_PERIOD_MS / 1000.0f;
 
 	auto applyRetardAmount = engineConfiguration->knockRetardReapplyRate * callbackPeriodSeconds;
@@ -137,6 +174,23 @@ void KnockControllerBase::onFastCallback() {
 		} else {
 			m_knockFuelTrimMultiplier = newTrim;
 		}
+	}
+
+	hasKnockRecently = !m_lastKnockTimer.hasElapsedSec(0.5f);
+	hasKnockRetardNow = m_knockRetard > 0;
+
+	m_knockThreshold = getKnockThreshold();
+	m_maximumRetard = getMaximumRetard();
+
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
+	auto load = getIgnitionLoad();
+
+	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+		m_gain[i] = interpolate3d(
+			config->knockGains[i].table,
+			config->knockGainLoadBins, load,
+			config->knockGainRpmBins, rpm
+		);
 	}
 }
 
@@ -187,6 +241,10 @@ static void startKnockSampling(Engine* p_engine) {
 
 #endif // EFI_SOFTWARE_KNOCK
 
+/**
+ * Triggered when a spark plug fires to schedule the knock detection window.
+ * rusEFI uses a crank-angle based window for knock detection.
+ */
 void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
 #if EFI_SOFTWARE_KNOCK
 	cylinderNumberCopy = cylinderNumber;

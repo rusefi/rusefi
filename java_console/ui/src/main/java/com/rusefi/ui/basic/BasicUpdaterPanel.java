@@ -12,6 +12,7 @@ import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.widgets.ToolButtons;
+import com.rusefi.util.CompatibilityOptional;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
@@ -77,30 +78,26 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
             this.ecuPortToUse);
 //        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
+        final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
+            "rusefi_updater.exe",
+            "center",
+            () -> 0
+        );
+        newReleaseNotification.ifPresent(content::add);
         if (isWindows()) {
-            final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
-                "rusefi_updater.exe",
-                "center",
-                () -> 0
-            );
-            if (newReleaseNotification.isPresent()) {
-                content.add(newReleaseNotification.get());
-            }
             content.add(ToolButtons.createShowDeviceManagerButton());
-
-            content.add(StartupFrame.binaryModificationControl());
-
-            updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
-            updateFirmwareButton.setEnabled(false);
-
-            statusMessage.setForeground(Color.red);
-            content.add(statusMessage);
-            content.add(updateFirmwareButton);
-
-            importTuneButton.setEnabled(false);
-        } else {
-            content.add(new JLabel("Sorry only works on Windows"));
         }
+
+        content.add(StartupFrame.binaryModificationControl());
+
+        updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
+        updateFirmwareButton.setEnabled(false);
+
+        statusMessage.setForeground(Color.red);
+        content.add(statusMessage);
+        content.add(updateFirmwareButton);
+
+        importTuneButton.setEnabled(false);
 
         content.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
@@ -135,6 +132,10 @@ never used?
         return importTuneButton;
     }
 
+    public JCheckBox getMigrateSettings() {
+        return migrateSettings;
+    }
+
     private void updateMigrateSettingState() {
         MigrateSettingsCheckboxState.isMigrationNeeded = migrateSettings.isSelected();
         MigrateSettingsCheckboxState.isVerboseMessages = verboseMessages.isSelected();
@@ -160,27 +161,29 @@ never used?
         final AvailableHardware currentHardware = connectivityContext.getCurrentHardware();
         log.info("updateUpdateFirmwareJob " + currentHardware);
         final List<PortResult> portsToUpdateFirmware = getPortResults(currentHardware);
-        switch (portsToUpdateFirmware.size()) {
-            case 1: {
-                // OpenBlt first preference
-                setUpdateFirmwareJob(getNonDfuUpdateFirmwareJobForPort(portsToUpdateFirmware.get(0)));
-                break;
-            }
-            case 0: {
-                // fallback to DFU which is more fragile
-                setUpdateFirmwareJob(new DfuManualJob());
-                break;
-            }
-            default: {
-                resetUpdateFirmwareJob(String.format(
-                    "Multiple ECUs found on: %s",
-                    portsToUpdateFirmware.stream()
-                        .map(portResult -> portResult.port)
-                        .collect(Collectors.joining(", "))
-                ));
-                break;
-            }
+        int count = portsToUpdateFirmware.size();
+        if (count == 1) {
+            // OpenBlt first preference
+            setUpdateFirmwareJob(getNonDfuUpdateFirmwareJobForPort(portsToUpdateFirmware.get(0)));
+            return;
         }
+        if (currentHardware.isDfuFound()) {
+            setUpdateFirmwareJob(new DfuManualJob());
+            return;
+        }
+        String message;
+        if (count == 0) {
+            message = "No ECUs found";
+        } else {
+            message = String.format(
+                "Multiple ECUs found on: %s",
+                portsToUpdateFirmware.stream()
+                    .map(portResult -> portResult.port)
+                    .collect(Collectors.joining(", "))
+            );
+        }
+
+        resetUpdateFirmwareJob(message);
     }
 
     private AsyncJob getNonDfuUpdateFirmwareJobForPort(final PortResult portToUpdateFirmware) {

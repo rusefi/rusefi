@@ -8,7 +8,7 @@ import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleInfoStrategy;
 import com.rusefi.updater.PlainSerialPortScanner;
-import com.rusefi.wizard.BackgroundWizard;
+import com.rusefi.ts_plugin.wizard.BackgroundWizard;
 
 /**
  * this class is invoked by TsHeadlessPlugin via reflection

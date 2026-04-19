@@ -12,6 +12,7 @@ import java.util.LinkedList;
  */
 public class JPanelWithListener extends JPanel {
     private final List<MouseListener> listeners = new LinkedList<>();
+    private final List<Runnable> cleanupActions = new LinkedList<>();
 
     public JPanelWithListener(LayoutManager layoutManager) {
         super(layoutManager);
@@ -35,8 +36,20 @@ public class JPanelWithListener extends JPanel {
         listeners.clear();
     }
 
+    public synchronized void addCleanupAction(Runnable action) {
+        cleanupActions.add(action);
+    }
+
     public void removeAllChildrenAndListeners() {
         removeAll();
         removeAllMouseListeners();
+        List<Runnable> toRun;
+        synchronized (this) {
+            toRun = new LinkedList<>(cleanupActions);
+            cleanupActions.clear();
+        }
+        for (Runnable action : toRun) {
+            action.run();
+        }
     }
 }

@@ -216,4 +216,5 @@ void setup_custom_board_overrides() {
 	custom_board_ConfigOverrides = alphax_silver_revA_boardConfigOverrides;
 
 	custom_board_OnConfigurationChange = customBoardOnConfigurationChange;
+	custom_board_hackHellenBoardId = pcaHackHellenBoardId;
 }

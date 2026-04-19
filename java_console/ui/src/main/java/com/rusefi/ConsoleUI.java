@@ -4,22 +4,30 @@ import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
+import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.StLinkFlasher;
-import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.*;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.JustOneInstance;
+import com.rusefi.ui.widgets.ConnectionStatusIcon;
+import com.rusefi.ui.wizard.WizardCatalog;
+import com.rusefi.ui.wizard.WizardContainer;
+import com.rusefi.ui.wizard.WizardStep;
+import com.rusefi.ui.wizard.WizardStepDescriptor;
+import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.LazyFileImpl;
+import org.jetbrains.annotations.NotNull;
 
 
 import javax.swing.*;
@@ -31,6 +39,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
@@ -52,8 +62,6 @@ public class ConsoleUI {
     public static final String TITLE = "rusEFI";
     public static EngineSnifferPanel engineSnifferPanel;
 
-    static Frame staticFrame;
-
     private final TabbedPanel tabbedPane;
     private final String port;
 
@@ -64,29 +72,73 @@ public class ConsoleUI {
      */
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
-    public static Frame getFrame() {
-        return staticFrame;
-    }
+    public ConsoleUI(String port, SerialPortType serialPortType) {
+        LinkManager linkManager = uiContext.getLinkManager();
 
-    public ConsoleUI(String port) {
-        CommandQueue.ERROR_HANDLER = e -> SwingUtilities.invokeLater(() -> {
-            throw new IllegalStateException("Connectivity error", e);
-        });
+        CommandQueue.ERROR_HANDLER = e -> {
+            log.error("Connectivity error", e);
+            linkManager.restart();
+        };
 
-        log.info("init...");
+        ConnectionStatusIcon connectionStatus = new ConnectionStatusIcon(linkManager);
+
         tabbedPane = new TabbedPanel(uiContext);
         this.port = port;
+
+        // Wizard container and CardLayout for switching between console and wizard modes
+        JPanel rootPanel = new JPanel(new CardLayout());
+        rootPanel.add(tabbedPane.getContent(), "console");
+
+        WizardContainer wizardContainer = new WizardContainer(uiContext);
+        rootPanel.add(wizardContainer, "wizard");
+
+        CardLayout rootCardLayout = (CardLayout) rootPanel.getLayout();
+
+        JButton launchWizardButton = getLaunchWizardButton(rootPanel, wizardContainer, rootCardLayout);
+
+        wizardContainer.setOnWizardExit(() -> rootCardLayout.show(rootPanel, "console"));
+
+        // On ECU connect, scan the wizard catalog for applicable standalone steps that need attention
+        // (e.g. empty VIN) and auto-launch the first one. Fires on every reconnect; once the user
+        // saves the value, subsequent connects skip this because needsAttention returns false.
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (!isConnected) return;
+            SwingUtilities.invokeLater(() -> {
+                if (!ConnectionStatusLogic.INSTANCE.isConnected()) return;
+                if (uiContext.getBinaryProtocol() == null) return;
+                if (uiContext.getBinaryProtocol().getControllerConfiguration() == null) return;
+                // Don't stomp on an already-visible wizard
+                if (wizardContainer.isShowing()) return;
+
+                for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
+                    if (!d.applicable.test(uiContext)) continue;
+                    if (d.needsAttention == null || !d.needsAttention.test(uiContext)) continue;
+                    WizardStep step = d.factory.apply(uiContext);
+                    wizardContainer.startSingleStep(step);
+                    rootCardLayout.show(rootPanel, "wizard");
+                    return;
+                }
+            });
+        });
+
+        JPanel cornerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        cornerPanel.setOpaque(false);
+        cornerPanel.add(connectionStatus);
+        cornerPanel.add(launchWizardButton);
+        tabbedPane.setCornerComponent(cornerPanel);
+
+        // ---------------
+
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
-        ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
-        setFrameIcon(ConsoleUI.staticFrame);
-        log.info("Console " + Version.CONSOLE_VERSION);
+        JFrame frame = mainFrame.getFrame().getFrame();
+        setFrameIcon(frame);
+        log.info("Console " + UiVersion.CONSOLE_VERSION);
 
         log.info("Hardware: " + StLinkFlasher.getHardwareKind());
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
-        LinkManager linkManager = uiContext.getLinkManager();
         // todo: this blocking IO operation should NOT be happening on the UI thread
         linkManager.start(port, mainFrame.listener);
 
@@ -100,18 +152,12 @@ public class ConsoleUI {
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
         uiContext.DetachedRepositoryINSTANCE.load();
-        if (!linkManager.isLogViewer())
+        if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges")).getContent());
 
-        if (!linkManager.isLogViewer()) {
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
-        }
-        if (!linkManager.isLogViewer()) {
-            tabbedPane.addTab("Bench Test", new BenchTestPane(uiContext, getConfig()).getContent());
-        }
 
-        if (!linkManager.isLogViewer()) {
             LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
             tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
         }
@@ -139,7 +185,10 @@ console live data tab is broken #8402
 
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
-            tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
+            tabbedPane.addTab("Tuning", new TuningPane(uiContext).getContent());
+            tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
+            tabbedPane.addTab("Pinout", new PinoutPane(uiContext).getContent());
+            tabbedPane.addTab("Device", new DevicePane(uiContext, port, serialPortType, tabbedPane.tabbedPane).getContent());
         }
 
         if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
@@ -152,7 +201,6 @@ console live data tab is broken #8402
         https://github.com/rusefi/rusefi/issues/5956
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 */
-        tabbedPane.addTab("Connection", new ConnectionTab(uiContext).getContent());
 
         if (false) {
             // this feature is not totally happy safer to disable to reduce user confusion
@@ -180,9 +228,26 @@ console live data tab is broken #8402
             }
         });
 
+        ShortcutsHelper.installConnectAndDisconnect(uiContext, tabbedPane.tabbedPane);
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
         log.info("showFrame");
-        mainFrame.getFrame().showFrame(tabbedPane.tabbedPane);
+
+        mainFrame.getFrame().showFrame(rootPanel);
+    }
+
+    private @NotNull JButton getLaunchWizardButton(JPanel rootPanel, WizardContainer wizardContainer, CardLayout rootCardLayout) {
+        JButton launchWizardButton = new JButton("Launch Wizard");
+        launchWizardButton.addActionListener(e -> {
+            if (ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED) {
+                JOptionPane.showMessageDialog(rootPanel,
+                    "Please connect to an ECU before launching the wizard.",
+                    "Not Connected", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            wizardContainer.startWizard();
+            rootCardLayout.show(rootPanel, "wizard");
+        });
+        return launchWizardButton;
     }
 
     public String getPort() {
@@ -200,6 +265,10 @@ console live data tab is broken #8402
     }
 
     static void startUi(String[] args) throws InterruptedException, InvocationTargetException {
+        startUi(args, null);
+    }
+
+    static void startUi(String[] args, AtomicReference<Consumer<String>> bannerCallback) throws InterruptedException, InvocationTargetException {
         if (ConnectionAndMeta.saveReadmeHtmlToFile()) {
             new Thread(ConsoleUI::writeReadmeFile).start();
         }
@@ -208,7 +277,7 @@ console live data tab is broken #8402
         AutotestLogging.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         commonUiStartup();
 // not very useful?        VersionChecker.start();
-        SwingUtilities.invokeAndWait(() -> awtCode(args));
+        SwingUtilities.invokeAndWait(() -> awtCode(args, bannerCallback));
     }
 
     /**
@@ -219,7 +288,7 @@ console live data tab is broken #8402
         tabbedPane.addTab(title, component);
     }
 
-    private static void awtCode(String[] args) {
+    private static void awtCode(String[] args, AtomicReference<Consumer<String>> bannerCallback) {
         if (JustOneInstance.isAlreadyRunning()) {
             int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like another instance is already running. Do you really want to start another instance?",
                 TITLE, JOptionPane.YES_NO_OPTION);
@@ -228,7 +297,6 @@ console live data tab is broken #8402
             }
         }
         JustOneInstance.onStart();
-        TunerStudioHelper.maybeCloseTs();
 
         try {
             boolean isPortDefined = args.length > 0;
@@ -248,11 +316,14 @@ console live data tab is broken #8402
             }
 
             if (isPortDefined) {
-                new ConsoleUI(port);
+                new ConsoleUI(port, SerialPortType.Unknown);
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                new StartupFrame(ConnectivityContext.INSTANCE).showUi();
+                StartupFrame startupFrame = new StartupFrame(ConnectivityContext.INSTANCE);
+                if (bannerCallback != null)
+                    bannerCallback.set(startupFrame::showUpdateBanner);
+                startupFrame.showUi();
             }
 
         } catch (Throwable e) {

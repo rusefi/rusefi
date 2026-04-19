@@ -16,11 +16,8 @@ jobs:
         run: |
           git submodule update --init --depth=1 java_console/peak-can-basic
 
-      - uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
           # As of 2025 rusEFI TS plugin is useful again: it provides a knock spectrogram! TS uses java 8 [tag:java8]
-          java-version: '17'
+      - uses: ./.github/actions/setup-java
 
       - name: Test Compiler
         run: javac -version
@@ -31,11 +28,11 @@ jobs:
           sudo apt-get install sshpass
 
       - name: Build TS plugin body
-        working-directory: ./java_tools/
+        working-directory: .
         run: ./gradlew :ts_plugin:shadowJar
 
       - name: Upload plugin artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: rusefi_plugin_body.jar
           path: java_tools/ts_plugin/build/libs/rusefi_plugin_body.jar

@@ -12,6 +12,9 @@
 #include "hellen_leds_100.cpp"
 #include "board_overrides.h"
 #include "connectors/generated_board_pin_names.h"
+#ifndef EFI_BOOTLOADER
+#include "AemXSeriesLambda.h"
+#endif // EFI_BOOTLOADER
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
@@ -183,13 +186,26 @@ int getBoardMetaDcOutputsCount() {
     return 2;
 }
 
+static void uaefi_slowCallback() {
+#ifndef EFI_BOOTLOADER
+extern AemXSeriesWideband aem1;
+  if (aem1.hasSeenRx) {
+    Gpio green = getRunningLedPin();
+		auto greenPort = getBrainPinPort(green);
+		auto greenPin = getBrainPinIndex(green);
+    palClearPad(greenPort, greenPin); // Hellen has inverted LED control
+  }
+#endif // EFI_BOOTLOADER
+}
+
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = uaefi_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = uaefi_boardConfigOverrides;
+	custom_board_periodicSlowCallback = uaefi_slowCallback;
 }
 
 int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {
-	/* we do not check voltage for valid ragne yet */
+	/* we do not check voltage for valid range yet */
 	(void)voltage;
 
 	switch (hwChannel) {

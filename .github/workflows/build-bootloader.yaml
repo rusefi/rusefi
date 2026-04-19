@@ -1,0 +1,28 @@
+name: Only Bootloader
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Checkout Submodules
+        run: |
+          misc/git_scripts/common_submodule_init.sh
+
+      - uses: ./.github/actions/setup-java
+
+      - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
+        uses: carlosperate/arm-none-eabi-gcc-action@v1.12.1
+        with:
+          release: '14.2.Rel1'
+
+      - name: Build Proteus F7 Bootloader
+        working-directory: ./firmware
+        run: bash bin/compile.sh config/boards/proteus/meta-info-proteus_f7.env bootloader

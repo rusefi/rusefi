@@ -13,6 +13,7 @@ static bool noFiringUntilVvtSync() {
 	auto operationMode = getEngineRotationState()->getOperationMode();
 
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
+	  warningTsReport(ObdCode::CUSTOM_NEED_PHASE, "Phase sync required per Setting");
 		// in rare cases engines do not like random sequential mode
 		return true;
 	}
@@ -30,10 +31,14 @@ static bool noFiringUntilVvtSync() {
 	// Symmetrical crank modes require cam sync before firing
 	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
 	// Examples include Nissan MR/VQ, Miata NB, etc
-	return
+	bool result =
 		operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
+  if (result) {
+	  warningTsReport(ObdCode::CUSTOM_SYMMETRICAL_CRANK, "Your crank wheel requires cam sync before firing");
+	}
+	return result;
 }
 #endif // EFI_SHAFT_POSITION_INPUT
 
@@ -99,14 +104,15 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::LambdaProtection);
 	}
 
-	if (noFiringUntilVvtSync()
-			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+  if (!engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+	  if (noFiringUntilVvtSync()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// examples:
 		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
 		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
-		allowFuel.clear(ClearReason::EnginePhase);
-		allowSpark.clear(ClearReason::EnginePhase);
+		  allowFuel.clear(ClearReason::EnginePhase);
+		  allowSpark.clear(ClearReason::EnginePhase);
+		}
 	}
 
 	// Force fuel limiting on the fault rev limit
@@ -234,14 +240,6 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::FloodClear);
 	}
 #endif // EFI_SHAFT_POSITION_INPUT
-
-	if (!engine->isMainRelayEnabled()) {
-/*
-todo AndreiKA this change breaks 22 unit tests?
-		allowFuel.clear();
-		allowSpark.clear();
-*/
-	}
 
 #if EFI_LAUNCH_CONTROL
 	// Fuel cut if launch control engaged

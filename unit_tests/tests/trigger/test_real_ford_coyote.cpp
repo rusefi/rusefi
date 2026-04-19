@@ -1,60 +1,36 @@
 #include "pch.h"
-
-#include "logicdata_csv_reader.h"
+#include "real_trigger_helper.h"
 
 static void runCoyoteIntakeCam(bool invertPrimaryTriggerSignal, uint32_t warningCount, int rpm) {
-	CsvReader reader(1, /* vvtCount */ 0);
-
-	reader.open("tests/trigger/resources/ford-coyote-intake-cam.csv");
-
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	eth.setTriggerType(trigger_type_e::TT_VVT_FORD_COYOTE);
+	RealTriggerHelper helper;
 	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
-	engineConfiguration->alwaysInstantRpm = true;
-	reader.flipOnRead = invertPrimaryTriggerSignal;
+	printf("Reading intake %d...\n", invertPrimaryTriggerSignal);
+	helper.runTest("tests/trigger/resources/ford-coyote-intake-cam.csv", trigger_type_e::TT_VVT_FORD_COYOTE, invertPrimaryTriggerSignal);
 
-
-  printf("Reading intake %d...\n", invertPrimaryTriggerSignal);
-	while (reader.haveMore()) {
-		reader.processLine(&eth);
-	}
-
-	ASSERT_EQ( warningCount, eth.recentWarnings()->getCount())<< "warningCounter#intakeCam";
-	ASSERT_EQ( rpm, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	ASSERT_EQ(warningCount, helper.eth.recentWarnings()->getCount()) << "warningCounter#intakeCam";
+	ASSERT_EQ(rpm, round(Sensor::getOrZero(SensorType::Rpm)));
 }
 
 TEST(fordCoyote, intakeCam) {
-  runCoyoteIntakeCam(false, 1, 1093);
+	runCoyoteIntakeCam(false, 1, 1093);
 }
 
 static void runCoyoteExhaustCam(bool invertPrimaryTriggerSignal, uint32_t warningCount, int rpm) {
-	CsvReader reader(1, /* vvtCount */ 0);
-
-	reader.open("tests/trigger/resources/ford-coyote-exhaust-cam.csv");
-
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	eth.setTriggerType(trigger_type_e::TT_VVT_FORD_COYOTE);
+	RealTriggerHelper helper;
 	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
-	reader.flipOnRead = invertPrimaryTriggerSignal;
-	engineConfiguration->alwaysInstantRpm = true;
+	printf("Reading exhaust...\n");
+	helper.runTest("tests/trigger/resources/ford-coyote-exhaust-cam.csv", trigger_type_e::TT_VVT_FORD_COYOTE, invertPrimaryTriggerSignal);
 
-	  printf("Reading exhaust...\n");
-	while (reader.haveMore()) {
-		reader.processLine(&eth);
-	}
-
-	ASSERT_EQ(warningCount, eth.recentWarnings()->getCount())<< "warningCounter#exhaustCam";
-	ASSERT_EQ(rpm, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	ASSERT_EQ(warningCount, helper.eth.recentWarnings()->getCount()) << "warningCounter#exhaustCam";
+	ASSERT_EQ(rpm, round(Sensor::getOrZero(SensorType::Rpm)));
 }
 
 TEST(fordCoyote, exhaustCam) {
-  runCoyoteExhaustCam(false, 1, 1093);
+	runCoyoteExhaustCam(false, 1, 1093);
 }
 
 TEST(fordCoyote, exhaustCamInverted) {

@@ -62,8 +62,8 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 }
 
 #if EFI_SENT_SUPPORT
-static void initSentLinearSensor(LinearFunc& func, FunctionalSensor& sensor, int in1, float out1, int in2, float out2, float min, float max)
-{
+static void initSentLinearSensor(
+		LinearFunc& func, FunctionalSensor& sensor, int in1, float out1, int in2, float out2, float min, float max) {
 	func.configure(in1, out1, in2, out2, min, max);
 
 	sensor.setFunction(func);
@@ -87,27 +87,30 @@ void initFluidPressure() {
 			 * Sig0 shows about 197..198 at 1 Atm (open air) and 282 at 1000 KPa (10 Bar)
 			 * Sig1 shows abour 202..203 at 1 Atm (open air) and 283 at 1000 KPa (10 Bar)
 			 */
-			initSentLinearSensor(fuelPressureFuncHigh, fuelPressureSensorHigh,
-				200, BAR2KPA(1),
-				283, BAR2KPA(10),
-				BAR2KPA(0), BAR2KPA(1000) /* What is limit of this sensor? */);
+			initSentLinearSensor(
+					fuelPressureFuncHigh,
+					fuelPressureSensorHigh,
+					200,
+					BAR2KPA(1),
+					283,
+					BAR2KPA(10),
+					BAR2KPA(0),
+					BAR2KPA(1000) /* What is limit of this sensor? */);
 		}
 	} else
 #endif
 	{
 		initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, engineConfiguration->highPressureFuel, 100);
 	}
-    initFluidPressure(acPressureFunc, acPressureSensor, engineConfiguration->acPressure, 10);
+	initFluidPressure(acPressureFunc, acPressureSensor, engineConfiguration->acPressure, 10);
 	initFluidPressure(auxLinear1Func, auxLinear1Sensor, engineConfiguration->auxLinear1, 10);
 	initFluidPressure(auxLinear2Func, auxLinear2Sensor, engineConfiguration->auxLinear2, 10);
 	initFluidPressure(auxLinear3Func, auxLinear3Sensor, engineConfiguration->auxLinear3, 10);
 	initFluidPressure(auxLinear4Func, auxLinear4Sensor, engineConfiguration->auxLinear4, 10);
 
 	injectorPressure.setProxiedSensor(
-		engineConfiguration->injectorPressureType == IPT_High
-		? SensorType::FuelPressureHigh
-		: SensorType::FuelPressureLow
-	);
+			engineConfiguration->injectorPressureType == IPT_High ? SensorType::FuelPressureHigh
+																  : SensorType::FuelPressureLow);
 
 	injectorPressure.Register();
 }

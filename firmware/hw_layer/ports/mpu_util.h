@@ -22,6 +22,12 @@ bool mcuCanFlashWhileRunning();
 bool isStm32F42x();
 #endif // STM32F4
 
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+void printWRPBits();
+void printOptBytes();
+void removeWRP();
+#endif
+
 // ADC
 #if HAL_USE_ADC
 
@@ -141,8 +147,8 @@ void HardFaultVector(void);
 #endif /* __cplusplus */
 
 // search:openblt_version
-// ascii 'BL04' in reverse LBS byte order
-#define BLT_CURRENT_VERSION 0x34304C42
+// ascii 'BL05' in reverse LBS byte order
+#define BLT_CURRENT_VERSION 0x35304C42
 #define BLT_BIN_VERSION_ADDR              ((uint32_t)0x08000024U)       /*! 3rd reserved DWORD in vector table search:openblt_version */
 
 #if EFI_USE_OPENBLT

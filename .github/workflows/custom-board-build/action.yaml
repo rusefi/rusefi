@@ -175,12 +175,15 @@ runs:
         echo "DEFAULT_TUNE_OUTPUT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.sim_output}})/" >> $GITHUB_ENV
         source ${{inputs.rusefi_dir}}/firmware/config/boards/common_script_read_meta_env.inc "${{inputs.meta_info}}"
         cd ${{inputs.rusefi_dir}}/firmware
+        # BOARD_DIR value is assigned within sourced common_script_read_meta_env.inc based on meta_info location
         ABSOLUTE_BOARD_DIR=${{github.workspace}}/$BOARD_DIR
+        echo "ABSOLUTE_BOARD_DIR=[$ABSOLUTE_BOARD_DIR] META_OUTPUT_ROOT_FOLDER=[$META_OUTPUT_ROOT_FOLDER]"
         # sometimes absolute path is simpler
         echo "ABSOLUTE_BOARD_DIR=$ABSOLUTE_BOARD_DIR" >> $GITHUB_ENV
         # todo: why do we require relative path exactly?
         BOARD_DIR=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_DIR")
         BOARD_META_PATH=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_META_PATH")
+        echo "BOARD_META_PATH=[$BOARD_META_PATH] BOARD_DIR=[$BOARD_DIR]"
         echo "BOARD_DIR=$BOARD_DIR" >> $GITHUB_ENV
         echo "BOARD_META_PATH=$BOARD_META_PATH" >> $GITHUB_ENV
         echo "SHORT_BOARD_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
@@ -205,14 +208,11 @@ runs:
         fi
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1.11.1
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.1
       with:
         release: '14.2.Rel1'
 
-    - uses: actions/setup-java@v4
-      with:
-        distribution: 'zulu'
-        java-version: '17'
+    - uses: ./.github/actions/setup-java
 
     - name: Test Compiler
       shell: bash
@@ -265,23 +265,23 @@ runs:
         : Handle configs separately just to make github logs more readable
         bash bin/compile.sh $BOARD_META_PATH config
 
-    - name: Add Config to Commit Regardless of firmware build status
-#      if: ${{ inputs.push == 'true' }}
-# looks like gen_live_data is either not invoked or not working right here?
-      if: "false"
-      shell: bash
-      run: |
-        : Add Config to Commit Regardless of firmware build status
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
-        OUT=$(git commit -m "Quick Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
-        if echo "$OUT" | grep 'nothing to commit'; then
-          echo "Configs: looks like nothing to commit"
-          exit 0
-        fi
-        git status
+#    - name: Add Config to Commit Regardless of firmware build status
+##      if: ${{ inputs.push == 'true' }}
+## looks like gen_live_data is either not invoked or not working right here?
+#      if: "false"
+#      shell: bash
+#      run: |
+#        : Add Config to Commit Regardless of firmware build status
+#        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
+#        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h 4
+#        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*ini 4
+#        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*txt 4
+#        OUT=$(git commit -m "Quick Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
+#        if echo "$OUT" | grep 'nothing to commit'; then
+#          echo "Configs: looks like nothing to commit"
+#          exit 0
+#        fi
+#        git status
 
     - name: Push Configs
       if: ${{ inputs.push == 'true' }}
@@ -312,7 +312,7 @@ runs:
         ls -l bootloader/blbuild
 
     - name: Gradle tune-tools separately
-      working-directory: ${{inputs.rusefi_dir}}/java_tools
+      working-directory: ${{inputs.rusefi_dir}}
       shell: bash
       run: ./gradlew :tune-tools:shadowJar
 
@@ -358,7 +358,7 @@ runs:
         cd ${{inputs.rusefi_dir}}/simulator/
         ./build/rusefi_simulator 10
         mkdir -p ${{inputs.sim_output}}canned-tunes
-        ./write_tune.sh ${ABSOLUTE_BOARD_DIR}/generated/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
+        ./write_tune.sh ${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
 
     - name: Add Tune to Commit
       if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
@@ -368,7 +368,7 @@ runs:
         echo "Current directory: $PWD"
         ls ${{inputs.sim_output}}
         git config advice.addIgnoredFile false
-        git add ${{inputs.sim_output}}*msq
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.sim_output}}*msq" 6
         OUT=$(git commit -m "Auto-generated Default Tune (custom board)" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Tune: looks like nothing to commit"
@@ -380,11 +380,13 @@ runs:
       if: ${{ inputs.push == 'true' }}
       shell: bash
       run: |
+        : generated pages live here
+        git add "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/controllers/generated/*.h"
         : Add Config to Commit
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*.h
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*ini
-        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*txt
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq" 6
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/**/*.h" 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*ini" 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*txt" 4
         : # TODO handle extra headers but only if those exist
         : #if [ -d firmware ]; then
         : #  git add firmware/extra*
@@ -402,14 +404,21 @@ runs:
       run: |
         : Add Connectors to Commit
         if [ -d connectors ]; then
-          git add connectors/*
+          ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "connectors/*"
         fi
+        git status
         OUT=$(git commit -m "Auto-generated Connectors" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Connectors: looks like nothing to commit"
           exit 0
         fi
         echo "[$OUT]"
+
+    - name: Quick Rebase
+      if: ${{ inputs.push == 'true' }}
+      shell: bash
+      run: |
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/git-fast-clean-update.sh
 
     - name: Push
       if: ${{ inputs.push == 'true' }}
@@ -438,35 +447,35 @@ runs:
       if: ${{ contains(inputs.artifacts, 'bin') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.bin
+        name: rusefi_${{env.SHORT_BOARD_NAME}}.bin
         path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.bin
 
     - name: Upload github action srec artifact
       if: ${{ contains(inputs.artifacts, 'srec') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_update.srec
+        name: rusefi_update_${{env.SHORT_BOARD_NAME}}.srec
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi.srec
 
     - name: Upload github action hex artifact
       if: ${{ contains(inputs.artifacts, 'hex') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.hex
+        name: rusefi_${{env.SHORT_BOARD_NAME}}.hex
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.hex
 
     - name: Upload github action list artifact
       if: ${{ contains(inputs.artifacts, 'list') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.list
+        name: rusefi_${{env.PROJECT_BOARD}}.list
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.list
 
     - name: Upload github action map artifact
       if: ${{ contains(inputs.artifacts, 'map') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.map
+        name: rusefi_${{env.PROJECT_BOARD}}.map
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.map
 
     # sad: we have duplication with build-firmware.yaml :(
@@ -482,14 +491,14 @@ runs:
       if: ${{ contains(inputs.artifacts, 'elf') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.txt
+        name: rusefi_${{env.PROJECT_BOARD}}.txt
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.txt
 
     - name: Upload github action elf artifact
       if: ${{ contains(inputs.artifacts, 'elf') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi.elf
+        name: rusefi_${{env.PROJECT_BOARD}}.elf
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.elf
 
     - name: Upload github action bootloader bin artifact
@@ -501,16 +510,18 @@ runs:
 
     - name: Upload github action bundle artifact
       if: ${{ contains(inputs.artifacts, 'bundle') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_${{env.current_date}}.zip.zip
+        archive: false
+        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_${{env.current_date}}.zip
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}.zip
 
     - name: Upload github action bundle autoupdate artifact
       if: ${{ contains(inputs.artifacts, 'autoupdate') }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate_${{env.current_date}}.zip.zip
+        archive: false
+        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate_${{env.current_date}}.zip
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate.zip
 
     - uses: mukunku/tag-exists-action@v1.6.0

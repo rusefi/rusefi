@@ -41,10 +41,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
-void onBoardStandBy() {
-    efiPrintf("K: onBoardStandBy");
-    hellenBoardStandBy();
-}
 
 static void hellen_honda_k_boardConfigOverrides() {
 	setHellenMegaEnPin();
@@ -189,4 +185,8 @@ Gpio* getBoardMetaOutputs() {
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = hellen_honda_k_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen_honda_k_boardConfigOverrides;
+	custom_board_onBoardStandBy = []() {
+		efiPrintf("K: onBoardStandBy");
+		hellenBoardStandBy();
+	};
 }

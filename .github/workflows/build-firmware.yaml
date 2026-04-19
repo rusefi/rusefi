@@ -34,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+# we are not using 'recursive' here, we have common_submodule_init.sh instead probably as a performance optimization?
       - uses: actions/checkout@v6
         with:
           submodules: true
@@ -61,7 +62,7 @@ jobs:
           cp ./firmware/ext/openblt/Host/libopenblt.so deliver/
           cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
 
-#      - uses: actions/upload-artifact@v6
+#      - uses: actions/upload-artifact@v7
 #        if: 0
 #        name: libopenblt-linux
 #        path: |
@@ -102,7 +103,7 @@ jobs:
 
     - name: Create Release
       if: ${{ env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.19.1
+      uses: ncipollo/release-action@v1.21.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
@@ -119,7 +120,7 @@ jobs:
         cp ./firmware/ext/openblt/Host/libopenblt.dylib deliver/
         cp ./misc/libopenblt_jni/build/libopenblt_jni.dylib deliver/
 
-#    - uses: actions/upload-artifact@v6
+#    - uses: actions/upload-artifact@v7
 #      with:
 #        name: bootcommander-linux
 #        path: |
@@ -135,6 +136,7 @@ jobs:
 
     - name: Set matrix
       id: set-matrix
+      working-directory: firmware
       run: |
         export EVENT_NAME="${{github.event_name}}"
         export RUN_ATTEMPT="${{github.run_attempt}}"
@@ -142,7 +144,7 @@ jobs:
         ${{ github.event.head_commit.message }}
         EOM
         export COMMIT_MESSAGE
-        echo "matrix=$(bash firmware/bin/generate_matrix.sh)" >> $GITHUB_OUTPUT
+        echo "matrix=$(bash bin/generate_matrix.sh config/boards)" >> $GITHUB_OUTPUT
 
   build-firmware:
     runs-on: ubuntu-latest
@@ -191,10 +193,7 @@ jobs:
       run: |
         misc/git_scripts/common_submodule_init.sh
 
-    - uses: actions/setup-java@v5
-      with:
-        distribution: 'zulu'
-        java-version: '17'
+    - uses: ./.github/actions/setup-java
 
     - name: Install multilib, mingw, sshpass and mtools
       run: |
@@ -202,7 +201,6 @@ jobs:
         sudo bash misc/actions/ubuntu-install-tools.sh
 
     - name: Set Build Env Variables
-      working-directory: ./firmware/
       run: |
         echo AUTOMATION_LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
         echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
@@ -218,7 +216,7 @@ jobs:
 #
       # TODO: address `Acquire GCC` version copy paste, maybe a tiny action to acquire specific version?
     - name: Acquire Arm GNU Toolchain (arm-none-eabi-gcc)
-      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.0
+      uses: carlosperate/arm-none-eabi-gcc-action@v1.12.3
       with:
         release: '14.2.Rel1'
 
@@ -286,7 +284,7 @@ jobs:
 
     - name: Add Bundles to Release
       if: ${{ env.upload == 'release' }}
-      uses: ncipollo/release-action@v1.19.1
+      uses: ncipollo/release-action@v1.21.0
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
@@ -314,35 +312,35 @@ jobs:
 
     - name: Upload github action text artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: rusefi_${{matrix.build-target}}.txt
         path: ./firmware/build/rusefi.txt
 
     - name: Upload github action elf artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload github action map artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: rusefi_${{matrix.build-target}}.map
         path: ./firmware/build/rusefi.map
 
     - name: Upload github action bin artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload github action hex artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: rusefi_${{matrix.build-target}}.hex
 # we have a bit of a mess - this file from 'build' folder is only legit for not-BLT builds
@@ -351,19 +349,21 @@ jobs:
 
     - name: Upload github action dfu artifact
       if: ${{ env.upload == 'gha_artifact' }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: rusefi_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle artifact
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
+        archive: false
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
 
     - name: Upload github action autoupdate artifact
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
+        archive: false
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip

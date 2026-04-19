@@ -119,6 +119,8 @@ void ShiftTorqueReductionController::updateTriggerPinState(
     if (!previousTorqueReductionTriggerPinState && torqueReductionTriggerPinState) {
     m_pinTriggeredTimer.reset();
     }
+#else
+  UNUSED(pin);UNUSED(mode);UNUSED(invertPhysicalPin);UNUSED(invalidPinState);
 #endif // !EFI_SIMULATOR
 }
 

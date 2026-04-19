@@ -2,7 +2,7 @@ package com.rusefi.maintenance.migration.digit_field_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import java.io.FileNotFoundException;
 
@@ -29,3 +29,4 @@ public class DigitIniFieldMigrationContext {
         return result;
     }
 }
+

@@ -17,7 +17,8 @@ void initVehicleSpeedSensor() {
 
 	float filterParameter = 1.0f / parameter;
 
-	vehicleSpeedSensor.initIfValid(engineConfiguration->vehicleSpeedSensorInputPin, vehicleSpeedConverter, filterParameter);
+	vehicleSpeedSensor.initIfValid(
+			engineConfiguration->vehicleSpeedSensorInputPin, vehicleSpeedConverter, filterParameter);
 }
 
 void deInitVehicleSpeedSensor() {

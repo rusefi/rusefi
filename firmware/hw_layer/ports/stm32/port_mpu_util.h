@@ -14,6 +14,13 @@
 
 #define MCU_SERIAL_NUMBER_BYTES 12
 
+#define MCU_REVISION_MASK  0xfff
+
+#define STM32_DEVICE_ID_F40x 1043
+#define STM32_DEVICE_ID_F42x 1049
+
+#define GET_MCU_REVISION() (DBGMCU->IDCODE & MCU_REVISION_MASK)
+
 // 4mhz was chosen because it's the GCD of (84, 108, 200), the three speeds of STM32 TIM5 clock currently supported
 // https://www.wolframalpha.com/input/?i=common+factors+of+168+180+216
 #define US_TO_NT_MULTIPLIER (4)
@@ -22,6 +29,8 @@
 #define SCHEDULER_PWM_DEVICE PWMD5
 #define SCHEDULER_TIMER_DEVICE TIM5
 #define SCHEDULER_TIMER_FREQ (US_TO_NT_MULTIPLIER * 1'000'000)
+
+const char *getStm32McuName(int mcuRevision);
 
 /* TODO: rename includes to hal_flash_ex.h with no MCU specific? */
 #ifdef STM32F4XX

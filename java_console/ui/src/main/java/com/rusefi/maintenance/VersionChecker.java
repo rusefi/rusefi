@@ -1,7 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.Version;
+import com.rusefi.UiVersion;
 import com.rusefi.models.Utils;
 import com.rusefi.ui.util.URLLabel;
 
@@ -70,7 +70,7 @@ public class VersionChecker {
 
         final Integer javaVersion = parseNotNull(map.get(JAVA_CONSOLE_TAG), "VC value");
         log.info("Server recommends java_console version " + javaVersion + " or newer");
-        showUpdateWarningIfNeeded("dev console", javaVersion, Version.CONSOLE_VERSION);
+        showUpdateWarningIfNeeded("dev console", javaVersion, UiVersion.CONSOLE_VERSION);
         log.info("Server recommends firmware " + map.get(FIRMWARE_TAG) + " or newer");
 
         String criticalUrl = map.get("critical_url");

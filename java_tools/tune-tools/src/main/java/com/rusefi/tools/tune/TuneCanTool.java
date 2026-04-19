@@ -13,7 +13,7 @@ import com.rusefi.tune.xml.Msq;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -336,6 +336,7 @@ public class TuneCanTool {
             if (isInteger) {
                 sb.append(TuneTools.getAssignmentCode(defaultValue, parentReference, cName, Integer.toString(intValue)));
             } else {
+                // todo: use precision here?
                 sb.append(TuneTools.getAssignmentCode(defaultValue, parentReference, cName, niceToString(doubleValue)));
             }
 
@@ -458,3 +459,4 @@ public class TuneCanTool {
         return HARDWARE_PROPERTIES.contains(name);
     }
 }
+

@@ -2,18 +2,25 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.PrimeTunerStudioCache;
+import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
+import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.io.DoubleCallbacks;
+import com.rusefi.ui.basic.FirmwareUpdateTab;
+import com.rusefi.ui.basic.SingleAsyncJobExecutor;
+import com.rusefi.ui.basic.StatusPanelWithProgressBar;
+import com.rusefi.ui.basic.TuneManagementTab;
+import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.ToolButtons;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +34,8 @@ import java.awt.event.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -51,6 +60,9 @@ public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);
 
     public static final String ALWAYS_AUTO_PORT = "always_auto_port";
+    public static final String AUTO_CLOSE_TS = "auto_close_ts";
+    public static final String CHECK_TS_RUNNING = "check_ts_running";
+    private static final String STARTUP_TAB_INDEX = "startup_tab_index";
     private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
     public static final String SCANNING_PORTS = "Scanning ports";
 
@@ -76,10 +88,23 @@ public class StartupFrame {
      */
     private boolean isProceeding;
     private final JLabel noPortsMessage = new JLabel();
+    private final JLabel dfuErrorMessage = new JLabel(
+        "Failed to check for DFU devices. Try 'Run as Administrator'");
+    private boolean hasSeenEcuOrSimulator = false;
     private final StatusAnimation status;
     private final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
     private ProgramSelector selector;
     private boolean firstTimeHasEcuWithOpenBlt = true;
+    private boolean firstTimeAutoConnect = true;
+
+    private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar();
+    private final StatusPanel tuneStatusPanel = new StatusPanel(250);
+    private final SingleAsyncJobExecutor asyncJobExecutor = new SingleAsyncJobExecutor(
+        new DoubleCallbacks(firmwareStatusPanel, tuneStatusPanel));
+    private final AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
+    private FirmwareUpdateTab firmwareUpdateTab;
+    private StatusAnimation firmwareTabStatus;
+    private JTabbedPane outerTabs;
 
     public StartupFrame(ConnectivityContext connectivityContext) {
         this.connectivityContext = connectivityContext;
@@ -98,6 +123,7 @@ public class StartupFrame {
             @Override
             public void windowClosed(WindowEvent ev) {
                 if (!isProceeding) {
+                    saveTabIndex();
                     getConfig().save();
                     log.info("Configuration saved.");
                 }
@@ -107,15 +133,15 @@ public class StartupFrame {
     }
 
     public void showUi() {
-        String panelTitle = UiProperties.useSimulator() ? "Real stm32" : "";
-        realHardwarePanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), panelTitle));
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
         connectPanel.add(portsComboBox.getComboPorts());
+/*
+    make baud rate selection much less visible #9103
         final JComboBox<String> comboSpeeds = createSpeedCombo();
         comboSpeeds.setToolTipText("For 'STMicroelectronics Virtual COM Port' device any speed setting would work the same");
         connectPanel.add(comboSpeeds);
-
+*/
         setToolTip(connectButton, "Connect to real hardware");
 
         JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("Always auto-connect port");
@@ -143,12 +169,12 @@ public class StartupFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    connectButtonAction(comboSpeeds);
+                    connectButtonAction();
                 }
             }
         });
 
-        connectButton.addActionListener(e -> connectButtonAction(comboSpeeds));
+        connectButton.addActionListener(e -> connectButtonAction());
 
         final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
             "rusefi_autoupdate.exe",
@@ -177,29 +203,40 @@ public class StartupFrame {
         realHardwarePanel.add(noPortsMessage, "right, wrap");
         noPortsMessage.setToolTipText("Check you cables. Check your drivers. Do you want to start simulator maybe?");
 
+        dfuErrorMessage.setForeground(Color.red);
+        dfuErrorMessage.setVisible(false);
+        realHardwarePanel.add(dfuErrorMessage, "right, wrap");
+
+        // After a grace period, warn the user if DFU scanning failed and no ECU was ever seen.
+        // This typically means the console needs to be run as Administrator on Windows.
+        Timer dfuErrorTimer = new Timer(15_000, e -> {
+            if (DfuFlasher.dfuDetectionCommandFailed && !hasSeenEcuOrSimulator) {
+                dfuErrorMessage.setVisible(true);
+                frame.pack();
+            }
+        });
+        dfuErrorTimer.setRepeats(false);
+        dfuErrorTimer.start();
+
         selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
+        selector.setJobExecutor(asyncJobExecutor);
 
+        JButton goToFirmwareTab = new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
+        goToFirmwareTab.addActionListener(e -> outerTabs.setSelectedIndex(0));
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
-        realHardwarePanel.add(selector.getControl(), "right, wrap");
-
-        if (FileLog.isWindows()) {
-
-            // for F7 builds we just build one file at the moment
-//            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
-            JComponent updateHelp = ProgramSelector.createHelpButton();
-
-            JLabel comp = binaryModificationControl();
-            realHardwarePanel.add(comp, "right, wrap");
-            realHardwarePanel.add(updateHelp, "right, wrap");
-
-            // st-link is pretty advanced use-case, real humans do not have st-link as of 2021
-            //realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
-        }
+        realHardwarePanel.add(goToFirmwareTab, "right, wrap");
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             status.stop();
             selector.apply(currentHardware);
             applyKnownPorts(currentHardware);
+            if (!hasSeenEcuOrSimulator) {
+                boolean ecuOrSimSeen = currentHardware.getKnownPorts().stream()
+                    .anyMatch(p -> p.type == SerialPortType.Ecu || p.type == SerialPortType.EcuWithOpenblt);
+                if (ecuOrSimSeen) {
+                    hasSeenEcuOrSimulator = true;
+                }
+            }
             frame.pack();
         }));
 
@@ -246,7 +283,57 @@ public class StartupFrame {
         JPanel content = new JPanel(new BorderLayout());
         content.add(leftPanel, BorderLayout.WEST);
         content.add(rightPanel, BorderLayout.EAST);
-        frame.add(content);
+
+        JPanel connectTabWrapper = new JPanel(new BorderLayout());
+        connectTabWrapper.add(content, BorderLayout.NORTH);
+
+        outerTabs = new JTabbedPane() {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension superPref = super.getPreferredSize();
+                Component sel = getSelectedComponent();
+                if (sel == null) return superPref;
+                int connectTabHeight = Math.max(sel.getPreferredSize().height, leftPanel.getPreferredSize().height);
+                return new Dimension(superPref.width, 100 + connectTabHeight);
+            }
+        };
+        firmwareUpdateTab = new FirmwareUpdateTab(
+            connectivityContext, UiProperties.getWhiteLabel(),
+            firmwareStatusPanel, asyncJobExecutor, ecuPortToUse);
+
+        JPanel firmwareTopPanel = new JPanel(new BorderLayout(0, 0));
+        firmwareTopPanel.add(selector.getControl(), BorderLayout.NORTH);
+        firmwareTopPanel.add(firmwareUpdateTab.getBasicUpdaterPanel().getMigrateSettings(), BorderLayout.SOUTH);
+
+        JPanel firmwareTabPanel = new JPanel(new BorderLayout(0, 0));
+        firmwareTabPanel.add(firmwareTopPanel, BorderLayout.NORTH);
+        firmwareTabPanel.add(firmwareStatusPanel.getContent(), BorderLayout.CENTER);
+        outerTabs.addTab("Update Firmware", firmwareTabPanel);
+        outerTabs.addTab("Manage Tunes", new TuneManagementTab(
+            connectivityContext,
+            ecuPortToUse,
+            firmwareUpdateTab.getBasicUpdaterPanel().getImportTuneButton().getContent(),
+            asyncJobExecutor,
+            tuneStatusPanel
+        ).getContent());
+        outerTabs.addTab("Connect", connectTabWrapper);
+
+        int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
+        outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
+
+        connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+            if (firmwareTabStatus != null)
+                firmwareTabStatus.stop();
+            firmwareUpdateTab.getBasicUpdaterPanel().onHardwareUpdated();
+        }));
+
+        firmwareTabStatus = new StatusAnimation(
+            msg -> firmwareUpdateTab.getBasicUpdaterPanel().updateStatus(msg),
+            SCANNING_PORTS);
+
+        TunerStudioHelper.checkTunerStudio(frame.getContentPane(), () -> restoreContent(outerTabs));
+
+        frame.add(outerTabs);
         frame.pack();
         setFrameIcon(frame);
         log.info("setVisible");
@@ -266,7 +353,7 @@ public class StartupFrame {
         final Supplier<Integer> minWidthSupplier
     ) {
         final String nextBranchName = ConsoleBundleUtil.readBundleFullNameNotNull().getNextBranchName();
-        if (nextBranchName != null && !nextBranchName.isBlank()) {
+        if (nextBranchName != null && nextBranchName.trim().length() > 0) {
             final JLabel newReleaseAmmomceMessage = new JLabel(
                 String.format(
                     "<html><p style=\"text-align: %s;font-weight: bold;color:red\">New release `%s` is available!<br/>To upgrade please restart `%s`.</p></html>",
@@ -326,6 +413,12 @@ public class StartupFrame {
         return jLabel;
     }
 
+    private void restoreContent(JComponent root) {
+        frame.getContentPane().removeAll();
+        frame.add(root);
+        AutoupdateUtil.pack(frame);
+    }
+
     private void updateConnectButtonState() {
         PortResult selectedItem = (PortResult) portsComboBox.getComboPorts().getSelectedItem();
         connectButton.setEnabled(selectedItem != null && selectedItem.type != OpenBlt);
@@ -333,6 +426,18 @@ public class StartupFrame {
 
     private void applyKnownPorts(AvailableHardware currentHardware) {
         List<PortResult> ports = currentHardware.getKnownPorts();
+/*
+todo: enable auto-connect once we have 'Device' tab
+        List<PortResult> ecuPorts = ports.stream().filter(portResult -> portResult.type == EcuWithOpenblt || portResult.type == SerialPortType.Ecu).collect(Collectors.toList());
+        if (!ecuPorts.isEmpty() && firstTimeAutoConnect) {
+            firstTimeAutoConnect = false;
+            PortResult target = ecuPorts.get(0);
+            log.info("Ecu detected, connecting automatically: " + target);
+            // combo box selection is already updated by applyPortSelectionToUIcontrol
+            connect(target);
+            return;
+        }
+*/
         log.info("Rendering available ports: " + ports);
         connectPanel.setVisible(!ports.isEmpty());
 
@@ -348,7 +453,7 @@ public class StartupFrame {
 
         noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
 
-        boolean hasEcuWithOpenBlt = !currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == EcuWithOpenblt).collect(Collectors.toList()).isEmpty();
+        boolean hasEcuWithOpenBlt = !ports.stream().filter(portResult -> portResult.type == EcuWithOpenblt).collect(Collectors.toList()).isEmpty();
         if (hasEcuWithOpenBlt && firstTimeHasEcuWithOpenBlt) {
             selector.setMode(UpdateMode.OPENBLT_AUTO);
             firstTimeHasEcuWithOpenBlt = false;
@@ -362,11 +467,18 @@ public class StartupFrame {
         BasicLogoHelper.setFrameIcon(frame, icon);
     }
 
-    private void connectButtonAction(JComboBox<String> comboSpeeds) {
+    private void connectButtonAction() {
+/*
+        make baud rate combo box much less visible #9103
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
+*/
         PortResult selectedPort = ((PortResult)portsComboBox.getComboPorts().getSelectedItem());
+        connect(selectedPort);
+    }
+
+    private void connect(PortResult selectedPort) {
         disposeFrameAndProceed();
-        new ConsoleUI(selectedPort.port);
+        new ConsoleUI(selectedPort.port, selectedPort.type);
     }
 
     /**
@@ -399,10 +511,37 @@ public class StartupFrame {
         };
     }
 
+    public void showUpdateBanner(String message) {
+        // Use null parent if StartupFrame was already disposed (user connected to a ecu before update finished)
+        Component parent = frame.isDisplayable() ? frame : null;
+        int choice = JOptionPane.showConfirmDialog(
+            parent,
+            message + "\nRestart now to apply it?",
+            "Update Ready",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        if (choice == JOptionPane.YES_OPTION) {
+            if (frame.isDisplayable())
+                disposeFrameAndProceed();
+            SimulatorHelper.onWindowClosed();
+            Autoupdate.relaunchConsole();
+        }
+    }
+
+    private void saveTabIndex() {
+        if (outerTabs != null)
+            getConfig().getRoot().setProperty(STARTUP_TAB_INDEX, outerTabs.getSelectedIndex());
+    }
+
     public void disposeFrameAndProceed() {
         isProceeding = true;
+        saveTabIndex();
+        getConfig().save();
         frame.dispose();
         status.stop();
+        if (firmwareTabStatus != null)
+            firmwareTabStatus.stop();
         connectivityContext.getSerialPortScanner().stopTimer();
     }
 

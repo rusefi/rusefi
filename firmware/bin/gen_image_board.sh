@@ -4,6 +4,9 @@ BOARD_DIR=${1:-$BOARD_DIR}
 SHORT_BOARD_NAME=${2:-$SHORT_BOARD_NAME}
 INI=${3:-"rusefi_$SHORT_BOARD_NAME.ini"}
 
+# fail on error
+set -e
+
 shopt -s expand_aliases
 if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
 FDIR=$(realpath $(dirname "$0")/..)

@@ -10,6 +10,7 @@ struct_no_prefix wideband_state_s
 	bit allowed;
 	bit fwUnsupported;
 	bit fwOutdated;
+	bit faeDetected;
 
 	uint16_t tempC;WBO: Temperature;"C", 1, 0, 500, 1000, 0
 	uint16_t autoscale nernstVoltage;WBO: Nernst Voltage;"V", 0.001, 0, 0, 1, 3

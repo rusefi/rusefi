@@ -48,16 +48,28 @@ static int getSpiAf(SPIDriver *driver) {
 }
 
 void turnOnSpi(spi_device_e device) {
-	if (isSpiInitialized[device])
+	if (isSpiInitialized[device]) {
 		return; // already initialized
+	}
 	isSpiInitialized[device] = true;
+
+	brain_pin_e sckPin = getSckPin(device);
+	brain_pin_e misoPin = getMisoPin(device);
+	brain_pin_e mosiPin = getMosiPin(device);
+
+	if (!isBrainPinValid(sckPin) ||
+	    !isBrainPinValid(misoPin)
+	    /* EGT is a case when MOSI is not assigned || !isBrainPinValid(mosiPin)*/) {
+		criticalError("SPI%d pin(s) are not valid", device);
+	}
+
 	if (device == SPI_DEVICE_1) {
 // todo: introduce a nice structure with all fields for same SPI
 #if STM32_SPI_USE_SPI1
 //	scheduleMsg(&logging, "Turning on SPI1 pins");
-		initSpiModule(&SPID1, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID1, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi1SckMode,
 				engineConfiguration->spi1MosiMode,
 				engineConfiguration->spi1MisoMode);
@@ -68,9 +80,9 @@ void turnOnSpi(spi_device_e device) {
 	if (device == SPI_DEVICE_2) {
 #if STM32_SPI_USE_SPI2
 //	scheduleMsg(&logging, "Turning on SPI2 pins");
-		initSpiModule(&SPID2, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID2, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi2SckMode,
 				engineConfiguration->spi2MosiMode,
 				engineConfiguration->spi2MisoMode);
@@ -81,9 +93,9 @@ void turnOnSpi(spi_device_e device) {
 	if (device == SPI_DEVICE_3) {
 #if STM32_SPI_USE_SPI3
 //	scheduleMsg(&logging, "Turning on SPI3 pins");
-		initSpiModule(&SPID3, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID3, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi3SckMode,
 				engineConfiguration->spi3MosiMode,
 				engineConfiguration->spi3MisoMode);
@@ -93,9 +105,9 @@ void turnOnSpi(spi_device_e device) {
 	}
 	if (device == SPI_DEVICE_4) {
 #if STM32_SPI_USE_SPI4
-		initSpiModule(&SPID4, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID4, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi4SckMode,
 				engineConfiguration->spi4MosiMode,
 				engineConfiguration->spi4MisoMode);
@@ -105,9 +117,9 @@ void turnOnSpi(spi_device_e device) {
 	}
 	if (device == SPI_DEVICE_5) {
 #if STM32_SPI_USE_SPI5
-		initSpiModule(&SPID5, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID5, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi5SckMode,
 				engineConfiguration->spi5MosiMode,
 				engineConfiguration->spi5MisoMode);
@@ -117,9 +129,9 @@ void turnOnSpi(spi_device_e device) {
 	}
 	if (device == SPI_DEVICE_6) {
 #if STM32_SPI_USE_SPI6
-		initSpiModule(&SPID6, getSckPin(device),
-				getMisoPin(device),
-				getMosiPin(device),
+		initSpiModule(&SPID6, sckPin,
+				misoPin,
+				mosiPin,
 				engineConfiguration->spi6SckMode,
 				engineConfiguration->spi6MosiMode,
 				engineConfiguration->spi6MisoMode);

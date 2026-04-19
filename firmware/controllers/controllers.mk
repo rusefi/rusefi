@@ -75,13 +75,16 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/hysteresis.cpp \
 	$(CONTROLLERS_DIR)/max_limit_with_hysteresis.cpp \
 	$(CONTROLLERS_DIR)/long_term_fuel_trim.cpp \
+	$(CONTROLLERS_DIR)/second_tables.cpp \
+	$(CONTROLLERS_DIR)/extra_flash_pages.cpp \
 
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \
 	$(CONTROLLERS_DIR)/system \
 	$(CONTROLLERS_DIR)/system/timer \
-	$(CONTROLLERS_DIR)/algo \
-	$(CONTROLLERS_DIR)/algo/airmass \
+ $(CONTROLLERS_DIR)/algo \
+ $(CONTROLLERS_DIR)/algo/airmass \
+ $(CONTROLLERS_DIR)/algo/bean \
 	$(CONTROLLERS_DIR)/algo/defaults \
 	$(CONTROLLERS_DIR)/algo/fuel \
 	$(CONTROLLERS_DIR)/algo/ignition \

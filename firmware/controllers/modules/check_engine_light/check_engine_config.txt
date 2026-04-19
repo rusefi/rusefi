@@ -1,0 +1,11 @@
+	uint8_t autoscale cel_battery_min_v;"Minimum Battery Voltage";"#", 0.1, 0, 0, 25, 1
+	uint8_t autoscale cel_battery_max_v;"Maximum Battery Voltage";"#", 0.1, 0, 0, 25, 1
+
+	uint8_t autoscale cel_map_min_v;"Minimum MAP V";"V", 0.02, 0, 0, 5, 2
+	uint8_t autoscale cel_map_max_v;"Maximum MAP V";"V", 0.02, 0, 0, 5, 2
+
+	uint8_t autoscale cel_iat_min_v;"Minimum IAT V";"V", 0.02, 0, 0, 5, 2
+	uint8_t autoscale cel_iat_max_v;"Maximum IAT V";"V", 0.02, 0, 0, 5, 2
+
+	uint8_t autoscale cel_tps_min_v;"Minimum TPS V";"V", 0.02, 0, 0, 5, 2
+	uint8_t autoscale cel_tps_max_v;"Maximum TPS V";"V", 0.02, 0, 0, 5, 2

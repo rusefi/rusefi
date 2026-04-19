@@ -52,7 +52,7 @@ static void setupDefaultSensorInputs() {
 static bool isFirstInvocation = true;
 #endif // EFI_BOOTLOADER
 
-/*PUBLIC_API_WEAK*/ int hackHellenBoardId(int detectedId) {
+static int hyundaiHellenBoardId(int detectedId) {
   if (detectedId == BOARD_ID_VAG121_D) {
     // wow something bad has happened to that batch of boards?!
     return BOARD_ID_154HYUNDAI_C;
@@ -200,4 +200,5 @@ Gpio* getBoardMetaOutputs() {
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = hellen154_hyundai_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen154_hyundai_boardConfigOverrides;
+	custom_board_hackHellenBoardId = hyundaiHellenBoardId;
 }

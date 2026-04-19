@@ -53,6 +53,7 @@ pins:
 info:
   cid: a
   title: uaefi
+  name: connector A
   directory: hellen/uaefi
   board_url: https://wiki.rusefi.com/uaefi
   image:

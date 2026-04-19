@@ -16,7 +16,7 @@ public class SingleAsyncJobExecutor {
 
     private volatile Optional<AsyncJob> jobInProgress = Optional.empty();
 
-    SingleAsyncJobExecutor(
+    public SingleAsyncJobExecutor(
         final UpdateOperationCallbacks updateOperationCallbacks
     ) {
         this.updateOperationCallbacks = updateOperationCallbacks;

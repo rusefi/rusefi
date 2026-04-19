@@ -52,8 +52,8 @@ pins:
 
   - pin: 9A
     function: CAM Sensor Exhaust
-    meta: MM100_IN_D3
-    class: event_inputs
+    id: [MM100_IN_D3, MM100_IN_D3]
+    class: [event_inputs, sent_inputs]
     ts_name: ___ HALL3
     type: hall
 
@@ -108,8 +108,8 @@ pins:
     function: Digital input signal
 
   - pin: 17A
-    meta: MM100_IN_D2
-    class: event_inputs
+    id: [MM100_IN_D2, MM100_IN_D2]
+    class: [event_inputs, sent_inputs]
     function: CAM Sensor Intake
     ts_name: ___ HALL2
     type: hall
@@ -146,73 +146,61 @@ pins:
 
   - pin: 23A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 24A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 25A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 26A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 27A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 28A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 29A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 30A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 31A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 32A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 33A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
   - pin: 34A
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
     type: gnd
     color: black
 
@@ -226,7 +214,7 @@ pins:
     class: outputs
     meta: MM100_IGN1
     ts_name: Coil 1
-    function: Coil 1
+    function: Coil 1 (5v)
     type: ign
     color: green
 
@@ -380,13 +368,13 @@ pins:
 
   - pin: 23B
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+
     type: gnd
     color: black
 
   - pin: 24B
     function: GNDA
-#   HALL1 sensor / HALL2 sensor / HALL3 sensor / DIN sensor / map sensor / tps1 sensor / tps2 sensor / AIN1 sensor / AIN2 sensor / FLEX/HALL sensor / KNOCK sensor / IAT sensor / CLT sensor / KNOCK2 sensor / PPS1 sensor / PPS2 sensor
+
     type: gnd
     color: black
 
@@ -402,6 +390,12 @@ pins:
     ts_name: MAP
     function: MAP signal
     color: yellow
+
+  - pin: On-board MAP
+    meta: MM100_IN_MAP2_ANALOG
+    class: analog_inputs
+    function: Optional MAP Sensor Input
+    ts_name: On-board MAP
 
 info:
   cid: main

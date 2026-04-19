@@ -9,6 +9,7 @@
 #include "pch.h"
 
 #include "storage.h"
+#include "extra_flash_pages.h"
 
 #if EFI_CONFIGURATION_STORAGE
 #include "mpu_util.h"
@@ -16,6 +17,10 @@
 
 /* If any setting storage is exist or we are in unit test */
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
+
+/* TODO: no weak please */
+__attribute__((weak)) bool boardAllowFlashNow() { return true; }
+
 bool storageAllowWriteID(StorageItemId id)
 {
 #if (EFI_STORAGE_INT_FLASH == TRUE) || defined(EFI_UNIT_TEST)
@@ -27,6 +32,10 @@ bool storageAllowWriteID(StorageItemId id)
 		// check if HW support flash writing while executing
 		if (mcuCanFlashWhileRunning()) {
 			return true;
+		}
+
+		if (!boardAllowFlashNow()) {
+			return false;
 		}
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -87,6 +96,9 @@ static bool storageWriteID(uint32_t id) {
 	} else if (id == EFI_LTFT_RECORD_ID) {
 		engine->module<LongTermFuelTrim>()->store();
 		return true;
+	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
+		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
+		return true;
 	} else {
 		efiPrintf("Requested to write unknown record id %ld", id);
 		// to clear pending bit
@@ -100,6 +112,9 @@ static bool storageReadID(uint32_t id) {
 
 	if (id == EFI_LTFT_RECORD_ID) {
 		engine->module<LongTermFuelTrim>()->load();
+		return true;
+	} else if (id == EFI_SECOND_TABLES_RECORD_ID) {
+		loadExtraPage(EFI_SECOND_TABLES_RECORD_ID);
 		return true;
 	} else {
 		efiPrintf("Requested to read unknown record id %ld", id);
@@ -245,6 +260,7 @@ bool storagRequestUnregisterStorage(StorageType id)
 	return storageManagerSendCmd(MSG_CMD_UNREG, (uint32_t)id);
 }
 
+// bitmap of flags per pageId. Reminder that page numbers start from 1, see StorageItemId
 static uint32_t pendingWrites = 0;
 static uint32_t pendingReads = 0;
 
@@ -327,9 +343,10 @@ static void storageManagerThread(void*) {
 			}
 		}
 
-		// check if we can write some of pendind IDs...
+		// check if we can write some of pending IDs...
 		for (size_t i = 0; (i < EFI_STORAGE_TOTAL_ITEMS) && pendingWrites; i++) {
 			if ((pendingWrites & BIT(i)) == 0) {
+			  // not for this page
 				continue;
 			}
 

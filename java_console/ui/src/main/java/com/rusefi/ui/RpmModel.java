@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class RpmModel {
     }
 
     private RpmModel() {
-        SensorCentral.getInstance().addListener(Sensor.RPMValue, value -> setValue((int) value));
+        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.getOutputChannelName(), value -> setValue((int) value));
     }
 
     public void setValue(int rpm) {

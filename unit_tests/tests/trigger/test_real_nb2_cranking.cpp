@@ -28,9 +28,9 @@ TEST(realCrankingNB2, normalCranking) {
 
 	ASSERT_EQ(876, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	EXPECT_EQ(2u, eth.recentWarnings()->getCount());
-	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, eth.recentWarnings()->get(0).Code);
-	EXPECT_EQ(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, eth.recentWarnings()->get(1).Code);
+	EXPECT_EQ(3u, eth.recentWarnings()->getCount());
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, eth.recentWarnings()->get(1).Code);
+	EXPECT_EQ(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, eth.recentWarnings()->get(2).Code);
 }
 
 TEST(realCrankingNB2, crankingMissingInjector) {
@@ -49,8 +49,8 @@ TEST(realCrankingNB2, crankingMissingInjector) {
 
 	ASSERT_EQ(316, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	EXPECT_EQ(3u, eth.recentWarnings()->getCount());
-	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, eth.recentWarnings()->get(0).Code);
-	EXPECT_EQ(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, eth.recentWarnings()->get(1).Code);
-	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(2).Code);
+	EXPECT_EQ(4u, eth.recentWarnings()->getCount());
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, eth.recentWarnings()->get(1).Code);
+	EXPECT_EQ(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, eth.recentWarnings()->get(2).Code);
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(3).Code);
 }

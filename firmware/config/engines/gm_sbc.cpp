@@ -88,6 +88,7 @@ void setGmSbc() {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->globalTriggerAngleOffset = 24;
 
+    // this is used to tell HEI that we are always in charge of timing advance
     gppwm_channel *ignOverride = &engineConfiguration->gppwm[0];
    	ignOverride->pwmFrequency = 0;
    	strcpy(engineConfiguration->gpPwmNote[0], "ign ovrrd B");

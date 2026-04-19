@@ -27,8 +27,8 @@ typedef enum __attribute__ ((__packed__)) {
 	// 4 cylinder
 	FO_1_3_4_2 = 1, // typical inline 4
 	FO_1_2_4_3 = 2,
-	FO_1_3_2_4 = 3, // for example horizontally opposed engine
-	FO_1_4_3_2 = 17, // for example VW aircooled boxer engine
+	FO_1_3_2_4 = 3, // horizontally opposed engine
+	FO_1_4_3_2 = 17, // VW aircooled boxer engine
 
 	// 5 cylinder
 	FO_1_2_4_5_3 = 6,
@@ -38,8 +38,8 @@ typedef enum __attribute__ ((__packed__)) {
 	FO_1_6_5_4_3_2 = 30, // GM 3800 engine
 	FO_1_4_5_2_3_6 = 31, // Chevrolet Corvair
 	FO_1_4_2_5_3_6 = 7, // Mercedes-Benz M104 engine
-	FO_1_2_3_4_5_6 = 9, // all Nissan v6, GM 60-Degree V6 engine
-	FO_1_6_3_2_5_4 = 13, // EG33
+	FO_1_2_3_4_5_6 = 9, // All Nissan v6, GM 60-Degree V6 engine
+	FO_1_6_3_2_5_4 = 13, // Subaru EG33
 	FO_1_4_3_6_2_5 = 27, // VAG v6 different from VAG VR6
 	FO_1_6_2_4_3_5 = 29, // Some 911
 
@@ -56,7 +56,7 @@ typedef enum __attribute__ ((__packed__)) {
 	FO_1_2_3_4_5_6_7_8 = 25, // linearly incrementing, for V8 testing
 	FO_1_5_4_8_6_3_7_2 = 26, // Audi 4.2 40v V8
 	FO_1_5_4_8_3_7_2_6 = 32, // Ford Voodoo
-	FO_1_8_7_3_6_5_4_2 = 28, // VH41DE (Japaneese Y32 Variant)
+	FO_1_8_7_3_6_5_4_2 = 28, // VH41DE (Japanese Y32 Variant)
 	FO_1_8_6_2_7_3_4_5 = 34, // Ferrari-Maserati F136
 
 	// 9 cylinder - for instance radial :)
@@ -65,10 +65,10 @@ typedef enum __attribute__ ((__packed__)) {
 
 	// 10 cylinder
 	FO_1_10_9_4_3_6_5_8_7_2 = 14, // dodge and viper ram v10
-	FO_1_6_5_10_2_7_3_8_4_9 = 33, // BMW S85, also Audi 5.2 R8 and huracan GDI. Ford Triton 6.8L V10
+	FO_1_6_5_10_2_7_3_8_4_9 = 33, // BMW S85, also Audi 5.2 R8 and Huracan GDI. Ford Triton 6.8L V10
 
 	// 12 cylinder
-	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // bmw M70 & M73, Ferrari 456M GT V12
+	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // BMW M70 & M73, Ferrari 456M GT V12
 	FO_1_7_4_10_2_8_6_12_3_9_5_11 = 16, // Lamborghini Diablo VT, typical rusEfi use-case
 	FO_1_12_5_8_3_10_6_7_2_11_4_9 = 18, // VAG W12, M120
 	// 1,12,7,6,3,10,11,2,5,8,9,4 Rolls-Royce Merlin

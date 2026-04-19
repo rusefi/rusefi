@@ -1,0 +1,11 @@
+[project]
+name = "rusefi"
+# https://github.com/xtitoris/xtitoris-forge
+channels = ["conda-forge", "xtitoris"]
+platforms = ["win-64", "linux-64", "osx-arm64"]
+
+# pixi global install arm-gnu-toolchain=14.2.rel1 --channel xtitoris
+# pixi global install arm-gnu-toolchain --channel xtitoris
+[dependencies]
+make = ">=4.4.1,<5"
+arm-gnu-toolchain = ">=14,<15"

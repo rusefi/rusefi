@@ -96,7 +96,7 @@ void generateLog(const char* filename) {
     reader.open(filename, NORMAL_ORDER, NORMAL_ORDER);
 
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-    setVerboseTrigger(true);
+//    setVerboseTrigger(true);
 
     engineConfiguration->vvtMode[0] = vvt_mode_e::VVT_MITSUBISHI_6G72;
     eth.setTriggerType(trigger_type_e::TT_3_TOOTH_CRANK);

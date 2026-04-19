@@ -42,6 +42,8 @@ const char *SettingStorageSD::getIdFileName(size_t id) {
 	switch (id) {
 	case EFI_LTFT_RECORD_ID:
 		return "ltft.bin";
+	case EFI_SECOND_TABLES_RECORD_ID:
+		return "second_tables.bin";
 	default:
 		return nullptr;
 	}

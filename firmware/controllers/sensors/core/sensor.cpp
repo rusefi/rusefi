@@ -40,6 +40,11 @@ public:
 			firmwareError(ObdCode::CUSTOM_OBD_26, "Duplicate registration for sensor \"%s\"", sensor->getSensorName());
 			return false;
 		} else {
+
+#if VERBOSE_SENSOR_DEBUG
+  efiPrintf("Register sensor %s", sensor->getSensorName());
+#endif
+
 			// Put the sensor in the registry
 			m_sensor = sensor;
 			return true;
@@ -47,6 +52,13 @@ public:
 	}
 
 	void unregister() {
+#if VERBOSE_SENSOR_DEBUG
+	  if (m_sensor) {
+      efiPrintf("Unregistering sensor %s", m_sensor->getSensorName());
+	  } else {
+	    efiPrintf("Unregistering null sensor");
+	  }
+#endif
 		m_sensor = nullptr;
 	}
 

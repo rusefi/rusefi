@@ -416,6 +416,15 @@ uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t ta
 	return left;
 }
 
+TriggerWheel TriggerWaveform::getWheel(size_t index) {
+#if EFI_UNIT_TEST
+	return triggerSignalIndeces[index];
+#else
+  UNUSED(index);
+#endif
+	return TriggerWheel::T_PRIMARY;
+}
+
 void TriggerWaveform::setShapeDefinitionError(bool value) {
 	shapeDefinitionError = value;
 }
@@ -479,8 +488,15 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeSuzukiG13B(this);
 		break;
 
-	case trigger_type_e::TT_FORD_TFI_PIP:
-		configureFordPip(this);
+	case trigger_type_e::TT_SUZUKI_G16B:
+		initializeSuzukiG16B(this);
+		break;
+
+	case trigger_type_e::TT_FORD_TFI_PIP_6:
+		configureFordPip6(this);
+		break;
+	case trigger_type_e::TT_FORD_TFI_PIP_8:
+		configureFordPip8(this);
 		break;
 
 	case trigger_type_e::TT_FORD_ST170:
@@ -504,7 +520,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_DODGE_NEON_1995:
-	case trigger_type_e::TT_DODGE_NEON_1995_ONLY_CRANK:
 		configureNeon1995TriggerWaveformOnlyCrank(this);
 		break;
 
@@ -517,8 +532,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_DODGE_NEON_2003_CRANK:
-		configureNeon2003TriggerWaveformCam(this);
-//		configureNeon2003TriggerWaveformCrank(triggerShape);
+		configureNeon2003TriggerWaveformCrank(this);
 		break;
 
 	case trigger_type_e::TT_FORD_ASPIRE:
@@ -723,7 +737,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMitsubishi4g63Cam(this);
 		break;
 
-	case trigger_type_e::TT_UNUSED29:
+	case trigger_type_e::TT_NISSAN_K11:
+	  initializeNissanK11(this);
+    break;
 	case trigger_type_e::TT_HONDA_CBR_600:
 		configureHondaCbr600(this);
 		break;
@@ -798,9 +814,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_TRI_TACH:
-		configureTriTach(this);
-		break;
-
+// too dead		configureTriTach(this);
+//		break;
+//
 	case trigger_type_e::TT_GM_24x_5:
 		initGmLS24_5deg(this);
 		break;
@@ -829,6 +845,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeJeepRenix66_2_2(this);
 		break;
 
+	case trigger_type_e::TT_UNUSED_96:
 	case trigger_type_e::TT_SUBARU_7_6_CRANK:
 		initializeSubaru7_6_crankOnly(this);
 		break;

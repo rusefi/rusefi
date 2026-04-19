@@ -487,8 +487,14 @@ float getStandardAirCharge() {
 	return idealGasLaw(cylDisplacement, STD_ATMOSPHERE, C_K_OFFSET + STD_IAT);
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD
+#include "board_overrides.h"
+
+std::optional<setup_custom_get_cylinder_fuel_trim_type> custom_board_getCylinderFuelTrim;
+
 float getCylinderFuelTrim(size_t cylinderNumber, float rpm, float fuelLoad) {
+	if (custom_board_getCylinderFuelTrim.has_value()) {
+		return custom_board_getCylinderFuelTrim.value()(cylinderNumber, rpm, fuelLoad);
+	}
 	auto trimPercent = interpolate3d(
 		config->fuelTrims[cylinderNumber].table,
 		config->fuelTrimLoadBins, fuelLoad,

@@ -1,6 +1,6 @@
-/*
+/**
  * @file knock_logic.h
- *
+ * @brief High-level knock control interface and base class.
  * @date Apr 04, 2021
  * @author Andrey Gusakov
  */
@@ -19,12 +19,13 @@ public:
     KnockControllerBase() {
 	    // start with threshold higher than any possible knock to avoid recording spurious knocks
 	    m_knockThreshold = 100;
+		memset(m_gain, 0, sizeof(m_gain));
     }
 	// EngineModule implementation
 	void onFastCallback() override;
 
 	// onKnockSenseCompleted is the callback from the knock sense driver to report a sensed knock level
-	void onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime);
+	bool onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime);
 
 	float getFuelTrimMultiplier() const;
 	float getKnockRetard() const;
@@ -37,6 +38,10 @@ private:
 	using PD = PeakDetect<float, MS2NT(50)>;
 	PD peakDetectors[MAX_CYLINDER_COUNT];
 	PD allCylinderPeakDetector;
+
+	Timer m_lastKnockTimer;
+
+	int8_t m_gain[MAX_CYLINDER_COUNT];
 };
 
 class KnockController : public KnockControllerBase {

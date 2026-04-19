@@ -86,6 +86,9 @@ public:
 	 * Open question if we have any cases where this opimization is needed.
 	 */
 	float getCachedRpm() const;
+
+	float getMinCrankingRpm() const;
+	
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
@@ -138,6 +141,11 @@ private:
 	 * Open question is when do we need it for performance reasons.
 	 */
 	 float cachedRpmValue = 0;
+
+	/**
+	 * The slowest RPM encountered during cranking, used for interpolating ignition advance
+	 */
+	float minCrankingRpm = 0;
 
 	/**
 	 * This counter is incremented with each revolution of one of the shafts. Could be

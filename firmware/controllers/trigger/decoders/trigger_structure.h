@@ -237,6 +237,8 @@ public:
 
 	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
 
+	TriggerWheel getWheel(size_t index);
+
 	/**
 	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
 	 */

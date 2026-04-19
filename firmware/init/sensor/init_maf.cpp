@@ -6,7 +6,7 @@
 #include "table_func.h"
 #include "func_chain.h"
 
-static FunctionalSensor maf (SensorType::Maf , /* timeout = */ MS2NT(50));
+static FunctionalSensor maf(SensorType::Maf, /* timeout = */ MS2NT(50));
 static FunctionalSensor maf2(SensorType::Maf2, /* timeout = */ MS2NT(50));
 
 // Just check min/max allowed voltage
@@ -24,7 +24,6 @@ struct MafVoltageCheck : public SensorConverter {
 	}
 };
 
-
 // extract the type of the elements in the bin/value arrays
 using BinType = std::remove_extent_t<decltype(config->mafDecodingBins)>;
 using ValueType = std::remove_extent_t<decltype(config->mafDecoding)>;
@@ -41,7 +40,7 @@ struct MafTable : public SensorConverter {
 
 struct MafFilter final : public SensorConverter {
 	SensorResult convert(float input) const override {
-//		engine->outputChannels.mafMeasured_preFilter = input;
+		//		engine->outputChannels.mafMeasured_preFilter = input;
 
 		float param = engineConfiguration->mafFilterParameter;
 		if (param == 0) {
@@ -85,7 +84,7 @@ static void initMaf(adc_channel_e channel, FunctionalSensor& m) {
 
 	m.setFunction(mafFunction);
 
-	AdcSubscription::SubscribeSensor(m, channel, /*lowpassCutoff =*/ 50);
+	AdcSubscription::SubscribeSensor(m, channel, /*lowpassCutoff =*/50);
 	m.Register();
 }
 

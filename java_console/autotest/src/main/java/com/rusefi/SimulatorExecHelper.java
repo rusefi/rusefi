@@ -15,6 +15,7 @@ import static com.rusefi.SimulatorFunctionalTestLauncher.isHappy;
 
 /**
  * 3/18/14
+ * @see SimulatorHelper
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SimulatorExecHelper {
@@ -22,7 +23,7 @@ public class SimulatorExecHelper {
 
     private final static NamedThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorExecHelper", true);
 
-    private static final String SIMULATOR_BUILD_RUSEFI_SIMULATOR = "../simulator/build/rusefi_simulator";
+    private static final String SIMULATOR_BUILD_RUSEFI_SIMULATOR = "simulator/build/rusefi_simulator";
     // see also SimulatorHelper
     private static final String SIMULATOR_BINARY = getSimulatorBinary();
     private static Process simulatorProcess;

@@ -51,7 +51,6 @@
 // DEPRECATED that's a bad pattern - weak linking is extremely fragile, we risk changing method signature
 // and loosing magic
 // open question what's best way?
+// this approach is deprecated, we shall migrate all usages to proved board_overrides.h pattern
 //
-// better option one: listeners
-// better option two: required per-board method, like what we do for getWarningLedPin() etc
 #define PUBLIC_API_WEAK __attribute__((weak))

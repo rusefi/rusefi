@@ -54,6 +54,10 @@ float InstantRpmCalculator::calculateInstantRpm(
 
 	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 
+	// Save previous timestamp before overwriting - needed for single-tooth triggers
+	// where prevIndex == current_index (see below)
+	uint32_t previousTimeAtIndex = timeOfLastEvent[current_index];
+
 	// Record the time of this event so we can calculate RPM from it later
 	timeOfLastEvent[current_index] = nowNt32;
 
@@ -69,6 +73,21 @@ float InstantRpmCalculator::calculateInstantRpm(
 	// now let's get precise angle for that event
 	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
 	auto time90ago = timeOfLastEvent[prevIndex];
+	angle_t angleDiff = currentAngle - prevIndexAngle;
+
+	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
+	wrapAngle(angleDiff, "angleDiff", ObdCode::CUSTOM_ERR_6561);
+
+	// For single-tooth triggers, all event angles map to the same value, so
+	// findAngleIndex returns current_index. This causes two problems:
+	// 1) time90ago was just overwritten with nowNt32, yielding time=0
+	// 2) angleDiff is 0 since both angles are identical
+	// Fix: use the saved previous timestamp and the full engine cycle as angle delta,
+	// effectively measuring RPM from one revolution to the next.
+	if (prevIndex == (int)current_index) {
+		time90ago = previousTimeAtIndex;
+		angleDiff = getEngineState()->engineCycle;
+	}
 
 	// No previous timestamp, instant RPM isn't ready yet
 	if (time90ago == 0) {
@@ -76,10 +95,6 @@ float InstantRpmCalculator::calculateInstantRpm(
 	}
 
 	uint32_t time = nowNt32 - time90ago;
-	angle_t angleDiff = currentAngle - prevIndexAngle;
-
-	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
-	wrapAngle(angleDiff, "angleDiff", ObdCode::CUSTOM_ERR_6561);
 
 	// just for safety, avoid divide-by-0
 	if (time == 0) {

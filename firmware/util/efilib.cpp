@@ -212,11 +212,27 @@ static uint32_t getBitRangeCommon(const uint8_t data[], int bitIndex, int bitWid
 uint32_t getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth) {
   return getBitRangeCommon(data, bitIndex, bitWidth, 1);
 }
+int32_t getBitRangeLsbSigned(const uint8_t data[], int bitIndex, int bitWidth) {
+  int32_t val = getBitRangeCommon(data, bitIndex, bitWidth, 1);
+  val <<= (32 - bitWidth);
+  val >>= (32 - bitWidth);
+  return val;
+}
+
 
 // see also getBitRangeMsb in lua_lib.h
-uint32_t getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth) {
+uint32_t getBitRangeMsbInternal(const uint8_t data[], int bitIndex, int bitWidth) {
   return getBitRangeCommon(data, bitIndex, bitWidth, -1);
 }
+
+/*
+int32_t getBitRangeMsbSigned(const uint8_t data[], int bitIndex, int bitWidth) {
+  int32_t val = getBitRangeCommon(data, bitIndex, bitWidth, -1);
+  val <<= (32 - bitWidth);
+  val >>= (32 - bitWidth);
+  return val;
+}
+*/
 
 void setBitRangeLsb(uint8_t data[], const int totalBitIndex, const int bitWidth, const uint32_t value) {
 	int leftBitWidth = bitWidth;
@@ -263,7 +279,14 @@ int motorolaMagicFromDbc(int b, int length) {
 
 uint32_t getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth) {
 	const int b = motorolaMagicFromDbc(bitIndex, bitWidth);
-	return getBitRangeMsb(data, b, bitWidth);
+	return getBitRangeMsbInternal(data, b, bitWidth);
+}
+int32_t getBitRangeMotoSigned(const uint8_t data[], int bitIndex, int bitWidth) {
+	const int b = motorolaMagicFromDbc(bitIndex, bitWidth);
+	int val = getBitRangeMsbInternal(data, b, bitWidth);
+  val <<= (32 - bitWidth);
+  val >>= (32 - bitWidth);
+  return val;
 }
 
 void setBitRangeMoto(uint8_t data[], const int totalBitIndex, const int bitWidth, const uint32_t value) {

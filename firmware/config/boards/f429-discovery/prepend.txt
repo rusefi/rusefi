@@ -1,5 +1,6 @@
 
-! asserting that rectangular configuration works
+! more than twice we had firmware defects related to table indexing
+! asserting that rectangular configuration works as one of the ways to assert correct array access
 #define TRACTION_CONTROL_ETB_DROP_SLIP_SIZE 10
 #define TRACTION_CONTROL_ETB_DROP_SPEED_SIZE 16
 

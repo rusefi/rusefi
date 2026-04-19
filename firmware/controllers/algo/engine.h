@@ -59,6 +59,7 @@
 #include "vvt.h"
 #include "closed_loop_fuel.h"
 #include "long_term_fuel_trim.h"
+#include "second_tables.h"
 #include "electronic_throttle_generated.h"
 #include "engine_cylinder.hpp"
 
@@ -109,8 +110,7 @@ public:
 
     StartStopState startStopState{};
 
-
-    TunerStudioOutputChannels outputChannels{};
+    output_channels_s outputChannels{};
 
     /**
      * Sometimes for instance during shutdown we need to completely supress CAN TX
@@ -377,12 +377,6 @@ public:
        Returns true if some operations are in progress on background.
      */
     bool isInShutdownMode() const;
-
-    /**
-     * The stepper does not work if the main relay is turned off (it requires +12V).
-     * Needed by the stepper motor code to detect if it works.
-     */
-    bool isMainRelayEnabled() const;
 
     void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
 

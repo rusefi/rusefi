@@ -204,7 +204,7 @@ public:
 	}
 
 	/* CAN messages entry point */
-	virtual void decodeFrame(const CANRxFrame& frame, efitick_t nowNt)
+	virtual void decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/)
 	{
 		if (frame.DLC < 1 + isoHeaderByteIndex) {
 			// invalid++;

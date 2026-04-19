@@ -11,6 +11,9 @@
 #define TRIGGER_GAP_TO "gapTo"
 #define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 #define TRIGGER_SYNC_EDGE "syncEdge"
+#define TRIGGER_MODE "operationMode"
+#define TRIGGER_ONLY_PRIMARY "useOnlyPrimaryForSync"
+#define TRIGGER_WITHOUT_TDC "shapeWithoutTdc"
 
 ! this is shared between tunerstudio.template.ini and FiringOrderTSLogic
 #define IGNITION_OUTPUT "Ignition Output"

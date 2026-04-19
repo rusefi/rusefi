@@ -1,10 +1,16 @@
 package com.rusefi.core;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
+import com.opensr5.ini.LowercaseHashMap;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,16 +20,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p/>
  * Date: 1/6/13
  * Andrey Belomutskiy, (c) 2013-2020
- *
- * @see SensorLog
  */
 public class SensorCentral implements ISensorCentral {
     private static final SensorCentral INSTANCE = new SensorCentral();
 
     private final SensorsHolder sensorsHolder = new SensorsHolder();
+    // Reused every grabSensorValues call to avoid allocating a fresh map each ECU frame.
+    // LowercaseHashMap gives case-insensitive semantics with O(1) lookup vs TreeMap's O(log N).
+    private final Map<String, Double> outputChannelCache = new LowercaseHashMap<>();
 
-    private final Map<Sensor, List<SensorListener>> sensorListeners = new EnumMap<>(Sensor.class);
+    // Keys normalized to lower-case (Locale.US) for O(1) HashMap lookup.
+    // "coolant", "COOLANT", "Coolant" all resolve to the same listener list.
+    private final Map<String, List<SensorListener>> sensorListeners = new HashMap<>();
     private final List<ResponseListener> listeners = new CopyOnWriteArrayList<>();
+    private volatile Map<String, ResolvedGaugeLabels> resolvedGaugeLabels = Collections.emptyMap();
     private byte[] response;
 
     public static SensorCentral getInstance() {
@@ -34,11 +44,38 @@ public class SensorCentral implements ISensorCentral {
     }
 
     @Override
-    public void grabSensorValues(byte[] response, @NotNull IniFileModel ini) {
+    public Map<String, Double> getOutputChannelMap() {
+        return outputChannelCache;
+    }
+
+    @Override
+    public void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
         this.response = response;
-        ISensorCentral.super.grabSensorValues(response, ini);
+        ISensorCentral.super.grabSensorValues(response, ini, configImage);
         for (ResponseListener listener : listeners)
             listener.onSensorUpdate();
+    }
+
+    @Override
+    public void onGaugeLabelsResolved(Map<String, ResolvedGaugeLabels> labels) {
+        this.resolvedGaugeLabels = labels;
+    }
+
+    /**
+     * Get the resolved gauge labels from the most recent update cycle.
+     * @return map of gauge name to resolved title/units
+     */
+    public Map<String, ResolvedGaugeLabels> getResolvedGaugeLabels() {
+        return resolvedGaugeLabels;
+    }
+
+    /**
+     * Get resolved labels for a specific gauge.
+     * @return resolved labels, or null if no string functions were resolved for this gauge
+     */
+    @Nullable
+    public ResolvedGaugeLabels getResolvedLabels(String gaugeName) {
+        return resolvedGaugeLabels.get(gaugeName);
     }
 
     public byte[] getResponse() {
@@ -47,47 +84,59 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public double getValue(Sensor sensor) {
-        return sensorsHolder.getValue(sensor);
+        return getValue(sensor.getNativeName());
     }
 
     @Override
-    public boolean setValue(double value, final Sensor sensor) {
-        boolean isUpdated = sensorsHolder.setValue(value, sensor);
+    public double getValue(String sensorName) {
+        return sensorsHolder.getValue(sensorName);
+    }
+
+    @Override
+    public boolean setValue(double value, String sensorName) {
+        boolean isUpdated = sensorsHolder.setValue(value, sensorName);
+        if (!isUpdated)
+            return false;
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor);
+            listeners = sensorListeners.get(sensorName.toLowerCase(Locale.US));
         }
 
         if (listeners == null)
-            return isUpdated;
+            return true;
         for (SensorListener listener : listeners)
             listener.onSensorUpdate(value);
-        return isUpdated;
+        return true;
     }
 
     public void addListener(ResponseListener listener) {
         listeners.add(listener);
     }
 
-    @Override
-    public ListenerToken addListener(Sensor sensor, SensorListener listener) {
-        List<SensorListener> listeners;
-        synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor);
-            if (listeners == null)
-                listeners = new CopyOnWriteArrayList<>();
-            sensorListeners.put(sensor, listeners);
-        }
-        listeners.add(listener);
-
-        return new SensorCentral.ListenerToken(this, sensor, listener);
+    public void removeListener(ResponseListener listener) {
+        listeners.remove(listener);
     }
 
     @Override
-    public void removeListener(Sensor sensor, SensorListener listener) {
+    public ListenerToken addListener(String sensorName, SensorListener listener) {
+        String key = sensorName.toLowerCase(Locale.US);
         List<SensorListener> listeners;
         synchronized (sensorListeners) {
-            listeners = sensorListeners.get(sensor);
+            listeners = sensorListeners.get(key);
+            if (listeners == null)
+                listeners = new CopyOnWriteArrayList<>();
+            sensorListeners.put(key, listeners);
+        }
+        listeners.add(listener);
+
+        return new SensorCentral.ListenerToken(this, sensorName, listener);
+    }
+
+    @Override
+    public void removeListener(String sensorName, SensorListener listener) {
+        List<SensorListener> listeners;
+        synchronized (sensorListeners) {
+            listeners = sensorListeners.get(sensorName.toLowerCase(Locale.US));
         }
         if (listeners != null)
             listeners.remove(listener);
@@ -95,7 +144,12 @@ public class SensorCentral implements ISensorCentral {
 
     @Override
     public ValueSource getValueSource(Sensor sensor) {
-        return () -> SensorCentral.this.getValue(sensor);
+        return getValueSource(sensor.name());
+    }
+
+    @Override
+    public ValueSource getValueSource(String sensorName) {
+        return () -> SensorCentral.this.getValue(sensorName);
     }
 
     public interface SensorListener {

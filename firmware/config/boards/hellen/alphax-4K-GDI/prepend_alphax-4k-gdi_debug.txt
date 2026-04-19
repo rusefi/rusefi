@@ -1,0 +1,4 @@
+
+! next step would be
+! #define VE_LOAD_COUNT 12
+! #define VE_RPM_COUNT 12

@@ -38,6 +38,9 @@ void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
 	} else {
 		m_rate = grams / elapsedSecond;
 	}
+#else
+  UNUSED(grams);
+  UNUSED(nowNt);
 #endif // EFI_PROD_CODE || EFI_UNIT_TEST
 }
 

@@ -1,8 +1,8 @@
 #include "pch.h"
-
 #include "defaults.h"
 #include "vr_pwm.h"
 #include "kline.h"
+#include "second_tables.h"
 #include "engine_configuration_defaults.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
@@ -142,6 +142,16 @@ void defaultsOrFixOnBurn() {
 	  engineConfiguration->afrExpAverageAlpha = 1;
 	}
 
+	if (engineConfiguration->referenceTorqueForGenerator == 0) {
+  	engineConfiguration->referenceTorqueForGenerator = 250;
+	}
+	if (engineConfiguration->referenceMapForGenerator == 0) {
+  	engineConfiguration->referenceMapForGenerator = 100;
+	}
+	if (engineConfiguration->referenceVeForGenerator == 0) {
+  	engineConfiguration->referenceVeForGenerator = 75;
+	}
+
 	if (engineConfiguration->alternator_iTermMin == 0) {
   	engineConfiguration->alternator_iTermMin = -1000;
 	}
@@ -227,8 +237,9 @@ void setDefaultBaseEngine() {
 
 	mc33810defaults();
 
- 	setRpmTableBin(config->torqueRpmBins);
- 	setLinearCurve(config->torqueLoadBins, 0, 100, 1);
+ 	setRpmTableBin(secondTablesGetState()->torqueRpmBins);
+ 	// here we assume load is TPS
+ 	setLinearCurve(secondTablesGetState()->torqueLoadBins, 0, 100, 1);
 
 	engineConfiguration->fuelAlgorithm = engine_load_mode_e::LM_SPEED_DENSITY;
 	// let's have valid default while we still have the field
@@ -281,6 +292,8 @@ void setDefaultBaseEngine() {
 
   setRpmTableBin(config->maxKnockRetardRpmBins);
   setLinearCurve(config->maxKnockRetardLoadBins, 0, 100, 1);
+  setRpmTableBin(config->knockGainRpmBins);
+  setLinearCurve(config->knockGainLoadBins, 0, 100, 1);
   setTable(config->maxKnockRetardTable, 20);
 
 	// Trigger
@@ -426,6 +439,9 @@ void setDefaultBaseEngine() {
 	setRpmTableBin(config->maximumOilPressureBins);
 
 	engine->engineModules.apply_all([](auto & m) { m.setDefaultConfiguration(); });
+
+	engineConfiguration->useMetricOnInterface = true;
+
   // we invoke this last so that we can validate even defaults
   defaultsOrFixOnBurn();
 }

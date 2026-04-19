@@ -115,6 +115,33 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 
 	s->setTriggerSynchronizationGap(3);
 	s->setSecondTriggerSynchronizationGap(1); // redundancy
+
+	// TODO: gaps above are not correct!
+//	The 36-2-1-1 shape consists of 36 teeth with 3 missing, arranged as groups of 11, 11, and 10 normal teeth
+//	separated by single-tooth gaps plus one 2-tooth gap, and the current sync uses simple gap settings that
+//	need to be replaced with explicit indices around 11-12-13 with normal teeth in between.
+//	The pattern per 720° is a 2-tooth gap followed by 11 teeth, a 1-tooth gap, 11 teeth, another 1-tooth gap,
+//	10 teeth, then back to the big gap.
+
+	// should be something like below
+
+	// Gap ratio sequence looking back from the 2-tooth gap (tooth 31) sync point:
+		// index 0: the 2-tooth gap, ratio 3.0
+//		s->setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 4.0);
+	// indices 1-8: normal teeth, ratio 1.0
+	for (int i = 1; i <= 8; i++) {
+//		s->setTriggerSynchronizationGap3(/*gapIndex*/i, /*from*/0.5, 1.5);
+	}
+	// index 9: first tooth after single-tooth gap, ratio 0.5
+//	s->setTriggerSynchronizationGap3(/*gapIndex*/9, /*from*/0.2, 0.8);
+	// index 10: single-tooth gap, ratio 2.0
+//	s->setTriggerSynchronizationGap3(/*gapIndex*/10, /*from*/1.3, 2.8);
+	// indices 11-13: normal teeth, ratio 1.0
+	for (int i = 11; i <= 13; i++) {
+//		s->setTriggerSynchronizationGap3(/*gapIndex*/i, /*from*/0.5, 1.5);
+	}
+
+
 }
 
 // Mitsubishi 4B11

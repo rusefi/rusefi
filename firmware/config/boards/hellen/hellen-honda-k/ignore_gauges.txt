@@ -1,0 +1,7 @@
+*@GDI
+
+vvtPositionB2*@VVT
+vvtTargets3Gauge@VVT
+vvtTargets4Gauge@VVT
+vvtOutput3Gauge@VVT
+vvtOutput4Gauge@VVT

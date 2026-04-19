@@ -29,8 +29,8 @@ jobs:
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo bash misc/actions/ubuntu-install-tools.sh
-        sudo apt-get install python3-pip valgrind
-        pip install gcovr
+        bash misc/actions/install-gcovr.sh
+        bash misc/actions/install-valgrind.sh
 
     - name: Install required software (macos)
       if: ${{ matrix.os == 'macos-latest' }}
@@ -61,6 +61,7 @@ jobs:
         TIMEFORMAT=%R
         time make -j4 COVERAGE=yes
 
+      # This is expected to fail if run after UTC midnight and the last step was run before UTC midnight
     - name: Build Tests again to assert incremental
       working-directory: ./unit_tests/
       run: |
@@ -88,7 +89,7 @@ jobs:
 
     - name: Upload code coverage artifacts
       if: ${{ matrix.os != 'macos-latest' }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: rusefi_code_coverage.txt
         path: ./unit_tests/gcov_working_area/gcov

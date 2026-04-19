@@ -13,6 +13,7 @@
 // Issue TS zeroes LSB byte of pageIdentifier
 #define TS_PAGE_SCATTER_OFFSETS		0x0100
 #define TS_PAGE_LTFT_TRIMS			0x0200
+#define TS_PAGE_SECOND_TABLES		0x0300
 
 typedef struct {
 	int queryCommandCounter;
@@ -56,6 +57,9 @@ int getSecondsSinceChannelsRequest();
 void updateTunerStudioState();
 
 bool isTuningVeNow();
+#if EFI_UNIT_TEST
+void resetCalibrationTimerForTest();
+#endif
 void startTunerStudioConnectivity();
 bool needToTriggerTsRefresh();
 void onApplyPreset();
@@ -88,6 +92,15 @@ public:
 
 	void ThreadTask() override;
 
+	static bool isAnyConsoleActive(void);
+
+private:
+	static int getInstanceCounter() {
+		static int instances = 0;
+		return instances++;
+	}
+	static inline uint32_t consoleActiveMask = 0;
+	static void onDataArrived(int instance, bool valid);
 };
 #endif
 

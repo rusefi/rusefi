@@ -70,13 +70,6 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 
 java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ${ENUM_JAR} \
-	-outputPath controllers/algo \
-	-enumInputFile controllers/algo/rusefi_hw_enums.h \
-
-[ $? -eq 0 ] || { echo "ERROR generating hw_enums"; exit 1; }
-
-java -DSystemOut.name=logs/gen_enum_to_string \
-	-jar ${ENUM_JAR} \
 	-outputPath controllers/sensors \
 	-generatedFile sensor \
 	-enumInputFile controllers/sensors/sensor_type.h
@@ -84,10 +77,3 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
 pwd
-cd config/boards/kinetis/config
-./kinetis_gen_enum_to_string.sh
-cd ../../../..
-
-cd config/boards/cypress/config
-./hellen_cypress_gen_enum_to_string.sh
-cd ../../../..

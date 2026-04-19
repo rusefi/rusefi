@@ -13,6 +13,10 @@ jobs:
   build-simulator:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        use-clang: ['no', 'yes']
+
     steps:
     - uses: actions/checkout@v6
 
@@ -21,47 +25,56 @@ jobs:
       run: |
         misc/git_scripts/common_submodule_init.sh
 
-    - name: Print GCC version
+    - name: Install Clang
+      if: ${{ matrix.use-clang == 'yes' }}
+      run: sudo apt-get install -y clang
+
+    - name: Print compiler version
       working-directory: .
-      run: gcc -v
+      run: |
+        if [ "${{ matrix.use-clang }}" = "yes" ]; then
+          clang -v
+        else
+          gcc -v
+        fi
 
     - name: Install multilib
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo bash misc/actions/ubuntu-install-tools.sh
 
-    - uses: actions/setup-java@v5
-      with:
-        distribution: 'zulu'
-        # using version 21 here just for fun. See build-tsplugin-body.yaml
-        java-version: '17'
+    - uses: ./.github/actions/setup-java
 
     - name: Generate docs and enums
       working-directory: ./firmware/
       run: make docs-enums
 
     - name: Gradle autotest java Using freshly generated java code
-      working-directory: ./java_tools
+      working-directory: .
       run: ./gradlew :autotest:shadowJar :tune-tools:shadowJar
 
     - name: Compile Linux Simulator
       working-directory: ./simulator/
-      run: make -j$(nproc) -r
+      run: make -j$(nproc) -r USE_CLANG=${{ matrix.use-clang }}
 
     - name: Run Simulator Functional Test
-      working-directory: ./java_tools/
+      if: ${{ matrix.use-clang == 'no' }}
+      working-directory: .
       run: ./gradlew simulatorFunctionalTestLauncherWithSimulator
 
     - name: Run Linux Simulator for 10 seconds
+      if: ${{ matrix.use-clang == 'no' }}
       working-directory: ./simulator/
       run: ./build/rusefi_simulator 10
 
     - name: Git Status and Simulator generated folder Status
+      if: ${{ matrix.use-clang == 'no' }}
       run: |
         git status
         ls -l simulator/generated/
 
     - name: Convert .bin from Linux Simulator into .xml
+      if: ${{ matrix.use-clang == 'no' }}
       working-directory: ./simulator/
       run: |
         export DEFAULT_TUNE_OUTPUT_FOLDER=../simulator/generated/
@@ -69,12 +82,12 @@ jobs:
         ./write_tune.sh ../firmware/tunerstudio/generated/rusefi_f407-discovery.ini
 
     - name: Commit fresh generated default simulator tune
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master'}}
+      if: ${{ matrix.use-clang == 'no' && github.event_name == 'push' && github.ref == 'refs/heads/master'}}
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-default-tune Action"
-        git add "simulator/generated/*msq"
-        git add "simulator/generated/canned-tunes/*md"
+        .github/workflows/bin/smart-git-add.sh "simulator/generated/*msq" 6
+        .github/workflows/bin/smart-git-add.sh "simulator/generated/canned-tunes/*md" 4
         OUT=$(git commit -m "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit\|no changes added'; then
           echo "default tune: looks like nothing to commit"
@@ -87,20 +100,21 @@ jobs:
           echo "default tune: looks like something unexpected: [$OUT]"
           exit 1
         fi
-        git stash
-        echo Fetching only current branch to make things quicker
-        git fetch $(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} | sed 's!/! !')
-        git rebase
+
+    - name: Quick Rebase
+      if: ${{ matrix.use-clang == 'no' && github.event_name == 'push' && github.ref == 'refs/heads/master'}}
+      run: |
+        .github/workflows/bin/git-fast-clean-update.sh
 
     - name: Push fresh default tune
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.COMMIT == 'true'}}
+      if: ${{ matrix.use-clang == 'no' && github.event_name == 'push' && github.ref == 'refs/heads/master' && env.COMMIT == 'true'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
         branch: ${{ github.ref }}
 
     - name: Upload Linux built simulator
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
-        name: rusefi_simulator_linux
+        name: rusefi_simulator_linux${{ matrix.use-clang == 'yes' && '_clang' || '' }}
         path: ./simulator/build/rusefi_simulator
