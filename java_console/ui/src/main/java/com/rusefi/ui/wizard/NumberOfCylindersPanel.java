@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-public class NumberOfCylindersPanel implements WizardStep {
+public class NumberOfCylindersPanel extends AbstractWizardStep {
     private final JLayeredPane layeredPane = new JLayeredPane();
     private final JPanel mainPanel = new JPanel(new GridBagLayout());
     private final JPanel overlayPanel = new JPanel() {
@@ -23,28 +23,13 @@ public class NumberOfCylindersPanel implements WizardStep {
 
     private final UIContext uiContext;
     private Consumer<Integer> onCylindersSelected;
-    private Consumer<WizardStepResult> onStepCompleted;
 
     public void setOnCylindersSelected(Consumer<Integer> onCylindersSelected) {
         this.onCylindersSelected = onCylindersSelected;
     }
 
-    @Override
-    public String getTitle() {
-        return "Number of Cylinders";
-    }
-
-    @Override
-    public String getWizardFlagFieldName() {
-        return "wizardNumberOfCylinders";
-    }
-
-    @Override
-    public void setOnStepCompleted(Consumer<WizardStepResult> callback) {
-        this.onStepCompleted = callback;
-    }
-
     public NumberOfCylindersPanel(UIContext uiContext) {
+        super("Number of Cylinders", "wizardNumberOfCylinders");
         this.uiContext = uiContext;
         layeredPane.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(overlayPanel, JLayeredPane.PALETTE_LAYER);
@@ -61,7 +46,7 @@ public class NumberOfCylindersPanel implements WizardStep {
 
         JLabel messageLabel = new JLabel();
         messageLabel.setForeground(Color.WHITE);
-        scaleComponent(messageLabel, 2);
+        scale(messageLabel, 2);
         overlayPanel.add(messageLabel);
 
         layeredPane.addComponentListener(new ComponentAdapter() {
@@ -79,7 +64,7 @@ public class NumberOfCylindersPanel implements WizardStep {
         gbc.anchor = GridBagConstraints.CENTER;
 
         JLabel label = new JLabel("How many cylinders?");
-        scaleComponent(label, 3);
+        scale(label, 3);
         mainPanel.add(label, gbc);
 
         gbc.gridy++;
@@ -88,7 +73,7 @@ public class NumberOfCylindersPanel implements WizardStep {
 
         for (int option : options) {
             JButton button = new JButton(String.valueOf(option));
-            scaleComponent(button, 3);
+            scale(button, 3);
             buttonsPanel.add(button);
 
             boolean isGotcha = option == 7 || option == 9 || option == 16;
@@ -109,9 +94,7 @@ public class NumberOfCylindersPanel implements WizardStep {
                         if (onCylindersSelected != null) {
                             onCylindersSelected.accept(option);
                         }
-                        if (onStepCompleted != null) {
-                            onStepCompleted.accept(new WizardStepResult("cylindersCount", String.valueOf(option)));
-                        }
+                        fireCompleted(new WizardStepResult("cylindersCount", String.valueOf(option)));
                     }
                 });
             }
@@ -128,11 +111,7 @@ public class NumberOfCylindersPanel implements WizardStep {
         overlayPanel.setBounds(x, y, w, h);
     }
 
-    private void scaleComponent(JComponent component, float factor) {
-        Font font = component.getFont();
-        component.setFont(font.deriveFont(font.getSize() * factor));
-    }
-
+    @Override
     public JComponent getPanel() {
         return layeredPane;
     }

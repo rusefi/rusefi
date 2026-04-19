@@ -94,21 +94,18 @@ public class WizardContainer extends JPanel {
     }
 
     private void resetAllFlags() {
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
-        if (bp == null) return;
-        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (ini == null || image == null) return;
+        WizardConfig cfg = WizardConfig.snapshot(uiContext);
+        if (cfg == null) return;
 
-        ConfigurationImage modified = image.clone();
+        ConfigurationImage modified = cfg.image.clone();
         for (WizardStepDescriptor d : FLAGGED) {
-            IniField field = ini.findIniField(d.flagName).orElse(null);
+            IniField field = cfg.ini.findIniField(d.flagName).orElse(null);
             if (field instanceof EnumIniField) {
                 modified.setBitValue((EnumIniField) field, 0);
             }
         }
         uiContext.getLinkManager().submit(() -> {
-            bp.uploadChanges(modified);
+            cfg.bp.uploadChanges(modified);
             SwingUtilities.invokeLater(this::refreshDebugFlags);
         });
     }
@@ -268,16 +265,13 @@ public class WizardContainer extends JPanel {
     }
 
     private int readCylindersCountFromEcu() {
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
-        if (bp == null) return 4;
-        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (ini == null || image == null) return 4;
+        WizardConfig cfg = WizardConfig.snapshot(uiContext);
+        if (cfg == null) return 4;
 
-        IniField field = ini.findIniField("cylindersCount").orElse(null);
+        IniField field = cfg.ini.findIniField("cylindersCount").orElse(null);
         if (field == null) return 4;
 
-        String value = ConfigurationImageGetterSetter.getStringValue(field, image);
+        String value = ConfigurationImageGetterSetter.getStringValue(field, cfg.image);
         try {
             int count = (int) Double.parseDouble(value);
             return count > 0 ? count : 4;
@@ -311,16 +305,13 @@ public class WizardContainer extends JPanel {
     }
 
     private boolean isFlagSet(String flagName) {
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
-        if (bp == null) return false;
-        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (ini == null || image == null) return false;
+        WizardConfig cfg = WizardConfig.snapshot(uiContext);
+        if (cfg == null) return false;
 
-        IniField field = ini.findIniField(flagName).orElse(null);
+        IniField field = cfg.ini.findIniField(flagName).orElse(null);
         if (field instanceof EnumIniField) {
             EnumIniField ef = (EnumIniField) field;
-            int raw = image.getByteBuffer(ef).getInt();
+            int raw = cfg.image.getByteBuffer(ef).getInt();
             int ordinal = ConfigurationImage.getBitRange(raw, ef.getBitPosition(), ef.getBitSize0() + 1);
             return ordinal == 1;
         }
