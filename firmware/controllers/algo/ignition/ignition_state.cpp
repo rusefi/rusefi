@@ -26,10 +26,6 @@
 
 #if EFI_ENGINE_CONTROL
 
-// TODO: wow move this into engineState at least for context not to leak from test to test!
-// todo: reset this between cranking attempts?! #2735
-float minCrankingRpm = 0;
-
 static Map3D<TRACTION_CONTROL_ETB_DROP_SLIP_SIZE, TRACTION_CONTROL_ETB_DROP_SPEED_SIZE, int8_t, uint16_t, uint8_t> tcTimingDropTable{"tct"};
 static Map3D<TRACTION_CONTROL_ETB_DROP_SLIP_SIZE, TRACTION_CONTROL_ETB_DROP_SPEED_SIZE, int8_t, uint16_t, uint8_t> tcSparkSkipTable{"tcs"};
 
@@ -48,6 +44,38 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
 	// compute base ignition angle from main table
 	float advanceAngle = IgnitionState::getInterpolatedIgnitionAngle(rpm, engineLoad);
+
+#if EFI_PROD_CODE || EFI_UNIT_TEST
+	bool secondIgnitionTableActive = false;
+
+	const bool ignPinActive = isBrainPinValid(secondTablesGetState()->secondIgnitionTableInput) &&
+		efiReadPin(secondTablesGetState()->secondIgnitionTableInput, secondTablesGetState()->secondIgnitionTableInputMode);
+
+	if (ignPinActive) {
+		// Hard switch: pin overrides everything, replace ignition table entirely
+		advanceAngle = interpolate3d(
+			secondTablesGetState()->secondIgnitionTable,
+			secondTablesGetState()->secondIgnitionLoadBins, engineLoad,
+			secondTablesGetState()->secondIgnitionRpmBins, rpm
+		);
+		secondIgnitionTableActive = true;
+	} else {
+		auto result = calculateBlend(
+			secondTablesGetState()->secondIgnitionBlendParameter,
+			secondTablesGetState()->secondIgnitionBlendBins, secondTablesGetState()->secondIgnitionBlendValues,
+			secondTablesGetState()->secondIgnitionTable,
+			secondTablesGetState()->secondIgnitionLoadBins, engineLoad,
+			secondTablesGetState()->secondIgnitionRpmBins, rpm
+		);
+		if (result.Bias > 0) {
+			advanceAngle = interpolateClamped(0, advanceAngle, 100, result.Value, result.Bias);
+			secondIgnitionTableActive = true;
+		}
+		engine->outputChannels.secondIgnitionBlendParameter = result.BlendParameter;
+		engine->outputChannels.secondIgnitionBlendBias = result.Bias;
+	}
+	engine->engineState.isSecondIgnitionTableActive = secondIgnitionTableActive;
+#endif // EFI_PROD_CODE || EFI_UNIT_TEST
 
   float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
   float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
@@ -208,9 +236,7 @@ angle_t getCrankingAdvance(float rpm, float engineLoad) {
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
 	angle_t crankingToRunningTransitionAngle = getRunningAdvance(engineConfiguration->cranking.rpm, engineLoad);
 	// interpolate not from zero, but starting from min. possible rpm detected
-	if (rpm < minCrankingRpm || minCrankingRpm == 0)
-		minCrankingRpm = rpm;
-	return interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, engineConfiguration->cranking.rpm, crankingToRunningTransitionAngle, rpm);
+	return interpolateClamped(engine->rpmCalculator.getMinCrankingRpm(), engineConfiguration->crankingTimingAngle, engineConfiguration->cranking.rpm, crankingToRunningTransitionAngle, rpm);
 }
 #endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
@@ -259,8 +285,14 @@ angle_t IgnitionState::getWrappedAdvance(const float rpm, const float engineLoad
     return angle;
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD
+#include "board_overrides.h"
+
+std::optional<setup_custom_get_cylinder_ignition_trim_type> custom_board_getCylinderIgnitionTrim;
+
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad) {
+	if (custom_board_getCylinderIgnitionTrim.has_value()) {
+		return custom_board_getCylinderIgnitionTrim.value()(cylinderNumber, rpm, ignitionLoad);
+	}
 	return IgnitionState::getInterpolatedIgnitionTrim(cylinderNumber, rpm, ignitionLoad);
 }
 

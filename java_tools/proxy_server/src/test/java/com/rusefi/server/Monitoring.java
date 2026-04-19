@@ -1,7 +1,7 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.Version;
+import com.rusefi.UiVersion;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.tools.online.ProxyClient;
 import org.takes.Take;
@@ -72,7 +72,7 @@ public class Monitoring {
         builder.add("applicationsCount", backend.getApplicationsCount());
         builder.add("controllersCount", backend.getControllersCount());
         builder.add("backend version", ProxyClient.BACKEND_VERSION);
-        builder.add("framework version", Version.CONSOLE_VERSION);
+        builder.add("framework version", UiVersion.CONSOLE_VERSION);
         builder.add("compiled", new Date(rusEFIVersion.classBuildTimeMillis()).toString());
         builder.add("now", System.currentTimeMillis());
         builder.add(SessionDetails.AGE, birthday.getDuration());

@@ -1,3 +1,5 @@
+// file AemXSeriesLambda.h
+
 #pragma once
 
 #include "can_sensor.h"
@@ -20,6 +22,8 @@ public:
 	void refreshState(void);
 
 	void refreshSmoothedLambda(float lambda);
+
+  bool hasSeenRx = false;
 
 protected:
 	// Dispatches to one of the three decoders below
@@ -45,6 +49,7 @@ private:
 	bool m_afrIsValid;
 	// Used for AEM sensor only
 	bool m_isFault;
+	bool m_faeDetected;
 	// Last valid packed received, for wbo::Fault::CanSilent state
 	efitick_t m_lastUpdate = 0;
 };

@@ -6,7 +6,7 @@ import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.util.Map;
 
 import static com.rusefi.maintenance.migration.migrators.BattLagCorrExtensionMigrator.INJECTOR_BATT_LAG_CORR_BATT_BINS_FIELD_NAME;
@@ -52,3 +52,4 @@ public class BattLagCorrMigratorTest {
         assertEquals("", testContext.getTestCallbacks().getContent());
     }
 }
+

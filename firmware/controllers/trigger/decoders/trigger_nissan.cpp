@@ -13,6 +13,28 @@
 #include "trigger_universal.h"
 #include "trigger_subaru.h"
 
+void initializeNissanK11(TriggerWaveform *s) {
+  s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+
+    s->addEvent720(110, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent720(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    s->addEvent720(190, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent720(200, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    s->addEvent720(290, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent720(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    s->addEvent720(470, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent720(540, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    s->addEvent720(650, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+    s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    s->tdcPosition = 10;
+    s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.40, 0.50);
+}
+
 /**
  * 8,2,2,2 Nissan pattern
  */

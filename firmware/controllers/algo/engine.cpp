@@ -291,9 +291,7 @@ extern bool kAcRequestState;
 }
 
 Engine::Engine() {
-	// Everything else has default initializers setup in generated file
-	engineState.lua.fuelMult = 1;
-	ignitionState.luaTimingMult = 1;
+	resetLua();
 }
 
 int Engine::getGlobalConfigurationVersion() const {
@@ -316,6 +314,7 @@ void Engine::resetLua() {
 	engineState.lua.luaDisableEtb = false;
 	engineState.lua.luaIgnCut = false;
 	engineState.lua.luaFuelCut = false;
+	engineState.lua.engineTorque = NAN;
 	engineState.lua.disableDecelerationFuelCutOff = false;
 #if EFI_BOOST_CONTROL
 	module<BoostController>().unmock().resetLua();
@@ -547,15 +546,6 @@ bool Engine::isInShutdownMode() const {
 	return false;
 }
 
-bool Engine::isMainRelayEnabled() const {
-#if EFI_MAIN_RELAY_CONTROL
-	return enginePins.mainRelay.getLogicValue();
-#else
-	// if no main relay control, we assume it's always turned on
-	return true;
-#endif /* EFI_MAIN_RELAY_CONTROL */
-}
-
 injection_mode_e getCurrentInjectionMode() {
 	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
 }
@@ -590,7 +580,7 @@ EngineState * getEngineState() {
 	return &engine->engineState;
 }
 
-TunerStudioOutputChannels *getTunerStudioOutputChannels() {
+output_channels_s *getTunerStudioOutputChannels() {
 	return &engine->outputChannels;
 }
 

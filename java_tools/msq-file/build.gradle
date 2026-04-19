@@ -3,4 +3,5 @@ dependencies {
 
   // intention is to have happy self-contained shadowJar compatible both with java 8 and 11+
   api global_libs.jaxb
+  runtimeOnly global_libs.jaxb_runtime
 }

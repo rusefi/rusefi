@@ -33,14 +33,7 @@ import static com.rusefi.config.generated.Integration.CMD_SET_SENSOR_MOCK;
 public class DetachedSensor {
     private static final String NAME = "name";
     private static final String WIDTH = "width";
-
-    private static final Collection<Sensor> MOCKABLE = Arrays.asList(
-            Sensor.COOLANT,
-            Sensor.LAMBDAVALUE,
-            Sensor.INTAKE,
-            Sensor.MAFMEASURED,
-            Sensor.MAPVALUE,
-            Sensor.TPSVALUE);
+    public static final int DEFAULT_WIDTH = 256;
 
     private final static Hashtable<Integer, JComponent> SLIDER_LABELS = new Hashtable<>();
     public static final String XPOS = "xpos";
@@ -63,17 +56,18 @@ public class DetachedSensor {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JFrame frame;
     private final JPanel mockControlPanel = new JPanel(new BorderLayout());
-    private Sensor sensor;
+    private String gaugeName;
     @NotNull
     private final UIContext uiContext;
     private final int width;
 
-    public DetachedSensor(UIContext uiContext, Sensor sensor, int width) {
+    public DetachedSensor(UIContext uiContext, String gaugeName, int width) {
         this.uiContext = uiContext;
         this.width = width;
+        this.gaugeName = gaugeName;
         frame = new JFrame();
         frame.setAlwaysOnTop(true);
-        onChange(sensor);
+        frame.setTitle(gaugeName);
 
         uiContext.DetachedRepositoryINSTANCE.add(this);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -85,11 +79,14 @@ public class DetachedSensor {
             }
         });
         create();
+//        showMockControl();
     }
 
-    void create() {
+    private void create() {
+        JPanelWithListener wrapper = new JPanelWithListener(new BorderLayout());
         SensorGauge.GaugeChangeListener listener = this::onChange;
-        content.add(SensorGauge.createGauge(uiContext, sensor, listener, null), BorderLayout.CENTER);
+        SensorGauge.createGaugeBody(uiContext, gaugeName, wrapper, listener, null);
+        content.add(wrapper, BorderLayout.CENTER);
         content.add(mockControlPanel, BorderLayout.SOUTH);
 
         frame.add(content);
@@ -100,29 +97,29 @@ public class DetachedSensor {
         frame.setLocation(e.getXOnScreen(), e.getYOnScreen());
     }
 
-    public void onChange(Sensor sensor) {
-        this.sensor = sensor;
-        frame.setTitle(sensor.getName());
-        showMockControl();
+    public void onChange(String gaugeName) {
+        this.gaugeName = gaugeName;
+        frame.setTitle(gaugeName);
+//        showMockControl();
     }
 
+/*
     public void showMockControl() {
         mockControlPanel.removeAll();
-        boolean isMockable = isMockable();
+        Sensor sensor = Sensor.lookup(gaugeName, null);
+        boolean isMockable = sensor != null && isMockable(sensor);
         if (isMockable) {
             Component mockComponent = createMockValueSlider(uiContext.getCommandQueue(), sensor);
             mockControlPanel.add(mockComponent);
         }
         AutoupdateUtil.trueLayoutAndRepaint(content);
-        int size = width;
-        int h = isMockable ? (int) (size * 1.5) : size;
-        frame.setSize(size, h);
+        int h = isMockable ? (int) (width * 1.5) : width;
+        frame.setSize(width, h);
     }
 
-    private boolean isMockable() {
+    private boolean isMockable(Sensor sensor) {
         return MOCKABLE.contains(sensor) && LinkManager.isSimulationMode;
     }
-
     public static Component createMockValueSlider(CommandQueue commandQueue, final Sensor sensor) {
         SensorType sensorType = SensorTypeHelper.valueOfAnyCase(sensor.getName());
 
@@ -167,25 +164,27 @@ public class DetachedSensor {
              * User might be changing slider faster than commands are being send
              * We only add commandSender into the queue only if not already pending in order to only send one command with latest requested value and not a sequence of commands.
              */
+    /*
             commandQueue.addIfNotPresent(commandSender);
         });
 
         return slider;
     }
+        */
 
     public void saveConfig(Node child) {
-        child.setProperty(NAME, sensor.name());
+        child.setProperty(NAME, gaugeName);
         child.setProperty(WIDTH, frame.getWidth());
         child.setProperty(XPOS, frame.getLocation().x);
         child.setProperty(YPOS, frame.getLocation().y);
     }
 
     public static void create(UIContext uiContext, Node child) {
-        Sensor sensor = Sensor.lookup(child.getProperty(NAME, Sensor.RPMValue.name()), Sensor.RPMValue);
-        int width = child.getIntProperty(WIDTH, 256);
+        String gaugeName = child.getProperty(NAME, Sensor.RPMGauge.name());
+        int width = child.getIntProperty(WIDTH, DEFAULT_WIDTH);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);
-        DetachedSensor ds = new DetachedSensor(uiContext, sensor, width);
+        DetachedSensor ds = new DetachedSensor(uiContext, gaugeName, width);
         ds.frame.setLocation(xpos, ypos);
         ds.frame.setVisible(true);
     }

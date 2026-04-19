@@ -5,12 +5,17 @@ import com.opensr5.ini.*;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -23,73 +28,13 @@ public class IniFileReaderTest {
     private static final String PAGE_READ = "    pageReadCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n";
     private static final String CRC_READ = "    crc32CheckCommand     = \"X\",       \"X\",     \"X\"\n\n\n\n";
     private static final String SIGNATURE_UNIT_TEST = "  signature      = \"unit test\"\n";
-    private static final double EPS = 0.00001;
+    static final double EPS = 0.00001;
 
     @Test
     public void parseExpressions() {
         assertEquals(0.1, IniField.parseDouble("{1/10}"), EPS);
         assertEquals(0.1, IniField.parseDouble("{0.1}"), EPS);
         assertEquals(0.1, IniField.parseDouble("0.1"), EPS);
-    }
-
-    @Test
-    public void testSplitWithEmptyUnits() {
-        {
-            String[] s = IniFileReaderUtil.splitTokens("\tverboseCanBaseAddress\t\t\t= \"\", 1");
-            assertArrayEquals(new String[] { "verboseCanBaseAddress", "", "1" }, s);
-        }
-        {
-            String[] s = IniFileReaderUtil.splitTokens("\tverboseCanBaseAddress\t\t\t= scalar, U32,\t756,\t\"\", 1, 0, 0, 536870911, 0");
-            assertArrayEquals(new String[] { "verboseCanBaseAddress", "scalar", "U32", "756", "", "1", "0", "0", "536870911", "0" }, s);
-        }
-    }
-
-    @Test
-    public void testSplit() {
-        {
-            String[] s = IniFileReaderUtil.splitTokens("1");
-            assertArrayEquals(new String[] { "1" }, s);
-        }
-        {
-            String[] s = IniFileReaderUtil.splitTokens("hello");
-            assertArrayEquals(new String[] { "hello" }, s);
-        }
-        {
-            String[] s = IniFileReaderUtil.splitTokens("\"hello\"");
-            assertArrayEquals(new String[] { "hello" }, s);
-        }
-        {
-            String[] s = IniFileReaderUtil.splitTokens("\"hello\",\"w\"");
-            assertArrayEquals(new String[] { "hello", "w" }, s);
-        }
-    }
-
-    @Test
-    public void testBraces() {
-        {
-            String[] result = IniFileReaderUtil.splitTokens(
-                "veLoadBins = array, U16, 17056, [16], {bitStringValue(fuelUnits, fuelAlgorithm) }, 1, 0, 0, 1000, 0"
-            );
-            assertArrayEquals(new String[] {
-                "veLoadBins", "array", "U16", "17056", "[16]", "{bitStringValue(fuelUnits, fuelAlgorithm) }", "1", "0",
-                "0", "1000", "0"
-            }, result);
-        }
-    }
-
-    @Test
-    public void testRealLine() {
-        String[] result = IniFileReaderUtil.splitTokens("\tdialog = engineChars,\t\"Base Engine Settings\"");
-        assertArrayEquals(new String[] { "dialog", "engineChars", "Base Engine Settings" }, result);
-        assertEquals(result.length, 3);
-    }
-
-    @Test
-    public void testQuotedTokens() {
-        {
-            String[] result = IniFileReaderUtil.splitTokens("\"hel  lo\"");
-            assertArrayEquals(new String[] { "hel  lo" }, result);
-        }
     }
 
     @Test
@@ -121,26 +66,27 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testCurve() {
-        String string =
-            "   ; generates [SettingContextHelp]\n" +
-                "[Constants]\n" +
-                "page = 1\n" +
-                "scriptCurve1Bins = array, F32, 4828, [16], \"x\", 1, 0, -10000, 10000, 3\n" +
-                "scriptCurve1 = array, F32, 4892, [16], \"y\", 1, 0, -10000, 10000, 3\n " +
-                "[CurveEditor]\n" +
-                "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
-                "\t\tcolumnLabel = \"X\", \"Y\"\n" +
-                "\t\txAxis\t\t=  0, 128, 10\n" +
-                "\t\tyAxis\t\t= -155,  150, 10\n" +
-                "\t\txBins\t\t= scriptCurve1Bins\n" +
-                "\t\tyBins\t\t= scriptCurve1\n" +
-                "\t\tshowTextValues = true\n";
+    public void testOutputChannels() throws IniMemberNotFound {
+        String string = "[OutputChannels]\n" +
+            "stftCorrection2 = scalar, F32, 1444,  \"%\", 100.0, -1.0\n" +
+            "; total TS size = 1448\n" +
+            "tpsFrom = scalar, F32, 1448\n";
         RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
-        // technically these are constants?!
-        assertEquals(2, model.getAllIniFields().size());
-        assertEquals(2, model.getFieldsInUiOrder().size());
+
+        ScalarIniField stftCorrection2 = (ScalarIniField) model.getOutputChannel("stftCorrection2");
+        assertEquals(1444, stftCorrection2.getOffset());
+        assertEquals("%", stftCorrection2.getUnits());
+        assertEquals(100.0, stftCorrection2.getMultiplier());  // multiplier from INI file
+        assertEquals(-1.0, stftCorrection2.getSerializationOffset());  // serialization offset from INI file
+        assertEquals(FieldType.FLOAT, stftCorrection2.getType());
+
+        ScalarIniField tpsFrom = (ScalarIniField) model.getOutputChannel("tpsFrom");
+        assertEquals(1448, tpsFrom.getOffset());
+        assertEquals("", tpsFrom.getUnits());
+        assertEquals(1.0, tpsFrom.getMultiplier());
+        assertEquals(0.0, tpsFrom.getSerializationOffset());
+        assertEquals(FieldType.FLOAT, stftCorrection2.getType());
     }
 
     @Test
@@ -190,29 +136,6 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testTable() {
-        String string =
-                "[Constants]\n" +
-                "page = 1\n" +
-                "tpsTpsAccelTable = array, F32, 19744, [8x8], \"value\", 1, 0, 0, 30000, 2\n" +
-                "tpsTpsAccelFromRpmBins = array, F32, 20000, [8], \"from\", 1, 0, 0, 30000, 2\n" +
-                "tpsTpsAccelToRpmBins = array, F32, 20032, [8], \"to\", 1, 0, 0, 25500, 2\n\n " +
-                "[TableEditor]\n" +
-                "\ttable = tpsTpsAccelTbl,  tpsTpsAccelMap,  \"TPS/TPS Acceleration Extra Fuel(ms)\",\t1\n" +
-                "\ttopicHelp = \"tpstpsHelp\"\n" +
-                "\t\txBins\t\t= tpsTpsAccelFromRpmBins,  TPSValue\n" +
-                "\t\tyBins\t\t= tpsTpsAccelToRpmBins,  TPSValue\n" +
-                "\t\tzBins\t\t= tpsTpsAccelTable";
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-        assertEquals(3, model.getAllIniFields().size());
-        assertEquals(3, model.getFieldsInUiOrder().size());
-        assertTrue(model.getFieldsInUiOrder().containsKey("tpsTpsAccelToRpmBins"));
-        assertFalse(model.getFieldsInUiOrder().containsKey("tpsTpsAccelTbl"));
-        assertTrue(model.getFieldsInUiOrder().containsKey("tpsTpsAccelTable"));
-    }
-
-    @Test
     public void testConditional() {
         String string = "page = 1\n" +
                 "[Constants]\n" +
@@ -249,36 +172,6 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testEasyFields() {
-        String string = "page = 1\n" +
-                "[Constants]\n" +
-                "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
-                "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\", \"PA5\", \"PA6\", \"PA7\", \"PB0\", \"PB1\", \"PC0\", \"PC1\", \"PC2\", \"PC3\", \"PC4\", \"PC5\", \"Disabled\", \"PB12\", \"PB13\", \"PC14\", \"PC15\", \"PC16\", \"PC17\", \"PD3\", \"PD4\", \"PE2\", \"PE6\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\", \"INVALID\"\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(2, model.getAllIniFields().size());
-    }
-
-    @Test
-    public void testEnumListFields() {
-        String string = "#define gpio_list=\"NONE\", \"INVALID\", \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\"\n" +
-                "page = 1\n" +
-                "[Constants]\n" +
-                "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
-                "\tiat_adcChannel\t\t\t\t = bits, U08, 312, [0:7] $gpio_list\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-        assertEquals(1, model.getDefines().size());
-
-        EnumIniField field = (EnumIniField) model.getAllIniFields().get("iat_adcChannel");
-        assertEquals(7, field.getEnums().size());
-        assertEquals(2, model.getAllIniFields().size());
-    }
-
-    @Test
     public void testSetBits() {
         assertEquals(0xFE, EnumIniField.setBitRange(0xFF, 0, 0, 1));
         assertEquals(0xF0, EnumIniField.setBitRange(0xFF, 0, 0, 4));
@@ -304,45 +197,13 @@ public class IniFileReaderTest {
         assertEquals(2, ConfigurationImage.getBitRange(0xf0, 3, 2));
     }
 
-    @Test
-    public void testBitField() {
-        String string = "page = 1\n" +
-                "[Constants]\n" +
-                "\tname\t= bits,    U32,   \t744, [3:5], \"false\", \"true\"";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(1, model.getAllIniFields().size());
-
-        EnumIniField field = (EnumIniField) model.getAllIniFields().get("name");
-        assertEquals(3, field.getBitPosition());
-        assertEquals(2, field.getBitSize0());
-        assertEquals(2, field.getEnums().size());
-    }
-
-    @Test
-    public void testCurveField() {
-        String string = "page = 1\n" +
-                " \tname2\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n" +
-                "[Constants]\n" +
-                " \tname\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n" +
-                "[PcVariables]\n" +
-                " \tname3\t\t\t= array, F32,\t108,\t[8],\t\"\", 1, 0, 0.0, 18000, 2\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(1, model.getAllIniFields().size());
-        ArrayIniField field = (ArrayIniField) model.getAllIniFields().get("name");
-        assertNotNull(field);
-        assertEquals(1, field.getCols());
-        assertEquals(8, field.getRows());
-    }
-
-    private static @NotNull IniFileModel readLines(RawIniFile lines) {
+    static @NotNull IniFileModel readLines(RawIniFile lines) {
         IniFileMetaInfo metaInfo = mock(IniFileMetaInfo.class);
-        return IniFileReaderUtil.readIniFile(lines, "", metaInfo);
+        try {
+            return IniFileReaderUtil.readIniFile(lines, "", metaInfo);
+        } catch (IniParsingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
@@ -367,112 +228,6 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testGaugeConfiguration() {
-        String string = "[GaugeConfigurations]\n" +
-                "gaugeCategory = Engine\n" +
-                "rpmGauge = RPMValue, \"Engine Speed\", \"RPM\", 0, 8000, 0, 0, 6000, 8000, 0, 0\n" +
-                "cltGauge = coolant, \"Coolant Temp\", \"°C\", -40, 120, -40, 0, 100, 120, 1, 0\n" +
-                "gaugeCategory = Sensors\n" +
-                "tpsGauge = TPSValue, \"Throttle Position\", \"%\", 0, 100, 0, 0, 90, 100, 1, 1\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        // Test gauge categories
-        assertEquals(2, model.getGaugeCategories().size());
-        assertTrue(model.getGaugeCategories().containsKey("Engine"));
-        assertTrue(model.getGaugeCategories().containsKey("Sensors"));
-
-        // Test Engine category
-        GaugeCategoryModel engineCategory = model.getGaugeCategories().get("Engine");
-        assertNotNull(engineCategory);
-        assertEquals("Engine", engineCategory.getName());
-        assertEquals(2, engineCategory.getGauges().size());
-
-        // Test Sensors category
-        GaugeCategoryModel sensorsCategory = model.getGaugeCategories().get("Sensors");
-        assertNotNull(sensorsCategory);
-        assertEquals("Sensors", sensorsCategory.getName());
-        assertEquals(1, sensorsCategory.getGauges().size());
-
-        // Test all gauges map
-        assertEquals(3, model.getGauges().size());
-        assertTrue(model.getGauges().containsKey("rpmGauge"));
-        assertTrue(model.getGauges().containsKey("cltGauge"));
-        assertTrue(model.getGauges().containsKey("tpsGauge"));
-
-        // Test individual gauge retrieval
-        GaugeModel rpmGauge = model.getGauge("rpmGauge");
-        assertNotNull(rpmGauge);
-        assertEquals("rpmGauge", rpmGauge.getName());
-        assertEquals("RPMValue", rpmGauge.getChannel());
-        assertEquals("Engine Speed", rpmGauge.getTitle());
-        assertEquals("RPM", rpmGauge.getUnits());
-        assertEquals(0.0, rpmGauge.getLowValue(), EPS);
-        assertEquals(8000.0, rpmGauge.getHighValue(), EPS);
-        assertEquals(0.0, rpmGauge.getLowDangerValue(), EPS);
-        assertEquals(0.0, rpmGauge.getLowWarningValue(), EPS);
-        assertEquals(6000.0, rpmGauge.getHighWarningValue(), EPS);
-        assertEquals(8000.0, rpmGauge.getHighDangerValue(), EPS);
-        assertEquals(0, rpmGauge.getValueDecimalPlaces());
-        assertEquals(0, rpmGauge.getLabelDecimalPlaces());
-
-        // Test coolant gauge with different decimal places
-        GaugeModel cltGauge = model.getGauge("cltGauge");
-        assertNotNull(cltGauge);
-        assertEquals("cltGauge", cltGauge.getName());
-        assertEquals("coolant", cltGauge.getChannel());
-        assertEquals("Coolant Temp", cltGauge.getTitle());
-        assertEquals("°C", cltGauge.getUnits());
-        assertEquals(-40.0, cltGauge.getLowValue(), EPS);
-        assertEquals(120.0, cltGauge.getHighValue(), EPS);
-        assertEquals(-40.0, cltGauge.getLowDangerValue(), EPS);
-        assertEquals(0.0, cltGauge.getLowWarningValue(), EPS);
-        assertEquals(100.0, cltGauge.getHighWarningValue(), EPS);
-        assertEquals(120.0, cltGauge.getHighDangerValue(), EPS);
-        assertEquals(1, cltGauge.getValueDecimalPlaces());
-        assertEquals(0, cltGauge.getLabelDecimalPlaces());
-
-        // Test TPS gauge
-        GaugeModel tpsGauge = model.getGauge("tpsGauge");
-        assertNotNull(tpsGauge);
-        assertEquals("tpsGauge", tpsGauge.getName());
-        assertEquals("TPSValue", tpsGauge.getChannel());
-        assertEquals("Throttle Position", tpsGauge.getTitle());
-        assertEquals("%", tpsGauge.getUnits());
-        assertEquals(1, tpsGauge.getValueDecimalPlaces());
-        assertEquals(1, tpsGauge.getLabelDecimalPlaces());
-    }
-
-    @Test
-    public void testGaugeConfigurationWithoutCategory() {
-        String string = "[GaugeConfigurations]\n" +
-                "rpmGauge = RPMValue, \"Engine Speed\", \"RPM\", 0, 8000, 0, 0, 6000, 8000, 0, 0\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        // Gauges without a category should still be in the all gauges map
-        assertEquals(1, model.getGauges().size());
-        assertTrue(model.getGauges().containsKey("rpmGauge"));
-
-        GaugeModel rpmGauge = model.getGauge("rpmGauge");
-        assertNotNull(rpmGauge);
-        assertEquals("rpmGauge", rpmGauge.getName());
-    }
-
-    @Test
-    public void testEmptyGaugeConfiguration() {
-        String string = "[GaugeConfigurations]\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(0, model.getGaugeCategories().size());
-        assertEquals(0, model.getGauges().size());
-    }
-
-    @Test
     public void testGaugeCategoryModelImmutability() {
         String string = "[GaugeConfigurations]\n" +
                 "gaugeCategory = TestCategory\n" +
@@ -494,58 +249,6 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testIncompleteGaugeConfiguration() {
-        // Test gauge with only required fields: name, channel, title, units, lowValue, highValue
-        String string = "[GaugeConfigurations]\n" +
-                "egt1Gauge = egt1, \"EGT#1\", \"C\", 0, 2000\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        // Gauge should be parsed successfully
-        assertEquals(1, model.getGauges().size());
-        assertTrue(model.getGauges().containsKey("egt1Gauge"));
-
-        GaugeModel gauge = model.getGauge("egt1Gauge");
-        assertNotNull(gauge);
-        assertEquals("egt1Gauge", gauge.getName());
-        assertEquals("egt1", gauge.getChannel());
-        assertEquals("EGT#1", gauge.getTitle());
-        assertEquals("C", gauge.getUnits());
-        assertEquals(0.0, gauge.getLowValue(), EPS);
-        assertEquals(2000.0, gauge.getHighValue(), EPS);
-
-        // Missing fields should default to sensible values
-        assertEquals(0.0, gauge.getLowDangerValue(), EPS);  // defaults to lowValue
-        assertEquals(0.0, gauge.getLowWarningValue(), EPS);  // defaults to lowValue
-        assertEquals(2000.0, gauge.getHighWarningValue(), EPS);  // defaults to highValue
-        assertEquals(2000.0, gauge.getHighDangerValue(), EPS);  // defaults to highValue
-        assertEquals(0, gauge.getValueDecimalPlaces());  // defaults to 0
-        assertEquals(0, gauge.getLabelDecimalPlaces());  // defaults to 0
-    }
-
-    @Test
-    public void testPartialGaugeConfiguration() {
-        // Test gauge with some optional fields provided
-        String string = "[GaugeConfigurations]\n" +
-                "testGauge = channel, \"Test\", \"units\", 0, 100, 5, 10, 90\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        GaugeModel gauge = model.getGauge("testGauge");
-        assertNotNull(gauge);
-        assertEquals(0.0, gauge.getLowValue(), EPS);
-        assertEquals(100.0, gauge.getHighValue(), EPS);
-        assertEquals(5.0, gauge.getLowDangerValue(), EPS);
-        assertEquals(10.0, gauge.getLowWarningValue(), EPS);
-        assertEquals(90.0, gauge.getHighWarningValue(), EPS);
-        assertEquals(100.0, gauge.getHighDangerValue(), EPS);  // defaults to highValue
-        assertEquals(0, gauge.getValueDecimalPlaces());  // defaults to 0
-        assertEquals(0, gauge.getLabelDecimalPlaces());  // defaults to 0
-    }
-
-    @Test
     public void testDialogWithTopicHelp() {
         String string = "[Constants]\n" +
                 "page = 1\n" +
@@ -561,10 +264,11 @@ public class IniFileReaderTest {
 
         // Test that dialog was created with topicHelp
         assertEquals(1, model.getDialogs().size());
-        assertTrue(model.getDialogs().containsKey("Trigger Settings"));
+        assertTrue(model.getDialogs().containsKey("triggerDialog"));
 
-        DialogModel dialog = model.getDialogs().get("Trigger Settings");
+        DialogModel dialog = model.getDialogs().get("triggerDialog");
         assertNotNull(dialog);
+        assertEquals("triggerDialog", dialog.getKey());
         assertEquals("triggerHelp", dialog.getTopicHelp());
 
         // Test that topicHelp was also stored in the topicHelp map
@@ -587,7 +291,7 @@ public class IniFileReaderTest {
         IniFileModel model = readLines(lines);
 
         assertEquals(1, model.getDialogs().size());
-        DialogModel dialog = model.getDialogs().get("Basic Settings");
+        DialogModel dialog = model.getDialogs().get("basicDialog");
         assertNotNull(dialog);
         assertNull(dialog.getTopicHelp());
 
@@ -617,15 +321,15 @@ public class IniFileReaderTest {
 
         assertEquals(3, model.getDialogs().size());
 
-        DialogModel dialog1 = model.getDialogs().get("Dialog One");
+        DialogModel dialog1 = model.getDialogs().get("dialog1");
         assertNotNull(dialog1);
         assertEquals("helpOne", dialog1.getTopicHelp());
 
-        DialogModel dialog2 = model.getDialogs().get("Dialog Two");
+        DialogModel dialog2 = model.getDialogs().get("dialog2");
         assertNotNull(dialog2);
         assertEquals("helpTwo", dialog2.getTopicHelp());
 
-        DialogModel dialog3 = model.getDialogs().get("Dialog Three");
+        DialogModel dialog3 = model.getDialogs().get("dialog3");
         assertNotNull(dialog3);
         assertNull(dialog3.getTopicHelp());
 
@@ -767,7 +471,7 @@ public class IniFileReaderTest {
                 "\t\tfield = \"Base CAN identifier\", msIoBox0_id\n" +
                 "\t\tfield = \"VSS settings\", msIoBox0_vss\n" +
                 "\n" +
-                "\tdialog = msIoBox, \"\"\n" +
+                "\tdialog = msIoBox, \"MS IO box Container\"\n" +
                 "\t\tpanel = msIoBox1\n" +
                 "\n" +
                 "\thelp = boostPidHelp, \"Boost Control PID\"\n" +
@@ -790,20 +494,37 @@ public class IniFileReaderTest {
         RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
-        // Verify dialogs were created
-        // Note: Two dialogs have empty name "", so one overwrites the other in the map
-        assertEquals(3, model.getDialogs().size());
-        assertTrue(model.getDialogs().containsKey("MS IO box 1"));
-        assertTrue(model.getDialogs().containsKey(""));
-        assertTrue(model.getDialogs().containsKey("VE Table"));
+        // Verify dialogs were created (now stored by dialog key, not UI name)
+        assertEquals(4, model.getDialogs().size());
+        assertTrue(model.getDialogs().containsKey("msIoBox1"));
+        assertTrue(model.getDialogs().containsKey("msIoBox"));
+        assertTrue(model.getDialogs().containsKey("veTableDialog"));
+        assertTrue(model.getDialogs().containsKey("veTableDialog3D"));
 
-        // Verify the dialog with empty name is the last one defined (veTableDialog with topicHelp)
-        DialogModel veDialog = model.getDialogs().get("");
+        // Verify the msIoBox1 dialog has fields but no panels
+        DialogModel msIoBoxDialog = model.getDialogs().get("msIoBox1");
+        assertNotNull(msIoBoxDialog);
+        assertEquals(2, msIoBoxDialog.getFields().size());
+        assertEquals(0, msIoBoxDialog.getPanels().size());
+
+        // Verify the msIoBox container dialog has a panel reference
+        DialogModel msIoBoxContainer = model.getDialogs().get("msIoBox");
+        assertNotNull(msIoBoxContainer);
+        assertEquals(0, msIoBoxContainer.getFields().size());
+        assertEquals(1, msIoBoxContainer.getPanels().size());
+        PanelModel panel = msIoBoxContainer.getPanels().get(0);
+        assertEquals("msIoBox1", panel.getPanelName());
+        assertNull(panel.getPlacement());
+
+        // Verify the veTableDialog with topicHelp
+        DialogModel veDialog = model.getDialogs().get("veTableDialog");
         assertNotNull(veDialog);
         assertEquals("veTableDialogHelp", veDialog.getTopicHelp());
+        assertEquals(1, veDialog.getFields().size());
+        assertEquals(0, veDialog.getPanels().size());
 
-        // Verify dialog with "VE Table" name also has topicHelp
-        DialogModel veDialog3D = model.getDialogs().get("VE Table");
+        // Verify dialog veTableDialog3D also has topicHelp
+        DialogModel veDialog3D = model.getDialogs().get("veTableDialog3D");
         assertNotNull(veDialog3D);
         assertEquals("veTableDialogHelp", veDialog3D.getTopicHelp());
 
@@ -841,227 +562,241 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testTableEditorBasic() {
-        String string =
-                "[Constants]\n" +
-                "page = 1\n" +
-                "tpsTpsAccelTable = array, F32, 19744, [8x8], \"value\", 1, 0, 0, 30000, 2\n" +
-                "tpsTpsAccelFromRpmBins = array, F32, 20000, [8], \"from\", 1, 0, 0, 30000, 2\n" +
-                "tpsTpsAccelToRpmBins = array, F32, 20032, [8], \"to\", 1, 0, 0, 25500, 2\n\n " +
-                "[TableEditor]\n" +
-                "\ttable = tpsTpsAccelTbl,  tpsTpsAccelMap,  \"TPS/TPS Acceleration Extra Fuel(ms)\",\t1\n" +
-                "\ttopicHelp = \"tpstpsHelp\"\n" +
-                "\t\txBins\t\t= tpsTpsAccelFromRpmBins,  TPSValue\n" +
-                "\t\tyBins\t\t= tpsTpsAccelToRpmBins,  TPSValue\n" +
-                "\t\tzBins\t\t= tpsTpsAccelTable";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(1, model.getTables().size());
-        assertTrue(model.getTables().containsKey("tpsTpsAccelTbl"));
-
-        // Verify table can be retrieved by both IDs
-        TableModel table = model.getTable("tpsTpsAccelTbl");
-        assertNotNull(table);
-        assertEquals("tpsTpsAccelTbl", table.getTableId());
-        assertEquals("tpsTpsAccelMap", table.getMap3dId());
-        assertEquals("TPS/TPS Acceleration Extra Fuel(ms)", table.getTitle());
-        assertEquals("tpstpsHelp", table.getTopicHelp());
-
-        // Verify bins
-        assertEquals("tpsTpsAccelFromRpmBins", table.getXBinsConstant());
-        assertEquals("TPSValue", table.getXBinsChannel());
-        assertFalse(table.isXBinsReadOnly());
-        assertEquals("tpsTpsAccelToRpmBins", table.getYBinsConstant());
-        assertEquals("TPSValue", table.getYBinsChannel());
-        assertFalse(table.isYBinsReadOnly());
-        assertEquals("tpsTpsAccelTable", table.getZBinsConstant());
-
-    }
-
-    @Test
-    public void testTableEditorWithAllFeatures() {
-        String string =
-                "[Constants]\n" +
-                "page = 1\n" +
-                "ALSTimingRetardTable = array, F32, 19744, [8x8], \"value\", 1, 0, 0, 30000, 2\n" +
-                "alsIgnRetardrpmBins = array, F32, 20000, [8], \"from\", 1, 0, 0, 30000, 2\n" +
-                "alsIgnRetardLoadBins = array, F32, 20032, [8], \"to\", 1, 0, 0, 25500, 2\n\n " +
-                "[TableEditor]\n" +
-                "\ttable = IgnRetardTableALS, IgnRetardALS,  \"Ignition adjustment\",   1\n" +
-                "\t  xyLabels = \"RPM\", \"Load\"\n" +
-                "\t  xBins       = alsIgnRetardrpmBins,  RPMValue, readOnly\n" +
-                "\t  yBins       = alsIgnRetardLoadBins,  TPSValue\n" +
-                "\t  zBins       = ALSTimingRetardTable\n" +
-                "\t  gridHeight  = 4.0\n" +
-                "\t  gridOrient  = 250,   0, 340\n" +
-                "\t  upDownLabel = \"(RICHER)\", \"(LEANER)\"";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        TableModel table = model.getTable("IgnRetardTableALS");
-        assertNotNull(table);
-        assertEquals("IgnRetardTableALS", table.getTableId());
-        assertEquals("IgnRetardALS", table.getMap3dId());
-        assertEquals("Ignition adjustment", table.getTitle());
-
-        // Verify xyLabels
-        assertEquals("RPM", table.getXLabel());
-        assertEquals("Load", table.getYLabel());
-
-        // Verify xBins with readOnly flag
-        assertEquals("alsIgnRetardrpmBins", table.getXBinsConstant());
-        assertEquals("RPMValue", table.getXBinsChannel());
-        assertTrue(table.isXBinsReadOnly());
-
-        // Verify yBins without readOnly flag
-        assertEquals("alsIgnRetardLoadBins", table.getYBinsConstant());
-        assertEquals("TPSValue", table.getYBinsChannel());
-        assertFalse(table.isYBinsReadOnly());
-
-        // Verify zBins
-        assertEquals("ALSTimingRetardTable", table.getZBinsConstant());
-
-        // Verify upDownLabel
-        assertEquals("(RICHER)", table.getUpLabel());
-        assertEquals("(LEANER)", table.getDownLabel());
-
-        // Verify gridHeight
-        assertNotNull(table.getGridHeight());
-        assertEquals(4.0, table.getGridHeight(), EPS);
-
-        // Verify gridOrient
-        assertEquals("250,0,340", table.getGridOrient());
-    }
-
-    @Test
-    public void testMultipleTables() {
-        String string =
-                "[Constants]\n" +
-                "page = 1\n" +
-                "boostTableOpenLoop = array, F32, 1000, [8x8], \"value\", 1, 0, 0, 100, 2\n" +
-                "boostRpmBins = array, F32, 2000, [8], \"rpm\", 1, 0, 0, 8000, 0\n" +
-                "boostOpenLoopLoadBins = array, F32, 3000, [8], \"load\", 1, 0, 0, 100, 1\n" +
-                "boostTableClosedLoop = array, F32, 4000, [8x8], \"value\", 1, 0, 0, 300, 1\n" +
-                "boostClosedLoopLoadBins = array, F32, 5000, [8], \"load\", 1, 0, 0, 100, 1\n" +
-                "[TableEditor]\n" +
-                "\ttable = boostTableTbl,  boostMapOpen,  \"Boost control duty cycle (open loop)\",\t1\n" +
-                "\t\txBins\t\t= boostRpmBins,  RPMValue\n" +
-                "\t\tyBins\t\t= boostOpenLoopLoadBins,  openLoopYAxis\n" +
-                "\t\tzBins\t\t= boostTableOpenLoop\n\n" +
-                "\ttable = boostClosedTbl,  boostMapClosed,  \"Boost control target / Closed Loop (kPa)\",\t1\n" +
-                "\t\txBins\t\t= boostRpmBins,  RPMValue\n" +
-                "\t\tyBins\t\t= boostClosedLoopLoadBins,  TPSValue\n" +
-                "\t\tzBins\t\t= boostTableClosedLoop";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(2, model.getTables().size());
-
-        // Verify first table
-        TableModel table1 = model.getTable("boostTableTbl");
-        assertNotNull(table1);
-        assertEquals("boostTableTbl", table1.getTableId());
-        assertEquals("boostMapOpen", table1.getMap3dId());
-        assertEquals("Boost control duty cycle (open loop)", table1.getTitle());
-        assertEquals("boostTableOpenLoop", table1.getZBinsConstant());
-
-        // Verify second table
-        TableModel table2 = model.getTable("boostClosedTbl");
-        assertNotNull(table2);
-        assertEquals("boostClosedTbl", table2.getTableId());
-        assertEquals("boostMapClosed", table2.getMap3dId());
-        assertEquals("Boost control target / Closed Loop (kPa)", table2.getTitle());
-        assertEquals("boostTableClosedLoop", table2.getZBinsConstant());
-    }
-
-    @Test
-    public void testTableWithoutOptionalFields() {
-        String string =
-                "[Constants]\n" +
-                "page = 1\n" +
-                "scriptTable1 = array, F32, 1000, [8x8], \"value\", 1, 0, 0, 100, 2\n" +
-                "scriptTable1RpmBins = array, F32, 2000, [8], \"rpm\", 1, 0, 0, 8000, 0\n" +
-                "scriptTable1LoadBins = array, F32, 3000, [8], \"load\", 1, 0, 0, 100, 1\n" +
-                "[TableEditor]\n" +
-                "\ttable = scriptTable1Tbl,  scriptTable1Map,  \"Script Table #1\",\t1\n" +
-                "\t\txBins\t\t= scriptTable1RpmBins,  RPMValue\n" +
-                "\t\tyBins\t\t= scriptTable1LoadBins,  fuelingLoad\n" +
-                "\t\tzBins\t\t= scriptTable1";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        TableModel table = model.getTable("scriptTable1Tbl");
-        assertNotNull(table);
-        assertEquals("scriptTable1Tbl", table.getTableId());
-        assertEquals("scriptTable1Map", table.getMap3dId());
-        assertEquals("Script Table #1", table.getTitle());
-
-        // Verify optional fields are null or empty
-        assertNull(table.getTopicHelp());
-        assertNull(table.getXLabel());
-        assertNull(table.getYLabel());
-        assertNull(table.getUpLabel());
-        assertNull(table.getDownLabel());
-        assertNull(table.getGridHeight());
-        assertNull(table.getGridOrient());
-    }
-
-    @Test
-    public void testEmptyTableEditor() {
-        String string = "[TableEditor]\n";
-
-        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
-        IniFileModel model = readLines(lines);
-
-        assertEquals(0, model.getTables().size());
-    }
-
-    @Test
-    public void testGetDialogKeyByTitle() {
+    public void testTextFieldsInDialog() {
         String string = "[Constants]\n" +
                 "page = 1\n" +
-                "veTable = array, F32, 0, [16x16], \"value\", 1, 0, 0, 100, 2\n" +
                 "field1 = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
                 "[SettingContextHelp]\n" +
                 "; SettingContextHelpEnd\n" +
-                "\thelp = veTableDialogHelp, \"Volumetric Efficiency\"\n" +
-                "\t\ttext = \"VE help text\"\n" +
-                "\t\twebHelp = \"https://rusefi.com/s/fuel\"\n" +
-                "\n" +
-                "\tdialog = veTableDialog, \"VE Table\"\n" +
-                "\t\ttopicHelp = \"veTableDialogHelp\"\n" +
-                "\t\tfield = \"VE Table\", veTable\n" +
-                "\n" +
-                "\tdialog = engineChars, \"Base Engine Settings\"\n" +
-                "\t\tfield = \"Field 1\", field1\n" +
-                "\n" +
-                "\tdialog = idleSettings, \"Idle Control\"\n" +
-                "\t\tfield = \"Field 1\", field1\n";
+                "dialog = canReWidebandLegacyTools, \"Legacy\"\n" +
+                "    field = \"!Please connect \"\n" +
+                "    field = \"!Please do \"\n" +
+                "    field = \"\"\n" +
+                "    field = \"Just text\"\n" +
+                "    field = \"Real Field\", field1\n";
 
         RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = readLines(lines);
 
-        // Test finding dialog key by title
-        String veDialogKey = model.getDialogKeyByTitle("VE Table");
-        assertEquals("veTableDialog", veDialogKey);
+        DialogModel dialog = model.getDialogs().get("canReWidebandLegacyTools");
+        assertNotNull(dialog);
+        assertEquals(5, dialog.getFields().size());
 
-        String engineCharsKey = model.getDialogKeyByTitle("Base Engine Settings");
-        assertEquals("engineChars", engineCharsKey);
+        // Text-only fields (start with !) have key same as UI name
+        assertEquals("!Please connect ", dialog.getFields().get(0).getUiName());
+        assertEquals("!Please connect ", dialog.getFields().get(0).getKey());
 
-        String idleSettingsKey = model.getDialogKeyByTitle("Idle Control");
-        assertEquals("idleSettings", idleSettingsKey);
+        assertEquals("!Please do ", dialog.getFields().get(1).getUiName());
+        assertEquals("!Please do ", dialog.getFields().get(1).getKey());
 
-        // Test with non-existent title
-        String nonExistent = model.getDialogKeyByTitle("Non Existent Dialog");
-        assertNull(nonExistent);
+        assertEquals("", dialog.getFields().get(2).getUiName());
+        assertEquals("", dialog.getFields().get(2).getKey());
 
-        // Test with empty title
-        String emptyTitle = model.getDialogKeyByTitle("");
-        assertNull(emptyTitle);
+        assertEquals("Just text", dialog.getFields().get(3).getUiName());
+        assertEquals("Just text", dialog.getFields().get(3).getKey());
+
+        assertEquals("Real Field", dialog.getFields().get(4).getUiName());
+        assertEquals("field1", dialog.getFields().get(4).getKey());
     }
+
+
+    @Test
+    public void testExpressionOutputChannels() throws IniMemberNotFound {
+        String string = "[OutputChannels]\n" +
+            "; Scalar output channels\n" +
+            "coolant = scalar, S16, 20, \"C\", 0.01, 0\n" +
+            "intake = scalar, S16, 22, \"C\", 0.01, 0\n" +
+            "; Expression output channels (virtual channels calculated from expressions)\n" +
+            "coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }\n" +
+            "intakeTemperature = { intake }\n" +
+            "lambdaValue = { isLambdaDisplay ? lambda1 : (lambda1 * 14.7) }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        // Test that scalar output channels are parsed
+        ScalarIniField coolant = (ScalarIniField) model.getOutputChannel("coolant");
+        assertEquals(20, coolant.getOffset());
+        assertEquals("C", coolant.getUnits());
+
+        ScalarIniField intake = (ScalarIniField) model.getOutputChannel("intake");
+        assertEquals(22, intake.getOffset());
+
+        // Test that expression output channels are stored separately
+        Map<String, String> exprChannels = model.getExpressionOutputChannels();
+        assertEquals(3, exprChannels.size());
+
+        // Test that expression output channels can be looked up by name
+        String coolantTempExpr = model.getExpressionOutputChannel("coolantTemperature");
+        assertNotNull(coolantTempExpr);
+        assertTrue(coolantTempExpr.contains("useMetricOnInterface"));
+        assertTrue(coolantTempExpr.contains("coolant"));
+
+        String intakeTempExpr = model.getExpressionOutputChannel("intakeTemperature");
+        assertNotNull(intakeTempExpr);
+        assertEquals("{ intake }", intakeTempExpr);
+
+        String lambdaExpr = model.getExpressionOutputChannel("lambdaValue");
+        assertNotNull(lambdaExpr);
+        assertTrue(lambdaExpr.contains("isLambdaDisplay"));
+        assertTrue(lambdaExpr.contains("lambda1"));
+
+        // Verify expression channels are not in the scalar output channels
+        assertThrows(IniMemberNotFound.class, () -> model.getOutputChannel("coolantTemperature"));
+        assertThrows(IniMemberNotFound.class, () -> model.getOutputChannel("intakeTemperature"));
+        assertThrows(IniMemberNotFound.class, () -> model.getOutputChannel("lambdaValue"));
+    }
+
+    @Test
+    public void testGaugeConfigurationWithSimpleExpressions() {
+        // Test with simple division expression that IniField.parseDouble can handle
+        String string = "[GaugeConfigurations]\n" +
+                "gaugeCategory = TestExpressions\n" +
+                "simpleGauge = channel1, \"Simple Gauge\", \"unit\", 0, {10/2}, 0, 1, 4, 5, 1, 1\n" +
+                "mathGauge = channel2, \"Math Gauge\", \"unit\", {1/10}, {100/10}, 0, 2, 8, 10, 2, 2\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertEquals(1, model.getGaugeCategories().size());
+        assertTrue(model.getGaugeCategories().containsKey("TestExpressions"));
+
+        GaugeCategoryModel category = model.getGaugeCategories().get("TestExpressions");
+        assertNotNull(category);
+        assertEquals(2, category.getGauges().size());
+
+        GaugeModel simpleGauge = model.getGauge("simpleGauge");
+
+        assertNotNull(simpleGauge);
+        assertEquals("simpleGauge", simpleGauge.getName());
+        assertEquals("channel1", simpleGauge.getChannel());
+        assertEquals("Simple Gauge", simpleGauge.getTitle());
+        assertEquals("unit", simpleGauge.getUnits());
+        assertEquals(0.0, simpleGauge.getLowValue(), EPS);
+
+        // Expression {10/2} evaluates to 5.0
+        assertEquals(5.0, simpleGauge.getHighValue(), EPS);
+        assertEquals(0.0, simpleGauge.getLowDangerValue(), EPS);
+        assertEquals(1.0, simpleGauge.getLowWarningValue(), EPS);
+        assertEquals(4.0, simpleGauge.getHighWarningValue(), EPS);
+        assertEquals(5.0, simpleGauge.getHighDangerValue(), EPS);
+        assertEquals(1, simpleGauge.getValueDecimalPlaces());
+        assertEquals(1, simpleGauge.getLabelDecimalPlaces());
+
+        // Test mathGauge with multiple division expressions
+        GaugeModel mathGauge = model.getGauge("mathGauge");
+        assertNotNull(mathGauge);
+        assertEquals("mathGauge", mathGauge.getName());
+        assertEquals("channel2", mathGauge.getChannel());
+        assertEquals("Math Gauge", mathGauge.getTitle());
+        assertEquals("unit", mathGauge.getUnits());
+        // Expression {1/10} evaluates to 0.1
+        assertEquals(0.1, mathGauge.getLowValue(), EPS);
+        // Expression {100/10} evaluates to 10.0
+        assertEquals(10.0, mathGauge.getHighValue(), EPS);
+        assertEquals(0.0, mathGauge.getLowDangerValue(), EPS);
+        assertEquals(2.0, mathGauge.getLowWarningValue(), EPS);
+        assertEquals(8.0, mathGauge.getHighWarningValue(), EPS);
+        assertEquals(10.0, mathGauge.getHighDangerValue(), EPS);
+        assertEquals(2, mathGauge.getValueDecimalPlaces());
+        assertEquals(2, mathGauge.getLabelDecimalPlaces());
+    }
+
+    @Test
+    public void testIndicatorPanelAndDialogWithPanels() {
+        // Reproduces IgnitionTableDialog: a dialog that only has panel references (no fields/commands),
+        // preceded by an indicatorPanel definition. The last dialog in the file must be correctly saved.
+        String string =
+            "indicatorPanel = ignitionTableIndicators, 1\n" +
+            "    indicator = { isIdling && useSeparateAdvanceForIdle == 1 }, \"Using normal ignition table\", \"Using idle ignition table\",  white,  black,  green,  black\n" +
+            "\n" +
+            "dialog = IgnitionTableDialog, \"\"\n" +
+            "    panel = ignitionTableIndicators\n" +
+            "    panel = ignitionTableTbl\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        // The indicatorPanel definition should be saved as a dialog with indicators
+        assertTrue(model.getDialogs().containsKey("ignitionTableIndicators"));
+        DialogModel indicatorPanelDialog = model.getDialogs().get("ignitionTableIndicators");
+        assertNotNull(indicatorPanelDialog);
+        assertEquals(1, indicatorPanelDialog.getIndicators().size());
+        assertEquals(0, indicatorPanelDialog.getPanels().size());
+
+        // IgnitionTableDialog should be saved with 2 panel references (no fields)
+        assertTrue(model.getDialogs().containsKey("IgnitionTableDialog"));
+        DialogModel ignitionTableDialog = model.getDialogs().get("IgnitionTableDialog");
+        assertNotNull(ignitionTableDialog);
+        assertEquals(0, ignitionTableDialog.getFields().size());
+        assertEquals(2, ignitionTableDialog.getPanels().size());
+        assertEquals("ignitionTableIndicators", ignitionTableDialog.getPanels().get(0).getPanelName());
+        assertEquals("ignitionTableTbl", ignitionTableDialog.getPanels().get(1).getPanelName());
+    }
+
+    @Test
+    public void testIndicatorPanelWithoutColors() {
+        // Defaults: offBg=null, offFg="black", onBg="green", onFg="black"
+        String string =
+            "indicatorPanel = statusPanel, 1\n" +
+            "    indicator = { isIdling }, \"Not idling\", \"Idling\"\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertTrue(model.getDialogs().containsKey("statusPanel"));
+        DialogModel panel = model.getDialogs().get("statusPanel");
+        assertNotNull(panel);
+        assertEquals(1, panel.getIndicators().size());
+
+        IndicatorModel indicator = panel.getIndicators().get(0);
+        assertEquals("{ isIdling }", indicator.getExpression());
+        assertEquals("Not idling", indicator.getOffLabel());
+        assertEquals("Idling", indicator.getOnLabel());
+        // Default colors when omitted
+        assertNull(indicator.getOffBg());
+        assertEquals("black", indicator.getOffFg());
+        assertEquals("green", indicator.getOnBg());
+        assertEquals("black", indicator.getOnFg());
+    }
+
+    @Test
+    public void testIndicatorPanelWithTooFewTokensIsIgnored() {
+        // An indicator with fewer than 4 tokens (expression + offLabel + onLabel) must be silently skipped
+        String string =
+            "indicatorPanel = statusPanel, 1\n" +
+            "    indicator = { isIdling }, \"Not idling\"\n" +  // only 3 tokens — should be ignored
+            "    indicator = { isCranking }, \"Not cranking\", \"Cranking\"\n"; // valid 4-token indicator
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        DialogModel panel = model.getDialogs().get("statusPanel");
+        assertNotNull(panel);
+        assertEquals(1, panel.getIndicators().size()); // only the valid one
+        assertEquals("{ isCranking }", panel.getIndicators().get(0).getExpression());
+    }
+
+    @Test
+    public void testFrontPageIndicatorWithoutColors() {
+        String string =
+            "[FrontPage]\n" +
+            "indicator = { coolant > 90 }, \"Cold\", \"Warm\"\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<IndicatorModel> indicators = model.getFrontPage().getIndicators();
+        assertEquals(1, indicators.size());
+
+        IndicatorModel indicator = indicators.get(0);
+        assertEquals("{ coolant > 90 }", indicator.getExpression());
+        assertEquals("Cold", indicator.getOffLabel());
+        assertEquals("Warm", indicator.getOnLabel());
+        assertNull(indicator.getOffBg());
+        assertEquals("black", indicator.getOffFg());
+        assertEquals("green", indicator.getOnBg());
+        assertEquals("black", indicator.getOnFg());
+    }
+
 }

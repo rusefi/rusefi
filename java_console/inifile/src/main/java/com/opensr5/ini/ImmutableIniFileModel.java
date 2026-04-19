@@ -12,6 +12,7 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, IniField> allIniFields;
     private final Map<String, IniField> secondaryIniFields;
     private final Map<String, IniField> allOutputChannels;
+    private final Map<String, String> expressionOutputChannels;
     private final Map<String, String> protocolMeta;
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
@@ -21,10 +22,24 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, GaugeCategoryModel> gaugeCategories;
     private final Map<String, GaugeModel> gauges;
     private final Map<String, TableModel> tables;
+    private final Map<String, CurveModel> curves;
     private final Map<String, String> topicHelp;
     private final Map<String, ContextHelpModel> contextHelp;
+    private final List<MenuModel> menus;
+    private final FrontPageModel frontPage;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
+        LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
+        result.putAll(source);
+        return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Case-insensitive lookup via TreeMap's comparator, but preserves original key case on
+     * iteration. Required for maps iterated by callers that use keys as field names
+     * (e.g. DefaultTuneMigrator), unlike copyWithCaseInsensitiveKeys which normalizes to lowercase.
+     */
+    private static <V> Map<String, V> copyWithCaseInsensitiveOrderedKeys(Map<String, V> source) {
         TreeMap<String, V> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         result.putAll(source);
         return Collections.unmodifiableMap(result);
@@ -36,6 +51,7 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, IniField> allIniFields,
                                  Map<String, IniField> secondaryIniFields,
                                  Map<String, IniField> allOutputChannels,
+                                 Map<String, String> expressionOutputChannels,
                                  Map<String, String> protocolMeta,
                                  IniFileMetaInfo metaInfo,
                                  String iniFilePath,
@@ -46,13 +62,21 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, GaugeModel> gauges,
                                  Map<String, String> topicHelp,
                                  Map<String, ContextHelpModel> contextHelp,
-                                 Map<String, TableModel> tables) {
+                                 Map<String, TableModel> tables,
+                                 Map<String, CurveModel> curves,
+                                 String menuDialog,
+                                 List<MenuModel> menus,
+                                 FrontPageModel frontPage) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
-        this.allIniFields = copyWithCaseInsensitiveKeys(allIniFields);
-        this.secondaryIniFields = copyWithCaseInsensitiveKeys(secondaryIniFields);
+        // allIniFields/secondaryIniFields are iterated with keys used as field names — must
+        // preserve original case on iteration, so use TreeMap(CASE_INSENSITIVE_ORDER) not
+        // LowercaseHashMap (which normalizes keys and breaks callers like DefaultTuneMigrator).
+        this.allIniFields = copyWithCaseInsensitiveOrderedKeys(allIniFields);
+        this.secondaryIniFields = copyWithCaseInsensitiveOrderedKeys(secondaryIniFields);
         this.allOutputChannels = copyWithCaseInsensitiveKeys(allOutputChannels);
+        this.expressionOutputChannels = copyWithCaseInsensitiveKeys(expressionOutputChannels);
         this.protocolMeta = Collections.unmodifiableMap(new TreeMap<>(protocolMeta));
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
@@ -64,6 +88,9 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.topicHelp = Collections.unmodifiableMap(new TreeMap<>(topicHelp));
         this.contextHelp = Collections.unmodifiableMap(new LinkedHashMap<>(contextHelp));
         this.tables = copyWithCaseInsensitiveKeys(tables);
+        this.curves = copyWithCaseInsensitiveKeys(curves);
+        this.menus = Collections.unmodifiableList(new ArrayList<>(menus));
+        this.frontPage = frontPage;
     }
 
     @Override
@@ -95,7 +122,11 @@ public class ImmutableIniFileModel implements IniFileModel {
 
     @Override
     public Optional<IniField> findIniField(String key) {
-        return Optional.ofNullable(allIniFields.get(key));
+        IniField field = allIniFields.get(key);
+        if (field == null) {
+            field = secondaryIniFields.get(key);
+        }
+        return Optional.ofNullable(field);
     }
 
     @Override
@@ -115,6 +146,21 @@ public class ImmutableIniFileModel implements IniFileModel {
         if (result == null)
             throw new IniMemberNotFound(key + " field not found");
         return result;
+    }
+
+    @Override
+    public Map<String, IniField> getAllOutputChannels() {
+        return allOutputChannels;
+    }
+
+    @Override
+    public String getExpressionOutputChannel(String key) {
+        return expressionOutputChannels.get(key);
+    }
+
+    @Override
+    public Map<String, String> getExpressionOutputChannels() {
+        return expressionOutputChannels;
     }
 
     @Override
@@ -149,8 +195,14 @@ public class ImmutableIniFileModel implements IniFileModel {
 
     @Override
     public String getDialogKeyByTitle(String dialogTitle) {
-        DialogModel dialog = dialogs.get(dialogTitle);
-        return dialog != null ? dialog.getKey() : null;
+        // TODO, if this is used heavily, we maybe need to implement a multiple-key map for the dialogs,
+        //  since some ops use the key and the screen generator uses the title
+        for (DialogModel dialog : dialogs.values()) {
+            if (dialogTitle.equals(dialog.getUiName())) {
+                return dialog.getKey();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -178,6 +230,19 @@ public class ImmutableIniFileModel implements IniFileModel {
     }
 
     @Override
+    public GaugeModel findGaugeByChannel(String channelName) {
+        if (channelName == null) {
+            return null;
+        }
+        for (GaugeModel gauge : gauges.values()) {
+            if (channelName.equalsIgnoreCase(gauge.getChannel())) {
+                return gauge;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Map<String, String> getTopicHelp() {
         return topicHelp;
     }
@@ -198,7 +263,22 @@ public class ImmutableIniFileModel implements IniFileModel {
     }
 
     @Override
+    public Map<String, CurveModel> getCurves() {
+        return curves;
+    }
+
+    @Override
     public TableModel getTable(String name) {
         return tables.get(name);
+    }
+
+    @Override
+    public FrontPageModel getFrontPage() {
+        return frontPage;
+    }
+
+    @Override
+    public List<MenuModel> getMenus() {
+        return menus;
     }
 }

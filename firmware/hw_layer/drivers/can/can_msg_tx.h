@@ -17,8 +17,15 @@
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 #include "fifo_buffer.h"
-extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
+extern fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
+
+// sometimes we want to prohibit default bus index altogether
+#ifndef CAN_TX_WITH_DEFAULT_BUS
+#define CAN_TX_WITH_DEFAULT_BUS TRUE
+#endif
+
+#define DEFAULT_BUS_INDEX 0
 
 /**
  * Represent a message to be transmitted over CAN.
@@ -34,7 +41,15 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, size_t bus = 0, bool isExtended = false);
+	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc
+#if CAN_TX_WITH_DEFAULT_BUS
+	= 8
+#endif
+	, size_t bus
+#if CAN_TX_WITH_DEFAULT_BUS
+	 = DEFAULT_BUS_INDEX
+#endif
+	 , bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
@@ -63,6 +78,11 @@ public:
 	void setShortValue(uint16_t value, size_t offset);
 
 	/**
+	 * @brief Write a 32-bit int value to the buffer. Note: this writes in Intel little endian byte order.
+	 */
+	void setIntValueLsb(uint32_t value, size_t offset);
+
+	/**
 	 Same as above but big endian Motorola
 	 * for instance DBC 8|16@0
 	 */
@@ -83,7 +103,7 @@ public:
 	}
 
     void setArray(const uint8_t *data, size_t len) {
-        for (size_t i = 0; i < std::min(len, size_t(8)); i++) {
+        for (size_t i = 0; i < std::min(len, sizeof(m_frame.data8)); i++) {
             m_frame.data8[i] = data[i];
         }
     }

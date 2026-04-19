@@ -1,10 +1,13 @@
 package com.opensr5;
 
 import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.core.ByteBufferUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.Objects;
@@ -14,7 +17,7 @@ import static com.rusefi.config.FieldType.*;
 /**
  * mutable presentation of ECU calibrations
  * in the MCU firmware that's config/engineConfiguration
- *
+ * <p>
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
@@ -57,9 +60,9 @@ public class ConfigurationImage {
     }
 
     public void setBitValue(EnumIniField enumIniField, int ordinal) {
-        int value = getByteBuffer(enumIniField).getInt();
+        int value = (int) enumIniField.getType().readRawValue(getByteBuffer(enumIniField));
         value = EnumIniField.setBitRange(value, ordinal, enumIniField.getBitPosition(), enumIniField.getBitSize0() + 1);
-        getByteBuffer(enumIniField).putInt(value);
+        enumIniField.getType().writeRawValue(getByteBuffer(enumIniField), value);
     }
 
     @NotNull
@@ -102,11 +105,39 @@ public class ConfigurationImage {
                 '}';
     }
 
+    /**
+     * Read a numeric value from this configuration image
+     * Handles ScalarIniField (applying multiplier) and EnumIniField (extracting bit range).
+     *
+     * @return the value, or null if the field type is not supported
+     */
+    @Nullable
+    public Double readNumericValue(IniField field) {
+        if (field instanceof ScalarIniField) {
+            ScalarIniField scalarField = (ScalarIniField) field;
+            ByteBuffer bb = getByteBuffer(scalarField.getOffset(), 4);
+            double rawValue = scalarField.getType().readRawValue(bb);
+            return rawValue * scalarField.getMultiplier();
+        }
+
+        if (field instanceof EnumIniField) {
+            EnumIniField enumField = (EnumIniField) field;
+            ByteBuffer bb = getByteBuffer(enumField.getOffset(), enumField.getSize());
+            int rawValue = (int) enumField.getType().readRawValue(bb);
+            int bitCount = enumField.getBitSize0() + 1;
+            int mask = (1 << bitCount) - 1;
+            return (double) ((rawValue >> enumField.getBitPosition()) & mask);
+        }
+
+        return null;
+    }
+
     @NotNull
     public ByteBuffer getByteBuffer(EnumIniField enumIniField) {
         Objects.requireNonNull(this, "image enum getter");
-        if (getSize() < enumIniField.getOffset() + 4)
+        int size = enumIniField.getSize();
+        if (getSize() < enumIniField.getOffset() + size)
             throw new IllegalArgumentException("OutOfBounds while " + enumIniField.getName() + " " + enumIniField.getOffset());
-        return getByteBuffer(enumIniField.getOffset(), 4);
+        return getByteBuffer(enumIniField.getOffset(), size);
     }
 }

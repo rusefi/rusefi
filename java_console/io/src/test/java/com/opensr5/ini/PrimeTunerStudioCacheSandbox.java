@@ -10,7 +10,7 @@ public class PrimeTunerStudioCacheSandbox {
     public static void main(String[] args) throws FileNotFoundException {
         String localIniFile = FindFileHelper.findFile("../firmware/tunerstudio/generated",
             IniFileReader.RUSEFI_INI_PREFIX + "_proteus_f7",
-            IniFileReader.RUSEFI_INI_SUFFIX,
+            IniFileReader.INI_FILE_SUFFIX,
             (fileDirectory, fileName) -> {
                 throw new IllegalStateException();
             }, true);

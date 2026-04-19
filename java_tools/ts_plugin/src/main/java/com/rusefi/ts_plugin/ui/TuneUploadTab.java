@@ -16,7 +16,6 @@ import com.rusefi.ts_plugin.UploaderStatus;
 import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.ts_plugin.util.UploadQueue;
 import com.rusefi.tune.xml.Msq;
-import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
 import org.apache.hc.core5.concurrent.FutureCallback;
 import org.putgemin.VerticalFlowLayout;

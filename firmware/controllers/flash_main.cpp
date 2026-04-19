@@ -26,6 +26,8 @@
 #include "tunerstudio.h"
 #endif
 
+#include "extra_flash_pages.h"
+
 
 #include "runtime_state.h"
 
@@ -50,9 +52,13 @@ bool settingsLtftRequestWriteToFlash() {
 	return storageRequestWriteID(EFI_LTFT_RECORD_ID, false);
 }
 
+void suspendLinearTimeWatcher() {
+  engine->configBurnTimer.reset();
+}
+
 /* TODO: extract to persistentState method */
 bool writeToFlashNowImpl() {
-	engine->configBurnTimer.reset();
+	suspendLinearTimeWatcher();
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
@@ -61,6 +67,13 @@ bool writeToFlashNowImpl() {
 
 	// Do actual write
 	auto result1 = storageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
+#if (EFI_STORAGE_INT_FLASH == TRUE) && (EFI_STORAGE_MFS != TRUE)
+	// The sector was just erased above — write all extra pages into the
+	// now-blank shared region.  Add new pages in extra_flash_pages.cpp.
+	if (result1 == StorageStatus::Ok) {
+		burnExtraFlashPages();
+	}
+#endif
 	auto result2 = storageWrite(EFI_SETTINGS_BACKUP_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
 
 	resetMaxValues();

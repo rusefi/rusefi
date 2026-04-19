@@ -1,15 +1,23 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
+import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.*;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.io.IoStream;
+import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.maintenance.jobs.*;
+import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.updater.OpenbltDetectorStrategy;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +26,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.io.EOFException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -36,13 +46,8 @@ public class ProgramSelector {
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
     private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
     private final ConnectivityContext connectivityContext;
-    private final static boolean USE_JAVA_SERIAL;
-
-    static {
-        String KEY = "USE_JAVA_OPENBLT_SERIAL";
-        USE_JAVA_SERIAL = parseBoolean(System.getProperty(KEY, "true"));
-        log.info(KEY + "=" + USE_JAVA_SERIAL);
-    }
+    @Nullable
+    private SingleAsyncJobExecutor jobExecutor;
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
@@ -111,7 +116,15 @@ public class ProgramSelector {
                 throw new IllegalArgumentException("How did you " + selectedMode);
         }
 
-        AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(job);
+        if (jobExecutor != null) {
+            jobExecutor.startJob(job, parent);
+        } else {
+            AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(job);
+        }
+    }
+
+    public void setJobExecutor(@Nullable SingleAsyncJobExecutor jobExecutor) {
+        this.jobExecutor = jobExecutor;
     }
 
     public static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
@@ -122,6 +135,14 @@ public class ProgramSelector {
     public static void rebootToOpenblt(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
         String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
         DfuFlasher.rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_OPENBLT);
+    }
+
+    /**
+     * Send reboot-to-OpenBLT via an already-open BinaryProtocol connection.
+     * Use this from ConsoleUI context where the port is held by LinkManager.
+     */
+    public static void rebootToOpenblt(JComponent parent, BinaryProtocol binaryProtocol, UpdateOperationCallbacks callbacks) {
+        BootloaderHelper.sendBootloaderRebootCommand(parent, binaryProtocol.signature, binaryProtocol.getStream(), callbacks, Integration.CMD_REBOOT_OPENBLT);
     }
 
     public static void flashOpenBltCan(JComponent parent, UpdateOperationCallbacks callbacks) {
@@ -146,19 +167,34 @@ public class ProgramSelector {
 
     private static boolean waitForEcuPortDisappeared(
         final PortResult ecuPort,
-        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
+        final UpdateOperationCallbacks callbacks
     ) {
+        // Scanner is already suspended by the caller (bltUpdateFirmware).
         return waitForPredicate(
             String.format("Waiting for ECU on port %s to reboot to OpenBlt for up to " + TOTAL_WAIT_SECONDS + " seconds...", ecuPort),
             () -> {
-                final AvailableHardware availableHardware = connectivityContext.getCurrentHardware();
-                log.info(String.format(
-                    "current ports: [%s]",
-                    availableHardware.getKnownPorts().stream()
-                        .map(PortResult::toString)
-                        .collect(Collectors.joining(","))
-                ));
-                return !availableHardware.isPortAvailable(ecuPort);
+                // Directly probe the port rather than relying on the scanner snapshot.
+                // The scanner cache would keep reporting EcuWithOpenblt even after the
+                // ECU has already entered OpenBLT mode (the OS port does not disappear).
+                try (IoStream stream = BufferedSerialIoStream.openPort(ecuPort.port)) {
+                    if (stream == null) {
+                        log.info("Port " + ecuPort.port + " is unavailable — ECU is rebooting");
+                        return true;
+                    }
+                    if (OpenbltDetectorStrategy.isPortOpenblt(stream)) {
+                        log.info("Port " + ecuPort.port + " is now in OpenBLT mode");
+                        return true;
+                    }
+                } catch (EOFException e) {
+                    // readByte timed out — keep waiting until a write error or
+                    // null stream indicates the ECU has actually reset.
+                    log.info("Port " + ecuPort.port + " still responding as ECU firmware (XCP ignored)");
+                } catch (Exception e) {
+                    log.info("Port " + ecuPort.port + " probe error (ECU transitioning): " + e.getMessage());
+                    return true;
+                }
+                log.info("Port " + ecuPort.port + " still responding as ECU firmware");
+                return false;
             },
             callbacks
         );
@@ -166,26 +202,32 @@ public class ProgramSelector {
 
     private static List<PortResult> waitForNewOpenBltPortAppeared(
         final List<PortResult> openBltPortsBefore,
-        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
+        final UpdateOperationCallbacks callbacks
     ) {
+        // Scanner is suspended by the caller (bltUpdateFirmware). Scan all system
+        // COM ports ourselves so we can find OpenBLT even when it enumerates on a
+        // different port number than the original ECU port (common with USB-CDC where
+        // the bootloader has a different USB PID and gets a new COM assignment).
         final List<PortResult> newPorts = new ArrayList<>();
         waitForPredicate(
             "Waiting for new OpenBlt port to appear...",
             () -> {
-                final AvailableHardware availableHardwareAfter = connectivityContext.getCurrentHardware();
-                log.info(String.format(
-                    "ports after reboot to OpenBlt: [%s]",
-                    availableHardwareAfter.getKnownPorts().stream()
-                        .map(PortResult::toString)
-                        .collect(Collectors.joining(","))
-                ));
-                for (final PortResult p : availableHardwareAfter.getKnownPorts(OpenBlt)) {
-                    if (!openBltPortsBefore.contains(p)) {
-                        // This item is in the after list but not before list
-                        newPorts.add(p);
+                for (SerialPort sp : SerialPort.getCommPorts()) {
+                    final String portName = sp.getSystemPortName();
+                    if (openBltPortsBefore.stream().anyMatch(p -> p.port.equals(portName))) {
+                        continue; // skip ports that were already in OpenBLT mode before
+                    }
+                    try (IoStream stream = BufferedSerialIoStream.openPort(portName)) {
+                        if (OpenbltDetectorStrategy.isPortOpenblt(stream)) {
+                            log.info("Direct probe: port " + portName + " is in OpenBLT mode");
+                            newPorts.add(new PortResult(portName, OpenBlt));
+                            return true;
+                        }
+                    } catch (Exception e) {
+                        log.info("Probe of " + portName + " error: " + e.getMessage());
                     }
                 }
-                return !newPorts.isEmpty();
+                return false;
             },
             callbacks
         );
@@ -205,12 +247,32 @@ public class ProgramSelector {
     }
 
     private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext) {
+        // Suspend the scanner for the entire reboot → detect → flash sequence so it
+        // never races with our direct port probes for exclusive COM port access on Windows.
+        try {
+            connectivityContext.getSerialPortScanner().suspend().await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        try {
+            return bltUpdateFirmwareWithSuspendedScanner(parent, ecuPort, callbacks, connectivityContext);
+        } finally {
+            // Invalidate the cache so the scanner re-inspects the port (now running new
+            // firmware) on its first post-resume scan cycle.
+            connectivityContext.getSerialPortScanner().invalidatePort(ecuPort.port);
+            connectivityContext.getSerialPortScanner().resume();
+        }
+    }
+
+    private static boolean bltUpdateFirmwareWithSuspendedScanner(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext) {
+        // Snapshot pre-existing OpenBLT ports so we can ignore them when searching
+        // for the newly-appeared bootloader port after the reboot.
         final List<PortResult> openBltPortsBefore = connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt);
 
         rebootToOpenblt(parent, ecuPort.port, callbacks);
 
         // invoking blocking method
-        final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks, connectivityContext);
+        final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
 
         if (!isEcuPortDisappeared) {
             callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
@@ -220,7 +282,7 @@ public class ProgramSelector {
             return false;
         }
 
-        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks, connectivityContext);
+        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks);
 
         // Check that exactly one thing appeared in the "after" list
         if (newItems.isEmpty()) {
@@ -230,10 +292,7 @@ public class ProgramSelector {
 
         if (newItems.size() > 1) {
             // More than one port appeared? whattt?
-            callbacks.logLine(
-                "Unable to find ECU after reboot as multiple serial ports appeared. Before: "
-                    + openBltPortsBefore.size()
-            );
+            callbacks.logLine("Unable to find ECU after reboot as multiple serial ports appeared.");
             return false;
         }
 
@@ -253,7 +312,7 @@ public class ProgramSelector {
 
             @Override
             public void updateProgress(int percent) {
-                callbacks.logLine("Progress: " + percent + "%");
+                callbacks.updateProgress(percent);
             }
 
             @Override
@@ -288,11 +347,7 @@ public class ProgramSelector {
         }
         try {
             callbacks.logLine("flashSerial " + fileName);
-            if (USE_JAVA_SERIAL) {
-                OpenBltFlasher.flashSerial(fileName, port, cb);
-            } else {
-                OpenbltJni.flashSerial(fileName, port, cb);
-            }
+            OpenBltFlasher.flashSerial(fileName, port, cb);
 
             callbacks.logLine("Update completed successfully!");
             return true;
@@ -300,10 +355,6 @@ public class ProgramSelector {
             callbacks.logLine("flashOpenbltSerial Error: " + e);
             log.error("flashOpenbltSerial " + e, e);
             return false;
-        } finally {
-            if (!USE_JAVA_SERIAL) {
-                OpenbltJni.stop(cb);
-            }
         }
     }
 
@@ -361,6 +412,14 @@ public class ProgramSelector {
 
         if (updateModeToRestore != null) {
             updateModeComboBox.setSelectedItem(updateModeToRestore);
+        }
+
+        // When a DFU device is present, prefer DFU_MANUAL over DFU_SWITCH (which is the
+        // default fallback shown before any device is detected). This handles both the first
+        // detection and the case where hasDfuDevice briefly flipped to false then back to true,
+        // leaving DFU_SWITCH restored instead of DFU_MANUAL. see #9157
+        if (hasDfuDevice && updateModeComboBox.getSelectedItem() == DFU_SWITCH) {
+            updateModeComboBox.setSelectedItem(DFU_MANUAL);
         }
 
         AutoupdateUtil.trueLayoutAndRepaint(updateModeComboBox);

@@ -7,12 +7,12 @@ import com.rusefi.tune.ConfigurationImageGetterSetter2;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
-import com.rusefi.Version;
+import com.rusefi.UiVersion;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -29,7 +29,7 @@ public class Msq {
     public Bibliography bibliography = new Bibliography();
 
     public Msq() {
-        versionInfo = new VersionInfo(Integer.toString(Version.CONSOLE_VERSION));
+        versionInfo = new VersionInfo(Integer.toString(UiVersion.CONSOLE_VERSION));
     }
 
     static {
@@ -73,9 +73,40 @@ public class Msq {
                 continue;
             }
             IniField field = instance.getAllIniFields().get(constant.getName());
-            Objects.requireNonNull(field, "Field for " + constant.getName());
+            if (field == null) {
+                log.info("asImage: skipping unknown field " + constant.getName());
+                continue;
+            }
             log.debug("Setting " + field);
             ConfigurationImageGetterSetter2.setValue(field, ci, constant);
+        }
+        return ci;
+    }
+
+    /**
+     * Applies constants from this MSQ onto an existing image instead of a blank one.
+     * Fields present in the MSQ but absent from {@code instance} are skipped.
+     * Fields present in {@code base} but absent from the MSQ retain their current value.
+     * This is preferable to {@link #asImage} when loading into a live ECU because it
+     * preserves the correct image size and handles firmware-version differences gracefully.
+     */
+    public ConfigurationImage applyOnto(ConfigurationImage base, IniFileModel instance) {
+        Objects.requireNonNull(instance, "ini model");
+        ConfigurationImage ci = base.clone();
+        Page page = findPage();
+        if (page == null) return ci;
+        for (Constant constant : page.constant) {
+            if (constant.getName().startsWith("UNALLOCATED_SPACE")) continue;
+            IniField field = instance.getAllIniFields().get(constant.getName());
+            if (field == null) {
+                log.info("applyOnto: skipping unknown field " + constant.getName());
+                continue;
+            }
+            try {
+                ConfigurationImageGetterSetter2.setValue(field, ci, constant);
+            } catch (IllegalArgumentException e) {
+                log.info("applyOnto: skipping incompatible value for " + constant.getName() + ": " + e.getMessage());
+            }
         }
         return ci;
     }
@@ -95,7 +126,7 @@ public class Msq {
 
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.getAllIniFields().get(key);
-        String value = ConfigurationImageGetterSetter.getValue(field, image);
+        String value = ConfigurationImageGetterSetter.getStringValue(field, image);
         Page page = findPage();
         if (page == null) {
             log.error("Msq: No page");
@@ -142,3 +173,4 @@ public class Msq {
         return findPage().getConstantsAsMap();
     }
 }
+

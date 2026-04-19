@@ -2,6 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.rusefi.*;
 import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.DoubleCallbacks;
 import com.rusefi.maintenance.DfuFlasher;
@@ -23,11 +24,15 @@ import java.util.concurrent.atomic.AtomicReference;
  * <p>
  * Focuses on firmware updater
  * Much simpler than {@link com.rusefi.StartupFrame}
+ *
+ * @deprecated Firmware update and tune management tabs are now part of the main
+ *             {@link com.rusefi.StartupFrame}. This class remains for scripted/automated use.
  */
+@Deprecated
 public class BasicStartupFrame {
     private final String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
 
-    private final BasicUpdaterPanel basicUpdaterPanel;
+    private final FirmwareUpdateTab firmwareUpdateTab;
     private final FrameHelper frame = FrameHelper.createFrame(
         whiteLabel + " basic console " + Launcher.CONSOLE_VERSION
     );
@@ -44,39 +49,42 @@ public class BasicStartupFrame {
     }
 
     private BasicStartupFrame(ConnectivityContext connectivityContext) {
-        DfuFlasher.dfuEnabledInCaseOfError = false;
-        TunerStudioHelper.maybeCloseTs();
-
         JTabbedPane tabbedPane = new JTabbedPane();
-        final JPanel firmwareUpdateContent = new JPanel();
-        StatusPanel statusPanelFirmwareTab = new StatusPanel(500);
+        StatusPanelWithProgressBar statusPanelFirmwareTab = new StatusPanelWithProgressBar();
         StatusPanel statusPanelTuneTab = new StatusPanel(250);
         SingleAsyncJobExecutor singleAsyncJobExecutor = new SingleAsyncJobExecutor(new DoubleCallbacks(statusPanelFirmwareTab, statusPanelTuneTab));
 
         AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
-        basicUpdaterPanel = new BasicUpdaterPanel(connectivityContext,
-            ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
+        firmwareUpdateTab = new FirmwareUpdateTab(connectivityContext,
+            whiteLabel,
             statusPanelFirmwareTab,
             singleAsyncJobExecutor, ecuPortToUse
         );
-        firmwareUpdateContent.add(basicUpdaterPanel.getContent());
-        firmwareUpdateContent.add(statusPanelFirmwareTab);
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             onHardwareUpdated();
         }));
 
-        tabbedPane.addTab("Firmware", firmwareUpdateContent);
+        tabbedPane.addTab("Firmware", firmwareUpdateTab.getContent());
         tabbedPane.addTab("Tunes", new TuneManagementTab(
             connectivityContext,
             ecuPortToUse,
-            basicUpdaterPanel.getImportTuneButton().getContent(),
+            firmwareUpdateTab.getBasicUpdaterPanel().getImportTuneButton().getContent(),
             singleAsyncJobExecutor,
             statusPanelTuneTab
         ).getContent());
-
+/*
+todo: fix TrimsTab so that it does not enlarge frame
+        tabbedPane.addTab("Trims", new TrimsTab(
+            connectivityContext,
+            ecuPortToUse
+        ).getContent());
+*/
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
         frame.showFrame(tabbedPane, false);
+
+        TunerStudioHelper.checkTunerStudio(frame.getFrame().getContentPane(), () -> restoreContent(tabbedPane));
+
         UiUtils.centerWindow(frame.getFrame());
         packFrame();
 
@@ -87,18 +95,24 @@ public class BasicStartupFrame {
         frame.getFrame().pack();
     }
 
+    private void restoreContent(JComponent content) {
+        frame.getFrame().getContentPane().removeAll();
+        frame.getFrame().add(content);
+        AutoupdateUtil.pack(frame.getFrame());
+    }
+
     private void updateStatus(final String niceStatus) {
-        basicUpdaterPanel.updateStatus(niceStatus);
+        firmwareUpdateTab.getBasicUpdaterPanel().updateStatus(niceStatus);
 
         // I'm not sure why it works, but it looks like the following frame packing helps to avoid displaying of logo on
         // the right side of frame
         packFrame();
     }
 
-    public void onHardwareUpdated() {
+    private void onHardwareUpdated() {
         status.stop();
 
-        basicUpdaterPanel.onHardwareUpdated();
+        firmwareUpdateTab.getBasicUpdaterPanel().onHardwareUpdated();
 
         // I'm not sure if the following frame packing is really necessary, but I'm adding it just in case if frame was
         // not packed in updateStatus method

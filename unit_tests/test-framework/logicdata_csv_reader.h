@@ -31,6 +31,7 @@ public:
 
 	bool flipOnRead = false;
 	bool flipVvtOnRead = false;
+	// a way to skip some columns
 	int readingOffset = 0;
 	double lastTimeStamp = 0.0;
 

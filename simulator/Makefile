@@ -26,6 +26,20 @@ ifneq ($(OS),Windows_NT)
 endif
 $(info OS is [${OS}])
 
+# Cygwin reports as CYGWIN_NT-* from uname but is still Windows underneath.
+# Detect it so that Windows-specific workarounds (e.g. disabling
+# CH_DBG_SYSTEM_STATE_CHECK) apply on Cygwin builds too.
+IS_CYGWIN = $(if $(findstring CYGWIN,$(OS)),yes,no)
+
+# Windows flag: true for both native Windows_NT and Cygwin.
+ifeq ($(OS),Windows_NT)
+  IS_WIN = yes
+else ifeq ($(IS_CYGWIN),yes)
+  IS_WIN = yes
+else
+  IS_WIN = no
+endif
+
 include ../firmware/rusefi.mk
 include ../firmware/rusefi_rules.mk
 -include ${BOARD_DIR}/firmware/firmware.mk
@@ -38,10 +52,10 @@ PCHSUB = simulator
 # used by USE_SMART_BUILD
 CONFDIR = .
 
-ifneq ($(OS),Windows_NT)
-  SANITIZE = yes
-else
+ifeq ($(IS_WIN),yes)
   SANITIZE = no
+else
+  SANITIZE = yes
 endif
 
 ifeq ($(SIMULATOR_DEBUG_LEVEL_OPT),)
@@ -54,7 +68,7 @@ ifeq ($(USE_OPT),)
   USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing -Werror=nonnull
   USE_OPT += -D US_TO_NT_MULTIPLIER=$(US_TO_NT_MULTIPLIER)
 
-  ifeq ($(OS),Windows_NT)
+  ifeq ($(IS_WIN),yes)
     USE_OPT += -DEFI_SIM_IS_WINDOWS=1 -DIS_WINDOWS_COMPILER=1
   else
     USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0 -DIS_WINDOWS_COMPILER=0
@@ -136,7 +150,7 @@ endif
 #
 
 # Define project name here
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   PROJECT = rusefi_simulator.exe
 else
   PROJECT = rusefi_simulator
@@ -161,7 +175,7 @@ include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 #include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
 else
   include ${CHIBIOS}/os/hal/ports/simulator/posix/platform.mk
@@ -236,7 +250,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 # Compiler settings
 #
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
   # ChibiOS seem to require 32 bit compiler at least on Windows
   # base 32-bit Cygwin is needed with mingw64 32-bit version
   # Cygwin64 would not debug if used with mingw64 32-bit version
@@ -247,20 +261,29 @@ else
   TRGT =
 endif
 
-CC   = $(TRGT)gcc
-CPPC = $(TRGT)g++
-# Enable loading with g++ only if you need C++ runtime support.
-# NOTE: You can use C++ even without C++ support if you are careful. C++
-#       runtime support makes code size explode.
-#LD   = $(CC)
-LD   = $(CPPC)
+# Use 'make USE_CLANG=yes' to build with clang/clang++ instead of gcc/g++.
+ifeq ($(USE_CLANG),yes)
+  CC   = clang
+  CPPC = clang++
+  LD   = clang++
+  COV  = llvm-cov gcov
+else
+  CC   = $(TRGT)gcc
+  CPPC = $(TRGT)g++
+  # Enable loading with g++ only if you need C++ runtime support.
+  # NOTE: You can use C++ even without C++ support if you are careful. C++
+  #       runtime support makes code size explode.
+  #LD   = $(CC)
+  LD   = $(CPPC)
+  COV  = gcov
+endif
+
 CP   = $(TRGT)objcopy
 AS   = $(CC) -x assembler-with-cpp
 AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 BIN  = $(CP) -O binary
-COV  = gcov
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wundef -Wstrict-prototypes
@@ -279,6 +302,9 @@ CPPWARN = -Wall -Wextra -Wundef
 # List all user C define here, like -D_DEBUG=1
 UDEFS = -DSIMULATOR
 DDEFS += -DFIRMWARE_ID=\"simulator\" -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
+DDEFS += -DMETA_GENERATED_H_OVERRIDE=\"rusefi_generated_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DMETA_ENGINE_GENERATED_H_OVERRIDE=\"engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DSIGNATURE_H_OVERRIDE=\"signature_$(SHORT_BOARD_NAME).h\"
 
 
 # Define ASM defines here
@@ -291,7 +317,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ifeq ($(OS),Windows_NT)
+ifeq ($(IS_WIN),yes)
 ULIBS = -lws2_32 -static
 else
 ULIBS =
@@ -307,11 +333,22 @@ endif
 
 include $(RULESPATH)/rules.mk
 
-ifneq (yes,$(SUBMAKE))
-ifeq ($(SHORT_BOARD_NAME),)
-  SHORT_BOARD_NAME = f407-discovery
+# Clang does not support GCC's -Wa,-alms= (assembler listing) option.
+# Re-define the flags without the -Wa, listing options when building with clang.
+ifeq ($(USE_CLANG),yes)
+  CFLAGS   = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) $(DEFS)
+  CPPFLAGS = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) $(DEFS)
+  ASFLAGS  = $(MCFLAGS) $(OPT) $(ADEFS)
+  ASXFLAGS = $(MCFLAGS) $(OPT) $(ADEFS)
+  CFLAGS  += -MD -MP -MF $(DEPDIR)/$(@F).d
+  CPPFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
+  ASFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
+  ASXFLAGS += -MD -MP -MF $(DEPDIR)/$(@F).d
 endif
+
+ifneq (yes,$(SUBMAKE))
 include $(PROJECT_DIR)/rusefi_config.mk
+include $(PROJECT_DIR)/docs_enums.mk
 endif
 
 # Enable precompiled header

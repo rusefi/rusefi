@@ -1,0 +1,28 @@
+{
+  "deviceId" : 1105,
+  "bitNameToValue" : {
+    "RDP" : 170,
+    "BOR_LEV" : 2,
+    "IWDG_STOP" : 1,
+    "IWDG_STDBY" : 1,
+    "nDBANK" : 1,
+    "WWDG_SW" : 1,
+    "IWDG_SW" : 1,
+    "nRST_STOP" : 1,
+    "nRST_STDBY" : 1,
+    "BOOT_ADD0" : 128,
+    "BOOT_ADD1" : 64,
+    "nWRP0" : 1,
+    "nWRP1" : 1,
+    "nWRP2" : 1,
+    "nWRP3" : 1,
+    "nWRP4" : 1,
+    "nWRP5" : 1,
+    "nWRP6" : 1,
+    "nWRP7" : 1,
+    "nWRP8" : 1,
+    "nWRP9" : 1,
+    "nWRP10" : 1,
+    "nWRP11" : 1
+  }
+}

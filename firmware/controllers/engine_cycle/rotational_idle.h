@@ -13,5 +13,10 @@ class RotationalIdle: public live_data_rotational_idle_s {
 public:
     RotationalIdle();
     bool shouldEngageRotationalIdle();
-    bool shouldSkipSparkRotationalIdle(int8_t offset);
+    bool shouldSkipSparkRotationalIdle();
+    bool shouldSkipFuelRotationalIdle();
+
+private:
+    uint32_t sparkPatternCounter = 1;
+    uint32_t fuelPatternCounter = 1;
 };

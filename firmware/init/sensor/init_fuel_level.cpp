@@ -13,6 +13,6 @@ void initFuelLevel() {
 	}
 
 	// noisy data from fuel tank slosh is handled on an higher level
-	AdcSubscription::SubscribeSensor(fuelSensor, channel, /*lowpassCutoff =*/ 100);
+	AdcSubscription::SubscribeSensor(fuelSensor, channel, /*lowpassCutoff =*/100);
 	fuelSensor.Register();
 }

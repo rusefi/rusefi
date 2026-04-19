@@ -45,7 +45,7 @@ public class TriggerWheelInfo {
         this.syncEdge = syncEdge;
     }
 
-    private static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
+    static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
         String[] tokens = line.split(" ");
         String idStr = tokens[1];
         int eventCount = Integer.parseInt(tokens[2]);
@@ -76,7 +76,7 @@ public class TriggerWheelInfo {
             String value = keyValue[1];
             if (key.startsWith(TRIGGER_GAP_FROM)) {
                 int index = getIndex(key);
-                gaps.gapFrom[index] = Double.parseDouble(value);
+                gaps.gapFrom[index] = "nan".equalsIgnoreCase(value) ? Double.NaN : Double.parseDouble(value);
                 continue;
             }
             if (key.startsWith(TRIGGER_GAP_TO)) {
@@ -109,6 +109,10 @@ public class TriggerWheelInfo {
                     break;
                 case TRIGGER_SYNC_EDGE:
                     syncEdge = value;
+                    break;
+                case "operationMode":
+                case "useOnlyPrimaryForSync":
+                case "shapeWithoutTdc":
                     break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);

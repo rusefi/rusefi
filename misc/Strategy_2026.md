@@ -6,5 +6,5 @@ As of Jan 1st, 2026 the main three issues with rusEFI are
 * limited documentation and some usability quirks
 * limited documentation and some usability quirks
 
-We seem to have a pretty complete and balanced ECU offering from both firmware and hardware perspectives. At the moment
+We seem to have a pretty complete and balanced ECU offering for non-professional road racing from both firmware and hardware perspectives. At the moment
 there is no clear open source roadmap for this project.

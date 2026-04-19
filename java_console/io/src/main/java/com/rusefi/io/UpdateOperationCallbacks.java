@@ -113,4 +113,8 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
         public void clear() {
         }
     };
+
+    default void updateProgress(int percent) {
+        logLine("Progress: " + percent + "%");
+    }
 }

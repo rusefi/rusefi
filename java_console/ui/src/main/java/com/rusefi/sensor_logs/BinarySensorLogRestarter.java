@@ -1,33 +1,34 @@
 package com.rusefi.sensor_logs;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.maintenance.VersionChecker;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
-import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ts_plugin.ui.AuthTokenPanel;
+import com.rusefi.ui.UIContext;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 
 public class BinarySensorLogRestarter implements SensorLog {
     private static final Logging log = getLogging(BinarySensorLogRestarter.class);
     private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("BinarySensorLogRestarter"));
+    private final UIContext uiContext;
 
     private BinarySensorLog logger;
 
     private long seenRunning;
+
+    public BinarySensorLogRestarter(UIContext uiContext) {
+        this.uiContext = uiContext;
+    }
 
     @Override
     public double getSecondsSinceFileStart() {
@@ -36,7 +37,7 @@ public class BinarySensorLogRestarter implements SensorLog {
 
     @Override
     public synchronized void writeSensorLogLine() {
-        double rpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
+        double rpm = SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.getOutputChannelName());
         if (rpm > 200) {
             seenRunning = System.currentTimeMillis();
         }
@@ -46,15 +47,17 @@ public class BinarySensorLogRestarter implements SensorLog {
         }
 
         if (logger == null) {
-            Collection<Sensor> sensorsForLogging = filterOutSensorsWithoutType(SensorLogger.SENSORS);
-
-            logger = new BinarySensorLog<>(sensor -> SensorCentral.getInstance().getValue(sensor), sensorsForLogging);
+            byte[] response = SensorCentral.getInstance().getResponse();
+            logger = new BinarySensorLog<>(sensor -> {
+                if (sensor instanceof Sensor) {
+                    return SensorCentral.getInstance().getValue((Sensor) sensor);
+                } else if (sensor instanceof CustomBinaryLogEntry && response != null) {
+                    return ((CustomBinaryLogEntry) sensor).getValue(response);
+                }
+                return 0.0;
+            }, SensorLogger.getSensors(uiContext));
         }
         logger.writeSensorLogLine();
-    }
-
-    private static Collection<Sensor> filterOutSensorsWithoutType(Sensor[] sensors) {
-        return Arrays.stream(sensors).filter(sensor -> sensor.getType() != null).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

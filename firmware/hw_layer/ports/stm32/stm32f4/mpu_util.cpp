@@ -6,6 +6,9 @@
  */
 #include "pch.h"
 #include "flash_int.h"
+#include "flash_main.h"
+#include "efiprintf.h"
+#include "stm32f4xx_hal_flash.h"
 
 bool mcuCanFlashWhileRunning() {
 	// Never allow flash while running on F4, dual bank not implemented.

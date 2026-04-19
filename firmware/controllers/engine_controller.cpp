@@ -218,6 +218,8 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 		snprintf(buffer, bufferSize, "%s%d", name ? name : "null", getAdcChannelPin(hwChannel));
 	}
 #else
+  UNUSED(msg);
+  UNUSED(hwChannel);
 	snprintf(buffer, bufferSize, "NONE");
 #endif /* HAL_USE_ADC */
 	return buffer;
@@ -568,6 +570,9 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscending("VE load", config->veLoadBins);
 		ensureArrayIsAscending("VE RPM", config->veRpmBins);
 
+  		ensureArrayIsAscending("Second VE load", secondTablesGetState()->secondVeLoadBins);
+  		ensureArrayIsAscending("Second VE RPM", secondTablesGetState()->secondVeRpmBins);
+
 		ensureArrayIsAscending("Lambda/AFR load", config->lambdaLoadBins);
 		ensureArrayIsAscending("Lambda/AFR RPM", config->lambdaRpmBins);
 
@@ -606,6 +611,9 @@ bool validateConfigOnStartUpOrBurn() {
 
 		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
 		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
+
+		ensureArrayIsAscending("Second Ignition load", secondTablesGetState()->secondIgnitionLoadBins);
+		ensureArrayIsAscending("Second Ignition RPM", secondTablesGetState()->secondIgnitionRpmBins);
 		ensureArrayIsAscendingOrDefault("Ign Trim Rpm", config->ignTrimRpmBins);
    		ensureArrayIsAscendingOrDefault("Ign Trim Load", config->ignTrimLoadBins);
 

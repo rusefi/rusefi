@@ -1,17 +1,50 @@
 package com.rusefi.tools;
 
-import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
+import com.rusefi.NamedThreadFactory;
+
+import com.rusefi.StartupFrame;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.ui.TunerStudioPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static com.rusefi.ui.util.UiUtils.createOnTopParent;
-
 public class TunerStudioHelper {
     private static final String FIND_TS_PROCESS = "Get-Process | Where-Object {$_.MainWindowTitle -like \\\"*TunerStudio*\\\"}";
+
+    public static NamedThreadFactory factory = new NamedThreadFactory("TSScanner");
+
+    public static void checkTunerStudio(Container container, Runnable restoreContent) {
+        factory.newThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!PersistentConfiguration.getBoolProperty(StartupFrame.CHECK_TS_RUNNING, true)) {
+                    return;
+                }
+                boolean isTsRunning = TunerStudioHelper.isTsRunning();
+                if (isTsRunning) {
+                    if (PersistentConfiguration.getBoolProperty(StartupFrame.AUTO_CLOSE_TS, false)) {
+                        TunerStudioHelper.attemptClosingTunerStudio();
+                        return;
+                    }
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            container.removeAll();
+                            container.add(new TunerStudioPanel(restoreContent));
+                            container.revalidate();
+                            container.repaint();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
 
     public static void attemptClosingTunerStudio() {
         try {
@@ -41,16 +74,6 @@ public class TunerStudioHelper {
             return false;
         } catch (IOException e) {
             return false;
-        }
-    }
-
-    public static void maybeCloseTs() {
-        boolean isTsRunning = isTsRunning();
-        if (isTsRunning) {
-            int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like TunerStudio is running, shall we close it?",
-                ConsoleUI.TITLE, JOptionPane.YES_NO_OPTION);
-            if (result == JOptionPane.YES_OPTION)
-                attemptClosingTunerStudio();
         }
     }
 }

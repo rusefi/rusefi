@@ -45,16 +45,17 @@
 #include "ford_festiva.h"
 
 #include "board_overrides.h"
+#include <magic_enum.hpp>
 
 static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
-void applyUnknownEngineType(engine_type_e engineType) {
+void applyUnknownEngineType(engine_type_e /*engineType*/) {
 		// placeholder
 }
 
-void boardAfterTuneDefaults(engine_type_e engineType) {
+void boardAfterTuneDefaults(engine_type_e /*engineType*/) {
   // placeholder
 }
 
@@ -354,7 +355,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration();
 		break;
-	case engine_type_e::DODGE_NEON_2003_CRANK:
+	case engine_type_e::ET_DODGE_NEON_2003:
 		setDodgeNeonNGCEngineConfiguration();
 		break;
 	case engine_type_e::FORD_ASPIRE_1996:
@@ -428,5 +429,6 @@ void applyEngineType(engine_type_e engineType) {
 }
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {
-  return engine_type_e::UNUSED_105;
+  auto last_val = magic_enum::enum_value<engine_type_e>(magic_enum::enum_count<engine_type_e>() - 1);
+  return last_val;
 }

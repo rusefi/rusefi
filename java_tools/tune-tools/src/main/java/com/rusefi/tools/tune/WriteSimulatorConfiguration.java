@@ -12,7 +12,7 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -82,7 +82,7 @@ public class WriteSimulatorConfiguration {
         Msq m = MsqFactory.valueOf(configuration, ini);
         String name = "KNOCKNOISERPMBINS";
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
-        if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
+        if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ""))
             throw new IllegalStateException(name + " canary wonders if everything is fine?");
         m.writeXmlFile(outputXmlFileName);
 
@@ -90,3 +90,4 @@ public class WriteSimulatorConfiguration {
         log.info("Looks valid " + newTuneJustToValidate);
     }
 }
+

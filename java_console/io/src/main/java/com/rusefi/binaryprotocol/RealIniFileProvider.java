@@ -5,6 +5,7 @@ import com.opensr5.ini.*;
 import com.rusefi.ini.reader.IniFileReader;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
@@ -35,9 +36,11 @@ public class RealIniFileProvider implements IniFileProvider {
             throw new IniNotFoundException("Failed to locate .ini file in five different places!");
         IniFileModel iniFileModel;
         try {
-            iniFileModel = IniFileReaderUtil.readIniFile(localIniFile);
+                iniFileModel = IniFileReaderUtil.readIniFileChecked(localIniFile);
+        } catch (IniParsingException e) {
+            throw new IniNotFoundException("Parsing error: " + e, e);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new IniNotFoundException(e.toString());
         }
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
         return iniFileModel;

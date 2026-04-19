@@ -21,8 +21,8 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_0 = 0,
 	DBG_1 = 1,
 	DBG_2 = 2,
-	DBG_STEPPER_IDLE_CONTROL = 3,
-	DBG_EL_ACCEL = 4,
+	DBG_3 = 3,
+	DBG_4 = 4,
 	DBG_5 = 5,
 	DBG_6 = 6,
 	DBG_7 = 7,
@@ -32,7 +32,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_11 = 11,
 	DBG_12 = 12,
 	DBG_13 = 13,
-	DBG_SR5_PROTOCOL = 14,
+	DBG_14 = 14,
 	DBG_KNOCK = 15,
 	DBG_16 = 16,
 	/**
@@ -129,8 +129,8 @@ enum class trigger_type_e : uint32_t {
 	// GM 24x with 5/10 degree gaps
 	TT_GM_24x_5 = 27,
 	TT_HONDA_CBR_600 = 28,
-	TT_UNUSED29 = 29,
-	// todo: we syspect that this one is broken while TT_JEEP_EVD_36_2_2 is potentially better?
+	TT_NISSAN_K11 = 29,
+	// todo: we suspect that this one is broken while TT_JEEP_EVD_36_2_2 is potentially better?
 	TT_CHRYSLER_NGC_36_2_2 = 30,
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,
@@ -147,7 +147,7 @@ enum class trigger_type_e : uint32_t {
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
 	TT_JEEP_18_2_2_2 = 37,
 	TT_12_TOOTH_CRANK = 38,
-	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
+	TT_FORD_TFI_PIP_6 = 39,
 	// Jeep XJ 2500cc 4 cylinder. See also TT_JEEP_18_2_2_2 for 6 cylinders
 	TT_JEEP_4_CYL = 40,
 	// magneti marelli Fiat/Lancia IAW P8 from the 90', 2.0 16 v turbo engine - Lancia Coupe
@@ -171,6 +171,20 @@ enum class trigger_type_e : uint32_t {
 	TT_NISSAN_MR18_CAM_VVT = 52,
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
 	// also known as Audi 5 Cyl
+	/**
+	Audi 5 Cyl Tri Tach is the most known example of early EFI reading flywheel gear teeth as crank trigger wheel
+	French had a 145 tooth version
+  these do not fit universal rusEFI trigger decoder well
+  see FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR for one incompatibility
+  see PWM_PHASE_MAX_COUNT for another problematic area
+
+  a solution could be a hardware or software pre-scaler which would have to be reset at well known points, probably meaning by cam shaft
+  and some custom code to approach synchronization point differently
+
+  while we have half a dozen of interests regarding 1980s compatibility, this ares is definitely not a priority
+
+  for any contribution to be taken seriously it has to start with logic analyzer data as described at unit_tests/tests/trigger/resources/readme.md
+	*/
 	TT_TRI_TACH = 53,
 	TT_GM_60_2_2_2 = 54,
 	// * https://rusefi.com/forum/viewtopic.php?f=5&t=1937
@@ -185,7 +199,7 @@ enum class trigger_type_e : uint32_t {
 	TT_VVT_MITSUBISHI_3A92 = 62,
 	TT_SUBARU_SVX_CRANK_1 = 63,
 	TT_SUBARU_SVX_CAM_VVT = 64,
-	TT_FORD_TFI_PIP = 65,
+	TT_FORD_TFI_PIP_8 = 65,
 	TT_SUZUKI_G13B = 66,
 	// * Honda K exhaust cam shaft
 	TT_HONDA_K_CAM_4_1 = 67,
@@ -244,13 +258,23 @@ enum class trigger_type_e : uint32_t {
 
 	// symmetrical crank
 	TT_SUBARU_7_6_CRANK = 94,
-	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
-	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
+
+	// we assume this is NOT ready/NOT working? https://github.com/rusefi/rusefi/pull/9262
+	TT_SUZUKI_G16B = 95,
+	TT_UNUSED_96 = 96,
+
+	// TL,DR https://github.com/rusefi/rusefi/commit/523805138589585cc8889d6afd9305d120180902 example of new trigger commit
+	//
+	// before you add a new trigger: did you have a chance to capture digital signal with a logic analyzer?
+	// see unit_tests/tests/trigger/resources/readme.md for some details
+	//
+	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propagate new value to rusefi.ini TS project
+	//
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 95, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 97, // this is used if we want to iterate over all trigger types
 };
 
 typedef enum {
@@ -289,10 +313,13 @@ typedef enum {
 	TS_GRAB_TPS_CLOSED = 0x20,
 	TS_GRAB_TPS_OPEN = 0x21,
 	TS_WIDEBAND_UPDATE_FILE = 0x22,
+	TS_ESTIMATE_TORQUE_TABLE = 0x23,
+	TS_ETB_BENCH_TEST_0 = 0x24,
+	TS_ETB_BENCH_TEST_1 = 0x25,
 } ts_14_command;
 
 typedef enum {
-	TS_DEBUG_MODE = 0,
+	TS_UNUSED_0 = 0,
 	TS_COMMAND_1 = 1,
 	TS_COMMAND_2 = 2,
 	TS_COMMAND_3 = 3,

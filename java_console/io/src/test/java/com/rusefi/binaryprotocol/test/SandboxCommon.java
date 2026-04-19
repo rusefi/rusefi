@@ -7,7 +7,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -33,12 +33,15 @@ public class SandboxCommon {
 
         StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
         linkManager.setConnector(streamConnector);
-        streamConnector.connectAndReadConfiguration(new BinaryProtocol.Arguments(false), new ConnectionStateListener() {
+        streamConnector.connectAndReadConfiguration(new BinaryProtocol.Arguments(false), new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {}
+
             @Override
             public void onConnectionEstablished() {
                 log.info("onConnectionEstablished");
 
-                BinaryProtocol currentStreamState = linkManager.getCurrentStreamState();
+                BinaryProtocol currentStreamState = linkManager.getBinaryProtocol();
                 if (currentStreamState == null) {
                     log.info("No BinaryProtocol");
                 } else {

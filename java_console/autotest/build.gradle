@@ -10,7 +10,7 @@ task simulatorFunctionalTestLauncherWithSimulator(type: Exec) {
     group = "Execution"
     description = "Run the main class with ExecTask"
     workingDir = rootProject.projectDir
-    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.rusefi.SimulatorFunctionalTestLauncher", "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini", "start"
+    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.rusefi.SimulatorFunctionalTestLauncher", "firmware/tunerstudio/generated/rusefi_f407-discovery.ini", "start"
 }
 
 task simulatorFunctionalTestLauncherAssumungSimulatorWasStartedExternally(type: Exec) {
@@ -18,5 +18,5 @@ task simulatorFunctionalTestLauncherAssumungSimulatorWasStartedExternally(type: 
     group = "Execution"
     description = "Run the main class with ExecTask"
     workingDir = rootProject.projectDir
-    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.rusefi.SimulatorFunctionalTestLauncher", "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini"
+    commandLine "java", "-classpath", sourceSets.main.runtimeClasspath.getAsPath(), "com.rusefi.SimulatorFunctionalTestLauncher", "firmware/tunerstudio/generated/rusefi_f407-discovery.ini"
 }

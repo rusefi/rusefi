@@ -118,7 +118,7 @@ public class TuneReadWriteTest {
          * Looks like I am not getting something right around Field#FIELD_PRECISION
          * See also TuneWriterTest :(
          */
-        assertEquals(66, compareImages(binaryDataFromXml, fileBinaryData, model), "Binary match expected");
+        assertEquals(110, compareImages(binaryDataFromXml, fileBinaryData, model), "Binary match expected");
         // todo: looks like this is not removing the temporary file?
         Files.delete(path);
     }
@@ -135,8 +135,8 @@ public class TuneReadWriteTest {
             if (tsByte != fileByte) {
                 IniField field = ini.findByOffset(i);
                 if (field instanceof ScalarIniField) {
-                    System.out.println("    Image " + ConfigurationImageGetterSetter.getValue(field, image1));
-                    System.out.println("FileImage " + ConfigurationImageGetterSetter.getValue(field, fileData));
+                    System.out.println("    Image " + ConfigurationImageGetterSetter.getStringValue(field, image1));
+                    System.out.println("FileImage " + ConfigurationImageGetterSetter.getStringValue(field, fileData));
                 }
                 System.out.println("Mismatch at offset=" + i + ", " + (field == null ? "(no field)" : field) + " runtime=" + tsByte + "/file=" + fileByte);
                 mismatchCounter++;

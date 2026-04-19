@@ -178,7 +178,16 @@ public:
 
 	void update() override {
 #if EFI_TUNER_STUDIO
-		if (m_autocalPhase != ACPhase::Stopped) {
+		if (m_benchTestActive) {
+			if (m_benchTestTimer.hasElapsedMs(300)) {
+				auto motor = TBase::getMotor();
+				if (motor) {
+					motor->disable("bench test");
+				}
+				m_benchTestActive = false;
+				efiPrintf("ETB bench test done");
+			}
+		} else if (m_autocalPhase != ACPhase::Stopped) {
 			ACPhase nextPhase = doAutocal(m_autocalPhase);
 
 			// if we changed phase, reset the phase timer
@@ -192,6 +201,23 @@ public:
 		{
 			TBase::update();
 		}
+	}
+
+	void startBenchTest() override {
+		auto motor = TBase::getMotor();
+		if (!motor) {
+			efiPrintf("ETB bench test: no motor configured");
+			return;
+		}
+		if (TBase::getFunction() != DC_Throttle1 && TBase::getFunction() != DC_Throttle2) {
+			efiPrintf("ETB bench test: not a throttle");
+			return;
+		}
+		motor->set(0.5f);
+		motor->enable();
+		m_benchTestTimer.reset();
+		m_benchTestActive = true;
+		efiPrintf("ETB bench test: opening for 300ms");
 	}
 
 	void autoCalibrateTps(bool reportToTs) override {
@@ -316,6 +342,9 @@ private:
 	Timer m_autocalTimer;
 	// Report calibrated values to TS, if false - set directly to config
 	bool m_isAutocalTs;
+
+	bool m_benchTestActive = false;
+	Timer m_benchTestTimer;
 
 	float m_primaryMax;
 	float m_secondaryMax;

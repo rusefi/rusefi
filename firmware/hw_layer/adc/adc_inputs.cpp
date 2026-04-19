@@ -31,6 +31,8 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 	if (isAdcChannelOnChip(channel)) {
 		return (boardGetAnalogDiagnostic() == ObdCode::None) ? 0 : -1;
 	}
+#else
+  UNUSED(channel);
 #endif // EFI_PROD_CODE
 
 	/* input is outside chip/ECU */

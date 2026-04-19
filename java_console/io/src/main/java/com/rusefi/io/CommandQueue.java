@@ -82,19 +82,24 @@ public class CommandQueue {
 
         commandListeners.add(listener);
 
-        // Actually send the command now that we're listening
-        linkManager.send(command, commandRequest.isFireEvent());
-
         // Wait for a reply
         int timeoutMs = commandRequest.getTimeout();
-        cl.await(timeoutMs, TimeUnit.MILLISECONDS);
-
-        commandListeners.remove(listener);
+        try {
+            // Actually send the command now that we're listening
+            linkManager.send(command, commandRequest.isFireEvent());
+            cl.await(timeoutMs, TimeUnit.MILLISECONDS);
+        } finally {
+            // Always remove the listener — if send() throws the listener would
+            // otherwise leak and fire on confirmations from future commands,
+            // causing spurious IllegalStateExceptions that cascade into
+            // repeated restart loops.
+            commandListeners.remove(listener);
+        }
 
         if (cl.getCount() == 0) {
             commandRequest.getListener().onCommandConfirmation();
         } else {
-			throw new IllegalStateException("No confirmation received after timeout of " + timeoutMs + " ms");
+            log.warn("No confirmation received for command '" + command + "' after timeout of " + timeoutMs + " ms");
         }
     }
 
@@ -124,6 +129,15 @@ public class CommandQueue {
 
     public LinkManager getLinkManager() {
         return linkManager;
+    }
+
+    /**
+     * Discard any commands that have not yet been sent.  Call this before
+     * reconnecting after an intentional disconnect so that stale commands
+     * queued in the previous session are not replayed in the new one.
+     */
+    public void clearPendingCommands() {
+        pendingCommands.clear();
     }
 
     /**

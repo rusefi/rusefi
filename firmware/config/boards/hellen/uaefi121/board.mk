@@ -15,16 +15,10 @@ DDEFS += -DEFI_MAX_31855=TRUE
 
 
 
-DDEFS += -DEFI_SKIP_BOR=TRUE
-
-
-
-
 DDEFS += -DBOARD_SERIAL="\"000200000000000000000000\""
 
 include $(BOARD_DIR)/mega-uaefi.mk
 
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 
-DDEFS += -DUSB_DESCRIPTOR_B_LENGTH=32
 DDEFS += -DUSB_DESCRIPTOR_STRING_CONTENT="'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'u', 0, 'a', 0, 'E', 0, 'F', 0, 'I', 0, '1', 0, '2', 0, '1', 0"

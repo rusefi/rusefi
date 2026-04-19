@@ -52,6 +52,10 @@ public class PersistentConfiguration {
         return getConfig().getRoot().getBoolProperty(name);
     }
 
+    public static boolean getBoolProperty(String name, boolean defaultValue) {
+        return getConfig().getRoot().getBoolProperty(name, defaultValue);
+    }
+
     public static void setBoolProperty(String name, boolean value) {
         getConfig().getRoot().setBoolProperty(name, value);
     }

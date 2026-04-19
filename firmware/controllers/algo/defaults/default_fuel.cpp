@@ -78,6 +78,7 @@ static void setDefaultWarmupFuelEnrichment() {
 
 static void setDefaultVETable() {
 	setRpmTableBin(config->veRpmBins);
+
 #if (VE_LOAD_COUNT == 16) && (VE_RPM_COUNT == 16)
 	static const float hardCodedveTable[16][16] = {
 {49.300,	49.300,	49.400,	49.600,	50.200,	51.400,	52.600,	53.800,	54.400,	54.600,	54.400,	53.700,	52.800,	51.800,	50.900,	50.000,	},

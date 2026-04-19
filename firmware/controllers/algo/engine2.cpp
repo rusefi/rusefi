@@ -63,7 +63,7 @@ void WarningCodeState::addWarningCode(ObdCode code, const char *text) {
 }
 
 void WarningCodeState::refreshTs() {
-	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
+	output_channels_s *tsOutputChannels = &engine->outputChannels;
 	const int period = maxI(3, engineConfiguration->warningPeriod);
 
 	// TODO: do we neet this sticky warning code?

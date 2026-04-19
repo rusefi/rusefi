@@ -20,6 +20,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+static bool unitTestsCreateLogs = false;
+
 bool unitTestBusyWaitHack;
 bool unitTestTaskPrecisionHack;
 bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
@@ -36,14 +38,14 @@ extern PinRepository pinRepository;
 extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
-extern int minCrankingRpm;
+extern bool hasRememberedConfiguration;
 
 EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
-	minCrankingRpm = 0;
 	ButtonDebounce::resetForUnitTests();
 	unitTestBusyWaitHack = false;
+	unitTestTaskPrecisionHack = false;
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault,
@@ -98,7 +100,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 		#else
 		  mkdir(TEST_RESULTS_DIR, 0777);
 		#endif
-		createUnitTestLog();
+		if (unitTestsCreateLogs) {
+			// this logging is pretty heavy, not running unless specifically requested
+			createUnitTestLog();
+		}
 
 		std::stringstream filePath;
 		filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
@@ -125,6 +130,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	}
 
 	activeConfiguration = engine_configuration_s{};
+	hasRememberedConfiguration = false;
 
 	enginePins.reset();
 	enginePins.unregisterPins();
@@ -147,6 +153,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	initDataStructures();
 
 	resetConfigurationExt(configurationCallback, engineType);
+
+	// Populate second tables before validation — mirrors the prod boot order
+	// where loadExtraPages() runs before validateConfig.
+	secondTablesSetDefaults();
 
 	validateConfigOnStartUpOrBurn();
 

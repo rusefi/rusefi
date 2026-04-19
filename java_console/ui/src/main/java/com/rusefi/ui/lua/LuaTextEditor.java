@@ -2,6 +2,7 @@ package com.rusefi.ui.lua;
 
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
@@ -133,7 +134,7 @@ public class LuaTextEditor {
         document.addUndoableEditListener(e -> undoManager.addEdit(e.getEdit()));
 
         // Map undo action
-        installKeyAction(undoKeyStroke, "undoKeyStroke", textArea, new AbstractAction() {
+        ShortcutsHelper.installKeyAction(undoKeyStroke, "undoKeyStroke", textArea, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -144,7 +145,7 @@ public class LuaTextEditor {
             }
         });
         // Map redo action
-        installKeyAction(redoKeyStroke, "redoKeyStroke", textArea, new AbstractAction() {
+        ShortcutsHelper.installKeyAction(redoKeyStroke, "redoKeyStroke", textArea, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -154,11 +155,6 @@ public class LuaTextEditor {
                 }
             }
         });
-    }
-
-    public static void installKeyAction(KeyStroke undoKeyStroke, String actionName, JComponent control, AbstractAction action) {
-        control.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(undoKeyStroke, actionName);
-        control.getActionMap().put(actionName, action);
     }
 
     public JComponent getControl() {
@@ -197,5 +193,5 @@ public class LuaTextEditor {
             provider.addCompletion(new BasicCompletion(provider, f));
         }
     }
-    
+
 }

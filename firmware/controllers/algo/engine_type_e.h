@@ -107,7 +107,7 @@ enum class engine_type_e : uint16_t {
 
 	TEST_ENGINE_VVT = 45,
 
-	DODGE_NEON_2003_CRANK = 46,
+	ET_DODGE_NEON_2003 = 46,
 
 	GM_LCV = 47,
 

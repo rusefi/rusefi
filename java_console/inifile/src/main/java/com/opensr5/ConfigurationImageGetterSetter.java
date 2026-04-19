@@ -1,19 +1,22 @@
 package com.opensr5;
 
 import com.opensr5.ini.field.*;
+import com.rusefi.config.Field;
+import com.rusefi.config.StringFormatter;
 
 public class ConfigurationImageGetterSetter {
     /**
-     * @see com.rusefi.config.Field#getValue
+     * @see Field#getValue
      */
-    public static String getValue(IniField iniField, ConfigurationImage image) {
+    public static String getStringValue(IniField iniField, ConfigurationImage image) {
         return iniField.accept(new IniFieldVisitor<String>() {
             @Override
             public String visit(ScalarIniField field) {
-                com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName(), field.getOffset(), field.getType());
+                Field f = new Field(field.getName(), field.getOffset(), field.getType());
                 try {
                     Double value = f.getValue(image, field.getMultiplier()) + field.getSerializationOffset();
-                    return com.rusefi.config.StringFormatter.niceToString(value, com.rusefi.config.StringFormatter.FIELD_PRECISION);
+                    int precision = IniField.parseDigits(field.getDigits());
+                    return StringFormatter.niceToString(value, precision);
                 } catch (Throwable e) {
                     throw new IllegalStateException("While getting " + field.getName(), e);
                 }
@@ -21,7 +24,7 @@ public class ConfigurationImageGetterSetter {
 
             @Override
             public String visit(EnumIniField field) {
-                int ordinal = image.getByteBuffer(field).getInt();
+                int ordinal = (int) field.getType().readRawValue(image.getByteBuffer(field));
                 ordinal = ConfigurationImage.getBitRange(ordinal, field.getBitPosition(), field.getBitSize0() + 1);
 
                 if (ordinal >= field.getEnums().size())
@@ -31,14 +34,15 @@ public class ConfigurationImageGetterSetter {
 
             @Override
             public String visit(ArrayIniField field) {
-                final String[][] values = new String[field.getRows()][field.getCols()];
+                Double[][] values = getArrayValues(field, image);
+                final String[][] stringValues = new String[field.getRows()][field.getCols()];
+                int precision = IniField.parseDigits(field.getDigits());
                 for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
                     for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
-                        final com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName() + "_" + colIndex, field.getOffset(rowIndex, colIndex), field.getType());
-                        values[rowIndex][colIndex] = f.getAnyValue(image, field.getMultiplier());
+                        stringValues[rowIndex][colIndex] = StringFormatter.niceToString(values[rowIndex][colIndex], precision);
                     }
                 }
-                return field.formatValue(values);
+                return field.formatValue(stringValues);
             }
 
             @Override
@@ -63,12 +67,49 @@ public class ConfigurationImageGetterSetter {
         });
     }
 
+    public static Double[][] getArrayValues(ArrayIniField field, ConfigurationImage image) {
+        Double[][] values = new Double[field.getRows()][field.getCols()];
+        for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
+            for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
+                Field f = new Field(field.getName() + "_" + colIndex, field.getOffset(rowIndex, colIndex), field.getType());
+                values[rowIndex][colIndex] = f.getValue(image, field.getMultiplier());
+            }
+        }
+        return values;
+    }
+
+    public static void setArrayValues(ArrayIniField field, ConfigurationImage image, Double[][] data) {
+        for (int rowIndex = 0; rowIndex < data.length; rowIndex++) {
+            for (int colIndex = 0; colIndex < data[rowIndex].length; colIndex++) {
+                java.nio.ByteBuffer wrapped = image.getByteBuffer(
+                        field.getOffset(rowIndex, colIndex), field.getType().getStorageSize());
+                ConfigurationImage.setScalarValue(wrapped, field.getType(),
+                        String.valueOf(data[rowIndex][colIndex]),
+                        Field.NO_BIT_OFFSET, field.getMultiplier(), 0);
+            }
+        }
+    }
+
+    public static void setArrayValues(ArrayIniField field, ConfigurationImage image, Double[] data) {
+        int index = 0;
+        for (int rowIndex = 0; rowIndex < field.getRows(); rowIndex++) {
+            for (int colIndex = 0; colIndex < field.getCols(); colIndex++) {
+                if (index >= data.length) return;
+                java.nio.ByteBuffer wrapped = image.getByteBuffer(
+                        field.getOffset(rowIndex, colIndex), field.getType().getStorageSize());
+                ConfigurationImage.setScalarValue(wrapped, field.getType(),
+                        String.valueOf(data[index++]),
+                        Field.NO_BIT_OFFSET, field.getMultiplier(), 0);
+            }
+        }
+    }
+
     public static void setValue2(IniField iniField, ConfigurationImage image, final String name, final String value) {
         iniField.accept(new IniFieldVisitor<Void>() {
             @Override
             public Void visit(ScalarIniField field) {
                 java.util.Objects.requireNonNull(image, "image for setter");
-                com.rusefi.config.Field f = new com.rusefi.config.Field(field.getName(), field.getOffset(), field.getType());
+                Field f = new Field(field.getName(), field.getOffset(), field.getType());
                 java.nio.ByteBuffer wrapped = image.getByteBuffer(field.getOffset(), field.getType().getStorageSize());
                 ConfigurationImage.setScalarValue(wrapped, field.getType(), value, f.getBitOffset(), field.getMultiplier(), field.getSerializationOffset());
                 return null;
@@ -96,7 +137,7 @@ public class ConfigurationImageGetterSetter {
                             wrapped,
                             field.getType(),
                             values[rowIndex][colIndex],
-                            com.rusefi.config.Field.NO_BIT_OFFSET,
+                            Field.NO_BIT_OFFSET,
                             field.getMultiplier(),
                             0
                         );

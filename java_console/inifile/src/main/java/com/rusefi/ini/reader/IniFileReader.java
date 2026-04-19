@@ -3,6 +3,7 @@ package com.rusefi.ini.reader;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
 import com.opensr5.ini.field.*;
+import com.rusefi.config.FieldType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +15,8 @@ import java.util.*;
  */
 public class IniFileReader {
     public IniFileModel getIniFileModel() {
-        // Finish any pending context help entry before building the model
+        // Finish any pending dialog/indicatorPanel and context help before building the model
+        finishDialog();
         finishContextHelp();
 
         return new ImmutableIniFileModel(metaInfo.getSignature(),
@@ -23,6 +25,7 @@ public class IniFileReader {
                 allIniFields,
                 secondaryIniFields,
                 allOutputChannels,
+                expressionOutputChannels,
                 protocolMeta,
                 getMetaInfo(),
                 getIniFilePath(),
@@ -33,11 +36,15 @@ public class IniFileReader {
                 allGauges,
                 topicHelpMap,
                 contextHelp,
-                allTables);
+                allTables,
+                allCurves,
+                menuDialogString,
+                menus,
+                frontPage);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
-    public static final String RUSEFI_INI_SUFFIX = ".ini";
+    public static final String INI_FILE_SUFFIX = ".ini";
     public static final String INI_FILE_PATH = System.getProperty("ini_file_path", "..");
     private static final String SECTION_PAGE = "page";
     private static final String FIELD_TYPE_SCALAR = "scalar";
@@ -50,19 +57,29 @@ public class IniFileReader {
     private String dialogId;
     private String dialogUiName;
     private String dialogTopicHelp;
+    private String dialogLayoutHint;
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
     private final List<DialogModel.Command> commandsOfCurrentDialog = new ArrayList<>();
+    private final List<PanelModel> panelsOfCurrentDialog = new ArrayList<>();
+    private final List<IndicatorModel> indicatorsOfCurrentDialog = new ArrayList<>();
+    private final List<ReadoutModel> readoutsOfCurrentDialog = new ArrayList<>();
+    private int currentReadoutColumns = 1;
+    private final List<String> gaugeNamesOfCurrentDialog = new ArrayList<>();
+    private final List<DialogModel.DialogEntry> orderedEntriesOfCurrentDialog = new ArrayList<>();
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    // Expression-based output channels like: coolantTemperature = { useMetricOnInterface ? coolant : (coolant * 1.8 + 32) }
+    private final Map<String, String> expressionOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
     private final Map</*field name*/String, String> tooltips = new TreeMap<>();
     private final Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private boolean isOutputChannelsSection;
+    private boolean isPcVariablesSection;
     private final IniFileMetaInfo metaInfo;
     private final String iniFilePath;
 
@@ -74,14 +91,26 @@ public class IniFileReader {
     private final Map<String, String> topicHelpMap = new TreeMap<>();
 
     private final Map<String, ContextHelpModel> contextHelp = new LinkedHashMap<>();
+    private String menuDialog;
     private String currentHelpReferenceName;
     private String currentHelpTitle;
     private final List<String> currentHelpTextLines = new ArrayList<>();
     private String currentHelpWebHelp;
 
     private boolean isTableEditorSection = false;
+    private boolean isMenuSection = false;
+    private final List<MenuModel> menus = new ArrayList<>();
+    private MenuModel currentMenu;
+    private GroupMenuModel currentGroup;
+    private String menuDialogString;
     private final Map<String, TableModel> allTables = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final TableBuilder tableBuilder = new TableBuilder();
+
+    private boolean isCurveEditorSection = false;
+    private boolean isFrontPageSection = false;
+    private final FrontPageModel frontPage = new FrontPageModel();
+    private final Map<String, CurveModel> allCurves = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final CurveBuilder curveBuilder = new CurveBuilder();
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -120,19 +149,28 @@ public class IniFileReader {
     }
 
     void finishDialog() {
-        if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty())
+        if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty()
+                && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty()
+                && readoutsOfCurrentDialog.isEmpty() && gaugeNamesOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
-        dialogs.put(dialogUiName, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, dialogTopicHelp));
-
+        // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, gaugeNamesOfCurrentDialog, dialogTopicHelp, dialogLayoutHint, orderedEntriesOfCurrentDialog));
         dialogId = null;
         dialogTopicHelp = null;
+        dialogLayoutHint = null;
         fieldsOfCurrentDialog.clear();
         commandsOfCurrentDialog.clear();
+        panelsOfCurrentDialog.clear();
+        indicatorsOfCurrentDialog.clear();
+        readoutsOfCurrentDialog.clear();
+        currentReadoutColumns = 1;
+        gaugeNamesOfCurrentDialog.clear();
+        orderedEntriesOfCurrentDialog.clear();
     }
 
-    void handleLine(RawIniFile.Line line) {
+    void handleLine(RawIniFile.Line line) throws IniParsingException {
 
         String rawText = line.getRawText();
         try {
@@ -191,14 +229,21 @@ public class IniFileReader {
                 }
                 isConstantsSection = first.equals("[Constants]");
                 isOutputChannelsSection = first.equals("[OutputChannels]");
+                isPcVariablesSection = first.equalsIgnoreCase("[PcVariables]");
                 isGaugeConfigurationsSection = first.equalsIgnoreCase("[GaugeConfigurations]");
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
+                isCurveEditorSection = first.equalsIgnoreCase("[CurveEditor]");
+                isMenuSection = first.equalsIgnoreCase("[Menu]");
+                isFrontPageSection = first.equalsIgnoreCase("[FrontPage]");
 
                 if (wasGaugeSection && !isGaugeConfigurationsSection) {
                     finishGaugeCategory();
                 }
                 if (wasTableSection && !isTableEditorSection) {
                     finishTable();
+                }
+                if (first.startsWith("[") && !isCurveEditorSection) {
+                    finishCurve();
                 }
             }
 
@@ -215,11 +260,23 @@ public class IniFileReader {
             } else if (isOutputChannelsSection) {
                 handleOutputChannelDefinition(list);
                 return;
+            } else if (isPcVariablesSection) {
+                handlePcVariableDefinition(list, line);
+                return;
             } else if (isGaugeConfigurationsSection) {
                 handleGaugeConfiguration(list);
                 return;
             } else if (isTableEditorSection) {
                 tableBuilder.handleLine(list, this::addField, this::finishTable);
+                return;
+            } else if (isCurveEditorSection) {
+                curveBuilder.handleLine(list, this::addField, this::finishCurve);
+                return;
+            } else if (isMenuSection) {
+                handleMenu(list);
+                return;
+            } else if (isFrontPageSection) {
+                handleFrontPage(list);
                 return;
             }
 
@@ -236,6 +293,24 @@ public class IniFileReader {
                     break;
                 case "dialog":
                     handleDialog(list);
+                    break;
+                case "indicatorPanel":
+                    handleIndicatorPanel(list);
+                    break;
+                case "indicator":
+                    handleDialogIndicator(list);
+                    break;
+                case "readoutPanel":
+                    handleReadoutPanel(list);
+                    break;
+                case "readout":
+                    handleReadout(list);
+                    break;
+                case "gauge":
+                    handleDialogGauge(list);
+                    break;
+                case "panel":
+                    handlePanel(list);
                     break;
                 case "topicHelp":
                     handleTopicHelp(list);
@@ -260,7 +335,7 @@ public class IniFileReader {
                     break;
             }
         } catch (RuntimeException e) {
-            throw new IllegalStateException("Failed to handle [" + rawText + "]: " + e, e);
+            throw new IniParsingException("Failed to handle [" + rawText + "]: " + e, e);
         }
     }
 
@@ -269,12 +344,39 @@ public class IniFileReader {
             return;
         String name = list.get(0);
         String channelType = list.get(1);
+
+        // Check if it's an expression channel (starts with { or the second element looks like an expression)
+        if (channelType.startsWith("{") || ExpressionEvaluator.looksLikeExpression(channelType)) {
+            // Expression-based output channel like: coolantTemperature = { useMetricOnInterface ? coolant : ... }
+            // Reconstruct the full expression from the parsed list
+            StringBuilder expr = new StringBuilder();
+            for (int i = 1; i < list.size(); i++) {
+                if (i > 1) expr.append(", ");
+                expr.append(list.get(i));
+            }
+            expressionOutputChannels.put(name, expr.toString().trim());
+            return;
+        }
+
         switch (channelType) {
             case FIELD_TYPE_SCALAR: {
-                String scalarType = list.get(2);
+                FieldType scalarType = FieldType.parseTs(list.get(2));
+                String unit = list.size() > 4 ? list.get(4) : "";
                 int offset = Integer.parseInt(list.get(3));
-                // todo: reuse ScalarIniField#parse but would need changes?
-                allOutputChannels.put(name, new ScalarIniField(name, offset, scalarType, null, 1, "0", 0));
+                // Output channel format: name = scalar, type, offset, units, multiplier, digits
+                double multiplier = list.size() > 5 ? IniField.parseDouble(list.get(5)) : 1.0;
+                double digits = list.size() > 6 ? IniField.parseDouble(list.get(6)) : 0.0;
+                allOutputChannels.put(name, new ScalarIniField(name, offset, unit, scalarType, multiplier, "0", digits));
+                break;
+            }
+            case FIELD_TYPE_BITS: {
+                // Output channel bits format: name = bits, type, offset, [bitLow:bitHigh], "label"
+                FieldType type = FieldType.parseTs(list.get(2));
+                int offset = Integer.parseInt(list.get(3));
+                String bitRange = list.get(4);
+                EnumIniReaderHelper.ParseBitRange parseBitRange = new EnumIniReaderHelper.ParseBitRange().invoke(bitRange);
+                allOutputChannels.put(name, new EnumIniField(name, offset, type, new EnumIniField.EnumKeyValueMap(Collections.emptyMap()), parseBitRange.getBitPosition(), parseBitRange.getBitSize0()));
+                break;
             }
         }
     }
@@ -292,6 +394,37 @@ public class IniFileReader {
             String binsConstant = list.removeFirst();
             addField(binsConstant);
         }
+    }
+
+    /**
+     * Parse [PcVariables] section fields. These are TunerStudio-local variables (no ECU offset).
+     * We only handle 'bits' type for now
+     */
+    private void handlePcVariableDefinition(LinkedList<String> list, RawIniFile.Line line) {
+        if (list.size() < 4)
+            return;
+        if (!FIELD_TYPE_BITS.equals(list.get(1)))
+            return;
+
+        // PcVariables bits format: name = bits, U08, [0:7], "opt1", "opt2", ...
+        String name = list.get(0);
+        FieldType type = FieldType.parseTs(list.get(2));
+        String bitRange = list.get(3);
+        EnumIniReaderHelper.ParseBitRange parseBitRange = new EnumIniReaderHelper.ParseBitRange().invoke(bitRange);
+
+        // Parse enum values from tokens starting at index 4 (after name, bits, type, bitrange)
+        String[] tokens = IniFileReaderUtil.splitTokens(line.getRawText());
+        Map<Integer, String> keyValues = new TreeMap<>();
+        int enumStartIndex = 4; // PcVariables has no offset, so enums start one position earlier than Constants
+        for (int i = 0; i < tokens.length - enumStartIndex; i++) {
+            keyValues.put(i, tokens[i + enumStartIndex]);
+        }
+
+        EnumIniField field = new EnumIniField(name, 0, type, new EnumIniField.EnumKeyValueMap(keyValues),
+            parseBitRange.getBitPosition(), parseBitRange.getBitSize0());
+
+        // Store in secondary fields so they're findable via findIniField() but don't conflict with real config fields
+        secondaryIniFields.put(field.getName(), field);
     }
 
     private void handleConstantFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
@@ -331,7 +464,7 @@ public class IniFileReader {
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
-        registerUiField(key, uiFieldName);
+        registerUiField(key, uiFieldName, null, null);
         log.debug("IniFileModel: Slider label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
@@ -339,7 +472,9 @@ public class IniFileReader {
         list.removeFirst(); // "commandButton"
         String uiName = list.removeFirst();
         String command = list.removeFirst();
-        commandsOfCurrentDialog.add(new DialogModel.Command(uiName, command));
+        DialogModel.Command cmd = new DialogModel.Command(uiName, command);
+        commandsOfCurrentDialog.add(cmd);
+        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.COMMAND, cmd));
     }
 
     private void handleField(LinkedList<String> list) {
@@ -349,21 +484,43 @@ public class IniFileReader {
 
         String key = list.isEmpty() ? null : list.removeFirst();
 
-        registerUiField(key, uiFieldName);
+        if (key == null || uiFieldName.startsWith("!")) {
+            key = uiFieldName;
+        }
+
+        // Scan remaining tokens for {…} expressions
+        String enableExpression = null;
+        String visibleExpression = null;
+        for (String token : list) {
+            if (PanelModel.isExpression(token)) {
+                if (enableExpression == null) {
+                    enableExpression = token;
+                } else {
+                    visibleExpression = token;
+                    break;
+                }
+            }
+        }
+
+        registerUiField(key, uiFieldName, enableExpression, visibleExpression);
         log.debug("IniFileModel: Field label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
-    private void registerUiField(String key, String uiFieldName) {
-        DialogModel.Field field = new DialogModel.Field(key, uiFieldName);
+    private void registerUiField(String key, String uiFieldName, String enableExpression, String visibleExpression) {
+        DialogModel.Field field = new DialogModel.Field(key, uiFieldName, enableExpression, visibleExpression);
 
         if (key != null) {
             fieldsOfCurrentDialog.add(field);
+            orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.FIELD, field));
             // If the field hasn't been registered yet,
             //  or if it has been but without a UI name (name will be the same as the key)
             // This isn't necessarily more correct, but it's more likely to be correct in dialogs that are more user-visible
             if (! fieldsInUiOrder.containsKey(key) || fieldsInUiOrder.get(key).getUiName() == key) {
                 fieldsInUiOrder.put(key, field);
             }
+        } else {
+            // Label-only field (no backing config key) — still add to ordered entries
+            orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.FIELD, field));
         }
     }
 
@@ -374,10 +531,170 @@ public class IniFileReader {
         String keyword = list.removeFirst();
 //                    trim(list);
         String name = list.isEmpty() ? null : list.removeFirst();
+        String layoutHint = list.isEmpty() ? null : list.removeFirst();
 
         dialogId = keyword;
         dialogUiName = name;
-        log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "]");
+        dialogLayoutHint = layoutHint;
+        log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "] layoutHint=[" + layoutHint + "]");
+    }
+
+    private void handleIndicatorPanel(LinkedList<String> list) {
+        finishDialog();
+        list.removeFirst(); // "indicatorPanel"
+        if (list.isEmpty()) return;
+        String key = list.removeFirst();
+        // optional: numberOfColumns, [enableExpression]
+        int cols = 1;
+        if (!list.isEmpty()) {
+            try { cols = Integer.parseInt(list.peek()); list.removeFirst(); } catch (NumberFormatException ignored) { }
+        }
+        dialogId = key;
+        dialogUiName = "";
+        dialogLayoutHint = null;
+        currentReadoutColumns = cols;
+    }
+
+    private void handleDialogIndicator(LinkedList<String> list) {
+        if (dialogId == null) return;
+        // format: indicator, expression, offLabel, onLabel[, offBg, offFg, onBg, onFg]
+        // Colors are optional
+        if (list.size() < 4) return;
+
+        IndicatorModel indicator = makeIndicatorFromIniField(list);
+        indicatorsOfCurrentDialog.add(indicator);
+        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.INDICATOR, indicator));
+    }
+
+    private IndicatorModel makeIndicatorFromIniField(LinkedList<String> list) {
+        return new IndicatorModel(
+                list.get(1), list.get(2), list.get(3),
+                list.size() > 4 ? list.get(4) : null,
+                list.size() > 5 ? list.get(5) : "black",
+                list.size() > 6 ? list.get(6) : "green",
+                list.size() > 7 ? list.get(7) : "black");
+    }
+
+    private void handleDialogGauge(LinkedList<String> list) {
+        if (dialogId == null) return;
+        // format: gauge = gaugeName
+        if (list.size() < 2) return;
+        String gaugeName = list.get(1);
+        gaugeNamesOfCurrentDialog.add(gaugeName);
+        orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.GAUGE, gaugeName));
+    }
+
+    private void handleReadoutPanel(LinkedList<String> list) {
+        finishDialog();
+        list.removeFirst(); // "readoutPanel"
+        if (list.isEmpty()) return;
+        String key = list.removeFirst();
+        // optional: numberOfColumns, [enableExpression]
+        int cols = 1;
+        if (!list.isEmpty()) {
+            try { cols = Integer.parseInt(list.removeFirst()); } catch (NumberFormatException ignored) { }
+        }
+        dialogId = key;
+        dialogUiName = "";
+        dialogLayoutHint = null;
+        currentReadoutColumns = cols;
+    }
+
+    private void handleReadout(LinkedList<String> list) {
+        if (dialogId == null) return;
+        if (list.size() < 2) return;
+        // format 1: readout = name  (gauge ref or channel ref, 2 tokens)
+        // format 2: readout = channel, title, units, min, max, loD, loW, hiW, hiD, valDig, lblDig  (12 tokens)
+        if (list.size() == 2) {
+            readoutsOfCurrentDialog.add(ReadoutModel.ofRef(list.get(1)));
+            return;
+        }
+        String channel = list.get(1);
+        String title   = list.size() > 2  ? list.get(2)  : null;
+        String units   = list.size() > 3  ? list.get(3)  : null;
+        Double min     = parseOptionalDouble(list, 4);
+        Double max     = parseOptionalDouble(list, 5);
+        Double lowD    = parseOptionalDouble(list, 6);
+        Double lowW    = parseOptionalDouble(list, 7);
+        Double hiW     = parseOptionalDouble(list, 8);
+        Double hiD     = parseOptionalDouble(list, 9);
+        int valDig     = list.size() > 10 ? parseIntSafe(list.get(10)) : 1;
+        int lblDig     = list.size() > 11 ? parseIntSafe(list.get(11)) : 0;
+        readoutsOfCurrentDialog.add(new ReadoutModel(channel, title, units, min, max, lowD, lowW, hiW, hiD, valDig, lblDig));
+    }
+
+    //TODO: this is usefull for varius ui things, move to a more generic place
+    private static Double parseOptionalDouble(List<String> list, int index) {
+        if (list.size() <= index) return null;
+        try { return Double.parseDouble(list.get(index)); } catch (NumberFormatException e) { return null; }
+    }
+
+    private static int parseIntSafe(String s) {
+        try { return Integer.parseInt(s); } catch (NumberFormatException e) { return 0; }
+    }
+
+    private void handlePanel(LinkedList<String> list) {
+        list.removeFirst(); // "panel"
+
+        String panelName = list.isEmpty() ? null : list.removeFirst();
+        String placement;
+        // placement is optional, we need to recognize what type of token comes in
+        if (!list.isEmpty() && !PanelModel.isExpression(list.getFirst())) {
+            placement = list.isEmpty() ? null : list.removeFirst();
+        } else {
+            placement = null;
+        }
+        String enableExpression = list.isEmpty() ? null : list.removeFirst();
+        String visibleExpression = list.isEmpty() ? null : list.removeFirst();
+
+        if (panelName != null) {
+            PanelModel panel = new PanelModel(panelName, placement, enableExpression, visibleExpression);
+            panelsOfCurrentDialog.add(panel);
+            orderedEntriesOfCurrentDialog.add(new DialogModel.DialogEntry(DialogModel.DialogEntry.Kind.PANEL, panel));
+            log.debug("IniFileModel: Panel name=[" + panelName + "] placement=[" + placement + "]");
+        }
+    }
+
+    private void handleMenu(LinkedList<String> list) {
+        String keyword = list.removeFirst();
+        switch (keyword) {
+            case "menuDialog":
+                menuDialogString = list.get(0);
+                break;
+            case "menu":
+                currentMenu = new MenuModel(IniFileReaderUtil.removeMenuAmpersand(list.get(0)));
+                menus.add(currentMenu);
+                currentGroup = null;
+                break;
+            case "subMenu":
+                if (currentMenu != null) {
+                    String name = list.size() > 1 ? list.get(1) : "";
+                    // format: key, name, [enableExpr], [visibleExpr]
+                    // positions 2 and 3 are optional; "0" is used as a placeholder meaning no expression
+                    String enableExpression = (list.size() > 2 && PanelModel.isExpression(list.get(2))) ? list.get(2) : null;
+                    String visibleExpression = (list.size() > 3 && PanelModel.isExpression(list.get(3))) ? list.get(3) : null;
+                    SubMenuModel subMenu = new SubMenuModel(list.get(0), IniFileReaderUtil.removeMenuAmpersand(name), enableExpression, visibleExpression);
+                    currentMenu.getItems().add(subMenu);
+                    currentGroup = null;
+                }
+                break;
+            case "groupMenu":
+                if (currentMenu != null) {
+                    currentGroup = new GroupMenuModel(IniFileReaderUtil.removeMenuAmpersand(list.get(0)));
+                    currentMenu.getItems().add(currentGroup);
+                }
+                break;
+            case "groupChildMenu":
+                if (currentGroup != null) {
+                    String name = list.size() > 1 ? list.get(1) : "";
+                    // format: key, name, [enableExpr], [visibleExpr]
+                    // positions 2 and 3 are optional; "0" is used as a placeholder meaning no expression
+                    String enableExpression = (list.size() > 2 && PanelModel.isExpression(list.get(2))) ? list.get(2) : null;
+                    String visibleExpression = (list.size() > 3 && PanelModel.isExpression(list.get(3))) ? list.get(3) : null;
+                    currentGroup.getItems().add(new SubMenuModel(list.get(0), IniFileReaderUtil.removeMenuAmpersand(name), enableExpression, visibleExpression));
+                }
+                break;
+        }
     }
 
     private void handleTopicHelp(LinkedList<String> list) {
@@ -423,26 +740,27 @@ public class IniFileReader {
             currentCategoryGauges.add(gauge);
             allGauges.put(gaugeName, gauge);
 
-        } catch (NumberFormatException e) {
-            log.warn("Failed to parse gauge: " + gaugeName + ": " + e.getMessage());
-        } catch (IndexOutOfBoundsException e) {
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
             log.warn("Failed to parse gauge: " + gaugeName + ": " + e.getMessage());
         }
     }
 
     private @NotNull GaugeModel getGaugeModel(LinkedList<String> list, String gaugeName) {
         String channel = list.get(1);
-        String title = list.get(2);
-        String units = list.get(3);
-        double lowValue = parseDouble(list.get(4));
-        double highValue = parseDouble(list.get(5));
+        // Title and units: parse as string or expression (never numeric)
+        IniValue title = IniValue.parseString(list.get(2));
+        IniValue units = IniValue.parseString(list.get(3));
+        // Numeric fields can be either numbers or expressions
+        IniValue lowValue = IniValue.parseNumeric(list.get(4));
+        IniValue highValue = IniValue.parseNumeric(list.get(5));
 
-        double lowDangerValue = list.size() > 6 ? parseDouble(list.get(6)) : lowValue;
-        double lowWarningValue = list.size() > 7 ? parseDouble(list.get(7)) : lowValue;
-        double highWarningValue = list.size() > 8 ? parseDouble(list.get(8)) : highValue;
-        double highDangerValue = list.size() > 9 ? parseDouble(list.get(9)) : highValue;
-        int valueDecimalPlaces = list.size() > 10 ? parseInt(list.get(10)) : 0;
-        int labelDecimalPlaces = list.size() > 11 ? parseInt(list.get(11)) : 0;
+        // For optional fields, use the same value as lowValue/highValue if not specified
+        IniValue lowDangerValue = list.size() > 6 ? IniValue.parseNumeric(list.get(6)) : lowValue;
+        IniValue lowWarningValue = list.size() > 7 ? IniValue.parseNumeric(list.get(7)) : lowValue;
+        IniValue highWarningValue = list.size() > 8 ? IniValue.parseNumeric(list.get(8)) : highValue;
+        IniValue highDangerValue = list.size() > 9 ? IniValue.parseNumeric(list.get(9)) : highValue;
+        IniValue valueDecimalPlaces = list.size() > 10 ? IniValue.parseNumeric(list.get(10)) : IniValue.ofNumeric(0);
+        IniValue labelDecimalPlaces = list.size() > 11 ? IniValue.parseNumeric(list.get(11)) : IniValue.ofNumeric(0);
 
         return new GaugeModel(gaugeName, channel, title, units,
                 lowValue, highValue, lowDangerValue, lowWarningValue, highWarningValue, highDangerValue,
@@ -512,6 +830,13 @@ public class IniFileReader {
         }
     }
 
+    public void finishCurve() {
+        if (curveBuilder.isComplete()) {
+            allCurves.put(curveBuilder.getCurveId(), curveBuilder.build());
+        }
+        curveBuilder.reset();
+    }
+
     private void handleHelpEntry(LinkedList<String> list) {
         if (list.size() >= 3) {
             finishContextHelp();
@@ -532,12 +857,18 @@ public class IniFileReader {
         }
     }
 
-    private double parseDouble(String s) {
-        return Double.parseDouble(s);
-    }
-
-    private int parseInt(String s) {
-        return Integer.parseInt(s);
+    private void handleFrontPage(LinkedList<String> list) {
+        String first = list.getFirst();
+        if (first.startsWith("gauge")) {
+            if (list.size() >= 2) {
+                frontPage.getGaugeNames().add(list.get(1));
+            }
+        } else if (first.equalsIgnoreCase("indicator")) {
+            // format: indicator, expression, offLabel, onLabel[, offBg, offFg, onBg, onFg]
+            if (list.size() >= 4) {
+                frontPage.getIndicators().add(makeIndicatorFromIniField(list));
+            }
+        }
     }
 
     void finishTable() {

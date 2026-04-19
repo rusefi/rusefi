@@ -30,7 +30,7 @@ public class ExecHelper {
      * This method listens to a data stream from the process, appends messages to UI
      * and accumulates output in a buffer
      */
-    private static void startStreamThread(final Process p, final InputStream stream, final StringBuffer buffer, final UpdateOperationCallbacks callbacks) {
+    private static Thread startStreamThread(final Process p, final InputStream stream, final StringBuffer buffer, final UpdateOperationCallbacks callbacks) {
         final Thread t = new Thread(() -> {
             try {
                 BufferedReader bis = new BufferedReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
@@ -54,6 +54,7 @@ public class ExecHelper {
         });
         t.setDaemon(true);
         t.start();
+        return t;
     }
 
     @NotNull
@@ -93,9 +94,16 @@ public class ExecHelper {
         callbacks.logLine("Executing command=" + command);
         try {
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
-            startStreamThread(p, p.getInputStream(), output, callbacks);
-            startStreamThread(p, p.getErrorStream(), error, callbacks);
+            Thread stdoutThread = startStreamThread(p, p.getInputStream(), output, callbacks);
+            Thread stderrThread = startStreamThread(p, p.getErrorStream(), error, callbacks);
             p.waitFor(3, TimeUnit.MINUTES);
+            // Join the stream threads so that output/error buffers are fully populated before
+            // we return. Without this join, callers that inspect `output` immediately after this
+            // method returns race against the stream threads and can see an empty buffer even
+            // when the process produced output (the root cause of intermittent WMIC false-negatives,
+            // see #9157 [see the if "manual DFU" is auto-selected - it gets un-selected periodically! part])
+            stdoutThread.join(2000);
+            stderrThread.join(2000);
         } catch (IOException e) {
             log.info("executeCommand " + e);
             throw new ErrorExecutingCommand(e);

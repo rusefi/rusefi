@@ -24,12 +24,19 @@ TEST(Knock, Retards) {
 
 	// Aggression of 10%
 	engineConfiguration->knockRetardAggression = 10;
+	// disable suppress for test
+	engineConfiguration->knockSuppressMinTps = 0;
+
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
 
 	MockKnockController dut;
 	dut.onFastCallback();
 
 	// No retard unless we knock
 	ASSERT_FLOAT_EQ(dut.getKnockRetard(), 0);
+
+	// Need to call onFastCallback once to update thresholds from the Mock
+	dut.onFastCallback();
 
 	// Send some weak knocks, should yield no response
 	for (size_t i = 0; i < 10; i++) {
@@ -41,7 +48,8 @@ TEST(Knock, Retards) {
 	// Send a strong knock!
 	dut.onKnockSenseCompleted(0, 30, 0);
 
-	// Should retard 10% of the distance between current timing and "maximum"
+	// Should retard 10% of the distance between current timing (0) and "minimum" (-20)
+	// dist = 0 - (-20) = 20. 10% of 20 = 2.
 	EXPECT_FLOAT_EQ(dut.getKnockRetard(), 2);
 
 	// Send tons of strong knocks, make sure we don't go over the configured limit
@@ -54,6 +62,10 @@ TEST(Knock, Retards) {
 
 TEST(Knock, Reapply) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
+
+	// disable suppress for test
+	engineConfiguration->knockSuppressMinTps = 0;
 
 	MockKnockController dut;
 	dut.onFastCallback();
@@ -69,7 +81,8 @@ TEST(Knock, Reapply) {
 	// Send a strong knock!
 	dut.onKnockSenseCompleted(0, 30, 0);
 
-	// Should retard 10% of the distance between current timing and "maximum"
+	// Should retard 10% of the distance between current timing (0) and "minimum" (-20)
+	// dist = 0 - (-20) = 20. 10% of 20 = 2.
 	EXPECT_FLOAT_EQ(dut.getKnockRetard(), 2);
 
 	constexpr auto fastPeriodSec = FAST_CALLBACK_PERIOD_MS / 1000.0f;
@@ -95,16 +108,22 @@ TEST(Knock, Reapply) {
 
 TEST(Knock, FuelTrim) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
 
 	// Aggression of 10%
 	engineConfiguration->knockFuelTrimAggression = 10;
 	engineConfiguration->knockFuelTrim = 30;
+	// disable suppress for test
+	engineConfiguration->knockSuppressMinTps = 0;
 
 	MockKnockController dut;
 	dut.onFastCallback();
 
 	// No trim unless we knock
 	ASSERT_FLOAT_EQ(dut.getFuelTrimMultiplier(), 1.0);
+
+	// Need to call onFastCallback once to update thresholds from the Mock
+	dut.onFastCallback();
 
 	// Send some weak knocks, should yield no response
 	for (size_t i = 0; i < 10; i++) {
@@ -116,7 +135,7 @@ TEST(Knock, FuelTrim) {
 	// Send a strong knock!
 	dut.onKnockSenseCompleted(0, 30, 0);
 
-	// Should retard 10% of the distance between current timing and "maximum"
+	// 30% * 10% = 3% = 0.03
 	EXPECT_FLOAT_EQ(dut.getFuelTrimMultiplier(), 1.03);
 
 	// Send tons of strong knocks, make sure we don't go over the configured limit
@@ -129,6 +148,10 @@ TEST(Knock, FuelTrim) {
 
 TEST(Knock, FuelTrimReapply) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
+
+	// disable suppress for test
+	engineConfiguration->knockSuppressMinTps = 0;
 
 	MockKnockController dut;
 	dut.onFastCallback();

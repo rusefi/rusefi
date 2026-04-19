@@ -42,7 +42,9 @@ public class IniFileReaderUtil {
         int openedBraceCount = 0;
         StringBuilder sb = new StringBuilder();
         for (final char c: str.toCharArray()) {
-            if (c == '\"' || (isTokenSeparator(c) && !inQuote && (openedBraceCount == 0))) {
+            // When inside braces (expressions), treat quotes as regular characters
+            // and don't use them for tokenization - expressions handle their own quotes
+            if ((c == '\"' && openedBraceCount == 0) || (isTokenSeparator(c) && !inQuote && (openedBraceCount == 0))) {
                 if (c == '\"') {
                     inQuote = !inQuote;
                     if (!inQuote) {
@@ -86,6 +88,13 @@ public class IniFileReaderUtil {
         return c == ' ' || c == '\t' || c == '=' || c == ',';
     }
 
+    public static String removeMenuAmpersand(String name) {
+        if (name == null) {
+            return null;
+        }
+        return name.replace("&", "");
+    }
+
     public static RawIniFile read(InputStream in) {
         return read(in, "unknown");
     }
@@ -110,12 +119,12 @@ public class IniFileReaderUtil {
         return new RawIniFile(lines, msg);
     }
 
-    public static RawIniFile read(File input) throws FileNotFoundException {
+    private static RawIniFile read(File input) throws FileNotFoundException {
         InputStream in = new FileInputStream(input);
         return read(in, input.getAbsolutePath());
     }
 
-    public static @NotNull IniFileModel readIniFile(RawIniFile content, String iniFilePath, IniFileMetaInfo metaInfo) {
+    public static @NotNull IniFileModel readIniFile(RawIniFile content, String iniFilePath, IniFileMetaInfo metaInfo) throws IniParsingException {
         final IniFileReader result = new IniFileReader(
             metaInfo,
             iniFilePath
@@ -126,11 +135,20 @@ public class IniFileReaderUtil {
         result.finishDialog();
         result.finishGaugeCategory();
         result.finishTable();
+        result.finishCurve();
         return result.getIniFileModel();
     }
 
-    @NotNull
     public static IniFileModel readIniFile(String fileName) throws FileNotFoundException {
+        try {
+            return readIniFileChecked(fileName);
+        } catch (IniParsingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    public static IniFileModel readIniFileChecked(String fileName) throws FileNotFoundException, IniParsingException {
         Objects.requireNonNull(fileName, "fileName");
         log.info("Reading " + fileName);
         File input = new File(fileName);

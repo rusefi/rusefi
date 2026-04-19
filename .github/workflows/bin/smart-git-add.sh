@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+# This script iterates over files matching a specified pattern (or all files in a directory).
+# For each file, it calculates the total number of changed lines (added + deleted) relative to the HEAD commit.
+# If the number of changes is greater than or equal to an optional threshold, the file is added to the git index.
+# This is useful in CI workflows to only commit generated files if they have meaningful changes.
+
+# Check if an argument is provided
+# Threshold: if total_changed >= threshold, then git add.
+if [ -z "$1" ]; then
+    echo "Usage: $0 <pattern> [numberOfChangedLinesThreshold]"
+    exit 1
+fi
+
+pattern=$1
+threshold=$2
+
+echo "Pattern: [$pattern], threshold: [$threshold]"
+
+# Expand the pattern and iterate over files
+# We use a loop to handle potential multiple files matching the pattern
+# and to print the required message.
+# Note: we should handle cases where the pattern might not match anything
+# or where it's a directory.
+
+# Using find to handle potential globbing issues if needed,
+# but simple expansion might be enough if passed with quotes or if handled by shell.
+# However, the requirement says "going over individual files matching pattern".
+
+# If we pass a pattern like 'firmware/*/*generated*.cpp', we want to expand it.
+
+shopt -s globstar nullglob
+
+# Function to get changed lines
+get_changed_lines() {
+    local file=$1
+    local stats
+    local added
+    local deleted
+
+    # git diff --numstat will give "added deleted path"
+    # We want to check both unstaged AND staged changes because if it's already staged,
+    # git diff will be empty but we still want to report the total change being added.
+    # We'll use HEAD as reference to see total change from last commit.
+    if git rev-parse --verify HEAD >/dev/null 2>&1; then
+        stats=$(git diff --numstat HEAD "$file")
+    else
+        # Initial commit case: all lines are new
+        added=$(wc -l < "$file")
+        deleted=0
+        echo $((added + deleted))
+        return
+    fi
+
+    if [ -z "$stats" ]; then
+        # Check if it's a new file (not yet in index at all)
+        if ! git ls-files "$file" > /dev/null 2>&1; then
+            added=$(wc -l < "$file")
+            deleted=0
+        else
+            # File is already in index and no changes since HEAD
+            added=0
+            deleted=0
+        fi
+    else
+        added=$(echo "$stats" | awk '{print $1}')
+        deleted=$(echo "$stats" | awk '{print $2}')
+        # Handle the case where awk might get non-numeric values (e.g., binary files)
+        if [[ ! "$added" =~ ^[0-9]+$ ]]; then added=0; fi
+        if [[ ! "$deleted" =~ ^[0-9]+$ ]]; then deleted=0; fi
+    fi
+    echo $((added + deleted))
+}
+
+# We want to support both directory names and globs
+for file in $pattern; do
+    if [ -f "$file" ]; then
+        total_changed=$(get_changed_lines "$file")
+        # Threshold: if total_changed is greater or equal to threshold, then git add.
+        if [ -n "$threshold" ] && [ "$total_changed" -lt "$threshold" ]; then
+            echo "skipping $file: $total_changed lines changed (threshold $threshold)"
+        else
+            echo "adding $file file into commit: $total_changed lines changed"
+            git add "$file"
+        fi
+    elif [ -d "$file" ]; then
+        # If it's a directory, find all files and process them
+        find "$file" -type f | while read -r subfile; do
+            total_changed=$(get_changed_lines "$subfile")
+            # Threshold: if total_changed is greater or equal to threshold, then git add.
+            if [ -n "$threshold" ] && [ "$total_changed" -lt "$threshold" ]; then
+                echo "skipping $subfile: $total_changed lines changed (threshold $threshold)"
+            else
+                echo "adding $subfile file into commit: $total_changed lines changed"
+                git add "$subfile"
+            fi
+        done
+    fi
+done

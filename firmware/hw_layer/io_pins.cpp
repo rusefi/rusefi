@@ -76,7 +76,8 @@ void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brain
 			gpiochips_setPadMode(brainPin, mode);
 		}
 	#endif
-
+#else
+  UNUSED(msg);UNUSED(brainPin);UNUSED(mode);
 #endif /* EFI_PROD_CODE */
 }
 

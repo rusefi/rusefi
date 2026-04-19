@@ -41,7 +41,8 @@ if [ ! -z "$sig" -a "$sig" != " " ]; then
     echo "* found path: $path"
     # we do not have ssh for this user
     # sftp does not support -p flag on mkdir :(
-    sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+
+    $(realpath $(dirname "$0"))/../bin/sshpass-retry.sh $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
 mkdir ${INI_DESTINATION_FOLDER}rusefi
 cd ${INI_DESTINATION_FOLDER}rusefi
 mkdir $branch
@@ -52,8 +53,8 @@ mkdir $branch/$year/$month/$day/$board
 put $fileName $path
 SSHCMD
     retVal=$?
+
     if [ $retVal -ne 0 ]; then
-      echo "${SCRIPT_NAME} Upload failed"
       exit 1
     fi
     echo "${SCRIPT_NAME} * upload done!"

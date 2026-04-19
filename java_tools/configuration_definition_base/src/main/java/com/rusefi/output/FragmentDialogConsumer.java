@@ -38,7 +38,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
                 ConfigStructure cs = configField.getStructureType();
                 if (cs != null) {
-                    String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
+                    String extraPrefix = (cs.isWithPrefix() || configField.isFromIterate()) ? configField.getName() + "_" : "";
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
                 }
 

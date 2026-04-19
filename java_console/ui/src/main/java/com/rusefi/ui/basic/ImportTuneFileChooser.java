@@ -19,7 +19,7 @@ public class ImportTuneFileChooser {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
     }
 
-    void showFileChooserToImportTuneAction(
+    public void showFileChooserToImportTuneAction(
         final PortResult port,
         final JComponent parent,
         final ConnectivityContext connectivityContext

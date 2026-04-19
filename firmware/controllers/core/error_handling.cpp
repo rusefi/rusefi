@@ -241,7 +241,9 @@ void errorHandlerShowBootReasonAndErrors() {
 	ErrorCookie cookie = err->Cookie;
 
 	printErrorState();
-	printErrorStack();
+	if (cookie != ErrorCookie::None) {
+		printErrorStack();
+	}
 #endif // EFI_BACKUP_SRAM
 	#undef PRINT
 }
@@ -312,9 +314,11 @@ void errorHandlerWriteReportFile(FIL *fd) {
 			printWdResetCounter();
 #if EFI_BACKUP_SRAM
 			printErrorState();
-			printErrorStack();
+			if (cookie != ErrorCookie::None) {
+				printErrorStack();
+			}
 #endif // EFI_BACKUP_SRAM
-      f_printf(fd, "rusEFI v%d@%u", getRusEfiVersion(), /*do we have a working way to print 64 bit values?!*/(int)SIGNATURE_HASH);
+			f_printf(fd, "rusEFI v%d@%u", getRusEfiVersion(), /*do we have a working way to print 64 bit values?!*/(int)SIGNATURE_HASH);
 			// additional board-specific data
 			onBoardWriteErrorFile(fd);
 			// todo: figure out what else would be useful
@@ -490,6 +494,10 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 }
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
+#if EFI_UNIT_TEST
+bool silentUnitTest = true; // performance optimization since console output is pricey
+#endif // EFI_UNIT_TEST
+
 /**
  * @returns TRUE in case there were warnings recently
  */
@@ -519,7 +527,9 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 #if EFI_SIMULATOR || EFI_PROD_CODE
 	efiPrintf("WARNING: %s", warningBuffer);
 #else
-	printf("WARNING: %s\n", warningBuffer);
+	if (!silentUnitTest) {
+		printf("WARNING: %s\n", warningBuffer);
+	}
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 	return false;
@@ -655,6 +665,7 @@ static void firmwareErrorV(ObdCode code, const char *fmt, va_list ap) {
 	criticalShutdown();
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
 #else // EFI_PROD_CODE
+  UNUSED(code);
 
 	// large buffer on stack is risky we better use normal memory
 	static char errorBuffer[200];

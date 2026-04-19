@@ -6,7 +6,7 @@ import com.rusefi.binaryprotocol.IniNotFoundException;
 import com.rusefi.binaryprotocol.RealIniFileProvider;
 import com.rusefi.tune.xml.Msq;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,3 +39,4 @@ public class MsqSandbox {
         }
     }
 }
+

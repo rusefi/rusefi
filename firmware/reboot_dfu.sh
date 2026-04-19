@@ -3,8 +3,8 @@
 # fail on error!
 set -e
 
-cd ../java_tools
+cd ../
 ./gradlew :ui:shadowJar
-cd ../firmware
+cd firmware
 
 java -jar ../console/rusefi_console.jar reboot_dfu

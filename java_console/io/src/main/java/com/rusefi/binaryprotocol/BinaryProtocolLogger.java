@@ -7,6 +7,7 @@ import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.WellKnownGauges;
 import com.rusefi.io.LinkManager;
 import com.rusefi.stream.LogicdataStreamFile;
 import com.rusefi.stream.StreamFile;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
+import static com.rusefi.config.generated.VariableRegistryValues.GAUGE_NAME_RPM;
 
 public class BinaryProtocolLogger {
     private static final int HIGH_RPM_DELAY = Integer.getInteger("high_speed_logger_time", 10);
@@ -109,11 +111,11 @@ public class BinaryProtocolLogger {
     }
 
     public void start() {
-        SensorCentral.getInstance().addListener(Sensor.RPMValue, rpmListener);
+        SensorCentral.getInstance().addListener(WellKnownGauges.RPMGauge.RPMGauge.getOutputChannelName(), rpmListener);
     }
 
     public void close() {
-        SensorCentral.getInstance().removeListener(Sensor.RPMValue, rpmListener);
+        SensorCentral.getInstance().removeListener(WellKnownGauges.RPMGauge.getOutputChannelName(), rpmListener);
         closeComposites();
         Runtime.getRuntime().removeShutdownHook(hook);
     }

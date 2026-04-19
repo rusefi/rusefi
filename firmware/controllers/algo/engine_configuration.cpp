@@ -77,8 +77,9 @@ std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange
  * This is useful to compare old/current (activeConfiguration) and new/future (engineConfiguration) configurations in order to apply new settings.
  *
  * todo: place this field next to 'engineConfiguration'?
+ * todo: not great that it's a global variable which we have to clean, move to 'engine' somewhere?
  */
-static bool hasRememberedConfiguration = false;
+bool hasRememberedConfiguration = false;
 #if EFI_ACTIVE_CONFIGURATION_IN_FLASH
 #include "flash_int.h"
 engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
@@ -736,9 +737,23 @@ void setBoardConfigOverrides() {
   // time to force migration to custom_board_ConfigOverrides
 }
 
-PUBLIC_API_WEAK int hackHellenBoardId(int detectedId) { return detectedId; }
+#include "board_overrides.h"
 
-PUBLIC_API_WEAK void onBoardStandBy() { }
+std::optional<setup_custom_hack_hellen_board_id_type> custom_board_hackHellenBoardId;
+std::optional<setup_custom_on_board_standby_type> custom_board_onBoardStandBy;
+
+int hackHellenBoardId(int detectedId) {
+	if (custom_board_hackHellenBoardId.has_value()) {
+		return custom_board_hackHellenBoardId.value()(detectedId);
+	}
+	return detectedId;
+}
+
+void onBoardStandBy() {
+	if (custom_board_onBoardStandBy.has_value()) {
+		custom_board_onBoardStandBy.value()();
+	}
+}
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD int getBoardMetaOutputsCount() { return 0; }
 // default implementation: treat all outputs as low side

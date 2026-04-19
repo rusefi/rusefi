@@ -89,6 +89,7 @@
 ! High speed logger commands
 #define TS_SET_LOGGER_SWITCH  'l'
 
+#define TS_GET_IMAGE_COMMAND '('
 
 
 #define CMD_SET_SENSOR_MOCK "set_sensor_mock"

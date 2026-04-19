@@ -2,5 +2,6 @@ dependencies {
   api project(':inifile')
   api project(':shared_ui')
   api global_libs.jaxb
+  runtimeOnly global_libs.jaxb_runtime
   implementation files('lib/TunerStudioMS.jar')
 }

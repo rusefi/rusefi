@@ -26,9 +26,13 @@
 #include "long_term_fuel_trim.h"
 #include "can_common.h"
 #include "can_rx.h"
+#include "torque_estimator.h"
 #include "value_lookup.h"
 #include "can_msg_tx.h"
 #include "gm_sbc.h" // setStepperHw
+#if EFI_PROD_CODE
+#include "mass_storage_init.h"
+#endif // EFI_PROD_CODE
 
 #include "fw_configuration.h"
 #include "board_overrides.h"
@@ -299,11 +303,11 @@ void fuelPumpBench() {
 	fuelPumpBenchExt(BENCH_FUEL_PUMP_DURATION);
 }
 
-static void vvtValveBench(int vvtIndex) {
 #if EFI_VVT_PID
+static void vvtValveBench(int vvtIndex) {
 	pinbench(BENCH_VVT_DURATION, 100.0, 1, getVvtOutputPin(vvtIndex));
-#endif // EFI_VVT_PID
 }
+#endif // EFI_VVT_PID
 
 static void requestWidebandUpdate(int hwIndex, bool fromFile)
 {
@@ -362,6 +366,7 @@ int luaCommandCounters[LUA_BUTTON_COUNT] = {};
 
 void handleBenchCategory(uint16_t index) {
 	switch(index) {
+#if EFI_VVT_PID
 	case BENCH_VVT0_VALVE:
 	    vvtValveBench(0);
 		return;
@@ -374,6 +379,7 @@ void handleBenchCategory(uint16_t index) {
 	case BENCH_VVT3_VALVE:
 	    vvtValveBench(3);
 		return;
+#endif // EFI_VVT_PID
 	case BENCH_AUXOUT0:
 	    auxOutBench(0);
 		return;
@@ -560,7 +566,13 @@ static void handleCommandX14(uint16_t index) {
 			etbAutocal(DC_Throttle1, false);
 		return;
 	case TS_ETB_AUTOCAL_1_FAST:
-			etbAutocal(DC_Throttle2, false);
+		etbAutocal(DC_Throttle2, false);
+		return;
+	case TS_ETB_BENCH_TEST_0:
+		etbBenchTestStart(0);
+		return;
+	case TS_ETB_BENCH_TEST_1:
+		etbBenchTestStart(1);
 		return;
 	case TS_ETB_START_AUTOTUNE:
 			engine->etbAutoTune = true;
@@ -585,6 +597,10 @@ static void handleCommandX14(uint16_t index) {
 	case TS_WIDEBAND_UPDATE_FILE:
 		// broadcast, for old WBO FWs
 		requestWidebandUpdate(0xff, index == TS_WIDEBAND_UPDATE_FILE);
+		return;
+	case TS_ESTIMATE_TORQUE_TABLE:
+	  estimateTorqueTable();
+	  onApplyPreset();
 		return;
 	case COMMAND_X14_UNUSED_15:
 		return;
@@ -675,6 +691,23 @@ static void processCanRequestCalibration(const CANRxFrame& frame) {
 #endif // EFI_LUA_LOOKUP
 }
 
+// totally wrong place for this code but well
+static void sendECU_IMAGE_INFO() {
+	  CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::ECU_IMAGE_INFO, 8, /*bus*/0, /*isExtended*/true);
+#if EFI_PROD_CODE
+   #if EFI_EMBED_INI_MSD
+    #if EFI_USE_COMPRESSED_INI_MSD
+     msg[0] = 1;
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
+    #else // EFI_USE_COMPRESSED_INI_MSD
+     msg[0] = 2;
+     msg.setIntValueLsb(getStorageImageSize(), /*offset*/4);
+    #endif // EFI_USE_COMPRESSED_INI_MSD
+   #endif //EFI_EMBED_INI_MSD
+#endif// EFI_PROD_CODE
+  efiPrintf("ECU_IMAGE_INFO %d", msg[0]);
+}
+
 void processCanEcuControl(const CANRxFrame& frame) {
 	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
 		return;
@@ -685,6 +718,8 @@ void processCanEcuControl(const CANRxFrame& frame) {
     processCanSetCalibration(frame);
   } else if (eid == (int)bench_test_packet_ids_e::ECU_REQ_CALIBRATION) {
     processCanRequestCalibration(frame);
+  } else if (eid == (int)bench_test_packet_ids_e::DASH_ALIVE) {
+    sendECU_IMAGE_INFO();
   } else if (eid == (int)bench_test_packet_ids_e::ECU_CAN_BUS_USER_CONTROL) {
     processCanUserControl(frame);
   }
@@ -700,12 +735,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	bool running = !engine->rpmCalculator.isStopped();
 
 	switch (subsystem) {
+	case TS_UNUSED_0:
 	case TS_CLEAR_WARNINGS:
 		clearWarnings();
-		break;
-
-	case TS_DEBUG_MODE:
-		engineConfiguration->debugMode = (debug_mode_e)index;
 		break;
 
 	case TS_IGNITION_CATEGORY:

@@ -4,6 +4,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':ts_plugin')
     implementation project(':trigger-ui')
     implementation project(':autotest')
     implementation project(':luaformatter')
@@ -23,11 +24,14 @@ dependencies {
     implementation files('../lib/dfu/IntelHexParser.jar')
 */
     testFixturesApi testFixtures(project(':ecu_io'))
+    implementation global_libs.jaxb_runtime
 }
 
 shadowJar {
     base {
-        archivesName = "${rootDir}/../console/rusefi_console"
+      // [dark-magic-jar] see https://github.com/rusefi/rusefi/pull/9051 for important very not obvious issue
+        archiveFileName = 'rusefi_console.jar'
+        destinationDirectory = file("${rootDir}/console")
         archiveClassifier = ''
     }
 

@@ -6,9 +6,9 @@ echo "The storage section of rusefi_xxx.ini is updated as well"
 rm -f gen_config.log
 rm -f gen_config_board.log
 
-cd ../java_tools
+cd ..
 ./gradlew :config_definition:shadowJar
-cd ../firmware
+cd firmware
 
 genConfig ()
 {

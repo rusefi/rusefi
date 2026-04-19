@@ -16,6 +16,15 @@ float getConfigValueByHash(const int hash) {
 // engineSnifferRpmThreshold
 		case 46918724:
 			return engineConfiguration->engineSnifferRpmThreshold;
+// ltitEnabled
+		case 1049828813:
+			return engineConfiguration->ltitEnabled;
+// useMetricOnInterface
+		case 934247460:
+			return engineConfiguration->useMetricOnInterface;
+// useLambdaOnInterface
+		case 1514634753:
+			return engineConfiguration->useLambdaOnInterface;
 // multisparkMaxRpm
 		case -775882810:
 			return engineConfiguration->multisparkMaxRpm;
@@ -37,9 +46,6 @@ float getConfigValueByHash(const int hash) {
 // idlePositionMax
 		case -1256791970:
 			return engineConfiguration->idlePositionMax;
-// ltitEnabled
-		case 1049828813:
-			return engineConfiguration->ltitEnabled;
 // ltitEmaAlpha
 		case -1008029221:
 			return engineConfiguration->ltitEmaAlpha;
@@ -343,6 +349,42 @@ float getConfigValueByHash(const int hash) {
 // disableFan2WhenStopped
 		case -311454863:
 			return engineConfiguration->disableFan2WhenStopped;
+// fan1PwmEnabled
+		case 859066570:
+			return engineConfiguration->fan1PwmEnabled;
+// fan2PwmEnabled
+		case -1198455285:
+			return engineConfiguration->fan2PwmEnabled;
+// fan1PwmFrequency
+		case 1318639761:
+			return engineConfiguration->fan1PwmFrequency;
+// fan2PwmFrequency
+		case -1644699118:
+			return engineConfiguration->fan2PwmFrequency;
+// fan1MinPwm
+		case 992359619:
+			return engineConfiguration->fan1MinPwm;
+// fan1MaxPwm
+		case 983231621:
+			return engineConfiguration->fan1MaxPwm;
+// fan2MinPwm
+		case -2011139708:
+			return engineConfiguration->fan2MinPwm;
+// fan2MaxPwm
+		case -2020267706:
+			return engineConfiguration->fan2MaxPwm;
+// fan1AcAdder
+		case -180298801:
+			return engineConfiguration->fan1AcAdder;
+// fan2AcAdder
+		case -511528784:
+			return engineConfiguration->fan2AcAdder;
+// fan1SoftStartSec
+		case 1115446416:
+			return engineConfiguration->fan1SoftStartSec;
+// fan2SoftStartSec
+		case -1847892463:
+			return engineConfiguration->fan2SoftStartSec;
 // wizardPanelToShow
 		case 727066858:
 			return engineConfiguration->wizardPanelToShow;
@@ -970,6 +1012,15 @@ float getConfigValueByHash(const int hash) {
 // torqueReductionArmingApp
 		case -763838959:
 			return engineConfiguration->torqueReductionArmingApp;
+// referenceTorqueForGenerator
+		case 1979839970:
+			return engineConfiguration->referenceTorqueForGenerator;
+// referenceMapForGenerator
+		case -1373131840:
+			return engineConfiguration->referenceMapForGenerator;
+// referenceVeForGenerator
+		case 931823549:
+			return engineConfiguration->referenceVeForGenerator;
 // tachPulseDuractionMs
 		case 58931511:
 			return engineConfiguration->tachPulseDuractionMs;
@@ -1996,6 +2047,30 @@ float getConfigValueByHash(const int hash) {
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
+// cel_battery_min_v
+		case -1794416277:
+			return config->cel_battery_min_v;
+// cel_battery_max_v
+		case -1794692883:
+			return config->cel_battery_max_v;
+// cel_map_min_v
+		case -491094482:
+			return config->cel_map_min_v;
+// cel_map_max_v
+		case -491371088:
+			return config->cel_map_max_v;
+// cel_iat_min_v
+		case 1152494894:
+			return config->cel_iat_min_v;
+// cel_iat_max_v
+		case 1152218288:
+			return config->cel_iat_max_v;
+// cel_tps_min_v
+		case -789855065:
+			return config->cel_tps_min_v;
+// cel_tps_max_v
+		case -790131671:
+			return config->cel_tps_max_v;
 // dynoRpmStep
 		case -1085712470:
 			return config->dynoRpmStep;
@@ -2038,6 +2113,24 @@ float getConfigValueByHash(const int hash) {
 // dynoCarFrontalAreaM2
 		case -1661556925:
 			return config->dynoCarFrontalAreaM2;
+// wizardNumberOfCylinders
+		case -1547587839:
+			return config->wizardNumberOfCylinders;
+// wizardFiringOrder
+		case 346390417:
+			return config->wizardFiringOrder;
+// wizardMapSensorType
+		case 554586032:
+			return config->wizardMapSensorType;
+// wizardCrankTrigger
+		case -221893735:
+			return config->wizardCrankTrigger;
+// wizardCamTrigger
+		case -717549157:
+			return config->wizardCamTrigger;
+// wizardInjectorFlow
+		case -1499796020:
+			return config->wizardInjectorFlow;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -2066,6 +2159,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case 46918724:
 	{
 		engineConfiguration->engineSnifferRpmThreshold = (int)value;
+		return 1;
+	}
+		case 1049828813:
+	{
+		engineConfiguration->ltitEnabled = (int)value;
+		return 1;
+	}
+		case 934247460:
+	{
+		engineConfiguration->useMetricOnInterface = (int)value;
+		return 1;
+	}
+		case 1514634753:
+	{
+		engineConfiguration->useLambdaOnInterface = (int)value;
 		return 1;
 	}
 		case -775882810:
@@ -2101,11 +2209,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1256791970:
 	{
 		engineConfiguration->idlePositionMax = (int)value;
-		return 1;
-	}
-		case 1049828813:
-	{
-		engineConfiguration->ltitEnabled = (int)value;
 		return 1;
 	}
 		case -1008029221:
@@ -2611,6 +2714,66 @@ bool setConfigValueByName(const char *name, float value) {
 		case -311454863:
 	{
 		engineConfiguration->disableFan2WhenStopped = (int)value;
+		return 1;
+	}
+		case 859066570:
+	{
+		engineConfiguration->fan1PwmEnabled = (int)value;
+		return 1;
+	}
+		case -1198455285:
+	{
+		engineConfiguration->fan2PwmEnabled = (int)value;
+		return 1;
+	}
+		case 1318639761:
+	{
+		engineConfiguration->fan1PwmFrequency = (int)value;
+		return 1;
+	}
+		case -1644699118:
+	{
+		engineConfiguration->fan2PwmFrequency = (int)value;
+		return 1;
+	}
+		case 992359619:
+	{
+		engineConfiguration->fan1MinPwm = (int)value;
+		return 1;
+	}
+		case 983231621:
+	{
+		engineConfiguration->fan1MaxPwm = (int)value;
+		return 1;
+	}
+		case -2011139708:
+	{
+		engineConfiguration->fan2MinPwm = (int)value;
+		return 1;
+	}
+		case -2020267706:
+	{
+		engineConfiguration->fan2MaxPwm = (int)value;
+		return 1;
+	}
+		case -180298801:
+	{
+		engineConfiguration->fan1AcAdder = (int)value;
+		return 1;
+	}
+		case -511528784:
+	{
+		engineConfiguration->fan2AcAdder = (int)value;
+		return 1;
+	}
+		case 1115446416:
+	{
+		engineConfiguration->fan1SoftStartSec = value;
+		return 1;
+	}
+		case -1847892463:
+	{
+		engineConfiguration->fan2SoftStartSec = value;
 		return 1;
 	}
 		case 727066858:
@@ -3656,6 +3819,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case -763838959:
 	{
 		engineConfiguration->torqueReductionArmingApp = (int)value;
+		return 1;
+	}
+		case 1979839970:
+	{
+		engineConfiguration->referenceTorqueForGenerator = value;
+		return 1;
+	}
+		case -1373131840:
+	{
+		engineConfiguration->referenceMapForGenerator = value;
+		return 1;
+	}
+		case 931823549:
+	{
+		engineConfiguration->referenceVeForGenerator = value;
 		return 1;
 	}
 		case 58931511:
@@ -5368,6 +5546,46 @@ bool setConfigValueByName(const char *name, float value) {
 		config->tcu_shiftTime = value;
 		return 1;
 	}
+		case -1794416277:
+	{
+		config->cel_battery_min_v = (int)value;
+		return 1;
+	}
+		case -1794692883:
+	{
+		config->cel_battery_max_v = (int)value;
+		return 1;
+	}
+		case -491094482:
+	{
+		config->cel_map_min_v = (int)value;
+		return 1;
+	}
+		case -491371088:
+	{
+		config->cel_map_max_v = (int)value;
+		return 1;
+	}
+		case 1152494894:
+	{
+		config->cel_iat_min_v = (int)value;
+		return 1;
+	}
+		case 1152218288:
+	{
+		config->cel_iat_max_v = (int)value;
+		return 1;
+	}
+		case -789855065:
+	{
+		config->cel_tps_min_v = (int)value;
+		return 1;
+	}
+		case -790131671:
+	{
+		config->cel_tps_max_v = (int)value;
+		return 1;
+	}
 		case -1085712470:
 	{
 		config->dynoRpmStep = (int)value;
@@ -5436,6 +5654,36 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1661556925:
 	{
 		config->dynoCarFrontalAreaM2 = value;
+		return 1;
+	}
+		case -1547587839:
+	{
+		config->wizardNumberOfCylinders = (int)value;
+		return 1;
+	}
+		case 346390417:
+	{
+		config->wizardFiringOrder = (int)value;
+		return 1;
+	}
+		case 554586032:
+	{
+		config->wizardMapSensorType = (int)value;
+		return 1;
+	}
+		case -221893735:
+	{
+		config->wizardCrankTrigger = (int)value;
+		return 1;
+	}
+		case -717549157:
+	{
+		config->wizardCamTrigger = (int)value;
+		return 1;
+	}
+		case -1499796020:
+	{
+		config->wizardInjectorFlow = (int)value;
 		return 1;
 	}
 	}

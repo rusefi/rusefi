@@ -10,7 +10,7 @@
  *
  * Tuner Studio has a really simple protocol, a minimal implementation
  * capable of displaying current engine state on the gauges would
- * require only two commands: queryCommand and ochGetCommand
+ * require only two commands: queryCommand and ochGetCommand (output channels get)
  *
  * queryCommand:
  * 		Communication initialization command. TunerStudio sends a single byte H
@@ -27,6 +27,20 @@
  * tuner studio, three more commands should be implemented:
  *
  * See also https://www.efianalytics.com/TunerStudio/docs/EFI%20Analytics%20ECU%20Definition%20files.pdf
+ *
+ *
+ * Slightly longer explanation:
+ *
+ * we start by one or two commands to establish communication and get controller signature
+ * controller signature is a key to identify proper .ini metadata file
+ * once connection is established and .ini is available
+ * due to packet size limitation, large range operations are broken into multiple 'chunks' meaning we ready from specific offset with specific size around 1-2Kb
+ * we have two kinds of 'read' commands
+ * 'get output channels' to read gauges (dynamic, read only access)
+ * 'read chunks' meaning read of ECU persistent calibration which is organized as a few 'pages' limited to 64K
+ * tuning software also uses 'write chunks' to write calibration data, followed by 'burn' to apply all written chunks. Like 'commit'
+ *
+ * other commands are less important like 'get CRC32' to validate data integrity between ECU and local software snapshot
  *
  *
  * @date Oct 22, 2013
@@ -69,6 +83,7 @@
 
 #include "main_trigger_callback.h"
 #include "flash_main.h"
+#include "extra_flash_pages.h"
 
 #include "tunerstudio_io.h"
 #include "malfunction_central.h"
@@ -79,6 +94,10 @@
 #include "electronic_throttle.h"
 #include "live_data.h"
 #include "efi_quote.h"
+
+#if EFI_PROD_CODE
+#include "mass_storage_init.h"
+#endif // EFI_PROD_CODE
 
 #include <string.h>
 #include "bench_test.h"
@@ -162,6 +181,8 @@ static void setTsSpeed(int value) {
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
 	efiPrintf("%s: %s", tsChannel->name, msg);
+#else
+  UNUSED(tsChannel);UNUSED(msg);
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
@@ -186,6 +207,8 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 	case TS_PAGE_LTFT_TRIMS:
 		return (uint8_t *)ltftGetTsPage() + offset;
 #endif
+	case TS_PAGE_SECOND_TABLES:
+		return static_cast<uint8_t*>(getExtraPageAddr(EFI_SECOND_TABLES_RECORD_ID)) + offset;
 	default:
 		tunerStudioError(tsChannel, "ERROR: page address out of range");
 		return nullptr;
@@ -208,19 +231,19 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 	case TS_PAGE_LTFT_TRIMS:
 		return ltftGetTsPageSize();
 #endif
+	case TS_PAGE_SECOND_TABLES:
+		return getExtraPageSize(EFI_SECOND_TABLES_RECORD_ID);
 	default:
 		return 0;
 	}
 }
 
 // Validate whether the specified offset and count would cause an overrun in the tune.
-// Returns true if an overrun would occur.
-static bool validateOffsetCount(size_t page, size_t offset, size_t count, TsChannelBase* tsChannel) {
+// Returns true if an overrun would occur. Callers are responsible for sending the error code.
+static bool validateOffsetCount(size_t page, size_t offset, size_t count) {
 	size_t allowedSize = getTunerStudioPageSize(page);
 	if (offset + count > allowedSize) {
 		efiPrintf("TS: Project mismatch? Too much configuration requested %d+%d>%d", offset, count, allowedSize);
-		tunerStudioError(tsChannel, "ERROR: out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "bad_offset");
 		return true;
 	}
 
@@ -312,7 +335,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		page, offset, count, tsState.outputChannelsCommandCounter);
 
 
-	if (validateOffsetCount(page, offset, count, tsChannel)) {
+	if (validateOffsetCount(page, offset, count)) {
 		tunerStudioError(tsChannel, "ERROR: WR out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
@@ -359,7 +382,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
-	if (validateOffsetCount(page, offset, count, tsChannel)) {
+	if (validateOffsetCount(page, offset, count)) {
 		tunerStudioError(tsChannel, "ERROR: CRC out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
@@ -427,7 +450,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
-	if (validateOffsetCount(page, offset, count, tsChannel)) {
+	if (validateOffsetCount(page, offset, count)) {
 		tunerStudioError(tsChannel, "ERROR: RD out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
@@ -490,6 +513,8 @@ static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 		efiPrintf("Burned in %.1fms", t.getElapsedSeconds() * 1e3);
 	} else if (page == TS_PAGE_SCATTER_OFFSETS) {
 		/* do nothing */
+	} else if (page == TS_PAGE_SECOND_TABLES) {
+		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: Burn invalid page");
 		return;
@@ -512,6 +537,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_SCATTERED_GET_COMMAND
 #endif
 			|| command == TS_SET_LOGGER_SWITCH
+			|| command == TS_GET_IMAGE_COMMAND
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
@@ -744,6 +770,18 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	return 0;
 }
 
+bool TunerstudioThread::isAnyConsoleActive(void) {
+	return (consoleActiveMask != 0);
+}
+
+void TunerstudioThread::onDataArrived(int instance, bool valid) {
+	if (valid) {
+		consoleActiveMask |= (1 << instance);
+	} else {
+		consoleActiveMask &= ~(1 << instance);
+	}
+}
+
 void TunerstudioThread::ThreadTask() {
 	auto channel = setupChannel();
 
@@ -752,12 +790,15 @@ void TunerstudioThread::ThreadTask() {
 		return;
 	}
 
+	// get our instance...
+	int instance = getInstanceCounter();
+
 	// Until the end of time, process incoming messages.
 	while (true) {
 		if (tsProcessOne(channel) == 0) {
-			onDataArrived(true);
+			onDataArrived(instance, true);
 		} else {
-			onDataArrived(false);
+			onDataArrived(instance, false);
 		}
 	}
 }
@@ -813,6 +854,21 @@ void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int
 	tsChannel->writeCrcResponse(TS_RESPONSE_OK);
 }
 
+static void handleGetImageCommand(TsChannelBase* tsChannel, size_t offset32, int count) {
+#if EFI_PROD_CODE
+	if (offset32 + count > getStorageImageSize()) {
+		tsState.errorOutOfRange++;
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: GET_IMAGE out of range");
+		return;
+	}
+
+	const unsigned char* addr = getStorageImage() + offset32;
+	tsChannel->sendResponse(TS_CRC, addr, count);
+#else
+  sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "not implemented");
+#endif // EFI_PROD_CODE
+}
+
 int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
@@ -820,8 +876,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	data++;
 
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
+	const uint32_t* data32 = reinterpret_cast<uint32_t*>(data);
 
-	// only few command have page argument, default page is 0
+	// only few commands have page argument, default page is 0
 	uint16_t page = 0;
 	uint16_t offset = 0;
 	uint16_t count = 0;
@@ -897,6 +954,13 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		offset = data16[1];
 		count = data16[2];
 		handlePageReadCommand(tsChannel, page, offset, count);
+		break;
+	case TS_GET_IMAGE_COMMAND:
+		{
+		  size_t offset32 = data32[0];
+		  count = data16[2];
+		  handleGetImageCommand(tsChannel, offset32, count);
+		}
 		break;
 	case TS_TEST_COMMAND:
 		[[fallthrough]];
@@ -1042,9 +1106,19 @@ static char tsErrorBuff[80];
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 bool isTuningVeNow() {
-  int tuningDetector = engineConfiguration->isTuningDetectorEnabled ? 0 : 20;
+	// When tuning detection is enabled, suspend STFT/LTFT for 20 s after each VE table write.
+	const int tuningDetector = engineConfiguration->isTuningDetectorEnabled ? 20 : 0;
 	return !calibrationsVeWriteTimer.hasElapsedSec(tuningDetector);
 }
+
+#if EFI_UNIT_TEST
+// Reset the VE-write timer to its initial "always elapsed" state so that tests do not
+// leak state across test cases (EngineTestHelper resets the mock clock to 0 in its
+// constructor, which would make a timer reset at T=0 appear freshly reset again).
+void resetCalibrationTimerForTest() {
+	calibrationsVeWriteTimer.init();
+}
+#endif
 
 void startTunerStudioConnectivity() {
 	// Assert tune & output channel struct sizes

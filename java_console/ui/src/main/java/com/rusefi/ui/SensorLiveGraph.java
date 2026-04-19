@@ -1,11 +1,17 @@
 package com.rusefi.ui;
 
+import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.sensor_logs.CustomBinaryLogEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -29,24 +35,28 @@ public class SensorLiveGraph extends JPanel {
     private static final String LOWER = "lower";
 
     private final LinkedList<Double> values = new LinkedList<>();
+    private final UIContext uiContext;
     private final Node config;
     private final JMenuItem extraItem;
     @NotNull
     private ChangePeriod period;
-    private Sensor sensor;
+    private String gaugeName;
     private boolean autoScale;
     private double customUpper;
     private double customLower;
 
-    public SensorLiveGraph(Node config, final Sensor defaultSensor, JMenuItem extraItem) {
+    public SensorLiveGraph(UIContext uiContext, Node config, final String defaultGaugeName, JMenuItem extraItem) {
+        this.uiContext = uiContext;
         this.config = config;
         this.extraItem = extraItem;
-        String gaugeName = config.getProperty(SENSOR_TYPE, defaultSensor.name());
-        this.sensor = Sensor.lookup(gaugeName, defaultSensor);
+        this.gaugeName = config.getProperty(SENSOR_TYPE, defaultGaugeName);
 
         Thread thread = THREAD_FACTORY.newThread(createRunnable());
         thread.start();
         period = ChangePeriod.lookup(config.getProperty(PERIOD));
+        if (period == null) {
+            period = ChangePeriod._200;
+        }
         autoScale = config.getBoolProperty(USE_AUTO_SCALE);
         customUpper = config.getDoubleProperty(UPPER, Double.NaN);
         customLower = config.getDoubleProperty(LOWER, Double.NaN);
@@ -86,7 +96,33 @@ public class SensorLiveGraph extends JPanel {
     }
 
     private void grabNewValue() {
-        double value = SensorCentral.getInstance().getValue(sensor);
+        double value = Double.NaN;
+        String channelName = null;
+        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
+        byte[] response = SensorCentral.getInstance().getResponse();
+        if (bp != null && response != null) {
+            IniFileModel iniFile = bp.getIniFileNullable();
+            if (iniFile != null) {
+                try {
+                    GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
+                    if (gaugeModel != null) {
+                        channelName = gaugeModel.getChannel();
+                        IniField field = iniFile.getOutputChannel(channelName);
+                        if (field instanceof ScalarIniField) {
+                            CustomBinaryLogEntry entry = new CustomBinaryLogEntry(gaugeModel, (ScalarIniField) field);
+                            value = entry.getValue(response);
+                        }
+                    }
+                } catch (Exception e) {
+                    // fall back to sensor central
+                }
+            }
+        }
+
+        if (Double.isNaN(value) && channelName != null) {
+            value = SensorCentral.getInstance().getValue(channelName);
+        }
+
         addValue(value);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -204,6 +240,28 @@ public class SensorLiveGraph extends JPanel {
     }
 
     private void addChangeSensorItems(JPopupMenu pm) {
+        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
+        if (bp != null) {
+            IniFileModel iniFile = bp.getIniFileNullable();
+            if (iniFile != null) {
+                for (final String category : iniFile.getGaugeCategories().keySet()) {
+                    JMenuItem cmi = new JMenu(category);
+                    pm.add(cmi);
+                    for (final GaugeModel gauge : iniFile.getGaugeCategories().get(category).getGauges()) {
+                        JMenuItem mi = new JMenuItem(gauge.getTitle());
+                        mi.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                setSensor(gauge.getName());
+                            }
+                        });
+                        cmi.add(mi);
+                    }
+                }
+                return;
+            }
+        }
+
         for (final SensorCategory sc : SensorCategory.values()) {
             JMenuItem cmi = new JMenu(sc.getName());
             pm.add(cmi);
@@ -213,7 +271,7 @@ public class SensorLiveGraph extends JPanel {
                 mi.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        setSensor(s);
+                        setSensor(s.getName());
                     }
                 });
                 cmi.add(mi);
@@ -221,10 +279,10 @@ public class SensorLiveGraph extends JPanel {
         }
     }
 
-    private synchronized void setSensor(Sensor sensor) {
-        this.sensor = sensor;
+    private synchronized void setSensor(String gaugeName) {
+        this.gaugeName = gaugeName;
         values.clear();
-        config.setProperty(SENSOR_TYPE, sensor.name());
+        config.setProperty(SENSOR_TYPE, gaugeName);
     }
 
     private synchronized void addValue(double value) {
@@ -254,7 +312,22 @@ public class SensorLiveGraph extends JPanel {
         g.drawString(String.format("%.2f", range.maxValue), 5, maxY);
 
         g.setColor(Color.blue);
-        String sensorName = sensor.getName() + " ";
+        String title = null;
+        BinaryProtocol bp = uiContext.getLinkManager().getBinaryProtocol();
+        if (bp != null) {
+            IniFileModel iniFile = bp.getIniFileNullable();
+            if (iniFile != null) {
+                GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
+                if (gaugeModel != null) {
+                    title = gaugeModel.getTitle();
+                }
+            }
+        }
+        if (title == null) {
+            Sensor s = Sensor.lookup(gaugeName, null);
+            title = s == null ? gaugeName : s.getName();
+        }
+        String sensorName = title + " ";
         int nameWidth = g.getFontMetrics().stringWidth(sensorName);
         g.drawString(sensorName, d.width - nameWidth, g.getFont().getSize());
 
@@ -270,8 +343,23 @@ public class SensorLiveGraph extends JPanel {
         if (autoScale) {
             range = VisibleRange.findRange(values);
         } else {
-            range = new VisibleRange(Double.isNaN(customLower) ? sensor.getMinValue() : customLower,
-                    Double.isNaN(customUpper) ? sensor.getMaxValue() : customUpper);
+            double maxValue = 0;
+            double minValue = 0;
+
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp != null) {
+                IniFileModel iniFile = bp.getIniFileNullable();
+                if (iniFile != null) {
+                    GaugeModel gaugeModel = iniFile.getGauge(gaugeName);
+                    if (gaugeModel != null) {
+                        maxValue = gaugeModel.getHighValue();
+                        minValue = gaugeModel.getLowValue();
+                    }
+                }
+            }
+
+            range = new VisibleRange(Double.isNaN(customLower) ? minValue : customLower,
+                    Double.isNaN(customUpper) ? maxValue : customUpper);
         }
         return range;
     }

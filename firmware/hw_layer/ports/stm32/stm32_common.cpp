@@ -292,4 +292,16 @@ void assertInterruptPriority(const char* func, uint8_t expectedPrio) {
 	}
 }
 
+const char *getStm32McuName(int mcuRevision) {
+  switch (mcuRevision) {
+    case STM32_DEVICE_ID_F40x: // x413
+      return "F40x";
+    case STM32_DEVICE_ID_F42x: // x419
+      return "F42x";
+    case 1105:
+      return "F7";
+  }
+  return "unknown";
+}
+
 #endif // EFI_PROD_CODE

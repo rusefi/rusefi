@@ -16,8 +16,10 @@
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 #include "fifo_buffer.h"
-fifo_buffer<CANTxFrame, 1024> txCanBuffer;
+fifo_buffer<CANTxFrame, TEST_CAN_BUFFER_SIZE> txCanBuffer;
 #endif // EFI_SIMULATOR
+
+bool verboseCanTxError = false;
 
 #if EFI_CAN_SUPPORT
 /*static*/ CANDriver* CanTxMessage::s_devices[EFI_CAN_BUS_COUNT] = {
@@ -72,7 +74,7 @@ CanTxMessage::~CanTxMessage() {
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 	txCanBuffer.put(m_frame);
 
-#if EFI_UNIT_TEST
+#if 0 && EFI_UNIT_TEST
 	printf("%s Sending CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x \n",
 		   getCanCategory(category),
 		   busIndex + 1,
@@ -89,6 +91,12 @@ CanTxMessage::~CanTxMessage() {
 	ScopePerf pc(PE::CanDriverTx);
 
 	if (!engine->allowCanTx) {
+		return;
+	}
+
+	if (busIndex >= EFI_CAN_BUS_COUNT) {
+		// Error already throuwn from CanTxMessage::setBus
+		// just do not access out of bounds
 		return;
 	}
 
@@ -123,7 +131,21 @@ CanTxMessage::~CanTxMessage() {
 	if (msg == MSG_OK) {
 		engine->outputChannels.canWriteOk++;
 	} else {
+extern int txErrorCount[EFI_CAN_BUS_COUNT];
 		engine->outputChannels.canWriteNotOk++;
+		txErrorCount[busIndex]++;
+
+		if (verboseCanTxError) {
+		  efiPrintf("%s TX ERR CAN%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
+				getCanCategory(category),
+				busIndex + 1,
+				(unsigned int)CAN_ID(m_frame),
+				m_frame.DLC,
+				m_frame.data8[0], m_frame.data8[1],
+				m_frame.data8[2], m_frame.data8[3],
+				m_frame.data8[4], m_frame.data8[5],
+				m_frame.data8[6], m_frame.data8[7]);
+		}
 	}
 #endif // EFI_TUNER_STUDIO
 #endif /* EFI_CAN_SUPPORT */
@@ -131,10 +153,21 @@ CanTxMessage::~CanTxMessage() {
 
 #if HAS_CAN_FRAME
 void CanTxMessage::setDlc(uint8_t dlc) {
+	// TODO: CAN vs CANFD
+	if (dlc > sizeof(m_frame.data8)) {
+		criticalError("CAN: incorrect DLC %d", dlc);
+		return;
+	}
+
 	m_frame.DLC = dlc;
 }
 
 void CanTxMessage::setBus(size_t bus) {
+	if (bus >= EFI_CAN_BUS_COUNT) {
+		criticalError("CAN: CAN%d incorect bus", bus + 1);
+		return;
+	}
+
 	busIndex = bus;
 }
 
@@ -142,6 +175,13 @@ void CanTxMessage::setBus(size_t bus) {
 void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
 	m_frame.data8[offset] = value & 0xFF;
 	m_frame.data8[offset + 1] = value >> 8;
+}
+
+void CanTxMessage::setIntValueLsb(uint32_t value, size_t offset) {
+	m_frame.data8[offset] = value & 0xFF;
+	m_frame.data8[offset + 1] = (value >> 8) & 0xFF;
+	m_frame.data8[offset + 2] = (value >> 16) & 0xFF;
+	m_frame.data8[offset + 3] = (value >> 24) & 0xFF;
 }
 
 // MOTOROLA order, MSB (Most Significant Byte/Big Endian) comes first.

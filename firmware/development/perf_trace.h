@@ -32,7 +32,7 @@ enum class PE : uint8_t {
 	SingleTimerExecutorDoExecute,
 	SingleTimerExecutorScheduleTimerCallback,
 	PeriodicControllerPeriodicTask,
-	PeriodicTimerControllerPeriodicTask, //TODO: main_loop remove this after migrating to main_loop
+	PeriodicTimerControllerPeriodicTask, // TODO: main_loop remove this after migrating to main_loop
 	AdcCallbackFast,
 	AdcProcessSlow,
 	AdcConversionSlow,
@@ -105,15 +105,14 @@ void perfTraceEnable();
 const BigBufferHandle perfTraceGetBuffer();
 
 #if ENABLE_PERF_TRACE
-class ScopePerf
-{
+class ScopePerf {
 public:
-	ScopePerf(PE event) : m_event(event) {
+	ScopePerf(PE event)
+		: m_event(event) {
 		perfEventBegin(event);
 	}
 
-	~ScopePerf()
-	{
+	~ScopePerf() {
 		perfEventEnd(m_event);
 	}
 

@@ -12,6 +12,8 @@
 #define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
+! see TPS_TS_CONVERSION, this is related on how TS handles voltage for TPS calibration
+#define PACK_MULT_RAW_VOLTAGE 0.005
 #define PACK_MULT_MASS_FLOW 10
 #define TPS_2_BYTE_PACKING_MULT 100
 #define PACK_MULT_AFR_CFG 10
@@ -29,6 +31,15 @@
 
 #define VE_RPM_COUNT 16
 #define VE_LOAD_COUNT 16
+
+#define MAP_UPPER_LIMIT 650
+
+#define IGN_LOAD_COUNT 16
+#define IGN_RPM_COUNT 16
+#define BLEND_FACTOR_SIZE 8
+
+#define TORQUE_CURVE_SIZE 6
+#define TORQUE_CURVE_RPM_SIZE 6
 
 #define TCU_GEAR_COUNT 10
 #define EGT_CHANNEL_COUNT 8
@@ -218,8 +229,11 @@
 #define UNITS_KMH "kmh"
 #define UNITS_MPH "mph"
 
-#define GAUGE_PRECISION_TEMPERATURE_C 1,1
-#define GAUGE_PRECISION_TEMPERATURE_F 1,2
+#define GAUGE_PRECISION_TEMPERATURE_C 1
+#define GAUGE_PRECISION_TEMPERATURE_F 2
+
+#define UNITS_KPA_TO_PSI 0.145038
+#define UNITS_KMH_TO_MPH 0.62137119
 
 #define GAUGE_NAME_ADJUSTED_TIMING "Timing: ignition"
 #define GAUGE_NAME_TIMING_ADVANCE "Timing: base ignition"

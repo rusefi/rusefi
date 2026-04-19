@@ -11,9 +11,9 @@ SCRIPT_NAME=$(basename "$0")
 
 echo "${SCRIPT_NAME} hello"
 
-cd ../java_tools
+cd ../
 ./gradlew :models:shadowJar
-cd ../firmware
+cd firmware
 
 
 java -cp ../java_console/models/build/libs/models-all.jar com.rusefi.PerfTraceEnumGenerator development/perf_trace.h ../java_console/models/src/main/java/com/rusefi/tracing/EnumNames.java

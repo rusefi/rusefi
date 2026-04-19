@@ -1,15 +1,15 @@
 package com.rusefi.tune.xml;
 
-import com.rusefi.Version;
+import com.rusefi.UiVersion;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 public class Bibliography {
     private String tuneComment = null;
 
     @XmlAttribute
     public String getAuthor() {
-        return "rusEFI " + Version.CONSOLE_VERSION;
+        return "rusEFI " + UiVersion.CONSOLE_VERSION;
     }
 
     @XmlAttribute
@@ -26,3 +26,4 @@ public class Bibliography {
         return "date";
     }
 }
+

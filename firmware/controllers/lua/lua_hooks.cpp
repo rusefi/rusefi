@@ -2,6 +2,7 @@
 
 #include "rusefi_lua.h"
 #include "lua_hooks.h"
+#include "second_tables.h"
 
 #include "lua_biquad.h"
 #include "fuel_math.h"
@@ -392,26 +393,6 @@ static int lua_getAuxDigital(lua_State* l) {
 	return 1;
 }
 
-static int lua_setDebug(lua_State* l) {
-	// wrong debug mode, ignore
-	if (engineConfiguration->debugMode != DBG_LUA) {
-		return 0;
-	}
-
-	auto idx = luaL_checkinteger(l, 1);
-	auto val = luaL_checknumber(l, 2);
-
-	// invalid index, ignore
-	if (idx < 1 || idx > 7) {
-		return 0;
-	}
-
-	auto firstDebugField = &engine->outputChannels.debugFloatField1;
-	firstDebugField[idx - 1] = val;
-
-	return 0;
-}
-
 #if EFI_ENGINE_CONTROL
 static auto lua_getAirmassResolveMode(lua_State* l) {
 	if (lua_gettop(l) == 0) {
@@ -695,7 +676,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 
 	lua_register(lState, "readPin", lua_readpin);
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-	lua_register(lState, "startCrankingEngine", [](lua_State* l) {
+	lua_register(lState, "startCrankingEngine", [](lua_State*) {
 		doStartCranking();
 		return 0;
 	});
@@ -882,6 +863,11 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	  }
 		return 1;
 	});
+
+	lua_register(lState, "setEngineTorque", [](lua_State* l) {
+		engine->engineState.lua.engineTorque = luaL_checknumber(l, 1);
+		return 0;
+	});
 #endif // STM32F4
 
 #if !defined(STM32F4) || defined(WITH_LUA_GET_GPPWM_STATE)
@@ -1024,10 +1010,11 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		auto tps = Sensor::getOrZero(SensorType::Tps1);
 
+ 	  // here we assume load is TPS
 		auto result = interpolate3d(
-                  		config->torqueTable,
-                  		config->torqueLoadBins, tps,
-                  		config->torqueRpmBins, rpm
+                  		secondTablesGetState()->torqueTable,
+                  		secondTablesGetState()->torqueLoadBins, tps,
+                  		secondTablesGetState()->torqueRpmBins, rpm
                   	);
 		lua_pushnumber(l, result);
 		return 1;
@@ -1128,7 +1115,6 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
                                  	});
 	lua_register(lState, "getDigital", lua_getDigital);
 	lua_register(lState, "getAuxDigital", lua_getAuxDigital);
-	lua_register(lState, "setDebug", lua_setDebug);
 #if EFI_ENGINE_CONTROL
 	lua_register(lState, "getAirmass", lua_getAirmass);
 	lua_register(lState, "setAirmass", lua_setAirmass);

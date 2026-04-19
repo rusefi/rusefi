@@ -122,8 +122,6 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 	angle_t firstAngle = shape->getAngle(triggerShapeSynchPointIndex);
 	assertAngleRange(firstAngle, "firstAngle", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE);
 
-	int riseOnlyIndex = 0;
-
 	size_t length = shape->getLength();
 
 	setArrayValues(eventAngles, 0);
@@ -133,6 +131,9 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 
 	assertAngleRange(triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE2);
 	efiAssertVoid(ObdCode::CUSTOM_TRIGGER_CYCLE, getTriggerCentral()->engineCycleEventCount != 0, "zero engineCycleEventCount");
+
+	float lastAnglePrimary = 0.0;
+	float lastAngleSecondary = 0.0;
 
 	for (size_t eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
@@ -158,12 +159,20 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 			if (shape->useOnlyRisingEdges) {
 				criticalAssertVoid(triggerDefinitionIndex < triggerShapeLength, "trigger shape fail");
 				assertIsInBounds(triggerDefinitionIndex, shape->isRiseEvent, "isRise");
-
-				// In case this is a rising event, replace the following fall event with the rising as well
+				bool primary = shape->getWheel(triggerDefinitionIndex) == TriggerWheel::T_PRIMARY ? true : false;
+				// In case this is a rising event, store the angle to be used for the next falling event.
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
-					riseOnlyIndex += 2;
-					eventAngles[riseOnlyIndex] = angle;
-					eventAngles[riseOnlyIndex + 1] = angle;
+					eventAngles[eventIndex] = angle;
+					if (primary) {
+						lastAnglePrimary = angle;
+					} else {
+						lastAngleSecondary = angle;
+					}
+					// If this is a falling event, apply the angle of the last rising event on this channel.
+				} else if (primary) {
+					eventAngles[eventIndex] = lastAnglePrimary;
+				} else {
+					eventAngles[eventIndex] = lastAngleSecondary;
 				}
 			} else {
 				eventAngles[eventIndex] = angle;
@@ -231,6 +240,8 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	m_hasSynchronizedPhase = true;
 
 	if (totalShift > 0) {
+		m_phaseAdjustment = totalShift;
+		// Resync angle changed - count how many times this happens
 		camResyncCounter++;
 		onTransitionEvent(TransitionEvent::EngineResync);
 	}
@@ -264,6 +275,11 @@ void PrimaryTriggerDecoder::onNotEnoughTeeth(int /*actual*/, int /*expected*/) {
 		currentCycle.eventCount[0],
 		currentCycle.eventCount[1]);
 }
+
+#if EFI_UNIT_TEST
+// weird: we count trigger error on next sync, but if we never sync - counter does not increase?!
+int tooManyTeethCounter = 0;
+#endif // EFI_UNIT_TEST
 
 void PrimaryTriggerDecoder::onTooManyTeeth(int /*actual*/, int /*expected*/) {
 	warning(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, "primary trigger error: too many teeth between sync points: expected %d/%d got %d/%d",
@@ -635,6 +651,10 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		setShaftSynchronized(false);
 
 		return unexpected;
+	} else if (!isValidIndex(triggerShape)) {
+#if EFI_UNIT_TEST
+		tooManyTeethCounter++;
+#endif // EFI_UNIT_TEST
 	}
 
 	triggerStateIndex = currentCycle.current_index;

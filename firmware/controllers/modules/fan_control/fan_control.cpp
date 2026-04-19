@@ -3,6 +3,8 @@
 #include "fan_control.h"
 
 #include "bench_test.h"
+#include "table_helper.h"
+#include "rusefi/interpolation.h"
 
 PUBLIC_API_WEAK bool fansDisabledByBoardStatus() {
   return false;
@@ -69,6 +71,67 @@ bool FanController::getState(bool acActive, bool lastState) {
 	}
 }
 
+void FanController::initPwm() {
+	if (m_pwmInitialized) {
+		return;
+	}
+#ifndef EFI_UNIT_TEST
+	if (!isBrainPinValid(getConfigPin())) {
+		return;
+	}
+	startSimplePwm(&m_pwm, "Fan PWM", &engine->scheduler, &getPin(), getPwmFrequency(), 0);
+	m_pwmInitialized = true;
+#endif
+}
+
+void FanController::onSlowCallbackPwm(bool acActive) {
+	initPwm();
+
+	auto clt = Sensor::get(SensorType::Clt);
+
+	if (!clt) {
+		// Sensor invalid – run fan at max PWM
+		float safeDuty = getMaxPwm();
+		pwmCurvePwm = safeDuty;
+		pwmTargetPwm = safeDuty;
+		m_currentPwm = safeDuty;
+		pwmAppliedPwm = safeDuty;
+		m_state = (safeDuty > 0);
+#ifndef EFI_UNIT_TEST
+		if (m_pwmInitialized) {
+			m_pwm.setSimplePwmDutyCycle(safeDuty / 100.0f);
+		}
+#endif
+		return;
+	}
+
+	pwmCurvePwm = computeCurvePwm(clt.Value);
+
+	float target = pwmCurvePwm;
+	if (acActive) {
+		target += getPwmAcAdder();
+	}
+	target = clampF(getMinPwm(), target, getMaxPwm());
+	pwmTargetPwm = target;
+
+	// Soft-start: limit upward slew rate so ramp from 0-100 takes softStartSec seconds
+	float softSec = getSoftStartSec();
+	if (softSec > 0 && target > m_currentPwm) {
+		float maxStep = 100.0f / (softSec * 20.0f);
+		target = minF(target, m_currentPwm + maxStep);
+	}
+
+	m_currentPwm = target;
+	pwmAppliedPwm = m_currentPwm;
+	m_state = (m_currentPwm > 0);
+
+#ifndef EFI_UNIT_TEST
+	if (m_pwmInitialized) {
+		m_pwm.setSimplePwmDutyCycle(m_currentPwm / 100.0f);
+	}
+#endif
+}
+
 void FanController::onSlowCallback() {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
@@ -78,6 +141,12 @@ void FanController::onSlowCallback() {
 #endif
 
 	bool acActive = engine->module<AcController>()->isAcEnabled();
+
+	pwmActive = isPwmEnabled();
+	if (isPwmEnabled()) {
+		onSlowCallbackPwm(acActive);
+		return;
+	}
 
 	auto& pin = getPin();
 
@@ -93,4 +162,23 @@ void FanController::setDefaultConfiguration() {
 	engineConfiguration->fanOffTemperature = 88;
 	engineConfiguration->fan2OnTemperature = 95;
 	engineConfiguration->fan2OffTemperature = 91;
+
+	engineConfiguration->fan1PwmFrequency = 250;
+	engineConfiguration->fan2PwmFrequency = 250;
+
+	setLinearCurve(engineConfiguration->fan1TempBins, 80, 110);
+	setLinearCurve(engineConfiguration->fan1PwmValues, 0, 100);
+	setLinearCurve(engineConfiguration->fan2TempBins, 85, 115);
+	setLinearCurve(engineConfiguration->fan2PwmValues, 0, 100);
+
+	engineConfiguration->fan1MinPwm = 20;
+	engineConfiguration->fan1MaxPwm = 100;
+	engineConfiguration->fan2MinPwm = 20;
+	engineConfiguration->fan2MaxPwm = 100;
+
+	engineConfiguration->fan1AcAdder = 10;
+	engineConfiguration->fan2AcAdder = 10;
+
+	engineConfiguration->fan1SoftStartSec = 2.0f;
+	engineConfiguration->fan2SoftStartSec = 2.0f;
 }

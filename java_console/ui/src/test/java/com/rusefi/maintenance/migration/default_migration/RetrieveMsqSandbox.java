@@ -7,7 +7,7 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.tune.xml.Msq;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 
 public class RetrieveMsqSandbox {
@@ -24,3 +24,4 @@ public class RetrieveMsqSandbox {
         );
     }
 }
+

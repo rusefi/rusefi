@@ -3,6 +3,7 @@ package com.opensr5.ini.field;
 import com.rusefi.config.FieldType;
 
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class ScalarIniField extends IniField {
     private final String unit;
@@ -15,7 +16,7 @@ public class ScalarIniField extends IniField {
                           double serializationOffset) {
         super(name, offset);
         this.unit = unit;
-        this.type = type;
+        this.type = Objects.requireNonNull(type);
         this.digits = digits;
         this.serializationOffset = serializationOffset;
         if (multiplier == 0)

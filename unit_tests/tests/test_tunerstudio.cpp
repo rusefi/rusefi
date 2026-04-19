@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
+#include "tunerstudio_impl.h"
 
 static uint8_t st5TestBuffer[16000];
 
@@ -89,4 +90,91 @@ TEST(TunerstudioCommands, writeChunkEngineConfig) {
 	instance.handleWriteChunkCommand(&channel, 0, 100, 1, &val);
 
 	EXPECT_EQ(configBytes[100], 50);
+}
+
+static constexpr size_t TS_ERROR_PACKET_SIZE = 7;
+static constexpr uint16_t OVERSIZED_COUNT = 0xFFFF;
+
+TEST(TunerstudioCommands, outOfRangePageReadSendsExactlyOneError) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	int prevErrors = tsState.errorOutOfRange;
+
+	TunerStudio ts;
+	ts.handlePageReadCommand(&channel, TS_PAGE_SETTINGS, 0, OVERSIZED_COUNT);
+
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OUT_OF_RANGE);
+
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
+}
+
+TEST(TunerstudioCommands, outOfRangeCrc32CheckSendsExactlyOneError) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	int prevErrors = tsState.errorOutOfRange;
+
+	TunerStudio ts;
+	ts.handleCrc32Check(&channel, TS_PAGE_SETTINGS, 0, OVERSIZED_COUNT);
+
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OUT_OF_RANGE);
+
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
+}
+
+TEST(TunerstudioCommands, outOfRangeWriteChunkSendsExactlyOneError) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	int prevErrors = tsState.errorOutOfRange;
+
+	uint8_t dummy[1] = {};
+	TunerStudio ts;
+	ts.handleWriteChunkCommand(&channel, TS_PAGE_SETTINGS, 0, OVERSIZED_COUNT, dummy);
+
+	EXPECT_EQ(channel.writeIdx, TS_ERROR_PACKET_SIZE);
+	EXPECT_EQ(st5TestBuffer[2], TS_RESPONSE_OUT_OF_RANGE);
+
+	EXPECT_EQ(tsState.errorOutOfRange - prevErrors, 1);
+}
+
+// ---------------------------------------------------------------------------
+// isTuningVeNow — detect tuning and suspend STFT/LTFT
+// ---------------------------------------------------------------------------
+
+// Verify that writing to the VE table region triggers tuning detection when the
+// detector is enabled, and does NOT when disabled.
+TEST(TunerstudioCommands, tuningDetectorEnabledSuspendsAfterVeWrite) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	::testing::NiceMock<MockTsChannel> channel;
+
+	engineConfiguration->isTuningDetectorEnabled = true;
+
+	// Write 1 byte to the start of the VE table to reset calibrationsVeWriteTimer
+	const uint16_t veOffset = static_cast<uint16_t>(offsetof(persistent_config_s, veTable));
+	uint8_t dummy = 0;
+	TunerStudio ts;
+	ts.handleWriteChunkCommand(&channel, TS_PAGE_SETTINGS, veOffset, 1, &dummy);
+
+	// With enabled=true and timer just reset, isTuningVeNow() must return true
+	EXPECT_TRUE(isTuningVeNow());
+
+	resetCalibrationTimerForTest();
+}
+
+TEST(TunerstudioCommands, tuningDetectorDisabledDoesNotSuspendAfterVeWrite) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	::testing::NiceMock<MockTsChannel> channel;
+
+	engineConfiguration->isTuningDetectorEnabled = false;
+
+	const uint16_t veOffset = static_cast<uint16_t>(offsetof(persistent_config_s, veTable));
+	uint8_t dummy = 0;
+	TunerStudio ts;
+	ts.handleWriteChunkCommand(&channel, TS_PAGE_SETTINGS, veOffset, 1, &dummy);
+
+	// With enabled=false, tuning detection uses 0 s threshold — always elapsed → not tuning
+	EXPECT_FALSE(isTuningVeNow());
+
+	resetCalibrationTimerForTest();
 }

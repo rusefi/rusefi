@@ -1,3 +1,8 @@
+/**
+ * @file software_knock.h
+ * @brief Interface for software-based knock detection.
+ */
+
 #pragma once
 
 #include "pch.h"
