@@ -2,11 +2,11 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>console\rusefi_autoupdate.jar</jar>
+  <jar>console/rusefi_console.jar</jar>
   <outfile>c:\stuff\rusefi\misc\console_launcher\rusefi_updater.exe</outfile>
   <errTitle></errTitle>
-  <cmdLine>basic-ui</cmdLine>
-  <chdir>console</chdir>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
   <priority>normal</priority>
   <downloadUrl>https://rusefi.com/s/jre-redirect</downloadUrl>
   <supportUrl></supportUrl>

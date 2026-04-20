@@ -86,8 +86,8 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
 
 # Launchers live at the bundle root; they delegate to console/rusefi_console.jar
 ROOT_FOLDER_SOURCES = \
-  ../misc/console_launcher/rusefi_console.exe \
-  ../misc/console_launcher/rusefi_console.sh
+  ../misc/console_launcher/rusefi_updater.exe \
+  ../misc/console_launcher/rusefi_updater.sh
 
 # todo: remove BootCommander.exe once https://github.com/rusefi/rusefi/issues/6358 is done
 
