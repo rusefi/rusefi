@@ -289,6 +289,24 @@ public class WizardContainer extends JPanel {
         return TOTAL_STEPS;
     }
 
+    /** Total flagged steps applicable to this board — drives the "of N" denominator shown to the user. */
+    private int applicableFlaggedCount() {
+        int count = 0;
+        for (WizardStepDescriptor d : FLAGGED) {
+            if (d.applicable.test(uiContext)) count++;
+        }
+        return count;
+    }
+
+    /** 1-based position of flagged step {@code index} among applicable steps — drives the "Step N" numerator. */
+    private int applicableCountUpTo(int index) {
+        int count = 0;
+        for (int i = 0; i <= index && i < FLAGGED.size(); i++) {
+            if (FLAGGED.get(i).applicable.test(uiContext)) count++;
+        }
+        return count;
+    }
+
     /**
      * A flagged step is "satisfied" (skipped by the wizard flow) when:
      * - it's not applicable to this board, OR
@@ -408,7 +426,7 @@ public class WizardContainer extends JPanel {
         if (totalSteps == 1) {
             stepLabel.setText(title);
         } else {
-            stepLabel.setText("Step " + (index + 1) + " of " + totalSteps + ": " + title);
+            stepLabel.setText("Step " + applicableCountUpTo(index) + " of " + applicableFlaggedCount() + ": " + title);
         }
         CardLayout cl = (CardLayout) stepContentPanel.getLayout();
         cl.show(stepContentPanel, "step" + index);
