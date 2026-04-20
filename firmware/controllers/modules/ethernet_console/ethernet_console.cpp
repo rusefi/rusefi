@@ -23,6 +23,11 @@ static void do_connection() {
 	sockaddr_in remote;
 	socklen_t size = sizeof(remote);
 	connectionSocket = lwip_accept(listenerSocket, (sockaddr*)&remote, &size);
+
+	if (connectionSocket != -1) {
+		int one = 1;
+		lwip_setsockopt(connectionSocket, IPPROTO_TCP, TCP_NODELAY, &one, sizeof(one));
+	}
 }
 
 class EthernetChannel final : public TsChannelBase {
@@ -37,11 +42,39 @@ public:
 	}
 
 	void write(const uint8_t* buffer, size_t size, bool isEndOfPacket) override {
-		// If not the end of a packet, set the MSG_MORE flag to indicate to the transport
-		// that we have more to add to the buffer before queuing a flush.
-		auto flags = isEndOfPacket ? 0 : MSG_MORE;
-		lwip_send(connectionSocket, buffer, size, flags);
+		// lwIP's MSG_MORE only sets PSH, it does not coalesce sends.  Buffer locally so
+		// multi-part TS responses (header + body + tail) leave as a single TCP segment.
+		// Without this, small leading writes trigger delayed-ACK + Nagle on the peer
+		// pair and add ~40 ms per transaction.
+		size_t remaining = size;
+		const uint8_t* src = buffer;
+		while (remaining > 0) {
+			size_t free = sizeof(txBuffer) - txPos;
+			size_t chunk = remaining < free ? remaining : free;
+			memcpy(txBuffer + txPos, src, chunk);
+			txPos += chunk;
+			src += chunk;
+			remaining -= chunk;
+			if (txPos == sizeof(txBuffer)) {
+				flush();
+			}
+		}
+		if (isEndOfPacket) {
+			flush();
+		}
 	}
+
+	void flush() override {
+		if (txPos > 0) {
+			lwip_send(connectionSocket, txBuffer, txPos, 0);
+			txPos = 0;
+		}
+	}
+
+private:
+	uint8_t txBuffer[1536];
+	size_t txPos = 0;
+public:
 
 	size_t readTimeout(uint8_t* buffer, size_t size, int /*timeout*/) override {
 		auto result = lwip_recv(connectionSocket, buffer, size, /*flags =*/ 0);
