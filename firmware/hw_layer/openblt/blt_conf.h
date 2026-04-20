@@ -121,11 +121,19 @@
 /** only USB supported, this is ignored but required */
 #define BOOT_COM_RS232_CHANNEL_INDEX 0
 
+/** TODO: fix include mess and delete following hacks */
+#ifndef TRUE
+#define TRUE	(1)
+#endif
+#ifndef FALSE
+#define FALSE	(0)
+#endif
+
 #ifndef EFI_ETHERNET
 #define EFI_ETHERNET FALSE
 #endif
 
-#if (EFI_ETHERNET == TRUE)
+#if (EFI_ETHERNET)
 /* The NET communication interface for firmware updates via TCP/IP is selected by setting
  * the BOOT_COM_NET_ENABLE configurable to 1. The maximum amount of data bytes in a
  * message for data transmission and reception is set through BOOT_COM_NET_TX_MAX_DATA
