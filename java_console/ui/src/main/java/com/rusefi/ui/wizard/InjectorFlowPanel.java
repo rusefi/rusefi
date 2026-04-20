@@ -3,18 +3,18 @@ package com.rusefi.ui.wizard;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
+import com.opensr5.ConfigurationImageMetaVersion0_0;
+import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.VariableRegistryValues;
-import com.rusefi.io.IoStream;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -28,12 +28,12 @@ public class InjectorFlowPanel extends AbstractWizardStep {
     private static final String UNITS_CC_MIN = "cc/min";
 
     /**
-     * cmd_preset_injector_preset: TS_IO_TEST_COMMAND + TS_BOARD_ACTION (u16 BE) + BOARD_ACTION_INJECTOR_PRESET (u16 BE).
-     * ECU reads the target injector from the {@code hardcoded_injectors} config field, so upload must precede this.
+     * cmd_preset_injector_preset payload: TS_BOARD_ACTION (u16 BE) + BOARD_ACTION_INJECTOR_PRESET (u16 BE).
+     * Sent via {@link BinaryProtocol#executeCommand} with opcode TS_IO_TEST_COMMAND; the ECU reads the
+     * target injector from the {@code hardcoded_injectors} config field, so upload must precede this.
      * Do not mutate: shared immutable payload.
      */
-    private static final byte[] CMD_PRESET_INJECTOR_PRESET = ByteBuffer.allocate(5)
-        .put((byte) Integration.TS_IO_TEST_COMMAND)
+    private static final byte[] CMD_PRESET_INJECTOR_PAYLOAD = ByteBuffer.allocate(4)
         .putShort((short) VariableRegistryValues.ts_command_e_TS_BOARD_ACTION)
         .putShort((short) VariableRegistryValues.BOARD_ACTION_INJECTOR_PRESET)
         .array();
@@ -160,10 +160,11 @@ public class InjectorFlowPanel extends AbstractWizardStep {
             );
 
             // Queue the preset-apply command after fireCompleted's upload+burn so the ECU reads
-            // the just-written hardcoded_injectors value.
+            // the just-written hardcoded_injectors value. The preset handler mutates ECU config,
+            // so we re-read the image afterward to avoid a later wizard save clobbering it.
             BinaryProtocol bp = cfg.bp;
             fireCompleted(new WizardStepResult(modified));
-            uiContext.getLinkManager().submit(() -> sendPresetInjectorCmd(bp, selected.toString()));
+            uiContext.getLinkManager().submit(() -> sendPresetAndReload(bp, selected.toString()));
             return;
         } else if (flowTextField != null) {
             String flowText = flowTextField.getText().trim();
@@ -182,16 +183,31 @@ public class InjectorFlowPanel extends AbstractWizardStep {
         fireCompleted(new WizardStepResult(modified));
     }
 
-    private void sendPresetInjectorCmd(BinaryProtocol bp, String injectorName) {
-        IoStream stream = bp.getStream();
-        synchronized (stream.getIoLock()) {
-            try {
-                stream.sendPacket(CMD_PRESET_INJECTOR_PRESET);
-                log.info("cmd_preset_injector_preset sent for " + injectorName);
-            } catch (IOException e) {
-                log.error("Failed to send cmd_preset_injector_preset", e);
-            }
+    private void sendPresetAndReload(BinaryProtocol bp, String injectorName) {
+        byte[] response = bp.executeCommand(
+            Integration.TS_IO_TEST_COMMAND,
+            CMD_PRESET_INJECTOR_PAYLOAD,
+            "preset injector " + injectorName);
+
+        if (response == null) {
+            log.error("cmd_preset_injector_preset failed for " + injectorName);
+            return;
         }
+
+        log.info("cmd_preset_injector_preset sent for " + injectorName + ", re-reading config");
+
+        IniFileModel iniFile = bp.getIniFileNullable();
+        if (iniFile == null) {
+            return;
+        }
+        ConfigurationImageMetaVersion0_0 meta = ConfigurationImageMetaVersion0_0.getMeta(iniFile);
+        ConfigurationImageWithMeta imageWithMeta = bp.readFullImageFromController(meta);
+        if (imageWithMeta.isEmpty()) {
+            log.warn("readFullImageFromController returned empty; config not refreshed");
+            return;
+        }
+        bp.setConfigurationImage(imageWithMeta.getConfigurationImage());
+        log.info("Config refreshed after preset injector");
     }
 
     @Override
