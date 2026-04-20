@@ -40,14 +40,14 @@ public class WizardCatalog {
         new WizardStepDescriptor(
             "wizardMapSensorType",
             true,
-            WizardStepDescriptor.ALWAYS,
+            NOT_HD81,
             null,
             null
         ),
         new WizardStepDescriptor(
             "wizardCrankTrigger",
             true,
-            WizardStepDescriptor.ALWAYS,
+            NOT_HD81,
             null,
             null
         ),
