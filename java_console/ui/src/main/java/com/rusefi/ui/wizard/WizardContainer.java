@@ -60,6 +60,7 @@ public class WizardContainer extends JPanel {
 
         // Debug panel at the bottom showing wizard flag states
         buildDebugPanel();
+        debugPanel.setVisible(false);
         add(debugPanel, BorderLayout.SOUTH);
     }
 
@@ -161,7 +162,8 @@ public class WizardContainer extends JPanel {
         currentStepIndex = 0;
         totalSteps = TOTAL_STEPS;
         onAllStepsComplete = this::showCompletionCard;
-        debugPanel.setVisible(true);
+        // uncomment to show the debug panel; we need it to reset the flags on local env
+        // debugPanel.setVisible(true);
         steps.clear();
         stepContentPanel.removeAll();
 
