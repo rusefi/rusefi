@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -76,17 +77,9 @@ public class TuneManifestHelper {
         InputStream err = connection.getErrorStream();
         if (err == null)
             return "";
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(err))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            int maxChars = 500;
-            while ((line = reader.readLine()) != null && sb.length() < maxChars) {
-                sb.append(line).append(' ');
-            }
-            String s = sb.toString().trim();
-            return s.length() > maxChars ? s.substring(0, maxChars) + "..." : s;
-        } catch (IOException ignored) {
-            return "";
+        try (Scanner scanner = new Scanner(err).useDelimiter("\\A")) {
+            String body = scanner.hasNext() ? scanner.next().trim() : "";
+            return body.length() > 500 ? body.substring(0, 500) + "..." : body;
         }
     }
 
