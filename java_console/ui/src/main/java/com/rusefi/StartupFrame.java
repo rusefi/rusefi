@@ -7,10 +7,17 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.*;
 import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
+import com.rusefi.ui.UIContext;
+import com.rusefi.ui.wizard.WizardCatalog;
+import com.rusefi.ui.wizard.WizardContainer;
+import com.rusefi.ui.wizard.WizardStep;
+import com.rusefi.ui.wizard.WizardStepDescriptor;
 import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
@@ -106,8 +113,21 @@ public class StartupFrame {
     private StatusAnimation firmwareTabStatus;
     private JTabbedPane outerTabs;
 
-    public StartupFrame(ConnectivityContext connectivityContext) {
+    private final UIContext uiContext;
+    private final JPanel rootContent = new JPanel(new CardLayout());
+    private WizardContainer wizardContainer;
+    private PortResult autoConnectedPort;
+    private Thread autoConnectThread;
+    private ConnectionStatusLogic.Listener splashListener;
+
+    public StartupFrame(ConnectivityContext connectivityContext, UIContext uiContext) {
         this.connectivityContext = connectivityContext;
+        this.uiContext = uiContext;
+        // Firmware-update and tune operations open the serial port themselves via a fresh
+        // LinkManager. If our splash auto-connect is holding the same port, they'd deadlock on
+        // "Connecting...". Release the splash connection just before any job starts so the port
+        // is free for the exclusive operation.
+        asyncJobExecutor.addOnJobAboutToStartListener(this::releaseSplashConnection);
         String title = UiProperties.getWhiteLabel() + " console " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
@@ -123,6 +143,10 @@ public class StartupFrame {
             @Override
             public void windowClosed(WindowEvent ev) {
                 if (!isProceeding) {
+                    if (autoConnectedPort != null) {
+                        // Splash owned the connection and we're not handing off — release it.
+                        uiContext.getLinkManager().close();
+                    }
                     saveTabIndex();
                     getConfig().save();
                     log.info("Configuration saved.");
@@ -331,9 +355,16 @@ public class StartupFrame {
             msg -> firmwareUpdateTab.getBasicUpdaterPanel().updateStatus(msg),
             SCANNING_PORTS);
 
-        TunerStudioHelper.checkTunerStudio(frame.getContentPane(), () -> restoreContent(outerTabs));
+        wizardContainer = new WizardContainer(uiContext, /*compact=*/true);
+        wizardContainer.setOnWizardExit(() -> {
+            showCard("startup");
+        });
+        rootContent.add(outerTabs, "startup");
+        rootContent.add(wizardContainer, "wizard");
 
-        frame.add(outerTabs);
+        TunerStudioHelper.checkTunerStudio(frame.getContentPane(), () -> restoreContent(rootContent));
+
+        frame.add(rootContent);
         frame.pack();
         setFrameIcon(frame);
         log.info("setVisible");
@@ -426,18 +457,12 @@ public class StartupFrame {
 
     private void applyKnownPorts(AvailableHardware currentHardware) {
         List<PortResult> ports = currentHardware.getKnownPorts();
-/*
-todo: enable auto-connect once we have 'Device' tab
-        List<PortResult> ecuPorts = ports.stream().filter(portResult -> portResult.type == EcuWithOpenblt || portResult.type == SerialPortType.Ecu).collect(Collectors.toList());
-        if (!ecuPorts.isEmpty() && firstTimeAutoConnect) {
-            firstTimeAutoConnect = false;
-            PortResult target = ecuPorts.get(0);
-            log.info("Ecu detected, connecting automatically: " + target);
-            // combo box selection is already updated by applyPortSelectionToUIcontrol
-            connect(target);
+        // Once auto-connect is in flight (or succeeded), the splash-connect flow owns the Connect
+        // tab's UI state — skip re-rendering so we don't stomp on the "Connecting..."/"Connected to X"
+        // label and re-enable a disabled combo.
+        if (autoConnectedPort != null) {
             return;
         }
-*/
         log.info("Rendering available ports: " + ports);
         connectPanel.setVisible(!ports.isEmpty());
 
@@ -460,6 +485,18 @@ todo: enable auto-connect once we have 'Device' tab
         }
 
         AutoupdateUtil.trueLayoutAndRepaint(connectPanel);
+
+        // Kick off auto-connect last — combo is already populated, so if this fails and we revert
+        // to manual mode, the user has options to pick from without waiting for another scan event.
+        List<PortResult> ecuPorts = ports.stream()
+            .filter(p -> p.type == SerialPortType.Ecu || p.type == EcuWithOpenblt)
+            .collect(Collectors.toList());
+        if (ecuPorts.size() == 1 && firstTimeAutoConnect && shouldAutoConnect()) {
+            firstTimeAutoConnect = false;
+            PortResult target = ecuPorts.get(0);
+            log.info("Single ECU detected, auto-connecting in background: " + target);
+            autoConnect(target);
+        }
     }
 
     public static void setFrameIcon(Frame frame) {
@@ -477,8 +514,159 @@ todo: enable auto-connect once we have 'Device' tab
     }
 
     private void connect(PortResult selectedPort) {
+        boolean alreadyConnected = isAutoConnected(selectedPort);
+        // Splash started LinkManager but the live connection dropped (ECU reboot, cable yank)
+        // before the user clicked Connect. Reset it so ConsoleUI's start() can set a fresh connector
+        // without tripping the "Already started" guard.
+        if (!alreadyConnected && autoConnectedPort != null) {
+            uiContext.getLinkManager().close();
+        }
         disposeFrameAndProceed();
-        new ConsoleUI(selectedPort.port, selectedPort.type);
+        new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected);
+    }
+
+    /**
+     * True when the splash already established a connection to {@code target} via {@link #autoConnect}.
+     * In that case, the handoff to {@link ConsoleUI} must not re-start the {@link LinkManager}.
+     */
+    private boolean isAutoConnected(PortResult target) {
+        return autoConnectedPort != null
+            && target != null
+            && autoConnectedPort.port.equals(target.port)
+            && ConnectionStatusLogic.INSTANCE.isConnected();
+    }
+
+    /**
+     * Auto-connect is permitted as long as no firmware-update job is in flight. The Connect tab
+     * may not be visible yet — the scanner only fires {@code onChange} on hardware-list changes,
+     * so gating on the current tab would silently disable auto-connect for users who saved a
+     * different startup tab last session.
+     */
+    private boolean shouldAutoConnect() {
+        return asyncJobExecutor.isNotInProgress();
+    }
+
+    private void autoConnect(PortResult target) {
+        autoConnectedPort = target;
+        connectButton.setEnabled(false);
+        connectButton.setText("Connecting...");
+        portsComboBox.getComboPorts().setEnabled(false);
+        noPortsMessage.setText("Connecting to " + target.port + "…");
+        noPortsMessage.setForeground(Color.darkGray);
+        noPortsMessage.setVisible(true);
+
+        splashListener = new ConnectionStatusLogic.Listener() {
+            @Override
+            public void onConnectionStatus(boolean isConnected) {
+                if (!isConnected) return;
+                SwingUtilities.invokeLater(() -> {
+                    if (!ConnectionStatusLogic.INSTANCE.isConnected()) return;
+                    if (uiContext.getBinaryProtocol() == null) return;
+                    if (uiContext.getBinaryProtocol().getControllerConfiguration() == null) return;
+                    onSplashConnected(target);
+                });
+            }
+
+            @Override
+            public void onConnectionFailed(String msg) {
+                SwingUtilities.invokeLater(() -> onSplashConnectFailed(msg));
+            }
+        };
+        ConnectionStatusLogic.INSTANCE.addListener(splashListener);
+
+        autoConnectThread = new NamedThreadFactory("splash-connect").newThread(
+            () -> uiContext.getLinkManager().startAndConnect(target.port, splashListener));
+        autoConnectThread.start();
+    }
+
+    /**
+     * Flip the root {@link CardLayout} and resize the frame to the active card's preferred size.
+     * Without per-card packing, CardLayout reports the max of all children, leaving empty
+     * horizontal margins around the narrower wizard content.
+     */
+    private void showCard(String name) {
+        CardLayout cl = (CardLayout) rootContent.getLayout();
+        cl.show(rootContent, name);
+        Component active = null;
+        for (Component c : rootContent.getComponents()) {
+            if (c.isVisible()) {
+                active = c;
+                break;
+            }
+        }
+        if (active != null) {
+            rootContent.setPreferredSize(active.getPreferredSize());
+        }
+        frame.pack();
+    }
+
+    private void onSplashConnected(PortResult target) {
+        if (autoConnectedPort == null || !autoConnectedPort.port.equals(target.port)) {
+            // User cancelled or moved on — ignore the late event.
+            return;
+        }
+        connectButton.setText("Connect");
+        connectButton.setEnabled(true);
+        portsComboBox.getComboPorts().setEnabled(true);
+        noPortsMessage.setForeground(Color.darkGray);
+        noPortsMessage.setText("Connected to " + target.port + " — click Connect to open console");
+        noPortsMessage.setVisible(true);
+
+        // Check standalone wizard catalog for any step that needs attention on this ECU.
+        for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
+            if (!d.applicable.test(uiContext)) continue;
+            if (d.needsAttention == null || !d.needsAttention.test(uiContext)) continue;
+            WizardStep step = d.factory.apply(uiContext);
+            wizardContainer.startSingleStep(step);
+            showCard("wizard");
+            return;
+        }
+        // No wizard needed — stay on splash, user can click Connect to open the full console.
+    }
+
+    /**
+     * Tear down the splash-initiated connection so the port is released. Called when a firmware
+     * update or tune operation is about to start (it opens the port via its own LinkManager).
+     * After this runs, the splash goes back to "manual Connect" behaviour for the session —
+     * we intentionally do not re-arm {@code firstTimeAutoConnect}.
+     */
+    private void releaseSplashConnection() {
+        if (autoConnectedPort == null) return;
+        log.info("Releasing splash auto-connection before async job");
+        if (splashListener != null) {
+            ConnectionStatusLogic.INSTANCE.removeListener(splashListener);
+            splashListener = null;
+        }
+        uiContext.getLinkManager().close();
+        autoConnectedPort = null;
+        autoConnectThread = null;
+        // Reset UI on the Connect tab so the user sees a normal state after the job finishes.
+        SwingUtilities.invokeLater(() -> {
+            connectButton.setText("Connect");
+            connectButton.setEnabled(true);
+            portsComboBox.getComboPorts().setEnabled(true);
+            noPortsMessage.setForeground(Color.darkGray);
+            noPortsMessage.setText("");
+            noPortsMessage.setVisible(false);
+        });
+    }
+
+    private void onSplashConnectFailed(String msg) {
+        log.warn("Splash auto-connect failed: " + msg);
+        // Per design: keep auto-connect gate closed for the rest of the session.
+        uiContext.getLinkManager().close();
+        if (splashListener != null) {
+            ConnectionStatusLogic.INSTANCE.removeListener(splashListener);
+            splashListener = null;
+        }
+        autoConnectedPort = null;
+        autoConnectThread = null;
+        connectButton.setEnabled(true);
+        connectButton.setText("Connect");
+        portsComboBox.getComboPorts().setEnabled(true);
+        noPortsMessage.setForeground(Color.red);
+        noPortsMessage.setText("Auto-connect failed: " + msg);
+        noPortsMessage.setVisible(true);
     }
 
     /**
@@ -536,6 +724,12 @@ todo: enable auto-connect once we have 'Device' tab
 
     public void disposeFrameAndProceed() {
         isProceeding = true;
+        // Detach the splash-scoped connection listener so it doesn't keep mutating this disposed
+        // frame's widgets when ConsoleUI (or a reconnect) fires ConnectionStatusLogic events.
+        if (splashListener != null) {
+            ConnectionStatusLogic.INSTANCE.removeListener(splashListener);
+            splashListener = null;
+        }
         saveTabIndex();
         getConfig().save();
         frame.dispose();

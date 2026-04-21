@@ -65,8 +65,24 @@ public class CalibrationsHelper {
         waitForPredicate(
             String.format("Waiting for %s port to appear...", desiredPortType),
             () -> {
-                foundPorts.addAll(connectivityContext.getCurrentHardware().getKnownPorts(desiredPortType));
-                return !foundPorts.isEmpty();
+                final List<PortResult> knownPorts = connectivityContext.getCurrentHardware().getKnownPorts();
+                foundPorts.addAll(knownPorts.stream()
+                    .filter(p -> p.type == desiredPortType)
+                    .collect(Collectors.toList()));
+                if (!foundPorts.isEmpty()) {
+                    return true;
+                }
+                // Post-flash the scanner can probe the port while the ECU firmware is still
+                // booting and classify it as Unknown (or stale EcuWithOpenblt from before the
+                // reboot). The cache is otherwise sticky until the OS port disappears — force
+                // a re-probe by invalidating non-matching classifications so the scanner's
+                // next cycle re-inspects.
+                for (PortResult p : knownPorts) {
+                    if (p.type != desiredPortType) {
+                        connectivityContext.getSerialPortScanner().invalidatePort(p.port);
+                    }
+                }
+                return false;
             },
             callbacks
         );
