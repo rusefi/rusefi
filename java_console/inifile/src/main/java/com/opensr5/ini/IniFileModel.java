@@ -15,6 +15,7 @@ public interface IniFileModel {
 
     Map<String, List<String>> getDefines();
 
+    // [Constants]
     // todo: rename to 'getPrimaryPageIniFields()'?
     Map<String, IniField> getAllIniFields();
 
@@ -27,6 +28,7 @@ public interface IniFileModel {
     @Deprecated // always use 'Field' generated parameter with code-generated name?
     IniField getIniField(String key);
 
+    // [OutputChannels]
     IniField getOutputChannel(String key) throws IniMemberNotFound;
 
     Map<String, IniField> getAllOutputChannels();
