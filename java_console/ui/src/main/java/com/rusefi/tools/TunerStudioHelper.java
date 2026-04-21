@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 /**
  * see TsHelper
  */
-public class TsHelper {
+public class TunerStudioHelper {
     private static final String FIND_TS_PROCESS = "Get-Process | Where-Object {$_.MainWindowTitle -like \\\"*TunerStudio*\\\"}";
 
     public static NamedThreadFactory factory = new NamedThreadFactory("TSScanner");
