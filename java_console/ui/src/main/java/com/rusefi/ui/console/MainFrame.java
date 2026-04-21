@@ -81,32 +81,44 @@ public class MainFrame {
         }));
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
-        linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStatusLogic.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {}
+        BinaryProtocol existingBp = linkManager.getBinaryProtocol();
+        boolean alreadyConnected = existingBp != null && existingBp.getControllerConfiguration() != null;
+        if (alreadyConnected) {
+            // Splash already did connectAndReadConfiguration. Running it again would re-open the
+            // already-open serial port and fail. Run only the post-connect setup here.
+            ConnectionWatchdog.init(linkManager);
+            SwingUtilities.invokeLater(() -> {
+                tabbedPane.logsManager.showContent();
+                new BinaryProtocolServer().start(linkManager);
+            });
+        } else {
+            linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStatusLogic.Listener() {
+                @Override
+                public void onConnectionStatus(boolean isConnected) {}
 
-            @Override
-            public void onConnectionFailed(String errorMessage) {
-                log.error("onConnectionFailed " + errorMessage);
-                SwingUtilities.invokeLater(() -> showConnectionFailedDialog(errorMessage));
-            }
+                @Override
+                public void onConnectionFailed(String errorMessage) {
+                    log.error("onConnectionFailed " + errorMessage);
+                    SwingUtilities.invokeLater(() -> showConnectionFailedDialog(errorMessage));
+                }
 
-            @Override
-            public void onConnectionEstablished() {
-                ConnectionWatchdog.init(linkManager);
+                @Override
+                public void onConnectionEstablished() {
+                    ConnectionWatchdog.init(linkManager);
 
-                SwingUtilities.invokeLater(() -> {
+                    SwingUtilities.invokeLater(() -> {
 //                    tabbedPane.settingsTab.showContent(linkManager);
-                    tabbedPane.logsManager.showContent();
-                    /**
-                     * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server
-                     * before launching new instance
-                     */
-                    new BinaryProtocolServer().start(linkManager);
-                });
+                        tabbedPane.logsManager.showContent();
+                        /**
+                         * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server
+                         * before launching new instance
+                         */
+                        new BinaryProtocolServer().start(linkManager);
+                    });
 
-            }
-        });
+                }
+            });
+        }
 
         consoleUI.uiContext.getLinkManager().getEngineState().registerStringValueAction(Integration.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
             @Override
