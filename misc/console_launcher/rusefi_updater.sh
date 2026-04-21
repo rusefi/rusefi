@@ -1,3 +1,4 @@
 #!/bin/sh
 
-java -jar ./console/rusefi_console.jar
+cd "$(dirname "$0")/console"
+java -jar ./rusefi_console.jar
