@@ -39,6 +39,15 @@ public class WizardContainer extends JPanel {
     private int selectedCylinders = 4; // default, updated by step 0
 
     public WizardContainer(UIContext uiContext) {
+        this(uiContext, false);
+    }
+
+    /**
+     * @param compact when {@code true}, skips the oversized header fonts/buttons so the wizard
+     *                fits inside a modest host frame (e.g. the splash screen). Use {@code false}
+     *                for the fullscreen-console experience.
+     */
+    public WizardContainer(UIContext uiContext, boolean compact) {
         super(new BorderLayout());
         this.uiContext = uiContext;
 
@@ -46,11 +55,11 @@ public class WizardContainer extends JPanel {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        scaleComponent(stepLabel, 1.5f);
+        if (!compact) scaleComponent(stepLabel, 1.5f);
         headerPanel.add(stepLabel, BorderLayout.CENTER);
 
         JButton cancelButton = new JButton("Exit Wizard");
-        scaleComponent(cancelButton, 1.5f);
+        if (!compact) scaleComponent(cancelButton, 1.5f);
         cancelButton.addActionListener(e -> exitWizard());
         headerPanel.add(cancelButton, BorderLayout.EAST);
 
