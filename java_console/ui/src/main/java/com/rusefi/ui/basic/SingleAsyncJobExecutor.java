@@ -13,6 +13,7 @@ public class SingleAsyncJobExecutor {
     private final UpdateOperationCallbacks updateOperationCallbacks;
 
     private final java.util.List<Runnable> onJobInProgressFinished = new ArrayList<>();
+    private final java.util.List<Runnable> onJobAboutToStart = new ArrayList<>();
 
     private volatile Optional<AsyncJob> jobInProgress = Optional.empty();
 
@@ -26,9 +27,20 @@ public class SingleAsyncJobExecutor {
         onJobInProgressFinished.add(listener);
     }
 
+    /**
+     * Runs before a new job is handed off to the executor. Use this to release resources the job
+     * will need exclusive access to (e.g. close a live serial connection so the firmware updater
+     * can open the same port).
+     */
+    public void addOnJobAboutToStartListener(Runnable listener) {
+        onJobAboutToStart.add(listener);
+    }
+
     public void startJob(final AsyncJob job, final Component parent) {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
+            for (Runnable listener : onJobAboutToStart)
+                listener.run();
             updateOperationCallbacks.clear();
             AsyncJobExecutor.INSTANCE.executeJob(job, updateOperationCallbacks, this::handleJobInProgressFinished);
         } else {
