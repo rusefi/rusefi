@@ -65,7 +65,7 @@ public class ConsoleUI {
     private final TabbedPanel tabbedPane;
     private final String port;
 
-    public final UIContext uiContext = new UIContext();
+    public final UIContext uiContext;
 
     /**
      * We can listen to tab activation event if we so desire
@@ -73,6 +73,11 @@ public class ConsoleUI {
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public ConsoleUI(String port, SerialPortType serialPortType) {
+        this(new UIContext(), port, serialPortType, false);
+    }
+
+    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected) {
+        this.uiContext = uiContext;
         LinkManager linkManager = uiContext.getLinkManager();
 
         CommandQueue.ERROR_HANDLER = e -> {
@@ -139,8 +144,10 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
-        // todo: this blocking IO operation should NOT be happening on the UI thread
-        linkManager.start(port, mainFrame.listener);
+        if (!alreadyConnected) {
+            // todo: this blocking IO operation should NOT be happening on the UI thread
+            linkManager.start(port, mainFrame.listener);
+        }
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
         if (!LinkManager.isLogViewerMode(port))
@@ -320,7 +327,7 @@ console live data tab is broken #8402
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                StartupFrame startupFrame = new StartupFrame(ConnectivityContext.INSTANCE);
+                StartupFrame startupFrame = new StartupFrame(ConnectivityContext.INSTANCE, new UIContext());
                 if (bannerCallback != null)
                     bannerCallback.set(startupFrame::showUpdateBanner);
                 startupFrame.showUi();

@@ -15,6 +15,8 @@ PCHSUB = unit_tests
 include $(PROJECT_DIR)/rusefi_rules.mk
 
 # User may want to pass in a forced value for SANITIZE
+# SANITIZE=yes enables AddressSanitizer (ASan) which is incompatible with Valgrind.
+# If you want to run Valgrind, you must use SANITIZE=no.
 ifeq ($(SANITIZE),)
 	ifneq ($(OS),Windows_NT)
 		SANITIZE = yes

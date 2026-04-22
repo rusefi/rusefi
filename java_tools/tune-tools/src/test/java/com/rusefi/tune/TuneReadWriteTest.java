@@ -73,7 +73,17 @@ public class TuneReadWriteTest {
         ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE).getConfigurationImage();
 
         int mismatchCounter = compareImages(tsBinaryData, fileBinaryData, model);
+        // Mismatches:
+        assertMismatch(tsBinaryData, fileBinaryData, 324, "hip9011PrescalerAndSDO");
+        assertMismatch(tsBinaryData, fileBinaryData, 1506, "knockDetectionWindowEnd");
+        assertMismatch(tsBinaryData, fileBinaryData, 1507, "knockDetectionWindowEnd");
+
         assertEquals(3, mismatchCounter);
+    }
+
+    private void assertMismatch(ConfigurationImage tsBinaryData, ConfigurationImage fileBinaryData, int offset, String fieldName) {
+        assertEquals(fieldName, model.findByOffset(offset).getName());
+        assertNotEquals(tsBinaryData.getContent()[offset], fileBinaryData.getContent()[offset]);
     }
 
     @Test

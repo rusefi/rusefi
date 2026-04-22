@@ -171,8 +171,12 @@ public enum SerialPortScanner {
         boolean stLinkConnected;
         boolean PCANConnected;
 
-        final Set<String> serialPorts = LinkManager.getCommPorts();
-        log.info("getCommPorts: " + serialPorts);
+        // ttyS* are legacy motherboard UARTs on Linux — never a rusEFI ECU and they stall
+        // the binary protocol handshake for seconds.  Drop them before the scan pipeline.
+        final Set<String> serialPorts = LinkManager.getCommPorts().stream()
+            .filter(name -> !name.startsWith("ttyS"))
+            .collect(Collectors.toCollection(TreeSet::new));
+        log.info("getCommPorts (filtered): " + serialPorts);
 
         List<String> portsToInspect = new ArrayList<>();
 

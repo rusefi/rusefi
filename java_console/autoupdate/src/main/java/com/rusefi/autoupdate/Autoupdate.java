@@ -364,7 +364,7 @@ public class Autoupdate {
     }
 
     /**
-     * rusefi_console.exe/invokes rusefi_console.jar - entry point is Launcher#main
+     * rusefi_updater.exe/invokes rusefi_console.jar - entry point is Launcher#main
      */
     private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
         if (!Files.exists(Paths.get(consoleExeFileName))) {

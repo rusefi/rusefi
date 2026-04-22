@@ -168,8 +168,13 @@ public class BinaryProtocol {
 
     @Nullable
     public static String getSignature(IoStream stream) throws IOException {
+        // Drop bytes that arrived between port open and now
+        IncomingDataBuffer buffer = stream.getDataBuffer();
+        if (buffer.getPendingCount() > 0) {
+            buffer.dropPending();
+        }
         HelloCommand.send(stream);
-        return HelloCommand.getHelloResponse(stream.getDataBuffer());
+        return HelloCommand.getHelloResponse(buffer);
     }
 
     /**

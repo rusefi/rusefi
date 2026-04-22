@@ -70,7 +70,18 @@
 
 #include "generated_lookup_meta.h"
 
-// Ensure that one TCP segment can always fit an entire response to TS - we never need to split a TS packet across multiple frames.
-#define TCP_MSS (BLOCKING_FACTOR + 10)
+// Full Ethernet MTU per TCP segment.  TS responses that exceed the MTU get split
+// across multiple segments; EthernetChannel coalesces its own multi-part writes
+// so this does not cause per-TS-frame fragmentation overhead.
+#define TCP_MSS 1460
+
+// Widen the send window and give lwIP a heap large enough to actually use it.
+// MEMP_NUM_TCP_SEG must be >= derived TCP_SND_QUEUELEN or the lwIP sanity check
+// will fail the build.  Costs ~30 KB static RAM on ethernet-enabled boards.
+#define TCP_SND_BUF         (8 * TCP_MSS)
+#define TCP_WND             (8 * TCP_MSS)
+#define TCP_SND_QUEUELEN    32
+#define MEMP_NUM_TCP_SEG    40
+#define MEM_SIZE            (24 * 1024)
 
 #endif /* LWIP_HDR_LWIPOPTS_H__ */

@@ -30,6 +30,8 @@ mkdir gcov
 
 echo -e "\nGenerating rusEFI unit test coverage"
 
+source ../coverage_common.sh
+
 # Run gcovr to collect coverage data and produce an HTML report.
 #   --exclude-throw-branches   : exclude branches caused by throw/catch from branch coverage
 #   --exclude-unreachable-branches : exclude compiler-generated unreachable branches
@@ -42,5 +44,5 @@ echo -e "\nGenerating rusEFI unit test coverage"
 #
 # For debug use --html-details --html-single-page --verbose to generate a single html
 gcovr --exclude-throw-branches --exclude-unreachable-branches --decisions --merge-mode-functions=separate \
-      --exclude '/.*/googletest/' \
+      $GCOVR_EXCLUDES \
       -j4  -r ../.. --html-nested gcov/index.html

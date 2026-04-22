@@ -52,6 +52,8 @@ PCHSUB = simulator
 # used by USE_SMART_BUILD
 CONFDIR = .
 
+# SANITIZE=yes enables AddressSanitizer (ASan) which is incompatible with Valgrind.
+# If you want to run Valgrind, you must use SANITIZE=no.
 ifeq ($(IS_WIN),yes)
   SANITIZE = no
 else

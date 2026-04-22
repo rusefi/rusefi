@@ -47,3 +47,11 @@ artifacts
 
 .cache/
 *.idx
+
+# unit tests
+bean_encoder_test.csv
+
+# gcov local
+venv/
+coverage_reports/
+

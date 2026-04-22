@@ -106,4 +106,12 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     public void setStatus(String status) {
         bottomStatusLabel.setText(status);
     }
+
+    public String getLogText() {
+        return logTextArea.getText();
+    }
+
+    public boolean isInErrorState() {
+        return LIGHT_RED.equals(logTextArea.getBackground());
+    }
 }

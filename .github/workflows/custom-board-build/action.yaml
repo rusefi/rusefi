@@ -212,7 +212,7 @@ runs:
       with:
         release: '14.2.Rel1'
 
-    - uses: ./.github/actions/setup-java
+    - uses: rusefi/rusefi/.github/actions/setup-java@master
 
     - name: Test Compiler
       shell: bash

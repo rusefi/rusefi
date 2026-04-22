@@ -5,7 +5,6 @@ import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
@@ -13,41 +12,34 @@ import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * Wizard step that edits one or more INI fields generically.
  * Supports string/scalar fields (JTextField) and enum fields (JComboBox).
  * Arrays are not supported.
  */
-public class GenericFieldsPanel implements WizardStep {
-    private static final String INVALID_SENTINEL = "INVALID";
+public class GenericFieldsPanel extends AbstractWizardStep {
 
     private final UIContext uiContext;
-    private final String title;
     private final String description;
     private final List<String> fieldNames;
-    private final String wizardFlagFieldName; // may be null for one-off auto-launched panels
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final Map<String, JComponent> editors = new LinkedHashMap<>();
 
-    private Consumer<WizardStepResult> onStepCompleted;
-
     public GenericFieldsPanel(UIContext uiContext, String title, String description,
                               List<String> fieldNames, String wizardFlagFieldName) {
+        super(title, wizardFlagFieldName);
         this.uiContext = uiContext;
-        this.title = title;
         this.description = description;
         this.fieldNames = fieldNames;
-        this.wizardFlagFieldName = wizardFlagFieldName;
 
         buildUi();
         loadValues();
     }
 
     private void buildUi() {
-        JLabel titleLabel = new JLabel(title);
+        JLabel titleLabel = new JLabel(getTitle());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         scale(titleLabel, 2f);
@@ -119,16 +111,13 @@ public class GenericFieldsPanel implements WizardStep {
     }
 
     private void loadValues() {
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
-        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        if (bp == null || ini == null) return;
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (image == null) return;
+        WizardConfig cfg = WizardConfig.snapshot(uiContext);
+        if (cfg == null) return;
 
         for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
-            IniField field = ini.findIniField(entry.getKey()).orElse(null);
+            IniField field = cfg.ini.findIniField(entry.getKey()).orElse(null);
             if (field == null) continue;
-            String value = ConfigurationImageGetterSetter.getStringValue(field, image);
+            String value = ConfigurationImageGetterSetter.getStringValue(field, cfg.image);
             if (value == null) continue;
             String unquoted = stripQuotes(value);
             JComponent editor = entry.getValue();
@@ -149,17 +138,13 @@ public class GenericFieldsPanel implements WizardStep {
     }
 
     private void onSave() {
-        if (onStepCompleted == null) return;
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
-        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        if (bp == null || ini == null) return;
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (image == null) return;
+        WizardConfig cfg = WizardConfig.snapshot(uiContext);
+        if (cfg == null) return;
 
-        ConfigurationImage modified = image.clone();
+        ConfigurationImage modified = cfg.image.clone();
         for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
             String name = entry.getKey();
-            IniField field = ini.findIniField(name).orElse(null);
+            IniField field = cfg.ini.findIniField(name).orElse(null);
             if (field == null) continue;
             JComponent editor = entry.getValue();
 
@@ -171,7 +156,7 @@ public class GenericFieldsPanel implements WizardStep {
                 ConfigurationImageGetterSetter.setValue2(field, modified, name, ((JTextField) editor).getText());
             }
         }
-        onStepCompleted.accept(new WizardStepResult(modified));
+        fireCompleted(new WizardStepResult(modified));
     }
 
     /**
@@ -179,12 +164,9 @@ public class GenericFieldsPanel implements WizardStep {
      * Useful for "auto-launch if needs attention" gating.
      */
     public static boolean anyFieldEmpty(UIContext uiContext, List<String> fieldNames) {
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
-        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        if (bp == null || ini == null) return false;
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (image == null) return false;
-        return anyFieldEmpty(ini, image, fieldNames);
+        WizardConfig cfg = WizardConfig.snapshot(uiContext);
+        if (cfg == null) return false;
+        return anyFieldEmpty(cfg.ini, cfg.image, fieldNames);
     }
 
     /** Pure-data variant for testing / reuse outside a UIContext. */
@@ -201,34 +183,11 @@ public class GenericFieldsPanel implements WizardStep {
         return false;
     }
 
-    private static String stripQuotes(String value) {
-        if (value.length() >= 2 && value.startsWith("\"") && value.endsWith("\"")) {
-            return value.substring(1, value.length() - 1);
-        }
-        return value;
-    }
-
-    @Override
-    public String getTitle() { return title; }
-
     @Override
     public JComponent getPanel() { return content; }
 
     @Override
-    public String getWizardFlagFieldName() { return wizardFlagFieldName; }
-
-    @Override
-    public void setOnStepCompleted(Consumer<WizardStepResult> callback) {
-        this.onStepCompleted = callback;
-    }
-
-    @Override
     public void onShow() {
         loadValues();
-    }
-
-    private void scale(JComponent c, float factor) {
-        Font f = c.getFont();
-        c.setFont(f.deriveFont(f.getSize() * factor));
     }
 }

@@ -2175,7 +2175,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.04.19.hellenNA8_96.688372796"
+#define TS_SIGNATURE "rusEFI master.2026.04.22.hellenNA8_96.688372796"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
