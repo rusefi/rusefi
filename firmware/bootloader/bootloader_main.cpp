@@ -142,20 +142,23 @@ static blt_bool checkIfRebootIntoOpenBltRequested(void) {
 
 static blt_bool checkIfResetLoop(void) {
 	uint8_t wd_counter = 0;
+	SharedParamsReadByIndex(1, &wd_counter);
 	Reset_Cause_t resetCause = getMCUResetCause();
 	if ((resetCause == Reset_Cause_IWatchdog) ||
 		(resetCause == Reset_Cause_WWatchdog)) {
 		// One of watchdogs
-		SharedParamsReadByIndex(1, &wd_counter);
 		wd_counter++;
-		SharedParamsWriteByIndex(1, wd_counter);
 		wdReset = BLT_TRUE;
-	} else if ((resetCause == Reset_Cause_NRST_Pin) ||
-			   (resetCause == Reset_Cause_POR)) {
-		// power on or NRST reset
+	} else {
 		// cleat WD counter
-		SharedParamsWriteByIndex(1, wd_counter);
+		wd_counter = 0;
+		if ((resetCause == Reset_Cause_NRST_Pin) ||
+			(resetCause == Reset_Cause_POR)) {
+			// power on or NRST reset
+			// TODO: speed up first boot on POR?
+		}
 	}
+	SharedParamsWriteByIndex(1, wd_counter);
 
 	return (wd_counter > maxWdRebootCounter);
 }
