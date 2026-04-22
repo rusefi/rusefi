@@ -14,6 +14,9 @@ ifeq (,$(findstring EFI_BOOTLOADER,$(DDEFS)))
 	DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
 endif
 
+# Fix stuck in mac_lld_start() in main app
+DDEFS += -DSTM32_MAC_DISABLE_TX_FLUSH=TRUE
+
 # Both LWIP and uIP cause few shadow errors
 ALLOW_SHADOW = yes
 
