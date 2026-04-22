@@ -23,12 +23,15 @@ public class TsCreateProjectSandbox {
     public static void main(String[] args) throws Exception {
         // scan for ECU
         SerialAutoChecker.AutoDetectResult detect = PortDetector.autoDetectSerial(null);
-        String port = detect.getSerialPort();
-        String signature = detect.getSignature();
-        if (port == null || signature == null) {
+        if (detect.getSerialPort() == null || detect.getSignature() == null) {
             System.err.println("No ECU found");
             System.exit(1);
         }
+        // ECU signature comes out of the binary protocol zero-padded; a trailing null in
+        // project.properties makes TunerStudio declare the file "corrupt, no configuration options found".
+        String signature = detect.getSignature().replaceAll("\\p{Cntrl}", "").trim();
+        // On Linux PortDetector returns a bare tty name ("ttyACM0"); TS wants the full device path.
+        String port = normalizeSerialPort(detect.getSerialPort());
         System.out.println("Detected ECU at " + port + " signature=" + signature);
 
         // read calibrations + ini straight off the ECU
@@ -52,6 +55,11 @@ public class TsCreateProjectSandbox {
             System.exit(3);
         }
 
+        // TS projects always have these sibling dirs; empty dashboard/ is fine — TS generates dashboard.dash on first open.
+        for (String dir : new String[] {"dashboard", "DataLogs", "inc", "TuneView", "restorePoints"}) {
+            new File(projectPath + File.separator + dir).mkdirs();
+        }
+
         FileUtil.copyFile(sourceIniPath, projectPath + File.separator + TsHelper.MAIN_CONTROLLER_PATH);
         calibrations.generateMsq().writeXmlFile(projectPath + File.separator + TsHelper.CURRENT_TUNE_MSQ);
 
@@ -60,17 +68,30 @@ public class TsCreateProjectSandbox {
         projectProperties.setProperty("projectDescription", "");
         projectProperties.setProperty("ecuConfigFile", "mainController.ini");
         projectProperties.setProperty("ecuUid", ecuUidFrom(calibrations).toString());
-        projectProperties.setProperty("commPort", port);
-        projectProperties.setProperty("baudRate", "115200");
+        projectProperties.setProperty("ecuSettings", "");
         projectProperties.setProperty("firmwareDescription", signature);
+        projectProperties.setProperty("lastDisplayedTuneFile", "");
+        // Deliberately NOT setting dashBoardFile — TS tries to load that path literally. Without a
+        // pre-generated dashboard.dash (TS writes its own ~500KB one including embedded fonts),
+        // pointing at a missing file throws FileNotFoundException and TS shows "error loading
+        // default gauge cluster". Omitting the key makes TS fall back to its built-in default.
+        projectProperties.setProperty("useCommonDashboardDir", "false");
+        projectProperties.setProperty("useCommonTuneViewDir", "false");
+        projectProperties.setProperty("canId", "-1");
         projectProperties.setProperty("selectedComDriver", "Multi Interface MegaSquirt Driver");
+        projectProperties.setProperty("CommSettingCom Port", "COM1");
+        projectProperties.setProperty("CommSettingBaud Rate", "115200");
         projectProperties.setProperty("CommSettingMSCommDriver.controllerInterfaceId", "RS232 Serial Interface");
         projectProperties.setProperty("CommSettingMSCommDriver.RS232 Serial InterfaceCom Port", port);
         projectProperties.setProperty("CommSettingMSCommDriver.RS232 Serial InterfaceBaud Rate", "115200");
-        try (FileOutputStream fos = new FileOutputStream(
-            projectPath + File.separator + "projectCfg" + File.separator + "project.properties")) {
+        projectProperties.setProperty("CommSettingMSCommDriver.RS232 Serial InterfaceBluetooth Port", "false");
+        projectProperties.setProperty("CommSettingMSCommDriver.RS232 Serial Interface2nd Com Port", "");
+        String projectPropertiesPath = projectPath + File.separator + "projectCfg" + File.separator + "project.properties";
+        try (FileOutputStream fos = new FileOutputStream(projectPropertiesPath)) {
             projectProperties.store(fos, "rusEFI sandbox");
         }
+        // TS keeps a .bkup copy beside it; create the same content so the project doesn't look half-written.
+        FileUtil.copyFile(projectPropertiesPath, projectPropertiesPath + ".bkup");
 
         // make new project the "last project" — TS opens it on next launch
         Properties tsProperties = loadTsPropertiesOrEmpty();
@@ -85,6 +106,13 @@ public class TsCreateProjectSandbox {
         }
 
         System.out.println("Created TS project at " + projectPath);
+    }
+
+    private static String normalizeSerialPort(String port) {
+        if (port.startsWith("tty") && !port.contains("/")) {
+            return "/dev/" + port;
+        }
+        return port;
     }
 
     private static UUID ecuUidFrom(CalibrationsInfo calibrations) {
