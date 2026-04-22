@@ -46,6 +46,15 @@ PUBLIC_API_WEAK bool OpenBltIsBoardOk()
 	return true;
 }
 
+
+void efiSetLed(ioportid_t port, int pin, bool state) {
+#if (LED_PIN_MODE == OM_INVERTED)
+	palWritePad(port, pin, state);
+#else
+	palWritePad(port, pin, !state);
+#endif
+}
+
 class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
 protected:
 	void main(void) override {
@@ -91,20 +100,17 @@ protected:
 #endif // BOOTLOADER_DISABLE_GREEN_LED
 
 		if (yellowPort) {
-			palSetPad(yellowPort, yellowPin);
+			efiSetLed(yellowPort, yellowPin, 0);
 		}
 		if (bluePort) {
-			palSetPad(bluePort, bluePin);
+			efiSetLed(bluePort, bluePin, 0);
 		}
 		if (greenPort) {
-			palSetPad(greenPort, greenPin);
+			efiSetLed(greenPort, greenPin, 0);
 		}
 		if (redPort) {
-			if (wdReset) {
-				palClearPad(redPort, redPin);
-			} else {
-				palSetPad(redPort, redPin);
-			}
+			// Red is constantly on if WD
+			efiSetLed(redPort, redPin, wdReset);
 		}
 
 		while (true) {
