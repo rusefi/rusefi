@@ -1,5 +1,6 @@
 package com.rusefi.ts;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
@@ -13,31 +14,49 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.UUID;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Creates a TunerStudio project on disk from a live ECU's calibrations:
  *  - {@code ~/TunerStudioProjects/<projectName>/} directory scaffold
- *  - copies the ini as {@code projectCfg/mainController.ini}
- *  - writes {@code CurrentTune.msq} from the configuration image
- *  - writes {@code projectCfg/project.properties} (+ .bkup)
- *  - writes a generated {@code dashboard/dashboard.dash}
- *  - updates {@code ~/.efiAnalytics/tsUser.properties} so TS auto-opens the project
- *
+ *  - Copies the ini as {@code projectCfg/mainController.ini}
+ *  - Writes {@code CurrentTune.msq} from the configuration image
+ *  - Writes {@code projectCfg/project.properties} (+ .bkup)
+ *  - Writes a generated {@code dashboard/dashboard.dash}
+ *  - Updates {@code ~/.efiAnalytics/tsUser.properties} so TS auto-opens the project
+ * <p>
  * See /com/rusefi/ts/ts_project_format.md for the full on-disk contract.
  */
 public final class TsProjectCreator {
 
+    private static final Logging log = getLogging(TsProjectCreator.class);
+
     private TsProjectCreator() {}
 
     /**
-     * Create the project only if it doesn't already exist on disk (existence is checked via
-     * {@code projectCfg/project.properties}). Prevents overwriting a user-customized project on
-     * every reconnect.
+     * Create the project only if no existing one matches the current ECU. Match priority:
+     * <ol>
+     *   <li>Same target directory already exists (fast path, also catches our previous runs).</li>
+     *   <li>Another project under {@code ~/TunerStudioProjects/} has the same {@code ecuUid} —
+     *       same physical ECU regardless of firmware version. This is the case the user cared
+     *       about: firmware upgrades change the signature but not the hardware, and we don't want
+     *       a fresh project per firmware update.</li>
+     *   <li>Another project has the same {@code firmwareDescription} (same signature).</li>
+     *   <li>Another project has the same {@code CommSettingMSCommDriver.RS232 Serial InterfaceCom Port}
+     *       (same USB slot / tty).</li>
+     * </ol>
      *
-     * @return true if a project was created, false if it already existed.
+     * @return true if a project was created, false if an existing one was reused.
      */
     public static boolean createIfMissing(String projectName, String port, CalibrationsInfo calibrations) throws IOException {
         String projectPath = computeProjectPath(projectName);
         if (new File(projectPath + File.separator + "projectCfg" + File.separator + "project.properties").exists()) {
+            log.info("Project " + projectName + " already exists by name, skipping creation");
+            return false;
+        }
+        File existing = findMatchingProject(projectsDir(), calibrations, port);
+        if (existing != null) {
+            log.info("Found existing TS project for this ECU at " + existing.getAbsolutePath() + ", skipping creation");
             return false;
         }
         create(projectName, port, calibrations);
@@ -78,8 +97,53 @@ public final class TsProjectCreator {
     }
 
     static String computeProjectPath(String projectName) {
-        return System.getProperty("user.home") + File.separator + "TunerStudioProjects"
-            + File.separator + projectName;
+        return projectsDir() + File.separator + projectName;
+    }
+
+    private static String projectsDir() {
+        return System.getProperty("user.home") + File.separator + "TunerStudioProjects";
+    }
+
+    /**
+     * Scan all immediate subdirs of {@code ~/TunerStudioProjects/} looking for a
+     * {@code projectCfg/project.properties} whose {@code ecuUid}, {@code firmwareDescription},
+     * or serial-port setting matches the ECU we're about to create a project for.
+     * Returns the first match, or null.
+     */
+    private static File findMatchingProject(String projectsDir, CalibrationsInfo calibrations, String port) {
+        File dir = new File(projectsDir);
+        if (!dir.isDirectory()) return null;
+        File[] children = dir.listFiles(File::isDirectory);
+        if (children == null) return null;
+
+        String ecuUid = ecuUidFrom(calibrations).toString();
+        String signature = sanitizeSignature(calibrations.getImage().getMeta().getEcuSignature());
+        String normalizedPort = normalizeSerialPort(port);
+
+        for (File child : children) {
+            File propsFile = new File(child, "projectCfg" + File.separator + "project.properties");
+            if (!propsFile.isFile()) continue;
+            Properties p = new Properties();
+            try (FileInputStream fis = new FileInputStream(propsFile)) {
+                p.load(fis);
+            } catch (IOException e) {
+                log.warn("Skipping unreadable project " + child.getName() + ": " + e.getMessage());
+                continue;
+            }
+            if (ecuUid.equals(p.getProperty("ecuUid"))) {
+                log.info("Existing project " + child.getName() + " matches by ecuUid");
+                return child;
+            }
+            if (signature.equals(p.getProperty("firmwareDescription"))) {
+                log.info("Existing project " + child.getName() + " matches by firmwareDescription");
+                return child;
+            }
+            if (normalizedPort.equals(p.getProperty("CommSettingMSCommDriver.RS232 Serial InterfaceCom Port"))) {
+                log.info("Existing project " + child.getName() + " matches by serial port");
+                return child;
+            }
+        }
+        return null;
     }
 
     /**
@@ -113,6 +177,7 @@ public final class TsProjectCreator {
         }
         ConfigurationImage image = calibrations.getImage().getConfigurationImage();
         byte[] uidBytes = new byte[12];
+        assert image != null;
         System.arraycopy(image.getContent(), uid1.getOffset(), uidBytes, 0, 12);
         return UUID.nameUUIDFromBytes(uidBytes);
     }
