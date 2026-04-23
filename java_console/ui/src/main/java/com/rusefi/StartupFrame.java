@@ -4,7 +4,9 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.PrimeTunerStudioCache;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.ts.TsProjectCreator;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.ConnectionStatusLogic;
@@ -612,6 +614,8 @@ public class StartupFrame {
         noPortsMessage.setText("Connected to " + target.port + " — click Connect to open console");
         noPortsMessage.setVisible(true);
 
+        maybeAutoCreateTsProject(target);
+
         // Check standalone wizard catalog for any step that needs attention on this ECU.
         for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
             if (!d.applicable.test(uiContext)) continue;
@@ -622,6 +626,24 @@ public class StartupFrame {
             return;
         }
         // No wizard needed — stay on splash, user can click Connect to open the full console.
+    }
+
+    private void maybeAutoCreateTsProject(PortResult target) {
+        if (!Boolean.parseBoolean(PropertiesHolder.getProperty("auto_create_project", "false"))) {
+            return;
+        }
+        if (target.getCalibrations() == null) {
+            return;
+        }
+        String projectName = PropertiesHolder.getProperty("default_project_name", "rusEFI");
+        new Thread(() -> {
+            try {
+                boolean created = TsProjectCreator.createIfMissing(projectName, target.port, target.getCalibrations());
+                log.info(created ? "Auto-created TS project " + projectName : "TS project " + projectName + " already exists, skipping");
+            } catch (Exception e) {
+                log.warn("Auto-create TS project failed", e);
+            }
+        }, "Auto-create TS project").start();
     }
 
     /**
