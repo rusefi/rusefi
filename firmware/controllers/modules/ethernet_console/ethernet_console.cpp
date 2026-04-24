@@ -98,7 +98,7 @@ struct EthernetThread : public TunerstudioThread {
 
 		sockaddr_in address;
 		address.sin_family = AF_INET;
-		address.sin_port = htons(29000);
+		address.sin_port = htons(ETHERNET_PORT);
 		address.sin_addr.s_addr = INADDR_ANY;
 
 		listenerSocket = lwip_socket(AF_INET, SOCK_STREAM, 0);
