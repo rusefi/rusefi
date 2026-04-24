@@ -29,6 +29,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final Map<String, JComponent> editors = new LinkedHashMap<>();
+    private final Map<String, JLabel> errorLabels = new LinkedHashMap<>();
     private JButton saveButton;
 
     public GenericFieldsPanel(UIContext uiContext, String title, String description,
@@ -46,7 +47,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         JLabel titleLabel = new JLabel(getTitle());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        scale(titleLabel, 2f);
+        scale(titleLabel, 1.5f);
         content.add(titleLabel, BorderLayout.NORTH);
 
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
@@ -79,11 +80,18 @@ public class GenericFieldsPanel extends AbstractWizardStep {
             gbc.gridx = 1;
             IniField field = ini != null ? ini.findIniField(fieldName).orElse(null) : null;
             JComponent editor = buildEditorFor(field);
-            WizardFieldPolicy.forField(fieldName).decorate(editor, this::updateSaveButton);
+            WizardFieldPolicy.forField(fieldName).decorate(editor, this::updateValidity);
             scale(editor, 1.3f);
             editors.put(fieldName, editor);
             form.add(editor, gbc);
             row++;
+
+            gbc.gridx = 1;
+            gbc.gridy = row++;
+            JLabel errorLabel = new JLabel(" ");
+            errorLabel.setForeground(Color.RED);
+            errorLabels.put(fieldName, errorLabel);
+            form.add(errorLabel, gbc);
         }
 
         JPanel centerWrapper = new JPanel(new GridBagLayout());
@@ -115,16 +123,16 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         return new JTextField(20);
     }
 
-    private void updateSaveButton() {
-        if (saveButton == null) return;
+    private void updateValidity() {
         boolean ok = true;
         for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
-            if (!WizardFieldPolicy.forField(entry.getKey()).isValid(entry.getValue())) {
-                ok = false;
-                break;
-            }
+            String name = entry.getKey();
+            String error = WizardFieldPolicy.forField(name).errorMessage(entry.getValue());
+            JLabel errorLabel = errorLabels.get(name);
+            if (errorLabel != null) errorLabel.setText(error == null ? " " : error);
+            if (error != null) ok = false;
         }
-        saveButton.setEnabled(ok);
+        if (saveButton != null) saveButton.setEnabled(ok);
     }
 
     private void loadValues() {
@@ -153,7 +161,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
                 ((JTextField) editor).setText(text == null ? "" : text);
             }
         }
-        updateSaveButton();
+        updateValidity();
     }
 
     private void onSave() {

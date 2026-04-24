@@ -26,8 +26,11 @@ public interface WizardFieldPolicy {
     /** Transform the editor's current text before it is written back to the config image. */
     default String transformSavedValue(String text) { return text; }
 
+    /** Error text to show beneath the editor, or {@code null} when the field is acceptable. */
+    default String errorMessage(JComponent editor) { return null; }
+
     /** Whether the current editor state is acceptable to advance past this step. */
-    default boolean isValid(JComponent editor) { return true; }
+    default boolean isValid(JComponent editor) { return errorMessage(editor) == null; }
 
     /** Holds the field-name → policy registry. New policies get a one-line entry here. */
     final class Registry {

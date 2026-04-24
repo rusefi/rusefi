@@ -62,8 +62,8 @@ final class VinFieldPolicy implements WizardFieldPolicy {
     }
 
     @Override
-    public boolean isValid(JComponent editor) {
-        if (!(editor instanceof JTextField)) return true;
-        return ((JTextField) editor).getText().length() == VIN_LENGTH;
+    public String errorMessage(JComponent editor) {
+        if (!(editor instanceof JTextField)) return null;
+        return ((JTextField) editor).getText().length() == VIN_LENGTH ? null : "VIN should be 17 symbols";
     }
 }
