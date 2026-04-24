@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -79,6 +80,14 @@ public class PinoutPane {
     private final List<ConnectorImagePanel> activeImagePanels = new ArrayList<>();
     /** All table models currently displayed — updated alongside activeImagePanels. */
     private final List<DefaultTableModel> activeTableModels = new ArrayList<>();
+    /** JTables aligned index-for-index with {@link #activeTableModels}; needed to drive row selection from {@link #highlightByEnumValue}. */
+    private final List<JTable> activeTables = new ArrayList<>();
+    /** Tab host for connectors; held as a field so {@link #highlightByEnumValue} can switch connector. */
+    private JTabbedPane connectorTabs;
+    /** Callback fired on double-click of a pin row that has a tune field currently assigned to it. Args: dialogKey, fieldKey. */
+    private BiConsumer<String, String> navigateToTune;
+    /** Latest config image observed via uiContext.addConfigImageListener — reflects unburned Tune edits. Prefer over BinaryProtocol.getControllerConfiguration(). */
+    private ConfigurationImage liveConfigImage;
     // ---- Color mode ----
 
     enum ColorMode { TYPE, PIGTAIL }
@@ -391,7 +400,10 @@ public class PinoutPane {
             }
         }));
 
-        uiContext.addConfigImageListener(ci -> SwingUtilities.invokeLater(() -> refreshTuneUse(ci)));
+        uiContext.addConfigImageListener(ci -> SwingUtilities.invokeLater(() -> {
+            liveConfigImage = ci;
+            refreshTuneUse(ci);
+        }));
     }
 
     public JPanel getContent() {
@@ -410,6 +422,9 @@ public class PinoutPane {
         statusLabel.setText("Not connected");
         activeImagePanels.clear();
         activeTableModels.clear();
+        activeTables.clear();
+        connectorTabs = null;
+        liveConfigImage = null;
         setCenterPanel(null);
     }
 
@@ -454,6 +469,8 @@ public class PinoutPane {
     private void buildConnectorTabs(List<String> connectorPaths, String zipName) {
         activeImagePanels.clear();
         activeTableModels.clear();
+        activeTables.clear();
+        connectorTabs = null;
 
         File zipFile = findFile(PINOUTS_DIR + "/" + zipName);
         if (zipFile == null) {
@@ -482,6 +499,7 @@ public class PinoutPane {
         for (ConnectorData cd : connectors) {
             tabs.addTab(cd.title, buildConnectorPanel(cd, tuneUseMap));
         }
+        connectorTabs = tabs;
         setCenterPanel(tabs);
     }
 
@@ -509,6 +527,26 @@ public class PinoutPane {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         packColumns(table);
+        activeTables.add(table);
+
+        // Double-click a row → jump to the tune field currently driving that pin, if any.
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() != 2 || navigateToTune == null) return;
+                int viewRow = table.rowAtPoint(e.getPoint());
+                if (viewRow < 0) return;
+                int modelRow = table.convertRowIndexToModel(viewRow);
+                String pinName = YamlUtil.toStr(model.getValueAt(modelRow, 0));
+                String tsName  = YamlUtil.toStr(model.getValueAt(modelRow, 4));
+                String iniKey  = tsName.replace("___", pinName).trim();
+                if (iniKey.isEmpty()) return;
+                String[] assignment = findPinAssignment(iniKey);
+                if (assignment != null) {
+                    navigateToTune.accept(assignment[1], assignment[0]);
+                }
+            }
+        });
 
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -650,6 +688,78 @@ public class PinoutPane {
         }
     }
 
+    public void setNavigateToTune(BiConsumer<String, String> navigateToTune) {
+        this.navigateToTune = navigateToTune;
+    }
+
+    /**
+     * Selects the connector tab + row whose expanded ts_name matches the given enum value,
+     * causing the existing selection listener to also highlight the pin marker on the image.
+     * No-op if no row matches (e.g. value is NONE, or pin lives on a connector not currently shown).
+     */
+    public void highlightByEnumValue(String enumValue) {
+        if (enumValue == null || connectorTabs == null) return;
+        String target = enumValue.replace("\"", "").trim();
+        if (target.isEmpty() || "NONE".equalsIgnoreCase(target) || "INVALID".equalsIgnoreCase(target)) return;
+        int connectorCount = Math.min(activeTableModels.size(), activeTables.size());
+        for (int i = 0; i < connectorCount; i++) {
+            DefaultTableModel model = activeTableModels.get(i);
+            JTable table = activeTables.get(i);
+            for (int modelRow = 0; modelRow < model.getRowCount(); modelRow++) {
+                String pinName = YamlUtil.toStr(model.getValueAt(modelRow, 0));
+                String tsName  = YamlUtil.toStr(model.getValueAt(modelRow, 4));
+                String iniKey  = tsName.replace("___", pinName).trim();
+                if (target.equals(iniKey)) {
+                    if (i < connectorTabs.getTabCount()) connectorTabs.setSelectedIndex(i);
+                    int viewRow = table.convertRowIndexToView(modelRow);
+                    table.setRowSelectionInterval(viewRow, viewRow);
+                    table.scrollRectToVisible(table.getCellRect(viewRow, 0, true));
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns {fieldKey, dialogKey} for whichever pin-enum field currently resolves to {@code iniKey},
+     * or null if no field (or dialog) currently holds that assignment.
+     */
+    private String[] findPinAssignment(String iniKey) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        if (ini == null) return null;
+        ConfigurationImage ci = currentConfigImage();
+        if (ci == null) return null;
+
+        for (Map.Entry<String, IniField> entry : ini.getAllIniFields().entrySet()) {
+            IniField field = entry.getValue();
+            if (!(field instanceof EnumIniField)) continue;
+            String key = entry.getKey();
+            if (!key.toLowerCase().matches(".*pins?\\d*")) continue;
+
+            String rawValue;
+            try {
+                rawValue = ConfigurationImageGetterSetter.getStringValue(field, ci);
+            } catch (Exception ignored) {
+                continue;
+            }
+            String value = rawValue.replace("\"", "").trim();
+            if (!iniKey.equals(value)) continue;
+
+            String dialogKey = findDialogForField(ini, key);
+            if (dialogKey != null) return new String[]{key, dialogKey};
+        }
+        return null;
+    }
+
+    private static String findDialogForField(IniFileModel ini, String fieldKey) {
+        for (DialogModel d : ini.getDialogs().values()) {
+            for (DialogModel.Field f : d.getFields()) {
+                if (fieldKey.equals(f.getKey())) return d.getKey();
+            }
+        }
+        return null;
+    }
+
     /**
      * Builds a map from TunerStudio pin name (ts_name) to the human-readable label(s) of
      * any tune field currently assigned to that pin.
@@ -657,12 +767,18 @@ public class PinoutPane {
      * the convention used throughout rusEFI for pin-selector enum fields.
      */
     private Map<String, String> buildTuneUseMap() {
-        BinaryProtocol bp = uiContext.getBinaryProtocol();
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        if (bp == null || ini == null) return Collections.emptyMap();
-        ConfigurationImage ci = bp.getControllerConfiguration();
+        if (ini == null) return Collections.emptyMap();
+        ConfigurationImage ci = currentConfigImage();
         if (ci == null) return Collections.emptyMap();
         return buildTuneUseMap(ini, ci);
+    }
+
+    /** Prefer the live (possibly unburned) image if we've seen one; otherwise fall back to the last burned image. */
+    private ConfigurationImage currentConfigImage() {
+        if (liveConfigImage != null) return liveConfigImage;
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        return bp != null ? bp.getControllerConfiguration() : null;
     }
 
     /**

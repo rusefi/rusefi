@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,10 +34,14 @@ public class CalibrationFieldFactory {
     };
 
     public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage) {
-        return createFieldRow(field, iniField, ci, workingImage, null);
+        return createFieldRow(field, iniField, ci, workingImage, null, null);
     }
 
     public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange) {
+        return createFieldRow(field, iniField, ci, workingImage, onChange, null);
+    }
+
+    public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange, Consumer<String> onShowInPinout) {
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));
 
@@ -52,7 +57,7 @@ public class CalibrationFieldFactory {
             if (isCheckboxEnum(enumField)) {
                 row.add(createCheckBox(enumField, iniField, currentValue, workingImage, onChange));
             } else {
-                row.add(createComboBox(enumField, iniField, currentValue, workingImage, onChange));
+                row.add(createComboBox(enumField, iniField, currentValue, workingImage, onChange, field.getKey(), onShowInPinout));
             }
         } else {
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
@@ -119,7 +124,7 @@ public class CalibrationFieldFactory {
         return checkBox;
     }
 
-    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
+    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange, String fieldKey, Consumer<String> onShowInPinout) {
         String cleanValue = currentValue.replace("\"", "");
         String[] comboValues = enumField.getEnums().values().stream().filter(v -> !v.contains("INVALID")).toArray(String[]::new);
         JComboBox<String> comboBox = new JComboBox<>(comboValues);
@@ -135,7 +140,54 @@ public class CalibrationFieldFactory {
                 if (onChange != null) onChange.run();
             }
         });
+        attachPinoutContextMenu(comboBox, fieldKey, onShowInPinout);
         return comboBox;
+    }
+
+    /**
+     * For pin-enum fields (name matches .*pins?\d*), attaches a
+     * right-click "Show in Pinout" menu that fires the current combo value up to the
+     * caller for cross-tab navigation.
+     * <p>
+     * JComboBox.setComponentPopupMenu is unreliable: right-clicks on the arrow button or
+     * the internal renderer may not propagate in every L&F. So instead we install an
+     * explicit popup-trigger MouseListener on the combo AND its descendants.
+     */
+    private static void attachPinoutContextMenu(JComboBox<String> comboBox, String fieldKey, Consumer<String> onShowInPinout) {
+        if (onShowInPinout == null || fieldKey == null) return;
+        if (!fieldKey.toLowerCase().matches(".*pins?\\d*")) return;
+
+        JPopupMenu menu = new JPopupMenu();
+        JMenuItem show = new JMenuItem("Show in Pinout");
+        show.addActionListener(e -> {
+            Object sel = comboBox.getSelectedItem();
+            if (sel == null) return;
+            String value = sel.toString().replace("\"", "").trim();
+            if (value.isEmpty() || "NONE".equalsIgnoreCase(value) || "INVALID".equalsIgnoreCase(value)) return;
+            onShowInPinout.accept(value);
+        });
+        menu.add(show);
+
+        MouseAdapter popupTrigger = new MouseAdapter() {
+            @Override public void mousePressed(MouseEvent e)  { maybeShow(e); }
+            @Override public void mouseReleased(MouseEvent e) { maybeShow(e); }
+            private void maybeShow(MouseEvent e) {
+                if (!e.isPopupTrigger()) return;
+                Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), comboBox);
+                menu.show(comboBox, p.x, p.y);
+                e.consume();
+            }
+        };
+        installRecursively(comboBox, popupTrigger);
+    }
+
+    private static void installRecursively(Component c, MouseAdapter listener) {
+        c.addMouseListener(listener);
+        if (c instanceof Container) {
+            for (Component child : ((Container) c).getComponents()) {
+                installRecursively(child, listener);
+            }
+        }
     }
 
     private static JTextField createTextField(IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {

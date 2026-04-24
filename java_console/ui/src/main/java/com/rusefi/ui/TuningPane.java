@@ -16,15 +16,19 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.ArrayDeque;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2026
  */
 public class TuningPane {
     private final JPanel content = new JPanel(new BorderLayout());
+    private final MainMenuTreeWidget left;
+    /** Fired when the user picks "Show in Pinout" on a pin-enum field. Wired from ConsoleUI after construction. */
+    private Consumer<String> navigateToPinout;
 
     public TuningPane(UIContext uiContext) {
-        MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext);
+        left = new MainMenuTreeWidget(uiContext);
 
         CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
         JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
@@ -70,6 +74,11 @@ public class TuningPane {
             sessionImage[0] = image.clone();
             left.refreshExpressions(image);
             uiContext.fireConfigImageChanged(image);
+        });
+
+        // Right-click "Show in Pinout" on a pin-enum combo fires the current value upward.
+        right.setOnShowInPinout(value -> {
+            if (navigateToPinout != null) navigateToPinout.accept(value);
         });
 
         // When the ECU disconnects (e.g. after a firmware flash or board swap), drop all stale
@@ -120,5 +129,19 @@ public class TuningPane {
 
     public JPanel getContent() {
         return content;
+    }
+
+    public void setNavigateToPinout(Consumer<String> navigateToPinout) {
+        this.navigateToPinout = navigateToPinout;
+    }
+
+    /**
+     * Selects the dialog containing {@code fieldKey} in the left tree, which triggers the
+     * existing onSelect pipeline to render the dialog on the right.
+     * Field-level scrolling within the dialog is deferred (see issue — "scroll into view").
+     */
+    public void navigateToField(String dialogKey, String fieldKey) {
+        if (dialogKey == null) return;
+        left.selectSubMenu(dialogKey);
     }
 }

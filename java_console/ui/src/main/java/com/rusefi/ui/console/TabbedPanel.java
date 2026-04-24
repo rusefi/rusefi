@@ -121,6 +121,11 @@ public class TabbedPanel {
         tabbedPane.addTab(title, component);
     }
 
+    public void selectTab(String title) {
+        int idx = tabbedPane.indexOfTab(title);
+        if (idx >= 0) tabbedPane.setSelectedIndex(idx);
+    }
+
     public JComponent getContent() {
         return tabbedPane;
     }
