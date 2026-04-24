@@ -54,9 +54,15 @@ public class CalibrationDialogWidget {
     private static final int READOUT_GAUGE_SIZE = 150;
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
+    /** Called when the user picks "Show in Pinout" on a pin-enum field; arg is the current enum value. */
+    private Consumer<String> onShowInPinout;
 
     public void setOnConfigChange(Consumer<ConfigurationImage> onConfigChange) {
         this.onConfigChange = onConfigChange;
+    }
+
+    public void setOnShowInPinout(Consumer<String> onShowInPinout) {
+        this.onShowInPinout = onShowInPinout;
     }
 
     /**
@@ -275,7 +281,7 @@ public class CalibrationDialogWidget {
         Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
         JPanel row = iniField.map(value -> {
             try {
-                return CalibrationFieldFactory.createFieldRow(field, value, ci, workingImage, onChange);
+                return CalibrationFieldFactory.createFieldRow(field, value, ci, workingImage, onChange, onShowInPinout);
             } catch (OrdinalOutOfRangeException e) {
                 log.warn("Skipping field " + field.getKey() + " with out-of-range ordinal: " + e.getMessage());
                 return CalibrationFieldFactory.createLabelRow(field);
