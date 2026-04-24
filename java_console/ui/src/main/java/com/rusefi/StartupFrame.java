@@ -252,6 +252,15 @@ public class StartupFrame {
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
         realHardwarePanel.add(goToFirmwareTab, "right, wrap");
 
+        JButton openTunerStudio = new JButton("Open TunerStudio");
+        setToolTip(openTunerStudio, "Launch TunerStudio and close this console so the serial port is released");
+        openTunerStudio.addActionListener(e -> {
+            if (TunerStudioHelper.launchTunerStudio(frame)) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        realHardwarePanel.add(openTunerStudio, "right, wrap");
+
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             status.stop();
             selector.apply(currentHardware);
