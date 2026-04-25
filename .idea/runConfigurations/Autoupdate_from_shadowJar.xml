@@ -5,7 +5,6 @@
     </classpathModifications>
     <option name="MAIN_CLASS_NAME" value="com.rusefi.autoupdate.Autoupdate" />
     <module name="java_tools.autoupdate.main" />
-    <option name="PROGRAM_PARAMETERS" value="basic-ui" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../console" />
     <extension name="coverage">
       <pattern>
