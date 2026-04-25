@@ -6,10 +6,22 @@ public abstract class IniField {
     private final String name;
     // offset within binary page
     private final int offset;
+    // TunerStudio protocol page index (0 = main settings page).  Set by
+    // IniFileReader.registerField — the ini file uses 1-based page numbering
+    // while the protocol pageIdentifier is 0-based, so reader stores (iniPage - 1).
+    private int pageIndex = 0;
 
     public IniField(String name, int offset) {
         this.name = name;
         this.offset = offset;
+    }
+
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
     }
 
     public static double parseDouble(String s) {
