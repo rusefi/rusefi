@@ -23,7 +23,6 @@ import com.rusefi.tools.online.Online;
 import com.rusefi.ts_plugin.ui.AuthTokenPanel;
 import com.rusefi.ui.StatusConsumer;
 import com.rusefi.io.UiLinkManagerHelper;
-import com.rusefi.ui.basic.BasicStartupFrame;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -56,7 +55,6 @@ public class ConsoleTools {
     static {
         registerTool("help", args -> printTools(), "Print this help.");
         registerTool("headless", ConsoleTools::runHeadless, "Connect to rusEFI controller and start saving logs.");
-        registerTool("basic-ui", BasicStartupFrame::runTool, "Deprecated: Basic UI is now integrated into the main launcher!.");
 
         registerTool("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
 //        registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");

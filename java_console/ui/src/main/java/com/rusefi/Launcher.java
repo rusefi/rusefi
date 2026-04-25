@@ -9,6 +9,7 @@ import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -54,7 +55,12 @@ public class Launcher implements rusEFIVersion {
         // rusefi_console.jar now that the previous instance has fully exited.
         Autoupdate.finalizePendingUpdate();
 
-        if (ConsoleTools.runTool(args)) {
+        // Older rusefi_updater.exe launchers pass "basic-ui" — that mode is gone, fall through to the full UI.
+        String[] effectiveArgs = (args.length > 0 && "basic-ui".equalsIgnoreCase(args[0]))
+            ? Arrays.copyOfRange(args, 1, args.length) // we want the rest of the args
+            : args; // or all the args if we don't have basic-ui as the first one
+
+        if (ConsoleTools.runTool(effectiveArgs)) {
             return;
         }
 
@@ -70,6 +76,6 @@ public class Launcher implements rusEFIVersion {
         updateThread.setDaemon(true);
         updateThread.start();
 
-        ConsoleUI.startUi(args, bannerCallback);
+        ConsoleUI.startUi(effectiveArgs, bannerCallback);
     }
 }
