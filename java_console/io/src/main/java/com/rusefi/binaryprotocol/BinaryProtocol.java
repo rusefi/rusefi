@@ -470,11 +470,47 @@ public class BinaryProtocol {
         return imageWithMeta;
     }
 
+    /**
+     * Read {@code size} bytes starting at {@code offset} within the specified TS protocol
+     * page (0 = main settings page).  Returns null on failure.  Issues one or more
+     * TS_READ_COMMAND requests chunked by the .ini's blockingFactor.
+     */
+    @org.jetbrains.annotations.Nullable
+    public byte[] readFromPage(int page, int offset, int size) {
+        byte[] result = new byte[size];
+        int idx = 0;
+        int blockingFactor = getIniFile().getBlockingFactor();
+        while (idx < size) {
+            if (stream.isClosed()) {
+                return null;
+            }
+            int thisRead = Math.min(size - idx, blockingFactor);
+            byte[] packet = smartPacketPrefix(page, offset + idx, thisRead);
+            byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet,
+                "readFromPage page=" + page + " offset=" + (offset + idx) + " size=" + thisRead);
+            if (!checkResponseCode(response) || response.length != thisRead + 1) {
+                log.error("readFromPage failed at page=" + page + " offset=" + (offset + idx));
+                return null;
+            }
+            System.arraycopy(response, 1, result, idx, thisRead);
+            idx += thisRead;
+        }
+        return result;
+    }
+
     public byte @NotNull [] smartPacketPrefix(int offset, int requestSize) {
-        return smartPacketPrefix2(offset, requestSize, isSinglePageController());
+        return smartPacketPrefix(0, offset, requestSize);
+    }
+
+    public byte @NotNull [] smartPacketPrefix(int page, int offset, int requestSize) {
+        return smartPacketPrefix2(page, offset, requestSize, isSinglePageController());
     }
 
     static byte @NotNull [] smartPacketPrefix2(int offset, int requestSize, boolean isSinglePageController) {
+        return smartPacketPrefix2(0, offset, requestSize, isSinglePageController);
+    }
+
+    static byte @NotNull [] smartPacketPrefix2(int page, int offset, int requestSize, boolean isSinglePageController) {
         byte[] packet;
         if (isSinglePageController) {
             // older controller, no page index in read command
@@ -483,7 +519,7 @@ public class BinaryProtocol {
             ByteRange.packOffsetAndSize(offset, requestSize, packet);
         } else {
             packet = new byte[6];
-            ByteRange.packPageOffsetAndSize(offset, requestSize, packet);
+            ByteRange.packPageOffsetAndSize(page, offset, requestSize, packet);
         }
         return packet;
     }
@@ -619,6 +655,10 @@ public class BinaryProtocol {
     }
 
     public void writeInBlocks(byte[] content, int contentOffset, int ecuOffset, int size) {
+        writeInBlocks(content, contentOffset, ecuOffset, size, 0);
+    }
+
+    public void writeInBlocks(byte[] content, int contentOffset, int ecuOffset, int size, int page) {
         int idx = 0;
         int remaining;
         int blockingFactor = getIniFile().getBlockingFactor();
@@ -627,7 +667,7 @@ public class BinaryProtocol {
             remaining = size - idx;
             int thisWrite = Math.min(remaining, blockingFactor);
 
-            writeData(content, contentOffset + idx, ecuOffset + idx, thisWrite);
+            writeData(content, contentOffset + idx, ecuOffset + idx, thisWrite, page);
 
             idx += thisWrite;
 
@@ -635,10 +675,10 @@ public class BinaryProtocol {
         } while (remaining > 0);
     }
 
-    private void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
+    private void writeData(byte[] content, int contentOffset, int ecuOffset, int size, int page) {
         isBurnPending = true;
 
-        byte[] packet = WriteCommand.getWritePacket(this, content, contentOffset, ecuOffset, size);
+        byte[] packet = WriteCommand.getWritePacket(this, content, contentOffset, ecuOffset, size, page);
 
         long start = System.currentTimeMillis();
         while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
