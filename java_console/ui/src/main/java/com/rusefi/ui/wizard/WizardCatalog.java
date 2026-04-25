@@ -70,7 +70,7 @@ public class WizardCatalog {
         new WizardStepDescriptor(
             null,
             true,
-            WizardStepDescriptor.ALWAYS,
+            boardNameContains("hd81"),
             ctx -> GenericFieldsPanel.anyFieldEmpty(ctx, VIN_FIELDS),
             ctx -> new GenericFieldsPanel(
                 ctx,
