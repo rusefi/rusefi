@@ -13,6 +13,7 @@ You can define plain text help that users can access via a menu.
     `webHelp = "http://..."` *(optional)*
     `text = "Your help text here. Use <br> for new lines."`.
 *   **Definition Rule:** This is defined as an entity within the `[UserDefined]` or `[UiDialogs]` section, and it is triggered by referencing the `helpReferenceName` from a defined `[Menu]`.
+*    To insert line breaks in a multi-line plain text help definition, you use an HTML-style <br> tag where you want the new line to occur
 
 **3. Setting Context Help (Tooltips)**
 You can add short help tips (a small blue square with a question mark) to specific constants or variables in your dialogs.
