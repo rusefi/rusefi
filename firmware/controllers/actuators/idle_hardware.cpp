@@ -102,10 +102,10 @@ void initIdleHardware() {
 
 		if (engineConfiguration->useRawOutputToDriveIdleStepper) {
 		  // four Push-Pull outputs to directly drive stepper idle air valve coils
-			auto motorA = initDcMotor(engineConfiguration->stepper_raw_output[0],
-				engineConfiguration->stepper_raw_output[1], ETB_COUNT + 0);
-			auto motorB = initDcMotor(engineConfiguration->stepper_raw_output[2],
-				engineConfiguration->stepper_raw_output[3], ETB_COUNT + 1);
+			auto motorA = initStepperDcMotor(engineConfiguration->stepper_raw_output[0],
+				engineConfiguration->stepper_raw_output[1], 0);
+			auto motorB = initStepperDcMotor(engineConfiguration->stepper_raw_output[2],
+				engineConfiguration->stepper_raw_output[3], 1);
 
 			iacHbridgeHw.initialize(
 				motorA,
@@ -115,10 +115,10 @@ void initIdleHardware() {
 
 			hw = &iacHbridgeHw;
 		} else if (engineConfiguration->useHbridgesToDriveIdleStepper) {
-			auto motorA = initDcMotor("DC dis-1", engineConfiguration->stepperDcIo[0],
-				ETB_COUNT + 0, engineConfiguration->stepper_dc_use_two_wires);
-			auto motorB = initDcMotor("DC dis-2", engineConfiguration->stepperDcIo[1],
-				ETB_COUNT + 1, engineConfiguration->stepper_dc_use_two_wires);
+			auto motorA = initStepperDcMotor("DC dis-1", engineConfiguration->stepperDcIo[0],
+				0, engineConfiguration->stepper_dc_use_two_wires);
+			auto motorB = initStepperDcMotor("DC dis-2", engineConfiguration->stepperDcIo[1],
+				1, engineConfiguration->stepper_dc_use_two_wires);
 
 			iacHbridgeHw.initialize(
 				motorA,
