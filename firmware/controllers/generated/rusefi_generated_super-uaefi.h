@@ -766,7 +766,7 @@
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
 #define GAUGE_NAME_GYRO_YAW "Gyro: Yaw rate"
 #define GAUGE_NAME_IAC "Idle: Position"
-#define GAUGE_NAME_IAT "IAT"
+#define GAUGE_NAME_IAT "Intake Air IAT"
 #define GAUGE_NAME_IDLE_POSITION "Idle: Position sensor"
 #define GAUGE_NAME_IGNITION_LOAD "Ignition: load"
 #define GAUGE_NAME_IGNITION_MODE "Ignition: Mode"
@@ -1566,7 +1566,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 920213436
+#define SIGNATURE_HASH 992224140
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2175,7 +2175,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.04.26.super-uaefi.920213436"
+#define TS_SIGNATURE "rusEFI master.2026.04.26.super-uaefi.992224140"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

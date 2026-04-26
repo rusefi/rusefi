@@ -6,7 +6,7 @@ alignmentFill_at_11("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, Field
 internalVref("internalVref", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 12, 0.001, 0.0, 5.0, "V"),
 internalVbat("internalVbat", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 14, 0.001, 0.0, 5.0, "V"),
 coolant("CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 0.01, 0.0, 0.0, "deg C"),
-intake("IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 18, 0.01, 0.0, 0.0, "deg C"),
+intake("Intake Air IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 18, 0.01, 0.0, 0.0, "deg C"),
 auxTemp1("auxTemp1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 20, 0.01, 0.0, 0.0, "deg C"),
 auxTemp2("auxTemp2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 22, 0.01, 0.0, 0.0, "deg C"),
 TPSValue("TPS", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 24, 0.01, 0.0, 0.0, "%"),
