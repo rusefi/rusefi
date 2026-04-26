@@ -1,0 +1,3 @@
+- TunerStudio Help Documentation: `.junie/ts-help-topic.md`
+- TunerStudio Persistence: `firmware/tunerstudio/readme-persistence.md`
+- Validation: Scan `firmware/tunerstudio/generated/rusefi_uaefi.ini` to verify final field names, gauge mappings, and output channel logic.

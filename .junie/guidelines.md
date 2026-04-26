@@ -1,6 +1,6 @@
 ### Project Structure and Module Locations
 
-See also CLAUDE.md
+See also CLAUDE.md, .junie/ts-help-topic.md and .junie/ts-readme.md
 
 rusEFI is an open-source engine control unit firmware for STM32 microcontrollers.
 
