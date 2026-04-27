@@ -85,12 +85,12 @@ pins:
     color: red
 
   - pin: 16D
-    function: GNDA
+    function: GNDA Analog Ground
     type: gnd
     color: black
 
   - pin: 17D
-    function: GND
+    function: Power/Chassis GND
     type: GND
 #   color: red / black
 
@@ -119,7 +119,7 @@ pins:
     type: 12V
 
   - pin: 23D
-    function: GNDA
+    function: GNDA Analog Ground
     type: gnd
     color: black
 
