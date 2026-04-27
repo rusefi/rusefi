@@ -85,7 +85,7 @@ pins:
     color: red
 
   - pin: 16D
-    function: GNDA Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: gnd
     color: black
 
@@ -119,7 +119,7 @@ pins:
     type: 12V
 
   - pin: 23D
-    function: GNDA Analog Ground
+    function: GNDA Analog/Sensor Ground
     type: gnd
     color: black
 
