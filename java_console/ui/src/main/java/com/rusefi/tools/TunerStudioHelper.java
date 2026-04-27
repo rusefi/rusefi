@@ -125,10 +125,10 @@ public class TunerStudioHelper {
             String pf = System.getenv().getOrDefault("ProgramFiles", "C:\\Program Files");
             String pf86 = System.getenv().getOrDefault("ProgramFiles(x86)", "C:\\Program Files (x86)");
             return Arrays.asList(
-                pf + "\\EFIAnalytics\\TunerStudioMS\\TunerStudioMS.exe",
-                pf86 + "\\EFIAnalytics\\TunerStudioMS\\TunerStudioMS.exe",
-                pf + "\\TunerStudioMS\\TunerStudioMS.exe",
-                pf86 + "\\TunerStudioMS\\TunerStudioMS.exe"
+                pf + "\\EFIAnalytics\\TunerStudioMS\\TunerStudio.exe",
+                pf86 + "\\EFIAnalytics\\TunerStudioMS\\TunerStudio.exe",
+                pf + "\\TunerStudioMS\\TunerStudio.exe",
+                pf86 + "\\TunerStudioMS\\TunerStudio.exe"
             );
         }
         if (FileLog.isLinux()) {
