@@ -481,6 +481,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_GM_LNF = 65;
 	public static final int engine_type_e_GM_LTG = 55;
 	public static final int engine_type_e_GM_SBC = 98;
+	public static final int engine_type_e_GM_SBC_GEN3 = 5;
 	public static final int engine_type_e_GM_SBC_GEN4 = 27;
 	public static final int engine_type_e_GM_SBC_GEN5 = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
@@ -557,7 +558,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_105 = 105;
 	public static final int engine_type_e_UNUSED_16 = 16;
-	public static final int engine_type_e_UNUSED_5 = 5;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VAG_5_CYL = 77;
 	public static final int engine_type_e_VW_ABA = 32;
