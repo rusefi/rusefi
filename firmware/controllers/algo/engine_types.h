@@ -261,7 +261,9 @@ enum class trigger_type_e : uint32_t {
 
 	// we assume this is NOT ready/NOT working? https://github.com/rusefi/rusefi/pull/9262
 	TT_SUZUKI_G16B = 95,
-	TT_UNUSED_96 = 96,
+	TT_VIPER_V10_CRANK = 96,
+	TT_UNUSED_97 = 97,
+	TT_UNUSED_98 = 98,
 
 	// TL,DR https://github.com/rusefi/rusefi/commit/523805138589585cc8889d6afd9305d120180902 example of new trigger commit
 	//
@@ -274,7 +276,7 @@ enum class trigger_type_e : uint32_t {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 97, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 99, // this is used if we want to iterate over all trigger types
 };
 
 typedef enum {
