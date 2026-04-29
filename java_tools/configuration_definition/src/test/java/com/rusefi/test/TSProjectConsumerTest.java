@@ -226,10 +226,19 @@ public class TSProjectConsumerTest {
         });
     }
     @Test
-    public void testForwardReference() {
+    public void testForwardReference() throws IOException {
         String content = "dialog = dialog1\n" +
             "panel = panel1\n" +
             "dialog = panel1\n";
+        TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
+        // This should now PASS because we pre-scan
+        consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));
+    }
+
+    @Test
+    public void testTrulyUndefinedPanel() throws IOException {
+        String content = "dialog = dialog1\n" +
+            "panel = undefinedPanel\n";
         TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
         assertThrows(IllegalArgumentException.class, () -> {
             consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));

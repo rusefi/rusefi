@@ -146,14 +146,38 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @NotNull
     public TsFileContent getTsFileContent(InputStream in) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = in.read(buffer)) > -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.flush();
+        byte[] contentBytes = bos.toByteArray();
+
+        // Pass 1: collect all definitions
         String generatedContent = getContent();
         if (generatedContent != null) {
             for (String line : generatedContent.split("[\r\n]+")) {
-                processLineForForwardReference(line);
+                collectDefinitions(line);
             }
         }
 
-        BufferedReader r = new BufferedReader(new InputStreamReader(in, CHARSET));
+        // Pre-scan the main file and all includes for definitions
+        preScanDefinitions(new ByteArrayInputStream(contentBytes));
+
+        // Also pre-scan for definitions in variables from Registry
+        for (String key : state.getVariableRegistry().getKeys()) {
+            String value = state.getVariableRegistry().get(key);
+            if (value != null) {
+                for (String line : value.split("[\r\n]+")) {
+                    collectDefinitions(line);
+                }
+            }
+        }
+
+        // Pass 2: actual processing and usage validation
+        BufferedReader r = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(contentBytes), CHARSET));
 
         StringBuilder prefix = new StringBuilder();
         StringBuilder postfix = new StringBuilder();
@@ -170,7 +194,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 log.info("Including " + fileName);
                 List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
                 for (String includedLine : lines) {
-                    processLineForForwardReference(includedLine);
+                    validateUsage(includedLine);
                     processAndUse(includedLine, isBeforeStartTag, prefix, isAfterEndTag, postfix);
                 }
                 continue;
@@ -183,25 +207,67 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 isAfterEndTag = true;
                 continue;
             }
-            processLineForForwardReference(line);
+            validateUsage(line);
             processAndUse(line, isBeforeStartTag, prefix, isAfterEndTag, postfix);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
     }
 
-    private void processLineForForwardReference(String line) {
+    private void preScanDefinitions(InputStream in) throws IOException {
+        BufferedReader r = new BufferedReader(new InputStreamReader(in, CHARSET));
+        String line;
+        while ((line = r.readLine()) != null) {
+            if (line.startsWith(INCLUDE_FILE)) {
+                String fileName = line.substring(INCLUDE_FILE.length()).trim();
+                fileName = unquote(state.getVariableRegistry().applyVariables(fileName));
+                log.info("Pre-scanning Including " + fileName);
+                List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
+                for (String includedLine : lines) {
+                    collectDefinitions(includedLine);
+                }
+                continue;
+            }
+            collectDefinitions(line);
+        }
+    }
+
+    private void collectDefinitions(String line) {
         line = line.trim();
         if (line.isEmpty() || line.startsWith(";")) {
             return;
         }
-        if (line.startsWith("dialog") || line.startsWith("table") || line.startsWith("curve") || line.startsWith("indicatorPanel")) {
+
+        // Handle lines that might be combined like "dialog = name@@LIVE_DATA_PANELS_FROM_FILE@@"
+        // although usually they are on separate lines after variable expansion.
+        // But since we scan the template BEFORE expansion, we must be careful.
+
+        if (line.startsWith("dialog") || line.startsWith("table") || line.startsWith("curve") || line.startsWith("indicatorPanel") || line.startsWith("readoutPanel")) {
             int index = line.indexOf('=');
             if (index != -1) {
-                String name = line.substring(index + 1).split(",")[0].split("@@")[0].trim();
-                definedPanels.add(name);
+                String[] parts = line.substring(index + 1).split(",");
+                // First part is usually the name of the panel being defined
+                String name = parts[0].split("@@")[0].trim();
+                if (!name.isEmpty()) {
+                    definedPanels.add(name);
+                }
+                // For 'table', the second part is also a panel name (the visual component)
+                if (line.startsWith("table") && parts.length > 1) {
+                    String secondaryName = parts[1].split("@@")[0].trim();
+                    if (!secondaryName.isEmpty()) {
+                        definedPanels.add(secondaryName);
+                    }
+                }
             }
-        } else if (line.startsWith("panel")) {
+        }
+    }
+
+    private void validateUsage(String line) {
+        line = line.trim();
+        if (line.isEmpty() || line.startsWith(";")) {
+            return;
+        }
+        if (line.startsWith("panel")) {
             int index = line.indexOf('=');
             if (index != -1) {
                 String name = line.substring(index + 1).split(",")[0].split("@@")[0].trim();
