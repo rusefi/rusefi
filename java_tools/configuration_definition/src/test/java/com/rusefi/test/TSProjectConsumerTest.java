@@ -273,4 +273,20 @@ public class TSProjectConsumerTest {
         TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
         consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));
     }
+
+    @Test
+    public void testForwardReferenceInGeneratedContent() throws IOException {
+        String content = "panel = generatedPanel\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+
+        TSProjectConsumer consumer = new TestTSProjectConsumer(state) {
+            @Override
+            public String getContent() {
+                return "indicatorPanel = generatedPanel, 1\n";
+            }
+        };
+        // This should now PASS because "generatedPanel" is in the generated content
+        consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));
+    }
 }

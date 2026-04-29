@@ -146,6 +146,13 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @NotNull
     public TsFileContent getTsFileContent(InputStream in) throws IOException {
+        String generatedContent = getContent();
+        if (generatedContent != null) {
+            for (String line : generatedContent.split("[\r\n]+")) {
+                processLineForForwardReference(line);
+            }
+        }
+
         BufferedReader r = new BufferedReader(new InputStreamReader(in, CHARSET));
 
         StringBuilder prefix = new StringBuilder();
