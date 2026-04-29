@@ -14,7 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 import jakarta.xml.bind.JAXBException;
 import java.io.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import static com.rusefi.ReaderStateImpl.INCLUDE_FILE;
@@ -140,6 +142,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return getTsFileContent(in);
     }
 
+    private final Set<String> definedPanels = new HashSet<>();
+
     @NotNull
     public TsFileContent getTsFileContent(InputStream in) throws IOException {
         BufferedReader r = new BufferedReader(new InputStreamReader(in, CHARSET));
@@ -159,6 +163,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 log.info("Including " + fileName);
                 List<String> lines = FileLinesHelper.readAllLinesWithRoot(fileName);
                 for (String includedLine : lines) {
+                    processLineForForwardReference(includedLine);
                     processAndUse(includedLine, isBeforeStartTag, prefix, isAfterEndTag, postfix);
                 }
                 continue;
@@ -171,10 +176,33 @@ public class TSProjectConsumer implements ConfigurationConsumer {
                 isAfterEndTag = true;
                 continue;
             }
+            processLineForForwardReference(line);
             processAndUse(line, isBeforeStartTag, prefix, isAfterEndTag, postfix);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
+    }
+
+    private void processLineForForwardReference(String line) {
+        line = line.trim();
+        if (line.isEmpty() || line.startsWith(";")) {
+            return;
+        }
+        if (line.startsWith("dialog") || line.startsWith("table") || line.startsWith("curve") || line.startsWith("indicatorPanel")) {
+            int index = line.indexOf('=');
+            if (index != -1) {
+                String name = line.substring(index + 1).split(",")[0].split("@@")[0].trim();
+                definedPanels.add(name);
+            }
+        } else if (line.startsWith("panel")) {
+            int index = line.indexOf('=');
+            if (index != -1) {
+                String name = line.substring(index + 1).split(",")[0].split("@@")[0].trim();
+                if (!definedPanels.contains(name) && !name.equalsIgnoreCase("std_separator") && !name.equalsIgnoreCase("std_ms3SdConsole") && !name.equalsIgnoreCase("main")) {
+                    throw new IllegalArgumentException("Forward reference detected: " + name + " is used before it is defined in " + line);
+                }
+            }
+        }
     }
 
     private void processAndUse(String line, boolean isBeforeStartTag, StringBuilder prefix, boolean isAfterEndTag, StringBuilder postfix) {

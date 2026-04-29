@@ -39,20 +39,20 @@ public class TSProjectConsumerTest {
     @Test
     public void conditionalField() {
         String test = "struct pid_s\n" +
-                "custom afr_table_t 4x4 array,   U08,   @OFFSET@, [4x4],\"deg\",\t   {1/10},     0,        0,  25.0,     1 \n" +
-                "#if LAMBDA\n" +
-                "\tint periodMs2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "#else\n" +
-                "\tint periodMs2;PID dTime;\"ms2\",      1,      0,       0, 3000,      0\n" +
-                "#endif\n" +
-                "#if LAMBDA\n" +
-                "afr_table_t afrTable;\t\t\n" +
-                "#else\n" +
-                "afr_table_t afrTable;\t\t\n" +
-                "#endif\n" +
-                "\tint16_t autoscale periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
-                "end_struct\n" +
-                "";
+            "custom afr_table_t 4x4 array,   U08,   @OFFSET@, [4x4],\"deg\",\t   {1/10},     0,        0,  25.0,     1 \n" +
+            "#if LAMBDA\n" +
+            "\tint periodMs2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+            "#else\n" +
+            "\tint periodMs2;PID dTime;\"ms2\",      1,      0,       0, 3000,      0\n" +
+            "#endif\n" +
+            "#if LAMBDA\n" +
+            "afr_table_t afrTable;\t\t\n" +
+            "#else\n" +
+            "afr_table_t afrTable;\t\t\n" +
+            "#endif\n" +
+            "\tint16_t autoscale periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
+            "end_struct\n" +
+            "";
 
         ReaderStateImpl state = new ReaderStateImpl();
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
@@ -64,23 +64,23 @@ public class TSProjectConsumerTest {
         state.readBufferedReader(test, javaFieldsConsumer, consumer, tsProjectConsumer);
 
         assertEquals("#if LAMBDA\n" +
-                "periodMs2 = scalar, S32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
-                "#else\n" +
-                "periodMs2 = scalar, S32, 0, \"ms2\", 1, 0, 0, 3000, 0\n" +
-                "#endif\n" +
-                "#if LAMBDA\n" +
-                "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
-                "#else\n" +
-                "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
-                "#endif\n" +
-                "periodMs = scalar, S16, 20, \"ms\", 0.1, 0, 0, 3000, 0\n" +
-                "; total TS size = 24\n", tsProjectConsumer.getContent());
+            "periodMs2 = scalar, S32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
+            "#else\n" +
+            "periodMs2 = scalar, S32, 0, \"ms2\", 1, 0, 0, 3000, 0\n" +
+            "#endif\n" +
+            "#if LAMBDA\n" +
+            "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
+            "#else\n" +
+            "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
+            "#endif\n" +
+            "periodMs = scalar, S16, 20, \"ms\", 0.1, 0, 0, 3000, 0\n" +
+            "; total TS size = 24\n", tsProjectConsumer.getContent());
 
         assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT).setScale(1.0).setBaseOffset(0);\n" +
-                        "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 4, FieldType.INT).setScale(1.0).setBaseOffset(0);\n" +
-                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 20, FieldType.INT16).setScale(0.1).setBaseOffset(0);\n" +
-                        "\tpublic static final Field ALIGNMENTFILL_AT_22 = Field.create(\"ALIGNMENTFILL_AT_22\", 22, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n",
-                javaFieldsConsumer.getContent());
+                "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 4, FieldType.INT).setScale(1.0).setBaseOffset(0);\n" +
+                "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 20, FieldType.INT16).setScale(0.1).setBaseOffset(0);\n" +
+                "\tpublic static final Field ALIGNMENTFILL_AT_22 = Field.create(\"ALIGNMENTFILL_AT_22\", 22, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n",
+            javaFieldsConsumer.getContent());
 
 
         assertEquals("// start of pid_s\n" +
@@ -115,8 +115,8 @@ public class TSProjectConsumerTest {
     @Test
     public void cppCornerCaseEmptyStruct() {
         String test = "struct pid_s\n" +
-                "end_struct\n" +
-                "";
+            "end_struct\n" +
+            "";
 
         ReaderStateImpl state = new ReaderStateImpl();
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
@@ -133,10 +133,10 @@ public class TSProjectConsumerTest {
 
 
         assertEquals("// start of pid_s\n" +
-                "struct pid_s {\n" +
-                "};\n" +
-                "static_assert(sizeof(pid_s) == 1);\n" +
-                "\n", consumer.getContent());
+            "struct pid_s {\n" +
+            "};\n" +
+            "static_assert(sizeof(pid_s) == 1);\n" +
+            "\n", consumer.getContent());
     }
 
     @Test
@@ -162,9 +162,9 @@ public class TSProjectConsumerTest {
     @Test
     public void testDuplicateFieldInConstants() {
         String test = "struct pid_s\n" +
-                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "end_struct\n";
+            "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+            "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+            "end_struct\n";
 
         ReaderStateImpl state = new ReaderStateImpl();
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
@@ -176,11 +176,11 @@ public class TSProjectConsumerTest {
     @Test
     public void testDuplicateFieldInConstantsWithDirective() {
         String test = "struct pid_s\n" +
-                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "#if DEBUG\n" +
-                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "#endif\n" +
-                "end_struct\n";
+            "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+            "#if DEBUG\n" +
+            "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+            "#endif\n" +
+            "end_struct\n";
 
         ReaderStateImpl state = new ReaderStateImpl();
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
@@ -193,12 +193,12 @@ public class TSProjectConsumerTest {
         TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
         String page1 = "struct page1\n" +
-                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "end_struct\n";
+            "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+            "end_struct\n";
 
         String page2 = "struct page2\n" +
-                "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "end_struct\n";
+            "    int field1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+            "end_struct\n";
 
         ReaderStateImpl state1 = new ReaderStateImpl();
         // Use isConstantsSection = false to enforce uniqueness check
@@ -224,5 +224,53 @@ public class TSProjectConsumerTest {
         assertThrows(DuplicateFieldNameException.class, () -> {
             state2.readBufferedReader(page2, consumer2);
         });
+    }
+    @Test
+    public void testForwardReference() {
+        String content = "dialog = dialog1\n" +
+            "panel = panel1\n" +
+            "dialog = panel1\n";
+        TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
+        assertThrows(IllegalArgumentException.class, () -> {
+            consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));
+        });
+    }
+
+    @Test
+    public void testNoForwardReference() throws IOException {
+        String content = "subMenu = dialog1\n" +
+            "groupChildMenu = dialog2\n" +
+            "dialog = panel1\n" +
+            "dialog = dialog1\n" +
+            "dialog = dialog2\n" +
+            "panel = panel1\n";
+        TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
+        consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));
+    }
+
+    @Test
+    public void testForwardReferenceWithAtAt() throws IOException {
+        String content = "dialog = trigger_console\n" +
+            "panel = trigger_console@@if_ts_show_trigger_console\n";
+        TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
+        consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));
+    }
+
+    @Test
+    public void testForwardReferenceWithAtAtDefinition() throws IOException {
+        String content = "dialog = trigger_console@@if_ts_show_trigger_console\n" +
+            "panel = trigger_console\n";
+        TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
+        consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));
+    }
+
+    @Test
+    public void testIndicatorPanel() throws IOException {
+        String content = "indicatorPanel = isBoostControlledPanel, 1\n" +
+            "indicator = {isBoostControlled}, \"No Boost Control\", \"Boost Control Active\"\n" +
+            "dialog = boostOpenBlend1Cfg, \"Boost open loop blend 1 config\"\n" +
+            "panel = isBoostControlledPanel\n";
+        TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
+        consumer.getTsFileContent(new java.io.ByteArrayInputStream(content.getBytes()));
     }
 }
