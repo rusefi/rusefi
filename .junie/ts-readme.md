@@ -3,3 +3,4 @@
 - TunerStudio Persistence: `firmware/tunerstudio/readme-persistence.md`
 - Validation: Scan `firmware/tunerstudio/generated/rusefi_uaefi.ini` to verify final field names, gauge mappings, and output channel logic.
 - UI Pattern: Prefer wrapping 3D tables/curves into a `dialog` that includes the table (West) and a status `panel` (East) containing relevant gauges and calibration fields (e.g., offsets, PID status).
+- Dialog definitions should be placed in this [UserDefined] section to keep them organized.
