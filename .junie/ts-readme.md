@@ -3,4 +3,5 @@
 - TunerStudio Persistence: `firmware/tunerstudio/readme-persistence.md`
 - Validation: Scan `firmware/tunerstudio/generated/rusefi_uaefi.ini` to verify final field names, gauge mappings, and output channel logic.
 - UI Pattern: Prefer wrapping 3D tables/curves into a `dialog` that includes the table (West) and a status `panel` (East) containing relevant gauges and calibration fields (e.g., offsets, PID status).
-- Dialog definitions should be placed in this [UserDefined] section to keep them organized.
+- Dialog/Panel Placement: Dialog definitions should be placed in the `[UserDefined]` section to keep them organized.
+- Forward References: Forward references for `panel` in dialogs are prohibited by `TSProjectConsumer`. A `panel` must be defined (as a `dialog`, `table`, or `curve`) before it is used in another dialog. Note that `subMenu` and `groupChildMenu` are exempt from this rule and can reference dialogs defined later in the file.
