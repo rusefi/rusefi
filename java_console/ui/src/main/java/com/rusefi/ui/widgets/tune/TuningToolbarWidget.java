@@ -173,7 +173,9 @@ public class TuningToolbarWidget {
         JFileChooser chooser = createMsqFileChooser();
         JButton button = new JButton("Load Tune From File");
         button.addActionListener(e -> {
-            if (chooser.showOpenDialog(button) != JFileChooser.APPROVE_OPTION) return;
+            if (chooser.showOpenDialog(button) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
             IniFileModel ini = uiContext.iniFileState.getIniFileModel();
             if (ini == null) {
                 JOptionPane.showMessageDialog(button, "No INI file loaded", "Error", JOptionPane.ERROR_MESSAGE);
