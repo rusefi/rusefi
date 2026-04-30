@@ -16,6 +16,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.ArrayDeque;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -33,10 +34,10 @@ public class TuningPane {
         CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
         JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
 
-        final String[] currentKey = {null};
+        final AtomicReference<String> currentKey = new AtomicReference<>();
 
         // Accumulated tune edits across all dialogs for this session.
-        final ConfigurationImage[] sessionImage = {null};
+        final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
 
         TuningToolbarWidget toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage);
 
@@ -57,21 +58,21 @@ public class TuningPane {
             // so that changes made in dialogs, tables, or curves are not lost when opening another.
             ConfigurationImage pending = right.getWorkingImage();
             if (pending != null) {
-                sessionImage[0] = pending;
-            } else if (sessionImage[0] == null) {
-                sessionImage[0] = bp.getControllerConfiguration().clone();
+                sessionImage.set(pending);
+            } else if (sessionImage.get() == null) {
+                sessionImage.set(bp.getControllerConfiguration().clone());
             }
 
-            currentKey[0] = subMenu.getKey();
-            right.update(subMenu.getKey(), uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
+            currentKey.set(subMenu.getKey());
+            right.update(subMenu.getKey(), uiContext.iniFileState.getIniFileModel(), sessionImage.get());
         });
 
         // All edit events (dialog fields, table cells, curve drags) flow through onConfigChange.
         // Text fields fire per-keystroke; the toolbar widget coalesces them into one undo point.
         right.setOnConfigChange(image -> {
-            toolbar.onEdit(sessionImage[0]);
+            toolbar.onEdit(sessionImage.get());
             // Clone because workingImage is mutated in-place by further edits.
-            sessionImage[0] = image.clone();
+            sessionImage.set(image.clone());
             left.refreshExpressions(image);
             uiContext.fireConfigImageChanged(image);
         });
@@ -91,15 +92,16 @@ public class TuningPane {
                 SwingUtilities.invokeLater(() -> {
                     toolbar.onDisconnect();
                     right.reset();
-                    sessionImage[0] = null;
+                    sessionImage.set(null);
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
-                    if (currentKey[0] == null) return;
+                    String key = currentKey.get();
+                    if (key == null) return;
                     BinaryProtocol bp = uiContext.getBinaryProtocol();
                     if (bp == null || bp.getControllerConfiguration() == null) return;
-                    sessionImage[0] = bp.getControllerConfiguration().clone();
-                    right.update(currentKey[0], uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
+                    sessionImage.set(bp.getControllerConfiguration().clone());
+                    right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
                 });
             }
         });

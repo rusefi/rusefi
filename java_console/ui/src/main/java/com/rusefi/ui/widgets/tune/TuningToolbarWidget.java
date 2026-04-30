@@ -19,6 +19,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Toolbar for the Tune tab: Burn, Discard, Undo, and Redo buttons.
@@ -34,7 +35,7 @@ public class TuningToolbarWidget {
 
     private final ArrayDeque<ConfigurationImage> undoStack = new ArrayDeque<>();
     private final ArrayDeque<ConfigurationImage> redoStack = new ArrayDeque<>();
-    private final ConfigurationImage[] undoBaseline = {null};
+    private final AtomicReference<ConfigurationImage> undoBaseline = new AtomicReference<>();
 
     private final JButton undoButton = new JButton("Undo");
     private final JButton redoButton = new JButton("Redo");
@@ -50,8 +51,8 @@ public class TuningToolbarWidget {
      */
     public TuningToolbarWidget(UIContext uiContext,
                                 CalibrationDialogWidget right,
-                                String[] currentKey,
-                                ConfigurationImage[] sessionImage) {
+                                AtomicReference<String> currentKey,
+                                AtomicReference<ConfigurationImage> sessionImage) {
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
 
@@ -61,11 +62,11 @@ public class TuningToolbarWidget {
         };
 
         Runnable flushUndoBaseline = () -> {
-            if (undoBaseline[0] != null) {
-                undoStack.push(undoBaseline[0]);
+            ConfigurationImage baseline = undoBaseline.getAndSet(null);
+            if (baseline != null) {
+                undoStack.push(baseline);
                 if (undoStack.size() > MAX_UNDO) undoStack.removeLast();
                 redoStack.clear();
-                undoBaseline[0] = null;
                 updateButtons.run();
             }
         };
@@ -75,8 +76,9 @@ public class TuningToolbarWidget {
 
         uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
-            if (bp == null || sessionImage[0] == null) return;
-            final ConfigurationImage snapshot = sessionImage[0].clone();
+            ConfigurationImage image = sessionImage.get();
+            if (bp == null || image == null) return;
+            final ConfigurationImage snapshot = image.clone();
             uiContext.getLinkManager().submit(() -> bp.uploadChangesWithoutBurn(snapshot));
         });
         uploadTimer.setRepeats(false);
@@ -91,11 +93,13 @@ public class TuningToolbarWidget {
         undoButton.addActionListener(e -> {
             if (undoStack.isEmpty()) return;
             undoCommitTimer.stop();
-            undoBaseline[0] = null;
-            if (sessionImage[0] != null) redoStack.push(sessionImage[0]);
-            sessionImage[0] = undoStack.pop();
-            if (currentKey[0] != null) {
-                right.update(currentKey[0], uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
+            undoBaseline.set(null);
+            ConfigurationImage image = sessionImage.get();
+            if (image != null) redoStack.push(image);
+            sessionImage.set(undoStack.pop());
+            String key = currentKey.get();
+            if (key != null) {
+                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             }
             updateButtons.run();
         });
@@ -103,11 +107,13 @@ public class TuningToolbarWidget {
         redoButton.addActionListener(e -> {
             if (redoStack.isEmpty()) return;
             undoCommitTimer.stop();
-            undoBaseline[0] = null;
-            if (sessionImage[0] != null) undoStack.push(sessionImage[0]);
-            sessionImage[0] = redoStack.pop();
-            if (currentKey[0] != null) {
-                right.update(currentKey[0], uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
+            undoBaseline.set(null);
+            ConfigurationImage image = sessionImage.get();
+            if (image != null) undoStack.push(image);
+            sessionImage.set(redoStack.pop());
+            String key = currentKey.get();
+            if (key != null) {
+                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             }
             updateButtons.run();
         });
@@ -123,15 +129,15 @@ public class TuningToolbarWidget {
 
     private @NotNull JButton getBurnToEcuButton(UIContext uiContext,
                                                 CalibrationDialogWidget right,
-                                                ConfigurationImage[] sessionImage) {
+                                                AtomicReference<ConfigurationImage> sessionImage) {
         JButton burnButton = new JButton("Burn to ECU");
         burnButton.addActionListener(e -> {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
             ConfigurationImage toBurn = right.getWorkingImage();
-            if (toBurn == null) toBurn = sessionImage[0];
+            if (toBurn == null) toBurn = sessionImage.get();
             if (bp == null || toBurn == null) return;
             final ConfigurationImage image = toBurn;
-            sessionImage[0] = image;
+            sessionImage.set(image);
             uiContext.getLinkManager().submit(() -> {
                 bp.burn();
                 bp.setConfigurationImage(image);
@@ -142,8 +148,8 @@ public class TuningToolbarWidget {
 
     private @NotNull JButton getDiscardButton(UIContext uiContext,
                                               CalibrationDialogWidget right,
-                                              ConfigurationImage[] sessionImage,
-                                              String[] currentKey,
+                                              AtomicReference<ConfigurationImage> sessionImage,
+                                              AtomicReference<String> currentKey,
                                               Runnable updateButtons) {
         JButton discardButton = new JButton("Discard changes");
 
@@ -152,14 +158,15 @@ public class TuningToolbarWidget {
             if (bp == null) return;
             ConfigurationImage baseline = bp.getCachedImage();
             if (baseline == null) baseline = bp.getControllerConfiguration();
-            sessionImage[0] = baseline.clone();
-            if (currentKey[0] != null) {
-                right.update(currentKey[0], uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
+            sessionImage.set(baseline.clone());
+            String key = currentKey.get();
+            if (key != null) {
+                right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
             }
             undoCommitTimer.stop();
             undoStack.clear();
             redoStack.clear();
-            undoBaseline[0] = null;
+            undoBaseline.set(null);
             updateButtons.run();
         });
 
@@ -168,8 +175,8 @@ public class TuningToolbarWidget {
 
     private @NotNull JButton getLoadTuneButton(UIContext uiContext,
                                                 CalibrationDialogWidget right,
-                                                String[] currentKey,
-                                                ConfigurationImage[] sessionImage) {
+                                                AtomicReference<String> currentKey,
+                                                AtomicReference<ConfigurationImage> sessionImage) {
         JFileChooser chooser = createMsqFileChooser();
         JButton button = new JButton("Load Tune From File");
         button.addActionListener(e -> {
@@ -183,10 +190,11 @@ public class TuningToolbarWidget {
             }
             final String path = chooser.getSelectedFile().getAbsolutePath();
             final String fileName = chooser.getSelectedFile().getName();
-            final ConfigurationImage base = sessionImage[0] != null
-                    ? sessionImage[0]
+            ConfigurationImage sessionImg = sessionImage.get();
+            final ConfigurationImage base = sessionImg != null
+                    ? sessionImg
                     : new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
-            final ConfigurationImage[] result = {null};
+            final AtomicReference<ConfigurationImage> result = new AtomicReference<>();
             final StatusWindow statusWindow = new StatusWindow();
             statusWindow.showFrame("Load Tune");
             final UpdateOperationCallbacks callbacks = statusWindow.getContent();
@@ -216,7 +224,7 @@ public class TuningToolbarWidget {
                                     });
                                     latch.await();
                                 }
-                                result[0] = newImage;
+                                result.set(newImage);
                                 callbacks.done();
                             } catch (Exception ex) {
                                 callbacks.logLine("Error: " + ex.getMessage());
@@ -227,13 +235,15 @@ public class TuningToolbarWidget {
                 },
                 callbacks,
                 () -> SwingUtilities.invokeLater(() -> {
-                    if (result[0] != null) {
+                    ConfigurationImage res = result.get();
+                    if (res != null) {
                         statusWindow.getFrame().dispose();
-                        sessionImage[0] = result[0];
-                        if (currentKey[0] != null) {
-                            right.update(currentKey[0], ini, result[0]);
+                        sessionImage.set(res);
+                        String key = currentKey.get();
+                        if (key != null) {
+                            right.update(key, ini, res);
                         }
-                        uiContext.fireConfigImageChanged(result[0]);
+                        uiContext.fireConfigImageChanged(res);
                     }
                 })
             );
@@ -243,13 +253,13 @@ public class TuningToolbarWidget {
 
     private @NotNull JButton getSaveTuneButton(UIContext uiContext,
                                                CalibrationDialogWidget right,
-                                               ConfigurationImage[] sessionImage) {
+                                               AtomicReference<ConfigurationImage> sessionImage) {
         JFileChooser chooser = createMsqFileChooser();
         JButton button = new JButton("Save Tune To File");
         button.addActionListener(e -> {
             IniFileModel ini = uiContext.iniFileState.getIniFileModel();
             ConfigurationImage image = right.getWorkingImage();
-            if (image == null) image = sessionImage[0];
+            if (image == null) image = sessionImage.get();
             if (image == null) {
                 BinaryProtocol bp = uiContext.getBinaryProtocol();
                 if (bp != null) image = bp.getControllerConfiguration();
@@ -292,9 +302,7 @@ public class TuningToolbarWidget {
      * Captures the pre-edit baseline for undo and restarts the debounce + upload timers.
      */
     public void onEdit(ConfigurationImage previousSessionImage) {
-        if (undoBaseline[0] == null && previousSessionImage != null) {
-            undoBaseline[0] = previousSessionImage;
-        }
+        undoBaseline.compareAndSet(null, previousSessionImage);
         undoCommitTimer.restart();
         uploadTimer.restart();
     }
@@ -315,11 +323,11 @@ public class TuningToolbarWidget {
     public void flushBeforeNavigate() {
         if (undoCommitTimer.isRunning()) {
             undoCommitTimer.stop();
-            if (undoBaseline[0] != null) {
-                undoStack.push(undoBaseline[0]);
+            ConfigurationImage baseline = undoBaseline.getAndSet(null);
+            if (baseline != null) {
+                undoStack.push(baseline);
                 if (undoStack.size() > MAX_UNDO) undoStack.removeLast();
                 redoStack.clear();
-                undoBaseline[0] = null;
                 undoButton.setEnabled(!undoStack.isEmpty());
                 redoButton.setEnabled(!redoStack.isEmpty());
             }
@@ -334,7 +342,7 @@ public class TuningToolbarWidget {
         uploadTimer.stop();
         undoStack.clear();
         redoStack.clear();
-        undoBaseline[0] = null;
+        undoBaseline.set(null);
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
     }
