@@ -274,7 +274,7 @@ public class TuningToolbarWidget {
                                                CalibrationDialogWidget right,
                                                AtomicReference<ConfigurationImage> sessionImage) {
         JFileChooser chooser = createMsqFileChooser();
-        JButton button = new JButton("Save Tune To File");
+        JButton button = new JButton(LoadTuneHelper.SAVE_TUNE_TEXT);
         button.addActionListener(e -> {
             IniFileModel ini = uiContext.iniFileState.getIniFileModel();
             ConfigurationImage image = right.getWorkingImage();
