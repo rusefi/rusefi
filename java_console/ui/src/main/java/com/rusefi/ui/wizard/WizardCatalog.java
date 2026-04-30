@@ -74,8 +74,8 @@ public class WizardCatalog {
             ctx -> GenericFieldsPanel.anyFieldEmpty(ctx, VIN_FIELDS),
             ctx -> new GenericFieldsPanel(
                 ctx,
-                "Enter Vehicle Identification Number",
-                "Your ECU's VIN is empty. Enter the VIN to continue.",
+                "Enter Vehicle Identification Number (VIN) to continue",
+                null,
                 VIN_FIELDS,
                 null)
         )

@@ -36,7 +36,7 @@ int IsoTpBase::sendFrame(const IsoTpFrameHeader &header, const uint8_t *data, in
 		return 0;
 	}
 
-	int dlc = offset + numBytes;
+	int dlc = 8;
 	CanTxMessage txmsg(CanCategory::SERIAL, txFrameId, dlc, busIndex, IS_EXT_RANGE_ID(txFrameId));
 
 	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)

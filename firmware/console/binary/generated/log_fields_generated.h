@@ -45,7 +45,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels.internalVref, "internalVref", "V", 3},
 	{engine->outputChannels.internalVbat, "internalVbat", "V", 3},
 	{engine->outputChannels.coolant, "CLT", "deg C", 1},
-	{engine->outputChannels.intake, "IAT", "deg C", 1},
+	{engine->outputChannels.intake, "Intake Air IAT", "deg C", 1},
 	{engine->outputChannels.auxTemp1, "auxTemp1", "deg C", 1},
 	{engine->outputChannels.auxTemp2, "auxTemp2", "deg C", 1},
 	{engine->outputChannels.TPSValue, "TPS", "%", 2},

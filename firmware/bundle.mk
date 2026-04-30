@@ -126,9 +126,11 @@ ifeq ($(USE_OPENBLT),yes)
 else
   FIRMWARE_OUTPUTS = $(FOLDER)/$(PROJECT).hex
   BINSRC = $(BUILDDIR)/$(PROJECT).bin
+endif
+
+# we need these files for crash investigations
 ifeq ($(INCLUDE_ELF),yes)
   FIRMWARE_OUTPUTS += $(FOLDER)/$(PROJECT).elf $(FOLDER)/$(PROJECT).map $(FOLDER)/$(PROJECT).list
-endif
 endif
 
 ST_DRIVERS = $(DRIVERS_FOLDER)/silent_st_drivers2.exe

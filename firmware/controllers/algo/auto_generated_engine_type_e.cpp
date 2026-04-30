@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sat Apr 04 11:57:47 UTC 2026
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Mon Apr 27 13:14:12 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -57,6 +57,8 @@ const char *getEngine_type_e(engine_type_e value) {
 			return "GM_LTG";
 		case engine_type_e::GM_SBC:
 			return "GM_SBC";
+		case engine_type_e::GM_SBC_GEN3:
+			return "GM_SBC_GEN3";
 		case engine_type_e::GM_SBC_GEN4:
 			return "GM_SBC_GEN4";
 		case engine_type_e::GM_SBC_GEN5:
@@ -209,8 +211,6 @@ const char *getEngine_type_e(engine_type_e value) {
 			return "UNUSED_105";
 		case engine_type_e::UNUSED_16:
 			return "UNUSED_16";
-		case engine_type_e::UNUSED_5:
-			return "UNUSED_5";
 		case engine_type_e::UNUSED_97:
 			return "UNUSED_97";
 		case engine_type_e::VAG_5_CYL:

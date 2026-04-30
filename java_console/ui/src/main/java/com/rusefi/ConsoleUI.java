@@ -49,6 +49,8 @@ import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 import static com.rusefi.ui.util.UiUtils.createOnTopParent;
 
 /**
+ * Main frame of rusEFI updater app
+ *
  * @see StartupFrame
  */
 public class ConsoleUI {
@@ -192,10 +194,22 @@ console live data tab is broken #8402
 
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
-            tabbedPane.addTab("Tuning", new TuningPane(uiContext).getContent());
+            TuningPane tuningPane = new TuningPane(uiContext);
+            PinoutPane pinoutPane = new PinoutPane(uiContext);
+            tabbedPane.addTab("Tuning", tuningPane.getContent());
             tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
-            tabbedPane.addTab("Pinout", new PinoutPane(uiContext).getContent());
+            tabbedPane.addTab("Pinout", pinoutPane.getContent());
             tabbedPane.addTab("Device", new DevicePane(uiContext, port, serialPortType, tabbedPane.tabbedPane).getContent());
+
+            // Pinout ↔ Tune bidirectional navigation
+            pinoutPane.setNavigateToTune((dialogKey, fieldKey) -> {
+                tabbedPane.selectTab("Tuning");
+                tuningPane.navigateToField(dialogKey, fieldKey);
+            });
+            tuningPane.setNavigateToPinout(enumValue -> {
+                tabbedPane.selectTab("Pinout");
+                pinoutPane.highlightByEnumValue(enumValue);
+            });
         }
 
         if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
@@ -329,7 +343,7 @@ console live data tab is broken #8402
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
                 StartupFrame startupFrame = new StartupFrame(ConnectivityContext.INSTANCE, new UIContext());
                 if (bannerCallback != null)
-                    bannerCallback.set(startupFrame::showUpdateBanner);
+                    bannerCallback.set(message -> startupFrame.restartConsole());
                 startupFrame.showUi();
             }
 

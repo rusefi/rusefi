@@ -16,23 +16,28 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.ArrayDeque;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2026
  */
 public class TuningPane {
     private final JPanel content = new JPanel(new BorderLayout());
+    private final MainMenuTreeWidget left;
+    /** Fired when the user picks "Show in Pinout" on a pin-enum field. Wired from ConsoleUI after construction. */
+    private Consumer<String> navigateToPinout;
 
     public TuningPane(UIContext uiContext) {
-        MainMenuTreeWidget left = new MainMenuTreeWidget(uiContext);
+        left = new MainMenuTreeWidget(uiContext);
 
         CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
         JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
 
-        final String[] currentKey = {null};
+        final AtomicReference<String> currentKey = new AtomicReference<>();
 
         // Accumulated tune edits across all dialogs for this session.
-        final ConfigurationImage[] sessionImage = {null};
+        final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
 
         TuningToolbarWidget toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage);
 
@@ -53,23 +58,28 @@ public class TuningPane {
             // so that changes made in dialogs, tables, or curves are not lost when opening another.
             ConfigurationImage pending = right.getWorkingImage();
             if (pending != null) {
-                sessionImage[0] = pending;
-            } else if (sessionImage[0] == null) {
-                sessionImage[0] = bp.getControllerConfiguration().clone();
+                sessionImage.set(pending);
+            } else if (sessionImage.get() == null) {
+                sessionImage.set(bp.getControllerConfiguration().clone());
             }
 
-            currentKey[0] = subMenu.getKey();
-            right.update(subMenu.getKey(), uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
+            currentKey.set(subMenu.getKey());
+            right.update(subMenu.getKey(), uiContext.iniFileState.getIniFileModel(), sessionImage.get());
         });
 
         // All edit events (dialog fields, table cells, curve drags) flow through onConfigChange.
         // Text fields fire per-keystroke; the toolbar widget coalesces them into one undo point.
         right.setOnConfigChange(image -> {
-            toolbar.onEdit(sessionImage[0]);
+            toolbar.onEdit(sessionImage.get());
             // Clone because workingImage is mutated in-place by further edits.
-            sessionImage[0] = image.clone();
+            sessionImage.set(image.clone());
             left.refreshExpressions(image);
             uiContext.fireConfigImageChanged(image);
+        });
+
+        // Right-click "Show in Pinout" on a pin-enum combo fires the current value upward.
+        right.setOnShowInPinout(value -> {
+            if (navigateToPinout != null) navigateToPinout.accept(value);
         });
 
         // When the ECU disconnects (e.g. after a firmware flash or board swap), drop all stale
@@ -82,15 +92,16 @@ public class TuningPane {
                 SwingUtilities.invokeLater(() -> {
                     toolbar.onDisconnect();
                     right.reset();
-                    sessionImage[0] = null;
+                    sessionImage.set(null);
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
-                    if (currentKey[0] == null) return;
+                    String key = currentKey.get();
+                    if (key == null) return;
                     BinaryProtocol bp = uiContext.getBinaryProtocol();
                     if (bp == null || bp.getControllerConfiguration() == null) return;
-                    sessionImage[0] = bp.getControllerConfiguration().clone();
-                    right.update(currentKey[0], uiContext.iniFileState.getIniFileModel(), sessionImage[0]);
+                    sessionImage.set(bp.getControllerConfiguration().clone());
+                    right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
                 });
             }
         });
@@ -110,15 +121,35 @@ public class TuningPane {
 
     private static JPanel buildFrontendIndicatorPanel(UIContext uiContext) {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        if (ini == null) return null;
+        if (ini == null) {
+            return null;
+        }
         FrontPageModel frontPage = ini.getFrontPage();
-        if (frontPage == null) return null;
+        if (frontPage == null) {
+            return null;
+        }
         List<IndicatorModel> indicators = frontPage.getIndicators();
-        if (indicators.isEmpty()) return null;
+        if (indicators.isEmpty()) {
+            return null;
+        }
         return new IndicatorPanel(indicators, ini, 0).getPanel();
     }
 
     public JPanel getContent() {
         return content;
+    }
+
+    public void setNavigateToPinout(Consumer<String> navigateToPinout) {
+        this.navigateToPinout = navigateToPinout;
+    }
+
+    /**
+     * Selects the dialog containing {@code fieldKey} in the left tree, which triggers the
+     * existing onSelect pipeline to render the dialog on the right.
+     * Field-level scrolling within the dialog is deferred (see issue — "scroll into view").
+     */
+    public void navigateToField(String dialogKey, String fieldKey) {
+        if (dialogKey == null) return;
+        left.selectSubMenu(dialogKey);
     }
 }

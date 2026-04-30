@@ -9,9 +9,21 @@ DDEFS += -DEFI_FILE_LOGGING=FALSE -DEFI_ALTERNATOR_CONTROL=FALSE -DEFI_LOGIC_ANA
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
 # Enable ethernet
-LWIP = yes
+EFI_ETHERNET = yes
+ifeq (,$(findstring EFI_BOOTLOADER,$(DDEFS)))
+	LWIP = yes
+	DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
+endif
+
+# Fix stuck in mac_lld_start() in main app
+DDEFS += -DSTM32_MAC_DISABLE_TX_FLUSH=TRUE
+
+# Both LWIP and uIP cause few shadow errors
 ALLOW_SHADOW = yes
-DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
+
+# We need early init for ethernet in OpenBLT
+DDEFS += -DOPENBLT_BOARD_EARLY_INIT=TRUE
+
 DDEFS += -DEFI_ETHERNET=TRUE
 DDEFS += -DEFI_STORAGE_SD=FALSE
 

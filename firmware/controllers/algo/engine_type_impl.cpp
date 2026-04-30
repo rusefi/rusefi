@@ -81,7 +81,6 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::SIMULATOR_CONFIG:
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::MINIMAL_PINS:
-	case engine_type_e::UNUSED_5:
 	case engine_type_e::UNUSED_16:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -218,6 +217,7 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 
 #if defined(HW_HELLEN_UAEFI) || defined(HW_HELLEN_UAEFI121) || defined(HW_HELLEN_SUPER_UAEFI) || defined(HW_HELLEN_8CHAN) || HW_PROTEUS || EFI_SIMULATOR
+	case engine_type_e::GM_SBC_GEN3:
 	case engine_type_e::GM_SBC_GEN4:
 		setGmLs4();
 		break;

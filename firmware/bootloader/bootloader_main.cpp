@@ -46,6 +46,15 @@ PUBLIC_API_WEAK bool OpenBltIsBoardOk()
 	return true;
 }
 
+
+void efiSetLed(ioportid_t port, int pin, bool state) {
+#if (LED_PIN_MODE == OM_INVERTED)
+	palWritePad(port, pin, state);
+#else
+	palWritePad(port, pin, !state);
+#endif
+}
+
 class BlinkyThread : public chibios_rt::BaseStaticThread<256> {
 protected:
 	void main(void) override {
@@ -91,20 +100,17 @@ protected:
 #endif // BOOTLOADER_DISABLE_GREEN_LED
 
 		if (yellowPort) {
-			palSetPad(yellowPort, yellowPin);
+			efiSetLed(yellowPort, yellowPin, 0);
 		}
 		if (bluePort) {
-			palSetPad(bluePort, bluePin);
+			efiSetLed(bluePort, bluePin, 0);
 		}
 		if (greenPort) {
-			palSetPad(greenPort, greenPin);
+			efiSetLed(greenPort, greenPin, 0);
 		}
 		if (redPort) {
-			if (wdReset) {
-				palClearPad(redPort, redPin);
-			} else {
-				palSetPad(redPort, redPin);
-			}
+			// Red is constantly on if WD
+			efiSetLed(redPort, redPin, wdReset);
 		}
 
 		while (true) {
@@ -142,25 +148,39 @@ static blt_bool checkIfRebootIntoOpenBltRequested(void) {
 
 static blt_bool checkIfResetLoop(void) {
 	uint8_t wd_counter = 0;
+	SharedParamsReadByIndex(1, &wd_counter);
 	Reset_Cause_t resetCause = getMCUResetCause();
 	if ((resetCause == Reset_Cause_IWatchdog) ||
 		(resetCause == Reset_Cause_WWatchdog)) {
 		// One of watchdogs
-		SharedParamsReadByIndex(1, &wd_counter);
 		wd_counter++;
-		SharedParamsWriteByIndex(1, wd_counter);
 		wdReset = BLT_TRUE;
-	} else if ((resetCause == Reset_Cause_NRST_Pin) ||
-			   (resetCause == Reset_Cause_POR)) {
-		// power on or NRST reset
+	} else {
 		// cleat WD counter
-		SharedParamsWriteByIndex(1, wd_counter);
+		wd_counter = 0;
+		if ((resetCause == Reset_Cause_NRST_Pin) ||
+			(resetCause == Reset_Cause_POR)) {
+			// power on or NRST reset
+			// TODO: speed up first boot on POR?
+		}
 	}
+	SharedParamsWriteByIndex(1, wd_counter);
 
 	return (wd_counter > maxWdRebootCounter);
 }
 
+#if OPENBLT_BOARD_EARLY_INIT
+extern "C" {
+extern void OpenBLT__early_init(void);
+}
+#endif
+
 int main(void) {
+#if OPENBLT_BOARD_EARLY_INIT
+	// Some specific board init
+	// Like Ethernet pin/gpio init before MAC init is called from halInit();
+	OpenBLT__early_init();
+#endif
 	halInit();
 	chSysInit();
 

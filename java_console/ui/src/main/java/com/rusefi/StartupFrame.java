@@ -4,7 +4,9 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.PrimeTunerStudioCache;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.ts.TsProjectCreator;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.ConnectionStatusLogic;
@@ -42,7 +44,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -249,6 +250,15 @@ public class StartupFrame {
         goToFirmwareTab.addActionListener(e -> outerTabs.setSelectedIndex(0));
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
         realHardwarePanel.add(goToFirmwareTab, "right, wrap");
+
+        JButton openTunerStudio = new JButton("Open TunerStudio");
+        setToolTip(openTunerStudio, "Launch TunerStudio and close this console so the serial port is released");
+        openTunerStudio.addActionListener(e -> {
+            if (TunerStudioHelper.launchTunerStudio(frame)) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        realHardwarePanel.add(openTunerStudio, "right, wrap");
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             status.stop();
@@ -612,6 +622,8 @@ public class StartupFrame {
         noPortsMessage.setText("Connected to " + target.port + " — click Connect to open console");
         noPortsMessage.setVisible(true);
 
+        maybeAutoCreateTsProject(target);
+
         // Check standalone wizard catalog for any step that needs attention on this ECU.
         for (WizardStepDescriptor d : WizardCatalog.standaloneAutoLaunch()) {
             if (!d.applicable.test(uiContext)) continue;
@@ -622,6 +634,24 @@ public class StartupFrame {
             return;
         }
         // No wizard needed — stay on splash, user can click Connect to open the full console.
+    }
+
+    private void maybeAutoCreateTsProject(PortResult target) {
+        if (!Boolean.parseBoolean(PropertiesHolder.getProperty("auto_create_project", "false"))) {
+            return;
+        }
+        if (target.getCalibrations() == null) {
+            return;
+        }
+        String projectName = PropertiesHolder.getProperty("default_project_name", "rusEFI");
+        new Thread(() -> {
+            try {
+                boolean created = TsProjectCreator.createIfMissing(projectName, target.port, target.getCalibrations());
+                log.info(created ? "Auto-created TS project " + projectName : "TS project " + projectName + " already exists, skipping");
+            } catch (Exception e) {
+                log.warn("Auto-create TS project failed", e);
+            }
+        }, "Auto-create TS project").start();
     }
 
     /**
@@ -699,22 +729,12 @@ public class StartupFrame {
         };
     }
 
-    public void showUpdateBanner(String message) {
-        // Use null parent if StartupFrame was already disposed (user connected to a ecu before update finished)
-        Component parent = frame.isDisplayable() ? frame : null;
-        int choice = JOptionPane.showConfirmDialog(
-            parent,
-            message + "\nRestart now to apply it?",
-            "Update Ready",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.INFORMATION_MESSAGE
-        );
-        if (choice == JOptionPane.YES_OPTION) {
-            if (frame.isDisplayable())
-                disposeFrameAndProceed();
-            SimulatorHelper.onWindowClosed();
-            Autoupdate.relaunchConsole();
-        }
+    public void restartConsole() {
+        // not much point requesting an extra click - if we have updated, we shall restart
+        if (frame.isDisplayable())
+            disposeFrameAndProceed();
+        SimulatorHelper.onWindowClosed();
+        Autoupdate.relaunchConsole();
     }
 
     private void saveTabIndex() {

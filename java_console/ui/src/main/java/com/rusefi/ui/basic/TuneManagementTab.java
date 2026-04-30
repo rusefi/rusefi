@@ -7,6 +7,7 @@ import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
+import com.rusefi.tune_manifest.ManifestParseException;
 import com.rusefi.tune_manifest.TuneManifestHelper;
 import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
@@ -30,9 +31,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
 
-/**
- * @see BasicStartupFrame#main dedicated sandbox not needed?
- */
 public class TuneManagementTab {
     private static final Logging log = getLogging(TuneManagementTab.class);
 
@@ -43,6 +41,8 @@ public class TuneManagementTab {
     private final JPanel totalContent = new JPanel(new BorderLayout());
     private final JLabel status = new JLabel("Downloading tunes...");
     private final JTable table = new JTable(new MyTableModel());
+    private final JPanel centerPanel = new JPanel(new BorderLayout());
+    private JScrollPane tableScroll;
     private final JProgressBar uploadProgress = new JProgressBar();
     private final AtomicBoolean awaitingCompletion = new AtomicBoolean(false);
     private List<TuneModel> tunes = new ArrayList<>();
@@ -61,14 +61,13 @@ public class TuneManagementTab {
         if (tunesManifestUrl != null) {
             totalContent.add(status, BorderLayout.NORTH);
 
-            JScrollPane tableScroll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            tableScroll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
                 @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(400, 200);
                 }
             };
 
-            JPanel centerPanel = new JPanel(new BorderLayout());
             centerPanel.add(tableScroll, BorderLayout.CENTER);
             centerPanel.add(uploadProgress, BorderLayout.SOUTH);
 
@@ -98,7 +97,9 @@ public class TuneManagementTab {
                             }
                         });
                     } catch (IOException | ParseException e) {
-                        SwingUtilities.invokeLater(() -> status.setText("Error " + e));
+                        log.error("Failed to download tunes manifest from " + tunesManifestUrl, e);
+                        String body = (e instanceof ManifestParseException) ? ((ManifestParseException) e).getBody() : null;
+                        SwingUtilities.invokeLater(() -> showManifestError(e, body));
                     }
                 }
             }).start();
@@ -163,6 +164,31 @@ public class TuneManagementTab {
         this.tunes = tunes;
         status.setText(tunes.size() + " tunes downloaded!");
         AutoupdateUtil.trueLayoutAndRepaint(table);
+    }
+
+    private void showManifestError(Exception e, String body) {
+        // Keep the header label short: JLabel's preferred width tracks its full text, and a long
+        // error message there would inflate the tab (and the splash frame on the next pack).
+        status.setText("Failed to load tunes.");
+
+        String content = (body == null || body.isEmpty()) ? e.toString() : body;
+        JTextArea textArea = new JTextArea(content);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setCaretPosition(0);
+        JScrollPane errorScroll = new JScrollPane(textArea,
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(400, 200);
+            }
+        };
+        if (tableScroll != null) {
+            centerPanel.remove(tableScroll);
+        }
+        centerPanel.add(errorScroll, BorderLayout.CENTER);
+        AutoupdateUtil.trueLayoutAndRepaint(centerPanel);
     }
 
     public Component getContent() {

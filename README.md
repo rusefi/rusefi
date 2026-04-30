@@ -27,7 +27,7 @@ See [the changelog](firmware/CHANGELOG.md)
  * [Hardware](/hardware) KiCAD files for our older PCBs
  * [rusEFI console](/java_console) rusEFI own native tuning software
  * [Simulator](/simulator) win32 or posix version of firmware allows to explore without any hardware
- * [Unit Tests](/unit_tests) Unit tests of firmware pieces
+ * [Unit Tests](/unit_tests) Unit tests of firmware pieces [coverage report](https://rusefi.com/docs/unit_tests_coverage/)
  * [Misc tools](/java_tools) Misc development utilities
  * [Software Development process](misc/SoftwareDevelopmentProcess.md)
 

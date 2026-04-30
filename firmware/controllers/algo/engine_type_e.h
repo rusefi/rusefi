@@ -23,7 +23,7 @@ enum class engine_type_e : uint16_t {
 	 */
 	MRE_SECONDARY_CAN = 4,
 
-	UNUSED_5 = 5,
+	GM_SBC_GEN3 = 5,
 	HARLEY = 6,
 	FORD_INLINE_6_1995 = 7,
 	/**

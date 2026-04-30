@@ -481,6 +481,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_GM_LNF = 65;
 	public static final int engine_type_e_GM_LTG = 55;
 	public static final int engine_type_e_GM_SBC = 98;
+	public static final int engine_type_e_GM_SBC_GEN3 = 5;
 	public static final int engine_type_e_GM_SBC_GEN4 = 27;
 	public static final int engine_type_e_GM_SBC_GEN5 = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
@@ -557,7 +558,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_105 = 105;
 	public static final int engine_type_e_UNUSED_16 = 16;
-	public static final int engine_type_e_UNUSED_5 = 5;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VAG_5_CYL = 77;
 	public static final int engine_type_e_VW_ABA = 32;
@@ -568,6 +568,7 @@ public class VariableRegistryValues {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
+	public static final int ETHERNET_PORT = 29001;
 	public static final int FAN_PWM_CURVE_SIZE = 8;
 	public static final int FLASH_DATA_VERSION = 260407;
 	public static final int FLOW_LINEARIZATION_MASS_SIZE = 2;
@@ -706,7 +707,7 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
 	public static final String GAUGE_NAME_GYRO_YAW = "Gyro: Yaw rate";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
-	public static final String GAUGE_NAME_IAT = "IAT";
+	public static final String GAUGE_NAME_IAT = "Intake Air IAT";
 	public static final String GAUGE_NAME_IDLE_POSITION = "Idle: Position sensor";
 	public static final String GAUGE_NAME_IGNITION_LOAD = "Ignition: load";
 	public static final String GAUGE_NAME_IGNITION_MODE = "Ignition: Mode";
@@ -1453,7 +1454,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1999704577;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1634,8 +1634,10 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int trigger_type_e_TT_TOYOTA_3_TOOTH_UZ = 91;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
-	public static final int trigger_type_e_TT_UNUSED = 97;
-	public static final int trigger_type_e_TT_UNUSED_96 = 96;
+	public static final int trigger_type_e_TT_UNUSED = 99;
+	public static final int trigger_type_e_TT_UNUSED_97 = 97;
+	public static final int trigger_type_e_TT_UNUSED_98 = 98;
+	public static final int trigger_type_e_TT_VIPER_V10_CRANK = 96;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int trigger_type_e_TT_VVT_FORD_COYOTE = 4;
@@ -1773,7 +1775,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.04.22.mre-legacy_f4.1999704577";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.04.30.mre-legacy_f4.3636599743";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2128;

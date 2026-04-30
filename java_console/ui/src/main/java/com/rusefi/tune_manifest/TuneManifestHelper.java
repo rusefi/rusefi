@@ -10,12 +10,14 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -36,22 +38,49 @@ public class TuneManifestHelper {
     }
 
     static @Nullable String downloadFile(String baseUrl, String fullFileUrl, String localFileName) throws IOException {
+        return downloadFile(baseUrl, fullFileUrl, localFileName, null);
+    }
+
+    static @Nullable String downloadFile(String baseUrl, String fullFileUrl, String localFileName, @Nullable String acceptHeader) throws IOException {
         String localFolderForSpecificUrl = getLocalFolder(baseUrl);
 
         String fullLocalFileName = localFolderForSpecificUrl + localFileName;
 
         URL url = new URL(fullFileUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        if (acceptHeader != null) {
+            connection.setRequestProperty("Accept", acceptHeader);
+        }
         try {
-            try (InputStream in = url.openStream()) {
+            int status = connection.getResponseCode();
+            if (status == HttpURLConnection.HTTP_NOT_FOUND) {
+                log.error("File not found: " + fullFileUrl);
+                return null;
+            }
+            if (status / 100 != 2) {
+                String body = readErrorBody(connection);
+                throw new IOException("HTTP " + status + " " + connection.getResponseMessage()
+                    + " for " + fullFileUrl + (body.isEmpty() ? "" : ": " + body));
+            }
+            try (InputStream in = connection.getInputStream()) {
                 // Copy the stream to a file, replacing the file if it already exists
                 Files.copy(in, Paths.get(fullLocalFileName), StandardCopyOption.REPLACE_EXISTING);
                 log.info("File downloaded successfully to " + fullLocalFileName);
             }
-        } catch (FileNotFoundException e) {
-            log.error("File not found: " + fullFileUrl);
-            return null;
+        } finally {
+            connection.disconnect();
         }
         return fullLocalFileName;
+    }
+
+    private static String readErrorBody(HttpURLConnection connection) {
+        InputStream err = connection.getErrorStream();
+        if (err == null)
+            return "";
+        try (Scanner scanner = new Scanner(err).useDelimiter("\\A")) {
+            String body = scanner.hasNext() ? scanner.next().trim() : "";
+            return body.length() > 500 ? body.substring(0, 500) + "..." : body;
+        }
     }
 
     public static @NotNull String getLocalFolder(String baseUrl) {
@@ -61,29 +90,36 @@ public class TuneManifestHelper {
     }
 
     static List<TuneModel> parseManifest(String localManifest) throws IOException, ParseException {
-        List<TuneModel> tunes = new ArrayList<>();
         try {
+            List<TuneModel> tunes = new ArrayList<>();
             JSONParser parser = new JSONParser();
             try (FileReader reader = new FileReader(localManifest)) {
-                // Parse the JSON file
                 Object obj = parser.parse(reader);
-
-                // Cast the parsed object to a JSONObject
                 JSONArray topLevelArray = (JSONArray) obj;
-
                 for (int i = 0; i < topLevelArray.size(); i++) {
                     JSONObject object = (JSONObject) topLevelArray.get(i);
                     tunes.add(TuneModel.parse(object));
                 }
             }
             return tunes;
-        } catch (ClassCastException e) {
-            throw new IOException("JSON error " + e, e);
+        } catch (ClassCastException | ParseException e) {
+            throw new ManifestParseException(readFileBodySafely(localManifest), e);
+        }
+    }
+
+    private static String readFileBodySafely(String path) {
+        try {
+            return new String(Files.readAllBytes(Paths.get(path)));
+        } catch (IOException e) {
+            return "(could not read local manifest file: " + e.getMessage() + ")";
         }
     }
 
     public static void downloadAllTunes(String baseUrl, Callback callback) throws IOException, ParseException {
-        String localManifest = downloadFile(baseUrl, baseUrl + MANIFEST_FILE_NAME, MANIFEST_FILE_NAME);
+        String localManifest = downloadFile(baseUrl, baseUrl + MANIFEST_FILE_NAME, MANIFEST_FILE_NAME, "application/json");
+        if (localManifest == null) {
+            throw new IOException("Manifest not found at " + baseUrl + MANIFEST_FILE_NAME);
+        }
         List<TuneModel> tunes = parseManifest(localManifest);
 
         for (TuneModel t : tunes) {

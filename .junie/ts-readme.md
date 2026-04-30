@@ -1,0 +1,7 @@
+- files: `firmware/tunerstudio/readme.md`
+- TunerStudio Help Documentation: `.junie/ts-help-topic.md`
+- TunerStudio Persistence: `firmware/tunerstudio/readme-persistence.md`
+- Validation: Scan `firmware/tunerstudio/generated/rusefi_uaefi.ini` to verify final field names, gauge mappings, and output channel logic.
+- UI Pattern: Prefer wrapping 3D tables/curves into a `dialog` with `border` layout, placing the table (West) and a status `panel` (East) side-by-side. The status panel should contain relevant gauges and calibration fields (e.g., offsets, PID status).
+- Dialog/Panel validation: The build tool strictly validates that all referenced panels exist. Suffixes starting with `@@` (used for conditional visibility) are automatically ignored during name comparison.
+- [UserDefined] section: Dialog and panel definitions should generally be placed in this section of the template to maintain organization.

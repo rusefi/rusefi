@@ -117,5 +117,6 @@ Key preprocessor flags that control compilation:
 - Requires Unix-like OS (Linux, macOS, or Windows WSL)
 - All PRs must pass CI gates (firmware builds for all boards, unit tests)
 - Wiki: https://wiki.rusefi.com/
+- TunerStudio General Notes: `.junie/ts-readme.md`
 
 See also .junie/guidelines.md file

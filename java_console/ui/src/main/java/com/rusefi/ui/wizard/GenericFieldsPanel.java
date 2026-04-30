@@ -17,6 +17,9 @@ import java.util.Map;
  * Wizard step that edits one or more INI fields generically.
  * Supports string/scalar fields (JTextField) and enum fields (JComboBox).
  * Arrays are not supported.
+ * <p>
+ * Field-specific behavior (prefill, validation, input filters) lives in
+ * {@link WizardFieldPolicy} implementations — this class stays field-agnostic.
  */
 public class GenericFieldsPanel extends AbstractWizardStep {
 
@@ -26,6 +29,8 @@ public class GenericFieldsPanel extends AbstractWizardStep {
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final Map<String, JComponent> editors = new LinkedHashMap<>();
+    private final Map<String, JLabel> errorLabels = new LinkedHashMap<>();
+    private JButton saveButton;
 
     public GenericFieldsPanel(UIContext uiContext, String title, String description,
                               List<String> fieldNames, String wizardFlagFieldName) {
@@ -42,7 +47,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         JLabel titleLabel = new JLabel(getTitle());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        scale(titleLabel, 2f);
+        scale(titleLabel, 1.5f);
         content.add(titleLabel, BorderLayout.NORTH);
 
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
@@ -75,17 +80,25 @@ public class GenericFieldsPanel extends AbstractWizardStep {
             gbc.gridx = 1;
             IniField field = ini != null ? ini.findIniField(fieldName).orElse(null) : null;
             JComponent editor = buildEditorFor(field);
+            WizardFieldPolicy.forField(fieldName).decorate(editor, this::updateValidity);
             scale(editor, 1.3f);
             editors.put(fieldName, editor);
             form.add(editor, gbc);
             row++;
+
+            gbc.gridx = 1;
+            gbc.gridy = row++;
+            JLabel errorLabel = new JLabel(" ");
+            errorLabel.setForeground(Color.RED);
+            errorLabels.put(fieldName, errorLabel);
+            form.add(errorLabel, gbc);
         }
 
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.add(form);
         content.add(centerWrapper, BorderLayout.CENTER);
 
-        JButton saveButton = new JButton("Save and Continue");
+        saveButton = new JButton("Save and Continue");
         scale(saveButton, 1.5f);
         saveButton.addActionListener(e -> onSave());
 
@@ -110,6 +123,18 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         return new JTextField(20);
     }
 
+    private void updateValidity() {
+        boolean ok = true;
+        for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
+            String name = entry.getKey();
+            String error = WizardFieldPolicy.forField(name).errorMessage(entry.getValue());
+            JLabel errorLabel = errorLabels.get(name);
+            if (errorLabel != null) errorLabel.setText(error == null ? " " : error);
+            if (error != null) ok = false;
+        }
+        if (saveButton != null) saveButton.setEnabled(ok);
+    }
+
     private void loadValues() {
         WizardConfig cfg = WizardConfig.snapshot(uiContext);
         if (cfg == null) return;
@@ -132,9 +157,11 @@ public class GenericFieldsPanel extends AbstractWizardStep {
                     combo.setSelectedItem(unquoted);
                 }
             } else if (editor instanceof JTextField) {
-                ((JTextField) editor).setText(unquoted);
+                String text = WizardFieldPolicy.forField(entry.getKey()).transformLoadedValue(unquoted);
+                ((JTextField) editor).setText(text == null ? "" : text);
             }
         }
+        updateValidity();
     }
 
     private void onSave() {
@@ -153,7 +180,8 @@ public class GenericFieldsPanel extends AbstractWizardStep {
                 if (selected == null) continue; // leave INVALID/blank untouched
                 ConfigurationImageGetterSetter.setValue2(field, modified, name, selected.toString());
             } else if (editor instanceof JTextField) {
-                ConfigurationImageGetterSetter.setValue2(field, modified, name, ((JTextField) editor).getText());
+                String text = WizardFieldPolicy.forField(name).transformSavedValue(((JTextField) editor).getText());
+                ConfigurationImageGetterSetter.setValue2(field, modified, name, text);
             }
         }
         fireCompleted(new WizardStepResult(modified));

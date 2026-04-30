@@ -435,8 +435,12 @@ public class WizardContainer extends JPanel {
         WizardStep step = steps.get(index);
         String title = step != null ? step.getTitle() : "...";
         if (totalSteps == 1) {
-            stepLabel.setText(title);
+            // Single-step mode (e.g. VIN auto-launch): the panel renders its own title,
+            // so hide the header label to avoid duplicating it.
+            stepLabel.setText("");
+            stepLabel.setVisible(false);
         } else {
+            stepLabel.setVisible(true);
             stepLabel.setText("Step " + applicableCountUpTo(index) + " of " + applicableFlaggedCount() + ": " + title);
         }
         CardLayout cl = (CardLayout) stepContentPanel.getLayout();
