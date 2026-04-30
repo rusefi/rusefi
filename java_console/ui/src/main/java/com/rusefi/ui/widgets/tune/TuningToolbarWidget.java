@@ -11,6 +11,7 @@ import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.basic.LoadTuneHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -198,7 +199,7 @@ public class TuningToolbarWidget {
                                                 AtomicReference<String> currentKey,
                                                 AtomicReference<ConfigurationImage> sessionImage) {
         JFileChooser chooser = createMsqFileChooser();
-        JButton button = new JButton("Load Tune From File");
+        JButton button = new JButton(LoadTuneHelper.LOAD_TUNE_TEXT);
         button.addActionListener(e -> {
             if (chooser.showOpenDialog(button) != JFileChooser.APPROVE_OPTION) {
                 return;
