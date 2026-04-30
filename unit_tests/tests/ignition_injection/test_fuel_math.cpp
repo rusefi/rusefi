@@ -541,3 +541,42 @@ TEST(AirmassModes, PredictiveMapCalculation) {
 	// Should use the fallback MAP from the table
 	EXPECT_FLOAT_EQ(dut.getMap(1500, false), 85.0f);
 }
+
+// Verifies that the blend target tracks the rising sensor value rather than
+// the stale pre-event snapshot, avoiding a lean dip during long transients.
+TEST(AirmassModes, PredictiveMapBlendTowardRisingSensor) {
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+
+	EXPECT_CALL(mapFallback, getValue(1500, 30.0f))
+		.WillRepeatedly(Return(85.0f));
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->accelEnrichmentMode = AE_MODE_PREDICTIVE_MAP;
+	for (auto index = 0; index < efi::size(config->predictiveMapBlendDurationValues); index++) {
+		config->predictiveMapBlendDurationValues[index] = 0.5f; // 500ms blend
+	}
+
+	SpeedDensityAirmass dut(veTable, mapFallback);
+
+	Sensor::setMockValue(SensorType::Tps1, 30.0f);
+	Sensor::setMockValue(SensorType::Map, 65.0f);
+
+	// Trigger prediction: predicted=85, sensor=65
+	auto& tpsAccel = *engine->module<TpsAccelEnrichment>();
+	tpsAccel.m_accelEventJustOccurred = true;
+	EXPECT_FLOAT_EQ(dut.getMap(1500, false), 85.0f);
+
+	// Sensor rises to 75 kPa (manifold filling up)
+	Sensor::setMockValue(SensorType::Map, 75.0f);
+
+	// At 50% blend with rising sensor: 85 + (75-85)*0.5 = 80.0
+	// Old code would give: 85 + (65-85)*0.5 = 75.0
+	eth.moveTimeForwardMs(250);
+	EXPECT_NEAR(dut.getMap(1500, false), 80.0f, EPS4D);
+
+	// Sensor catches up to predicted — prediction exits early
+	Sensor::setMockValue(SensorType::Map, 90.0f);
+	EXPECT_FLOAT_EQ(dut.getMap(1500, false), 90.0f);
+}

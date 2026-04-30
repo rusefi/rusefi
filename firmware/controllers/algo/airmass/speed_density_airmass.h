@@ -23,7 +23,7 @@ private:
 
 	// State for predictive MAP blending
 	bool m_isMapPredictionActive = false;
+	bool m_awaitingThrottleRelease = false;
 	Timer m_predictionTimer;
 	float m_initialPredictedMap = 0;
-	float m_initialRealMap = 0;
 };
