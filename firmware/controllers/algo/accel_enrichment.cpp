@@ -213,11 +213,23 @@ TpsAccelEnrichment::TpsAccelEnrichment() {
 
 void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*previousConfig*/) {
 	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
-	int length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
+	int length;
 
-	if (length < 1) {
-		efiPrintf("setTpsAccelLen: Length should be positive [%d]", length);
-		return;
+	if (engineConfiguration->accelEnrichmentMode == AE_MODE_PREDICTIVE_MAP) {
+		// In predictive MAP mode, size the lookback buffer to cover the longest possible
+		// blend duration so the TPS history window is consistent with the prediction window.
+		float maxBlendDuration = 0;
+		for (int i = 0; i < TPS_TPS_ACCEL_CLT_CORR_TABLE; i++) {
+			maxBlendDuration = maxF(maxBlendDuration, config->predictiveMapBlendDurationValues[i]);
+		}
+		length = maxF(2, ceilf(maxBlendDuration / slowCallbackPeriodSecond));
+	} else {
+		length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
+
+		if (length < 1) {
+			efiPrintf("setTpsAccelLen: Length should be positive [%d]", length);
+			return;
+		}
 	}
 
 	setLength(length);
