@@ -121,11 +121,17 @@ public class TuningPane {
 
     private static JPanel buildFrontendIndicatorPanel(UIContext uiContext) {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        if (ini == null) return null;
+        if (ini == null) {
+            return null;
+        }
         FrontPageModel frontPage = ini.getFrontPage();
-        if (frontPage == null) return null;
+        if (frontPage == null) {
+            return null;
+        }
         List<IndicatorModel> indicators = frontPage.getIndicators();
-        if (indicators.isEmpty()) return null;
+        if (indicators.isEmpty()) {
+            return null;
+        }
         return new IndicatorPanel(indicators, ini, 0).getPanel();
     }
 

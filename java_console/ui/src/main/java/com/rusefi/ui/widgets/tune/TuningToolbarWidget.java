@@ -65,7 +65,9 @@ public class TuningToolbarWidget {
             ConfigurationImage baseline = undoBaseline.getAndSet(null);
             if (baseline != null) {
                 undoStack.push(baseline);
-                if (undoStack.size() > MAX_UNDO) undoStack.removeLast();
+                if (undoStack.size() > MAX_UNDO) {
+                    undoStack.removeLast();
+                }
                 redoStack.clear();
                 updateButtons.run();
             }
@@ -77,7 +79,9 @@ public class TuningToolbarWidget {
         uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
             ConfigurationImage image = sessionImage.get();
-            if (bp == null || image == null) return;
+            if (bp == null || image == null) {
+                return;
+            }
             final ConfigurationImage snapshot = image.clone();
             uiContext.getLinkManager().submit(() -> bp.uploadChangesWithoutBurn(snapshot));
         });
@@ -91,11 +95,15 @@ public class TuningToolbarWidget {
         JButton saveTuneButton = getSaveTuneButton(uiContext, right, sessionImage);
 
         undoButton.addActionListener(e -> {
-            if (undoStack.isEmpty()) return;
+            if (undoStack.isEmpty()) {
+                return;
+            }
             undoCommitTimer.stop();
             undoBaseline.set(null);
             ConfigurationImage image = sessionImage.get();
-            if (image != null) redoStack.push(image);
+            if (image != null) {
+                redoStack.push(image);
+            }
             sessionImage.set(undoStack.pop());
             String key = currentKey.get();
             if (key != null) {
@@ -105,11 +113,15 @@ public class TuningToolbarWidget {
         });
 
         redoButton.addActionListener(e -> {
-            if (redoStack.isEmpty()) return;
+            if (redoStack.isEmpty()) {
+                return;
+            }
             undoCommitTimer.stop();
             undoBaseline.set(null);
             ConfigurationImage image = sessionImage.get();
-            if (image != null) undoStack.push(image);
+            if (image != null) {
+                undoStack.push(image);
+            }
             sessionImage.set(redoStack.pop());
             String key = currentKey.get();
             if (key != null) {
@@ -134,8 +146,12 @@ public class TuningToolbarWidget {
         burnButton.addActionListener(e -> {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
             ConfigurationImage toBurn = right.getWorkingImage();
-            if (toBurn == null) toBurn = sessionImage.get();
-            if (bp == null || toBurn == null) return;
+            if (toBurn == null) {
+                toBurn = sessionImage.get();
+            }
+            if (bp == null || toBurn == null) {
+                return;
+            }
             final ConfigurationImage image = toBurn;
             sessionImage.set(image);
             uiContext.getLinkManager().submit(() -> {
@@ -155,9 +171,13 @@ public class TuningToolbarWidget {
 
         discardButton.addActionListener(e -> {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
-            if (bp == null) return;
+            if (bp == null) {
+                return;
+            }
             ConfigurationImage baseline = bp.getCachedImage();
-            if (baseline == null) baseline = bp.getControllerConfiguration();
+            if (baseline == null) {
+                baseline = bp.getControllerConfiguration();
+            }
             sessionImage.set(baseline.clone());
             String key = currentKey.get();
             if (key != null) {
@@ -260,16 +280,22 @@ public class TuningToolbarWidget {
             if (image == null) image = sessionImage.get();
             if (image == null) {
                 BinaryProtocol bp = uiContext.getBinaryProtocol();
-                if (bp != null) image = bp.getControllerConfiguration();
+                if (bp != null) {
+                    image = bp.getControllerConfiguration();
+                }
             }
             if (ini == null || image == null) {
                 JOptionPane.showMessageDialog(button, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (chooser.showSaveDialog(button) != JFileChooser.APPROVE_OPTION) return;
+            if (chooser.showSaveDialog(button) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
             File selected = chooser.getSelectedFile();
             String path = selected.getAbsolutePath();
-            if (!path.toLowerCase().endsWith(".msq")) path += ".msq";
+            if (!path.toLowerCase().endsWith(".msq")) {
+                path += ".msq";
+            }
             final String finalPath = path;
             final ConfigurationImage finalImage = image;
             new Thread(() -> {
