@@ -23,6 +23,7 @@
 #endif
 
 using enum idle_mode_e;
+using enum cranking_idle_mode_e;
 
 IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
 	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
@@ -181,14 +182,15 @@ if (engine->antilagController.isAntilagCondition) {
 }
 
 percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) {
-	percent_t crankingValvePosition = getCrankingOpenLoop(clt);
-
 	isCranking = phase == Phase::Cranking;
 	isIdleCoasting = phase == Phase::Coasting || (phase == Phase::Running && engineConfiguration->modeledFlowIdle);
 
-	// if we're cranking, nothing more to do.
-	if (isCranking) {
-		return crankingValvePosition;
+	bool rpmMode = engineConfiguration->crankingIdleMode == CRANKING_IDLE_RPM;
+
+	// Duty mode only: return cranking position directly during cranking.
+	// RPM mode falls through to running open-loop; m_lastTargetRpm shifts the 3D table lookup.
+	if (isCranking && !rpmMode) {
+		return getCrankingOpenLoop(clt);
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
@@ -208,9 +210,14 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 
 	percent_t running = getRunningOpenLoop(phase, rpm, clt, tps);
 
-	// Interpolate between cranking and running over a short time
-	// This clamps once you fall off the end, so no explicit check for >1 required
-	return interpolateClamped(0, crankingValvePosition, 1, running, crankingTaperFraction);
+	// RPM mode: taper is handled via m_lastTargetRpm driving the 3D table; just return running.
+	if (rpmMode) {
+		return running;
+	}
+
+	// Duty mode: interpolate between cranking duty and running over the crank taper.
+	// This clamps once you fall off the end, so no explicit check for >1 required.
+	return interpolateClamped(0, getCrankingOpenLoop(clt), 1, running, crankingTaperFraction);
 }
 
 float IdleController::getIdleTimingAdjustment(float rpm) {
@@ -382,6 +389,17 @@ float IdleController::getIdlePosition(float rpm) {
  	  }
 
 		m_lastPhase = phase;
+
+		// RPM mode: treat cltCrankingCorr values as RPM targets and blend toward normal idle RPM
+		// via the existing crank taper fraction. This shifts the 3D open-loop table lookup to a
+		// higher RPM row at startup and naturally tapers it down as the engine warms into idle.
+		if (engineConfiguration->crankingIdleMode == CRANKING_IDLE_RPM &&
+		    (phase == Phase::Cranking || phase == Phase::CrankToIdleTaper)) {
+			float crankingRpmTarget = interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
+			m_lastTargetRpm = interpolateClamped(0, crankingRpmTarget, 1, m_lastTargetRpm, crankingTaper);
+			targetRpm.ClosedLoopTarget = m_lastTargetRpm;
+			idleTarget = m_lastTargetRpm;
+		}
 
 		finishIdleTestIfNeeded();
 

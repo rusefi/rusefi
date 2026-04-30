@@ -181,6 +181,11 @@ enum class idle_mode_e : uint8_t {
 
 };
 
+enum class cranking_idle_mode_e : uint8_t {
+	CRANKING_IDLE_DUTY = 0,
+	CRANKING_IDLE_RPM  = 1,
+};
+
 enum class SentEtbType : uint8_t {
 	NONE = 0,
 	GM_TYPE_1 = 1,
