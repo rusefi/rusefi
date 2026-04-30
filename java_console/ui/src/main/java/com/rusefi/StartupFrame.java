@@ -44,7 +44,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -730,22 +729,12 @@ public class StartupFrame {
         };
     }
 
-    public void showUpdateBanner(String message) {
-        // Use null parent if StartupFrame was already disposed (user connected to a ecu before update finished)
-        Component parent = frame.isDisplayable() ? frame : null;
-        int choice = JOptionPane.showConfirmDialog(
-            parent,
-            message + "\nRestart now to apply it?",
-            "Update Ready",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.INFORMATION_MESSAGE
-        );
-        if (choice == JOptionPane.YES_OPTION) {
-            if (frame.isDisplayable())
-                disposeFrameAndProceed();
-            SimulatorHelper.onWindowClosed();
-            Autoupdate.relaunchConsole();
-        }
+    public void restartConsole() {
+        // not much point requesting an extra click - if we have updated, we shall restart
+        if (frame.isDisplayable())
+            disposeFrameAndProceed();
+        SimulatorHelper.onWindowClosed();
+        Autoupdate.relaunchConsole();
     }
 
     private void saveTabIndex() {
