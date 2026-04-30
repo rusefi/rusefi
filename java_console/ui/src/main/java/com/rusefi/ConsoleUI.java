@@ -341,7 +341,7 @@ console live data tab is broken #8402
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
                 StartupFrame startupFrame = new StartupFrame(ConnectivityContext.INSTANCE, new UIContext());
                 if (bannerCallback != null)
-                    bannerCallback.set(startupFrame::showUpdateBanner);
+                    bannerCallback.set(message -> startupFrame.restartConsole());
                 startupFrame.showUi();
             }
 
