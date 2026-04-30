@@ -215,9 +215,7 @@ public class TuningToolbarWidget {
                                     CountDownLatch latch = new CountDownLatch(1);
                                     uiContext.getLinkManager().submit(() -> {
                                         try {
-                                            bp.uploadChangesWithoutBurn(newImage);
-                                            bp.burn();
-                                            bp.setConfigurationImage(newImage);
+                                            bp.uploadChanges(newImage);
                                         } finally {
                                             latch.countDown();
                                         }
