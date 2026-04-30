@@ -1168,6 +1168,9 @@ bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skippe
 custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Open Loop"
 	idle_mode_e idleMode;See also idleRpmPid;
 
+custom cranking_idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Duty Cycle", "RPM"
+	cranking_idle_mode_e crankingIdleMode;Cranking idle valve mode. Duty Cycle: open-loop valve position from table (0-100%). RPM: table values are RPM targets that shift the Base Idle Valve table lookup during cranking, tapering to normal idle RPM. Re-enter table values when switching modes.
+
 	bit isInjectionEnabled,"enabled","disabled"
 	bit isIgnitionEnabled,"enabled","disabled"
 	bit isCylinderCleanupEnabled,"enabled","disabled";When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
