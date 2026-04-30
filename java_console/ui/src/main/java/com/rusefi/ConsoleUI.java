@@ -49,6 +49,8 @@ import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 import static com.rusefi.ui.util.UiUtils.createOnTopParent;
 
 /**
+ * Main frame of rusEFI updater app
+ *
  * @see StartupFrame
  */
 public class ConsoleUI {

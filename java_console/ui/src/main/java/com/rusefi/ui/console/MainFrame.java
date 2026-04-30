@@ -11,11 +11,13 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.net.URI;
 import java.util.Objects;
 import java.time.LocalDateTime;
@@ -62,6 +64,37 @@ public class MainFrame {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
         listener = ConnectionStatusLogic.Listener.VOID;
+
+        createMenuBar();
+    }
+
+    private void createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+
+        JMenuItem loadTuneItem = new JMenuItem(LoadTuneHelper.LOAD_TUNE_TEXT);
+        loadTuneItem.setMnemonic(KeyEvent.VK_L);
+        loadTuneItem.setEnabled(false);
+        fileMenu.add(loadTuneItem);
+
+        JMenuItem saveTuneItem = new JMenuItem(LoadTuneHelper.SAVE_TUNE_TEXT);
+        saveTuneItem.setMnemonic(KeyEvent.VK_S);
+        saveTuneItem.setEnabled(false);
+        fileMenu.add(saveTuneItem);
+
+        fileMenu.addSeparator();
+
+        JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.setMnemonic(KeyEvent.VK_X);
+        exitItem.addActionListener(e -> {
+            // This triggers the same cleanup logic as closing the window
+            frame.getFrame().dispose();
+        });
+        fileMenu.add(exitItem);
+
+        menuBar.add(fileMenu);
+        frame.getFrame().setJMenuBar(menuBar);
     }
 
     private void windowOpenedHandler() {
