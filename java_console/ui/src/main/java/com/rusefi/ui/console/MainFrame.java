@@ -2,6 +2,7 @@ package com.rusefi.ui.console;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.*;
+import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
@@ -11,6 +12,7 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.ui.basic.FirmwareUpdateTab;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.util.ExitUtil;
 import org.jetbrains.annotations.NotNull;
@@ -94,6 +96,20 @@ public class MainFrame {
         fileMenu.add(exitItem);
 
         menuBar.add(fileMenu);
+
+        JMenu actionsMenu = new JMenu("Actions");
+        actionsMenu.setMnemonic(KeyEvent.VK_A);
+
+        JMenuItem updateSoftwareItem = new JMenuItem("Update Software");
+        saveTuneItem.setEnabled(false);
+        actionsMenu.add(updateSoftwareItem);
+
+        JMenuItem updateEcuItem = new JMenuItem("Update ECU");
+        saveTuneItem.setEnabled(false);
+        actionsMenu.add(updateEcuItem);
+
+        menuBar.add(actionsMenu);
+
         frame.getFrame().setJMenuBar(menuBar);
     }
 
