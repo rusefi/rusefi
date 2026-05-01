@@ -645,15 +645,15 @@
          80.0
          100.0
 </constant>
-        <constant cols="1" digits="2" name="cltCrankingCorr" rows="8" units="percent">
-         50.0
-         50.0
-         50.0
-         50.0
-         50.0
-         50.0
-         50.0
-         50.0
+        <constant cols="1" digits="0" name="cltCrankingCorr" rows="8" units="value">
+         50
+         50
+         50
+         50
+         50
+         50
+         50
+         50
 </constant>
         <constant cols="1" digits="2" name="cltCrankingCorrBins" rows="8" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">
          -40.0
@@ -856,6 +856,7 @@
          1.0
          1.0
 </constant>
+        <constant name="crankingIdleMode">"Duty Cycle"</constant>
         <constant name="crankingInjectionMode">"Simultaneous"</constant>
         <constant digits="0" name="crankingTimingAngle" units="deg">6</constant>
         <constant cols="1" digits="2" name="crankingTpsBins" rows="8" units="%">
@@ -5078,7 +5079,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260429" nPages="1" signature="rusEFI master.2026.05.01.f407-discovery.3431558475" version="5.0"/>
+    <versionInfo firmwareInfo="20260429" nPages="1" signature="rusEFI master.2026.05.01.f407-discovery.1524383696" version="5.0"/>
     <bibliography author="rusEFI 20260429" writeDate="date"/>
     <settings/>
     <userComments/>
