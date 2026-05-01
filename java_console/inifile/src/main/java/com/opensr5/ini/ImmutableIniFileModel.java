@@ -27,6 +27,7 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final Map<String, ContextHelpModel> contextHelp;
     private final List<MenuModel> menus;
     private final FrontPageModel frontPage;
+    private final Map<String, String> controllerCommands;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
@@ -66,7 +67,8 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, CurveModel> curves,
                                  String menuDialog,
                                  List<MenuModel> menus,
-                                 FrontPageModel frontPage) {
+                                 FrontPageModel frontPage,
+                                 Map<String, String> controllerCommands) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -91,6 +93,7 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.curves = copyWithCaseInsensitiveKeys(curves);
         this.menus = Collections.unmodifiableList(new ArrayList<>(menus));
         this.frontPage = frontPage;
+        this.controllerCommands = copyWithCaseInsensitiveKeys(controllerCommands);
     }
 
     @Override
@@ -280,5 +283,10 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public List<MenuModel> getMenus() {
         return menus;
+    }
+
+    @Override
+    public Map<String, String> getControllerCommands() {
+        return controllerCommands;
     }
 }

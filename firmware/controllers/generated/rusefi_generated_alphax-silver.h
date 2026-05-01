@@ -1438,6 +1438,7 @@
 #define nitrous_arming_method_e_LUA_GAUGE 1
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
 #define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
+#define operation_mode_e_FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR 8
 #define operation_mode_e_FOUR_STROKE_SIX_TIMES_CRANK_SENSOR 7
 #define operation_mode_e_FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR 4
 #define operation_mode_e_FOUR_STROKE_THREE_TIMES_CRANK_SENSOR 5
@@ -1564,7 +1565,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1155212260
+#define SIGNATURE_HASH 2556399529
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2175,12 +2176,12 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.04.30.alphax-silver.1155212260"
+#define TS_SIGNATURE "rusEFI master.2026.05.01.alphax-silver.2556399529"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 2128
+#define TS_TOTAL_OUTPUT_SIZE 2132
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

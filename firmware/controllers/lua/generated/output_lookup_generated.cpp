@@ -490,6 +490,12 @@ float getOutputValueByHash(const int hash) {
 // effectiveMap
 		case -1724101868:
 			return engine->outputChannels.effectiveMap;
+// predTimerResetCnt
+		case -1457567239:
+			return engine->outputChannels.predTimerResetCnt;
+// mapPredEventOver
+		case -1250788372:
+			return engine->outputChannels.mapPredEventOver;
 // instantMAPValue
 		case -1162308767:
 			return engine->outputChannels.instantMAPValue;

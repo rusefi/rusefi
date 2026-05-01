@@ -98,6 +98,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	fprintf(fp, "%s=%s\n", TRIGGER_MODE, getOperation_mode_e(mode));
 	bool isOneOfCrankShapes = mode == FOUR_STROKE_CRANK_SENSOR ||
 			mode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
+			mode == FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR ||
 			mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
 			mode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
 	fprintf(fp, "%s=%s\n", TRIGGER_IS_CRANK_KEY, isOneOfCrankShapes ? "true" : "false");

@@ -40,7 +40,8 @@ public class IniFileReader {
                 allCurves,
                 menuDialogString,
                 menus,
-                frontPage);
+                frontPage,
+                controllerCommands);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -99,6 +100,7 @@ public class IniFileReader {
 
     private boolean isTableEditorSection = false;
     private boolean isMenuSection = false;
+    private boolean isControllerCommandsSection = false;
     private final List<MenuModel> menus = new ArrayList<>();
     private MenuModel currentMenu;
     private GroupMenuModel currentGroup;
@@ -111,6 +113,8 @@ public class IniFileReader {
     private final FrontPageModel frontPage = new FrontPageModel();
     private final Map<String, CurveModel> allCurves = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final CurveBuilder curveBuilder = new CurveBuilder();
+
+    private final Map<String, String> controllerCommands = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -234,6 +238,7 @@ public class IniFileReader {
                 isTableEditorSection = first.equalsIgnoreCase("[TableEditor]");
                 isCurveEditorSection = first.equalsIgnoreCase("[CurveEditor]");
                 isMenuSection = first.equalsIgnoreCase("[Menu]");
+                isControllerCommandsSection = first.equalsIgnoreCase("[ControllerCommands]");
                 isFrontPageSection = first.equalsIgnoreCase("[FrontPage]");
 
                 if (wasGaugeSection && !isGaugeConfigurationsSection) {
@@ -277,6 +282,11 @@ public class IniFileReader {
                 return;
             } else if (isFrontPageSection) {
                 handleFrontPage(list);
+                return;
+            } else if (isControllerCommandsSection) {
+                if (list.size() >= 2) {
+                    controllerCommands.put(list.get(0), list.get(1));
+                }
                 return;
             }
 
