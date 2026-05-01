@@ -73,8 +73,12 @@ jobs:
           echo "headers: looks like nothing to commit"
           exit 0
         elif echo "$OUT" | grep 'changed'; then
-          echo "COMMIT=true" >> $GITHUB_ENV
-          echo "headers: looks like something has changed"
+          if [ "${{github.repository}}" == "rusefi/rusefi" ]; then
+            echo "COMMIT=true" >> $GITHUB_ENV
+            echo "headers: looks like something has changed, we are on main, so pushing"
+          else
+            echo "headers: looks like something has changed, but we are fork"
+          fi
           exit 0
         else
           echo "headers: looks like something unexpected"
@@ -108,8 +112,12 @@ jobs:
           echo "triggers: looks like nothing to commit"
           exit 0
         elif echo "$OUT" | grep 'changed'; then
-          echo "COMMIT=true" >> $GITHUB_ENV
-          echo "triggers: looks like something has changed"
+          if [ "${{github.repository}}" == "rusefi/rusefi" ]; then
+            echo "COMMIT=true" >> $GITHUB_ENV
+            echo "triggers: looks like something has changed, we are on main, so pushing"
+          else
+            echo "triggers: looks like something has changed, but we are fork"
+          fi
           exit 0
         else
           echo "triggers: looks like something unexpected"
