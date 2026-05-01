@@ -2787,3 +2787,5 @@ end_struct
 #define poke false
 
 #define BOARD_ACTION_INJECTOR_PRESET 0x302
+
+#define ETHERNET_PORT 29001
