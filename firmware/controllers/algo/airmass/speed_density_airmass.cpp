@@ -59,30 +59,68 @@ float SpeedDensityAirmass::getPredictiveMap(float rpm, bool postState, float map
 	float elapsedTime = m_predictionTimer.getElapsedSeconds();
 
 	if (m_isMapPredictionActive && elapsedTime >= blendDuration) {
-			// prediction phase is over
 			m_isMapPredictionActive = false;
+			engine->outputChannels.mapPredEventOver++;
+	}
+
+	// Always compute table output for diagnostics, regardless of accel event state.
+	float predictedMap = logAndGetFallback(rpm, postState);
+
+	auto& ae = engine->module<TpsAccelEnrichment>();
+
+	// Clear the re-trigger lock once the throttle returns below the accel threshold,
+	// requiring a fresh pedal engagement before prediction can fire again.
+	if (!ae->isAboveAccelThreshold) {
+		m_awaitingThrottleRelease = false;
 	}
 
 	float effectiveMap = 0;
 	if (m_isMapPredictionActive) {
-		float blendFactor = elapsedTime / blendDuration;
-		// Linearly interpolate between the initial predicted and real values
-		effectiveMap = m_initialPredictedMap + (m_initialRealMap - m_initialPredictedMap) * blendFactor;
+		// Drain any accel events that occurred during prediction so they
+		// cannot immediately re-trigger when the blend window ends.
+		ae->isAccelEventTriggered();
 
-		if (mapSensor >= effectiveMap) {
+		float currentTps = Sensor::getOrZero(SensorType::Tps1);
+
+		// Exit if TPS has dropped by more than the accel threshold below its peak
+		// (throttle released), OR if the sensor has already caught up to or exceeded
+		// what the table predicts at current TPS (no prediction benefit remaining).
+		if (currentTps < m_tpsPeak - engineConfiguration->tpsAccelEnrichmentThreshold
+				|| mapSensor >= predictedMap) {
 			m_isMapPredictionActive = false;
+		} else {
+			// Track rising TPS peak so the exit check above stays anchored to the
+			// highest point reached during this event.
+			m_tpsPeak = maxF(m_tpsPeak, currentTps);
+
+			// Track the rising TPS: if the table now predicts a higher MAP than our
+			// current base, adopt it and restart the blend so we don't under-fuel
+			// a still-opening throttle.
+			if (predictedMap > m_initialPredictedMap) {
+				m_initialPredictedMap = predictedMap;
+				m_predictionTimer.reset();
+				elapsedTime = 0;
+			}
+
+			float blendFactor = elapsedTime / blendDuration;
+			// Blend toward the current (rising) sensor value so the transition
+			// tracks manifold fill-up rather than the stale pre-event pressure.
+			effectiveMap = m_initialPredictedMap + (mapSensor - m_initialPredictedMap) * blendFactor;
+
+			if (mapSensor >= effectiveMap) {
+				m_isMapPredictionActive = false;
+			}
 		}
 	} else {
-		if (engine->module<TpsAccelEnrichment>()->isAccelEventTriggered()) {
-			float predictedMap = logAndGetFallback(rpm, postState);
-
+		if (!m_awaitingThrottleRelease && ae->isAccelEventTriggered()) {
 			if (predictedMap > mapSensor) {
 				m_isMapPredictionActive = true;
-			  engine->module<TpsAccelEnrichment>()->m_timeSinceAccel.reset();
+				ae->m_timeSinceAccel.reset();
 				m_predictionTimer.reset();
 				m_initialPredictedMap = predictedMap;
-				m_initialRealMap = mapSensor;
+				engine->outputChannels.predTimerResetCnt++;
 				effectiveMap = predictedMap;
+				m_awaitingThrottleRelease = true;
 			}
 		}
 	}
