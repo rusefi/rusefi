@@ -1347,6 +1347,7 @@ public class VariableRegistryValues {
 	public static final int nitrous_arming_method_e_LUA_GAUGE = 1;
 	public static final int operation_mode_e_FOUR_STROKE_CAM_SENSOR = 2;
 	public static final int operation_mode_e_FOUR_STROKE_CRANK_SENSOR = 1;
+	public static final int operation_mode_e_FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR = 8;
 	public static final int operation_mode_e_FOUR_STROKE_SIX_TIMES_CRANK_SENSOR = 7;
 	public static final int operation_mode_e_FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4;
 	public static final int operation_mode_e_FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5;
@@ -1775,7 +1776,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.04.30.mre-legacy_f4.3636599743";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.05.01.mre-legacy_f4.3636599743";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2128;

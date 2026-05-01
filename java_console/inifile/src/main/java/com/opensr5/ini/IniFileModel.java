@@ -95,4 +95,6 @@ public interface IniFileModel {
     FrontPageModel getFrontPage();
 
     List<MenuModel> getMenus();
+
+    Map<String, String> getControllerCommands();
 }
