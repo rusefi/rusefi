@@ -454,6 +454,7 @@ todo: spllit into smaller tests?
             @Override public com.opensr5.ini.TableModel getTable(String name) { return null; }
             @Override public com.opensr5.ini.FrontPageModel getFrontPage() { return null; }
             @Override public List<com.opensr5.ini.MenuModel> getMenus() { return null; }
+            @Override public Map<String, String> getControllerCommands() { return java.util.Collections.emptyMap(); }
         };
 
         com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget(curveModel, model, null);
