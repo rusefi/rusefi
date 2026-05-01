@@ -321,6 +321,8 @@ public class VariableRegistryValues {
 	public static final int CRANKING_CYCLE_CLT_SIZE = 4;
 	public static final int CRANKING_ENRICH_CLT_COUNT = 6;
 	public static final int CRANKING_ENRICH_COUNT = 6;
+	public static final int cranking_idle_mode_e_CRANKING_IDLE_DUTY = 0;
+	public static final int cranking_idle_mode_e_CRANKING_IDLE_RPM = 1;
 	public static final int cranking_parameters_s_size = 4;
 	public static final int CRITICAL_BUFFER_SIZE = 120;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
@@ -1455,6 +1457,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 1318537508;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1776,7 +1779,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.05.01.mre-legacy_f4.3636599743";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.05.01.mre-legacy_f4.1318537508";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2128;

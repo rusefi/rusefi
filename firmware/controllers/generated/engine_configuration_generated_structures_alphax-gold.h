@@ -3552,11 +3552,16 @@ struct engine_configuration_s {
 	 */
 	idle_mode_e idleMode;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * Cranking idle valve mode. Duty Cycle: open-loop valve position from table (0-100%). RPM: table values are RPM targets that shift the Base Idle Valve table lookup during cranking, tapering to normal idle RPM. Re-enter table values when switching modes.
 	 * offset 1433
 	 */
-	uint8_t alignmentFill_at_1433[3] = {};
+	cranking_idle_mode_e crankingIdleMode;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1434
+	 */
+	uint8_t alignmentFill_at_1434[2] = {};
 	/**
 	offset 1436 bit 0 */
 	bool isInjectionEnabled : 1 {};
@@ -3665,16 +3670,16 @@ struct engine_configuration_s {
 	bool watchOutForLinearTime : 1 {};
 	/**
 	offset 1436 bit 28 */
-	bool unusedBit_542_28 : 1 {};
+	bool unusedBit_543_28 : 1 {};
 	/**
 	offset 1436 bit 29 */
-	bool unusedBit_542_29 : 1 {};
+	bool unusedBit_543_29 : 1 {};
 	/**
 	offset 1436 bit 30 */
-	bool unusedBit_542_30 : 1 {};
+	bool unusedBit_543_30 : 1 {};
 	/**
 	offset 1436 bit 31 */
-	bool unusedBit_542_31 : 1 {};
+	bool unusedBit_543_31 : 1 {};
 	/**
 	 * units: count
 	 * offset 1440
@@ -3978,16 +3983,16 @@ struct engine_configuration_s {
 	bool enableKnockSpectrogramFilter : 1 {};
 	/**
 	offset 1608 bit 28 */
-	bool unusedBit_615_28 : 1 {};
+	bool unusedBit_616_28 : 1 {};
 	/**
 	offset 1608 bit 29 */
-	bool unusedBit_615_29 : 1 {};
+	bool unusedBit_616_29 : 1 {};
 	/**
 	offset 1608 bit 30 */
-	bool unusedBit_615_30 : 1 {};
+	bool unusedBit_616_30 : 1 {};
 	/**
 	offset 1608 bit 31 */
-	bool unusedBit_615_31 : 1 {};
+	bool unusedBit_616_31 : 1 {};
 	/**
 	 * This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.
 	 * units: percent
@@ -4136,76 +4141,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1652 bit 8 */
-	bool unusedBit_649_8 : 1 {};
+	bool unusedBit_650_8 : 1 {};
 	/**
 	offset 1652 bit 9 */
-	bool unusedBit_649_9 : 1 {};
+	bool unusedBit_650_9 : 1 {};
 	/**
 	offset 1652 bit 10 */
-	bool unusedBit_649_10 : 1 {};
+	bool unusedBit_650_10 : 1 {};
 	/**
 	offset 1652 bit 11 */
-	bool unusedBit_649_11 : 1 {};
+	bool unusedBit_650_11 : 1 {};
 	/**
 	offset 1652 bit 12 */
-	bool unusedBit_649_12 : 1 {};
+	bool unusedBit_650_12 : 1 {};
 	/**
 	offset 1652 bit 13 */
-	bool unusedBit_649_13 : 1 {};
+	bool unusedBit_650_13 : 1 {};
 	/**
 	offset 1652 bit 14 */
-	bool unusedBit_649_14 : 1 {};
+	bool unusedBit_650_14 : 1 {};
 	/**
 	offset 1652 bit 15 */
-	bool unusedBit_649_15 : 1 {};
+	bool unusedBit_650_15 : 1 {};
 	/**
 	offset 1652 bit 16 */
-	bool unusedBit_649_16 : 1 {};
+	bool unusedBit_650_16 : 1 {};
 	/**
 	offset 1652 bit 17 */
-	bool unusedBit_649_17 : 1 {};
+	bool unusedBit_650_17 : 1 {};
 	/**
 	offset 1652 bit 18 */
-	bool unusedBit_649_18 : 1 {};
+	bool unusedBit_650_18 : 1 {};
 	/**
 	offset 1652 bit 19 */
-	bool unusedBit_649_19 : 1 {};
+	bool unusedBit_650_19 : 1 {};
 	/**
 	offset 1652 bit 20 */
-	bool unusedBit_649_20 : 1 {};
+	bool unusedBit_650_20 : 1 {};
 	/**
 	offset 1652 bit 21 */
-	bool unusedBit_649_21 : 1 {};
+	bool unusedBit_650_21 : 1 {};
 	/**
 	offset 1652 bit 22 */
-	bool unusedBit_649_22 : 1 {};
+	bool unusedBit_650_22 : 1 {};
 	/**
 	offset 1652 bit 23 */
-	bool unusedBit_649_23 : 1 {};
+	bool unusedBit_650_23 : 1 {};
 	/**
 	offset 1652 bit 24 */
-	bool unusedBit_649_24 : 1 {};
+	bool unusedBit_650_24 : 1 {};
 	/**
 	offset 1652 bit 25 */
-	bool unusedBit_649_25 : 1 {};
+	bool unusedBit_650_25 : 1 {};
 	/**
 	offset 1652 bit 26 */
-	bool unusedBit_649_26 : 1 {};
+	bool unusedBit_650_26 : 1 {};
 	/**
 	offset 1652 bit 27 */
-	bool unusedBit_649_27 : 1 {};
+	bool unusedBit_650_27 : 1 {};
 	/**
 	offset 1652 bit 28 */
-	bool unusedBit_649_28 : 1 {};
+	bool unusedBit_650_28 : 1 {};
 	/**
 	offset 1652 bit 29 */
-	bool unusedBit_649_29 : 1 {};
+	bool unusedBit_650_29 : 1 {};
 	/**
 	offset 1652 bit 30 */
-	bool unusedBit_649_30 : 1 {};
+	bool unusedBit_650_30 : 1 {};
 	/**
 	offset 1652 bit 31 */
-	bool unusedBit_649_31 : 1 {};
+	bool unusedBit_650_31 : 1 {};
 	/**
 	 * Angle of tooth detection within engine phase cycle
 	 * units: angle
@@ -5720,70 +5725,70 @@ struct engine_configuration_s {
 	bool boardEnHall6PullUp : 1 {};
 	/**
 	offset 3872 bit 10 */
-	bool unusedBit_981_10 : 1 {};
+	bool unusedBit_982_10 : 1 {};
 	/**
 	offset 3872 bit 11 */
-	bool unusedBit_981_11 : 1 {};
+	bool unusedBit_982_11 : 1 {};
 	/**
 	offset 3872 bit 12 */
-	bool unusedBit_981_12 : 1 {};
+	bool unusedBit_982_12 : 1 {};
 	/**
 	offset 3872 bit 13 */
-	bool unusedBit_981_13 : 1 {};
+	bool unusedBit_982_13 : 1 {};
 	/**
 	offset 3872 bit 14 */
-	bool unusedBit_981_14 : 1 {};
+	bool unusedBit_982_14 : 1 {};
 	/**
 	offset 3872 bit 15 */
-	bool unusedBit_981_15 : 1 {};
+	bool unusedBit_982_15 : 1 {};
 	/**
 	offset 3872 bit 16 */
-	bool unusedBit_981_16 : 1 {};
+	bool unusedBit_982_16 : 1 {};
 	/**
 	offset 3872 bit 17 */
-	bool unusedBit_981_17 : 1 {};
+	bool unusedBit_982_17 : 1 {};
 	/**
 	offset 3872 bit 18 */
-	bool unusedBit_981_18 : 1 {};
+	bool unusedBit_982_18 : 1 {};
 	/**
 	offset 3872 bit 19 */
-	bool unusedBit_981_19 : 1 {};
+	bool unusedBit_982_19 : 1 {};
 	/**
 	offset 3872 bit 20 */
-	bool unusedBit_981_20 : 1 {};
+	bool unusedBit_982_20 : 1 {};
 	/**
 	offset 3872 bit 21 */
-	bool unusedBit_981_21 : 1 {};
+	bool unusedBit_982_21 : 1 {};
 	/**
 	offset 3872 bit 22 */
-	bool unusedBit_981_22 : 1 {};
+	bool unusedBit_982_22 : 1 {};
 	/**
 	offset 3872 bit 23 */
-	bool unusedBit_981_23 : 1 {};
+	bool unusedBit_982_23 : 1 {};
 	/**
 	offset 3872 bit 24 */
-	bool unusedBit_981_24 : 1 {};
+	bool unusedBit_982_24 : 1 {};
 	/**
 	offset 3872 bit 25 */
-	bool unusedBit_981_25 : 1 {};
+	bool unusedBit_982_25 : 1 {};
 	/**
 	offset 3872 bit 26 */
-	bool unusedBit_981_26 : 1 {};
+	bool unusedBit_982_26 : 1 {};
 	/**
 	offset 3872 bit 27 */
-	bool unusedBit_981_27 : 1 {};
+	bool unusedBit_982_27 : 1 {};
 	/**
 	offset 3872 bit 28 */
-	bool unusedBit_981_28 : 1 {};
+	bool unusedBit_982_28 : 1 {};
 	/**
 	offset 3872 bit 29 */
-	bool unusedBit_981_29 : 1 {};
+	bool unusedBit_982_29 : 1 {};
 	/**
 	offset 3872 bit 30 */
-	bool unusedBit_981_30 : 1 {};
+	bool unusedBit_982_30 : 1 {};
 	/**
 	offset 3872 bit 31 */
-	bool unusedBit_981_31 : 1 {};
+	bool unusedBit_982_31 : 1 {};
 	/**
 	 * Below TPS value all knock suppression will be disabled.
 	 * units: %
@@ -6536,8 +6541,8 @@ struct persistent_config_s {
 	 */
 	float cltCrankingCorrBins[CLT_CRANKING_CURVE_SIZE] = {};
 	/**
-	 * CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.
-	 * units: percent
+	 * Duty mode: open-loop valve position (0-100%). RPM mode: cranking RPM target (0-5000). Re-enter values when switching modes.
+	 * units: value
 	 * offset 5616
 	 */
 	float cltCrankingCorr[CLT_CRANKING_CURVE_SIZE] = {};
