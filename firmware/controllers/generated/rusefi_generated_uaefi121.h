@@ -1439,6 +1439,7 @@
 #define nitrous_arming_method_e_LUA_GAUGE 1
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
 #define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
+#define operation_mode_e_FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR 8
 #define operation_mode_e_FOUR_STROKE_SIX_TIMES_CRANK_SENSOR 7
 #define operation_mode_e_FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR 4
 #define operation_mode_e_FOUR_STROKE_THREE_TIMES_CRANK_SENSOR 5
@@ -2177,7 +2178,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.04.30.uaefi121.4008295971"
+#define TS_SIGNATURE "rusEFI master.2026.05.01.uaefi121.4008295971"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

@@ -305,6 +305,11 @@ typedef enum {
 	 * Same pattern repeated six times on crank wheel like 1995 Lamborghini Diablo
 	 */
 	FOUR_STROKE_SIX_TIMES_CRANK_SENSOR = 7,
+
+	// Same pattern repeated five times per crank revolution.
+	// Used by some V10 engines (e.g. Dodge Viper) whose crank trigger has 5-fold symmetry.
+	FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR = 8,
+
 } operation_mode_e;
 
 /**

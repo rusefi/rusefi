@@ -193,5 +193,6 @@ public class GaugesPanelSandboxMocked {
         @Override public TableModel getTable(String n) { return null; }
         @Override public FrontPageModel getFrontPage() { return null; }
         @Override public List<MenuModel> getMenus() { return Collections.emptyList(); }
+        @Override public Map<String, String> getControllerCommands() { return Collections.emptyMap(); }
     }
 }
