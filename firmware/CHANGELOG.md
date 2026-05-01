@@ -14,7 +14,7 @@ Release template (copy/paste this for new release):
  -
 
 ### Added
- -
+ - MAP Prediction AE Improvements #9482
 
 ### Fixed
  -
