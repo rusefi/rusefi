@@ -2041,7 +2041,36 @@
       lastAngle: 270
     - channel: 0
       angle: 305
-- name: TT_UNUSED_96
+- name: TT_VIPER_V10_CRANK
+  humanName: Viper
+  offset: 65
+  operationMode: FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR
+  syncEdge: RiseOnly
+  syncGaps:
+    - from: 0.17
+      to: 0.69
+  teeth:
+    - channel: 0
+      angle: 0
+      count: 2
+      lastAngle: 11
+    - channel: 0
+      angle: 29.6
+- name: TT_UNUSED_97
+  offset: 65
+  operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+  syncEdge: RiseOnly
+  syncGaps:
+    - from: 0.17
+      to: 0.69
+  teeth:
+    - channel: 0
+      angle: 0
+      count: 2
+      lastAngle: 55
+    - channel: 0
+      angle: 148
+- name: TT_UNUSED_98
   offset: 65
   operationMode: FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
   syncEdge: RiseOnly
