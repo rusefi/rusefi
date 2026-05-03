@@ -30,6 +30,9 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.core.net.ConnectionAndMeta.RUSEFI_WIKI_DOWNLOAD_PAGE;
 
+/**
+ * @see ConsoleUI
+ */
 public class MainFrame {
     private static final Logging log = getLogging(Launcher.class);
 
