@@ -49,4 +49,8 @@ public class StubIniFileModel implements IniFileModel {
     @Override public FrontPageModel getFrontPage() { return null; }
     @Override public List<MenuModel> getMenus() { return Collections.emptyList(); }
     @Override public Map<String, String> getControllerCommands() { return Collections.emptyMap(); }
+
+    @Override public List<VeAnalyzeMap> getVeAnalyzeMaps() { return Collections.emptyList(); }
+    @Override public List<String> getLambdaTargetTables() { return Collections.emptyList(); }
+    @Override public List<VeAnalyzeFilter> getVeAnalyzeFilters() { return Collections.emptyList(); }
 }

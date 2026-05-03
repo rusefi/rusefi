@@ -60,6 +60,49 @@ public class IniFileReaderTest {
         assertEquals("X", meta.getPageReadCommand(1));
     }
 
+    @Test
+    public void testVeAnalyze() {
+        String string = "  signature      = \"unit test\"\n" +
+                "[VeAnalyze]\n" +
+                "\n" +
+                "\t\t;\ttableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition\n" +
+                "\t\tveAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, egoCorrectionForVeAnalyze, { useLambdaOnInterface }\n" +
+                "\t\tveAnalyzeMap = veTableTbl, afrTableTbl, afrGasolineScale, egoCorrectionForVeAnalyze, { !useLambdaOnInterface }\n" +
+                "\t\tlambdaTargetTables = lambdaTableTbl, afrTSCustom\n" +
+                "\n" +
+                "\t\t; filter =  Name,\t\t\"DisplayName\", outputChannel, operator, defaultVal, userAdjustable\n" +
+                "\t\tfilter = minRPMFilter, \"Minimum RPM\", RPMValue,\t\t\t<\t\t, 500,\t\t, true\n" +
+                "\n" +
+                "\t\tfilter = minCltFilter, \"Minimum CLT\", coolant,\t\t<\t\t, 60,\t\t, true\n";
+
+        RawIniFile lines = fromString(string);
+        IniFileModel model = readLines(lines);
+
+        List<VeAnalyzeMap> maps = model.getVeAnalyzeMaps();
+        assertEquals(2, maps.size());
+        assertEquals("veTableTbl", maps.get(0).getTableName());
+        assertEquals("lambdaTableTbl", maps.get(0).getLambdaTargetTableName());
+        assertEquals("lambdaValue", maps.get(0).getLambdaChannel());
+        assertEquals("egoCorrectionForVeAnalyze", maps.get(0).getEgoCorrectionChannel());
+        assertEquals("{ useLambdaOnInterface }", maps.get(0).getActiveCondition());
+
+        assertEquals("afrTableTbl", maps.get(1).getLambdaTargetTableName());
+
+        List<String> lambdaTables = model.getLambdaTargetTables();
+        assertEquals(2, lambdaTables.size());
+        assertEquals("lambdaTableTbl", lambdaTables.get(0));
+        assertEquals("afrTSCustom", lambdaTables.get(1));
+
+        List<VeAnalyzeFilter> filters = model.getVeAnalyzeFilters();
+        assertEquals(2, filters.size());
+        assertEquals("minRPMFilter", filters.get(0).getName());
+        assertEquals("Minimum RPM", filters.get(0).getDisplayName());
+        assertEquals("RPMValue", filters.get(0).getOutputChannel());
+        assertEquals("<", filters.get(0).getOperator());
+        assertEquals(500.0, filters.get(0).getDefaultValue());
+        assertTrue(filters.get(0).isUserAdjustable());
+    }
+
     @NotNull
     private RawIniFile fromString(String string) {
         return IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
