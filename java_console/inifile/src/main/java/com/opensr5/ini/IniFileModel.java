@@ -97,4 +97,10 @@ public interface IniFileModel {
     List<MenuModel> getMenus();
 
     Map<String, String> getControllerCommands();
+
+    List<VeAnalyzeMap> getVeAnalyzeMaps();
+
+    List<String> getLambdaTargetTables();
+
+    List<VeAnalyzeFilter> getVeAnalyzeFilters();
 }

@@ -7,6 +7,8 @@ import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.SubMenuModel;
+import com.opensr5.ini.VeAnalyzeFilter;
+import com.opensr5.ini.VeAnalyzeMap;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import com.rusefi.ui.UIContext;
@@ -455,6 +457,9 @@ todo: spllit into smaller tests?
             @Override public com.opensr5.ini.FrontPageModel getFrontPage() { return null; }
             @Override public List<com.opensr5.ini.MenuModel> getMenus() { return null; }
             @Override public Map<String, String> getControllerCommands() { return java.util.Collections.emptyMap(); }
+            @Override public List<VeAnalyzeMap> getVeAnalyzeMaps() { return java.util.Collections.emptyList(); }
+            @Override public List<String> getLambdaTargetTables() { return java.util.Collections.emptyList(); }
+            @Override public List<VeAnalyzeFilter> getVeAnalyzeFilters() { return java.util.Collections.emptyList(); }
         };
 
         com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget(curveModel, model, null);

@@ -28,6 +28,9 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final List<MenuModel> menus;
     private final FrontPageModel frontPage;
     private final Map<String, String> controllerCommands;
+    private final List<VeAnalyzeMap> veAnalyzeMaps;
+    private final List<String> lambdaTargetTables;
+    private final List<VeAnalyzeFilter> veAnalyzeFilters;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
@@ -68,7 +71,10 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  String menuDialog,
                                  List<MenuModel> menus,
                                  FrontPageModel frontPage,
-                                 Map<String, String> controllerCommands) {
+                                 Map<String, String> controllerCommands,
+                                 List<VeAnalyzeMap> veAnalyzeMaps,
+                                 List<String> lambdaTargetTables,
+                                 List<VeAnalyzeFilter> veAnalyzeFilters) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -94,6 +100,9 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.menus = Collections.unmodifiableList(new ArrayList<>(menus));
         this.frontPage = frontPage;
         this.controllerCommands = copyWithCaseInsensitiveKeys(controllerCommands);
+        this.veAnalyzeMaps = Collections.unmodifiableList(new ArrayList<>(veAnalyzeMaps));
+        this.lambdaTargetTables = Collections.unmodifiableList(new ArrayList<>(lambdaTargetTables));
+        this.veAnalyzeFilters = Collections.unmodifiableList(new ArrayList<>(veAnalyzeFilters));
     }
 
     @Override
@@ -288,5 +297,20 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public Map<String, String> getControllerCommands() {
         return controllerCommands;
+    }
+
+    @Override
+    public List<VeAnalyzeMap> getVeAnalyzeMaps() {
+        return veAnalyzeMaps;
+    }
+
+    @Override
+    public List<String> getLambdaTargetTables() {
+        return lambdaTargetTables;
+    }
+
+    @Override
+    public List<VeAnalyzeFilter> getVeAnalyzeFilters() {
+        return veAnalyzeFilters;
     }
 }
