@@ -171,7 +171,9 @@ public class ConsoleUI {
             tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
         }
 
-        tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
+        if (UiProperties.isEngineSnifferEnabled()) {
+            tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
+        }
 
 
 
@@ -198,7 +200,9 @@ console live data tab is broken #8402
             PinoutPane pinoutPane = new PinoutPane(uiContext);
             tabbedPane.addTab("Tuning", tuningPane.getContent());
             tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
-            tabbedPane.addTab("Pinout", pinoutPane.getContent());
+            if (UiProperties.isPinoutEnabled()) {
+                tabbedPane.addTab("Pinout", pinoutPane.getContent());
+            }
             tabbedPane.addTab("Device", new DevicePane(uiContext, port, serialPortType, tabbedPane.tabbedPane).getContent());
 
             // Pinout ↔ Tune bidirectional navigation
@@ -206,10 +210,12 @@ console live data tab is broken #8402
                 tabbedPane.selectTab("Tuning");
                 tuningPane.navigateToField(dialogKey, fieldKey);
             });
-            tuningPane.setNavigateToPinout(enumValue -> {
-                tabbedPane.selectTab("Pinout");
-                pinoutPane.highlightByEnumValue(enumValue);
-            });
+            if (UiProperties.isPinoutEnabled()) {
+                tuningPane.setNavigateToPinout(enumValue -> {
+                    tabbedPane.selectTab("Pinout");
+                    pinoutPane.highlightByEnumValue(enumValue);
+                });
+            }
         }
 
         if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
