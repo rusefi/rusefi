@@ -61,7 +61,7 @@ public:
 	using ThreadController::stop;
 
 	void ThreadTask() override {
-		while (true) {
+		while (!chThdShouldTerminateX()) {
 			// Block until we get a message
 			msg_t result = canReceiveTimeout(m_device, CAN_ANY_MAILBOX, &m_buffer, CAN_RX_TIMEOUT);
 
@@ -75,6 +75,8 @@ public:
 
 			processCanRxMessage(m_index, m_buffer, getTimeNowNt());
 		}
+
+		chThdExit((msg_t)0x0);
 	}
 
 private:
