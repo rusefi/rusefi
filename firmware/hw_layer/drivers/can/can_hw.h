@@ -18,5 +18,6 @@ void setCanVss(int type);
 void stopCanPins();
 void startCanPins();
 bool getIsCanEnabled(void);
+void setCanBaud(size_t index, can_baudrate_e rate);
 
 #endif /* EFI_CAN_SUPPORT */
