@@ -250,11 +250,13 @@ static int lua_canSetBaud(lua_State* l) {
 	int bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 	int baud = luaL_checkinteger(l, 2);
 
+#if !EFI_UNIT_TEST
 	int ret = setCanBaud(bus, baud);
 
 	if (ret < 0) {
 		luaL_error(l, "Failed to change CAN%d baudrate to %d", bus + 1, baud);
 	}
+#endif
 
 	return 0;
 }
