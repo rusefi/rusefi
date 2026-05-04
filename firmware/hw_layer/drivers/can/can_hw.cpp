@@ -58,6 +58,8 @@ public:
 		}
 	}
 
+	using ThreadController::stop;
+
 	void ThreadTask() override {
 		while (true) {
 			// Block until we get a message
@@ -306,6 +308,40 @@ void initCan() {
 
 bool getIsCanEnabled(void) {
 	return isCanEnabled;
+}
+
+void setCanBaud(size_t index, can_baudrate_e rate) {
+	if (index >= EFI_CAN_BUS_COUNT)
+		return;
+
+	auto device = getCanDevice(index);
+	if (device == nullptr)
+		return;
+
+	// Stop listener
+	canRead[index].stop();
+
+	// Remove CAN device from tx system
+	CanTxMessage::removeDevice(index);
+
+	// Actually stop HW
+	canStop(device);
+
+	// Get config for new baudrate
+	CANConfig canConfig;
+	memcpy(&canConfig, findCanConfig(rate), sizeof(canConfig));
+	applyListenOnly(&canConfig, getCanListenOnly(index));
+
+	// Start HW
+	canStart(device, &canConfig);
+
+	// Plumb CAN devices to tx system
+	CanTxMessage::setDevice(index, device);
+
+	// Start listener
+	if (engineConfiguration->canReadEnabled) {
+		canRead[index].start();
+	}
 }
 
 #endif /* EFI_CAN_SUPPORT */
