@@ -108,6 +108,7 @@ static CANDriver* getCanDevice(size_t index)
 
 	return nullptr;
 }
+#endif // EFI_PROD_CODE
 
 static can_baudrate_e getDefaultCanBaudRate(size_t index) {
 	switch (index) {
@@ -138,7 +139,6 @@ static bool getCanListenOnly(size_t index) {
 
 	return engineConfiguration->can1ListenMode;
 }
-#endif
 
 int txErrorCount[EFI_CAN_BUS_COUNT] = {};
 
