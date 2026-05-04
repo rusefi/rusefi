@@ -310,13 +310,13 @@ bool getIsCanEnabled(void) {
 	return isCanEnabled;
 }
 
-void setCanBaud(size_t index, can_baudrate_e rate) {
+int setCanBaud(size_t index, can_baudrate_e rate) {
 	if (index >= EFI_CAN_BUS_COUNT)
-		return;
+		return -1;
 
 	auto device = getCanDevice(index);
 	if (device == nullptr)
-		return;
+		return -2;
 
 	// Stop listener
 	canRead[index].stop();
@@ -342,6 +342,48 @@ void setCanBaud(size_t index, can_baudrate_e rate) {
 	if (engineConfiguration->canReadEnabled) {
 		canRead[index].start();
 	}
+
+	return 0;
+}
+
+int setCanBaud(size_t index, int baudrate) {
+	can_baudrate_e rate;
+
+	switch (baudrate) {
+	case 33000:
+		rate = B33KBPS;
+		break;
+	case 50000:
+		rate = B50KBPS;
+		break;
+	case 83000:
+	case 83333:
+		rate = B83KBPS;
+		break;
+	case 100000:
+		rate = B100KBPS;
+		break;
+	case 125000:
+		rate = B125KBPS;
+		break;
+	case 250000:
+		rate = B250KBPS;
+		break;
+	case 666000:
+	case 666666:
+		rate = B666KBPS;
+		break;
+	case 1000000:
+		rate = B1MBPS;
+		break;
+	case 500000:
+		rate = B500KBPS;
+		break;
+	default:
+		return -3;
+	}
+
+	return setCanBaud(index, rate);
 }
 
 #endif /* EFI_CAN_SUPPORT */
