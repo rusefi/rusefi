@@ -26,6 +26,7 @@
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
+#include "can_hw.h"
 #endif // EFI_CAN_SUPPORT
 #include "settings.h"
 #include <new>
@@ -242,6 +243,19 @@ static int lua_txCan(lua_State* l) {
 	msg.setDlc(dlc);
 
 	// no return value
+	return 0;
+}
+
+static int lua_canSetBaud(lua_State* l) {
+	int bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
+	int baud = luaL_checkinteger(l, 2);
+
+	int ret = setCanBaud(bus, baud);
+
+	if (ret < 0) {
+		luaL_error(l, "Failed to change CAN%d baudrate to %d", bus + 1, baud);
+	}
+
 	return 0;
 }
 #endif // EFI_CAN_SUPPORT
@@ -1156,6 +1170,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	lua_register(lState, "txCan", lua_txCan);
+	lua_register(lState, "canSetBaud", lua_canSetBaud);
 #endif
 
 #if EFI_PROD_CODE
