@@ -117,6 +117,10 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap(1); // redundancy
 
 	// TODO: gaps above are not correct!
+	// findAllSyncSequences(TT_36_2_1_1, ...) in test_trigger_sequence_finder.cpp brute-forces
+	// candidate gap-ratio sequences against this synthetic waveform; on real 6g75 captures
+	// (see test_real_6g75.cpp / issue #8827) those tight ratios fail to sync, so the simple
+	// (3.0, 1.0) above is kept until the real-wheel geometry/edge handling is fixed.
 //	The 36-2-1-1 shape consists of 36 teeth with 3 missing, arranged as groups of 11, 11, and 10 normal teeth
 //	separated by single-tooth gaps plus one 2-tooth gap, and the current sync uses simple gap settings that
 //	need to be replaced with explicit indices around 11-12-13 with normal teeth in between.
