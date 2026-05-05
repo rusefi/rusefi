@@ -280,14 +280,15 @@ static size_t findAllSyncSequencesFromCsv(trigger_type_e t, size_t maxLength, si
 				// (window opened wide); we iterate all masks with popcount <= budget.
 				unsigned int maxMask = (length >= 32) ? 0xFFFFFFFFu : ((1u << length) - 1u);
 				for (unsigned int mask = 0; mask <= maxMask; mask++) {
-					if (__builtin_popcount(mask) > errorBudget)
+ 				if (__builtin_popcount(mask) > errorBudget)
 						continue;
-					// Diagnostic: synthetic-stimulator check (prints "happy ratio ..." / "Not good sync"
-					// lines). Counts are not used for the regression baseline because the synthetic
-					// waveform's geometry can differ from the real capture's geometry.
-					tryGapSequence(length, sourceIndex, form, triggerConfig, step, mask, function);
-
 					// Authoritative check: does this candidate sync UNIQUELY against the real ratios?
+					// We intentionally do NOT route the candidate through the synthetic-stimulator
+					// path (tryGapSequence + findTriggerZeroEventIndex) here: its internal
+					// TriggerStimulatorHelper replays the synthetic waveform's own teeth, so any
+					// real-recording ratio that doesn't match the synthetic geometry fails sync
+					// regardless of capture quality (issue #8827). Gaps are taken purely from the
+					// real recording — see tryGapSequenceOnRealData.
 					if (tryGapSequenceOnRealData(length, sourceIndex, ratios, waveformToothCount,
 							mask, realRatioTolerance)) {
 						happySequenceCounter++;
