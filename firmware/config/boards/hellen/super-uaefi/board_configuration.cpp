@@ -9,6 +9,7 @@
 #include "hellen_meta.h"
 #include "board_overrides.h"
 //#include "connectors/generated_board_pin_names.h"
+#include "../uaefi121/mega-uaefi.h"
 
 Gpio getCommsLedPin() {
 	return Gpio::MM100_LED3_BLUE;
@@ -56,20 +57,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[1] = Gpio::MM100_IN_D2; // HALL2
 
   engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D3;
-}
-
-static void super_uaefi_boardConfigOverrides() {
-	setHellenMegaEnPin();
-	setHellenVbatt();
-
-	hellenMegaSdWithAccelerometer();
-
-  engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM6;
-
-	setHellenCan();
-
-	setDefaultHellenAtPullUps();
-
 }
 
 void setUaefiDefaultETBPins() {
@@ -175,5 +162,5 @@ int getBoardMetaDcOutputsCount() {
 
 void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = super_uaefi_boardDefaultConfiguration;
-	custom_board_ConfigOverrides = super_uaefi_boardConfigOverrides;
+	custom_board_ConfigOverrides = setMegaUaefiBoardConfigOverrides;
 }
