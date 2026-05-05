@@ -302,6 +302,104 @@ static size_t findAllSyncSequencesFromCsv(trigger_type_e t, size_t maxLength, si
 	return happySequenceCounter;
 }
 
+// Read one revolution's worth of real ratios from a CSV at the given startOffset into out[].
+// Returns true if successful.
+static bool loadCsvRatios(const char *csvPath, size_t step, int waveformToothCount,
+		size_t startOffset, float *out) {
+	std::vector<double> teeth = readToothTimestamps(csvPath, step);
+	if (teeth.size() < (size_t)(waveformToothCount + startOffset + 2)) return false;
+	for (int i = 0; i < waveformToothCount; i++) {
+		size_t idx = startOffset + i + 2;
+		double d0 = teeth[idx]     - teeth[idx - 1];
+		double d1 = teeth[idx - 1] - teeth[idx - 2];
+		out[i] = (d1 > 0) ? (float)(d0 / d1) : 0.0f;
+	}
+	return true;
+}
+
+// Sliding match counter against a real ratio array using EXPLICIT (lo, hi) gap windows.
+// Returns the number of positions in `realRatios` where the candidate sequence matches.
+// Positions in `skipMask` are wildcards.
+static int countMatchesWithWindows(size_t length, const float *los, const float *his,
+		unsigned int skipMask, const float *realRatios, int toothCount) {
+	int matchCount = 0;
+	for (int candidatePos = 0; candidatePos < toothCount; candidatePos++) {
+		bool ok = true;
+		for (size_t gapIndex = 0; gapIndex < length; gapIndex++) {
+			if (skipMask & (1u << gapIndex)) continue;
+			int probeIdx = candidatePos - gapIndex;
+			if (probeIdx < 0) probeIdx += toothCount;
+			float actual = realRatios[probeIdx];
+			if (actual < los[gapIndex] || actual > his[gapIndex]) { ok = false; break; }
+		}
+		if (ok) matchCount++;
+	}
+	return matchCount;
+}
+
+// Per the issue: use the cleaner CSV (`6g75-without-spark-crank.csv`, which actually syncs
+// at runtime with tooManyTeethCounter==3) to derive candidate gap windows, then verify each
+// candidate uniquely syncs against the noisier with-spark capture too. Print survivors so
+// they can be plugged into setTriggerSynchronizationGap3() in initialize36_2_1_1().
+static size_t crossValidateGapsFromCleanCsv(size_t maxLength, size_t step,
+		int waveformToothCount, const char *cleanCsv, const char *noisyCsv,
+		int errorBudget, float tolerance) {
+	std::vector<float> cleanRatios(waveformToothCount), noisyRatios(waveformToothCount);
+	if (!loadCsvRatios(cleanCsv, step, waveformToothCount, 0, cleanRatios.data())) {
+		printf("Cannot load clean CSV %s\n", cleanCsv);
+		return 0;
+	}
+	if (!loadCsvRatios(noisyCsv, step, waveformToothCount, 0, noisyRatios.data())) {
+		printf("Cannot load noisy CSV %s\n", noisyCsv);
+		return 0;
+	}
+	printf("\n=== Cross-validating: clean=%s noisy=%s ===\n", cleanCsv, noisyCsv);
+
+	size_t survivors = 0;
+	float los[32], his[32];
+	for (size_t length = 1; length <= maxLength; length++) {
+		for (int sourceIndex = 0; sourceIndex < waveformToothCount; sourceIndex++) {
+			// Build (lo, hi) windows from the CLEAN CSV at this template position.
+			for (size_t g = 0; g < length; g++) {
+				int idx = sourceIndex - (int)g;
+				if (idx < 0) idx += waveformToothCount;
+				float r = cleanRatios[idx];
+				los[g] = r * (1.0f - tolerance);
+				his[g] = r * (1.0f + tolerance);
+			}
+			unsigned int maxMask = (length >= 32) ? 0xFFFFFFFFu : ((1u << length) - 1u);
+			for (unsigned int mask = 0; mask <= maxMask; mask++) {
+				if (__builtin_popcount(mask) > errorBudget) {
+					if (mask == maxMask) break;
+					continue;
+				}
+				int cleanMatches = countMatchesWithWindows(length, los, his, mask,
+						cleanRatios.data(), waveformToothCount);
+				if (cleanMatches != 1) {
+					if (mask == maxMask) break;
+					continue;
+				}
+				int noisyMatches = countMatchesWithWindows(length, los, his, mask,
+						noisyRatios.data(), waveformToothCount);
+				if (noisyMatches == 1) {
+					survivors++;
+					if (survivors <= 20) {
+						printf("SURVIVOR len=%zu src=%d mask=0x%x:", length, sourceIndex, mask);
+						for (size_t g = 0; g < length; g++) {
+							if (mask & (1u << g)) printf(" g%zu=*", g);
+							else printf(" g%zu=[%.3f..%.3f]", g, los[g], his[g]);
+						}
+						printf("\n");
+					}
+				}
+				if (mask == maxMask) break;
+			}
+		}
+	}
+	printf("Total cross-validated survivors: %zu\n", survivors);
+	return survivors;
+}
+
 TEST(trigger, finderRealData) {
 	// Brute-force candidate sync sequences for TT_36_2_1_1 using the real 6g75 cranking
 	// capture (https://github.com/rusefi/rusefi/issues/8827). The ratio array is computed
@@ -310,18 +408,29 @@ TEST(trigger, finderRealData) {
 	size_t happyWithSpark = findAllSyncSequencesFromCsv(trigger_type_e::TT_36_2_1_1, 4, 2,
 			[] (TriggerWaveform* form) { initialize36_2_1_1(form); },
 			"tests/trigger/resources/6g75-withsparkplugs-cranking.csv");
-	// Regression baseline: real-data self-consistency check yields plenty of unique sync
-	// candidates against the noisy 6g75 with-spark capture (issue #8827). Number ties out
-	// with `happyWithoutSpark` below — the cleaner capture has slightly more candidates,
-	// matching `real6g75without`'s lower `tooManyTeethCounter` (3 vs 382) at runtime.
 	ASSERT_EQ(2194u, happyWithSpark);
 
 	// Cleaner capture (no spark plugs running) - same wheel, less ringing.
 	size_t happyWithoutSpark = findAllSyncSequencesFromCsv(trigger_type_e::TT_36_2_1_1, 4, 2,
 			[] (TriggerWaveform* form) { initialize36_2_1_1(form); },
 			"tests/trigger/resources/6g75-without-spark-crank.csv");
-	// Cleaner capture (no spark) reports MORE unique sync candidates than the noisy one,
-	// which is exactly what we expected: `real6g75without.real` syncs in the runtime test
-	// (`tooManyTeethCounter == 3`) precisely because the real ratios are self-consistent.
 	ASSERT_EQ(2359u, happyWithoutSpark);
+
+	// Per issue: derive candidate gap windows from the CLEAN capture
+	// (6g75-without-spark-crank.csv — runtime syncs OK there with tooManyTeethCounter==3),
+	// and cross-check each candidate against the noisy with-spark capture. Survivors are
+	// the actual fix candidates for setTriggerSynchronizationGap3() in initialize36_2_1_1.
+	TriggerWaveform tmp;
+	initialize36_2_1_1(&tmp);
+	int waveformToothCount = tmp.getSize() / 2;
+	size_t survivors = crossValidateGapsFromCleanCsv(/*maxLength*/4, /*step*/2,
+			waveformToothCount,
+			"tests/trigger/resources/6g75-without-spark-crank.csv",
+			"tests/trigger/resources/6g75-withsparkplugs-cranking.csv",
+			/*errorBudget*/2, /*tolerance*/0.20f);
+	// Pin survivor count as a regression baseline; printed survivors are the actionable
+	// gap-window candidates to plug into initialize36_2_1_1(). The clearest single-gap
+	// survivor is `len=1 src=30 mask=0x0: g0=[2.095..3.142]` — the big-block gap, which
+	// matches the runtime observation in real6g75without.real (tooManyTeethCounter==3).
+	ASSERT_EQ(51u, survivors);
 }
