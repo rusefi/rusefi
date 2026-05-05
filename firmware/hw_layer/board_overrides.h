@@ -40,8 +40,8 @@ using setup_custom_get_cylinder_ignition_trim_type = angle_t (*)(size_t /*cylind
 using setup_custom_get_cylinder_fuel_trim_type = float (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*fuelLoad*/);
 using setup_custom_bool_type = bool (*)();
 
-// todo: migrate 'validateBoardConfig'
 using custom_validate_config_type = bool (*)();
+extern std::optional<custom_validate_config_type> custom_board_validateConfig;
 
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
@@ -106,4 +106,12 @@ static inline bool call_board_override(std::optional<FuncType> board_override, A
         return true;
     }
     return false;
+}
+
+template<typename FuncType, typename... Args>
+static inline auto get_board_override_result(std::optional<FuncType> board_override, auto defaultValue, Args&&... args){
+    if (board_override.has_value()) {
+        return std::invoke(board_override.value(), std::forward<Args>(args)...);
+    }
+    return defaultValue;
 }
