@@ -74,6 +74,7 @@
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
 
 #include "periodic_task.h"
+#include "board_overrides.h"
 
 #ifdef MODULE_MAP_AVERAGING
 #include "map_averaging.h"
@@ -498,7 +499,8 @@ void commonInitEngineController() {
 #endif
 }
 
-PUBLIC_API_WEAK bool validateBoardConfig() {
+bool validateBoardConfig() {
+  // todo: remove placeholder June 2026
   return true;
 }
 
@@ -519,7 +521,7 @@ static bool validateGdi() {
 
 // Returns false if there's an obvious problem with the loaded configuration
 bool validateConfigOnStartUpOrBurn() {
-  if (!validateBoardConfig()) {
+  if (!get_board_override_result(custom_board_validateConfig, true)) {
     return false;
   }
 #if defined(HW_HELLEN_UAEFI)
@@ -791,3 +793,5 @@ int getRusEfiVersion() {
 	return VCS_DATE;
 }
 #endif /* EFI_UNIT_TEST */
+
+std::optional<custom_validate_config_type> custom_board_validateConfig;
