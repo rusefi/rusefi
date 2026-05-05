@@ -29,8 +29,12 @@ static float getPos(TriggerWaveform *form, int index, size_t step) {
 static float ratios[400];
 static float ratiosThisTime[400];
 
+// 'skipMask' marks which gap positions in the candidate sequence are treated as
+// allowed decoding errors: those gaps get a wide-open window so a noisy tooth
+// at that position does not fail the sync. This budgets out a small number of
+// real-data decoding errors (tooManyTeethCounter-style noise) per candidate.
 static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
-		trigger_config_s &triggerConfig, size_t step) {
+		trigger_config_s &triggerConfig, size_t step, unsigned int skipMask = 0) {
 	int toothCount = form.getSize() / step;
 
 	for (size_t gapIndex = 0; gapIndex < length; gapIndex++) {
@@ -41,7 +45,12 @@ static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
 		float ratio = ratios[ratioIndex];
 		ratiosThisTime[ratioIndex] = ratio;
 //			printf("trying %d ratio %f\n", gapIndex, ratio);
-		form.setTriggerSynchronizationGap4(gapIndex, ratio);
+		if (skipMask & (1u << gapIndex)) {
+			// Wide-open window = this position is allowed to be a decoding error.
+			form.setTriggerSynchronizationGap3(gapIndex, 0.01f, 100.0f);
+		} else {
+			form.setTriggerSynchronizationGap4(gapIndex, ratio);
+		}
 	}
 
 	TriggerDecoderBase decoder("test");
@@ -179,7 +188,7 @@ static std::vector<double> readToothTimestamps(const char *fileName, size_t step
 // "happy" sequence printed is a candidate set of sync gaps that synchronizes the
 // existing decoder against the actual recorded tooth pattern.
 static size_t findAllSyncSequencesFromCsv(trigger_type_e t, size_t maxLength, size_t step,
-		TriggerWaveformFunctionPtr function, const char *csvPath) {
+		TriggerWaveformFunctionPtr function, const char *csvPath, int errorBudget = 2) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	size_t happySequenceCounter = 0;
@@ -216,8 +225,17 @@ static size_t findAllSyncSequencesFromCsv(trigger_type_e t, size_t maxLength, si
 
 		for (size_t length = 1; length <= maxLength; length++) {
 			for (int sourceIndex = 0; sourceIndex < waveformToothCount; sourceIndex++) {
-				if (tryGapSequence(length, sourceIndex, form, triggerConfig, step)) {
-					happySequenceCounter++;
+				// Try with 0..errorBudget allowed decoding errors per candidate. Each bit
+				// in skipMask represents one position whose ratio is allowed to deviate
+				// (window opened wide); we iterate all masks with popcount <= budget.
+				unsigned int maxMask = (length >= 32) ? 0xFFFFFFFFu : ((1u << length) - 1u);
+				for (unsigned int mask = 0; mask <= maxMask; mask++) {
+					if (__builtin_popcount(mask) > errorBudget)
+						continue;
+					if (tryGapSequence(length, sourceIndex, form, triggerConfig, step, mask)) {
+						happySequenceCounter++;
+					}
+					if (mask == maxMask) break; // avoid overflow when length==32
 				}
 			}
 		}
@@ -231,7 +249,17 @@ TEST(trigger, finderRealData) {
 	// capture (https://github.com/rusefi/rusefi/issues/8827). The ratio array is computed
 	// from real edge timestamps in the CSV rather than from the idealized waveform, so the
 	// "happy" sequences printed here are gap ratios that match what the ECU actually sees.
-	findAllSyncSequencesFromCsv(trigger_type_e::TT_36_2_1_1, 4, 2,
+	size_t happyWithSpark = findAllSyncSequencesFromCsv(trigger_type_e::TT_36_2_1_1, 4, 2,
 			[] (TriggerWaveform* form) { initialize36_2_1_1(form); },
 			"tests/trigger/resources/6g75-withsparkplugs-cranking.csv");
+	// Regression baseline: with the current synthetic TT_36_2_1_1 geometry, no candidate
+	// gap sequence (even with a 2-error budget) synchronizes against the noisy with-spark
+	// capture. See test_real_6g75.cpp for the root-cause discussion (issue #8827).
+	ASSERT_EQ(0u, happyWithSpark);
+
+	// Cleaner capture (no spark plugs running) - same wheel, less ringing.
+	size_t happyWithoutSpark = findAllSyncSequencesFromCsv(trigger_type_e::TT_36_2_1_1, 4, 2,
+			[] (TriggerWaveform* form) { initialize36_2_1_1(form); },
+			"tests/trigger/resources/6g75-without-spark-crank.csv");
+	ASSERT_EQ(0u, happyWithoutSpark);
 }
