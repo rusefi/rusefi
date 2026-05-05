@@ -18,8 +18,8 @@ The "shape" of a trigger wheel is defined by a sequence of events (Rising or Fal
 - **Synchronization Point:** A unique pattern in the waveform (e.g., a missing tooth or a specific gap ratio) used to align the software state with the physical engine position.
 
 ### 3. Synchronization Algorithm
-The primary synchronization method is based on **Gap Ratios**. 
-The decoder tracks the duration between consecutive edges (`toothDurations`). 
+The primary synchronization method is based on **Gap Ratios**.
+The decoder tracks the duration between consecutive edges (`toothDurations`).
 A synchronization point is identified when the ratio of the current gap to the previous gap falls within a specific range:
 
 `Ratio = CurrentGap / PreviousGap`
@@ -46,6 +46,26 @@ The `TriggerDecoder` class maintains the runtime state:
 - **Verbose Trigger Logging:** Set `setVerboseTrigger(true)` in unit tests or enable `VerboseTriggerSynchDetails` in the configuration.
 - **Gap Printing:** The firmware can print the detected gap ratios to the console when synchronization fails or when verbose logging is enabled.
 - **Trigger Error Counters:** `totalTriggerErrorCounter` and `orderingErrorCounter` help identify wiring issues or electrical noise.
+
+### Brute-Force Sync Sequence Finder
+
+When designing or repairing a decoder, it is often unclear which gap ratio (or sequence of ratios) will reliably identify the synchronization point on a given wheel shape. The unit test `unit_tests/tests/trigger/test_trigger_sequence_finder.cpp` contains a developer utility, `findAllSyncSequences`, which exhaustively searches a `TriggerWaveform` for all gap-ratio sequences (up to a configurable length) that produce a valid sync via `findTriggerZeroEventIndex`.
+
+Typical usage — add an entry to `TEST(trigger, finder)`:
+
+```cpp
+ASSERT_EQ(<expectedCount>u, findAllSyncSequences(
+    trigger_type_e::TT_YOUR_TRIGGER, /*maxLength*/ 3, /*step*/ 2,
+    [] (TriggerWaveform* form) {
+        configureYourWheel(form);
+    }));
+```
+
+Parameters:
+- `maxLength` — maximum number of consecutive gap ratios considered as a sync sequence.
+- `step` — `1` for `SyncEdge::Both` waveforms, `2` for rise/fall-only waveforms.
+
+Each "happy" sync sequence is printed to stdout, which gives concrete candidate ratio values to plug into `setTriggerSynchronizationGap*` calls when authoring or fixing a decoder (e.g. the broken `TT_36_2_1_1` decoder pinned by `unit_tests/tests/trigger/test_real_6g75.cpp` — see [issue #8827](https://github.com/rusefi/rusefi/issues/8827)).
 
 ---
 *For more detail, see the source code in `firmware/controllers/trigger/` and the Doxygen comments in `rusefi.cpp`.*
