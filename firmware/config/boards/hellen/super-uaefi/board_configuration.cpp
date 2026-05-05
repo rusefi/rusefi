@@ -72,10 +72,6 @@ static void super_uaefi_boardConfigOverrides() {
 
 }
 
-bool validateBoardConfig() {
-  return true;
-}
-
 void setUaefiDefaultETBPins() {
   // users would want to override those if using H-bridges for stepper idle control
   setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
