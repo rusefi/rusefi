@@ -338,7 +338,7 @@ never used?
         if (logoLabelPopupMenu != null) {
             logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
                 isEcuPortJobPossible,
-                ecuPort.map(port -> existsAnyOfUnitIdentifierFields(port.getCalibrations().getIniFile())).orElse(false)
+                ecuPort.map(port -> port.getCalibrations() != null && existsAnyOfUnitIdentifierFields(port.getCalibrations().getIniFile())).orElse(false)
             );
         }
     }
