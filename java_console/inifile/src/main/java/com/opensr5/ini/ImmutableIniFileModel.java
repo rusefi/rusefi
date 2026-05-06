@@ -91,8 +91,22 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.tooltips = Collections.unmodifiableMap(new TreeMap<>(tooltips));
         this.fieldsInUiOrder = Collections.unmodifiableMap(new LinkedHashMap<>(fieldsInUiOrder));
         this.dialogs = Collections.unmodifiableMap(new TreeMap<>(dialogs));
-        this.gaugeCategories = Collections.unmodifiableMap(new LinkedHashMap<>(gaugeCategories));
-        this.gauges = copyWithCaseInsensitiveKeys(gauges);
+
+        // If at least one gauge category named GAUGE_CATEGORY_ECU_STATUS ("ECU Status") is registered,
+        // inject a synthetic 'runtimeDataRateGauge' into that category and into the gauges map.
+        Map<String, GaugeCategoryModel> effectiveCategories = new LinkedHashMap<>(gaugeCategories);
+        Map<String, GaugeModel> effectiveGauges = new LinkedHashMap<>(gauges);
+        GaugeCategoryModel ecuStatusCategory = effectiveCategories.get(GAUGE_CATEGORY_ECU_STATUS);
+        if (ecuStatusCategory != null) {
+            GaugeModel synthetic = createRuntimeDataRateGauge();
+            List<GaugeModel> updatedGauges = new ArrayList<>(ecuStatusCategory.getGauges());
+            updatedGauges.add(synthetic);
+            effectiveCategories.put(GAUGE_CATEGORY_ECU_STATUS,
+                    new GaugeCategoryModel(ecuStatusCategory.getName(), updatedGauges));
+            effectiveGauges.put(synthetic.getName(), synthetic);
+        }
+        this.gaugeCategories = Collections.unmodifiableMap(effectiveCategories);
+        this.gauges = copyWithCaseInsensitiveKeys(effectiveGauges);
         this.topicHelp = Collections.unmodifiableMap(new TreeMap<>(topicHelp));
         this.contextHelp = Collections.unmodifiableMap(new LinkedHashMap<>(contextHelp));
         this.tables = copyWithCaseInsensitiveKeys(tables);
@@ -103,6 +117,34 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.veAnalyzeMaps = Collections.unmodifiableList(new ArrayList<>(veAnalyzeMaps));
         this.lambdaTargetTables = Collections.unmodifiableList(new ArrayList<>(lambdaTargetTables));
         this.veAnalyzeFilters = Collections.unmodifiableList(new ArrayList<>(veAnalyzeFilters));
+    }
+
+    /**
+     * Mirrors firmware's {@code GAUGE_CATEGORY_ECU_STATUS} (defined in rusefi_config.txt).
+     * Duplicated as a string literal to avoid a heavy {@code :models} dependency from {@code :inifile}.
+     */
+    public static final String GAUGE_CATEGORY_ECU_STATUS = "ECU Status";
+
+    /**
+     * Synthetic gauge name added when {@link #GAUGE_CATEGORY_ECU_STATUS}
+     * category is present. Reports the runtime data rate (samples/sec) coming from the controller.
+     */
+    public static final String RUNTIME_DATA_RATE_GAUGE = "runtimeDataRateGauge";
+
+    private static GaugeModel createRuntimeDataRateGauge() {
+        return new GaugeModel(
+                RUNTIME_DATA_RATE_GAUGE,
+                RUNTIME_DATA_RATE_GAUGE,
+                IniValue.ofString("Runtime data rate"),
+                IniValue.ofString("Hz"),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(0));
     }
 
     @Override
