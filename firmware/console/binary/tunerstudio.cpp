@@ -198,7 +198,7 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 		return (uint8_t*)engineConfiguration + offset;
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
-		return (uint8_t *)tsChannel->page1.highSpeedOffsets + offset;
+		return (uint8_t *)tsChannel->page2.highSpeedOffsets + offset;
 #else
 	case TS_PAGE_SCATTER_OFFSETS:
 		return (uint8_t *)&ts_blank_page_placeholder;
@@ -221,7 +221,7 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 		return TOTAL_CONFIG_SIZE;
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
-		return PAGE_SIZE_1;
+		return PAGE_SIZE_2;
 #else
 	case TS_PAGE_SCATTER_OFFSETS:
 		// min read from TS seems to be 256b?
@@ -406,7 +406,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 	int totalResponseSize = 0;
 	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
-		uint16_t packed = tsChannel->page1.highSpeedOffsets[i];
+		uint16_t packed = tsChannel->page2.highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 
 		size_t size = type == 0 ? 0 : 1 << (type - 1);
@@ -424,7 +424,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 	uint8_t dataBuffer[8];
 	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
-		uint16_t packed = tsChannel->page1.highSpeedOffsets[i];
+		uint16_t packed = tsChannel->page2.highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 		uint16_t offset = packed & 0x1FFF;
 
