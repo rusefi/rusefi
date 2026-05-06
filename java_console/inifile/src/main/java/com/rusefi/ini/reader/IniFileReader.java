@@ -740,7 +740,15 @@ public class IniFileReader {
 
         if (gaugeName.equalsIgnoreCase("gaugeCategory")) {
             finishGaugeCategory();
-            currentGaugeCategory = list.get(1);
+            // Unquoted multi-word category names (e.g. `gaugeCategory = Boost PID`) are
+            // tokenized into multiple list entries because space is a token separator;
+            // re-join them so the category key matches what the firmware emits.
+            // Quoted forms (e.g. `gaugeCategory = "ECU Status"`) yield a single token already.
+            StringBuilder name = new StringBuilder(list.get(1));
+            for (int i = 2; i < list.size(); i++) {
+                name.append(' ').append(list.get(i));
+            }
+            currentGaugeCategory = name.toString();
             return;
         }
 

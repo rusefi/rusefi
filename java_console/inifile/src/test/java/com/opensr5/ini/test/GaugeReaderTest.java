@@ -144,14 +144,14 @@ public class GaugeReaderTest {
 
         assertEquals(2, model.getGaugeCategories().size());
 
-        GaugeCategoryModel boostPid = model.getGaugeCategories().get("Boost"); // TODO: we have a bug!
+        GaugeCategoryModel boostPid = model.getGaugeCategories().get("Boost PID");
         assertNotNull(boostPid, "Unquoted 'gaugeCategory = Boost PID' must be parsed as key 'Boost PID' (with space preserved)");
-        assertEquals("Boost", boostPid.getName());
+        assertEquals("Boost PID", boostPid.getName());
         assertEquals(1, boostPid.getGauges().size());
 
-        GaugeCategoryModel alternatorPid = model.getGaugeCategories().get("Alternator"); // TODO: we have a bug!
+        GaugeCategoryModel alternatorPid = model.getGaugeCategories().get("Alternator PID");
         assertNotNull(alternatorPid, "Unquoted 'gaugeCategory = Alternator PID' must be parsed as key 'Alternator PID'");
-        assertEquals("Alternator", alternatorPid.getName());
+        assertEquals("Alternator PID", alternatorPid.getName());
         assertEquals(1, alternatorPid.getGauges().size());
 
         assertTrue(model.getGauges().containsKey("boostStatus_iTermGauge"));
