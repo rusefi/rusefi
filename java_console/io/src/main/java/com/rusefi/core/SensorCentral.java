@@ -84,6 +84,12 @@ public class SensorCentral implements ISensorCentral {
     private volatile Map<String, ResolvedGaugeLabels> resolvedGaugeLabels = Collections.emptyMap();
     private byte[] response;
 
+    // Sliding window of recent frame arrival timestamps (System.nanoTime), used to compute
+    // the synthetic 'runtimeDataRateGauge' value (frames-per-second) once per ECU frame.
+    private static final int RATE_WINDOW_SIZE = 16;
+    private static final long RATE_WINDOW_NANOS = 2_000_000_000L; // 2 seconds
+    private final java.util.ArrayDeque<Long> frameTimestampsNanos = new java.util.ArrayDeque<>(RATE_WINDOW_SIZE + 1);
+
     public static SensorCentral getInstance() {
         return INSTANCE;
     }
@@ -100,8 +106,36 @@ public class SensorCentral implements ISensorCentral {
     public void grabSensorValues(byte[] response, @NotNull IniFileModel ini, @Nullable ConfigurationImage configImage) {
         this.response = response;
         ISensorCentral.super.grabSensorValues(response, ini, configImage);
+        updateRuntimeDataRate();
         for (ResponseListener listener : listeners)
             listener.onSensorUpdate();
+    }
+
+    /**
+     * Computes the runtime data rate (Hz) over a sliding window of recent frame timestamps
+     * and publishes it to the synthetic {@code runtimeDataRateGauge} channel injected by
+     * {@link com.opensr5.ini.ImmutableIniFileModel}.
+     */
+    private void updateRuntimeDataRate() {
+        long now = System.nanoTime();
+        synchronized (frameTimestampsNanos) {
+            frameTimestampsNanos.addLast(now);
+            // Bound the window by both count and time so an idle period drops the rate to ~0.
+            while (frameTimestampsNanos.size() > RATE_WINDOW_SIZE
+                    || (!frameTimestampsNanos.isEmpty() && now - frameTimestampsNanos.peekFirst() > RATE_WINDOW_NANOS)) {
+                frameTimestampsNanos.pollFirst();
+            }
+            int n = frameTimestampsNanos.size();
+            double hz = 0.0;
+            if (n >= 2) {
+                long spanNanos = now - frameTimestampsNanos.peekFirst();
+                if (spanNanos > 0) {
+                    // (n - 1) intervals over spanNanos
+                    hz = (n - 1) * 1_000_000_000.0 / spanNanos;
+                }
+            }
+            setValue(hz, com.opensr5.ini.ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE);
+        }
     }
 
     @Override
