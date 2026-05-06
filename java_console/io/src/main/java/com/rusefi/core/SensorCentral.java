@@ -15,11 +15,59 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * This class keeps track of {@link Sensor} current values and {@link SensorCentral.SensorListener}
- * <p/>
- * <p/>
- * Date: 1/6/13
- * Andrey Belomutskiy, (c) 2013-2020
+ * This class keeps track of {@link Sensor} current values and {@link SensorCentral.SensorListener}.
+ *
+ * <h3>Data flow into SensorCentral</h3>
+ *
+ * <p>SensorCentral is the singleton sink for all real-time sensor values decoded from the
+ * controller's "output channels" frame. The flow per ECU frame is:</p>
+ *
+ * <ol>
+ *   <li><b>Frame arrival.</b> {@link com.rusefi.binaryprotocol.BinaryProtocol} (the only
+ *       production producer) reassembles a raw output-channels byte buffer from the link and
+ *       calls {@link #grabSensorValues(byte[], IniFileModel, ConfigurationImage)} once per
+ *       frame. Test sandboxes (e.g. {@code TableTracerSandbox}, {@code CurveTracerSandbox})
+ *       and the proxy server's {@code ControllerConnectionState} feed synthetic frames the
+ *       same way.</li>
+ *
+ *   <li><b>Decode.</b> {@link #grabSensorValues} stores the raw {@code response} bytes for
+ *       later retrieval via {@link #getResponse()} and delegates decoding to
+ *       {@link ISensorCentral#grabSensorValues} (default implementation in
+ *       {@link ISensorHolder#grabSensorValues}). That default runs three passes over the
+ *       {@link IniFileModel}:
+ *       <ul>
+ *         <li>Pass 1 — direct output channels: every channel in
+ *             {@link IniFileModel#getAllOutputChannels()} is read from the bytes and pushed
+ *             via {@link #setValue(double, String)}.</li>
+ *         <li>Pass 2 — expression gauges: gauge channels that are runtime expressions
+ *             (e.g. {@code { coolant * 1.8 + 32 }}) are evaluated against the just-decoded
+ *             values plus optional config image and also pushed via {@link #setValue}.</li>
+ *         <li>Pass 3 — string-valued gauge labels (bitStringValue / stringValue) are resolved
+ *             and delivered through {@link #onGaugeLabelsResolved(Map)}, which caches them
+ *             into {@link #resolvedGaugeLabels} for {@link #getResolvedLabels(String)}.</li>
+ *       </ul>
+ *   </li>
+ *
+ *   <li><b>Storage.</b> Each {@link #setValue(double, String)} call writes through to
+ *       {@link SensorsHolder} (case-insensitive, lock-free per-channel {@code AtomicDouble})
+ *       and reports whether the value actually changed.</li>
+ *
+ *   <li><b>Per-sensor fan-out.</b> When a value changed, {@link #setValue} synchronously
+ *       notifies every registered {@link SensorListener} for that channel name (registered
+ *       via {@link #addListener(String, SensorListener)}). Listener lists are keyed by the
+ *       lower-cased sensor name.</li>
+ *
+ *   <li><b>Per-frame fan-out.</b> After the entire frame is decoded, {@link #grabSensorValues}
+ *       notifies every {@link ResponseListener} registered via
+ *       {@link #addListener(ResponseListener)} exactly once. These listeners typically refresh
+ *       UI panels that need a "frame complete" signal rather than per-channel deltas.</li>
+ * </ol>
+ *
+ * <p>Outside the per-frame pipeline, {@link #setValue} can also be called directly (e.g. from
+ * tests or simulated sensors); the same fan-out rules apply.</p>
+ *
+ * <p>Date: 1/6/13<br/>
+ * Andrey Belomutskiy, (c) 2013-2020</p>
  */
 public class SensorCentral implements ISensorCentral {
     private static final SensorCentral INSTANCE = new SensorCentral();
