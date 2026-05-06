@@ -38,7 +38,6 @@ public class IniFileReader {
                 contextHelp,
                 allTables,
                 allCurves,
-                menuDialogString,
                 menus,
                 frontPage,
                 controllerCommands,
@@ -95,7 +94,6 @@ public class IniFileReader {
     private final Map<String, String> topicHelpMap = new TreeMap<>();
 
     private final Map<String, ContextHelpModel> contextHelp = new LinkedHashMap<>();
-    private String menuDialog;
     private String currentHelpReferenceName;
     private String currentHelpTitle;
     private final List<String> currentHelpTextLines = new ArrayList<>();
@@ -107,7 +105,6 @@ public class IniFileReader {
     private final List<MenuModel> menus = new ArrayList<>();
     private MenuModel currentMenu;
     private GroupMenuModel currentGroup;
-    private String menuDialogString;
     private final Map<String, TableModel> allTables = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final TableBuilder tableBuilder = new TableBuilder();
 
@@ -680,9 +677,6 @@ public class IniFileReader {
     private void handleMenu(LinkedList<String> list) {
         String keyword = list.removeFirst();
         switch (keyword) {
-            case "menuDialog":
-                menuDialogString = list.get(0);
-                break;
             case "menu":
                 currentMenu = new MenuModel(IniFileReaderUtil.removeMenuAmpersand(list.get(0)));
                 menus.add(currentMenu);

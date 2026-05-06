@@ -68,7 +68,6 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, ContextHelpModel> contextHelp,
                                  Map<String, TableModel> tables,
                                  Map<String, CurveModel> curves,
-                                 String menuDialog,
                                  List<MenuModel> menus,
                                  FrontPageModel frontPage,
                                  Map<String, String> controllerCommands,
