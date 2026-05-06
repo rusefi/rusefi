@@ -1470,8 +1470,8 @@
 #define PACK_MULT_VOLTAGE 1000
 #define PACK_MULT_VSS 100
 #define PACK_PERCENT_BYTE_MULT 100.0
-#define PAGE_SIZE_1 256
-#define PAGE_SIZE_2 2048
+#define PAGE_SIZE_2 256
+#define PAGE_SIZE_3 2048
 #define PAGE_SIZE_4 1268
 #define PEDAL_TO_TPS_RPM_SIZE 8
 #define PEDAL_TO_TPS_SIZE 8
@@ -1569,7 +1569,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3898061105
+#define SIGNATURE_HASH 2155740487
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2180,7 +2180,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.05.06.proteus_f4.3898061105"
+#define TS_SIGNATURE "rusEFI master.2026.05.06.proteus_f4.2155740487"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

@@ -1373,8 +1373,8 @@ public class VariableRegistryValues {
 	public static final int PACK_MULT_TEMPERATURE = 100;
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int PACK_MULT_VSS = 100;
-	public static final int PAGE_SIZE_1 = 256;
-	public static final int PAGE_SIZE_2 = 2048;
+	public static final int PAGE_SIZE_2 = 256;
+	public static final int PAGE_SIZE_3 = 2048;
 	public static final int PAGE_SIZE_4 = 1268;
 	public static final int PEDAL_TO_TPS_RPM_SIZE = 8;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
@@ -1777,7 +1777,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.05.06.mre-legacy_f4.3064760734";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.05.06.mre-legacy_f4.3733374440";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2132;
