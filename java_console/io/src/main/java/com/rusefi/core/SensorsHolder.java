@@ -9,6 +9,7 @@ public class SensorsHolder {
     // all resolve to the same entry, with O(1) HashMap lookup instead of O(log N) TreeMap comparison.
     // Values stored as single-element double[] to avoid boxing on every update.
     // The array is allocated once per channel name and mutated in place thereafter.
+    // todo: probably not worth migrating to AtomicDouble with longBitsToDouble
     private final Map<String, double[]> values = new HashMap<>();
 
     public double getValue(Sensor sensor) {
