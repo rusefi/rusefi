@@ -213,7 +213,7 @@ public enum SerialPortScanner {
                     final Optional<CalibrationsInfo> tcpCalibrations = getEcuCalibrations(tcpPort);
                     final PortResult tcpResult = tcpCalibrations
                         .map(c -> new PortResult(tcpPort, SerialPortType.Ecu, c))
-                        .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Ecu));
+                        .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Unknown));
                     ports.add(tcpResult);
 
                     // cache port + calibrations
