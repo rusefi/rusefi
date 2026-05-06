@@ -1,15 +1,12 @@
 package com.rusefi.core;
 
-import com.opensr5.ini.*;
-import com.opensr5.ini.field.IniField;
-import com.rusefi.config.Field;
+import com.opensr5.ini.ImmutableIniFileModel;
+import com.opensr5.ini.IniFileModelMocks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -174,8 +171,8 @@ public class SensorCentralTest {
 
         sensorCentral.addListener(listener);
         try {
-            sensorCentral.grabSensorValues(new byte[0], new StubIniFileModel(), null);
-            sensorCentral.grabSensorValues(new byte[0], new StubIniFileModel(), null);
+            sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
+            sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
             assertEquals(2, callCount.get());
         } finally {
             sensorCentral.removeListener(listener);
@@ -188,9 +185,9 @@ public class SensorCentralTest {
         SensorCentral.ResponseListener listener = callCount::incrementAndGet;
 
         sensorCentral.addListener(listener);
-        sensorCentral.grabSensorValues(new byte[0], new StubIniFileModel(), null);
+        sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
         sensorCentral.removeListener(listener);
-        sensorCentral.grabSensorValues(new byte[0], new StubIniFileModel(), null);
+        sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
 
         assertEquals(1, callCount.get());
     }
@@ -198,7 +195,7 @@ public class SensorCentralTest {
     @Test
     void grabSensorValuesStoresResponseBytes() {
         byte[] payload = {1, 2, 3, 4, 5};
-        sensorCentral.grabSensorValues(payload, new StubIniFileModel(), null);
+        sensorCentral.grabSensorValues(payload, IniFileModelMocks.empty(), null);
         assertSame(payload, sensorCentral.getResponse());
     }
 
@@ -209,13 +206,13 @@ public class SensorCentralTest {
                 ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE, latestHz::set);
         try {
             // First frame: only one timestamp in window → published value is 0.0.
-            sensorCentral.grabSensorValues(new byte[0], new StubIniFileModel(), null);
+            sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
             assertNotNull(latestHz.get(), "runtimeDataRateGauge should be published on first frame");
             assertEquals(0.0, latestHz.get(), 0.0001);
 
             // Second frame after a measurable delay: rate should be > 0 and finite.
             Thread.sleep(20);
-            sensorCentral.grabSensorValues(new byte[0], new StubIniFileModel(), null);
+            sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
             double hz = latestHz.get();
             assertTrue(hz > 0.0 && Double.isFinite(hz),
                     "expected positive finite Hz, got " + hz);
@@ -264,47 +261,4 @@ public class SensorCentralTest {
         assertDoesNotThrow(() -> sensorCentral.removeListener("nonExistentSensor", listener));
     }
 
-    /**
-     * Minimal IniFileModel stub that returns empty/null defaults for every accessor.
-     * Sufficient to drive {@link SensorCentral#grabSensorValues} without exercising
-     * any actual decoding (no output channels, no expression channels, no gauges).
-     */
-    private static class StubIniFileModel implements IniFileModel {
-        @Override public String getSignature() { return "STUB"; }
-        @Override public int getBlockingFactor() { return 0; }
-        @Override public Map<String, List<String>> getDefines() { return Collections.emptyMap(); }
-        @Override public Map<String, IniField> getAllIniFields() { return Collections.emptyMap(); }
-        @Override public Map<String, IniField> getSecondaryIniFields() { return Collections.emptyMap(); }
-        @Override public Optional<IniField> findIniField(String key) { return Optional.empty(); }
-        @Override public IniField getIniField(Field field) { return null; }
-        @Override public IniField getIniField(String key) { return null; }
-        @Override public IniField getOutputChannel(String key) { return null; }
-        @Override public Map<String, IniField> getAllOutputChannels() { return Collections.emptyMap(); }
-        @Override public String getExpressionOutputChannel(String key) { return null; }
-        @Override public Map<String, String> getExpressionOutputChannels() { return Collections.emptyMap(); }
-        @Override public Map<String, String> getProtocolMeta() { return Collections.emptyMap(); }
-        @Override public IniFileMetaInfo getMetaInfo() { return null; }
-        @Override public String getIniFilePath() { return ""; }
-        @Override public Map<String, String> getTooltips() { return Collections.emptyMap(); }
-        @Override public Map<String, DialogModel.Field> getFieldsInUiOrder() { return Collections.emptyMap(); }
-        @Override public Map<String, DialogModel> getDialogs() { return Collections.emptyMap(); }
-        @Override public String getDialogKeyByTitle(String dialogTitle) { return null; }
-        @Override public IniField findByOffset(int i) { return null; }
-        @Override public Map<String, GaugeCategoryModel> getGaugeCategories() { return Collections.emptyMap(); }
-        @Override public Map<String, GaugeModel> getGauges() { return Collections.emptyMap(); }
-        @Override public GaugeModel getGauge(String name) { return null; }
-        @Override public GaugeModel findGaugeByChannel(String channelName) { return null; }
-        @Override public Map<String, String> getTopicHelp() { return Collections.emptyMap(); }
-        @Override public Map<String, ContextHelpModel> getContextHelp() { return Collections.emptyMap(); }
-        @Override public ContextHelpModel getContextHelp(String referenceName) { return null; }
-        @Override public Map<String, TableModel> getTables() { return Collections.emptyMap(); }
-        @Override public Map<String, CurveModel> getCurves() { return Collections.emptyMap(); }
-        @Override public TableModel getTable(String name) { return null; }
-        @Override public FrontPageModel getFrontPage() { return null; }
-        @Override public List<MenuModel> getMenus() { return Collections.emptyList(); }
-        @Override public Map<String, String> getControllerCommands() { return Collections.emptyMap(); }
-        @Override public List<VeAnalyzeMap> getVeAnalyzeMaps() { return Collections.emptyList(); }
-        @Override public List<String> getLambdaTargetTables() { return Collections.emptyList(); }
-        @Override public List<VeAnalyzeFilter> getVeAnalyzeFilters() { return Collections.emptyList(); }
-    }
 }
