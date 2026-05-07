@@ -407,7 +407,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 	sendOkResponse(tsChannel);
 }
 
-void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
+void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint32_t page, uint32_t offset, uint32_t count) {
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
@@ -573,7 +573,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
 			|| command == TS_GET_TEXT
-			|| command == TS_CRC_CHECK_COMMAND
+			|| command == TS_CRC_CHECK_COMMAND || command == TS_CRC32_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
@@ -960,6 +960,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		offset = data16[1];
 		count = data16[2];
 		handleCrc32Check(tsChannel, page, offset, count);
+		break;
+	case TS_CRC32_CHECK_COMMAND:
+		{
+			uint32_t page32 = data32[0];
+			uint32_t offset32 = data32[1];
+			uint32_t count32 = data32[2];
+			handleCrc32Check(tsChannel, page32, offset32, count32);
+		}
 		break;
 	case TS_BURN_COMMAND:
 		/* command with page argument */

@@ -13,6 +13,8 @@
 #define TS_QUERY_COMMAND 'Q'
 ! 0x6B 107
 #define TS_CRC_CHECK_COMMAND 'k'
+! 0x4B
+#define TS_CRC32_CHECK_COMMAND 'K'
 
 ! 0x46
 #define TS_COMMAND_F 'F'
