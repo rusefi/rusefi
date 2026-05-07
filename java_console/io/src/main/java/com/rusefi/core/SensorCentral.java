@@ -80,7 +80,17 @@ public class SensorCentral implements ISensorCentral {
     // Keys normalized to lower-case (Locale.US) for O(1) HashMap lookup.
     // "coolant", "COOLANT", "Coolant" all resolve to the same listener list.
     private final Map<String, List<SensorListener>> sensorListeners = new HashMap<>();
-    private final List<ResponseListener> listeners = new CopyOnWriteArrayList<>();
+    private final List<ResponseListenerHolder> listeners = new CopyOnWriteArrayList<>();
+
+    private static class ResponseListenerHolder {
+        private final ResponseListener listener;
+        private final SensorSubscription subscription;
+
+        public ResponseListenerHolder(ResponseListener listener, SensorSubscription subscription) {
+            this.listener = listener;
+            this.subscription = subscription;
+        }
+    }
     private volatile Map<String, ResolvedGaugeLabels> resolvedGaugeLabels = Collections.emptyMap();
     private byte[] response;
 
@@ -107,8 +117,9 @@ public class SensorCentral implements ISensorCentral {
         this.response = response;
         ISensorCentral.super.grabSensorValues(response, ini, configImage);
         updateRuntimeDataRate();
-        for (ResponseListener listener : listeners)
-            listener.onSensorUpdate();
+        for (ResponseListenerHolder holder : listeners) {
+            holder.listener.onSensorUpdate();
+        }
     }
 
     /**
@@ -192,11 +203,24 @@ public class SensorCentral implements ISensorCentral {
     }
 
     public void addListener(ResponseListener listener) {
-        listeners.add(listener);
+        addListener(listener, new SensorSubscription());
+    }
+
+    public void addListener(ResponseListener listener, SensorSubscription subscription) {
+        listeners.add(new ResponseListenerHolder(listener, subscription));
+    }
+
+    public SensorSubscription getSubscription(ResponseListener listener) {
+        for (ResponseListenerHolder holder : listeners) {
+            if (holder.listener == listener) {
+                return holder.subscription;
+            }
+        }
+        return null;
     }
 
     public void removeListener(ResponseListener listener) {
-        listeners.remove(listener);
+        listeners.removeIf(holder -> holder.listener == listener);
     }
 
     @Override

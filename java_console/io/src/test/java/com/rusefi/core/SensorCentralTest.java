@@ -112,6 +112,18 @@ public class SensorCentralTest {
     }
 
     @Test
+    void testResponseListenerSubscription() {
+        SensorCentral.ResponseListener listener = () -> {};
+        SensorSubscription sub = new SensorSubscription("RPM");
+        sensorCentral.addListener(listener, sub);
+
+        assertSame(sub, sensorCentral.getSubscription(listener));
+
+        sensorCentral.removeListener(listener);
+        assertNull(sensorCentral.getSubscription(listener));
+    }
+
+    @Test
     void caseInsensitiveListenerLookup() {
         AtomicReference<Double> receivedValue = new AtomicReference<>();
 
