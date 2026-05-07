@@ -741,6 +741,11 @@ public class BinaryProtocol {
         }
     }
 
+    /**
+     * This is a blocking method which would fetch all output channels from the controller.
+     *
+     * @return true if successful
+     */
     public boolean requestOutputChannels() {
         if (stream.isClosed())
             return false;
