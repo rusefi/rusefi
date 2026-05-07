@@ -494,7 +494,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint32_t page,
 				return;
 			}
 			// to have rusEFI console happy just send all zeros within a valid packet
-			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
+			addr = (uint8_t*)(tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE);
 			memset(addr, 0, count);
 		}
 	}
