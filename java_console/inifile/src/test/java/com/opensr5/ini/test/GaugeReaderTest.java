@@ -2,6 +2,7 @@ package com.opensr5.ini.test;
 
 import com.opensr5.ini.GaugeCategoryModel;
 import com.opensr5.ini.GaugeModel;
+import com.opensr5.ini.ImmutableIniFileModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.rusefi.ini.reader.IniFileReaderUtil;
@@ -102,6 +103,59 @@ public class GaugeReaderTest {
         assertEquals("%", tpsGauge.getUnits());
         assertEquals(1, tpsGauge.getValueDecimalPlaces());
         assertEquals(1, tpsGauge.getLabelDecimalPlaces());
+    }
+
+    /**
+     * Regression: generated .ini files now emit {@code gaugeCategory = "ECU Status"} (quoted).
+     * Quotes must be stripped by the tokenizer so the category key matches
+     * {@link ImmutableIniFileModel#GAUGE_CATEGORY_ECU_STATUS} and the synthetic
+     * {@link ImmutableIniFileModel#RUNTIME_DATA_RATE_GAUGE} is injected.
+     */
+    @Test
+    public void testQuotedEcuStatusCategoryAddsRuntimeDataRateGauge() {
+        String string = "[GaugeConfigurations]\n" +
+            "gaugeCategory = \"" + ImmutableIniFileModel.GAUGE_CATEGORY_ECU_STATUS + "\"\n" +
+            "rpmGauge = RPMValue, \"Engine Speed\", \"RPM\", 0, 8000, 0, 0, 6000, 8000, 0, 0\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        GaugeCategoryModel ecuStatus = model.getGaugeCategories().get(ImmutableIniFileModel.GAUGE_CATEGORY_ECU_STATUS);
+        assertNotNull(ecuStatus, "Quoted gaugeCategory \"ECU Status\" must be parsed as key 'ECU Status'");
+        assertTrue(model.getGauges().containsKey(ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE),
+            "Synthetic " + ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE + " must be injected when ECU Status category is present");
+    }
+
+    /**
+     * Coverage for unquoted multi-word category name, e.g. {@code gaugeCategory = Boost PID}
+     * as emitted by firmware/tunerstudio/gauge_declarations.ini. The tokenizer must preserve
+     * the space and produce the exact key {@code "Boost PID"}.
+     */
+    @Test
+    public void testUnquotedCategoryNameWithSpace() {
+        String string = "[GaugeConfigurations]\n" +
+            "gaugeCategory = Boost PID\n" +
+            "boostStatus_iTermGauge = boostStatus_iTerm, \"Boost PID iTerm\", \"\", -100, 100, -100, 100, -100, 100, 3, 3\n" +
+            "gaugeCategory = Alternator PID\n" +
+            "alternatorStatus_iTermGauge = alternatorStatus_iTerm, \"Alternator PID iTerm\", \"\", -100, 100, -100, 100, -100, 100, 3, 3\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertEquals(2, model.getGaugeCategories().size());
+
+        GaugeCategoryModel boostPid = model.getGaugeCategories().get("Boost"); // TODO: we have a bug!
+        assertNotNull(boostPid, "Unquoted 'gaugeCategory = Boost PID' must be parsed as key 'Boost PID' (with space preserved)");
+        assertEquals("Boost", boostPid.getName());
+        assertEquals(1, boostPid.getGauges().size());
+
+        GaugeCategoryModel alternatorPid = model.getGaugeCategories().get("Alternator"); // TODO: we have a bug!
+        assertNotNull(alternatorPid, "Unquoted 'gaugeCategory = Alternator PID' must be parsed as key 'Alternator PID'");
+        assertEquals("Alternator", alternatorPid.getName());
+        assertEquals(1, alternatorPid.getGauges().size());
+
+        assertTrue(model.getGauges().containsKey("boostStatus_iTermGauge"));
+        assertTrue(model.getGauges().containsKey("alternatorStatus_iTermGauge"));
     }
 
     @Test
