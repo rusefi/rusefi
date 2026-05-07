@@ -35,8 +35,9 @@ public class RpmLabel {
         rpmValue.setForeground(Color.red);
 
         content.setBorder(BorderFactory.createLineBorder(Color.white));
-        if (withCaption)
+        if (withCaption) {
             content.add(rpmCaption);
+        }
         content.add(rpmValue, "grow, wrap");
 
         RpmModel.getInstance().addListener(new RpmModel.RpmListener() {
@@ -64,10 +65,11 @@ public class RpmLabel {
     }
 
     private void updateRpmValue(int value) {
-        if (value == -1)
+        if (value == -1) {
             rpmValue.setText("Noise");
-        else
+        } else {
             rpmValue.setText(value + "");
+        }
     }
 
     public JPanel getContent() {

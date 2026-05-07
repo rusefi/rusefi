@@ -102,6 +102,10 @@ Key preprocessor flags that control compilation:
 - `EFI_UNIT_TEST=1` - Unit test build
 - `EFI_SIMULATOR=1` - Simulator build
 
+## Coding Style
+
+- Always use curly brackets for `if` statements, even for single-line blocks.
+
 ## Embedded Code Practices
 
 - **Static allocation only**: Embedded firmware uses only static memory allocation. No heap usage (`new`, `malloc`, `std::vector`, `std::string`, `std::map`, etc.) is permitted in production firmware code. Use fixed-size containers like `cyclic_buffer` from `rusefi/containers/cyclic_buffer.h` instead. Memory is limited and fragmentation must be avoided.
