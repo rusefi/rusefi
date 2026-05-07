@@ -60,6 +60,8 @@
 #define TS_RESPONSE_FRAMING_ERROR 0x8D
 ! 0x52 82
 #define TS_READ_COMMAND 'R'
+! 0x28
+#define TS_READ32_COMMAND '('
 ! 0x47
 #define TS_GET_TEXT 'G'
 ! 0x45
@@ -88,9 +90,6 @@
 
 ! High speed logger commands
 #define TS_SET_LOGGER_SWITCH  'l'
-
-#define TS_GET_IMAGE_COMMAND '('
-
 
 #define CMD_SET_SENSOR_MOCK "set_sensor_mock"
 #define CMD_RESET_SENSOR_MOCKS "reset_sensor_mocks"
