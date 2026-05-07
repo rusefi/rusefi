@@ -15,6 +15,11 @@
 #define TS_PAGE_LTFT_TRIMS			0x0200
 #define TS_PAGE_SECOND_TABLES		0x0300
 
+// Special RusEFI pages accessable only using READ32 command
+// Two MSB bytes are "RE"
+#define TS_PAGE_FS_IMAGE_SIZE		0x52450000
+#define TS_PAGE_FS_IMAGE_DATA		0x52450001
+
 typedef struct {
 	int queryCommandCounter;
 	int outputChannelsCommandCounter;
