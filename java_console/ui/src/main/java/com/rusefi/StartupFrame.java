@@ -246,10 +246,7 @@ public class StartupFrame {
         selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
         selector.setJobExecutor(asyncJobExecutor);
 
-        JButton goToFirmwareTab = new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
-        goToFirmwareTab.addActionListener(e -> outerTabs.setSelectedIndex(0));
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
-        realHardwarePanel.add(goToFirmwareTab, "right, wrap");
 
         JButton openTunerStudio = new JButton("Open TunerStudio");
         setToolTip(openTunerStudio, "Launch TunerStudio and close this console so the serial port is released");
