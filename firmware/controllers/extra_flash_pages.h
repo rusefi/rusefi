@@ -37,6 +37,13 @@ struct alignas(32) ExtraPageContainer {
 };
 
 /**
+ * Reset all extra pages to defaults derived from the current page-1 config.
+ * Called from resetConfigurationExt() so that every config reset (preset apply,
+ * version mismatch, CRC failure) leaves extra pages consistent with page 1.
+ */
+void resetExtraPages();
+
+/**
  * Load all extra pages from storage into RAM.
  * Called unconditionally at startup (before TunerStudio starts), like the main config
  *

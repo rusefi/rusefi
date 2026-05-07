@@ -22,6 +22,13 @@ static constexpr size_t PAGE4_SECTOR_OFFSET = 72u * 1024u;
 static_assert(sizeof(persistent_config_container_s) <= PAGE4_SECTOR_OFFSET,
 	"persistent_config_container_s exceeds PAGE4_SECTOR_OFFSET — increase the offset");
 
+void resetExtraPages() {
+	secondTablesSetDefaults();
+
+	// When extracting a new config page from the main config, add a
+	// resetXxx() call here
+}
+
 void loadExtraPages() {
 	loadSecondTables();
 
