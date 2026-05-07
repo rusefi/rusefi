@@ -1,5 +1,6 @@
 package com.rusefi.core;
 
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.ImmutableIniFileModel;
 import com.opensr5.ini.IniFileModelMocks;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class SensorCentralTest {
     private SensorCentral sensorCentral;
@@ -121,6 +123,25 @@ public class SensorCentralTest {
 
         sensorCentral.removeListener(listener);
         assertNull(sensorCentral.getSubscription(listener));
+    }
+
+    @Test
+    void testSubscriptionFiltering() {
+        AtomicInteger callCount = new AtomicInteger();
+        SensorCentral.ResponseListener listener = callCount::incrementAndGet;
+        sensorCentral.addListener(listener, new SensorSubscription("RPM"));
+
+        IniFileModel ini = mock(IniFileModel.class);
+
+        // Update with no RPM
+        sensorCentral.setValue(10, "TPS");
+        sensorCentral.grabSensorValues(new byte[10], ini, null);
+        assertEquals(0, callCount.get(), "Should not notify for TPS when subscribed to RPM");
+
+        // Update with RPM
+        sensorCentral.setValue(1000, "RPM");
+        sensorCentral.grabSensorValues(new byte[10], ini, null);
+        assertEquals(1, callCount.get(), "Should notify for RPM");
     }
 
     @Test

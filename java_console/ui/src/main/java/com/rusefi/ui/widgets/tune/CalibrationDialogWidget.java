@@ -16,6 +16,7 @@ import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.SensorGauge;
 import eu.hansolo.steelseries.gauges.Radial;
@@ -119,6 +120,24 @@ public class CalibrationDialogWidget {
         SensorCentral.getInstance().addListener(() -> {
             if (!readoutEntries.isEmpty() || !gaugeReadoutEntries.isEmpty()) {
                 SwingUtilities.invokeLater(this::refreshReadouts);
+            }
+        }, new SensorSubscription() {
+            @Override
+            public boolean isInterestedInAny(Set<String> updatedSensors) {
+                if (readoutEntries.isEmpty() && gaugeReadoutEntries.isEmpty()) {
+                    return false;
+                }
+                for (ReadoutLabelEntry entry : readoutEntries) {
+                    if (updatedSensors.contains(entry.channel.toLowerCase())) return true;
+                }
+                for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
+                    if (updatedSensors.contains(entry.channel.toLowerCase())) return true;
+                    // Also interested if ANY sensor updated if we have expression labels,
+                    // because we don't know which sensors are in the expression without parsing it again.
+                    // But we could parse it once. For now, let's be safe.
+                    if (entry.hasExpressionLabels) return true;
+                }
+                return false;
             }
         });
     }

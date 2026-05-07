@@ -23,4 +23,16 @@ public class SensorSubscription {
     public boolean isInterestedIn(String sensorName) {
         return sensorNames.isEmpty() || sensorNames.contains(sensorName.toLowerCase());
     }
+
+    public boolean isInterestedInAny(Set<String> updatedSensors) {
+        if (sensorNames.isEmpty()) {
+            return true;
+        }
+        for (String updated : updatedSensors) {
+            if (sensorNames.contains(updated.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

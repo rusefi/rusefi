@@ -7,11 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.opensr5.ini.LowercaseHashMap;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -117,8 +113,12 @@ public class SensorCentral implements ISensorCentral {
         this.response = response;
         ISensorCentral.super.grabSensorValues(response, ini, configImage);
         updateRuntimeDataRate();
+        Set<String> updatedSensors = sensorsHolder.getSensorNames();
         for (ResponseListenerHolder holder : listeners) {
-            holder.listener.onSensorUpdate();
+            // todo: once we trust this! if (holder.subscription.isInterestedInAny(updatedSensors))
+            {
+                holder.listener.onSensorUpdate();
+            }
         }
     }
 
