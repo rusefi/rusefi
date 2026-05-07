@@ -131,23 +131,6 @@ namespace {
 	Timer calibrationsVeWriteTimer;
 }
 
-#if 0
-static void printScatterList(TsChannelBase* tsChannel) {
-	efiPrintf("Scatter list (global)");
-	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
-		uint16_t packed = tsChannel->highSpeedOffsets[i];
-		uint16_t type = packed >> 13;
-		uint16_t offset = packed & 0x1FFF;
-
-		if (type == 0)
-			continue;
-		size_t size = 1 << (type - 1);
-
-		efiPrintf("%02d offset 0x%04x size %d", i, offset, size);
-	}
-}
-#endif
-
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
 /* 10mS when receiving byte by byte */
@@ -268,11 +251,6 @@ static bool validateOffsetCount(size_t page, size_t offset, size_t count) {
 	size_t allowedSize = getTunerStudioPageSize(page);
 	if (offset + count > allowedSize) {
 		efiPrintf("TS: Project mismatch? Too much configuration requested %d+%d>%d", offset, count, allowedSize);
-		return true;
-	}
-	if (count > 65535) {
-		// this is TS protocol limitation
-		efiPrintf("TS: requested more that can fit into one reply %d", count);
 		return true;
 	}
 
@@ -479,7 +457,9 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint32_t page, uint32_t offset, uint32_t count) {
 	tsState.readPageCommandsCounter++;
 
-	if (validateOffsetCount(page, offset, count)) {
+	// TS packet limit is 64K - 1 bytes
+	if (validateOffsetCount(page, offset, count) ||
+		(count > 65535)) {
 		tunerStudioError(tsChannel, "ERROR: RD out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
@@ -962,7 +942,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleCrc32Check(tsChannel, page, offset, count);
 		break;
 	case TS_CRC32_CHECK_COMMAND:
-		{
+		if (incomingPacketSize >= 13) {
 			uint32_t page32 = data32[0];
 			uint32_t offset32 = data32[1];
 			uint32_t count32 = data32[2];
@@ -982,7 +962,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handlePageReadCommand(tsChannel, page, offset, count);
 		break;
 	case TS_READ32_COMMAND:
-		{
+		if (incomingPacketSize >= 13) {
 			uint32_t page32 = data32[0];
 			uint32_t offset32 = data32[1];
 			uint32_t count32 = data32[2];
