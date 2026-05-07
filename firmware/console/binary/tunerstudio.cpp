@@ -488,6 +488,11 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint32_t page,
 	uint8_t* addr = getWorkingPageAddr(tsChannel, page, offset, false);
 	if (page == TS_PAGE_SETTINGS) {
 		if (isLockedFromUser()) {
+			// do not overrun temporary buffer!
+			if (count + TS_PACKET_HEADER_SIZE > sizeof(tsChannel->scratchBuffer)) {
+				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: RD no space for dummy reply");
+				return;
+			}
 			// to have rusEFI console happy just send all zeros within a valid packet
 			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
 			memset(addr, 0, count);
