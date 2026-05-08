@@ -197,6 +197,7 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             TuningPane tuningPane = new TuningPane(uiContext);
+            mainFrame.setTuneActions(tuningPane.getLoadTuneAction(), tuningPane.getSaveTuneAction());
             PinoutPane pinoutPane = new PinoutPane(uiContext);
             tabbedPane.addTab("Tuning", tuningPane.getContent());
             tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());

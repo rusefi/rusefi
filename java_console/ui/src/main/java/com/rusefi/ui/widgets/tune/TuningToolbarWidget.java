@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.concurrent.CountDownLatch;
@@ -40,6 +41,9 @@ public class TuningToolbarWidget {
 
     private final JButton undoButton = new JButton("Undo");
     private final JButton redoButton = new JButton("Redo");
+
+    private AbstractAction loadTuneAction;
+    private AbstractAction saveTuneAction;
 
     private final Timer undoCommitTimer;
     private final Timer uploadTimer;
@@ -92,8 +96,8 @@ public class TuningToolbarWidget {
 
         JButton discardButton = getDiscardButton(uiContext, right, sessionImage, currentKey, updateButtons);
 
-        JButton loadTuneButton = getLoadTuneButton(uiContext, right, currentKey, sessionImage);
-        JButton saveTuneButton = getSaveTuneButton(uiContext, right, sessionImage);
+        buildLoadTuneAction(uiContext, right, currentKey, sessionImage);
+        buildSaveTuneAction(uiContext, right, sessionImage);
 
         undoButton.addActionListener(e -> {
             if (undoStack.isEmpty()) {
@@ -136,8 +140,6 @@ public class TuningToolbarWidget {
         panel.add(discardButton);
         panel.add(undoButton);
         panel.add(redoButton);
-        panel.add(loadTuneButton);
-        panel.add(saveTuneButton);
     }
 
     private @NotNull JButton getBurnToEcuButton(UIContext uiContext,
@@ -194,121 +196,131 @@ public class TuningToolbarWidget {
         return discardButton;
     }
 
-    private @NotNull JButton getLoadTuneButton(UIContext uiContext,
-                                                CalibrationDialogWidget right,
-                                                AtomicReference<String> currentKey,
-                                                AtomicReference<ConfigurationImage> sessionImage) {
+    private void buildLoadTuneAction(UIContext uiContext,
+                                     CalibrationDialogWidget right,
+                                     AtomicReference<String> currentKey,
+                                     AtomicReference<ConfigurationImage> sessionImage) {
         JFileChooser chooser = createMsqFileChooser();
-        JButton button = new JButton(LoadTuneHelper.LOAD_TUNE_TEXT);
-        button.addActionListener(e -> {
-            if (chooser.showOpenDialog(button) != JFileChooser.APPROVE_OPTION) {
-                return;
-            }
-            IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-            if (ini == null) {
-                JOptionPane.showMessageDialog(button, "No INI file loaded", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            final String path = chooser.getSelectedFile().getAbsolutePath();
-            final String fileName = chooser.getSelectedFile().getName();
-            ConfigurationImage sessionImg = sessionImage.get();
-            final ConfigurationImage base = sessionImg != null
-                    ? sessionImg
-                    : new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
-            final AtomicReference<ConfigurationImage> result = new AtomicReference<>();
-            final StatusWindow statusWindow = new StatusWindow();
-            statusWindow.showFrame("Load Tune");
-            final UpdateOperationCallbacks callbacks = statusWindow.getContent();
+        loadTuneAction = new AbstractAction(LoadTuneHelper.LOAD_TUNE_TEXT) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+                    return;
+                }
+                IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+                if (ini == null) {
+                    JOptionPane.showMessageDialog(null, "No INI file loaded", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                final String path = chooser.getSelectedFile().getAbsolutePath();
+                final String fileName = chooser.getSelectedFile().getName();
+                ConfigurationImage sessionImg = sessionImage.get();
+                final ConfigurationImage base = sessionImg != null
+                        ? sessionImg
+                        : new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
+                final AtomicReference<ConfigurationImage> result = new AtomicReference<>();
+                final StatusWindow statusWindow = new StatusWindow();
+                statusWindow.showFrame("Load Tune");
+                final UpdateOperationCallbacks callbacks = statusWindow.getContent();
 
-            AsyncJobExecutor.INSTANCE.executeJob(
-                new AsyncJob("Load Tune") {
-                    @Override
-                    public void doJob(UpdateOperationCallbacks cb, Runnable onJobFinished) {
-                        JobHelper.doJob(() -> {
-                            try {
-                                callbacks.logLine("Reading " + fileName + "...");
-                                Msq msq = Msq.readTune(path);
-                                callbacks.logLine("Applying tune fields...");
-                                ConfigurationImage newImage = msq.applyOnto(base, ini);
-                                BinaryProtocol bp = uiContext.getBinaryProtocol();
-                                if (bp != null) {
-                                    callbacks.logLine("Uploading and burning to ECU...");
-                                    CountDownLatch latch = new CountDownLatch(1);
-                                    uiContext.getLinkManager().submit(() -> {
-                                        try {
-                                            bp.uploadChanges(newImage);
-                                        } finally {
-                                            latch.countDown();
-                                        }
-                                    });
-                                    latch.await();
+                AsyncJobExecutor.INSTANCE.executeJob(
+                    new AsyncJob("Load Tune") {
+                        @Override
+                        public void doJob(UpdateOperationCallbacks cb, Runnable onJobFinished) {
+                            JobHelper.doJob(() -> {
+                                try {
+                                    callbacks.logLine("Reading " + fileName + "...");
+                                    Msq msq = Msq.readTune(path);
+                                    callbacks.logLine("Applying tune fields...");
+                                    ConfigurationImage newImage = msq.applyOnto(base, ini);
+                                    BinaryProtocol bp = uiContext.getBinaryProtocol();
+                                    if (bp != null) {
+                                        callbacks.logLine("Uploading and burning to ECU...");
+                                        CountDownLatch latch = new CountDownLatch(1);
+                                        uiContext.getLinkManager().submit(() -> {
+                                            try {
+                                                bp.uploadChanges(newImage);
+                                            } finally {
+                                                latch.countDown();
+                                            }
+                                        });
+                                        latch.await();
+                                    }
+                                    result.set(newImage);
+                                    callbacks.done();
+                                } catch (Exception ex) {
+                                    callbacks.logLine("Error: " + ex.getMessage());
+                                    callbacks.error();
                                 }
-                                result.set(newImage);
-                                callbacks.done();
-                            } catch (Exception ex) {
-                                callbacks.logLine("Error: " + ex.getMessage());
-                                callbacks.error();
-                            }
-                        }, onJobFinished);
-                    }
-                },
-                callbacks,
-                () -> SwingUtilities.invokeLater(() -> {
-                    ConfigurationImage res = result.get();
-                    if (res != null) {
-                        statusWindow.getFrame().dispose();
-                        sessionImage.set(res);
-                        String key = currentKey.get();
-                        if (key != null) {
-                            right.update(key, ini, res);
+                            }, onJobFinished);
                         }
-                        uiContext.fireConfigImageChanged(res);
-                    }
-                })
-            );
-        });
-        return button;
+                    },
+                    callbacks,
+                    () -> SwingUtilities.invokeLater(() -> {
+                        ConfigurationImage res = result.get();
+                        if (res != null) {
+                            statusWindow.getFrame().dispose();
+                            sessionImage.set(res);
+                            String key = currentKey.get();
+                            if (key != null) {
+                                right.update(key, ini, res);
+                            }
+                            uiContext.fireConfigImageChanged(res);
+                        }
+                    })
+                );
+            }
+        };
     }
 
-    private @NotNull JButton getSaveTuneButton(UIContext uiContext,
-                                               CalibrationDialogWidget right,
-                                               AtomicReference<ConfigurationImage> sessionImage) {
+    private void buildSaveTuneAction(UIContext uiContext,
+                                     CalibrationDialogWidget right,
+                                     AtomicReference<ConfigurationImage> sessionImage) {
         JFileChooser chooser = createMsqFileChooser();
-        JButton button = new JButton(LoadTuneHelper.SAVE_TUNE_TEXT);
-        button.addActionListener(e -> {
-            IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-            ConfigurationImage image = right.getWorkingImage();
-            if (image == null) image = sessionImage.get();
-            if (image == null) {
-                BinaryProtocol bp = uiContext.getBinaryProtocol();
-                if (bp != null) {
-                    image = bp.getControllerConfiguration();
+        saveTuneAction = new AbstractAction(LoadTuneHelper.SAVE_TUNE_TEXT) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+                ConfigurationImage image = right.getWorkingImage();
+                if (image == null) image = sessionImage.get();
+                if (image == null) {
+                    BinaryProtocol bp = uiContext.getBinaryProtocol();
+                    if (bp != null) {
+                        image = bp.getControllerConfiguration();
+                    }
                 }
-            }
-            if (ini == null || image == null) {
-                JOptionPane.showMessageDialog(button, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (chooser.showSaveDialog(button) != JFileChooser.APPROVE_OPTION) {
-                return;
-            }
-            File selected = chooser.getSelectedFile();
-            String path = selected.getAbsolutePath();
-            if (!path.toLowerCase().endsWith(".msq")) {
-                path += ".msq";
-            }
-            final String finalPath = path;
-            final ConfigurationImage finalImage = image;
-            new Thread(() -> {
-                try {
-                    MsqFactory.valueOf(finalImage, ini).writeXmlFile(finalPath);
-                } catch (Exception ex) {
-                    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
-                            button, "Failed to save tune: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE));
+                if (ini == null || image == null) {
+                    JOptionPane.showMessageDialog(null, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            }, "save-tune").start();
-        });
-        return button;
+                if (chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+                    return;
+                }
+                File selected = chooser.getSelectedFile();
+                String path = selected.getAbsolutePath();
+                if (!path.toLowerCase().endsWith(".msq")) {
+                    path += ".msq";
+                }
+                final String finalPath = path;
+                final ConfigurationImage finalImage = image;
+                new Thread(() -> {
+                    try {
+                        MsqFactory.valueOf(finalImage, ini).writeXmlFile(finalPath);
+                    } catch (Exception ex) {
+                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
+                                null, "Failed to save tune: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE));
+                    }
+                }, "save-tune").start();
+            }
+        };
+    }
+
+    public AbstractAction getLoadTuneAction() {
+        return loadTuneAction;
+    }
+
+    public AbstractAction getSaveTuneAction() {
+        return saveTuneAction;
     }
 
     private static @NotNull JFileChooser createMsqFileChooser() {

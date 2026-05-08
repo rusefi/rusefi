@@ -15,6 +15,7 @@ import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.basic.FirmwareUpdateTab;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.util.ExitUtil;
+import javax.swing.Action;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -65,6 +66,9 @@ public class MainFrame {
 
     public final ConnectionStatusLogic.Listener listener;
 
+    private JMenuItem loadTuneItem;
+    private JMenuItem saveTuneItem;
+
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
@@ -78,12 +82,12 @@ public class MainFrame {
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic(KeyEvent.VK_F);
 
-        JMenuItem loadTuneItem = new JMenuItem(LoadTuneHelper.LOAD_TUNE_TEXT);
+        loadTuneItem = new JMenuItem(LoadTuneHelper.LOAD_TUNE_TEXT);
         loadTuneItem.setMnemonic(KeyEvent.VK_L);
         loadTuneItem.setEnabled(false);
         fileMenu.add(loadTuneItem);
 
-        JMenuItem saveTuneItem = new JMenuItem(LoadTuneHelper.SAVE_TUNE_TEXT);
+        saveTuneItem = new JMenuItem(LoadTuneHelper.SAVE_TUNE_TEXT);
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
         saveTuneItem.setEnabled(false);
         fileMenu.add(saveTuneItem);
@@ -180,6 +184,15 @@ public class MainFrame {
                 VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
         });
+    }
+
+    public void setTuneActions(Action loadAction, Action saveAction) {
+        loadTuneItem.setAction(loadAction);
+        loadTuneItem.setText(LoadTuneHelper.LOAD_TUNE_TEXT);
+        loadTuneItem.setMnemonic(KeyEvent.VK_L);
+        saveTuneItem.setAction(saveAction);
+        saveTuneItem.setText(LoadTuneHelper.SAVE_TUNE_TEXT);
+        saveTuneItem.setMnemonic(KeyEvent.VK_S);
     }
 
     public FrameHelper getFrame() {
