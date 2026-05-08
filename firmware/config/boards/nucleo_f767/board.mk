@@ -34,3 +34,9 @@ DDEFS += -DHW_NUCLEO_F767=1
 DDEFS += -DFIRMWARE_ID=\"nucleo_f767\"
 DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::MINIMAL_PINS
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_NUCLEO_F767
+
+# this board is equiped with STM32F767ZI which has 2Mb of flash.
+include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
+
+# So we can have ini storage enabled
+DDEFS += -DEFI_EMBED_INI_MSD=TRUE -DEFI_USE_COMPRESSED_INI_MSD=FALSE
