@@ -12,6 +12,7 @@ import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
 import javax.swing.*;
+import javax.swing.Action;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.ArrayDeque;
@@ -25,6 +26,7 @@ import java.util.function.Consumer;
 public class TuningPane {
     private final JPanel content = new JPanel(new BorderLayout());
     private final MainMenuTreeWidget left;
+    private final TuningToolbarWidget toolbar;
     /** Fired when the user picks "Show in Pinout" on a pin-enum field. Wired from ConsoleUI after construction. */
     private Consumer<String> navigateToPinout;
 
@@ -39,7 +41,7 @@ public class TuningPane {
         // Accumulated tune edits across all dialogs for this session.
         final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
 
-        TuningToolbarWidget toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage);
+        toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
         splitPane.setResizeWeight(0.3);
@@ -151,5 +153,13 @@ public class TuningPane {
     public void navigateToField(String dialogKey, String fieldKey) {
         if (dialogKey == null) return;
         left.selectSubMenu(dialogKey);
+    }
+
+    public Action getLoadTuneAction() {
+        return toolbar.getLoadTuneAction();
+    }
+
+    public Action getSaveTuneAction() {
+        return toolbar.getSaveTuneAction();
     }
 }
