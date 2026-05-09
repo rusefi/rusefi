@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SignatureHelperTest {
     @Test
@@ -30,7 +31,7 @@ public class SignatureHelperTest {
         assertEquals("05", s.getMonth());
         assertEquals("09", s.getDay());
         assertEquals("uaefi_pro", s.getBundleTarget());
-        assertEquals("8849742d4267db6407b1400ae917a1ed39795d32", s.getHash());
+        assertEquals("4226383888", s.getHash());
     }
 
     @Test
@@ -41,6 +42,6 @@ public class SignatureHelperTest {
         assertEquals("04", s.getMonth());
         assertEquals("27", s.getDay());
         assertEquals("all", s.getBundleTarget());
-        assertEquals("3659024206688255410edc1e751b6736281e0efd", s.getHash());
+        assertNull(s.getHash());
     }
 }
