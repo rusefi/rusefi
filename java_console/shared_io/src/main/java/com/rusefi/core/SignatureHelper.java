@@ -118,12 +118,12 @@ public class SignatureHelper {
                 targetBuilder.append(parts[i]);
             }
             String bundleTarget = targetBuilder.toString();
-            String hash = parts[parts.length - 1];
+            String hash = parts[parts.length - 2];
             return new RusEfiSignature(branch, year, month, day, bundleTarget, hash);
         } else if (parts.length == 4) {
             // Legacy format
-            String hash = parts[3];
-            return new RusEfiSignature(branch, year, month, day, "all", hash);
+            // Legacy format only has the git hash, it does not have the numeric hash
+            return new RusEfiSignature(branch, year, month, day, "all", null);
         }
 
         return null;
