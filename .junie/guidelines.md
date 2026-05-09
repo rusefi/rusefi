@@ -43,6 +43,9 @@ That .ini file would be parsed into IniFileModel instance giving java code knowl
 - rusefi_updater.exe (see console_launcher folder for launch4j) invokes Launcher#main with empty args; the merged launcher handles both the autoupdate flow and the console UI
 - rusefi_autoupdate.exe entry point is Autoupdate#main
 
+#### subject domain
+- Timing: In the context of engine control, "timing" usually refers to **ignition timing advance** (the angle before TDC when the spark occurs).
+
 #### Key frontend java application classes
 AbstractIoStream: Base class for communication streams that manages byte counters, activity tracking, and listener notification.
 
