@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.widgets.JSplitButton;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ public class JSplitButtonSandbox {
         frame.setSize(400, 200);
         frame.setLayout(new FlowLayout());
 
-        JSplitButton splitButton = new JSplitButton("Default Action");
+        JSplitButton splitButton = new JSplitButton("Default Action", AutoupdateUtil.loadIcon("upload48.png"));
         splitButton.addActionListener(e -> System.out.println("Main action clicked!"));
 
         JPopupMenu menu = new JPopupMenu();

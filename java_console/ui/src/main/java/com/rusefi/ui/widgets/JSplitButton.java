@@ -17,9 +17,13 @@ public class JSplitButton extends JPanel {
     private JPopupMenu popupMenu;
 
     public JSplitButton(String text) {
+        this(text, null);
+    }
+
+    public JSplitButton(String text, Icon icon) {
         setLayout(new BorderLayout());
 
-        mainButton = new JButton(text);
+        mainButton = new JButton(text, icon);
         arrowButton = new BasicArrowButton(SwingConstants.SOUTH);
 
         add(mainButton, BorderLayout.CENTER);
@@ -31,6 +35,10 @@ public class JSplitButton extends JPanel {
                 showPopup();
             }
         });
+    }
+
+    public void setIcon(Icon icon) {
+        mainButton.setIcon(icon);
     }
 
     public void setPopupMenu(JPopupMenu popupMenu) {
