@@ -74,6 +74,61 @@ public class SignatureHelper {
         }
     }
 
+    public static RusEfiSignature parseSrec(String srecName) {
+        if (srecName == null) {
+            return null;
+        }
+        if (srecName.endsWith(".srec")) {
+            srecName = srecName.substring(0, srecName.length() - 5);
+        }
+        if (srecName.endsWith("_update")) {
+            srecName = srecName.substring(0, srecName.length() - 7);
+        }
+        String[] parts = srecName.split("_");
+        // format: rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32
+        // or: rusefi_development_2026-04-27_3659024206688255410edc1e751b6736281e0efd
+        if (parts.length < 4) {
+            return null;
+        }
+        String branch = parts[1];
+        String date = parts[2];
+        String[] dateParts = date.split("-");
+        if (dateParts.length != 3) {
+            return null;
+        }
+        String year = dateParts[0];
+        String month = dateParts[1];
+        String day = dateParts[2];
+
+        if (parts.length >= 6) {
+            // New format
+            // format: rusefi_branch_date_target_number_hash
+            // example: rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32
+            // parts[0] = rusefi
+            // parts[1] = development
+            // parts[2] = 2026-05-09
+            // parts[parts.length - 1] = hash
+            // parts[parts.length - 2] = number
+            // target is everything between parts[2] and parts[parts.length - 2]
+            StringBuilder targetBuilder = new StringBuilder();
+            for (int i = 3; i < parts.length - 2; i++) {
+                if (targetBuilder.length() > 0) {
+                    targetBuilder.append("_");
+                }
+                targetBuilder.append(parts[i]);
+            }
+            String bundleTarget = targetBuilder.toString();
+            String hash = parts[parts.length - 1];
+            return new RusEfiSignature(branch, year, month, day, bundleTarget, hash);
+        } else if (parts.length == 4) {
+            // Legacy format
+            String hash = parts[3];
+            return new RusEfiSignature(branch, year, month, day, "all", hash);
+        }
+
+        return null;
+    }
+
     public static RusEfiSignature parse(final String signature) {
         if (signature == null || !signature.startsWith(PREFIX))
             return null;

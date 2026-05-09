@@ -24,11 +24,23 @@ public class SignatureHelperTest {
 
     @Test
     public void parseSrecName() {
-        "rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec";
+        RusEfiSignature s = SignatureHelper.parseSrec("rusefi_development_2026-05-09_uaefi_pro_4226383888_8849742d4267db6407b1400ae917a1ed39795d32_update.srec");
+        assertEquals("development", s.getBranch());
+        assertEquals("2026", s.getYear());
+        assertEquals("05", s.getMonth());
+        assertEquals("09", s.getDay());
+        assertEquals("uaefi_pro", s.getBundleTarget());
+        assertEquals("8849742d4267db6407b1400ae917a1ed39795d32", s.getHash());
     }
 
     @Test
     public void testLegacySrecName() {
-        "rusefi_development_2026-04-27_3659024206688255410edc1e751b6736281e0efd_update.srec"
+        RusEfiSignature s = SignatureHelper.parseSrec("rusefi_development_2026-04-27_3659024206688255410edc1e751b6736281e0efd_update.srec");
+        assertEquals("development", s.getBranch());
+        assertEquals("2026", s.getYear());
+        assertEquals("04", s.getMonth());
+        assertEquals("27", s.getDay());
+        assertEquals("all", s.getBundleTarget());
+        assertEquals("3659024206688255410edc1e751b6736281e0efd", s.getHash());
     }
 }
