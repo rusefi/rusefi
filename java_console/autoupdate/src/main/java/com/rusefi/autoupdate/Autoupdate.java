@@ -96,6 +96,10 @@ public class Autoupdate {
         return sb.toString();
     }
 
+    private static boolean isAutoUpdateEnabled() {
+        return AutoupdateProperty.get() && ConnectionAndMeta.getBoolean("autoupdate_bundle");
+    }
+
     // everything here assumes Windows. Sorry!
     private static void autoupdate(String[] args) {
         BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
@@ -107,8 +111,8 @@ public class Autoupdate {
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
         final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
-        if (!AutoupdateProperty.get()) {
-            log.info(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY + " says 'do not update'");
+        if (!isAutoUpdateEnabled()) {
+            log.info("Autoupdate is disabled by property or configuration");
             downloadedAutoupdateFile = Optional.empty();
         } else {
             downloadedAutoupdateFile = downloadFreshZipFile(firstArgument, bundleInfo);
@@ -284,8 +288,8 @@ public class Autoupdate {
                 onComplete.accept(null);
                 return;
             }
-            if (!AutoupdateProperty.get()) {
-                log.info("runSilentUpdate: " + AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY + " says 'do not update'");
+            if (!isAutoUpdateEnabled()) {
+                log.info("runSilentUpdate: autoupdate is disabled");
                 onComplete.accept(null);
                 return;
             }
