@@ -2181,7 +2181,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.05.10.f429-discovery.3795175199"
+#define TS_SIGNATURE "rusEFI master.2026.05.11.f429-discovery.3795175199"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
