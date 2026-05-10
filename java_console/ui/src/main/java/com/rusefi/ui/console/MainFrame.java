@@ -68,6 +68,7 @@ public class MainFrame {
 
     private JMenuItem loadTuneItem;
     private JMenuItem saveTuneItem;
+    private JMenuItem updateSoftwareItem;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
@@ -107,12 +108,13 @@ public class MainFrame {
         JMenu actionsMenu = new JMenu("Actions");
         actionsMenu.setMnemonic(KeyEvent.VK_A);
 
-        JMenuItem updateSoftwareItem = new JMenuItem("Update Software");
-        saveTuneItem.setEnabled(false);
+        updateSoftwareItem = new JMenuItem("Update Software");
+        updateSoftwareItem.setEnabled(false);
+        updateSoftwareItem.addActionListener(e -> onUpdateSoftwareClicked());
         actionsMenu.add(updateSoftwareItem);
 
         JMenuItem updateEcuItem = new JMenuItem("Update ECU");
-        saveTuneItem.setEnabled(false);
+        updateEcuItem.setEnabled(false);
         actionsMenu.add(updateEcuItem);
 
         menuBar.add(actionsMenu);
@@ -120,9 +122,31 @@ public class MainFrame {
         frame.getFrame().setJMenuBar(menuBar);
     }
 
+    private void onUpdateSoftwareClicked() {
+        updateSoftwareItem.setEnabled(false);
+        Thread updateThread = new Thread(() ->
+            Autoupdate.runManualUpdate(msg -> {
+                if (msg != null) {
+                    Autoupdate.relaunchConsole();
+                }
+            }), "manual-update");
+        updateThread.setDaemon(true);
+        updateThread.start();
+    }
+
     private void windowOpenedHandler() {
         setTitle();
         tabbedPane.tabbedPane.addPropertyChangeListener("isUpdating", e -> SwingUtilities.invokeLater(this::setTitle));
+        if (!AutoupdateProperty.get()) {
+            Thread checkThread = new Thread(() -> {
+                boolean available = Autoupdate.isUpdateAvailable();
+                if (available) {
+                    SwingUtilities.invokeLater(() -> updateSoftwareItem.setEnabled(true));
+                }
+            }, "update-availability-check");
+            checkThread.setDaemon(true);
+            checkThread.start();
+        }
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
             setTitle();
             // this would repaint status label

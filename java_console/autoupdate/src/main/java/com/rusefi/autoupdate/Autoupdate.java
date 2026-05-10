@@ -228,6 +228,47 @@ public class Autoupdate {
     }
 
     /**
+     * Checks server metadata to determine if a newer bundle is available, without downloading anything.
+     * Safe to call from a background thread.
+     */
+    public static boolean isUpdateAvailable() {
+        try {
+            BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
+            if (BundleInfo.isUndefined(bundleInfo)) {
+                return false;
+            }
+            return isNewerAvailable(bundleInfo);
+        } catch (Exception e) {
+            log.error("isUpdateAvailable error: " + e);
+            return false;
+        }
+    }
+
+    private static boolean isNewerAvailable(BundleInfo bundleInfo) {
+        try {
+            String branchUrl = BundleInfoStrategy.getDownloadUrl(bundleInfo, PropertiesHolder.getBaseUrl(), BundleInfo::getBranchName);
+            boolean isObfuscated = FindFileHelper.isObfuscated();
+            String suffix = isObfuscated ? "_obfuscated_public" : "";
+            String folderName = bundleInfo.getTarget() + "_" + bundleInfo.getBranchName();
+            String localFolder = userHomeSubDirectory + folderName + File.separator;
+            new File(localFolder).mkdirs();
+            String fileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + bundleInfo.getTarget() + suffix + "_autoupdate" + ".zip";
+            String localZipFileName = localFolder + fileName;
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(fileName).invoke(branchUrl);
+            log.info("isNewerAvailable: local=" + localZipFileName);
+            log.info("isNewerAvailable: server size=" + connectionAndMeta.getCompleteFileSize() + " modified=" + new Date(connectionAndMeta.getLastModified()));
+            File localFile = new File(localZipFileName);
+            log.info("isNewerAvailable: local  size=" + localFile.length() + " modified=" + new Date(localFile.lastModified()));
+            boolean upToDate = AutoupdateUtil.hasExistingFile(localZipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified());
+            log.info("isNewerAvailable: update " + (upToDate ? "NOT needed (already up to date)" : "IS available"));
+            return !upToDate;
+        } catch (IOException e) {
+            log.error("isNewerAvailable error: " + e);
+            return false;
+        }
+    }
+
+    /**
      * Runs a silent background update from within rusefi_console: downloads and unpacks the bundle
      * (excluding rusefi_console.jar itself, which cannot be replaced while running),
      * then invokes {@code onComplete} with a non-null restart message when an update was applied,
@@ -248,35 +289,60 @@ public class Autoupdate {
                 onComplete.accept(null);
                 return;
             }
-            log.info("runSilentUpdate: checking for update...");
-            Optional<DownloadedAutoupdateFileInfo> downloaded = doDownload(bundleInfo);
-            if (!downloaded.isPresent()) {
-                log.info("runSilentUpdate: no update available or download skipped");
-                onComplete.accept(null);
-                return;
-            }
-            log.info("runSilentUpdate: update downloaded, applying...");
-            ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles();
-            DownloadedAutoupdateFileInfo file = downloaded.get();
-            findSrecFile(false);
-            try {
-                // Unzip everything except the console JAR (cannot replace a running JAR).
-                FileUtil.unzip(file.zipFileName, new File(".."), isConsoleJar.negate());
-                final String srecFile = findSrecFile();
-                final String firmwareFile = findFirmwareFile();
-                new File(srecFile == null ? firmwareFile : srecFile).setLastModified(file.lastModified);
-                tryInstallTsPlugin();
-                // Stage the new console JAR under a different name so relaunchConsole() can
-                // launch from it and finalizePendingUpdate() can swap it in on next startup.
-                extractConsoleJarAsPending(file.zipFileName);
-            } catch (IOException e) {
-                log.error("runSilentUpdate: error unzipping: " + e);
-            }
-            onComplete.accept("Update installed — please restart to apply the new console");
+            performUpdate(bundleInfo, onComplete);
         } catch (Throwable e) {
             log.error("runSilentUpdate error: " + e);
             onComplete.accept(null);
         }
+    }
+
+    /**
+     * Performs a bundle update regardless of the AutoupdateProperty setting.
+     * Intended for the "Update Software" menu item when auto-update is disabled.
+     */
+    public static void runManualUpdate(Consumer<String> onComplete) {
+        try {
+            log.info("runManualUpdate: starting");
+            BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
+            log.info("runManualUpdate: bundle=" + bundleInfo);
+            if (BundleInfo.isUndefined(bundleInfo)) {
+                log.info("runManualUpdate: no bundle info, skipping");
+                onComplete.accept(null);
+                return;
+            }
+            performUpdate(bundleInfo, onComplete);
+        } catch (Throwable e) {
+            log.error("runManualUpdate error: " + e);
+            onComplete.accept(null);
+        }
+    }
+
+    private static void performUpdate(BundleInfo bundleInfo, Consumer<String> onComplete) {
+        log.info("performUpdate: checking for update...");
+        Optional<DownloadedAutoupdateFileInfo> downloaded = doDownload(bundleInfo);
+        if (!downloaded.isPresent()) {
+            log.info("performUpdate: no update available or download skipped");
+            onComplete.accept(null);
+            return;
+        }
+        log.info("performUpdate: update downloaded, applying...");
+        ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles();
+        DownloadedAutoupdateFileInfo file = downloaded.get();
+        findSrecFile(false);
+        try {
+            // Unzip everything except the console JAR (cannot replace a running JAR).
+            FileUtil.unzip(file.zipFileName, new File(".."), isConsoleJar.negate());
+            final String srecFile = findSrecFile();
+            final String firmwareFile = findFirmwareFile();
+            new File(srecFile == null ? firmwareFile : srecFile).setLastModified(file.lastModified);
+            tryInstallTsPlugin();
+            // Stage the new console JAR under a different name so relaunchConsole() can
+            // launch from it and finalizePendingUpdate() can swap it in on next startup.
+            extractConsoleJarAsPending(file.zipFileName);
+        } catch (IOException e) {
+            log.error("performUpdate: error unzipping: " + e);
+        }
+        onComplete.accept("Update installed — please restart to apply the new console");
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String firstArgument, BundleInfo bundleInfo) {
