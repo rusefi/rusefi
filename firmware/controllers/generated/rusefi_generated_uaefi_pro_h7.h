@@ -1489,6 +1489,7 @@
 #define PINOUT_URL "https://rusefi.com/docs/pinouts/hellen/uaefi/"
 #define poke false
 #define ppsExpAverageAlpha_NAME "Accelerator Exp Average"
+#define PRIMARY_CAN_NAME "Primary CAN"
 #define PRIME_CURVE_COUNT 8
 #define PROTOCOL_COIL_SHORT_PREFIX "c"
 #define PROTOCOL_CRANK1 "t1"
@@ -1526,6 +1527,7 @@
 #define SD_CARD_LABEL "rusEFI logs"
 #define SECOND_IGNITION_TABLE "Second Ignition Table"
 #define SECOND_VE_TABLE "Second VE Table"
+#define SECONDARY_CAN_NAME "Secondary CAN"
 #define SECONDARY_PANELS_FILE "tunerstudio/secondary_panels.ini"
 #define SelectedGear_Drive 6
 #define SelectedGear_Invalid 0
@@ -1564,7 +1566,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 730420783
+#define SIGNATURE_HASH 1161978888
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2176,7 +2178,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.05.11.uaefi_pro_h7.730420783"
+#define TS_SIGNATURE "rusEFI master.2026.05.11.uaefi_pro_h7.1161978888"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

@@ -1393,6 +1393,7 @@ public class VariableRegistryValues {
 	public static final int pin_output_mode_e_OM_OPENDRAIN = 2;
 	public static final int pin_output_mode_e_OM_OPENDRAIN_INVERTED = 3;
 	public static final String ppsExpAverageAlpha_NAME = "Accelerator Exp Average";
+	public static final String PRIMARY_CAN_NAME = "Primary CAN";
 	public static final int PRIME_CURVE_COUNT = 8;
 	public static final String PROTOCOL_COIL_SHORT_PREFIX = "c";
 	public static final String PROTOCOL_CRANK1 = "t1";
@@ -1428,6 +1429,7 @@ public class VariableRegistryValues {
 	public static final String SD_CARD_LABEL = "rusEFI logs";
 	public static final String SECOND_IGNITION_TABLE = "Second Ignition Table";
 	public static final String SECOND_VE_TABLE = "Second VE Table";
+	public static final String SECONDARY_CAN_NAME = "Secondary CAN";
 	public static final String SECONDARY_PANELS_FILE = "tunerstudio/secondary_panels.ini";
 	public static final int SelectedGear_Drive = 6;
 	public static final int SelectedGear_Invalid = 0;
@@ -1456,7 +1458,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 714445034;
+	public static final int SIGNATURE_HASH = 1147052749;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1778,7 +1780,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.05.11.mre-legacy_f4.714445034";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.05.11.mre-legacy_f4.1147052749";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2132;
