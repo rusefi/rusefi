@@ -204,7 +204,12 @@ console live data tab is broken #8402
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }
-            tabbedPane.addTab("Device", new DevicePane(uiContext, port, serialPortType, tabbedPane.tabbedPane).getContent());
+            DevicePane devicePane = new DevicePane(uiContext, port, serialPortType, tabbedPane.tabbedPane);
+            tabbedPane.addTab("Device", devicePane.getContent());
+            mainFrame.setUpdateEcuAction(() -> {
+                tabbedPane.selectTab("Device");
+                devicePane.triggerAutoUpdate();
+            });
 
             // Pinout ↔ Tune bidirectional navigation
             pinoutPane.setNavigateToTune((dialogKey, fieldKey) -> {

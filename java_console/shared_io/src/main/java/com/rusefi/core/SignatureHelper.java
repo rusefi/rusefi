@@ -119,11 +119,11 @@ public class SignatureHelper {
             }
             String bundleTarget = targetBuilder.toString();
             String hash = parts[parts.length - 2];
-            return new RusEfiSignature(branch, year, month, day, bundleTarget, hash);
+            return new RusEfiSignature(branch, year, month, day, bundleTarget, hash, false);
         } else if (parts.length == 4) {
             // Legacy format
             // Legacy format only has the git hash, it does not have the numeric hash
-            return new RusEfiSignature(branch, year, month, day, "all", null);
+            return new RusEfiSignature(branch, year, month, day, "all", null, true);
         }
 
         return null;
@@ -144,6 +144,6 @@ public class SignatureHelper {
         String bundleTarget = elements[4];
         String hash = elements[5];
 
-        return new RusEfiSignature(branch, year, month, day, bundleTarget, hash);
+        return new RusEfiSignature(branch, year, month, day, bundleTarget, hash, false);
     }
 }
