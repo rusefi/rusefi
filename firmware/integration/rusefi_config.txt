@@ -304,6 +304,9 @@ struct_no_prefix engine_configuration_s
 
 #define CAN_WBO_COUNT 2
 
+#define PRIMARY_CAN_NAME "Primary CAN"
+#define SECONDARY_CAN_NAME "Secondary CAN"
+
 struct stft_cell_cfg_s
 	uint8_t autoscale maxAdd;Maximum % that the short term fuel trim can add;"%", 0.1, 0, 0, 25, 1
 	uint8_t autoscale maxRemove;Maximum % that the short term fuel trim can remove;"%", 0.1, 0, 0, 25, 1
