@@ -131,11 +131,20 @@ public class CalibrationsHelper {
                     newEcuPort.port
                 ));
 
-                final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
-                    newEcuPort.port,
-                    callbacks,
-                    getFileNameWithoutExtension(timestampFileNameComponent, "after_firmware_update"), connectivityContext
-                );
+                // The ECU's USB can briefly drop and re-enumerate right after the
+                // scanner's probe. Retry a few times to ride out that transient window.
+                Optional<CalibrationsInfo> updatedCalibrations = Optional.empty();
+                for (int attempt = 1; attempt <= 3 && !updatedCalibrations.isPresent(); attempt++) {
+                    if (attempt > 1) {
+                        callbacks.logLine("Retrying calibration read after firmware update (attempt " + attempt + ")...");
+                        BinaryProtocol.sleep(5_000);
+                    }
+                    updatedCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                        newEcuPort.port,
+                        callbacks,
+                        getFileNameWithoutExtension(timestampFileNameComponent, "after_firmware_update"), connectivityContext
+                    );
+                }
                 if (!updatedCalibrations.isPresent()) {
                     callbacks.logLine("Failed to back up tune from ECU after firmware update...");
                     return false;
