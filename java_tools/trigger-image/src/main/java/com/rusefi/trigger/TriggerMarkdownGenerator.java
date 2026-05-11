@@ -7,9 +7,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TriggerMarkdownGenerator {
-    public static void generate(String workingFolder, String outputFile) throws IOException {
+    public static void generate(String inputFile, String outputFile) throws IOException {
         List<TriggerWheelInfo> wheels = new ArrayList<>();
-        TriggerWheelInfo.readWheels(workingFolder, wheels::add);
+        TriggerWheelInfo.readWheels(inputFile, wheels::add);
 
         // Group by size/tooth count (number of signals)
         Map<Integer, List<TriggerWheelInfo>> groupedByCount = wheels.stream()
@@ -47,8 +47,8 @@ public class TriggerMarkdownGenerator {
     }
 
     public static void main(String[] args) throws IOException {
-        String workingFolder = args.length > 0 ? args[0] : TriggerWheelInfo.DEFAULT_WORK_FOLDER;
+        String inputFile = args.length > 0 ? args[0] : TriggerWheelInfo.DEFAULT_FILE;
         String outputFile = args.length > 1 ? args[1] : "triggers.md";
-        generate(workingFolder, outputFile);
+        generate(inputFile, outputFile);
     }
 }

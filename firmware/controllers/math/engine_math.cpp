@@ -31,7 +31,7 @@ extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
 floatms_t getEngineCycleDuration(float rpm) {
-	return getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
+	return getCrankshaftRevolutionTimeMs(rpm) * (getOperationMode() == TWO_STROKE ? 1 : 2);
 }
 
 /**
@@ -97,7 +97,12 @@ ignition_mode_e getCurrentIgnitionMode() {
  * This heavy method is only invoked in case of a configuration change or initialization.
  */
 void prepareOutputSignals() {
-	auto operationMode = getEngineRotationState()->getOperationMode();
+#if EFI_SHAFT_POSITION_INPUT
+	engine->triggerCentral.prepareTriggerShape();
+#endif // EFI_SHAFT_POSITION_INPUT
+
+	auto operationMode = getOperationMode();
+
 	getEngineState()->engineCycle = getEngineCycle(operationMode);
 
 	bool isOddFire = false;
@@ -119,10 +124,6 @@ void prepareOutputSignals() {
 		printf("prepareOutputSignals %d %s\r\n", engineConfiguration->trigger.type, getIgnition_mode_e(engineConfiguration->ignitionMode));
 	}
 #endif /* EFI_UNIT_TEST */
-
-#if EFI_SHAFT_POSITION_INPUT
-	engine->triggerCentral.prepareTriggerShape();
-#endif // EFI_SHAFT_POSITION_INPUT
 
 	// Fuel schedule may now be completely wrong, force a reset
 	engine->injectionEvents.invalidate();

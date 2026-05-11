@@ -6,7 +6,6 @@
  */
 
 #include "pch.h"
-#include "trigger_nissan.h"
 #include "nissan_vq.h"
 
 class TriggerCallback {
@@ -80,7 +79,9 @@ TEST(nissan, vq_vvt) {
 
 	{
 		static TriggerWaveform crank;
-		initializeNissanVQ35crank(&crank);
+		trigger_config_s triggerConfig;
+		triggerConfig.type = trigger_type_e::TT_NISSAN_VQ35;
+		crank.initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 
 		scheduleTriggerEvents(&crank,
 				/* timeScale */ 1,
@@ -92,7 +93,9 @@ TEST(nissan, vq_vvt) {
 
 	{
 		static TriggerWaveform vvt;
-		initializeNissanVQvvt(&vvt);
+		trigger_config_s triggerConfig;
+		triggerConfig.type = trigger_type_e::TT_VVT_NISSAN_VQ35;
+		vvt.initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 
 		scheduleTriggerEvents(&vvt,
 				/* timeScale */ vvtTimeScale,
@@ -104,7 +107,9 @@ TEST(nissan, vq_vvt) {
 
 	{
 		static TriggerWaveform vvt;
-		initializeNissanVQvvt(&vvt);
+		trigger_config_s triggerConfig;
+		triggerConfig.type = trigger_type_e::TT_VVT_NISSAN_VQ35;
+		vvt.initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 
 		scheduleTriggerEvents(&vvt,
 				/* timeScale */ vvtTimeScale,
@@ -133,15 +138,15 @@ TEST(nissan, vq_vvt) {
 
 		ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
 		// let's celebrate that vvtPosition stays the same
-		ASSERT_NEAR(34, tc->vvtPosition[0][0], EPS2D) << "queueIndex=" << queueIndex;
+		ASSERT_NEAR(29.5, tc->vvtPosition[0][0], EPS2D) << "queueIndex=" << queueIndex;
     	queueIndex++;
 	}
-	ASSERT_EQ(queueIndex, 432) << "Total queueIndex=" << queueIndex;
+	ASSERT_EQ(queueIndex, 438) << "Total queueIndex=" << queueIndex;
 
 	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
 
-	ASSERT_NEAR(34, tc->vvtPosition[0][0], EPS2D);
-	ASSERT_NEAR(34, tc->vvtPosition[1][0], EPS2D);
+	ASSERT_NEAR(29.5, tc->vvtPosition[0][0], EPS2D);
+	ASSERT_NEAR(29.5, tc->vvtPosition[1][0], EPS2D);
 
 	EXPECT_EQ(0u, eth.recentWarnings()->getCount());
 }

@@ -1,15 +1,13 @@
 #include "pch.h"
 #include "trigger_simulator.h"
 #include "mock_trigger_configuration.h"
-#include "trigger_gm.h"
-#include "trigger_universal.h"
-#include "trigger_mitsubishi.h"
+#include "trigger_structure.h"
 
 #include <vector>
 #include <cstdio>
 #include <cstring>
 
-typedef void (*TriggerWaveformFunctionPtr)(TriggerWaveform*);
+typedef void (*TriggerWaveformFunctionPtr)(TriggerWaveform*, const trigger_config_s&);
 
 static float wrap(float angle, float cycle) {
 	if (angle < 0)
@@ -44,7 +42,7 @@ static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
 	// even when it would otherwise sync. Rebuild the waveform from the
 	// initializer for each attempt to guarantee a clean state.
 	if (reinit != nullptr) {
-		reinit(&form);
+		reinit(&form, triggerConfig);
 	}
 	int toothCount = form.getSize() / step;
 
@@ -101,7 +99,7 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength, size_t st
 	triggerConfig.type = t;
 
 	TriggerWaveform form;
-	function(&form);
+	function(&form, triggerConfig);
 	toothOffset = (form.syncEdge == SyncEdge::Rise || form.syncEdge == SyncEdge::Both ? 0 : 1);
 
 	operation_mode_e om = form.getWheelOperationMode();
@@ -133,28 +131,26 @@ static size_t findAllSyncSequences(trigger_type_e t, size_t maxLength, size_t st
 	return happySequenceCounter;
 }
 
+static size_t findAllSyncSequencesDefault(trigger_type_e t, size_t maxLength, size_t step) {
+	return findAllSyncSequences(t, maxLength, step, [] (TriggerWaveform* form, const trigger_config_s& config) {
+		form->initializeTriggerWaveform(OM_NONE, config, false);
+	});
+}
+
 TEST(trigger, finder) {
     // step - 1 - for both, 2 - for rise/fall only
 
-	ASSERT_EQ(9u, findAllSyncSequences(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, 2, [] (TriggerWaveform* form) {
-						configureQuickStartSenderWheel(form);
-					}));
+	ASSERT_EQ(9u, findAllSyncSequencesDefault(trigger_type_e::TT_VVT_BOSCH_QUICK_START, 3, 2));
 
-	ASSERT_EQ(27u, findAllSyncSequences(trigger_type_e::TT_GM_24x_3, 3, 2, [] (TriggerWaveform* form) {
-						initGmLS24_3deg(form);
-					}));
+	ASSERT_EQ(27u, findAllSyncSequencesDefault(trigger_type_e::TT_GM_24x_3, 3, 2));
 
-    ASSERT_EQ(44u, findAllSyncSequences(trigger_type_e::TT_VVT_MITSU_6G72, 8, 1, [] (TriggerWaveform* form) {
-        initializeVvt6G72(form);
-    }));
+	ASSERT_EQ(44u, findAllSyncSequencesDefault(trigger_type_e::TT_VVT_MITSU_6G72, 8, 1));
 
-    // Brute-force candidate sync sequences for the broken TT_36_2_1_1 decoder.
-    // See https://github.com/rusefi/rusefi/issues/8827 and unit_tests/tests/trigger/test_real_6g75.cpp
-    // The "happy" sequences printed by this call are the candidate gap ratios to plug
-    // into setTriggerSynchronizationGap*() in initialize36_2_1_1() in trigger_mitsubishi.cpp.
-    findAllSyncSequences(trigger_type_e::TT_36_2_1_1, 4, 2, [] (TriggerWaveform* form) {
-        initialize36_2_1_1(form);
-    });
+	// Brute-force candidate sync sequences for the broken TT_36_2_1_1 decoder.
+	// See https://github.com/rusefi/rusefi/issues/8827 and unit_tests/tests/trigger/test_real_6g75.cpp
+	// The "happy" sequences printed by this call are the candidate gap ratios to plug
+	// into setTriggerSynchronizationGap*() in initialize36_2_1_1() in trigger_mitsubishi.cpp.
+	findAllSyncSequencesDefault(trigger_type_e::TT_36_2_1_1, 4, 2);
 }
 
 // Read tooth-edge timestamps from a CsvReader-format trigger capture.
@@ -237,17 +233,16 @@ static bool tryGapSequenceOnRealData(size_t length, int toothIndex,
 //      stimulator path can't validate real ratios when synthetic and real geometry
 //      differ (e.g. real 6g75 has gaps at ~2.62 vs synthetic 3.0; see issue #8827).
 static size_t findAllSyncSequencesFromCsv(trigger_type_e t, size_t maxLength, size_t step,
-		TriggerWaveformFunctionPtr function, const char *csvPath, int errorBudget = 2,
+		const char *csvPath, int errorBudget = 2,
 		float realRatioTolerance = 0.20f) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-
 	size_t happySequenceCounter = 0;
 
 	trigger_config_s triggerConfig;
 	triggerConfig.type = t;
 
 	TriggerWaveform form;
-	function(&form);
+	form.initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 
 	int waveformToothCount = form.getSize() / step;
 
@@ -406,13 +401,11 @@ TEST(trigger, finderRealData) {
 	// from real edge timestamps in the CSV rather than from the idealized waveform, so the
 	// "happy" sequences printed here are gap ratios that match what the ECU actually sees.
 	size_t happyWithSpark = findAllSyncSequencesFromCsv(trigger_type_e::TT_36_2_1_1, 4, 2,
-			[] (TriggerWaveform* form) { initialize36_2_1_1(form); },
 			"tests/trigger/resources/6g75-withsparkplugs-cranking.csv");
 	ASSERT_EQ(2194u, happyWithSpark);
 
 	// Cleaner capture (no spark plugs running) - same wheel, less ringing.
 	size_t happyWithoutSpark = findAllSyncSequencesFromCsv(trigger_type_e::TT_36_2_1_1, 4, 2,
-			[] (TriggerWaveform* form) { initialize36_2_1_1(form); },
 			"tests/trigger/resources/6g75-without-spark-crank.csv");
 	ASSERT_EQ(2359u, happyWithoutSpark);
 
@@ -420,8 +413,11 @@ TEST(trigger, finderRealData) {
 	// (6g75-without-spark-crank.csv — runtime syncs OK there with tooManyTeethCounter==3),
 	// and cross-check each candidate against the noisy with-spark capture. Survivors are
 	// the actual fix candidates for setTriggerSynchronizationGap3() in initialize36_2_1_1.
+	trigger_config_s triggerConfig;
+	triggerConfig.type = trigger_type_e::TT_36_2_1_1;
+
 	TriggerWaveform tmp;
-	initialize36_2_1_1(&tmp);
+	tmp.initializeTriggerWaveform(OM_NONE, triggerConfig, false);
 	int waveformToothCount = tmp.getSize() / 2;
 	size_t survivors = crossValidateGapsFromCleanCsv(/*maxLength*/4, /*step*/2,
 			waveformToothCount,

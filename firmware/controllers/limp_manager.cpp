@@ -10,7 +10,7 @@
 
 #if EFI_SHAFT_POSITION_INPUT
 static bool noFiringUntilVvtSync() {
-	auto operationMode = getEngineRotationState()->getOperationMode();
+	auto operationMode = getOperationMode();
 
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
 	  warningTsReport(ObdCode::CUSTOM_NEED_PHASE, "Phase sync required per Setting");

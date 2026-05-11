@@ -2,6 +2,7 @@ defaultTasks 'shadowJar'
 
 dependencies {
     api project(':logging')
+    api global_libs.snakeyaml
 }
 
 shadowJar {

@@ -15,6 +15,7 @@ import java.awt.*;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.util.Date;
 import java.util.List;
 
@@ -46,65 +47,20 @@ public class TriggerImage {
     private static trigger_type_e onlyOneTrigger = null;
 
     /**
-     * todo: https://github.com/rusefi/rusefi/issues/2077
      *
      * @see TriggerWheelInfo#isCrankBased
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
-        switch (findByOrdinal(triggerName.getId())) {
-            case TT_FORD_ASPIRE:
-                return "Ford Aspire";
-            case TT_VVT_BOSCH_QUICK_START:
-                return "Bosch Quick Start";
-            case TT_MAZDA_MIATA_NA:
-                return "Miata NA";
-            case TT_SUBARU_SVX:
-                return "Subaru SVX";
-            case TT_HONDA_K_CRANK_12_1:
-                return "Honda K 1/12";
-            case TT_SUBARU_7_6:
-                return "Subaru 7/6";
-            case TT_GM_24x_3:
-                return "GM 24x 3";
-            case TT_GM_24x_5:
-                return "GM 24x 5";
-            case TT_DODGE_NEON_1995:
-                return "Dodge Neon 1995";
-            case TT_SKODA_FAVORIT:
-                return "Skoda Favorit";
-            case TT_GM_7X:
-                return "GM 7x";
-            case TT_CHRYSLER_NGC_36_2_2:
-                return "Chrysler NGC 36/2/2";
-            case TT_HALF_MOON:
-                return "Half Moon";
-            case TT_NARROW_SINGLE_TOOTH:
-                return "Narrow Single Tooth";
-            case TT_JEEP_4_CYL:
-                return "Jeep 4 cylinder";
-            case TT_JEEP_18_2_2_2:
-                return "18/2/2/2";
-            case TT_RENIX_44_2_2:
-                return "44/2/2";
-            case TT_RENIX_66_2_2_2:
-                return "66/2/2/2";
-            case TT_TOOTHED_WHEEL_36_1:
-                return "36/1";
-            case TT_TOOTHED_WHEEL_36_2:
-                return "36/2";
-// too dead            case TT_TRI_TACH:
-//                return "TriTach";
-            case TT_TOOTHED_WHEEL_60_2:
-                return "60/2";
-            case TT_GM_60_2_2_2:
-                return "GM 60/2/2/2";
-        }
-        return triggerName.getTriggerName();
+        String name = triggerName.getTriggerHumanName();
+				if (name == null || name.equals("")) {
+						name = triggerName.getTriggerName();
+				}
+				return name;
     }
 
     public static void main(String[] args) throws Exception {
-        String workingFolder = args.length > 0 ? args[0] : TriggerWheelInfo.DEFAULT_WORK_FOLDER;
-        TriggerMarkdownGenerator.generate(workingFolder, "triggers.md");
+        String inputFile = args.length > 0 ? args[0] : TriggerWheelInfo.DEFAULT_FILE;
+        TriggerMarkdownGenerator.generate(inputFile, "triggers.md");
 
         SwingUtilities2.invokeAndWait(() -> {
             try {
@@ -116,11 +72,11 @@ public class TriggerImage {
     }
 
     private static void runAwt(String[] args) throws InterruptedException, InvocationTargetException {
-        final String workingFolder;
+        final String inputFile;
         if (args.length < 1) {
-            workingFolder = TriggerWheelInfo.DEFAULT_WORK_FOLDER;
+            inputFile = TriggerWheelInfo.DEFAULT_FILE;
         } else {
-            workingFolder = args[0];
+            inputFile = args[0];
         }
 
         if (args.length > 1)
@@ -159,7 +115,7 @@ public class TriggerImage {
         });
 
         SwingUtilities2.invokeAndWait(() -> {
-            TriggerWheelInfo.readWheels(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
+            TriggerWheelInfo.readWheels(inputFile, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
         });
         Thread.sleep(1000L * sleepAtEnd);
         System.exit(0);
@@ -171,7 +127,7 @@ public class TriggerImage {
 
         topPanel.removeAll();
 
-        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), true,
+        JPanel firstWheelControl = createWheelPanel(triggerWheelInfo.getFirstWheeTriggerSignals(), !triggerWheelInfo.isShapeWithoutTdc(),
             triggerWheelInfo);
         if (DEBUG) {
             firstWheelControl.setBorder(BorderFactory.createLineBorder(Color.green));
@@ -196,6 +152,7 @@ public class TriggerImage {
         triggerPanel.syncEdge = triggerWheelInfo.getSyncEdge();
         triggerPanel.isKnown = triggerWheelInfo.isKnownOperationMode();
         triggerPanel.isCrankBased = triggerWheelInfo.isCrankBased();
+        triggerPanel.shapeWithoutTdc = triggerWheelInfo.isShapeWithoutTdc();
 
         EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
@@ -320,14 +277,13 @@ public class TriggerImage {
     @NotNull
     static List<WaveState> convertSignalsToWaves(List<TriggerSignal> signals) {
         /**
-         * todo: what does this code do? does this work?
-         * looks to be repeating trigger share couple of times? but not visible on images somehow?
+         * Duplicates the waveform so that several rotations are shown in the graph.
          */
         List<TriggerSignal> toShow = new ArrayList<>(signals);
         for (int i = 1; i <= 2 + EXTRA_COUNT; i++) {
             for (TriggerSignal s : signals)
-                toShow.add(new TriggerSignal(s.getWaveIndex(), s.getState(), s.getAngle() + i * 720,
-                    s.getGap()));
+                // Offset each iteration by 360
+                toShow.add(new TriggerSignal(s.getWaveIndex(), s.getAngle() + i * 360, s.getState(), s.getGap()));
         }
 
         List<WaveState> waves = new ArrayList<>();
@@ -364,6 +320,7 @@ public class TriggerImage {
         public String syncEdge;
         public boolean isKnown;
         public boolean isCrankBased;
+        public boolean shapeWithoutTdc;
         public UpDownImage image;
         public TriggerWheelInfo.TriggerGaps gaps;
 
@@ -392,43 +349,49 @@ public class TriggerImage {
                 g.drawString(id, 0, (int) (h * 0.9));
 
             g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
-            int tdcFontSize = (int) (f.getSize() * 1.5);
-            g.setFont(new Font(f.getName(), Font.BOLD, tdcFontSize));
-            String tdcMessage;
-            if (tdcPosition != 0) {
-                tdcMessage = "TDC " + formatTdcPosition() + " degree from synchronization point";
-            } else {
-                tdcMessage = "TDC at synchronization point";
-            }
-            int y = tdcFontSize;
-            String prefix = "     ";
-            g.drawString(prefix + tdcMessage, 0, y);
-            y += tdcFontSize;
-            g.setColor(Color.darkGray);
-            if (image == null)
-                return;
-            for (int i = 0; i < gaps.gapFrom.length; i++) {
-                String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
-                g.drawString(prefix + "       " + message, 0, y);
-                y += tdcFontSize;
-            }
 
-            if (isKnown) {
-                g.drawString(prefix + (isCrankBased ? "On crankshaft" : "On camshaft"), 0, y);
-                y += tdcFontSize;
-            }
+						int tdcFontSize = (int) (f.getSize() * 1.5);
+						int y = tdcFontSize;
+						String prefix = "     ";
+						g.setFont(new Font(f.getName(), Font.BOLD, tdcFontSize));
 
-            if (syncEdge != null) {
-                g.drawString(prefix + syncEdge, 0, y);
-                y += tdcFontSize;
-            }
+						if (!shapeWithoutTdc) {
+								String tdcMessage;
+								if (tdcPosition != 0) {
+										tdcMessage = "TDC " + formatTdcPosition() + " degree from synchronization point";
+								} else {
+										tdcMessage = "TDC at synchronization point";
+								}
+								g.drawString(prefix + tdcMessage, 0, y);
+								y += tdcFontSize;
 
-            int tdcX = image.engineReport.getTimeAxisTranslator().timeToScreen(MIN_TIME + tdcPosition, w);
-            g.drawLine(tdcX, 0, tdcX, h);
-            Graphics2D g2 = (Graphics2D) g;
-            g2.rotate(Math.PI / 2);
-            g2.drawString("TDC", 160, -tdcX - 3);
-            g2.rotate(-Math.PI / 2);
+								g.setColor(Color.darkGray);
+								if (image == null)
+										return;
+								for (int i = 0; i < gaps.gapFrom.length; i++) {
+										String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
+										g.drawString(prefix + "       " + message, 0, y);
+										y += tdcFontSize;
+								}
+
+								int tdcX = image.engineReport.getTimeAxisTranslator().timeToScreen(MIN_TIME + tdcPosition, w);
+								g.drawLine(tdcX, 0, tdcX, h);
+								Graphics2D g2 = (Graphics2D) g;
+								g2.rotate(Math.PI / 2);
+								g2.drawString("TDC", 160, -tdcX - 3);
+								g2.rotate(-Math.PI / 2);
+						}
+
+						g.setColor(Color.darkGray);
+						if (isKnown) {
+								g.drawString(prefix + (isCrankBased ? "On crankshaft" : "On camshaft"), 0, y);
+								y += tdcFontSize;
+						}
+
+						if (syncEdge != null) {
+								g.drawString(prefix + syncEdge, 0, y);
+								y += tdcFontSize;
+						}
         }
 
         private String formatTdcPosition() {

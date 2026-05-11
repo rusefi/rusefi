@@ -12,8 +12,6 @@
 #include "dodge_neon.h"
 #include "ford_1995_inline_6.h"
 #include "event_queue.h"
-#include "trigger_mazda.h"
-#include "trigger_chrysler.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
@@ -120,11 +118,11 @@ TEST(misc, testGetCoilDutyCycleIssue977) {
 TEST(misc, testFordAspire) {
 	printf("*************************************************** testFordAspire\r\n");
 
-	ASSERT_EQ( 4,  getTriggerZeroEventIndex(engine_type_e::FORD_ASPIRE_1996)) << "getTriggerZeroEventIndex";
+	ASSERT_EQ( 0,  getTriggerZeroEventIndex(engine_type_e::FORD_ASPIRE_1996)) << "getTriggerZeroEventIndex";
 
 	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
-	ASSERT_EQ( 4,  getTriggerCentral()->triggerShape.getTriggerWaveformSynchPointIndex()) << "getTriggerWaveformSynchPointIndex";
+	ASSERT_EQ( 0,  getTriggerCentral()->triggerShape.getTriggerWaveformSynchPointIndex()) << "getTriggerWaveformSynchPointIndex";
 
 	engineConfiguration->crankingTimingAngle = 31;
 
@@ -348,7 +346,7 @@ TEST(misc, testRpmCalculator) {
 }
 
 TEST(trigger, testAnotherTriggerDecoder) {
-	testTriggerDecoder2("Miata 2003", engine_type_e::MAZDA_MIATA_NB2, 3, 0.38888889, 0.0);
+	testTriggerDecoder2("Miata 2003", engine_type_e::MAZDA_MIATA_NB2, 0, 0.38888889, 0.0);
 }
 
 TEST(trigger, testTriggerDecoder) {
@@ -369,11 +367,11 @@ TEST(trigger, testTriggerDecoder) {
 	printf("====================================================================================== testTriggerDecoder part 2\r\n");
 	testTriggerDecoder2("Dodge Neon 1995", engine_type_e::DODGE_NEON_1995, 0, 0.4931, 0.2070);
 
-	testTriggerDecoder2("ford aspire", engine_type_e::FORD_ASPIRE_1996, 4, 0.0000, 0.5);
+	testTriggerDecoder2("ford aspire", engine_type_e::FORD_ASPIRE_1996, 0, 0.0000, 0.5);
 
-	testTriggerDecoder2("dodge ram", engine_type_e::DODGE_RAM, 16, 0.5000, 0.06);
+	testTriggerDecoder2("dodge ram", engine_type_e::DODGE_RAM, 0, 0.5000, 0.06);
 
-	testTriggerDecoder2("Miata NB2", engine_type_e::MAZDA_MIATA_NB2, 3, 0.3888888955, 0);
+	testTriggerDecoder2("Miata NB2", engine_type_e::MAZDA_MIATA_NB2, 0, 0.3888888955, 0);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
 
@@ -385,11 +383,11 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoderByTriggerType("testFordEscortGt", trigger_type_e::TT_MAZDA_DOHC_1_4, 0, 0.8096, 0.3844);
 
-	testTriggerDecoderByTriggerType("NISSAN_PRIMERA", trigger_type_e::TT_NISSAN_SR20VE, 2, 0.9611, 0.0);
+	testTriggerDecoderByTriggerType("NISSAN_PRIMERA", trigger_type_e::TT_NISSAN_SR20VE, 0, 0.9611, 0.0);
 
 	testTriggerDecoder2("test1+1", engine_type_e::DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
-	testTriggerDecoder2("neon NGC4", engine_type_e::ET_DODGE_NEON_2003, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder2("neon NGC4", engine_type_e::ET_DODGE_NEON_2003, 0, 0.5000, 0.0, 1);
 
 	{
 		EngineTestHelper eth(engine_type_e::ET_DODGE_NEON_2003);

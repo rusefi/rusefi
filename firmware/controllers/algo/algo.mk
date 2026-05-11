@@ -3,6 +3,7 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/ignition/ignition_sta
 	$(PROJECT_DIR)/controllers/algo/malfunction_central.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_commonenum.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_enginetypes.cpp \
+	$(GENERATED_ENUMS_DIR)/auto_generated_triggertypes.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_engine_type_e.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel_math.cpp \
 	$(PROJECT_DIR)/controllers/algo/accel_enrichment.cpp \

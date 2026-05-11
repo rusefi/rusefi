@@ -69,7 +69,7 @@ public class SimulatorFunctionalTest {
 
     private void assertVvtPosition() {
         assertNear("RPM", SensorCentral.getInstance().getValue(WellKnownGauges.RPMGauge.getOutputChannelName()), 1200, 5);
-        assertNear("VVT", SensorCentral.getInstance().getValue(Sensor.vvtPositionB1I), 90, 15);
+        assertNear("VVT", SensorCentral.getInstance().getValue(Sensor.vvtPositionB1I), 107.5, 15);
     }
 
     private void assertNear(String message, double actual, double expected, double tolerance) {

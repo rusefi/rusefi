@@ -34,6 +34,14 @@ inline angle_t wrapAngleMethod(angle_t param, const char *msg = "", ObdCode code
 	return param;
 }
 
+struct ComplexTriggerSignal {
+  TriggerWheel wheel;
+  float angle;
+  float width;
+	int count;
+	float lastAngle;
+};
+
 class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
@@ -123,6 +131,8 @@ public:
 	// If true, falling edges should be fully ignored on this trigger shape.
 	bool useOnlyRisingEdges;
 
+	bool knownOperationMode = true;
+
 	void calculateExpectedEventCounts();
 
 	size_t getExpectedEventCount(TriggerWheel channelIndex) const;
@@ -138,9 +148,6 @@ public:
 	 */
 	TriggerWheel triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
 	TriggerValue triggerSignalStates[PWM_PHASE_MAX_COUNT];
-	// see also 'doesTriggerImplyOperationMode'
-	// todo: reuse doesTriggerImplyOperationMode instead of separate field only which is only used for metadata anyway?
-	bool knownOperationMode = true;
 #endif
 
 	/**
@@ -190,6 +197,7 @@ public:
 	 */
 	void addEventClamped(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex, float filterLeft, float filterRight);
 	operation_mode_e getWheelOperationMode() const;
+	operation_mode_e getAmbiguousOperationMode();
 
 	void initialize(operation_mode_e operationMode, SyncEdge syncEdge);
 	void setTriggerSynchronizationGap(float syncRatio);
@@ -254,6 +262,14 @@ private:
 	 * this is part of performance optimization
 	 */
 	operation_mode_e operationMode;
+
+	void setEvents(const ComplexTriggerSignal* events, size_t length);
+
+	void addPendingFall(ComplexTriggerSignal* pendingFall, angle_t angle);
+
+	void initializePre(trigger_type_e type);
+
+	void initializePost(trigger_type_e type, bool isCrankWheel);
 };
 
 /**
@@ -269,3 +285,5 @@ public:
 	 */
 	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
+
+PUBLIC_API_WEAK void customTrigger(operation_mode_e triggerOperationMode, TriggerWaveform *s, trigger_type_e type);
