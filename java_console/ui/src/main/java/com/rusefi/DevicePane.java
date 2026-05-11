@@ -13,6 +13,7 @@ import java.awt.*;
 
 public class DevicePane {
     private final JPanel content = new JPanel();
+    private JButton autoUpdateButton;
 
     public DevicePane(UIContext uiContext, String port, SerialPortType serialPortType, JTabbedPane tabbedPane) {
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -35,7 +36,8 @@ public class DevicePane {
             buttons.add(new JLabel("Legacy Device Without OpenBLT"));
         } else if (serialPortType == SerialPortType.EcuWithOpenblt) {
             JButton switchButton = new JButton("Switch to OpenBLT");
-            JButton autoButton = new JButton("Auto Update Firmware");
+            autoUpdateButton = new JButton("Auto Update Firmware");
+            JButton autoButton = autoUpdateButton;
 
             switchButton.addActionListener(e -> {
                 switchButton.setEnabled(false);
@@ -70,6 +72,12 @@ public class DevicePane {
                 }));
             });
             buttons.add(autoButton);
+        }
+    }
+
+    public void triggerAutoUpdate() {
+        if (autoUpdateButton != null && autoUpdateButton.isEnabled()) {
+            autoUpdateButton.doClick();
         }
     }
 
