@@ -1,8 +1,5 @@
 package com.opensr5.ini.field;
 
-import com.opensr5.ConfigurationImage;
-import com.rusefi.tune.xml.Constant;
-
 import java.util.Objects;
 
 public abstract class IniField {
@@ -17,12 +14,31 @@ public abstract class IniField {
 
     public static double parseDouble(String s) {
         // todo: real implementation
-        s = s.replaceAll("\\{", "").replaceAll("\\}", "");
+        // TODO: replace with new ExpressionEvaluator
+        s = s.replace("{", "").replace("}", "").trim();
+        // If this is a complex expression with ternary operator, try to extract the true branch
+        // this is related to the lambdaTable using the true branch as default on the fuel tests
+        // [tag:lambdaTable]
+        if (s.contains("?")) {
+            int questionIndex = s.indexOf('?');
+            int colonIndex = s.lastIndexOf(':');
+            if (questionIndex >= 0 && colonIndex > questionIndex) {
+                s = s.substring(questionIndex + 1, colonIndex).trim();
+                // Recursively parse the true branch
+                return parseDouble(s);
+            }
+            // If we can't extract a true branch, return default
+            return 1.0;
+        }
         int dividerIndex = s.indexOf('/');
         if (dividerIndex != -1) {
-            return Double.parseDouble(s.substring(0, dividerIndex)) / Double.parseDouble(s.substring(dividerIndex + 1));
+            return Double.parseDouble(s.substring(0, dividerIndex).trim()) / Double.parseDouble(s.substring(dividerIndex + 1).trim());
         } else {
-            return Double.parseDouble(s);
+            try {
+                return Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
         }
     }
 
@@ -38,22 +54,21 @@ public abstract class IniField {
         return null;
     }
 
+    public static int parseDigits(String digits) {
+        try {
+            return Integer.parseInt(digits);
+        } catch (NumberFormatException e) {
+            return 3;
+        }
+    }
+
     public int getOffset() {
         return offset;
     }
 
     public abstract int getSize();
 
-    /**
-     * @see com.rusefi.config.Field#getValue
-     */
-    public String getValue(ConfigurationImage image) {
-        return null;
-    }
-
-    public void setValue(ConfigurationImage image, Constant constant) {
-        throw new UnsupportedOperationException("On " + getClass());
-    }
+    public abstract <T> T accept(IniFieldVisitor<T> visitor);
 
     @Override
     public boolean equals(Object o) {

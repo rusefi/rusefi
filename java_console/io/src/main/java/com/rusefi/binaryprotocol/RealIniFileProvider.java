@@ -2,8 +2,10 @@ package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
-import com.opensr5.ini.IniFileModelImpl;
+import com.rusefi.ini.reader.IniFileReader;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
@@ -24,19 +26,21 @@ public class RealIniFileProvider implements IniFileProvider {
         if (localIniFile == null) {
             log.info("Failed to download " + signature + " maybe custom board?");
             // 4th option: current folder
-            localIniFile = IniFileModelImpl.findIniFile(".");
+            localIniFile = IniLocator.findIniFile(".");
         }
         if (localIniFile == null) {
             // 5th option: one level up or environment variable direction
-            localIniFile = IniFileModelImpl.findIniFile(IniFileModelImpl.INI_FILE_PATH);
+            localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH);
         }
         if (localIniFile == null)
             throw new IniNotFoundException("Failed to locate .ini file in five different places!");
-        IniFileModelImpl iniFileModel = null;
+        IniFileModel iniFileModel;
         try {
-            iniFileModel = IniFileModelImpl.readIniFile(localIniFile);
+                iniFileModel = IniFileReaderUtil.readIniFileChecked(localIniFile);
+        } catch (IniParsingException e) {
+            throw new IniNotFoundException("Parsing error: " + e, e);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new IniNotFoundException(e.toString());
         }
         PrimeTunerStudioCache.prime(iniFileModel, localIniFile);
         return iniFileModel;

@@ -73,6 +73,7 @@ public class ConfigDefinition {
         String tsInputFileFolder = null;
         List<String> softPrePrependsFileNames = new ArrayList<>();
         GaugeIgnoreList ignoreList = new GaugeIgnoreList();
+        TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
         DefinitionsState parseState = state.getEnumsReader().parseState;
         String signatureDestination = null;
@@ -188,8 +189,9 @@ public class ConfigDefinition {
         }
 
         FieldsApiGenerator.run();
-        handlePage(state, 1, softPrePrependsFileNames);
-        handlePage(state, 2, softPrePrependsFileNames);
+        handlePage(state, 2, softPrePrependsFileNames, usedNames);
+        handlePage(state, 3, softPrePrependsFileNames, usedNames);
+        handlePage(state, 4, softPrePrependsFileNames, usedNames);
 
         if (tsInputFileFolder != null) {
             // used to update .ini files
@@ -208,7 +210,7 @@ public class ConfigDefinition {
         }
 
         if (tsInputFileFolder != null) {
-            state.addDestination(new TSProjectConsumer(tsInputFileFolder, state, ignoreList));
+            state.addDestination(new TSProjectConsumer(tsInputFileFolder, state, ignoreList, usedNames));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
@@ -220,10 +222,10 @@ public class ConfigDefinition {
         state.doJob();
     }
 
-    private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends) throws IOException {
-        PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends);
+    private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends, TreeSet<String> usedNames) throws IOException {
+        PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends, usedNames);
         page.doJob();
-        // PAGE_CONTENT_1 is handled here!
+        // PAGE_CONTENT_N is handled here!
         parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
         parentState.getVariableRegistry().register("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
     }

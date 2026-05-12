@@ -1,6 +1,11 @@
 package com.rusefi.util;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 public interface LazyFile extends Output {
+    Charset CHARSET = StandardCharsets.ISO_8859_1;
+
     interface LazyFileFactory {
         LazyFile create(String fileName);
     }

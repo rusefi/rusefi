@@ -2,7 +2,7 @@ package com.rusefi.maintenance.migration.multiplier_to_table_migration;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 
 public class MultiplierToTableMigrationContext {
@@ -19,3 +19,4 @@ public class MultiplierToTableMigrationContext {
             "src/test/java/com/rusefi/maintenance/migration/multiplier_to_table_migration/test_data/cranking_fuel_multiplier"
         );    }
 }
+

@@ -2,7 +2,7 @@ package com.rusefi.tools.tune;
 
 import com.rusefi.RootHolder;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 
 import static com.rusefi.tools.tune.TuneCanTool.writeDiffBetweenLocalTuneFileAndDefaultTune;
@@ -40,3 +40,4 @@ public class TuneCanToolRunner {
             customTuneFileName, "", name);
     }
 }
+

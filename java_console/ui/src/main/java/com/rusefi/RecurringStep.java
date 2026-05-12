@@ -47,11 +47,27 @@ public class RecurringStep {
         isStopped = true;
     }
 
+    /**
+     * Reset stopped state and start a new worker thread.
+     * Safe to call only after stop() — the old thread must have exited.
+     */
+    public synchronized void restart() {
+        isStopped = false;
+        start();
+    }
+
     synchronized void resume() {
         isSuspended = false;
     }
 
     synchronized CountDownLatch suspend() {
+        if (isStopped) {
+            // Worker thread has exited; checkSuspended() will never be called,
+            // so count down immediately to avoid callers waiting forever.
+            CountDownLatch latch = createSuspendedCountDownLatch();
+            latch.countDown();
+            return latch;
+        }
         if (!isSuspended) {
             isSuspended = true;
             suspendedCountDownLatch = createSuspendedCountDownLatch();

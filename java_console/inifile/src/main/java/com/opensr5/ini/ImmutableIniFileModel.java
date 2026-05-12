@@ -1,0 +1,357 @@
+package com.opensr5.ini;
+
+import com.opensr5.ini.field.IniField;
+import com.rusefi.config.Field;
+
+import java.util.*;
+
+public class ImmutableIniFileModel implements IniFileModel {
+    private final String signature;
+    private final int blockingFactor;
+    private final Map<String, List<String>> defines;
+    private final Map<String, IniField> allIniFields;
+    private final Map<String, IniField> secondaryIniFields;
+    private final Map<String, IniField> allOutputChannels;
+    private final Map<String, String> expressionOutputChannels;
+    private final Map<String, String> protocolMeta;
+    private final IniFileMetaInfo metaInfo;
+    private final String iniFilePath;
+    private final Map<String, String> tooltips;
+    private final Map<String, DialogModel.Field> fieldsInUiOrder;
+    private final Map<String, DialogModel> dialogs;
+    private final Map<String, GaugeCategoryModel> gaugeCategories;
+    private final Map<String, GaugeModel> gauges;
+    private final Map<String, TableModel> tables;
+    private final Map<String, CurveModel> curves;
+    private final Map<String, String> topicHelp;
+    private final Map<String, ContextHelpModel> contextHelp;
+    private final List<MenuModel> menus;
+    private final FrontPageModel frontPage;
+    private final Map<String, String> controllerCommands;
+    private final List<VeAnalyzeMap> veAnalyzeMaps;
+    private final List<String> lambdaTargetTables;
+    private final List<VeAnalyzeFilter> veAnalyzeFilters;
+
+    private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
+        LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
+        result.putAll(source);
+        return Collections.unmodifiableMap(result);
+    }
+
+    /**
+     * Case-insensitive lookup via TreeMap's comparator, but preserves original key case on
+     * iteration. Required for maps iterated by callers that use keys as field names
+     * (e.g. DefaultTuneMigrator), unlike copyWithCaseInsensitiveKeys which normalizes to lowercase.
+     */
+    private static <V> Map<String, V> copyWithCaseInsensitiveOrderedKeys(Map<String, V> source) {
+        TreeMap<String, V> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        result.putAll(source);
+        return Collections.unmodifiableMap(result);
+    }
+
+    public ImmutableIniFileModel(String signature,
+                                 int blockingFactor,
+                                 Map<String, List<String>> defines,
+                                 Map<String, IniField> allIniFields,
+                                 Map<String, IniField> secondaryIniFields,
+                                 Map<String, IniField> allOutputChannels,
+                                 Map<String, String> expressionOutputChannels,
+                                 Map<String, String> protocolMeta,
+                                 IniFileMetaInfo metaInfo,
+                                 String iniFilePath,
+                                 Map<String, String> tooltips,
+                                 Map<String, DialogModel.Field> fieldsInUiOrder,
+                                 Map<String, DialogModel> dialogs,
+                                 Map<String, GaugeCategoryModel> gaugeCategories,
+                                 Map<String, GaugeModel> gauges,
+                                 Map<String, String> topicHelp,
+                                 Map<String, ContextHelpModel> contextHelp,
+                                 Map<String, TableModel> tables,
+                                 Map<String, CurveModel> curves,
+                                 List<MenuModel> menus,
+                                 FrontPageModel frontPage,
+                                 Map<String, String> controllerCommands,
+                                 List<VeAnalyzeMap> veAnalyzeMaps,
+                                 List<String> lambdaTargetTables,
+                                 List<VeAnalyzeFilter> veAnalyzeFilters) {
+        this.signature = signature;
+        this.blockingFactor = blockingFactor;
+        this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
+        // allIniFields/secondaryIniFields are iterated with keys used as field names — must
+        // preserve original case on iteration, so use TreeMap(CASE_INSENSITIVE_ORDER) not
+        // LowercaseHashMap (which normalizes keys and breaks callers like DefaultTuneMigrator).
+        this.allIniFields = copyWithCaseInsensitiveOrderedKeys(allIniFields);
+        this.secondaryIniFields = copyWithCaseInsensitiveOrderedKeys(secondaryIniFields);
+        this.allOutputChannels = copyWithCaseInsensitiveKeys(allOutputChannels);
+        this.expressionOutputChannels = copyWithCaseInsensitiveKeys(expressionOutputChannels);
+        this.protocolMeta = Collections.unmodifiableMap(new TreeMap<>(protocolMeta));
+        this.metaInfo = metaInfo;
+        this.iniFilePath = iniFilePath;
+        this.tooltips = Collections.unmodifiableMap(new TreeMap<>(tooltips));
+        this.fieldsInUiOrder = Collections.unmodifiableMap(new LinkedHashMap<>(fieldsInUiOrder));
+        this.dialogs = Collections.unmodifiableMap(new TreeMap<>(dialogs));
+
+        // If at least one gauge category named GAUGE_CATEGORY_ECU_STATUS ("ECU Status") is registered,
+        // inject a synthetic 'runtimeDataRateGauge' into that category and into the gauges map.
+        Map<String, GaugeCategoryModel> effectiveCategories = new LinkedHashMap<>(gaugeCategories);
+        Map<String, GaugeModel> effectiveGauges = new LinkedHashMap<>(gauges);
+        GaugeCategoryModel ecuStatusCategory = effectiveCategories.get(GAUGE_CATEGORY_ECU_STATUS);
+        if (ecuStatusCategory != null) {
+            GaugeModel synthetic = createRuntimeDataRateGauge();
+            List<GaugeModel> updatedGauges = new ArrayList<>(ecuStatusCategory.getGauges());
+            updatedGauges.add(synthetic);
+            effectiveCategories.put(GAUGE_CATEGORY_ECU_STATUS,
+                    new GaugeCategoryModel(ecuStatusCategory.getName(), updatedGauges));
+            effectiveGauges.put(synthetic.getName(), synthetic);
+        }
+        this.gaugeCategories = Collections.unmodifiableMap(effectiveCategories);
+        this.gauges = copyWithCaseInsensitiveKeys(effectiveGauges);
+        this.topicHelp = Collections.unmodifiableMap(new TreeMap<>(topicHelp));
+        this.contextHelp = Collections.unmodifiableMap(new LinkedHashMap<>(contextHelp));
+        this.tables = copyWithCaseInsensitiveKeys(tables);
+        this.curves = copyWithCaseInsensitiveKeys(curves);
+        this.menus = Collections.unmodifiableList(new ArrayList<>(menus));
+        this.frontPage = frontPage;
+        this.controllerCommands = copyWithCaseInsensitiveKeys(controllerCommands);
+        this.veAnalyzeMaps = Collections.unmodifiableList(new ArrayList<>(veAnalyzeMaps));
+        this.lambdaTargetTables = Collections.unmodifiableList(new ArrayList<>(lambdaTargetTables));
+        this.veAnalyzeFilters = Collections.unmodifiableList(new ArrayList<>(veAnalyzeFilters));
+    }
+
+    /**
+     * Mirrors firmware's {@code GAUGE_CATEGORY_ECU_STATUS} (defined in rusefi_config.txt).
+     * Duplicated as a string literal to avoid a heavy {@code :models} dependency from {@code :inifile}.
+     */
+    public static final String GAUGE_CATEGORY_ECU_STATUS = "ECU Status";
+
+    /**
+     * Synthetic gauge name added when {@link #GAUGE_CATEGORY_ECU_STATUS}
+     * category is present. Reports the runtime data rate (samples/sec) coming from the controller.
+     */
+    public static final String RUNTIME_DATA_RATE_GAUGE = "runtimeDataRateGauge";
+
+    private static GaugeModel createRuntimeDataRateGauge() {
+        return new GaugeModel(
+                RUNTIME_DATA_RATE_GAUGE,
+                RUNTIME_DATA_RATE_GAUGE,
+                IniValue.ofString("Runtime data rate"),
+                IniValue.ofString("Hz"),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(0));
+    }
+
+    @Override
+    public String getSignature() {
+        return signature;
+    }
+
+    @Override
+    public int getBlockingFactor() {
+        if (blockingFactor == 0)
+            throw new IllegalStateException("blockingFactor not found in " + iniFilePath);
+        return blockingFactor;
+    }
+
+    @Override
+    public Map<String, List<String>> getDefines() {
+        return defines;
+    }
+
+    @Override
+    public Map<String, IniField> getAllIniFields() {
+        return allIniFields;
+    }
+
+    @Override
+    public Map<String, IniField> getSecondaryIniFields() {
+        return secondaryIniFields;
+    }
+
+    @Override
+    public Optional<IniField> findIniField(String key) {
+        IniField field = allIniFields.get(key);
+        if (field == null) {
+            field = secondaryIniFields.get(key);
+        }
+        return Optional.ofNullable(field);
+    }
+
+    @Override
+    public IniField getIniField(Field field) {
+        return getIniField(field.getName());
+    }
+
+    @Override
+    public IniField getIniField(String key) {
+        IniField result = allIniFields.get(key);
+        return Objects.requireNonNull(result, () -> key + " field not found");
+    }
+
+    @Override
+    public IniField getOutputChannel(String key) throws IniMemberNotFound {
+        IniField result = allOutputChannels.get(key);
+        if (result == null)
+            throw new IniMemberNotFound(key + " field not found");
+        return result;
+    }
+
+    @Override
+    public Map<String, IniField> getAllOutputChannels() {
+        return allOutputChannels;
+    }
+
+    @Override
+    public String getExpressionOutputChannel(String key) {
+        return expressionOutputChannels.get(key);
+    }
+
+    @Override
+    public Map<String, String> getExpressionOutputChannels() {
+        return expressionOutputChannels;
+    }
+
+    @Override
+    public Map<String, String> getProtocolMeta() {
+        return protocolMeta;
+    }
+
+    @Override
+    public IniFileMetaInfo getMetaInfo() {
+        return metaInfo;
+    }
+
+    @Override
+    public String getIniFilePath() {
+        return iniFilePath;
+    }
+
+    @Override
+    public Map<String, String> getTooltips() {
+        return tooltips;
+    }
+
+    @Override
+    public Map<String, DialogModel.Field> getFieldsInUiOrder() {
+        return fieldsInUiOrder;
+    }
+
+    @Override
+    public Map<String, DialogModel> getDialogs() {
+        return dialogs;
+    }
+
+    @Override
+    public String getDialogKeyByTitle(String dialogTitle) {
+        // TODO, if this is used heavily, we maybe need to implement a multiple-key map for the dialogs,
+        //  since some ops use the key and the screen generator uses the title
+        for (DialogModel dialog : dialogs.values()) {
+            if (dialogTitle.equals(dialog.getUiName())) {
+                return dialog.getKey();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public IniField findByOffset(int i) {
+        for (IniField field : allIniFields.values()) {
+            if (i >= field.getOffset() && i < field.getOffset() + field.getSize())
+                return field;
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, GaugeCategoryModel> getGaugeCategories() {
+        return gaugeCategories;
+    }
+
+    @Override
+    public Map<String, GaugeModel> getGauges() {
+        return gauges;
+    }
+
+    @Override
+    public GaugeModel getGauge(String name) {
+        return gauges.get(name);
+    }
+
+    @Override
+    public GaugeModel findGaugeByChannel(String channelName) {
+        if (channelName == null) {
+            return null;
+        }
+        for (GaugeModel gauge : gauges.values()) {
+            if (channelName.equalsIgnoreCase(gauge.getChannel())) {
+                return gauge;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getTopicHelp() {
+        return topicHelp;
+    }
+
+    @Override
+    public Map<String, ContextHelpModel> getContextHelp() {
+        return contextHelp;
+    }
+
+    @Override
+    public ContextHelpModel getContextHelp(String referenceName) {
+        return contextHelp.get(referenceName);
+    }
+
+    @Override
+    public Map<String, TableModel> getTables() {
+        return tables;
+    }
+
+    @Override
+    public Map<String, CurveModel> getCurves() {
+        return curves;
+    }
+
+    @Override
+    public TableModel getTable(String name) {
+        return tables.get(name);
+    }
+
+    @Override
+    public FrontPageModel getFrontPage() {
+        return frontPage;
+    }
+
+    @Override
+    public List<MenuModel> getMenus() {
+        return menus;
+    }
+
+    @Override
+    public Map<String, String> getControllerCommands() {
+        return controllerCommands;
+    }
+
+    @Override
+    public List<VeAnalyzeMap> getVeAnalyzeMaps() {
+        return veAnalyzeMaps;
+    }
+
+    @Override
+    public List<String> getLambdaTargetTables() {
+        return lambdaTargetTables;
+    }
+
+    @Override
+    public List<VeAnalyzeFilter> getVeAnalyzeFilters() {
+        return veAnalyzeFilters;
+    }
+}

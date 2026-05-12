@@ -14,7 +14,11 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.core.Pair;
+import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.io.BundleInfo;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.*;
@@ -22,7 +26,7 @@ import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -33,6 +37,7 @@ import java.util.concurrent.*;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
 import static com.rusefi.config.generated.VariableRegistryValues.*;
+import static com.rusefi.core.net.ConnectionAndMeta.RUSEFI_WIKI_DOWNLOAD_PAGE;
 import static com.rusefi.util.TuneBackupUtil.saveConfigurationImageToFiles;
 
 /**
@@ -68,6 +73,10 @@ public class BinaryProtocol {
 
     public @NotNull IniFileModel getIniFile() {
         return Objects.requireNonNull(iniFile);
+    }
+
+    public @Nullable IniFileModel getIniFileNullable() {
+        return iniFile;
     }
 
     public static String findCommand(byte command) {
@@ -159,8 +168,13 @@ public class BinaryProtocol {
 
     @Nullable
     public static String getSignature(IoStream stream) throws IOException {
+        // Drop bytes that arrived between port open and now
+        IncomingDataBuffer buffer = stream.getDataBuffer();
+        if (buffer.getPendingCount() > 0) {
+            buffer.dropPending();
+        }
         HelloCommand.send(stream);
-        return HelloCommand.getHelloResponse(stream.getDataBuffer());
+        return HelloCommand.getHelloResponse(buffer);
     }
 
     /**
@@ -180,8 +194,35 @@ public class BinaryProtocol {
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
+
+        // Check for bundle/ECU mismatch before attempting to read configuration
+        // Skip check if bundle target is unknown (e.g., simulator, local development)
+        RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
+        String bundleTarget = BundleUtil.getBundleTarget();
+        if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)) {
+            // [tag:QC_firmware]
+            if (!bundleTarget.equalsIgnoreCase(ecuSignature.getBundleTarget()) && !bundleTarget.contains("_QC_")) {
+                String errorMsg = String.format(
+                    "Bundle/ECU mismatch detected!\n\n" +
+                    "Connected ECU: %s\n" +
+                    "Bundle target: %s\n\n" +
+                    "Please download the correct bundle for your ECU from:\n" +
+                    RUSEFI_WIKI_DOWNLOAD_PAGE + "\n\n" +
+                    "The .ini file in this bundle is not compatible with your ECU's memory layout.",
+                    ecuSignature.getBundleTarget(), bundleTarget
+                );
+                log.info(errorMsg);
+                close();
+                return errorMsg;
+            }
+        }
+
         try {
             iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
+            // SensorLogger is in the UI module, we can't easily access it from the IO module if it's not on the classpath
+            // However, BinaryProtocol is often used in the context where UI is also present.
+            // Let's check if we can use reflection or if there is a better way.
+            // For now, let's try to fix the import or use the full name if it's available.
         } catch (IniNotFoundException e) {
             close();
             return "Failed to located .ini";
@@ -192,7 +233,12 @@ public class BinaryProtocol {
 
         int pageSize = iniFile.getMetaInfo().getPageSize(0);
         log.info("pageSize=" + pageSize);
-        readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
+        try {
+            readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
+        } catch (IllegalStateException e) {
+            close();
+            return e.getMessage();
+        }
         if (stream.isClosed())
             return "Failed to read calibration";
 
@@ -253,10 +299,16 @@ public class BinaryProtocol {
     }
 
     /**
-     * this method patches configuration inside ECU by writing only regions with different content
+     * Patches configuration inside ECU RAM by writing only regions with different content.
+     * Does not burn to flash or update the local configuration image.
      */
-    public void uploadChanges(ConfigurationImage newVersion) {
+    public void uploadChangesWithoutBurn(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
+        if (current.getSize() != newVersion.getSize()) {
+            throw new IllegalStateException("Calibration size mismatch: ECU has " + current.getSize()
+                + " bytes but image has " + newVersion.getSize()
+                + " bytes. Calibrations may be from a different firmware version.");
+        }
         // let's have our own copy which no one would be able to change
         newVersion = newVersion.clone();
         int offset = 0;
@@ -276,6 +328,13 @@ public class BinaryProtocol {
 
             offset = range.second;
         }
+    }
+
+    /**
+     * this method patches configuration inside ECU by writing only regions with different content
+     */
+    public void uploadChanges(ConfigurationImage newVersion) {
+        uploadChangesWithoutBurn(newVersion);
         burn();
         setConfigurationImage(newVersion);
     }
@@ -295,11 +354,16 @@ public class BinaryProtocol {
             ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
             if (image.isEmpty()) {
+                // Drop any stale bytes (e.g. a duplicate error code left in the buffer by a prior failed CRC-check command)
+                // prior 2026 we have a bug sending duplicate error codes from validateOffsetCount, see #9145
+                dropPending(stream);
                 image = readFullImageFromController(arguments, meta);
                 if (image.isEmpty())
                     return;
             }
-            setConfigurationImage(image.getConfigurationImage());
+            ConfigurationImage loadedImage = image.getConfigurationImage();
+            setConfigurationImage(loadedImage);
+            state.setCachedImage(loadedImage);
             log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
         }
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
@@ -322,6 +386,7 @@ public class BinaryProtocol {
     @NotNull
     public ConfigurationImageWithMeta readFullImageFromController(final ConfigurationImageMeta meta) {
         log.info("Reading from controller " + meta.getEcuSignature());
+
         final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta);
         final ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
@@ -342,7 +407,25 @@ public class BinaryProtocol {
 
             if (!checkResponseCode(response) || response.length != requestSize + 1) {
                 if (extractCode(response) == TS_RESPONSE_OUT_OF_RANGE) {
-                    throw new IllegalStateException("TS_RESPONSE_OUT_OF_RANGE ECU/console version mismatch? " + offset + "/" + requestSize);
+                    RusEfiSignature ecuSig = SignatureHelper.parse(signature);
+                    BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
+
+                    String ecuDesc = (ecuSig != null)
+                        ? String.format("%s (branch=%s, %s-%s-%s, hash=%s)",
+                            ecuSig.getBundleTarget(), ecuSig.getBranch(),
+                            ecuSig.getYear(), ecuSig.getMonth(), ecuSig.getDay(), ecuSig.getHash())
+                        : signature;
+                    String bundleDesc = BundleInfo.isUndefined(bundleInfo)
+                        ? "unknown"
+                        : bundleInfo.getTarget() + " (release=" + bundleInfo.getBranchName() + ")";
+
+                    throw new IllegalStateException(
+                        "ECU rejected memory read at offset=" + offset + " size=" + requestSize + ".\n\n" +
+                        "Bundle: " + bundleDesc + "\n" +
+                        "Connected ECU: " + ecuDesc + "\n\n" +
+                        "This usually means the .ini file doesn't match your ECU.\n" +
+                        "Download the correct bundle from" + RUSEFI_WIKI_DOWNLOAD_PAGE
+                    );
                 }
                 String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
@@ -361,8 +444,12 @@ public class BinaryProtocol {
     }
 
     public byte @NotNull [] smartPacketPrefix(int offset, int requestSize) {
+        return smartPacketPrefix2(offset, requestSize, isSinglePageController());
+    }
+
+    static byte @NotNull [] smartPacketPrefix2(int offset, int requestSize, boolean isSinglePageController) {
         byte[] packet;
-        if (isSinglePageController()) {
+        if (isSinglePageController) {
             // older controller, no page index in read command
             // PS: technically we can/shall actually use command syntax as specified by the .ini
             packet = new byte[4];
@@ -550,19 +637,19 @@ public class BinaryProtocol {
             return;
         log.info("Need to burn");
 
-        while (true) {
-            if (stream.isClosed())
+        long start = System.currentTimeMillis();
+        while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
+            if (BurnCommand.execute(this)) {
+                log.info("BURN OK");
+                isBurnPending = false;
                 return;
-            boolean isGoodBurn = BurnCommand.execute(this);
-            if (!isGoodBurn) {
-                log.warn("BURN HAS FAILED?! Will retry");
-                continue;
             }
-            log.info("BURN OK");
-            break;
+            log.warn("BURN HAS FAILED?! Will retry");
         }
-        log.info("DONE");
-        isBurnPending = false;
+        // Burn did not succeed within the timeout — close the stream so the watchdog
+        // can trigger a reconnection rather than leaving the executor permanently blocked.
+        log.error("Burn timed out or stream closed, giving up");
+        stream.close();
     }
 
     public void setConfigurationImage(ConfigurationImage configurationImage) {
@@ -574,6 +661,33 @@ public class BinaryProtocol {
      */
     public ConfigurationImage getControllerConfiguration() {
         return state.getConfigurationImage();
+    }
+
+    /**
+     * @return the cached baseline image (snapshot taken when the tune was loaded), or null if not set
+     */
+    @Nullable
+    public ConfigurationImage getCachedImage() {
+        return state.getCachedImage();
+    }
+
+    /**
+     * Snapshot the current in-memory image as the new diff baseline.
+     */
+    public void cacheCurrentImage() {
+        ConfigurationImage current = state.getConfigurationImage();
+        if (current != null)
+            state.setCachedImage(current);
+    }
+
+    /**
+     * Reset the current in-memory image back to the cached baseline.
+     * Does NOT write to the ECU — call burn separately if needed.
+     *
+     * @return true if a cached image existed and the reset was applied
+     */
+    public boolean resetToCachedImage() {
+        return state.resetToCached();
     }
 
     /**
@@ -627,6 +741,11 @@ public class BinaryProtocol {
         }
     }
 
+    /**
+     * This is a blocking method which would fetch all output channels from the controller.
+     *
+     * @return true if successful
+     */
     public boolean requestOutputChannels() {
         if (stream.isClosed())
             return false;
@@ -662,7 +781,7 @@ public class BinaryProtocol {
 
         state.setCurrentOutputs(reassemblyBuffer);
 
-        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer, getIniFile());
+        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer, getIniFile(), getControllerConfiguration());
         return true;
     }
 
@@ -670,3 +789,4 @@ public class BinaryProtocol {
         return state;
     }
 }
+

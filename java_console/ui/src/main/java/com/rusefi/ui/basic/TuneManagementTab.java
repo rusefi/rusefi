@@ -7,6 +7,7 @@ import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
+import com.rusefi.tune_manifest.ManifestParseException;
 import com.rusefi.tune_manifest.TuneManifestHelper;
 import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
@@ -18,19 +19,18 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
 
-/**
- * @see BasicStartupFrame#main dedicated sandbox not needed?
- */
 public class TuneManagementTab {
     private static final Logging log = getLogging(TuneManagementTab.class);
 
@@ -41,6 +41,10 @@ public class TuneManagementTab {
     private final JPanel totalContent = new JPanel(new BorderLayout());
     private final JLabel status = new JLabel("Downloading tunes...");
     private final JTable table = new JTable(new MyTableModel());
+    private final JPanel centerPanel = new JPanel(new BorderLayout());
+    private JScrollPane tableScroll;
+    private final JProgressBar uploadProgress = new JProgressBar();
+    private final AtomicBoolean awaitingCompletion = new AtomicBoolean(false);
     private List<TuneModel> tunes = new ArrayList<>();
 
     public TuneManagementTab(ConnectivityContext connectivityContext,
@@ -48,26 +52,39 @@ public class TuneManagementTab {
                              Component importTuneButton,
                              SingleAsyncJobExecutor singleAsyncJobExecutor,
                              StatusPanel statusPanelTuneTab) {
-//        content.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+        uploadProgress.setIndeterminate(true);
+        uploadProgress.setStringPainted(true);
+        uploadProgress.setString("Loading tune...");
+        uploadProgress.setVisible(false);
 
         String tunesManifestUrl = getTunesManifestUrl();
         if (tunesManifestUrl != null) {
             totalContent.add(status, BorderLayout.NORTH);
 
-            JScrollPane tableScroll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            tableScroll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
                 @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(400, 200);
                 }
             };
 
-            JPanel centerPanel = new JPanel(new BorderLayout());
             centerPanel.add(tableScroll, BorderLayout.CENTER);
-            centerPanel.add(statusPanelTuneTab, BorderLayout.SOUTH);
+            centerPanel.add(uploadProgress, BorderLayout.SOUTH);
 
             totalContent.add(centerPanel, BorderLayout.CENTER);
 
-//            table.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            singleAsyncJobExecutor.addOnJobInProgressFinishedListener(() -> {
+                if (!awaitingCompletion.compareAndSet(true, false))
+                    return;
+                SwingUtilities.invokeLater(() -> {
+                    uploadProgress.setVisible(false);
+                    if (statusPanelTuneTab.isInErrorState()) {
+                        showErrorLogPopup(statusPanelTuneTab.getLogText());
+                    } else {
+                        status.setText("Tune loaded successfully.");
+                    }
+                });
+            });
 
             new Thread(new Runnable() {
                 @Override
@@ -80,7 +97,9 @@ public class TuneManagementTab {
                             }
                         });
                     } catch (IOException | ParseException e) {
-                        SwingUtilities.invokeLater(() -> status.setText("Error " + e));
+                        log.error("Failed to download tunes manifest from " + tunesManifestUrl, e);
+                        String body = (e instanceof ManifestParseException) ? ((ManifestParseException) e).getBody() : null;
+                        SwingUtilities.invokeLater(() -> showManifestError(e, body));
                     }
                 }
             }).start();
@@ -103,10 +122,17 @@ public class TuneManagementTab {
                 if (!new File(tuneFileName).exists()) {
                     ErrorMessageHelper.showErrorDialog("Failed to load " + model.getUrl(), "Tune error");
                 } else if (portResult.isPresent()) {
+                    if (!singleAsyncJobExecutor.isNotInProgress()) {
+                        status.setText("Another job is already running, please wait.");
+                        return;
+                    }
                     log.info("Let's load " + tuneFileName + " into " + portResult);
+                    awaitingCompletion.set(true);
+                    uploadProgress.setVisible(true);
+                    status.setText("Loading tune...");
                     ImportTuneJob.importTuneIntoDevice(portResult.get(), status, connectivityContext, tuneFileName, singleAsyncJobExecutor);
                 } else {
-                    statusPanelTuneTab.logLine("Not connected?");
+                    status.setText("Not connected?");
                 }
             }
         }));
@@ -114,10 +140,55 @@ public class TuneManagementTab {
         totalContent.add(importTuneButton, BorderLayout.SOUTH);
     }
 
+    private void showErrorLogPopup(String logText) {
+        try {
+            Toolkit.getDefaultToolkit().getSystemClipboard()
+                .setContents(new StringSelection(logText), null);
+        } catch (Throwable e) {
+            log.error("clipboard error " + e, e);
+        }
+        JTextArea textArea = new JTextArea(logText, 20, 60);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setCaretPosition(0);
+        JScrollPane scroll = new JScrollPane(textArea);
+        JOptionPane.showMessageDialog(
+            totalContent,
+            new Object[]{"Tune upload failed. Log (already copied to clipboard):", scroll},
+            "Tune Upload Error",
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
+
     private void displayTunes(List<TuneModel> tunes) {
         this.tunes = tunes;
         status.setText(tunes.size() + " tunes downloaded!");
         AutoupdateUtil.trueLayoutAndRepaint(table);
+    }
+
+    private void showManifestError(Exception e, String body) {
+        // Keep the header label short: JLabel's preferred width tracks its full text, and a long
+        // error message there would inflate the tab (and the splash frame on the next pack).
+        status.setText("Failed to load tunes.");
+
+        String content = (body == null || body.isEmpty()) ? e.toString() : body;
+        JTextArea textArea = new JTextArea(content);
+        textArea.setEditable(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setCaretPosition(0);
+        JScrollPane errorScroll = new JScrollPane(textArea,
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(400, 200);
+            }
+        };
+        if (tableScroll != null) {
+            centerPanel.remove(tableScroll);
+        }
+        centerPanel.add(errorScroll, BorderLayout.CENTER);
+        AutoupdateUtil.trueLayoutAndRepaint(centerPanel);
     }
 
     public Component getContent() {

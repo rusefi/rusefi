@@ -1,8 +1,6 @@
 package com.rusefi.tune;
 
-import com.rusefi.tools.tune.TS2C;
 import com.rusefi.tools.tune.TableData;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -32,7 +30,7 @@ public class TableDataTest {
 
 
 
-        assertEquals("{0.000,\t0.000,\t0.000,\t333.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
+        assertEqualsWithLocalFormattingHack("{0.000,\t0.000,\t0.000,\t333.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
             "{0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
             "{0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
             "{444.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
@@ -42,7 +40,7 @@ public class TableDataTest {
             "{771.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t777.000,\t},\n", data.getCTable());
 
 
-        assertEquals("static const float hardCodedscriptTable4[8][10] = {\n" +
+        assertEqualsWithLocalFormattingHack("static const float hardCodedscriptTable4[8][10] = {\n" +
             "{0.000,\t0.000,\t0.000,\t333.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
             "{0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
             "{0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
@@ -52,5 +50,13 @@ public class TableDataTest {
             "{0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t},\n" +
             "{771.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t0.000,\t777.000,\t},\n" +
             "};\n", data.getCsourceCode());
+    }
+
+    private void assertEqualsWithLocalFormattingHack(String s, String s2) {
+        assertEquals(localFormattingHack(s), localFormattingHack(s2));
+    }
+
+    private String localFormattingHack(String cTable) {
+        return cTable.replaceAll(",", " ").replaceAll("\\.", " ");
     }
 }

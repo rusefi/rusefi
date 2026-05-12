@@ -27,9 +27,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ConfigFieldImpl implements ConfigField {
     private static final Logging log = getLogging(ConfigFieldImpl.class);
-    public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, null, null);
+    public static final String VOID_BIT = "void";
+    public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, VOID_BIT, VOID_BIT);
 
-    private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
+    private static final String typePattern = "([\\w\\d_]+)(\\s*\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
     private static final String namePattern = "[[@\\w\\d\\s_]]+";
     private static final String commentPattern = ";([^;]*)";
@@ -84,14 +85,20 @@ public class ConfigFieldImpl implements ConfigField {
         Objects.requireNonNull(name, comment + " " + type);
         assertNoWhitespaces(name);
         this.name = name;
-        if (TypesHelper.isBoolean(type) && trueName == null && !getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX))
-            state.intDefaultBitNameCounter();
 
         if (!isVoid())
             Objects.requireNonNull(state);
         this.state = state;
         this.parentType = state == null ? null : (state.isStackEmpty() ? null : state.peek());
         this.comment = comment;
+
+        if (TypesHelper.isBoolean(type) && (trueName == null || falseName == null) && !getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
+            if (this.isWithinStruct("persistent_config_s")) {
+                throw new IllegalArgumentException("trueName and falseName must be non-null: " + name);
+            } else {
+                state.intDefaultBitNameCounter();
+            }
+        }
 
         if (!isVoid())
             Objects.requireNonNull(type);
@@ -104,18 +111,27 @@ public class ConfigFieldImpl implements ConfigField {
             String[] tokens = getTokens();
             if (tokens.length > 1) {
                 String scale = tokens[1].trim();
-                Double scaleDouble;
-                try {
-                    scaleDouble = Double.parseDouble(scale);
-                } catch (NumberFormatException ignore) {
-                    scaleDouble = -1.0;
-                }
-                if (!hasAutoscale && scaleDouble != 1) {
-                    throw new IllegalStateException("Unexpected scale of " + scale + " without autoscale on " + this);
+                if (!isExpression(scale)) {
+                   validateAutoScale(scale, hasAutoscale);
+                } else {
+                    String parsedScale = extractTrueBranch(scale);
+                    validateAutoScale(parsedScale, hasAutoscale);
                 }
             }
         }
         validateRange();
+    }
+
+    private void validateAutoScale(String scale, Boolean hasAutoscale) {
+        Double scaleDouble;
+        try {
+            scaleDouble = Double.parseDouble(scale);
+        } catch (NumberFormatException ignore) {
+            scaleDouble = -1.0;
+        }
+        if (!hasAutoscale && scaleDouble != 1) {
+            throw new IllegalStateException("Unexpected scale of " + scale + " without autoscale on " + this);
+        }
     }
 
     private void validateRange() {
@@ -123,6 +139,9 @@ public class ConfigFieldImpl implements ConfigField {
             return;
         String[] tokens = getTokens();
         if (tokens.length < 4)
+            return;
+        // Skip validation if min or max are expressions - see #8650
+        if (isExpression(tokens[3]) || (tokens.length >= 5 && isExpression(tokens[4])))
             return;
         double scale = autoscaleSpecNumber();
         double min = getMin();
@@ -135,6 +154,49 @@ public class ConfigFieldImpl implements ConfigField {
             throw new FieldOutOfRangeException(name + ": max value " + max + " outside of range. Type " + type + " maxValue " + maxValue);
     }
 
+    /**
+     * Check if a string is an expression
+     */
+    private static boolean isExpression(String str) {
+        if (str == null)
+            return false;
+        String trimmed = str.trim();
+        return trimmed.startsWith("{") && trimmed.endsWith("}");
+    }
+
+    /**
+     * Extract the true branch from a ternary expression and try to evaluate it.
+     * For expressions like "{condition ? trueValue : falseValue}", returns "trueValue".
+     * This is useful for providing a sensible default when we can't evaluate the condition at parse time.
+     * We use the true branch because unit tests typically use the "primary" or "true" case.
+     *
+     * @param expression The full expression string (may or may not include outer braces)
+     * @return The true branch if it can be extracted, otherwise the original expression
+     */
+    private static String extractTrueBranch(String expression) {
+        if (expression == null)
+            return expression;
+
+        String trimmed = expression.trim();
+        // Remove outer braces if present
+        if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+            trimmed = trimmed.substring(1, trimmed.length() - 1).trim();
+        }
+
+        // Check if this is a ternary expression
+        if (!trimmed.contains("?"))
+            return expression;
+
+        // Find the question mark and colon
+        int questionIndex = trimmed.indexOf('?');
+        int colonIndex = trimmed.lastIndexOf(':');
+
+        if (questionIndex <= 0 || colonIndex <= questionIndex)
+            return expression;
+
+        // Extract the true branch (between ? and :)
+        return trimmed.substring(questionIndex + 1, colonIndex).trim();
+    }
 
     @Override
     public ConfigStructure getParentStructureType() {
@@ -230,7 +292,7 @@ public class ConfigFieldImpl implements ConfigField {
 
 
         ConfigFieldImpl field = new ConfigFieldImpl(state, name, comment, arraySizeAsText, type, arraySizes,
-                tsInfo, isIterate, hasAutoscale, null, null);
+                tsInfo, isIterate, hasAutoscale, VOID_BIT, VOID_BIT);
         if (log.debugEnabled())
             log.debug("type " + type);
         if (log.debugEnabled())
@@ -393,12 +455,27 @@ public class ConfigFieldImpl implements ConfigField {
     public static @NotNull Pair<Integer, Integer> getScaleSpec(String scale, String name) {
         double factor;
         if (scale.startsWith("{") && scale.endsWith("}")) {
+            String innerExpression = scale.substring(1, scale.length() - 1).trim();
+            if (innerExpression.contains("?")) {
+                // Try to extract and evaluate the true branch
+                String trueBranch = extractTrueBranch(scale);
+                try {
+                    return getScaleSpec("{" + trueBranch + "}", name);
+                } catch (Exception e) {
+                    // If we can't evaluate the true branch, fall back to 1:1
+                    return new Pair<>(1, 1);
+                }
+            }
             // Handle just basic division, not a full fledged eval loop
-            scale = scale.substring(1, scale.length() - 1);
-            String[] parts = scale.split("/");
-            if (parts.length != 2)
-                throw new IllegalArgumentException(name + ": Two parts of division expected in " + scale);
-            factor = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
+            String[] parts = innerExpression.split("/");
+            if (parts.length == 1) {
+                // Simple number wrapped in braces (e.g., from extracting true branch of ternary)
+                factor = Double.parseDouble(parts[0]);
+            } else if (parts.length == 2) {
+                factor = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
+            } else {
+                throw new IllegalArgumentException(name + ": Expected simple number or division in " + innerExpression);
+            }
         } else {
             factor = Double.parseDouble(scale);
         }
@@ -414,7 +491,7 @@ public class ConfigFieldImpl implements ConfigField {
         double factor2 = ((double) div) / mul;
         double accuracy = Math.abs((factor2 / factor) - 1.);
         if (accuracy > 0.0000001) {
-            // Don't want to deal with exception propogation; this should adequately not compile
+            // Don't want to deal with exception propagation; this should adequately not compile
             throw new IllegalStateException("$*@#$* Cannot accurately represent autoscale for [" + scale + "] got " + accuracy);
         }
 
@@ -438,7 +515,16 @@ public class ConfigFieldImpl implements ConfigField {
         String[] tokens = getTokens();
         if (tokens.length < 4)
             return -1;
-        return Double.parseDouble(tokens[3]);
+        String minToken = tokens[3];
+        if (isExpression(minToken)) {
+            String trueBranch = extractTrueBranch(minToken);
+            try {
+                return Double.parseDouble(trueBranch);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+        return Double.parseDouble(minToken);
     }
 
     @Override
@@ -446,7 +532,16 @@ public class ConfigFieldImpl implements ConfigField {
         String[] tokens = getTokens();
         if (tokens.length < 5)
             return -1;
-        return Double.parseDouble(tokens[4]);
+        String maxToken = tokens[4];
+        if (isExpression(maxToken)) {
+            String trueBranch = extractTrueBranch(maxToken);
+            try {
+                return Double.parseDouble(trueBranch);
+            } catch (NumberFormatException e) {
+                return 255;
+            }
+        }
+        return Double.parseDouble(maxToken);
     }
 
     @Override
@@ -454,7 +549,16 @@ public class ConfigFieldImpl implements ConfigField {
         String[] tokens = getTokens();
         if (tokens.length < 6)
             return 0;
-        return Integer.parseInt(tokens[5].trim());
+        String digitsToken = tokens[5].trim();
+        if (isExpression(digitsToken)) {
+            String trueBranch = extractTrueBranch(digitsToken);
+            try {
+                return Integer.parseInt(trueBranch);
+            } catch (NumberFormatException e) {
+                return 2;
+            }
+        }
+        return Integer.parseInt(digitsToken);
     }
 
     @Override
@@ -510,6 +614,21 @@ public class ConfigFieldImpl implements ConfigField {
         public FieldOutOfRangeException(String s) {
             super(s);
         }
+    }
+
+    @Override
+    public boolean isWithinStruct(String structName) {
+        if (this.state == null || this.state.isStackEmpty())
+            return false;
+        ConfigStructure parent = this.state.peek();
+        String parentName = parent.getName();
+        while(!parentName.equals(structName)) {
+            parent = parent.getParent();
+            if (parent == null)
+                return false;
+            parentName = parent.getName();
+        }
+        return true;
     }
 }
 

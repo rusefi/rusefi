@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -286,3 +286,4 @@ public class DefaultTuneMigratorTest {
         assertEquals(expectedValueToUpdate.getName(), valueToUpdate.getName());
     }
 }
+

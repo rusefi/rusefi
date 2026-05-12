@@ -58,6 +58,18 @@ public enum PropertiesHolder {
         return result;
     }
 
+    public static String getPinoutBaseUrl() {
+        String propertyFileValue = INSTANCE.getProperties().getProperty("pinout_base_url");
+        log.info("pinout_base_url=" + propertyFileValue);
+        return System.getProperty("RE_PINOUT_URL", propertyFileValue);
+    }
+
+    public static String getPinoutMetaName() {
+        String propertyFileValue = INSTANCE.getProperties().getProperty("pinout_meta_name", "boards_meta.yaml");
+        log.info("pinout_meta_name=" + propertyFileValue);
+        return System.getProperty("RE_PINOUT_META", propertyFileValue);
+    }
+
     public static boolean getBoolean(String propertyName, Properties properties) {
         String flag = properties.getProperty(propertyName);
         return Boolean.TRUE.toString().equalsIgnoreCase(flag);

@@ -5,7 +5,7 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.util.Collections;
 
 public class TsProjectUpdaterSandbox {
@@ -18,3 +18,4 @@ public class TsProjectUpdaterSandbox {
         TsProjectUpdater.INSTANCE.afterTuneMigration(context);
     }
 }
+

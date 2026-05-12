@@ -4,8 +4,8 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
-import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
@@ -44,7 +44,6 @@ public class LuaScriptPanel {
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
         this.config = config;
-        ConnectionTab.installConnectAndDisconnect(context, mainPanel);
         command = AnyCommand.createField(context, config, true, true);
 
         // Upper panel: command entry, etc
@@ -68,7 +67,7 @@ public class LuaScriptPanel {
             LinkManager linkManager = context.getLinkManager();
 
             linkManager.submit(() -> {
-                BinaryProtocol bp = linkManager.getCurrentStreamState();
+                BinaryProtocol bp = linkManager.getBinaryProtocol();
                 bp.burn();
             });
         });
@@ -143,7 +142,7 @@ public class LuaScriptPanel {
                     try {
                         readFromECU();
                     } catch (Throwable e) {
-                        System.out.println(e);
+                        log.error("Unexpected" + e, e);
                     }
                 }
             });
@@ -191,7 +190,7 @@ public class LuaScriptPanel {
                 }
             });
 
-            BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
+            BinaryProtocol bp = context.getBinaryProtocol();
             StringIniField luaScript = getLuaScriptField(bp);
 
             if (newLua.length() >= luaScript.getSize()) {
@@ -253,7 +252,7 @@ public class LuaScriptPanel {
     }
 
     void readFromECU() {
-        BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
+        BinaryProtocol bp = context.getBinaryProtocol();
 
         if (bp == null) {
             setText("No ECU located");
@@ -278,7 +277,9 @@ public class LuaScriptPanel {
     static StringIniField getLuaScriptField(BinaryProtocol bp) {
         Objects.requireNonNull(bp, "BinaryProtocol");
         // todo: do we have "luaScript" as code-generated constant anywhere?
-        IniFileModel iniFile = bp.getIniFile();
+        IniFileModel iniFile = bp.getIniFileNullable();
+        if (iniFile == null)
+            return null;
         Objects.requireNonNull(iniFile, "iniFile");
         return (StringIniField) iniFile.getIniField("LUASCRIPT");
     }
@@ -296,7 +297,7 @@ public class LuaScriptPanel {
         LinkManager linkManager = context.getLinkManager();
 
         linkManager.submit(() -> {
-            BinaryProtocol bp = linkManager.getCurrentStreamState();
+            BinaryProtocol bp = linkManager.getBinaryProtocol();
 
             StringIniField field = getLuaScriptField(bp);
 

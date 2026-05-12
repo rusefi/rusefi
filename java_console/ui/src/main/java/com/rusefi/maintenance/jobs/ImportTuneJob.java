@@ -9,7 +9,7 @@ import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 
 import javax.swing.*;
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -57,3 +57,4 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
         }, onJobFinished);
     }
 }
+

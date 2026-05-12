@@ -1,6 +1,7 @@
 package com.rusefi.f4discovery;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -42,7 +43,7 @@ public class BurnCommandTest extends RusefiTestBase {
                 BinaryProtocol bp = linkManager.getBinaryProtocol();
                 ScalarIniField displacementField = (ScalarIniField) bp.getIniFile().getIniField("displacement");
                 ByteBuffer bb = wrap(new byte[4]);
-                ScalarIniField.setValue(bb, displacementField.getType(), "3", Field.NO_BIT_OFFSET, 1, 0);
+                ConfigurationImage.setScalarValue(bb, displacementField.getType(), "3", Field.NO_BIT_OFFSET, 1, 0);
                 log.info("assertWrite writeData " + Arrays.toString(bb.array()) + " " + displacementField);
                 // here we assert that write command do not break protocol
                 bp.writeInBlocks(bb.array(), 0, displacementField.getOffset(), displacementField.getSize());

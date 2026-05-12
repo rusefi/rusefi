@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
-import com.rusefi.FileLog;
+import com.devexperts.logging.FileLogger;
+import com.devexperts.logging.Logging;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -15,7 +16,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 
 /**
@@ -25,30 +29,19 @@ import java.util.List;
  * @see GaugesGridElement
  */
 public class GaugesPanel {
-    private static final Sensor[] DEFAULT_LAYOUT = {
-            Sensor.RPMValue,
-            Sensor.MAFMEASURED,
-            Sensor.COOLANT,
-            Sensor.INTAKE,
-            Sensor.TPSVALUE,
-
-            Sensor.MAPVALUE,
-//            Sensor.tCharge,
-//            Sensor.baseFuel,
-//            Sensor.runningFuel,
-
-//            Sensor.etbTarget,
-            Sensor.lastErrorCode,
-            Sensor.LAMBDAVALUE,
-            Sensor.VBATT,
-            Sensor.VEHICLESPEEDKPH,
-
+    private static final String[] DEFAULT_LAYOUT = {
+        "RPMGauge",
+        "internalMcuTemperatureGauge",
+        "CLTGauge",
+        "IATGauge",
+        "TPSGauge",
+        "MAPGauge",
+        "lastErrorCodeGauge",
+        "VBattGauge",
+        "VSSGauge",
     };
     private static final String GAUGES_ROWS = "gauges_rows";
     private static final String GAUGES_COLUMNS = "gauges_cols";
-    private static final String SHOW_MESSAGES = "show_messages";
-    private static final String SHOW_RPM = "show_rpm";
-    private static final String SPLIT_LOCATION = "SPLIT_LOCATION";
     public static final String DISABLE_LOGS = "DISABLE_LOGS";
     private static final int DEFAULT_ROWS = 3;
     private static final int DEFAULT_COLUMNS = 3;
@@ -58,60 +51,31 @@ public class GaugesPanel {
     private final GaugesGrid gauges;
     private final Node config;
     private final UIContext uiContext;
-
-    private boolean showRpmPanel;
-    private boolean showMessagesPanel;
-    private final JPanel lowerRpmPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-    /**
-     * this panel is displayed on the right
-     */
-    private final JPanel messagesPanel = new JPanel(new BorderLayout());
-    private final JSplitPane middleSplitPanel;
+    /** Tracked so we can call destroy() before replacing on grid resize. */
+    private final List<GaugesGridElement> gaugeElements = new ArrayList<>();
 
     public GaugesPanel(UIContext uiContext, final Node config) {
         this.uiContext = uiContext;
         gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
-        showRpmPanel = config.getBoolProperty(SHOW_RPM, true);
-        showMessagesPanel = config.getBoolProperty(SHOW_MESSAGES, true);
-
-        prepareMessagesPanel();
-
-        lowerRpmPanel.add(new RpmLabel(uiContext,15, false).getContent());
 
         int rows = config.getIntProperty(GAUGES_ROWS, DEFAULT_ROWS);
         int columns = config.getIntProperty(GAUGES_COLUMNS, DEFAULT_COLUMNS);
 
         setSensorGridDimensions(rows, columns);
 
-        middleSplitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, createMiddleLeftPanel(), messagesPanel);
 
         content.add(createTopPanel(config), BorderLayout.NORTH);
 
-        content.add(middleSplitPanel, BorderLayout.CENTER);
+        content.add(createMiddleLeftPanel(), BorderLayout.CENTER);
 
         content.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
-
-        applyShowFlags();
-        final int splitLocation = config.getIntProperty(SPLIT_LOCATION, -1);
-        if (splitLocation != -1) {
-            // this does not work. maybe because panel is not displayed yet? todo: fix it so that splitter location
-            // would be persisted in the config
-            middleSplitPanel.setDividerLocation(splitLocation);
-        }
-        middleSplitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent pce) {
-                config.setProperty(SPLIT_LOCATION, middleSplitPanel.getDividerLocation());
-            }
-        });
     }
 
     @NotNull
     private JPanel createMiddleLeftPanel() {
         JPanel middleLeftPanel = new JPanel(new BorderLayout());
         middleLeftPanel.add(gauges.panel, BorderLayout.CENTER);
-        middleLeftPanel.add(lowerRpmPanel, BorderLayout.SOUTH);
         return middleLeftPanel;
     }
 
@@ -140,42 +104,8 @@ public class GaugesPanel {
         });
         rightUpperPanel.add(selector);
 
-        JButton menuButton = new PopupMenuButton("#", createMenu(config));
-        rightUpperPanel.add(menuButton);
+
         return rightUpperPanel;
-    }
-
-    @NotNull
-    private JPopupMenu createMenu(final Node config) {
-        JPopupMenu menu = new JPopupMenu();
-
-        final JCheckBoxMenuItem showRpmItem = new JCheckBoxMenuItem("Show RPM");
-        final JCheckBoxMenuItem showCommandsItem = new JCheckBoxMenuItem("Show Commands");
-        showRpmItem.setSelected(showRpmPanel);
-        ActionListener showCheckboxListener = e -> {
-            showRpmPanel = showRpmItem.isSelected();
-            showMessagesPanel = showCommandsItem.isSelected();
-            config.setProperty(SHOW_RPM, showRpmPanel);
-            config.setProperty(SHOW_MESSAGES, showMessagesPanel);
-            applyShowFlags();
-            // todo: this is not needed if we show/hide RPM panel. TODO: split into two different listeners
-            middleSplitPanel.setDividerLocation(0.5);
-        };
-        showRpmItem.addActionListener(showCheckboxListener);
-        showCommandsItem.addActionListener(showCheckboxListener);
-
-        menu.add(showRpmItem);
-        showCommandsItem.setSelected(showMessagesPanel);
-        menu.add(showCommandsItem);
-        menu.add(new JPopupMenu.Separator());
-        menu.add(new JPopupMenu("Reset Config")); // todo looks like not working
-        return menu;
-    }
-
-    private void prepareMessagesPanel() {
-        MessagesPanel mp = new MessagesPanel(null, config);
-        messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
-        messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
     }
 
     @NotNull
@@ -203,7 +133,7 @@ public class GaugesPanel {
     private JButton createSaveImageButton() {
         JButton saveImageButton = UiUtils.createSaveImageButton();
         saveImageButton.addActionListener(e -> {
-            String fileName = FileLog.getDate() + "_gauges.png";
+            String fileName = FileLogger.getDate() + "_gauges.png";
 
             UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
         });
@@ -211,27 +141,34 @@ public class GaugesPanel {
     }
 
     private void setSensorGridDimensions(int rows, int columns) {
+        // Destroy old elements before discarding them so their ConnectionStatusLogic
+        // listeners are removed and their Radial BufferedImage data can be GC'd.
+        for (GaugesGridElement element : gaugeElements) {
+            element.destroy();
+        }
+        gaugeElements.clear();
+
         gauges.setLayout(rows, columns);
 
+        List<String> defaultLayout = getDefaultLayout();
         for (int i = 0; i < rows * columns; i++) {
             // sometimes grid is quite large so we shall be careful with default sensor index
-            Sensor defaultSensor = DEFAULT_LAYOUT[Math.min(i, DEFAULT_LAYOUT.length - 1)];
-            Component element = GaugesGridElement.read(uiContext, config.getChild("element_" + i), defaultSensor);
-
-            gauges.panel.add(element);
+            String defaultGaugeName = defaultLayout.get(Math.min(i, defaultLayout.size() - 1));
+            GaugesGridElement element = GaugesGridElement.create(uiContext, config.getChild("element_" + i), defaultGaugeName);
+            gaugeElements.add(element);
+            gauges.panel.add(element.getContent());
         }
 
         saveConfig(rows, columns);
     }
 
+    private List<String> getDefaultLayout() {
+        return Arrays.asList(DEFAULT_LAYOUT);
+    }
+
     private void saveConfig(int rows, int columns) {
         config.setProperty(GAUGES_ROWS, rows);
         config.setProperty(GAUGES_COLUMNS, columns);
-    }
-
-    private void applyShowFlags() {
-        lowerRpmPanel.setVisible(showRpmPanel);
-        messagesPanel.setVisible(showMessagesPanel);
     }
 
     public JComponent getContent() {

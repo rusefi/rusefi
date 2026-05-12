@@ -1,22 +1,45 @@
 package com.rusefi.core;
 
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
-public class SensorsHolder implements ISensorHolder {
-    private final Map<Sensor, Double> values = new EnumMap<>(Sensor.class);
+public class SensorsHolder {
+    // Keys are normalized to lower-case (Locale.US) so that "TPSValue", "tpsvalue", "TPSVALUE"
+    // all resolve to the same entry, with O(1) HashMap lookup instead of O(log N) TreeMap comparison.
+    // Values stored as single-element double[] to avoid boxing on every update.
+    // The array is allocated once per channel name and mutated in place thereafter.
+    // todo: probably not worth migrating to AtomicDouble with longBitsToDouble
+    private final Map<String, double[]> values = new HashMap<>();
+
+    public Set<String> getSensorNames() {
+        return values.keySet();
+    }
 
     public double getValue(Sensor sensor) {
-        Double value = values.get(sensor);
-        if (value == null)
-            return Double.NaN;
-        return value;
+        return getValue(sensor.getNativeName());
+    }
+
+    public double getValue(String sensorName) {
+        double[] cell = values.get(sensorName.toLowerCase(Locale.US));
+        return cell == null ? Double.NaN : cell[0];
     }
 
     public boolean setValue(double value, final Sensor sensor) {
-        Double oldValue = values.get(sensor);
-        boolean isUpdated = oldValue == null || !oldValue.equals(value);
-        values.put(sensor, value);
+        // "RPMGauge" => "RPMValue"
+        return setValue(value, sensor.getNativeName());
+    }
+
+    public boolean setValue(double value, String sensorName) {
+        String key = sensorName.toLowerCase(Locale.US);
+        double[] cell = values.get(key);
+        if (cell == null) {
+            values.put(key, new double[]{value});
+            return true;
+        }
+        boolean isUpdated = cell[0] != value;
+        cell[0] = value;
         return isUpdated;
     }
 }

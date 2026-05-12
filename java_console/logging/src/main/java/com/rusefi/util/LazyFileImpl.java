@@ -2,9 +2,16 @@ package com.rusefi.util;
 
 import com.devexperts.logging.Logging;
 
+import com.github.difflib.DiffUtils;
+import com.github.difflib.UnifiedDiffUtils;
+import com.github.difflib.patch.*;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -17,12 +24,18 @@ public class LazyFileImpl implements LazyFile {
     private static final Logging log = getLogging(LazyFileImpl.class);
 
     private final String filename;
+    private final String patchfile;
 
     private final StringBuffer content = new StringBuffer();
     private final StringBuffer contentWithoutTag = new StringBuffer();
 
     public LazyFileImpl(String filename) {
+        this(filename, null);
+    }
+
+		public LazyFileImpl(String filename, String patchfile) {
         this.filename = filename;
+				this.patchfile = patchfile;
     }
 
     @Override
@@ -31,14 +44,14 @@ public class LazyFileImpl implements LazyFile {
         String[] lines = line.split("\\r?\\n");
         for (String subLine : lines) {
             if (!subLine.toLowerCase().contains(LazyFile.LAZY_FILE_TAG_LOWER)) {
-                contentWithoutTag.append(subLine);
+                contentWithoutTag.append(subLine + "\n");
             }
         }
     }
 
     public static String unifySpaces(String line) {
         line = line.replace("\r", "");
-        return line.replaceAll("\n[\n]*", "");
+        return line.replaceAll("\n[\n]+", "\n");
     }
 
     @Override
@@ -62,8 +75,26 @@ public class LazyFileImpl implements LazyFile {
                 break;
             }
         }
+
+				if (patchfile != null && !patchfile.trim().isEmpty()) {
+						List<String> fileLines = Arrays.asList(fileContent.split("\\r?\\n"));
+						List<String> newLines  = Arrays.asList(newContent.split("\\r?\\n"));
+
+						Patch<String> patch = DiffUtils.diff(fileLines, newLines);
+						List<String> unifiedDiff = UnifiedDiffUtils.generateUnifiedDiff(
+																																						"a/" + filename,
+																																						"b/" + filename,
+																																						fileLines,
+																																						patch,
+																																						3
+																																						);
+
+						Files.write(Paths.get(patchfile), unifiedDiff,
+												StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				}
+
         Files.createDirectories(Paths.get(new File(filename).getParent()));
-        Writer fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), IoUtils.CHARSET));
+        Writer fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), LazyFile.CHARSET));
         fw.write(content.toString());
         fw.close();
     }
@@ -75,13 +106,18 @@ public class LazyFileImpl implements LazyFile {
             log.info(filename + " does not exist considering empty current content");
             return "";
         }
-        Scanner in = new Scanner(Paths.get(filename), IoUtils.CHARSET.name());
+        Scanner in = new Scanner(Paths.get(filename), LazyFile.CHARSET.name());
         Pattern pat = Pattern.compile(".*\\R|.+\\z");
         String line;
         StringBuilder sb = new StringBuilder();
         while ((line = in.findWithinHorizon(pat, 0)) != null) {
-            if (!line.toLowerCase().contains(LazyFile.LAZY_FILE_TAG_LOWER))
-                sb.append(line);
+            // Split and process each line the same way write() does
+            String[] lines = line.split("\\r?\\n");
+            for (String subLine : lines) {
+                if (!subLine.toLowerCase().contains(LazyFile.LAZY_FILE_TAG_LOWER)) {
+                    sb.append(subLine).append("\n");
+                }
+            }
         }
         return sb.toString();
     }
