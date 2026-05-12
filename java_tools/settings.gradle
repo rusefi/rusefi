@@ -10,6 +10,12 @@ project(':trigger-image').projectDir = new File(rootRelativePath + 'java_tools/t
 include ':tune-tools'
 project(':tune-tools').projectDir = new File(rootRelativePath + 'java_tools/tune-tools')
 
+include ':version'
+project(':version').projectDir = new File(rootRelativePath + 'java_tools/version')
+
+include ':msq-file'
+project(':msq-file').projectDir = new File(rootRelativePath + 'java_tools/msq-file')
+
 include ':proxy_server'
 // gradle naming convention does not like '_' symbol
 project(':proxy_server').projectDir = new File(rootRelativePath + 'java_tools/proxy_server')

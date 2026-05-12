@@ -21,6 +21,7 @@ dependencies {
     api project(':peak-can-basic')
     api project(':core_io')
     api project(':logging')
+    api project(':msq-file')
 
     api group: 'com.fazecast', name: 'jSerialComm', version: '2.11.2'
     implementation group: 'tel.schich', name: 'javacan-core', version: "$javaCanVersion"
