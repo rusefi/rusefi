@@ -103,4 +103,6 @@ public interface IniFileModel {
     List<String> getLambdaTargetTables();
 
     List<VeAnalyzeFilter> getVeAnalyzeFilters();
+
+    List<EventTriggerModel> getEventTriggers();
 }

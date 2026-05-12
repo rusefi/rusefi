@@ -43,7 +43,8 @@ public class IniFileReader {
                 controllerCommands,
                 veAnalyzeMaps,
                 lambdaTargetTables,
-                veAnalyzeFilters);
+                veAnalyzeFilters,
+                eventTriggers);
     }
     private static final Logging log = Logging.getLogging(IniFileReader.class);
     public static final String RUSEFI_INI_PREFIX = "rusefi";
@@ -120,6 +121,9 @@ public class IniFileReader {
     private final List<VeAnalyzeMap> veAnalyzeMaps = new ArrayList<>();
     private final List<String> lambdaTargetTables = new ArrayList<>();
     private final List<VeAnalyzeFilter> veAnalyzeFilters = new ArrayList<>();
+
+    private boolean isEventTriggersSection = false;
+    private final List<EventTriggerModel> eventTriggers = new ArrayList<>();
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -246,6 +250,7 @@ public class IniFileReader {
                 isControllerCommandsSection = first.equalsIgnoreCase("[ControllerCommands]");
                 isFrontPageSection = first.equalsIgnoreCase("[FrontPage]");
                 isVeAnalyzeSection = first.equalsIgnoreCase("[VeAnalyze]");
+                isEventTriggersSection = first.equalsIgnoreCase("[EventTriggers]");
 
                 if (wasGaugeSection && !isGaugeConfigurationsSection) {
                     finishGaugeCategory();
@@ -291,6 +296,9 @@ public class IniFileReader {
                 return;
             } else if (isVeAnalyzeSection) {
                 handleVeAnalyze(list);
+                return;
+            } else if (isEventTriggersSection) {
+                handleEventTrigger(list);
                 return;
             } else if (isControllerCommandsSection) {
                 if (list.size() >= 2) {
@@ -912,6 +920,26 @@ public class IniFileReader {
                 veAnalyzeFilters.add(new VeAnalyzeFilter(name, displayName, outputChannel, operator, defaultValue, userAdjustable));
             }
         }
+    }
+
+    private void handleEventTrigger(LinkedList<String> list) {
+        if (list.size() < 3)
+            return;
+        if (!list.get(0).equalsIgnoreCase("triggeredPageRefresh"))
+            return;
+        int page;
+        try {
+            page = Integer.parseInt(list.get(1));
+        } catch (NumberFormatException e) {
+            return;
+        }
+        // Tokens after the page number form the expression; rejoin them with space.
+        StringBuilder expr = new StringBuilder();
+        for (int i = 2; i < list.size(); i++) {
+            if (i > 2) expr.append(", ");
+            expr.append(list.get(i));
+        }
+        eventTriggers.add(new EventTriggerModel(page, expr.toString().trim()));
     }
 
     private void handleFrontPage(LinkedList<String> list) {
