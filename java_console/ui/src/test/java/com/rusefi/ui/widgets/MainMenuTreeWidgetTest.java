@@ -460,6 +460,7 @@ todo: spllit into smaller tests?
             @Override public List<VeAnalyzeMap> getVeAnalyzeMaps() { return java.util.Collections.emptyList(); }
             @Override public List<String> getLambdaTargetTables() { return java.util.Collections.emptyList(); }
             @Override public List<VeAnalyzeFilter> getVeAnalyzeFilters() { return java.util.Collections.emptyList(); }
+            @Override public List<com.opensr5.ini.EventTriggerModel> getEventTriggers() { return java.util.Collections.emptyList(); }
         };
 
         com.rusefi.ui.widgets.tune.CurveWidget widget = new com.rusefi.ui.widgets.tune.CurveWidget(curveModel, model, null);
