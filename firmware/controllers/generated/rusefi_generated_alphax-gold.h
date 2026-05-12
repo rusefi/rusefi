@@ -1568,7 +1568,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 237358373
+#define SIGNATURE_HASH 3018356438
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1879,6 +1879,8 @@
 #define TS_COMPOSITE_DISABLE 2
 #define TS_COMPOSITE_ENABLE 1
 #define TS_COMPOSITE_READ 3
+#define TS_CRC32_CHECK_COMMAND 'K'
+#define TS_CRC32_CHECK_COMMAND_char K
 #define TS_CRC_CHECK_COMMAND 'k'
 #define TS_CRC_CHECK_COMMAND_char k
 #define ts_ecu_locking true
@@ -1890,8 +1892,6 @@
 #define TS_GET_CONFIG_ERROR_char e
 #define TS_GET_FIRMWARE_VERSION 'V'
 #define TS_GET_FIRMWARE_VERSION_char V
-#define TS_GET_IMAGE_COMMAND '('
-#define TS_GET_IMAGE_COMMAND_char (
 #define TS_GET_OUTPUTS_SIZE '4'
 #define TS_GET_OUTPUTS_SIZE_char 4
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
@@ -1921,6 +1921,8 @@
 #define TS_QUERY_BOOTLOADER_OPENBLT 1
 #define TS_QUERY_COMMAND 'Q'
 #define TS_QUERY_COMMAND_char Q
+#define TS_READ32_COMMAND '('
+#define TS_READ32_COMMAND_char (
 #define TS_READ_COMMAND 'R'
 #define TS_READ_COMMAND_char R
 #define TS_RESPONSE_BURN_OK 4
@@ -2179,7 +2181,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.05.11.alphax-gold.237358373"
+#define TS_SIGNATURE "rusEFI master.2026.05.12.alphax-gold.3018356438"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

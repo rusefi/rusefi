@@ -1458,7 +1458,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1147052749;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1747,12 +1746,12 @@ public class VariableRegistryValues {
 	public static final int TS_COMPOSITE_DISABLE = 2;
 	public static final int TS_COMPOSITE_ENABLE = 1;
 	public static final int TS_COMPOSITE_READ = 3;
+	public static final char TS_CRC32_CHECK_COMMAND = 'K';
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
-	public static final char TS_GET_IMAGE_COMMAND = '(';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
 	public static final char TS_GET_SCATTERED_GET_COMMAND = '9';
@@ -1769,6 +1768,7 @@ public class VariableRegistryValues {
 	public static final int TS_QUERY_BOOTLOADER_NONE = 0;
 	public static final int TS_QUERY_BOOTLOADER_OPENBLT = 1;
 	public static final char TS_QUERY_COMMAND = 'Q';
+	public static final char TS_READ32_COMMAND = '(';
 	public static final char TS_READ_COMMAND = 'R';
 	public static final int TS_RESPONSE_BURN_OK = 4;
 	public static final int TS_RESPONSE_CRC_FAILURE = 0x82;
@@ -1780,7 +1780,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.05.11.mre-legacy_f4.1147052749";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.05.12.mre-legacy_f4.4187167038";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2132;
