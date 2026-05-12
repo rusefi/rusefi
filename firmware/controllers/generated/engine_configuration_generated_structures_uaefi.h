@@ -231,7 +231,7 @@ struct ltft_s {
 	 * units: sec
 	 * offset 8
 	 */
-	scaled_channel<uint16_t, 1, 1> timeConstant[STFT_CELL_COUNT] = {};
+	scaled_channel<uint16_t, 10, 1> timeConstant[STFT_CELL_COUNT] = {};
 };
 static_assert(sizeof(ltft_s) == 16);
 
