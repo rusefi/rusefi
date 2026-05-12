@@ -1,9 +1,22 @@
+#!/bin/bash
+
 # this script is helps to back-port complete master java into some very old branch by just dumping it there
 
-# todo make this bash script
+TARGET_DIR=${1:-../rusefi.2}
 
-TARGET_DIR=../rusefi.2
+if [ ! -d "$TARGET_DIR" ]; then
+  echo "Target directory $TARGET_DIR does not exist"
+  exit 1
+fi
 
-remoge all java files in target dir
+echo "Back-porting Java to $TARGET_DIR"
 
-copy all java
+# remove all java files in target dir
+echo "Removing old Java files..."
+find "$TARGET_DIR/java_console" "$TARGET_DIR/java_tools" -name "*.java" -type f -delete 2>/dev/null
+
+# copy all java
+echo "Copying new Java files..."
+find java_console java_tools -name "*.java" | rsync -avR --files-from=- . "$TARGET_DIR/"
+
+echo "Done!"
