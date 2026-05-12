@@ -15,6 +15,7 @@ import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.ui.widgets.JSplitButton;
 import com.rusefi.updater.OpenbltDetectorStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +33,6 @@ import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortType.OpenBlt;
-import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.maintenance.CalibrationsHelper.*;
 import static com.rusefi.maintenance.CallbacksWaitingUtil.TOTAL_WAIT_SECONDS;
 import static com.rusefi.maintenance.CallbacksWaitingUtil.waitForPredicate;
@@ -44,37 +44,22 @@ public class ProgramSelector {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
-    private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
+    private final JSplitButton splitButton = new JSplitButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
     private final ConnectivityContext connectivityContext;
+    private final JComboBox<PortResult> comboPorts;
     @Nullable
     private SingleAsyncJobExecutor jobExecutor;
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
+        this.comboPorts = comboPorts;
         content.add(updateModeAndButton, BorderLayout.NORTH);
         content.add(noHardware, BorderLayout.SOUTH);
 
-        String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
-
-        parseDisplayText(persistedMode).ifPresent(updateModeComboBox::setSelectedItem);
-
-        JButton updateFirmwareButton = createUpdateFirmwareButton();
-
         updateModeAndButton.setVisible(false);
-        updateModeAndButton.add(updateModeComboBox);
-        updateModeAndButton.add(updateFirmwareButton);
+        updateModeAndButton.add(splitButton);
 
-        updateFirmwareButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                final UpdateMode selectedMode = (UpdateMode) updateModeComboBox.getSelectedItem();
-                final PortResult selectedPort = ((PortResult) comboPorts.getSelectedItem());
-
-                final String persistedValue = (selectedMode != null ? selectedMode.displayText : null);
-                getConfig().getRoot().setProperty(getClass().getSimpleName(), persistedValue);
-                executeJob(comboPorts, selectedMode, selectedPort);
-            }
-        });
+        splitButton.addActionListener(e -> executeJob(splitButton, OPENBLT_AUTO, (PortResult) comboPorts.getSelectedItem()));
     }
 
     private void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {
@@ -374,64 +359,54 @@ public class ProgramSelector {
         boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
         boolean hasDfuDevice = currentHardware.isDfuFound();
 
-        Object updateModeToRestore = updateModeComboBox.getSelectedItem();
-        updateModeComboBox.removeAllItems();
+        JPopupMenu popupMenu = new JPopupMenu();
+
         if (FileLog.isWindows()) {
             boolean requireBlt = FindFileHelper.isObfuscated();
 
             if (!requireBlt) {
                 if (hasSerialPorts) {
-                    updateModeComboBox.addItem(DFU_AUTO);
+                    addMenuItem(popupMenu, DFU_AUTO);
                 }
                 if (hasDfuDevice) {
-                    updateModeComboBox.addItem(DFU_MANUAL);
-                    updateModeComboBox.addItem(DFU_ERASE);
+                    addMenuItem(popupMenu, DFU_MANUAL);
+                    addMenuItem(popupMenu, DFU_ERASE);
                     if (DfuFlasher.haveBootloaderBinFile()) {
-                        updateModeComboBox.addItem(INSTALL_OPENBLT);
+                        addMenuItem(popupMenu, INSTALL_OPENBLT);
                     }
                 }
-                updateModeComboBox.addItem(DFU_SWITCH);
-                if (currentHardware.isStLinkConnected())
-                    updateModeComboBox.addItem(ST_LINK);
+                addMenuItem(popupMenu, DFU_SWITCH);
+                if (currentHardware.isStLinkConnected()) {
+                    addMenuItem(popupMenu, ST_LINK);
+                }
             }
-            if (currentHardware.isPCANConnected())
-                updateModeComboBox.addItem(OPENBLT_CAN);
-            // todo: detect PCAN mode.addItem(OPENBLT_CAN);
+            if (currentHardware.isPCANConnected()) {
+                addMenuItem(popupMenu, OPENBLT_CAN);
+            }
         }
 
         if (hasSerialPorts) {
-            updateModeComboBox.addItem(OPENBLT_AUTO);
-            updateModeComboBox.addItem(OPENBLT_SWITCH);
-            updateModeComboBox.addItem(OPENBLT_MANUAL);
-
-            List<PortResult> listOfBootloaders = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
-            if (!listOfBootloaders.isEmpty()) {
-                updateModeToRestore = OPENBLT_MANUAL;
-            }
+            addMenuItem(popupMenu, OPENBLT_SWITCH);
+            addMenuItem(popupMenu, OPENBLT_MANUAL);
         }
 
-        if (updateModeToRestore != null) {
-            updateModeComboBox.setSelectedItem(updateModeToRestore);
-        }
+        int menuItemCount = popupMenu.getComponentCount();
+        splitButton.setPopupMenu(menuItemCount > 0 ? popupMenu : null);
+        splitButton.setMainButtonEnabled(hasSerialPorts);
+        splitButton.setArrowButtonEnabled(menuItemCount > 0);
 
-        // When a DFU device is present, prefer DFU_MANUAL over DFU_SWITCH (which is the
-        // default fallback shown before any device is detected). This handles both the first
-        // detection and the case where hasDfuDevice briefly flipped to false then back to true,
-        // leaving DFU_SWITCH restored instead of DFU_MANUAL. see #9157
-        if (hasDfuDevice && updateModeComboBox.getSelectedItem() == DFU_SWITCH) {
-            updateModeComboBox.setSelectedItem(DFU_MANUAL);
-        }
-
-        AutoupdateUtil.trueLayoutAndRepaint(updateModeComboBox);
+        AutoupdateUtil.trueLayoutAndRepaint(splitButton);
         AutoupdateUtil.trueLayoutAndRepaint(content);
+    }
+
+    private void addMenuItem(JPopupMenu menu, UpdateMode mode) {
+        JMenuItem item = new JMenuItem(mode.displayText);
+        item.addActionListener(e -> executeJob(splitButton, mode, (PortResult) comboPorts.getSelectedItem()));
+        menu.add(item);
     }
 
     @NotNull
     public static JButton createUpdateFirmwareButton() {
         return new JButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
-    }
-
-    public void setMode(UpdateMode updateMode) {
-        updateModeComboBox.setSelectedItem(updateMode);
     }
 }
