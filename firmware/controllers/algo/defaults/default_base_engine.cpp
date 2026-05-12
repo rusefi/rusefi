@@ -294,7 +294,7 @@ void setDefaultBaseEngine() {
   setLinearCurve(config->maxKnockRetardLoadBins, 0, 100, 1);
   setRpmTableBin(config->knockGainRpmBins);
   setLinearCurve(config->knockGainLoadBins, 0, 100, 1);
-  setTable(config->maxKnockRetardTable, 20);
+  setTable(config->maxKnockRetardTable, 2);
 
 	// Trigger
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
