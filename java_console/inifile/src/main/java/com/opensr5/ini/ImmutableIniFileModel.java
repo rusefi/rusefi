@@ -31,6 +31,7 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final List<VeAnalyzeMap> veAnalyzeMaps;
     private final List<String> lambdaTargetTables;
     private final List<VeAnalyzeFilter> veAnalyzeFilters;
+    private final List<EventTriggerModel> eventTriggers;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
@@ -73,7 +74,8 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, String> controllerCommands,
                                  List<VeAnalyzeMap> veAnalyzeMaps,
                                  List<String> lambdaTargetTables,
-                                 List<VeAnalyzeFilter> veAnalyzeFilters) {
+                                 List<VeAnalyzeFilter> veAnalyzeFilters,
+                                 List<EventTriggerModel> eventTriggers) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -116,6 +118,7 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.veAnalyzeMaps = Collections.unmodifiableList(new ArrayList<>(veAnalyzeMaps));
         this.lambdaTargetTables = Collections.unmodifiableList(new ArrayList<>(lambdaTargetTables));
         this.veAnalyzeFilters = Collections.unmodifiableList(new ArrayList<>(veAnalyzeFilters));
+        this.eventTriggers = Collections.unmodifiableList(new ArrayList<>(eventTriggers));
     }
 
     /**
@@ -353,5 +356,10 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public List<VeAnalyzeFilter> getVeAnalyzeFilters() {
         return veAnalyzeFilters;
+    }
+
+    @Override
+    public List<EventTriggerModel> getEventTriggers() {
+        return eventTriggers;
     }
 }

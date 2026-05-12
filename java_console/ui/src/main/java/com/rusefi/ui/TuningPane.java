@@ -1,10 +1,15 @@
 package com.rusefi.ui;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageMetaVersion0_0;
+import com.opensr5.ConfigurationImageWithMeta;
+import com.opensr5.ini.EventTriggerModel;
+import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.FrontPageModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
@@ -17,6 +22,8 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -84,6 +91,58 @@ public class TuningPane {
             if (navigateToPinout != null) navigateToPinout.accept(value);
         });
 
+        // Per-trigger edge-detection state: maps trigger index → previous boolean value.
+        // ConcurrentHashMap because onSensorUpdate runs on the protocol thread while
+        // the disconnect handler clears it from the EDT.
+        final ConcurrentHashMap<Integer, Boolean> triggerPrevValues = new ConcurrentHashMap<>();
+
+        SensorCentral.ResponseListener eventTriggerListener = () -> {
+            IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+            if (ini == null) return;
+            List<EventTriggerModel> triggers = ini.getEventTriggers();
+            if (triggers.isEmpty()) return;
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp == null) return;
+
+            Map<String, Double> channels = SensorCentral.getInstance().getOutputChannelMap();
+
+            for (int i = 0; i < triggers.size(); i++) {
+                EventTriggerModel trigger = triggers.get(i);
+                Double val = ExpressionEvaluator.tryEvaluateWithContext(trigger.getExpression(), channels);
+                boolean current = val != null && val != 0.0;
+                Boolean prev = triggerPrevValues.put(i, current);
+                if (prev == null) {
+                    // First observed frame: initialize state without firing.
+                    continue;
+                }
+                if (!prev && current) {
+                    final int page = trigger.getPage();
+                    if (page == 1) {
+                        final int pageSize = ini.getMetaInfo().getPageSize(0);
+                        final String signature = ini.getMetaInfo().getSignature();
+                        uiContext.getLinkManager().submit(() -> {
+                            ConfigurationImageWithMeta result = bp.readFullImageFromController(
+                                    new ConfigurationImageMetaVersion0_0(pageSize, signature));
+                            if (result.isEmpty()) return;
+                            ConfigurationImage newImage = result.getConfigurationImage();
+                            bp.setConfigurationImage(newImage);
+                            SwingUtilities.invokeLater(() -> {
+                                toolbar.onDisconnect();
+                                sessionImage.set(newImage.clone());
+                                String key = currentKey.get();
+                                if (key != null) {
+                                    right.update(key, ini, sessionImage.get());
+                                }
+                            });
+                        });
+                    }
+                    // Pages 3/4 are not represented as separate ConfigurationImages in the
+                    // Java console yet; those triggers are accepted but currently no-op.
+                }
+            }
+        };
+        SensorCentral.getInstance().addListener(eventTriggerListener);
+
         // When the ECU disconnects (e.g. after a firmware flash or board swap), drop all stale
         // session state so the next connection re-reads calibrations fresh from the new board.
         // Without this, sessionImage/workingImage from the old board (possibly a different config
@@ -95,9 +154,11 @@ public class TuningPane {
                     toolbar.onDisconnect();
                     right.reset();
                     sessionImage.set(null);
+                    triggerPrevValues.clear();
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
+                    triggerPrevValues.clear();
                     String key = currentKey.get();
                     if (key == null) return;
                     BinaryProtocol bp = uiContext.getBinaryProtocol();
