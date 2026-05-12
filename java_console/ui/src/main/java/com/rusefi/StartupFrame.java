@@ -102,7 +102,6 @@ public class StartupFrame {
     private final StatusAnimation status;
     private final JButton connectButton = new JButton("Connect", new ImageIcon(getClass().getResource("/com/rusefi/connect48.png")));
     private ProgramSelector selector;
-    private boolean firstTimeHasEcuWithOpenBlt = true;
     private boolean firstTimeAutoConnect = true;
 
     private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar();
@@ -484,12 +483,6 @@ public class StartupFrame {
         updateConnectButtonState();
 
         noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
-
-        boolean hasEcuWithOpenBlt = !ports.stream().filter(portResult -> portResult.type == EcuWithOpenblt).collect(Collectors.toList()).isEmpty();
-        if (hasEcuWithOpenBlt && firstTimeHasEcuWithOpenBlt) {
-            selector.setMode(UpdateMode.OPENBLT_AUTO);
-            firstTimeHasEcuWithOpenBlt = false;
-        }
 
         AutoupdateUtil.trueLayoutAndRepaint(connectPanel);
 
