@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260510</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260512</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -3017,12 +3017,12 @@ end</constant>
          7000
 </constant>
         <constant cols="6" digits="2" name="maxKnockRetardTable" rows="6" units="deg">
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
 </constant>
         <constant digits="1" name="maxOilPressureTimeout" units="sec">0.0</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
@@ -5079,7 +5079,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.11.f407-discovery.1054795294" version="5.0"/>
+    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.12.f407-discovery.3990384586" version="5.0"/>
     <bibliography author="rusEFI 20260510" writeDate="date"/>
     <settings/>
     <userComments/>

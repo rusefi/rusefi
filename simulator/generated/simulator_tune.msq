@@ -3016,12 +3016,12 @@ end</constant>
          7000
 </constant>
         <constant cols="6" digits="2" name="maxKnockRetardTable" rows="6" units="deg">
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
 </constant>
         <constant digits="1" name="maxOilPressureTimeout" units="sec">0.0</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
