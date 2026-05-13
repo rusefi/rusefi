@@ -37,7 +37,7 @@ public class InjectorFlowPanel extends AbstractWizardStep {
      */
     private static final byte[] CMD_PRESET_INJECTOR_PAYLOAD = ByteBuffer.allocate(4)
         .putShort((short) VariableRegistryValues.ts_command_e_TS_BOARD_ACTION)
-        .putShort((short) VariableRegistryValues.BOARD_ACTION_INJECTOR_PRESET)
+        .putShort((short) 0x302)  // BOARD_ACTION_INJECTOR_PRESET — not defined in LTS firmware config
         .array();
 
     private final UIContext uiContext;
