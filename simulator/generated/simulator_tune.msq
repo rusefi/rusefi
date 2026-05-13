@@ -1181,7 +1181,7 @@
         <constant digits="1" name="fuelTempSensor_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="fuelTempSensor_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="fuelTempSensor_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
-        <constant cols="1" digits="0" name="fuelTrimLoadBins" rows="4" units="">
+        <constant cols="1" digits="0" name="fuelTrimLoadBins" rows="4" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}">
          20
          50
          80
@@ -2067,7 +2067,7 @@
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant name="ignBlends4_yAxisOverride">"Zero"</constant>
-        <constant cols="1" digits="0" name="ignitionCltCorrLoadBins" rows="5" units="Load">
+        <constant cols="1" digits="0" name="ignitionCltCorrLoadBins" rows="5" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          0
          35
          70
@@ -2089,7 +2089,7 @@
          60
 </constant>
         <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">6.0</constant>
-        <constant cols="1" digits="0" name="ignitionIatCorrLoadBins" rows="8" units="Load">
+        <constant cols="1" digits="0" name="ignitionIatCorrLoadBins" rows="8" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          0
          20
          40
@@ -2192,7 +2192,7 @@
         <constant name="ignKeyAdcChannel">"Disabled"</constant>
         <constant digits="0" name="ignKeyAdcDivider" units="">0</constant>
         <constant name="ignOverrideMode">"None"</constant>
-        <constant cols="1" digits="0" name="ignTrimLoadBins" rows="4" units="">
+        <constant cols="1" digits="0" name="ignTrimLoadBins" rows="4" units="{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}">
          20
          50
          80
@@ -2399,7 +2399,7 @@
          0 0 0 0 0 0
          0 0 0 0 0 0
 </constant>
-        <constant cols="1" digits="0" name="injPhaseLoadBins" rows="6" units="Load">
+        <constant cols="1" digits="0" name="injPhaseLoadBins" rows="6" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          10
          40
          70
@@ -4478,7 +4478,7 @@ end</constant>
         <constant name="trailingCoilPins7">"NONE"</constant>
         <constant name="trailingCoilPins8">"NONE"</constant>
         <constant name="trailingCoilPins9">"NONE"</constant>
-        <constant cols="1" digits="0" name="trailingSparkLoadBins" rows="4" units="Load">
+        <constant cols="1" digits="0" name="trailingSparkLoadBins" rows="4" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          20
          45
          75
@@ -5078,7 +5078,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.13.f407-discovery.2143219276" version="5.0"/>
+    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.13.f407-discovery.2595160601" version="5.0"/>
     <bibliography author="rusEFI 20260510" writeDate="date"/>
     <settings/>
     <userComments/>
