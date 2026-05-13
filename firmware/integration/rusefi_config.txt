@@ -1969,7 +1969,7 @@ float[TMF_RATIO_SIZE x TMF_SIZE] tmfTable;;"", 1, 0, 0, 255, 2
 
 	int16_t[CLT_TIMING_LOAD_AXIS_SIZE x CLT_TIMING_TEMP_AXIS_SIZE] autoscale ignitionCltCorrTable;;"deg", 0.1, 0, -50, 50, 1
     int16_t[CLT_TIMING_TEMP_AXIS_SIZE] autoscale ignitionCltCorrTempBins;CLT-based timing correction;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
-    uint8_t[CLT_TIMING_LOAD_AXIS_SIZE] autoscale ignitionCltCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+    uint8_t[CLT_TIMING_LOAD_AXIS_SIZE] autoscale ignitionCltCorrLoadBins;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 5 : 5 * @@UNITS_KPA_TO_PSI@@}, 0, 0, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 
 
 	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -10000, 10000, 3
@@ -2057,12 +2057,12 @@ float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
 int16_t[IAT_IGN_CORR_LOAD_COUNT x IAT_IGN_CORR_TEMP_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -50, 50, 1
 int8_t[IAT_IGN_CORR_TEMP_COUNT] ignitionIatCorrTempBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? 120 : 248}, 0
-uint8_t[IAT_IGN_CORR_LOAD_COUNT] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+uint8_t[IAT_IGN_CORR_LOAD_COUNT] autoscale ignitionIatCorrLoadBins;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 5 : 5 * @@UNITS_KPA_TO_PSI@@}, 0, 0, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 
 #define INJ_PHASE_LOAD_COUNT 16
 #define INJ_PHASE_RPM_COUNT 16
 int16_t[INJ_PHASE_LOAD_COUNT x INJ_PHASE_RPM_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
-uint16_t[INJ_PHASE_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+uint16_t[INJ_PHASE_LOAD_COUNT] injPhaseLoadBins;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 uint16_t[INJ_PHASE_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
@@ -2133,12 +2133,12 @@ struct fuel_cyl_trim_s
 end_struct
 
 ! All ign trim tables share axes
-uint16_t[IGN_TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 1000, 0
+uint16_t[IGN_TRIM_SIZE] ignTrimLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {(ignOverrideMode != 0 && ignOverrideMode != 1) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 0 || ignOverrideMode == 1 ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
 uint16_t[IGN_TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 ign_cyl_trim_s[MAX_CYLINDER_COUNT iterate] ignTrims
 
 ! All fuel trim tables share axes
-uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 1000, 0
+uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : (veOverrideMode == 2 ? 100 : @@MAP_UPPER_LIMIT@@)}, 0
 uint16_t[FUEL_TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 fuel_cyl_trim_s[MAX_CYLINDER_COUNT iterate] fuelTrims
 
@@ -2397,7 +2397,7 @@ float   autoscale dynoCarFrontalAreaM2;@@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@;@@DYNO_
 
 int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_RPM_SIZE] autoscale trailingSparkTable;;"deg", 0.1, 0, 0, 12, 1
 uint8_t[TRAILING_SPARK_RPM_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12000, 0
-uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 5 : 5 * @@UNITS_KPA_TO_PSI@@}, 0, 0, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 
 uint8_t[4] autoscale maximumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint8_t[4] autoscale maximumOilPressureValues;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 10 : 1.45038}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 2000 : 290}, 0
