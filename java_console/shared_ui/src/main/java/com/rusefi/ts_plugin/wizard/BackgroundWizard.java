@@ -16,7 +16,6 @@ import com.efiAnalytics.plugin.ecu.*;
 import com.rusefi.output.HashUtil;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
-import static com.rusefi.config.generated.VariableRegistryValues.DIALOG_NAME_VEHICLE_INFORMATION;
 
 public class BackgroundWizard {
     private static final String ECU_WIZARD_KEY = "wizardPanelToShow";
@@ -38,7 +37,7 @@ public class BackgroundWizard {
     /**
      * Represents the panels enabled for use in the BackgroundWizard
      */
-    private static final String[] WizardEnabledPanels = {DIALOG_NAME_VEHICLE_INFORMATION};
+    private static final String[] WizardEnabledPanels = {"Vehicle Information"};
 
     public static void start(Supplier<ControllerAccess> controllerAccessSupplier) {
         BackgroundWizard.controllerAccessSupplier = controllerAccessSupplier;
