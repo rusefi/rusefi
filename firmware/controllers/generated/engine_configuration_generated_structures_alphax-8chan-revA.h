@@ -6277,7 +6277,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<int16_t, 1, 1> ignitionCltCorrTempBins[CLT_TIMING_TEMP_AXIS_SIZE] = {};
 	/**
-	 * units: Load
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 4604
 	 */
 	scaled_channel<uint8_t, 1, 5> ignitionCltCorrLoadBins[CLT_TIMING_LOAD_AXIS_SIZE] = {};
@@ -6589,7 +6589,7 @@ struct persistent_config_s {
 	 */
 	int8_t ignitionIatCorrTempBins[IAT_IGN_CORR_TEMP_COUNT] = {};
 	/**
-	 * units: Load
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 14756
 	 */
 	scaled_channel<uint8_t, 1, 5> ignitionIatCorrLoadBins[IAT_IGN_CORR_LOAD_COUNT] = {};
@@ -6599,7 +6599,7 @@ struct persistent_config_s {
 	 */
 	int16_t injectionPhase[INJ_PHASE_LOAD_COUNT][INJ_PHASE_RPM_COUNT] = {};
 	/**
-	 * units: Load
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 15276
 	 */
 	uint16_t injPhaseLoadBins[INJ_PHASE_LOAD_COUNT] = {};
@@ -6781,6 +6781,7 @@ struct persistent_config_s {
 	 */
 	int16_t scriptTable4RpmBins[TABLE_4_RPM_SIZE] = {};
 	/**
+	 * units: {bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}
 	 * offset 18748
 	 */
 	uint16_t ignTrimLoadBins[IGN_TRIM_SIZE] = {};
@@ -6794,6 +6795,7 @@ struct persistent_config_s {
 	 */
 	ign_cyl_trim_s ignTrims[MAX_CYLINDER_COUNT] = {};
 	/**
+	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}
 	 * offset 18956
 	 */
 	uint16_t fuelTrimLoadBins[FUEL_TRIM_SIZE] = {};
@@ -7509,7 +7511,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> trailingSparkRpmBins[TRAILING_SPARK_RPM_SIZE] = {};
 	/**
-	 * units: Load
+	 * units: {bitStringValue(pressureUnitsLabels, useMetricOnInterface)}
 	 * offset 23716
 	 */
 	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
