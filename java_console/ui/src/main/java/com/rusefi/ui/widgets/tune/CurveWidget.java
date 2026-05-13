@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -257,7 +258,7 @@ public class CurveWidget {
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
                 g2.setColor(Color.RED);
-                String label = String.format("%." + xDigits + "f", val);
+                String label = String.format(Locale.US, "%." + xDigits + "f", val);
                 int labelWidth = fm.stringWidth(label);
                 g2.drawString(label, p1.x - labelWidth / 2, p1.y + fm.getAscent() + 2);
             }
@@ -272,7 +273,7 @@ public class CurveWidget {
                 g2.drawLine(p1.x, p1.y, p2.x, p2.y);
 
                 g2.setColor(Color.RED);
-                String label = String.format("%." + yDigits + "f", val);
+                String label = String.format(Locale.US, "%." + yDigits + "f", val);
                 int labelWidth = fm.stringWidth(label);
                 g2.drawString(label, p1.x - labelWidth - 5, p1.y + fm.getAscent() / 2);
             }

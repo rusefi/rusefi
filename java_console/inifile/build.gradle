@@ -7,4 +7,6 @@ dependencies {
     api global_libs.jaxb
     api 'javax.activation:activation:1.1.1'
     api 'net.objecthunter:exp4j:0.4.8'
+
+    testImplementation global_libs.mockito
 }
