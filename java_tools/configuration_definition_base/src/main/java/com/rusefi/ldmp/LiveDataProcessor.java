@@ -55,8 +55,9 @@ public class LiveDataProcessor {
     }
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 5) {
-            System.err.println("Five arguments expected: name of live data yaml input file and else but got " + args.length + ": " + Arrays.toString(args));
+        // accept 5 args (master) or 6 args (LTS: 5th is javaDestinationFileName, 6th is destinationFolder)
+        if (args.length != 5 && args.length != 6) {
+            System.err.println("Five or six arguments expected: name of live data yaml input file and else but got " + args.length + ": " + Arrays.toString(args));
             System.exit(-1);
         }
         log.info("Invoked with " + Arrays.toString(args));
@@ -65,7 +66,7 @@ public class LiveDataProcessor {
         String definitionInputFileName = args[1];
         String headerFileName = args[2];
         String javaDestinationFolder = args[3];
-        String destinationFolder = args[4];
+        String destinationFolder = args.length == 6 ? args[5] : args[4];
         TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFolder);
         List<LinkedHashMap> totalContent = new ArrayList<>();
         for (String fileName : yamlFileNames.split(",")) {

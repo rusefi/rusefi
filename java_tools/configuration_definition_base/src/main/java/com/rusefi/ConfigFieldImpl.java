@@ -93,11 +93,7 @@ public class ConfigFieldImpl implements ConfigField {
         this.comment = comment;
 
         if (TypesHelper.isBoolean(type) && (trueName == null || falseName == null) && !getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
-            if (this.isWithinStruct("persistent_config_s")) {
-                throw new IllegalArgumentException("trueName and falseName must be non-null: " + name);
-            } else {
-                state.intDefaultBitNameCounter();
-            }
+            state.intDefaultBitNameCounter();
         }
 
         if (!isVoid())
