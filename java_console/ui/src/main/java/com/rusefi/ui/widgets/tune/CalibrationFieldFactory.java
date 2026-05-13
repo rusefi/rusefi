@@ -88,16 +88,20 @@ public class CalibrationFieldFactory {
     }
 
     /**
-     * Creates a button row for a dialog command.
+     * Creates a button row for a dialog command. {@code onExecute} is called on the EDT when
+     * the button is clicked; it is responsible for dispatching the command to the ECU on the
+     * IO thread. May be null, in which case the button is rendered but does nothing.
      */
-    public static JPanel createCommandRow(DialogModel.Command command) {
+    public static JPanel createCommandRow(DialogModel.Command command, Runnable onExecute) {
         JButton button = new JButton(command.getUiName());
         applyStyle(button);
         button.setAlignmentX(Component.LEFT_ALIGNMENT);
-        button.addActionListener(e -> {
-            // TODO: implement command execution
-            System.out.println("Executing command: " + command.getCommand());
-        });
+        if (onExecute != null) {
+            button.addActionListener(e -> onExecute.run());
+        } else {
+            // disable button since we can get the action
+            button.setEnabled(false);
+        }
 
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));

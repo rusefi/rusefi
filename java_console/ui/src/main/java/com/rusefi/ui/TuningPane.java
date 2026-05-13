@@ -16,11 +16,11 @@ import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
+import com.devexperts.logging.Logging;
+
 import javax.swing.*;
 import javax.swing.Action;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +31,8 @@ import java.util.function.Consumer;
  * Andrey Belomutskiy, (c) 2013-2026
  */
 public class TuningPane {
+    private static final Logging log = Logging.getLogging(TuningPane.class);
+
     private final JPanel content = new JPanel(new BorderLayout());
     private final MainMenuTreeWidget left;
     private final TuningToolbarWidget toolbar;
@@ -117,17 +119,24 @@ public class TuningPane {
                 }
                 if (!prev && current) {
                     final int page = trigger.getPage();
+                    log.info("EventTrigger fired: page=" + page + " expr=[" + trigger.getExpression() + "]");
                     if (page == 1) {
                         final int pageSize = ini.getMetaInfo().getPageSize(0);
                         final String signature = ini.getMetaInfo().getSignature();
                         uiContext.getLinkManager().submit(() -> {
+                            log.info("EventTrigger: reading page 1 from ECU");
                             ConfigurationImageWithMeta result = bp.readFullImageFromController(
                                     new ConfigurationImageMetaVersion0_0(pageSize, signature));
-                            if (result.isEmpty()) return;
+                            if (result.isEmpty()) {
+                                log.error("EventTrigger: page 1 read returned empty — refresh aborted");
+                                return;
+                            }
                             ConfigurationImage newImage = result.getConfigurationImage();
                             bp.setConfigurationImage(newImage);
+                            log.info("EventTrigger: page 1 refreshed successfully");
                             SwingUtilities.invokeLater(() -> {
                                 toolbar.onDisconnect();
+                                assert newImage != null;
                                 sessionImage.set(newImage.clone());
                                 String key = currentKey.get();
                                 if (key != null) {
@@ -135,9 +144,9 @@ public class TuningPane {
                                 }
                             });
                         });
+                    } else {
+                        log.info("EventTrigger: page " + page + " refresh not yet implemented — skipping");
                     }
-                    // Pages 3/4 are not represented as separate ConfigurationImages in the
-                    // Java console yet; those triggers are accepted but currently no-op.
                 }
             }
         };
