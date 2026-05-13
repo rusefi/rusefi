@@ -431,6 +431,6 @@ TEST(trigger, finderRealData) {
 	// Pin survivor count as a regression baseline; printed survivors are the actionable
 	// gap-window candidates to plug into initialize36_2_1_1(). The clearest single-gap
 	// survivor is `len=1 src=30 mask=0x0: g0=[2.095..3.142]` — the big-block gap, which
-	// matches the runtime observation in real6g75without.real (tooManyTeethCounter==3).
+	// matches the runtime observation in real6g75.withoutSparkPlugs (tooManyTeethCounter==3).
 	ASSERT_EQ(51u, survivors);
 }

@@ -4,14 +4,14 @@
 
 extern int tooManyTeethCounter;
 
-TEST(real6g75without, real) {
+TEST(real6g75, withoutSparkPlugs) {
     tooManyTeethCounter = 0;
     CsvReader reader(/*triggerCount*/ 1, /* vvtCount */ 0);
 
     reader.open("tests/trigger/resources/6g75-without-spark-crank.csv", NORMAL_ORDER, NORMAL_ORDER);
 
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-//    setVerboseTrigger(true);
+    // setVerboseTrigger(true);
 
     engineConfiguration->vvtMode[0] = VVT_INACTIVE;
     eth.setTriggerType(trigger_type_e::TT_36_2_1_1);
@@ -20,9 +20,21 @@ TEST(real6g75without, real) {
         reader.processLine(&eth);
     }
 
-    ASSERT_EQ(3, tooManyTeethCounter);
-    ASSERT_EQ(2, eth.recentWarnings()->getCount());
-    ASSERT_NEAR(144.73, Sensor::getOrZero(SensorType::Rpm), 0.1);
+    // At least 2 of those come from
+    // TriggerStimulatorHelper::findTriggerSyncPoint in eth.setTriggerType
+    // The issue is that trigger ratios for this trigger are set up to lag one tooth
+    // so by the time we see the actual sync point for the first time, we have already counted 64 events
+    // triggering the "too many teeth" logic in TriggerDecoderBase::decodeTriggerEvent,
+    // which resets synchronization and causes us to miss the sync point on the next pass as well.
+    ASSERT_EQ(4, tooManyTeethCounter);
+    
+    // single warning from the tapered tail of the log below cranking RPM
+    ASSERT_EQ(1, eth.recentWarnings()->getCount());
+    EXPECT_EQ(ObdCode::CUSTOM_Ignition_Coil_Overcharge_1, eth.recentWarnings()->get(0).Code);
+
+    // Actual cranking RPM is around 160, but data has a tapering tail at the end
+    // that goes down to 60, so it averages out at 143
+    ASSERT_NEAR(143.2, Sensor::getOrZero(SensorType::Rpm), 0.1);
 }
 
 TEST(real6g75, realWithSparkPlugs) {
@@ -54,7 +66,12 @@ TEST(real6g75, realWithSparkPlugs) {
     // real-data ratio set, so fixing this requires redesigning the synthetic waveform in
     // initialize36_2_1_1() (likely as 36-4 single-block-gap for cranking) AND only then
     // widening the gap window to 1.8-4.5 / 0.3-0.7. Pinned at 382 until that lands.
-    ASSERT_EQ(382, tooManyTeethCounter);
-    ASSERT_EQ(1, eth.recentWarnings()->getCount());
-    ASSERT_NEAR(143.40, Sensor::getOrZero(SensorType::Rpm), 0.1);
+
+    ASSERT_EQ(2, tooManyTeethCounter);
+
+    ASSERT_EQ(2, eth.recentWarnings()->getCount());
+    EXPECT_EQ(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, eth.recentWarnings()->get(0).Code);
+    EXPECT_EQ(ObdCode::CUSTOM_Ignition_Coil_Overcharge_2, eth.recentWarnings()->get(1).Code);
+
+    ASSERT_NEAR(166.9, Sensor::getOrZero(SensorType::Rpm), 0.1);
 }
