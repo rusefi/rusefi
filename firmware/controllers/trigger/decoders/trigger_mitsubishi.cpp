@@ -90,9 +90,6 @@ void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
 void initialize36_2_1_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 90;
-	int totalTeethCount = 36;
-
-	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
 
   const float WIDE_TOOTH_WIDTH  = 8.5;
   const float WIDE_TOOTH_OFFSET = 6.5;
@@ -153,7 +150,6 @@ void initialize36_2_1_1(TriggerWaveform *s) {
   s->setTriggerSynchronizationGap3(0, 0.3, 0.6);
   s->setTriggerSynchronizationGap3(1, 1.7, 3.6);
   s->setTriggerSynchronizationGap3(2, 0.8, 1.2);
-
 }
 
 // Mitsubishi 4B11
