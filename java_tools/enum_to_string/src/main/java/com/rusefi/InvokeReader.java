@@ -12,7 +12,7 @@ public class InvokeReader {
     private final static String KEY_OUTPUT = "-outputPath";
     private final static String KEY_OUTPUT_FILE = "-generatedFile";
     private static final String KEY_DEFINITION = "-definition";
-    private String fileSuffix = null;
+    private String fileSuffix = "enums";
 
     private String[] args;
     private String outputPath;
