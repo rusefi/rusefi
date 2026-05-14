@@ -21,13 +21,16 @@ int djb2lowerCase(const char *str);
 
 inline uint16_t SWAP_UINT16(uint16_t x)
 {
-	return ((x << 8) | (x >> 8));
+	return __builtin_bswap16(x);
 }
 
 inline uint32_t SWAP_UINT32(uint32_t x)
 {
-	return (((x >> 24) & 0x000000ff) | ((x <<  8) & 0x00ff0000) |
-			((x >>  8) & 0x0000ff00) | ((x << 24) & 0xff000000));
+	return __builtin_bswap32(x);
+}
+
+inline uint64_t SWAP_UINT64(uint64_t x) {
+    return __builtin_bswap64(x);
 }
 
 #define BIT(n) (UINT32_C(1) << (n))
