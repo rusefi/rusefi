@@ -23,7 +23,6 @@
 static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite packet size");
 
 static volatile bool ToothLoggerEnabled = false;
-static uint32_t lastEdgeTimestamp = 0;
 
 // TODO: wrap into signle composite_logger_s
 static bool wasSecondary = false;
@@ -125,9 +124,6 @@ void EnableToothLogger() {
 	for (size_t i = 0; i < bufferCount; i++) {
 		freeBuffers.postI(&buffers[i]);
 	}
-
-	// Reset the last edge to now - this prevents the first edge logged from being bogus
-	lastEdgeTimestamp = getTimeNowUs();
 
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
