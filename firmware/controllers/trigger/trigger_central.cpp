@@ -238,24 +238,19 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 	if (!useOnlyRise || engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
 		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
-
-#if EFI_TOOTH_LOGGER
-		LogTriggerCamTooth(front == TriggerValue::RISE, nowNt, index);
-#else
-  UNUSED(nowNt);
-#endif /* EFI_TOOTH_LOGGER */
 	} else {
 		if (isImportantFront) {
 			// On the important edge, log a rise+fall pair, and nothing on the real falling edge
 			addEngineSnifferVvtEvent(index, FrontDirection::UP);
 			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
-
-#if EFI_TOOTH_LOGGER
-			LogTriggerCamTooth(true, nowNt, index);
-			LogTriggerCamTooth(false, nowNt, index);
-#endif /* EFI_TOOTH_LOGGER */
 		}
 	}
+
+#if EFI_TOOTH_LOGGER
+	LogCamTriggerTooth(nowNt, index, front == TriggerValue::RISE);
+#else
+	UNUSED(nowNt);
+#endif /* EFI_TOOTH_LOGGER */
 }
 
 static bool tooSoonToHandleSignal() {
@@ -520,13 +515,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && getTriggerCentral()->triggerShape.useOnlyRisingEdges;
-
-	if (!logLogicState) {
-		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
-		LogTriggerTooth(signal, timestamp);
-	}
-
+	LogPrimaryTriggerTooth(timestamp, isRising);
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges,
@@ -539,19 +528,6 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 			return;
 		}
 	}
-
-#if EFI_TOOTH_LOGGER
-	if (logLogicState) {
-		// first log rising normally
-		LogTriggerTooth(signal, timestamp);
-		// in 'logLogicState' mode we log opposite front right after logical rising away
-		if (signal == SHAFT_PRIMARY_RISING) {
-			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp);
-		} else {
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp);
-		}
-	}
-#endif /* EFI_TOOTH_LOGGER */
 
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
 	if (triggerReentrant > maxTriggerReentrant)
