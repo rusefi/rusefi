@@ -88,7 +88,7 @@ public class SensorCentral implements ISensorCentral {
         }
     }
     private volatile Map<String, ResolvedGaugeLabels> resolvedGaugeLabels = Collections.emptyMap();
-    private byte[] response;
+    private volatile byte[] response;
 
     // Sliding window of recent frame arrival timestamps (System.nanoTime), used to compute
     // the synthetic 'runtimeDataRateGauge' value (frames-per-second) once per ECU frame.
@@ -246,6 +246,28 @@ public class SensorCentral implements ISensorCentral {
         }
         if (listeners != null)
             listeners.remove(listener);
+    }
+
+    /**
+     * Clears all accumulated sensor state. Called on ECU disconnect so stale values from the
+     * old board do not linger into the next connection (especially critical when ECU A and B
+     * have different output-channel layouts / firmware signatures).
+     * <p>
+     * Thread-safety: this method may race with the pull thread's {@link #grabSensorValues} call.
+     * {@code sensorsHolder} uses its own internal lock so {@code reset()} and
+     * {@code getValue}/{@code setValue} are mutually exclusive.
+     * {@code response} and {@code resolvedGaugeLabels} are {@code volatile}, so their
+     * null/empty assignments are immediately visible to any concurrent reader.
+     * {@code frameTimestampsNanos} is guarded by its own {@code synchronized} block here and
+     * in {@link #updateRuntimeDataRate}.
+     */
+    public void reset() {
+        sensorsHolder.reset();
+        response = null;
+        resolvedGaugeLabels = Collections.emptyMap();
+        synchronized (frameTimestampsNanos) {
+            frameTimestampsNanos.clear();
+        }
     }
 
     @Override

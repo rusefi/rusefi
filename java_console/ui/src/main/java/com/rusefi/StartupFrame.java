@@ -558,7 +558,10 @@ public class StartupFrame {
         splashListener = new ConnectionStatusLogic.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
-                if (!isConnected) return;
+                if (!isConnected) {
+                    SwingUtilities.invokeLater(() -> onSplashDisconnected());
+                    return;
+                }
                 SwingUtilities.invokeLater(() -> {
                     if (!ConnectionStatusLogic.INSTANCE.isConnected()) return;
                     if (uiContext.getBinaryProtocol() == null) return;
@@ -671,14 +674,35 @@ public class StartupFrame {
         });
     }
 
-    private void onSplashConnectFailed(String msg) {
-        log.warn("Splash auto-connect failed: " + msg);
-        // Per design: keep auto-connect gate closed for the rest of the session.
-        uiContext.getLinkManager().close();
+    /**
+     * Called on the EDT when the ECU drops the connection while still on the splash screen
+     * lears splash-owned state so the port combo is repopulated
+     * on the next scanner tick and the user can manually pick a port or wait for ECU B.
+     */
+    private void onSplashDisconnected() {
         if (splashListener != null) {
             ConnectionStatusLogic.INSTANCE.removeListener(splashListener);
             splashListener = null;
         }
+        // Sets isStarted=false so the next connect() can create a new LinkManager connector.
+        uiContext.getLinkManager().close();
+        autoConnectedPort = null;
+        autoConnectThread = null;
+        connectButton.setText("Connect");
+        connectButton.setEnabled(true);
+        portsComboBox.getComboPorts().setEnabled(true);
+    }
+
+    private void onSplashConnectFailed(String msg) {
+        log.warn("Splash auto-connect failed: " + msg);
+        // Remove the listener before calling close() so the NOT_CONNECTED event it emits does
+        // not re-trigger onSplashDisconnected() and overwrite the failure message below.
+        if (splashListener != null) {
+            ConnectionStatusLogic.INSTANCE.removeListener(splashListener);
+            splashListener = null;
+        }
+        // Per design: keep auto-connect gate closed for the rest of the session.
+        uiContext.getLinkManager().close();
         autoConnectedPort = null;
         autoConnectThread = null;
         connectButton.setEnabled(true);
