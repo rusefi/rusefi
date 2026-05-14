@@ -293,11 +293,13 @@ void LogPrimaryTriggerTooth(efitick_t timestamp, bool state) {
 }
 
 void LogCamTriggerTooth(efitick_t timestamp, int camIndex, bool state) {
-	wasSecondary = true;
+	if (camIndex < efi::size(camStates)) {
+		wasSecondary = true;
 
-	camStates[camIndex] = state;
+		camStates[camIndex] = state;
 
-	LogTriggerTooth(timestamp);
+		LogTriggerTooth(timestamp);
+	}
 
 #if EFI_UNIT_TEST
 	jsonTraceEntry("cam", JSON_CAM_PID + camIndex, /*isEnter*/state, timestamp);
