@@ -702,6 +702,8 @@ public class StartupFrame {
             splashListener = null;
         }
         // Per design: keep auto-connect gate closed for the rest of the session.
+        // the idea here is "if the user is connecting and desconecting multiple boards,
+        // user is updating a large batch of units, so we don't bother with calibration data pre-read, since it is done on the update job"
         uiContext.getLinkManager().close();
         autoConnectedPort = null;
         autoConnectThread = null;
