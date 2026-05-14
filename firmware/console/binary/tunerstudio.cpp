@@ -925,6 +925,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		switch(data[0]) {
 		case TS_COMPOSITE_ENABLE:
 			EnableToothLogger();
+			sendOkResponse(tsChannel);
 			break;
 		case TS_COMPOSITE_PRI_ENABLE:
 			EnableToothLogger(TLmode::PrimaryTooth);
@@ -932,6 +933,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			break;
 		case TS_COMPOSITE_DISABLE:
 			DisableToothLogger();
+			sendOkResponse(tsChannel);
 			break;
 		case TS_COMPOSITE_READ:
 			{
@@ -950,9 +952,11 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #ifdef TRIGGER_SCOPE
 		case TS_TRIGGER_SCOPE_ENABLE:
 			triggerScopeEnable();
+			sendOkResponse(tsChannel);
 			break;
 		case TS_TRIGGER_SCOPE_DISABLE:
 			triggerScopeDisable();
+			sendOkResponse(tsChannel);
 			break;
 		case TS_TRIGGER_SCOPE_READ:
 			{
@@ -971,9 +975,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			// dunno what that was, send NAK
 			return false;
 		}
-
-		sendOkResponse(tsChannel);
-
 		break;
 	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
 		{
