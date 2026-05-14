@@ -1,6 +1,7 @@
 package com.rusefi.core;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -11,10 +12,13 @@ public class SensorsHolder {
     // Values stored as single-element double[] to avoid boxing on every update.
     // The array is allocated once per channel name and mutated in place thereafter.
     // todo: probably not worth migrating to AtomicDouble with longBitsToDouble
+    private final Object lock = new Object();
     private final Map<String, double[]> values = new HashMap<>();
 
     public Set<String> getSensorNames() {
-        return values.keySet();
+        synchronized (lock) {
+            return new HashSet<>(values.keySet());
+        }
     }
 
     public double getValue(Sensor sensor) {
@@ -22,8 +26,10 @@ public class SensorsHolder {
     }
 
     public double getValue(String sensorName) {
-        double[] cell = values.get(sensorName.toLowerCase(Locale.US));
-        return cell == null ? Double.NaN : cell[0];
+        synchronized (lock) {
+            double[] cell = values.get(sensorName.toLowerCase(Locale.US));
+            return cell == null ? Double.NaN : cell[0];
+        }
     }
 
     public boolean setValue(double value, final Sensor sensor) {
@@ -33,13 +39,21 @@ public class SensorsHolder {
 
     public boolean setValue(double value, String sensorName) {
         String key = sensorName.toLowerCase(Locale.US);
-        double[] cell = values.get(key);
-        if (cell == null) {
-            values.put(key, new double[]{value});
-            return true;
+        synchronized (lock) {
+            double[] cell = values.get(key);
+            if (cell == null) {
+                values.put(key, new double[]{value});
+                return true;
+            }
+            boolean isUpdated = cell[0] != value;
+            cell[0] = value;
+            return isUpdated;
         }
-        boolean isUpdated = cell[0] != value;
-        cell[0] = value;
-        return isUpdated;
+    }
+
+    public void reset() {
+        synchronized (lock) {
+            values.clear();
+        }
     }
 }
