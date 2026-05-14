@@ -23,11 +23,14 @@
 static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite packet size");
 
 static volatile bool ToothLoggerEnabled = false;
-//static uint32_t lastEdgeTimestamp = 0;
+static uint32_t lastEdgeTimestamp = 0;
 
+static bool wasSecondary = false;
 static bool currentTrigger1 = false;
-static bool currentTrigger2 = false;
+static bool camStates[4] = {false};
 static bool currentTdc = false;
+
+// TODO:
 // any coil, all coils thrown together
 static bool currentCoilState = false;
 // same about injectors
@@ -60,11 +63,11 @@ void SetNextCompositeEntry(efitick_t timestamp) {
 
 	event.timestamp = timestamp;
 	event.primaryTrigger = currentTrigger1;
-	event.secondaryTrigger = currentTrigger2;
+	event.secondaryTrigger = camStates[0];
 	event.isTDC = currentTdc;
 	event.sync = engine->triggerCentral.triggerState.getShaftSynchronized();
-	event.coil = currentCoilState;
-	event.injector = currentInjectorState;
+//	event.coil = currentCoilState;
+//	event.injector = currentInjectorState;
 
 	events.push_back(event);
 }
@@ -80,12 +83,12 @@ void DisableToothLogger() {
 
 #else // not EFI_UNIT_TEST
 
-static constexpr size_t BUFFER_COUNT = BIG_BUFFER_SIZE / sizeof(CompositeBuffer);
-static_assert(BUFFER_COUNT >= 2);
+static constexpr size_t bufferCount = BIG_BUFFER_SIZE / sizeof(CompositeBuffer);
+static_assert(bufferCount >= 2);
 
 static CompositeBuffer* buffers = nullptr;
-static chibios_rt::Mailbox<CompositeBuffer*, BUFFER_COUNT> freeBuffers CCM_OPTIONAL;
-static chibios_rt::Mailbox<CompositeBuffer*, BUFFER_COUNT> filledBuffers CCM_OPTIONAL;
+static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers;
+static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers;
 
 static CompositeBuffer* currentBuffer = nullptr;
 
@@ -108,7 +111,7 @@ void EnableToothLogger() {
 	buffers = bufferHandle.get<CompositeBuffer>();
 
 	// Reset all buffers
-	for (size_t i = 0; i < BUFFER_COUNT; i++) {
+	for (size_t i = 0; i < bufferCount; i++) {
 		buffers[i].nextIdx = 0;
 	}
 
@@ -117,15 +120,16 @@ void EnableToothLogger() {
 
 	// Empty the filled buffer list
 	CompositeBuffer* dummy;
-	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy)) ;
+	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy))
+		;
 
 	// Put all buffers in the free list
-	for (size_t i = 0; i < BUFFER_COUNT; i++) {
+	for (size_t i = 0; i < bufferCount; i++) {
 		freeBuffers.postI(&buffers[i]);
 	}
 
 	// Reset the last edge to now - this prevents the first edge logged from being bogus
-	//lastEdgeTimestamp = getTimeNowUs();
+	lastEdgeTimestamp = getTimeNowUs();
 
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
@@ -136,13 +140,13 @@ void EnableToothLogger() {
 void DisableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
 
-	ToothLoggerEnabled = false;
-	setToothLogReady(false);
-
 	// Release the big buffer for another user
 	// C++ magic: here we are calling BigBufferHandle::operator=() with empty instance
 	bufferHandle = {};
 	buffers = nullptr;
+
+	ToothLoggerEnabled = false;
+	setToothLogReady(false);
 }
 
 static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
@@ -157,13 +161,6 @@ static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
 	if (msg != MSG_OK) {
 		// What even happened if we didn't get timeout, but also didn't get OK?
 		return nullptr;
-	}
-
-	chibios_rt::CriticalSectionLocker csl;
-
-	// If the used list is empty, clear the ready flag
-	if (filledBuffers.getUsedCountI() == 0) {
-		setToothLogReady(false);
 	}
 
 	return buffer;
@@ -181,7 +178,12 @@ void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
 	chibios_rt::CriticalSectionLocker csl;
 
 	msg_t msg = freeBuffers.postI(buffer);
-	criticalAssertVoid(msg == MSG_OK, "Composite logger post to free buffer fail");
+	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
+
+	// If the used list is empty, clear the ready flag
+	if (filledBuffers.getUsedCountI() == 0) {
+		setToothLogReady(false);
+	}
 }
 
 static CompositeBuffer* findBuffer(efitick_t timestamp) {
@@ -228,11 +230,16 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		// TS uses big endian, grumble
 		entry->timestamp = SWAP_UINT32(nowUs);
 		entry->priLevel = currentTrigger1;
-		entry->secLevel = currentTrigger2;
-		entry->trigger = currentTdc;
+		entry->cam1 = camStates[0];
+		entry->cam2 = camStates[1];
+		entry->cam3 = camStates[2];
+		entry->cam4 = camStates[3];
+		entry->trigger = wasSecondary;
+		entry->tdc = currentTdc;
 		entry->sync = engine->triggerCentral.triggerState.getShaftSynchronized();
-		entry->coil = currentCoilState;
-		entry->injector = currentInjectorState;
+		// TODO:
+		//entry->coil = currentCoilState;
+		//entry->injector = currentInjectorState;
 	}
 
 	// if the buffer is full...
@@ -258,32 +265,7 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 #define JSON_TRG_PID 4
 #define JSON_CAM_PID 10
 
-void LogTriggerSync(bool isSync, efitick_t timestamp) {
-#if EFI_UNIT_TEST
-	jsonTraceEntry("sync", 3, /*isEnter*/isSync, timestamp);
-#else
-	UNUSED(isSync); UNUSED(timestamp);
-#endif
-}
-
-void LogTriggerCamTooth(bool isRising, efitick_t timestamp, int index) {
-#if EFI_UNIT_TEST
-	jsonTraceEntry("cam", JSON_CAM_PID + index, /*isEnter*/isRising, timestamp);
-#else
-	UNUSED(isRising); UNUSED(timestamp); UNUSED(index);
-#endif
-}
-
-void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
-#if EFI_UNIT_TEST
-	if (tooth == SHAFT_PRIMARY_RISING) {
-		jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/true, timestamp);
-	} else if (tooth == SHAFT_PRIMARY_FALLING) {
-		jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/false, timestamp);
-	}
-#endif // EFI_UNIT_TEST
-
-    efiAssertVoid(ObdCode::CUSTOM_ERR_6650, hasLotsOfRemainingStack(), "l-t-t");
+static void LogTriggerTooth(efitick_t timestamp) {
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
 		return;
@@ -296,40 +278,30 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 
 	ScopePerf perf(PE::LogTriggerTooth);
 
-/*
-		// We currently only support the primary trigger falling edge
-    	// (this is the edge that VR sensors are accurate on)
-    	// Since VR sensors are the most useful case here, this is okay for now.
-    	if (tooth != SHAFT_PRIMARY_FALLING) {
-    		return;
-    	}
-
-    	uint32_t nowUs = NT2US(timestamp);
-    	// 10us per LSB - this gives plenty of accuracy, yet fits 655.35 ms in to a uint16
-    	uint16_t delta = static_cast<uint16_t>((nowUs - lastEdgeTimestamp) / 10);
-    	lastEdgeTimestamp = nowUs;
-
-    	SetNextEntry(delta);
-*/
-
-	switch (tooth) {
-	case SHAFT_PRIMARY_FALLING:
-		currentTrigger1 = false;
-		break;
-	case SHAFT_PRIMARY_RISING:
-		currentTrigger1 = true;
-		break;
-	case SHAFT_SECONDARY_FALLING:
-		currentTrigger2 = false;
-		break;
-	case SHAFT_SECONDARY_RISING:
-		currentTrigger2 = true;
-		break;
-	default:
-		break;
-	}
-
 	SetNextCompositeEntry(timestamp);
+}
+
+void LogPrimaryTriggerTooth(efitick_t timestamp, bool state) {
+	wasSecondary = false;
+	currentTrigger1 = state;
+
+	LogTriggerTooth(timestamp);
+
+#if EFI_UNIT_TEST
+	jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/state, timestamp);
+#endif // EFI_UNIT_TEST
+}
+
+void LogCamTriggerTooth(efitick_t timestamp, int camIndex, bool state) {
+	wasSecondary = true;
+
+	camStates[camIndex] = state;
+
+	LogTriggerTooth(timestamp);
+
+#if EFI_UNIT_TEST
+	jsonTraceEntry("cam", JSON_CAM_PID + camIndex, /*isEnter*/state, timestamp);
+#endif
 }
 
 void LogTriggerTopDeadCenter(efitick_t timestamp) {
@@ -343,16 +315,26 @@ void LogTriggerTopDeadCenter(efitick_t timestamp) {
 	SetNextCompositeEntry(timestamp + 10);
 }
 
-void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
+void LogTriggerSync(efitick_t timestamp, bool isSync) {
 #if EFI_UNIT_TEST
-	jsonTraceEntry("coil", 20 + index, state, timestamp);
-#endif // EFI_UNIT_TEST
+	jsonTraceEntry("sync", 3, /*isEnter*/isSync, timestamp);
+#else
+	UNUSED(isSync); UNUSED(timestamp);
+#endif
+}
+
+void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
 	if (!ToothLoggerEnabled) {
 		return;
 	}
 	currentCoilState = state;
+
 	UNUSED(timestamp); UNUSED(index);
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
+
+#if EFI_UNIT_TEST
+	jsonTraceEntry("coil", 20 + index, state, timestamp);
+#endif // EFI_UNIT_TEST
 }
 
 void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
