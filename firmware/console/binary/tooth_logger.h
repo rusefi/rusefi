@@ -28,25 +28,27 @@ void DisableToothLogger();
 bool IsToothLoggerEnabled();
 
 // A new tooth has arrived! Log to the buffer if enabled.
-void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp);
-void LogTriggerCamTooth(bool isRising, efitick_t timestamp, int index);
+void LogPrimaryTriggerTooth(efitick_t timestamp, bool state);
+void LogCamTriggerTooth(efitick_t timestamp, int camIndex, bool state);
 
 void LogTriggerTopDeadCenter(efitick_t timestamp);
-void LogTriggerSync(bool isSync, efitick_t timestamp);
-void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state);
+void LogTriggerSync(efitick_t timestamp, bool isSync);
 
+void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state);
 void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state);
 
-typedef struct __attribute__ ((packed)) {
+typedef struct __attribute__((packed)) {
 	// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
 	uint32_t timestamp;
 	// unfortunately all these fields are required by TS...
 	bool priLevel : 1;
-	bool secLevel : 1;
+	bool cam1 : 1;
 	bool trigger : 1;
 	bool sync : 1;
-	bool coil : 1;
-	bool injector : 1;
+	bool tdc : 1;
+	bool cam2 : 1;
+	bool cam3 : 1;
+	bool cam4 : 1;
 } composite_logger_s;
 
 static constexpr size_t toothLoggerEntriesPerBuffer = 250;
@@ -56,6 +58,11 @@ struct CompositeBuffer {
 	size_t nextIdx;
 	Timer startTime;
 };
+
+// Require that the composite buffer be a multiple of 4 bytes long.
+// The bigBuffer is guaranteed to be aligned on 4 bytes, but we need all elements to be aligned too.
+// If misaligned, Timer will crash.
+static_assert(sizeof(CompositeBuffer) % 4 == 0);
 
 // Get a reference to the buffer
 // Returns nullptr if no buffer is available
