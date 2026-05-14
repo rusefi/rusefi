@@ -25,16 +25,14 @@ static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite pa
 static volatile bool ToothLoggerEnabled = false;
 static uint32_t lastEdgeTimestamp = 0;
 
+// TODO: wrap into signle composite_logger_s
 static bool wasSecondary = false;
 static bool currentTrigger1 = false;
 static bool camStates[4] = {false};
 static bool currentTdc = false;
-
-// TODO:
-// any coil, all coils thrown together
-static bool currentCoilState = false;
-// same about injectors
-static bool currentInjectorState = false;
+// Up to 8 coils and 8 injectors
+static uint8_t currentCoilsState = 0x00;
+static uint8_t currentInjectorsState = 0x00;
 
 #if EFI_UNIT_TEST
 
@@ -66,8 +64,8 @@ void SetNextCompositeEntry(efitick_t timestamp) {
 	event.secondaryTrigger = camStates[0];
 	event.isTDC = currentTdc;
 	event.sync = engine->triggerCentral.triggerState.getShaftSynchronized();
-//	event.coil = currentCoilState;
-//	event.injector = currentInjectorState;
+	event.coil = currentCoilsState;
+	event.injector = currentInjectorsState;
 
 	events.push_back(event);
 }
@@ -237,9 +235,8 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		entry->trigger = wasSecondary;
 		entry->tdc = currentTdc;
 		entry->sync = engine->triggerCentral.triggerState.getShaftSynchronized();
-		// TODO:
-		//entry->coil = currentCoilState;
-		//entry->injector = currentInjectorState;
+		entry->coil = currentCoilsState;
+		entry->injector = currentInjectorsState;
 	}
 
 	// if the buffer is full...
@@ -307,14 +304,10 @@ void LogCamTriggerTooth(efitick_t timestamp, int camIndex, bool state) {
 }
 
 void LogTriggerTopDeadCenter(efitick_t timestamp) {
-	// bail if we aren't enabled
-	if (!ToothLoggerEnabled) {
-		return;
-	}
 	currentTdc = true;
-	SetNextCompositeEntry(timestamp);
+	LogTriggerTooth(timestamp);
 	currentTdc = false;
-	SetNextCompositeEntry(timestamp + 10);
+	LogTriggerTooth(timestamp + 10);
 }
 
 void LogTriggerSync(efitick_t timestamp, bool isSync) {
@@ -326,13 +319,15 @@ void LogTriggerSync(efitick_t timestamp, bool isSync) {
 }
 
 void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
-	if (!ToothLoggerEnabled) {
-		return;
-	}
-	currentCoilState = state;
+	if (index < 8) {
+		if (state) {
+			currentCoilsState |= (1 << index);
+		} else {
+			currentCoilsState &= ~(1 << index);
+		}
 
-	UNUSED(timestamp); UNUSED(index);
-	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
+		LogTriggerTooth(timestamp);
+	}
 
 #if EFI_UNIT_TEST
 	jsonTraceEntry("coil", 20 + index, state, timestamp);
@@ -340,15 +335,19 @@ void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
 }
 
 void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
+	if (index < 8) {
+		if (state) {
+			currentInjectorsState |= (1 << index);
+		} else {
+			currentInjectorsState &= ~(1 << index);
+		}
+
+		LogTriggerTooth(timestamp);
+	}
+
 #if EFI_UNIT_TEST
 	jsonTraceEntry("inj", 30 + index, state, timestamp);
 #endif // EFI_UNIT_TEST
-	if (!ToothLoggerEnabled) {
-		return;
-	}
-	currentInjectorState = state;
-	UNUSED(timestamp); UNUSED(index);
-	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
 void EnableToothLoggerIfNotEnabled() {
