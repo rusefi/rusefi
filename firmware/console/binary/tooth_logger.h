@@ -37,21 +37,24 @@ void LogTriggerSync(efitick_t timestamp, bool isSync);
 void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state);
 void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state);
 
-typedef struct __attribute__((packed)) {
+typedef union __attribute__((packed)) {
 	// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
-	uint32_t timestamp;
-	// unfortunately all these fields are required by TS...
-	bool priLevel : 1;
-	bool cam1 : 1;
-	bool trigger : 1;
-	bool sync : 1;
-	bool tdc : 1;
-	bool cam2 : 1;
-	bool cam3 : 1;
-	bool cam4 : 1;
-	uint8_t coil;
-	uint8_t injector;
-	uint8_t unused; // to make struct size 8 bytes
+	struct {
+		uint32_t timestamp;
+		// unfortunately all these fields are required by TS...
+		bool priLevel : 1;
+		bool cam1 : 1;
+		bool trigger : 1;
+		bool sync : 1;
+		bool tdc : 1;
+		bool cam2 : 1;
+		bool cam3 : 1;
+		bool cam4 : 1;
+		uint8_t coil;
+		uint8_t injector;
+		uint8_t unused; // to make struct size 8 bytes
+	};
+	uint64_t x;
 } composite_logger_s;
 
 static constexpr size_t toothLoggerEntriesPerBuffer = 250;
