@@ -226,7 +226,7 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		uint32_t nowUs = NT2US(timestamp);
 
 		// TS uses big endian, grumble
-		entry->timestamp = SWAP_UINT32(nowUs);
+		entry->timestamp = nowUs;
 		entry->priLevel = currentTrigger1;
 		entry->cam1 = camStates[0];
 		entry->cam2 = camStates[1];
@@ -237,6 +237,10 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		entry->sync = engine->triggerCentral.triggerState.getShaftSynchronized();
 		entry->coil = currentCoilsState;
 		entry->injector = currentInjectorsState;
+
+		// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
+		// swap whole record byteorder
+		entry->x = SWAP_UINT64(entry->x);
 	}
 
 	// if the buffer is full...
