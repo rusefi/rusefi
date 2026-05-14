@@ -49,6 +49,9 @@ typedef struct __attribute__((packed)) {
 	bool cam2 : 1;
 	bool cam3 : 1;
 	bool cam4 : 1;
+	uint8_t coil;
+	uint8_t injector;
+	uint8_t unused; // to make struct size 8 bytes
 } composite_logger_s;
 
 static constexpr size_t toothLoggerEntriesPerBuffer = 250;
