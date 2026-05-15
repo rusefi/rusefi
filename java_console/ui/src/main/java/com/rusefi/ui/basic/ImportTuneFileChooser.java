@@ -1,7 +1,6 @@
 package com.rusefi.ui.basic;
 
 import com.rusefi.ConnectivityContext;
-import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.io.LinkManager;
@@ -19,20 +18,6 @@ public class ImportTuneFileChooser {
 
     public ImportTuneFileChooser(final SingleAsyncJobExecutor singleAsyncJobExecutor) {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
-    }
-
-    public void showFileChooserToImportTuneAction(
-        final PortResult port,
-        final JComponent parent,
-        final ConnectivityContext connectivityContext
-    ) {
-        final int selectedOption = tuneToImportFileChooser.showOpenDialog(parent);
-        if (selectedOption == JFileChooser.APPROVE_OPTION) {
-            final File selectedFile = tuneToImportFileChooser.getSelectedFile();
-            saveTuneToImportDefaultDirectory(selectedFile.getParent());
-            String tuneFileName = selectedFile.getAbsolutePath();
-            ImportTuneJob.importTuneIntoDevice(port, parent, connectivityContext, tuneFileName, singleAsyncJobExecutor);
-        }
     }
 
     public void showFileChooserToImportTuneAction(
