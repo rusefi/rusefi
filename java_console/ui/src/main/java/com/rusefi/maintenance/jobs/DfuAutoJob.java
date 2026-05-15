@@ -18,10 +18,6 @@ public class DfuAutoJob extends AsyncJobWithContext<SerialPortWithParentComponen
     private final ConnectivityContext connectivityContext;
     private final @Nullable LinkManager linkManager;
 
-    public DfuAutoJob(final PortResult port, final JComponent parent, ConnectivityContext connectivityContext) {
-        this(port, parent, connectivityContext, null);
-    }
-
     public DfuAutoJob(final PortResult port, final JComponent parent, ConnectivityContext connectivityContext,
                       final @Nullable LinkManager linkManager) {
         super("DFU update", new SerialPortWithParentComponentJobContext(port, parent));
@@ -54,21 +50,19 @@ public class DfuAutoJob extends AsyncJobWithContext<SerialPortWithParentComponen
         } finally {
             onJobFinished.run();
         }
-        if (linkManager != null) {
-            try {
-                connectivityContext.getSerialPortScanner().suspend().await(30, java.util.concurrent.TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            linkManager.getCommandQueue().clearPendingCommands();
-            try {
-                linkManager.reconnect();
-            } finally {
-                connectivityContext.getSerialPortScanner().cachePort(
-                    new PortResult(context.getPort().port, context.getPort().type)
-                );
-                connectivityContext.getSerialPortScanner().resume();
-            }
+        try {
+            connectivityContext.getSerialPortScanner().suspend().await(30, java.util.concurrent.TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        linkManager.getCommandQueue().clearPendingCommands();
+        try {
+            linkManager.reconnect();
+        } finally {
+            connectivityContext.getSerialPortScanner().cachePort(
+                new PortResult(context.getPort().port, context.getPort().type)
+            );
+            connectivityContext.getSerialPortScanner().resume();
         }
     }
 

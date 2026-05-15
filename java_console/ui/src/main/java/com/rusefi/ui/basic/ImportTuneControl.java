@@ -75,7 +75,7 @@ public class ImportTuneControl implements EnableableControl {
         final LinkManager lm = splashLinkManager;
         final BinaryProtocol liveBp = (lm != null) ? lm.getBinaryProtocol() : null;
         if (liveBp != null) {
-            exportTune.showFileChooserToExportTuneAction(liveBp, lm, exportTuneButton, connectivityContext);
+            exportTune.showFileChooserToExportTuneAction(liveBp, lm, exportTuneButton);
         } else {
             JOptionPane.showMessageDialog(exportTuneButton, "Device is not connected", "Error", JOptionPane.ERROR_MESSAGE);
         }

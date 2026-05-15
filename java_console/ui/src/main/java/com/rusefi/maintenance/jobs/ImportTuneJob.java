@@ -2,7 +2,6 @@ package com.rusefi.maintenance.jobs;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
-import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.ConnectionStatusLogic;
@@ -24,20 +23,12 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
     private static final Logging log = getLogging(ImportTuneJob.class);
     private final ConnectivityContext connectivityContext;
     private final @Nullable BinaryProtocol binaryProtocol;
-    private final @Nullable LinkManager linkManager;
-
-    /** Port-based constructor: opens a fresh connection to {@code port}. */
-    public ImportTuneJob(final PortResult port, final Msq tuneToImport, final ConnectivityContext connectivityContext) {
-        super("Load Tune", new ImportTuneJobContext(port, tuneToImport));
-        this.connectivityContext = connectivityContext;
-        this.binaryProtocol = null;
-        this.linkManager = null;
-    }
+    private final LinkManager linkManager;
 
     /** Live-connection constructor: reuses the established {@link BinaryProtocol} without closing it. */
     public ImportTuneJob(final BinaryProtocol bp, final LinkManager lm, final Msq tuneToImport,
                          final ConnectivityContext connectivityContext) {
-        super("Load Tune", new ImportTuneJobContext(null, tuneToImport));
+        super("Load Tune", new ImportTuneJobContext(tuneToImport));
         this.connectivityContext = connectivityContext;
         this.binaryProtocol = bp;
         this.linkManager = lm;
@@ -48,16 +39,10 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
      * Use this when the reconnect is still in progress at click time.
      */
     public ImportTuneJob(final LinkManager lm, final Msq tuneToImport, final ConnectivityContext connectivityContext) {
-        super("Load Tune", new ImportTuneJobContext(null, tuneToImport));
+        super("Load Tune", new ImportTuneJobContext(tuneToImport));
         this.connectivityContext = connectivityContext;
         this.binaryProtocol = null;
         this.linkManager = lm;
-    }
-
-    public static void importTuneIntoDevice(PortResult port, JComponent parent, ConnectivityContext connectivityContext,
-                                            String tuneFileName, SingleAsyncJobExecutor singleAsyncJobExecutor) {
-        loadAndStart(tuneFileName, parent, msq ->
-            singleAsyncJobExecutor.startJob(new ImportTuneJob(port, msq, connectivityContext), parent));
     }
 
     /** Imports a tune via the live splash connection without closing/reopening the serial port. */
@@ -102,7 +87,7 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
                     callbacks.error();
                 }
             }, onJobFinished);
-        } else if (linkManager != null) {
+        } else {
             JobHelper.doJob(() -> {
                 BinaryProtocol bp = awaitBinaryProtocol(callbacks);
                 if (bp == null) {
@@ -112,15 +97,6 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
                 }
                 if (CalibrationsHelper.importTune(
                     bp, linkManager, context.getTuneToImport(), callbacks, connectivityContext)) {
-                    callbacks.done();
-                } else {
-                    callbacks.error();
-                }
-            }, onJobFinished);
-        } else {
-            JobHelper.doJob(() -> {
-                if (CalibrationsHelper.importTune(
-                    context.getPort().port, context.getTuneToImport(), callbacks, connectivityContext)) {
                     callbacks.done();
                 } else {
                     callbacks.error();

@@ -918,12 +918,4 @@ public class StartupFrame {
         return hasEcuOrBootloader;
     }
 
-    private static JComboBox<String> createSpeedCombo() {
-        JComboBox<String> combo = new JComboBox<>();
-        String defaultSpeed = getConfig().getRoot().getProperty(ConsoleUI.SPEED_KEY, "115200");
-        for (int speed : new int[]{9600, 14400, 19200, 38400, 57600, 115200, 460800, 921600})
-            combo.addItem(Integer.toString(speed));
-        combo.setSelectedItem(defaultSpeed);
-        return combo;
-    }
 }
