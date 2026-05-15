@@ -126,6 +126,8 @@ public class StartupFrame {
     private ConnectionStatusLogic.Listener splashListener;
     // Registered in releaseSplashConnection() for firmware jobs; fires once on post-flash reconnect.
     private ConnectionStatusLogic.Listener postFlashReconnectListener;
+    // Saved in releaseSplashConnection() for tune import/export jobs; restored in onLiveConnectionJobFinished().
+    private PortResult postLiveConnectionJobPort;
 
     public StartupFrame(ConnectivityContext connectivityContext, UIContext uiContext) {
         this.connectivityContext = connectivityContext;
@@ -135,6 +137,7 @@ public class StartupFrame {
         // "Connecting...". Release the splash connection just before any job starts so the port
         // is free for the exclusive operation.
         asyncJobExecutor.addOnJobAboutToStartListener(this::releaseSplashConnection);
+        asyncJobExecutor.addOnJobInProgressFinishedListener(this::onLiveConnectionJobFinished);
         String title = UiProperties.getWhiteLabel() + " console " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
@@ -638,7 +641,9 @@ public class StartupFrame {
 
         // Hand the live LinkManager to firmware-update jobs so they can disconnect/reconnect
         // cleanly instead of closing and re-opening the port from scratch.
-        firmwareUpdateTab.getBasicUpdaterPanel().setSplashLinkManager(uiContext.getLinkManager());
+        final LinkManager lm = uiContext.getLinkManager();
+        firmwareUpdateTab.getBasicUpdaterPanel().setSplashLinkManager(lm);
+        selector.setLinkManager(lm);
 
         maybeAutoCreateTsProject(target);
 
@@ -715,12 +720,18 @@ public class StartupFrame {
                         noPortsMessage.setForeground(Color.darkGray);
                         noPortsMessage.setText("Connected to " + savedPort.port + " — click Connect to open console");
                         noPortsMessage.setVisible(true);
-                        // The port disappeared during DFU, hiding connectPanel. Re-show it so the
-                        // user can click Connect after the flash completes.
                         connectPanel.setVisible(true);
                         final LinkManager reconnectedLm = uiContext.getLinkManager();
                         autoConnectedPort = savedPort;
                         firmwareUpdateTab.getBasicUpdaterPanel().setSplashLinkManager(reconnectedLm);
+                        selector.setLinkManager(reconnectedLm);
+                        // Restore the port in the combo so the user can switch if needed.
+                        portsComboBox.getComboPorts().removeAllItems();
+                        portsComboBox.getComboPorts().addItem(savedPort);
+                        portsComboBox.getComboPorts().setSelectedItem(savedPort);
+                        // Restore ecuPortToUse so the Upload Tune button is enabled.
+                        ecuPortToUse.set(Optional.of(savedPort));
+                        firmwareUpdateTab.getBasicUpdaterPanel().refreshButtons();
                     });
                 }
             };
@@ -741,6 +752,10 @@ public class StartupFrame {
         if (!isLiveConnectionJob) {
             // Non-handoff job: release the port so the job can open it.
             uiContext.getLinkManager().close();
+        } else {
+            // Tune import/export keeps the LM alive. Save the port so onLiveConnectionJobFinished()
+            // can restore the selector LinkManager once the job completes.
+            postLiveConnectionJobPort = autoConnectedPort;
         }
 
         autoConnectedPort = null;
@@ -753,6 +768,29 @@ public class StartupFrame {
             noPortsMessage.setForeground(Color.darkGray);
             noPortsMessage.setText("");
             noPortsMessage.setVisible(false);
+        });
+    }
+
+    /**
+     * Restores the selector LinkManager after a tune import/export job finishes.
+     */
+    private void onLiveConnectionJobFinished() {
+        final PortResult savedPort = postLiveConnectionJobPort;
+        if (savedPort == null) {
+            return;
+        }
+        postLiveConnectionJobPort = null;
+        SwingUtilities.invokeLater(() -> {
+            final LinkManager lm = uiContext.getLinkManager();
+            if (lm.getBinaryProtocol() == null) {
+                return;
+            }
+            selector.setLinkManager(lm);
+            autoConnectedPort = savedPort;
+            firmwareUpdateTab.getBasicUpdaterPanel().setSplashLinkManager(lm);
+            noPortsMessage.setForeground(Color.darkGray);
+            noPortsMessage.setText("Connected to " + savedPort.port + " — click Connect to open console");
+            noPortsMessage.setVisible(true);
         });
     }
 

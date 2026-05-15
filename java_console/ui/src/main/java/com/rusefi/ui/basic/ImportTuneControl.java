@@ -62,7 +62,7 @@ public class ImportTuneControl implements EnableableControl {
         final BinaryProtocol liveBp = (lm != null) ? lm.getBinaryProtocol() : null;
         if (liveBp != null) {
             importTune.showFileChooserToImportTuneAction(liveBp, lm, importTuneButton, connectivityContext);
-        } else if (lm != null) {
+        } else if (lm != null && lm.isActive()) {
             importTune.showFileChooserToImportTuneAction(lm, importTuneButton, connectivityContext);
         } else {
             JOptionPane.showMessageDialog(importTuneButton, "Device is not connected", "Error", JOptionPane.ERROR_MESSAGE);
