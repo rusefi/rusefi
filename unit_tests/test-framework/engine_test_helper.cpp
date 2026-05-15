@@ -59,6 +59,7 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 }
 
 EngineTestHelperBase::~EngineTestHelperBase() {
+	DisableToothLogger();
 	engine = nullptr;
 	engineConfiguration = nullptr;
 	config = nullptr;
