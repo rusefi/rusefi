@@ -4,8 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.ConnectionStatusLogic;
-import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.tune.xml.Msq;
@@ -14,8 +12,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import jakarta.xml.bind.JAXBException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -89,7 +85,7 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
             }, onJobFinished);
         } else {
             JobHelper.doJob(() -> {
-                BinaryProtocol bp = awaitBinaryProtocol(callbacks);
+                BinaryProtocol bp = JobHelper.awaitBinaryProtocol(linkManager, callbacks);
                 if (bp == null) {
                     callbacks.logLine("Timed out waiting for connection.");
                     callbacks.error();
@@ -105,33 +101,4 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
         }
     }
 
-    private BinaryProtocol awaitBinaryProtocol(UpdateOperationCallbacks callbacks) {
-        BinaryProtocol bp = linkManager.getBinaryProtocol();
-        if (bp != null) {
-            return bp;
-        }
-        callbacks.logLine("Waiting for connection to stabilize...");
-        CountDownLatch latch = new CountDownLatch(1);
-        ConnectionStatusLogic.Listener listener = new ConnectionStatusLogic.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {
-                if (!isConnected || ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
-                    latch.countDown();
-                }
-            }
-        };
-        ConnectionStatusLogic.INSTANCE.addListener(listener);
-        ConnectionStatusValue currentValue = ConnectionStatusLogic.INSTANCE.getValue();
-        if (currentValue == ConnectionStatusValue.CONNECTED || currentValue == ConnectionStatusValue.NOT_CONNECTED) {
-            latch.countDown();
-        }
-        try {
-            latch.await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            ConnectionStatusLogic.INSTANCE.removeListener(listener);
-        }
-        return linkManager.getBinaryProtocol();
-    }
 }
