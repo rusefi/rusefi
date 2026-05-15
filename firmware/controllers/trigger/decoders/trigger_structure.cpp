@@ -885,8 +885,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	}
 }
 
-void initializeCamRiseOnly(TriggerWaveform *s, float w, const angle_t angles[], size_t count) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+void initializeRiseOnlyTrigger(TriggerWaveform *s, float w, const angle_t angles[], size_t count, operation_mode_e mode) {
+	s->initialize(mode, SyncEdge::RiseOnly);
 	for (size_t i = 0; i < count; i++) {
 		s->addToothRiseFall(angles[i], w);
 	}
