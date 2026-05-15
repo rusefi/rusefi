@@ -24,14 +24,8 @@ static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite pa
 
 static volatile bool ToothLoggerEnabled = false;
 
-// TODO: wrap into signle composite_logger_s
-static bool wasSecondary = false;
-static bool currentTrigger1 = false;
-static bool camStates[4] = {false};
-static bool currentTdc = false;
-// Up to 8 coils and 8 injectors
-static uint8_t currentCoilsState = 0x00;
-static uint8_t currentInjectorsState = 0x00;
+// current state
+static composite_logger_s cur;
 
 #if EFI_UNIT_TEST
 
@@ -59,12 +53,12 @@ void SetNextCompositeEntry(efitick_t timestamp) {
 	CompositeEvent event;
 
 	event.timestamp = timestamp;
-	event.primaryTrigger = currentTrigger1;
-	event.secondaryTrigger = camStates[0];
-	event.isTDC = currentTdc;
+	event.primaryTrigger = cur.priLevel;
+	event.secondaryTrigger = cur.cam1;
+	event.isTDC = cur.tdc;
 	event.sync = engine->triggerCentral.triggerState.getShaftSynchronized();
-	event.coil = currentCoilsState;
-	event.injector = currentInjectorsState;
+	event.coil = cur.coil;
+	event.injector = cur.injector;
 
 	events.push_back(event);
 }
@@ -223,21 +217,12 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 	if (idx < efi::size(buffer->buffer)) {
 		composite_logger_s* entry = &buffer->buffer[idx];
 
-		uint32_t nowUs = NT2US(timestamp);
+		entry->x = cur.x;
+		// TODO: why?
+		entry->sync = engine->triggerCentral.triggerState.getShaftSynchronized();
+		entry->timestamp = NT2US(timestamp);
 
 		// TS uses big endian, grumble
-		entry->timestamp = nowUs;
-		entry->priLevel = currentTrigger1;
-		entry->cam1 = camStates[0];
-		entry->cam2 = camStates[1];
-		entry->cam3 = camStates[2];
-		entry->cam4 = camStates[3];
-		entry->trigger = wasSecondary;
-		entry->tdc = currentTdc;
-		entry->sync = engine->triggerCentral.triggerState.getShaftSynchronized();
-		entry->coil = currentCoilsState;
-		entry->injector = currentInjectorsState;
-
 		// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
 		// swap whole record byteorder
 		entry->x = SWAP_UINT64(entry->x);
@@ -283,8 +268,8 @@ static void LogTriggerTooth(efitick_t timestamp) {
 }
 
 void LogPrimaryTriggerTooth(efitick_t timestamp, bool state) {
-	wasSecondary = false;
-	currentTrigger1 = state;
+	cur.trigger = false;
+	cur.priLevel = state;
 
 	LogTriggerTooth(timestamp);
 
@@ -294,10 +279,18 @@ void LogPrimaryTriggerTooth(efitick_t timestamp, bool state) {
 }
 
 void LogCamTriggerTooth(efitick_t timestamp, int camIndex, bool state) {
-	if (camIndex < efi::size(camStates)) {
-		wasSecondary = true;
+	if (camIndex < 4) {
+		cur.trigger = true;
 
-		camStates[camIndex] = state;
+		if (camIndex == 0) {
+			cur.cam1 = state;
+		} else if (camIndex == 1) {
+			cur.cam2 = state;
+		} else if (camIndex == 2) {
+			cur.cam3 = state;
+		} else if (camIndex == 3) {
+			cur.cam4 = state;
+		}
 
 		LogTriggerTooth(timestamp);
 	}
@@ -308,9 +301,9 @@ void LogCamTriggerTooth(efitick_t timestamp, int camIndex, bool state) {
 }
 
 void LogTriggerTopDeadCenter(efitick_t timestamp) {
-	currentTdc = true;
+	cur.tdc = true;
 	LogTriggerTooth(timestamp);
-	currentTdc = false;
+	cur.tdc = false;
 	LogTriggerTooth(timestamp + 10);
 }
 
@@ -325,9 +318,9 @@ void LogTriggerSync(efitick_t timestamp, bool isSync) {
 void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
 	if (index < 8) {
 		if (state) {
-			currentCoilsState |= (1 << index);
+			cur.coil |= (1 << index);
 		} else {
-			currentCoilsState &= ~(1 << index);
+			cur.coil &= ~(1 << index);
 		}
 
 		LogTriggerTooth(timestamp);
@@ -341,9 +334,9 @@ void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
 void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
 	if (index < 8) {
 		if (state) {
-			currentInjectorsState |= (1 << index);
+			cur.injector |= (1 << index);
 		} else {
-			currentInjectorsState &= ~(1 << index);
+			cur.injector &= ~(1 << index);
 		}
 
 		LogTriggerTooth(timestamp);
