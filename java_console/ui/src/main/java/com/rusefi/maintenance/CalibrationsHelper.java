@@ -92,17 +92,6 @@ public class CalibrationsHelper {
         return foundPorts;
     }
 
-
-    public static boolean updateFirmwareAndRestorePreviousCalibrations(
-        final PortResult originalEcuPort,
-        final UpdateOperationCallbacks callbacks,
-        final Supplier<Boolean> updateFirmware,
-        final ConnectivityContext connectivityContext
-    ) {
-        return updateFirmwareAndRestorePreviousCalibrations(
-            originalEcuPort, null, null, callbacks, updateFirmware, connectivityContext);
-    }
-
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
         final PortResult originalEcuPort,
         @Nullable final BinaryProtocol bp,

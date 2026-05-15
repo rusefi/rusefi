@@ -229,15 +229,6 @@ public class ProgramSelector {
     public static boolean flashOpenbltSerialAutomatic(
         JComponent parent,
         PortResult ecuPort,
-        UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
-    ) {
-        return updateFirmwareAndRestorePreviousCalibrations(
-            ecuPort, callbacks, () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext);
-    }
-
-    public static boolean flashOpenbltSerialAutomatic(
-        JComponent parent,
-        PortResult ecuPort,
         BinaryProtocol bp,
         LinkManager lm,
         UpdateOperationCallbacks callbacks,
