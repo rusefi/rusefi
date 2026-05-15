@@ -57,7 +57,7 @@ public class Integration {
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
-	public static final int COMPOSITE_PACKET_SIZE = 5;
+	public static final int COMPOSITE_PACKET_SIZE = 8;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final String CRITICAL_PREFIX = "CRITICAL";
 	public static final int DEFAULT_SELT_STIM_RPM = 1200;
@@ -91,6 +91,7 @@ public class Integration {
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;
 	public static final int TS_COMPOSITE_ENABLE = 1;
+	public static final int TS_COMPOSITE_PRI_ENABLE = 7;
 	public static final int TS_COMPOSITE_READ = 3;
 	public static final char TS_CRC32_CHECK_COMMAND = 'K';
 	public static final char TS_CRC_CHECK_COMMAND = 'k';

@@ -353,7 +353,7 @@
 #define CMD_WRITECONFIG "writeconfig"
 #define COIL_1_NAME "Spark #1"
 #define COIL_2_NAME "Spark #2"
-#define COMPOSITE_PACKET_SIZE 5
+#define COMPOSITE_PACKET_SIZE 8
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define CRANKING_ADVANCE_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
@@ -1569,7 +1569,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4202815894
+#define SIGNATURE_HASH 2955993119
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1879,6 +1879,7 @@
 #define TS_COMMAND_F_char F
 #define TS_COMPOSITE_DISABLE 2
 #define TS_COMPOSITE_ENABLE 1
+#define TS_COMPOSITE_PRI_ENABLE 7
 #define TS_COMPOSITE_READ 3
 #define TS_CRC32_CHECK_COMMAND 'K'
 #define TS_CRC32_CHECK_COMMAND_char K
@@ -2183,7 +2184,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.05.15.small-can-board.4202815894"
+#define TS_SIGNATURE "rusEFI master.2026.05.15.small-can-board.2955993119"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
