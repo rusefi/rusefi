@@ -225,5 +225,16 @@ void initializeMitsubishi4G69Cam(TriggerWaveform *s) {
 }
 
 void initializeMitsubishi6G75Cam(TriggerWaveform *s) {
+    s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+    int toothWidth = 5;
+
+// tooth 1		75.0
+// tooth 2		45.0
+// tooth 3		60.0
+// tooth 4		22.5
+// tooth 5		75.0
+// tooth 6		22.5
+// tooth 7		60.0
+
 	// todo: implement me!
 }
