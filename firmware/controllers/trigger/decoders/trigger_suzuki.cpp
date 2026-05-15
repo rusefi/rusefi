@@ -9,7 +9,6 @@
 
 #include "trigger_suzuki.h"
 
-
 void initializeSuzukiG13B(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
@@ -37,7 +36,7 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 
 void initializeSuzukiG16B(TriggerWaveform *s) {
 	static const angle_t angles[] = { 35, 50, 90, 125, 165, 180, 215, 270, 305, 345, 360 };
-	initializeCamRiseOnly(s, 5, angles, efi::size(angles));
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
 
 	// Set sync gap based on largest gap between teeth
 	// Calculate gaps: 15,40,35,40,15,35,55,35,40,15,35 (degrees)
