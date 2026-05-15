@@ -125,7 +125,7 @@ public class TuneManagementTab {
                 } else {
                     BinaryProtocol liveBp = uiContext.getBinaryProtocol();
                     LinkManager lm = uiContext.getLinkManager();
-                    if (liveBp != null) {
+                    if (liveBp != null && lm != null) {
                         log.info("Let's load " + tuneFileName + " via live connection");
                         awaitingCompletion.set(true);
                         uploadProgress.setVisible(true);
