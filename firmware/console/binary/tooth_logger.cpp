@@ -23,6 +23,7 @@
 static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite packet size");
 
 static volatile bool ToothLoggerEnabled = false;
+static TLmode ToothLoggerMode = TLmode::Full;
 
 // current state
 static composite_logger_s cur;
@@ -63,7 +64,7 @@ void SetNextCompositeEntry(efitick_t timestamp) {
 	events.push_back(event);
 }
 
-bool EnableToothLogger() {
+bool EnableToothLogger(TLmode mode) {
 	ToothLoggerEnabled = true;
 	events.clear();
 
@@ -93,7 +94,7 @@ static void setToothLogReady(bool value) {
 
 static BigBufferHandle bufferHandle;
 
-bool EnableToothLogger() {
+bool EnableToothLogger(TLmode mode) {
 	chibios_rt::CriticalSectionLocker csl;
 
 	bufferHandle = getBigBuffer(BigBufferUser::ToothLogger);
@@ -123,6 +124,7 @@ bool EnableToothLogger() {
 
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
+	ToothLoggerMode = mode;
 
 	setToothLogReady(false);
 
@@ -269,6 +271,12 @@ void LogPrimaryTriggerTooth(efitick_t timestamp, bool state) {
 	cur.trigger = false;
 	cur.priLevel = state;
 
+	// in tooth mode we are interested in rising edges of primary only
+	if ((ToothLoggerMode == TLmode::PrimaryTooth) &&
+		(state == false)) {
+		return;
+	}
+
 	LogTriggerTooth(timestamp);
 
 #if EFI_UNIT_TEST
@@ -290,6 +298,10 @@ void LogCamTriggerTooth(efitick_t timestamp, int camIndex, bool state) {
 			cur.cam4 = state;
 		}
 
+		// in tooth mode we are interested in rising edges of primary only
+		if (ToothLoggerMode == TLmode::PrimaryTooth) {
+			return;
+		}
 		LogTriggerTooth(timestamp);
 	}
 
@@ -299,6 +311,11 @@ void LogCamTriggerTooth(efitick_t timestamp, int camIndex, bool state) {
 }
 
 void LogTriggerTopDeadCenter(efitick_t timestamp) {
+	// in tooth mode we are interested in rising edges of primary only
+	if (ToothLoggerMode == TLmode::PrimaryTooth) {
+		return;
+	}
+
 	cur.tdc = true;
 	LogTriggerTooth(timestamp);
 	cur.tdc = false;
@@ -322,6 +339,11 @@ void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
 			cur.coil &= ~(1 << index);
 		}
 
+		// in tooth mode we are interested in rising edges of primary only
+		if (ToothLoggerMode == TLmode::PrimaryTooth) {
+			return;
+		}
+
 		LogTriggerTooth(timestamp);
 	}
 
@@ -338,6 +360,11 @@ void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
 			cur.injector &= ~(1 << index);
 		}
 
+		// in tooth mode we are interested in rising edges of primary only
+		if (ToothLoggerMode == TLmode::PrimaryTooth) {
+			return;
+		}
+
 		LogTriggerTooth(timestamp);
 	}
 
@@ -346,9 +373,9 @@ void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
 #endif // EFI_UNIT_TEST
 }
 
-bool EnableToothLoggerIfNotEnabled() {
+bool EnableToothLoggerIfNotEnabled(TLmode mode) {
 	if (!ToothLoggerEnabled) {
-		ToothLoggerEnabled = EnableToothLogger();
+		ToothLoggerEnabled = EnableToothLogger(mode);
 	}
 
 	return ToothLoggerEnabled;
