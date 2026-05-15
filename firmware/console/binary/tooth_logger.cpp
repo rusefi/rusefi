@@ -56,7 +56,7 @@ void SetNextCompositeEntry(efitick_t timestamp) {
 	event.primaryTrigger = cur.priLevel;
 	event.secondaryTrigger = cur.cam1;
 	event.isTDC = cur.tdc;
-	event.sync = engine->triggerCentral.triggerState.getShaftSynchronized();
+	event.sync = cur.sync;
 	event.coil = cur.coil;
 	event.injector = cur.injector;
 
@@ -218,8 +218,6 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		composite_logger_s* entry = &buffer->buffer[idx];
 
 		entry->x = cur.x;
-		// TODO: why?
-		entry->sync = engine->triggerCentral.triggerState.getShaftSynchronized();
 		entry->timestamp = NT2US(timestamp);
 
 		// TS uses big endian, grumble
@@ -308,10 +306,11 @@ void LogTriggerTopDeadCenter(efitick_t timestamp) {
 }
 
 void LogTriggerSync(efitick_t timestamp, bool isSync) {
+	cur.sync = isSync;
+	LogTriggerTooth(timestamp);;
+
 #if EFI_UNIT_TEST
 	jsonTraceEntry("sync", 3, /*isEnter*/isSync, timestamp);
-#else
-	UNUSED(isSync); UNUSED(timestamp);
 #endif
 }
 
