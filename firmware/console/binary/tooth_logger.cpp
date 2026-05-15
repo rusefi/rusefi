@@ -69,9 +69,11 @@ void SetNextCompositeEntry(efitick_t timestamp) {
 	events.push_back(event);
 }
 
-void EnableToothLogger() {
+bool EnableToothLogger() {
 	ToothLoggerEnabled = true;
 	events.clear();
+
+	return ToothLoggerEnabled;
 }
 
 void DisableToothLogger() {
@@ -97,12 +99,12 @@ static void setToothLogReady(bool value) {
 
 static BigBufferHandle bufferHandle;
 
-void EnableToothLogger() {
+bool EnableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	bufferHandle = getBigBuffer(BigBufferUser::ToothLogger);
 	if (!bufferHandle) {
-		return;
+		return false;
 	}
 
 	buffers = bufferHandle.get<CompositeBuffer>();
@@ -129,6 +131,8 @@ void EnableToothLogger() {
 	ToothLoggerEnabled = true;
 
 	setToothLogReady(false);
+
+	return true;
 }
 
 void DisableToothLogger() {
@@ -350,10 +354,12 @@ void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
 #endif // EFI_UNIT_TEST
 }
 
-void EnableToothLoggerIfNotEnabled() {
+bool EnableToothLoggerIfNotEnabled() {
 	if (!ToothLoggerEnabled) {
-		EnableToothLogger();
+		ToothLoggerEnabled = EnableToothLogger();
 	}
+
+	return ToothLoggerEnabled;
 }
 
 bool IsToothLoggerEnabled() {
