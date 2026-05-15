@@ -8,6 +8,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.BootloaderHelper;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.IoStream;
@@ -49,6 +50,8 @@ public class ProgramSelector {
     private final JComboBox<PortResult> comboPorts;
     @Nullable
     private SingleAsyncJobExecutor jobExecutor;
+    @Nullable
+    private LinkManager linkManager;
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
@@ -68,7 +71,7 @@ public class ProgramSelector {
         AsyncJob job;
         switch (selectedMode) {
             case DFU_AUTO:
-                job = new DfuAutoJob(selectedPort, parent, connectivityContext);
+                job = new DfuAutoJob(selectedPort, parent, connectivityContext, linkManager);
                 break;
             case DFU_MANUAL:
                 job = new DfuManualJob();
@@ -83,7 +86,7 @@ public class ProgramSelector {
                 job = new DfuSwitchJob(selectedPort, parent);
                 break;
             case OPENBLT_SWITCH:
-                job = new OpenBltSwitchJob(selectedPort, parent);
+                job = new OpenBltSwitchJob(selectedPort, parent, linkManager);
                 break;
             case OPENBLT_CAN:
                 job = new OpenBltCanJob(parent);
@@ -92,7 +95,7 @@ public class ProgramSelector {
                 job = new OpenBltManualJob(selectedPort, parent);
                 break;
             case OPENBLT_AUTO:
-                job = new OpenBltAutoJob(selectedPort, parent, connectivityContext);
+                job = new OpenBltAutoJob(selectedPort, parent, connectivityContext, linkManager);
                 break;
             case DFU_ERASE:
                 job = new DfuEraseJob();
@@ -110,6 +113,10 @@ public class ProgramSelector {
 
     public void setJobExecutor(@Nullable SingleAsyncJobExecutor jobExecutor) {
         this.jobExecutor = jobExecutor;
+    }
+
+    public void setLinkManager(@Nullable LinkManager linkManager) {
+        this.linkManager = linkManager;
     }
 
     public static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
@@ -225,10 +232,19 @@ public class ProgramSelector {
         UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         return updateFirmwareAndRestorePreviousCalibrations(
-            ecuPort,
-            callbacks,
-            () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext
-        );
+            ecuPort, callbacks, () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext);
+    }
+
+    public static boolean flashOpenbltSerialAutomatic(
+        JComponent parent,
+        PortResult ecuPort,
+        BinaryProtocol bp,
+        LinkManager lm,
+        UpdateOperationCallbacks callbacks,
+        ConnectivityContext connectivityContext
+    ) {
+        return updateFirmwareAndRestorePreviousCalibrations(
+            ecuPort, bp, lm, callbacks, () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext);
     }
 
     private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext) {
