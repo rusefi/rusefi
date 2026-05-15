@@ -2,12 +2,10 @@ package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
-import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
-import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.ui.UIContext;
@@ -28,9 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
@@ -53,7 +49,6 @@ public class TuneManagementTab {
 
     public TuneManagementTab(ConnectivityContext connectivityContext,
                              UIContext uiContext,
-                             AtomicReference<Optional<PortResult>> ecuPortToUse,
                              Component importTuneButton,
                              SingleAsyncJobExecutor singleAsyncJobExecutor,
                              StatusPanel statusPanelTuneTab) {
@@ -123,35 +118,30 @@ public class TuneManagementTab {
                 TuneModel model = tunes.get(row);
                 String localFolderForSpecificUrl = getLocalFolder(tunesManifestUrl);
                 String tuneFileName = localFolderForSpecificUrl + model.getSaferLocalFileName();
-                Optional<PortResult> portResult = ecuPortToUse.get();
                 if (!new File(tuneFileName).exists()) {
                     ErrorMessageHelper.showErrorDialog("Failed to load " + model.getUrl(), "Tune error");
-                } else if (portResult.isPresent() || uiContext.getBinaryProtocol() != null
-                        || ConnectionStatusLogic.INSTANCE.isConnected()
-                        || uiContext.getLinkManager().isActive()) {
-                    if (!singleAsyncJobExecutor.isNotInProgress()) {
-                        status.setText("Another job is already running, please wait.");
-                        return;
-                    }
-                    log.info("Let's load " + tuneFileName + " into " + portResult);
-                    awaitingCompletion.set(true);
-                    uploadProgress.setVisible(true);
-                    status.setText("Loading tune...");
+                } else if (!singleAsyncJobExecutor.isNotInProgress()) {
+                    status.setText("Another job is already running, please wait.");
+                } else {
                     BinaryProtocol liveBp = uiContext.getBinaryProtocol();
                     LinkManager lm = uiContext.getLinkManager();
                     if (liveBp != null) {
+                        log.info("Let's load " + tuneFileName + " via live connection");
+                        awaitingCompletion.set(true);
+                        uploadProgress.setVisible(true);
+                        status.setText("Loading tune...");
                         ImportTuneJob.importTuneIntoDeviceViaLiveConnection(
                             liveBp, lm, status, connectivityContext, tuneFileName, singleAsyncJobExecutor);
-                    } else if (ConnectionStatusLogic.INSTANCE.isConnected() || lm.isActive()) {
-                        // LM is connecting or reconnecting (e.g. auto-connect in progress, post-flash
-                        // reconnect) — job will wait for the BP handshake before proceeding.
+                    } else if (lm != null) {
+                        log.info("Let's load " + tuneFileName + " via LM");
+                        awaitingCompletion.set(true);
+                        uploadProgress.setVisible(true);
+                        status.setText("Loading tune...");
                         ImportTuneJob.importTuneIntoDeviceViaLiveConnection(
                             lm, status, connectivityContext, tuneFileName, singleAsyncJobExecutor);
                     } else {
-                        ImportTuneJob.importTuneIntoDevice(portResult.get(), status, connectivityContext, tuneFileName, singleAsyncJobExecutor);
+                        status.setText("Not connected?");
                     }
-                } else {
-                    status.setText("Not connected?");
                 }
             }
         }));

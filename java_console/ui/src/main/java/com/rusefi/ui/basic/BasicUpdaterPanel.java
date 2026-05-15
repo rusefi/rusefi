@@ -76,9 +76,7 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
         this.updateOperationCallbacks = updateOperationCallbacks;
         singleAsyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
-        importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this,
-            connectivityContext,
-            this.ecuPortToUse);
+        importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this, connectivityContext);
 //        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
         final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(

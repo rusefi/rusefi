@@ -4,9 +4,9 @@ import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
-import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.tune.xml.Msq;
@@ -139,14 +139,12 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
         ConnectionStatusLogic.Listener listener = new ConnectionStatusLogic.Listener() {
             @Override
             public void onConnectionStatus(boolean isConnected) {
-                // Wake on CONNECTED (success) or NOT_CONNECTED (fail-fast — ECU dropped).
                 if (!isConnected || ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
                     latch.countDown();
                 }
             }
         };
         ConnectionStatusLogic.INSTANCE.addListener(listener);
-        // Re-check after registering to avoid the race where state changed before we registered.
         ConnectionStatusValue currentValue = ConnectionStatusLogic.INSTANCE.getValue();
         if (currentValue == ConnectionStatusValue.CONNECTED || currentValue == ConnectionStatusValue.NOT_CONNECTED) {
             latch.countDown();
