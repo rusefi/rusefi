@@ -175,7 +175,11 @@ never used?
         final List<PortResult> portsToUpdateFirmware = getPortResults(currentHardware);
         int count = portsToUpdateFirmware.size();
         if (count == 1) {
-            // OpenBlt first preference
+            if (splashLinkManager == null) {
+                log.info("updateUpdateFirmwareJob: skipping — splashLinkManager not set yet (auto-connect in progress)");
+                resetUpdateFirmwareJob("Connecting...");
+                return;
+            }
             setUpdateFirmwareJob(getNonDfuUpdateFirmwareJobForPort(portsToUpdateFirmware.get(0)));
             return;
         }
