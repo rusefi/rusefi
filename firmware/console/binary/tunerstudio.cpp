@@ -926,6 +926,10 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		case TS_COMPOSITE_ENABLE:
 			EnableToothLogger();
 			break;
+		case TS_COMPOSITE_PRI_ENABLE:
+			EnableToothLogger(TLmode::PrimaryTooth);
+			sendOkResponse(tsChannel);
+			break;
 		case TS_COMPOSITE_DISABLE:
 			DisableToothLogger();
 			break;
