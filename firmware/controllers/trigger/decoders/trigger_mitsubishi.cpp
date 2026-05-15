@@ -225,16 +225,18 @@ void initializeMitsubishi4G69Cam(TriggerWaveform *s) {
 }
 
 void initializeMitsubishi6G75Cam(TriggerWaveform *s) {
-    s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-    int toothWidth = 5;
+	// tooth/gap info: (75, 45, 60, 22.5, 75, 22.5, 60)
+	static const angle_t angles[] = {
+		75,
+		75 + 45,
+		75 + 45 + 60,
+		75 + 45 + 60 + 22.5,
+		75 + 45 + 60 + 22.5 + 75,
+		75 + 45 + 60 + 22.5 + 75 + 22.5,
+		75 + 45 + 60 + 22.5 + 75 + 22.5 + 60
+	};
 
-// tooth 1		75.0
-// tooth 2		45.0
-// tooth 3		60.0
-// tooth 4		22.5
-// tooth 5		75.0
-// tooth 6		22.5
-// tooth 7		60.0
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
 
-	// todo: implement me!
+	s->setTriggerSynchronizationGap(2.66);
 }
