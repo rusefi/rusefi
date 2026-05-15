@@ -66,19 +66,9 @@ void configureFordST170(TriggerWaveform * s) {
 }
 
 void configureFordCoyote(TriggerWaveform *s) {
-    s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	static const angle_t angles[] = { 45, 90, 180 - 30, 180, 270 - 30, 270, 360 };
+	initializeRiseOnlyTrigger(s, 10, angles, efi::size(angles));
 
-    s->setTriggerSynchronizationGap(3);
-    s->setSecondTriggerSynchronizationGap(0.5);
-
-	s->addToothRiseFall(45 /*, width = 10*/);
-	s->addToothRiseFall(90);
-
-	s->addToothRiseFall(180 - 30);
-	s->addToothRiseFall(180);
-
-	s->addToothRiseFall(270 - 30);
-	s->addToothRiseFall(270);
-
-	s->addToothRiseFall(360);
+	s->setTriggerSynchronizationGap(3);
+	s->setSecondTriggerSynchronizationGap(0.5);
 }
