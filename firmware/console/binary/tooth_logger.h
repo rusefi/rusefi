@@ -17,10 +17,15 @@ const std::vector<CompositeEvent>& getCompositeEvents();
 void jsonTraceEntry(const char* name, int pid, bool isEnter, efitick_t timestamp);
 #endif // EFI_UNIT_TEST
 
-bool EnableToothLoggerIfNotEnabled();
+enum class TLmode : uint8_t {
+	Full,
+	PrimaryTooth
+};
+
+bool EnableToothLoggerIfNotEnabled(TLmode mode = TLmode::Full);
 
 // Enable the tooth logger - this clears the buffer starts logging
-bool EnableToothLogger();
+bool EnableToothLogger(TLmode mode = TLmode::Full);
 
 // Stop logging - leave buffer intact
 void DisableToothLogger();
