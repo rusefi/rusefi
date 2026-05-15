@@ -737,8 +737,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMitsubishi4G69Cam(this);
 		break;
 	case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
-// 		initializeMitsubishi6G75Cam(this);
-// 		break;
+		initializeMitsubishi6G75Cam(this);
+		break;
 	case trigger_type_e::TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);
 		break;
