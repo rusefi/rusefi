@@ -636,7 +636,7 @@ public class StartupFrame {
         connectButton.setEnabled(true);
         portsComboBox.getComboPorts().setEnabled(true);
         noPortsMessage.setForeground(Color.darkGray);
-        noPortsMessage.setText("Connected to " + target.port + " — click Connect to open console");
+        noPortsMessage.setText("Connected to " + target.port + " — launching console…");
         noPortsMessage.setVisible(true);
 
         // Hand the live LinkManager to firmware-update jobs so they can disconnect/reconnect
@@ -656,7 +656,7 @@ public class StartupFrame {
             showCard("wizard");
             return;
         }
-        // No wizard needed — stay on splash, user can click Connect to open the full console.
+        connect(target);
     }
 
     private void maybeAutoCreateTsProject(PortResult target) {
