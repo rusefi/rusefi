@@ -61,16 +61,14 @@ void initializeNissanSR20VE_4(TriggerWaveform *s) {
 }
 
 void initializeNissanVQvvt(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-
+	static const angle_t angles[] = { 20, 80, 100, 140, 160, 260 };
 	int offset = 360 - 260;
+	angle_t offsetAngles[efi::size(angles)];
+	for (size_t i = 0; i < efi::size(angles); i++) {
+		offsetAngles[i] = angles[i] + offset;
+	}
 
-	s->addToothRiseFall(offset + 20);
-	s->addToothRiseFall(offset + 80);
-	s->addToothRiseFall(offset + 100);
-	s->addToothRiseFall(offset + 140);
-	s->addToothRiseFall(offset + 160);
-	s->addToothRiseFall(offset + 260);
+	initializeRiseOnlyTrigger(s, 10, offsetAngles, efi::size(angles));
 
 	s->setTriggerSynchronizationGap2(4, 6);
 	s->setSecondTriggerSynchronizationGap2(0.35f, 0.7f);
@@ -251,13 +249,8 @@ void initializeNissanHRcrank(TriggerWaveform *s) {
 
 
 void initializeNissanHRvvtIn(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-
-
-	s->addToothRiseFall(120);
-	s->addToothRiseFall(120 + 22);
-	s->addToothRiseFall(240);
-	s->addToothRiseFall(360);
+	static const angle_t angles[] = { 120, 120 + 22, 240, 360 };
+	initializeRiseOnlyTrigger(s, 10, angles, efi::size(angles));
 
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.1, 0.3);
 }
