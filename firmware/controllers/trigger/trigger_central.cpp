@@ -515,7 +515,10 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	LogPrimaryTriggerTooth(timestamp, isRising);
+	// only primary, respect invert settings
+	if (isPrimary) {
+		LogPrimaryTriggerTooth(timestamp, signal == SHAFT_PRIMARY_RISING);
+	}
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges,
