@@ -6575,27 +6575,35 @@ event 20 0 1 595.000000 nan
 event 21 0 0 595.000000 nan
 event 22 0 1 688.000000 nan
 event 23 0 0 688.000000 nan
-TRIGGERTYPE 97 4 TT_VVT_MITSUBISHI_6G75 0.00
+TRIGGERTYPE 97 14 TT_VVT_MITSUBISHI_6G75 0.00
 knownOperationMode=true
 operationMode=FOUR_STROKE_CAM_SENSOR
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=720
-gapsCount=2
-syncEdge=Both
+gapsCount=1
+syncEdge=RiseOnly
 isSynchronizationNeeded=true
 useOnlyPrimaryForSync=false
 shapeWithoutTdc=false
-gapFrom.0=2.000000
-gapTo.0=5.000000
-gapFrom.1=0.200000
-gapTo.1=0.950000
+gapFrom.0=1.995000
+gapTo.0=3.325000
 # end of meta section
-event 0 0 1 0.000000 3.000000
-event 1 0 0 180.000000 0.666667
-event 2 0 1 360.000000 1.000000
-event 3 0 0 450.000000 0.500000
+event 0 0 1 0.000000 2.666667
+event 1 0 0 0.000000 nan
+event 2 0 1 150.000000 1.250000
+event 3 0 0 150.000000 nan
+event 4 0 1 240.000000 0.600000
+event 5 0 0 240.000000 nan
+event 6 0 1 360.000000 1.333333
+event 7 0 0 360.000000 nan
+event 8 0 1 405.000000 0.375000
+event 9 0 0 405.000000 nan
+event 10 0 1 555.000000 3.333333
+event 11 0 0 555.000000 nan
+event 12 0 1 600.000000 0.300000
+event 13 0 0 600.000000 nan
 TRIGGERTYPE 98 24 TT_UNUSED_98 65.00
 knownOperationMode=true
 operationMode=FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
