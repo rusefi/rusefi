@@ -17,6 +17,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_trigger_skipped_wheel.cpp \
 	tests/trigger/test_real_arctic_cat.cpp \
 	tests/trigger/test_real_bosch_quick_start.cpp \
+	tests/trigger/test_real_chrysler_phaser.cpp \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
