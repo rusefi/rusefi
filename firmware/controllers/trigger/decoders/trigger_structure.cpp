@@ -884,3 +884,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		wave.checkSwitchTimes(getCycleDuration());
 	}
 }
+
+void initializeCamRiseOnly(TriggerWaveform *s, float w, const angle_t angles[], size_t count) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	for (size_t i = 0; i < count; i++) {
+		s->addToothRiseFall(angles[i], w);
+	}
+}

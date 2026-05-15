@@ -269,3 +269,5 @@ public:
 	 */
 	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
+
+void initializeCamRiseOnly(TriggerWaveform *s, float w, const angle_t angles[], size_t count);
