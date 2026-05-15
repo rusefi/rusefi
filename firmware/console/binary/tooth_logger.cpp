@@ -316,10 +316,9 @@ void LogTriggerTopDeadCenter(efitick_t timestamp) {
 		return;
 	}
 
-	cur.tdc = true;
+	// just togle TDC flag, this looks good on graph
+	cur.tdc = !cur.tdc;
 	LogTriggerTooth(timestamp);
-	cur.tdc = false;
-	LogTriggerTooth(timestamp + 10);
 }
 
 void LogTriggerSync(efitick_t timestamp, bool isSync) {
