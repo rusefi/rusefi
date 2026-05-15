@@ -32,7 +32,6 @@ Release template (copy/paste this for new release):
  - ETB bench test button: open throttle 300ms without sensors (#9171)
  - PWM support for fan control #5407
  - Per cylinder knock control individual gain control #9404
- - 6G75 crank Trigger fixes #8827
  - 6G75 Cam trigger support #9533
 
 ### Breaking Changes
@@ -40,6 +39,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Idle VE table when using an electronic throttle correctly uses accel pedal to match main idle logic
+- 6G75 crank Trigger fixes #8827
 
 ## February 2026 "Day 1458"
 
