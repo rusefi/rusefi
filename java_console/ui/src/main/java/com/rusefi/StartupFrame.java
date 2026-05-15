@@ -30,6 +30,7 @@ import com.rusefi.maintenance.jobs.DfuAutoJob;
 import com.rusefi.maintenance.jobs.ExportTuneJob;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.maintenance.jobs.OpenBltAutoJob;
+import com.rusefi.maintenance.jobs.OpenBltSwitchJob;
 import com.rusefi.ui.basic.FirmwareUpdateTab;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
@@ -694,7 +695,7 @@ public class StartupFrame {
 
         Optional<AsyncJob> job = asyncJobExecutor.getJobInProgress();
         boolean isFirmwareJob = job.map(j -> j instanceof DfuAutoJob || j instanceof OpenBltAutoJob).orElse(false);
-        boolean isLiveConnectionJob = job.map(j -> j instanceof ImportTuneJob || j instanceof ExportTuneJob).orElse(false);
+        boolean isLiveConnectionJob = job.map(j -> j instanceof ImportTuneJob || j instanceof ExportTuneJob || j instanceof OpenBltSwitchJob).orElse(false);
 
         // Detach the original splash listener in all cases — the disconnect() inside
         // firmware jobs would fire NOT_CONNECTED and we don't want onSplashDisconnected()
