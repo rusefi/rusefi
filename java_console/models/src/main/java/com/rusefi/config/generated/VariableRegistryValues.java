@@ -258,7 +258,7 @@ public class VariableRegistryValues {
 	public static final int CLT_LIMITER_CURVE_SIZE = 4;
 	public static final int CLT_TIMING_LOAD_AXIS_SIZE = 5;
 	public static final int CLT_TIMING_TEMP_AXIS_SIZE = 5;
-	public static final int CLT_UPPER_LIMIT = 125;
+	public static final int CLT_UPPER_LIMIT = 250;
 	public static final int CLT_UPPER_VALIDATION_LIMIT = 250;
 	public static final String CMD_AC_RELAY_BENCH = "acrelaybench";
 	public static final String CMD_ALTERNATOR_PIN = "set_alternator_pin";
@@ -1313,9 +1313,9 @@ public class VariableRegistryValues {
 	public static final int lua_gauge_meaning_e_LUA_GAUGE_LOWER_BOUND = 0;
 	public static final int lua_gauge_meaning_e_LUA_GAUGE_UPPER_BOUND = 1;
 	public static final int LUA_PWM_COUNT = 8;
-	public static final int LUA_SCRIPT_SIZE = 8000;
+	public static final int LUA_SCRIPT_SIZE = 10000;
 	public static final int MAF_DECODING_COUNT = 32;
-	public static final String MAIN_HELP_URL = "https://rusefi.com/s/hellen154hyuindai";
+	public static final String MAIN_HELP_URL = "https://rusefi.com/s/microrusefi";
 	public static final String MAIN_PAGE_GAUGES_FILE = "tunerstudio/main_page_gauges.ini";
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_EST_LOAD_COUNT = 16;
@@ -1380,7 +1380,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 24336;
+	public static final int persistent_config_s_size = 26336;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1458,6 +1458,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 1089416361;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1526,7 +1527,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 24336;
+	public static final int TOTAL_CONFIG_SIZE = 26336;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1639,7 +1640,6 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_TOYOTA_3_TOOTH_UZ = 91;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
 	public static final int trigger_type_e_TT_UNUSED = 99;
-	public static final int trigger_type_e_TT_UNUSED_97 = 97;
 	public static final int trigger_type_e_TT_UNUSED_98 = 98;
 	public static final int trigger_type_e_TT_VIPER_V10_CRANK = 96;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
@@ -1651,6 +1651,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_VVT_MITSU_6G72 = 79;
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_3A92 = 62;
 	public static final int trigger_type_e_TT_VVT_MITSUBISHI_4G69 = 78;
+	public static final int trigger_type_e_TT_VVT_MITSUBISHI_6G75 = 97;
 	public static final int trigger_type_e_TT_VVT_NISSAN_VQ35 = 59;
 	public static final int trigger_type_e_TT_VVT_SUBARU_7_WITHOUT_6 = 51;
 	public static final int trigger_type_e_TT_VVT_TOYOTA_3_TOOTH = 17;
@@ -1780,7 +1781,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.05.14.hellen154hyundai.2493462707";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.05.15.mre-legacy_f4.1089416361";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2132;
