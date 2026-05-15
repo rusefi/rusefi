@@ -736,6 +736,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	case trigger_type_e::TT_VVT_MITSUBISHI_4G69:
 	    initializeMitsubishi4G69Cam(this);
 		break;
+	case trigger_type_e::TT_VVT_MITSUBISHI_6G75:
+// 		initializeMitsubishi6G75Cam(this);
+// 		break;
 	case trigger_type_e::TT_MITSU_4G63_CAM:
 	    initializeMitsubishi4g63Cam(this);
 		break;
@@ -849,7 +852,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_VIPER_V10_CRANK:
-	case trigger_type_e::TT_UNUSED_97:
 	case trigger_type_e::TT_UNUSED_98:
 	case trigger_type_e::TT_SUBARU_7_6_CRANK:
 		initializeSubaru7_6_crankOnly(this);

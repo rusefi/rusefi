@@ -93,7 +93,7 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 
   const float WIDE_TOOTH_WIDTH  = 8.5;
   const float WIDE_TOOTH_OFFSET = 6.5;
-  const float TOOTH_WIDTH = 5.0;  
+  const float TOOTH_WIDTH = 5.0;
   const float GAP_WIDTH   = 5.0;
 
   float offset = WIDE_TOOTH_WIDTH;
@@ -135,7 +135,7 @@ void initialize36_2_1_1(TriggerWaveform *s) {
     s->addEvent360(offset + TOOTH_WIDTH, TriggerValue::FALL);
     offset += TOOTH_WIDTH + GAP_WIDTH;
   }
-  
+
   offset += TOOTH_WIDTH + GAP_WIDTH + WIDE_TOOTH_OFFSET; // gap before the last tooth
   // Finally, the last tooth is wide and we wrap it around to the beginning of the cycle
   // offset should be exactly 360 at this point
@@ -222,4 +222,8 @@ void initializeMitsubishi4G69Cam(TriggerWaveform *s) {
 
     s->setTriggerSynchronizationGap(1);
    	s->setSecondTriggerSynchronizationGap(4.5);
+}
+
+void initializeMitsubishi6G75Cam(TriggerWaveform *s) {
+	// todo: implement me!
 }
