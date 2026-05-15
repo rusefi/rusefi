@@ -49,15 +49,6 @@ public class DfuFlasher {
     public static boolean doAutoDfu(
         final JComponent parent,
         final PortResult port,
-        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
-    ) {
-        return CalibrationsHelper.updateFirmwareAndRestorePreviousCalibrations(
-            port, callbacks, () -> dfuUpdateFirmware(parent, port.port, callbacks), connectivityContext);
-    }
-
-    public static boolean doAutoDfu(
-        final JComponent parent,
-        final PortResult port,
         final BinaryProtocol bp,
         final LinkManager lm,
         final UpdateOperationCallbacks callbacks,
