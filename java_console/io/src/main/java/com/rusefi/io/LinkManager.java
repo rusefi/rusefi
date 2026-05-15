@@ -332,6 +332,11 @@ public class LinkManager implements Closeable {
         return connector == LinkConnector.VOID;
     }
 
+    /** True while a connection is in progress or established (between {@code start()} and {@code close()}). */
+    public boolean isActive() {
+        return isStarted;
+    }
+
     public void send(String command, boolean fireEvent) throws InterruptedException {
         if (this.connector == null)
             throw new NullPointerException("connector");

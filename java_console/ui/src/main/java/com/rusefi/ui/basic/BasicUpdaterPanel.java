@@ -5,10 +5,12 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.jobs.*;
+import org.jetbrains.annotations.Nullable;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.widgets.ToolButtons;
@@ -58,6 +60,7 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
     private final ConnectivityContext connectivityContext;
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateOperationCallbacks updateOperationCallbacks;
+    private @Nullable LinkManager splashLinkManager;
 //    private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
@@ -132,6 +135,17 @@ never used?
         return importTuneButton;
     }
 
+    /**
+     * Registers the live splash auto-connect {@link LinkManager} so firmware-update jobs can
+     * call {@link LinkManager#disconnect()} before flashing and {@link LinkManager#reconnect()}
+     * after. Pass {@code null} on disconnect to clear the handoff.
+     */
+    public void setSplashLinkManager(@Nullable LinkManager lm) {
+        this.splashLinkManager = lm;
+        importTuneButton.setLinkManager(lm);
+        updateUpdateFirmwareJob();
+    }
+
     public JCheckBox getMigrateSettings() {
         return migrateSettings;
     }
@@ -191,11 +205,11 @@ never used?
         final SerialPortType portType = portToUpdateFirmware.type;
         switch (portType) {
             case Ecu: {
-                job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
+                job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext, splashLinkManager);
                 break;
             }
             case EcuWithOpenblt: {
-                job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
+                job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext, splashLinkManager);
                 break;
             }
             case OpenBlt: {

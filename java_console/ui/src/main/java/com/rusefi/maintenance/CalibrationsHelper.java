@@ -11,7 +11,9 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.binaryprotocol.IniNotFoundException;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
+import org.jetbrains.annotations.Nullable;
 import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.ConfigurationImageGetterSetter2;
@@ -25,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -96,15 +99,42 @@ public class CalibrationsHelper {
         final Supplier<Boolean> updateFirmware,
         final ConnectivityContext connectivityContext
     ) {
+        return updateFirmwareAndRestorePreviousCalibrations(
+            originalEcuPort, null, null, callbacks, updateFirmware, connectivityContext);
+    }
+
+    public static boolean updateFirmwareAndRestorePreviousCalibrations(
+        final PortResult originalEcuPort,
+        @Nullable final BinaryProtocol bp,
+        @Nullable final LinkManager lm,
+        final UpdateOperationCallbacks callbacks,
+        final Supplier<Boolean> updateFirmware,
+        final ConnectivityContext connectivityContext
+    ) {
         AutoupdateUtil.assertNotAwtThread();
 
         final String timestampFileNameComponent = DATE_FORMAT.format(new Date());
+        final String backupName = getFileNameWithoutExtension(timestampFileNameComponent, "backup_from_ecu");
 
-        final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
-            originalEcuPort.port,
-            callbacks,
-            getFileNameWithoutExtension(timestampFileNameComponent, "backup_from_ecu"), connectivityContext
-        );
+        final Optional<CalibrationsInfo> prevCalibrations;
+        if (bp != null && lm != null) {
+            // Reuse the live connection — no new port-open needed.
+            final Optional<CalibrationsInfo>[] holder = new Optional[]{Optional.empty()};
+            try {
+                lm.submit(() -> holder[0] = readAndBackupCurrentCalibrations(bp, callbacks, backupName)).get();
+            } catch (ExecutionException | InterruptedException e) {
+                if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+                callbacks.logLine("Failed to read current calibrations: " + e.getMessage());
+                lm.disconnect();
+                return false;
+            }
+            prevCalibrations = holder[0];
+            lm.disconnect(); // release port so the flash can proceed
+        } else {
+            prevCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                originalEcuPort.port, callbacks, backupName, connectivityContext);
+        }
+
         if (!prevCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up current tune from ECU...");
             return false;
@@ -271,6 +301,87 @@ public class CalibrationsHelper {
                 connectivityContext
             );
             if (!mergedTuneFromEcu.isPresent()) {
+                callbacks.logLine("Failed to back up merged tune from ECU...");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Imports a tune into the ECU using a live {@link BinaryProtocol} connection.
+     * Reads, merges, and writes calibrations through the {@link LinkManager}'s executor queue so
+     * the operation is safely interleaved with the pull thread without closing the connection.
+     * Must NOT be called on the Swing EDT.
+     */
+    public static boolean importTune(
+        final BinaryProtocol bp,
+        final LinkManager lm,
+        final Msq msqToImport,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
+        AutoupdateUtil.assertNotAwtThread();
+        log.info("importTune via live BinaryProtocol connection");
+
+        final String signature = msqToImport.versionInfo.getSignature();
+        final IniFileModel iniFileToImport;
+        try {
+            iniFileToImport = BinaryProtocol.iniFileProvider.provide(signature);
+        } catch (IniNotFoundException e) {
+            callbacks.logLine(String.format("We failed to get .ini file for signature `%s`", signature));
+            return false;
+        }
+
+        final String timestampFileNameComponent = DATE_FORMAT.format(new Date());
+
+        if (!backupTune(iniFileToImport, msqToImport,
+                getFileNameWithoutExtension(timestampFileNameComponent, "tune_to_import"), callbacks)) {
+            callbacks.logLine("Failed to back up tune to import...");
+            return false;
+        }
+
+        final String backupName = getFileNameWithoutExtension(timestampFileNameComponent, "backup_from_ecu");
+        final Optional<CalibrationsInfo>[] prevTuneHolder = new Optional[]{Optional.empty()};
+        try {
+            lm.submit(() -> prevTuneHolder[0] = readAndBackupCurrentCalibrations(bp, callbacks, backupName)).get();
+        } catch (ExecutionException | InterruptedException e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+            callbacks.logLine("Failed to read current calibrations: " + e.getMessage());
+            return false;
+        }
+        if (!prevTuneHolder[0].isPresent()) {
+            callbacks.logLine("Failed to back up current tune from ECU...");
+            return false;
+        }
+
+        final Optional<CalibrationsInfo> mergedTune = mergeCalibrations(
+            iniFileToImport, msqToImport, prevTuneHolder[0].get(), callbacks,
+            new HashSet<>(Collections.singletonList("vinNumber"))
+        );
+
+        if (mergedTune.isPresent()) {
+            if (!backUpCalibrationsInfo(mergedTune.get(),
+                    getFileNameWithoutExtension(timestampFileNameComponent, "merged_to_write"), callbacks)) {
+                callbacks.logLine("Failed to back up merged tune...");
+                return false;
+            }
+            if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
+                    bp, lm, mergedTune.get().getImage().getConfigurationImage(), callbacks)) {
+                callbacks.logLine("Failed to write merged tune to ECU...");
+                return false;
+            }
+            final String mergedBackupName = getFileNameWithoutExtension(timestampFileNameComponent, "merged_from_ecu");
+            final Optional<CalibrationsInfo>[] mergedFromEcuHolder = new Optional[]{Optional.empty()};
+            try {
+                lm.submit(() -> mergedFromEcuHolder[0] =
+                    readAndBackupCurrentCalibrations(bp, callbacks, mergedBackupName)).get();
+            } catch (ExecutionException | InterruptedException e) {
+                if (e instanceof InterruptedException) Thread.currentThread().interrupt();
+                callbacks.logLine("Failed to read merged calibrations back: " + e.getMessage());
+                return false;
+            }
+            if (!mergedFromEcuHolder[0].isPresent()) {
                 callbacks.logLine("Failed to back up merged tune from ECU...");
                 return false;
             }

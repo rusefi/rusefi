@@ -57,6 +57,10 @@ public class SingleAsyncJobExecutor {
         return !jobInProgress.isPresent();
     }
 
+    public synchronized Optional<AsyncJob> getJobInProgress() {
+        return jobInProgress;
+    }
+
     private synchronized Optional<AsyncJob> setJobInProgressIfEmpty(final AsyncJob job) {
         final Optional<AsyncJob> prevJobInProgress = jobInProgress;
         if (!prevJobInProgress.isPresent()) {

@@ -2,6 +2,7 @@ package com.rusefi.maintenance.jobs;
 
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.ProgramSelector;
@@ -24,13 +25,17 @@ public class OpenBltAutoJob extends AsyncJobWithContext<SerialPortWithParentComp
 
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
-        if (linkManager != null) {
-            // Release the active ConsoleUI connection so the port is free for
-            // calibrations backup and OpenBLT operations.
-            linkManager.disconnect();
-        }
         try {
-            if (ProgramSelector.flashOpenbltSerialAutomatic(context.getParent(), context.getPort(), callbacks, connectivityContext)) {
+            final boolean ok;
+            if (linkManager != null) {
+                BinaryProtocol bp = linkManager.getBinaryProtocol();
+                ok = ProgramSelector.flashOpenbltSerialAutomatic(
+                    context.getParent(), context.getPort(), bp, linkManager, callbacks, connectivityContext);
+            } else {
+                ok = ProgramSelector.flashOpenbltSerialAutomatic(
+                    context.getParent(), context.getPort(), callbacks, connectivityContext);
+            }
+            if (ok) {
                 callbacks.done();
             } else {
                 callbacks.error();

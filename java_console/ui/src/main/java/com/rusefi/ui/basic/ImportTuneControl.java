@@ -3,7 +3,10 @@ package com.rusefi.ui.basic;
 import com.rusefi.util.CompatibilityOptional;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.io.LinkManager;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +30,8 @@ public class ImportTuneControl implements EnableableControl {
     private final BasicButtonCoordinator basicButtonCoordinator;
     private final ConnectivityContext connectivityContext;
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
+    @Nullable
+    private volatile LinkManager splashLinkManager;
 
     public ImportTuneControl(SingleAsyncJobExecutor singleAsyncJobExecutor,
                              BasicButtonCoordinator basicButtonCoordinator,
@@ -54,20 +59,24 @@ public class ImportTuneControl implements EnableableControl {
         return panel;
     }
 
+    public void setLinkManager(@Nullable LinkManager lm) {
+        this.splashLinkManager = lm;
+    }
+
     private void onImportTuneButtonClicked(final ActionEvent actionEvent) {
         basicButtonCoordinator.disableButtons();
-        CompatibilityOptional.ifPresentOrElse(ecuPortToUse.get(),
-            port -> {
-                importTune.showFileChooserToImportTuneAction(port, importTuneButton, connectivityContext);
-            }, () -> {
-                JOptionPane.showMessageDialog(
-                    importTuneButton,
-                    "Device is not connected",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
-        );
+        final LinkManager lm = splashLinkManager;
+        final BinaryProtocol liveBp = (lm != null) ? lm.getBinaryProtocol() : null;
+        if (liveBp != null) {
+            importTune.showFileChooserToImportTuneAction(liveBp, lm, importTuneButton, connectivityContext);
+        } else if (lm != null && lm.isActive()) {
+            importTune.showFileChooserToImportTuneAction(lm, importTuneButton, connectivityContext);
+        } else {
+            CompatibilityOptional.ifPresentOrElse(ecuPortToUse.get(),
+                port -> importTune.showFileChooserToImportTuneAction(port, importTuneButton, connectivityContext),
+                () -> JOptionPane.showMessageDialog(importTuneButton, "Device is not connected", "Error", JOptionPane.ERROR_MESSAGE)
+            );
+        }
         basicButtonCoordinator.refreshButtons();
     }
 
