@@ -5961,48 +5961,46 @@ crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=720
-gapsCount=3
+gapsCount=2
 syncEdge=RiseOnly
 isSynchronizationNeeded=true
 useOnlyPrimaryForSync=false
 shapeWithoutTdc=false
-gapFrom.0=1.620000
-gapTo.0=2.700000
-gapFrom.1=1.560000
-gapTo.1=2.600000
-gapFrom.2=0.255000
-gapTo.2=0.425000
+gapFrom.0=2.500000
+gapTo.0=3.500000
+gapFrom.1=0.250000
+gapTo.1=0.400000
 # end of meta section
-event 0 0 1 0.000000 2.160000
+event 0 0 1 0.000000 3.264151
 event 1 0 0 0.000000 nan
-event 2 0 1 22.000000 0.203694
-event 3 0 0 22.000000 nan
-event 4 0 1 42.000000 0.909178
-event 5 0 0 42.000000 nan
-event 6 0 1 88.000000 2.299885
-event 7 0 0 88.000000 nan
-event 8 0 1 180.000000 2.000000
-event 9 0 0 180.000000 nan
-event 10 0 1 264.000000 0.913043
-event 11 0 0 264.000000 nan
-event 12 0 1 284.000000 0.238095
-event 13 0 0 284.000000 nan
-event 14 0 1 352.000000 3.400000
-event 15 0 0 352.000000 nan
-event 16 0 1 376.000000 0.352941
-event 17 0 0 376.000000 nan
-event 18 0 1 400.000000 1.000000
-event 19 0 0 400.000000 nan
-event 20 0 1 448.000000 2.000000
-event 21 0 0 448.000000 nan
-event 22 0 1 468.000000 0.416667
-event 23 0 0 468.000000 nan
-event 24 0 1 538.000000 3.500000
-event 25 0 0 538.000000 nan
-event 26 0 1 562.000000 0.342857
-event 27 0 0 562.000000 nan
-event 28 0 1 612.000000 2.083333
-event 29 0 0 612.000000 nan
+event 2 0 1 88.400009 1.277457
+event 3 0 0 88.400009 nan
+event 4 0 1 109.600006 0.239819
+event 5 0 0 109.600006 nan
+event 6 0 1 130.399994 0.981132
+event 7 0 0 130.399994 nan
+event 8 0 1 178.000000 2.288461
+event 9 0 0 178.000000 nan
+event 10 0 1 267.199982 1.873950
+event 11 0 0 267.199982 nan
+event 12 0 1 355.199982 0.986547
+event 13 0 0 355.199982 nan
+event 14 0 1 375.600006 0.231818
+event 15 0 0 375.600006 nan
+event 16 0 1 444.000031 3.352941
+event 17 0 0 444.000031 nan
+event 18 0 1 466.399994 0.327485
+event 19 0 0 466.399994 nan
+event 20 0 1 488.800018 1.000000
+event 21 0 0 488.800018 nan
+event 22 0 1 538.400024 2.214286
+event 23 0 0 538.400024 nan
+event 24 0 1 559.599976 0.427419
+event 25 0 0 559.599976 nan
+event 26 0 1 629.599976 3.301887
+event 27 0 0 629.599976 nan
+event 28 0 1 650.799988 0.302857
+event 29 0 0 650.799988 nan
 TRIGGERTYPE 91 6 TT_TOYOTA_3_TOOTH_UZ 0.00
 knownOperationMode=true
 operationMode=FOUR_STROKE_CAM_SENSOR
