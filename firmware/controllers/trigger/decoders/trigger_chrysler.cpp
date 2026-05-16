@@ -614,30 +614,16 @@ void configureChryslerVtt15(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	int width = 5;
 
-	s->addToothRiseFall(37 + width, width);
-	s->addToothRiseFall(47 + width, width);
+  // best-effort angles from engine logs
+  // Definitely not exact, but close enough for testing purposes
+  angle_t angles[] = {
+    35.0, 45.6, 80.2, 124.4, 135.0, 145.4, 169.2, 213.8, 257.8, 268.0, 302.2, 313.4, 324.6, 349.4, 360.0
+  };
 
-	s->addToothRiseFall(81 + width, width);
-	s->addToothRiseFall(93 + width, width);
-	s->addToothRiseFall(105 + width, width);
+  for (int i = 0; i < sizeof(angles) / sizeof(angles[0]); i++) {
+    s->addToothRiseFall(angles[i], width);
+  }
 
-	s->addToothRiseFall(129 + width, width);
-	s->addToothRiseFall(139 + width, width);
-
-	s->addToothRiseFall(174 + width, width);
-	s->addToothRiseFall(186 + width, width);
-
-	s->addToothRiseFall(211 + width, width);
-
-	s->addToothRiseFall(265 + width, width);
-	s->addToothRiseFall(276 + width, width);
-	s->addToothRiseFall(286 + width, width);
-
-	s->addToothRiseFall(309 + width, width);
-
-	s->addToothRiseFall(360, width);
-
-	s->setTriggerSynchronizationGap4(/*gapIndex*/0, 2.16);
-	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 2.08);
-	s->setTriggerSynchronizationGap4(/*gapIndex*/2, 0.34);
+  s->setTriggerSynchronizationGap3(0, 2.5, 3.5);
+  s->setTriggerSynchronizationGap3(1, 0.25, 0.4);
 }
