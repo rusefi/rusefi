@@ -1910,7 +1910,7 @@ Fuel to odd when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.)
 After a knock event, reapply fuel at this rate.
 
 ### knockFuelTrim
-Fuel trim when knock, max 30%
+Maximum Amount of Fuel trim when knock
 
 ### knockSpectrumSensitivity
 

@@ -5707,7 +5707,7 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> knockFuelTrimReapplyRate;
 	/**
-	 * Fuel trim when knock, max 30%
+	 * Maximum Amount of Fuel trim when knock
 	 * units: %
 	 * offset 3875
 	 */
