@@ -277,7 +277,7 @@ void setupHellenSharedInputs(void) {
 	// 2.36 is measured while input is 2.5
 	// Set input with no pull-down for both pins (we still have pull-down in voltage divider)
 	efiSetPadModeWithoutOwnershipAcquisition("A21-ADC", Gpio::MM100_IN_AUX2, PAL_MODE_INPUT);
-	efiSetPadModeWithoutOwnershipAcquisition("A21-EINT", Gpio::MM100_IN_AUX4_DIGITAL, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A21-EINT", Gpio::MM100_IN_AUX2_DIGITAL, PAL_MODE_INPUT);
 }
 
 #ifndef EFI_BOOTLOADER
