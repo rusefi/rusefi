@@ -28,7 +28,7 @@ void setHellen64Can();
 void setHellenAnalogDividers();
 void setHellenVbatt();
 
-void setuoHellenSharedInputs(void);
+void setupHellenSharedInputs(void);
 
 int detectHellenBoardId();
 void detectHellenBoardType();

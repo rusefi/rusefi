@@ -83,7 +83,7 @@ void setUaefiDefaultETBPins() {
  * @brief Board-specific initialization code.
  */
 static void uaefi_boardInitHardware() {
-	setuoHellenSharedInputs();
+	setupHellenSharedInputs();
 }
 
 /**
