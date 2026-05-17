@@ -78,6 +78,14 @@ void setUaefiDefaultETBPins() {
   setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
 }
 
+
+/**
+ * @brief Board-specific initialization code.
+ */
+static void uaefi_boardInitHardware() {
+	setuoHellenSharedInputs();
+}
+
 /**
  * @brief   Board-specific configuration defaults.
  *
@@ -199,6 +207,7 @@ extern AemXSeriesWideband aem1;
 }
 
 void setup_custom_board_overrides() {
+	custom_board_InitHardware = uaefi_boardInitHardware;
 	custom_board_DefaultConfiguration = uaefi_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = uaefi_boardConfigOverrides;
 	custom_board_periodicSlowCallback = uaefi_slowCallback;
