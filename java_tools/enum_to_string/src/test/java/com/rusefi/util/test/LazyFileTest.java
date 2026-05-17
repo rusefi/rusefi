@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LazyFileTest {
     @Test
     public void testUnifySpaces() {
-        assertEquals("a\nb\nc", LazyFileImpl.unifySpaces("a\r\n\r\nb\n\n\nc"));
+        assertEquals("a\n\nb\n\n\nc", LazyFileImpl.unifySpaces("a\r\n\r\nb\n\n\nc"));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class LazyFileTest {
 
 
     /**
-     * This test asserts the "Newline Swallowing" defect.
+     * This test verifies that the "Newline Swallowing" defect is fixed.
      * The defect occurred because split("\\r?\\n") without a limit parameter ignores trailing empty strings.
      * If a file ended with newlines or contained only newlines, they were lost in the comparison buffer,
      * causing the tool to think the content was unchanged (or changed when it wasn't).
@@ -152,25 +152,21 @@ public class LazyFileTest {
         writer1.write("line1\n\nline2\n");
         writer1.close();
 
-        // BUG: In the current implementation, "line1\n\nline2\n" results in "line1\nline2\n" in the comparison buffer
-        // due to split() behavior and unconditional newline append.
-        // The file is created because "line1\nline2\n" != "" (initial state).
         assertTrue(Files.exists(testFile), "File should be created");
         long firstModTime = Files.getLastModifiedTime(testFile).toMillis();
+        String content = Files.readString(testFile);
+        assertEquals("line1\n\nline2\n", content, "Newlines should be preserved");
 
         // Second write with same content
         LazyFile writer2 = new LazyFileImpl(testFile.toString());
         writer2.write("line1\n\nline2\n");
         writer2.close();
 
-        // INTERESTING: In this specific case, it DOES NOT rewrite because the buggy comparison buffer
-        // for "line1\n\nline2\n" is consistent ("line1\nline2\n") during both write and read-back.
-        // However, it's still a bug because it's comparing WRONG content (swallowed newlines).
-        assertEquals(firstModTime, Files.getLastModifiedTime(testFile).toMillis(), "Should not rewrite for same newlines even if they are swallowed consistently");
+        assertEquals(firstModTime, Files.getLastModifiedTime(testFile).toMillis(), "Should not rewrite for same content");
     }
 
     /**
-     * This test asserts the "Inconsistent Buffering" defect.
+     * This test verifies that the "Inconsistent Buffering" defect is fixed.
      * The defect occurred because write() was adding a newline unconditionally for every line processed,
      * but only if the line matched the split criteria. Multiple write() calls vs one large write() call
      * would result in different numbers of newlines in the comparison buffer, causing false positives in the diff.
@@ -187,20 +183,17 @@ public class LazyFileTest {
         assertTrue(Files.exists(testFile), "File should be created");
         long firstModTime = Files.getLastModifiedTime(testFile).toMillis();
 
-        // Write in parts
-        // And then it proceeds to write the file!
-        // If it proceeds to write the file, why does the timestamp NOT change?
-        // Maybe the write is too fast and timestamp resolution is low?
-        // Let's add a sleep.
+        // Sleep to ensure modification time would change if written
         try { Thread.sleep(100); } catch (InterruptedException e) {}
 
+        // Write in parts - should result in SAME content and NOT rewrite
         LazyFile writer2 = new LazyFileImpl(testFile.toString());
         writer2.write("part1");
         writer2.write("part2");
         writer2.write("\n");
         writer2.close();
 
-        assertNotEquals(firstModTime, Files.getLastModifiedTime(testFile).toMillis(), "KNOWN BUG: Rewrites when written in parts due to inconsistent buffering");
+        assertEquals(firstModTime, Files.getLastModifiedTime(testFile).toMillis(), "Should NOT rewrite when written in parts if final content is same");
     }
 
     /**
@@ -241,9 +234,7 @@ public class LazyFileTest {
         writer1.write("\n\n\n");
         writer1.close();
 
-        // KNOWN BUG: split("\\r?\\n") on only newlines returns an empty array.
-        // Comparison buffer remains empty, matches initial empty state of non-existent file.
-        // Thus, the file is NOT created.
-        assertFalse(Files.exists(testFile), "KNOWN BUG: File is NOT created when only newlines are written");
+        assertTrue(Files.exists(testFile), "File SHOULD be created even if it only contains newlines");
+        assertEquals(3, Files.readString(testFile).length());
     }
 }
