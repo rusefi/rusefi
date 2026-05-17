@@ -267,6 +267,19 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 	return engineConfiguration->analogInputDividerCoefficient;
 }
 
+void setuoHellenSharedInputs(void) {
+	// A21 is connected to to ADC and EINT inputs: PC4 for ADC, and PE9 for EINT
+	// board.c configures both as input with pull-down
+	// when using A21 in ADC mode PC4 is reconfigured as analog input with pull-down disabled
+	// While PE9 is still input with pull-down enabled
+	// This adds additional low-side reistor to 1/2 volage divider
+	// This affects acuracity of voltage mesurement
+	// 2.36 is measured while input is 2.5
+	// Set input with no pull-down for both pins (we still have pull-down in voltage divider)
+	efiSetPadModeWithoutOwnershipAcquisition("A21-ADC", Gpio::MM100_IN_AUX2, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A21-EINT", Gpio::MM100_IN_AUX4_DIGITAL, PAL_MODE_INPUT);
+}
+
 #ifndef EFI_BOOTLOADER
 bool boardSdCardEnable() {
 	// on mega-module we manage SD card power supply
