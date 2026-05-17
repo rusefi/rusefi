@@ -267,7 +267,7 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 	return engineConfiguration->analogInputDividerCoefficient;
 }
 
-void setuoHellenSharedInputs(void) {
+void setupHellenSharedInputs(void) {
 	// A21 is connected to to ADC and EINT inputs: PC4 for ADC, and PE9 for EINT
 	// board.c configures both as input with pull-down
 	// when using A21 in ADC mode PC4 is reconfigured as analog input with pull-down disabled
