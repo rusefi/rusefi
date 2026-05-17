@@ -14,21 +14,39 @@ public class TriggerMarkdownGeneratorTest {
     public void testGenerator() throws IOException {
         String testFolder = "test_triggers";
         new File(testFolder).mkdirs();
-        String triggersFile = testFolder + File.separator + "triggers.txt";
-        String content = "TRIGGERTYPE 1 2 TT_TEST_A 0.00\n" +
-                "knownOperationMode=true\n" +
-                "#\n" +
-                "event 0 0 0 0.0 0.0\n" +
-                "event 0 1 0 10.0 0.0\n" +
-                "TRIGGERTYPE 2 2 TT_TEST_B 0.00\n" +
-                "knownOperationMode=true\n" +
-                "#\n" +
-                "event 0 0 0 0.0 0.0\n" +
-                "event 0 1 0 10.0 0.0\n" +
-                "TRIGGERTYPE 3 1 TT_TEST_C 0.00\n" +
-                "knownOperationMode=true\n" +
-                "#\n" +
-                "event 0 0 0 0.0 0.0\n";
+        String triggersFile = testFolder + File.separator + "triggers.yaml";
+        String content = "- name: TT_TEST_A\n" +
+            "  operationMode: FOUR_STROKE_CAM_SENSOR\n" +
+            "  syncEdge: RiseOnly\n" +
+            "  syncGaps:\n" +
+            "  - from: 1.5\n" +
+            "    to: 2.5\n" +
+            "  teeth:\n" +
+            "  - channel: 0\n" +
+            "    angle: 0\n" +
+            "  - channel: 1\n" +
+            "    angle: 20\n" +
+            "- name: TT_TEST_B\n" +
+            "  operationMode: FOUR_STROKE_CAM_SENSOR\n" +
+            "  syncEdge: RiseOnly\n" +
+            "  syncGaps:\n" +
+            "  - from: 1.5\n" +
+            "    to: 2.5\n" +
+            "  teeth:\n" +
+            "  - channel: 0\n" +
+            "    angle: 0\n" +
+            "  - channel: 1\n" +
+            "    angle: 20\n" +
+            "- name: TT_TEST_C\n" +
+            "  operationMode: FOUR_STROKE_CAM_SENSOR\n" +
+            "  syncEdge: RiseOnly\n" +
+            "  syncGaps:\n" +
+            "  - from: 1.5\n" +
+            "    to: 2.5\n" +
+            "  teeth:\n" +
+            "  - channel: 0\n" +
+            "    angle: 0\n";
+ 
         Files.write(Paths.get(triggersFile), content.getBytes());
 
         String outputFile = "test_report.md";
@@ -38,10 +56,10 @@ public class TriggerMarkdownGeneratorTest {
         List<String> lines = Files.readAllLines(Paths.get(outputFile));
 
         // Check grouping and sorting
-        assertTrue(lines.contains("## tooth count 0"));
+        assertTrue(lines.contains("## tooth count 1"));
         assertTrue(lines.contains("- [TEST_C](#TEST_C)"));
         assertFalse(lines.contains("- [TT_TEST_C](#TT_TEST_C)"));
-        assertTrue(lines.contains("## tooth count 1"));
+        assertTrue(lines.contains("## tooth count 2"));
         assertTrue(lines.contains("- [TEST_A](#TEST_A)"));
         assertTrue(lines.contains("- [TEST_B](#TEST_B)"));
 
