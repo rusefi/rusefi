@@ -38,6 +38,7 @@ public class BinaryProtocolExecutor {
         try (LinkManager linkManager = new LinkManager()
             .setNeedPullText(false)
             .setNeedPullLiveData(true)
+            .setNotifyGlobalStatusOnClose(false)
         ) {
             callbacks.logLine(String.format(msg + ": Connecting to port `%s`...", port));
 
