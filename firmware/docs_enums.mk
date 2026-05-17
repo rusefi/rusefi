@@ -84,6 +84,9 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
   DOCS_ENUMS_INPUTS += $(BOARD_DIR)/board_config.txt
 endif
 
+#
+# java code generators use LazyFile to avoid unneeded file updates so that we have incremental builds
+#
 .docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR)
 	bash $(PROJECT_DIR)/bin/detect_github.sh
 	bash $(PROJECT_DIR)/gen_live_documentation.sh
