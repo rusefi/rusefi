@@ -105,3 +105,8 @@ See CLAUDE.md
 ### Coding Style
 - Always use curly brackets for `if` statements, even for single-line blocks.
 
+### Bug Fix Process
+- **Mandatory separation**: When fixing a bug, you must first create and commit (or submit in a separate prompt) a reproduction test case that fails without the fix.
+- Only after the reproduction test case is verified to fail, you may proceed with implementing and committing the fix.
+- Verification of the fix must be done using the same reproduction test case.
+
