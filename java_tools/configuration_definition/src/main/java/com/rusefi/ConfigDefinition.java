@@ -188,7 +188,8 @@ public class ConfigDefinition {
             }
         }
 
-        FieldsApiGenerator.run();
+        FieldsApiGenerator.run(ConfigDefinitionRootOutputFolder.getValue() + "controllers/generated/generated_fields_api_header.h");
+        System.out.println("FieldsApiGenerator: Result written to " + ConfigDefinitionRootOutputFolder.getValue() + "controllers/generated/generated_fields_api_header.h");
         handlePage(state, 2, softPrePrependsFileNames, usedNames);
         handlePage(state, 3, softPrePrependsFileNames, usedNames);
         handlePage(state, 4, softPrePrependsFileNames, usedNames);
