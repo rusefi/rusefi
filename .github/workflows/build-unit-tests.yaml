@@ -87,6 +87,22 @@ jobs:
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh
 
+    - name: Summarize Code Coverage
+      if: ${{ matrix.os != 'macos-latest' }}
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: unit_tests/gcov_working_area/gcov/coverage.xml
+        badge: true
+        format: markdown
+        output: both
+
+    - name: Add Coverage PR Comment
+      if: ${{ matrix.os != 'macos-latest' && github.event_name == 'pull_request' }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results.md
+
     - name: Upload code coverage artifacts
       if: ${{ matrix.os != 'macos-latest' }}
       uses: actions/upload-artifact@v7
