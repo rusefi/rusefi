@@ -9,7 +9,6 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
-#include "hellen_leds_100.cpp"
 #include "board_overrides.h"
 #include "connectors/generated_board_pin_names.h"
 #ifndef EFI_BOOTLOADER

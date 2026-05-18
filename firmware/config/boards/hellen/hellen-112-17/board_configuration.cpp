@@ -41,8 +41,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
 }
 
-#include "hellen_leds_100.cpp"
-
 static void hellen112_17_boardConfigOverrides() {
 	// rev A needs EN pin but newer revisions would potentially not use it
 	setHellenMegaEnPin();

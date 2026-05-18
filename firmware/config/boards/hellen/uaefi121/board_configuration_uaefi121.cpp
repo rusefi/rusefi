@@ -10,17 +10,9 @@
 #include "mega-uaefi.h"
 #include "board_overrides.h"
 
-Gpio getCommsLedPin() {
-	return Gpio::MM100_LED3_BLUE;
-}
-
 Gpio getRunningLedPin() {
 	// this one is used to drive tach pin 43
 	return Gpio::Unassigned;
-}
-
-Gpio getWarningLedPin() {
-	return Gpio::MM100_LED4_YELLOW;
 }
 
 static void setupDefaultSensorInputs() {

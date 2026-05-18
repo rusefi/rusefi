@@ -11,17 +11,9 @@
 //#include "connectors/generated_board_pin_names.h"
 #include "../uaefi121/mega-uaefi.h"
 
-Gpio getCommsLedPin() {
-	return Gpio::MM100_LED3_BLUE;
-}
-
 Gpio getRunningLedPin() {
 	// this one is used to drive 20D - High side output
 	return Gpio::Unassigned;
-}
-
-Gpio getWarningLedPin() {
-	return Gpio::MM100_LED4_YELLOW;
 }
 
 static void setupDefaultSensorInputs() {
