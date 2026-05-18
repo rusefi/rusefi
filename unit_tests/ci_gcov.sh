@@ -43,6 +43,12 @@ source ../coverage_common.sh
 #   --html-nested              : generate a nested HTML report with per-directory pages
 #
 # For debug use --html-details --html-single-page --verbose to generate a single html
-gcovr --exclude-throw-branches --exclude-unreachable-branches --decisions --merge-mode-functions=separate \
+GCOVR_COMMON_OPTS="--exclude-throw-branches --exclude-unreachable-branches --decisions --merge-mode-functions=separate \
       $GCOVR_EXCLUDES \
-      -j4  -r ../.. --html-nested gcov/index.html
+      -j4 -r ../.."
+
+# Generate nested HTML report for browsing coverage details.
+gcovr $GCOVR_COMMON_OPTS --html-nested gcov/index.html
+
+# Generate Cobertura XML for GitHub Action coverage summary processing.
+gcovr $GCOVR_COMMON_OPTS --xml-pretty gcov/coverage.xml
