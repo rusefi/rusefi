@@ -1,0 +1,140 @@
+name: Custom Board Unit Tests
+
+on:
+  workflow_call:
+    inputs:
+      rusefi_submodule_path:
+        required: false
+        type: string
+        default: ext/rusefi
+      baseline_workflow_file:
+        required: false
+        type: string
+        default: build-unit-tests.yaml
+      is_pull_request:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: recursive
+
+    - name: Install required software
+      run: |
+        sudo bash "${{ inputs.rusefi_submodule_path }}/misc/actions/add-ubuntu-latest-apt-mirrors.sh"
+        sudo bash "${{ inputs.rusefi_submodule_path }}/misc/actions/ubuntu-install-tools.sh"
+        python3 -m pip install --user gcovr
+
+    - name: Build tests
+      working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
+      run: make -j12 COVERAGE=yes
+
+    - name: Run tests
+      working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
+      run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
+
+    - name: Generate coverage artifacts
+      working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
+      run: |
+        rm -rf gcov_working_area
+        mkdir -p gcov_working_area/gcov
+        cd gcov_working_area
+        gcovr --exclude '.*/googletest/.*' --exclude '.*/unit_tests/.*' -j4 -r ../.. --html-nested --output gcov/index.html
+        gcovr --exclude '.*/googletest/.*' --exclude '.*/unit_tests/.*' -j4 -r ../.. --xml-pretty --output gcov/coverage.xml
+
+    - name: Summarize code coverage
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: ${{ inputs.rusefi_submodule_path }}/unit_tests/gcov_working_area/gcov/coverage.xml
+        badge: true
+        format: markdown
+        output: both
+
+    - name: Download master coverage artifact
+      if: ${{ inputs.is_pull_request }}
+      uses: dawidd6/action-download-artifact@v11
+      with:
+        github_token: ${{ github.token }}
+        workflow: ${{ inputs.baseline_workflow_file }}
+        branch: master
+        workflow_conclusion: success
+        name: rusefi_code_coverage.txt
+        path: master_coverage
+        if_no_artifact_found: warn
+
+    - name: Add coverage delta vs master
+      if: ${{ inputs.is_pull_request }}
+      run: |
+        python3 - << 'PY'
+        import glob
+        import os
+        import xml.etree.ElementTree as ET
+
+        summary_path = "code-coverage-results.md"
+        output_path = "code-coverage-results-with-delta.md"
+        current_xml = "${{ inputs.rusefi_submodule_path }}/unit_tests/gcov_working_area/gcov/coverage.xml"
+        master_candidates = glob.glob("master_coverage/**/coverage.xml", recursive=True)
+
+        base_summary = ""
+        if os.path.exists(summary_path):
+            try:
+                with open(summary_path, "r", encoding="utf-8") as f:
+                    base_summary = f.read().rstrip()
+            except PermissionError:
+                base_summary = "Coverage summary generated, but source file was not readable."
+
+        lines = ["", "---", "", "### Coverage Change vs `master`", ""]
+
+        if not os.path.exists(current_xml):
+            lines.append("Current coverage file not found.")
+        elif not master_candidates:
+            lines.append("Master baseline coverage artifact not found.")
+        else:
+            master_xml = master_candidates[0]
+
+            def line_rate_percent(path: str) -> float:
+                root = ET.parse(path).getroot()
+                return float(root.attrib["line-rate"]) * 100.0
+
+            current = line_rate_percent(current_xml)
+            master = line_rate_percent(master_xml)
+            delta = current - master
+
+            if delta > 0:
+                trend = "increased"
+                sign = "+"
+            elif delta < 0:
+                trend = "decreased"
+                sign = ""
+            else:
+                trend = "unchanged"
+                sign = ""
+
+            lines.append(f"- Current: `{current:.2f}%`")
+            lines.append(f"- Master: `{master:.2f}%`")
+            lines.append(f"- Delta: `{sign}{delta:.2f}%` ({trend})")
+
+        with open(output_path, "w", encoding="utf-8") as f:
+            if base_summary:
+                f.write(base_summary + "\n")
+            f.write("\n".join(lines) + "\n")
+        PY
+
+    - name: Add coverage PR comment
+      if: ${{ inputs.is_pull_request }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results-with-delta.md
+
+    - name: Upload code coverage artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: rusefi_code_coverage.txt
+        path: ./${{ inputs.rusefi_submodule_path }}/unit_tests/gcov_working_area/gcov
