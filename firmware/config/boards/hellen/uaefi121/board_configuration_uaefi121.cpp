@@ -40,6 +40,13 @@ static void setupDefaultSensorInputs() {
   engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D1;  // HALL1
 }
 
+/**
+ * @brief Board-specific initialization code.
+ */
+static void uaefi_121boardInitHardware() {
+	setupHellenSharedInputs();
+}
+
 static void uaefi_121boardDefaultConfiguration() {
   setMegaUaefiBoardDefaultConfiguration();
 
@@ -138,6 +145,7 @@ Gpio* getBoardMetaOutputs() {
 }
 
 void setup_custom_board_overrides() {
+	custom_board_InitHardware = uaefi_121boardInitHardware;
 	custom_board_DefaultConfiguration = uaefi_121boardDefaultConfiguration;
 	custom_board_ConfigOverrides = setMegaUaefiBoardConfigOverrides;
 }
