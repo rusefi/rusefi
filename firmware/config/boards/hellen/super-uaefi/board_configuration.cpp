@@ -66,6 +66,13 @@ void setUaefiDefaultETBPins() {
 }
 
 /**
+ * @brief Board-specific initialization code.
+ */
+static void super_uaefi_boardInitHardware() {
+	setupHellenSharedInputs();
+}
+
+/**
  * @brief   Board-specific configuration defaults.
  *
 
@@ -161,6 +168,7 @@ int getBoardMetaDcOutputsCount() {
 }
 
 void setup_custom_board_overrides() {
+	custom_board_InitHardware = super_uaefi_boardInitHardware;
 	custom_board_DefaultConfiguration = super_uaefi_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = setMegaUaefiBoardConfigOverrides;
 }
