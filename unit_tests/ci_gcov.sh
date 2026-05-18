@@ -48,7 +48,7 @@ GCOVR_COMMON_OPTS="--exclude-throw-branches --exclude-unreachable-branches --dec
       -j4 -r ../.."
 
 # Generate nested HTML report for browsing coverage details.
-gcovr $GCOVR_COMMON_OPTS --html-nested gcov/index.html
+gcovr $GCOVR_COMMON_OPTS --html-nested --output gcov/index.html
 
 # Generate Cobertura XML for GitHub Action coverage summary processing.
-gcovr $GCOVR_COMMON_OPTS --xml-pretty gcov/coverage.xml
+gcovr $GCOVR_COMMON_OPTS --xml-pretty --output gcov/coverage.xml
