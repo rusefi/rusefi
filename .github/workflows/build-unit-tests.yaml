@@ -96,8 +96,67 @@ jobs:
         format: markdown
         output: both
 
-    - name: Add Coverage PR Comment
+    - name: Download master coverage artifact
       if: ${{ matrix.os != 'macos-latest' && github.event_name == 'pull_request' }}
+      uses: dawidd6/action-download-artifact@v11
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        workflow: build-unit-tests.yaml
+        branch: master
+        workflow_conclusion: success
+        name: rusefi_code_coverage.txt
+        path: master_coverage
+        if_no_artifact_found: warn
+
+    - name: Add coverage delta vs master
+      if: ${{ matrix.os != 'macos-latest' && github.event_name == 'pull_request' }}
+      run: |
+        python3 - << 'PY'
+        import glob
+        import os
+        import xml.etree.ElementTree as ET
+
+        summary_path = "code-coverage-results.md"
+        current_xml = "unit_tests/gcov_working_area/gcov/coverage.xml"
+        master_candidates = glob.glob("master_coverage/**/coverage.xml", recursive=True)
+
+        lines = ["", "---", "", "### Coverage Change vs `master`", ""]
+
+        if not os.path.exists(current_xml):
+            lines.append("Current coverage file not found.")
+        elif not master_candidates:
+            lines.append("Master baseline coverage artifact not found.")
+        else:
+            master_xml = master_candidates[0]
+
+            def line_rate_percent(path: str) -> float:
+                root = ET.parse(path).getroot()
+                return float(root.attrib["line-rate"]) * 100.0
+
+            current = line_rate_percent(current_xml)
+            master = line_rate_percent(master_xml)
+            delta = current - master
+
+            if delta > 0:
+                trend = "increased"
+                sign = "+"
+            elif delta < 0:
+                trend = "decreased"
+                sign = ""
+            else:
+                trend = "unchanged"
+                sign = ""
+
+            lines.append(f"- Current: `{current:.2f}%`")
+            lines.append(f"- Master: `{master:.2f}%`")
+            lines.append(f"- Delta: `{sign}{delta:.2f}%` ({trend})")
+
+        with open(summary_path, "a", encoding="utf-8") as f:
+            f.write("\n".join(lines) + "\n")
+        PY
+
+    - name: Add Coverage PR Comment
+      if: ${{ matrix.os != 'macos-latest' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false }}
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         recreate: true
