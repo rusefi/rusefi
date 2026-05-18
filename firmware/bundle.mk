@@ -77,14 +77,15 @@ WHITE_LABEL_BUNDLE_NAME = $(WHITE_LABEL)_bundle_$(BUNDLE_NAME)
 
 CONSOLE_FOLDER = $(FOLDER)/console
 DRIVERS_FOLDER = $(FOLDER)/drivers
+BIN_FOLDER = $(FOLDER)/bin
+DEVICE_BIN_FOLDER = $(FOLDER)/bin/device
 
 UPDATE_FOLDER_SOURCES = \
   $(RUSEFI_CONSOLE_SETTINGS) \
   $(INI_FILE) \
   ../misc/console_launcher/readme.html
 
-FOLDER_SOURCES = \
-  ../java_console/bin
+FOLDER_SOURCES =
 
 # Custom board builds don't include the simulator
 ifneq ($(BUNDLE_SIMULATOR),false)
@@ -133,7 +134,7 @@ BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
 # We need to put different things in the bundle depending on some meta-info flags
 ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_HEX_OUT = $(BOOTLOADER_HEX)
-  BOOTLOADER_BIN_OUT = $(FOLDER)/openblt.bin
+  BOOTLOADER_BIN_OUT = $(FOLDER)/bin/device/openblt.bin
   SREC_TARGET = $(FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA)_update.srec
 else
   FIRMWARE_OUTPUTS = $(FOLDER)/$(PROJECT).hex
@@ -170,7 +171,7 @@ CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(CONSOLE_FOLDE
 
 FULL_BUNDLE_CONTENT = \
   $(ST_DRIVERS) \
-  $(FOLDER_TARGETS) \
+  $(BIN_FOLDER) \
   $(ROOT_FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
@@ -206,7 +207,7 @@ $(SREC_TARGET): $(BUILDDIR)/rusefi.srec
 $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
 	ln -rfs $< $@
 
-$(BOOTLOADER_BIN_OUT): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(FOLDER)
+$(BOOTLOADER_BIN_OUT): bootloader/blbuild/openblt_$(PROJECT_BOARD).bin | $(DEVICE_BIN_FOLDER)
 	ln -rfs $< $@
 
 $(FIRMWARE_BIN_OUT) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
@@ -253,6 +254,14 @@ $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 	cp ext/rusefi-gha/static-content/silent_st_drivers2.exe $(DRIVERS_FOLDER)
 
 $(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
+	mkdir -p $@
+
+$(BIN_FOLDER): .FORCE | $(FOLDER)
+	rm -rf $@
+	mkdir -p $@
+	find ../java_console/bin -maxdepth 1 -mindepth 1 | xargs -I{} ln -rfs {} $@/
+
+$(DEVICE_BIN_FOLDER): | $(BIN_FOLDER)
 	mkdir -p $@
 
 $(BRANCH_REF_FILE):

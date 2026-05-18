@@ -31,7 +31,7 @@ import static com.rusefi.core.FindFileHelper.INPUT_FILES_PATH;
  * @see StLinkFlasher
  */
 public class DfuFlasher {
-    public static final String BOOTLOADER_BIN_FILE = INPUT_FILES_PATH + "/" + "openblt.bin";
+    public static final String BOOTLOADER_BIN_FILE = INPUT_FILES_PATH + "/bin/device/openblt.bin";
     private static final String DFU_CMD_TOOL_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
     private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
