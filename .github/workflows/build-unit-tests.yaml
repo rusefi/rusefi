@@ -117,8 +117,17 @@ jobs:
         import xml.etree.ElementTree as ET
 
         summary_path = "code-coverage-results.md"
+        output_path = "code-coverage-results-with-delta.md"
         current_xml = "unit_tests/gcov_working_area/gcov/coverage.xml"
         master_candidates = glob.glob("master_coverage/**/coverage.xml", recursive=True)
+
+        base_summary = ""
+        if os.path.exists(summary_path):
+            try:
+                with open(summary_path, "r", encoding="utf-8") as f:
+                    base_summary = f.read().rstrip()
+            except PermissionError:
+                base_summary = "Coverage summary generated, but source file was not writable."
 
         lines = ["", "---", "", "### Coverage Change vs `master`", ""]
 
@@ -151,7 +160,9 @@ jobs:
             lines.append(f"- Master: `{master:.2f}%`")
             lines.append(f"- Delta: `{sign}{delta:.2f}%` ({trend})")
 
-        with open(summary_path, "a", encoding="utf-8") as f:
+        with open(output_path, "w", encoding="utf-8") as f:
+            if base_summary:
+                f.write(base_summary + "\n")
             f.write("\n".join(lines) + "\n")
         PY
 
@@ -160,7 +171,7 @@ jobs:
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         recreate: true
-        path: code-coverage-results.md
+        path: code-coverage-results-with-delta.md
 
     - name: Upload code coverage artifacts
       if: ${{ matrix.os != 'macos-latest' }}
