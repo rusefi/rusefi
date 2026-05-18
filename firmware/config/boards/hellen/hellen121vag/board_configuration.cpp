@@ -72,6 +72,13 @@ static void hellen121_vag_boardConfigOverrides() {
 }
 
 /**
+ * @brief Board-specific initialization code.
+ */
+static void hellen121_vag_boardInitHardware() {
+	setupHellenSharedInputs();
+}
+
+/**
  * @brief   Board-specific configuration defaults.
  *
 
@@ -132,6 +139,7 @@ int getBoardMetaDcOutputsCount() {
 }
 
 void setup_custom_board_overrides() {
+	custom_board_InitHardware = hellen121_vag_boardInitHardware;
 	custom_board_DefaultConfiguration = hellen121_vag_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = hellen121_vag_boardConfigOverrides;
 }
