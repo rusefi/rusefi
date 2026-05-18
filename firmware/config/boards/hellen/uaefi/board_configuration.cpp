@@ -16,23 +16,7 @@
 #include "AemXSeriesLambda.h"
 #endif // EFI_BOOTLOADER
 
-static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
-	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
-	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;
-	engineConfiguration->injectionPins[3] = Gpio::MM100_INJ4;
-	engineConfiguration->injectionPins[4] = Gpio::MM100_INJ5;
-	engineConfiguration->injectionPins[5] = Gpio::MM100_INJ6;
-}
-
-static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
-	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN2;
-	engineConfiguration->ignitionPins[2] = Gpio::MM100_IGN3;
-	engineConfiguration->ignitionPins[3] = Gpio::MM100_IGN4;
-	engineConfiguration->ignitionPins[4] = Gpio::MM100_IGN5;
-	engineConfiguration->ignitionPins[5] = Gpio::MM100_IGN6;
-}
+#include "../uaefi121/mega-uaefi.h"
 
 static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
@@ -72,13 +56,6 @@ static bool uaefi_validateBoardConfig() {
   return true;
 }
 
-void setUaefiDefaultETBPins() {
-  // users would want to override those if using H-bridges for stepper idle control
-  setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
-  setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
-}
-
-
 /**
  * @brief Board-specific initialization code.
  */
@@ -93,11 +70,7 @@ static void uaefi_boardInitHardware() {
  *
  */
 static void uaefi_boardDefaultConfiguration() {
-	setInjectorPins();
-	setIgnitionPins();
-	setUaefiDefaultETBPins();
-
-  setHellenMMbaro();
+	setUaefiBoardDefaultConfiguration();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
