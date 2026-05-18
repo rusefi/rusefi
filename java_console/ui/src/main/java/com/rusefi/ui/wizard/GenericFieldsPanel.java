@@ -5,10 +5,12 @@ import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.HierarchyEvent;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,10 @@ public class GenericFieldsPanel extends AbstractWizardStep {
     private final Map<String, JComponent> editors = new LinkedHashMap<>();
     private final Map<String, JLabel> errorLabels = new LinkedHashMap<>();
     private JButton saveButton;
+    private final JLabel connectionStatusLabel = new JLabel(" ");
+
+    private final ConnectionStatusLogic.Listener connectionStatusListener = isConnected ->
+        SwingUtilities.invokeLater(() -> onConnectionStatusChanged(isConnected));
 
     public GenericFieldsPanel(UIContext uiContext, String title, String description,
                               List<String> fieldNames, String wizardFlagFieldName) {
@@ -102,10 +108,28 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         scale(saveButton, 1.5f);
         saveButton.addActionListener(e -> onSave());
 
+        connectionStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        connectionStatusLabel.setForeground(Color.RED);
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         buttonPanel.add(saveButton);
-        content.add(buttonPanel, BorderLayout.SOUTH);
+
+        JPanel southPanel = new JPanel(new BorderLayout());
+        southPanel.add(connectionStatusLabel, BorderLayout.NORTH);
+        southPanel.add(buttonPanel, BorderLayout.CENTER);
+        content.add(southPanel, BorderLayout.SOUTH);
+
+        content.addHierarchyListener(e -> {
+            if ((e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) == 0) {
+                return;
+            }
+            if (content.isShowing()) {
+                ConnectionStatusLogic.INSTANCE.addAndFireListener(connectionStatusListener);
+            } else {
+                ConnectionStatusLogic.INSTANCE.removeListener(connectionStatusListener);
+            }
+        });
     }
 
     private static JComponent buildEditorFor(IniField field) {
@@ -123,8 +147,20 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         return new JTextField(20);
     }
 
+    private void onConnectionStatusChanged(boolean isConnected) {
+        if (!isConnected) {
+            connectionStatusLabel.setText("ECU disconnected — reconnect to save");
+            if (saveButton != null) {
+                saveButton.setEnabled(false);
+            }
+        } else {
+            connectionStatusLabel.setText(" ");
+            updateValidity();
+        }
+    }
+
     private void updateValidity() {
-        boolean ok = true;
+        boolean ok = ConnectionStatusLogic.INSTANCE.isConnected();
         for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
             String name = entry.getKey();
             String error = WizardFieldPolicy.forField(name).errorMessage(entry.getValue());
@@ -166,7 +202,10 @@ public class GenericFieldsPanel extends AbstractWizardStep {
 
     private void onSave() {
         WizardConfig cfg = WizardConfig.snapshot(uiContext);
-        if (cfg == null) return;
+        if (cfg == null) {
+            onConnectionStatusChanged(false);
+            return;
+        }
 
         ConfigurationImage modified = cfg.image.clone();
         for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
