@@ -11,6 +11,10 @@ on:
         required: false
         type: string
         default: build-unit-tests.yaml
+      board_meta_path:
+        required: false
+        type: string
+        default: meta-info.env
       is_pull_request:
         required: false
         type: boolean
@@ -33,7 +37,9 @@ jobs:
 
     - name: Build tests
       working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
-      run: make -j12 COVERAGE=yes
+      run: |
+        source ../firmware/config/boards/common_script_read_meta_env.inc "../../../${{ inputs.board_meta_path }}"
+        make -j12 COVERAGE=yes
 
     - name: Run tests
       working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
