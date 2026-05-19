@@ -376,4 +376,39 @@ bool IsToothLoggerEnabled() {
 	return ToothLoggerEnabled;
 }
 
+#if EFI_FILE_LOGGING
+
+static int ToothLoggerWriteBin(Writer &writer, CompositeBuffer* buffer) {
+	int size = buffer->nextIdx * sizeof(composite_logger_s);
+
+	writer.write(reinterpret_cast<const char*>(buffer->buffer), size);
+
+	return size;
+}
+
+int ToothLoggerWriter(FileBufferedWriter &writer) {
+	int ret = 0;
+	CompositeBuffer* buffer = nullptr;
+
+	// manualy pick buffer, do not use GetToothLoggerBufferImpl() as it sets buffer ready flag to TS
+	msg_t msg = filledBuffers.fetch(&buffer, TIME_MS2I(3000));
+	if (msg == MSG_TIMEOUT) {
+		// if we did not get any event within 3 seconds - finish current file and wait for new event.
+		// TODO: we need to flush data from currently writing buffer!
+	} else if (msg != MSG_OK) {
+		return 0;
+	}
+
+	// can return nullptr
+	if (buffer) {
+		ret = ToothLoggerWriteBin(writer, buffer);
+
+		ReturnToothLoggerBuffer(buffer);
+	}
+
+	return ret;
+}
+
+#endif /* EFI_FILE_LOGGING */
+
 #endif /* EFI_TOOTH_LOGGER */
