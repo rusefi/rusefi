@@ -2056,7 +2056,7 @@ float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 #define IAT_IGN_CORR_LOAD_COUNT 8
 
 int16_t[IAT_IGN_CORR_LOAD_COUNT x IAT_IGN_CORR_TEMP_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -50, 50, 1
-int8_t[IAT_IGN_CORR_TEMP_COUNT] ignitionIatCorrTempBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? 120 : 248}, 0
+int8_t[IAT_IGN_CORR_TEMP_COUNT] ignitionIatCorrTempBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? 150 : 300}, 0
 uint8_t[IAT_IGN_CORR_LOAD_COUNT] autoscale ignitionIatCorrLoadBins;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 5 : 5 * @@UNITS_KPA_TO_PSI@@}, 0, 0, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 
 #define INJ_PHASE_LOAD_COUNT 16
