@@ -530,9 +530,9 @@ static bool useMsdMode() {
 		return false;
 	}
 	if (isIgnVoltage()) {
-	  // if we have battery voltage let's give priority to logging not reading
-	  // this gives us a chance to SD card log cranking
-	  return false;
+		// if we have battery voltage let's give priority to logging not reading
+		// this gives us a chance to SD card log cranking
+		return false;
 	}
 	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
 	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
