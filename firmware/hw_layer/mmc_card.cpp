@@ -929,11 +929,6 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		sdReportStorageInit();
 
 		sdMode = SD_MODE_ECU;
-
-#if EFI_STORAGE_SD == TRUE
-		// Give some time for storage manager to load settings from SD
-		chThdSleepMilliseconds(1000);
-#endif
 	}
 
 #if HAL_USE_USB_MSD
@@ -941,6 +936,10 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	// If we have a device AND USB is connected, mount the card to USB, otherwise
 	// mount the null device and try to mount the filesystem ourselves
 	if (useMsdMode()) {
+#if EFI_STORAGE_SD == TRUE
+		// Give some time for storage manager to load settings from SD
+		chThdSleepMilliseconds(1000);
+#endif
 		sdTargetMode = SD_MODE_PC;
 	}
 #endif
