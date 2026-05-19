@@ -417,12 +417,14 @@ void setDefaultBaseEngine() {
 	engineConfiguration->issFilterReciprocal = 2;
 
 	//knock
-#ifdef KNOCK_SPECTROGRAM
+	// Still set defaults, even spectrogram is not enaled.
+	// these fields unsconditionaly exists in config, lets keep safe defaults
+//#ifdef KNOCK_SPECTROGRAM
 	engineConfiguration->enableKnockSpectrogram = false;
 	engineConfiguration->enableKnockSpectrogramFilter = false;
 	engineConfiguration->knockSpectrumSensitivity = 1.0;
 	engineConfiguration->knockFrequency = 0.0;
-#endif
+//#endif
 
 	// Check engine light
 #if EFI_PROD_CODE
