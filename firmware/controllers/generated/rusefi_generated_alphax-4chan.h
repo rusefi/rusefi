@@ -1418,6 +1418,7 @@
 #define MEMBER_FLOW flow
 #define MENU_NAME_AUX_TEMP1 "AuxTemp1 sensor"
 #define MENU_NAME_AUX_TEMP2 "AuxTemp2 sensor"
+#define MIN_launchTpsThreshold 20
 #define MLQ_FIELD_HEADER_SIZE 89
 #define MLQ_HEADER_SIZE 24
 #define MsIoBox_config_s_size 4
@@ -1568,7 +1569,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2682622140
+#define SIGNATURE_HASH 4165352160
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2182,7 +2183,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.05.19.alphax-4chan.2682622140"
+#define TS_SIGNATURE "rusEFI master.2026.05.20.alphax-4chan.4165352160"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

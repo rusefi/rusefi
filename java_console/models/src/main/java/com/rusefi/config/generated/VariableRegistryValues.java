@@ -1333,6 +1333,7 @@ public class VariableRegistryValues {
 	public static final int mc33810maxDwellTimer_e_DWELL_8MS = 2;
 	public static final String MENU_NAME_AUX_TEMP1 = "AuxTemp1 sensor";
 	public static final String MENU_NAME_AUX_TEMP2 = "AuxTemp2 sensor";
+	public static final int MIN_launchTpsThreshold = 20;
 	public static final int MLQ_FIELD_HEADER_SIZE = 89;
 	public static final int MLQ_HEADER_SIZE = 24;
 	public static final int MsIoBox_config_s_size = 4;
@@ -1781,7 +1782,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.05.19.hellen154hyundai.2903889463";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.05.20.hellen154hyundai.3400957035";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2132;
