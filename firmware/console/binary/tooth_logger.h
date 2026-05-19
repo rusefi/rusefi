@@ -89,6 +89,7 @@ void ReturnToothLoggerBuffer(CompositeBuffer*);
 
 #include "file_writer.h"
 
+bool ToothLoggerHasData();
 int ToothLoggerWriter(FileBufferedWriter &writer);
 
 #endif
