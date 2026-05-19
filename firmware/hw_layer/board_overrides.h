@@ -30,7 +30,7 @@
 
 // function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
-using setup_custom_board_config_type = void (*)(engine_configuration_s * /*previousConfiguration*/);
+using setup_custom_board_config_type = void (*)(const engine_configuration_s * /*previousConfiguration*/);
 using setup_custom_board_output_type = int (*)();
 using setup_custom_board_engine_type_type = void (*)(engine_type_e);
 using setup_custom_get_float_type = float (*)();
