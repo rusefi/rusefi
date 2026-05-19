@@ -24,6 +24,10 @@ inputs:
     required: false
     default: "false"
     description: Whether to post sticky PR comment
+  pr_number:
+    required: false
+    default: ""
+    description: Pull request number for comment when not in pull_request event
 
 runs:
   using: composite
@@ -107,8 +111,16 @@ runs:
             f.write("\n".join(lines) + "\n")
         PY
 
-    - name: Add Coverage PR Comment
-      if: ${{ inputs.post_pr_comment == 'true' }}
+    - name: Add Coverage PR Comment (explicit PR)
+      if: ${{ inputs.post_pr_comment == 'true' && inputs.pr_number != '' }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        number: ${{ inputs.pr_number }}
+        path: code-coverage-results-with-delta.md
+
+    - name: Add Coverage PR Comment (current PR)
+      if: ${{ inputs.post_pr_comment == 'true' && inputs.pr_number == '' }}
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         recreate: true
