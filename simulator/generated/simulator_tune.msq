@@ -33,7 +33,7 @@
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
         <constant digits="2" name="afr_value1" units="AFR">10.0</constant>
         <constant digits="2" name="afr_value2" units="AFR">19.99</constant>
-        <constant digits="3" name="afrExpAverageAlpha" units="">1.0</constant>
+        <constant digits="4" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"None"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
          200.0
@@ -2615,7 +2615,7 @@
         <constant digits="1" name="knockRetardAggression" units="%">20.0</constant>
         <constant digits="1" name="knockRetardReapplyRate" units="deg/s">3.0</constant>
         <constant digits="0" name="knockSamplingDuration" units="Deg">45</constant>
-        <constant digits="2" name="knockSpectrumSensitivity" units="sense">0.0</constant>
+        <constant digits="2" name="knockSpectrumSensitivity" units="sense">1.0</constant>
         <constant digits="1" name="knockSuppressMinTps" units="%">10.0</constant>
         <constant name="l9779_cs">"NONE"</constant>
         <constant name="l9779spiDevice">"Off"</constant>
@@ -5078,7 +5078,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.19.f407-discovery.1069039307" version="5.0"/>
+    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.19.f407-discovery.2737171613" version="5.0"/>
     <bibliography author="rusEFI 20260510" writeDate="date"/>
     <settings/>
     <userComments/>
