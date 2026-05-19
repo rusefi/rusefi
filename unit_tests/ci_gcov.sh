@@ -39,13 +39,15 @@ source ../coverage_common.sh
 #   --merge-mode-functions=separate : keep separate entries for same-named functions
 #   --exclude '/.*/googletest/': skip Google Test framework sources
 #   -j4                        : use 4 parallel threads for processing
-#   -r ../..                   : repository root (two levels up from gcov_working_area)
+#   -r <root>                  : repository root; defaults to two levels up from gcov_working_area
+#                                override by setting GCOVR_ROOT before invoking this script
 #   --html-nested              : generate a nested HTML report with per-directory pages
 #
 # For debug use --html-details --html-single-page --verbose to generate a single html
+GCOVR_ROOT="${GCOVR_ROOT:-../..}"
 GCOVR_COMMON_OPTS="--exclude-throw-branches --exclude-unreachable-branches --decisions --merge-mode-functions=separate \
       $GCOVR_EXCLUDES \
-      -j4 -r ../.."
+      -j4 -r $GCOVR_ROOT"
 
 # Generate nested HTML report for browsing coverage details.
 gcovr $GCOVR_COMMON_OPTS --html-nested --output gcov/index.html
