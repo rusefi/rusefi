@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - PWM support for fan control #5407
  - Per cylinder knock control individual gain control #9404
  - 6G75 Cam trigger support #9533
+ - minimal launchTpsThreshold is required to reduce confusion
 
 ### Breaking Changes
  - Dodge Neon 2003 crank actually uses crank decoder #8977

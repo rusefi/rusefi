@@ -1095,7 +1095,9 @@ include_file controllers/algo/accel_enrichment.engineConfiguration.txt
     float mapExpAverageAlpha;A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'1' means no filtering, 0.98 would be some filtering.;"", 1, 0, 0, 1, 3
 	float magicNumberAvailableForDevTricks
 	float turbochargerFilter
-	int launchTpsThreshold;;"", 1, 0, 0, 20000, 0
+
+#define MIN_launchTpsThreshold 20
+	int launchTpsThreshold;;"", 1, 0, @@MIN_launchTpsThreshold@@, 20000, 0
 	float launchActivateDelay;;"", 1, 0, 0, 20000, 0
 
 	stft_s stft

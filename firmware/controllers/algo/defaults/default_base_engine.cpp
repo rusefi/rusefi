@@ -131,6 +131,10 @@ void defaultsOrFixOnBurn() {
     setDynoDefaults();
   }
 
+  if (engineConfiguration->launchTpsThreshold < MIN_launchTpsThreshold) {
+    engineConfiguration->launchTpsThreshold = MIN_launchTpsThreshold;
+  }
+
 	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
 	  engineConfiguration->mapExpAverageAlpha = 1;
 	}
