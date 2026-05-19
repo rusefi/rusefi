@@ -16,7 +16,7 @@
 
 #if EFI_FILE_LOGGING
 
-#include "buffered_writer.h"
+#include "file_writer.h"
 #include "status_loop.h"
 #include "binary_logging.h"
 
@@ -43,106 +43,9 @@ static bool sdLoggerReady = false;
 
 #include "rtc_helper.h"
 
-// TODO: do we need this additioal layer of buffering?
-// FIL structure already have buffer of FF_MAX_SS size
-// check if it is better to increase FF_MAX_SS and drop BufferedWriter?
-struct SdLogBufferWriter final : public BufferedWriter<512> {
-	bool failed = false;
-
-	int start(FIL *fd) {
-		if (m_fd) {
-			efiPrintf("SD logger already started!");
-			return -1;
-		}
-
-		totalLoggedBytes = 0;
-		writeCounter = 0;
-
-		m_fd = fd;
-
-		return 0;
-	}
-
-	void stop() {
-		m_fd = nullptr;
-
-		flush();
-
-		totalLoggedBytes = 0;
-		writeCounter = 0;
-	}
-
-	size_t writen() {
-		return totalLoggedBytes;
-	}
-
-	size_t writeInternal(const char* buffer, size_t count) override {
-		if ((!m_fd) || (failed)) {
-			return 0;
-		}
-
-		size_t bytesWritten;
-		efiAssert(ObdCode::CUSTOM_STACK_6627, hasLotsOfRemainingStack(), "sdlow#3", 0);
-		FRESULT err = f_write(m_fd, buffer, count, &bytesWritten);
-
-		if (err) {
-			printFatFsError("log file write", err);
-			failed = true;
-			return 0;
-		} else if (bytesWritten != count) {
-			printFatFsError("log file write partitial", err);
-			failed = true;
-			return 0;
-		} else {
-			writeCounter++;
-			totalLoggedBytes += count;
-			if (writeCounter >= F_SYNC_FREQUENCY) {
-				/**
-				 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
-				 * todo: one day someone should actually measure the relative cost of f_sync
-				 */
-				f_sync(m_fd);
-				writeCounter = 0;
-			}
-		}
-
-		return bytesWritten;
-	}
-
-private:
-	FIL *m_fd = nullptr;
-
-	size_t totalLoggedBytes = 0;
-	size_t writeCounter = 0;
-};
-
-#else // not EFI_PROD_CODE (simulator)
-
-#include <fstream>
-
-class SdLogBufferWriter final : public BufferedWriter<512> {
-public:
-	bool failed = false;
-
-	SdLogBufferWriter()
-		: m_stream("rusefi_simulator_log.mlg", std::ios::binary | std::ios::trunc)
-	{
-		sdLoggerReady = true;
-	}
-
-	size_t writeInternal(const char* buffer, size_t count) override {
-		m_stream.write(buffer, count);
-		m_stream.flush();
-		return count;
-	}
-
-private:
-	std::ofstream m_stream;
-};
-
 #endif
 
-static NO_CACHE SdLogBufferWriter logBuffer;
+static NO_CACHE FileBufferedWriter logBuffer;
 
 #if EFI_PROD_CODE
 
@@ -319,7 +222,7 @@ static void sdStatistics() {
 	efiPrintf("SDIO mode");
 #endif
 	if (sdLoggerIsReady()) {
-		efiPrintf("filename=%s size=%d", logName, logBuffer.writen());
+		efiPrintf("filename=%s size=%d", logName, logBuffer.size());
 	}
 #if EFI_FILE_LOGGING
 	efiPrintf("%d SD card fields", getSdCardFieldsCount());
@@ -643,15 +546,15 @@ static int sdTriggerLogger();
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
-static int sdLogger(FIL *fd)
-{
+// actually write logs on SD card
+static int sdLogger(FIL *fd) {
 	int ret = 0;
 
 	if (!sdLoggerInitDone) {
 		incLogFileName(fd);
 		ret = sdLoggerCreateFile(fd);
 		if (ret == 0) {
-			ret = logBuffer.start(fd);
+			ret = logBuffer.init(fd);
 		}
 		resetFileLogging();
 
@@ -686,7 +589,7 @@ static int sdLogger(FIL *fd)
 	// check if we need to start next log file
 	// in next write (assume same size as current) will cross LOGGER_MAX_FILE_SIZE boundary
 	// TODO: use f_tell() instead ?
-	if (logBuffer.writen() + ret > LOGGER_MAX_FILE_SIZE) {
+	if (logBuffer.size() + ret > LOGGER_MAX_FILE_SIZE) {
 		logBuffer.stop();
 		sdLoggerCloseFile(fd);
 
@@ -938,6 +841,7 @@ die:
 }
 
 static int mlgLogger() {
+	static size_t writeCounter = 0;
 	// TODO: move this check somewhere out of here!
 	// if the SPI device got un-picked somehow, cancel SD card
 	// Don't do this check at all if using SDMMC interface instead of SPI
@@ -954,6 +858,16 @@ static int mlgLogger() {
 	// Something went wrong (already handled), so cancel further writes
 	if (logBuffer.failed) {
 		return -1;
+	}
+
+	writeCounter++;
+	if (writeCounter >= F_SYNC_FREQUENCY) {
+		/**
+		 * Performance optimization: not f_sync after each line, sync is probably a heavy operation
+		 * todo: one day someone should actually measure the relative cost of sync
+		 */
+		logBuffer.sync();
+		writeCounter = 0;
 	}
 
 	auto freq = engineConfiguration->sdCardLogFrequency;
