@@ -33,7 +33,7 @@
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
         <constant digits="2" name="afr_value1" units="AFR">10.0</constant>
         <constant digits="2" name="afr_value2" units="AFR">19.99</constant>
-        <constant digits="3" name="afrExpAverageAlpha" units="">1.0</constant>
+        <constant digits="4" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"None"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
          200.0
@@ -2715,7 +2715,7 @@
         <constant name="launchSparkCutEnable">"no"</constant>
         <constant digits="0" name="launchSpeedThreshold" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">30</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
-        <constant digits="0" name="launchTpsThreshold" units="">0</constant>
+        <constant digits="0" name="launchTpsThreshold" units="">20</constant>
         <constant name="limitTorqueReductionTime">"no"</constant>
         <constant name="logicAnalyzerPins1">"NONE"</constant>
         <constant name="logicAnalyzerPins2">"NONE"</constant>
@@ -5080,7 +5080,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.19.f407-discovery.4012602460" version="5.0"/>
+    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.20.f407-discovery.3297134273" version="5.0"/>
     <bibliography author="rusEFI 20260510" writeDate="date"/>
     <settings/>
     <userComments/>
