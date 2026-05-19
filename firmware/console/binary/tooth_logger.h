@@ -66,4 +66,11 @@ CompositeBuffer* GetToothLoggerBufferBlocking();
 // Return a buffer to the pool once its contents have been read
 void ReturnToothLoggerBuffer(CompositeBuffer*);
 
-#include "big_buffer.h"
+
+#if EFI_FILE_LOGGING
+
+#include "file_writer.h"
+
+int ToothLoggerWriter(FileBufferedWriter &writer);
+
+#endif
