@@ -556,9 +556,6 @@ bool mountMmc() {
 // Log 'regular' ECU log to MLG file
 static int mlgLogger();
 
-// Log binary trigger log
-static int sdTriggerLogger();
-
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
@@ -585,7 +582,7 @@ static int sdLogger(FIL *fd) {
 
 	if (!sdLoggerFailed) {
 		if (engineConfiguration->sdTriggerLog) {
-			ret = sdTriggerLogger();
+			ret = ToothLoggerWriter(logBuffer);
 		} else {
 			ret = mlgLogger();
 		}
@@ -915,25 +912,6 @@ static int mlgLogger() {
 	chThdSleepUntilWindowed(before, before + period);
 
 	return writen;
-}
-
-static int sdTriggerLogger() {
-	int ret = 0;
-#if EFI_TOOTH_LOGGER
-	auto buffer = GetToothLoggerBufferBlocking();
-
-	// can return nullptr
-	if (buffer) {
-		ret = buffer->nextIdx * sizeof(composite_logger_s);
-		logBuffer.write(reinterpret_cast<const char*>(buffer->buffer), ret);
-		if (logBuffer.failed) {
-			ret = -1;
-		}
-
-		ReturnToothLoggerBuffer(buffer);
-	}
-#endif /* EFI_TOOTH_LOGGER */
-	return ret;
 }
 
 #endif // EFI_PROD_CODE
