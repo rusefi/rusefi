@@ -10,9 +10,14 @@
 
 #include "pch.h"
 
+#include "board_overrides.h"
+
 #if EFI_HD_ACR
 
 static bool getAcrState() {
+    if (custom_board_getAcrState.has_value()) {
+        return custom_board_getAcrState.value()();
+    }
     bool engineMovedRecently = getTriggerCentral()->engineMovedRecently();
     engine->engineState.acrEngineMovedRecently = engineMovedRecently;
 	auto currentPhase = getTriggerCentral()->getCurrentEnginePhase(getTimeNowNt());
