@@ -29,8 +29,6 @@
 // at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
 #define F_SYNC_FREQUENCY 10
 
-static bool sdLoggerReady = false;
-
 #if EFI_PROD_CODE
 
 #include <cstdio>
@@ -92,6 +90,7 @@ static const char *sdStatusName(SD_STATUS status)
 	return sdStatusNames[status];
 }
 
+static bool sdLoggerReady = false;
 static SD_STATUS sdStatus = SD_STATUS_INIT;
 
 static SD_MODE sdMode = SD_MODE_IDLE;
