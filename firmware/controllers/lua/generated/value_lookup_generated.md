@@ -974,12 +974,15 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 
 
 ### sdTriggerLog
-'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
+'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 
 ### stepper_dc_use_two_wires
 
 
 ### watchOutForLinearTime
+
+
+### sdTriggerLogCsv
 
 
 ### engineChartSize

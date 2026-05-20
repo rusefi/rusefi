@@ -3654,7 +3654,7 @@ struct engine_configuration_s {
 	offset 1436 bit 24 */
 	bool useBiQuadOnAuxSpeedSensors : 1 {};
 	/**
-	 * 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
+	 * 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 	offset 1436 bit 25 */
 	bool sdTriggerLog : 1 {};
 	/**
@@ -3665,16 +3665,16 @@ struct engine_configuration_s {
 	bool watchOutForLinearTime : 1 {};
 	/**
 	offset 1436 bit 28 */
-	bool unusedBit_542_28 : 1 {};
+	bool sdTriggerLogCsv : 1 {};
 	/**
 	offset 1436 bit 29 */
-	bool unusedBit_542_29 : 1 {};
+	bool unusedBit_543_29 : 1 {};
 	/**
 	offset 1436 bit 30 */
-	bool unusedBit_542_30 : 1 {};
+	bool unusedBit_543_30 : 1 {};
 	/**
 	offset 1436 bit 31 */
-	bool unusedBit_542_31 : 1 {};
+	bool unusedBit_543_31 : 1 {};
 	/**
 	 * units: count
 	 * offset 1440
