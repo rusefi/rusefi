@@ -47,12 +47,7 @@ jobs:
 
     - name: Generate coverage artifacts
       working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
-      run: |
-        rm -rf gcov_working_area
-        mkdir -p gcov_working_area/gcov
-        cd gcov_working_area
-        gcovr --exclude '.*/googletest/.*' --exclude '.*/unit_tests/.*' -j4 -r ../.. --html-nested --output gcov/index.html
-        gcovr --exclude '.*/googletest/.*' --exclude '.*/unit_tests/.*' -j4 -r ../.. --xml-pretty --output gcov/coverage.xml
+      run: bash ../../../.github/workflows/bin/generate-coverage-artifacts.sh
 
     - name: Report code coverage
       uses: rusefi/rusefi/.github/actions/unit-test-coverage-report@master
