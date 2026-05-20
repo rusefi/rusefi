@@ -1197,10 +1197,12 @@ bit useCltBasedRpmLimit,"yes","no";If enabled, use a curve for RPM limit (based 
 bit forceO2Heating,"yes","no";If enabled, don't wait for engine start to heat O2 sensors.\nWARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
 bit invertVvtControlIntake,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
+
 bit useBiQuadOnAuxSpeedSensors,"yes","no"
-bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
+bit sdTriggerLog,"Trigger","Full MLG";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 bit stepper_dc_use_two_wires,"yes","no"
 bit watchOutForLinearTime,"yes","no"
+bit sdTriggerLogCsv,"CSV","Binary"
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 

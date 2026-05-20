@@ -442,6 +442,8 @@ bool ToothLoggerHasData() {
 
 }
 
+static bool sdTriggerLogCsv = 0;
+
 int ToothLoggerWriter(FileBufferedWriter &writer) {
 	int ret = 0;
 	CompositeBuffer* buffer = nullptr;
@@ -467,8 +469,11 @@ int ToothLoggerWriter(FileBufferedWriter &writer) {
 
 	// can return nullptr
 	if (buffer) {
-		// TODO: add configuration field for this
-		if (1) {
+		// on-fly format change is not supported
+		if (writer.size() == 0) {
+			sdTriggerLogCsv = engineConfiguration->sdTriggerLogCsv;
+		}
+		if (sdTriggerLogCsv) {
 			if (writer.size() == 0) {
 				ToothLoggerWriteCsvHeader(writer);
 			}
