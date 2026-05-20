@@ -559,8 +559,64 @@ static int mlgLogger();
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
-// actually write logs on SD card
-static int sdLogger(FIL *fd) {
+static int sdLoggerTooth(FIL *fd) {
+	int ret = 0;
+
+	// file is not created yet?
+	if (!sdLoggerInitDone) {
+		// do we have some data ready?
+		if (!ToothLoggerHasData()) {
+			// nothing to log
+			// wait another 100mS for tooth data
+			chThdSleepMilliseconds(100);
+			return 0;
+		}
+
+		// Ok, lets create file
+		incLogFileName(fd);
+
+		ret = sdLoggerCreateFile(fd);
+		if (ret != 0) {
+			sdLoggerFailed = true;
+			return -1;
+		}
+
+		ret = logBuffer.init(fd);
+		if (ret != 0) {
+			// TODO: close file
+			sdLoggerFailed = true;
+			return -2;
+		}
+
+		sdLoggerInitDone = true;
+	}
+
+	// we have file... do we have some data to write?
+	ret = ToothLoggerWriter(logBuffer);
+	if (ret > 0) {
+		// we have data, we have successfully wrote it
+		return ret;
+	}
+
+	if (ret < 0) {
+		// some error
+		sdLoggerFailed = true;
+	}
+
+	// some error or no more data...
+	// in both cases: close file
+	logBuffer.stop();
+	sdLoggerCloseFile(fd);
+
+	// need to start new file
+	sdLoggerInitDone = false;
+
+	// error or size of wroten data
+	return ret;
+}
+
+// actually write mlg log on SD card
+static int sdLoggerMlg(FIL *fd) {
 	int ret = 0;
 
 	if (!sdLoggerInitDone) {
@@ -568,35 +624,27 @@ static int sdLogger(FIL *fd) {
 		MLG::resetFileLogging();
 
 		ret = sdLoggerCreateFile(fd);
-		if (ret == 0) {
-			ret = logBuffer.init(fd);
+		if (ret != 0) {
+			sdLoggerFailed = true;
+			return -1;
+		}
+		ret = logBuffer.init(fd);
+		if (ret != 0) {
+			// TODO: close file
+			sdLoggerFailed = true;
+			return -2;
 		}
 
 		sdLoggerInitDone = true;
-
-		if (ret < 0) {
-			sdLoggerFailed = true;
-			return ret;
-		}
 	}
 
-	if (!sdLoggerFailed) {
-		if (engineConfiguration->sdTriggerLog) {
-			ret = ToothLoggerWriter(logBuffer);
-		} else {
-			ret = mlgLogger();
-		}
-	}
+	ret = mlgLogger();
 
 	if (ret < 0) {
+		logBuffer.stop();
+		sdLoggerCloseFile(fd);
 		sdLoggerFailed = true;
 		return ret;
-	}
-
-	if (sdLoggerFailed) {
-		// logger is dead until restart, do not waste CPU
-		chThdSleepMilliseconds(100);
-		return -1;
 	}
 
 #ifdef LOGGER_MAX_FILE_SIZE
@@ -621,7 +669,7 @@ static void sdLoggerStart(void)
 	sdLoggerFailed = false;
 
 #if EFI_TOOTH_LOGGER
-	// TODO: cache this config option untill sdLoggerStop()
+	// TODO: cache this config option until sdLoggerStop()
 	if (engineConfiguration->sdTriggerLog) {
 		EnableToothLogger();
 	}
@@ -633,7 +681,7 @@ static void sdLoggerStop(void)
 	logBuffer.stop();
 	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
-	// TODO: cache this config option untill sdLoggerStop()
+	// TODO: pick this config option from cached
 	if (engineConfiguration->sdTriggerLog) {
 		DisableToothLogger();
 	}
@@ -786,8 +834,19 @@ static int sdModeExecuter()
 			errorHandlerDeleteReports();
 			sdNeedRemoveReports = false;
 		}
-		// execute logger
-		return sdLogger(&resources.fd);
+
+		if ((sdLoggedSuppressed) || (sdLoggerFailed)) {
+			// logger is dead or paused, do not waste CPU
+			chThdSleepMilliseconds(100);
+			return 0;
+		}
+
+		// execute one of logger
+		if (engineConfiguration->sdTriggerLog) {
+			return sdLoggerTooth(&resources.fd);
+		} else {
+			return sdLoggerMlg(&resources.fd);
+		}
 	}
 
 	return 0;
@@ -855,7 +914,9 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	while (1) {
 		sdModeSwitcher();
-		sdModeExecuter();
+		if (sdModeExecuter() == 0) {
+			chThdSleepMilliseconds(100);
+		}
 	}
 
 die:
