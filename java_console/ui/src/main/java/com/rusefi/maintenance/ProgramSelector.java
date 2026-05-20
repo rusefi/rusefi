@@ -113,6 +113,10 @@ public class ProgramSelector {
 
     public void setJobExecutor(@Nullable SingleAsyncJobExecutor jobExecutor) {
         this.jobExecutor = jobExecutor;
+        if (jobExecutor != null) {
+            jobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(() -> apply(connectivityContext.getCurrentHardware())));
+            jobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(() -> apply(connectivityContext.getCurrentHardware())));
+        }
     }
 
     public void setLinkManager(@Nullable LinkManager linkManager) {
@@ -398,9 +402,11 @@ public class ProgramSelector {
         }
 
         int menuItemCount = popupMenu.getComponentCount();
+        boolean isJobRunning = jobExecutor != null && !jobExecutor.isNotInProgress();
+
         splitButton.setPopupMenu(menuItemCount > 0 ? popupMenu : null);
-        splitButton.setMainButtonEnabled(hasSerialPorts);
-        splitButton.setArrowButtonEnabled(menuItemCount > 0);
+        splitButton.setMainButtonEnabled(hasSerialPorts && !isJobRunning);
+        splitButton.setArrowButtonEnabled(menuItemCount > 0 && !isJobRunning);
 
         AutoupdateUtil.trueLayoutAndRepaint(splitButton);
         AutoupdateUtil.trueLayoutAndRepaint(content);

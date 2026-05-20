@@ -75,6 +75,7 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
         this.ecuPortToUse = ecuPortToUse;
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
         this.updateOperationCallbacks = updateOperationCallbacks;
+        singleAsyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
         singleAsyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
         importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this, connectivityContext);
 //        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
