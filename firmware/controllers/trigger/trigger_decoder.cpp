@@ -185,6 +185,12 @@ int64_t TriggerDecoderBase::getTotalEventCounter() const {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
+/**
+ * @return number of completed wheel synchronization cycles for this decoder since reset.
+ * Incremented once per full trigger cycle via incrementShaftSynchronizationCounter().
+ * For the primary (crank) decoder this effectively counts engine revolutions/cycles
+ * and is used widely (e.g. crank-vs-cam phase alignment, knock indexing, VVT validation).
+ */
 int TriggerDecoderBase::getSynchronizationCounter() const {
 	return synchronizationCounter;
 }
