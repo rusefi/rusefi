@@ -562,6 +562,7 @@ static int mlgLogger();
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
+#if EFI_TOOTH_LOGGER
 static int sdLoggerTooth(FIL *fd) {
 	int ret = 0;
 
@@ -617,6 +618,7 @@ static int sdLoggerTooth(FIL *fd) {
 	// error or size of wroten data
 	return ret;
 }
+#endif
 
 // actually write mlg log on SD card
 static int sdLoggerMlg(FIL *fd) {
@@ -845,9 +847,12 @@ static int sdModeExecuter()
 		}
 
 		// execute one of logger
+#if EFI_TOOTH_LOGGER
 		if (engineConfiguration->sdTriggerLog) {
 			return sdLoggerTooth(&resources.fd);
-		} else {
+		} else
+#endif
+		{
 			return sdLoggerMlg(&resources.fd);
 		}
 	}
