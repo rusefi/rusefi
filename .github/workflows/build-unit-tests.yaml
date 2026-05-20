@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    permissions:
-      pull-requests: write
 
     strategy:
       matrix:
@@ -98,7 +96,7 @@ jobs:
         baseline_workflow_file: build-unit-tests.yaml
         artifact_name: rusefi_code_coverage.txt
         is_pull_request: ${{ github.event_name == 'pull_request' }}
-        post_pr_comment: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false }}
+        post_pr_comment: false
 
     - name: upload test coverage to remote server
       if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}

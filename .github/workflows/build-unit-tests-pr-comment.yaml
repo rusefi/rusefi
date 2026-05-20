@@ -1,0 +1,46 @@
+name: Unit Tests PR Coverage Comment
+
+on:
+  workflow_run:
+    workflows: ["Unit Tests"]
+    types: [completed]
+
+jobs:
+  comment-coverage:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.pull_requests[0].number }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Download coverage artifact from triggering run
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          github_token: ${{ github.token }}
+          run_id: ${{ github.event.workflow_run.id }}
+          name: rusefi_code_coverage.txt
+          path: coverage_from_pr
+          if_no_artifact_found: fail
+
+      - name: Locate coverage xml
+        shell: bash
+        run: |
+          COVERAGE_XML=$(find coverage_from_pr -name "coverage.xml" -print -quit)
+          if [ -z "$COVERAGE_XML" ]; then
+            echo "coverage.xml not found in artifact"
+            exit 1
+          fi
+          echo "COVERAGE_XML=$COVERAGE_XML" >> "$GITHUB_ENV"
+
+      - name: Report code coverage
+        uses: rusefi/rusefi/.github/actions/unit-test-coverage-report@master
+        with:
+          coverage_xml_path: ${{ env.COVERAGE_XML }}
+          artifact_upload_path: coverage_from_pr
+          baseline_workflow_file: build-unit-tests.yaml
+          artifact_name: rusefi_code_coverage.txt
+          is_pull_request: true
+          post_pr_comment: true
+          pr_number: ${{ github.event.workflow_run.pull_requests[0].number }}
