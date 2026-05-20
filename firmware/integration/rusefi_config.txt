@@ -1200,11 +1200,13 @@ bit useCltBasedRpmLimit,"yes","no";If enabled, use a curve for RPM limit (based 
 bit forceO2Heating,"yes","no";If enabled, don't wait for engine start to heat O2 sensors.\nWARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
 bit invertVvtControlIntake,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
+
 bit useBiQuadOnAuxSpeedSensors,"yes","no"
-bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
+bit sdTriggerLog,"Trigger","Full MLG";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 bit stepper_dc_use_two_wires,"yes","no"
 bit watchOutForLinearTime
 bit useCompensatedMap,"enabled","disabled";Compensated MAP: in Speed Density mode, normalize MAP by barometric pressure before it is used as a table load axis.\nMAP_ref = MAP / (baro / 101.325 kPa) feeds the VE lookup and the fuel/spark load axes, so the same table cells are hit regardless of altitude (WOT reads ~100 kPa at any elevation).\nThe physical air mass calculation still uses actual MAP. Requires a barometric pressure sensor; without a valid baro reading no compensation is applied.
+bit sdTriggerLogCsv,"CSV","Binary"
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 
