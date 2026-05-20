@@ -96,7 +96,6 @@ public:
 	FileBufferedWriter()
 		: m_stream("rusefi_simulator_log.mlg", std::ios::binary | std::ios::trunc)
 	{
-		sdLoggerReady = true;
 	}
 
 	size_t writeInternal(const char* buffer, size_t count) override {

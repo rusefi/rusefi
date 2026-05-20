@@ -141,6 +141,9 @@ static MMCConfig mmccfg = {
 static NO_CACHE FATFS MMC_FS;
 
 static void sdLoggerSetReady(bool value) {
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.sd_logging_internal = value;
+#endif
 	sdLoggerReady = value;
 }
 
@@ -303,7 +306,7 @@ static int sdLoggerCreateFile(FIL *fd) {
 	}
 #endif
 
-	// SD logger is ok
+	// SD logger is running
 	sdLoggerSetReady(true);
 
 	return 0;
@@ -506,7 +509,7 @@ static bool mountMmc() {
 #endif // EFI_STORAGE_SD
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.sd_logging_internal = ret;
+	engine->outputChannels.sd_error = (uint8_t) ret;
 #endif
 
 	return ret;
@@ -531,8 +534,9 @@ static void unmountMmc() {
 	}
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.sd_logging_internal = false;
+	engine->outputChannels.sd_error = (uint8_t) ret;
 #endif
+	sdLoggerSetReady(false);
 
 	efiPrintf("SD card unmounted");
 }
