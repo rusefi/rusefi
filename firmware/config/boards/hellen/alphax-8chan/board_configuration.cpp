@@ -89,7 +89,7 @@ static void alphax_8chan_boardInitHardware() {
 	tempPullUp.initPin("Temp PullUp", Gpio::MM176_OUT_IO12);
 }
 
-static void customBoardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void customBoardOnConfigurationChange(const engine_configuration_s * /*previousConfiguration*/) {
 	alphaCrankPPullUp.setValue(config->boardUseCrankPullUp);
 	alphaHall1PullDown.setValue(config->boardUseH1PullDown);
 	alphaHall2PullDown.setValue(config->boardUseH2PullDown);

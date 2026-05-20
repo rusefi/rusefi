@@ -65,7 +65,7 @@ static void alphax_2chan_boardInitHardware() {
 	alphaCamPullDown.initPin("a-cam", Gpio::H144_OUT_IO8);
 }
 
-static void customBoardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void customBoardOnConfigurationChange(const engine_configuration_s * /*previousConfiguration*/) {
 	alphaTachPullUp.setValue(config->boardUseTachPullUp);
 	alphaTempPullUp.setValue(config->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(config->boardUseCrankPullUp);

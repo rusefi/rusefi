@@ -98,7 +98,7 @@ static void alphax_4chan_boardInitHardware() {
 	alphaD5PullDown.initPin("a-d5", Gpio::H144_LS_8);
 }
 
-static void customBoardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void customBoardOnConfigurationChange(const engine_configuration_s * /*previousConfiguration*/) {
 	alphaTachPullUp.setValue(config->boardUseTachPullUp);
 	alphaTempPullUp.setValue(config->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(config->boardUseCrankPullUp);
