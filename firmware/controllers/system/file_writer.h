@@ -104,6 +104,10 @@ public:
 		return count;
 	}
 
+	size_t size() {
+		return m_stream.tellp();
+	}
+
 	void sync() {
 		// NOP
 	}
