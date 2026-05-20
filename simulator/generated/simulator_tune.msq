@@ -560,8 +560,8 @@
         <constant digits="0" name="brakeMeanEffectivePressureDifferential" units="">0</constant>
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">20260519</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260519</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">20260520</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260520</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -2713,7 +2713,7 @@
         <constant name="launchSparkCutEnable">"no"</constant>
         <constant digits="0" name="launchSpeedThreshold" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">30</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
-        <constant digits="0" name="launchTpsThreshold" units="">0</constant>
+        <constant digits="0" name="launchTpsThreshold" units="">20</constant>
         <constant name="limitTorqueReductionTime">"no"</constant>
         <constant name="logicAnalyzerPins1">"NONE"</constant>
         <constant name="logicAnalyzerPins2">"NONE"</constant>
@@ -5078,7 +5078,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.19.f407-discovery.2737171613" version="5.0"/>
+    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.20.f407-discovery.3297134273" version="5.0"/>
     <bibliography author="rusEFI 20260510" writeDate="date"/>
     <settings/>
     <userComments/>
