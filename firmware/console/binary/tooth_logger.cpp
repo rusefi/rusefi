@@ -80,7 +80,6 @@ void DisableToothLogger() {
 static constexpr size_t bufferCount = BIG_BUFFER_SIZE / sizeof(CompositeBuffer);
 static_assert(bufferCount >= 2);
 
-static CompositeBuffer* buffers = nullptr;
 static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers;
 static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers;
 
@@ -102,7 +101,7 @@ bool EnableToothLogger(TLmode mode) {
 		return false;
 	}
 
-	buffers = bufferHandle.get<CompositeBuffer>();
+	CompositeBuffer* buffers = bufferHandle.get<CompositeBuffer>();
 
 	// Reset all buffers
 	for (size_t i = 0; i < bufferCount; i++) {
@@ -137,7 +136,6 @@ void DisableToothLogger() {
 	// Release the big buffer for another user
 	// C++ magic: here we are calling BigBufferHandle::operator=() with empty instance
 	bufferHandle = {};
-	buffers = nullptr;
 
 	ToothLoggerEnabled = false;
 	setToothLogReady(false);
