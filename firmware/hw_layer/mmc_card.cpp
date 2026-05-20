@@ -903,12 +903,12 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	if (mountMmc()) {
 		sdReportStorageInit();
 
-		sdMode = SD_MODE_ECU;
-
 #if EFI_STORAGE_SD == TRUE
 		// Give some time for storage manager to load settings from SD
 		chThdSleepMilliseconds(1000);
 #endif
+
+		unmountMmc();
 	}
 
 #if HAL_USE_USB_MSD
