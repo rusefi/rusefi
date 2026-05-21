@@ -34,7 +34,7 @@ typedef enum {
 typedef struct {
 	const char *token;
 	action_type_e parameterType;
-	void (*callback)(void);
+	void *callback;
 	void *param;
 } TokenCallback;
 
@@ -75,33 +75,80 @@ void resetConsoleActions(void);
 void helpCommand(void);
 void initConsoleLogic();
 void handleConsoleLine(char *line);
-void addConsoleAction(const char *token, Void callback);
-void addConsoleActionP(const char *token, VoidPtr callback, void *param);
 
-void addConsoleActionI(const char *token, VoidInt callback);
-void addConsoleActionIP(const char *token, VoidIntVoidPtr callback, void *param);
+void doAddAction(const TokenCallback *t);
 
-void addConsoleActionIF(const char* token, VoidIntFloat callback);
+#if !defined(EFI_DISABLE_CONSOLE_ACTIONS)
+#define addTypedConsoleAction(token, type, callback, param) \
+	do { \
+		static const TokenCallback t = { token, type, (void*)+callback, param }; \
+		doAddAction(&t); \
+	} while(0)
+#else
+#define addTypedConsoleAction(token, type, callback, param)
+#endif
 
-void addConsoleActionII(const char *token, VoidIntInt callback);
-void addConsoleActionIIP(const char *token, VoidIntIntVoidPtr callback, void *param);
+#define ASSERT_TYPE(TYPE, VALUE) \
+	static_assert(std::is_same_v<decltype(+VALUE), TYPE>, "Incorrect action callback")
 
-void addConsoleActionF(const char *token, VoidFloat callback);
-void addConsoleActionNANF(const char *token, VoidFloat callback);
+#define addConsoleAction(token, callback) \
+	ASSERT_TYPE(Void, callback); \
+	addTypedConsoleAction(token, NO_PARAMETER, callback, nullptr)
+#define addConsoleActionI(token, callback) \
+	ASSERT_TYPE(VoidInt, callback); \
+	addTypedConsoleAction(token, ONE_PARAMETER, callback, nullptr)
+#define addConsoleActionII(token, callback) \
+	ASSERT_TYPE(VoidIntInt, callback); \
+	addTypedConsoleAction(token, TWO_INTS_PARAMETER, callback, nullptr)
+#define addConsoleActionIF(token, callback) \
+	ASSERT_TYPE(VoidIntFloat, callback); \
+	addTypedConsoleAction(token, INT_FLOAT_PARAMETER, callback, nullptr)
+#define addConsoleActionF(token, callback) \
+	ASSERT_TYPE(VoidFloat, callback); \
+	addTypedConsoleAction(token, FLOAT_PARAMETER, callback, nullptr)
+#define addConsoleActionNANF(token, callback) \
+	ASSERT_TYPE(VoidFloat, callback); \
+	addTypedConsoleAction(token, FLOAT_PARAMETER_NAN_ALLOWED, callback, nullptr)
+#define addConsoleActionFF(token, callback) \
+	ASSERT_TYPE(VoidFloatFloat, callback); \
+	addTypedConsoleAction(token, FLOAT_FLOAT_PARAMETER, callback, nullptr)
+#define addConsoleActionFFF(token, callback) \
+	ASSERT_TYPE(VoidFloatFloatFloat, callback); \
+	addTypedConsoleAction(token, FLOAT_FLOAT_FLOAT_PARAMETER, callback, nullptr)
+#define addConsoleActionFFFF(token, callback) \
+	ASSERT_TYPE(VoidFloatFloatFloatFloat, callback); \
+	addTypedConsoleAction(token, FLOAT_FLOAT_FLOAT_FLOAT_PARAMETER, callback, nullptr)
+#define addConsoleActionS(token, callback) \
+	ASSERT_TYPE(VoidCharPtr, callback); \
+	addTypedConsoleAction(token, STRING_PARAMETER, callback, nullptr)
+#define addConsoleActionSS(token, callback) \
+	ASSERT_TYPE(VoidCharPtrCharPtr, callback); \
+	addTypedConsoleAction(token, STRING2_PARAMETER, callback, nullptr)
+#define addConsoleActionSSS(token, callback) \
+	ASSERT_TYPE(VoidCharPtrCharPtrCharPtr, callback); \
+	addTypedConsoleAction(token, STRING3_PARAMETER, callback, nullptr)
+#define addConsoleActionSSSSS(token, callback) \
+	ASSERT_TYPE(VoidCharPtrCharPtrCharPtrCharPtrCharPtr, callback); \
+	addTypedConsoleAction(token, STRING5_PARAMETER, callback, nullptr)
 
-void addConsoleActionFF(const char *token, VoidFloatFloat callback);
-void addConsoleActionFFF(const char *token, VoidFloatFloatFloat callback);
-void addConsoleActionFFFF(const char *token, VoidFloatFloatFloatFloat callback);
-void addConsoleActionFFP(const char *token, VoidFloatFloatVoidPtr callback, void *param);
-
-void addConsoleActionS(const char *token, VoidCharPtr callback);
-void addConsoleActionSP(const char *token, VoidCharPtrVoidPtr callback, void *param);
-
-void addConsoleActionSS(const char *token, VoidCharPtrCharPtr callback);
-void addConsoleActionSSP(const char *token, VoidCharPtrCharPtrVoidPtr callback, void *param);
-
-void addConsoleActionSSS(const char *token, VoidCharPtrCharPtrCharPtr callback);
-void addConsoleActionSSSSS(const char *token, VoidCharPtrCharPtrCharPtrCharPtrCharPtr callback);
+#define addConsoleActionP(token, callback, param) \
+	ASSERT_TYPE(VoidPtr, callback); \
+	addTypedConsoleAction(token, NO_PARAMETER_P, callback, param)
+#define addConsoleActionIP(token, callback, param) \
+	ASSERT_TYPE(VoidIntVoidPtr, callback); \
+	addTypedConsoleAction(token, ONE_PARAMETER_P, callback, param)
+#define addConsoleActionIIP(token, callback, param) \
+	ASSERT_TYPE(VoidIntIntVoidPtr, callback); \
+	addTypedConsoleAction(token, TWO_INTS_PARAMETER_P, callback, param)
+#define addConsoleActionFFP(token, callback, param) \
+	ASSERT_TYPE(VoidFloatFloatVoidPtr, callback); \
+	addTypedConsoleAction(token, FLOAT_FLOAT_PARAMETER_P, callback, param)
+#define addConsoleActionSP(token, callback, param) \
+	ASSERT_TYPE(VoidCharPtrVoidPtr, callback); \
+	addTypedConsoleAction(token, STRING_PARAMETER_P, callback, param)
+#define addConsoleActionSSP(token, callback, param) \
+	ASSERT_TYPE(VoidCharPtrCharPtrVoidPtr, callback); \
+	addTypedConsoleAction(token, STRING2_PARAMETER_P, callback, param)
 
 void onCliCaseError(const char *token);
 void onCliDuplicateError(const char *token);
