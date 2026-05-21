@@ -29,7 +29,7 @@ See also [https://wiki.rusefi.com/Build-Server-and-Automation](https://wiki.ruse
 
 [Trigger images](https://wiki.rusefi.com/All-Supported-Triggers) generation is still a two-step manual process:
 
-Step 1: Invoke unit_tests. One of the unit_tests artifacts is triggers.txt
+Step 1: Invoke unit_tests. One of the unit_tests artifacts is triggers.txt which is a snapshot of all trigger definitions.
 
 Step 2: Once we have triggers.txt updated by unit_tests we can invoke firmware/gen_trigger_images.bat in order
 to generate actual trigger images.
@@ -49,7 +49,7 @@ Ideal change happens as two commits:
 ```cpp
 TEST(ModuleName, TestDescription) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-    
+
     // Your test logic here
     ASSERT_EQ(expectedValue, actualValue);
 }
@@ -59,10 +59,10 @@ TEST(ModuleName, TestDescription) {
 ```cpp
 TEST(SensorModule, TestWithMockedSensor) {
     EngineTestHelper eth;
-    
+
     // Mock sensor reading
     Sensor::setMockValue(SensorType::Clt, 80.0f);
-    
+
     // Test logic using mocked sensor
     ASSERT_NEAR(80.0f, Sensor::get(SensorType::Clt), 0.1f);
 }
@@ -72,7 +72,7 @@ TEST(SensorModule, TestWithMockedSensor) {
 ```cpp
 TEST(TimeModule, TestWithTimeAdvance) {
     EngineTestHelper eth;
-    
+
     // Advance virtual time
     eth.moveTimeForwardUs(1000); // Advance 1ms
     eth.moveTimeForwardMs(1); // Advance 1ms

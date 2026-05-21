@@ -34,4 +34,4 @@ To add a new trigger decoder to rusEFI, follow these steps:
     In `firmware/integration/rusefi_config.txt`, find the `#define trigger_type_e_enum` line. Update the string at the corresponding index to match your new trigger's name.
 
 7.  **Verify**:
-    Compile the firmware and run unit tests to ensure everything is correctly hooked up.
+    Compile the firmware and run unit tests. Unit tests execution produces `triggers.txt` (a snapshot of all trigger definitions), which is then used to generate trigger images.
