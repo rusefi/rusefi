@@ -27,6 +27,9 @@
 #include "global_shared.h"
 #include "engine_configuration.h"
 #include "transition_events.h"
+#include "board_overrides.h"
+
+std::optional<setup_custom_board_overrides_type> custom_board_TriggerResetState;
 
 /**
  * decoder uses TriggerStimulatorHelper in findTriggerZeroEventIndex
@@ -90,6 +93,8 @@ void TriggerDecoderBase::resetState() {
 
 	totalEventCountBase = 0;
 	isFirstEvent = true;
+
+	call_board_override(custom_board_TriggerResetState);
 }
 
 void TriggerDecoderBase::setTriggerErrorState(int errorIncrement) {
