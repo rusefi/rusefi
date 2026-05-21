@@ -135,3 +135,5 @@ struct testSpinEngineUntilData {
 	int currentTooth;
 	int toothCount;
 };
+
+void setUnitTestCreateLogs(bool enabled);

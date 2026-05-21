@@ -40,6 +40,10 @@ extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern bool hasRememberedConfiguration;
 
+void setUnitTestCreateLogs(bool enabled) {
+	unitTestsCreateLogs = enabled;
+}
+
 EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
