@@ -891,3 +891,10 @@ void initializeRiseOnlyTrigger(TriggerWaveform *s, float w, const angle_t angles
 		s->addToothRiseFall(angles[i], w);
 	}
 }
+
+void initializeRiseOnlyTrigger(TriggerWaveform *s, const float w[], const angle_t angles[], size_t count, operation_mode_e mode) {
+	s->initialize(mode, SyncEdge::RiseOnly);
+	for (size_t i = 0; i < count; i++) {
+		s->addToothRiseFall(angles[i], w[i]);
+	}
+}
