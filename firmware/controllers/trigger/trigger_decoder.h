@@ -152,6 +152,11 @@ public:
 	 * Resets the decoder state to its initial, unsynchronized condition.
 	 * This includes clearing synchronization status, error counters, tooth duration history,
 	 * and internal event tracking.
+	 *
+	 * Invoked:
+	 *  - During object construction.
+	 *  - When trigger synchronization is lost (e.g., engine stopped for >1 second).
+	 *  - During trigger initialization/re-initialization when searching for the sync point.
 	 */
 	virtual void resetState();
 	void setShaftSynchronized(bool value);
@@ -205,6 +210,11 @@ public:
 	PrimaryTriggerDecoder(const char* name);
 	/**
 	 * Resets the primary decoder state, including its base state and phase synchronization.
+	 *
+	 * Invoked:
+	 *  - During object construction (via TriggerDecoderBase).
+	 *  - When trigger synchronization is lost (e.g., engine stopped for >1 second).
+	 *  - During trigger initialization/re-initialization when searching for the sync point.
 	 */
 	void resetState() override;
 

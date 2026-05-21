@@ -68,6 +68,9 @@ void TriggerDecoderBase::setShaftSynchronized(bool value) {
 
 /**
  * Resets the base decoder state.
+ *
+ * This is called during initialization, when engine rotation stops,
+ * or during trigger re-sync search.
  */
 void TriggerDecoderBase::resetState() {
 	setShaftSynchronized(false);
@@ -200,6 +203,9 @@ int TriggerDecoderBase::getSynchronizationCounter() const {
 
 /**
  * Resets the primary decoder state, including its phase sync state.
+ *
+ * This is called during initialization, when engine rotation stops,
+ * or during trigger re-sync search.
  */
 void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
