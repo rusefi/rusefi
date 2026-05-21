@@ -148,6 +148,11 @@ public:
 	uint32_t totalTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
 
+	/**
+	 * Resets the decoder state to its initial, unsynchronized condition.
+	 * This includes clearing synchronization status, error counters, tooth duration history,
+	 * and internal event tracking.
+	 */
 	virtual void resetState();
 	void setShaftSynchronized(bool value);
 	bool getShaftSynchronized() const;
@@ -198,6 +203,9 @@ private:
 class PrimaryTriggerDecoder : public TriggerDecoderBase, public trigger_state_primary_s {
 public:
 	PrimaryTriggerDecoder(const char* name);
+	/**
+	 * Resets the primary decoder state, including its base state and phase synchronization.
+	 */
 	void resetState() override;
 
 	void resetHasFullSync() {

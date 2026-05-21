@@ -66,6 +66,9 @@ void TriggerDecoderBase::setShaftSynchronized(bool value) {
 	shaft_is_synchronized = value;
 }
 
+/**
+ * Resets the base decoder state.
+ */
 void TriggerDecoderBase::resetState() {
 	setShaftSynchronized(false);
 	toothed_previous_time = 0;
@@ -195,6 +198,9 @@ int TriggerDecoderBase::getSynchronizationCounter() const {
 	return synchronizationCounter;
 }
 
+/**
+ * Resets the primary decoder state, including its phase sync state.
+ */
 void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
 
