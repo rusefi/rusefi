@@ -29,7 +29,7 @@ void createUnitTestLog() {
 	// fun fact: ASAN says not to extracjsonTracet 'fileName' into a variable, we must be doing something a bit not right?
 	mslFile = fopen(filePath.str().c_str(), "wb");
 	if (mslFile != nullptr) {
-		printf("Writing [%s]\n", filePath.str().c_str());
+		printf("Writing MLS [%s]\n", filePath.str().c_str());
 		MLG::resetFileLogging();
 		MLG::writeSdLogLine(unitTestLogWriter);
 	}
