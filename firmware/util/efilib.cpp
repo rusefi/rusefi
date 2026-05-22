@@ -144,29 +144,6 @@ int djb2lowerCase(const char *str) {
 	return hash;
 }
 
-/**
- * @brief This function knows how to print a histogram_s summary
- */
-void printHistogram(Logging *logging, histogram_s *histogram) {
-#if EFI_HISTOGRAMS && ! EFI_UNIT_TEST
-	int report[5];
-	int len = hsReport(histogram, report);
-
-	logging->reset();
-	logging.append(PROTOCOL_MSG LOG_DELIMITER);
-	logging.appendPrintf("histogram %s *", histogram->name);
-	for (int i = 0; i < len; i++)
-	logging.appendPrintf("%d ", report[i]);
-	logging.appendPrintf("*");
-	logging.append(LOG_DELIMITER);
-	scheduleLogging(logging);
-#else
-	UNUSED(logging);
-	UNUSED(histogram);
-
-#endif /* EFI_HISTOGRAMS */
-}
-
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed) {
 	if (newValue >= oldValue)
 		return (incrLimitPerSec <= 0.0f) ? newValue : oldValue + std::min(newValue - oldValue, incrLimitPerSec * secsPassed);
