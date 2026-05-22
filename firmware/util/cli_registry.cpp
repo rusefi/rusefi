@@ -77,19 +77,14 @@ void doAddAction(const TokenCallback *t) {
 static int getParameterCount(action_type_e parameterType) {
 	switch (parameterType) {
 	case NO_PARAMETER:
-	case NO_PARAMETER_P:
 		return 0;
 	case ONE_PARAMETER:
-	case ONE_PARAMETER_P:
 	case FLOAT_PARAMETER:
 	case STRING_PARAMETER:
 		return 1;
 	case FLOAT_FLOAT_PARAMETER:
-	case FLOAT_FLOAT_PARAMETER_P:
 	case STRING2_PARAMETER:
-	case STRING2_PARAMETER_P:
 	case TWO_INTS_PARAMETER:
-	case TWO_INTS_PARAMETER_P:
 	case INT_FLOAT_PARAMETER:
 		return 2;
 	case STRING3_PARAMETER:
@@ -211,34 +206,16 @@ int handleActionWithParameter(const TokenCallback *current, char *argv[], int ar
 		(*callbackS)();
 		return 0;
 	}
-	case NO_PARAMETER_P:
-	{
-		VoidPtr callbackS = (VoidPtr) current->callback;
-		(*callbackS)(current->param);
-		return 0;
-	}
 	case STRING_PARAMETER:
 	{
 		VoidCharPtr callbackS = (VoidCharPtr) current->callback;
 		(*callbackS)(argv[0]);
 		return 0;
 	}
-	case STRING_PARAMETER_P:
-	{
-		VoidCharPtrVoidPtr callbackS = (VoidCharPtrVoidPtr) current->callback;
-		(*callbackS)(argv[0], current->param);
-		return 0;
-	}
 	case STRING2_PARAMETER:
 	{
 		VoidCharPtrCharPtr callbackS = (VoidCharPtrCharPtr) current->callback;
 		(*callbackS)(argv[0], argv[1]);
-		return 0;
-	}
-	case STRING2_PARAMETER_P:
-	{
-		VoidCharPtrCharPtrVoidPtr callbackS = (VoidCharPtrCharPtrVoidPtr) current->callback;
-		(*callbackS)(argv[0], argv[1], current->param);
 		return 0;
 	}
 	case STRING3_PARAMETER:
@@ -290,7 +267,6 @@ int handleActionWithParameter(const TokenCallback *current, char *argv[], int ar
 	}
 
 	case FLOAT_FLOAT_PARAMETER:
-	case FLOAT_FLOAT_PARAMETER_P:
 	{
 		float value[2];
 		for (int i = 0; i < 2; i++) {
@@ -300,13 +276,8 @@ int handleActionWithParameter(const TokenCallback *current, char *argv[], int ar
 				return -1;
 			}
 		}
-		if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
-			VoidFloatFloat callbackS = (VoidFloatFloat) current->callback;
-			(*callbackS)(value[0], value[1]);
-		} else {
-			VoidFloatFloatVoidPtr callbackS = (VoidFloatFloatVoidPtr) current->callback;
-			(*callbackS)(value[0], value[1], current->param);
-		}
+		VoidFloatFloat callbackS = (VoidFloatFloat) current->callback;
+		(*callbackS)(value[0], value[1]);
 		return 0;
 	}
 	case FLOAT_FLOAT_FLOAT_PARAMETER:
@@ -355,7 +326,6 @@ int handleActionWithParameter(const TokenCallback *current, char *argv[], int ar
 		callback(value1, value2);
 		return 0;
 	}
-	case ONE_PARAMETER_P:
 	case ONE_PARAMETER:
 	{
 		int value = atoi(argv[0]);
@@ -365,14 +335,8 @@ int handleActionWithParameter(const TokenCallback *current, char *argv[], int ar
 			#endif
 			return -1;
 		}
-		if (current->parameterType == ONE_PARAMETER_P) {
-			VoidIntVoidPtr callback1 = (VoidIntVoidPtr) current->callback;
-			(*callback1)(value, current->param);
-
-		} else {
-			VoidInt callback1 = (VoidInt) current->callback;
-			(*callback1)(value);
-		}
+		VoidInt callback1 = (VoidInt) current->callback;
+		(*callback1)(value);
 		return 0;
 	}
 	default:
