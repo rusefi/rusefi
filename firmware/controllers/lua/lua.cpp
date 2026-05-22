@@ -43,11 +43,11 @@ static int lua_setTickRate(lua_State* l) {
 	// Limit to 1..200 hz
 	float freq = clampF(1, userFreq, 2000);
 	if (freq != userFreq) {
-	  efiPrintf(TAG "clamping tickrate %f", freq);
+		efiPrintf(TAG "clamping tickrate %f", freq);
 	}
 
 	if (freq > 150 && !engineConfiguration->luaCanRxWorkaround) {
-	  efiPrintf(TAG "luaCanRxWorkaround recommended at high tick rate!");
+		efiPrintf(TAG "luaCanRxWorkaround recommended at high tick rate!");
 	}
 
 	luaTickPeriodUs = 1000000.0f / freq;
@@ -112,7 +112,7 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "loading script length: %u...", std::strlen(scriptStr));
 
 	if (0 != doString(ls, scriptStr)) {
-	  withErrorLoading = true;
+		withErrorLoading = true;
 		efiPrintf(TAG "ERROR loading script: %s", lua_tostring(ls, -1));
 		lua_pop(ls, 1);
 		return false;
@@ -177,14 +177,14 @@ static void invokeTick(LuaHandle& ls) {
 		return;
 	}
 #if EFI_PROD_CODE
-  uint32_t before = port_rt_get_counter_value();
+	uint32_t before = port_rt_get_counter_value();
 #endif // EFI_PROD_CODE
 
 	int status = lua_pcall(ls, 0, 0, 0);
 
 #if EFI_PROD_CODE
-  uint32_t duration = port_rt_get_counter_value() - before;
-  maxLuaDuration = std::max(maxLuaDuration, duration);
+	uint32_t duration = port_rt_get_counter_value() - before;
+	maxLuaDuration = std::max(maxLuaDuration, duration);
 #endif // EFI_PROD_CODE
 
 	if (0 != status) {
@@ -276,8 +276,8 @@ void LuaThread::ThreadTask() {
 
 		auto usedAfterRun = luaHeapUsed();
 		if (usedAfterRun != 0) {
-		  if (!withErrorLoading) {
-			  efiPrintf(TAG "MEMORY LEAK DETECTED: %d bytes used after teardown", usedAfterRun);
+			if (!withErrorLoading) {
+				efiPrintf(TAG "MEMORY LEAK DETECTED: %d bytes used after teardown", usedAfterRun);
 			}
 
 			// Lua blew up in some terrible way that left memory allocated, reset the heap
@@ -309,9 +309,9 @@ void startLua() {
 	initLuaCanRx();
 #endif // EFI_CAN_SUPPORT
 
-    addConsoleActionII("set_lua_setting", [](int index, int value) {
-        engineConfiguration->scriptSetting[index] = value;
-    });
+	addConsoleActionII("set_lua_setting", [](int index, int value) {
+		engineConfiguration->scriptSetting[index] = value;
+	});
 
 	luaThread.start();
 
@@ -343,15 +343,15 @@ void startLua() {
 	});
 
 	addConsoleAction("luainfo", [](){
-	  efiPrintf("maxLuaDuration %lu", maxLuaDuration);
-	  maxLuaDuration = 0;
-	  efiPrintf("rx total/recent/dropped %d %d %d", totalRxCount,
-	    recentRxCount, getLuaCanRxDropped());
-	  efiPrintf("luaCycle %luus including luaRxTime %dus", NT2US(engine->outputChannels.luaLastCycleDuration),
-	    NT2US(rxTime));
+		efiPrintf("maxLuaDuration %lu", maxLuaDuration);
+		maxLuaDuration = 0;
+		efiPrintf("rx total/recent/dropped %d %d %d", totalRxCount,
+			recentRxCount, getLuaCanRxDropped());
+		efiPrintf("luaCycle %luus including luaRxTime %dus", NT2US(engine->outputChannels.luaLastCycleDuration),
+			NT2US(rxTime));
 
-     luaHeapPrintInfo();
-  });
+		luaHeapPrintInfo();
+	});
 }
 
 #else // not EFI_UNIT_TEST
