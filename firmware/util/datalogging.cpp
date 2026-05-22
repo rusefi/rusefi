@@ -8,9 +8,8 @@
  *
  * The idea is that each interrupt handler would have it's own logging buffer. You can add
  * stuff into this buffer without any locking since it's you own buffer, and once you get
- * the whole message you invoke the scheduleLogging() method which appends your local content
- * into the global logging buffer, from which it is later dispatched to the console by our
- * main console thread.
+ * the whole message you hand the buffer over to logging central with loggingPostBuffer(),
+ * which queues it to be sent to the console by the binary TS thread without copying it.
  *
  * @date Feb 25, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
