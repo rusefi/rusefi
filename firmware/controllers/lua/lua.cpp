@@ -279,15 +279,13 @@ void LuaThread::ThreadTask() {
 static LuaThread luaThread;
 
 void startLua() {
-	luaHeapInit();
-
 #if EFI_CAN_SUPPORT
 	initLuaCanRx();
 #endif // EFI_CAN_SUPPORT
 
-    addConsoleActionII("set_lua_setting", [](int index, int value) {
-        engineConfiguration->scriptSetting[index] = value;
-    });
+	addConsoleActionII("set_lua_setting", [](int index, int value) {
+		engineConfiguration->scriptSetting[index] = value;
+	});
 
 	luaThread.start();
 
@@ -306,16 +304,13 @@ void startLua() {
 		needsReset = true;
 	});
 
-	addConsoleAction("luamemory", [](){
-	  efiPrintf("maxLuaDuration %lu", maxLuaDuration);
-	  maxLuaDuration = 0;
-	  efiPrintf("rx total/recent/dropped %d %d %d", totalRxCount,
-	    recentRxCount, getLuaCanRxDropped());
-	  efiPrintf("luaCycle %luus including luaRxTime %dus", NT2US(engine->outputChannels.luaLastCycleDuration),
-	    NT2US(rxTime));
-
-     luaHeapPrintInfo();
-  });
+	addConsoleAction("luainfo", [](){
+		efiPrintf("maxLuaDuration %lu", maxLuaDuration);
+		maxLuaDuration = 0;
+		efiPrintf("rx total/recent/dropped %d %d %d", totalRxCount,
+			recentRxCount, getLuaCanRxDropped());
+		luaHeapPrintInfo();
+	});
 }
 
 #else // not EFI_UNIT_TEST
