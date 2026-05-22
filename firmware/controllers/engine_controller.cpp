@@ -538,6 +538,13 @@ bool validateConfigOnStartUpOrBurn() {
 		return false;
   }
 
+  if (engineConfiguration->knockFrequency != 0 && engineConfiguration->knockFrequency < 100) {
+    // todo: migrate from hard error to soft error
+		criticalError("knock frequency setting uses HZ not KHz: %f", engineConfiguration->knockFrequency);
+		return false;
+  }
+
+
   defaultsOrFixOnBurn();
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
