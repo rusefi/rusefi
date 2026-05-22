@@ -29,6 +29,4 @@
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par);
 
-void printHistogram(Logging *logging, histogram_s *histogram);
-
 #endif /* EFI_UNIT_TEST */

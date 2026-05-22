@@ -11,6 +11,7 @@
 #include "rusefi_enums.h"
 
 #include "datalogging.h"
+#include "loggingcentral.h"
 
 enum class FrontDirection : uint8_t {
 	UP,
@@ -30,9 +31,21 @@ void addEngineSnifferOutputPinEvent(NamedOutputPin *pin, FrontDirection frontDir
 #if EFI_ENGINE_SNIFFER
 
 /**
+ * This is the number of events in the digital chart which would be displayed
+ * on the 'digital sniffer' pane
+ */
+#if EFI_PROD_CODE
+#define WAVE_LOGGING_SIZE 5000
+#else
+#define WAVE_LOGGING_SIZE 35000
+#endif
+
+/**
  * @brief	rusEfi console sniffer data buffer
  */
-class WaveChart {
+class WaveChart : public LogBuffer<WAVE_LOGGING_SIZE> {
+	void free(void) override;
+
 public:
 	WaveChart();
 	void init();

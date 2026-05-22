@@ -46,18 +46,6 @@ static char shaft_signal_msg_index[15];
 extern WaveChart waveChart;
 
 /**
- * This is the number of events in the digital chart which would be displayed
- * on the 'digital sniffer' pane
- */
-#if EFI_PROD_CODE
-#define WAVE_LOGGING_SIZE 5000
-#else
-#define WAVE_LOGGING_SIZE 35000
-#endif
-
-static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE] CCM_OPTIONAL;
-
-/**
  * We want to skip some engine cycles to skip what was scheduled before parameters were changed
  */
 static uint32_t skipUntilEngineCycle = 0;
@@ -70,7 +58,7 @@ static void resetNow() {
 }
 #endif // EFI_UNIT_TEST
 
-WaveChart::WaveChart() : logging("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER)) {
+WaveChart::WaveChart() : logging("wave chart", buffer, size()) {
 }
 
 void WaveChart::init() {
@@ -127,8 +115,12 @@ void setChartSize(int newSize) {
 void WaveChart::publishIfFull() {
 	if (isFull() || isStartedTooLongAgo()) {
 		publish();
-		reset();
 	}
+}
+
+// called after logging central transfers this buffer
+void WaveChart::free() {
+	reset();
 }
 
 void WaveChart::publish() {
@@ -136,7 +128,11 @@ void WaveChart::publish() {
 	logging.appendPrintf( LOG_DELIMITER);
 
 	if (getTriggerCentral()->isEngineSnifferEnabled) {
-		scheduleLogging(&logging);
+		// set buffer used
+		len = logging.linePointer - getBuffer();
+		loggingPostBuffer(this);
+	} else {
+		reset();
 	}
 #endif /* EFI_ENGINE_SNIFFER */
 }

@@ -23,147 +23,101 @@
 
 #include "pch.h"
 
-
-#include "thread_controller.h"
-
 /* for isprint() */
 #include <ctype.h>
 
-template <size_t TBufferSize>
-void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
-	writeInternal(line->buffer);
-}
-
-template <size_t TBufferSize>
-void LogBuffer<TBufferSize>:: writeLogger(Logging* logging) {
-	writeInternal(logging->buffer);
-}
-
-template <size_t TBufferSize>
-size_t LogBuffer<TBufferSize>::length() const {
-	return m_writePtr - m_buffer;
-}
-
-template <size_t TBufferSize>
-void LogBuffer<TBufferSize>::reset() {
-	m_writePtr = m_buffer;
-	*m_writePtr = '\0';
-}
-
-template <size_t TBufferSize>
-const char* LogBuffer<TBufferSize>::get() const {
-	return m_buffer;
-}
-
-template <size_t TBufferSize>
-void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
-	size_t len = std::strlen(buffer);
-	// leave one byte extra at the end to guarantee room for a null terminator
-	size_t available = TBufferSize - length() - 1;
-
-	// If we can't fit the whole thing, write as much as we can
-	len = minI(available, len);
-	// Ensure the output buffer is always null terminated (in case we did a partial write)
-	*(m_writePtr + len) = '\0';
-	memcpy(m_writePtr, buffer, len);
-	m_writePtr += len;
-}
-
-// for unit tests
-template class LogBuffer<10>;
-
 #if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
 
-// This mutex protects the LogBuffer instances below
-chibios_rt::Mutex logBufferMutex;
-
-// Two buffers:
-//  - we copy line buffers to writeBuffer in LoggingBufferFlusher
-//  - and read from readBuffer via TunerStudio protocol commands
-using LB = LogBuffer<DL_OUTPUT_BUFFER>;
-LB buffers[2];
-LB* writeBuffer = &buffers[0];
-LB* readBuffer = &buffers[1];
-
-/**
- * Actual communication layer invokes this method when it's ready to send some data out
- *
- * @return pointer to the buffer which should be print to console
- */
-const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
-	{
-		chibios_rt::MutexLocker lock(logBufferMutex);
-
-		// Swap buffers under lock
-		auto temp = writeBuffer;
-		writeBuffer = readBuffer;
-		readBuffer = temp;
-
-		// Reset the front buffer - it's now empty
-		writeBuffer->reset();
-	}
-
-	*actualOutputBufferSize = readBuffer->length();
-#if EFI_ENABLE_ASSERTS
-	size_t expectedOutputSize = std::strlen(readBuffer->get());
-
-	// Check that the actual length of the buffer matches the expected length of how much we thought we wrote
-	if (*actualOutputBufferSize != expectedOutputSize) {
-		firmwareError(ObdCode::ERROR_LOGGING_SIZE_CALC, "lsize mismatch %d vs strlen %d", *actualOutputBufferSize, expectedOutputSize);
-
-		return nullptr;
-	}
-#endif /* EFI_ENABLE_ASSERTS */
-	return readBuffer->get();
-}
-
-// These buffers store lines queued to be written to the writeBuffer
-constexpr size_t lineBufferCount = 24;
-static LogLineBuffer lineBuffers[lineBufferCount];
-
-// freeBuffers contains a queue of buffers that are not in use
-static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> freeBuffers;
-// filledBuffers contains a queue of buffers currently waiting to be written to the output buffer
-static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> filledBuffers;
-
-class LoggingBufferFlusher : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	LoggingBufferFlusher() : ThreadController("log flush", PRIO_TEXT_LOG) { }
-
-	void ThreadTask() override {
-		while (true) {
-			// Fetch a queued message
-			LogLineBuffer* line;
-			msg_t msg = filledBuffers.fetch(&line, TIME_INFINITE);
-
-			if (msg != MSG_OK) {
-				// This should be impossible - neither timeout or reset should happen
-			} else {
-				{
-					// Lock the buffer mutex - inhibit buffer swaps while writing
-					chibios_rt::MutexLocker lock(logBufferMutex);
-
-					// Write the line out to the output buffer
-					writeBuffer->writeLine(line);
-				}
-
-				// Return this line buffer to the free list
-				freeBuffers.post(line, TIME_INFINITE);
-			}
-		}
-	}
+// Stores the result of one call to efiPrintfInternal in the queue to be copied out to the output buffer
+struct LogLineBuffer : LogBuffer<128>{
+	void free(void) override;
 };
 
-static LoggingBufferFlusher lbf;
+// These buffers store lines
+constexpr size_t lineBufferCount = 64;
+static LogLineBuffer lineBuffers[lineBufferCount];
+
+// freeBuffers contains a queue of line buffers that are not in use
+static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> freeBuffers;
+// filledBuffers contains a queue of buffers currently waiting to be transfered
+static chibios_rt::Mailbox<LogBufferBase*, lineBufferCount + 10> filledBuffers;
+
+void LogLineBuffer::free() {
+	freeBuffers.post(this, TIME_INFINITE);
+}
+
+/**
+ * Fill buffer with as much data as possible
+ *
+ * @return actual size to transfer
+ */
+size_t loggingGetOutputData(char *buffer, size_t size) {
+	LogBufferBase* line;
+	size_t offset = 0;
+	// TODO: better?
+	while (offset + 128 <= size) {
+		// Fetch a queued message
+		msg_t msg = filledBuffers.fetch(&line, TIME_IMMEDIATE);
+
+		if (msg != MSG_OK) {
+			return offset;
+		}
+
+		const char* content = line->getBuffer();
+		size_t len = std::strlen(content);
+		memcpy(buffer + offset, content, len);
+		offset += len;
+
+		// Return this logging buffer to the owner
+		line->free();
+	}
+
+	return offset;
+}
+
+// actually we can send much more in one packed. this is just a threshold that triggers current packet finalization
+constexpr size_t maxSend = scratchBuffer_SIZE;
+
+size_t loggingSendOutputData(TsChannelBase* tsChannel) {
+	// consolidate up to 16 line buffers in one TS packet
+	LogBufferBase* bufs[16];
+	size_t totalBufs = 0;
+	size_t totalSize = 0;
+
+	while ((totalSize < maxSend) && (totalBufs < efi::size(bufs))) {
+		// Fetch a queued message
+		msg_t msg = filledBuffers.fetch(&bufs[totalBufs], TIME_IMMEDIATE);
+
+		if (msg != MSG_OK) {
+			break;
+		}
+
+		totalSize += bufs[totalBufs]->used();
+		totalBufs++;
+	}
+
+	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, totalSize);
+
+	for (size_t i = 0; i < totalBufs; i++) {
+		LogBufferBase *buf = bufs[i];
+
+		crc = tsChannel->writePacketBody((uint8_t *)buf->getBuffer(), buf->used(), crc);
+		buf->free();
+	}
+
+	tsChannel->writeCrcPacketTail(crc);
+
+	return totalSize;
+}
 
 void startLoggingProcessor() {
 	// Push all buffers in to the free queue
 	for (size_t i = 0; i < lineBufferCount; i++) {
-		freeBuffers.post(&lineBuffers[i], TIME_INFINITE);
-	}
+		LogLineBuffer* line = &lineBuffers[i];
 
-	// Start processing used buffers
-	lbf.start();
+		line->len = 0;
+		line->free();
+	}
 }
 
 #endif // EFI_PROD_CODE
@@ -171,6 +125,8 @@ void startLoggingProcessor() {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 extern bool verboseMode;
 #endif
+
+size_t maxPrintfSize = 0;
 
 namespace priv
 {
@@ -243,22 +199,32 @@ void efiPrintfInternal(const char *format, ...) {
 		if (isprint(lineBuffer->buffer[i]) == 0)
 			lineBuffer->buffer[i] = ' ';
 	}
+	lineBuffer->len = len;
 
+	if (len > maxPrintfSize) {
+		maxPrintfSize = len;
+	}
+
+	loggingPostBuffer(lineBuffer);
+#endif
+}
+} // namespace priv
+
+void loggingPostBuffer(LogBufferBase *buffer) {
 #if EFI_SIMULATOR
+	const bool isIsr = port_is_isr_context();
 	if (isIsr) {
 		chSysLockFromISR();
-		filledBuffers.postI(lineBuffer);
+		filledBuffers.postI(buffer);
 		chSysUnlockFromISR();
 	} else
 #endif
 	{
 		// Push the buffer in to the written list so it can be written back
 		chibios_rt::CriticalSectionLocker csl;
-		filledBuffers.postI(lineBuffer);
+		filledBuffers.postI(buffer);
 	}
-#endif
 }
-} // namespace priv
 
 /**
  * This method appends the content of specified thread-local logger into the global buffer
@@ -267,15 +233,45 @@ void efiPrintfInternal(const char *format, ...) {
  * This is a legacy function, most normal logging should use efiPrintf
  */
 void scheduleLogging(Logging *logging) {
-#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
-	// Lock the buffer mutex - inhibit buffer swaps while writing
-	{
-		chibios_rt::MutexLocker lock(logBufferMutex);
 
-		writeBuffer->writeLogger(logging);
+#if 0
+#if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
+	LogBufferBase* lineBase;
+	chibios_rt::CriticalSectionLocker csl;
+
+	cnt_t free = freeBuffers.getUsedCountI();
+	if (free * (128 - 1) >= logging->loggingSize()) {
+		msg_t msg;
+		const char *writePrt = logging->buffer;
+
+		while (writePrt < logging->linePointer) {
+			msg = freeBuffers.fetchI(&lineBase);
+			if (msg != MSG_OK) {
+				break;
+			}
+			LogLineBuffer* lineBuffer = static_cast<LogLineBuffer*>(lineBase);
+
+			size_t len = minI(128 - 1, logging->linePointer - writePrt);
+			memcpy(lineBuffer->buffer, writePrt, len);
+			lineBuffer->buffer[len] = '\0';
+			lineBuffer->len = len;
+			writePrt += len;
+			filledBuffers.postI(lineBuffer);
+		}
+	} else {
+		// drop whole Logging if not enought line buffers available
 	}
 
-	// Reset the logging now that it's been written out
+
+	// Lock the buffer mutex - inhibit buffer swaps while writing
+	//{
+	//	chibios_rt::MutexLocker lock(logBufferMutex);
+//
+	//	writeBuffer->writeLogger(logging);
+	//}
+//
+	//// Reset the logging now that it's been written out
 	logging->reset();
+#endif
 #endif
 }
