@@ -105,20 +105,57 @@ TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
 		std::string convertedHeader = readFirstLine(convertedCsvPath);
 		ASSERT_FALSE(convertedHeader.empty())
 			<< "Converted CSV is empty: " << convertedCsvPath;
-		// The converted CSV should expose the same canonical leading field
-		// names as the directly-written CSV - Time first, then SD: Present.
-		EXPECT_NE(std::string::npos, convertedHeader.find("Time"))
-			<< "Converted CSV header missing 'Time': [" << convertedHeader << "]";
-		EXPECT_NE(std::string::npos, convertedHeader.find("SD: Present"))
-			<< "Converted CSV header missing 'SD: Present': [" << convertedHeader << "]";
+		// Strong assertion: header derived from MLG field metadata is
+		// fully deterministic. Time appears as "Time (sec)" (units in
+		// parentheses, no leading "time_us" column since the binary log
+		// has no separate microsecond timestamp column), followed by the
+		// same fixed dozen always-on fields in the declared order.
+		const std::string expectedConvertedHeaderPrefix =
+			"Time (sec),SD: Present,SD: Logging,triggerScopeReady,"
+			"antilagTriggered,isO2HeaterOn,checkEngine,needBurn,SD: MSD,"
+			"Tooth Logger Ready,Error: TPS,Error: CLT,Error: MAP,Error: IAT,"
+			"Error: Trigger";
+		ASSERT_GE(convertedHeader.size(), expectedConvertedHeaderPrefix.size())
+			<< "Converted CSV header shorter than expected prefix: ["
+			<< convertedHeader << "]";
+		EXPECT_EQ(expectedConvertedHeaderPrefix,
+			convertedHeader.substr(0, expectedConvertedHeaderPrefix.size()))
+			<< "Converted CSV header prefix mismatch. Full header: ["
+			<< convertedHeader << "]";
 
-		// At least one data row should be present.
+		// Exactly 3 data rows are expected. createUnitTestLog() writes a
+		// first record at t=0 (the initial writeSdLogLine() call); the
+		// three writeUnitTestLogLine() calls above then add three more
+		// records, but the very last one is dropped because EngineTestHelper's
+		// destructor closes/flushes the file after the loop. Net result is
+		// 3 rows in the binary MLG => 3 rows in the converted CSV with
+		// Time = 0, 0.001, 0.002 seconds respectively.
 		std::ifstream cf(convertedCsvPath);
 		std::string cline;
+		std::vector<std::string> dataRows;
 		std::getline(cf, cline); // header
-		std::getline(cf, cline); // first data row
-		ASSERT_FALSE(cline.empty())
-			<< "Converted CSV missing data row: " << convertedCsvPath;
+		while (std::getline(cf, cline)) {
+			if (!cline.empty()) {
+				dataRows.push_back(cline);
+			}
+		}
+		ASSERT_EQ(3u, dataRows.size())
+			<< "Converted CSV should have exactly 3 data rows; got "
+			<< dataRows.size() << " in " << convertedCsvPath;
+		// Every always-on field starts at zero on a fresh EngineTestHelper.
+		// Note: the MLG "Time" field is *not* the unit-test microsecond
+		// timestamp -- it is the engine "Time (sec)" live-data field which
+		// remains 0 in this no-trigger test. So every row's prefix is
+		// "0,0,0,0,...,0" (Time + 14 zero booleans matching the header
+		// prefix asserted above).
+		const std::string expectedRowPrefix =
+			"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+		for (size_t r = 0; r < dataRows.size(); r++) {
+			EXPECT_EQ(0u, dataRows[r].find(expectedRowPrefix))
+				<< "Converted CSV row " << r << " prefix mismatch. "
+				<< "Expected leading [" << expectedRowPrefix
+				<< "]; got [" << dataRows[r] << "]";
+		}
 	}
 
 	// --- CSV (.csv) ---
