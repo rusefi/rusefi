@@ -32,6 +32,7 @@ extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 #include "fw_configuration.h"
+#include "malfunction_central.h"
 
 extern engine_configuration_s & activeConfiguration;
 extern PinRepository pinRepository;
@@ -53,6 +54,8 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 	setTimeNowUs(0);
 	ButtonDebounce::resetForUnitTests();
 	unitTestTaskPrecisionHack = false;
+	// Reset global error code set so checkEngine bit doesn't leak between tests
+	clearWarnings();
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault,

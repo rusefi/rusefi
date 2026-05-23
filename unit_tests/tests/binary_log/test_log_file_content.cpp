@@ -69,38 +69,73 @@ TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
 	// --- Binary MLG (.msl) ---
 	{
 		std::string blob = readAllBytes(mslPath);
-		ASSERT_GE(blob.size(), 6u) << "MLG file too small: " << mslPath;
+		ASSERT_GE(blob.size(), 256u) << "MLG file too small: " << mslPath;
 		// File format magic: "MLVLG\0" — see firmware/console/binary_mlg_log/binary_mlg_logging.cpp
 		const char expectedMagic[6] = {'M', 'L', 'V', 'L', 'G', '\0'};
 		EXPECT_EQ(0, std::memcmp(blob.data(), expectedMagic, sizeof(expectedMagic)))
 			<< "Unexpected MLG header magic in " << mslPath;
+
+		// The MLG header lays out fixed-width field metadata after the file-format
+		// magic. Sanity-check that the first field is "Time" (NUL-terminated and
+		// padded), followed by its unit "sec" — both must appear well within the
+		// header, before the second field "SD: Present".
+		size_t timePos = blob.find(std::string("Time", 4) + std::string(1, '\0'));
+		ASSERT_NE(std::string::npos, timePos) << "MLG header missing 'Time' field name";
+		ASSERT_LT(timePos, 64u) << "'Time' field name should be near the start of MLG header";
+
+		size_t secPos = blob.find(std::string("sec", 3) + std::string(1, '\0'), timePos);
+		ASSERT_NE(std::string::npos, secPos) << "MLG header missing 'sec' unit for Time field";
+		ASSERT_LT(secPos - timePos, 64u) << "'sec' unit should be near 'Time' field name";
+
+		size_t presentPos = blob.find("SD: Present");
+		ASSERT_NE(std::string::npos, presentPos) << "MLG should contain 'SD: Present' field name";
+		ASSERT_GT(presentPos, secPos) << "'SD: Present' should appear after Time/sec metadata";
 	}
 
 	// --- CSV (.csv) ---
 	{
 		std::string header = readFirstLine(csvPath);
 		ASSERT_FALSE(header.empty()) << "CSV file empty: " << csvPath;
-		EXPECT_EQ(0u, header.find("time_us"))
-			<< "CSV header must start with 'time_us', got: [" << header << "]";
-		// Header should have multiple columns (time_us + at least one field).
-		EXPECT_NE(std::string::npos, header.find(','))
-			<< "CSV header should have multiple columns: [" << header << "]";
+		// Strong assertion: the first ~120 bytes of the CSV header are
+		// stable — they are the first dozen always-on log fields in the
+		// declared order. If anyone reorders, renames, or removes one of
+		// these columns, we want this test to scream.
+		const std::string expectedCsvHeaderPrefix =
+			"time_us,Time[sec],SD: Present,SD: Logging,triggerScopeReady,"
+			"antilagTriggered,isO2HeaterOn,checkEngine,needBurn,SD: MSD,"
+			"Tooth Logger Ready,Error: TPS,Error: CLT,Error: MAP,Error: IAT,"
+			"Error: Trigger";
+		ASSERT_GE(header.size(), expectedCsvHeaderPrefix.size())
+			<< "CSV header shorter than expected prefix: [" << header << "]";
+		EXPECT_EQ(expectedCsvHeaderPrefix, header.substr(0, expectedCsvHeaderPrefix.size()))
+			<< "CSV header prefix mismatch. Full header: [" << header << "]";
 
-		// And at least one data line should exist.
+		// And at least one data line should exist, and it must start with the
+		// timestamp we advanced to (1000us on the first writeUnitTestLogLine()).
 		std::ifstream f(csvPath);
 		std::string line;
 		std::getline(f, line); // header
 		std::getline(f, line); // first data row
-		EXPECT_FALSE(line.empty()) << "CSV missing data row: " << csvPath;
+		ASSERT_FALSE(line.empty()) << "CSV missing data row: " << csvPath;
+		EXPECT_EQ(0u, line.find("1000,"))
+			<< "CSV first data row should start with '1000,' (time_us): [" << line << "]";
 	}
 
 	// --- NDJSON (.ndjson) ---
 	{
 		std::string firstLine = readFirstLine(ndjsonPath);
 		ASSERT_FALSE(firstLine.empty()) << "NDJSON file empty: " << ndjsonPath;
-		// Every line is a JSON object beginning with the timestamp key.
-		EXPECT_EQ(0u, firstLine.find("{\"t_us\":"))
-			<< "NDJSON line should start with {\"t_us\": ..., got: [" << firstLine << "]";
+		// Strong assertion: the first ~150 bytes of the first NDJSON record are
+		// fully deterministic given a fresh EngineTestHelper and a single
+		// moveTimeForwardUs(1000) before the first writeUnitTestLogLine().
+		const std::string expectedNdjsonPrefix =
+			"{\"t_us\":1000,\"Time\":0.00100000005,\"SD: Present\":0,"
+			"\"SD: Logging\":0,\"triggerScopeReady\":0,\"antilagTriggered\":0,"
+			"\"isO2HeaterOn\":0,\"checkEngine\":0";
+		ASSERT_GE(firstLine.size(), expectedNdjsonPrefix.size())
+			<< "NDJSON line shorter than expected prefix: [" << firstLine << "]";
+		EXPECT_EQ(expectedNdjsonPrefix, firstLine.substr(0, expectedNdjsonPrefix.size()))
+			<< "NDJSON prefix mismatch. Full line: [" << firstLine << "]";
 		EXPECT_EQ('}', firstLine.back())
 			<< "NDJSON line should end with '}', got: [" << firstLine << "]";
 	}
