@@ -44,6 +44,10 @@ void setUnitTestCreateLogs(bool enabled) {
 	unitTestsCreateLogs = enabled;
 }
 
+bool getUnitTestCreateLogs() {
+  return unitTestsCreateLogs;
+}
+
 EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
@@ -600,13 +604,27 @@ warningBuffer_t * getRecentWarnings() {
 }
 
 void sayByeBye() {
-  if (unitTestsCreateLogs) {
-    std::error_code ec;
-    auto absPath = std::filesystem::absolute(TEST_RESULTS_DIR, ec);
-    if (!ec) {
-      printf("test results are in %s folder\n", absPath.string().c_str());
-    } else {
-      printf("test results are in %s folder\n", TEST_RESULTS_DIR);
+  std::error_code ec;
+  auto absPath = std::filesystem::absolute(TEST_RESULTS_DIR, ec);
+  std::string folder = ec ? std::string(TEST_RESULTS_DIR) : absPath.string();
+
+  // Count non-zero-size unit test log files produced under TEST_RESULTS_DIR.
+  size_t nonEmptyCount = 0;
+  std::error_code itEc;
+  std::filesystem::directory_iterator it(folder, itEc);
+  if (!itEc) {
+    for (const auto& entry : it) {
+      std::error_code fEc;
+      if (entry.is_regular_file(fEc) && !fEc) {
+        auto sz = entry.file_size(fEc);
+        if (!fEc && sz > 0) {
+          nonEmptyCount++;
+        }
+      }
     }
+  }
+  if (nonEmptyCount > 0) {
+    printf("test results are in %s folder\n", folder.c_str());
+    printf("unit test log files: %zu\n", nonEmptyCount);
   }
 }

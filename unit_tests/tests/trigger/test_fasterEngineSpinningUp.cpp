@@ -9,6 +9,9 @@
 #include "util/injection_crank_helper.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
+  bool wasLogging = getUnitTestCreateLogs();
+  setUnitTestCreateLogs(true);
+
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	float phase = 181;
 	setTable(config->injectionPhase, -phase);
@@ -122,6 +125,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	auto const turnInjectionPinLowAction{ action_s::make<turnInjectionPinLow>((InjectionEvent*){})};
 	eth.assertEvent5("inj start#3", 0, turnInjectionPinHighAction, -expectedSimultaneousTimestamp - 1625);
 	eth.assertEvent5("inj end#3", 1, turnInjectionPinLowAction, -expectedSimultaneousTimestamp);
+
+	setUnitTestCreateLogs(wasLogging);
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {
