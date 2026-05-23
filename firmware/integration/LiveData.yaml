@@ -180,6 +180,7 @@ Usages:
     java: TriggerStatePrimary.java
     folder: controllers/trigger
     prepend: integration/rusefi_config_shared.txt
+    constexpr: [ "engine->triggerCentral.triggerState" ]
 
   - name: wall_fuel_state
     cppFileName: wall_fuel
