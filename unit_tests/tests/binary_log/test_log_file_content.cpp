@@ -8,6 +8,7 @@
 #include "pch.h"
 
 #include "unit_test_logger.h"
+#include "msl_to_csv.h"
 
 #include <cstdio>
 #include <filesystem>
@@ -90,6 +91,34 @@ TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
 		size_t presentPos = blob.find("SD: Present");
 		ASSERT_NE(std::string::npos, presentPos) << "MLG should contain 'SD: Present' field name";
 		ASSERT_GT(presentPos, secPos) << "'SD: Present' should appear after Time/sec metadata";
+	}
+
+	// --- Convert MLG to CSV via msl_to_csv and sanity-check the result ---
+	{
+		std::string convertedCsvPath = mslPath + ".converted.csv";
+		std::error_code ec2;
+		std::filesystem::remove(convertedCsvPath, ec2);
+
+		ASSERT_TRUE(convertMslToCsv(mslPath.c_str(), convertedCsvPath.c_str()))
+			<< "convertMslToCsv failed for " << mslPath;
+
+		std::string convertedHeader = readFirstLine(convertedCsvPath);
+		ASSERT_FALSE(convertedHeader.empty())
+			<< "Converted CSV is empty: " << convertedCsvPath;
+		// The converted CSV should expose the same canonical leading field
+		// names as the directly-written CSV - Time first, then SD: Present.
+		EXPECT_NE(std::string::npos, convertedHeader.find("Time"))
+			<< "Converted CSV header missing 'Time': [" << convertedHeader << "]";
+		EXPECT_NE(std::string::npos, convertedHeader.find("SD: Present"))
+			<< "Converted CSV header missing 'SD: Present': [" << convertedHeader << "]";
+
+		// At least one data row should be present.
+		std::ifstream cf(convertedCsvPath);
+		std::string cline;
+		std::getline(cf, cline); // header
+		std::getline(cf, cline); // first data row
+		ASSERT_FALSE(cline.empty())
+			<< "Converted CSV missing data row: " << convertedCsvPath;
 	}
 
 	// --- CSV (.csv) ---
