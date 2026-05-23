@@ -8,11 +8,29 @@ FILE *mslFile = nullptr;
 static FILE *csvFile = nullptr;
 static FILE *ndjsonFile = nullptr;
 
+// Per-stream byte counters. Each writer increments its counter as it produces
+// output and throws LogsTooLargeException once the counter exceeds
+// LOG_FILE_SIZE_LIMIT. The caller (writeUnitTestLogLine) catches the exception
+// and disables logging for the rest of the test run.
+static size_t mslBytes = 0;
+static size_t csvBytes = 0;
+static size_t ndjsonBytes = 0;
+
+static void checkSizeLimit(const char* which, size_t bytes) {
+	if (bytes > LOG_FILE_SIZE_LIMIT) {
+		throw LogsTooLargeException(std::string(which) + " log exceeded "
+			+ std::to_string(LOG_FILE_SIZE_LIMIT) + " bytes (size="
+			+ std::to_string(bytes) + ")");
+	}
+}
+
 struct UnitTestLogBufferWriter final : public BufferedWriter<512> {
 	bool failed = false;
 
 	size_t writeInternal(const char *buffer, size_t count) override {
-		return fwrite(buffer, 1, count, mslFile);
+		size_t n = fwrite(buffer, 1, count, mslFile);
+		mslBytes += n;
+		return n;
 	}
 };
 
@@ -73,9 +91,7 @@ static void writeCsvHeader() {
 	if (csvFile == nullptr) {
 		return;
 	}
-	bool first = true;
 	fputs("time_us", csvFile);
-	first = false;
 	MLG::forEachField([&](const MLG::Entries::Field& f) {
 		fputc(',', csvFile);
 		std::string name = f.getName() ? f.getName() : "";
@@ -88,14 +104,16 @@ static void writeCsvHeader() {
 		fputs(csvEscape(name.c_str()).c_str(), csvFile);
 	});
 	fputc('\n', csvFile);
-	(void)first;
 }
 
 static void writeCsvLine() {
 	if (csvFile == nullptr) {
 		return;
 	}
-	fprintf(csvFile, "%lld", static_cast<long long>(getTimeNowUs()));
+	int written = fprintf(csvFile, "%lld", static_cast<long long>(getTimeNowUs()));
+	if (written > 0) {
+		csvBytes += written;
+	}
 	MLG::forEachField([&](const MLG::Entries::Field& f) {
 		void* offset = MLG::getUnitTestFieldOffset(f);
 		double v = f.readValueAsDouble(offset);
@@ -106,36 +124,64 @@ static void writeCsvLine() {
 		if (digits > 9) {
 			digits = 9;
 		}
-		fprintf(csvFile, ",%.*f", digits, v);
+		int n = fprintf(csvFile, ",%.*f", digits, v);
+		if (n > 0) {
+			csvBytes += n;
+		}
 	});
 	fputc('\n', csvFile);
+	csvBytes += 1;
+	checkSizeLimit("CSV", csvBytes);
 }
 
 static void writeNdjsonLine() {
 	if (ndjsonFile == nullptr) {
 		return;
 	}
-	fprintf(ndjsonFile, "{\"t_us\":%lld", static_cast<long long>(getTimeNowUs()));
+	int written = fprintf(ndjsonFile, "{\"t_us\":%lld", static_cast<long long>(getTimeNowUs()));
+	if (written > 0) {
+		ndjsonBytes += written;
+	}
 	MLG::forEachField([&](const MLG::Entries::Field& f) {
 		void* offset = MLG::getUnitTestFieldOffset(f);
 		double v = f.readValueAsDouble(offset);
 		std::string name = jsonEscape(f.getName());
 		// Always emit as a JSON number. NaN/Inf are emitted as null to keep JSON valid.
+		// Note: the field name is never passed as a printf format string -- it is
+		// emitted as a literal via "%s" so that '%' characters in names cannot be
+		// misinterpreted (which previously tripped ASAN's printf interceptor).
+		int n;
 		if (std::isnan(v) || std::isinf(v)) {
-			fprintf(ndjsonFile, ",\"%s\":null", name.c_str());
+			n = fprintf(ndjsonFile, ",\"%s\":null", name.c_str());
 		} else {
-			fprintf(ndjsonFile, ",\"%s\":%.9g", name.c_str(), v);
+			n = fprintf(ndjsonFile, ",\"%s\":%.9g", name.c_str(), v);
+		}
+		if (n > 0) {
+			ndjsonBytes += n;
 		}
 	});
 	fputs("}\n", ndjsonFile);
+	ndjsonBytes += 2;
+	checkSizeLimit("NDJSON", ndjsonBytes);
 }
 
+// Forward declare to allow disabling logging on size-limit exceptions.
+void setUnitTestCreateLogs(bool enabled);
+
 void writeUnitTestLogLine() {
-	if (mslFile != nullptr) {
-		MLG::writeSdLogLine(unitTestLogWriter);
+	try {
+		if (mslFile != nullptr) {
+			MLG::writeSdLogLine(unitTestLogWriter);
+			checkSizeLimit("MSL", mslBytes);
+		}
+		writeCsvLine();
+		writeNdjsonLine();
+	} catch (const LogsTooLargeException& e) {
+		printf("LogsTooLargeException: %s -- disabling unit test logging for the rest of the run.\n",
+			e.what());
+		closeUnitTestLog();
+		setUnitTestCreateLogs(false);
 	}
-	writeCsvLine();
-	writeNdjsonLine();
 }
 
 void createUnitTestLog() {
@@ -146,6 +192,10 @@ void createUnitTestLog() {
 	std::string mslPath = base + ".msl";
 	std::string csvPath = base + ".csv";
 	std::string ndjsonPath = base + ".ndjson";
+
+	mslBytes = 0;
+	csvBytes = 0;
+	ndjsonBytes = 0;
 
 	// fun fact: ASAN says not to extract 'fileName' into a variable, we must be doing something a bit not right?
 	mslFile = fopen(mslPath.c_str(), "wb");

@@ -14,6 +14,8 @@
 #include "can_msg_tx.h"
 #include "unit_test_logger.h"
 
+#include <chrono>
+
 bool hasInitGtest = false;
 
 #if EFI_SIMULATOR || EFI_UNIT_TEST
@@ -42,6 +44,8 @@ GTEST_API_ int main(int argc, char **argv) {
     return 0;
   }
 
+  setUnitTestCreateLogs(true);
+
 	hasInitGtest = true;
 
 //	cleanTestResultsFolder();
@@ -60,7 +64,11 @@ GTEST_API_ int main(int argc, char **argv) {
 //	setVerboseTrigger(true);
 // --gtest_filter=*TEST_NAME*
 	//::testing::GTEST_FLAG(filter) = "*AllTriggersFixture*";
+	auto testsStart = std::chrono::steady_clock::now();
 	int result = RUN_ALL_TESTS();
+	auto testsEnd = std::chrono::steady_clock::now();
+	double totalSeconds = std::chrono::duration<double>(testsEnd - testsStart).count();
+	printf("Total tests execution time: %.3f s\n", totalSeconds);
 	// windows ERRORLEVEL in Jenkins batch file seems to want negative value to detect failure
 	// TODO: Jenkins is long gone! Can we remove this returnCode hack?
 	int returnCode = result == 0 ? 0 : -1;
