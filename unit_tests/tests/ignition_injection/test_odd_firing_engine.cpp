@@ -26,8 +26,6 @@ TEST(OddFireRunningMode, hd) {
   // basic engine setup
 	EngineTestHelper eth(engine_type_e::HARLEY);
 	configureOddFiringEngine(eth);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
 	setTestFuelCrankingTable(27);
 
@@ -72,7 +70,13 @@ TEST(OddFireRunningMode, hd) {
 
 	ASSERT_EQ(500, Sensor::getOrZero(SensorType::Rpm));
 
+	// Preserve simulated time across executeAll(): otherwise the busy-wait
+	// inside the scheduler would advance the mock clock to each event's
+	// future moment, distorting the inter-tooth interval used for RPM below.
+	// See rusefi issue #6457.
+	efitick_t savedNt = getTimeNowNt();
 	engine->scheduler.executeAll(getTimeNowUs() + MS2US(1000000));
+	setTimeNowNt(savedNt);
 
 	eth.fireTriggerEvents2(2 /* count */ , 60 /* ms */);
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
