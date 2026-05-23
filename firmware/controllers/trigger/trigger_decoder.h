@@ -248,6 +248,22 @@ public:
 
 private:
 
+	/**
+	 * True when the crank trigger pattern alone is ambiguous and additional information
+	 * (typically a cam/VVT signal) is required to determine the engine's true phase within
+	 * the full 720-degree four-stroke cycle.
+	 *
+	 * Many crank-only wheels (e.g. symmetric 60-2) repeat their pattern every 360 crank
+	 * degrees, so the decoder can find a sync point on the crank wheel but cannot tell
+	 * which of the two engine revolutions of the four-stroke cycle it is currently in.
+	 * In that case m_needsDisambiguation is set to true, and m_hasSynchronizedPhase will
+	 * only become true once syncEnginePhase() has been called based on a cam signal.
+	 *
+	 * When false (e.g. asymmetric crank patterns that are unique over the full engine
+	 * cycle, or when running in a half-cycle/wasted-spark mode where 360 deg of ambiguity
+	 * is acceptable), the decoder is considered fully phase-synchronized as soon as the
+	 * crank sync point is found - see resetHasFullSync().
+	 */
 	bool m_needsDisambiguation = false;
 };
 
