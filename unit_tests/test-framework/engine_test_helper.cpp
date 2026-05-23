@@ -23,7 +23,6 @@
 
 static bool unitTestsCreateLogs = false;
 
-bool unitTestBusyWaitHack;
 bool unitTestTaskPrecisionHack;
 bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 
@@ -49,7 +48,6 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
 	ButtonDebounce::resetForUnitTests();
-	unitTestBusyWaitHack = false;
 	unitTestTaskPrecisionHack = false;
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
