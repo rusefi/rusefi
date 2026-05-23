@@ -37,6 +37,8 @@ make
 
 Unit tests use Google Test and run on amd64/aarch64, not on the ECU.
 
+**Cross-platform requirement**: Unit test code MUST build and run on all supported host platforms — Linux (GCC/Clang), macOS (Clang), and Windows (MSVC and MinGW). Avoid POSIX-only APIs (e.g. `realpath`, `PATH_MAX`, `dirent.h` without guards) unless wrapped in `#ifdef` guards or replaced by portable C++ equivalents. Prefer `std::filesystem` over POSIX path APIs.
+
 ### Code Generation
 
 ```bash
@@ -92,6 +94,7 @@ Code generation is integrated into the Makefile for all four delivery units: eac
 
 - C99 with GNU extensions for C code
 - C++20 for firmware code
+- C++17 (minimum) for unit tests and host-side tooling; portable C++17 features such as `std::filesystem`, `std::optional`, `std::string_view` and structured bindings are preferred over platform-specific APIs to keep unit tests cross-platform (Linux/macOS/Windows-MSVC/MinGW)
 - No RTTI, no exceptions (`-fno-rtti -fno-exceptions`)
 - LTO enabled by default
 
