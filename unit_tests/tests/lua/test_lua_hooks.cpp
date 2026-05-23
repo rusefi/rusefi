@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "rusefi_lua.h"
-#include "can_msg_tx.h"
 
 
 TEST(LuaHooks, TestCrc8) {
@@ -108,9 +107,6 @@ TEST(LuaHooks, CanTxChannel) {
 
 	// channel 0 invalid
 	EXPECT_ANY_THROW(testLuaExecString("txCan(0, 0, 0, {0})"));
-
-	// do not pollute shared txCanBuffer for subsequent tests
-	txCanBuffer.clear();
 }
 
 TEST(LuaHooks, CanTxId) {
@@ -123,9 +119,6 @@ TEST(LuaHooks, CanTxId) {
 	EXPECT_NO_THROW(testLuaExecString("txCan(1, 536870911, 1, {0})"));
 	// ext ID too high
 	EXPECT_ANY_THROW(testLuaExecString("txCan(1, 536870912, 1, {0})"));
-
-	// do not pollute shared txCanBuffer for subsequent tests
-	txCanBuffer.clear();
 }
 
 TEST(LuaHooks, CanTxDataLength) {
@@ -144,9 +137,6 @@ TEST(LuaHooks, CanTxDataLength) {
 
 	// invalid: not a table
 	EXPECT_ANY_THROW(testLuaExecString("txCan(1, 0, 0, 26)"));
-
-	// do not pollute shared txCanBuffer for subsequent tests
-	txCanBuffer.clear();
 }
 
 TEST(LuaHooks, LuaInterpolate) {
