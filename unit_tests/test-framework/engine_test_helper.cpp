@@ -19,6 +19,7 @@
 // https://stackoverflow.com/questions/23427804/cant-find-mkdir-function-in-dirent-h-for-windows
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <filesystem>
 
 static bool unitTestsCreateLogs = false;
 
@@ -587,6 +588,12 @@ warningBuffer_t * getRecentWarnings() {
 
 void sayByeBye() {
   if (unitTestsCreateLogs) {
-    printf("test results are in %s folder", TEST_RESULTS_DIR);
+    std::error_code ec;
+    auto absPath = std::filesystem::absolute(TEST_RESULTS_DIR, ec);
+    if (!ec) {
+      printf("test results are in %s folder\n", absPath.string().c_str());
+    } else {
+      printf("test results are in %s folder\n", TEST_RESULTS_DIR);
+    }
   }
 }
