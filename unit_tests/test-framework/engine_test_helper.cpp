@@ -584,3 +584,9 @@ void setVerboseTrigger(bool isEnabled) {
 warningBuffer_t * getRecentWarnings() {
   return &engine->engineState.warnings.recentWarnings;
 }
+
+void sayByeBye() {
+  if (unitTestsCreateLogs) {
+    printf("test results are in %s folder", TEST_RESULTS_DIR);
+  }
+}

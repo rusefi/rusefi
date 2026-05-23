@@ -43,5 +43,7 @@ GTEST_API_ int main(int argc, char **argv) {
 	// TODO: Jenkins is long gone! Can we remove this returnCode hack?
 	int returnCode = result == 0 ? 0 : -1;
 	printf("DONE returning %d\n", returnCode);
+
+  sayByeBye();
 	return returnCode;
 }

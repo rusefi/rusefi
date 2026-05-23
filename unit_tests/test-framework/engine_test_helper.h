@@ -137,3 +137,4 @@ struct testSpinEngineUntilData {
 };
 
 void setUnitTestCreateLogs(bool enabled);
+void sayByeBye();
