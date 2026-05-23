@@ -443,15 +443,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	eth->fireTriggerEventsWithDuration(20);
 	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
 
-	// Preserve simulated time across clearQueue(): otherwise the
-	// scheduler busy-wait advances the mock clock to each event's
-	// future moment, distorting RPM calculation downstream.
-	// See rusefi issue #6457.
-	{
-		efitick_t savedNt = getTimeNowNt();
-		eth->clearQueue();
-		setTimeNowNt(savedNt);
-	}
+	eth->clearQueuePreservingTime();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -975,22 +967,11 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //	assertInjectorDownEvent("L04@8", 8, MS2US(50.0), 0);
 
 
-	{
-		// Preserve simulated time across executeAll(): the scheduler busy-wait
-		// would otherwise advance the mock clock to each event's future moment,
-		// past the intended deadline. See rusefi issue #6457.
-		efitick_t savedNt = getTimeNowNt();
-		engine->scheduler.executeAll(getTimeNowUs() + 1);
-		setTimeNowNt(savedNt);
-	}
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + 1);
 	// injector goes high...
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@1";
 
-	{
-		efitick_t savedNt = getTimeNowNt();
-		engine->scheduler.executeAll(getTimeNowUs() + MS2US(17.5) + 1);
-		setTimeNowNt(savedNt);
-	}
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(17.5) + 1);
 	// injector does not go low too soon, that's a feature :)
 	ASSERT_TRUE(enginePins.injectors[0].currentLogicValue) << "injector@2";
 
@@ -1006,11 +987,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //todo	assertInjectorDownEvent("L015@5", 5, MS2US(30), 0);
 
 
-	{
-		efitick_t savedNt = getTimeNowNt();
-		engine->scheduler.executeAll(getTimeNowUs() + MS2US(10) + 1);
-		setTimeNowNt(savedNt);
-	}
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(10) + 1);
 	// end of combined injection
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@3";
 

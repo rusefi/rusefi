@@ -100,12 +100,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);
 
-	// Preserve simulated time across clearQueue(): executing scheduled events
-	// would otherwise busy-wait the mock clock forward and distort the
-	// inter-tooth interval used for RPM computation below.
-	efitick_t savedNt = getTimeNowNt();
-	eth.clearQueue();
-	setTimeNowNt(savedNt);
+	eth.clearQueuePreservingTime();
 	eth.fireTriggerEventsWithDuration(60);
 
 	// check if the mode is now changed to 'running' at higher RPM

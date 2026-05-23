@@ -336,6 +336,21 @@ void EngineTestHelper::clearQueue() {
 	ASSERT_EQ( 0,  engine.scheduler.size()) << "Failed to clearQueue";
 }
 
+// See rusefi issue #6457: the scheduler busy-wait in event_queue.cpp would
+// otherwise advance the mock clock to each scheduled event's future moment,
+// distorting subsequent inter-tooth interval / RPM computation.
+void EngineTestHelper::clearQueuePreservingTime() {
+	efitick_t savedNt = getTimeNowNt();
+	clearQueue();
+	setTimeNowNt(savedNt);
+}
+
+void EngineTestHelper::executeAllPreservingTimeUs(efitimeus_t deadlineUs) {
+	efitick_t savedNt = getTimeNowNt();
+	engine.scheduler.executeAll(deadlineUs);
+	setTimeNowNt(savedNt);
+}
+
 int EngineTestHelper::executeActions() {
 	return engine.scheduler.executeAll(getTimeNowUs());
 }
