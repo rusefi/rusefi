@@ -201,6 +201,28 @@ void resetFileLogging() {
 	blockRollCounter = 0;
 }
 
+void forEachField(const std::function<void(const Entries::Field&)>& callback) {
+	for (size_t i = 0; i < efi::size(fields); i++) {
+		callback(fields[i]);
+	}
+}
+
+void* getUnitTestFieldOffset(const Entries::Field& field) {
+#if EFI_UNIT_TEST
+	if (engine == nullptr) {
+		return nullptr;
+	}
+	constexpr auto engineObjectSize{ sizeof(Engine) };
+	static_assert(engineObjectSize < 0x400000);
+	auto const currentFieldAddress{ reinterpret_cast<uintptr_t>(field.getAddr()) };
+	auto const fieldNeedsOffset{ currentFieldAddress < engineObjectSize };
+	return fieldNeedsOffset ? engine : nullptr;
+#else
+	(void)field;
+	return nullptr;
+#endif
+}
+
 } /* namespace MLG */
 
 #endif /* EFI_FILE_LOGGING */
