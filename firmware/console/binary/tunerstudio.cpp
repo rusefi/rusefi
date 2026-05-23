@@ -880,8 +880,15 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	char command = data[0];
 	data++;
 
+	// Use memcpy to safely read potentially unaligned data from the receive buffer.
+	// The scratchBuffer is only byte-aligned, and after data++ the pointer is
+	// misaligned for 16/32-bit access. Cortex-M7 does not support unaligned
+	// access for all instructions (e.g., ldmia), causing a UsageFault.
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
-	const uint32_t* data32 = reinterpret_cast<uint32_t*>(data);
+	uint32_t data32[3];
+	if (incomingPacketSize >= 13) {
+		memcpy(&data32[0], data, sizeof(data32));
+	}
 
 	// only few commands have page argument, default page is 0
 	uint16_t page = 0;
