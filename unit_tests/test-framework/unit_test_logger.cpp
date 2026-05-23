@@ -4,9 +4,24 @@
 #include "binary_mlg_logging.h"
 #include "mlg_field.h"
 
+#include <filesystem>
+
 FILE *mslFile = nullptr;
 static FILE *csvFile = nullptr;
 static FILE *ndjsonFile = nullptr;
+
+// Paths of the per-test log files currently being written, used to remove
+// them if a writer exceeds LOG_FILE_SIZE_LIMIT (LogsTooLargeException).
+static std::string mslPathCurrent;
+static std::string csvPathCurrent;
+static std::string ndjsonPathCurrent;
+
+// Aggregated stats for aborted log runs, surfaced via sayByeBye().
+static size_t abortedLogsCount = 0;
+static size_t abortedLogsTotalBytes = 0;
+
+size_t getAbortedLogsCount() { return abortedLogsCount; }
+size_t getAbortedLogsTotalBytes() { return abortedLogsTotalBytes; }
 
 // Per-stream byte counters. Each writer increments its counter as it produces
 // output and throws LogsTooLargeException once the counter exceeds
@@ -180,6 +195,27 @@ void writeUnitTestLogLine() {
 		printf("LogsTooLargeException: %s -- disabling unit test logging for the rest of the run.\n",
 			e.what());
 		closeUnitTestLog();
+		// Remove the over-sized log files and accumulate their total size so
+		// sayByeBye() can report how much storage was reclaimed.
+		auto removeAndCount = [](const std::string& path) {
+			if (path.empty()) {
+				return;
+			}
+			std::error_code ec;
+			auto sz = std::filesystem::file_size(path, ec);
+			if (!ec) {
+				abortedLogsTotalBytes += static_cast<size_t>(sz);
+			}
+			std::error_code rmEc;
+			std::filesystem::remove(path, rmEc);
+		};
+		removeAndCount(mslPathCurrent);
+		removeAndCount(csvPathCurrent);
+		removeAndCount(ndjsonPathCurrent);
+		mslPathCurrent.clear();
+		csvPathCurrent.clear();
+		ndjsonPathCurrent.clear();
+		abortedLogsCount++;
 		setUnitTestCreateLogs(false);
 	}
 }
@@ -196,6 +232,9 @@ void createUnitTestLog() {
 	mslBytes = 0;
 	csvBytes = 0;
 	ndjsonBytes = 0;
+	mslPathCurrent = mslPath;
+	csvPathCurrent = csvPath;
+	ndjsonPathCurrent = ndjsonPath;
 
 	// fun fact: ASAN says not to extract 'fileName' into a variable, we must be doing something a bit not right?
 	mslFile = fopen(mslPath.c_str(), "wb");

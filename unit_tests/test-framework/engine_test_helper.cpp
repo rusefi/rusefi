@@ -662,4 +662,9 @@ void sayByeBye() {
     printf("test results are in %s folder\n", folder.c_str());
     printf("unit test log files: %zu\n", nonEmptyCount);
   }
+  size_t aborted = getAbortedLogsCount();
+  if (aborted > 0) {
+    printf("aborted unit test logs (exceeded LOG_FILE_SIZE_LIMIT): %zu, total removed bytes: %zu\n",
+      aborted, getAbortedLogsTotalBytes());
+  }
 }
