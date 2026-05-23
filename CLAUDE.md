@@ -35,7 +35,24 @@ make
 ./build/rusefi_test --gtest_filter=TestName
 ```
 
-Unit tests use Google Test and run on amd64/aarch64, not on the ECU.
+#### Code Coverage
+Coverage reports are generated using `gcovr` (requires Python 3).
+
+```bash
+cd unit_tests
+./run_coverage.sh
+```
+
+This script:
+1. Sets up a local Python virtual environment in `unit_tests/venv/`
+2. Installs `gcovr`
+3. Builds tests with `COVERAGE=yes`
+4. Runs all tests
+5. Generates HTML and JSON reports in `unit_tests/coverage_reports/`
+
+Exclusion patterns (e.g., for `googletest` or the `unit_tests` directory itself) are defined in `unit_tests/coverage_common.sh`.
+
+Unit tests use Google Test and run on PC, not on the ECU.
 
 **Cross-platform requirement**: Unit test code MUST build and run on all supported host platforms — Linux (GCC/Clang), macOS (Clang), and Windows (MSVC and MinGW). Avoid POSIX-only APIs (e.g. `realpath`, `PATH_MAX`, `dirent.h` without guards) unless wrapped in `#ifdef` guards or replaced by portable C++ equivalents. Prefer `std::filesystem` over POSIX path APIs.
 
