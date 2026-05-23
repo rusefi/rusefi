@@ -14,7 +14,9 @@
     <mapping directory="$PROJECT_DIR$/firmware/controllers/can/wideband_firmware" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/firmware/controllers/lua/luaaa" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/firmware/ext/lua" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/ext/magic_enum" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/firmware/ext/openblt" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/firmware/ext/rusefi-gha" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/firmware/ext/uzlib" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/firmware/libfirmware" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/hardware/InteractiveHtmlBom" vcs="Git" />
