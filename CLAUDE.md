@@ -89,6 +89,12 @@ firmware/gen_enum_to_string.sh
 - `unit_tests/` - Google Test suite
 - `simulator/` - Windows/Linux firmware simulator
 
+### Deep Dive AI Guidance
+For detailed technical documentation intended for AI assistants, see:
+- [Fueling System](docs/AI/fueling_system.md) - Mass-based fueling pipeline (17 stages).
+- [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
+- [Engine Protection](docs/AI/protection_system.md) - LimpManager and cut logic.
+
 ### Key Concepts
 
 - **Event-driven execution**: Trigger events from crank/cam sensors drive the main control loop
