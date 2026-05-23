@@ -443,7 +443,15 @@ static void setTestBug299(EngineTestHelper *eth) {
 	eth->fireTriggerEventsWithDuration(20);
 	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
 
-	eth->clearQueue();
+	// Preserve simulated time across clearQueue(): otherwise the
+	// scheduler busy-wait advances the mock clock to each event's
+	// future moment, distorting RPM calculation downstream.
+	// See rusefi issue #6457.
+	{
+		efitick_t savedNt = getTimeNowNt();
+		eth->clearQueue();
+		setTimeNowNt(savedNt);
+	}
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -554,8 +562,6 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
