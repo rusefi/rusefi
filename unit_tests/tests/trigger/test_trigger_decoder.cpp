@@ -930,8 +930,6 @@ TEST(big, testSinglePoint) {
 #if FUEL_RPM_COUNT == 16
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	engineConfiguration->hpfpCamLobes = 0;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
@@ -977,11 +975,22 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //	assertInjectorDownEvent("L04@8", 8, MS2US(50.0), 0);
 
 
-	engine->scheduler.executeAll(getTimeNowUs() + 1);
+	{
+		// Preserve simulated time across executeAll(): the scheduler busy-wait
+		// would otherwise advance the mock clock to each event's future moment,
+		// past the intended deadline. See rusefi issue #6457.
+		efitick_t savedNt = getTimeNowNt();
+		engine->scheduler.executeAll(getTimeNowUs() + 1);
+		setTimeNowNt(savedNt);
+	}
 	// injector goes high...
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@1";
 
-	engine->scheduler.executeAll(getTimeNowUs() + MS2US(17.5) + 1);
+	{
+		efitick_t savedNt = getTimeNowNt();
+		engine->scheduler.executeAll(getTimeNowUs() + MS2US(17.5) + 1);
+		setTimeNowNt(savedNt);
+	}
 	// injector does not go low too soon, that's a feature :)
 	ASSERT_TRUE(enginePins.injectors[0].currentLogicValue) << "injector@2";
 
@@ -997,7 +1006,11 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //todo	assertInjectorDownEvent("L015@5", 5, MS2US(30), 0);
 
 
-	engine->scheduler.executeAll(getTimeNowUs() + MS2US(10) + 1);
+	{
+		efitick_t savedNt = getTimeNowNt();
+		engine->scheduler.executeAll(getTimeNowUs() + MS2US(10) + 1);
+		setTimeNowNt(savedNt);
+	}
 	// end of combined injection
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@3";
 
