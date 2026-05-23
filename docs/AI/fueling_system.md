@@ -32,3 +32,6 @@ The rusEFI fueling system is a mass-based model that translates configuration an
 - All math is floating-point in the `algo/` layer.
 - Use `getFuelComputer()` to access the current fueling state.
 - Transient fuel (`WallFuel`) is additive to the base fuel mass before injector characterization.
+
+Use injectorState1 injectorState2 etc in logs (see unit_tests/test_results/readme.md for unit tests output) to
+assert actual logic state.

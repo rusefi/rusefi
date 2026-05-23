@@ -26,3 +26,6 @@ The ignition (spark) system determines when to charge (dwell) and fire (discharg
 - **BTDC vs ATDC**: Advance is typically measured in degrees Before Top Dead Center (BTDC). Internal math may use 0-720° cycle coordinates.
 - **Dwell Overlap**: rusEFI supports overlapping dwell events (where one coil starts charging before another finishes firing).
 - **Wasted Spark on Odd Fire**: Specialized logic in `spark_logic.cpp` handles uneven firing intervals.
+
+Use coilState1 coilState2 etc in logs (see unit_tests/test_results/readme.md for unit tests output) to
+assert actual logic state.
