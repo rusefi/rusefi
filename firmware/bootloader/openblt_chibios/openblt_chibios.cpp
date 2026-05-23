@@ -77,6 +77,41 @@ void CpuStartUserProgram(void)
   /* release the communication interface */
   ComFree();
 #endif
+#if (BOOT_COM_NET_ENABLE > 0)
+  /* stop theE thernet MAC to prevent DMA from writing to bootloader memory
+   * after we jump to the firmware.
+   * Note: we do NOT put PHY in power-down mode because the firmware's MII
+   * operations will hang waiting for a non-responsive PHY.
+   * Instead, we manually stop MAC/DMA, reset the PHY, and reset the peripheral. */
+  ETH->MACCR = 0;
+  ETH->DMAOMR = 0;
+  ETH->DMAIER = 0;
+  ETH->DMASR = ETH->DMASR;
+  rccDisableETH();
+
+  /* Reset PHY via MII before jumping - ensure PHY is in clean state for firmware */
+  rccEnableETH(true);
+  /* Wait for any pending MII operation to complete (with timeout) */
+  {
+    volatile int mii_timeout = 1000000;
+    while ((ETH->MACMIIAR & ETH_MACMIIAR_MB) && mii_timeout--)
+      ;
+  }
+  /* PHY soft reset */
+  ETH->MACMIIDR = 0x8000; /* BMCR_RESET */
+  ETH->MACMIIAR = (0 << 11) | (0 << 6) | 0x0C | ETH_MACMIIAR_MW | ETH_MACMIIAR_MB;
+  {
+    volatile int mii_timeout = 1000000;
+    while ((ETH->MACMIIAR & ETH_MACMIIAR_MB) && mii_timeout--)
+      ;
+  }
+  rccDisableETH();
+
+  /* Full ETH peripheral reset to ensure clean state for firmware */
+  rccEnableETH(true);
+  rccResetETH();
+  rccDisableETH();
+#endif
   /* reset the HAL */
   chSysDisable();
   /* reset the timer */
