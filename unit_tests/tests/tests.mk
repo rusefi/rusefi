@@ -169,6 +169,7 @@ TESTS_SRC_CPP = \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
 	tests/binary_log/test_bit_logger_field.cpp \
+	tests/binary_log/test_log_file_content.cpp \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \
