@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "rusefi_lua.h"
+#include "can_msg_tx.h"
 
 
 TEST(LuaHooks, TestCrc8) {
@@ -37,12 +38,12 @@ TEST(LuaHooks, TestGetCalibration) {
 TEST(LuaHooks, TestSetCalibration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 		const char* sourceCode = R"(
-	
+
 		function testFunc()
 			setCalibration("cranking.rpm", 900, false)
 			return getCalibration("cranking.rpm")
 		end
-	
+
 		)";
 		EXPECT_EQ(testLuaReturnsNumber(sourceCode), 900);
 }
@@ -107,6 +108,9 @@ TEST(LuaHooks, CanTxChannel) {
 
 	// channel 0 invalid
 	EXPECT_ANY_THROW(testLuaExecString("txCan(0, 0, 0, {0})"));
+
+	// do not pollute shared txCanBuffer for subsequent tests
+	txCanBuffer.clear();
 }
 
 TEST(LuaHooks, CanTxId) {
@@ -119,6 +123,9 @@ TEST(LuaHooks, CanTxId) {
 	EXPECT_NO_THROW(testLuaExecString("txCan(1, 536870911, 1, {0})"));
 	// ext ID too high
 	EXPECT_ANY_THROW(testLuaExecString("txCan(1, 536870912, 1, {0})"));
+
+	// do not pollute shared txCanBuffer for subsequent tests
+	txCanBuffer.clear();
 }
 
 TEST(LuaHooks, CanTxDataLength) {
@@ -137,6 +144,9 @@ TEST(LuaHooks, CanTxDataLength) {
 
 	// invalid: not a table
 	EXPECT_ANY_THROW(testLuaExecString("txCan(1, 0, 0, 26)"));
+
+	// do not pollute shared txCanBuffer for subsequent tests
+	txCanBuffer.clear();
 }
 
 TEST(LuaHooks, LuaInterpolate) {
@@ -160,7 +170,7 @@ TEST(LuaHooks, TestLuaTimer) {
 static const char* sensorTest = R"(
 function testFunc()
 	local sens = Sensor.new("CLT")
-	
+
 	-- Check valid sensor
 	sens:set(33)
 	if getSensor("CLT") ~= 33 then
