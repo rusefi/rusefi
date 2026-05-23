@@ -15,6 +15,8 @@
 #include "unit_test_logger.h"
 
 #include <chrono>
+#include <string>
+#include <unordered_set>
 
 bool hasInitGtest = false;
 
@@ -25,6 +27,100 @@ bool hasInitGtest = false;
 class TxCanBufferCleaner : public ::testing::EmptyTestEventListener {
 	void OnTestStart(const ::testing::TestInfo& /*test_info*/) override {
 		txCanBuffer.clear();
+	}
+};
+
+// Tests known to produce log artifacts larger than LOG_FILE_SIZE_LIMIT (16 MB)
+// when unit-test logging is enabled. For these we skip log creation so the
+// LogsTooLargeException doesn't fail them. Keep in sync with the failure list
+// observed under setUnitTestCreateLogs(true).
+static const std::unordered_set<std::string>& getLogDisabledTests() {
+	static const std::unordered_set<std::string> s = {
+		"Toyota3ToothCam.RealEngineRunning",
+		"arctic.realStartFromFile",
+		"realBQS.realHarleyCranking",
+		"realBQS.readAsPrimarySensor",
+		"realBQS.readAsCam",
+		"realChryslerPhaser.phaser_cam_1",
+		"realChryslerPhaser.phaser_cam_2",
+		"cranking.realCrankingFromFile",
+		"cranking.naCrankFromFile",
+		"realCrankingVQ40.normalCrankingSyncCam1",
+		"realCrankingVQ40.normalCrankingSyncCam2",
+		"realCas24Plus1.spinningOnBench",
+		"real4b11.running",
+		"real4b11.runningDoubledEdge",
+		"real4g93.cranking",
+		"real4g93.crankingOn11",
+		"real4g93.crankingCamOnly",
+		"real6g72.sync_3000gt_cranking_rusefi",
+		"real6g72.sync_3000gt_cranking_rusefi_2",
+		"real6g72.sync_3000gt_crank_cam_cranking",
+		"real6g72.sync_3000gt_crank_cam_cranking_2",
+		"real6g72.sync_3000gt_crank_cam_cranking_idle",
+		"real6g75.withoutSparkPlugs",
+		"real6g75.realWithSparkPlugs",
+		"fordCoyote.intakeCam",
+		"fordCoyote.exhaustCam",
+		"fordCoyote.exhaustCamInverted",
+		"crankingVW.vwRealCrankingFromFile",
+		"crankingVW.crankingTwiceWithGap",
+		"realCrankingNB2.normalCranking",
+		"realCrankingNB2.crankingMissingInjector",
+		"realNeon.srt4_looks_like_cam",
+		"realNeon.srt4_crank",
+		"crankingGm24x_5.gmRealCrankingFromFile",
+		"nissan.realFromFile",
+		"nissan.realNoSparkPlugsFromFile",
+		"nissan.realFromFile4seconds",
+		"nissan.realFromFileVVTIN",
+		"realk24.crankingNoPlugs1",
+		"realk24.crankingNoPlugs2",
+		"realk20.cranking",
+		"realJeepEva.cranking",
+		"real.SubaruEj20gcranking_only_cam7",
+		"real.SubaruEj20gDefaultCranking",
+		"real.SubaruEj20gCrankingWot",
+		"real.SubaruEj20gDefaultCranking_only_crank",
+		"real.SubaruEj20gDefaultCrankingSeparateTrigger",
+		"real.SubaruEj20gDefaultRev",
+		"RealNoisyTrigger.AvoidOverdwell1NoInstant",
+		"RealNoisyTrigger.AvoidOverdwell1WithInstant",
+		"RealNoisyTrigger.AvoidOverdwell2NoInstant",
+		"RealNoisyTrigger.AvoidOverdwell2WithInstant",
+		"RealNoisyTrigger.AvoidOverdwell3NoInstant",
+		"RealNoisyTrigger.AvoidOverdwell3WithInstant",
+		"harley.hdCrankingWithCam1",
+		"harley.hdCrankingWithCam3",
+		"harley.hdCrankingWithCam4",
+		"harley.hdCrankingWithCamAnother",
+		"harley.hdCrankingWithCamAnother2",
+		"harley.hdCrankingWithCamAnother3",
+	};
+	return s;
+}
+
+// Toggles setUnitTestCreateLogs(false) around tests known to overflow the
+// 16 MB per-file log cap (LogsTooLargeException), restoring the prior value
+// after each such test finishes.
+class LogDisablerForHeavyTests : public ::testing::EmptyTestEventListener {
+	bool savedLogs = false;
+	bool didDisable = false;
+	void OnTestStart(const ::testing::TestInfo& test_info) override {
+		std::string fullName = std::string(test_info.test_suite_name()) + "." + test_info.name();
+		if (getLogDisabledTests().count(fullName) > 0) {
+			savedLogs = getUnitTestCreateLogs();
+			if (savedLogs) {
+				setUnitTestCreateLogs(false);
+				didDisable = true;
+			}
+		}
+	}
+	void OnTestEnd(const ::testing::TestInfo& /*test_info*/) override {
+		if (didDisable) {
+			setUnitTestCreateLogs(savedLogs);
+			didDisable = false;
+		}
 	}
 };
 #endif
@@ -54,6 +150,7 @@ GTEST_API_ int main(int argc, char **argv) {
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 	// Auto-clear shared txCanBuffer before every test to prevent inter-test pollution
 	::testing::UnitTest::GetInstance()->listeners().Append(new TxCanBufferCleaner());
+	::testing::UnitTest::GetInstance()->listeners().Append(new LogDisablerForHeavyTests());
 #endif
 	// uncomment if you only want to run selected tests
 	/**

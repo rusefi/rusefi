@@ -180,9 +180,6 @@ static void writeNdjsonLine() {
 	checkSizeLimit("NDJSON", ndjsonBytes);
 }
 
-// Forward declare to allow disabling logging on size-limit exceptions.
-void setUnitTestCreateLogs(bool enabled);
-
 void writeUnitTestLogLine() {
 	try {
 		if (mslFile != nullptr) {
@@ -192,11 +189,13 @@ void writeUnitTestLogLine() {
 		writeCsvLine();
 		writeNdjsonLine();
 	} catch (const LogsTooLargeException& e) {
-		printf("LogsTooLargeException: %s -- disabling unit test logging for the rest of the run.\n",
-			e.what());
+		// Close the streams and delete the over-sized log files for the current
+		// test (so we don't leave huge artifacts behind), bump the aborted
+		// counter, then re-throw so the offending test fails loudly via gtest.
+		// Logging is only disabled for this specific test (streams are closed);
+		// the global setUnitTestCreateLogs flag is left unchanged so other tests
+		// can still produce logs.
 		closeUnitTestLog();
-		// Remove the over-sized log files and accumulate their total size so
-		// sayByeBye() can report how much storage was reclaimed.
 		auto removeAndCount = [](const std::string& path) {
 			if (path.empty()) {
 				return;
@@ -216,7 +215,7 @@ void writeUnitTestLogLine() {
 		csvPathCurrent.clear();
 		ndjsonPathCurrent.clear();
 		abortedLogsCount++;
-		setUnitTestCreateLogs(false);
+		throw;
 	}
 }
 
