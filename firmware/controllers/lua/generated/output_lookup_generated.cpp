@@ -1264,6 +1264,15 @@ float getOutputValueByHash(const int hash) {
 // dwellActualRatio
 		case -175046954:
 			return engine->engineState.dwellActualRatio;
+// camResyncCounter
+		case 1138743722:
+			return engine->triggerCentral.triggerState.camResyncCounter;
+// m_phaseAdjustment
+		case -739701471:
+			return engine->triggerCentral.triggerState.m_phaseAdjustment;
+// m_hasSynchronizedPhase
+		case 900196958:
+			return engine->triggerCentral.triggerState.m_hasSynchronizedPhase;
 // dcOutput0
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;
