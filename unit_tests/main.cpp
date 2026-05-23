@@ -8,8 +8,34 @@
 
 #include "pch.h"
 #include <stdlib.h>
+#include <dirent.h>
+#include <string.h>
+#include <sys/stat.h>
 
 #include "can_msg_tx.h"
+#include "unit_test_logger.h"
+
+static void cleanTestResultsDir() {
+	DIR* dir = opendir(TEST_RESULTS_DIR);
+	if (dir == nullptr) {
+		return;
+	}
+	struct dirent* entry;
+	while ((entry = readdir(dir)) != nullptr) {
+		const char* name = entry->d_name;
+		size_t len = strlen(name);
+		bool isTxt = len >= 4 && strcmp(name + len - 4, ".txt") == 0;
+		bool isJson = len >= 5 && strcmp(name + len - 5, ".json") == 0;
+		bool isMsl = len >= 4 && strcmp(name + len - 4, ".msl") == 0;
+		bool isLogicdata = len >= 10 && strcmp(name + len - 10, ".logicdata") == 0;
+		if (isTxt || isJson || isMsl || isLogicdata) {
+			char path[512];
+			snprintf(path, sizeof(path), "%s/%s", TEST_RESULTS_DIR, name);
+			remove(path);
+		}
+	}
+	closedir(dir);
+}
 
 bool hasInitGtest = false;
 
@@ -40,6 +66,8 @@ GTEST_API_ int main(int argc, char **argv) {
   }
 
 	hasInitGtest = true;
+
+	cleanTestResultsDir();
 
 	testing::InitGoogleTest(&argc, argv);
 #if EFI_SIMULATOR || EFI_UNIT_TEST
