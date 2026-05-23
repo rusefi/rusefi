@@ -603,6 +603,38 @@ warningBuffer_t * getRecentWarnings() {
   return &engine->engineState.warnings.recentWarnings;
 }
 
+void cleanTestResultsFolder() {
+  std::error_code ec;
+  auto absPath = std::filesystem::absolute(TEST_RESULTS_DIR, ec);
+  std::string folder = ec ? std::string(TEST_RESULTS_DIR) : absPath.string();
+
+  std::error_code itEc;
+  std::filesystem::directory_iterator it(folder, itEc);
+  if (itEc) {
+    return;
+  }
+  auto isPreserved = [](const std::string& name) {
+    std::string lower;
+    lower.reserve(name.size());
+    for (char c : name) {
+      lower.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(c))));
+    }
+    return lower == ".gitignore" || lower == "readme.md";
+  };
+  for (const auto& entry : it) {
+    std::error_code fEc;
+    if (!entry.is_regular_file(fEc) || fEc) {
+      continue;
+    }
+    const std::string name = entry.path().filename().string();
+    if (isPreserved(name)) {
+      continue;
+    }
+    std::error_code rmEc;
+    std::filesystem::remove(entry.path(), rmEc);
+  }
+}
+
 void sayByeBye() {
   std::error_code ec;
   auto absPath = std::filesystem::absolute(TEST_RESULTS_DIR, ec);

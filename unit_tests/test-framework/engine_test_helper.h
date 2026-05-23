@@ -148,3 +148,5 @@ struct testSpinEngineUntilData {
 void setUnitTestCreateLogs(bool enabled);
 bool getUnitTestCreateLogs();
 void sayByeBye();
+// Removes all files from TEST_RESULTS_DIR except .gitignore and readme.md.
+void cleanTestResultsFolder();
