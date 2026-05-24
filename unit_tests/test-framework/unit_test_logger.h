@@ -9,7 +9,7 @@
 // Per-file size limit for unit test log artifacts. When a writer's output
 // exceeds this threshold the writer throws LogsTooLargeException and the
 // caller disables logging for the remainder of the run.
-static constexpr size_t LOG_FILE_SIZE_LIMIT = 16 * 1024 * 1024; // 16 MB
+static constexpr size_t LOG_FILE_SIZE_LIMIT = 16 * 1024 * 1024;
 
 class LogsTooLargeException : public std::runtime_error {
 public:

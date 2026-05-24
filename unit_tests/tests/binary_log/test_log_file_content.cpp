@@ -42,7 +42,11 @@ std::string readFirstLine(const std::string& path) {
 
 } // namespace
 
+extern bool useNdJSONFiles;
+
 TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
+  bool wasUsing = useNdJSONFiles;
+  useNdJSONFiles = true;
 	bool wasLogging = getUnitTestCreateLogs();
 	setUnitTestCreateLogs(true);
 
@@ -207,4 +211,5 @@ TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
 	}
 
 	setUnitTestCreateLogs(wasLogging);
+	useNdJSONFiles = wasUsing;
 }

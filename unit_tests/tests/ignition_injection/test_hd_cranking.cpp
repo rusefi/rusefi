@@ -30,6 +30,10 @@ TEST(harley, hdCrankingWithCam1) {
 	runTest("tests/ignition_injection/resources/hd-req-sync_1.csv");
 }
 
+TEST(harley, hdCranking2006) {
+	runTest("tests/trigger/resources/hd-re-sd.teeth");
+}
+
 TEST(harley, hdCrankingWithCam3) {
 	HdCranking test("tests/ignition_injection/resources/hd-req-sync_3.csv");
 	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;

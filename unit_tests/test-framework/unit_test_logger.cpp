@@ -6,6 +6,9 @@
 
 #include <filesystem>
 
+// these NDJSON files are 10 times larger than MLS but very much machine readable
+bool useNdJSONFiles = false;
+
 FILE *mslFile = nullptr;
 static FILE *csvFile = nullptr;
 static FILE *ndjsonFile = nullptr;
@@ -249,10 +252,12 @@ void createUnitTestLog() {
 		writeCsvHeader();
 	}
 
-	ndjsonFile = fopen(ndjsonPath.c_str(), "w");
-	if (ndjsonFile != nullptr) {
-		printf("Writing NDJSON [%s]\n", ndjsonPath.c_str());
-	}
+  if (useNdJSONFiles) {
+	  ndjsonFile = fopen(ndjsonPath.c_str(), "w");
+	  if (ndjsonFile != nullptr) {
+  		printf("Writing NDJSON [%s]\n", ndjsonPath.c_str());
+  	}
+  }
 }
 
 void closeUnitTestLog() {
