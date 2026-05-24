@@ -34,9 +34,6 @@
 #if EFI_HD_ACR
 
 static bool getAcrState() {
-    if (custom_board_getAcrState.has_value()) {
-        return custom_board_getAcrState.value()();
-    }
     bool engineMovedRecently = getTriggerCentral()->engineMovedRecently();
     engine->engineState.acrEngineMovedRecently = engineMovedRecently;
 	auto currentPhase = getTriggerCentral()->getCurrentEnginePhase(getTimeNowNt());
@@ -48,6 +45,10 @@ static bool getAcrState() {
 	if (!engineMovedRecently) {
 		return false;
 	}
+
+    if (custom_board_getAcrState.has_value()) {
+        return custom_board_getAcrState.value()();
+    }
 
 	int revCount = getTriggerCentral()->triggerState.getSynchronizationCounter();
 	if (revCount > engineConfiguration->acrRevolutions) {
