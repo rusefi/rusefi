@@ -279,6 +279,7 @@ void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
 
 void PrimaryTriggerDecoder::onShaftSynchronized(bool value) {
 	enginePins.debugTriggerState.setValue(value);
+	m_hasSynchronizedCrank = value;
 }
 
 void PrimaryTriggerDecoder::onTriggerError() {
