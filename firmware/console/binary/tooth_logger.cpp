@@ -1,7 +1,19 @@
 /*
  * @file tooth_logger.cpp
  *
+ * logic analyzer, not to be confused with "trigger oscilloscope"
+ * also not to be confused with engine_sniffer.cpp - do we have some overlap between generations of tools?
+
+ // timestamps: any event adds an event / line to CSV
+ // TDC: toggled on 1st cylinder TDC
+ // sync:
+ // coils: bitfield of first 8 cylinders
+ // Injectors: same as above
+
+
+ *
  * At least some of the code here is related to xxx.teeth files
+ * TODO: remove legacy 'binary' format since we have CSV now?
  * See also misc\tooth_log_converter\log_convert.cpp
  *
  * @date Jul 7, 2019
@@ -314,7 +326,7 @@ void LogTriggerTopDeadCenter(efitick_t timestamp) {
 		return;
 	}
 
-	// just togle TDC flag, this looks good on graph
+	// just toggle TDC flag, this looks good on graph
 	cur.tdc = !cur.tdc;
 	LogTriggerTooth(timestamp);
 }
