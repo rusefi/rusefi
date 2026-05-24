@@ -38,19 +38,7 @@ static std::vector<std::string> splitCsv(const std::string& line) {
 	return out;
 }
 
-} // namespace
-
-// Teeth CSV format (header):
-//   Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors
-// We collapse Cam1..Cam4 into the single secondaryTrigger channel via OR
-// (typical .teeth captures only use Cam 1), and feed the remaining columns
-// straight into CompositeEvent.
-TEST(teethToLogicData, hdReSd) {
-	const std::string inPath =
-		std::string("tests/trigger/resources/hd-re-sd.teeth");
-	const std::string outPath =
-		std::string(TEST_RESULTS_DIR) + "/hd-re-sd.logicdata";
-
+void convertTeethToLogicData(const std::string& inPath, const std::string& outPath) {
 	std::ifstream in(inPath);
 	ASSERT_TRUE(in.good()) << "Cannot open " << inPath;
 
@@ -105,4 +93,29 @@ TEST(teethToLogicData, hdReSd) {
 	EXPECT_GT(sz, 256u) << "Output suspiciously small: " << outPath;
 	printf("Wrote %s (%zu events, %zu bytes)\n",
 		outPath.c_str(), events.size(), static_cast<size_t>(sz));
+}
+
+} // namespace
+
+// Teeth CSV format (header):
+//   Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors
+// We collapse Cam1..Cam4 into the single secondaryTrigger channel via OR
+// (typical .teeth captures only use Cam 1), and feed the remaining columns
+// straight into CompositeEvent.
+TEST(teethToLogicData, hdReSd) {
+	const std::string inPath =
+		std::string("tests/trigger/resources/hd-re-sd.teeth");
+	const std::string outPath =
+		std::string(TEST_RESULTS_DIR) + "/hd-re-sd.logicdata";
+
+	convertTeethToLogicData(inPath, outPath);
+}
+
+TEST(teethToLogicData, hdReSd2) {
+	const std::string inPath =
+		std::string("tests/trigger/resources/hd-re-sd-2.teeth");
+	const std::string outPath =
+		std::string(TEST_RESULTS_DIR) + "/hd-re-sd-2.logicdata";
+
+	convertTeethToLogicData(inPath, outPath);
 }
