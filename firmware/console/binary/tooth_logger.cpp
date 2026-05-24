@@ -385,6 +385,24 @@ void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
 #endif // EFI_UNIT_TEST
 }
 
+void LogTriggerAcrState(efitick_t timestamp, bool state) {
+	if (cur.acr == state) {
+		return;
+	}
+	cur.acr = state;
+
+	// in tooth mode we are interested in rising edges of primary only
+	if (ToothLoggerMode == TLmode::PrimaryTooth) {
+		return;
+	}
+
+	LogTriggerTooth(timestamp);
+
+#if EFI_UNIT_TEST
+	jsonTraceEntry("acr", 40, state, timestamp);
+#endif // EFI_UNIT_TEST
+}
+
 bool EnableToothLoggerIfNotEnabled(TLmode mode) {
 	if (!ToothLoggerEnabled) {
 		ToothLoggerEnabled = EnableToothLogger(mode);
@@ -402,7 +420,7 @@ bool IsToothLoggerEnabled() {
 static int ToothLoggerWriteCsvHeader(Writer &writer) {
 	// keep in sync with composite_logger_s
 	// drop trigger - purpose not clear
-	const char header[] = "Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors\r\n";
+	const char header[] = "Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR\r\n";
 
 	// no tailing '\0'
 	writer.write(header, sizeof(header) - 1);
@@ -423,11 +441,11 @@ static int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 		int ret = chsnprintf(tmp, sizeof(tmp), "%d.%06d, "
 					"%d, %d, %d, %d, %d, "
 					"%d, %d, "
-					"%d, %d\r\n",	// TODO: convert to bitwise?
+					"%d, %d, %d\r\n",	// TODO: convert to bitwise?
 				c.timestamp / 1000000, c.timestamp % 1000000,
 				c.priLevel, c.cam1, c.cam2, c.cam3, c.cam4,
 				c.sync, c.tdc,
-				c.coil, c.injector);
+				c.coil, c.injector, c.acr);
 
 		if ((ret < 0) || (ret >= sizeof(tmp))) {
 			return -1;
