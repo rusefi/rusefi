@@ -1,4 +1,8 @@
+// trigger_scope.cpp
+
 #include "pch.h"
+
+// "trigger oscilloscope"
 
 #ifdef TRIGGER_SCOPE
 
