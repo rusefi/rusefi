@@ -10,6 +10,9 @@
  // coils: bitfield of first 8 cylinders
  // Injectors: same as above
 
+ at the moment CSV is tightly coupled with TS composite & primary tooth loggers
+
+ * this file also appends to unit test JSON, what a mess!
 
  *
  * At least some of the code here is related to xxx.teeth files
