@@ -184,6 +184,9 @@ protected:
 	//  - Saw a sync point but the wrong number of events in the cycle
 	virtual void onTriggerError() { }
 
+	// Called when shaft synchronization state changes.
+	virtual void onShaftSynchronized(bool /*value*/) { }
+
 	virtual void onNotEnoughTeeth(int, int) { }
 	virtual void onTooManyTeeth(int, int) { }
 
@@ -242,6 +245,8 @@ public:
 	}
 
 	void onTriggerError() override;
+
+	void onShaftSynchronized(bool value) override;
 
 	void onNotEnoughTeeth(int actual, int expected) override;
 	void onTooManyTeeth(int actual, int expected) override;

@@ -107,7 +107,8 @@ public:
 	OutputPin warningLedPin; // orange LED on brain board by default
 	OutputPin runningLedPin; // green LED on brain board by default
 
-	OutputPin debugTriggerSync;
+	OutputPin debugTriggerSync; // toggle on sync events regardless tooth count and error
+	OutputPin debugTriggerState; // higher lever isSynchronized or not state
 	RegisteredOutputPin boostPin;
 	RegisteredOutputPin idleSolenoidPin;
 	RegisteredOutputPin secondIdleSolenoidPin;

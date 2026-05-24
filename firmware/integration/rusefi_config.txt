@@ -848,6 +848,7 @@ switch_input_pin_e clutchDownPin;Some cars have a switch to indicate that clutch
 	pin_output_mode_e electronicThrottlePin1Mode;
 	spi_device_e max31855spiDevice;
 	Gpio debugTriggerSync;
+	Gpio debugTriggerState;
 
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	pin_input_mode_e brakePedalPinMode;

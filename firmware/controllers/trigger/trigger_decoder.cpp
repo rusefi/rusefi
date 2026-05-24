@@ -67,6 +67,7 @@ void TriggerDecoderBase::setShaftSynchronized(bool value) {
 		mostRecentSyncTime = 0;
 	}
 	shaft_is_synchronized = value;
+	onShaftSynchronized(value);
 }
 
 /**
@@ -274,6 +275,10 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 
 void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
 	synchronizationCounter++;
+}
+
+void PrimaryTriggerDecoder::onShaftSynchronized(bool value) {
+	enginePins.debugTriggerState.setValue(value);
 }
 
 void PrimaryTriggerDecoder::onTriggerError() {
