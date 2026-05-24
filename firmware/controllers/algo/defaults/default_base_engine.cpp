@@ -131,6 +131,11 @@ void defaultsOrFixOnBurn() {
     setDynoDefaults();
   }
 
+#if HW_PROTEUS && defined(STM32F4XX)
+  // should have been proteus per-board validation
+  engineConfiguration->is_enabled_spi_5 = false;
+#endif
+
   if (engineConfiguration->launchTpsThreshold < MIN_launchTpsThreshold) {
     engineConfiguration->launchTpsThreshold = MIN_launchTpsThreshold;
   }
