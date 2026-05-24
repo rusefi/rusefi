@@ -57,7 +57,7 @@ typedef union __attribute__((packed)) {
 		bool cam4 : 1;
 		uint8_t coil;
 		uint8_t injector;
-		uint8_t unused; // to make struct size 8 bytes
+		bool acr : 1;
 	};
 	uint64_t x;
 } composite_logger_s;
