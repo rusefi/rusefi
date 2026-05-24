@@ -12,6 +12,9 @@
 
 #include "pch.h"
 
+#include "board_overrides.h"
+#include "tooth_logger.h"
+
 #if EFI_HD_ACR
 
 static bool getAcrState() {
@@ -58,6 +61,9 @@ void HarleyAcr::onSlowCallback() {
 	engine->engineState.acrActive = acrState;
 	enginePins.harleyAcr.setValue(acrState);
 	enginePins.harleyAcr2.setValue(acrState);
+#if EFI_TOOTH_LOGGER
+	LogTriggerAcrState(getTimeNowNt(), acrState);
+#endif // EFI_TOOTH_LOGGER
 	m_active = acrState;
 }
 
