@@ -793,6 +793,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).camResyncCounter, "sync: Phase Re-Sync Counter", "cnt", 0, "Sync"},
 	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_phaseAdjustment, "sync: phase adjustment", "deg", 0, "Sync"},
 	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState), 4, 0, "sync: We Know Engine Phase", ""},
+	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState), 4, 1, "sync: We have sync", ""},
 	{engine->lambdaMonitor, 0, 0, "lambdaCurrentlyGood", ""},
 	{engine->lambdaMonitor, 0, 1, "lambdaMonitorCut", ""},
 	{engine->lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},

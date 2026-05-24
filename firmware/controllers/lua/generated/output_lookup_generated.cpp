@@ -1767,6 +1767,9 @@ float getOutputValueByHash(const int hash) {
 // m_hasSynchronizedPhase
 		case 900196958:
 			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_hasSynchronizedPhase;
+// m_hasSynchronizedCrank
+		case 885139196:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_hasSynchronizedCrank;
 // lambdaCurrentlyGood
 		case 350535927:
 			return engine->lambdaMonitor.lambdaCurrentlyGood;
