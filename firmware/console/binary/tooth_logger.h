@@ -94,3 +94,12 @@ bool ToothLoggerHasData();
 int ToothLoggerWriter(FileBufferedWriter &writer);
 
 #endif
+
+#if EFI_FILE_LOGGING || EFI_UNIT_TEST
+
+#include "writer.h"
+
+int ToothLoggerWriteCsvHeader(Writer &writer);
+int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer);
+
+#endif
