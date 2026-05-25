@@ -16,7 +16,8 @@
  **************************************
  */
 enum class SensorType : unsigned char {
-	Invalid, // we need indeces for Lua consumers. At the moment we still do not expose constants into Lua :(
+	Invalid, // we need indices for Lua consumers. At the moment we still do not expose constants into Lua :(
+	// todo: add 'EngineTemperature' for air-cooled engines?
 	Clt, // 1
 	Iat,
 	Rpm,
