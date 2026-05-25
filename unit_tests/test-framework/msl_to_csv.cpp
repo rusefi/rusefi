@@ -233,3 +233,18 @@ bool convertMslToCsv(const char* mslPath, const char* csvPath) {
                 (unsigned long long)records, (unsigned)numFields, csvPath);
     return true;
 }
+
+void runMsl2Csv(const char* mslFileName) {
+    std::string input(mslFileName);
+    std::string output;
+    size_t lastDot = input.find_last_of(".");
+    if (lastDot == std::string::npos) {
+        output = input + ".csv";
+    } else {
+        output = input.substr(0, lastDot) + ".csv";
+    }
+
+    if (!convertMslToCsv(mslFileName, output.c_str())) {
+        std::fprintf(stderr, "Failed to convert %s\n", mslFileName);
+    }
+}
