@@ -420,7 +420,7 @@ bool IsToothLoggerEnabled() {
 static int ToothLoggerWriteCsvHeader(Writer &writer) {
 	// keep in sync with composite_logger_s
 	// drop trigger - purpose not clear
-	const char header[] = "Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR\r\n";
+	const char header[] = "Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET\r\n";
 
 	// no tailing '\0'
 	writer.write(header, sizeof(header) - 1);
@@ -437,15 +437,19 @@ static int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 		composite_logger_s c;
 		c.x = SWAP_UINT64(buffer->buffer[i].x);
 
+    // todo: take these data points from structure, not current values. Kind of works for slow sensors, but still!
+		float vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
+		float et = Sensor::get(SensorType::Clt).value_or(0);
+
 		// it is cheaper to write all data, even we have 1 cylinder engine with single crank sensor
 		int ret = chsnprintf(tmp, sizeof(tmp), "%d.%06d, "
 					"%d, %d, %d, %d, %d, "
 					"%d, %d, "
-					"%d, %d, %d\r\n",	// TODO: convert to bitwise?
+					"%d, %d, %d, %.2f, %.2f\r\n",	// TODO: convert to bitwise?
 				c.timestamp / 1000000, c.timestamp % 1000000,
 				c.priLevel, c.cam1, c.cam2, c.cam3, c.cam4,
 				c.sync, c.tdc,
-				c.coil, c.injector, c.acr);
+				c.coil, c.injector, c.acr, vbatt, et);
 
 		if ((ret < 0) || (ret >= sizeof(tmp))) {
 			return -1;
