@@ -131,6 +131,10 @@ void defaultsOrFixOnBurn() {
     setDynoDefaults();
   }
 
+  if (engineConfiguration->engineShutDownPeriod == 0) {
+    engineConfiguration->engineShutDownPeriod = 5;
+  }
+
 	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
 	  engineConfiguration->mapExpAverageAlpha = 1;
 	}

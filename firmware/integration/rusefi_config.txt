@@ -1764,6 +1764,8 @@ int anotherCiTest
 linear_sensor_s auxLinear3
 linear_sensor_s auxLinear4
 
+float engineShutDownPeriod;;"", 1, 0, 0, 10, 3
+
 split_lines@@BOARD_ENGINE_CONFIGURATION_FROM_FILE@@
 
 uint8_t autoscale knockSuppressMinTps;Below TPS value all knock suppression will be disabled.;"%", 1, 0, 0, 100, 1
