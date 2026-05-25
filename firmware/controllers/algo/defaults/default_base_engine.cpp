@@ -131,6 +131,10 @@ void defaultsOrFixOnBurn() {
     setDynoDefaults();
   }
 
+  if (engineConfiguration->engineShutDownPeriod == 0) {
+    engineConfiguration->engineShutDownPeriod = 5;
+  }
+
 #if HW_PROTEUS && defined(STM32F4XX)
   // should have been proteus per-board validation
   engineConfiguration->is_enabled_spi_5 = false;
