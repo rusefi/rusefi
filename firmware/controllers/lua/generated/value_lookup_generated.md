@@ -1903,6 +1903,9 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 ### auxLinear4.value2
 
 
+### engineShutDownPeriod
+
+
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.
 

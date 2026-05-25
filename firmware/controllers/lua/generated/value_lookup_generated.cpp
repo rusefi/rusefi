@@ -1909,6 +1909,9 @@ float getConfigValueByHash(const int hash) {
 // auxLinear4.value2
 		case -1058844737:
 			return engineConfiguration->auxLinear4.value2;
+// engineShutDownPeriod
+		case -1846425734:
+			return engineConfiguration->engineShutDownPeriod;
 // knockSuppressMinTps
 		case 893776859:
 			return engineConfiguration->knockSuppressMinTps;
@@ -5317,6 +5320,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1058844737:
 	{
 		engineConfiguration->auxLinear4.value2 = value;
+		return 1;
+	}
+		case -1846425734:
+	{
+		engineConfiguration->engineShutDownPeriod = value;
 		return 1;
 	}
 		case 893776859:
