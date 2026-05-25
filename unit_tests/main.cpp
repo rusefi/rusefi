@@ -140,6 +140,12 @@ GTEST_API_ int main(int argc, char **argv) {
     return 0;
   }
 
+  if (argc == 3 && strcmp(argv[1], "csv2logicdata") == 0) {
+    void runCsv2LogicData(const char* csvFileName);
+    runCsv2LogicData(argv[2]);
+    return 0;
+  }
+
   setUnitTestCreateLogs(true);
 
 	hasInitGtest = true;
