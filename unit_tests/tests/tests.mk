@@ -171,6 +171,7 @@ TESTS_SRC_CPP = \
 	tests/test_binary_log.cpp \
 	tests/test_tooth_logger.cpp \
 	test-framework/csv2logicdata.cpp \
+	test-framework/logicdata2csv.cpp \
 	tests/binary_log/test_bit_logger_field.cpp \
 	tests/binary_log/test_log_file_content.cpp \
 	tests/test_dynoview.cpp \
