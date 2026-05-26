@@ -343,6 +343,109 @@ static void readChannelData(int ch, ChannelEdges& out) {
 	(void)numEdges1;
 }
 
+// Read a length-prefixed ASCII string into `out`.
+static void readString(std::string& out) {
+	uint64_t len = readVar();
+	out.clear();
+	out.reserve((size_t)len);
+	for (uint64_t i = 0; i < len; i++) {
+		out.push_back((char)readByte());
+	}
+}
+
+// Inspect just the header of a .logicdata file. Auto-detects between
+// our writer's variant (no version byte, BLOCK=0x15, numChannels hard-coded
+// to 6) and the real Saleae / Java LogicdataStreamFile variant (leading
+// version=0x13 byte, BLOCK=0x18, numChannels declared in header).
+static LogicDataHeaderInfo inspectHeaderImpl() {
+	LogicDataHeaderInfo info;
+	uint8_t magic = readByte();
+	if (magic != 0x7f) throw std::runtime_error("bad magic");
+
+	// After magic both variants emit a single var. For the real Saleae /
+	// Java writer this is `version=0x13`; for our C++ writer it's an extra
+	// `write(strlen(title))` that is otherwise unused (writeString below
+	// writes the length again). Distinguish by value: 0x13 = real format.
+	uint64_t firstVar = readVar();
+	info.hasVersionByte = (firstVar == 0x13);
+
+	// Title: length (var) followed by raw bytes. NOTE: for our writer this is
+	// `writeString(title)` (var-length-prefixed bytes); for the real format
+	// the layout is also `<var:titleLen> <raw bytes>`. Identical on the wire.
+	uint64_t titleLen = readVar();
+	if (titleLen > 256) throw std::runtime_error("implausible title length");
+	info.title.resize((size_t)titleLen);
+	for (uint64_t k = 0; k < titleLen; k++) {
+		info.title[(size_t)k] = (char)readByte();
+	}
+
+	info.blockMarker = (int)readVar(); // BLOCK (0x15 ours / 0x18 real)
+	skipVar(); // SUB
+	info.frequency = readVar();
+	skipVar(); // 0
+	skipVar(); // reservedDurationInSamples
+	skipVar(); // frequency / frequencyDiv
+	skipVars(2);
+	info.numChannels = (int)readVar();
+	if (info.numChannels <= 0 || info.numChannels > 64) {
+		throw std::runtime_error("implausible numChannels");
+	}
+
+	skipVar(); // BLOCK
+	skipVar(); // 0
+
+	skipVar(); // BLOCK
+	for (int i = 0; i < info.numChannels; i++) {
+		skipVar(); skipVar(); skipVar(); // writeId(i, 1)
+	}
+	skipVar(); // 0
+
+	skipVar(); // BLOCK
+	skipVar(); skipVar(); skipVar(); // writeId(0, 0)
+	skipVar();
+	skipVar();
+
+	// channelDataHeader prefix.
+	skipVar(); // BLOCK
+	skipVar(); // scaledDurationInSamples
+	skipVars(5);
+	skipVar(); // numChannels
+	skipVars(3);
+	skipVar(); skipVar(); skipVar(); // writeId(0, 1)
+	skipVar();
+
+	skipVar(); // BLOCK
+	skipVars(3);
+
+	// Per-channel headers: 0xff var, ch var, name string, then variant-
+	// specific padding/doubles + optional id+flags. We only need the name,
+	// then follow the writer's per-channel header skip recipe.
+	for (int ch = 0; ch < info.numChannels; ch++) {
+		skipVar();            // 0xff
+		skipVar();            // ch
+		uint64_t nameLen = readVar();
+		std::string name;
+		name.resize((size_t)nameLen);
+		for (uint64_t k = 0; k < nameLen; k++) {
+			name[(size_t)k] = (char)readByte();
+		}
+		info.channelNames.push_back(name);
+		skipVars(2);          // padding 0, 0
+		skipDouble();         // 1.0
+		skipVar();            // 0
+		skipDouble();         // 0.0
+		skipVar();            // 1 or 2
+		skipDouble();         // 0.0 or 1.0
+		if (ch == info.numChannels - 1) {
+			skipVar();        // 0
+		} else {
+			skipVar(); skipVar(); skipVar();   // writeId(1+ch, 1)
+			skipVar(); skipVar(); skipVar();   // CHANNEL_FLAGS bytes (3 vars)
+		}
+	}
+	return info;
+}
+
 } // namespace
 
 std::vector<CompositeEvent> readLogicDataFile(const char* fileName) {
@@ -405,4 +508,22 @@ std::vector<CompositeEvent> readLogicDataFile(const char* fileName) {
 	fclose(g_fp);
 	g_fp = nullptr;
 	return result;
+}
+
+LogicDataHeaderInfo inspectLogicDataHeader(const char* fileName) {
+	g_fp = fopen(fileName, "rb");
+	if (!g_fp) {
+		throw std::runtime_error(std::string("cannot open ") + fileName);
+	}
+	LogicDataHeaderInfo info;
+	try {
+		info = inspectHeaderImpl();
+	} catch (...) {
+		fclose(g_fp);
+		g_fp = nullptr;
+		throw;
+	}
+	fclose(g_fp);
+	g_fp = nullptr;
+	return info;
 }

@@ -178,3 +178,39 @@ TEST(logicDataToCsv, roundTripSynthetic) {
 		EXPECT_TRUE(found) << "Unexpected timestamp " << ev.timestamp;
 	}
 }
+
+// Open a real Saleae .logicdata file (produced by the Java
+// LogicdataStreamFile / Saleae Logic, not by our C++ writer) and inspect its
+// header. This exercises the format auto-detect path in
+// inspectLogicDataHeader(): real files have an extra `version=0x13` byte
+// after the magic, use BLOCK=0x18 (vs our writer's 0x15), declare
+// numChannels in the header, and use default channel names "Channel N".
+TEST(logicDataToCsv, openRealSaleaeFile) {
+	const std::string path =
+		std::string("tests/trigger/resources/out-of-battery.logicdata");
+
+	std::error_code ec;
+	ASSERT_TRUE(std::filesystem::exists(path, ec)) << "Missing input: " << path;
+
+	LogicDataHeaderInfo info;
+	ASSERT_NO_THROW({ info = inspectLogicDataHeader(path.c_str()); });
+
+	// This file is from /home/snow/fw-iws/tests/resources/may-25/, produced
+	// by the Java/Saleae writer — must be detected as the "real" variant.
+	EXPECT_TRUE(info.hasVersionByte)
+		<< "Expected real-Saleae format (version=0x13)";
+	EXPECT_EQ(info.blockMarker, 0x18)
+		<< "Real Saleae format uses BLOCK=0x18, got 0x"
+		<< std::hex << info.blockMarker;
+	EXPECT_EQ(info.title, "Data save2");
+	EXPECT_EQ(info.numChannels, 8);
+	ASSERT_EQ(info.channelNames.size(), static_cast<size_t>(info.numChannels));
+	EXPECT_EQ(info.channelNames[0], "Channel 0");
+	EXPECT_EQ(info.channelNames[7], "Channel 7");
+
+	printf("Real .logicdata: title=\"%s\" version=%d block=0x%x"
+		   " numChannels=%d frequency=%llu\n",
+		info.title.c_str(), info.hasVersionByte ? 1 : 0,
+		info.blockMarker, info.numChannels,
+		(unsigned long long)info.frequency);
+}
