@@ -132,7 +132,7 @@ void hellenDisableEn(const char *msg) {
 #endif // EFI_CONFIGURATION_STORAGE
 	do {
 		chThdSleepMilliseconds(10);
-		if (sdCardGetCurrentMode() == SD_MODE_IDLE) {
+		if (sdCardGetCurrentMode() == SD_MODE_UNMOUNT) {
 			break;
 		}
 		timeout -= 10;
