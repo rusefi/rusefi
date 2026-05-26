@@ -70,17 +70,19 @@ static void skipString() {
 	for (uint64_t i = 0; i < len; i++) (void)readByte();
 }
 
-// Inverse of writeDouble().
+// Inverse of writeDouble(). Written as length=8 + 8 raw bytes, but some files
+// may emit shorter encodings; accept any 0..8.
 static void skipDouble() {
 	uint8_t n = readByte();
 	if (n == 0) return;
-	if (n != 8) throw std::runtime_error("bad double length");
-	for (int i = 0; i < 8; i++) (void)readByte();
+	if (n > 8) throw std::runtime_error("bad double length");
+	for (int i = 0; i < n; i++) (void)readByte();
 }
 
 static void readHeader() {
 	uint8_t magic = readByte();
 	if (magic != 0x7f) throw std::runtime_error("bad magic");
+	skipVar();    // duplicate strlen(title), see writeHeader
 	skipString(); // title
 
 	skipVar(); // BLOCK
@@ -201,25 +203,11 @@ struct ChannelEdges {
 };
 
 static void readEdges(std::vector<uint32_t>& deltas, std::vector<int>& states,
-                      bool useLongDeltas) {
-	// Edges are written as raw little-endian bytes (2 or 4 per edge).
-	// Stream ends when we see a 0x00 byte where the LOW byte of next edge starts.
-	// In writer: edges loop then writeByte(0). However an edge could legitimately
-	// have a low byte of 0x00. Detection in writer uses raw bytes and a single
-	// trailing 0x00 marker, so reader must trust the marker — relying on the
-	// fact that the writer never emits an edge with all zero bytes (delta>0).
-	while (true) {
+                      bool useLongDeltas, int numEdges) {
+	// Edges are written as raw little-endian bytes (2 or 4 per edge), followed
+	// by a single 0x00 terminator byte.
+	for (int e = 0; e < numEdges; e++) {
 		uint8_t b0 = readByte();
-		// If this is the terminator: a single 0x00 byte. But b0=0 could also be
-		// the first byte of a valid delta (delta with low byte 0). Heuristic:
-		// peek ahead — if the remaining bytes of an edge are all zero AND the
-		// state would be undefined, treat as terminator. Simpler: writer emits
-		// terminator as a single byte 0x00 and then moves on to the next
-		// section, which always starts with a writeVar/writeRaw of known
-		// value. For numEdges>0 path, the very next bytes are write(BLOCK) for
-		// ch==0 or write(0,4) for ch>0. So if b0==0 we treat as terminator.
-		if (b0 == 0) return;
-
 		uint8_t b1 = readByte();
 		uint32_t raw;
 		if (useLongDeltas) {
@@ -299,17 +287,11 @@ static void readChannelData(int ch, ChannelEdges& out) {
 
 	std::vector<uint32_t> deltas;
 	std::vector<int> newStates;
-	if (!empty) {
-		readEdges(deltas, newStates, useLongDeltas);
-	} else {
-		// No edges written, no terminator either? Writer calls writeEdges only
-		// inside the main flow regardless of numEdges; the for loop runs 0
-		// times then writes the terminator byte 0x00. So we still consume it.
-		uint8_t term = readByte();
-		if (term != 0) {
-			// unexpected — but proceed
-		}
-	}
+	// Writer always calls writeEdges regardless of empty/non-empty, which
+	// loops numEdges times then writes a single 0x00 terminator byte. For
+	// empty channels numEdges is 0 so we just consume the terminator.
+	readEdges(deltas, newStates, useLongDeltas, (int)numEdges1);
+	(void)readByte(); // 0x00 terminator
 
 	if (ch == 0) {
 		skipVar(); // BLOCK
