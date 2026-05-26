@@ -660,6 +660,7 @@ static void sdLoggerStart()
 
 static void sdLoggerStop()
 {
+	logBuffer.stop();
 	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
 	// TODO: pick this config option from cached
