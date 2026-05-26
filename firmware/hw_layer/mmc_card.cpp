@@ -350,13 +350,9 @@ static void removeFile(const char *pathx) {
 #if HAL_USE_USB_MSD
 
 static volatile bool usbConnected = false;
-static chibios_rt::BinarySemaphore usbConnectedSemaphore(/* taken =*/ true);
 
 void onUsbConnectedNotifyMmcI(bool connected) {
 	usbConnected = connected;
-	if (connected) {
-		usbConnectedSemaphore.signalI();
-	}
 }
 
 #endif /* HAL_USE_USB_MSD */
