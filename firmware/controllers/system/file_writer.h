@@ -33,10 +33,9 @@ struct FileBufferedWriter final : public BufferedWriter<512> {
 	}
 
 	void stop() {
-		m_fd = nullptr;
-
 		flush();
 
+		m_fd = nullptr;
 		m_size = 0;
 	}
 
