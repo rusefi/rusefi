@@ -81,9 +81,21 @@ static const char *sdStatusNames[] =
 	"MMC_CONNECT_FAILED"
 };
 
-static const char *sdStatusName(SD_STATUS status)
-{
+static const char *sdStatusName(SD_STATUS status) {
 	return sdStatusNames[status];
+}
+
+static const char *sdModeNames[] =
+{
+	"Idle",
+	"ECU/logging",
+	"PC/MSD",
+	"Unmount",
+	"Format"
+};
+
+static const char *sdModeName(SD_MODE mode) {
+	return sdModeNames[mode];
 }
 
 static bool sdLoggerReady = false;
@@ -92,6 +104,7 @@ static SD_STATUS sdStatus = SD_STATUS_INIT;
 static SD_MODE sdMode = SD_MODE_IDLE;
 // by default we want SD card for logs
 static SD_MODE sdTargetMode = SD_MODE_ECU;
+static bool sdTargetModeRequested = false;
 
 static bool sdNeedRemoveReports = false;
 
@@ -210,8 +223,8 @@ static void printMmcPinout() {
 
 static void sdStatistics() {
 	printMmcPinout();
-	efiPrintf("SD enabled=%s status=%s", boolToString(engineConfiguration->isSdCardEnabled),
-			sdStatusName(sdStatus));
+	efiPrintf("SD enabled=%s status=%s target mode=%s%s", boolToString(engineConfiguration->isSdCardEnabled),
+			sdStatusName(sdStatus), sdModeName(sdTargetMode), sdTargetModeRequested ? " user selected" : " auto");
 #if HAL_USE_MMC_SPI
 	printSpiConfig("SD", mmcSpiDevice);
 #if defined(STM32F4XX) || defined(STM32F7XX)
@@ -332,10 +345,14 @@ static void removeFile(const char *pathx) {
 
 #if HAL_USE_USB_MSD
 
+static volatile bool usbConnected = false;
 static chibios_rt::BinarySemaphore usbConnectedSemaphore(/* taken =*/ true);
 
-void onUsbConnectedNotifyMmcI() {
-	usbConnectedSemaphore.signalI();
+void onUsbConnectedNotifyMmcI(bool connected) {
+	usbConnected = connected;
+	if (connected) {
+		usbConnectedSemaphore.signalI();
+	}
 }
 
 #endif /* HAL_USE_USB_MSD */
@@ -429,23 +446,6 @@ static void deinitializeMmcBlockDevide() {
 
 #endif /* EFI_SDC_DEVICE */
 
-#if HAL_USE_USB_MSD
-static bool useMsdMode() {
-	if (engineConfiguration->alwaysWriteSdCard) {
-		return false;
-	}
-	if (isIgnVoltage()) {
-		// if we have battery voltage let's give priority to logging not reading
-		// this gives us a chance to SD card log cranking
-		return false;
-	}
-	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
-	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
-
-	return usbResult == MSG_OK;
-}
-#endif // HAL_USE_USB_MSD
-
 static BaseBlockDevice* cardBlockDevice = nullptr;
 
 // Initialize SD card.
@@ -487,11 +487,7 @@ static bool mountMmc() {
 		ret = f_mount(&MMC_FS, "", /* Mount immediately */ 1);
 
 		if (ret != FR_OK) {
-			sdStatus = SD_STATUS_MOUNT_FAILED;
 			printFatFsError("Mount failed", ret);
-		} else {
-			sdStatus = SD_STATUS_MOUNTED;
-			efiPrintf("SD card mounted!");
 		}
 	}
 
@@ -711,6 +707,7 @@ static int sdModeSwitchToIdle(SD_MODE from)
 	case SD_MODE_ECU:
 		sdLoggerStop();
 		unmountMmc();
+		sdStatus = SD_STATUS_INIT;
 		return 0;
 	case SD_MODE_PC:
 		deattachMsdSdCard();
@@ -726,72 +723,90 @@ static int sdModeSwitchToIdle(SD_MODE from)
 	return -1;
 }
 
-static int sdModeSwitcher()
-{
-	if (sdTargetMode == SD_MODE_IDLE) {
-		return 0;
+// manages SD card mode depending on current power scheme
+static SD_MODE sdModeSelector() {
+	if (!usbConnected && !isIgnVoltage()) {
+		// No USB connection, no ignition voltage
+		// Are we about to switch off?
+		return SD_MODE_UNMOUNT;
 	}
 
-	if (sdMode == sdTargetMode) {
+	if (sdTargetModeRequested) {
+		// user force selected mode
+		// preserve it until power off
+		return sdTargetMode;
+	}
+
+	if (engineConfiguration->alwaysWriteSdCard) {
+		return SD_MODE_ECU;
+	}
+
+#if HAL_USE_USB_MSD
+	if (usbConnected) {
+		return SD_MODE_PC;
+	}
+#endif
+
+	return SD_MODE_ECU;
+}
+
+static SD_MODE sdModeSwitcher(SD_MODE mode, SD_MODE target) {
+	// No request to switch to any mode
+	if (target == SD_MODE_IDLE) {
+		return mode;
+	}
+
+	if (mode == target) {
 		// already here
-		sdTargetMode = SD_MODE_IDLE;
-		return 0;
+		return target;
 	}
 
-	if (sdMode != SD_MODE_IDLE) {
-		int ret = sdModeSwitchToIdle(sdMode);
+	if (mode != SD_MODE_IDLE) {
+		int ret = sdModeSwitchToIdle(mode);
 		if (ret) {
-			return ret;
+			// failed to switch
+			efiPrintf("SD: failed to switch to Idle before %s: %d", sdModeName(target), ret);
+			return mode;
 		}
-		sdMode = SD_MODE_IDLE;
-	}
-
-	if (sdMode != SD_MODE_IDLE) {
-		return -1;
+		mode = SD_MODE_IDLE;
 	}
 
 	// Now SD card is in idle state, we can switch into target state
-	switch (sdTargetMode) {
+	switch (target) {
 	case SD_MODE_IDLE:
-		return 0;
+		[[fallthrough]];
 	case SD_MODE_UNMOUNT:
 		// everything is done in sdModeSwitchToIdle();
-		sdMode = SD_MODE_UNMOUNT;
-		sdTargetMode = SD_MODE_IDLE;
-		return 0;
+		return target;
 	case SD_MODE_ECU:
 		if (mountMmc()) {
+			sdStatus = SD_STATUS_MOUNTED;
 			sdLoggerStart();
-			sdMode = SD_MODE_ECU;
+			return SD_MODE_ECU;
 		} else {
+			sdStatus = SD_STATUS_MOUNT_FAILED;
 			// failed to mount SD card to ECU, go to idle
-			sdMode = SD_MODE_IDLE;
+			return SD_MODE_IDLE;
 		}
-		sdTargetMode = SD_MODE_IDLE;
-		return 0;
 	case SD_MODE_PC:
 		attachMsdSdCard(cardBlockDevice, resources.blkbuf, sizeof(resources.blkbuf));
 		sdStatus = SD_STATUS_MSD;
-		sdMode = SD_MODE_PC;
-		sdTargetMode = SD_MODE_IDLE;
-		return 0;
+		return SD_MODE_PC;
 	case SD_MODE_FORMAT:
 		if (sdFormat()) {
 			// formated ok
 		}
-		sdMode = SD_MODE_IDLE;
-		// TODO: return to mode that was used before format was requested!
-		sdTargetMode = SD_MODE_IDLE;
-		return 0;
+		sdStatus = SD_STATUS_INIT;
+		return SD_MODE_IDLE;
 	}
 
 	// should not happen
-	return -1;
+	return mode;
 }
 
-static int sdModeExecuter()
+static int sdModeExecuter(SD_MODE mode)
 {
-	switch (sdMode) {
+	switch (mode) {
 	case SD_MODE_IDLE:
 	case SD_MODE_PC:
 	case SD_MODE_UNMOUNT:
@@ -875,18 +890,28 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	// Try to mount SD card, drop critical report if needed and check for previously stored reports
 	sdReportStorageInit();
 
-#if HAL_USE_USB_MSD
-	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
-	// If we have a device AND USB is connected, mount the card to USB, otherwise
-	// mount the null device and try to mount the filesystem ourselves
-	if (useMsdMode()) {
-		sdTargetMode = SD_MODE_PC;
-	}
-#endif
-
 	while (1) {
-		sdModeSwitcher();
-		if (sdModeExecuter() == 0) {
+		// get SD card mode
+		SD_MODE target = sdModeSelector();
+
+		// target mode is valid and not reached yet
+		if ((target != SD_MODE_IDLE) && (sdMode != target)) {
+			// Try to swith to this adjusted mode
+			SD_MODE current = sdModeSwitcher(sdMode, target);
+
+			// Target mode is valid and we have failed to switch to it
+			if (current != target) {
+				efiPrintf("SD: failed to switch from %s to %s", sdModeName(sdMode), sdModeName(target));
+				// TODO: handle
+				chThdSleepMilliseconds(1000);
+				sdMode = SD_MODE_IDLE;
+			} else {
+				efiPrintf("SD: switched from %s to %s", sdModeName(sdMode), sdModeName(target));
+			}
+			sdMode = target;
+		}
+
+		if (sdModeExecuter(sdMode) == 0) {
 			chThdSleepMilliseconds(100);
 		}
 	}
@@ -993,8 +1018,9 @@ void initMmcCard() {
 void sdCardRequestMode(SD_MODE mode)
 {
 	// Check if SD is not in transition state...
-	if (sdTargetMode == SD_MODE_IDLE) {
-		efiPrintf("sdCardRequestMode %d", (int)mode);
+	if (sdMode != mode) {
+		efiPrintf("sdCardRequestMode %s", sdModeName(mode));
+		sdTargetModeRequested = true;
 		sdTargetMode = mode;
 	}
 }
