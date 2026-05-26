@@ -66,7 +66,7 @@ static void setupVbatt() {
 	engineConfiguration->analogInputDividerCoefficient = 1.56f;
 
 	// 82k high side/10k low side = 9.2
-	engineConfiguration->vbattDividerCoeff = (92.0f / 10.0f);
+	engineConfiguration->vbattDividerCoeff = (101.0f / 10.0f);
 
 	// Battery sense on PA7
 	engineConfiguration->vbattAdcChannel = EFI_ADC_7;
