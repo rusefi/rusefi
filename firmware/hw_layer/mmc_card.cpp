@@ -68,9 +68,9 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 	}
 
 	void stop() {
-		m_fd = nullptr;
-
 		flush();
+
+		m_fd = nullptr;
 
 		totalLoggedBytes = 0;
 		writeCounter = 0;
@@ -730,6 +730,7 @@ static void sdLoggerStart(void)
 
 static void sdLoggerStop(void)
 {
+	logBuffer.stop();
 	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
 	// TODO: cache this config option untill sdLoggerStop()
