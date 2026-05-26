@@ -30,3 +30,28 @@ struct LogicDataHeaderInfo {
 };
 
 LogicDataHeaderInfo inspectLogicDataHeader(const char* fileName);
+
+// Per-channel decoded edge stream. One entry per state-change event.
+struct ChannelEdgeStream {
+    std::string name;
+    int initialState = 0;
+    int lastState = 0;
+    std::vector<uint32_t> timestamps; // absolute, after delta accumulation (in samples)
+    std::vector<int> states;          // state AFTER each edge
+};
+
+struct LogicDataFull {
+    LogicDataHeaderInfo header;
+    std::vector<ChannelEdgeStream> channels;
+};
+
+// Generic reader: works for both our 6-channel writer's variant (BLOCK=0x15)
+// and the real-Saleae / Java LogicdataStreamFile variant (BLOCK=0x18, any
+// numChannels declared in the header).
+LogicDataFull readLogicDataFull(const char* fileName);
+
+// Convenience: write a generic CSV from a parsed file. The first column is
+// time in seconds (sample_count / frequency); subsequent columns are 0/1
+// for each channel at that timestamp. One row is emitted per unique edge
+// timestamp; the row carries the post-edge state for every channel.
+void writeLogicDataGenericCsv(const char* csvFileName, const LogicDataFull& data);

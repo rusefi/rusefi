@@ -214,3 +214,93 @@ TEST(logicDataToCsv, openRealSaleaeFile) {
 		info.blockMarker, info.numChannels,
 		(unsigned long long)info.frequency);
 }
+
+// Full-conversion path: read the real-Saleae out-of-battery.logicdata, decode
+// all channel edge streams, and write a generic per-channel CSV. Validates
+// that the new readLogicDataFull / writeLogicDataGenericCsv pipeline works
+// end-to-end on a real Saleae capture.
+TEST(logicDataToCsv, openRealSaleaeFileToCsv) {
+	const std::string inPath =
+		std::string("tests/trigger/resources/out-of-battery.logicdata");
+	const std::string outPath =
+		std::string(TEST_RESULTS_DIR) + "/out-of-battery.csv";
+
+	std::error_code ec;
+	ASSERT_TRUE(std::filesystem::exists(inPath, ec)) << "Missing input: " << inPath;
+
+	LogicDataFull data;
+	ASSERT_NO_THROW({ data = readLogicDataFull(inPath.c_str()); });
+
+	EXPECT_TRUE(data.header.hasVersionByte);
+	EXPECT_EQ(data.header.numChannels, 8);
+	ASSERT_EQ(data.channels.size(), 8u);
+
+	size_t totalEdges = 0;
+	for (const auto& c : data.channels) totalEdges += c.timestamps.size();
+	EXPECT_GT(totalEdges, 0u) << "Expected at least some edges in the trace";
+
+	ASSERT_NO_THROW({ writeLogicDataGenericCsv(outPath.c_str(), data); });
+	auto sz = std::filesystem::file_size(outPath, ec);
+	ASSERT_FALSE(ec);
+	EXPECT_GT(sz, 16u);
+
+	// Sanity check on CSV header line.
+	std::ifstream f(outPath);
+	std::string line;
+	ASSERT_TRUE(std::getline(f, line));
+	EXPECT_NE(line.find("Time[s]"), std::string::npos);
+	EXPECT_NE(line.find("Channel 0"), std::string::npos);
+	EXPECT_NE(line.find("Channel 7"), std::string::npos);
+
+	printf("out-of-battery: %zu channels, %zu total edges -> %s (%zu bytes)\n",
+		data.channels.size(), totalEdges, outPath.c_str(),
+		static_cast<size_t>(sz));
+}
+
+// Convert every real-Saleae file from the may-25 capture set to CSV. They
+// have varying numChannels and varying record counts, so this exercises the
+// generic decode path across multiple inputs.
+TEST(logicDataToCsv, convertAllMay25Files) {
+	static const char* const files[] = {
+		"happy.logicdata",
+		"happy-2.logicdata",
+		"happy-3n.logicdata",
+		"not-great.logicdata",
+		"not-great-2.logicdata",
+		"not-great-3.logicdata",
+		"not-great-4.logicdata",
+		"not-great-5n.logicdata",
+		"out-of-battery.logicdata",
+	};
+
+	int converted = 0;
+	for (const char* baseName : files) {
+		const std::string inPath =
+			std::string("tests/trigger/resources/") + baseName;
+		std::error_code ec;
+		if (!std::filesystem::exists(inPath, ec)) {
+			ADD_FAILURE() << "Missing input: " << inPath;
+			continue;
+		}
+		const std::string outPath =
+			std::string(TEST_RESULTS_DIR) + "/" + baseName + ".csv";
+
+		LogicDataFull data;
+		ASSERT_NO_THROW({ data = readLogicDataFull(inPath.c_str()); })
+			<< "Reading failed for " << baseName;
+		ASSERT_GT(data.channels.size(), 0u) << baseName;
+		ASSERT_NO_THROW({ writeLogicDataGenericCsv(outPath.c_str(), data); })
+			<< "CSV write failed for " << baseName;
+		auto sz = std::filesystem::file_size(outPath, ec);
+		ASSERT_FALSE(ec);
+		EXPECT_GT(sz, 16u) << baseName;
+
+		size_t totalEdges = 0;
+		for (const auto& c : data.channels) totalEdges += c.timestamps.size();
+		printf("  %-26s nch=%d edges=%zu -> %s (%zu bytes)\n",
+			baseName, data.header.numChannels, totalEdges,
+			outPath.c_str(), static_cast<size_t>(sz));
+		converted++;
+	}
+	EXPECT_EQ(converted, (int)(sizeof(files)/sizeof(files[0])));
+}

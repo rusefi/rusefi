@@ -23,6 +23,27 @@ void runLogicData2Csv(const char* logicDataFileName) {
         output = input.substr(0, lastDot) + ".csv";
     }
 
+    // Detect format variant first. Real Saleae / Java LogicdataStreamFile
+    // files (version=0x13, BLOCK=0x18, arbitrary numChannels, generic
+    // "Channel N" names) cannot be mapped to the 6-field CompositeEvent.
+    // For those we emit a generic per-channel CSV instead.
+    try {
+        LogicDataHeaderInfo info = inspectLogicDataHeader(logicDataFileName);
+        if (info.hasVersionByte || info.numChannels != 6) {
+            LogicDataFull full = readLogicDataFull(logicDataFileName);
+            writeLogicDataGenericCsv(output.c_str(), full);
+            size_t totalEdges = 0;
+            for (const auto& c : full.channels) totalEdges += c.timestamps.size();
+            std::cout << "logicdata2csv: wrote " << totalEdges << " edges across "
+                      << full.channels.size() << " channels to " << output << std::endl;
+            return;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "logicdata2csv: header inspect failed for " << logicDataFileName
+                  << ": " << e.what() << std::endl;
+        return;
+    }
+
     std::vector<CompositeEvent> events;
     try {
         events = readLogicDataFile(logicDataFileName);
