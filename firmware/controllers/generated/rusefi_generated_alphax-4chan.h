@@ -824,6 +824,7 @@
 #define GAUGE_NAME_UPTIME "Uptime"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
+#define GAUGE_NAME_VIGN "VIgn"
 #define GAUGE_NAME_VVS "Vehicle Speed"
 #define GAUGE_NAME_VVT_B1E "VVT: bank 1 exhaust"
 #define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"
@@ -1569,7 +1570,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 775670644
+#define SIGNATURE_HASH 388270245
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2183,12 +2184,12 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.05.26.alphax-4chan.775670644"
+#define TS_SIGNATURE "rusEFI master.2026.05.27.alphax-4chan.388270245"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 2132
+#define TS_TOTAL_OUTPUT_SIZE 2136
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "C2/C3 Crank VR"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "E5/E6 Cam VR"
 #define TS_TRIGGER_SCOPE_DISABLE 5

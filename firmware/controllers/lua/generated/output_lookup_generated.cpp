@@ -160,6 +160,9 @@ float getOutputValueByHash(const int hash) {
 // VBatt
 		case 277722310:
 			return engine->outputChannels.VBatt;
+// VIgn
+		case 2090832025:
+			return engine->outputChannels.VIgn;
 // oilPressure
 		case 598268994:
 			return engine->outputChannels.oilPressure;
