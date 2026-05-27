@@ -14,7 +14,7 @@
 #define DOT_MLG ".mlg"
 
 // see also SD_STATUS
-typedef enum {
+typedef enum : uint8_t {
 	SD_MODE_IDLE = 0,
 	SD_MODE_ECU,
 	SD_MODE_PC,
