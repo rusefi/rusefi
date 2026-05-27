@@ -534,6 +534,7 @@ static void updatePressures() {
 
 static void updateMiscSensors() {
 	engine->outputChannels.VBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
+	engine->outputChannels.VIgn = Sensor::getOrZero(SensorType::IgnKeyVoltage);
 
 	engine->outputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
