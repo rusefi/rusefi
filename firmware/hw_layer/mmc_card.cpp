@@ -40,6 +40,7 @@
 #include "hellen_meta.h"
 
 #include "rtc_helper.h"
+#include "backup_ram.h"
 
 #endif
 
@@ -55,7 +56,7 @@ extern int errorHandlerCheckReportFiles();
 extern void errorHandlerDeleteReports();
 
 // see also SD_MODE
-typedef enum {
+typedef enum : uint8_t {
 	SD_STATUS_INIT = 0,
 	SD_STATUS_MOUNTED,
 	SD_STATUS_MOUNT_FAILED,
@@ -82,7 +83,10 @@ static const char *sdStatusNames[] =
 };
 
 static const char *sdStatusName(SD_STATUS status) {
-	return sdStatusNames[status];
+	if ((uint8_t)status < efi::size(sdStatusNames)) {
+		return sdStatusNames[status];
+	}
+	return "INVALID";
 }
 
 static const char *sdModeNames[] =
@@ -95,7 +99,10 @@ static const char *sdModeNames[] =
 };
 
 static const char *sdModeName(SD_MODE mode) {
-	return sdModeNames[mode];
+	if ((uint8_t)mode < efi::size(sdModeNames)) {
+		return sdModeNames[mode];
+	}
+	return "INVALID";
 }
 
 static bool sdLoggerReady = false;
@@ -147,6 +154,70 @@ static MMCConfig mmccfg = {
  * fatfs MMC/SPI
  */
 static NO_CACHE FATFS MMC_FS;
+
+union SdBackupState {
+	struct {
+		SD_MODE mode;
+		SD_STATUS status;
+		uint8_t unsafeUnmountCnt;
+		uint8_t valid;
+	} __attribute__((packed));
+	uint32_t x;
+};
+
+static_assert(sizeof(SdBackupState) == sizeof(uint32_t));
+
+static void sdCardUpdateBackupState() {
+	SdBackupState state;
+	state.x = backupRamLoad(backup_ram_e::MccStatus);
+	state.mode = sdMode;
+	state.status = sdStatus;
+	state.valid = 0x5A;
+	backupRamSave(backup_ram_e::MccStatus, state.x);
+}
+
+static void sdCardShowBackupState() {
+	SdBackupState state;
+	state.x = backupRamLoad(backup_ram_e::MccStatus);
+
+	efiPrintf("SD state at last power off %s / %s", sdModeName(state.mode), sdStatusName(state.status));
+	efiPrintf("total unsafe power offs %d", state.unsafeUnmountCnt);
+}
+
+static bool sdCardInitBackupState() {
+	SdBackupState state;
+	state.x = backupRamLoad(backup_ram_e::MccStatus);
+
+	bool valid = state.valid == 0x5A;
+	if (valid) {
+		if ((state.mode != SD_MODE_IDLE) && (state.mode != SD_MODE_UNMOUNT)) {
+			if (state.unsafeUnmountCnt < 255) {
+				state.unsafeUnmountCnt++;
+			}
+		}
+	} else {
+		state.mode = SD_MODE_IDLE;
+		state.status = SD_STATUS_INIT;
+		state.unsafeUnmountCnt = 0;
+		state.valid = 0x5A;
+	}
+
+	backupRamSave(backup_ram_e::MccStatus, state.x);
+
+	return valid;
+}
+
+static void sdCardSetCurrentMode(SD_MODE mode) {
+	sdMode = mode;
+
+	sdCardUpdateBackupState();
+}
+
+static void sdSetCurrentStatus(SD_STATUS status) {
+	sdStatus = status;
+
+	sdCardUpdateBackupState();
+}
 
 static void sdLoggerSetReady(bool value) {
 #if EFI_TUNER_STUDIO
@@ -299,7 +370,7 @@ static int sdLoggerCreateFile(FIL *fd) {
 	engine->outputChannels.sd_error = (uint8_t)err;
 #endif
 	if (err != FR_OK) {
-		sdStatus = SD_STATUS_OPEN_FAILED;
+		sdSetCurrentStatus(SD_STATUS_OPEN_FAILED);
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: file open failed");
 		printFatFsError("log file create", err);	// else - show error
 		return -1;
@@ -391,7 +462,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	// Performs the initialization procedure on the inserted card.
 	LOCK_SD_SPI();
 	if (blkConnect(&MMCD1) != HAL_SUCCESS) {
-		sdStatus = SD_STATUS_MMC_FAILED;
+		sdSetCurrentStatus(SD_STATUS_MMC_FAILED);
 		UNLOCK_SD_SPI();
 		return nullptr;
 	}
@@ -704,7 +775,7 @@ static int sdModeSwitchToIdle(SD_MODE from)
 	case SD_MODE_ECU:
 		sdLoggerStop();
 		unmountMmc();
-		sdStatus = SD_STATUS_INIT;
+		sdSetCurrentStatus(SD_STATUS_INIT);
 		return 0;
 	case SD_MODE_PC:
 		deattachMsdSdCard();
@@ -777,23 +848,23 @@ static SD_MODE sdModeSwitcher(SD_MODE mode, SD_MODE target) {
 		return target;
 	case SD_MODE_ECU:
 		if (mountMmc()) {
-			sdStatus = SD_STATUS_MOUNTED;
+			sdSetCurrentStatus(SD_STATUS_MOUNTED);
 			sdLoggerStart();
 			return SD_MODE_ECU;
 		} else {
-			sdStatus = SD_STATUS_MOUNT_FAILED;
+			sdSetCurrentStatus(SD_STATUS_MOUNT_FAILED);
 			// failed to mount SD card to ECU, go to idle
 			return SD_MODE_IDLE;
 		}
 	case SD_MODE_PC:
 		attachMsdSdCard(cardBlockDevice, resources.blkbuf, sizeof(resources.blkbuf));
-		sdStatus = SD_STATUS_MSD;
+		sdSetCurrentStatus(SD_STATUS_MSD);
 		return SD_MODE_PC;
 	case SD_MODE_FORMAT:
 		if (sdFormat()) {
 			// formated ok
 		}
-		sdStatus = SD_STATUS_INIT;
+		sdSetCurrentStatus(SD_STATUS_INIT);
 		return SD_MODE_IDLE;
 	}
 
@@ -876,10 +947,16 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		chThdSleepMilliseconds(100);
 	}
 
-	sdStatus = SD_STATUS_CONNECTING;
+	if (sdCardInitBackupState()) {
+		sdCardShowBackupState();
+	} else {
+		efiPrintf("SD backup RAM state is not valid");
+	}
+
+	sdSetCurrentStatus(SD_STATUS_CONNECTING);
 	if (!initMmc()) {
 		efiPrintf("Card is not preset/failed to init");
-		sdStatus = SD_STATUS_NOT_INSERTED;
+		sdSetCurrentStatus(SD_STATUS_NOT_INSERTED);
 		// give up until next boot
 		goto die;
 	}
@@ -901,11 +978,11 @@ static THD_FUNCTION(MMCmonThread, arg) {
 				efiPrintf("SD: failed to switch from %s to %s", sdModeName(sdMode), sdModeName(target));
 				// TODO: handle
 				chThdSleepMilliseconds(1000);
-				sdMode = SD_MODE_IDLE;
+				sdCardSetCurrentMode(SD_MODE_IDLE);
 			} else {
 				efiPrintf("SD: switched from %s to %s", sdModeName(sdMode), sdModeName(target));
 			}
-			sdMode = target;
+			sdCardSetCurrentMode(target);
 		}
 
 		if (sdModeExecuter(sdMode) == 0) {
