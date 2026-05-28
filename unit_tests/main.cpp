@@ -152,7 +152,7 @@ GTEST_API_ int main(int argc, char **argv) {
     return 0;
   }
 
-  if (argc == 3 && strcmp(argv[1], "msl_to_csv") == 0) {
+  if (argc == 3 && strcmp(argv[1], "msl2csv") == 0) {
     void runMsl2Csv(const char* mslFileName);
     runMsl2Csv(argv[2]);
     return 0;
