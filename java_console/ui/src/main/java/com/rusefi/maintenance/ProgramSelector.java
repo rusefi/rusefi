@@ -239,7 +239,7 @@ public class ProgramSelector {
         ConnectivityContext connectivityContext
     ) {
         return updateFirmwareAndRestorePreviousCalibrations(
-            ecuPort, bp, lm, callbacks, () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext);
+            parent, ecuPort, bp, lm, callbacks, () -> bltUpdateFirmware(parent, ecuPort, callbacks, connectivityContext), connectivityContext);
     }
 
     private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext) {
