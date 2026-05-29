@@ -339,7 +339,7 @@ static void alphax_gold_boardInitHardware() {
 	board_init_ext_gpios();
 }
 
-static void alphax_gold_OnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void alphax_gold_OnConfigurationChange(const engine_configuration_s * /*previousConfiguration*/) {
 	alphaTempPullUp.setValue(engineConfiguration->boardEnTempPullUp);
 	alphaKnock1PullUp.setValue(engineConfiguration->boardEnKnock1PullUp);
 	alphaKnock2PullUp.setValue(engineConfiguration->boardEnKnock2PullUp);

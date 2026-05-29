@@ -974,12 +974,15 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 
 
 ### sdTriggerLog
-'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
+'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Full MLG' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 
 ### stepper_dc_use_two_wires
 
 
 ### watchOutForLinearTime
+
+
+### sdTriggerLogCsv
 
 
 ### engineChartSize
@@ -1900,6 +1903,9 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 ### auxLinear4.value2
 
 
+### engineShutDownPeriod
+
+
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.
 
@@ -1910,7 +1916,7 @@ Fuel to odd when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.)
 After a knock event, reapply fuel at this rate.
 
 ### knockFuelTrim
-Fuel trim when knock, max 30%
+Maximum Amount of Fuel trim when knock
 
 ### knockSpectrumSensitivity
 

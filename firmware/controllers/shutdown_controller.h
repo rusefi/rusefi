@@ -30,7 +30,7 @@ public:
 		float timeSinceStopRequested = m_engineStopTimer.getElapsedSeconds(nowNt);
 
 		// If there was stop requested in the past 5 seconds, we're in stop mode
-		return timeSinceStopRequested < 5;
+		return timeSinceStopRequested < engineConfiguration->engineShutDownPeriod;
 	}
 
 private:

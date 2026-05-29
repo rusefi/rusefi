@@ -443,7 +443,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	eth->fireTriggerEventsWithDuration(20);
 	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
 
-	eth->clearQueue();
+	eth->clearQueuePreservingTime();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -554,8 +554,6 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
@@ -924,8 +922,6 @@ TEST(big, testSinglePoint) {
 #if FUEL_RPM_COUNT == 16
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	engineConfiguration->hpfpCamLobes = 0;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
@@ -971,11 +967,11 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //	assertInjectorDownEvent("L04@8", 8, MS2US(50.0), 0);
 
 
-	engine->scheduler.executeAll(getTimeNowUs() + 1);
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + 1);
 	// injector goes high...
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@1";
 
-	engine->scheduler.executeAll(getTimeNowUs() + MS2US(17.5) + 1);
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(17.5) + 1);
 	// injector does not go low too soon, that's a feature :)
 	ASSERT_TRUE(enginePins.injectors[0].currentLogicValue) << "injector@2";
 
@@ -991,7 +987,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //todo	assertInjectorDownEvent("L015@5", 5, MS2US(30), 0);
 
 
-	engine->scheduler.executeAll(getTimeNowUs() + MS2US(10) + 1);
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(10) + 1);
 	// end of combined injection
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@3";
 

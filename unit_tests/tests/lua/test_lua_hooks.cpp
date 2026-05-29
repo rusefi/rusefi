@@ -37,12 +37,12 @@ TEST(LuaHooks, TestGetCalibration) {
 TEST(LuaHooks, TestSetCalibration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 		const char* sourceCode = R"(
-	
+
 		function testFunc()
 			setCalibration("cranking.rpm", 900, false)
 			return getCalibration("cranking.rpm")
 		end
-	
+
 		)";
 		EXPECT_EQ(testLuaReturnsNumber(sourceCode), 900);
 }
@@ -160,7 +160,7 @@ TEST(LuaHooks, TestLuaTimer) {
 static const char* sensorTest = R"(
 function testFunc()
 	local sens = Sensor.new("CLT")
-	
+
 	-- Check valid sensor
 	sens:set(33)
 	if getSensor("CLT") ~= 33 then

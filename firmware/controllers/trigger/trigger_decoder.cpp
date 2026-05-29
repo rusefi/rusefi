@@ -27,6 +27,9 @@
 #include "global_shared.h"
 #include "engine_configuration.h"
 #include "transition_events.h"
+#include "board_overrides.h"
+
+std::optional<setup_custom_board_overrides_type> custom_board_TriggerResetState;
 
 /**
  * decoder uses TriggerStimulatorHelper in findTriggerZeroEventIndex
@@ -48,11 +51,11 @@ bool TriggerDecoderBase::getShaftSynchronized() const {
 }
 
 void TriggerDecoderBase::setShaftSynchronized(bool value) {
-#if EFI_UNIT_TEST
+#if EFI_TOOTH_LOGGER
 	if (value != shaft_is_synchronized) {
-		LogTriggerSync(value, getTimeNowNt());
+		LogTriggerSync(getTimeNowNt(), value);
 	}
-#endif
+#endif /* EFI_TOOTH_LOGGER */
 
 	if (value) {
 		if (!shaft_is_synchronized) {
@@ -64,8 +67,15 @@ void TriggerDecoderBase::setShaftSynchronized(bool value) {
 		mostRecentSyncTime = 0;
 	}
 	shaft_is_synchronized = value;
+	onShaftSynchronized(value);
 }
 
+/**
+ * Resets the base decoder state.
+ *
+ * This is called during initialization, when engine rotation stops,
+ * or during trigger re-sync search.
+ */
 void TriggerDecoderBase::resetState() {
 	setShaftSynchronized(false);
 	toothed_previous_time = 0;
@@ -84,6 +94,8 @@ void TriggerDecoderBase::resetState() {
 
 	totalEventCountBase = 0;
 	isFirstEvent = true;
+
+	call_board_override(custom_board_TriggerResetState);
 }
 
 void TriggerDecoderBase::setTriggerErrorState(int errorIncrement) {
@@ -185,10 +197,22 @@ int64_t TriggerDecoderBase::getTotalEventCounter() const {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
+/**
+ * @return number of completed wheel synchronization cycles for this decoder since reset.
+ * Incremented once per full trigger cycle via incrementShaftSynchronizationCounter().
+ * For the primary (crank) decoder this effectively counts engine revolutions/cycles
+ * and is used widely (e.g. crank-vs-cam phase alignment, knock indexing, VVT validation).
+ */
 int TriggerDecoderBase::getSynchronizationCounter() const {
 	return synchronizationCounter;
 }
 
+/**
+ * Resets the primary decoder state, including its phase sync state.
+ *
+ * This is called during initialization, when engine rotation stops,
+ * or during trigger re-sync search.
+ */
 void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
 
@@ -251,6 +275,11 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 
 void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
 	synchronizationCounter++;
+}
+
+void PrimaryTriggerDecoder::onShaftSynchronized(bool value) {
+	enginePins.debugTriggerState.setValue(value);
+	m_hasSynchronizedCrank = value;
 }
 
 void PrimaryTriggerDecoder::onTriggerError() {

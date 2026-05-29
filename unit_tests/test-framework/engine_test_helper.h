@@ -90,6 +90,15 @@ public:
 	 * a healthy test should probably use executeActions instead?
 	 */
 	void clearQueue();
+	/**
+	 * Like clearQueue()/executeAll() but preserves the simulated mock clock
+	 * across the call. Without this, the scheduler busy-wait in event_queue.cpp
+	 * advances time to each scheduled event's future moment, distorting any
+	 * subsequent inter-tooth interval or RPM computation.
+	 * See rusefi issue #6457.
+	 */
+	void clearQueuePreservingTime();
+	void executeAllPreservingTimeUs(efitimeus_t deadlineUs);
 
 	scheduling_s * assertEvent5(const char *msg, int index, action_s const& action, efitimeus_t expectedTimestamp);
 	scheduling_s * assertScheduling(const char *msg, int index, scheduling_s *expected, action_s const& action, efitimeus_t expectedTimestamp);
@@ -135,3 +144,24 @@ struct testSpinEngineUntilData {
 	int currentTooth;
 	int toothCount;
 };
+
+void setUnitTestCreateLogs(bool enabled);
+bool getUnitTestCreateLogs();
+
+/**
+ * RAII helper: toggle unit-test log creation for the duration of a test,
+ * restoring the previous value on scope exit.
+ */
+struct ScopedUnitTestCreateLogs {
+	bool saved;
+	explicit ScopedUnitTestCreateLogs(bool enabled) : saved(getUnitTestCreateLogs()) {
+		setUnitTestCreateLogs(enabled);
+	}
+	~ScopedUnitTestCreateLogs() {
+		setUnitTestCreateLogs(saved);
+	}
+};
+
+void sayByeBye();
+// Removes all files from TEST_RESULTS_DIR except .gitignore and readme.md.
+void cleanTestResultsFolder();

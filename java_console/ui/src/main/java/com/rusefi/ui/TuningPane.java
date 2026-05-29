@@ -1,21 +1,29 @@
 package com.rusefi.ui;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageMetaVersion0_0;
+import com.opensr5.ConfigurationImageWithMeta;
+import com.opensr5.ini.EventTriggerModel;
+import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.FrontPageModel;
 import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
+import com.devexperts.logging.Logging;
+
 import javax.swing.*;
+import javax.swing.Action;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -23,8 +31,11 @@ import java.util.function.Consumer;
  * Andrey Belomutskiy, (c) 2013-2026
  */
 public class TuningPane {
+    private static final Logging log = Logging.getLogging(TuningPane.class);
+
     private final JPanel content = new JPanel(new BorderLayout());
     private final MainMenuTreeWidget left;
+    private final TuningToolbarWidget toolbar;
     /** Fired when the user picks "Show in Pinout" on a pin-enum field. Wired from ConsoleUI after construction. */
     private Consumer<String> navigateToPinout;
 
@@ -39,7 +50,7 @@ public class TuningPane {
         // Accumulated tune edits across all dialogs for this session.
         final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
 
-        TuningToolbarWidget toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage);
+        toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
         splitPane.setResizeWeight(0.3);
@@ -82,6 +93,65 @@ public class TuningPane {
             if (navigateToPinout != null) navigateToPinout.accept(value);
         });
 
+        // Per-trigger edge-detection state: maps trigger index → previous boolean value.
+        // ConcurrentHashMap because onSensorUpdate runs on the protocol thread while
+        // the disconnect handler clears it from the EDT.
+        final ConcurrentHashMap<Integer, Boolean> triggerPrevValues = new ConcurrentHashMap<>();
+
+        SensorCentral.ResponseListener eventTriggerListener = () -> {
+            IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+            if (ini == null) return;
+            List<EventTriggerModel> triggers = ini.getEventTriggers();
+            if (triggers.isEmpty()) return;
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp == null) return;
+
+            Map<String, Double> channels = SensorCentral.getInstance().getOutputChannelMap();
+
+            for (int i = 0; i < triggers.size(); i++) {
+                EventTriggerModel trigger = triggers.get(i);
+                Double val = ExpressionEvaluator.tryEvaluateWithContext(trigger.getExpression(), channels);
+                boolean current = val != null && val != 0.0;
+                Boolean prev = triggerPrevValues.put(i, current);
+                if (prev == null) {
+                    // First observed frame: initialize state without firing.
+                    continue;
+                }
+                if (!prev && current) {
+                    final int page = trigger.getPage();
+                    log.info("EventTrigger fired: page=" + page + " expr=[" + trigger.getExpression() + "]");
+                    if (page == 1) {
+                        final int pageSize = ini.getMetaInfo().getPageSize(0);
+                        final String signature = ini.getMetaInfo().getSignature();
+                        uiContext.getLinkManager().submit(() -> {
+                            log.info("EventTrigger: reading page 1 from ECU");
+                            ConfigurationImageWithMeta result = bp.readFullImageFromController(
+                                    new ConfigurationImageMetaVersion0_0(pageSize, signature));
+                            if (result.isEmpty()) {
+                                log.error("EventTrigger: page 1 read returned empty — refresh aborted");
+                                return;
+                            }
+                            ConfigurationImage newImage = result.getConfigurationImage();
+                            bp.setConfigurationImage(newImage);
+                            log.info("EventTrigger: page 1 refreshed successfully");
+                            SwingUtilities.invokeLater(() -> {
+                                toolbar.onDisconnect();
+                                assert newImage != null;
+                                sessionImage.set(newImage.clone());
+                                String key = currentKey.get();
+                                if (key != null) {
+                                    right.update(key, ini, sessionImage.get());
+                                }
+                            });
+                        });
+                    } else {
+                        log.info("EventTrigger: page " + page + " refresh not yet implemented — skipping");
+                    }
+                }
+            }
+        };
+        SensorCentral.getInstance().addListener(eventTriggerListener);
+
         // When the ECU disconnects (e.g. after a firmware flash or board swap), drop all stale
         // session state so the next connection re-reads calibrations fresh from the new board.
         // Without this, sessionImage/workingImage from the old board (possibly a different config
@@ -93,9 +163,11 @@ public class TuningPane {
                     toolbar.onDisconnect();
                     right.reset();
                     sessionImage.set(null);
+                    triggerPrevValues.clear();
                 });
             } else {
                 SwingUtilities.invokeLater(() -> {
+                    triggerPrevValues.clear();
                     String key = currentKey.get();
                     if (key == null) return;
                     BinaryProtocol bp = uiContext.getBinaryProtocol();
@@ -151,5 +223,13 @@ public class TuningPane {
     public void navigateToField(String dialogKey, String fieldKey) {
         if (dialogKey == null) return;
         left.selectSubMenu(dialogKey);
+    }
+
+    public Action getLoadTuneAction() {
+        return toolbar.getLoadTuneAction();
+    }
+
+    public Action getSaveTuneAction() {
+        return toolbar.getSaveTuneAction();
     }
 }

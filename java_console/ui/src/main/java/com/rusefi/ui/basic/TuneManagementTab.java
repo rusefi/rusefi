@@ -2,11 +2,13 @@ package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
-import com.rusefi.PortResult;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
+import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
+import com.rusefi.ui.UIContext;
 import com.rusefi.tune_manifest.ManifestParseException;
 import com.rusefi.tune_manifest.TuneManifestHelper;
 import com.rusefi.tune_manifest.TuneModel;
@@ -24,9 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
@@ -48,7 +48,7 @@ public class TuneManagementTab {
     private List<TuneModel> tunes = new ArrayList<>();
 
     public TuneManagementTab(ConnectivityContext connectivityContext,
-                             AtomicReference<Optional<PortResult>> ecuPortToUse,
+                             UIContext uiContext,
                              Component importTuneButton,
                              SingleAsyncJobExecutor singleAsyncJobExecutor,
                              StatusPanel statusPanelTuneTab) {
@@ -118,21 +118,30 @@ public class TuneManagementTab {
                 TuneModel model = tunes.get(row);
                 String localFolderForSpecificUrl = getLocalFolder(tunesManifestUrl);
                 String tuneFileName = localFolderForSpecificUrl + model.getSaferLocalFileName();
-                Optional<PortResult> portResult = ecuPortToUse.get();
                 if (!new File(tuneFileName).exists()) {
                     ErrorMessageHelper.showErrorDialog("Failed to load " + model.getUrl(), "Tune error");
-                } else if (portResult.isPresent()) {
-                    if (!singleAsyncJobExecutor.isNotInProgress()) {
-                        status.setText("Another job is already running, please wait.");
-                        return;
-                    }
-                    log.info("Let's load " + tuneFileName + " into " + portResult);
-                    awaitingCompletion.set(true);
-                    uploadProgress.setVisible(true);
-                    status.setText("Loading tune...");
-                    ImportTuneJob.importTuneIntoDevice(portResult.get(), status, connectivityContext, tuneFileName, singleAsyncJobExecutor);
+                } else if (!singleAsyncJobExecutor.isNotInProgress()) {
+                    status.setText("Another job is already running, please wait.");
                 } else {
-                    status.setText("Not connected?");
+                    BinaryProtocol liveBp = uiContext.getBinaryProtocol();
+                    LinkManager lm = uiContext.getLinkManager();
+                    if (liveBp != null && lm != null) {
+                        log.info("Let's load " + tuneFileName + " via live connection");
+                        awaitingCompletion.set(true);
+                        uploadProgress.setVisible(true);
+                        status.setText("Loading tune...");
+                        ImportTuneJob.importTuneIntoDeviceViaLiveConnection(
+                            liveBp, lm, status, connectivityContext, tuneFileName, singleAsyncJobExecutor);
+                    } else if (lm != null) {
+                        log.info("Let's load " + tuneFileName + " via LM");
+                        awaitingCompletion.set(true);
+                        uploadProgress.setVisible(true);
+                        status.setText("Loading tune...");
+                        ImportTuneJob.importTuneIntoDeviceViaLiveConnection(
+                            lm, status, connectivityContext, tuneFileName, singleAsyncJobExecutor);
+                    } else {
+                        status.setText("Not connected?");
+                    }
                 }
             }
         }));

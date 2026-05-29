@@ -6,8 +6,10 @@ import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.maintenance.jobs.JobHelper;
@@ -47,13 +49,13 @@ public class DfuFlasher {
     public static boolean doAutoDfu(
         final JComponent parent,
         final PortResult port,
-        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
+        final BinaryProtocol bp,
+        final LinkManager lm,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
     ) {
         return CalibrationsHelper.updateFirmwareAndRestorePreviousCalibrations(
-            port,
-            callbacks,
-            () -> dfuUpdateFirmware(parent, port.port, callbacks), connectivityContext
-        );
+            parent, port, bp, lm, callbacks, () -> dfuUpdateFirmware(parent, port.port, callbacks), connectivityContext);
     }
 
     private static boolean dfuUpdateFirmware(

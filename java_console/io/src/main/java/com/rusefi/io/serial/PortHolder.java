@@ -42,9 +42,20 @@ public class PortHolder {
      */
     void connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
         Objects.requireNonNull(arguments);
-        IoStream stream = ioStreamFactory.call();
+        IoStream stream;
+        try {
+            stream = ioStreamFactory.call();
+        } catch (RuntimeException e) {
+            log.error("Exception opening port: " + e.getMessage());
+            if (listener != null) {
+                listener.onConnectionFailed("Exception opening port: " + e.getMessage());
+            }
+            return;
+        }
         if (stream == null) {
-            // error already reported
+            if (listener != null) {
+                listener.onConnectionFailed("Failed to open port");
+            }
             return;
         }
         synchronized (portLock) {

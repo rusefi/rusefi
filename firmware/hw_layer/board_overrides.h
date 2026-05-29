@@ -30,7 +30,7 @@
 
 // function with no parameters and returning void
 using setup_custom_board_overrides_type = void (*)();
-using setup_custom_board_config_type = void (*)(engine_configuration_s * /*previousConfiguration*/);
+using setup_custom_board_config_type = void (*)(const engine_configuration_s * /*previousConfiguration*/);
 using setup_custom_board_output_type = int (*)();
 using setup_custom_board_engine_type_type = void (*)(engine_type_e);
 using setup_custom_get_float_type = float (*)();
@@ -40,8 +40,8 @@ using setup_custom_get_cylinder_ignition_trim_type = angle_t (*)(size_t /*cylind
 using setup_custom_get_cylinder_fuel_trim_type = float (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*fuelLoad*/);
 using setup_custom_bool_type = bool (*)();
 
-// todo: migrate 'validateBoardConfig'
 using custom_validate_config_type = bool (*)();
+extern std::optional<custom_validate_config_type> custom_board_validateConfig;
 
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
@@ -69,6 +69,8 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwar
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
 extern std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange;
 
+extern std::optional<setup_custom_board_overrides_type> custom_board_TriggerResetState;
+
 extern std::optional<setup_custom_board_overrides_type> custom_board_BeforeTuneDefaults;
 extern std::optional<setup_custom_board_engine_type_type> custom_board_AfterTuneDefaults;
 extern std::optional<setup_custom_board_engine_type_type> custom_board_applyUnknownType;
@@ -95,6 +97,8 @@ extern std::optional<setup_custom_get_cylinder_fuel_trim_type> custom_board_getC
 
 extern std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
 
+extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
+
 /**
  * This function checks if an override is present and calls it if available.
  * Return true if override is present and was called
@@ -106,4 +110,12 @@ static inline bool call_board_override(std::optional<FuncType> board_override, A
         return true;
     }
     return false;
+}
+
+template<typename FuncType, typename... Args>
+static inline auto get_board_override_result(std::optional<FuncType> board_override, auto defaultValue, Args&&... args){
+    if (board_override.has_value()) {
+        return std::invoke(board_override.value(), std::forward<Args>(args)...);
+    }
+    return defaultValue;
 }

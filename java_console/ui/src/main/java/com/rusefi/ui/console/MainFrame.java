@@ -9,17 +9,22 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.core.FindFileHelper;
+import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.basic.FirmwareUpdateTab;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.util.ExitUtil;
+import javax.swing.Action;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.net.URI;
 import java.util.Objects;
 import java.time.LocalDateTime;
@@ -30,6 +35,9 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.core.net.ConnectionAndMeta.RUSEFI_WIKI_DOWNLOAD_PAGE;
 
+/**
+ * @see ConsoleUI
+ */
 public class MainFrame {
     private static final Logging log = getLogging(Launcher.class);
 
@@ -62,6 +70,12 @@ public class MainFrame {
 
     public final ConnectionStatusLogic.Listener listener;
 
+    private JMenuItem loadTuneItem;
+    private JMenuItem saveTuneItem;
+    private JMenuItem updateSoftwareItem;
+    private JMenuItem updateEcuItem;
+    private Runnable updateEcuAction;
+
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
@@ -75,12 +89,12 @@ public class MainFrame {
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic(KeyEvent.VK_F);
 
-        JMenuItem loadTuneItem = new JMenuItem(LoadTuneHelper.LOAD_TUNE_TEXT);
+        loadTuneItem = new JMenuItem(LoadTuneHelper.LOAD_TUNE_TEXT);
         loadTuneItem.setMnemonic(KeyEvent.VK_L);
         loadTuneItem.setEnabled(false);
         fileMenu.add(loadTuneItem);
 
-        JMenuItem saveTuneItem = new JMenuItem(LoadTuneHelper.SAVE_TUNE_TEXT);
+        saveTuneItem = new JMenuItem(LoadTuneHelper.SAVE_TUNE_TEXT);
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
         saveTuneItem.setEnabled(false);
         fileMenu.add(saveTuneItem);
@@ -100,12 +114,18 @@ public class MainFrame {
         JMenu actionsMenu = new JMenu("Actions");
         actionsMenu.setMnemonic(KeyEvent.VK_A);
 
-        JMenuItem updateSoftwareItem = new JMenuItem("Update Software");
-        saveTuneItem.setEnabled(false);
+        updateSoftwareItem = new JMenuItem("Update Software");
+        updateSoftwareItem.setEnabled(false);
+        updateSoftwareItem.addActionListener(e -> onUpdateSoftwareClicked());
         actionsMenu.add(updateSoftwareItem);
 
-        JMenuItem updateEcuItem = new JMenuItem("Update ECU");
-        saveTuneItem.setEnabled(false);
+        updateEcuItem = new JMenuItem("No updates available");
+        updateEcuItem.setEnabled(false);
+        updateEcuItem.addActionListener(e -> {
+            if (updateEcuAction != null) {
+                updateEcuAction.run();
+            }
+        });
         actionsMenu.add(updateEcuItem);
 
         menuBar.add(actionsMenu);
@@ -113,9 +133,79 @@ public class MainFrame {
         frame.getFrame().setJMenuBar(menuBar);
     }
 
+    public void setUpdateEcuAction(Runnable action) {
+        this.updateEcuAction = action;
+    }
+
+
+    static boolean needsFirmwareUpdate(RusEfiSignature ecuSig, String srecName) {
+        if (ecuSig == null || srecName == null) {
+            return false;
+        }
+        RusEfiSignature srecSig = SignatureHelper.parseSrec(srecName);
+        if (srecSig == null) {
+            return false;
+        }
+        if (!srecSig.getIsLegacyFormat()) {
+            return !srecSig.getHash().equals(ecuSig.getHash());
+        } else {
+            return !ecuSig.getYear().equals(srecSig.getYear())
+                || !ecuSig.getMonth().equals(srecSig.getMonth())
+                || !ecuSig.getDay().equals(srecSig.getDay());
+        }
+    }
+
+    private void checkFirmwareUpdate(String firmwareVersion) {
+        log.info("checkFirmwareUpdate: " + firmwareVersion);
+        RusEfiSignature ecuSig = SignatureHelper.parse(firmwareVersion);
+        if (ecuSig == null) {
+            log.info("checkFirmwareUpdate: could not parse ECU signature");
+            return;
+        }
+        String srecPath = FindFileHelper.findSrecFile();
+        if (srecPath == null) {
+            log.info("checkFirmwareUpdate: no srec file found");
+            SwingUtilities.invokeLater(() -> {
+                updateEcuItem.setText("No updates available");
+                updateEcuItem.setEnabled(false);
+            });
+            return;
+        }
+        String srecName = new File(srecPath).getName();
+        log.info("checkFirmwareUpdate: srec=" + srecName);
+        boolean needsUpdate = needsFirmwareUpdate(ecuSig, srecName);
+        log.info("checkFirmwareUpdate: needsUpdate=" + needsUpdate);
+        SwingUtilities.invokeLater(() -> {
+            updateEcuItem.setText(needsUpdate ? "Update ECU" : "No updates available");
+            updateEcuItem.setEnabled(needsUpdate);
+        });
+    }
+
+    private void onUpdateSoftwareClicked() {
+        updateSoftwareItem.setEnabled(false);
+        Thread updateThread = new Thread(() ->
+            Autoupdate.runManualUpdate(msg -> {
+                if (msg != null) {
+                    Autoupdate.relaunchConsole();
+                }
+            }), "manual-update");
+        updateThread.setDaemon(true);
+        updateThread.start();
+    }
+
     private void windowOpenedHandler() {
         setTitle();
         tabbedPane.tabbedPane.addPropertyChangeListener("isUpdating", e -> SwingUtilities.invokeLater(this::setTitle));
+        if (!AutoupdateProperty.get()) {
+            Thread checkThread = new Thread(() -> {
+                boolean available = Autoupdate.isUpdateAvailable();
+                if (available) {
+                    SwingUtilities.invokeLater(() -> updateSoftwareItem.setEnabled(true));
+                }
+            }, "update-availability-check");
+            checkThread.setDaemon(true);
+            checkThread.start();
+        }
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
             setTitle();
             // this would repaint status label
@@ -126,6 +216,16 @@ public class MainFrame {
                 consoleUI.uiContext.getLinkManager().execute(() -> consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Integration.CMD_DATE) +
                                 " " + isoDateTime, CommandQueue.DEFAULT_TIMEOUT,
                         InvocationConfirmationListener.VOID, false));
+                BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
+                if (bp != null && bp.signature != null) {
+                    String sig = bp.signature;
+                    Thread fwCheckThread = new Thread(() -> checkFirmwareUpdate(sig), "firmware-update-check");
+                    fwCheckThread.setDaemon(true);
+                    fwCheckThread.start();
+                }
+            } else {
+                updateEcuItem.setText("No updates available");
+                updateEcuItem.setEnabled(false);
             }
         }));
 
@@ -140,6 +240,12 @@ public class MainFrame {
                 tabbedPane.logsManager.showContent();
                 new BinaryProtocolServer().start(linkManager);
             });
+            if (existingBp.signature != null) {
+                String sig = existingBp.signature;
+                Thread fwCheckThread = new Thread(() -> checkFirmwareUpdate(sig), "firmware-update-check");
+                fwCheckThread.setDaemon(true);
+                fwCheckThread.start();
+            }
         } else {
             linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStatusLogic.Listener() {
                 @Override
@@ -177,6 +283,15 @@ public class MainFrame {
                 VersionChecker.getInstance().onFirmwareVersion(firmwareVersion);
             }
         });
+    }
+
+    public void setTuneActions(Action loadAction, Action saveAction) {
+        loadTuneItem.setAction(loadAction);
+        loadTuneItem.setText(LoadTuneHelper.LOAD_TUNE_TEXT);
+        loadTuneItem.setMnemonic(KeyEvent.VK_L);
+        saveTuneItem.setAction(saveAction);
+        saveTuneItem.setText(LoadTuneHelper.SAVE_TUNE_TEXT);
+        saveTuneItem.setMnemonic(KeyEvent.VK_S);
     }
 
     public FrameHelper getFrame() {

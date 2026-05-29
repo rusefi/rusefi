@@ -63,6 +63,12 @@ public:
 	 * Configures the device for all messages to transmit from.
 	 */
 	static void setDevice(size_t idx, CANDriver* device);
+	/**
+	 * Removes device from interface list
+	 */
+	static void removeDevice(size_t idx) {
+		setDevice(idx, nullptr);
+	}
 #endif // EFI_CAN_SUPPORT
 
 	size_t busIndex = 0;

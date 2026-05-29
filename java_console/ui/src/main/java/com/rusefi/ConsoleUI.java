@@ -171,7 +171,9 @@ public class ConsoleUI {
             tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
         }
 
-        tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
+        if (UiProperties.isEngineSnifferEnabled()) {
+            tabbedPaneAdd("Engine Sniffer", engineSnifferPanel.getPanel(), engineSnifferPanel.getTabSelectedListener());
+        }
 
 
 
@@ -195,21 +197,31 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             TuningPane tuningPane = new TuningPane(uiContext);
+            mainFrame.setTuneActions(tuningPane.getLoadTuneAction(), tuningPane.getSaveTuneAction());
             PinoutPane pinoutPane = new PinoutPane(uiContext);
             tabbedPane.addTab("Tuning", tuningPane.getContent());
             tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
-            tabbedPane.addTab("Pinout", pinoutPane.getContent());
-            tabbedPane.addTab("Device", new DevicePane(uiContext, port, serialPortType, tabbedPane.tabbedPane).getContent());
+            if (UiProperties.isPinoutEnabled()) {
+                tabbedPane.addTab("Pinout", pinoutPane.getContent());
+            }
+            DevicePane devicePane = new DevicePane(uiContext, port, serialPortType, tabbedPane.tabbedPane);
+            tabbedPane.addTab("Device", devicePane.getContent());
+            mainFrame.setUpdateEcuAction(() -> {
+                tabbedPane.selectTab("Device");
+                devicePane.triggerAutoUpdate();
+            });
 
             // Pinout ↔ Tune bidirectional navigation
             pinoutPane.setNavigateToTune((dialogKey, fieldKey) -> {
                 tabbedPane.selectTab("Tuning");
                 tuningPane.navigateToField(dialogKey, fieldKey);
             });
-            tuningPane.setNavigateToPinout(enumValue -> {
-                tabbedPane.selectTab("Pinout");
-                pinoutPane.highlightByEnumValue(enumValue);
-            });
+            if (UiProperties.isPinoutEnabled()) {
+                tuningPane.setNavigateToPinout(enumValue -> {
+                    tabbedPane.selectTab("Pinout");
+                    pinoutPane.highlightByEnumValue(enumValue);
+                });
+            }
         }
 
         if (!linkManager.isLogViewer() && false) // todo: fix it & better name?

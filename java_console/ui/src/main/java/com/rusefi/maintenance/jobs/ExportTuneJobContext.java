@@ -1,12 +1,9 @@
 package com.rusefi.maintenance.jobs;
 
-import com.rusefi.PortResult;
-
-public class ExportTuneJobContext extends SerialPortJobContext {
+public class ExportTuneJobContext {
     private final String fileName;
 
-    public ExportTuneJobContext(PortResult port, String fileName) {
-        super(port);
+    public ExportTuneJobContext(String fileName) {
         this.fileName = fileName;
     }
 

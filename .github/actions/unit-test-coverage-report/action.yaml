@@ -1,0 +1,133 @@
+name: Unit Test Coverage Report
+description: Summarize coverage, compare vs master, comment on PR, upload artifacts
+
+inputs:
+  coverage_xml_path:
+    required: true
+    description: Path to Cobertura XML coverage report
+  artifact_upload_path:
+    required: true
+    description: Path to upload as coverage artifact
+  baseline_workflow_file:
+    required: false
+    default: build-unit-tests.yaml
+    description: Workflow filename used to fetch master baseline artifact
+  artifact_name:
+    required: false
+    default: rusefi_code_coverage.txt
+    description: Artifact name for upload/download
+  is_pull_request:
+    required: false
+    default: "false"
+    description: Whether current run is for a pull request
+  post_pr_comment:
+    required: false
+    default: "false"
+    description: Whether to post sticky PR comment
+  pr_number:
+    required: false
+    default: ""
+    description: Pull request number for comment when not in pull_request event
+
+runs:
+  using: composite
+  steps:
+    - name: Summarize Code Coverage
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: ${{ inputs.coverage_xml_path }}
+        badge: true
+        format: markdown
+        output: both
+
+    - name: Download master coverage artifact
+      if: ${{ inputs.is_pull_request == 'true' }}
+      uses: dawidd6/action-download-artifact@v11
+      with:
+        github_token: ${{ github.token }}
+        workflow: ${{ inputs.baseline_workflow_file }}
+        branch: master
+        workflow_conclusion: success
+        name: ${{ inputs.artifact_name }}
+        path: master_coverage
+        if_no_artifact_found: warn
+
+    - name: Add coverage delta vs master
+      if: ${{ inputs.is_pull_request == 'true' }}
+      shell: bash
+      run: |
+        python3 - << 'PY'
+        import glob
+        import os
+        import xml.etree.ElementTree as ET
+
+        summary_path = "code-coverage-results.md"
+        output_path = "code-coverage-results-with-delta.md"
+        current_xml = "${{ inputs.coverage_xml_path }}"
+        master_candidates = glob.glob("master_coverage/**/coverage.xml", recursive=True)
+
+        base_summary = ""
+        if os.path.exists(summary_path):
+            try:
+                with open(summary_path, "r", encoding="utf-8") as f:
+                    base_summary = f.read().rstrip()
+            except PermissionError:
+                base_summary = "Coverage summary generated, but source file was not readable."
+
+        lines = ["", "---", "", "### Coverage Change vs `master`", ""]
+
+        if not os.path.exists(current_xml):
+            lines.append("Current coverage file not found.")
+        elif not master_candidates:
+            lines.append("Master baseline coverage artifact not found.")
+        else:
+            master_xml = master_candidates[0]
+
+            def line_rate_percent(path: str) -> float:
+                root = ET.parse(path).getroot()
+                return float(root.attrib["line-rate"]) * 100.0
+
+            current = line_rate_percent(current_xml)
+            master = line_rate_percent(master_xml)
+            delta = current - master
+
+            if delta > 0:
+                trend = "increased"
+                sign = "+"
+            elif delta < 0:
+                trend = "decreased"
+                sign = ""
+            else:
+                trend = "unchanged"
+                sign = ""
+
+            lines.append(f"- Current: `{current:.2f}%`")
+            lines.append(f"- Master: `{master:.2f}%`")
+            lines.append(f"- Delta: `{sign}{delta:.2f}%` ({trend})")
+
+        with open(output_path, "w", encoding="utf-8") as f:
+            if base_summary:
+                f.write(base_summary + "\n")
+            f.write("\n".join(lines) + "\n")
+        PY
+
+    - name: Add Coverage PR Comment (explicit PR)
+      if: ${{ inputs.post_pr_comment == 'true' && inputs.pr_number != '' }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        number: ${{ inputs.pr_number }}
+        path: code-coverage-results-with-delta.md
+
+    - name: Add Coverage PR Comment (current PR)
+      if: ${{ inputs.post_pr_comment == 'true' && inputs.pr_number == '' }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results-with-delta.md
+
+    - name: Upload code coverage artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.artifact_name }}
+        path: ${{ inputs.artifact_upload_path }}

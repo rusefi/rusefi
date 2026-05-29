@@ -182,19 +182,9 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 // https://rusefi.com/forum/viewtopic.php?f=17&t=2417
 // Cam pattern for intake/exhaust on all Skyactiv-G (and maybe -D/-X)
 void initializeMazdaSkyactivCam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-
-    int wide = 20;
-    int narrow = 10;
-
-	s->addToothRiseFall(70, wide);
-	s->addToothRiseFall(90, narrow);
-
-	s->addToothRiseFall(160, wide);
-	s->addToothRiseFall(180, narrow);
-
-	s->addToothRiseFall(270, wide);
-	s->addToothRiseFall(360, wide);
+	static const angle_t angles[] = {70, 90, 160, 180, 270, 360};
+	static const float widths[] = {20, 10, 20, 10, 20, 20};
+	initializeRiseOnlyTrigger(s, widths, angles, efi::size(angles));
 
 	s->setTriggerSynchronizationGap(0.43);
 	s->setSecondTriggerSynchronizationGap(0.78);
@@ -202,35 +192,8 @@ void initializeMazdaSkyactivCam(TriggerWaveform *s) {
 }
 
 void initializeMazdaLCam(TriggerWaveform* s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-
-	// 6 teeth:
-	// 0, 60, 90, 150, 180, 270
-	// Tooth at 0 is just before #1 TDC
-
-	// 60
-	s->addEvent360(50, TriggerValue::RISE);
-	s->addEvent360(60, TriggerValue::FALL);
-
-	// 90
-	s->addEvent360(80, TriggerValue::RISE);
-	s->addEvent360(90, TriggerValue::FALL);
-
-	// 150
-	s->addEvent360(140, TriggerValue::RISE);
-	s->addEvent360(150, TriggerValue::FALL);
-
-	// 180
-	s->addEvent360(170, TriggerValue::RISE);
-	s->addEvent360(180, TriggerValue::FALL);
-
-	// 270
-	s->addEvent360(260, TriggerValue::RISE);
-	s->addEvent360(270, TriggerValue::FALL);
-
-	// 0 (aka 360)
-	s->addEvent360(350, TriggerValue::RISE);
-	s->addEvent360(360, TriggerValue::FALL);
+	static const angle_t angles[] = { 60, 90, 150, 180, 270, 360 };
+	initializeRiseOnlyTrigger(s, 10, angles, efi::size(angles));
 
 	s->setTriggerSynchronizationGap3(0, 0.32, 0.8);
 	s->setTriggerSynchronizationGap3(1, 1.5, 2.5);

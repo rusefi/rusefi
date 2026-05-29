@@ -56,4 +56,10 @@ public:
 		}
   }
 
+  void assertSyncAtIndex(EngineTestHelper *eth, int expectedSyncAtIndex) {
+    if (!gotSync && eth->engine.triggerCentral.triggerState.getShaftSynchronized()) {
+      gotSync = true;
+      EXPECT_EQ(lineIndex(), expectedSyncAtIndex);
+    }
+  }
 };

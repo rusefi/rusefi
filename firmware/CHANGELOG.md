@@ -31,13 +31,18 @@ Release template (copy/paste this for new release):
 ### Added
  - ETB bench test button: open throttle 300ms without sensors (#9171)
  - PWM support for fan control #5407
- - Per cylinder knock control indivdual gain control #9404
+ - Per cylinder knock control individual gain control #9404
+ - 6G75 Cam trigger support #9533
+ - minimal launchTpsThreshold is required to reduce confusion
 
 ### Breaking Changes
  - Dodge Neon 2003 crank actually uses crank decoder #8977
+ - uaEFI PPS2 calibration #9549
+ - uaefi121, super-uaefi, huge, 121vag PPS2 calibration #9551
 
 ### Fixed
  - Idle VE table when using an electronic throttle correctly uses accel pedal to match main idle logic
+- 6G75 crank Trigger fixes #8827
 
 ## February 2026 "Day 1458"
 

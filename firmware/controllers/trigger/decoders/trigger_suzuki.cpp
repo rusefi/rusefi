@@ -35,28 +35,14 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 }
 
 void initializeSuzukiG16B(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-	
-	float w = 5; // width of tooth in degrees
+	static const angle_t angles[] = { 35, 50, 90, 125, 165, 180, 215, 270, 305, 345, 360 };
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
 
-	angle_t teethAngles[] = { 0, 15, 55, 90, 130, 145, 180, 235, 270, 310, 325 }; // angle center of tooth
-
-	int size = sizeof(teethAngles) / sizeof(teethAngles[0]);
-	angle_t offset = 360 - teethAngles[size - 1];
-
-	for(int i = 0; i < size; i++) {
-		angle_t pos = teethAngles[i];
-		s->addToothRiseFall(pos + offset, w);
-	}
-	
 	// Set sync gap based on largest gap between teeth
 	// Calculate gaps: 15,40,35,40,15,35,55,35,40,15,35 (degrees)
 	// Largest is 55° between 180-235, one before is 35°
 	// Ratio largest/previous 1.57
 	s->setTriggerSynchronizationGap(1.57);
-	
-	// Optional second gap if needed for reliable sync
-	// s->setSecondTriggerSynchronizationGap(2.3);
 }
 
 void initializeSuzukiK6A(TriggerWaveform *s) {

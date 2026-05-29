@@ -2,6 +2,7 @@ package com.rusefi.ui.mocked;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
+import com.opensr5.ini.IniFileModelMocks;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
@@ -95,7 +96,7 @@ public class GaugesPanelSandboxMocked {
     }
 
     private void setupMocking(UIContext uiContext) {
-        StubIniFileModel stub = new StubIniFileModel();
+        IniFileModelMocks.GaugeRegistry stub = IniFileModelMocks.mutableWithGauges();
 
         for (GaugeDefinition gaugeDefinition : GaugeDefinition.values()) {
             stub.register(new GaugeModel(
@@ -114,7 +115,7 @@ public class GaugesPanelSandboxMocked {
             ));
         }
 
-        uiContext.iniFileState.setIniFileModelForTest(stub);
+        uiContext.iniFileState.setIniFileModelForTest(stub.model);
     }
 
     private void launchSimulation() {

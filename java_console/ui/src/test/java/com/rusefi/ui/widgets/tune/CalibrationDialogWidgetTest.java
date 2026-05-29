@@ -460,6 +460,33 @@ public class CalibrationDialogWidgetTest {
     }
 
     @Test
+    public void testDecodeIniCommandBytesTypicalPayload() {
+        // "Z\x00\x13\x00\x01" → [0x5A, 0x00, 0x13, 0x00, 0x01]
+        byte[] result = CalibrationDialogWidget.decodeIniCommandBytes("Z\\x00\\x13\\x00\\x01");
+        assertArrayEquals(new byte[]{0x5A, 0x00, 0x13, 0x00, 0x01}, result);
+    }
+
+    @Test
+    public void testDecodeIniCommandBytesAllEscapes() {
+        // Payload with all-escape content
+        byte[] result = CalibrationDialogWidget.decodeIniCommandBytes("\\x00\\xFF\\x1e\\x22");
+        assertArrayEquals(new byte[]{0x00, (byte) 0xFF, 0x1e, 0x22}, result);
+    }
+
+    @Test
+    public void testDecodeIniCommandBytesOnlyLiteral() {
+        // No escape sequences, just ASCII
+        byte[] result = CalibrationDialogWidget.decodeIniCommandBytes("ZAB");
+        assertArrayEquals(new byte[]{'Z', 'A', 'B'}, result);
+    }
+
+    @Test
+    public void testDecodeIniCommandBytesEmpty() {
+        byte[] result = CalibrationDialogWidget.decodeIniCommandBytes("");
+        assertArrayEquals(new byte[0], result);
+    }
+
+    @Test
     public void testLinkLabel() {
         IniFileModel iniFileModel = mock(IniFileModel.class);
         when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());

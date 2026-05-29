@@ -207,10 +207,12 @@ constexpr void copyTable(TDest (&dest)[N][M], const TDest (&source)[N][M]) {
 
 template<typename kType>
 void setRpmBin(kType array[], int size, float idleRpm, float topRpm) {
+	// feature: special handling of first two cells
 	array[0] = idleRpm - 150;
 	int rpmStep = (int)(efiRound((topRpm - idleRpm) / (size - 2), 50) - 150);
 	for (int i = 1; i < size - 1;i++)
 		array[i] = idleRpm + rpmStep * (i - 1);
+	// kind of not perfect: because of nice round step, we accumulate error and end up with a gap between value before last, and last one
 	array[size - 1] = topRpm;
 }
 

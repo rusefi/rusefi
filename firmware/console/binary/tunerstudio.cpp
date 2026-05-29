@@ -131,23 +131,6 @@ namespace {
 	Timer calibrationsVeWriteTimer;
 }
 
-#if 0
-static void printScatterList(TsChannelBase* tsChannel) {
-	efiPrintf("Scatter list (global)");
-	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
-		uint16_t packed = tsChannel->highSpeedOffsets[i];
-		uint16_t type = packed >> 13;
-		uint16_t offset = packed & 0x1FFF;
-
-		if (type == 0)
-			continue;
-		size_t size = 1 << (type - 1);
-
-		efiPrintf("%02d offset 0x%04x size %d", i, offset, size);
-	}
-}
-#endif
-
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
 /* 10mS when receiving byte by byte */
@@ -189,7 +172,7 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 // use this array for any disabled pages on TS
 uint8_t ts_blank_page_placeholder[256];
 
-static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t offset) {
+static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t offset, bool write = true) {
 	// TODO: validate offset?
 	switch (page) {
 	case TS_PAGE_SETTINGS:
@@ -198,7 +181,7 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 		return (uint8_t*)engineConfiguration + offset;
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
-		return (uint8_t *)tsChannel->page1.highSpeedOffsets + offset;
+		return (uint8_t *)tsChannel->page2.highSpeedOffsets + offset;
 #else
 	case TS_PAGE_SCATTER_OFFSETS:
 		return (uint8_t *)&ts_blank_page_placeholder;
@@ -209,10 +192,34 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 #endif
 	case TS_PAGE_SECOND_TABLES:
 		return static_cast<uint8_t*>(getExtraPageAddr(EFI_SECOND_TABLES_RECORD_ID)) + offset;
-	default:
-		tunerStudioError(tsChannel, "ERROR: page address out of range");
+	}
+
+	if (write) {
+		tunerStudioError(tsChannel, "ERROR: page address out of range or readonly");
 		return nullptr;
 	}
+
+	// Now check for read-only pages
+	switch (page) {
+#if (EFI_PROD_CODE /* || EFI_SIMULATOR */)
+	case TS_PAGE_FS_IMAGE_SIZE:
+		{
+			uint32_t* data32 = reinterpret_cast<uint32_t*>(tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE);
+			// TODO: endian convert?
+			data32[0] = getStorageImageSize();
+			return (uint8_t *)tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
+		}
+	case TS_PAGE_FS_IMAGE_DATA:
+		// drop const...
+		return (uint8_t *)getStorageImage() + offset;
+#endif
+	default:
+		// throw error below
+		break;
+	}
+
+	tunerStudioError(tsChannel, "ERROR: page address out of range");
+	return nullptr;
 }
 
 static constexpr size_t getTunerStudioPageSize(size_t page) {
@@ -221,7 +228,7 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 		return TOTAL_CONFIG_SIZE;
 #if EFI_TS_SCATTER
 	case TS_PAGE_SCATTER_OFFSETS:
-		return PAGE_SIZE_1;
+		return PAGE_SIZE_2;
 #else
 	case TS_PAGE_SCATTER_OFFSETS:
 		// min read from TS seems to be 256b?
@@ -233,6 +240,13 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 #endif
 	case TS_PAGE_SECOND_TABLES:
 		return getExtraPageSize(EFI_SECOND_TABLES_RECORD_ID);
+#if (EFI_PROD_CODE /* || EFI_SIMULATOR */)
+	case TS_PAGE_FS_IMAGE_SIZE:
+		// page contains only 4 bytes of size of next page
+		return sizeof(uint32_t);
+	case TS_PAGE_FS_IMAGE_DATA:
+		return getStorageImageSize();
+#endif
 	default:
 		return 0;
 	}
@@ -378,7 +392,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 	sendOkResponse(tsChannel);
 }
 
-void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
+void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint32_t page, uint32_t offset, uint32_t count) {
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
@@ -388,7 +402,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t page, uint
 		return;
 	}
 
-	const uint8_t* start = getWorkingPageAddr(tsChannel, page, offset);
+	const uint8_t* start = getWorkingPageAddr(tsChannel, page, offset, false);
 	if (start == nullptr) {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: CRC invalid page");
 		return;
@@ -406,7 +420,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 	int totalResponseSize = 0;
 	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
-		uint16_t packed = tsChannel->page1.highSpeedOffsets[i];
+		uint16_t packed = tsChannel->page2.highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 
 		size_t size = type == 0 ? 0 : 1 << (type - 1);
@@ -424,7 +438,7 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 
 	uint8_t dataBuffer[8];
 	for (size_t i = 0; i < TS_SCATTER_OFFSETS_COUNT; i++) {
-		uint16_t packed = tsChannel->page1.highSpeedOffsets[i];
+		uint16_t packed = tsChannel->page2.highSpeedOffsets[i];
 		uint16_t type = packed >> 13;
 		uint16_t offset = packed & 0x1FFF;
 
@@ -447,20 +461,27 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 }
 #endif // EFI_TS_SCATTER
 
-void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
+void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint32_t page, uint32_t offset, uint32_t count) {
 	tsState.readPageCommandsCounter++;
 
-	if (validateOffsetCount(page, offset, count)) {
+	// TS packet limit is 64K - 1 bytes
+	if (validateOffsetCount(page, offset, count) ||
+		(count > 65535)) {
 		tunerStudioError(tsChannel, "ERROR: RD out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
 	}
 
-	uint8_t* addr = getWorkingPageAddr(tsChannel, page, offset);
+	uint8_t* addr = getWorkingPageAddr(tsChannel, page, offset, false);
 	if (page == TS_PAGE_SETTINGS) {
 		if (isLockedFromUser()) {
+			// do not overrun temporary buffer!
+			if (count + TS_PACKET_HEADER_SIZE > sizeof(tsChannel->scratchBuffer)) {
+				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: RD no space for dummy reply");
+				return;
+			}
 			// to have rusEFI console happy just send all zeros within a valid packet
-			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
+			addr = (uint8_t*)(tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE);
 			memset(addr, 0, count);
 		}
 	}
@@ -526,7 +547,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static bool isKnownCommand(char command) {
-	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
+	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_READ32_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_BURN_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
@@ -537,10 +558,9 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_SCATTERED_GET_COMMAND
 #endif
 			|| command == TS_SET_LOGGER_SWITCH
-			|| command == TS_GET_IMAGE_COMMAND
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
 			|| command == TS_GET_TEXT
-			|| command == TS_CRC_CHECK_COMMAND
+			|| command == TS_CRC_CHECK_COMMAND || command == TS_CRC32_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
@@ -854,29 +874,21 @@ void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int
 	tsChannel->writeCrcResponse(TS_RESPONSE_OK);
 }
 
-static void handleGetImageCommand(TsChannelBase* tsChannel, size_t offset32, int count) {
-#if EFI_PROD_CODE
-	if (offset32 + count > getStorageImageSize()) {
-		tsState.errorOutOfRange++;
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: GET_IMAGE out of range");
-		return;
-	}
-
-	const unsigned char* addr = getStorageImage() + offset32;
-	tsChannel->sendResponse(TS_CRC, addr, count);
-#else
-  sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "not implemented");
-#endif // EFI_PROD_CODE
-}
-
 int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
 	char command = data[0];
 	data++;
 
+	// Use memcpy to safely read potentially unaligned data from the receive buffer.
+	// The scratchBuffer is only byte-aligned, and after data++ the pointer is
+	// misaligned for 16/32-bit access. Cortex-M7 does not support unaligned
+	// access for all instructions (e.g., ldmia), causing a UsageFault.
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
-	const uint32_t* data32 = reinterpret_cast<uint32_t*>(data);
+	uint32_t data32[3];
+	if (incomingPacketSize >= 13) {
+		memcpy(&data32[0], data, sizeof(data32));
+	}
 
 	// only few commands have page argument, default page is 0
 	uint16_t page = 0;
@@ -943,6 +955,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		count = data16[2];
 		handleCrc32Check(tsChannel, page, offset, count);
 		break;
+	case TS_CRC32_CHECK_COMMAND:
+		if (incomingPacketSize >= 13) {
+			uint32_t page32 = data32[0];
+			uint32_t offset32 = data32[1];
+			uint32_t count32 = data32[2];
+			handleCrc32Check(tsChannel, page32, offset32, count32);
+		}
+		break;
 	case TS_BURN_COMMAND:
 		/* command with page argument */
 		page = data16[0];
@@ -955,11 +975,12 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		count = data16[2];
 		handlePageReadCommand(tsChannel, page, offset, count);
 		break;
-	case TS_GET_IMAGE_COMMAND:
-		{
-		  size_t offset32 = data32[0];
-		  count = data16[2];
-		  handleGetImageCommand(tsChannel, offset32, count);
+	case TS_READ32_COMMAND:
+		if (incomingPacketSize >= 13) {
+			uint32_t page32 = data32[0];
+			uint32_t offset32 = data32[1];
+			uint32_t count32 = data32[2];
+			handlePageReadCommand(tsChannel, page32, offset32, count32);
 		}
 		break;
 	case TS_TEST_COMMAND:
@@ -995,9 +1016,15 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		switch(data[0]) {
 		case TS_COMPOSITE_ENABLE:
 			EnableToothLogger();
+			sendOkResponse(tsChannel);
+			break;
+		case TS_COMPOSITE_PRI_ENABLE:
+			EnableToothLogger(TLmode::PrimaryTooth);
+			sendOkResponse(tsChannel);
 			break;
 		case TS_COMPOSITE_DISABLE:
 			DisableToothLogger();
+			sendOkResponse(tsChannel);
 			break;
 		case TS_COMPOSITE_READ:
 			{
@@ -1016,9 +1043,11 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #ifdef TRIGGER_SCOPE
 		case TS_TRIGGER_SCOPE_ENABLE:
 			triggerScopeEnable();
+			sendOkResponse(tsChannel);
 			break;
 		case TS_TRIGGER_SCOPE_DISABLE:
 			triggerScopeDisable();
+			sendOkResponse(tsChannel);
 			break;
 		case TS_TRIGGER_SCOPE_READ:
 			{
@@ -1037,9 +1066,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			// dunno what that was, send NAK
 			return false;
 		}
-
-		sendOkResponse(tsChannel);
-
 		break;
 	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
 		{

@@ -160,6 +160,9 @@ float getOutputValueByHash(const int hash) {
 // VBatt
 		case 277722310:
 			return engine->outputChannels.VBatt;
+// VIgn
+		case 2090832025:
+			return engine->outputChannels.VIgn;
 // oilPressure
 		case 598268994:
 			return engine->outputChannels.oilPressure;
@@ -1758,6 +1761,18 @@ float getOutputValueByHash(const int hash) {
 // triggerElapsedUs
 		case 767689023:
 			return engine->triggerCentral.triggerElapsedUs;
+// camResyncCounter
+		case 1138743722:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).camResyncCounter;
+// m_phaseAdjustment
+		case -739701471:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_phaseAdjustment;
+// m_hasSynchronizedPhase
+		case 900196958:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_hasSynchronizedPhase;
+// m_hasSynchronizedCrank
+		case 885139196:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_hasSynchronizedCrank;
 // lambdaCurrentlyGood
 		case 350535927:
 			return engine->lambdaMonitor.lambdaCurrentlyGood;

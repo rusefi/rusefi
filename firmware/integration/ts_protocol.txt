@@ -13,6 +13,8 @@
 #define TS_QUERY_COMMAND 'Q'
 ! 0x6B 107
 #define TS_CRC_CHECK_COMMAND 'k'
+! 0x4B
+#define TS_CRC32_CHECK_COMMAND 'K'
 
 ! 0x46
 #define TS_COMMAND_F 'F'
@@ -49,6 +51,8 @@
 #define TS_TRIGGER_SCOPE_DISABLE 5
 #define TS_TRIGGER_SCOPE_READ 6
 
+#define TS_COMPOSITE_PRI_ENABLE 7
+
 #define PROTOCOL_MSG "msg"
 #define PROTOCOL_HELLO_PREFIX "***"
 
@@ -60,6 +64,8 @@
 #define TS_RESPONSE_FRAMING_ERROR 0x8D
 ! 0x52 82
 #define TS_READ_COMMAND 'R'
+! 0x28
+#define TS_READ32_COMMAND '('
 ! 0x47
 #define TS_GET_TEXT 'G'
 ! 0x45
@@ -88,9 +94,6 @@
 
 ! High speed logger commands
 #define TS_SET_LOGGER_SWITCH  'l'
-
-#define TS_GET_IMAGE_COMMAND '('
-
 
 #define CMD_SET_SENSOR_MOCK "set_sensor_mock"
 #define CMD_RESET_SENSOR_MOCKS "reset_sensor_mocks"
@@ -161,7 +164,7 @@
 #define PROTOCOL_CRANK2 "t2"
 
 #define CRITICAL_PREFIX "CRITICAL"
-#define COMPOSITE_PACKET_SIZE 5
+#define COMPOSITE_PACKET_SIZE 8
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define LOG_DELIMITER "`"
 

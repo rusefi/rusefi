@@ -525,8 +525,7 @@ int Mc33810::chip_init()
 	if (rx != SPI_CHECK_ACK) {
 		engine->outputChannels.mc33810spiErrorCounter++;
 		static Timer needBatteryMessage;
-		float vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
-		if (vBatt > 6 || needBatteryMessage.getElapsedSeconds() > 7) {
+		if ((isIgnVoltage()) && (needBatteryMessage.getElapsedSeconds() > 7)) {
 			needBatteryMessage.reset();
 			const char *msg;
 			if (rx == 0xffff) {
@@ -536,8 +535,9 @@ int Mc33810::chip_init()
 			} else {
 				msg = "unexpected";
 			}
-			efiPrintf(DRIVER_NAME " spi loopback test failed [first 0x%04x][spi check 0x%04x][%s] vBatt=%f count=%d", rxSpiCheck, rx, msg, vBatt,
-			  engine->outputChannels.mc33810spiErrorCounter);
+			efiPrintf(DRIVER_NAME " spi loopback test failed [first 0x%04x][spi check 0x%04x][%s] vBatt=%f count=%d",
+				rxSpiCheck, rx, msg, Sensor::getOrZero(SensorType::BatteryVoltage),
+				engine->outputChannels.mc33810spiErrorCounter);
 		}
 		ret = -2;
 		goto err_exit;

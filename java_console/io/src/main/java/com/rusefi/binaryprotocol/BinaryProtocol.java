@@ -120,6 +120,14 @@ public class BinaryProtocol {
 
         binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
         stream.addCloseListener(binaryProtocolLogger::close);
+        // When the stream dies (cable yank, ECU reboot, etc.) mark NOT_CONNECTED and purge
+        // stale sensor data so a subsequent ECU doesn't inherit values from this one.
+        // This is the only mechanism that fires NOT_CONNECTED on the splash screen — the
+        // ConnectionWatchdog exists only inside ConsoleUI and is not created during splash.
+        stream.addCloseListener(() -> {
+            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+            SensorCentral.getInstance().reset();
+        });
     }
 
     public boolean isClosed() {
@@ -276,7 +284,6 @@ public class BinaryProtocol {
                                 if (linkManager.isNeedPullLiveData()) {
                                     LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
                                     LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
-                                    log.info(stream + ": Got livedata");
                                 }
                             }
                         });
@@ -741,6 +748,11 @@ public class BinaryProtocol {
         }
     }
 
+    /**
+     * This is a blocking method which would fetch all output channels from the controller.
+     *
+     * @return true if successful
+     */
     public boolean requestOutputChannels() {
         if (stream.isClosed())
             return false;

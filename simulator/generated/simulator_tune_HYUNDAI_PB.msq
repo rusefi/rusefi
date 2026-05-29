@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23380">
+    <page number="0" size="23388">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -33,7 +33,7 @@
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
         <constant digits="2" name="afr_value1" units="AFR">10.0</constant>
         <constant digits="2" name="afr_value2" units="AFR">19.99</constant>
-        <constant digits="3" name="afrExpAverageAlpha" units="">1.0</constant>
+        <constant digits="4" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"None"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6" units="cycles">
          200.0
@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260429</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260529</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -919,6 +919,7 @@
          25.0
 </constant>
         <constant name="debugMode">"Executor"</constant>
+        <constant name="debugTriggerState">"NONE"</constant>
         <constant name="debugTriggerSync">"NONE"</constant>
         <constant name="devBit0">"false"</constant>
         <constant name="devBit01">"false"</constant>
@@ -1006,6 +1007,7 @@
         <constant digits="0" name="engineChartSize" units="count">400</constant>
         <constant name="engineCode">Gamma</constant>
         <constant name="engineMake">Hyundai</constant>
+        <constant digits="3" name="engineShutDownPeriod" units="">5.0</constant>
         <constant name="engineSnifferFocusOnInputs">"no"</constant>
         <constant digits="0" name="engineSnifferRpmThreshold" units="RPM">2500</constant>
         <constant name="engineSyncCam">"Intake First Bank"</constant>
@@ -1183,7 +1185,7 @@
         <constant digits="1" name="fuelTempSensor_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="fuelTempSensor_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="fuelTempSensor_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
-        <constant cols="1" digits="0" name="fuelTrimLoadBins" rows="4" units="">
+        <constant cols="1" digits="0" name="fuelTrimLoadBins" rows="4" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}">
          20
          50
          80
@@ -2069,7 +2071,7 @@
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant name="ignBlends4_yAxisOverride">"Zero"</constant>
-        <constant cols="1" digits="0" name="ignitionCltCorrLoadBins" rows="5" units="Load">
+        <constant cols="1" digits="0" name="ignitionCltCorrLoadBins" rows="5" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          0
          35
          70
@@ -2091,7 +2093,7 @@
          60
 </constant>
         <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">6.0</constant>
-        <constant cols="1" digits="0" name="ignitionIatCorrLoadBins" rows="8" units="Load">
+        <constant cols="1" digits="0" name="ignitionIatCorrLoadBins" rows="8" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          0
          20
          40
@@ -2194,7 +2196,7 @@
         <constant name="ignKeyAdcChannel">"Disabled"</constant>
         <constant digits="0" name="ignKeyAdcDivider" units="">0</constant>
         <constant name="ignOverrideMode">"None"</constant>
-        <constant cols="1" digits="0" name="ignTrimLoadBins" rows="4" units="">
+        <constant cols="1" digits="0" name="ignTrimLoadBins" rows="4" units="{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}">
          20
          50
          80
@@ -2401,7 +2403,7 @@
          0 0 0 0 0 0
          0 0 0 0 0 0
 </constant>
-        <constant cols="1" digits="0" name="injPhaseLoadBins" rows="6" units="Load">
+        <constant cols="1" digits="0" name="injPhaseLoadBins" rows="6" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          10
          40
          70
@@ -2617,7 +2619,7 @@
         <constant digits="1" name="knockRetardAggression" units="%">20.0</constant>
         <constant digits="1" name="knockRetardReapplyRate" units="deg/s">3.0</constant>
         <constant digits="0" name="knockSamplingDuration" units="Deg">45</constant>
-        <constant digits="2" name="knockSpectrumSensitivity" units="sense">0.0</constant>
+        <constant digits="2" name="knockSpectrumSensitivity" units="sense">1.0</constant>
         <constant digits="1" name="knockSuppressMinTps" units="%">10.0</constant>
         <constant name="l9779_cs">"NONE"</constant>
         <constant name="l9779spiDevice">"Off"</constant>
@@ -2715,7 +2717,7 @@
         <constant name="launchSparkCutEnable">"no"</constant>
         <constant digits="0" name="launchSpeedThreshold" units="{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}">30</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
-        <constant digits="0" name="launchTpsThreshold" units="">0</constant>
+        <constant digits="0" name="launchTpsThreshold" units="">3</constant>
         <constant name="limitTorqueReductionTime">"no"</constant>
         <constant name="logicAnalyzerPins1">"NONE"</constant>
         <constant name="logicAnalyzerPins2">"NONE"</constant>
@@ -2733,10 +2735,10 @@
         <constant name="ltft_enabled">"yes"</constant>
         <constant digits="1" name="ltft_maxAdd" units="%">12.5</constant>
         <constant digits="1" name="ltft_maxRemove" units="%">12.5</constant>
-        <constant digits="0" name="ltft_timeConstant1" units="sec">3000</constant>
-        <constant digits="0" name="ltft_timeConstant2" units="sec">1500</constant>
-        <constant digits="0" name="ltft_timeConstant3" units="sec">30</constant>
-        <constant digits="0" name="ltft_timeConstant4" units="sec">300</constant>
+        <constant digits="1" name="ltft_timeConstant1" units="sec">3000.0</constant>
+        <constant digits="1" name="ltft_timeConstant2" units="sec">1500.0</constant>
+        <constant digits="1" name="ltft_timeConstant3" units="sec">30.0</constant>
+        <constant digits="1" name="ltft_timeConstant4" units="sec">300.0</constant>
         <constant digits="1" name="ltitClampMax" units="%">0.0</constant>
         <constant digits="1" name="ltitClampMin" units="%">0.0</constant>
         <constant digits="0" name="ltitCorrectionRate" units="%/s">0</constant>
@@ -3108,12 +3110,12 @@ end</constant>
          7000
 </constant>
         <constant cols="6" digits="2" name="maxKnockRetardTable" rows="6" units="deg">
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
-         20.0 20.0 20.0 20.0 20.0 20.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
+         2.0 2.0 2.0 2.0 2.0 2.0
 </constant>
         <constant digits="1" name="maxOilPressureTimeout" units="sec">0.0</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
@@ -3627,7 +3629,8 @@ end</constant>
         <constant name="sdCardCsPinMode">"default"</constant>
         <constant digits="0" name="sdCardLogFrequency" units="hz">50</constant>
         <constant name="sdCardSpiDevice">"Off"</constant>
-        <constant name="sdTriggerLog">"normal"</constant>
+        <constant name="sdTriggerLog">"Full MLG"</constant>
+        <constant name="sdTriggerLogCsv">"Binary"</constant>
         <constant name="secondaryInjectorCompensationMode">"None"</constant>
         <constant digits="0" name="secondaryInjectorFuelReferencePressure" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0</constant>
         <constant name="secondSolenoidPin">"NONE"</constant>
@@ -4570,7 +4573,7 @@ end</constant>
         <constant name="trailingCoilPins7">"NONE"</constant>
         <constant name="trailingCoilPins8">"NONE"</constant>
         <constant name="trailingCoilPins9">"NONE"</constant>
-        <constant cols="1" digits="0" name="trailingSparkLoadBins" rows="4" units="Load">
+        <constant cols="1" digits="0" name="trailingSparkLoadBins" rows="4" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">
          20
          45
          75
@@ -5170,8 +5173,8 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260429" nPages="1" signature="rusEFI master.2026.04.29.f407-discovery.3327040612" version="5.0"/>
-    <bibliography author="rusEFI 20260429" writeDate="date"/>
+    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.29.f407-discovery.2712971338" version="5.0"/>
+    <bibliography author="rusEFI 20260510" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>

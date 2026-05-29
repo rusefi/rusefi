@@ -26,8 +26,6 @@ TEST(OddFireRunningMode, hd) {
   // basic engine setup
 	EngineTestHelper eth(engine_type_e::HARLEY);
 	configureOddFiringEngine(eth);
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
 	setTestFuelCrankingTable(27);
 
@@ -72,7 +70,7 @@ TEST(OddFireRunningMode, hd) {
 
 	ASSERT_EQ(500, Sensor::getOrZero(SensorType::Rpm));
 
-	engine->scheduler.executeAll(getTimeNowUs() + MS2US(1000000));
+	eth.executeAllPreservingTimeUs(getTimeNowUs() + MS2US(1000000));
 
 	eth.fireTriggerEvents2(2 /* count */ , 60 /* ms */);
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());

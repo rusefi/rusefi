@@ -1,24 +1,22 @@
-### Project Structure and Module Locations
+### Scope of this file
 
-See also CLAUDE.md, .junie/ts-help-topic.md and .junie/ts-readme.md
+`CLAUDE.md` (at the repository root) is considered part of these guidelines — read it first. This file only adds Junie-specific guidance and frontend/Java details that are **not** already covered in `CLAUDE.md`. Do not duplicate content from `CLAUDE.md` here; if something belongs in both audiences, put it in `CLAUDE.md` and reference it from here.
 
-rusEFI is an open-source engine control unit firmware for STM32 microcontrollers.
+See also: `CLAUDE.md`, `docs/adding-new-trigger.md`, `.junie/ts-help-topic.md`, `.junie/ts-readme.md`.
 
-Main firmware is located in `firmware` folder (relative to project root). This is C++ code.
+## Frontend (Java console)
 
-Unit tests are located in `unit_tests` folder (relative to project root). This is C++ code.
-
-This Java Gradle project has some build tools and our frontend application; it's a multi-repo-like structure where some modules are located outside the current root (`java_tools`).
-
-## Frontend
+`CLAUDE.md` focuses on the C++ firmware / unit tests / simulator. This section covers the Java side, which `CLAUDE.md` does not describe.
 
 rusEFI console frontend application scans serial ports and well-known local TCP port 29001 to locate an engine control unit embedded device.
 
-An ECU would respond to a HELLO command with a signature String which identifies ECU kind, model and firmware version  (see BundleInfo)
+An ECU would respond to a HELLO command with a signature String which identifies ECU kind, model and firmware version (see `BundleInfo`).
 
-Based on that signature, UI frontend would pull an .ini file with all the metadata related to the exact ECU we have connected to from the internet, and cache it locally in user.home
+Based on that signature, UI frontend would pull an `.ini` file with all the metadata related to the exact ECU we have connected to from the internet, and cache it locally in `user.home`.
 
-That .ini file would be parsed into IniFileModel instance giving java code knowledge of desired calibration memory and user interface layout.
+That `.ini` file would be parsed into an `IniFileModel` instance giving java code knowledge of desired calibration memory and user interface layout.
+
+The Java side is a Gradle project with build tools and the frontend application; it's a multi-repo-like structure where some modules are located outside the current root (`java_tools`).
 
 #### Key Module Locations:
 - `:ui` is located in `../java_console/ui`
@@ -40,8 +38,20 @@ That .ini file would be parsed into IniFileModel instance giving java code knowl
 - Source code for `:ui` is in `../java_console/ui/src/main/java`.
 
 #### UI entry points
-- rusefi_updater.exe (see console_launcher folder for launch4j) invokes Launcher#main with empty args; the merged launcher handles both the autoupdate flow and the console UI
-- rusefi_autoupdate.exe entry point is Autoupdate#main
+- `rusefi_updater.exe` (see `console_launcher` folder for launch4j) invokes `Launcher#main` with empty args; the merged launcher handles both the autoupdate flow and the console UI.
+- `rusefi_autoupdate.exe` entry point is `Autoupdate#main`.
+
+#### TS templating:
+- Pattern: `#define CAM_INPUT_1_1_NAME "Cam sensor bank 1 intake"` in `rusefi_config.txt`
+- Usage: `@@CAM_INPUT_1_1_NAME@@` in `tunerstudio.template.ini`
+- This pattern is used for dynamic strings in the TunerStudio UI.
+
+#### Autoupdate:
+- Logic for bypassing: Caps Lock key skips the automatic update process.
+- Configuration: `autoupdate_bundle=true` in `shared_io.properties` controls the global auto-update behavior.
+
+#### Subject domain
+- Timing: In the context of engine control, "timing" usually refers to **ignition timing advance** (the angle before TDC when the spark occurs).
 
 #### Key frontend java application classes
 AbstractIoStream: Base class for communication streams that manages byte counters, activity tracking, and listener notification.
@@ -68,7 +78,9 @@ TableModel: A metadata container (POJO) that stores a table's configuration, suc
 
 UIContext: Acts as the main application state singleton, providing access to essential components like the link manager and the INI file state.
 
-IniFileState: Manages the current state and availability of the INI configuration model within the application lifecycle.CalibrationDialogWidget: The UI manager that orchestrates the layout of the right-side panel, dynamically creating fields and table views.
+IniFileState: Manages the current state and availability of the INI configuration model within the application lifecycle.
+
+CalibrationDialogWidget: The UI manager that orchestrates the layout of the right-side panel, dynamically creating fields and table views.
 
 Node: A hierarchical data structure used to store and retrieve UI configuration and layout preferences.
 
@@ -82,10 +94,14 @@ GaugesPanel: Manages the overall layout, rendering, and container logic for the 
 
 WellKnownGauges: Provides an enumeration of standard gauges and their associated output channel names for consistent data mapping.
 
-BinaryProtocol Encapsulates the logical state of the connection and handles the retrieval of the configuration image from the controller.
+BinaryProtocol: Encapsulates the logical state of the connection and handles the retrieval of the configuration image from the controller.
 
 GaugesGrid: Manages the visual container by wrapping a JPanel with a GridLayout and handling its dimensional resets.
 
-GaugesGridElement: Acts as a factory wrapper for individual slots, toggling between gauge and graph modes based on persistent Node configuration.
+GaugesGridElement: Acts as a factory wrapper for individual slots, toggling between gauge and graph modes based on persistent `Node` configuration.
 
-See CLAUDE.md
+### Bug Fix Process
+- **Mandatory separation**: When fixing a bug, you must first create and commit (or submit in a separate prompt) a reproduction test case that fails without the fix.
+- Only after the reproduction test case is verified to fail, you may proceed with implementing and committing the fix.
+- Verification of the fix must be done using the same reproduction test case.
+- The reproduction test source file must be `git add`-ed when created (see "Source Control Hygiene" in `CLAUDE.md`).

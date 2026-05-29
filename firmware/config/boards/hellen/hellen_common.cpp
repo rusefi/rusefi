@@ -132,7 +132,7 @@ void hellenDisableEn(const char *msg) {
 #endif // EFI_CONFIGURATION_STORAGE
 	do {
 		chThdSleepMilliseconds(10);
-		if (sdCardGetCurrentMode() == SD_MODE_IDLE) {
+		if (sdCardGetCurrentMode() == SD_MODE_UNMOUNT) {
 			break;
 		}
 		timeout -= 10;
@@ -265,6 +265,63 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 	}
 
 	return engineConfiguration->analogInputDividerCoefficient;
+}
+
+void setupHellenSharedInputs(void) {
+	// MM100:
+	// IN_AUX2 = A21 is connected to to ADC and EINT inputs: PC4 for ADC, and PE9 for EINT
+	// board.c configures both as input with pull-down
+	// when using A21 in ADC mode PC4 is reconfigured as analog input with pull-down disabled
+	// While PE9 is still input with pull-down enabled
+	// This adds additional low-side reistor to 1/2 volage divider
+	// This affects acuracity of voltage mesurement
+	// 2.36 is measured while input is 2.5
+	// Set input with no pull-down for both pins (we still have pull-down in voltage divider)
+	//
+	// Module-mega-mcu144 & 176:
+	//                 ADC   EINT
+	// IN_AUX4 = A20 = PA7 + PE11
+	// IN_AUX2 = A21 = PC4 + PE9
+	// IN_AUX3 = A22 = PC5 + PB2 (only if R131 is populated)
+	// Module-mcu 176
+	// IN_AUX4 = A20 = PA7 + PE11 + PH5
+	// IN_AUX2 = A21 = PC4 + PE9  + PH4
+	// IN_AUX3 = A22 = PC5 + PB2  + PH3
+	// IN_AUX1 = A23 = PB0 + PH2
+#if HELLEN_BOARD_MM100
+	efiSetPadModeWithoutOwnershipAcquisition("A21-ADC", Gpio::MM100_IN_AUX2, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A21-EINT", Gpio::MM100_IN_AUX2_DIGITAL, PAL_MODE_INPUT);
+#endif
+#if HELLEN_BOARD_MM144
+	efiSetPadModeWithoutOwnershipAcquisition("A20-ADC", Gpio::H144_IN_AUX4, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A20-EINT", Gpio::H144_IN_AUX4_DIGITAL, PAL_MODE_INPUT);
+
+	efiSetPadModeWithoutOwnershipAcquisition("A21-ADC", Gpio::H144_IN_AUX2, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A21-EINT", Gpio::H144_IN_AUX2_DIGITAL, PAL_MODE_INPUT);
+
+	efiSetPadModeWithoutOwnershipAcquisition("A22-ADC", Gpio::H144_IN_AUX3, PAL_MODE_INPUT);
+	// Only if R131 is populated
+	// Seems safe as we still have pull-down on PB2 = BOOT1
+	efiSetPadModeWithoutOwnershipAcquisition("A22-EINT", Gpio::B2, PAL_MODE_INPUT);
+#endif
+#if HELLEN_BOARD_MM176
+	efiSetPadModeWithoutOwnershipAcquisition("A20-ADC", Gpio::MM176_IN_AUX4, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A20-EINT", Gpio::MM176_IN_AUX4_DIGITAL, PAL_MODE_INPUT);
+
+	efiSetPadModeWithoutOwnershipAcquisition("A21-ADC", Gpio::MM176_IN_AUX2, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A21-EINT", Gpio::MM176_IN_AUX2_DIGITAL, PAL_MODE_INPUT);
+
+	efiSetPadModeWithoutOwnershipAcquisition("A22-ADC", Gpio::MM176_IN_AUX3, PAL_MODE_INPUT);
+	// Only if R131 is populated
+	// Seems safe as we still have pull-down on PB2 = BOOT1
+	efiSetPadModeWithoutOwnershipAcquisition("A22-EINT", Gpio::B2, PAL_MODE_INPUT);
+#endif
+#if HELLEN_BOARD_MCU176
+	efiSetPadModeWithoutOwnershipAcquisition("A20-ALT", Gpio::MCU176_IN_AUX4_DIGITAL_ALT, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A21-ALT", Gpio::MCU176_IN_AUX2_DIGITAL_ALT, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A22-ALT", Gpio::MCU176_IN_AUX3_DIGITAL_ALT, PAL_MODE_INPUT);
+	efiSetPadModeWithoutOwnershipAcquisition("A24-ALT", Gpio::MCU176_IN_AUX1_DIGITAL_ALT, PAL_MODE_INPUT);
+#endif
 }
 
 #ifndef EFI_BOOTLOADER

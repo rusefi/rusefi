@@ -28,14 +28,40 @@ Outputs are placed in `firmware/deliver/`:
 
 ```bash
 cd unit_tests
-make
-./build/rusefi_test
+./test.sh
 
 # Run a specific test
-./build/rusefi_test --gtest_filter=TestName
+./test.sh TestName
 ```
 
-Unit tests use Google Test and run on amd64/aarch64, not on the ECU.
+`test.sh` is the recommended way to run tests as it automatically handles both the build (`make`) and execution.
+
+#### Code Coverage
+Coverage reports are generated using `gcovr` (requires Python 3).
+
+```bash
+cd unit_tests
+./run_coverage.sh
+```
+
+This script:
+1. Sets up a local Python virtual environment in `unit_tests/venv/`
+2. Installs `gcovr`
+3. Builds tests with `COVERAGE=yes`
+4. Runs all tests
+5. Generates HTML and JSON reports in `unit_tests/coverage_reports/`
+
+Exclusion patterns (e.g., for `googletest` or the `unit_tests` directory itself) are defined in `unit_tests/coverage_common.sh`.
+
+Unit tests use Google Test and run on PC, not on the ECU.
+
+#### Troubleshooting test output
+
+To inspect what a test actually scheduled/executed (events, timings, sniffer/logic traces) call `setUnitTestCreateLogs(true)` (declared in `unit_tests/test-framework/engine_test_helper.h`) before constructing `EngineTestHelper` — typically from `main.cpp` or at the top of an individual test. When enabled, each test writes per-test artifacts (e.g. `unittest_<Suite>_<Name>_trace.json`, logic-data, and engine-sniffer files) into the `unit_tests/test_results/` directory (`TEST_RESULTS_DIR` in `unit_test_logger.h`); the absolute path is printed at process exit by `sayByeBye()`. This is the recommended way to diagnose unexpected scheduler/RPM/injection behavior instead of adding ad-hoc `printf`s.
+
+See also unit_tests/test_results/readme.md for unit tests output.
+
+**Cross-platform requirement**: Unit test code MUST build and run on all supported host platforms — Linux (GCC/Clang), macOS (Clang), and Windows (MSVC and MinGW). Avoid POSIX-only APIs (e.g. `realpath`, `PATH_MAX`, `dirent.h` without guards) unless wrapped in `#ifdef` guards or replaced by portable C++ equivalents. Prefer `std::filesystem` over POSIX path APIs.
 
 ### Code Generation
 
@@ -70,6 +96,12 @@ firmware/gen_enum_to_string.sh
 - `unit_tests/` - Google Test suite
 - `simulator/` - Windows/Linux firmware simulator
 
+### Deep Dive AI Guidance
+For detailed technical documentation intended for AI assistants, see:
+- [Fueling System](docs/AI/fueling_system.md) - Mass-based fueling pipeline (17 stages).
+- [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
+- [Engine Protection](docs/AI/protection_system.md) - LimpManager and cut logic.
+
 ### Key Concepts
 
 - **Event-driven execution**: Trigger events from crank/cam sensors drive the main control loop
@@ -80,7 +112,7 @@ firmware/gen_enum_to_string.sh
 #### Generated configuration layout
 
 - `firmware/integration/rusefi_config.txt` defines the parameters stored in persistent configuration (both "configuration", ie which pins do what, and the "calibration" or "tune", like the VE table, timing, etc.). This is the primary input that describes the main `engine_configuration_s` struct and the top-level persistent config layout.
-- `firmware/integration/config_page_*.txt` files define additional TunerStudio memory pages, each containing its own struct (e.g. `page1_s`, `page2_s`, `page4_s`). These pages hold data that lives outside the main configuration image — for example, high-speed scatter offsets (`page1_s`), long-term fuel trim tables (`page2_s`), and secondary VE tables with blend controls (`page4_s`).
+- `firmware/integration/config_page_*.txt` files define additional TunerStudio memory pages, each containing its own struct (e.g. `page2_s`, `page3_s`, `page4_s`). These pages hold data that lives outside the main configuration image — for example, high-speed scatter offsets (`page2_s` / TS page 2), long-term fuel trim tables (`page3_s` / TS page 3), and secondary VE tables with blend controls (`page4_s` / TS page 4). The struct and file numbers match the TunerStudio page numbers.
 - Both `rusefi_config.txt` and the `config_page_*.txt` files are processed by the Java tool at `java_tools/configuration_definition` to generate several outputs. It is critical that these match, so that each part of the system can communicate and agree about the in-memory config format.
   - C/C++ headers in `firmware/controllers/generated/` — the main config produces `engine_configuration_generated_structures.h`, while each config page produces a corresponding `page_N_generated.h`.
   - Along with `firmware/tunerstudio/tunerstudio.template.ini`, generates the ini file used by TunerStudio to communicate with the ECU. All tuner-adjustable parameters **MUST** appear in these input files to be useful.
@@ -92,15 +124,41 @@ Code generation is integrated into the Makefile for all four delivery units: eac
 
 - C99 with GNU extensions for C code
 - C++20 for firmware code
+- C++17 (minimum) for unit tests and host-side tooling; portable C++17 features such as `std::filesystem`, `std::optional`, `std::string_view` and structured bindings are preferred over platform-specific APIs to keep unit tests cross-platform (Linux/macOS/Windows-MSVC/MinGW)
 - No RTTI, no exceptions (`-fno-rtti -fno-exceptions`)
 - LTO enabled by default
 
 ### Build Conditionals
 
-Key preprocessor flags that control compilation:
-- `EFI_PROD_CODE=1` - Production firmware
-- `EFI_UNIT_TEST=1` - Unit test build
-- `EFI_SIMULATOR=1` - Simulator build
+Key preprocessor flags that control compilation. These three are **mutually exclusive** — any given translation unit is compiled in exactly one of these modes:
+
+- `EFI_PROD_CODE=1` - Production firmware build (cross-compiled for STM32, ChibiOS available, real HAL).
+- `EFI_SIMULATOR=1` - Desktop simulator build (`simulator/`), ChibiOS available via the simulator port.
+- `EFI_UNIT_TEST=1` - Host-side Google Test build under `unit_tests/`. No ChibiOS, no real HAL — runs as a plain native binary on Linux (GCC/Clang), macOS (Clang) and Windows (MSVC and MinGW).
+
+#### Using `EFI_UNIT_TEST` in code
+
+- `#if EFI_UNIT_TEST` — include a host-only path: stub out HAL/ChibiOS/board-specific calls, expose extra accessors for tests, or substitute portable C++ for embedded primitives.
+- `#if !EFI_UNIT_TEST` — exclude code that cannot compile on the host (board pin macros, ChibiOS threads/HAL, MCU registers, etc.).
+- For three-way splits, combine with `EFI_PROD_CODE` / `EFI_SIMULATOR` rather than negating one flag.
+- The flag is set by `unit_tests/Makefile` (and the unit-test CMake/IDE projects). It is **never** set by board `compile_*.sh` scripts or the simulator build.
+
+#### Cross-platform requirement under `EFI_UNIT_TEST`
+
+Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware sources guarded by `#if EFI_UNIT_TEST` or compiled unconditionally into the test binary) **must build on all four host toolchains**: Linux GCC/Clang, macOS Clang, Windows MSVC, Windows MinGW. Prefer portable C++17 (`std::filesystem`, `std::string`, `std::string_view`, `std::optional`, structured bindings) over POSIX-only (`realpath`, `PATH_MAX`, `dirent.h`) or Win32-only APIs. Guard any unavoidable platform-specific call with an explicit `#ifdef`.
+
+#### Relationship to test infrastructure
+
+`EFI_UNIT_TEST` is the *compile-time* gate; the *runtime* test scaffolding it enables lives in `unit_tests/test-framework/` — most notably `EngineTestHelper` and `setUnitTestCreateLogs(true)` (see the "Troubleshooting test output" section above).
+
+## Source Control Hygiene
+
+- **Stage new files immediately**: When you create a new source file (C/C++ headers/sources, Java/Kotlin sources, unit tests, scripts, build files, resources, docs, etc.), run `git add <path>` as part of the same change so it shows up in `git status` / `git diff` and is not lost on the next clean or branch switch.
+- Do not stage build artifacts or generated files (see "Do not attempt to commit any generated files" above), IDE-local files, or user-specific configs.
+
+## Coding Style
+
+- Always use curly brackets for `if` statements, even for single-line blocks.
 
 ## Embedded Code Practices
 
@@ -117,6 +175,7 @@ Key preprocessor flags that control compilation:
 - Requires Unix-like OS (Linux, macOS, or Windows WSL)
 - All PRs must pass CI gates (firmware builds for all boards, unit tests)
 - Wiki: https://wiki.rusefi.com/
+- Adding a new trigger: `docs/adding-new-trigger.md`
 - TunerStudio General Notes: `.junie/ts-readme.md`
 
 See also .junie/guidelines.md file

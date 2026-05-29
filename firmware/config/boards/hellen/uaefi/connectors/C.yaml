@@ -58,7 +58,7 @@ pins:
     class: [switch_inputs, event_inputs]
     color: grey
     ts_name: ___ BUTTON3
-    function: Button input 3 PullDown 10K
+    function: Button input 3 PullDown 10K by default, see BT3 area on the board
 
   - pin: C10
     ts_name: ___ EGT+

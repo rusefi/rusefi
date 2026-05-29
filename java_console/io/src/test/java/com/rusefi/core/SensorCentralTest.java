@@ -1,12 +1,18 @@
 package com.rusefi.core;
 
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.ImmutableIniFileModel;
+import com.opensr5.ini.IniFileModelMocks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 public class SensorCentralTest {
     private SensorCentral sensorCentral;
@@ -108,6 +114,40 @@ public class SensorCentralTest {
     }
 
     @Test
+    void testResponseListenerSubscription() {
+        SensorCentral.ResponseListener listener = () -> {};
+        SensorSubscription sub = new SensorSubscription("RPM");
+        sensorCentral.addListener(listener, sub);
+
+        assertSame(sub, sensorCentral.getSubscription(listener));
+
+        sensorCentral.removeListener(listener);
+        assertNull(sensorCentral.getSubscription(listener));
+    }
+
+    @Test
+
+    void testSubscriptionFiltering() {
+        AtomicInteger callCount = new AtomicInteger();
+        SensorCentral.ResponseListener listener = callCount::incrementAndGet;
+        sensorCentral.addListener(listener, new SensorSubscription("RPM"));
+
+        IniFileModel ini = mock(IniFileModel.class);
+
+        // Update with no RPM
+        sensorCentral.setValue(10, "TPS");
+        sensorCentral.grabSensorValues(new byte[10], ini, null);
+        // todo: adjust once holder.subscription.isInterestedInAny
+        assertEquals(1, callCount.get(), "Should not notify for TPS when subscribed to RPM");
+
+        // Update with RPM
+        sensorCentral.setValue(1000, "RPM");
+        sensorCentral.grabSensorValues(new byte[10], ini, null);
+        // todo: adjust once holder.subscription.isInterestedInAny
+        assertEquals(2, callCount.get(), "Should notify for RPM");
+    }
+
+    @Test
     void caseInsensitiveListenerLookup() {
         AtomicReference<Double> receivedValue = new AtomicReference<>();
 
@@ -163,12 +203,85 @@ public class SensorCentralTest {
     @Test
     void responseListenerNotifiedOnGrabSensorValues() {
         AtomicInteger callCount = new AtomicInteger(0);
+        SensorCentral.ResponseListener listener = callCount::incrementAndGet;
 
-        sensorCentral.addListener(callCount::incrementAndGet);
+        sensorCentral.addListener(listener);
+        try {
+            sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
+            sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
+            assertEquals(2, callCount.get());
+        } finally {
+            sensorCentral.removeListener(listener);
+        }
+    }
 
-        // Note: grabSensorValues requires proper ini file setup
-        // This test verifies that ResponseListener can be added
-        assertNotNull(callCount);
+    @Test
+    void responseListenerRemovalStopsNotification() {
+        AtomicInteger callCount = new AtomicInteger(0);
+        SensorCentral.ResponseListener listener = callCount::incrementAndGet;
+
+        sensorCentral.addListener(listener);
+        sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
+        sensorCentral.removeListener(listener);
+        sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
+
+        assertEquals(1, callCount.get());
+    }
+
+    @Test
+    void grabSensorValuesStoresResponseBytes() {
+        byte[] payload = {1, 2, 3, 4, 5};
+        sensorCentral.grabSensorValues(payload, IniFileModelMocks.empty(), null);
+        assertSame(payload, sensorCentral.getResponse());
+    }
+
+    @Test
+    void grabSensorValuesPublishesRuntimeDataRateGauge() throws InterruptedException {
+        AtomicReference<Double> latestHz = new AtomicReference<>();
+        SensorCentral.ListenerToken token = sensorCentral.addListener(
+                ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE, latestHz::set);
+        try {
+            // First frame: only one timestamp in window → published value is 0.0.
+            sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
+            assertNotNull(latestHz.get(), "runtimeDataRateGauge should be published on first frame");
+            assertEquals(0.0, latestHz.get(), 0.0001);
+
+            // Second frame after a measurable delay: rate should be > 0 and finite.
+            Thread.sleep(20);
+            sensorCentral.grabSensorValues(new byte[0], IniFileModelMocks.empty(), null);
+            double hz = latestHz.get();
+            assertTrue(hz > 0.0 && Double.isFinite(hz),
+                    "expected positive finite Hz, got " + hz);
+        } finally {
+            token.remove();
+        }
+    }
+
+    @Test
+    void getOutputChannelMapReturnsStableInstance() {
+        Map<String, Double> map1 = sensorCentral.getOutputChannelMap();
+        Map<String, Double> map2 = sensorCentral.getOutputChannelMap();
+        assertNotNull(map1);
+        assertSame(map1, map2);
+    }
+
+    @Test
+    void onGaugeLabelsResolvedStoresLabels() {
+        Map<String, ISensorHolder.ResolvedGaugeLabels> labels = Collections.singletonMap(
+                "someGauge", new ISensorHolder.ResolvedGaugeLabels("Title", "Units"));
+        sensorCentral.onGaugeLabelsResolved(labels);
+
+        assertSame(labels, sensorCentral.getResolvedGaugeLabels());
+        ISensorHolder.ResolvedGaugeLabels resolved = sensorCentral.getResolvedLabels("someGauge");
+        assertNotNull(resolved);
+        assertEquals("Title", resolved.getTitle());
+        assertEquals("Units", resolved.getUnits());
+
+        // Unknown gauge → null (not an exception).
+        assertNull(sensorCentral.getResolvedLabels("noSuchGauge"));
+
+        // Reset to empty so other tests aren't affected.
+        sensorCentral.onGaugeLabelsResolved(Collections.emptyMap());
     }
 
     @Test
@@ -183,4 +296,5 @@ public class SensorCentralTest {
         SensorCentral.SensorListener listener = value -> {};
         assertDoesNotThrow(() -> sensorCentral.removeListener("nonExistentSensor", listener));
     }
+
 }

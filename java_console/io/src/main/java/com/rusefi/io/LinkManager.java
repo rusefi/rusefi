@@ -59,6 +59,7 @@ public class LinkManager implements Closeable {
     private boolean needPullLiveData = true;
     public final MessagesListener messageListener = (source, message) -> log.info(source + ": " + message);
     private boolean isDisconnectedByUser;
+    private boolean notifyGlobalStatusOnClose = true;
 
     public LinkManager() {
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
@@ -178,6 +179,16 @@ public class LinkManager implements Closeable {
 
     public LinkManager setNeedPullText(boolean needPullText) {
         this.needPullText = needPullText;
+        return this;
+    }
+
+    /**
+     * When false, {@link #close()} does not push {@link ConnectionStatusValue#NOT_CONNECTED} to the
+     * global {@link ConnectionStatusLogic#INSTANCE}.  Set this on short-lived scanner probes so they
+     * do not evict the splash-screen auto-connect or any other persistent connection.
+     */
+    public LinkManager setNotifyGlobalStatusOnClose(boolean notify) {
+        this.notifyGlobalStatusOnClose = notify;
         return this;
     }
 
@@ -332,6 +343,11 @@ public class LinkManager implements Closeable {
         return connector == LinkConnector.VOID;
     }
 
+    /** True while a connection is in progress or established (between {@code start()} and {@code close()}). */
+    public boolean isActive() {
+        return isStarted;
+    }
+
     public void send(String command, boolean fireEvent) throws InterruptedException {
         if (this.connector == null)
             throw new NullPointerException("connector");
@@ -353,7 +369,9 @@ public class LinkManager implements Closeable {
 
     @Override
     public void close() {
-        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        if (notifyGlobalStatusOnClose) {
+            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        }
         if (connector != null) {
             connector.stop();
         }

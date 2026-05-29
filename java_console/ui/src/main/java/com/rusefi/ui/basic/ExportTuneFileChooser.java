@@ -1,8 +1,8 @@
 package com.rusefi.ui.basic;
 
-import com.rusefi.ConnectivityContext;
-import com.rusefi.PortResult;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.jobs.ExportTuneJob;
 
 import javax.swing.*;
@@ -19,9 +19,9 @@ public class ExportTuneFileChooser {
     }
 
     public void showFileChooserToExportTuneAction(
-        final PortResult port,
-        final JComponent parent,
-        final ConnectivityContext connectivityContext
+        final BinaryProtocol bp,
+        final LinkManager lm,
+        final JComponent parent
     ) {
         final int selectedOption = tuneToExportFileChooser.showSaveDialog(parent);
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
@@ -32,9 +32,8 @@ public class ExportTuneFileChooser {
                 selectedFile = new File(path);
             }
             saveTuneToExportDefaultDirectory(selectedFile.getParent());
-            // We need to strip .msq for CalibrationsHelper.backUpCalibrationsInfo as it adds extensions
             String baseName = path.substring(0, path.length() - 4);
-            ExportTuneJob.exportTuneFromDevice(port, parent, connectivityContext, baseName, singleAsyncJobExecutor);
+            ExportTuneJob.exportTuneViaLiveConnection(bp, lm, parent, baseName, singleAsyncJobExecutor);
         }
     }
 

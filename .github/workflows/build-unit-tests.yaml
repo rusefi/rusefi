@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    permissions:
+      pull-requests: write
 
     strategy:
       matrix:
@@ -87,12 +89,16 @@ jobs:
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh
 
-    - name: Upload code coverage artifacts
+    - name: Report code coverage
       if: ${{ matrix.os != 'macos-latest' }}
-      uses: actions/upload-artifact@v7
+      uses: ./.github/actions/unit-test-coverage-report
       with:
-        name: rusefi_code_coverage.txt
-        path: ./unit_tests/gcov_working_area/gcov
+        coverage_xml_path: unit_tests/gcov_working_area/gcov/coverage.xml
+        artifact_upload_path: ./unit_tests/gcov_working_area/gcov
+        baseline_workflow_file: build-unit-tests.yaml
+        artifact_name: rusefi_code_coverage.txt
+        is_pull_request: ${{ github.event_name == 'pull_request' }}
+        post_pr_comment: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false }}
 
     - name: upload test coverage to remote server
       if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}

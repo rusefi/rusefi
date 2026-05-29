@@ -49,8 +49,8 @@ CONFIG_FILES = \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/signature_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/generated_fields_api_header.h \
-  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_1_generated.h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_2_generated.h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_3_generated.h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/page_4_generated.h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.cpp \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.md \

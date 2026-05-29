@@ -407,7 +407,7 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
 
     #if HAL_USE_USB_MSD
         // Tell the MMC thread to wake up and mount the card as a USB device
-        onUsbConnectedNotifyMmcI();
+        onUsbConnectedNotifyMmcI(true);
     #endif
 
     chSysUnlockFromISR();
@@ -418,6 +418,10 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
     /* Falls into.*/
   case USB_EVENT_SUSPEND:
     chSysLockFromISR();
+
+    #if HAL_USE_USB_MSD
+      onUsbConnectedNotifyMmcI(false);
+    #endif
 
     /* Disconnection event on suspend.*/
     sduSuspendHookI(&SDU1);

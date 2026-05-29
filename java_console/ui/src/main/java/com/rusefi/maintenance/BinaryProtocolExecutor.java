@@ -5,6 +5,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.fazecast.jSerialComm.SerialPort.getCommPorts;
@@ -36,21 +38,43 @@ public class BinaryProtocolExecutor {
         try (LinkManager linkManager = new LinkManager()
             .setNeedPullText(false)
             .setNeedPullLiveData(true)
+            .setNotifyGlobalStatusOnClose(false)
         ) {
             callbacks.logLine(String.format(msg + ": Connecting to port `%s`...", port));
+
+            final CountDownLatch connectionLatch = new CountDownLatch(1);
+            final AtomicBoolean connectionSuccess = new AtomicBoolean(false);
+
+            linkManager.startAndConnect(port, new ConnectionStatusLogic.Listener() {
+                @Override
+                public void onConnectionStatus(boolean isConnected) {}
+
+                @Override
+                public void onConnectionFailed(String s) {
+                    callbacks.logLine(String.format(msg + ": Connection failed: %s", s));
+                    connectionLatch.countDown();
+                }
+
+                @Override
+                public void onConnectionEstablished() {
+                    connectionSuccess.set(true);
+                    connectionLatch.countDown();
+                }
+            });
+
             try {
-                if (linkManager.connect(port, isScanningForEcu).await(1, TimeUnit.MINUTES)) {
-                    final CountDownLatch latch = new CountDownLatch(1);
+                if (connectionLatch.await(1, TimeUnit.MINUTES) && connectionSuccess.get()) {
+                    final CountDownLatch actionLatch = new CountDownLatch(1);
                     callbacks.logLine(String.format(msg + ": Performing action on port %s...", port));
                     linkManager.execute(() -> {
                         try {
                             executionResult.set(bpAction.doWithBinaryProtocol(linkManager.getBinaryProtocol()));
                         } finally {
-                            latch.countDown();
+                            actionLatch.countDown();
                         }
                     });
                     try {
-                        if (!latch.await(1, TimeUnit.MINUTES)) {
+                        if (!actionLatch.await(1, TimeUnit.MINUTES)) {
                             callbacks.logLine(String.format("Failed perform action on port %s in a minute", port));
                         }
                     } catch (final InterruptedException e) {

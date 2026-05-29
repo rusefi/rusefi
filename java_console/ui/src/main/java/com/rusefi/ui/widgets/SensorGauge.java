@@ -1,6 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.ExpressionEvaluator;
 import com.opensr5.ini.GaugeModel;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -9,6 +10,7 @@ import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.UIContext;
@@ -20,6 +22,8 @@ import eu.hansolo.steelseries.tools.ColorDef;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -98,6 +102,10 @@ public class SensorGauge {
                 gauge.setUnitString("");
             }
             final String[] lastLabels = {null, null}; // [title, units]
+            Set<String> labelsSensors = new HashSet<>();
+            labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getTitle()));
+            labelsSensors.addAll(ExpressionEvaluator.extractVariables(gaugeModel.getUnits()));
+
             responseListener = () ->
                 SwingUtilities.invokeLater(() -> {
                     ISensorHolder.ResolvedGaugeLabels labels = SensorCentral.getInstance().getResolvedLabels(gaugeName);
@@ -118,7 +126,7 @@ public class SensorGauge {
                         }
                     }
                 });
-            SensorCentral.getInstance().addListener(responseListener);
+            SensorCentral.getInstance().addListener(responseListener, new SensorSubscription(labelsSensors.toArray(new String[0])));
         } else {
             responseListener = null;
         }

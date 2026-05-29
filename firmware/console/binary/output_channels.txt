@@ -75,6 +75,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 2
+	uint16_t autoscale VIgn;@@GAUGE_NAME_VIGN@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 2
 
 	uint16_t autoscale oilPressure;@@GAUGE_NAME_OIL_PRESSURE@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	int16_t autoscale vvtPositionB1I;@@GAUGE_NAME_VVT_B1I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1

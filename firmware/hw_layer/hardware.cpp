@@ -80,6 +80,8 @@ std::optional<setup_custom_board_overrides_type> custom_board_BeforeTuneDefaults
 
 std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
 
+std::optional<setup_custom_bool_type> custom_board_getAcrState;
+
 std::optional<setup_custom_board_engine_type_type> custom_board_AfterTuneDefaults;
 std::optional<setup_custom_board_engine_type_type> custom_board_applyUnknownType;
 

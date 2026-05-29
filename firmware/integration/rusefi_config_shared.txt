@@ -98,6 +98,7 @@
 #define GAUGE_NAME_DETECTED_GEAR "Detected Gear"
 #define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
 #define GAUGE_NAME_VBAT "VBatt"
+#define GAUGE_NAME_VIGN "VIgn"
 #define GAUGE_NAME_TIME "Time"
 #define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_CLT "CLT"

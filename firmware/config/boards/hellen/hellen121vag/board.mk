@@ -21,6 +21,8 @@ DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_121VAG
 # this board uses original MCU module before mega-module generation
 LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=H176_ORIGINAL_MCU_LED1_RED
 include $(BOARDS_DIR)/hellen/hellen-common176.mk
+# This is legacy MCU module
+DDEFS += -DHELLEN_BOARD_MCU176=TRUE
 
 DDEFS += -DHW_HELLEN_121_VAG=1
 

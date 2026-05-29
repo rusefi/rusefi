@@ -1,0 +1,60 @@
+name: Custom Board Unit Tests
+
+on:
+  workflow_call:
+    inputs:
+      rusefi_submodule_path:
+        required: false
+        type: string
+        default: ext/rusefi
+      baseline_workflow_file:
+        required: false
+        type: string
+        default: build-unit-tests.yaml
+      board_meta_path:
+        required: false
+        type: string
+        default: meta-info.env
+      is_pull_request:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: recursive
+
+    - name: Install required software
+      run: |
+        sudo bash "${{ inputs.rusefi_submodule_path }}/misc/actions/add-ubuntu-latest-apt-mirrors.sh"
+        sudo bash "${{ inputs.rusefi_submodule_path }}/misc/actions/ubuntu-install-tools.sh"
+        python3 -m pip install --user gcovr
+
+    - name: Build tests
+      working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
+      run: |
+        source ../firmware/config/boards/common_script_read_meta_env.inc "../../../${{ inputs.board_meta_path }}"
+        make -j12 COVERAGE=yes
+
+    - name: Run tests
+      working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
+      run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
+
+    - name: Generate coverage artifacts
+      working-directory: ./${{ inputs.rusefi_submodule_path }}/unit_tests/
+      run: bash ../../../.github/workflows/bin/generate-coverage-artifacts.sh
+
+    - name: Report code coverage
+      uses: rusefi/rusefi/.github/actions/unit-test-coverage-report@master
+      with:
+        coverage_xml_path: ${{ inputs.rusefi_submodule_path }}/unit_tests/gcov_working_area/gcov/coverage.xml
+        artifact_upload_path: ./${{ inputs.rusefi_submodule_path }}/unit_tests/gcov_working_area/gcov
+        baseline_workflow_file: ${{ inputs.baseline_workflow_file }}
+        artifact_name: rusefi_code_coverage.txt
+        is_pull_request: ${{ inputs.is_pull_request }}
+        post_pr_comment: ${{ inputs.is_pull_request }}

@@ -100,6 +100,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	    return trigger_type_e::TT_VVT_MAZDA_SKYACTIV;
 	case VVT_MAZDA_L:
 		return trigger_type_e::TT_VVT_MAZDA_L;
+	case VVT_MITSUBISHI_6G75:
+		return trigger_type_e::TT_VVT_MITSUBISHI_6G75;
 	case VVT_NISSAN_VQ:
 		return trigger_type_e::TT_VVT_NISSAN_VQ35;
 	case VVT_TOYOTA_4_1:
@@ -298,13 +300,36 @@ int Engine::getGlobalConfigurationVersion() const {
 	return globalConfigurationVersion;
 }
 
+#if EFI_UNIT_TEST
 void Engine::reset() {
+	efi::clear((engine_state_s&)engineState);
+	efi::clear((fuel_computer_s&)fuelComputer);
+	efi::clear((ignition_state_s&)ignitionState);
+	efi::clear(sensors);
+ 	efi::clear((output_channels_s&)outputChannels);
+ 	efi::clear(dc_motors);
+ #if EFI_SENT_SUPPORT
+ 	efi::clear(sent_state);
+ #endif
+
 	/**
 	 * it's important for wrapAngle() that engineCycle field never has zero
 	 */
 	engineState.engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	resetLua();
+
+	allowCanTx = true;
+	isPwmEnabled = true;
+	pauseCANdueToSerial = false;
+
+	globalConfigurationVersion = 0;
+	isRunningPwmTest = false;
+	isFunctionalTestMode = false;
+	slowCallBackWasInvoked = false;
+
+	timeToStopIdleTest = 0;
 }
+#endif
 
 void Engine::resetLua() {
 	// todo: https://github.com/rusefi/rusefi/issues/4308

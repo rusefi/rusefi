@@ -60,6 +60,49 @@ public class IniFileReaderTest {
         assertEquals("X", meta.getPageReadCommand(1));
     }
 
+    @Test
+    public void testVeAnalyze() {
+        String string = "  signature      = \"unit test\"\n" +
+                "[VeAnalyze]\n" +
+                "\n" +
+                "\t\t;\ttableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition\n" +
+                "\t\tveAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, egoCorrectionForVeAnalyze, { useLambdaOnInterface }\n" +
+                "\t\tveAnalyzeMap = veTableTbl, afrTableTbl, afrGasolineScale, egoCorrectionForVeAnalyze, { !useLambdaOnInterface }\n" +
+                "\t\tlambdaTargetTables = lambdaTableTbl, afrTSCustom\n" +
+                "\n" +
+                "\t\t; filter =  Name,\t\t\"DisplayName\", outputChannel, operator, defaultVal, userAdjustable\n" +
+                "\t\tfilter = minRPMFilter, \"Minimum RPM\", RPMValue,\t\t\t<\t\t, 500,\t\t, true\n" +
+                "\n" +
+                "\t\tfilter = minCltFilter, \"Minimum CLT\", coolant,\t\t<\t\t, 60,\t\t, true\n";
+
+        RawIniFile lines = fromString(string);
+        IniFileModel model = readLines(lines);
+
+        List<VeAnalyzeMap> maps = model.getVeAnalyzeMaps();
+        assertEquals(2, maps.size());
+        assertEquals("veTableTbl", maps.get(0).getTableName());
+        assertEquals("lambdaTableTbl", maps.get(0).getLambdaTargetTableName());
+        assertEquals("lambdaValue", maps.get(0).getLambdaChannel());
+        assertEquals("egoCorrectionForVeAnalyze", maps.get(0).getEgoCorrectionChannel());
+        assertEquals("{ useLambdaOnInterface }", maps.get(0).getActiveCondition());
+
+        assertEquals("afrTableTbl", maps.get(1).getLambdaTargetTableName());
+
+        List<String> lambdaTables = model.getLambdaTargetTables();
+        assertEquals(2, lambdaTables.size());
+        assertEquals("lambdaTableTbl", lambdaTables.get(0));
+        assertEquals("afrTSCustom", lambdaTables.get(1));
+
+        List<VeAnalyzeFilter> filters = model.getVeAnalyzeFilters();
+        assertEquals(2, filters.size());
+        assertEquals("minRPMFilter", filters.get(0).getName());
+        assertEquals("Minimum RPM", filters.get(0).getDisplayName());
+        assertEquals("RPMValue", filters.get(0).getOutputChannel());
+        assertEquals("<", filters.get(0).getOperator());
+        assertEquals(500.0, filters.get(0).getDefaultValue());
+        assertTrue(filters.get(0).isUserAdjustable());
+    }
+
     @NotNull
     private RawIniFile fromString(String string) {
         return IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
@@ -797,6 +840,147 @@ public class IniFileReaderTest {
         assertEquals("black", indicator.getOffFg());
         assertEquals("green", indicator.getOnBg());
         assertEquals("black", indicator.getOnFg());
+    }
+
+    @Test
+    public void testEventTriggersEmpty() {
+        String string = "[EventTriggers]\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertTrue(model.getEventTriggers().isEmpty());
+    }
+
+    @Test
+    public void testEventTriggersSingleEntry() {
+        String string =
+            "[EventTriggers]\n" +
+            "triggeredPageRefresh = 1, { triggerPageRefreshFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(1, triggers.get(0).getPage());
+        assertEquals("{ triggerPageRefreshFlag }", triggers.get(0).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersMultipleEntries() {
+        String string =
+            "[EventTriggers]\n" +
+            "  triggeredPageRefresh = 1, { triggerPageRefreshFlag }\n" +
+            "  triggeredPageRefresh = 3, { ltftPageRefreshFlag }\n" +
+            "  triggeredPageRefresh = 4, { triggerPageRefreshFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(3, triggers.size());
+
+        assertEquals(1, triggers.get(0).getPage());
+        assertEquals("{ triggerPageRefreshFlag }", triggers.get(0).getExpression());
+
+        assertEquals(3, triggers.get(1).getPage());
+        assertEquals("{ ltftPageRefreshFlag }", triggers.get(1).getExpression());
+
+        assertEquals(4, triggers.get(2).getPage());
+        assertEquals("{ triggerPageRefreshFlag }", triggers.get(2).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersTooFewTokensIgnored() {
+        String string =
+            "[EventTriggers]\n" +
+            "triggeredPageRefresh = 1\n" +       // only 2 tokens — ignored
+            "triggeredPageRefresh\n" +            // only 1 token — ignored
+            "triggeredPageRefresh = 2, { validFlag }\n"; // valid
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(2, triggers.get(0).getPage());
+    }
+
+    @Test
+    public void testEventTriggersUnknownKeywordIgnored() {
+        String string =
+            "[EventTriggers]\n" +
+            "unknownDirective = 1, { someFlag }\n" +
+            "triggeredPageRefresh = 5, { myFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(5, triggers.get(0).getPage());
+        assertEquals("{ myFlag }", triggers.get(0).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersInvalidPageIgnored() {
+        String string =
+            "[EventTriggers]\n" +
+            "triggeredPageRefresh = notANumber, { someFlag }\n" +
+            "triggeredPageRefresh = 2, { validFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(2, triggers.get(0).getPage());
+    }
+
+    @Test
+    public void testEventTriggersSectionCaseInsensitive() {
+        String string =
+            "[eventtriggers]\n" +
+            "TRIGGEREDPAGEREFRESH = 7, { myChannelFlag }\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(7, triggers.get(0).getPage());
+        assertEquals("{ myChannelFlag }", triggers.get(0).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersMultiTokenExpressionJoined() {
+        // When the expression is split across multiple comma-separated tokens,
+        // handleEventTrigger re-joins them with ", ".
+        String string =
+            "[EventTriggers]\n" +
+            "triggeredPageRefresh = 1, flagA, flagB, flagC\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        List<EventTriggerModel> triggers = model.getEventTriggers();
+        assertEquals(1, triggers.size());
+        assertEquals(1, triggers.get(0).getPage());
+        assertEquals("flagA, flagB, flagC", triggers.get(0).getExpression());
+    }
+
+    @Test
+    public void testEventTriggersAbsentWhenSectionMissing() {
+        // When [EventTriggers] section is absent entirely, the list must be empty.
+        String string =
+            "[FrontPage]\n" +
+            "indicator = { coolant > 90 }, \"Cold\", \"Warm\"\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        assertTrue(model.getEventTriggers().isEmpty());
     }
 
 }

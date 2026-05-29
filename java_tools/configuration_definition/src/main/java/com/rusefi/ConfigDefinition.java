@@ -188,9 +188,10 @@ public class ConfigDefinition {
             }
         }
 
-        FieldsApiGenerator.run();
-        handlePage(state, 1, softPrePrependsFileNames, usedNames);
+        FieldsApiGenerator.run(ConfigDefinitionRootOutputFolder.getValue() + "controllers/generated/generated_fields_api_header.h");
+        System.out.println("FieldsApiGenerator: Result written to " + ConfigDefinitionRootOutputFolder.getValue() + "controllers/generated/generated_fields_api_header.h");
         handlePage(state, 2, softPrePrependsFileNames, usedNames);
+        handlePage(state, 3, softPrePrependsFileNames, usedNames);
         handlePage(state, 4, softPrePrependsFileNames, usedNames);
 
         if (tsInputFileFolder != null) {
@@ -225,7 +226,7 @@ public class ConfigDefinition {
     private static void handlePage(ReaderStateImpl parentState, int pageIndex, List<String> softPrepends, TreeSet<String> usedNames) throws IOException {
         PlainConfigHandler page = new PlainConfigHandler("integration/config_page_" + pageIndex + ".txt", pageIndex, softPrepends, usedNames);
         page.doJob();
-        // PAGE_CONTENT_1 is handled here!
+        // PAGE_CONTENT_N is handled here!
         parentState.getVariableRegistry().put("PAGE_CONTENT_" + pageIndex, page.tsProjectConsumer.getContent());
         parentState.getVariableRegistry().register("PAGE_SIZE_" + pageIndex, Integer.toString(page.tsProjectConsumer.getTotalSize()));
     }

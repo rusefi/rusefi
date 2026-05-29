@@ -3,7 +3,6 @@ package com.rusefi.ui.mocked;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.*;
 import com.opensr5.ini.field.ArrayIniField;
-import com.opensr5.ini.field.IniField;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
@@ -24,13 +23,14 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Collections.singletonList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 public class TableTracerSandboxMocked {
 
@@ -73,7 +73,7 @@ public class TableTracerSandboxMocked {
     }
 
     public void start() {
-        IniFileModel stubModel = new StubTableIniModel();
+        IniFileModel stubModel = createTableIniModelMock();
         ConfigurationImage stubImage = new ConfigurationImage(getData());
 
         AbstractIoStream tsStream = new AbstractIoStream() {
@@ -173,35 +173,36 @@ public class TableTracerSandboxMocked {
         return buffer;
     }
 
-    static class StubTableIniModel extends StubIniFileModel {
-        @Override
-        public List<MenuModel> getMenus() {
-            MenuModel menu = new MenuModel("Engine");
-            menu.getItems().add(new SubMenuModel(VE_TABLE_ID, VE_TABLE_NAME));
-            return singletonList(menu);
-        }
+    /**
+     * Builds a Mockito-based {@link IniFileModel} that exposes a single VE table with
+     * RPM/load axes, plus a navigation menu pointing to it. Replaces the previous
+     * hand-written {@code StubTableIniModel extends StubIniFileModel}.
+     */
+    private static IniFileModel createTableIniModelMock() {
+        IniFileModel m = IniFileModelMocks.empty();
 
-        @Override
-        public TableModel getTable(String name) {
+        MenuModel menu = new MenuModel("Engine");
+        menu.getItems().add(new SubMenuModel(VE_TABLE_ID, VE_TABLE_NAME));
+        when(m.getMenus()).thenReturn(singletonList(menu));
+
+        when(m.getTable(anyString())).thenAnswer(inv -> {
+            String name = inv.getArgument(0);
             return new TableModel(
                     name, name + "_3d", VE_TABLE_TITLE, "Help",
                     "RPM", "Load", RPM_BINS_KEY, null, false,
                     LOAD_BINS_KEY, null, false, VE_ENTRIES_KEY,
                     "Up", "Down", 10.0, "normal"
             );
-        }
+        });
 
-        @Override
-        public Optional<IniField> findIniField(String key) {
-            // Memory types are FLOAT (4 bytes) even if stored as Double in UI
-            if (RPM_BINS_KEY.equals(key)) {
-                return Optional.of(new ArrayIniField(key, RPM_BINS_OFFSET, FieldType.FLOAT, TABLE_DIM, 1, "RPM", 1.0, "0", "8000", "0"));
-            } else if (LOAD_BINS_KEY.equals(key)) {
-                return Optional.of(new ArrayIniField(key, LOAD_BINS_OFFSET, FieldType.FLOAT, 1, TABLE_DIM, "kPa", 1.0, "0", "300", "0"));
-            } else if (VE_ENTRIES_KEY.equals(key)) {
-                return Optional.of(new ArrayIniField(key, VE_TABLE_OFFSET, FieldType.FLOAT, TABLE_DIM, TABLE_DIM, "%", 1.0, "0", "100", "1"));
-            }
-            return Optional.empty();
-        }
+        // Memory types are FLOAT (4 bytes) even if stored as Double in UI
+        when(m.findIniField(RPM_BINS_KEY)).thenReturn(Optional.of(
+                new ArrayIniField(RPM_BINS_KEY, RPM_BINS_OFFSET, FieldType.FLOAT, TABLE_DIM, 1, "RPM", 1.0, "0", "8000", "0")));
+        when(m.findIniField(LOAD_BINS_KEY)).thenReturn(Optional.of(
+                new ArrayIniField(LOAD_BINS_KEY, LOAD_BINS_OFFSET, FieldType.FLOAT, 1, TABLE_DIM, "kPa", 1.0, "0", "300", "0")));
+        when(m.findIniField(VE_ENTRIES_KEY)).thenReturn(Optional.of(
+                new ArrayIniField(VE_ENTRIES_KEY, VE_TABLE_OFFSET, FieldType.FLOAT, TABLE_DIM, TABLE_DIM, "%", 1.0, "0", "100", "1")));
+
+        return m;
     }
 }

@@ -1,8 +1,9 @@
 package com.rusefi.ui.basic;
 
 import com.rusefi.ConnectivityContext;
-import com.rusefi.PortResult;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
 
 import javax.swing.*;
@@ -20,7 +21,8 @@ public class ImportTuneFileChooser {
     }
 
     public void showFileChooserToImportTuneAction(
-        final PortResult port,
+        final BinaryProtocol bp,
+        final LinkManager lm,
         final JComponent parent,
         final ConnectivityContext connectivityContext
     ) {
@@ -28,8 +30,20 @@ public class ImportTuneFileChooser {
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             final File selectedFile = tuneToImportFileChooser.getSelectedFile();
             saveTuneToImportDefaultDirectory(selectedFile.getParent());
-            String tuneFileName = selectedFile.getAbsolutePath();
-            ImportTuneJob.importTuneIntoDevice(port, parent, connectivityContext, tuneFileName, singleAsyncJobExecutor);
+            ImportTuneJob.importTuneIntoDeviceViaLiveConnection(bp, lm, parent, connectivityContext, selectedFile.getAbsolutePath(), singleAsyncJobExecutor);
+        }
+    }
+
+    public void showFileChooserToImportTuneAction(
+        final LinkManager lm,
+        final JComponent parent,
+        final ConnectivityContext connectivityContext
+    ) {
+        final int selectedOption = tuneToImportFileChooser.showOpenDialog(parent);
+        if (selectedOption == JFileChooser.APPROVE_OPTION) {
+            final File selectedFile = tuneToImportFileChooser.getSelectedFile();
+            saveTuneToImportDefaultDirectory(selectedFile.getParent());
+            ImportTuneJob.importTuneIntoDeviceViaLiveConnection(lm, parent, connectivityContext, selectedFile.getAbsolutePath(), singleAsyncJobExecutor);
         }
     }
 

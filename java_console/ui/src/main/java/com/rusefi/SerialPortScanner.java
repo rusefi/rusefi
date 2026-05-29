@@ -64,6 +64,10 @@ public enum SerialPortScanner {
             startTimer();
     }
 
+    // Number of ECU-detection attempts before giving up and labelling a port Unknown.
+    // A freshly rebooted or reconnected ECU may not respond on the first try.
+    private static final int DETECT_MAX_ATTEMPTS = 3;
+
     private static PortResult inspectPort(String serialPort) {
         log.info("Determining type of serial port: " + serialPort);
 
@@ -71,24 +75,34 @@ public enum SerialPortScanner {
         log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
         if (isOpenblt) {
             return new PortResult(serialPort, SerialPortType.OpenBlt);
-        } else {
-            // See if this looks like an ECU
+        }
+
+        for (int attempt = 1; attempt <= DETECT_MAX_ATTEMPTS; attempt++) {
             final Optional<CalibrationsInfo> ecuCalibrations = getEcuCalibrations(serialPort);
             final boolean isEcu = ecuCalibrations.isPresent();
-            log.info("Port " + serialPort + (isEcu ? " looks like" : " does not look like") + " an ECU");
+            log.info("Port " + serialPort + " ECU detection attempt " + attempt + "/" + DETECT_MAX_ATTEMPTS
+                + ": " + (isEcu ? "found" : "not found"));
             if (isEcu) {
-                final boolean ecuHasOpenblt = ecuHasOpenblt(serialPort);
-                log.info("ECU at " + serialPort + (ecuHasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
+                final boolean hasOpenblt = ecuHasOpenblt(serialPort);
+                log.info("ECU at " + serialPort + (hasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
                 return new PortResult(
                     serialPort,
-                    ecuHasOpenblt ? SerialPortType.EcuWithOpenblt : SerialPortType.Ecu,
+                    hasOpenblt ? SerialPortType.EcuWithOpenblt : SerialPortType.Ecu,
                     ecuCalibrations.get()
                 );
-            } else {
-                // Dunno what this is, leave it in the list anyway
-                return new PortResult(serialPort, SerialPortType.Unknown);
+            }
+            if (attempt < DETECT_MAX_ATTEMPTS) {
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
             }
         }
+
+        log.info("Port " + serialPort + " does not look like an ECU after " + DETECT_MAX_ATTEMPTS + " attempts");
+        return new PortResult(serialPort, SerialPortType.Unknown);
     }
 
     private static List<PortResult> inspectPorts(final List<String> ports) {
@@ -188,9 +202,12 @@ public enum SerialPortScanner {
 
         for (PortResult p : inspectPorts(portsToInspect)) {
             log.info("Port " + p.port + " detected as: " + p.type.friendlyString);
-
             ports.add(p);
-            portCache.put(p);
+            // Do not cache Unknown — keep the port uninspected so the next scan cycle retries
+            // detection automatically without waiting for the port to disappear and reappear.
+            if (p.type != SerialPortType.Unknown) {
+                portCache.put(p);
+            }
         }
 
         final Collection<String> tcpPorts = includeSlowLookup
@@ -213,7 +230,7 @@ public enum SerialPortScanner {
                     final Optional<CalibrationsInfo> tcpCalibrations = getEcuCalibrations(tcpPort);
                     final PortResult tcpResult = tcpCalibrations
                         .map(c -> new PortResult(tcpPort, SerialPortType.Ecu, c))
-                        .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Ecu));
+                        .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Unknown));
                     ports.add(tcpResult);
 
                     // cache port + calibrations

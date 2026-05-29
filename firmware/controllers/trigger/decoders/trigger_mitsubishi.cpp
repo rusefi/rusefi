@@ -90,58 +90,66 @@ void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
 void initialize36_2_1_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 90;
-	int totalTeethCount = 36;
 
-	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
-	float toothWidth = 0.5;
+  const float WIDE_TOOTH_WIDTH  = 8.5;
+  const float WIDE_TOOTH_OFFSET = 6.5;
+  const float TOOTH_WIDTH = 5.0;
+  const float GAP_WIDTH   = 5.0;
 
-	float oneTooth = 720 / totalTeethCount;
+  float offset = WIDE_TOOTH_WIDTH;
 
-	float offset = (36 - 11 - 12 - 11) * oneTooth;
+  // First tooth after the gap is wide
+  // we can't have an event at 0, so we wrap the first rise event around to the end of the cycle
+  s->addEvent360(offset, TriggerValue::FALL);
+  offset += GAP_WIDTH;
 
-	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
-			NO_LEFT_FILTER, offset + 11 * oneTooth + 1);
+  // Then we have 10 regular teeth
+  for (int i = 0; i < 10; i++) {
+    s->addEvent360(offset, TriggerValue::RISE);
+    s->addEvent360(offset + TOOTH_WIDTH, TriggerValue::FALL);
+    offset += TOOTH_WIDTH + GAP_WIDTH;
+  }
 
-	offset += (11 + 1) * oneTooth;
+  // Then a gap followed by a wide tooth
+  offset += WIDE_TOOTH_OFFSET;
+  s->addEvent360(offset, TriggerValue::RISE);
+  offset += WIDE_TOOTH_WIDTH;
+  s->addEvent360(offset, TriggerValue::FALL);
+  offset += GAP_WIDTH;
 
-	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
-			NO_LEFT_FILTER, offset + 11 * oneTooth + 1);
+  for (int i = 0; i < 10; i++) {
+    s->addEvent360(offset, TriggerValue::RISE);
+    s->addEvent360(offset + TOOTH_WIDTH, TriggerValue::FALL);
+    offset += TOOTH_WIDTH + GAP_WIDTH;
+  }
 
+  // Then another gap followed by a wide tooth
+  offset += WIDE_TOOTH_OFFSET;
+  s->addEvent360(offset, TriggerValue::RISE);
+  offset += WIDE_TOOTH_WIDTH;
+  s->addEvent360(offset, TriggerValue::FALL);
+  offset += GAP_WIDTH;
 
-	offset += (11 + 1) * oneTooth;
+  for (int i = 0; i < 9; i++) {
+    s->addEvent360(offset, TriggerValue::RISE);
+    s->addEvent360(offset + TOOTH_WIDTH, TriggerValue::FALL);
+    offset += TOOTH_WIDTH + GAP_WIDTH;
+  }
 
-	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
-			NO_LEFT_FILTER, offset + 10 * oneTooth + 1);
+  offset += TOOTH_WIDTH + GAP_WIDTH + WIDE_TOOTH_OFFSET; // gap before the last tooth
+  // Finally, the last tooth is wide and we wrap it around to the beginning of the cycle
+  // offset should be exactly 360 at this point
+  s->addEvent360(offset, TriggerValue::RISE);
 
-	s->setTriggerSynchronizationGap(3);
-	s->setSecondTriggerSynchronizationGap(1); // redundancy
+  // Looking at real captures:
+  // wide gap normal   1.0 - 2.6 - 0.5
+  // wide gap crank    1.0 - 1.7 - 0.4
+  // narrow gap normal 1.0 - 1.65- 0.8
+  // narrow gap crank  0.8 - 1.0 - 0.7
 
-	// TODO: gaps above are not correct!
-//	The 36-2-1-1 shape consists of 36 teeth with 3 missing, arranged as groups of 11, 11, and 10 normal teeth
-//	separated by single-tooth gaps plus one 2-tooth gap, and the current sync uses simple gap settings that
-//	need to be replaced with explicit indices around 11-12-13 with normal teeth in between.
-//	The pattern per 720° is a 2-tooth gap followed by 11 teeth, a 1-tooth gap, 11 teeth, another 1-tooth gap,
-//	10 teeth, then back to the big gap.
-
-	// should be something like below
-
-	// Gap ratio sequence looking back from the 2-tooth gap (tooth 31) sync point:
-		// index 0: the 2-tooth gap, ratio 3.0
-//		s->setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 4.0);
-	// indices 1-8: normal teeth, ratio 1.0
-	for (int i = 1; i <= 8; i++) {
-//		s->setTriggerSynchronizationGap3(/*gapIndex*/i, /*from*/0.5, 1.5);
-	}
-	// index 9: first tooth after single-tooth gap, ratio 0.5
-//	s->setTriggerSynchronizationGap3(/*gapIndex*/9, /*from*/0.2, 0.8);
-	// index 10: single-tooth gap, ratio 2.0
-//	s->setTriggerSynchronizationGap3(/*gapIndex*/10, /*from*/1.3, 2.8);
-	// indices 11-13: normal teeth, ratio 1.0
-	for (int i = 11; i <= 13; i++) {
-//		s->setTriggerSynchronizationGap3(/*gapIndex*/i, /*from*/0.5, 1.5);
-	}
-
-
+  s->setTriggerSynchronizationGap3(0, 0.3, 0.6);
+  s->setTriggerSynchronizationGap3(1, 1.7, 3.6);
+  s->setTriggerSynchronizationGap3(2, 0.8, 1.2);
 }
 
 // Mitsubishi 4B11
@@ -172,46 +180,34 @@ void initialize36_2_1(TriggerWaveform *s) {
 }
 
 void initializeVvt3A92(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
-
-	int w = 5;
-	s->addToothRiseFall(120, w);
-
-	s->addToothRiseFall(12 + 120, w);
-
-	s->addToothRiseFall(240, w);
-
-	s->addToothRiseFall(360, w);
+	static const angle_t angles[] = { 120, 132, 240, 360 };
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles), FOUR_STROKE_CRANK_SENSOR);
 
 	s->setTriggerSynchronizationGap(9);
 	s->setSecondTriggerSynchronizationGap(0.11); // redundancy
 }
 
 void initializeMitsubishi4G69Cam(TriggerWaveform *s) {
-    s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-
-    int tooth = 5;
-
-    int extraTooth = 20;
-
-	s->addEvent360( 90 - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360( 90, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(180 - extraTooth - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(180 - extraTooth, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(180 - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(270 - extraTooth - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(270 - extraTooth, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(270 - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(270, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	s->addEvent360(360 - tooth, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	static const angle_t angles[] = { 90, 160, 180, 250, 270, 360 };
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
 
     s->setTriggerSynchronizationGap(1);
    	s->setSecondTriggerSynchronizationGap(4.5);
+}
+
+void initializeMitsubishi6G75Cam(TriggerWaveform *s) {
+	// tooth/gap info: (75, 45, 60, 22.5, 75, 22.5, 60)
+	static const angle_t angles[] = {
+		75,
+		75 + 45,
+		75 + 45 + 60,
+		75 + 45 + 60 + 22.5,
+		75 + 45 + 60 + 22.5 + 75,
+		75 + 45 + 60 + 22.5 + 75 + 22.5,
+		75 + 45 + 60 + 22.5 + 75 + 22.5 + 60
+	};
+
+	initializeRiseOnlyTrigger(s, 5, angles, efi::size(angles));
+
+	s->setTriggerSynchronizationGap(2.66);
 }

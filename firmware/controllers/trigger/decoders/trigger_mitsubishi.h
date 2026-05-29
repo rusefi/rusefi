@@ -21,3 +21,4 @@ void initialize36_2_1(TriggerWaveform *s);
 void initializeVvt6G72(TriggerWaveform *s);
 void initializeVvt3A92(TriggerWaveform *s);
 void initializeMitsubishi4G69Cam(TriggerWaveform *s);
+void initializeMitsubishi6G75Cam(TriggerWaveform *s);

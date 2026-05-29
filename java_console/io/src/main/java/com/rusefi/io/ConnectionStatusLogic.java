@@ -22,8 +22,9 @@ public class ConnectionStatusLogic {
             r.run();
         } else {
             addListener(isConnected -> {
-                if (getValue() == ConnectionStatusValue.CONNECTED)
+                if (getValue() == ConnectionStatusValue.CONNECTED) {
                     r.run();
+                }
             });
         }
     }
@@ -37,23 +38,27 @@ public class ConnectionStatusLogic {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (message.startsWith(Integration.CRITICAL_PREFIX))
+                if (message.startsWith(Integration.CRITICAL_PREFIX)) {
                     markConnected();
+                }
             }
         });
     }
 
     public void markConnected() {
-        if (value == ConnectionStatusValue.NOT_CONNECTED)
+        if (value == ConnectionStatusValue.NOT_CONNECTED) {
             setValue(ConnectionStatusValue.LOADING);
+        }
     }
 
     public void setValue(@NotNull ConnectionStatusValue value) {
-        if (value == this.value)
+        if (value == this.value) {
             return;
+        }
         this.value = value;
-        for (Listener listener : listeners)
+        for (Listener listener : listeners) {
             listener.onConnectionStatus(isConnected());
+        }
     }
 
     public boolean isConnected() {

@@ -385,6 +385,9 @@ runs:
         : Add Config to Commit
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq" 6
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/**/*.h" 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/**/*generated*.h" 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/**/*generated*.cpp" 4
+        ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/controllers/lua/generated/*.md"
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*ini" 4
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/tunerstudio/generated/*txt" 4
         : # TODO handle extra headers but only if those exist

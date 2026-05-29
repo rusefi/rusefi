@@ -2,8 +2,8 @@
 DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/integration/rusefi_config.txt \
   $(PROJECT_DIR)/integration/rusefi_config_shared.txt \
-  $(PROJECT_DIR)/integration/config_page_1.txt \
   $(PROJECT_DIR)/integration/config_page_2.txt \
+  $(PROJECT_DIR)/integration/config_page_3.txt \
   $(PROJECT_DIR)/integration/config_page_4.txt \
   $(PROJECT_DIR)/console/binary/output_channels.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/knock_controller.txt \
@@ -84,6 +84,9 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
   DOCS_ENUMS_INPUTS += $(BOARD_DIR)/board_config.txt
 endif
 
+#
+# java code generators use LazyFile to avoid unneeded file updates so that we have incremental builds
+#
 .docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE_JAR) $(ENUM_TO_STRING_JAR)
 	bash $(PROJECT_DIR)/bin/detect_github.sh
 	bash $(PROJECT_DIR)/gen_live_documentation.sh

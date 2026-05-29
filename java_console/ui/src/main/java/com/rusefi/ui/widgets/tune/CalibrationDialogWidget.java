@@ -16,6 +16,8 @@ import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.SensorGauge;
 import eu.hansolo.steelseries.gauges.Radial;
@@ -30,6 +32,7 @@ import com.devexperts.logging.Logging;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -119,6 +122,24 @@ public class CalibrationDialogWidget {
         SensorCentral.getInstance().addListener(() -> {
             if (!readoutEntries.isEmpty() || !gaugeReadoutEntries.isEmpty()) {
                 SwingUtilities.invokeLater(this::refreshReadouts);
+            }
+        }, new SensorSubscription() {
+            @Override
+            public boolean isInterestedInAny(Set<String> updatedSensors) {
+                if (readoutEntries.isEmpty() && gaugeReadoutEntries.isEmpty()) {
+                    return false;
+                }
+                for (ReadoutLabelEntry entry : readoutEntries) {
+                    if (updatedSensors.contains(entry.channel.toLowerCase())) return true;
+                }
+                for (GaugeReadoutEntry entry : gaugeReadoutEntries) {
+                    if (updatedSensors.contains(entry.channel.toLowerCase())) return true;
+                    // Also interested if ANY sensor updated if we have expression labels,
+                    // because we don't know which sensors are in the expression without parsing it again.
+                    // But we could parse it once. For now, let's be safe.
+                    if (entry.hasExpressionLabels) return true;
+                }
+                return false;
             }
         });
     }
@@ -252,7 +273,9 @@ public class CalibrationDialogWidget {
                     renderField(container, entry.getAs(DialogModel.Field.class), iniFileModel, ci);
                     break;
                 case COMMAND:
-                    container.add(CalibrationFieldFactory.createCommandRow(entry.getAs(DialogModel.Command.class)));
+                    container.add(CalibrationFieldFactory.createCommandRow(
+                        entry.getAs(DialogModel.Command.class),
+                        buildCommandExecutor(entry.getAs(DialogModel.Command.class).getCommand())));
                     break;
                 case INDICATOR:
                     pendingIndicators.add(entry.getAs(IndicatorModel.class));
@@ -561,6 +584,57 @@ public class CalibrationDialogWidget {
                 setComponentsEnabled((Container) comp, enabled);
             }
         }
+    }
+
+    /**
+     * Returns a Runnable that, when invoked on the EDT, looks up the command's binary payload in
+     * {@code [ControllerCommands]}, decodes {@code \xNN} escapes, and submits it to the ECU on the
+     * IO thread. Falls back to TS_EXECUTE text if the command is not found in the table.
+     */
+    private Runnable buildCommandExecutor(String commandName) {
+        return () -> {
+            BinaryProtocol bp = uiContext.getBinaryProtocol();
+            if (bp == null) {
+                return;
+            }
+            IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+            String payloadStr = ini != null ? ini.getControllerCommands().get(commandName) : null;
+            if (payloadStr != null) {
+                byte[] raw = decodeIniCommandBytes(payloadStr);
+                if (raw.length < 1) {
+                    log.warn("Empty payload for command: " + commandName);
+                    return;
+                }
+                char opcode = (char) (raw[0] & 0xFF);
+                byte[] payload = new byte[raw.length - 1];
+                System.arraycopy(raw, 1, payload, 0, payload.length);
+                uiContext.getLinkManager().submit(() ->
+                    bp.executeCommand(opcode, payload, commandName)
+                );
+            } else {
+                log.warn("Command not found in [ControllerCommands]: " + commandName);
+            }
+        };
+    }
+
+    /**
+     * Decodes an INI binary string such as {@code Z\x00\x13\x00\x01} into bytes.
+     * Each {@code \xNN} sequence becomes one byte; other characters are taken as-is.
+     */
+    static byte[] decodeIniCommandBytes(String s) {
+        byte[] buf = new byte[s.length()];
+        int out = 0;
+        int i = 0;
+        while (i < s.length()) {
+            if (i + 3 < s.length() && s.charAt(i) == '\\' && s.charAt(i + 1) == 'x') {
+                buf[out++] = (byte) Integer.parseInt(s.substring(i + 2, i + 4), 16);
+                i += 4;
+            } else {
+                buf[out++] = (byte) s.charAt(i);
+                i++;
+            }
+        }
+        return Arrays.copyOf(buf, out);
     }
 
     public JPanel getContentPane() {

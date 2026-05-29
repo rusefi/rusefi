@@ -1,4 +1,5 @@
 TESTS_SRC_CPP = \
+	tests/test_scoped_logs.cpp \
 	tests/ltft_sandbox.cpp \
 	tests/log_replay_sandbox.cpp \
 	tests/trigger/test_all_triggers.cpp \
@@ -17,6 +18,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_trigger_skipped_wheel.cpp \
 	tests/trigger/test_real_arctic_cat.cpp \
 	tests/trigger/test_real_bosch_quick_start.cpp \
+	tests/trigger/test_real_chrysler_phaser.cpp \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
@@ -45,6 +47,8 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_override_gaps.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
 	tests/trigger/test_instant_rpm.cpp \
+	tests/trigger/test_teeth_to_logicdata.cpp \
+	tests/trigger/test_logicdata_to_csv.cpp \
 	tests/sent/test_sent.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
@@ -167,7 +171,11 @@ TESTS_SRC_CPP = \
 	tests/test_hpfp_integrated.cpp \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
+	tests/test_tooth_logger.cpp \
+	test-framework/csv2logicdata.cpp \
+	test-framework/logicdata2csv.cpp \
 	tests/binary_log/test_bit_logger_field.cpp \
+	tests/binary_log/test_log_file_content.cpp \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \

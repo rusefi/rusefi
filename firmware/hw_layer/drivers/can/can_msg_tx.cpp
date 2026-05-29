@@ -31,8 +31,8 @@ bool verboseCanTxError = false;
 };
 
 /*static*/ void CanTxMessage::setDevice(size_t idx, CANDriver* device) {
-	if (idx > efi::size(s_devices)) {
-		criticalError("Attemp to install CAN%d bus!", idx + 1);
+	if (idx >= efi::size(s_devices)) {
+		criticalError("Cannot install CAN%d bus!", idx + 1);
 		return;
 	}
 	s_devices[idx] = device;

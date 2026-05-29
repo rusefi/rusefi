@@ -262,7 +262,7 @@ enum class trigger_type_e : uint32_t {
 	// we assume this is NOT ready/NOT working? https://github.com/rusefi/rusefi/pull/9262
 	TT_SUZUKI_G16B = 95,
 	TT_VIPER_V10_CRANK = 96,
-	TT_UNUSED_97 = 97,
+	TT_VVT_MITSUBISHI_6G75 = 97,
 	TT_UNUSED_98 = 98,
 
 	// TL,DR https://github.com/rusefi/rusefi/commit/523805138589585cc8889d6afd9305d120180902 example of new trigger commit

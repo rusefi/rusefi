@@ -64,6 +64,7 @@
 #endif
 
 #include "board_overrides.h"
+#include "extra_flash_pages.h"
 
 #define TS_DEFAULT_SPEED 38400
 
@@ -118,18 +119,6 @@ void onBurnRequest() {
 	wipeStrings();
 
 	incrementGlobalConfigurationVersion("burn");
-}
-
-/**
- * this hook is about https://wiki.rusefi.com/Custom-Firmware and https://wiki.rusefi.com/Canned-Tune-Process
- * todo: why two hooks? is one already dead?
- */
-void boardBeforeTuneDefaults() {
-  // placeholder
-}
-
-void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) {
-  // placeholder
 }
 
 /**
@@ -497,6 +486,9 @@ static void setDefaultEngineConfiguration() {
 	// wow unit tests have much cooler setDefaultLaunchParameters method
 	engineConfiguration->launchRpm = 3000;
 // 	engineConfiguration->launchTimingRetard = 10;
+
+  engineConfiguration->launchTpsThreshold = MIN_launchTpsThreshold;
+
 	engineConfiguration->launchRpmWindow = 500;
     engineConfiguration->launchSpeedThreshold = 30;
 
@@ -671,6 +663,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * Let's apply global defaults first
 	 */
 	setDefaultEngineConfiguration();
+
+	// defaults on another configuration page/s:
+	resetExtraPages();
 
 	/**
 	 * custom board engine defaults. Yes, this overlaps with (older) engine_type_e approach.

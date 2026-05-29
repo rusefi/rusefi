@@ -18,5 +18,7 @@ void setCanVss(int type);
 void stopCanPins();
 void startCanPins();
 bool getIsCanEnabled(void);
+int setCanBaud(size_t index, can_baudrate_e rate);
+int setCanBaud(size_t index, int baud);
 
 #endif /* EFI_CAN_SUPPORT */

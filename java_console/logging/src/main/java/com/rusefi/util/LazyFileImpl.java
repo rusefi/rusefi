@@ -27,7 +27,6 @@ public class LazyFileImpl implements LazyFile {
     private final String patchfile;
 
     private final StringBuffer content = new StringBuffer();
-    private final StringBuffer contentWithoutTag = new StringBuffer();
 
     public LazyFileImpl(String filename) {
         this(filename, null);
@@ -41,17 +40,25 @@ public class LazyFileImpl implements LazyFile {
     @Override
     public void write(String line) {
         content.append(line);
-        String[] lines = line.split("\\r?\\n");
-        for (String subLine : lines) {
+    }
+
+    private static String removeTags(String content) {
+        StringBuilder sb = new StringBuilder();
+        String[] lines = content.split("\\r?\\n", -1);
+        for (int i = 0; i < lines.length; i++) {
+            String subLine = lines[i];
             if (!subLine.toLowerCase().contains(LazyFile.LAZY_FILE_TAG_LOWER)) {
-                contentWithoutTag.append(subLine + "\n");
+                sb.append(subLine);
+                if (i < lines.length - 1) {
+                    sb.append("\n");
+                }
             }
         }
+        return sb.toString();
     }
 
     public static String unifySpaces(String line) {
-        line = line.replace("\r", "");
-        return line.replaceAll("\n[\n]+", "\n");
+        return line.replace("\r", "");
     }
 
     @Override
@@ -59,10 +66,10 @@ public class LazyFileImpl implements LazyFile {
         if (LazyFile.TEST.equals(filename))
             return;
         String fileContent = unifySpaces(readCurrentContent(filename));
-        String newContent = unifySpaces(contentWithoutTag.toString());
+        String newContent = unifySpaces(removeTags(content.toString()));
 
         if (fileContent.equals(newContent)) {
-            log.info(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content, new content size=" + contentWithoutTag.length());
+            log.info(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content, new content size=" + content.length());
             return;
         }
         for (int i = 0; i < Math.min(fileContent.length(), newContent.length()); i++) {
@@ -106,19 +113,6 @@ public class LazyFileImpl implements LazyFile {
             log.info(filename + " does not exist considering empty current content");
             return "";
         }
-        Scanner in = new Scanner(Paths.get(filename), LazyFile.CHARSET.name());
-        Pattern pat = Pattern.compile(".*\\R|.+\\z");
-        String line;
-        StringBuilder sb = new StringBuilder();
-        while ((line = in.findWithinHorizon(pat, 0)) != null) {
-            // Split and process each line the same way write() does
-            String[] lines = line.split("\\r?\\n");
-            for (String subLine : lines) {
-                if (!subLine.toLowerCase().contains(LazyFile.LAZY_FILE_TAG_LOWER)) {
-                    sb.append(subLine).append("\n");
-                }
-            }
-        }
-        return sb.toString();
+        return removeTags(new String(Files.readAllBytes(Paths.get(filename)), LazyFile.CHARSET));
     }
 }

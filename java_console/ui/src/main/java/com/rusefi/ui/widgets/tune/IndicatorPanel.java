@@ -7,6 +7,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.TsStringFunction;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.SensorSubscription;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,11 +54,17 @@ public class IndicatorPanel {
         }
 
         refresh(null);
+        Set<String> allSensors = new HashSet<>();
+        for (IndicatorModel model : this.indicators) {
+            allSensors.addAll(ExpressionEvaluator.extractVariables(model.getExpression()));
+            allSensors.addAll(ExpressionEvaluator.extractVariables(model.getOnLabel()));
+            allSensors.addAll(ExpressionEvaluator.extractVariables(model.getOffLabel()));
+        }
 
         SensorCentral.getInstance().addListener(() -> {
             final ConfigurationImage snap = currentImage;
             SwingUtilities.invokeLater(() -> applyAll(snap));
-        });
+        }, new SensorSubscription(allSensors.toArray(new String[0])));
     }
 
     public JPanel getPanel() {

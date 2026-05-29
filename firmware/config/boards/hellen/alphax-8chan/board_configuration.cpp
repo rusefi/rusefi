@@ -74,7 +74,9 @@ static void setupDefaultSensorInputs() {
 }
 
 static void alphax_8chan_boardInitHardware() {
-  // technically same thing as setHellenMegaEnPin() since underlying pin E10 is same as H144_GP8
+	setupHellenSharedInputs();
+
+	// technically same thing as setHellenMegaEnPin() since underlying pin E10 is same as H144_GP8
 	setHellenEnPin(Gpio::MM176_EN_PIN);
 
 	alphaCrankPPullUp.initPin("Crank-PullUp", Gpio::MM176_GP16);
@@ -87,7 +89,7 @@ static void alphax_8chan_boardInitHardware() {
 	tempPullUp.initPin("Temp PullUp", Gpio::MM176_OUT_IO12);
 }
 
-static void customBoardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+static void customBoardOnConfigurationChange(const engine_configuration_s * /*previousConfiguration*/) {
 	alphaCrankPPullUp.setValue(config->boardUseCrankPullUp);
 	alphaHall1PullDown.setValue(config->boardUseH1PullDown);
 	alphaHall2PullDown.setValue(config->boardUseH2PullDown);

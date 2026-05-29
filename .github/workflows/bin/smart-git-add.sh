@@ -54,7 +54,8 @@ get_changed_lines() {
 
     if [ -z "$stats" ]; then
         # Check if it's a new file (not yet in index at all)
-        if ! git ls-files "$file" > /dev/null 2>&1; then
+        if [ -z "$(git ls-files -- "$file")" ]; then
+            # File is not tracked yet - count all lines as added
             added=$(wc -l < "$file")
             deleted=0
         else

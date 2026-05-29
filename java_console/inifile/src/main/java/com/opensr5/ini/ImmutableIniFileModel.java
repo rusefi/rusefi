@@ -28,6 +28,10 @@ public class ImmutableIniFileModel implements IniFileModel {
     private final List<MenuModel> menus;
     private final FrontPageModel frontPage;
     private final Map<String, String> controllerCommands;
+    private final List<VeAnalyzeMap> veAnalyzeMaps;
+    private final List<String> lambdaTargetTables;
+    private final List<VeAnalyzeFilter> veAnalyzeFilters;
+    private final List<EventTriggerModel> eventTriggers;
 
     private static <V> Map<String, V> copyWithCaseInsensitiveKeys(Map<String, V> source) {
         LowercaseHashMap<V> result = new LowercaseHashMap<>(source.size() * 2);
@@ -65,10 +69,13 @@ public class ImmutableIniFileModel implements IniFileModel {
                                  Map<String, ContextHelpModel> contextHelp,
                                  Map<String, TableModel> tables,
                                  Map<String, CurveModel> curves,
-                                 String menuDialog,
                                  List<MenuModel> menus,
                                  FrontPageModel frontPage,
-                                 Map<String, String> controllerCommands) {
+                                 Map<String, String> controllerCommands,
+                                 List<VeAnalyzeMap> veAnalyzeMaps,
+                                 List<String> lambdaTargetTables,
+                                 List<VeAnalyzeFilter> veAnalyzeFilters,
+                                 List<EventTriggerModel> eventTriggers) {
         this.signature = signature;
         this.blockingFactor = blockingFactor;
         this.defines = Collections.unmodifiableMap(new TreeMap<>(defines));
@@ -85,8 +92,22 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.tooltips = Collections.unmodifiableMap(new TreeMap<>(tooltips));
         this.fieldsInUiOrder = Collections.unmodifiableMap(new LinkedHashMap<>(fieldsInUiOrder));
         this.dialogs = Collections.unmodifiableMap(new TreeMap<>(dialogs));
-        this.gaugeCategories = Collections.unmodifiableMap(new LinkedHashMap<>(gaugeCategories));
-        this.gauges = copyWithCaseInsensitiveKeys(gauges);
+
+        // If at least one gauge category named GAUGE_CATEGORY_ECU_STATUS ("ECU Status") is registered,
+        // inject a synthetic 'runtimeDataRateGauge' into that category and into the gauges map.
+        Map<String, GaugeCategoryModel> effectiveCategories = new LinkedHashMap<>(gaugeCategories);
+        Map<String, GaugeModel> effectiveGauges = new LinkedHashMap<>(gauges);
+        GaugeCategoryModel ecuStatusCategory = effectiveCategories.get(GAUGE_CATEGORY_ECU_STATUS);
+        if (ecuStatusCategory != null) {
+            GaugeModel synthetic = createRuntimeDataRateGauge();
+            List<GaugeModel> updatedGauges = new ArrayList<>(ecuStatusCategory.getGauges());
+            updatedGauges.add(synthetic);
+            effectiveCategories.put(GAUGE_CATEGORY_ECU_STATUS,
+                    new GaugeCategoryModel(ecuStatusCategory.getName(), updatedGauges));
+            effectiveGauges.put(synthetic.getName(), synthetic);
+        }
+        this.gaugeCategories = Collections.unmodifiableMap(effectiveCategories);
+        this.gauges = copyWithCaseInsensitiveKeys(effectiveGauges);
         this.topicHelp = Collections.unmodifiableMap(new TreeMap<>(topicHelp));
         this.contextHelp = Collections.unmodifiableMap(new LinkedHashMap<>(contextHelp));
         this.tables = copyWithCaseInsensitiveKeys(tables);
@@ -94,6 +115,38 @@ public class ImmutableIniFileModel implements IniFileModel {
         this.menus = Collections.unmodifiableList(new ArrayList<>(menus));
         this.frontPage = frontPage;
         this.controllerCommands = copyWithCaseInsensitiveKeys(controllerCommands);
+        this.veAnalyzeMaps = Collections.unmodifiableList(new ArrayList<>(veAnalyzeMaps));
+        this.lambdaTargetTables = Collections.unmodifiableList(new ArrayList<>(lambdaTargetTables));
+        this.veAnalyzeFilters = Collections.unmodifiableList(new ArrayList<>(veAnalyzeFilters));
+        this.eventTriggers = Collections.unmodifiableList(new ArrayList<>(eventTriggers));
+    }
+
+    /**
+     * Mirrors firmware's {@code GAUGE_CATEGORY_ECU_STATUS} (defined in rusefi_config.txt).
+     * Duplicated as a string literal to avoid a heavy {@code :models} dependency from {@code :inifile}.
+     */
+    public static final String GAUGE_CATEGORY_ECU_STATUS = "ECU Status";
+
+    /**
+     * Synthetic gauge name added when {@link #GAUGE_CATEGORY_ECU_STATUS}
+     * category is present. Reports the runtime data rate (samples/sec) coming from the controller.
+     */
+    public static final String RUNTIME_DATA_RATE_GAUGE = "runtimeDataRateGauge";
+
+    private static GaugeModel createRuntimeDataRateGauge() {
+        return new GaugeModel(
+                RUNTIME_DATA_RATE_GAUGE,
+                RUNTIME_DATA_RATE_GAUGE,
+                IniValue.ofString("Runtime data rate"),
+                IniValue.ofString("Hz"),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(100),
+                IniValue.ofNumeric(0),
+                IniValue.ofNumeric(0));
     }
 
     @Override
@@ -288,5 +341,25 @@ public class ImmutableIniFileModel implements IniFileModel {
     @Override
     public Map<String, String> getControllerCommands() {
         return controllerCommands;
+    }
+
+    @Override
+    public List<VeAnalyzeMap> getVeAnalyzeMaps() {
+        return veAnalyzeMaps;
+    }
+
+    @Override
+    public List<String> getLambdaTargetTables() {
+        return lambdaTargetTables;
+    }
+
+    @Override
+    public List<VeAnalyzeFilter> getVeAnalyzeFilters() {
+        return veAnalyzeFilters;
+    }
+
+    @Override
+    public List<EventTriggerModel> getEventTriggers() {
+        return eventTriggers;
     }
 }

@@ -180,6 +180,8 @@ Usages:
     java: TriggerStatePrimary.java
     folder: controllers/trigger
     prepend: integration/rusefi_config_shared.txt
+    constexpr: [ "static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState)" ]
+    conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
 
   - name: wall_fuel_state
     cppFileName: wall_fuel

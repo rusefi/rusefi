@@ -1,14 +1,35 @@
-// Controller for Harley Davidson Automatic Compression Release
+// harley_acr.cpp
 //
-// To make the starter's job easier, these bike engines have a solenoid
-// that dumps cylinder pressure to atmosphere until the engine is spinning
-// fast enough to actually have a chance at starting.
-// We open the valve the instant the engine starts moving, then close it
-// once the specified number of revolutions have occurred, plus some engine phase.
-// This allows the valve to close at just the right moment that you don't get a
-// weird half-charge if it closed mid way up on a compression stroke.
+// Controller for Harley-Davidson Automatic Compression Release (ACR).
+//
+// Big V-twin engines have very high cylinder compression which makes them hard
+// to crank with the starter motor. To ease the starter's job, these engines are
+// fitted with an ACR solenoid (one per cylinder on twin-ACR setups) that bleeds
+// cylinder pressure to atmosphere while the engine is being cranked.
+//
+// Control strategy:
+//  - As soon as the crank starts moving, energize the ACR solenoid(s) so the
+//    very first compression stroke is relieved.
+//  - Keep the valve open for `acrRevolutions` crank revolutions (counted via
+//    the trigger decoder's synchronization counter).
+//  - On the final revolution, close the valve at a specific crank phase
+//    (`acrDisablePhase`) so it shuts mid-expansion rather than mid-compression.
+//    This avoids leaving a partial charge trapped in the cylinder, which would
+//    cause an awkward "half-charge" combustion event on the next stroke.
+//  - If the engine is stopped, the valve is de-energized to save power.
+//
+// Board-specific behavior can override the computed state via the
+// `custom_board_getAcrState` hook (see board_overrides.h).
+//
+// The current ACR state is also published to:
+//  - `engine->engineState.acrActive` (for telemetry / outputs),
+//  - the composite tooth logger (`LogTriggerAcrState`) so ACR transitions show
+//    up alongside trigger, coil and injector events in the CSV log.
 
 #include "pch.h"
+
+#include "board_overrides.h"
+#include "tooth_logger.h"
 
 #if EFI_HD_ACR
 
@@ -24,6 +45,10 @@ static bool getAcrState() {
 	if (!engineMovedRecently) {
 		return false;
 	}
+
+    if (custom_board_getAcrState.has_value()) {
+        return custom_board_getAcrState.value()();
+    }
 
 	int revCount = getTriggerCentral()->triggerState.getSynchronizationCounter();
 	if (revCount > engineConfiguration->acrRevolutions) {
@@ -56,6 +81,9 @@ void HarleyAcr::onSlowCallback() {
 	engine->engineState.acrActive = acrState;
 	enginePins.harleyAcr.setValue(acrState);
 	enginePins.harleyAcr2.setValue(acrState);
+#if EFI_TOOTH_LOGGER
+	LogTriggerAcrState(getTimeNowNt(), acrState);
+#endif // EFI_TOOTH_LOGGER
 	m_active = acrState;
 }
 

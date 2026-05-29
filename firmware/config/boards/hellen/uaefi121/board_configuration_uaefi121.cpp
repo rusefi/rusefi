@@ -40,8 +40,17 @@ static void setupDefaultSensorInputs() {
   engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D1;  // HALL1
 }
 
+/**
+ * @brief Board-specific initialization code.
+ */
+static void uaefi_121boardInitHardware() {
+	setupHellenSharedInputs();
+}
+
 static void uaefi_121boardDefaultConfiguration() {
-  setMegaUaefiBoardDefaultConfiguration();
+	setUaefiBoardDefaultConfiguration();
+	// Small fix
+	engineConfiguration->injectionPins[0] = Gpio::MM100_MEGA_UAEFI_INJ1;
 
   engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
   engineConfiguration->fuelPumpPin = Gpio::MM100_IGN8;
@@ -55,20 +64,6 @@ static void uaefi_121boardDefaultConfiguration() {
 	engineConfiguration->spi3sckPin = Gpio::C10;
 	engineConfiguration->max31855_cs[0] = Gpio::A15;
 	engineConfiguration->max31855spiDevice = SPI_DEVICE_3;
-
-		engineConfiguration->injectionPins[0] = Gpio::MM100_MEGA_UAEFI_INJ1;
-  	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
-  	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;
-  	engineConfiguration->injectionPins[3] = Gpio::MM100_INJ4;
-  	engineConfiguration->injectionPins[4] = Gpio::MM100_INJ5;
-  	engineConfiguration->injectionPins[5] = Gpio::MM100_INJ6;
-
-	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
-	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN2;
-	engineConfiguration->ignitionPins[2] = Gpio::MM100_IGN3;
-	engineConfiguration->ignitionPins[3] = Gpio::MM100_IGN4;
-	engineConfiguration->ignitionPins[4] = Gpio::MM100_IGN5;
-	engineConfiguration->ignitionPins[5] = Gpio::MM100_IGN6;
 
     setupDefaultSensorInputs();
 }
@@ -138,6 +133,7 @@ Gpio* getBoardMetaOutputs() {
 }
 
 void setup_custom_board_overrides() {
+	custom_board_InitHardware = uaefi_121boardInitHardware;
 	custom_board_DefaultConfiguration = uaefi_121boardDefaultConfiguration;
 	custom_board_ConfigOverrides = setMegaUaefiBoardConfigOverrides;
 }
