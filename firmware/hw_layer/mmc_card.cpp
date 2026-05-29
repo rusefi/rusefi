@@ -320,6 +320,10 @@ static void sdSetMode(const char *mode) {
 		sdCardRequestMode(SD_MODE_PC);
 	} else if (strcmp(mode, "ecu") == 0) {
 		sdCardRequestMode(SD_MODE_ECU);
+	} else if ((strcmp(mode, "off") == 0) || (strcmp(mode, "unmount") == 0)) {
+		sdCardRequestMode(SD_MODE_UNMOUNT);
+	} else if (strcmp(mode, "auto") == 0) {
+		sdCardRequestMode(SD_MODE_IDLE);
 	} else {
 		efiPrintf("Invalid mode %s allowed modes pc and ecu", mode);
 	}
@@ -1070,6 +1074,8 @@ void initEarlyMmcCard() {
 	addConsoleActionS("del", removeFile);
 	// sdmode pc
 	// sdmode ecu
+	// sdmode off
+	// sdmode auto
 	addConsoleActionS("sdmode", sdSetMode);
 	addConsoleAction("delreports", sdCardRemoveReportFiles);
 	//incLogFileName() use same shared FDLogFile, calling it while FDLogFile is used by log writer will cause damage
@@ -1096,6 +1102,9 @@ void sdCardRequestMode(SD_MODE mode)
 		efiPrintf("sdCardRequestMode %s", sdModeName(mode));
 		sdTargetModeRequested = true;
 		sdTargetMode = mode;
+	}
+	if (mode == SD_MODE_IDLE) {
+		sdTargetModeRequested = false;
 	}
 }
 
