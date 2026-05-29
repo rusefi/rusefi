@@ -18,6 +18,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
         TableAddColumnsMigrator.MAP_SAMPLING_MIGRATOR,
         // rest of migrators
         AfrLambdaTableMigrator.INSTANCE,
+        ArrayFieldScaleMigrator.INSTANCE,
         BattLagCorrExtensionMigrator.INSTANCE,
         CltIdleCorrMigrator.INSTANCE,
         DisplacementIniFieldMigrator.INSTANCE,
