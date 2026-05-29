@@ -300,13 +300,35 @@ int Engine::getGlobalConfigurationVersion() const {
 	return globalConfigurationVersion;
 }
 
+#if EFI_UNIT_TEST
 void Engine::reset() {
 	/**
 	 * it's important for wrapAngle() that engineCycle field never has zero
 	 */
 	engineState.engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	resetLua();
+ 	efi::clear((output_channels_s&)outputChannels);
+// 	efi::clear((engine_state_s&)engineState);
+// 	efi::clear((fuel_computer_s&)fuelComputer);
+// 	efi::clear((ignition_state_s&)ignitionState);
+// 	efi::clear(sensors);
+ 	efi::clear(dc_motors);
+ #if EFI_SENT_SUPPORT
+ 	efi::clear(sent_state);
+ #endif
+
+	allowCanTx = true;
+	isPwmEnabled = true;
+	pauseCANdueToSerial = false;
+
+	globalConfigurationVersion = 0;
+	isRunningPwmTest = false;
+	isFunctionalTestMode = false;
+	slowCallBackWasInvoked = false;
+
+	timeToStopIdleTest = 0;
 }
+#endif
 
 void Engine::resetLua() {
 	// todo: https://github.com/rusefi/rusefi/issues/4308

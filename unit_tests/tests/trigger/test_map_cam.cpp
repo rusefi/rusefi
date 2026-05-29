@@ -46,9 +46,11 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(ClearReason::None, getLimpManager()->allowIgnition().reason);
 	ASSERT_EQ(ClearReason::None, getLimpManager()->allowInjection().reason);
 
-	for (size_t i = 0; i < 4; i++) {
-		printf("%d %s\n", i, engine->scheduler.getForUnitTest(i)->action.getCallbackName());
-	}
+	// NOTHING TO DO HERE - this loop was dangerous and unnecessary.
+	// printf("Scheduler size: %d\n", engine->scheduler.size());
+	// for (size_t i = 0; i < (size_t)engine->scheduler.size(); i++) {
+	// 	printf("%d %s\n", (int)i, engine->scheduler.getForUnitTest(i)->action.getCallbackName());
+	// }
 
 	// We have "VVT" sync, things should be scheduled!
 	ASSERT_EQ(4, engine->scheduler.size());
