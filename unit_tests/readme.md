@@ -4,9 +4,9 @@ TL, DR: just follow [tests](tests) folder as examples. [tests/nitrous_control](t
 
 gcc/makefile/gtest
 
-1. Run `make` to build desktop binary, you can add `-j4` | `-j8` | `-j16` for using multiple cores
-2. Execute rusefi_test binary on your PC/Mac, it's expected to say SUCCESS and not fail :) Googletest will also print results summary.
-3. To run only one test use command line like ```build/rusefi_test --gtest_filter=*TEST_NAME*``` ~~uncomment and modify [main.cpp](https://github.com/rusefi/rusefi/blob/master/unit_tests/main.cpp) line ``::testing::GTEST_FLAG(filter)``~~
+7. Run `./test.sh` to build and run all tests. You can also run `make -j$(nproc)` followed by `./build/rusefi_test`.
+8. Execute tests on your PC/Mac, it's expected to say SUCCESS and not fail :) Googletest will also print results summary.
+9. To run only one test use `./test.sh TEST_NAME` (which builds first) or ```build/rusefi_test --gtest_filter=*TEST_NAME*```.
 
 In this folder we have rusEFI unit tests using https://github.com/google/googletest
 
@@ -20,7 +20,7 @@ see `.vscode/launch.json` "Debug Unit Tests (gdb)"
 
 for make the coverage locally you need to install [gcovr](https://gcovr.com/en/stable/installation.html)
 
-build the test with `make COVERAGE=yes`, run `build/rusefi_test` then finally `unit_tests/ci_gcov.sh`
+Build and run the coverage with `./run_coverage.sh`.
 the report will be on `unit_tests/gcov_working_area/gcov/index.html`
 
 See also [https://wiki.rusefi.com/Build-Server-and-Automation](https://wiki.rusefi.com/Build-Server-and-Automation)

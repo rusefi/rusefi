@@ -28,12 +28,13 @@ Outputs are placed in `firmware/deliver/`:
 
 ```bash
 cd unit_tests
-make
-./build/rusefi_test
+./test.sh
 
 # Run a specific test
-./build/rusefi_test --gtest_filter=TestName
+./test.sh TestName
 ```
+
+`test.sh` is the recommended way to run tests as it automatically handles both the build (`make`) and execution.
 
 #### Code Coverage
 Coverage reports are generated using `gcovr` (requires Python 3).

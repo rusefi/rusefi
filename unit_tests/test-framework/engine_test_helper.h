@@ -147,6 +147,21 @@ struct testSpinEngineUntilData {
 
 void setUnitTestCreateLogs(bool enabled);
 bool getUnitTestCreateLogs();
+
+/**
+ * RAII helper: toggle unit-test log creation for the duration of a test,
+ * restoring the previous value on scope exit.
+ */
+struct ScopedUnitTestCreateLogs {
+	bool saved;
+	explicit ScopedUnitTestCreateLogs(bool enabled) : saved(getUnitTestCreateLogs()) {
+		setUnitTestCreateLogs(enabled);
+	}
+	~ScopedUnitTestCreateLogs() {
+		setUnitTestCreateLogs(saved);
+	}
+};
+
 void sayByeBye();
 // Removes all files from TEST_RESULTS_DIR except .gitignore and readme.md.
 void cleanTestResultsFolder();

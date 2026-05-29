@@ -47,8 +47,7 @@ extern bool useNdJSONFiles;
 TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
   bool wasUsing = useNdJSONFiles;
   useNdJSONFiles = true;
-	bool wasLogging = getUnitTestCreateLogs();
-	setUnitTestCreateLogs(true);
+	ScopedUnitTestCreateLogs scoped(true);
 
 	std::string mslPath = makeArtifactPath(".msl");
 	std::string csvPath = makeArtifactPath(".csv");
@@ -210,6 +209,5 @@ TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
 			<< "NDJSON line should end with '}', got: [" << firstLine << "]";
 	}
 
-	setUnitTestCreateLogs(wasLogging);
 	useNdJSONFiles = wasUsing;
 }

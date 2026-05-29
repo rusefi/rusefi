@@ -104,23 +104,15 @@ static const std::unordered_set<std::string>& getLogDisabledTests() {
 // 16 MB per-file log cap (LogsTooLargeException), restoring the prior value
 // after each such test finishes.
 class LogDisablerForHeavyTests : public ::testing::EmptyTestEventListener {
-	bool savedLogs = false;
-	bool didDisable = false;
+	std::unique_ptr<ScopedUnitTestCreateLogs> disabler;
 	void OnTestStart(const ::testing::TestInfo& test_info) override {
 		std::string fullName = std::string(test_info.test_suite_name()) + "." + test_info.name();
 		if (getLogDisabledTests().count(fullName) > 0) {
-			savedLogs = getUnitTestCreateLogs();
-			if (savedLogs) {
-				setUnitTestCreateLogs(false);
-				didDisable = true;
-			}
+			disabler = std::make_unique<ScopedUnitTestCreateLogs>(false);
 		}
 	}
 	void OnTestEnd(const ::testing::TestInfo& /*test_info*/) override {
-		if (didDisable) {
-			setUnitTestCreateLogs(savedLogs);
-			didDisable = false;
-		}
+		disabler.reset();
 	}
 };
 #endif
