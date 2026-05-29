@@ -1097,7 +1097,7 @@ include_file controllers/algo/accel_enrichment.engineConfiguration.txt
 	float magicNumberAvailableForDevTricks
 	float turbochargerFilter
 
-#define MIN_launchTpsThreshold 20
+#define MIN_launchTpsThreshold 3
 	int launchTpsThreshold;;"", 1, 0, @@MIN_launchTpsThreshold@@, 20000, 0
 	float launchActivateDelay;;"", 1, 0, 0, 20000, 0
 
