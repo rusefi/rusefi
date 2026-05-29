@@ -6,4 +6,4 @@
 # Installs valgrind, used for detecting memory errors in unit tests.
 #
 
-sudo apt-get install valgrind
+sudo apt-get install -y valgrind
