@@ -509,14 +509,14 @@ pins:
     class: switch_inputs
     color: yellow
     ts_name: BUTTON1
-    function: BUTTON1 sensor
+    function: BUTTON1 sensor PullDown 10K
 
   - pin: 85a
     meta: MM100_IN_CAM
     class: switch_inputs
     color: green
     ts_name: BUTTON2
-    function: BUTTON2 sensor
+    function: BUTTON2 sensor PullDown 10K
 
   - pin: 86a
     ts_name: ___ LS5_HOT
@@ -544,7 +544,7 @@ pins:
     class: switch_inputs
     color: grey
     ts_name: BUTTON3
-    function: BUTTON3 input
+    function: BUTTON3 input PullDown 10K
 
   - pin: 90a
     class: analog_inputs
