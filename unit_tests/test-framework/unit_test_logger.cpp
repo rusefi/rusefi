@@ -4,11 +4,6 @@
 #include "binary_mlg_logging.h"
 #include "mlg_field.h"
 
-// Per-file size limit for unit test log artifacts. When a writer's output
-// exceeds this threshold the writer throws LogsTooLargeException and the
-// caller disables logging for the remainder of the run.
-size_t LOG_FILE_SIZE_LIMIT = 16 * 1024 * 1024;
-
 #include <filesystem>
 
 // these NDJSON files are 10 times larger than MLS but very much machine readable
@@ -39,10 +34,16 @@ static size_t mslBytes = 0;
 static size_t csvBytes = 0;
 static size_t ndjsonBytes = 0;
 
+static size_t activeLogFileSizeLimit = LOG_FILE_SIZE_LIMIT_DEFAULT;
+
+size_t getLogFileSizeLimit() { return activeLogFileSizeLimit; }
+void setLogFileSizeLimit(size_t bytes) { activeLogFileSizeLimit = bytes; }
+
 static void checkSizeLimit(const char* which, size_t bytes) {
-	if (bytes > LOG_FILE_SIZE_LIMIT) {
+	size_t limit = activeLogFileSizeLimit;
+	if (bytes > limit) {
 		throw LogsTooLargeException(std::string(which) + " log exceeded "
-			+ std::to_string(LOG_FILE_SIZE_LIMIT) + " bytes (size="
+			+ std::to_string(limit) + " bytes (size="
 			+ std::to_string(bytes) + ")");
 	}
 }
