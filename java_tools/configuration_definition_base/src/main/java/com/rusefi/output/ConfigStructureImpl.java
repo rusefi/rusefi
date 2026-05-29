@@ -38,11 +38,83 @@ public class ConfigStructureImpl implements ConfigStructure {
     private ConfigField cPrevField = ConfigFieldImpl.VOID;
     private final Set<String> names = new HashSet<>();
 
+    private List<String> templateParameters = new ArrayList<>();
+    private boolean isTemplateInstance;
+    private String templateBaseName;
+    private final List<String> rawFieldLines = new ArrayList<>();
+
     public ConfigStructureImpl(String name, String comment, boolean withPrefix, ConfigStructure parent) {
+        this(name, comment, withPrefix, parent, Collections.emptyList());
+    }
+
+    public ConfigStructureImpl(String name, String comment, boolean withPrefix, ConfigStructure parent, List<String> templateParameters) {
         this.name = name;
         this.comment = comment;
         this.withPrefix = withPrefix;
         this.parent = parent;
+        this.templateParameters = new ArrayList<>(templateParameters);
+    }
+
+    public ConfigStructureImpl instantiate(String instanceName, Map<String, String> templateArgs, ReaderStateImpl state) {
+        ConfigStructureImpl instance = new ConfigStructureImpl(instanceName, this.comment, this.withPrefix, this.parent);
+        instance.isTemplateInstance = true;
+        instance.templateBaseName = this.name;
+
+        for (ConfigField field : this.cFields) {
+            ConfigFieldImpl original = (ConfigFieldImpl) field;
+            String substitutedTsInfo = substituteTemplate(original.getTsInfo(), templateArgs);
+            String substitutedComment = substituteTemplate(original.getComment(), templateArgs);
+
+            ConfigFieldImpl substituted = new ConfigFieldImpl(
+                state,
+                original.getName(),
+                substitutedComment,
+                original.getArraySizeVariableName(),
+                original.getTypeName(),
+                original.getArraySizes(),
+                substitutedTsInfo,
+                original.isIterate(),
+                original.isHasAutoscale(),
+                original.getTrueName(),
+                original.getFalseName()
+            );
+            instance.cFields.add(substituted);
+            instance.tsFields.add(substituted);
+            instance.tsFieldsMap.put(substituted.getName(), substituted);
+            instance.names.add(substituted.getName());
+        }
+
+        instance.totalSize = this.totalSize;
+        instance.readingBitState.set(this.readingBitState.get());
+
+        return instance;
+    }
+
+    private static String substituteTemplate(String value, Map<String, String> templateArgs) {
+        if (value == null) {
+            return null;
+        }
+        String result = value;
+        for (Map.Entry<String, String> entry : templateArgs.entrySet()) {
+            result = result.replace("__TMPL_" + entry.getKey() + "__", entry.getValue());
+        }
+        return result;
+    }
+
+    public List<String> getTemplateParameters() {
+        return templateParameters;
+    }
+
+    public boolean isTemplate() {
+        return !templateParameters.isEmpty();
+    }
+
+    public boolean isTemplateInstance() {
+        return isTemplateInstance;
+    }
+
+    public String getTemplateBaseName() {
+        return templateBaseName;
     }
 
     @Override

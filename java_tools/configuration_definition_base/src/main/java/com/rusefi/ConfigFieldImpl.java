@@ -30,7 +30,7 @@ public class ConfigFieldImpl implements ConfigField {
     public static final String VOID_BIT = "void";
     public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, VOID_BIT, VOID_BIT);
 
-    private static final String typePattern = "([\\w\\d_]+)(\\s*\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
+    private static final String typePattern = "([\\w\\d_]+(?:<[^>]+>)?)(\\s*\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
     private static final String namePattern = "[[@\\w\\d\\s_]]+";
     private static final String commentPattern = ";([^;]*)";
@@ -142,6 +142,9 @@ public class ConfigFieldImpl implements ConfigField {
             return;
         // Skip validation if min or max are expressions - see #8650
         if (isExpression(tokens[3]) || (tokens.length >= 5 && isExpression(tokens[4])))
+            return;
+        // Skip validation if scale contains template variables (e.g., @@TABLE_SCALE@@)
+        if (tokens.length > 1 && tokens[1].contains("@@"))
             return;
         double scale = autoscaleSpecNumber();
         double min = getMin();
@@ -477,7 +480,11 @@ public class ConfigFieldImpl implements ConfigField {
                 throw new IllegalArgumentException(name + ": Expected simple number or division in " + innerExpression);
             }
         } else {
-            factor = Double.parseDouble(scale);
+            try {
+                factor = Double.parseDouble(scale);
+            } catch (NumberFormatException e) {
+                return new Pair<>(1, 1);
+            }
         }
         int mul, div;
         if (factor < 1.d) {

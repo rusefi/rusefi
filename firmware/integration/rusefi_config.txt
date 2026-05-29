@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260407
+#define FLASH_DATA_VERSION 260528
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -101,6 +101,12 @@ include_file integration/generated/rusefi_config_generated_enums.txt
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
+
+! Template struct: parameters are comma-separated in angle brackets
+! Usage: @@PARAM_NAME@@ in field definitions is substituted with the provided value
+! Define: struct name<T1, T2> ... @@T1@@ ... @@T2@@ ... end_struct
+! Instantiate: name<val1, val2> field
+
 
 struct_no_prefix persistent_config_s
 
@@ -2217,8 +2223,8 @@ uint16_t[ALS_RPM_SIZE] alsIgnSkiprpmBins;;"RPM",	   1, 0, 0, 25000, 0
 
 #define BLEND_TABLE_COUNT 8
 
-struct blend_table_s
-	int16_t[BLEND_TABLE_COUNT x BLEND_TABLE_COUNT] autoscale table;;"", 0.1, 0, -100, 100, 1
+struct blend_table_s<TABLE_SCALE>
+	int16_t[BLEND_TABLE_COUNT x BLEND_TABLE_COUNT] autoscale table;;"", @@TABLE_SCALE@@, 0, -100, 100, 1
 	uint16_t[BLEND_TABLE_COUNT] loadBins;;"Load", 1, 0, 0, 1000, 0
 	uint16_t[BLEND_TABLE_COUNT] rpmBins;;"RPM", 1, 0, 0, 18000, 0
 
@@ -2230,8 +2236,8 @@ struct blend_table_s
 	uint8_t[BLEND_FACTOR_SIZE] autoscale blendValues;;"%", 0.5, 0, 0, 100, 1
 end_struct
 
-blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
-blend_table_s[VE_BLEND_COUNT iterate] veBlends
+blend_table_s<0.1>[IGN_BLEND_COUNT iterate] ignBlends
+blend_table_s<0.1>[VE_BLEND_COUNT iterate] veBlends
 
 ! secondVe and secondIgnition fields moved to config_page_4.txt (page4_s / TS page 4)
 #define THR_EST_SIZE 12
@@ -2239,8 +2245,8 @@ blend_table_s[VE_BLEND_COUNT iterate] veBlends
 uint16_t[THR_EST_SIZE] autoscale throttleEstimateEffectiveAreaBins;;"%", 0.1, 0, 0, 100, 1
 uint16_t[THR_EST_SIZE] autoscale throttleEstimateEffectiveAreaValues;In units of g/s normalized to choked flow conditions;"g/s", 0.1, 0, 0, 6500, 1
 
-blend_table_s[BOOST_BLEND_COUNT iterate] boostOpenLoopBlends
-blend_table_s[BOOST_BLEND_COUNT iterate] boostClosedLoopBlends
+blend_table_s<0.1>[BOOST_BLEND_COUNT iterate] boostOpenLoopBlends
+blend_table_s<0.1>[BOOST_BLEND_COUNT iterate] boostClosedLoopBlends
 
 float[RANGE_INPUT_COUNT] tcu_rangeP;;"level", 1, 0, 0, 200000, 0
 float[RANGE_INPUT_COUNT] tcu_rangeR;;"level", 1, 0, 0, 200000, 0
@@ -2344,7 +2350,7 @@ include_file controllers/modules/check_engine_light/check_engine_config.txt
 uint8_t[8] autoscale minimumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint8_t[8] autoscale minimumOilPressureValues;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 10 : 1.45038}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 1000 : 145}, 0
 
-blend_table_s[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
+blend_table_s<0.01>[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
 
 #define DYNO_RPM_STEP_UNITS "Rpm"
 #define DYNO_RPM_STEP_TOOLTIP "RPM Trim Window, Leave on 100 if you dont know what this does"
