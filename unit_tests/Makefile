@@ -31,8 +31,11 @@ include $(PROJECT_DIR)/common.mk
 include $(PROJECT_DIR)/controllers/modules/modules.mk
 
 ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
+  $(info including $(BOARD_DIR)/board_unit_tests.mk)
   # could depend on BOARDS_DIR
   include $(BOARD_DIR)/board_unit_tests.mk
+else
+  $(info no board_unit_tests.mk found at $(BOARD_DIR)/board_unit_tests.mk)
 endif
 
 include $(PROJECT_DIR)/common_libfirmware.mk
