@@ -69,7 +69,35 @@ struct BlendResult {
 	float TableYAxis;
 };
 
-BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load);
+template<typename TBlendTable>
+BlendResult calculateBlend(TBlendTable& cfg, float rpm, float load) {
+	// If set to 0, skip the math as its disabled
+	if (cfg.blendParameter == GPPWM_Zero) {
+		return { 0, 0, 0, 0 };
+	}
+
+	auto value = readGppwmChannel(cfg.blendParameter);
+
+	if (!value) {
+		return { 0, 0, 0, 0 };
+	}
+
+	// Override Y axis value (if necessary)
+	if (cfg.yAxisOverride != GPPWM_Zero) {
+		// TODO: is this value_or(0) correct or even reasonable?
+		load = readGppwmChannel(cfg.yAxisOverride).value_or(0);
+	}
+
+	float tableValue = interpolate3d(
+		cfg.table,
+		cfg.loadBins, load,
+		cfg.rpmBins, rpm
+	);
+
+	float blendFactor = interpolate2d(value.Value, cfg.blendBins, cfg.blendValues);
+
+	return { value.Value, blendFactor, 0.01f * blendFactor * tableValue, load };
+}
 
 // Overload for tables with flat (non-struct) blend config, e.g. veSwitchTable.
 // Unlike the blend_table_s overload, BlendResult::Value is the raw table lookup
