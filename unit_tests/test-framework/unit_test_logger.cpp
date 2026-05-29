@@ -4,6 +4,11 @@
 #include "binary_mlg_logging.h"
 #include "mlg_field.h"
 
+// Per-file size limit for unit test log artifacts. When a writer's output
+// exceeds this threshold the writer throws LogsTooLargeException and the
+// caller disables logging for the remainder of the run.
+size_t LOG_FILE_SIZE_LIMIT = 16 * 1024 * 1024;
+
 #include <filesystem>
 
 // these NDJSON files are 10 times larger than MLS but very much machine readable
