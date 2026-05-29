@@ -25,6 +25,10 @@ public class BitState {
         bitIndex = 0;
     }
 
+    public void set(int value) {
+        bitIndex = value;
+    }
+
     public int get() {
         return bitIndex;
     }

@@ -275,6 +275,9 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
+        if (destinations.isEmpty()) {
+            destinations.addAll(consumers);
+        }
         for (ConfigurationConsumer consumer : consumers)
             consumer.startFile();
 
@@ -349,6 +352,8 @@ public class ReaderStateImpl implements ReaderState {
     private static void handleStartStructure(ReaderStateImpl state, String line, boolean withPrefix) {
         String name;
         String comment;
+        List<String> templateParameters = Collections.emptyList();
+
         if (line.contains(" ")) {
             int index = line.indexOf(' ');
             name = line.substring(0, index);
@@ -357,8 +362,21 @@ public class ReaderStateImpl implements ReaderState {
             name = line;
             comment = null;
         }
+
+        // here we check if we are inside a template
+        if (name.contains("<") && name.endsWith(">")) {
+            int bracketStart = name.indexOf('<');
+            String templatePart = name.substring(bracketStart + 1, name.length() - 1);
+            name = name.substring(0, bracketStart);
+            templateParameters = Arrays.asList(templatePart.split("\\s*,\\s*"));
+
+            for (String param : templateParameters) {
+                state.variableRegistry.register(param, "__TMPL_" + param + "__");
+            }
+        }
+
         ConfigStructure parent = state.isStackEmpty() ? null : state.peek();
-        ConfigStructureImpl structure = new ConfigStructureImpl(name, comment, withPrefix, parent);
+        ConfigStructureImpl structure = new ConfigStructureImpl(name, comment, withPrefix, parent, templateParameters);
         state.stack.push(structure);
         if (log.debugEnabled())
             log.debug("Starting structure " + structure.getName());
@@ -382,21 +400,71 @@ public class ReaderStateImpl implements ReaderState {
             }
         }
 
+        String typeName = cf.getTypeName();
+        String baseTypeName = typeName;
+        Map<String, String> templateArgs = null;
+
+        if (typeName.contains("<") && typeName.endsWith(">")) {
+            int bracketStart = typeName.indexOf('<');
+            String templatePart = typeName.substring(bracketStart + 1, typeName.length() - 1);
+            baseTypeName = typeName.substring(0, bracketStart);
+
+            ConfigStructureImpl templateStruct = state.structures.get(baseTypeName);
+            if (templateStruct != null && templateStruct.isTemplate()) {
+                List<String> templateParams = templateStruct.getTemplateParameters();
+                String[] argValues = templatePart.split("\\s*,\\s*");
+                if (argValues.length != templateParams.size()) {
+                    throw new IllegalStateException("Template " + baseTypeName + " expects " + templateParams.size() +
+                        " parameters but got " + argValues.length);
+                }
+                templateArgs = new LinkedHashMap<>();
+                for (int i = 0; i < templateParams.size(); i++) {
+                    templateArgs.put(templateParams.get(i), argValues[i]);
+                }
+
+                String instanceName = baseTypeName + "_" + typeName.substring(bracketStart + 1, typeName.length() - 1)
+                    .replaceAll("[^a-zA-Z0-9_]", "_");
+                if (!state.structures.containsKey(instanceName)) {
+                    ConfigStructureImpl instantiated = templateStruct.instantiate(instanceName, templateArgs, state);
+                    instantiated.addAlignmentFill(state, 4);
+                    state.structures.put(instanceName, instantiated);
+
+                    if (log.debugEnabled())
+                        log.debug("Instantiating template " + baseTypeName + " as " + instanceName + " with " + instantiated.getcFields().size() + " fields");
+
+                    for (ConfigurationConsumer consumer : state.destinations) {
+                        try {
+                            consumer.handleEndStruct(state, instantiated);
+                        } catch (IOException e) {
+                            throw new IllegalStateException("Failed to output instantiated struct " + instanceName, e);
+                        }
+                    }
+                }
+
+                typeName = instanceName;
+            }
+        }
+
         if (state.isStackEmpty())
             throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
         ConfigStructureImpl structure = state.stack.peek();
 
-        Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getTypeName());
-        Integer customTypeSize = state.tsCustomSize.get(cf.getTypeName());
+        Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(baseTypeName);
+        Integer customTypeSize = state.tsCustomSize.get(baseTypeName);
         if (getPrimitiveSize != null && getPrimitiveSize > 1) {
             if (log.debugEnabled())
                 log.debug("Need to align before " + cf.getName());
             structure.addAlignmentFill(state, getPrimitiveSize);
-        } else if (state.structures.containsKey(cf.getTypeName())) {
-            // we are here for struct members
+        } else if (state.structures.containsKey(baseTypeName)) {
             structure.addAlignmentFill(state, 4);
         } else if (customTypeSize != null) {
             structure.addAlignmentFill(state, customTypeSize % 8);
+        }
+
+        if (templateArgs != null && state.structures.containsKey(typeName)) {
+            cf = new ConfigFieldImpl(state, cf.getName(), cf.getComment(), cf.getArraySizeVariableName(),
+                typeName, cf.getArraySizes(), cf.getTsInfo(), cf.isIterate(), cf.isHasAutoscale(),
+                cf.getTrueName(), cf.getFalseName());
         }
 
         if (cf.isIterate()) {

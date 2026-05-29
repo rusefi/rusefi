@@ -820,4 +820,84 @@ public class ConfigFieldParserTest {
                 "; total TS size = 256\n";
         assertEquals(expected, tsProjectConsumer.getContent());
     }
+
+    @Test
+    public void testStructTemplateDefinition() {
+        String test = "struct blend_table_s<TABLE_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "\tuint16_t[2] loadBins;;\"Load\", 1, 0, 0, 1000, 0\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        ConfigStructure templateStruct = state.getStructures().get("blend_table_s");
+        assertNotNull(templateStruct);
+        assertEquals("blend_table_s", templateStruct.getName());
+        assertTrue(((ConfigStructureImpl) templateStruct).isTemplate());
+        assertEquals(1, ((ConfigStructureImpl) templateStruct).getTemplateParameters().size());
+        assertEquals("TABLE_SCALE", ((ConfigStructureImpl) templateStruct).getTemplateParameters().get(0));
+    }
+
+    @Test
+    public void testStructTemplateInstantiation() {
+        String test = "#define BLEND_COUNT 2\n" +
+                "struct blend_table_s<TABLE_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "\tuint16_t[2] loadBins;;\"Load\", 1, 0, 0, 1000, 0\n" +
+                "end_struct\n" +
+                "struct_no_prefix engine_configuration_s\n" +
+                "blend_table_s<0.1>[BLEND_COUNT iterate] ignBlends\n" +
+                "blend_table_s<0.01>[BLEND_COUNT iterate] afrBlends\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        BaseCHeaderConsumer cConsumer = new BaseCHeaderConsumer();
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, cConsumer, tsProjectConsumer);
+
+        String cContent = cConsumer.getContent();
+        assertTrue(cContent.contains("scaled_channel<int16_t, 10, 1>"), "Should contain 0.1 scale");
+        assertTrue(cContent.contains("scaled_channel<int16_t, 100, 1>"), "Should contain 0.01 scale");
+
+        String tsContent = tsProjectConsumer.getContent();
+        assertTrue(tsContent.contains("ignBlends1_table = array, S16,"), "Should contain ignBlends1_table");
+        assertTrue(tsContent.contains("afrBlends1_table = array, S16,"), "Should contain afrBlends1_table");
+    }
+
+    @Test
+    public void testStructTemplateWithDifferentScales() {
+        String test = "struct blend_table_s<TABLE_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "end_struct\n" +
+                "struct_no_prefix engine_configuration_s\n" +
+                "blend_table_s<0.1> ignBlends\n" +
+                "blend_table_s<0.01> afrBlends\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, tsProjectConsumer);
+
+        String content = tsProjectConsumer.getContent();
+        assertTrue(content.contains("ignBlends_table"), "Should contain ignBlends_table");
+        assertTrue(content.contains("afrBlends_table"), "Should contain afrBlends_table");
+    }
+
+    @Test
+    public void testStructTemplateWrongArgCount() {
+        String test = "struct blend_table_s<TABLE_SCALE, OTHER_SCALE>\n" +
+                "\tint16_t[2 x 2] autoscale table;;\"\", @@TABLE_SCALE@@, 0, -100, 100, 1\n" +
+                "end_struct\n" +
+                "struct_no_prefix engine_configuration_s\n" +
+                "blend_table_s<0.1> ignBlends\n" +
+                "end_struct\n";
+
+        ReaderStateImpl state = new ReaderStateImpl();
+        assertThrows(ParsingException.class, () -> {
+            TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+            state.readBufferedReader(test, tsProjectConsumer);
+        });
+    }
 }
