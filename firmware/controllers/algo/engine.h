@@ -246,6 +246,7 @@ public:
 
     IgnitionState ignitionState{};
     void resetLua();
+    void reset();
 
 #if EFI_SHAFT_POSITION_INPUT
     void OnTriggerStateProperState(efitick_t nowNt, size_t triggerStateIndex) override;
@@ -385,8 +386,6 @@ public:
 #endif
 
 private:
-    void reset();
-
     void injectEngineReferences();
 };
 

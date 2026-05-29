@@ -100,7 +100,12 @@ FILE *jsonTrace = nullptr;
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
 	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
 {
-	efi::clear(engine.outputChannels);
+	efi::clear((output_channels_s&)engine.outputChannels);
+	efi::clear((fuel_computer_s&)engine.fuelComputer);
+	efi::clear((ignition_state_s&)engine.ignitionState);
+	efi::clear((engine_state_s&)engine.engineState);
+	efi::clear(engine.sensors);
+	engine.reset();
 	persistentConfig = decltype(persistentConfig){};
 	pinRepository = decltype(pinRepository){};
 
