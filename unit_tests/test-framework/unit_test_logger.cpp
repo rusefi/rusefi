@@ -148,7 +148,12 @@ static void writeCsvLine() {
 		if (digits > 9) {
 			digits = 9;
 		}
-		int n = fprintf(csvFile, ",%.*f", digits, v);
+		int n = 0;
+		if (std::isnan(v) || std::isinf(v)) {
+			n = fprintf(csvFile, ",null");
+		} else {
+			n = fprintf(csvFile, ",%.*f", digits, v);
+		}
 		if (n > 0) {
 			csvBytes += n;
 		}
