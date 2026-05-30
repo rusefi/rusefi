@@ -149,7 +149,8 @@ static void writeCsvLine() {
 			digits = 9;
 		}
 		int n = 0;
-		if (std::isnan(v) || std::isinf(v)) {
+		bool isFloat = (f.getTypeId() == static_cast<uint8_t>(MLG::Types::Field::Scalar::F32));
+		if (isFloat && (std::isnan(v) || std::isinf(v))) {
 			n = fprintf(csvFile, ",null");
 		} else {
 			n = fprintf(csvFile, ",%.*f", digits, v);
