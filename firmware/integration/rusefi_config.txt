@@ -93,7 +93,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260407
+#define FLASH_DATA_VERSION 260501
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -579,6 +579,8 @@ bit useSeparateIdleTablesForCrankingTaper,"enabled","disabled";This uses separat
 bit launchControlEnabled,"enabled","disabled"
 bit antiLagEnabled,"enabled","disabled"
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
+bit crankingAirAmountEnabled,"enabled","disabled";Enable CLT-based cranking air amount table. During cranking, open-loop valve position is taken from this table instead of the running idle tables.
+bit crankingIdleRpmFlareEnabled,"enabled","disabled";Enable CLT-based cranking idle RPM flare. An RPM adder from the table is applied during cranking, tapering to zero as the engine transitions to idle.
 bit displayLogicLevelsInEngineSniffer,"yes","no";Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
 bit useTLE8888_stepper,"yes","no"
 bit usescriptTableForCanSniffingFiltering,"yes","no"
@@ -1800,13 +1802,13 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 
 	bit nitrousControlEnabled,"enabled","disabled"
 	bit vvlControlEnabled,"enabled","disabled"
-	bit unusedBit_Fancy3
-	bit unusedBit_Fancy4
-	bit unusedBit_Fancy5
-	bit unusedBit_Fancy6
-	bit unusedBit_Fancy7
-	bit unusedBit_Fancy8
-	bit unusedBit_Fancy9
+	bit exhaustCutoutEnabled,"enabled","disabled"
+	bit exhaustCutoutShowOpenState,"LED on when open","LED off when open"
+	bit unusedBit_CutoutWasHBridge
+	bit exhaustCutoutInvertedOutput,"INVERTED","NORMAL"
+	bit exhaustCutoutKeyOnTestEnabled,"Key-on test","disabled"
+	bit exhaustCutoutEngineOnTestEnabled,"Engine-on test","disabled"
+	bit unusedBit_CutoutWasPwm
 	bit unusedBit_Fancy10
 	bit unusedBit_Fancy11
 	bit unusedBit_Fancy12
@@ -1932,7 +1934,51 @@ end_struct
 
     rotational_idle_s rotationalIdleController;
 
-! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
+! Exhaust Cutout Control
+	#define exhaust_cutout_activation_e_enum "OFF", "Switch", "LuaGauge"
+	custom exhaust_cutout_activation_e 1 bits, U08, @OFFSET@, [0:1], @@exhaust_cutout_activation_e_enum@@
+
+	#define exhaust_cutout_behavior_e_enum "Always Closed", "Always Open", "Auto"
+	custom exhaust_cutout_behavior_e 1 bits, U08, @OFFSET@, [0:1], @@exhaust_cutout_behavior_e_enum@@
+
+	#define exhaust_cutout_output_mode_e_enum "Digital", "PWM", "H-Bridge"
+	custom exhaust_cutout_output_mode_e 1 bits, U08, @OFFSET@, [0:1], @@exhaust_cutout_output_mode_e_enum@@
+
+	exhaust_cutout_output_mode_e exhaustCutoutOutputMode;Exhaust cutout output type: Digital on/off, PWM, or H-Bridge motor
+	exhaust_cutout_activation_e exhaustCutoutActivationMode;Exhaust cutout activation mode
+	exhaust_cutout_behavior_e exhaustCutoutBehaviorLow;Cutout behavior when switch is OFF or gauge is below threshold
+	exhaust_cutout_behavior_e exhaustCutoutBehaviorHigh;Cutout behavior when switch is ON or gauge is above threshold
+	lua_gauge_e exhaustCutoutLuaGauge;Lua gauge index for activation
+	lua_gauge_meaning_e exhaustCutoutLuaGaugeMeaning;Lua gauge comparison direction
+
+	switch_input_pin_e exhaustCutoutSwitchPin;Hardware switch input pin
+	pin_input_mode_e exhaustCutoutSwitchPinMode;
+
+	output_pin_e exhaustCutoutOutputPin;Cutout output pin (digital) or H-Bridge IN1 (Open direction)
+	pin_output_mode_e exhaustCutoutOutputPinMode;
+
+	output_pin_e exhaustCutoutHBridgePin2;H-Bridge IN2 pin (Close direction)
+	pin_output_mode_e exhaustCutoutHBridgePin2Mode;
+
+	output_pin_e exhaustCutoutLedPin;Status LED output pin
+	pin_output_mode_e exhaustCutoutLedPinMode;
+
+	float exhaustCutoutLuaGaugeThreshold;Lua gauge activation threshold;"", 1, 0, -30000, 30000, 3
+
+	uint16_t exhaustCutoutOpenRpm;RPM threshold to open cutout (0 to disable);"rpm", 1, 0, 0, 20000, 0
+	uint8_t exhaustCutoutOpenTps;TPS threshold to open cutout (0 to disable);"%", 1, 0, 0, 100, 0
+	uint8_t autoscale exhaustCutoutTpsDelayS;Anti-blip: TPS must exceed threshold for this long before opening;"s", 0.1, 0, 0, 25, 1
+	float exhaustCutoutOpenMapKpa;MAP/Boost threshold to open cutout (0 to disable);"kPa", 1, 0, 0, 500, 1
+	uint8_t autoscale exhaustCutoutClosingDelayS;Hold-open time after triggers clear;"s", 0.1, 0, 0, 25, 1
+	uint8_t autoscale exhaustCutoutMoveDurationS;H-Bridge motor drive time (de-energizes after). Also controls LED blink duration and actuator test step duration.;"s", 0.1, 0, 0, 5, 1
+
+	uint16_t exhaustCutoutPwmFrequency;PWM output frequency (PWM mode only);"Hz", 1, 0, 1, 10000, 0
+	uint8_t autoscale exhaustCutoutPwmOpenDuty;PWM duty when cutout is OPEN (PWM mode only);"%", 1, 0, 0, 100, 0
+	uint8_t autoscale exhaustCutoutPwmClosedDuty;PWM duty when cutout is CLOSED (PWM mode only);"%", 1, 0, 0, 100, 0
+
+	uint16_t exhaustCutoutHBridgePwmFrequency;H-Bridge IN1/IN2 PWM frequency (H-Bridge mode only);"Hz", 1, 0, 1, 10000, 0
+	uint8_t autoscale exhaustCutoutHBridgeDutyCycle;H-Bridge motor drive duty cycle (H-Bridge mode only);"%", 1, 0, 0, 100, 0
+	uint8_t[3] exhaustCutoutHBridgeAlignmentPad;unused
 
 ! end of engine_configuration_s
 end_struct
@@ -2017,7 +2063,8 @@ uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
 uint8_t[PEDAL_TO_TPS_RPM_SIZE] autoscale pedalToTpsRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
-float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.;"percent", 1, 0, 0, 100, 2
+float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;Cranking idle valve position by coolant temperature (Duty mode only). 0-100% open-loop valve duty during cranking.;"value", 1, 0, 0, 100, 0
+float[CLT_CRANKING_CURVE_SIZE] cltCrankingRpmAdder;Cranking idle RPM adder by coolant temperature (RPM mode only). Added on top of the normal CLT-based idle RPM target during cranking, tapering to zero as the engine warms into idle.;"RPM", 1, 0, 0, 2000, 0
 
 float[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDurationBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
 uint16_t[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDuration;This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\nShould be 100 once tune is better;"cycles", 1, 0, 0, 500, 1

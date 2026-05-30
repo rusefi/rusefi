@@ -12,6 +12,7 @@
 #include "closed_loop_idle_generated.h"
 #include "vvt_generated.h"
 #include "mc33810_state_generated.h"
+#include "exhaust_cutout.h"
 #include <livedata_board_extra.h>
 
 template<>
@@ -327,4 +328,9 @@ const live_data_rotational_idle_s* getLiveData(size_t) {
 #else
 	return nullptr;
 #endif
+}
+
+template<>
+const exhaust_cutout_s* getLiveData(size_t) {
+	return &engine->module<ExhaustCutoutController>().unmock();
 }

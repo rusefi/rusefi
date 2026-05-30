@@ -448,6 +448,7 @@ void commonInitEngineController() {
 	initScriptImpl();
 
 	initGpPwm();
+	initExhaustCutout();
 
 #if EFI_IDLE_CONTROL
 	startIdleThread();
