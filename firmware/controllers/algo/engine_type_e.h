@@ -208,8 +208,6 @@ enum class engine_type_e : uint16_t {
   UNUSED_105 = 105,
 
 // board_engine_types_tag
-
-  // [CannedTunes] please keep this always last always unused
 };
 
 engine_type_e getLastEngineType();
