@@ -579,6 +579,8 @@ bit useSeparateIdleTablesForCrankingTaper,"enabled","disabled";This uses separat
 bit launchControlEnabled,"enabled","disabled"
 bit antiLagEnabled,"enabled","disabled"
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
+bit crankingAirAmountEnabled,"enabled","disabled";Enable CLT-based cranking air amount table. During cranking, open-loop valve position is taken from this table instead of the running idle tables.
+bit crankingIdleRpmFlareEnabled,"enabled","disabled";Enable CLT-based cranking idle RPM flare. An RPM adder from the table is applied during cranking, tapering to zero as the engine transitions to idle.
 bit displayLogicLevelsInEngineSniffer,"yes","no";Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
 bit useTLE8888_stepper,"yes","no"
 bit usescriptTableForCanSniffingFiltering,"yes","no"
@@ -2017,7 +2019,8 @@ uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
 uint8_t[PEDAL_TO_TPS_RPM_SIZE] autoscale pedalToTpsRpmBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
-float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position %. The values in this curve represent a percentage of the ETB Maximum angle. e.g. If "ETB Idle Maximum Angle" is 10, a value of 70 means 7% ETB Position.;"percent", 1, 0, 0, 100, 2
+float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;Cranking idle valve position by coolant temperature (Duty mode only). 0-100% open-loop valve duty during cranking.;"value", 1, 0, 0, 100, 0
+float[CLT_CRANKING_CURVE_SIZE] cltCrankingRpmAdder;Cranking idle RPM adder by coolant temperature (RPM mode only). Added on top of the normal CLT-based idle RPM target during cranking, tapering to zero as the engine warms into idle.;"RPM", 1, 0, 0, 2000, 0
 
 float[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDurationBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -100 : -148}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 2
 uint16_t[CLT_CRANKING_TAPER_CURVE_SIZE] afterCrankingIACtaperDuration;This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\nShould be 100 once tune is better;"cycles", 1, 0, 0, 500, 1
