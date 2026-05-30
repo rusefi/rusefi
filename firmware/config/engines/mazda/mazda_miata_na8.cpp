@@ -36,7 +36,6 @@ void setMazdaMiata96() {
 	engineConfiguration->idlePidRpmDeadZone = 100;
 	engineConfiguration->idlePidRpmUpperLimit = 350;
 
-	engineConfiguration->iacByTpsTaper = 6;
 	engineConfiguration->useIdleTimingPidControl = true;
 
 	engineConfiguration->wwaeTau = 0.1;

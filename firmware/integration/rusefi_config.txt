@@ -1026,7 +1026,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
-	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
+	bit unusedBit_idleReturnTargetRamp,"yes","no"
 	bit useInjectorFlowLinearizationTable,"yes","no"
 	bit useHbridgesToDriveIdleStepper,"yes","no";If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable,"yes","no"
@@ -1305,7 +1305,7 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	bit enableKnockSpectrogram,"yes","no";"Available via TS Plugin see https://rusefi.com/s/knock"
 	bit enableKnockSpectrogramFilter,"yes","no"
 
-	int16_t iacByTpsTaper;This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.;"percent", 1, 0, 0, 500, 0
+	int16_t unusedIacByTpsTaper
 
 	Gpio accelerometerCsPin;
 	uint8_t coastingFuelCutVssLow;Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 255 : 158}, 0
@@ -1684,8 +1684,7 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	int8_t[TCU_GEAR_COUNT] autoscale gearBasedOpenLoopBoostAdder;Boost duty cycle modified by gear;"%", 0.5, 0, -63, 63, 1
 
 	uint32_t benchTestCount;How many test bench pulses do you want;"", 1, 0, 1, 10000000, 0
-	uint8_t autoscale iacByTpsHoldTime;How long initial idle adder is held before starting to decay.;"seconds", 0.1, 0, 0, 25, 1
-	uint8_t autoscale iacByTpsDecayTime;How long it takes to remove initial IAC adder to return to normal idle.;"seconds", 0.1, 0, 0, 25, 1
+	uint8_t[2] unusedIacByTpsHoldDecay
 
 	switch_input_pin_e[RANGE_INPUT_COUNT iterate] tcu_rangeInput;
 	pin_input_mode_e[RANGE_INPUT_COUNT iterate] tcu_rangeInputMode;
@@ -1886,7 +1885,7 @@ uint8_t autoscale knockFuelTrim;Maximum Amount of Fuel trim when knock;"%", 1, 0
 
 	int8_t[8] airmassToTimingBins;;"mg", 1, 0, -100, 100, 0
 	int8_t[8] airmassToTimingValues;;"deg", 1, 0, -30, 30, 0
-	uint8_t autoscale idleReturnTargetRampDuration;idle return target ramp duration;"seconds", 0.1, 0, 0.1, 15, 1
+	uint8_t unusedIdleReturnTargetRampDuration
 
 	float wastegatePositionOpenedVoltage;Voltage when the wastegate is fully open;"v", 1, 0, 0, 10, 2
 	float wastegatePositionClosedVoltage;Voltage when the wastegate is closed;"v", 1, 0, 0, 10, 2

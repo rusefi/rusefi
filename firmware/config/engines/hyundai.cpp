@@ -315,10 +315,6 @@ static void commonGenesisCoupe() {
     engineConfiguration->tpsAccelFractionDivisor = 3;
     // default "false"
     engineConfiguration->useSeparateAdvanceForIdle = true;
-    // default 0.0
-    engineConfiguration->iacByTpsHoldTime = 2;
-    // default 0.0
-    engineConfiguration->iacByTpsDecayTime = 3;
     // default "false"
     engineConfiguration->useIdleTimingPidControl = true;
     // default "false"

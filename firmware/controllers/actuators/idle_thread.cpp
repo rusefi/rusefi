@@ -41,17 +41,6 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
   // Higher exit than entry to add some hysteresis to avoid bouncing around upper threshold
  	float exitRpm = target + 1.5 * rpmUpperLimit;
 
- 	// Ramp the target down from the transition RPM to normal over a few seconds
-  if (engineConfiguration->idleReturnTargetRamp) {
- 		// Ramp the target down from the transition RPM to normal over a few seconds
- 		float timeSinceIdleEntry = m_timeInIdlePhase.getElapsedSeconds();
- 		target += interpolateClamped(
- 			0, rpmUpperLimit,
- 			engineConfiguration->idleReturnTargetRampDuration, 0,
- 			timeSinceIdleEntry
- 		);
- 	}
-
  	idleTarget = target;
 	idleEntryRpm = entryRpm;
 	idleExitRpm = exitRpm;
@@ -142,31 +131,6 @@ if (engine->antilagController.isAntilagCondition) {
 	running += engineConfiguration->ALSIdleAdd;
 }
 #endif /* EFI_ANTILAG_SYSTEM */
-
-	// 'dashpot' (hold+decay) logic for coasting->idle
-	float tpsForTaper = tps.value_or(0);
-	efitimeus_t nowUs = getTimeNowUs();
-	if (phase == Phase::Running) {
-		lastTimeRunningUs = nowUs;
-	}
-	// imitate a slow pedal release for TPS taper (to avoid engine stalls)
-	if (tpsForTaper <= engineConfiguration->idlePidDeactivationTpsThreshold) {
-		// make sure the time is not zero
-		float timeSinceRunningPhaseSecs = (nowUs - lastTimeRunningUs + 1) / US_PER_SECOND_F;
-		// we shift the time to implement the hold correction (time can be negative)
-		float timeSinceRunningAfterHoldSecs = timeSinceRunningPhaseSecs - engineConfiguration->iacByTpsHoldTime;
-		// implement the decay correction (from tpsForTaper to 0)
-		tpsForTaper = interpolateClamped(0, engineConfiguration->idlePidDeactivationTpsThreshold, engineConfiguration->iacByTpsDecayTime, tpsForTaper, timeSinceRunningAfterHoldSecs);
-	}
-
-	// Now bump it by the specified amount when the throttle is opened (if configured)
-	// nb: invalid tps will make no change, no explicit check required
-	iacByTpsTaper = interpolateClamped(
-		0, 0,
-		engineConfiguration->idlePidDeactivationTpsThreshold, engineConfiguration->iacByTpsTaper,
-		tpsForTaper);
-
-	running += iacByTpsTaper;
 
 	float airTaperRpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit;
 	iacByRpmTaper = interpolateClamped(

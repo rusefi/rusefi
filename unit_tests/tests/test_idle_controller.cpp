@@ -213,66 +213,6 @@ TEST(idle_v2, idleAdderShouldNotAffectNonIdleAreas) {
 	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 }
 
-TEST(idle_v2, runningOpenLoopTpsTaper) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	IdleController dut;
-
-	// Zero out base tempco table
-	setTable(config->cltIdleCorrTable, 0.0f);
-
-	// Add 50% idle position
-	engineConfiguration->iacByTpsTaper = 50;
-	// At 10% TPS
-	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
-
-	// Check in-bounds points
-	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 0, 0));
-	EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 0, 5));
-	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 0, 10));
-
-	// Check out of bounds - shouldn't leave the interval [0, 10]
-	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 0, -5));
-	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 0, 20));
-}
-
-TEST(idle_v2, runningOpenLoopTpsTaperWithDashpot) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	IdleController dut;
-
-	// Zero out base tempco table
-	setTable(config->cltIdleCorrTable, 0.0f);
-
-	// Add 50% idle position
-	engineConfiguration->iacByTpsTaper = 50;
-	// At 10% TPS
-	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
-
-	// set hold and decay time
-	engineConfiguration->iacByTpsHoldTime = 10;	// 10 secs
-	engineConfiguration->iacByTpsDecayTime = 10;	// 10 secs
-
-	// save the lastTimeRunningUs time - let it be the start of the hold phase
-	advanceTimeUs(5'000'000);
-	// full throttle = max.iac
-	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Running, 0, 0, 100));
-
-	// jump to the end of the 'hold' phase of dashpot
-	advanceTimeUs(10'000'000);
-
-	// change the state to idle (release the pedal) - but still 100% max.iac!
-    EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 0));
-    // now we're in the middle of decay
-    advanceTimeUs(5'000'000);
-    // 50% decay (50% of 50 is 25)
-    EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 0));
-    // now the decay is finished
-    advanceTimeUs(5'000'000);
-    // no correction
-    EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 0));
-    // still react to the pedal
-    EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 10));
-}
-
 struct MockOpenLoopIdler : public IdleController {
 	MOCK_METHOD(float, getCrankingOpenLoop, (float clt), (const, override));
 	MOCK_METHOD(float, getRunningOpenLoop, (IIdleController::Phase phase, float rpm, float clt, SensorResult tps), (override));
