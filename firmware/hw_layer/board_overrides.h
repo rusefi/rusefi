@@ -78,6 +78,10 @@ extern std::optional<setup_custom_board_engine_type_type> custom_board_applyUnkn
 extern std::optional<setup_custom_board_overrides_type> custom_board_periodicSlowCallback;
 extern std::optional<setup_custom_board_overrides_type> custom_board_periodicFastCallback;
 
+// Called from Engine::onEngineStopped() so boards can reset their own per-run state
+// (e.g. board-specific trigger/IO hardware) when the engine stops.
+extern std::optional<setup_custom_board_overrides_type> custom_board_onEngineStopped;
+
 // Board hardware related:
 extern std::optional<setup_custom_board_output_type> custom_board_getMetaOutputsCount;
 extern std::optional<setup_custom_board_output_type> custom_board_getMetaLowSideOutputs;

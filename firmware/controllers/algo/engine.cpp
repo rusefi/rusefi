@@ -149,6 +149,7 @@ void Engine::updateTriggerConfiguration() {
 
 std::optional<setup_custom_board_overrides_type> custom_board_periodicSlowCallback;
 std::optional<setup_custom_board_overrides_type> custom_board_periodicFastCallback;
+std::optional<setup_custom_board_overrides_type> custom_board_onEngineStopped;
 
 void boardPeriodicSlowCallback() {
   // placeholder to force upgrade
@@ -595,6 +596,9 @@ void Engine::periodicFastCallback() {
 
 void Engine::onEngineStopped() {
 	engineModules.apply_all([](auto& m) { m.onEngineStop(); });
+
+  // todo: proper way is to use modules!
+	call_board_override(custom_board_onEngineStopped);
 }
 
 EngineRotationState * getEngineRotationState() {
