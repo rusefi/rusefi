@@ -12,15 +12,49 @@
 #include <cstdint>
 
 /**
- * Something is wrong, but we can live with it: some minor sensor is disconnected
- * or something like that
+ * rusEFI distinguishes three kinds of errors, in order of increasing severity:
  *
- * see also firmwareError()
+ *  1) warning(...)         - Recoverable runtime condition. The engine keeps running.
+ *                            Example: a minor/optional sensor is disconnected, a
+ *                            transient out-of-range reading, a non-fatal CAN timeout.
+ *                            Warnings are rate-limited and surfaced in the TS warning
+ *                            channel. Use warningTsReport() to also pop up a TS dialog.
+ *
+ *  2) configError(...)     - Recoverable *configuration* problem detected at startup
+ *                            or while applying a new tune. The firmware keeps running
+ *                            (so the user can fix the tune over TS), but the offending
+ *                            subsystem should refuse to operate. The message is kept
+ *                            and exposed via getConfigErrorMessage() / hasConfigError()
+ *                            so TunerStudio can show it to the user.
+ *
+ *  3) firmwareError(...) / criticalError(...)
+ *                          - Non-recoverable: firmware cannot safely run the engine.
+ *                            Sets hasCriticalFirmwareErrorFlag, latches a critical
+ *                            message (getCriticalErrorMessage()), turns the fatal LED
+ *                            on and shuts outputs off. Use this for self-contradicting
+ *                            configuration that cannot be ignored, failed asserts, or
+ *                            any condition where continuing to drive outputs would be
+ *                            unsafe. criticalError() is just firmwareError() with the
+ *                            OBD_PCM_Processor_Fault code pre-filled.
+ *
+ * Rule of thumb:
+ *   - Sensor/runtime hiccup the engine can survive          -> warning()
+ *   - Bad tune / setup the user must fix in TunerStudio     -> configError()
+ *   - We must not keep firing injectors/coils as configured -> firmwareError()/criticalError()
+ *
+ * See also docs/AI/ files referenced from CLAUDE.md.
+ */
+
+/**
+ * Something is wrong, but we can live with it: some minor sensor is disconnected
+ * or something like that. Rate-limited; engine continues to run.
+ *
+ * see also configError() for bad-tune problems and firmwareError() for fatal ones.
  */
 bool warning(ObdCode code, const char *fmt, ...);
 
 /**
- * Same as above, but also report to user by pop-up window in TunerStudio
+ * Same as warning(), but also report to the user via a pop-up window in TunerStudio.
  */
 bool warningTsReport(ObdCode code, const char *fmt, ...);
 
@@ -31,14 +65,17 @@ using critical_msg_t = char[CRITICAL_BUFFER_SIZE];
     turnAllPinsOff();
 
 /**
- * Something really bad had happened - firmware cannot function, we cannot run the engine
- * We definitely use this critical error approach in case of invalid configuration. If user sets a self-contradicting
- * configuration we have to just put a hard stop on this.
+ * Something really bad has happened - firmware cannot function, we cannot run the engine.
+ * Latches a critical error: sets hasCriticalFirmwareErrorFlag, stores the message
+ * (retrievable via getCriticalErrorMessage()), and triggers criticalShutdown() (fatal
+ * LED on, all output pins off). Used for self-contradicting configuration that we
+ * refuse to run with, failed asserts, and other unrecoverable conditions.
  *
- * see also warning()
+ * see also warning() (recoverable runtime) and configError() (recoverable bad tune).
  */
 void firmwareError(ObdCode code, const char *fmt, ...);
 
+// Shortcut: firmwareError() with OBD_PCM_Processor_Fault as the OBD code.
 #define criticalError(...) firmwareError(ObdCode::OBD_PCM_Processor_Fault, __VA_ARGS__)
 
 extern bool hasCriticalFirmwareErrorFlag;
@@ -47,7 +84,12 @@ extern bool hasCriticalFirmwareErrorFlag;
 
 const char* getCriticalErrorMessage();
 
-// report recoverable configuration error
+/**
+ * Report a recoverable configuration error (bad/inconsistent tune).
+ * Unlike firmwareError(), the firmware keeps running so the user can fix
+ * the tune from TunerStudio. The offending subsystem is expected to refuse
+ * to operate. Message is exposed via getConfigErrorMessage() / hasConfigError().
+ */
 void configError(const char *fmt, ...);
 void clearConfigErrorMessage();
 const char* getConfigErrorMessage();
