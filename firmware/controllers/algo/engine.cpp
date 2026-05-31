@@ -151,14 +151,6 @@ std::optional<setup_custom_board_overrides_type> custom_board_periodicSlowCallba
 std::optional<setup_custom_board_overrides_type> custom_board_periodicFastCallback;
 std::optional<setup_custom_board_overrides_type> custom_board_onEngineStopped;
 
-void boardPeriodicSlowCallback() {
-  // placeholder to force upgrade
-}
-
-void boardPeriodicFastCallback() {
-  // placeholder to force upgrade
-}
-
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
@@ -210,7 +202,6 @@ void Engine::periodicSlowCallback() {
 	void baroLps25Update();
 	baroLps25Update();
 #endif // EFI_PROD_CODE
-  boardPeriodicSlowCallback();
   call_board_override(custom_board_periodicSlowCallback);
 }
 
@@ -583,9 +574,7 @@ injection_mode_e getCurrentInjectionMode() {
 void Engine::periodicFastCallback() {
 	ScopePerf pc(PE::EnginePeriodicFastCallback);
 
-	boardPeriodicFastCallback();
 	call_board_override(custom_board_periodicFastCallback);
-
 
 	engineState.periodicFastCallback();
 
