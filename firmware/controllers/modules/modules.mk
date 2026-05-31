@@ -1,6 +1,9 @@
 # auto-gen files
 MODULES_INC += $(PROJECT_DIR)/controllers/modules/generated
 
+# board module stubs - shared between prod firmware, simulator and unit_tests
+MODULES_INC += $(PROJECT_DIR)/controllers/modules/stubs
+
 # user defined modules
 include $(PROJECT_DIR)/controllers/modules/tachometer/tachometer.mk
 include $(PROJECT_DIR)/controllers/modules/fuel_pump/fuel_pump.mk

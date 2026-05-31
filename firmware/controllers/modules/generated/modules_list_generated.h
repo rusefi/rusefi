@@ -14,3 +14,6 @@ EthernetConsoleModule,
 #ifdef MODULE_VVL_CONTROLLER
 VvlController,
 #endif
+
+// Board-specific extra module types appended to Engine::engineModules
+#include "board_modules_list.h"
