@@ -22,6 +22,10 @@
 #define EFI_BOOST_CONTROL TRUE
 #endif
 
+#ifndef EFI_EXHAUST_CUTOUT
+#define EFI_EXHAUST_CUTOUT FALSE
+#endif
+
 #ifndef EFI_BOSCH_YAW
 #define EFI_BOSCH_YAW FALSE
 #endif

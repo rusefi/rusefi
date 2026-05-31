@@ -1,0 +1,10 @@
+struct_no_prefix exhaust_cutout_s
+	bit isTriggerRpm;RPM trigger active
+	bit isTriggerTps;TPS trigger active, anti-blip OK
+	bit isTriggerMap;MAP/boost trigger active
+	bit isInputHigh;Activation input in HIGH state
+	bit targetOpen;Control logic requests cutout open
+	bit isCutoutOpen;Cutout is fully open
+	bit isCutoutMoving;H-Bridge motor is running
+	bit isTestActive;Actuator test sequence is running
+end_struct

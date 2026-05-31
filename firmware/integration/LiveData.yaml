@@ -141,6 +141,14 @@ Usages:
     folder: controllers/actuators
     output_name: mainRelay
 
+  - name: exhaust_cutout
+    java: ExhaustCutout.java
+    folder: controllers/actuators
+    prepend: integration/rusefi_config_shared.txt
+    output_name: exhaustCutout
+    engineModule: ExhaustCutoutController
+    conditional_compilation: "EFI_EXHAUST_CUTOUT"
+
   #todo: handle ETB pid and Idle pid which point at same pid_state.txt
   # - name: pid_state
   #   java: PidState.java

@@ -39,6 +39,9 @@
 #include "trigger_scheduler.h"
 #include "fuel_pump.h"
 #include "main_relay.h"
+#if EFI_EXHAUST_CUTOUT
+#include "exhaust_cutout.h"
+#endif // EFI_EXHAUST_CUTOUT
 #include "ac_control.h"
 #include "type_list.h"
 #include "boost_control.h"
@@ -161,6 +164,9 @@ public:
         AlternatorController,
 #endif /* EFI_ALTERNATOR_CONTROL */
         MainRelayController,
+#if EFI_EXHAUST_CUTOUT
+        ExhaustCutoutController,
+#endif // EFI_EXHAUST_CUTOUT
         Mockable<IgnitionController>,
         Mockable<AcController>,
         PrimeController,

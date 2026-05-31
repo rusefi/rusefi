@@ -611,6 +611,24 @@ typedef enum __attribute__ ((__packed__)) {
 	LUA_GAUGE_UPPER_BOUND = 1,
 } lua_gauge_meaning_e;
 
+typedef enum __attribute__ ((__packed__)) {
+	EXHAUST_CUTOUT_OFF = 0,
+	EXHAUST_CUTOUT_SWITCH = 1,
+	EXHAUST_CUTOUT_LUA_GAUGE = 2,
+} exhaust_cutout_activation_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	EXHAUST_CUTOUT_ALWAYS_CLOSED = 0,
+	EXHAUST_CUTOUT_ALWAYS_OPEN = 1,
+	EXHAUST_CUTOUT_AUTO = 2,
+} exhaust_cutout_behavior_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	EXHAUST_CUTOUT_OUTPUT_DIGITAL = 0,
+	EXHAUST_CUTOUT_OUTPUT_PWM = 1,
+	EXHAUST_CUTOUT_OUTPUT_HBRIDGE = 2,
+} exhaust_cutout_output_mode_e;
+
 // this one is "Rotational Idle", it's a naming mess https://github.com/rusefi/rusefi/issues/8435
 typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_ANTILAG = 0,
