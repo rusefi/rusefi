@@ -26,10 +26,25 @@ class ShutdownController {
 public:
 	void stopEngine(StopRequestedReason reason);
 
+	/**
+	 * Engine-stop window: returns true while we are within the post-stop "cool-down" period.
+	 *
+	 * After a stop is requested (via start button, Lua script, console, TS command or a board hook -
+	 * see StopRequestedReason) we stay in "engine stop" mode for `engineShutDownPeriod` seconds.
+	 *
+	 * While in this window:
+	 *  - LimpManager cuts fuel (see LimpManager::updateState / ClearReason::StopRequested)
+	 *  - RpmCalculator::checkIfSpinning() reports the engine as not spinning, which in turn lets
+	 *    the rest of the code treat trigger events as if the engine is fully stopped and reset
+	 *    trigger-related state (e.g. noise filter accumulators, sync state) cleanly.
+	 *
+	 * The timer is (re)started by ShutdownController::stopEngine().
+	 */
 	bool isEngineStop(efitick_t nowNt) const {
 		float timeSinceStopRequested = m_engineStopTimer.getElapsedSeconds(nowNt);
 
-		// If there was stop requested in the past 5 seconds, we're in stop mode
+		// If there was a stop request within the last `engineShutDownPeriod` seconds, we're still
+		// in the engine-stop window.
 		return timeSinceStopRequested < engineConfiguration->engineShutDownPeriod;
 	}
 

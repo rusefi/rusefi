@@ -114,8 +114,18 @@ bool RpmCalculator::isRunning() const {
 
 /**
  * @return true if engine is spinning (cranking or running)
+ *
+ * If a stop was recently requested (see ShutdownController::isEngineStop and
+ * StopRequestedReason - start button, Lua, console, TS command, board hook), we
+ * deliberately return false here even if trigger pulses are still arriving while the
+ * engine winds down. This guarantees the engine is treated as stopped during the
+ * shutdown window, which - via the STOPPED state path and RpmCalculator::setStopSpinning() -
+ * lets trigger state (noise filter accumulators, shaft sync, instant-RPM history) be
+ * reset cleanly without re-entering RUNNING/CRANKING from leftover trigger events.
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
+	// Engine-stop window: force "not spinning" so the rest of the code path resets trigger
+	// state instead of latching back into a running state from residual trigger pulses.
 	if (getLimpManager()->shutdownController.isEngineStop(nowNt)) {
 		return false;
 	}
@@ -220,6 +230,20 @@ void RpmCalculator::onSlowCallback() {
 	}
 }
 
+/**
+ * Called when we conclude the engine is no longer spinning - either because no trigger events
+ * have been seen for a while (see RpmCalculator::onSlowCallback -> engineMovedRecently) or as
+ * part of an explicit engine stop request (see ShutdownController / LimpManager).
+ *
+ * This is where trigger-related state is reset back to a clean "engine off" baseline so that
+ * the next start attempt begins from a known state:
+ *   - noise filter accumulators are cleared (required by 'useNoiselessTriggerDecoder')
+ *   - revolution counter since start is zeroed
+ *   - cached RPM and rpmRate are zeroed
+ *   - spinning_state_e is forced to STOPPED
+ *   - engine->onEngineStopped() notifies all engine modules so they can reset their own
+ *     per-run state (trigger sync, instant RPM, schedulers, etc.) - see Engine::onEngineStopped.
+ */
 void RpmCalculator::setStopSpinning() {
 	isSpinning = false;
 	revolutionCounterSinceStart = 0;
@@ -227,12 +251,16 @@ void RpmCalculator::setStopSpinning() {
 
 	if (cachedRpmValue != 0) {
 		assignRpmValue(0);
+		// Reset trigger-decoder noise filter accumulators - otherwise stale per-tooth statistics
+		// from the previous run would bias the noiseless trigger decoder on the next start.
 		// needed by 'useNoiselessTriggerDecoder'
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 		efiPrintf("engine stopped");
 	}
 	state = STOPPED;
 
+	// Broadcast "engine stopped" to all engine modules so they can reset their own state
+	// (trigger sync, instant RPM history, schedulers, etc.). See Engine::onEngineStopped.
 	engine->onEngineStopped();
 }
 

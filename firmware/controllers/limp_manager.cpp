@@ -186,7 +186,16 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		m_lowOilPressureTimer.reset(nowNt);
 	}
 
-	// If we're in engine stop mode, inhibit fuel
+	// If we're in the engine-stop window (a stop was requested recently via start button, Lua,
+	// console, TS command or a board hook - see ShutdownController::isEngineStop and
+	// StopRequestedReason), inhibit fuel so the engine actually winds down instead of restarting
+	// from residual trigger events.
+	//
+	// Note: this works together with RpmCalculator::checkIfSpinning(), which also consults
+	// shutdownController.isEngineStop() and forces the "not spinning" state during the same
+	// window. That in turn lets trigger-related state (noise filter accumulators, shaft sync,
+	// instant-RPM state) be reset cleanly via RpmCalculator::setStopSpinning() ->
+	// triggerCentral.noiseFilter.resetAccumSignalData() and engine->onEngineStopped().
 	if (shutdownController.isEngineStop(nowNt)) {
 		/**
 		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
