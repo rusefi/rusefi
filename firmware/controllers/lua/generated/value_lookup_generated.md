@@ -565,6 +565,9 @@ AEM X-Series or rusEFI Wideband
 ### useAbsolutePressureForLagTime
 
 
+### mainRelayDisableTime
+Time after ignition turn-off before the main relay is disabled.
+
 ### verboseCanBaseAddress
 
 

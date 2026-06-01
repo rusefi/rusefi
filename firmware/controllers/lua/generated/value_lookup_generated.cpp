@@ -571,6 +571,9 @@ float getConfigValueByHash(const int hash) {
 // useAbsolutePressureForLagTime
 		case -1155937004:
 			return engineConfiguration->useAbsolutePressureForLagTime;
+// mainRelayDisableTime
+		case 2053998026:
+			return engineConfiguration->mainRelayDisableTime;
 // verboseCanBaseAddress
 		case 6238478:
 			return engineConfiguration->verboseCanBaseAddress;
@@ -3090,6 +3093,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1155937004:
 	{
 		engineConfiguration->useAbsolutePressureForLagTime = (int)value;
+		return 1;
+	}
+		case 2053998026:
+	{
+		engineConfiguration->mainRelayDisableTime = (int)value;
 		return 1;
 	}
 		case 6238478:
