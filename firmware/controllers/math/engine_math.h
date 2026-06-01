@@ -69,6 +69,10 @@ struct BlendResult {
 	float TableYAxis;
 };
 
+// Convert blend percent (0-100) to ratio (0-1)
+// blendValues stores percent, so interpolate2d returns percent directly
+static constexpr float BLEND_PERCENT_TO_RATIO = 1.0f / 100.0f;
+
 template<typename TBlendTable>
 BlendResult calculateBlend(TBlendTable& cfg, float rpm, float load) {
 	// If set to 0, skip the math as its disabled
@@ -96,7 +100,7 @@ BlendResult calculateBlend(TBlendTable& cfg, float rpm, float load) {
 
 	float blendFactor = interpolate2d(value.Value, cfg.blendBins, cfg.blendValues);
 
-	return { value.Value, blendFactor, 0.01f * blendFactor * tableValue, load };
+	return { value.Value, blendFactor, BLEND_PERCENT_TO_RATIO * blendFactor * tableValue, load };
 }
 
 // Overload for tables with flat (non-struct) blend config, e.g. veSwitchTable.
