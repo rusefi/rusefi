@@ -385,15 +385,21 @@ float IdleController::getIdlePosition(float rpm) {
 
 		m_lastPhase = phase;
 
-		// RPM mode: add the CLT-based RPM adder on top of the normal idle RPM target during
-		// cranking, then taper the adder to zero as crankingTaper approaches 1.
+		// RPM mode: elevate the idle RPM target by a CLT-based adder during cranking and the
+		// crank-to-idle taper, decaying to zero as crankingTaper approaches 1.
+		// m_lastTargetRpm is updated for both phases so that getRunningOpenLoop() indexes the
+		// 3D duty table at the elevated RPM even during actual cranking (starter engaged).
+		// idleTarget (displayed in TunerStudio) is only updated during CrankToIdleTaper — when
+		// the engine is running — to avoid showing a corrupted value during key-off.
 		if (engineConfiguration->crankingIdleRpmFlareEnabled &&
 		    (phase == Phase::Cranking || phase == Phase::CrankToIdleTaper)) {
 			float rpmAdder = interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingRpmAdder);
 			float crankingRpmTarget = m_lastTargetRpm + rpmAdder;
 			m_lastTargetRpm = interpolateClamped(0, crankingRpmTarget, 1, m_lastTargetRpm, crankingTaper);
 			targetRpm.ClosedLoopTarget = m_lastTargetRpm;
-			idleTarget = m_lastTargetRpm;
+			if (phase == Phase::CrankToIdleTaper) {
+				idleTarget = m_lastTargetRpm;
+			}
 		}
 
 		finishIdleTestIfNeeded();
