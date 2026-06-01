@@ -58,7 +58,7 @@ TEST(harley, hdCrankingWithCam3) {
 		}
 	}
 
-	ASSERT_EQ(2, engine->triggerCentral.triggerState.camResyncCounter); // interesting!
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.phaseResyncCounter); // interesting!
 }
 
 TEST(harley, hdCrankingWithCam4) {

@@ -266,7 +266,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	if (totalShift > 0) {
 		m_phaseAdjustment = totalShift;
 		// Resync angle changed - count how many times this happens
-		camResyncCounter++;
+		phaseResyncCounter++;
 		onTransitionEvent(TransitionEvent::EngineResync);
 	}
 
