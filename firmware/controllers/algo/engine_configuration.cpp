@@ -428,6 +428,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->vvtActivationDelayMs = 6000;
 
 	engineConfiguration->startCrankingDuration = 3;
+	engineConfiguration->mainRelayDisableTime = 1;
 
 	engineConfiguration->maxAcRpm = 5000;
 	engineConfiguration->maxAcClt = 100;
