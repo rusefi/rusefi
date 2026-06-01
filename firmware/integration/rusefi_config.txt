@@ -2237,8 +2237,8 @@ struct blend_table_s<TABLE_SCALE>
 	uint8_t[BLEND_FACTOR_SIZE] autoscale blendValues;;"%", 0.5, 0, 0, 100, 1
 end_struct
 
-blend_table_s<0.1>[IGN_BLEND_COUNT iterate] ignBlends
-blend_table_s<0.1>[VE_BLEND_COUNT iterate] veBlends
+blend_table_s<BLEND_PRECISION>[IGN_BLEND_COUNT iterate] ignBlends
+blend_table_s<BLEND_PRECISION>[VE_BLEND_COUNT iterate] veBlends
 
 ! secondVe and secondIgnition fields moved to config_page_4.txt (page4_s / TS page 4)
 #define THR_EST_SIZE 12
@@ -2246,8 +2246,8 @@ blend_table_s<0.1>[VE_BLEND_COUNT iterate] veBlends
 uint16_t[THR_EST_SIZE] autoscale throttleEstimateEffectiveAreaBins;;"%", 0.1, 0, 0, 100, 1
 uint16_t[THR_EST_SIZE] autoscale throttleEstimateEffectiveAreaValues;In units of g/s normalized to choked flow conditions;"g/s", 0.1, 0, 0, 6500, 1
 
-blend_table_s<0.1>[BOOST_BLEND_COUNT iterate] boostOpenLoopBlends
-blend_table_s<0.1>[BOOST_BLEND_COUNT iterate] boostClosedLoopBlends
+blend_table_s<BLEND_PRECISION>[BOOST_BLEND_COUNT iterate] boostOpenLoopBlends
+blend_table_s<BLEND_PRECISION>[BOOST_BLEND_COUNT iterate] boostClosedLoopBlends
 
 float[RANGE_INPUT_COUNT] tcu_rangeP;;"level", 1, 0, 0, 200000, 0
 float[RANGE_INPUT_COUNT] tcu_rangeR;;"level", 1, 0, 0, 200000, 0
@@ -2351,7 +2351,7 @@ include_file controllers/modules/check_engine_light/check_engine_config.txt
 uint8_t[8] autoscale minimumOilPressureBins;;"RPM", @@RPM_AS_BYTE_SCALE@@, 0, 0, @@RPM_AS_BYTE_LIMIT@@, 0
 uint8_t[8] autoscale minimumOilPressureValues;;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 10 : 1.45038}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 1000 : 145}, 0
 
-blend_table_s<0.01>[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
+blend_table_s<TARGET_AFR_BLEND_PRECISION>[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
 
 #define DYNO_RPM_STEP_UNITS "Rpm"
 #define DYNO_RPM_STEP_TOOLTIP "RPM Trim Window, Leave on 100 if you dont know what this does"
