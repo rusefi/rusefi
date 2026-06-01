@@ -1761,9 +1761,9 @@ float getOutputValueByHash(const int hash) {
 // triggerElapsedUs
 		case 767689023:
 			return engine->triggerCentral.triggerElapsedUs;
-// camResyncCounter
-		case 1138743722:
-			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).camResyncCounter;
+// phaseResyncCounter
+		case 1065880714:
+			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).phaseResyncCounter;
 // m_phaseAdjustment
 		case -739701471:
 			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_phaseAdjustment;

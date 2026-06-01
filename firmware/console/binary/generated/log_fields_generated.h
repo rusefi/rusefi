@@ -791,7 +791,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 	{engine->triggerCentral, 64, 0, "isDecodingMapCam", ""},
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
-	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).camResyncCounter, "sync: Phase Re-Sync Counter", "cnt", 0, "Sync"},
+	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).phaseResyncCounter, "sync: Phase Re-Sync Counter", "cnt", 0, "Sync"},
 	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_phaseAdjustment, "sync: phase adjustment", "deg", 0, "Sync"},
 	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState), 4, 0, "sync: We Know Engine Phase", ""},
 	{static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState), 4, 1, "sync: We have sync", ""},
