@@ -394,8 +394,9 @@ float IdleController::getIdlePosition(float rpm) {
 		if (engineConfiguration->crankingIdleRpmFlareEnabled &&
 		    (phase == Phase::Cranking || phase == Phase::CrankToIdleTaper)) {
 			float rpmAdder = interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingRpmAdder);
-			float crankingRpmTarget = m_lastTargetRpm + rpmAdder;
-			m_lastTargetRpm = interpolateClamped(0, crankingRpmTarget, 1, m_lastTargetRpm, crankingTaper);
+			float baseIdle = targetRpm.ClosedLoopTarget;
+			float crankingRpmTarget = baseIdle + rpmAdder;
+			m_lastTargetRpm = interpolateClamped(0, crankingRpmTarget, 1, baseIdle, crankingTaper);
 			targetRpm.ClosedLoopTarget = m_lastTargetRpm;
 			if (phase == Phase::CrankToIdleTaper) {
 				idleTarget = m_lastTargetRpm;
