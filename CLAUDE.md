@@ -107,6 +107,7 @@ For detailed technical documentation intended for AI assistants, see:
 - **Event-driven execution**: Trigger events from crank/cam sensors drive the main control loop
 - **Angle-based scheduling**: Events scheduled by crank angle, not just time
 - **Configuration-driven**: Board and engine parameters externalized; firmware adapts via configuration
+- **Calibration Compatibility**: Maintaining [compatibility with older tunes](docs/calibration-compatibility.md) when adding new parameters.
 - **ChibiOS RTOS**: Real-time operating system foundation
 
 #### Generated configuration layout
