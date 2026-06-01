@@ -1107,6 +1107,10 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		engine->module<AcController>().unmock().isDisabledByLua = value;
 		return 0;
 	});
+	lua_register(lState, "startDisabled", [](lua_State* l) {
+		engine->startStopState.startDisabledByLua = lua_toboolean(l, 1);
+		return 0;
+	});
 	lua_register(lState, "getTimeSinceAcToggleMs", [](lua_State* l) {
 		float result = engine->module<AcController>().unmock().timeSinceStateChange.getElapsedSeconds() * 1000;
 		lua_pushnumber(l, result);

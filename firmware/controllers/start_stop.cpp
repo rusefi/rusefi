@@ -84,6 +84,9 @@ void slowStartStopButtonCallback() {
     if (isCrankingSuppressed()) {
       return;
     }
+    if (engine->startStopState.startDisabledByLua) {
+      return;
+    }
   }
 
 	bool startStopState = engine->startStopState.startStopButtonDebounce.readPinEvent();

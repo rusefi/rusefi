@@ -8,6 +8,7 @@ struct StartStopState {
  	Timer startStopStateLastPush;
 
   bool isFirstTime = true;
+  bool startDisabledByLua = false;
 
 };
 
