@@ -23,7 +23,7 @@ public:
     [[nodiscard]] uint16_t getCounter() const;
 
     explicit operator bool() const {
-        return state != nullptr;
+        return state != nullptr && (*state != 0);
     }
 
 private:

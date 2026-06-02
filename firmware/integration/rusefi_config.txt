@@ -1088,8 +1088,8 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     custom antiLagActivationMode_e  1 bits, S08, @OFFSET@, [0:1], @@antiLagActivationMode_e_enum@@
     antiLagActivationMode_e antiLagActivationMode;
 
-#define cranking_condition_e_enum "None", "Brake", "Clutch"
-custom cranking_condition_e 1 bits, S08, @OFFSET@, [0:1], @@cranking_condition_e_enum@@
+#define cranking_condition_e_enum "None", "Brake", "Clutch Up", "Clutch Down"
+custom cranking_condition_e 1 bits, S08, @OFFSET@, [0:2], @@cranking_condition_e_enum@@
 cranking_condition_e crankingCondition;
 
 include_file controllers/algo/accel_enrichment.engineConfiguration.txt
