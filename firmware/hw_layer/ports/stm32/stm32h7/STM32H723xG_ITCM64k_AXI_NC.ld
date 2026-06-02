@@ -14,6 +14,16 @@
     limitations under the License.
 */
 
+/* change address & length if bootloader */
+/* H743 has all sectors 128K size */
+bootloader_size = 128k;
+flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
+flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 1M;
+image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
+
+/* OpenBLT <-> main FW shared area */
+_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
+
 /*
  * STM32H723xG (64k ITCM) generic setup.
  * 
@@ -26,7 +36,7 @@
  */
 MEMORY
 {
-    flash0 (rx) : org = 0x08000000, len = 1M        /* Flash bank1 */
+    flash0 (rx) : org = flash_start, len = image_size    /* Flash bank1 */
     flash1 (rx) : org = 0x00000000, len = 0
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
@@ -34,7 +44,8 @@ MEMORY
     flash5 (rx) : org = 0x00000000, len = 0
     flash6 (rx) : org = 0x00000000, len = 0
     flash7 (rx) : org = 0x00000000, len = 0
-    ram0   (wx) : org = 0x24000000, len = 16k       /* AXI SRAM no-cache*/
+    shared      : org = 0x24000000, len = _OpenBLT_Shared_Params_Size
+    ram0   (wx) : org = 0x24000000 + _OpenBLT_Shared_Params_Size, len = 16k - _OpenBLT_Shared_Params_Size       /* AXI SRAM no-cache*/
     ram1   (wx) : org = 0x24004000, len = 304k      /* AXI SRAM cached */
     ram2   (wx) : org = 0x30000000, len = 16k       /* AHB SRAM1 */
     ram3   (wx) : org = 0x30002000, len = 16k       /* AHB SRAM2 */
