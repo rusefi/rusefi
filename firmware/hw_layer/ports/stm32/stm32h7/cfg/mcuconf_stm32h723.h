@@ -4,9 +4,20 @@
 #ifndef STM32_NOCACHE_ENABLE
 #define STM32_NOCACHE_ENABLE                TRUE
 #endif
+
+#if STM32_NOCACHE_IN_AXI
+// first 16 Kb in AXI SRAM.
+#define STM32_NOCACHE_MPU_REGION            MPU_REGION_6
+#define STM32_NOCACHE_RBAR                  0x24000000U
+#define STM32_NOCACHE_RASR                  MPU_RASR_SIZE_16K
+#else
+// whole SRAM2 region.
+// NOTE: this region is not accesable by some bus master
+// For example by SDMMC1 !!!
 #define STM32_NOCACHE_MPU_REGION            MPU_REGION_6
 #define STM32_NOCACHE_RBAR                  0x30002000U
 #define STM32_NOCACHE_RASR                  MPU_RASR_SIZE_16K
+#endif
 
 /*
  * PWR system settings.
