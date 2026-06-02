@@ -6262,7 +6262,7 @@ struct blend_table_s {
 	/**
 	 * offset 0
 	 */
-	scaled_channel<int16_t, 10, 1> table[BLEND_TABLE_COUNT][BLEND_TABLE_COUNT] = {};
+	scaled_channel<int16_t, 1, 1> table[BLEND_TABLE_COUNT][BLEND_TABLE_COUNT] = {};
 	/**
 	 * units: Load
 	 * offset 128
@@ -6298,6 +6298,90 @@ struct blend_table_s {
 	uint8_t alignmentFill_at_186[2] = {};
 };
 static_assert(sizeof(blend_table_s) == 188);
+
+// start of blend_table_s_BLEND_PRECISION
+struct blend_table_s_BLEND_PRECISION {
+	/**
+	 * offset 0
+	 */
+	scaled_channel<int16_t, 1, 1> table[BLEND_TABLE_COUNT][BLEND_TABLE_COUNT] = {};
+	/**
+	 * units: Load
+	 * offset 128
+	 */
+	uint16_t loadBins[BLEND_TABLE_COUNT] = {};
+	/**
+	 * units: RPM
+	 * offset 144
+	 */
+	uint16_t rpmBins[BLEND_TABLE_COUNT] = {};
+	/**
+	 * offset 160
+	 */
+	gppwm_channel_e blendParameter;
+	/**
+	 * offset 161
+	 */
+	gppwm_channel_e yAxisOverride;
+	/**
+	 * offset 162
+	 */
+	scaled_channel<int16_t, 10, 1> blendBins[BLEND_FACTOR_SIZE] = {};
+	/**
+	 * units: %
+	 * offset 178
+	 */
+	scaled_channel<uint8_t, 2, 1> blendValues[BLEND_FACTOR_SIZE] = {};
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 186
+	 */
+	uint8_t alignmentFill_at_186[2] = {};
+};
+static_assert(sizeof(blend_table_s_BLEND_PRECISION) == 188);
+
+// start of blend_table_s_TARGET_AFR_BLEND_PRECISION
+struct blend_table_s_TARGET_AFR_BLEND_PRECISION {
+	/**
+	 * offset 0
+	 */
+	scaled_channel<int16_t, 1, 1> table[BLEND_TABLE_COUNT][BLEND_TABLE_COUNT] = {};
+	/**
+	 * units: Load
+	 * offset 128
+	 */
+	uint16_t loadBins[BLEND_TABLE_COUNT] = {};
+	/**
+	 * units: RPM
+	 * offset 144
+	 */
+	uint16_t rpmBins[BLEND_TABLE_COUNT] = {};
+	/**
+	 * offset 160
+	 */
+	gppwm_channel_e blendParameter;
+	/**
+	 * offset 161
+	 */
+	gppwm_channel_e yAxisOverride;
+	/**
+	 * offset 162
+	 */
+	scaled_channel<int16_t, 10, 1> blendBins[BLEND_FACTOR_SIZE] = {};
+	/**
+	 * units: %
+	 * offset 178
+	 */
+	scaled_channel<uint8_t, 2, 1> blendValues[BLEND_FACTOR_SIZE] = {};
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 186
+	 */
+	uint8_t alignmentFill_at_186[2] = {};
+};
+static_assert(sizeof(blend_table_s_TARGET_AFR_BLEND_PRECISION) == 188);
 
 // start of KnockGain
 struct KnockGain {
@@ -7121,11 +7205,11 @@ struct persistent_config_s {
 	/**
 	 * offset 59584
 	 */
-	blend_table_s ignBlends[IGN_BLEND_COUNT] = {};
+	blend_table_s_BLEND_PRECISION ignBlends[IGN_BLEND_COUNT] = {};
 	/**
 	 * offset 60336
 	 */
-	blend_table_s veBlends[VE_BLEND_COUNT] = {};
+	blend_table_s_BLEND_PRECISION veBlends[VE_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 61088
@@ -7140,11 +7224,11 @@ struct persistent_config_s {
 	/**
 	 * offset 61136
 	 */
-	blend_table_s boostOpenLoopBlends[BOOST_BLEND_COUNT] = {};
+	blend_table_s_BLEND_PRECISION boostOpenLoopBlends[BOOST_BLEND_COUNT] = {};
 	/**
 	 * offset 61512
 	 */
-	blend_table_s boostClosedLoopBlends[BOOST_BLEND_COUNT] = {};
+	blend_table_s_BLEND_PRECISION boostClosedLoopBlends[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: level
 	 * offset 61888
@@ -7549,7 +7633,7 @@ struct persistent_config_s {
 	/**
 	 * offset 63304
 	 */
-	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT] = {};
+	blend_table_s_TARGET_AFR_BLEND_PRECISION targetAfrBlends[TARGET_AFR_BLEND_COUNT] = {};
 	/**
 	 * @@DYNO_RPM_STEP_TOOLTIP@@
 	 * units: Rpm
