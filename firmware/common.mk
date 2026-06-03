@@ -63,11 +63,6 @@ endif
 LIVE_DATA_GENERATED_DIRS := $(LIVE_DATA_GENERATED_DIRS) $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)live_data_generated
 LIVE_DATA_GENERATED_DIRS += $(PROJECT_DIR)/live_data_generated
 
-# When META_OUTPUT_ROOT_FOLDER is set prefer generated headers from that location
-ifneq ($(META_OUTPUT_ROOT_FOLDER),)
-	LIVE_DATA_GENERATED_DIRS := $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)live_data_generated $(LIVE_DATA_GENERATED_DIRS)
-endif
-
 ifeq ($(SHORT_BOARD_NAME),)
   SHORT_BOARD_NAME = f407-discovery
 endif
