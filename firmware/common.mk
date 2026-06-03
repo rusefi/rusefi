@@ -60,6 +60,7 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
 	# technical debt: this should be in a shared location for all private or custom repos!
 	LIVE_DATA_GENERATED_DIRS := $(BOARD_DIR)/generated/live_data_generated
 endif
+LIVE_DATA_GENERATED_DIRS := $(LIVE_DATA_GENERATED_DIRS) $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)live_data_generated
 LIVE_DATA_GENERATED_DIRS += $(PROJECT_DIR)/live_data_generated
 
 # When META_OUTPUT_ROOT_FOLDER is set prefer generated headers from that location
