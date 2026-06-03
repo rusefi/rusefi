@@ -274,7 +274,7 @@ public class LuaScriptPanel {
         setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
     }
 
-    static StringIniField getLuaScriptField(BinaryProtocol bp) {
+    public static StringIniField getLuaScriptField(BinaryProtocol bp) {
         Objects.requireNonNull(bp, "BinaryProtocol");
         // todo: do we have "luaScript" as code-generated constant anywhere?
         IniFileModel iniFile = bp.getIniFileNullable();
