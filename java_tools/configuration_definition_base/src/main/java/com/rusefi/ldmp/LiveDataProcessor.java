@@ -145,7 +145,7 @@ public class LiveDataProcessor {
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
-        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(getOutputLookupFileName(), fileFactory);
+        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(destinationFolder + getOutputLookupFileName(), fileFactory);
 
         EntryHandler handler = new EntryHandler() {
             @Override

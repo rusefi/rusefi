@@ -91,11 +91,6 @@ ALLINC += \
 	$(UTIL_INC) \
 	$(CONTROLLERS_SENSORS_INC) \
 	$(CONTROLLERS_INC) \
-
-# When META_OUTPUT_ROOT_FOLDER is set, prefer generated files from that location
-ifneq ($(META_OUTPUT_ROOT_FOLDER),)
-ALLINC += $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)console/binary/generated
-ALLINC += $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated
-endif
-ALLINC += $(PROJECT_DIR)/console/binary/generated \
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)console/binary/generated \
+	$(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated \
 
