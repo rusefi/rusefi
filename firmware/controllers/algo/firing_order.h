@@ -29,6 +29,7 @@ typedef enum __attribute__ ((__packed__)) {
 	FO_1_2_4_3 = 2,
 	FO_1_3_2_4 = 3, // horizontally opposed engine
 	FO_1_4_3_2 = 17, // VW aircooled boxer engine
+	FO_1_2_3_4 = 35, // 982 honda sabre 750 reverse rotation V4
 
 	// 5 cylinder
 	FO_1_2_4_5_3 = 6,
@@ -80,7 +81,7 @@ typedef enum __attribute__ ((__packed__)) {
 	// unfortunately not supported by default firmware because MAX_CYLINDER_COUNT=12 by default
 	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
-	// next value to use: 35
+	// next value to use: 36
 
 } firing_order_e;
 
