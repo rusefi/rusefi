@@ -24,7 +24,18 @@
 
 using enum idle_mode_e;
 
+/**
+ * Computes the desired idle RPM target as a function of coolant temperature (CLT),
+ * with optional bump for A/C, plus the hysteresis entry/exit thresholds used to
+ * decide whether the engine is idling or coasting.
+ *
+ * Returned TargetInfo contains:
+ *   - ClosedLoopTarget: RPM the closed-loop PID tries to hold
+ *   - IdleEntryRpm:     RPM below which we re-enter idle
+ *   - IdleExitRpm:      RPM above which we declare coasting (higher than entry for hysteresis)
+ */
 IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
+	// Base target from the CLT->RPM curve (cold engines idle higher)
 	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
 
   // FIXME: this is running as "RPM target" not "RPM bump" [ie adding to the CLT rpm target]
@@ -58,8 +69,20 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  	return { target, entryRpm, exitRpm };
 }
 
+/**
+ * Classifies the current engine operating phase used by the idle controller:
+ *   Cranking         - engine not yet running
+ *   CrankToIdleTaper - just started, still tapering off cranking IAC position
+ *   Idling           - closed-loop idle territory
+ *   Coasting         - off-throttle, RPM above idle (engine braking)
+ *   Running          - driver is on the throttle or vehicle is moving
+ *
+ * Hysteresis is applied via IdleEntryRpm / IdleExitRpm so we don't oscillate
+ * between Idling and Coasting near the threshold.
+ */
 IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController::TargetInfo targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
 #if EFI_SHAFT_POSITION_INPUT
+	// Not spinning at running RPM yet -> cranking
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
 	}
@@ -111,16 +134,35 @@ IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController
 	return Phase::Idling;
 }
 
+/**
+ * Returns a 0..1 (and beyond) fraction representing how far we have progressed through
+ * the post-cranking taper. 0 = just started, 1 = taper complete. Used to blend
+ * cranking IAC position into running open-loop position.
+ */
 float IdleController::getCrankingTaperFraction(float clt) const {
   	float taperDuration = interpolate2d(clt, config->afterCrankingIACtaperDurationBins, config->afterCrankingIACtaperDuration);
 	return (float)engine->rpmCalculator.getRevolutionCounterSinceStart() / taperDuration;
 }
 
+/**
+ * Open-loop IAC position while cranking - purely a function of coolant temperature.
+ */
 float IdleController::getCrankingOpenLoop(float clt) const {
 	return interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 }
 
+/**
+ * Computes the running (non-cranking) open-loop IAC position.
+ * Starts from the CLT/RPM correction table and adds bumps for:
+ *   - A/C compressor request
+ *   - Cooling fans on
+ *   - Lua scripting adder
+ *   - Antilag system
+ *   - TPS 'dashpot' decay when releasing throttle (helps avoid stalls)
+ *   - Extra airflow as RPM climbs (airByRpmTaper)
+ */
 percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float rpm, float clt, SensorResult tps) {
+	// Base value from a 2D CLT vs RPM correction surface
 	float running = interpolate3d(
 		config->cltIdleCorrTable,
 		config->rpmIdleCorrBins, m_lastTargetRpm,
@@ -180,6 +222,12 @@ if (engine->antilagController.isAntilagCondition) {
 	return clampPercentValue(running);
 }
 
+/**
+ * Top-level open-loop IAC computation. Picks between:
+ *   - cranking position (engine still cranking)
+ *   - dedicated coasting table (if enabled and we are coasting)
+ *   - running open-loop, blended from cranking via the taper fraction
+ */
 percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) {
 	percent_t crankingValvePosition = getCrankingOpenLoop(clt);
 
@@ -217,6 +265,13 @@ float IdleController::getIdleTimingAdjustment(float rpm) {
 	return getIdleTimingAdjustment(rpm, m_lastTargetRpm, m_lastPhase);
 }
 
+/**
+ * Idle ignition-timing PID adjustment.
+ *
+ * Small timing tweaks react much faster than airflow changes through the IAC,
+ * so we use a separate PID on ignition advance to hold RPM steady at idle.
+ * Returns degrees of timing correction to add to the base advance.
+ */
 float IdleController::getIdleTimingAdjustment(float rpm, float targetRpm, Phase phase) {
 	// if not enabled, do nothing
 	if (!engineConfiguration->useIdleTimingPidControl) {
@@ -340,6 +395,17 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	return newValue;
 }
 
+/**
+ * Main entry point invoked on the fast callback. Orchestrates the whole idle pipeline:
+ *   1. Read sensors (CLT, TPS, VSS)
+ *   2. Compute target RPM and cranking taper
+ *   3. Determine the current Phase (cranking/idling/coasting/running)
+ *   4. Compute open-loop IAC position
+ *   5. If automatic mode + valid TPS, add closed-loop PID correction
+ *   6. For modeled-flow idle, convert airmass -> valve position and split high-frequency
+ *      content to the timing PID
+ * Returns the final IAC valve position percentage (0..100).
+ */
 float IdleController::getIdlePosition(float rpm) {
 #if EFI_SHAFT_POSITION_INPUT
 
@@ -457,9 +523,11 @@ float IdleController::getIdlePosition(float rpm) {
 
 }
 
+// Periodic tick from the fast callback scheduler: recompute idle position and push it to hardware.
 void IdleController::onFastCallback() {
 #if EFI_SHAFT_POSITION_INPUT
 	float position = getIdlePosition(engine->triggerCentral.instantRpm.getInstantRpm());
+	// Send the resulting percentage to the actual IAC actuator (stepper / DC motor / PWM solenoid)
 	applyIACposition(position);
 	// huh: why not onIgnitionStateChanged?
 	engine->m_ltit.checkIfShouldSave();
@@ -476,6 +544,10 @@ void IdleController::onConfigurationChange(engine_configuration_s const * previo
 #endif
 }
 
+/**
+ * One-time controller initialization: wire up the timing-PID, the high-pass filter used
+ * by modeled-flow idle, and the main RPM idle PID.
+ */
 void IdleController::init() {
 	shouldResetPid = false;
 	mightResetPid = false;
