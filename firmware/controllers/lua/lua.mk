@@ -14,8 +14,8 @@ ifeq ($(EFI_LUA_LOOKUP), FALSE)
   ALLCPPSRC += $(LUA_DIR)/value_lookup_stubs.cpp \
 
 else
-  ALLCPPSRC += $(LUA_DIR)/generated/output_lookup_generated.cpp \
-			   $(LUA_DIR)/generated/value_lookup_generated.cpp \
+  ALLCPPSRC += $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/output_lookup_generated.cpp \
+			   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/lua/generated/value_lookup_generated.cpp \
 
 endif
 
