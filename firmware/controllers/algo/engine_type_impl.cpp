@@ -428,7 +428,7 @@ void applyEngineType(engine_type_e engineType) {
   call_board_override(custom_board_AfterTuneDefaults, engineType);
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {
+engine_type_e getLastEngineType() {
   auto last_val = magic_enum::enum_value<engine_type_e>(magic_enum::enum_count<engine_type_e>() - 1);
   return last_val;
 }
