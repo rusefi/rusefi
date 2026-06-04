@@ -69,6 +69,8 @@ include ':ui'
 project(':ui').projectDir = new File(rootRelativePath + 'java_console/ui')
 include ':luaformatter'
 project(':luaformatter').projectDir = new File(rootRelativePath + 'java_console/luaformatter_module')
+include ':mcp_lua'
+project(':mcp_lua').projectDir = new File(rootRelativePath + 'java_console/mcp_lua')
 include ':enum_generator'
 project(':enum_generator').projectDir = new File(rootRelativePath + 'java_tools/enum_generator')
 

@@ -1,0 +1,45 @@
+apply from: '../../android/dependencies.gradle'
+apply from: dependenciesPath
+
+dependencies {
+    api project(':ecu_io')
+    api project(':models')
+    api project(':inifile')
+    implementation global_libs.json
+
+    testImplementation global_libs.junit5api
+    testRuntimeOnly global_libs.junit5engine
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.rusefi.mcp.LuaMcpServer'
+    }
+}
+
+task fatJar(type: Jar) {
+    dependsOn configurations.runtimeClasspath
+    archiveClassifier = 'all'
+    manifest {
+        attributes 'Main-Class': 'com.rusefi.mcp.LuaMcpServer'
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.main.output
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
+
+task runMcp(type: JavaExec) {
+    dependsOn build
+    group = "Execution"
+    description = "Run the rusEFI Lua MCP server on stdio"
+    workingDir = rootProject.projectDir
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.rusefi.mcp.LuaMcpServer'
+    standardInput = System.in
+}
