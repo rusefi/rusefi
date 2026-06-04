@@ -2,7 +2,7 @@
 
 `CLAUDE.md` (at the repository root) is considered part of these guidelines — read it first. This file only adds Junie-specific guidance and frontend/Java details that are **not** already covered in `CLAUDE.md`. Do not duplicate content from `CLAUDE.md` here; if something belongs in both audiences, put it in `CLAUDE.md` and reference it from here.
 
-See also: `CLAUDE.md`, `docs/adding-new-trigger.md`, `.junie/ts-help-topic.md`, `.junie/ts-readme.md`.
+See also: `CLAUDE.md`, `docs/adding-new-trigger.md`, `.junie/ts-help-topic.md`, `.junie/ts-readme.md`, `java_console/mcp_lua/README.md`, `firmware/controllers/lua/examples/`.
 
 ## Frontend (Java console)
 
@@ -31,8 +31,13 @@ The Java side is a Gradle project with build tools and the frontend application;
 - `:models` is located in `../java_console/models`
 - `:autotest` is located in `../java_console/autotest`
 - `:luaformatter` is located in `../java_console/luaformatter_module`
-- `:mcp_lua` is located in `../java_console/mcp_lua` — MCP server exposing rusEFI Lua tooling (set/get scripts, messages, commands) over stdio JSON-RPC
+- `:mcp_lua` is located in `../java_console/mcp_lua` — MCP server exposing rusEFI Lua tooling (set/get scripts, messages, commands) over stdio JSON-RPC. See `java_console/mcp_lua/README.md` for the exposed tools (`set_lua`, `get_lua`, `lua_reset`, `read_messages`, `wait_for_message`, …) and the typical LLM iteration loop.
 - `:mcp_can` is located in `../java_console/mcp_can` — MCP server for read-only CAN bus sniffing via PCAN hardware
+
+#### MCP servers and Lua iteration
+- The `:mcp_lua` module is the recommended way for an LLM (Junie / Claude Desktop / JetBrains AI / Cursor) to iterate on Lua scripts against a real or simulated ECU: write a candidate script, `set_lua` to upload + burn + `luareset`, then `wait_for_message` / `read_messages` to observe `print(...)` / `efiPrintf` output. See `java_console/mcp_lua/README.md` for the full architecture (`LuaService` in `:ecu_io`, `MessagesCentral` listener) and gotchas (stdio transport, single ECU connection, ASCII-only `LUASCRIPT`).
+- Reference Lua scripts live in `firmware/controllers/lua/examples/` (e.g. `launch_control.lua`, `CruiseCheck.lua`, `gdi4-communication.lua`, `man-in-the-middle.txt`, `DBW-controller.txt`, `dash-sweep.lua`, …). When asked to write or improve a Lua script, **start by scanning that folder** for an analogous example before drafting from scratch, then iterate via `:mcp_lua`.
+- For CAN-bus context that a Lua script might react to, the read-only `:mcp_can` PCAN sniffer can be used to capture frames first.
 
 #### Build and Development:
 - When running Gradle commands from `java_tools`, you can refer to these modules by their simple names (e.g., `:ui`, `:ecu_io`) as they are included in `settings.gradle`.
