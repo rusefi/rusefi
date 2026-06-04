@@ -31,6 +31,8 @@ The Java side is a Gradle project with build tools and the frontend application;
 - `:models` is located in `../java_console/models`
 - `:autotest` is located in `../java_console/autotest`
 - `:luaformatter` is located in `../java_console/luaformatter_module`
+- `:mcp_lua` is located in `../java_console/mcp_lua` — MCP server exposing rusEFI Lua tooling (set/get scripts, messages, commands) over stdio JSON-RPC
+- `:mcp_can` is located in `../java_console/mcp_can` — MCP server for read-only CAN bus sniffing via PCAN hardware
 
 #### Build and Development:
 - When running Gradle commands from `java_tools`, you can refer to these modules by their simple names (e.g., `:ui`, `:ecu_io`) as they are included in `settings.gradle`.
