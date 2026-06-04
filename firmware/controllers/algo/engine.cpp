@@ -323,8 +323,27 @@ void Engine::reset() {
 }
 #endif
 
+/**
+ * The "resetLua track": clears every piece of engine state that a Lua script
+ * may have written, so that after a script reload (luareset / new script
+ * upload via mcp_lua / set_lua) we start from a clean slate instead of
+ * leaving the previous script's overrides stuck in place forever.
+ *
+ * Anything a Lua script can poke (fuel/ign add+mult, idle add, boost
+ * targets, ETB disable, fuel/ign cut, decel fuel cut off, engine torque,
+ * AC disable, CAN RX hooks, aux pins) MUST be reset here / from the
+ * matching subsystem resetLua(). When you add a new Lua-writable field,
+ * extend this function (and the relevant subsystem's resetLua()).
+ *
+ * Call sites:
+ *  - LuaThread::ThreadTask() after each runOneLua() iteration (lua.cpp),
+ *    which means it fires on every `luareset` and on every new script
+ *    upload performed by mcp_lua / SetLuaTool.
+ *  - Engine reset paths in unit tests.
+ *
+ * todo: https://github.com/rusefi/rusefi/issues/4308 Uniform reset pattern for all Lua adjustments
+ */
 void Engine::resetLua() {
-	// todo: https://github.com/rusefi/rusefi/issues/4308
 	engineState.lua = {};
 	engineState.lua.fuelAdd = 0;
 	engineState.lua.fuelMult = 1;
