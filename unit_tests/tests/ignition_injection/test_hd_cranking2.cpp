@@ -37,12 +37,11 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 				&& reader.lineIndex() == expectedFirstPhaseSyncAtIndex) {
 			auto shift = engine->triggerCentral.syncEnginePhaseAndReport(2, 0);
 
-			// After phase sync, instant RPM is reset to 0 to avoid using stale timing data from before the phase shift.
-			// However, the main rpmCalculator (cycle-based RPM) is NOT reset because it averages over a full revolution
-			// and we haven't seen an "engine stopped" event. This is why getCachedRpm() remains non-zero.
+			// After phase sync, instant RPM is NO LONGER reset to 0. Instead, the history buffer is rotated
+			// to match the new engine phase, preserving RPM calculation and avoiding a gap in engine control.
 			if (shift != 0) {
-				// instantRpm is used for immediate event scheduling and IS reset to ensure timing integrity
-				EXPECT_EQ(0, engine->triggerCentral.instantRpm.getInstantRpm());
+				// instantRpm is used for immediate event scheduling and should remain valid
+				EXPECT_NE(0, engine->triggerCentral.instantRpm.getInstantRpm());
 
 				// rpmCalculator is the main RPM source; it is NOT reset by phase sync.
 				// It keeps the last known good cycle-average RPM until the next TDC.

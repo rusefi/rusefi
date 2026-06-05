@@ -43,6 +43,36 @@ void InstantRpmCalculator::movePreSynchTimestamps() {
 	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
+void InstantRpmCalculator::offsetIndices(int indexOffset) {
+	if (indexOffset == 0) {
+		return;
+	}
+
+	uint32_t newTimeOfLastEvent[PWM_PHASE_MAX_COUNT];
+	float newInstantRpmValue[PWM_PHASE_MAX_COUNT];
+
+	setArrayValues(newTimeOfLastEvent, 0);
+	setArrayValues(newInstantRpmValue, 0.0f);
+
+	auto triggerSize = getTriggerCentral()->triggerShape.getSize();
+	int crankDivider = getCrankDivider(getTriggerCentral()->triggerShape.getWheelOperationMode());
+	int totalSize = triggerSize * crankDivider;
+
+	for (int i = 0; i < totalSize; i++) {
+		int newIndex = i - indexOffset;
+		while (newIndex < 0) {
+			newIndex += totalSize;
+		}
+		newIndex %= totalSize;
+
+		newTimeOfLastEvent[newIndex] = timeOfLastEvent[i];
+		newInstantRpmValue[newIndex] = instantRpmValue[i];
+	}
+
+	memcpy(timeOfLastEvent, newTimeOfLastEvent, sizeof(timeOfLastEvent));
+	memcpy(instantRpmValue, newInstantRpmValue, sizeof(instantRpmValue));
+}
+
 float InstantRpmCalculator::calculateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 	uint32_t current_index, efitick_t nowNt) {

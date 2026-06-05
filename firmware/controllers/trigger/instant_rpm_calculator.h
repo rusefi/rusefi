@@ -34,6 +34,8 @@ public:
 		m_instantRpm = 0;
 	}
 
+	void offsetIndices(int indexOffset);
+
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
