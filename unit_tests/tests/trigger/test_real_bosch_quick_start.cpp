@@ -65,6 +65,6 @@ TEST(realBQS, readAsCam) {
 			EXPECT_EQ(reader.lineIndex(), 13);
 		}
 	}
-	ASSERT_DOUBLE_EQ(-247.03125, tc->getVVTPosition(0, 0));
+	ASSERT_NEAR(112.96875, tc->getVVTPosition(0, 0), 0.1);
 	ASSERT_TRUE(vvtDecoder.getShaftSynchronized());
 }

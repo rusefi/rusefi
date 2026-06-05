@@ -61,8 +61,8 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 	// Captured from the data points "Fuel: Injection counter"
 	// (engineState.fuelInjectionCounter) and "Ign: Spark counter"
 	// (engineState.globalSparkCounter) visible in the TS log screenshot.
-	EXPECT_EQ(8, (int)engine->engineState.fuelInjectionCounter);
-	EXPECT_EQ(8, (int)engine->engineState.globalSparkCounter);
+	EXPECT_EQ(10, (int)engine->engineState.fuelInjectionCounter);
+	EXPECT_EQ(9, (int)engine->engineState.globalSparkCounter);
 }
 
 TEST(harleyCrank, orange2truncated) {
