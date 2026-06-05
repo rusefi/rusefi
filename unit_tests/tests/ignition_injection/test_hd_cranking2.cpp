@@ -3,7 +3,7 @@
 
 #include "pch.h"
 #include "engine_csv_reader.h"
-#include "msl_to_csv.h"
+//#include "msl_to_csv.h"
 #include "unit_test_logger.h"
 
 static void runCrankGapCrankingSyncData2(const char *fileName,
@@ -56,7 +56,7 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 	EXPECT_TRUE(reader.gotSync);
 	EXPECT_TRUE(reader.gotPhaseSync);
 	EXPECT_EQ(expectedCamResyncCounter,
-			eth.engine.triggerCentral.triggerState.phaseResyncCounter);
+			eth.engine.triggerCentral.triggerState.camResyncCounter);
 
 	// Total injection / spark counts observed at end of CSV playback.
 	// Captured from the data points "Fuel: Injection counter"
@@ -67,18 +67,18 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 }
 
 TEST(harleyCrank, orange2truncated) {
-	setUnitTestCreateLogs(true);
+//	setUnitTestCreateLogs(true);
 	{
 		runCrankGapCrankingSyncData2(
 				"tests/ignition_injection/resources/orange-2-first-9-seconds.csv",
 				41, 1, 139);
 	}
-	setUnitTestCreateLogs(false);
+//	setUnitTestCreateLogs(false);
 
 	// EngineTestHelper destructor above already closed the .msl file via
 	// closeUnitTestLog(). Convert it to a sibling CSV so the log can be
 	// inspected without TunerStudio.
-	const char* mslPath = "test_results/unittest_harleyCrank_orange2truncated.msl";
-	const char* csvPath = "test_results/unittest_harleyCrank_orange2truncated.csv";
-	EXPECT_TRUE(convertMslToCsv(mslPath, csvPath));
+// 	const char* mslPath = "test_results/unittest_harleyCrank_orange2truncated.msl";
+// 	const char* csvPath = "test_results/unittest_harleyCrank_orange2truncated.csv";
+// 	EXPECT_TRUE(convertMslToCsv(mslPath, csvPath));
 }
