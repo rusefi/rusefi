@@ -145,19 +145,39 @@ TEST(unitTestLog, ndjsonCsvAndBinaryContent) {
 		ASSERT_EQ(3u, dataRows.size())
 			<< "Converted CSV should have exactly 3 data rows; got "
 			<< dataRows.size() << " in " << convertedCsvPath;
-		// Every always-on field starts at zero on a fresh EngineTestHelper.
-		// Note: the MLG "Time" field is *not* the unit-test microsecond
-		// timestamp -- it is the engine "Time (sec)" live-data field which
-		// remains 0 in this no-trigger test. So every row's prefix is
-		// "0,0,0,0,...,0" (Time + 14 zero booleans matching the header
-		// prefix asserted above).
-		const std::string expectedRowPrefix =
-			"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+		// The 15 always-on boolean fields after Time start at zero on a
+		// fresh EngineTestHelper. The Time (sec) column is declared with
+		// 3-digit precision in the MLG field descriptor (TIME_PRECISION=1000,
+		// i.e. millisecond precision), so the first CSV column must be
+		// formatted as "0.000" / "0.002" / "0.003" rather than bare "0".
+		// (Defect: prior to fix, Time was rendered with digits=0, yielding
+		// "0" with zero-digit precision for every row.)
+		const std::string booleanPrefix =
+			"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
 		for (size_t r = 0; r < dataRows.size(); r++) {
-			EXPECT_EQ(0u, dataRows[r].find(expectedRowPrefix))
-				<< "Converted CSV row " << r << " prefix mismatch. "
-				<< "Expected leading [" << expectedRowPrefix
-				<< "]; got [" << dataRows[r] << "]";
+			// Defect guard #1: Time column must contain a decimal point.
+			size_t firstComma = dataRows[r].find(',');
+			ASSERT_NE(std::string::npos, firstComma)
+				<< "Converted CSV row " << r << " missing any comma: ["
+				<< dataRows[r] << "]";
+			std::string timeCol = dataRows[r].substr(0, firstComma);
+			EXPECT_NE(std::string::npos, timeCol.find('.'))
+				<< "Converted CSV row " << r
+				<< " Time (sec) column ['" << timeCol
+				<< "'] has no decimal point — must use millisecond precision";
+			// Defect guard #2: 3-digit precision => exactly 3 chars after '.'.
+			size_t dotPos = timeCol.find('.');
+			if (dotPos != std::string::npos) {
+				EXPECT_EQ(3u, timeCol.size() - dotPos - 1)
+					<< "Converted CSV row " << r
+					<< " Time (sec) column ['" << timeCol
+					<< "'] does not have exactly 3 fractional digits";
+			}
+			// And the remaining 15 boolean fields must all be zero.
+			EXPECT_EQ(firstComma + 1, dataRows[r].find(booleanPrefix))
+				<< "Converted CSV row " << r
+				<< " boolean prefix mismatch after Time. Got ["
+				<< dataRows[r] << "]";
 		}
 	}
 
