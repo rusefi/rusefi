@@ -2463,12 +2463,12 @@ end_struct
 #define ts_show_stepper_push_pull false
 #define ts_show_live_data true
 #define ts_show_ve_blend true
-#define ts_show_InjectorFlowLinearizationTable false
-#define ts_show_engine_make true
-#define ts_show_engine_code true
 #define ts_show_veBlends2 true
 #define ts_show_veBlends3 true
 #define ts_show_veBlends4 true
+#define ts_show_InjectorFlowLinearizationTable false
+#define ts_show_engine_make true
+#define ts_show_engine_code true
 #define ts_show_FractionDivisor true
 #define ts_show_fuel_threshold true
 #define ts_show_jam_detection true
