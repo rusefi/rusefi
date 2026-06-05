@@ -1,6 +1,6 @@
 
 #include "pch.h"
-#include "instant_rpm_calculator.h"
+#include "arrays_util.h"
 
 /**
  * sensorChartMode
@@ -43,51 +43,6 @@ void InstantRpmCalculator::movePreSynchTimestamps() {
 	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
-static void rotateArray(uint32_t* array, int size, int offset) {
-	if (size <= 0) return;
-	offset %= size;
-	if (offset < 0) offset += size;
-	if (offset == 0) return;
-
-	// In-place rotation using reverse algorithm
-	// 1. Reverse first part
-	// 2. Reverse second part
-	// 3. Reverse whole array
-	auto reverse = [](auto* arr, int start, int end) {
-		while (start < end) {
-			auto temp = arr[start];
-			arr[start] = arr[end];
-			arr[end] = temp;
-			start++;
-			end--;
-		}
-	};
-
-	reverse(array, 0, offset - 1);
-	reverse(array, offset, size - 1);
-	reverse(array, 0, size - 1);
-}
-
-static void rotateArray(float* array, int size, int offset) {
-	if (size <= 0) return;
-	offset %= size;
-	if (offset < 0) offset += size;
-	if (offset == 0) return;
-
-	auto reverse = [](auto* arr, int start, int end) {
-		while (start < end) {
-			auto temp = arr[start];
-			arr[start] = arr[end];
-			arr[end] = temp;
-			start++;
-			end--;
-		}
-	};
-
-	reverse(array, 0, offset - 1);
-	reverse(array, offset, size - 1);
-	reverse(array, 0, size - 1);
-}
 
 void InstantRpmCalculator::offsetIndices(int indexOffset) {
 	auto triggerSize = getTriggerCentral()->triggerShape.getSize();

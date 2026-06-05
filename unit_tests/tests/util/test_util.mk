@@ -12,5 +12,6 @@ CPPSRC += 	$(PROJECT_DIR)/../unit_tests/tests/util/test_buffered_writer.cpp \
 	$(PROJECT_DIR)/../unit_tests/tests/util/test_lua_biquad.cpp \
 	$(PROJECT_DIR)/../unit_tests/tests/util/test_hash.cpp \
 	$(PROJECT_DIR)/../unit_tests/tests/util/test_table_helper.cpp \
+	$(PROJECT_DIR)/../unit_tests/tests/util/test_rotate_array.cpp \
 
 INCDIR += $(PROJECT_DIR)/controllers/system
