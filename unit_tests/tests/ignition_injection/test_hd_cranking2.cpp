@@ -35,7 +35,20 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 		// crank-gap mode would produce at this point.
 		if (!reader.gotPhaseSync
 				&& reader.lineIndex() == expectedFirstPhaseSyncAtIndex) {
-			engine->triggerCentral.syncEnginePhaseAndReport(2, 0);
+			auto shift = engine->triggerCentral.syncEnginePhaseAndReport(2, 0);
+
+			// After phase sync, instant RPM is reset to 0 to avoid using stale timing data from before the phase shift.
+			// However, the main rpmCalculator (cycle-based RPM) is NOT reset because it averages over a full revolution
+			// and we haven't seen an "engine stopped" event. This is why getCachedRpm() remains non-zero.
+			if (shift != 0) {
+				// instantRpm is used for immediate event scheduling and IS reset to ensure timing integrity
+				EXPECT_EQ(0, engine->triggerCentral.instantRpm.getInstantRpm());
+
+				// rpmCalculator is the main RPM source; it is NOT reset by phase sync.
+				// It keeps the last known good cycle-average RPM until the next TDC.
+				EXPECT_NE(0, engine->rpmCalculator.getCachedRpm());
+				EXPECT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
+			}
 		}
 
 		reader.assertPhaseSyncAtIndex(&eth, expectedFirstPhaseSyncAtIndex);
@@ -49,8 +62,8 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 	// Captured from the data points "Fuel: Injection counter"
 	// (engineState.fuelInjectionCounter) and "Ign: Spark counter"
 	// (engineState.globalSparkCounter) visible in the TS log screenshot.
-	EXPECT_EQ(8, engine->engineState.fuelInjectionCounter);
-	EXPECT_EQ(8, engine->engineState.globalSparkCounter);
+	EXPECT_EQ(8, (int)engine->engineState.fuelInjectionCounter);
+	EXPECT_EQ(8, (int)engine->engineState.globalSparkCounter);
 }
 
 TEST(harleyCrank, orange2truncated) {
