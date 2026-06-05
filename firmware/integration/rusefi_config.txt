@@ -601,7 +601,7 @@ bit useIdleAdvanceWhileCoasting,"yes","no"
 
 ! note: 0.00489 mult is correct for "faking" 10 bit ADC with 5V Vref - NOPE!
 ! note: see TPS_TS_CONVERSION, this is TS related legacy stuff that should be removed someday. 1000 units for 0..5V range
-custom tps_limit_t 2 scalar, S16, @OFFSET@, "V", @@PACK_MULT_RAW_VOLTAGE@@, 0, 0, 5, 2, controllerPriority
+custom tps_limit_t 2 scalar, S16, @OFFSET@, "V", @@PACK_MULT_RAW_VOLTAGE@@, 0, 0, 5, 2
 tps_limit_t tpsMin;Closed voltage for primary throttle position sensor
 tps_limit_t tpsMax;Fully opened voltage for primary throttle position sensor
 
@@ -1273,8 +1273,8 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	switch_input_pin_e tcuUpshiftButtonPin
 	switch_input_pin_e tcuDownshiftButtonPin
 
-	float throttlePedalUpVoltage;;"volts", 1, 0, -6, 6, 2, controllerPriority
-	float throttlePedalWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2, controllerPriority
+	float throttlePedalUpVoltage;;"volts", 1, 0, -6, 6, 2
+	float throttlePedalWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2
 
 	int16_t startUpFuelPumpDuration;on IGN voltage detection turn fuel pump on to build fuel pressure;"seconds", 1, 0, 0, 6000, 0
 	uint16_t mafFilterParameter;larger value = larger intake manifold volume;"", 1, 0, 0, 10000, 0
@@ -1334,8 +1334,8 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
 
 
-	float throttlePedalSecondaryUpVoltage;;"volts", 1, 0, -6, 6, 2, controllerPriority
-	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2, controllerPriority
+	float throttlePedalSecondaryUpVoltage;;"volts", 1, 0, -6, 6, 2
+	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"volts", 1, 0, -6, 6, 2
 
 	#define can_baudrate_e_enum "33.33kbps", "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "666kbps", "1Mbps"
 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:3], @@can_baudrate_e_enum@@
@@ -2463,12 +2463,12 @@ end_struct
 #define ts_show_stepper_push_pull false
 #define ts_show_live_data true
 #define ts_show_ve_blend true
-#define ts_show_veBlends2 true
-#define ts_show_veBlends3 true
-#define ts_show_veBlends4 true
 #define ts_show_InjectorFlowLinearizationTable false
 #define ts_show_engine_make true
 #define ts_show_engine_code true
+#define ts_show_veBlends2 true
+#define ts_show_veBlends3 true
+#define ts_show_veBlends4 true
 #define ts_show_FractionDivisor true
 #define ts_show_fuel_threshold true
 #define ts_show_jam_detection true
