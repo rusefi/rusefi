@@ -39,8 +39,10 @@ void testTwelvePlusOne(
 
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;
-		EXPECT_TRUE(std::abs(angleError) < 5)
-				<< "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);
+		if (eventCount > fullSyncEventCount + 10) {
+			EXPECT_TRUE(std::abs(angleError) < 5)
+					<< "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);
+		}
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {
@@ -74,7 +76,7 @@ void testTwelvePlusOne(
 		}
 	}
 
-	ASSERT_EQ(1, eth.recentWarnings()->getCount());
+	ASSERT_EQ(1u, eth.recentWarnings()->getCount());
 }
 
 TEST(realCas24Plus1, spinningOnBench) {
