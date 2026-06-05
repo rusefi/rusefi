@@ -44,6 +44,13 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 	EXPECT_TRUE(reader.gotPhaseSync);
 	EXPECT_EQ(expectedCamResyncCounter,
 			eth.engine.triggerCentral.triggerState.phaseResyncCounter);
+
+	// Total injection / spark counts observed at end of CSV playback.
+	// Captured from the data points "Fuel: Injection counter"
+	// (engineState.fuelInjectionCounter) and "Ign: Spark counter"
+	// (engineState.globalSparkCounter) visible in the TS log screenshot.
+	EXPECT_EQ(8, engine->engineState.fuelInjectionCounter);
+	EXPECT_EQ(8, engine->engineState.globalSparkCounter);
 }
 
 TEST(harleyCrank, orange2truncated) {
