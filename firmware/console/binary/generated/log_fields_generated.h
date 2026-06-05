@@ -5,7 +5,7 @@
 #include <electronic_throttle_impl.h>
 #endif
 static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
-	{packedTime, GAUGE_NAME_TIME, "sec", 0},
+	{packedTime, GAUGE_NAME_TIME, "sec", 3},
 	{engine->outputChannels, 0, 0, "SD: Present", ""},
 	{engine->outputChannels, 0, 1, "SD: Logging", ""},
 	{engine->outputChannels, 0, 2, "triggerScopeReady", ""},
