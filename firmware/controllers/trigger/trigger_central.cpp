@@ -143,6 +143,16 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 		int indexOffset = (newSyncCounter - oldSyncCounter) * triggerShape.getSize();
 
 		instantRpm.offsetIndices(indexOffset);
+
+		// Adjust phase-dependent variables
+		if (expectedNextPhase) {
+			expectedNextPhase.Value = fmod(expectedNextPhase.Value - totalShift + engineCycle, engineCycle);
+		}
+		m_lastToothPhaseFromSyncPoint = fmod(m_lastToothPhaseFromSyncPoint - totalShift + engineCycle, engineCycle);
+		triggerToothAngleError = 0;
+
+		// Reset schedulers to avoid "out-of-order" warnings/errors when transitioning phase
+		engine->injectionEvents.resetOverlapping();
 	}
 	return totalShift;
 }

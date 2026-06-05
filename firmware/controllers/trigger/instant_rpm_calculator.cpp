@@ -43,34 +43,65 @@ void InstantRpmCalculator::movePreSynchTimestamps() {
 	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
+static void rotateArray(uint32_t* array, int size, int offset) {
+	if (size <= 0) return;
+	offset %= size;
+	if (offset < 0) offset += size;
+	if (offset == 0) return;
+
+	// In-place rotation using reverse algorithm
+	// 1. Reverse first part
+	// 2. Reverse second part
+	// 3. Reverse whole array
+	auto reverse = [](auto* arr, int start, int end) {
+		while (start < end) {
+			auto temp = arr[start];
+			arr[start] = arr[end];
+			arr[end] = temp;
+			start++;
+			end--;
+		}
+	};
+
+	reverse(array, 0, offset - 1);
+	reverse(array, offset, size - 1);
+	reverse(array, 0, size - 1);
+}
+
+static void rotateArray(float* array, int size, int offset) {
+	if (size <= 0) return;
+	offset %= size;
+	if (offset < 0) offset += size;
+	if (offset == 0) return;
+
+	auto reverse = [](auto* arr, int start, int end) {
+		while (start < end) {
+			auto temp = arr[start];
+			arr[start] = arr[end];
+			arr[end] = temp;
+			start++;
+			end--;
+		}
+	};
+
+	reverse(array, 0, offset - 1);
+	reverse(array, offset, size - 1);
+	reverse(array, 0, size - 1);
+}
+
 void InstantRpmCalculator::offsetIndices(int indexOffset) {
-	if (indexOffset == 0) {
-		return;
-	}
-
-	uint32_t newTimeOfLastEvent[PWM_PHASE_MAX_COUNT];
-	float newInstantRpmValue[PWM_PHASE_MAX_COUNT];
-
-	setArrayValues(newTimeOfLastEvent, 0);
-	setArrayValues(newInstantRpmValue, 0.0f);
-
 	auto triggerSize = getTriggerCentral()->triggerShape.getSize();
 	int crankDivider = getCrankDivider(getTriggerCentral()->triggerShape.getWheelOperationMode());
 	int totalSize = triggerSize * crankDivider;
 
-	for (int i = 0; i < totalSize; i++) {
-		int newIndex = i - indexOffset;
-		while (newIndex < 0) {
-			newIndex += totalSize;
-		}
-		newIndex %= totalSize;
+	// We want to shift indices by indexOffset.
+	// If index 0 becomes index -indexOffset (mod totalSize),
+	// this is a rotation.
+	// Positive indexOffset means the data moves "forward" in the array,
+	// so the element at i moves to (i + indexOffset) % totalSize.
 
-		newTimeOfLastEvent[newIndex] = timeOfLastEvent[i];
-		newInstantRpmValue[newIndex] = instantRpmValue[i];
-	}
-
-	memcpy(timeOfLastEvent, newTimeOfLastEvent, sizeof(timeOfLastEvent));
-	memcpy(instantRpmValue, newInstantRpmValue, sizeof(instantRpmValue));
+	rotateArray(timeOfLastEvent, totalSize, indexOffset);
+	rotateArray(instantRpmValue, totalSize, indexOffset);
 }
 
 float InstantRpmCalculator::calculateInstantRpm(
