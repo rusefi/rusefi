@@ -11,6 +11,7 @@ public:
 
   bool gotRpm = false;
   bool gotSync = false;
+  bool gotPhaseSync = false;
   bool prevSync = false;
 
   int expectedFirstRpm = -1;
@@ -60,6 +61,13 @@ public:
     if (!gotSync && eth->engine.triggerCentral.triggerState.getShaftSynchronized()) {
       gotSync = true;
       EXPECT_EQ(lineIndex(), expectedSyncAtIndex);
+    }
+  }
+
+  void assertPhaseSyncAtIndex(EngineTestHelper *eth, int expectedPhaseSyncAtIndex) {
+    if (!gotPhaseSync && eth->engine.triggerCentral.triggerState.hasSynchronizedPhase()) {
+      gotPhaseSync = true;
+      EXPECT_EQ(lineIndex(), expectedPhaseSyncAtIndex);
     }
   }
 };
