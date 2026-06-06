@@ -171,9 +171,25 @@ float getMcuVbatVoltage() {
 // 42000 / 8 / 32 = 164 clocks / channel
 // This ^ does not include additional MCU temperatur conversions
 
+#ifndef ADC1_SLOW_MUXED
+#if defined(ADC_MUX_PIN)
+#define ADC1_SLOW_MUXED 1
+#else
+#define ADC1_SLOW_MUXED 0
+#endif
+#endif
+
+#ifndef ADC3_SLOW_MUXED
+#if defined(ADC_MUX_PIN) && defined(ADC3_SLOW_CHANNEL_COUNT)
+#define ADC3_SLOW_MUXED 1
+#else
+#define ADC3_SLOW_MUXED 0
+#endif
+#endif
+
 // Slow ADC has 16 channels we can sample, or 32 if ADC mux mode is enabled.
 static volatile NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount];
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 static volatile NO_CACHE adcsample_t slowSampleBufferMuxed[SLOW_ADC_OVERSAMPLE * adcChannelCount];
 #endif
 
@@ -183,7 +199,9 @@ static volatile NO_CACHE adcsample_t slowSampleBufferMuxed[SLOW_ADC_OVERSAMPLE *
 // mux=1 counterparts land at EFI_ADC_40-47
 static_assert(ADC3_SLOW_CHANNEL_COUNT == 8, "convGroupSlowAdc3 hardcodes exactly 8 channels (AN4-AN9, AN14, AN15)");
 static volatile NO_CACHE adcsample_t slowSampleBufferAdc3[SLOW_ADC_OVERSAMPLE * ADC3_SLOW_CHANNEL_COUNT];
+#if ADC3_SLOW_MUXED
 static volatile NO_CACHE adcsample_t slowSampleBufferAdc3Muxed[SLOW_ADC_OVERSAMPLE * ADC3_SLOW_CHANNEL_COUNT];
+#endif
 
 static const ADCConversionGroup convGroupSlowAdc3 = {
 	.circular        = FALSE,
@@ -291,10 +309,10 @@ typedef enum {
 #ifdef ADC3_SLOW_CHANNEL_COUNT
 	convertAdc3Primary,
 #endif
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 	convertMuxed,
 #endif
-#ifdef ADC3_SLOW_CHANNEL_COUNT
+#if ADC3_SLOW_MUXED
 	convertAdc3Muxed,
 #endif
 	convertAux,
@@ -307,28 +325,32 @@ static slowAdcState_t slowAdcGetNextState(slowAdcState_t state)
 	case convertPrimary:
 #ifdef ADC3_SLOW_CHANNEL_COUNT
 		return convertAdc3Primary;
-#elif defined(ADC_MUX_PIN)
+#elif ADC1_SLOW_MUXED
 		return convertMuxed;
+#elif ADC3_SLOW_MUXED
+		return convertAdc3Muxed;
 #else
 		return convertAux;
 #endif
 #ifdef ADC3_SLOW_CHANNEL_COUNT
 	case convertAdc3Primary:
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 		return convertMuxed;
-#else
-		return convertAux;
-#endif
-#endif
-#ifdef ADC_MUX_PIN
-	case convertMuxed:
-#ifdef ADC3_SLOW_CHANNEL_COUNT
+#elif ADC3_SLOW_MUXED
 		return convertAdc3Muxed;
 #else
 		return convertAux;
 #endif
 #endif
-#ifdef ADC3_SLOW_CHANNEL_COUNT
+#if ADC1_SLOW_MUXED
+	case convertMuxed:
+#if ADC3_SLOW_MUXED
+		return convertAdc3Muxed;
+#else
+		return convertAux;
+#endif
+#endif
+#if ADC3_SLOW_MUXED
 	case convertAdc3Muxed:
 		return convertAux;
 #endif
@@ -362,15 +384,18 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 			adcStartConversionI(&ADCD3, &convGroupSlowAdc3, (adcsample_t *)slowSampleBufferAdc3, SLOW_ADC_OVERSAMPLE);
 			break;
 		#endif
-		#ifdef ADC_MUX_PIN
+		#if ADC1_SLOW_MUXED
 		case convertMuxed:
 			muxControl.setValue(ADC_MUX_MUXED_VALUE, /*force*/true);
 			adcStartConversionI(&ADCD1, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
 			break;
 		#endif
-		#ifdef ADC3_SLOW_CHANNEL_COUNT
+		#if ADC3_SLOW_MUXED
 		case convertAdc3Muxed:
-			// mux already 1; start ADC3 muxed
+			#if (ADC1_SLOW_MUXED == 0)
+			// If ADC1 wasn't muxed, the mux pin hasn't been set high yet
+			muxControl.setValue(ADC_MUX_MUXED_VALUE, /*force*/true);
+			#endif
 			adcStartConversionI(&ADCD3, &convGroupSlowAdc3, (adcsample_t *)slowSampleBufferAdc3Muxed, SLOW_ADC_OVERSAMPLE);
 			break;
 		#endif
@@ -432,16 +457,25 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	result &= readBatchAdc3(&convertedSamples[EFI_ADC_32 - EFI_ADC_0], (adcsample_t *)slowSampleBufferAdc3);
 #endif
 
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 		muxControl.setValue(ADC_MUX_MUXED_VALUE, /*force*/true);
 	#endif
 	// mux=1: ADC1 muxed channels (EFI_ADC_16-31)
 	result &= readBatch(&convertedSamples[adcChannelCount], (adcsample_t *)slowSampleBufferMuxed);
-#ifdef ADC3_SLOW_CHANNEL_COUNT
+#endif
+
+#if ADC3_SLOW_MUXED
+	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
+		#if (ADC1_SLOW_MUXED == 0)
+			muxControl.setValue(ADC_MUX_MUXED_VALUE, /*force*/true);
+		#endif
+	#endif
 	// mux=1: ADC3 muxed channels (EFI_ADC_40-47)
 	result &= readBatchAdc3(&convertedSamples[EFI_ADC_40 - EFI_ADC_0], (adcsample_t *)slowSampleBufferAdc3Muxed);
 #endif
+
+#ifdef ADC_MUX_PIN
 	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 		muxControl.setValue(ADC_MUX_PRIMARY_VALUE, /*force*/true);
 	#endif

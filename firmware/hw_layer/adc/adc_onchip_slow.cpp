@@ -12,11 +12,28 @@
 
 #include "adc_device.h"
 
+#ifndef ADC1_SLOW_MUXED
+#if defined(ADC_MUX_PIN)
+#define ADC1_SLOW_MUXED 1
+#else
+#define ADC1_SLOW_MUXED 0
+#endif
+#endif
+
+#ifndef ADC3_SLOW_MUXED
+#if defined(ADC_MUX_PIN) && defined(ADC3_SLOW_CHANNEL_COUNT)
+#define ADC3_SLOW_MUXED 1
+#else
+#define ADC3_SLOW_MUXED 0
+#endif
+#endif
+
 #ifndef SLOW_ADC_CHANNEL_COUNT
-#ifdef ADC3_SLOW_CHANNEL_COUNT
-// 16 ADC1 primary + 16 ADC1 muxed + ADC3 primary + ADC3 muxed
-#define SLOW_ADC_CHANNEL_COUNT (32 + ADC3_SLOW_CHANNEL_COUNT * 2)
-#elif defined(ADC_MUX_PIN)
+#if ADC3_SLOW_MUXED
+#define SLOW_ADC_CHANNEL_COUNT 48
+#elif defined(ADC3_SLOW_CHANNEL_COUNT)
+#define SLOW_ADC_CHANNEL_COUNT 40
+#elif ADC1_SLOW_MUXED
 #define SLOW_ADC_CHANNEL_COUNT 32
 #else
 #define SLOW_ADC_CHANNEL_COUNT 16
