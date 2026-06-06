@@ -71,6 +71,8 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	# todo: https://github.com/rusefi/rusefi/pull/7505
 	# you would think that removal of below like would reduce flash usage but somehow it increased it somehow?!
 	DDEFS += -DKNOCK_SPECTROGRAM=TRUE
+	DDEFS += -DEFI_WIDEBAND_FIRMWARE_UPDATE=FALSE
+	DDEFS += -DEFI_EMBED_INI_MSD=FALSE
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_PROTEUS_H7
 else
