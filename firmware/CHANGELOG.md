@@ -18,7 +18,7 @@ Release template (copy/paste this for new release):
  - 1-2-3-4 firing order for 982 honda sabre 750 reverse rotation V4
 
 ### Fixed
- -
+ - wasted to sequential transition when phase is detected #9613
 
 ### Removed
  -
