@@ -44,7 +44,7 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_38 = 39, // PF4, ADC3 only
 	EFI_ADC_39 = 40, // PF5, ADC3 only
 
-	// External ADC channels
+	// ADC3 muxed channels (mux=1 counterparts of EFI_ADC_32-39, e.g. IAT paired with CLT on PF5)
 	EFI_ADC_40 = 41,
 	EFI_ADC_41 = 42,
 	EFI_ADC_42 = 43,
