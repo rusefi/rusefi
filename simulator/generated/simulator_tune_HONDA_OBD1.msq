@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260529</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260607</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -2707,7 +2707,7 @@
         <constant name="launchActivatePinMode">"DEFAULT"</constant>
         <constant name="launchActivationMode">"Launch Button"</constant>
         <constant name="launchControlEnabled">"disabled"</constant>
-        <constant digits="0" name="launchCorrectionsEndRpm" units="">0</constant>
+        <constant digits="0" name="launchCorrectionsEndRpm" units="RPM">0</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0</constant>
         <constant name="launchFuelCutEnable">"no"</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000</constant>
@@ -2891,6 +2891,7 @@ end</constant>
 </constant>
         <constant digits="0" name="mafFilterParameter" units="">1</constant>
         <constant digits="0" name="magicNumberAvailableForDevTricks" units="">1</constant>
+        <constant digits="0" name="mainRelayDisableTime" units="s">1</constant>
         <constant name="mainRelayPin">"NONE"</constant>
         <constant name="mainRelayPinMode">"default"</constant>
         <constant name="malfunctionIndicatorPin">"NONE"</constant>
@@ -5082,7 +5083,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.05.29.f407-discovery.2712971338" version="5.0"/>
+    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.06.07.f407-discovery.1884589737" version="5.0"/>
     <bibliography author="rusEFI 20260510" writeDate="date"/>
     <settings/>
     <userComments/>
