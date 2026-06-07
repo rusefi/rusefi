@@ -68,7 +68,12 @@ public enum SerialPortScanner {
     // A freshly rebooted or reconnected ECU may not respond on the first try.
     private static final int DETECT_MAX_ATTEMPTS = 3;
 
-    private static PortResult inspectPort(String serialPort) {
+    /**
+     * Determines the type of a serial port: OpenBLT bootloader, ECU (with or without OpenBLT), or Unknown.
+     * Unlike {@link com.rusefi.autodetect.PortDetector#autoDetectSerial} which only finds ECUs,
+     * this method also recognises OpenBLT bootloaders via the XCP protocol probe.
+     */
+    static PortResult inspectPort(String serialPort) {
         log.info("Determining type of serial port: " + serialPort);
 
         boolean isOpenblt = isPortOpenblt(serialPort);
@@ -105,7 +110,7 @@ public enum SerialPortScanner {
         return new PortResult(serialPort, SerialPortType.Unknown);
     }
 
-    private static List<PortResult> inspectPorts(final List<String> ports) {
+    static List<PortResult> inspectPorts(final List<String> ports) {
         if (ports.isEmpty()) {
             return new ArrayList<>();
         }

@@ -10,6 +10,8 @@ See also: `CLAUDE.md`, `docs/adding-new-trigger.md`, `.junie/ts-help-topic.md`, 
 
 rusEFI console frontend application scans serial ports and well-known local TCP port 29001 to locate an engine control unit embedded device.
 
+`PortDetectorSandbox` (`java_console/ui/src/test/java/com/rusefi/autodetect/PortDetectorSandbox.java`) is a handy manual sandbox for testing serial port auto-detection logic against real hardware. Run its `main()` to continuously poll and print detected ports and signatures.
+
 An ECU would respond to a HELLO command with a signature String which identifies ECU kind, model and firmware version (see `BundleInfo`).
 
 Based on that signature, UI frontend would pull an `.ini` file with all the metadata related to the exact ECU we have connected to from the internet, and cache it locally in `user.home`.

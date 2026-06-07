@@ -8,6 +8,9 @@ import com.rusefi.maintenance.DfuFlasher;
 
 import java.util.List;
 
+/**
+ * @see OpenBltSandbox
+ */
 public class BltSwitchSandbox {
     public static void main(String[] args) throws InterruptedException {
         SerialPortScanner serialPortScanner = ConnectivityContext.INSTANCE.getSerialPortScanner();
