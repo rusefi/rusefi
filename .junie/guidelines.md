@@ -2,7 +2,7 @@
 
 `CLAUDE.md` (at the repository root) is considered part of these guidelines — read it first. This file only adds Junie-specific guidance and frontend/Java details that are **not** already covered in `CLAUDE.md`. Do not duplicate content from `CLAUDE.md` here; if something belongs in both audiences, put it in `CLAUDE.md` and reference it from here.
 
-See also: `CLAUDE.md`, `docs/adding-new-trigger.md`, `.junie/ts-help-topic.md`, `.junie/ts-readme.md`, `java_console/mcp_lua/README.md`, `firmware/controllers/lua/examples/`.
+See also: `CLAUDE.md`, `docs/adding-new-trigger.md`, `.junie/ts-help-topic.md`, `.junie/ts-readme.md`, `README-mcp.md`, `java_console/mcp_lua/README.md`, `firmware/controllers/lua/examples/`, [Lua-Scripting.md](https://github.com/rusefi/rusefi_documentation/blob/master/Lua-Scripting.md).
 
 ## Frontend (Java console)
 
@@ -37,7 +37,8 @@ The Java side is a Gradle project with build tools and the frontend application;
 - `:mcp_can` is located in `../java_console/mcp_can` — MCP server for read-only CAN bus sniffing via PCAN hardware
 
 #### MCP servers and Lua iteration
-- The `:mcp_lua` module is the recommended way for an LLM (Junie / Claude Desktop / JetBrains AI / Cursor) to iterate on Lua scripts against a real or simulated ECU: write a candidate script, `set_lua` to upload + burn + `luareset`, then `wait_for_message` / `read_messages` to observe `print(...)` / `efiPrintf` output. See `java_console/mcp_lua/README.md` for the full architecture (`LuaService` in `:ecu_io`, `MessagesCentral` listener) and gotchas (stdio transport, single ECU connection, ASCII-only `LUASCRIPT`).
+- The `:mcp_lua` module is the recommended way for an LLM (Junie / Claude Desktop / JetBrains AI / Cursor) to iterate on Lua scripts against a real ECU: write a candidate script, `set_lua` to upload + burn + `luareset`, then `wait_for_message` / `read_messages` to observe `print(...)` / `efiPrintf` output. See `java_console/mcp_lua/README.md` for the full architecture (`LuaService` in `:ecu_io`, `MessagesCentral` listener) and gotchas (stdio transport, single ECU connection, ASCII-only `LUASCRIPT`).
+- **By default target a real ECU** connected via serial port. The Win32 simulator is not reliable for MCP workflows (socket binding issues, process instability). Use serial port autodetect (omit `--port`) or pass the explicit serial port name.
 - Reference Lua scripts live in `firmware/controllers/lua/examples/` (e.g. `launch_control.lua`, `CruiseCheck.lua`, `gdi4-communication.lua`, `man-in-the-middle.txt`, `DBW-controller.txt`, `dash-sweep.lua`, …). When asked to write or improve a Lua script, **start by scanning that folder** for an analogous example before drafting from scratch, then iterate via `:mcp_lua`.
 - For CAN-bus context that a Lua script might react to, the read-only `:mcp_can` PCAN sniffer can be used to capture frames first.
 
