@@ -177,6 +177,10 @@ rusEFI provides two MCP (Model Context Protocol) servers for LLM-driven tooling 
 - **`:mcp_lua`** (`java_console/mcp_lua`) — `LuaMcpServer`: connect to an ECU, upload/download Lua scripts, send commands, and capture ECU messages. Entry point: `com.rusefi.mcp.LuaMcpServer`.
 - **`:mcp_can`** (`java_console/mcp_can`) — `CanSnifferMcp`: read-only CAN bus sniffing via PCAN hardware (connect, read packets, wait for packet, status). Entry point: `com.rusefi.mcp.CanSnifferMcp`.
 
+## Serial Connectivity
+
+All rusEFI serial connections use the USB CDC (Communications Device Class) profile. Baud rate is irrelevant and never a concern — the USB serial profile handles throughput natively regardless of any baud rate setting in host software or code.
+
 ## Development Notes
 
 - Supported IDE: Visual Studio Code
