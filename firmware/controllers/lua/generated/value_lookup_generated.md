@@ -2,7 +2,7 @@
 null
 
 ### launchRpm
-A secondary Rev limit engaged by the driver to help launch the vehicle faster
+The target engine speed (RPM) to maintain during launch.
 
 ### rpmHardLimit
 set rpm_hard_limit X
@@ -71,7 +71,7 @@ LTIT table regional smoothing intensity (0=no smoothing)
 Minimum threshold of PID integrator for LTIT correction
 
 ### launchFuelAdderPercent
-
+Fuel enrichment adder percentage.
 
 ### etbJamTimeout
 Time after which the throttle is considered jammed.
@@ -251,7 +251,7 @@ Pull-up resistor value on your board
 Pull-up resistor value on your board
 
 ### launchTimingRetard
-
+The target absolute ignition timing value (e.g., -10 means -10 degrees, not 10 degrees of retard relative to base timing).
 
 ### idleMaximumAirmass
 Maximum commanded airmass for the idle controller.
@@ -578,10 +578,10 @@ Boost Voltage
 Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
 
 ### initialIgnitionCutPercent
-
+The percentage of ignition events to cut when entering the launch control window (e.g., at Launch RPM minus Launch Control Window).
 
 ### finalIgnitionCutPercentBeforeLaunch
-
+The percentage of ignition events to cut when the engine speed reaches the end of the corrections RPM (Launch RPM minus Launch Corrections End RPM). Between the start of the window and the end of corrections RPM, the cut percentage interpolates linearly from initial to final cut percentage.
 
 ### idlePidRpmUpperLimit
 How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
@@ -602,7 +602,7 @@ Maximum allowed ETB position. Some throttles go past fully open, so this allows 
 Rate the ECU will log to the SD card, in hz (log lines per second).
 
 ### launchCorrectionsEndRpm
-
+The RPM difference below the Launch RPM at which corrections (timing retard interpolation and/or ignition cut ramp) reach their final/maximum target. For example, if Launch RPM is 4000, and this is 50, corrections reach their final target at 3950 RPM.
 
 ### lambdaProtectionRestoreRpm
 
@@ -638,7 +638,7 @@ If enabled we use two H-bridges to drive stepper idle air valve
 
 
 ### enableLaunchRetard
-
+Enables absolute ignition timing control during launch (sets timing to the "Absolute Timing at Launch" value).
 
 ### canInputBCM
 
@@ -758,7 +758,7 @@ Pause closed loop fueling after acceleration fuel occurs. Set this to a little l
 Launch disabled above this speed if setting is above zero
 
 ### launchRpmWindow
-Starting Launch RPM window to activate (subtracts from Launch RPM)
+The RPM window before the Launch RPM where launch control strategies (like retard/cut) begin to activate. For example, if Launch RPM is 4000 and Window is 500, activation starts at 3500 RPM.
 
 ### triggerEventsTimeoutMs
 
@@ -875,7 +875,7 @@ When selected, this option cuts the spark to limit RPM. Cutting spark can produc
 
 
 ### launchSparkCutEnable
-This is the Cut Mode normally used
+Enables or disables ignition/spark cut during launch control.
 
 ### torqueReductionEnabled
 
@@ -956,7 +956,7 @@ This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate
 
 
 ### launchSmoothRetard
-Interpolates the Ignition Retard from 0 to 100% within the RPM Range
+Gradually interpolates the ignition timing from the base timing table value down to the target "Absolute Timing at Launch" value, starting from the beginning of the launch window.
 
 ### isPhaseSyncRequiredForIgnition
 Some engines are OK running semi-random sequential while other engine require phase synchronization

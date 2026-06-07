@@ -1259,7 +1259,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t startButtonSuppressOnStartUpMs;
 	/**
-	 * A secondary Rev limit engaged by the driver to help launch the vehicle faster
+	 * The target engine speed (RPM) to maintain during launch.
 	 * units: rpm
 	 * offset 4
 	 */
@@ -1531,6 +1531,7 @@ struct engine_configuration_s {
 	 */
 	switch_input_pin_e torqueReductionTriggerPin;
 	/**
+	 * Fuel enrichment adder percentage.
 	 * units: %
 	 * offset 66
 	 */
@@ -1754,6 +1755,7 @@ struct engine_configuration_s {
 	 */
 	ThermistorConf iat;
 	/**
+	 * The target absolute ignition timing value (e.g., -10 means -10 degrees, not 10 degrees of retard relative to base timing).
 	 * units: deg
 	 * offset 424
 	 */
@@ -2810,11 +2812,13 @@ struct engine_configuration_s {
 	 */
 	uint16_t minimumBoostClosedLoopMap;
 	/**
+	 * The percentage of ignition events to cut when entering the launch control window (e.g., at Launch RPM minus Launch Control Window).
 	 * units: %
 	 * offset 872
 	 */
 	int8_t initialIgnitionCutPercent;
 	/**
+	 * The percentage of ignition events to cut when the engine speed reaches the end of the corrections RPM (Launch RPM minus Launch Corrections End RPM). Between the start of the window and the end of corrections RPM, the cut percentage interpolates linearly from initial to final cut percentage.
 	 * units: %
 	 * offset 873
 	 */
@@ -2927,6 +2931,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_919[1] = {};
 	/**
+	 * The RPM difference below the Launch RPM at which corrections (timing retard interpolation and/or ignition cut ramp) reach their final/maximum target. For example, if Launch RPM is 4000, and this is 50, corrections reach their final target at 3950 RPM.
+	 * units: RPM
 	 * offset 920
 	 */
 	uint16_t launchCorrectionsEndRpm;
@@ -3106,6 +3112,7 @@ struct engine_configuration_s {
 	offset 1012 bit 3 */
 	bool multisparkEnable : 1 {};
 	/**
+	 * Enables absolute ignition timing control during launch (sets timing to the "Absolute Timing at Launch" value).
 	offset 1012 bit 4 */
 	bool enableLaunchRetard : 1 {};
 	/**
@@ -3289,7 +3296,7 @@ struct engine_configuration_s {
 	 */
 	int launchSpeedThreshold;
 	/**
-	 * Starting Launch RPM window to activate (subtracts from Launch RPM)
+	 * The RPM window before the Launch RPM where launch control strategies (like retard/cut) begin to activate. For example, if Launch RPM is 4000 and Window is 500, activation starts at 3500 RPM.
 	 * units: RPM
 	 * offset 1084
 	 */
@@ -3501,7 +3508,7 @@ struct engine_configuration_s {
 	offset 1428 bit 17 */
 	bool launchFuelCutEnable : 1 {};
 	/**
-	 * This is the Cut Mode normally used
+	 * Enables or disables ignition/spark cut during launch control.
 	offset 1428 bit 18 */
 	bool launchSparkCutEnable : 1 {};
 	/**
@@ -3642,7 +3649,7 @@ struct engine_configuration_s {
 	offset 1440 bit 17 */
 	bool isBoostControlEnabled : 1 {};
 	/**
-	 * Interpolates the Ignition Retard from 0 to 100% within the RPM Range
+	 * Gradually interpolates the ignition timing from the base timing table value down to the target "Absolute Timing at Launch" value, starting from the beginning of the launch window.
 	offset 1440 bit 18 */
 	bool launchSmoothRetard : 1 {};
 	/**
