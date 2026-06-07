@@ -509,7 +509,7 @@ engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Ty
 
 uint16_t startButtonSuppressOnStartUpMs
 
-uint16_t launchRpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm", 1, 0, 0, 20000, 0
+uint16_t launchRpm;The target engine speed (RPM) to maintain during launch.;"rpm", 1, 0, 0, 20000, 0
 uint16_t rpmHardLimit;set rpm_hard_limit X;"rpm", 1, 0, 0, 20000, 0
 uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM", 1, 0, 0, 30000, 0
 
@@ -544,7 +544,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	Gpio canRxPin
 
 	switch_input_pin_e torqueReductionTriggerPin;Pin that activates the reduction/cut for shifting. Sometimes shared with the Launch Control pin
-	int8_t launchFuelAdderPercent;;"%", 1, 0, -100, 100, 0
+	int8_t launchFuelAdderPercent;Fuel enrichment adder percentage.;"%", 1, 0, -100, 100, 0
 	uint8_t autoscale etbJamTimeout;Time after which the throttle is considered jammed.;"sec", 0.02, 0, 0, 5, 2
 
 	output_pin_e tachOutputPin;
@@ -622,7 +622,7 @@ MAP_sensor_config_s map;@see isMapAveragingEnabled
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
 ThermistorConf iat;
 
-	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
+	float launchTimingRetard;The target absolute ignition timing value (e.g., -10 means -10 degrees, not 10 degrees of retard relative to base timing).;"deg", 1, 0, -180, 180, 2
 	uint8_t autoscale idleMaximumAirmass;Maximum commanded airmass for the idle controller.;"mg", 2, 0, 0, 500, 1
 	int16_t alternator_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t alternator_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
@@ -945,8 +945,8 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	uint8_t mc33_hvolt;Boost Voltage;"v", 1, 0, 40, 70, 0
 	uint16_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@}, 0
 
-    int8_t initialIgnitionCutPercent;;"%", 1, 0, 0, 100, 0
-    int8_t finalIgnitionCutPercentBeforeLaunch;;"%", 1, 0, 0, 100, 0
+    int8_t initialIgnitionCutPercent;The percentage of ignition events to cut when entering the launch control window (e.g., at Launch RPM minus Launch Control Window).;"%", 1, 0, 0, 100, 0
+    int8_t finalIgnitionCutPercentBeforeLaunch;The percentage of ignition events to cut when the engine speed reaches the end of the corrections RPM (Launch RPM minus Launch Corrections End RPM). Between the start of the window and the end of corrections RPM, the cut percentage interpolates linearly from initial to final cut percentage.;"%", 1, 0, 0, 100, 0
 
 	gppwm_channel_e boostOpenLoopYAxis
 
@@ -982,7 +982,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3"
 	uint16_t sdCardLogFrequency;Rate the ECU will log to the SD card, in hz (log lines per second).;"hz", 1, 0, 1, 250, 0
 	adc_channel_e idlePositionChannel;
-	uint16_t launchCorrectionsEndRpm;
+	uint16_t launchCorrectionsEndRpm;The RPM difference below the Launch RPM at which corrections (timing retard interpolation and/or ignition cut ramp) reach their final/maximum target. For example, if Launch RPM is 4000, and this is 50, corrections reach their final target at 3950 RPM.;"RPM", 1, 0, 0, 1000, 0
 	output_pin_e starterRelayDisablePin;
 	pin_output_mode_e starterRelayDisablePinMode;On some vehicles we can disable starter once engine is already running
 	output_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
@@ -1038,7 +1038,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	bit useInjectorFlowLinearizationTable,"yes","no"
 	bit useHbridgesToDriveIdleStepper,"yes","no";If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable,"yes","no"
-	bit enableLaunchRetard,"yes","no"
+	bit enableLaunchRetard,"yes","no";Enables absolute ignition timing control during launch (sets timing to the "Absolute Timing at Launch" value).
 	bit canInputBCM,"enabled","disabled"
 	bit consumeObdSensors,"yes","no";This property is useful if using rusEFI as TCM or BCM only
 	bit enableCanVss,"yes","no";Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
@@ -1098,7 +1098,7 @@ include_file controllers/algo/accel_enrichment.engineConfiguration.txt
 	uint8_t autoscale noFuelTrimAfterAccelTime;Pause closed loop fueling after acceleration fuel occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel accel.;"sec", 0.1, 0, 0, 10, 1
 
     int launchSpeedThreshold;Launch disabled above this speed if setting is above zero;{bitStringValue(velocityUnitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : @@UNITS_KMH_TO_MPH@@}, 0, {useMetricOnInterface ? 0 : 0}, {useMetricOnInterface ? 300 : 186}, 0
-    int launchRpmWindow;Starting Launch RPM window to activate (subtracts from Launch RPM);"RPM", 1, 0, 0, 8000, 0
+    int launchRpmWindow;The RPM window before the Launch RPM where launch control strategies (like retard/cut) begin to activate. For example, if Launch RPM is 4000 and Window is 500, activation starts at 3500 RPM.;"RPM", 1, 0, 0, 8000, 0
     float triggerEventsTimeoutMs;;"ms", 1, 0, 0, 3000, 3
     float ppsExpAverageAlpha;A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'100%' means no filtering, 98% would be some filtering.;"percent", 100, 0, 0, 100, 1
     float mapExpAverageAlpha;A higher alpha (closer to 1) means the EMA reacts more quickly to changes in the data.\n'1' means no filtering, 0.98 would be some filtering.;"", 1, 0, 0, 1, 3
@@ -1165,7 +1165,7 @@ end_struct
 bit cutFuelOnHardLimit,"yes","no";When enabled, this option cuts the fuel supply when the RPM limit is reached. Cutting fuel provides a smoother limiting action; however, it may lead to slightly higher combustion chamber temperatures since unburned fuel is not present to cool the combustion process.
 bit cutSparkOnHardLimit,"yes","no";When selected, this option cuts the spark to limit RPM. Cutting spark can produce flames from the exhaust due to unburned fuel igniting in the exhaust system. Additionally, this unburned fuel can help cool the combustion chamber, which may be beneficial in high-performance applications.\nBe careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
 bit launchFuelCutEnable,"yes","no"
-bit launchSparkCutEnable,"yes","no";This is the Cut Mode normally used
+bit launchSparkCutEnable,"yes","no";Enables or disables ignition/spark cut during launch control.
 	bit torqueReductionEnabled,"enabled","disabled"
 	bit camSyncOnSecondCrankRevolution,"second","first";When we sync cam sensor is that first or second full engine revolution of the four stroke cycle?
 	bit limitTorqueReductionTime,"yes","no"
@@ -1200,7 +1200,7 @@ bit useAdvanceCorrectionsForCranking,"yes","no";This enables the various ignitio
 bit flexCranking,"enabled","disabled";Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
 bit useIacPidMultTable,"yes","no";This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled,"enabled","disabled"
-bit launchSmoothRetard,"enabled","disabled";Interpolates the Ignition Retard from 0 to 100% within the RPM Range
+bit launchSmoothRetard,"enabled","disabled";Gradually interpolates the ignition timing from the base timing table value down to the target "Absolute Timing at Launch" value, starting from the beginning of the launch window.
 bit isPhaseSyncRequiredForIgnition,"yes","no";Some engines are OK running semi-random sequential while other engine require phase synchronization
 bit useCltBasedRpmLimit,"yes","no";If enabled, use a curve for RPM limit (based on coolant temperature) instead of a constant value.
 bit forceO2Heating,"yes","no";If enabled, don't wait for engine start to heat O2 sensors.\nWARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
