@@ -66,7 +66,15 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 
 bool adcIsMuxedInput(adc_channel_e hwChannel) {
 #ifdef ADC_MUX_PIN
-    return ((hwChannel >= EFI_ADC_16) && (hwChannel <= EFI_ADC_31));
+    if ((hwChannel >= EFI_ADC_16) && (hwChannel <= EFI_ADC_31)) {
+        return true;
+    }
+#ifdef ADC3_SLOW_CHANNEL_COUNT
+    if ((hwChannel >= EFI_ADC_40) && (hwChannel < static_cast<adc_channel_e>(EFI_ADC_40 + ADC3_SLOW_CHANNEL_COUNT))) {
+        return true;
+    }
+#endif
+    return false;
 #else
     UNUSED(hwChannel);
     return false;
@@ -76,10 +84,18 @@ bool adcIsMuxedInput(adc_channel_e hwChannel) {
 // If mux is not enabled or channel is already a root channel - return itself
 adc_channel_e adcMuxedGetParent(adc_channel_e hwChannel)
 {
-    if (adcIsMuxedInput(hwChannel)) {
+#ifdef ADC_MUX_PIN
+    // ADC1 muxed channels: EFI_ADC_16-31 -> EFI_ADC_0-15
+    if ((hwChannel >= EFI_ADC_16) && (hwChannel <= EFI_ADC_31)) {
         return (adc_channel_e)(EFI_ADC_0 + (hwChannel - EFI_ADC_16));
     }
-
+#ifdef ADC3_SLOW_CHANNEL_COUNT
+    // ADC3 muxed channels: EFI_ADC_40-47 -> EFI_ADC_32-39
+    if ((hwChannel >= EFI_ADC_40) && (hwChannel < static_cast<adc_channel_e>(EFI_ADC_40 + ADC3_SLOW_CHANNEL_COUNT))) {
+        return (adc_channel_e)(EFI_ADC_32 + (hwChannel - EFI_ADC_40));
+    }
+#endif
+#endif
     return hwChannel;
 }
 

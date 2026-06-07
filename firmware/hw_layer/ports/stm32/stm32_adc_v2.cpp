@@ -8,6 +8,14 @@
 
 #include "pch.h"
 
+#ifndef EFI_SLOW_ADC
+#define EFI_SLOW_ADC ADCD1
+#endif
+
+#ifndef ADC_FAST_DEVICE
+#define ADC_FAST_DEVICE ADCD2
+#endif
+
 #ifdef EFI_SOFTWARE_KNOCK
 #include "knock_config.h"
 #endif
@@ -376,7 +384,7 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 			#ifdef ADC_MUX_PIN
 			muxControl.setValue(ADC_MUX_PRIMARY_VALUE, /*force*/true);
 			#endif
-			adcStartConversionI(&ADCD1, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 			break;
 		#ifdef ADC3_SLOW_CHANNEL_COUNT
 		case convertAdc3Primary:
@@ -387,7 +395,7 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 		#if ADC1_SLOW_MUXED
 		case convertMuxed:
 			muxControl.setValue(ADC_MUX_MUXED_VALUE, /*force*/true);
-			adcStartConversionI(&ADCD1, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
+			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
 			break;
 		#endif
 		#if ADC3_SLOW_MUXED
@@ -401,11 +409,11 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 		#endif
 		case convertAux:
 			adcSTM32DisableVBATE();
-			adcStartConversionI(&ADCD1, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
+			adcStartConversionI(&EFI_SLOW_ADC, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
 			break;
 		case convertAux2:
 			adcSTM32EnableVBATE();
-			adcStartConversionI(&ADCD1, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
+			adcStartConversionI(&EFI_SLOW_ADC, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
 			break;
 		}
 		chSysUnlockFromISR();
@@ -415,7 +423,7 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 
 static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
-	msg_t result = adcConvert(&ADCD1, &convGroupSlow, b, SLOW_ADC_OVERSAMPLE);
+	msg_t result = adcConvert(&EFI_SLOW_ADC, &convGroupSlow, b, SLOW_ADC_OVERSAMPLE);
 
 	// If something went wrong - try again later
 	if (result != MSG_OK) {
@@ -423,11 +431,11 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 	}
 
 	// Temperature sensor is only physically wired to ADC1
-	adcConvert(&ADCD1, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
+	adcConvert(&EFI_SLOW_ADC, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
 
 	// Switch IN18 input to Vbat
 	adcSTM32EnableVBATE();
-	adcConvert(&ADCD1, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
+	adcConvert(&EFI_SLOW_ADC, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
 	adcSTM32DisableVBATE();
 #endif
 
@@ -457,12 +465,36 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	result &= readBatchAdc3(&convertedSamples[EFI_ADC_32 - EFI_ADC_0], (adcsample_t *)slowSampleBufferAdc3);
 #endif
 
+#if defined(EFI_SLOW_ADC) && (EFI_SLOW_ADC == ADCD3)
+	// Map ADC3 channels to their standard EFI_ADC_32..39 indices
+	convertedSamples[EFI_ADC_32 - EFI_ADC_0] = convertedSamples[4];  // PF6
+	convertedSamples[EFI_ADC_33 - EFI_ADC_0] = convertedSamples[5];  // PF7
+	convertedSamples[EFI_ADC_34 - EFI_ADC_0] = convertedSamples[6];  // PF8
+	convertedSamples[EFI_ADC_35 - EFI_ADC_0] = convertedSamples[7];  // PF9
+	convertedSamples[EFI_ADC_36 - EFI_ADC_0] = convertedSamples[8];  // PF10
+	convertedSamples[EFI_ADC_37 - EFI_ADC_0] = convertedSamples[9];  // PF3
+	convertedSamples[EFI_ADC_38 - EFI_ADC_0] = convertedSamples[14]; // PF4
+	convertedSamples[EFI_ADC_39 - EFI_ADC_0] = convertedSamples[15]; // PF5
+#endif
+
 #if ADC1_SLOW_MUXED
 	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 		muxControl.setValue(ADC_MUX_MUXED_VALUE, /*force*/true);
 	#endif
 	// mux=1: ADC1 muxed channels (EFI_ADC_16-31)
 	result &= readBatch(&convertedSamples[adcChannelCount], (adcsample_t *)slowSampleBufferMuxed);
+#endif
+
+#if defined(EFI_SLOW_ADC) && (EFI_SLOW_ADC == ADCD3)
+	// Map ADC3 muxed channels to their standard EFI_ADC_40..47 indices
+	convertedSamples[EFI_ADC_40 - EFI_ADC_0] = convertedSamples[16 + 4];  // PF6
+	convertedSamples[EFI_ADC_41 - EFI_ADC_0] = convertedSamples[16 + 5];  // PF7
+	convertedSamples[EFI_ADC_42 - EFI_ADC_0] = convertedSamples[16 + 6];  // PF8
+	convertedSamples[EFI_ADC_43 - EFI_ADC_0] = convertedSamples[16 + 7];  // PF9
+	convertedSamples[EFI_ADC_44 - EFI_ADC_0] = convertedSamples[16 + 8];  // PF10
+	convertedSamples[EFI_ADC_45 - EFI_ADC_0] = convertedSamples[16 + 9];  // PF3
+	convertedSamples[EFI_ADC_46 - EFI_ADC_0] = convertedSamples[16 + 14]; // PF4
+	convertedSamples[EFI_ADC_47 - EFI_ADC_0] = convertedSamples[16 + 15]; // PF5
 #endif
 
 #if ADC3_SLOW_MUXED
@@ -624,18 +656,18 @@ void portInitAdc() {
 #endif //ADC_MUX_PIN
 
 	// Init slow ADC
-	adcStart(&ADCD1, NULL);
+	adcStart(&EFI_SLOW_ADC, NULL);
 
 	// Enable internal temperature reference
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
 
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
-	adcStartConversion(&ADCD1, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+	adcStartConversion(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 #endif
 
 #if EFI_USE_FAST_ADC
 	// Init fast ADC (MAP sensor)
-	adcStart(&ADCD2, NULL);
+	adcStart(&ADC_FAST_DEVICE, NULL);
 #endif
 
 #if defined(STM32F7XX)

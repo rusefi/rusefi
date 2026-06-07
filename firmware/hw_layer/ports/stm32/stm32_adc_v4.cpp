@@ -8,6 +8,10 @@
 
 #include "pch.h"
 
+#ifndef EFI_SLOW_ADC
+#define EFI_SLOW_ADC ADCD1
+#endif
+
 #if HAL_USE_ADC
 
 #include "mpu_util.h"
@@ -42,7 +46,7 @@ static constexpr int H7_ADC_SHIFT_BITS = log2_int(H7_ADC_OVERSAMPLE);
 
 void portInitAdc() {
 	// Init slow ADC
-	adcStart(&ADCD1, NULL);
+	adcStart(&EFI_SLOW_ADC, NULL);
 
 #if STM32_ADC_USE_ADC3
 	// Knock/trigger scope ADC
@@ -168,7 +172,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	{
 		chibios_rt::CriticalSectionLocker csl;
 		// Oversampling and right-shift happen in hardware, so we can sample directly to the output buffer
-		adcStartConversionI(&ADCD1, &convGroupSlow, convertedSamples, 1);
+		adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, convertedSamples, 1);
 	}
 
 	constexpr uint32_t samplingRate = H7_ADC_SPEED;
