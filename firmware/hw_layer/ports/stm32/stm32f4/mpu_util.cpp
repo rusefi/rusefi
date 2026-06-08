@@ -29,17 +29,45 @@ size_t flashSectorSize(flashsector_t sector) {
 #define TM_ID_GetFlashSize()	(*(__IO uint16_t *) (FLASHSIZE_BASE))
 
 uintptr_t getFlashAddrFirstCopy() {
-	/* last 128K sector on 512K devices */
-	if (TM_ID_GetFlashSize() <= 512)
+	if (TM_ID_GetFlashSize() <= 512) {
+		/* last 128K sector on 512K devices */
 		return 0x08060000;
+	}
+	if (TM_ID_GetFlashSize() <= 1024) {
+		/* last 128K sector on 1M devices */
+		/* Same for single and dual bank modes */
+		return 0x080E0000;
+	}
+
+#if EFI_FLASH_USE_1500_OF_2MB
+	/* 2 Mb devices */
+	/* Sector 23, 128K */
+	return 0x081E0000;
+#else
+	/* Sector 11, 128K */
 	return 0x080E0000;
+#endif
 }
 
 uintptr_t getFlashAddrSecondCopy() {
-	/* no second copy on 512K devices */
-	if (TM_ID_GetFlashSize() <= 512)
+	if (TM_ID_GetFlashSize() <= 512) {
+		/* no second copy on 512K devices */
 		return 0x000000000;
+	}
+	if (TM_ID_GetFlashSize() <= 1024) {
+		/* Sector 10, 128K */
+		/* Same for single and dual bank modes */
+		return 0x080C0000;
+	}
+
+#if EFI_FLASH_USE_1500_OF_2MB
+	/* 2 Mb devices */
+	/* Sector 22, 128K */
+	return 0x081C0000;
+#else
+	/* Sector 10, 128K */
 	return 0x080C0000;
+#endif
 }
 
 /*
