@@ -299,6 +299,8 @@ INCDIR += $(ALLINC) \
 	config
 
 ifeq ($(EFI_ETHERNET),yes)
+	DDEFS += -DEFI_ETHERNET=TRUE
+
 	UIP_DIR = $(PROJECT_DIR)/ext/openblt/Target/Source/third_party/uip
 
 	# Collect network and UIP third party library files

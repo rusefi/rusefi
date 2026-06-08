@@ -265,6 +265,8 @@ endif
 
 ifeq ($(EFI_ETHERNET),yes)
   LWIP = yes
+  DDEFS += -DEFI_ETHERNET=TRUE
+  DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
 endif
 
 ifeq ($(LWIP),yes)
