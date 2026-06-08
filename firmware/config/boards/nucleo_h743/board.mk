@@ -5,13 +5,7 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
 # Enable ethernet
-LWIP = yes
-ALLOW_SHADOW = yes
-DDEFS += -DCH_CFG_USE_DYNAMIC=TRUE
-
-# which one is correct?
 EFI_ETHERNET = yes
-DDEFS += -DEFI_ETHERNET=TRUE
 
 DDEFS += -DEFI_STORAGE_SD=FALSE
 

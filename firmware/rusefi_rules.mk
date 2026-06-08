@@ -8,6 +8,11 @@ ifneq ($(USE_CLANG),yes)
   RUSEFI_OPT += -Werror=stringop-truncation
 endif
 
+ifeq ($(EFI_ETHERNET),yes)
+  # Both LWIP and uIP cause few shadow errors
+  ALLOW_SHADOW = yes
+endif
+
 ifneq ($(ALLOW_SHADOW),yes)
      RUSEFI_OPT += -Werror=shadow
 endif
