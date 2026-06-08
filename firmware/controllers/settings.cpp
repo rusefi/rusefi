@@ -37,7 +37,6 @@
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
-extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif // EFI_ENGINE_SNIFFER
 
