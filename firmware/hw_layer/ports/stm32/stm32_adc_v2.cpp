@@ -174,9 +174,17 @@ float getMcuVbatVoltage() {
 // 42000 / 8 / 32 = 164 clocks / channel
 // This ^ does not include additional MCU temperatur conversions
 
+#ifndef ADC1_SLOW_MUXED
+#if defined(ADC_MUX_PIN)
+#define ADC1_SLOW_MUXED 1
+#else
+#define ADC1_SLOW_MUXED 0
+#endif
+#endif
+
 // Slow ADC has 16 channels we can sample, or 32 if ADC mux mode is enabled.
 static volatile NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount];
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 static volatile NO_CACHE adcsample_t slowSampleBufferMuxed[SLOW_ADC_OVERSAMPLE * adcChannelCount];
 #endif
 
@@ -233,7 +241,7 @@ static /* constexpr */ ADCConversionGroup convGroupSlow = {
 
 typedef enum {
 	convertPrimary,
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 	convertMuxed,
 #endif
 	convertAux,
@@ -244,13 +252,13 @@ static slowAdcState_t slowAdcGetNextState(slowAdcState_t state)
 {
 	switch (state) {
 	case convertPrimary:
-		#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 		return convertMuxed;
-		#else
+#else
 		return convertAux;
-		#endif
+#endif
 	break;
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 	case convertMuxed:
 		return convertAux;
 	break;
@@ -275,12 +283,12 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 		slowAdcState = slowAdcGetNextState(slowAdcState);
 		switch (slowAdcState) {
 		case convertPrimary:
-			#ifdef ADC_MUX_PIN
+			#if ADC1_SLOW_MUXED
 			muxControl.setValue(0, /*force*/true);
 			#endif
 			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 			break;
-		#ifdef ADC_MUX_PIN
+		#if ADC1_SLOW_MUXED
 		case convertMuxed:
 			muxControl.setValue(1, /*force*/true);
 			// convert second half
@@ -310,8 +318,7 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 		return false;
 	}
 
-	// MCU Temperature sensor is only physically wired to ADC1
-	// todo: disable MCU Temperature sensor if EFI_SLOW_ADC is not ADC1?
+	// Temperature sensor is only physically wired to ADC1
 	adcConvert(&EFI_SLOW_ADC, &auxConvGroup, (adcsample_t *)auxSensorSamples, auxSensorOversample);
 
 	// Switch IN18 input to Vbat
@@ -341,12 +348,12 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 
 	result &= readBatch(convertedSamples, (adcsample_t *)slowSampleBuffer);
 
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 		muxControl.setValue(1, /*force*/true);
 	#endif
-		// read the second batch, starting where we left off
-		result &= readBatch(&convertedSamples[adcChannelCount], (adcsample_t *)slowSampleBufferMuxed);
+	// mux=1: ADC1 muxed channels (EFI_ADC_16-31)
+	result &= readBatch(&convertedSamples[adcChannelCount], (adcsample_t *)slowSampleBufferMuxed);
 	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 		muxControl.setValue(0, /*force*/true);
 	#endif

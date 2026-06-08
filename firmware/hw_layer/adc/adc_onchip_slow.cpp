@@ -12,12 +12,20 @@
 
 #include "adc_device.h"
 
+#ifndef ADC1_SLOW_MUXED
+#if defined(ADC_MUX_PIN)
+#define ADC1_SLOW_MUXED 1
+#else
+#define ADC1_SLOW_MUXED 0
+#endif
+#endif
+
 #ifndef SLOW_ADC_CHANNEL_COUNT
-#ifdef ADC_MUX_PIN
+#if ADC1_SLOW_MUXED
 #define SLOW_ADC_CHANNEL_COUNT 32
-#else // not ADC_MUX_PIN
+#else
 #define SLOW_ADC_CHANNEL_COUNT 16
-#endif // def ADC_MUX_PIN
+#endif
 #endif // SLOW_ADC_CHANNEL_COUNT
 
 /* TODO: Drop NO_CACHE for F4 and F7 couse with ADCv2 driver CPU does averaging and CPU stores result to this array */
