@@ -310,7 +310,8 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 		return false;
 	}
 
-	// Temperature sensor is only physically wired to ADC1
+	// MCU Temperature sensor is only physically wired to ADC1
+	// todo: disable MCU Temperature sensor if EFI_SLOW_ADC is not ADC1?
 	adcConvert(&EFI_SLOW_ADC, &auxConvGroup, (adcsample_t *)auxSensorSamples, auxSensorOversample);
 
 	// Switch IN18 input to Vbat
