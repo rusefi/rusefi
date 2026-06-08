@@ -8,6 +8,14 @@
 
 #include "pch.h"
 
+#ifndef EFI_SLOW_ADC
+#define EFI_SLOW_ADC ADCD1
+#endif
+
+#ifndef ADC_FAST_DEVICE
+#define ADC_FAST_DEVICE ADCD2
+#endif
+
 #ifdef EFI_SOFTWARE_KNOCK
 #include "knock_config.h"
 #endif
@@ -270,22 +278,22 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 			#ifdef ADC_MUX_PIN
 			muxControl.setValue(0, /*force*/true);
 			#endif
-			adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 			break;
 		#ifdef ADC_MUX_PIN
 		case convertMuxed:
 			muxControl.setValue(1, /*force*/true);
 			// convert second half
-			adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
+			adcStartConversionI(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
 			break;
 		#endif
 		case convertAux:
 			adcSTM32DisableVBATE();
-			adcStartConversionI(adcp, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
+			adcStartConversionI(&EFI_SLOW_ADC, &aux1ConvGroup, (adcsample_t *)aux1SensorSamples, auxSensorOversample);
 			break;
 		case convertAux2:
 			adcSTM32EnableVBATE();
-			adcStartConversionI(adcp, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
+			adcStartConversionI(&EFI_SLOW_ADC, &aux2ConvGroup, (adcsample_t *)aux2SensorSamples, auxSensorOversample);
 			break;
 		}
 		chSysUnlockFromISR();
@@ -295,7 +303,7 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 
 static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
-	msg_t result = adcConvert(&ADCD1, &convGroupSlow, b, SLOW_ADC_OVERSAMPLE);
+	msg_t result = adcConvert(&EFI_SLOW_ADC, &convGroupSlow, b, SLOW_ADC_OVERSAMPLE);
 
 	// If something went wrong - try again later
 	if (result != MSG_OK) {
@@ -303,7 +311,7 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 	}
 
 	// Temperature sensor is only physically wired to ADC1
-	adcConvert(&ADCD1, &auxConvGroup, (adcsample_t *)auxSensorSamples, auxSensorOversample);
+	adcConvert(&EFI_SLOW_ADC, &auxConvGroup, (adcsample_t *)auxSensorSamples, auxSensorOversample);
 
 	// Switch IN18 input to Vbat
 	adcSTM32EnableVBATE();
@@ -486,18 +494,18 @@ void portInitAdc() {
 #endif //ADC_MUX_PIN
 
 	// Init slow ADC
-	adcStart(&ADCD1, NULL);
+	adcStart(&EFI_SLOW_ADC, NULL);
 
 	// Enable internal temperature reference
 	adcSTM32EnableTSVREFE(); // Internal temperature sensor
 
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
-	adcStartConversion(&ADCD1, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+	adcStartConversion(&EFI_SLOW_ADC, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 #endif
 
 #if EFI_USE_FAST_ADC
 	// Init fast ADC (MAP sensor)
-	adcStart(&ADCD2, NULL);
+	adcStart(&ADC_FAST_DEVICE, NULL);
 #endif
 
 #if defined(STM32F7XX)
