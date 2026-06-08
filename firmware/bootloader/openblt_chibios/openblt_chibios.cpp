@@ -78,7 +78,8 @@ void CpuStartUserProgram(void)
   ComFree();
 #endif
 #if (BOOT_COM_NET_ENABLE > 0)
-  /* stop theE thernet MAC to prevent DMA from writing to bootloader memory
+#if defined(STM32F4XX) || defined(STM32F7XX)
+  /* stop the Ethernet MAC to prevent DMA from writing to bootloader memory
    * after we jump to the firmware.
    * Note: we do NOT put PHY in power-down mode because the firmware's MII
    * operations will hang waiting for a non-responsive PHY.
@@ -111,7 +112,8 @@ void CpuStartUserProgram(void)
   rccEnableETH(true);
   rccResetETH();
   rccDisableETH();
-#endif
+#endif // STM32F4XX || STM32F7XX
+#endif //BOOT_COM_NET_ENABLE
   /* reset the HAL */
   chSysDisable();
   /* reset the timer */
