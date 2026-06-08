@@ -244,11 +244,6 @@ ifeq ($(EFI_ONBOARD_MEMS_LIS3DSH),yes)
 endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
-
-ifeq ($(LWIP),yes)
-  include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
-endif
-
 include $(CHIBIOS)/os/hal/lib/complex/mfs/hal_mfs.mk
 
 ifeq ($(USE_FATFS),yes)
@@ -263,8 +258,17 @@ ifeq ($(USE_FATFS),yes)
 endif
 
 ifeq ($(USE_WIFI),yes)
+  LWIP = yes
   include $(PROJECT_DIR)/ext/atwinc1500/atwinc1500.mk
   DDEFS += -DEFI_WIFI=1
+endif
+
+ifeq ($(EFI_ETHERNET),yes)
+  LWIP = yes
+endif
+
+ifeq ($(LWIP),yes)
+  include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
 endif
 
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
