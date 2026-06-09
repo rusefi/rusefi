@@ -849,19 +849,12 @@ static void handleGetText(TsChannelBase* tsChannel) {
 	tsState.textCommandCounter++;
 
 	printOverallStatus();
-
-#if 0
-	size_t outputSize = loggingGetOutputData(tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE, sizeof(tsChannel->scratchBuffer) - TS_PACKET_HEADER_SIZE - TS_PACKET_TAIL_SIZE);
 #if EFI_SIMULATOR
-	logMsg("get test sending [%d]\r\n", outputSize);
-#endif
-
-	tsChannel->crcAndWriteBuffer(TS_RESPONSE_OK, outputSize);
-#else
-	/* size_t outputSize = */loggingSendOutputData(tsChannel);
-#endif
+	size_t outputSize =
+#endif // EFI_SIMULATOR
+		loggingSendOutputData(tsChannel);
 #if EFI_SIMULATOR
-	//logMsg("sent [%d]\r\n", outputSize);
+	logMsg("sent [%d]\r\n", outputSize);
 #endif // EFI_SIMULATOR
 }
 #endif // EFI_TEXT_LOGGING

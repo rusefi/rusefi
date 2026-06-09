@@ -46,37 +46,15 @@ void LogLineBuffer::free() {
 	freeBuffers.post(this, TIME_INFINITE);
 }
 
-/**
- * Fill buffer with as much data as possible
- *
- * @return actual size to transfer
- */
-size_t loggingGetOutputData(char *buffer, size_t size) {
-	LogBufferBase* line;
-	size_t offset = 0;
-	// TODO: better?
-	while (offset + 128 <= size) {
-		// Fetch a queued message
-		msg_t msg = filledBuffers.fetch(&line, TIME_IMMEDIATE);
-
-		if (msg != MSG_OK) {
-			return offset;
-		}
-
-		const char* content = line->getBuffer();
-		size_t len = std::strlen(content);
-		memcpy(buffer + offset, content, len);
-		offset += len;
-
-		// Return this logging buffer to the owner
-		line->free();
-	}
-
-	return offset;
-}
 
 // actually we can send much more in one packed. this is just a threshold that triggers current packet finalization
 constexpr size_t maxSend = scratchBuffer_SIZE;
+
+/**
+ * Write as much data as possible
+ *
+ * @return actual size transfered
+ */
 
 size_t loggingSendOutputData(TsChannelBase* tsChannel) {
 	// consolidate up to 16 line buffers in one TS packet
