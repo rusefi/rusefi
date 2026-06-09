@@ -15,7 +15,6 @@ class Logging;
 
 void startLoggingProcessor();
 
-size_t loggingGetOutputData(char *buffer, size_t size);
 size_t loggingSendOutputData(TsChannelBase* tsChannel);
 
 namespace priv
