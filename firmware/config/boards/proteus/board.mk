@@ -47,6 +47,8 @@ DDEFS += -DHW_PROTEUS=1
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
   # todo: KNOCK_SPECTROGRAM to use big_buffer
 	DDEFS += -DKNOCK_SPECTROGRAM=TRUE
+	# Off-MCU spectrogram: stream raw knock ADC to host (rusEFI UI) for FFT in Rust.
+	DDEFS += -DKNOCK_SCOPE=TRUE
 	DDEFS += -DLUA_RX_MAX_FILTER_COUNT=96
 	DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_PROTEUS_F7
 
@@ -71,6 +73,8 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	# todo: https://github.com/rusefi/rusefi/pull/7505
 	# you would think that removal of below like would reduce flash usage but somehow it increased it somehow?!
 	DDEFS += -DKNOCK_SPECTROGRAM=TRUE
+	# Off-MCU spectrogram: stream raw knock ADC to host (rusEFI UI) for FFT in Rust.
+	DDEFS += -DKNOCK_SCOPE=TRUE
 	DDEFS += -DEFI_WIDEBAND_FIRMWARE_UPDATE=FALSE
 	DDEFS += -DEFI_EMBED_INI_MSD=FALSE
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)

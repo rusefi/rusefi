@@ -91,6 +91,9 @@
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
 #include "trigger_scope.h"
+#ifdef KNOCK_SCOPE
+#include "knock_scope.h"
+#endif // KNOCK_SCOPE
 #include "electronic_throttle.h"
 #include "live_data.h"
 #include "efi_quote.h"
@@ -1062,6 +1065,21 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			}
 			break;
 #endif // TRIGGER_SCOPE
+#ifdef KNOCK_SCOPE
+		case TS_KNOCK_SCOPE_ENABLE:
+			knockScopeEnable();
+			sendOkResponse(tsChannel);
+			break;
+		case TS_KNOCK_SCOPE_DISABLE:
+			knockScopeDisable();
+			sendOkResponse(tsChannel);
+			break;
+		case TS_KNOCK_SCOPE_READ:
+			if (!knockScopeSendPending(tsChannel)) {
+				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
+			}
+			break;
+#endif // KNOCK_SCOPE
 		default:
 			// dunno what that was, send NAK
 			return false;

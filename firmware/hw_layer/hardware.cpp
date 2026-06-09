@@ -47,6 +47,9 @@
 #include "software_knock.h"
 #endif
 #include "trigger_scope.h"
+#ifdef KNOCK_SCOPE
+#include "knock_scope.h"
+#endif // KNOCK_SCOPE
 #include "init.h"
 #if EFI_MC33816
 #include "mc33816.h"
@@ -571,6 +574,10 @@ void initHardware() {
 #ifdef TRIGGER_SCOPE
 	initTriggerScope();
 #endif // TRIGGER_SCOPE
+
+#ifdef KNOCK_SCOPE
+	initKnockScope();
+#endif // KNOCK_SCOPE
 
 #if HAL_USE_SPI
 	initSpiModules();

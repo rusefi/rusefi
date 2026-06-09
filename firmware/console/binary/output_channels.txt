@@ -468,4 +468,7 @@ float mapFast
   uint16_t transitionEventsCounter
 
   uint8_t[MAX_CYLINDER_COUNT iterate] mapPerCylinder;;"kPa", 1, 0, 0, 0, 0
+
+bit knockScopeReady;Knock Scope ready
+
 end_struct
