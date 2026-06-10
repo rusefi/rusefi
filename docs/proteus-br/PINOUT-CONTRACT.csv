@@ -1,0 +1,117 @@
+pin,function,peripheral,group,evidence,criticality
+PD7,LS1 / Injector 1,GPIO,lowside,firmware/config/boards/proteus_meta.h:15,DEFAULT
+PG9,LS2 / Injector 2,GPIO,lowside,firmware/config/boards/proteus_meta.h:17,DEFAULT
+PG10,LS3 / Injector 3,GPIO,lowside,firmware/config/boards/proteus_meta.h:20,DEFAULT
+PG11,LS4 / Injector 4,GPIO,lowside,firmware/config/boards/proteus_meta.h:23,DEFAULT
+PG12,LS5 / Injector 5,GPIO,lowside,firmware/config/boards/proteus_meta.h:26,DEFAULT
+PG13,LS6 / Injector 6,GPIO,lowside,firmware/config/boards/proteus_meta.h:29,DEFAULT
+PG14,LS7 / Injector 7,GPIO,lowside,firmware/config/boards/proteus_meta.h:32,DEFAULT
+PB4,LS8 / Injector 8,GPIO (TIM3_CH1 capable),lowside,firmware/config/boards/proteus_meta.h:33,DEFAULT
+PB5,LS9 / Injector 9,GPIO (TIM3_CH2 capable),lowside,firmware/config/boards/proteus_meta.h:34,DEFAULT
+PB6,LS10 / Injector 10 / fuel pump relay default,GPIO (TIM4_CH1 capable),lowside,firmware/config/boards/proteus_meta.h:37; firmware/config/boards/proteus/board_configuration.cpp:179,DEFAULT
+PB7,LS11 / Injector 11 / fan relay default,GPIO (TIM4_CH2 capable),lowside,firmware/config/boards/proteus_meta.h:38; firmware/config/boards/proteus/board_configuration.cpp:178,DEFAULT
+PB8,LS12 / Injector 12 / main relay default,GPIO (TIM4_CH3 capable),lowside,firmware/config/boards/proteus_meta.h:39; firmware/config/boards/proteus/board_configuration.cpp:177,DEFAULT
+PB9,LS13,GPIO (TIM4_CH4 capable),lowside,firmware/config/boards/proteus_meta.h:42,DEFAULT
+PE0,LS14,GPIO,lowside,firmware/config/boards/proteus_meta.h:44,DEFAULT
+PE1,LS15,GPIO,lowside,firmware/config/boards/proteus_meta.h:46,DEFAULT
+PE2,LS16,GPIO,lowside,firmware/config/boards/proteus_meta.h:48,DEFAULT
+PD4,IGN1,GPIO,ignition,firmware/config/boards/proteus_meta.h:62,DEFAULT
+PD3,IGN2,GPIO,ignition,firmware/config/boards/proteus_meta.h:65,DEFAULT
+PC9,IGN3,GPIO (TIM8_CH4 capable),ignition,firmware/config/boards/proteus_meta.h:68,DEFAULT
+PC8,IGN4,GPIO (TIM8_CH3 capable),ignition,firmware/config/boards/proteus_meta.h:69,DEFAULT
+PC7,IGN5,GPIO (TIM3_CH2 capable),ignition,firmware/config/boards/proteus_meta.h:70,DEFAULT
+PG8,IGN6,GPIO,ignition,firmware/config/boards/proteus_meta.h:71,DEFAULT
+PG7,IGN7,GPIO,ignition,firmware/config/boards/proteus_meta.h:72,DEFAULT
+PG6,IGN8,GPIO,ignition,firmware/config/boards/proteus_meta.h:73,DEFAULT
+PG5,IGN9,GPIO,ignition,firmware/config/boards/proteus_meta.h:74,DEFAULT
+PG4,IGN10,GPIO,ignition,firmware/config/boards/proteus_meta.h:75,DEFAULT
+PG3,IGN11 (trigger simulator under HARDWARE_CI only),GPIO,ignition,firmware/config/boards/proteus_meta.h:76; firmware/config/boards/proteus/board_configuration.cpp:184,DEFAULT
+PG2,IGN12 (trigger simulator under HARDWARE_CI only),GPIO,ignition,firmware/config/boards/proteus_meta.h:77; firmware/config/boards/proteus/board_configuration.cpp:185,DEFAULT
+PA9,HS1 (USB VBUS sense must NOT be wired here),GPIO (TIM1_CH2 capable),highside,firmware/config/boards/proteus_meta.h:52; firmware/hw_layer/ports/stm32/stm32f4/board.h:33-34,DEFAULT
+PA8,HS2,GPIO (TIM1_CH1 capable),highside,firmware/config/boards/proteus_meta.h:55,DEFAULT
+PD15,HS3,GPIO (TIM4_CH4 capable),highside,firmware/config/boards/proteus_meta.h:57,DEFAULT
+PD14,HS4,GPIO (TIM4_CH3 capable),highside,firmware/config/boards/proteus_meta.h:59,DEFAULT
+PD12,ETB1 PWM (TLE9201 PWM),TIM4_CH1 AF2 hardware PWM (SW fallback),etb,firmware/config/boards/proteus/board_configuration.cpp:86; firmware/hw_layer/ports/stm32/stm32_pwm.cpp:127,DEFAULT
+PD10,ETB1 DIR,GPIO,etb,firmware/config/boards/proteus/board_configuration.cpp:88,DEFAULT
+PD11,ETB1 DIS,GPIO,etb,firmware/config/boards/proteus/board_configuration.cpp:90,DEFAULT
+PD13,ETB2 PWM (TLE9201 PWM),TIM4_CH2 AF2 hardware PWM (SW fallback),etb,firmware/config/boards/proteus/board_configuration.cpp:94; firmware/hw_layer/ports/stm32/stm32_pwm.cpp:128,DEFAULT
+PD9,ETB2 DIR,GPIO,etb,firmware/config/boards/proteus/board_configuration.cpp:96,DEFAULT
+PD8,ETB2 DIS,GPIO,etb,firmware/config/boards/proteus/board_configuration.cpp:98,DEFAULT
+PC0,AV1 / MAP default,ADC123_IN10 (EFI_ADC_10),analog_volt,firmware/config/boards/proteus_meta.h:93-95; firmware/config/boards/proteus/board_configuration.cpp:116,DEFAULT+SILICON
+PC1,AV2 / TPS1_1 default,ADC123_IN11 (EFI_ADC_11),analog_volt,firmware/config/boards/proteus_meta.h:97-99; firmware/config/boards/proteus/board_configuration.cpp:115,DEFAULT+SILICON
+PC2,AV3 (TPS1_2 alias),ADC123_IN12 (EFI_ADC_12),analog_volt,firmware/config/boards/proteus_meta.h:101-103,DEFAULT+SILICON
+PC3,AV4 (TPS2_1 alias),ADC123_IN13 (EFI_ADC_13),analog_volt,firmware/config/boards/proteus_meta.h:105-107,DEFAULT+SILICON
+PA0,AV5,ADC123_IN0 (EFI_ADC_0),analog_volt,firmware/config/boards/proteus_meta.h:109-110,DEFAULT+SILICON
+PA1,AV6 (digital-capable),ADC123_IN1 (EFI_ADC_1),analog_volt,firmware/config/boards/proteus_meta.h:112-114,DEFAULT+SILICON
+PA2,AV7 (PPS2 alias),ADC123_IN2 (EFI_ADC_2),analog_volt,firmware/config/boards/proteus_meta.h:116-118,DEFAULT+SILICON
+PA3,AV8 (digital-capable),ADC123_IN3 (EFI_ADC_3),analog_volt,firmware/config/boards/proteus_meta.h:120-122,DEFAULT+SILICON
+PA4,AV9 (PPS alias),ADC12_IN4 (EFI_ADC_4),analog_volt,firmware/config/boards/proteus_meta.h:124-126; firmware/hw_layer/ports/stm32/stm32_adc.cpp:23,DEFAULT+SILICON
+PA5,AV10 / AFR-WBO analog default,ADC12_IN5 (EFI_ADC_5),analog_volt,firmware/config/boards/proteus_meta.h:128-130; firmware/config/boards/proteus/board_configuration.cpp:120,DEFAULT+SILICON
+PA6,AV11 (digital-capable),ADC12_IN6 (EFI_ADC_6),analog_volt,firmware/config/boards/proteus_meta.h:132-134,DEFAULT+SILICON
+PC4,AT1,ADC12_IN14 (EFI_ADC_14),analog_temp,firmware/config/boards/proteus_meta.h:79-80,DEFAULT+SILICON
+PC5,AT2 / IAT default,ADC12_IN15 (EFI_ADC_15),analog_temp,firmware/config/boards/proteus_meta.h:82-84; firmware/config/boards/proteus/board_configuration.cpp:114,DEFAULT+SILICON
+PB0,AT3 / CLT default,ADC12_IN8 (EFI_ADC_8),analog_temp,firmware/config/boards/proteus_meta.h:86-88; firmware/config/boards/proteus/board_configuration.cpp:113,DEFAULT+SILICON
+PB1,AT4,ADC12_IN9 (EFI_ADC_9),analog_temp,firmware/config/boards/proteus_meta.h:90-91,DEFAULT+SILICON
+PC6,Digital 1 / primary trigger default,GPIO + EXTI6 (PAL both edges),trigger,firmware/config/boards/proteus_meta.h:139; firmware/config/boards/proteus/board_configuration.cpp:107; firmware/hw_layer/digital_input/trigger/trigger_input_exti.cpp:60,DEFAULT
+PE11,Digital 2 (Hall CAM suggested),GPIO + EXTI11,trigger,firmware/config/boards/proteus_meta.h:140; firmware/config/boards/proteus/connectors/black23.yaml:2-8,DEFAULT
+PE12,Digital 3 (VSS suggested),GPIO + EXTI12,trigger,firmware/config/boards/proteus_meta.h:141; firmware/config/boards/proteus/connectors/black23.yaml:10-16,DEFAULT
+PE14,Digital 4 (start button suggested),GPIO + EXTI14,trigger,firmware/config/boards/proteus_meta.h:142; firmware/config/boards/proteus/connectors/black23.yaml:18-24,DEFAULT
+PE13,Digital 5,GPIO + EXTI13,trigger,firmware/config/boards/proteus_meta.h:143; firmware/config/boards/proteus/connectors/black23.yaml:60-66,DEFAULT
+PE15,Digital 6,GPIO + EXTI15,trigger,firmware/config/boards/proteus_meta.h:144; firmware/config/boards/proteus/connectors/black23.yaml:75-81,DEFAULT
+PE7,VR1 conditioner output,GPIO + EXTI7,trigger,firmware/config/boards/proteus_meta.h:136; firmware/config/boards/proteus/connectors/black23.yaml:40-42,DEFAULT
+PE8,VR2 conditioner output,GPIO + EXTI8,trigger,firmware/config/boards/proteus_meta.h:137; firmware/config/boards/proteus/connectors/black23.yaml:31-33,DEFAULT
+PF4,Knock 1,ADC3_IN14 (EFI_ADC_38),knock,firmware/config/boards/proteus/knock_config.h:8-11 and 27-28; firmware/hw_layer/ports/stm32/stm32_adc.cpp:40,BOOT+SILICON
+PF5,Knock 2,ADC3_IN15 (EFI_ADC_39),knock,firmware/config/boards/proteus/knock_config.h:13-15 and 29; firmware/hw_layer/ports/stm32/stm32_adc.cpp:42,BOOT+SILICON
+PD0,CAN1 RX (OpenBLT bootloader + low-power wake hardcoded),CAN1_RX AF9,can,firmware/config/boards/proteus/board_configuration.cpp:149 and 191; firmware/config/boards/proteus/board.mk:39-40,BOOT
+PD1,CAN1 TX (OpenBLT bootloader hardcoded),CAN1_TX AF9,can,firmware/config/boards/proteus/board_configuration.cpp:148; firmware/config/boards/proteus/board.mk:41-42,BOOT
+PB12,CAN2 RX,CAN2_RX AF9,can,firmware/config/boards/proteus/board_configuration.cpp:150,DEFAULT
+PB13,CAN2 TX,CAN2_TX AF9,can,firmware/config/boards/proteus/board_configuration.cpp:151,DEFAULT
+PA11,USB D-,OTG_FS_DM AF10,usb,firmware/hw_layer/ports/stm32/stm32f4/board.h:29-31; firmware/hw_layer/ports/stm32/serial_over_usb/usbconsole.cpp:29,BOOT
+PA12,USB D+,OTG_FS_DP AF10,usb,firmware/hw_layer/ports/stm32/stm32f4/board.h:29-31; firmware/hw_layer/ports/stm32/serial_over_usb/usbconsole.cpp:30,BOOT
+PA13,SWDIO,SYS AF0,debug,firmware/hw_layer/ports/stm32/stm32f4/board.h:182-199,BOOT
+PA14,SWCLK,SYS AF0,debug,firmware/hw_layer/ports/stm32/stm32f4/board.h:182-199,BOOT
+BOOT0,boot strap,dedicated ST boot pin,debug,hardware-only; no firmware reference (see PINOUT-CONTRACT.md unresolved item 4),HW
+NRST,reset,dedicated ST reset pin,debug,hardware-only; no firmware reference,HW
+PH0,HSE crystal in (integer-MHz crystal auto-detected),OSC_IN,clock,firmware/hw_layer/ports/stm32/mcuconf_common_f4_f7.h:439-450; firmware/hw_layer/ports/stm32/osc_detector.cpp:13-15,HW
+PH1,HSE crystal out,OSC_OUT,clock,firmware/hw_layer/ports/stm32/mcuconf_common_f4_f7.h:439-450,HW
+PA7,12V_SENSE / VBatt (divider 9.2),ADC12_IN7 (EFI_ADC_7),vbatt,firmware/config/boards/proteus/board_configuration.cpp:68-72; firmware/config/boards/proteus/connectors/black23.yaml:117-122,DEFAULT+SILICON
+PC10,SD card SCK,SPI3_SCK AF6,sd_spi,firmware/config/boards/proteus/board_configuration.cpp:128,DEFAULT
+PC11,SD card MISO,SPI3_MISO AF6,sd_spi,firmware/config/boards/proteus/board_configuration.cpp:129,DEFAULT
+PC12,SD card MOSI,SPI3_MOSI AF6,sd_spi,firmware/config/boards/proteus/board_configuration.cpp:130,DEFAULT
+PD2,SD card CS,GPIO,sd_spi,firmware/config/boards/proteus/board_configuration.cpp:125,DEFAULT
+PD5,Console UART TX (F4 build only),USART2_TX AF7,uart,firmware/config/boards/proteus/board.mk:29-35,BOOT(F4)
+PD6,Console UART RX (F4 build only),USART2_RX AF7,uart,firmware/config/boards/proteus/board.mk:29-35,BOOT(F4)
+PF7,AUX SPI5 SCK (F7 build only; free on F4 - reserve),SPI5_SCK,aux_spi,firmware/config/boards/proteus/board_configuration.cpp:132-138; firmware/config/boards/proteus/board.mk:55,DEFAULT(F7)
+PF8,AUX SPI5 MISO (F7 build only; free on F4 - reserve),SPI5_MISO,aux_spi,firmware/config/boards/proteus/board_configuration.cpp:132-138,DEFAULT(F7)
+PF9,AUX SPI5 MOSI (F7 build only; free on F4 - reserve),SPI5_MOSI,aux_spi,firmware/config/boards/proteus/board_configuration.cpp:132-138,DEFAULT(F7)
+PB10,LPS25 baro SCL,I2C2_SCL,i2c_baro,firmware/config/boards/proteus/board_configuration.cpp:153,DEFAULT
+PB11,LPS25 baro SDA,I2C2_SDA,i2c_baro,firmware/config/boards/proteus/board_configuration.cpp:154,DEFAULT
+PE3,Critical error LED,GPIO,led,firmware/config/boards/proteus/board.mk:8-9,BOOT
+PE4,Comms LED,GPIO,led,firmware/config/boards/proteus/board_configuration.cpp:52-54,BOOT
+PE5,Running LED,GPIO,led,firmware/config/boards/proteus/board_configuration.cpp:56-58,BOOT
+PE6,Warning LED,GPIO,led,firmware/config/boards/proteus/board_configuration.cpp:60-62,BOOT
+PA10,free (TIM1_CH3/USART1_RX capable),unused,free,firmware/hw_layer/ports/stm32/stm32_pwm.cpp:100,FREE
+PA15,free (JTDI; TIM2_CH1 capable),unused,free,firmware/hw_layer/ports/stm32/stm32_pwm.cpp:107,FREE
+PB2,free (BOOT1 strap - keep pulled to GND),unused,free,hardware strap,FREE
+PB3,free (SWO/JTDO - recommend reserving for debug trace),unused,free,firmware/hw_layer/ports/stm32/stm32_pwm.cpp:108,FREE
+PB14,free,unused,free,no firmware reference,FREE
+PB15,free,unused,free,no firmware reference,FREE
+PC13,free (VBAT domain - low drive),unused,free,no firmware reference,FREE
+PC14,free (OSC32_IN; LSE not fitted and EFI_RTC=FALSE),unused,free,firmware/hw_layer/ports/stm32/stm32f4/board.h:55-58; firmware/config/boards/proteus/meta-info-proteus_f4.env:5,FREE
+PC15,free (OSC32_OUT; see PC14),unused,free,firmware/hw_layer/ports/stm32/stm32f4/board.h:55-58,FREE
+PE9,free (TIM1_CH1 capable),unused,free,firmware/hw_layer/ports/stm32/stm32_pwm.cpp:102,FREE
+PE10,free,unused,free,no firmware reference,FREE
+PF0,free (I2C2_SDA alt),unused,free,no firmware reference,FREE
+PF1,free (I2C2_SCL alt),unused,free,no firmware reference,FREE
+PF2,free,unused,free,no firmware reference,FREE
+PF3,free (ADC3_IN9 = EFI_ADC_37),unused,free,firmware/hw_layer/ports/stm32/stm32_adc.cpp:34,FREE
+PF6,free (ADC3_IN4 = EFI_ADC_32),unused,free,firmware/hw_layer/ports/stm32/stm32_adc.cpp:24,FREE
+PF10,free (ADC3_IN8 = EFI_ADC_36),unused,free,firmware/hw_layer/ports/stm32/stm32_adc.cpp:32,FREE
+PF11,free,unused,free,no firmware reference,FREE
+PF12,free,unused,free,no firmware reference,FREE
+PF13,free,unused,free,no firmware reference,FREE
+PF14,free,unused,free,no firmware reference,FREE
+PF15,free,unused,free,no firmware reference,FREE
+PG0,free,unused,free,no firmware reference,FREE
+PG1,free,unused,free,no firmware reference,FREE
+PG15,free,unused,free,no firmware reference,FREE
