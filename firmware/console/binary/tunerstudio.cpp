@@ -361,15 +361,15 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		return;
 	}
 
+	if (isLockedFromUser()) {
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
+		return;
+	}
+
 	onCalibrationWrite(page, offset, count);
 
 	// Special case
 	if (page == TS_PAGE_SETTINGS) {
-		if (isLockedFromUser()) {
-			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
-			return;
-		}
-
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
 		// [tag:popular_vehicle]
 		if (!needToTriggerTsRefresh()) {
