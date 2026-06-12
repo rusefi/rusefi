@@ -1,9 +1,12 @@
 #include "pch.h"
 
 #include "mass_storage_init.h"
+#include "null_device.h"
+
+#if HAL_USE_USB_MSD
 #include "mass_storage_device.h"
 #include "counting_block_device.h"
-#include "null_device.h"
+#endif
 
 #if EFI_EMBED_INI_MSD
 	#if EFI_USE_COMPRESSED_INI_MSD
