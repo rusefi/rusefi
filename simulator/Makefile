@@ -207,7 +207,9 @@ CSRC =  $(ALLCSRC) \
   $(RUSEFI_LIB_C) \
   $(PROJECT_DIR)/ChibiOS-Contrib/os/various/lib_scsi.c \
   $(PROJECT_DIR)/ext/uzlib/src/tinflate.c \
-  $(PROJECT_DIR)/ext/uzlib/src/tinfgzip.c
+  $(PROJECT_DIR)/ext/uzlib/src/tinfgzip.c \
+  $(PROJECT_DIR)/ext/uzlib/src/adler32.c \
+  $(PROJECT_DIR)/ext/uzlib/src/crc32.c
 
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
