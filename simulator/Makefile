@@ -187,6 +187,8 @@ include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/common.mk
 include $(PROJECT_DIR)/controllers/modules/modules.mk
+# Mass storage include provides getStorageImage()/getStorageImageSize() used by TS FS_IMAGE pages
+include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 
 ifneq ($(BOARD_DIR),)
   # used by custom board custom live data
@@ -197,10 +199,15 @@ ifneq ($(BOARD_DIR),)
   endif
 endif
 
+# SCSI and uzlib sources required by compressed_block_device.cpp for decompressing
+# the embedded INI image (TS FS_IMAGE_DATA page support)
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-  $(RUSEFI_LIB_C)
+  $(RUSEFI_LIB_C) \
+  $(PROJECT_DIR)/ChibiOS-Contrib/os/various/lib_scsi.c \
+  $(PROJECT_DIR)/ext/uzlib/src/tinflate.c \
+  $(PROJECT_DIR)/ext/uzlib/src/tinfgzip.c
 
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -222,10 +229,15 @@ CPPSRC = $(ALLCPPSRC) \
   $(RUSEFI_LIB_CPP) \
   main.cpp
 
+# Remove mass_storage_device.cpp from ALLCPPSRC since it requires USB MSD HAL
+# (not available in simulator). We only need getStorageImage() for TS protocol.
+CPPSRC := $(filter-out $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage_device.cpp,$(CPPSRC))
+
 
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
+# mass_storage and uzlib headers needed for getStorageImage() and compressed INI decompression
 INCDIR += . \
   $(PCH_DIR) \
   $(ALLINC) \
@@ -236,6 +248,8 @@ INCDIR += . \
   $(PROJECT_DIR)/development/hw_layer \
   $(CHIBIOS)/os/hal/lib/streams \
   $(RUSEFI_LIB_INC) \
+  $(PROJECT_DIR)/hw_layer/mass_storage \
+  $(PROJECT_DIR)/ext/uzlib/src \
   simulator/system \
   simulator/can \
   simulator
@@ -307,6 +321,9 @@ DDEFS += -DFIRMWARE_ID=\"simulator\" -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 DDEFS += -DMETA_GENERATED_H_OVERRIDE=\"rusefi_generated_$(SHORT_BOARD_NAME).h\"
 DDEFS += -DMETA_ENGINE_GENERATED_H_OVERRIDE=\"engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h\"
 DDEFS += -DSIGNATURE_H_OVERRIDE=\"signature_$(SHORT_BOARD_NAME).h\"
+DDEFS += -DEFI_EMBED_INI_MSD=TRUE
+DDEFS += -DHAL_USE_USB_MSD=FALSE
+DDEFS += -DEFI_USE_COMPRESSED_INI_MSD=FALSE
 
 
 # Define ASM defines here

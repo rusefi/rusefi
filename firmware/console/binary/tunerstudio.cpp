@@ -95,9 +95,9 @@
 #include "live_data.h"
 #include "efi_quote.h"
 
-#if EFI_PROD_CODE
+#if (EFI_PROD_CODE || EFI_SIMULATOR)
 #include "mass_storage_init.h"
-#endif // EFI_PROD_CODE
+#endif // (EFI_PROD_CODE || EFI_SIMULATOR)
 
 #include <string.h>
 #include "bench_test.h"
@@ -201,7 +201,7 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 
 	// Now check for read-only pages
 	switch (page) {
-#if (EFI_PROD_CODE /* || EFI_SIMULATOR */)
+#if (EFI_PROD_CODE || EFI_SIMULATOR)
 	case TS_PAGE_FS_IMAGE_SIZE:
 		{
 			uint32_t* data32 = reinterpret_cast<uint32_t*>(tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE);
@@ -240,7 +240,7 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 #endif
 	case TS_PAGE_SECOND_TABLES:
 		return getExtraPageSize(EFI_SECOND_TABLES_RECORD_ID);
-#if (EFI_PROD_CODE /* || EFI_SIMULATOR */)
+#if (EFI_PROD_CODE || EFI_SIMULATOR)
 	case TS_PAGE_FS_IMAGE_SIZE:
 		// page contains only 4 bytes of size of next page
 		return sizeof(uint32_t);
