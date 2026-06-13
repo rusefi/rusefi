@@ -1,6 +1,17 @@
 /**
  * can_gpio_msiobox.cpp
  *
+ * GPIO chip driver for the MegaSquirt I/O box ("IOBox"): a CAN-attached
+ * expander that provides additional discrete/PWM outputs, ADC inputs,
+ * switch inputs and wheel-speed (VSS/tach) capture.
+ *
+ * The driver implements two roles at once:
+ *  - GpioChip:    exposes the IOBox pins to the rest of the firmware as if
+ *                 they were ordinary GPIOs (writePad/readPad/setPadPWM).
+ *  - CanListener: drives the CAN protocol state machine, sends commands to
+ *                 the device and decodes the telemetry frames it broadcasts.
+ *
+ * Current status:
  *  - discrete output works
  *  - PWM output works
  *
@@ -152,12 +163,15 @@ static_assert(sizeof(iobox_tach) == 8);
 /* Driver local variables and types.										*/
 /*==========================================================================*/
 
+/* Connection state machine for a single IOBox device.
+ * Flow: WAIT_INIT -> (ping) -> WAIT_WHOAMI -> (whoami received) -> READY.
+ * On timeout we go to FAILED and later retry from WAIT_INIT. */
 typedef enum {
-	MSIOBOX_DISABLED = 0,
-	MSIOBOX_WAIT_INIT,
-	MSIOBOX_WAIT_WHOAMI, // 2
-	MSIOBOX_READY,
-	MSIOBOX_FAILED // 4
+	MSIOBOX_DISABLED = 0,	// device not used / not configured
+	MSIOBOX_WAIT_INIT,		// need to send the initial ping
+	MSIOBOX_WAIT_WHOAMI, // 2	// ping sent, waiting for the whoami reply
+	MSIOBOX_READY,			// device answered, normal operation
+	MSIOBOX_FAILED // 4		// communication lost, waiting before retry
 } msiobox_state;
 
 class MsIoBox final : public GpioChip, public CanListener {
@@ -199,7 +213,7 @@ private:
 	int update();
 	void checkState();
 
-	/* PWM output helpers */
+	/* PWM output helpers: convert frequency/duty into device on/off clock counts */
 	void CalcOnOffPeriod(int ch, pwm_settings &pwm);
 
 	/* Output states */
@@ -252,12 +266,17 @@ MsIoBox::MsIoBox(uint32_t bus, uint32_t base, uint16_t period)
 	stateTimer.reset();
 }
 
+/* GpioChip init hook, called once when the chip is registered. */
 int MsIoBox::init()
 {
 	/* TODO: register can listener here */
 	return 0;
 }
 
+/* (Re)configure the CAN binding for this device and force a reconnect.
+ * bus    - CAN bus index to talk on
+ * base   - base CAN id of the device (0x200 / 0x220 / 0x240)
+ * period - broadcast/refresh period in milliseconds */
 int MsIoBox::config(uint32_t bus, uint32_t base, uint16_t period)
 {
 	/* TODO: sanity checks? */
@@ -275,6 +294,8 @@ int MsIoBox::config(uint32_t bus, uint32_t base, uint16_t period)
 	return 0;
 }
 
+/* Filter: decide whether an incoming CAN frame belongs to this device.
+ * Only the frames the IOBox emits (base + 8 .. base + 14) are accepted. */
 bool MsIoBox::acceptFrame(const size_t busIndex, const CANRxFrame& frame) const {
 	/* TODO: check busIndex! */
 	UNUSED(busIndex);
@@ -314,15 +335,21 @@ int MsIoBox::setup() {
 	return 0;
 }
 
+/* Fill a pwm_settings structure for the given output channel.
+ * The device counts time in its own clock ticks (pwmBaseFreq), so the
+ * requested frequency/duty is converted into on/off tick counts here. */
 void MsIoBox::CalcOnOffPeriod(int channel, pwm_settings &pwm)
 {
+	/* channel is in on/off mode (not PWM) - nothing to drive */
 	if ((OutMode & BIT(channel)) == 0) {
 		pwm.on = pwm.off = 0;
 		return;
 	}
 
+	/* total period in device clock ticks, rounded to nearest */
 	int period = (pwmBaseFreq + (OutPwm[channel].frequency / 2)) / OutPwm[channel].frequency;
 
+	/* split the period into high (on) and low (off) parts by duty cycle */
 	pwm.on = period * OutPwm[channel].duty;
 	pwm.off = period - pwm.on;
 }
@@ -355,8 +382,13 @@ int MsIoBox::update() {
 	return 0;
 }
 
+/* Decode a telemetry frame received from the device.
+ * Which payloads are valid depends on the current connection state:
+ * in WAIT_WHOAMI we only expect the whoami packet, in READY we expect
+ * ADC/input/tach broadcasts. */
 void MsIoBox::decodeFrame(const CANRxFrame& frame, efitick_t) {
 	uint32_t id = CAN_ID(frame);
+	/* packet type is encoded as an offset from the device base id */
 	uint32_t offset = id - m_base;
 	bool handled = true;
 
@@ -417,6 +449,8 @@ void MsIoBox::decodeFrame(const CANRxFrame& frame, efitick_t) {
 }
 
 /* gpio chip stuff */
+/* Set a discrete (on/off) output. Switches the pin out of PWM mode and
+ * just records the new state; the actual CAN frame is sent from update(). */
 int MsIoBox::writePad(size_t pin, int value) {
 	if (pin >= MSIOBOX_OUTPUTS)
 		return -1;
@@ -441,6 +475,8 @@ int MsIoBox::writePad(size_t pin, int value) {
 	return 0;
 }
 
+/* Read a logical (switch) input. Input pins are numbered after the outputs,
+ * so the output count is subtracted to get the input index. */
 int MsIoBox::readPad(size_t pin) {
 	if ((pin < MSIOBOX_OUTPUTS) || (pin >= MSIOBOX_SIGNALS))
 		return -1;
@@ -479,6 +515,8 @@ int MsIoBox::setPadPWM(size_t pin, float frequency, float duty)
 	return 0;
 }
 
+/* Report pin diagnostics: OK only while the device is READY and we have
+ * received fresh data recently, otherwise treat it as driver-off. */
 brain_pin_diag_e MsIoBox::getDiag(size_t pin)
 {
 	if (pin >= MSIOBOX_SIGNALS)
@@ -491,6 +529,9 @@ brain_pin_diag_e MsIoBox::getDiag(size_t pin)
 	return PIN_DRIVER_OFF;
 }
 
+/* Periodic state-machine tick, driven from request().
+ * Handles connection bring-up, timeouts and pushing pending config/output
+ * updates to the device while it is READY. */
 void MsIoBox::checkState(void)
 {
 	switch (state) {
@@ -535,6 +576,8 @@ void MsIoBox::checkState(void)
 	}
 }
 
+/* Called by the CAN framework to fetch the next listener; we piggy-back on
+ * it to advance our own state machine on every poll. */
 CanListener* MsIoBox::request(void) {
 	checkState();
 
@@ -544,6 +587,10 @@ CanListener* MsIoBox::request(void) {
 
 static MsIoBox instance[BOARD_CAN_GPIO_COUNT];
 
+/* Entry point: bring up the IOBox driver(s) according to configuration.
+ * Does nothing if the IOBox is disabled in the tune. Computes the device
+ * CAN base id from the selected id slot, registers a CAN listener and the
+ * GPIO chip, and adds a "msioinfo" console command for diagnostics. */
 void initCanGpioMsiobox() {
 	if (engineConfiguration->msIoBox0.id == MsIoBoxId::OFF) {
 		return;
