@@ -15,6 +15,8 @@
  *  - discrete output works
  *  - PWM output works
  *
+ * see also iobox.yaml
+ *
  * TODO list:
  *  - implement input reading
  *  - support PWM out mode
