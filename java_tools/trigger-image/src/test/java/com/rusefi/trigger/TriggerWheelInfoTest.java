@@ -63,4 +63,12 @@ public class TriggerWheelInfoTest {
         assertTrue(info.isCrankBased());
         assertEquals(1, info.getSignals().size());
     }
+
+    @Test
+    public void testReadWheelsFromResource() {
+        // This should not throw exception if triggers.txt is available on classpath
+        TriggerWheelInfo.readWheels("non_existent_folder", wheelInfo -> {
+            assertNotNull(wheelInfo);
+        });
+    }
 }

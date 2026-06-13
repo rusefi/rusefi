@@ -140,9 +140,19 @@ public class TriggerWheelInfo {
         String fileName = workingFolder + File.separator + TRIGGERS_FILE_NAME;
         BufferedReader br;
         try {
-            br = new BufferedReader(new FileReader(fileName));
+            File file = new File(fileName);
+            if (file.exists()) {
+                log.info("Reading file " + fileName);
+                br = new BufferedReader(new FileReader(file));
+            } else {
+                InputStream stream = TriggerWheelInfo.class.getResourceAsStream("/" + TRIGGERS_FILE_NAME);
+                if (stream == null) {
+                    throw new IOException("File not found " + fileName + " and no resource /" + TRIGGERS_FILE_NAME);
+                }
+                log.info("Reading resource " + TRIGGERS_FILE_NAME);
+                br = new BufferedReader(new InputStreamReader(stream));
+            }
 
-            log.info("Reading " + fileName);
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().startsWith("#")) {
