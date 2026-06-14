@@ -2,6 +2,7 @@ package com.rusefi.ui.wizard;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.hd81.HdConstants;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -45,14 +46,14 @@ public class WizardCatalogTest {
 
     @Test
     public void boardNameContainsMatchesSubstringCaseInsensitive() {
-        Predicate<UIContext> hd81 = WizardCatalog.boardNameContains("hd81");
+        Predicate<UIContext> hd81 = WizardCatalog.boardNameContains(HdConstants.HD_81);
         assertTrue(hd81.test(contextWithSignature("rusEFI master.2026.04.18.hd81-gdi.abc123")));
         assertTrue(hd81.test(contextWithSignature("rusEFI master.2026.04.18.HD81-gdi.abc123")));
     }
 
     @Test
     public void boardNameContainsRejectsNonMatchingBoard() {
-        Predicate<UIContext> hd81 = WizardCatalog.boardNameContains("hd81");
+        Predicate<UIContext> hd81 = WizardCatalog.boardNameContains(HdConstants.HD_81);
         assertFalse(hd81.test(contextWithSignature("rusEFI master.2026.04.18.proteus_f7.abc123")));
     }
 
@@ -60,7 +61,7 @@ public class WizardCatalogTest {
     public void boardNameContainsReturnsFalseForNullBinaryProtocol() {
         UIContext ctx = mock(UIContext.class);
         when(ctx.getBinaryProtocol()).thenReturn(null);
-        assertFalse(WizardCatalog.boardNameContains("hd81").test(ctx));
+        assertFalse(WizardCatalog.boardNameContains(HdConstants.HD_81).test(ctx));
     }
 
     @Test
@@ -69,13 +70,13 @@ public class WizardCatalogTest {
         bp.signature = null;
         UIContext ctx = mock(UIContext.class);
         when(ctx.getBinaryProtocol()).thenReturn(bp);
-        assertFalse(WizardCatalog.boardNameContains("hd81").test(ctx));
+        assertFalse(WizardCatalog.boardNameContains(HdConstants.HD_81).test(ctx));
     }
 
     @Test
     public void boardNameContainsReturnsFalseForUnparseableSignature() {
         // Missing "rusEFI " prefix → parse() returns null → predicate is false.
-        assertFalse(WizardCatalog.boardNameContains("hd81").test(contextWithSignature("garbage")));
+        assertFalse(WizardCatalog.boardNameContains(HdConstants.HD_81).test(contextWithSignature("garbage")));
     }
 
     private UIContext contextWithSignature(String signature) {

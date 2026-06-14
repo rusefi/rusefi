@@ -4,6 +4,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.hd81.HdConstants;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +20,7 @@ import java.util.function.Predicate;
 public class WizardCatalog {
     private static final List<String> VIN_FIELDS = Collections.singletonList("vinNumber");
 
-    private static final Predicate<UIContext> NOT_HD81 = boardNameContains("hd81").negate();
+    private static final Predicate<UIContext> NOT_HD81 = boardNameContains(HdConstants.HD_81).negate();
 
     public static final List<WizardStepDescriptor> ALL = Collections.unmodifiableList(Arrays.asList(
         // ----- Flagged full-wizard steps (order matters; drives step numbering) -----
@@ -70,7 +71,7 @@ public class WizardCatalog {
         new WizardStepDescriptor(
             null,
             true,
-            boardNameContains("hd81"),
+            boardNameContains(HdConstants.HD_81),
             ctx -> GenericFieldsPanel.anyFieldEmpty(ctx, VIN_FIELDS),
             ctx -> new GenericFieldsPanel(
                 ctx,
