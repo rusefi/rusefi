@@ -1494,6 +1494,8 @@
 #define pin_output_mode_e_OM_OPENDRAIN 2
 #define pin_output_mode_e_OM_OPENDRAIN_INVERTED 3
 #define poke false
+#define PPS_FAIL_INDICATOR "Pedal error"
+#define PPS_OK_INDICATOR "Pedal OK"
 #define ppsExpAverageAlpha_NAME "Accelerator Exp Average"
 #define PRIMARY_CAN_NAME "Primary CAN"
 #define PRIME_CURVE_COUNT 8
@@ -1571,7 +1573,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2039397947
+#define SIGNATURE_HASH 4156398661
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2188,7 +2190,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.06.14.alphax-8chan.2039397947"
+#define TS_SIGNATURE "rusEFI master.2026.06.14.alphax-8chan.4156398661"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
