@@ -386,6 +386,10 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		// huh, why is this NOT within above 'needToTriggerTsRefresh()' condition?
 		call_board_override(custom_board_ConfigOverrides);
 	} else {
+		if (isLockedFromUser()) {
+			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
+			return;
+		}
 		memcpy(addr, content, count);
 	}
 
