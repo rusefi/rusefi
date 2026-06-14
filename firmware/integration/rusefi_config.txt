@@ -2455,6 +2455,9 @@ split_lines@@BOARD_CONFIG_FROM_FILE@@
 	KnockGain[MAX_CYLINDER_COUNT iterate] knockGains
 end_struct
 
+#define PPS_OK_INDICATOR "Pedal OK"
+#define PPS_FAIL_INDICATOR "Pedal error"
+
 #define VE_BLEND1_TABLE_NAME "VE blend 1"
 #define HD_MENU_NAME "Harley"
 #define smLaunchControl_NAME "Launch Control"
