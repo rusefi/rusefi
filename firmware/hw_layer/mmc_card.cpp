@@ -753,11 +753,26 @@ static bool sdFormat()
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: format failed");
 		goto exit;
 	}
+
+	// FS should be mounted to change label
+	memset(&MMC_FS, 0, sizeof(FATFS));
+	ret = f_mount(&MMC_FS, "", /* Mount immediately */ 1);
+	if (ret) {
+		printFatFsError("mount after format failed", ret);
+		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
+		goto exit;
+	}
+
 	ret = f_setlabel(SD_CARD_LABEL);
 	if (ret) {
 		printFatFsError("setlabel failed", ret);
 		// this is not critical
 		ret = FR_OK;
+	}
+
+	ret = f_unmount("");
+	if (ret != FR_OK) {
+		printFatFsError("Umount failed", ret);
 	}
 
 exit:
