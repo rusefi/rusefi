@@ -410,3 +410,16 @@ typedef enum {
 	LUA_COMMAND_10,
 	BENCH_BOOST_VALVE,
 } bench_mode_e;
+
+// Reason why SD logging is or is not currently writing (for the SD: Logging state indicator)
+typedef enum __attribute__ ((__packed__)) {
+	SD_LOG_DISABLED = 0,      // SD not in ECU logging mode
+	SD_LOG_SUPPRESSED = 1,    // paused via console (sdsuppresslogging)
+	SD_LOG_FAILED = 2,        // logger died
+	SD_LOG_UNCONDITIONAL = 3, // logging, conditional trigger disabled
+	SD_LOG_ACTIVE = 4,        // logging, trigger condition met
+	SD_LOG_STOP_DELAY = 5,    // logging, RPM below stop, within stop delay
+	SD_LOG_WAIT_RPM = 6,      // not logging: RPM below start threshold
+	SD_LOG_WAIT_COND = 7,     // not logging: TPS/MAP/VSS condition not met
+	SD_LOG_BUTTON_OFF = 8,    // not logging: trigger button toggled off
+} sd_log_state_e;

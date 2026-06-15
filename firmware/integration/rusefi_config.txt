@@ -1212,6 +1212,15 @@ bit sdTriggerLog,"Trigger","Full MLG";'Trigger' mode will write a high speed log
 bit stepper_dc_use_two_wires,"yes","no"
 bit watchOutForLinearTime,"yes","no"
 bit sdTriggerLogCsv,"CSV","Binary"
+bit sdCardConditionalLogging,"enabled","disabled";Only write the SD log while trigger conditions are met (start/stop). Off = always log, the current behavior.
+uint16_t sdLogStartRpm;Start logging at/above this RPM;"rpm", 1, 0, 0, 30000, 0
+uint16_t sdLogStopRpm;Stop logging below this RPM. Set below 'start' for hysteresis;"rpm", 1, 0, 0, 30000, 0
+uint8_t sdLogStopDelay;Keep logging this many seconds after RPM drops below the stop threshold;"sec", 1, 0, 0, 255, 0
+uint8_t sdLogMinTps;Also require TPS at/above this to start logging (0 = ignore);"%", 1, 0, 0, 100, 0
+uint16_t sdLogMinMap;Also require MAP at/above this to start logging (0 = ignore);"kPa", 1, 0, 0, 1000, 0
+uint8_t sdLogMinVss;Also require vehicle speed at/above this to start logging (0 = ignore);"kph", 1, 0, 0, 255, 0
+switch_input_pin_e sdLogTriggerPin;Optional toggle button to start/stop logging (press on, press off)
+pin_input_mode_e sdLogTriggerPinMode;
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 

@@ -247,6 +247,15 @@ void setDefaultBasePins() {
 // at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
 void setDefaultSdCardParameters() {
 	engineConfiguration->isSdCardEnabled = true;
+
+	// Conditional logging defaults to off -> SD logs unconditionally (current behavior)
+	engineConfiguration->sdCardConditionalLogging = false;
+	engineConfiguration->sdLogStartRpm = 0;
+	engineConfiguration->sdLogStopRpm = 0;
+	engineConfiguration->sdLogStopDelay = 5;
+	engineConfiguration->sdLogMinTps = 0;
+	engineConfiguration->sdLogMinMap = 0;
+	engineConfiguration->sdLogMinVss = 0;
 }
 
 #if EFI_ENGINE_CONTROL
