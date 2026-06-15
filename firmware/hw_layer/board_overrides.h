@@ -34,6 +34,7 @@ using setup_custom_board_config_type = void (*)(const engine_configuration_s * /
 using setup_custom_board_output_type = int (*)();
 using setup_custom_board_engine_type_type = void (*)(engine_type_e);
 using setup_custom_get_float_type = float (*)();
+using setup_custom_board_adjust_voltage_type = float (*)(float /*voltage*/, adc_channel_e /*hwChannel*/);
 using setup_custom_on_board_standby_type = void (*)();
 using setup_custom_hack_hellen_board_id_type = int (*)(int /*detectedId*/);
 using setup_custom_get_cylinder_ignition_trim_type = angle_t (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*ignitionLoad*/);
@@ -100,6 +101,7 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_DefaultConf
 extern std::optional<setup_custom_board_overrides_type> custom_board_ConfigOverrides;
 
 extern std::optional<setup_custom_get_float_type> custom_board_getFuncPairAllowedSplit;
+extern std::optional<setup_custom_board_adjust_voltage_type> custom_board_boardAdjustVoltage;
 extern std::optional<setup_custom_on_board_standby_type> custom_board_onBoardStandBy;
 extern std::optional<setup_custom_hack_hellen_board_id_type> custom_board_hackHellenBoardId;
 extern std::optional<setup_custom_get_cylinder_ignition_trim_type> custom_board_getCylinderIgnitionTrim;
