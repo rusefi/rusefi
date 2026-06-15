@@ -329,8 +329,10 @@ static void sdSetMode(const char *mode) {
 		sdCardRequestMode(SD_MODE_UNMOUNT);
 	} else if (strcmp(mode, "auto") == 0) {
 		sdCardRequestMode(SD_MODE_IDLE);
+	} else if (strcmp(mode, "format") == 0) {
+		sdCardRequestMode(SD_MODE_FORMAT);
 	} else {
-		efiPrintf("Invalid mode %s allowed modes pc and ecu", mode);
+		efiPrintf("Invalid mode %s allowed modes pc, ecu, off, unmount, auto, format", mode);
 	}
 }
 
