@@ -28,6 +28,7 @@ public enum bench_test_packet_ids_e {
 	RAW_LUA_ANALOG_2(7798804),
 	ECU_GPS_INPUT(7798805),
 	ECU_IMAGE_INFO(7798806),
+	ECU_ISO_TP_SETTINGS(7798807),
 	;
 
 
