@@ -282,6 +282,16 @@ void setDefaultWallWetting() {
 	copyArray(config->wwBetaMapValues, betaMap);
 }
 
+static void setDefaultFlexTransientComp() {
+	setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
+	setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
+
+	// Default to neutral (1.0) so transient fueling is unchanged until the user tunes these
+	setTable(config->flexAeMult, 1.0f);
+	setTable(config->flexWwTauMult, 1.0f);
+	setTable(config->flexWwBetaMult, 1.0f);
+}
+
 static void setDefaultWboSettings() {
 	for (size_t i = 0; i < CAN_WBO_COUNT; i++) {
 		engineConfiguration->canWbo[i].type = RUSEFI;
@@ -381,6 +391,9 @@ void setDefaultFuel() {
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 
 	setDefaultWallWetting();
+
+	// Flex fuel transient compensation (CLT x ethanol) - neutral by default
+	setDefaultFlexTransientComp();
 
 	// TPS/TPS AE curve
 	setMazdaMiataNbTpsTps();

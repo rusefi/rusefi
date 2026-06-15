@@ -1198,6 +1198,7 @@ bit useFixedBaroCorrFromMap,"yes","no";Read MAP sensor on ECU start-up to use as
 bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
 bit useAdvanceCorrectionsForCranking,"yes","no";This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
 bit flexCranking,"enabled","disabled";Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
+bit flexFuelTransientComp,"enabled","disabled";Enable flex-fuel transient fueling compensation (acceleration enrichment and wall wetting tau/beta) based on ethanol content and coolant temperature.
 bit useIacPidMultTable,"yes","no";This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled,"enabled","disabled"
 bit launchSmoothRetard,"enabled","disabled";Gradually interpolates the ignition timing from the base timing table value down to the target "Absolute Timing at Launch" value, starting from the beginning of the launch window.
@@ -2329,6 +2330,16 @@ uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 
 
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationBins;;"RPM", 50, 0, 0, 12500, 0
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale predictiveMapBlendDurationValues;;"second", 0.02, 0, 0, 5, 2
+
+! Flex-fuel transient fueling compensation: CLT (X) x Ethanol% (Y) multiplier tables
+#define FLEX_TRANSIENT_CLT_SIZE 8
+#define FLEX_TRANSIENT_ETH_SIZE 8
+
+int16_t[FLEX_TRANSIENT_CLT_SIZE] flexTransientCltBins;Coolant temperature axis for the flex-fuel transient compensation tables;"C", 1, 0, -40, 200, 0
+uint8_t[FLEX_TRANSIENT_ETH_SIZE] flexTransientEthanolBins;Ethanol percentage axis for the flex-fuel transient compensation tables;"%", 1, 0, 0, 100, 0
+uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexAeMult;Acceleration enrichment multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
+uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwTauMult;Wall wetting tau multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
+uint8_t[FLEX_TRANSIENT_ETH_SIZE x FLEX_TRANSIENT_CLT_SIZE] autoscale flexWwBetaMult;Wall wetting beta multiplier as a function of CLT (X) and ethanol % (Y);"mult", 0.02, 0, 0, 5, 2
 
 ! yes, 200C region is legit for some air-cooled engines
 int16_t[CLT_LIMITER_CURVE_SIZE] autoscale cltRevLimitRpmBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? 200 : 392}, 0
