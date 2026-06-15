@@ -435,6 +435,50 @@ TEST(FuelMath, getCycleFuelMassTest) {
 	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 1, EPS3D);
 }
 
+// flexCranking blends the E0 cranking coolant multiplier (crankingFuelCoef) with the
+// E100 table (crankingFuelCoefE100) based on the flex fuel sensor. The blend endpoint is
+// 100% ethanol, so E85 is genuinely interpolated rather than clamped to the E100 value.
+TEST(FuelMath, flexCrankingE100Interpolation) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Flat tables across CLT so the coolant axis is a no-op: E0 -> 1.0, E100 -> 3.0
+	setArrayValues(config->crankingFuelCoef, 1.0f);
+	setArrayValues(config->crankingFuelCoefE100, 3.0f);
+
+	engineConfiguration->flexCranking = true;
+	Sensor::setMockValue(SensorType::Clt, 20);
+
+	auto coolantCoef = []() {
+		getCrankingFuel3(/*baseFuel*/1, /*revolutionCounterSinceStart*/0);
+		return engine->engineState.crankingFuel.coolantTemperatureCoefficient;
+	};
+
+	// No flex sensor -> E0 table only
+	Sensor::resetMockValue(SensorType::FuelEthanolPercent);
+	EXPECT_NEAR(1.0f, coolantCoef(), EPS3D);
+
+	// E0 -> E0 table
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 0);
+	EXPECT_NEAR(1.0f, coolantCoef(), EPS3D);
+
+	// E50 -> halfway: 1.0 + 0.50 * (3.0 - 1.0) = 2.0
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 50);
+	EXPECT_NEAR(2.0f, coolantCoef(), EPS3D);
+
+	// E85 -> genuinely interpolated (previously clamped to the E100 value):
+	// 1.0 + 0.85 * (3.0 - 1.0) = 2.7
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 85);
+	EXPECT_NEAR(2.7f, coolantCoef(), EPS3D);
+
+	// E100 -> full E100 table value
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 100);
+	EXPECT_NEAR(3.0f, coolantCoef(), EPS3D);
+
+	// E110 -> clamp to E100 table value
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 110);
+	EXPECT_NEAR(3.0f, coolantCoef(), EPS3D);
+}
+
 TEST(FuelMath, postCrankingFactorAxis){
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);

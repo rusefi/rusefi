@@ -69,10 +69,10 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 	}
 
 	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
-		auto e85Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
+		auto e100Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
 
-		if (e85Mult <= 0.1f) {
-			warning(ObdCode::CUSTOM_ERR_ZERO_E85_MULT, "zero e85 multiplier");
+		if (e100Mult <= 0.1f) {
+			warning(ObdCode::CUSTOM_ERR_ZERO_E85_MULT, "zero e100 multiplier");
 			alreadyWarned = true;
 		}
 
@@ -82,7 +82,7 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 		engine->engineState.crankingFuel.coolantTemperatureCoefficient =
 			interpolateClamped(
 				0, e0Mult,
-				85, e85Mult,
+				100, e100Mult,
 				flex
 			);
 	} else {
