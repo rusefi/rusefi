@@ -13,6 +13,7 @@
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
 #include "rusefi/efistring.h"
+#include "board_overrides.h"
 
 #if EFI_USE_OPENBLT
 /* communication with OpenBLT that is plain C, not to modify external file */
@@ -253,8 +254,11 @@ void errorHandlerShowBootReasonAndErrors() {
 
 #define FAIL_REPORT_PREFIX	"fail"
 
-PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *) {
+void onBoardWriteErrorFile(FIL *) {
+  // placeholder, remove in Nov 2026
 }
+
+std::optional<setup_custom_board_write_error_file_type> custom_board_onBoardWriteErrorFile;
 
 static const char *errorHandlerGetErrorName(ErrorCookie cookie)
 {
@@ -320,7 +324,7 @@ void errorHandlerWriteReportFile(FIL *fd) {
 #endif // EFI_BACKUP_SRAM
 			f_printf(fd, "rusEFI v%d@%u", getRusEfiVersion(), /*do we have a working way to print 64 bit values?!*/(int)SIGNATURE_HASH);
 			// additional board-specific data
-			onBoardWriteErrorFile(fd);
+			call_board_override(custom_board_onBoardWriteErrorFile, fd);
 			// todo: figure out what else would be useful
 			f_close(fd);
 			enginePins.warningLedPin.setValue(1);

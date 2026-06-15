@@ -46,6 +46,12 @@ extern std::optional<custom_validate_config_type> custom_board_validateConfig;
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
 
+#if !defined(EFI_BOOTLOADER) && EFI_FILE_LOGGING && EFI_PROD_CODE
+#include "ff.h"
+using setup_custom_board_write_error_file_type = void (*)(FIL * /*fd*/);
+extern std::optional<setup_custom_board_write_error_file_type> custom_board_onBoardWriteErrorFile;
+#endif // EFI_FILE_LOGGING
+
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 using board_can_rx_type = void (*)(const size_t, const CANRxFrame &, efitick_t);
