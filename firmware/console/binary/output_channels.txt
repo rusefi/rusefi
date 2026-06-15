@@ -453,6 +453,8 @@ float mapFast
 
   uint8_t sd_error;
 
+	uint8_t sdLoggingState;SD: Logging state;"code", 1, 0, 0, 0, 0
+
 	uint8_t fastAdcOverrunCount;ECU: Fast ADC overruns;"", 1, 0, 0, 255, 0
 	uint8_t slowAdcOverrunCount;ECU: Slow ADC overruns;"", 1, 0, 0, 255, 0
 	uint8_t fastAdcLastError;ECU: Fast ADC error type;"", 1, 0, 0, 255, 0

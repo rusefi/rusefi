@@ -19,6 +19,7 @@
 #include "file_writer.h"
 #include "status_loop.h"
 #include "binary_mlg_logging.h"
+#include "sd_log_trigger.h"
 
 // Divide logs into 32Mb chunks.
 // With this opstion defined SW will pre-allocate file with given size and
@@ -916,8 +917,27 @@ static int sdModeExecuter(SD_MODE mode)
 
 		if ((sdLoggedSuppressed) || (sdLoggerFailed)) {
 			// logger is dead or paused, do not waste CPU
+			engine->outputChannels.sdLoggingState = (uint8_t)(sdLoggerFailed ? SD_LOG_FAILED : SD_LOG_SUPPRESSED);
+			engine->outputChannels.sd_logging_internal = false;
 			chThdSleepMilliseconds(100);
 			return 0;
+		}
+
+		// Conditional logging: only write while the trigger conditions are met (phase 1)
+		{
+			auto trigger = engine->module<SdLogTrigger>();
+			engine->outputChannels.sdLoggingState = (uint8_t)trigger->getState();
+			if (!trigger->shouldLog()) {
+				engine->outputChannels.sd_logging_internal = false;
+				// close the current file so each logging session is its own file
+				if (sdLoggerInitDone) {
+					sdLoggerStop();
+					sdLoggerInitDone = false;
+				}
+				chThdSleepMilliseconds(100);
+				return 0;
+			}
+			engine->outputChannels.sd_logging_internal = true;
 		}
 
 		// execute one of logger
