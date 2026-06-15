@@ -23,9 +23,11 @@ void SdLogTrigger::onConfigurationChange(engine_configuration_s const* /*previou
 }
 
 void SdLogTrigger::onSlowCallback() {
-	// Conditional logging disabled -> always log (current/default behavior)
+	// Conditional logging disabled -> always log (current/default behavior).
+	// Reset the conditional latch so that switching into conditional mode (or the
+	// boot-time default->tune transition) starts fresh instead of inheriting "on".
 	if (!engineConfiguration->sdCardConditionalLogging) {
-		m_logging = true;
+		m_logging = false;
 		m_state = SD_LOG_UNCONDITIONAL;
 		return;
 	}

@@ -20,7 +20,7 @@ public:
 
 	// Should the SD logger be writing right now?
 	bool shouldLog() const {
-		return m_logging;
+		return m_state == SD_LOG_UNCONDITIONAL || m_state == SD_LOG_ACTIVE || m_state == SD_LOG_STOP_DELAY;
 	}
 
 	// Why it is or is not logging - drives the "SD: Logging state" indicator
