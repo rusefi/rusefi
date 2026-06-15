@@ -824,8 +824,8 @@ static int sdModeSwitchToIdle(SD_MODE from)
 	case SD_MODE_UNMOUNT:
 		return 0;
 	case SD_MODE_FORMAT:
-		//not allowed to interrupt formating process
-		return -1;
+		// format is finished in sdModeSwitcher() and we are free to switch to idle
+		return 0;
 	}
 
 	efiPrintf("Invalid SD card thread state: %d", static_cast<int>(from));
@@ -906,7 +906,7 @@ static SD_MODE sdModeSwitcher(SD_MODE mode, SD_MODE target) {
 			// formated ok
 		}
 		sdSetCurrentStatus(SD_STATUS_INIT);
-		return SD_MODE_IDLE;
+		return SD_MODE_FORMAT;
 	}
 
 	// should not happen
