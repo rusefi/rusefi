@@ -96,6 +96,11 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 	int16_t autoscale wallFuelCorrectionValue;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 
+! Flex fuel transient compensation multipliers (1.0 = neutral)
+	uint16_t autoscale flexAeMultiplier;Flex: AE multiplier;"mult", 0.001, 0, 0, 5, 3
+	uint16_t autoscale flexWwTauMultiplier;Flex: WW tau multiplier;"mult", 0.001, 0, 0, 5, 3
+	uint16_t autoscale flexWwBetaMultiplier;Flex: WW beta multiplier;"mult", 0.001, 0, 0, 5, 3
+
 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 
 	uint16_t canReadCounter;@@GAUGE_NAME_CAN_READ_OK@@;"",1, 0, 0, 64000, 0

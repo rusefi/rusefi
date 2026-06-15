@@ -23,6 +23,7 @@
 
 #include "pch.h"
 #include "accel_enrichment.h"
+#include "flex_transient.h"
 #include "tunerstudio.h"
 
 
@@ -93,7 +94,11 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		mult = 1;
 	}
 
-	return extraFuel * mult;
+	// Flex fuel transient compensation (CLT x ethanol). Neutral (1.0) without a flex sensor.
+	// Note: AE_MODE_PREDICTIVE_MAP returns earlier, so this does not apply in that mode.
+	float flexMult = getFlexTransientMult(config->flexAeMult);
+	engine->outputChannels.flexAeMultiplier = flexMult;
+	return extraFuel * mult * flexMult;
 }
 
 void TpsAccelEnrichment::onEngineCycleTps() {
