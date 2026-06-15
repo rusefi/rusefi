@@ -6,6 +6,7 @@ TripOdometer,
 FanControl1,FanControl2,
 MapAveragingModule,
 ExampleModule,
+SdLogTrigger,
 
 #if EFI_ETHERNET
 EthernetConsoleModule,
