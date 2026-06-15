@@ -1,7 +1,4 @@
 #
-# this Makefile is intended to be invoked from one level above - see ..\compile_bootloader.sh
-#
-
 # by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
 
 ifeq ($(DEBUG_LEVEL_BLT_OPT),)
