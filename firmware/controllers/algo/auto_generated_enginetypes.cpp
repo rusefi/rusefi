@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri May 15 00:29:24 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Mon Jun 15 11:24:42 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -25,6 +25,8 @@ const char *getBench_mode_e(bench_mode_e value) {
 			return "BENCH_AUXOUT6";
 		case BENCH_AUXOUT7:
 			return "BENCH_AUXOUT7";
+		case BENCH_BOOST_VALVE:
+			return "BENCH_BOOST_VALVE";
 		case BENCH_CANCEL:
 			return "BENCH_CANCEL";
 		case BENCH_CHECK_ENGINE_LIGHT:

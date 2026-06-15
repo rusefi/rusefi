@@ -106,6 +106,7 @@
 #define bench_mode_e_BENCH_AUXOUT5 25
 #define bench_mode_e_BENCH_AUXOUT6 26
 #define bench_mode_e_BENCH_AUXOUT7 27
+#define bench_mode_e_BENCH_BOOST_VALVE 43
 #define bench_mode_e_BENCH_CANCEL 15
 #define bench_mode_e_BENCH_CHECK_ENGINE_LIGHT 7
 #define bench_mode_e_BENCH_FAN_RELAY 4
@@ -309,6 +310,7 @@
 #define CLT_UPPER_VALIDATION_LIMIT 250
 #define CMD_AC_RELAY_BENCH "acrelaybench"
 #define CMD_ALTERNATOR_PIN "set_alternator_pin"
+#define CMD_BOOST_BENCH "boostbench"
 #define CMD_BOOST_PIN "set_boost_pin"
 #define CMD_BURNCONFIG "burnconfig"
 #define CMD_DATE "date"
@@ -1578,7 +1580,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2811290261
+#define SIGNATURE_HASH 3728343823
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2195,7 +2197,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.06.15.hellenNA8_96.2811290261"
+#define TS_SIGNATURE "rusEFI master.2026.06.15.hellenNA8_96.3728343823"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

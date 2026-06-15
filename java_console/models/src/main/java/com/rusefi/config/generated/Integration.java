@@ -11,6 +11,7 @@ public class Integration {
 	public static final int CAN_BENCH_HEADER2 = 0x66;
 	public static final String CMD_AC_RELAY_BENCH = "acrelaybench";
 	public static final String CMD_ALTERNATOR_PIN = "set_alternator_pin";
+	public static final String CMD_BOOST_BENCH = "boostbench";
 	public static final String CMD_BOOST_PIN = "set_boost_pin";
 	public static final String CMD_BURNCONFIG = "burnconfig";
 	public static final String CMD_DATE = "date";

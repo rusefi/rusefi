@@ -103,6 +103,7 @@ public class VariableRegistryValues {
 	public static final int bench_mode_e_BENCH_AUXOUT5 = 25;
 	public static final int bench_mode_e_BENCH_AUXOUT6 = 26;
 	public static final int bench_mode_e_BENCH_AUXOUT7 = 27;
+	public static final int bench_mode_e_BENCH_BOOST_VALVE = 43;
 	public static final int bench_mode_e_BENCH_CANCEL = 15;
 	public static final int bench_mode_e_BENCH_CHECK_ENGINE_LIGHT = 7;
 	public static final int bench_mode_e_BENCH_FAN_RELAY = 4;
@@ -264,6 +265,7 @@ public class VariableRegistryValues {
 	public static final int CLT_UPPER_VALIDATION_LIMIT = 250;
 	public static final String CMD_AC_RELAY_BENCH = "acrelaybench";
 	public static final String CMD_ALTERNATOR_PIN = "set_alternator_pin";
+	public static final String CMD_BOOST_BENCH = "boostbench";
 	public static final String CMD_BOOST_PIN = "set_boost_pin";
 	public static final String CMD_BURNCONFIG = "burnconfig";
 	public static final String CMD_DATE = "date";
@@ -1464,7 +1466,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 210837857;
+	public static final int SIGNATURE_HASH = 1966850299;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1788,7 +1790,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.06.15.stm32f429_nucleo.210837857";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.06.15.stm32f429_nucleo.1966850299";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2136;
