@@ -109,6 +109,7 @@
 #define CMD_SPARK_BENCH "sparkbench"
 #define CMD_STARTER_BENCH "starterbench"
 #define CMD_HPFP_BENCH "hpfpbench"
+#define CMD_BOOST_BENCH "boostbench"
 #define CMD_AC_RELAY_BENCH "acrelaybench"
 #define CMD_FAN_BENCH "fanbench"
 #define CMD_FAN2_BENCH "fan2bench"

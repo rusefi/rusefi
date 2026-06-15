@@ -299,6 +299,11 @@ static void hpfpValveBench() {
 		&enginePins.hpfpValve);
 }
 
+static void boostValveBench() {
+	pinbench(engineConfiguration->benchTestOnTime, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
+		&enginePins.boostPin);
+}
+
 void fuelPumpBench() {
 	fuelPumpBenchExt(BENCH_FUEL_PUMP_DURATION);
 }
@@ -437,6 +442,9 @@ void handleBenchCategory(uint16_t index) {
 #endif // EFI_HD_ACR
 	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
+		return;
+	case BENCH_BOOST_VALVE:
+		boostValveBench();
 		return;
 	case BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump
@@ -910,6 +918,7 @@ void initBenchTest() {
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
+	addConsoleAction(CMD_BOOST_BENCH, boostValveBench);
 
 #if EFI_CAN_SUPPORT
   addConsoleActionI("ping_wideband", [](int index) {
