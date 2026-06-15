@@ -15,6 +15,8 @@
 class SdLogTrigger : public EngineModule {
 public:
 	void onSlowCallback() override;
+	// registers the toggle button pin so it takes part in pin-conflict detection
+	void onConfigurationChange(engine_configuration_s const* previousConfig) override;
 
 	// Should the SD logger be writing right now?
 	bool shouldLog() const {

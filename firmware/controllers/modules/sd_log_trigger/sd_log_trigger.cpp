@@ -10,6 +10,18 @@
 // button debounce window
 #define SD_LOG_BUTTON_DEBOUNCE_MS 100
 
+void SdLogTrigger::onConfigurationChange(engine_configuration_s const* /*previousConfig*/) {
+	// Register the toggle button so its pin is configured through efiSetPadMode by
+	// ButtonDebounce::startConfigurationList(), which reports a pin conflict
+	// (criticalError "Pin X required by ... but is used by Y") if the pin is
+	// already used by another feature - same protection as the start/stop button.
+	if (!m_buttonInited) {
+		m_button.init(SD_LOG_BUTTON_DEBOUNCE_MS, engineConfiguration->sdLogTriggerPin,
+			engineConfiguration->sdLogTriggerPinMode);
+		m_buttonInited = true;
+	}
+}
+
 void SdLogTrigger::onSlowCallback() {
 	// Conditional logging disabled -> always log (current/default behavior)
 	if (!engineConfiguration->sdCardConditionalLogging) {
@@ -19,13 +31,7 @@ void SdLogTrigger::onSlowCallback() {
 	}
 
 	// A configured toggle button takes precedence over the sensor conditions
-	if (isBrainPinValid(engineConfiguration->sdLogTriggerPin)) {
-		if (!m_buttonInited) {
-			m_button.init(SD_LOG_BUTTON_DEBOUNCE_MS, engineConfiguration->sdLogTriggerPin,
-				engineConfiguration->sdLogTriggerPinMode);
-			m_buttonInited = true;
-		}
-
+	if (m_buttonInited && isBrainPinValid(engineConfiguration->sdLogTriggerPin)) {
 		bool level = m_button.readPinEvent();
 		// toggle on the rising edge (press): on->off->on...
 		if (level && !m_lastButtonLevel) {
