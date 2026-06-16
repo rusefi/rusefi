@@ -104,8 +104,8 @@ pins:
   - pin: 16A
     id: [MM100_IN_AUX3, MM100_IN_AUX3_ANALOG]
     class: [switch_inputs, analog_inputs]
-    ts_name: ___ Digital input signal
-    function: Digital input signal
+    ts_name: ___ AIN 2 / Digital input (no pull)
+    function: Analog / Digital input
     type: av
 
   - pin: 17A
