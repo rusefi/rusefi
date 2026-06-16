@@ -31,7 +31,7 @@ void setUaefiBoardDefaultETBPins() {
 	setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
 }
 
-void setUaefiInjectorPins() {
+static void setUaefiInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
 	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
 	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;
@@ -40,7 +40,7 @@ void setUaefiInjectorPins() {
 	engineConfiguration->injectionPins[5] = Gpio::MM100_INJ6;
 }
 
-void setUaefiIgnitionPins() {
+static void setUaefiIgnitionPins() {
 	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
 	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN2;
 	engineConfiguration->ignitionPins[2] = Gpio::MM100_IGN3;
@@ -50,7 +50,7 @@ void setUaefiIgnitionPins() {
 }
 
 void setUaefiBoardDefaultConfiguration() {
-	setUaefiIgnitionPins();
+	setUaefiInjectorPins();
 	setUaefiIgnitionPins();
 	setUaefiBoardDefaultETBPins();
 	setHellenMMbaro();
