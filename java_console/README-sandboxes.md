@@ -68,6 +68,7 @@ sandbox class also carries a brief comment on top describing what it does.
 | Sandbox | Purpose |
 | --- | --- |
 | `TopLevelMenuSandbox` | Top-level calibration menu tree. |
+| `WizardSandbox` | Setup wizard driven by a test `.ini` file. |
 | `GaugesPanelSandbox` | Gauges panel driven by an `.ini` file and simulated sensors. |
 | `GaugesPanelMockedSandbox` (`ui`) | Gauges panel using mocked ini/sensor data. |
 | `GaugesPanelMocked2Sandbox` (`mocked`) | Gauges panel using fully mocked data. |
@@ -79,7 +80,6 @@ sandbox class also carries a brief comment on top describing what it does.
 | `MsgPanelSandbox` | Messages pane. |
 | `WavePanelSandbox` | Engine-sniffer wave panel. |
 | `UpDownSandbox` | Engine-sniffer up/down scaling control. |
-| `WizardSandbox` | Setup wizard driven by a test `.ini` file. |
 | `JSplitButtonSandbox` | The `JSplitButton` widget. |
 | `LafSandbox` | Custom Swing look-and-feel. |
 | `ProgressViewSandbox` | The `ProgressView` dialog. |
