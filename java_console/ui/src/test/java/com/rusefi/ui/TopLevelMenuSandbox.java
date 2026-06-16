@@ -1,13 +1,16 @@
 package com.rusefi.ui;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.RawIniFile;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.core.ui.FrameHelper;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.ini.reader.IniFileReaderUtil;
+import com.rusefi.ini.reader.IniParsingException;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
@@ -15,8 +18,10 @@ import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import javax.swing.*;
 import jakarta.xml.bind.JAXBException;
 import java.awt.*;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
@@ -25,12 +30,15 @@ import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
  * Visual sandbox for the top-level calibration menu tree.
  */
 public class TopLevelMenuSandbox {
-    public static void main(String[] args) throws JAXBException, FileNotFoundException {
+    private static final String INI_RESOURCE = "/january.ini";
+    private static final String TUNE_RESOURCE = "/january_tune.msq";
+
+    public static void main(String[] args) throws JAXBException, IOException, IniParsingException, java.net.URISyntaxException {
         commonUiStartup();
 
-        String iniPath = "../java_console/ui/src/test/resources/january.ini";
-        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
-        Msq msq = Msq.readTune("../java_console/ui/src/test/resources/january_tune.msq");
+        // Load test resources from the classpath so the working directory does not matter
+        IniFileModel model = readIniFromClasspath(INI_RESOURCE);
+        Msq msq = Msq.readTune(resourceFile(TUNE_RESOURCE).getAbsolutePath());
         ConfigurationImage ci = msq.asImage(model);
 
         SwingUtilities.invokeLater(() -> {
@@ -66,6 +74,22 @@ public class TopLevelMenuSandbox {
 
             runAwt(uiContext);
         });
+    }
+
+    private static IniFileModel readIniFromClasspath(String resource) throws IOException, IniParsingException {
+        try (InputStream is = TopLevelMenuSandbox.class.getResourceAsStream(resource)) {
+            if (is == null)
+                throw new IllegalStateException("Resource not found on classpath: " + resource);
+            RawIniFile content = IniFileReaderUtil.read(is, resource);
+            return IniFileReaderUtil.readIniFile(content, resource, new IniFileMetaInfoImpl(content));
+        }
+    }
+
+    private static File resourceFile(String resource) throws java.net.URISyntaxException {
+        URL url = TopLevelMenuSandbox.class.getResource(resource);
+        if (url == null)
+            throw new IllegalStateException("Resource not found on classpath: " + resource);
+        return new File(url.toURI());
     }
 
     private static void runAwt(UIContext uiContext) {
