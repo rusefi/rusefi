@@ -248,11 +248,12 @@ void setDefaultBasePins() {
 void setDefaultSdCardParameters() {
 	engineConfiguration->isSdCardEnabled = true;
 
-	// Conditional logging defaults to off -> SD logs unconditionally (current behavior)
+	// Conditional logging defaults to off -> SD logs unconditionally (current behavior).
+	// The thresholds below are only used once the user enables conditional logging.
 	engineConfiguration->sdCardConditionalLogging = false;
-	engineConfiguration->sdLogStartRpm = 0;
-	engineConfiguration->sdLogStopRpm = 0;
-	engineConfiguration->sdLogStopDelay = 5;
+	engineConfiguration->sdLogStartRpm = 800;
+	engineConfiguration->sdLogStopRpm = 700;
+	engineConfiguration->sdLogStopDelay = 30;
 	engineConfiguration->sdLogMinTps = 0;
 	engineConfiguration->sdLogMinMap = 0;
 	engineConfiguration->sdLogMinVss = 0;
