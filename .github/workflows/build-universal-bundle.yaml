@@ -3,6 +3,7 @@ name: Build Universal Bundle
 on:
   push:
     branches: [master]
+  pull_request:
     paths:
       - '.github/workflows/build-universal-bundle.yaml'
   workflow_dispatch:
