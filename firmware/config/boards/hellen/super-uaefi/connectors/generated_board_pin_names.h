@@ -22,7 +22,8 @@
 #define PIN_13A MM100_IN_PPS_ANALOG
 #define PIN_14A MM100_IN_O2S_ANALOG
 #define PIN_15A MM100_IN_AUX1_ANALOG
-#define PIN_16A MM100_MEGA_UAEFI_IN_AUX3
+#define PIN_16A_switch_inputs MM100_IN_AUX3
+#define PIN_16A_analog_inputs MM100_IN_AUX3_ANALOG
 #define PIN_17A_event_inputs MM100_IN_D2
 #define PIN_17A_sent_inputs MM100_IN_D2
 #define PIN_2B MM100_IGN1

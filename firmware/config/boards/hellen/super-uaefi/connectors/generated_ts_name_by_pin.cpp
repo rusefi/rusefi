@@ -10,6 +10,8 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch (brainPin) {
 		case Gpio::A6:
 			return "BUTTON2";
+		case Gpio::A7:
+			return "16A AIN 2 / Digital input (no pull)";
 		case Gpio::A8:
 			return "8B INJ_6";
 		case Gpio::A9:
@@ -28,8 +30,6 @@ const char* getBoardSpecificPinName(brain_pin_e brainPin) {
 			return "Coil 1";
 		case Gpio::C6:
 			return "31C LS4";
-		case Gpio::D1:
-			return "16A Digital input signal";
 		case Gpio::D10:
 			return "10B INJ_4";
 		case Gpio::D11:
