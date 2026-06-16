@@ -191,6 +191,14 @@ void defaultsOrFixOnBurn() {
 		engineConfiguration->sdLogStopRpm = 700;
 		engineConfiguration->sdLogStopDelay = 30;
 	}
+
+	// Flex fuel transient compensation: give tunes that predate the feature sensible
+	// CLT x ethanol axis bins so the tables aren't degenerate when enabled (values stay
+	// neutral via the helper guard until the user fills them in).
+	if (config->flexTransientCltBins[FLEX_TRANSIENT_CLT_SIZE - 1] == 0) {
+		setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
+		setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
+	}
 }
 
 void setDefaultBaseEngine() {
