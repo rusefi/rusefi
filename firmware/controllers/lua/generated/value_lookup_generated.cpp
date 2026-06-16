@@ -994,6 +994,27 @@ float getConfigValueByHash(const int hash) {
 // sdTriggerLogCsv
 		case -1920854018:
 			return engineConfiguration->sdTriggerLogCsv;
+// sdCardConditionalLogging
+		case -1861088559:
+			return engineConfiguration->sdCardConditionalLogging;
+// sdLogStartRpm
+		case 51050203:
+			return engineConfiguration->sdLogStartRpm;
+// sdLogStopRpm
+		case 1579882035:
+			return engineConfiguration->sdLogStopRpm;
+// sdLogStopDelay
+		case -1807345549:
+			return engineConfiguration->sdLogStopDelay;
+// sdLogMinTps
+		case -69863399:
+			return engineConfiguration->sdLogMinTps;
+// sdLogMinMap
+		case -69871520:
+			return engineConfiguration->sdLogMinMap;
+// sdLogMinVss
+		case -69861122:
+			return engineConfiguration->sdLogMinVss;
 // engineChartSize
 		case -1492464952:
 			return engineConfiguration->engineChartSize;
@@ -3798,6 +3819,41 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1920854018:
 	{
 		engineConfiguration->sdTriggerLogCsv = (int)value;
+		return 1;
+	}
+		case -1861088559:
+	{
+		engineConfiguration->sdCardConditionalLogging = (int)value;
+		return 1;
+	}
+		case 51050203:
+	{
+		engineConfiguration->sdLogStartRpm = (int)value;
+		return 1;
+	}
+		case 1579882035:
+	{
+		engineConfiguration->sdLogStopRpm = (int)value;
+		return 1;
+	}
+		case -1807345549:
+	{
+		engineConfiguration->sdLogStopDelay = (int)value;
+		return 1;
+	}
+		case -69863399:
+	{
+		engineConfiguration->sdLogMinTps = (int)value;
+		return 1;
+	}
+		case -69871520:
+	{
+		engineConfiguration->sdLogMinMap = (int)value;
+		return 1;
+	}
+		case -69861122:
+	{
+		engineConfiguration->sdLogMinVss = (int)value;
 		return 1;
 	}
 		case -1492464952:

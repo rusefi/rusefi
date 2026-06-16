@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Mon Jun 15 11:24:42 UTC 2026
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Jun 16 02:40:10 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -198,6 +198,29 @@ const char *getDebug_mode_e(debug_mode_e value) {
 			return "DBG_UNUSED_42";
 		case UNUSED23:
 			return "UNUSED23";
+	}
+	return NULL;
+}
+const char *getSd_log_state_e(sd_log_state_e value) {
+	switch (value) {
+		case SD_LOG_ACTIVE:
+			return "SD_LOG_ACTIVE";
+		case SD_LOG_BUTTON_OFF:
+			return "SD_LOG_BUTTON_OFF";
+		case SD_LOG_DISABLED:
+			return "SD_LOG_DISABLED";
+		case SD_LOG_FAILED:
+			return "SD_LOG_FAILED";
+		case SD_LOG_STOP_DELAY:
+			return "SD_LOG_STOP_DELAY";
+		case SD_LOG_SUPPRESSED:
+			return "SD_LOG_SUPPRESSED";
+		case SD_LOG_UNCONDITIONAL:
+			return "SD_LOG_UNCONDITIONAL";
+		case SD_LOG_WAIT_COND:
+			return "SD_LOG_WAIT_COND";
+		case SD_LOG_WAIT_RPM:
+			return "SD_LOG_WAIT_RPM";
 	}
 	return NULL;
 }

@@ -440,7 +440,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final String egoSettings_NAME = "CAN O2 sensors";
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int engine_configuration_s_size = 4104;
+	public static final int engine_configuration_s_size = 4120;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
@@ -1386,7 +1386,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 24344;
+	public static final int persistent_config_s_size = 24360;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1435,6 +1435,15 @@ public class VariableRegistryValues {
 	public static final int SCRIPT_TABLE_8 = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
 	public static final String SD_CARD_LABEL = "rusEFI logs";
+	public static final int sd_log_state_e_SD_LOG_ACTIVE = 4;
+	public static final int sd_log_state_e_SD_LOG_BUTTON_OFF = 8;
+	public static final int sd_log_state_e_SD_LOG_DISABLED = 0;
+	public static final int sd_log_state_e_SD_LOG_FAILED = 2;
+	public static final int sd_log_state_e_SD_LOG_STOP_DELAY = 5;
+	public static final int sd_log_state_e_SD_LOG_SUPPRESSED = 1;
+	public static final int sd_log_state_e_SD_LOG_UNCONDITIONAL = 3;
+	public static final int sd_log_state_e_SD_LOG_WAIT_COND = 7;
+	public static final int sd_log_state_e_SD_LOG_WAIT_RPM = 6;
 	public static final String SECOND_IGNITION_TABLE = "Second Ignition Table";
 	public static final String SECOND_VE_TABLE = "Second VE Table";
 	public static final String SECONDARY_CAN_NAME = "Secondary CAN";
@@ -1466,7 +1475,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1966850299;
+	public static final int SIGNATURE_HASH = 271500407;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1535,7 +1544,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 24344;
+	public static final int TOTAL_CONFIG_SIZE = 24360;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1790,10 +1799,10 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.06.15.stm32f429_nucleo.1966850299";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.06.16.stm32f429_nucleo.271500407";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 2136;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 2140;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;

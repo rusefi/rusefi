@@ -1519,63 +1519,81 @@ struct output_channels_s {
 	 */
 	uint8_t sd_error = (uint8_t)0;
 	/**
-	 * ECU: Fast ADC overruns
+	 * SD: Logging state
+	 * units: code
 	 * offset 873
+	 */
+	uint8_t sdLoggingState = (uint8_t)0;
+	/**
+	 * ECU: Fast ADC overruns
+	 * offset 874
 	 */
 	uint8_t fastAdcOverrunCount = (uint8_t)0;
 	/**
 	 * ECU: Slow ADC overruns
-	 * offset 874
+	 * offset 875
 	 */
 	uint8_t slowAdcOverrunCount = (uint8_t)0;
 	/**
 	 * ECU: Fast ADC error type
-	 * offset 875
+	 * offset 876
 	 */
 	uint8_t fastAdcLastError = (uint8_t)0;
 	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 877
+	 */
+	uint8_t alignmentFill_at_877[1] = {};
+	/**
 	 * ECU: Fast ADC period
 	 * units: ticks
-	 * offset 876
+	 * offset 878
 	 */
 	uint16_t fastAdcPeriod = (uint16_t)0;
 	/**
 	 * ECU: Fast ADC conversions
 	 * units: N
-	 * offset 878
+	 * offset 880
 	 */
 	uint16_t fastAdcConversionCount = (uint16_t)0;
 	/**
-	 * offset 880
+	 * offset 882
 	 */
 	uint8_t canReWidebandVersion = (uint8_t)0;
 	/**
-	 * offset 881
+	 * offset 883
 	 */
 	uint8_t canReWidebandFwDay = (uint8_t)0;
 	/**
-	 * offset 882
+	 * offset 884
 	 */
 	uint8_t canReWidebandFwMon = (uint8_t)0;
 	/**
-	 * offset 883
+	 * offset 885
 	 */
 	uint8_t canReWidebandFwYear = (uint8_t)0;
 	/**
-	 * offset 884
+	 * offset 886
 	 */
 	uint16_t transitionEventCode = (uint16_t)0;
 	/**
-	 * offset 886
+	 * offset 888
 	 */
 	uint16_t transitionEventsCounter = (uint16_t)0;
 	/**
 	 * units: kPa
-	 * offset 888
+	 * offset 890
 	 */
 	uint8_t mapPerCylinder[MAX_CYLINDER_COUNT] = {};
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 902
+	 */
+	uint8_t alignmentFill_at_902[2] = {};
 };
-static_assert(sizeof(output_channels_s) == 900);
+static_assert(sizeof(output_channels_s) == 904);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt

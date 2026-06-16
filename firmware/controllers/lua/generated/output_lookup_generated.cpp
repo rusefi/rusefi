@@ -886,6 +886,9 @@ float getOutputValueByHash(const int hash) {
 // sd_error
 		case -1811686395:
 			return engine->outputChannels.sd_error;
+// sdLoggingState
+		case -1766098652:
+			return engine->outputChannels.sdLoggingState;
 // fastAdcOverrunCount
 		case -1422787851:
 			return engine->outputChannels.fastAdcOverrunCount;

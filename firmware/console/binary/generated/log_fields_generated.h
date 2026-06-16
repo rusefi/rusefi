@@ -439,6 +439,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->outputChannels.throttleEffectiveAreaOpening, "throttleEffectiveAreaOpening", "", 0},
 	{engine->outputChannels.mcuSerial, "mcuSerial", "", 0},
 	{engine->outputChannels.sd_error, "sd_error", "", 0},
+	{engine->outputChannels.sdLoggingState, "SD: Logging state", "code", 0},
 	{engine->outputChannels.fastAdcOverrunCount, "ECU: Fast ADC overruns", "", 0},
 	{engine->outputChannels.slowAdcOverrunCount, "ECU: Slow ADC overruns", "", 0},
 	{engine->outputChannels.fastAdcLastError, "ECU: Fast ADC error type", "", 0},

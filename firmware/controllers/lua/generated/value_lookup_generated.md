@@ -988,6 +988,27 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 ### sdTriggerLogCsv
 
 
+### sdCardConditionalLogging
+Only write the SD log while trigger conditions are met (start/stop). Off = always log, the current behavior.
+
+### sdLogStartRpm
+Start logging at/above this RPM
+
+### sdLogStopRpm
+Stop logging below this RPM. Set below 'start' for hysteresis
+
+### sdLogStopDelay
+Keep logging this many seconds after RPM drops below the stop threshold
+
+### sdLogMinTps
+Also require TPS at/above this to start logging (0 = ignore)
+
+### sdLogMinMap
+Also require MAP at/above this to start logging (0 = ignore)
+
+### sdLogMinVss
+Also require vehicle speed at/above this to start logging (0 = ignore)
+
 ### engineChartSize
 
 
