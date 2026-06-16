@@ -554,3 +554,7 @@
 #ifndef EFI_SENT_SUPPORT
 #define EFI_SENT_SUPPORT        FALSE
 #endif
+
+#ifndef EFI_MISFIRE_DETECTION
+#define EFI_MISFIRE_DETECTION FALSE
+#endif

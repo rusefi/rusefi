@@ -54,5 +54,10 @@
 #define FULL_SD_LOGS TRUE
 #endif
 
+// F4 disables this by default to save flash; F7/H7 have room for it
+#ifndef EFI_MISFIRE_DETECTION
+#define EFI_MISFIRE_DETECTION TRUE
+#endif
+
 // note order of include - first we set F7 defaults (above) and only later we apply F4 defaults
 #include "../stm32f4ems/efifeatures.h"

@@ -3,6 +3,7 @@
 #include "live_data.h"
 
 #include "tunerstudio.h"
+#include "misfire_detection.h"
 #include "wideband_state_generated.h"
 #include "electronic_throttle_impl.h"
 #include "knock_controller_generated.h"
@@ -324,6 +325,15 @@ template<>
 const live_data_rotational_idle_s* getLiveData(size_t) {
 #if ROTATIONAL_IDLE_CONTROLLER
 	return &engine->rotationalIdleController;
+#else
+	return nullptr;
+#endif
+}
+
+template<>
+const misfire_detection_state_s* getLiveData(size_t) {
+#if EFI_MISFIRE_DETECTION
+	return &engine->module<MisfireController>().unmock();
 #else
 	return nullptr;
 #endif

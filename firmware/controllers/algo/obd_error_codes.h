@@ -347,7 +347,7 @@ enum class ObdCode : uint16_t {
 	//P0297 Vehicle Overspeed Condition
 	//P0298 Engine Oil Over Temperature Condition
 	//P0299 Turbocharger/Supercharger "A" Underboost Condition
-	//P0300 Random/Multiple Cylinder Misfire Detected
+	OBD_Random_Misfire = 300,       //P0300 Random/Multiple Cylinder Misfire Detected
 	//P0301 Cylinder 1 Misfire Detected
 	//P0302 Cylinder 2 Misfire Detected
 	//P0303 Cylinder 3 Misfire Detected

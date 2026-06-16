@@ -73,6 +73,10 @@
 #include "engine_modules_generated.h"
 #endif
 
+#if EFI_MISFIRE_DETECTION
+#include "misfire_detection.h"
+#endif
+
 static_assert(MAX_CYLINDER_COUNT > 0);
 
 #ifndef EFI_UNIT_TEST
@@ -191,6 +195,9 @@ public:
         LongTermFuelTrim,
 #endif
         ShortTermFuelTrim,
+#if EFI_MISFIRE_DETECTION
+        Mockable<MisfireController>,
+#endif // EFI_MISFIRE_DETECTION
 
 #include "modules_list_generated.h"
 

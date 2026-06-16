@@ -193,6 +193,14 @@ Usages:
     java: closed_loop_idle.java
     folder: controllers/math
 
+  - name: misfire_detection_state
+    java: MisfireDetection.java
+    folder: controllers/algo
+    prepend: integration/rusefi_config_shared.txt
+    output_name: misfire
+    engineModule: MisfireController
+    conditional_compilation: "EFI_MISFIRE_DETECTION"
+
   - name: live_data_example
     cppFileName: live_data_example
     java: live_data_example.java
