@@ -7,6 +7,9 @@ import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleInfoStrategy;
+import com.rusefi.core.net.UniversalApiClient;
+
+import java.util.Optional;
 import com.rusefi.updater.PlainSerialPortScanner;
 import com.rusefi.ts_plugin.wizard.BackgroundWizard;
 
@@ -33,13 +36,23 @@ public class TsHeadlessPluginImpl implements TsHeadlessPlugin {
 
         BackgroundWizard.onEcuDiscovery(s.getBundleTarget());
 
+        BundleInfo bi = s.asBundleInfo();
+
+        // 1. Try the universal API first
+        Optional<String> apiUrl = UniversalApiClient.getAutoupdateUrl(bi.getTarget(), bi.getBranchName());
+        if (apiUrl.isPresent()) {
+            String[] parts = UniversalApiClient.splitUrl(apiUrl.get());
+            Autoupdate.downloadAutoupdateZipFile(bi, parts[0], UniversalApiClient.isObfuscatedUrl(parts[1]));
+            return;
+        }
+
+        // 2. Fall back to re_auto_update_root_url from the .ini (existing behavior)
         String updateUrl = TsHeadlessPluginImpl.getUpdateUrl(iniFileModel);
         String isObfuscated = iniFileModel.getProtocolMeta().get("RE_obfuscated");
         if (updateUrl == null) {
             log.warn(String.format("Not sure where to download from [%s]/[%s]", updateUrl, isObfuscated));
             return;
         }
-        BundleInfo bi = s.asBundleInfo();
         String downloadFrom = BundleInfoStrategy.getDownloadUrl(bi, updateUrl, BundleInfo::getBranchName);
         Autoupdate.downloadAutoupdateZipFile(bi, downloadFrom, Boolean.parseBoolean(isObfuscated));
     }

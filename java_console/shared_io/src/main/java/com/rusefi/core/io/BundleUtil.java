@@ -47,6 +47,10 @@ public class BundleUtil {
         return readBundleFullNameNotNull().getTarget();
     }
 
+    public static boolean isUniversal() {
+        return readBundleFullNameNotNull().isUniversal();
+    }
+
     public static BundleInfo parse(List<@NotNull String> info) {
         Map<String, String> keyValues = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (String line : info) {

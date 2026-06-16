@@ -1,4 +1,19 @@
 
+// Inject API credentials from environment at build time — never stored in source.
+// In CI (universal bundle): set RUSEFI_API_TOKEN + RUSEFI_API_URL from the workflow.
+processResources {
+    def apiToken = System.getenv("RUSEFI_API_TOKEN") ?: ""
+    def apiUrl   = System.getenv("RUSEFI_API_URL")   ?: ""
+    if (!apiToken.isEmpty() || !apiUrl.isEmpty()) {
+        filesMatching("shared_io.properties") {
+            filter { line ->
+                if (!apiToken.isEmpty() && line.startsWith("api_token="))    return "api_token=${apiToken}"
+                if (!apiUrl.isEmpty()   && line.startsWith("api_base_url=")) return "api_base_url=${apiUrl}"
+                return line
+            }
+        }
+    }
+}
 
 apply from: '../../android/dependencies.gradle'
 

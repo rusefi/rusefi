@@ -1,0 +1,60 @@
+name: Build Universal Bundle
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/build-universal-bundle.yaml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Checkout Submodules Without ChibiOS
+        run: misc/git_scripts/common_submodule_init_without_chibios.sh
+
+      - uses: ./.github/actions/setup-java
+
+      - name: Build Universal Console JARs
+        env:
+          RUSEFI_API_TOKEN: ${{ secrets.RUSEFI_API_TOKEN }}
+          RUSEFI_API_URL: ${{ vars.RUSEFI_API_URL }}
+        run: ./gradlew :ui:shadowJar :autoupdate:jar :ts_plugin_launcher:shadowJar
+
+      - name: Assemble Universal Bundle
+        run: |
+          mkdir -p universal-bundle/console universal-bundle/bin universal-bundle/drivers
+
+          # Identity
+          printf 'platform=universal\nrelease=development\nnextRelease=\n' > universal-bundle/release.txt
+
+          # Launchers and readme at bundle root
+          cp misc/console_launcher/rusefi_updater.exe universal-bundle/
+          cp misc/console_launcher/rusefi_updater.sh  universal-bundle/
+          cp misc/console_launcher/readme.html        universal-bundle/
+
+          # Console JARs
+          cp console/rusefi_console.jar               universal-bundle/console/
+          cp console/rusefi_autoupdate.jar             universal-bundle/console/
+          cp java_tools/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar \
+             universal-bundle/console/
+
+          # STM32 flashing tool
+          cp -r misc/install/STM32_Programmer_CLI     universal-bundle/console/
+
+          # Scripts
+          cp -r java_console/bin/.                    universal-bundle/bin/
+
+          # Windows USB drivers
+          cp firmware/ext/rusefi-gha/static-content/silent_st_drivers2.exe \
+             universal-bundle/drivers/
+
+      - name: Upload Universal Bundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: rusefi-universal-bundle
+          path: universal-bundle/

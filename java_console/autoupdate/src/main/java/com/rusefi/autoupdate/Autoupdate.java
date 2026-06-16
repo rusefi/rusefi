@@ -10,6 +10,7 @@ import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
 import com.rusefi.core.net.PropertiesHolder;
+import com.rusefi.core.net.UniversalApiClient;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
@@ -429,6 +430,16 @@ public class Autoupdate {
     private static final Predicate<ZipEntry> isConsoleJar = zipEntry -> consoleJarZipEntry.equals(zipEntry.getName());
 
     private static Optional<DownloadedAutoupdateFileInfo> doDownload(final BundleInfo bundleInfo) {
+        // Ask the API for a direct URL first.
+        // Returns empty when api_base_url is unset.
+        Optional<String> apiUrl = UniversalApiClient.getAutoupdateUrl(
+            bundleInfo.getTarget(), bundleInfo.getBranchName());
+        if (apiUrl.isPresent()) {
+            String[] parts = UniversalApiClient.splitUrl(apiUrl.get());
+            return downloadAutoupdateZipFile(bundleInfo, parts[0], UniversalApiClient.isObfuscatedUrl(parts[1]));
+        }
+
+        // Fallback: existing convention (unchanged)
         String branchUrl = BundleInfoStrategy.getDownloadUrl(bundleInfo, PropertiesHolder.getBaseUrl(), BundleInfoStrategy::selectBranchName);
         return downloadAutoupdateZipFile(bundleInfo, branchUrl, FindFileHelper.isObfuscated());
     }

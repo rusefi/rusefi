@@ -21,7 +21,7 @@ public class BootloaderHelper {
     public static boolean sendBootloaderRebootCommand(JComponent parent, String signature, IoStream stream, UpdateOperationCallbacks callbacks, String command) {
         RusEfiSignature controllerSignature = SignatureHelper.parse(signature);
         String fileSystemBundleTarget = BundleUtil.getBundleTarget();
-        if (fileSystemBundleTarget != null && controllerSignature != null) {
+        if (fileSystemBundleTarget != null && controllerSignature != null && !BundleUtil.isUniversal()) {
             // hack: QC firmware self-identifies as "normal" not QC firmware :(
             // [tag:QC_firmware]
             if (!UiProperties.skipEcuTypeDetection() &&

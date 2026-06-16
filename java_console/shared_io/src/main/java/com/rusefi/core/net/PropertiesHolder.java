@@ -1,6 +1,7 @@
 package com.rusefi.core.net;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.core.io.BundleUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,9 +45,33 @@ public enum PropertiesHolder {
                 throw new NullPointerException("Error opening resource stream " + IO_PROPERTIES);
             }
             props.load(stream);
+            loadRemoteOverrides(props);
             return props;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static void loadRemoteOverrides(Properties local) {
+        String apiBaseUrl = System.getProperty("rusefi.api.url",   local.getProperty("api_base_url", "")).trim();
+        String apiToken   = System.getProperty("rusefi.api.token", local.getProperty("api_token",   "")).trim();
+        if (apiBaseUrl.isEmpty()) return;
+
+        // 1. Global console properties — always applied
+        merge(local, RemotePropertiesLoader.load(apiBaseUrl, apiToken, "universal"));
+
+        // 2. Board-specific properties overlay on top (board wins over global)
+        String boardTarget = BundleUtil.getBundleTarget();
+        if (boardTarget != null && !boardTarget.isBlank()
+                && !"universal".equalsIgnoreCase(boardTarget)
+                && !"unknown".equalsIgnoreCase(boardTarget)) {
+            merge(local, RemotePropertiesLoader.load(apiBaseUrl, apiToken, boardTarget));
+        }
+    }
+
+    private static void merge(Properties base, Properties overrides) {
+        for (String key : overrides.stringPropertyNames()) {
+            base.setProperty(key, overrides.getProperty(key));
         }
     }
 

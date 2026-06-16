@@ -207,7 +207,8 @@ public class BinaryProtocol {
         // Skip check if bundle target is unknown (e.g., simulator, local development)
         RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
         String bundleTarget = BundleUtil.getBundleTarget();
-        if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)) {
+        if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)
+                && !BundleUtil.isUniversal()) {
             // [tag:QC_firmware]
             if (!bundleTarget.equalsIgnoreCase(ecuSignature.getBundleTarget()) && !bundleTarget.contains("_QC_")) {
                 String errorMsg = String.format(

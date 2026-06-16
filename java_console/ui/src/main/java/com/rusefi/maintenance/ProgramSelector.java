@@ -3,9 +3,11 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.*;
+import com.rusefi.binaryprotocol.BackgroundBundleDownloader;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.LinkManager;
@@ -149,7 +151,7 @@ public class ProgramSelector {
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
-            OpenbltJni.flashCan(FindFileHelper.findSrecFile(), cb);
+            OpenbltJni.flashCan(resolveSrecFile(), cb);
 
             callbacks.logLine("Update completed successfully!");
             callbacks.done();
@@ -328,6 +330,25 @@ public class ProgramSelector {
             "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    /**
+     * For universal bundles: try the background-downloaded SREC first (board-specific, hash-matched).
+     * Falls back to the conventional filesystem scan for board-specific bundles.
+     */
+    @Nullable
+    private static String resolveSrecFile() {
+        if (BundleUtil.isUniversal()) {
+            try {
+                String path = BackgroundBundleDownloader.INSTANCE.tryExtractCurrentSrec();
+                if (path != null) {
+                    return path;
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        return FindFileHelper.findSrecFile();
+    }
+
     public static boolean flashOpenbltSerial(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (FileLog.is32bitJava()) {
             showError32bitJava(parent);
@@ -336,7 +357,7 @@ public class ProgramSelector {
 
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
-        String fileName = FindFileHelper.findSrecFile();
+        String fileName = resolveSrecFile();
         if (fileName == null) {
             callbacks.logLine(".srec image file not found");
             return false;
