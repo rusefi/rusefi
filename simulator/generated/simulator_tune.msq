@@ -3542,9 +3542,9 @@ end</constant>
         <constant digits="0" name="sdLogMinMap" units="kPa">0</constant>
         <constant digits="0" name="sdLogMinTps" units="%">0</constant>
         <constant digits="0" name="sdLogMinVss" units="kph">0</constant>
-        <constant digits="0" name="sdLogStartRpm" units="rpm">0</constant>
-        <constant digits="0" name="sdLogStopDelay" units="sec">0</constant>
-        <constant digits="0" name="sdLogStopRpm" units="rpm">0</constant>
+        <constant digits="0" name="sdLogStartRpm" units="rpm">800</constant>
+        <constant digits="0" name="sdLogStopDelay" units="sec">30</constant>
+        <constant digits="0" name="sdLogStopRpm" units="rpm">700</constant>
         <constant name="sdLogTriggerPin">"NONE"</constant>
         <constant name="sdLogTriggerPinMode">"DEFAULT"</constant>
         <constant name="sdTriggerLog">"Full MLG"</constant>
@@ -5091,8 +5091,8 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260510" nPages="1" signature="rusEFI master.2026.06.16.f407-discovery.4048740170" version="5.0"/>
-    <bibliography author="rusEFI 20260510" writeDate="date"/>
+    <versionInfo firmwareInfo="20260616" nPages="1" signature="rusEFI master.2026.06.17.f407-discovery.4048740170" version="5.0"/>
+    <bibliography author="rusEFI 20260616" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
