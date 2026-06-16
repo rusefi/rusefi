@@ -41,6 +41,19 @@ static void setupDefaultSensorInputs() {
   engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D3;
 }
 
+static void super_uaefi_boardConfigOverrides() {
+	setHellenMegaEnPin();
+	setHellenVbatt();
+
+	hellenMegaSdWithAccelerometer();
+
+	engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM6;
+
+	setHellenCan();
+
+	setDefaultHellenAtPullUps();
+}
+
 /**
  * @brief Board-specific initialization code.
  */
@@ -142,5 +155,5 @@ int getBoardMetaDcOutputsCount() {
 void setup_custom_board_overrides() {
 	custom_board_InitHardware = super_uaefi_boardInitHardware;
 	custom_board_DefaultConfiguration = super_uaefi_boardDefaultConfiguration;
-	custom_board_ConfigOverrides = setMegaUaefiBoardConfigOverrides;
+	custom_board_ConfigOverrides = super_uaefi_boardConfigOverrides;
 }
