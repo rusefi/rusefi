@@ -5,6 +5,9 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import static com.rusefi.maintenance.MaintenanceUtil.detectPcan;
 import static com.rusefi.maintenance.StLinkFlasher.detectStLink;
 
+/**
+ * Manual harness that probes for DFU/ST-Link flashing hardware.
+ */
 public class DfuFlasherSandbox {
     public static void main(String[] args) {
         System.out.println("detectStLink " + detectStLink(UpdateOperationCallbacks.DUMMY));

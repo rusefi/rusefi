@@ -6,7 +6,8 @@ import com.rusefi.maintenance.OpenbltJni;
 import java.io.IOException;
 
 /**
- * we are trying to replace OpenbltJni
+ * Manual harness that flashes/erases firmware over OpenBLT via a serial (UART) transport.
+ * (we are trying to replace OpenbltJni)
  */
 public class OpenBltSerialSandbox {
     public static final OpenbltJni.OpenbltCallbacks CONSOLE = new OpenbltJni.OpenbltCallbacks() {

@@ -3,6 +3,9 @@ package com.opensr5.ini;
 import com.devexperts.logging.Logging;
 import com.rusefi.ini.reader.IniFileReader;
 
+/**
+ * Manual harness that parses an .ini file into an {@link IniFileModel} and prints gauge metadata.
+ */
 public class IniFileModelSandbox {
     private static final Logging log = Logging.getLogging(IniFileModelSandbox.class);
 

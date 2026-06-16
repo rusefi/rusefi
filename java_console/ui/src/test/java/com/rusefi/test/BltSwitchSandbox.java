@@ -9,6 +9,8 @@ import com.rusefi.maintenance.DfuFlasher;
 import java.util.List;
 
 /**
+ * Manual harness that switches an ECU into the OpenBLT bootloader and reboots it.
+ *
  * @see OpenBltSandbox
  */
 public class BltSwitchSandbox {

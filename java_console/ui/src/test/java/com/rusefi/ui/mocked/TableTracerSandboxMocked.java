@@ -32,6 +32,9 @@ import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+/**
+ * Visual sandbox for the table-tracer overlay using fully mocked data.
+ */
 public class TableTracerSandboxMocked {
 
     // --- UI & Simulation Constants ---

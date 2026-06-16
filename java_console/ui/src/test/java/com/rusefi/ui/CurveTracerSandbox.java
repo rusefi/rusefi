@@ -22,6 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * Visual sandbox for the curve-tracer overlay over a calibration table fed from a live ECU.
+ */
 public class CurveTracerSandbox {
     private static final Logging log = getLogging(CurveTracerSandbox.class);
     private static final int BUFFER_SIZE = 65536;

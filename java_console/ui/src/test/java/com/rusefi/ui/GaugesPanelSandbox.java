@@ -16,6 +16,9 @@ import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * Visual sandbox for the gauges panel driven by an .ini file and simulated sensors.
+ */
 public class GaugesPanelSandbox {
     private static final Logging log = getLogging(GaugesPanelSandbox.class);
     private static final String INI_PATH = "/january.ini";

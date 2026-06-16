@@ -12,6 +12,8 @@ import static com.rusefi.io.tcp.TcpConnector.DEFAULT_PORT;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 
 /**
+ * Manual harness that connects to a (fake or real) ECU over TCP and pulls its configuration.
+ *
  * @see TcpServerSandbox
  * @see SandboxCommon
  */

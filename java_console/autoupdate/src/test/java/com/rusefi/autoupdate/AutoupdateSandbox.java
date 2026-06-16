@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Manual harness for the firmware autoupdate flow: downloads and unzips the autoupdate bundle.
+ */
 public class AutoupdateSandbox {
     public static void main(String[] args) throws IOException {
         BundleInfo bi = new BundleInfo(BundleInfo.DEVELOPMENT, null, "proteus_f7");

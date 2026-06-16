@@ -24,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * Visual sandbox for the table-tracer overlay fed from a live ECU.
+ */
 public class TableTracerSandbox {
     private static final Logging log = getLogging(TableTracerSandbox.class);
 

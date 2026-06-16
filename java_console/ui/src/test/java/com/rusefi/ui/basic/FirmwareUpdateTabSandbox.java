@@ -13,6 +13,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 
+/**
+ * Visual sandbox for the firmware update tab.
+ */
 public class FirmwareUpdateTabSandbox {
     public static void main(String[] args) {
         commonUiStartup();

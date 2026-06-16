@@ -6,6 +6,9 @@ import com.rusefi.ui.widgets.JSplitButton;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Visual sandbox for the {@link JSplitButton} widget.
+ */
 public class JSplitButtonSandbox {
     public static void main(String[] args) {
         JFrame frame = new JFrame("JSplitButton Sandbox");

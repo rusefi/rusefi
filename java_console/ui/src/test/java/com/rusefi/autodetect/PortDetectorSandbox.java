@@ -1,6 +1,8 @@
 package com.rusefi.autodetect;
 
 /**
+ * Manual sandbox that continuously polls and prints detected serial ports and ECU signatures.
+ *
  * see BltSwitchSandbox
  * See OpenBltSandbox
  */

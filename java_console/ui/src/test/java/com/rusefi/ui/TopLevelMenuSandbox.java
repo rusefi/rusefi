@@ -21,6 +21,9 @@ import java.io.IOException;
 
 import static com.rusefi.ui.basic.UiHelper.commonUiStartup;
 
+/**
+ * Visual sandbox for the top-level calibration menu tree.
+ */
 public class TopLevelMenuSandbox {
     public static void main(String[] args) throws JAXBException, FileNotFoundException {
         commonUiStartup();

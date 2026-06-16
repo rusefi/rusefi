@@ -19,14 +19,17 @@ import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public class GaugesPanelSandboxMocked {
+/**
+ * Visual sandbox for the gauges panel using mocked ini/sensor data.
+ */
+public class GaugesPanelMockedSandbox {
 
     private static final String WINDOW_TITLE = "RusEFI Gauges Sandbox";
     private static final Dimension WINDOW_SIZE = new Dimension(1280, 720);
     private static final int SIMULATION_DELAY_IN_MILLISECONDS = 100;
     private static final int GAUGES_ROWS = 3;
     private static final int GAUGES_COLUMNS = 3;
-    private static final Logging log = getLogging(GaugesPanelSandboxMocked.class);
+    private static final Logging log = getLogging(GaugesPanelMockedSandbox.class);
 
     private enum GaugeDefinition {
         // Positioned according to DEFAULT_LAYOUT in GaugesPanel.java
@@ -62,7 +65,7 @@ public class GaugesPanelSandboxMocked {
     );
 
     public static void main(String[] args) {
-        new GaugesPanelSandboxMocked().start();
+        new GaugesPanelMockedSandbox().start();
     }
 
     public void start() {

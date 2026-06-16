@@ -16,6 +16,9 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 
+/**
+ * Manual harness that starts a small Takes HTTP server.
+ */
 public class TakesServerSandbox {
 
     public static void main(final String... args) throws Exception {

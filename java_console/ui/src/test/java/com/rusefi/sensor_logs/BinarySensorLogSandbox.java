@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
+/**
+ * Manual harness that writes a sample binary sensor log.
+ */
 public class BinarySensorLogSandbox {
     public static void main(String[] args) {
         Map<String, Double> values = new HashMap<>();

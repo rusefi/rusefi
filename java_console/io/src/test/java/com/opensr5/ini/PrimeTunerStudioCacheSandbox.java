@@ -6,6 +6,9 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 
 import java.io.FileNotFoundException;
 
+/**
+ * Manual harness that primes the local TunerStudio cache from a generated .ini file.
+ */
 public class PrimeTunerStudioCacheSandbox {
     public static void main(String[] args) throws FileNotFoundException {
         String localIniFile = FindFileHelper.findFile("../firmware/tunerstudio/generated",

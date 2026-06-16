@@ -10,6 +10,9 @@ import com.rusefi.tune.xml.Msq;
 import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
 
+/**
+ * Manual harness that rebuilds an .msq tune from a stored calibrations image + .ini.
+ */
 public class RetrieveMsqSandbox {
     public static void main(String[] args) throws IOException, JAXBException {
         final ConfigurationImageWithMeta image = ConfigurationImageFile.readFromFile(

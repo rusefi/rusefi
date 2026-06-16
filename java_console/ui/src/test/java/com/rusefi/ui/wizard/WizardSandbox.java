@@ -13,6 +13,9 @@ import java.io.FileNotFoundException;
 
 import static com.rusefi.core.ui.FrameHelper.createFrame;
 
+/**
+ * Visual sandbox for the setup wizard driven by a test .ini file.
+ */
 public class WizardSandbox {
     public static void main(String[] args) throws FileNotFoundException {
         UIContext uiContext = new UIContext();

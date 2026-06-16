@@ -21,6 +21,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * Shared helpers used by the binaryprotocol test sandboxes.
+ */
 public class SandboxCommon {
     private static final Logging log = getLogging(SandboxCommon.class);
     static {

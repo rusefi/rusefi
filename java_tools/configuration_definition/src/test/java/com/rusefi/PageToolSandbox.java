@@ -3,6 +3,9 @@ package com.rusefi;
 import java.io.IOException;
 import java.util.Collections;
 
+/**
+ * Manual harness that runs the config page generator (PageTool).
+ */
 public class PageToolSandbox {
 
     public static void main(String[] args) throws IOException {
