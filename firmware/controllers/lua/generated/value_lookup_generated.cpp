@@ -955,6 +955,9 @@ float getConfigValueByHash(const int hash) {
 // flexCranking
 		case -563973567:
 			return engineConfiguration->flexCranking;
+// flexFuelTransientComp
+		case 1473909767:
+			return engineConfiguration->flexFuelTransientComp;
 // useIacPidMultTable
 		case -364626778:
 			return engineConfiguration->useIacPidMultTable;
@@ -3754,6 +3757,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -563973567:
 	{
 		engineConfiguration->flexCranking = (int)value;
+		return 1;
+	}
+		case 1473909767:
+	{
+		engineConfiguration->flexFuelTransientComp = (int)value;
 		return 1;
 	}
 		case -364626778:

@@ -196,6 +196,15 @@ float getOutputValueByHash(const int hash) {
 // wallFuelCorrectionValue
 		case -1511514122:
 			return engine->outputChannels.wallFuelCorrectionValue;
+// flexAeMultiplier
+		case -1150933023:
+			return engine->outputChannels.flexAeMultiplier;
+// flexWwTauMultiplier
+		case 740257907:
+			return engine->outputChannels.flexWwTauMultiplier;
+// flexWwBetaMultiplier
+		case 644684517:
+			return engine->outputChannels.flexWwBetaMultiplier;
 // revolutionCounterSinceStart
 		case -1555114948:
 			return engine->outputChannels.revolutionCounterSinceStart;

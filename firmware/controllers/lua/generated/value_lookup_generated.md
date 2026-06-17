@@ -949,6 +949,9 @@ This enables the various ignition corrections during cranking (IAT, CLT and PID 
 ### flexCranking
 Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
 
+### flexFuelTransientComp
+Enable flex-fuel transient fueling compensation (acceleration enrichment and wall wetting tau/beta) based on ethanol content and coolant temperature.
+
 ### useIacPidMultTable
 This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 
