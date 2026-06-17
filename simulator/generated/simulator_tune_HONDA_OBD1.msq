@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23404">
+    <page number="0" size="23620">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260616</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260617</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -1137,9 +1137,60 @@
         <constant name="firingOrder">"1-3-4-2"</constant>
         <constant digits="0" name="fixedModeTiming" units="RPM">50</constant>
         <constant digits="2" name="fixedTiming" units="deg">0.0</constant>
+        <constant cols="8" digits="2" name="flexAeMult" rows="8" units="mult">
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+</constant>
         <constant name="flexCranking">"disabled"</constant>
+        <constant name="flexFuelTransientComp">"disabled"</constant>
         <constant name="flexSensorInverted">"Normal"</constant>
         <constant name="flexSensorPin">"NONE"</constant>
+        <constant cols="1" digits="0" name="flexTransientCltBins" rows="8" units="C">
+         -40
+         -20
+         0
+         20
+         40
+         60
+         80
+         100
+</constant>
+        <constant cols="1" digits="0" name="flexTransientEthanolBins" rows="8" units="%">
+         0
+         14
+         29
+         43
+         57
+         71
+         86
+         100
+</constant>
+        <constant cols="8" digits="2" name="flexWwBetaMult" rows="8" units="mult">
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+</constant>
+        <constant cols="8" digits="2" name="flexWwTauMult" rows="8" units="mult">
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+</constant>
         <constant name="forceO2Heating">"no"</constant>
         <constant digits="3" name="fordInjectorSmallPulseBreakPoint" units="mg">0.0</constant>
         <constant digits="3" name="fordInjectorSmallPulseSlope" units="g/s">0.0</constant>
@@ -5092,7 +5143,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260616" nPages="1" signature="rusEFI master.2026.06.17.f407-discovery.4048740170" version="5.0"/>
+    <versionInfo firmwareInfo="20260616" nPages="1" signature="rusEFI master.2026.06.17.f407-discovery.2379234678" version="5.0"/>
     <bibliography author="rusEFI 20260616" writeDate="date"/>
     <settings/>
     <userComments/>
