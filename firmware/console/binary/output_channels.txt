@@ -381,6 +381,8 @@ bit vvtChannel3;bank 2 intake cam input
 ! bit 29
 bit vvtChannel4;bank 2 exhaust cam input
 bit isMapPredictionActive;AE: Map Prediction Active
+! bit 31 - last one!
+bit isFlexError;Error: Flex
 
 uint32_t outputRequestPeriod
 float mapFast

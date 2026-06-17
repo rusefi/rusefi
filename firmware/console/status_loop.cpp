@@ -422,7 +422,10 @@ static void updateFuelSensors() {
 	// High pressure is in bar, aka 100 kpa
 	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
 
-	engine->outputChannels.flexPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
+	SensorResult flex = Sensor::get(SensorType::FuelEthanolPercent);
+	engine->outputChannels.flexPercent = flex.value_or(0);
+	// Only report fail if a flex sensor is actually configured (many engines don't have one)
+	engine->outputChannels.isFlexError = Sensor::hasSensor(SensorType::FuelEthanolPercent) ? !flex.Valid : false;
 
 	engine->outputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
