@@ -19,9 +19,22 @@ floatms_t PrimeController::getPrimeDuration() const {
 		return 0;
 	}
 
-	auto primeMass =
-		0.001f *	// convert milligram to gram
-		interpolate2d(clt.Value, engineConfiguration->primeBins, engineConfiguration->primeValues);
+	// Flex fuel ON (flexCranking) with a present flex sensor selects a 2D table over (coolant, ethanol%) -
+	// the same single toggle that switches the cranking multiplier to its 2D table. Otherwise the 1D curve.
+	float primeMassMg;
+	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
+		// If the flex sensor has failed, default to 50% ethanol.
+		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50);
+		primeMassMg = interpolate3d(
+			engineConfiguration->primeFlexTable,
+			engineConfiguration->primeFlexBins, flex,
+			engineConfiguration->primeBins, clt.Value
+		);
+	} else {
+		primeMassMg = interpolate2d(clt.Value, engineConfiguration->primeBins, engineConfiguration->primeValues);
+	}
+
+	auto primeMass = 0.001f * primeMassMg;	// convert milligram to gram
 
 	efiPrintf("Priming pulse mass: %.4f g", primeMass);
 

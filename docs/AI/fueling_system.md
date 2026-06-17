@@ -22,6 +22,34 @@ The rusEFI fueling system is a mass-based model that translates configuration an
 16. **Output Logic**: Pulse width is clamped and synchronized with the engine phase.
 17. **Hardware Driver**: MOSFETs/GDI drivers fire the physical injectors.
 
+## Cranking Fuel
+
+While the engine is below `cranking.rpm` the pipeline above is bypassed and `getCrankingFuel3()` (in `fuel_math.cpp`) computes the per-cylinder injected mass as:
+
+```
+crankingFuel = baseCrankingFuel * coolantTemperatureCoefficient * tpsCoefficient
+```
+
+- **`baseCrankingFuel`** comes either from the 3D `crankingCycleBaseFuel` table (coolant x engine-revolutions, `useRunningMathForCranking = false`) or directly from the running math (`useRunningMathForCranking = true`).
+- **`tpsCoefficient`** is the `crankingTpsCoef` curve (flood-clear / throttle compensation).
+- **`coolantTemperatureCoefficient`** is the coolant enrichment, resolved in one of two ways, selected by a single `flexCranking` toggle:
+  1. **`flexCranking` off (or no flex sensor)** — a single coolant curve, `crankingFuelCoef`.
+  2. **`flexCranking` on, flex sensor present** — `crankingFuelFlexTable`, a coolant (X, shared `crankingFuelBins`) by ethanol-% (Y, `crankingFuelFlexBins`, 4 rows to keep RAM small) `interpolate3d` lookup. The dedicated ethanol axis lets the whole E0..E100 range be calibrated directly.
+
+The legacy 1D `crankingFuelCoefE100` curve (and its E0→E100 blend) is gone from the firmware path; the field is retained for tune compatibility but is no longer used or shown in TunerStudio.
+
+## Priming Pulse
+
+The priming pulse (`PrimeController::getPrimeDuration()`) mirrors the cranking design and is driven by the **same** `flexCranking` toggle:
+- **off / no flex sensor** — 1D `primeValues` curve vs coolant (`primeBins`).
+- **on, flex sensor present** — `primeFlexTable`, a coolant by ethanol-% `interpolate3d` lookup (shares `primeBins` for the coolant axis; 4-row ethanol axis `primeFlexBins`).
+
+### Flex-fuel interaction with `useRunningMathForCranking`
+
+Be careful: in running-math mode the `baseCrankingFuel` already reflects the **flex-adjusted stoichiometric ratio** (ethanol shifts stoich from ~14.7 toward ~9.0). The cranking flex multiplier therefore acts as **additional** cold-start enrichment on top of that, not as the full ethanol fuel correction — calibrate it accordingly to avoid double-counting ethanol.
+
+The 2D table fields are appended config so existing tunes remain valid; `defaultsOrFixOnBurn()` seeds each 2D table from the existing 1D curve for tunes that predate it. See `docs/calibration-compatibility.md`.
+
 ## Key Files
 - `firmware/controllers/algo/fuel_math.cpp`: Core mass calculations.
 - `firmware/controllers/algo/wall_fuel.cpp`: Transient fueling logic.

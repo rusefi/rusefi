@@ -320,6 +320,17 @@ static void setDefaultPriming() {
 
 	copyArray(engineConfiguration->primeBins, primeBins);
 	copyArray(engineConfiguration->primeValues, primeValues);
+
+	// Opt-in 2D priming flex table: seed every ethanol row with the same coolant curve so it starts
+	// neutral with respect to ethanol (identical to the non-flex curve) until the user calibrates it.
+	static constexpr uint8_t primeFlexEthanolBins[] = { 0, 35, 65, 100 };
+	copyArray(engineConfiguration->primeFlexBins, primeFlexEthanolBins);
+
+	for (size_t ethanolIdx = 0; ethanolIdx < efi::size(engineConfiguration->primeFlexTable); ethanolIdx++) {
+		for (size_t cltIdx = 0; cltIdx < PRIME_CURVE_COUNT; cltIdx++) {
+			engineConfiguration->primeFlexTable[ethanolIdx][cltIdx] = primeValues[cltIdx];
+		}
+	}
 }
 
 void setDefaultFuel() {

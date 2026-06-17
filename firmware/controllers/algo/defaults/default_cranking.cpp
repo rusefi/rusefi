@@ -62,6 +62,17 @@ void setDefaultCranking() {
 		90
 	};
 	copyArray(config->crankingFuelBins, crankingBins);
+
+	// Opt-in 2D cranking flex table: seed every ethanol row with the same coolant curve so it starts
+	// neutral with respect to ethanol (identical to the non-flex behaviour) until the user calibrates it.
+	static const uint8_t crankingFlexEthanolBins[] = { 0, 35, 65, 100 };
+	copyArray(config->crankingFuelFlexBins, crankingFlexEthanolBins);
+
+	for (size_t ethanolIdx = 0; ethanolIdx < efi::size(config->crankingFuelFlexTable); ethanolIdx++) {
+		for (size_t cltIdx = 0; cltIdx < CRANKING_CURVE_SIZE; cltIdx++) {
+			config->crankingFuelFlexTable[ethanolIdx][cltIdx] = crankingCoef[cltIdx];
+		}
+	}
 #endif
 	// Cranking cycle compensation
 
