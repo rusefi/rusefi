@@ -38,7 +38,10 @@ int IsoTpBase::sendFrame(const IsoTpFrameHeader &header, const uint8_t *data, in
 
 	int dlc = 8;
 	CanTxMessage txmsg(CanCategory::SERIAL, txFrameId, dlc, busIndex, IS_EXT_RANGE_ID(txFrameId));
-
+	// fill message with padding byte
+	for (int i = offset; i < dlc; i++) {
+		txmsg[i] = paddingByte;
+	}
 	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
 	txmsg[isoHeaderByteIndex] = (uint8_t)((header.frameType & 0xf) << 4);
 	switch (header.frameType) {
