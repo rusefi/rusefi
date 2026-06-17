@@ -175,6 +175,9 @@ struct_no_prefix engine_configuration_s
 #define CLT_CRANKING_CURVE_SIZE 8
 #define CLT_CRANKING_TAPER_CURVE_SIZE 6
 #define CRANKING_CYCLE_CLT_SIZE 4
+! Ethanol axis size for the opt-in 2D cranking flex-fuel enrichment table (crankingFuelFlexTable).
+! Deliberately small (4 rows) to keep RAM usage low - cranking enrichment does not need fine ethanol resolution.
+#define CRANKING_FLEX_SIZE 4
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define CRANKING_ADVANCE_CURVE_SIZE 4
 #define TRAILING_SPARK_SIZE 4
@@ -609,7 +612,7 @@ bit kickStartCranking,"yes","no"
 bit useSeparateIdleTablesForCrankingTaper,"enabled","disabled";This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled,"enabled","disabled"
 bit antiLagEnabled,"enabled","disabled"
-bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
+bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table). Note: in 'Fuel Map' (running math) mode the base mass already reflects the flex-adjusted stoich ratio, so the cranking flex multipliers act as ADDITIONAL enrichment on top of that - do not re-apply the full ethanol correction there.
 bit displayLogicLevelsInEngineSniffer,"yes","no";Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
 bit useTLE8888_stepper,"yes","no"
 bit usescriptTableForCanSniffingFiltering,"yes","no"
@@ -1226,7 +1229,7 @@ custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Ope
 bit useFixedBaroCorrFromMap,"yes","no";Read MAP sensor on ECU start-up to use as baro value.
 bit useSeparateAdvanceForCranking,"Table","Fixed (auto taper)";In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
 bit useAdvanceCorrectionsForCranking,"yes","no";This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
-bit flexCranking,"enabled","disabled";Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
+bit flexCranking,"enabled","disabled";Enable flex-fuel compensation for engine start. When on (and a flex fuel sensor is present) the cranking coolant multiplier and the priming pulse mass each come from a 2D table over coolant and ethanol % (crankingFuelFlexTable / primeFlexTable, 4-row ethanol axis) instead of their 1D coolant curves. When off, the 1D curves (crankingFuelCoef / primeValues) are used.
 bit flexFuelTransientComp,"enabled","disabled";Enable flex-fuel transient fueling compensation (acceleration enrichment and wall wetting tau/beta) based on ethanol content and coolant temperature.
 bit useIacPidMultTable,"yes","no";This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled,"enabled","disabled"
@@ -1507,6 +1510,8 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	pid_s[CAMS_PER_BANK iterate] auxPid;VVT output PID\nTODO: rename to vvtPid
 	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
 #define PRIME_CURVE_COUNT 8
+! Ethanol axis size for the opt-in 2D priming-pulse flex table (primeFlexTable). 4 rows keeps RAM low.
+#define PRIME_FLEX_SIZE 4
 	int16_t[PRIME_CURVE_COUNT] autoscale primeBins;;{bitStringValue(unitsLabels, useMetricOnInterface)}, {useMetricOnInterface ? 1 : 1.8}, {useMetricOnInterface ? 0 : 17.77777}, {useMetricOnInterface ? -40 : -40}, {useMetricOnInterface ? @@CLT_UPPER_LIMIT@@ : @@CLT_UPPER_LIMIT@@ * 1.8 + 32}, 0
 
 	linear_sensor_s oilPressure;
@@ -1580,6 +1585,11 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 	uint8_t[MAX_CYLINDER_COUNT iterate] cylinderBankSelect;Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor;"", 1, 1, 1, 2, 0
 
 	uint8_t[PRIME_CURVE_COUNT] autoscale primeValues;;"mg", 5, 0, 0, 1250, 0
+
+	! 2D priming pulse fuel mass vs ethanol %, used when flexCranking is enabled (same single toggle as the
+	! cranking 2D table). Shares the coolant axis with primeBins; uint8 (5 mg resolution) keeps RAM tiny.
+	uint8_t[PRIME_FLEX_SIZE] primeFlexBins;Ethanol % axis (Y) for primeFlexTable.;"%", 1, 0, 0, 100, 0
+	uint8_t[PRIME_FLEX_SIZE x PRIME_CURVE_COUNT] autoscale primeFlexTable;Priming pulse fuel mass as a function of coolant (X axis, shared primeBins) and ethanol % (Y axis, primeFlexBins). Used instead of primeValues when flexCranking is enabled and a flex sensor is present.;"mg", 5, 0, 0, 1250, 0
 
 	uint8_t autoscale triggerCompCenterVolt;Trigger comparator center point voltage;"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
 	uint8_t autoscale triggerCompHystMin;Trigger comparator hysteresis voltage (Min);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
@@ -2210,7 +2220,16 @@ uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;{bitStringValue(veLoadUnitLabels, veL
 uint16_t[FUEL_TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 fuel_cyl_trim_s[MAX_CYLINDER_COUNT iterate] fuelTrims
 
-uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
+! Legacy 1D cranking coolant multiplier at E100. Retained for tune compatibility (keeps the config layout and
+! lets older tunes preserve the value), but no longer used by firmware - flex cranking now uses crankingFuelFlexTable.
+! Intentionally NOT referenced by any TunerStudio dialog/curve/menu, so it is hidden from the tuner.
+uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;Legacy E100 cranking coolant multiplier - retained for compatibility, unused and hidden.;"ratio", 0.01, 0, 0, 50, 2
+
+! 2D cranking coolant multiplier vs ethanol %, used when flexCranking is enabled.
+! A real ethanol axis (default 0/35/65/100) lets the whole E0..E100 range be calibrated directly.
+! uint8 (0.02 resolution) keeps RAM tiny.
+uint8_t[CRANKING_FLEX_SIZE] crankingFuelFlexBins;Ethanol % axis (Y) for crankingFuelFlexTable.;"%", 1, 0, 0, 100, 0
+uint8_t[CRANKING_FLEX_SIZE x CRANKING_CURVE_SIZE] autoscale crankingFuelFlexTable;Cranking coolant multiplier as a function of coolant (X axis, shared crankingFuelBins) and ethanol % (Y axis, crankingFuelFlexBins). Used instead of crankingFuelCoef when flexCranking is enabled and a flex sensor is present.;"mult", 0.02, 0, 0, 5, 2
 
 #define TCU_TABLE_WIDTH 8
 

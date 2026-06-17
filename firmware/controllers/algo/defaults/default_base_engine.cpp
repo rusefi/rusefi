@@ -139,6 +139,49 @@ void defaultsOrFixOnBurn() {
     engineConfiguration->mainRelayDisableTime = 1;
   }
 
+  // Seed the 2D cranking flex table for tunes that predate it (all-zero ethanol axis). Mirror the existing
+  // E0 coolant curve at every ethanol level so turning on flexCranking stays neutral with respect to ethanol
+  // until the user calibrates it.
+  {
+    bool flexBinsEmpty = true;
+    for (size_t i = 0; i < efi::size(config->crankingFuelFlexBins); i++) {
+      if (config->crankingFuelFlexBins[i] != 0) {
+        flexBinsEmpty = false;
+        break;
+      }
+    }
+    if (flexBinsEmpty) {
+      static const uint8_t crankingFlexEthanolBins[] = { 0, 35, 65, 100 };
+      copyArray(config->crankingFuelFlexBins, crankingFlexEthanolBins);
+      for (size_t ethanolIdx = 0; ethanolIdx < efi::size(config->crankingFuelFlexTable); ethanolIdx++) {
+        for (size_t cltIdx = 0; cltIdx < CRANKING_CURVE_SIZE; cltIdx++) {
+          config->crankingFuelFlexTable[ethanolIdx][cltIdx] = config->crankingFuelCoef[cltIdx];
+        }
+      }
+    }
+  }
+
+  // Same migration for the 2D priming flex table: seed it from the existing 1D priming curve (primeValues)
+  // so turning on flexCranking does not change priming behaviour until the user calibrates the ethanol axis.
+  {
+    bool primeFlexBinsEmpty = true;
+    for (size_t i = 0; i < efi::size(engineConfiguration->primeFlexBins); i++) {
+      if (engineConfiguration->primeFlexBins[i] != 0) {
+        primeFlexBinsEmpty = false;
+        break;
+      }
+    }
+    if (primeFlexBinsEmpty) {
+      static const uint8_t primeFlexEthanolBins[] = { 0, 35, 65, 100 };
+      copyArray(engineConfiguration->primeFlexBins, primeFlexEthanolBins);
+      for (size_t ethanolIdx = 0; ethanolIdx < efi::size(engineConfiguration->primeFlexTable); ethanolIdx++) {
+        for (size_t cltIdx = 0; cltIdx < PRIME_CURVE_COUNT; cltIdx++) {
+          engineConfiguration->primeFlexTable[ethanolIdx][cltIdx] = engineConfiguration->primeValues[cltIdx];
+        }
+      }
+    }
+  }
+
 #if HW_PROTEUS && defined(STM32F4XX)
   // should have been proteus per-board validation
   engineConfiguration->is_enabled_spi_5 = false;

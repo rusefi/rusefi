@@ -462,6 +462,61 @@ TEST(FuelMath, postCrankingFactorAxis){
 	EXPECT_NEAR(engine->fuelComputer.running.postCrankingFuelCorrection, 5, EPS3D);
 }
 
+// flexCranking selects the cranking coolant-multiplier source: the 1D crankingFuelCoef curve when off
+// (or when no flex sensor is present), and the 2D crankingFuelFlexTable when on with a flex sensor.
+TEST(FuelMath, crankingFlexFallbackToCurve) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Pass the base mass straight through so the return value equals the coolant multiplier.
+	engineConfiguration->useRunningMathForCranking = true;
+
+	setArrayValues(config->crankingFuelCoef, 2.0f);  // flat 1D curve
+	Sensor::setMockValue(SensorType::Clt, 20);
+
+	// flex off -> 1D curve, regardless of any ethanol reading.
+	engineConfiguration->flexCranking = false;
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 85);
+	EXPECT_NEAR(2.0f, getCrankingFuel3(1, 0), EPS4D);
+
+	// flex on but no flex sensor present -> still the 1D curve.
+	engineConfiguration->flexCranking = true;
+	Sensor::resetMockValue(SensorType::FuelEthanolPercent);
+	EXPECT_NEAR(2.0f, getCrankingFuel3(1, 0), EPS4D);
+}
+
+// flexCranking on + flex sensor present resolves the cranking coolant multiplier from the 2D ethanol table.
+TEST(FuelMath, crankingFlex2dTable) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->useRunningMathForCranking = true;
+	engineConfiguration->flexCranking = true;
+
+	Sensor::setMockValue(SensorType::Clt, 20);
+
+	// Ethanol axis plus a table that is flat across coolant so only the ethanol axis matters.
+	const uint8_t ethanolBins[] = { 0, 35, 65, 100 };
+	copyArray(config->crankingFuelFlexBins, ethanolBins);
+
+	const float rowMult[] = { 2.0f, 2.5f, 3.5f, 5.0f };
+	for (size_t row = 0; row < efi::size(config->crankingFuelFlexTable); row++) {
+		for (size_t col = 0; col < CRANKING_CURVE_SIZE; col++) {
+			config->crankingFuelFlexTable[row][col] = rowMult[row];
+		}
+	}
+
+	// Exact ethanol bins hit their row.
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 0);
+	EXPECT_NEAR(2.0f, getCrankingFuel3(1, 0), EPS4D);
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 35);
+	EXPECT_NEAR(2.5f, getCrankingFuel3(1, 0), EPS4D);
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 100);
+	EXPECT_NEAR(5.0f, getCrankingFuel3(1, 0), EPS4D);
+
+	// Between bins -> linear interpolation on the ethanol axis (35 -> 65 at 50%).
+	Sensor::setMockValue(SensorType::FuelEthanolPercent, 50);
+	EXPECT_NEAR(3.0f, getCrankingFuel3(1, 0), EPS4D);
+}
+
 
 TEST(AirmassModes, PredictiveMapCalculation) {
 	StrictMock<MockVp3d> veTable;
