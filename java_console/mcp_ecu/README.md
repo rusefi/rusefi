@@ -1,4 +1,4 @@
-# rusEFI Lua MCP server
+# rusEFI ECU MCP server
 
 An [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that lets an
 LLM client (Claude Desktop, JetBrains AI, Cursor, etc.) iterate on rusEFI Lua scripts:
@@ -8,7 +8,7 @@ write a candidate script, upload it to the ECU, reset Lua, and observe the resul
 ## Architecture
 
 ```
-LLM client  <-- stdio JSON-RPC (MCP) -->  LuaMcpServer
+LLM client  <-- stdio JSON-RPC (MCP) -->  EcuMcpServer
                                               |
                                               +-- LuaService (in :ecu_io)
                                               |       |
@@ -22,7 +22,7 @@ LLM client  <-- stdio JSON-RPC (MCP) -->  LuaMcpServer
 ```
 
 `LuaService` (in `:ecu_io`) is the headless reusable core that `SetLuaTool` and
-`LuaMcpServer` both depend on. It owns connecting to the ECU, locating the `LUASCRIPT`
+`EcuMcpServer` both depend on. It owns connecting to the ECU, locating the `LUASCRIPT`
 ini field, writing/burning, and `luareset`.
 
 ## Tools exposed over MCP

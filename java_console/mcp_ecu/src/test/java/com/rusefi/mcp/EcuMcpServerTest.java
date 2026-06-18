@@ -14,14 +14,14 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Smoke test for the JSON-RPC / MCP protocol layer of {@link LuaMcpServer}.
+ * Smoke test for the JSON-RPC / MCP protocol layer of {@link EcuMcpServer}.
  *
  * <p>Drives the server with no ECU attached, so only protocol-level methods that
  * don't require {@code ensureConnected(...)} are exercised: {@code initialize},
  * {@code tools/list}, {@code ping}, plus an unknown-method error path. ECU-touching
  * tools are covered separately by {@code LuaService} tests / integration tests.
  */
-class LuaMcpServerTest {
+class EcuMcpServerTest {
 
     @Test
     void initializeAndListTools() throws Exception {
@@ -108,7 +108,7 @@ class LuaMcpServerTest {
         BufferedReader in = new BufferedReader(new StringReader(input));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos, true, "UTF-8");
-        LuaMcpServer server = new LuaMcpServer(null, in, out);
+        EcuMcpServer server = new EcuMcpServer(null, in, out);
         server.runForTests();
         String all = baos.toString(StandardCharsets.UTF_8.name()).trim();
         if (all.isEmpty()) return new String[0];

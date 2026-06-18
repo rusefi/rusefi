@@ -48,11 +48,11 @@ import static com.devexperts.logging.Logging.getLogging;
  * <p>IMPORTANT: stdin/stdout are reserved for the MCP transport. All diagnostic logging
  * goes through {@link Logging} (to a file) and stderr; never to stdout.
  */
-public class LuaMcpServer {
-    private static final Logging log = getLogging(LuaMcpServer.class);
+public class EcuMcpServer {
+    private static final Logging log = getLogging(EcuMcpServer.class);
 
     private static final String PROTOCOL_VERSION = "2024-11-05";
-    private static final String SERVER_NAME = "rusefi-lua-mcp";
+    private static final String SERVER_NAME = "rusefi-ecu-mcp";
     private static final String SERVER_VERSION = "0.1.0";
 
     private final PrintStream out;
@@ -74,14 +74,14 @@ public class LuaMcpServer {
     /** CLI: optional fixed serial port; null => autodetect on first connect. */
     private final String forcedPort;
 
-    public LuaMcpServer(String forcedPort) {
+    public EcuMcpServer(String forcedPort) {
         this(forcedPort,
                 new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)),
                 new PrintStream(System.out, true, StandardCharsets.UTF_8));
     }
 
     /** Test-friendly constructor: caller supplies the transport streams. */
-    public LuaMcpServer(String forcedPort, BufferedReader in, PrintStream out) {
+    public EcuMcpServer(String forcedPort, BufferedReader in, PrintStream out) {
         this.forcedPort = forcedPort;
         this.in = in;
         this.out = out;
@@ -98,13 +98,13 @@ public class LuaMcpServer {
             if ("--port".equals(args[i]) && i + 1 < args.length) {
                 port = args[++i];
             } else if ("--help".equals(args[i]) || "-h".equals(args[i])) {
-                System.err.println("Usage: LuaMcpServer [--port <serialPort>]");
+                System.err.println("Usage: EcuMcpServer [--port <serialPort>]");
                 System.err.println("Speaks MCP (JSON-RPC 2.0) over stdio.");
                 return;
             }
         }
         try {
-            new LuaMcpServer(port).run();
+            new EcuMcpServer(port).run();
         } catch (Throwable t) {
             log.error("MCP server fatal", t);
             System.err.println("MCP server fatal: " + t);
@@ -113,7 +113,7 @@ public class LuaMcpServer {
     }
 
     private void run() throws Exception {
-        log.info("rusEFI Lua MCP server starting. forcedPort=" + forcedPort);
+        log.info("rusEFI ECU MCP server starting. forcedPort=" + forcedPort);
         installMessagesListener();
 
         String line;
