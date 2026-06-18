@@ -2,6 +2,7 @@ package com.rusefi.mcp;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.lua.LuaService;
@@ -268,6 +269,16 @@ public class LuaMcpServer {
                 schemaObject(new String[][]{
                         {"command", "string", "Command text."}
                 }, new String[]{"command"}, false)));
+        tools.add(tool("command",
+                "Alias for send_command. Sends arbitrary text to the standard command queue.",
+                schemaObject(new String[][]{
+                        {"command", "string", "Command text."}
+                }, new String[]{"command"}, false)));
+        tools.add(tool("read_output_channel",
+                "Read latest output-channel value by channel name from SensorCentral.",
+                schemaObject(new String[][]{
+                        {"name", "string", "Output-channel name (case-insensitive)."}
+                }, new String[]{"name"}, false)));
         tools.add(tool("read_messages",
                 "Return ECU messages from the in-memory ring buffer captured via MessagesCentral " +
                         "(this is the same stream the Swing MessagesView shows, including Lua print() output).",
@@ -303,6 +314,8 @@ public class LuaMcpServer {
                 case "get_lua":     toolResult = doGetLua(); break;
                 case "lua_reset":   toolResult = doLuaReset(); break;
                 case "send_command":toolResult = doSendCommand(args); break;
+                case "command":    toolResult = doSendCommand(args); break;
+                case "read_output_channel": toolResult = doReadOutputChannel(args); break;
                 case "read_messages": toolResult = doReadMessages(args); break;
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
                 default:
@@ -401,12 +414,35 @@ public class LuaMcpServer {
     @SuppressWarnings("unchecked")
     private JSONObject doSendCommand(JSONObject args) throws Exception {
         String cmd = (String) args.get("command");
-        if (cmd == null || cmd.isEmpty()) return errorBody("'command' is required");
+        if (cmd == null) {
+            return errorBody("'command' is required");
+        }
         LinkManager lm = ensureConnected(null);
         LuaService.sendCommand(lm, cmd);
         JSONObject o = new JSONObject();
         o.put("queued", true);
         o.put("command", cmd);
+        return o;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doReadOutputChannel(JSONObject args) throws Exception {
+        String name = (String) args.get("name");
+        if (name == null || name.isEmpty()) {
+            return errorBody("'name' is required");
+        }
+
+        ensureConnected(null);
+        double value = SensorCentral.getInstance().getValue(name);
+
+        JSONObject o = new JSONObject();
+        o.put("name", name);
+        o.put("found", !Double.isNaN(value));
+        if (!Double.isNaN(value)) {
+            o.put("value", value);
+        } else {
+            o.put("error", "Output channel not found or no data yet");
+        }
         return o;
     }
 

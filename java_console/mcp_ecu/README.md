@@ -35,6 +35,8 @@ ini field, writing/burning, and `luareset`.
 | `get_lua` | Read currently-flashed Lua from the cached image. |
 | `lua_reset` | Send `luareset` to restart the Lua VM. |
 | `send_command` | Send any text command via the standard queue (e.g. `lua 1+2`). |
+| `command` | Alias for `send_command` (useful for clients that prefer shorter tool names). |
+| `read_output_channel` | Read latest output-channel value by name (case-insensitive). |
 | `read_messages` | Pull recent ECU messages from the in-memory ring buffer (Lua `print` included). |
 | `wait_for_message` | Block until a regex matches an ECU message, or timeout. |
 

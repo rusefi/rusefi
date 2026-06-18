@@ -45,7 +45,7 @@ class LuaMcpServerTest {
 
         JSONObject toolsList = parse(responses[1]);
         JSONArray tools = (JSONArray) ((JSONObject) toolsList.get("result")).get("tools");
-        assertTrue(tools.size() >= 8, "expected our 8 tools, got " + tools.size());
+        assertTrue(tools.size() >= 10, "expected our 10 tools, got " + tools.size());
         // Make sure the headline tools are present.
         java.util.Set<String> names = new java.util.HashSet<>();
         for (Object t : tools) names.add((String) ((JSONObject) t).get("name"));
@@ -53,6 +53,8 @@ class LuaMcpServerTest {
         assertTrue(names.contains("get_lua"));
         assertTrue(names.contains("lua_reset"));
         assertTrue(names.contains("send_command"));
+        assertTrue(names.contains("command"));
+        assertTrue(names.contains("read_output_channel"));
         assertTrue(names.contains("read_messages"));
         assertTrue(names.contains("wait_for_message"));
         assertTrue(names.contains("ecu_info"));
