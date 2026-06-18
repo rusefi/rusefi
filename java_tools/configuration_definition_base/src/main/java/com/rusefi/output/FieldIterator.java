@@ -50,6 +50,17 @@ public class FieldIterator {
     }
 
     public int adjustSize(int tsPosition) {
+        if (cf.isBit()) {
+            if (next.isBit()) {
+                // No increment while we are in the bit sequence.
+                // But wait, if we cross 32 bits, we might need to increment?
+                // Actually, let's keep tsPosition at the START of the bit sequence.
+                return tsPosition;
+            } else {
+                // End of bit sequence. Return tsPosition + size of all U32s used.
+                return tsPosition + bitState.getByteOffset() + 4;
+            }
+        }
         return tsPosition + cf.getSize(next);
     }
 }

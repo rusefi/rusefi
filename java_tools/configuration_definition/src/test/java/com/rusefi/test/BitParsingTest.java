@@ -42,9 +42,8 @@ public class BitParsingTest {
 
     @Test
     public void test35Bits() {
-        assertThrows(BitState.TooManyBitsInARow.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
+         {
+             {
                 ReaderStateImpl state = new ReaderStateImpl();
 
                 StringBuilder input = new StringBuilder("struct bit_s\n");
@@ -74,7 +73,7 @@ public class BitParsingTest {
                 assertTrue(result.contains("fieldName34 = bits, U32, 4, [2:2], \"false\", \"true\""));
                 assertTrue(result.contains("maxValue = scalar, S16, 8, \"\", 1, 0, -30000, 30000, 0"));
             }
-        });
+        }
     }
 
     private Output createOutput(StringWriter sw) {
