@@ -751,6 +751,9 @@ float getOutputValueByHash(const int hash) {
 // isMapPredictionActive
 		case 884518764:
 			return engine->outputChannels.isMapPredictionActive;
+// isFlexError
+		case 43207706:
+			return engine->outputChannels.isFlexError;
 // outputRequestPeriod
 		case 1894184322:
 			return engine->outputChannels.outputRequestPeriod;

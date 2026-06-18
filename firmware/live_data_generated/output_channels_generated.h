@@ -1280,8 +1280,9 @@ struct output_channels_s {
 	offset 712 bit 30 */
 	bool isMapPredictionActive : 1 {};
 	/**
+	 * Error: Flex
 	offset 712 bit 31 */
-	bool unusedBit_260_31 : 1 {};
+	bool isFlexError : 1 {};
 	/**
 	 * offset 716
 	 */
