@@ -528,6 +528,7 @@ typedef enum __attribute__ ((__packed__)) {
 	CCNONE = 0,
 	CC_BRAKE = 1,
 	CC_CLUTCH = 2,
+	CC_CLUTCH_DOWN = 3,
 } cranking_condition_e;
 
 /**
