@@ -80,6 +80,9 @@ void slowStartStopButtonCallback() {
     if (engineConfiguration->crankingCondition == CC_CLUTCH && !engine->clutchUpSwitchedState) {
       return;
     }
+    if (engineConfiguration->crankingCondition == CC_CLUTCH_DOWN && !engine->engineState.clutchDownState) {
+      return;
+    }
 
     if (isCrankingSuppressed()) {
       return;
