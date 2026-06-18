@@ -2,13 +2,13 @@
 
 This document covers the MCP (Model Context Protocol) servers shipped with the rusEFI Java console and how they locate the `.ini` configuration file required to connect to an ECU.
 
-See also: `java_console/mcp_lua/README.md`, `java_console/mcp_can/README.md`.
+See also: `java_console/mcp_ecu/README.md`, `java_console/mcp_can/README.md`.
 
 #### Available MCP servers
 
 | Module | Transport | Purpose |
 |--------|-----------|---------|
-| `:mcp_lua` | stdio JSON-RPC | Upload/get Lua scripts, reset Lua, read ECU messages |
+| `:mcp_ecu` | stdio JSON-RPC | Upload/get Lua scripts, reset Lua, read ECU messages |
 | `:mcp_can` | stdio JSON-RPC | Read-only CAN bus sniffing via PCAN hardware |
 
 #### .ini file resolution
@@ -53,7 +53,7 @@ A small Python package in `java_console/mcp_python/` provides reusable helpers f
 ```python
 from java_console.mcp_python import McpClient
 
-with McpClient("java_console/mcp_lua/build/libs/mcp_lua-all.jar") as mcp:
+with McpClient("java_console/mcp_ecu/build/libs/mcp_ecu-all.jar") as mcp:
     mcp.call("connect")
     mcp.call("set_lua", script="function onTick() end")
     mcp.call("read_messages", maxLines=20)

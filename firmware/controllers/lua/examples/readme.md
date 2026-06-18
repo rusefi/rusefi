@@ -9,7 +9,7 @@ example before starting from scratch. Files use `.lua` or `.txt` — both are pl
 Lua; the `.txt` extension is historical.
 
 For iterating on a live or simulated ECU from an LLM, see
-`java_console/mcp_lua/README.md` (the `:mcp_lua` MCP server: `set_lua`,
+`java_console/mcp_ecu/README.md` (the `:mcp_ecu` MCP server: `set_lua`,
 `lua_reset`, `wait_for_message`, …).
 
 Related (full engine configs, not just snippets):

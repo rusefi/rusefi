@@ -5,7 +5,7 @@ Typical usage::
 
     from java_console.mcp_python import McpClient
 
-    with McpClient("java_console/mcp_lua/build/libs/mcp_lua-all.jar",
+    with McpClient("java_console/mcp_ecu/build/libs/mcp_ecu-all.jar",
                     client_name="my_script") as mcp:
         mcp.call("connect")
         mcp.call("set_lua", script="function onTick() end")

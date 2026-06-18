@@ -47,9 +47,9 @@ jobs:
         working-directory: .
         run: ./gradlew test
 
-      - name: MCP Lua Tests
+      - name: MCP ECU Tests
         working-directory: .
-        run: ./gradlew :mcp_lua:test
+        run: ./gradlew :mcp_ecu:test
 
       - name: MCP CAN Tests
         working-directory: .

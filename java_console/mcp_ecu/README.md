@@ -47,9 +47,9 @@ A typical LLM session:
 ## Run
 
 ```
-./gradlew :mcp_lua:runMcp          # run on stdio
-./gradlew :mcp_lua:fatJar          # produce build/libs/mcp_lua-*-all.jar
-java -jar build/libs/mcp_lua-all.jar [--port /dev/ttyACM0]
+./gradlew :mcp_ecu:runMcp          # run on stdio
+./gradlew :mcp_ecu:fatJar          # produce build/libs/mcp_ecu-*-all.jar
+java -jar build/libs/mcp_ecu-all.jar [--port /dev/ttyACM0]
 ```
 
 ### Example client config (Claude Desktop)
@@ -59,7 +59,7 @@ java -jar build/libs/mcp_lua-all.jar [--port /dev/ttyACM0]
   "mcpServers": {
     "rusefi-lua": {
       "command": "java",
-      "args": ["-jar", "/abs/path/to/mcp_lua-all.jar"]
+      "args": ["-jar", "/abs/path/to/mcp_ecu-all.jar"]
     }
   }
 }
