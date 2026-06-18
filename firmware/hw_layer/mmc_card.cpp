@@ -8,6 +8,22 @@
  * default pinouts in case of SPI2 connected to MMC: PB13 - SCK, PB14 - MISO, PB15 - MOSI, PD4 - CS, 3.3v
  * default pinouts in case of SPI3 connected to MMC: PB3  - SCK, PB4  - MISO, PB5  - MOSI, PD4 - CS, 3.3v
  *
+ * Console commands registered by this module:
+ *  - sdinfo
+ *  - sdsuppresslogging
+ *  - del <filename>
+ *  - sdmode <pc|ecu|off|unmount|auto|format>
+ *  - delreports
+ *
+ * SD/MMC status output channels updated by this module:
+ *  - sd_present
+ *  - sd_error
+ *  - sd_formating
+ *  - sdLoggingState
+ *  - sd_logging_internal
+ *  - sd_active_wr
+ *  - sd_active_rd
+ *
  *
  * todo: extract some logic into a controller file
  */
