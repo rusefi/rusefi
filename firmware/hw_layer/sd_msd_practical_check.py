@@ -120,6 +120,31 @@ def to_list(value: Any) -> list[Any]:
     return [value]
 
 
+DRIVE_TYPE_MAP: dict[int, str] = {
+    0: "Unknown",
+    1: "NoRootDirectory",
+    2: "Removable",
+    3: "Fixed",
+    4: "Network",
+    5: "CDROM",
+    6: "RAMDisk",
+}
+
+
+def humanize_drive_type(volumes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+
+    for volume in volumes:
+        item = dict(volume)
+        drive_type_raw = item.get("DriveType", 0)
+        drive_type = int(drive_type_raw or 0)
+        item["DriveType"] = DRIVE_TYPE_MAP.get(drive_type, f"Unknown({drive_type})")
+        item["DriveTypeCode"] = drive_type
+        result.append(item)
+
+    return result
+
+
 def windows_storage_snapshot() -> dict[str, Any]:
     ps = r"""
 $usbDisks = Get-CimInstance Win32_DiskDrive |
@@ -136,14 +161,16 @@ $volumes = Get-CimInstance Win32_Volume |
 } | ConvertTo-Json -Depth 4 -Compress
 """
     raw = run_powershell_json(ps)
+    volumes = to_list(raw.get("volumes") if isinstance(raw, dict) else None)
+
     return {
         "usb_disks": to_list(raw.get("usb_disks") if isinstance(raw, dict) else None),
-        "volumes": to_list(raw.get("volumes") if isinstance(raw, dict) else None),
+        "volumes": humanize_drive_type(volumes),
     }
 
 
 def filter_removable_volumes(volumes: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    return [v for v in volumes if int(v.get("DriveType", 0) or 0) == 2]
+    return [v for v in volumes if int(v.get("DriveTypeCode", v.get("DriveType", 0)) or 0) == 2]
 
 
 def assert_windows_msd_visible(before: dict[str, Any], after: dict[str, Any], expected_label: str) -> dict[str, Any]:
