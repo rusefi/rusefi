@@ -80,7 +80,7 @@ def wait_for_format_done(
     mcp: McpClient,
     timeout_s: float,
     poll_s: float,
-    no_activity_done_s: float = 5.0,
+    start_timeout_s: float = 15.0,
 ) -> tuple[float, bool]:
     print("\nWaiting for format to complete (watching output channel `sd_formating`)...", flush=True)
     start = time.monotonic()
@@ -98,8 +98,11 @@ def wait_for_format_done(
         if seen_active and not math.isnan(formatting) and formatting < 0.5:
             return elapsed, True
 
-        if not seen_active and not math.isnan(formatting) and formatting < 0.5 and elapsed >= no_activity_done_s:
-            return elapsed, False
+        if not seen_active and elapsed >= min(start_timeout_s, timeout_s):
+            raise TimeoutError(
+                "Formatting never became active "
+                f"(`sd_formating` stayed below active threshold for {elapsed:.1f}s)"
+            )
 
         print(
             f"  t={elapsed:6.1f}s  sd_formating={'NaN' if math.isnan(formatting) else f'{formatting:.3f}'}",
@@ -227,6 +230,13 @@ def main():
             format_elapsed_s, saw_formatting_active = wait_for_format_done(mcp, args.timeout, args.poll)
             report["format_elapsed_s"] = format_elapsed_s
             report["observed_active_formatting"] = saw_formatting_active
+            format_error = read_channel(mcp, "sd_error")
+            report["format_sd_error"] = None if math.isnan(format_error) else int(format_error)
+            if math.isnan(format_error) or format_error > 0.5:
+                raise RuntimeError(
+                    "Formatting reported an error via `sd_error`: "
+                    f"{'NaN' if math.isnan(format_error) else int(format_error)}"
+                )
             print(
                 f"\nFormat finished in {format_elapsed_s:.2f}s"
                 f" (observed active formatting state: {saw_formatting_active})",
