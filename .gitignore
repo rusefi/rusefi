@@ -12,6 +12,7 @@ blbuild/
 Debug_EMS/
 Release_EMS/
 Debug/
+state/
 .settings/
 *_ram_report.txt
 doxygen/

@@ -14,6 +14,7 @@ Run from repository root so `java_console.mcp_python` is importable.
 
 import argparse
 import math
+import subprocess
 from pathlib import Path
 import sys
 import time
@@ -25,7 +26,9 @@ if str(REPO_ROOT) not in sys.path:
 
 from java_console.mcp_python import McpClient
 
-DEFAULT_JAR = r"java_console\mcp_ecu\build\libs\mcp_ecu-all.jar"
+DEFAULT_JAR_CANDIDATES = [
+    r"java_console\mcp_ecu\build\libs\mcp_ecu-all.jar",
+]
 DEFAULT_CHANNELS = [
     "sd_present",
     "sd_error",
@@ -64,7 +67,12 @@ def send_command(mcp: McpClient, cmd: str):
     _structured(mcp.call("command", command=cmd))
 
 
-def wait_for_format_done(mcp: McpClient, timeout_s: float, poll_s: float) -> tuple[float, bool]:
+def wait_for_format_done(
+    mcp: McpClient,
+    timeout_s: float,
+    poll_s: float,
+    no_activity_done_s: float = 5.0,
+) -> tuple[float, bool]:
     print("\nWaiting for format to complete (watching output channel `sd_formating`)...", flush=True)
     start = time.monotonic()
     seen_active = False
@@ -81,6 +89,9 @@ def wait_for_format_done(mcp: McpClient, timeout_s: float, poll_s: float) -> tup
         if seen_active and not math.isnan(formatting) and formatting < 0.5:
             return elapsed, True
 
+        if not seen_active and not math.isnan(formatting) and formatting < 0.5 and elapsed >= no_activity_done_s:
+            return elapsed, False
+
         print(
             f"  t={elapsed:6.1f}s  sd_formating={'NaN' if math.isnan(formatting) else f'{formatting:.3f}'}",
             flush=True,
@@ -90,15 +101,42 @@ def wait_for_format_done(mcp: McpClient, timeout_s: float, poll_s: float) -> tup
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Query/format SD card via rusEFI ECU MCP")
-    p.add_argument("--jar", default=DEFAULT_JAR, help="Path to mcp_ecu all-in-one jar")
+    p.add_argument("--jar", default=None, help="Path to MCP server jar (auto-detected if omitted)")
     p.add_argument("--timeout", type=float, default=180.0, help="Format completion timeout in seconds")
     p.add_argument("--poll", type=float, default=1.0, help="Polling interval in seconds")
     return p.parse_args()
 
 
+def resolve_jar_path(cli_jar: str | None) -> str:
+    if cli_jar:
+        if Path(cli_jar).exists():
+            return cli_jar
+        raise FileNotFoundError(f"MCP jar does not exist: {cli_jar}")
+
+    for candidate in DEFAULT_JAR_CANDIDATES:
+        if Path(candidate).exists():
+            return candidate
+
+    print("MCP fat jar not found; building with Gradle task :mcp_ecu:fatJar ...", flush=True)
+    subprocess.run([".\\gradlew", ":mcp_ecu:fatJar"], check=True)
+
+    for candidate in DEFAULT_JAR_CANDIDATES:
+        if Path(candidate).exists():
+            return candidate
+
+    candidates = "\n  - ".join(DEFAULT_JAR_CANDIDATES)
+    raise FileNotFoundError(
+        "Could not find MCP fat jar even after running `./gradlew :mcp_ecu:fatJar`; pass --jar explicitly.\n"
+        f"Checked:\n  - {candidates}"
+    )
+
+
 def main():
     args = parse_args()
-    with McpClient(args.jar, client_name="sd_mcp_test") as mcp:
+    jar = resolve_jar_path(args.jar)
+    print(f"Using MCP jar: {jar}", flush=True)
+
+    with McpClient(jar, client_name="sd_mcp_test") as mcp:
         print("Connecting to ECU...", flush=True)
         _structured(mcp.call("connect"))
 
