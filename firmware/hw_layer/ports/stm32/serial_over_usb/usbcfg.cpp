@@ -34,7 +34,7 @@ SerialUSBDriver SDU1;
 
 #if HAL_USE_USB_MSD
 	// Descriptor that includes MSD is larger and has an extra interface
-	#define DESCRIPTOR_SIZE 98
+	#define DESCRIPTOR_SIZE (98 + 8)
 	#define NUM_INTERFACES 3
 	#define USB_MSD_EP_SIZE 64
 
@@ -87,6 +87,14 @@ static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
                          0x80,          /* bmAttributes (bus powered).      */
                          200),          /* bMaxPower (400mA).               */
 #if HAL_USE_USB_MSD
+  // MSD
+  /* IAD Descriptor - describes that EP0+1 belong to MSD */
+  USB_DESC_INTERFACE_ASSOCIATION(MSD_IF, /* bFirstInterface.                */
+                                 0x01, /* bInterfaceCount.                  */
+                                 0x08, /* bFunctionClass (Mass Storage).    */
+                                 0x06, /* bFunctionSubClass.  (SCSI)        */
+                                 0x50, /* bFunctionProtocol (Bulk-Only)     */
+                                 4),   /* iInterface.                       */
   USB_DESC_INTERFACE    (MSD_IF,        /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
                          0x02,          /* bNumEndpoints.                   */
@@ -215,6 +223,7 @@ static const uint8_t vcom_string1[] = {
 #endif
 
 #ifndef USB_DESCRIPTOR_STRING_CONTENT
+/* "rusEFI Engine Management ECU" */
 #define USB_DESCRIPTOR_STRING_CONTENT 'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'E', 0, \
   'n', 0, 'g', 0, 'i', 0, 'n', 0, 'e', 0, ' ', 0, 'M', 0, 'a', 0, \
   'n', 0, 'a', 0, 'g', 0, 'e', 0, 'm', 0, 'e', 0, 'n', 0, 't', 0, \
@@ -258,6 +267,15 @@ static uint8_t vcom_string3[] = {
 };
 #endif
 
+/* "RusEFI MSD" */
+static uint8_t msd_string4[] = {
+  USB_DESC_BYTE(10 * 2 + 2),            /* bLength.                         */
+  USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
+  'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'M', 0,
+  'S', 0, 'D', 0,
+  0
+};
+
 /*
  * Strings wrappers array.
  */
@@ -265,7 +283,8 @@ static const USBDescriptor vcom_strings[] = {
   {sizeof vcom_string0, vcom_string0},
   {sizeof vcom_string1, vcom_string1},
   {sizeof vcom_string2, vcom_string2},
-  {sizeof vcom_string3, vcom_string3}
+  {sizeof vcom_string3, vcom_string3},
+  {sizeof msd_string4, msd_string4}
 };
 
 #ifndef BOARD_SERIAL
@@ -315,7 +334,7 @@ static const USBDescriptor *get_descriptor(USBDriver *usbp,
   case USB_DESCRIPTOR_CONFIGURATION:
     return &vcom_configuration_descriptor;
   case USB_DESCRIPTOR_STRING:
-    if (dindex < 4)
+    if (dindex < efi::size(vcom_strings))
       return &vcom_strings[dindex];
   }
   return NULL;
