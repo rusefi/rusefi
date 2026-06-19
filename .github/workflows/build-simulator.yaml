@@ -18,7 +18,7 @@ jobs:
         use-clang: ['no', 'yes']
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
 # todo: how to reduce code duplication of submodules list?
     - name: Checkout Submodules

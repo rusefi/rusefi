@@ -35,7 +35,7 @@ jobs:
 
     steps:
 # we are not using 'recursive' here, we have common_submodule_init.sh instead probably as a performance optimization?
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: true
 
@@ -132,7 +132,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Set matrix
       id: set-matrix
@@ -187,7 +187,7 @@ jobs:
           echo "upload=gha_artifact" >> $GITHUB_ENV
         fi
 
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Checkout Submodules
       run: |
