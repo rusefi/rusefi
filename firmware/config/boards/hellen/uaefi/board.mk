@@ -5,6 +5,7 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
   $(BOARD_DIR)/../uaefi121/mega-uaefi.cpp
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
+	include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
 	DDEFS += -DLUA_RX_MAX_FILTER_COUNT=96
 	# Format stays the F7 default (compressed MSD).
 	DDEFS += -DEFI_EMBED_INI_MSD=TRUE
