@@ -99,11 +99,15 @@ void MassStorageController::ThreadTask() {
 		}
 
 		if (cbwValid(m_cbw, status) && cbwMeaningful(m_cbw)) {
-			auto target = &m_luns[m_cbw.lun].target;
-			if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
-				sendCsw(CSW_STATUS_PASSED, 0);
-			} else {
-				sendCsw(CSW_STATUS_FAILED, scsiResidue(target));
+			// Get the LUN from the incoming CBW packet
+			uint8_t target_lun = m_cbw.lun & 0x0F; // Mask out reserved bits
+			if (target_lun <= USB_MSD_LUN_COUNT) {
+				auto target = &m_luns[target_lun].target;
+				if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
+					sendCsw(CSW_STATUS_PASSED, 0);
+				} else {
+					sendCsw(CSW_STATUS_FAILED, scsiResidue(target));
+				}
 			}
 		} else {
 			// ignore incorrect CBW
