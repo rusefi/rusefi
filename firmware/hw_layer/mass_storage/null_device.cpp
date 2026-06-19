@@ -31,24 +31,18 @@ static bool nd_return_success(void*) {
 }
 
 static bool nd_return_success_read(void*, uint32_t, uint8_t* buffer, uint32_t n) {
-	// write zeroes to the buffer to prevent somebody reading random memory
-	memset(buffer, 0, n);
-
-	return HAL_SUCCESS;
+	return HAL_FAILED;
 }
 
 static bool nd_return_success_write(void*, uint32_t, const uint8_t*, uint32_t) {
-	return HAL_SUCCESS;
+	return HAL_FAILED;
 }
 
 static bool nd_get_info(void*, BlockDeviceInfo* bdip) {
-	// We have to report non-zero size here because Windows
-	// will query the size of the block device even if we indicate
-	// that the device has no media
-	// If we report zeroes, it breaks USB until you unplug this device
-	bdip->blk_num = 1000;
-	bdip->blk_size = 512;
-	return HAL_SUCCESS;
+	// This should not be called as we report no media inserted
+	// Hack with fake disk size is rmeoved
+	// No media state is now handled in scsi lib
+	return HAL_FAILED;
 }
 
 static const struct BaseBlockDeviceVMT ndVmt = {
@@ -57,11 +51,11 @@ static const struct BaseBlockDeviceVMT ndVmt = {
 	nd_is_protected,
 
 	// These functions just claim success to make the host happy
-	nd_return_success,
-	nd_return_success,
+	nd_return_success,	// connect
+	nd_return_success,	// disconnect
 	nd_return_success_read,
 	nd_return_success_write,
-	nd_return_success,
+	nd_return_success,	// sync
 	nd_get_info
 };
 
