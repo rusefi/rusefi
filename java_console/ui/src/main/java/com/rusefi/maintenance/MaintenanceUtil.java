@@ -12,7 +12,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class MaintenanceUtil {
     private static final Logging log = getLogging(MaintenanceUtil.class);
 
-    private static final String WMIC_PCAN_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%PCAN-USB%'\" get Caption,ConfigManagerErrorCode /format:list";
+    private static final String WMIC_PCAN_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%PCAN-USB%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
 
     static boolean detectDevice(UpdateOperationCallbacks callbacks, String queryCommand, String pattern) throws ErrorExecutingCommand {
         if (!FileLog.isWindows()) {
@@ -28,7 +28,17 @@ public class MaintenanceUtil {
         String duration = "detectDevice lookup cost " + cost + "ms; ";
         String nicerOutput = output.length() == 0 ? "(empty)" : output.toString();
         log.info(duration + queryCommand + " says " + nicerOutput);
-        return output.toString().contains(pattern);
+        return containsPattern(output.toString(), pattern);
+    }
+
+    static boolean containsPattern(String output, String pattern) {
+        if (output.contains(pattern)) {
+            return true;
+        }
+
+        String normalizedOutput = output.replace(":", "=").replace(" ", "");
+        String normalizedPattern = pattern.replace(" ", "");
+        return normalizedOutput.contains(normalizedPattern);
     }
 
     public static boolean detectPcan(UpdateOperationCallbacks wnd) {

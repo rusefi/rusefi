@@ -28,7 +28,7 @@ public class StLinkFlasher {
     private static final String FAILED_MESSAGE_TAG = "failed";
     public static final String TITLE = "rusEFI ST-LINK Firmware Flasher";
     public static final String DONE = "DONE!";
-    private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
+    private static final String WMIC_STLINK_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%STLink%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
 
     public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         ExecHelper.submitAction(

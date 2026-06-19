@@ -45,6 +45,7 @@ Release template (copy/paste this for new release):
  - Idle VE table when using an electronic throttle correctly uses accel pedal to match main idle logic
  - 6G75 crank Trigger fixes #8827
  - SD card access over USB is not reliable #9664
+ - wmic.exe command-line utility is being completely eliminated. #9672
 
 ## February 2026 "Day 1458"
 
