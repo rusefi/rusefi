@@ -62,3 +62,5 @@ AlignTrailingComments: true
 # Packing
 BinPackArguments: false
 BinPackParameters: false
+
+InsertBraces: true
