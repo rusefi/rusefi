@@ -6,6 +6,8 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DLUA_RX_MAX_FILTER_COUNT=96
+	# Format stays the F7 default (compressed MSD).
+	DDEFS += -DEFI_EMBED_INI_MSD=TRUE
 endif
 
 #no mux on mm100
