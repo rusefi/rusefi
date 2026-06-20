@@ -2071,6 +2071,42 @@ Rotational Idle Auto engage CLT
 ### rotationalIdleController.auto_engage_clt
 Rotational Idle Auto engage CLT.
 
+### misfireDetectionEnabled
+Misfire Detection: master enable. Active at idle only. Latches check-engine light (P0300) once the count threshold is reached.
+
+### misfireConsecutiveCount
+Misfire Detection: minimum flagged firings within the recent-firings window before a misfire is counted.
+
+### misfireWindowFirings
+Misfire Detection: sliding window size in firings across all cylinders.
+
+### misfireCountThreshold
+Misfire Detection: total counted misfires before the MIL latches. 0 = monitor-only.
+
+### misfireK
+Misfire Detection: threshold multiplier (baseline + K * wobble). Default 3.0.
+
+### misfireWindowStart
+Misfire Detection: window start, degrees after each cylinder's TDC.
+
+### misfireWindowEnd
+Misfire Detection: window end, degrees after each cylinder's TDC.
+
+### misfireEmaAlphaDecel
+Misfire Detection: EMA alpha when segment is slowing (above baseline).
+
+### misfireEmaAlphaAccel
+Misfire Detection: EMA alpha when segment is recovering (below baseline).
+
+### misfireWobbleAlphaRise
+Misfire Detection: wobble EMA alpha when spread is increasing.
+
+### misfireWobbleAlphaFall
+Misfire Detection: wobble EMA alpha when spread is decreasing.
+
+### misfireSettleCycles
+Misfire Detection: firings to wait after entering idle before flagging starts. 0 = immediate.
+
 ### tcu_shiftTime
 
 

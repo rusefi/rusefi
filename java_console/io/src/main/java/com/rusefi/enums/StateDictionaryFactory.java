@@ -1,5 +1,5 @@
 package com.rusefi.enums;
-//was generated automatically by rusEFI tool config_definition_base-all.jar based on StateDictionaryGenerator integration/LiveData.yaml on Tue Jan 20 22:49:13 UTC 2026
+//was generated automatically by rusEFI tool config_definition_base-all.jar based on StateDictionaryGenerator integration/LiveData.yaml on Sat Jun 20 20:47:00 UTC 2026
 
 import com.rusefi.config.generated.*;
 import com.rusefi.ldmp.StateDictionary;
@@ -36,6 +36,7 @@ public class StateDictionaryFactory {
         stateDictionary.register(live_data_e.LDS_trigger_state_primary, "trigger_decoder");
         stateDictionary.register(live_data_e.LDS_wall_fuel_state, "wall_fuel");
         stateDictionary.register(live_data_e.LDS_closed_loop_idle, "closed_loop_idle");
+        stateDictionary.register(live_data_e.LDS_misfire_detection_state, "misfire_detection_state");
         stateDictionary.register(live_data_e.LDS_live_data_example, "live_data_example");
         stateDictionary.register(live_data_e.LDS_idle_state, "idle_thread");
         stateDictionary.register(live_data_e.LDS_electronic_throttle0, "electronic_throttle");

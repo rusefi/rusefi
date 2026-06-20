@@ -2077,6 +2077,42 @@ float getConfigValueByHash(const int hash) {
 // rotationalIdleController.auto_engage_clt
 		case 602046867:
 			return engineConfiguration->rotationalIdleController.auto_engage_clt;
+// misfireDetectionEnabled
+		case -2092512610:
+			return engineConfiguration->misfireDetectionEnabled;
+// misfireConsecutiveCount
+		case 867875269:
+			return engineConfiguration->misfireConsecutiveCount;
+// misfireWindowFirings
+		case -2093732642:
+			return engineConfiguration->misfireWindowFirings;
+// misfireCountThreshold
+		case -677106038:
+			return engineConfiguration->misfireCountThreshold;
+// misfireK
+		case -1173331233:
+			return engineConfiguration->misfireK;
+// misfireWindowStart
+		case -175438406:
+			return engineConfiguration->misfireWindowStart;
+// misfireWindowEnd
+		case 1198785859:
+			return engineConfiguration->misfireWindowEnd;
+// misfireEmaAlphaDecel
+		case -1819842742:
+			return engineConfiguration->misfireEmaAlphaDecel;
+// misfireEmaAlphaAccel
+		case -1823472379:
+			return engineConfiguration->misfireEmaAlphaAccel;
+// misfireWobbleAlphaRise
+		case 1919748872:
+			return engineConfiguration->misfireWobbleAlphaRise;
+// misfireWobbleAlphaFall
+		case 1919308692:
+			return engineConfiguration->misfireWobbleAlphaFall;
+// misfireSettleCycles
+		case -631434424:
+			return engineConfiguration->misfireSettleCycles;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5627,6 +5663,66 @@ bool setConfigValueByName(const char *name, float value) {
 		case 602046867:
 	{
 		engineConfiguration->rotationalIdleController.auto_engage_clt = (int)value;
+		return 1;
+	}
+		case -2092512610:
+	{
+		engineConfiguration->misfireDetectionEnabled = (int)value;
+		return 1;
+	}
+		case 867875269:
+	{
+		engineConfiguration->misfireConsecutiveCount = (int)value;
+		return 1;
+	}
+		case -2093732642:
+	{
+		engineConfiguration->misfireWindowFirings = (int)value;
+		return 1;
+	}
+		case -677106038:
+	{
+		engineConfiguration->misfireCountThreshold = (int)value;
+		return 1;
+	}
+		case -1173331233:
+	{
+		engineConfiguration->misfireK = value;
+		return 1;
+	}
+		case -175438406:
+	{
+		engineConfiguration->misfireWindowStart = value;
+		return 1;
+	}
+		case 1198785859:
+	{
+		engineConfiguration->misfireWindowEnd = value;
+		return 1;
+	}
+		case -1819842742:
+	{
+		engineConfiguration->misfireEmaAlphaDecel = value;
+		return 1;
+	}
+		case -1823472379:
+	{
+		engineConfiguration->misfireEmaAlphaAccel = value;
+		return 1;
+	}
+		case 1919748872:
+	{
+		engineConfiguration->misfireWobbleAlphaRise = value;
+		return 1;
+	}
+		case 1919308692:
+	{
+		engineConfiguration->misfireWobbleAlphaFall = value;
+		return 1;
+	}
+		case -631434424:
+	{
+		engineConfiguration->misfireSettleCycles = (int)value;
 		return 1;
 	}
 		case -1658957891:
