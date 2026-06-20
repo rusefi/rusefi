@@ -17,5 +17,5 @@ You can define plain text help that users can access via a menu.
 
 **3. Setting Context Help (Tooltips)**
 You can add short help tips (a small blue square with a question mark) to specific constants or variables in your dialogs.
-*   **Syntax:** `constantName = "Your Help Text"`.
+*   **Syntax:** `constantName = "Your Help Text. Use <br> for new lines."`.
 *   **Definition Rule:** These specific help tips **must** be defined inside the dedicated `[SettingContextHelp]` section.
