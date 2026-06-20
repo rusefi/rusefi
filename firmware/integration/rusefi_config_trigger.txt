@@ -16,4 +16,4 @@
 #define TRIGGER_WITHOUT_TDC "shapeWithoutTdc"
 
 ! this is shared between tunerstudio.template.ini and FiringOrderTSLogic
-#define IGNITION_OUTPUT "Ignition Output"
+#define IGNITION_OUTPUT "Ignition Cylinder"
