@@ -361,11 +361,12 @@
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define CRANKING_ADVANCE_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
-#define cranking_condition_e_auto_enum 0="CCNONE",1="CC_BRAKE",2="CC_CLUTCH"
+#define cranking_condition_e_auto_enum 0="CCNONE",1="CC_BRAKE",2="CC_CLUTCH",3="CC_CLUTCH_DOWN"
 #define cranking_condition_e_CC_BRAKE 1
 #define cranking_condition_e_CC_CLUTCH 2
+#define cranking_condition_e_CC_CLUTCH_DOWN 3
 #define cranking_condition_e_CCNONE 0
-#define cranking_condition_e_enum "None", "Brake", "Clutch"
+#define cranking_condition_e_enum "None", "Brake", "Clutch Up", "Clutch Down"
 #define CRANKING_CURVE_SIZE 8
 #define CRANKING_CYCLE_CLT_SIZE 4
 #define CRANKING_ENRICH_CLT_COUNT 6
@@ -1588,7 +1589,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3084973553
+#define SIGNATURE_HASH 3135362733
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2205,7 +2206,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.06.19.alphax-2chan.3084973553"
+#define TS_SIGNATURE "rusEFI master.2026.06.20.alphax-2chan.3135362733"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

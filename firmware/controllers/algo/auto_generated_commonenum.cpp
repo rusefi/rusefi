@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri May 15 12:26:08 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jun 20 02:44:02 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -519,6 +519,8 @@ const char *getCranking_condition_e(cranking_condition_e value) {
 			return "CC_BRAKE";
 		case CC_CLUTCH:
 			return "CC_CLUTCH";
+		case CC_CLUTCH_DOWN:
+			return "CC_CLUTCH_DOWN";
 	}
 	return NULL;
 }
