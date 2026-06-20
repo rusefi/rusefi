@@ -6,7 +6,7 @@ package com.rusefi.config.generated;
 import com.rusefi.config.*;
 
 public class TriggerVariableRegistryValues {
-	public static final String IGNITION_OUTPUT = "Ignition Output";
+	public static final String IGNITION_OUTPUT = "Ignition Cylinder";
 	public static final String TRIGGER_COMMENT = "#";
 	public static final String TRIGGER_CYCLE_DURATION = "cycleDuration";
 	public static final String TRIGGER_GAP_FROM = "gapFrom";
