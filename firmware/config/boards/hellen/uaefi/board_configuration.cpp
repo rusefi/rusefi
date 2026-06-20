@@ -40,6 +40,7 @@ static void uaefi_boardConfigOverrides() {
 	setHellenVbatt();
 
 	hellenMegaSdWithAccelerometer();
+	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
   engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM6;
 
