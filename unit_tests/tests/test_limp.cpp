@@ -274,8 +274,37 @@ TEST(limp, oilPressureStartupFailureCase) {
 	ASSERT_FALSE(dut.allowInjection());
 }
 
+TEST(limp, oilPressureStartupEnableProtect) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Configure "After Start" protection
+	engineConfiguration->minOilPressureAfterStart = 200;
+
+	// explicitly set it to false.
+	engineConfiguration->enableOilPressureProtect = false;
+
+	LimpManager dut;
+
+	// Low oil pressure!
+	Sensor::setMockValue(SensorType::OilPressure, 50);
+
+	// Start the engine
+	engine->rpmCalculator.setRpmValue(1000);
+
+	// update & check: injection should be allowed
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	advanceTimeUs(5.5e6);
+	dut.updateState(1000, getTimeNowNt());
+
+	// It SHOULD stay TRUE because enableOilPressureProtect is false.
+	EXPECT_FALSE(dut.allowInjection());
+}
+
 TEST(limp, oilPressureStartupSuccessCase) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->enableOilPressureProtect = true;
 	engineConfiguration->minOilPressureAfterStart = 200;
 
 	LimpManager dut;
