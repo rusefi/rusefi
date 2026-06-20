@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23620">
+    <page number="0" size="23660">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260619</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260620</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -3139,6 +3139,18 @@ end</constant>
          0
 </constant>
         <constant digits="0" name="minOilPressureAfterStart" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0</constant>
+        <constant digits="0" name="misfireConsecutiveCount" units="events">0</constant>
+        <constant digits="0" name="misfireCountThreshold" units="events">0</constant>
+        <constant name="misfireDetectionEnabled">"disabled"</constant>
+        <constant digits="3" name="misfireEmaAlphaAccel" units="">0.0</constant>
+        <constant digits="3" name="misfireEmaAlphaDecel" units="">0.0</constant>
+        <constant digits="1" name="misfireK" units="">0.0</constant>
+        <constant digits="0" name="misfireSettleCycles" units="cycles">0</constant>
+        <constant digits="0" name="misfireWindowEnd" units="deg">0</constant>
+        <constant digits="0" name="misfireWindowFirings" units="firings">0</constant>
+        <constant digits="0" name="misfireWindowStart" units="deg">0</constant>
+        <constant digits="3" name="misfireWobbleAlphaFall" units="">0.0</constant>
+        <constant digits="3" name="misfireWobbleAlphaRise" units="">0.0</constant>
         <constant name="modeledFlowIdle">"no"</constant>
         <constant name="msIoBox0_id">"Off"</constant>
         <constant name="msIoBox0_vss">"Off"</constant>
@@ -5144,7 +5156,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260619" nPages="1" signature="rusEFI master.2026.06.19.f407-discovery.2361006643" version="5.0"/>
+    <versionInfo firmwareInfo="20260619" nPages="1" signature="rusEFI master.2026.06.20.f407-discovery.1358246829" version="5.0"/>
     <bibliography author="rusEFI 20260619" writeDate="date"/>
     <settings/>
     <userComments/>
