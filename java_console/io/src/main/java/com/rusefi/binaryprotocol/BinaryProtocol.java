@@ -124,8 +124,12 @@ public class BinaryProtocol {
         // stale sensor data so a subsequent ECU doesn't inherit values from this one.
         // This is the only mechanism that fires NOT_CONNECTED on the splash screen — the
         // ConnectionWatchdog exists only inside ConsoleUI and is not created during splash.
+        // Skip the global status change for short-lived scanner probes (notifyGlobalStatusOnClose=false)
+        // so they don't disrupt the main console connection.
         stream.addCloseListener(() -> {
-            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+            if (linkManager.getNotifyGlobalStatusOnClose()) {
+                ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+            }
             SensorCentral.getInstance().reset();
         });
     }
@@ -191,6 +195,7 @@ public class BinaryProtocol {
      * @return null if everything fine, message instead
      */
     public String connectAndReadConfiguration(Arguments arguments, DataListener listener) {
+        log.info("connectAndReadConfiguration: starting");
         try {
             signature = getSignature(stream);
             if (signature == null) {
@@ -200,6 +205,7 @@ public class BinaryProtocol {
             }
             log.info(stream + ": Got [" + signature + "] signature");
         } catch (IOException e) {
+            log.info("Failed to read signature: " + e);
             return "Failed to read signature " + e;
         }
 
@@ -232,6 +238,7 @@ public class BinaryProtocol {
             // Let's check if we can use reflection or if there is a better way.
             // For now, let's try to fix the import or use the full name if it's available.
         } catch (IniNotFoundException e) {
+            log.info("INI not found for signature: " + signature);
             close();
             return "Failed to located .ini";
         }
@@ -242,7 +249,10 @@ public class BinaryProtocol {
         int pageSize = iniFile.getMetaInfo().getPageSize(0);
         log.info("pageSize=" + pageSize);
         try {
-            readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
+            if (!readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature))) {
+                close();
+                return "Failed to read calibration image from controller";
+            }
         } catch (IllegalStateException e) {
             close();
             return e.getMessage();
@@ -253,6 +263,7 @@ public class BinaryProtocol {
         if (linkManager.getNeedPullData())
             startPullThread(listener);
         binaryProtocolLogger.start();
+        log.info("connectAndReadConfiguration: completed successfully");
         return null;
     }
 
@@ -355,8 +366,9 @@ public class BinaryProtocol {
 
     /**
      * read complete tune from physical data stream
+     * @return true if image was successfully read (or not needed), false if read failed
      */
-    public void readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
+    public boolean readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
         if (arguments.needImage) {
             ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
@@ -365,15 +377,23 @@ public class BinaryProtocol {
                 // prior 2026 we have a bug sending duplicate error codes from validateOffsetCount, see #9145
                 dropPending(stream);
                 image = readFullImageFromController(arguments, meta);
-                if (image.isEmpty())
-                    return;
+                if (image.isEmpty()) {
+                    // Image read failed — revert to NOT_CONNECTED so the watchdog can retry.
+                    // Without this, the status stays LOADING indefinitely.
+                    ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+                    return false;
+                }
             }
             ConfigurationImage loadedImage = image.getConfigurationImage();
             setConfigurationImage(loadedImage);
             state.setCachedImage(loadedImage);
             log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
         }
-        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        // Only update global connection status for persistent connections (not scanner probes)
+        if (linkManager.getNotifyGlobalStatusOnClose()) {
+            ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        }
+        return true;
     }
 
     public static class Arguments {
