@@ -100,6 +100,125 @@ static std::string cleanField(std::string s) {
     return out;
 }
 
+// Splits a string on `delim`, preserving empty fields.
+static std::vector<std::string> split(const std::string& s, char delim) {
+    std::vector<std::string> out;
+    std::string cur;
+    for (char c : s) {
+        if (c == delim) {
+            out.push_back(cur);
+            cur.clear();
+        } else {
+            cur += c;
+        }
+    }
+    out.push_back(cur);
+    return out;
+}
+
+static std::string rstripCR(std::string s) {
+    while (!s.empty() && (s.back() == '\r' || s.back() == '\n')) {
+        s.pop_back();
+    }
+    return s;
+}
+
+// Converts a text/ASCII TunerStudio MSL log into CSV. The text MSL layout is:
+//   "signature ..."                  (quoted metadata line)
+//   "Capture Date: ..."              (quoted metadata line)
+//   #                                (marker line)
+//   Time<TAB>field<TAB>field...      (field-name header row)
+//   s<TAB>units<TAB>units...         (units row)
+//   <tab-separated data rows>
+// The CSV header combines each name with its units as "name (units)" and the
+// tab-separated data rows are re-emitted as comma-separated, CSV-escaped rows.
+static bool convertTextMslToCsv(const char* mslPath, const char* csvPath) {
+    FILE* in = std::fopen(mslPath, "r");
+    if (!in) {
+        std::fprintf(stderr, "convertMslToCsv: failed to open input '%s'\n", mslPath);
+        return false;
+    }
+
+    std::vector<std::string> lines;
+    {
+        std::string line;
+        int c;
+        while ((c = std::fgetc(in)) != EOF) {
+            if (c == '\n') {
+                lines.push_back(rstripCR(line));
+                line.clear();
+            } else {
+                line += char(c);
+            }
+        }
+        if (!line.empty()) {
+            lines.push_back(rstripCR(line));
+        }
+    }
+    std::fclose(in);
+
+    // Locate the field-name header row: the first line that contains a TAB and
+    // is not a quoted metadata line or the '#' marker.
+    size_t headerIdx = lines.size();
+    for (size_t i = 0; i < lines.size(); i++) {
+        const std::string& l = lines[i];
+        if (l.empty() || l == "#" || (!l.empty() && l[0] == '"')) {
+            continue;
+        }
+        if (l.find('\t') != std::string::npos) {
+            headerIdx = i;
+            break;
+        }
+    }
+    if (headerIdx >= lines.size()) {
+        std::fprintf(stderr, "convertMslToCsv: no header row found in text MSL '%s'\n", mslPath);
+        return false;
+    }
+
+    std::vector<std::string> names = split(lines[headerIdx], '\t');
+    std::vector<std::string> units;
+    size_t dataStart = headerIdx + 1;
+    // The row right after the names is the units row in standard TS MSL logs.
+    if (dataStart < lines.size() && lines[dataStart].find('\t') != std::string::npos) {
+        units = split(lines[dataStart], '\t');
+        dataStart++;
+    }
+
+    FILE* out = std::fopen(csvPath, "w");
+    if (!out) {
+        std::fprintf(stderr, "convertMslToCsv: failed to open output '%s'\n", csvPath);
+        return false;
+    }
+
+    // CSV header row: "name (units)" per column
+    for (size_t i = 0; i < names.size(); i++) {
+        std::string col = names[i];
+        if (i < units.size() && !units[i].empty()) {
+            col += " (" + units[i] + ")";
+        }
+        std::fputs(cleanField(col).c_str(), out);
+        std::fputc(i + 1 == names.size() ? '\n' : ',', out);
+    }
+
+    uint64_t records = 0;
+    for (size_t i = dataStart; i < lines.size(); i++) {
+        if (lines[i].empty()) {
+            continue;
+        }
+        std::vector<std::string> cells = split(lines[i], '\t');
+        for (size_t j = 0; j < cells.size(); j++) {
+            std::fputs(cleanField(cells[j]).c_str(), out);
+            std::fputc(j + 1 == cells.size() ? '\n' : ',', out);
+        }
+        records++;
+    }
+
+    std::fclose(out);
+    std::printf("convertMslToCsv: wrote %llu records, %zu fields to %s (text MSL)\n",
+                (unsigned long long)records, names.size(), csvPath);
+    return true;
+}
+
 } // namespace
 
 bool convertMslToCsv(const char* mslPath, const char* csvPath) {
@@ -117,9 +236,9 @@ bool convertMslToCsv(const char* mslPath, const char* csvPath) {
         return false;
     }
     if (std::memcmp(hdr, "MLVLG", 5) != 0) {
-        std::fprintf(stderr, "convertMslToCsv: bad magic in '%s'\n", mslPath);
+        // Not a binary MLVLG log - fall back to the text TunerStudio MSL parser.
         std::fclose(in);
-        return false;
+        return convertTextMslToCsv(mslPath, csvPath);
     }
 
     uint32_t dataBeginIndex = readU32BE(hdr + 16);
