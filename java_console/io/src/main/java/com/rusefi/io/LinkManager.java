@@ -192,6 +192,10 @@ public class LinkManager implements Closeable {
         return this;
     }
 
+    public boolean getNotifyGlobalStatusOnClose() {
+        return notifyGlobalStatusOnClose;
+    }
+
     public void disconnect() {
         log.info("disconnect");
         isDisconnectedByUser = true;
@@ -355,15 +359,23 @@ public class LinkManager implements Closeable {
     }
 
     public void restart() {
-        if (isDisconnectedByUser)
+        if (isDisconnectedByUser) {
+            log.info("restart: skipped, disconnected by user");
             return;
+        }
+        log.info("restart: closing current connection");
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
         final Set<String> ports = getCommPorts();
         final boolean isPortAvailableAgain = ports.contains(lastTriedPort);
-        log.info("restart isPortAvailableAgain=" + isPortAvailableAgain);
+        log.info("restart isPortAvailableAgain=" + isPortAvailableAgain + " port=" + lastTriedPort);
         if (isPortAvailableAgain) {
-            connect(lastTriedPort, false);
+            // Use isScanningForEcu=true to prevent ExitUtil.exit() on failure —
+            // the watchdog will retry again on the next cycle.
+            log.info("restart: calling connect()");
+            connect(lastTriedPort, true);
+        } else {
+            log.info("restart: port not available, skipping connect");
         }
     }
 
@@ -375,7 +387,7 @@ public class LinkManager implements Closeable {
         if (connector != null) {
             connector.stop();
         }
-        isStarted = false; // Connector is dead and cant be in started state (Otherwise the Exception will raised)
+        isStarted = false;
     }
 
     public static String unpackConfirmation(String message) {
