@@ -2211,7 +2211,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.06.20.subaru_eg33_f7.2930625113"
+#define TS_SIGNATURE "rusEFI master.2026.06.21.subaru_eg33_f7.2930625113"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
