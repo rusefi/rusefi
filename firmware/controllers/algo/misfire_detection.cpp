@@ -190,7 +190,11 @@ void MisfireController::evaluateSegment(float segDurationUs) {
 void MisfireController::onEnginePhase(float /*rpm*/, efitick_t edgeTimestamp,
 									  angle_t currentPhase, angle_t nextPhase) {
 	bool enabled = engineConfiguration->misfireDetectionEnabled;
+#if EFI_IDLE_CONTROL
 	bool idle = engine->module<IdleController>()->isIdling;
+#else
+	bool idle = true;
+#endif
 	bool monitoring = enabled && idle;
 
 	misfireDetectionActive = monitoring && m_emaSeeded && isSettled();
