@@ -3,6 +3,7 @@ apply from: dependenciesPath
 
 dependencies {
     api project(':ecu_io')
+    api project(':ui')
     api project(':models')
     api project(':inifile')
     implementation global_libs.json

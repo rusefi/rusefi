@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.ui.lua.LuaIncludeSyntax;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.lua.LuaService;
 import org.json.simple.JSONArray;
@@ -11,10 +12,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -378,8 +381,18 @@ public class EcuMcpServer {
         long timeout = asLong(args.get("timeoutMs"), 120_000L);
         if (script == null && path == null)
             return errorBody("Provide 'script' or 'path'");
-        if (script == null)
-            script = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.US_ASCII);
+        if (script == null) {
+            Path scriptPath = Paths.get(path);
+            script = new String(Files.readAllBytes(scriptPath), StandardCharsets.US_ASCII);
+            // If we have a path, we can support --include relative to that path
+            script = LuaIncludeSyntax.reloadScript(script, name -> {
+                try {
+                    return new String(Files.readAllBytes(scriptPath.getParent().resolve(name)), StandardCharsets.US_ASCII);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error reading included file [" + name + "]: " + e.getMessage());
+                }
+            });
+        }
 
         LinkManager lm = ensureConnected(null);
         LuaService.LuaApplyResult r = LuaService.applyLuaScript(lm, script, timeout);

@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LuaIncludeSyntax {
-    static String getScriptName(String lua) {
+    public static String getScriptName(String lua) {
         Pattern p = Pattern.compile(".*--\\s*scriptname\\s*([\\S]+)", Pattern.MULTILINE);
         Matcher m = p.matcher(lua);
         if (m.find())
@@ -12,7 +12,7 @@ public class LuaIncludeSyntax {
         return null;
     }
 
-    static String reloadScript(String lua, ContentSource source) {
+    public static String reloadScript(String lua, ContentSource source) {
 
         int index = 0;
         Pattern startPattern = Pattern.compile(".*--\\s*include\\s*([\\S]+)", Pattern.MULTILINE);

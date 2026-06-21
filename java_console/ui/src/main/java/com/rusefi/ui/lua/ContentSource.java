@@ -1,5 +1,5 @@
 package com.rusefi.ui.lua;
 
-interface ContentSource {
+public interface ContentSource {
     String getContent(String name);
 }
