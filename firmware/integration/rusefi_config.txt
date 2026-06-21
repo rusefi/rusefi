@@ -1062,10 +1062,14 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	bit knockBankCyl11,"Channel 2","Channel 1"
 	bit knockBankCyl12,"Channel 2","Channel 1"
 	bit tcuEnabled,"enabled","disabled"
-bit canBroadcastUseChannelTwo,"second","first"
+	! bit 27
 	bit useRawOutputToDriveIdleStepper,"yes","no";If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
-! bit 29
-bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
+	! bit 29
+	bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
+
+#define can_broadcast_channel_e_enum "first", "second", "3rd"
+custom can_broadcast_channel_e 1 bits, U08, @OFFSET@, [0:1], @@can_broadcast_channel_e_enum@@
+can_broadcast_channel_e canBroadcastUseChannel;
 
 
 	dc_io[ETB_COUNT iterate] etbIo

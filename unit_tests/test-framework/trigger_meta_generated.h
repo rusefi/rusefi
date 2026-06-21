@@ -3,7 +3,7 @@
 // begin
 #pragma once
 #include "rusefi_types.h"
-#define IGNITION_OUTPUT "Ignition Output"
+#define IGNITION_OUTPUT "Ignition Cylinder"
 #define TRIGGER_COMMENT "#"
 #define TRIGGER_CYCLE_DURATION "cycleDuration"
 #define TRIGGER_GAP_FROM "gapFrom"

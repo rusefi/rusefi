@@ -549,8 +549,13 @@ typedef enum __attribute__ ((__packed__)) {
 	CAN_BUS_HONDA_K = 11,
 	CAN_AIM_DASH = 12,
 	CAN_BUS_MS_SIMPLE_BROADCAST = 13,
-
 } can_nbc_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	CAN_BUS_FIRST = 0,
+	CAN_BUS_SECOND = 1,
+	CAN_BUS_THIRD = 2,
+} can_broadcast_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	TCHARGE_MODE_RPM_TPS = 0,
