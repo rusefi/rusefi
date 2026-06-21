@@ -1,3 +1,12 @@
+/**
+ * @file ignition_controller.cpp
+ * @brief Ignition key (ignition switch) input handling.
+ *
+ * Determines whether the ignition key is in the "on" position, supporting either a
+ * digital ignition-key pin (which takes priority) or an analog "voltage from key"
+ * input compared against a configurable threshold.
+ */
+
 #include "pch.h"
 
 bool isIgnVoltage() {

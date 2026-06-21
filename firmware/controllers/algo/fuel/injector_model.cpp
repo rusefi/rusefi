@@ -1,3 +1,12 @@
+/**
+ * @file injector_model.cpp
+ * @brief Injector model.
+ *
+ * Converts a requested fuel mass into an injector pulse width. Accounts for static
+ * injector flow, battery-voltage/fuel-pressure dependent deadtime, small-pulse
+ * non-linearity correction and (when enabled) staged secondary injectors.
+ */
+
 #include "pch.h"
 
 #include "injector_model.h"

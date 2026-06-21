@@ -1,3 +1,12 @@
+/**
+ * @file lua.cpp
+ * @brief Lua scripting engine integration.
+ *
+ * Owns the embedded Lua virtual machine lifecycle: allocation, loading user scripts,
+ * the periodic Lua thread that runs onTick/onCanRx callbacks, and reset/reload
+ * handling. User-facing rusEFI APIs are registered separately in lua_hooks.cpp.
+ */
+
 #include "pch.h"
 
 #include "rusefi_lua.h"

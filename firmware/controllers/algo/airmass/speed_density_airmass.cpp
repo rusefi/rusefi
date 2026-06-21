@@ -1,3 +1,12 @@
+/**
+ * @file speed_density_airmass.cpp
+ * @brief Speed-density air-mass model.
+ *
+ * Estimates the air mass trapped per cylinder per cycle from manifold pressure
+ * (MAP), intake air temperature and the volumetric-efficiency table using the
+ * ideal-gas law. This is the default airflow model when no MAF sensor is used.
+ */
+
 #include "pch.h"
 #include "speed_density_airmass.h"
 #include "accel_enrichment.h"

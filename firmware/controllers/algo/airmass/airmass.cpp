@@ -1,3 +1,12 @@
+/**
+ * @file airmass.cpp
+ * @brief Base air-mass model.
+ *
+ * Provides shared helpers used by the concrete air-charge models (speed-density,
+ * MAF, Alpha-N): selecting the VE table load axis and applying VE overrides /
+ * blend tables on top of the base volumetric-efficiency lookup.
+ */
+
 #include "pch.h"
 
 #include "airmass.h"

@@ -1,3 +1,11 @@
+/**
+ * @file torque_estimator.cpp
+ * @brief Engine torque estimation table builder.
+ *
+ * Populates the estimated-torque curve used for reporting and torque-based features
+ * by deriving relative torque across the RPM range from the engine's load/airflow model.
+ */
+
 #include "pch.h"
 #include "second_tables.h"
 

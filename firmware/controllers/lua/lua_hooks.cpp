@@ -1,3 +1,12 @@
+/**
+ * @file lua_hooks.cpp
+ * @brief Lua API hooks.
+ *
+ * Registers the rusEFI functions exposed to user Lua scripts: sensor reads, output
+ * control, table/curve lookups, CAN transmit, timers and configuration access.
+ * These bindings define the scripting surface available from the Lua VM in lua.cpp.
+ */
+
 #include "pch.h"
 
 #include "rusefi_lua.h"

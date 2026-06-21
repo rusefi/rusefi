@@ -1,3 +1,12 @@
+/**
+ * @file vr_pwm.cpp
+ * @brief Variable-reluctance sensor threshold control.
+ *
+ * Drives the PWM outputs that program the adaptive detection threshold of the
+ * variable-reluctance (VR) trigger-sensor conditioner chips, looking the duty up
+ * from an RPM-based curve.
+ */
+
 #include "pch.h"
 
 #include "vr_pwm.h"

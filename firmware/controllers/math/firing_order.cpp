@@ -1,3 +1,12 @@
+/**
+ * @file firing_order.cpp
+ * @brief Cylinder firing-order tables.
+ *
+ * Defines the predefined firing-order sequences for the supported cylinder counts
+ * and provides lookup helpers that map an ignition/injection event index to the
+ * corresponding physical cylinder.
+ */
+
 #include "pch.h"
 
 static const uint8_t order_1[] = {1};

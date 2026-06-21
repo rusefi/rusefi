@@ -1,8 +1,15 @@
-#include "pch.h"
-
 /**
+ * @file start_stop.cpp
+ * @brief Start/Stop button engine control.
+ *
+ * Implements the push-button start/stop behavior: on a button press it engages the
+ * starter to crank the engine (and can stop a running engine), honoring the relevant
+ * safety conditions.
+ *
  * See test_start_stop.cpp
  */
+
+#include "pch.h"
 
 #include "start_stop.h"
 #include "ignition_controller.h"

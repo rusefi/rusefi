@@ -1,3 +1,10 @@
+/**
+ * @file stepper_dual_hbridge.cpp
+ * @brief Dual H-bridge stepper motor driver.
+ *
+ * Hardware backend that steps a bipolar stepper motor (e.g. an idle-air-control valve)
+ * by energizing two H-bridges through the configured step sequence.
+ */
 
 #include "pch.h"
 
@@ -6,7 +13,7 @@
 #include "stepper.h"
 #include "dc_motor.h"
 
-static const int8_t phaseA[] = 
+static const int8_t phaseA[] =
 {
     1,
     1,
@@ -14,7 +21,7 @@ static const int8_t phaseA[] =
     -1
 };
 
-static const int8_t phaseB[] = 
+static const int8_t phaseB[] =
 {
     -1,
     1,
@@ -89,7 +96,7 @@ bool DualHBridgeStepper::update(float dutyMult) {
 	if (engineConfiguration->stepperNumMicroSteps > 1) {
 	    // phase B is 90 degrees shifted
 	    uint8_t m_phaseB = (m_phase + engineConfiguration->stepperNumMicroSteps) & tableSizeMask;
-	    
+
 	    // Set phases according to the table
 	    m_motorPhaseA->set(dutyMult * microPhases[m_phase]);
 	    m_motorPhaseB->set(dutyMult * microPhases[m_phaseB]);

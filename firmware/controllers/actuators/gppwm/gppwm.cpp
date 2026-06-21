@@ -1,3 +1,12 @@
+/**
+ * @file gppwm.cpp
+ * @brief General Purpose PWM (GPPWM) outputs.
+ *
+ * Drives a set of user-configurable channels that produce either an on/off or a
+ * PWM signal. Each channel's duty/state is looked up from a configurable input
+ * (RPM, CLT, TPS, etc.) via 1D/2D tables, allowing arbitrary auxiliary devices
+ * (fans, pumps, solenoids) to be controlled without dedicated firmware code.
+ */
 
 #include "pch.h"
 

@@ -1,3 +1,12 @@
+/**
+ * @file lambda_monitor.cpp
+ * @brief Lambda protection monitor.
+ *
+ * Watches measured lambda against an allowed limit while under load and, after a
+ * configurable time delay, signals a dangerously-lean condition so the limp manager
+ * can cut power to protect the engine.
+ */
+
 #include "pch.h"
 
 #include "lambda_monitor.h"

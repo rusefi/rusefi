@@ -1,3 +1,11 @@
+/**
+ * @file tc_4.cpp
+ * @brief Generic 4-speed transmission controller.
+ *
+ * Controls the shift solenoids of a simple 4-speed automatic transmission, selecting
+ * the solenoid pattern for the requested gear.
+ */
+
 #include "pch.h"
 
 #include "tc_4.h"

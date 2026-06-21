@@ -1,3 +1,12 @@
+/**
+ * @file limp_manager.cpp
+ * @brief Limp-home / protection manager.
+ *
+ * Central place that decides when fuel, spark or engine power must be cut or limited.
+ * Aggregates the various protection inputs (RPM/CLT/oil-pressure/boost limits, lambda
+ * protection, etc.) into the allowed-injection/allowed-ignition state machine.
+ */
+
 #include "pch.h"
 
 #include "limp_manager.h"

@@ -1,3 +1,12 @@
+/**
+ * @file misfire_detection.cpp
+ * @brief Misfire detection.
+ *
+ * Detects combustion misfires by tracking per-cycle crankshaft acceleration and
+ * comparing it against an adaptive, noise-aware (EMA + wobble) threshold. Detected
+ * misfires are reported to the malfunction-indicator subsystem.
+ */
+
 #include "pch.h"
 #include "misfire_detection.h"
 
