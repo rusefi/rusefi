@@ -81,6 +81,10 @@ public class ConnectionAndMeta {
     public static void downloadFile(String localTargetFileName, ConnectionAndMeta connectionAndMeta, DownloadProgressListener listener) throws IOException {
         HttpURLConnection httpConnection = connectionAndMeta.getHttpConnection();
         long completeFileSize = connectionAndMeta.getCompleteFileSize();
+        if (completeFileSize == 0) {
+            log.error("Server did not provide valid metadata, zero size?!");
+            completeFileSize = 1;
+        }
         Objects.requireNonNull(httpConnection, "httpConnection");
         BufferedInputStream in = new BufferedInputStream(httpConnection.getInputStream());
         FileOutputStream fos = new FileOutputStream(localTargetFileName);
