@@ -712,9 +712,6 @@ float getConfigValueByHash(const int hash) {
 // tcuEnabled
 		case 1997663388:
 			return engineConfiguration->tcuEnabled;
-// canBroadcastUseChannelTwo
-		case 1181153770:
-			return engineConfiguration->canBroadcastUseChannelTwo;
 // useRawOutputToDriveIdleStepper
 		case 839486731:
 			return engineConfiguration->useRawOutputToDriveIdleStepper;
@@ -3388,11 +3385,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1997663388:
 	{
 		engineConfiguration->tcuEnabled = (int)value;
-		return 1;
-	}
-		case 1181153770:
-	{
-		engineConfiguration->canBroadcastUseChannelTwo = (int)value;
 		return 1;
 	}
 		case 839486731:

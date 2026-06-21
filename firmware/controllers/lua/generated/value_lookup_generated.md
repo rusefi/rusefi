@@ -706,9 +706,6 @@ When set to yes, it enables intake air temperature-based corrections for Alpha-N
 ### tcuEnabled
 
 
-### canBroadcastUseChannelTwo
-
-
 ### useRawOutputToDriveIdleStepper
 If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
 

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jun 20 02:44:02 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Jun 21 03:44:36 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -339,6 +339,17 @@ const char *getCan_baudrate_e(can_baudrate_e value) {
 			return "B666KBPS";
 		case B83KBPS:
 			return "B83KBPS";
+	}
+	return NULL;
+}
+const char *getCan_broadcast_channel_e(can_broadcast_channel_e value) {
+	switch (value) {
+		case CAN_BUS_FIRST:
+			return "CAN_BUS_FIRST";
+		case CAN_BUS_SECOND:
+			return "CAN_BUS_SECOND";
+		case CAN_BUS_THIRD:
+			return "CAN_BUS_THIRD";
 	}
 	return NULL;
 }
