@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -154,13 +155,11 @@ public class ConnectionAndMeta {
     public ConnectionAndMeta invoke(String baseUrl) throws IOException {
         SSLContext ctx = acceptAnyCertificate();
 
-        String randomSuffix = "?r=" + UUID.randomUUID();
+        String randomSuffix = "?u=" + UUID.randomUUID();
         URL url = new URL(baseUrl + zipFileName + randomSuffix);
         log.info("Connecting to " + url);
         httpConnection = (HttpsURLConnection) url.openConnection();
-        String mySecretUA = "RE-Internal-Sync";
-        httpConnection.setRequestProperty("User-Agent", mySecretUA);
-        httpConnection.setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate");
+        configureDownloadRequest(httpConnection);
         httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
         log.info("Request Headers: " + httpConnection.getRequestProperties());
         int responseCode = httpConnection.getResponseCode();
@@ -172,6 +171,17 @@ public class ConnectionAndMeta {
         completeFileSize = httpConnection.getContentLength();
         lastModified = httpConnection.getLastModified();
         return this;
+    }
+
+    private static void configureDownloadRequest(HttpsURLConnection connection) throws ProtocolException {
+        String mySecretUA = "RE-Internal-Sync";
+        connection.setRequestMethod("GET");
+        connection.setUseCaches(false);
+        connection.setDefaultUseCaches(false);
+        connection.setRequestProperty("User-Agent", mySecretUA);
+        connection.setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+        connection.setRequestProperty("Pragma", "no-cache");
+        connection.setRequestProperty("Expires", "0");
     }
 
     private static void echoErrorStream(InputStream errorStream) {
