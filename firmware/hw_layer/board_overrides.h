@@ -110,6 +110,7 @@ extern std::optional<setup_custom_get_cylinder_fuel_trim_type> custom_board_getC
 extern std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
 
 extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
+extern std::optional<setup_custom_bool_type> custom_board_allowFlashNow;
 
 /**
  * This function checks if an override is present and calls it if available.
