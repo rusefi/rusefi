@@ -65,6 +65,14 @@ public interface ISensorHolder {
             if (outputChannelValues.containsKey(channel))
                 continue;
 
+            // Skip the synthetic runtimeDataRateGauge — its value is published directly
+            // by SensorCentral, added around 1634284766aeee57bf1315e61238371ae8137758, not evaluated as an expression here.
+            // since this gauge is not real, we can't find it on the ini, but we find it inside the gauges, so we fail under the check of resolveExpression
+            // ending up with "Member not found for gauge" logs of around 30/second, not nice
+            if (com.opensr5.ini.ImmutableIniFileModel.RUNTIME_DATA_RATE_GAUGE.equalsIgnoreCase(e.getKey())) {
+                continue;
+            }
+
             String expression = resolveExpression(ini, channel);
             if (expression == null) {
                 log.warn("Member not found for gauge " + e.getKey() + ": " + channel);
