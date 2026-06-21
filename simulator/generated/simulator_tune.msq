@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23660">
+    <page number="0" size="23664">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -578,7 +578,7 @@
         <constant name="can2RxPin">"NONE"</constant>
         <constant name="can2TxPin">"NONE"</constant>
         <constant name="canBaudRate">"500kbps"</constant>
-        <constant name="canBroadcastUseChannelTwo">"first"</constant>
+        <constant name="canBroadcastUseChannel">"first"</constant>
         <constant name="canGpioType">"None"</constant>
         <constant name="canInputBCM">"disabled"</constant>
         <constant name="canNbcType">"None"</constant>
@@ -5154,7 +5154,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260619" nPages="1" signature="rusEFI master.2026.06.21.f407-discovery.3090468319" version="5.0"/>
+    <versionInfo firmwareInfo="20260619" nPages="1" signature="rusEFI master.2026.06.21.f407-discovery.830167777" version="5.0"/>
     <bibliography author="rusEFI 20260619" writeDate="date"/>
     <settings/>
     <userComments/>
