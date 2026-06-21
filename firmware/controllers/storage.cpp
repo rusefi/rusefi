@@ -10,6 +10,7 @@
 
 #include "storage.h"
 #include "extra_flash_pages.h"
+#include "board_overrides.h"
 
 #if EFI_CONFIGURATION_STORAGE
 #include "mpu_util.h"
@@ -18,8 +19,12 @@
 /* If any setting storage is exist or we are in unit test */
 #if EFI_CONFIGURATION_STORAGE || defined(EFI_UNIT_TEST)
 
-/* TODO: no weak please */
-__attribute__((weak)) bool boardAllowFlashNow() { return true; }
+bool boardAllowFlashNow() {
+  // placeholder, remove Oct 2026
+  return true;
+}
+
+std::optional<setup_custom_bool_type> custom_board_allowFlashNow;
 
 bool storageAllowWriteID(StorageItemId id)
 {
@@ -34,7 +39,7 @@ bool storageAllowWriteID(StorageItemId id)
 			return true;
 		}
 
-		if (!boardAllowFlashNow()) {
+		if (!get_board_override_result(custom_board_allowFlashNow, true)) {
 			return false;
 		}
 
