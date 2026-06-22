@@ -21,6 +21,7 @@ sandbox class also carries a brief comment on top describing what it does.
 | `InspectPortSandbox` | Continuously polls all serial ports and prints their detected type. |
 | `PortDetectorSandbox` | Continuously polls and prints detected serial ports and ECU signatures. |
 | `ReconnectSandbox` | Exercises ECU auto-reconnect logic against real hardware. |
+| `HeadlessConnectivitySandbox` | Headless serial auto-scan + auto-reconnect harness printing INI/gauge presence, refresh rate, and ECU messages. |
 | `PlainSerialPortScannerSandbox` | Scans serial ports for an ECU and resolves its update URL. |
 
 ## CAN / UDS
