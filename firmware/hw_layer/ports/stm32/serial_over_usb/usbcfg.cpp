@@ -235,7 +235,7 @@ static const uint8_t vcom_string1[] = {
 static const uint8_t vcom_string2[] = {
   USB_DESC_BYTE(USB_DESCRIPTOR_B_LENGTH),                    /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  USB_DESCRIPTOR_STRING_CONTENT, 0
+  USB_DESCRIPTOR_STRING_CONTENT
 };
 
 /*
@@ -252,8 +252,7 @@ static const uint8_t vcom_string3[] = {
   BOARD_SERIAL[ 8], 0, BOARD_SERIAL[ 9], 0, BOARD_SERIAL[10], 0, BOARD_SERIAL[11], 0,
   BOARD_SERIAL[12], 0, BOARD_SERIAL[13], 0, BOARD_SERIAL[14], 0, BOARD_SERIAL[15], 0,
   BOARD_SERIAL[16], 0, BOARD_SERIAL[17], 0, BOARD_SERIAL[18], 0, BOARD_SERIAL[19], 0,
-  BOARD_SERIAL[20], 0, BOARD_SERIAL[21], 0, BOARD_SERIAL[22], 0, BOARD_SERIAL[23], 0,
-  0
+  BOARD_SERIAL[20], 0, BOARD_SERIAL[21], 0, BOARD_SERIAL[22], 0, BOARD_SERIAL[23], 0
 };
 #else
 static uint8_t vcom_string3[] = {
@@ -261,29 +260,27 @@ static uint8_t vcom_string3[] = {
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
   '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0, '6', 0, '7', 0,
   '8', 0, '9', 0, 'A', 0, 'B', 0, 'C', 0, 'D', 0, 'E', 0, 'F', 0,
-  '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0, '6', 0, '7', 0,
-  0
+  '0', 0, '1', 0, '2', 0, '3', 0, '4', 0, '5', 0, '6', 0, '7', 0
 };
 #endif
 
 /* "RusEFI MSD" */
-static uint8_t msd_string4[] = {
+static const uint8_t msd_string4[] = {
   USB_DESC_BYTE(10 * 2 + 2),            /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
   'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'M', 0,
-  'S', 0, 'D', 0,
-  0
+  'S', 0, 'D', 0
 };
 
 /*
  * Strings wrappers array.
  */
 static const USBDescriptor vcom_strings[] = {
-  {sizeof vcom_string0, vcom_string0},
-  {sizeof vcom_string1, vcom_string1},
-  {sizeof vcom_string2, vcom_string2},
-  {sizeof vcom_string3, vcom_string3},
-  {sizeof msd_string4, msd_string4}
+  { sizeof(vcom_string0), vcom_string0 },
+  { sizeof(vcom_string1), vcom_string1 },
+  { sizeof(vcom_string2), vcom_string2 },
+  { sizeof(vcom_string3), vcom_string3 },
+  { sizeof(msd_string4), msd_string4 }
 };
 
 #ifndef BOARD_SERIAL
@@ -490,10 +487,10 @@ static bool hybridRequestHook(USBDriver *usbp) {
  * USB driver configuration.
  */
 const USBConfig usbcfg = {
-  usb_event,
-  get_descriptor,
-  hybridRequestHook,
-  sof_handler
+  .event_cb = usb_event,
+  .get_descriptor_cb = get_descriptor,
+  .requests_hook_cb = hybridRequestHook,
+  .sof_cb = sof_handler
 };
 
 /*
