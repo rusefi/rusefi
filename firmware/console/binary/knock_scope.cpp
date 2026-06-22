@@ -39,6 +39,11 @@ static bool isRunning = false;
 
 static size_t readPos = 0;
 static size_t writePos = 0;
+// occupiedBytes includes the batch pinned during TX, pendingBytes does not.
+static size_t occupiedBytes = 0;
+static size_t pendingBytes = 0;
+static bool sendInProgress = false;
+static bool disablePending = false;
 static uint32_t totalFramesWritten = 0;
 static uint16_t droppedSinceLastRead = 0;
 
@@ -51,14 +56,11 @@ static size_t ringCapacity() {
 }
 
 static size_t ringUsedUnlocked() {
-	const size_t cap = ringCapacity();
-	if (cap == 0) {
-		return 0;
-	}
-	if (writePos >= readPos) {
-		return writePos - readPos;
-	}
-	return cap - readPos + writePos;
+	return occupiedBytes;
+}
+
+static size_t ringPendingUnlocked() {
+	return pendingBytes;
 }
 
 static size_t ringFreeUnlocked() {
@@ -66,8 +68,7 @@ static size_t ringFreeUnlocked() {
 	if (cap == 0) {
 		return 0;
 	}
-	// Reserve one byte so empty and full are distinguishable.
-	return cap - 1 - ringUsedUnlocked();
+	return cap - ringUsedUnlocked();
 }
 
 static void ringCopyFrom(size_t pos, void* dst, size_t len) {
@@ -107,7 +108,7 @@ static void ringAdvanceWrite(size_t len) {
 }
 
 static bool ringPeekFrameHeader(KnockScopeFrameHeader* header) {
-	if (ringUsedUnlocked() < sizeof(KnockScopeFrameHeader)) {
+	if (ringPendingUnlocked() < sizeof(KnockScopeFrameHeader)) {
 		return false;
 	}
 	ringCopyFrom(readPos, header, sizeof(*header));
@@ -123,32 +124,38 @@ static void ringDropOldestFrameUnlocked() {
 	if (!ringPeekFrameHeader(&header)) {
 		// Corrupt or partial data — drop everything.
 		readPos = writePos;
+		occupiedBytes = 0;
+		pendingBytes = 0;
 		return;
 	}
 
 	const size_t frameBytes = ringFrameBytes(header);
-	if (frameBytes > ringUsedUnlocked()) {
+	if (frameBytes > ringPendingUnlocked()) {
 		readPos = writePos;
+		occupiedBytes = 0;
+		pendingBytes = 0;
 		return;
 	}
 
 	ringAdvanceRead(frameBytes);
+	occupiedBytes -= frameBytes;
+	pendingBytes -= frameBytes;
 	droppedSinceLastRead++;
 }
 
 static void updateReadyFlagUnlocked() {
-	engine->outputChannels.knockScopeReady = readPos != writePos;
+	engine->outputChannels.knockScopeReady = pendingBytes != 0;
 }
 
 static size_t countPendingFramesAndBytes(uint16_t* outFrameCount) {
 	size_t pos = readPos;
+	size_t remainingBytes = pendingBytes;
 	size_t framesBytes = 0;
 	uint16_t count = 0;
 	const size_t cap = ringCapacity();
 
-	while (pos != writePos) {
-		const size_t usedFromPos = (pos <= writePos) ? (writePos - pos) : (cap - pos + writePos);
-		if (usedFromPos < sizeof(KnockScopeFrameHeader)) {
+	while (remainingBytes != 0) {
+		if (remainingBytes < sizeof(KnockScopeFrameHeader)) {
 			break;
 		}
 
@@ -159,11 +166,12 @@ static size_t countPendingFramesAndBytes(uint16_t* outFrameCount) {
 		}
 
 		const size_t frameBytes = ringFrameBytes(header);
-		if (frameBytes > usedFromPos) {
+		if (frameBytes > remainingBytes) {
 			break;
 		}
 
 		framesBytes += frameBytes;
+		remainingBytes -= frameBytes;
 		count++;
 		pos = (pos + frameBytes) % cap;
 	}
@@ -174,9 +182,6 @@ static size_t countPendingFramesAndBytes(uint16_t* outFrameCount) {
 	return framesBytes;
 }
 
-/// Снимок pending-кадров под lock: иначе `knockScopePublishWindow` двигает readPos во время UART TX.
-static uint8_t s_knockScopeSendScratch[BIG_BUFFER_SIZE];
-
 bool isKnockScopeActive() {
 	return isRunning;
 }
@@ -185,7 +190,10 @@ void knockScopeEnable() {
 	if (!engineConfiguration->enableKnockScope) {
 		return;
 	}
-	if (isRunning) {
+
+	chibios_rt::CriticalSectionLocker csl;
+
+	if (isRunning || sendInProgress || disablePending) {
 		return;
 	}
 
@@ -196,6 +204,10 @@ void knockScopeEnable() {
 
 	readPos = 0;
 	writePos = 0;
+	occupiedBytes = 0;
+	pendingBytes = 0;
+	sendInProgress = false;
+	disablePending = false;
 	totalFramesWritten = 0;
 	droppedSinceLastRead = 0;
 	memset(buffer.get<uint8_t>(), 0, buffer.size());
@@ -205,37 +217,56 @@ void knockScopeEnable() {
 }
 
 void knockScopeDisable() {
-	isRunning = false;
-	buffer = {};
-	readPos = 0;
-	writePos = 0;
-	totalFramesWritten = 0;
-	droppedSinceLastRead = 0;
-	engine->outputChannels.knockScopeReady = false;
-}
+	chibios_rt::CriticalSectionLocker csl;
 
-void knockScopePublishWindow(const adcsample_t* samples, size_t count, uint8_t cylinderNumber, uint8_t channelNumber) {
-	if (!isRunning || !buffer || !samples || count == 0) {
+	isRunning = false;
+	engine->outputChannels.knockScopeReady = false;
+
+	if (sendInProgress) {
+		disablePending = true;
 		return;
 	}
 
-	const size_t maxSamplesInBuffer = (buffer.size() - sizeof(KnockScopeFrameHeader)) / sizeof(adcsample_t);
-	const size_t copiedCount = std::min(count, maxSamplesInBuffer);
-	const size_t frameBytes = sizeof(KnockScopeFrameHeader) + copiedCount * sizeof(adcsample_t);
+	buffer = {};
+	readPos = 0;
+	writePos = 0;
+	occupiedBytes = 0;
+	pendingBytes = 0;
+	sendInProgress = false;
+	disablePending = false;
+	totalFramesWritten = 0;
+	droppedSinceLastRead = 0;
+}
 
-	KnockScopeFrameHeader header = {
-		.version = kKnockScopeFrameVersion,
-		.cylinderNumber = cylinderNumber,
-		.channelNumber = channelNumber,
-		.reserved = 0,
-		.sampleCount = static_cast<uint16_t>(copiedCount),
-		.reserved2 = 0
-	};
+void knockScopePublishWindow(const adcsample_t* samples, size_t count, uint8_t cylinderNumber, uint8_t channelNumber) {
+	if (!samples || count == 0) {
+		return;
+	}
 
 	{
 		chibios_rt::CriticalSectionLocker csl;
 
+		if (!isRunning || !buffer) {
+			return;
+		}
+
+		const size_t maxSamplesInBuffer = (buffer.size() - sizeof(KnockScopeFrameHeader)) / sizeof(adcsample_t);
+		const size_t copiedCount = std::min(count, maxSamplesInBuffer);
+		const size_t frameBytes = sizeof(KnockScopeFrameHeader) + copiedCount * sizeof(adcsample_t);
+		KnockScopeFrameHeader header = {
+			.version = kKnockScopeFrameVersion,
+			.cylinderNumber = cylinderNumber,
+			.channelNumber = channelNumber,
+			.reserved = 0,
+			.sampleCount = static_cast<uint16_t>(copiedCount),
+			.reserved2 = 0
+		};
+
 		while (ringFreeUnlocked() < frameBytes) {
+			if (sendInProgress) {
+				droppedSinceLastRead++;
+				return;
+			}
 			ringDropOldestFrameUnlocked();
 		}
 
@@ -243,6 +274,8 @@ void knockScopePublishWindow(const adcsample_t* samples, size_t count, uint8_t c
 		ringAdvanceWrite(sizeof(header));
 		ringCopyTo(writePos, samples, copiedCount * sizeof(adcsample_t));
 		ringAdvanceWrite(copiedCount * sizeof(adcsample_t));
+		occupiedBytes += frameBytes;
+		pendingBytes += frameBytes;
 
 		totalFramesWritten++;
 		updateReadyFlagUnlocked();
@@ -250,12 +283,13 @@ void knockScopePublishWindow(const adcsample_t* samples, size_t count, uint8_t c
 }
 
 bool knockScopeSendPending(TsChannelBase* tsChannel) {
-	if (!tsChannel || !isRunning || !buffer) {
+	if (!tsChannel) {
 		return false;
 	}
 
 	uint16_t frameCount = 0;
 	size_t framesBytes = 0;
+	size_t sendPos = 0;
 	uint16_t dropped = 0;
 	uint32_t totalWritten = 0;
 	KnockScopeBatchHeader batch;
@@ -263,25 +297,18 @@ bool knockScopeSendPending(TsChannelBase* tsChannel) {
 	{
 		chibios_rt::CriticalSectionLocker csl;
 
-		if (readPos == writePos) {
+		if (!isRunning || !buffer || sendInProgress || pendingBytes == 0) {
 			return false;
 		}
 
 		framesBytes = countPendingFramesAndBytes(&frameCount);
 		if (frameCount == 0 || framesBytes == 0) {
 			readPos = writePos;
+			occupiedBytes = 0;
+			pendingBytes = 0;
 			updateReadyFlagUnlocked();
 			return false;
 		}
-
-		if (framesBytes > BIG_BUFFER_SIZE) {
-			readPos = writePos;
-			droppedSinceLastRead += frameCount;
-			updateReadyFlagUnlocked();
-			return false;
-		}
-
-		ringCopyFrom(readPos, s_knockScopeSendScratch, framesBytes);
 
 		dropped = droppedSinceLastRead;
 		droppedSinceLastRead = 0;
@@ -294,17 +321,44 @@ bool knockScopeSendPending(TsChannelBase* tsChannel) {
 			.totalFramesWritten = totalWritten,
 		};
 
+		sendPos = readPos;
 		ringAdvanceRead(framesBytes);
+		pendingBytes -= framesBytes;
+		sendInProgress = true;
 		updateReadyFlagUnlocked();
 	}
 
 	const size_t payloadLen = kKnockScopeBatchHeaderSize + framesBytes;
 	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, payloadLen);
 	crc = tsChannel->writePacketBody(reinterpret_cast<const uint8_t*>(&batch), sizeof(batch), crc);
-	crc = tsChannel->writePacketBody(s_knockScopeSendScratch, framesBytes, crc);
+
+	const auto* ring = buffer.get<uint8_t>();
+	const size_t firstBytes = std::min(framesBytes, ringCapacity() - sendPos);
+	crc = tsChannel->writePacketBody(ring + sendPos, firstBytes, crc);
+	crc = tsChannel->writePacketBody(ring, framesBytes - firstBytes, crc);
 
 	tsChannel->writeCrcPacketTail(crc);
 	tsChannel->flush();
+
+	{
+		chibios_rt::CriticalSectionLocker csl;
+		sendInProgress = false;
+
+		if (disablePending) {
+			buffer = {};
+			readPos = 0;
+			writePos = 0;
+			occupiedBytes = 0;
+			pendingBytes = 0;
+			disablePending = false;
+			totalFramesWritten = 0;
+			droppedSinceLastRead = 0;
+			engine->outputChannels.knockScopeReady = false;
+		} else {
+			occupiedBytes -= framesBytes;
+			updateReadyFlagUnlocked();
+		}
+	}
 
 	return true;
 }
