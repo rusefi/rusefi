@@ -276,11 +276,11 @@ static const uint8_t msd_string4[] = {
  * Strings wrappers array.
  */
 static const USBDescriptor vcom_strings[] = {
-  {sizeof vcom_string0, vcom_string0},
-  {sizeof vcom_string1, vcom_string1},
-  {sizeof vcom_string2, vcom_string2},
-  {sizeof vcom_string3, vcom_string3},
-  {sizeof msd_string4, msd_string4}
+  { sizeof(vcom_string0), vcom_string0 },
+  { sizeof(vcom_string1), vcom_string1 },
+  { sizeof(vcom_string2), vcom_string2 },
+  { sizeof(vcom_string3), vcom_string3 },
+  { sizeof(msd_string4), msd_string4 }
 };
 
 #ifndef BOARD_SERIAL
@@ -487,10 +487,10 @@ static bool hybridRequestHook(USBDriver *usbp) {
  * USB driver configuration.
  */
 const USBConfig usbcfg = {
-  usb_event,
-  get_descriptor,
-  hybridRequestHook,
-  sof_handler
+  .event_cb = usb_event,
+  .get_descriptor_cb = get_descriptor,
+  .requests_hook_cb = hybridRequestHook,
+  .sof_cb = sof_handler
 };
 
 /*
