@@ -12,6 +12,28 @@ For iterating on a live or simulated ECU from an LLM, see
 `java_console/mcp_ecu/README.md` (the `:mcp_ecu` MCP server: `set_lua`,
 `lua_reset`, `wait_for_message`, …).
 
+---
+
+## Gotchas (read before writing a script)
+
+- **Lua-fed sensors time out — refresh them every `onTick`, not on a slow
+  gated cadence.** A `Sensor.new(...)` value goes invalid `setTimeout(ms)`
+  after the last `:set()` (see `StoredValueSensor::get()` in
+  `controllers/sensors/core/stored_value_sensor.h`). If you only call `:set()`
+  from a block gated to, say, every 2s while the timeout is 3s, you have ~1s
+  of slack — any tick jitter pushes the gap past the timeout and the consumer
+  briefly reads 0/invalid, then your next update restores it (gauges that
+  "drop to 0 and jump back"). Push `:set()` unconditionally each tick and gate
+  only the *value computation* (e.g. a sweep counter). Or, at minimum, set the
+  timeout well above the worst-case refresh interval.
+- **Failed `txCan` stalls the Lua thread.** On a bench with no second node to
+  ACK (or a mis-wired/unterminated bus), transmits fail and `txCan` blocks
+  until timeout; the `canWriteNotOk` output channel climbs. Many `txCan` calls
+  per tick at a high `setTickRate(...)` can then delay `onTick` by seconds —
+  which is exactly what trips the sensor-timeout gotcha above. Symptom is
+  environmental (gone on a live, terminated bus) but design scripts to tolerate
+  it.
+
 Related (full engine configs, not just snippets):
 - VAG CAN producer — `firmware/config/engines/vw_b6.lua`
 - GM CAN producer — `firmware/config/engines/gm_ls_4.cpp`
