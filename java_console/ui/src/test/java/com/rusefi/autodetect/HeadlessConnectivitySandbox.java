@@ -11,6 +11,14 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.lua.LuaService;
+import com.rusefi.ui.lua.LuaIncludeSyntax;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -22,6 +30,8 @@ public class HeadlessConnectivitySandbox {
     private static final long STATUS_PRINT_PERIOD_MS = 1000;
 
     public static void main(String[] args) {
+        String luaFilePath = args.length > 0 ? args[0] : null;
+
         LinkManager linkManager = new LinkManager();
         AtomicInteger reconnectCounter = new AtomicInteger();
         AtomicInteger disconnectedCounter = new AtomicInteger();
@@ -43,6 +53,27 @@ public class HeadlessConnectivitySandbox {
                     } else {
                         seenConnected = true;
                         System.out.println("[CONNECTION] first successful connection");
+
+                        if (luaFilePath != null) {
+                            System.out.println("[LUA] uploading " + luaFilePath);
+                            try {
+                                Path scriptPath = Paths.get(luaFilePath);
+                                String script = new String(Files.readAllBytes(scriptPath), StandardCharsets.US_ASCII);
+                                // Support --include relative to the script path
+                                script = LuaIncludeSyntax.reloadScript(script, name -> {
+                                    try {
+                                        return new String(Files.readAllBytes(scriptPath.getParent().resolve(name)), StandardCharsets.US_ASCII);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException("Error reading included file [" + name + "]: " + e.getMessage());
+                                    }
+                                });
+
+                                LuaService.LuaApplyResult r = LuaService.applyLuaScript(linkManager, script, 120_000L);
+                                System.out.println("[LUA] result: " + r);
+                            } catch (Exception e) {
+                                System.err.println("[LUA] Error: " + e.getMessage());
+                            }
+                        }
                     }
                     printIniAndGaugeAvailability(linkManager);
                 } else {
