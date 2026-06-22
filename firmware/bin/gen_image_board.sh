@@ -24,11 +24,14 @@ if [ "" = "$BOARD_SPECIFIC_URL" ]; then
 fi
 echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
 
+INI_IMAGE_SIZE=${INI_IMAGE_SIZE:-128}
+INI_IMAGE_COMPRESSED_SIZE=${INI_IMAGE_COMPRESSED_SIZE:-1088}
+
 # we generate both versions of the header but only one would be actually included due to conditional compilation see EFI_USE_COMPRESSED_INI_MSD
 # todo: make things consistent by
 # 0) having generated content not in the same folder with the tool generating content?
 # 1) using unique file name for each configuration?
 # 2) leverage consistent caching mechanism so that image is generated only in case of fresh .ini. Laziest approach would be to return exit code from java process above
 #
-hw_layer/mass_storage/create_ini_image.sh            ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             128 ${SHORT_BOARD_NAME} ${BOARD_SPECIFIC_URL} || { echo "ERROR: create_ini_image.sh failed"; exit 1; }
-hw_layer/mass_storage/create_ini_image_compressed.sh ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1088 ${SHORT_BOARD_NAME} ${BOARD_SPECIFIC_URL} || { echo "ERROR: create_ini_image_compressed.sh failed"; exit 1; }
+hw_layer/mass_storage/create_ini_image.sh            ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h            ${INI_IMAGE_SIZE}            ${SHORT_BOARD_NAME} ${BOARD_SPECIFIC_URL} || { echo "ERROR: create_ini_image.sh failed"; exit 1; }
+hw_layer/mass_storage/create_ini_image_compressed.sh ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h ${INI_IMAGE_COMPRESSED_SIZE} ${SHORT_BOARD_NAME} ${BOARD_SPECIFIC_URL} || { echo "ERROR: create_ini_image_compressed.sh failed"; exit 1; }
