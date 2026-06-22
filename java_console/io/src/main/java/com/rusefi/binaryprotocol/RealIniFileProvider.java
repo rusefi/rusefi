@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.*;
 import com.rusefi.ini.reader.IniFileReader;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,12 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class RealIniFileProvider implements IniFileProvider {
     private static final Logging log = getLogging(RealIniFileProvider.class);
+    private StatusConsumer statusConsumer = StatusConsumer.ANONYMOUS;
+
+    public void setStatusConsumer(StatusConsumer statusConsumer) {
+        this.statusConsumer = statusConsumer;
+    }
+
     @Override
     @NotNull
     public IniFileModel provide(String signature) throws IniNotFoundException {
@@ -24,7 +31,9 @@ public class RealIniFileProvider implements IniFileProvider {
          */
         String localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         if (localIniFile == null) {
-            log.info("Failed to download " + signature + " maybe custom board?");
+            String message = "Failed to download " + signature + " maybe custom board?";
+            log.info(message);
+            statusConsumer.logLine(message);
             // 4th option: current folder
             localIniFile = IniLocator.findIniFile(".");
         }

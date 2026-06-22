@@ -2,6 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.net.ConnectionAndMeta;
 
 import javax.swing.*;
@@ -18,6 +19,8 @@ public class FirmwareUpdateTab {
                              StatusPanelWithProgressBar statusPanelFirmwareTab,
                              SingleAsyncJobExecutor singleAsyncJobExecutor,
                              AtomicReference<Optional<PortResult>> ecuPortToUse) {
+        // a bit of a nasty hack? no one is un-setting this listener, right?
+        BinaryProtocol.iniFileProvider.setStatusConsumer(statusPanelFirmwareTab);
         basicUpdaterPanel = new BasicUpdaterPanel(connectivityContext,
             ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
             statusPanelFirmwareTab,
