@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.JobHelper;
@@ -39,6 +40,9 @@ public class TuningToolbarWidget {
     private final ArrayDeque<ConfigurationImage> redoStack = new ArrayDeque<>();
     private final AtomicReference<ConfigurationImage> undoBaseline = new AtomicReference<>();
 
+    /** [tag:offline_tune] Baseline image for discard — set when a tune is loaded (from ECU or MSQ file). */
+    private ConfigurationImage baselineImage;
+
     private final JButton undoButton = new JButton("Undo");
     private final JButton redoButton = new JButton("Redo");
 
@@ -49,15 +53,18 @@ public class TuningToolbarWidget {
     private final Timer uploadTimer;
 
     /**
-     * @param uiContext    live context (BinaryProtocol, LinkManager)
-     * @param right        the dialog widget — needed for get/update working image
-     * @param currentKey   single-element array holding the currently displayed menu key
-     * @param sessionImage single-element array holding the accumulated session image
+     * @param uiContext      live context (BinaryProtocol, LinkManager)
+     * @param right          the dialog widget — needed for get/update working image
+     * @param currentKey     single-element array holding the currently displayed menu key
+     * @param sessionImage   single-element array holding the accumulated session image
+     * @param baselineImage  baseline image for discard (from ECU or loaded MSQ); may be null initially
      */
     public TuningToolbarWidget(UIContext uiContext,
                                 CalibrationDialogWidget right,
                                 AtomicReference<String> currentKey,
-                                AtomicReference<ConfigurationImage> sessionImage) {
+                                AtomicReference<ConfigurationImage> sessionImage,
+                                ConfigurationImage baselineImage) {
+        this.baselineImage = baselineImage;
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
 
@@ -93,8 +100,10 @@ public class TuningToolbarWidget {
         uploadTimer.setRepeats(false);
 
         JButton burnButton = getBurnToEcuButton(uiContext, right, sessionImage);
+        burnButton.setEnabled(uiContext.getBinaryProtocol() != null);
 
         JButton discardButton = getDiscardButton(uiContext, right, sessionImage, currentKey, updateButtons);
+        discardButton.setEnabled(baselineImage != null);
 
         buildLoadTuneAction(uiContext, right, currentKey, sessionImage);
         buildSaveTuneAction(uiContext, right, sessionImage);
@@ -165,6 +174,17 @@ public class TuningToolbarWidget {
         return burnButton;
     }
 
+    /** Call when ECU connects to enable the burn button. */
+    public void onEcuConnected() {
+        Component[] components = panel.getComponents();
+        for (Component c : components) {
+            if (c instanceof JButton && "Burn to ECU".equals(((JButton) c).getText())) {
+                ((JButton) c).setEnabled(true);
+                break;
+            }
+        }
+    }
+
     private @NotNull JButton getDiscardButton(UIContext uiContext,
                                               CalibrationDialogWidget right,
                                               AtomicReference<ConfigurationImage> sessionImage,
@@ -173,15 +193,10 @@ public class TuningToolbarWidget {
         JButton discardButton = new JButton("Discard changes");
 
         discardButton.addActionListener(e -> {
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            if (bp == null) {
+            if (baselineImage == null) {
                 return;
             }
-            ConfigurationImage baseline = bp.getCachedImage();
-            if (baseline == null) {
-                baseline = bp.getControllerConfiguration();
-            }
-            sessionImage.set(baseline.clone());
+            sessionImage.set(baselineImage.clone());
             String key = currentKey.get();
             if (key != null) {
                 right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
@@ -207,18 +222,9 @@ public class TuningToolbarWidget {
                 if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
                     return;
                 }
-                IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-                if (ini == null) {
-                    JOptionPane.showMessageDialog(null, "No INI file loaded", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
                 final String path = chooser.getSelectedFile().getAbsolutePath();
                 final String fileName = chooser.getSelectedFile().getName();
-                ConfigurationImage sessionImg = sessionImage.get();
-                final ConfigurationImage base = sessionImg != null
-                        ? sessionImg
-                        : new ConfigurationImage(ini.getMetaInfo().getPageSize(0));
-                final AtomicReference<ConfigurationImage> result = new AtomicReference<>();
+
                 final StatusWindow statusWindow = new StatusWindow();
                 statusWindow.showFrame("Load Tune");
                 final UpdateOperationCallbacks callbacks = statusWindow.getContent();
@@ -229,13 +235,23 @@ public class TuningToolbarWidget {
                         public void doJob(UpdateOperationCallbacks cb, Runnable onJobFinished) {
                             JobHelper.doJob(() -> {
                                 try {
-                                    callbacks.logLine("Reading " + fileName + "...");
-                                    Msq msq = Msq.readTune(path);
-                                    callbacks.logLine("Applying tune fields...");
-                                    ConfigurationImage newImage = msq.applyOnto(base, ini);
+                                    cb.logLine("Loading " + fileName + "...");
+                                    OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(path, null);
+                                    if (result == null) {
+                                        cb.logLine("Load cancelled or failed.");
+                                        cb.error();
+                                        return;
+                                    }
+                                    cb.logLine("Applying tune fields...");
+                                    ConfigurationImage sessionImg = sessionImage.get();
+                                    ConfigurationImage base = sessionImg != null
+                                            ? sessionImg.clone()
+                                            : new ConfigurationImage(result.ini.getMetaInfo().getPageSize(0));
+                                    ConfigurationImage newImage = result.msq.applyOnto(base, result.ini);
+
                                     BinaryProtocol bp = uiContext.getBinaryProtocol();
                                     if (bp != null) {
-                                        callbacks.logLine("Uploading and burning to ECU...");
+                                        cb.logLine("Uploading and burning to ECU...");
                                         CountDownLatch latch = new CountDownLatch(1);
                                         uiContext.getLinkManager().submit(() -> {
                                             try {
@@ -246,28 +262,34 @@ public class TuningToolbarWidget {
                                         });
                                         latch.await();
                                     }
-                                    result.set(newImage);
-                                    callbacks.done();
+
+                                    SwingUtilities.invokeLater(() -> {
+                                        sessionImage.set(newImage);
+                                        baselineImage = newImage.clone();
+                                        String key = currentKey.get();
+                                        if (key != null) {
+                                            right.update(key, result.ini, newImage);
+                                        }
+                                        // Enable discard now that we have a baseline
+                                        Component[] components = panel.getComponents();
+                                        for (Component c : components) {
+                                            if (c instanceof JButton && "Discard changes".equals(((JButton) c).getText())) {
+                                                ((JButton) c).setEnabled(true);
+                                                break;
+                                            }
+                                        }
+                                        uiContext.fireConfigImageChanged(newImage);
+                                        cb.done();
+                                    });
                                 } catch (Exception ex) {
-                                    callbacks.logLine("Error: " + ex.getMessage());
-                                    callbacks.error();
+                                    cb.logLine("Error: " + ex.getMessage());
+                                    cb.error();
                                 }
                             }, onJobFinished);
                         }
                     },
                     callbacks,
-                    () -> SwingUtilities.invokeLater(() -> {
-                        ConfigurationImage res = result.get();
-                        if (res != null) {
-                            statusWindow.getFrame().dispose();
-                            sessionImage.set(res);
-                            String key = currentKey.get();
-                            if (key != null) {
-                                right.update(key, ini, res);
-                            }
-                            uiContext.fireConfigImageChanged(res);
-                        }
-                    })
+                    () -> SwingUtilities.invokeLater(() -> statusWindow.getFrame().dispose())
                 );
             }
         };
@@ -283,12 +305,6 @@ public class TuningToolbarWidget {
                 IniFileModel ini = uiContext.iniFileState.getIniFileModel();
                 ConfigurationImage image = right.getWorkingImage();
                 if (image == null) image = sessionImage.get();
-                if (image == null) {
-                    BinaryProtocol bp = uiContext.getBinaryProtocol();
-                    if (bp != null) {
-                        image = bp.getControllerConfiguration();
-                    }
-                }
                 if (ini == null || image == null) {
                     JOptionPane.showMessageDialog(null, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -321,6 +337,37 @@ public class TuningToolbarWidget {
 
     public AbstractAction getSaveTuneAction() {
         return saveTuneAction;
+    }
+
+    /**
+     * @return true if {@code current} differs from the loaded baseline (i.e. there are pending edits).
+     * If there is no baseline yet, any non-null image counts as a change.
+     */
+    public boolean hasUnsavedChanges(ConfigurationImage current) {
+        if (current == null) {
+            return false;
+        }
+        if (baselineImage == null) {
+            return true;
+        }
+        return !java.util.Arrays.equals(current.getContent(), baselineImage.getContent());
+    }
+
+    /** @return the loaded baseline image (pre-edit), or null if none loaded. */
+    public ConfigurationImage getBaselineImage() {
+        return baselineImage;
+    }
+
+    /** Sets the baseline image for discard and enables the discard button. */
+    public void setBaselineImage(ConfigurationImage image) {
+        this.baselineImage = image;
+        Component[] components = panel.getComponents();
+        for (Component c : components) {
+            if (c instanceof JButton && "Discard changes".equals(((JButton) c).getText())) {
+                ((JButton) c).setEnabled(image != null);
+                break;
+            }
+        }
     }
 
     private static @NotNull JFileChooser createMsqFileChooser() {
@@ -373,6 +420,7 @@ public class TuningToolbarWidget {
 
     /**
      * Must be called when the ECU disconnects so stale state is dropped.
+     * [tag:offline_tune] Preserves baselineImage so discard still works in offline mode.
      */
     public void onDisconnect() {
         undoCommitTimer.stop();
@@ -382,5 +430,13 @@ public class TuningToolbarWidget {
         undoBaseline.set(null);
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
+        // Disable burn button when ECU disconnects
+        Component[] components = panel.getComponents();
+        for (Component c : components) {
+            if (c instanceof JButton && "Burn to ECU".equals(((JButton) c).getText())) {
+                ((JButton) c).setEnabled(false);
+                break;
+            }
+        }
     }
 }

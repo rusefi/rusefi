@@ -2,6 +2,8 @@ package com.rusefi;
 
 import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.binaryprotocol.ShortcutsHelper;
@@ -75,12 +77,36 @@ public class ConsoleUI {
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public ConsoleUI(String port, SerialPortType serialPortType) {
-        this(new UIContext(), port, serialPortType, false);
+        this(new UIContext(), port, serialPortType, false, null, null);
     }
 
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected) {
+        this(uiContext, port, serialPortType, alreadyConnected, null, null);
+    }
+
+    /**
+     * [tag:offline_tune]
+     * Constructor for offline mode: opens the console with a pre-loaded tune and INI,
+     * without requiring a live ECU connection.
+     *
+     * @param uiContext      shared UI context
+     * @param ini            INI file model resolved from the MSQ signature
+     * @param initialImage   ConfigurationImage loaded from the MSQ file
+     */
+    public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage) {
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage);
+    }
+
+    private ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType,
+                      boolean alreadyConnected, IniFileModel offlineIni, ConfigurationImage offlineImage) {
         this.uiContext = uiContext;
         LinkManager linkManager = uiContext.getLinkManager();
+
+        boolean isOffline = (offlineIni != null && offlineImage != null);
+        if (isOffline) {
+            uiContext.setOfflineMode(true);
+            uiContext.setIniFileModelForOffline(offlineIni);
+        }
 
         CommandQueue.ERROR_HANDLER = e -> {
             log.error("Connectivity error", e);
@@ -146,13 +172,13 @@ public class ConsoleUI {
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
 
-        if (!alreadyConnected) {
+        if (!alreadyConnected && !isOffline) {
             // todo: this blocking IO operation should NOT be happening on the UI thread
             linkManager.start(port, mainFrame.listener);
         }
 
         engineSnifferPanel = new EngineSnifferPanel(uiContext, getConfig().getRoot().getChild("digital_sniffer"));
-        if (!LinkManager.isLogViewerMode(port))
+        if (isOffline || !LinkManager.isLogViewerMode(port))
             engineSnifferPanel.setOutpinListener(uiContext.getLinkManager().getEngineState());
 
         // what is LogViewer? is this all dead?
@@ -161,7 +187,7 @@ public class ConsoleUI {
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
         uiContext.DetachedRepositoryINSTANCE.load();
-        if (!linkManager.isLogViewer()) {
+        if (isOffline || !linkManager.isLogViewer()) {
             tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges")).getContent());
 
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
@@ -190,14 +216,17 @@ public class ConsoleUI {
 
 //        if (!linkManager.isLogViewer())
 //            tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
-        if (!linkManager.isLogViewer()) {
+        if (isOffline || !linkManager.isLogViewer()) {
 /*
 console live data tab is broken #8402
 
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
-            TuningPane tuningPane = new TuningPane(uiContext);
+            TuningPane tuningPane = new TuningPane(uiContext, offlineImage);
             mainFrame.setTuneActions(tuningPane.getLoadTuneAction(), tuningPane.getSaveTuneAction());
+            if (isOffline && offlineImage != null) {
+                tuningPane.seedOfflineImage(offlineImage, null);
+            }
             PinoutPane pinoutPane = new PinoutPane(uiContext);
             tabbedPane.addTab("Tuning", tuningPane.getContent());
             tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
@@ -224,8 +253,10 @@ console live data tab is broken #8402
             }
         }
 
-        if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
+        if ((isOffline || !linkManager.isLogViewer()) && false) {
+            // todo: fix it & better name?
             tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
+        }
 
 
         MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
@@ -241,7 +272,7 @@ console live data tab is broken #8402
             uiContext.sensorLogger.init();
         }
 
-        if (!LinkManager.isLogViewerMode(port)) {
+        if (isOffline || !LinkManager.isLogViewerMode(port)) {
             int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
             if (selectedIndex < tabbedPane.tabbedPane.getTabCount())
                 tabbedPane.tabbedPane.setSelectedIndex(selectedIndex);
@@ -263,7 +294,6 @@ console live data tab is broken #8402
 
         ShortcutsHelper.installConnectAndDisconnect(uiContext, tabbedPane.tabbedPane);
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
-        log.info("showFrame");
 
         mainFrame.getFrame().showFrame(rootPanel);
     }

@@ -1,6 +1,7 @@
 package com.rusefi.ui.console;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -307,6 +308,11 @@ public class MainFrame {
             BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
             String signature = bp == null ? "not loaded" : bp.signature;
             frameTitle = consoleVersion + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature;
+        } else if (consoleUI.uiContext.isOfflineMode()) {
+            // [tag:offline_tune] no ECU — title reflects the loaded tune's signature
+            IniFileModel ini = consoleUI.uiContext.iniFileState.getIniFileModel();
+            String signature = ini != null ? ini.getSignature() : "no INI";
+            frameTitle = "OFFLINE " + consoleVersion + " " + signature;
         } else {
             frameTitle = "DISCONNECTED " + consoleVersion;
         }
