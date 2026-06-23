@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.ini.IniFileState;
 import com.rusefi.io.CommandQueue;
@@ -23,6 +24,8 @@ public class UIContext {
     public IniFileState iniFileState = new IniFileState(this);
     public GaugesPanel.DetachedRepository DetachedRepositoryINSTANCE = new GaugesPanel.DetachedRepository(this);
 
+    /** [tag:offline_tune] True when the console was opened in offline mode (no ECU connection, tune loaded from file). */
+    private boolean offlineMode;
 
     @NotNull
     public LinkManager getLinkManager() {
@@ -36,6 +39,21 @@ public class UIContext {
 
     public CommandQueue getCommandQueue() {
         return linkManager.getCommandQueue();
+    }
+
+    public boolean isOfflineMode() {
+        return offlineMode;
+    }
+
+    public void setOfflineMode(boolean offlineMode) {
+        this.offlineMode = offlineMode;
+    }
+
+    /**
+     * [tag:offline_tune] Sets the INI model directly for offline editing (no ECU connection).
+     */
+    public void setIniFileModelForOffline(IniFileModel ini) {
+        iniFileState.setIniFileModelForTest(ini);
     }
 
     // ---- Config-image change notifications ----

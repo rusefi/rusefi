@@ -45,17 +45,15 @@ public class TabbedPanel {
                 text = "Updating";
                 textColor = Color.orange;
             } else {
-                switch (ConnectionStatusLogic.INSTANCE.getValue()) {
-                    case NOT_CONNECTED:
-                        text = "Not connected";
-                        textColor = Color.white;
-                        break;
-                    case LOADING:
-                        text = "Loading";
-                        textColor = Color.white;
-                        break;
-                    default:
-                        return;
+                ConnectionStatusValue status = ConnectionStatusLogic.INSTANCE.getValue();
+                if (status == ConnectionStatusValue.LOADING) {
+                    text = "Loading";
+                    textColor = Color.white;
+                } else {
+                    // Don't show "Not connected" overlay — the status is visible in the
+                    // title bar and corner icon. Blocking the entire UI with a black overlay
+                    // is too aggressive, especially for offline editing.
+                    return;
                 }
             }
             FontMetrics fm = g.getFontMetrics();
@@ -85,7 +83,7 @@ public class TabbedPanel {
     private boolean hasOverlay() {
         return criticalError != null
             || Boolean.TRUE.equals(tabbedPane.getClientProperty("isUpdating"))
-            || ConnectionStatusLogic.INSTANCE.getValue() != ConnectionStatusValue.CONNECTED;
+            || ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.LOADING;
     }
 
     private void refreshOverlay() {

@@ -1,12 +1,15 @@
 package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
 import com.rusefi.io.LinkManager;
+import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
 import com.rusefi.ui.UIContext;
 import com.rusefi.tune_manifest.ManifestParseException;
@@ -18,6 +21,7 @@ import com.rusefi.ui.widgets.StatusPanel;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
@@ -47,11 +51,16 @@ public class TuneManagementTab {
     private final AtomicBoolean awaitingCompletion = new AtomicBoolean(false);
     private List<TuneModel> tunes = new ArrayList<>();
 
+    /** [tag:offline_tune] Hands an offline-loaded tune back to the splash so it can open the console on the shared uiContext. */
+    private final java.util.function.BiConsumer<IniFileModel, ConfigurationImage> offlineConsoleLauncher;
+
     public TuneManagementTab(ConnectivityContext connectivityContext,
                              UIContext uiContext,
                              Component importTuneButton,
                              SingleAsyncJobExecutor singleAsyncJobExecutor,
-                             StatusPanel statusPanelTuneTab) {
+                             StatusPanel statusPanelTuneTab,
+                             java.util.function.BiConsumer<IniFileModel, ConfigurationImage> offlineConsoleLauncher) {
+        this.offlineConsoleLauncher = offlineConsoleLauncher;
         uploadProgress.setIndeterminate(true);
         uploadProgress.setStringPainted(true);
         uploadProgress.setString("Loading tune...");
@@ -146,7 +155,12 @@ public class TuneManagementTab {
             }
         }));
 
-        totalContent.add(importTuneButton, BorderLayout.SOUTH);
+        JButton loadTuneFileButton = new JButton("Load Tune File");
+        loadTuneFileButton.addActionListener(e -> loadTuneFileOffline());
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(importTuneButton, BorderLayout.NORTH);
+        bottomPanel.add(loadTuneFileButton, BorderLayout.SOUTH);
+        totalContent.add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private void showErrorLogPopup(String logText) {
@@ -206,6 +220,26 @@ public class TuneManagementTab {
 
     public static String getTunesManifestUrl() {
         return PropertiesHolder.getProperty("tunes_manifest");
+    }
+
+    /** [tag:offline_tune] Lets the user pick an .msq and open the console offline (no ECU connection). */
+    private void loadTuneFileOffline() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new FileNameExtensionFilter("Tune files (.msq)", "msq"));
+        if (chooser.showOpenDialog(totalContent) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        String path = chooser.getSelectedFile().getAbsolutePath();
+        OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(path, totalContent);
+        if (result == null) {
+            return;
+        }
+
+        // Hand off to the splash, which disposes itself and opens the console on the shared uiContext
+        // (keeping the scanner alive so a later ECU connect transitions this console online — no 2nd window).
+        SwingUtilities.invokeLater(() -> offlineConsoleLauncher.accept(result.ini, result.image));
     }
 
     class MyTableModel extends AbstractTableModel {
