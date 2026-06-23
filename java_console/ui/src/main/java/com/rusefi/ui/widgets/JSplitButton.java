@@ -45,6 +45,10 @@ public class JSplitButton extends JPanel {
         mainButton.setIcon(icon);
     }
 
+    public void setText(String text) {
+        mainButton.setText(text);
+    }
+
     public void setPopupMenu(JPopupMenu popupMenu) {
         this.popupMenu = popupMenu;
     }

@@ -25,6 +25,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -62,7 +63,35 @@ public class ProgramSelector {
         updateModeAndButton.setVisible(false);
         updateModeAndButton.add(splitButton);
 
-        splitButton.addActionListener(e -> executeJob(splitButton, OPENBLT_AUTO, (PortResult) comboPorts.getSelectedItem()));
+        splitButton.addActionListener(e -> {
+            final PortResult selectedPort = (PortResult) comboPorts.getSelectedItem();
+            executeJob(splitButton, mainButtonModeFor(selectedPort), selectedPort);
+        });
+
+        // Keep the main button label in sync with whatever port is currently selected. The combo is
+        // shared with the Connect tab and is repopulated/re-selected after apply() runs, so drive the
+        // text off selection changes (same source the action reads) rather than off apply()'s snapshot.
+        comboPorts.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                refreshMainButtonText();
+            }
+        });
+        refreshMainButtonText();
+    }
+
+    /**
+     * A board already sitting in the OpenBLT bootloader has no running firmware: it never auto-connects,
+     * so {@link #linkManager} is never set for it and {@link UpdateMode#OPENBLT_AUTO} (which reboots a
+     * live ECU into the bootloader) cannot work. Flash it directly via {@link UpdateMode#OPENBLT_MANUAL}.
+     */
+    private static UpdateMode mainButtonModeFor(@Nullable PortResult selectedPort) {
+        return (selectedPort != null && selectedPort.type == OpenBlt) ? OPENBLT_MANUAL : OPENBLT_AUTO;
+    }
+
+    private void refreshMainButtonText() {
+        final PortResult selectedPort = (PortResult) comboPorts.getSelectedItem();
+        final boolean isOpenBltBoard = mainButtonModeFor(selectedPort) == OPENBLT_MANUAL;
+        splitButton.setText(isOpenBltBoard ? OPENBLT_MANUAL.displayText : "Update Firmware");
     }
 
     private void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {

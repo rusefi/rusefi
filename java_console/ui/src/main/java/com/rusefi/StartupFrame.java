@@ -103,6 +103,7 @@ public class StartupFrame {
      * closing the application.
      */
     private boolean isProceeding;
+    // TODO: we should rename this!; now we are showing more than the "no ports connected" message
     private final JLabel noPortsMessage = new JLabel();
     private final JLabel dfuErrorMessage = new JLabel(
         "Failed to check for DFU devices. Try 'Run as Administrator'");
@@ -523,15 +524,28 @@ public class StartupFrame {
 
 
         boolean hasEcuOrBootloader = applyPortSelectionToUIcontrol(portsComboBox.getComboPorts(), ports);
+        PortResult openBltPort = ports.stream()
+            .filter(p -> p.type == OpenBlt)
+            .findFirst()
+            .orElse(null);
+        boolean hasOpenBlt = openBltPort != null;
         if (ports.isEmpty()) {
+            noPortsMessage.setForeground(Color.red);
             noPortsMessage.setText(NO_PORTS_FOUND);
+        } else if (hasOpenBlt) {
+            // A board sitting in the OpenBLT bootloader has no running firmware to auto-connect to —
+            // mirror the auto-connect status line and point the user at the firmware-update flow.
+            noPortsMessage.setForeground(Color.darkGray);
+            noPortsMessage.setText("Board in OpenBLT bootloader on " + openBltPort.port
+                + " — use the Update Firmware tab");
         } else {
+            noPortsMessage.setForeground(Color.red);
             noPortsMessage.setText("Make sure you are disconnected from TunerStudio");
         }
 
         updateConnectButtonState();
 
-        noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
+        noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader || hasOpenBlt);
 
         AutoupdateUtil.trueLayoutAndRepaint(connectPanel);
 
