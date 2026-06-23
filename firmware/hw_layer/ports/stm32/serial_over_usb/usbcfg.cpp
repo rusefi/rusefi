@@ -114,7 +114,7 @@ static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
                                  0x02, /* bFunctionClass (CDC).             */
                                  0x02, /* bFunctionSubClass.  (2)           */
                                  0x01, /* bFunctionProtocol (1)             */
-                                 2),   /* iInterface.                       */
+                                 5),   /* iInterface.                       */
   /* Interface Descriptor.*/
   USB_DESC_INTERFACE    (CDC_INT_IF,    /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
@@ -265,6 +265,15 @@ static const uint8_t msd_string4[] = {
   'S', 0, 'D', 0
 };
 
+/* "RusEFI Virtual COM Port" */
+static const uint8_t vcom_string5[] = {
+  USB_DESC_BYTE(23 * 2 + 2),            /* bLength.                         */
+  USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
+  'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'V', 0,
+  'i', 0, 'r', 0, 't', 0, 'u', 0, 'a', 0, 'l', 0, ' ', 0, 'C', 0,
+  'O', 0, 'M', 0, ' ', 0, 'P', 0, 'o', 0, 'r', 0, 't', 0
+};
+
 /*
  * Strings wrappers array.
  */
@@ -273,7 +282,8 @@ static const USBDescriptor vcom_strings[] = {
   { sizeof(vcom_string1), vcom_string1 },
   { sizeof(vcom_string2), vcom_string2 },
   { sizeof(vcom_string3), vcom_string3 },
-  { sizeof(msd_string4), msd_string4 }
+  { sizeof(msd_string4), msd_string4 },
+  { sizeof(vcom_string5), vcom_string5 }
 };
 
 #ifndef BOARD_SERIAL
