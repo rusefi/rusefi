@@ -34,7 +34,7 @@ SerialUSBDriver SDU1;
 
 #if HAL_USE_USB_MSD
 	// Descriptor that includes MSD is larger and has an extra interface
-	#define DESCRIPTOR_SIZE (98 + 8)
+	#define DESCRIPTOR_SIZE 98
 	#define NUM_INTERFACES 3
 	#define USB_MSD_EP_SIZE 64
 
@@ -88,13 +88,6 @@ static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
                          200),          /* bMaxPower (400mA).               */
 #if HAL_USE_USB_MSD
   // MSD
-  /* IAD Descriptor - describes that EP0+1 belong to MSD */
-  USB_DESC_INTERFACE_ASSOCIATION(MSD_IF, /* bFirstInterface.                */
-                                 0x01, /* bInterfaceCount.                  */
-                                 0x08, /* bFunctionClass (Mass Storage).    */
-                                 0x06, /* bFunctionSubClass.  (SCSI)        */
-                                 0x50, /* bFunctionProtocol (Bulk-Only)     */
-                                 4),   /* iInterface.                       */
   USB_DESC_INTERFACE    (MSD_IF,        /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
                          0x02,          /* bNumEndpoints.                   */
@@ -102,7 +95,7 @@ static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
                          0x06,          /* bInterfaceSubClass (SCSI
                                               transparent storage class).   */
                          0x50,          /* bInterfaceProtocol (Bulk Only).  */
-                         0),            /* iInterface.                      */
+                         4),            /* iInterface.                      */
   /* Mass Storage Data In Endpoint Descriptor.*/
   USB_DESC_ENDPOINT     (USB_MSD_DATA_EP | 0x80,
                          0x02,          /* bmAttributes (Bulk).             */
@@ -121,7 +114,7 @@ static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
                                  0x02, /* bFunctionClass (CDC).             */
                                  0x02, /* bFunctionSubClass.  (2)           */
                                  0x01, /* bFunctionProtocol (1)             */
-                                 2),   /* iInterface.                       */
+                                 5),   /* iInterface.                       */
   /* Interface Descriptor.*/
   USB_DESC_INTERFACE    (CDC_INT_IF,    /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
@@ -272,6 +265,15 @@ static const uint8_t msd_string4[] = {
   'S', 0, 'D', 0
 };
 
+/* "RusEFI Virtual COM Port" */
+static const uint8_t vcom_string5[] = {
+  USB_DESC_BYTE(23 * 2 + 2),            /* bLength.                         */
+  USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
+  'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'V', 0,
+  'i', 0, 'r', 0, 't', 0, 'u', 0, 'a', 0, 'l', 0, ' ', 0, 'C', 0,
+  'O', 0, 'M', 0, ' ', 0, 'P', 0, 'o', 0, 'r', 0, 't', 0
+};
+
 /*
  * Strings wrappers array.
  */
@@ -280,7 +282,8 @@ static const USBDescriptor vcom_strings[] = {
   { sizeof(vcom_string1), vcom_string1 },
   { sizeof(vcom_string2), vcom_string2 },
   { sizeof(vcom_string3), vcom_string3 },
-  { sizeof(msd_string4), msd_string4 }
+  { sizeof(msd_string4), msd_string4 },
+  { sizeof(vcom_string5), vcom_string5 }
 };
 
 #ifndef BOARD_SERIAL
