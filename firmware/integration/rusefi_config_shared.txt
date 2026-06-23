@@ -41,6 +41,10 @@
 #define TORQUE_CURVE_SIZE 6
 #define TORQUE_CURVE_RPM_SIZE 6
 
+! Default Lua script buffer size; boards override this (larger) in their prepend.txt.
+! Consumed by rusefi_types.h's lua_script_t and the page5_s struct. See #7911.
+#define LUA_SCRIPT_SIZE 8000
+
 #define TCU_GEAR_COUNT 10
 #define EGT_CHANNEL_COUNT 8
 

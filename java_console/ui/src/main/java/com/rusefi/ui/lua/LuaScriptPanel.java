@@ -340,10 +340,10 @@ public class LuaScriptPanel {
 // todo: check box for auto-burn?
 //            bp.burn();
 
-            // On new firmware (luaScript on its own page), the TS burn handler calls
-            // requestLuaReset() automatically — but we don't auto-burn here.
-            // On old firmware (page 0) the burn would re-flash the whole calibration,
-            // which is what luareset-via-console avoids.  Keep manual reset for parity.
+            // writeInBlocks above already updated the ECU's RAM copy of the script (on the
+            // main page for old firmware, or the dedicated Lua page for new firmware). The
+            // running Lua VM does not reload on its own, so trigger a reset to re-run the new
+            // script. (Note: there is no automatic reload on burn — the reset is what reloads.)
             resetLua();
         });
         // resume messages on 'write new script to ECU'

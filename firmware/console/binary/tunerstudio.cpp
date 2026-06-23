@@ -192,6 +192,8 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 #endif
 	case TS_PAGE_SECOND_TABLES:
 		return static_cast<uint8_t*>(getExtraPageAddr(EFI_SECOND_TABLES_RECORD_ID)) + offset;
+	case TS_PAGE_LUA:
+		return static_cast<uint8_t*>(getExtraPageAddr(EFI_LUA_PAGE_RECORD_ID)) + offset;
 	}
 
 	if (write) {
@@ -240,6 +242,8 @@ static constexpr size_t getTunerStudioPageSize(size_t page) {
 #endif
 	case TS_PAGE_SECOND_TABLES:
 		return getExtraPageSize(EFI_SECOND_TABLES_RECORD_ID);
+	case TS_PAGE_LUA:
+		return getExtraPageSize(EFI_LUA_PAGE_RECORD_ID);
 #if (EFI_PROD_CODE || EFI_SIMULATOR)
 	case TS_PAGE_FS_IMAGE_SIZE:
 		// page contains only 4 bytes of size of next page
@@ -536,6 +540,8 @@ static void handleBurnCommand(TsChannelBase* tsChannel, uint16_t page) {
 		/* do nothing */
 	} else if (page == TS_PAGE_SECOND_TABLES) {
 		burnExtraFlashPage(EFI_SECOND_TABLES_RECORD_ID);
+	} else if (page == TS_PAGE_LUA) {
+		burnExtraFlashPage(EFI_LUA_PAGE_RECORD_ID);
 	} else {
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: Burn invalid page");
 		return;

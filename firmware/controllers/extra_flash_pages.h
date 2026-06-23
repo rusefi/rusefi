@@ -5,6 +5,17 @@
 #include "storage.h"
 #include "rusefi/crc.h"
 
+// Fixed byte offsets of each piggy-backed extra page within the primary settings
+// flash sector (see extra_flash_pages.cpp for the rationale on fixed offsets).
+// Exposed here so each page module can static_assert it fits below the sector top.
+// Page 4 (second tables) sits at 72 KB (~1.3 KB used); the much larger Lua page is
+// placed just above it at 76 KB, leaving page-4 growth room while still fitting a
+// multi-tens-of-KB Lua script below the 128 KB sector top.
+static constexpr size_t PAGE4_SECTOR_OFFSET = 72u * 1024u;
+static constexpr size_t LUA_PAGE_SECTOR_OFFSET = 76u * 1024u;
+static_assert(LUA_PAGE_SECTOR_OFFSET % 32 == 0,
+	"LUA_PAGE_SECTOR_OFFSET must be 32-byte aligned for STM32H7 flash writes");
+
 /**
  * Generic CRC-wrapped container for extra flash pages.
  * Each extra page stores a version tag, the page data, and a CRC32 so that

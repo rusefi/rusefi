@@ -7,6 +7,7 @@
  */
 
 #include "pch.h"
+#include "lua_config_page.h"
 
 #if ! EFI_UNIT_TEST
 
@@ -766,5 +767,10 @@ void setEngineType(int value, bool isWriteToFlash) {
 }
 
 void setLuaScript(const char *luaScript) {
-	strncpy(config->luaScript, luaScript, efi::size(config->luaScript) - 1);
+	// luaScript lives on its own dedicated TunerStudio page (page5_s), not in the
+	// main config — see #7911. This runs during applyEngineType(), which is invoked
+	// after resetExtraPages()/luaConfigPageSetDefaults(), so the engine-default script
+	// installed here survives the page reset.
+	auto dest = luaConfigPageGetState()->luaScript;
+	strncpy(dest, luaScript, efi::size(luaConfigPageGetState()->luaScript) - 1);
 }
