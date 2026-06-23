@@ -36,8 +36,9 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
 
 /**
  * entry point of rusefi_autoupdate.exe
- *
+ * <p>
  * We've given up on complex classloader logic for auto-update and ended up with startConsoleAsANewProcess approach
+ *
  * @see com.rusefi.core.ui.ProgressView
  */
 public class Autoupdate {
@@ -97,7 +98,14 @@ public class Autoupdate {
     }
 
     private static boolean isAutoUpdateEnabled() {
-        return AutoupdateProperty.get() && ConnectionAndMeta.getBoolean("autoupdate_bundle");
+        boolean property = AutoupdateProperty.get();
+        boolean autoupdate_bundle = ConnectionAndMeta.getBoolean("autoupdate_bundle");
+        boolean result = property && autoupdate_bundle;
+        if (!result) {
+            log.info("AutoupdateProperty=" + property);
+            log.info("autoupdate_bundle=" + autoupdate_bundle);
+        }
+        return result;
     }
 
     // everything here assumes Windows. Sorry!
