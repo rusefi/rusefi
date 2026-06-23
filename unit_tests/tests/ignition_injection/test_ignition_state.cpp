@@ -301,3 +301,25 @@ TEST(ignition_state, testCrankingAdvance) {
   const auto correction = getCrankingAdvance(rpm, load);
   EXPECT_NEAR(6, correction, EPS2D);
 }
+
+TEST(ignition_state, getSparkDwellTableAndVoltageCorrection) {
+  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+  for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
+    config->sparkDwellRpmBins[i] = 1000 * i;
+    config->sparkDwellValues[i] = 2 + i;
+    config->dwellVoltageCorrVoltBins[i] = 8 + i;
+    config->dwellVoltageCorrValues[i] = 0.8f + 0.1f * i;
+  }
+
+  // rpm=3000 lands exactly on bin index 3 -> base dwell 5ms
+  // 11V lands exactly on bin index 3 -> correction 1.1x
+  Sensor::setMockValue(SensorType::BatteryVoltage, 11);
+  engine->ignitionState.updateDwell(3000, false);
+  EXPECT_NEAR(5.5, engine->ignitionState.getDwell(), EPS2D);
+
+  // an all-zero correction table is treated as "no correction" (1x) for backwards compat
+  setArrayValues(config->dwellVoltageCorrValues, 0);
+  engine->ignitionState.updateDwell(3000, false);
+  EXPECT_NEAR(5, engine->ignitionState.getDwell(), EPS2D);
+}
