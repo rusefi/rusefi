@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.AxisModel;
 import com.opensr5.ini.CurveModel;
 import com.opensr5.ini.DialogModel;
@@ -613,5 +614,106 @@ todo: spllit into smaller tests?
             }
         }
         return null;
+    }
+
+    private Component findCanvas(Container container) {
+        for (Component c : container.getComponents()) {
+            if (c.getClass().getName().endsWith("CurveCanvas")) return c;
+            if (c instanceof Container) {
+                Component found = findCanvas((Container) c);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Regression test for issue #9635: on small windows the curve plot collapsed to a sliver while the
+     * JTable held a large fixed width. Root cause: a JTable reports its preferredScrollableViewportSize
+     * (default 450x400) as the enclosing JScrollPane's preferred width, so GridBagLayout reserved ~450px
+     * for the table and gave the canvas (which started with a near-zero preferred size) only the weighted
+     * remainder. The fix shrinks the table's preferred footprint and gives the canvas a real preferred
+     * size so the 0.8/0.2 weights actually keep the plot wide.
+     *
+     * This asserts the layout *mechanism* (preferred sizes) rather than rendered widths: in this test
+     * environment GridBag was observed to distribute width by weight alone (the canvas never collapsed at
+     * any width), so a pixel-width assertion would not exercise the crush seen in the real app. The bug is
+     * documented by the issue screenshots, where the table holds its large preferred width while the canvas
+     * absorbs all the shrinkage.
+     */
+    @Test
+    public void testCurveWidgetCanvasKeepsWidthWhenNarrow() {
+        String string = "[Constants]\n" +
+            "page = 1\n" +
+            "scriptCurve1Bins = array, F32, 0, [16], \"x\", 1, 0, 0, 100, 3\n" +
+            "scriptCurve1 = array, F32, 64, [16], \"y\", 1, 0, 0, 100, 3\n " +
+            "[CurveEditor]\n" +
+            "\tcurve = scriptCurve1, \"Script Curve #1\"\n" +
+            "\t\txAxis\t\t=  0, 100, 10\n" +
+            "\t\tyAxis\t\t=  0, 200, 20\n" +
+            "\t\txBins\t\t= scriptCurve1Bins\n" +
+            "\t\tyBins\t\t= scriptCurve1\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        CurveModel curve = model.getCurves().get("scriptCurve1");
+        assertNotNull(curve, "curve scriptCurve1 should exist");
+
+        com.rusefi.ui.widgets.tune.CurveWidget widget =
+            new com.rusefi.ui.widgets.tune.CurveWidget(curve, model, null);
+        JPanel curvePanel = widget.getContentPane();
+
+        Component canvas = findCanvas(curvePanel);
+        assertNotNull(canvas, "curve canvas should be present");
+        JTable table = findTable(curvePanel);
+        assertNotNull(table, "curve table should be present");
+
+        // The table must no longer claim the JTable default of 450px (which starved the canvas). It keeps
+        // a modest preferred footprint and grows only via its 0.2 GridBag weight on wide windows.
+        assertTrue(table.getPreferredScrollableViewportSize().width <= 220,
+            "table preferred viewport width should be shrunk well below the 450px JTable default, was "
+                + table.getPreferredScrollableViewportSize().width);
+
+        // The canvas must advertise a real preferred width so the 0.8 weight has a baseline to defend as
+        // the window shrinks (an empty JPanel would report a near-zero preferred width).
+        assertTrue(canvas.getPreferredSize().width >= 300,
+            "canvas should advertise a usable preferred width, was " + canvas.getPreferredSize().width);
+    }
+
+    /**
+     * Regression test for issue #9635: a curve whose axis units are a TunerStudio expression such as
+     * {@code {bitStringValue(unitsLabels, useMetricOnInterface)}} used to render the raw expression text
+     * under the plot. CurveWidget.resolveUnits must evaluate it against the config image (where
+     * useMetricOnInterface lives) and yield the actual °C / °F label.
+     */
+    @Test
+    public void testCurveWidgetResolvesUnitsExpression() {
+        String iniContent = "[Constants]\n" +
+            "page = 1\n" +
+            "useMetricOnInterface = bits, U32, 772, [29:29], \"Imperial\", \"Metric\"\n" +
+            "[PcVariables]\n" +
+            "unitsLabels = bits, U08, [0:2], \"F\", \"C\"\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(iniContent.getBytes()));
+        IniFileModel model = readLines(lines);
+
+        String unitsExpr = "{bitStringValue(unitsLabels, useMetricOnInterface)}";
+
+        // Metric: bit 29 of the U32 at offset 772 set (LE byte 775 = 0x20) -> "C"
+        byte[] metric = new byte[800];
+        metric[775] = 0x20;
+        assertEquals("C", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits(
+            unitsExpr, model, new ConfigurationImage(metric)),
+            "metric config should resolve units to C");
+
+        // Imperial: bit 29 clear -> "F"
+        assertEquals("F", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits(
+            unitsExpr, model, new ConfigurationImage(new byte[800])),
+            "imperial config should resolve units to F");
+
+        // Plain (non-expression) units pass through, with surrounding braces stripped.
+        assertEquals("RPM", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits("RPM", model, null));
+        assertEquals("deg", com.rusefi.ui.widgets.tune.CurveWidget.resolveUnits("{ deg }", model, null));
     }
 }
