@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23664">
+    <page number="0" size="15664">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -2834,41 +2834,6 @@
         <constant name="luaOutputPins6">"NONE"</constant>
         <constant name="luaOutputPins7">"NONE"</constant>
         <constant name="luaOutputPins8">"NONE"</constant>
-        <constant name="luaScript">hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
-
-function toHexString(num)
-	if num == 0 then
-		return '0'
-	end
-
-	local result = ""
-	while num &gt; 0 do
-		local n = num % 16
-		result = hexstr[n + 1] ..result
-		num = math.floor(num / 16)
-	end
-	return result
-end
-
-function arrayToString(arr)
-	local str = ""
-	local index = 1
-	while arr[index] ~= nil do
-		str = str.." "..toHexString(arr[index])
-		index = index + 1
-	end
-	return str
-end
-
-function printPacket(bus, id, dlc, data)
-    print('Received ' .. arrayToString(data))
-end
-
-function onCanRx(bus, id, dlc, data)
-end
-
-function onTick()
-end</constant>
         <constant name="maf2AdcChannel">"Disabled"</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant cols="1" digits="2" name="mafDecoding" rows="32" units="kg/hour">
@@ -5154,7 +5119,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260622" nPages="1" signature="rusEFI master.2026.06.24.f407-discovery.3089592405" version="5.0"/>
+    <versionInfo firmwareInfo="20260622" nPages="1" signature="rusEFI master.2026.06.24.f407-discovery.1621188492" version="5.0"/>
     <bibliography author="rusEFI 20260622" writeDate="date"/>
     <settings/>
     <userComments/>
