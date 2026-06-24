@@ -31,6 +31,7 @@
 #define SCHEDULER_TIMER_FREQ (US_TO_NT_MULTIPLIER * 1'000'000)
 
 const char *getStm32McuName(int mcuRevision);
+size_t flashSizeKb();
 
 /* TODO: rename includes to hal_flash_ex.h with no MCU specific? */
 #ifdef STM32F4XX
