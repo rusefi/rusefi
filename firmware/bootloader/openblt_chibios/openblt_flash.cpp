@@ -67,12 +67,16 @@ void FlashInit() {
 #endif
 }
 
-blt_addr FlashGetUserProgBaseAddress() {
+blt_addr FlashGetUserProgOffset() {
 #ifdef STM32H7XX
-	return FLASH_BASE + 128 * 1024;
+	return 128 * 1024;
 #else // not STM32H7
-	return FLASH_BASE + 32 * 1024;
+	return 32 * 1024;
 #endif
+}
+
+blt_addr FlashGetUserProgBaseAddress() {
+	return FLASH_BASE + FlashGetUserProgOffset();
 }
 
 blt_bool FlashWrite(blt_addr addr, blt_int32u len, blt_int8u *data) {
@@ -125,7 +129,7 @@ blt_bool FlashVerifyChecksum() {
 
 	size_t imageSize = *reinterpret_cast<size_t*>(start + checksumOffset + 4);
 
-	if (imageSize > 1024 * 1024) {
+	if (imageSize > (2 * 1024 * 1024 - FlashGetUserProgOffset())) {
 		// impossibly large size, invalid
 		return BLT_FALSE;
 	}
