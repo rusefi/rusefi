@@ -1542,6 +1542,14 @@
 #define SCRIPT_SETTING_COUNT 8
 #define SCRIPT_TABLE_8 8
 #define SCRIPT_TABLE_COUNT 4
+#define scriptCurve3_NAME "Script Curve #3"
+#define scriptCurve3_X_LINES 10
+#define scriptCurve3_X_NAME "X"
+#define scriptCurve3_X_RANGE 128
+#define scriptCurve4_NAME "Script Curve #4"
+#define scriptCurve4_X_LINES 10
+#define scriptCurve4_X_NAME "X"
+#define scriptCurve4_X_RANGE 128
 #define SD_CARD_LABEL "rusEFI logs"
 #define sd_log_state_e_SD_LOG_ACTIVE 4
 #define sd_log_state_e_SD_LOG_BUTTON_OFF 8
@@ -1593,7 +1601,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1563310822
+#define SIGNATURE_HASH 911300479
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2212,7 +2220,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.06.24.uaefi_pro.1563310822"
+#define TS_SIGNATURE "rusEFI master.2026.06.24.uaefi_pro.911300479"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

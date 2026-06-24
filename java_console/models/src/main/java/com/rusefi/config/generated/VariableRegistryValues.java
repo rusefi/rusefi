@@ -1441,6 +1441,14 @@ public class VariableRegistryValues {
 	public static final int SCRIPT_SETTING_COUNT = 8;
 	public static final int SCRIPT_TABLE_8 = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
+	public static final String scriptCurve3_NAME = "Script Curve #3";
+	public static final int scriptCurve3_X_LINES = 10;
+	public static final String scriptCurve3_X_NAME = "X";
+	public static final int scriptCurve3_X_RANGE = 128;
+	public static final String scriptCurve4_NAME = "Script Curve #4";
+	public static final int scriptCurve4_X_LINES = 10;
+	public static final String scriptCurve4_X_NAME = "X";
+	public static final int scriptCurve4_X_RANGE = 128;
 	public static final String SD_CARD_LABEL = "rusEFI logs";
 	public static final int sd_log_state_e_SD_LOG_ACTIVE = 4;
 	public static final int sd_log_state_e_SD_LOG_BUTTON_OFF = 8;
@@ -1805,7 +1813,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.06.24.stm32f429_nucleo.2178761905";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.06.24.stm32f429_nucleo.3936495912";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2176;
