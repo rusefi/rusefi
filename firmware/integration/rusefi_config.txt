@@ -166,6 +166,16 @@ struct_no_prefix engine_configuration_s
 #define TRAILING_SPARK_SIZE 4
 #define TRAILING_SPARK_RPM_SIZE 4
 
+#define scriptCurve3_NAME "Script Curve #3"
+#define scriptCurve3_X_NAME "X"
+#define scriptCurve3_X_RANGE 128
+#define scriptCurve3_X_LINES 10
+
+#define scriptCurve4_NAME "Script Curve #4"
+#define scriptCurve4_X_NAME "X"
+#define scriptCurve4_X_RANGE 128
+#define scriptCurve4_X_LINES 10
+
 #define ENGINE_NOISE_CURVE_SIZE 16
 #define CLT_TIMING_TEMP_AXIS_SIZE 5
 #define CLT_TIMING_LOAD_AXIS_SIZE 5
