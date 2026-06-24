@@ -129,7 +129,7 @@ blt_bool FlashVerifyChecksum() {
 
 	size_t imageSize = *reinterpret_cast<size_t*>(start + checksumOffset + 4);
 
-	if (imageSize > (2 * 1024 * 1024 - FlashGetUserProgOffset())) {
+	if (imageSize > (flashSizeKb() * 1024 - FlashGetUserProgOffset())) {
 		// impossibly large size, invalid
 		return BLT_FALSE;
 	}

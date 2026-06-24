@@ -304,4 +304,8 @@ const char *getStm32McuName(int mcuRevision) {
   return "unknown";
 }
 
+size_t flashSizeKb() {
+	return *reinterpret_cast<const volatile uint16_t*>(FLASHSIZE_BASE);
+}
+
 #endif // EFI_PROD_CODE
