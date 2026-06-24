@@ -76,6 +76,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/max_limit_with_hysteresis.cpp \
 	$(CONTROLLERS_DIR)/long_term_fuel_trim.cpp \
 	$(CONTROLLERS_DIR)/second_tables.cpp \
+	$(CONTROLLERS_DIR)/lua/lua_config_page.cpp \
 	$(CONTROLLERS_DIR)/extra_flash_pages.cpp \
 
 CONTROLLERS_INC=\
@@ -101,4 +102,5 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/actuators \
 	$(CONTROLLERS_DIR)/actuators/gppwm \
 	$(CONTROLLERS_DIR)/serial \
+	$(CONTROLLERS_DIR)/lua \
 

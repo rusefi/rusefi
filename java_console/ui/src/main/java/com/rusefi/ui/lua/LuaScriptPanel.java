@@ -193,6 +193,11 @@ public class LuaScriptPanel {
             BinaryProtocol bp = context.getBinaryProtocol();
             StringIniField luaScript = getLuaScriptField(bp);
 
+            if (luaScript == null) {
+                setText("luaScript field not found in .ini");
+                return;
+            }
+
             if (newLua.length() >= luaScript.getSize()) {
                 setText(newLua.length() + " bytes would not fit sorry current limit " + luaScript.getSize());
             } else {
@@ -259,16 +264,32 @@ public class LuaScriptPanel {
             return;
         }
 
-        ConfigurationImage image = bp.getControllerConfiguration();
-        if (image == null) {
-            setText("No configuration image");
+        StringIniField luaScript = getLuaScriptField(bp);
+        if (luaScript == null) {
+            setText("luaScript field not found in .ini");
             return;
         }
-        StringIniField luaScript = getLuaScriptField(bp);
-        ByteBuffer luaScriptBuffer = image.getByteBuffer(luaScript.getOffset(), luaScript.getSize());
 
-        byte[] scriptArr = new byte[luaScript.getSize()];
-        luaScriptBuffer.get(scriptArr);
+        byte[] scriptArr;
+        if (luaScript.getPageIndex() == 0) {
+            // Main settings page: comes from the already-fetched controller image.
+            ConfigurationImage image = bp.getControllerConfiguration();
+            if (image == null) {
+                setText("No configuration image");
+                return;
+            }
+            ByteBuffer luaScriptBuffer = image.getByteBuffer(luaScript.getOffset(), luaScript.getSize());
+            scriptArr = new byte[luaScript.getSize()];
+            luaScriptBuffer.get(scriptArr);
+        } else {
+            // Secondary page (new firmware places luaScript on its own TS page).
+            // The main image only holds page 0, so fetch directly from the ECU.
+            scriptArr = bp.readFromPage(luaScript.getPageIndex(), luaScript.getOffset(), luaScript.getSize());
+            if (scriptArr == null) {
+                setText("Failed to read luaScript from page " + luaScript.getPageIndex());
+                return;
+            }
+        }
 
         int i = findNullTerminator(scriptArr);
         setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
@@ -280,8 +301,12 @@ public class LuaScriptPanel {
         IniFileModel iniFile = bp.getIniFileNullable();
         if (iniFile == null)
             return null;
-        Objects.requireNonNull(iniFile, "iniFile");
-        return (StringIniField) iniFile.getIniField("LUASCRIPT");
+        // findIniField searches both the main page (old firmware) and secondary
+        // pages (new firmware places luaScript on its own dedicated page).
+        return iniFile.findIniField("LUASCRIPT")
+            .filter(f -> f instanceof StringIniField)
+            .map(f -> (StringIniField) f)
+            .orElse(null);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -300,18 +325,25 @@ public class LuaScriptPanel {
             BinaryProtocol bp = linkManager.getBinaryProtocol();
 
             StringIniField field = getLuaScriptField(bp);
+            if (field == null) {
+                log.error("luaScript field not found in .ini — cannot write");
+                return;
+            }
 
             byte[] paddedScript = getScriptBytes(field, script);
 
-            log.info("Sending " + field);
-            bp.writeInBlocks(paddedScript, 0, field.getOffset(), paddedScript.length);
+            log.info("Sending " + field + " page=" + field.getPageIndex());
+            bp.writeInBlocks(paddedScript, 0, field.getOffset(), paddedScript.length, field.getPageIndex());
 
 // need a way to modify script on the fly with shorter execution gaps to keep E65 CAN network happy
 // todo: auto-burn on console close check box in case of Lua changes?
 // todo: check box for auto-burn?
 //            bp.burn();
 
-            // Burning doesn't reload lua script, so we have to do it manually
+            // writeInBlocks above already updated the ECU's RAM copy of the script (on the
+            // main page for old firmware, or the dedicated Lua page for new firmware). The
+            // running Lua VM does not reload on its own, so trigger a reset to re-run the new
+            // script. (Note: there is no automatic reload on burn — the reset is what reloads.)
             resetLua();
         });
         // resume messages on 'write new script to ECU'

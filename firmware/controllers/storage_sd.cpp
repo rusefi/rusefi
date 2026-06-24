@@ -44,6 +44,8 @@ const char *SettingStorageSD::getIdFileName(size_t id) {
 		return "ltft.bin";
 	case EFI_SECOND_TABLES_RECORD_ID:
 		return "second_tables.bin";
+	case EFI_LUA_PAGE_RECORD_ID:
+		return "lua_script.bin";
 	default:
 		return nullptr;
 	}

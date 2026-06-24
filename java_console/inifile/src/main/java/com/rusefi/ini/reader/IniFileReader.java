@@ -474,6 +474,8 @@ public class IniFileReader {
     }
 
     private void registerField(IniField field) {
+        // ini file uses 1-based page numbering; TS protocol pageIdentifier is 0-based.
+        field.setPageIndex(currentPageIndex - 1);
         if (currentPageIndex != 1) {
             log.info("Skipping field from secondary page: " + field);
             secondaryIniFields.put(field.getName(), field);
