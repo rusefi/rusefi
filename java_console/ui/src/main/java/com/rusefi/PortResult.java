@@ -76,6 +76,12 @@ public class PortResult {
     }
 
     public Optional<String> getFirmwareHash() {
+        if (calibrations == null) {
+            // [tag:offline_tune] A cached Ecu/EcuWithOpenblt port pre-cached during offline auto-connect
+            // (StartupFrame.cachePort) carries no calibration data - the constructor already tolerates that,
+            // so the hash is simply unknown rather than an NPE.
+            return Optional.empty();
+        }
         final Optional<IniField> hash3IniField = calibrations.getIniFile().findIniField(HASH3_FIELD_NAME);
         return hash3IniField.map(field -> ConfigurationImageGetterSetter.getStringValue(field, calibrations.getImage().getConfigurationImage()));
     }
