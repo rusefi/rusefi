@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -142,14 +143,26 @@ public class ConnectionAndMeta {
     public ConnectionAndMeta invoke(String baseUrl) throws IOException {
         SSLContext ctx = acceptAnyCertificate();
 
-        URL url = new URL(baseUrl + zipFileName);
+        String randomSuffix = "?u=" + UUID.randomUUID();
+        URL url = new URL(baseUrl + zipFileName + randomSuffix);
         System.out.println("Connecting to " + url);
         httpConnection = (HttpsURLConnection) url.openConnection();
-        httpConnection.setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate");
+        configureDownloadRequest(httpConnection);
         httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
         completeFileSize = httpConnection.getContentLength();
         lastModified = httpConnection.getLastModified();
         return this;
+    }
+
+    private static void configureDownloadRequest(HttpsURLConnection connection) throws ProtocolException {
+        String mySecretUA = "RE-Internal-Sync";
+        connection.setRequestMethod("GET");
+        connection.setUseCaches(false);
+        connection.setDefaultUseCaches(false);
+        connection.setRequestProperty("User-Agent", mySecretUA);
+        connection.setRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+        connection.setRequestProperty("Pragma", "no-cache");
+        connection.setRequestProperty("Expires", "0");
     }
 
     private static @NotNull SSLContext acceptAnyCertificate() throws IOException {
