@@ -19,6 +19,8 @@
 #include "pin_repository.h"
 #endif
 
+#include "can.h"
+
 #ifndef USART_CR2_STOP1_BITS
 // todo: acticulate why exactly does prometheus_469 as for this hack
 #define USART_CR2_STOP1_BITS 0
@@ -149,3 +151,4 @@ void startSerialChannels();
 SerialTsChannelBase* getBluetoothChannel();
 
 void startCanConsole();
+void announceCanConsole(CanCycle cycle);

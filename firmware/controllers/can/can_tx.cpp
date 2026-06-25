@@ -20,6 +20,7 @@
 #include "can_sensor.h"
 #include "can_bench_test.h"
 #include "rusefi_wideband.h"
+#include "tunerstudio_io.h"
 
 extern CanListener* canListeners_head;
 
@@ -102,6 +103,10 @@ void CanWrite::PeriodicTask(efitick_t) {
 	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms) && boardEnableSendWidebandInfo()) {
 		sendWidebandInfo();
 	}
+
+#if EFI_CAN_SERIAL
+	announceCanConsole(cycle);
+#endif
 
 	m_cycleCount++;
 }

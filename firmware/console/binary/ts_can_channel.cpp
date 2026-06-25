@@ -13,6 +13,7 @@
 #if EFI_CAN_SERIAL
 #include "serial_can.h"
 #include "can_hw.h"
+#include "can_common.h"
 
 #if !EFI_CAN_SUPPORT
 #error "EFI_CAN_SERIAL requires EFI_CAN_SUPPORT"
@@ -104,6 +105,21 @@ static CanTsThread canTsThread;
 void startCanConsole() {
 	canTsThread.start();
 	tsOverCanInit();
+}
+
+struct tsCanConsoleAnnounceMsg {
+	uint32_t txId;	// ECU to host CAN ID
+	uint32_t rxId;	// Host to ECU CAN ID
+};
+
+void announceCanConsole(CanCycle cycle) {
+	// every 250mS?
+	if (cycle.isInterval(CI::_250ms)) {
+		CanTxTyped<tsCanConsoleAnnounceMsg> msg(CanCategory::SERIAL, (int)bench_test_packet_ids_e::ECU_ISO_TP_SETTINGS, true, /* channel */ 0);
+		// TODO: add flag(s) if extended IDs are used!
+		msg->txId = CAN_ECU_SERIAL_TX_ID;
+		msg->rxId = CAN_ECU_SERIAL_RX_ID;
+	}
 }
 
 #endif // EFI_CAN_SERIAL
