@@ -96,7 +96,7 @@ struct Tle9201 {
 	int idx;
 	int detectedRev = 0;
 	uint8_t savedDiag = 0;
-	char name[10];
+	char name[11];
 };
 
 static Tle9201 chips[BOARD_TLE9201_COUNT];
@@ -260,7 +260,7 @@ static bool isInitialized = false;
 int Tle9201::init(int i) {
 	drv_state = TLE9201_READY;
 	idx = i;
-	sprintf(name, "TLE9201[%d]", idx);
+	snprintf(name, sizeof(name), "TLE9201[%d]", idx);
 
 	if (!drv_task_ready) {
 		chThdCreateStatic(tle9201_thread_1_wa, sizeof(tle9201_thread_1_wa),
