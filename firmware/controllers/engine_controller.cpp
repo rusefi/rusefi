@@ -54,6 +54,7 @@
 #include "gppwm.h"
 #include "date_stamp.h"
 #include "rusefi_lua.h"
+#include "lua_heap.h"
 #include "buttonshift.h"
 #include "start_stop.h"
 #include "dynoview.h"
@@ -758,7 +759,10 @@ void commonEarlyInit() {
 #endif
 
 #if EFI_LUA
-	startLua();
+	luaHeapInit();
+	if (0) {
+		startLua();
+	}
 #endif // EFI_LUA
 
 #if EFI_CAN_SERIAL

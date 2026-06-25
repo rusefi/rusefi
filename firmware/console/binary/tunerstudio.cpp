@@ -855,14 +855,10 @@ static void handleGetText(TsChannelBase* tsChannel) {
 	tsState.textCommandCounter++;
 
 	printOverallStatus();
-
-	size_t outputSize;
-	const char* output = swapOutputBuffers(&outputSize);
 #if EFI_SIMULATOR
-	logMsg("get test sending [%d]\r\n", outputSize);
-#endif
-
-	tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(output), outputSize, true);
+	size_t outputSize =
+#endif // EFI_SIMULATOR
+		loggingSendOutputData(tsChannel);
 #if EFI_SIMULATOR
 	logMsg("sent [%d]\r\n", outputSize);
 #endif // EFI_SIMULATOR

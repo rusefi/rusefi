@@ -9,11 +9,13 @@
 #include <cstddef>
 #include "generated_lookup_meta.h"
 
+#include "tunerstudio_io.h"
+
 class Logging;
 
 void startLoggingProcessor();
 
-const char* swapOutputBuffers(size_t *actualOutputBufferSize);
+size_t loggingSendOutputData(TsChannelBase* tsChannel);
 
 namespace priv
 {
@@ -30,31 +32,30 @@ namespace priv
 #define efiPrintfProto(proto, fmt, ...) priv::efiPrintfInternal(proto LOG_DELIMITER fmt LOG_DELIMITER, ##__VA_ARGS__)
 #define efiPrintf(fmt, ...) efiPrintfProto(PROTOCOL_MSG, fmt, ##__VA_ARGS__)
 
-/**
- * This is the legacy function to copy the contents of a local Logging object in to the output buffer
- */
+struct LogBufferBase {
+	size_t len = 0;
+
+	virtual void free(void) = 0;
+	virtual char* getBuffer() = 0;
+
+	size_t used() {
+		return len;
+	}
+};
+
+template <size_t bufSize>
+struct LogBuffer : public LogBufferBase {
+	char buffer[bufSize];
+
+	char* getBuffer() override {
+		return buffer;
+	}
+
+	constexpr size_t size() {
+		return bufSize;
+	}
+};
+
+void loggingPostBuffer(LogBufferBase *buffer);
+
 void scheduleLogging(Logging *logging);
-
-// Stores the result of one call to efiPrintfInternal in the queue to be copied out to the output buffer
-struct LogLineBuffer {
-	char buffer[256];
-};
-
-template <size_t TBufferSize>
-class LogBuffer {
-public:
-	void writeLine(LogLineBuffer* line);
-	void writeLogger(Logging* logging);
-
-	size_t length() const;
-	void reset();
-	const char* get() const;
-
-#if !EFI_UNIT_TEST
-private:
-#endif
-	void writeInternal(const char* buffer);
-
-	char m_buffer[TBufferSize];
-	char* m_writePtr = m_buffer;
-};
