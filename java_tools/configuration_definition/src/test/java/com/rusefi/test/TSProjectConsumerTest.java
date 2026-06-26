@@ -3,6 +3,7 @@ package com.rusefi.test;
 import com.rusefi.ReaderState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.TsFileContent;
+import com.rusefi.VariableRegistry;
 import com.rusefi.output.BaseCHeaderConsumer;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigurationConsumer;
@@ -186,6 +187,126 @@ public class TSProjectConsumerTest {
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         // This should NOT throw exception because we allow re-definitions if there is a directive in between
         state.readBufferedReader(test, tsProjectConsumer);
+    }
+
+    // --- [tag:ts_page_table] generator page-table emission + @@if_block (issue #9699) ---
+
+    // registry seeded as if all five TS pages were generated (sizes, contents, command chars)
+    private static ReaderStateImpl stateWithFivePages() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        VariableRegistry reg = state.getVariableRegistry();
+        reg.put("TS_READ_COMMAND_char", "R");
+        reg.put("TS_BURN_COMMAND_char", "B");
+        reg.put("TS_CHUNK_WRITE_COMMAND_char", "C");
+        reg.put("TS_CRC_CHECK_COMMAND_char", "k");
+        reg.put("persistent_config_s_size", "1000");
+        reg.put("PAGE_SIZE_2", "256");  reg.put("PAGE_CONTENT_2", "c2");
+        reg.put("PAGE_SIZE_3", "2048"); reg.put("PAGE_CONTENT_3", "c3");
+        reg.put("PAGE_SIZE_4", "1268"); reg.put("PAGE_CONTENT_4", "c4");
+        reg.put("PAGE_SIZE_5", "8000"); reg.put("PAGE_CONTENT_5", "c5");
+        return state;
+    }
+
+    @Test
+    public void tsPageTableAllEnabled() {
+        ReaderStateImpl state = stateWithFivePages();
+        VariableRegistry reg = state.getVariableRegistry();
+        new TestTSProjectConsumer(state).registerTsPagesBlockForTest();
+
+        assertEquals("5", reg.get("TS_PAGE_COUNT"));
+        assertEquals("\"\\x00\\x00\", \"\\x00\\x01\", \"\\x00\\x02\", \"\\x00\\x03\", \"\\x00\\x04\"",
+                reg.get("TS_PAGE_IDENTIFIERS"));
+        assertEquals("1000, 256, 2048, 1268, 8000", reg.get("TS_PAGE_SIZES"));
+        // page 1 (settings) and 4/5 burn; scatter (2) and ltft (3) are not burnable
+        assertEquals("\"B%2i\", \"\", \"\", \"B%2i\", \"B%2i\"", reg.get("TS_PAGE_BURN_COMMANDS"));
+        assertEquals("page = 2\n\tc2\npage = 3\n\tc3\npage = 4\n\tc4\npage = 5\n\tc5\n",
+                reg.get("TS_PAGE_FIELD_BLOCKS"));
+        assertEquals("  triggeredPageRefresh = 1, { triggerPageRefreshFlag }\n" +
+                        "  triggeredPageRefresh = 3, { ltftPageRefreshFlag }\n" +
+                        "  triggeredPageRefresh = 4, { triggerPageRefreshFlag }\n",
+                reg.get("TS_PAGE_REFRESH_TRIGGERS"));
+    }
+
+    @Test
+    public void tsPageTableLtftDisabledRenumbers() {
+        ReaderStateImpl state = stateWithFivePages();
+        VariableRegistry reg = state.getVariableRegistry();
+        reg.put("EFI_LTFT_CONTROL", "FALSE");
+        new TestTSProjectConsumer(state).registerTsPagesBlockForTest();
+
+        assertEquals("4", reg.get("TS_PAGE_COUNT"));
+        // LTFT identifier \x00\x02 dropped - firmware identifiers are fixed, so a gap is correct
+        assertEquals("\"\\x00\\x00\", \"\\x00\\x01\", \"\\x00\\x03\", \"\\x00\\x04\"",
+                reg.get("TS_PAGE_IDENTIFIERS"));
+        assertEquals("1000, 256, 1268, 8000", reg.get("TS_PAGE_SIZES"));
+        // page=N ordinals renumber: second_tables 4->3, lua 5->4
+        assertEquals("page = 2\n\tc2\npage = 3\n\tc4\npage = 4\n\tc5\n", reg.get("TS_PAGE_FIELD_BLOCKS"));
+        // ltft refresh gone, second_tables refresh renumbered 4->3
+        assertEquals("  triggeredPageRefresh = 1, { triggerPageRefreshFlag }\n" +
+                        "  triggeredPageRefresh = 3, { triggerPageRefreshFlag }\n",
+                reg.get("TS_PAGE_REFRESH_TRIGGERS"));
+        // published for @@if_block guards of LTFT's scattered references (editors, menus, tooltips)
+        assertEquals("false", reg.get("LTFT_PAGE_ENABLED"));
+    }
+
+    @Test
+    public void tsPageTableLuaDisabledTrailingDrop() {
+        ReaderStateImpl state = stateWithFivePages();
+        VariableRegistry reg = state.getVariableRegistry();
+        reg.put("EFI_LUA", "FALSE");
+        new TestTSProjectConsumer(state).registerTsPagesBlockForTest();
+
+        assertEquals("4", reg.get("TS_PAGE_COUNT"));
+        // Lua is the last page - dropping it needs no renumbering and leaves no gap
+        assertEquals("\"\\x00\\x00\", \"\\x00\\x01\", \"\\x00\\x02\", \"\\x00\\x03\"",
+                reg.get("TS_PAGE_IDENTIFIERS"));
+        assertEquals("1000, 256, 2048, 1268", reg.get("TS_PAGE_SIZES"));
+        assertEquals("page = 2\n\tc2\npage = 3\n\tc3\npage = 4\n\tc4\n", reg.get("TS_PAGE_FIELD_BLOCKS"));
+    }
+
+    @Test
+    public void tsPageTableZeroSizeDropped() {
+        ReaderStateImpl state = stateWithFivePages();
+        VariableRegistry reg = state.getVariableRegistry();
+        reg.put("PAGE_SIZE_5", "0"); // e.g. a board with LUA_SCRIPT_SIZE 0
+        new TestTSProjectConsumer(state).registerTsPagesBlockForTest();
+
+        assertEquals("4", reg.get("TS_PAGE_COUNT"));
+        assertEquals("1000, 256, 2048, 1268", reg.get("TS_PAGE_SIZES"));
+    }
+
+    private static String ifBlockResult(String flagValue, String content) throws IOException {
+        ReaderStateImpl state = new ReaderStateImpl();
+        if (flagValue != null)
+            state.getVariableRegistry().put("MY_FLAG", flagValue);
+        TSProjectConsumer consumer = new TestTSProjectConsumer(state);
+        return consumer.getTsFileContent(new StringBufferInputStream(content)).getPrefix();
+    }
+
+    @Test
+    public void ifBlockKeptWhenTrue() throws IOException {
+        String content = "before\n@@if_block MY_FLAG@@\ninside1\ninside2\n@@endif_block\nafter\n";
+        assertEquals("before\ninside1\ninside2\nafter\n", ifBlockResult("true", content));
+    }
+
+    @Test
+    public void ifBlockDroppedWhenFalse() throws IOException {
+        String content = "before\n@@if_block MY_FLAG@@\ninside1\ninside2\n@@endif_block\nafter\n";
+        assertEquals("before\nafter\n", ifBlockResult("false", content));
+    }
+
+    @Test
+    public void ifBlockDroppedWhenTokenMissing() throws IOException {
+        // an unregistered token parses as false and drops the block (matches per-line @@if_)
+        String content = "before\n@@if_block MISSING@@\ninside\n@@endif_block\nafter\n";
+        assertEquals("before\nafter\n", ifBlockResult(null, content));
+    }
+
+    @Test
+    public void ifBlockStartTagWithoutTrailingMarker() throws IOException {
+        // the closing "@@" on the start line is optional
+        String content = "a\n@@if_block MY_FLAG\nx\n@@endif_block\nb\n";
+        assertEquals("a\nb\n", ifBlockResult("false", content));
     }
 
     @Test
