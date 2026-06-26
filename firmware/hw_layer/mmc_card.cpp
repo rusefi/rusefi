@@ -835,7 +835,7 @@ static int sdModeExecuter()
 			sdNeedRemoveReports = false;
 		}
 
-		if ((sdLoggedSuppressed) || (sdLoggerFailed)) {
+		if (sdLoggerFailed) {
 			// logger is dead or paused, do not waste CPU
 			chThdSleepMilliseconds(100);
 			return 0;
