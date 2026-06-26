@@ -377,4 +377,57 @@ bool IsToothLoggerEnabled() {
 	return ToothLoggerEnabled;
 }
 
+#if EFI_FILE_LOGGING
+
+static int ToothLoggerWriteBin(Writer &writer, CompositeBuffer* buffer) {
+	int size = buffer->nextIdx * sizeof(composite_logger_s);
+
+	writer.write(reinterpret_cast<const char*>(buffer->buffer), size);
+
+	return size;
+}
+
+bool ToothLoggerHasData() {
+	chibios_rt::CriticalSectionLocker csl;
+
+	return ((currentBuffer) ||
+		(filledBuffers.getUsedCountI() > 0));
+
+}
+
+int ToothLoggerWriter(FileBufferedWriter &writer) {
+	int ret = 0;
+	CompositeBuffer* buffer = nullptr;
+	bool startNewFile = false;
+
+	// manualy pick buffer, do not use GetToothLoggerBufferImpl() as it changes TS buffer ready flag
+	msg_t msg = filledBuffers.fetch(&buffer, TIME_MS2I(3000));
+	if ((msg != MSG_OK) && (msg != MSG_TIMEOUT)) {
+		// error?
+		return -1;
+	}
+	if (msg == MSG_TIMEOUT) {
+		chibios_rt::CriticalSectionLocker csl;
+		// if we did not get any event within 3 seconds - finish current file and wait for new event.
+		startNewFile = true;
+
+		// flush data from currently writing buffer!
+		if (currentBuffer) {
+			buffer = currentBuffer;
+			currentBuffer = nullptr;
+		}
+	}
+
+	// can return nullptr
+	if (buffer) {
+		ret = ToothLoggerWriteBin(writer, buffer);
+
+		ReturnToothLoggerBuffer(buffer);
+	}
+
+	return startNewFile ? 0 : ret;
+}
+
+#endif /* EFI_FILE_LOGGING */
+
 #endif /* EFI_TOOTH_LOGGER */
