@@ -64,6 +64,11 @@ jobs:
         .github/workflows/bin/smart-git-add.sh 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
         # misc live data etc. reference files TODO change extention since not really .ini?
         .github/workflows/bin/smart-git-add.sh 'firmware/console/binary/generated/*.ini'
+        # live_data_fragments.h / live_data_ids.h live in a generated/ dir but their
+        # basenames lack the "generated" token, so the *generated*.h glob above misses
+        # them (bash globstar matches on basename, unlike the old `git add` pathspec
+        # where the directory name counted). Add them explicitly. See issue #9700.
+        .github/workflows/bin/smart-git-add.sh 'firmware/console/binary/generated/*.h'
         .github/workflows/bin/smart-git-add.sh 'firmware/controllers/lua/generated/*.md'
         .github/workflows/bin/smart-git-add.sh '**/*.java'
         .github/workflows/bin/smart-git-add.sh '*_generated.h'
