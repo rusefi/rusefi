@@ -26,6 +26,20 @@
 ! of any other fields, users will have their configs scrambled when they update their firmware.
 ! As a result, this file is an organism that must be handled carefully.
 !
+! If you are renaming a field or changing its scaling/logic, you might need to add a
+! corresponding migration logic in the Java console.
+! See `TuneMigrator.java` and `DefaultTuneMigrator.java` in `java_console/io`.
+!
+! Common migration scenarios:
+! - Resizing tables (e.g. VE table): Use `TableAddColumnsMigrator`
+! - Changing scale/precision: Use `ArrayFieldScaleMigrator`
+! - Renaming fields: `DefaultTuneMigrator` handles simple renames if units match,
+!   but complex renames might need a custom migrator.
+! - Logic inversion (e.g. boolean fields): Use `BooleanIniFieldMigrator`
+!
+! Migration allows users to keep their tunes when moving to a new firmware version
+! even if the configuration layout has changed.
+!
 ! You may notice that there isn't much organization to this file with fields in amongst unrelated fields.
 ! That's OK, it's just a result of things being removed and new things being put in their places, and new
 ! things only being able to be added at the end of the structure or where other things were removed previously.

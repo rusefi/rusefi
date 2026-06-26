@@ -9,6 +9,17 @@ import com.rusefi.tune.xml.Constant;
 
 import java.util.Optional;
 
+/**
+ * TableAddColumnsMigrator handles resizing of 2D tables (e.g., VE, Ignition) when columns or rows are added.
+ *
+ * <h3>Testing and Coverage Examples:</h3>
+ * This migrator is tested in {@code TableAddColumnsMigratorTest} in the {@code java_console/ui} module.
+ * Examples of tables covered by this migrator include:
+ * <ul>
+ *   <li>{@code veTable} (VE table migration)</li>
+ *   <li>{@code ignitionTable} (Ignition table migration)</li>
+ * </ul>
+ */
 public class TableAddColumnsMigrator implements TuneMigrator {
     public static final String VE_TABLE_FIELD_NAME = "veTable";
     public static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";

@@ -11,8 +11,18 @@ import java.util.Optional;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-// Generic migrator for array fields that change scale between firmware versions
-// Follows the same pattern as BooleanIniFieldMigrator with a static array of fields to migrate
+/**
+ * Generic migrator for array fields that change scale between firmware versions.
+ * Follows the same pattern as BooleanIniFieldMigrator with a static array of fields to migrate.
+ *
+ * <h3>Testing and Coverage Examples:</h3>
+ * This migrator is tested in {@code TargetAfrBlendsScaleMigratorTest} in the {@code java_console/ui} module.
+ * Examples of fields covered by this migrator include:
+ * <ul>
+ *   <li>{@code targetAfrBlends1_table} (Scale change from 0.1 to 0.01)</li>
+ *   <li>{@code targetAfrBlends2_table} (Scale change from 0.1 to 0.01)</li>
+ * </ul>
+ */
 public enum ArrayFieldScaleMigrator implements TuneMigrator {
     INSTANCE;
 

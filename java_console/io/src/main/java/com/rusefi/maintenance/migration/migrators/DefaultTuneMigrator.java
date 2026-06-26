@@ -15,6 +15,15 @@ import java.util.*;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
 
+/**
+ * DefaultTuneMigrator is the final stage of the migration process.
+ * It handles simple field-to-field migration where names and units match between the old and new .ini files.
+ *
+ * This migrator is executed last in {@link com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator}.
+ * It will skip any fields that have already been handled by more specialized migrators.
+ *
+ * It automatically ignores fields marked as "unused" in `rusefi_config.txt` and certain board-specific fields.
+ */
 public enum DefaultTuneMigrator implements TuneMigrator {
     INSTANCE;
 

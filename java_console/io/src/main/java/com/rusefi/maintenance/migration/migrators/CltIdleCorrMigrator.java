@@ -15,6 +15,8 @@ import java.util.Optional;
 public enum CltIdleCorrMigrator implements TuneMigrator {
     INSTANCE;
 
+    // Testing: CltIdleCorrMigratorTest
+
     public static final String MAN_IDLE_POSITION_FIELD_NAME = "manIdlePosition";
     public static final String CLT_IDLE_CORR_BINS_FIELD_NAME = "cltIdleCorrBins";
     public static final String CLT_IDLE_CORR_FIELD_NAME = "cltIdleCorr";

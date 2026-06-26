@@ -20,6 +20,23 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 
+/**
+ * DefaultTuneMigratorTest is an integration-style test for the full tune migration pipeline.
+ *
+ * It uses a set of "previous" and "updated" .ini and .msq files located in the {@code test_data/} folder.
+ * The test simulates a scenario where a user upgrades from an older firmware (represented by {@code prev_calibrations})
+ * to a newer one (represented by {@code updated_calibrations}).
+ *
+ * Testing Strategy:
+ * 1. Load the test context with previous and updated configuration/tune.
+ * 2. Execute the {@link com.rusefi.maintenance.migration.migrators.ComposedTuneMigrator#INSTANCE}.
+ * 3. Verify that individual fields are correctly migrated from the old tune to the new one.
+ *
+ * The {@link #checkValueToUpdateExist} helper method is used to assert that a field:
+ * - Had a specific value in the old tune.
+ * - Has a (possibly different) default value in the new tune.
+ * - Was correctly migrated (the old value was carried over to the new configuration).
+ */
 public class DefaultTuneMigratorTest {
     private TestTuneMigrationContext testContext;
 
@@ -256,6 +273,13 @@ public class DefaultTuneMigratorTest {
         );
     }
 
+    /**
+     * Asserts that a field was correctly migrated.
+     *
+     * @param fieldName The name of the field to check.
+     * @param expectedPrevFieldValue The value the field had in the "old" tune.
+     * @param expectedUpdatedFieldValue The default value the field has in the "new" tune (can be null if missing).
+     */
     private void checkValueToUpdateExist(
         final String fieldName,
         final String expectedPrevFieldValue,

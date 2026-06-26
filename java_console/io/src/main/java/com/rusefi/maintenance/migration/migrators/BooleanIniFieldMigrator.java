@@ -10,6 +10,18 @@ import java.util.Optional;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * BooleanIniFieldMigrator handles migration of boolean fields, including logic inversion
+ * or renaming.
+ *
+ * <h3>Testing and Coverage Examples:</h3>
+ * This migrator is tested in {@code BooleanIniFieldMigratorTest} in the {@code java_console/ui} module.
+ * Examples of fields covered by this migrator include:
+ * <ul>
+ *   <li>{@code launchControlEnabled}</li>
+ *   <li>{@code antiLagEnabled}</li>
+ * </ul>
+ */
 public enum BooleanIniFieldMigrator implements TuneMigrator {
     INSTANCE;
 
