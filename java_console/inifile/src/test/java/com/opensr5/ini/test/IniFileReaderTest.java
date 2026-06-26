@@ -983,4 +983,54 @@ public class IniFileReaderTest {
         assertTrue(model.getEventTriggers().isEmpty());
     }
 
+    @Test
+    public void testParsePageIdentifier() {
+        // The generator emits each identifier little-endian as two \xNN byte escapes.
+        assertEquals(0x0000, IniFileMetaInfoImpl.parsePageIdentifier("\\x00\\x00"));
+        assertEquals(0x0100, IniFileMetaInfoImpl.parsePageIdentifier("\\x00\\x01"));
+        assertEquals(0x0400, IniFileMetaInfoImpl.parsePageIdentifier("\\x00\\x04")); // Lua page
+        // plain numeric fallback
+        assertEquals(7, IniFileMetaInfoImpl.parsePageIdentifier("7"));
+    }
+
+    @Test
+    public void testLuaPageWireIdentifier() {
+        // Regression for #9693: a field on a secondary TS page must resolve to the real wire
+        // page identifier (Lua = 0x0400), NOT the page ordinal (4).  Sending the ordinal made
+        // the firmware reject the write ("WR out of range"), breaking the Lua write button.
+        String string = "   nPages              = 5\n" +
+            SIGNATURE_UNIT_TEST +
+            "    pageReadCommand     = \"X\", \"X\", \"X\", \"X\", \"X\"\n" +
+            "ochBlockSize=1\n" +
+            "    pageSize            = 100, 256, 2048, 1268, 8000\n" +
+            "    pageIdentifier      = \"\\x00\\x00\", \"\\x00\\x01\", \"\\x00\\x02\", \"\\x00\\x03\", \"\\x00\\x04\"\n" +
+            "page = 5\n" +
+            "[Constants]\n" +
+            "luaScript = string, ASCII, 0, 8000\n" +
+            "page = 1\n" +
+            "[Constants]\n" +
+            "someMainField = scalar, U08, 0, \"\", 1, 0, 0, 255, 0\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileMetaInfo metaInfo = new IniFileMetaInfoImpl(lines);
+
+        // metaInfo decodes the pageIdentifier list directly...
+        assertEquals(0x0000, metaInfo.getPageIdentifier(0));
+        assertEquals(0x0400, metaInfo.getPageIdentifier(4));
+
+        // ...and the reader stamps that identifier onto each field.
+        IniFileModel model;
+        try {
+            model = IniFileReaderUtil.readIniFile(lines, "", metaInfo);
+        } catch (IniParsingException e) {
+            throw new RuntimeException(e);
+        }
+
+        IniField lua = model.findIniField("luaScript").orElseThrow();
+        assertEquals(0x0400, lua.getPageIndex(), "Lua field must carry the 0x0400 wire page identifier");
+
+        IniField main = model.findIniField("someMainField").orElseThrow();
+        assertEquals(0x0000, main.getPageIndex(), "Main page field stays on identifier 0x0000");
+    }
+
 }

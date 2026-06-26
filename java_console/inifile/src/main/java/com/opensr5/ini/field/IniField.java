@@ -6,9 +6,10 @@ public abstract class IniField {
     private final String name;
     // offset within binary page
     private final int offset;
-    // TunerStudio protocol page index (0 = main settings page).  Set by
-    // IniFileReader.registerField — the ini file uses 1-based page numbering
-    // while the protocol pageIdentifier is 0-based, so reader stores (iniPage - 1).
+    // TunerStudio protocol page identifier (0x0000 = main settings page, 0x0100 scatter,
+    // 0x0200 LTFT, 0x0300 second tables, 0x0400 Lua - see firmware tunerstudio.h).  This is
+    // the value sent on the wire in read/write/burn commands, NOT the ini's 1-based page
+    // ordinal.  Set by IniFileReader.registerField from the ini's pageIdentifier list.
     private int pageIndex = 0;
 
     public IniField(String name, int offset) {
