@@ -474,8 +474,14 @@ public class IniFileReader {
     }
 
     private void registerField(IniField field) {
-        // ini file uses 1-based page numbering; TS protocol pageIdentifier is 0-based.
-        field.setPageIndex(currentPageIndex - 1);
+        // The ini uses 1-based page numbering (page = 1, 2, ...).  The value sent on the wire
+        // for read/write/burn is the TS page identifier from the ini's pageIdentifier list
+        // (0x0000 main, 0x0100 scatter, 0x0200 LTFT, 0x0300 second tables, 0x0400 Lua), NOT the
+        // page ordinal.  Looking it up by position keeps it correct even when a page is compiled
+        // out and the blocks are renumbered (#9699).  Falls back to the ordinal when metaInfo or
+        // the pageIdentifier line is unavailable (still correct for the main page).
+        int zeroBasedPage = currentPageIndex - 1;
+        field.setPageIndex(metaInfo != null ? metaInfo.getPageIdentifier(zeroBasedPage) : zeroBasedPage);
         if (currentPageIndex != 1) {
             log.info("Skipping field from secondary page: " + field);
             secondaryIniFields.put(field.getName(), field);
