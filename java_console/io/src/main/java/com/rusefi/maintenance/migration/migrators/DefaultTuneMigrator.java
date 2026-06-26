@@ -60,8 +60,11 @@ public enum DefaultTuneMigrator implements TuneMigrator {
         final IniFileModel newIni = context.getUpdatedIniFile();
         final Map<String, Constant> newValues = context.getUpdatedTune().getConstantsAsMap();
         final Map<String, Constant> prevValues = context.getPrevTune().getConstantsAsMap();
-        final Map<String, IniField> newIniFields = newIni.getAllIniFields();
-        final IniField newField = newIniFields.get(prevFieldName);
+        // findIniField (not getAllIniFields().get) so fields that live on a secondary TS page in the
+        // new .ini are still resolved. getAllIniFields() only holds main-page (page 1) fields; any
+        // field moved to a dedicated page — e.g. luaScript on its own page since #9693 — would
+        // otherwise look "missed in new .ini file" and be silently dropped from the migrated tune.
+        final IniField newField = newIni.findIniField(prevFieldName).orElse(null);
         final Constant prevValue = prevValues.get(prevFieldName);
 
         if (newField == null) {
