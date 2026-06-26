@@ -172,7 +172,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
      * and the parallel lists consistent automatically when a page is added or compiled out,
      * fixing issue #9699.
      */
-    private void registerTsPagesBlock() {
+    protected void registerTsPagesBlock() {
         VariableRegistry registry = state.getVariableRegistry();
         if (registry.get("TS_PAGE_COUNT") != null)
             return; // already registered (defensive against double invocation)

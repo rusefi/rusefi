@@ -11,4 +11,9 @@ public class TestTSProjectConsumer extends TSProjectConsumer {
     @Override
     public void endFile() {
     }
+
+    // exposes the protected page-table emission for unit testing
+    public void registerTsPagesBlockForTest() {
+        registerTsPagesBlock();
+    }
 }
