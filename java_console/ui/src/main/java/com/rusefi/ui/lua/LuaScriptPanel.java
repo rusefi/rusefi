@@ -135,15 +135,18 @@ public class LuaScriptPanel {
         mp.setFont(mono, config);
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
-        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        readFromECU();
-                    } catch (Throwable e) {
-                        log.error("Unexpected" + e, e);
-                    }
+        // addAndFireListener (not addListener): the Lua tab is usually opened AFTER the ECU is
+        // already connected, so a plain listener would miss the connect event and never read the
+        // script, leaving the editor blank. Firing immediately reads the current script on open.
+        ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> {
+            // readFromECU() does live ECU I/O (the Lua script lives on its own TS page now), which
+            // must run on the communication thread — not the EDT — or executeCommand() throws
+            // "Communication on wrong thread"
+            context.getLinkManager().submit(() -> {
+                try {
+                    readFromECU();
+                } catch (Throwable e) {
+                    log.error("Unexpected" + e, e);
                 }
             });
         });
@@ -238,7 +241,8 @@ public class LuaScriptPanel {
     }
 
     private void setText(String luaScript) {
-        scriptText.setText(luaScript);
+        // May be called from the communication thread (readFromECU); Swing requires EDT.
+        SwingUtilities.invokeLater(() -> scriptText.setText(luaScript));
     }
 
     private String getWorkingFolder() {
@@ -275,6 +279,7 @@ public class LuaScriptPanel {
             // Main settings page: comes from the already-fetched controller image.
             ConfigurationImage image = bp.getControllerConfiguration();
             if (image == null) {
+                log.info("readFromECU: page 0 branch but no configuration image");
                 setText("No configuration image");
                 return;
             }
@@ -286,6 +291,7 @@ public class LuaScriptPanel {
             // The main image only holds page 0, so fetch directly from the ECU.
             scriptArr = bp.readFromPage(luaScript.getPageIndex(), luaScript.getOffset(), luaScript.getSize());
             if (scriptArr == null) {
+                log.info("readFromECU: readFromPage returned null for page=" + luaScript.getPageIndex());
                 setText("Failed to read luaScript from page " + luaScript.getPageIndex());
                 return;
             }
