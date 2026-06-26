@@ -9,6 +9,8 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 
+// [tag:ts_page_table] these page identifiers must agree with the generator's TS_PAGES table
+// (TSProjectConsumer.java) and the @@TS_PAGE_*@@ block in tunerstudio.template.ini - see issue #9699
 #define TS_PAGE_SETTINGS			0x0000
 // Issue TS zeroes LSB byte of pageIdentifier
 #define TS_PAGE_SCATTER_OFFSETS		0x0100

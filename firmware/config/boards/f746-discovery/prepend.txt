@@ -1,0 +1,3 @@
+; board.mk builds with -DEFI_LUA=FALSE; mirror it here so the generator drops the Lua
+; TS page (page 5) from this board's .ini - see [tag:ts_page_table] / issue #9699
+#define EFI_LUA FALSE

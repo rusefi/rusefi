@@ -225,6 +225,7 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 }
 
 static constexpr size_t getTunerStudioPageSize(size_t page) {
+	// [tag:ts_page_table] per-page sizes here must match the sizes the generator emits into the .ini
 	switch (page) {
 	case TS_PAGE_SETTINGS:
 		return TOTAL_CONFIG_SIZE;
