@@ -10,8 +10,6 @@
 #include "logicdata_csv_reader.h"
 
 TEST(crankingVW, vwRealCrankingFromFile) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/nick_1.csv");
@@ -28,8 +26,6 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 }
 
 TEST(crankingVW, crankingTwiceWithGap) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
 	EngineTestHelper eth (engine_type_e::VW_ABA);
 	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;

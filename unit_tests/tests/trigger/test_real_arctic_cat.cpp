@@ -2,8 +2,6 @@
 #include "real_trigger_helper.h"
 
 TEST(arctic, realStartFromFile) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
 
 	RealTriggerHelper helper;
 	helper.runTest("tests/trigger/resources/arctic-cat.csv", trigger_type_e::TT_ARCTIC_CAT);

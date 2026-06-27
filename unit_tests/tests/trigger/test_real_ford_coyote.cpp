@@ -34,8 +34,6 @@ TEST(fordCoyote, exhaustCam) {
 }
 
 TEST(fordCoyote, exhaustCamInverted) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
 	// C9002, C9007, C9008
 	runCoyoteExhaustCam(true, 3, 1046);
 }
