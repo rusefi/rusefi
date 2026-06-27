@@ -509,13 +509,14 @@ static bool validateGdi() {
 	if (!lobes) {
 		return true;
 	}
+#if EFI_HPFP
 	int expectedLastLobeProfileAngle = 360 / lobes;
   float actualLastAngle = config->hpfpLobeProfileAngle[efi::size(config->hpfpLobeProfileAngle) - 1];
 	if (expectedLastLobeProfileAngle != actualLastAngle) {
 		criticalError("Last HPFP angle expected %d got %f", expectedLastLobeProfileAngle, actualLastAngle);
 		return false;
 	}
-
+#endif // EFI_HPFP
 	return true;
 }
 
