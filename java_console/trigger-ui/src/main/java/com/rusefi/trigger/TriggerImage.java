@@ -237,7 +237,7 @@ public class TriggerImage {
     }
 
     @NotNull
-    private static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
+    static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
                                            TriggerWheelInfo shape) {
         return new JPanel() {
             @Override

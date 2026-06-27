@@ -40,6 +40,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * MainMenuTreeWidget
+ */
 public class MainMenuTreeWidgetTest {
     private static IniFileModel readLines(RawIniFile lines) {
         IniFileMetaInfo metaInfo = new IniFileMetaInfo() {
