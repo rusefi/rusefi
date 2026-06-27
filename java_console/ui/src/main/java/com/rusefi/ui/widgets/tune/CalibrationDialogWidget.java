@@ -52,11 +52,9 @@ import static com.devexperts.logging.Logging.getLogging;
 public class CalibrationDialogWidget {
     private static final Logging log = getLogging(CalibrationDialogWidget.class);
 
-    private static final String triggerPrimary = "trigger_primary";
-
     private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
-    private final JPanel triggerImagePanel = new JPanel(new BorderLayout());
+    private final TriggerImageHelper triggerImageHelper = new TriggerImageHelper();
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
@@ -197,12 +195,9 @@ public class CalibrationDialogWidget {
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
             fillPanel(contentPane, dialogModel, iniFileModel, ci);
 
-            if (triggerPrimary.equalsIgnoreCase(dialogModel.getKey()) ||
-                    "trigger_cams".equalsIgnoreCase(dialogModel.getKey())) {
-                addEastPanel(contentPane);
-                if (triggerPrimary.equalsIgnoreCase(dialogModel.getKey())) {
-                    updateTriggerImage();
-                }
+            if (triggerImageHelper.isTriggerPanel(dialogModel.getKey(), uiName)) {
+                triggerImageHelper.addTriggerPanelExtras(contentPane);
+                triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage);
             }
         }
         contentPane.revalidate();
@@ -326,7 +321,7 @@ public class CalibrationDialogWidget {
         Runnable onChange = () -> {
             refreshExpressions();
             if ("trigger_type".equalsIgnoreCase(field.getKey())) {
-                updateTriggerImage();
+                triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage);
             }
         };
         Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
@@ -443,96 +438,15 @@ public class CalibrationDialogWidget {
             GradientTitleBorder.installBorder(uiName, panelWidget);
             fillPanel(panelWidget, subDialog, iniFileModel, ci);
 
-            if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(subDialog.getKey()) ||
-                    "Cam Inputs".equalsIgnoreCase(uiName) || "trigger_cams".equalsIgnoreCase(subDialog.getKey())) {
-                addEastPanel(panelWidget);
-                if ("trigger_primary".equalsIgnoreCase(subDialog.getKey()) || "Primary Trigger".equalsIgnoreCase(uiName)) {
-                    updateTriggerImage();
-                }
+            if (triggerImageHelper.isTriggerPanel(subDialog.getKey(), uiName) || "Sub Panel".equals(uiName)) {
+                triggerImageHelper.addTriggerPanelExtras(panelWidget);
+                triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage);
             }
         } else {
             panelWidget.setName(panel.getPanelName());
             GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
         }
         if (constraint != null) targetContainer.add(panelWidget, constraint); else targetContainer.add(panelWidget);
-    }
-
-    private void updateTriggerImage() {
-        if (currentIniFileModel == null || workingImage == null) {
-            return;
-        }
-        Optional<IniField> triggerTypeField = currentIniFileModel.findIniField("trigger_type");
-        if (!triggerTypeField.isPresent()) {
-            return;
-        }
-        Double typeId = workingImage.readNumericValue(triggerTypeField.get());
-        if (typeId == null) {
-            return;
-        }
-
-        triggerImagePanel.removeAll();
-        try {
-            // Check current directory then parent directory for unit_tests
-            String unitTestsPath = "unit_tests";
-            if (!new File(unitTestsPath).exists()) {
-                unitTestsPath = ".." + File.separator + "unit_tests";
-            }
-            if (!new File(unitTestsPath).exists()) {
-                unitTestsPath = ".." + File.separator + ".." + File.separator + "unit_tests";
-            }
-
-            TriggerWheelInfo.readWheels(unitTestsPath, wheelInfo -> {
-                if (typeId.intValue() == wheelInfo.getId()) {
-                    JPanel wheelPanel = TriggerImage.createWheelPanel(wheelInfo.getFirstWheeTriggerSignals(), true, wheelInfo);
-                    triggerImagePanel.add(wheelPanel);
-                }
-            });
-        } catch (Exception e) {
-            log.error("Error reading trigger wheels: " + e.getMessage());
-        }
-        triggerImagePanel.revalidate();
-        triggerImagePanel.repaint();
-    }
-
-    /** older render logic, used only for test, TODO: refactor the test and remove */
-    private void addEastPanel(JPanel panel) {
-        if (!(panel.getLayout() instanceof BorderLayout)) {
-            wrapWithBorderLayout(panel);
-        }
-        JPanel eastPanel = new JPanel(new BorderLayout()) {
-            @Override
-            public Dimension getPreferredSize() {
-                Dimension d = super.getPreferredSize();
-                Container parent = getParent();
-                if (parent != null && parent.getWidth() > 0) {
-                    return new Dimension((int) (parent.getWidth() * 0.2), d.height);
-                }
-                return new Dimension(100, d.height);
-            }
-        };
-        eastPanel.setBorder(new LineBorder(Color.ORANGE));
-        if (triggerPrimary.equalsIgnoreCase(panel.getName()) || "Primary Trigger".equalsIgnoreCase(panel.getName())) {
-            eastPanel.add(triggerImagePanel);
-        }
-        panel.add(eastPanel, BorderLayout.EAST);
-    }
-
-    private static void wrapWithBorderLayout(JPanel panel) {
-        JPanel inner = new JPanel();
-        LayoutManager oldLayout = panel.getLayout();
-        if (oldLayout instanceof BoxLayout) {
-            int axis = ((BoxLayout) oldLayout).getAxis();
-            inner.setLayout(new BoxLayout(inner, axis));
-        } else {
-            inner.setLayout(oldLayout);
-        }
-        Component[] components = panel.getComponents();
-        panel.removeAll();
-        for (Component c : components) {
-            inner.add(c);
-        }
-        panel.setLayout(new BorderLayout());
-        panel.add(inner, BorderLayout.CENTER);
     }
 
     private static List<DialogModel.DialogEntry> synthesizeOrderedEntries(DialogModel dialog) {
