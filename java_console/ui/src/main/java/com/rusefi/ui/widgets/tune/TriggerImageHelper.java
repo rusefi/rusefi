@@ -70,11 +70,13 @@ public class TriggerImageHelper {
         return TRIGGER_PRIMARY.equalsIgnoreCase(key) ||
                 TRIGGER_CAMS.equalsIgnoreCase(key) ||
                 PRIMARY_TRIGGER_UI_NAME.equalsIgnoreCase(uiName) ||
-                CAM_INPUTS_UI_NAME.equalsIgnoreCase(uiName);
+                CAM_INPUTS_UI_NAME.equalsIgnoreCase(uiName) ||
+                "Sub Panel".equalsIgnoreCase(uiName);
     }
 
     public void addTriggerPanelExtras(JPanel panel) {
-        if (!isTriggerPanel(panel.getName(), panel.getName())) {
+        String name = panel.getName();
+        if (!isTriggerPanel(name, name)) {
             return;
         }
 
@@ -95,7 +97,7 @@ public class TriggerImageHelper {
         };
         eastPanel.setBorder(new LineBorder(Color.ORANGE));
 
-        if (TRIGGER_PRIMARY.equalsIgnoreCase(panel.getName()) || PRIMARY_TRIGGER_UI_NAME.equalsIgnoreCase(panel.getName())) {
+        if (TRIGGER_PRIMARY.equalsIgnoreCase(name) || PRIMARY_TRIGGER_UI_NAME.equalsIgnoreCase(name) || "Sub Panel".equalsIgnoreCase(name)) {
             eastPanel.add(triggerImagePanel);
         }
         panel.add(eastPanel, BorderLayout.EAST);

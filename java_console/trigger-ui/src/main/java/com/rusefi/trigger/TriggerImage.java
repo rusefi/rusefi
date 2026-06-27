@@ -244,28 +244,37 @@ public class TriggerImage {
             public void paint(Graphics g) {
                 super.paint(g);
 
-                int middle = WHEEL_BORDER + WHEEL_DIAMETER / 2;
+                int w = getWidth();
+                int h = getHeight();
+                int size = Math.min(w, h);
+                int wheelBorder = size / 25; // proportional border
+                int wheelDiameter = size - 2 * wheelBorder;
+                int smallDiameter = (int) (wheelDiameter * 0.84); // 420/500 ratio from original constants
+                int middleX = w / 2;
+                int middleY = h / 2;
+                int radius = wheelDiameter / 2;
+
                 if (showTdc) {
                     double tdcAngle = Math.toRadians(_180 + shape.getTdcPositionIn360());
 
-                    int smallX = (int) (WHEEL_DIAMETER / 2 * Math.sin(tdcAngle));
-                    int smallY = (int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));
+                    int smallX = (int) (radius * Math.sin(tdcAngle));
+                    int smallY = (int) (radius * Math.cos(tdcAngle));
 
-                    int tdcMarkRadius = 8;
+                    int tdcMarkRadius = size / 60;
                     g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
                     // draw TDC mark and text on the round wheel
-                    g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
+                    g.fillOval(middleX + smallX - tdcMarkRadius, middleY + smallY - tdcMarkRadius,
                         2 * tdcMarkRadius,
                         2 * tdcMarkRadius);
 
-                    g.drawString("TDC", middle + smallX + tdcMarkRadius * 2, middle + smallY);
+                    g.drawString("TDC", middleX + smallX + tdcMarkRadius * 2, middleY + smallY);
                 }
                 g.setColor(Color.black);
 
                 for (int i = 0; i < wheel.size(); i++) {
                     TriggerSignal current = wheel.get(i);
 
-                    drawRadialLine(g, current.getAngle());
+                    drawRadialLine(g, current.getAngle(), middleX, middleY, wheelDiameter, smallDiameter);
                     /**
                      * java arc API is
                      *      * Angles are interpreted such that 0&nbsp;degrees
@@ -280,22 +289,22 @@ public class TriggerImage {
                     int arcDuration = (int) (current.getAngle() - nextAngle);
                     int arcStart = (int) arcToRusEFI(nextAngle);
                     if (current.getState() == 1) {
-                        g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, arcStart, arcDuration);
+                        g.drawArc(middleX - radius, middleY - radius, wheelDiameter, wheelDiameter, arcStart, arcDuration);
                     } else {
-                        int corner = WHEEL_BORDER + (WHEEL_DIAMETER - SMALL_DIAMETER) / 2;
-                        g.drawArc(corner, corner, SMALL_DIAMETER, SMALL_DIAMETER, arcStart, arcDuration);
+                        int smallRadius = smallDiameter / 2;
+                        g.drawArc(middleX - smallRadius, middleY - smallRadius, smallDiameter, smallDiameter, arcStart, arcDuration);
                     }
                 }
 
-                int dirArrow = 40;
-                g.drawArc(middle - dirArrow, middle - dirArrow, 2 * dirArrow, 2 * dirArrow, 0, 180);
-                g.drawLine(middle + dirArrow + 5, middle - 15, middle + dirArrow, middle);
+                int dirArrow = size / 12;
+                g.drawArc(middleX - dirArrow, middleY - dirArrow, 2 * dirArrow, 2 * dirArrow, 0, 180);
+                g.drawLine(middleX + dirArrow + 5, middleY - 15, middleX + dirArrow, middleY);
 
             }
 
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension(WHEEL_DIAMETER + 2 * WHEEL_BORDER, WHEEL_DIAMETER + 2 * WHEEL_BORDER);
+                return new Dimension(200, 200);
             }
         };
     }
@@ -304,17 +313,15 @@ public class TriggerImage {
         return angle + _180 - 90;
     }
 
-    private static void drawRadialLine(Graphics g, double angle) {
-        int center = WHEEL_BORDER + WHEEL_DIAMETER / 2;
-
+    private static void drawRadialLine(Graphics g, double angle, int centerX, int centerY, int wheelDiameter, int smallDiameter) {
         double radianAngle = Math.toRadians(_180 + angle);
 
-        int smallX = (int) (SMALL_DIAMETER / 2 * Math.sin(radianAngle));
-        int smallY = (int) (SMALL_DIAMETER / 2 * Math.cos(radianAngle));
-        int largeX = (int) (WHEEL_DIAMETER / 2 * Math.sin(radianAngle));
-        int largeY = (int) (WHEEL_DIAMETER / 2 * Math.cos(radianAngle));
+        int smallX = (int) (smallDiameter / 2.0 * Math.sin(radianAngle));
+        int smallY = (int) (smallDiameter / 2.0 * Math.cos(radianAngle));
+        int largeX = (int) (wheelDiameter / 2.0 * Math.sin(radianAngle));
+        int largeY = (int) (wheelDiameter / 2.0 * Math.cos(radianAngle));
 
-        g.drawLine(center + smallX, center + smallY, center + largeX, center + largeY);
+        g.drawLine(centerX + smallX, centerY + smallY, centerX + largeX, centerY + largeY);
     }
 
     @NotNull
