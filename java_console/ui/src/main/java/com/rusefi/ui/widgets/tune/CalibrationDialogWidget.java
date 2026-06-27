@@ -47,6 +47,9 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class CalibrationDialogWidget {
     private static final Logging log = getLogging(CalibrationDialogWidget.class);
+
+    private static final String triggerPrimary = "trigger_primary";
+
     private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
     private ConfigurationImage workingImage;
@@ -189,8 +192,8 @@ public class CalibrationDialogWidget {
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
             fillPanel(contentPane, dialogModel, iniFileModel, ci);
 
-            if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(dialogModel.getKey()) ||
-                    "Cam Inputs".equalsIgnoreCase(uiName) || "trigger_cams".equalsIgnoreCase(dialogModel.getKey())) {
+            if (triggerPrimary.equalsIgnoreCase(dialogModel.getKey()) ||
+                    "trigger_cams".equalsIgnoreCase(dialogModel.getKey())) {
                 addEastPanel(contentPane);
             }
         }
