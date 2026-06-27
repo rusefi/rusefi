@@ -30,6 +30,7 @@ import com.rusefi.ui.util.WrapLayout;
 import com.devexperts.logging.Logging;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.*;
 import java.util.Arrays;
@@ -178,9 +179,19 @@ public class CalibrationDialogWidget {
         gaugeReadoutEntries.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
+            String uiName = dialogModel.getUiName();
+            if (uiName == null || uiName.isEmpty()) {
+                uiName = dialogModel.getKey();
+            }
+            contentPane.setName(uiName);
+
             applyLayout(contentPane, dialogModel.getLayoutHint());
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
             fillPanel(contentPane, dialogModel, iniFileModel, ci);
+
+            if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(dialogModel.getKey())) {
+                addEastPanel(contentPane);
+            }
         }
         contentPane.revalidate();
         contentPane.repaint();
@@ -414,6 +425,10 @@ public class CalibrationDialogWidget {
             panelWidget.setName(uiName);
             GradientTitleBorder.installBorder(uiName, panelWidget);
             fillPanel(panelWidget, subDialog, iniFileModel, ci);
+
+            if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(subDialog.getKey())) {
+                addEastPanel(panelWidget);
+            }
         } else {
             panelWidget.setName(panel.getPanelName());
             GradientTitleBorder.installBorder(panel.getPanelName(), panelWidget);
@@ -422,6 +437,39 @@ public class CalibrationDialogWidget {
     }
 
     /** older render logic, used only for test, TODO: refactor the test and remove */
+    private static void addEastPanel(JPanel panel) {
+        if (!(panel.getLayout() instanceof BorderLayout)) {
+            JPanel inner = new JPanel();
+            LayoutManager oldLayout = panel.getLayout();
+            if (oldLayout instanceof BoxLayout) {
+                int axis = ((BoxLayout) oldLayout).getAxis();
+                inner.setLayout(new BoxLayout(inner, axis));
+            } else {
+                inner.setLayout(oldLayout);
+            }
+            Component[] components = panel.getComponents();
+            panel.removeAll();
+            for (Component c : components) {
+                inner.add(c);
+            }
+            panel.setLayout(new BorderLayout());
+            panel.add(inner, BorderLayout.CENTER);
+        }
+        JPanel eastPanel = new JPanel() {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension d = super.getPreferredSize();
+                Container parent = getParent();
+                if (parent != null && parent.getWidth() > 0) {
+                    return new Dimension((int) (parent.getWidth() * 0.2), d.height);
+                }
+                return new Dimension(100, d.height);
+            }
+        };
+        eastPanel.setBorder(new LineBorder(Color.ORANGE));
+        panel.add(eastPanel, BorderLayout.EAST);
+    }
+
     private static List<DialogModel.DialogEntry> synthesizeOrderedEntries(DialogModel dialog) {
         List<DialogModel.DialogEntry> list = new ArrayList<>();
         for (DialogModel.Field f : dialog.getFields())
