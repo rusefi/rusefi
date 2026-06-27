@@ -444,21 +444,7 @@ public class CalibrationDialogWidget {
     /** older render logic, used only for test, TODO: refactor the test and remove */
     private static void addEastPanel(JPanel panel) {
         if (!(panel.getLayout() instanceof BorderLayout)) {
-            JPanel inner = new JPanel();
-            LayoutManager oldLayout = panel.getLayout();
-            if (oldLayout instanceof BoxLayout) {
-                int axis = ((BoxLayout) oldLayout).getAxis();
-                inner.setLayout(new BoxLayout(inner, axis));
-            } else {
-                inner.setLayout(oldLayout);
-            }
-            Component[] components = panel.getComponents();
-            panel.removeAll();
-            for (Component c : components) {
-                inner.add(c);
-            }
-            panel.setLayout(new BorderLayout());
-            panel.add(inner, BorderLayout.CENTER);
+            wrapWithBorderLayout(panel);
         }
         JPanel eastPanel = new JPanel() {
             @Override
@@ -473,6 +459,24 @@ public class CalibrationDialogWidget {
         };
         eastPanel.setBorder(new LineBorder(Color.ORANGE));
         panel.add(eastPanel, BorderLayout.EAST);
+    }
+
+    private static void wrapWithBorderLayout(JPanel panel) {
+        JPanel inner = new JPanel();
+        LayoutManager oldLayout = panel.getLayout();
+        if (oldLayout instanceof BoxLayout) {
+            int axis = ((BoxLayout) oldLayout).getAxis();
+            inner.setLayout(new BoxLayout(inner, axis));
+        } else {
+            inner.setLayout(oldLayout);
+        }
+        Component[] components = panel.getComponents();
+        panel.removeAll();
+        for (Component c : components) {
+            inner.add(c);
+        }
+        panel.setLayout(new BorderLayout());
+        panel.add(inner, BorderLayout.CENTER);
     }
 
     private static List<DialogModel.DialogEntry> synthesizeOrderedEntries(DialogModel dialog) {
