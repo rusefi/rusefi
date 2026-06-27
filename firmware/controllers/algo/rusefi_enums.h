@@ -283,13 +283,17 @@ typedef enum {
 	TWO_STROKE = 3,
 
 	/**
-	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is when repeated three more times
+	 * 720 degree engine cycle but trigger is defined using a 180 cycle which is then repeated three more times.
 	 * In other words, same pattern is repeated on the crank wheel twice.
+	 * Total 4 trigger cycles per engine cycle.
+	 * Used by Renix 44-2-2.
 	 */
 	FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4,
 
 	/**
-	 * Same pattern repeated three times on crank wheel. Crazy, I know!
+	 * Same pattern repeated three times on crank wheel (every 120 crank degrees).
+	 * Total 6 trigger cycles per engine cycle.
+	 * Used by Renix 66-2-2-2.
 	 */
 	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 

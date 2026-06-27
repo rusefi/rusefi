@@ -175,13 +175,18 @@ public:
 	/**
 	 * This version of the method is best when same wheel could be mounted either on crank or cam
 	 *
-	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
-	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger.
+	 * Angles should be specified in the range [0, CycleDuration).
 	 *
-	 * TODO: one day kill all usages with FOUR_STROKE_CAM_SENSOR 720 cycle and add runtime prohibition
-	 * TODO: for FOUR_STROKE_CAM_SENSOR addEvent360 is the way to go
+	 * Cycle durations for common operation modes:
+	 * - FOUR_STROKE_CAM_SENSOR: 720 degrees
+	 * - FOUR_STROKE_CRANK_SENSOR: 360 degrees
+	 * - FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR: 180 degrees
+	 * - FOUR_STROKE_THREE_TIMES_CRANK_SENSOR: 120 degrees
+	 * - FOUR_STROKE_SIX_TIMES_CRANK_SENSOR: 60 degrees
+	 * - FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR: 30 degrees
 	 *
-	 * @param angle (0..360] or (0..720] depending on configuration
+	 * @param angle Normalized angle within the trigger cycle.
 	 */
 	void addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 

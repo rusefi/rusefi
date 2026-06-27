@@ -115,8 +115,10 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		// Pattern repeats every 180 crank degrees. 4 times per 720 degree engine cycle.
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		// Pattern repeats every 120 crank degrees. 6 times per 720 degree engine cycle.
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
 		case FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR:
 			return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_FIVE_TIMES_CRANK_SENSOR_DIVIDER;case FOUR_STROKE_SIX_TIMES_CRANK_SENSOR:
