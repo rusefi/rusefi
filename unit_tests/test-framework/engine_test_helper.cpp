@@ -23,7 +23,6 @@
 
 static bool unitTestsCreateLogs = false;
 
-bool unitTestTaskPrecisionHack;
 bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 
 #if EFI_ENGINE_SNIFFER
@@ -53,7 +52,7 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
 	ButtonDebounce::resetForUnitTests();
-	unitTestTaskPrecisionHack = false;
+
 	// Reset global error code set so checkEngine bit doesn't leak between tests
 	clearWarnings();
 	EnableToothLogger();

@@ -46,8 +46,6 @@ TEST(ignition, twoCoils) {
 }
 
 TEST(ignition, trailingSpark) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 

@@ -95,8 +95,7 @@ TEST(coil, testOverdwellProtection) {
 
 	ASSERT_TRUE(turnSparkPinHighStartChargingTimestamp.has_value())
 		<< "Missed scheduled overFireSparkAndPrepareNextSchedule";
-	// work in native NT precision to avoid the us<->NT rounding that previously
-	// required unitTestTaskPrecisionHack
+
 	const efitick_t expectedSparkUpTimestampNt = turnSparkPinHighStartChargingTimestamp.value();
 	const efitimeus_t expectedSparkUpTimestampUs = NT2US(expectedSparkUpTimestampNt);
 
