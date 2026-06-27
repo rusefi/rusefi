@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Arrays;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -18,14 +19,31 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class FrameHelper {
     private static final Logging log = getLogging(FrameHelper.class);
-    private final JFrame frame = new JFrame();
+    private final JFrame frame;
+    /**
+     * True when this helper wraps an already-visible frame handed off from another window
+     * (#9715) — in that case {@link #showFrame} swaps content in place instead of creating and
+     * showing a new window.
+     */
+    private final boolean reusing;
 
     public FrameHelper() {
         this(JDialog.DISPOSE_ON_CLOSE);
     }
 
     public FrameHelper(int operation) {
+        this(null, operation);
+    }
+
+    /**
+     * When {@code existingFrame} is non-null, reuse that already-visible frame instead of creating a
+     * new window (#9715) — used to hand the maximized splash frame to the main console so there is no
+     * second window flashing in. When null, a fresh {@link JFrame} is created as usual.
+     */
+    public FrameHelper(JFrame existingFrame, int operation) {
         AutoupdateUtil.assertAwtThread();
+        this.reusing = existingFrame != null;
+        this.frame = reusing ? existingFrame : new JFrame();
         frame.setDefaultCloseOperation(operation);
         AutoupdateUtil.setAppIcon(frame);
     }
@@ -52,8 +70,12 @@ public class FrameHelper {
     }
 
     public void showFrame(JComponent content, final boolean maximizeOnStart) {
-        initFrame(content, maximizeOnStart);
-        frame.setVisible(true);
+        if (reusing) {
+            swapContent(content);
+        } else {
+            initFrame(content, maximizeOnStart);
+            frame.setVisible(true);
+        }
     }
 
     public void initFrame(JComponent content, final boolean maximizeOnStart) {
@@ -62,6 +84,31 @@ public class FrameHelper {
         } else if (frame.getSize().getWidth() < 1 || frame.getSize().getHeight() < 1){
             frame.setSize(800, 500);
         }
+        installWindowListener(maximizeOnStart);
+        frame.add(content);
+    }
+
+    /**
+     * Swap the content of an already-visible, maximized frame (#9715). The previous owner's window
+     * listeners (e.g. the splash's "save config on close") and its default button are dropped, our
+     * close-handling listener is installed, and {@link #onWindowOpened()} is invoked explicitly
+     * because {@code WINDOW_OPENED} does not re-fire on a frame that is already showing.
+     */
+    private void swapContent(JComponent content) {
+        for (WindowListener l : frame.getWindowListeners()) {
+            frame.removeWindowListener(l);
+        }
+        installWindowListener(false);
+        frame.getRootPane().setDefaultButton(null);
+        frame.getContentPane().removeAll();
+        frame.add(content);
+        AutoupdateUtil.trueLayoutAndRepaint(frame);
+        onWindowOpened();
+        // The loading overlay raised by StartupFrame.connect stays up across this swap; it's taken
+        // down when the gauge grid finishes its chunked build (#9715, see ConsoleUI / GaugesPanel).
+    }
+
+    private void installWindowListener(final boolean maximizeOnStart) {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -80,7 +127,6 @@ public class FrameHelper {
                 log.info(Arrays.toString(Frame.getFrames()));
             }
         });
-        frame.add(content);
     }
 
     protected void onWindowOpened() {

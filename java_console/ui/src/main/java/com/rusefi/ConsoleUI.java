@@ -77,11 +77,19 @@ public class ConsoleUI {
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public ConsoleUI(String port, SerialPortType serialPortType) {
-        this(new UIContext(), port, serialPortType, false, null, null);
+        this(new UIContext(), port, serialPortType, false, null, null, null);
     }
 
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null);
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, null);
+    }
+
+    /**
+     * Reuses the already-visible, maximized {@code reuseFrame} handed off from {@link StartupFrame}
+     * instead of opening a second window (#9715).
+     */
+    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, JFrame reuseFrame) {
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame);
     }
 
     /**
@@ -94,11 +102,12 @@ public class ConsoleUI {
      * @param initialImage   ConfigurationImage loaded from the MSQ file
      */
     public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage) {
-        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage);
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, null);
     }
 
     private ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType,
-                      boolean alreadyConnected, IniFileModel offlineIni, ConfigurationImage offlineImage) {
+                      boolean alreadyConnected, IniFileModel offlineIni, ConfigurationImage offlineImage,
+                      JFrame reuseFrame) {
         this.uiContext = uiContext;
         LinkManager linkManager = uiContext.getLinkManager();
 
@@ -162,7 +171,7 @@ public class ConsoleUI {
 
         // ---------------
 
-        MainFrame mainFrame = new MainFrame(this, tabbedPane);
+        MainFrame mainFrame = new MainFrame(this, tabbedPane, reuseFrame);
         JFrame frame = mainFrame.getFrame().getFrame();
         setFrameIcon(frame);
         log.info("Console " + UiVersion.CONSOLE_VERSION);

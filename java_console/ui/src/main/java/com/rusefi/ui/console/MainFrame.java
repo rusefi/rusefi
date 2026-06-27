@@ -49,25 +49,7 @@ public class MainFrame {
     /**
      * @see StartupFrame
      */
-    private final FrameHelper frame = new FrameHelper() {
-        @Override
-        protected void onWindowOpened() {
-            log.info("onWindowOpened");
-            windowOpenedHandler();
-        }
-
-        @Override
-        protected void onWindowClosed() {
-            /**
-             * here we would close the port and log a message about it
-             */
-            windowClosedHandler();
-            /**
-             * here we would close the log file
-             */
-            log.info("onWindowClosed");
-        }
-    };
+    private final FrameHelper frame;
 
     public final ConnectionStatusLogic.Listener listener;
 
@@ -78,9 +60,32 @@ public class MainFrame {
     private Runnable updateEcuAction;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
+        this(consoleUI, tabbedPane, null);
+    }
+
+    /**
+     * @param reuseFrame when non-null, the console reuses this already-visible, maximized frame
+     *                   (handed off from {@link StartupFrame}) instead of creating a new window (#9715).
+     */
+    public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane, JFrame reuseFrame) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
         listener = ConnectionStatusLogic.Listener.VOID;
+        // reuseFrame == null creates a new window; non-null reuses the splash frame in place (#9715).
+        this.frame = new FrameHelper(reuseFrame, JFrame.DISPOSE_ON_CLOSE) {
+            @Override
+            protected void onWindowOpened() {
+                log.info("onWindowOpened");
+                windowOpenedHandler();
+            }
+
+            @Override
+            protected void onWindowClosed() {
+                // close the port, then the log file
+                windowClosedHandler();
+                log.info("onWindowClosed");
+            }
+        };
 
         createMenuBar();
     }
