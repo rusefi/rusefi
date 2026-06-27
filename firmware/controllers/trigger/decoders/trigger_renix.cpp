@@ -13,23 +13,35 @@
 #include "trigger_renix.h"
 
 static void commonRenix(TriggerWaveform *s) {
-	// 44-2-2 is symmetrical so we only need to define one half
-	int count = 22;
-	float tooth = s->getCycleDuration() / count; // hint: tooth = 8.181818 degrees
+	// 44-2-2 is symmetrical so we only need to define one half (180 crank degrees).
+	// The half consists of 22 evenly spaced tooth slots out of which two are
+	// missing. Real-world recordings (see unit_tests .../renix_44_2_2.csv) show
+	// that the two missing teeth are NOT adjacent: they sit at slot 0 and slot 2,
+	// i.e. the wheel produces two consecutive ~2x gaps separated by a single
+	// regular tooth followed by 18 regular teeth.
+	const int slotCount = 22;
+	const float slot = s->getCycleDuration() / slotCount; // hint: slot = 8.181818 degrees
 
-	float currentAngle = 0;
-	for (int i = 0;i < 20;i++) {
-		s->addEventAngle(currentAngle + tooth / 2, TriggerValue::RISE);
-		s->addEventAngle(currentAngle + tooth, TriggerValue::FALL);
-		currentAngle += tooth;
+	for (int i = 0; i < slotCount; i++) {
+		// the two missing teeth, one slot apart
+		if (i == 0 || i == 2) {
+			continue;
+		}
+
+		float slotStart = i * slot;
+		s->addEventAngle(slotStart + slot / 2, TriggerValue::RISE);
+		if (i == slotCount - 1) {
+			// float math error accumulates at this point so we have to spell out 180
+			s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL);
+		} else {
+			s->addEventAngle(slotStart + slot, TriggerValue::FALL);
+		}
 	}
 
-	s->addEventAngle(currentAngle + tooth, TriggerValue::RISE);
-
-	// float math error accumulates at this point so we have to spell out 180
-	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL);
-
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.25, 2.25);
+	// Sync on the tooth at slot 1: it follows the missing slot 0 (a 2x gap),
+	// while the preceding tooth (slot 21 of the previous cycle) was a regular
+	// tooth - so this/last = 2.0 and last/prev = 1.0.
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.5, 2.5);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.75, 1.25);
 }
 
