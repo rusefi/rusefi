@@ -2197,6 +2197,9 @@ float getConfigValueByHash(const int hash) {
 // wizardInjectorFlow
 		case -1499796020:
 			return config->wizardInjectorFlow;
+// wizardDisplacement
+		case -1214574065:
+			return config->wizardDisplacement;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -5860,6 +5863,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1499796020:
 	{
 		config->wizardInjectorFlow = (int)value;
+		return 1;
+	}
+		case -1214574065:
+	{
+		config->wizardDisplacement = (int)value;
 		return 1;
 	}
 	}

@@ -8119,82 +8119,82 @@ struct persistent_config_s {
 	bool wizardInjectorFlow : 1 {};
 	/**
 	offset 16184 bit 6 */
-	bool cyl8certification : 1 {};
+	bool wizardDisplacement : 1 {};
 	/**
 	offset 16184 bit 7 */
-	bool unusedBit_291_7 : 1 {};
+	bool cyl8certification : 1 {};
 	/**
 	offset 16184 bit 8 */
-	bool unusedBit_291_8 : 1 {};
+	bool unusedBit_292_8 : 1 {};
 	/**
 	offset 16184 bit 9 */
-	bool unusedBit_291_9 : 1 {};
+	bool unusedBit_292_9 : 1 {};
 	/**
 	offset 16184 bit 10 */
-	bool unusedBit_291_10 : 1 {};
+	bool unusedBit_292_10 : 1 {};
 	/**
 	offset 16184 bit 11 */
-	bool unusedBit_291_11 : 1 {};
+	bool unusedBit_292_11 : 1 {};
 	/**
 	offset 16184 bit 12 */
-	bool unusedBit_291_12 : 1 {};
+	bool unusedBit_292_12 : 1 {};
 	/**
 	offset 16184 bit 13 */
-	bool unusedBit_291_13 : 1 {};
+	bool unusedBit_292_13 : 1 {};
 	/**
 	offset 16184 bit 14 */
-	bool unusedBit_291_14 : 1 {};
+	bool unusedBit_292_14 : 1 {};
 	/**
 	offset 16184 bit 15 */
-	bool unusedBit_291_15 : 1 {};
+	bool unusedBit_292_15 : 1 {};
 	/**
 	offset 16184 bit 16 */
-	bool unusedBit_291_16 : 1 {};
+	bool unusedBit_292_16 : 1 {};
 	/**
 	offset 16184 bit 17 */
-	bool unusedBit_291_17 : 1 {};
+	bool unusedBit_292_17 : 1 {};
 	/**
 	offset 16184 bit 18 */
-	bool unusedBit_291_18 : 1 {};
+	bool unusedBit_292_18 : 1 {};
 	/**
 	offset 16184 bit 19 */
-	bool unusedBit_291_19 : 1 {};
+	bool unusedBit_292_19 : 1 {};
 	/**
 	offset 16184 bit 20 */
-	bool unusedBit_291_20 : 1 {};
+	bool unusedBit_292_20 : 1 {};
 	/**
 	offset 16184 bit 21 */
-	bool unusedBit_291_21 : 1 {};
+	bool unusedBit_292_21 : 1 {};
 	/**
 	offset 16184 bit 22 */
-	bool unusedBit_291_22 : 1 {};
+	bool unusedBit_292_22 : 1 {};
 	/**
 	offset 16184 bit 23 */
-	bool unusedBit_291_23 : 1 {};
+	bool unusedBit_292_23 : 1 {};
 	/**
 	offset 16184 bit 24 */
-	bool unusedBit_291_24 : 1 {};
+	bool unusedBit_292_24 : 1 {};
 	/**
 	offset 16184 bit 25 */
-	bool unusedBit_291_25 : 1 {};
+	bool unusedBit_292_25 : 1 {};
 	/**
 	offset 16184 bit 26 */
-	bool unusedBit_291_26 : 1 {};
+	bool unusedBit_292_26 : 1 {};
 	/**
 	offset 16184 bit 27 */
-	bool unusedBit_291_27 : 1 {};
+	bool unusedBit_292_27 : 1 {};
 	/**
 	offset 16184 bit 28 */
-	bool unusedBit_291_28 : 1 {};
+	bool unusedBit_292_28 : 1 {};
 	/**
 	offset 16184 bit 29 */
-	bool unusedBit_291_29 : 1 {};
+	bool unusedBit_292_29 : 1 {};
 	/**
 	offset 16184 bit 30 */
-	bool unusedBit_291_30 : 1 {};
+	bool unusedBit_292_30 : 1 {};
 	/**
 	offset 16184 bit 31 */
-	bool unusedBit_291_31 : 1 {};
+	bool unusedBit_292_31 : 1 {};
 	/**
 	 * offset 16188
 	 */
