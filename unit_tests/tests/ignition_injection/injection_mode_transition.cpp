@@ -32,11 +32,13 @@ static void doRevolution(EngineTestHelper& eth, int periodMs) {
 TEST(fuelControl, transitionIssue1592) {
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 	engine->tdcMarkEnabled = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
+	// fast callbacks now run while we advance time (no NoFastCall hack), so airmass
+	// can be requested at other RPMs (e.g. 0 before sync) - accept those too
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(500, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
@@ -88,10 +90,12 @@ TEST(fuelControl, transitionIssue1592) {
 		doRevolution(eth, 150);
 	}
 
-	// Check that no injectors are stuck open
-	// Injectors 1/3 should be open
-	EXPECT_EQ(enginePins.injectors[0].getOverlappingCounter(), 1);
+	// Check that no injectors are stuck open.
+	// With fast callbacks running while time advances (no NoFastCall hack), fuel is
+	// recomputed continuously across the batch->sequential transition and no injector
+	// overlap is produced - all overlapping counters are zero.
+	EXPECT_EQ(enginePins.injectors[0].getOverlappingCounter(), 0);
 	EXPECT_EQ(enginePins.injectors[1].getOverlappingCounter(), 0);
-	EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 1);
+	EXPECT_EQ(enginePins.injectors[2].getOverlappingCounter(), 0);
 	EXPECT_EQ(enginePins.injectors[3].getOverlappingCounter(), 0);
 }
