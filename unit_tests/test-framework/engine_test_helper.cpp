@@ -412,16 +412,20 @@ void EngineTestHelper::setTimeNtAndInvokeCallBacks(efitick_t nt)
 }
 
 void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
+	setTimeAndInvokeEventsNt(US2NT(targetTimeUs));
+}
+
+void EngineTestHelper::setTimeAndInvokeEventsNt(efitick_t targetTimeNt) {
 	int counter = 0;
 	while (true) {
-		criticalAssertVoid(counter++ < 100'000, "EngineTestHelper: failing to setTimeAndInvokeEventsUs");
+		criticalAssertVoid(counter++ < 100'000, "EngineTestHelper: failing to setTimeAndInvokeEventsNt");
 		scheduling_s* nextScheduledEvent = engine.scheduler.getHead();
 		if (nextScheduledEvent == nullptr) {
 			// nothing pending - we are done here
 			break;
 		}
 		efitick_t nextEventNt = nextScheduledEvent->getMomentNt();
-		if (nextEventNt > US2NT(targetTimeUs)) {
+		if (nextEventNt > targetTimeNt) {
 			// next event is too far in the future
 			break;
 		}
@@ -434,9 +438,9 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 		engine.scheduler.executeAllNt(getTimeNowNt());
 	}
 	if (unitTestTaskNoFastCallWhileAdvancingTimeHack) {
-		setTimeNowUs(targetTimeUs);
+		setTimeNowNt(targetTimeNt);
 	} else {
-		setTimeNtAndInvokeCallBacks(US_TO_NT_MULTIPLIER * targetTimeUs);
+		setTimeNtAndInvokeCallBacks(targetTimeNt);
 	}
 }
 

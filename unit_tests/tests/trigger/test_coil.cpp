@@ -48,11 +48,9 @@ static void prepareToScheduleOverdwellSparkDown(EngineTestHelper& eth) {
 }
 
 TEST(coil, testOverdwellProtection) {
-	extern bool unitTestTaskPrecisionHack;
 	printf("*************************************************** testOverdwellProtection\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	unitTestTaskPrecisionHack = true;
 	engine->onScheduleOverFireSparkAndPrepareNextSchedule = [&](const IgnitionEvent&, efitick_t) -> void {
 		FAIL() << "Unexpected scheduling of overFireSparkAndPrepareNextSchedule";
 	};
@@ -97,14 +95,18 @@ TEST(coil, testOverdwellProtection) {
 
 	ASSERT_TRUE(turnSparkPinHighStartChargingTimestamp.has_value())
 		<< "Missed scheduled overFireSparkAndPrepareNextSchedule";
-	const efitimeus_t expectedSparkUpTimestampUs = NT2US(turnSparkPinHighStartChargingTimestamp.value());
+	// work in native NT precision to avoid the us<->NT rounding that previously
+	// required unitTestTaskPrecisionHack
+	const efitick_t expectedSparkUpTimestampNt = turnSparkPinHighStartChargingTimestamp.value();
+	const efitimeus_t expectedSparkUpTimestampUs = NT2US(expectedSparkUpTimestampNt);
 
 	const efitimeus_t sparkDownOverdwellDurationUs = MS2US(1.5f * engine->ignitionState.sparkDwell);
 	EXPECT_EQ(4500, sparkDownOverdwellDurationUs) << "Unexpected sparkDown overdwell duration";
 
 	ASSERT_TRUE(overFireSparkAndPrepareNextTimestamp.has_value())
 		<< "Missed scheduled overFireSparkAndPrepareNextSchedule";
-	const efitimeus_t expectedSparkDownOverdwellTimestampUs = NT2US(overFireSparkAndPrepareNextTimestamp.value());
+	const efitick_t expectedSparkDownOverdwellTimestampNt = overFireSparkAndPrepareNextTimestamp.value();
+	const efitimeus_t expectedSparkDownOverdwellTimestampUs = NT2US(expectedSparkDownOverdwellTimestampNt);
 	EXPECT_EQ(expectedSparkDownOverdwellTimestampUs, expectedSparkUpTimestampUs + sparkDownOverdwellDurationUs);
 
 	EXPECT_FALSE(testCoil.getLogicValue()) << "Test coil should be off";
@@ -127,21 +129,21 @@ TEST(coil, testOverdwellProtection) {
 		}
 	};
 
-	eth.setTimeAndInvokeEventsUs(expectedSparkUpTimestampUs - 1);
+	eth.setTimeAndInvokeEventsNt(expectedSparkUpTimestampNt - 1);
 	EXPECT_FALSE(testCoil.getLogicValue()) << "Test still coil should be off";
 	EXPECT_FALSE(testIgnitionEventState.has_value()) << "Unexpected ignition event";
 
-	eth.setTimeAndInvokeEventsUs(expectedSparkUpTimestampUs);
+	eth.setTimeAndInvokeEventsNt(expectedSparkUpTimestampNt);
 	EXPECT_TRUE(testCoil.getLogicValue()) << "Test coil should be on";
 	ASSERT_TRUE(testIgnitionEventState.has_value()) << "Missed ignition event";
 	EXPECT_TRUE(testIgnitionEventState.value()) << "Unexpected state in ignition event";
 	testIgnitionEventState.reset();
 
-	eth.setTimeAndInvokeEventsUs(expectedSparkDownOverdwellTimestampUs - 1);
+	eth.setTimeAndInvokeEventsNt(expectedSparkDownOverdwellTimestampNt - 1);
 	EXPECT_TRUE(testCoil.getLogicValue()) << "Test coil still should be on";
 	EXPECT_FALSE(testIgnitionEventState.has_value()) << "Unexpected ignition event";
 
-	eth.setTimeAndInvokeEventsUs(expectedSparkDownOverdwellTimestampUs);
+	eth.setTimeAndInvokeEventsNt(expectedSparkDownOverdwellTimestampNt);
 	EXPECT_FALSE(testCoil.getLogicValue()) << "Test coil should be off";
 	ASSERT_TRUE(testIgnitionEventState.has_value()) << "Missed ignition event";
 	EXPECT_FALSE(testIgnitionEventState.value()) << "Unexpected state in ignition event";
