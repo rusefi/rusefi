@@ -98,15 +98,19 @@ void CanWrite::PeriodicTask(efitick_t) {
 		  sendQcBenchButtonCounters();
 		  sendQcBenchAuxDigitalCounters();
 	  }
+
+
+#if EFI_CAN_SERIAL
+    // todo: separate enable bit? no?
+	  announceCanConsole(cycle);
+#endif
+
 	}
 
 	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms) && boardEnableSendWidebandInfo()) {
 		sendWidebandInfo();
 	}
 
-#if EFI_CAN_SERIAL
-	announceCanConsole(cycle);
-#endif
 
 	m_cycleCount++;
 }
