@@ -6,8 +6,6 @@
 #include "real_trigger_helper.h"
 
 TEST(real4b11, running) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
 
 	RealTriggerHelper helper;
 	helper.expectedFirstRpm = 1436;
@@ -23,9 +21,6 @@ TEST(real4b11, running) {
 }
 
 TEST(real4b11, runningDoubledEdge) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
-
 	RealTriggerHelper helper;
 	helper.expectedFirstRpm = 1436;
 	helper.expectedFirstRpmLineIndex = 30;
