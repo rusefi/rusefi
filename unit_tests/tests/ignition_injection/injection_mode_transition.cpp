@@ -30,8 +30,7 @@ static void doRevolution(EngineTestHelper& eth, int periodMs) {
 
 // https://github.com/rusefi/rusefi/issues/1592
 TEST(fuelControl, transitionIssue1592) {
-	extern bool unitTestTaskPrecisionHack;
-	unitTestTaskPrecisionHack = true;
+
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
 	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
