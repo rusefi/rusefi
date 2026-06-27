@@ -23,8 +23,6 @@
 
 static bool unitTestsCreateLogs = false;
 
-bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
@@ -253,7 +251,6 @@ EngineTestHelper::~EngineTestHelper() {
 	enginePins.unregisterPins();
 	Sensor::resetRegistry();
 	memset(mockPinStates, 0, sizeof(mockPinStates));
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = false;
 }
 
 void EngineTestHelper::writeEventsLogicData(const char *fileName) {
@@ -428,19 +425,10 @@ void EngineTestHelper::setTimeAndInvokeEventsNt(efitick_t targetTimeNt) {
 			// next event is too far in the future
 			break;
 		}
-		// see #8725 for details
-		if (unitTestTaskNoFastCallWhileAdvancingTimeHack) {
-			setTimeNowNt(nextEventNt);
-		} else {
-			setTimeNtAndInvokeCallBacks(nextEventNt);
-		}
+		setTimeNtAndInvokeCallBacks(nextEventNt);
 		engine.scheduler.executeAllNt(getTimeNowNt());
 	}
-	if (unitTestTaskNoFastCallWhileAdvancingTimeHack) {
-		setTimeNowNt(targetTimeNt);
-	} else {
-		setTimeNtAndInvokeCallBacks(targetTimeNt);
-	}
+	setTimeNtAndInvokeCallBacks(targetTimeNt);
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {
