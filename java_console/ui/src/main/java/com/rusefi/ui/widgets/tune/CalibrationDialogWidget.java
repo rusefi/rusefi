@@ -26,6 +26,10 @@ import com.rusefi.ui.laf.GradientTitleBorder;
 import com.rusefi.ui.util.ScrollablePanel;
 import com.rusefi.ui.util.SwingUtil;
 import com.rusefi.ui.util.WrapLayout;
+import com.rusefi.trigger.TriggerImage;
+import com.rusefi.trigger.TriggerWheelInfo;
+import com.opensr5.ConfigurationImageGetterSetter;
+import java.io.File;
 
 import com.devexperts.logging.Logging;
 
@@ -52,6 +56,7 @@ public class CalibrationDialogWidget {
 
     private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
+    private final JPanel triggerImagePanel = new JPanel(new BorderLayout());
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
@@ -195,6 +200,9 @@ public class CalibrationDialogWidget {
             if (triggerPrimary.equalsIgnoreCase(dialogModel.getKey()) ||
                     "trigger_cams".equalsIgnoreCase(dialogModel.getKey())) {
                 addEastPanel(contentPane);
+                if (triggerPrimary.equalsIgnoreCase(dialogModel.getKey())) {
+                    updateTriggerImage();
+                }
             }
         }
         contentPane.revalidate();
@@ -315,7 +323,12 @@ public class CalibrationDialogWidget {
     }
 
     private void renderField(JPanel container, DialogModel.Field field, IniFileModel iniFileModel, ConfigurationImage ci) {
-        Runnable onChange = this::refreshExpressions;
+        Runnable onChange = () -> {
+            refreshExpressions();
+            if ("trigger_type".equalsIgnoreCase(field.getKey())) {
+                updateTriggerImage();
+            }
+        };
         Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
         JPanel row = iniField.map(value -> {
             try {
@@ -433,6 +446,9 @@ public class CalibrationDialogWidget {
             if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(subDialog.getKey()) ||
                     "Cam Inputs".equalsIgnoreCase(uiName) || "trigger_cams".equalsIgnoreCase(subDialog.getKey())) {
                 addEastPanel(panelWidget);
+                if ("trigger_primary".equalsIgnoreCase(subDialog.getKey()) || "Primary Trigger".equalsIgnoreCase(uiName)) {
+                    updateTriggerImage();
+                }
             }
         } else {
             panelWidget.setName(panel.getPanelName());
@@ -441,12 +457,49 @@ public class CalibrationDialogWidget {
         if (constraint != null) targetContainer.add(panelWidget, constraint); else targetContainer.add(panelWidget);
     }
 
+    private void updateTriggerImage() {
+        if (currentIniFileModel == null || workingImage == null) {
+            return;
+        }
+        Optional<IniField> triggerTypeField = currentIniFileModel.findIniField("trigger_type");
+        if (!triggerTypeField.isPresent()) {
+            return;
+        }
+        Double typeId = workingImage.readNumericValue(triggerTypeField.get());
+        if (typeId == null) {
+            return;
+        }
+
+        triggerImagePanel.removeAll();
+        try {
+            // Check current directory then parent directory for unit_tests
+            String unitTestsPath = "unit_tests";
+            if (!new File(unitTestsPath).exists()) {
+                unitTestsPath = ".." + File.separator + "unit_tests";
+            }
+            if (!new File(unitTestsPath).exists()) {
+                unitTestsPath = ".." + File.separator + ".." + File.separator + "unit_tests";
+            }
+
+            TriggerWheelInfo.readWheels(unitTestsPath, wheelInfo -> {
+                if (typeId.intValue() == wheelInfo.getId()) {
+                    JPanel wheelPanel = TriggerImage.createWheelPanel(wheelInfo.getFirstWheeTriggerSignals(), true, wheelInfo);
+                    triggerImagePanel.add(wheelPanel);
+                }
+            });
+        } catch (Exception e) {
+            log.error("Error reading trigger wheels: " + e.getMessage());
+        }
+        triggerImagePanel.revalidate();
+        triggerImagePanel.repaint();
+    }
+
     /** older render logic, used only for test, TODO: refactor the test and remove */
-    private static void addEastPanel(JPanel panel) {
+    private void addEastPanel(JPanel panel) {
         if (!(panel.getLayout() instanceof BorderLayout)) {
             wrapWithBorderLayout(panel);
         }
-        JPanel eastPanel = new JPanel() {
+        JPanel eastPanel = new JPanel(new BorderLayout()) {
             @Override
             public Dimension getPreferredSize() {
                 Dimension d = super.getPreferredSize();
@@ -458,6 +511,9 @@ public class CalibrationDialogWidget {
             }
         };
         eastPanel.setBorder(new LineBorder(Color.ORANGE));
+        if (triggerPrimary.equalsIgnoreCase(panel.getName()) || "Primary Trigger".equalsIgnoreCase(panel.getName())) {
+            eastPanel.add(triggerImagePanel);
+        }
         panel.add(eastPanel, BorderLayout.EAST);
     }
 

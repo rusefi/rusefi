@@ -48,7 +48,7 @@ public class TriggerImage {
     /**
      * todo: https://github.com/rusefi/rusefi/issues/2077
      *
-     * @see TriggerWheelInfo#isCrankBased
+     * @see TriggerWheelInfo#isCrankBased()
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (findByOrdinal(triggerName.getId())) {
@@ -237,7 +237,7 @@ public class TriggerImage {
     }
 
     @NotNull
-    static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
+    public static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
                                            TriggerWheelInfo shape) {
         return new JPanel() {
             @Override
@@ -318,7 +318,7 @@ public class TriggerImage {
     }
 
     @NotNull
-    static List<WaveState> convertSignalsToWaves(List<TriggerSignal> signals) {
+    public static List<WaveState> convertSignalsToWaves(List<TriggerSignal> signals) {
         /**
          * todo: what does this code do? does this work?
          * looks to be repeating trigger share couple of times? but not visible on images somehow?

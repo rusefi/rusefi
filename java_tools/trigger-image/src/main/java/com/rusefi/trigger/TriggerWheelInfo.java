@@ -14,7 +14,7 @@ import static com.rusefi.config.generated.TriggerVariableRegistryValues.*;
 public class TriggerWheelInfo {
     private static final Logging log = Logging.getLogging(TriggerWheelInfo.class);
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
-    static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
+    public static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
 
     private final int id;
     private final boolean isSecondWheelCam;
@@ -45,7 +45,7 @@ public class TriggerWheelInfo {
         this.syncEdge = syncEdge;
     }
 
-    static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
+    public static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
         String[] tokens = line.split(" ");
         String idStr = tokens[1];
         int eventCount = Integer.parseInt(tokens[2]);
@@ -136,7 +136,7 @@ public class TriggerWheelInfo {
         return Integer.parseInt(key.split("\\.")[1]);
     }
 
-    static void readWheels(String workingFolder, TriggerWheelInfoConsumer consumer) {
+    public static void readWheels(String workingFolder, TriggerWheelInfoConsumer consumer) {
         String fileName = workingFolder + File.separator + TRIGGERS_FILE_NAME;
         BufferedReader br;
         try {
@@ -261,7 +261,7 @@ public class TriggerWheelInfo {
         void onWheel(TriggerWheelInfo wheelInfo);
     }
 
-    static class TriggerGaps {
+    public static class TriggerGaps {
         public double[] gapFrom;
         public double[] gapTo;
 
