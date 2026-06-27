@@ -50,3 +50,36 @@ TEST(triggerRenix44, renix44RealCrankingFromFile) {
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "renix44 shaft sync";
 	ASSERT_NEAR(1389, Sensor::getOrZero(SensorType::Rpm), 5) << "renix44 RPM";
 }
+
+TEST(triggerRenix44, renix44RealCrankingFromFileAnotherOne) {
+	ScopedLogFileSizeLimit sz(32 * 1024 * 1024);
+	// It's a long trace, let's not waste time and disk space on logs
+	ScopedUnitTestCreateLogs sz2(false);
+	CsvReader reader(1, /* vvtCount */ 0);
+	// The recording is a rusEFI internal CSV log:
+	// PriLevel,SecLevel,Trigger,Sync,Coil,Injector,Time,ToothTime
+	reader.readingOffset = 0; // use PriLevel (column 0) as primary trigger
+	reader.timestampColumnIndex = 6; // 'Time' column holds the timestamp
+	reader.timestampScale = 0.001; // timestamps are in milliseconds
+	// rebase to zero to avoid 32-bit mock-clock overflow during us->NT conversion
+	reader.normalizeTimestamps = true;
+
+	reader.open("tests/trigger/resources/renix_44_2_2.csv-another-one.csv");
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->alwaysInstantRpm = true;
+	eth.setTriggerType(trigger_type_e::TT_RENIX_44_2_2);
+
+	float firstSyncRpm = 0;
+	while (reader.haveMore()) {
+		reader.processLine(&eth);
+		if (firstSyncRpm == 0) {
+			firstSyncRpm = Sensor::getOrZero(SensorType::Rpm);
+		}
+	}
+
+	// this is a different cranking capture: it syncs at a higher instant RPM and
+	// settles to a low cranking RPM by the end of the trace
+	ASSERT_NEAR(556.71, firstSyncRpm, 0.5) << "renix44 first sync RPM";
+	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "renix44 shaft sync";
+	ASSERT_NEAR(219, Sensor::getOrZero(SensorType::Rpm), 5) << "renix44 RPM";
+}
