@@ -113,10 +113,19 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 			token = readNextToken();
 		}
 
-		if ((size_t)timestampColumnIndex >= columnCount) {
-			criticalError("Missing timestamp column in [%s]", buffer);
+		if ((size_t)timestampColumnIndex >= columnCount
+				|| readingOffset + m_triggerCount + m_vvtCount > columnCount) {
+			// not a data row (e.g. a "MARK ###" marker line) - skip it
+			return;
 		}
 		timeStampstr = columns[timestampColumnIndex];
+
+		// skip header/units rows where the timestamp column is not numeric
+		// (e.g. "Time" or "ms"); this recording carries several header lines
+		if (timeStampstr == nullptr
+				|| !(isdigit((unsigned char)timeStampstr[0]) || timeStampstr[0] == '-' || timeStampstr[0] == '+' || timeStampstr[0] == '.')) {
+			return;
+		}
 
 		for (size_t i = 0; i < m_triggerCount; i++) {
 			char *triggerToken = columns[readingOffset + i];
@@ -139,6 +148,14 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 	double timeStamp = std::atof(timeStampstr) * timestampScale;
 	history.add(timeStamp);
+
+	if (normalizeTimestamps) {
+		if (!m_haveTimestampBase) {
+			m_timestampBase = timeStamp;
+			m_haveTimestampBase = true;
+		}
+		timeStamp -= m_timestampBase;
+	}
 
 	timeStamp += m_timestampOffset;
 
