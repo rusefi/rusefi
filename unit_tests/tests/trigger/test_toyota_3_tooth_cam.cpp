@@ -2,8 +2,6 @@
 #include "logicdata_csv_reader.h"
 
 TEST(Toyota3ToothCam, RealEngineRunning) {
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
 	CsvReader reader(1, /* vvtCount */ 1);
 
@@ -48,8 +46,6 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 }
 
 static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectSync, int expectPhaseResyncCounter) {
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->vvtMode[0] = VVT_TOYOTA_3_TOOTH;
 	engineConfiguration->skippedWheelOnCam = false;

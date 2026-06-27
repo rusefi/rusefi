@@ -3,8 +3,7 @@
 
 static void runCoyoteIntakeCam(bool invertPrimaryTriggerSignal, uint32_t warningCount, int rpm) {
 	RealTriggerHelper helper;
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
+
 
 	printf("Reading intake %d...\n", invertPrimaryTriggerSignal);
 	helper.runTest("tests/trigger/resources/ford-coyote-intake-cam.csv", trigger_type_e::TT_VVT_FORD_COYOTE, invertPrimaryTriggerSignal);
@@ -19,8 +18,6 @@ TEST(fordCoyote, intakeCam) {
 
 static void runCoyoteExhaustCam(bool invertPrimaryTriggerSignal, uint32_t warningCount, int rpm) {
 	RealTriggerHelper helper;
-	extern bool unitTestTaskNoFastCallWhileAdvancingTimeHack;
-	unitTestTaskNoFastCallWhileAdvancingTimeHack = true;
 
 	printf("Reading exhaust...\n");
 	helper.runTest("tests/trigger/resources/ford-coyote-exhaust-cam.csv", trigger_type_e::TT_VVT_FORD_COYOTE, invertPrimaryTriggerSignal);
