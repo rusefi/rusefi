@@ -2505,6 +2505,7 @@ bit wizardMapSensorType,"yes","no"
 bit wizardCrankTrigger,"yes","no"
 bit wizardCamTrigger,"yes","no"
 bit wizardInjectorFlow,"yes","no"
+bit wizardDisplacement,"yes","no"
 
 split_lines@@BOARD_CONFIG_FROM_FILE@@
 
