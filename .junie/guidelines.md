@@ -48,8 +48,7 @@ The Java side is a Gradle project with build tools and the frontend application;
 - Source code for `:ui` is in `../java_console/ui/src/main/java`.
 
 #### UI entry points
-- `rusefi_updater.exe` (see `console_launcher` folder for launch4j) invokes `Launcher#main` with empty args; the merged launcher handles both the autoupdate flow and the console UI.
-- `rusefi_autoupdate.exe` entry point is `Autoupdate#main`.
+- see docs/frontend.md
 
 #### TS templating:
 - Pattern: `#define CAM_INPUT_1_1_NAME "Cam sensor bank 1 intake"` in `rusefi_config.txt`
