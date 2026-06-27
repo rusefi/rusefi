@@ -28,9 +28,18 @@ TEST(triggerRenix44, renix44RealCrankingFromFile) {
 	engineConfiguration->alwaysInstantRpm = true;
 	eth.setTriggerType(trigger_type_e::TT_RENIX_44_2_2);
 
+	// capture the RPM reported at the very first synchronization point, like
+	// the other 'real cranking from file' tests do
+	float firstSyncRpm = 0;
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
+		if (firstSyncRpm == 0) {
+			firstSyncRpm = Sensor::getOrZero(SensorType::Rpm);
+		}
 	}
+
+	// the first sync point reports the running RPM right away (~1390)
+	ASSERT_NEAR(1389.81, firstSyncRpm, 0.5) << "renix44 first sync RPM";
 
 	// The decoder is able to synchronize on the 44-2-2 pattern and tracks the
 	// engine running at ~1389 RPM (22 teeth per symmetrical 180 deg half, ~0.967
