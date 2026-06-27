@@ -189,7 +189,8 @@ public class CalibrationDialogWidget {
             contentPane.setAlignmentX(Component.LEFT_ALIGNMENT);
             fillPanel(contentPane, dialogModel, iniFileModel, ci);
 
-            if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(dialogModel.getKey())) {
+            if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(dialogModel.getKey()) ||
+                    "Cam Inputs".equalsIgnoreCase(uiName) || "trigger_cams".equalsIgnoreCase(dialogModel.getKey())) {
                 addEastPanel(contentPane);
             }
         }
@@ -426,7 +427,8 @@ public class CalibrationDialogWidget {
             GradientTitleBorder.installBorder(uiName, panelWidget);
             fillPanel(panelWidget, subDialog, iniFileModel, ci);
 
-            if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(subDialog.getKey())) {
+            if ("Primary Trigger".equalsIgnoreCase(uiName) || "trigger_primary".equalsIgnoreCase(subDialog.getKey()) ||
+                    "Cam Inputs".equalsIgnoreCase(uiName) || "trigger_cams".equalsIgnoreCase(subDialog.getKey())) {
                 addEastPanel(panelWidget);
             }
         } else {
