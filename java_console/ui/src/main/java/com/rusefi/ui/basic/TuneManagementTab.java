@@ -80,8 +80,6 @@ public class TuneManagementTab {
             centerPanel.add(tableScroll, BorderLayout.CENTER);
             centerPanel.add(uploadProgress, BorderLayout.SOUTH);
 
-            totalContent.add(centerPanel, BorderLayout.CENTER);
-
             singleAsyncJobExecutor.addOnJobInProgressFinishedListener(() -> {
                 if (!awaitingCompletion.compareAndSet(true, false))
                     return;
@@ -157,10 +155,45 @@ public class TuneManagementTab {
 
         JButton loadTuneFileButton = new JButton("Load Tune File");
         loadTuneFileButton.addActionListener(e -> loadTuneFileOffline());
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(importTuneButton, BorderLayout.NORTH);
-        bottomPanel.add(loadTuneFileButton, BorderLayout.SOUTH);
-        totalContent.add(bottomPanel, BorderLayout.SOUTH);
+        // A bit bigger so it reads as the primary offline action (#9715).
+        loadTuneFileButton.setFont(loadTuneFileButton.getFont().deriveFont(Font.BOLD, 16f));
+        loadTuneFileButton.setMargin(new Insets(12, 28, 12, 28));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.add(centerHorizontally(importTuneButton));
+        buttonPanel.add(Box.createVerticalStrut(28));
+        buttonPanel.add(centerHorizontally(loadTuneFileButton));
+
+        if (tunesManifestUrl != null) {
+            // Keep the tune list but cap it at ~80% of the height, with the buttons in the lower 20%,
+            // so they aren't pinned to the very bottom edge of the now-maximized splash (#9715).
+            JPanel body = new JPanel(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 0;
+            c.weightx = 1;
+            c.weighty = 0.8;
+            c.fill = GridBagConstraints.BOTH;
+            body.add(centerPanel, c);
+            c.gridy = 1;
+            c.weighty = 0.2;
+            c.fill = GridBagConstraints.NONE;
+            c.anchor = GridBagConstraints.CENTER;
+            body.add(buttonPanel, c);
+            totalContent.add(body, BorderLayout.CENTER);
+        } else {
+            // No tune list available — just center the buttons in the tab (#9715).
+            JPanel centered = new JPanel(new GridBagLayout());
+            centered.add(buttonPanel, new GridBagConstraints());
+            totalContent.add(centered, BorderLayout.CENTER);
+        }
+    }
+
+    private static JPanel centerHorizontally(Component c) {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        row.add(c);
+        return row;
     }
 
     private void showErrorLogPopup(String logText) {
