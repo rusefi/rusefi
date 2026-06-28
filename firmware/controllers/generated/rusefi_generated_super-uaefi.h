@@ -1412,7 +1412,7 @@
 #define lua_gauge_meaning_e_LUA_GAUGE_LOWER_BOUND 0
 #define lua_gauge_meaning_e_LUA_GAUGE_UPPER_BOUND 1
 #define LUA_PWM_COUNT 8
-#define LUA_SCRIPT_SIZE 8000
+#define LUA_SCRIPT_SIZE 25000
 #define MAF_DECODING_COUNT 32
 #define MAIN_HELP_URL "https://rusefi.com/s/super-uaefi"
 #define MAIN_PAGE_GAUGES_FILE "tunerstudio/main_page_gauges.ini"
@@ -1488,7 +1488,7 @@
 #define PAGE_SIZE_2 256
 #define PAGE_SIZE_3 2048
 #define PAGE_SIZE_4 1268
-#define PAGE_SIZE_5 8000
+#define PAGE_SIZE_5 25000
 #define PEDAL_TO_TPS_RPM_SIZE 8
 #define PEDAL_TO_TPS_SIZE 8
 #define pedalSensor_NAME "Accelerator pedal"
@@ -1606,7 +1606,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2475820208
+#define SIGNATURE_HASH 1279568448
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1957,7 +1957,7 @@
 #define TS_PAGE_CRC_CHECK "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c"
 #define TS_PAGE_IDENTIFIERS "\x00\x00", "\x00\x01", "\x00\x02", "\x00\x03", "\x00\x04"
 #define TS_PAGE_READ_COMMANDS "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c"
-#define TS_PAGE_SIZES 16752, 256, 2048, 1268, 8000
+#define TS_PAGE_SIZES 16752, 256, 2048, 1268, 25000
 #define TS_PAGE_VALUE_WRITE "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v"
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_BEGIN_char _
@@ -2232,7 +2232,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.06.29.super-uaefi.2475820208"
+#define TS_SIGNATURE "rusEFI master.2026.06.29.super-uaefi.1279568448"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
