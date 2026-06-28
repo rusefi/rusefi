@@ -104,8 +104,10 @@ public class FrameHelper {
         frame.add(content);
         AutoupdateUtil.trueLayoutAndRepaint(frame);
         onWindowOpened();
-        // The loading overlay raised by StartupFrame.connect stays up across this swap; it's taken
-        // down when the gauge grid finishes its chunked build (#9715, see ConsoleUI / GaugesPanel).
+        // The loading overlay raised by StartupFrame.connect stays up across this swap and is taken
+        // down once the new content has painted (#9715): invokeLater drains after the repaint queued
+        // above, so the overlay lifts as the gauges become visible — no flicker, no fixed delay.
+        SwingUtilities.invokeLater(() -> LoadingOverlay.hide(frame));
     }
 
     private void installWindowListener(final boolean maximizeOnStart) {

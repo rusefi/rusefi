@@ -35,8 +35,12 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import com.rusefi.ui.InitOnFirstPaintPanel;
+import com.rusefi.ui.basic.LoadTuneHelper;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.function.Supplier;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -103,6 +107,21 @@ public class ConsoleUI {
      */
     public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage) {
         this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, null);
+    }
+
+    /**
+     * A menu action that builds the (lazily-constructed) Tuning pane on first use, then delegates to
+     * its real action (#9715). After the build, {@code buildTuning} re-points the menu at the real
+     * actions, so this wrapper only ever runs once.
+     */
+    private static Action lazyTuneAction(String text, Runnable buildTuning, Supplier<Action> realAction) {
+        return new AbstractAction(text) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buildTuning.run();
+                realAction.get().actionPerformed(e);
+            }
+        };
     }
 
     private ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType,
@@ -196,14 +215,28 @@ public class ConsoleUI {
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
         uiContext.DetachedRepositoryINSTANCE.load();
+        // Heavy tabs (Lua, Tuning) are lazy-built unless they are the user's last-opened tab, which
+        // will be shown immediately on startup — in that case build eagerly (#9715).
+        int savedTabIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
         if (isOffline || !linkManager.isLogViewer()) {
             tabbedPane.addTab("Gauges", new GaugesPanel(uiContext, getConfig().getRoot().getChild("gauges")).getContent());
 
             MessagesPane messagesPane = new MessagesPane(uiContext, getConfig().getRoot().getChild("messages"));
             tabbedPaneAdd("Messages", messagesPane.getContent(), messagesPane.getTabSelectedListener());
 
-            LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
-            tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
+            int luaIndex = tabbedPane.tabbedPane.getTabCount();
+            if (luaIndex == savedTabIndex) {
+                LuaScriptPanel luaScriptPanel = new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua"));
+                tabbedPaneAdd("Lua Scripting", luaScriptPanel.getPanel(), luaScriptPanel.getTabSelectedListener());
+            } else {
+                // Build the (heavy) Lua editor only when its tab is first shown (#9715).
+                tabbedPane.addTab("Lua Scripting", new InitOnFirstPaintPanel() {
+                    @Override
+                    protected JPanel createContent() {
+                        return new LuaScriptPanel(uiContext, getConfig().getRoot().getChild("lua")).getPanel();
+                    }
+                }.getContent());
+            }
         }
 
         if (UiProperties.isEngineSnifferEnabled()) {
@@ -231,13 +264,46 @@ console live data tab is broken #8402
 
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
-            TuningPane tuningPane = new TuningPane(uiContext, offlineImage);
-            mainFrame.setTuneActions(tuningPane.getLoadTuneAction(), tuningPane.getSaveTuneAction());
-            if (isOffline && offlineImage != null) {
-                tuningPane.seedOfflineImage(offlineImage, null);
-            }
             PinoutPane pinoutPane = new PinoutPane(uiContext);
-            tabbedPane.addTab("Tuning", tuningPane.getContent());
+
+            // Tuning is heavy (~60ms) and not always the startup tab. Build it on first use — tab
+            // shown, File>Load/Save Tune, or Pinout→Tune nav — unless it's the restored tab (#9715).
+            // The holder wires the tune menu + navigation the first time the instance is needed.
+            final TuningPane[] tuningHolder = {null};
+            final Runnable buildTuning = () -> {
+                if (tuningHolder[0] != null) {
+                    return;
+                }
+                TuningPane tp = new TuningPane(uiContext, offlineImage);
+                tuningHolder[0] = tp;
+                if (isOffline && offlineImage != null) {
+                    tp.seedOfflineImage(offlineImage, null);
+                }
+                mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction());
+                if (UiProperties.isPinoutEnabled()) {
+                    tp.setNavigateToPinout(enumValue -> {
+                        tabbedPane.selectTab("Pinout");
+                        pinoutPane.highlightByEnumValue(enumValue);
+                    });
+                }
+            };
+
+            int tuningIndex = tabbedPane.tabbedPane.getTabCount();
+            tabbedPane.addTab("Tuning", new InitOnFirstPaintPanel() {
+                @Override
+                protected JPanel createContent() {
+                    buildTuning.run();
+                    JPanel wrapper = new JPanel(new BorderLayout());
+                    wrapper.add(tuningHolder[0].getContent(), BorderLayout.CENTER);
+                    return wrapper;
+                }
+            }.getContent());
+            // Until Tuning is built, the menu actions build it on first click then delegate; once
+            // built, buildTuning re-points the menu at the real actions.
+            mainFrame.setTuneActions(
+                lazyTuneAction(LoadTuneHelper.LOAD_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getLoadTuneAction()),
+                lazyTuneAction(LoadTuneHelper.SAVE_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAction()));
+
             tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
@@ -251,14 +317,14 @@ console live data tab is broken #8402
 
             // Pinout ↔ Tune bidirectional navigation
             pinoutPane.setNavigateToTune((dialogKey, fieldKey) -> {
+                buildTuning.run();
                 tabbedPane.selectTab("Tuning");
-                tuningPane.navigateToField(dialogKey, fieldKey);
+                tuningHolder[0].navigateToField(dialogKey, fieldKey);
             });
-            if (UiProperties.isPinoutEnabled()) {
-                tuningPane.setNavigateToPinout(enumValue -> {
-                    tabbedPane.selectTab("Pinout");
-                    pinoutPane.highlightByEnumValue(enumValue);
-                });
+
+            // Build eagerly if Tuning was the user's last-opened tab (shown immediately on startup).
+            if (tuningIndex == savedTabIndex) {
+                buildTuning.run();
             }
         }
 
@@ -282,9 +348,8 @@ console live data tab is broken #8402
         }
 
         if (isOffline || !LinkManager.isLogViewerMode(port)) {
-            int selectedIndex = getConfig().getRoot().getIntProperty(TAB_INDEX, DEFAULT_TAB_INDEX);
-            if (selectedIndex < tabbedPane.tabbedPane.getTabCount())
-                tabbedPane.tabbedPane.setSelectedIndex(selectedIndex);
+            if (savedTabIndex < tabbedPane.tabbedPane.getTabCount())
+                tabbedPane.tabbedPane.setSelectedIndex(savedTabIndex);
         }
 
         tabbedPane.tabbedPane.addChangeListener(new ChangeListener() {

@@ -6,10 +6,10 @@ import java.awt.*;
 /**
  * Opaque, centered "loading" cover painted on a frame's glassPane (#9715). Used to bridge the
  * splash → console handoff as a single indicator: shown when the user connects, kept across the
- * ConsoleUI build, and removed once the gauge grid finishes its chunked build (GaugesPanel).
+ * ConsoleUI build, and removed once the new content has painted (FrameHelper.swapContent).
  *
- * <p>The bar animates because the gauge grid is built one element per EDT cycle, yielding the EDT
- * between batches; if that chunking is ever removed the bar will freeze (Swing single-thread).
+ * <p>Note: the bar does not animate while the EDT is building/painting the console — it reads as a
+ * static cover. That's a Swing single-thread limit; lazy-loading heavy tabs keeps the freeze short.
  */
 public class LoadingOverlay {
     public static void show(JFrame frame, String message) {
