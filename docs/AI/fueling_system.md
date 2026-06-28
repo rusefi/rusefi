@@ -36,7 +36,7 @@ crankingFuel = baseCrankingFuel * coolantTemperatureCoefficient * tpsCoefficient
   1. **`flexCranking` off (or no flex sensor)** — a single coolant curve, `crankingFuelCoef`.
   2. **`flexCranking` on, flex sensor present** — `crankingFuelFlexTable`, a coolant (X, shared `crankingFuelBins`) by ethanol-% (Y, `crankingFuelFlexBins`, 4 rows to keep RAM small) `interpolate3d` lookup. The dedicated ethanol axis lets the whole E0..E100 range be calibrated directly.
 
-The legacy 1D `crankingFuelCoefE100` curve (and its E0→E100 blend) is gone from the firmware path; the field is retained for tune compatibility but is no longer used or shown in TunerStudio.
+The legacy 1D `crankingFuelCoefE100` curve (and its E0→E100 blend) is gone from the firmware path. The field is **retired** (renamed with the `unused` prefix so its byte slot stays reserved and the migration framework ignores it); old tunes that calibrated it are carried over to `crankingFuelFlexTable` by `CrankingFlexTableMigrator` (see below).
 
 ## Priming Pulse
 
@@ -48,7 +48,13 @@ The priming pulse (`PrimeController::getPrimeDuration()`) mirrors the cranking d
 
 Be careful: in running-math mode the `baseCrankingFuel` already reflects the **flex-adjusted stoichiometric ratio** (ethanol shifts stoich from ~14.7 toward ~9.0). The cranking flex multiplier therefore acts as **additional** cold-start enrichment on top of that, not as the full ethanol fuel correction — calibrate it accordingly to avoid double-counting ethanol.
 
-The 2D table fields are appended config so existing tunes remain valid; `defaultsOrFixOnBurn()` seeds each 2D table from the existing 1D curve for tunes that predate it. See `docs/calibration-compatibility.md`.
+### Legacy tune migration
+
+The 2D table fields are appended config so existing tunes stay valid. Two mechanisms keep old tunes working:
+- `defaultsOrFixOnBurn()` seeds each 2D table from its corresponding 1D curve (E0 / `primeValues`) for any tune whose ethanol axis is still all-zero, so turning flex on is neutral until calibrated.
+- `CrankingFlexTableMigrator` (`java_console`, part of the `ComposedTuneMigrator` pipeline) reconstructs `crankingFuelFlexTable` from a user's old `crankingFuelCoef` (E0) and retired `crankingFuelCoefE100` (E100) curves, reproducing the legacy 85%-anchored blend at each ethanol node — so people who had tuned the old flex cranking curves keep their behaviour.
+
+See `docs/calibration-compatibility.md` and `TuneMigrator.java`.
 
 ## Key Files
 - `firmware/controllers/algo/fuel_math.cpp`: Core mass calculations.

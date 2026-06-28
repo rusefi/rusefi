@@ -2220,10 +2220,10 @@ uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;{bitStringValue(veLoadUnitLabels, veL
 uint16_t[FUEL_TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 fuel_cyl_trim_s[MAX_CYLINDER_COUNT iterate] fuelTrims
 
-! Legacy 1D cranking coolant multiplier at E100. Retained for tune compatibility (keeps the config layout and
-! lets older tunes preserve the value), but no longer used by firmware - flex cranking now uses crankingFuelFlexTable.
-! Intentionally NOT referenced by any TunerStudio dialog/curve/menu, so it is hidden from the tuner.
-uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;Legacy E100 cranking coolant multiplier - retained for compatibility, unused and hidden.;"ratio", 0.01, 0, 0, 50, 2
+! Retired field: the old 1D E100 cranking multiplier. Cranking flex now uses crankingFuelFlexTable, and old
+! tunes are migrated into it by CrankingFlexTableMigrator (java_console). Renamed with the 'unused' prefix so the
+! byte slot stays reserved (stable offsets, reusable later) and the tune-migration framework ignores it.
+uint16_t[CRANKING_CURVE_SIZE] autoscale unusedCrankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 
 ! 2D cranking coolant multiplier vs ethanol %, used when flexCranking is enabled.
 ! A real ethanol axis (default 0/35/65/100) lets the whole E0..E100 range be calibrated directly.
