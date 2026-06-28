@@ -518,7 +518,7 @@ CAN broadcast using custom rusEFI protocol
 
 
 ### measureMapOnlyInOneCylinder
-Useful for individual intakes
+Sample MAP during only one cylinder's intake per engine cycle instead of every cylinder.\nEnable for individual throttle bodies, where the MAP sensor reads a single runner with its own pressure pulses. Leave disabled for a shared plenum or single throttle so every intake event is averaged together for a smoother reading.
 
 ### stepperForceParkingEveryRestart
 

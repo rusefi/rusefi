@@ -2702,7 +2702,8 @@ struct engine_configuration_s {
 	offset 928 bit 11 */
 	bool externalRusEfiGdiModule : 1 {};
 	/**
-	 * Useful for individual intakes
+	 * Sample MAP during only one cylinder's intake per engine cycle instead of every cylinder.
+	 * Enable for individual throttle bodies, where the MAP sensor reads a single runner with its own pressure pulses. Leave disabled for a shared plenum or single throttle so every intake event is averaged together for a smoother reading.
 	offset 928 bit 12 */
 	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
