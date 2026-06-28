@@ -90,5 +90,5 @@ TEST(triggerRenix44, renix44RealCrankingFromFileAnotherOne) {
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized()) << "renix44 shaft sync";
 	ASSERT_NEAR(219, Sensor::getOrZero(SensorType::Rpm), 5) << "renix44 RPM";
 
-	ASSERT_EQ(531, tooManyTeethCounter);
+	ASSERT_EQ(3, tooManyTeethCounter);
 }

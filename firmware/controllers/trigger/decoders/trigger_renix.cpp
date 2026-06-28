@@ -41,7 +41,12 @@ static void commonRenix(TriggerWaveform *s) {
 	// Sync on the tooth at slot 1: it follows the missing slot 0 (a 2x gap),
 	// while the preceding tooth (slot 21 of the previous cycle) was a regular
 	// tooth - so this/last = 2.0 and last/prev = 1.0.
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.5, 2.5);
+  // Ideal gap ratios for the 44-2-2 pattern are:
+  // 1.0 - 2.0 - 1.0 - 0.5 
+  // But due to timing artifacts first gap may be significantly shorter than 2x
+  // throwing everything off.
+  // So we use a more relaxed range for the first gap ratio.
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.25, 2.5);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.75, 1.25);
 }
 
