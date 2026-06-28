@@ -618,7 +618,7 @@ public class StartupFrame {
         // Reuse this maximized splash frame for the console
         log.info("connect: handing off splash frame to ConsoleUI");
         prepareForHandoff();
-        LoadingOverlay.show(frame, "Loading console…");
+        LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
             new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected, frame));
     }

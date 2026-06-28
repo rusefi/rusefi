@@ -13,8 +13,23 @@ import java.awt.*;
  */
 public class LoadingOverlay {
     public static void show(JFrame frame, String message) {
+        show(frame, message, null);
+    }
+
+    /**
+     * @param logo optional logo shown above the message so it stays put across the splash → console
+     *             handoff instead of vanishing mid-load (#9715). Passed in because core_ui can't see
+     *             the ui-module LogoHelper.
+     */
+    public static void show(JFrame frame, String message, JComponent logo) {
         JPanel inner = new JPanel();
         inner.setLayout(new BoxLayout(inner, BoxLayout.Y_AXIS));
+
+        if (logo != null) {
+            logo.setAlignmentX(Component.CENTER_ALIGNMENT);
+            inner.add(logo);
+            inner.add(Box.createVerticalStrut(24));
+        }
 
         JLabel label = new JLabel(message);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
