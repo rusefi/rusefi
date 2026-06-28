@@ -47,8 +47,7 @@ void setDefaultCranking() {
 		1.0,
 		1.0
 	};
-	copyArray(config->crankingFuelCoef,     crankingCoef);
-	copyArray(config->crankingFuelCoefE100, crankingCoef);
+	copyArray(config->crankingFuelCoef, crankingCoef);
 
 	// Deg C
 	static const float crankingBins[] = {
