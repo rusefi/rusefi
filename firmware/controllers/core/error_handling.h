@@ -86,9 +86,11 @@ const char* getCriticalErrorMessage();
 
 /**
  * Report a recoverable configuration error (bad/inconsistent tune).
- * Unlike firmwareError(), the firmware keeps running so the user can fix
- * the tune from TunerStudio. The offending subsystem is expected to refuse
- * to operate. Message is exposed via getConfigErrorMessage() / hasConfigError().
+ *
+ * Surfacing: status_loop.cpp ORs hasConfigError() into
+ * tsOutputChannels->hasCriticalError, and TunerStudio reads the message
+ * via getConfigErrorMessage(). The flag stays set until something calls
+ * clearConfigErrorMessage() (who does that when?!).
  */
 void configError(const char *fmt, ...);
 void clearConfigErrorMessage();
