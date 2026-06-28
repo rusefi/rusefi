@@ -114,6 +114,7 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 	if (FLASH_RETURN_SUCCESS != err) {
 		efiPrintf("Flash: failed to erase flash at 0x%08x: %d", addr, err);
 		status = StorageStatus::Failed;
+		criticalError("failed to erase flash");
 	}
 
 	if (status == StorageStatus::Ok) {
@@ -121,6 +122,7 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		if (FLASH_RETURN_SUCCESS != err) {
 			efiPrintf("Flash: failed to write flash at 0x%08x: %d", addr, err);
 			status = StorageStatus::Failed;
+			criticalError("failed to write flash");
 		}
 	}
 
