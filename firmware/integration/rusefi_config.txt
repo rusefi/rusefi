@@ -933,7 +933,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	bit verboseTLE8888,"yes","no"
 	bit enableVerboseCanTx,"yes","no";CAN broadcast using custom rusEFI protocol
 	bit externalRusEfiGdiModule,"yes","no"
-	bit measureMapOnlyInOneCylinder,"yes","no";Useful for individual intakes
+	bit measureMapOnlyInOneCylinder,"yes","no";Sample MAP during only one cylinder's intake per engine cycle instead of every cylinder.\nEnable for individual throttle bodies, where the MAP sensor reads a single runner with its own pressure pulses. Leave disabled for a shared plenum or single throttle so every intake event is averaged together for a smoother reading.
 
 	! bit 13
 	bit stepperForceParkingEveryRestart,"yes","no"
