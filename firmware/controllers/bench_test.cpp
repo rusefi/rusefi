@@ -863,6 +863,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 #if EFI_USE_OPENBLT
 	case 0xbc:
+	  // todo: is _anyone_ using this? console seems to use CMD_REBOOT_OPENBLT text command?
 		/* Jump to OpenBLT if present */
 		jump_to_openblt();
 		break;
