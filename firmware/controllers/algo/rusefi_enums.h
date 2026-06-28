@@ -502,6 +502,12 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	MT_MPXH6300 = 15,
 
+	/**
+	 * Bosch 3 bar TMAP with integrated IAT, 11..310 kPa at 0.39..4.65V
+	 * 0261230566 / 0281002976 (VAG 03G906051E / 03G906051M / 038906051C)
+	 */
+	MT_BOSCH_3_BAR = 16,
+
 } air_pressure_sensor_type_e;
 
 typedef enum {

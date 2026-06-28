@@ -74,6 +74,9 @@ static MapCfg getMapCfg(air_pressure_sensor_type_e sensorType) {
 			return {0.2, 20, 4.8, 400};
 		case MT_MPXH6300:
 			return {1.0, 60, 4.5, 270};
+		case MT_BOSCH_3_BAR:
+			// 0261230566 / 0281002976: 11 kPa at 0.39V, 310 kPa at 4.65V
+			return {0.39, 11, 4.65, 310};
 		default:
 			firmwareError(ObdCode::CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: decoder %d", sensorType);
 			// falls through to custom
