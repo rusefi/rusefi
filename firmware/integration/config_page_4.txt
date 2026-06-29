@@ -6,7 +6,7 @@ custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:5], $gppwm_channel_e_enum
 struct_no_prefix page4_s
   ! note this is pretty similar to a blend table!
   uint16_t[VE_LOAD_COUNT x VE_RPM_COUNT] autoscale secondVeTable;;"%", 0.1, 0, 0, 999, 1
-  uint16_t[VE_LOAD_COUNT] secondVeLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : (veOverrideMode == 2 ? 100 : @@MAP_UPPER_LIMIT@@)}, 0
+  uint16_t[VE_LOAD_COUNT] secondVeLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
   uint16_t[VE_RPM_COUNT] secondVeRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
   switch_input_pin_e secondVeTableInput;Pin that activates the second VE table (hard switch, overrides blend)
@@ -19,7 +19,7 @@ struct_no_prefix page4_s
 
   ! note this is pretty similar to a blend table!
   int16_t[IGN_LOAD_COUNT x IGN_RPM_COUNT] autoscale secondIgnitionTable;;"deg", 0.1, 0, -20, 90, 1
-  uint16_t[IGN_LOAD_COUNT] secondIgnitionLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {(ignOverrideMode != 0 && ignOverrideMode != 1) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 0 || ignOverrideMode == 1 ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+  uint16_t[IGN_LOAD_COUNT] secondIgnitionLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {!(ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
   uint16_t[IGN_RPM_COUNT] secondIgnitionRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
   switch_input_pin_e secondIgnitionTableInput;Pin that activates the second ignition table (hard switch, overrides blend)
