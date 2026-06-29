@@ -96,6 +96,9 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		const auto err = intFlashErase(addr, size);
 		if (FLASH_RETURN_SUCCESS != err) {
 			efiPrintf("Flash: failed to erase flash: %d", err);
+			if (FLASH_RETURN_LOWVOLTAGEERROR == err) {
+				criticalError("Could not save settings. Low voltage detected - please check your USB cable.");
+			}
 			status = StorageStatus::Failed;
 		}
 	} else {
@@ -112,6 +115,9 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		const auto err = intFlashWrite(addr, reinterpret_cast<const char*>(ptr), size);
 		if (FLASH_RETURN_SUCCESS != err) {
 			efiPrintf("Flash: failed to write flash: %d", err);
+			if (FLASH_RETURN_LOWVOLTAGEERROR == err) {
+				criticalError("Could not save settings. Low voltage detected - please check your USB cable.");
+			}
 			status = StorageStatus::Failed;
 		}
 	}
