@@ -143,7 +143,7 @@ This uses separate ignition timing and VE tables not only for idle conditions, a
 
 
 ### useRunningMathForCranking
-For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
+For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table). Note: in 'Fuel Map' (running math) mode the base mass already reflects the flex-adjusted stoich ratio, so the cranking flex multipliers act as ADDITIONAL enrichment on top of that - do not re-apply the full ethanol correction there.
 
 ### displayLogicLevelsInEngineSniffer
 Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
@@ -944,7 +944,7 @@ In Constant mode, timing is automatically tapered to running as RPM increases.\n
 This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
 
 ### flexCranking
-Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
+Enable flex-fuel compensation for engine start. When on (and a flex fuel sensor is present) the cranking coolant multiplier and the priming pulse mass each come from a 2D table over coolant and ethanol % (crankingFuelFlexTable / primeFlexTable, 4-row ethanol axis) instead of their 1D coolant curves. When off, the 1D curves (crankingFuelCoef / primeValues) are used.
 
 ### flexFuelTransientComp
 Enable flex-fuel transient fueling compensation (acceleration enrichment and wall wetting tau/beta) based on ethanol content and coolant temperature.
