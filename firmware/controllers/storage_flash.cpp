@@ -81,24 +81,6 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		return StorageStatus::NotSupported;
 	}
 
-	if (getExtraPageFlashOffset(static_cast<StorageItemId>(id)) > 0) {
-#if EFI_SIMULATOR
-		// Simulator: each address maps to a separate file, so there is no
-		// shared-sector constraint — just overwrite directly.
-		const auto err = intFlashWrite(addr, reinterpret_cast<const char*>(ptr), size);
-		return (err == FLASH_RETURN_SUCCESS) ? StorageStatus::Ok : StorageStatus::Failed;
-#else
-		// Extra pages share their sector with the main config. They must only be
-		// written immediately after a main config write has erased the sector.
-		// If the area is not blank, the caller must trigger a full config burn instead.
-		if (!intFlashIsErased(addr, size)) {
-			return StorageStatus::Failed;
-		}
-		const auto err = intFlashWrite(addr, reinterpret_cast<const char*>(ptr), size);
-		return (err == FLASH_RETURN_SUCCESS) ? StorageStatus::Ok : StorageStatus::Failed;
-#endif
-	}
-
 	efiPrintf("Flash: Writing storage ID %d  @0x%x... %d bytes", id, addr, size);
 	efitick_t startNt = getTimeNowNt();
 
@@ -110,14 +92,24 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 
 	StorageStatus status = StorageStatus::Ok;
 
-	auto err = intFlashErase(addr, size);
-	if (FLASH_RETURN_SUCCESS != err) {
-		efiPrintf("Flash: failed to erase flash at 0x%08x: %d", addr, err);
-		status = StorageStatus::Failed;
+	if (getExtraPageFlashOffset(static_cast<StorageItemId>(id)) == 0) {
+		const auto err = intFlashErase(addr, size);
+		if (FLASH_RETURN_SUCCESS != err) {
+			efiPrintf("Flash: failed to erase flash at 0x%08x: %d", addr, err);
+			status = StorageStatus::Failed;
+		}
+	} else {
+		// Extra pages share their sector with the main config. They must only be
+		// written immediately after a main config write has erased the sector.
+		// If the area is not blank, the caller must trigger a full config burn instead.
+		if (!intFlashIsErased(addr, size)) {
+			efiPrintf("Flash: flash is not erased at 0x%08x", addr);
+			status = StorageStatus::Failed;
+		}
 	}
 
 	if (status == StorageStatus::Ok) {
-		err = intFlashWrite(addr, (const char*)ptr, size);
+		const auto err = intFlashWrite(addr, reinterpret_cast<const char*>(ptr), size);
 		if (FLASH_RETURN_SUCCESS != err) {
 			efiPrintf("Flash: failed to write flash at 0x%08x: %d", addr, err);
 			status = StorageStatus::Failed;
@@ -132,7 +124,8 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		startWatchdog();
 	}
 
-	efiPrintf("Flash: Write done after %d mS", elapsed_Ms);
+	efiPrintf("Flash: Write done %s after %d mS",
+		(status != StorageStatus::Ok) ? "with error(s)" : "Ok", elapsed_Ms);
 
 	return status;
 }
