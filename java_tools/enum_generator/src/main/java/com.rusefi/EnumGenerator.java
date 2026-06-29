@@ -227,6 +227,12 @@ public class EnumGenerator {
                 sb.append("\"").append(entry.valueTs).append("\"").append(",");
             }
 
+            // Pad the unused selectable slots with INVALID.
+            int slotCount = 1 << (32 - Integer.numberOfLeadingZeros(parsedDefinition.entries.size()));
+            for (int i = parsedDefinition.entries.size(); i < slotCount; i++) {
+                sb.append("\"INVALID\"").append(",");
+            }
+
             sb.setLength(sb.length() - 1);
 
             //log.info("Generated TS enum text representations for enum " + parsedDefinition.name + ": '" + sb + "'");
