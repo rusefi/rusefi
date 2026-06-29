@@ -61,7 +61,7 @@ public class ExpressionEvaluator {
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\b([a-zA-Z_][a-zA-Z0-9_]*)\\b");
     // Pre-compiled patterns reused across calls — never use String.matches/replaceAll with these literals
     private static final Pattern CONTAINS_FUNCTION_CALL = Pattern.compile(".*(stringValue|bitStringValue|getValue)\\s*\\(.*");
-    private static final Pattern HAS_ARITHMETIC_OPERATORS = Pattern.compile(".*[+*/()].*");
+    private static final Pattern HAS_ARITHMETIC_OPERATORS = Pattern.compile(".*[+*()].*");
     private static final Pattern IS_PLAIN_NUMBER       = Pattern.compile("^-?\\d+(\\.\\d+)?$");
     static final Pattern IS_SIMPLE_IDENTIFIER  = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*$");
 

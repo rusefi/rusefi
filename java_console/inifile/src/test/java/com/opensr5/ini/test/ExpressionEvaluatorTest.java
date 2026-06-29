@@ -305,7 +305,10 @@ public class ExpressionEvaluatorTest {
 
     @Test
     public void testLooksLikeExpression_WithDivide() {
-        assertTrue(ExpressionEvaluator.looksLikeExpression("10/2"));
+        assertTrue(ExpressionEvaluator.looksLikeExpression("{10/2}"));
+        // Unbraced "10/2" is NOT detected as expression because "/" is common in unit strings
+        // like "Air/Fuel Ratio", "km/h". Real INI expressions are always braced.
+        assertFalse(ExpressionEvaluator.looksLikeExpression("10/2"));
     }
 
     @Test
