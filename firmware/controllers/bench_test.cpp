@@ -849,7 +849,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		doScheduleStopEngine(StopRequestedReason::TsCommand);
 		break;
 
-	case 0xba:
+	case JUMP_DFU_COMMAND:
 #if EFI_PROD_CODE && EFI_DFU_JUMP
 		jump_to_bootloader();
 #endif /* EFI_DFU_JUMP */
@@ -862,7 +862,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 #if EFI_USE_OPENBLT
-	case 0xbc:
+	case JUMP_BLT_COMMAND:
 	  // todo: is _anyone_ using this? console seems to use CMD_REBOOT_OPENBLT text command?
 		/* Jump to OpenBLT if present */
 		jump_to_openblt();
