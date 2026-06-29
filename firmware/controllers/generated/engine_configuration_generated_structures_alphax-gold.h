@@ -7146,6 +7146,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {};
 	/**
+	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}
 	 * offset 9816
 	 */
 	uint16_t lambdaLoadBins[FUEL_LOAD_COUNT] = {};
@@ -7527,6 +7528,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 100, 1> lambdaMaxDeviationTable[LAM_SIZE][LAM_RPM_SIZE] = {};
 	/**
+	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}
 	 * offset 14424
 	 */
 	uint16_t lambdaMaxDeviationLoadBins[LAM_SIZE] = {};
@@ -7541,6 +7543,7 @@ struct persistent_config_s {
 	 */
 	uint8_t injectorStagingTable[INJ_STAGING_COUNT][INJ_STAGING_RPM_SIZE] = {};
 	/**
+	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}
 	 * offset 14476
 	 */
 	uint16_t injectorStagingLoadBins[INJ_STAGING_COUNT] = {};
