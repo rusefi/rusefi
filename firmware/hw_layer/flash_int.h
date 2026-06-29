@@ -90,12 +90,12 @@ typedef uint8_t flashdata_t;
 #if ((STM32_VDD >= 270) && (STM32_VDD <= 300))
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_1
 // 2.7V
-#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV5
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV4
 typedef uint32_t flashdata_t;
 #elif (STM32_VDD >= 210) && (STM32_VDD < 360)
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_0
 // 2.1V
-#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV1
+#define PWR_CR1_PLS_VALUE			PWR_CR1_PLS_LEV0
 typedef uint16_t flashdata_t;
 #elif (STM32_VDD >= 170) && (STM32_VDD < 360)
 #define FLASH_CR_PSIZE_VALUE        ((uint32_t)0x00000000)
