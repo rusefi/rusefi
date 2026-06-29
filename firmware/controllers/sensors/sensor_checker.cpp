@@ -168,9 +168,15 @@ PUBLIC_API_WEAK void boardSensorChecker() {
 }
 
 void SensorChecker::onSlowCallback() {
-	// Don't check when the ignition is off, or when it was just turned on (let things stabilize)
-	// TODO: also inhibit checking if we just did a flash burn, since that blocks the ECU for a few seconds.
-	bool shouldCheck = m_ignitionIsOn && m_timeSinceIgnOff.hasElapsedSec(5);
+	// Don't check when the ignition is off, or when it was just turned on (let things stabilize).
+	// Also skip right after a flash burn: writing flash stalls the ECU for a chunk of time, so
+	// analog reads (e.g. TPS) go briefly stale. Flagging that transient as a sensor fault would
+	// inflate the ETB intermittent-error counters and eventually disable the throttle on a healthy
+	// car (one false count per burn). configBurnTimer is reset at the start of each burn; the 5s
+	// window matches watchOutForLinearTime (see engine.cpp) and covers the burn plus ADC re-settle.
+	bool shouldCheck = m_ignitionIsOn
+		&& m_timeSinceIgnOff.hasElapsedSec(5)
+		&& engine->configBurnTimer.hasElapsedSec(5);
 	m_analogSensorsShouldWork = shouldCheck;
 	if (!shouldCheck) {
 		return;
