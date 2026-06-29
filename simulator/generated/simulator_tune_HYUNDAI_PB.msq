@@ -2432,7 +2432,7 @@
          3.08 1.64 1.15 1.19 0.99 0.76 0.64 0.6
 </constant>
         <constant digits="2" name="injectorSecondary_flow" units="">200.0</constant>
-        <constant cols="1" digits="0" name="injectorStagingLoadBins" rows="6" units="">
+        <constant cols="1" digits="0" name="injectorStagingLoadBins" rows="6" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}">
          0
          20
          40
@@ -2676,7 +2676,7 @@
         <constant digits="1" name="knockSuppressMinTps" units="%">10.0</constant>
         <constant name="l9779_cs">"NONE"</constant>
         <constant name="l9779spiDevice">"Off"</constant>
-        <constant cols="1" digits="0" name="lambdaLoadBins" rows="16" units="">
+        <constant cols="1" digits="0" name="lambdaLoadBins" rows="16" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}">
          30
          40
          50
@@ -2694,7 +2694,7 @@
          225
          250
 </constant>
-        <constant cols="1" digits="0" name="lambdaMaxDeviationLoadBins" rows="4" units="">
+        <constant cols="1" digits="0" name="lambdaMaxDeviationLoadBins" rows="4" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}">
          0
          0
          0
@@ -5146,7 +5146,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260628" nPages="1" signature="rusEFI master.2026.06.29.f407-discovery.395213" version="5.0"/>
+    <versionInfo firmwareInfo="20260628" nPages="1" signature="rusEFI master.2026.06.29.f407-discovery.3710048741" version="5.0"/>
     <bibliography author="rusEFI 20260628" writeDate="date"/>
     <settings/>
     <userComments/>
