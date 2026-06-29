@@ -95,7 +95,7 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 	if (getExtraPageFlashOffset(static_cast<StorageItemId>(id)) == 0) {
 		const auto err = intFlashErase(addr, size);
 		if (FLASH_RETURN_SUCCESS != err) {
-			efiPrintf("Flash: failed to erase flash at 0x%08x: %d", addr, err);
+			efiPrintf("Flash: failed to erase flash: %d", err);
 			status = StorageStatus::Failed;
 		}
 	} else {
@@ -103,7 +103,7 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		// written immediately after a main config write has erased the sector.
 		// If the area is not blank, the caller must trigger a full config burn instead.
 		if (!intFlashIsErased(addr, size)) {
-			efiPrintf("Flash: flash is not erased at 0x%08x", addr);
+			efiPrintf("Flash: flash is not erased");
 			status = StorageStatus::Failed;
 		}
 	}
@@ -111,14 +111,14 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 	if (status == StorageStatus::Ok) {
 		const auto err = intFlashWrite(addr, reinterpret_cast<const char*>(ptr), size);
 		if (FLASH_RETURN_SUCCESS != err) {
-			efiPrintf("Flash: failed to write flash at 0x%08x: %d", addr, err);
+			efiPrintf("Flash: failed to write flash: %d", err);
 			status = StorageStatus::Failed;
 		}
 	}
 
 	if (status == StorageStatus::Ok) {
 		if (intFlashCompare(addr, reinterpret_cast<const char*>(ptr), size) != TRUE) {
-			efiPrintf("Flash: validation failed at 0x%08x", addr);
+			efiPrintf("Flash: validation failed");
 			status = StorageStatus::Failed;
 		}
 	}
