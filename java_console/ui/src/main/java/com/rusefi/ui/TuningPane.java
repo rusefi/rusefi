@@ -12,6 +12,8 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.maintenance.OfflineEditMigration;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.widgets.TextGaugeStrip;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
@@ -38,6 +40,7 @@ public class TuningPane {
     private final UIContext uiContext;
     private final MainMenuTreeWidget left;
     private final TuningToolbarWidget toolbar;
+    private TextGaugeStrip gaugeStrip;
     /** Accumulated tune edits across all dialogs for this session. Field so offline seeding can set it. */
     private final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
     /** Single-element holder for the currently displayed menu key. Field so the connect handler can access it. */
@@ -48,14 +51,18 @@ public class TuningPane {
     private Consumer<String> navigateToPinout;
 
     public TuningPane(UIContext uiContext) {
-        this(uiContext, null);
+        this(uiContext, null, null);
+    }
+
+    public TuningPane(UIContext uiContext, Node config) {
+        this(uiContext, null, config);
     }
 
     /**
      * @param uiContext       live context (BinaryProtocol, LinkManager)
      * @param initialBaseline optional baseline image for discard (used in offline mode when a tune is pre-loaded)
      */
-    public TuningPane(UIContext uiContext, ConfigurationImage initialBaseline) {
+    public TuningPane(UIContext uiContext, ConfigurationImage initialBaseline, Node config) {
         this.uiContext = uiContext;
         left = new MainMenuTreeWidget(uiContext);
 
@@ -63,6 +70,10 @@ public class TuningPane {
         JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
 
         toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage, initialBaseline);
+
+        if (config != null) {
+            gaugeStrip = new TextGaugeStrip(uiContext, config.getChild("gauge_strip"));
+        }
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
         splitPane.setResizeWeight(0.3);
@@ -217,6 +228,9 @@ public class TuningPane {
         JPanel indicatorPanel = buildFrontendIndicatorPanel(uiContext);
         if (indicatorPanel != null) {
             northPanel.add(indicatorPanel);
+        }
+        if (gaugeStrip != null) {
+            northPanel.add(gaugeStrip.getContent());
         }
 
         content.add(northPanel, BorderLayout.NORTH);
