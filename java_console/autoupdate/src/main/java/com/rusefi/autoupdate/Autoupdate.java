@@ -181,11 +181,31 @@ public class Autoupdate {
 
         File targetJar = new File(runningJar.getParentFile(), "rusefi_console.jar");
         log.info("finalizePendingUpdate: " + runningJar + " -> " + targetJar);
-        try {
-            Files.copy(runningJar.toPath(), targetJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            log.info("finalizePendingUpdate: console JAR replaced successfully");
-        } catch (IOException e) {
-            log.error("finalizePendingUpdate: failed to replace console JAR: " + e);
+        // relaunchConsole() starts this process and then System.exit(0)s the previous JVM, but that
+        // old JVM was running from rusefi_console.jar and may not have released its file lock yet
+        // (on Windows the copy fails with "being used by another process"). Retry to wait it out -
+        // giving up on the first failure leaves the pending JAR orphaned and old code running (#9727).
+        IOException lastError = null;
+        for (int attempt = 1; attempt <= 20; attempt++) {
+            try {
+                Files.copy(runningJar.toPath(), targetJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                log.info("finalizePendingUpdate: console JAR replaced successfully on attempt " + attempt);
+                lastError = null;
+                break;
+            } catch (IOException e) {
+                lastError = e;
+                try {
+                    Thread.sleep(250);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
+        if (lastError != null) {
+            // Keep the pending JAR so a later startup can still finalize the swap.
+            log.error("finalizePendingUpdate: failed to replace console JAR: " + lastError);
+            return;
         }
         // On Linux the pending file can be deleted even while open; on Windows this may fail silently.
         if (!runningJar.delete()) {
