@@ -105,6 +105,10 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		// Extra pages share their sector with the main config. They must only be
 		// written immediately after a main config write has erased the sector.
 		// If the area is not blank, the caller must trigger a full config burn instead.
+	}
+
+	// Always check if area is erased. Even it was JUST erased
+	if (status == StorageStatus::Ok) {
 		if (!intFlashIsErased(addr, size)) {
 			efiPrintf("Flash: flash is not erased");
 			status = StorageStatus::Failed;
