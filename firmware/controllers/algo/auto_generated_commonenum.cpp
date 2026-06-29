@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Jun 21 03:44:36 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Jun 29 00:12:13 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -245,6 +245,8 @@ const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value) {
 	switch (value) {
 		case MT_BOSCH_2_5:
 			return "MT_BOSCH_2_5";
+		case MT_BOSCH_3_BAR:
+			return "MT_BOSCH_3_BAR";
 		case MT_CUSTOM:
 			return "MT_CUSTOM";
 		case MT_DENSO183:

@@ -64,6 +64,7 @@ public class VariableRegistryValues {
 	public static final int afr_sensor_s_size = 20;
 	public static final int air_pressure_sensor_config_s_size = 12;
 	public static final int air_pressure_sensor_type_e_MT_BOSCH_2_5 = 10;
+	public static final int air_pressure_sensor_type_e_MT_BOSCH_3_BAR = 16;
 	public static final int air_pressure_sensor_type_e_MT_CUSTOM = 0;
 	public static final int air_pressure_sensor_type_e_MT_DENSO183 = 1;
 	public static final int air_pressure_sensor_type_e_MT_DODGE_NEON_2003 = 4;
@@ -1490,7 +1491,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 673414258;
+	public static final int SIGNATURE_HASH = 1070962015;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1814,7 +1815,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.06.29.stm32f429_nucleo.673414258";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.06.29.stm32f429_nucleo.1070962015";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2176;
