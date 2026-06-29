@@ -116,6 +116,13 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 		}
 	}
 
+	if (status == StorageStatus::Ok) {
+		if (intFlashCompare(addr, reinterpret_cast<const char*>(ptr), size) != TRUE) {
+			efiPrintf("Flash: validation failed at 0x%08x", addr);
+			status = StorageStatus::Failed;
+		}
+	}
+
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
 
