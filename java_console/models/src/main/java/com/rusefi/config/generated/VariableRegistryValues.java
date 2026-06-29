@@ -1291,6 +1291,8 @@ public class VariableRegistryValues {
 	public static final int InjectorNonlinearMode_INJ_FordModel = 2;
 	public static final int InjectorNonlinearMode_INJ_None = 0;
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
+	public static final int JUMP_BLT_COMMAND = 0xBC;
+	public static final int JUMP_DFU_COMMAND = 0xBA;
 	public static final String KNOCK_RPM_TABLE_NAME = "Engine Knock Threshold RPM Based";
 	public static final int KNOCK_TABLE_RPM_SIZE = 6;
 	public static final int KNOCK_TABLE_SIZE = 6;
@@ -1430,7 +1432,7 @@ public class VariableRegistryValues {
 	public static final int RANGE_INPUT_COUNT = 6;
 	public static final String RE_auto_update_root_url = "https://rusefi.com/build_server";
 	public static final String RE_obfuscated = "false";
-	public static final int REBOOT_COMMAND = 0xbb;
+	public static final int REBOOT_COMMAND = 0xBB;
 	public static final int rotational_idle_accumulator_s_size = 4;
 	public static final int rotational_idle_s_size = 36;
 	public static final int RotationalCutMode_Both = 2;
@@ -1493,6 +1495,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 1656614679;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1816,7 +1819,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.06.29.stm32f429_nucleo.3782876400";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.06.29.stm32f429_nucleo.1656614679";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2176;
