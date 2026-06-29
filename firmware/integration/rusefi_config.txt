@@ -2164,11 +2164,11 @@ uint16_t[VVT_TABLE_SIZE] vvtTable2LoadBins;;"L", 1, 0, 0,  @@MAP_UPPER_LIMIT@@, 
 uint16_t[VVT_TABLE_RPM_SIZE] vvtTable2RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 int16_t[IGN_LOAD_COUNT x IGN_RPM_COUNT] autoscale ignitionTable;;"deg", 0.1, 0, -20, 90, 1
-uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {!(ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {!(ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint16_t[VE_LOAD_COUNT x VE_RPM_COUNT] autoscale veTable;;"%", 0.1, 0, 0, 999, 1
-uint16_t[VE_LOAD_COUNT] veLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+uint16_t[VE_LOAD_COUNT] veLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[VE_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 ! TODO at some point we need to flip this table to use AFR on the affected tests, since otherwise we get some no-to-nice fields as consequence
@@ -2176,7 +2176,7 @@ uint16_t[VE_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 ! [tag:lambdaTable]
 uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;{useLambdaOnInterface ? "lambda" : "afr"}, { useLambdaOnInterface ? 1/@@PACK_MULT_LAMBDA_CFG@@ : 1/@@PACK_MULT_AFR_CFG@@ }, 0, {useLambdaOnInterface ? 0.6 : 0}, {useLambdaOnInterface ? 1.5 : 25}, {useLambdaOnInterface ? 2 : 1}
 
-uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}, {!(afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}, {!(afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
 
 float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0, 0, 30000, 2
@@ -2211,12 +2211,12 @@ struct fuel_cyl_trim_s
 end_struct
 
 ! All ign trim tables share axes
-uint16_t[IGN_TRIM_SIZE] ignTrimLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {!(ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+uint16_t[IGN_TRIM_SIZE] ignTrimLoadBins;;{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}, {!(ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {ignOverrideMode == 1 || (ignOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[IGN_TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 ign_cyl_trim_s[MAX_CYLINDER_COUNT iterate] ignTrims
 
 ! All fuel trim tables share axes
-uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}, {!(veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {veOverrideMode == 1 || (veOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[FUEL_TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 fuel_cyl_trim_s[MAX_CYLINDER_COUNT iterate] fuelTrims
 
@@ -2342,14 +2342,14 @@ float[RANGE_INPUT_COUNT] tcu_rangeLow;;"level", 1, 0, 0, 200000, 0
 #define LAM_RPM_SIZE 4
 
 uint8_t[LAM_SIZE x LAM_RPM_SIZE] autoscale lambdaMaxDeviationTable;;"lambda", 0.01, 0, 0, 1, 2
-uint16_t[LAM_SIZE] lambdaMaxDeviationLoadBins;;{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}, {!(afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+uint16_t[LAM_SIZE] lambdaMaxDeviationLoadBins;;{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}, {!(afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[LAM_RPM_SIZE] lambdaMaxDeviationRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
 #define INJ_STAGING_COUNT 6
 #define INJ_STAGING_RPM_SIZE 6
 
 uint8_t[INJ_STAGING_COUNT x INJ_STAGING_RPM_SIZE] injectorStagingTable;;"%", 1, 0, 0, 90, 0
-uint16_t[INJ_STAGING_COUNT] injectorStagingLoadBins;;{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}, {!(afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : 100}, 0
+uint16_t[INJ_STAGING_COUNT] injectorStagingLoadBins;;{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}, {!(afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0)) || useMetricOnInterface ? 1 : @@UNITS_KPA_TO_PSI@@}, 0, 0, {afrOverrideMode == 1 || (afrOverrideMode == 0 && fuelAlgorithm == 0) ? (useMetricOnInterface ? @@MAP_UPPER_LIMIT@@ : @@MAP_UPPER_LIMIT@@ * @@UNITS_KPA_TO_PSI@@) : @@MAP_UPPER_LIMIT@@}, 0
 uint16_t[INJ_STAGING_RPM_SIZE] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
 #define WWAE_TABLE_SIZE 8
