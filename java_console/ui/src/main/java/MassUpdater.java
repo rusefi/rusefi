@@ -1,13 +1,16 @@
+import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
 import com.rusefi.UiVersion;
+import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.DfuManualJob;
 import com.rusefi.maintenance.jobs.OpenBltManualJob;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.widgets.ToolButtons;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -18,13 +21,17 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortType.OpenBlt;
 
 public class MassUpdater {
+    private static final Logging log = getLogging(MassUpdater.class);
+
+
     private final StatusWindow mainStatus = new StatusWindow();
     private final Set<String> knownPorts = new HashSet<>();
 
-    public MassUpdater(ConnectivityContext connectivityContext) {
+    public MassUpdater(ConnectivityContext connectivityContext, SerialPortType target) {
         mainStatus.showFrame("Mass Updater " + UiVersion.CONSOLE_VERSION);
 
         final AtomicBoolean previousDfuState = new AtomicBoolean();
@@ -68,8 +75,6 @@ public class MassUpdater {
                 previousDfuState.set(currentHardware.isDfuFound());
             }
 
-            SerialPortType target = OpenBlt;
-
             List<PortResult> currentFilteredList = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == target).collect(Collectors.toList());
             Set<String> currentSet = currentFilteredList.stream().map(portResult -> portResult.port).collect(Collectors.toSet());
             for (Iterator<String> it = knownPorts.iterator(); it.hasNext(); ) {
@@ -91,7 +96,24 @@ public class MassUpdater {
     }
 
     public static void main(String[] args) throws InterruptedException, InvocationTargetException {
+        SerialPortType target = getTargetFromArguments(args);
+        log.error("Target port type: " + target);
+
         ToolButtons.showDeviceManager();
-        SwingUtilities.invokeAndWait(() -> new MassUpdater(ConnectivityContext.INSTANCE));
+        SwingUtilities.invokeAndWait(() -> new MassUpdater(ConnectivityContext.INSTANCE, target));
+    }
+
+    private static @NotNull SerialPortType getTargetFromArguments(String[] args) {
+        SerialPortType target = OpenBlt;
+        if (args.length > 0) {
+            String arg = args[0];
+            for (SerialPortType type : SerialPortType.values()) {
+                if (type.name().equalsIgnoreCase(arg)) {
+                    target = type;
+                    break;
+                }
+            }
+        }
+        return target;
     }
 }
