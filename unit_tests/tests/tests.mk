@@ -79,6 +79,7 @@ TESTS_SRC_CPP = \
 	tests/launch/test_retard_threshold_rpm.cpp \
 	tests/launch/test_ignition_angle_advance.cpp \
 	tests/launch/test_spark_skip_ratio.cpp \
+	tests/launch/test_launch_rpm_threshold.cpp \
 	tests/shift_torque_reduction/flat_shift_condition_test_base.cpp \
 	tests/shift_torque_reduction/shift_torque_reduction_switch_params.cpp \
 	tests/shift_torque_reduction/shift_torque_reduction_switch_test_base.cpp \
