@@ -32,6 +32,7 @@ public:
 
 	bool isLaunchSparkRpmRetardCondition() const;
 	bool isLaunchFuelRpmRetardCondition() const;
+	bool ownsSharedTrigger() const;
 
 	float getSparkSkipRatio() const { return sparkSkipRatio; }
 

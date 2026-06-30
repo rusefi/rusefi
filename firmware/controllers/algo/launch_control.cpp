@@ -121,6 +121,19 @@ LaunchCondition LaunchControlBase::calculateLaunchCondition(const float rpm) {
 	}
 }
 
+bool LaunchControlBase::ownsSharedTrigger() const {
+	// SWITCH_INPUT_LAUNCH + LAUNCH_BUTTON already has its own RPM-based guard in
+	// calculateRPMLaunchCondition() that doesn't touch the latch, so it's excluded here.
+	const bool sameTrigger =
+		engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH
+		&& engineConfiguration->torqueReductionActivationMode == TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH;
+
+	return sameTrigger
+		&& engineConfiguration->launchControlEnabled
+		&& engineConfiguration->launchRpmThreshold > 0
+		&& isLaunchLatched;
+}
+
 LaunchControlBase::LaunchControlBase() {
 	launchActivatePinState = false;
 	isPreLaunchCondition = false;
