@@ -1,5 +1,6 @@
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
+import com.rusefi.SerialPortType;
 import com.rusefi.UiVersion;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
@@ -21,7 +22,7 @@ import static com.rusefi.SerialPortType.OpenBlt;
 
 public class MassUpdater {
     private final StatusWindow mainStatus = new StatusWindow();
-    private final Set<String> knownBlts = new HashSet<>();
+    private final Set<String> knownPorts = new HashSet<>();
 
     public MassUpdater(ConnectivityContext connectivityContext) {
         mainStatus.showFrame("Mass Updater " + UiVersion.CONSOLE_VERSION);
@@ -67,21 +68,23 @@ public class MassUpdater {
                 previousDfuState.set(currentHardware.isDfuFound());
             }
 
-            List<PortResult> currentBltList = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
-            Set<String> currentSet = currentBltList.stream().map(portResult -> portResult.port).collect(Collectors.toSet());
-            for (Iterator<String> it = knownBlts.iterator(); it.hasNext(); ) {
+            SerialPortType target = OpenBlt;
+
+            List<PortResult> currentFilteredList = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == target).collect(Collectors.toList());
+            Set<String> currentSet = currentFilteredList.stream().map(portResult -> portResult.port).collect(Collectors.toSet());
+            for (Iterator<String> it = knownPorts.iterator(); it.hasNext(); ) {
                 String port = it.next();
                 if (!currentSet.contains(port)) {
                     mainStatus.getContent().logLine(port + ": No longer present");
                     it.remove();
                 }
             }
-            for (PortResult openBltPort : currentBltList) {
-                if (!knownBlts.contains(openBltPort.port)) {
-                    knownBlts.add(openBltPort.port);
-                    mainStatus.getContent().logLine("New OpenBlt " + openBltPort);
+            for (PortResult openPort : currentFilteredList) {
+                if (!knownPorts.contains(openPort.port)) {
+                    knownPorts.add(openPort.port);
+                    mainStatus.getContent().logLine("New port " + openPort);
 
-                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(new OpenBltManualJob(openBltPort, mainStatus.getContent())));
+                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(new OpenBltManualJob(openPort, mainStatus.getContent())));
                 }
             }
         });
