@@ -15,5 +15,6 @@ bit     rpmPreLaunchCondition;
 	bit speedCondition;Launch: speedCondition
 	bit tpsCondition;Launch: tpsCondition
 	bit luaLaunchState
+	bit isLaunchLatched;Launch: isLaunchLatched
 
 end_struct

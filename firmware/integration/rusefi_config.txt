@@ -1991,6 +1991,8 @@ end_struct
 
 ! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
 
+	uint16_t launchRpmThreshold;Launch RPM Threshold: when above 0, launch only engages if the activation switch (button/clutch) is pressed at or below this RPM, and stays latched while held - even past this RPM. This lets a standing launch (switch pressed low, revved up) coexist with flat shift / torque reduction (switch blipped high during an upshift). 0 disables the gate (legacy behavior).;"rpm", 1, 0, 0, 20000, 0
+
 	! --- Misfire Detection ---
 	bit misfireDetectionEnabled,"enabled","disabled";Misfire Detection: master enable. Active at idle only. Latches check-engine light (P0300) once the count threshold is reached.
 	uint8_t misfireConsecutiveCount;Misfire Detection: minimum flagged firings within the recent-firings window before a misfire is counted.;"events", 1, 0, 1, 20, 0

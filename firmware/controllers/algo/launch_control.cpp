@@ -96,13 +96,25 @@ LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const float rpm) 
 
 LaunchCondition LaunchControlBase::calculateLaunchCondition(const float rpm) {
 	const LaunchCondition currentRpmLaunchCondition = calculateRPMLaunchCondition(rpm);
-	activateSwitchCondition = isInsideSwitchCondition();
+
+	const bool rawSwitchCondition = isInsideSwitchCondition();
+	if (engineConfiguration->launchRpmThreshold > 0) {
+		if (!rawSwitchCondition) {
+			isLaunchLatched = false;
+		} else if (!activateSwitchCondition) {
+			isLaunchLatched = (rpm <= engineConfiguration->launchRpmThreshold);
+		}
+	} else {
+		isLaunchLatched = rawSwitchCondition;
+	}
+	activateSwitchCondition = rawSwitchCondition;
+
 	rpmLaunchCondition = (currentRpmLaunchCondition == LaunchCondition::Launch);
 	rpmPreLaunchCondition = (currentRpmLaunchCondition == LaunchCondition::PreLaunch);
 	speedCondition = isInsideSpeedCondition();
 	tpsCondition = isInsideTpsCondition();
 
-	if(speedCondition && activateSwitchCondition && tpsCondition) {
+	if(speedCondition && isLaunchLatched && tpsCondition) {
 		return currentRpmLaunchCondition;
 	} else {
 		return LaunchCondition::NotMet;
