@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260629</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260630</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -1238,7 +1238,7 @@
         <constant digits="1" name="fuelTempSensor_tempC_1" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="fuelTempSensor_tempC_2" units="{bitStringValue(pressureUnitsLabels, useMetricOnInterface)}">0.0</constant>
         <constant digits="1" name="fuelTempSensor_tempC_3" units="{bitStringValue(unitsLabels, useMetricOnInterface)}">0.0</constant>
-        <constant cols="1" digits="0" name="fuelTrimLoadBins" rows="4" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}">
+        <constant cols="1" digits="0" name="fuelTrimLoadBins" rows="4" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdx)}">
          20
          50
          80
@@ -2178,7 +2178,7 @@
 </constant>
         <constant name="ignitionKeyDigitalPin">"NONE"</constant>
         <constant name="ignitionKeyDigitalPinMode">"DEFAULT"</constant>
-        <constant cols="1" digits="0" name="ignitionLoadBins" rows="16" units="{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}">
+        <constant cols="1" digits="0" name="ignitionLoadBins" rows="16" units="{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}">
          21
          27
          33
@@ -2249,7 +2249,7 @@
         <constant name="ignKeyAdcChannel">"Disabled"</constant>
         <constant digits="0" name="ignKeyAdcDivider" units="">0</constant>
         <constant name="ignOverrideMode">"None"</constant>
-        <constant cols="1" digits="0" name="ignTrimLoadBins" rows="4" units="{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}">
+        <constant cols="1" digits="0" name="ignTrimLoadBins" rows="4" units="{bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}">
          20
          50
          80
@@ -2432,7 +2432,7 @@
          3.08 1.64 1.15 1.19 0.99 0.76 0.64 0.6
 </constant>
         <constant digits="2" name="injectorSecondary_flow" units="">200.0</constant>
-        <constant cols="1" digits="0" name="injectorStagingLoadBins" rows="6" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}">
+        <constant cols="1" digits="0" name="injectorStagingLoadBins" rows="6" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}">
          0
          20
          40
@@ -2676,7 +2676,7 @@
         <constant digits="1" name="knockSuppressMinTps" units="%">10.0</constant>
         <constant name="l9779_cs">"NONE"</constant>
         <constant name="l9779spiDevice">"Off"</constant>
-        <constant cols="1" digits="0" name="lambdaLoadBins" rows="16" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}">
+        <constant cols="1" digits="0" name="lambdaLoadBins" rows="16" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}">
          30
          40
          50
@@ -2694,7 +2694,7 @@
          225
          250
 </constant>
-        <constant cols="1" digits="0" name="lambdaMaxDeviationLoadBins" rows="4" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}">
+        <constant cols="1" digits="0" name="lambdaMaxDeviationLoadBins" rows="4" units="{bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}">
          0
          0
          0
@@ -4879,7 +4879,7 @@
 </constant>
         <constant name="veBlends4_yAxisOverride">"Zero"</constant>
         <constant name="vehicleSpeedSensorInputPin">"NONE"</constant>
-        <constant cols="1" digits="0" name="veLoadBins" rows="16" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}">
+        <constant cols="1" digits="0" name="veLoadBins" rows="16" units="{bitStringValue(veLoadUnitLabels, veLoadUnitIdx)}">
          10
          20
          30
@@ -5146,7 +5146,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260628" nPages="1" signature="rusEFI master.2026.06.29.f407-discovery.3710048741" version="5.0"/>
+    <versionInfo firmwareInfo="20260628" nPages="1" signature="rusEFI master.2026.06.30.f407-discovery.1475347867" version="5.0"/>
     <bibliography author="rusEFI 20260628" writeDate="date"/>
     <settings/>
     <userComments/>
