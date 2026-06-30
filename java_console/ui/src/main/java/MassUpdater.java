@@ -5,10 +5,9 @@ import com.rusefi.SerialPortType;
 import com.rusefi.UiVersion;
 import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.jobs.AsyncJobExecutor;
-import com.rusefi.maintenance.jobs.DfuManualJob;
-import com.rusefi.maintenance.jobs.OpenBltManualJob;
+import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.StatusWindow;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.widgets.ToolButtons;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.SerialPortType.OpenBlt;
+import static com.rusefi.SerialPortType.*;
 
 public class MassUpdater {
     private static final Logging log = getLogging(MassUpdater.class);
@@ -89,7 +88,15 @@ public class MassUpdater {
                     knownPorts.add(openPort.port);
                     mainStatus.getContent().logLine("New port " + openPort);
 
-                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(new OpenBltManualJob(openPort, mainStatus.getContent())));
+                    AsyncJobWithContext<SerialPortWithParentComponentJobContext> job;
+                    if (EcuWithOpenblt == target) {
+                        job = new OpenBltAutoJob(openPort, mainStatus.getContent(), ConnectivityContext.INSTANCE, new UIContext().getLinkManager());
+                    } else {
+                        job = new OpenBltManualJob(openPort, mainStatus.getContent());
+                    }
+
+
+                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(job));
                 }
             }
         });
