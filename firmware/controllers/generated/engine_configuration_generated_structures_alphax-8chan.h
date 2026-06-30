@@ -7014,7 +7014,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<int16_t, 10, 1> ignitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT] = {};
 	/**
-	 * units: {bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}
+	 * units: {bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}
 	 * offset 8820
 	 */
 	uint16_t ignitionLoadBins[IGN_LOAD_COUNT] = {};
@@ -7029,7 +7029,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> veTable[VE_LOAD_COUNT][VE_RPM_COUNT] = {};
 	/**
-	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}
+	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdx)}
 	 * offset 9396
 	 */
 	uint16_t veLoadBins[VE_LOAD_COUNT] = {};
@@ -7044,7 +7044,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {};
 	/**
-	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}
+	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}
 	 * offset 9716
 	 */
 	uint16_t lambdaLoadBins[FUEL_LOAD_COUNT] = {};
@@ -7129,7 +7129,7 @@ struct persistent_config_s {
 	 */
 	int16_t scriptTable4RpmBins[TABLE_4_RPM_SIZE] = {};
 	/**
-	 * units: {bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}
+	 * units: {bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}
 	 * offset 10888
 	 */
 	uint16_t ignTrimLoadBins[IGN_TRIM_SIZE] = {};
@@ -7143,7 +7143,7 @@ struct persistent_config_s {
 	 */
 	ign_cyl_trim_s ignTrims[MAX_CYLINDER_COUNT] = {};
 	/**
-	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}
+	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdx)}
 	 * offset 11096
 	 */
 	uint16_t fuelTrimLoadBins[FUEL_TRIM_SIZE] = {};
@@ -7426,7 +7426,7 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 100, 1> lambdaMaxDeviationTable[LAM_SIZE][LAM_RPM_SIZE] = {};
 	/**
-	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}
+	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}
 	 * offset 14324
 	 */
 	uint16_t lambdaMaxDeviationLoadBins[LAM_SIZE] = {};
@@ -7441,7 +7441,7 @@ struct persistent_config_s {
 	 */
 	uint8_t injectorStagingTable[INJ_STAGING_COUNT][INJ_STAGING_RPM_SIZE] = {};
 	/**
-	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdxPcv)}
+	 * units: {bitStringValue(afrLoadUnitLabels, afrLoadUnitIdx)}
 	 * offset 14376
 	 */
 	uint16_t injectorStagingLoadBins[INJ_STAGING_COUNT] = {};

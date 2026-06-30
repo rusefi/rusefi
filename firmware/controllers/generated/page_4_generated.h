@@ -11,7 +11,7 @@ struct page4_s {
 	 */
 	scaled_channel<uint16_t, 10, 1> secondVeTable[VE_LOAD_COUNT][VE_RPM_COUNT] = {};
 	/**
-	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdxPcv)}
+	 * units: {bitStringValue(veLoadUnitLabels, veLoadUnitIdx)}
 	 * offset 512
 	 */
 	uint16_t secondVeLoadBins[VE_LOAD_COUNT] = {};
@@ -49,7 +49,7 @@ struct page4_s {
 	 */
 	scaled_channel<int16_t, 10, 1> secondIgnitionTable[IGN_LOAD_COUNT][IGN_RPM_COUNT] = {};
 	/**
-	 * units: {bitStringValue(ignLoadUnitLabels, ignLoadUnitIdxPcv)}
+	 * units: {bitStringValue(ignLoadUnitLabels, ignLoadUnitIdx)}
 	 * offset 1116
 	 */
 	uint16_t secondIgnitionLoadBins[IGN_LOAD_COUNT] = {};
