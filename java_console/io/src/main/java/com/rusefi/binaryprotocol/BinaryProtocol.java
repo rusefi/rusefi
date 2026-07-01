@@ -17,6 +17,7 @@ import com.rusefi.core.Pair;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.io.BoardCompatibility;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
@@ -212,10 +213,14 @@ public class BinaryProtocol {
         // Check for bundle/ECU mismatch before attempting to read configuration
         // Skip check if bundle target is unknown (e.g., simulator, local development)
         RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
+        if (ecuSignature != null) {
+            // remember the connected board so universal bundles can pick the right firmware / hardware kind
+            com.rusefi.core.io.ConnectedEcuTarget.set(ecuSignature.getBundleTarget());
+        }
         String bundleTarget = BundleUtil.getBundleTarget();
         if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)) {
-            // [tag:QC_firmware]
-            if (!bundleTarget.equalsIgnoreCase(ecuSignature.getBundleTarget()) && !bundleTarget.contains("_QC_")) {
+            // exact target, _QC_ hack and board_compatibility (* / allowlist) all handled here [tag:QC_firmware]
+            if (!com.rusefi.core.io.BoardCompatibility.isEcuCompatible(bundleTarget, ecuSignature.getBundleTarget())) {
                 String errorMsg = String.format(
                     "Bundle/ECU mismatch detected!\n\n" +
                     "Connected ECU: %s\n" +

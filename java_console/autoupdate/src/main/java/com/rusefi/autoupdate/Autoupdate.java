@@ -6,6 +6,7 @@ import com.rusefi.AutoupdateProperty;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleInfo;
 import com.rusefi.core.io.BundleInfoStrategy;
+import com.rusefi.core.io.ConnectedEcuTarget;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
@@ -134,7 +135,33 @@ public class Autoupdate {
         // ATTENTION! To avoid `ClassNotFoundException` we need to load all necessary classes before unzipping
         // autoupdate archive
         unzipAutoUpdate(downloadedAutoupdateFile);
+        prefetchLastConnectedBoardFirmware();
         startConsoleAsANewProcess(consoleExeFileName, args);
+    }
+
+    /**
+     * #9714 At startup, fetch (or refresh to the latest) the
+     * firmware of the most recently connected board so a later "Update Firmware" is instant.
+     * <p>
+     * No-op when: autoupdate is disabled, no board has ever connected, or this is a single-board
+     * bundle whose own firmware is the last-connected board (already refreshed by the bundle update
+     * above). Only downloads when the server has a newer build than the local cache.
+     */
+    private static void prefetchLastConnectedBoardFirmware() {
+        try {
+            if (!isAutoUpdateEnabled()) {
+                return;
+            }
+            String lastBoard = ConnectedEcuTarget.readPersisted();
+            if (lastBoard == null) {
+                log.info("[universal_bundle] prefetch: no previously connected board recorded");
+                return;
+            }
+            log.info("[universal_bundle] prefetch: ensuring latest firmware for last connected board " + lastBoard);
+            ensureFirmwareForTarget(lastBoard, percent -> {}, log::info);
+        } catch (Throwable e) {
+            log.error("[universal_bundle] prefetch error: " + e);
+        }
     }
 
     /**
@@ -460,6 +487,97 @@ public class Autoupdate {
         String branchUrl = BundleInfoStrategy.getDownloadUrl(bundleInfo, PropertiesHolder.getBaseUrl(), BundleInfoStrategy::selectBranchName);
         return downloadAutoupdateZipFile(bundleInfo, branchUrl, FindFileHelper.isObfuscated());
     }
+
+    /**
+     * when a universal bundle is connected to an ECU whose board
+     * differs from the one this bundle shipped with, fetch that board's firmware on demand by downloading
+     * its autoupdate zip from the build server and unpacking the firmware artifacts
+     * (rusefi.bin / *_update.srec / openblt.bin) next to the console, where the existing DFU/OpenBLT
+     * flashers look for them. Because the target is derived from the connected ECU's signature, the
+     * staged firmware always matches the ECU.
+     *
+     * @param ecuTarget bundle target reported by the connected ECU (its signature's bundle target)
+     * @return true if firmware for {@code ecuTarget} is present locally afterwards
+     */
+    public static boolean ensureFirmwareForTarget(String ecuTarget,
+                                                  ConnectionAndMeta.DownloadProgressListener progressListener,
+                                                  Consumer<String> logger) {
+        if (ecuTarget == null || ecuTarget.trim().isEmpty()) {
+            log.error("[universal_bundle] ensureFirmwareForTarget: no ECU target");
+            return false;
+        }
+        BundleInfo local = BundleUtil.readBundleFullNameNotNull();
+        String localTarget = local.getTarget();
+        if (localTarget != null && localTarget.equalsIgnoreCase(ecuTarget)) {
+            // the connected ECU is this bundle's own board - firmware already shipped locally
+            return true;
+        }
+        String branchName = BundleInfo.isUndefined(local) ? "master" : local.getBranchName();
+        BundleInfo wanted = new BundleInfo(branchName, null, ecuTarget);
+        String baseUrl = BundleInfoStrategy.getDownloadUrl(wanted, PropertiesHolder.getBaseUrl(), BundleInfo::getBranchName);
+        String zip = downloadZipForTarget(wanted, baseUrl, progressListener, logger);
+        if (zip == null) {
+            return false;
+        }
+        try {
+            findSrecFile(false); // move firmware of the previously-selected board into older-fw
+            log.info("[universal_bundle] ensureFirmwareForTarget: unpacking firmware for " + ecuTarget + " from " + zip);
+            FileUtil.unzip(zip, new File(".."), isFirmwareArtifact);
+            return true;
+        } catch (IOException e) {
+            log.error("[universal_bundle] ensureFirmwareForTarget: unzip failed: " + e);
+            return false;
+        }
+    }
+
+    /**
+     * Like the firmware half of {@link #downloadAutoupdateZipFile} but returns the local zip path even
+     * when the cached copy is already up to date (we still need to unpack it for the selected board).
+     *
+     * @return local zip path, or null on error
+     */
+    private static String downloadZipForTarget(BundleInfo info, String baseUrl,
+                                               ConnectionAndMeta.DownloadProgressListener progressListener,
+                                               Consumer<String> logger) {
+        try {
+            String folderName = info.getTarget() + "_" + info.getBranchName();
+            String localFolder = userHomeSubDirectory + folderName + File.separator;
+            new File(localFolder).mkdirs();
+            String fileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties())
+                + "_bundle_" + info.getTarget() + "_autoupdate.zip";
+            String localZipFileName = localFolder + fileName;
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(fileName).invoke(baseUrl);
+            long lastModified = connectionAndMeta.getLastModified();
+            if (AutoupdateUtil.hasExistingFile(localZipFileName, connectionAndMeta.getCompleteFileSize(), lastModified)) {
+                log.info("[universal_bundle] downloadZipForTarget: reusing cached " + localZipFileName);
+                logger.accept("Using cached firmware download for " + info.getTarget());
+            } else {
+                logger.accept("[universal_bundle] Downloading firmware for " + info.getTarget()
+                    + " (" + (connectionAndMeta.getCompleteFileSize() / 1024) + " KB)...");
+                // Route progress through the caller's callbacks (the reflash progress bar) instead of
+                // popping up a separate download dialog - #9714 makes it an inline step.
+                ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, progressListener);
+                new File(localZipFileName).setLastModified(lastModified);
+                logger.accept("[universal_bundle] Firmware download complete");
+            }
+            return localZipFileName;
+        } catch (IOException e) {
+            log.error("[universal_bundle] downloadZipForTarget error: " + e);
+            return null;
+        }
+    }
+
+    /**
+     * Firmware binaries that live at the root of an autoupdate zip. Deliberately excludes the console
+     * jar, release.txt, shared_io.properties and the .ini
+     */
+    private static final Predicate<ZipEntry> isFirmwareArtifact = entry -> {
+        if (entry.isDirectory())
+            return false;
+        String lower = entry.getName().toLowerCase();
+        return lower.endsWith(".srec") || lower.endsWith(".hex")
+            || lower.endsWith("rusefi.bin") || lower.endsWith("openblt.bin");
+    };
 
     /**
      * rusefi_updater.exe/invokes rusefi_console.jar - entry point is Launcher#main

@@ -83,7 +83,8 @@ public class StLinkFlasher {
 
     @NotNull
     public static HwPlatform getHardwareKind() {
-        String bundle = BundleUtil.readBundleFullNameNotNull().getTarget();
+        // #9714: prefer the connected ECU's target so a universal bundle picks the right MCU platform
+        String bundle = com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget();
         if (bundle.contains("h7"))
             return HwPlatform.H7;
         if (bundle.contains("f7"))
