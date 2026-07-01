@@ -235,7 +235,11 @@ public class DfuFlasher {
     }
 
     public static boolean detectSTM32BootloaderDriverState(UpdateOperationCallbacks callbacks) {
-        String command = ConnectionAndMeta.getBoolean("is_h7") ? WMIC_DFU_QUERY_H7_COMMAND : WMIC_DFU_QUERY_COMMAND;
+        // #9714: a universal bundle's is_h7 property can't cover every board, so trust the connected
+        // ECU's target first (e.g. "uaefi_pro_h7"), falling back to the bundled is_h7 property.
+        String effectiveTarget = com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget();
+        boolean isH7 = (effectiveTarget != null && effectiveTarget.contains("h7")) || ConnectionAndMeta.getBoolean("is_h7");
+        String command = isH7 ? WMIC_DFU_QUERY_H7_COMMAND : WMIC_DFU_QUERY_COMMAND;
         try {
             return MaintenanceUtil.detectDevice(callbacks, command, "ConfigManagerErrorCode=0");
         } catch (ErrorExecutingCommand e) {
