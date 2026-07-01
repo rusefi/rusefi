@@ -46,7 +46,10 @@ static bool noFiringUntilVvtSync() {
 		operationMode == FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
   if (result) {
-	  warningTsReport(ObdCode::CUSTOM_SYMMETRICAL_CRANK, "Your crank wheel requires cam sync before firing");
+    float rpm = Sensor::getOrZero(SensorType::Rpm);
+    if (rpm > 200) { // only showing warning above specific RPM to reduce confusion
+	    warningTsReport(ObdCode::CUSTOM_SYMMETRICAL_CRANK, "Not firing until we get cam sync");
+    }
 	}
 	return result;
 }
