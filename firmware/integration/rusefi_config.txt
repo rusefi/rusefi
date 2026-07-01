@@ -1350,7 +1350,7 @@ tps_limit_t tps2Max;Fully opened voltage for primary throttle position sensor
 	bit devBit4,"true","false"
 	bit devBit5,"true","false"
 	bit devBit6,"true","false"
-	bit devBit7,"true","false"
+	bit enableKnockScope,"yes","no";Stream raw software-knock ADC windows to host (rusEFI UI) for off-MCU FFT. Reuses per-cylinder crank-angle knock windows. Requires KNOCK_SCOPE build flag.
 	bit invertExhaustCamVVTSignal,"Falling","Rising"
 	bit enableKnockSpectrogram,"yes","no";"Available via TS Plugin see https://rusefi.com/s/knock"
 	bit enableKnockSpectrogramFilter,"yes","no"
