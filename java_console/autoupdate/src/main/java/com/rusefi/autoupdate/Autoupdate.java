@@ -539,12 +539,25 @@ public class Autoupdate {
     private static String downloadZipForTarget(BundleInfo info, String baseUrl,
                                                ConnectionAndMeta.DownloadProgressListener progressListener,
                                                Consumer<String> logger) {
+        // The universal console cannot know prior whether a given board ships open or obfuscated
+        // firmware. Try the public zip first and fall back to the obfuscated one - whichever the server has. #9714
+        String zip = downloadZipForTarget(info, baseUrl, progressListener, logger, false);
+        if (zip == null) {
+            zip = downloadZipForTarget(info, baseUrl, progressListener, logger, true);
+        }
+        return zip;
+    }
+
+    private static String downloadZipForTarget(BundleInfo info, String baseUrl,
+                                               ConnectionAndMeta.DownloadProgressListener progressListener,
+                                               Consumer<String> logger, boolean obfuscated) {
         try {
+            String suffix = obfuscated ? "_obfuscated_public" : "";
             String folderName = info.getTarget() + "_" + info.getBranchName();
             String localFolder = userHomeSubDirectory + folderName + File.separator;
             new File(localFolder).mkdirs();
             String fileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties())
-                + "_bundle_" + info.getTarget() + "_autoupdate.zip";
+                + "_bundle_" + info.getTarget() + suffix + "_autoupdate.zip";
             String localZipFileName = localFolder + fileName;
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(fileName).invoke(baseUrl);
             long lastModified = connectionAndMeta.getLastModified();
@@ -553,6 +566,7 @@ public class Autoupdate {
                 logger.accept("Using cached firmware download for " + info.getTarget());
             } else {
                 logger.accept("[universal_bundle] Downloading firmware for " + info.getTarget()
+                    + (obfuscated ? " (obfuscated)" : "")
                     + " (" + (connectionAndMeta.getCompleteFileSize() / 1024) + " KB)...");
                 // Route progress through the caller's callbacks (the reflash progress bar) instead of
                 // popping up a separate download dialog - #9714 makes it an inline step.
@@ -562,7 +576,9 @@ public class Autoupdate {
             }
             return localZipFileName;
         } catch (IOException e) {
-            log.error("[universal_bundle] downloadZipForTarget error: " + e);
+            // Expected when this variant does not exist on the server (e.g. public miss -> try obfuscated).
+            log.info("[universal_bundle] downloadZipForTarget (" + (obfuscated ? "obfuscated" : "public")
+                + ") not available for " + info.getTarget() + ": " + e);
             return null;
         }
     }

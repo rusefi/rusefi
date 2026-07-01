@@ -402,7 +402,7 @@ public class ProgramSelector {
         JPopupMenu popupMenu = new JPopupMenu();
 
         if (FileLog.isWindows()) {
-            boolean requireBlt = FindFileHelper.isObfuscated();
+            boolean requireBlt = FindFileHelper.isObfuscated() || isForeignBoardOnUniversalBundle();
 
             if (!requireBlt) {
                 if (hasSerialPorts) {
@@ -439,6 +439,18 @@ public class ProgramSelector {
 
         AutoupdateUtil.trueLayoutAndRepaint(splitButton);
         AutoupdateUtil.trueLayoutAndRepaint(content);
+    }
+
+    /**
+     * #9714: is the connected ECU a different board than this bundle? If so, a universal bundle will
+     * download that board's firmware on demand and we cannot yet tell whether it is obfuscated, so the
+     * caller forces OpenBLT (works for every board here; DFU would fail for obfuscated firmware).
+     * When no ECU is connected {@code effectiveTarget()} equals the bundle target, so this is false.
+     */
+    private static boolean isForeignBoardOnUniversalBundle() {
+        String bundleTarget = com.rusefi.core.io.BundleUtil.getBundleTarget();
+        String connected = com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget();
+        return bundleTarget != null && connected != null && !bundleTarget.equalsIgnoreCase(connected);
     }
 
     private void addMenuItem(JPopupMenu menu, UpdateMode mode) {
