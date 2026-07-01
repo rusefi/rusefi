@@ -367,3 +367,43 @@ jobs:
         archive: false
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+
+  build-universal-bundle:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Checkout ST drivers submodule
+      run: git submodule update --init firmware/ext/rusefi-gha
+
+    - uses: ./.github/actions/setup-java
+
+    - name: Build console jar
+      run: ./gradlew :ui:shadowJar :ts_plugin_launcher:build
+
+    - name: Assemble universal bundle
+      run: |
+        mkdir -p artifacts
+        WHITE_LABEL=rusefi bash firmware/bin/assemble_universal_bundle.sh ./artifacts universal
+
+    - name: Upload universal bundle artifact
+      uses: actions/upload-artifact@v7
+      with:
+        archive: false
+        name: rusefi_bundle_universal.zip
+        path: ./artifacts/rusefi_bundle_universal.zip
+
+    - name: Upload universal autoupdate artifact
+      uses: actions/upload-artifact@v7
+      with:
+        archive: false
+        name: rusefi_bundle_universal_autoupdate.zip
+        path: ./artifacts/rusefi_bundle_universal_autoupdate.zip
+
+    - name: Upload universal bundle to rusEFI server
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'rusefi/rusefi' }}
+      working-directory: ./artifacts
+      env:
+        WHITE_LABEL: rusefi
+      run: |
+        bash ../firmware/bin/upload_bundle.sh "${{ secrets.RUSEFI_SSH_USER }}" "${{ secrets.RUSEFI_SSH_PASS }}" "${{ secrets.RUSEFI_SSH_SERVER }}" universal
