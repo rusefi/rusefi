@@ -59,6 +59,44 @@ public class CalibrationsHelper {
         }
     }
 
+    enum PostMergeDecision {
+        /** merged calibration is usable - write it to the ECU */
+        WRITE_MERGED,
+        /** leave the freshly-flashed ECU on its firmware defaults */
+        RESET_TO_DEFAULTS,
+        /** user aborted the firmware update */
+        CANCEL,
+        /** re-read the calibration from the ECU and merge again */
+        RETRY
+    }
+
+    /**
+     *
+     * <ul>
+     *     <li>no failed fields -> strict-equivalent success, write the merged tune (action ignored)</li>
+     *     <li>CANCEL -> abort; RESET_ALL -> defaults; RETRY -> re-read and merge again</li>
+     *     <li>SKIP_FAILED_FIELDS -> write the partial merge if usable, else fall back to defaults</li>
+     * </ul>
+     */
+    static PostMergeDecision decidePostMerge(final MergeResult mergeResult, final CalibrationBackupFailureAction action) {
+        if (mergeResult.failedFields.isEmpty()) {
+            return PostMergeDecision.WRITE_MERGED;
+        }
+        if (action == CalibrationBackupFailureAction.CANCEL) {
+            return PostMergeDecision.CANCEL;
+        }
+        if (action == CalibrationBackupFailureAction.RESET_ALL) {
+            return PostMergeDecision.RESET_TO_DEFAULTS;
+        }
+        if (action == CalibrationBackupFailureAction.RETRY) {
+            return PostMergeDecision.RETRY;
+        }
+        // SKIP_FAILED_FIELDS: accept the partial merge if usable, otherwise reset to defaults
+        return mergeResult.mergedCalibrations.isPresent()
+            ? PostMergeDecision.WRITE_MERGED
+            : PostMergeDecision.RESET_TO_DEFAULTS;
+    }
+
     public static void main(String[] args) {
 //        args = new String[] {"destinationFileName.xml", "COM34"};
         if (args.length != 2) {
@@ -124,7 +162,6 @@ public class CalibrationsHelper {
 
         final Optional<CalibrationsInfo> prevCalibrations;
         boolean skipCalibrationRestore = false;
-        boolean usePartialMerge = false;
 
         int retryCount = 0;
         Optional<CalibrationsInfo> calibrations = Optional.empty();
@@ -173,8 +210,8 @@ public class CalibrationsHelper {
                     } else if (action == CalibrationBackupFailureAction.RESET_ALL) {
                         skipCalibrationRestore = true;
                     } else {
+                        // SKIP_FAILED_FIELDS but no tune could be read at all -> nothing to merge, use defaults
                         skipCalibrationRestore = true;
-                        usePartialMerge = true;
                     }
                 } else {
                     callbacks.logLine("Failed to back up current tune from ECU...");
@@ -272,34 +309,73 @@ public class CalibrationsHelper {
                                 return false;
                             }
                         } else {
-                            usePartialMerge = true;
+                            // SKIP_FAILED_FIELDS: a partial merge needs the calibration read back from
+                            // the ECU, but here the whole read failed - there is nothing to merge. Leave
+                            // the freshly flashed ECU on its default configuration instead of crashing on
+                            // an empty Optional.
+                            callbacks.logLine("No calibration could be read from ECU - it will use default configuration.");
+                            return true;
                         }
                     } else {
                         return false;
                     }
                 }
 
-                final MergeResult mergeResult;
-                if (usePartialMerge) {
-                    mergeResult = mergeCalibrationsWithPartialFailure(
-                        prevCalibrations.get().getIniFile(),
-                        prevCalibrations.get().generateMsq(),
-                        updatedCalibrations.get(),
-                        callbacks,
-                        emptySet()
-                    );
-                    if (!mergeResult.failedFields.isEmpty()) {
-                        callbacks.logLine("WARNING: " + mergeResult.failedFields.size() + " field(s) failed to migrate and were skipped.");
+                // Try the strict-equivalent merge first: migrate every field, collecting any that fail.
+                // mergeCalibrationsWithPartialFailure reports failures instead of throwing like the strict
+                // mergeCalibrations, so an empty failedFields means a clean (strict) success - no prompt.
+                MergeResult mergeResult = mergeCalibrationsWithPartialFailure(
+                    prevCalibrations.get().getIniFile(),
+                    prevCalibrations.get().generateMsq(),
+                    updatedCalibrations.get(),
+                    callbacks,
+                    emptySet()
+                );
+                while (!mergeResult.failedFields.isEmpty()) {
+                    callbacks.logLine("WARNING: " + mergeResult.failedFields.size()
+                        + " field(s) could not be migrated to the new firmware.");
+                    // Strict restore would fail on these fields - let the user pick (full reset or partial
+                    // merge). Headless has no dialog, so default to accepting the partial merge.
+                    final CalibrationBackupFailureAction action = isUiContext(callbacks)
+                        ? showCalibrationFailureDialog(
+                            parent,
+                            mergeResult.failedFields.size() + " field(s) could not be migrated to the new firmware.",
+                            mergeResult.failedFields,
+                            true)
+                        : CalibrationBackupFailureAction.SKIP_FAILED_FIELDS;
+                    final PostMergeDecision decision = decidePostMerge(mergeResult, action);
+                    if (decision == PostMergeDecision.CANCEL) {
+                        callbacks.logLine("Firmware update cancelled by user.");
+                        return false;
+                    } else if (decision == PostMergeDecision.RESET_TO_DEFAULTS) {
+                        callbacks.logLine("Calibration not restored - ECU will use default configuration.");
+                        return true;
+                    } else if (decision == PostMergeDecision.RETRY) {
+                        final Optional<CalibrationsInfo> reread = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                            newEcuPort.port,
+                            callbacks,
+                            getFileNameWithoutExtension(timestampFileNameComponent, "after_firmware_update_retry"),
+                            connectivityContext
+                        );
+                        if (!reread.isPresent()) {
+                            // can't read the config image anymore -> reset to defaults
+                            callbacks.logLine("Could not re-read calibration from ECU - it will use default configuration.");
+                            return true;
+                        }
+                        updatedCalibrations = reread;
+                        mergeResult = mergeCalibrationsWithPartialFailure(
+                            prevCalibrations.get().getIniFile(),
+                            prevCalibrations.get().generateMsq(),
+                            updatedCalibrations.get(),
+                            callbacks,
+                            emptySet()
+                        );
+                        continue;
                     }
-                } else {
-                    final Optional<CalibrationsInfo> mergedOpt = mergeCalibrations(
-                        prevCalibrations.get().getIniFile(),
-                        prevCalibrations.get().generateMsq(),
-                        updatedCalibrations.get(),
-                        callbacks,
-                        emptySet()
-                    );
-                    mergeResult = new MergeResult(mergedOpt, new ArrayList<>());
+                    // WRITE_MERGED: accept the partial merge (good fields applied, failed ones at defaults)
+                    callbacks.logLine("Applying partial merge; " + mergeResult.failedFields.size()
+                        + " field(s) left at firmware defaults.");
+                    break;
                 }
 
                 if (mergeResult.mergedCalibrations.isPresent() && MigrateSettingsCheckboxState.isMigrationNeeded) {
