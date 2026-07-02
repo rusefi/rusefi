@@ -329,6 +329,9 @@ int setCanBaud(size_t index, can_baudrate_e rate) {
 	// Actually stop HW
 	canStop(device);
 
+	// Give some time for HW to stop
+	chThdSleepMilliseconds(1);
+
 	// Get config for new baudrate
 	CANConfig canConfig;
 	memcpy(&canConfig, findCanConfig(rate), sizeof(canConfig));
