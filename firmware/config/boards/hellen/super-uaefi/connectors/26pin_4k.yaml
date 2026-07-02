@@ -90,7 +90,7 @@ pins:
     color: black
 
   - pin: 17D
-    function: Power/Chassis GND
+    function: Power/Chassis GND ground
     type: GND
 #   color: red / black
 

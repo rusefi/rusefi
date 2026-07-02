@@ -314,7 +314,7 @@ pins:
 #    type: ign
 
   - pin: 15B
-    function: Power/Chassis GND
+    function: Power/Chassis GND ground
     type: GND
 #   color: red / black
 

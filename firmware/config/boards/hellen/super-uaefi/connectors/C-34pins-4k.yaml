@@ -87,12 +87,12 @@ pins:
 #    function:
 
   - pin: 21C
-    function: Power/Chassis GND
+    function: Power/Chassis GND ground
     type: GND
 #   color: red / black
 
   - pin: 22C
-    function: Power/Chassis GND
+    function: Power/Chassis GND ground
     type: GND
 #   color: red / black
 
