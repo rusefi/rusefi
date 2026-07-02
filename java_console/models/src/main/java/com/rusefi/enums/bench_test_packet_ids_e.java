@@ -29,6 +29,7 @@ public enum bench_test_packet_ids_e {
 	ECU_GPS_INPUT(7798805),
 	ECU_IMAGE_INFO(7798806),
 	ECU_ISO_TP_SETTINGS(7798807),
+	ECU_ISO_TP_CLIENT(7798808),
 	;
 
 
