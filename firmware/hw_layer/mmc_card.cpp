@@ -276,6 +276,12 @@ static const char *fatErrors[] = {
 	"FR_INVALID_PARAMETER: Given parameter is invalid"
 };
 
+const char *getFatFsErrorDescription(FRESULT f_error) {
+	if (f_error <= FR_INVALID_PARAMETER)
+		return fatErrors[f_error];
+	return "unknown";
+}
+
 // print FAT error function
 void printFatFsError(const char *str, FRESULT f_error) {
 	static int fatFsErrors = 0;
@@ -285,7 +291,7 @@ void printFatFsError(const char *str, FRESULT f_error) {
 		return;
 	}
 
-	efiPrintf("%s FATfs Error %d %s", str, f_error, f_error <= FR_INVALID_PARAMETER ? fatErrors[f_error] : "unknown");
+	efiPrintf("%s FATfs Error %d %s", str, f_error, getFatFsErrorDescription(f_error));
 }
 
 // format, file access and MSD are used exclusively, we can union.
