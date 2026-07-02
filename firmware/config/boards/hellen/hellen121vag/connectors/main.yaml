@@ -184,7 +184,7 @@ pins:
     type: ls
 
   - pin: 50a
-    function: GNDA
+    function: GNDA sensor ground
 
   - pin: 51a
     function: LSU_U/PUMP_I
