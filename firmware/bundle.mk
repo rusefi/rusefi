@@ -41,7 +41,8 @@ endif
 DFU = $(DELIVER)/$(PROJECT).dfu
 DBIN = $(DELIVER)/$(PROJECT).bin
 DBIN_CRC = $(BUILDDIR)/$(PROJECT)_crc32.bin
-FIRMWARE_BIN_OUT = $(FOLDER)/$(PROJECT).bin
+# .bin name mirroring SREC_TARGET below
+BIN_TARGET = $(FOLDER)/rusefi_$(BRANCH_REF_FOR_BUNDLE)_$(BUNDLE_DATE)_$(BUNDLE_NAME)_$(SIGNATURE_HASH)_$(GITHUB_SHA).bin
 
 ifeq (,$(WHITE_LABEL))
 	WHITE_LABEL = rusefi
@@ -160,7 +161,7 @@ MOST_COMMON_BUNDLE_FILES = \
 UPDATE_BUNDLE_FILES = \
   $(FIRMWARE_OUTPUTS) \
   $(BOOTLOADER_BIN_OUT) \
-  $(FIRMWARE_BIN_OUT) \
+  $(BIN_TARGET) \
   $(SREC_TARGET) \
   $(MOST_COMMON_BUNDLE_FILES)
 
@@ -209,7 +210,12 @@ $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
 $(BOOTLOADER_BIN_OUT): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(FOLDER)
 	ln -rfs $< $@
 
-$(FIRMWARE_BIN_OUT) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
+$(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
+	ln -rfs $< $@
+
+# The bundled .bin gets a unique name (BIN_TARGET) so it can't be mismatched to the
+# wrong board; it still links to the plain deliver/ .bin ($(DBIN)).
+$(BIN_TARGET): $(DBIN) | $(FOLDER)
 	ln -rfs $< $@
 
 HEX_BASE_ADDRESS = $(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')

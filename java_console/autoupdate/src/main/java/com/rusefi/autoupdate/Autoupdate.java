@@ -592,7 +592,9 @@ public class Autoupdate {
             return false;
         String lower = entry.getName().toLowerCase();
         return lower.endsWith(".srec") || lower.endsWith(".hex")
-            || lower.endsWith("rusefi.bin") || lower.endsWith("openblt.bin");
+            || lower.endsWith("rusefi.bin") || lower.endsWith("openblt.bin")
+            // "rusefi_" (underscore) excludes rusefi-obfuscated.bin
+            || (lower.contains("rusefi_") && lower.endsWith(".bin"));
     };
 
     /**
