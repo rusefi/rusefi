@@ -112,8 +112,19 @@ public class FindFileHelper {
         }
     }
 
+    /**
+     * (rusefi_&lt;branch&gt;_&lt;date&gt;_&lt;board&gt;_&lt;sig&gt;_&lt;sha&gt;.bin)
+     * Prefix "rusefi_" + suffix ".bin" uniquely selects it:
+     * <p>
+     * "openblt.bin" has the wrong prefix, and
+     * "rusefi-obfuscated.bin" uses a hyphen rather than an underscore.
+     * <p>
+     * Dev (non-bundle) builds still drop a plain rusefi.bin next to the console, so fall back to that.
+     */
     public static String findFirmwareFile() {
-        return FIRMWARE_BIN_FILE;
+        String globbed = findFile(INPUT_FILES_PATH, "rusefi_", ".bin", (fileDirectory, fileName) -> {
+        }, true);
+        return globbed != null ? globbed : FIRMWARE_BIN_FILE;
     }
 
     public static boolean isObfuscated() {
