@@ -322,4 +322,20 @@ TEST(ignition_state, getSparkDwellTableAndVoltageCorrection) {
   setArrayValues(config->dwellVoltageCorrValues, 0);
   engine->ignitionState.updateDwell(3000, false);
   EXPECT_NEAR(5, engine->ignitionState.getDwell(), EPS2D);
+
+  // Duty mode (for Ford TFI modules) bypasses the table/voltage-correction
+  // calculation above entirely, computing dwell as a fixed percentage of the
+  // inter-spark interval instead.
+  engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+  engineConfiguration->dwellDutyModeEnabled = true;
+  engineConfiguration->dwellDutyPercent = 50;
+
+  // engine cycle @3000rpm = 40ms, 2 sparks per cycle (wasted spark) -> 20ms interval, 50% = 10ms
+  engine->ignitionState.updateDwell(3000, false);
+  EXPECT_NEAR(10, engine->ignitionState.getDwell(), EPS2D);
+
+  // duty mode ignores battery voltage correction entirely
+  Sensor::setMockValue(SensorType::BatteryVoltage, 8);
+  engine->ignitionState.updateDwell(3000, false);
+  EXPECT_NEAR(10, engine->ignitionState.getDwell(), EPS2D);
 }

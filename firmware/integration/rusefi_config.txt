@@ -107,7 +107,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260529
+#define FLASH_DATA_VERSION 260622
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -2004,6 +2004,15 @@ end_struct
 	float misfireWobbleAlphaRise;Misfire Detection: wobble EMA alpha when spread is increasing.;"", 1, 0, 0.001, 1, 3
 	float misfireWobbleAlphaFall;Misfire Detection: wobble EMA alpha when spread is decreasing.;"", 1, 0, 0.001, 1, 3
 	uint16_t misfireSettleCycles;Misfire Detection: firings to wait after entering idle before flagging starts. 0 = immediate.;"cycles", 1, 0, 0, 5000, 0
+
+	! --- Dwell Duty Mode ---
+	! Instead of the RPM/voltage dwell tables, compute dwell as a fixed percentage of the
+	! time between consecutive ignition pulses on the same output. This matches what Ford
+	! TFI (Thick Film Ignition) modules expect: a 50% duty cycle square wave where the ECU
+	! controls timing by advancing or retarding the pulse edge, not the absolute dwell time.
+	! Cranking always uses ignitionDwellForCrankingMs regardless of this setting.
+	bit dwellDutyModeEnabled,"enabled","disabled";Dwell Duty Mode: when enabled, ignores the RPM/voltage dwell tables and computes dwell as a fixed percentage of the time between consecutive ignition pulses. Required for Ford TFI modules that expect a 50% duty cycle square wave.
+	uint8_t dwellDutyPercent;Dwell Duty Mode: percentage of the inter-spark interval used as coil dwell time. 50 = half the interval between pulses (standard TFI target).;"%", 1, 0, 1, 90, 0
 
 ! end of engine_configuration_s
 end_struct
