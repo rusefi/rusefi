@@ -1,5 +1,12 @@
 #include "pch.h"
 
+// [tag:disable_engine_module] LTFT is a example of a compile-time optional engine
+// module that owns a TunerStudio page (pageIdentifier 0x0200, TS_PAGE_LTFT_TRIMS). Because of
+// that page, boards
+// must disable it via `#define EFI_LTFT_CONTROL FALSE` in their prepend.txt (never board.mk
+// or efifeatures.h): the .ini generator drops the page from that same declaration and
+// firmware/Makefile lifts it into DDEFS, so firmware and .ini cannot disagree. See the
+// how-to in engine_module.h and the static_assert next to the page table in tunerstudio.cpp.
 #if EFI_LTFT_CONTROL
 
 #include "storage.h"
