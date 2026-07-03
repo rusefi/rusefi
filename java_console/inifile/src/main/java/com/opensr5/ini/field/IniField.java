@@ -25,6 +25,19 @@ public abstract class IniField {
         this.pageIndex = pageIndex;
     }
 
+    /**
+     * Human-friendly 1-based TS page for user messages/logs. {@link #pageIndex} holds the TS wire
+     * identifier whose high byte is the page ordinal (0x0400 -> Lua page 5).
+     */
+    public int getDisplayPage() {
+        return toDisplayPage(pageIndex);
+    }
+
+    public static int toDisplayPage(int pageIndexOrIdentifier) {
+        int ordinal = pageIndexOrIdentifier >= 0x100 ? (pageIndexOrIdentifier >> 8) : pageIndexOrIdentifier;
+        return ordinal + 1;
+    }
+
     public static double parseDouble(String s) {
         // todo: real implementation
         // TODO: replace with new ExpressionEvaluator

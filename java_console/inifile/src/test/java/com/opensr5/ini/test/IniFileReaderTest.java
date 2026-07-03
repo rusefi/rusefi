@@ -1031,6 +1031,11 @@ public class IniFileReaderTest {
 
         IniField main = model.findIniField("someMainField").orElseThrow();
         assertEquals(0x0000, main.getPageIndex(), "Main page field stays on identifier 0x0000");
+
+        // ...but user-facing messages show the friendly 1-based TS page, not the raw wire id (#9766).
+        assertEquals(5, lua.getDisplayPage(), "Lua page 0x0400 displays as TS page 5, not 1024");
+        assertEquals(1, main.getDisplayPage(), "Main page 0x0000 displays as TS page 1");
+        assertEquals(5, IniField.toDisplayPage(4), "legacy 0-based ordinal 4 displays as TS page 5");
     }
 
 }
