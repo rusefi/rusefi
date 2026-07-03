@@ -136,7 +136,7 @@ void incrementGlobalConfigurationVersion(const char * msg) {
     }
 	engine->globalConfigurationVersion++;
 #if EFI_DETAILED_LOGGING
-	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);
+	efiPrintf("set globalConfigurationVersion=%d", engine->globalConfigurationVersion);
 #endif /* EFI_DETAILED_LOGGING */
 
 	applyNewHardwareSettings();

@@ -1094,7 +1094,7 @@ void onConfigurationChangeTriggerCallback() {
 	#endif
 	}
 #if EFI_DETAILED_LOGGING
-	efiPrintf("isTriggerConfigChanged=%d", triggerConfigChanged);
+	efiPrintf("isTriggerConfigChanged=%d", changed);
 #endif /* EFI_DETAILED_LOGGING */
 
 	// we do not want to miss two updates in a row

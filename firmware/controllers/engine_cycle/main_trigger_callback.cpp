@@ -218,12 +218,12 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	printf("scheduling injection angle=%.2f/delay=%d injectionDuration=%d %d\r\n", angleFromNow, (int)NT2US(startTime - nowNt), (int)durationUsStage1, (int)durationUsStage2);
 #endif
 #if EFI_DETAILED_LOGGING
-	efiPrintf("handleFuel pin=%s eventIndex %d duration=%.2fms %d", outputs[0]->name,
-			injEventIndex,
+	efiPrintf("handleFuel pin=%s eventIndex %d duration=%.2fms %u", outputs[0]->getName(),
+			cylinderNumber,
 			injectionDurationStage1,
-			getRevolutionCounter());
-	efiPrintf("handleFuel pin=%s delay=%.2f %d", outputs[0]->name, NT2US(startTime - nowNt),
-			getRevolutionCounter());
+			(unsigned)getRevolutionCounter());
+	efiPrintf("handleFuel pin=%s delay=%.2f %u", outputs[0]->getName(), NT2USF(startTime - nowNt),
+			(unsigned)getRevolutionCounter());
 #endif /* EFI_DETAILED_LOGGING */
 }
 
