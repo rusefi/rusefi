@@ -208,6 +208,16 @@ endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 
+# TS-page guard flags (see [tag:ts_page_table]) are declared once in the board's
+# prepend.txt - the only input the .ini generator can see. Lift them into DDEFS here
+# so the firmware compiles with the same value and the .ini page table can never
+# diverge from the pages the firmware actually serves (a divergence makes the firmware
+# answer reads of a page the .ini still lists with out_of_range, and TunerStudio
+# retries that page until it drops the connection).
+# Keep the list in sync with the guardFlag column of TS_PAGES in TSProjectConsumer.java.
+TS_PAGE_GUARD_FLAGS = EFI_LTFT_CONTROL|EFI_LUA
+DDEFS += $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null)
+
 # Include various ChibiOS mk files
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk
