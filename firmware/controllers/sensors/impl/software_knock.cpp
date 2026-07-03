@@ -25,6 +25,9 @@
 #include "knock_config.h"
 #include "ch.hpp"
 #include "error_handling.h"
+#ifdef KNOCK_SCOPE
+#include "knock_scope.h"
+#endif // KNOCK_SCOPE
 
 #ifdef KNOCK_SPECTROGRAM
 #include "fft/fft.hpp"
@@ -223,6 +226,12 @@ static void processLastKnockEvent() {
 
 	// take a local copy
 	auto lastKnockTime = lastKnockSampleTime;
+
+#ifdef KNOCK_SCOPE
+	if (engineConfiguration->enableKnockScope) {
+		knockScopePublishWindow(sampleBuffer, localCount, currentCylinderNumber, channelNumber);
+	}
+#endif // KNOCK_SCOPE
 
 	// We're done with inspecting the buffer, another sample can be taken
 	knockNeedsProcess = false;
