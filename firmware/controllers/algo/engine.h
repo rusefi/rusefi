@@ -147,6 +147,10 @@ public:
     FuelComputer fuelComputer{};
 #endif // EFI_ENGINE_CONTROL
 
+    // [tag:disable_engine_module] Entries wrapped in #if EFI_<NAME> are compile-time optional
+    // modules. Before adding or disabling one, read the how-to in engine_module.h - especially
+    // the TS-page rules: a module that owns a TunerStudio page (like LongTermFuelTrim below)
+    // must have its flag declared in the board prepend.txt, not in board.mk or efifeatures.h.
     type_list<
         Mockable<InjectorModelPrimary>,
         Mockable<InjectorModelSecondary>,
