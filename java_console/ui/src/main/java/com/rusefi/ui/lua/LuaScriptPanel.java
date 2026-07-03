@@ -291,8 +291,8 @@ public class LuaScriptPanel {
             // The main image only holds page 0, so fetch directly from the ECU.
             scriptArr = bp.readFromPage(luaScript.getPageIndex(), luaScript.getOffset(), luaScript.getSize());
             if (scriptArr == null) {
-                log.info("readFromECU: readFromPage returned null for page=" + luaScript.getPageIndex());
-                setText("Failed to read luaScript from page " + luaScript.getPageIndex());
+                log.info("readFromECU: readFromPage returned null for page=" + luaScript.getDisplayPage());
+                setText("Failed to read luaScript from page " + luaScript.getDisplayPage());
                 return;
             }
         }
@@ -338,7 +338,7 @@ public class LuaScriptPanel {
 
             byte[] paddedScript = getScriptBytes(field, script);
 
-            log.info("Sending " + field + " page=" + field.getPageIndex());
+            log.info("Sending " + field + " page=" + field.getDisplayPage());
             bp.writeInBlocks(paddedScript, 0, field.getOffset(), paddedScript.length, field.getPageIndex());
 
 // need a way to modify script on the fly with shorter execution gaps to keep E65 CAN network happy
