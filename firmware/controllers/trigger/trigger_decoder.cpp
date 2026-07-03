@@ -95,6 +95,12 @@ void TriggerDecoderBase::resetState() {
 	totalEventCountBase = 0;
 	isFirstEvent = true;
 
+	vvtToothDurations0 = 0;
+	vvtCurrentPosition = 0;
+	setArrayValues(vvtToothPosition, 0);
+	triggerSyncGapRatio = 0;
+	triggerStateIndex = 0;
+
 	call_board_override(custom_board_TriggerResetState);
 }
 
@@ -217,6 +223,9 @@ void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
 
 	resetHasFullSync();
+	m_hasSynchronizedCrank = false;
+	phaseResyncCounter = 0;
+	m_phaseAdjustment = 0;
 }
 
 
