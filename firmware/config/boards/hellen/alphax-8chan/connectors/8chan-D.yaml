@@ -74,13 +74,15 @@ pins:
 
   - pin: 10D
     function: Fan Relay Output (low)
+    type: ls
     meta: MM176_GP2
     class: outputs
     ts_name: ___ - Fan
     color: purple
 
   - pin: 11D
-    function: Main Relay Output (low)
+    function: Main Relay Control Output (low)
+    type: ls
     meta: MM176_GP1
     class: outputs
     ts_name: ___ - Main Relay
@@ -88,6 +90,7 @@ pins:
 
   - pin: 12D
     function: NOS Relay Output (low)
+      type: ls
     meta: MM176_OUT_IO8
     class: outputs
     ts_name: ___ - NOS

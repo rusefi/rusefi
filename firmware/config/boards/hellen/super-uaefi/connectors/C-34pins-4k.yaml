@@ -49,12 +49,12 @@ pins:
     type: wbo
 
   - pin: 10C
-    function: +12v from main relay INPUT
+    function: +12v from main relay (ecu input)
     type: 12V
     color: red
 
   - pin: 11C
-    function: +12v from main relay OUTPUT
+    function: +12v from main relay (auxiliary pin to daisy chain switched power to consumers)
     type: 12V
 
   - pin: 12C
@@ -128,7 +128,7 @@ pins:
     ts_name: ___ LS5_HOT
     meta: MM100_IGN7
     class: outputs
-    function: Low-Side 5 main relay / always hot / relay capable output
+    function: Low-Side 5 main relay Control Output / always hot / relay capable output
     type: ls
 
   - pin: 31C
