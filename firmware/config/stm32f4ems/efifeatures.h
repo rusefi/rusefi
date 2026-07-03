@@ -43,6 +43,12 @@
 #endif
 
 /* Long Term Fuel Trims */
+/* [tag:disable_engine_module] CAVEAT: EFI_LTFT_CONTROL gates TS page TS_PAGE_LTFT_TRIMS
+ * so a board must NOT flip it here or via board.mk DDEFS - declare `#define EFI_LTFT_CONTROL FALSE` in the
+ * board's prepend.txt instead.
+ * <p>
+ * Note the simulator and unit_tests keep their own efifeatures.h copies that bypass all of this.
+*/
 #ifndef EFI_LTFT_CONTROL
 #define EFI_LTFT_CONTROL TRUE
 #endif

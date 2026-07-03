@@ -16,8 +16,8 @@ BOARDINC = $(CHIBIOS)/os/hal/boards/ST_STM32F746G_DISCOVERY/
 # Default F7 linker script is not compatible
 LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F746xG.ld
 
-# Save some RAM until we enable SDRAM.
-DDEFS += -DEFI_LUA=FALSE
+# Save some RAM until we enable SDRAM: EFI_LUA=FALSE is declared in
+# prepend.txt and lifted into DDEFS by the Makefile - see [tag:ts_page_table]
 
 # USB OTG FS connector:
 DDEFS += -DEFI_USB_SERIAL_DM=Gpio::A11
