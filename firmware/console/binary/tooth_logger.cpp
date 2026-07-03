@@ -26,8 +26,12 @@
  *     settings - the composite logger state (see 'cur' below) begins empty and
  *     the header is written at offset zero, no state carries over from the
  *     previous file.
- *   - As soon as the buffer drains (no more data) or a write error occurs the
- *     file is closed; the next batch of tooth data begins yet another new file.
+ *   - A file is closed (and the next tooth event begins yet another new file)
+ *     when either a write error occurs or the logger goes idle: ToothLoggerWriter()
+ *     blocks up to 3 seconds waiting for a tooth event (filledBuffers.fetch with
+ *     TIME_MS2I(3000)); on timeout it flushes the partially-filled buffer and
+ *     signals a new file. Note there is NO 32MB size cap on .teeth files - the
+ *     LOGGER_MAX_FILE_SIZE check in mmc_card.cpp applies only to regular .mlg logs.
  *
  * TODO: remove legacy 'binary' format since we have CSV now?
  * See also misc\tooth_log_converter\log_convert.cpp
