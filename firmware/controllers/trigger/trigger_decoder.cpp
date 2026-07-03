@@ -222,6 +222,10 @@ int TriggerDecoderBase::getSynchronizationCounter() const {
 void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
 
+	/**
+	 * resetHasFullSync() resets m_hasSynchronizedPhase to true OR false
+	 * depending on m_needsDisambiguation
+	 */
 	resetHasFullSync();
 	m_hasSynchronizedCrank = false;
 	phaseResyncCounter = 0;
