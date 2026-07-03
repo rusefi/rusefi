@@ -73,6 +73,9 @@ void TriggerDecoderBase::setShaftSynchronized(bool value) {
 /**
  * Resets the base decoder state.
  *
+ * This handles fields common to all trigger inputs (primary, VVT, etc),
+ * such as tooth durations and basic synchronization flags.
+ *
  * This is called during initialization, when engine rotation stops,
  * or during trigger re-sync search.
  */
@@ -215,6 +218,10 @@ int TriggerDecoderBase::getSynchronizationCounter() const {
 
 /**
  * Resets the primary decoder state, including its phase sync state.
+ *
+ * This overrides TriggerDecoderBase::resetState() to handle primary-specific
+ * state like crank/phase sync flags, while calling the base implementation
+ * to clear common fields.
  *
  * This is called during initialization, when engine rotation stops,
  * or during trigger re-sync search.
