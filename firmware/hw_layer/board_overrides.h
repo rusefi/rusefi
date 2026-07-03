@@ -108,6 +108,7 @@ extern std::optional<setup_custom_get_cylinder_ignition_trim_type> custom_board_
 extern std::optional<setup_custom_get_cylinder_fuel_trim_type> custom_board_getCylinderFuelTrim;
 
 extern std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
+extern std::optional<setup_custom_bool_type> custom_board_boardAllowTriggerActions;
 
 extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
 extern std::optional<setup_custom_bool_type> custom_board_allowFlashNow;

@@ -79,6 +79,7 @@ std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
 std::optional<setup_custom_board_overrides_type> custom_board_BeforeTuneDefaults;
 
 std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
+std::optional<setup_custom_bool_type> custom_board_boardAllowTriggerActions;
 
 std::optional<setup_custom_bool_type> custom_board_getAcrState;
 

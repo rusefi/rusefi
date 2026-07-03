@@ -23,6 +23,7 @@
 #include "status_loop.h"
 #include "engine_sniffer.h"
 #include "auto_generated_sync_edge.h"
+#include "board_overrides.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -781,7 +782,10 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 	return true;
 }
 
-PUBLIC_API_WEAK bool boardAllowTriggerActions() { return true; }
+// todo: make this static in Dec 2026
+bool boardAllowTriggerActions() {
+	return get_board_override_result(custom_board_boardAllowTriggerActions, true);
+}
 
 angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
   int currentToothIndex = p_currentToothIndex;
