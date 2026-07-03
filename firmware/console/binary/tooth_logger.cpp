@@ -16,6 +16,19 @@
 
  *
  * At least some of the code here is related to xxx.teeth files
+ *
+ * .teeth file lifecycle (see firmware/hw_layer/mmc_card.cpp sdLoggerTooth()):
+ *   - A .teeth file is written instead of the regular .mlg log only while
+ *     engineConfiguration->sdTriggerLog is enabled (see prepareLogFileName()).
+ *   - No file exists until tooth data is actually available: sdLoggerTooth()
+ *     waits until ToothLoggerHasData() is true, then opens a brand new file.
+ *   - Each new file therefore starts fresh with the current/default logger
+ *     settings - the composite logger state (see 'cur' below) begins empty and
+ *     the header is written at offset zero, no state carries over from the
+ *     previous file.
+ *   - As soon as the buffer drains (no more data) or a write error occurs the
+ *     file is closed; the next batch of tooth data begins yet another new file.
+ *
  * TODO: remove legacy 'binary' format since we have CSV now?
  * See also misc\tooth_log_converter\log_convert.cpp
  *
