@@ -90,7 +90,7 @@ pins:
 
   - pin: 12D
     function: NOS Relay Output (low)
-      type: ls
+    type: ls
     meta: MM176_OUT_IO8
     class: outputs
     ts_name: ___ - NOS
