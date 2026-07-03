@@ -109,15 +109,20 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     // command list, the page=N field blocks and the triggeredPageRefresh ordinals are then all
     // rebuilt from the surviving pages so they stay consistent. See issue #9699.
     // A guarded page is dropped from the .ini when its guardFlag is FALSE in the registry (read
-    // from a board prepend). The guardFlag must mirror the board's compile flag. IMPORTANT: a page
+    // from a board prepend). The board's prepend.txt is the single declaration point for a guard
+    // flag: firmware/Makefile lifts flags listed in TS_PAGE_GUARD_FLAGS from prepend.txt into
+    // DDEFS (keep that list in sync with this column), and tunerstudio.cpp static_asserts that
+    // the compile flag matches the generated *_PAGE_ENABLED value. IMPORTANT: a page
     // that has a reference surface (tooltips, [TableEditor], menus, triggeredPageRefresh that name
     // its fields) also needs an enabledFlag and those references wrapped in @@if_block <enabledFlag>,
     // exactly as LTFT does - otherwise the drop leaves dangling references. LTFT has such a surface
     // (enabledFlag = LTFT_PAGE_ENABLED); Lua does not - its only page-5 entity is the luaScript
     // field, which is dropped with the field block, so it needs no enabledFlag. The size==0 rule is
     // generic but only safe for a genuinely empty page (no fields, hence nothing to reference).
-    // NOTE: EFI_LUA gates the .ini only; the firmware still serves page 5 (it is not gated on
-    // EFI_LUA), which is the safe direction - TS simply never requests the dropped page.
+    // NOTE: EFI_LUA gates the .ini only; the firmware still serves the Lua page (identifier
+    // \x00\x04 - it is not gated on EFI_LUA), which is the safe direction - TS simply never
+    // requests the dropped page. Refer to pages by wire identifier, not 1-based ordinal:
+    // ordinals shift when a guarded page is dropped.
     private static final TsPage[] TS_PAGES = {
         new TsPage("\\x00\\x00", "persistent_config_s_size", null,            true,  "triggerPageRefreshFlag", null,               null),
         new TsPage("\\x00\\x01", "PAGE_SIZE_2",              "PAGE_CONTENT_2", false, null,                     null,               null),
