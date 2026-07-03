@@ -144,6 +144,7 @@ GTEST_API_ int main(int argc, char **argv) {
     return 0;
   }
 
+  // this would take binary MLG as well as text MSL
   if (argc == 3 && strcmp(argv[1], "msl2csv") == 0) {
     void runMsl2Csv(const char* mslFileName);
     runMsl2Csv(argv[2]);
