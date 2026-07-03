@@ -224,6 +224,16 @@ static uint8_t* getWorkingPageAddr(TsChannelBase* tsChannel, size_t page, size_t
 	return nullptr;
 }
 
+#if EFI_PROD_CODE
+// [tag:ts_page_table] The .ini generator only reads the board's prepend.txt, so that file is
+// the single place a TS page guard flag is declared; the Makefile lifts it into DDEFS from
+// there. If the compile flag diverges anyway (e.g. via EXTRA_PARAMS or a board.mk override),
+// the firmware would answer reads of a page the .ini still lists with out_of_range and
+// TunerStudio would retry that page until it drops the connection - fail the build instead.
+static_assert(EFI_LTFT_CONTROL == LTFT_PAGE_ENABLED,
+		"EFI_LTFT_CONTROL must match generated LTFT_PAGE_ENABLED - declare the flag in the board prepend.txt only");
+#endif // EFI_PROD_CODE
+
 static constexpr size_t getTunerStudioPageSize(size_t page) {
 	// [tag:ts_page_table] per-page sizes here must match the sizes the generator emits into the .ini
 	switch (page) {
