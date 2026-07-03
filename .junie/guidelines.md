@@ -4,6 +4,10 @@
 
 See also: `CLAUDE.md`, `docs/adding-new-trigger.md`, `.junie/ts-help-topic.md`, `.junie/ts-readme.md`, `README-mcp.md`, `java_console/mcp_lua/README.md`, `firmware/controllers/lua/examples/`, [Lua-Scripting.md](https://github.com/rusefi/rusefi_documentation/blob/master/Lua-Scripting.md).
 
+## Firmware: engine modules
+
+When creating a new engine module (or disabling an existing one), first search the codebase for the `[tag:disable_engine_module]` comment tag and read every hit for context — the main how-to lives in `firmware/controllers/core/engine_module.h`, with the module registry in `firmware/controllers/algo/engine.h` and `long_term_fuel_trim.h`/`.cpp` as the worked example of an optional module that owns a TunerStudio page. See also the "Engine modules" bullet under Key Concepts in `CLAUDE.md`.
+
 ## Frontend (Java console)
 
 `CLAUDE.md` focuses on the C++ firmware / unit tests / simulator. This section covers the Java side, which `CLAUDE.md` does not describe.
