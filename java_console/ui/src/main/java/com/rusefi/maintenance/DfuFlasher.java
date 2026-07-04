@@ -235,6 +235,12 @@ public class DfuFlasher {
     }
 
     public static boolean detectSTM32BootloaderDriverState(UpdateOperationCallbacks callbacks) {
+        if (!FileLog.isWindows()) {
+            // The WMIC/driver check below is Windows-only. On Linux the STM32 system bootloader is
+            // visible directly over USB as 0483:df11 ("STM Device in DFU Mode"), so probe lsusb so the
+            // console at least reflects the DFU state (flashing it is still Windows-only, see #9771).
+            return FileLog.isLinux() && detectStm32DfuViaLsusb(callbacks);
+        }
         // #9714: a universal bundle's is_h7 property can't cover every board, so trust the connected
         // ECU's target first (e.g. "uaefi_pro_h7"), falling back to the bundled is_h7 property.
         String effectiveTarget = com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget();
@@ -245,6 +251,28 @@ public class DfuFlasher {
         } catch (ErrorExecutingCommand e) {
             dfuDetectionCommandFailed = true;
             callbacks.logLine("detectSTM32BootloaderDriverState IOError: " + e);
+            return false;
+        }
+    }
+
+    // STM32 system bootloader enumerates as USB 0483:df11 regardless of chip family; detect it on Linux
+    // via lsusb so a board reset into DFU surfaces in the console instead of leaving the watchdog spinning
+    // on the vanished serial port. (#9771)
+    private static boolean detectStm32DfuViaLsusb(UpdateOperationCallbacks callbacks) {
+        try {
+            Process process = new ProcessBuilder("lsusb").redirectErrorStream(true).start();
+            StringBuilder output = new StringBuilder();
+            try (java.io.BufferedReader reader =
+                     new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append('\n');
+                }
+            }
+            process.waitFor(3, java.util.concurrent.TimeUnit.SECONDS);
+            return output.toString().toLowerCase().contains("0483:df11");
+        } catch (Exception e) {
+            callbacks.logLine("lsusb DFU probe failed: " + e);
             return false;
         }
     }

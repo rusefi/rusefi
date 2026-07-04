@@ -152,6 +152,20 @@ public class ProgramSelector {
         this.linkManager = linkManager;
     }
 
+    /**
+     * Programmatically trigger the main "Update Firmware" action for the currently selected port —
+     * same as clicking the split button. Used by the console's "Update ECU" menu shortcut (#9771).
+     */
+    public void triggerUpdateFirmware() {
+        final PortResult selectedPort = (PortResult) comboPorts.getSelectedItem();
+        if (selectedPort == null) {
+            // Nothing detected/selected — mirrors the split button being disabled in apply(). (#9771)
+            log.info("triggerUpdateFirmware: no port selected, ignoring");
+            return;
+        }
+        executeJob(splitButton, mainButtonModeFor(selectedPort), selectedPort);
+    }
+
     public static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
         String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
         DfuFlasher.rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU);
