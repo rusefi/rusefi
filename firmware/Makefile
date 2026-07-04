@@ -469,7 +469,7 @@ CLEAN_PCH_HOOK:
 CLEAN_BUNDLE_HOOK:
 
 POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf $(GCC_MAP_READER_JAR)
-	@java -jar $(GCC_MAP_READER_JAR) $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
+	@java -jar $(GCC_MAP_READER_JAR) $(BUILDDIR)/$(PROJECT).map | grep Total
 	@$(TRGT)objdump -h $(BUILDDIR)/$(PROJECT).elf | grep -w ram4
 
 VPATH     = $(patsubst ./%,%,$(SRCPATHS))
