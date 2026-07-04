@@ -100,7 +100,9 @@ public class ConsoleTools {
                 String command = CommandHelper.assembleCommand(args);
                 log.info("Sending command [" + command + "]");
                 IoStream stream = sendNonBlockingCommandDoNotWaitForConfirmation(command);
-                stream.close(); // this would close connector non-daemon thread
+                if (stream != null) {
+                    stream.close(); // this would close connector non-daemon thread
+                }
 //                sleepAndPrintNonDaemons(4000);
             }
         }, "Sends command specified as second argument");
