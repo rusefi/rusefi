@@ -235,7 +235,6 @@ void PrimaryTriggerDecoder::resetState() {
 	 */
 	resetHasFullSync();
 	m_hasSynchronizedCrank = false;
-	phaseResyncCounter = 0;
 	m_phaseAdjustment = 0;
 }
 
