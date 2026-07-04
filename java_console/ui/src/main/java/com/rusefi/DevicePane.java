@@ -1,90 +1,207 @@
 package com.rusefi;
 
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
-import com.rusefi.maintenance.jobs.AsyncJobExecutor;
-import com.rusefi.maintenance.jobs.OpenBltAutoJob;
-import com.rusefi.maintenance.jobs.OpenBltSwitchJob;
+import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.MigrateSettingsCheckboxState;
+import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 
+/**
+ * The live console's "Device" tab — a single-session device manager (#9771).
+ * <p>
+ * Instead of being frozen with the port/type it was opened with, this tab subscribes to
+ * {@link DeviceSessionManager} and re-renders on every hardware/state change, so one running console
+ * can hook / remove / re-connect an ECU and flash it via DFU or OpenBLT without a restart. Firmware
+ * operations reuse {@link ProgramSelector} (which already builds the DFU/OpenBLT menu from the detected
+ * {@link AvailableHardware}). The connection lifecycle itself is owned by the auto-connect watchdog —
+ * this tab only offers firmware updates and locks the live tabs while the board isn't a usable ECU.
+ */
 public class DevicePane {
     private final JPanel content = new JPanel();
-    private JButton autoUpdateButton;
+    private final DeviceSessionManager sessionManager;
+    private final JTabbedPane tabbedPane;
 
-    public DevicePane(UIContext uiContext, String port, SerialPortType serialPortType, JTabbedPane tabbedPane) {
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+    private final JComboBox<PortResult> comboPorts = new JComboBox<>();
+    private final ProgramSelector selector;
+    private final SingleAsyncJobExecutor jobExecutor;
+    private final StatusPanelWithProgressBar statusPanel = new StatusPanelWithProgressBar();
+    // Previous state rendered on the EDT — used to detect the *transition* into a bootloader state so we
+    // pull focus to the Device tab only once, not on every scan cycle (#9771).
+    private SessionState lastRenderedState;
+
+    public DevicePane(final UIContext uiContext, final DeviceSessionManager sessionManager, final JTabbedPane tabbedPane) {
+        this.sessionManager = sessionManager;
+        this.tabbedPane = tabbedPane;
+
+        // Firmware jobs run on a per-tab single executor whose output is the status/progress panel.
+        // Tab-locking is driven by render() off the session state (which already includes FLASHING as
+        // well as the DFU/OpenBLT bootloader states), so no separate job-executor listeners are needed.
+        this.jobExecutor = new SingleAsyncJobExecutor(statusPanel);
+        sessionManager.setJobExecutor(jobExecutor);
+
+        this.selector = new ProgramSelector(ConnectivityContext.INSTANCE, comboPorts);
+        selector.setJobExecutor(jobExecutor);
+        selector.setLinkManager(uiContext.getLinkManager());
+
+        // Compact controls pinned to the top; the status log + progress bar fill the rest and the bar
+        // sits at the bottom of the pane (as elsewhere in the console). No connect/disconnect here — the
+        // auto-connect watchdog owns the connection; this tab is just firmware updates. comboPorts is
+        // kept only as a populated *model* feeding ProgramSelector's flash target (no visible picker
+        // needed for the single-board case). (#9771)
+        content.setLayout(new BorderLayout());
+        JPanel column = new JPanel();
+        column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
+        content.add(column, BorderLayout.NORTH);
+
         JCheckBox autoUpdateBundle = new JCheckBox("Auto-update bundle", AutoupdateProperty.get());
-        autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));
-        content.add(autoUpdateBundle);
+        autoUpdateBundle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(
+            AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));
+        column.add(autoUpdateBundle);
 
         JCheckBox migrateSettings = new JCheckBox("Migrate Settings", true);
+        migrateSettings.setAlignmentX(Component.LEFT_ALIGNMENT);
         migrateSettings.addActionListener(e -> MigrateSettingsCheckboxState.isMigrationNeeded = migrateSettings.isSelected());
         MigrateSettingsCheckboxState.isMigrationNeeded = true;
-        content.add(migrateSettings);
+        column.add(migrateSettings);
 
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        content.add(buttons);
+        JComponent selectorControl = selector.getControl();
+        selectorControl.setAlignmentX(Component.LEFT_ALIGNMENT);
+        column.add(selectorControl);
 
-        StatusPanelWithProgressBar statusPanel = new StatusPanelWithProgressBar();
-        content.add(statusPanel.getContent());
+        // Status log fills the middle; the StatusPanelWithProgressBar keeps its progress bar at the
+        // very bottom of the pane.
+        content.add(statusPanel.getContent(), BorderLayout.CENTER);
 
-        if (serialPortType == SerialPortType.Ecu) {
-            buttons.add(new JLabel("Legacy Device Without OpenBLT"));
-        } else if (serialPortType == SerialPortType.EcuWithOpenblt) {
-            JButton switchButton = new JButton("Switch to OpenBLT");
-            autoUpdateButton = new JButton("Auto Update Firmware");
-            JButton autoButton = autoUpdateButton;
+        sessionManager.addListener((state, hardware) -> SwingUtilities.invokeLater(() -> render(state, hardware)));
+    }
 
-            switchButton.addActionListener(e -> {
-                switchButton.setEnabled(false);
-                autoButton.setEnabled(false);
-                statusPanel.clear();
-                OpenBltSwitchJob job = new OpenBltSwitchJob(new PortResult(port, serialPortType), content, uiContext.getLinkManager());
-                AsyncJobExecutor.INSTANCE.executeJob(job, statusPanel, () -> SwingUtilities.invokeLater(() -> {
-                    switchButton.setEnabled(true);
-                    autoButton.setEnabled(true);
-                }));
-            });
-            buttons.add(switchButton);
+    private void render(final SessionState state, final AvailableHardware hardware) {
+        final AvailableHardware effectiveHardware = (hardware != null)
+            ? hardware
+            : ConnectivityContext.INSTANCE.getCurrentHardware();
 
-            autoButton.addActionListener(e -> {
-                switchButton.setEnabled(false);
-                autoButton.setEnabled(false);
-                statusPanel.clear();
-                setNonDeviceTabsEnabled(tabbedPane, false);
-                if (tabbedPane != null) {
-                    tabbedPane.putClientProperty("isUpdating", Boolean.TRUE);
-                    tabbedPane.repaint();
-                }
-                OpenBltAutoJob job = new OpenBltAutoJob(new PortResult(port, serialPortType), content, ConnectivityContext.INSTANCE, uiContext.getLinkManager());
-                AsyncJobExecutor.INSTANCE.executeJob(job, statusPanel, () -> SwingUtilities.invokeLater(() -> {
-                    switchButton.setEnabled(true);
-                    autoButton.setEnabled(true);
-                    setNonDeviceTabsEnabled(tabbedPane, true);
-                    if (tabbedPane != null) {
-                        tabbedPane.putClientProperty("isUpdating", Boolean.FALSE);
-                        tabbedPane.repaint();
-                    }
-                }));
-            });
-            buttons.add(autoButton);
+        // Repopulate the ports combo, preserving the current selection where possible.
+        final PortResult previouslySelected = (PortResult) comboPorts.getSelectedItem();
+        final List<PortResult> ports = (effectiveHardware != null)
+            ? effectiveHardware.getKnownPorts()
+            : Collections.emptyList();
+        comboPorts.removeAllItems();
+        for (final PortResult port : ports) {
+            comboPorts.addItem(port);
+        }
+        reselectPort(ports, previouslySelected);
+
+        // ProgramSelector builds the DFU / OpenBLT menu straight from the detected hardware.
+        selector.apply(effectiveHardware);
+
+        // The board is a usable live ECU only in CONNECTED. While it is being flashed or sits in a
+        // DFU/OpenBLT bootloader, the live tabs show frozen/stale data — lock them and (on entry) pull
+        // the user to the Device tab so the only offered action is a firmware update. (#9771)
+        lockConsoleForState(state);
+
+        lastRenderedState = state;
+        content.revalidate();
+        content.repaint();
+    }
+
+    private void lockConsoleForState(final SessionState state) {
+        final boolean flashing = state == SessionState.FLASHING;
+        final boolean bootloaderPresent = isBootloaderState(state);
+        setNonDeviceTabsEnabled(!(flashing || bootloaderPresent));
+        if (tabbedPane != null) {
+            // Frame blink (#9715) signals an update *in progress* — only while actually flashing, not
+            // while merely waiting in a bootloader for the user to start the update.
+            tabbedPane.putClientProperty("isUpdating", flashing);
+            tabbedPane.repaint();
+        }
+        // Only on the transition into a bootloader state: pull focus to Device once (don't yank the user
+        // back every scan cycle) and drop a one-line hint into the status log, which replaces the old
+        // status label. (#9771)
+        if (bootloaderPresent && !isBootloaderState(lastRenderedState)) {
+            selectDeviceTab();
+            statusPanel.clear();
+            statusPanel.log(bootloaderGuidance(state), true, false);
         }
     }
 
-    public void triggerAutoUpdate() {
-        if (autoUpdateButton != null && autoUpdateButton.isEnabled()) {
-            autoUpdateButton.doClick();
+    private static String bootloaderGuidance(final SessionState state) {
+        if (state == SessionState.DEVICE_IN_DFU) {
+            // DFU flashing is Windows-only in rusEFI (STM32_Programmer_CLI.exe); elsewhere it's a dead end.
+            return FileLog.isWindows()
+                ? "Board is in the DFU bootloader — click Update Firmware to flash."
+                : "Board is in the DFU bootloader. DFU flashing requires Windows — power-cycle to exit, or use OpenBLT.";
         }
+        return "Board is in the OpenBLT bootloader — click Update Firmware to flash.";
     }
 
-    private static void setNonDeviceTabsEnabled(JTabbedPane tabbedPane, boolean enabled) {
-        if (tabbedPane == null) return;
+    private static boolean isBootloaderState(final SessionState state) {
+        return state == SessionState.DEVICE_IN_DFU || state == SessionState.DEVICE_IN_BLT;
+    }
+
+    private void selectDeviceTab() {
+        if (tabbedPane == null) {
+            return;
+        }
         for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            if (!"Device".equals(tabbedPane.getTitleAt(i))) {
+            if ("Device".equals(tabbedPane.getTitleAt(i))) {
+                tabbedPane.setSelectedIndex(i);
+                return;
+            }
+        }
+    }
+
+    private void reselectPort(final List<PortResult> ports, final PortResult previouslySelected) {
+        if (previouslySelected != null) {
+            for (final PortResult port : ports) {
+                if (port.port.equals(previouslySelected.port)) {
+                    comboPorts.setSelectedItem(port);
+                    return;
+                }
+            }
+        }
+        // No prior selection (or it disappeared): prefer the first connectable ECU.
+        for (final PortResult port : ports) {
+            if (port.isEcu()) {
+                comboPorts.setSelectedItem(port);
+                return;
+            }
+        }
+        if (!ports.isEmpty()) {
+            comboPorts.setSelectedIndex(0);
+        }
+    }
+
+    /**
+     * Programmatically start a firmware update (used by the "Update ECU" menu shortcut). No-op while a
+     * job is already running or when there is no connectable port.
+     */
+    public void triggerAutoUpdate() {
+        if (sessionManager.getState() == SessionState.FLASHING) {
+            return;
+        }
+        selector.triggerUpdateFirmware();
+    }
+
+    // Tabs usable without a live ECU: the Device tab (hosts the update controls), offline tune editing
+    // ("Tuning") and the pinout reference. These stay enabled while the board is in a bootloader or being
+    // flashed; only the live-data tabs get locked. (#9771)
+    private static boolean isOfflineCapableTab(final String title) {
+        return "Device".equals(title) || "Tuning".equals(title) || "Pinout".equals(title);
+    }
+
+    private void setNonDeviceTabsEnabled(final boolean enabled) {
+        if (tabbedPane == null) {
+            return;
+        }
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            if (!isOfflineCapableTab(tabbedPane.getTitleAt(i))) {
                 tabbedPane.setEnabledAt(i, enabled);
             }
         }

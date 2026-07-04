@@ -35,6 +35,9 @@ public class LinkManager implements Closeable {
     private static final Logging log = getLogging(LinkManager.class);
     public static final String PCAN = "PCAN";
     public static final String SOCKET_CAN = "SocketCAN";
+    // Synthetic marker for a board in the STM32 built-in bootloader (DFU). Not a real serial port —
+    // never opened as a stream; used only to surface DFU in the ports list (#9771).
+    public static final String DFU = "DFU";
 
     @NotNull
     public static final LogLevel LOG_LEVEL = LogLevel.INFO;
@@ -208,6 +211,19 @@ public class LinkManager implements Closeable {
         restart();
     }
 
+    /**
+     * Reconnect to a specific port. #9771: the Device tab's Connect button targets the port selected in
+     * its combo (a board re-hooked on a different COM port than before) instead of blindly resuming the
+     * previous {@link #lastTriedPort}.
+     */
+    public void reconnect(String port) {
+        log.info("reconnect " + port);
+        Objects.requireNonNull(port, "port");
+        isDisconnectedByUser = false;
+        lastTriedPort = port;
+        restart();
+    }
+
     public enum LogLevel {
         INFO,
         DEBUG,
@@ -333,8 +349,13 @@ public class LinkManager implements Closeable {
         this.connector = connector;
     }
 
+    private static boolean isDfu(String port) {
+        return DFU.equals(port);
+    }
+
     public static boolean isSpecialNotSerial(String port) {
-        return isLogViewerMode(port) || isPcanPort(port) || isSocketCan(port) || TcpConnector.isTcpPort(port);
+        // DFU is a synthetic, non-serial marker (#9771) — never open it as a stream.
+        return isLogViewerMode(port) || isPcanPort(port) || isSocketCan(port) || TcpConnector.isTcpPort(port) || isDfu(port);
     }
 
     public static boolean isLogViewerMode(String port) {

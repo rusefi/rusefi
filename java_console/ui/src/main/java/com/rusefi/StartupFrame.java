@@ -303,6 +303,12 @@ public class StartupFrame {
         realHardwarePanel.add(openTunerStudio, "right, wrap");
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+            // #9771: after a normal handoff the live console (DeviceSessionManager) owns device state —
+            // the scanner stays alive but this splash listener must stop mutating the repurposed splash
+            // widgets. The offline-tune path (isProceeding && offlineConsoleOpen) still needs the branch below.
+            if (isProceeding && !offlineConsoleOpen) {
+                return;
+            }
             if (offlineConsoleOpen) {
                 // [tag:offline_tune] Splash UI is disposed; keep only the auto-connect path alive so
                 // plugging in an ECU transitions the already-open offline console online (see onSplashConnected).
@@ -418,6 +424,10 @@ public class StartupFrame {
         outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
 
         connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+            // #9771: stop updating splash firmware-tab widgets once the live console has taken over.
+            if (isProceeding && !offlineConsoleOpen) {
+                return;
+            }
             if (firmwareTabStatus != null)
                 firmwareTabStatus.stop();
             firmwareUpdateTab.getBasicUpdaterPanel().onHardwareUpdated();
@@ -536,7 +546,10 @@ public class StartupFrame {
 
     private void updateConnectButtonState() {
         PortResult selectedItem = (PortResult) portsComboBox.getComboPorts().getSelectedItem();
-        connectButton.setEnabled(selectedItem != null && selectedItem.type != OpenBlt);
+        // OpenBLT bootloader and DFU are not connectable — they are firmware-update targets (#9771).
+        connectButton.setEnabled(selectedItem != null
+            && selectedItem.type != OpenBlt
+            && selectedItem.type != SerialPortType.Dfu);
     }
 
     private void applyKnownPorts(AvailableHardware currentHardware) {
@@ -1109,7 +1122,11 @@ public class StartupFrame {
             revealControlsTimer.stop();
         if (firmwareTabStatus != null)
             firmwareTabStatus.stop();
-        connectivityContext.getSerialPortScanner().stopTimer();
+        // #9771: keep the port scanner alive through handoff so the live console (its
+        // DeviceSessionManager) keeps seeing hotplug / DFU / OpenBLT transitions. The scanner's worker
+        // is a daemon thread and the console exits via ExitUtil.exit, so no explicit stop is needed.
+        // The splash's own scanner listeners are guarded by isProceeding so they stop mutating the
+        // (now-repurposed) splash widgets after handoff.
     }
 
     public void disposeFrameAndProceed() {
