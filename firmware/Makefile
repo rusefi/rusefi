@@ -458,14 +458,8 @@ CLEAN_PCH_HOOK:
 
 CLEAN_BUNDLE_HOOK:
 
-POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf
-	@JAR=../java_tools/gcc_map_reader.jar; \
-	  [ -f "$$JAR" ] || JAR=../java_tools/gcc_map_reader/build/libs/gcc_map_reader.jar; \
-	  if [ -f "$$JAR" ]; then \
-	    java -jar "$$JAR" $(BUILDDIR)/$(PROJECT).map | grep Total || echo "gcc_map_reader ran but produced no output"; \
-	  else \
-	    echo "gcc_map_reader.jar not found, skipping memory report"; \
-	  fi
+POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf $(GCC_MAP_READER_JAR)
+	@java -jar $(GCC_MAP_READER_JAR) $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
 	@$(TRGT)objdump -h $(BUILDDIR)/$(PROJECT).elf | grep -w ram4
 
 VPATH     = $(patsubst ./%,%,$(SRCPATHS))
