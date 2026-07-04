@@ -385,6 +385,8 @@ runs:
         : Add Config to Commit
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*msq" 6
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}/**/*.h" 4
+        : live data headers often change by only 1-2 lines, below the smart-git-add threshold, so add them unconditionally
+        git add "${{inputs.meta_output}}/live_data_generated/*.h"
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/**/*generated*.h" 4
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/**/*generated*.cpp" 4
         ${{inputs.rusefi_dir}}/.github/workflows/bin/smart-git-add.sh "${{inputs.meta_output}}/controllers/lua/generated/*.md"
