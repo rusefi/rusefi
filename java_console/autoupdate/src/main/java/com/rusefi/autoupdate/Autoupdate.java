@@ -36,11 +36,94 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 import static com.rusefi.core.FindFileHelper.findFirmwareFile;
 
 /**
- * entry point of rusefi_autoupdate.exe
+ * Entry point of {@code rusefi_autoupdate.exe} and the coordinator of the console/firmware
+ * auto-update user experience.
  * <p>
- * We've given up on complex classloader logic for auto-update and ended up with startConsoleAsANewProcess approach
+ * We've given up on complex classloader logic for auto-update and ended up with the
+ * {@link #startConsoleAsANewProcess} approach: the updater JVM downloads and unpacks a fresh
+ * bundle, then launches the real console as a brand-new process so classloading is never asked
+ * to swap classes underneath a running JVM.
+ *
+ * <h2>User experience overview</h2>
+ *
+ * <h3>1. Settings that gate auto-update</h3>
+ * Auto-update is controlled by <b>two</b> flags — {@link #isAutoUpdateEnabled} requires
+ * BOTH to be true:
+ * <ul>
+ *   <li><b>{@link com.rusefi.AutoupdateProperty} (user preference)</b> — per-installation
+ *       toggle persisted in the console's preferences. Users flip this to opt out of
+ *       silent updates.</li>
+ *   <li><b>{@code autoupdate_bundle} (bundle-level property in {@code shared_io.properties})</b>
+ *       — set by whoever ships the bundle. A white-label bundle can hard-disable auto-update
+ *       for its users regardless of the per-user preference.</li>
+ * </ul>
+ *
+ * <h3>2. Caps Lock override at launch</h3>
+ * When {@code rusefi_autoupdate.exe} starts, {@link #isSkipUpdater} checks the CAPS LOCK
+ * key state. If Caps Lock is ON, the updater short-circuits and launches the existing
+ * console without any network check — an emergency escape hatch when the user needs to
+ * boot the console even if the update servers are unreachable or misbehaving. This is
+ * independent of {@link AutoupdateProperty} / {@code autoupdate_bundle} (those only gate
+ * the download; Caps Lock skips even the availability check).
+ *
+ * <h3>3. Launch-time silent update path ({@link #main} / {@link #autoupdate})</h3>
+ * When the user double-clicks the bundle's autoupdate exe:
+ * <ol>
+ *   <li>Read {@link BundleInfo} from the local bundle name.</li>
+ *   <li>If auto-update is enabled, {@link #downloadFreshZipFile} downloads the latest
+ *       bundle zip (only when server timestamp/size indicate it's newer than the local
+ *       copy — see {@link #isNewerAvailable}); otherwise nothing is downloaded.</li>
+ *   <li>{@link #unzipAutoUpdate} extracts the bundle over the installation.</li>
+ *   <li>{@link #prefetchLastConnectedBoardFirmware} (issue #9714) refreshes firmware for
+ *       the board the user last connected to, so a later in-console "Update ECU" is
+ *       instant.</li>
+ *   <li>{@link #startConsoleAsANewProcess} launches the freshly unpacked console.</li>
+ * </ol>
+ *
+ * <h3>4. In-console UX: the two "Actions" menu items</h3>
+ * Wiring lives in {@code MainFrame}:
+ * <ul>
+ *   <li><b>"Update Software" ({@code updateSoftwareItem})</b> — updates the bundle
+ *       (console + firmware files) from within a running console, without needing to
+ *       restart via the autoupdate exe.
+ *       <ul>
+ *         <li>Disabled by default. Only when {@link AutoupdateProperty} is OFF (i.e. the
+ *             user has opted out of launch-time silent updates) does {@code MainFrame}
+ *             spawn a background thread that polls {@link #isUpdateAvailable} and enables
+ *             the menu item if a newer bundle exists on the server. When the property is
+ *             ON the launch-time flow already handled it, so the menu stays disabled.</li>
+ *         <li>Clicking runs {@link #runManualUpdate} which — bypassing the
+ *             {@link #isAutoUpdateEnabled} gate — calls {@link #performUpdate} to
+ *             download+unpack the bundle, stage {@code rusefi_console.jar} as
+ *             {@link #PENDING_CONSOLE_JAR} (the running JAR cannot overwrite itself),
+ *             then invokes {@link #relaunchConsole} which spawns a new JVM off the
+ *             pending JAR; {@link #finalizePendingUpdate} promotes it to the real name
+ *             during the next startup.</li>
+ *       </ul></li>
+ *   <li><b>"Update ECU" ({@code updateEcuItem})</b> — flashes the connected ECU when
+ *       its firmware signature does not match the locally cached srec. Enabled by
+ *       {@code MainFrame#checkFirmwareUpdate} after connection, based on
+ *       {@code MainFrame#needsFirmwareUpdate} comparing the ECU's reported signature
+ *       against the srec on disk. This action is about firmware-on-the-ECU, not about
+ *       the console software itself; it delegates to the firmware update flow rather
+ *       than to this class.</li>
+ * </ul>
+ *
+ * <h3>5. "Check" vs. "Apply" are separate</h3>
+ * The class deliberately splits availability check from the actual download+install:
+ * <ul>
+ *   <li>{@link #isUpdateAvailable} / {@link #isNewerAvailable} — read-only, network-only,
+ *       safe to call from a background thread; used by {@code MainFrame} to decide
+ *       whether to enable "Update Software".</li>
+ *   <li>{@link #runSilentUpdate} — respects the {@link #isAutoUpdateEnabled} gate; used
+ *       by callers that want the settings honored.</li>
+ *   <li>{@link #runManualUpdate} — ignores the gate; used by the "Update Software"
+ *       menu item because reaching that item already implies explicit user intent.</li>
+ *   <li>{@link #performUpdate} — the shared apply path used by both silent and manual.</li>
+ * </ul>
  *
  * @see com.rusefi.core.ui.ProgressView
+ * @see com.rusefi.AutoupdateProperty
  */
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);

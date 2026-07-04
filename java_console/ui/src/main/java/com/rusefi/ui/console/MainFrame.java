@@ -55,6 +55,9 @@ public class MainFrame {
 
     private JMenuItem loadTuneItem;
     private JMenuItem saveTuneItem;
+    /**
+     * user experience overview at Autoupdate.java
+     */
     private JMenuItem updateSoftwareItem;
     private JMenuItem updateEcuItem;
     private Runnable updateEcuAction;
