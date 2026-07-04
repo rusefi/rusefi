@@ -140,6 +140,10 @@ typedef enum  __attribute__ ((__packed__)) {
 
   VVT_MITSUBISHI_6G75 = 31,
 
+  VVT_CUSTOM_3 = 32,
+
+  VVT_CUSTOM_4 = 34,
+
 } vvt_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
