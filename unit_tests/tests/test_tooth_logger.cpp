@@ -27,13 +27,17 @@ TEST(ToothLogger, WriteCsvHeader) {
 	ToothLoggerWriteCsvHeader(w);
 
 	EXPECT_EQ(w.data,
-		"Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET\r\n");
+		"Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP\r\n");
 }
 
 TEST(ToothLogger, WriteCsvRows) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
 	// Seed mock sensor values so we get deterministic VBatt/ET columns
 	Sensor::setMockValue(SensorType::BatteryVoltage, 12.34f);
 	Sensor::setMockValue(SensorType::Clt, 56.78f);
+
+	engine->outputChannels.instantMAPValue = 0;
 
 	CompositeBuffer buf{};
 	buf.nextIdx = 2;
