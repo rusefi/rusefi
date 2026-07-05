@@ -84,11 +84,14 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 	efiPrintf("Flash: Writing storage ID %d  @0x%x... %d bytes", id, addr, size);
 	efitick_t startNt = getTimeNowNt();
 
-	if (!mcuCanFlashWhileRunning()) {
-		// there's no wdgStop() for STM32, so we cannot disable it.
-		// we just set a long timeout of 5 secs to wait until flash is done.
-		startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
-	}
+	// there's no wdgStop() for STM32, so we cannot disable it.
+	// we just set a long timeout of 5 secs to wait until flash is done.
+	// Note that this is needed even when mcuCanFlashWhileRunning(): on
+	// dual-bank STM32F7, Cortex-M7 speculative prefetch into the bank being
+	// erased sporadically stalls the CPU - and thus the watchdog feed - for
+	// the full duration of a sector erase, which exceeds the default watchdog
+	// timeout. See https://community.st.com/t5/stm32-mcus-products/bus-stall-on-stm32f767-during-mass-flash-erase-in-dual-bank-mode/td-p/583538
+	startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
 
 	StorageStatus status = StorageStatus::Ok;
 
@@ -136,10 +139,8 @@ StorageStatus SettingStorageFlash::store(size_t id, const uint8_t *ptr, size_t s
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
 
-	if (!mcuCanFlashWhileRunning()) {
-		// restart the watchdog with the default timeout
-		startWatchdog();
-	}
+	// restart the watchdog with the default timeout
+	startWatchdog();
 
 	efiPrintf("Flash: Write done %s after %d mS",
 		(status != StorageStatus::Ok) ? "with error(s)" : "Ok", elapsed_Ms);
