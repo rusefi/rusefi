@@ -53,6 +53,8 @@ This script:
 
 Exclusion patterns (e.g., for `googletest` or the `unit_tests` directory itself) are defined in `unit_tests/coverage_common.sh`.
 
+The build system does not track compiler-flag changes, so run `make clean` in `unit_tests/` when switching between coverage and non-coverage builds — otherwise stale objects produce a near-zero (or needlessly instrumented) result.
+
 Unit tests use Google Test and run on PC, not on the ECU.
 
 #### Troubleshooting test output

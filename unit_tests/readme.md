@@ -16,12 +16,17 @@ Note:
 If you're using VSCode, we have launch tasks available to debug your tests!
 see `.vscode/launch.json` "Debug Unit Tests (gdb)"
 
-[Code Coverage Report](https://rusefi.com/docs/unit_tests_coverage/)
+# Code Coverage
 
-for make the coverage locally you need to install [gcovr](https://gcovr.com/en/stable/installation.html)
+[Published CI Coverage Report](https://rusefi.com/docs/unit_tests_coverage/)
 
-Build and run the coverage with `./run_coverage.sh`.
-the report will be on `unit_tests/gcov_working_area/gcov/index.html`
+To generate coverage locally run `./run_coverage.sh` — it needs only `python3`; it creates a virtual environment in `unit_tests/venv/` and installs [gcovr](https://gcovr.com/en/stable/) into it automatically, then builds with `COVERAGE=yes`, runs all tests and writes reports to:
+- `unit_tests/coverage_reports/coverage.html` (HTML)
+- `unit_tests/coverage_reports/coverage.json` (JSON)
+
+Gotcha: the build system does not detect compiler-flag changes, so objects from an earlier non-coverage build are reused without instrumentation and coverage comes out near zero (and vice versa — a coverage build slows down subsequent `./test.sh` runs). Run `make clean` whenever you switch between coverage and non-coverage builds.
+
+CI uses a different script, `ci_gcov.sh` (invoked by `.github/workflows/build-unit-tests.yaml` after an instrumented test run), which writes `unit_tests/gcov_working_area/gcov/index.html` plus Cobertura XML and uses extra gcovr options (`--exclude-throw-branches --exclude-unreachable-branches --decisions --merge-mode-functions=separate`), so local percentages may differ slightly from the published report. Exclusion patterns shared by both scripts live in `coverage_common.sh`.
 
 See also [https://wiki.rusefi.com/Build-Server-and-Automation](https://wiki.rusefi.com/Build-Server-and-Automation)
 
