@@ -40,10 +40,12 @@ static bool noFiringUntilVvtSync() {
 	// Symmetrical crank modes require cam sync before firing
 	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
 	// Examples include Nissan MR/VQ, Miata NB, etc
+	// see limp.noFiringUntilCamSyncOnSymmetricalCrank unit test
 	bool result =
 		operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_FIVE_TIMES_CRANK_SENSOR ||
+		operationMode == FOUR_STROKE_SIX_TIMES_CRANK_SENSOR ||
 		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
   if (result) {
     float rpm = Sensor::getOrZero(SensorType::Rpm);

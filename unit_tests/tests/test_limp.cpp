@@ -457,6 +457,29 @@ TEST(limp, gdiFuelCut) {
 	ASSERT_EQ(ClearReason::GdiLimits, dut.allowInjection().reason);
 }
 
+static void assertNoFiringUntilCamSync(trigger_type_e triggerType, const char* context) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// TEST_ENGINE defaults to IM_ONE_COIL where a distributor makes crank phase ambiguity harmless
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	eth.setTriggerType(triggerType);
+
+	// A symmetrical crank wheel repeats several times per engine cycle, so crank phase
+	// is ambiguous (worse than the 360 degrees wasted spark can tolerate) until cam sync arrives
+	ASSERT_FALSE(engine->triggerCentral.triggerState.hasSynchronizedPhase()) << context;
+
+	LimpManager dut;
+	dut.updateState(1000, getTimeNowNt());
+
+	EXPECT_EQ(ClearReason::EnginePhase, dut.allowInjection().reason) << context;
+	EXPECT_EQ(ClearReason::EnginePhase, dut.allowIgnition().reason) << context;
+}
+
+TEST(limp, noFiringUntilCamSyncOnSymmetricalCrank) {
+	assertNoFiringUntilCamSync(trigger_type_e::TT_3_TOOTH_CRANK, "3 tooth crank");
+	assertNoFiringUntilCamSync(trigger_type_e::TT_6_TOOTH_CRANK, "6 tooth crank");
+	assertNoFiringUntilCamSync(trigger_type_e::TT_12_TOOTH_CRANK, "12 tooth crank");
+}
+
 struct Mockhpfp : public MockHpfpController {
 	bool isHpfpActive;
 	angle_t m_deadangle;
