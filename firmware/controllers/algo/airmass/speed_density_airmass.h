@@ -16,6 +16,9 @@ public:
 
 	float getMap(float rpm, bool postState);
 
+	// Baro-normalized MAP for table lookups ('Compensated MAP' feature); returns map unchanged when disabled
+	float getCompensatedMap(float map) const;
+
 private:
 	float getPredictiveMap(float rpm, bool postState, float mapSensor);
 	float logAndGetFallback(float rpm, bool postState) const;
