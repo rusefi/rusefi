@@ -56,11 +56,23 @@ The 2D table fields are appended config so existing tunes stay valid. Two mechan
 
 See `docs/calibration-compatibility.md` and `TuneMigrator.java`.
 
+## Fuel Consumption Tracking
+
+Downstream of the pipeline, the `TripOdometer` engine module (`firmware/controllers/modules/trip_odometer/`, guarded by `MODULE_ODOMETER` / `EFI_VEHICLE_SPEED`) accounts for fuel actually injected:
+
+- **Input**: `main_trigger_callback.cpp` calls `consumeFuel(actualInjectedMass, nowNt)` on each injection event, where `actualInjectedMass = numberOfInjections * (injectionMassStage1 + injectionMassStage2)` — i.e. post-cut, post-trim staged mass, not the ideal fuel mass.
+- **Total consumed**: accumulated as integer grams plus a float sub-gram remainder (`getConsumedGrams()` / `getConsumedGramsRemainder()`) for dynamic range on long runs. RAM-only; resets on power cycle.
+- **Instantaneous rate**: `getConsumptionGramPerSecond()` — grams divided by time since the previous pulse; forced to 0 if pulses are more than 0.2 s apart.
+- **Also tracked**: trip distance (from `SensorType::VehicleSpeed`), engine run time, ignition-on time.
+
+Consumers: TunerStudio output channels `totalFuelConsumption` (grams) and `fuelFlowRate` (gram/s) in `status_loop.cpp`; verbose CAN broadcast (`can_verbose.cpp`); OBD-II fuel rate PID (`obd2.cpp`); CAN dash conversions (`can_dash.cpp`); Lua hooks `getConsumedGrams` / `getConsumedGramsRemainder` / `getConsumptionGramPerSecond` (`lua_hooks.cpp`). There is no built-in per-hour, fuel-economy, or persistent lifetime-total channel — consumers derive those from g/s, distance, and fuel density.
+
 ## Key Files
 - `firmware/controllers/algo/fuel_math.cpp`: Core mass calculations.
 - `firmware/controllers/algo/wall_fuel.cpp`: Transient fueling logic.
 - `firmware/controllers/engine_cycle/fuel_computer.cpp`: Orchestration of the fueling pipeline.
 - `firmware/controllers/engine_cycle/injection_scheduling.cpp`: Crank-angle event timing.
+- `firmware/controllers/modules/trip_odometer/trip_odometer.cpp`: Consumed-fuel and fuel-rate accounting.
 
 ## Implementation Notes
 - All math is floating-point in the `algo/` layer.
