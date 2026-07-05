@@ -997,6 +997,9 @@ float getConfigValueByHash(const int hash) {
 // sdCardConditionalLogging
 		case -1861088559:
 			return engineConfiguration->sdCardConditionalLogging;
+// useCompensatedMap
+		case 135376707:
+			return engineConfiguration->useCompensatedMap;
 // sdLogStartRpm
 		case 51050203:
 			return engineConfiguration->sdLogStartRpm;
@@ -3863,6 +3866,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1861088559:
 	{
 		engineConfiguration->sdCardConditionalLogging = (int)value;
+		return 1;
+	}
+		case 135376707:
+	{
+		engineConfiguration->useCompensatedMap = (int)value;
 		return 1;
 	}
 		case 51050203:

@@ -3709,8 +3709,11 @@ struct engine_configuration_s {
 	offset 1540 bit 30 */
 	bool sdCardConditionalLogging : 1 {};
 	/**
+	 * Compensated MAP: in Speed Density mode, normalize MAP by barometric pressure before it is used as a table load axis.
+	 * MAP_ref = MAP / (baro / 101.325 kPa) feeds the VE lookup and the fuel/spark load axes, so the same table cells are hit regardless of altitude (WOT reads ~100 kPa at any elevation).
+	 * The physical air mass calculation still uses actual MAP. Requires a barometric pressure sensor; without a valid baro reading no compensation is applied.
 	offset 1540 bit 31 */
-	bool unusedBit_550_31 : 1 {};
+	bool useCompensatedMap : 1 {};
 	/**
 	 * Start logging at/above this RPM
 	 * units: rpm
