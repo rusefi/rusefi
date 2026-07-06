@@ -2071,6 +2071,9 @@ Rotational Idle Auto engage CLT
 ### rotationalIdleController.auto_engage_clt
 Rotational Idle Auto engage CLT.
 
+### launchRpmThreshold
+Launch RPM Threshold: when above 0, launch only engages if the activation switch (button/clutch) is pressed at or below this RPM, and stays latched while held - even past this RPM. This lets a standing launch (switch pressed low, revved up) coexist with flat shift / torque reduction (switch blipped high during an upshift). 0 disables the gate (legacy behavior).
+
 ### misfireDetectionEnabled
 Misfire Detection: master enable. Active at idle only. Latches check-engine light (P0300) once the count threshold is reached.
 

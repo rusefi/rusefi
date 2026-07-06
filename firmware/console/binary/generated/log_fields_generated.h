@@ -679,6 +679,7 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->launchController, 4, 10, "Launch: speedCondition", ""},
 	{engine->launchController, 4, 11, "Launch: tpsCondition", ""},
 	{engine->launchController, 4, 12, "luaLaunchState", ""},
+	{engine->launchController, 4, 13, "Launch: isLaunchLatched", ""},
 	{engine->shiftTorqueReductionController, 0, 0, "isTorqueReductionTriggerPinValid", ""},
 	{engine->shiftTorqueReductionController, 0, 1, "torqueReductionTriggerPinState", ""},
 	{engine->shiftTorqueReductionController, 0, 2, "isTimeConditionSatisfied", ""},

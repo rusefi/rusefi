@@ -1446,6 +1446,9 @@ float getOutputValueByHash(const int hash) {
 // luaLaunchState
 		case 707453027:
 			return engine->launchController.luaLaunchState;
+// isLaunchLatched
+		case 1386353137:
+			return engine->launchController.isLaunchLatched;
 // isTorqueReductionTriggerPinValid
 		case 1922853657:
 			return engine->shiftTorqueReductionController.isTorqueReductionTriggerPinValid;
