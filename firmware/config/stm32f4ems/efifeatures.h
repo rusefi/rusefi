@@ -312,7 +312,7 @@
 #endif
 
 #ifndef BOARD_PCA9685_COUNT
-#define BOARD_PCA9685_COUNT 0
+#define BOARD_PCA9685_COUNT 1
 #endif
 
 #define EFI_ANALOG_SENSORS TRUE
