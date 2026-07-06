@@ -51,8 +51,13 @@ static DeviceType determineDevice() {
 }
 
 bool mcuCanFlashWhileRunning() {
+#if EFI_FLASH_USE_1500_OF_2MB
+	// Don't care if MCU is dual bank. Half of second bank is allocated for code
+	return false;
+#else
 	// Allow flash-while-running if dual bank mode is enabled, and we're a 2MB device (ie, no code located in second bank)
 	return determineDevice() == DeviceType::DualBank2MB;
+#endif
 }
 
 // See ST AN4826
