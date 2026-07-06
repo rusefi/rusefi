@@ -31,6 +31,12 @@ extern "C" {
 #include "mpu_util.h"
 #include "backup_ram.h"
 
+// the bootloader does not compile storage.cpp - keep it out of this interlock
+#if EFI_CONFIGURATION_STORAGE && !defined(EFI_BOOTLOADER)
+#include "storage.h"
+#define EFI_STORAGE_REBOOT_INTERLOCK TRUE
+#endif
+
 #ifndef ALLOW_JUMP_WITH_IGNITION_VOLTAGE
 // stm32 bootloader might touch uart ports which we cannot allow on boards where uart pins are used to control engine coils etc
 #define ALLOW_JUMP_WITH_IGNITION_VOLTAGE TRUE
@@ -42,6 +48,13 @@ static bool reset_and_jump(void) {
     configError("Not allowed with ignition power");
     return false;
   }
+#endif
+
+#ifdef EFI_STORAGE_REBOOT_INTERLOCK
+	// Let any queued or in-flight settings/LTFT flash write finish before we
+	// reset: a reset in the middle of a sector erase/program corrupts the
+	// sector being written and can leave the device hung until power cycle.
+	storageWaitIdle(STORAGE_WAIT_IDLE_TIMEOUT_MS);
 #endif
 
 	#ifdef STM32H7XX
