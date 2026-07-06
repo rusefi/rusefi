@@ -263,7 +263,7 @@ static void w25q_reset_memory(SNORDriver *devp) {
   };
 
   wspiCommand(devp, &cmd_reset_enable_4);
-  wspiCommand(devp, &cmd_reset_memory_4);
+  wspiCommand(devp, &cmd_reset_4);
 #else
   /* 2x W25Q_CMD_RESET_ENABLE command.*/
   static const wspi_command_t cmd_reset_enable_2 = {
@@ -274,9 +274,9 @@ static void w25q_reset_memory(SNORDriver *devp) {
     .dummy            = 0
   };
 
-  /* 2x W25Q_CMD_RESET_MEMORY command.*/
-  static const wspi_command_t cmd_reset_memory_2 = {
-    .cmd              = W25Q_CMD_RESET_MEMORY,
+  /* 2x W25Q_CMD_RESET command.*/
+  static const wspi_command_t cmd_reset_2 = {
+    .cmd              = W25Q_CMD_RESET,
     .cfg              = WSPI_CFG_CMD_MODE_TWO_LINES,
     .addr             = 0,
     .alt              = 0,
