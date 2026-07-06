@@ -87,11 +87,12 @@ import static com.rusefi.core.FindFileHelper.findFirmwareFile;
  *       (console + firmware files) from within a running console, without needing to
  *       restart via the autoupdate exe.
  *       <ul>
- *         <li>Disabled by default. Only when {@link AutoupdateProperty} is OFF (i.e. the
- *             user has opted out of launch-time silent updates) does {@code MainFrame}
- *             spawn a background thread that polls {@link #isUpdateAvailable} and enables
- *             the menu item if a newer bundle exists on the server. When the property is
- *             ON the launch-time flow already handled it, so the menu stays disabled.</li>
+ *         <li>Disabled by default. Only when {@link #isAutoUpdateEnabled} is false (the user
+ *             preference is OFF or the bundle hard-disables auto-update — i.e. the launch-time
+ *             silent update did not run, see #9775) does {@code MainFrame} spawn a background
+ *             thread that polls {@link #isUpdateAvailable} and enables the menu item if a newer
+ *             bundle exists on the server. When auto-update is fully enabled the launch-time
+ *             flow already handled it, so the menu stays disabled.</li>
  *         <li>Clicking runs {@link #runManualUpdate} which — bypassing the
  *             {@link #isAutoUpdateEnabled} gate — calls {@link #performUpdate} to
  *             download+unpack the bundle, stage {@code rusefi_console.jar} as
@@ -181,7 +182,13 @@ public class Autoupdate {
         return sb.toString();
     }
 
-    private static boolean isAutoUpdateEnabled() {
+    /**
+     * Effective auto-update gate: requires BOTH the per-user {@link AutoupdateProperty} preference
+     * and the bundle-level {@code autoupdate_bundle} property. When this returns false the
+     * launch-time silent update is skipped, so {@code MainFrame} offers the manual
+     * "Update Software" path instead (#9775).
+     */
+    public static boolean isAutoUpdateEnabled() {
         boolean property = AutoupdateProperty.get();
         boolean autoupdate_bundle = ConnectionAndMeta.getBoolean("autoupdate_bundle");
         boolean result = property && autoupdate_bundle;

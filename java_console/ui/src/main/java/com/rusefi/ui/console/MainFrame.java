@@ -205,7 +205,9 @@ public class MainFrame {
     private void windowOpenedHandler() {
         setTitle();
         tabbedPane.tabbedPane.addPropertyChangeListener("isUpdating", e -> SwingUtilities.invokeLater(this::setTitle));
-        if (!AutoupdateProperty.get()) {
+        // Offer manual update whenever the launch-time silent update did not run - either because
+        // the user preference is off or because the bundle hard-disables auto-update (#9775).
+        if (!Autoupdate.isAutoUpdateEnabled()) {
             Thread checkThread = new Thread(() -> {
                 boolean available = Autoupdate.isUpdateAvailable();
                 if (available) {
