@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15736">
+    <page number="0" size="15740">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -2763,6 +2763,7 @@
         <constant digits="0" name="launchFuelAdderPercent" units="%">0</constant>
         <constant name="launchFuelCutEnable">"no"</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000</constant>
+        <constant digits="0" name="launchRpmThreshold" units="rpm">0</constant>
         <constant digits="0" name="launchRpmWindow" units="RPM">500</constant>
         <constant name="launchSmoothRetard">"disabled"</constant>
         <constant name="launchSparkCutEnable">"no"</constant>
@@ -5145,8 +5146,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260704" nPages="1" signature="rusEFI master.2026.07.06.f407-discovery.2872824220" version="5.0"/>
-    <bibliography author="rusEFI 20260704" writeDate="date"/>
+    <versionInfo firmwareInfo="20260706" nPages="1" signature="rusEFI master.2026.07.06.f407-discovery.765265304" version="5.0"/>
+    <bibliography author="rusEFI 20260706" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
