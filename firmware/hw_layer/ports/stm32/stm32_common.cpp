@@ -36,11 +36,11 @@ extern "C" {
 #define ALLOW_JUMP_WITH_IGNITION_VOLTAGE TRUE
 #endif
 
-static void reset_and_jump(void) {
+static bool reset_and_jump(void) {
 #if !ALLOW_JUMP_WITH_IGNITION_VOLTAGE
   if (isIgnVoltage()) {
-    criticalError("Not allowed with ignition power");
-    return;
+    configError("Not allowed with ignition power");
+    return false;
   }
 #endif
 
@@ -57,15 +57,19 @@ static void reset_and_jump(void) {
 
 	// and now reboot
 	NVIC_SystemReset();
+
+	return true;
 }
 
 #if EFI_DFU_JUMP
 void jump_to_bootloader() {
 	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
-
 	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
 
-	reset_and_jump();
+	if (!reset_and_jump()) {
+		// we have failed to reboot, clear breadcrumb
+		*((unsigned long *)0x2001FFF0) = 0x0; // End of RAM
+	}
 }
 #endif
 
@@ -76,7 +80,9 @@ void jump_to_openblt() {
 	/* Store sing to stay in OpenBLT */
 	SharedParamsWriteByIndex(0, 0x01);
 
-	reset_and_jump();
+	if (!reset_and_jump()) {
+		SharedParamsWriteByIndex(0, 0x0);
+	}
 #endif
 }
 #endif /* EFI_PROD_CODE */
