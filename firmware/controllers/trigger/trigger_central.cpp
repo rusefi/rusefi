@@ -156,6 +156,15 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 
 		// Reset schedulers to avoid "out-of-order" warnings/errors when transitioning phase
 		engine->injectionEvents.resetOverlapping();
+
+		// On a crank-speed trigger the sync counter parity picks which trigger cycle starts the
+		// engine cycle, so a parity-changing shift means the next trigger index 0 is no longer one
+		// full engine cycle after the previous one - that cycle-RPM sample must be discarded.
+		// On a cam-speed trigger (crank divider 1) index 0 cadence is not affected.
+		int crankDivider = getCrankDivider(triggerShape.getWheelOperationMode());
+		if ((newSyncCounter - oldSyncCounter) % crankDivider != 0) {
+			engine->rpmCalculator.onEnginePhaseResync();
+		}
 	}
 	return totalShift;
 }

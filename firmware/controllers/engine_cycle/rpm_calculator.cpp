@@ -219,6 +219,16 @@ void RpmCalculator::onNewEngineCycle() {
 	revolutionCounterSinceStart++;
 }
 
+void RpmCalculator::onEnginePhaseResync() {
+	m_cyclePeriodDisturbed = true;
+}
+
+bool RpmCalculator::consumeCyclePeriodDisturbed() {
+	bool result = m_cyclePeriodDisturbed;
+	m_cyclePeriodDisturbed = false;
+	return result;
+}
+
 uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 	return revolutionCounterSinceBoot;
 }
@@ -248,6 +258,7 @@ void RpmCalculator::setStopSpinning() {
 	isSpinning = false;
 	revolutionCounterSinceStart = 0;
 	rpmRate = 0;
+	m_cyclePeriodDisturbed = false;
 
 	if (cachedRpmValue != 0) {
 		assignRpmValue(0);
@@ -303,6 +314,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 
 		float periodSeconds = engine->rpmCalculator.lastTdcTimer.getElapsedSecondsAndReset(nowNt);
 
+		// An engine phase re-sync since the previous cycle start shifted which trigger cycle
+		// begins the engine cycle, so 'periodSeconds' does not span exactly one engine cycle.
+		// Drop this one sample, otherwise RPM momentarily reads double on a crank-speed trigger.
+		bool cyclePeriodDisturbed = rpmState->consumeCyclePeriodDisturbed();
+
 		if (hadRpmRecently) {
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
@@ -311,7 +327,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 * and each revolution of crankshaft consists of two engine cycles revolutions
 		 *
 		 */
-			if (!alwaysInstantRpm) {
+			if (!alwaysInstantRpm && !cyclePeriodDisturbed) {
 				if (periodSeconds == 0) {
 					rpmState->setRpmValue(0);
 					rpmState->rpmRate = 0;

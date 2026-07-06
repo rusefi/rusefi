@@ -62,7 +62,10 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 	// (engineState.fuelInjectionCounter) and "Ign: Spark counter"
 	// (engineState.globalSparkCounter) visible in the TS log screenshot.
 	EXPECT_EQ(10, (int)engine->engineState.fuelInjectionCounter);
-	EXPECT_EQ(9, (int)engine->engineState.globalSparkCounter);
+	// The screenshot of the original run showed 9 sparks, but that run scheduled sparks off a
+	// momentarily doubled RPM right after phase re-sync; with that bogus cycle-RPM sample now
+	// discarded, spark scheduling continues at the true RPM and two more sparks fire.
+	EXPECT_EQ(11, (int)engine->engineState.globalSparkCounter);
 }
 
 TEST(harleyCrank, orange2truncated) {
