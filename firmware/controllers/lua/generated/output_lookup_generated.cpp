@@ -1393,12 +1393,12 @@ float getOutputValueByHash(const int hash) {
 // normalizedCylinderFilling
 		case 1599780729:
 			return engine->fuelComputer.normalizedCylinderFilling;
-// brokenInjector
-		case -1453554940:
-			return engine->fuelComputer.brokenInjector;
 // idealEngineTorque
 		case -791713926:
 			return engine->fuelComputer.idealEngineTorque;
+// brokenInjector
+		case -1453554940:
+			return engine->fuelComputer.brokenInjector;
 // injectorHwIssue
 		case -1237512821:
 			return engine->fuelComputer.injectorHwIssue;

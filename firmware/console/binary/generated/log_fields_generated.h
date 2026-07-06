@@ -660,8 +660,8 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->fuelComputer.sdTcharge_coff, "sdTcharge_coff", "", 0},
 	{engine->fuelComputer.sdAirMassInOneCylinder, "Air: Cylinder airmass", "g", 3},
 	{engine->fuelComputer.normalizedCylinderFilling, "Air: Normalized cyl filling", "%", 1},
-	{engine->fuelComputer.brokenInjector, "brokenInjector", "", 0},
 	{engine->fuelComputer.idealEngineTorque, "idealEngineTorque", "", 0},
+	{engine->fuelComputer.brokenInjector, "brokenInjector", "", 0},
 	{engine->fuelComputer, 48, 0, "injectorHwIssue", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
