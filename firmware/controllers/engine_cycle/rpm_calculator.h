@@ -90,6 +90,17 @@ public:
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
 	void onNewEngineCycle();
+	/**
+	 * Called when engine phase re-sync (see PrimaryTriggerDecoder::syncEnginePhase) shifts the
+	 * trigger synchronization counter: the next trigger cycle start no longer arrives one full
+	 * engine cycle after the previous one, so the next cycle-RPM sample must be discarded -
+	 * otherwise RPM momentarily reads double on a crank-speed trigger.
+	 */
+	void onEnginePhaseResync();
+	/**
+	 * Returns true at most once after onEnginePhaseResync(), see above
+	 */
+	bool consumeCyclePeriodDisturbed();
 	uint32_t getRevolutionCounterM(void) const;
 	void setRpmValue(float value);
 	/**
@@ -156,6 +167,9 @@ private:
 	 * Needed by spinning-up logic.
 	 */
 	bool isSpinning = false;
+
+	// see onEnginePhaseResync()
+	bool m_cyclePeriodDisturbed = false;
 
 	Timer engineStartTimer;
 };
