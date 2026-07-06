@@ -297,6 +297,19 @@ static void w25q_reset_memory(SNORDriver *devp) {
 static const uint8_t w25q_manufacturer_ids[] = W25Q_SUPPORTED_MANUFACTURE_IDS;
 static const uint8_t w25q_memory_type_ids[] = W25Q_SUPPORTED_MEMORY_TYPE_IDS;
 
+static bool w25q_id_valid(const uint8_t id[3]) {
+  return w25q_find_id(w25q_manufacturer_ids,
+                      sizeof(w25q_manufacturer_ids),
+                      id[0]) &&
+         w25q_find_id(w25q_memory_type_ids,
+                      sizeof(w25q_memory_type_ids),
+                      id[1]) &&
+         /* Capacity code is log2 of the size in bytes: sanity-limit it so
+            garbage never overflows the size math below. 0x11 = 1 Mbit,
+            0x1e = 2 Gbit. */
+         (id[2] >= 0x11U) && (id[2] <= 0x1eU);
+}
+
 /*===========================================================================*/
 /* Driver exported functions.                                                */
 /*===========================================================================*/
@@ -321,15 +334,15 @@ void snor_device_init(SNORDriver *devp) {
               3U, id);
 #endif /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
 
-  /* Checking if the device is white listed.*/
-  osalDbgAssert(w25q_find_id(w25q_manufacturer_ids,
-                             sizeof(w25q_manufacturer_ids),
-                             id[0]),
-                "invalid manufacturer id");
-  osalDbgAssert(w25q_find_id(w25q_memory_type_ids,
-                             sizeof(w25q_memory_type_ids),
-                             id[1]),
-                "invalid memory type id");
+  /* Checking if the device is white listed. This intentionally does not
+     assert: a missing or confused external flash chip must degrade into
+     "storage unavailable", not halt the ECU into a watchdog reboot loop.
+     A zero-sized descriptor is the failure indication for board code.*/
+  if (!w25q_id_valid(id)) {
+    snor_descriptor.sectors_count = 0U;
+    snor_descriptor.size = 0U;
+    return;
+  }
 
   /* Setting up the device size.*/
   snor_descriptor.sectors_count = (1U << (size_t)id[2]) /
