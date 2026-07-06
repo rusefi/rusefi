@@ -8,7 +8,7 @@
 
 static void runCrankGapCrankingSyncData2(const char *fileName,
 		int expectedSyncAtIndex,
-		int expectedCamResyncCounter,
+		int expectedphaseResyncCounter,
 		int expectedFirstPhaseSyncAtIndex) {
 	EngineTestHelper eth(engine_type_e::HARLEY);
 
@@ -54,8 +54,8 @@ static void runCrankGapCrankingSyncData2(const char *fileName,
 	}
 	EXPECT_TRUE(reader.gotSync);
 	EXPECT_TRUE(reader.gotPhaseSync);
-	EXPECT_EQ(expectedCamResyncCounter,
-			eth.engine.triggerCentral.triggerState.camResyncCounter);
+	EXPECT_EQ(expectedphaseResyncCounter,
+			eth.engine.triggerCentral.triggerState.phaseResyncCounter);
 
 	// Total injection / spark counts observed at end of CSV playback.
 	// Captured from the data points "Fuel: Injection counter"

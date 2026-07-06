@@ -196,7 +196,7 @@ void PrimaryTriggerDecoder::resetState() {
 
 	resetHasFullSync();
 	m_hasSynchronizedCrank = false;
-	camResyncCounter = 0;
+	phaseResyncCounter = 0;
 	m_phaseAdjustment = 0;
 }
 
@@ -246,7 +246,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 
 	if (totalShift > 0) {
 		m_phaseAdjustment = totalShift;
-		camResyncCounter++;
+		phaseResyncCounter++;
 		onTransitionEvent(TransitionEvent::EngineResync);
 	}
 
