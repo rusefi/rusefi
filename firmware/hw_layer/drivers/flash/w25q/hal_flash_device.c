@@ -315,11 +315,44 @@ static bool w25q_id_valid(const uint8_t id[3]) {
 /*===========================================================================*/
 
 void snor_device_init(SNORDriver *devp) {
-  uint8_t id[3];
+  uint8_t id[3] = {0U, 0U, 0U};
+
 #if SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_SPI
-  /* Reading device ID.*/
-  bus_cmd_receive(devp, W25Q_CMD_READ_JEDEC_ID,
-                  3U, id);
+  /* An MCU reset does not reset the flash chip. If the previous session was
+     interrupted in the middle of a transaction (for example a reboot request
+     arriving during an MFS write), the chip may still be busy finishing an
+     erase/program or have its command decoder out of sync, and the first
+     JEDEC ID read returns garbage. Do not trust a single read: wait for a
+     possibly in-flight operation, software-reset the chip and retry.*/
+  for (int attempt = 0; ; attempt++) {
+    /* Reading device ID.*/
+    bus_cmd_receive(devp, W25Q_CMD_READ_JEDEC_ID,
+                    3U, id);
+    if (w25q_id_valid(id) || (attempt >= 2)) {
+      break;
+    }
+
+    /* While busy the chip ignores most commands and status reads as busy,
+       so give an interrupted erase a chance to finish. Sector erase is
+       400 ms worst case. A desynchronized or absent chip reads as 0xFF
+       (busy) and simply burns the full timeout here.*/
+    for (int waitMs = 0; waitMs < 500; waitMs++) {
+      uint8_t sts;
+      bus_cmd_receive(devp, W25Q_CMD_READ_STATUS_REGISTER, 1, &sts);
+      if ((sts & W25Q_FLAGS_BUSY) == 0U) {
+        break;
+      }
+      osalThreadSleepMilliseconds(1);
+    }
+
+    /* Software reset returns the command decoder to a known state. It also
+       aborts any leftover erase/program - that data was torn anyway.*/
+    bus_cmd(devp, W25Q_CMD_RESET_ENABLE);
+    bus_cmd(devp, W25Q_CMD_RESET);
+    /* tRST is 30 us on an idle device, allow extra margin for a reset
+       issued against an active erase.*/
+    osalThreadSleepMilliseconds(2);
+  }
 #else /* SNOR_BUS_DRIVER == SNOR_BUS_DRIVER_WSPI */
   /* Attempting a reset of the XIP mode, it could be in an unexpected state
      because a CPU reset does not reset the memory too.*/
