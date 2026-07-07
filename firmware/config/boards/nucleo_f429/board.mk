@@ -20,3 +20,6 @@ DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_NUCLEO_F429
 
 # reducing RAM consumption for EFI_ETHERNET to fit
 DDEFS += -DEFI_ALTERNATOR_CONTROL=FALSE -DEFI_LOGIC_ANALYZER=FALSE -DEFI_ENABLE_ASSERTS=FALSE
+
+# Save some RAM: EFI_LUA=FALSE is declared in
+# prepend.txt and lifted into DDEFS by the Makefile - see [tag:ts_page_table]
