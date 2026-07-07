@@ -27,9 +27,15 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
                 if (linkManager != null) {
                     BinaryProtocol bp = linkManager.getBinaryProtocol();
                     ProgramSelector.rebootToOpenblt(context.getParent(), bp, callbacks);
-                    // Disconnect before the ECU drops the link; prevents ConnectionWatchdog
-                    // from calling restart() → connect(port, false) → ExitUtil.exit().
-                    linkManager.disconnect();
+                    // Intentionally NOT calling linkManager.disconnect() here. Switching to OpenBLT is a
+                    // transient state: the board comes back either as an ECU on a (possibly renumbered) port
+                    // or, after the bootloader times out with no flash, jumps straight back to firmware. We
+                    // want auto-reconnect to resume in both cases. disconnect() sets isDisconnectedByUser=true,
+                    // which permanently blocks ConnectionWatchdog.restart() *and* the ConsoleUI
+                    // follow-renumbered-port listener, so the live session would never come back
+                    // (online → OpenBLT → online without flashing hangs forever).
+                    // The old ExitUtil.exit() hazard the disconnect guarded against is gone: restart() now
+                    // reconnects via connect(port, isScanningForEcu=true), which suppresses the exit. [tag:better_ux_for_flashing]
                 } else {
                     ProgramSelector.rebootToOpenblt(context.getParent(), context.getPort().port, callbacks);
                 }

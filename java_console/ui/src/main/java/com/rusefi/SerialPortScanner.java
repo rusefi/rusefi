@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BufferedSerialIoStream;
@@ -190,6 +191,20 @@ public enum SerialPortScanner {
 
     private final SerialPortCache portCache = new SerialPortCache();
 
+    // The DFU/STLink/PCAN device probes shell out to PowerShell (~800ms each). Running all three
+    // every 300ms scan cycle starves the ECU re-detection this same thread performs after a reboot,
+    // which is what makes the reconnect "loading" state drag on. Throttle them to a few seconds and
+    // skip them entirely while a live ECU is connected (a board cannot be a connected ECU and a DFU
+    // device at the same time, and the scan thread must stay responsive for the reconnect). The
+    // last-known results are reused between probes so the ProgramSelector menu stays stable.
+    // [tag:better_ux_for_flashing]
+    private static final long DEVICE_PROBE_INTERVAL_MS = 3000;
+    // Accessed only from the single "Ports Scanner" thread.
+    private long lastDeviceProbeMs = 0;
+    private boolean lastDfuConnected = false;
+    private boolean lastStLinkConnected = false;
+    private boolean lastPcanConnected = false;
+
     /**
      * Find all available serial ports and checks if simulator local TCP port is available
      */
@@ -253,9 +268,20 @@ public enum SerialPortScanner {
                     }
                 }
             }
-            dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
-            stLinkConnected = StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
-            PCANConnected = MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
+            // Skip the expensive OS device probes while a live ECU is connected, and otherwise run them
+            // no more than once per DEVICE_PROBE_INTERVAL_MS. Reuse the last-known values in between so
+            // the update menu doesn't flicker. [tag:better_ux_for_flashing]
+            final boolean liveEcuConnected = ConnectionStatusLogic.INSTANCE.isConnected();
+            final long now = System.currentTimeMillis();
+            if (!liveEcuConnected && (now - lastDeviceProbeMs) >= DEVICE_PROBE_INTERVAL_MS) {
+                lastDfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
+                lastStLinkConnected = StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
+                lastPcanConnected = MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
+                lastDeviceProbeMs = now;
+            }
+            dfuConnected = lastDfuConnected;
+            stLinkConnected = lastStLinkConnected;
+            PCANConnected = lastPcanConnected;
         } else {
             dfuConnected = false;
             stLinkConnected = false;
