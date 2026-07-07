@@ -38,7 +38,25 @@ public class ConnectedEcuTarget {
      */
     public static String effectiveTarget() {
         String t = connectedTarget;
-        return t != null ? t : BundleUtil.getBundleTarget();
+        if (t != null) {
+            return t;
+        }
+        // No live connection this session (board sitting in a bootloader, or the console was just
+        // restarted): fall back to the last-connected board persisted across sessions before the generic
+        // bundle target, so hardware-kind decisions and the universal-bundle flash guard have the best
+        // available guess. This is only a guess — see isLiveTargetKnown(). (#9771)
+        String persisted = readPersisted();
+        return persisted != null ? persisted : BundleUtil.getBundleTarget();
+    }
+
+    /**
+     * @return true when {@link #effectiveTarget()} is backed by a live connection made this session (a
+     * verified ECU signature), rather than the persisted last-board guess or the bundle default. Callers
+     * that flash firmware must treat an unverified target as unconfirmed (a board in a bootloader cannot
+     * identify itself, and the user may have swapped hardware).
+     */
+    public static boolean isLiveTargetKnown() {
+        return connectedTarget != null;
     }
 
     private static void persist(String ecuTarget) {

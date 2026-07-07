@@ -79,7 +79,7 @@ public class DfuFlasher {
             }
 
             timeForDfuSwitch(callbacks);
-            if (executeDFU(callbacks, FindFileHelper.findFirmwareFile())) {
+            if (executeDFU(callbacks, FindFileHelper.findFirmwareFileForConnectedBoard())) {
                 // We need to wait to allow connection to ECU port (see #7403)
                 timeForDfuSwitch(callbacks);
                 return true;
@@ -170,7 +170,16 @@ public class DfuFlasher {
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         submitAction(() -> {
             JobHelper.doJob(
-                () -> executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.findFirmwareFile()),
+                () -> {
+                    // A board sitting in DFU has no live signature, so fetch the right firmware for the
+                    // persisted last-connected board first; fail closed rather than flash the bundle
+                    // default onto a different board on a universal bundle. (#9771 / #9714)
+                    if (!MaintenanceUtil.ensureFirmwareForConnectedTarget(callbacks)) {
+                        callbacks.error();
+                        return;
+                    }
+                    executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.findFirmwareFileForConnectedBoard());
+                },
                 onJobFinished
             );
         });
@@ -197,6 +206,11 @@ public class DfuFlasher {
     }
 
     private static boolean executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile) {
+        // Refuse to silently flash firmware built for a different board (brick guard, #9771).
+        if (!MaintenanceUtil.confirmFirmwareMatchesBoard(firmwareBinFile, callbacks)) {
+            callbacks.logLine("Firmware update aborted — firmware/board mismatch.");
+            return false;
+        }
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks);
         if (!driverIsHappy) {
             callbacks.logLine("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");

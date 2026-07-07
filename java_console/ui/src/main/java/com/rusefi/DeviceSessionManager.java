@@ -2,8 +2,8 @@ package com.rusefi;
 
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
+import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
-import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 
 import java.util.List;
@@ -28,7 +28,6 @@ public class DeviceSessionManager {
         void onSessionChanged(SessionState state, AvailableHardware hardware);
     }
 
-    private final UIContext uiContext;
     private final ConnectivityContext connectivityContext;
     private volatile SingleAsyncJobExecutor jobExecutor;
 
@@ -40,10 +39,8 @@ public class DeviceSessionManager {
     // scanner never re-probes the live port (#9771).
     private volatile PortResult sessionPort;
 
-    public DeviceSessionManager(final UIContext uiContext,
-                                final ConnectivityContext connectivityContext,
+    public DeviceSessionManager(final ConnectivityContext connectivityContext,
                                 final PortResult initialPort) {
-        this.uiContext = uiContext;
         this.connectivityContext = connectivityContext;
         this.currentHardware = connectivityContext.getCurrentHardware();
         this.sessionPort = initialPort;
@@ -72,8 +69,19 @@ public class DeviceSessionManager {
     public void setJobExecutor(final SingleAsyncJobExecutor jobExecutor) {
         this.jobExecutor = jobExecutor;
         if (jobExecutor != null) {
+            // Pause the watchdog during a flash job so it does not race the flasher for the port. (#9771)
+            jobExecutor.addOnJobAboutToStartListener(() -> ConnectionWatchdog.pause());
             jobExecutor.addOnJobAboutToStartListener(this::refresh);
-            jobExecutor.addOnJobInProgressFinishedListener(this::refresh);
+            jobExecutor.addOnJobInProgressFinishedListener(() -> {
+                // Flash finished (success or failure): immediately resume the scanner and force a fresh
+                // scan so the UI can detect the board's post-flash state (OpenBLT/DFU) and offer retry
+                // options. (#9771)
+                final SerialPortScanner scanner = connectivityContext.getSerialPortScanner();
+                scanner.resume();
+                scanner.restartTimer();
+                refresh();
+                ConnectionWatchdog.resume();
+            });
         }
         refresh();
     }
@@ -140,33 +148,4 @@ public class DeviceSessionManager {
         return state;
     }
 
-    /**
-     * Connect to the given board. #9771: honours the Device tab's port selection so a board re-hooked on
-     * a different port connects to *that* port instead of blindly resuming the previous one. A non-ECU
-     * selection (DFU / OpenBLT / Unknown) is a flash target, not a connect target, so fall back to
-     * resuming the previous live ECU.
-     */
-    public void connect(final PortResult port) {
-        if (port != null && port.isEcu()) {
-            this.sessionPort = port;
-            uiContext.getLinkManager().reconnect(port.port);
-        } else {
-            uiContext.getLinkManager().reconnect();
-        }
-    }
-
-    /**
-     * User-initiated disconnect of the live ECU connection. The scanner stays alive so the board can
-     * be re-detected (and re-connected, or flashed in DFU/OpenBLT) without restarting the console.
-     */
-    public void disconnect() {
-        uiContext.getLinkManager().disconnect();
-    }
-
-    /**
-     * User-initiated reconnect of the previous live ECU (resumes {@code lastTriedPort}).
-     */
-    public void reconnect() {
-        uiContext.getLinkManager().reconnect();
-    }
 }
