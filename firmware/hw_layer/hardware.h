@@ -13,6 +13,19 @@ void stopHardware();
 
 #if HAL_USE_SPI
 
+#ifdef STM32H7XX
+
+#define SPI_BaudRatePrescaler_2         (0x0UL << SPI_CFG1_MBR_Pos)
+#define SPI_BaudRatePrescaler_4         (0x1UL << SPI_CFG1_MBR_Pos)
+#define SPI_BaudRatePrescaler_8         (0x2UL << SPI_CFG1_MBR_Pos)
+#define SPI_BaudRatePrescaler_16        (0x3UL << SPI_CFG1_MBR_Pos)
+#define SPI_BaudRatePrescaler_32        (0x4UL << SPI_CFG1_MBR_Pos)
+#define SPI_BaudRatePrescaler_64        (0x5UL << SPI_CFG1_MBR_Pos)
+#define SPI_BaudRatePrescaler_128       (0x6UL << SPI_CFG1_MBR_Pos)
+#define SPI_BaudRatePrescaler_256       (0x7UL << SPI_CFG1_MBR_Pos)
+
+#else /* not STM32H7XX */
+
 // Peripherial Clock 42MHz SPI2 SPI3
 // Peripherial Clock 84MHz SPI1                                SPI1        SPI2/3
 //  42 MHz      21 MHZ
@@ -31,6 +44,8 @@ void stopHardware();
 #define SPI_BaudRatePrescaler_128       ((uint16_t)0x0030)
 //  328.125 KHz 164.06 KHz
 #define SPI_BaudRatePrescaler_256       ((uint16_t)0x0038)
+
+#endif
 
 SPIDriver * getSpiDevice(spi_device_e spiDevice);
 void turnOnSpi(spi_device_e device);
