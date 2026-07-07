@@ -151,9 +151,9 @@ void initSpiModule(SPIDriver *driver,
 	 * Info on the silicon defect can be found in this document, section 2.5.2:
 	 * https://www.st.com/content/ccc/resource/technical/document/errata_sheet/0a/98/58/84/86/b6/47/a2/DM00037591.pdf/files/DM00037591.pdf/jcr:content/translations/en.DM00037591.pdf
 	 */
-	efiSetPadMode("SPI CLK ", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) | sckMode | PAL_STM32_OSPEED_HIGHEST);
+	efiSetPadMode("SPI CLK ", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) | sckMode | PAL_STM32_OSPEED_HIGHEST | PAL_STM32_PUPDR_PULLDOWN);
 
-	efiSetPadMode("SPI MOSI", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) | mosiMode | PAL_STM32_OSPEED_HIGHEST);
+	efiSetPadMode("SPI MOSI", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) | mosiMode | PAL_STM32_OSPEED_HIGHEST | PAL_STM32_PUPDR_PULLUP);
 
 	// Activate the internal pullup on MISO: SD cards indicate "busy" by holding MOSI low,
 	// so in case there is no SD card installed, the line could float low and indicate that
