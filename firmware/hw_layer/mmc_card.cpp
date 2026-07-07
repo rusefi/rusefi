@@ -331,7 +331,8 @@ static void sdStatistics() {
 	efiPrintf("HS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_hs_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
 	efiPrintf("LS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_ls_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
 #else
-	efiPrintf("not implemented");
+	efiPrintf("HS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_hs_spicfg.cfg1 & SPI_CFG1_MBR_Msk) >> SPI_CFG1_MBR_Pos)));
+	efiPrintf("LS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_ls_spicfg.cfg1 & SPI_CFG1_MBR_Msk) >> SPI_CFG1_MBR_Pos)));
 #endif
 #else
 	efiPrintf("SDIO mode");
