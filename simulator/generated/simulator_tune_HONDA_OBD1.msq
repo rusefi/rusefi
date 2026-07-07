@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15736">
+    <page number="0" size="15740">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">20260706</constant>
+        <constant digits="0" name="calibrationBirthday" units="">20260707</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -2764,6 +2764,7 @@
         <constant digits="0" name="launchFuelAdderPercent" units="%">0</constant>
         <constant name="launchFuelCutEnable">"no"</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000</constant>
+        <constant digits="0" name="launchRpmThreshold" units="rpm">0</constant>
         <constant digits="0" name="launchRpmWindow" units="RPM">500</constant>
         <constant name="launchSmoothRetard">"disabled"</constant>
         <constant name="launchSparkCutEnable">"no"</constant>
@@ -5146,7 +5147,7 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260706" nPages="1" signature="rusEFI master.2026.07.06.f407-discovery.3499629922" version="5.0"/>
+    <versionInfo firmwareInfo="20260706" nPages="1" signature="rusEFI master.2026.07.07.f407-discovery.765265304" version="5.0"/>
     <bibliography author="rusEFI 20260706" writeDate="date"/>
     <settings/>
     <userComments/>
