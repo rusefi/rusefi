@@ -17,12 +17,28 @@ public abstract class IniField {
 
     public static double parseDouble(String s) {
         // todo: real implementation
-        s = s.replaceAll("\\{", "").replaceAll("\\}", "");
+        s = s.replace("{", "").replace("}", "").trim();
+        // If this is a complex expression with ternary operator, try to extract the true branch
+        // newer .ini files use expressions like {condition ? 1 : 0.145038} for multiplier/offset
+        if (s.contains("?")) {
+            int questionIndex = s.indexOf('?');
+            int colonIndex = s.lastIndexOf(':');
+            if (questionIndex >= 0 && colonIndex > questionIndex) {
+                // Recursively parse the true branch
+                return parseDouble(s.substring(questionIndex + 1, colonIndex).trim());
+            }
+            // If we can't extract a true branch, return default
+            return 1.0;
+        }
         int dividerIndex = s.indexOf('/');
         if (dividerIndex != -1) {
-            return Double.parseDouble(s.substring(0, dividerIndex)) / Double.parseDouble(s.substring(dividerIndex + 1));
+            return Double.parseDouble(s.substring(0, dividerIndex).trim()) / Double.parseDouble(s.substring(dividerIndex + 1).trim());
         } else {
-            return Double.parseDouble(s);
+            try {
+                return Double.parseDouble(s);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
         }
     }
 

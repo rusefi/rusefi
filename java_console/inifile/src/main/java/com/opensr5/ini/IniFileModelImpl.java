@@ -315,7 +315,8 @@ public class IniFileModelImpl implements IniFileModel {
                     break;
             }
         } catch (RuntimeException e) {
-            throw new IllegalStateException("Failed to handle [" + rawText + "]: " + e, e);
+            // survive newer .ini format: skip lines we cannot parse instead of failing the whole file
+            log.error("Failed to handle, skipping [" + rawText + "]: " + e, e);
         }
     }
 
