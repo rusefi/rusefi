@@ -148,6 +148,39 @@ public class ConsoleUI {
         ConnectionStatusIcon connectionStatus = new ConnectionStatusIcon(linkManager, tabbedPane.tabbedPane);
         this.port = port;
 
+        // Follow a renumbered ECU across a bootloader round-trip. After a reboot to DFU/OpenBLT *without*
+        // flashing, the board can re-enumerate onto a different ttyACMx. ConnectionWatchdog.restart() only
+        // retries the original port name (isPortAvailableAgain=false forever), so the live session would
+        // never come back. When the scanner has classified exactly one ECU on a new port and we are not
+        // connected, repoint the LinkManager there. [tag:better_ux_for_flashing]
+        if (!isOffline) {
+            ConnectivityContext.INSTANCE.getSerialPortScanner().addListener(currentHardware -> {
+                if (linkManager.isDisconnectedByUser()) {
+                    return;
+                }
+                if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+                    return;
+                }
+                final String currentPort = linkManager.getLastTriedPort();
+                // Only act once the original port has truly vanished — otherwise the watchdog's same-name
+                // restart() handles the reconnect and we must not fight it.
+                if (currentPort == null || LinkManager.getCommPorts().contains(currentPort)) {
+                    return;
+                }
+                final java.util.List<PortResult> ecuPorts = currentHardware.getKnownPorts(
+                    CompatibilitySet.of(SerialPortType.Ecu, SerialPortType.EcuWithOpenblt));
+                if (ecuPorts.size() != 1) {
+                    return;
+                }
+                final String newPort = ecuPorts.get(0).port;
+                if (newPort.equals(currentPort)) {
+                    return;
+                }
+                log.info("ECU reappeared on " + newPort + " (was " + currentPort + ") — following renumbered port");
+                linkManager.execute(() -> linkManager.reconnect(newPort));
+            });
+        }
+
         // Wizard container and CardLayout for switching between console and wizard modes
         JPanel rootPanel = new JPanel(new CardLayout());
         rootPanel.add(tabbedPane.getContent(), "console");
