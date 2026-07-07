@@ -84,8 +84,18 @@ public class ProgramSelector {
      * so {@link #linkManager} is never set for it and {@link UpdateMode#OPENBLT_AUTO} (which reboots a
      * live ECU into the bootloader) cannot work. Flash it directly via {@link UpdateMode#OPENBLT_MANUAL}.
      */
-    private static UpdateMode mainButtonModeFor(@Nullable PortResult selectedPort) {
-        return (selectedPort != null && selectedPort.type == OpenBlt) ? OPENBLT_MANUAL : OPENBLT_AUTO;
+    private UpdateMode mainButtonModeFor(@Nullable PortResult selectedPort) {
+        if (selectedPort != null && selectedPort.type == OpenBlt) {
+            return OPENBLT_MANUAL;
+        }
+        // OPENBLT_AUTO reboots a *live* ECU into the bootloader; with no live connection there is nothing
+        // to reboot and awaitBinaryProtocol would just time out. So when offline — including a board
+        // sitting in a bootloader whose detection is momentarily flickering to Unknown — flash manually
+        // rather than flip-flopping into a dead AUTO job. [tag:better_ux_for_flashing]
+        if (!isLiveConnection()) {
+            return OPENBLT_MANUAL;
+        }
+        return OPENBLT_AUTO;
     }
 
     private void refreshMainButtonText() {
@@ -485,6 +495,10 @@ public class ProgramSelector {
         splitButton.setPopupMenu(menuItemCount > 0 ? popupMenu : null);
         splitButton.setMainButtonEnabled(hasSerialPorts && !isJobRunning);
         splitButton.setArrowButtonEnabled(menuItemCount > 0 && !isJobRunning);
+
+        // Keep the main-button mode/label in sync with the connection state too (not just combo changes):
+        // once the board is a live ECU again the button must go back to AUTO. [tag:better_ux_for_flashing]
+        refreshMainButtonText();
 
         AutoupdateUtil.trueLayoutAndRepaint(splitButton);
         AutoupdateUtil.trueLayoutAndRepaint(content);
