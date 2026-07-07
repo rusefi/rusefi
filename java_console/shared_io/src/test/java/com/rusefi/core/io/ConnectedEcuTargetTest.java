@@ -29,8 +29,12 @@ public class ConnectedEcuTargetTest {
         Field f = ConnectedEcuTarget.class.getDeclaredField("connectedTarget");
         f.setAccessible(true);
         f.set(null, null);
-        // Delete the persisted file so tests start from a clean slate
+        // Ensure the settings dir exists so the tests can write the persisted file (Files.write does
+        // not create parent dirs, and ~/.rusEFI may not exist yet in a clean test env).
         Path p = Paths.get(PERSISTED_FILE);
+        if (p.getParent() != null) {
+            Files.createDirectories(p.getParent());
+        }
         if (Files.exists(p)) {
             Files.delete(p);
         }
