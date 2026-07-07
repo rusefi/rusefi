@@ -1617,8 +1617,32 @@ struct output_channels_s {
 	 * offset 910
 	 */
 	uint8_t alignmentFill_at_910[2] = {};
+	/**
+	 * CLT: measured resistance
+	 * units: Ohm
+	 * offset 912
+	 */
+	float cltResistance = (float)0;
+	/**
+	 * IAT: measured resistance
+	 * units: Ohm
+	 * offset 916
+	 */
+	float iatResistance = (float)0;
+	/**
+	 * Aux temp 1: measured resistance
+	 * units: Ohm
+	 * offset 920
+	 */
+	float auxTemp1Resistance = (float)0;
+	/**
+	 * Aux temp 2: measured resistance
+	 * units: Ohm
+	 * offset 924
+	 */
+	float auxTemp2Resistance = (float)0;
 };
-static_assert(sizeof(output_channels_s) == 912);
+static_assert(sizeof(output_channels_s) == 928);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt

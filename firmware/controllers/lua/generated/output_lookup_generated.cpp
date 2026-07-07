@@ -934,6 +934,18 @@ float getOutputValueByHash(const int hash) {
 // transitionEventsCounter
 		case 1163075685:
 			return engine->outputChannels.transitionEventsCounter;
+// cltResistance
+		case -1105741991:
+			return engine->outputChannels.cltResistance;
+// iatResistance
+		case 2145185076:
+			return engine->outputChannels.iatResistance;
+// auxTemp1Resistance
+		case 261721451:
+			return engine->outputChannels.auxTemp1Resistance;
+// auxTemp2Resistance
+		case -1795800404:
+			return engine->outputChannels.auxTemp2Resistance;
 // baseDwell
 		case -1777838088:
 			return engine->ignitionState.baseDwell;
