@@ -17,6 +17,7 @@ public class ConnectionWatchdog {
 
     private final Timer reconnectTimer;
     private static boolean isCreated;
+    private static ConnectionWatchdog instance;
 
     private ConnectionWatchdog(int timeoutMs, Runnable restartAction) {
         reconnectTimer = new Timer(timeoutMs, e -> {
@@ -32,7 +33,7 @@ public class ConnectionWatchdog {
         if (isCreated)
             return; // only one instance is needed
         isCreated = true;
-        new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
+        instance = new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
             if (isRestartPending.compareAndSet(false, true)) {
                 linkManager.execute(() -> {
                     log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
@@ -42,7 +43,29 @@ public class ConnectionWatchdog {
             } else {
                 log.info("restart already pending...");
             }
-        }).start();
+        });
+        instance.start();
+    }
+
+    /**
+     * Temporarily suppress the watchdog reconnect timer. Use this when a firmware flash
+     * or other operation owns the port exclusively so the watchdog does not race it. (#9771)
+     */
+    public synchronized static void pause() {
+        if (instance != null) {
+            instance.reconnectTimer.stop();
+            log.info("ConnectionWatchdog paused");
+        }
+    }
+
+    /**
+     * Resume the watchdog after {@link #pause()}. The timer restarts its full delay.
+     */
+    public synchronized static void resume() {
+        if (instance != null) {
+            instance.reconnectTimer.restart();
+            log.info("ConnectionWatchdog resumed");
+        }
     }
 
     void start() {
