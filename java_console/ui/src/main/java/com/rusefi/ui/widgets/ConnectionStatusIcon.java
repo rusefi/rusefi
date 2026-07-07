@@ -7,11 +7,22 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConnectionStatusIcon extends JButton {
-    public ConnectionStatusIcon(LinkManager linkManager) {
+    // Board sitting in a DFU/OpenBLT bootloader (#9771) — distinct from connected (green)/disconnected (red).
+    private static final Color BOOTLOADER_PURPLE = new Color(150, 40, 210);
+
+    public ConnectionStatusIcon(LinkManager linkManager, JTabbedPane tabbedPane) {
         setIcon(new Icon() {
             @Override
             public void paintIcon(Component c, Graphics g, int x, int y) {
-                g.setColor(ConnectionStatusLogic.INSTANCE.isConnected() ? Color.GREEN : Color.RED);
+                final Color color;
+                if (tabbedPane != null && tabbedPane.getClientProperty("bootloaderMode") != null) {
+                    color = BOOTLOADER_PURPLE;
+                } else if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+                    color = Color.GREEN;
+                } else {
+                    color = Color.RED;
+                }
+                g.setColor(color);
                 g.fillOval(x, y, getIconWidth(), getIconHeight());
             }
 
@@ -29,12 +40,20 @@ public class ConnectionStatusIcon extends JButton {
         setContentAreaFilled(false);
 
         Runnable updateButton = () -> {
-            boolean isConnected = ConnectionStatusLogic.INSTANCE.isConnected();
-            setToolTipText(isConnected ? "Connected. Click or Ctrl+D to disconnect." : "Disconnected. Click or Ctrl+R to connect.");
+            final Object bootloaderMode = tabbedPane == null ? null : tabbedPane.getClientProperty("bootloaderMode");
+            if (bootloaderMode != null) {
+                setToolTipText(bootloaderMode + " bootloader — use the Device tab to update firmware.");
+            } else {
+                boolean isConnected = ConnectionStatusLogic.INSTANCE.isConnected();
+                setToolTipText(isConnected ? "Connected. Click or Ctrl+D to disconnect." : "Disconnected. Click or Ctrl+R to connect.");
+            }
             repaint();
         };
 
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(updateButton));
+        if (tabbedPane != null) {
+            tabbedPane.addPropertyChangeListener("bootloaderMode", e -> SwingUtilities.invokeLater(updateButton));
+        }
         updateButton.run();
 
         addActionListener(e -> {
