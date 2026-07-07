@@ -132,6 +132,10 @@ public class DevicePane {
             selectDeviceTab();
             statusPanel.clear();
             statusPanel.log(bootloaderGuidance(state), true, false);
+        } else if (state == SessionState.CONNECTED && lastRenderedState != SessionState.CONNECTED) {
+            // Board is a live ECU again (e.g. it rebooted to firmware after a flash) — clear any stale
+            // "Board is in the … bootloader" hint left in the status log. [tag:better_ux_for_flashing]
+            statusPanel.clear();
         }
     }
 
