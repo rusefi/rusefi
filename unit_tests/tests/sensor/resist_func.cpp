@@ -77,6 +77,43 @@ TEST(resistance, InRange)
     }
 }
 
+TEST(resistance, LastResistanceCache)
+{
+    ResistanceFunc f;
+    f.configure(5, 10000, false);
+
+    // No conversion yet -> 0
+    EXPECT_FLOAT_EQ(f.getLastResistance(), 0);
+
+    // Valid conversion caches the computed resistance
+    {
+        auto r = f.convert(1.0f);
+        EXPECT_TRUE(r.Valid);
+        EXPECT_FLOAT_EQ(f.getLastResistance(), 2500);
+    }
+
+    // Failed conversion (dead short) resets the cache to 0
+    {
+        auto r = f.convert(0.01f);
+        EXPECT_FALSE(r.Valid);
+        EXPECT_FLOAT_EQ(f.getLastResistance(), 0);
+    }
+
+    // Valid again
+    {
+        auto r = f.convert(3.0f);
+        EXPECT_TRUE(r.Valid);
+        EXPECT_FLOAT_EQ(f.getLastResistance(), 15000);
+    }
+
+    // Failed conversion (open circuit) resets the cache to 0
+    {
+        auto r = f.convert(4.99f);
+        EXPECT_FALSE(r.Valid);
+        EXPECT_FLOAT_EQ(f.getLastResistance(), 0);
+    }
+}
+
 TEST(resistance, PulldownMode)
 {
     ResistanceFunc f;

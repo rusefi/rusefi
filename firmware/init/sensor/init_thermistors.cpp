@@ -126,6 +126,26 @@ void initThermistors() {
 	configureTempSensor("aux2", aux2, faux2, engineConfiguration->auxTempSensor2, false);
 }
 
+// Returns the last resistance measured by the given thermistor's conversion chain, in ohms.
+// Returns 0 if the sensor is not configured, uses a linear (non-thermistor) calibration,
+// or the last conversion failed (dead short / open circuit).
+// This exposes the exact value computed by ResistanceFunc::convert() so TunerStudio can show
+// a live resistance gauge on thermistor calibration dialogs, see issue #9788.
+float getThermistorResistance(SensorType type) {
+	switch (type) {
+	case SensorType::Clt:
+		return fclt.thermistor.get<resist>().getLastResistance();
+	case SensorType::Iat:
+		return fiat.thermistor.get<resist>().getLastResistance();
+	case SensorType::AuxTemp1:
+		return faux1.thermistor.get<resist>().getLastResistance();
+	case SensorType::AuxTemp2:
+		return faux2.thermistor.get<resist>().getLastResistance();
+	default:
+		return 0;
+	}
+}
+
 void deinitThermistors() {
 	AdcSubscription::UnsubscribeSensor(clt, engineConfiguration->clt.adcChannel);
 	AdcSubscription::UnsubscribeSensor(iat, engineConfiguration->iat.adcChannel);

@@ -477,4 +477,10 @@ float mapFast
   uint16_t transitionEventsCounter
 
   uint8_t[MAX_CYLINDER_COUNT iterate] mapPerCylinder;;"kPa", 1, 0, 0, 0, 0
+
+	! Live measured thermistor resistance, exact value computed by ResistanceFunc, see issue #9788
+	float cltResistance;CLT: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
+	float iatResistance;IAT: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
+	float auxTemp1Resistance;Aux temp 1: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
+	float auxTemp2Resistance;Aux temp 2: measured resistance;"Ohm", 1, 0, 0, 1000000, 0
 end_struct
