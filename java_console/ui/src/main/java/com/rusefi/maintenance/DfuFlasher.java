@@ -173,7 +173,7 @@ public class DfuFlasher {
                 () -> {
                     // A board sitting in DFU has no live signature, so fetch the right firmware for the
                     // persisted last-connected board first; fail closed rather than flash the bundle
-                    // default onto a different board on a universal bundle. (#9771 / #9714)
+                    // default onto a different board on a universal bundle. [tag:better_ux_for_flashing] / #9714
                     if (!MaintenanceUtil.ensureFirmwareForConnectedTarget(callbacks)) {
                         callbacks.error();
                         return;
@@ -206,7 +206,7 @@ public class DfuFlasher {
     }
 
     private static boolean executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile) {
-        // Refuse to silently flash firmware built for a different board (brick guard, #9771).
+        // Refuse to silently flash firmware built for a different board (brick guard, [tag:better_ux_for_flashing]).
         if (!MaintenanceUtil.confirmFirmwareMatchesBoard(firmwareBinFile, callbacks)) {
             callbacks.logLine("Firmware update aborted — firmware/board mismatch.");
             return false;
@@ -252,7 +252,7 @@ public class DfuFlasher {
         if (!FileLog.isWindows()) {
             // The WMIC/driver check below is Windows-only. On Linux the STM32 system bootloader is
             // visible directly over USB as 0483:df11 ("STM Device in DFU Mode"), so probe lsusb so the
-            // console at least reflects the DFU state (flashing it is still Windows-only, see #9771).
+            // console at least reflects the DFU state (flashing it is still Windows-only, see [tag:better_ux_for_flashing]).
             return FileLog.isLinux() && detectStm32DfuViaLsusb(callbacks);
         }
         // #9714: a universal bundle's is_h7 property can't cover every board, so trust the connected
@@ -271,7 +271,7 @@ public class DfuFlasher {
 
     // STM32 system bootloader enumerates as USB 0483:df11 regardless of chip family; detect it on Linux
     // via lsusb so a board reset into DFU surfaces in the console instead of leaving the watchdog spinning
-    // on the vanished serial port. (#9771)
+    // on the vanished serial port. [tag:better_ux_for_flashing]
     private static boolean detectStm32DfuViaLsusb(UpdateOperationCallbacks callbacks) {
         try {
             Process process = new ProcessBuilder("lsusb").redirectErrorStream(true).start();

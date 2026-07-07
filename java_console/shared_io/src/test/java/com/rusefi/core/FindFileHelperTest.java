@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FindFileHelperTest {
     /**
-     * The target parsed here gates the firmware/board brick guard (#9771), so pin the real artifact
+     * The target parsed here gates the firmware/board brick guard [tag:better_ux_for_flashing], so pin the real artifact
      * shapes: a two-token target, a one-token target, obfuscated (no numeric signature) and dev builds.
      */
     @Test

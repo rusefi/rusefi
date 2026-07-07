@@ -49,7 +49,7 @@ public class ConnectionWatchdog {
 
     /**
      * Temporarily suppress the watchdog reconnect timer. Use this when a firmware flash
-     * or other operation owns the port exclusively so the watchdog does not race it. (#9771)
+     * or other operation owns the port exclusively so the watchdog does not race it. [tag:better_ux_for_flashing]
      */
     public synchronized static void pause() {
         if (instance != null) {

@@ -136,7 +136,7 @@ public class FindFileHelper {
      * Extract the board target from a firmware artifact file name, e.g.
      * {@code rusefi_development_2026-07-06_uaefi_pro_2528425206_<sha>_update.srec} -> {@code uaefi_pro}.
      * The target is the token(s) between the {@code yyyy-MM-dd} date and the numeric signature. Returns
-     * null for names that don't follow this pattern (e.g. a plain dev {@code rusefi.srec}). (#9771)
+     * null for names that don't follow this pattern (e.g. a plain dev {@code rusefi.srec}). [tag:better_ux_for_flashing]
      */
     public static String extractTargetFromFirmwareName(String path) {
         if (path == null) {
@@ -177,7 +177,7 @@ public class FindFileHelper {
     /**
      * Pick the {@code .srec} matching the currently-connected board, falling back to the generic
      * single-file pick for dev builds / single-board bundles. This is the flash-time entry point that
-     * prevents grabbing another board's leftover image from a shared bundle dir. (#9771)
+     * prevents grabbing another board's leftover image from a shared bundle dir. [tag:better_ux_for_flashing]
      */
     public static String findSrecFileForConnectedBoard() {
         final String match = findSrecFileForTarget(com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget());
@@ -193,7 +193,7 @@ public class FindFileHelper {
     /**
      * Newest {@code .srec} whose embedded target matches {@code target}, searching the bundle input dir
      * first, then the {@code older-fw} archive (so a native image displaced there by a foreign download is
-     * recovered rather than lost). Null if none matches. (#9771)
+     * recovered rather than lost). Null if none matches. [tag:better_ux_for_flashing]
      */
     public static String findSrecFileForTarget(String target) {
         return findFirmwareForTarget(target, ".srec");

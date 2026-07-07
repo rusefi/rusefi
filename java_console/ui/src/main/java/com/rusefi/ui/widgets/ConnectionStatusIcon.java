@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConnectionStatusIcon extends JButton {
-    // Board sitting in a DFU/OpenBLT bootloader (#9771) — distinct from connected (green)/disconnected (red).
+    // Board sitting in a DFU/OpenBLT bootloader [tag:better_ux_for_flashing] — distinct from connected (green)/disconnected (red).
     private static final Color BOOTLOADER_PURPLE = new Color(150, 40, 210);
 
     public ConnectionStatusIcon(LinkManager linkManager, JTabbedPane tabbedPane) {

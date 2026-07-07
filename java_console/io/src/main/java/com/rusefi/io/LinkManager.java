@@ -36,7 +36,7 @@ public class LinkManager implements Closeable {
     public static final String PCAN = "PCAN";
     public static final String SOCKET_CAN = "SocketCAN";
     // Synthetic marker for a board in the STM32 built-in bootloader (DFU). Not a real serial port —
-    // never opened as a stream; used only to surface DFU in the ports list (#9771).
+    // never opened as a stream; used only to surface DFU in the ports list [tag:better_ux_for_flashing].
     public static final String DFU = "DFU";
 
     @NotNull
@@ -214,7 +214,7 @@ public class LinkManager implements Closeable {
     /**
      * Reconnect to a specific port, updating {@link #lastTriedPort} so the watchdog follows it too. Used
      * after a firmware flash when the board re-enumerates onto a different port (Linux ttyACMx
-     * renumbering) than the one we were originally connected to. (#9771)
+     * renumbering) than the one we were originally connected to. [tag:better_ux_for_flashing]
      */
     public void reconnect(String port) {
         log.info("reconnect " + port);
@@ -354,7 +354,7 @@ public class LinkManager implements Closeable {
     }
 
     public static boolean isSpecialNotSerial(String port) {
-        // DFU is a synthetic, non-serial marker (#9771) — never open it as a stream.
+        // DFU is a synthetic, non-serial marker [tag:better_ux_for_flashing] — never open it as a stream.
         return isLogViewerMode(port) || isPcanPort(port) || isSocketCan(port) || TcpConnector.isTcpPort(port) || isDfu(port);
     }
 

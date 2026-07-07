@@ -261,7 +261,7 @@ public enum SerialPortScanner {
             ports.add(new PortResult(LinkManager.SOCKET_CAN, SerialPortType.CAN));
 */
         // Surface a DFU device (STM32 built-in bootloader) as a synthetic, non-connectable port so a
-        // running console can offer DFU flashing in-session (#9771). dfuConnected stays exposed via
+        // running console can offer DFU flashing in-session [tag:better_ux_for_flashing]. dfuConnected stays exposed via
         // AvailableHardware.isDfuFound() for the existing ProgramSelector menu logic.
         if (dfuConnected) {
             ports.add(new PortResult(LinkManager.DFU, SerialPortType.Dfu));

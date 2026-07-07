@@ -1,6 +1,6 @@
 package com.rusefi;
 
-// covers both serial use-cases and the non-serial ones (DFU) that are surfaced as synthetic ports (#9771)
+// covers both serial use-cases and the non-serial ones (DFU) that are surfaced as synthetic ports [tag:better_ux_for_flashing]
 public enum SerialPortType {
     Ecu("ECU", 20),
     EcuWithOpenblt("ECU w/ BL", 20),
