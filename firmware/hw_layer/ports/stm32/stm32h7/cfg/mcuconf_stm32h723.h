@@ -135,7 +135,7 @@
 #define STM32_DFSDM1SEL                     STM32_DFSDM1SEL_PCLK2
 #define STM32_SPDIFSEL                      STM32_SPDIFSEL_PLL1_Q_CK
 #define STM32_SPI45SEL                      STM32_SPI45SEL_PLL2_Q_CK
-#define STM32_SPI123SEL                     STM32_SPI123SEL_PLL2_P_CK
+#define STM32_SPI123SEL                     STM32_SPI123SEL_PLL1_Q_CK
 #define STM32_SAI1SEL                       STM32_SAI1SEL_PLL1_Q_CK
 #define STM32_LPTIM1SEL                     STM32_LPTIM1SEL_PCLK1
 #define STM32_CECSEL                        STM32_CECSEL_LSE_CK
