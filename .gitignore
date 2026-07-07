@@ -56,3 +56,5 @@ bean_encoder_test.csv
 venv/
 coverage_reports/
 
+# AI
+.ai/mcp
