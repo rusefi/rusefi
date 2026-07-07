@@ -18,8 +18,19 @@ public:
 
 	void showInfo(float testInputValue) const override;
 
+	// Last resistance computed by convert(), in ohms. Zero if the last conversion failed
+	// (dead short / open circuit) or no conversion happened yet. Exposed so the measured
+	// resistance can be shown live during thermistor calibration.
+	float getLastResistance() const {
+		return m_lastResistance;
+	}
+
 private:
 	float m_supplyVoltage = 5.0f;
 	float m_pullupResistor = 1000.0f;
 	bool m_isPulldown = false;
+
+	// convert() is const as it's logically a pure conversion; caching the last result for
+	// monitoring purposes doesn't change that, hence mutable.
+	mutable float m_lastResistance = 0;
 };

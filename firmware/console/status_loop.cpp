@@ -54,6 +54,7 @@
 #include "frequency_sensor.h"
 #include "digital_input_exti.h"
 #include "dc_motors.h"
+#include "init.h"
 
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
@@ -485,6 +486,12 @@ static void updateRawSensors() {
 	engine->outputChannels.rawIat = Sensor::getRaw(SensorType::Iat);
 	engine->outputChannels.rawAuxTemp1 = Sensor::getRaw(SensorType::AuxTemp1);
 	engine->outputChannels.rawAuxTemp2 = Sensor::getRaw(SensorType::AuxTemp2);
+
+	// Live thermistor resistance as computed inside the firmware, for calibration dialogs, see issue #9788
+	engine->outputChannels.cltResistance = getThermistorResistance(SensorType::Clt);
+	engine->outputChannels.iatResistance = getThermistorResistance(SensorType::Iat);
+	engine->outputChannels.auxTemp1Resistance = getThermistorResistance(SensorType::AuxTemp1);
+	engine->outputChannels.auxTemp2Resistance = getThermistorResistance(SensorType::AuxTemp2);
 	engine->outputChannels.rawAmbientTemp = Sensor::getRaw(SensorType::AmbientTemperature);
 	engine->outputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 	engine->outputChannels.rawFuelLevel = Sensor::getRaw(SensorType::FuelLevel);
