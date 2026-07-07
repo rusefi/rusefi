@@ -212,9 +212,9 @@ public class LinkManager implements Closeable {
     }
 
     /**
-     * Reconnect to a specific port. #9771: the Device tab's Connect button targets the port selected in
-     * its combo (a board re-hooked on a different COM port than before) instead of blindly resuming the
-     * previous {@link #lastTriedPort}.
+     * Reconnect to a specific port, updating {@link #lastTriedPort} so the watchdog follows it too. Used
+     * after a firmware flash when the board re-enumerates onto a different port (Linux ttyACMx
+     * renumbering) than the one we were originally connected to. (#9771)
      */
     public void reconnect(String port) {
         log.info("reconnect " + port);

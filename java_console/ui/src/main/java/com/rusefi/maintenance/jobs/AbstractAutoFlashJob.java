@@ -51,21 +51,46 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
             onJobFinished.run();
         }
 
-        // lm is non-null here — null path returned inside try
-        try {
-            connectivityContext.getSerialPortScanner().suspend().await(30, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        // lm is non-null here — null path returned inside try. Recover the live connection even when the
+        // calibration restore reported failure (the firmware itself may have flashed fine).
         lm.getCommandQueue().clearPendingCommands();
-        try {
-            lm.reconnect();
-        } finally {
-            connectivityContext.getSerialPortScanner().cachePort(
-                new PortResult(context.getPort().port, context.getPort().type)
-            );
-            connectivityContext.getSerialPortScanner().resume();
+        // The board re-enumerates after reboot, often onto a *different* port
+        // and sometimes after a delay. Let the always-on scanner detect + cache it, then reconnect to that
+        // port. We poll the scanner's snapshot rather than running a competing PortDetector probe: that
+        // probe races the scanner for the same port, fails to open it, and falls back to the stale
+        // pre-flash port. Do NOT fall back to the pre-flash port — after renumbering it's a ghost. (#9771)
+        connectivityContext.getSerialPortScanner().resume();
+        final String detectedPort = awaitEcuPort(TimeUnit.SECONDS.toMillis(60));
+        if (detectedPort != null) {
+            connectivityContext.getSerialPortScanner().cachePort(new PortResult(detectedPort, context.getPort().type));
+            lm.reconnect(detectedPort);
+        } else {
+            callbacks.logLine("ECU did not re-appear after flashing — reconnect manually once it enumerates.");
         }
+    }
+
+    /**
+     * Poll the scanner's detected hardware for a connectable ECU port (the rebooted board, possibly on a
+     * renumbered port), up to {@code timeoutMs}. Returns the port name, or null on timeout. Uses the
+     * scanner's own detection (which caches the port, so the subsequent reconnect doesn't collide with a
+     * probe) instead of a competing autodetect. (#9771)
+     */
+    private String awaitEcuPort(final long timeoutMs) {
+        final long deadline = System.currentTimeMillis() + timeoutMs;
+        while (System.currentTimeMillis() < deadline) {
+            for (final PortResult p : connectivityContext.getCurrentHardware().getKnownPorts()) {
+                if (p.isEcu()) {
+                    return p.port;
+                }
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        return null;
     }
 
 }
