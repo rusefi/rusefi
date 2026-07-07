@@ -224,6 +224,16 @@ public class LinkManager implements Closeable {
         restart();
     }
 
+    /** Port name of the most recent connect attempt, or null before the first one. */
+    public String getLastTriedPort() {
+        return lastTriedPort;
+    }
+
+    /** True once {@link #disconnect()} was called and no reconnect has happened since. */
+    public boolean isDisconnectedByUser() {
+        return isDisconnectedByUser;
+    }
+
     public enum LogLevel {
         INFO,
         DEBUG,
