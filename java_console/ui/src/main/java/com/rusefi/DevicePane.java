@@ -119,10 +119,14 @@ public class DevicePane {
             // Frame blink (#9715) signals an update *in progress* — only while actually flashing, not
             // while merely waiting in a bootloader for the user to start the update.
             tabbedPane.putClientProperty("isUpdating", flashing);
+            // Surface the bootloader state to the window title
+            tabbedPane.putClientProperty("bootloaderMode",
+                state == SessionState.DEVICE_IN_DFU ? "DFU"
+                    : state == SessionState.DEVICE_IN_BLT ? "OpenBLT" : null);
             tabbedPane.repaint();
         }
-        // Only on the transition into a bootloader state: pull focus to Device once (don't yank the user
-        // back every scan cycle) and drop a one-line hint into the status log, which replaces the old
+        // Only on the transition into a bootloader state: pull focus to Device once
+        // and drop a one-line hint into the status log, which replaces the old
         // status label. (#9771)
         if (bootloaderPresent && !isBootloaderState(lastRenderedState)) {
             selectDeviceTab();
