@@ -12,6 +12,7 @@
  *  - sdinfo
  *  - sdsuppresslogging
  *  - del <filename>
+ *  - sd_test_write1mb
  *  - sdmode <pc|ecu|off|unmount|auto|format>
  *  - delreports
  *
@@ -446,6 +447,57 @@ static void removeFile(const char *pathx) {
 	}
 
 	f_unlink(pathx);
+}
+
+#define SD_TEST_FILE_NAME "test1mb.bin"
+#define SD_TEST_FILE_SIZE (1024 * 1024)
+
+// Writes a 1Mb test file filled with an incrementing 32 bit counter, reports throughput
+static void sdTestWrite1Mb() {
+	if (sdMode != SD_MODE_ECU) {
+		efiPrintf("SD card should be mounted to ECU");
+		return;
+	}
+
+	// own descriptor and buffer: shared 'resources' union belongs to the logger thread
+	static NO_CACHE FIL testFd;
+	static NO_CACHE uint32_t testBuffer[128];
+
+	memset(&testFd, 0, sizeof(testFd));
+	FRESULT err = f_open(&testFd, SD_TEST_FILE_NAME, FA_CREATE_ALWAYS | FA_WRITE);
+	if (err != FR_OK) {
+		printFatFsError("test file create", err);
+		return;
+	}
+
+	efiPrintf("SD: writing %d bytes to %s...", SD_TEST_FILE_SIZE, SD_TEST_FILE_NAME);
+
+	uint32_t counter = 0;
+	size_t written = 0;
+	systime_t before = chVTGetSystemTime();
+
+	while (written < SD_TEST_FILE_SIZE) {
+		for (size_t i = 0; i < efi::size(testBuffer); i++) {
+			testBuffer[i] = counter++;
+		}
+
+		UINT bytesWritten = 0;
+		err = f_write(&testFd, testBuffer, sizeof(testBuffer), &bytesWritten);
+		if ((err != FR_OK) || (bytesWritten != sizeof(testBuffer))) {
+			printFatFsError("test file write", err);
+			break;
+		}
+		written += bytesWritten;
+	}
+
+	f_close(&testFd);
+
+	sysinterval_t elapsed = chVTTimeElapsedSinceX(before);
+	uint32_t elapsedMs = TIME_I2MS(elapsed);
+	if (elapsedMs == 0) {
+		elapsedMs = 1;
+	}
+	efiPrintf("SD: wrote %d bytes in %lu ms, %lu Kb/sec", written, elapsedMs, (uint32_t)(written / elapsedMs * 1000 / 1024));
 }
 
 #if HAL_USE_USB_MSD
@@ -1161,6 +1213,7 @@ void initEarlyMmcCard() {
     efiPrintf("Suppressed!");
   });
 	addConsoleActionS("del", removeFile);
+	addConsoleAction("sd_test_write1mb", sdTestWrite1Mb);
 	// sdmode pc
 	// sdmode ecu
 	// sdmode off
