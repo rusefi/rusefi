@@ -40,7 +40,9 @@ public class MessagesView {
         italic = d.addStyle("StyleName", null);
         italic.addAttribute(StyleConstants.CharacterConstants.Italic, Boolean.TRUE);
 
-        MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
+        // Replay the backlog so messages from an early splash-screen auto-connect (before this tab
+        // existed) are shown instead of being clipped (#9738).
+        MessagesCentral.getInstance().addListenerAndReplay(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
                 final String date = DATE_FORMAT.format(new Date());
