@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The live console's "Device" tab — a single-session device manager (#9771).
+ * The live console's "Device" tab — a single-session device manager [tag:better_ux_for_flashing].
  * <p>
  * Instead of being frozen with the port/type it was opened with, this tab subscribes to
  * {@link DeviceSessionManager} and re-renders on every hardware/state change, so one running console
@@ -32,7 +32,7 @@ public class DevicePane {
     private final SingleAsyncJobExecutor jobExecutor;
     private final StatusPanelWithProgressBar statusPanel = new StatusPanelWithProgressBar();
     // Previous state rendered on the EDT — used to detect the *transition* into a bootloader state so we
-    // pull focus to the Device tab only once, not on every scan cycle (#9771).
+    // pull focus to the Device tab only once, not on every scan cycle [tag:better_ux_for_flashing].
     private SessionState lastRenderedState;
 
     public DevicePane(final UIContext uiContext, final DeviceSessionManager sessionManager, final JTabbedPane tabbedPane) {
@@ -53,7 +53,7 @@ public class DevicePane {
         // sits at the bottom of the pane (as elsewhere in the console). No connect/disconnect here — the
         // auto-connect watchdog owns the connection; this tab is just firmware updates. comboPorts is
         // kept only as a populated *model* feeding ProgramSelector's flash target (no visible picker
-        // needed for the single-board case). (#9771)
+        // needed for the single-board case). [tag:better_ux_for_flashing]
         content.setLayout(new BorderLayout());
         JPanel column = new JPanel();
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
@@ -103,7 +103,7 @@ public class DevicePane {
 
         // The board is a usable live ECU only in CONNECTED. While it is being flashed or sits in a
         // DFU/OpenBLT bootloader, the live tabs show frozen/stale data — lock them and (on entry) pull
-        // the user to the Device tab so the only offered action is a firmware update. (#9771)
+        // the user to the Device tab so the only offered action is a firmware update. [tag:better_ux_for_flashing]
         lockConsoleForState(state);
 
         lastRenderedState = state;
@@ -127,7 +127,7 @@ public class DevicePane {
         }
         // Only on the transition into a bootloader state: pull focus to Device once
         // and drop a one-line hint into the status log, which replaces the old
-        // status label. (#9771)
+        // status label. [tag:better_ux_for_flashing]
         if (bootloaderPresent && !isBootloaderState(lastRenderedState)) {
             selectDeviceTab();
             statusPanel.clear();
@@ -195,7 +195,7 @@ public class DevicePane {
 
     // Tabs usable without a live ECU: the Device tab (hosts the update controls), offline tune editing
     // ("Tuning") and the pinout reference. These stay enabled while the board is in a bootloader or being
-    // flashed; only the live-data tabs get locked. (#9771)
+    // flashed; only the live-data tabs get locked. [tag:better_ux_for_flashing]
     private static boolean isOfflineCapableTab(final String title) {
         return "Device".equals(title) || "Tuning".equals(title) || "Pinout".equals(title);
     }

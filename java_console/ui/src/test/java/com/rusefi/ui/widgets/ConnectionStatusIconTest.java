@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 /**
- * Tests for the purple bootloader indicator on the connection status icon (#9771).
+ * Tests for the purple bootloader indicator on the connection status icon [tag:better_ux_for_flashing].
  */
 public class ConnectionStatusIconTest {
 

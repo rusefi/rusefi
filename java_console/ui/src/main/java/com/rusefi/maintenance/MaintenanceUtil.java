@@ -66,7 +66,7 @@ public class MaintenanceUtil {
      * On a universal bundle the flashers would otherwise program whatever firmware is on disk (the bundle
      * default), not the board that was just connected. Resolve the target from the persisted
      * last-connected board (it survives the disconnect) and download it first; fail closed rather than
-     * flash the wrong firmware onto a different board. (#9771 / #9714)
+     * flash the wrong firmware onto a different board. [tag:better_ux_for_flashing] / #9714
      *
      * @return true if it is safe to proceed with flashing
      */
@@ -77,7 +77,7 @@ public class MaintenanceUtil {
         // target is only a guess (persisted last board, or the bundle default) — confirm before flashing
         // so we never program a possibly-swapped board silently. Independent of foreign-vs-matching: even
         // flashing the bundle's own firmware onto an unverified board deserves a check. Live-verified
-        // flashes skip this. (#9771)
+        // flashes skip this. [tag:better_ux_for_flashing]
         if (!ConnectedEcuTarget.isLiveTargetKnown() && !confirmUnverifiedTarget(ecuTarget)) {
             callbacks.logLine("Firmware update cancelled — unverified board target \"" + ecuTarget + "\".");
             return false;
@@ -106,7 +106,7 @@ public class MaintenanceUtil {
 
     /**
      * Ask the user to confirm flashing an unverified (persisted-guess) board target. Runs on the EDT and
-     * blocks the calling job thread for the answer; fails closed (no flash) if interrupted. (#9771)
+     * blocks the calling job thread for the answer; fails closed (no flash) if interrupted. [tag:better_ux_for_flashing]
      */
     private static boolean confirmUnverifiedTarget(final String ecuTarget) {
         return confirmOnEdt(String.format(
@@ -122,7 +122,7 @@ public class MaintenanceUtil {
      * incompatible board. The firmware artifact name encodes its target (e.g. "uaefi_pro"); if that does
      * not match — and is not compatible with — the connected board's target, make the user explicitly
      * confirm. This catches the case where the bundle dir still holds another board's downloaded firmware
-     * and {@link FindFileHelper#findSrecFile()} blindly picks it. (#9771)
+     * and {@link FindFileHelper#findSrecFile()} blindly picks it. [tag:better_ux_for_flashing]
      *
      * @return true if it is safe to proceed with flashing {@code firmwareFile}
      */

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Window-independent owner of the "one console, all device states" session (#9771).
+ * Window-independent owner of the "one console, all device states" session [tag:better_ux_for_flashing].
  * <p>
  * A single console instance must handle every board transition — hook, remove, hook-in-DFU,
  * hook-in-OpenBLT, re-connect — without a restart. To do that the {@link SerialPortScanner} is kept
@@ -36,7 +36,7 @@ public class DeviceSessionManager {
     private volatile SessionState state = SessionState.DISCONNECTED;
     private volatile AvailableHardware currentHardware;
     // The board this session intends to be connected to; re-cached on CONNECTED so the always-on
-    // scanner never re-probes the live port (#9771).
+    // scanner never re-probes the live port [tag:better_ux_for_flashing].
     private volatile PortResult sessionPort;
 
     public DeviceSessionManager(final ConnectivityContext connectivityContext,
@@ -69,13 +69,13 @@ public class DeviceSessionManager {
     public void setJobExecutor(final SingleAsyncJobExecutor jobExecutor) {
         this.jobExecutor = jobExecutor;
         if (jobExecutor != null) {
-            // Pause the watchdog during a flash job so it does not race the flasher for the port. (#9771)
+            // Pause the watchdog during a flash job so it does not race the flasher for the port. [tag:better_ux_for_flashing]
             jobExecutor.addOnJobAboutToStartListener(() -> ConnectionWatchdog.pause());
             jobExecutor.addOnJobAboutToStartListener(this::refresh);
             jobExecutor.addOnJobInProgressFinishedListener(() -> {
                 // Flash finished (success or failure): immediately resume the scanner and force a fresh
                 // scan so the UI can detect the board's post-flash state (OpenBLT/DFU) and offer retry
-                // options. (#9771)
+                // options. [tag:better_ux_for_flashing]
                 final SerialPortScanner scanner = connectivityContext.getSerialPortScanner();
                 scanner.resume();
                 scanner.restartTimer();
@@ -122,7 +122,7 @@ public class DeviceSessionManager {
         if (this.state == SessionState.CONNECTED) {
             // Re-cache the live port so the always-on scanner never re-probes it. The cache is cleared
             // when a port disappears (retainAll in the scanner), so a disconnect/replug reconnect must
-            // re-cache here or the scanner races the live BinaryProtocol read and hangs on Windows. (#9771)
+            // re-cache here or the scanner races the live BinaryProtocol read and hangs on Windows. [tag:better_ux_for_flashing]
             final PortResult live = sessionPort;
             if (live != null && !LinkManager.isSpecialNotSerial(live.port)) {
                 connectivityContext.getSerialPortScanner().cachePort(live);

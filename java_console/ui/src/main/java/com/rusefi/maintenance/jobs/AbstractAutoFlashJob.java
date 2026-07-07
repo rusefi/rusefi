@@ -58,7 +58,7 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
         // and sometimes after a delay. Let the always-on scanner detect + cache it, then reconnect to that
         // port. We poll the scanner's snapshot rather than running a competing PortDetector probe: that
         // probe races the scanner for the same port, fails to open it, and falls back to the stale
-        // pre-flash port. Do NOT fall back to the pre-flash port — after renumbering it's a ghost. (#9771)
+        // pre-flash port. Do NOT fall back to the pre-flash port — after renumbering it's a ghost. [tag:better_ux_for_flashing]
         connectivityContext.getSerialPortScanner().resume();
         final String detectedPort = awaitEcuPort(TimeUnit.SECONDS.toMillis(60));
         if (detectedPort != null) {
@@ -73,7 +73,7 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
      * Poll the scanner's detected hardware for a connectable ECU port (the rebooted board, possibly on a
      * renumbered port), up to {@code timeoutMs}. Returns the port name, or null on timeout. Uses the
      * scanner's own detection (which caches the port, so the subsequent reconnect doesn't collide with a
-     * probe) instead of a competing autodetect. (#9771)
+     * probe) instead of a competing autodetect. [tag:better_ux_for_flashing]
      */
     private String awaitEcuPort(final long timeoutMs) {
         final long deadline = System.currentTimeMillis() + timeoutMs;

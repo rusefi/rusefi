@@ -44,7 +44,7 @@ public class ConnectedEcuTarget {
         // No live connection this session (board sitting in a bootloader, or the console was just
         // restarted): fall back to the last-connected board persisted across sessions before the generic
         // bundle target, so hardware-kind decisions and the universal-bundle flash guard have the best
-        // available guess. This is only a guess — see isLiveTargetKnown(). (#9771)
+        // available guess. This is only a guess — see isLiveTargetKnown(). [tag:better_ux_for_flashing]
         String persisted = readPersisted();
         return persisted != null ? persisted : BundleUtil.getBundleTarget();
     }

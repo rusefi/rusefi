@@ -1,7 +1,7 @@
 package com.rusefi;
 
 /**
- * The single-session device state shared by the splash and the live console (#9771).
+ * The single-session device state shared by the splash and the live console [tag:better_ux_for_flashing].
  * <p>
  * A single console instance must handle every board transition — hook, remove, hook-in-DFU,
  * hook-in-OpenBLT, re-connect — without a restart. {@link DeviceSessionManager} derives one of

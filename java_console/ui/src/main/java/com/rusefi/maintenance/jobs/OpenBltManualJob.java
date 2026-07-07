@@ -26,7 +26,7 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
                 // Take exclusive access to the port before flashing. The always-on scanner probes OpenBLT
                 // ports with XCP every cycle; if a probe overlaps the flash it corrupts the firmware image.
                 // suspend().await(...) blocks until the in-flight scan cycle has finished, mirroring the
-                // auto path's bltUpdateFirmware. (#9771)
+                // auto path's bltUpdateFirmware. [tag:better_ux_for_flashing]
                 final SerialPortScanner scanner = ConnectivityContext.INSTANCE.getSerialPortScanner();
                 try {
                     scanner.suspend().await(30, TimeUnit.SECONDS);

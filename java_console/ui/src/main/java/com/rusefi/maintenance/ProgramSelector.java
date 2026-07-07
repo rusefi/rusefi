@@ -103,7 +103,7 @@ public class ProgramSelector {
      * itself a bootloader and we're offline — prefer any detected OpenBLT port over the connection-
      * dependent AUTO path (which reboots a *running* ECU and just times out with no live BinaryProtocol).
      * This covers the offline "open a tune, plug an OpenBLT board" flow where the combo selection may be
-     * null/stale right after the hot-plug. (#9771)
+     * null/stale right after the hot-plug. [tag:better_ux_for_flashing]
      */
     private PortResult resolveFlashPort() {
         final PortResult selected = (PortResult) comboPorts.getSelectedItem();
@@ -179,12 +179,12 @@ public class ProgramSelector {
 
     /**
      * Programmatically trigger the main "Update Firmware" action for the currently selected port —
-     * same as clicking the split button. Used by the console's "Update ECU" menu shortcut (#9771).
+     * same as clicking the split button. Used by the console's "Update ECU" menu shortcut [tag:better_ux_for_flashing].
      */
     public void triggerUpdateFirmware() {
         final PortResult targetPort = resolveFlashPort();
         if (targetPort == null) {
-            // Nothing detected/selected — mirrors the split button being disabled in apply(). (#9771)
+            // Nothing detected/selected — mirrors the split button being disabled in apply(). [tag:better_ux_for_flashing]
             log.info("triggerUpdateFirmware: no port to flash, ignoring");
             return;
         }
@@ -414,7 +414,7 @@ public class ProgramSelector {
             callbacks.logLine(".srec image file not found");
             return false;
         }
-        // refuse to silently flash firmware built for a different board (e.g. a dev-build fallback or a naming quirk). (#9771)
+        // refuse to silently flash firmware built for a different board (e.g. a dev-build fallback or a naming quirk). [tag:better_ux_for_flashing]
         if (!MaintenanceUtil.confirmFirmwareMatchesBoard(fileName, callbacks)) {
             callbacks.logLine("Firmware update aborted — firmware/board mismatch.");
             return false;

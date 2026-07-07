@@ -144,7 +144,7 @@ public class ConsoleUI {
         tabbedPane = new TabbedPanel(uiContext);
 
         // Pass the tabbed pane so the icon can turn purple when a board is in a DFU/OpenBLT bootloader
-        // (DevicePane publishes the "bootloaderMode" client property on it). (#9771)
+        // (DevicePane publishes the "bootloaderMode" client property on it). [tag:better_ux_for_flashing]
         ConnectionStatusIcon connectionStatus = new ConnectionStatusIcon(linkManager, tabbedPane.tabbedPane);
         this.port = port;
 
@@ -310,7 +310,7 @@ console live data tab is broken #8402
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }
-            // Single-session device manager (#9771): the scanner is kept alive for the whole console
+            // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
             PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(ConnectivityContext.INSTANCE, initialPort);

@@ -318,7 +318,7 @@ public class MainFrame {
         if (Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))) {
             frameTitle = "UPDATING " + consoleVersion;
         } else if (bootloaderMode != null) {
-            // Board sitting in a bootloader (#9771) — not connected, but not a plain "disconnected" state.
+            // Board sitting in a bootloader [tag:better_ux_for_flashing] — not connected, but not a plain "disconnected" state.
             frameTitle = bootloaderMode + " BOOTLOADER " + consoleVersion;
         } else if (ConnectionStatusLogic.INSTANCE.isConnected()) {
             BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();

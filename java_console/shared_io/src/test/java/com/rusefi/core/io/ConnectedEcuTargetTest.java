@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests for the effectiveTarget fallback chain and live-target tracking (#9771).
+ * Tests for the effectiveTarget fallback chain and live-target tracking [tag:better_ux_for_flashing].
  * The real persistence file lives in ~/.rusEFI/last_connected_board.txt, so tests
  * clean it up between runs and use reflection to reset the in-memory state.
  */
