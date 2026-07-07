@@ -4,6 +4,7 @@ import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.MaintenanceUtil;
 import com.rusefi.maintenance.ProgramSelector;
 
@@ -33,17 +34,25 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
+                final boolean flashed;
                 try {
-                    if (ProgramSelector.flashOpenbltSerial(context.getParent(), context.getPort().port, callbacks)) {
-                        callbacks.done();
-                    } else {
-                        callbacks.error();
-                    }
+                    flashed = ProgramSelector.flashOpenbltSerial(context.getParent(), context.getPort().port, callbacks);
                 } finally {
                     // Board reboots to fresh firmware on a possibly-different port — re-inspect it.
                     scanner.invalidatePort(context.getPort().port);
                     scanner.resume();
                 }
+                if (!flashed) {
+                    callbacks.error();
+                    return;
+                }
+                // Scanner is running again so restore can wait for the rebooted ECU port to reappear.
+                // The auto path backs up+restores the tune around the flash; the manual path had no live
+                // ECU pre-flash (board was already in the bootloader), so restore the last tune backed up
+                // off an ECU this session. A hard failure here is non-fatal: the flash itself succeeded.
+                // [tag:better_ux_for_flashing]
+                CalibrationsHelper.restorePreviousCalibrationsAfterManualFlash(callbacks, ConnectivityContext.INSTANCE);
+                callbacks.done();
             },
             onJobFinished
         );

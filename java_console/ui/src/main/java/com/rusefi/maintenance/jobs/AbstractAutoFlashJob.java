@@ -1,7 +1,9 @@
 package com.rusefi.maintenance.jobs;
 
+import com.rusefi.AvailableHardware;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
+import com.rusefi.SerialPortType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -76,12 +78,25 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
      * probe) instead of a competing autodetect. [tag:better_ux_for_flashing]
      */
     private String awaitEcuPort(final long timeoutMs) {
-        final long deadline = System.currentTimeMillis() + timeoutMs;
+        final long start = System.currentTimeMillis();
+        final long deadline = start + timeoutMs;
+        // A *successful* flash reboots the board through the bootloader back to firmware, so a brief
+        // bootloader/Unknown flicker while it re-enumerates is normal — give the ECU time to come up
+        // before concluding (only on a *persistent* bootloader) that the flash was interrupted and no ECU
+        // is coming. This avoids bailing before the ECU is ready. [tag:better_ux_for_flashing]
+        final long bootloaderGraceMs = 5_000;
         while (System.currentTimeMillis() < deadline) {
-            for (final PortResult p : connectivityContext.getCurrentHardware().getKnownPorts()) {
+            final AvailableHardware hw = connectivityContext.getCurrentHardware();
+            for (final PortResult p : hw.getKnownPorts()) {
                 if (p.isEcu()) {
                     return p.port;
                 }
+            }
+            final boolean inBootloader = !hw.getKnownPorts(SerialPortType.OpenBlt).isEmpty() || hw.isDfuFound();
+            if (inBootloader && (System.currentTimeMillis() - start) > bootloaderGraceMs) {
+                // Persistently a bootloader (interrupted flash) — stop waiting so we don't hold the job
+                // executor and block the user's next flash attempt.
+                return null;
             }
             try {
                 Thread.sleep(500);

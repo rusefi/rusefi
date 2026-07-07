@@ -30,6 +30,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,11 @@ public class CalibrationsHelper {
     static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss");
     private static final String RUSEFI_FORCE_CALIBRATIONS_RESTORE = System.getenv("RUSEFI_FORCE_CALIBRATIONS_RESTORE");
     private static final int MAX_CALIBRATION_RETRIES = 3;
+
+    /** Most recent tune successfully read+backed up off a live ECU this session. Used to restore the
+     *  tune after a manual OpenBLT flash, where the board is already in the bootloader before flashing
+     *  (no live ECU to read pre-flash like the auto path does). [tag:better_ux_for_flashing] */
+    private static volatile Optional<CalibrationsInfo> lastEcuCalibrations = Optional.empty();
 
     public static class MergeResult {
         public final Optional<CalibrationsInfo> mergedCalibrations;
@@ -118,13 +124,27 @@ public class CalibrationsHelper {
         final UpdateOperationCallbacks callbacks,
         final ConnectivityContext connectivityContext
     ) {
+        return waitForPortAppeared(
+            t -> t == desiredPortType,
+            String.format("Waiting for %s port to appear...", desiredPortType),
+            callbacks,
+            connectivityContext
+        );
+    }
+
+    private static List<PortResult> waitForPortAppeared(
+        final Predicate<SerialPortType> portTypeMatches,
+        final String description,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
         final List<PortResult> foundPorts = new ArrayList<>();
         waitForPredicate(
-            String.format("Waiting for %s port to appear...", desiredPortType),
+            description,
             () -> {
                 final List<PortResult> knownPorts = connectivityContext.getCurrentHardware().getKnownPorts();
                 foundPorts.addAll(knownPorts.stream()
-                    .filter(p -> p.type == desiredPortType)
+                    .filter(p -> portTypeMatches.test(p.type))
                     .collect(Collectors.toList()));
                 if (!foundPorts.isEmpty()) {
                     return true;
@@ -135,7 +155,7 @@ public class CalibrationsHelper {
                 // a re-probe by invalidating non-matching classifications so the scanner's
                 // next cycle re-inspects.
                 for (PortResult p : knownPorts) {
-                    if (p.type != desiredPortType) {
+                    if (!portTypeMatches.test(p.type)) {
                         connectivityContext.getSerialPortScanner().invalidatePort(p.port);
                     }
                 }
@@ -419,6 +439,85 @@ public class CalibrationsHelper {
                 return false;
             }
         }
+    }
+
+    /**
+     * Restore the tune after a <b>manual</b> OpenBLT flash.
+     * <p>
+     * The auto path reads the live ECU and restores it post-flash. The manual path starts with the
+     * board already in the bootloader (no live ECU to read), so it restores {@link #lastEcuCalibrations}
+     * - the last tune backed up off an ECU this session - onto the freshly flashed firmware.
+     * <p>
+     * Must NOT be called on the Swing EDT. [tag:better_ux_for_flashing]
+     */
+    public static void restorePreviousCalibrationsAfterManualFlash(
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
+        AutoupdateUtil.assertNotAwtThread();
+
+        final Optional<CalibrationsInfo> prev = lastEcuCalibrations;
+        if (!prev.isPresent()) {
+            callbacks.logLine("No previously backed-up tune available - ECU will keep its freshly flashed configuration.");
+            return;
+        }
+
+        // A freshly flashed board comes up as either Ecu or EcuWithOpenblt depending on the port
+        // probe timing; accept both.
+        final List<PortResult> ecuPorts = waitForPortAppeared(
+            t -> t == SerialPortType.Ecu || t == SerialPortType.EcuWithOpenblt,
+            "Waiting for ECU to reappear after flash to restore tune...",
+            callbacks,
+            connectivityContext
+        );
+        if (ecuPorts.size() != 1) {
+            callbacks.logLine(String.format(
+                "Cannot restore tune: expected exactly one ECU after flash but found %d.", ecuPorts.size()));
+            return;
+        }
+        final String newEcuPort = ecuPorts.get(0).port;
+
+        final String timestamp = DATE_FORMAT.format(new Date());
+        Optional<CalibrationsInfo> freshCalibrations = Optional.empty();
+        for (int attempt = 1; attempt <= 3 && !freshCalibrations.isPresent(); attempt++) {
+            if (attempt > 1) {
+                callbacks.logLine("Retrying calibration read after flash (attempt " + attempt + ")...");
+                BinaryProtocol.sleep(5_000);
+            }
+            freshCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                newEcuPort, callbacks,
+                getFileNameWithoutExtension(timestamp, "after_manual_flash"), connectivityContext);
+        }
+        if (!freshCalibrations.isPresent()) {
+            callbacks.logLine("Failed to read calibration from ECU after flash - tune not restored, ECU keeps defaults.");
+            return;
+        }
+
+        final MergeResult mergeResult = mergeCalibrationsWithPartialFailure(
+            prev.get().getIniFile(),
+            prev.get().generateMsq(),
+            freshCalibrations.get(),
+            callbacks,
+            emptySet()
+        );
+        if (!mergeResult.failedFields.isEmpty()) {
+            callbacks.logLine("WARNING: " + mergeResult.failedFields.size()
+                + " field(s) could not be migrated; leaving them at firmware defaults.");
+        }
+        if (!mergeResult.mergedCalibrations.isPresent()) {
+            callbacks.logLine("Restored tune matches firmware defaults - nothing to write.");
+            return;
+        }
+        if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
+            newEcuPort,
+            mergeResult.mergedCalibrations.get().getImage().getConfigurationImage(),
+            callbacks,
+            connectivityContext
+        )) {
+            callbacks.logLine("Failed to write restored tune to ECU...");
+            return;
+        }
+        callbacks.logLine("Previous tune restored after manual flash.");
     }
 
     /**
@@ -711,6 +810,9 @@ public class CalibrationsHelper {
                     backupFileName,
                     callbacks
                 )) {
+                    // Remember the last good tune read off a live ECU so a later manual OpenBLT flash
+                    // (board already in the bootloader) can still restore it. [tag:better_ux_for_flashing]
+                    lastEcuCalibrations = calibrationsInfo;
                     return calibrationsInfo;
                 }
             }
