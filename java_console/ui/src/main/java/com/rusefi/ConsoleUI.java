@@ -141,9 +141,11 @@ public class ConsoleUI {
             linkManager.restart();
         };
 
-        ConnectionStatusIcon connectionStatus = new ConnectionStatusIcon(linkManager);
-
         tabbedPane = new TabbedPanel(uiContext);
+
+        // Pass the tabbed pane so the icon can turn purple when a board is in a DFU/OpenBLT bootloader
+        // (DevicePane publishes the "bootloaderMode" client property on it). (#9771)
+        ConnectionStatusIcon connectionStatus = new ConnectionStatusIcon(linkManager, tabbedPane.tabbedPane);
         this.port = port;
 
         // Wizard container and CardLayout for switching between console and wizard modes
@@ -311,7 +313,7 @@ console live data tab is broken #8402
             // Single-session device manager (#9771): the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
             PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
-            DeviceSessionManager deviceSessionManager = new DeviceSessionManager(uiContext, ConnectivityContext.INSTANCE, initialPort);
+            DeviceSessionManager deviceSessionManager = new DeviceSessionManager(ConnectivityContext.INSTANCE, initialPort);
             DevicePane devicePane = new DevicePane(uiContext, deviceSessionManager, tabbedPane.tabbedPane);
             tabbedPane.addTab("Device", devicePane.getContent());
             mainFrame.setUpdateEcuAction(() -> {
