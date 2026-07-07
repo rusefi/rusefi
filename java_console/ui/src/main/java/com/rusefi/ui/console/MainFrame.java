@@ -205,6 +205,8 @@ public class MainFrame {
     private void windowOpenedHandler() {
         setTitle();
         tabbedPane.tabbedPane.addPropertyChangeListener("isUpdating", e -> SwingUtilities.invokeLater(this::setTitle));
+        tabbedPane.tabbedPane.addPropertyChangeListener("bootloaderMode", e -> SwingUtilities.invokeLater(this::setTitle));
+
         // Offer manual update whenever the launch-time silent update did not run - either because
         // the user preference is off or because the bundle hard-disables auto-update (#9775).
         if (!Autoupdate.isAutoUpdateEnabled()) {
@@ -312,8 +314,12 @@ public class MainFrame {
     private void setTitle() {
         String consoleVersion = "Console " + Launcher.CONSOLE_VERSION;
         String frameTitle;
+        Object bootloaderMode = tabbedPane.tabbedPane.getClientProperty("bootloaderMode");
         if (Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating"))) {
             frameTitle = "UPDATING " + consoleVersion;
+        } else if (bootloaderMode != null) {
+            // Board sitting in a bootloader (#9771) — not connected, but not a plain "disconnected" state.
+            frameTitle = bootloaderMode + " BOOTLOADER " + consoleVersion;
         } else if (ConnectionStatusLogic.INSTANCE.isConnected()) {
             BinaryProtocol bp = consoleUI.uiContext.getBinaryProtocol();
             String signature = bp == null ? "not loaded" : bp.signature;
