@@ -127,7 +127,16 @@ public enum SerialPortScanner {
 
             Thread t = new Thread(() -> {
                 log.trace(String.format("Thread `%s` is starting...", threadName));
-                PortResult r = inspectPort(p);
+                PortResult r;
+                try {
+                    r = inspectPort(p);
+                } catch (Throwable e) {
+                    // Never let a probe exception (e.g. jSerialComm SerialPortInvalidPortException on a
+                    // vanishing/re-enumerating port) kill the inspect thread and lose the result — record
+                    // Unknown and move on. [tag:better_ux_for_flashing]
+                    log.warn("inspectPort crashed for " + p + ", treating as Unknown: " + e);
+                    r = new PortResult(p, SerialPortType.Unknown);
+                }
 
                 // Record the result under lock
                 synchronized (resultsLock) {
@@ -317,7 +326,11 @@ public enum SerialPortScanner {
     private static boolean isPortOpenblt(String port) {
         try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
             return OpenbltDetectorStrategy.isPortOpenblt(stream);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            // jSerialComm throws SerialPortInvalidPortException (a RuntimeException), not IOException, when
+            // a port vanishes / re-enumerates mid-probe (hot-plug, reboot to bootloader). Swallow it so the
+            // inspect thread doesn't crash and lose the port result. Next cycle retries. [tag:better_ux_for_flashing]
+            log.info("isPortOpenblt probe failed for " + port + ": " + e);
             return false;
         }
     }
