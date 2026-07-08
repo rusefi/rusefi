@@ -185,7 +185,7 @@ Maintenance / flashing decision logic (`ui` and `shared_io`):
 
 13. **`MaintenanceUtil.confirmFirmwareMatchesBoard` safe branches** — the
     brick guard added this week. Reachable today using the
-    `ConnectedEcuTargetTest` recipe (reflection-reset the static, write
+    `ConnectedEcuTargetTest` recipe (`setConnectedTargetForUnitTest`, write
     `last_connected_board.txt`) with `UpdateOperationCallbacks.DUMMY`:
     matching target ⇒ true without dialog; unparseable firmware name
     (`extractTargetFromFirmwareName` ⇒ null) ⇒ true, no false alarm;
@@ -282,6 +282,16 @@ sites.
 
 ## Conventions for new tests
 
+- **Reflection is prohibited in unit tests.** No `setAccessible`,
+  `getDeclaredField`, `getDeclaredMethod` or any other reflective access to
+  production internals — it silently breaks on rename/refactor and hides the
+  real coupling. Instead, give the production class an explicit test seam:
+  a `...ForUnitTest` / `...ForTests` method (existing precedent:
+  `ConnectedEcuTarget.setConnectedTargetForUnitTest`,
+  `LinkManager.setBinaryProtocolForTests`, `RateCounter.getSizeForUnitTest`),
+  or widen a `private` member to package-private with a comment naming the
+  test (as `CalibrationsHelper.isUiContext`). (`InvocationTargetException`
+  from `SwingUtilities.invokeAndWait` is not reflection — it's fine.)
 - JUnit 5 (`org.junit.jupiter`), one behavior per test, names describing the
   scenario (`unpluggedPortIsEvictedAndReinspectedOnReplug`).
 - No `Thread.sleep`, no wall-clock timing margins, no real serial ports, no

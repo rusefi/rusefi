@@ -166,6 +166,7 @@ Any code reachable from a unit-test build (`unit_tests/` itself, plus firmware s
 ## Coding Style
 
 - Always use curly brackets for `if` statements, even for single-line blocks.
+- Reflection is prohibited in Java unit tests — add an explicit `...ForUnitTest`/`...ForTests` seam on the production class or widen a member to package-private instead (see [Java Connectivity & UI Unit Testing](docs/java-connectivity-ui-unit-testing.md)).
 
 ## Embedded Code Practices
 

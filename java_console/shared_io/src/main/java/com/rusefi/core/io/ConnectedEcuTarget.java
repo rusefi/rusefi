@@ -34,6 +34,15 @@ public class ConnectedEcuTarget {
     }
 
     /**
+     * Reset/override the in-memory live target WITHOUT touching the persisted file. Reflection in unit
+     * tests is prohibited (see docs/java-connectivity-ui-unit-testing.md) — tests use this explicit seam
+     * to isolate themselves from a previously connected ECU.
+     */
+    public static void setConnectedTargetForUnitTest(String ecuTarget) {
+        connectedTarget = ecuTarget;
+    }
+
+    /**
      * @return connected ECU target if known, otherwise the local bundle target.
      */
     public static String effectiveTarget() {

@@ -987,7 +987,8 @@ public class CalibrationsHelper {
         )), failedFields);
     }
 
-    private static boolean isUiContext(final UpdateOperationCallbacks callbacks) {
+    // package-private for CalibrationsHelperContextTest — reflection in unit tests is prohibited
+    static boolean isUiContext(final UpdateOperationCallbacks callbacks) {
         return callbacks != UpdateOperationCallbacks.DUMMY &&
                callbacks != UpdateOperationCallbacks.LOGGER;
     }

@@ -5,8 +5,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Tests for the effectiveTarget fallback chain and live-target tracking [tag:better_ux_for_flashing].
  * The real persistence file lives in ~/.rusEFI/last_connected_board.txt, so tests
- * clean it up between runs and use reflection to reset the in-memory state.
+ * clean it up between runs and reset the in-memory state through the dedicated test seam.
  */
 public class ConnectedEcuTargetTest {
 
@@ -26,9 +24,7 @@ public class ConnectedEcuTargetTest {
     @AfterEach
     void resetState() throws Exception {
         // Clear the in-memory live target
-        Field f = ConnectedEcuTarget.class.getDeclaredField("connectedTarget");
-        f.setAccessible(true);
-        f.set(null, null);
+        ConnectedEcuTarget.setConnectedTargetForUnitTest(null);
         // Ensure the settings dir exists so the tests can write the persisted file (Files.write does
         // not create parent dirs, and ~/.rusEFI may not exist yet in a clean test env).
         Path p = Paths.get(PERSISTED_FILE);

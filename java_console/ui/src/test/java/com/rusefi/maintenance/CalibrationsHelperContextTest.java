@@ -3,44 +3,28 @@ package com.rusefi.maintenance;
 import com.rusefi.io.UpdateOperationCallbacks;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Method;
-
+import static com.rusefi.maintenance.CalibrationsHelper.isUiContext;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalibrationsHelperContextTest {
 
     @Test
-    public void testIsUiContext_withDummyCallbacks() throws Exception {
-        Method method = CalibrationsHelper.class.getDeclaredMethod("isUiContext", UpdateOperationCallbacks.class);
-        method.setAccessible(true);
-
-        boolean result = (boolean) method.invoke(null, UpdateOperationCallbacks.DUMMY);
-        assertFalse(result, "DUMMY callbacks should not be considered UI context");
+    public void testIsUiContext_withDummyCallbacks() {
+        assertFalse(isUiContext(UpdateOperationCallbacks.DUMMY), "DUMMY callbacks should not be considered UI context");
     }
 
     @Test
-    public void testIsUiContext_withLoggerCallbacks() throws Exception {
-        Method method = CalibrationsHelper.class.getDeclaredMethod("isUiContext", UpdateOperationCallbacks.class);
-        method.setAccessible(true);
-
-        boolean result = (boolean) method.invoke(null, UpdateOperationCallbacks.LOGGER);
-        assertFalse(result, "LOGGER callbacks should not be considered UI context");
+    public void testIsUiContext_withLoggerCallbacks() {
+        assertFalse(isUiContext(UpdateOperationCallbacks.LOGGER), "LOGGER callbacks should not be considered UI context");
     }
 
     @Test
-    public void testIsUiContext_withConsoleCallbacks() throws Exception {
-        Method method = CalibrationsHelper.class.getDeclaredMethod("isUiContext", UpdateOperationCallbacks.class);
-        method.setAccessible(true);
-
-        boolean result = (boolean) method.invoke(null, UpdateOperationCallbacks.CONSOLE);
-        assertTrue(result, "CONSOLE callbacks should be considered UI context");
+    public void testIsUiContext_withConsoleCallbacks() {
+        assertTrue(isUiContext(UpdateOperationCallbacks.CONSOLE), "CONSOLE callbacks should be considered UI context");
     }
 
     @Test
-    public void testIsUiContext_withCustomCallbacks() throws Exception {
-        Method method = CalibrationsHelper.class.getDeclaredMethod("isUiContext", UpdateOperationCallbacks.class);
-        method.setAccessible(true);
-
+    public void testIsUiContext_withCustomCallbacks() {
         UpdateOperationCallbacks customCallbacks = new UpdateOperationCallbacks() {
             @Override
             public void log(String message, boolean breakLineOnTextArea, boolean sendToLogger) {
@@ -63,7 +47,6 @@ public class CalibrationsHelperContextTest {
             }
         };
 
-        boolean result = (boolean) method.invoke(null, customCallbacks);
-        assertTrue(result, "Custom callbacks should be considered UI context");
+        assertTrue(isUiContext(customCallbacks), "Custom callbacks should be considered UI context");
     }
 }
