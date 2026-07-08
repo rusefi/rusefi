@@ -1,1 +1,1 @@
-
+#define EFI_LTFT_CONTROL FALSE
