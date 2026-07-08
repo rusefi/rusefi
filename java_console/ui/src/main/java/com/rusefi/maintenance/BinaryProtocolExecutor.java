@@ -100,7 +100,7 @@ public class BinaryProtocolExecutor {
             callbacks.logLine(msg + ": Suspending port scanning...");
             try {
                 long start = System.currentTimeMillis();
-                connectivityContext.getSerialPortScanner().suspend().await(1, TimeUnit.MINUTES);
+                connectivityContext.getPortScanner().suspend().await(1, TimeUnit.MINUTES);
                 callbacks.logLine(String.format("Port scanning is suspended in %dms.", System.currentTimeMillis() - start));
             } catch (final InterruptedException e) {
                 callbacks.logLine("Failed to suspend port scanning in a minute.");
@@ -115,7 +115,7 @@ public class BinaryProtocolExecutor {
             return execute(port, callbacks, bpAction, failureResult, false, msg);
         } finally {
             callbacks.logLine(msg + ": Resuming port scanning...");
-            connectivityContext.getSerialPortScanner().resume();
+            connectivityContext.getPortScanner().resume();
             callbacks.logLine("Port scanning is resumed.");
         }
     }

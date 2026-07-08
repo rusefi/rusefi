@@ -10,13 +10,12 @@ and everything they feed (`StartupFrame`, `DeviceSessionManager`, `DevicePane`,
 **The plumbing is done; the seam is half-open.** `ConnectivityContext` is
 threaded as a constructor/method parameter through ~30 classes, and it is the
 *only* place in main code that touches `SerialPortScanner.INSTANCE` — a single
-choke point, which is exactly the shape you want. As of 2026-07-08 (Phases 1–2
-below) it is a plain class with an injected `SerialPortScanner` and the global
-`INSTANCE` survives only at composition roots. What still blocks real
-substitution: `SerialPortScanner` itself is an `enum` singleton, so the only
-scanner a `ConnectivityContext` can hold is the real hardware-probing one — no
-test can yet hand a consumer fake hardware. Phase 3 (interface + fake) opens
-the seam fully.
+choke point, which is exactly the shape you want. As of 2026-07-08 (Phases 1–3
+below) it is a plain class holding the `PortScanner` interface, the global
+`INSTANCE` survives only at composition roots, and tests substitute a
+hand-written `FakePortScanner` — `DeviceSessionManagerTest` is the first
+automated coverage of the flashing/session state machine. The scanner's own
+internals (Phase 4) remain the last untestable piece.
 
 ## UIContext: the working DI precedent
 
@@ -81,7 +80,7 @@ opened.
 ### Remaining `ConnectivityContext.INSTANCE` call sites
 
 | Site | Classification |
-|---|---|
+| --- | --- |
 | `ConsoleUI.java:157,349,500` | Composition root — acceptable (this is where the object graph is built) |
 | `MassUpdater.java` (`main`) | Composition root — acceptable |
 | `MassUpdater` (auto-flash job creation) | **Leak — fixed 2026-07-08**: now uses a `connectivityContext` field set from the constructor |
@@ -156,29 +155,36 @@ roots. No call sites changed. This alone doesn't unlock fakes (the scanner is
 still an enum) but it removes the "only one instance can ever exist" property
 and is the prerequisite for Phase 3.
 
-### Phase 3 — interface out the scanner (unlocks consumer testing)
+### Phase 3 — interface out the scanner (unlocks consumer testing) — DONE 2026-07-08
 
-Consumers use a narrow surface of `SerialPortScanner`: `getCurrentHardware()`,
-`addListener()`, `suspend()`, `resume()`, `cachePort()`, `invalidatePort()`,
-`stopTimer()`/`restartTimer()`. Extract that as an interface (e.g.
-`PortScanner`, could live in the `connectivity` module), have
-`SerialPortScanner` implement it, and make `ConnectivityContext` hold the
-interface type.
+The narrow surface consumers actually use — `getCurrentHardware()`,
+`addListener()`, `suspend()`, `resume()`, `restartTimer()`, `cachePort()`,
+`invalidatePort()` — is extracted as the `PortScanner` interface
+(`java_console/ui/src/main/java/com/rusefi/PortScanner.java`, which also owns
+the lifted `Listener` type). `SerialPortScanner` implements it;
+`ConnectivityContext` holds and exposes the interface type, and its getter was
+renamed `getSerialPortScanner()` → `getPortScanner()` to match. `stopTimer()`
+stayed on the concrete class — no consumer calls it.
 
-Payoff: a ~40-line hand-written `FakePortScanner` (scripted
-`AvailableHardware` sequences, recorded suspend/resume/cachePort calls) makes
-the currently-untested state machines testable with plain JUnit — no
-mockito-inline needed, consistent with the project's existing fake/sandbox
-style. First tests to write, in value order:
+Test infrastructure delivered with the seam:
 
-1. `DeviceSessionManager` — session-state transitions as hardware
-   appears/disappears/changes type (highest regression risk area,
-   `[tag:better_ux_for_flashing]`).
-2. `ProgramSelector.apply()` — menu contents per `AvailableHardware` shape
-   (DFU present, OpenBLT present, ECU-with-OpenBLT, nothing).
-3. Job suspend/resume choreography — `BinaryProtocolExecutor` and
-   `AbstractAutoFlashJob` call suspend/invalidate/resume in the right order and
-   always resume on failure paths.
+- `FakePortScanner` (ui test scope): scripted `AvailableHardware` changes via
+  `fireHardwareChange()`, recorded suspend/resume/restartTimer/cachePort/
+  invalidatePort calls. Plain hand-written fake — no mockito-inline needed,
+  consistent with the project's existing fake/sandbox style.
+- `DeviceSessionManagerTest`: 9 tests covering the session state machine —
+  bootloader detection (OpenBLT/DFU, precedence, disappearance), initial-port
+  pre-caching, re-cache on reconnect, connection-status-driven
+  CONNECTING/CONNECTED, immediate snapshot delivery to late subscribers.
+  First-ever automated coverage of the `[tag:better_ux_for_flashing]` session
+  logic. (Note: tests drive the global `ConnectionStatusLogic.INSTANCE` and
+  reset it around each test — injecting that singleton is a possible later
+  cleanup.)
+
+Still-open test targets through the same seam: `ProgramSelector.apply()` menu
+contents per hardware shape (its pure decision logic is already covered by
+`ProgramSelectorTest`), and the job suspend/invalidate/resume choreography in
+`BinaryProtocolExecutor` / `AbstractAutoFlashJob` failure paths.
 
 ### Phase 4 — make the scanner itself testable
 

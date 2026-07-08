@@ -302,7 +302,7 @@ public class StartupFrame {
         });
         realHardwarePanel.add(openTunerStudio, "right, wrap");
 
-        connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+        connectivityContext.getPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             // [tag:better_ux_for_flashing]: after a normal handoff the live console (DeviceSessionManager) owns device state —
             // the scanner stays alive but this splash listener must stop mutating the repurposed splash
             // widgets. The offline-tune path (isProceeding && offlineConsoleOpen) still needs the branch below.
@@ -423,7 +423,7 @@ public class StartupFrame {
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
         outerTabs.setSelectedIndex(Math.min(savedTabIndex, outerTabs.getTabCount() - 1));
 
-        connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+        connectivityContext.getPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             // [tag:better_ux_for_flashing]: stop updating splash firmware-tab widgets once the live console has taken over.
             if (isProceeding && !offlineConsoleOpen) {
                 return;
@@ -701,7 +701,7 @@ public class StartupFrame {
         if (offlineConsoleOpen) {
             // [tag:offline_tune] Pre-cache the target so the scanner skips re-inspecting it during the
             // connect read window — otherwise a scan tick could reopen the port mid-read and hang in LOADING.
-            connectivityContext.getSerialPortScanner().cachePort(new PortResult(target.port, target.type));
+            connectivityContext.getPortScanner().cachePort(new PortResult(target.port, target.type));
         }
         connectButton.setEnabled(false);
         connectButton.setText("Connecting...");
@@ -834,7 +834,7 @@ public class StartupFrame {
             // under a different port name — auto-reconnects (handled via onSplashDisconnected re-arming).
             // Do NOT open a second console.
             log.info("onSplashConnected: offline console online on " + target.port + " — caching port, scanner kept alive");
-            connectivityContext.getSerialPortScanner().cachePort(new PortResult(target.port, target.type));
+            connectivityContext.getPortScanner().cachePort(new PortResult(target.port, target.type));
             return;
         }
         connectButton.setText("Connect");
@@ -1020,7 +1020,7 @@ public class StartupFrame {
             // [tag:offline_tune] The offline console is still up. Re-arm scanner-driven auto-connect and
             // let the scanner re-inspect the (now stale) port so the console reconnects when the board
             // comes back — possibly under a different port name (USB re-enumeration).
-            connectivityContext.getSerialPortScanner().invalidatePort(autoConnectedPort.port);
+            connectivityContext.getPortScanner().invalidatePort(autoConnectedPort.port);
             firstTimeAutoConnect = true;
         }
         autoConnectedPort = null;

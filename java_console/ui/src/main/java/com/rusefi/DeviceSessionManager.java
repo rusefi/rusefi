@@ -51,10 +51,10 @@ public class DeviceSessionManager {
         // that our BinaryProtocol connection is actively reading — that race hangs the live read on
         // Windows (mirrors the offline-tune cachePort in StartupFrame#onSplashConnected). [tag:offline_tune]
         if (initialPort != null && !LinkManager.isSpecialNotSerial(initialPort.port)) {
-            connectivityContext.getSerialPortScanner().cachePort(initialPort);
+            connectivityContext.getPortScanner().cachePort(initialPort);
         }
 
-        connectivityContext.getSerialPortScanner().addListener(hardware -> {
+        connectivityContext.getPortScanner().addListener(hardware -> {
             this.currentHardware = hardware;
             recomputeAndBroadcast();
         });
@@ -76,7 +76,7 @@ public class DeviceSessionManager {
                 // Flash finished (success or failure): immediately resume the scanner and force a fresh
                 // scan so the UI can detect the board's post-flash state (OpenBLT/DFU) and offer retry
                 // options. [tag:better_ux_for_flashing]
-                final SerialPortScanner scanner = connectivityContext.getSerialPortScanner();
+                final PortScanner scanner = connectivityContext.getPortScanner();
                 scanner.resume();
                 scanner.restartTimer();
                 refresh();
@@ -125,7 +125,7 @@ public class DeviceSessionManager {
             // re-cache here or the scanner races the live BinaryProtocol read and hangs on Windows. [tag:better_ux_for_flashing]
             final PortResult live = sessionPort;
             if (live != null && !LinkManager.isSpecialNotSerial(live.port)) {
-                connectivityContext.getSerialPortScanner().cachePort(live);
+                connectivityContext.getPortScanner().cachePort(live);
             }
         }
         // Always broadcast: even when the state label is unchanged the hardware snapshot may have

@@ -149,7 +149,7 @@ public class CalibrationsHelper {
                 // port that vanished after an ECU reboot and re-enumeration).
                 for (PortResult p : knownPorts) {
                     if (!osPorts.contains(p.port)) {
-                        connectivityContext.getSerialPortScanner().invalidatePort(p.port);
+                        connectivityContext.getPortScanner().invalidatePort(p.port);
                     }
                 }
                 final List<PortResult> matching = knownPorts.stream()
@@ -167,7 +167,7 @@ public class CalibrationsHelper {
                 // next cycle re-inspects.
                 for (PortResult p : knownPorts) {
                     if (!portTypeMatches.test(p.type)) {
-                        connectivityContext.getSerialPortScanner().invalidatePort(p.port);
+                        connectivityContext.getPortScanner().invalidatePort(p.port);
                     }
                 }
                 return false;

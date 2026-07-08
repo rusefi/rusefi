@@ -2,7 +2,7 @@ package com.rusefi.maintenance.jobs;
 
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
-import com.rusefi.SerialPortScanner;
+import com.rusefi.PortScanner;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.MaintenanceUtil;
@@ -31,7 +31,7 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
                 // ports with XCP every cycle; if a probe overlaps the flash it corrupts the firmware image.
                 // suspend().await(...) blocks until the in-flight scan cycle has finished, mirroring the
                 // auto path's bltUpdateFirmware. [tag:better_ux_for_flashing]
-                final SerialPortScanner scanner = connectivityContext.getSerialPortScanner();
+                final PortScanner scanner = connectivityContext.getPortScanner();
                 try {
                     scanner.suspend().await(30, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {

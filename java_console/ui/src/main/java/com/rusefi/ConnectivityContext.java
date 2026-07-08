@@ -12,17 +12,17 @@ package com.rusefi;
 public class ConnectivityContext {
     public static final ConnectivityContext INSTANCE = new ConnectivityContext(SerialPortScanner.INSTANCE);
 
-    private final SerialPortScanner serialPortScanner;
+    private final PortScanner portScanner;
 
-    public ConnectivityContext(SerialPortScanner serialPortScanner) {
-        this.serialPortScanner = serialPortScanner;
+    public ConnectivityContext(PortScanner portScanner) {
+        this.portScanner = portScanner;
     }
 
-    public SerialPortScanner getSerialPortScanner() {
-        return serialPortScanner;
+    public PortScanner getPortScanner() {
+        return portScanner;
     }
 
     public AvailableHardware getCurrentHardware() {
-        return getSerialPortScanner().getCurrentHardware();
+        return getPortScanner().getCurrentHardware();
     }
 }

@@ -372,7 +372,7 @@ public class ProgramSelector {
         // Suspend the scanner for the entire reboot → detect → flash sequence so it
         // never races with our direct port probes for exclusive COM port access on Windows.
         try {
-            connectivityContext.getSerialPortScanner().suspend().await(30, TimeUnit.SECONDS);
+            connectivityContext.getPortScanner().suspend().await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -381,8 +381,8 @@ public class ProgramSelector {
         } finally {
             // Invalidate the cache so the scanner re-inspects the port (now running new
             // firmware) on its first post-resume scan cycle.
-            connectivityContext.getSerialPortScanner().invalidatePort(ecuPort.port);
-            connectivityContext.getSerialPortScanner().resume();
+            connectivityContext.getPortScanner().invalidatePort(ecuPort.port);
+            connectivityContext.getPortScanner().resume();
         }
     }
 

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  *
  * @author Andrey Belomutskiy
  */
-public enum SerialPortScanner {
+public enum SerialPortScanner implements PortScanner {
     INSTANCE;
 
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
@@ -50,15 +50,17 @@ public enum SerialPortScanner {
     @NotNull
     private AvailableHardware knownHardware = new AvailableHardware(Collections.emptyList(), false, false, false);
 
-    private final List<Listener> listeners = new CopyOnWriteArrayList<>();
+    private final List<PortScanner.Listener> listeners = new CopyOnWriteArrayList<>();
 
+    @Override
     public AvailableHardware getCurrentHardware() {
         synchronized (lock) {
             return knownHardware;
         }
     }
 
-    public void addListener(Listener listener) {
+    @Override
+    public void addListener(PortScanner.Listener listener) {
         boolean shouldStart = listeners.isEmpty();
         listeners.add(listener);
         if (shouldStart)
@@ -332,7 +334,7 @@ public enum SerialPortScanner {
             knownHardware = currentHardware;
         }
         if (isListUpdated) {
-            for (Listener listener : listeners)
+            for (PortScanner.Listener listener : listeners)
                 listener.onChange(currentHardware);
         }
     }
@@ -345,12 +347,9 @@ public enum SerialPortScanner {
         portsScanner.stop();
     }
 
+    @Override
     public void restartTimer() {
         portsScanner.restart();
-    }
-
-    public interface Listener {
-        void onChange(AvailableHardware currentHardware);
     }
 
     private static Optional<CalibrationsInfo> getEcuCalibrations(final String port) {
@@ -385,6 +384,7 @@ public enum SerialPortScanner {
         }
     }
 
+    @Override
     public void resume() {
         portsScanner.resume();
     }
@@ -394,6 +394,7 @@ public enum SerialPortScanner {
      * ensuring they release any open port handles before a flash job proceeds.
      * [tag:better_ux_for_flashing]
      */
+    @Override
     public CountDownLatch suspend() {
         CountDownLatch latch = portsScanner.suspend();
         // Interrupt all in-flight probe threads so they close their port handles
@@ -436,6 +437,7 @@ public enum SerialPortScanner {
      * opening the port and competing with an already-established BinaryProtocol
      * connection on the same serial stream.
      */
+    @Override
     public void cachePort(PortResult port) {
         portCache.put(port);
     }
@@ -446,6 +448,7 @@ public enum SerialPortScanner {
      * the scanner does not keep reporting the port as {@code EcuWithOpenblt}
      * after the ECU has already transitioned to OpenBLT mode.
      */
+    @Override
     public void invalidatePort(String portName) {
         portCache.invalidate(portName);
     }

@@ -154,7 +154,7 @@ public class ConsoleUI {
         // never come back. When the scanner has classified exactly one ECU on a new port and the port we
         // were on has vanished, repoint the LinkManager there. [tag:better_ux_for_flashing]
         if (!isOffline) {
-            ConnectivityContext.INSTANCE.getSerialPortScanner().addListener(currentHardware -> {
+            ConnectivityContext.INSTANCE.getPortScanner().addListener(currentHardware -> {
                 if (linkManager.isDisconnectedByUser()) {
                     return;
                 }

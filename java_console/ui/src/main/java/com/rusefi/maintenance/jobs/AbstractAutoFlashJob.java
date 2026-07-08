@@ -61,10 +61,10 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
         // port. We poll the scanner's snapshot rather than running a competing PortDetector probe: that
         // probe races the scanner for the same port, fails to open it, and falls back to the stale
         // pre-flash port. Do NOT fall back to the pre-flash port — after renumbering it's a ghost. [tag:better_ux_for_flashing]
-        connectivityContext.getSerialPortScanner().resume();
+        connectivityContext.getPortScanner().resume();
         final String detectedPort = awaitEcuPort(TimeUnit.SECONDS.toMillis(60));
         if (detectedPort != null) {
-            connectivityContext.getSerialPortScanner().cachePort(new PortResult(detectedPort, context.getPort().type));
+            connectivityContext.getPortScanner().cachePort(new PortResult(detectedPort, context.getPort().type));
             lm.reconnect(detectedPort);
         } else {
             callbacks.logLine("ECU did not re-appear after flashing — reconnect manually once it enumerates.");

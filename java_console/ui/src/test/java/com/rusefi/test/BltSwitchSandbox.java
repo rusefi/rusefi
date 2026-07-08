@@ -15,11 +15,11 @@ import java.util.List;
  */
 public class BltSwitchSandbox {
     public static void main(String[] args) throws InterruptedException {
-        SerialPortScanner serialPortScanner = ConnectivityContext.INSTANCE.getSerialPortScanner();
+        PortScanner serialPortScanner = ConnectivityContext.INSTANCE.getPortScanner();
 
         ConnectionAndMeta.getProperties().setProperty(UiProperties.SKIP_ECU_TYPE_DETECTION, "true");
 
-        serialPortScanner.addListener(new SerialPortScanner.Listener() {
+        serialPortScanner.addListener(new PortScanner.Listener() {
             @Override
             public void onChange(AvailableHardware currentHardware) {
                 System.out.println(currentHardware);

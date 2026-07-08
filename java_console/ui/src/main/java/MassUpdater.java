@@ -44,7 +44,7 @@ public class MassUpdater {
         final AtomicBoolean previousDfuState = new AtomicBoolean();
         AtomicBoolean isUsingDfu = new AtomicBoolean(); // it seems like DFU detection is not 100% reliable? a work-around to avoid double-DFU
 
-        connectivityContext.getSerialPortScanner().addListener(currentHardware -> {
+        connectivityContext.getPortScanner().addListener(currentHardware -> {
 
             if (!isUsingDfu.get() && currentHardware.isDfuFound() != previousDfuState.get()) {
                 mainStatus.getContent().logLine(currentHardware.isDfuFound() ? "I see a DFU device!" : "No DFU...");
