@@ -143,7 +143,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(CanCategory p_category, uint32_t p_id, bool p_isExtended, size_t canChannel) : CanTxMessage(p_category, p_id, sizeof(TData), canChannel, p_isExtended) { }
+	explicit CanTxTyped(CanCategory p_category, uint32_t p_id, bool p_isExtended, size_t p_canChannel) : CanTxMessage(p_category, p_id, sizeof(TData), p_canChannel, p_isExtended) { }
 
 #if HAS_CAN_FRAME
 	/**
@@ -164,9 +164,9 @@ public:
 };
 
 template <typename TData>
-void transmitStruct(CanCategory category, uint32_t id, bool isExtended, int canChannel)
+void transmitStruct(CanCategory category, uint32_t id, bool isExtended, int p_canChannel)
 {
-	CanTxTyped<TData> frame(category, id, isExtended, canChannel);
+	CanTxTyped<TData> frame(category, id, isExtended, p_canChannel);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());
