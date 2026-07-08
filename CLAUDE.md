@@ -103,6 +103,7 @@ For detailed technical documentation intended for AI assistants, see:
 - [Fueling System](docs/AI/fueling_system.md) - Mass-based fueling pipeline (17 stages).
 - [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
 - [Engine Protection](docs/AI/protection_system.md) - LimpManager and cut logic.
+- [Sensor Framework](docs/AI/sensors_system.md) - Sensor registry, conversion pipeline, redundancy and mocking.
 
 ### Key Concepts
 
