@@ -198,7 +198,9 @@ public:
 #if EFI_LTFT_CONTROL
         LongTermFuelTrim,
 #endif
+#if EFI_ENGINE_CONTROL
         ShortTermFuelTrim,
+#endif // EFI_ENGINE_CONTROL
 #if EFI_MISFIRE_DETECTION
         Mockable<MisfireController>,
 #endif // EFI_MISFIRE_DETECTION

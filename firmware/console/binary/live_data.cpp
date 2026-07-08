@@ -296,7 +296,7 @@ const long_term_fuel_trim_state_s* getLiveData(size_t) {
 
 template<>
 const short_term_fuel_trim_state_s* getLiveData(size_t) {
-#if EFI_LTFT_CONTROL
+#if EFI_ENGINE_CONTROL
 	return &engine->module<ShortTermFuelTrim>().unmock();
 #else
 	return nullptr;

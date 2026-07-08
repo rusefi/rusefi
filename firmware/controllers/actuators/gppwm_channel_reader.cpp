@@ -91,7 +91,11 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 	case GPPWM_FuelPressure:
 		return Sensor::get(SensorType::FuelPressureInjector);
 	case GPPWM_ThrottleRatio:
+#if EFI_ENGINE_CONTROL
 		return getThrottlePressureRatio(Sensor::getOrZero(SensorType::Map));
+#else
+		return 0;
+#endif // EFI_ENGINE_CONTROL
 	}
 	return unexpected;
 }
