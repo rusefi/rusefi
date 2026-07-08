@@ -1,0 +1,6 @@
+// Headless connection-controller layer: port scanning, device discovery and
+// ECU session tracking. Sits between the transport layer (:ecu_io) and Swing
+// code (:ui) — code in this module must not depend on javax.swing/java.awt.
+dependencies {
+    api project(':ecu_io')
+}

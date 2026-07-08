@@ -23,6 +23,7 @@
 | `:inifile` | inifile | 67 | TS ini / project file parsing (`com.opensr5.ini`) | logging-api, version |
 | `:models` | models | 71 | Grab-bag: math/DSP, stream writers, generated config, sensors | inifile, logging, shared_io |
 | `:ecu_io` | **io** | 207 | Binary protocol, serial/TCP/CAN transports, OpenBLT, autodetect | models, msq-file, peak-can-basic |
+| `:connectivity` | connectivity | 8 | Headless connection-controller layer: port scanning results, device discovery helpers (no Swing allowed) | ecu_io |
 | `:autoupdate` | autoupdate | 8 | Self-updater (`rusefi_autoupdate.jar`) | core_ui |
 | `:shared_ui` | shared_ui | 10 | TS-plugin-shared UI bits | core_ui, ecu_io, models, config_definition_base |
 | `:trigger-ui` | trigger-ui | 9 | Trigger wheel visualization | core_ui, shared_ui, models, trigger-image, autoupdate |
@@ -118,6 +119,8 @@ Note that `java_console` vs `java_tools` is **not a layering boundary**: tools d
 14. Align project names with directories: either rename the dirs (`io`→`ecu_io`, `configuration_definition*`→`config_definition*`, `luaformatter_module` merge) or the project ids, and pick one naming convention (Gradle's own docs prefer dashes).
 
 ### Longer term (directional)
+
+> **Progress (July 2026):** a `:connectivity` module now exists between `:ecu_io` and `:ui` as the home for the headless connection-controller layer. First move-only batch: `SerialPortType`, `PortResult`, `AvailableHardware`, `SerialPortCache`, `UiLinkManagerHelper` (from `:ui`) and `ScannerHelper`, `OpenbltDetectorStrategy`, `PlainSerialPortScanner` (from `:ecu_io`). Still in `:ui` pending refactoring: `SerialPortScanner` (blocked by its `com.rusefi.maintenance` flasher imports), `ConnectivityContext`, `DeviceSessionManager` (blocked by Swing-bound `SingleAsyncJobExecutor`).
 
 15. **Resolve split packages module by module** — this is the single highest-leverage cleanup because it unlocks everything else. Target: each package has exactly one owning module. Start with the worst offenders: `com.rusefi.core`, `com.rusefi.io`, `com.rusefi.util`, `com.opensr5.*`.
 16. **Extract the tune-migration domain** (~100 classes currently split between `io` and `ui`) into its own headless module — it is business logic, testable without Swing, and the biggest coherent cluster inside `ui`.

@@ -56,6 +56,8 @@ include ':shared_ui'
 project(':shared_ui').projectDir = new File(rootRelativePath + 'java_console/shared_ui')
 include ':ecu_io'
 project(':ecu_io').projectDir = new File(rootRelativePath + 'java_console/io')
+include ':connectivity'
+project(':connectivity').projectDir = new File(rootRelativePath + 'java_console/connectivity')
 include ':logging'
 project(':logging').projectDir = new File(rootRelativePath + 'java_console/logging')
 include ':inifile'
