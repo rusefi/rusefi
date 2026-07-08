@@ -88,6 +88,12 @@ public class ProgramSelector {
         if (selectedPort != null && selectedPort.type == OpenBlt) {
             return OPENBLT_MANUAL;
         }
+        // A DFU device is a board already sitting in the STM32 built-in bootloader: it has no running
+        // firmware to reboot and never auto-connects, so flash it directly via DFU_MANUAL rather than
+        // mislabeling the button as a (dead) OpenBLT action. [tag:better_ux_for_flashing]
+        if (selectedPort != null && selectedPort.type == SerialPortType.Dfu) {
+            return DFU_MANUAL;
+        }
         // OPENBLT_AUTO reboots a *live* ECU into the bootloader; with no live connection there is nothing
         // to reboot and awaitBinaryProtocol would just time out. So when offline — including a board
         // sitting in a bootloader whose detection is momentarily flickering to Unknown — flash manually
@@ -99,8 +105,14 @@ public class ProgramSelector {
     }
 
     private void refreshMainButtonText() {
-        final boolean isOpenBltBoard = mainButtonModeFor(resolveFlashPort()) == OPENBLT_MANUAL;
-        splitButton.setText(isOpenBltBoard ? OPENBLT_MANUAL.displayText : "Update Firmware");
+        final UpdateMode mode = mainButtonModeFor(resolveFlashPort());
+        if (mode == OPENBLT_MANUAL) {
+            splitButton.setText(OPENBLT_MANUAL.displayText);
+        } else if (mode == DFU_MANUAL) {
+            splitButton.setText(DFU_MANUAL.displayText);
+        } else {
+            splitButton.setText("Update Firmware");
+        }
     }
 
     private boolean isLiveConnection() {
