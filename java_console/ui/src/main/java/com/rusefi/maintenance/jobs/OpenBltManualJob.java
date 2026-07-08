@@ -23,7 +23,7 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         JobHelper.doJob(
             () -> {
-                if (!MaintenanceUtil.ensureFirmwareForConnectedTarget(callbacks)) {
+                if (!MaintenanceUtil.ensureFirmwareForConnectedTarget(callbacks, connectivityContext.getConnectedEcuTarget())) {
                     callbacks.error();
                     return;
                 }
@@ -39,7 +39,8 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
                 }
                 final boolean flashed;
                 try {
-                    flashed = ProgramSelector.flashOpenbltSerial(context.getParent(), context.getPort().port, callbacks);
+                    flashed = ProgramSelector.flashOpenbltSerial(context.getParent(), context.getPort().port, callbacks,
+                        connectivityContext.getConnectedEcuTarget());
                 } finally {
                     // Board reboots to fresh firmware on a possibly-different port — re-inspect it.
                     scanner.invalidatePort(context.getPort().port);

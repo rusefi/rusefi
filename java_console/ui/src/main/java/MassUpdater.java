@@ -75,7 +75,7 @@ public class MassUpdater {
                         public void clear() {}
                     };
                     SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
-                        new DfuManualJob(),
+                        new DfuManualJob(connectivityContext.getConnectedEcuTarget()),
                         releaseSemaphore,
                         () -> {}
                     ));
@@ -157,7 +157,7 @@ public class MassUpdater {
      */
     private void runAutoJob(final PortResult openPort) {
         try {
-            final LinkManager lm = new LinkManager()
+            final LinkManager lm = new LinkManager(connectivityContext.getConnectedEcuTarget())
                 .setNeedPullText(false)
                 .setNeedPullLiveData(true);
             final CountDownLatch connected = new CountDownLatch(1);

@@ -181,13 +181,13 @@ public class ProgramSelector {
                 job = new DfuAutoJob(selectedPort, parent, connectivityContext, linkManager);
                 break;
             case DFU_MANUAL:
-                job = new DfuManualJob();
+                job = new DfuManualJob(connectivityContext.getConnectedEcuTarget());
                 break;
             case INSTALL_OPENBLT:
-                job = new InstallOpenBltJob();
+                job = new InstallOpenBltJob(connectivityContext.getConnectedEcuTarget());
                 break;
             case ST_LINK:
-                job = new StLinkJob(parent);
+                job = new StLinkJob(parent, connectivityContext.getConnectedEcuTarget());
                 break;
             case DFU_SWITCH:
                 job = new DfuSwitchJob(selectedPort, parent);
@@ -422,7 +422,7 @@ public class ProgramSelector {
 
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
 
-        return flashOpenbltSerial(parent, openbltPort, callbacks);
+        return flashOpenbltSerial(parent, openbltPort, callbacks, connectivityContext.getConnectedEcuTarget());
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
@@ -454,7 +454,8 @@ public class ProgramSelector {
             "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static boolean flashOpenbltSerial(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
+    public static boolean flashOpenbltSerial(JComponent parent, String port, UpdateOperationCallbacks callbacks,
+                                             com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
         if (FileLog.is32bitJava()) {
             showError32bitJava(parent);
             return false;
@@ -462,13 +463,13 @@ public class ProgramSelector {
 
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
-        String fileName = FindFileHelper.findSrecFileForConnectedBoard();
+        String fileName = FindFileHelper.findSrecFileForConnectedBoard(connectedEcuTarget);
         if (fileName == null) {
             callbacks.logLine(".srec image file not found");
             return false;
         }
         // refuse to silently flash firmware built for a different board (e.g. a dev-build fallback or a naming quirk). [tag:better_ux_for_flashing]
-        if (!MaintenanceUtil.confirmFirmwareMatchesBoard(fileName, callbacks)) {
+        if (!MaintenanceUtil.confirmFirmwareMatchesBoard(fileName, callbacks, connectedEcuTarget)) {
             callbacks.logLine("Firmware update aborted — firmware/board mismatch.");
             return false;
         }
@@ -504,7 +505,8 @@ public class ProgramSelector {
         JPopupMenu popupMenu = new JPopupMenu();
 
         if (FileLog.isWindows()) {
-            boolean requireBlt = FindFileHelper.isObfuscated() || isForeignBoardOnUniversalBundle();
+            boolean requireBlt = FindFileHelper.isObfuscated()
+                || isForeignBoardOnUniversalBundle(connectivityContext.getConnectedEcuTarget());
 
             if (!requireBlt) {
                 if (hasSerialPorts) {
@@ -555,9 +557,9 @@ public class ProgramSelector {
      * bundle target if none) — so a board sitting in a bootloader after a restart is still treated as its
      * real (foreign) board here; the flash guard confirms that unverified target before programming.
      */
-    private static boolean isForeignBoardOnUniversalBundle() {
+    private static boolean isForeignBoardOnUniversalBundle(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
         String bundleTarget = com.rusefi.core.io.BundleUtil.getBundleTarget();
-        String connected = com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget();
+        String connected = connectedEcuTarget.effectiveTarget();
         return bundleTarget != null && connected != null && !bundleTarget.equalsIgnoreCase(connected);
     }
 

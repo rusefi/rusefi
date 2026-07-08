@@ -31,6 +31,14 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     // A freshly rebooted or reconnected ECU may not respond on the first try.
     private static final int DETECT_MAX_ATTEMPTS = 3;
 
+    // The DFU driver-state query differs between H7 and F4/F7 boards, so the probe needs the
+    // connected-board identity (shared with ConnectivityContext, see ProductionConnectivity).
+    private final com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget;
+
+    public EcuHardwareProbes(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
+        this.connectedEcuTarget = connectedEcuTarget;
+    }
+
     @Override
     public Set<String> listSerialPorts() {
         return LinkManager.getCommPorts();
@@ -58,7 +66,7 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
 
     @Override
     public boolean isDfuDeviceConnected() {
-        return DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
+        return DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY, connectedEcuTarget);
     }
 
     @Override

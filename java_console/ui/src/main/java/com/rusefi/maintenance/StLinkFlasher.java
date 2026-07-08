@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.Launcher;
 import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.io.ConnectedEcuTarget;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.jobs.JobHelper;
 import org.jetbrains.annotations.NotNull;
@@ -30,15 +31,16 @@ public class StLinkFlasher {
     public static final String DONE = "DONE!";
     private static final String WMIC_STLINK_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%STLink%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";
 
-    public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+    public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks, final Runnable onJobFinished,
+                                        final ConnectedEcuTarget connectedEcuTarget) {
         ExecHelper.submitAction(
-            () -> JobHelper.doJob(() -> doFlashFirmware(callbacks, fileName), onJobFinished),
+            () -> JobHelper.doJob(() -> doFlashFirmware(callbacks, fileName, connectedEcuTarget), onJobFinished),
             StLinkFlasher.class + " extProcessThread"
         );
     }
 
-    public static String getOpenocdCommand() {
-        String cfg = getHardwareKind().getOpenOcdName();
+    public static String getOpenocdCommand(ConnectedEcuTarget connectedEcuTarget) {
+        String cfg = getHardwareKind(connectedEcuTarget).getOpenOcdName();
         return OPENOCD_EXE + " -f openocd/" + cfg;
     }
 
@@ -48,7 +50,7 @@ public class StLinkFlasher {
                 OPENOCD_EXE, wnd);
     }
 
-    private static void doFlashFirmware(UpdateOperationCallbacks wnd, String fileName) {
+    private static void doFlashFirmware(UpdateOperationCallbacks wnd, String fileName, ConnectedEcuTarget connectedEcuTarget) {
         if (!new File(fileName).exists()) {
             wnd.logLine(fileName + " not found, cannot proceed !!!");
             wnd.error();
@@ -56,7 +58,7 @@ public class StLinkFlasher {
         }
       String error;
       try {
-        error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
+        error = executeOpenOCDCommand(getOpenocdCommand(connectedEcuTarget) + " -c \"program " +
                 fileName +
                 " verify reset exit 0x08000000\"", wnd);
       } catch (FileNotFoundException e) {
@@ -82,9 +84,9 @@ public class StLinkFlasher {
     }
 
     @NotNull
-    public static HwPlatform getHardwareKind() {
+    public static HwPlatform getHardwareKind(ConnectedEcuTarget connectedEcuTarget) {
         // #9714: prefer the connected ECU's target so a universal bundle picks the right MCU platform
-        String bundle = com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget();
+        String bundle = connectedEcuTarget.effectiveTarget();
         if (bundle.contains("h7"))
             return HwPlatform.H7;
         if (bundle.contains("f7"))

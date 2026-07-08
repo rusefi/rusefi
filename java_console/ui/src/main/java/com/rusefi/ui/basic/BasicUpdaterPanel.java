@@ -185,7 +185,7 @@ never used?
             return;
         }
         if (currentHardware.isDfuFound()) {
-            setUpdateFirmwareJob(new DfuManualJob());
+            setUpdateFirmwareJob(new DfuManualJob(connectivityContext.getConnectedEcuTarget()));
             return;
         }
         String message;

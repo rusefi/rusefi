@@ -70,15 +70,16 @@ public class MaintenanceUtil {
      *
      * @return true if it is safe to proceed with flashing
      */
-    public static boolean ensureFirmwareForConnectedTarget(final UpdateOperationCallbacks callbacks) {
+    public static boolean ensureFirmwareForConnectedTarget(final UpdateOperationCallbacks callbacks,
+                                                           final ConnectedEcuTarget connectedEcuTarget) {
         final String bundleTarget = BundleUtil.getBundleTarget();
-        final String ecuTarget = ConnectedEcuTarget.effectiveTarget();
+        final String ecuTarget = connectedEcuTarget.effectiveTarget();
         // A board in a bootloader cannot identify itself. If there is no live signature this session the
         // target is only a guess (persisted last board, or the bundle default) — confirm before flashing
         // so we never program a possibly-swapped board silently. Independent of foreign-vs-matching: even
         // flashing the bundle's own firmware onto an unverified board deserves a check. Live-verified
         // flashes skip this. [tag:better_ux_for_flashing]
-        if (!ConnectedEcuTarget.isLiveTargetKnown() && !confirmUnverifiedTarget(ecuTarget)) {
+        if (!connectedEcuTarget.isLiveTargetKnown() && !confirmUnverifiedTarget(ecuTarget)) {
             callbacks.logLine("Firmware update cancelled — unverified board target \"" + ecuTarget + "\".");
             return false;
         }
@@ -126,9 +127,10 @@ public class MaintenanceUtil {
      *
      * @return true if it is safe to proceed with flashing {@code firmwareFile}
      */
-    public static boolean confirmFirmwareMatchesBoard(final String firmwareFile, final UpdateOperationCallbacks callbacks) {
+    public static boolean confirmFirmwareMatchesBoard(final String firmwareFile, final UpdateOperationCallbacks callbacks,
+                                                      final ConnectedEcuTarget connectedEcuTarget) {
         final String fileTarget = FindFileHelper.extractTargetFromFirmwareName(firmwareFile);
-        final String boardTarget = ConnectedEcuTarget.effectiveTarget();
+        final String boardTarget = connectedEcuTarget.effectiveTarget();
         if (fileTarget == null || boardTarget == null || fileTarget.equalsIgnoreCase(boardTarget)) {
             return true;
         }

@@ -64,7 +64,17 @@ public class LinkManager implements Closeable {
     private boolean isDisconnectedByUser;
     private boolean notifyGlobalStatusOnClose = true;
 
+    // The board identity this link records at connect time. Defaults to a private instance (probe/tool
+    // LinkManagers); production consoles share ConnectivityContext's instance so flashing decisions see
+    // the live-connected board. [tag:better_ux_for_flashing]
+    private final com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget;
+
     public LinkManager() {
+        this(new com.rusefi.core.io.ConnectedEcuTarget());
+    }
+
+    public LinkManager(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
+        this.connectedEcuTarget = connectedEcuTarget;
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
             @Override
             public void beforeLine(String fullLine) {
@@ -73,6 +83,11 @@ public class LinkManager implements Closeable {
             }
         });
         commandQueue = new CommandQueue(this);
+    }
+
+    @NotNull
+    public com.rusefi.core.io.ConnectedEcuTarget getConnectedEcuTarget() {
+        return connectedEcuTarget;
     }
 
     @NotNull

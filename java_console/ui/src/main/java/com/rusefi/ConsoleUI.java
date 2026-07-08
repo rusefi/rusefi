@@ -81,7 +81,7 @@ public class ConsoleUI {
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public ConsoleUI(String port, SerialPortType serialPortType, ConnectivityContext connectivityContext) {
-        this(new UIContext(), port, serialPortType, false, null, null, null, connectivityContext);
+        this(new UIContext(connectivityContext.getConnectedEcuTarget()), port, serialPortType, false, null, null, null, connectivityContext);
     }
 
     public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, ConnectivityContext connectivityContext) {
@@ -231,7 +231,7 @@ public class ConsoleUI {
         setFrameIcon(frame);
         log.info("Console " + UiVersion.CONSOLE_VERSION);
 
-        log.info("Hardware: " + StLinkFlasher.getHardwareKind());
+        log.info("Hardware: " + StLinkFlasher.getHardwareKind(connectivityContext.getConnectedEcuTarget()));
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
@@ -500,7 +500,7 @@ console live data tab is broken #8402
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                StartupFrame startupFrame = new StartupFrame(connectivityContext, new UIContext());
+                StartupFrame startupFrame = new StartupFrame(connectivityContext, new UIContext(connectivityContext.getConnectedEcuTarget()));
                 if (bannerCallback != null)
                     bannerCallback.set(message -> startupFrame.restartConsole());
                 startupFrame.showUi();

@@ -55,8 +55,11 @@ rather than invent new machinery.
 
 4. **Resettable globals are tolerated, bounded, and reset around every test.**
    `DeviceSessionManagerTest` mutates `ConnectionStatusLogic.INSTANCE` and
-   restores it in `@BeforeEach`/`@AfterEach`; `ConnectedEcuTargetTest` resets the
-   persisted-target static and writes `last_connected_board.txt` under the
+   restores it in `@BeforeEach`/`@AfterEach`; `ConnectedEcuTargetTest` constructs
+   a fresh `ConnectedEcuTarget` per test (the static holder was eliminated
+   2026-07-08 — the process-wide instance now lives in `ConnectivityContext`,
+   shared with the console `LinkManager` so `BinaryProtocol` can record the
+   board at connect time) and writes `last_connected_board.txt` under the
    settings dir. This is acceptable (it serializes tests) but do not spread it —
    injecting a connection-status provider is a known later cleanup.
 
@@ -185,8 +188,9 @@ Maintenance / flashing decision logic (`ui` and `shared_io`):
 
 13. **`MaintenanceUtil.confirmFirmwareMatchesBoard` safe branches** — the
     brick guard added this week. Reachable today using the
-    `ConnectedEcuTargetTest` recipe (`setConnectedTargetForUnitTest`, write
-    `last_connected_board.txt`) with `UpdateOperationCallbacks.DUMMY`:
+    `ConnectedEcuTargetTest` recipe (construct a `ConnectedEcuTarget`, use
+    `setConnectedTargetForUnitTest`, write `last_connected_board.txt`) and pass
+    it with `UpdateOperationCallbacks.DUMMY`:
     matching target ⇒ true without dialog; unparseable firmware name
     (`extractTargetFromFirmwareName` ⇒ null) ⇒ true, no false alarm;
     compatible board via `BoardCompatibility` allowlist ⇒ true; no target
@@ -298,7 +302,7 @@ sites.
   network, no display. If a test wants any of those, the production code needs
   a seam (Tier 3) or the scenario belongs in a `*Sandbox`.
 - Reset any global you touch (`ConnectionStatusLogic.INSTANCE`,
-  `ConnectedEcuTarget` statics, `FindFileHelper.INPUT_FILES_PATH`) in
+  `FindFileHelper.INPUT_FILES_PATH`, the `last_connected_board.txt` file) in
   `@BeforeEach`/`@AfterEach`, restoring the prior value.
 - Prefer extending `FakePortScanner`/`FakeProbes` over new mocks; if a fake
   grows useful across suites, promote it out of the test class (as

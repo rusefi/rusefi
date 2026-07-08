@@ -17,7 +17,20 @@ import java.util.function.Consumer;
  * key frontend app state singleton
  */
 public class UIContext {
-    private final LinkManager linkManager = new LinkManager();
+    private final LinkManager linkManager;
+
+    /** Tests and offline tools: the LinkManager records the board identity into its own private instance. */
+    public UIContext() {
+        this.linkManager = new LinkManager();
+    }
+
+    /**
+     * Production consoles: share the process-wide {@code ConnectivityContext} board identity so the
+     * target recorded at connect time is visible to offline flashing decisions.
+     */
+    public UIContext(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
+        this.linkManager = new LinkManager(connectedEcuTarget);
+    }
 
     public SensorLogger sensorLogger = new SensorLogger(this);
 

@@ -215,7 +215,7 @@ public class BinaryProtocol {
         RusEfiSignature ecuSignature = SignatureHelper.parse(signature);
         if (ecuSignature != null) {
             // remember the connected board so universal bundles can pick the right firmware / hardware kind
-            com.rusefi.core.io.ConnectedEcuTarget.set(ecuSignature.getBundleTarget());
+            linkManager.getConnectedEcuTarget().set(ecuSignature.getBundleTarget());
         }
         String bundleTarget = BundleUtil.getBundleTarget();
         if (ecuSignature != null && bundleTarget != null && !"unknown".equalsIgnoreCase(bundleTarget)) {

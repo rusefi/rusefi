@@ -21,14 +21,19 @@ import static com.devexperts.logging.Logging.getLogging;
  * <p>
  * The target is also persisted to disk (#9714) so the separate autoupdate process can pre-fetch the
  * latest firmware for the board you actually use, making a later "Update Firmware" instant.
+ * <p>
+ * This is a plain instance class, not a static holder: the process-wide production instance is owned
+ * by {@code ConnectivityContext} (wired at {@code ProductionConnectivity}) and shared with each
+ * production {@code LinkManager} so {@code BinaryProtocol} can record the target at connect time.
+ * Tests construct their own instance. Only the cross-process persistence file stays static.
  */
 public class ConnectedEcuTarget {
     private static final Logging log = getLogging(ConnectedEcuTarget.class);
     private static final String LAST_BOARD_FILE = FileUtil.RUSEFI_SETTINGS_FOLDER + "last_connected_board.txt";
 
-    private static volatile String connectedTarget;
+    private volatile String connectedTarget;
 
-    public static void set(String ecuTarget) {
+    public void set(String ecuTarget) {
         connectedTarget = ecuTarget;
         persist(ecuTarget);
     }
@@ -36,16 +41,16 @@ public class ConnectedEcuTarget {
     /**
      * Reset/override the in-memory live target WITHOUT touching the persisted file. Reflection in unit
      * tests is prohibited (see docs/java-connectivity-ui-unit-testing.md) — tests use this explicit seam
-     * to isolate themselves from a previously connected ECU.
+     * to simulate a live-connected board without disk side effects.
      */
-    public static void setConnectedTargetForUnitTest(String ecuTarget) {
+    public void setConnectedTargetForUnitTest(String ecuTarget) {
         connectedTarget = ecuTarget;
     }
 
     /**
      * @return connected ECU target if known, otherwise the local bundle target.
      */
-    public static String effectiveTarget() {
+    public String effectiveTarget() {
         String t = connectedTarget;
         if (t != null) {
             return t;
@@ -64,7 +69,7 @@ public class ConnectedEcuTarget {
      * that flash firmware must treat an unverified target as unconfirmed (a board in a bootloader cannot
      * identify itself, and the user may have swapped hardware).
      */
-    public static boolean isLiveTargetKnown() {
+    public boolean isLiveTargetKnown() {
         return connectedTarget != null;
     }
 
@@ -86,6 +91,7 @@ public class ConnectedEcuTarget {
 
     /**
      * @return the target of the most recently connected ECU across sessions, or null if none recorded.
+     * Static on purpose: the autoupdate process reads this file without any connection context.
      */
     public static String readPersisted() {
         try {

@@ -12,13 +12,26 @@ package com.rusefi;
  */
 public class ConnectivityContext {
     private final PortScanner portScanner;
+    // Identity of the board this process talks to: written at connect time (via the LinkManager sharing
+    // this instance, see ProductionConnectivity), read by flashing/hardware-kind decisions. Owned here
+    // because those decisions run in offline flows where no live connection exists to ask.
+    private final com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget;
 
     public ConnectivityContext(PortScanner portScanner) {
+        this(portScanner, new com.rusefi.core.io.ConnectedEcuTarget());
+    }
+
+    public ConnectivityContext(PortScanner portScanner, com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
         this.portScanner = portScanner;
+        this.connectedEcuTarget = connectedEcuTarget;
     }
 
     public PortScanner getPortScanner() {
         return portScanner;
+    }
+
+    public com.rusefi.core.io.ConnectedEcuTarget getConnectedEcuTarget() {
+        return connectedEcuTarget;
     }
 
     public AvailableHardware getCurrentHardware() {

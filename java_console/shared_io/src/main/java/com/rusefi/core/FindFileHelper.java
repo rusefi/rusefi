@@ -179,14 +179,14 @@ public class FindFileHelper {
      * single-file pick for dev builds / single-board bundles. This is the flash-time entry point that
      * prevents grabbing another board's leftover image from a shared bundle dir. [tag:better_ux_for_flashing]
      */
-    public static String findSrecFileForConnectedBoard() {
-        final String match = findSrecFileForTarget(com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget());
+    public static String findSrecFileForConnectedBoard(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
+        final String match = findSrecFileForTarget(connectedEcuTarget.effectiveTarget());
         return match != null ? match : findSrecFile();
     }
 
     /** @see #findSrecFileForConnectedBoard — same, for the {@code .bin} DFU image. */
-    public static String findFirmwareFileForConnectedBoard() {
-        final String match = findFirmwareFileForTarget(com.rusefi.core.io.ConnectedEcuTarget.effectiveTarget());
+    public static String findFirmwareFileForConnectedBoard(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
+        final String match = findFirmwareFileForTarget(connectedEcuTarget.effectiveTarget());
         return match != null ? match : findFirmwareFile();
     }
 
