@@ -103,4 +103,39 @@ public class ProgramSelectorTest {
         PortResult resolved = resolveFlashPort(null, false, Collections.singletonList(dfu), NO_PORTS);
         assertEquals(DFU_MANUAL, mainButtonModeFor(resolved, false));
     }
+
+    @Test
+    public void staleEcuSelectionIsOverriddenByRenumberedBootloaderPort() {
+        // Interrupted flash / OpenBLT reboot renumbering: the combo still shows the old ECU port while
+        // the board now sits in the bootloader under a new port name — resolve to the freshly detected
+        // bootloader, not the stale selection, so recovery flashes the right port.
+        PortResult staleEcu = new PortResult("COM_OLD", SerialPortType.Ecu);
+        PortResult renumberedBlt = new PortResult("COM_NEW", SerialPortType.OpenBlt);
+        PortResult resolved = resolveFlashPort(staleEcu, false, NO_PORTS, Collections.singletonList(renumberedBlt));
+        assertSame(renumberedBlt, resolved);
+        assertEquals(OPENBLT_MANUAL, mainButtonModeFor(resolved, false));
+    }
+
+    @Test
+    public void staleEcuSelectionWithBothBootloadersDetectedPrefersDfu() {
+        // Corrupted-board recovery: DFU is the deeper recovery path, it must win over OpenBLT when a
+        // stale (dead) ECU selection is being overridden.
+        PortResult staleEcu = new PortResult("COM_OLD", SerialPortType.Ecu);
+        PortResult dfu = port(SerialPortType.Dfu);
+        PortResult blt = port(SerialPortType.OpenBlt);
+        PortResult resolved = resolveFlashPort(staleEcu, false,
+            Collections.singletonList(dfu), Collections.singletonList(blt));
+        assertSame(dfu, resolved);
+        assertEquals(DFU_MANUAL, mainButtonModeFor(resolved, false));
+    }
+
+    @Test
+    public void bootloaderSelectionWinsEvenWithLiveConnection() {
+        // A second board sitting in a bootloader while another ECU is live-connected: the explicit
+        // bootloader selection must be flashed manually, not rerouted through the live AUTO path.
+        PortResult blt = port(SerialPortType.OpenBlt);
+        PortResult resolved = resolveFlashPort(blt, true, NO_PORTS, NO_PORTS);
+        assertSame(blt, resolved);
+        assertEquals(OPENBLT_MANUAL, mainButtonModeFor(resolved, true));
+    }
 }

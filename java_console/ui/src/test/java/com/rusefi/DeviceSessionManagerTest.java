@@ -131,6 +131,23 @@ public class DeviceSessionManagerTest {
     }
 
     @Test
+    public void runningEcuWithOpenbltSupportIsNotABootloaderDevice() {
+        DeviceSessionManager manager = new DeviceSessionManager(connectivityContext, null);
+        // EcuWithOpenblt is a *running* ECU that merely supports the bootloader — only an actual
+        // OpenBlt port means the board is sitting in the bootloader.
+        scanner.fireHardwareChange(hardwareWith(new PortResult("COM5", SerialPortType.EcuWithOpenblt)));
+        assertEquals(SessionState.DISCONNECTED, manager.getState());
+    }
+
+    @Test
+    public void debugProbesAloneDoNotChangeSessionState() {
+        DeviceSessionManager manager = new DeviceSessionManager(connectivityContext, null);
+        // ST-Link/PCAN are developer probes, not a board state; only DFU means "device in bootloader"
+        scanner.fireHardwareChange(new AvailableHardware(Collections.emptyList(), false, true, true));
+        assertEquals(SessionState.DISCONNECTED, manager.getState());
+    }
+
+    @Test
     public void liveConnectionWinsOverBootloaderDetection() {
         DeviceSessionManager manager = new DeviceSessionManager(connectivityContext, null);
         scanner.fireHardwareChange(hardwareWith(new PortResult("COM3", SerialPortType.OpenBlt)));

@@ -71,6 +71,12 @@ public class PortResult {
         return this.port.equals(other.port) && this.type.equals(other.type);
     }
 
+    @Override
+    public int hashCode() {
+        // must stay consistent with equals(): identity is (port, type) only
+        return 31 * port.hashCode() + type.hashCode();
+    }
+
     public boolean isEcu() {
         return type == SerialPortType.Ecu || type == SerialPortType.EcuWithOpenblt;
     }

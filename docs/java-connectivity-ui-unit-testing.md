@@ -1,0 +1,298 @@
+# Java Console: Unit Test Approach for Connectivity Management & UI
+
+Status as of 2026-07-08. Scope: `java_console` connectivity/flashing/session path
+(`connectivity`, `io`, `shared_io`, `ui` modules) and the Swing UI around it.
+
+## Why this document
+
+The week of 2026-07-01..08 delivered a burst of connectivity features with real
+brick-a-board consequences — DFU bootloader detection and in-session firmware
+update (#9771), following a renumbered ECU port across OpenBLT/DFU reboots,
+recovering a corrupted board with the same-session tune, and safeguards against
+flashing firmware for the wrong board — followed by a deliberate testability
+refactoring: the headless `connectivity` module, `ConnectivityContext`
+dependency injection, the `PortScanner` and `HardwareProbes` seams, and the
+first automated tests for this layer (`SerialPortScannerTest`,
+`DeviceSessionManagerTest`, `ProgramSelectorTest`).
+
+That refactoring history is recorded in `docs/java-connectivity-context-review.md`
+(deleted once complete; retrievable via
+`git show 148cb160d48^:docs/java-connectivity-context-review.md`). This document
+is the follow-up: **how to test this layer going forward**, and a concrete
+backlog ordered by how much production refactoring each test requires —
+starting with tests that require none.
+
+## The established approach
+
+These patterns are already proven in the tree. New tests should follow them
+rather than invent new machinery.
+
+1. **Hand-written fakes, no new mocking machinery.** The project uses
+   `mockito-core` (cannot mock final classes) and deliberately does *not* add
+   `mockito-inline`. Seams are narrow interfaces + plain fakes:
+   `FakePortScanner` (`java_console/ui/src/test/java/com/rusefi/FakePortScanner.java`)
+   implements `PortScanner` with scripted `fireHardwareChange(AvailableHardware)`
+   and recorded `suspendCount`/`resumeCount`/`cachedPorts`/`invalidatedPorts`;
+   `SerialPortScannerTest.FakeProbes` implements `SerialPortScanner.HardwareProbes`
+   with scripted port lists, inspection results, device-probe flags and a fake
+   clock. Mockito is fine for simple interface stubs (`mock(LinkManager.class)`
+   in `ConnectionStatusIconTest`), but stateful collaborators get a fake.
+
+2. **Constructor-injected seams, production wiring only at composition roots.**
+   `SerialPortScanner(HardwareProbes, boolean startTimerOnFirstListener)` and
+   `ConnectivityContext(PortScanner)` are the model. Production graphs are
+   assembled in `ProductionConnectivity.CONTEXT` / `ConsoleUI` / `MassUpdater`;
+   nothing else may reach for a singleton. When opening a new seam, copy this
+   shape: extract the narrow interface the consumer actually uses, keep a
+   production implementation wiring the old statics, change no call sites.
+
+3. **Drive policy loops directly; never depend on real threads, sleeps or wall
+   clock.** `SerialPortScannerTest` constructs the scanner with
+   `startTimerOnFirstListener=false` and calls `findAllAvailablePorts()` per
+   "cycle"; time for the device-probe throttle comes from `probes.now()`. Tests
+   that need `Thread.sleep`, timing margins, or the real 300 ms `RecurringStep`
+   loop are wrong — add a clock/step seam instead (see Tier 3).
+
+4. **Resettable globals are tolerated, bounded, and reset around every test.**
+   `DeviceSessionManagerTest` mutates `ConnectionStatusLogic.INSTANCE` and
+   restores it in `@BeforeEach`/`@AfterEach`; `ConnectedEcuTargetTest` resets the
+   persisted-target static and writes `last_connected_board.txt` under the
+   settings dir. This is acceptable (it serializes tests) but do not spread it —
+   injecting a connection-status provider is a known later cleanup.
+
+5. **Swing components are tested headlessly, off-screen.**
+   `ConnectionStatusIconTest` (`java_console/ui/src/test/java/com/rusefi/ui/widgets/`)
+   is the template:
+   - instantiate the real component with mocked/fake constructor params;
+   - inject state through the same channels production uses — constructor
+     params, `JComponent` client properties (`bootloaderMode`, `isUpdating`),
+     and the resettable `ConnectionStatusLogic.INSTANCE`;
+   - assert **colors** by painting the `Icon` into a
+     `BufferedImage(TYPE_INT_ARGB)` and checking pixel channel dominance
+     (pure Java2D, needs no display), and **text** via `getToolTipText()` /
+     title strings;
+   - flush listener-driven updates with `SwingUtilities.invokeAndWait(() -> {})`.
+
+   CI runs `./gradlew test` on `ubuntu-latest` *without* an X display
+   (`xvfb-run` wraps only the TriggerImage step), so a test must never need a
+   real frame/peer — off-screen painting and component getters only.
+
+6. **`*Sandbox.java` files are manual hardware harnesses, not tests.** They have
+   `main()` and no `@Test`, so `gradlew test` skips them automatically
+   (`BltSwitchSandbox`, `InspectPortSandbox`, `FirmwareUpdateTabSandbox`, ~35
+   more). Anything requiring a physical board or live serial port belongs there;
+   automated tests must run hardware-free.
+
+7. **Where tests live.** JUnit 5 is wired for every subproject via the root
+   `build.gradle` (`allprojects` + `useJUnitPlatform()`). Pure decision logic
+   tests sit next to their module (`shared_io` has `FindFileHelperTest`,
+   `ConnectedEcuTargetTest`, `BoardCompatibilityTest`); the connectivity-policy
+   tests currently live in `ui/src/test` alongside the fakes and could move to
+   `connectivity/src/test` (directory does not exist yet; no build change
+   needed) once `DeviceSessionManager` dependencies allow.
+
+## Coverage today (2026-07-08)
+
+| Area | Test | What it covers |
+| --- | --- | --- |
+| Scan policy | `ui` `SerialPortScannerTest` (13) | ttyS filtering, ECU caching vs Unknown retry, stale-node drop, unplug/replug eviction, listener-only-on-change, synthetic DFU port, device-probe throttle + last-known reuse, probe skip while connected, TCP not cached, `cachePort`/`invalidatePort`, ECU-first sort |
+| Session state machine | `ui` `DeviceSessionManagerTest` (9) | OpenBLT/DFU detection + precedence + disappearance, initial-port pre-cache, re-cache on reconnect, CONNECTING/CONNECTED, snapshot to late subscribers |
+| Flash mode/port decisions | `ui` `ProgramSelectorTest` | `mainButtonModeFor` (DFU/OpenBLT/live/offline), `resolveFlashPort` (bootloader wins, offline DFU>OpenBLT preference) |
+| Tune merge recovery | `ui` `CalibrationsHelper*Test` | `decidePostMerge` all actions (#9756 crash path), partial-merge failed-field tracking, `isUiContext` |
+| Firmware file targeting | `shared_io` `FindFileHelperTest` ×2 | `extractTargetFromFirmwareName`, `findXNumberOfFile` |
+| Persisted board target | `shared_io` `ConnectedEcuTargetTest` | live → persisted-file → bundle fallback chain |
+| Board compatibility | `shared_io` `BoardCompatibilityTest` | exact/wildcard/allowlist/QC-bypass matching |
+| UI status | `ui` `ConnectionStatusIconTest` | red/green/purple priority, bootloader tooltip, property-change reaction, null tab pane |
+| Update-available check | `ui` `MainFrameUpdateCheckTest` | `needsFirmwareUpdate` null/unparseable inputs, new-format hash compare, legacy date compare |
+| Connectivity value types & helpers | `connectivity` `SerialPortCacheTest`, `AvailableHardwareTest`, `PortResultTest`, `SerialPortTypeTest`, `SerialPortScannerInspectPortsTest`, `RecurringStepTest` | cache eviction semantics, snapshot filtering/equality, PortResult identity contract, sort ranks, probe fan-out (dead port dropped, crash ⇒ Unknown), suspend-latch handshake — the Tier 1 batch, added 2026-07-08 |
+
+Not covered anywhere: the flashing-job choreography (suspend → invalidate →
+resume, `close()`-not-`disconnect()`), `EcuHardwareProbes.inspect()`
+classification/retry, the ECU-follow-across-reboot rule in `ConsoleUI`,
+`MainFrame` title composition, `StartupFrame` port-list presentation and splash
+connection state machine.
+
+## Test backlog
+
+Ordered by production-refactoring cost. Tier 1 items are pure additions; write
+them first — they also lock in the behavior the recent bugfixes established
+before further refactoring moves this code again.
+
+### Tier 1 — no production change at all (IMPLEMENTED 2026-07-08)
+
+Implementation notes: items 1–8 and 10 landed as the `connectivity/src/test`
+suite plus `MaintenanceUtilTest` and extensions to `ProgramSelectorTest` /
+`DeviceSessionManagerTest`; the missing `PortResult.hashCode` (item 3) was
+added. Items 9, 11 and 12 turned out to be already covered —
+`MainFrameUpdateCheckTest` covers `needsFirmwareUpdate` end to end,
+`ConnectionStatusIconTest` already asserts bootloader-over-connected priority,
+and `ConnectedEcuTargetTest.effectiveTarget_usesPersistedWhenNoLive` is exactly
+the recovery-after-restart scenario.
+
+Connectivity module value types and policy helpers (new tests can create
+`connectivity/src/test`, or sit in `ui/src/test` next to the fakes; same
+`com.rusefi` package gives package-private access):
+
+1. **`SerialPortCache`** — `put`/`get` present-vs-absent, `retainAll` evicts
+   exactly the not-retained keys, `invalidate`, overwrite of same port name.
+   Currently only exercised through the scanner.
+2. **`AvailableHardware`** — `getKnownPorts(type)` / `getKnownPorts(Set)`
+   filtering, `isPortAvailable`, `isEmpty`, `equals`.
+3. **`PortResult`** — `equals` compares only port+type (same port, different
+   calibrations ⇒ equal), `isEcu()` for each `SerialPortType`. Note: custom
+   `equals` with **no `hashCode` override** — a real finding to fix while
+   writing the test.
+4. **`SerialPortType` sort order** — assert the ordering the scanner's
+   comparator relies on: OpenBlt(10) < Dfu(15) < Ecu/EcuWithOpenblt(20) <
+   CAN(30) < Unknown(100).
+5. **`SerialPortScanner.inspectPorts(...)` (static)** — inject a
+   `Function<String, PortResult>` inspector, pass `null` probe-threads ref:
+   null-returning inspector drops the port; throwing inspector yields
+   `Unknown`; normal results collected. (Skip the deliberate-timeout case — it
+   costs the hardwired 5 s sleep; that path needs the Tier 3 clock seam.)
+6. **`RecurringStep.suspend()` latch state machine** (without `start()`):
+   after `stop()` the returned latch is already at 0; before stop it is at 1
+   and repeated `suspend()` returns the same latch until `resume()`.
+
+Maintenance / flashing decision logic (`ui` and `shared_io`):
+
+7. **`MaintenanceUtil.containsPattern`** — the `:`→`=` + whitespace
+   normalization that DFU driver detection depends on:
+   `"ConfigManagerErrorCode: 0"` must match pattern
+   `"ConfigManagerErrorCode=0"`; plus plain substring and no-match cases.
+   Package-private, zero deps, untested.
+8. **`ProgramSelector.mainButtonModeFor` / `resolveFlashPort` cross-combos**
+   — the corrupted-board + renumbering compounds the existing tests skip:
+   offline with a stale ECU combo selection *and* a freshly appeared
+   renumbered OpenBLT port ⇒ resolves to the OpenBLT port ⇒ `OPENBLT_MANUAL`;
+   live connection while the combo selects a bootloader port.
+9. **`MainFrame.needsFirmwareUpdate(RusEfiSignature, String)`** — already
+   `static` and pure (hash/date comparison feeding the "update available" menu
+   state). ~~No test exists~~ — correction: `MainFrameUpdateCheckTest` already
+   covers it fully.
+10. **`DeviceSessionManager` matrix rows** via existing `FakePortScanner`:
+    an `EcuWithOpenblt` port that is a *real* port (not bootloader) while
+    NOT_CONNECTED stays DISCONNECTED; stLink/PCAN flags alone don't change
+    state.
+11. **`ConnectionStatusIcon` additions** — any new color/tooltip/priority case
+    uses the existing paint-to-image pattern as-is.
+12. **`ConnectedEcuTarget`** — one explicit recovery-after-restart assertion:
+    no live target this session (board stuck in bootloader) ⇒
+    `isLiveTargetKnown()==false` while `effectiveTarget()` returns the
+    persisted board.
+
+### Tier 2 — test-fixture tricks or visibility-only changes
+
+13. **`MaintenanceUtil.confirmFirmwareMatchesBoard` safe branches** — the
+    brick guard added this week. Reachable today using the
+    `ConnectedEcuTargetTest` recipe (reflection-reset the static, write
+    `last_connected_board.txt`) with `UpdateOperationCallbacks.DUMMY`:
+    matching target ⇒ true without dialog; unparseable firmware name
+    (`extractTargetFromFirmwareName` ⇒ null) ⇒ true, no false alarm;
+    compatible board via `BoardCompatibility` allowlist ⇒ true; no target
+    known ⇒ true. Only the genuine-mismatch branch is Swing-blocked (Tier 3).
+14. **`FindFileHelper.findSrecFileForTarget` / `newestMatchingTarget`** —
+    `INPUT_FILES_PATH` is a mutable `public static String`; point it at a
+    JUnit `@TempDir`. Scenarios: newest-by-mtime wins; a `uaefi` target must
+    NOT pick a `uaefi_pro` file sitting in the same dir (file-selection layer
+    of the mismatched-board guard); firmware only present in the `older-fw`
+    archive is still found (foreign-download recovery); null/blank/no-match ⇒
+    null.
+15. **`DevicePane.bootloaderGuidance` / `isBootloaderState` /
+    `isOfflineCapableTab`** — pure static helpers, currently `private`; make
+    package-private and test directly (`bootloaderGuidance` branches on
+    `FileLog.isWindows()`, so assert the platform-independent parts or both
+    strings).
+
+### Tier 3 — one small seam each, ranked by value
+
+Each of these follows pattern #2: extract the narrow interface the consumer
+already uses, keep a production impl wiring the old statics, change no call
+sites.
+
+1. **`EcuHardwareProbes.inspect()`** — the port classification pipeline
+   (OpenBLT-first, 3-attempt retry, stale-node ⇒ null, ECU-with/without-OpenBLT,
+   Unknown after max attempts). Blocked by three `private static` probes that
+   open real ports. Seam: extract `isPortOpenblt` / `readEcuCalibrations` /
+   `ecuHasOpenblt` into an injectable interface (mirror of `HardwareProbes`)
+   plus a sleep hook. Highest-value blocked target — this decision tree is
+   where detection bugs live.
+2. **`DeviceSessionManager` FLASHING state + watchdog choreography** — the
+   job-start ⇒ pause-watchdog / job-finish ⇒ resume + restartTimer + refresh
+   path is entirely untested. Seam: a 3-method `JobExecutor` interface
+   (`isNotInProgress`, the two job listeners — `SingleAsyncJobExecutor`
+   already has them) plus injected pause/resume runnables for
+   `ConnectionWatchdog`. `FakePortScanner` already counts
+   `resumeCount`/`restartTimerCount` for the assertions.
+3. **`AbstractAutoFlashJob.awaitEcuPort`** — the interrupted-flash /
+   port-renumbering wait ("return ECU port; give up after the bootloader grace
+   period"). Seam: package-private + injected clock/sleeper; drive hardware
+   snapshots via a `FakePortScanner`-backed `ConnectivityContext`.
+4. **OpenBLT job choreography** (`OpenBltManualJob` / `OpenBltSwitchJob`) —
+   suspend ⇒ invalidate ⇒ flash ⇒ resume ordering, and the
+   `linkManager.close()`-not-`disconnect()` invariant that keeps
+   `isDisconnectedByUser()` false so reconnect can follow the renumbered port.
+   Seam: inject the flasher call (functional interface around
+   `ProgramSelector.flashOpenbltSerial`); assert ordering on the fake scanner's
+   recorded calls.
+5. **`MainFrame.setTitle`** — extract a pure
+   `composeTitle(isUpdating, bootloaderMode, connected, firmwareVersion, port,
+   signature, offline, iniSignature)`; the priority ladder
+   (UPDATING > BOOTLOADER > connected > OFFLINE > DISCONNECTED) is pure string
+   logic currently welded to `ConsoleUI`/`FrameHelper`.
+6. **`ConsoleUI` ECU-follow-across-reboot rule** — currently an anonymous
+   listener inside the 285-line private constructor. Extract a static
+   predicate, e.g. `Optional<String> ecuPortToFollow(currentPort, commPorts,
+   ecuPorts, disconnectedByUser)`, and test: skips when disconnected-by-user,
+   when current port still present, when zero or multiple candidate ECU ports,
+   when candidate equals current; follows on exactly-one new ECU port.
+7. **`MaintenanceUtil` confirm seam** — inject the EDT-confirm as a
+   `BooleanSupplier` so the genuine-mismatch branch of
+   `confirmFirmwareMatchesBoard` / `confirmUnverifiedTarget` becomes
+   deterministic instead of opening a `JOptionPane`.
+8. **`LinkManager.restart()` gate** — the renumber-follow invariant
+   (`disconnect()` blocks restart, port must be present in `getCommPorts()`).
+   A `SerialPortSource` interface exists but is not injectable per instance;
+   add a settable source. Cheapest immediate assertion (no seam):
+   `disconnect()` then `restart()` is a no-op.
+9. **`DfuFlasher` H7-vs-F4/F7 driver decision** — extract the one-line
+   `isH7(effectiveTarget, is_h7Property)` predicate out of the
+   Windows/process-exec method.
+10. **`OpenbltDetectorStrategy`** protocol decoders — pure byte logic blocked
+    on the concrete `IncomingDataBuffer`; needs a constructible/fake buffer in
+    the `io` module. Moderate effort; do after the above.
+
+### Explicitly not recommended
+
+- **`PlainSerialPortScanner.findEcu`** — spins a real `LinkManager` per port;
+  no realistic seam short of rewriting it. Cover via sandbox/manual testing.
+- **`ConnectionWatchdog`** — static singleton on a Swing `Timer`; needs
+  de-singletoning first (fold into Tier 3 item 2's seam when touched).
+- **`SerialPortScanner.suspend()` drain and `RecurringStep` 300 ms loop
+  timing** — real-thread choreography; only testable after routing the wait
+  through `probes.now()` / an injected sleeper. Don't write sleep-based tests
+  for these.
+- **Adding a DI framework or `mockito-inline`** — rejected during the
+  refactoring for good reasons (small hand-wired graph; fakes are cheaper and
+  more readable). Still holds.
+- **`StartupFrame` splash connection state machine** — deeply tied to a live
+  `JFrame`, `LinkManager` and `ConnectionStatusLogic`; extract pieces
+  opportunistically (e.g. `updateConnectButtonState`'s port-type predicate)
+  rather than attempting the whole machine.
+
+## Conventions for new tests
+
+- JUnit 5 (`org.junit.jupiter`), one behavior per test, names describing the
+  scenario (`unpluggedPortIsEvictedAndReinspectedOnReplug`).
+- No `Thread.sleep`, no wall-clock timing margins, no real serial ports, no
+  network, no display. If a test wants any of those, the production code needs
+  a seam (Tier 3) or the scenario belongs in a `*Sandbox`.
+- Reset any global you touch (`ConnectionStatusLogic.INSTANCE`,
+  `ConnectedEcuTarget` statics, `FindFileHelper.INPUT_FILES_PATH`) in
+  `@BeforeEach`/`@AfterEach`, restoring the prior value.
+- Prefer extending `FakePortScanner`/`FakeProbes` over new mocks; if a fake
+  grows useful across suites, promote it out of the test class (as
+  `FakePortScanner` already was).
+- Swing assertions go through off-screen painting and component getters only;
+  flush the EDT with `SwingUtilities.invokeAndWait(() -> {})` before asserting
+  listener-driven state.
