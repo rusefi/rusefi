@@ -112,8 +112,11 @@ void LongTermFuelTrim::learn(ClosedLoopFuelResult clResult, float rpm, float fue
 	const auto& cfg = engineConfiguration->ltft;
 
 	// LTFT uses STFT output, so if STFT is not correcting for some reason - LTFT also should not learn
-	if ((!cfg.enabled) || (ltftSavePending) || (ltftLoadPending) ||
-		(engine->module<ShortTermFuelTrim>()->stftCorrectionState != stftEnabled)) {
+	if ((!cfg.enabled) || (ltftSavePending) || (ltftLoadPending)
+#if EFI_ENGINE_CONTROL
+	 || (engine->module<ShortTermFuelTrim>()->stftCorrectionState != stftEnabled)
+#endif // EFI_ENGINE_CONTROL
+		) {
 		ltftLearning = false;
 		return;
 	}
