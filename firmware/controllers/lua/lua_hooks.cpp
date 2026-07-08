@@ -1155,7 +1155,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		lua_pushboolean(l, hasFirmwareError());
 		return 1;
 	});
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	lua_register(lState, "stopEngine", [](lua_State*) {
 		doScheduleStopEngine(StopRequestedReason::Lua);
 		return 0;
@@ -1170,7 +1170,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		lua_pushinteger(l, result);
 		return 1;
 	});
-#endif // EFI_SHAFT_POSITION_INPUT
+#endif // EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 #endif // WITH_LUA_STOP_ENGINE
 
 #if EFI_CAN_SUPPORT

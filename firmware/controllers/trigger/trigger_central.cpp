@@ -154,8 +154,10 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 		m_lastToothPhaseFromSyncPoint = fmod(m_lastToothPhaseFromSyncPoint - totalShift + engineCycle, engineCycle);
 		triggerToothAngleError = 0;
 
+#if EFI_ENGINE_CONTROL
 		// Reset schedulers to avoid "out-of-order" warnings/errors when transitioning phase
 		engine->injectionEvents.resetOverlapping();
+#endif // EFI_ENGINE_CONTROL
 
 		// On a crank-speed trigger the sync counter parity picks which trigger cycle starts the
 		// engine cycle, so a parity-changing shift means the next trigger index 0 is no longer one
@@ -529,10 +531,12 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 		engine->outputChannels.triggerChannel2 = signal == SHAFT_SECONDARY_RISING;
 	}
 
+#if EFI_ENGINE_CONTROL
 	// Don't accept trigger input in case of some problems
 	if (!getLimpManager()->allowTriggerInput()) {
 		return;
 	}
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_TOOTH_LOGGER
 	// Log to the Tunerstudio tooth logger
@@ -932,8 +936,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine->module<TpsAccelEnrichment>()->onEngineCycleTps();
 		}
 
+#if EFI_ENGINE_CONTROL
 		// Handle ignition and injection
 		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
+#endif // EFI_ENGINE_CONTROL
 
     temp_mapVvt_index = triggerIndexForListeners / 2;
 

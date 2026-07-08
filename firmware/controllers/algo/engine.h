@@ -249,9 +249,9 @@ public:
 //    SoftSparkLimiter ALSsoftSparkLimiter{false};
 #endif /* EFI_ANTILAG_SYSTEM */
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
     LambdaMonitor lambdaMonitor{};
-#endif // EFI_ENGINE_CONTROL
+#endif // EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 
 #if ROTATIONAL_IDLE_CONTROLLER
     RotationalIdle rotationalIdleController{};

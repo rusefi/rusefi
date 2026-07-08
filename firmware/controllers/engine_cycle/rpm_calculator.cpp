@@ -124,11 +124,13 @@ bool RpmCalculator::isRunning() const {
  * reset cleanly without re-entering RUNNING/CRANKING from leftover trigger events.
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
+#if EFI_ENGINE_CONTROL
 	// Engine-stop window: force "not spinning" so the rest of the code path resets trigger
 	// state instead of latching back into a running state from residual trigger pulses.
 	if (getLimpManager()->shutdownController.isEngineStop(nowNt)) {
 		return false;
 	}
+#endif // EFI_ENGINE_CONTROL
 
 	// Anything below 60 rpm is not running
 	bool noRpmEventsForTooLong = lastTdcTimer.getElapsedSeconds(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
@@ -172,7 +174,10 @@ void RpmCalculator::setRpmValue(float value) {
 	}
 
 	assignRpmValue(value);
+#if EFI_ENGINE_CONTROL
+	// only read in the guarded cranking-to-running transition check below
 	spinning_state_e oldState = state;
+#endif // EFI_ENGINE_CONTROL
 	// Change state
 	if (cachedRpmValue == 0) {
 		// Reset minCrankingRpm between attempts
@@ -381,6 +386,7 @@ float RpmCalculator::getSecondsSinceEngineStart(efitick_t nowNt) const {
  * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the rusEfi console
  * digital sniffer.
  */
+#if EFI_ENGINE_CONTROL
 static void onTdcCallback() {
 #if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
@@ -394,12 +400,14 @@ static void onTdcCallback() {
 	LogTriggerTopDeadCenter(getTimeNowNt());
 #endif /* EFI_TOOTH_LOGGER */
 }
+#endif // EFI_ENGINE_CONTROL
 
 /**
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 void tdcMarkCallback(
 		uint32_t trgEventIndex, efitick_t nowNt) {
+#if EFI_ENGINE_CONTROL
 	bool isTriggerSynchronizationPoint = trgEventIndex == 0;
 	if (isTriggerSynchronizationPoint && getTriggerCentral()->isEngineSnifferEnabled) {
 
@@ -421,6 +429,11 @@ void tdcMarkCallback(
 			scheduleByAngle(&engine->tdcScheduler[revIndex2], nowNt, tdcPosition, action_s::make<onTdcCallback>());
 		}
 	}
+#else
+	// no tdcScheduler to schedule the engine sniffer TDC mark on without engine control
+	UNUSED(trgEventIndex);
+	UNUSED(nowNt);
+#endif // EFI_ENGINE_CONTROL
 }
 
 /**
