@@ -21,7 +21,7 @@ public class InspectPortSandbox {
         while (true) {
             Set<String> ports = LinkManager.getCommPorts();
             System.out.println("Available ports: " + ports);
-            List<PortResult> results = SerialPortScanner.inspectPorts(new ArrayList<>(ports));
+            List<PortResult> results = SerialPortScanner.inspectPorts(new ArrayList<>(ports), null);
             for (PortResult result : results) {
                 System.out.println("  " + result.port + " => " + result.type);
             }
