@@ -255,7 +255,7 @@ Usages:
     java: LambdaMonitor.java
     folder: controllers/math
     constexpr: "engine->lambdaMonitor"
-    conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
+    conditional_compilation: "EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT"
 
   - name: mc33810_state
     cppFileName: mc33810
