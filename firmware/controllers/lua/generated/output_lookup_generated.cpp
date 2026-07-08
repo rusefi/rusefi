@@ -1467,6 +1467,17 @@ float getOutputValueByHash(const int hash) {
 		case -783525499:
 			return engine->module<MisfireController>()->misfireWobbleThreshUs;
 #endif
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+// lambdaCurrentlyGood
+		case 350535927:
+			return engine->lambdaMonitor.lambdaCurrentlyGood;
+// lambdaMonitorCut
+		case 1849938842:
+			return engine->lambdaMonitor.lambdaMonitorCut;
+// lambdaTimeSinceGood
+		case 481450608:
+			return engine->lambdaMonitor.lambdaTimeSinceGood;
+#endif
 #if EFI_LAUNCH_CONTROL
 // retardThresholdRpm
 		case -1374156957:
@@ -1831,15 +1842,6 @@ float getOutputValueByHash(const int hash) {
 // m_hasSynchronizedCrank
 		case 885139196:
 			return static_cast<trigger_state_primary_s&>(engine->triggerCentral.triggerState).m_hasSynchronizedCrank;
-// lambdaCurrentlyGood
-		case 350535927:
-			return engine->lambdaMonitor.lambdaCurrentlyGood;
-// lambdaMonitorCut
-		case 1849938842:
-			return engine->lambdaMonitor.lambdaMonitorCut;
-// lambdaTimeSinceGood
-		case 481450608:
-			return engine->lambdaMonitor.lambdaTimeSinceGood;
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 // trgsynchronizationCounter
