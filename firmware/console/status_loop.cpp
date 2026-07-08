@@ -234,8 +234,10 @@ void initWarningRunningPins() {
 
 #if EFI_PROD_CODE
 static void initStatusLeds() {
+	// getCommsLedPin() is a hard-coded per-board constant - this runs before settings are loaded
 	enginePins.communicationLedPin.initPin("led: comm status", getCommsLedPin(), LED_PIN_MODE, true);
-	// checkEnginePin is already initialized by the time we get here
+	// checkEnginePin is config-dependent and initialized later during initHardware();
+	// until then setValue() on it is a no-op
 }
 
 static bool isTriggerErrorNow() {
@@ -778,10 +780,16 @@ void updateTunerStudioState() {
 
 #endif /* EFI_TUNER_STUDIO */
 
+// Invoked from runRusEfi() BEFORE loadConfiguration() so that the LED blinks even if
+// config load/validation fails: nothing reachable from here may read engineConfiguration
+// (values are defaults/zeros at that point). Pin selection relies on compile-time board
+// constants only, and CommunicationBlinkingTask reads global flags, never settings.
+// Prerequisites: initPinRepository() and detectBoardType() must have already run.
 void startStatusThreads() {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();
+	// runs on virtual timer interrupts, keeps blinking even if the main thread hangs
 	communicationsBlinkingTask.start();
 #endif /* EFI_PROD_CODE */
 }
