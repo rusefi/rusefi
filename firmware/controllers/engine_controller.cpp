@@ -575,10 +575,10 @@ bool validateConfigOnStartUpOrBurn() {
 		return false;
 	}
 
+#if EFI_ENGINE_CONTROL
 	ensureArrayIsAscending("Injector deadtime vBATT", engineConfiguration->injector.battLagCorrBattBins);
 	ensureArrayIsAscending("Injector deadtime Pressure", engineConfiguration->injector.battLagCorrPressBins);
 
-#if EFI_ENGINE_CONTROL
 	// Fueling
 	{
 		ensureArrayIsAscending("VE load", config->veLoadBins);
@@ -651,6 +651,7 @@ bool validateConfigOnStartUpOrBurn() {
 
 // todo: huh? why does this not work on CI?	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
 
+#if EFI_ENGINE_CONTROL
 	ensureArrayIsAscending("MAF transfer function", config->mafDecodingBins);
 
 	// Cranking tables
@@ -663,6 +664,7 @@ bool validateConfigOnStartUpOrBurn() {
 	ensureArrayIsAscending("Idle target RPM", config->cltIdleRpmBins);
 	ensureArrayIsAscending("Idle warmup mult CLT", config->cltIdleCorrBins);
 	ensureArrayIsAscending("Idle warmup mult RPM", config->rpmIdleCorrBins);
+#endif // EFI_ENGINE_CONTROL
 	ensureArrayIsAscendingOrDefault("Idle coasting RPM", config->iacCoastingRpmBins);
 	ensureArrayIsAscendingOrDefault("Idle VE RPM", config->idleVeRpmBins);
 	ensureArrayIsAscendingOrDefault("Idle VE Load", config->idleVeLoadBins);
