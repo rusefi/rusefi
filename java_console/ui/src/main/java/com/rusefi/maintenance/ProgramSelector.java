@@ -199,7 +199,7 @@ public class ProgramSelector {
                 job = new OpenBltCanJob(parent);
                 break;
             case OPENBLT_MANUAL:
-                job = new OpenBltManualJob(selectedPort, parent);
+                job = new OpenBltManualJob(selectedPort, parent, connectivityContext);
                 break;
             case OPENBLT_AUTO:
                 job = new OpenBltAutoJob(selectedPort, parent, connectivityContext, linkManager);

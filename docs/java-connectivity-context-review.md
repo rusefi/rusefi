@@ -7,17 +7,16 @@ and everything they feed (`StartupFrame`, `DeviceSessionManager`, `DevicePane`,
 
 ## TL;DR — is this dependency injection yet?
 
-**The plumbing is done; the injection is not.** `ConnectivityContext` is threaded
-as a constructor/method parameter through ~30 classes, and it is the *only*
-place in main code that touches `SerialPortScanner.INSTANCE` — a single choke
-point, which is exactly the shape you want. But it is an `enum` singleton whose
-`getSerialPortScanner()` is hard-wired to `SerialPortScanner.INSTANCE` (also an
-enum). Only one instance of either can ever exist, so nothing can actually be
-substituted: every "injected" `ConnectivityContext` is the same global, and no
-test can hand a consumer fake hardware. Today it is a *token being passed
-around*, not a dependency being injected. The good news: because the parameter
-threading is already ~95% complete, converting the token into a real injectable
-seam is a small, mechanical change (Phase 1–2 below).
+**The plumbing is done; the seam is half-open.** `ConnectivityContext` is
+threaded as a constructor/method parameter through ~30 classes, and it is the
+*only* place in main code that touches `SerialPortScanner.INSTANCE` — a single
+choke point, which is exactly the shape you want. As of 2026-07-08 (Phases 1–2
+below) it is a plain class with an injected `SerialPortScanner` and the global
+`INSTANCE` survives only at composition roots. What still blocks real
+substitution: `SerialPortScanner` itself is an `enum` singleton, so the only
+scanner a `ConnectivityContext` can hold is the real hardware-probing one — no
+test can yet hand a consumer fake hardware. Phase 3 (interface + fake) opens
+the seam fully.
 
 ## UIContext: the working DI precedent
 
@@ -52,15 +51,10 @@ passing both explicitly is correct and already the established style.
 
 ### What ConnectivityContext is
 
-`java_console/ui/src/main/java/com/rusefi/ConnectivityContext.java` — 13 lines:
-
-```java
-public enum ConnectivityContext {
-    INSTANCE;
-    public SerialPortScanner getSerialPortScanner() { return SerialPortScanner.INSTANCE; }
-    public AvailableHardware getCurrentHardware() { return getSerialPortScanner().getCurrentHardware(); }
-}
-```
+`java_console/ui/src/main/java/com/rusefi/ConnectivityContext.java`: originally
+an `enum` singleton hard-wired to `SerialPortScanner.INSTANCE`; since
+2026-07-08 a plain class holding an injected `SerialPortScanner`, with a
+`static INSTANCE` wired to the production scanner for the composition roots.
 
 History: introduced for "console closes if we have non-rusEFI serial ports"
 (#7989, commit `7379c1e2ec6`, message: *"only:probably proper way forward"*),
@@ -152,24 +146,15 @@ testable.
 `INSTANCE` now appears only in `ConsoleUI`, `MassUpdater.main` and the
 sandboxes — i.e. only at composition roots.
 
-### Phase 2 — make ConnectivityContext a real class (the UIContext shape)
+### Phase 2 — make ConnectivityContext a real class (the UIContext shape) — DONE 2026-07-08
 
-Convert the enum to a plain class that *owns* its scanner reference, matching
-the pattern `UIContext` already proves out:
-
-```java
-public class ConnectivityContext {
-    public static final ConnectivityContext INSTANCE = new ConnectivityContext(SerialPortScanner.INSTANCE);
-    private final SerialPortScanner scanner;
-    public ConnectivityContext(SerialPortScanner scanner) { this.scanner = scanner; }
-    ...
-}
-```
-
-Call sites don't change (`ConnectivityContext.INSTANCE` still works at the
-roots). This alone doesn't unlock fakes (the scanner is still an enum) but it
-removes the "only one instance can ever exist" property and is a prerequisite
-for Phase 3.
+The enum is now a plain class that *owns* its scanner reference, matching the
+pattern `UIContext` already proves out: a public constructor taking
+`SerialPortScanner`, with `public static final ConnectivityContext INSTANCE =
+new ConnectivityContext(SerialPortScanner.INSTANCE)` kept for the composition
+roots. No call sites changed. This alone doesn't unlock fakes (the scanner is
+still an enum) but it removes the "only one instance can ever exist" property
+and is the prerequisite for Phase 3.
 
 ### Phase 3 — interface out the scanner (unlocks consumer testing)
 

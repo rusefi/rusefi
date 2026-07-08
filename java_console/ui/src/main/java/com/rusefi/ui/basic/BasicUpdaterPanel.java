@@ -216,7 +216,7 @@ never used?
                 break;
             }
             case OpenBlt: {
-                job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton);
+                job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
                 break;
             }
             default: {
