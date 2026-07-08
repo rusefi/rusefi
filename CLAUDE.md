@@ -104,6 +104,7 @@ For detailed technical documentation intended for AI assistants, see:
 - [Ignition System](docs/AI/ignition_system.md) - Timing calculation and spark scheduling.
 - [Engine Protection](docs/AI/protection_system.md) - LimpManager and cut logic.
 - [Sensor Framework](docs/AI/sensors_system.md) - Sensor registry, conversion pipeline, redundancy and mocking.
+- [Java Gradle Structure Review](docs/java-gradle-structure-review.md) - Gradle subproject inventory, dependency graph, and known structural issues in `java_console/` + `java_tools/`.
 
 ### Key Concepts
 
