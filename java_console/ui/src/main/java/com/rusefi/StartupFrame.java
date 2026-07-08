@@ -354,7 +354,7 @@ public class StartupFrame {
         miscPanel.add(buttonLogViewer, "wrap");
         miscPanel.add(new HorizontalLine(), "wrap");
 */
-        miscPanel.add(SimulatorHelper.createSimulatorComponent(this));
+        miscPanel.add(SimulatorHelper.createSimulatorComponent(this, connectivityContext));
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
@@ -632,7 +632,7 @@ public class StartupFrame {
         prepareForHandoff();
         LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
-            new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected, frame, ProductionConnectivity.CONTEXT));
+            new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected, frame, connectivityContext));
     }
 
     /**
@@ -663,7 +663,7 @@ public class StartupFrame {
         }
         // NOTE: intentionally do NOT call serialPortScanner.stopTimer() — the offline console relies on
         // the scanner's auto-connect to go online.
-        new ConsoleUI(uiContext, ini, image, ProductionConnectivity.CONTEXT);
+        new ConsoleUI(uiContext, ini, image, connectivityContext);
     }
 
     /**

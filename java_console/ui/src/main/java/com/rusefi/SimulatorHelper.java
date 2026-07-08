@@ -81,7 +81,7 @@ public class SimulatorHelper {
         }).start();
     }
 
-    public static JComponent createSimulatorComponent(final StartupFrame portSelector) {
+    public static JComponent createSimulatorComponent(final StartupFrame portSelector, final ConnectivityContext connectivityContext) {
         if (!SimulatorHelper.isBinaryHere())
             return new JLabel(SimulatorHelper.BINARY + " not found");
 
@@ -97,7 +97,7 @@ public class SimulatorHelper {
                 startSimulator(isLaunchedOk -> SwingUtilities.invokeLater(() -> {
                     if (isLaunchedOk) {
                         portSelector.disposeFrameAndProceed();
-                        new ConsoleUI("" + TcpConnector.DEFAULT_PORT, SerialPortType.Unknown, ProductionConnectivity.CONTEXT);
+                        new ConsoleUI("" + TcpConnector.DEFAULT_PORT, SerialPortType.Unknown, connectivityContext);
                     } else {
                         ErrorMessageHelper.showErrorDialog("Error starting simulator", "Error");
                         simulatorButton.setText("Failed");

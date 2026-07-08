@@ -347,7 +347,6 @@ console live data tab is broken #8402
             // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
             PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
-            ConnectivityContext connectivityContext = connectivityContext;
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
             DevicePane devicePane = new DevicePane(uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane);
             tabbedPane.addTab("Device", devicePane.getContent());
@@ -493,12 +492,15 @@ console live data tab is broken #8402
                 }
             }
 
+            // The console app's composition root: the only place (besides MassUpdater.main) that
+            // touches the production connectivity singleton; everything below receives it as a parameter.
+            ConnectivityContext connectivityContext = ProductionConnectivity.CONTEXT;
             if (isPortDefined) {
-                new ConsoleUI(port, SerialPortType.Unknown, ProductionConnectivity.CONTEXT);
+                new ConsoleUI(port, SerialPortType.Unknown, connectivityContext);
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                StartupFrame startupFrame = new StartupFrame(ProductionConnectivity.CONTEXT, new UIContext());
+                StartupFrame startupFrame = new StartupFrame(connectivityContext, new UIContext());
                 if (bannerCallback != null)
                     bannerCallback.set(message -> startupFrame.restartConsole());
                 startupFrame.showUi();
