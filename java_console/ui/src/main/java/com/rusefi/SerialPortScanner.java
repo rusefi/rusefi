@@ -11,10 +11,11 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.updater.OpenbltDetectorStrategy;
 import com.rusefi.util.CompatibilityOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -29,16 +30,98 @@ import java.util.stream.Collectors;
  *
  * @author Andrey Belomutskiy
  */
-public enum SerialPortScanner implements PortScanner {
-    INSTANCE;
-
+public class SerialPortScanner implements PortScanner {
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
     private static final boolean SHOW_SOCKETCAN = FileLog.isLinux();
 
+    /**
+     * The hardware/OS probes the scan loop performs, separated from the scan *policy* (caching,
+     * Unknown-retry, listener notification, suspend/probe-throttle choreography) so the policy can
+     * be unit tested with scripted probe results. {@link ProductionProbes} is the real
+     * implementation. See docs/java-connectivity-context-review.md.
+     */
+    public interface HardwareProbes {
+        Set<String> listSerialPorts();
+
+        /** @return detected port type, or null for a dead/stale OS node that must be dropped entirely */
+        @Nullable
+        PortResult inspectPort(String serialPort);
+
+        Collection<String> listTcpPorts();
+
+        Optional<CalibrationsInfo> getEcuCalibrations(String tcpPort);
+
+        boolean isLiveEcuConnected();
+
+        boolean isDfuDeviceConnected();
+
+        boolean isStLinkConnected();
+
+        boolean isPcanConnected();
+
+        /** Clock used for the device-probe throttle; injectable so tests can script time. */
+        long now();
+    }
+
+    static class ProductionProbes implements HardwareProbes {
+        @Override
+        public Set<String> listSerialPorts() {
+            return LinkManager.getCommPorts();
+        }
+
+        @Override
+        public PortResult inspectPort(String serialPort) {
+            return SerialPortScanner.inspectPort(serialPort);
+        }
+
+        @Override
+        public Collection<String> listTcpPorts() {
+            return TcpConnector.getAvailablePorts();
+        }
+
+        @Override
+        public Optional<CalibrationsInfo> getEcuCalibrations(String tcpPort) {
+            return SerialPortScanner.getEcuCalibrations(tcpPort);
+        }
+
+        @Override
+        public boolean isLiveEcuConnected() {
+            return ConnectionStatusLogic.INSTANCE.isConnected();
+        }
+
+        @Override
+        public boolean isDfuDeviceConnected() {
+            return DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
+        }
+
+        @Override
+        public boolean isStLinkConnected() {
+            return StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
+        }
+
+        @Override
+        public boolean isPcanConnected() {
+            return MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
+        }
+
+        @Override
+        public long now() {
+            return System.currentTimeMillis();
+        }
+    }
+
+    public static final SerialPortScanner INSTANCE = new SerialPortScanner(new ProductionProbes(), true);
+
+    private final HardwareProbes probes;
+    // Tests construct a scanner that never starts the background scan thread and drive
+    // findAllAvailablePorts directly instead.
+    private final boolean startTimerOnFirstListener;
     private final RecurringStep portsScanner;
 
-    SerialPortScanner() {
+    SerialPortScanner(HardwareProbes probes, boolean startTimerOnFirstListener) {
+        this.probes = probes;
+        this.startTimerOnFirstListener = startTimerOnFirstListener;
         this.portsScanner = new RecurringStep(
             () -> findAllAvailablePorts(false),
             () -> findAllAvailablePorts(true),
@@ -63,7 +146,7 @@ public enum SerialPortScanner implements PortScanner {
     public void addListener(PortScanner.Listener listener) {
         boolean shouldStart = listeners.isEmpty();
         listeners.add(listener);
-        if (shouldStart)
+        if (shouldStart && startTimerOnFirstListener)
             startTimer();
     }
 
@@ -131,7 +214,13 @@ public enum SerialPortScanner implements PortScanner {
     // [tag:better_ux_for_flashing]
     private final List<Thread> probeThreads = Collections.synchronizedList(new ArrayList<>());
 
+    /** Entry point kept for {@link InspectPortSandbox}-style manual harnesses: probes real hardware. */
     static List<PortResult> inspectPorts(final List<String> ports, final List<Thread> probeThreadsRef) {
+        return inspectPorts(ports, probeThreadsRef, SerialPortScanner::inspectPort);
+    }
+
+    static List<PortResult> inspectPorts(final List<String> ports, final List<Thread> probeThreadsRef,
+                                         final Function<String, PortResult> inspector) {
         if (ports.isEmpty()) {
             return new ArrayList<>();
         }
@@ -150,7 +239,7 @@ public enum SerialPortScanner implements PortScanner {
                 log.trace(String.format("Thread `%s` is starting...", threadName));
                 PortResult r;
                 try {
-                    r = inspectPort(p);
+                    r = inspector.apply(p);
                 } catch (Throwable e) {
                     // Never let a probe exception kill the inspect thread.
                     // If inspectPort already returned null (dead port), keep it null.
@@ -232,9 +321,10 @@ public enum SerialPortScanner implements PortScanner {
     private boolean lastPcanConnected = false;
 
     /**
-     * Find all available serial ports and checks if simulator local TCP port is available
+     * Find all available serial ports and checks if simulator local TCP port is available.
+     * Package-private so scan-policy unit tests can drive scan cycles directly with scripted probes.
      */
-    private void findAllAvailablePorts(boolean includeSlowLookup) {
+    void findAllAvailablePorts(boolean includeSlowLookup) {
         List<PortResult> ports = new ArrayList<>();
         boolean dfuConnected;
         boolean stLinkConnected;
@@ -242,7 +332,7 @@ public enum SerialPortScanner implements PortScanner {
 
         // ttyS* are legacy motherboard UARTs on Linux — never a rusEFI ECU and they stall
         // the binary protocol handshake for seconds.  Drop them before the scan pipeline.
-        final Set<String> serialPorts = LinkManager.getCommPorts().stream()
+        final Set<String> serialPorts = probes.listSerialPorts().stream()
             .filter(name -> !name.startsWith("ttyS"))
             .collect(Collectors.toCollection(TreeSet::new));
         log.info("getCommPorts (filtered): " + serialPorts);
@@ -255,7 +345,7 @@ public enum SerialPortScanner implements PortScanner {
             CompatibilityOptional.ifPresentOrElse(cachedPort, ports::add, () -> portsToInspect.add(serialPort));
         }
 
-        for (PortResult p : inspectPorts(portsToInspect, probeThreads)) {
+        for (PortResult p : inspectPorts(portsToInspect, probeThreads, probes::inspectPort)) {
             log.info("Port " + p.port + " detected as: " + p.type.friendlyString);
             ports.add(p);
             // Do not cache Unknown — keep the port uninspected so the next scan cycle retries
@@ -266,7 +356,7 @@ public enum SerialPortScanner implements PortScanner {
         }
 
         final Collection<String> tcpPorts = includeSlowLookup
-            ? TcpConnector.getAvailablePorts()
+            ? probes.listTcpPorts()
             : Collections.emptyList();
 
         final Set<String> livePortNames = new HashSet<>(serialPorts);
@@ -282,7 +372,7 @@ public enum SerialPortScanner implements PortScanner {
                 if (cachedPort.isPresent()) {
                     ports.add(cachedPort.get());
                 } else {
-                    final Optional<CalibrationsInfo> tcpCalibrations = getEcuCalibrations(tcpPort);
+                    final Optional<CalibrationsInfo> tcpCalibrations = probes.getEcuCalibrations(tcpPort);
                     final PortResult tcpResult = tcpCalibrations
                         .map(c -> new PortResult(tcpPort, SerialPortType.Ecu, c))
                         .orElseGet(() -> new PortResult(tcpPort, SerialPortType.Unknown));
@@ -297,12 +387,12 @@ public enum SerialPortScanner implements PortScanner {
             // Skip the expensive OS device probes while a live ECU is connected, and otherwise run them
             // no more than once per DEVICE_PROBE_INTERVAL_MS. Reuse the last-known values in between so
             // the update menu doesn't flicker. [tag:better_ux_for_flashing]
-            final boolean liveEcuConnected = ConnectionStatusLogic.INSTANCE.isConnected();
-            final long now = System.currentTimeMillis();
+            final boolean liveEcuConnected = probes.isLiveEcuConnected();
+            final long now = probes.now();
             if (!liveEcuConnected && (now - lastDeviceProbeMs) >= DEVICE_PROBE_INTERVAL_MS) {
-                lastDfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
-                lastStLinkConnected = StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
-                lastPcanConnected = MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
+                lastDfuConnected = probes.isDfuDeviceConnected();
+                lastStLinkConnected = probes.isStLinkConnected();
+                lastPcanConnected = probes.isPcanConnected();
                 lastDeviceProbeMs = now;
             }
             dfuConnected = lastDfuConnected;

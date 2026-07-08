@@ -10,12 +10,14 @@ and everything they feed (`StartupFrame`, `DeviceSessionManager`, `DevicePane`,
 **The plumbing is done; the seam is half-open.** `ConnectivityContext` is
 threaded as a constructor/method parameter through ~30 classes, and it is the
 *only* place in main code that touches `SerialPortScanner.INSTANCE` — a single
-choke point, which is exactly the shape you want. As of 2026-07-08 (Phases 1–3
+choke point, which is exactly the shape you want. As of 2026-07-08 (Phases 1–4
 below) it is a plain class holding the `PortScanner` interface, the global
-`INSTANCE` survives only at composition roots, and tests substitute a
-hand-written `FakePortScanner` — `DeviceSessionManagerTest` is the first
-automated coverage of the flashing/session state machine. The scanner's own
-internals (Phase 4) remain the last untestable piece.
+`INSTANCE` survives only at composition roots, tests substitute a hand-written
+`FakePortScanner` (`DeviceSessionManagerTest`), and the scanner itself takes
+injected `HardwareProbes` so its scan policy is unit-tested with scripted
+hardware (`SerialPortScannerTest`). Remaining statics on this path:
+`ConnectionStatusLogic.INSTANCE`, `ConnectionWatchdog`, and the flash-tool
+statics behind `ProductionProbes`.
 
 ## UIContext: the working DI precedent
 
@@ -186,17 +188,29 @@ contents per hardware shape (its pure decision logic is already covered by
 `ProgramSelectorTest`), and the job suspend/invalidate/resume choreography in
 `BinaryProtocolExecutor` / `AbstractAutoFlashJob` failure paths.
 
-### Phase 4 — make the scanner itself testable
+### Phase 4 — make the scanner itself testable — DONE 2026-07-08
 
-Split `SerialPortScanner`'s *policy* (cache retention, Unknown-retry,
-listener-on-change, probe throttling, suspend-waits-for-in-flight-probes) from
-its *probes* (the static hardware calls). Convert the enum to a class whose
-constructor takes a small probe-provider (port lister, port inspector, device
-probes, ECU-connected supplier), with a production factory wiring the current
-statics. `SerialPortScanner.INSTANCE` becomes a static field. Then the scan
-state machine gets direct unit tests with scripted probe results — including
-the historically buggy areas: stale-port handling, Unknown non-caching,
-reconnect cache pre-population, probe-thread interruption on suspend.
+`SerialPortScanner` is now a class (no longer an enum) whose constructor takes
+a `HardwareProbes` provider — port lister, per-port inspector, TCP lister,
+device probes (DFU/ST-Link/PCAN), live-ECU supplier, and the clock used by the
+device-probe throttle. `ProductionProbes` (nested) wires the original statics
+(`LinkManager.getCommPorts`, `SerialPortScanner.inspectPort`, `TcpConnector`,
+`ConnectionStatusLogic`, `DfuFlasher`/`StLinkFlasher`/`MaintenanceUtil`);
+`INSTANCE` is a `static final` field built from it, so no call sites changed.
+A second constructor flag lets tests build a scanner that never starts the
+background scan thread and drive `findAllAvailablePorts` cycles directly. The
+static `inspectPorts(ports, threads)` entry point is kept for the
+`InspectPortSandbox` manual harness.
+
+`SerialPortScannerTest` (13 tests) now covers the scan policy with scripted
+probes — the historically buggy `[tag:better_ux_for_flashing]` areas: ttyS
+filtering, ECU caching vs. Unknown retry-every-cycle, dead/stale OS-node
+dropping, cache eviction on unplug + re-inspection on replug,
+listener-only-on-change, DFU synthetic port, device-probe throttling with
+last-known-value reuse, probe skip while a live ECU is connected, non-ECU TCP
+ports not being cached, `cachePort`/`invalidatePort` semantics, and ECU-first
+sort order. Not covered (needs real threads/time): the suspend-interrupts-
+in-flight-probes choreography and the 5-second per-port inspection timeout.
 
 ### Phase 5 (optional, later) — layering
 
