@@ -12,8 +12,11 @@ import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
-    public OpenBltManualJob(final PortResult port, final JComponent parent) {
+    private final ConnectivityContext connectivityContext;
+
+    public OpenBltManualJob(final PortResult port, final JComponent parent, final ConnectivityContext connectivityContext) {
         super("OpenBLT via Serial", new SerialPortWithParentComponentJobContext(port, parent));
+        this.connectivityContext = connectivityContext;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
                 // ports with XCP every cycle; if a probe overlaps the flash it corrupts the firmware image.
                 // suspend().await(...) blocks until the in-flight scan cycle has finished, mirroring the
                 // auto path's bltUpdateFirmware. [tag:better_ux_for_flashing]
-                final SerialPortScanner scanner = ConnectivityContext.INSTANCE.getSerialPortScanner();
+                final SerialPortScanner scanner = connectivityContext.getSerialPortScanner();
                 try {
                     scanner.suspend().await(30, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
@@ -51,7 +54,7 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
                 // ECU pre-flash (board was already in the bootloader), so restore the last tune backed up
                 // off an ECU this session. A hard failure here is non-fatal: the flash itself succeeded.
                 // [tag:better_ux_for_flashing]
-                CalibrationsHelper.restorePreviousCalibrationsAfterManualFlash(callbacks, ConnectivityContext.INSTANCE);
+                CalibrationsHelper.restorePreviousCalibrationsAfterManualFlash(callbacks, connectivityContext);
                 callbacks.done();
             },
             onJobFinished

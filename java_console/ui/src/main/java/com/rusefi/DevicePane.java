@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class DevicePane {
     private final JPanel content = new JPanel();
+    private final ConnectivityContext connectivityContext;
     private final DeviceSessionManager sessionManager;
     private final JTabbedPane tabbedPane;
 
@@ -35,7 +36,9 @@ public class DevicePane {
     // pull focus to the Device tab only once, not on every scan cycle [tag:better_ux_for_flashing].
     private SessionState lastRenderedState;
 
-    public DevicePane(final UIContext uiContext, final DeviceSessionManager sessionManager, final JTabbedPane tabbedPane) {
+    public DevicePane(final UIContext uiContext, final ConnectivityContext connectivityContext,
+                      final DeviceSessionManager sessionManager, final JTabbedPane tabbedPane) {
+        this.connectivityContext = connectivityContext;
         this.sessionManager = sessionManager;
         this.tabbedPane = tabbedPane;
 
@@ -45,7 +48,7 @@ public class DevicePane {
         this.jobExecutor = new SingleAsyncJobExecutor(statusPanel);
         sessionManager.setJobExecutor(jobExecutor);
 
-        this.selector = new ProgramSelector(ConnectivityContext.INSTANCE, comboPorts);
+        this.selector = new ProgramSelector(connectivityContext, comboPorts);
         selector.setJobExecutor(jobExecutor);
         selector.setLinkManager(uiContext.getLinkManager());
 
@@ -85,7 +88,7 @@ public class DevicePane {
     private void render(final SessionState state, final AvailableHardware hardware) {
         final AvailableHardware effectiveHardware = (hardware != null)
             ? hardware
-            : ConnectivityContext.INSTANCE.getCurrentHardware();
+            : connectivityContext.getCurrentHardware();
 
         // Repopulate the ports combo, preserving the current selection where possible.
         final PortResult previouslySelected = (PortResult) comboPorts.getSelectedItem();

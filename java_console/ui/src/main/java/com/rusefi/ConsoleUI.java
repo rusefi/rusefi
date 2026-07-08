@@ -346,8 +346,9 @@ console live data tab is broken #8402
             // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
             PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
-            DeviceSessionManager deviceSessionManager = new DeviceSessionManager(ConnectivityContext.INSTANCE, initialPort);
-            DevicePane devicePane = new DevicePane(uiContext, deviceSessionManager, tabbedPane.tabbedPane);
+            ConnectivityContext connectivityContext = ConnectivityContext.INSTANCE;
+            DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
+            DevicePane devicePane = new DevicePane(uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane);
             tabbedPane.addTab("Device", devicePane.getContent());
             mainFrame.setUpdateEcuAction(() -> {
                 tabbedPane.selectTab("Device");

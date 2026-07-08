@@ -88,11 +88,11 @@ opened.
 
 | Site | Classification |
 |---|---|
-| `ConsoleUI.java:157,349,499` | Composition root — acceptable (this is where the object graph is built) |
-| `MassUpdater.java:219` (`main`) | Composition root — acceptable |
-| `MassUpdater.java:193` | **Leak** — the class already receives `connectivityContext` in its constructor (line 39) but the OpenBLT job creation reaches for the global anyway |
-| `DevicePane.java:48,88` | **Leak** — constructor builds `ProgramSelector` from the global; `render()` falls back to the global. `DevicePane` already receives `DeviceSessionManager`, which holds the context |
-| `OpenBltManualJob.java:31,54` | **Leak** — the only job class not taking the context in its constructor (its siblings `OpenBltAutoJob`/`DfuAutoJob`/`AbstractAutoFlashJob` all do) |
+| `ConsoleUI.java:157,349,500` | Composition root — acceptable (this is where the object graph is built) |
+| `MassUpdater.java` (`main`) | Composition root — acceptable |
+| `MassUpdater` (auto-flash job creation) | **Leak — fixed 2026-07-08**: now uses a `connectivityContext` field set from the constructor |
+| `DevicePane` | **Leak — fixed 2026-07-08**: now takes `ConnectivityContext` as a constructor parameter |
+| `OpenBltManualJob` | **Leak — fixed 2026-07-08**: now takes the context in its constructor like its siblings `OpenBltAutoJob`/`DfuAutoJob` |
 | `FirmwareUpdateTabSandbox`, `BltSwitchSandbox` (test sandboxes) | Composition roots for manual hardware testing — acceptable |
 
 ### Static state behind the seam
@@ -139,16 +139,17 @@ Ordered so each phase is independently useful, small, and low-risk. Phases 1–2
 are mechanical; Phase 3 opens the seam; Phase 4 makes the scanner itself
 testable.
 
-### Phase 1 — close the leaks (no behavior change)
+### Phase 1 — close the leaks (no behavior change) — DONE 2026-07-08
 
-1. `OpenBltManualJob`: accept `ConnectivityContext` in the constructor like its
-   sibling jobs; update the call sites that create it.
-2. `MassUpdater:193`: use the `connectivityContext` field instead of `INSTANCE`.
-3. `DevicePane`: take `ConnectivityContext` as a constructor parameter (or
-   expose it from `DeviceSessionManager`, which already holds it) and drop both
-   `INSTANCE` references.
+1. `OpenBltManualJob`: accepts `ConnectivityContext` in the constructor like its
+   sibling jobs; all three call sites (`MassUpdater`, `ProgramSelector`,
+   `BasicUpdaterPanel`) pass the context they already hold.
+2. `MassUpdater`: keeps the constructor parameter as a field; auto-flash job
+   creation uses it instead of `INSTANCE`.
+3. `DevicePane`: takes `ConnectivityContext` as a constructor parameter; both
+   `INSTANCE` references dropped.
 
-After this, `INSTANCE` appears only in `ConsoleUI`, `MassUpdater.main` and the
+`INSTANCE` now appears only in `ConsoleUI`, `MassUpdater.main` and the
 sandboxes — i.e. only at composition roots.
 
 ### Phase 2 — make ConnectivityContext a real class (the UIContext shape)

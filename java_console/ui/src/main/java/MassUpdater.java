@@ -35,8 +35,10 @@ public class MassUpdater {
 
     private final AtomicBoolean flashInProgress = new AtomicBoolean();
     private boolean multipleWarned;
+    private final ConnectivityContext connectivityContext;
 
     public MassUpdater(ConnectivityContext connectivityContext, SerialPortType target) {
+        this.connectivityContext = connectivityContext;
         mainStatus.showFrame("Mass Updater " + UiVersion.CONSOLE_VERSION);
 
         final AtomicBoolean previousDfuState = new AtomicBoolean();
@@ -100,7 +102,7 @@ public class MassUpdater {
                     knownPorts.add(openPort.port);
                     mainStatus.getContent().logLine("New port " + openPort);
 
-                    OpenBltManualJob job = new OpenBltManualJob(openPort, mainStatus.getContent());
+                    OpenBltManualJob job = new OpenBltManualJob(openPort, mainStatus.getContent(), connectivityContext);
                     SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(job));
                 }
             }
@@ -190,7 +192,7 @@ public class MassUpdater {
                 return;
             }
 
-            final OpenBltAutoJob job = new OpenBltAutoJob(openPort, mainStatus.getContent(), ConnectivityContext.INSTANCE, lm);
+            final OpenBltAutoJob job = new OpenBltAutoJob(openPort, mainStatus.getContent(), connectivityContext, lm);
             final UpdateOperationCallbacks callbacks = createStatusWindow(job.getName());
             // Synchronous: blocks this worker thread until the whole flash sequence is done.
             job.doJob(callbacks, () -> {});
