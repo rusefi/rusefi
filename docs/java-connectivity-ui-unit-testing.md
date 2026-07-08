@@ -99,7 +99,7 @@ rather than invent new machinery.
 | Area | Test | What it covers |
 | --- | --- | --- |
 | Scan policy | `ui` `SerialPortScannerTest` (13) | ttyS filtering, ECU caching vs Unknown retry, stale-node drop, unplug/replug eviction, listener-only-on-change, synthetic DFU port, device-probe throttle + last-known reuse, probe skip while connected, TCP not cached, `cachePort`/`invalidatePort`, ECU-first sort |
-| Session state machine | `ui` `DeviceSessionManagerTest` (9) | OpenBLT/DFU detection + precedence + disappearance, initial-port pre-cache, re-cache on reconnect, CONNECTING/CONNECTED, snapshot to late subscribers |
+| Session state machine | `ui` `DeviceSessionManagerTest` (15) | OpenBLT/DFU detection + precedence + disappearance, initial-port pre-cache, re-cache on reconnect, CONNECTING/CONNECTED, snapshot to late subscribers, FLASHING + watchdog pause/resume + post-flash rescan choreography (`FakeJobExecutor`) |
 | Flash mode/port decisions | `ui` `ProgramSelectorTest` | `mainButtonModeFor` (DFU/OpenBLT/live/offline), `resolveFlashPort` (bootloader wins, offline DFU>OpenBLT preference) |
 | Tune merge recovery | `ui` `CalibrationsHelper*Test` | `decidePostMerge` all actions (#9756 crash path), partial-merge failed-field tracking, `isUiContext` |
 | Firmware file targeting | `shared_io` `FindFileHelperTest` ×2 | `extractTargetFromFirmwareName`, `findXNumberOfFile` |
@@ -108,7 +108,7 @@ rather than invent new machinery.
 | UI status | `ui` `ConnectionStatusIconTest` | red/green/purple priority, bootloader tooltip, property-change reaction, null tab pane |
 | Update-available check | `ui` `MainFrameUpdateCheckTest` | `needsFirmwareUpdate` null/unparseable inputs, new-format hash compare, legacy date compare |
 | Connectivity value types & helpers | `connectivity` `SerialPortCacheTest`, `AvailableHardwareTest`, `PortResultTest`, `SerialPortTypeTest`, `SerialPortScannerInspectPortsTest`, `RecurringStepTest` | cache eviction semantics, snapshot filtering/equality, PortResult identity contract, sort ranks, probe fan-out (dead port dropped, crash ⇒ Unknown), suspend-latch handshake — the Tier 1 batch, added 2026-07-08 |
-| Flash brick guard (safe branches) | `ui` `MaintenanceUtilTest` | `confirmFirmwareMatchesBoard`: matching/case-insensitive target, unparseable name no-false-alarm, `_QC_` compatibility — plus the `containsPattern` normalization; Tier 2, added 2026-07-08 |
+| Flash brick guard | `ui` `MaintenanceUtilTest` | `confirmFirmwareMatchesBoard`: matching/case-insensitive target, unparseable name no-false-alarm, `_QC_` compatibility, mismatch declined/accepted via `UserConfirm` seam; `ensureFirmwareForConnectedTarget` unverified-declined + live-verified-skip; plus the `containsPattern` normalization (Tiers 2–3, 2026-07-08) |
 | Firmware selection by board target | `shared_io` `FindFileHelperTargetSelectionTest` | newest-match wins, related-name (`_pro`) rejected, exact match beats newer foreign image, `older-fw` archive recovery, `.bin` variant, null/blank/unmatched ⇒ null; Tier 2, added 2026-07-08 |
 | Device tab presentation decisions | `ui` `DevicePaneTest` | bootloader-state classification, DFU/OpenBLT guidance text (platform-aware), offline-capable tab lock list; Tier 2, added 2026-07-08 |
 | Port classification pipeline | `ui` `EcuHardwareProbesInspectTest` | OpenBLT-first probing, stale-node/vanish ⇒ dropped, ECU-with/without-OpenBLT + calibrations, 3-attempt retry with between-attempts backoff, interrupt handling; Tier 3 item 1, added 2026-07-08 |
@@ -237,13 +237,15 @@ sites.
    along), found-on-third-retry, Unknown after max attempts with backoff
    between attempts only, and interrupt-during-backoff (stops retrying,
    restores the interrupt flag).
-2. **`DeviceSessionManager` FLASHING state + watchdog choreography** — the
-   job-start ⇒ pause-watchdog / job-finish ⇒ resume + restartTimer + refresh
-   path is entirely untested. Seam: a 3-method `JobExecutor` interface
-   (`isNotInProgress`, the two job listeners — `SingleAsyncJobExecutor`
-   already has them) plus injected pause/resume runnables for
-   `ConnectionWatchdog`. `FakePortScanner` already counts
-   `resumeCount`/`restartTimerCount` for the assertions.
+2. **`DeviceSessionManager` FLASHING state + watchdog choreography** — DONE
+   2026-07-08. The nested `JobExecutor` interface (implemented by
+   `SingleAsyncJobExecutor`, no call-site changes) plus constructor-injected
+   watchdog pause/resume hooks (production overload wires
+   `ConnectionWatchdog::pause/resume`). `DeviceSessionManagerTest` +4: job
+   start ⇒ FLASHING (beats CONNECTED) + watchdog paused; job finish ⇒ scanner
+   resume + forced rescan + watchdog resume + post-flash bootloader detection;
+   already-running executor reports FLASHING immediately; null executor
+   tolerated.
 3. **`AbstractAutoFlashJob.awaitEcuPort`** — the interrupted-flash /
    port-renumbering wait ("return ECU port; give up after the bootloader grace
    period"). Seam: package-private + injected clock/sleeper; drive hardware
@@ -266,10 +268,16 @@ sites.
    ecuPorts, disconnectedByUser)`, and test: skips when disconnected-by-user,
    when current port still present, when zero or multiple candidate ECU ports,
    when candidate equals current; follows on exactly-one new ECU port.
-7. **`MaintenanceUtil` confirm seam** — inject the EDT-confirm as a
-   `BooleanSupplier` so the genuine-mismatch branch of
-   `confirmFirmwareMatchesBoard` / `confirmUnverifiedTarget` becomes
-   deterministic instead of opening a `JOptionPane`.
+7. **`MaintenanceUtil` confirm seam** — DONE 2026-07-08. The nested
+   `UserConfirm` interface with package-private overloads (public methods
+   delegate to the `confirmOnEdt` JOptionPane production impl).
+   `MaintenanceUtilTest` +5 covers the previously Swing-blocked branches:
+   mismatch declined ⇒ flash blocked (message names both targets), mismatch
+   explicitly accepted ⇒ proceeds, verified match never asks, unverified
+   target declined ⇒ fail closed, live-verified bundle-matching target skips
+   confirmation. Note: tests pick a board target outside the bundled
+   `board_compatibility` allowlist to reach the mismatch branch
+   deterministically.
 8. **`LinkManager.restart()` gate** — the renumber-follow invariant
    (`disconnect()` blocks restart, port must be present in `getCommPorts()`).
    A `SerialPortSource` interface exists but is not injectable per instance;

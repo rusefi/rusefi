@@ -72,6 +72,14 @@ public class MaintenanceUtil {
      */
     public static boolean ensureFirmwareForConnectedTarget(final UpdateOperationCallbacks callbacks,
                                                            final ConnectedEcuTarget connectedEcuTarget) {
+        return ensureFirmwareForConnectedTarget(callbacks, connectedEcuTarget, MaintenanceUtil::confirmOnEdt);
+    }
+
+    // package-private overload with an injected confirm so the user-decision branches are unit-testable
+    // without a blocking JOptionPane — reflection and real dialogs are both prohibited in unit tests.
+    static boolean ensureFirmwareForConnectedTarget(final UpdateOperationCallbacks callbacks,
+                                                    final ConnectedEcuTarget connectedEcuTarget,
+                                                    final UserConfirm confirm) {
         final String bundleTarget = BundleUtil.getBundleTarget();
         final String ecuTarget = connectedEcuTarget.effectiveTarget();
         // A board in a bootloader cannot identify itself. If there is no live signature this session the
@@ -79,7 +87,7 @@ public class MaintenanceUtil {
         // so we never program a possibly-swapped board silently. Independent of foreign-vs-matching: even
         // flashing the bundle's own firmware onto an unverified board deserves a check. Live-verified
         // flashes skip this. [tag:better_ux_for_flashing]
-        if (!connectedEcuTarget.isLiveTargetKnown() && !confirmUnverifiedTarget(ecuTarget)) {
+        if (!connectedEcuTarget.isLiveTargetKnown() && !confirmUnverifiedTarget(ecuTarget, confirm)) {
             callbacks.logLine("Firmware update cancelled — unverified board target \"" + ecuTarget + "\".");
             return false;
         }
@@ -109,8 +117,8 @@ public class MaintenanceUtil {
      * Ask the user to confirm flashing an unverified (persisted-guess) board target. Runs on the EDT and
      * blocks the calling job thread for the answer; fails closed (no flash) if interrupted. [tag:better_ux_for_flashing]
      */
-    private static boolean confirmUnverifiedTarget(final String ecuTarget) {
-        return confirmOnEdt(String.format(
+    private static boolean confirmUnverifiedTarget(final String ecuTarget, final UserConfirm confirm) {
+        return confirm.confirm(String.format(
             "No live ECU is connected to verify the board.\n\n" +
             "About to flash firmware for: \"%s\".\n" +
             "If the plugged-in board is not \"%s\", flashing the wrong firmware can brick it.\n\n" +
@@ -129,6 +137,13 @@ public class MaintenanceUtil {
      */
     public static boolean confirmFirmwareMatchesBoard(final String firmwareFile, final UpdateOperationCallbacks callbacks,
                                                       final ConnectedEcuTarget connectedEcuTarget) {
+        return confirmFirmwareMatchesBoard(firmwareFile, callbacks, connectedEcuTarget, MaintenanceUtil::confirmOnEdt);
+    }
+
+    // package-private overload with an injected confirm, see ensureFirmwareForConnectedTarget above
+    static boolean confirmFirmwareMatchesBoard(final String firmwareFile, final UpdateOperationCallbacks callbacks,
+                                               final ConnectedEcuTarget connectedEcuTarget,
+                                               final UserConfirm confirm) {
         final String fileTarget = FindFileHelper.extractTargetFromFirmwareName(firmwareFile);
         final String boardTarget = connectedEcuTarget.effectiveTarget();
         if (fileTarget == null || boardTarget == null || fileTarget.equalsIgnoreCase(boardTarget)) {
@@ -141,11 +156,19 @@ public class MaintenanceUtil {
         callbacks.logLine(String.format(
             "*** FIRMWARE/BOARD MISMATCH *** file is built for \"%s\" but the connected board is \"%s\".",
             fileTarget, boardTarget));
-        return confirmOnEdt(String.format(
+        return confirm.confirm(String.format(
             "DANGER: about to flash \"%s\" firmware onto a \"%s\" board.\n\n" +
             "This is almost certainly the WRONG firmware and will likely BRICK the board.\n\n" +
             "Flash anyway?", fileTarget, boardTarget),
             "Firmware / board mismatch", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * The blocking user-confirmation seam behind the flash guards. Production is {@link #confirmOnEdt}
+     * (a modal JOptionPane); tests inject a scripted answer.
+     */
+    interface UserConfirm {
+        boolean confirm(String message, String title, int messageType);
     }
 
     private static boolean confirmOnEdt(final String message, final String title, final int messageType) {

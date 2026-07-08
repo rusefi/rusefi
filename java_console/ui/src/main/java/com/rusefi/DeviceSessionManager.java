@@ -28,8 +28,23 @@ public class DeviceSessionManager {
         void onSessionChanged(SessionState state, AvailableHardware hardware);
     }
 
+    /**
+     * The narrow slice of {@link SingleAsyncJobExecutor} this session manager consumes, extracted so the
+     * FLASHING state and the watchdog/scanner choreography can be unit-tested with a fake executor.
+     */
+    public interface JobExecutor {
+        boolean isNotInProgress();
+
+        void addOnJobAboutToStartListener(Runnable listener);
+
+        void addOnJobInProgressFinishedListener(Runnable listener);
+    }
+
     private final ConnectivityContext connectivityContext;
-    private volatile SingleAsyncJobExecutor jobExecutor;
+    private volatile JobExecutor jobExecutor;
+    // ConnectionWatchdog is a static singleton; injected as hooks so tests can observe pause/resume.
+    private final Runnable watchdogPause;
+    private final Runnable watchdogResume;
 
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
@@ -41,7 +56,16 @@ public class DeviceSessionManager {
 
     public DeviceSessionManager(final ConnectivityContext connectivityContext,
                                 final PortResult initialPort) {
+        this(connectivityContext, initialPort, ConnectionWatchdog::pause, ConnectionWatchdog::resume);
+    }
+
+    public DeviceSessionManager(final ConnectivityContext connectivityContext,
+                                final PortResult initialPort,
+                                final Runnable watchdogPause,
+                                final Runnable watchdogResume) {
         this.connectivityContext = connectivityContext;
+        this.watchdogPause = watchdogPause;
+        this.watchdogResume = watchdogResume;
         this.currentHardware = connectivityContext.getCurrentHardware();
         this.sessionPort = initialPort;
         this.state = computeState();
@@ -66,11 +90,11 @@ public class DeviceSessionManager {
      * while a DFU/OpenBLT job owns the port. The executor is created by the Device tab (it owns the
      * status/progress sink), so it is injected after construction.
      */
-    public void setJobExecutor(final SingleAsyncJobExecutor jobExecutor) {
+    public void setJobExecutor(final JobExecutor jobExecutor) {
         this.jobExecutor = jobExecutor;
         if (jobExecutor != null) {
             // Pause the watchdog during a flash job so it does not race the flasher for the port. [tag:better_ux_for_flashing]
-            jobExecutor.addOnJobAboutToStartListener(() -> ConnectionWatchdog.pause());
+            jobExecutor.addOnJobAboutToStartListener(watchdogPause);
             jobExecutor.addOnJobAboutToStartListener(this::refresh);
             jobExecutor.addOnJobInProgressFinishedListener(() -> {
                 // Flash finished (success or failure): immediately resume the scanner and force a fresh
@@ -80,7 +104,7 @@ public class DeviceSessionManager {
                 scanner.resume();
                 scanner.restartTimer();
                 refresh();
-                ConnectionWatchdog.resume();
+                watchdogResume.run();
             });
         }
         refresh();

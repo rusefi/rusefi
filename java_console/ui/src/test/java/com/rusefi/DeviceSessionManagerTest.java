@@ -154,4 +154,98 @@ public class DeviceSessionManagerTest {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
         assertEquals(SessionState.CONNECTED, manager.getState());
     }
+
+    // ---- FLASHING state + watchdog/scanner choreography around a flash job ----
+
+    /** Scripted {@link DeviceSessionManager.JobExecutor}: fires the same listeners production wires. */
+    private static class FakeJobExecutor implements DeviceSessionManager.JobExecutor {
+        boolean inProgress;
+        final List<Runnable> aboutToStart = new ArrayList<>();
+        final List<Runnable> finished = new ArrayList<>();
+
+        @Override
+        public boolean isNotInProgress() {
+            return !inProgress;
+        }
+
+        @Override
+        public void addOnJobAboutToStartListener(Runnable listener) {
+            aboutToStart.add(listener);
+        }
+
+        @Override
+        public void addOnJobInProgressFinishedListener(Runnable listener) {
+            finished.add(listener);
+        }
+
+        void startJob() {
+            inProgress = true;
+            aboutToStart.forEach(Runnable::run);
+        }
+
+        void finishJob() {
+            inProgress = false;
+            finished.forEach(Runnable::run);
+        }
+    }
+
+    private final List<String> watchdogEvents = new ArrayList<>();
+
+    private DeviceSessionManager managerWithWatchdogHooks() {
+        return new DeviceSessionManager(connectivityContext, null,
+            () -> watchdogEvents.add("pause"), () -> watchdogEvents.add("resume"));
+    }
+
+    @Test
+    public void flashJobDrivesSessionToFlashingAndPausesWatchdog() {
+        DeviceSessionManager manager = managerWithWatchdogHooks();
+        FakeJobExecutor jobExecutor = new FakeJobExecutor();
+        manager.setJobExecutor(jobExecutor);
+
+        // FLASHING must win even over a live connection: the flasher owns the port now
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        jobExecutor.startJob();
+
+        assertEquals(SessionState.FLASHING, manager.getState());
+        assertEquals(Collections.singletonList("pause"), watchdogEvents,
+            "the watchdog must be paused so it does not race the flasher for the port");
+    }
+
+    @Test
+    public void jobFinishResumesScannerForcesRescanAndResumesWatchdog() {
+        DeviceSessionManager manager = managerWithWatchdogHooks();
+        FakeJobExecutor jobExecutor = new FakeJobExecutor();
+        manager.setJobExecutor(jobExecutor);
+        jobExecutor.startJob();
+
+        jobExecutor.finishJob();
+
+        assertEquals(SessionState.DISCONNECTED, manager.getState(), "job over — state derives from reality again");
+        assertEquals(1, scanner.resumeCount, "the scanner must resume immediately after the flash");
+        assertEquals(1, scanner.restartTimerCount, "a fresh scan cycle must be forced to detect the post-flash board state");
+        assertEquals(asList("pause", "resume"), watchdogEvents);
+
+        // the forced rescan is what lets the UI offer retry when the board is still in the bootloader
+        scanner.fireHardwareChange(hardwareWith(new PortResult("COM9", SerialPortType.OpenBlt)));
+        assertEquals(SessionState.DEVICE_IN_BLT, manager.getState());
+    }
+
+    @Test
+    public void executorWithJobAlreadyRunningReportsFlashingImmediately() {
+        DeviceSessionManager manager = managerWithWatchdogHooks();
+        FakeJobExecutor jobExecutor = new FakeJobExecutor();
+        jobExecutor.inProgress = true;
+
+        manager.setJobExecutor(jobExecutor);
+
+        assertEquals(SessionState.FLASHING, manager.getState());
+    }
+
+    @Test
+    public void nullExecutorIsAcceptedAndJustRefreshes() {
+        DeviceSessionManager manager = managerWithWatchdogHooks();
+        manager.setJobExecutor(null);
+        assertEquals(SessionState.DISCONNECTED, manager.getState());
+        assertTrue(watchdogEvents.isEmpty());
+    }
 }

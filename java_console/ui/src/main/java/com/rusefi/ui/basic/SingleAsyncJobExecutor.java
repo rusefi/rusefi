@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class SingleAsyncJobExecutor {
+public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.JobExecutor {
     private final UpdateOperationCallbacks updateOperationCallbacks;
 
     private final java.util.List<Runnable> onJobInProgressFinished = new ArrayList<>();
