@@ -80,20 +80,20 @@ public class ConsoleUI {
      */
     private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
-    public ConsoleUI(String port, SerialPortType serialPortType) {
-        this(new UIContext(), port, serialPortType, false, null, null, null);
+    public ConsoleUI(String port, SerialPortType serialPortType, ConnectivityContext connectivityContext) {
+        this(new UIContext(), port, serialPortType, false, null, null, null, connectivityContext);
     }
 
-    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null, null);
+    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, ConnectivityContext connectivityContext) {
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, null, connectivityContext);
     }
 
     /**
      * Reuses the already-visible, maximized {@code reuseFrame} handed off from {@link StartupFrame}
      * instead of opening a second window (#9715).
      */
-    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, JFrame reuseFrame) {
-        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame);
+    public ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType, boolean alreadyConnected, JFrame reuseFrame, ConnectivityContext connectivityContext) {
+        this(uiContext, port, serialPortType, alreadyConnected, null, null, reuseFrame, connectivityContext);
     }
 
     /**
@@ -104,9 +104,10 @@ public class ConsoleUI {
      * @param uiContext      shared UI context
      * @param ini            INI file model resolved from the MSQ signature
      * @param initialImage   ConfigurationImage loaded from the MSQ file
+     * @param connectivityContext
      */
-    public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage) {
-        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, null);
+    public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, ConnectivityContext connectivityContext) {
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, null, connectivityContext);
     }
 
     /**
@@ -126,7 +127,7 @@ public class ConsoleUI {
 
     private ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType,
                       boolean alreadyConnected, IniFileModel offlineIni, ConfigurationImage offlineImage,
-                      JFrame reuseFrame) {
+                      JFrame reuseFrame, ConnectivityContext connectivityContext) {
         this.uiContext = uiContext;
         LinkManager linkManager = uiContext.getLinkManager();
 
@@ -154,7 +155,7 @@ public class ConsoleUI {
         // never come back. When the scanner has classified exactly one ECU on a new port and the port we
         // were on has vanished, repoint the LinkManager there. [tag:better_ux_for_flashing]
         if (!isOffline) {
-            ProductionConnectivity.CONTEXT.getPortScanner().addListener(currentHardware -> {
+            connectivityContext.getPortScanner().addListener(currentHardware -> {
                 if (linkManager.isDisconnectedByUser()) {
                     return;
                 }
@@ -346,7 +347,7 @@ console live data tab is broken #8402
             // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
             PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
-            ConnectivityContext connectivityContext = ProductionConnectivity.CONTEXT;
+            ConnectivityContext connectivityContext = connectivityContext;
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
             DevicePane devicePane = new DevicePane(uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane);
             tabbedPane.addTab("Device", devicePane.getContent());
@@ -493,7 +494,7 @@ console live data tab is broken #8402
             }
 
             if (isPortDefined) {
-                new ConsoleUI(port, SerialPortType.Unknown);
+                new ConsoleUI(port, SerialPortType.Unknown, ProductionConnectivity.CONTEXT);
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);

@@ -97,7 +97,7 @@ public class SimulatorHelper {
                 startSimulator(isLaunchedOk -> SwingUtilities.invokeLater(() -> {
                     if (isLaunchedOk) {
                         portSelector.disposeFrameAndProceed();
-                        new ConsoleUI("" + TcpConnector.DEFAULT_PORT, SerialPortType.Unknown);
+                        new ConsoleUI("" + TcpConnector.DEFAULT_PORT, SerialPortType.Unknown, ProductionConnectivity.CONTEXT);
                     } else {
                         ErrorMessageHelper.showErrorDialog("Error starting simulator", "Error");
                         simulatorButton.setText("Failed");

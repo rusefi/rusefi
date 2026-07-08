@@ -26,7 +26,6 @@ import com.rusefi.ui.wizard.WizardStepDescriptor;
 import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
-import com.rusefi.ui.util.UiUtils;
 import com.rusefi.io.DoubleCallbacks;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.DfuAutoJob;
@@ -633,7 +632,7 @@ public class StartupFrame {
         prepareForHandoff();
         LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
         SwingUtilities.invokeLater(() ->
-            new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected, frame));
+            new ConsoleUI(uiContext, selectedPort.port, selectedPort.type, alreadyConnected, frame, ProductionConnectivity.CONTEXT));
     }
 
     /**
@@ -664,7 +663,7 @@ public class StartupFrame {
         }
         // NOTE: intentionally do NOT call serialPortScanner.stopTimer() — the offline console relies on
         // the scanner's auto-connect to go online.
-        new ConsoleUI(uiContext, ini, image);
+        new ConsoleUI(uiContext, ini, image, ProductionConnectivity.CONTEXT);
     }
 
     /**
