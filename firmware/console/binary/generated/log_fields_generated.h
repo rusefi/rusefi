@@ -628,7 +628,26 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB more"},
 	{engine->dc_motors, 8, 0, "isEnabled0", ""},
-#if EFI_BOOST_CONTROL
+#if EFI_ENGINE_CONTROL
+	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
+	{engine->fuelComputer.running.postCrankingFuelCorrection, "Fuel: Post cranking mult", "", 0},
+	{engine->fuelComputer.running.intakeTemperatureCoefficient, "Fuel: IAT correction", "", 0},
+	{engine->fuelComputer.running.coolantTemperatureCoefficient, "Fuel: CLT correction", "", 0},
+	{engine->fuelComputer.running.timeSinceCrankingInSecs, "running.timeSinceCrankingInSecs", "secs", 0, "Fuel: math"},
+	{engine->fuelComputer.running.baseFuel, "Fuel: base cycle mass", "mg", 3},
+	{engine->fuelComputer.running.fuel, "Fuel: running", "mg", 3},
+	{engine->fuelComputer.afrTableYAxis, "afrTableYAxis", "%", 0},
+	{engine->fuelComputer.targetLambda, "Fuel: target lambda", "", 2, "Fuel: math"},
+	{engine->fuelComputer.targetAFR, "Fuel: target AFR", "ratio", 2, "Fuel: math"},
+	{engine->fuelComputer.stoichiometricRatio, "Fuel: Stoich ratio", "ratio", 2},
+	{engine->fuelComputer.sdTcharge_coff, "sdTcharge_coff", "", 0},
+	{engine->fuelComputer.sdAirMassInOneCylinder, "Air: Cylinder airmass", "g", 3},
+	{engine->fuelComputer.normalizedCylinderFilling, "Air: Normalized cyl filling", "%", 1},
+	{engine->fuelComputer.idealEngineTorque, "idealEngineTorque", "", 0},
+	{engine->fuelComputer.brokenInjector, "brokenInjector", "", 0},
+	{engine->fuelComputer, 48, 0, "injectorHwIssue", ""},
+#endif
+#if EFI_ENGINE_CONTROL && EFI_BOOST_CONTROL
 	{*engine->module<BoostController>(), 0, 0, "isTpsInvalid", ""},
 	{*engine->module<BoostController>(), 0, 1, "m_shouldResetPid", ""},
 	{*engine->module<BoostController>(), 0, 2, "isBelowClosedLoopThreshold", ""},
@@ -648,25 +667,6 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "percent", 1, "Boost Control"},
 	{engine->module<BoostController>()->boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
 	{engine->module<BoostController>()->boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
-#endif
-#if EFI_ENGINE_CONTROL
-	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
-	{engine->fuelComputer.running.postCrankingFuelCorrection, "Fuel: Post cranking mult", "", 0},
-	{engine->fuelComputer.running.intakeTemperatureCoefficient, "Fuel: IAT correction", "", 0},
-	{engine->fuelComputer.running.coolantTemperatureCoefficient, "Fuel: CLT correction", "", 0},
-	{engine->fuelComputer.running.timeSinceCrankingInSecs, "running.timeSinceCrankingInSecs", "secs", 0, "Fuel: math"},
-	{engine->fuelComputer.running.baseFuel, "Fuel: base cycle mass", "mg", 3},
-	{engine->fuelComputer.running.fuel, "Fuel: running", "mg", 3},
-	{engine->fuelComputer.afrTableYAxis, "afrTableYAxis", "%", 0},
-	{engine->fuelComputer.targetLambda, "Fuel: target lambda", "", 2, "Fuel: math"},
-	{engine->fuelComputer.targetAFR, "Fuel: target AFR", "ratio", 2, "Fuel: math"},
-	{engine->fuelComputer.stoichiometricRatio, "Fuel: Stoich ratio", "ratio", 2},
-	{engine->fuelComputer.sdTcharge_coff, "sdTcharge_coff", "", 0},
-	{engine->fuelComputer.sdAirMassInOneCylinder, "Air: Cylinder airmass", "g", 3},
-	{engine->fuelComputer.normalizedCylinderFilling, "Air: Normalized cyl filling", "%", 1},
-	{engine->fuelComputer.idealEngineTorque, "idealEngineTorque", "", 0},
-	{engine->fuelComputer.brokenInjector, "brokenInjector", "", 0},
-	{engine->fuelComputer, 48, 0, "injectorHwIssue", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController.retardThresholdRpm, "Launch: Retard threshold RPM", "", 0},

@@ -1303,7 +1303,60 @@ float getOutputValueByHash(const int hash) {
 // isEnabled0
 		case 1691876092:
 			return engine->dc_motors.isEnabled0;
-#if EFI_BOOST_CONTROL
+#if EFI_ENGINE_CONTROL
+// totalFuelCorrection
+		case -1779658835:
+			return engine->fuelComputer.totalFuelCorrection;
+// running.postCrankingFuelCorrection
+		case -1288205717:
+			return engine->fuelComputer.running.postCrankingFuelCorrection;
+// running.intakeTemperatureCoefficient
+		case 197173469:
+			return engine->fuelComputer.running.intakeTemperatureCoefficient;
+// running.coolantTemperatureCoefficient
+		case 1822238385:
+			return engine->fuelComputer.running.coolantTemperatureCoefficient;
+// running.timeSinceCrankingInSecs
+		case 526786951:
+			return engine->fuelComputer.running.timeSinceCrankingInSecs;
+// running.baseFuel
+		case -42886021:
+			return engine->fuelComputer.running.baseFuel;
+// running.fuel
+		case -794283008:
+			return engine->fuelComputer.running.fuel;
+// afrTableYAxis
+		case 995190836:
+			return engine->fuelComputer.afrTableYAxis;
+// targetLambda
+		case -734904659:
+			return engine->fuelComputer.targetLambda;
+// targetAFR
+		case 2122891301:
+			return engine->fuelComputer.targetAFR;
+// stoichiometricRatio
+		case 341978922:
+			return engine->fuelComputer.stoichiometricRatio;
+// sdTcharge_coff
+		case 1417236183:
+			return engine->fuelComputer.sdTcharge_coff;
+// sdAirMassInOneCylinder
+		case 1650433343:
+			return engine->fuelComputer.sdAirMassInOneCylinder;
+// normalizedCylinderFilling
+		case 1599780729:
+			return engine->fuelComputer.normalizedCylinderFilling;
+// idealEngineTorque
+		case -791713926:
+			return engine->fuelComputer.idealEngineTorque;
+// brokenInjector
+		case -1453554940:
+			return engine->fuelComputer.brokenInjector;
+// injectorHwIssue
+		case -1237512821:
+			return engine->fuelComputer.injectorHwIssue;
+#endif
+#if EFI_ENGINE_CONTROL && EFI_BOOST_CONTROL
 // isTpsInvalid
 		case -575666209:
 			return engine->module<BoostController>()->isTpsInvalid;
@@ -1362,58 +1415,57 @@ float getOutputValueByHash(const int hash) {
 		case 1239062717:
 			return engine->module<BoostController>()->boostOutput;
 #endif
-#if EFI_ENGINE_CONTROL
-// totalFuelCorrection
-		case -1779658835:
-			return engine->fuelComputer.totalFuelCorrection;
-// running.postCrankingFuelCorrection
-		case -1288205717:
-			return engine->fuelComputer.running.postCrankingFuelCorrection;
-// running.intakeTemperatureCoefficient
-		case 197173469:
-			return engine->fuelComputer.running.intakeTemperatureCoefficient;
-// running.coolantTemperatureCoefficient
-		case 1822238385:
-			return engine->fuelComputer.running.coolantTemperatureCoefficient;
-// running.timeSinceCrankingInSecs
-		case 526786951:
-			return engine->fuelComputer.running.timeSinceCrankingInSecs;
-// running.baseFuel
-		case -42886021:
-			return engine->fuelComputer.running.baseFuel;
-// running.fuel
-		case -794283008:
-			return engine->fuelComputer.running.fuel;
-// afrTableYAxis
-		case 995190836:
-			return engine->fuelComputer.afrTableYAxis;
-// targetLambda
-		case -734904659:
-			return engine->fuelComputer.targetLambda;
-// targetAFR
-		case 2122891301:
-			return engine->fuelComputer.targetAFR;
-// stoichiometricRatio
-		case 341978922:
-			return engine->fuelComputer.stoichiometricRatio;
-// sdTcharge_coff
-		case 1417236183:
-			return engine->fuelComputer.sdTcharge_coff;
-// sdAirMassInOneCylinder
-		case 1650433343:
-			return engine->fuelComputer.sdAirMassInOneCylinder;
-// normalizedCylinderFilling
-		case 1599780729:
-			return engine->fuelComputer.normalizedCylinderFilling;
-// idealEngineTorque
-		case -791713926:
-			return engine->fuelComputer.idealEngineTorque;
-// brokenInjector
-		case -1453554940:
-			return engine->fuelComputer.brokenInjector;
-// injectorHwIssue
-		case -1237512821:
-			return engine->fuelComputer.injectorHwIssue;
+#if EFI_ENGINE_CONTROL && EFI_LAUNCH_CONTROL
+// isNitrousArmed
+		case 595683774:
+			return engine->module<NitrousController>()->isNitrousArmed;
+// isNitrousSpeedCondition
+		case 2135736269:
+			return engine->module<NitrousController>()->isNitrousSpeedCondition;
+// isNitrousTpsCondition
+		case 1400235571:
+			return engine->module<NitrousController>()->isNitrousTpsCondition;
+// isNitrousCltCondition
+		case 31747807:
+			return engine->module<NitrousController>()->isNitrousCltCondition;
+// isNitrousMapCondition
+		case 541066842:
+			return engine->module<NitrousController>()->isNitrousMapCondition;
+// isNitrousAfrCondition
+		case 2008830549:
+			return engine->module<NitrousController>()->isNitrousAfrCondition;
+// isNitrousRpmCondition
+		case -649083733:
+			return engine->module<NitrousController>()->isNitrousRpmCondition;
+// isNitrousCondition
+		case -454003684:
+			return engine->module<NitrousController>()->isNitrousCondition;
+#endif
+#if EFI_ENGINE_CONTROL && EFI_MISFIRE_DETECTION
+// misfireDetectionActive
+		case 1980253487:
+			return engine->module<MisfireController>()->misfireDetectionActive;
+// misfireLatched
+		case 385260457:
+			return engine->module<MisfireController>()->misfireLatched;
+// misfireTotalCount
+		case 2130189985:
+			return engine->module<MisfireController>()->misfireTotalCount;
+// misfireEmaUs
+		case 1057331407:
+			return engine->module<MisfireController>()->misfireEmaUs;
+// misfireLastSegUs
+		case -1971271249:
+			return engine->module<MisfireController>()->misfireLastSegUs;
+// misfireThreshUs
+		case 1848662122:
+			return engine->module<MisfireController>()->misfireThreshUs;
+// misfireWobbleUs
+		case 675334487:
+			return engine->module<MisfireController>()->misfireWobbleUs;
+// misfireWobbleThreshUs
+		case -783525499:
+			return engine->module<MisfireController>()->misfireWobbleThreshUs;
 #endif
 #if EFI_LAUNCH_CONTROL
 // retardThresholdRpm
@@ -1491,56 +1543,6 @@ float getOutputValueByHash(const int hash) {
 // trqRedIgnRetXaxisValue
 		case 892591242:
 			return engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue;
-// isNitrousArmed
-		case 595683774:
-			return engine->module<NitrousController>()->isNitrousArmed;
-// isNitrousSpeedCondition
-		case 2135736269:
-			return engine->module<NitrousController>()->isNitrousSpeedCondition;
-// isNitrousTpsCondition
-		case 1400235571:
-			return engine->module<NitrousController>()->isNitrousTpsCondition;
-// isNitrousCltCondition
-		case 31747807:
-			return engine->module<NitrousController>()->isNitrousCltCondition;
-// isNitrousMapCondition
-		case 541066842:
-			return engine->module<NitrousController>()->isNitrousMapCondition;
-// isNitrousAfrCondition
-		case 2008830549:
-			return engine->module<NitrousController>()->isNitrousAfrCondition;
-// isNitrousRpmCondition
-		case -649083733:
-			return engine->module<NitrousController>()->isNitrousRpmCondition;
-// isNitrousCondition
-		case -454003684:
-			return engine->module<NitrousController>()->isNitrousCondition;
-#endif
-#if EFI_MISFIRE_DETECTION
-// misfireDetectionActive
-		case 1980253487:
-			return engine->module<MisfireController>()->misfireDetectionActive;
-// misfireLatched
-		case 385260457:
-			return engine->module<MisfireController>()->misfireLatched;
-// misfireTotalCount
-		case 2130189985:
-			return engine->module<MisfireController>()->misfireTotalCount;
-// misfireEmaUs
-		case 1057331407:
-			return engine->module<MisfireController>()->misfireEmaUs;
-// misfireLastSegUs
-		case -1971271249:
-			return engine->module<MisfireController>()->misfireLastSegUs;
-// misfireThreshUs
-		case 1848662122:
-			return engine->module<MisfireController>()->misfireThreshUs;
-// misfireWobbleUs
-		case 675334487:
-			return engine->module<MisfireController>()->misfireWobbleUs;
-// misfireWobbleThreshUs
-		case -783525499:
-			return engine->module<MisfireController>()->misfireWobbleThreshUs;
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 // etb1etbCurrentTarget
