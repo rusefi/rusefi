@@ -741,8 +741,7 @@ bool validateConfigOnStartUpOrBurn(bool isRunningOnBurn) {
 #if !EFI_UNIT_TEST
 
 void commonEarlyInit() {
-	// Start this early - it will start LED blinking and such
-	startStatusThreads();
+	// note: LED blinking is started even earlier, see startStatusThreads() call in runRusEfi()
 
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: figure out better startup logic
