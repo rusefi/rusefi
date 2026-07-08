@@ -1,6 +1,7 @@
 import com.devexperts.logging.Logging;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
+import com.rusefi.ProductionConnectivity;
 import com.rusefi.SerialPortType;
 import com.rusefi.UiVersion;
 import com.rusefi.io.BootloaderHelper;
@@ -218,7 +219,7 @@ public class MassUpdater {
         log.error("Target port type: " + target);
 
         ToolButtons.showDeviceManager();
-        SwingUtilities.invokeAndWait(() -> new MassUpdater(ConnectivityContext.INSTANCE, target));
+        SwingUtilities.invokeAndWait(() -> new MassUpdater(ProductionConnectivity.CONTEXT, target));
     }
 
     private static @NotNull SerialPortType getTargetFromArguments(String[] args) {

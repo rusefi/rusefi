@@ -1,15 +1,8 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.io.ConnectionStatusLogic;
-import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.serial.BufferedSerialIoStream;
-import com.rusefi.io.tcp.TcpConnector;
-import com.rusefi.maintenance.*;
-import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.updater.OpenbltDetectorStrategy;
-import com.rusefi.util.CompatibilityOptional;
+import com.rusefi.maintenance.CalibrationsInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,8 +18,11 @@ import java.util.stream.Collectors;
  * 3) live ECU with software reboot into DFU, aka "Auto DFU", not suitable for obfuscated firmware
  * 4) OpenBLT USB device, ala "Manual OpenBLT", regardless if primary firmware has not been uploaded yet or software reboot into OpenBLT
  * 5) live ECU compiled with OpenBLT support
- *
- * technical debt: this class has some *serial* use-cases scanning and some not serial scanning: DFU and st-link
+ * <p>
+ * This class is the scan *policy* — caching, Unknown-retry, listener notification, device-probe
+ * throttling, suspend choreography. The actual hardware/OS probing is injected via
+ * {@link HardwareProbes}; the production implementation ({@code EcuHardwareProbes} in the ui
+ * module) depends on the flashing tools and the binary protocol.
  *
  * @author Andrey Belomutskiy
  */
@@ -38,7 +34,7 @@ public class SerialPortScanner implements PortScanner {
     /**
      * The hardware/OS probes the scan loop performs, separated from the scan *policy* (caching,
      * Unknown-retry, listener notification, suspend/probe-throttle choreography) so the policy can
-     * be unit tested with scripted probe results. {@link ProductionProbes} is the real
+     * be unit tested with scripted probe results. {@code EcuHardwareProbes} (ui module) is the real
      * implementation. See docs/java-connectivity-context-review.md.
      */
     public interface HardwareProbes {
@@ -64,62 +60,13 @@ public class SerialPortScanner implements PortScanner {
         long now();
     }
 
-    static class ProductionProbes implements HardwareProbes {
-        @Override
-        public Set<String> listSerialPorts() {
-            return LinkManager.getCommPorts();
-        }
-
-        @Override
-        public PortResult inspectPort(String serialPort) {
-            return SerialPortScanner.inspectPort(serialPort);
-        }
-
-        @Override
-        public Collection<String> listTcpPorts() {
-            return TcpConnector.getAvailablePorts();
-        }
-
-        @Override
-        public Optional<CalibrationsInfo> getEcuCalibrations(String tcpPort) {
-            return SerialPortScanner.getEcuCalibrations(tcpPort);
-        }
-
-        @Override
-        public boolean isLiveEcuConnected() {
-            return ConnectionStatusLogic.INSTANCE.isConnected();
-        }
-
-        @Override
-        public boolean isDfuDeviceConnected() {
-            return DfuFlasher.detectSTM32BootloaderDriverState(UpdateOperationCallbacks.DUMMY);
-        }
-
-        @Override
-        public boolean isStLinkConnected() {
-            return StLinkFlasher.detectStLink(UpdateOperationCallbacks.DUMMY);
-        }
-
-        @Override
-        public boolean isPcanConnected() {
-            return MaintenanceUtil.detectPcan(UpdateOperationCallbacks.DUMMY);
-        }
-
-        @Override
-        public long now() {
-            return System.currentTimeMillis();
-        }
-    }
-
-    public static final SerialPortScanner INSTANCE = new SerialPortScanner(new ProductionProbes(), true);
-
     private final HardwareProbes probes;
     // Tests construct a scanner that never starts the background scan thread and drive
     // findAllAvailablePorts directly instead.
     private final boolean startTimerOnFirstListener;
     private final RecurringStep portsScanner;
 
-    SerialPortScanner(HardwareProbes probes, boolean startTimerOnFirstListener) {
+    public SerialPortScanner(HardwareProbes probes, boolean startTimerOnFirstListener) {
         this.probes = probes;
         this.startTimerOnFirstListener = startTimerOnFirstListener;
         this.portsScanner = new RecurringStep(
@@ -150,75 +97,16 @@ public class SerialPortScanner implements PortScanner {
             startTimer();
     }
 
-    // Number of ECU-detection attempts before giving up and labelling a port Unknown.
-    // A freshly rebooted or reconnected ECU may not respond on the first try.
-    private static final int DETECT_MAX_ATTEMPTS = 3;
-
-    /**
-     * Determines the type of a serial port: OpenBLT bootloader, ECU (with or without OpenBLT), or Unknown.
-     * Unlike {@link com.rusefi.autodetect.PortDetector#autoDetectSerial} which only finds ECUs,
-     * this method also recognises OpenBLT bootloaders via the XCP protocol probe.
-     */
-    static PortResult inspectPort(String serialPort) {
-        log.info("Determining type of serial port: " + serialPort);
-
-        boolean isOpenblt;
-        try {
-            isOpenblt = isPortOpenblt(serialPort);
-        } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
-            // Return null so inspectPorts filters them out entirely. [tag:better_ux_for_flashing]
-            log.info("Port " + serialPort + " is not actually available (stale OS node): " + e.getMessage());
-            return null;
-        }
-        log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
-        if (isOpenblt) {
-            return new PortResult(serialPort, SerialPortType.OpenBlt);
-        }
-
-        for (int attempt = 1; attempt <= DETECT_MAX_ATTEMPTS; attempt++) {
-            final Optional<CalibrationsInfo> ecuCalibrations;
-            try {
-                ecuCalibrations = getEcuCalibrations(serialPort);
-            } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
-                log.info("Port " + serialPort + " vanished during ECU detection: " + e.getMessage());
-                return null;
-            }
-            final boolean isEcu = ecuCalibrations.isPresent();
-            log.info("Port " + serialPort + " ECU detection attempt " + attempt + "/" + DETECT_MAX_ATTEMPTS
-                + ": " + (isEcu ? "found" : "not found"));
-            if (isEcu) {
-                final boolean hasOpenblt = ecuHasOpenblt(serialPort);
-                log.info("ECU at " + serialPort + (hasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
-                return new PortResult(
-                    serialPort,
-                    hasOpenblt ? SerialPortType.EcuWithOpenblt : SerialPortType.Ecu,
-                    ecuCalibrations.get()
-                );
-            }
-            if (attempt < DETECT_MAX_ATTEMPTS) {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        }
-
-        log.info("Port " + serialPort + " does not look like an ECU after " + DETECT_MAX_ATTEMPTS + " attempts");
-        return new PortResult(serialPort, SerialPortType.Unknown);
-    }
-
     // Track in-flight probe threads so suspend() can interrupt them and wait
     // for them to release the port before a flash job proceeds.
     // [tag:better_ux_for_flashing]
     private final List<Thread> probeThreads = Collections.synchronizedList(new ArrayList<>());
 
-    /** Entry point kept for {@link InspectPortSandbox}-style manual harnesses: probes real hardware. */
-    static List<PortResult> inspectPorts(final List<String> ports, final List<Thread> probeThreadsRef) {
-        return inspectPorts(ports, probeThreadsRef, SerialPortScanner::inspectPort);
-    }
-
+    /**
+     * Probe every port concurrently (one thread each, bounded by a shared timeout) and collect the
+     * results. Dead ports (null from the inspector) are dropped; ports that time out are reported
+     * as Unknown.
+     */
     static List<PortResult> inspectPorts(final List<String> ports, final List<Thread> probeThreadsRef,
                                          final Function<String, PortResult> inspector) {
         if (ports.isEmpty()) {
@@ -342,7 +230,11 @@ public class SerialPortScanner implements PortScanner {
         for (String serialPort : serialPorts) {
             // First, check the port cache
             final Optional<PortResult> cachedPort = portCache.get(serialPort);
-            CompatibilityOptional.ifPresentOrElse(cachedPort, ports::add, () -> portsToInspect.add(serialPort));
+            if (cachedPort.isPresent()) {
+                ports.add(cachedPort.get());
+            } else {
+                portsToInspect.add(serialPort);
+            }
         }
 
         for (PortResult p : inspectPorts(portsToInspect, probeThreads, probes::inspectPort)) {
@@ -440,38 +332,6 @@ public class SerialPortScanner implements PortScanner {
     @Override
     public void restartTimer() {
         portsScanner.restart();
-    }
-
-    private static Optional<CalibrationsInfo> getEcuCalibrations(final String port) {
-        log.info("getEcuCalibrations " + port);
-        return CalibrationsHelper.readCurrentCalibrationsWithoutSuspendingPortScanner(
-            port,
-            UpdateOperationCallbacks.LOGGER
-        );
-    }
-
-    private static boolean ecuHasOpenblt(String port) {
-        try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
-            if (stream == null) {
-                return false;
-            }
-
-            return OpenbltDetectorStrategy.streamHasOpenBlt(stream);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private static boolean isPortOpenblt(String port) {
-        try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
-            return OpenbltDetectorStrategy.isPortOpenblt(stream);
-        } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
-            // Port is truly dead — let it propagate so inspectPort returns null.
-            throw e;
-        } catch (Exception e) {
-            log.info("isPortOpenblt probe failed for " + port + ": " + e);
-            return false;
-        }
     }
 
     @Override

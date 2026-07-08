@@ -154,7 +154,7 @@ public class ConsoleUI {
         // never come back. When the scanner has classified exactly one ECU on a new port and the port we
         // were on has vanished, repoint the LinkManager there. [tag:better_ux_for_flashing]
         if (!isOffline) {
-            ConnectivityContext.INSTANCE.getPortScanner().addListener(currentHardware -> {
+            ProductionConnectivity.CONTEXT.getPortScanner().addListener(currentHardware -> {
                 if (linkManager.isDisconnectedByUser()) {
                     return;
                 }
@@ -346,7 +346,7 @@ console live data tab is broken #8402
             // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
             PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
-            ConnectivityContext connectivityContext = ConnectivityContext.INSTANCE;
+            ConnectivityContext connectivityContext = ProductionConnectivity.CONTEXT;
             DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
             DevicePane devicePane = new DevicePane(uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane);
             tabbedPane.addTab("Device", devicePane.getContent());
@@ -497,7 +497,7 @@ console live data tab is broken #8402
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                StartupFrame startupFrame = new StartupFrame(ConnectivityContext.INSTANCE, new UIContext());
+                StartupFrame startupFrame = new StartupFrame(ProductionConnectivity.CONTEXT, new UIContext());
                 if (bannerCallback != null)
                     bannerCallback.set(message -> startupFrame.restartConsole());
                 startupFrame.showUi();

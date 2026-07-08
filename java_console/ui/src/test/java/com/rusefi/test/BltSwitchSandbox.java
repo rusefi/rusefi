@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class BltSwitchSandbox {
     public static void main(String[] args) throws InterruptedException {
-        PortScanner serialPortScanner = ConnectivityContext.INSTANCE.getPortScanner();
+        PortScanner serialPortScanner = ProductionConnectivity.CONTEXT.getPortScanner();
 
         ConnectionAndMeta.getProperties().setProperty(UiProperties.SKIP_ECU_TYPE_DETECTION, "true");
 

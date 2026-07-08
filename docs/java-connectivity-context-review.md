@@ -10,14 +10,16 @@ and everything they feed (`StartupFrame`, `DeviceSessionManager`, `DevicePane`,
 **The plumbing is done; the seam is half-open.** `ConnectivityContext` is
 threaded as a constructor/method parameter through ~30 classes, and it is the
 *only* place in main code that touches `SerialPortScanner.INSTANCE` — a single
-choke point, which is exactly the shape you want. As of 2026-07-08 (Phases 1–4
-below) it is a plain class holding the `PortScanner` interface, the global
-`INSTANCE` survives only at composition roots, tests substitute a hand-written
-`FakePortScanner` (`DeviceSessionManagerTest`), and the scanner itself takes
-injected `HardwareProbes` so its scan policy is unit-tested with scripted
-hardware (`SerialPortScannerTest`). Remaining statics on this path:
+choke point, which is exactly the shape you want. As of 2026-07-08 (Phases 1–5
+below) it is a plain class holding the `PortScanner` interface and lives in
+the `connectivity` module alongside the scan policy; the production wiring is
+`ProductionConnectivity.CONTEXT` (ui), referenced only at composition roots.
+Tests substitute a hand-written `FakePortScanner`
+(`DeviceSessionManagerTest`), and the scanner takes injected `HardwareProbes`
+so its scan policy is unit-tested with scripted hardware
+(`SerialPortScannerTest`). Remaining statics on this path:
 `ConnectionStatusLogic.INSTANCE`, `ConnectionWatchdog`, and the flash-tool
-statics behind `ProductionProbes`.
+statics behind `EcuHardwareProbes`.
 
 ## UIContext: the working DI precedent
 
@@ -212,12 +214,31 @@ ports not being cached, `cachePort`/`invalidatePort` semantics, and ECU-first
 sort order. Not covered (needs real threads/time): the suspend-interrupts-
 in-flight-probes choreography and the 5-second per-port inspection timeout.
 
-### Phase 5 (optional, later) — layering
+### Phase 5 — layering — DONE 2026-07-08
 
-Once Phase 4 decouples the probes, the scanner policy + `PortScanner`
-interface + `ConnectivityContext` can move from `ui` to the `connectivity`
-module, resolving the layering debt noted in the scanner's class comment.
-Not required for testability; do it only if/when module boundaries matter.
+The scan *policy* now lives where the `connectivity` module's own build.gradle
+comment always said it should ("Headless connection-controller layer: port
+scanning, device discovery and ECU session tracking"):
+
+- Moved `ui` → `connectivity` (same `com.rusefi` package, so no import churn):
+  `PortScanner`, `ConnectivityContext`, `SerialPortScanner` (policy only) and
+  its `RecurringStep` timer.
+- The production probing could NOT move — ECU/OpenBLT detection needs
+  `CalibrationsHelper`/`DfuFlasher`/`StLinkFlasher` (ui module). It became
+  `EcuHardwareProbes` (ui) implementing `SerialPortScanner.HardwareProbes`,
+  including the static `inspect()` detection pipeline and the parallel
+  `inspectPorts()` entry point used by `InspectPortSandbox`.
+- Because `ConnectivityContext` (connectivity) can no longer reference the
+  production probes (ui), its static `INSTANCE` was replaced by
+  `ProductionConnectivity.CONTEXT` (ui) — a final holder wiring
+  `new ConnectivityContext(new SerialPortScanner(new EcuHardwareProbes(), true))`,
+  referenced only at the composition roots (`ConsoleUI`, `MassUpdater`,
+  hardware sandboxes).
+
+Candidates for a later pass, not moved: `DeviceSessionManager`/`SessionState`
+("ECU session tracking" per the module charter) — blocked on their
+`SingleAsyncJobExecutor` (Swing) and `ConnectionWatchdog` dependencies; and the
+scan-policy tests, which stay in `ui` test scope alongside the fakes.
 
 ### Explicitly not recommended
 

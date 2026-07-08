@@ -1,6 +1,7 @@
 package com.rusefi.ui.basic;
 
 import com.rusefi.ConnectivityContext;
+import com.rusefi.ProductionConnectivity;
 import com.rusefi.PortResult;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.FrameHelper;
@@ -33,7 +34,7 @@ public class FirmwareUpdateTabSandbox {
 
         AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
         FirmwareUpdateTab firmwareUpdateTab = new FirmwareUpdateTab(
-            ConnectivityContext.INSTANCE,
+            ProductionConnectivity.CONTEXT,
             whiteLabel,
             statusPanelFirmwareTab,
             singleAsyncJobExecutor,
