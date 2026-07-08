@@ -143,9 +143,20 @@ public class CalibrationsHelper {
             description,
             () -> {
                 final List<PortResult> knownPorts = connectivityContext.getCurrentHardware().getKnownPorts();
-                foundPorts.addAll(knownPorts.stream()
+                final Set<String> osPorts = LinkManager.getCommPorts();
+                // Invalidate any cached port that the OS no longer reports — forces the scanner
+                // to re-probe on the next cycle and prevents returning stale results (e.g. a
+                // port that vanished after an ECU reboot and re-enumeration).
+                for (PortResult p : knownPorts) {
+                    if (!osPorts.contains(p.port)) {
+                        connectivityContext.getSerialPortScanner().invalidatePort(p.port);
+                    }
+                }
+                final List<PortResult> matching = knownPorts.stream()
                     .filter(p -> portTypeMatches.test(p.type))
-                    .collect(Collectors.toList()));
+                    .filter(p -> osPorts.contains(p.port))
+                    .collect(Collectors.toList());
+                foundPorts.addAll(matching);
                 if (!foundPorts.isEmpty()) {
                     return true;
                 }

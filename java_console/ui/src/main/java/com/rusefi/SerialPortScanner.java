@@ -77,14 +77,27 @@ public enum SerialPortScanner {
     static PortResult inspectPort(String serialPort) {
         log.info("Determining type of serial port: " + serialPort);
 
-        boolean isOpenblt = isPortOpenblt(serialPort);
+        boolean isOpenblt;
+        try {
+            isOpenblt = isPortOpenblt(serialPort);
+        } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
+            // Return null so inspectPorts filters them out entirely. [tag:better_ux_for_flashing]
+            log.info("Port " + serialPort + " is not actually available (stale OS node): " + e.getMessage());
+            return null;
+        }
         log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
         if (isOpenblt) {
             return new PortResult(serialPort, SerialPortType.OpenBlt);
         }
 
         for (int attempt = 1; attempt <= DETECT_MAX_ATTEMPTS; attempt++) {
-            final Optional<CalibrationsInfo> ecuCalibrations = getEcuCalibrations(serialPort);
+            final Optional<CalibrationsInfo> ecuCalibrations;
+            try {
+                ecuCalibrations = getEcuCalibrations(serialPort);
+            } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
+                log.info("Port " + serialPort + " vanished during ECU detection: " + e.getMessage());
+                return null;
+            }
             final boolean isEcu = ecuCalibrations.isPresent();
             log.info("Port " + serialPort + " ECU detection attempt " + attempt + "/" + DETECT_MAX_ATTEMPTS
                 + ": " + (isEcu ? "found" : "not found"));
@@ -111,7 +124,12 @@ public enum SerialPortScanner {
         return new PortResult(serialPort, SerialPortType.Unknown);
     }
 
-    static List<PortResult> inspectPorts(final List<String> ports) {
+    // Track in-flight probe threads so suspend() can interrupt them and wait
+    // for them to release the port before a flash job proceeds.
+    // [tag:better_ux_for_flashing]
+    private final List<Thread> probeThreads = Collections.synchronizedList(new ArrayList<>());
+
+    static List<PortResult> inspectPorts(final List<String> ports, final List<Thread> probeThreadsRef) {
         if (ports.isEmpty()) {
             return new ArrayList<>();
         }
@@ -132,9 +150,9 @@ public enum SerialPortScanner {
                 try {
                     r = inspectPort(p);
                 } catch (Throwable e) {
-                    // Never let a probe exception (e.g. jSerialComm SerialPortInvalidPortException on a
-                    // vanishing/re-enumerating port) kill the inspect thread and lose the result — record
-                    // Unknown and move on. [tag:better_ux_for_flashing]
+                    // Never let a probe exception kill the inspect thread.
+                    // If inspectPort already returned null (dead port), keep it null.
+                    // Otherwise treat as Unknown. [tag:better_ux_for_flashing]
                     log.warn("inspectPort crashed for " + p + ", treating as Unknown: " + e);
                     r = new PortResult(p, SerialPortType.Unknown);
                 }
@@ -143,14 +161,12 @@ public enum SerialPortScanner {
                 synchronized (resultsLock) {
                     if (Thread.currentThread().isInterrupted()) {
                         log.trace(String.format("Thread `%s` is interrupted.", threadName));
-                        // If interrupted, don't try to write our result
                         return;
                     }
 
                     results.put(p, r);
 
                     if (results.size() == ports.size()) {
-                        // We now have all the results - interrupt the calling thread
                         callingThread.interrupt();
                     }
                 }
@@ -161,24 +177,25 @@ public enum SerialPortScanner {
             t.setDaemon(true);
             t.start();
 
+            if (probeThreadsRef != null) {
+                probeThreadsRef.add(t);
+            }
+
             return t;
         }).collect(Collectors.toList());
 
-        // Give everyone a chance to finish
         try {
-            // todo: see if everyone has already finished - make this sleep conditional!
-            // todo: lower this timeout?
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             // We got interrupted because the last port got found, nothing to do
         }
 
-        // Interrupt all threads under lock to ensure no more objects are added to results
         synchronized (resultsLock) {
             ScannerHelper.interruptThreads(threads);
         }
 
-        // Now check that we got everything - if any timed out, register them as unknown
+        // Timed-out ports that don't have a result yet get Unknown;
+        // null results (dead ports) are left as-is so they get filtered out.
         for (String port : ports) {
             if (!results.containsKey(port)) {
                 log.info("Port " + port + " timed out, adding as Unknown.");
@@ -186,7 +203,14 @@ public enum SerialPortScanner {
             }
         }
 
-        return new ArrayList<>(results.values());
+        // Clean up finished threads from the tracking list
+        if (probeThreadsRef != null) {
+            probeThreadsRef.removeIf(t -> !t.isAlive());
+        }
+
+        return results.values().stream()
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
 
     private final SerialPortCache portCache = new SerialPortCache();
@@ -229,7 +253,7 @@ public enum SerialPortScanner {
             CompatibilityOptional.ifPresentOrElse(cachedPort, ports::add, () -> portsToInspect.add(serialPort));
         }
 
-        for (PortResult p : inspectPorts(portsToInspect)) {
+        for (PortResult p : inspectPorts(portsToInspect, probeThreads)) {
             log.info("Port " + p.port + " detected as: " + p.type.friendlyString);
             ports.add(p);
             // Do not cache Unknown — keep the port uninspected so the next scan cycle retries
@@ -352,10 +376,10 @@ public enum SerialPortScanner {
     private static boolean isPortOpenblt(String port) {
         try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
             return OpenbltDetectorStrategy.isPortOpenblt(stream);
+        } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
+            // Port is truly dead — let it propagate so inspectPort returns null.
+            throw e;
         } catch (Exception e) {
-            // jSerialComm throws SerialPortInvalidPortException (a RuntimeException), not IOException, when
-            // a port vanishes / re-enumerates mid-probe (hot-plug, reboot to bootloader). Swallow it so the
-            // inspect thread doesn't crash and lose the port result. Next cycle retries. [tag:better_ux_for_flashing]
             log.info("isPortOpenblt probe failed for " + port + ": " + e);
             return false;
         }
@@ -365,8 +389,44 @@ public enum SerialPortScanner {
         portsScanner.resume();
     }
 
+    /**
+     * Suspend the scanner and wait for all in-flight probe threads to finish,
+     * ensuring they release any open port handles before a flash job proceeds.
+     * [tag:better_ux_for_flashing]
+     */
     public CountDownLatch suspend() {
-        return portsScanner.suspend();
+        CountDownLatch latch = portsScanner.suspend();
+        // Interrupt all in-flight probe threads so they close their port handles
+        synchronized (probeThreads) {
+            for (Thread t : probeThreads) {
+                if (t.isAlive()) {
+                    t.interrupt();
+                }
+            }
+        }
+        // Wait for probe threads to finish (max 10 seconds)
+        long deadline = System.currentTimeMillis() + 10_000;
+        while (System.currentTimeMillis() < deadline) {
+            boolean allDone = true;
+            synchronized (probeThreads) {
+                for (Thread t : probeThreads) {
+                    if (t.isAlive()) {
+                        allDone = false;
+                        break;
+                    }
+                }
+            }
+            if (allDone) {
+                break;
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        return latch;
     }
 
     /**
