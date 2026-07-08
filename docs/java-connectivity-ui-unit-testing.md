@@ -108,6 +108,9 @@ rather than invent new machinery.
 | UI status | `ui` `ConnectionStatusIconTest` | red/green/purple priority, bootloader tooltip, property-change reaction, null tab pane |
 | Update-available check | `ui` `MainFrameUpdateCheckTest` | `needsFirmwareUpdate` null/unparseable inputs, new-format hash compare, legacy date compare |
 | Connectivity value types & helpers | `connectivity` `SerialPortCacheTest`, `AvailableHardwareTest`, `PortResultTest`, `SerialPortTypeTest`, `SerialPortScannerInspectPortsTest`, `RecurringStepTest` | cache eviction semantics, snapshot filtering/equality, PortResult identity contract, sort ranks, probe fan-out (dead port dropped, crash ⇒ Unknown), suspend-latch handshake — the Tier 1 batch, added 2026-07-08 |
+| Flash brick guard (safe branches) | `ui` `MaintenanceUtilTest` | `confirmFirmwareMatchesBoard`: matching/case-insensitive target, unparseable name no-false-alarm, `_QC_` compatibility — plus the `containsPattern` normalization; Tier 2, added 2026-07-08 |
+| Firmware selection by board target | `shared_io` `FindFileHelperTargetSelectionTest` | newest-match wins, related-name (`_pro`) rejected, exact match beats newer foreign image, `older-fw` archive recovery, `.bin` variant, null/blank/unmatched ⇒ null; Tier 2, added 2026-07-08 |
+| Device tab presentation decisions | `ui` `DevicePaneTest` | bootloader-state classification, DFU/OpenBLT guidance text (platform-aware), offline-capable tab lock list; Tier 2, added 2026-07-08 |
 
 Not covered anywhere: the flashing-job choreography (suspend → invalidate →
 resume, `close()`-not-`disconnect()`), `EcuHardwareProbes.inspect()`
@@ -184,7 +187,17 @@ Maintenance / flashing decision logic (`ui` and `shared_io`):
     `isLiveTargetKnown()==false` while `effectiveTarget()` returns the
     persisted board.
 
-### Tier 2 — test-fixture tricks or visibility-only changes
+### Tier 2 — test-fixture tricks or visibility-only changes (IMPLEMENTED 2026-07-08)
+
+Implementation notes: item 13 landed in `MaintenanceUtilTest` (safe branches
+only — the genuine-mismatch dialog still needs the Tier 3 confirm seam), item
+14 as `FindFileHelperTargetSelectionTest` (a `@TempDir` input dir plus a
+suite-unique target token so the real `older-fw` archive can be exercised and
+cleaned safely), item 15 as `DevicePaneTest` after widening the three helpers
+to package-private. The `ConnectedEcuTarget` DI migration (2026-07-08) made
+item 13 simpler than described: the guard now takes the instance as a
+parameter, so tests just construct one and use `setConnectedTargetForUnitTest`.
+
 
 13. **`MaintenanceUtil.confirmFirmwareMatchesBoard` safe branches** — the
     brick guard added this week. Reachable today using the

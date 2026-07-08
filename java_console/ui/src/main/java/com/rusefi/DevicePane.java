@@ -142,7 +142,7 @@ public class DevicePane {
         }
     }
 
-    private static String bootloaderGuidance(final SessionState state) {
+    static String bootloaderGuidance(final SessionState state) {
         if (state == SessionState.DEVICE_IN_DFU) {
             // DFU flashing is Windows-only in rusEFI (STM32_Programmer_CLI.exe); elsewhere it's a dead end.
             return FileLog.isWindows()
@@ -152,7 +152,7 @@ public class DevicePane {
         return "Board is in the OpenBLT bootloader — click Update Firmware to flash.";
     }
 
-    private static boolean isBootloaderState(final SessionState state) {
+    static boolean isBootloaderState(final SessionState state) {
         return state == SessionState.DEVICE_IN_DFU || state == SessionState.DEVICE_IN_BLT;
     }
 
@@ -203,7 +203,7 @@ public class DevicePane {
     // Tabs usable without a live ECU: the Device tab (hosts the update controls), offline tune editing
     // ("Tuning") and the pinout reference. These stay enabled while the board is in a bootloader or being
     // flashed; only the live-data tabs get locked. [tag:better_ux_for_flashing]
-    private static boolean isOfflineCapableTab(final String title) {
+    static boolean isOfflineCapableTab(final String title) {
         return "Device".equals(title) || "Tuning".equals(title) || "Pinout".equals(title);
     }
 
