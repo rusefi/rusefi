@@ -159,15 +159,11 @@ static TsCalMode functionToCalModeSecMax(dc_function_e func) {
 }
 #endif // EFI_TUNER_STUDIO
 
-#define ETB_DUTY_LIMIT 0.9
-// this macro clamps both positive and negative percentages from about -100% to 100%
-#define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
-
 PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
   return false;
 }
 
-bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider) {
+bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider, float minDuty, float maxDuty) {
 	state = (uint8_t)EtbState::InInit;
 	if (function == DC_None) {
 		// if not configured, don't init.
@@ -178,6 +174,8 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 	m_function = function;
 	m_positionSensor = functionToPositionSensor(function);
+	m_minDuty = minDuty;
+	m_maxDuty = maxDuty;
 
 	// If we are a throttle, require redundant TPS sensor
 	if (isEtbMode()) {
@@ -570,7 +568,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	// If not ETB, or ETB is allowed, output is valid, and we aren't paused, output to motor.
 	if (isEnabled) {
 		m_motor->enable();
-		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
+		m_motor->set(clampF(-m_minDuty, 0.01f * outputValue.Value, m_maxDuty));
 	} else {
 		// Otherwise disable the motor.
 		m_motor->disable("no-ETB");
@@ -913,7 +911,8 @@ void doInitElectronicThrottle(bool isStartupInit) {
 
 		auto pid = getPidForDcFunction(func);
 
-		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider());
+		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider(),
+				engineConfiguration->dcMinDutyCycle[i] / 100.0f, engineConfiguration->dcMaxDutyCycle[i] / 100.0f);
 		if (isStartupInit && dcConfigured) {
 			controller->reset("init");
 		}

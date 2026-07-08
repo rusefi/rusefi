@@ -139,6 +139,15 @@ void defaultsOrFixOnBurn() {
     engineConfiguration->mainRelayDisableTime = 1;
   }
 
+  for (int i = 0; i < ETB_COUNT; i++) {
+    if (engineConfiguration->dcMinDutyCycle[i] == 0) {
+      engineConfiguration->dcMinDutyCycle[i] = 90;
+    }
+    if (engineConfiguration->dcMaxDutyCycle[i] == 0) {
+      engineConfiguration->dcMaxDutyCycle[i] = 90;
+    }
+  }
+
   // Seed the 2D cranking flex table for tunes that predate it (all-zero ethanol axis). Mirror the existing
   // E0 coolant curve at every ethanol level so turning on flexCranking stays neutral with respect to ethanol
   // until the user calibrates it.

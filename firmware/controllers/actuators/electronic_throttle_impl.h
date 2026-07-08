@@ -27,7 +27,7 @@
 
 class EtbController : public IEtbController, public electronic_throttle_s {
 public:
-	bool init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap) override;
+	bool init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, float minDuty, float maxDuty) override;
 	void setIdlePosition(percent_t pos) override;
 	void setWastegatePosition(percent_t pos) override;
 	void reset(const char *reason) override;
@@ -93,6 +93,8 @@ private:
 	dc_function_e m_function = DC_None;
 	SensorType m_positionSensor = SensorType::Invalid;
 	DcMotor *m_motor = nullptr;
+	float m_minDuty = 0.9f;
+	float m_maxDuty = 0.9f;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
 
