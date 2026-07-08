@@ -27,15 +27,25 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
                 if (linkManager != null) {
                     BinaryProtocol bp = linkManager.getBinaryProtocol();
                     ProgramSelector.rebootToOpenblt(context.getParent(), bp, callbacks);
-                    // Intentionally NOT calling linkManager.disconnect() here. Switching to OpenBLT is a
-                    // transient state: the board comes back either as an ECU on a (possibly renumbered) port
-                    // or, after the bootloader times out with no flash, jumps straight back to firmware. We
-                    // want auto-reconnect to resume in both cases. disconnect() sets isDisconnectedByUser=true,
-                    // which permanently blocks ConnectionWatchdog.restart() *and* the ConsoleUI
-                    // follow-renumbered-port listener, so the live session would never come back
-                    // (online → OpenBLT → online without flashing hangs forever).
-                    // The old ExitUtil.exit() hazard the disconnect guarded against is gone: restart() now
-                    // reconnects via connect(port, isScanningForEcu=true), which suppresses the exit. [tag:better_ux_for_flashing]
+                    // close() — NOT disconnect() — to release the serial port for the transient OpenBLT
+                    // state. The board comes back either as an ECU on a (possibly renumbered on Linux) port
+                    // or jumps straight back to firmware after the bootloader times out with no flash; we
+                    // want auto-reconnect to resume in both cases.
+                    //
+                    // Why close() and not either extreme:
+                    //  - disconnect() sets isDisconnectedByUser=true, permanently blocking
+                    //    ConnectionWatchdog.restart() AND the ConsoleUI follow-renumbered-port listener —
+                    //    the session would never come back.
+                    //  - Leaving the LinkManager fully active keeps the watchdog
+                    //    reconnecting while the SerialPortScanner also probes the returning node. On Linux
+                    //    the board re-enumerates onto a NEW ttyACMx that is never cached (Unknown results
+                    //    aren't cached), so the scanner re-probes it every cycle and the two openers
+                    //    mutually EBUSY ("maybe no permissions?") forever → console stuck disconnected.
+                    //    (Windows keeps a sticky COM number) This mirrors the working DFU
+                    //    path, where DfuFlasher opens/closes its own stream and the live LM is released.
+                    // close() frees the port but leaves isDisconnectedByUser=false, so the returning ECU is
+                    // classified by the scanner uncontested and a single reconnect brings the console back. [tag:better_ux_for_flashing]
+                    linkManager.close();
                 } else {
                     ProgramSelector.rebootToOpenblt(context.getParent(), context.getPort().port, callbacks);
                 }
