@@ -111,6 +111,7 @@ rather than invent new machinery.
 | Flash brick guard (safe branches) | `ui` `MaintenanceUtilTest` | `confirmFirmwareMatchesBoard`: matching/case-insensitive target, unparseable name no-false-alarm, `_QC_` compatibility — plus the `containsPattern` normalization; Tier 2, added 2026-07-08 |
 | Firmware selection by board target | `shared_io` `FindFileHelperTargetSelectionTest` | newest-match wins, related-name (`_pro`) rejected, exact match beats newer foreign image, `older-fw` archive recovery, `.bin` variant, null/blank/unmatched ⇒ null; Tier 2, added 2026-07-08 |
 | Device tab presentation decisions | `ui` `DevicePaneTest` | bootloader-state classification, DFU/OpenBLT guidance text (platform-aware), offline-capable tab lock list; Tier 2, added 2026-07-08 |
+| Port classification pipeline | `ui` `EcuHardwareProbesInspectTest` | OpenBLT-first probing, stale-node/vanish ⇒ dropped, ECU-with/without-OpenBLT + calibrations, 3-attempt retry with between-attempts backoff, interrupt handling; Tier 3 item 1, added 2026-07-08 |
 
 Not covered anywhere: the flashing-job choreography (suspend → invalidate →
 resume, `close()`-not-`disconnect()`), `EcuHardwareProbes.inspect()`
@@ -227,13 +228,15 @@ Each of these follows pattern #2: extract the narrow interface the consumer
 already uses, keep a production impl wiring the old statics, change no call
 sites.
 
-1. **`EcuHardwareProbes.inspect()`** — the port classification pipeline
-   (OpenBLT-first, 3-attempt retry, stale-node ⇒ null, ECU-with/without-OpenBLT,
-   Unknown after max attempts). Blocked by three `private static` probes that
-   open real ports. Seam: extract `isPortOpenblt` / `readEcuCalibrations` /
-   `ecuHasOpenblt` into an injectable interface (mirror of `HardwareProbes`)
-   plus a sleep hook. Highest-value blocked target — this decision tree is
-   where detection bugs live.
+1. **`EcuHardwareProbes.inspect()`** — DONE 2026-07-08. The three probes plus
+   the retry backoff became the nested `PortProbe` interface (production
+   `REAL_PROBE` wires the original private statics; 1-arg `inspect()` kept, no
+   call sites changed). `EcuHardwareProbesInspectTest` (8 tests, scripted
+   fake probe) covers: OpenBLT-first without ECU probing, stale-node ⇒ null,
+   vanish-mid-detection ⇒ null, ECU with/without OpenBLT (calibrations ride
+   along), found-on-third-retry, Unknown after max attempts with backoff
+   between attempts only, and interrupt-during-backoff (stops retrying,
+   restores the interrupt flag).
 2. **`DeviceSessionManager` FLASHING state + watchdog choreography** — the
    job-start ⇒ pause-watchdog / job-finish ⇒ resume + restartTimer + refresh
    path is entirely untested. Seam: a 3-method `JobExecutor` interface
