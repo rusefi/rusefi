@@ -44,6 +44,13 @@ The sensor framework decouples sensor *producers* (ADC, CAN, frequency inputs, L
 - **Calibration guards** raise firmware errors early: TPS open/closed points too close, primary/secondary calibrations nearly identical (double-wired sensor), non-monotonic thermistor points.
 - **Reconfiguration**: `reconfigureSensors()` re-runs category inits; deinit uses `activeConfiguration` (previous settings) so ADC channels move cleanly. `SubscribeSensor`/`Register` are re-entry safe.
 
+## Rate of Change
+There is no general-purpose rate-of-change / derivative helper in the sensor framework — `Sensor::get()` returns instantaneous values only.
+- **TPS**: the closest existing machinery is `TpsAccelEnrichment` (`firmware/controllers/algo/accel_enrichment.cpp`). It receives `Tps1` each fast tick via `onNewValue()`, keeps a `cyclic_buffer<float>` history, and publishes the largest adjacent-sample delta as `tpsFrom`/`tpsTo`/`deltaTps` plus `isAboveAccelThreshold`/`isBelowDecelThreshold` (see `tps_accel_state.txt`). Caveats: the delta is *per sample step, not per second* (units depend on callback rate and buffer length), and it is hardwired to TPS1 and fuel-AE semantics.
+- **PPS (pedal)**: no rate is computed anywhere; the pedal path only gets `ExpAverage` smoothing (`ppsExpAverageAlpha`, `init_tps.cpp`).
+- **Not measurers**: `limitRateOfChange()` (`firmware/util/efilib.cpp`) is a slew-rate *limiter* (used for tCharge); ETB/idle PID derivative terms differentiate their own error internally and are not exposed.
+- A true %/sec rate would require a new time-aware differentiator (value + `Timer`, like the `edgeTimer` pattern in `frequency_sensor.cpp`) or a time-normalized generalization of the `TpsAccelEnrichment` buffer.
+
 ## Unit Testing
 - `Sensor::setMockValue(type, value)` / `setInvalidMockValue(type)` override any sensor; mocks take precedence over real sensors in the registry. `Sensor::resetRegistry()` runs between tests.
 - Framework tests live in `unit_tests/tests/sensor/`; control-logic tests throughout the suite use `setMockValue` to stand up engine state.
