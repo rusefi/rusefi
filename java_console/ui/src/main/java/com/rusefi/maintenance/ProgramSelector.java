@@ -129,10 +129,17 @@ public class ProgramSelector {
      */
     private PortResult resolveFlashPort() {
         final PortResult selected = (PortResult) comboPorts.getSelectedItem();
-        if (selected != null && selected.type == OpenBlt) {
+        if (selected != null && (selected.type == OpenBlt || selected.type == SerialPortType.Dfu)) {
             return selected;
         }
         if (!isLiveConnection()) {
+            // A board sitting in the STM32 built-in bootloader is flashed manually via DFU; prefer it over
+            // the connection-dependent AUTO path (and over a null/stale combo selection right after launch)
+            // so the button isn't mislabeled as a dead OpenBLT action. [tag:better_ux_for_flashing]
+            final List<PortResult> dfuPorts = connectivityContext.getCurrentHardware().getKnownPorts(SerialPortType.Dfu);
+            if (!dfuPorts.isEmpty()) {
+                return dfuPorts.get(0);
+            }
             final List<PortResult> bltPorts = connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt);
             if (!bltPorts.isEmpty()) {
                 return bltPorts.get(0);
