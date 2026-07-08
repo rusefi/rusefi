@@ -104,7 +104,7 @@ Usages:
     output_name: boost
     constexpr: "engine->module<BoostController>()"
     isPtr: true
-    conditional_compilation: "EFI_BOOST_CONTROL"
+    conditional_compilation: "EFI_ENGINE_CONTROL && EFI_BOOST_CONTROL"
 
   - name: ac_control
     java: AcControl.java
@@ -120,7 +120,7 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: nitrous
     engineModule: NitrousController
-    conditional_compilation: "EFI_LAUNCH_CONTROL"
+    conditional_compilation: "EFI_ENGINE_CONTROL && EFI_LAUNCH_CONTROL"
 
   - name: fan_control
     java: FanControl.java
@@ -199,7 +199,7 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: misfire
     engineModule: MisfireController
-    conditional_compilation: "EFI_MISFIRE_DETECTION"
+    conditional_compilation: "EFI_ENGINE_CONTROL && EFI_MISFIRE_DETECTION"
 
   - name: live_data_example
     cppFileName: live_data_example

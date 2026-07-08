@@ -402,6 +402,7 @@ static void updateThrottles() {
 }
 
 static void updateLambda() {
+#if EFI_ENGINE_CONTROL
 	float lambdaValue = Sensor::getOrDefault(SensorType::Lambda1, 0.5 / STOICH_RATIO, 0.0 / STOICH_RATIO, 30.5 / STOICH_RATIO);
 	engine->outputChannels.lambdaValue = lambdaValue;
 	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
@@ -415,6 +416,7 @@ static void updateLambda() {
 	// TODO: this can be calculated on PC side!
 	engine->outputChannels.afr2GasolineScale = lambda2Value * STOICH_RATIO;
 	engine->outputChannels.SmoothedAFRValue2 = Sensor::getOrZero(SensorType::SmoothedLambda2);
+#endif // EFI_ENGINE_CONTROL
 }
 
 static void updateFuelSensors() {
