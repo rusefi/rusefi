@@ -356,6 +356,7 @@ static void setDefaultScriptParameters() {
 	setRpmTableBin(config->scriptTable4RpmBins);
 }
 
+#if EFI_ENGINE_CONTROL
 static void setDefaultIdleOpenLoopParameters() {
 	setRpmTableBin(config->rpmIdleCorrBins);
 	setLinearCurve(config->cltIdleCorrBins, CLT_CURVE_RANGE_FROM, 140, 10);
@@ -363,6 +364,7 @@ static void setDefaultIdleOpenLoopParameters() {
 		setLinearCurve(config->cltIdleCorrTable[i], 75.0, 50, 5);
 	}
 }
+#endif // EFI_ENGINE_CONTROL
 
 /**
  * @brief	Global default engine configuration
