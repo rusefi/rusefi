@@ -1,0 +1,106 @@
+package com.rusefi.maintenance;
+
+import com.rusefi.PortResult;
+import com.rusefi.SerialPortType;
+import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
+import java.util.List;
+
+import static com.rusefi.maintenance.ProgramSelector.mainButtonModeFor;
+import static com.rusefi.maintenance.ProgramSelector.resolveFlashPort;
+import static com.rusefi.maintenance.UpdateMode.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+/**
+ * Unit tests for the Update-Firmware main-button decision logic that maps a detected/selected port and
+ * the live-connection state to an {@link UpdateMode}. Covers the DFU regression where a board sitting in
+ * the STM32 built-in bootloader was mislabeled as a (dead) OpenBLT action. [tag:better_ux_for_flashing]
+ */
+public class ProgramSelectorTest {
+    private static final List<PortResult> NO_PORTS = Collections.emptyList();
+
+    private static PortResult port(SerialPortType type) {
+        return new PortResult("COM_TEST", type);
+    }
+
+    // ---- mainButtonModeFor ----
+
+    @Test
+    public void dfuDeviceMapsToManualDfu() {
+        // A connected DFU device must flash via DFU_MANUAL, not be mislabeled as an OpenBLT action.
+        assertEquals(DFU_MANUAL, mainButtonModeFor(port(SerialPortType.Dfu), false));
+        assertEquals(DFU_MANUAL, mainButtonModeFor(port(SerialPortType.Dfu), true));
+    }
+
+    @Test
+    public void openBltBoardMapsToManualOpenBlt() {
+        assertEquals(OPENBLT_MANUAL, mainButtonModeFor(port(SerialPortType.OpenBlt), false));
+        assertEquals(OPENBLT_MANUAL, mainButtonModeFor(port(SerialPortType.OpenBlt), true));
+    }
+
+    @Test
+    public void liveEcuMapsToAutoOpenBlt() {
+        assertEquals(OPENBLT_AUTO, mainButtonModeFor(port(SerialPortType.Ecu), true));
+    }
+
+    @Test
+    public void offlineFallsBackToManualOpenBlt() {
+        assertEquals(OPENBLT_MANUAL, mainButtonModeFor(port(SerialPortType.Ecu), false));
+        assertEquals(OPENBLT_MANUAL, mainButtonModeFor(null, false));
+    }
+
+    // ---- resolveFlashPort ----
+
+    @Test
+    public void selectedDfuPortIsUsedDirectly() {
+        PortResult dfu = port(SerialPortType.Dfu);
+        assertSame(dfu, resolveFlashPort(dfu, false, NO_PORTS, NO_PORTS));
+        assertSame(dfu, resolveFlashPort(dfu, true, NO_PORTS, NO_PORTS));
+    }
+
+    @Test
+    public void selectedOpenBltPortIsUsedDirectly() {
+        PortResult blt = port(SerialPortType.OpenBlt);
+        assertSame(blt, resolveFlashPort(blt, false, NO_PORTS, NO_PORTS));
+    }
+
+    @Test
+    public void offlineWithNullSelectionPrefersDetectedDfuOverOpenBlt() {
+        // Right after launch the combo selection may be null/stale: a detected DFU device must win so the
+        // button becomes "Manual DFU Update" rather than a dead OpenBLT action.
+        PortResult dfu = port(SerialPortType.Dfu);
+        PortResult blt = port(SerialPortType.OpenBlt);
+        assertSame(dfu, resolveFlashPort(null, false, Collections.singletonList(dfu), Collections.singletonList(blt)));
+    }
+
+    @Test
+    public void offlineWithNullSelectionFallsBackToDetectedOpenBlt() {
+        PortResult blt = port(SerialPortType.OpenBlt);
+        assertSame(blt, resolveFlashPort(null, false, NO_PORTS, Collections.singletonList(blt)));
+    }
+
+    @Test
+    public void liveConnectionKeepsSelectedNonBootloaderPort() {
+        PortResult ecu = port(SerialPortType.Ecu);
+        PortResult dfu = port(SerialPortType.Dfu);
+        // With a live ECU connection we do not override with detected bootloader ports.
+        assertSame(ecu, resolveFlashPort(ecu, true, Collections.singletonList(dfu), NO_PORTS));
+    }
+
+    @Test
+    public void nothingDetectedResolvesToNull() {
+        assertNull(resolveFlashPort(null, false, NO_PORTS, NO_PORTS));
+    }
+
+    // ---- combined: resolved port feeds the button mode ----
+
+    @Test
+    public void offlineDfuHotPlugResultsInManualDfuMode() {
+        PortResult dfu = port(SerialPortType.Dfu);
+        PortResult resolved = resolveFlashPort(null, false, Collections.singletonList(dfu), NO_PORTS);
+        assertEquals(DFU_MANUAL, mainButtonModeFor(resolved, false));
+    }
+}

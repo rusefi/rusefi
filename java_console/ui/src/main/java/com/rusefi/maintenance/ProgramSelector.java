@@ -85,6 +85,14 @@ public class ProgramSelector {
      * live ECU into the bootloader) cannot work. Flash it directly via {@link UpdateMode#OPENBLT_MANUAL}.
      */
     private UpdateMode mainButtonModeFor(@Nullable PortResult selectedPort) {
+        return mainButtonModeFor(selectedPort, isLiveConnection());
+    }
+
+    /**
+     * Pure decision logic behind the main Update-Firmware button mode, extracted so it can be unit tested
+     * without Swing/hardware-detection singletons. [tag:better_ux_for_flashing]
+     */
+    static UpdateMode mainButtonModeFor(@Nullable PortResult selectedPort, boolean liveConnection) {
         if (selectedPort != null && selectedPort.type == OpenBlt) {
             return OPENBLT_MANUAL;
         }
@@ -98,7 +106,7 @@ public class ProgramSelector {
         // to reboot and awaitBinaryProtocol would just time out. So when offline — including a board
         // sitting in a bootloader whose detection is momentarily flickering to Unknown — flash manually
         // rather than flip-flopping into a dead AUTO job. [tag:better_ux_for_flashing]
-        if (!isLiveConnection()) {
+        if (!liveConnection) {
             return OPENBLT_MANUAL;
         }
         return OPENBLT_AUTO;
@@ -129,18 +137,34 @@ public class ProgramSelector {
      */
     private PortResult resolveFlashPort() {
         final PortResult selected = (PortResult) comboPorts.getSelectedItem();
+        return resolveFlashPort(
+            selected,
+            isLiveConnection(),
+            connectivityContext.getCurrentHardware().getKnownPorts(SerialPortType.Dfu),
+            connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt)
+        );
+    }
+
+    /**
+     * Pure port-resolution logic behind the main Update-Firmware action, extracted so it can be unit
+     * tested without Swing/hardware-detection singletons. [tag:better_ux_for_flashing]
+     */
+    static PortResult resolveFlashPort(
+        @Nullable final PortResult selected,
+        final boolean liveConnection,
+        final List<PortResult> dfuPorts,
+        final List<PortResult> bltPorts
+    ) {
         if (selected != null && (selected.type == OpenBlt || selected.type == SerialPortType.Dfu)) {
             return selected;
         }
-        if (!isLiveConnection()) {
+        if (!liveConnection) {
             // A board sitting in the STM32 built-in bootloader is flashed manually via DFU; prefer it over
             // the connection-dependent AUTO path (and over a null/stale combo selection right after launch)
             // so the button isn't mislabeled as a dead OpenBLT action. [tag:better_ux_for_flashing]
-            final List<PortResult> dfuPorts = connectivityContext.getCurrentHardware().getKnownPorts(SerialPortType.Dfu);
             if (!dfuPorts.isEmpty()) {
                 return dfuPorts.get(0);
             }
-            final List<PortResult> bltPorts = connectivityContext.getCurrentHardware().getKnownPorts(OpenBlt);
             if (!bltPorts.isEmpty()) {
                 return bltPorts.get(0);
             }
