@@ -254,7 +254,7 @@ const throttle_model_s* getLiveData(size_t) {
 
 template<>
 const lambda_monitor_s* getLiveData(size_t) {
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_ENGINE_CONTROL
 	return &engine->lambdaMonitor;
 #else
 	return nullptr;
