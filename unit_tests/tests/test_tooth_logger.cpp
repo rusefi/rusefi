@@ -27,15 +27,16 @@ TEST(ToothLogger, WriteCsvHeader) {
 	ToothLoggerWriteCsvHeader(w);
 
 	EXPECT_EQ(w.data,
-		"Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP\r\n");
+		"Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS\r\n");
 }
 
 TEST(ToothLogger, WriteCsvRows) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	// Seed mock sensor values so we get deterministic VBatt/ET columns
+	// Seed mock sensor values so we get deterministic VBatt/ET/TPS columns
 	Sensor::setMockValue(SensorType::BatteryVoltage, 12.34f);
 	Sensor::setMockValue(SensorType::Clt, 56.78f);
+	Sensor::setMockValue(SensorType::Tps1, 43.21f);
 
 	engine->outputChannels.instantMAPValue = 0;
 
@@ -84,6 +85,7 @@ TEST(ToothLogger, WriteCsvRows) {
 	EXPECT_NE(w.data.find("2.000500,"), std::string::npos);
 	EXPECT_NE(w.data.find("12.34"), std::string::npos);
 	EXPECT_NE(w.data.find("56.78"), std::string::npos);
+	EXPECT_NE(w.data.find("43.21"), std::string::npos);
 
 	// Number of CSV rows (CRLF-terminated) must match the buffer entries.
 	size_t crlfCount = 0;
