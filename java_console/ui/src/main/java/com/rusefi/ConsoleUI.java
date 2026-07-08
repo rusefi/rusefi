@@ -151,19 +151,19 @@ public class ConsoleUI {
         // Follow a renumbered ECU across a bootloader round-trip. After a reboot to DFU/OpenBLT *without*
         // flashing, the board can re-enumerate onto a different ttyACMx. ConnectionWatchdog.restart() only
         // retries the original port name (isPortAvailableAgain=false forever), so the live session would
-        // never come back. When the scanner has classified exactly one ECU on a new port and we are not
-        // connected, repoint the LinkManager there. [tag:better_ux_for_flashing]
+        // never come back. When the scanner has classified exactly one ECU on a new port and the port we
+        // were on has vanished, repoint the LinkManager there. [tag:better_ux_for_flashing]
         if (!isOffline) {
             ConnectivityContext.INSTANCE.getSerialPortScanner().addListener(currentHardware -> {
                 if (linkManager.isDisconnectedByUser()) {
                     return;
                 }
-                if (ConnectionStatusLogic.INSTANCE.isConnected()) {
-                    return;
-                }
+                // NB: intentionally NOT gated on ConnectionStatusLogic.isConnected(). After an OpenBLT
+                // switch the status can stay stale "connected", which would block recovery forever.
+                // if the port we were on is gone, the link is
+                // dead regardless of the status flag; while genuinely connected that port is still present
+                // so we skip and let the watchdog's same-name restart() own the reconnect.
                 final String currentPort = linkManager.getLastTriedPort();
-                // Only act once the original port has truly vanished — otherwise the watchdog's same-name
-                // restart() handles the reconnect and we must not fight it.
                 if (currentPort == null || LinkManager.getCommPorts().contains(currentPort)) {
                     return;
                 }
