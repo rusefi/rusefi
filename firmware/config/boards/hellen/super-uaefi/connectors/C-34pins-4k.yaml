@@ -18,10 +18,10 @@ pins:
 #    color: grey
 
   - pin: 3C
-    function: WBO2 SWD
+    function: WBO2 SWD (low-level controller programming access)
 
   - pin: 4C
-    function: WBO2 SWC
+    function: WBO2 SWC (low-level controller programming access)
 
   - pin: 5C
     function: WBO2 Vs (Un) (pin 6)

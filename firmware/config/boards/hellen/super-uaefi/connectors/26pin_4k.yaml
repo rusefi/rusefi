@@ -77,7 +77,7 @@ pins:
     type: vr
 
   - pin: 14D
-    function: WBO1 SWC
+    function: WBO1 SWC (low-level controller programming access)
 
   - pin: 15D
     function: WBO1 Ip (pin 1)
@@ -112,7 +112,7 @@ pins:
     type: hs
 
   - pin: 21D
-    function: WBO1 SWD
+    function: WBO1 SWD (low-level controller programming access)
 
   - pin: 22D
     function: +12v from main relay OUTPUT
