@@ -22,9 +22,14 @@
  * so a board must NOT flip it here or via board.mk DDEFS - declare `#define EFI_LTFT_CONTROL FALSE` in the
  * board's prepend.txt instead.
  * <p>
- * Note the simulator and unit_tests keep their own efifeatures.h copies that bypass all of this.
+ * TS-page guard flags declared in a board's prepend.txt end up in the board's generated
+ * header AND are lifted into DDEFS by the simulator Makefile (same as firmware/Makefile,
+ * see [tag:ts_page_table]), so defaults here must be #ifndef-guarded to let the board
+ * value win without a -Werror macro redefinition.
 */
+#ifndef EFI_LTFT_CONTROL
 #define EFI_LTFT_CONTROL FALSE
+#endif
 #define EFI_AUX_VALVES FALSE
 
 #define EFI_TS_TUNNEL_CAN TRUE
@@ -190,7 +195,10 @@
 
 #define EFI_BOARD_TEST FALSE
 
+// TS-page guard flag, see [tag:ts_page_table] comment above near EFI_LTFT_CONTROL
+#ifndef EFI_LUA
 #define EFI_LUA TRUE
+#endif
 #define LUA_USER_HEAP 100000
 
 #ifndef TRUE

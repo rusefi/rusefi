@@ -197,6 +197,17 @@ ifneq ($(BOARD_DIR),)
     # part common between PROD, simulator and unit tests
     include $(BOARD_DIR)/board_common.mk
   endif
+
+  # TS-page guard flags (see [tag:ts_page_table]) are declared once in the board's
+  # prepend.txt and end up in the board's generated header. Lift them into DDEFS just
+  # like firmware/Makefile does, so the bundled simulator serves the same TS page table
+  # as the board firmware and the generated header cannot conflict with the
+  # #ifndef-guarded defaults in simulator/efifeatures.h.
+  # BOARD_DIR is exported relative to the firmware directory, so also try it under
+  # PROJECT_DIR; custom boards pass an absolute path (but don't bundle a simulator).
+  # Keep the list in sync with the guardFlag column of TS_PAGES in TSProjectConsumer.java.
+  TS_PAGE_GUARD_FLAGS = EFI_LTFT_CONTROL|EFI_LUA
+  DDEFS += $(sort $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt $(PROJECT_DIR)/$(BOARD_DIR)/prepend.txt $(PROJECT_DIR)/$(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null))
 endif
 
 # SCSI and uzlib sources required by compressed_block_device.cpp for decompressing
