@@ -13,6 +13,24 @@ import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
+    /** Wall-clock + sleep seam so {@link #awaitEcuPort} is testable without real time. */
+    interface Clock {
+        long millis();
+        void sleep(long ms) throws InterruptedException;
+    }
+
+    static final Clock SYSTEM_CLOCK = new Clock() {
+        @Override
+        public long millis() {
+            return System.currentTimeMillis();
+        }
+
+        @Override
+        public void sleep(final long ms) throws InterruptedException {
+            Thread.sleep(ms);
+        }
+    };
+
     protected final ConnectivityContext connectivityContext;
     private final @Nullable LinkManager linkManager;
 
@@ -62,7 +80,7 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
         // probe races the scanner for the same port, fails to open it, and falls back to the stale
         // pre-flash port. Do NOT fall back to the pre-flash port — after renumbering it's a ghost. [tag:better_ux_for_flashing]
         connectivityContext.getPortScanner().resume();
-        final String detectedPort = awaitEcuPort(TimeUnit.SECONDS.toMillis(60));
+        final String detectedPort = awaitEcuPort(TimeUnit.SECONDS.toMillis(60), SYSTEM_CLOCK);
         if (detectedPort != null) {
             connectivityContext.getPortScanner().cachePort(new PortResult(detectedPort, context.getPort().type));
             lm.reconnect(detectedPort);
@@ -77,15 +95,17 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
      * scanner's own detection (which caches the port, so the subsequent reconnect doesn't collide with a
      * probe) instead of a competing autodetect. [tag:better_ux_for_flashing]
      */
-    private String awaitEcuPort(final long timeoutMs) {
-        final long start = System.currentTimeMillis();
+    // package-private + injected Clock so AbstractAutoFlashJobAwaitEcuPortTest can drive the
+    // renumber-follow / bootloader-grace decisions without real time. Production passes SYSTEM_CLOCK.
+    String awaitEcuPort(final long timeoutMs, final Clock clock) {
+        final long start = clock.millis();
         final long deadline = start + timeoutMs;
         // A *successful* flash reboots the board through the bootloader back to firmware, so a brief
         // bootloader/Unknown flicker while it re-enumerates is normal — give the ECU time to come up
         // before concluding (only on a *persistent* bootloader) that the flash was interrupted and no ECU
         // is coming. This avoids bailing before the ECU is ready. [tag:better_ux_for_flashing]
         final long bootloaderGraceMs = 5_000;
-        while (System.currentTimeMillis() < deadline) {
+        while (clock.millis() < deadline) {
             final AvailableHardware hw = connectivityContext.getCurrentHardware();
             for (final PortResult p : hw.getKnownPorts()) {
                 if (p.isEcu()) {
@@ -93,13 +113,13 @@ abstract class AbstractAutoFlashJob extends AsyncJobWithContext<SerialPortWithPa
                 }
             }
             final boolean inBootloader = !hw.getKnownPorts(SerialPortType.OpenBlt).isEmpty() || hw.isDfuFound();
-            if (inBootloader && (System.currentTimeMillis() - start) > bootloaderGraceMs) {
+            if (inBootloader && (clock.millis() - start) > bootloaderGraceMs) {
                 // Persistently a bootloader (interrupted flash) — stop waiting so we don't hold the job
                 // executor and block the user's next flash attempt.
                 return null;
             }
             try {
-                Thread.sleep(500);
+                clock.sleep(500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;

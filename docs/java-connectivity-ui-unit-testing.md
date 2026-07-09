@@ -112,6 +112,7 @@ rather than invent new machinery.
 | Firmware selection by board target | `shared_io` `FindFileHelperTargetSelectionTest` | newest-match wins, related-name (`_pro`) rejected, exact match beats newer foreign image, `older-fw` archive recovery, `.bin` variant, null/blank/unmatched ⇒ null; Tier 2, added 2026-07-08 |
 | Device tab presentation decisions | `ui` `DevicePaneTest` | bootloader-state classification, DFU/OpenBLT guidance text (platform-aware), offline-capable tab lock list; Tier 2, added 2026-07-08 |
 | Port classification pipeline | `ui` `EcuHardwareProbesInspectTest` | OpenBLT-first probing, stale-node/vanish ⇒ dropped, ECU-with/without-OpenBLT + calibrations, 3-attempt retry with between-attempts backoff, interrupt handling; Tier 3 item 1, added 2026-07-08 |
+| Post-flash reconnect wait | `ui` `AbstractAutoFlashJobAwaitEcuPortTest` | `awaitEcuPort`: immediate ECU, follow renumbered port, bootloader-grace flicker vs persistent OpenBLT/DFU giveup, timeout, interrupt; Tier 3 item 3, added 2026-07-08 |
 
 Not covered anywhere: the flashing-job choreography (suspend → invalidate →
 resume, `close()`-not-`disconnect()`), `EcuHardwareProbes.inspect()`
@@ -246,10 +247,17 @@ sites.
    resume + forced rescan + watchdog resume + post-flash bootloader detection;
    already-running executor reports FLASHING immediately; null executor
    tolerated.
-3. **`AbstractAutoFlashJob.awaitEcuPort`** — the interrupted-flash /
-   port-renumbering wait ("return ECU port; give up after the bootloader grace
-   period"). Seam: package-private + injected clock/sleeper; drive hardware
-   snapshots via a `FakePortScanner`-backed `ConnectivityContext`.
+3. **`AbstractAutoFlashJob.awaitEcuPort`** — DONE 2026-07-08. Seam: nested
+   `Clock` interface (`millis()` + `sleep()`); production wires `SYSTEM_CLOCK`,
+   `awaitEcuPort` widened to package-private taking the clock. Test drives a
+   `FakePortScanner`-backed `ConnectivityContext` whose hardware snapshot mutates
+   per virtual `sleep`. `AbstractAutoFlashJobAwaitEcuPortTest` (8 tests): ECU
+   already present returns without a poll; follows the ECU onto a renumbered port
+   appearing after several polls (never the ghost pre-flash port); bootloader
+   flicker within the 5 s grace then ECU ⇒ followed not abandoned; persistent
+   OpenBLT/DFU past grace ⇒ null before timeout; nothing on the bus ⇒ null at
+   timeout; interrupt mid-wait ⇒ null + interrupt flag restored; `EcuWithOpenblt`
+   counts as connectable.
 4. **OpenBLT job choreography** (`OpenBltManualJob` / `OpenBltSwitchJob`) —
    suspend ⇒ invalidate ⇒ flash ⇒ resume ordering, and the
    `linkManager.close()`-not-`disconnect()` invariant that keeps
