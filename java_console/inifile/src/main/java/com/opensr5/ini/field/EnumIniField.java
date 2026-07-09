@@ -6,6 +6,7 @@ import com.rusefi.config.FieldType;
 
 import javax.management.ObjectName;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class EnumIniField extends IniField {
     private final FieldType type;
@@ -107,8 +108,14 @@ public class EnumIniField extends IniField {
                     String key = trimmed.substring(1);
                     List<String> elements = defines.get(key);
                     Objects.requireNonNull(elements, "Elements for " + key);
-                    for (int i = 0; i < elements.size(); i++) {
-                        keyValues.put(i, elements.get(i));
+                    if (isKeyValuePairs(elements)) {
+                        for (int i = 0; i < elements.size(); i += 2) {
+                            keyValues.put(Integer.valueOf(elements.get(i)), elements.get(i + 1));
+                        }
+                    } else {
+                        for (int i = 0; i < elements.size(); i++) {
+                            keyValues.put(i, elements.get(i));
+                        }
                     }
                 } else {
                     for (int i = 0; i < tokens.length - offset; i++) {
@@ -121,6 +128,22 @@ public class EnumIniField extends IniField {
             return new EnumKeyValueMap(keyValues);
         }
 
+        private static final Pattern INTEGER_KEY = Pattern.compile("\\d+");
+
+        /**
+         * A '#define name=0="NONE",10="Pin 10"' key-value define tokenizes into alternating
+         * ordinal/label elements while the positional form is labels only, see PinoutLogic.enumToOptionsList()
+         */
+        private static boolean isKeyValuePairs(List<String> elements) {
+            if (elements.isEmpty() || elements.size() % 2 != 0)
+                return false;
+            for (int i = 0; i < elements.size(); i += 2) {
+                if (!INTEGER_KEY.matcher(elements.get(i)).matches())
+                    return false;
+            }
+            return true;
+        }
+
         public Collection<String> values() {
             return keyValues.values();
         }
@@ -131,6 +154,10 @@ public class EnumIniField extends IniField {
 
         public String get(int ordinal) {
             return keyValues.get(ordinal);
+        }
+
+        public int maxOrdinal() {
+            return keyValues.isEmpty() ? -1 : Collections.max(keyValues.keySet());
         }
 
         public int indexOf(String value) {

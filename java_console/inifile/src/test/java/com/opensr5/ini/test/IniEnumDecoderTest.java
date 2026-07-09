@@ -3,6 +3,11 @@ package com.opensr5.ini.test;
 import com.opensr5.ini.field.EnumIniField;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IniEnumDecoderTest {
@@ -18,6 +23,36 @@ public class IniEnumDecoderTest {
 
         assertEquals(0, m.indexOf("DEFAULT_FRANKENSO"));
         assertEquals(24, m.indexOf("BMW_M73_M"));
+    }
+
+    @Test
+    public void testDefineReferenceArraySyntax() {
+        String line = "iat_adcChannel = bits, U08, 312, [0:7], $adc_channel_e_list";
+        Map<String, List<String>> defines = Collections.singletonMap("adc_channel_e_list",
+            Arrays.asList("NONE", "PA0", "PA1"));
+
+        EnumIniField.EnumKeyValueMap m = EnumIniField.EnumKeyValueMap.valueOf(line, defines);
+
+        assertEquals(3, m.size());
+        assertEquals("NONE", m.get(0));
+        assertEquals("PA1", m.get(2));
+    }
+
+    @Test
+    public void testDefineReferenceKeyValueSyntax() {
+        // as tokenized from '#define adc_channel_e_list=0="NONE",13="Analog 1",11="VBAT"'
+        String line = "iat_adcChannel = bits, U08, 312, [0:7], $adc_channel_e_list";
+        Map<String, List<String>> defines = Collections.singletonMap("adc_channel_e_list",
+            Arrays.asList("0", "NONE", "13", "Analog 1", "11", "VBAT"));
+
+        EnumIniField.EnumKeyValueMap m = EnumIniField.EnumKeyValueMap.valueOf(line, defines);
+
+        assertEquals(3, m.size());
+        assertEquals("NONE", m.get(0));
+        assertEquals("Analog 1", m.get(13));
+        assertEquals("VBAT", m.get(11));
+        assertEquals(13, m.indexOf("Analog 1"));
+        assertNull(m.get(1));
     }
 
     @Test
