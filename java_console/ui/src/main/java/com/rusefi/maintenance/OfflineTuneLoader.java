@@ -5,15 +5,10 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.IniNotFoundException;
 import com.rusefi.binaryprotocol.RealIniFileProvider;
-import com.rusefi.ini.reader.IniFileReaderUtil;
-import com.rusefi.ini.reader.IniParsingException;
 import com.rusefi.tune.xml.Msq;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Component;
-import java.io.File;
-import java.io.FileNotFoundException;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -75,57 +70,14 @@ public class OfflineTuneLoader {
     }
 
     private static IniFileModel tryLoadIni(String signature, Component parent) {
-        // Attempt automatic resolution via RealIniFileProvider (download + local fallback)
+        // RealIniFileProvider handles download, local lookup, and the manual .ini picker
+        // (registered via ManualIniFilePicker) as a last resort — which also caches the picked file.
         try {
-            RealIniFileProvider provider = new RealIniFileProvider();
-            IniFileModel ini = provider.provide(signature);
-            if (ini != null) {
-                log.info("Resolved INI for signature: " + signature);
-                return ini;
-            }
-        } catch (IniNotFoundException e) {
-            log.info("Automatic INI resolution failed for " + signature + ": " + e.getMessage());
-        } catch (Exception e) {
-            log.info("Automatic INI resolution failed for " + signature + ": " + e.getMessage());
-        }
-
-        // Manual fallback: let user pick an INI file
-        log.info("Attempting manual INI selection for signature: " + signature);
-        return promptForIniFile(parent, signature);
-    }
-
-    private static IniFileModel promptForIniFile(Component parent, String signature) {
-        int choice = JOptionPane.showConfirmDialog(
-            parent,
-            "Could not automatically find an INI file for signature:\n" + signature + "\n\nWould you like to select an INI file manually?",
-            "INI File Not Found",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.WARNING_MESSAGE
-        );
-        if (choice != JOptionPane.YES_OPTION) {
-            return null;
-        }
-
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setFileFilter(new FileNameExtensionFilter("INI files", "ini"));
-        if (chooser.showOpenDialog(parent) != JFileChooser.APPROVE_OPTION) {
-            return null;
-        }
-
-        File iniFile = chooser.getSelectedFile();
-        try {
-            IniFileModel ini = IniFileReaderUtil.readIniFileChecked(iniFile.getAbsolutePath());
-            log.info("Manually loaded INI: " + iniFile.getAbsolutePath());
+            IniFileModel ini = new RealIniFileProvider().provide(signature);
+            log.info("Resolved INI for signature: " + signature);
             return ini;
-        } catch (FileNotFoundException e) {
-            showErrorDialog(parent, "INI file not found:\n" + iniFile.getAbsolutePath());
-            return null;
-        } catch (IniParsingException e) {
-            showErrorDialog(parent, "Failed to parse INI file:\n" + e.getMessage());
-            return null;
-        } catch (Exception e) {
-            showErrorDialog(parent, "Failed to read INI file:\n" + e.getMessage());
+        } catch (IniNotFoundException e) {
+            log.info("INI resolution failed for " + signature + ": " + e.getMessage());
             return null;
         }
     }

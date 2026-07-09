@@ -9,12 +9,26 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import com.rusefi.ini.reader.IniParsingException;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import static com.devexperts.logging.Logging.getLogging;
 
 public class RealIniFileProvider implements IniFileProvider {
     private static final Logging log = getLogging(RealIniFileProvider.class);
+
+    /**
+     * Last-resort manual .ini source: when download and local lookups all fail, the UI registers
+     * a picker here so the user can point at a local .ini. Kept as an interface so this (io) module
+     * stays Swing-free. See {@link com.rusefi.core.SignatureHelper#importIntoCache}.
+     */
+    public interface ManualIniPicker {
+        File pick(String signature);
+    }
+
+    public static ManualIniPicker manualPicker = null;
+
     private StatusConsumer statusConsumer = StatusConsumer.ANONYMOUS;
 
     public void setStatusConsumer(StatusConsumer statusConsumer) {
@@ -40,6 +54,20 @@ public class RealIniFileProvider implements IniFileProvider {
         if (localIniFile == null) {
             // 5th option: one level up or environment variable direction
             localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH);
+        }
+        if (localIniFile == null && manualPicker != null) {
+            // 6th option: ask the user to point at a local .ini and cache it for next time
+            File picked = manualPicker.pick(signature);
+            if (picked != null) {
+                try {
+                    localIniFile = SignatureHelper.importIntoCache(signature, picked);
+                    if (localIniFile == null)
+                        localIniFile = picked.getAbsolutePath();
+                } catch (IOException e) {
+                    log.info("Failed to import picked .ini into cache: " + e);
+                    localIniFile = picked.getAbsolutePath();
+                }
+            }
         }
         if (localIniFile == null)
             throw new IniNotFoundException("Failed to locate .ini file in five different places!");
