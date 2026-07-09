@@ -1,6 +1,7 @@
 package com.opensr5;
 
 import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.OrdinalOutOfRangeException;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ConfigurationImageGetterSetterTest {
     /**
@@ -32,6 +34,30 @@ public class ConfigurationImageGetterSetterTest {
         String value = ConfigurationImageGetterSetter.getStringValue(field, ci);
         assertEquals("\"Auto\"", value);
     }
+    /**
+     * Sparse key-value enum lists (pin dropdowns) omit INVALID placeholder entries,
+     * see PinoutLogic.enumToOptionsList()
+     */
+    @Test
+    public void testEnumIniFieldSparseKeyValueMap() {
+        TreeMap<Integer, String> map = new TreeMap<>();
+        map.put(0, "NONE");
+        map.put(5, "Injector 1");
+        map.put(47, "Coil 1");
+        EnumIniField.EnumKeyValueMap enumMap = new EnumIniField.EnumKeyValueMap(map);
+
+        // ordinal present in the map
+        EnumIniField field = new EnumIniField("injectionPins1", 0, FieldType.UINT8, enumMap, 0, 7);
+        assertEquals("\"Coil 1\"", ConfigurationImageGetterSetter.getStringValue(field, new ConfigurationImage(new byte[]{47, 0})));
+
+        // ordinal in a gap: pin exists in the tune but is not exposed by this board's ini
+        assertEquals("\"INVALID\"", ConfigurationImageGetterSetter.getStringValue(field, new ConfigurationImage(new byte[]{33, 0})));
+
+        // ordinal beyond the highest known entry
+        assertThrows(OrdinalOutOfRangeException.class,
+            () -> ConfigurationImageGetterSetter.getStringValue(field, new ConfigurationImage(new byte[]{48, 0})));
+    }
+
     @Test
     public void testGetStringValueWithPrecision() {
         ConfigurationImage ci = new ConfigurationImage(new byte[4]);

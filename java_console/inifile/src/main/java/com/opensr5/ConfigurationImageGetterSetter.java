@@ -27,9 +27,14 @@ public class ConfigurationImageGetterSetter {
                 int ordinal = (int) field.getType().readRawValue(image.getByteBuffer(field));
                 ordinal = ConfigurationImage.getBitRange(ordinal, field.getBitPosition(), field.getBitSize0() + 1);
 
-                if (ordinal >= field.getEnums().size())
-                    throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + field.getName() + " while " + field.getEnums().size() + " " + field.getType());
-                return "\"" + field.getEnums().get(ordinal) + "\"";
+                String label = field.getEnums().get(ordinal);
+                if (label == null) {
+                    if (ordinal > field.getEnums().maxOrdinal())
+                        throw new OrdinalOutOfRangeException("Ordinal out of range " + ordinal + " in " + field.getName() + " while " + field.getEnums().size() + " " + field.getType());
+                    // sparse key-value enum lists omit INVALID placeholder entries, see PinoutLogic.enumToOptionsList()
+                    label = "INVALID";
+                }
+                return "\"" + label + "\"";
             }
 
             @Override

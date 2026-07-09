@@ -81,6 +81,27 @@ public class IniFileFieldsTest {
     }
 
     @Test
+    public void testEnumListFieldsKeyValueDefine() {
+        // human-sorted key-value form with gaps, see PinoutLogic.enumToOptionsList()
+        String string = "#define output_pin_e_list=0=\"NONE\",5=\"Injector 1\",4=\"Injector 2\",47=\"Coil 1\"\n" +
+            "page = 1\n" +
+            "[Constants]\n" +
+            "\tinjectionPins1\t\t\t\t = bits, U16, 312, [0:8] $output_pin_e_list\n";
+
+        RawIniFile lines = IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes()));
+        IniFileModel model = IniFileReaderTest.readLines(lines);
+        assertEquals(1, model.getDefines().size());
+
+        EnumIniField field = (EnumIniField) model.getAllIniFields().get("injectionPins1");
+        assertEquals(4, field.getEnums().size());
+        assertEquals("NONE", field.getEnums().get(0));
+        assertEquals("Injector 2", field.getEnums().get(4));
+        assertEquals("Injector 1", field.getEnums().get(5));
+        assertEquals("Coil 1", field.getEnums().get(47));
+        assertEquals(47, field.getEnums().indexOf("Coil 1"));
+    }
+
+    @Test
     public void testBitField() {
         String string = "page = 1\n" +
             "[Constants]\n" +
