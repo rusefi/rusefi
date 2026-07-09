@@ -50,6 +50,7 @@ public class Launcher implements rusEFIVersion {
         log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis()));
         log.info("\n\n");
         PersistentConfiguration.registerShutdownHook();
+        com.rusefi.maintenance.ManualIniFilePicker.register();
 
         // If this process was launched from rusefi_console_pending.jar, copy it over
         // rusefi_console.jar now that the previous instance has fully exited.

@@ -74,6 +74,28 @@ public class SignatureHelper {
         }
     }
 
+    /**
+     * Copies a user-selected .ini into the local cache keyed by the signature hash,
+     * so subsequent connects resolve it without any download or prompt.
+     * @return cached file path, or null if the signature cannot be parsed
+     */
+    public static String importIntoCache(String signature, File source) throws IOException {
+        return importIntoCache(signature, source, LOCAL_INI_CACHE_FOLDER);
+    }
+
+    // package-private for tests
+    static String importIntoCache(String signature, File source, String cacheFolder) throws IOException {
+        Pair<String, String> p = getUrl(signature);
+        if (p == null)
+            return null;
+        new File(cacheFolder).mkdirs();
+        String cachedIniFile = cacheFolder + File.separator + p.second;
+        java.nio.file.Files.copy(source.toPath(), new File(cachedIniFile).toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        log.info("Imported " + source + " into cache as " + cachedIniFile);
+        return cachedIniFile;
+    }
+
     public static RusEfiSignature parseSrec(String srecName) {
         if (srecName == null) {
             return null;
