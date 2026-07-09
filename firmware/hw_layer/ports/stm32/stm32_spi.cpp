@@ -356,7 +356,7 @@ SPIConfig mmc_hs_spicfg = {
 	.sspad = 0,
 	.cfg1 = 7 // 8 bits per byte
 		| 0 /* MBR = 0, divider = 2 */,
-	.cfg2 = 0
+	.cfg2 = SPI_CFG2_AFCNTR // keep control of all associated GPIOs
 };
 
 // Slow mode is 80mhz/4 = 20MHz
@@ -373,7 +373,7 @@ SPIConfig mmc_ls_spicfg = {
 	.sspad = 0,
 	.cfg1 = 7 // 8 bits per byte
 		| SPI_CFG1_MBR_0 /* MBR = 001, divider = 4 */,
-	.cfg2 = 0
+	.cfg2 = SPI_CFG2_AFCNTR // keep control of all associated GPIOs
 };
 
 #else /* not STM32H7XX */
