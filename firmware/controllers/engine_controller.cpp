@@ -536,12 +536,14 @@ bool validateConfigOnStartUpOrBurn() {
   if (!validateGdi()) {
     return false;
   }
+#if EFI_ELECTRONIC_THROTTLE_BODY
   if (engineConfiguration->etbMinimumPosition + 1 >= engineConfiguration->etbMaximumPosition) {
 		criticalError("Broken ETB min/max %d %d",
 		  engineConfiguration->etbMinimumPosition,
 		  engineConfiguration->etbMaximumPosition);
 		return false;
   }
+#endif
 
   if (engineConfiguration->knockFrequency != 0 && engineConfiguration->knockFrequency < 100) {
     // todo: migrate from hard error to soft error
