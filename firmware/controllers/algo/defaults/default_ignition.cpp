@@ -114,6 +114,10 @@ void setDefaultIgnition() {
 	setLinearCurve(config->dwellVoltageCorrVoltBins, 8, 15, 0.1);
 	setLinearCurve(config->dwellVoltageCorrValues, 1, 1, 1);
 
+	// Dwell Duty Mode - disabled by default; 50% is the standard TFI module target.
+	engineConfiguration->dwellDutyModeEnabled = false;
+	engineConfiguration->dwellDutyPercent = 50;
+
 	// Multispark
 	setDefaultMultisparkParameters();
 
