@@ -111,8 +111,12 @@ public class ConsoleUI {
      * @param initialImage   ConfigurationImage loaded from the MSQ file
      * @param connectivityContext
      */
-    public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, ConnectivityContext connectivityContext) {
-        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, null, connectivityContext);
+    /**
+     * [tag:offline_tune] Offline console that reuses the already-visible, maximized splash
+     * {@code reuseFrame} instead of opening a second window — same handoff the online path uses (#9715).
+     */
+    public ConsoleUI(UIContext uiContext, IniFileModel ini, ConfigurationImage initialImage, JFrame reuseFrame, ConnectivityContext connectivityContext) {
+        this(uiContext, null, SerialPortType.Unknown, false, ini, initialImage, reuseFrame, connectivityContext);
     }
 
     /**
@@ -185,6 +189,12 @@ public class ConsoleUI {
         // Pass the tabbed pane so the icon can turn purple when a board is in a DFU/OpenBLT bootloader
         // (DevicePane publishes the "bootloaderMode" client property on it). [tag:better_ux_for_flashing]
         ConnectionStatusIcon connectionStatus = new ConnectionStatusIcon(linkManager, tabbedPane.tabbedPane);
+
+        // [tag:offline_tune] Mirror offline mode onto a tabbedPane client property so the connection
+        // status icon (and anything else watching) can surface it, same mechanism as "bootloaderMode".
+        tabbedPane.tabbedPane.putClientProperty("offlineMode", uiContext.isOfflineMode() ? Boolean.TRUE : null);
+        uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(() ->
+                tabbedPane.tabbedPane.putClientProperty("offlineMode", offline ? Boolean.TRUE : null)));
         this.port = port;
 
         // Follow a renumbered ECU across a bootloader round-trip. After a reboot to DFU/OpenBLT *without*
@@ -324,6 +334,12 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             PinoutPane pinoutPane = new PinoutPane(uiContext);
+
+            // [tag:offline_tune] Seed the loaded tune image so config-image-driven panes (e.g. PinoutPane's
+            // "Tune use" column) have data with no live ECU — the online path gets this from BinaryProtocol.
+            if (isOffline && offlineImage != null) {
+                uiContext.fireConfigImageChanged(offlineImage);
+            }
 
             // Tuning is heavy (~60ms) and not always the startup tab. Build it on first use — tab
             // shown, File>Load/Save Tune, or Pinout→Tune nav — unless it's the restored tab (#9715).

@@ -36,6 +36,11 @@ public class TuningToolbarWidget {
 
     private final JPanel panel;
 
+    /** [tag:offline_tune] Shows offline / unburned-edit state. Empty when connected and clean. */
+    private final JLabel stateLabel = new JLabel();
+    private final UIContext uiContext;
+    private final AtomicReference<ConfigurationImage> sessionImage;
+
     private final ArrayDeque<ConfigurationImage> undoStack = new ArrayDeque<>();
     private final ArrayDeque<ConfigurationImage> redoStack = new ArrayDeque<>();
     private final AtomicReference<ConfigurationImage> undoBaseline = new AtomicReference<>();
@@ -64,6 +69,8 @@ public class TuningToolbarWidget {
                                 AtomicReference<String> currentKey,
                                 AtomicReference<ConfigurationImage> sessionImage,
                                 ConfigurationImage baselineImage) {
+        this.uiContext = uiContext;
+        this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
@@ -149,6 +156,33 @@ public class TuningToolbarWidget {
         panel.add(discardButton);
         panel.add(undoButton);
         panel.add(redoButton);
+        panel.add(stateLabel);
+
+        // [tag:offline_tune] Refresh the state label whenever offline mode toggles (e.g. Load Tune
+        // while disconnected). Edit/discard/burn/connect/disconnect paths call refreshState() directly.
+        uiContext.addOfflineModeListener(offline -> SwingUtilities.invokeLater(this::refreshState));
+        refreshState();
+    }
+
+    /**
+     * [tag:offline_tune] Updates the toolbar state label from current offline mode + dirty state.
+     * Empty (invisible) when connected with no pending edits.
+     */
+    public void refreshState() {
+        boolean dirty = hasUnsavedChanges(sessionImage.get());
+        stateLabel.setText(stateLabelText(uiContext.isOfflineMode(), dirty));
+        stateLabel.setForeground(dirty ? new Color(0xB0, 0x60, 0x00) : Color.GRAY);
+    }
+
+    /**
+     * Pure label-text logic for the offline/dirty toolbar indicator. Package-private and static so it
+     * can be unit-tested without Swing (see {@code TuningToolbarStateLabelTest}).
+     */
+    static String stateLabelText(boolean offline, boolean dirty) {
+        if (dirty) {
+            return offline ? "Local changes not burned to ECU" : "Pending changes not burned";
+        }
+        return offline ? "Offline tune" : "";
     }
 
     private @NotNull JButton getBurnToEcuButton(UIContext uiContext,
@@ -169,6 +203,8 @@ public class TuningToolbarWidget {
             uiContext.getLinkManager().submit(() -> {
                 bp.burn();
                 bp.setConfigurationImage(image);
+                // Burned image is now the ECU's state — adopt it as baseline so dirty state clears.
+                SwingUtilities.invokeLater(() -> setBaselineImage(image.clone()));
             });
         });
         return burnButton;
@@ -183,6 +219,7 @@ public class TuningToolbarWidget {
                 break;
             }
         }
+        refreshState();
     }
 
     private @NotNull JButton getDiscardButton(UIContext uiContext,
@@ -206,6 +243,7 @@ public class TuningToolbarWidget {
             redoStack.clear();
             undoBaseline.set(null);
             updateButtons.run();
+            refreshState();
         });
 
         return discardButton;
@@ -263,21 +301,19 @@ public class TuningToolbarWidget {
                                         latch.await();
                                     }
 
+                                    final boolean loadedWhileDisconnected = (bp == null);
                                     SwingUtilities.invokeLater(() -> {
                                         sessionImage.set(newImage);
-                                        baselineImage = newImage.clone();
+                                        // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
+                                        if (loadedWhileDisconnected) {
+                                            uiContext.setOfflineMode(true);
+                                        }
                                         String key = currentKey.get();
                                         if (key != null) {
                                             right.update(key, result.ini, newImage);
                                         }
-                                        // Enable discard now that we have a baseline
-                                        Component[] components = panel.getComponents();
-                                        for (Component c : components) {
-                                            if (c instanceof JButton && "Discard changes".equals(((JButton) c).getText())) {
-                                                ((JButton) c).setEnabled(true);
-                                                break;
-                                            }
-                                        }
+                                        // Adopt the loaded tune as baseline (enables discard + refreshes state label).
+                                        setBaselineImage(newImage.clone());
                                         uiContext.fireConfigImageChanged(newImage);
                                         cb.done();
                                     });
@@ -368,6 +404,7 @@ public class TuningToolbarWidget {
                 break;
             }
         }
+        refreshState();
     }
 
     private static @NotNull JFileChooser createMsqFileChooser() {
@@ -389,6 +426,7 @@ public class TuningToolbarWidget {
         undoBaseline.compareAndSet(null, previousSessionImage);
         undoCommitTimer.restart();
         uploadTimer.restart();
+        refreshState();
     }
 
     /**
@@ -438,5 +476,6 @@ public class TuningToolbarWidget {
                 break;
             }
         }
+        refreshState();
     }
 }

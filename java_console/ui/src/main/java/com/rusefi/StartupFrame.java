@@ -638,32 +638,19 @@ public class StartupFrame {
     /**
      * [tag:offline_tune]
      * Opens the full console in offline mode with a pre-loaded tune, reusing the shared {@link UIContext}.
-     * Disposes the splash window but keeps the serial-port scanner running so that plugging in an ECU
-     * later auto-connects and the offline console transitions itself online — without spawning a second
+     * Reuses this maximized splash frame (same handoff as {@link #connect}, #9715) instead of opening a
+     * second window, and keeps the serial-port scanner running so that plugging in an ECU later
+     * auto-connects and the offline console transitions itself online — without spawning a second
      * console (see the {@link #offlineConsoleOpen} guards).
      */
     public void openOfflineConsole(IniFileModel ini, ConfigurationImage image) {
-        log.info("openOfflineConsole: launching offline console on shared uiContext");
+        log.info("openOfflineConsole: handing off splash frame to offline ConsoleUI");
         offlineConsoleOpen = true;
-        isProceeding = true;
-        // Drop the splash-scoped connection listener so it can't mutate the disposed splash widgets.
-        if (splashListener != null) {
-            ConnectionStatusLogic.INSTANCE.removeListener(splashListener);
-            splashListener = null;
-        }
-        saveTabIndex();
-        getConfig().save();
-        frame.dispose();
-        status.stop();
-        if (revealControlsTimer != null) {
-            revealControlsTimer.stop();
-        }
-        if (firmwareTabStatus != null) {
-            firmwareTabStatus.stop();
-        }
-        // NOTE: intentionally do NOT call serialPortScanner.stopTimer() — the offline console relies on
-        // the scanner's auto-connect to go online.
-        new ConsoleUI(uiContext, ini, image, connectivityContext);
+        // Shared teardown-without-dispose; keeps the scanner alive for later auto-connect.
+        prepareForHandoff();
+        LoadingOverlay.show(frame, "Loading console…", LogoHelper.createLogoLabel());
+        SwingUtilities.invokeLater(() ->
+            new ConsoleUI(uiContext, ini, image, frame, connectivityContext));
     }
 
     /**

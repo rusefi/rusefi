@@ -129,6 +129,53 @@ public class ConnectionStatusIconTest {
     }
 
     @Test
+    void tooltipShowsOfflineWhenOfflineModeAndDisconnected() {
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        tabbedPane.putClientProperty("offlineMode", Boolean.TRUE);
+        ConnectionStatusIcon icon = new ConnectionStatusIcon(linkManager, tabbedPane);
+        String tip = icon.getToolTipText();
+        assertNotNull(tip);
+        assertTrue(tip.contains("Offline tune"), "Expected offline tooltip: " + tip);
+    }
+
+    @Test
+    void connectedTakesPrecedenceOverOfflineTooltip() {
+        // Offline flag can be stale; a live connection must win.
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
+        tabbedPane.putClientProperty("offlineMode", Boolean.TRUE);
+        ConnectionStatusIcon icon = new ConnectionStatusIcon(linkManager, tabbedPane);
+        String tip = icon.getToolTipText();
+        assertNotNull(tip);
+        assertTrue(tip.contains("Connected"), "Connected should win over offline: " + tip);
+    }
+
+    @Test
+    void bootloaderTakesPrecedenceOverOfflineTooltip() {
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        tabbedPane.putClientProperty("offlineMode", Boolean.TRUE);
+        tabbedPane.putClientProperty("bootloaderMode", "DFU");
+        ConnectionStatusIcon icon = new ConnectionStatusIcon(linkManager, tabbedPane);
+        String tip = icon.getToolTipText();
+        assertNotNull(tip);
+        assertTrue(tip.contains("DFU"), "Bootloader should win over offline: " + tip);
+    }
+
+    @Test
+    void updatesWhenOfflineModeChanges() {
+        ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
+        ConnectionStatusIcon icon = new ConnectionStatusIcon(linkManager, tabbedPane);
+        assertFalse(icon.getToolTipText().contains("Offline tune"), "Should not be offline initially");
+
+        tabbedPane.putClientProperty("offlineMode", Boolean.TRUE);
+        try {
+            SwingUtilities.invokeAndWait(() -> {});
+        } catch (Exception e) {
+            fail(e);
+        }
+        assertTrue(icon.getToolTipText().contains("Offline tune"), "Should show offline after property change");
+    }
+
+    @Test
     void worksWithNullTabbedPane() {
         // Should not throw, falls back to connected/disconnected only
         assertDoesNotThrow(() -> new ConnectionStatusIcon(linkManager, null));

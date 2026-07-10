@@ -41,8 +41,11 @@ public class ConnectionStatusIcon extends JButton {
 
         Runnable updateButton = () -> {
             final Object bootloaderMode = tabbedPane == null ? null : tabbedPane.getClientProperty("bootloaderMode");
+            final Object offlineMode = tabbedPane == null ? null : tabbedPane.getClientProperty("offlineMode");
             if (bootloaderMode != null) {
                 setToolTipText(bootloaderMode + " bootloader — use the Device tab to update firmware.");
+            } else if (offlineMode != null && !ConnectionStatusLogic.INSTANCE.isConnected()) {
+                setToolTipText("Offline tune loaded. Connect ECU to burn or compare.");
             } else {
                 boolean isConnected = ConnectionStatusLogic.INSTANCE.isConnected();
                 setToolTipText(isConnected ? "Connected. Click or Ctrl+D to disconnect." : "Disconnected. Click or Ctrl+R to connect.");
@@ -53,6 +56,7 @@ public class ConnectionStatusIcon extends JButton {
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(updateButton));
         if (tabbedPane != null) {
             tabbedPane.addPropertyChangeListener("bootloaderMode", e -> SwingUtilities.invokeLater(updateButton));
+            tabbedPane.addPropertyChangeListener("offlineMode", e -> SwingUtilities.invokeLater(updateButton));
         }
         updateButton.run();
 
