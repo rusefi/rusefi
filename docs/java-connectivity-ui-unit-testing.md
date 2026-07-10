@@ -99,7 +99,7 @@ rather than invent new machinery.
 
 | Area | Test | What it covers |
 | --- | --- | --- |
-| Scan policy | `ui` `SerialPortScannerTest` (13) | ttyS filtering, ECU caching vs Unknown retry, stale-node drop, unplug/replug eviction, listener-only-on-change, synthetic DFU port, device-probe throttle + last-known reuse, probe skip while connected, TCP not cached, `cachePort`/`invalidatePort`, ECU-first sort |
+| Scan policy | `connectivity` `SerialPortScannerTest` (13) | ttyS filtering, ECU caching vs Unknown retry, stale-node drop, unplug/replug eviction, listener-only-on-change, synthetic DFU port, device-probe throttle + last-known reuse, probe skip while connected, TCP not cached, `cachePort`/`invalidatePort`, ECU-first sort |
 | Session state machine | `connectivity` `DeviceSessionManagerTest` (15) | OpenBLT/DFU detection + precedence + disappearance, initial-port pre-cache, re-cache on reconnect, CONNECTING/CONNECTED, snapshot to late subscribers, FLASHING + watchdog pause/resume + post-flash rescan choreography (`FakeJobExecutor`) |
 | Flash mode/port decisions | `ui` `ProgramSelectorTest` | `mainButtonModeFor` (DFU/OpenBLT/live/offline), `resolveFlashPort` (bootloader wins, offline DFU>OpenBLT preference) |
 | Tune merge recovery | `ui` `CalibrationsHelper*Test` | `decidePostMerge` all actions (#9756 crash path), partial-merge failed-field tracking, `isUiContext` |
