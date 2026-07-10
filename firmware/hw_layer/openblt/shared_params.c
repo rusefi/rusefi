@@ -120,6 +120,11 @@ bool SharedParamsReadByIndex(uint32_t idx, uint8_t * value)
 {
   bool result = false;
 
+  #if CORTEX_MODEL == 7
+    // If we have a cache, invalidate relevant cache lines to get fresh data from RAM.
+    SCB_InvalidateDCache_by_Addr((uint32_t*)&sharedParamsBuffer, sizeof(sharedParamsBuffer));
+  #endif
+
   /* Only continue if the buffer and the specified parameters are valid. */
   if ( (SharedParamsValidateBuffer()) &&
        (idx < SHARED_PARAMS_CFG_BUFFER_DATA_LEN)  &&
