@@ -23,13 +23,15 @@ flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 1M;
 image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size - 128K) : flash_size;
 
 /* OpenBLT <-> main FW shared area */
-_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
+/* We need only 16 bytes for tSharedParamsBuffer struct, but align to cache line size */
+_OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 32 : 0;
 
 /*
  * STM32H723xG (64k ITCM) generic setup.
  *
- * AXI SRAM     - BSS, Data, Heap.
- * SRAM1+SRAM2  - NOCACHE, ETH.
+ * AXI SRAM     - 16k NOCACHE and ETH, then BSS, Data, Heap.
+ * SRAM1+SRAM2  - None.
+ * SRAM3        - None.
  * SRAM4        - None.
  * DTCM-RAM     - Main Stack, Process Stack.
  * ITCM-RAM     - None.
@@ -45,10 +47,10 @@ MEMORY
     flash5 (rx) : org = 0x00000000, len = 0
     flash6 (rx) : org = 0x00000000, len = 0
     flash7 (rx) : org = 0x00000000, len = 0
-    shared      : org = 0x24000000, len = _OpenBLT_Shared_Params_Size
-    ram0   (wx) : org = 0x24000000 + _OpenBLT_Shared_Params_Size, len = 16k - _OpenBLT_Shared_Params_Size       /* AXI SRAM no-cache*/
+    ram0   (wx) : org = 0x24000000, len = 16k       /* AXI SRAM no-cache*/
     ram1   (wx) : org = 0x24004000, len = 304k      /* AXI SRAM cached */
-    ram2   (wx) : org = 0x30000000, len = 16k       /* AHB SRAM1 */
+    shared (wx) : org = 0x30000000, len = _OpenBLT_Shared_Params_Size
+    ram2   (wx) : org = 0x30000000 + _OpenBLT_Shared_Params_Size, len = 16k - _OpenBLT_Shared_Params_Size       /* AHB SRAM1 */
     ram3   (wx) : org = 0x30002000, len = 16k       /* AHB SRAM2 */
     ram4   (wx) : org = 0x38000000, len = 16k       /* AHB SRAM4 */
     ram5   (wx) : org = 0x20000000, len = 128k      /* DTCM-RAM */
