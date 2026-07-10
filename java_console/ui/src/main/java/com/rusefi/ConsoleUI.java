@@ -18,6 +18,7 @@ import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.lua.LuaScriptPanel;
+import com.rusefi.ui.plugins.ConsoleTabProvider;
 import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.ui.widgets.ConnectionStatusIcon;
 import com.rusefi.ui.wizard.WizardCatalog;
@@ -45,6 +46,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -355,6 +357,8 @@ console live data tab is broken #8402
                 devicePane.triggerAutoUpdate();
             });
 
+            addCustomTabs();
+
             // Pinout ↔ Tune bidirectional navigation
             pinoutPane.setNavigateToTune((dialogKey, fieldKey) -> {
                 buildTuning.run();
@@ -429,6 +433,20 @@ console live data tab is broken #8402
 
     public String getPort() {
         return port;
+    }
+
+    private void addCustomTabs() {
+        try {
+            for (ConsoleTabProvider provider : ServiceLoader.load(ConsoleTabProvider.class)) {
+                try {
+                    tabbedPane.addTab(provider.getTitle(), provider.createTab(uiContext));
+                } catch (Exception e) {
+                    log.error("Failed to add custom console tab from " + provider.getClass().getName(), e);
+                }
+            }
+        } catch (Throwable e) {
+            log.error("Failed to load custom console tabs", e);
+        }
     }
 
     private static void writeReadmeFile() {

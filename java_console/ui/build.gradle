@@ -28,7 +28,14 @@ dependencies {
     implementation global_libs.jaxb_runtime
 }
 
+def customJavaUi = findProject(':custom-java-ui')
+
 shadowJar {
+    if (customJavaUi != null) {
+        dependsOn ':custom-java-ui:classes'
+        from { customJavaUi.sourceSets.main.output }
+    }
+
     base {
       // [dark-magic-jar] see https://github.com/rusefi/rusefi/pull/9051 for important very not obvious issue
         archiveFileName = 'rusefi_console.jar'
