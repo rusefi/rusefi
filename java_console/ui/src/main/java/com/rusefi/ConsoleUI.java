@@ -31,6 +31,7 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.LazyFileImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 import javax.swing.*;
@@ -44,8 +45,10 @@ import java.awt.event.ActionListener;
 import java.util.function.Supplier;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -127,6 +130,39 @@ public class ConsoleUI {
         };
     }
 
+    /**
+     * The follow-a-renumbered-ECU decision: which port, if any, should the live session repoint to
+     * after the board re-enumerated. Empty unless the port we were on has VANISHED (while it is still
+     * present the watchdog's same-name restart() owns the reconnect) and the scanner has classified
+     * exactly ONE candidate ECU on a different port — with zero or several candidates we cannot know
+     * which one is our board, so we stay put rather than hijack a stranger. [tag:better_ux_for_flashing]
+     * <p>
+     * NB: intentionally NOT gated on ConnectionStatusLogic.isConnected(). After an OpenBLT switch the
+     * status can stay stale "connected", which would block recovery forever; if the port we were on is
+     * gone, the link is dead regardless of the status flag.
+     * <p>
+     * Package-private static so ConsoleUiEcuPortToFollowTest can drive it directly.
+     */
+    static Optional<String> ecuPortToFollow(final @Nullable String currentPort,
+                                            final Collection<String> commPorts,
+                                            final java.util.List<PortResult> ecuPorts,
+                                            final boolean disconnectedByUser) {
+        if (disconnectedByUser) {
+            return Optional.empty();
+        }
+        if (currentPort == null || commPorts.contains(currentPort)) {
+            return Optional.empty();
+        }
+        if (ecuPorts.size() != 1) {
+            return Optional.empty();
+        }
+        final String newPort = ecuPorts.get(0).port;
+        if (newPort.equals(currentPort)) {
+            return Optional.empty();
+        }
+        return Optional.of(newPort);
+    }
+
     private ConsoleUI(UIContext uiContext, String port, SerialPortType serialPortType,
                       boolean alreadyConnected, IniFileModel offlineIni, ConfigurationImage offlineImage,
                       JFrame reuseFrame, ConnectivityContext connectivityContext) {
@@ -158,29 +194,14 @@ public class ConsoleUI {
         // were on has vanished, repoint the LinkManager there. [tag:better_ux_for_flashing]
         if (!isOffline) {
             connectivityContext.getPortScanner().addListener(currentHardware -> {
-                if (linkManager.isDisconnectedByUser()) {
-                    return;
-                }
-                // NB: intentionally NOT gated on ConnectionStatusLogic.isConnected(). After an OpenBLT
-                // switch the status can stay stale "connected", which would block recovery forever.
-                // if the port we were on is gone, the link is
-                // dead regardless of the status flag; while genuinely connected that port is still present
-                // so we skip and let the watchdog's same-name restart() own the reconnect.
                 final String currentPort = linkManager.getLastTriedPort();
-                if (currentPort == null || LinkManager.getCommPorts().contains(currentPort)) {
-                    return;
-                }
                 final java.util.List<PortResult> ecuPorts = currentHardware.getKnownPorts(
                     CompatibilitySet.of(SerialPortType.Ecu, SerialPortType.EcuWithOpenblt));
-                if (ecuPorts.size() != 1) {
-                    return;
-                }
-                final String newPort = ecuPorts.get(0).port;
-                if (newPort.equals(currentPort)) {
-                    return;
-                }
-                log.info("ECU reappeared on " + newPort + " (was " + currentPort + ") — following renumbered port");
-                linkManager.execute(() -> linkManager.reconnect(newPort));
+                ecuPortToFollow(currentPort, LinkManager.getCommPorts(), ecuPorts, linkManager.isDisconnectedByUser())
+                    .ifPresent(newPort -> {
+                        log.info("ECU reappeared on " + newPort + " (was " + currentPort + ") — following renumbered port");
+                        linkManager.execute(() -> linkManager.reconnect(newPort));
+                    });
             });
         }
 

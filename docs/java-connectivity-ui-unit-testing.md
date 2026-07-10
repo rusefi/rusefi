@@ -115,11 +115,11 @@ rather than invent new machinery.
 | Port classification pipeline | `ui` `EcuHardwareProbesInspectTest` | OpenBLT-first probing, stale-node/vanish ⇒ dropped, ECU-with/without-OpenBLT + calibrations, 3-attempt retry with between-attempts backoff, interrupt handling; Tier 3 item 1, added 2026-07-08 |
 | Post-flash reconnect wait | `ui` `AbstractAutoFlashJobAwaitEcuPortTest` | `awaitEcuPort`: immediate ECU, follow renumbered port, bootloader-grace flicker vs persistent OpenBLT/DFU giveup, timeout, interrupt; Tier 3 item 3, added 2026-07-08 |
 | OpenBLT job choreography | `ui` `OpenBltManualJobTest`, `OpenBltSwitchJobTest` | manual flash: suspend-before-flash / invalidate+resume-after (also on failure and flasher crash), restore-only-after-resume, ensure-firmware abort before touching the scanner; switch: reboot-then-`close()` ordering, never `disconnect()` (renumber-follow invariant), port released even with no `BinaryProtocol`; Tier 3 item 4, added 2026-07-10 |
+| ECU-follow-across-reboot rule | `ui` `ConsoleUiEcuPortToFollowTest` | `ConsoleUI.ecuPortToFollow`: follows the single new ECU (incl. `EcuWithOpenblt`) once the old port vanished; stays put when disconnected-by-user, current port still present, never-connected, zero/multiple candidates, or candidate == current; Tier 3 item 6, added 2026-07-10 |
 
 Not covered anywhere: `EcuHardwareProbes.inspect()`
-classification/retry, the ECU-follow-across-reboot rule in `ConsoleUI`,
-`MainFrame` title composition, `StartupFrame` port-list presentation and splash
-connection state machine.
+classification/retry, `MainFrame` title composition, `StartupFrame` port-list
+presentation and splash connection state machine.
 
 ## Test backlog
 
@@ -278,12 +278,17 @@ sites.
    signature, offline, iniSignature)`; the priority ladder
    (UPDATING > BOOTLOADER > connected > OFFLINE > DISCONNECTED) is pure string
    logic currently welded to `ConsoleUI`/`FrameHelper`.
-6. **`ConsoleUI` ECU-follow-across-reboot rule** — currently an anonymous
-   listener inside the 285-line private constructor. Extract a static
-   predicate, e.g. `Optional<String> ecuPortToFollow(currentPort, commPorts,
-   ecuPorts, disconnectedByUser)`, and test: skips when disconnected-by-user,
-   when current port still present, when zero or multiple candidate ECU ports,
-   when candidate equals current; follows on exactly-one new ECU port.
+6. **`ConsoleUI` ECU-follow-across-reboot rule** — DONE 2026-07-10. Extracted
+   exactly as sketched: package-private static
+   `ConsoleUI.ecuPortToFollow(currentPort, commPorts, ecuPorts, disconnectedByUser)`
+   returning `Optional<String>`; the scanner listener in the constructor now just
+   gathers the four inputs and `ifPresent`-reconnects, and the
+   not-gated-on-isConnected rationale moved to the predicate's javadoc.
+   `ConsoleUiEcuPortToFollowTest` (8) covers: follows the single new ECU,
+   `EcuWithOpenblt` counts as connectable; empty on disconnected-by-user,
+   current-port-still-present (watchdog owns that reconnect), null current port,
+   zero candidates, multiple (ambiguous) candidates, and candidate == current
+   port (inconsistent scanner-vs-OS snapshot).
 7. **`MaintenanceUtil` confirm seam** — DONE 2026-07-08. The nested
    `UserConfirm` interface with package-private overloads (public methods
    delegate to the `confirmOnEdt` JOptionPane production impl).
