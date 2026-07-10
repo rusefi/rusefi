@@ -15,18 +15,19 @@
 */
 
 /* change address & length if bootloader */
-/* H743 has all sectors 128K size */
+/* H723/733 has all sectors 128K size */
 bootloader_size = 128k;
 flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
 flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : 1M;
-image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size) : flash_size;
+/* Last sector used is for config */
+image_size = DEFINED(HAS_BOOTLOADER) ? (flash_size - bootloader_size - 128K) : flash_size;
 
 /* OpenBLT <-> main FW shared area */
 _OpenBLT_Shared_Params_Size = DEFINED(HAS_BOOTLOADER) || DEFINED(IS_BOOTLOADER) ? 16 : 0;
 
 /*
  * STM32H723xG (64k ITCM) generic setup.
- * 
+ *
  * AXI SRAM     - BSS, Data, Heap.
  * SRAM1+SRAM2  - NOCACHE, ETH.
  * SRAM4        - None.
