@@ -78,3 +78,8 @@ project(':mcp_can').projectDir = new File(rootRelativePath + 'java_console/mcp_c
 include ':enum_generator'
 project(':enum_generator').projectDir = new File(rootRelativePath + 'java_tools/enum_generator')
 
+def customJavaUiDir = System.getenv('RUSEFI_CUSTOM_JAVA_UI_DIR')
+if (customJavaUiDir) {
+  include ':custom-java-ui'
+  project(':custom-java-ui').projectDir = new File(customJavaUiDir)
+}
