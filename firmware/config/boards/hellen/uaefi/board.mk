@@ -19,7 +19,7 @@ DDEFS += -DFIRMWARE_ID=\"uaefi\" $(VAR_DEF_ENGINE_TYPE)
 #Knock is available on F4 and F7
 ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# Default H743 linker script is not compatible
-	LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/STM32H723xG_ITCM64k.ld
+	LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/STM32H723xG_ITCM64k_AXI_NC.ld
 	# Do not use HSE autodetection
 	DDEFS += -DSTM32_HSECLK=20000000
 	DDEFS += -DENABLE_AUTO_DETECT_HSE=FALSE
