@@ -80,4 +80,21 @@ bool storagRequestUnregisterStorage(StorageType id);
  */
 bool getNeedToWriteConfiguration();
 
+/**
+ * @return true if any storage write is queued or currently executing
+ */
+bool storageIsBusy();
+
+/**
+ * Wait for queued and in-flight storage writes to complete, up to timeoutMs.
+ * Note that deferred writes only execute once the engine stops, so this can
+ * time out while the engine is running.
+ * @return true if storage is idle, false on timeout
+ */
+bool storageWaitIdle(unsigned int timeoutMs);
+
+// Bound for storageWaitIdle() before a reboot: covers a full double-copy
+// settings write plus MFS worst case garbage collection
+#define STORAGE_WAIT_IDLE_TIMEOUT_MS 10000
+
 void initStorage();

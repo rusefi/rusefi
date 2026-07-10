@@ -390,6 +390,31 @@ bool getNeedToWriteConfiguration() {
 	return (pendingWrites & BIT(EFI_SETTINGS_RECORD_ID)) != 0;
 }
 
+bool storageIsBusy() {
+	bool requestQueued;
+	{
+		// a request that was posted but not yet fetched by the manager thread
+		// is not reflected in pendingWrites yet
+		chibios_rt::CriticalSectionLocker csl;
+		requestQueued = storageManagerMb.getUsedCountI() > 0;
+	}
+	// a pendingWrites bit stays set while storageWriteID() is executing, so
+	// this also covers a write that is currently in flight
+	return requestQueued || (pendingWrites != 0);
+}
+
+bool storageWaitIdle(unsigned int timeoutMs) {
+	while (storageIsBusy()) {
+		if (timeoutMs < 10) {
+			// writes are deferred while the engine is running - give up
+			return false;
+		}
+		chThdSleepMilliseconds(10);
+		timeoutMs -= 10;
+	}
+	return true;
+}
+
 void initStorage() {
 	bool settingsStorageReady = false;
 	// may be unused
@@ -417,6 +442,17 @@ void initStorage() {
 #endif // EFI_STORAGE_MFS
 
 	chThdCreateStatic(storageManagerThreadStack, sizeof(storageManagerThreadStack), PRIO_STORAGE_MANAGER, storageManagerThread, nullptr);
+}
+
+#else // !EFI_CONFIGURATION_STORAGE
+
+/* stubs so that reboot paths link on builds without configuration storage */
+bool storageIsBusy() {
+	return false;
+}
+
+bool storageWaitIdle(unsigned int /*timeoutMs*/) {
+	return true;
 }
 
 #endif // EFI_CONFIGURATION_STORAGE
