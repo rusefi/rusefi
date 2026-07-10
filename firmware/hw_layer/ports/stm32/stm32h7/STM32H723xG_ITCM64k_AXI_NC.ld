@@ -56,6 +56,8 @@ MEMORY
     ram7   (wx) : org = 0x38800000, len = 4k        /* BCKP SRAM */
 }
 
+__backup_sram_addr__ = ORIGIN(ram7);
+
 /* For each data/text section two region are defined, a virtual region
    and a load region (_LMA suffix).*/
 
@@ -114,6 +116,9 @@ REGION_ALIAS("NOCACHE_RAM", ram0);
 /* RAM region to be used for eth segment.*/
 REGION_ALIAS("ETH_RAM", ram0);
 
+/* RAM region to be used for battery backuped data */
+REGION_ALIAS("BKUP_RAM", ram7);
+
 SECTIONS
 {
     /* Special section for non cache-able areas.*/
@@ -137,6 +142,25 @@ SECTIONS
         . = ALIGN(4);
         __eth_end__ = .;
     } > ETH_RAM
+
+    .bkup_ram_noinit (NOLOAD):
+    {
+        *(.bkup_ram_noinit)
+    } > BKUP_RAM
+
+    /* shared between main FW and OpenBLT */
+    .shared (NOLOAD) :
+    {
+        . = ALIGN(4);
+        _sshared = .;
+        __shared_start__ = _sshared;
+        *(.shared)
+        *(.shared.*)
+        KEEP(*(.shared))
+        . = ALIGN(4);
+        _eshared = .;
+        __shared_end__ = _eshared;
+    } > shared
 }
 
 /* Code rules inclusion.*/
