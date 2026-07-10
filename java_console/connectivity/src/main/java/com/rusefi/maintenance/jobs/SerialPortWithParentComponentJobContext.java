@@ -1,7 +1,6 @@
 package com.rusefi.maintenance.jobs;
 
 import com.rusefi.PortResult;
-import com.rusefi.SerialPortScanner;
 
 import javax.swing.*;
 

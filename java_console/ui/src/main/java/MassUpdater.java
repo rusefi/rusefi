@@ -4,7 +4,6 @@ import com.rusefi.PortResult;
 import com.rusefi.ProductionConnectivity;
 import com.rusefi.SerialPortType;
 import com.rusefi.UiVersion;
-import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -103,7 +102,7 @@ public class MassUpdater {
                     knownPorts.add(openPort.port);
                     mainStatus.getContent().logLine("New port " + openPort);
 
-                    OpenBltManualJob job = new OpenBltManualJob(openPort, mainStatus.getContent(), connectivityContext);
+                    OpenBltManualJob job = OpenBltManualJobFactory.createProduction(openPort, mainStatus.getContent(), connectivityContext);
                     SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(job));
                 }
             }

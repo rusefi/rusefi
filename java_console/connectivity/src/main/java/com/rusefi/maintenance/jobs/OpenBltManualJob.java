@@ -5,9 +5,6 @@ import com.rusefi.PortResult;
 import com.rusefi.PortScanner;
 import com.rusefi.core.io.ConnectedEcuTarget;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.CalibrationsHelper;
-import com.rusefi.maintenance.MaintenanceUtil;
-import com.rusefi.maintenance.ProgramSelector;
 
 import javax.swing.*;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +15,7 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
      * choreography, so OpenBltManualJobTest can assert the ordering without hardware. Production
      * wires the original statics; the choreography itself stays in {@link #doJob}.
      */
-    interface FlashSteps {
+    public interface FlashSteps {
         boolean ensureFirmware(UpdateOperationCallbacks callbacks, ConnectedEcuTarget target);
 
         boolean flash(JComponent parent, String port, UpdateOperationCallbacks callbacks, ConnectedEcuTarget target);
@@ -26,33 +23,9 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
         void restoreCalibrations(UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext);
     }
 
-    static final FlashSteps PRODUCTION_STEPS = new FlashSteps() {
-        @Override
-        public boolean ensureFirmware(final UpdateOperationCallbacks callbacks, final ConnectedEcuTarget target) {
-            return MaintenanceUtil.ensureFirmwareForConnectedTarget(callbacks, target);
-        }
-
-        @Override
-        public boolean flash(final JComponent parent, final String port, final UpdateOperationCallbacks callbacks,
-                             final ConnectedEcuTarget target) {
-            return ProgramSelector.flashOpenbltSerial(parent, port, callbacks, target);
-        }
-
-        @Override
-        public void restoreCalibrations(final UpdateOperationCallbacks callbacks,
-                                        final ConnectivityContext connectivityContext) {
-            CalibrationsHelper.restorePreviousCalibrationsAfterManualFlash(callbacks, connectivityContext);
-        }
-    };
-
     private final ConnectivityContext connectivityContext;
     private final FlashSteps steps;
 
-    public OpenBltManualJob(final PortResult port, final JComponent parent, final ConnectivityContext connectivityContext) {
-        this(port, parent, connectivityContext, PRODUCTION_STEPS);
-    }
-
-    // package-private: unit tests inject scripted steps, see FlashSteps
     OpenBltManualJob(final PortResult port, final JComponent parent, final ConnectivityContext connectivityContext,
                      final FlashSteps steps) {
         super("OpenBLT via Serial", new SerialPortWithParentComponentJobContext(port, parent));

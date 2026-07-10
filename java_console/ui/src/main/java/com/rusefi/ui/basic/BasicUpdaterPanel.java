@@ -216,7 +216,7 @@ never used?
                 break;
             }
             case OpenBlt: {
-                job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
+                job = OpenBltManualJobFactory.createProduction(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
                 break;
             }
             default: {

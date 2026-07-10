@@ -22,12 +22,8 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
     private final LinkManager linkManager;
     private final Rebooter rebooter;
 
-    public OpenBltSwitchJob(final PortResult port, final JComponent parent, final LinkManager linkManager) {
-        this(port, parent, linkManager, OpenbltRebooter.PRODUCTION_REBOOTER);
-    }
-
     // package-private: unit tests inject a recording rebooter, see Rebooter
-    OpenBltSwitchJob(final PortResult port, final JComponent parent, final LinkManager linkManager,
+    public OpenBltSwitchJob(final PortResult port, final JComponent parent, final LinkManager linkManager,
                      final Rebooter rebooter) {
         super("OpenBLT switch", new SerialPortWithParentComponentJobContext(port, parent));
         this.linkManager = linkManager;

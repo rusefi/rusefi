@@ -9,7 +9,7 @@ import com.rusefi.maintenance.ProgramSelector;
 import javax.swing.*;
 
 public class OpenbltRebooter {
-    static final OpenBltSwitchJob.Rebooter PRODUCTION_REBOOTER = new OpenBltSwitchJob.Rebooter() {
+    public static final OpenBltSwitchJob.Rebooter PRODUCTION_REBOOTER = new OpenBltSwitchJob.Rebooter() {
         @Override
         public void rebootToOpenblt(final JComponent parent, final BinaryProtocol bp,
                                     final UpdateOperationCallbacks callbacks) {

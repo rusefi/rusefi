@@ -188,13 +188,13 @@ public class ProgramSelector {
                 job = new DfuSwitchJob(selectedPort, parent);
                 break;
             case OPENBLT_SWITCH:
-                job = new OpenBltSwitchJob(selectedPort, parent, linkManager);
+                job = new OpenBltSwitchJob(selectedPort, parent, linkManager, OpenbltRebooter.PRODUCTION_REBOOTER);
                 break;
             case OPENBLT_CAN:
                 job = new OpenBltCanJob(parent);
                 break;
             case OPENBLT_MANUAL:
-                job = new OpenBltManualJob(selectedPort, parent, connectivityContext);
+                job = OpenBltManualJobFactory.createProduction(selectedPort, parent, connectivityContext);
                 break;
             case OPENBLT_AUTO:
                 job = new OpenBltAutoJob(selectedPort, parent, connectivityContext, linkManager);
