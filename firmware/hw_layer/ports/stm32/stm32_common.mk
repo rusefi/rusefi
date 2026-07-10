@@ -9,6 +9,7 @@ HW_LAYER_PORT_CPP += \
 	$(HW_STM32_PORT_DIR)/stm32_pwm.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_serial.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_spi.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_i2c.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_icu.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_reset_cause.cpp \
 	$(HW_STM32_PORT_DIR)/stm32_opt.cpp \
