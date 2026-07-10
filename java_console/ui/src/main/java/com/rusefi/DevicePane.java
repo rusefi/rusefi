@@ -62,7 +62,7 @@ public class DevicePane {
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
         content.add(column, BorderLayout.NORTH);
 
-        JCheckBox autoUpdateBundle = new JCheckBox("Auto-update bundle", AutoupdateProperty.get());
+        JCheckBox autoUpdateBundle = new JCheckBox("Auto-update Software", AutoupdateProperty.get());
         autoUpdateBundle.setAlignmentX(Component.LEFT_ALIGNMENT);
         autoUpdateBundle.addActionListener(e -> PersistentConfiguration.setBoolProperty(
             AutoupdateProperty.AUTO_UPDATE_BUNDLE_PROPERTY, autoUpdateBundle.isSelected()));

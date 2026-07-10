@@ -46,7 +46,7 @@ public class ProgramSelector {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
-    private final JSplitButton splitButton = new JSplitButton("Update Firmware", AutoupdateUtil.loadIcon("upload48.png"));
+    private final JSplitButton splitButton = new JSplitButton("Update ECU Firmware", AutoupdateUtil.loadIcon("upload48.png"));
     private final ConnectivityContext connectivityContext;
     private final JComboBox<PortResult> comboPorts;
     @Nullable

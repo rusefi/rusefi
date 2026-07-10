@@ -185,7 +185,7 @@ public class MainFrame {
         boolean needsUpdate = needsFirmwareUpdate(ecuSig, srecName);
         log.info("checkFirmwareUpdate: needsUpdate=" + needsUpdate);
         SwingUtilities.invokeLater(() -> {
-            updateEcuItem.setText(needsUpdate ? "Update ECU" : "No updates available");
+            updateEcuItem.setText(needsUpdate ? "Update ECU Firmware" : "No updates available");
             updateEcuItem.setEnabled(needsUpdate);
         });
     }
