@@ -42,6 +42,10 @@ public class RealIniFileProvider implements IniFileProvider {
      */
     private static final Set<String> declinedSignatures = ConcurrentHashMap.newKeySet();
 
+    public static void clearDeclinedSignaturesForTests() {
+        declinedSignatures.clear();
+    }
+
     private StatusConsumer statusConsumer = StatusConsumer.ANONYMOUS;
 
     public void setStatusConsumer(StatusConsumer statusConsumer) {
