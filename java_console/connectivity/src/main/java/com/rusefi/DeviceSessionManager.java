@@ -4,7 +4,6 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionStatusValue;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
-import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,7 +28,7 @@ public class DeviceSessionManager {
     }
 
     /**
-     * The narrow slice of {@link SingleAsyncJobExecutor} this session manager consumes, extracted so the
+     * The narrow slice of {@code com.rusefi.ui.basic.SingleAsyncJobExecutor} this session manager consumes, extracted so the
      * FLASHING state and the watchdog/scanner choreography can be unit-tested with a fake executor.
      */
     public interface JobExecutor {
