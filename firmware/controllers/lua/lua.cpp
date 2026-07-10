@@ -19,6 +19,7 @@
 #include "lua_hooks.h"
 #include "can_filter.h"
 #include "lua_config_page.h"
+#include "bench_test.h"
 
 #define TAG "LUA "
 
@@ -314,6 +315,18 @@ void startLua() {
 
 	addConsoleAction("luareset", [](){
 		needsReset = true;
+	});
+
+	// these commands facilitate TS Lua Button scripts development; registered here rather than
+	// in initBenchTest() so that they exist on boards without EFI_ENGINE_CONTROL
+	addConsoleActionI("lua_button", [](int index) {
+		if (index < 1 || index > LUA_BUTTON_COUNT) {
+			return;
+		}
+		luaCommandCounters[index - 1]++;
+	});
+	addConsoleActionFFFF("luabench2", [](float humanIndex, float onTime, float offTimeMs, float count) {
+		doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
 	});
 
 	addConsoleAction("luamemory", [](){

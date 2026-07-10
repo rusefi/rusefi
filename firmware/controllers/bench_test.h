@@ -25,6 +25,9 @@ void starterRelayBench();
 
 void executeTSCommand(uint16_t subsystem, uint16_t index);
 void handleBenchCategory(uint16_t index);
+// TS Lua button press counters, incremented by the LUA_COMMAND_1..4 bench commands and the lua_button console command
+extern int luaCommandCounters[LUA_BUTTON_COUNT];
+void doRunBenchTestLuaOutput(size_t humanIndex, float onTimeMs, float offTimeMs, int count);
 int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]);
 #if EFI_CAN_SUPPORT
 void processCanEcuControl(const CANRxFrame& frame);
