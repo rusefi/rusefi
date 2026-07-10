@@ -4,20 +4,34 @@ import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.ProgramSelector;
 
 import javax.swing.*;
 
 public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
-    private final LinkManager linkManager;
+    /**
+     * Seam for unit tests around the static reboot-to-bootloader commands, so OpenBltSwitchJobTest
+     * can assert the reboot-then-close() choreography without hardware. Production wires
+     * {@link OpenbltRebooter#rebootToOpenblt}.
+     */
+    interface Rebooter {
+        void rebootToOpenblt(JComponent parent, BinaryProtocol bp, UpdateOperationCallbacks callbacks);
 
-    public OpenBltSwitchJob(final PortResult port, final JComponent parent) {
-        this(port, parent, null);
+        void rebootToOpenblt(JComponent parent, String port, UpdateOperationCallbacks callbacks);
     }
 
+    private final LinkManager linkManager;
+    private final Rebooter rebooter;
+
     public OpenBltSwitchJob(final PortResult port, final JComponent parent, final LinkManager linkManager) {
+        this(port, parent, linkManager, OpenbltRebooter.PRODUCTION_REBOOTER);
+    }
+
+    // package-private: unit tests inject a recording rebooter, see Rebooter
+    OpenBltSwitchJob(final PortResult port, final JComponent parent, final LinkManager linkManager,
+                     final Rebooter rebooter) {
         super("OpenBLT switch", new SerialPortWithParentComponentJobContext(port, parent));
         this.linkManager = linkManager;
+        this.rebooter = rebooter;
     }
 
     @Override
@@ -26,7 +40,7 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
             () -> {
                 if (linkManager != null) {
                     BinaryProtocol bp = linkManager.getBinaryProtocol();
-                    ProgramSelector.rebootToOpenblt(context.getParent(), bp, callbacks);
+                    rebooter.rebootToOpenblt(context.getParent(), bp, callbacks);
                     // close() — NOT disconnect() — to release the serial port for the transient OpenBLT
                     // state. The board comes back either as an ECU on a (possibly renumbered on Linux) port
                     // or jumps straight back to firmware after the bootloader times out with no flash; we
@@ -47,7 +61,7 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
                     // classified by the scanner uncontested and a single reconnect brings the console back. [tag:better_ux_for_flashing]
                     linkManager.close();
                 } else {
-                    ProgramSelector.rebootToOpenblt(context.getParent(), context.getPort().port, callbacks);
+                    rebooter.rebootToOpenblt(context.getParent(), context.getPort().port, callbacks);
                 }
             },
             onJobFinished

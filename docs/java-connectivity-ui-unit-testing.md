@@ -1,6 +1,6 @@
 # Java Console: Unit Test Approach for Connectivity Management & UI
 
-Status as of 2026-07-08. Scope: `java_console` connectivity/flashing/session path
+Status as of 2026-07-10. Scope: `java_console` connectivity/flashing/session path
 (`connectivity`, `io`, `shared_io`, `ui` modules) and the Swing UI around it.
 
 ## Why this document
@@ -114,9 +114,9 @@ rather than invent new machinery.
 | Device tab presentation decisions | `ui` `DevicePaneTest` | bootloader-state classification, DFU/OpenBLT guidance text (platform-aware), offline-capable tab lock list; Tier 2, added 2026-07-08 |
 | Port classification pipeline | `ui` `EcuHardwareProbesInspectTest` | OpenBLT-first probing, stale-node/vanish ⇒ dropped, ECU-with/without-OpenBLT + calibrations, 3-attempt retry with between-attempts backoff, interrupt handling; Tier 3 item 1, added 2026-07-08 |
 | Post-flash reconnect wait | `ui` `AbstractAutoFlashJobAwaitEcuPortTest` | `awaitEcuPort`: immediate ECU, follow renumbered port, bootloader-grace flicker vs persistent OpenBLT/DFU giveup, timeout, interrupt; Tier 3 item 3, added 2026-07-08 |
+| OpenBLT job choreography | `ui` `OpenBltManualJobTest`, `OpenBltSwitchJobTest` | manual flash: suspend-before-flash / invalidate+resume-after (also on failure and flasher crash), restore-only-after-resume, ensure-firmware abort before touching the scanner; switch: reboot-then-`close()` ordering, never `disconnect()` (renumber-follow invariant), port released even with no `BinaryProtocol`; Tier 3 item 4, added 2026-07-10 |
 
-Not covered anywhere: the flashing-job choreography (suspend → invalidate →
-resume, `close()`-not-`disconnect()`), `EcuHardwareProbes.inspect()`
+Not covered anywhere: `EcuHardwareProbes.inspect()`
 classification/retry, the ECU-follow-across-reboot rule in `ConsoleUI`,
 `MainFrame` title composition, `StartupFrame` port-list presentation and splash
 connection state machine.
@@ -259,13 +259,20 @@ sites.
    OpenBLT/DFU past grace ⇒ null before timeout; nothing on the bus ⇒ null at
    timeout; interrupt mid-wait ⇒ null + interrupt flag restored; `EcuWithOpenblt`
    counts as connectable.
-4. **OpenBLT job choreography** (`OpenBltManualJob` / `OpenBltSwitchJob`) —
-   suspend ⇒ invalidate ⇒ flash ⇒ resume ordering, and the
-   `linkManager.close()`-not-`disconnect()` invariant that keeps
-   `isDisconnectedByUser()` false so reconnect can follow the renumbered port.
-   Seam: inject the flasher call (functional interface around
-   `ProgramSelector.flashOpenbltSerial`); assert ordering on the fake scanner's
-   recorded calls.
+4. **OpenBLT job choreography** (`OpenBltManualJob` / `OpenBltSwitchJob`) — DONE
+   2026-07-10. `OpenBltManualJob` grew a nested `FlashSteps` seam (ensure-firmware /
+   flash / restore-calibrations; production `PRODUCTION_STEPS` wires the original
+   `MaintenanceUtil` / `ProgramSelector` / `CalibrationsHelper` statics, no call
+   sites changed) — the suspend/invalidate/resume choreography itself stays in
+   `doJob` under test. `OpenBltSwitchJob` grew a nested `Rebooter` seam around the
+   two `ProgramSelector.rebootToOpenblt` overloads. `OpenBltManualJobTest` (4,
+   scripted steps record the fake scanner's state at each step) covers
+   suspend-before-flash, invalidate+resume after success/failure/crash,
+   restore-only-after-resume-and-only-on-success, and the ensure-firmware abort
+   touching nothing. `OpenBltSwitchJobTest` (3, Mockito `InOrder` across the
+   rebooter and a mocked `LinkManager`) locks reboot-before-`close()` and the
+   `close()`-not-`disconnect()` invariant that keeps `isDisconnectedByUser()`
+   false so reconnect can follow the renumbered port.
 5. **`MainFrame.setTitle`** — extract a pure
    `composeTitle(isUpdating, bootloaderMode, connected, firmwareVersion, port,
    signature, offline, iniSignature)`; the priority ladder
