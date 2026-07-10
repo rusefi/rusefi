@@ -18,6 +18,7 @@ HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_adc.cpp \
 	$(PROJECT_DIR)/hw_layer/hardware.cpp \
 	$(PROJECT_DIR)/hw_layer/spi.cpp \
+	$(PROJECT_DIR)/hw_layer/i2c.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/arm_common.cpp \
 	$(PROJECT_DIR)/hw_layer/kline.cpp \
 	$(PROJECT_DIR)/hw_layer/mmc_card.cpp \

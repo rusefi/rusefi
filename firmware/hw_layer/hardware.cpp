@@ -167,6 +167,10 @@ void applyNewHardwareSettings() {
 
 	stopHardware();
 
+#if HAL_USE_I2C
+	stopI2cModules();
+#endif
+
 #if HAL_USE_SPI
 	stopSpiModules();
 #endif /* HAL_USE_SPI */
@@ -295,6 +299,10 @@ void initHardwareNoConfig() {
 	initEarlyMmcCard();
 #endif // EFI_FILE_LOGGING
 
+#if HAL_USE_I2C
+	initEarlyI2c();
+#endif
+
 #if HAL_USE_PAL && EFI_PROD_CODE
 	// this should be initialized before detectBoardType()
 	efiExtiInit();
@@ -397,6 +405,10 @@ void initHardware() {
 #ifdef TRIGGER_SCOPE
 	initTriggerScope();
 #endif // TRIGGER_SCOPE
+
+#if HAL_USE_I2C
+	initI2cModules();
+#endif
 
 #if HAL_USE_SPI
 	initSpiModules();
