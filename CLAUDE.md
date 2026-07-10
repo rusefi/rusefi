@@ -93,6 +93,7 @@ firmware/gen_enum_to_string.sh
   - `can/` - CAN bus communication
   - `lua/` - Runtime scripting
 - `firmware/hw_layer/` - Hardware abstraction layer
+  - `ports/at32/` (Artery AT32F435) is not used at the moment: both AT32 boards (`at_start_f435`, `m74_9`) are disabled (`meta-info.disabled_env`), so no CI build exercises this port
 - `firmware/libfirmware/` - Reusable library code
 - `firmware/util/` - Self-contained utilities (no external dependencies)
 - `unit_tests/` - Google Test suite

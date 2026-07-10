@@ -16,6 +16,7 @@ static_assert(sizeof(page5_container_s) % 32 == 0,
 // (LUA_SCRIPT_SIZE is up to tens of KB per board) so it must fit below the 128 KB
 // sector top — this also guarantees it never reaches the next-sector backup config
 // copy on H7/F4. Failing this is a per-board compile error: lower LUA_SCRIPT_SIZE.
+// [tag:persistent-container-magic-size]
 #if (EFI_STORAGE_INT_FLASH == TRUE) && (EFI_STORAGE_MFS != TRUE) && !EFI_SIMULATOR
 static_assert(LUA_PAGE_SECTOR_OFFSET + sizeof(page5_container_s) <= 128u * 1024u,
 	"Lua config page does not fit in the flash sector — reduce LUA_SCRIPT_SIZE for this board");
