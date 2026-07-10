@@ -25,6 +25,7 @@ public class RealIniFileProviderManualPickerTest {
     @AfterEach
     public void resetPicker() {
         RealIniFileProvider.manualPicker = null;
+        RealIniFileProvider.clearDeclinedSignaturesForTests();
     }
 
     /** A hand-written fake per the test conventions — records the signature it was asked about. */
@@ -58,6 +59,21 @@ public class RealIniFileProviderManualPickerTest {
 
         assertThrows(IniNotFoundException.class,
                 () -> new RealIniFileProvider().provide(UNPARSEABLE_SIGNATURE));
+    }
+
+    /** The port scanner calls provide() on a loop; a declined signature must not re-prompt (#9774 follow-up). */
+    @Test
+    public void promptsOnlyOncePerSignatureAcrossRepeatedProbes() {
+        int[] promptCount = {0};
+        RealIniFileProvider.manualPicker = signature -> {
+            promptCount[0]++;
+            return null; // user declines every time
+        };
+        for (int i = 0; i < 5; i++) {
+            assertThrows(IniNotFoundException.class,
+                    () -> new RealIniFileProvider().provide(UNPARSEABLE_SIGNATURE));
+        }
+        assertEquals(1, promptCount[0], "picker must be shown at most once per signature");
     }
 
     @Test

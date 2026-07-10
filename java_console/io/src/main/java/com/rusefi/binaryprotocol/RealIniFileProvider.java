@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -28,6 +30,21 @@ public class RealIniFileProvider implements IniFileProvider {
     }
 
     public static ManualIniPicker manualPicker = null;
+
+    /**
+     * Signatures the user was already prompted for and declined (or picked nothing). The port
+     * scanner calls {@link #provide} on a loop for every probe cycle, so without this a cancelled
+     * picker would immediately re-open on the next scan — an endless dialog storm (issue #9774
+     * follow-up). A successful pick is cached as a real .ini by {@link SignatureHelper#importIntoCache}
+     * and resolves before we ever reach the picker, so this only remembers the "no" answers.
+     * ponytail: session-lifetime set, cleared only by restart — good enough; a "retry" menu item
+     * can clear it later if anyone asks.
+     */
+    private static final Set<String> declinedSignatures = ConcurrentHashMap.newKeySet();
+
+    public static void clearDeclinedSignaturesForTests() {
+        declinedSignatures.clear();
+    }
 
     private StatusConsumer statusConsumer = StatusConsumer.ANONYMOUS;
 
@@ -55,8 +72,9 @@ public class RealIniFileProvider implements IniFileProvider {
             // 5th option: one level up or environment variable direction
             localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH);
         }
-        if (localIniFile == null && manualPicker != null) {
-            // 6th option: ask the user to point at a local .ini and cache it for next time
+        if (localIniFile == null && manualPicker != null && !declinedSignatures.contains(signature)) {
+            // 6th option: ask the user to point at a local .ini and cache it for next time.
+            // Prompt at most once per signature so the port-scanner loop can't re-open the dialog.
             File picked = manualPicker.pick(signature);
             if (picked != null) {
                 try {
@@ -67,6 +85,8 @@ public class RealIniFileProvider implements IniFileProvider {
                     log.info("Failed to import picked .ini into cache: " + e);
                     localIniFile = picked.getAbsolutePath();
                 }
+            } else {
+                declinedSignatures.add(signature);
             }
         }
         if (localIniFile == null)
