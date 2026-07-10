@@ -538,6 +538,8 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 	}
 
 	// max SPI rate is 25 MHz after init
+	// TODO: change to 26 MHz for some H7 devices where SPI PCLK is 52 MHz
+	// so we can get 26MHz instead of current 13MHz. This is 4% overclock.
 	spiCalcClockDiv(mmccfg.spip, &mmc_hs_spicfg, 25 * 1000 * 1000);
 	// and 250 KHz during initialization
 	spiCalcClockDiv(mmccfg.spip, &mmc_ls_spicfg, 250 * 1000);
