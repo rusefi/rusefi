@@ -54,12 +54,20 @@ public class UIContext {
         return linkManager.getCommandQueue();
     }
 
+    private final List<Consumer<Boolean>> offlineModeListeners = new ArrayList<>();
+
     public boolean isOfflineMode() {
         return offlineMode;
     }
 
     public void setOfflineMode(boolean offlineMode) {
         this.offlineMode = offlineMode;
+        for (Consumer<Boolean> l : offlineModeListeners) l.accept(offlineMode);
+    }
+
+    /** [tag:offline_tune] Notified (on the calling thread) whenever offline mode is toggled. */
+    public void addOfflineModeListener(Consumer<Boolean> listener) {
+        offlineModeListeners.add(listener);
     }
 
     /**

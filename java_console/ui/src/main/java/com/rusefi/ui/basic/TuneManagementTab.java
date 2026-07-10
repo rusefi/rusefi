@@ -8,6 +8,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.net.PropertiesHolder;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.ErrorMessageHelper;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.maintenance.OfflineTuneLoader;
 import com.rusefi.maintenance.jobs.ImportTuneJob;
@@ -159,8 +160,26 @@ public class TuneManagementTab {
         loadTuneFileButton.setFont(loadTuneFileButton.getFont().deriveFont(Font.BOLD, 16f));
         loadTuneFileButton.setMargin(new Insets(12, 28, 12, 28));
 
+        // [tag:offline_tune] Explain what this screen does — without it the splash is three silent
+        // buttons and no hint that a tune can be edited with no ECU attached (#9730).
+        JLabel offlineHint = new JLabel("<html><div style='text-align:center;'>"
+                + "No ECU connected. Load a tune file to view and edit it offline,<br>"
+                + "then connect an ECU to burn your changes.</div></html>");
+        offlineHint.setForeground(Color.DARK_GRAY);
+
+        // [tag:offline_tune] The import pair pushes a tune to a *connected* ECU; on this pre-connection
+        // splash it has nothing to talk to (clicking just prints "Not connected?"), so only show it
+        // once an ECU is actually connected.
+        Runnable updateImportVisibility = () ->
+                importTuneButton.setVisible(com.rusefi.io.ConnectionStatusLogic.INSTANCE.isConnected());
+        updateImportVisibility.run();
+        com.rusefi.io.ConnectionStatusLogic.INSTANCE.addListener(
+                c -> SwingUtilities.invokeLater(updateImportVisibility));
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.add(centerHorizontally(offlineHint));
+        buttonPanel.add(Box.createVerticalStrut(20));
         buttonPanel.add(centerHorizontally(importTuneButton));
         buttonPanel.add(Box.createVerticalStrut(28));
         buttonPanel.add(centerHorizontally(loadTuneFileButton));

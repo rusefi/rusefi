@@ -1,6 +1,6 @@
 # Java Console: Unit Test Approach for Connectivity Management & UI
 
-Status as of 2026-07-10. Scope: `java_console` connectivity/flashing/session path
+Status as of 2026-07-08. Scope: `java_console` connectivity/flashing/session path
 (`connectivity`, `io`, `shared_io`, `ui` modules) and the Swing UI around it.
 
 ## Why this document
@@ -106,7 +106,7 @@ rather than invent new machinery.
 | Firmware file targeting | `shared_io` `FindFileHelperTest` ×2 | `extractTargetFromFirmwareName`, `findXNumberOfFile` |
 | Persisted board target | `shared_io` `ConnectedEcuTargetTest` | live → persisted-file → bundle fallback chain |
 | Board compatibility | `shared_io` `BoardCompatibilityTest` | exact/wildcard/allowlist/QC-bypass matching |
-| UI status | `ui` `ConnectionStatusIconTest` | red/green/purple priority, bootloader tooltip, property-change reaction, null tab pane |
+| UI status | `ui` `ConnectionStatusIconTest` | red/green/purple priority, bootloader tooltip, offline tooltip (offline+disconnected, connected/bootloader precedence, property-change reaction), null tab pane |
 | Update-available check | `ui` `MainFrameUpdateCheckTest` | `needsFirmwareUpdate` null/unparseable inputs, new-format hash compare, legacy date compare |
 | Connectivity value types & helpers | `connectivity` `SerialPortCacheTest`, `AvailableHardwareTest`, `PortResultTest`, `SerialPortTypeTest`, `SerialPortScannerInspectPortsTest`, `RecurringStepTest` | cache eviction semantics, snapshot filtering/equality, PortResult identity contract, sort ranks, probe fan-out (dead port dropped, crash ⇒ Unknown), suspend-latch handshake — the Tier 1 batch, added 2026-07-08 |
 | Flash brick guard | `ui` `MaintenanceUtilTest` | `confirmFirmwareMatchesBoard`: matching/case-insensitive target, unparseable name no-false-alarm, `_QC_` compatibility, mismatch declined/accepted via `UserConfirm` seam; `ensureFirmwareForConnectedTarget` unverified-declined + live-verified-skip; plus the `containsPattern` normalization (Tiers 2–3, 2026-07-08) |
@@ -114,12 +114,24 @@ rather than invent new machinery.
 | Device tab presentation decisions | `ui` `DevicePaneTest` | bootloader-state classification, DFU/OpenBLT guidance text (platform-aware), offline-capable tab lock list; Tier 2, added 2026-07-08 |
 | Port classification pipeline | `ui` `EcuHardwareProbesInspectTest` | OpenBLT-first probing, stale-node/vanish ⇒ dropped, ECU-with/without-OpenBLT + calibrations, 3-attempt retry with between-attempts backoff, interrupt handling; Tier 3 item 1, added 2026-07-08 |
 | Post-flash reconnect wait | `ui` `AbstractAutoFlashJobAwaitEcuPortTest` | `awaitEcuPort`: immediate ECU, follow renumbered port, bootloader-grace flicker vs persistent OpenBLT/DFU giveup, timeout, interrupt; Tier 3 item 3, added 2026-07-08 |
+| Offline-mode UI state | `ui` `UIContextOfflineModeTest`, `TuningToolbarStateLabelTest` | `UIContext` offline flag default + setter + listener fan-out to every listener; Tuning toolbar dirty/offline label wording across all 4 offline×dirty combos (#9730, 2026-07-10) |
 | OpenBLT job choreography | `ui` `OpenBltManualJobTest`, `OpenBltSwitchJobTest` | manual flash: suspend-before-flash / invalidate+resume-after (also on failure and flasher crash), restore-only-after-resume, ensure-firmware abort before touching the scanner; switch: reboot-then-`close()` ordering, never `disconnect()` (renumber-follow invariant), port released even with no `BinaryProtocol`; Tier 3 item 4, added 2026-07-10 |
 | ECU-follow-across-reboot rule | `ui` `ConsoleUiEcuPortToFollowTest` | `ConsoleUI.ecuPortToFollow`: follows the single new ECU (incl. `EcuWithOpenblt`) once the old port vanished; stays put when disconnected-by-user, current port still present, never-connected, zero/multiple candidates, or candidate == current; Tier 3 item 6, added 2026-07-10 |
 
 Not covered anywhere: `EcuHardwareProbes.inspect()`
 classification/retry, `MainFrame` title composition, `StartupFrame` port-list
 presentation and splash connection state machine.
+
+The offline-tune UI glue added with #9730 (2026-07-10) is only unit-tested at
+its pure edges (the two rows above). The Swing/IO-bound parts remain
+sandbox/manual-only, consistent with the tiering: `PinoutPane.showOfflineBoard`
+(needs the `pinouts_raw` board data + image render), `TuneManagementTab`'s
+import-pair visibility gating, and the splash→offline-console frame-reuse
+handoff (`StartupFrame.openOfflineConsole`, which the "not recommended" list
+already excludes as splash-machine territory). If any of these regress, the
+cheap seam is the same pattern used above — lift the decision (which board
+signature, whether to show the import pair) out of the Swing wiring into a pure
+helper and test that.
 
 ## Test backlog
 

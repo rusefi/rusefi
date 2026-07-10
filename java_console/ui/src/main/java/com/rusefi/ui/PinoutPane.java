@@ -391,12 +391,16 @@ public class PinoutPane {
         content.add(northPanel, BorderLayout.NORTH);
 
         ConnectionStatusLogic.INSTANCE.addAndFireListener(isConnected -> SwingUtilities.invokeLater(() -> {
-            if (!isConnected) {
-                showDisconnected();
-            } else {
+            if (isConnected) {
                 BinaryProtocol bp = uiContext.getBinaryProtocol();
                 String signature = bp != null ? bp.signature : null;
                 showBoard(signature);
+            } else if (uiContext.isOfflineMode()) {
+                // [tag:offline_tune] No ECU, but a tune is loaded — show its board pinout + Tune use
+                // from the offline INI signature and image instead of the "Not connected" placeholder.
+                showOfflineBoard();
+            } else {
+                showDisconnected();
             }
         }));
 
@@ -426,6 +430,19 @@ public class PinoutPane {
         connectorTabs = null;
         liveConfigImage = null;
         setCenterPanel(null);
+    }
+
+    /** [tag:offline_tune] Renders the board pinout for an offline-loaded tune, identified by the INI signature. */
+    private void showOfflineBoard() {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        String signature = ini != null ? ini.getSignature() : null;
+        if (signature == null) {
+            statusLabel.setText("Offline tune — board unknown");
+            activeImagePanels.clear();
+            setCenterPanel(null);
+            return;
+        }
+        showBoard(signature);
     }
 
     private void showBoard(String signature) {
@@ -953,6 +970,8 @@ public class PinoutPane {
         if (ConnectionStatusLogic.INSTANCE.isConnected()) {
             BinaryProtocol bp = uiContext.getBinaryProtocol();
             showBoard(bp != null ? bp.signature : null);
+        } else if (uiContext.isOfflineMode()) {
+            showOfflineBoard();
         }
     }
 
