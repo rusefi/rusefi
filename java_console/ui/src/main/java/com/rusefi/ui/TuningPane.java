@@ -218,6 +218,8 @@ public class TuningPane {
                     if (key != null) {
                         right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());
                     }
+                    // Refresh config-image-driven panes (e.g. PinoutPane "Tune use") to the adopted ECU tune.
+                    uiContext.fireConfigImageChanged(sessionImage.get());
                 });
             }
         });
@@ -299,13 +301,35 @@ public class TuningPane {
         }
     }
 
+    /** [tag:offline_tune] Reconnect-dialog outcomes. Pure mapping in {@link #reconcileOutcome} is unit-tested. */
+    enum ReconcileOutcome { WRITE_LOCAL, MIGRATE, USE_ECU, KEEP_LOCAL }
+
+    /**
+     * [tag:offline_tune] Maps the reconnect dialog's choice to an action.
+     * Dismissing the dialog (window close / Esc → {@link JOptionPane#CLOSED_OPTION}) must NEVER discard
+     * local edits — it keeps them (stays offline). {@code dialogChoice} is the 0-based option index
+     * returned by {@code showOptionDialog}: option 0 keeps local (burn or migrate), option 1 uses the ECU tune.
+     */
+    static ReconcileOutcome reconcileOutcome(boolean sameSignature, int dialogChoice, boolean migratableEmpty) {
+        if (dialogChoice == JOptionPane.CLOSED_OPTION) {
+            return ReconcileOutcome.KEEP_LOCAL;
+        }
+        if (sameSignature) {
+            return dialogChoice == 0 ? ReconcileOutcome.WRITE_LOCAL : ReconcileOutcome.USE_ECU;
+        }
+        if (dialogChoice == 0 && !migratableEmpty) {
+            return ReconcileOutcome.MIGRATE;
+        }
+        return ReconcileOutcome.USE_ECU; // "Use ECU Tune", or "Migrate" with nothing migratable
+    }
+
     /**
      * [tag:offline_tune]
      * Called on the EDT when an ECU connects while there are unsaved offline edits.
-     * Prompts the user to write/migrate their edits or discard them.
+     * Prompts the user to keep/migrate their edits or use the ECU tune.
      *
-     * @return true if the user chose to write/migrate (edits handled, caller must NOT reseed);
-     *         false if the user chose discard (caller should adopt the ECU tune).
+     * @return true if the caller must NOT adopt the ECU tune (edits written/migrated, or kept-local on
+     *         dialog dismissal); false only if the user explicitly chose the ECU tune.
      */
     private boolean reconcileOfflineEditsOnConnect(BinaryProtocol bp, CalibrationDialogWidget right,
                                                    ConfigurationImage offlineEdits) {
@@ -317,12 +341,21 @@ public class TuningPane {
         // Same firmware (or we cannot compare layouts): the edited image is byte-compatible — write it raw.
         if (sameSignature || offlineIni == null || ecuIni == null) {
             int choice = JOptionPane.showOptionDialog(content,
-                    "You have unsaved offline tune edits.\n" +
-                            "Write them to the connected ECU, or discard them and load the ECU's current tune?",
+                    "You have unsaved local tune edits.\n" +
+                            "Keep them and burn to the connected ECU, or use the ECU's current tune?\n\n" +
+                            "Closing this dialog keeps your local edits without burning.",
                     "ECU Connected", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                    null, new Object[]{"Write to ECU", "Discard edits"}, "Write to ECU");
-            if (choice != JOptionPane.YES_OPTION) {
-                return false;
+                    null, new Object[]{"Keep Local and Burn to ECU", "Use ECU Tune"}, "Keep Local and Burn to ECU");
+            switch (reconcileOutcome(true, choice, false)) {
+                case USE_ECU:
+                    return false; // caller adopts the ECU's current tune
+                case KEEP_LOCAL:
+                    // Dialog dismissed — never discard silently. Stay offline with edits intact; the ECU
+                    // is connected and the layout matches, so allow burning them later.
+                    toolbar.onEcuConnected();
+                    return true;
+                default: // WRITE_LOCAL
+                    break;
             }
             final ConfigurationImage toWrite = offlineEdits.clone();
             uiContext.getLinkManager().submit(() -> {
@@ -331,6 +364,7 @@ public class TuningPane {
                     uiContext.setOfflineMode(false);
                     toolbar.onEcuConnected();
                     toolbar.setBaselineImage(toWrite.clone());
+                    uiContext.fireConfigImageChanged(toWrite);
                 });
             });
             return true;
@@ -354,14 +388,21 @@ public class TuningPane {
                     .append(" edited field(s) do not exist on this ECU and will be skipped:\n")
                     .append(formatFieldList(plan.incompatible)).append("\n");
         }
-        msg.append("\nMigrate your edits to the connected ECU, or discard them?");
+        msg.append("\nMigrate your edits to the connected ECU, or use the ECU's current tune?\n")
+                .append("Closing this dialog keeps your local edits (offline) without changing the ECU.");
 
         int choice = JOptionPane.showOptionDialog(content, msg.toString(),
                 "ECU Signature Mismatch", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
-                null, new Object[]{"Migrate to ECU", "Discard edits"}, "Migrate to ECU");
-        if (choice != JOptionPane.YES_OPTION || plan.migratable.isEmpty()) {
-            // Nothing to migrate, or user discarded — adopt the ECU tune.
-            return false;
+                null, new Object[]{"Migrate to ECU", "Use ECU Tune"}, "Migrate to ECU");
+        switch (reconcileOutcome(false, choice, plan.migratable.isEmpty())) {
+            case USE_ECU:
+                return false; // "Use ECU Tune", or nothing migratable — adopt the ECU tune
+            case KEEP_LOCAL:
+                // Dialog dismissed — keep local edits, stay offline. No raw burn: the layouts differ,
+                // so burning stays disabled until the user reconnects and reconciles deliberately.
+                return true;
+            default: // MIGRATE
+                break;
         }
 
         final ConfigurationImage merged = OfflineEditMigration.apply(bp.getControllerConfiguration(), ecuIni, plan.migratable);
@@ -377,6 +418,7 @@ public class TuningPane {
                 if (key != null) {
                     right.update(key, targetIni, sessionImage.get());
                 }
+                uiContext.fireConfigImageChanged(merged);
             });
         });
         return true;
