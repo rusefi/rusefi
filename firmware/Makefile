@@ -216,7 +216,8 @@ DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 # retries that page until it drops the connection).
 # Keep the list in sync with the guardFlag column of TS_PAGES in TSProjectConsumer.java.
 TS_PAGE_GUARD_FLAGS = EFI_LTFT_CONTROL|EFI_LUA
-DDEFS += $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null)
+TS_PAGE_GUARD_DEFS := $(shell sed -nE 's/^#define[[:space:]]+($(TS_PAGE_GUARD_FLAGS))[[:space:]]+(TRUE|FALSE)[[:space:]]*$$/-D\1=\2/p' $(BOARD_DIR)/prepend.txt $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt 2>/dev/null)
+DDEFS += $(TS_PAGE_GUARD_DEFS)
 
 # Include various ChibiOS mk files
 # Licensing files.
