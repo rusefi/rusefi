@@ -17,7 +17,8 @@ import static com.devexperts.logging.Logging.getLogging;
  * <p>
  * A universal bundle's own {@code release.txt} target is not specific to the attached board, so
  * hardware-kind decisions (DFU H7 vs F4/F7 driver query, ST-Link OpenOCD config) consult this
- * instead. For a single-board bundle this equals the bundle target, so reading it is harmless.
+ * instead. For a single-board bundle the bundle target is authoritative: an offline guess is only
+ * trusted when this bundle can actually serve it (see {@link #resolveOfflineTarget}, #9814).
  * <p>
  * The target is also persisted to disk (#9714) so the separate autoupdate process can pre-fetch the
  * latest firmware for the board you actually use, making a later "Update Firmware" instant.
@@ -56,11 +57,27 @@ public class ConnectedEcuTarget {
             return t;
         }
         // No live connection this session (board sitting in a bootloader, or the console was just
-        // restarted): fall back to the last-connected board persisted across sessions before the generic
-        // bundle target, so hardware-kind decisions and the universal-bundle flash guard have the best
-        // available guess. This is only a guess — see isLiveTargetKnown(). [tag:better_ux_for_flashing]
-        String persisted = readPersisted();
-        return persisted != null ? persisted : BundleUtil.getBundleTarget();
+        // restarted): guess from the last-connected board persisted across sessions. This is only a
+        // guess — see isLiveTargetKnown(). [tag:better_ux_for_flashing]
+        return resolveOfflineTarget(readPersisted(), BundleUtil.getBundleTarget(),
+                BoardCompatibility.getBoardCompatibility());
+    }
+
+    /**
+     * Pick the offline target from the persisted last-connected board and the local bundle. Pure and
+     * package-private so the #9814 branches are unit-testable without touching release.txt / properties.
+     * <p>
+     * The persisted board is trusted only when this bundle can actually serve it: a universal bundle
+     * ({@code board_compatibility=*}) keeps the guess, but a single-board bundle must never suggest a
+     * stale, incompatible board just because it was connected in a previous session (#9814 — board A in
+     * OpenBLT mode was offered board B's firmware). When the guess is not servable, the bundle target
+     * wins.
+     */
+    static String resolveOfflineTarget(String persisted, String bundleTarget, String compat) {
+        if (persisted != null && BoardCompatibility.isEcuCompatible(bundleTarget, persisted, compat)) {
+            return persisted;
+        }
+        return bundleTarget;
     }
 
     /**
