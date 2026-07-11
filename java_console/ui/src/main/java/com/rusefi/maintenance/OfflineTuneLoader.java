@@ -77,7 +77,12 @@ public class OfflineTuneLoader {
             log.info("Resolved INI for signature: " + signature);
             return ini;
         } catch (IniNotFoundException e) {
+            // Genuine failure OR the user declined the manual .ini picker — either way the tune can't
+            // open, so surface the outcome instead of failing silently (the read/signature errors above
+            // already dialog; this makes the INI path consistent). #9730
             log.info("INI resolution failed for " + signature + ": " + e.getMessage());
+            showErrorDialog(parent, "No INI file available for this tune (signature: " + signature + ").\n"
+                    + "The tune was not opened.");
             return null;
         }
     }
