@@ -11,8 +11,8 @@ URL="https://github.com/rusefi/build_support/raw/master/arm-gnu-toolchain-12.2.r
 MANIFEST_SUM="d7145e6152652d550651e1ceeb9eea86"
 # colloquial directory name, to afford re-use of script
 COLLOQUIAL="gcc-arm-none-eabi"
-# temporary working directory
-TMP_DIR="/tmp/rusefi-provide_gcc12"
+# persistent working directory
+TMP_DIR="${HOME}/.rusefi-tools/rusefi-provide_gcc12"
 
 archive="${URL##*/}"
 
