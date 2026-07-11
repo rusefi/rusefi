@@ -180,23 +180,23 @@ BUNDLE_FILES = \
   $(FULL_BUNDLE_CONTENT)
 
 $(SIMULATOR_EXE): $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE
-	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes
+	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 
 # make sure not to invoke in parallel with SIMULATOR_EXE rule above
 ../simulator/build/rusefi_simulator.linux: $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE
-	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
+	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 
 # make Windows simulator a prerequisite so that we don't try compiling them concurrently
 # that also means no incremental compilation making that rule less useful. See 'rusefi_simulator.linux' above
 ../simulator/build/rusefi_simulator.both: $(CONFIG_FILES) $(DOCS_ENUMS) .FORCE | $(SIMULATOR_EXE)
-	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
+	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 
 # We pass SUBMAKE=yes to the bootloader Make instance so it knows not to try to build configs,
 #  as that would result in two simultaneous config generations, which causes issues.
 .bootloader-sentinel: $(CONFIG_FILES) .FORCE
-	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) TGT_SENTINEL=../$(TGT_SENTINEL) $(MAKE) -C bootloader -r SUBMAKE=yes
+	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) TGT_SENTINEL=../$(TGT_SENTINEL) $(MAKE) -C bootloader -r SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 	@touch $@
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf

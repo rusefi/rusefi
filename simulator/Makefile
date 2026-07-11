@@ -43,6 +43,7 @@ endif
 include ../firmware/rusefi.mk
 include ../firmware/rusefi_rules.mk
 -include ${BOARD_DIR}/firmware/firmware.mk
+DDEFS += $(TS_PAGE_GUARD_DEFS)
 
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
