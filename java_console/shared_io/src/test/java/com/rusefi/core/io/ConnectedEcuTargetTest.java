@@ -74,12 +74,13 @@ public class ConnectedEcuTargetTest {
     }
 
     @Test
-    void effectiveTarget_usesPersistedWhenNoLive() throws Exception {
-        // Write a persisted value
+    void effectiveTarget_rejectsIncompatiblePersistedGuess() throws Exception {
+        // #9814: a single-board bundle must not offer a stale, incompatible board persisted from a
+        // previous session. In this test env the bundle target is "unknown" with no board_compatibility,
+        // so an unrelated persisted board is not servable and the bundle target wins.
         Files.write(Paths.get(PERSISTED_FILE), "hellen154hyundai".getBytes());
-        // no live target this session (e.g. board sitting in a bootloader after a console restart)
         assertFalse(target.isLiveTargetKnown());
-        assertEquals("hellen154hyundai", target.effectiveTarget());
+        assertEquals(BundleUtil.getBundleTarget(), target.effectiveTarget());
     }
 
     @Test
@@ -93,17 +94,47 @@ public class ConnectedEcuTargetTest {
     }
 
     @Test
-    void effectiveTarget_prefersPersistedOverBundle() throws Exception {
-        Files.write(Paths.get(PERSISTED_FILE), "hellen121nissan".getBytes());
-        assertEquals("hellen121nissan", target.effectiveTarget());
-    }
-
-    @Test
     void setPersistsAcrossInstances() {
         target.set("proteus_f7");
         // a different instance (e.g. the autoupdate process after restart) sees the persisted value
         assertEquals("proteus_f7", ConnectedEcuTarget.readPersisted());
         assertFalse(new ConnectedEcuTarget().isLiveTargetKnown());
-        assertEquals("proteus_f7", new ConnectedEcuTarget().effectiveTarget());
+        // effectiveTarget only trusts the persisted guess when this bundle can serve it; with the test
+        // env's "unknown" bundle target and no compatibility list, it falls back to the bundle target.
+        assertEquals(BundleUtil.getBundleTarget(), new ConnectedEcuTarget().effectiveTarget());
+    }
+
+    // --- resolveOfflineTarget: the #9814 gate, pure and independent of release.txt / properties ---
+
+    @Test
+    void resolveOfflineTarget_keepsPersistedMatchingBundle() {
+        assertEquals("proteus_f7", ConnectedEcuTarget.resolveOfflineTarget("proteus_f7", "proteus_f7", null));
+    }
+
+    @Test
+    void resolveOfflineTarget_rejectsForeignGuessOnSingleBoardBundle() {
+        // #9814: board B persisted, single-board bundle for board A, no compatibility list → board A wins
+        assertEquals("boardA", ConnectedEcuTarget.resolveOfflineTarget("boardB", "boardA", null));
+    }
+
+    @Test
+    void resolveOfflineTarget_universalBundleKeepsForeignGuess() {
+        // universal bundle (board_compatibility=*) serves any board → keep the guess
+        assertEquals("boardB", ConnectedEcuTarget.resolveOfflineTarget("boardB", "universal", "*"));
+    }
+
+    @Test
+    void resolveOfflineTarget_allowlistKeepsListedGuess() {
+        assertEquals("uaefi_pro", ConnectedEcuTarget.resolveOfflineTarget("uaefi_pro", "uaefi", "uaefi,uaefi_pro"));
+    }
+
+    @Test
+    void resolveOfflineTarget_allowlistRejectsUnlistedGuess() {
+        assertEquals("uaefi", ConnectedEcuTarget.resolveOfflineTarget("hellen121nissan", "uaefi", "uaefi,uaefi_pro"));
+    }
+
+    @Test
+    void resolveOfflineTarget_nullPersistedReturnsBundle() {
+        assertEquals("boardA", ConnectedEcuTarget.resolveOfflineTarget(null, "boardA", "*"));
     }
 }
