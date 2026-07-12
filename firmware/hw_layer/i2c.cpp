@@ -115,7 +115,59 @@ static void i2cInfo() {
 }
 
 static void i2cScan(int bus) {
-	
+	I2CDriver *driver = getI2cDevice(static_cast<i2c_bus_e>(bus));
+	if ((driver == NULL) || !isI2cInitialized[bus]) {
+		efiPrintf("Bus %d is not configured/exist", bus);
+	}
+
+	msg_t status;
+	int found_count = 0;
+
+	char line[128];
+	char *ptr = line;
+
+	efiPrintf("Starting I2C Bus Scan...");
+	efiPrintf("     0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F");
+
+	// Scan standard 7-bit user addresses from 0x00 to 0x7F
+	for (i2caddr_t addr = 0x00; addr <= 0x7F; addr++) {
+		// Print row headers for a clean matrix look
+		if ((addr % 16) == 0) {
+			ptr += sprintf(ptr, "%02X: ", addr);
+		}
+
+		// Skip the reserved/illegal address pools (0x00-0x07 and 0x78-0x7F)
+		if (addr < 0x08 || addr > 0x77) {
+			ptr += sprintf(ptr, "   ");
+		} else {
+		#if 0
+			uint8_t dummy_tx = 0;
+			// ChibiOS I2C call using 0 bytes for tx and rx (Zero-byte Write)
+			// We use a small timeout (e.g., 10ms) so a missing device doesn't hang the thread
+			status = i2cMasterTransmitTimeout(driver, addr, &dummy_tx, 0, NULL, 0, TIME_MS2I(10));
+		#else
+			uint8_t dummy_rx = 0;
+			// ChibiOS I2C call using 0 bytes for tx and rx (Zero-byte Write)
+			// We use a small timeout (e.g., 10ms) so a missing device doesn't hang the thread
+			status = i2cMasterReceiveTimeout(driver, addr, &dummy_rx, 1, TIME_MS2I(10));
+		#endif
+
+			if (status == MSG_OK) {
+				ptr += sprintf(ptr, "%02X ", addr);
+				found_count++;
+			} else {
+				ptr += sprintf(ptr, "-- ");
+			}
+		}
+
+		// Extra formatting line breaks for every 16 addresses
+		if ((addr % 16) == 15) {
+			efiPrintf("%s", line);
+			ptr = line;
+		}
+	}
+
+	efiPrintf("Scan complete. Found %d device(s).", found_count);
 }
 
 void initEarlyI2c() {
