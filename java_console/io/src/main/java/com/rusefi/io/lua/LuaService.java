@@ -155,8 +155,30 @@ public class LuaService {
         return result.get();
     }
 
-    /** Read the current LUASCRIPT field from the cached controller image. */
-    public static String readLuaScript(LinkManager linkManager) {
+    /** Read the current LUASCRIPT field: cached image for page 0, live page read otherwise. */
+    public static String readLuaScript(LinkManager linkManager) throws InterruptedException {
+        // secondary-page reads talk to the ECU, so everything runs on the link thread
+        AtomicReference<Object> outcome = new AtomicReference<>();
+        CountDownLatch done = new CountDownLatch(1);
+        linkManager.submit(() -> {
+            try {
+                outcome.set(readLuaScriptOnLinkThread(linkManager));
+            } catch (Throwable t) {
+                outcome.set(t);
+            } finally {
+                done.countDown();
+            }
+        });
+        if (!done.await(60, TimeUnit.SECONDS))
+            throw new IllegalStateException("Timeout reading luaScript");
+        if (outcome.get() instanceof Throwable) {
+            Throwable t = (Throwable) outcome.get();
+            throw t instanceof RuntimeException ? (RuntimeException) t : new IllegalStateException(t);
+        }
+        return (String) outcome.get();
+    }
+
+    private static String readLuaScriptOnLinkThread(LinkManager linkManager) {
         BinaryProtocol bp = linkManager.getBinaryProtocol();
         if (bp == null)
             throw new IllegalStateException("BinaryProtocol is null");
