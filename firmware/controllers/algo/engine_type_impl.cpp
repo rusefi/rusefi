@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "bmw_m52.h"
+#include "bmw.h"
 #include "bmw_m73.h"
 
 #include "canam.h"
@@ -81,7 +81,6 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::SIMULATOR_CONFIG:
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::MINIMAL_PINS:
-	case engine_type_e::UNUSED_16:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
@@ -411,6 +410,9 @@ void applyEngineType(engine_type_e engineType) {
 #endif // HW_FRANKENSO
 	case engine_type_e::BMW_M52:
 	  bmwM52();
+    break;
+	case engine_type_e::BMW_N52:
+	  bmwN52();
     break;
 #if defined(HW_SUBARU_EG33) || EFI_SIMULATOR
 	case engine_type_e::SUBARU_EG33:

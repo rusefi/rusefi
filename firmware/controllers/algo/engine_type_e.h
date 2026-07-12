@@ -42,7 +42,7 @@ enum class engine_type_e : uint16_t {
 	FORD_ESCORT_GT = 14,
 	// this is pretty close to body control module/BCM use-case!
 	FUEL_BENCH = 15,
-	UNUSED_16 = 16,
+	BMW_N52 = 16,
 	TCU_4R70W = 17,
 
 	TEST_33816 = 18,

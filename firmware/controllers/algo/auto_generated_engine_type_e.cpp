@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Mon Apr 27 13:14:12 UTC 2026
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sun Jul 12 11:52:18 EDT 2026
 // see also gen_config_and_enums.bat
 
 
@@ -13,6 +13,8 @@ const char *getEngine_type_e(engine_type_e value) {
 			return "BMW_M73_MRE";
 		case engine_type_e::BMW_M73_MRE_SLAVE:
 			return "BMW_M73_MRE_SLAVE";
+		case engine_type_e::BMW_N52:
+			return "BMW_N52";
 		case engine_type_e::DEFAULT_FRANKENSO:
 			return "DEFAULT_FRANKENSO";
 		case engine_type_e::DISCOVERY_PDM:
@@ -209,8 +211,6 @@ const char *getEngine_type_e(engine_type_e value) {
 			return "UNUSED94";
 		case engine_type_e::UNUSED_105:
 			return "UNUSED_105";
-		case engine_type_e::UNUSED_16:
-			return "UNUSED_16";
 		case engine_type_e::UNUSED_97:
 			return "UNUSED_97";
 		case engine_type_e::VAG_5_CYL:
