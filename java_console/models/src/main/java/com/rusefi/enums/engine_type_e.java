@@ -21,7 +21,7 @@ public enum engine_type_e {
 	TOYOTA_1NZ_FE,
 	FORD_ESCORT_GT,
 	FUEL_BENCH,
-	UNUSED_16,
+	BMW_N52,
 	TCU_4R70W,
 	TEST_33816,
 	TEST_ROTARY,

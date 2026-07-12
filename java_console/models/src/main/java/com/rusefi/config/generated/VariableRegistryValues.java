@@ -469,6 +469,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_BMW_M52 = 22;
 	public static final int engine_type_e_BMW_M73_MRE = 50;
 	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 51;
+	public static final int engine_type_e_BMW_N52 = 16;
 	public static final int engine_type_e_DEFAULT_FRANKENSO = 0;
 	public static final int engine_type_e_DISCOVERY_PDM = 38;
 	public static final int engine_type_e_DODGE_NEON_1995 = 2;
@@ -567,7 +568,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_UNUSED42 = 42;
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_105 = 105;
-	public static final int engine_type_e_UNUSED_16 = 16;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VAG_5_CYL = 77;
 	public static final int engine_type_e_VW_ABA = 32;
