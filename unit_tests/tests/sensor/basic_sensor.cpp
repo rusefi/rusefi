@@ -89,6 +89,25 @@ TEST_F(SensorBasic, DoubleUnRegister) {
 	ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);// huh? is that a bug?
 }
 
+// https://github.com/rusefi/rusefi/issues/9822
+// This test asserts the CURRENT BUGGY behavior: unregister() clears the registry slot
+// even when it is owned by a different sensor instance. Once the bug is fixed this test
+// should be flipped to expect the Lua sensor to survive.
+TEST_F(SensorBasic, UnregisterOnlyRemovesOwnSensor) {
+	// A Lua-created sensor owns the slot
+	MockSensor luaSensor(SensorType::AcceleratorPedalUnfiltered);
+	ASSERT_TRUE(luaSensor.Register());
+
+	// A sensor of the same type that never registered (no ADC channel configured)
+	// gets deinitialized, for example on settings burn
+	MockSensor neverRegistered(SensorType::AcceleratorPedalUnfiltered);
+	neverRegistered.unregister();
+
+	// WRONG: the Lua sensor should still be registered, but unregister() above evicted it
+	// from a slot it never owned - this is exactly the bug reported in #9822
+	EXPECT_EQ(Sensor::getSensorOfType(SensorType::AcceleratorPedalUnfiltered), nullptr);
+}
+
 TEST_F(SensorBasic, SensorInitialized) {
 	MockSensor dut(SensorType::Clt);
 	ASSERT_TRUE(dut.Register());
