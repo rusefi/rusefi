@@ -42,14 +42,10 @@ import com.rusefi.ui.basic.LoadTuneHelper;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
 import java.util.function.Supplier;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -476,7 +472,9 @@ console live data tab is broken #8402
 
     private void addCustomTabs() {
         try {
-            for (ConsoleTabProvider provider : ServiceLoader.load(ConsoleTabProvider.class)) {
+            ServiceLoader<ConsoleTabProvider> load = ServiceLoader.load(ConsoleTabProvider.class);
+            log.info("Trying providers: " + load);
+            for (ConsoleTabProvider provider : load) {
                 try {
                     tabbedPane.addTab(provider.getTitle(), provider.createTab(uiContext));
                 } catch (Exception e) {
