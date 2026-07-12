@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.*;
+import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,6 +31,8 @@ public class MessagesView {
     public MessagesView(Node config) {
         this.config = config;
         messages.setEditable(false);
+        // fixed-width font so hexdumps and other formatted multi-line output stay aligned (#9827)
+        messages.setFont(new Font(Font.MONOSPACED, Font.PLAIN, messages.getFont().getSize()));
 
         UiUtils.installPopupMenu(createPopupMenu(), messages);
 

@@ -19,7 +19,6 @@ import java.awt.*;
  */
 public class MessagesPanel {
     private static final String FONT_SIZE = "font_size";
-    private static final String FONT_NAME = "font_name";
 
     private final MessagesView messagesView;
 
@@ -70,13 +69,13 @@ public class MessagesPanel {
     public void setFont(Font font, Node config) {
         messagesView.messages.setFont(font);
         config.setProperty(FONT_SIZE, font.getSize());
-        config.setProperty(FONT_NAME, font.getName());
     }
 
     public void loadFont(Node config) {
+        // font family is not restored from config: messages are always fixed-width so hexdumps
+        // stay aligned (#9827), and old configs have the proportional default persisted
         Font f = getFont();
         int size = config.getIntProperty(FONT_SIZE, f.getSize());
-        String name = config.getProperty(FONT_NAME, f.getName());
-        setFont(new Font(name, f.getStyle(), size), config);
+        setFont(f.deriveFont((float) size), config);
     }
 }
