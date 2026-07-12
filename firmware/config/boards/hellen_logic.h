@@ -111,4 +111,19 @@ inline void setHellenMMbaro() {
 	engineConfiguration->lps25BaroSensorScl = Gpio::B10;
 	engineConfiguration->lps25BaroSensorSda = Gpio::B11;
 }
+
+#if EFI_PROD_CODE
+#if HAL_USE_I2C
+inline void setHellenMMi2c2() {
+	i2c_config_s *cfg = getI2cCfg(I2C_BUS_2);
+	if (cfg != nullptr) {
+		cfg->sclPin = Gpio::B10;
+		cfg->sdaPin = Gpio::B11;
+		cfg->speed = I2C_SPEED_400K;
+		cfg->enabled = true;
+	}
+}
+#endif
+#endif
+
 #pragma GCC diagnostic pop
