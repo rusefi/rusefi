@@ -196,3 +196,46 @@ scripted/CI use — see [README-mcp.md](../../README-mcp.md).
   `read_messages` / `wait_for_message`.
 - **`MessagesCentral` runs on the AWT EDT.** A headless JRE is fine, but you can pass
   `-Djava.awt.headless=true` to be explicit.
+
+
+## Field notes from real usage (2026-07)
+
+### Client-side
+
+- `read_messages` returns the **oldest** `maxLines` entries from the ring buffer,
+  not the newest. Page with `sinceSeq` (using the returned `latestSeq`) or request
+  a large `maxLines`; otherwise you'll re-read stale history and miss new output.
+- `send_command` only queues the command; the result is observable solely through
+  the message stream (`read_messages` / `wait_for_message`). The queue echoes
+  `confirmation_<cmd>:<n>` when the ECU accepts it.
+- A fresh `connect` spends up to ~60 s fetching the controller image, and every
+  queued command waits behind that. Send a cheap marker command
+  (e.g. `lua print('warm')`) and wait for it before trusting short timeouts.
+- MCP servers registered with an LLM client are typically only picked up by
+  sessions started afterwards. The server also speaks plain newline-delimited
+  JSON-RPC on stdio, so a ~50-line script can drive it directly.
+
+### ECU-side Lua
+
+- The interactive `lua <snippet>` console command runs inside the RUNNING script
+  VM but is capped at ~99 chars (`interactiveCmd[100]`) and does not tolerate
+  spaces reliably — expose work as no-arg global functions (`myHelper()`) and
+  call those.
+- The ECU Lua number parser rejected `1e9` ("malformed number") — use plain
+  integer literals (`1000000000`).
+- `LUASCRIPT` is ASCII-only: non-ASCII characters (em-dashes in comments, etc.)
+  are silently mangled to `???` on the controller. Sanitize before upload.
+- Budget check: the field is 20-50K depending on controller; stripping
+  full-line comments/indentation from a commented source tree is often enough
+  to fit.
+
+### Paging (new firmware)
+
+- New firmware stores the script as ini field `luaScript` on a dedicated TS page
+  (identifier 0x0400) instead of the main config page. `LuaService` therefore
+  uses `findIniField` (searches secondary pages), page-aware
+  `writeInBlocks`/`readFromPage`, and a page-aware burn — the firmware routes a
+  Lua-page burn to `burnExtraFlashPage`, which is what makes scripts survive
+  power cycles (`Flash: Writing storage ID 5` in the messages confirms it).
+- Any live page read must run on the LinkManager thread
+  (`linkManager.submit(...)`), or you get "Communication on wrong thread".
