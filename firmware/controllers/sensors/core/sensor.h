@@ -181,6 +181,9 @@ public:
 		return false;
 	}
 
+	// Remove this sensor from the sensor registry.
+	// No-op if a different sensor instance of the same type currently owns the
+	// registry slot (for example a Lua-created sensor while this one never registered).
 	void unregister();
 
 	SensorType type() const {
