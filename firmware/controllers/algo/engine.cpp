@@ -202,10 +202,6 @@ void Engine::periodicSlowCallback() {
 
 	slowCallBackWasInvoked = true;
 
-#if EFI_PROD_CODE
-	void baroLps25Update();
-	baroLps25Update();
-#endif // EFI_PROD_CODE
   call_board_override(custom_board_periodicSlowCallback);
 
 	// after modules and board code so checks see the freshest state
