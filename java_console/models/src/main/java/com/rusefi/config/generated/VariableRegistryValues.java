@@ -1737,6 +1737,7 @@ public class VariableRegistryValues {
 	public static final int ts_14_command_TS_WIDEBAND_UPDATE_FILE = 0x22;
 	public static final int ts_14_command_TS_WRITE_FLASH = 0x0A;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
+	public static final char TS_BOARD_COMMAND = 'j';
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final int ts_command_e_TS_BENCH_CATEGORY = 22;
@@ -1818,7 +1819,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.07.12.stm32f429_nucleo.2981569150";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.07.12.stm32f429_nucleo.4091176896";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2192;

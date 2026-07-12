@@ -89,6 +89,7 @@ public class Integration {
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
+	public static final char TS_BOARD_COMMAND = 'j';
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final char TS_COMMAND_F = 'F';

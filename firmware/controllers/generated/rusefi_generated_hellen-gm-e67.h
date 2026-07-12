@@ -1612,7 +1612,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2412424839
+#define SIGNATURE_HASH 3450334009
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1875,6 +1875,8 @@
 #define ts_14_command_TS_WIDEBAND_UPDATE_FILE 0x22
 #define ts_14_command_TS_WRITE_FLASH 0x0A
 #define TS_BLOCK_READ_TIMEOUT 3000
+#define TS_BOARD_COMMAND 'j'
+#define TS_BOARD_COMMAND_char j
 #define TS_BURN_COMMAND 'B'
 #define TS_BURN_COMMAND_char B
 #define TS_CHUNK_WRITE_COMMAND 'C'
@@ -2238,7 +2240,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.12.hellen-gm-e67.2412424839"
+#define TS_SIGNATURE "rusEFI master.2026.07.12.hellen-gm-e67.3450334009"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
