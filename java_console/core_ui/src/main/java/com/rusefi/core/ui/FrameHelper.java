@@ -128,6 +128,11 @@ public class FrameHelper {
                 }
                 log.info(Arrays.toString(Frame.getFrames()));
             }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                onWindowClosing();
+            }
         });
     }
 
@@ -135,5 +140,8 @@ public class FrameHelper {
     }
 
     protected void onWindowClosed() {
+    }
+
+    protected void onWindowClosing() {
     }
 }

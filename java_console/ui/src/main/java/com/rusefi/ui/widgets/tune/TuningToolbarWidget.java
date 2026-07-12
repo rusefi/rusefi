@@ -53,6 +53,7 @@ public class TuningToolbarWidget {
 
     private AbstractAction loadTuneAction;
     private AbstractAction saveTuneAction;
+    private final JFileChooser saveTuneChooser = createMsqFileChooser();
 
     private final Timer undoCommitTimer;
     private final Timer uploadTimer;
@@ -189,25 +190,31 @@ public class TuningToolbarWidget {
                                                 CalibrationDialogWidget right,
                                                 AtomicReference<ConfigurationImage> sessionImage) {
         JButton burnButton = new JButton("Burn to ECU");
-        burnButton.addActionListener(e -> {
-            BinaryProtocol bp = uiContext.getBinaryProtocol();
-            ConfigurationImage toBurn = right.getWorkingImage();
-            if (toBurn == null) {
-                toBurn = sessionImage.get();
-            }
-            if (bp == null || toBurn == null) {
-                return;
-            }
-            final ConfigurationImage image = toBurn;
-            sessionImage.set(image);
-            uiContext.getLinkManager().submit(() -> {
-                bp.burn();
-                bp.setConfigurationImage(image);
-                // Burned image is now the ECU's state — adopt it as baseline so dirty state clears.
-                SwingUtilities.invokeLater(() -> setBaselineImage(image.clone()));
+        burnButton.addActionListener(e -> burnToEcuAndThen(right, null));
+        return burnButton;
+    }
+
+    public void burnToEcuAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        ConfigurationImage toBurn = right.getWorkingImage();
+        if (toBurn == null) {
+            toBurn = sessionImage.get();
+        }
+        if (bp == null || toBurn == null) {
+            return;
+        }
+        final ConfigurationImage image = toBurn;
+        sessionImage.set(image);
+        uiContext.getLinkManager().submit(() -> {
+            bp.burn();
+            bp.setConfigurationImage(image);
+            SwingUtilities.invokeLater(() -> {
+                setBaselineImage(image.clone());
+                if (onSuccess != null) {
+                    onSuccess.run();
+                }
             });
         });
-        return burnButton;
     }
 
     /** Call when ECU connects to enable the burn button. */
@@ -334,37 +341,45 @@ public class TuningToolbarWidget {
     private void buildSaveTuneAction(UIContext uiContext,
                                      CalibrationDialogWidget right,
                                      AtomicReference<ConfigurationImage> sessionImage) {
-        JFileChooser chooser = createMsqFileChooser();
         saveTuneAction = new AbstractAction(LoadTuneHelper.SAVE_TUNE_TEXT) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-                ConfigurationImage image = right.getWorkingImage();
-                if (image == null) image = sessionImage.get();
-                if (ini == null || image == null) {
-                    JOptionPane.showMessageDialog(null, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (chooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
-                    return;
-                }
-                File selected = chooser.getSelectedFile();
-                String path = selected.getAbsolutePath();
-                if (!path.toLowerCase().endsWith(".msq")) {
-                    path += ".msq";
-                }
-                final String finalPath = path;
-                final ConfigurationImage finalImage = image;
-                new Thread(() -> {
-                    try {
-                        MsqFactory.valueOf(finalImage, ini).writeXmlFile(finalPath);
-                    } catch (Exception ex) {
-                        SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
-                                null, "Failed to save tune: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE));
-                    }
-                }, "save-tune").start();
+                saveTuneAndThen(right, null);
             }
         };
+    }
+
+    public void saveTuneAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
+        IniFileModel ini = uiContext.iniFileState.getIniFileModel();
+        ConfigurationImage image = right.getWorkingImage();
+        if (image == null) {
+            image = sessionImage.get();
+        }
+        if (ini == null || image == null) {
+            JOptionPane.showMessageDialog(null, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (saveTuneChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File selected = saveTuneChooser.getSelectedFile();
+        String path = selected.getAbsolutePath();
+        if (!path.toLowerCase().endsWith(".msq")) {
+            path += ".msq";
+        }
+        final String finalPath = path;
+        final ConfigurationImage finalImage = image;
+        new Thread(() -> {
+            try {
+                MsqFactory.valueOf(finalImage, ini).writeXmlFile(finalPath);
+                if (onSuccess != null) {
+                    SwingUtilities.invokeLater(onSuccess);
+                }
+            } catch (Exception ex) {
+                SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
+                        null, "Failed to save tune: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE));
+            }
+        }, "save-tune").start();
     }
 
     public AbstractAction getLoadTuneAction() {
