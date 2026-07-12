@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.function.Consumer;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -22,11 +21,6 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
     };
 
     private final UIContext uiContext;
-    private Consumer<Integer> onCylindersSelected;
-
-    public void setOnCylindersSelected(Consumer<Integer> onCylindersSelected) {
-        this.onCylindersSelected = onCylindersSelected;
-    }
 
     public NumberOfCylindersPanel(UIContext uiContext) {
         super("Number of Cylinders", "wizardNumberOfCylinders");
@@ -91,9 +85,6 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (onCylindersSelected != null) {
-                            onCylindersSelected.accept(option);
-                        }
                         fireCompleted(new WizardStepResult("cylindersCount", String.valueOf(option)));
                     }
                 });

@@ -69,7 +69,7 @@ sandbox class also carries a brief comment on top describing what it does.
 | Sandbox | Purpose |
 | --- | --- |
 | `TopLevelMenuSandbox` | Top-level calibration menu tree. |
-| `WizardSandbox` | Setup wizard driven by a test `.ini` file. |
+| `WizardSandbox` | The real console setup wizard (`WizardContainer`) offline: generated `.ini` + blank config image behind a mocked `BinaryProtocol`. |
 | `GaugesPanelSandbox` | Gauges panel driven by an `.ini` file and simulated sensors. |
 | `GaugesPanelMockedSandbox` (`ui`) | Gauges panel using mocked ini/sensor data. |
 | `GaugesPanelMocked2Sandbox` (`mocked`) | Gauges panel using fully mocked data. |
