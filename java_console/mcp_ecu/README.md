@@ -85,8 +85,10 @@ Returns `success`, `bytesWritten`, `fieldSize` (same as `ecu_info`'s `maxSize`),
 
 ### `get_lua`
 
-No arguments. Returns `script` and `length`. Reads from the cached controller image —
-this reflects what was last written/fetched over this connection, no re-read from the ECU.
+No arguments. Returns `script` and `length`. Old firmware (script on the main config
+page): reads the cached controller image — what was last written/fetched over this
+connection. New firmware (script on the dedicated Lua page): fetched live from the ECU
+on every call.
 
 ### `lua_reset`
 
@@ -218,9 +220,18 @@ scripted/CI use — see [README-mcp.md](../../README-mcp.md).
 ### ECU-side Lua
 
 - The interactive `lua <snippet>` console command runs inside the RUNNING script
-  VM but is capped at ~99 chars (`interactiveCmd[100]`) and does not tolerate
-  spaces reliably — expose work as no-arg global functions (`myHelper()`) and
-  call those.
+  VM but is capped at ~99 chars (`interactiveCmd[100]`), does not tolerate
+  spaces reliably, and allows only one pending snippet at a time — expose work
+  as no-arg global functions (`myHelper()`) and call those.
+- **The VM is heavily trimmed: there is no Lua base library.** `string`, `table`,
+  `type`, `tostring` are all nil (`string.format`, `table.concat` included) — an
+  error like `attempt to index a nil value (global 'string')` aborts the whole
+  calling snippet/function mid-way, leaving globals partially updated. Stick to
+  core syntax (`..`, `#`, tables) plus rusEFI builtins: `print`, `math.floor`,
+  `toHexString`, `byteToHex`, `arrayToString`, ...
+- `print()` requires a string (numbers coerce fine): `print(nil)` and
+  `print(true)` fail with "bad argument #1 to 'print' (string expected)" — and
+  with no `tostring`, the fix is concatenation onto a literal or `x and'y'or'z'`.
 - The ECU Lua number parser rejected `1e9` ("malformed number") — use plain
   integer literals (`1000000000`).
 - `LUASCRIPT` is ASCII-only: non-ASCII characters (em-dashes in comments, etc.)
