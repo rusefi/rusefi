@@ -389,6 +389,24 @@ typedef enum __attribute__ ((__packed__)) {
 #define SPI_TOTAL_COUNT 6
 
 typedef enum __attribute__ ((__packed__)) {
+	I2C_NONE = 0,
+	I2C_BUS_1 = 1,
+	I2C_BUS_2 = 2,
+	I2C_BUS_3 = 3,
+	I2C_BUS_4 = 4,
+} i2c_bus_e;
+
+#define I2C_BUS_TOTAL_COUNT 4
+
+typedef enum __attribute__ ((__packed__)) {
+	I2C_SPEED_100K = 0,
+	I2C_SPEED_400K = 1,
+	I2C_SPEED_1M = 2,
+	I2C_SPEED_3p4M = 3,
+	I2C_SPEED_5M = 4,
+} i2c_speed_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
 	W202 = 1,
 	BMW_e90 = 2,
