@@ -582,7 +582,9 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
 			|| command == TS_GET_CONFIG_ERROR
-			|| command == TS_QUERY_BOOTLOADER;
+			|| command == TS_QUERY_BOOTLOADER
+			// board-specific binary command, handled by custom_board_ts_binary_command
+			|| command == TS_BOARD_COMMAND;
 }
 
 /**
@@ -1136,6 +1138,13 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 	}
 	default:
+		// Give a custom board a chance to handle its own binary command (e.g. SD file
+		// transfer). `data` was advanced past the command byte, so it points at the payload
+		// and (incomingPacketSize - 1) is the payload length.
+		if (get_board_override_result(custom_board_ts_binary_command, false,
+				tsChannel, command, reinterpret_cast<uint8_t*>(data), (uint16_t)(incomingPacketSize - 1))) {
+			break;
+		}
 		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "unknown_command");
 static char tsErrorBuff[80];
 		chsnprintf(tsErrorBuff, sizeof(tsErrorBuff), "ERROR: ignoring unexpected command %d [%c]", command, command);

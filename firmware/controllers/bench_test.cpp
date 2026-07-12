@@ -736,6 +736,7 @@ void processCanEcuControl(const CANRxFrame& frame) {
 #endif // EFI_CAN_SUPPORT
 
 std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;
+std::optional<board_ts_binary_command_type> custom_board_ts_binary_command;
 
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);

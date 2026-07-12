@@ -97,6 +97,11 @@
 ! High speed logger commands
 #define TS_SET_LOGGER_SWITCH  'l'
 
+! Board-specific custom binary command. The base firmware does not interpret this
+! opcode itself - it is delegated to the custom_board_ts_binary_command hook so a
+! custom board can implement its own binary request/response
+#define TS_BOARD_COMMAND 'j'
+
 #define CMD_SET_SENSOR_MOCK "set_sensor_mock"
 #define CMD_RESET_SENSOR_MOCKS "reset_sensor_mocks"
 #define CMD_RESET_SIMULATOR "reset_simulator"
