@@ -354,6 +354,8 @@ console live data tab is broken #8402
                 if (isOffline && offlineImage != null) {
                     tp.seedOfflineImage(offlineImage, null);
                 }
+                mainFrame.setExitRequestHandler(() ->
+                        tp.requestExit(mainFrame.getFrame().getFrame(), () -> mainFrame.getFrame().getFrame().dispose()));
                 mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction());
                 if (UiProperties.isPinoutEnabled()) {
                     tp.setNavigateToPinout(enumValue -> {

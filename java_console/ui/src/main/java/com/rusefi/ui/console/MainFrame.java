@@ -61,6 +61,7 @@ public class MainFrame {
     private JMenuItem updateSoftwareItem;
     private JMenuItem updateEcuItem;
     private Runnable updateEcuAction;
+    private Runnable exitRequestHandler;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this(consoleUI, tabbedPane, null);
@@ -75,7 +76,7 @@ public class MainFrame {
         this.tabbedPane = tabbedPane;
         listener = ConnectionStatusLogic.Listener.VOID;
         // reuseFrame == null creates a new window; non-null reuses the splash frame in place (#9715).
-        this.frame = new FrameHelper(reuseFrame, JFrame.DISPOSE_ON_CLOSE) {
+        this.frame = new FrameHelper(reuseFrame, JFrame.DO_NOTHING_ON_CLOSE) {
             @Override
             protected void onWindowOpened() {
                 log.info("onWindowOpened");
@@ -87,6 +88,11 @@ public class MainFrame {
                 // close the port, then the log file
                 windowClosedHandler();
                 log.info("onWindowClosed");
+            }
+
+            @Override
+            protected void onWindowClosing() {
+                requestExit();
             }
         };
 
@@ -112,10 +118,7 @@ public class MainFrame {
 
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.setMnemonic(KeyEvent.VK_X);
-        exitItem.addActionListener(e -> {
-            // This triggers the same cleanup logic as closing the window
-            frame.getFrame().dispose();
-        });
+        exitItem.addActionListener(e -> requestExit());
         fileMenu.add(exitItem);
 
         menuBar.add(fileMenu);
@@ -144,6 +147,18 @@ public class MainFrame {
 
     public void setUpdateEcuAction(Runnable action) {
         this.updateEcuAction = action;
+    }
+
+    public void setExitRequestHandler(Runnable exitRequestHandler) {
+        this.exitRequestHandler = exitRequestHandler;
+    }
+
+    private void requestExit() {
+        if (exitRequestHandler == null) {
+            frame.getFrame().dispose();
+        } else {
+            exitRequestHandler.run();
+        }
     }
 
 
@@ -206,6 +221,9 @@ public class MainFrame {
         setTitle();
         tabbedPane.tabbedPane.addPropertyChangeListener("isUpdating", e -> SwingUtilities.invokeLater(this::setTitle));
         tabbedPane.tabbedPane.addPropertyChangeListener("bootloaderMode", e -> SwingUtilities.invokeLater(this::setTitle));
+        // [tag:offline_tune] Refresh the OFFLINE title when offline mode toggles (e.g. Load Tune while
+        // disconnected) — otherwise the title would lag until the next connection event. #9730
+        consoleUI.uiContext.addOfflineModeListener(o -> SwingUtilities.invokeLater(this::setTitle));
 
         // Offer manual update whenever the launch-time silent update did not run - either because
         // the user preference is off or because the bundle hard-disables auto-update (#9775).

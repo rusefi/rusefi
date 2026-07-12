@@ -40,6 +40,7 @@ public class TuningPane {
     private final UIContext uiContext;
     private final MainMenuTreeWidget left;
     private final TuningToolbarWidget toolbar;
+    private final CalibrationDialogWidget right;
     private TextGaugeStrip gaugeStrip;
     /** Accumulated tune edits across all dialogs for this session. Field so offline seeding can set it. */
     private final AtomicReference<ConfigurationImage> sessionImage = new AtomicReference<>();
@@ -66,10 +67,15 @@ public class TuningPane {
         this.uiContext = uiContext;
         left = new MainMenuTreeWidget(uiContext);
 
-        CalibrationDialogWidget right = new CalibrationDialogWidget(uiContext);
+        right = new CalibrationDialogWidget(uiContext);
         JScrollPane rightScrollPane = new JScrollPane(right.getContentPane());
 
-        toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage, initialBaseline);
+        ConfigurationImage baseline = initialBaseline;
+        BinaryProtocol initialBp = uiContext.getBinaryProtocol();
+        if (baseline == null && initialBp != null && initialBp.getControllerConfiguration() != null) {
+            baseline = initialBp.getControllerConfiguration().clone();
+        }
+        toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage, baseline);
 
         if (config != null) {
             gaugeStrip = new TextGaugeStrip(uiContext, config.getChild("gauge_strip"));
@@ -280,6 +286,53 @@ public class TuningPane {
 
     public Action getSaveTuneAction() {
         return toolbar.getSaveTuneAction();
+    }
+
+    enum ExitPrompt {
+        NONE,
+        BURN,
+        SAVE
+    }
+
+    static ExitPrompt exitPrompt(boolean dirty, boolean connected) {
+        if (!dirty) {
+            return ExitPrompt.NONE;
+        }
+        return connected ? ExitPrompt.BURN : ExitPrompt.SAVE;
+    }
+
+    static void dispatchExitChoice(ExitPrompt prompt, int choice,
+                                   Consumer<Runnable> burn, Consumer<Runnable> save, Runnable exit) {
+        if (choice == 0) {
+            if (prompt == ExitPrompt.BURN) {
+                burn.accept(exit);
+            } else if (prompt == ExitPrompt.SAVE) {
+                save.accept(exit);
+            }
+        } else if (choice == 1) {
+            exit.run();
+        }
+    }
+
+    public void requestExit(Component parent, Runnable exit) {
+        ExitPrompt prompt = exitPrompt(toolbar.hasUnsavedChanges(sessionImage.get()),
+                ConnectionStatusLogic.INSTANCE.isConnected() && uiContext.getBinaryProtocol() != null);
+        if (prompt == ExitPrompt.NONE) {
+            exit.run();
+            return;
+        }
+
+        boolean burn = prompt == ExitPrompt.BURN;
+        String action = burn ? "Burn to ECU and Exit" : "Save Tune and Exit";
+        String without = burn ? "Exit Without Burning" : "Exit Without Saving";
+        int choice = JOptionPane.showOptionDialog(parent,
+                burn ? "The tune has changes that have not been burned to the ECU."
+                        : "The tune has unsaved changes.",
+                "Unsaved Tune Changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, new Object[]{action, without, "Cancel"}, action);
+        dispatchExitChoice(prompt, choice,
+                onSuccess -> toolbar.burnToEcuAndThen(right, onSuccess),
+                onSuccess -> toolbar.saveTuneAndThen(right, onSuccess), exit);
     }
 
     /**
