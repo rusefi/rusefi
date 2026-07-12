@@ -90,9 +90,6 @@ TEST_F(SensorBasic, DoubleUnRegister) {
 }
 
 // https://github.com/rusefi/rusefi/issues/9822
-// This test asserts the CURRENT BUGGY behavior: unregister() clears the registry slot
-// even when it is owned by a different sensor instance. Once the bug is fixed this test
-// should be flipped to expect the Lua sensor to survive.
 TEST_F(SensorBasic, UnregisterOnlyRemovesOwnSensor) {
 	// A Lua-created sensor owns the slot
 	MockSensor luaSensor(SensorType::AcceleratorPedalUnfiltered);
@@ -103,9 +100,12 @@ TEST_F(SensorBasic, UnregisterOnlyRemovesOwnSensor) {
 	MockSensor neverRegistered(SensorType::AcceleratorPedalUnfiltered);
 	neverRegistered.unregister();
 
-	// WRONG: the Lua sensor should still be registered, but unregister() above evicted it
-	// from a slot it never owned - this is exactly the bug reported in #9822
-	EXPECT_EQ(Sensor::getSensorOfType(SensorType::AcceleratorPedalUnfiltered), nullptr);
+	// The Lua sensor must still be registered
+	EXPECT_EQ(Sensor::getSensorOfType(SensorType::AcceleratorPedalUnfiltered), &luaSensor);
+
+	// The actual owner can still unregister itself
+	luaSensor.unregister();
+	EXPECT_FALSE(Sensor::getSensorOfType(SensorType::AcceleratorPedalUnfiltered));
 }
 
 TEST_F(SensorBasic, SensorInitialized) {
