@@ -500,7 +500,7 @@
 #define ego_sensor_e_ES_PLX 4
 #define egoSettings_NAME "CAN O2 sensors"
 #define EGT_CHANNEL_COUNT 8
-#define engine_configuration_s_size 4204
+#define engine_configuration_s_size 4252
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",1="LM_REAL_MAF",4="UNSUPPORTED_ENUM_VALUE"
 #define engine_load_mode_e_LM_ALPHA_N 2
 #define engine_load_mode_e_LM_LUA 3
@@ -1296,6 +1296,19 @@
 #define HPFP_LOBE_PROFILE_SIZE 16
 #define HPFP_TARGET_SIZE 10
 #define HW_EVENT_TYPES 4
+#define i2c_bus_e_I2C_BUS_1 1
+#define i2c_bus_e_I2C_BUS_2 2
+#define i2c_bus_e_I2C_BUS_3 3
+#define i2c_bus_e_I2C_BUS_4 4
+#define i2c_bus_e_I2C_NONE 0
+#define I2C_BUS_TOTAL_COUNT 4
+#define i2c_config_s_size 12
+#define i2c_speed_e_auto_enum 0="I2C_SPEED_100K",2="I2C_SPEED_1M",3="I2C_SPEED_3p4M",1="I2C_SPEED_400K",4="I2C_SPEED_5M"
+#define i2c_speed_e_I2C_SPEED_100K 0
+#define i2c_speed_e_I2C_SPEED_1M 2
+#define i2c_speed_e_I2C_SPEED_3p4M 3
+#define i2c_speed_e_I2C_SPEED_400K 1
+#define i2c_speed_e_I2C_SPEED_5M 4
 #define IAC_PID_MULT_RPM_SIZE 8
 #define IAC_PID_MULT_SIZE 8
 #define IAT_CURVE_SIZE 16
@@ -1498,7 +1511,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 16696
+#define persistent_config_s_size 16744
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",4="PI_INVERTED_DEFAULT",6="PI_INVERTED_PULLDOWN",5="PI_INVERTED_PULLUP",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_PI_DEFAULT 0
@@ -1611,7 +1624,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3573167692
+#define SIGNATURE_HASH 2356525218
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1693,7 +1706,7 @@
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
-#define TOTAL_CONFIG_SIZE 16696
+#define TOTAL_CONFIG_SIZE 16744
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1964,7 +1977,7 @@
 #define TS_PAGE_CRC_CHECK "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c", "k%2i%2o%2c"
 #define TS_PAGE_IDENTIFIERS "\x00\x00", "\x00\x01", "\x00\x02", "\x00\x03", "\x00\x04"
 #define TS_PAGE_READ_COMMANDS "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c", "R%2i%2o%2c"
-#define TS_PAGE_SIZES 16696, 256, 2048, 1268, 10000
+#define TS_PAGE_SIZES 16744, 256, 2048, 1268, 10000
 #define TS_PAGE_VALUE_WRITE "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v", "C%2i%2o%2c%v"
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_BEGIN_char _
@@ -2117,6 +2130,15 @@
 #define ts_show_hardware_simulator false
 #define ts_show_hbridge_function true
 #define ts_show_hd true
+#define ts_show_i2c false
+#define ts_show_i2c1_enable true
+#define ts_show_i2c1_pins true
+#define ts_show_i2c2_enable true
+#define ts_show_i2c2_pins true
+#define ts_show_i2c3_enable true
+#define ts_show_i2c3_pins true
+#define ts_show_i2c4_enable true
+#define ts_show_i2c4_pins false
 #define ts_show_iat true
 #define ts_show_idle_hardware true
 #define ts_show_ign_key_analog_input false
@@ -2239,7 +2261,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.12.mre_f4.3573167692"
+#define TS_SIGNATURE "rusEFI master.2026.07.12.mre_f4.2356525218"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

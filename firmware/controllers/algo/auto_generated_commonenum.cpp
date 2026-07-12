@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Jul 04 18:52:14 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Jul 12 10:53:05 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -719,6 +719,36 @@ const char *getHpfp_cam_e(hpfp_cam_e value) {
 			return "HPFP_CAM_IN2";
 		case HPFP_CAM_NONE:
 			return "HPFP_CAM_NONE";
+	}
+	return NULL;
+}
+const char *getI2c_bus_e(i2c_bus_e value) {
+	switch (value) {
+		case I2C_BUS_1:
+			return "I2C_BUS_1";
+		case I2C_BUS_2:
+			return "I2C_BUS_2";
+		case I2C_BUS_3:
+			return "I2C_BUS_3";
+		case I2C_BUS_4:
+			return "I2C_BUS_4";
+		case I2C_NONE:
+			return "I2C_NONE";
+	}
+	return NULL;
+}
+const char *getI2c_speed_e(i2c_speed_e value) {
+	switch (value) {
+		case I2C_SPEED_100K:
+			return "I2C_SPEED_100K";
+		case I2C_SPEED_1M:
+			return "I2C_SPEED_1M";
+		case I2C_SPEED_3p4M:
+			return "I2C_SPEED_3p4M";
+		case I2C_SPEED_400K:
+			return "I2C_SPEED_400K";
+		case I2C_SPEED_5M:
+			return "I2C_SPEED_5M";
 	}
 	return NULL;
 }

@@ -446,7 +446,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final String egoSettings_NAME = "CAN O2 sensors";
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int engine_configuration_s_size = 4204;
+	public static final int engine_configuration_s_size = 4252;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
@@ -1227,6 +1227,18 @@ public class VariableRegistryValues {
 	public static final int HPFP_LOBE_PROFILE_SIZE = 16;
 	public static final int HPFP_TARGET_SIZE = 10;
 	public static final int HW_EVENT_TYPES = 4;
+	public static final int i2c_bus_e_I2C_BUS_1 = 1;
+	public static final int i2c_bus_e_I2C_BUS_2 = 2;
+	public static final int i2c_bus_e_I2C_BUS_3 = 3;
+	public static final int i2c_bus_e_I2C_BUS_4 = 4;
+	public static final int i2c_bus_e_I2C_NONE = 0;
+	public static final int I2C_BUS_TOTAL_COUNT = 4;
+	public static final int i2c_config_s_size = 12;
+	public static final int i2c_speed_e_I2C_SPEED_100K = 0;
+	public static final int i2c_speed_e_I2C_SPEED_1M = 2;
+	public static final int i2c_speed_e_I2C_SPEED_3p4M = 3;
+	public static final int i2c_speed_e_I2C_SPEED_400K = 1;
+	public static final int i2c_speed_e_I2C_SPEED_5M = 4;
 	public static final int IAC_PID_MULT_RPM_SIZE = 8;
 	public static final int IAC_PID_MULT_SIZE = 8;
 	public static final int IAT_CURVE_SIZE = 16;
@@ -1397,7 +1409,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 16696;
+	public static final int persistent_config_s_size = 16744;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1563,7 +1575,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 16696;
+	public static final int TOTAL_CONFIG_SIZE = 16744;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1819,7 +1831,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.07.12.stm32f429_nucleo.4091176896";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.07.12.stm32f429_nucleo.2874534190";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2192;
