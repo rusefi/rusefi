@@ -66,11 +66,11 @@ public class RealIniFileProvider implements IniFileProvider {
             log.info(message);
             statusConsumer.logLine(message);
             // 4th option: current folder
-            localIniFile = IniLocator.findIniFile(".");
+            localIniFile = IniLocator.findIniFile(".", signature);
         }
         if (localIniFile == null) {
             // 5th option: one level up or environment variable direction
-            localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH);
+            localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH, signature);
         }
         if (localIniFile == null && manualPicker != null && !declinedSignatures.contains(signature)) {
             // 6th option: ask the user to point at a local .ini and cache it for next time.

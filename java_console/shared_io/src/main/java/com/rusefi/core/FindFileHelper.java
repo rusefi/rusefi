@@ -180,14 +180,53 @@ public class FindFileHelper {
      * prevents grabbing another board's leftover image from a shared bundle dir. [tag:better_ux_for_flashing]
      */
     public static String findSrecFileForConnectedBoard(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
-        final String match = findSrecFileForTarget(connectedEcuTarget.effectiveTarget());
-        return match != null ? match : findSrecFile();
+        return findForConnectedBoard(connectedEcuTarget.effectiveTarget(), ".srec", findSrecFile());
     }
 
     /** @see #findSrecFileForConnectedBoard — same, for the {@code .bin} DFU image. */
     public static String findFirmwareFileForConnectedBoard(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
-        final String match = findFirmwareFileForTarget(connectedEcuTarget.effectiveTarget());
-        return match != null ? match : findFirmwareFile();
+        return findForConnectedBoard(connectedEcuTarget.effectiveTarget(), ".bin", findFirmwareFile());
+    }
+
+    /**
+     * Flash-time file priority for the connected board:
+     * <ol>
+     *   <li>exact target match sitting next to the console — the multi-board-bundle brick-guard;</li>
+     *   <li>the local single build ({@code sibling}) when it is safe (its name has no parseable target,
+     *       i.e. a dev/local build, or the target matches) — preferred over the archive so we never
+     *       substitute a wrong-key {@code obfuscated_public} image left in {@code older-fw} by an earlier
+     *       public download;</li>
+     *   <li>a native image displaced into {@code older-fw} by a foreign download (recovered, not lost);</li>
+     *   <li>last resort: whatever single file is next to the console.</li>
+     * </ol>
+     * [tag:better_ux_for_flashing]
+     */
+    private static String findForConnectedBoard(String target, String suffix, String sibling) {
+        final String localMatch = newestMatchingTarget(INPUT_FILES_PATH, target, suffix);
+        if (localMatch != null) {
+            return localMatch;
+        }
+        if (isSafeLocalSibling(sibling, target)) {
+            return sibling;
+        }
+        final String archived = newestMatchingTarget(RUSEFI_SETTINGS_FOLDER + "older-fw", target, suffix);
+        if (archived != null) {
+            return archived;
+        }
+        return sibling;
+    }
+
+    /**
+     * True when {@code sibling} is safe to flash onto {@code target} without a name-based board match:
+     * a dev/local build whose name carries no parseable target, or one whose target matches. A file whose
+     * name encodes a *different* board is not safe (that is the brick scenario the target match guards).
+     */
+    private static boolean isSafeLocalSibling(String sibling, String target) {
+        if (sibling == null) {
+            return false;
+        }
+        final String siblingTarget = extractTargetFromFirmwareName(sibling);
+        return siblingTarget == null || (target != null && siblingTarget.equalsIgnoreCase(target));
     }
 
     /**
