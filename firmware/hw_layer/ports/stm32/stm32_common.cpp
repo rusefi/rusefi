@@ -319,6 +319,8 @@ const char *getStm32McuName(int mcuRevision) {
       return "F42x";
     case 1105:
       return "F7";
+    case 0x483:
+      return "H7";
   }
   return "unknown";
 }
