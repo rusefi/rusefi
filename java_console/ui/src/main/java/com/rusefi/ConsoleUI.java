@@ -46,6 +46,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -471,19 +472,50 @@ console live data tab is broken #8402
     }
 
     private void addCustomTabs() {
+        String serviceResource = "META-INF/services/" + ConsoleTabProvider.class.getName();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = ConsoleUI.class.getClassLoader();
+        }
         try {
-            ServiceLoader<ConsoleTabProvider> load = ServiceLoader.load(ConsoleTabProvider.class);
-            log.info("Trying providers: " + load);
-            for (ConsoleTabProvider provider : load) {
+            // Enumerate the service-declaration files actually visible on the classpath, so a missing
+            // META-INF/services entry is distinguishable from a
+            // provider that failed to instantiate.
+            java.util.List<URL> serviceFiles = Collections.list(classLoader.getResources(serviceResource));
+            log.info("addCustomTabs: found " + serviceFiles.size() + " '" + serviceResource + "' file(s) on classpath: " + serviceFiles);
+        } catch (Throwable e) {
+            log.error("addCustomTabs: failed to enumerate '" + serviceResource + "' on classpath", e);
+        }
+
+        int providerCount = 0;
+        try {
+            Iterator<ConsoleTabProvider> iterator = ServiceLoader.load(ConsoleTabProvider.class, classLoader).iterator();
+            // hasNext()/next() are where ServiceLoader parses the service file and instantiates providers,
+            // so a broken provider throws ServiceConfigurationError here rather than at load(). Guard each
+            // step so one bad provider does not hide the others.
+            while (true) {
+                ConsoleTabProvider provider;
                 try {
+                    if (!iterator.hasNext()) {
+                        break;
+                    }
+                    provider = iterator.next();
+                } catch (Throwable e) {
+                    log.error("addCustomTabs: ServiceLoader failed to instantiate a ConsoleTabProvider", e);
+                    break;
+                }
+                providerCount++;
+                try {
+                    log.info("addCustomTabs: adding custom console tab '" + provider.getTitle() + "' from " + provider.getClass().getName());
                     tabbedPane.addTab(provider.getTitle(), provider.createTab(uiContext));
-                } catch (Exception e) {
-                    log.error("Failed to add custom console tab from " + provider.getClass().getName(), e);
+                } catch (Throwable e) {
+                    log.error("addCustomTabs: failed to add custom console tab from " + provider.getClass().getName(), e);
                 }
             }
         } catch (Throwable e) {
-            log.error("Failed to load custom console tabs", e);
+            log.error("addCustomTabs: failed to load custom console tabs", e);
         }
+        log.info("addCustomTabs: " + providerCount + " ConsoleTabProvider(s) discovered via ServiceLoader");
     }
 
     private static void writeReadmeFile() {
