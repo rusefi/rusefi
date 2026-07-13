@@ -900,6 +900,11 @@ static int sdModeSwitchToIdle(SD_MODE from)
 		return 0;
 	case SD_MODE_PC:
 		deattachMsdSdCard();
+		// USB-host (MSD) access - especially without a clean eject - can leave the SD/MMC in a state
+		// where the next FatFS mount fails with FR_DISK_ERR. Re-connect the block device so whatever
+		// mode we switch into next (typically ECU) mounts from a fresh SD init, like at boot.
+		deinitMmc();
+		initMmc();
 		return 0;
 	case SD_MODE_UNMOUNT:
 		return 0;
