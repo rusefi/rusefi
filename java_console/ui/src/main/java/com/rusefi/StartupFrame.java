@@ -37,6 +37,7 @@ import com.rusefi.ui.basic.FirmwareUpdateTab;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
 import com.rusefi.ui.basic.TuneManagementTab;
+import com.rusefi.ui.basic.UpdateFirmwareResult;
 import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.ToolButtons;
 import net.miginfocom.swing.MigLayout;
@@ -912,8 +913,10 @@ public class StartupFrame {
                     ConnectionStatusLogic.INSTANCE.removeListener(this);
                     if (this == postFlashReconnectListener) postFlashReconnectListener = null;
                     SwingUtilities.invokeLater(() -> {
-                        noPortsMessage.setForeground(Color.darkGray);
-                        noPortsMessage.setText("Connected to " + savedPort.port + " — click Connect to open console");
+                        // persistent success/failure indication that outlives the transient status panel (#9832)
+                        final UpdateFirmwareResult updateResult = firmwareUpdateTab.getBasicUpdaterPanel().getLastUpdateResult();
+                        noPortsMessage.setForeground(updateResult.bannerColor());
+                        noPortsMessage.setText(updateResult.bannerText(savedPort.port));
                         noPortsMessage.setVisible(true);
                         connectPanel.setVisible(true);
                         final LinkManager reconnectedLm = uiContext.getLinkManager();
