@@ -46,6 +46,13 @@ class CltSensorPanelTest {
         Map<String, String> outOfRangeTemperature = calibration("-56", "18000", "24", "2100", "120", "100");
         assertEquals("Temperatures must be between -55 and 200 °C.",
             CltSensorPanel.validate("D16", outOfRangeTemperature, "2490"));
+
+        Map<String, String> invalidCurve = calibration("-13.9", "73300", "23.5", "53100", "60", "2280");
+        assertEquals("Calibration points do not produce a valid thermistor curve.",
+            CltSensorPanel.validate("D16", invalidCurve, "2490"));
+
+        Map<String, String> validCurve = calibration("-13.9", "73300", "23.7", "10630", "60", "2280");
+        assertNull(CltSensorPanel.validate("D16", validCurve, "2490"));
     }
 
     @Test

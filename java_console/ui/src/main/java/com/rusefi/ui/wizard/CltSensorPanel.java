@@ -403,6 +403,8 @@ public class CltSensorPanel extends AbstractWizardStep {
         }
         double previous = Double.NEGATIVE_INFINITY;
         Set<Double> resistances = new HashSet<>();
+        double[] temperatures = new double[3];
+        double[] resistanceValues = new double[3];
         for (int i = 0; i < 3; i++) {
             double temperature = finite(values.get(TEMP_FIELDS[i]));
             double resistance = finite(values.get(RESISTANCE_FIELDS[i]));
@@ -421,7 +423,12 @@ public class CltSensorPanel extends AbstractWizardStep {
             if (!resistances.add(resistance)) {
                 return "Resistance values must be different at each point.";
             }
+            temperatures[i] = temperature;
+            resistanceValues[i] = resistance;
             previous = temperature;
+        }
+        if (!hasValidThermistorCurve(temperatures, resistanceValues)) {
+            return "Calibration points do not produce a valid thermistor curve.";
         }
         if (pullup != null) {
             double pullupResistance = finite(pullup);
@@ -430,6 +437,31 @@ public class CltSensorPanel extends AbstractWizardStep {
             }
         }
         return null;
+    }
+
+    private static boolean hasValidThermistorCurve(double[] temperatures, double[] resistances) {
+        double l1 = Math.log(resistances[0]);
+        double l2 = Math.log(resistances[1]);
+        double l3 = Math.log(resistances[2]);
+        double y1 = 1 / (temperatures[0] + 273.15);
+        double y2 = 1 / (temperatures[1] + 273.15);
+        double y3 = 1 / (temperatures[2] + 273.15);
+        double u2 = (y2 - y1) / (l2 - l1);
+        double u3 = (y3 - y1) / (l3 - l1);
+        double c = ((u3 - u2) / (l3 - l2)) / (l1 + l2 + l3);
+        double b = u2 - c * (l1 * l1 + l1 * l2 + l2 * l2);
+        double a = y1 - (b + l1 * l1 * c) * l1;
+        double at10Percent = thermistorTemperature(
+            resistances[0] + 0.1 * (resistances[1] - resistances[0]), a, b, c);
+        double at90Percent = thermistorTemperature(
+            resistances[1] + 0.9 * (resistances[2] - resistances[1]), a, b, c);
+        return Double.isFinite(at10Percent) && Double.isFinite(at90Percent)
+            && at10Percent >= temperatures[0] && at90Percent <= temperatures[2];
+    }
+
+    private static double thermistorTemperature(double resistance, double a, double b, double c) {
+        double logResistance = Math.log(resistance);
+        return 1 / (a + b * logResistance + c * logResistance * logResistance * logResistance) - 273.15;
     }
 
     private static double finite(String value) {
