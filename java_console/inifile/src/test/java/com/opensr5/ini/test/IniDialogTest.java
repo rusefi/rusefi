@@ -5,6 +5,7 @@ import com.rusefi.ini.reader.IniFileReaderUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.util.Map;
 
 import static com.opensr5.ini.test.IniFileReaderTest.EPS;
 import static com.opensr5.ini.test.IniFileReaderTest.readLines;
@@ -14,6 +15,35 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IniDialogTest {
+    @Test
+    public void testSettingSelectorOptions() {
+        String string =
+            "dialog = clt_thermistor, \"CLT sensor\"\n" +
+            "    settingSelector = \"Common CLT Sensors\"\n" +
+            "        settingOption = \"GM CLT\", clt_tempC_1=-40,clt_resistance_1=100000,useLinearCltSensor=0\n" +
+            "        settingOption = \"Miata NA\", clt_tempC_1=-20,clt_resistance_1=16150,useLinearCltSensor=0\n" +
+            "        settingOption = \"Miata NB\", clt_tempC_1=-10,clt_resistance_1=9000,useLinearCltSensor=0\n" +
+            "        settingOption = \"Bosch Various\", clt_tempC_1=0,clt_resistance_1=5896,useLinearCltSensor=0\n" +
+            "dialog = other, \"Other\"\n" +
+            "    field = \"Field\", someField\n";
+
+        IniFileModel model = readLines(IniFileReaderUtil.read(new ByteArrayInputStream(string.getBytes())));
+        DialogModel clt = model.getDialogs().get("clt_thermistor");
+
+        assertNotNull(clt);
+        assertEquals(1, clt.getSettingSelectors().size());
+        DialogModel.SettingSelector selector = clt.getSettingSelectors().get(0);
+        assertEquals("Common CLT Sensors", selector.getLabel());
+        assertEquals(4, selector.getOptions().size());
+        assertEquals("Miata NA", selector.getOptions().get(1).getLabel());
+        assertEquals(Map.of(
+            "clt_tempC_1", "-40",
+            "clt_resistance_1", "100000",
+            "useLinearCltSensor", "0"
+        ), selector.getOptions().get(0).getAssignments());
+        assertTrue(model.getDialogs().get("other").getSettingSelectors().isEmpty());
+    }
+
     @Test
     public void testDialogWithPanels() {
         String string = "[Constants]\n" +
