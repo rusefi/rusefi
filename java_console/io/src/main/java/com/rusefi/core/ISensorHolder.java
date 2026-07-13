@@ -182,7 +182,7 @@ public interface ISensorHolder {
      */
     @Nullable
     static Double readFieldValue(byte[] response, String label, IniField field) {
-        ByteBuffer bb = getByteBuffer(response, label, field.getOffset());
+        ByteBuffer bb = getByteBuffer(response, label, field.getOffset(), field.getSize());
         if (field instanceof ScalarIniField) {
             ScalarIniField scalarField = (ScalarIniField) field;
             double rawValue = scalarField.getType().readRawValue(bb);
@@ -201,9 +201,16 @@ public interface ISensorHolder {
     // This avoids allocating a new HeapByteBuffer for every output channel read per ECU frame.
     ThreadLocal<ByteBuffer[]> RESPONSE_BB_HOLDER = ThreadLocal.withInitial(() -> new ByteBuffer[1]);
 
+    // Legacy overload: callers that always read a full 32-bit word (e.g. CustomBinaryLogEntry
+    // masks a getInt(), PanamaHelper reads a 4-byte serial) rely on the fixed 4-byte window.
     static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset) {
+        return getByteBuffer(response, message, fieldOffset, 4);
+    }
+
+    static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset, int size) {
         int offset = fieldOffset + 1; // first byte is response code
-        int size = 4;
+        // Use the field's actual storage size (1/2/4 bytes) rather than assuming 4: a 1- or 2-byte
+        // channel at the very end of the output block would otherwise fail this bounds check and read as null.
         if (offset + size > response.length) {
             throw new IllegalArgumentException(message + String.format(" but %d+%d in %d", offset, size, response.length));
         }
