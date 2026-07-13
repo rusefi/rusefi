@@ -18,4 +18,7 @@ public interface WizardStep {
 
     /** Called each time this step becomes visible — useful for refreshing against the live ECU config. */
     default void onShow() {}
+
+    /** Called before this step stops being visible. */
+    default void onHide() {}
 }

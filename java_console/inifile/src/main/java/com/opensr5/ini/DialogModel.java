@@ -2,7 +2,9 @@ package com.opensr5.ini;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -18,6 +20,7 @@ public class DialogModel {
     private final List<ReadoutModel> readouts;
     private final int readoutColumns;
     private final List<String> gaugeNames;
+    private final List<SettingSelector> settingSelectors;
     private final String topicHelp;
     private final String layoutHint;
     private final List<DialogEntry> orderedEntries;
@@ -63,6 +66,11 @@ public class DialogModel {
     }
 
     public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, List<IndicatorModel> indicators, List<ReadoutModel> readouts, int readoutColumns, List<String> gaugeNames, String topicHelp, String layoutHint, List<DialogEntry> orderedEntries) {
+        this(key, uiName, fields, commandsOfCurrentDialog, panels, indicators, readouts, readoutColumns,
+            gaugeNames, topicHelp, layoutHint, orderedEntries, Collections.emptyList());
+    }
+
+    public DialogModel(String key, String uiName, List<Field> fields, List<Command> commandsOfCurrentDialog, List<PanelModel> panels, List<IndicatorModel> indicators, List<ReadoutModel> readouts, int readoutColumns, List<String> gaugeNames, String topicHelp, String layoutHint, List<DialogEntry> orderedEntries, List<SettingSelector> settingSelectors) {
         this.key = key;
         this.uiName = uiName;
         this.fields = new ArrayList<>(fields);
@@ -72,6 +80,7 @@ public class DialogModel {
         this.readouts = new ArrayList<>(readouts);
         this.readoutColumns = readoutColumns;
         this.gaugeNames = new ArrayList<>(gaugeNames);
+        this.settingSelectors = new ArrayList<>(settingSelectors);
         this.topicHelp = topicHelp;
         this.layoutHint = layoutHint;
         this.orderedEntries = new ArrayList<>(orderedEntries);
@@ -103,6 +112,10 @@ public class DialogModel {
 
     public List<String> getGaugeNames() {
         return gaugeNames;
+    }
+
+    public List<SettingSelector> getSettingSelectors() {
+        return Collections.unmodifiableList(settingSelectors);
     }
 
     public String getKey() {
@@ -196,6 +209,51 @@ public class DialogModel {
 
         public String getCommand() {
             return command;
+        }
+    }
+
+    public static class SettingSelector {
+        private final String label;
+        private final String enableExpression;
+        private final List<SettingOption> options = new ArrayList<>();
+
+        public SettingSelector(String label, String enableExpression) {
+            this.label = label;
+            this.enableExpression = enableExpression;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getEnableExpression() {
+            return enableExpression;
+        }
+
+        public List<SettingOption> getOptions() {
+            return Collections.unmodifiableList(options);
+        }
+
+        public void addOption(SettingOption option) {
+            options.add(option);
+        }
+    }
+
+    public static class SettingOption {
+        private final String label;
+        private final Map<String, String> assignments;
+
+        public SettingOption(String label, Map<String, String> assignments) {
+            this.label = label;
+            this.assignments = new LinkedHashMap<>(assignments);
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public Map<String, String> getAssignments() {
+            return Collections.unmodifiableMap(assignments);
         }
     }
 }
