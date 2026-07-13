@@ -6,6 +6,7 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.MigrateSettingsCheckboxState;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
+import com.rusefi.ui.basic.UpdateFirmwareResult;
 
 import javax.swing.*;
 import java.awt.*;
@@ -136,9 +137,13 @@ public class DevicePane {
             statusPanel.clear();
             statusPanel.log(bootloaderGuidance(state), true, false);
         } else if (state == SessionState.CONNECTED && lastRenderedState != SessionState.CONNECTED) {
-            // Board is a live ECU again (e.g. it rebooted to firmware after a flash) — clear any stale
-            // "Board is in the … bootloader" hint left in the status log. [tag:better_ux_for_flashing]
-            statusPanel.clear();
+            // Board is a live ECU again (e.g. it rebooted to firmware after a flash). Normally clear the
+            // stale "Board is in the … bootloader" hint — but if a firmware update just finished, preserve
+            // its (green/red) report so the success/failure survives the reconnect instead of being wiped
+            // (issue #9832). consumeLastResult() shows it once; a later unrelated reconnect clears normally.
+            if (jobExecutor.consumeLastResult() == UpdateFirmwareResult.NONE) {
+                statusPanel.clear();
+            }
         }
     }
 

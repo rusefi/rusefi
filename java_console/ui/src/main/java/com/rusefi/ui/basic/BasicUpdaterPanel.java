@@ -316,6 +316,11 @@ never used?
         });
     }
 
+    /** Outcome of the most recent firmware-update job, for the persistent post-reconnect banner (#9832). */
+    public UpdateFirmwareResult getLastUpdateResult() {
+        return singleAsyncJobExecutor.getLastResult();
+    }
+
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
         disableButtons();
         CompatibilityOptional.ifPresentOrElse(updateFirmwareJob,
