@@ -53,8 +53,12 @@ public class WizardSandbox {
 
     /** No-ECU {@link UIContext}: generated INI + blank config image behind a mocked {@link BinaryProtocol}. */
     static UIContext createOfflineContext() throws FileNotFoundException {
-        UIContext uiContext = new UIContext();
         IniFileModel model = IniFileReaderUtil.readIniFile(resolveIniPath());
+        return createOfflineContext(model);
+    }
+
+    static UIContext createOfflineContext(IniFileModel model) {
+        UIContext uiContext = new UIContext();
         uiContext.iniFileState.setIniFileModelForTest(model);
 
         // Blank image: all wizard flags read "no" so every step is shown
