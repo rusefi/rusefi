@@ -13,7 +13,8 @@ public class OpenbltRebooter {
         @Override
         public void rebootToOpenblt(final JComponent parent, final BinaryProtocol bp,
                                     final UpdateOperationCallbacks callbacks) {
-            rebootToOpenblt(parent, bp, callbacks);
+            // call the static helper, NOT this override — bare rebootToOpenblt(...) recurses into itself
+            OpenbltRebooter.rebootToOpenblt(parent, bp, callbacks);
         }
 
         @Override
