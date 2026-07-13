@@ -1,5 +1,9 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.IniField;
 import com.rusefi.ui.UIContext;
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +13,10 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public class NumberOfCylindersPanel extends AbstractWizardStep {
+    private static final String TWO_STROKE_FIELD = "twoStroke";
+    private static final String FOUR_STROKE_VALUE = "Four Stroke";
+    private static final String TWO_STROKE_VALUE = "Two Stroke";
+
     private final JLayeredPane layeredPane = new JLayeredPane();
     private final JPanel mainPanel = new JPanel(new GridBagLayout());
     private final JPanel overlayPanel = new JPanel() {
@@ -62,6 +70,21 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
         mainPanel.add(label, gbc);
 
         gbc.gridy++;
+        JToggleButton fourStroke = new JToggleButton("4 Stroke", true);
+        JToggleButton twoStroke = new JToggleButton("2 Stroke");
+        scale(fourStroke, 2);
+        scale(twoStroke, 2);
+        fourStroke.setMargin(new Insets(15, 30, 15, 30));
+        twoStroke.setMargin(new Insets(15, 30, 15, 30));
+        ButtonGroup strokeGroup = new ButtonGroup();
+        strokeGroup.add(fourStroke);
+        strokeGroup.add(twoStroke);
+        JPanel strokePanel = new JPanel(new GridLayout(1, 2, 10, 0));
+        strokePanel.add(fourStroke);
+        strokePanel.add(twoStroke);
+        mainPanel.add(strokePanel, gbc);
+
+        gbc.gridy++;
         JPanel buttonsPanel = new JPanel(new GridLayout(3, 4, 10, 10));
         int[] options = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16};
 
@@ -85,13 +108,33 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        fireCompleted(new WizardStepResult("cylindersCount", String.valueOf(option)));
+                        WizardConfig cfg = WizardConfig.snapshot(uiContext);
+                        if (cfg == null) {
+                            return;
+                        }
+                        WizardStepResult result = createResult(cfg.ini, cfg.image, option, twoStroke.isSelected());
+                        if (result == null) {
+                            return;
+                        }
+                        fireCompleted(result);
                     }
                 });
             }
         }
 
         mainPanel.add(buttonsPanel, gbc);
+    }
+
+    static WizardStepResult createResult(IniFileModel ini, ConfigurationImage image, int cylinders, boolean twoStroke) {
+        IniField field = ini.findIniField(TWO_STROKE_FIELD).orElse(null);
+        if (field == null) {
+            return null;
+        }
+
+        ConfigurationImage modified = image.clone();
+        ConfigurationImageGetterSetter.setValue2(field, modified, TWO_STROKE_FIELD,
+            twoStroke ? TWO_STROKE_VALUE : FOUR_STROKE_VALUE);
+        return new WizardStepResult("cylindersCount", String.valueOf(cylinders), modified);
     }
 
     private void updateOverlayBounds() {
