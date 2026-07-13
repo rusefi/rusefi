@@ -9,6 +9,7 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.util.ScrollablePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class CltSensorPanel extends AbstractWizardStep {
+    static final int CARD_WIDTH = 760;
     static final String ADC_FIELD = "clt_adcChannel";
     static final String PULLUP_FIELD = "clt_bias_resistor";
     static final String LINEAR_FIELD = "useLinearCltSensor";
@@ -30,7 +32,20 @@ public class CltSensorPanel extends AbstractWizardStep {
     private final UIContext uiContext;
     private final ISensorCentral sensorCentral;
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JPanel card = new JPanel(new GridBagLayout());
+    private final JPanel card = new JPanel(new GridBagLayout()) {
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension preferred = super.getPreferredSize();
+            preferred.width = CARD_WIDTH;
+            return preferred;
+        }
+
+        @Override
+        public Dimension getMaximumSize() {
+            Dimension preferred = super.getPreferredSize();
+            return new Dimension(CARD_WIDTH, preferred.height);
+        }
+    };
     private final JPanel calibrationCards = new JPanel(new CardLayout());
     private final JComboBox<String> adcCombo = new JComboBox<>();
     private final JComboBox<DialogModel.SettingOption> presetCombo = new JComboBox<>();
@@ -129,13 +144,11 @@ public class CltSensorPanel extends AbstractWizardStep {
         gbc.insets = new Insets(0, 0, 0, 0);
         card.add(buildActions(), gbc);
 
-        JPanel wrapper = new JPanel(new GridBagLayout());
-        GridBagConstraints wrapperGbc = new GridBagConstraints();
-        wrapperGbc.insets = new Insets(16, 16, 16, 16);
-        wrapperGbc.fill = GridBagConstraints.HORIZONTAL;
-        wrapperGbc.weightx = 1;
-        wrapperGbc.anchor = GridBagConstraints.NORTH;
-        wrapper.add(card, wrapperGbc);
+        JPanel wrapper = new ScrollablePanel();
+        wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
+        wrapper.setBorder(BorderFactory.createEmptyBorder(16, 16, 16, 16));
+        card.setAlignmentX(Component.CENTER_ALIGNMENT);
+        wrapper.add(card);
         content.add(new JScrollPane(wrapper), BorderLayout.CENTER);
 
         ButtonGroup modes = new ButtonGroup();
@@ -168,16 +181,31 @@ public class CltSensorPanel extends AbstractWizardStep {
     }
 
     private JPanel buildModeButtons() {
-        JPanel panel = new JPanel(new GridLayout(1, 2, 0, 0));
+        JPanel panel = new JPanel(new GridLayout(1, 2, 8, 0));
         panel.add(presetMode);
         panel.add(customMode);
         return panel;
     }
 
     private JPanel buildPresetPanel() {
-        JPanel panel = new JPanel(new BorderLayout(0, 5));
-        panel.add(sectionLabel("SENSOR"), BorderLayout.NORTH);
-        panel.add(presetCombo, BorderLayout.CENTER);
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        panel.add(sectionLabel("SENSOR"), gbc);
+
+        gbc.gridy++;
+        gbc.insets = new Insets(0, 0, 0, 0);
+        panel.add(presetCombo, gbc);
+
+        gbc.gridy++;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel.add(Box.createGlue(), gbc);
         return panel;
     }
 
@@ -613,5 +641,9 @@ public class CltSensorPanel extends AbstractWizardStep {
 
     boolean areLiveListenersActiveForTests() {
         return voltageListener != null && cltListener != null;
+    }
+
+    JComponent getCardForTests() {
+        return card;
     }
 }

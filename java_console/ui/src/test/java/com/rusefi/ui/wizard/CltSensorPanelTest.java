@@ -99,6 +99,8 @@ class CltSensorPanelTest {
         CltSensorPanel panel = new CltSensorPanel(WizardSandbox.createOfflineContext(loadTestIni()));
 
         assertTrue(panel.isCustomModeVisibleForTests());
+        assertEquals(CltSensorPanel.CARD_WIDTH, panel.getCardForTests().getPreferredSize().width);
+        assertEquals(CltSensorPanel.CARD_WIDTH, panel.getCardForTests().getMaximumSize().width);
     }
 
     @Test
