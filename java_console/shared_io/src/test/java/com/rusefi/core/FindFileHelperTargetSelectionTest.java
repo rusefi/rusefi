@@ -1,5 +1,6 @@
 package com.rusefi.core;
 
+import com.rusefi.core.io.ConnectedEcuTarget;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -118,5 +119,48 @@ public class FindFileHelperTargetSelectionTest {
         assertNull(FindFileHelper.findSrecFileForTarget(null));
         assertNull(FindFileHelper.findSrecFileForTarget("  "));
         assertNull(FindFileHelper.findSrecFileForTarget("someotherboard"));
+    }
+
+    /**
+     * "Secure: decode error 2": a plain local build sits next to the console while a stale
+     * public-obfuscated image for the same board is in older-fw. The connected-board pick must
+     * prefer the local sibling (right key) over the archived obfuscated one (wrong key), even though the
+     * archived name parses to the connected target and the local one does not.
+     */
+    @Test
+    public void localSiblingWinsOverArchivedObfuscatedImage() throws IOException {
+        File localPlain = writeInputFile("rusefi.srec", 1_000_000_000_000L); // dev/local build, no parseable target
+
+        File archiveDir = new File(OLDER_FW_DIR);
+        assertTrue(archiveDir.isDirectory() || archiveDir.mkdirs());
+        File archivedObfuscated = new File(archiveDir,
+            "rusefi-development_2026-07-06_" + TARGET + "_99386034_deadbeef_obfuscated.srec");
+        Files.write(archivedObfuscated.toPath(), new byte[]{1});
+        createdInOlderFw.add(archivedObfuscated);
+
+        ConnectedEcuTarget connected = new ConnectedEcuTarget();
+        connected.setConnectedTargetForUnitTest(TARGET);
+
+        assertEquals(localPlain.getAbsolutePath(), FindFileHelper.findSrecFileForConnectedBoard(connected));
+    }
+
+    /**
+     * The brick-guard still holds: a local sibling whose name encodes a *different* board is not used;
+     * the exact-target image recovered from older-fw wins instead.
+     */
+    @Test
+    public void foreignNamedLocalSiblingIsNotUsedForConnectedBoard() throws IOException {
+        writeInputFile(srecName(TARGET + "_pro", "aaaa"), 1_000_000_000_000L); // foreign board next to console
+
+        File archiveDir = new File(OLDER_FW_DIR);
+        assertTrue(archiveDir.isDirectory() || archiveDir.mkdirs());
+        File archived = new File(archiveDir, srecName(TARGET, "cccc"));
+        Files.write(archived.toPath(), new byte[]{1});
+        createdInOlderFw.add(archived);
+
+        ConnectedEcuTarget connected = new ConnectedEcuTarget();
+        connected.setConnectedTargetForUnitTest(TARGET);
+
+        assertEquals(archived.getAbsolutePath(), FindFileHelper.findSrecFileForConnectedBoard(connected));
     }
 }
