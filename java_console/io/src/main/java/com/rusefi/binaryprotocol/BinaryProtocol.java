@@ -362,10 +362,10 @@ public class BinaryProtocol {
         setConfigurationImage(newVersion);
     }
 
-    private static byte[] receivePacket(String msg, IoStream stream) throws IOException {
+    private static byte[] receivePacket(String msg, IoStream stream, int timeoutMs) throws IOException {
         long start = System.currentTimeMillis();
         synchronized (stream.getIoLock()) {
-            return stream.getDataBuffer().getPacket(Timeouts.BINARY_IO_TIMEOUT, msg, start);
+            return stream.getDataBuffer().getPacket(timeoutMs, msg, start);
         }
     }
 
@@ -617,11 +617,20 @@ public class BinaryProtocol {
      * @return null in case of IO issues
      */
     public byte[] executeCommand(char opcode, byte[] packet, String msg) {
-        linkManager.assertCommunicationThread();
-        return doExecute(opcode, packet, msg, stream);
+        return executeCommand(opcode, packet, msg, Timeouts.BINARY_IO_TIMEOUT);
     }
 
-    private static byte @Nullable [] doExecute(char opcode, byte[] packet, String msg, IoStream stream) {
+    /**
+     * @param timeoutMs how long to wait for the response, overriding the default
+     *                  {@link Timeouts#BINARY_IO_TIMEOUT}. Use a larger value for commands
+     *                  whose firmware handler blocks for a while before replying.
+     */
+    public byte[] executeCommand(char opcode, byte[] packet, String msg, int timeoutMs) {
+        linkManager.assertCommunicationThread();
+        return doExecute(opcode, packet, msg, stream, timeoutMs);
+    }
+
+    private static byte @Nullable [] doExecute(char opcode, byte[] packet, String msg, IoStream stream, int timeoutMs) {
         if (stream.isClosed())
             return null;
 
@@ -632,7 +641,7 @@ public class BinaryProtocol {
             if (Bug3923.obscene)
                 log.info("Sending opcode " + opcode + " payload " + packet.length);
             stream.sendPacket(fullRequest);
-            return receivePacket(msg, stream);
+            return receivePacket(msg, stream, timeoutMs);
         } catch (IOException e) {
             log.error(msg + ": executeCommand failed: " + e);
             stream.close();
