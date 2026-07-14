@@ -103,15 +103,41 @@ void MassStorageController::ThreadTask() {
 			uint8_t target_lun = m_cbw.lun & 0x0F; // Mask out reserved bits
 			if (target_lun <= USB_MSD_LUN_COUNT) {
 				auto target = &m_luns[target_lun].target;
+
+				// mark busy so 'sdinfo' can show what we are stuck on if this never returns
+				m_cmdCount = m_cmdCount + 1;
+				m_busyOpcode = m_cbw.cmd_data[0];
+				m_busySince = chVTGetSystemTime();
+
 				if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
 					sendCsw(CSW_STATUS_PASSED, 0);
 				} else {
+					m_failedCmdCount = m_failedCmdCount + 1;
+					m_lastFailedOpcode = m_cbw.cmd_data[0];
 					sendCsw(CSW_STATUS_FAILED, scsiResidue(target));
 				}
+
+				m_busyOpcode = -1;
 			}
 		} else {
 			// ignore incorrect CBW
+			m_invalidCbwCount = m_invalidCbwCount + 1;
 		}
+	}
+}
+
+void MassStorageController::printDiagnostics() const {
+	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs",
+			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount);
+
+	// snapshot: m_busySince is only meaningful while m_busyOpcode is set
+	int busyOpcode = m_busyOpcode;
+	systime_t busySince = m_busySince;
+	if (busyOpcode >= 0) {
+		efiPrintf("MSD: executing opcode 0x%02x for %lu ms", busyOpcode,
+				(uint32_t)TIME_I2MS(chVTTimeElapsedSinceX(busySince)));
+	} else {
+		efiPrintf("MSD: idle, waiting for next command");
 	}
 }
 
