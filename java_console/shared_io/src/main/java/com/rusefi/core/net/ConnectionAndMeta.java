@@ -71,6 +71,10 @@ public class ConnectionAndMeta {
         return PropertiesHolder.INSTANCE.getBoolean(propertyName, properties);
     }
 
+    public static boolean getBoolean(String propertyName, Properties properties, boolean defaultValue) {
+        return PropertiesHolder.getBoolean(propertyName, properties, defaultValue);
+    }
+
     public synchronized static Properties getProperties() throws RuntimeException {
         return PropertiesHolder.INSTANCE.getProperties();
     }

@@ -71,7 +71,14 @@ public enum PropertiesHolder {
     }
 
     public static boolean getBoolean(String propertyName, Properties properties) {
+        return getBoolean(propertyName, properties, false);
+    }
+
+    public static boolean getBoolean(String propertyName, Properties properties, boolean defaultValue) {
         String flag = properties.getProperty(propertyName);
+        if (flag == null) {
+            return defaultValue;
+        }
         return Boolean.TRUE.toString().equalsIgnoreCase(flag);
     }
 

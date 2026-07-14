@@ -378,7 +378,9 @@ console live data tab is broken #8402
                 lazyTuneAction(LoadTuneHelper.LOAD_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getLoadTuneAction()),
                 lazyTuneAction(LoadTuneHelper.SAVE_TUNE_TEXT, buildTuning, () -> tuningHolder[0].getSaveTuneAction()));
 
-            tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
+            if (UiProperties.isKnockAnalyzerEnabled()) {
+                tabbedPane.addTab("Knock Analyzer", new KnockPane(uiContext).getContent());
+            }
             if (UiProperties.isPinoutEnabled()) {
                 tabbedPane.addTab("Pinout", pinoutPane.getContent());
             }

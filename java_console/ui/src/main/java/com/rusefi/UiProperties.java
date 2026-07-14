@@ -33,4 +33,8 @@ public class UiProperties {
     public static boolean isPinoutEnabled() {
         return ConnectionAndMeta.getBoolean("show_pinout_tab", PropertiesHolder.INSTANCE.getProperties());
     }
+
+    public static boolean isKnockAnalyzerEnabled() {
+        return ConnectionAndMeta.getBoolean("show_knock_analyzer_tab", PropertiesHolder.INSTANCE.getProperties(), true);
+    }
 }
