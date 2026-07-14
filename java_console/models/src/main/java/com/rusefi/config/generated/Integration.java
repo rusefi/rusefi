@@ -37,6 +37,7 @@ public class Integration {
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
+	public static final String CMD_LUA_RESET = "luareset";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
 	public static final String CMD_PWM = "pwm";
@@ -136,5 +137,4 @@ public class Integration {
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
 	public static final int TS_TRIGGER_SCOPE_ENABLE = 4;
 	public static final int TS_TRIGGER_SCOPE_READ = 6;
-    public static final String CMD_LUA_RESET = "luareset";
 }

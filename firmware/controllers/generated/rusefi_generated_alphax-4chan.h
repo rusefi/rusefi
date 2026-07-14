@@ -339,6 +339,7 @@
 #define CMD_INJECTION "injection"
 #define CMD_INJECTION_PIN "set_injection_pin"
 #define CMD_LOGIC_PIN "set_logic_input_pin"
+#define CMD_LUA_RESET "luareset"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
 #define CMD_PWM "pwm"
@@ -1625,7 +1626,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1323630610
+#define SIGNATURE_HASH 2527534209
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2262,7 +2263,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.14.alphax-4chan.1323630610"
+#define TS_SIGNATURE "rusEFI master.2026.07.14.alphax-4chan.2527534209"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
