@@ -23,6 +23,9 @@
 #define CBW_LUN_RESERVED_MASK           0b11110000
 #define CBW_CMD_LEN_RESERVED_MASK       0b11000000
 
+// bit 7 of bmCBWFlags: data phase direction, set = Device-to-Host (IN)
+#define CBW_FLAGS_DIRECTION_IN          0b10000000
+
 #define CSW_STATUS_PASSED               0x00
 #define CSW_STATUS_FAILED               0x01
 #define CSW_STATUS_PHASE_ERROR          0x02
@@ -98,21 +101,58 @@ void MassStorageController::ThreadTask() {
 			continue;
 		}
 
-		if (cbwValid(m_cbw, status) && cbwMeaningful(m_cbw)) {
-			// Get the LUN from the incoming CBW packet
-			uint8_t target_lun = m_cbw.lun & 0x0F; // Mask out reserved bits
-			if (target_lun <= USB_MSD_LUN_COUNT) {
-				auto target = &m_luns[target_lun].target;
-				if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
-					sendCsw(CSW_STATUS_PASSED, 0);
-				} else {
-					sendCsw(CSW_STATUS_FAILED, scsiResidue(target));
-				}
-			}
+		if (!cbwValid(m_cbw, status) || !cbwMeaningful(m_cbw)) {
+			// BOT spec 6.6.1: an invalid CBW is answered by stalling both bulk endpoints,
+			// no CSW is sent. The host recovers with Reset Recovery (Bulk-Only Mass Storage
+			// Reset plus Clear Feature HALT on both endpoints, serviced at interrupt level),
+			// after which we are back at usbReceive() above waiting for a fresh CBW.
+			// Silently ignoring a bad CBW instead would leave the host waiting forever for
+			// a CSW - which presents as a frozen file manager on the PC.
+			stallTransport(/*stallIn =*/ true, /*stallOut =*/ true);
+			continue;
+		}
+
+		// Get the LUN from the incoming CBW packet, range-checked by cbwMeaningful()
+		uint8_t target_lun = m_cbw.lun & 0x0F; // Mask out reserved bits
+		auto target = &m_luns[target_lun].target;
+
+		// lib_scsi sets residue on a short data phase but never clears it between
+		// commands, so reset it here or a stale value leaks into every following CSW
+		target->residue = 0;
+
+		if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
+			sendCsw(CSW_STATUS_PASSED, scsiResidue(target));
 		} else {
-			// ignore incorrect CBW
+			// The command failed and the SCSI layer fails before performing the data phase
+			// (LBA out of range, unhandled command, unit attention). If the CBW announced a
+			// data phase the host is now about to transfer data, not read a CSW - so per BOT
+			// spec 6.7.2/6.7.3 we must stall the endpoint the host will use for that data,
+			// otherwise host and device desynchronize and the transport locks up. The host
+			// clears the stall and then picks up the CSW queued below - queueing behind the
+			// stall is safe since clearing a halt only clears the endpoint STALL flag.
+			if (m_cbw.data_len > 0) {
+				bool dataIn = (m_cbw.flags & CBW_FLAGS_DIRECTION_IN) != 0;
+				stallTransport(/*stallIn =*/ dataIn, /*stallOut =*/ !dataIn);
+			}
+			// none of the announced data phase was performed
+			sendCsw(CSW_STATUS_FAILED, m_cbw.data_len);
 		}
 	}
+}
+
+void MassStorageController::stallTransport(bool stallIn, bool stallOut) {
+	osalSysLock();
+	// USB may have been reset/disconnected since the command was received - endpoint
+	// records are gone in that case and there is nothing to stall
+	if (usbGetDriverStateI(m_usb) == USB_ACTIVE) {
+		if (stallIn) {
+			usbStallTransmitI(m_usb, USB_MSD_DATA_EP);
+		}
+		if (stallOut) {
+			usbStallReceiveI(m_usb, USB_MSD_DATA_EP);
+		}
+	}
+	osalSysUnlock();
 }
 
 /*static*/ bool MassStorageController::cbwValid(const msd_cbw_t& cbw, msg_t recvd) {

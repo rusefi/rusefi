@@ -27,6 +27,7 @@ private:
 	static bool cbwMeaningful(const msd_cbw_t& cbw);
 
 	void sendCsw(uint8_t status, uint32_t residue);
+	void stallTransport(bool stallIn, bool stallOut);
 
 	usbmsdstate_t m_state;
 
