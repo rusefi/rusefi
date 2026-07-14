@@ -2,7 +2,8 @@
   "permissions": {
     "defaultMode": "acceptEdits",
     "allow": [
-      "Bash(./gradlew *)"
+      "Bash(./gradlew *)",
+      "Bash(./gen_config_board.sh *)"
     ]
   }
 }
