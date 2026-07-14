@@ -6,6 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 rusEFI is an open-source engine control unit firmware for STM32 microcontrollers.
 
+## Session reporting & knowledge capture
+
+After each completed unit of work (a landed feature, a fixed bug, or a finished investigation), and at minimum once per working session:
+
+1. **Append** a dated entry to `docs/report.md` — never rewrite or reorder earlier entries. Cover: what was done, key decisions and why, validation performed (tests run, hardware checks), and open follow-ups. Match the file's existing style: plain ASCII, `-`/`->` instead of dashes/arrows, tables for change inventories.
+2. **Fold durable, non-obvious knowledge into this CLAUDE.md**: build/tooling quirks, hardware protocols, architecture invariants, recurring debugging root-causes. Skip anything derivable from the code or git history — CLAUDE.md records what the code cannot say.
+
 ## Build Commands
 
 Default to building with 12 threads unless otherwise specified (-j12 etc).
@@ -193,6 +200,10 @@ rusEFI provides two MCP (Model Context Protocol) servers for LLM-driven tooling 
 ## Serial Connectivity
 
 All rusEFI serial connections use the USB CDC (Communications Device Class) profile. Baud rate is irrelevant and never a concern — the USB serial profile handles throughput natively regardless of any baud rate setting in host software or code.
+
+### USB Mass Storage SCSI (known Wireshark false-positive)
+
+When sniffing the ECU's USB link, Wireshark flags the SCSI `Mode Sense(6)` (opcode 0x1a) replies as *"Malformed Packet: SCSI: length of contained item exceeds length of containing item."* This is **not** bad wire data. The reply is a valid but *short* Caching mode page (page code 0x08, `PageLength = 0x0a`) instead of the SBC-2 mandated 0x12; Wireshark's dissector decodes the full 20-byte caching-page layout, overruns the buffer, and raises the exception. Windows accepts the reply and the device works. The response is hardcoded in the ChibiOS-Contrib USB-MSD SCSI target (`os/hal/src/hal_usb_msd.c`, a submodule usually not checked out), used by `firmware/hw_layer/mass_storage/mass_storage_device.cpp`. Treat it as cosmetic unless a host actually rejects it.
 
 ## Development Notes
 
