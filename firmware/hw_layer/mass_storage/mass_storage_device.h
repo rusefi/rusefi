@@ -23,6 +23,14 @@ public:
 	// console diagnostics, called from another thread ('sdinfo' command)
 	void printDiagnostics() const;
 
+	// Bulk-Only Mass Storage Reset handling, called from the EP0 setup hook in ISR context
+	void onBulkOnlyResetIsr(USBDriver *usbp);
+
+	// polled by the SCSI transport so an abandoned command stops touching USB
+	bool isBotResetPending() const {
+		return m_botResetPending;
+	}
+
 protected:
 	void ThreadTask() override;
 
@@ -42,6 +50,10 @@ private:
 	// wedges (host frozen on a write), 'sdinfo' shows which command never completed.
 	volatile int m_busyOpcode = -1;
 	volatile systime_t m_busySince = 0;
+
+	// Set by onBulkOnlyResetIsr(), tells ThreadTask to abandon the in-flight command
+	// without sending its CSW. Cleared when the next CBW arrives.
+	volatile bool m_botResetPending = false;
 
 	usbmsdstate_t m_state;
 
