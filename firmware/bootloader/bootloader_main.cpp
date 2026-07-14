@@ -21,6 +21,7 @@ static blt_bool rebootLoop;
 static blt_bool wdReset;
 
 static const uint8_t maxWdRebootCounter = 10;
+static const uint8_t maxSwRebootCounter = 15;
 
 #if (BOOT_COP_HOOKS_ENABLE > 0)
 extern "C" {
@@ -148,16 +149,21 @@ static blt_bool checkIfRebootIntoOpenBltRequested(void) {
 
 static blt_bool checkIfResetLoop(void) {
 	uint8_t wd_counter = 0;
+	uint8_t sw_counter = 0;
 	SharedParamsReadByIndex(1, &wd_counter);
+	SharedParamsReadByIndex(2, &sw_counter);
 	Reset_Cause_t resetCause = getMCUResetCause();
 	if ((resetCause == Reset_Cause_IWatchdog) ||
 		(resetCause == Reset_Cause_WWatchdog)) {
 		// One of watchdogs
 		wd_counter++;
 		wdReset = BLT_TRUE;
+	} else if (resetCause == Reset_Cause_Soft_Reset) {
+		sw_counter++;
 	} else {
-		// cleat WD counter
+		// cleat counters
 		wd_counter = 0;
+		sw_counter = 0;
 		if ((resetCause == Reset_Cause_NRST_Pin) ||
 			(resetCause == Reset_Cause_POR)) {
 			// power on or NRST reset
@@ -165,8 +171,10 @@ static blt_bool checkIfResetLoop(void) {
 		}
 	}
 	SharedParamsWriteByIndex(1, wd_counter);
+	SharedParamsWriteByIndex(2, sw_counter);
 
-	return (wd_counter > maxWdRebootCounter);
+	return ((wd_counter > maxWdRebootCounter) ||
+			(sw_counter > maxSwRebootCounter));
 }
 
 #if OPENBLT_BOARD_EARLY_INIT
