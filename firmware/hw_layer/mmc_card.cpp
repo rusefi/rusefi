@@ -363,6 +363,9 @@ static void sdStatistics() {
 #if EFI_FILE_LOGGING
 	efiPrintf("%d SD card fields", MLG::getSdCardFieldsCount());
 #endif
+#if HAL_USE_USB_MSD
+	printMsdDiagnostics();
+#endif
 }
 
 static void sdSetMode(const char *mode) {
