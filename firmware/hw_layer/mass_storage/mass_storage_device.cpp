@@ -34,8 +34,25 @@
 #define MSD_SETUP_INDEX(setup)  MSD_SETUP_WORD(setup, 4)
 #define MSD_SETUP_LENGTH(setup) MSD_SETUP_WORD(setup, 6)
 
+// the one and only mass storage controller, used by the EP0 setup ISR hook and the
+// transport callbacks below which only get a USBDriver/SCSITransport pointer
+static MassStorageController *s_msdInstance = nullptr;
+
+// After a Bulk-Only Mass Storage Reset the host has abandoned the command the SCSI
+// layer is still executing. lib_scsi ignores transport errors and keeps pumping its
+// data phase, so if we kept doing real USB transfers here the leftover data phase
+// would consume the fresh post-reset CBWs as if they were data. Refuse all transfers
+// until the command unwinds; ThreadTask then waits for the next CBW.
+static bool transportAbandoned() {
+	return (s_msdInstance != nullptr) && s_msdInstance->isBotResetPending();
+}
+
 static uint32_t scsi_transport_transmit(const SCSITransport *transport,
 										const uint8_t *data, size_t len) {
+	if (transportAbandoned()) {
+		return 0;
+	}
+
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
 	msg_t status = usbTransmit(trp->usbp, trp->ep, data, len);
 	if (MSG_OK == status)
@@ -46,6 +63,10 @@ static uint32_t scsi_transport_transmit(const SCSITransport *transport,
 
 static uint32_t scsi_transport_transmit_start(const SCSITransport *transport,
 											  const uint8_t *data, size_t len) {
+	if (transportAbandoned()) {
+		return 0;
+	}
+
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
 	msg_t status = usbTransmitStart(trp->usbp, trp->ep, data, len);
 	if (MSG_OK == status)
@@ -55,6 +76,10 @@ static uint32_t scsi_transport_transmit_start(const SCSITransport *transport,
 }
 
 static uint32_t scsi_transport_transmit_wait(const SCSITransport *transport) {
+	if (transportAbandoned()) {
+		return 1;
+	}
+
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
 	msg_t status = usbTransmitWait(trp->usbp, trp->ep);
 	if (MSG_OK == status)
@@ -65,6 +90,10 @@ static uint32_t scsi_transport_transmit_wait(const SCSITransport *transport) {
 
 static uint32_t scsi_transport_receive(const SCSITransport *transport,
 										uint8_t *data, size_t len) {
+	if (transportAbandoned()) {
+		return 0;
+	}
+
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
 	msg_t status = usbReceive(trp->usbp, trp->ep, data, len);
 	if (MSG_RESET != status)
@@ -76,6 +105,7 @@ static uint32_t scsi_transport_receive(const SCSITransport *transport,
 MassStorageController::MassStorageController(USBDriver* usb)
 	: ThreadController("MSD", MSD_THD_PRIO)
 	, m_usb(usb) {
+	s_msdInstance = this;
 	for (size_t i = 0; i < USB_MSD_LUN_COUNT; i++) {
 		scsiObjectInit(&m_luns[i].target);
 	}
@@ -99,6 +129,10 @@ void MassStorageController::ThreadTask() {
 		}
 
 		if (cbwValid(m_cbw, status) && cbwMeaningful(m_cbw)) {
+			// The host only sends a CBW after any Bulk-Only Mass Storage Reset it issued
+			// has completed, so receiving one means an earlier reset is fully handled
+			m_botResetPending = false;
+
 			// Get the LUN from the incoming CBW packet
 			uint8_t target_lun = m_cbw.lun & 0x0F; // Mask out reserved bits
 			if (target_lun <= USB_MSD_LUN_COUNT) {
@@ -109,15 +143,29 @@ void MassStorageController::ThreadTask() {
 				m_busyOpcode = m_cbw.cmd_data[0];
 				m_busySince = chVTGetSystemTime();
 
+				uint8_t cswStatus;
+				uint32_t residue;
 				if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
-					sendCsw(CSW_STATUS_PASSED, 0);
+					cswStatus = CSW_STATUS_PASSED;
+					residue = 0;
 				} else {
 					m_failedCmdCount = m_failedCmdCount + 1;
 					m_lastFailedOpcode = m_cbw.cmd_data[0];
-					sendCsw(CSW_STATUS_FAILED, scsiResidue(target));
+					cswStatus = CSW_STATUS_FAILED;
+					residue = scsiResidue(target);
 				}
 
 				m_busyOpcode = -1;
+
+				if (m_botResetPending) {
+					// A Bulk-Only Mass Storage Reset arrived while this command was executing
+					// (the reset hook also woke us out of any blocked USB transfer with
+					// MSG_RESET). The host has abandoned this command and is not expecting
+					// its CSW - sending one anyway would desynchronize the transport.
+					continue;
+				}
+
+				sendCsw(cswStatus, residue);
 			}
 		} else {
 			// ignore incorrect CBW
@@ -139,6 +187,34 @@ void MassStorageController::printDiagnostics() const {
 	} else {
 		efiPrintf("MSD: idle, waiting for next command");
 	}
+}
+
+void MassStorageController::onBulkOnlyResetIsr(USBDriver *usbp) {
+	osalSysLockFromISR();
+
+	// tell ThreadTask the host abandoned the in-flight command, see m_botResetPending checks
+	m_botResetPending = true;
+
+	// Abort whatever transfer is in progress on the data endpoint: clear the
+	// transfer-active flags (usbStartReceiveI/usbStartTransmitI assert "already
+	// receiving/transmitting" on re-arm otherwise) and wake the MSD thread with
+	// MSG_RESET. This mirrors what the USB stack itself does on a bus reset in
+	// _usb_reset(), scoped down to this one endpoint so the CDC (console/TS)
+	// endpoints of the composite device are not disturbed.
+	usbp->receiving &= (uint16_t)~(1U << USB_MSD_DATA_EP);
+	usbp->transmitting &= (uint16_t)~(1U << USB_MSD_DATA_EP);
+
+	const USBEndpointConfig *epcp = usbp->epc[USB_MSD_DATA_EP];
+	if (epcp != NULL) {
+		if (epcp->in_state != NULL) {
+			osalThreadResumeI(&epcp->in_state->thread, MSG_RESET);
+		}
+		if (epcp->out_state != NULL) {
+			osalThreadResumeI(&epcp->out_state->thread, MSG_RESET);
+		}
+	}
+
+	osalSysUnlockFromISR();
 }
 
 /*static*/ bool MassStorageController::cbwValid(const msd_cbw_t& cbw, msg_t recvd) {
@@ -248,14 +324,14 @@ bool msd_request_hook_new(USBDriver *usbp) {
 		&& usbp->setup[1] == MSD_REQ_RESET) {
 		/* Bulk-Only Mass Storage Reset (class-specific request)
 		This request is used to reset the mass storage device and its associated interface.
-		This class-specific request shall ready the device for the next CBW from the host. */
-		/* Do any special reset code here. */
-		/* The device shall NAK the status stage of the device request until
-		* the Bulk-Only Mass Storage Reset is complete.
-		* NAK EP1 in and out */
-		// usbp->otg->ie[1].DIEPCTL = DIEPCTL_SNAK;
-		// usbp->otg->oe[1].DOEPCTL = DOEPCTL_SNAK;
-		/* response to this request using EP0 */
+		This class-specific request shall ready the device for the next CBW from the host.
+		The host sends it when the transport hangs (a CSW it waited for never arrived, a
+		transfer timed out); if we ACK without actually resetting, the MSD thread stays
+		stuck in the old command and the drive is dead until the cable is re-plugged. */
+		if (s_msdInstance != nullptr) {
+			s_msdInstance->onBulkOnlyResetIsr(usbp);
+		}
+		/* reset is complete by the time we get here, ACK the request using EP0 */
 		usbSetupTransfer(usbp, 0, 0, NULL);
 		return true;
 	} else if (usbp->setup[0] == (USB_RTYPE_TYPE_CLASS | USB_RTYPE_RECIPIENT_INTERFACE | USB_RTYPE_DIR_DEV2HOST)
