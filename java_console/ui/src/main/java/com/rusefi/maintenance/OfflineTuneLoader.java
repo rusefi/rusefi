@@ -9,6 +9,7 @@ import com.rusefi.tune.xml.Msq;
 
 import javax.swing.*;
 import java.awt.Component;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -45,22 +46,26 @@ public class OfflineTuneLoader {
      * @return Result containing msq, ini, image, and signature; or null if user cancels
      */
     public static Result loadTuneFromFile(String msqPath, Component parent) {
+        return loadTuneFromFile(msqPath, parent, message -> showErrorDialog(parent, message));
+    }
+
+    public static Result loadTuneFromFile(String msqPath, Component parent, Consumer<String> errorHandler) {
         Msq msq;
         try {
             msq = Msq.readTune(msqPath);
         } catch (Exception e) {
             log.error("Failed to read MSQ: " + msqPath, e);
-            showErrorDialog(parent, "Failed to read tune file:\n" + e.getMessage());
+            errorHandler.accept("Failed to read tune file:\n" + e.getMessage());
             return null;
         }
 
         String signature = msq.getVersionInfo() != null ? msq.getVersionInfo().getSignature() : null;
         if (signature == null || signature.isEmpty()) {
-            showErrorDialog(parent, "MSQ file does not contain a signature.\nCannot determine which INI file to use.");
+            errorHandler.accept("MSQ file does not contain a signature.\nCannot determine which INI file to use.");
             return null;
         }
 
-        IniFileModel ini = tryLoadIni(signature, parent);
+        IniFileModel ini = tryLoadIni(signature, errorHandler);
         if (ini == null) {
             return null;
         }
@@ -69,7 +74,7 @@ public class OfflineTuneLoader {
         return new Result(msq, ini, image, signature);
     }
 
-    private static IniFileModel tryLoadIni(String signature, Component parent) {
+    private static IniFileModel tryLoadIni(String signature, Consumer<String> errorHandler) {
         // RealIniFileProvider handles download, local lookup, and the manual .ini picker
         // (registered via ManualIniFilePicker) as a last resort — which also caches the picked file.
         try {
@@ -81,7 +86,7 @@ public class OfflineTuneLoader {
             // open, so surface the outcome instead of failing silently (the read/signature errors above
             // already dialog; this makes the INI path consistent). #9730
             log.info("INI resolution failed for " + signature + ": " + e.getMessage());
-            showErrorDialog(parent, "No INI file available for this tune (signature: " + signature + ").\n"
+            errorHandler.accept("No INI file available for this tune (signature: " + signature + ").\n"
                     + "The tune was not opened.");
             return null;
         }

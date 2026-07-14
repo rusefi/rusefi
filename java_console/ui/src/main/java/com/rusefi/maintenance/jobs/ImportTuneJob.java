@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import jakarta.xml.bind.JAXBException;
+import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -43,11 +44,13 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
 
     /** Imports a tune via the live splash connection without closing/reopening the serial port. */
     public static void importTuneIntoDeviceViaLiveConnection(BinaryProtocol bp, LinkManager lm, JComponent parent,
-                                                              ConnectivityContext connectivityContext,
-                                                              String tuneFileName,
-                                                              SingleAsyncJobExecutor singleAsyncJobExecutor) {
+                                                               ConnectivityContext connectivityContext,
+                                                               String tuneFileName,
+                                                               SingleAsyncJobExecutor singleAsyncJobExecutor,
+                                                               Consumer<String> errorHandler) {
         loadAndStart(tuneFileName, parent, msq ->
-            singleAsyncJobExecutor.startJob(new ImportTuneJob(bp, lm, msq, connectivityContext), parent));
+            singleAsyncJobExecutor.startJob(
+                new ImportTuneJob(bp, lm, msq, connectivityContext), parent, errorHandler), errorHandler);
     }
 
     /**
@@ -55,20 +58,24 @@ public class ImportTuneJob extends AsyncJobWithContext<ImportTuneJobContext> {
      * in progress (e.g. immediately after a post-flash reconnect).
      */
     public static void importTuneIntoDeviceViaLiveConnection(LinkManager lm, JComponent parent,
-                                                              ConnectivityContext connectivityContext,
-                                                              String tuneFileName,
-                                                              SingleAsyncJobExecutor singleAsyncJobExecutor) {
+                                                               ConnectivityContext connectivityContext,
+                                                               String tuneFileName,
+                                                               SingleAsyncJobExecutor singleAsyncJobExecutor,
+                                                               Consumer<String> errorHandler) {
         loadAndStart(tuneFileName, parent, msq ->
-            singleAsyncJobExecutor.startJob(new ImportTuneJob(lm, msq, connectivityContext), parent));
+            singleAsyncJobExecutor.startJob(
+                new ImportTuneJob(lm, msq, connectivityContext), parent, errorHandler), errorHandler);
     }
 
-    private static void loadAndStart(String tuneFileName, JComponent parent, java.util.function.Consumer<Msq> starter) {
+    private static void loadAndStart(String tuneFileName, JComponent parent,
+                                     Consumer<Msq> starter, Consumer<String> errorHandler) {
         try {
             starter.accept(Msq.readTune(tuneFileName));
         } catch (JAXBException e) {
-            final String errorMsg = String.format("Failed to load tune to import from file %s", tuneFileName);
+            final String errorMsg = String.format("Failed to load tune to import from file %s: %s",
+                tuneFileName, e.getMessage());
             log.error(errorMsg, e);
-            JOptionPane.showMessageDialog(parent, errorMsg, "Error", JOptionPane.ERROR_MESSAGE);
+            errorHandler.accept(errorMsg);
         }
     }
 
