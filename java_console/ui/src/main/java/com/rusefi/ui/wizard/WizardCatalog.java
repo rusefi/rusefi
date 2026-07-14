@@ -46,6 +46,13 @@ public class WizardCatalog {
             null
         ),
         new WizardStepDescriptor(
+            "wizardTps",
+            true,
+            WizardStepDescriptor.ALWAYS,
+            null,
+            null
+        ),
+        new WizardStepDescriptor(
             "wizardCltSensor",
             true,
             WizardStepDescriptor.ALWAYS,

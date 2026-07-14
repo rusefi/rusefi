@@ -25,14 +25,16 @@ public class WizardCatalogTest {
     }
 
     @Test
-    public void cltFollowsMapAndAppliesToAllBoards() {
+    public void tpsAndCltFollowMapAndApplyToAllBoards() {
         List<WizardStepDescriptor> flagged = WizardCatalog.flaggedSteps();
         List<String> names = flagged.stream().map(d -> d.flagName).collect(Collectors.toList());
         int mapIndex = names.indexOf("wizardMapSensorType");
 
         assertTrue(mapIndex >= 0);
-        assertEquals("wizardCltSensor", names.get(mapIndex + 1));
+        assertEquals("wizardTps", names.get(mapIndex + 1));
+        assertEquals("wizardCltSensor", names.get(mapIndex + 2));
         assertTrue(flagged.get(mapIndex + 1).applicable.test(mock(UIContext.class)));
+        assertTrue(flagged.get(mapIndex + 2).applicable.test(mock(UIContext.class)));
     }
 
     @Test

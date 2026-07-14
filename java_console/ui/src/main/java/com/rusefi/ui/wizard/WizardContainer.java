@@ -203,29 +203,35 @@ public class WizardContainer extends JPanel {
         steps.add(mapPanel);
         stepContentPanel.add(mapPanel.getPanel(), "step2");
 
-        // Step 3: CLT Sensor
+        // Step 3: TPS
+        TpsPanel tpsPanel = new TpsPanel(uiContext);
+        wireStep(tpsPanel, 3);
+        steps.add(tpsPanel);
+        stepContentPanel.add(tpsPanel.getPanel(), "step3");
+
+        // Step 4: CLT Sensor
         CltSensorPanel cltPanel = new CltSensorPanel(uiContext);
-        wireStep(cltPanel, 3);
+        wireStep(cltPanel, 4);
         steps.add(cltPanel);
-        stepContentPanel.add(cltPanel.getPanel(), "step3");
+        stepContentPanel.add(cltPanel.getPanel(), "step4");
 
-        // Step 4: Crank Trigger
+        // Step 5: Crank Trigger
         CrankTriggerPanel crankPanel = new CrankTriggerPanel(uiContext);
-        wireStep(crankPanel, 4);
+        wireStep(crankPanel, 5);
         steps.add(crankPanel);
-        stepContentPanel.add(crankPanel.getPanel(), "step4");
+        stepContentPanel.add(crankPanel.getPanel(), "step5");
 
-        // Step 5: Cam Trigger
+        // Step 6: Cam Trigger
         CamTriggerPanel camPanel = new CamTriggerPanel(uiContext);
-        wireStep(camPanel, 5);
+        wireStep(camPanel, 6);
         steps.add(camPanel);
-        stepContentPanel.add(camPanel.getPanel(), "step5");
+        stepContentPanel.add(camPanel.getPanel(), "step6");
 
-        // Step 6: Injector Flow
+        // Step 7: Injector Flow
         InjectorFlowPanel injPanel = new InjectorFlowPanel(uiContext);
-        wireStep(injPanel, 6);
+        wireStep(injPanel, 7);
         steps.add(injPanel);
-        stepContentPanel.add(injPanel.getPanel(), "step6");
+        stepContentPanel.add(injPanel.getPanel(), "step7");
 
         // Completion card
         JPanel completionPanel = new JPanel(new GridBagLayout());
