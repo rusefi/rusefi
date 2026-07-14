@@ -205,6 +205,12 @@ All rusEFI serial connections use the USB CDC (Communications Device Class) prof
 
 When sniffing the ECU's USB link, Wireshark flags the SCSI `Mode Sense(6)` (opcode 0x1a) replies as *"Malformed Packet: SCSI: length of contained item exceeds length of containing item."* This is **not** bad wire data. The reply is a valid but *short* Caching mode page (page code 0x08, `PageLength = 0x0a`) instead of the SBC-2 mandated 0x12; Wireshark's dissector decodes the full 20-byte caching-page layout, overruns the buffer, and raises the exception. Windows accepts the reply and the device works. The response is hardcoded in the ChibiOS-Contrib USB-MSD SCSI target (`os/hal/src/hal_usb_msd.c`, a submodule usually not checked out), used by `firmware/hw_layer/mass_storage/mass_storage_device.cpp`. Treat it as cosmetic unless a host actually rejects it.
 
+### CDC console and MSD share ONE composite USB device — SD mode switch can drop the console link
+
+The USB serial console (CDC) and the SD-card USB mass storage are **interfaces on a single composite `USBD1` device**, not separate devices. The config descriptor is fixed at 3 interfaces — MSD IF0 + CDC-control IF1 + CDC-data IF2 (`firmware/hw_layer/ports/stm32/serial_over_usb/usbcfg.cpp`, `NUM_INTERFACES`/`DESCRIPTOR_SIZE`); MSD is always enumerated whenever `HAL_USE_USB_MSD` is built in. Switching the SD card between PC/MSD and ECU/logging does **not** re-enumerate USB — `attachMsdSdCard`/`deattachMsdSdCard` (`mass_storage_init.cpp`) only hot-swap LUN1's backing block device (real SD card ↔ null device `ND1`) on the already-running MSD controller.
+
+Consequence (observed, `SdEcuPcCycleSandbox`): switching **PC/MSD → ECU** yanks the mounted mass-storage medium out from under the host. Windows' usbstor stack recovers by resetting/re-enumerating the whole composite device; the firmware then takes `USB_EVENT_RESET`/`SUSPEND`, whose handler calls `sduSuspendHookI(&SDU1)` (`usbcfg.cpp`), tearing down the CDC channel. The console link drops host-side (`write failed: wrote 0 but expected 11`, port closes) even though the SD switch itself succeeded firmware-side. So a console-driven SD-mode soak cannot span multiple cycles over one connection — either address it firmware-side (return SCSI "medium not present"/unit-attention for an orderly host eject instead of swapping to a dead LUN) or reconnect the host link after each switch.
+
 ## Development Notes
 
 - Supported IDE: Visual Studio Code
