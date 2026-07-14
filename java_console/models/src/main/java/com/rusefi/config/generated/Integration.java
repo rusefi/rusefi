@@ -136,4 +136,5 @@ public class Integration {
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
 	public static final int TS_TRIGGER_SCOPE_ENABLE = 4;
 	public static final int TS_TRIGGER_SCOPE_READ = 6;
+    public static final String CMD_LUA_RESET = "luareset";
 }
