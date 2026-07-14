@@ -145,7 +145,7 @@ static bool sdNeedRemoveReports = false;
 
 #if HAL_USE_MMC_SPI
 /**
- * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
+ * Don't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
  * which will cause disaster (usually multiple-unlock of the same mutex in UNLOCK_SD_SPI)
  */
 static spi_device_e mmcSpiDevice = SPI_NONE;
@@ -163,6 +163,9 @@ static MMCConfig mmccfg = {
 	.hscfg = &mmc_hs_spicfg
 };
 
+// When MMC_USE_MUTUAL_EXCLUSION is enabled the ChibiOS MMC driver serializes SPI bus
+// access itself, so these become no-ops; otherwise we must lock the bus manually since
+// other devices (and threads) may share the same SPI peripheral.
 #if MMC_USE_MUTUAL_EXCLUSION == TRUE
 #define LOCK_SD_SPI()
 #define UNLOCK_SD_SPI()
@@ -178,13 +181,21 @@ static MMCConfig mmccfg = {
  */
 static NO_CACHE FATFS MMC_FS;
 
+/**
+ * SD card state persisted in battery-backed RAM (a single 32-bit word) so that after
+ * a reset we can tell whether the previous power-off happened while the filesystem
+ * was still mounted - i.e. an "unsafe unmount" that risks FAT corruption.
+ */
 union SdBackupState {
 	struct {
 		SD_MODE mode;
 		SD_STATUS status;
+		// how many times power was lost while the card was mounted, saturates at 255
 		uint8_t unsafeUnmountCnt;
+		// magic marker 0x5A: anything else means backup RAM content is uninitialized/lost
 		uint8_t valid;
 	} __attribute__((packed));
+	// raw access for backupRamLoad()/backupRamSave()
 	uint32_t x;
 };
 
@@ -207,6 +218,13 @@ static void sdCardShowBackupState() {
 	efiPrintf("total unsafe power offs %d", state.unsafeUnmountCnt);
 }
 
+/**
+ * Inspect the backup RAM state left over from the previous boot and re-initialize it.
+ * If the card was left in a mounted mode (anything but IDLE/UNMOUNT) the previous
+ * shutdown was unsafe, so bump the unsafe unmount counter.
+ *
+ * @return true if backup RAM contained a valid state from a previous boot
+ */
 static bool sdCardInitBackupState() {
 	SdBackupState state;
 	state.x = backupRamLoad(backup_ram_e::MccStatus);
@@ -296,6 +314,8 @@ void printFatFsError(const char *str, FRESULT f_error) {
 }
 
 // format, file access and MSD are used exclusively, we can union.
+// All members are only touched from the MMC thread (see MMCmonThread), which is what
+// makes the union safe - see sdTestWrite1Mb() for what to do from other threads.
 static union {
 	// Warning: shared between all FS users, please release it after use
 	FIL fd;
@@ -713,6 +733,13 @@ static bool sdLoggerFailed = false;
 static bool sdLoggedSuppressed = false;
 
 #if EFI_TOOTH_LOGGER
+/**
+ * One iteration of trigger tooth logging: lazily creates a .teeth file once tooth
+ * data shows up, appends whatever the tooth logger has buffered, and closes the file
+ * when the data stream ends so the next burst starts a fresh file.
+ *
+ * @return positive number of bytes written, 0 if there was nothing to do, negative on error
+ */
 static int sdLoggerTooth(FIL *fd) {
 	int ret = 0;
 
@@ -770,7 +797,13 @@ static int sdLoggerTooth(FIL *fd) {
 }
 #endif
 
-// actually write mlg log on SD card
+/**
+ * One iteration of MLG logging: lazily creates the log file on first call, writes one
+ * log line (rate-limited inside mlgLogger()), and rolls over to a new file when the
+ * current one reaches LOGGER_MAX_FILE_SIZE.
+ *
+ * @return positive number of bytes written, negative on error
+ */
 static int sdLoggerMlg(FIL *fd) {
 	int ret = 0;
 
@@ -888,6 +921,13 @@ exit:
 	return (ret ? false : true);
 }
 
+/**
+ * Tear down whatever the current mode was using (logger + FS mount for ECU mode,
+ * USB mass storage attachment for PC mode) so the card is free for the next mode.
+ * All mode transitions go through IDLE - see sdModeSwitcher().
+ *
+ * @return 0 on success
+ */
 static int sdModeSwitchToIdle(SD_MODE from)
 {
 	switch (from) {
@@ -912,7 +952,12 @@ static int sdModeSwitchToIdle(SD_MODE from)
 	return -1;
 }
 
-// manages SD card mode depending on current power scheme
+/**
+ * Decide which mode the SD card should be in right now.
+ * A user request (sdmode console command / TS) always wins; otherwise the mode is
+ * derived from the power state: unmount when both USB and ignition are gone (we are
+ * about to lose power), expose the card to the PC when USB is connected, log otherwise.
+ */
 static SD_MODE sdModeSelector() {
 	if (sdTargetModeRequested) {
 		// user force selected mode
@@ -939,6 +984,13 @@ static SD_MODE sdModeSelector() {
 	return SD_MODE_ECU;
 }
 
+/**
+ * Move the SD card from 'mode' towards 'target'. Any transition first passes through
+ * IDLE (releasing the resources of the old mode) and then enters the target mode.
+ *
+ * @return the mode actually reached - equal to 'target' on success, otherwise the
+ * mode we ended up stuck in (e.g. IDLE if the mount failed)
+ */
 static SD_MODE sdModeSwitcher(SD_MODE mode, SD_MODE target) {
 	// No request to switch to any mode
 	if (target == SD_MODE_IDLE) {
@@ -993,6 +1045,12 @@ static SD_MODE sdModeSwitcher(SD_MODE mode, SD_MODE target) {
 	return mode;
 }
 
+/**
+ * Do one iteration of work for the current mode. Only ECU (logging) mode has ongoing
+ * work: checking the log trigger and writing log data. All other modes just sleep.
+ *
+ * @return positive number of bytes written, 0 if idle (caller sleeps), negative on error
+ */
 static int sdModeExecuter(SD_MODE mode)
 {
 	switch (mode) {
@@ -1069,6 +1127,14 @@ PUBLIC_API_WEAK bool boardSdCardDisable() {
 }
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
+
+/**
+ * The SD card thread: owns the card and the 'resources' union for its whole lifetime.
+ * After one-time init (backup RAM check, card detection, crash report handling) it
+ * runs the mode state machine forever: sdModeSelector() picks the desired mode,
+ * sdModeSwitcher() transitions to it, sdModeExecuter() does that mode's work.
+ * If the card fails to initialize the thread parks itself until the next boot.
+ */
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
 
@@ -1147,6 +1213,13 @@ die:
 	}
 }
 
+/**
+ * Write one MLG log line and pace the logger: sleeps so that lines are written at
+ * engineConfiguration->sdCardLogFrequency Hz (clamped to 1..250), and syncs the file
+ * to media every F_SYNC_FREQUENCY lines rather than after every write.
+ *
+ * @return number of bytes written, or negative if the buffer writer has failed
+ */
 static int mlgLogger() {
 	static size_t writeCounter = 0;
 	// TODO: move this check somewhere out of here!
@@ -1240,6 +1313,14 @@ void initMmcCard() {
 
 #if EFI_PROD_CODE
 
+/**
+ * Ask the SD thread to switch to the given mode (from console 'sdmode' command or TS).
+ * The switch is asynchronous - it happens on the next MMCmonThread loop iteration.
+ * A user-requested mode sticks until power off; requesting SD_MODE_IDLE clears the
+ * user override and returns mode selection to automatic (see sdModeSelector()).
+ *
+ * @return 0 if the request was accepted
+ */
 int sdCardRequestMode(SD_MODE mode)
 {
 	if (!isSdCardEnabled()) {
