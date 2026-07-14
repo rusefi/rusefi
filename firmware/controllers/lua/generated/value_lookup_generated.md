@@ -565,66 +565,6 @@ AEM X-Series or rusEFI Wideband
 ### useAbsolutePressureForLagTime
 
 
-### mainRelayDisableTime
-Time after ignition turn-off before the main relay is disabled.
-
-### verboseCanBaseAddress
-
-
-### mc33_hvolt
-Boost Voltage
-
-### minimumBoostClosedLoopMap
-Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
-
-### initialIgnitionCutPercent
-The percentage of ignition events to cut when entering the launch control window (e.g., at Launch RPM minus Launch Control Window).
-
-### finalIgnitionCutPercentBeforeLaunch
-The percentage of ignition events to cut when the engine speed reaches the end of the corrections RPM (Launch RPM minus Launch Corrections End RPM). Between the start of the window and the end of corrections RPM, the cut percentage interpolates linearly from initial to final cut percentage.
-
-### idlePidRpmUpperLimit
-How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
-
-### applyNonlinearBelowPulse
-Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
-
-### torqueReductionArmingRpm
-Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction
-
-### stoichRatioSecondary
-Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0
-
-### etbMaximumPosition
-Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.
-
-### sdCardLogFrequency
-Rate the ECU will log to the SD card, in hz (log lines per second).
-
-### launchCorrectionsEndRpm
-The RPM difference below the Launch RPM at which corrections (timing retard interpolation and/or ignition cut ramp) reach their final/maximum target. For example, if Launch RPM is 4000, and this is 50, corrections reach their final target at 3950 RPM.
-
-### lambdaProtectionRestoreRpm
-
-
-### mapMinBufferLength
-This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.
-
-### idlePidDeactivationTpsThreshold
-Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.
-
-### stepperParkingExtraSteps
-
-
-### startCrankingDuration
-Maximum time to crank starter when start/stop button is pressed
-
-### lambdaProtectionMinTps
-
-
-### lambdaProtectionTimeout
-Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
-
 ### idleReturnTargetRamp
 Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 
@@ -711,6 +651,66 @@ If enabled we use four Push-Pull outputs to directly drive stepper idle air valv
 
 ### verboseCan2
 Print incoming and outgoing second bus CAN messages in rusEFI console
+
+### mainRelayDisableTime
+Time after ignition turn-off before the main relay is disabled.
+
+### verboseCanBaseAddress
+
+
+### mc33_hvolt
+Boost Voltage
+
+### minimumBoostClosedLoopMap
+Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
+
+### initialIgnitionCutPercent
+The percentage of ignition events to cut when entering the launch control window (e.g., at Launch RPM minus Launch Control Window).
+
+### finalIgnitionCutPercentBeforeLaunch
+The percentage of ignition events to cut when the engine speed reaches the end of the corrections RPM (Launch RPM minus Launch Corrections End RPM). Between the start of the window and the end of corrections RPM, the cut percentage interpolates linearly from initial to final cut percentage.
+
+### idlePidRpmUpperLimit
+How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
+
+### applyNonlinearBelowPulse
+Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
+
+### torqueReductionArmingRpm
+Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction
+
+### stoichRatioSecondary
+Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0
+
+### etbMaximumPosition
+Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.
+
+### sdCardLogFrequency
+Rate the ECU will log to the SD card, in hz (log lines per second).
+
+### launchCorrectionsEndRpm
+The RPM difference below the Launch RPM at which corrections (timing retard interpolation and/or ignition cut ramp) reach their final/maximum target. For example, if Launch RPM is 4000, and this is 50, corrections reach their final target at 3950 RPM.
+
+### lambdaProtectionRestoreRpm
+
+
+### mapMinBufferLength
+This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.
+
+### idlePidDeactivationTpsThreshold
+Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.
+
+### stepperParkingExtraSteps
+
+
+### startCrankingDuration
+Maximum time to crank starter when start/stop button is pressed
+
+### lambdaProtectionMinTps
+
+
+### lambdaProtectionTimeout
+Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 
 ### boostPid.pFactor
 
