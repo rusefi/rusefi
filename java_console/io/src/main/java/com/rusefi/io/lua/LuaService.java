@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.BurnCommand;
@@ -139,7 +140,7 @@ public class LuaService {
                         + " page " + field.getPageIndex());
                 bp.writeInBlocks(padded, 0, field.getOffset(), padded.length, field.getPageIndex());
                 boolean burned = BurnCommand.execute(bp, field.getPageIndex());
-                linkManager.getCommandQueue().write("luareset");
+                linkManager.getCommandQueue().write(Integration.CMD_LUA_RESET);
                 Thread.sleep(LUARESET_GRACE_MS);
                 result.set(LuaApplyResult.success(scriptBytes.length, field.getSize(), burned));
             } catch (Throwable t) {
@@ -208,7 +209,7 @@ public class LuaService {
 
     /** Send {@code luareset} via the standard command queue. */
     public static void luaReset(LinkManager linkManager) {
-        linkManager.getCommandQueue().write("luareset");
+        linkManager.getCommandQueue().write(Integration.CMD_LUA_RESET);
     }
 
     /** Send an arbitrary text command via the standard command queue. */

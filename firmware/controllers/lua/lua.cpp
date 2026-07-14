@@ -313,7 +313,7 @@ void startLua() {
 		interactivePending = true;
 	});
 
-	addConsoleAction("luareset", [](){
+	addConsoleAction(CMD_LUA_RESET, [](){
 		needsReset = true;
 	});
 

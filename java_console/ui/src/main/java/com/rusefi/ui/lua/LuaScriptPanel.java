@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.ShortcutsHelper;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
@@ -369,6 +370,6 @@ public class LuaScriptPanel {
     }
 
     void resetLua() {
-        this.context.getCommandQueue().write("luareset");
+        this.context.getCommandQueue().write(Integration.CMD_LUA_RESET);
     }
 }

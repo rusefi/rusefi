@@ -105,6 +105,7 @@
 #define CMD_SET_SENSOR_MOCK "set_sensor_mock"
 #define CMD_RESET_SENSOR_MOCKS "reset_sensor_mocks"
 #define CMD_RESET_SIMULATOR "reset_simulator"
+#define CMD_LUA_RESET "luareset"
 #define CMD_SET "set"
 #define CMD_GET "get"
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
