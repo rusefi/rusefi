@@ -36,3 +36,59 @@ Open follow-ups:
 - Optional cleanup if the warning ever matters: set the Caching mode page length to 0x12
   and pad the page to the full 20 bytes, or drop the caching page from the Mode Sense
   reply. Lives upstream in ChibiOS-Contrib hal_usb_msd.c.
+
+## 2026-07-14 - SD ECU<->PC switch soak sandbox + USB CDC link-drop investigation
+
+What was done:
+- Created a headless soak sandbox SdEcuPcCycleSandbox in the :ui test subproject
+  (java_console/ui/src/test/java/com/rusefi/SdEcuPcCycleSandbox.java), modeled on the
+  purple-gateway SdPcToEcuSwitchSandbox. It cycles the SD card ECU/logging <-> PC/MSD 10
+  times, 20s dwell per mode, confirming each switch via the sd_present / sd_logging_internal
+  / sd_msd output channels, and reports a pass/fail tally. Added Gradle task :ui:runSdCycle.
+- Initialized two uninitialized git submodules required by the Java build:
+  java_console/peak-can-basic (missing peak.can.basic.* -> :ecu_io compile fail) and
+  java_console/luaformatter (missing neoe.formatter.lua -> :ui compile fail).
+
+Result of the run (COM149, purple-gateway fw, USB-powered only / no +12V):
+- Cycle 1 fully succeeded BOTH directions. PC/MSD->ECU no longer hits FR_DISK_ERR: firmware
+  logged "SD: switched from PC/MSD to ECU/logging" and opened log file re_10.mlg; status bits
+  confirmed sd_logging_internal=1.
+- ~1.5s after the ECU switch the host CDC serial link dropped:
+  "output channels: executeCommand failed: java.io.IOException: write failed: wrote 0 but
+  expected 11", COM149 closed. Never recovered, so cycle 2's first command got no response and
+  the soak aborted at 1/20. Sandbox behaved correctly - it detected and reported the drop.
+
+Root cause (investigated, code-evidenced):
+- CDC console and USB mass storage are interfaces on ONE composite USB device (USBD1). The
+  config descriptor is fixed at 3 interfaces - MSD IF0 + CDC-control IF1 + CDC-data IF2, 98
+  bytes (usbcfg.cpp DESCRIPTOR_SIZE/NUM_INTERFACES). MSD is always present in the enumerated
+  descriptor whenever HAL_USE_USB_MSD is built in.
+- The SD mode switch does NOT re-enumerate or reconfigure USB. attachMsdSdCard /
+  deattachMsdSdCard (mass_storage_init.cpp) merely hot-swap LUN1's backing block device
+  between the real SD card and the null device ND1 on the already-running MSD controller.
+- Causal chain: PC/MSD->ECU calls deattachMsdSdCard() which swaps LUN1 (SD card -> ND1) while
+  Windows still has that mass-storage volume mounted -> the medium vanishes under the mounted
+  volume -> the Windows usbstor stack resets/re-enumerates the whole composite device to
+  recover -> firmware gets USB_EVENT_RESET/SUSPEND, whose handler calls sduSuspendHookI(&SDU1)
+  (usbcfg.cpp:446), tearing down the CDC channel -> host CDC write returns 0, COM149 drops.
+- It is host-side (write wrote 0 = port handle invalidated), not a firmware stall: the switch
+  completed cleanly, logging started, and the device kept emitting messages up to the drop.
+
+Remediation directions (not implemented - investigation only):
+- Don't swap the MSD LUN to a dead null device under a mounted volume. Instead present a stable
+  medium or return SCSI "not ready / medium not present" (unit attention) so Windows performs an
+  orderly media-eject rather than treating it as a device fault and resetting the port.
+- Or signal proper SCSI medium-removal / unit-attention before switching so the host dismounts
+  cleanly.
+- Host-side, for a true 10x soak: reconnect LinkManager after each switch (treat the CDC drop
+  as expected re-enumeration). The current sandbox intentionally reports it instead.
+- The existing USB.pcapng capture can confirm the host-issued bus reset around a mode switch.
+
+Validation:
+- ./gradlew :ui:compileTestJava BUILD SUCCESSFUL after submodule init.
+- ./gradlew :ui:runSdCycle exercised against real hardware; full log captured.
+
+Open follow-ups:
+- Decide remediation approach (firmware SCSI media-eject vs host-side reconnect).
+- Consider gating: the soak cannot complete 10 cycles over one connection until the CDC drop is
+  addressed.
