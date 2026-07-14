@@ -2,6 +2,7 @@
 
 #include "mass_storage_init.h"
 #include "mass_storage_device.h"
+#include "counting_block_device.h"
 #include "null_device.h"
 
 #if HAL_USE_USB_MSD
@@ -74,13 +75,17 @@ static const scsi_inquiry_response_t sdCardInquiry = {
     {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
 };
 
+// counts SD card I/O and failures in MSD mode - lib_scsi swallows block device errors,
+// this wrapper is the only place they are visible; counters shown by 'sdinfo'
+static CountingBlockDevice sdCountingDevice;
+
 void attachMsdSdCard(BaseBlockDevice* blkdev, uint8_t *blkbuf, size_t blkbufsize) {
 	if ((blkbuf == NULL) || (blkbufsize == 0)) {
 		// if no specific buffer was provided use default
 		blkbuf = blkbuf0;
 		blkbufsize = sizeof(blkbuf0);
 	}
-	msd.attachLun(1, blkdev, blkbuf, blkbufsize, &sdCardInquiry, nullptr);
+	msd.attachLun(1, wrapCountingBlockDevice(&sdCountingDevice, blkdev), blkbuf, blkbufsize, &sdCardInquiry, nullptr);
 
 #if EFI_TUNER_STUDIO
 	// SD MSD attached, enable indicator in TS
@@ -124,6 +129,11 @@ static BaseBlockDevice* getRamdiskDevice() {
 	// No embedded ini file, just mount the null device instead
 	return (BaseBlockDevice*)&ND1;
 #endif
+}
+
+void printMsdDiagnostics() {
+	msd.printDiagnostics();
+	printCountingBlockDeviceStats(&sdCountingDevice, "MSD SD card");
 }
 
 void initUsbMsd() {
