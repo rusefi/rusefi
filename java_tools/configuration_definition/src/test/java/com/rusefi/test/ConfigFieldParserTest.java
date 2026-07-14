@@ -444,6 +444,33 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testBitWordRollover() {
+        StringBuilder test = new StringBuilder("struct_no_prefix bits_s\n");
+        for (int i = 0; i < 40; i++) {
+            test.append("\tbit b").append(i).append("\n");
+        }
+        test.append("end_struct\n");
+
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
+        ReaderStateImpl state = new ReaderStateImpl();
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(test.toString(), consumer, javaFieldsConsumer);
+
+        // 33rd bit starts a new 32-bit word at offset 4; second word is padded so the struct is 8 bytes
+        String header = consumer.getContent();
+        assertTrue(header.contains("offset 0 bit 31 */\n\tbool b31 : 1 {};"));
+        assertTrue(header.contains("offset 4 bit 0 */\n\tbool b32 : 1 {};"));
+        assertTrue(header.contains("offset 4 bit 7 */\n\tbool b39 : 1 {};"));
+        assertTrue(header.contains("offset 4 bit 31 */\n\tbool unusedBit_40_31 : 1 {};"));
+        assertTrue(header.contains("static_assert(sizeof(bits_s) == 8)"));
+
+        String javaFields = javaFieldsConsumer.getContent();
+        assertTrue(javaFields.contains("Field.create(\"B31\", 0, FieldType.BIT, 31)"));
+        assertTrue(javaFields.contains("Field.create(\"B32\", 4, FieldType.BIT, 0)"));
+        assertTrue(javaFields.contains("Field.create(\"B39\", 4, FieldType.BIT, 7)"));
+    }
+
+    @Test
     public void test2byteOffset() {
         String test = "struct_no_prefix pid_s\n" +
                 "\tint8_t byte1\n" +

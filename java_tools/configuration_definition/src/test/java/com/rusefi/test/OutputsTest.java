@@ -1,6 +1,5 @@
 package com.rusefi.test;
 
-import com.rusefi.BitState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.ldmp.TestFileCaptor;
 import com.rusefi.output.DataLogConsumer;
@@ -39,16 +38,20 @@ public class OutputsTest {
     }
 
     @Test
-    public void tooManyBits() {
-      assertThrows(BitState.TooManyBitsInARow.class, () -> {
+    public void fortyBitsInARow() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 40; i++)
-          sb.append("bit b" + i + "\n");
+            sb.append("bit b" + i + "\n");
         String test = "struct total\n" +
-          sb +
-          "end_struct\n";
-        runOriginalImplementation(test);
-      });
+            sb +
+            "end_struct\n";
+
+        // bits roll over into a new 32-bit word after [31:31], the second word is padded to 32 bits
+        StringBuilder expected = new StringBuilder();
+        for (int i = 0; i < 40; i++)
+            expected.append("b" + i + " = bits, U32, " + (i / 32) * 4 + ", [" + (i % 32) + ":" + (i % 32) + "]\n");
+        expected.append("; total TS size = 8\n");
+        assertEquals(expected.toString(), runOriginalImplementation(test).getContent());
     }
 
     private static OutputsSectionConsumer runOriginalImplementation(String test) {

@@ -1,10 +1,15 @@
 package com.rusefi;
 
 /**
+ * Consecutive 'bit' fields are packed into 32-bit words; a run longer than one word simply
+ * continues in the next word, see ConfigFieldImpl#getSize word rollover logic.
+ *
  * Andrey Belomutskiy, (c) 2013-2020
  * 6/4/2015.
  */
 public class BitState {
+    public static final int WORD_SIZE_BITS = 32;
+
     private int bitIndex;
 
     public void incrementBitIndex(ConfigField cf, ConfigField next) {
@@ -16,9 +21,10 @@ public class BitState {
     }
 
     public void incrementBitIndex(ConfigField cf) {
-        if (bitIndex == 32)
-            throw new TooManyBitsInARow("Too many bits in a row: " + cf.getName());
         bitIndex++;
+        if (bitIndex == WORD_SIZE_BITS) {
+            bitIndex = 0;
+        }
     }
 
     public void reset() {
@@ -31,11 +37,5 @@ public class BitState {
 
     public int get() {
         return bitIndex;
-    }
-
-    public static class TooManyBitsInARow extends RuntimeException {
-        public TooManyBitsInARow(String s) {
-            super(s);
-        }
     }
 }
