@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -21,6 +22,17 @@ public class WizardCatalogTest {
         for (WizardStepDescriptor d : flagged) {
             assertTrue(d.isFlagged(), "flaggedSteps() returned non-flagged entry: " + d.flagName);
         }
+    }
+
+    @Test
+    public void cltFollowsMapAndAppliesToAllBoards() {
+        List<WizardStepDescriptor> flagged = WizardCatalog.flaggedSteps();
+        List<String> names = flagged.stream().map(d -> d.flagName).collect(Collectors.toList());
+        int mapIndex = names.indexOf("wizardMapSensorType");
+
+        assertTrue(mapIndex >= 0);
+        assertEquals("wizardCltSensor", names.get(mapIndex + 1));
+        assertTrue(flagged.get(mapIndex + 1).applicable.test(mock(UIContext.class)));
     }
 
     @Test

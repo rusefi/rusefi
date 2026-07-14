@@ -72,6 +72,8 @@ public class IniFileReader {
     private int currentReadoutColumns = 1;
     private final List<String> gaugeNamesOfCurrentDialog = new ArrayList<>();
     private final List<DialogModel.DialogEntry> orderedEntriesOfCurrentDialog = new ArrayList<>();
+    private final List<DialogModel.SettingSelector> settingSelectorsOfCurrentDialog = new ArrayList<>();
+    private DialogModel.SettingSelector currentSettingSelector;
     private final Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> secondaryIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -164,12 +166,13 @@ public class IniFileReader {
     void finishDialog() {
         if (fieldsOfCurrentDialog.isEmpty() && commandsOfCurrentDialog.isEmpty()
                 && panelsOfCurrentDialog.isEmpty() && indicatorsOfCurrentDialog.isEmpty()
-                && readoutsOfCurrentDialog.isEmpty() && gaugeNamesOfCurrentDialog.isEmpty())
+                && readoutsOfCurrentDialog.isEmpty() && gaugeNamesOfCurrentDialog.isEmpty()
+                && settingSelectorsOfCurrentDialog.isEmpty())
             return;
         if (dialogUiName == null)
             dialogUiName = dialogId;
         // Store dialogs by their key (dialogId), not by UI name, for easier panel resolution
-        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, gaugeNamesOfCurrentDialog, dialogTopicHelp, dialogLayoutHint, orderedEntriesOfCurrentDialog));
+        dialogs.put(dialogId, new DialogModel(dialogId, dialogUiName, fieldsOfCurrentDialog, commandsOfCurrentDialog, panelsOfCurrentDialog, indicatorsOfCurrentDialog, readoutsOfCurrentDialog, currentReadoutColumns, gaugeNamesOfCurrentDialog, dialogTopicHelp, dialogLayoutHint, orderedEntriesOfCurrentDialog, settingSelectorsOfCurrentDialog));
         dialogId = null;
         dialogTopicHelp = null;
         dialogLayoutHint = null;
@@ -181,6 +184,8 @@ public class IniFileReader {
         currentReadoutColumns = 1;
         gaugeNamesOfCurrentDialog.clear();
         orderedEntriesOfCurrentDialog.clear();
+        settingSelectorsOfCurrentDialog.clear();
+        currentSettingSelector = null;
     }
 
     void handleLine(RawIniFile.Line line) throws IniParsingException {
@@ -338,6 +343,12 @@ public class IniFileReader {
                     break;
                 case "panel":
                     handlePanel(list);
+                    break;
+                case "settingSelector":
+                    handleSettingSelector(list);
+                    break;
+                case "settingOption":
+                    handleSettingOption(list);
                     break;
                 case "topicHelp":
                     handleTopicHelp(list);
@@ -572,6 +583,33 @@ public class IniFileReader {
         dialogUiName = name;
         dialogLayoutHint = layoutHint;
         log.debug("IniFileModel: Dialog key=" + keyword + ": name=[" + name + "] layoutHint=[" + layoutHint + "]");
+    }
+
+    private void handleSettingSelector(LinkedList<String> list) {
+        if (dialogId == null || list.size() < 2) {
+            return;
+        }
+        list.removeFirst();
+        String label = list.removeFirst();
+        String enableExpression = list.stream().filter(PanelModel::isExpression).findFirst().orElse(null);
+        currentSettingSelector = new DialogModel.SettingSelector(label, enableExpression);
+        settingSelectorsOfCurrentDialog.add(currentSettingSelector);
+    }
+
+    private void handleSettingOption(LinkedList<String> list) {
+        if (currentSettingSelector == null || list.size() < 2) {
+            return;
+        }
+        list.removeFirst();
+        String label = list.removeFirst();
+        if ((list.size() & 1) != 0) {
+            throw new IllegalArgumentException("Setting option assignments must be name/value pairs");
+        }
+        Map<String, String> assignments = new LinkedHashMap<>();
+        while (!list.isEmpty()) {
+            assignments.put(list.removeFirst(), list.removeFirst());
+        }
+        currentSettingSelector.addOption(new DialogModel.SettingOption(label, assignments));
     }
 
     private void handleIndicatorPanel(LinkedList<String> list) {

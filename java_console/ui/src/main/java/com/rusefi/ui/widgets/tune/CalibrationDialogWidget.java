@@ -567,6 +567,10 @@ public class CalibrationDialogWidget {
     }
 
     private JComponent buildGaugeCell(GaugeModel gaugeModel) {
+        if (GraphicsEnvironment.isHeadless()) {
+            return new JLabel(gaugeModel.getName());
+        }
+
         double lo = resolveGaugeValue(gaugeModel.getLowValueValue(), gaugeModel.getLowValue());
         double hi = resolveGaugeValue(gaugeModel.getHighValueValue(), gaugeModel.getHighValue());
         Radial radial = SensorGauge.createRadial(hi, lo, gaugeModel);

@@ -35,6 +35,7 @@ public class WizardContainer extends JPanel {
     private Runnable onWizardExit;
     private Runnable onAllStepsComplete;
     private int currentStepIndex = 0;
+    private int activeStepIndex = -1;
     private int totalSteps = TOTAL_STEPS;
     private int selectedCylinders = 4; // default, updated by step 0
 
@@ -168,11 +169,13 @@ public class WizardContainer extends JPanel {
     }
 
     public void startWizard() {
+        hideCurrentStep();
         currentStepIndex = 0;
+        activeStepIndex = -1;
         totalSteps = TOTAL_STEPS;
         onAllStepsComplete = this::showCompletionCard;
-        // uncomment to show the debug panel; we need it to reset the flags on local env
-        // debugPanel.setVisible(true);
+        debugPanel.setVisible(true);
+        refreshDebugFlags();
         steps.clear();
         stepContentPanel.removeAll();
 
@@ -200,23 +203,29 @@ public class WizardContainer extends JPanel {
         steps.add(mapPanel);
         stepContentPanel.add(mapPanel.getPanel(), "step2");
 
-        // Step 3: Crank Trigger
+        // Step 3: CLT Sensor
+        CltSensorPanel cltPanel = new CltSensorPanel(uiContext);
+        wireStep(cltPanel, 3);
+        steps.add(cltPanel);
+        stepContentPanel.add(cltPanel.getPanel(), "step3");
+
+        // Step 4: Crank Trigger
         CrankTriggerPanel crankPanel = new CrankTriggerPanel(uiContext);
-        wireStep(crankPanel, 3);
+        wireStep(crankPanel, 4);
         steps.add(crankPanel);
-        stepContentPanel.add(crankPanel.getPanel(), "step3");
+        stepContentPanel.add(crankPanel.getPanel(), "step4");
 
-        // Step 4: Cam Trigger
+        // Step 5: Cam Trigger
         CamTriggerPanel camPanel = new CamTriggerPanel(uiContext);
-        wireStep(camPanel, 4);
+        wireStep(camPanel, 5);
         steps.add(camPanel);
-        stepContentPanel.add(camPanel.getPanel(), "step4");
+        stepContentPanel.add(camPanel.getPanel(), "step5");
 
-        // Step 5: Injector Flow
+        // Step 6: Injector Flow
         InjectorFlowPanel injPanel = new InjectorFlowPanel(uiContext);
-        wireStep(injPanel, 5);
+        wireStep(injPanel, 6);
         steps.add(injPanel);
-        stepContentPanel.add(injPanel.getPanel(), "step5");
+        stepContentPanel.add(injPanel.getPanel(), "step6");
 
         // Completion card
         JPanel completionPanel = new JPanel(new GridBagLayout());
@@ -254,7 +263,9 @@ public class WizardContainer extends JPanel {
      * satisfied), the wizard auto-exits. Used for targeted prompts like an empty-VIN auto-launch.
      */
     public void startSingleStep(WizardStep step) {
+        hideCurrentStep();
         currentStepIndex = 0;
+        activeStepIndex = -1;
         totalSteps = 1;
         onAllStepsComplete = this::exitWizard;
         debugPanel.setVisible(false);
@@ -270,6 +281,7 @@ public class WizardContainer extends JPanel {
     }
 
     private void showCompletionCard() {
+        hideCurrentStep();
         stepLabel.setText("Configuration Complete");
         CardLayout cl = (CardLayout) stepContentPanel.getLayout();
         cl.show(stepContentPanel, "complete");
@@ -431,7 +443,9 @@ public class WizardContainer extends JPanel {
     }
 
     private void showStep(int index) {
+        hideCurrentStep();
         currentStepIndex = index;
+        activeStepIndex = index;
         WizardStep step = steps.get(index);
         String title = step != null ? step.getTitle() : "...";
         if (totalSteps == 1) {
@@ -451,9 +465,28 @@ public class WizardContainer extends JPanel {
     }
 
     private void exitWizard() {
+        hideCurrentStep();
         if (onWizardExit != null) {
             onWizardExit.run();
         }
+    }
+
+    private void hideCurrentStep() {
+        if (activeStepIndex >= 0 && activeStepIndex < steps.size()) {
+            WizardStep active = steps.get(activeStepIndex);
+            if (active != null) {
+                active.onHide();
+            }
+        }
+        activeStepIndex = -1;
+    }
+
+    List<String> assembledStepFlagsForTests() {
+        List<String> result = new ArrayList<>();
+        for (WizardStep step : steps) {
+            result.add(step == null ? "wizardFiringOrder" : step.getWizardFlagFieldName());
+        }
+        return result;
     }
 
     private void scaleComponent(JComponent component, float factor) {
