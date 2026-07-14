@@ -58,3 +58,5 @@ coverage_reports/
 
 # AI
 .ai/mcp
+
+.claude/settings.local.json
