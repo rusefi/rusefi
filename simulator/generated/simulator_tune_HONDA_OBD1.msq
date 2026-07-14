@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="15788">
+    <page number="0" size="15784">
         <constant name="accelEnrichmentMode">"MS Adder"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
@@ -5092,6 +5092,7 @@
         <constant name="watchOutForLinearTime">"yes"</constant>
         <constant name="widebandOnSecondBus">"CAN1"</constant>
         <constant name="wizardCamTrigger">"no"</constant>
+        <constant name="wizardCltSensor">"no"</constant>
         <constant name="wizardCrankTrigger">"no"</constant>
         <constant name="wizardDisplacement">"no"</constant>
         <constant name="wizardFiringOrder">"no"</constant>
@@ -5163,8 +5164,8 @@
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20260713" nPages="1" signature="rusEFI master.2026.07.14.f407-discovery.2554252886" version="5.0"/>
-    <bibliography author="rusEFI 20260713" writeDate="date"/>
+    <versionInfo firmwareInfo="20260714" nPages="1" signature="rusEFI master.2026.07.14.f407-discovery.1915059251" version="5.0"/>
+    <bibliography author="rusEFI 20260714" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
