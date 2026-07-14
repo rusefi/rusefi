@@ -60,6 +60,10 @@ public class ConfigFieldImpl implements ConfigField {
     private String iterateOriginalName;
     private int iterateIndex;
 
+    // index of this bit within its 32-bit word, only meaningful when isBit(), assigned by
+    // ConfigStructureImpl#addBitField at parse time
+    private int bitPositionInWord;
+
     // this is used to override the units used on rusefi_config.txt
     // only used to replace "SPECIAL_CASE_TEMPERATURE" to "C" and "F", and apply the correct scale
     @Nullable
@@ -332,11 +336,20 @@ public class ConfigFieldImpl implements ConfigField {
         return matcher.matches();
     }
 
+    public void setBitPositionInWord(int bitPositionInWord) {
+        this.bitPositionInWord = bitPositionInWord;
+    }
+
+    public int getBitPositionInWord() {
+        return bitPositionInWord;
+    }
+
     @Override
     public int getSize(ConfigField next) {
         if (isBit() && next.isBit()) {
-            // we have a protection from 33+ bits in a row in BitState, see BitState.TooManyBitsInARow
-            return 0;
+            // bits are packed into 32-bit words: the last bit of a word closes it even when more
+            // bits follow - the run continues in the next word
+            return bitPositionInWord == BitState.WORD_SIZE_BITS - 1 ? 4 : 0;
         }
         if (isBit())
             return 4;

@@ -92,3 +92,47 @@ Open follow-ups:
 - Decide remediation approach (firmware SCSI media-eject vs host-side reconnect).
 - Consider gating: the soak cannot complete 10 cycles over one connection until the CDC drop is
   addressed.
+
+## 2026-07-14 - SD indicator/output-channel name reuse between SdEcuPcCycleSandbox and .ini
+
+What was done:
+- Removed the duplicated magic strings sd_present / sd_logging_internal / sd_msd that existed
+  independently in output_channels.txt (bit field names), tunerstudio.template.ini (6 indicator
+  expressions) and SdEcuPcCycleSandbox.java (SensorCentral lookups). They now flow from a single
+  source of truth via the existing code generation.
+
+Change inventory:
+| File                                                        | Change                                                          |
+|-------------------------------------------------------------|-----------------------------------------------------------------|
+| firmware/integration/rusefi_config_shared.txt               | new OUTPUT_CHANNEL_SD_PRESENT / _SD_LOGGING_INTERNAL / _SD_MSD quoted defines |
+| firmware/console/binary/output_channels.txt                 | the 3 SD bit fields renamed to @#OUTPUT_CHANNEL_SD_...#@ references |
+| firmware/tunerstudio/tunerstudio.template.ini               | 6 indicator lines reference @#OUTPUT_CHANNEL_SD_...#@           |
+| java_tools/.../ReaderStateImpl.java (config_definition_base)| handleBitLine now applies variable substitution to the bit name (comment stays templated, matching plain-field parsing) |
+| java_tools/.../ConfigFieldParserTest.java                   | new testBitNameViaVariableReference                             |
+| java_console/.../SdEcuPcCycleSandbox.java                   | uses VariableRegistryValues.OUTPUT_CHANNEL_SD_* constants       |
+| java_tools/version/.../UiVersion.java                       | CONSOLE_VERSION -> 20260714                                     |
+
+Key decisions and why:
+- Constants live in rusefi_config_shared.txt because it is prepended by BOTH pipelines that need
+  them: gen_config_common.sh (template .ini + VariableRegistryValues.java) and the LiveData.yaml
+  output_channels entry (LiveDataProcessor parsing output_channels.txt).
+- Used the existing @#NAME#@ quote-stripping substitution (same as TS_HELLO_COMMAND usages) so the
+  quoted define yields a bare identifier in struct field names and { } indicator expressions while
+  generating a proper Java String constant.
+- handleBitLine substitution was narrowed to the name part only: applying it to the whole line
+  expanded @@...@@ comment templates at parse time, which changed engine_state_generated.h
+  (clutchDownState comment). The narrowed version keeps every generated artifact byte-identical.
+- Did not resurrect the deleted generated TsOutputs.java (removed in #6711); defines + existing
+  VariableRegistryValues generation is the sanctioned mechanism.
+
+Validation:
+- ./gradlew :config_definition:test :config_definition_base:test green including the new test.
+- gen_live_documentation.sh + gen_config_board.sh f407-discovery: all generated outputs
+  (output_channels_generated.h, live_data_fragments.ini, data_logs.ini, board .ini indicator
+  lines) byte-identical to committed state; only VariableRegistryValues.java gains the 3 new
+  String constants. Board-generated .h/.ini signature/date churn reverted (CI regenerates).
+- ./gradlew :ui:compileTestJava BUILD SUCCESSFUL with the sandbox on the generated constants.
+
+Open follow-ups:
+- Other magic output-channel names shared between java_console and .ini (e.g. sd_error,
+  sd_formating, sd_active_wr/rd) could adopt the same pattern when java code starts using them.

@@ -78,6 +78,7 @@ public class ConfigStructureImpl implements ConfigStructure {
                 original.getTrueName(),
                 original.getFalseName()
             );
+            substituted.setBitPositionInWord(original.getBitPositionInWord());
             instance.cFields.add(substituted);
             instance.tsFields.add(substituted);
             instance.tsFieldsMap.put(substituted.getName(), substituted);
@@ -123,6 +124,7 @@ public class ConfigStructureImpl implements ConfigStructure {
     }
 
     public void addBitField(ConfigFieldImpl bitField) {
+        bitField.setBitPositionInWord(this.readingBitState.get());
         addBoth(bitField);
         this.readingBitState.incrementBitIndex(bitField);
     }
@@ -210,7 +212,8 @@ public class ConfigStructureImpl implements ConfigStructure {
         if (readingBitState.get() == 0)
             return;
         int sizeAtStartOfPadding = cFields.size();
-        while (readingBitState.get() < 32) {
+        // pad the current 32-bit word to its end; the bit index wraps to 0 exactly at the word boundary
+        while (readingBitState.get() != 0) {
             ConfigFieldImpl bitField = new ConfigFieldImpl(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, VOID_BIT, VOID_BIT);
             addBitField(bitField);
         }
