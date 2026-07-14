@@ -107,7 +107,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 260713
+#define FLASH_DATA_VERSION 260714
 
 ! Remove next line when Java toolset gets adjusted to load those from json config into VariablesRegistry
 ! Also remove file integration/generated/rusefi_config_generated_enums.txt
@@ -962,8 +962,36 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	! hack not to break tunes before 2779925f54f5c2d23499cbb2797f71508c652f54 "injector lag lookup should be done based on differential pressure"
 	bit useAbsolutePressureForLagTime,"yes","no"
 	! see #8650, only used on the UI
-	bit unusedBit_311_30
-	bit unusedBit_311_31
+
+	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
+	bit useInjectorFlowLinearizationTable,"yes","no"
+	bit useHbridgesToDriveIdleStepper,"yes","no";If enabled we use two H-bridges to drive stepper idle air valve
+	bit multisparkEnable,"yes","no"
+	bit enableLaunchRetard,"yes","no";Enables absolute ignition timing control during launch (sets timing to the "Absolute Timing at Launch" value).
+	bit canInputBCM,"enabled","disabled"
+	bit consumeObdSensors,"yes","no";This property is useful if using rusEFI as TCM or BCM only
+	bit enableCanVss,"yes","no";Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
+	bit stftIgnoreErrorMagnitude,"yes","no";If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
+	bit vvtBooleanForVerySpecialCases,"true","false"
+	bit enableSoftwareKnock,"enabled","disabled"
+	bit verboseVVTDecoding,"enabled","disabled";Verbose info in console below engineSnifferRpmThreshold
+	bit invertCamVVTSignal,"Falling","Rising"
+	bit alphaNUseIat,"yes","no";When set to yes, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
+	bit knockBankCyl1,"Channel 2","Channel 1"
+	bit knockBankCyl2,"Channel 2","Channel 1"
+	bit knockBankCyl3,"Channel 2","Channel 1"
+	bit knockBankCyl4,"Channel 2","Channel 1"
+	bit knockBankCyl5,"Channel 2","Channel 1"
+	bit knockBankCyl6,"Channel 2","Channel 1"
+	bit knockBankCyl7,"Channel 2","Channel 1"
+	bit knockBankCyl8,"Channel 2","Channel 1"
+	bit knockBankCyl9,"Channel 2","Channel 1"
+	bit knockBankCyl10,"Channel 2","Channel 1"
+	bit knockBankCyl11,"Channel 2","Channel 1"
+	bit knockBankCyl12,"Channel 2","Channel 1"
+	bit tcuEnabled,"enabled","disabled"
+	bit useRawOutputToDriveIdleStepper,"yes","no";If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
+	bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
@@ -1063,38 +1091,6 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
-
-	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
-	bit useInjectorFlowLinearizationTable,"yes","no"
-	bit useHbridgesToDriveIdleStepper,"yes","no";If enabled we use two H-bridges to drive stepper idle air valve
-	bit multisparkEnable,"yes","no"
-	bit enableLaunchRetard,"yes","no";Enables absolute ignition timing control during launch (sets timing to the "Absolute Timing at Launch" value).
-	bit canInputBCM,"enabled","disabled"
-	bit consumeObdSensors,"yes","no";This property is useful if using rusEFI as TCM or BCM only
-	bit enableCanVss,"yes","no";Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
-	bit stftIgnoreErrorMagnitude,"yes","no";If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
-	bit vvtBooleanForVerySpecialCases,"true","false"
-	bit enableSoftwareKnock,"enabled","disabled"
-	bit verboseVVTDecoding,"enabled","disabled";Verbose info in console below engineSnifferRpmThreshold
-	bit invertCamVVTSignal,"Falling","Rising"
-	bit alphaNUseIat,"yes","no";When set to yes, it enables intake air temperature-based corrections for Alpha-N tuning strategies.
-	bit knockBankCyl1,"Channel 2","Channel 1"
-	bit knockBankCyl2,"Channel 2","Channel 1"
-	bit knockBankCyl3,"Channel 2","Channel 1"
-	bit knockBankCyl4,"Channel 2","Channel 1"
-	bit knockBankCyl5,"Channel 2","Channel 1"
-	bit knockBankCyl6,"Channel 2","Channel 1"
-	bit knockBankCyl7,"Channel 2","Channel 1"
-	bit knockBankCyl8,"Channel 2","Channel 1"
-	bit knockBankCyl9,"Channel 2","Channel 1"
-	bit knockBankCyl10,"Channel 2","Channel 1"
-	bit knockBankCyl11,"Channel 2","Channel 1"
-	bit knockBankCyl12,"Channel 2","Channel 1"
-	bit tcuEnabled,"enabled","disabled"
-	! bit 27
-	bit useRawOutputToDriveIdleStepper,"yes","no";If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coils
-	! bit 29
-	bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
 
 #define can_broadcast_channel_e_enum "first", "second", "3rd"
 custom can_broadcast_channel_e 1 bits, U08, @OFFSET@, [0:1], @@can_broadcast_channel_e_enum@@
