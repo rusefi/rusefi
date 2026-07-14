@@ -501,7 +501,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 		// All hope is now lost.
 
 		// Reboot!
-		NVIC_SystemReset();
+		rebootNow();
 	}
 
 #endif // EFI_PROD_CODE

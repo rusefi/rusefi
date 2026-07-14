@@ -103,6 +103,10 @@ int at32GetRamSizeKb(void)
 #define EFI_STORAGE_REBOOT_INTERLOCK TRUE
 #endif
 
+void rebootNow() {
+    NVIC_SystemReset();
+}
+
 static void reset_and_jump(void) {
 #ifdef EFI_STORAGE_REBOOT_INTERLOCK
     // Let any queued or in-flight settings/LTFT flash write finish before we
@@ -112,7 +116,7 @@ static void reset_and_jump(void) {
 #endif
 
     // and now reboot
-    NVIC_SystemReset();
+    rebootNow();
 }
 
 #if EFI_DFU_JUMP

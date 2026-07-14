@@ -151,11 +151,6 @@ static char panicMessage[200];
 
 static virtual_timer_t resetTimer;
 
-// todo: move this into a hw-specific file
-void rebootNow() {
-	NVIC_SystemReset();
-}
-
 /**
  * Some configuration changes require full firmware reset.
  * Once day we will write graceful shutdown, but that would be one day.
