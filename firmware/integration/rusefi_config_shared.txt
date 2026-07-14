@@ -166,6 +166,13 @@
 #define INDICATOR_NAME_BRAKE_DOWN "Brake switch"
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 
+! SD card status output channel names: single source of truth shared between the
+! output_channels.txt bit fields, tunerstudio.template.ini indicators and java_console
+! (generated into VariableRegistryValues.java), see for instance SdEcuPcCycleSandbox
+#define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
+#define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
+#define OUTPUT_CHANNEL_SD_MSD "sd_msd"
+
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF"
 #define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF #2"
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "Air: Flow estimate"

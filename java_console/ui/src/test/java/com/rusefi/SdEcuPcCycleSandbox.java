@@ -124,9 +124,9 @@ public class SdEcuPcCycleSandbox {
                         + "the firmware and SerialIoStream treated the full TX buffer as a disconnect");
                 return false;
             }
-            double present = sc.getValue("sd_present");
-            double ecu = sc.getValue("sd_logging_internal");
-            double pc = sc.getValue("sd_msd");
+            double present = sc.getValue(VariableRegistryValues.OUTPUT_CHANNEL_SD_PRESENT);
+            double ecu = sc.getValue(VariableRegistryValues.OUTPUT_CHANNEL_SD_LOGGING_INTERNAL);
+            double pc = sc.getValue(VariableRegistryValues.OUTPUT_CHANNEL_SD_MSD);
             boolean reached = wantPc
                     ? (present > 0.5 && pc > 0.5 && ecu < 0.5)
                     : (present > 0.5 && ecu > 0.5 && pc < 0.5);
@@ -141,7 +141,7 @@ public class SdEcuPcCycleSandbox {
         SensorCentral sc = SensorCentral.getInstance();
         long deadline = System.currentTimeMillis() + STATUS_READY_TIMEOUT_MS;
         while (System.currentTimeMillis() < deadline) {
-            if (!Double.isNaN(sc.getValue("sd_present")))
+            if (!Double.isNaN(sc.getValue(VariableRegistryValues.OUTPUT_CHANNEL_SD_PRESENT)))
                 return;
             Thread.sleep(POLL_MS);
         }
@@ -150,8 +150,11 @@ public class SdEcuPcCycleSandbox {
 
     private static void logStatus(String when) {
         SensorCentral sc = SensorCentral.getInstance();
-        log.info(String.format("SD status %s: sd_present=%s sd_logging_internal(ECU)=%s sd_msd(PC)=%s",
-                when, sc.getValue("sd_present"), sc.getValue("sd_logging_internal"), sc.getValue("sd_msd")));
+        log.info(String.format("SD status %s: %s=%s %s(ECU)=%s %s(PC)=%s",
+                when,
+                VariableRegistryValues.OUTPUT_CHANNEL_SD_PRESENT, sc.getValue(VariableRegistryValues.OUTPUT_CHANNEL_SD_PRESENT),
+                VariableRegistryValues.OUTPUT_CHANNEL_SD_LOGGING_INTERNAL, sc.getValue(VariableRegistryValues.OUTPUT_CHANNEL_SD_LOGGING_INTERNAL),
+                VariableRegistryValues.OUTPUT_CHANNEL_SD_MSD, sc.getValue(VariableRegistryValues.OUTPUT_CHANNEL_SD_MSD)));
     }
 
     /** Sends the same TS bench command as the .ini SD Card dialog issues. */

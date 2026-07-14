@@ -9,15 +9,15 @@
 
 struct_no_prefix output_channels_s
 
-bit sd_present;SD: Present
-bit sd_logging_internal;SD: Logging
+bit @#OUTPUT_CHANNEL_SD_PRESENT#@;SD: Present
+bit @#OUTPUT_CHANNEL_SD_LOGGING_INTERNAL#@;SD: Logging
 bit triggerScopeReady
 bit antilagTriggered
 bit isO2HeaterOn;
 bit checkEngine;
 bit needBurn;
 
-bit sd_msd;SD: MSD
+bit @#OUTPUT_CHANNEL_SD_MSD#@;SD: MSD
 bit toothLogReady;Tooth Logger Ready
 bit isTpsError;Error: TPS
 bit isCltError;Error: CLT
