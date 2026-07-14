@@ -29,6 +29,23 @@ dependencies {
     implementation global_libs.jaxb_runtime
 }
 
+// Headless soak: cycles the SD card ECU/logging <-> PC/MSD 10 times, 20s in each mode, and
+// reports a pass/fail tally. Auto-detects the serial port, or pass -PecuPort=COM7.
+task runSdCycle(type: JavaExec) {
+    dependsOn testClasses
+    group = "Execution"
+    description = "Run SdEcuPcCycleSandbox against a connected ECU"
+    workingDir = rootProject.projectDir
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.rusefi.SdEcuPcCycleSandbox'
+    standardInput = System.in
+    maxHeapSize = '2g'
+    jvmArgs '-Djava.awt.headless=true'
+    if (project.hasProperty('ecuPort')) {
+        args project.property('ecuPort')
+    }
+}
+
 def customJavaUi = findProject(':custom-java-ui')
 
 shadowJar {
