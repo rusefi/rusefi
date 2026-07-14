@@ -137,6 +137,7 @@ extern "C"
 #endif /* __cplusplus */
 
 // these need to be declared with C linkage - they're called from C and asm files
+void rebootNow();
 void DebugMonitorVector(void);
 void UsageFaultVector(void);
 void BusFaultVector(void);
