@@ -429,6 +429,21 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testBitNameViaVariableReference() {
+        // output_channels.txt uses @#DEFINE#@ references as bit names so that .ini and java share one constant
+        String test = "#define SD_PRESENT_CHANNEL \"sd_present\"\n" +
+                "struct_no_prefix pid_s\n" +
+                "\tbit @#SD_PRESENT_CHANNEL#@;SD: Present\n" +
+                "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(test, javaFieldsConsumer);
+
+        assertEquals("\tpublic static final Field SD_PRESENT = Field.create(\"SD_PRESENT\", 0, FieldType.BIT, 0).setBaseOffset(0);\n",
+                javaFieldsConsumer.getContent());
+    }
+
+    @Test
     public void test2byteOffset() {
         String test = "struct_no_prefix pid_s\n" +
                 "\tint8_t byte1\n" +

@@ -108,6 +108,9 @@ public class ReaderStateImpl implements ReaderState {
             bitName = line.substring(0, index);
             comment = line.substring(index + 1);
         }
+        // bit names support @@variable@@/@#variable#@ references just like ConfigFieldImpl#parse does for plain
+        // fields; comments stay templated here and are resolved later, see getCommentTemplated()
+        bitName = state.variableRegistry.applyVariables(bitName);
         String[] bitNameParts = bitName.split(",");
 
         if (log.debugEnabled())
