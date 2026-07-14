@@ -1482,6 +1482,9 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
+#define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
+#define OUTPUT_CHANNEL_SD_MSD "sd_msd"
+#define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
 #define output_pin_e_enum 0="NONE",100="C1-12 Check Engine",52="C1-13 - Fuel Pump",65="C1-25 Tach",109="C1-26 - Starter Relay",64="C1-39 - VSS Output",112="C1-40 - MAIN",102="C1-56 - Starter Enable",47="C2-1 - IGN 1",61="C2-16 INJ 3",72="C2-17 - IGN 8",69="C2-18 - IGN 4",106="C2-32 INJ 2",27="C2-33 - IGN 7",68="C2-34 - IGN 5",96="C2-48 INJ 8",59="C2-49 INJ 5",94="C2-52 INJ 6",71="C2-53 - IGN 2",26="C2-54 - IGN 6",70="C2-55 - IGN 3",60="C2-70 INJ 4",95="C2-71 INJ 7",105="C2-72 INJ 1",111="C3-16 - Coolant Pump",10="C3-49 - Fan Relay",63="C3-7 - Alternator Enable",43="J4_4 Wastegate Solenoid",53="J4_5 Error Light",46="J7_1 AUX",45="J7_2 AUX",44="J7_3 AUX",17="J7_4 AUX",55="J7_5 AUX",56="J7_6 AUX",66="J7_7 AUX",67="J7_8 AUX"
 #define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C3-49 - Fan Relay","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","J7_4 AUX","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C2-54 - IGN 6","C2-33 - IGN 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","J4_4 Wastegate Solenoid","J7_3 AUX","J7_2 AUX","J7_1 AUX","C2-1 - IGN 1","INVALID","INVALID","INVALID","INVALID","C1-13 - Fuel Pump","J4_5 Error Light","INVALID","J7_5 AUX","J7_6 AUX","INVALID","INVALID","C2-49 INJ 5","C2-70 INJ 4","C2-16 INJ 3","INVALID","C3-7 - Alternator Enable","C1-39 - VSS Output","C1-25 Tach","J7_7 AUX","J7_8 AUX","C2-34 - IGN 5","C2-18 - IGN 4","C2-55 - IGN 3","C2-53 - IGN 2","C2-17 - IGN 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C2-52 INJ 6","C2-71 INJ 7","C2-48 INJ 8","INVALID","INVALID","INVALID","C1-12 Check Engine","INVALID","C1-56 - Starter Enable","INVALID","INVALID","C2-72 INJ 1","C2-32 INJ 2","INVALID","INVALID","C1-26 - Starter Relay","INVALID","C3-16 - Coolant Pump","C1-40 - MAIN","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define PACK_ADD_TEMPERATURE 40
@@ -1625,7 +1628,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1983383618
+#define SIGNATURE_HASH 1523749766
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2262,7 +2265,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.14.hellen-gm-e67.1983383618"
+#define TS_SIGNATURE "rusEFI master.2026.07.14.hellen-gm-e67.1523749766"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

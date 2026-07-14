@@ -1482,6 +1482,9 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
+#define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
+#define OUTPUT_CHANNEL_SD_MSD "sd_msd"
+#define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
 #define output_pin_e_enum 0="NONE",43="Coil 1F",80="Coil 1G",41="Coil 1H",76="Coil 1I",74="Coil 1L",78="Coil 1M",58="Coil 1O",59="Coil 1P",47="Injector 2M",57="Injector 2N",71="Injector 2O",72="Injector 2P",69="Injector 3S",70="Injector 3T",53="Injector 3U",68="Injector 3V",27="Injector 3W",55="Injector 3X",26="Injector 3Y",25="Injector 3Z"
 #define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3Z","Injector 3Y","Injector 3W","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Coil 1H","INVALID","Coil 1F","INVALID","INVALID","INVALID","Injector 2M","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3U","INVALID","Injector 3X","INVALID","Injector 2N","Coil 1O","Coil 1P","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Injector 3V","Injector 3S","Injector 3T","Injector 2O","Injector 2P","INVALID","Coil 1L","INVALID","Coil 1I","INVALID","Coil 1M","INVALID","Coil 1G","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define PACK_ADD_TEMPERATURE 40
@@ -1625,7 +1628,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3825420451
+#define SIGNATURE_HASH 3370767207
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2262,7 +2265,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.14.frankenso_na6.3825420451"
+#define TS_SIGNATURE "rusEFI master.2026.07.14.frankenso_na6.3370767207"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

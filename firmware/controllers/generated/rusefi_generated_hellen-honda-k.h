@@ -1480,6 +1480,9 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
+#define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
+#define OUTPUT_CHANNEL_SD_MSD "sd_msd"
+#define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
 #define output_pin_e_enum 0="NONE",94="A12 Idle Air Control",69="A27 - IGN4",70="A28 - IGN3",71="A29 - IGN2",47="A30 - IGN1",52="AuxHigh1",100="AuxPP1",109="B15 VTEC/VTS Output",111="B18 Alternator Control",60="B2 - Injector 4",64="B21 - EVAP",95="B22 Intake Runner",43="B23 VTC VVT",61="B3 - Injector 3",106="B4 - Injector 2",105="B5 - Injector 1",10="B6 Radiator Relay",96="B7 Lockout Solenoid",62="C11 Aux Low 3",65="C12 Aux Low 2",41="C13 Aux Low 1",104="E1 Fuel Relay",59="E18 - AC Relay",110="E26 Tachometer",101="E31 Check Engine",112="E7 Main Relay Control"
 #define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B6 Radiator Relay","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C13 Aux Low 1","INVALID","B23 VTC VVT","INVALID","INVALID","INVALID","A30 - IGN1","INVALID","INVALID","INVALID","INVALID","AuxHigh1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","E18 - AC Relay","B2 - Injector 4","B3 - Injector 3","C11 Aux Low 3","INVALID","B21 - EVAP","C12 Aux Low 2","INVALID","INVALID","INVALID","A27 - IGN4","A28 - IGN3","A29 - IGN2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","A12 Idle Air Control","B22 Intake Runner","B7 Lockout Solenoid","INVALID","INVALID","INVALID","AuxPP1","E31 Check Engine","INVALID","INVALID","E1 Fuel Relay","B5 - Injector 1","B4 - Injector 2","INVALID","INVALID","B15 VTEC/VTS Output","E26 Tachometer","B18 Alternator Control","E7 Main Relay Control","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define PACK_ADD_TEMPERATURE 40
@@ -1623,7 +1626,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2118390933
+#define SIGNATURE_HASH 1387171665
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2263,7 +2266,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.14.hellen-honda-k.2118390933"
+#define TS_SIGNATURE "rusEFI master.2026.07.14.hellen-honda-k.1387171665"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

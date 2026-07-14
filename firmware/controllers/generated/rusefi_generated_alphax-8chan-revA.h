@@ -1479,6 +1479,9 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
+#define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
+#define OUTPUT_CHANNEL_SD_MSD "sd_msd"
+#define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
 #define output_pin_e_enum 0="NONE",69="10A - Ignition 4",53="10D - LS 7",70="11A - Ignition 3",11="11D - LS 8",71="12A - Ignition 2",111="12D - NOS",47="13A - Ignition 1",41="13D - Boost",72="18C - Ignition 8",27="19C - Ignition 7",60="1A - Injector 4",26="20C - Ignition 6",68="21C - Ignition 5",104="21D - Tachometer",96="26C - Injector 8",95="27C - Injector 7",94="28C - Injector 6",59="29C - Injector 5",61="2A - Injector 3",106="3A - Injector 2",105="4A - Injector 1",110="8B - Main Relay LS",10="8D - Fuel Pump",100="9D - Fan Relay"
 #define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","8D - Fuel Pump","11D - LS 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","20C - Ignition 6","19C - Ignition 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","13D - Boost","INVALID","INVALID","INVALID","INVALID","INVALID","13A - Ignition 1","INVALID","INVALID","INVALID","INVALID","INVALID","10D - LS 7","INVALID","INVALID","INVALID","INVALID","INVALID","29C - Injector 5","1A - Injector 4","2A - Injector 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","21C - Ignition 5","10A - Ignition 4","11A - Ignition 3","12A - Ignition 2","18C - Ignition 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","28C - Injector 6","27C - Injector 7","26C - Injector 8","INVALID","INVALID","INVALID","9D - Fan Relay","INVALID","INVALID","INVALID","21D - Tachometer","4A - Injector 1","3A - Injector 2","INVALID","INVALID","INVALID","8B - Main Relay LS","12D - NOS","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define PACK_ADD_TEMPERATURE 40
@@ -1622,7 +1625,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1954034355
+#define SIGNATURE_HASH 1486006647
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2259,7 +2262,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.14.alphax-8chan-revA.1954034355"
+#define TS_SIGNATURE "rusEFI master.2026.07.14.alphax-8chan-revA.1486006647"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'

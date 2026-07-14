@@ -1482,6 +1482,9 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
+#define OUTPUT_CHANNEL_SD_LOGGING_INTERNAL "sd_logging_internal"
+#define OUTPUT_CHANNEL_SD_MSD "sd_msd"
+#define OUTPUT_CHANNEL_SD_PRESENT "sd_present"
 #define output_pin_e_enum 0="NONE",95="10 - VTC Left",103="104 ETB Relay",96="11 - VTC Right",112="111 Main Relay",62="113 Fuel Pump Relay",42="2 Aux Low 3",59="21 - INJ_5",61="22 - INJ_3",105="23 - INJ_1",53="29 - VIAS",41="3 Aux Low 2",94="40 - INJ_6",60="41 - INJ_4",106="42 - INJ_2",68="60 - Coil 5",70="61 - Coil 3",47="62 - Coil 1",26="79 - Coil 6",40="8 Aux Low 1",69="80 - Coil 4",71="81 - Coil 2"
 #define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","79 - Coil 6","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","8 Aux Low 1","3 Aux Low 2","2 Aux Low 3","INVALID","INVALID","INVALID","INVALID","62 - Coil 1","INVALID","INVALID","INVALID","INVALID","INVALID","29 - VIAS","INVALID","INVALID","INVALID","INVALID","INVALID","21 - INJ_5","41 - INJ_4","22 - INJ_3","113 Fuel Pump Relay","INVALID","INVALID","INVALID","INVALID","INVALID","60 - Coil 5","80 - Coil 4","61 - Coil 3","81 - Coil 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","40 - INJ_6","10 - VTC Left","11 - VTC Right","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","104 ETB Relay","INVALID","23 - INJ_1","42 - INJ_2","INVALID","INVALID","INVALID","INVALID","INVALID","111 Main Relay","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID"
 #define PACK_ADD_TEMPERATURE 40
@@ -1625,7 +1628,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3383514997
+#define SIGNATURE_HASH 3846622385
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2262,7 +2265,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.14.hellen121nissan.3383514997"
+#define TS_SIGNATURE "rusEFI master.2026.07.14.hellen121nissan.3846622385"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
