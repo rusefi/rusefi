@@ -98,6 +98,8 @@ const char* getConfigErrorMessage();
 bool hasConfigError();
 bool hasErrorReportFile();
 
+void errorHandlerResetCounters();
+
 // todo: better place for this shared declaration?
 int getRusEfiVersion();
 

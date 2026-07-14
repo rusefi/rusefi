@@ -152,14 +152,17 @@ const char *errorCookieToName(ErrorCookie cookie)
 	PRINT("Reset Cause: %s", getMCUResetCause(getMCUResetCause()))
 
 #if EFI_USE_OPENBLT
-#define printWdResetCounter()										\
+#define printResetCounters()										\
 	do {															\
 		uint8_t wd_counter = 0;										\
+		uint8_t sw_counter = 0;										\
 		SharedParamsReadByIndex(1, &wd_counter);					\
+		SharedParamsReadByIndex(2, &sw_counter);					\
 		PRINT("WD resets: %u", (unsigned int)wd_counter);			\
+		PRINT("SW resets: %u", (unsigned int)sw_counter);			\
 	} while (0)
 #else
-#define printWdResetCounter()										\
+#define printResetCounters()										\
 	do {} while(0)
 #endif
 
@@ -235,7 +238,7 @@ void errorHandlerShowBootReasonAndErrors() {
 	#define PRINT(...) efiPrintf(__VA_ARGS__)
 
 	printResetReason();
-	printWdResetCounter();
+	printResetCounters();
 
 #if EFI_BACKUP_SRAM
 	backupErrorState *err = &lastBootError;
@@ -315,7 +318,7 @@ void errorHandlerWriteReportFile(FIL *fd) {
 			//this is file print
 			#define PRINT(format, ...) f_printf(fd, format "\r\n", __VA_ARGS__)
 			printResetReason();
-			printWdResetCounter();
+			printResetCounters();
 #if EFI_BACKUP_SRAM
 			printErrorState();
 			if (cookie != ErrorCookie::None) {
@@ -392,7 +395,14 @@ void errorHandlerDeleteReports() {
 	errorHandlerCheckReportFiles();
 }
 
+#endif // EFI_FILE_LOGGING
+
+void errorHandlerResetCounters() {
+#if EFI_USE_OPENBLT
+	SharedParamsWriteByIndex(1, 0);
+	SharedParamsWriteByIndex(2, 0);
 #endif
+}
 
 #if EFI_BACKUP_SRAM
 static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)

@@ -199,6 +199,14 @@ static void doPeriodicSlowCallback() {
 #endif // EFI_TCU
 
 	tryResetWatchdog();
+
+#if EFI_PROD_CODE
+	// single-shot reset all counter after 5 second of happines
+	static unsigned int slow_counter = 5 * 1000 / SLOW_CALLBACK_PERIOD_MS;
+	if ((slow_counter) && (--slow_counter == 0)) {
+		errorHandlerResetCounters();
+	}
+#endif // EFI_PROD_CODE
 }
 
 void initPeriodicEvents() {
