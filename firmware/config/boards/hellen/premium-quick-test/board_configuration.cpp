@@ -105,7 +105,7 @@ static void premiumQuickTestInitHardware() {
 		.vref = 5.0, // is not true when powered from USB due to voltage drop on reverse protection diode
 	};
 
-	int ret = ads7128_add(Gpio::MSIOBOX_0_OUT_1, 0, &ads7128_cfg);
+	int ret = ads7128_add(Gpio::EXTIOCHIP_0_IO_1, 0, &ads7128_cfg);
 	efiPrintf("*****************+ ads7128_add %d +*******************", ret);
 #endif
 }
