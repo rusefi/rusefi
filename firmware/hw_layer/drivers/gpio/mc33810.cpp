@@ -20,10 +20,11 @@
  */
 
 #include "pch.h"
-#include "gpio/gpio_ext.h"
-#include "gpio/mc33810.h"
 
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
+
+#include "gpio/gpio_ext.h"
+#include "gpio/mc33810.h"
 
 // For exti irq
 #include "digital_input_exti.h"
@@ -941,7 +942,7 @@ case DWELL_8MS:
 
 #else /* BOARD_MC33810_COUNT > 0 */
 
-int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
+int mc33810_add(brain_pin_e base, unsigned int index, const void *cfg)
 {
 	(void)base; (void)index; (void)cfg;
 

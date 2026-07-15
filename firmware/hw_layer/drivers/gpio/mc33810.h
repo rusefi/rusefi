@@ -16,6 +16,8 @@
 #include <hal.h>
 #include "rusefi_types.h"
 
+#if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
+
 #include "gpio_ext.h"
 #include "mc33810_state_generated.h"
 
@@ -149,13 +151,13 @@ struct Mc33810 : public GpioChip, public mc33810_state_s {
 
 int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg);
 
-#if (BOARD_MC33810_COUNT > 0)
 extern Mc33810 mc33810_chips[BOARD_MC33810_COUNT];
 constexpr mc33810_state_s* mc33810getLiveData(size_t idx) {
 	return (idx >= BOARD_MC33810_COUNT) ? nullptr : &mc33810_chips[idx];
 }
-#endif
 
 /* debug */
 void mc33810_req_init();
 int getMc33810maxDwellTimer(mc33810maxDwellTimer_e value);
+
+#endif // EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
