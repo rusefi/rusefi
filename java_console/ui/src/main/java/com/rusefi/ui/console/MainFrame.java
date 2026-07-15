@@ -16,7 +16,6 @@ import com.rusefi.core.SignatureHelper;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.ui.basic.FirmwareUpdateTab;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import com.rusefi.util.ExitUtil;
 import javax.swing.Action;

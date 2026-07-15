@@ -138,6 +138,41 @@ public class Autoupdate {
      */
     public static final String PENDING_CONSOLE_JAR = "rusefi_console_pending.jar";
 
+    public enum UpdateOutcome {
+        UPDATED,
+        UP_TO_DATE,
+        FAILED,
+        SKIPPED
+    }
+
+    static class DownloadResult {
+        final UpdateOutcome outcome;
+        final Optional<DownloadedAutoupdateFileInfo> file;
+
+        private DownloadResult(UpdateOutcome outcome, Optional<DownloadedAutoupdateFileInfo> file) {
+            this.outcome = outcome;
+            this.file = file;
+        }
+
+        static DownloadResult updated(DownloadedAutoupdateFileInfo file) {
+            return new DownloadResult(UpdateOutcome.UPDATED, Optional.of(file));
+        }
+
+        static DownloadResult of(UpdateOutcome outcome) {
+            return new DownloadResult(outcome, Optional.empty());
+        }
+    }
+
+    @FunctionalInterface
+    interface UpdateDownloader {
+        DownloadResult download(BundleInfo bundleInfo) throws Exception;
+    }
+
+    @FunctionalInterface
+    interface UpdateApplier {
+        void apply(DownloadedAutoupdateFileInfo file) throws Exception;
+    }
+
     private static final String TITLE = getTitle();
 
     private static String getTitle() {
@@ -191,12 +226,16 @@ public class Autoupdate {
     public static boolean isAutoUpdateEnabled() {
         boolean property = AutoupdateProperty.get();
         boolean autoupdate_bundle = ConnectionAndMeta.getBoolean("autoupdate_bundle");
-        boolean result = property && autoupdate_bundle;
+        boolean result = isAutoUpdateEnabled(property, autoupdate_bundle);
         if (!result) {
             log.info("AutoupdateProperty=" + property);
             log.info("autoupdate_bundle=" + autoupdate_bundle);
         }
         return result;
+    }
+
+    static boolean isAutoUpdateEnabled(boolean userPreference, boolean bundleEnabled) {
+        return userPreference && bundleEnabled;
     }
 
     // everything here assumes Windows. Sorry!
@@ -420,28 +459,25 @@ public class Autoupdate {
     /**
      * Runs a silent background update from within rusefi_console: downloads and unpacks the bundle
      * (excluding rusefi_console.jar itself, which cannot be replaced while running),
-     * then invokes {@code onComplete} with a non-null restart message when an update was applied,
-     * or with {@code null} when no update was needed.
+     * @return the result of checking and, when needed, applying the update
      */
-    public static void runSilentUpdate(Consumer<String> onComplete) {
+    public static UpdateOutcome runSilentUpdate() {
         try {
             log.info("runSilentUpdate: starting");
             BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
             log.info("runSilentUpdate: bundle=" + bundleInfo);
             if (BundleInfo.isUndefined(bundleInfo)) {
                 log.info("runSilentUpdate: no bundle info, skipping");
-                onComplete.accept(null);
-                return;
+                return UpdateOutcome.SKIPPED;
             }
             if (!isAutoUpdateEnabled()) {
                 log.info("runSilentUpdate: autoupdate is disabled");
-                onComplete.accept(null);
-                return;
+                return UpdateOutcome.SKIPPED;
             }
-            performUpdate(bundleInfo, onComplete);
+            return performUpdate(bundleInfo);
         } catch (Throwable e) {
             log.error("runSilentUpdate error: " + e);
-            onComplete.accept(null);
+            return UpdateOutcome.FAILED;
         }
     }
 
@@ -459,39 +495,53 @@ public class Autoupdate {
                 onComplete.accept(null);
                 return;
             }
-            performUpdate(bundleInfo, onComplete);
+            UpdateOutcome outcome = performUpdate(bundleInfo);
+            onComplete.accept(outcome == UpdateOutcome.UPDATED
+                ? "Update installed - please restart to apply the new console"
+                : null);
         } catch (Throwable e) {
             log.error("runManualUpdate error: " + e);
             onComplete.accept(null);
         }
     }
 
-    private static void performUpdate(BundleInfo bundleInfo, Consumer<String> onComplete) {
+    private static UpdateOutcome performUpdate(BundleInfo bundleInfo) {
+        return performUpdate(bundleInfo, Autoupdate::doDownloadDetailed, Autoupdate::applyUpdate);
+    }
+
+    static UpdateOutcome performUpdate(BundleInfo bundleInfo, UpdateDownloader downloader, UpdateApplier applier) {
         log.info("performUpdate: checking for update...");
-        Optional<DownloadedAutoupdateFileInfo> downloaded = doDownload(bundleInfo);
-        if (!downloaded.isPresent()) {
-            log.info("performUpdate: no update available or download skipped");
-            onComplete.accept(null);
-            return;
-        }
-        log.info("performUpdate: update downloaded, applying...");
-        ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles();
-        DownloadedAutoupdateFileInfo file = downloaded.get();
-        findSrecFile(false);
         try {
-            // Unzip everything except the console JAR (cannot replace a running JAR).
-            FileUtil.unzip(file.zipFileName, new File(".."), isConsoleJar.negate());
-            final String srecFile = findSrecFile();
-            final String firmwareFile = findFirmwareFile();
-            new File(srecFile == null ? firmwareFile : srecFile).setLastModified(file.lastModified);
-            tryInstallTsPlugin();
-            // Stage the new console JAR under a different name so relaunchConsole() can
-            // launch from it and finalizePendingUpdate() can swap it in on next startup.
-            extractConsoleJarAsPending(file.zipFileName);
-        } catch (IOException e) {
-            log.error("performUpdate: error unzipping: " + e);
+            DownloadResult downloaded = downloader.download(bundleInfo);
+            if (downloaded.outcome != UpdateOutcome.UPDATED) {
+                log.info("performUpdate: " + downloaded.outcome);
+                return downloaded.outcome;
+            }
+            if (!downloaded.file.isPresent()) {
+                log.error("performUpdate: downloaded update has no file");
+                return UpdateOutcome.FAILED;
+            }
+            log.info("performUpdate: update downloaded, applying...");
+            applier.apply(downloaded.file.get());
+            return UpdateOutcome.UPDATED;
+        } catch (Throwable e) {
+            log.error("performUpdate failed", e);
+            return UpdateOutcome.FAILED;
         }
-        onComplete.accept("Update installed — please restart to apply the new console");
+    }
+
+    private static void applyUpdate(DownloadedAutoupdateFileInfo file) throws IOException {
+        ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles();
+        findSrecFile(false);
+        // Unzip everything except the console JAR (cannot replace a running JAR).
+        FileUtil.unzip(file.zipFileName, new File(".."), isConsoleJar.negate());
+        final String srecFile = findSrecFile();
+        final String firmwareFile = findFirmwareFile();
+        new File(srecFile == null ? firmwareFile : srecFile).setLastModified(file.lastModified);
+        tryInstallTsPlugin();
+        // Stage the new console JAR under a different name so relaunchConsole() can
+        // launch from it and finalizePendingUpdate() can swap it in on next startup.
+        extractConsoleJarAsPending(file.zipFileName);
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String firstArgument, BundleInfo bundleInfo) {
@@ -574,8 +624,12 @@ public class Autoupdate {
     private static final Predicate<ZipEntry> isConsoleJar = zipEntry -> consoleJarZipEntry.equals(zipEntry.getName());
 
     private static Optional<DownloadedAutoupdateFileInfo> doDownload(final BundleInfo bundleInfo) {
+        return doDownloadDetailed(bundleInfo).file;
+    }
+
+    private static DownloadResult doDownloadDetailed(final BundleInfo bundleInfo) {
         String branchUrl = BundleInfoStrategy.getDownloadUrl(bundleInfo, PropertiesHolder.getBaseUrl(), BundleInfoStrategy::selectBranchName);
-        return downloadAutoupdateZipFile(bundleInfo, branchUrl, FindFileHelper.isObfuscated());
+        return downloadAutoupdateZipFileDetailed(bundleInfo, branchUrl, FindFileHelper.isObfuscated());
     }
 
     /**
@@ -743,9 +797,16 @@ public class Autoupdate {
         final BundleInfo info,
         final String baseUrl,
         boolean isObfuscated) {
+        return downloadAutoupdateZipFileDetailed(info, baseUrl, isObfuscated).file;
+    }
+
+    private static DownloadResult downloadAutoupdateZipFileDetailed(
+        final BundleInfo info,
+        final String baseUrl,
+        boolean isObfuscated) {
         if (isSkipUpdater()) {
             log.info("User wants to skip auto-update");
-            return Optional.empty();
+            return DownloadResult.of(UpdateOutcome.SKIPPED);
         }
 
         try {
@@ -763,7 +824,7 @@ public class Autoupdate {
 
             if (AutoupdateUtil.hasExistingFile(localZipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
                 log.info("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
-                return Optional.empty();
+                return DownloadResult.of(UpdateOutcome.UP_TO_DATE);
             }
 
             // todo: user could have waited hours to respond to question above, we probably need to re-establish connection
@@ -778,7 +839,7 @@ public class Autoupdate {
             file.setLastModified(lastModified);
             log.info("Downloaded " + file.length() + " bytes, lastModified=" + lastModified);
 
-            return Optional.of(new DownloadedAutoupdateFileInfo(localZipFileName, lastModified));
+            return DownloadResult.updated(new DownloadedAutoupdateFileInfo(localZipFileName, lastModified));
         } catch (ReportedIOException e) {
             // we had already reported error with a UI dialog when we had parent frame
             log.error("Error downloading bundle: " + e);
@@ -790,6 +851,6 @@ public class Autoupdate {
                 ErrorMessageHelper.showErrorDialog("Error downloading " + e, "Error");
             }
         }
-        return Optional.empty();
+        return DownloadResult.of(UpdateOutcome.FAILED);
     }
 }

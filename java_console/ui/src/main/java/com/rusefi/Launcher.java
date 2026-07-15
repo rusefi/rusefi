@@ -11,8 +11,7 @@ import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -67,16 +66,12 @@ public class Launcher implements rusEFIVersion {
 
         ConsoleTools.printTools();
 
-        AtomicReference<Consumer<String>> bannerCallback = new AtomicReference<>();
-        Thread updateThread = new Thread(() ->
-            Autoupdate.runSilentUpdate(msg -> {
-                Consumer<String> cb = bannerCallback.get();
-                if (cb != null && msg != null)
-                    SwingUtilities.invokeLater(() -> cb.accept(msg));
-            }), "autoupdate-background");
+        CompletableFuture<Autoupdate.UpdateOutcome> updateOutcome = new CompletableFuture<>();
+        Thread updateThread = new Thread(() -> updateOutcome.complete(Autoupdate.runSilentUpdate()),
+            "autoupdate-background");
         updateThread.setDaemon(true);
         updateThread.start();
 
-        ConsoleUI.startUi(effectiveArgs, bannerCallback);
+        ConsoleUI.startUi(effectiveArgs, updateOutcome);
     }
 }

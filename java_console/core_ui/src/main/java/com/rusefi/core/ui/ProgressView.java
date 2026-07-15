@@ -12,7 +12,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * @see FirmwareUpdateTabSandbox
  */
 public class ProgressView {
     private final FrameHelper frameHelper;
