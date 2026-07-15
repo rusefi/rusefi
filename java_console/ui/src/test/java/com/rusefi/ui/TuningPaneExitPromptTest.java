@@ -10,14 +10,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TuningPaneExitPromptTest {
     @Test
     void cleanTuneDoesNotPrompt() {
-        assertEquals(TuningPane.ExitPrompt.NONE, TuningPane.exitPrompt(false, true));
-        assertEquals(TuningPane.ExitPrompt.NONE, TuningPane.exitPrompt(false, false));
+        assertEquals(TuningPane.ExitPrompt.NONE, TuningPane.exitPrompt(false, true, false));
+        assertEquals(TuningPane.ExitPrompt.NONE, TuningPane.exitPrompt(false, false, false));
     }
 
     @Test
     void dirtyTuneOffersAvailablePersistenceAction() {
-        assertEquals(TuningPane.ExitPrompt.BURN, TuningPane.exitPrompt(true, true));
-        assertEquals(TuningPane.ExitPrompt.SAVE, TuningPane.exitPrompt(true, false));
+        assertEquals(TuningPane.ExitPrompt.BURN, TuningPane.exitPrompt(true, true, false));
+        assertEquals(TuningPane.ExitPrompt.SAVE, TuningPane.exitPrompt(true, false, false));
+        assertEquals(TuningPane.ExitPrompt.SAVE, TuningPane.exitPrompt(true, true, true));
     }
 
     @Test

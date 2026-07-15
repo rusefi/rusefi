@@ -54,6 +54,7 @@ public class TuningPane {
     private final AtomicReference<String> currentKey = new AtomicReference<>();
     /** [tag:offline_tune] The .ini the offline tune was loaded with — used to migrate edits if a different-signature ECU connects. */
     private IniFileModel offlineIni;
+    private volatile boolean firmwareUpdateInProgress;
     /** Fired when the user picks "Show in Pinout" on a pin-enum field. Wired from ConsoleUI after construction. */
     private Consumer<String> navigateToPinout;
     private Runnable showTuningTab = () -> { };
@@ -339,11 +340,11 @@ public class TuningPane {
         SAVE
     }
 
-    static ExitPrompt exitPrompt(boolean dirty, boolean connected) {
+    static ExitPrompt exitPrompt(boolean dirty, boolean connected, boolean firmwareUpdateInProgress) {
         if (!dirty) {
             return ExitPrompt.NONE;
         }
-        return connected ? ExitPrompt.BURN : ExitPrompt.SAVE;
+        return connected && !firmwareUpdateInProgress ? ExitPrompt.BURN : ExitPrompt.SAVE;
     }
 
     static void dispatchExitChoice(ExitPrompt prompt, int choice,
@@ -359,9 +360,10 @@ public class TuningPane {
         }
     }
 
-    public void requestExit(Component parent, Runnable exit) {
+    public void requestExit(Component parent, Runnable exit, boolean firmwareUpdateInProgress) {
         ExitPrompt prompt = exitPrompt(toolbar.hasUnsavedChanges(sessionImage.get()),
-                ConnectionStatusLogic.INSTANCE.isConnected() && uiContext.getBinaryProtocol() != null);
+                ConnectionStatusLogic.INSTANCE.isConnected() && uiContext.getBinaryProtocol() != null,
+                firmwareUpdateInProgress);
         if (prompt == ExitPrompt.NONE) {
             exit.run();
             return;
@@ -378,6 +380,11 @@ public class TuningPane {
         dispatchExitChoice(prompt, choice,
                 onSuccess -> toolbar.burnToEcuAndThen(right, onSuccess),
                 onSuccess -> toolbar.saveTuneAndThen(right, onSuccess), exit);
+    }
+
+    public void setFirmwareUpdateInProgress(boolean inProgress) {
+        firmwareUpdateInProgress = inProgress;
+        toolbar.setFirmwareUpdateInProgress(inProgress);
     }
 
     /**
@@ -430,7 +437,10 @@ public class TuningPane {
      *         dialog dismissal); false only if the user explicitly chose the ECU tune.
      */
     private boolean reconcileOfflineEditsOnConnect(BinaryProtocol bp, CalibrationDialogWidget right,
-                                                   ConfigurationImage offlineEdits) {
+                                                    ConfigurationImage offlineEdits) {
+        if (firmwareUpdateInProgress) {
+            return true;
+        }
         IniFileModel ecuIni = uiContext.iniFileState.getIniFileModel();
         String ecuSig = (ecuIni != null) ? ecuIni.getSignature() : bp.signature;
         String offlineSig = (offlineIni != null) ? offlineIni.getSignature() : null;

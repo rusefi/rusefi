@@ -157,8 +157,12 @@ public class StartupFrame {
         // LinkManager. If our splash auto-connect is holding the same port, they'd deadlock on
         // "Connecting...". Release the splash connection just before any job starts so the port
         // is free for the exclusive operation.
+        asyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(() ->
+            setStartupFirmwareUpdateInProgress(isFirmwareOperationInProgress())));
         asyncJobExecutor.addOnJobAboutToStartListener(this::releaseSplashConnection);
         asyncJobExecutor.addOnJobInProgressFinishedListener(this::onLiveConnectionJobFinished);
+        asyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(() ->
+            setStartupFirmwareUpdateInProgress(false)));
         String title = UiProperties.getWhiteLabel() + " console " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
@@ -171,6 +175,24 @@ public class StartupFrame {
 
         frame = FrameHelper.createFrame(title).getFrame();
         frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent ev) {
+                if (!isFirmwareOperationInProgress()) {
+                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    return;
+                }
+                int choice = JOptionPane.showConfirmDialog(
+                    frame,
+                    "A firmware update is still in progress. Exiting now may leave the ECU unfinished. Exit anyway?",
+                    "Firmware Update In Progress",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+                frame.setDefaultCloseOperation(choice == JOptionPane.YES_OPTION
+                    ? JFrame.EXIT_ON_CLOSE
+                    : JFrame.DO_NOTHING_ON_CLOSE);
+            }
+
             @Override
             public void windowClosed(WindowEvent ev) {
                 if (!isProceeding) {
@@ -614,11 +636,20 @@ public class StartupFrame {
         make baud rate combo box much less visible #9103
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
 */
+        if (!asyncJobExecutor.isNotInProgress()) {
+            return;
+        }
         PortResult selectedPort = ((PortResult)portsComboBox.getComboPorts().getSelectedItem());
+        if (selectedPort == null) {
+            return;
+        }
         connect(selectedPort);
     }
 
     private void connect(PortResult selectedPort) {
+        if (!asyncJobExecutor.isNotInProgress()) {
+            return;
+        }
         log.info("connect: port=" + selectedPort.port);
         boolean alreadyConnected = isAutoConnected(selectedPort);
         log.info("connect: alreadyConnected=" + alreadyConnected);
@@ -646,6 +677,9 @@ public class StartupFrame {
      * console (see the {@link #offlineConsoleOpen} guards).
      */
     public void openOfflineConsole(IniFileModel ini, ConfigurationImage image) {
+        if (!asyncJobExecutor.isNotInProgress()) {
+            return;
+        }
         log.info("openOfflineConsole: handing off splash frame to offline ConsoleUI");
         offlineConsoleOpen = true;
         // Shared teardown-without-dispose; keeps the scanner alive for later auto-connect.
@@ -674,6 +708,31 @@ public class StartupFrame {
      */
     private boolean shouldAutoConnect() {
         return asyncJobExecutor.isNotInProgress();
+    }
+
+    private boolean isFirmwareOperationInProgress() {
+        return asyncJobExecutor.getJobInProgress()
+            .map(job -> !(job instanceof ImportTuneJob) && !(job instanceof ExportTuneJob))
+            .orElse(false);
+    }
+
+    private void setStartupFirmwareUpdateInProgress(boolean inProgress) {
+        if (outerTabs == null) {
+            return;
+        }
+        if (inProgress) {
+            outerTabs.setSelectedIndex(0);
+        }
+        outerTabs.setEnabledAt(0, true);
+        outerTabs.setEnabledAt(1, !inProgress);
+        outerTabs.setEnabledAt(2, !inProgress);
+        firmwareUpdateTab.getBasicUpdaterPanel().getMigrateSettings().setEnabled(!inProgress);
+        portsComboBox.getComboPorts().setEnabled(!inProgress);
+        if (inProgress) {
+            connectButton.setEnabled(false);
+        } else {
+            updateConnectButtonState();
+        }
     }
 
     private void autoConnect(PortResult target) {
@@ -939,8 +998,8 @@ public class StartupFrame {
             autoConnectThread = null;
             SwingUtilities.invokeLater(() -> {
                 connectButton.setText("Connect");
-                connectButton.setEnabled(true);
-                portsComboBox.getComboPorts().setEnabled(true);
+                connectButton.setEnabled(asyncJobExecutor.isNotInProgress());
+                portsComboBox.getComboPorts().setEnabled(asyncJobExecutor.isNotInProgress());
                 noPortsMessage.setForeground(Color.darkGray);
                 noPortsMessage.setText("Updating firmware...");
                 noPortsMessage.setVisible(true);
@@ -962,8 +1021,8 @@ public class StartupFrame {
         // Reset UI on the Connect tab so the user sees a normal state after the job finishes.
         SwingUtilities.invokeLater(() -> {
             connectButton.setText("Connect");
-            connectButton.setEnabled(true);
-            portsComboBox.getComboPorts().setEnabled(true);
+            connectButton.setEnabled(asyncJobExecutor.isNotInProgress());
+            portsComboBox.getComboPorts().setEnabled(asyncJobExecutor.isNotInProgress());
             noPortsMessage.setForeground(Color.darkGray);
             noPortsMessage.setText("");
             noPortsMessage.setVisible(false);
