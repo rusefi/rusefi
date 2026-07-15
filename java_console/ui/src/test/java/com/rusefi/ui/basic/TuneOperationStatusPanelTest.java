@@ -36,6 +36,7 @@ class TuneOperationStatusPanelTest {
             assertEquals("Tune import failed", panel.getResultTextForUnitTest());
             assertTrue(panel.isCopyLogVisibleForUnitTest());
             assertTrue(panel.isContinueVisibleForUnitTest());
+            assertEquals(panel.getCopyLogSizeForUnitTest(), panel.getContinueSizeForUnitTest());
         });
     }
 }

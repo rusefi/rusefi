@@ -17,13 +17,23 @@ public class TuneOperationStatusPanel {
         progress.setIndeterminate(true);
         progress.setStringPainted(true);
         copyLog.addActionListener(e -> statusPanel.copyContentToClipboard());
-        continueButton.setFont(continueButton.getFont().deriveFont(continueButton.getFont().getSize() * 1.5f));
-        continueButton.setMargin(new Insets(10, 24, 10, 24));
+        for (JButton button : new JButton[]{copyLog, continueButton}) {
+            button.setFont(button.getFont().deriveFont(button.getFont().getSize() * 1.5f));
+            button.setMargin(new Insets(10, 24, 10, 24));
+        }
         continueButton.addActionListener(e -> onContinue.run());
 
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 8));
         actions.add(copyLog);
         actions.add(continueButton);
+        Dimension copySize = copyLog.getPreferredSize();
+        Dimension continueSize = continueButton.getPreferredSize();
+        Dimension actionSize = new Dimension(
+            Math.max(copySize.width, continueSize.width),
+            Math.max(copySize.height, continueSize.height)
+        );
+        copyLog.setPreferredSize(actionSize);
+        continueButton.setPreferredSize(actionSize);
         JPanel progressWrapper = new JPanel(new BorderLayout());
         progressWrapper.setBorder(BorderFactory.createEmptyBorder(10, 24, 10, 24));
         progressWrapper.add(progress, BorderLayout.CENTER);
@@ -72,6 +82,14 @@ public class TuneOperationStatusPanel {
 
     boolean isContinueVisibleForUnitTest() {
         return continueButton.isVisible();
+    }
+
+    Dimension getCopyLogSizeForUnitTest() {
+        return copyLog.getPreferredSize();
+    }
+
+    Dimension getContinueSizeForUnitTest() {
+        return continueButton.getPreferredSize();
     }
 
     void continueForUnitTest() {
