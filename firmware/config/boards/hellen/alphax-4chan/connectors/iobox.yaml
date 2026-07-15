@@ -1,21 +1,21 @@
 pins:
   - pin: canbus-1
-    id: MSIOBOX_0_OUT_1
+    id: EXTIOCHIP_0_IO_1
     class: outputs
     ts_name: MS IO-Box 0 OUT 1
 
   - pin: canbus-2
-    id: MSIOBOX_0_OUT_2
+    id: EXTIOCHIP_0_IO_2
     class: outputs
     ts_name: MS IO-Box 0 OUT 2
 
   - pin: canbus-3
-    id: MSIOBOX_0_OUT_3
+    id: EXTIOCHIP_0_IO_3
     class: outputs
     ts_name: MS IO-Box 0 OUT 3
 
   - pin: canbus-4
-    id: MSIOBOX_0_OUT_4
+    id: EXTIOCHIP_0_IO_4
     class: outputs
     ts_name: MS IO-Box 0 OUT 4
 
