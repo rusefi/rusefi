@@ -12,12 +12,14 @@
 #include "global.h"
 #include "engine_configuration.h"
 
+// todo: '_TS_' part here no longer makes sense now that we use volts!
 // Scaled to 1000 counts = 5.0 volts
 #define TPS_TS_CONVERSION (1 / PACK_MULT_RAW_VOLTAGE)
 
 // we have this '100'  magic constant too often for two many other reasons todo: refactor further?
 #define POSITION_FULLY_OPEN 100
 
+// todo: looks like we need to rename this method since we no longer store sensors in ADC units?
 constexpr inline int convertVoltageTo10bitADC(float voltage) {
 	return (int) (voltage * TPS_TS_CONVERSION);
 }
