@@ -5,6 +5,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +29,7 @@ public class RealIniFileProviderManualPickerTest {
     @AfterEach
     public void resetPicker() {
         RealIniFileProvider.manualPicker = null;
-        RealIniFileProvider.clearDeclinedSignaturesForTests();
+        RealIniFileProvider.clearPromptedSignaturesForTests();
     }
 
     /** A hand-written fake per the test conventions — records the signature it was asked about. */
@@ -74,6 +78,46 @@ public class RealIniFileProviderManualPickerTest {
                     () -> new RealIniFileProvider().provide(UNPARSEABLE_SIGNATURE));
         }
         assertEquals(1, promptCount[0], "picker must be shown at most once per signature");
+    }
+
+    @Test
+    public void promptsOnlyOnceForConcurrentProbes() throws Exception {
+        AtomicInteger promptCount = new AtomicInteger();
+        CountDownLatch pickerEntered = new CountDownLatch(1);
+        CountDownLatch releasePicker = new CountDownLatch(1);
+        RealIniFileProvider.manualPicker = signature -> {
+            promptCount.incrementAndGet();
+            pickerEntered.countDown();
+            try {
+                releasePicker.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            return null;
+        };
+
+        FutureTask<Boolean> first = new FutureTask<>(() -> {
+            assertThrows(IniNotFoundException.class,
+                    () -> new RealIniFileProvider().provide(UNPARSEABLE_SIGNATURE));
+            return true;
+        });
+        FutureTask<Boolean> second = new FutureTask<>(() -> {
+            assertThrows(IniNotFoundException.class,
+                    () -> new RealIniFileProvider().provide(UNPARSEABLE_SIGNATURE));
+            return true;
+        });
+        new Thread(first).start();
+        boolean entered = pickerEntered.await(5, TimeUnit.SECONDS);
+        try {
+            assertTrue(entered);
+            new Thread(second).start();
+            assertTrue(second.get(5, TimeUnit.SECONDS));
+        } finally {
+            releasePicker.countDown();
+        }
+        assertTrue(first.get(5, TimeUnit.SECONDS));
+
+        assertEquals(1, promptCount.get());
     }
 
     @Test
