@@ -31,6 +31,7 @@ private:
 
 	void sda_low();
 	void sda_high();
+	virtual bool sda_get();
 	void scl_low();
 	void scl_high();
 

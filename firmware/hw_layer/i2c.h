@@ -9,6 +9,9 @@
 
 #include "rusefi_enums.h"
 
+#include <cstdint>
+#include <cstddef>
+
 class i2cBus {
 public:
 	// Initialize the I2C driver
