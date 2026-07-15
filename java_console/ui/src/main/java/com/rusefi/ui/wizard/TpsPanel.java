@@ -11,6 +11,7 @@ import com.rusefi.ui.util.ScrollablePanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
 
 public class TpsPanel extends AbstractWizardStep {
     static final int CARD_WIDTH = 760;
@@ -41,6 +42,8 @@ public class TpsPanel extends AbstractWizardStep {
     private final JComboBox<String> adcCombo = new JComboBox<>();
     private final JTextField closedField = new JTextField(10);
     private final JTextField wotField = new JTextField(10);
+    private final JButton grabClosedButton = new JButton("Grab");
+    private final JButton grabWotButton = new JButton("Grab");
     private final JLabel voltageValue = new JLabel("-- V");
     private final JLabel tpsValue = new JLabel("-- %");
     private final JLabel errorLabel = new JLabel(" ");
@@ -121,22 +124,37 @@ public class TpsPanel extends AbstractWizardStep {
         wrapper.add(card);
         content.add(new JScrollPane(wrapper), BorderLayout.CENTER);
 
+        grabClosedButton.addActionListener(e -> captureCurrentVoltage(closedField));
+        grabWotButton.addActionListener(e -> captureCurrentVoltage(wotField));
         nextButton.addActionListener(e -> saveAndContinue());
     }
 
     private JPanel buildEndpointFields() {
-        JPanel panel = new JPanel(new GridLayout(1, 2, 12, 0));
-        panel.add(labeledField("CLOSED VOLTAGE", closedField));
-        panel.add(labeledField("OPEN VOLTAGE (WOT)", wotField));
+        JPanel panel = new JPanel(new GridLayout(1, 2, 28, 0));
+        panel.add(labeledField("CLOSED VOLTAGE", closedField, grabClosedButton));
+        panel.add(labeledField("OPEN VOLTAGE (WOT)", wotField, grabWotButton));
         return panel;
     }
 
-    private JPanel labeledField(String title, JTextField field) {
+    private JPanel labeledField(String title, JTextField field, JButton grabButton) {
         JPanel panel = new JPanel(new BorderLayout(8, 5));
         panel.add(sectionLabel(title), BorderLayout.NORTH);
         panel.add(field, BorderLayout.CENTER);
-        panel.add(new JLabel("V"), BorderLayout.EAST);
+        JPanel trailing = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        trailing.add(new JLabel("V"));
+        trailing.add(grabButton);
+        panel.add(trailing, BorderLayout.EAST);
         return panel;
+    }
+
+    private void captureCurrentVoltage(JTextField field) {
+        double voltage = sensorCentral.getValue(RAW_TPS_CHANNEL);
+        if (!Double.isFinite(voltage) || voltage < 0 || voltage > 5) {
+            errorLabel.setText("TPS voltage is not available.");
+            return;
+        }
+        field.setText(String.format(Locale.ROOT, "%.3f", voltage));
+        errorLabel.setText(" ");
     }
 
     private JPanel buildReadouts() {
@@ -189,6 +207,8 @@ public class TpsPanel extends AbstractWizardStep {
         adcCombo.setEnabled(true);
         closedField.setEnabled(true);
         wotField.setEnabled(true);
+        grabClosedButton.setEnabled(true);
+        grabWotButton.setEnabled(true);
         nextButton.setEnabled(true);
         errorLabel.setText(" ");
     }
@@ -198,6 +218,8 @@ public class TpsPanel extends AbstractWizardStep {
         adcCombo.setEnabled(false);
         closedField.setEnabled(false);
         wotField.setEnabled(false);
+        grabClosedButton.setEnabled(false);
+        grabWotButton.setEnabled(false);
         nextButton.setEnabled(false);
     }
 
@@ -314,5 +336,21 @@ public class TpsPanel extends AbstractWizardStep {
 
     JComponent getCardForTests() {
         return card;
+    }
+
+    void grabClosedForTests() {
+        grabClosedButton.doClick();
+    }
+
+    void grabWotForTests() {
+        grabWotButton.doClick();
+    }
+
+    String getClosedVoltageForTests() {
+        return closedField.getText();
+    }
+
+    String getWotVoltageForTests() {
+        return wotField.getText();
     }
 }

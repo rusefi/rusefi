@@ -57,6 +57,21 @@ class TpsPanelTest {
         assertEquals(TpsPanel.CARD_WIDTH, panel.getCardForTests().getMaximumSize().width);
     }
 
+    @Test
+    void grabButtonsCaptureCurrentVoltage() throws Throwable {
+        ISensorCentral sensors = mock(ISensorCentral.class);
+        when(sensors.getValue(TpsPanel.RAW_TPS_CHANNEL)).thenReturn(0.512, 4.487, Double.NaN);
+        TpsPanel panel = new TpsPanel(WizardSandbox.createOfflineContext(loadTestIni()), sensors);
+
+        panel.grabClosedForTests();
+        panel.grabWotForTests();
+        assertEquals("0.512", panel.getClosedVoltageForTests());
+        assertEquals("4.487", panel.getWotVoltageForTests());
+
+        panel.grabClosedForTests();
+        assertEquals("0.512", panel.getClosedVoltageForTests());
+    }
+
     private static IniFileModel loadTestIni() throws Throwable {
         try (InputStream stream = TpsPanelTest.class.getResourceAsStream("/january.ini")) {
             assertNotNull(stream);
