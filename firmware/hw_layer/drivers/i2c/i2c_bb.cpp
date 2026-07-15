@@ -22,6 +22,14 @@ void BitbangI2c::sda_low() {
 #endif
 }
 
+bool BitbangI2c::sda_get() {
+#if EFI_PROD_CODE
+	return palReadPad(m_sdaPort, m_sdaPin);
+#else
+	return false;
+#endif
+}
+
 void BitbangI2c::scl_high() {
 #if EFI_PROD_CODE
 	palSetPad(m_sclPort, m_sclPin);
@@ -131,12 +139,8 @@ bool BitbangI2c::readBit() {
 	waitQuarterBit();
 	waitQuarterBit();
 
-#if EFI_PROD_CODE
 	// Read just before we set the clock low (ie, as late as possible)
-	bool val = palReadPad(m_sdaPort, m_sdaPin);
-#else
-	bool val = false;
-#endif
+	bool val = sda_get();
 
 	scl_low();
 	waitQuarterBit();
@@ -195,11 +199,17 @@ msg_t BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize
 	start();
 
 	// Address + write
-	writeByte(addr << 1 | 0);
+	if (!writeByte(addr << 1 | 0)) {
+		stop();
+		return MSG_RESET;
+	}
 
 	// Write outbound bytes
 	for (size_t i = 0; i < writeSize; i++) {
-		writeByte(writeData[i]);
+		if (!writeByte(writeData[i])) {
+			stop();
+			return MSG_RESET;
+		}
 	}
 
 	stop();
@@ -208,18 +218,22 @@ msg_t BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize
 }
 
 msg_t BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
-	write(addr, writeData, writeSize);
+	msg_t res = write(addr, writeData, writeSize);
+	if (res != MSG_OK) {
+		return res;
+	}
 
-	read(addr, readData, readSize);
-
-	return MSG_OK;
+	return read(addr, readData, readSize);
 }
 
 msg_t BitbangI2c::read(uint8_t addr, uint8_t* readData, size_t readSize) {
 	start();
 
 	// Address + read
-	writeByte(addr << 1 | 1);
+	if (!writeByte(addr << 1 | 1)) {
+		stop();
+		return MSG_RESET;
+	}
 
 	for (size_t i = 0; i < readSize - 1; i++) {
 		// All but the last byte send ACK to indicate we're still reading
