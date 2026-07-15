@@ -58,8 +58,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",13="11A CLT Coolant",14="12A IAT",4="13A PPS1",1="14A AIN 1",9="15A TPS2",8="16A AIN 2 / Digital input (no pull)",6="1C Voltage From Key",5="5A TPS1",2="6A AIN 2",15="7A PPS2",11="MAP",12="On-board MAP"
-#define adc_channel_e_fullenum "NONE","14A AIN 1","6A AIN 2","INVALID","13A PPS1","5A TPS1","1C Voltage From Key","INVALID","16A AIN 2 / Digital input (no pull)","15A TPS2","INVALID","MAP","On-board MAP","11A CLT Coolant","12A IAT","7A PPS2"
+#define adc_channel_e_enum 0="NONE",13="11A CLT Coolant",14="12A IAT",4="13A PPS1",1="14A AIN 1",9="15A TPS2",8="16A AIN 2 / Digital input (no pull)",6="1C Voltage From Key",11="26B MAP",5="5A TPS1",2="6A AIN 2",15="7A PPS2",12="On-board MAP"
+#define adc_channel_e_fullenum "NONE","14A AIN 1","6A AIN 2","INVALID","13A PPS1","5A TPS1","1C Voltage From Key","INVALID","16A AIN 2 / Digital input (no pull)","15A TPS2","INVALID","26B MAP","On-board MAP","11A CLT Coolant","12A IAT","7A PPS2"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1628,7 +1628,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 34619158
+#define SIGNATURE_HASH 1015358888
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -2265,7 +2265,7 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_wbo_canbus_set_type false
-#define TS_SIGNATURE "rusEFI master.2026.07.15.super-uaefi.34619158"
+#define TS_SIGNATURE "rusEFI master.2026.07.16.super-uaefi.1015358888"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_TEST_COMMAND 't'
