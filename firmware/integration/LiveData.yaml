@@ -262,8 +262,9 @@ Usages:
     java: Mc33810State.java
     folder: hw_layer/drivers/gpio/
     prepend: integration/rusefi_config_shared.txt
+    constexpr: "mc33810getLiveData(0)"
     isPtr: true
-    conditional_compilation: "EFI_PROD_CODE"
+    conditional_compilation: "EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)"
 
   - name: long_term_fuel_trim_state
     cppFileName: long_term_fuel_trim
