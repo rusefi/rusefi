@@ -1,6 +1,16 @@
 /**
  * binary_mlg_logging.cpp
  *
+ * Writes engine state in the MegaLogViewer MLG binary format (version 2).
+ * This is the payload generator for SD card logging - the file lifecycle
+ * (create/rotate/close, f_expand pre-allocation) lives in
+ * firmware/hw_layer/mmc_card.cpp; the simulator uses the same code to write
+ * rusefi_simulator_log.mlg. Overview: docs/AI/sd_card_logging.md
+ *
+ * File layout: one header ("MLVLG", format 02) + one descriptor per logged
+ * field, then a stream of fixed-size data records. The field list is the
+ * generated log_fields_generated.h.
+ *
  * See also BinarySensorLog.java
  * See also mlq_file_format.txt
  *
@@ -53,6 +63,8 @@ static uint64_t binaryLogCount = 0;
 
 static const uint16_t recordLength = computeFieldsRecordLength();
 
+// MLG file header + one descriptor per field. Must land at file offset zero,
+// which is why mmc_card.cpp opens log files with FA_CREATE_ALWAYS (truncate).
 static size_t writeFileHeader(Writer& outBuffer) {
 	size_t writen = 0;
 	char buffer[Types::Header::Size];
@@ -105,6 +117,9 @@ static size_t writeFileHeader(Writer& outBuffer) {
 
 static uint8_t blockRollCounter = 0;
 
+// One fixed-size MLG data record: 4-byte prefix (block type 0, rolling counter,
+// 16-bit timestamp at 10us resolution), then every field's current value,
+// then a 1-byte checksum (plain sum of all payload bytes).
 static size_t writeSdBlock(Writer& outBuffer) {
 	size_t writen = 0;
 	static char buffer[16];
@@ -178,6 +193,9 @@ static size_t writeSdBlock(Writer& outBuffer) {
 	return writen;
 }
 
+// Append one "line" to the log: the header on the first call after
+// resetFileLogging(), one data record on every later call. Called by the SD
+// thread at sdCardLogFrequency Hz (see mlgLogger() in mmc_card.cpp).
 size_t writeSdLogLine(Writer& bufferedWriter) {
 #if EFI_PROD_CODE
 	if (!main_loop_started)
@@ -196,6 +214,8 @@ size_t writeSdLogLine(Writer& bufferedWriter) {
 	}
 }
 
+// Must be called for every new file (including 32Mb rollover) so the next
+// writeSdLogLine() emits a fresh header and the rolling counter restarts.
 void resetFileLogging() {
 	binaryLogCount = 0;
 	blockRollCounter = 0;

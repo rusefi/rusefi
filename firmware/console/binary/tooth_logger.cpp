@@ -109,6 +109,13 @@ void DisableToothLogger() {
 
 #else // not EFI_UNIT_TEST
 
+// Multi-buffering between producers and consumers: trigger/coil/injector edge
+// handlers (interrupt context) append composite_logger_s entries into
+// 'currentBuffer'; a buffer that fills up (or goes 5 seconds stale) is posted to
+// 'filledBuffers', where a consumer - the TS composite-log reader or the SD card
+// thread (ToothLoggerWriter) - drains it and returns it to 'freeBuffers'.
+// Buffers live in the shared BigBuffer region, so the tooth logger cannot run
+// concurrently with other BigBuffer users. See docs/AI/sd_card_logging.md
 static constexpr size_t bufferCount = BIG_BUFFER_SIZE / sizeof(CompositeBuffer);
 static_assert(bufferCount >= 2);
 
@@ -451,8 +458,19 @@ bool ToothLoggerHasData() {
 
 }
 
+// binary vs CSV output format, latched at file creation - see ToothLoggerWriter()
 static bool sdTriggerLogCsv = 0;
 
+/**
+ * One iteration of SD card .teeth file writing, called from the SD thread
+ * (sdLoggerTooth() in mmc_card.cpp): waits up to 3 seconds for a filled buffer
+ * and appends it to the file, as raw binary records or CSV per sdTriggerLogCsv
+ * (decided once per file, on-the-fly format change is not supported).
+ *
+ * @return positive number of bytes written; 0 to request the caller close the
+ * file and start a new one on the next tooth event (3 second idle timeout, the
+ * partially-filled current buffer is flushed first); negative on error
+ */
 int ToothLoggerWriter(FileBufferedWriter &writer) {
 	int ret = 0;
 	CompositeBuffer* buffer = nullptr;

@@ -203,3 +203,33 @@ plain code, no gen_config step).
 
 Open follow-ups:
 - Confirm on hardware that a defaults-reset N52 reads plausible TPS%/pedal% before user tuning.
+---
+
+## 2026-07-15 - SD card logging: overview doc + code comments (f_expand logic)
+
+What: Documented the SD card logging subsystem and annotated its three core source files.
+
+| File | Change |
+|-------------------------------------------------------|--------------------------------------------|
+| docs/AI/sd_card_logging.md (new)                       | End-to-end overview: SD thread mode state machine (IDLE/ECU/PC/UNMOUNT/FORMAT, all transitions via IDLE), .mlg vs .teeth loggers, FileBufferedWriter path, f_expand pre-allocation, file naming, status channels, console commands |
+| firmware/hw_layer/mmc_card.cpp                         | Expanded LOGGER_MAX_FILE_SIZE, f_expand and f_truncate comments; doc pointer in file header |
+| firmware/console/binary_mlg_log/binary_mlg_logging.cpp | File-header overview (MLG v2 layout, who owns file lifecycle); comments on writeFileHeader/writeSdBlock/writeSdLogLine/resetFileLogging |
+| firmware/console/binary/tooth_logger.cpp               | Comment on freeBuffers/filledBuffers multi-buffering (BigBuffer, interrupt producers -> TS/SD consumers); ToothLoggerWriter() contract incl. 3s idle timeout -> new file |
+| CLAUDE.md                                              | Added sd_card_logging.md to Deep Dive AI Guidance list |
+
+Key facts captured (the f_expand logic in particular):
+- sdLoggerCreateFile() pre-allocates each log file to 32Mb with f_expand(fd, size, opt=1)
+  (allocate-now, contiguous; FF_USE_EXPAND=1 in firmware/ext/FatFS/ffconf.h). All FAT
+  updates happen up-front, so writes inside the pre-allocated area never touch FAT
+  structures -> sudden power loss loses buffered data but not the filesystem.
+- f_expand failure (fragmented card) is deliberately non-fatal: FatFS falls back to
+  cluster-by-cluster growth, logging works without the corruption protection.
+- sdLoggerCloseFile() f_truncate()s back to actual size; a power-lossed file stays 32Mb
+  with trailing garbage.
+- Both loggers share sdLoggerCreateFile() (so .teeth files are pre-allocated too) but
+  only sdLoggerMlg() enforces the 32Mb rollover cap.
+
+Validation: comment/doc-only changes, no code touched; facts verified against source
+(mmc_card.cpp, file_writer.h, ffconf.h FF_USE_EXPAND=1, tooth_logger.cpp, sd_log_trigger.h).
+
+Open follow-ups: none.

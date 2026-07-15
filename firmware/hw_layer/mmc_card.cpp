@@ -5,6 +5,8 @@
  * @author Kot_dnz
  * @author Andrey Belomutskiy, (c) 2012-2020
  *
+ * SD card logging overview: docs/AI/sd_card_logging.md
+ *
  * default pinouts in case of SPI2 connected to MMC: PB13 - SCK, PB14 - MISO, PB15 - MOSI, PD4 - CS, 3.3v
  * default pinouts in case of SPI3 connected to MMC: PB3  - SCK, PB4  - MISO, PB5  - MOSI, PD4 - CS, 3.3v
  *
@@ -39,9 +41,14 @@
 #include "sd_log_trigger.h"
 
 // Divide logs into 32Mb chunks.
-// With this opstion defined SW will pre-allocate file with given size and
-// should not touch FAT structures until file is fully filled
-// This should protect FS from corruption at sudden power loss
+// When defined, every log file is pre-allocated to this size with f_expand() on create
+// and shrunk back to the actually-written size with f_truncate() on close - see
+// sdLoggerCreateFile()/sdLoggerCloseFile(). While writes stay inside the pre-allocated
+// area they never modify FAT/allocation structures, so a sudden power loss can lose
+// buffered data but should not corrupt the filesystem itself.
+// .mlg logs also roll over to a new file at this size (see sdLoggerMlg()); .teeth files
+// have no such cap and just degrade to normal allocation past this point.
+// See docs/AI/sd_card_logging.md for the full overview.
 #define LOGGER_MAX_FILE_SIZE	(32 * 1024 * 1024)
 
 // at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
@@ -436,11 +443,16 @@ static int sdLoggerCreateFile(FIL *fd) {
 	}
 
 #ifdef LOGGER_MAX_FILE_SIZE
-	//pre-allocate data ahead
+	// Pre-allocate the whole file as one contiguous cluster chain (opt=1: allocate now,
+	// not just find; requires FF_USE_EXPAND in ffconf.h). All FAT updates happen here,
+	// up-front: subsequent f_write() calls inside this area only touch data sectors,
+	// which protects the filesystem from corruption at sudden power loss.
 	err = f_expand(fd, LOGGER_MAX_FILE_SIZE, /* Find and allocate */ 1);
 	if (err != FR_OK) {
 		printFatFsError("pre-allocate", err);
-		// this is not critical
+		// Not critical: happens on a fragmented card with no 32Mb contiguous run.
+		// FatFS falls back to growing the file cluster-by-cluster on write - logging
+		// still works, just without the power-loss protection above.
 	}
 #endif
 
@@ -453,7 +465,10 @@ static int sdLoggerCreateFile(FIL *fd) {
 static void sdLoggerCloseFile(FIL *fd)
 {
 #ifdef LOGGER_MAX_FILE_SIZE
-	// truncate file to actual size
+	// Shrink the file from the 32Mb f_expand() pre-allocation back to the size actually
+	// written, returning the unused tail to free space. A file that never got this
+	// treatment (power loss) stays at full 32Mb with trailing garbage - log readers
+	// stop at the last valid record.
 	f_truncate(fd);
 #endif
 
