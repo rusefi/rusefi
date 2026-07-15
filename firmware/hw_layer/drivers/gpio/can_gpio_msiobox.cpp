@@ -606,7 +606,8 @@ void initCanGpioMsiobox() {
 		if (instance[i].config(0, can_id, 20) == 0) {
 			registerCanListener(instance[i]);
 			/* register */
-			int ret = gpiochip_register(Gpio::MSIOBOX_0_OUT_1, DRIVER_NAME, instance[i], MSIOBOX_SIGNALS);
+			/* TODO: pick base from settings */
+			int ret = gpiochip_register(Gpio::EXTIOCHIP_0_IO_1, DRIVER_NAME, instance[i], MSIOBOX_SIGNALS);
 			if (ret < 0) {
 			  // no error handling, not returning error code
 				return;
