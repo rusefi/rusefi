@@ -700,6 +700,12 @@ static LOG_FIELD_CONSTNESS_SPECIFIER_STORAGE MLG::Entries::Field fields[] = {
 	{engine->shiftTorqueReductionController.trqRedTimeXaxisValue, "trqRedTimeXaxisValue", "", 0},
 	{engine->shiftTorqueReductionController.trqRedIgnRetXaxisValue, "trqRedIgnRetXaxisValue", "", 0},
 #endif
+#if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
+	{mc33810getLiveData(0)->sparkDuration[0], "Spark duration 1", "ms", 3, "Timing"},
+	{mc33810getLiveData(0)->sparkDuration[1], "Spark duration 2", "ms", 3, "Timing"},
+	{mc33810getLiveData(0)->sparkDuration[2], "Spark duration 3", "ms", 3, "Timing"},
+	{mc33810getLiveData(0)->sparkDuration[3], "Spark duration 4", "ms", 3, "Timing"},
+#endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveDataConstexpr<electronic_throttle_s, 0>()->etbCurrentTarget, "etb1ETB: target for current pedal", "%", 2, "ETB more"},
 	{getLiveDataConstexpr<electronic_throttle_s, 0>()->boardEtbAdjustment, "etb1ETB: board adjustment", "%", 2, "ETB more"},
