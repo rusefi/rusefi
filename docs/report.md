@@ -233,3 +233,36 @@ Validation: comment/doc-only changes, no code touched; facts verified against so
 (mmc_card.cpp, file_writer.h, ffconf.h FF_USE_EXPAND=1, tooth_logger.cpp, sd_log_trigger.h).
 
 Open follow-ups: none.
+
+## 2026-07-15 - Lua scripting API: categorized hook inventory doc
+
+What: Reviewed every custom Lua method registered around lua_hooks.cpp and documented
+them in a new docs/AI/lua_scripting.md, grouped into 11 categories.
+
+| File | Change |
+|-------------------------------|--------------------------------------------------------|
+| docs/AI/lua_scripting.md (new) | Full inventory of Lua hooks by category: input reads, virtual sensors, virtual switches, closed-loop trims, cut/disable controls, PWM/DAC outputs, CAN, config/calibration access, state queries, luaaa helper classes, framework/test hooks; plus registration-site map, indexing conventions, build-flag gating, and an "adding a new hook" recipe |
+| CLAUDE.md | Added lua_scripting.md to the Deep Dive AI Guidance list |
+
+Key decisions / findings:
+- Registration is spread over four files: lua_hooks.cpp (bulk + luaaa classes),
+  lua_hooks_util.cpp (print/interpolate/find*/mcu_standby), lua.cpp (setTickRate,
+  onTick dispatch), lua_can_rx.cpp (onCanRx dispatch, global_can_data workaround).
+  lua_hooks_ext.cpp is an empty extension point; boardConfigureLuaHooks() is a weak
+  board hook with no in-tree overrides.
+- Documented the mixed indexing convention explicitly: 1-based (HUMAN_OFFSET) for
+  TS-facing entities (CAN bus, curves, tables, TS buttons, gauges), 0-based for
+  sensor indices, PWM channels, aux digital inputs, vin().
+- Documented flash-saving exclusions (#if !defined(STM32F4) group) and the
+  DISABLE_LUA_* / WITH_LUA_* opt-out macros.
+- setTickRate code clamps 1..2000 Hz while its comment says 1..200 - doc records
+  the code behavior (comment discrepancy left in source, not a functional issue).
+
+Validation: doc-only change; every listed hook, guard macro and constant
+(LUA_PWM_COUNT=8, LUA_GAUGE_COUNT=8, LUA_DIGITAL_INPUT_COUNT=8, LUA_BUTTON_COUNT=10,
+CMD_BURNCONFIG="burnconfig") verified against source via grep/read of the four
+registration files, lua_pid.h and rusefi_config.txt.
+
+Open follow-ups:
+- lua.cpp setTickRate comment ("Limit to 1..200 hz") disagrees with clampF(1, x, 2000).
+- lua_hooks.cpp has a commented-out hasCriticalReportFile hook referencing issue #7291.
