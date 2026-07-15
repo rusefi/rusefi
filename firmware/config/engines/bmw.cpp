@@ -18,6 +18,9 @@ void bmwN52() {
     engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
     engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
+    engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+    engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
+
     // TPS/PPS calibration captured from a real N52 throttle body + pedal (see "super N52" reference tune).
     // TPS min/max are stored as 10-bit ADC counts, so convert the measured volts.
     // Throttle 1: primary min/max, then secondary min/max.

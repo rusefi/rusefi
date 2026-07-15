@@ -136,3 +136,70 @@ Validation:
 Open follow-ups:
 - Other magic output-channel names shared between java_console and .ini (e.g. sd_error,
   sd_formating, sd_active_wr/rd) could adopt the same pattern when java code starts using them.
+
+---
+
+## 2026-07-14 - N52 preset: bake in TPS/PPS calibration from reference tune
+
+What: Ported TPS + PPS calibration out of the "super N52" TunerStudio tune (CurrentTune.msq)
+into the `bmwN52()` engine preset in `firmware/config/engines/bmw.cpp`, so a fresh N52 selection
+ships with the real throttle-body/pedal calibration instead of raw defaults.
+
+| Field(s)                                                   | Source (msq, volts) | Stored as |
+|------------------------------------------------------------|---------------------|-----------|
+| tpsMin / tpsMax                                            | 4.545 / 0.58        | 10-bit ADC via convertVoltageTo10bitADC |
+| tps1SecondaryMin / tps1SecondaryMax                       | 0.75 / 4.72         | 10-bit ADC via convertVoltageTo10bitADC |
+| throttlePedalUpVoltage / throttlePedalWOTVoltage          | 0.625 / 2.230       | float volts (verbatim) |
+| throttlePedalSecondaryUpVoltage / ...WOTVoltage           | 0.947 / 4.197       | float volts (verbatim) |
+
+Key decisions:
+- Used shared helpers setTPS1Calibration()/setPPSCalibration() (defaults.h), matching subaru.cpp.
+- TPS stored as 10-bit ADC counts (not volts): wrapped msq volts in convertVoltageTo10bitADC
+  (= volts*200). PPS stored as float volts, copied through directly. This units split is the main
+  porting hazard and is now documented.
+- Skipped tps2* fields: msq had them at defaults (0/5, 5/0); N52 runs a single dual-sensor throttle.
+- Added #include "defaults.h"; convertVoltageTo10bitADC comes transitively via pch.h.
+
+Docs: new docs/AI/engine_presets.md documents the canned-tune/preset process end to end
+(enum -> engine_type_impl.cpp dispatch -> config/engines setup fn), the TPS-vs-PPS units gotcha,
+and a step-by-step msq->preset porting recipe.
+
+Validation: static review only - mirrors the established subaru.cpp calibration pattern; all
+referenced helpers are declared in the included headers. No generated files touched (presets are
+plain code, no gen_config step).
+
+Open follow-ups:
+- Confirm on hardware that a defaults-reset N52 reads plausible TPS
+---
+
+## 2026-07-14 - N52 preset: bake in TPS/PPS calibration from reference tune
+
+What: Ported TPS + PPS calibration out of the "super N52" TunerStudio tune (CurrentTune.msq)
+into the bmwN52() engine preset in firmware/config/engines/bmw.cpp, so a fresh N52 selection
+ships with the real throttle-body/pedal calibration instead of raw defaults.
+
+| Field(s)                                           | Source (msq, volts) | Stored as |
+|----------------------------------------------------|---------------------|-----------|
+| tpsMin / tpsMax                                     | 4.545 / 0.58        | 10-bit ADC via convertVoltageTo10bitADC |
+| tps1SecondaryMin / tps1SecondaryMax                | 0.75 / 4.72         | 10-bit ADC via convertVoltageTo10bitADC |
+| throttlePedalUpVoltage / throttlePedalWOTVoltage   | 0.625 / 2.230       | float volts (verbatim) |
+| throttlePedalSecondaryUpVoltage / ...WOTVoltage    | 0.947 / 4.197       | float volts (verbatim) |
+
+Key decisions:
+- Used shared helpers setTPS1Calibration()/setPPSCalibration() (defaults.h), matching subaru.cpp.
+- TPS stored as 10-bit ADC counts (not volts): wrapped msq volts in convertVoltageTo10bitADC
+  (-> volts*200). PPS stored as float volts, copied through directly. This units split is the
+  main porting hazard and is now documented.
+- Skipped tps2* fields: msq had them at defaults (0/5, 5/0); N52 runs a single dual-sensor throttle.
+- Added #include "defaults.h"; convertVoltageTo10bitADC comes transitively via pch.h.
+
+Docs: new docs/AI/engine_presets.md documents the canned-tune/preset process end to end
+(enum -> engine_type_impl.cpp dispatch -> config/engines setup fn), the TPS-vs-PPS units gotcha,
+and a step-by-step msq->preset porting recipe.
+
+Validation: static review only - mirrors the established subaru.cpp calibration pattern; all
+referenced helpers are declared in the included headers. No generated files touched (presets are
+plain code, no gen_config step).
+
+Open follow-ups:
+- Confirm on hardware that a defaults-reset N52 reads plausible TPS%/pedal% before user tuning.
