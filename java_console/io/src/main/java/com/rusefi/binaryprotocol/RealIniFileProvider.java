@@ -32,18 +32,17 @@ public class RealIniFileProvider implements IniFileProvider {
     public static ManualIniPicker manualPicker = null;
 
     /**
-     * Signatures the user was already prompted for and declined (or picked nothing). The port
-     * scanner calls {@link #provide} on a loop for every probe cycle, so without this a cancelled
-     * picker would immediately re-open on the next scan — an endless dialog storm (issue #9774
-     * follow-up). A successful pick is cached as a real .ini by {@link SignatureHelper#importIntoCache}
-     * and resolves before we ever reach the picker, so this only remembers the "no" answers.
+     * Signatures for which a picker has already been opened. The port scanner calls {@link #provide}
+     * concurrently and on every probe cycle, so the atomic add both prevents duplicate pickers and
+     * stops a cancelled picker from immediately reopening (issue #9774 follow-up). A successful pick
+     * is cached as a real .ini by {@link SignatureHelper#importIntoCache}.
      * ponytail: session-lifetime set, cleared only by restart — good enough; a "retry" menu item
      * can clear it later if anyone asks.
      */
-    private static final Set<String> declinedSignatures = ConcurrentHashMap.newKeySet();
+    private static final Set<String> promptedSignatures = ConcurrentHashMap.newKeySet();
 
-    public static void clearDeclinedSignaturesForTests() {
-        declinedSignatures.clear();
+    public static void clearPromptedSignaturesForTests() {
+        promptedSignatures.clear();
     }
 
     private StatusConsumer statusConsumer = StatusConsumer.ANONYMOUS;
@@ -72,10 +71,11 @@ public class RealIniFileProvider implements IniFileProvider {
             // 5th option: one level up or environment variable direction
             localIniFile = IniLocator.findIniFile(IniFileReader.INI_FILE_PATH, signature);
         }
-        if (localIniFile == null && manualPicker != null && !declinedSignatures.contains(signature)) {
+        ManualIniPicker picker = manualPicker;
+        if (localIniFile == null && picker != null && promptedSignatures.add(signature)) {
             // 6th option: ask the user to point at a local .ini and cache it for next time.
-            // Prompt at most once per signature so the port-scanner loop can't re-open the dialog.
-            File picked = manualPicker.pick(signature);
+            // Atomic add prevents concurrent port-scanner probes from opening duplicate pickers.
+            File picked = picker.pick(signature);
             if (picked != null) {
                 try {
                     localIniFile = SignatureHelper.importIntoCache(signature, picked);
@@ -85,8 +85,6 @@ public class RealIniFileProvider implements IniFileProvider {
                     log.info("Failed to import picked .ini into cache: " + e);
                     localIniFile = picked.getAbsolutePath();
                 }
-            } else {
-                declinedSignatures.add(signature);
             }
         }
         if (localIniFile == null)
