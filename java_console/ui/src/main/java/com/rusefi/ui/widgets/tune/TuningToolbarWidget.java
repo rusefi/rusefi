@@ -59,6 +59,7 @@ public class TuningToolbarWidget {
 
     private final Timer undoCommitTimer;
     private final Timer uploadTimer;
+    private volatile boolean firmwareUpdateInProgress;
 
     /**
      * @param uiContext      live context (BinaryProtocol, LinkManager)
@@ -102,6 +103,9 @@ public class TuningToolbarWidget {
         undoCommitTimer.setRepeats(false);
 
         uploadTimer = new Timer(UPLOAD_DELAY_MS, e -> {
+            if (firmwareUpdateInProgress) {
+                return;
+            }
             BinaryProtocol bp = uiContext.getBinaryProtocol();
             ConfigurationImage image = sessionImage.get();
             if (bp == null || image == null) {
@@ -201,6 +205,9 @@ public class TuningToolbarWidget {
     }
 
     public void burnToEcuAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
+        if (firmwareUpdateInProgress) {
+            return;
+        }
         BinaryProtocol bp = uiContext.getBinaryProtocol();
         ConfigurationImage toBurn = right.getWorkingImage();
         if (toBurn == null) {
@@ -273,6 +280,9 @@ public class TuningToolbarWidget {
         loadTuneAction = new AbstractAction(LoadTuneHelper.LOAD_TUNE_TEXT) {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (firmwareUpdateInProgress) {
+                    return;
+                }
                 if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
                     return;
                 }
@@ -292,6 +302,12 @@ public class TuningToolbarWidget {
                                     OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(
                                         path, null, cb::logLine);
                                     if (result == null) {
+                                        cb.error();
+                                        SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
+                                        return;
+                                    }
+                                    if (firmwareUpdateInProgress) {
+                                        cb.logLine("Firmware update in progress; tune load cancelled.");
                                         cb.error();
                                         SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
                                         return;
@@ -358,6 +374,14 @@ public class TuningToolbarWidget {
                 );
             }
         };
+    }
+
+    public void setFirmwareUpdateInProgress(boolean inProgress) {
+        firmwareUpdateInProgress = inProgress;
+        if (inProgress) {
+            uploadTimer.stop();
+        }
+        loadTuneAction.setEnabled(!inProgress);
     }
 
     private void buildSaveTuneAction(UIContext uiContext,

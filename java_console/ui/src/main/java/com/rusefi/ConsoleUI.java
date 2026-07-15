@@ -331,6 +331,8 @@ console live data tab is broken #8402
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
  */
             PinoutPane pinoutPane = new PinoutPane(uiContext);
+            PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
+            DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
 
             // [tag:offline_tune] Seed the loaded tune image so config-image-driven panes (e.g. PinoutPane's
             // "Tune use" column) have data with no live ECU — the online path gets this from BinaryProtocol.
@@ -348,12 +350,15 @@ console live data tab is broken #8402
                 }
                 TuningPane tp = new TuningPane(uiContext, offlineImage, getConfig().getRoot().getChild("tuning"));
                 tuningHolder[0] = tp;
+                tp.setFirmwareUpdateInProgress(deviceSessionManager.getState() == SessionState.FLASHING);
                 tp.setShowTuningTab(() -> tabbedPane.selectTab("Tuning"));
                 if (isOffline && offlineImage != null) {
                     tp.seedOfflineImage(offlineImage, null);
                 }
                 mainFrame.setExitRequestHandler(() ->
-                        tp.requestExit(mainFrame.getFrame().getFrame(), () -> mainFrame.getFrame().getFrame().dispose()));
+                        tp.requestExit(mainFrame.getFrame().getFrame(),
+                            () -> mainFrame.getFrame().getFrame().dispose(),
+                            deviceSessionManager.getState() == SessionState.FLASHING));
                 mainFrame.setTuneActions(tp.getLoadTuneAction(), tp.getSaveTuneAction());
                 if (UiProperties.isPinoutEnabled()) {
                     tp.setNavigateToPinout(enumValue -> {
@@ -387,8 +392,6 @@ console live data tab is broken #8402
             }
             // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
-            PortResult initialPort = (port != null) ? new PortResult(port, serialPortType) : null;
-            DeviceSessionManager deviceSessionManager = new DeviceSessionManager(connectivityContext, initialPort);
             DevicePane devicePane = new DevicePane(uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane);
             tabbedPane.addTab("Device", devicePane.getContent());
             mainFrame.setUpdateEcuAction(() -> {
@@ -398,8 +401,20 @@ console live data tab is broken #8402
 
             addCustomTabs();
 
+            deviceSessionManager.addListener((state, hardware) -> SwingUtilities.invokeLater(() -> {
+                boolean flashing = state == SessionState.FLASHING;
+                mainFrame.setFirmwareUpdateInProgress(flashing);
+                launchWizardButton.setEnabled(!flashing);
+                if (tuningHolder[0] != null) {
+                    tuningHolder[0].setFirmwareUpdateInProgress(flashing);
+                }
+            }));
+
             // Pinout ↔ Tune bidirectional navigation
             pinoutPane.setNavigateToTune((dialogKey, fieldKey) -> {
+                if (deviceSessionManager.getState() == SessionState.FLASHING) {
+                    return;
+                }
                 buildTuning.run();
                 tabbedPane.selectTab("Tuning");
                 tuningHolder[0].navigateToField(dialogKey, fieldKey);
@@ -449,7 +464,8 @@ console live data tab is broken #8402
             }
         });
 
-        ShortcutsHelper.installConnectAndDisconnect(uiContext, tabbedPane.tabbedPane);
+        ShortcutsHelper.installConnectAndDisconnect(uiContext, tabbedPane.tabbedPane,
+            () -> !Boolean.TRUE.equals(tabbedPane.tabbedPane.getClientProperty("isUpdating")));
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
 
         mainFrame.getFrame().showFrame(rootPanel);

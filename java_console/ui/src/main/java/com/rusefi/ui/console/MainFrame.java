@@ -62,6 +62,9 @@ public class MainFrame {
     private JMenuItem updateEcuItem;
     private Runnable updateEcuAction;
     private Runnable exitRequestHandler;
+    private boolean firmwareUpdateInProgress;
+    private boolean updateSoftwareAvailable;
+    private boolean updateEcuAvailable;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this(consoleUI, tabbedPane, null);
@@ -154,6 +157,18 @@ public class MainFrame {
     }
 
     private void requestExit() {
+        if (firmwareUpdateInProgress) {
+            int choice = JOptionPane.showConfirmDialog(
+                frame.getFrame(),
+                "A firmware update is still in progress. Exiting now may leave the ECU unfinished. Exit anyway?",
+                "Firmware Update In Progress",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+            );
+            if (choice != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
         if (exitRequestHandler == null) {
             frame.getFrame().dispose();
         } else {
@@ -191,7 +206,7 @@ public class MainFrame {
             log.info("checkFirmwareUpdate: no srec file found");
             SwingUtilities.invokeLater(() -> {
                 updateEcuItem.setText("No updates available");
-                updateEcuItem.setEnabled(false);
+                setUpdateEcuAvailable(false);
             });
             return;
         }
@@ -201,12 +216,12 @@ public class MainFrame {
         log.info("checkFirmwareUpdate: needsUpdate=" + needsUpdate);
         SwingUtilities.invokeLater(() -> {
             updateEcuItem.setText(needsUpdate ? "Update ECU Firmware" : "No updates available");
-            updateEcuItem.setEnabled(needsUpdate);
+            setUpdateEcuAvailable(needsUpdate);
         });
     }
 
     private void onUpdateSoftwareClicked() {
-        updateSoftwareItem.setEnabled(false);
+        setUpdateSoftwareAvailable(false);
         Thread updateThread = new Thread(() ->
             Autoupdate.runManualUpdate(msg -> {
                 if (msg != null) {
@@ -231,7 +246,7 @@ public class MainFrame {
             Thread checkThread = new Thread(() -> {
                 boolean available = Autoupdate.isUpdateAvailable();
                 if (available) {
-                    SwingUtilities.invokeLater(() -> updateSoftwareItem.setEnabled(true));
+                    SwingUtilities.invokeLater(() -> setUpdateSoftwareAvailable(true));
                 }
             }, "update-availability-check");
             checkThread.setDaemon(true);
@@ -256,7 +271,7 @@ public class MainFrame {
                 }
             } else {
                 updateEcuItem.setText("No updates available");
-                updateEcuItem.setEnabled(false);
+                setUpdateEcuAvailable(false);
             }
         }));
 
@@ -323,6 +338,29 @@ public class MainFrame {
         saveTuneItem.setAction(saveAction);
         saveTuneItem.setText(LoadTuneHelper.SAVE_TUNE_TEXT);
         saveTuneItem.setMnemonic(KeyEvent.VK_S);
+        refreshFirmwareUpdateExclusion();
+    }
+
+    public void setFirmwareUpdateInProgress(boolean firmwareUpdateInProgress) {
+        this.firmwareUpdateInProgress = firmwareUpdateInProgress;
+        refreshFirmwareUpdateExclusion();
+    }
+
+    private void setUpdateSoftwareAvailable(boolean available) {
+        updateSoftwareAvailable = available;
+        refreshFirmwareUpdateExclusion();
+    }
+
+    private void setUpdateEcuAvailable(boolean available) {
+        updateEcuAvailable = available;
+        refreshFirmwareUpdateExclusion();
+    }
+
+    private void refreshFirmwareUpdateExclusion() {
+        Action loadAction = loadTuneItem.getAction();
+        loadTuneItem.setEnabled(!firmwareUpdateInProgress && loadAction != null && loadAction.isEnabled());
+        updateSoftwareItem.setEnabled(!firmwareUpdateInProgress && updateSoftwareAvailable);
+        updateEcuItem.setEnabled(!firmwareUpdateInProgress && updateEcuAvailable);
     }
 
     public FrameHelper getFrame() {

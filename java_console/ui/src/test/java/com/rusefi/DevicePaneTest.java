@@ -44,9 +44,7 @@ public class DevicePaneTest {
     }
 
     @Test
-    public void offlineCapableTabsStayEnabledDuringBootloaderAndFlashing() {
-        // The Device tab hosts the update controls, Tuning supports offline tune editing, Pinout is a
-        // static reference — these must never be locked while the board has no live connection.
+    public void bootloaderAllowsOfflineTabsButFlashingBlocksTuning() {
         assertTrue(DevicePane.isOfflineCapableTab("Device"));
         assertTrue(DevicePane.isOfflineCapableTab("Tuning"));
         assertTrue(DevicePane.isOfflineCapableTab("Pinout"));
@@ -54,5 +52,12 @@ public class DevicePaneTest {
         assertFalse(DevicePane.isOfflineCapableTab("Gauges"));
         assertFalse(DevicePane.isOfflineCapableTab("Messages"));
         assertFalse(DevicePane.isOfflineCapableTab(null));
+
+        assertTrue(DevicePane.isTabEnabled("Tuning", SessionState.DEVICE_IN_BLT));
+        assertTrue(DevicePane.isTabEnabled("Tuning", SessionState.DEVICE_IN_DFU));
+        assertFalse(DevicePane.isTabEnabled("Tuning", SessionState.FLASHING));
+        assertTrue(DevicePane.isTabEnabled("Device", SessionState.FLASHING));
+        assertTrue(DevicePane.isTabEnabled("Pinout", SessionState.FLASHING));
+        assertFalse(DevicePane.isTabEnabled("Messages", SessionState.FLASHING));
     }
 }

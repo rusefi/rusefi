@@ -6,6 +6,7 @@ import com.rusefi.FakePortScanner;
 import com.rusefi.PortResult;
 import com.rusefi.SerialPortType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import org.junit.jupiter.api.AfterEach;
@@ -17,7 +18,14 @@ import java.util.Deque;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the post-flash reconnect wait {@link AbstractAutoFlashJob#awaitEcuPort} — the
@@ -165,5 +173,58 @@ public class AbstractAutoFlashJobAwaitEcuPortTest {
         scanner.fireHardwareChange(hw(new PortResult("COM9", SerialPortType.EcuWithOpenblt)));
 
         assertEquals("COM9", job.awaitEcuPort(60_000, clock));
+    }
+
+    @Test
+    public void completionRunsAfterReconnectRecovery() {
+        LinkManager linkManager = mock(LinkManager.class);
+        BinaryProtocol binaryProtocol = mock(BinaryProtocol.class);
+        CommandQueue commandQueue = mock(CommandQueue.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        Runnable completion = mock(Runnable.class);
+        when(linkManager.getBinaryProtocol()).thenReturn(binaryProtocol);
+        when(linkManager.getCommandQueue()).thenReturn(commandQueue);
+
+        AbstractAutoFlashJob reconnectingJob = new AbstractAutoFlashJob(
+            "test", new PortResult("COM_OLD", SerialPortType.Ecu), null,
+            new ConnectivityContext(scanner), linkManager) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                return true;
+            }
+
+            @Override
+            String awaitEcuPort(long timeoutMs, Clock clock) {
+                return "COM_NEW";
+            }
+        };
+
+        reconnectingJob.doJob(callbacks, completion);
+
+        org.mockito.InOrder order = inOrder(linkManager, completion);
+        order.verify(linkManager).reconnect("COM_NEW");
+        order.verify(completion).run();
+    }
+
+    @Test
+    public void completionRunsOnceWhenFlashThrows() {
+        LinkManager linkManager = mock(LinkManager.class);
+        BinaryProtocol binaryProtocol = mock(BinaryProtocol.class);
+        UpdateOperationCallbacks callbacks = mock(UpdateOperationCallbacks.class);
+        Runnable completion = mock(Runnable.class);
+        when(linkManager.getBinaryProtocol()).thenReturn(binaryProtocol);
+
+        AbstractAutoFlashJob failingJob = new AbstractAutoFlashJob(
+            "test", new PortResult("COM_OLD", SerialPortType.Ecu), null,
+            new ConnectivityContext(scanner), linkManager) {
+            @Override
+            protected boolean flash(LinkManager lm, BinaryProtocol bp, UpdateOperationCallbacks cb) {
+                throw new IllegalStateException("flash failed");
+            }
+        };
+
+        assertThrows(IllegalStateException.class, () -> failingJob.doJob(callbacks, completion));
+        verify(completion).run();
+        verify(linkManager, never()).reconnect(anyString());
     }
 }
