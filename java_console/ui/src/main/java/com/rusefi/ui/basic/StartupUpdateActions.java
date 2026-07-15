@@ -69,6 +69,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
         updateFirmwareButton.setEnabled(false);
 
+        updateSoftwareButton.setPreferredSize(updateFirmwareButton.getPreferredSize());
         softwareUpdateAvailable = !Autoupdate.isAutoUpdateEnabled();
         updateSoftwareButton.setVisible(softwareUpdateAvailable);
         updateSoftwareButton.setEnabled(softwareUpdateAvailable);
@@ -84,6 +85,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         importTuneButton.setEnabled(false);
 
         migrateSettings.setSelected(true);
+        migrateSettings.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         migrateSettings.addActionListener(e -> updateMigrateSettingState());
 
         verboseMessages.setSelected(false);

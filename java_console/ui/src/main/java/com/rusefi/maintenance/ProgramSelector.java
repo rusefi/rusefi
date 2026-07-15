@@ -52,6 +52,8 @@ public class ProgramSelector {
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
         this.comboPorts = comboPorts;
+        noHardware.setBorder(BorderFactory.createEmptyBorder(5, 8, 5, 8));
+        noHardware.setFont(noHardware.getFont().deriveFont(noHardware.getFont().getSize2D() + 2));
         content.add(updateModeAndButton, BorderLayout.NORTH);
         content.add(noHardware, BorderLayout.SOUTH);
 
