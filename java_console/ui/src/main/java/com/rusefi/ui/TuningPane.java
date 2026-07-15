@@ -14,12 +14,14 @@ import com.rusefi.maintenance.OfflineEditMigration;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.TextGaugeStrip;
+import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.ui.basic.TuneOperationStatusPanel;
 
 import javax.swing.*;
 import javax.swing.Action;
@@ -35,11 +37,15 @@ import java.util.function.Consumer;
  */
 public class TuningPane {
     private static final Logging log = Logging.getLogging(TuningPane.class);
+    private static final String TUNING_CARD = "tuning";
+    private static final String LOAD_CARD = "load";
 
-    private final JPanel content = new JPanel(new BorderLayout());
+    private final JPanel content = new JPanel(new CardLayout());
+    private final JPanel tuningContent = new JPanel(new BorderLayout());
     private final UIContext uiContext;
     private final MainMenuTreeWidget left;
     private final TuningToolbarWidget toolbar;
+    private final TuneOperationStatusPanel loadStatusCard;
     private final CalibrationDialogWidget right;
     private TextGaugeStrip gaugeStrip;
     /** Accumulated tune edits across all dialogs for this session. Field so offline seeding can set it. */
@@ -50,6 +56,7 @@ public class TuningPane {
     private IniFileModel offlineIni;
     /** Fired when the user picks "Show in Pinout" on a pin-enum field. Wired from ConsoleUI after construction. */
     private Consumer<String> navigateToPinout;
+    private Runnable showTuningTab = () -> { };
 
     public TuningPane(UIContext uiContext) {
         this(uiContext, null, null);
@@ -75,7 +82,24 @@ public class TuningPane {
         if (baseline == null && initialBp != null && initialBp.getControllerConfiguration() != null) {
             baseline = initialBp.getControllerConfiguration().clone();
         }
-        toolbar = new TuningToolbarWidget(uiContext, right, currentKey, sessionImage, baseline);
+        StatusPanel loadStatusPanel = new StatusPanel(250);
+        loadStatusCard = new TuneOperationStatusPanel(loadStatusPanel, this::showTuningContent);
+        toolbar = new TuningToolbarWidget(
+            uiContext,
+            right,
+            currentKey,
+            sessionImage,
+            baseline,
+            loadStatusPanel,
+            () -> {
+                showTuningTab.run();
+                showLoadProgress();
+            },
+            failed -> {
+                showTuningTab.run();
+                showLoadResult(failed);
+            }
+        );
 
         if (config != null) {
             gaugeStrip = new TextGaugeStrip(uiContext, config.getChild("gauge_strip"));
@@ -241,8 +265,11 @@ public class TuningPane {
             northPanel.add(gaugeStrip.getContent());
         }
 
-        content.add(northPanel, BorderLayout.NORTH);
-        content.add(splitPane, BorderLayout.CENTER);
+        tuningContent.add(northPanel, BorderLayout.NORTH);
+        tuningContent.add(splitPane, BorderLayout.CENTER);
+        content.add(tuningContent, TUNING_CARD);
+        content.add(loadStatusCard.getContent(), LOAD_CARD);
+        showTuningContent();
     }
 
 
@@ -268,6 +295,24 @@ public class TuningPane {
 
     public void setNavigateToPinout(Consumer<String> navigateToPinout) {
         this.navigateToPinout = navigateToPinout;
+    }
+
+    public void setShowTuningTab(Runnable showTuningTab) {
+        this.showTuningTab = showTuningTab;
+    }
+
+    private void showLoadProgress() {
+        loadStatusCard.showProgress("Loading tune...");
+        ((CardLayout) content.getLayout()).show(content, LOAD_CARD);
+    }
+
+    private void showLoadResult(boolean failed) {
+        loadStatusCard.showResult("Tune loaded successfully", "Tune load failed", failed);
+        ((CardLayout) content.getLayout()).show(content, LOAD_CARD);
+    }
+
+    private void showTuningContent() {
+        ((CardLayout) content.getLayout()).show(content, TUNING_CARD);
     }
 
     /**

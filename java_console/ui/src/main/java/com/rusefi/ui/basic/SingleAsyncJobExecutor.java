@@ -8,9 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.JobExecutor {
-    private final UpdateOperationCallbacks updateOperationCallbacks;
+    private final Function<AsyncJob, UpdateOperationCallbacks> callbacksProvider;
 
     private final java.util.List<Runnable> onJobInProgressFinished = new ArrayList<>();
     private final java.util.List<Runnable> onJobAboutToStart = new ArrayList<>();
@@ -24,45 +26,50 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
      */
     private volatile UpdateFirmwareResult lastResult = UpdateFirmwareResult.NONE;
 
-    /** Delegating callbacks that record the terminal outcome before forwarding to the real UI. */
-    private final UpdateOperationCallbacks recordingCallbacks;
-
     public SingleAsyncJobExecutor(
         final UpdateOperationCallbacks updateOperationCallbacks
     ) {
-        this.updateOperationCallbacks = updateOperationCallbacks;
-        this.recordingCallbacks = new UpdateOperationCallbacks() {
+        this(job -> updateOperationCallbacks);
+    }
+
+    public SingleAsyncJobExecutor(Function<AsyncJob, UpdateOperationCallbacks> callbacksProvider) {
+        this.callbacksProvider = callbacksProvider;
+    }
+
+    /** Delegating callbacks that record the terminal outcome before forwarding to the selected UI. */
+    private UpdateOperationCallbacks recordingCallbacks(UpdateOperationCallbacks delegate) {
+        return new UpdateOperationCallbacks() {
             @Override
             public void log(final String message, final boolean breakLineOnTextArea, final boolean sendToLogger) {
-                updateOperationCallbacks.log(message, breakLineOnTextArea, sendToLogger);
+                delegate.log(message, breakLineOnTextArea, sendToLogger);
             }
 
             @Override
             public void done() {
                 lastResult = UpdateFirmwareResult.SUCCESS;
-                updateOperationCallbacks.done();
+                delegate.done();
             }
 
             @Override
             public void error() {
                 lastResult = UpdateFirmwareResult.FAILURE;
-                updateOperationCallbacks.error();
+                delegate.error();
             }
 
             @Override
             public void warning() {
-                updateOperationCallbacks.warning();
+                delegate.warning();
             }
 
             @Override
             public void clear() {
                 lastResult = UpdateFirmwareResult.NONE;
-                updateOperationCallbacks.clear();
+                delegate.clear();
             }
 
             @Override
             public void updateProgress(final int percent) {
-                updateOperationCallbacks.updateProgress(percent);
+                delegate.updateProgress(percent);
             }
         };
     }
@@ -97,19 +104,25 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
     }
 
     public void startJob(final AsyncJob job, final Component parent) {
+        startJob(job, parent, message -> JOptionPane.showMessageDialog(
+            parent,
+            message,
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        ));
+    }
+
+    public void startJob(final AsyncJob job, final Component parent, Consumer<String> errorHandler) {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
-            for (Runnable listener : onJobAboutToStart)
+            for (Runnable listener : onJobAboutToStart) {
                 listener.run();
-            recordingCallbacks.clear(); // resets lastResult to NONE and clears the status panel
-            AsyncJobExecutor.INSTANCE.executeJob(job, recordingCallbacks, this::handleJobInProgressFinished);
+            }
+            UpdateOperationCallbacks callbacks = recordingCallbacks(callbacksProvider.apply(job));
+            callbacks.clear(); // resets lastResult to NONE and clears the selected status panel
+            AsyncJobExecutor.INSTANCE.executeJob(job, callbacks, this::handleJobInProgressFinished);
         } else {
-            JOptionPane.showMessageDialog(
-                parent,
-                String.format("Job `%s` is already in progress!", prevJobInProgress.get().getName()),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-            );
+            errorHandler.accept(String.format("Job `%s` is already in progress!", prevJobInProgress.get().getName()));
         }
     }
 
@@ -135,7 +148,8 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
 
     private void handleJobInProgressFinished() {
         resetJobInProgress();
-        for (Runnable listener : onJobInProgressFinished)
+        for (Runnable listener : onJobInProgressFinished) {
             listener.run();
+        }
     }
 }

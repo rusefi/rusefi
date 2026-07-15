@@ -348,6 +348,7 @@ console live data tab is broken #8402
                 }
                 TuningPane tp = new TuningPane(uiContext, offlineImage, getConfig().getRoot().getChild("tuning"));
                 tuningHolder[0] = tp;
+                tp.setShowTuningTab(() -> tabbedPane.selectTab("Tuning"));
                 if (isOffline && offlineImage != null) {
                     tp.seedOfflineImage(offlineImage, null);
                 }

@@ -10,14 +10,17 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 public class ImportTuneFileChooser {
     private static final String TUNE_TO_IMPORT_DEFAULT_DIRECTORY_PROPERTY_NAME = "tune_to_import_default_directory";
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
+    private final Consumer<String> errorHandler;
     private final JFileChooser tuneToImportFileChooser = createTuneToImportFileChooser();
 
-    public ImportTuneFileChooser(final SingleAsyncJobExecutor singleAsyncJobExecutor) {
+    public ImportTuneFileChooser(final SingleAsyncJobExecutor singleAsyncJobExecutor, Consumer<String> errorHandler) {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
+        this.errorHandler = errorHandler;
     }
 
     public void showFileChooserToImportTuneAction(
@@ -30,7 +33,8 @@ public class ImportTuneFileChooser {
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             final File selectedFile = tuneToImportFileChooser.getSelectedFile();
             saveTuneToImportDefaultDirectory(selectedFile.getParent());
-            ImportTuneJob.importTuneIntoDeviceViaLiveConnection(bp, lm, parent, connectivityContext, selectedFile.getAbsolutePath(), singleAsyncJobExecutor);
+            ImportTuneJob.importTuneIntoDeviceViaLiveConnection(bp, lm, parent, connectivityContext,
+                selectedFile.getAbsolutePath(), singleAsyncJobExecutor, errorHandler);
         }
     }
 
@@ -43,7 +47,8 @@ public class ImportTuneFileChooser {
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             final File selectedFile = tuneToImportFileChooser.getSelectedFile();
             saveTuneToImportDefaultDirectory(selectedFile.getParent());
-            ImportTuneJob.importTuneIntoDeviceViaLiveConnection(lm, parent, connectivityContext, selectedFile.getAbsolutePath(), singleAsyncJobExecutor);
+            ImportTuneJob.importTuneIntoDeviceViaLiveConnection(lm, parent, connectivityContext,
+                selectedFile.getAbsolutePath(), singleAsyncJobExecutor, errorHandler);
         }
     }
 

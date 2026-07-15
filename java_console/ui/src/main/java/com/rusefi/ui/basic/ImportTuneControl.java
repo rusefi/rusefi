@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.function.Consumer;
 
 public class ImportTuneControl implements EnableableControl {
     private final JButton importTuneButton = new JButton(
@@ -25,6 +26,8 @@ public class ImportTuneControl implements EnableableControl {
 
     private final BasicButtonCoordinator basicButtonCoordinator;
     private final ConnectivityContext connectivityContext;
+    private final SingleAsyncJobExecutor singleAsyncJobExecutor;
+    private Consumer<String> importErrorHandler = message -> { };
     @Nullable
     private volatile LinkManager splashLinkManager;
 
@@ -33,10 +36,15 @@ public class ImportTuneControl implements EnableableControl {
                              ConnectivityContext connectivityContext) {
         this.basicButtonCoordinator = basicButtonCoordinator;
         this.connectivityContext = connectivityContext;
+        this.singleAsyncJobExecutor = singleAsyncJobExecutor;
         importTuneButton.addActionListener(this::onImportTuneButtonClicked);
         exportTuneButton.addActionListener(this::onExportTuneButtonClicked);
-        importTune = new ImportTuneFileChooser(singleAsyncJobExecutor);
+        importTune = new ImportTuneFileChooser(singleAsyncJobExecutor, message -> importErrorHandler.accept(message));
         exportTune = new ExportTuneFileChooser(singleAsyncJobExecutor);
+    }
+
+    public void setImportErrorHandler(Consumer<String> importErrorHandler) {
+        this.importErrorHandler = importErrorHandler;
     }
 
     public void setLinkManager(@Nullable LinkManager lm) {
@@ -58,6 +66,11 @@ public class ImportTuneControl implements EnableableControl {
 
     private void onImportTuneButtonClicked(final ActionEvent actionEvent) {
         basicButtonCoordinator.disableButtons();
+        if (!singleAsyncJobExecutor.isNotInProgress()) {
+            importErrorHandler.accept("Another job is already running, please wait.");
+            basicButtonCoordinator.refreshButtons();
+            return;
+        }
         final LinkManager lm = splashLinkManager;
         final BinaryProtocol liveBp = (lm != null) ? lm.getBinaryProtocol() : null;
         if (liveBp != null) {
@@ -65,7 +78,7 @@ public class ImportTuneControl implements EnableableControl {
         } else if (lm != null && lm.isActive()) {
             importTune.showFileChooserToImportTuneAction(lm, importTuneButton, connectivityContext);
         } else {
-            JOptionPane.showMessageDialog(importTuneButton, "Device is not connected", "Error", JOptionPane.ERROR_MESSAGE);
+            importErrorHandler.accept("Device is not connected");
         }
         basicButtonCoordinator.refreshButtons();
     }

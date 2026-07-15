@@ -1,5 +1,6 @@
 package com.rusefi.ui.widgets.tune;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -10,7 +11,6 @@ import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.JobHelper;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.MsqFactory;
-import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.basic.LoadTuneHelper;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.ArrayDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * Toolbar for the Tune tab: Burn, Discard, Undo, and Redo buttons.
@@ -30,6 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * so they are kept out of TuningPane.
  */
 public class TuningToolbarWidget {
+    private static final Logging log = Logging.getLogging(TuningToolbarWidget.class);
     private static final int MAX_UNDO = 15;
     private static final int IDLE_TIMEOUT_MS = 300;
     private static final int UPLOAD_DELAY_MS = 100;
@@ -67,9 +69,12 @@ public class TuningToolbarWidget {
      */
     public TuningToolbarWidget(UIContext uiContext,
                                 CalibrationDialogWidget right,
-                                AtomicReference<String> currentKey,
-                                AtomicReference<ConfigurationImage> sessionImage,
-                                ConfigurationImage baselineImage) {
+                                 AtomicReference<String> currentKey,
+                                 AtomicReference<ConfigurationImage> sessionImage,
+                                 ConfigurationImage baselineImage,
+                                 UpdateOperationCallbacks loadCallbacks,
+                                 Runnable onLoadStarted,
+                                 Consumer<Boolean> onLoadFinished) {
         this.uiContext = uiContext;
         this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
@@ -113,7 +118,8 @@ public class TuningToolbarWidget {
         JButton discardButton = getDiscardButton(uiContext, right, sessionImage, currentKey, updateButtons);
         discardButton.setEnabled(baselineImage != null);
 
-        buildLoadTuneAction(uiContext, right, currentKey, sessionImage);
+        buildLoadTuneAction(uiContext, right, currentKey, sessionImage,
+            loadCallbacks, onLoadStarted, onLoadFinished);
         buildSaveTuneAction(uiContext, right, sessionImage);
 
         undoButton.addActionListener(e -> {
@@ -259,7 +265,10 @@ public class TuningToolbarWidget {
     private void buildLoadTuneAction(UIContext uiContext,
                                      CalibrationDialogWidget right,
                                      AtomicReference<String> currentKey,
-                                     AtomicReference<ConfigurationImage> sessionImage) {
+                                     AtomicReference<ConfigurationImage> sessionImage,
+                                     UpdateOperationCallbacks callbacks,
+                                     Runnable onLoadStarted,
+                                     Consumer<Boolean> onLoadFinished) {
         JFileChooser chooser = createMsqFileChooser();
         loadTuneAction = new AbstractAction(LoadTuneHelper.LOAD_TUNE_TEXT) {
             @Override
@@ -270,9 +279,8 @@ public class TuningToolbarWidget {
                 final String path = chooser.getSelectedFile().getAbsolutePath();
                 final String fileName = chooser.getSelectedFile().getName();
 
-                final StatusWindow statusWindow = new StatusWindow();
-                statusWindow.showFrame("Load Tune");
-                final UpdateOperationCallbacks callbacks = statusWindow.getContent();
+                callbacks.clear();
+                onLoadStarted.run();
 
                 AsyncJobExecutor.INSTANCE.executeJob(
                     new AsyncJob("Load Tune") {
@@ -281,20 +289,31 @@ public class TuningToolbarWidget {
                             JobHelper.doJob(() -> {
                                 try {
                                     cb.logLine("Loading " + fileName + "...");
-                                    OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(path, null);
+                                    OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(
+                                        path, null, cb::logLine);
                                     if (result == null) {
-                                        cb.logLine("Load cancelled or failed.");
                                         cb.error();
+                                        SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
                                         return;
                                     }
                                     cb.logLine("Applying tune fields...");
-                                    ConfigurationImage sessionImg = sessionImage.get();
-                                    ConfigurationImage base = sessionImg != null
-                                            ? sessionImg.clone()
-                                            : new ConfigurationImage(result.ini.getMetaInfo().getPageSize(0));
-                                    ConfigurationImage newImage = result.msq.applyOnto(base, result.ini);
-
                                     BinaryProtocol bp = uiContext.getBinaryProtocol();
+                                    IniFileModel targetIni = bp == null
+                                        ? result.ini
+                                        : uiContext.iniFileState.getIniFileModel();
+                                    ConfigurationImage currentImage = imageToSave(
+                                        right.getWorkingImage(),
+                                        sessionImage.get(),
+                                        bp == null ? null : bp.getControllerConfiguration(),
+                                        baselineImage
+                                    );
+                                    ConfigurationImage base = currentImage == null
+                                        ? new ConfigurationImage(targetIni.getMetaInfo().getPageSize(0))
+                                        : currentImage.clone();
+                                    ConfigurationImage newImage = bp == null
+                                        ? result.image
+                                        : result.msq.applyOnto(base, targetIni);
+
                                     if (bp != null) {
                                         cb.logLine("Uploading and burning to ECU...");
                                         CountDownLatch latch = new CountDownLatch(1);
@@ -309,7 +328,7 @@ public class TuningToolbarWidget {
                                     }
 
                                     final boolean loadedWhileDisconnected = (bp == null);
-                                    SwingUtilities.invokeLater(() -> {
+                                    SwingUtilities.invokeAndWait(() -> {
                                         sessionImage.set(newImage);
                                         // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
                                         if (loadedWhileDisconnected) {
@@ -317,22 +336,25 @@ public class TuningToolbarWidget {
                                         }
                                         String key = currentKey.get();
                                         if (key != null) {
-                                            right.update(key, result.ini, newImage);
+                                            right.update(key, targetIni, newImage);
                                         }
                                         // Adopt the loaded tune as baseline (enables discard + refreshes state label).
                                         setBaselineImage(newImage.clone());
                                         uiContext.fireConfigImageChanged(newImage);
-                                        cb.done();
                                     });
+                                    cb.done();
+                                    SwingUtilities.invokeLater(() -> onLoadFinished.accept(false));
                                 } catch (Exception ex) {
-                                    cb.logLine("Error: " + ex.getMessage());
+                                    log.error("Failed to load tune " + path, ex);
+                                    cb.logLine("Error: " + ex);
                                     cb.error();
+                                    SwingUtilities.invokeLater(() -> onLoadFinished.accept(true));
                                 }
                             }, onJobFinished);
                         }
                     },
                     callbacks,
-                    () -> SwingUtilities.invokeLater(() -> statusWindow.getFrame().dispose())
+                    () -> { }
                 );
             }
         };
@@ -351,10 +373,13 @@ public class TuningToolbarWidget {
 
     public void saveTuneAndThen(CalibrationDialogWidget right, Runnable onSuccess) {
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
-        ConfigurationImage image = right.getWorkingImage();
-        if (image == null) {
-            image = sessionImage.get();
-        }
+        BinaryProtocol bp = uiContext.getBinaryProtocol();
+        ConfigurationImage image = imageToSave(
+            right.getWorkingImage(),
+            sessionImage.get(),
+            bp == null ? null : bp.getControllerConfiguration(),
+            baselineImage
+        );
         if (ini == null || image == null) {
             JOptionPane.showMessageDialog(null, "No configuration loaded", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -380,6 +405,19 @@ public class TuningToolbarWidget {
                         null, "Failed to save tune: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE));
             }
         }, "save-tune").start();
+    }
+
+    static ConfigurationImage imageToSave(ConfigurationImage workingImage,
+                                          ConfigurationImage sessionImage,
+                                          ConfigurationImage ecuImage,
+                                          ConfigurationImage baselineImage) {
+        if (workingImage != null) {
+            return workingImage;
+        }
+        if (sessionImage != null) {
+            return sessionImage;
+        }
+        return ecuImage != null ? ecuImage : baselineImage;
     }
 
     public AbstractAction getLoadTuneAction() {

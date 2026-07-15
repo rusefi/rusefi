@@ -26,7 +26,6 @@ import com.rusefi.ui.wizard.WizardStepDescriptor;
 import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
-import com.rusefi.io.DoubleCallbacks;
 import com.rusefi.maintenance.jobs.AsyncJob;
 import com.rusefi.maintenance.jobs.DfuAutoJob;
 import com.rusefi.maintenance.jobs.ExportTuneJob;
@@ -124,7 +123,7 @@ public class StartupFrame {
     private final StatusPanelWithProgressBar firmwareStatusPanel = new StatusPanelWithProgressBar();
     private final StatusPanel tuneStatusPanel = new StatusPanel(250);
     private final SingleAsyncJobExecutor asyncJobExecutor = new SingleAsyncJobExecutor(
-        new DoubleCallbacks(firmwareStatusPanel, tuneStatusPanel));
+        job -> job instanceof ImportTuneJob ? tuneStatusPanel : firmwareStatusPanel);
     private final AtomicReference<Optional<PortResult>> ecuPortToUse = new AtomicReference<>(Optional.empty());
     private FirmwareUpdateTab firmwareUpdateTab;
     private StatusAnimation firmwareTabStatus;
@@ -410,14 +409,16 @@ public class StartupFrame {
         firmwareTabPanel.add(firmwareTopPanel, BorderLayout.NORTH);
         firmwareTabPanel.add(firmwareStatusPanel.getContent(), BorderLayout.CENTER);
         outerTabs.addTab("Update Firmware", firmwareTabPanel);
-        outerTabs.addTab("Manage Tunes", new TuneManagementTab(
+        final TuneManagementTab tuneManagementTab = new TuneManagementTab(
             connectivityContext,
             uiContext,
-            firmwareUpdateTab.getBasicUpdaterPanel().getImportTuneButton().getContent(),
+            firmwareUpdateTab.getBasicUpdaterPanel().getImportTuneButton(),
             asyncJobExecutor,
             tuneStatusPanel,
+            () -> outerTabs.setSelectedIndex(1),
             this::openOfflineConsole
-        ).getContent());
+        );
+        outerTabs.addTab("Manage Tunes", tuneManagementTab.getContent());
         outerTabs.addTab("Connect", connectTabWrapper);
 
         int savedTabIndex = getConfig().getRoot().getIntProperty(STARTUP_TAB_INDEX, 0);
