@@ -2,6 +2,10 @@
 #include "bmw.h"
 #include "defaults.h"
 
+#ifdef HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
+
 void bmwM52() {
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
     engineConfiguration->cylindersCount = 6;
@@ -23,6 +27,7 @@ void bmwN52() {
     engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
 
 #ifdef HW_HELLEN_SUPER_UAEFI
+    engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
 //     engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
 // 	  engineConfiguration->camInputs[1] = Gpio::MM100_IN_D3;
 #endif // HW_HELLEN_SUPER_UAEFI
