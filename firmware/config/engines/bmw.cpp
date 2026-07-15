@@ -14,6 +14,8 @@ void bmwM52() {
 }
 
 void bmwN52() {
+    engineConfiguration->canNbcType = CAN_BUS_BMW_E90;
+
     strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
     strcpy(engineConfiguration->engineCode, "N52");
     engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
