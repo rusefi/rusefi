@@ -388,7 +388,7 @@ pins:
   - pin: 26B
     class: analog_inputs
     meta: MM100_IN_MAP1_ANALOG
-    ts_name: MAP
+    ts_name: ___ MAP
     function: MAP signal
     color: yellow
 
