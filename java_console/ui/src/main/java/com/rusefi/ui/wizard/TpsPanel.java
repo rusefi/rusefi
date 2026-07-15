@@ -137,13 +137,13 @@ public class TpsPanel extends AbstractWizardStep {
     }
 
     private JPanel labeledField(String title, JTextField field, JButton grabButton) {
-        JPanel panel = new JPanel(new BorderLayout(8, 5));
+        JPanel panel = new JPanel(new BorderLayout(0, 5));
         panel.add(sectionLabel(title), BorderLayout.NORTH);
-        panel.add(field, BorderLayout.CENTER);
-        JPanel trailing = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
-        trailing.add(new JLabel("V"));
-        trailing.add(grabButton);
-        panel.add(trailing, BorderLayout.EAST);
+        JPanel input = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        input.add(field);
+        input.add(new JLabel("V"));
+        input.add(grabButton);
+        panel.add(input, BorderLayout.CENTER);
         return panel;
     }
 
@@ -158,7 +158,7 @@ public class TpsPanel extends AbstractWizardStep {
     }
 
     private JPanel buildReadouts() {
-        JPanel panel = new JPanel(new GridLayout(1, 2, 0, 0));
+        JPanel panel = new JPanel(new GridLayout(1, 2, 12, 0));
         panel.add(readout("VOLTAGE", voltageValue));
         panel.add(readout("TPS", tpsValue));
         return panel;
