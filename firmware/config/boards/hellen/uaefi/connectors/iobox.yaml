@@ -1,23 +1,83 @@
 pins:
-  - pin: canbus-1
-    id: MSIOBOX_0_OUT_1
+  - pin: 1
+    id: EXTIOCHIP_0_IO_1
     class: outputs
-    ts_name: MS IO-Box 0 OUT 1
+    ts_name: Ext Chip 0 IO 1
 
-  - pin: canbus-2
-    id: MSIOBOX_0_OUT_2
+  - pin: 2
+    id: EXTIOCHIP_0_IO_2
     class: outputs
-    ts_name: MS IO-Box 0 OUT 2
+    ts_name: Ext Chip 0 IO 2
 
-  - pin: canbus-3
-    id: MSIOBOX_0_OUT_3
+  - pin: 3
+    id: EXTIOCHIP_0_IO_3
     class: outputs
-    ts_name: MS IO-Box 0 OUT 3
+    ts_name: Ext Chip 0 IO 3
 
-  - pin: canbus-4
-    id: MSIOBOX_0_OUT_4
+  - pin: 4
+    id: EXTIOCHIP_0_IO_4
     class: outputs
-    ts_name: MS IO-Box 0 OUT 4
+    ts_name: Ext Chip 0 IO 4
+
+  - pin: 5
+    id: EXTIOCHIP_0_IO_5
+    class: outputs
+    ts_name: Ext Chip 0 IO 5
+
+  - pin: 6
+    id: EXTIOCHIP_0_IO_6
+    class: outputs
+    ts_name: Ext Chip 0 IO 6
+
+  - pin: 7
+    id: EXTIOCHIP_0_IO_7
+    class: outputs
+    ts_name: Ext Chip 0 IO 7
+
+  - pin: 8
+    id: EXTIOCHIP_0_IO_8
+    class: outputs
+    ts_name: Ext Chip 0 IO 8
+
+  - pin: 9
+    id: EXTIOCHIP_0_IO_9
+    class: outputs
+    ts_name: Ext Chip 0 IO 9
+
+  - pin: 10
+    id: EXTIOCHIP_0_IO_10
+    class: outputs
+    ts_name: Ext Chip 0 IO 10
+
+  - pin: 11
+    id: EXTIOCHIP_0_IO_11
+    class: outputs
+    ts_name: Ext Chip 0 IO 11
+
+  - pin: 12
+    id: EXTIOCHIP_0_IO_12
+    class: outputs
+    ts_name: Ext Chip 0 IO 12
+
+  - pin: 13
+    id: EXTIOCHIP_0_IO_13
+    class: outputs
+    ts_name: Ext Chip 0 IO 13
+
+  - pin: 14
+    id: EXTIOCHIP_0_IO_14
+    class: outputs
+    ts_name: Ext Chip 0 IO 14
+
+  - pin: 15
+    id: EXTIOCHIP_0_IO_15
+    class: outputs
+    ts_name: Ext Chip 0 IO 15
+
+  - pin: 16
+    id: EXTIOCHIP_0_IO_16
+    class: outputs
+    ts_name: Ext Chip 0 IO 16
 
 info:
-  cid: iobox
+  cid: iochip

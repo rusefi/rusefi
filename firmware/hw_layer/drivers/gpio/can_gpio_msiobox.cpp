@@ -598,7 +598,7 @@ void initCanGpioMsiobox() {
 		return;
 	}
 
-	// MSIOBOX_0_OUT_1
+	// EXTIOCHIP_0_IO_1
 	for (size_t i = 0; i < BOARD_CAN_GPIO_COUNT; i++) {
 		uint32_t can_id = CAN_IOBOX_BASE1 + 0x20 * (static_cast<uint32_t>(engineConfiguration->msIoBox0.id) - static_cast<uint32_t>(MsIoBoxId::ID200));
 
@@ -606,7 +606,8 @@ void initCanGpioMsiobox() {
 		if (instance[i].config(0, can_id, 20) == 0) {
 			registerCanListener(instance[i]);
 			/* register */
-			int ret = gpiochip_register(Gpio::MSIOBOX_0_OUT_1, DRIVER_NAME, instance[i], MSIOBOX_SIGNALS);
+			/* TODO: pick base from settings */
+			int ret = gpiochip_register(Gpio::EXTIOCHIP_0_IO_1, DRIVER_NAME, instance[i], MSIOBOX_SIGNALS);
 			if (ret < 0) {
 			  // no error handling, not returning error code
 				return;
