@@ -57,6 +57,8 @@ public class CalibrationDialogWidget {
     private final TriggerImageHelper triggerImageHelper = new TriggerImageHelper();
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
+    private TriggerImageHelper.Channel triggerImageChannel = TriggerImageHelper.Channel.PRIMARY;
+    private int fieldRowVerticalMargin;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
     private final List<IndicatorPanel> indicatorPanels = new ArrayList<>();
     private final List<ReadoutLabelEntry> readoutEntries = new ArrayList<>();
@@ -73,6 +75,10 @@ public class CalibrationDialogWidget {
 
     public void setOnShowInPinout(Consumer<String> onShowInPinout) {
         this.onShowInPinout = onShowInPinout;
+    }
+
+    public void setFieldRowVerticalMargin(int margin) {
+        fieldRowVerticalMargin = margin;
     }
 
     /**
@@ -189,6 +195,7 @@ public class CalibrationDialogWidget {
             if (uiName == null || uiName.isEmpty()) {
                 uiName = dialogModel.getKey();
             }
+            triggerImageChannel = triggerImageHelper.getChannel(dialogModel.getKey(), uiName);
             contentPane.setName(uiName);
 
             applyLayout(contentPane, dialogModel.getLayoutHint());
@@ -197,7 +204,7 @@ public class CalibrationDialogWidget {
 
             if (triggerImageHelper.isTriggerPanel(dialogModel.getKey(), uiName)) {
                 triggerImageHelper.addTriggerPanelExtras(contentPane);
-                triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage);
+                updateTriggerImage();
             }
         }
         contentPane.revalidate();
@@ -320,8 +327,10 @@ public class CalibrationDialogWidget {
     private void renderField(JPanel container, DialogModel.Field field, IniFileModel iniFileModel, ConfigurationImage ci) {
         Runnable onChange = () -> {
             refreshExpressions();
-            if ("trigger_type".equalsIgnoreCase(field.getKey())) {
-                triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage);
+            if ("trigger_type".equalsIgnoreCase(field.getKey()) ||
+                "vvtMode1".equalsIgnoreCase(field.getKey()) ||
+                "vvtMode2".equalsIgnoreCase(field.getKey())) {
+                updateTriggerImage();
             }
         };
         Optional<IniField> iniField = iniFileModel.findIniField(field.getKey());
@@ -333,6 +342,11 @@ public class CalibrationDialogWidget {
                 return CalibrationFieldFactory.createLabelRow(field);
             }
         }).orElseGet(() -> CalibrationFieldFactory.createLabelRow(field));
+        if (fieldRowVerticalMargin > 0 && iniField.isPresent()) {
+            row.setBorder(BorderFactory.createEmptyBorder(
+                fieldRowVerticalMargin, 0, fieldRowVerticalMargin, 0));
+            CalibrationFieldFactory.fixRowHeight(row);
+        }
 
         boolean hasExpressions = field.getEnableExpression() != null || field.getVisibleExpression() != null;
         if (hasExpressions) {
@@ -440,7 +454,12 @@ public class CalibrationDialogWidget {
 
             if (triggerImageHelper.isTriggerPanel(subDialog.getKey(), uiName) || "Sub Panel".equals(uiName)) {
                 triggerImageHelper.addTriggerPanelExtras(panelWidget);
-                triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage);
+                TriggerImageHelper.Channel channel = triggerImageHelper.getChannel(subDialog.getKey(), uiName);
+                if (channel == TriggerImageHelper.Channel.SECONDARY) {
+                    triggerImageHelper.updateVvtTriggerImage(currentIniFileModel, workingImage);
+                } else {
+                    triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage, channel);
+                }
             }
         } else {
             panelWidget.setName(panel.getPanelName());
@@ -490,6 +509,14 @@ public class CalibrationDialogWidget {
         refreshIndicators();
         if (onConfigChange != null) {
             onConfigChange.accept(workingImage);
+        }
+    }
+
+    private void updateTriggerImage() {
+        if (triggerImageChannel == TriggerImageHelper.Channel.SECONDARY) {
+            triggerImageHelper.updateVvtTriggerImage(currentIniFileModel, workingImage);
+        } else {
+            triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage, triggerImageChannel);
         }
     }
 
