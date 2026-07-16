@@ -8172,76 +8172,76 @@ struct persistent_config_s {
 	bool wizardCltSensor : 1 {};
 	/**
 	offset 16292 bit 8 */
-	bool boardUseTempPullUp : 1 {};
+	bool wizardTps : 1 {};
 	/**
 	offset 16292 bit 9 */
-	bool boardUse2stepPullDown : 1 {};
+	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 16292 bit 10 */
-	bool boardUseD2PullDown : 1 {};
+	bool boardUse2stepPullDown : 1 {};
 	/**
 	offset 16292 bit 11 */
-	bool boardUseD3PullDown : 1 {};
+	bool boardUseD2PullDown : 1 {};
 	/**
 	offset 16292 bit 12 */
-	bool boardUseTachPullUp : 1 {};
+	bool boardUseD3PullDown : 1 {};
 	/**
 	offset 16292 bit 13 */
-	bool unusedBit_299_13 : 1 {};
+	bool boardUseTachPullUp : 1 {};
 	/**
 	offset 16292 bit 14 */
-	bool unusedBit_299_14 : 1 {};
+	bool unusedBit_300_14 : 1 {};
 	/**
 	offset 16292 bit 15 */
-	bool unusedBit_299_15 : 1 {};
+	bool unusedBit_300_15 : 1 {};
 	/**
 	offset 16292 bit 16 */
-	bool unusedBit_299_16 : 1 {};
+	bool unusedBit_300_16 : 1 {};
 	/**
 	offset 16292 bit 17 */
-	bool unusedBit_299_17 : 1 {};
+	bool unusedBit_300_17 : 1 {};
 	/**
 	offset 16292 bit 18 */
-	bool unusedBit_299_18 : 1 {};
+	bool unusedBit_300_18 : 1 {};
 	/**
 	offset 16292 bit 19 */
-	bool unusedBit_299_19 : 1 {};
+	bool unusedBit_300_19 : 1 {};
 	/**
 	offset 16292 bit 20 */
-	bool unusedBit_299_20 : 1 {};
+	bool unusedBit_300_20 : 1 {};
 	/**
 	offset 16292 bit 21 */
-	bool unusedBit_299_21 : 1 {};
+	bool unusedBit_300_21 : 1 {};
 	/**
 	offset 16292 bit 22 */
-	bool unusedBit_299_22 : 1 {};
+	bool unusedBit_300_22 : 1 {};
 	/**
 	offset 16292 bit 23 */
-	bool unusedBit_299_23 : 1 {};
+	bool unusedBit_300_23 : 1 {};
 	/**
 	offset 16292 bit 24 */
-	bool unusedBit_299_24 : 1 {};
+	bool unusedBit_300_24 : 1 {};
 	/**
 	offset 16292 bit 25 */
-	bool unusedBit_299_25 : 1 {};
+	bool unusedBit_300_25 : 1 {};
 	/**
 	offset 16292 bit 26 */
-	bool unusedBit_299_26 : 1 {};
+	bool unusedBit_300_26 : 1 {};
 	/**
 	offset 16292 bit 27 */
-	bool unusedBit_299_27 : 1 {};
+	bool unusedBit_300_27 : 1 {};
 	/**
 	offset 16292 bit 28 */
-	bool unusedBit_299_28 : 1 {};
+	bool unusedBit_300_28 : 1 {};
 	/**
 	offset 16292 bit 29 */
-	bool unusedBit_299_29 : 1 {};
+	bool unusedBit_300_29 : 1 {};
 	/**
 	offset 16292 bit 30 */
-	bool unusedBit_299_30 : 1 {};
+	bool unusedBit_300_30 : 1 {};
 	/**
 	offset 16292 bit 31 */
-	bool unusedBit_299_31 : 1 {};
+	bool unusedBit_300_31 : 1 {};
 	/**
 	 * offset 16296
 	 */
