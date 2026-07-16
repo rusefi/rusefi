@@ -130,6 +130,9 @@ void attachMsdSdCard(BaseBlockDevice* blkdev, uint8_t *blkbuf, size_t blkbufsize
 
 void deattachMsdSdCard(void) {
 	// this is safe to use same read/write buffer couse all luns are handled from one thread
+	// attachLun() blocks until any in-flight SCSI command has fully unwound (CSW included),
+	// so once we return the MSD thread can no longer touch the SD card and the caller is
+	// free to hand the MMC/SPI driver to the logger (mountMmc/f_mount)
 	msd.attachLun(1, (BaseBlockDevice*)&ND1, blkbuf0, sizeof(blkbuf0), &sdCardInquiry, nullptr);
 
 #if EFI_TUNER_STUDIO
