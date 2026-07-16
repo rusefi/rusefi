@@ -197,10 +197,12 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
             gbc.gridx = 0;
             gbc.weightx = 0;
             gbc.fill = GridBagConstraints.NONE;
+            gbc.anchor = GridBagConstraints.CENTER;
             rows.add(new JLabel(Integer.toString(index)), gbc);
             gbc.gridx = 1;
             gbc.weightx = 1;
             gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.anchor = GridBagConstraints.WEST;
             rows.add(selector, gbc);
             gbc.gridx = 2;
             gbc.weightx = 0;
