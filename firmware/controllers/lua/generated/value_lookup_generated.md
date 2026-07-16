@@ -2206,3 +2206,33 @@ Misfire Detection: firings to wait after entering idle before flagging starts. 0
 ### wizardTps
 
 
+### boardUseTachPullUp
+
+
+### boardUseCrankPullUp
+
+
+### boardUseTempPullUp
+
+
+### boardUse2stepPullDown
+
+
+### boardUseCamPullDown
+
+
+### boardUseD4PullDown
+
+
+### boardUseD5PullDown
+
+
+### boardUseCamVrPullUp
+
+
+### boardUseD2PullDown
+
+
+### boardUseD3PullDown
+
+

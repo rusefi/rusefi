@@ -2212,6 +2212,36 @@ float getConfigValueByHash(const int hash) {
 // wizardTps
 		case -1732086003:
 			return config->wizardTps;
+// boardUseTachPullUp
+		case 885690524:
+			return config->boardUseTachPullUp;
+// boardUseCrankPullUp
+		case 1280316843:
+			return config->boardUseCrankPullUp;
+// boardUseTempPullUp
+		case -1457484942:
+			return config->boardUseTempPullUp;
+// boardUse2stepPullDown
+		case -1470758947:
+			return config->boardUse2stepPullDown;
+// boardUseCamPullDown
+		case 1304425152:
+			return config->boardUseCamPullDown;
+// boardUseD4PullDown
+		case 1481814407:
+			return config->boardUseD4PullDown;
+// boardUseD5PullDown
+		case -858840440:
+			return config->boardUseD5PullDown;
+// boardUseCamVrPullUp
+		case -94892331:
+			return config->boardUseCamVrPullUp;
+// boardUseD2PullDown
+		case 1868156805:
+			return config->boardUseD2PullDown;
+// boardUseD3PullDown
+		case -472498042:
+			return config->boardUseD3PullDown;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -5900,6 +5930,56 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1732086003:
 	{
 		config->wizardTps = (int)value;
+		return 1;
+	}
+		case 885690524:
+	{
+		config->boardUseTachPullUp = (int)value;
+		return 1;
+	}
+		case 1280316843:
+	{
+		config->boardUseCrankPullUp = (int)value;
+		return 1;
+	}
+		case -1457484942:
+	{
+		config->boardUseTempPullUp = (int)value;
+		return 1;
+	}
+		case -1470758947:
+	{
+		config->boardUse2stepPullDown = (int)value;
+		return 1;
+	}
+		case 1304425152:
+	{
+		config->boardUseCamPullDown = (int)value;
+		return 1;
+	}
+		case 1481814407:
+	{
+		config->boardUseD4PullDown = (int)value;
+		return 1;
+	}
+		case -858840440:
+	{
+		config->boardUseD5PullDown = (int)value;
+		return 1;
+	}
+		case -94892331:
+	{
+		config->boardUseCamVrPullUp = (int)value;
+		return 1;
+	}
+		case 1868156805:
+	{
+		config->boardUseD2PullDown = (int)value;
+		return 1;
+	}
+		case -472498042:
+	{
+		config->boardUseD3PullDown = (int)value;
 		return 1;
 	}
 	}
