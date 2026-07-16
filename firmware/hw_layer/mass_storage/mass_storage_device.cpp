@@ -224,6 +224,17 @@ void MassStorageController::ThreadTask() {
 			// Get the LUN from the incoming CBW packet
 			uint8_t target_lun = m_cbw.lun & 0x0F; // Mask out reserved bits
 			if (target_lun <= USB_MSD_LUN_COUNT) {
+				// Hold the LUN lock for the whole command, CSW included: attachLun() (the
+				// SD mode switch swapping LUN1's backing device) must not return while
+				// lib_scsi is still using the old block device. scsiExecCmd captures the
+				// blkdev pointer at command start, so an unsynchronized swap lets the SD
+				// thread mount/log on the same MMC/SPI driver this command is still
+				// reading - ChibiOS sync SPI holds a single waiter per driver, the second
+				// thread's DMA wakeup is lost and both threads suspend forever (observed
+				// on hardware). The wait is bounded because every USB data-phase wait in
+				// this command carries MSD_DATA_PHASE_TIMEOUT.
+				chibios_rt::MutexLocker lock(m_lunMutex);
+
 				auto target = &m_luns[target_lun].target;
 
 				// mark busy so 'sdinfo' can show what we are stuck on if this never returns
