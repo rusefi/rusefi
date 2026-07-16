@@ -53,6 +53,23 @@ public abstract class AbstractWizardStep implements WizardStep {
         c.setFont(f.deriveFont(f.getSize() * factor));
     }
 
+    protected static void styleTitle(JLabel label) {
+        label.setForeground(WizardStyle.text());
+        label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() * 1.6f));
+        label.setBorder(BorderFactory.createEmptyBorder(
+            WizardStyle.LARGE_GAP, WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.GAP));
+    }
+
+    protected static void styleButton(AbstractButton button) {
+        button.putClientProperty("JButton.buttonType", "square");
+    }
+
+    protected static void stylePrimaryAction(JButton button) {
+        styleButton(button);
+        button.setMargin(new Insets(9, 18, 9, 18));
+        button.setFont(button.getFont().deriveFont(Font.BOLD));
+    }
+
     /** Returns {@code value} with surrounding INI quotes removed, or unchanged if not quoted. */
     protected static String stripQuotes(String value) {
         return EnumIniField.isQuoted(value) ? ObjectName.unquote(value) : value;

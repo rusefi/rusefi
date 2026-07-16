@@ -53,14 +53,13 @@ public class InjectorFlowPanel extends AbstractWizardStep {
 
         JLabel title = new JLabel(getTitle());
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        title.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        scale(title, 2.5f);
+        styleTitle(title);
         content.add(title, BorderLayout.NORTH);
 
         content.add(body, BorderLayout.CENTER);
 
         JButton continueButton = new JButton("Continue");
-        scale(continueButton, 1.5f);
+        stylePrimaryAction(continueButton);
         continueButton.addActionListener(e -> onContinue());
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));

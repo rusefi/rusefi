@@ -5,6 +5,7 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.ui.hd81.HdConstants;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -14,6 +15,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class WizardCatalogTest {
+
+    @Test
+    public void flaggedStepsHaveStableOrderAndTitles() {
+        List<WizardStepDescriptor> flagged = WizardCatalog.flaggedSteps();
+        assertEquals(Arrays.asList(
+            "wizardNumberOfCylinders", "wizardFiringOrder", "wizardMapSensorType",
+            "wizardTps", "wizardCltSensor", "wizardCrankTrigger", "wizardCamTrigger", "wizardInjectorFlow"),
+            flagged.stream().map(d -> d.flagName).collect(java.util.stream.Collectors.toList()));
+        assertEquals(Arrays.asList(
+            "Cylinders", "Firing Order", "MAP Sensor", "TPS", "CLT Sensor",
+            "Crank Trigger", "Cam Trigger", "Injector Flow"),
+            flagged.stream().map(d -> d.displayTitle).collect(java.util.stream.Collectors.toList()));
+    }
 
     @Test
     public void flaggedStepsAreAllFlagged() {

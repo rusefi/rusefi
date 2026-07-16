@@ -34,6 +34,8 @@ public class WizardSandbox {
 
     public static void main(String[] args) throws FileNotFoundException {
         UIContext uiContext = createOfflineContext();
+        int width = args.length > 0 ? Integer.parseInt(args[0]) : 800;
+        int height = args.length > 1 ? Integer.parseInt(args[1]) : 600;
 
         UiHelper.configureLaf();
 
@@ -45,7 +47,7 @@ public class WizardSandbox {
             fh.getFrame().add(wizard);
             wizard.startWizard();
 
-            fh.getFrame().setSize(800, 600);
+            fh.getFrame().setSize(width, height);
             fh.getFrame().setLocationRelativeTo(null);
             fh.getFrame().setVisible(true);
         });

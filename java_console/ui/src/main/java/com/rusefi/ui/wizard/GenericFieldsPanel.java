@@ -52,8 +52,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
     private void buildUi() {
         JLabel titleLabel = new JLabel(getTitle());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        scale(titleLabel, 1.5f);
+        styleTitle(titleLabel);
         content.add(titleLabel, BorderLayout.NORTH);
 
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
@@ -105,7 +104,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         content.add(centerWrapper, BorderLayout.CENTER);
 
         saveButton = new JButton("Save and Continue");
-        scale(saveButton, 1.5f);
+        stylePrimaryAction(saveButton);
         saveButton.addActionListener(e -> onSave());
 
         connectionStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
