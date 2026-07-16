@@ -20,6 +20,7 @@
 #define MSD_CSW_SIGNATURE               0x53425355
 
 #define CBW_FLAGS_RESERVED_MASK         0b01111111
+#define CBW_FLAGS_DIRECTION_IN          0b10000000
 #define CBW_LUN_RESERVED_MASK           0b11110000
 #define CBW_CMD_LEN_RESERVED_MASK       0b11000000
 
@@ -133,10 +134,12 @@ static uint32_t scsi_transport_transmit(const SCSITransport *transport,
 	if (MSG_TIMEOUT == status) {
 		s_msdInstance->onDataPhaseTimeout();
 	}
-	if (MSG_OK == status)
+	if (MSG_OK == status) {
+		s_msdInstance->onDataPhaseBytes(len);
 		return len;
-	else
+	} else {
 		return 0;
+	}
 }
 
 static uint32_t scsi_transport_transmit_start(const SCSITransport *transport,
@@ -147,10 +150,12 @@ static uint32_t scsi_transport_transmit_start(const SCSITransport *transport,
 
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
 	msg_t status = usbTransmitStart(trp->usbp, trp->ep, data, len);
-	if (MSG_OK == status)
+	if (MSG_OK == status) {
+		s_msdInstance->onDataPhaseBytes(len);
 		return len;
-	else
+	} else {
 		return 0;
+	}
 }
 
 static uint32_t scsi_transport_transmit_wait(const SCSITransport *transport) {
@@ -181,10 +186,15 @@ static uint32_t scsi_transport_receive(const SCSITransport *transport,
 		s_msdInstance->onDataPhaseTimeout();
 		return 0;
 	}
-	if (MSG_RESET != status)
+	if (MSG_RESET != status) {
+		// usbReceive returns the received byte count when non-negative
+		if (status > 0) {
+			s_msdInstance->onDataPhaseBytes(status);
+		}
 		return status;
-	else
+	} else {
 		return 0;
+	}
 }
 
 MassStorageController::MassStorageController(USBDriver* usb)
@@ -242,6 +252,8 @@ void MassStorageController::ThreadTask() {
 				m_busyOpcode = m_cbw.cmd_data[0];
 				m_busySince = chVTGetSystemTime();
 
+				m_dataPhaseBytes = 0;
+
 				uint8_t cswStatus;
 				uint32_t residue;
 				if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
@@ -251,7 +263,11 @@ void MassStorageController::ThreadTask() {
 					m_failedCmdCount = m_failedCmdCount + 1;
 					m_lastFailedOpcode = m_cbw.cmd_data[0];
 					cswStatus = CSW_STATUS_FAILED;
-					residue = scsiResidue(target);
+					// dCSWDataResidue = expected minus actually moved. Not scsiResidue():
+					// lib_scsi only writes that on a short transfer and never resets it
+					// between commands, so for a command that moved no data at all it
+					// reports a stale value from some earlier command.
+					residue = (m_cbw.data_len > m_dataPhaseBytes) ? (m_cbw.data_len - m_dataPhaseBytes) : 0;
 				}
 
 				m_busyOpcode = -1;
@@ -264,6 +280,24 @@ void MassStorageController::ThreadTask() {
 					// this command's CSW - sending one anyway would desynchronize the
 					// transport.
 					continue;
+				}
+
+				if ((m_cbw.data_len > 0) && ((m_cbw.flags & CBW_FLAGS_DIRECTION_IN) != 0)
+						&& (m_dataPhaseBytes == 0)) {
+					// BOT "13 cases" case 4/5 (Hi > Dn): the host expects a data-IN phase
+					// but this command sent nothing (e.g. Read Capacity on a medium-less
+					// LUN), so its data URB is still armed. Sending the 13-byte CSW now
+					// would land in that buffer - if it is smaller than 13 bytes (Read
+					// Capacity posts 8) the packet overruns it and the host sees a babble
+					// error, kills the URB, loses the CSW and retries the command forever
+					// (observed: Windows in a 200 ms retry loop, babble recovery also
+					// disturbing the CDC interfaces of the composite device). Per the BOT
+					// spec, STALL bulk-IN instead: the host clear-halts the endpoint and
+					// only then collects the CSW into a proper 13-byte read.
+					osalSysLock();
+					usbStallTransmitI(m_usb, USB_MSD_DATA_EP);
+					osalSysUnlock();
+					m_noDataStallCount = m_noDataStallCount + 1;
 				}
 
 				sendCsw(cswStatus, residue);
@@ -282,8 +316,8 @@ void MassStorageController::onDataPhaseTimeout() {
 }
 
 void MassStorageController::printDiagnostics() const {
-	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs, %lu data-phase timeouts",
-			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount, m_timeoutCount);
+	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs, %lu data-phase timeouts, %lu no-data stalls",
+			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount, m_timeoutCount, m_noDataStallCount);
 
 	// snapshot: m_busySince is only meaningful while m_busyOpcode is set
 	int busyOpcode = m_busyOpcode;

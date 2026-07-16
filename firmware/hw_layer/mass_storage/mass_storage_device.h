@@ -30,6 +30,14 @@ public:
 	// timed out, meaning the host abandoned the command without a Bulk-Only Reset
 	void onDataPhaseTimeout();
 
+	// called by the SCSI transport with the number of data-phase bytes actually moved,
+	// so ThreadTask can detect a command that owed the host data but sent none (BOT
+	// case 4/5, e.g. Read Capacity on a medium-less LUN). lib_scsi's scsiResidue()
+	// cannot tell: it is only written on short transfers and never reset per command.
+	void onDataPhaseBytes(uint32_t bytes) {
+		m_dataPhaseBytes = m_dataPhaseBytes + bytes;
+	}
+
 	// polled by the SCSI transport so an abandoned command stops touching USB
 	bool isCommandAbandoned() const {
 		return m_botResetPending || m_dataPhaseTimedOut;
@@ -66,6 +74,12 @@ private:
 	// the whole composite device every ~20s). Cleared when the next CBW arrives.
 	volatile bool m_dataPhaseTimedOut = false;
 	volatile uint32_t m_timeoutCount = 0;
+
+	// Data-phase bytes moved by the current command, reset before each scsiExecCmd.
+	// Zero on a command that declared a data-IN phase means the host's data URB is
+	// still armed and a straight CSW would babble into it - stall bulk-IN instead.
+	volatile uint32_t m_dataPhaseBytes = 0;
+	volatile uint32_t m_noDataStallCount = 0;
 
 	usbmsdstate_t m_state;
 
