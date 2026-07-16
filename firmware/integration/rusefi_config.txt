@@ -2539,6 +2539,7 @@ bit wizardCamTrigger,"yes","no"
 bit wizardInjectorFlow,"yes","no"
 bit wizardDisplacement,"yes","no"
 bit wizardCltSensor,"yes","no"
+bit wizardTps,"yes","no"
 
 split_lines@@BOARD_CONFIG_FROM_FILE@@
 
