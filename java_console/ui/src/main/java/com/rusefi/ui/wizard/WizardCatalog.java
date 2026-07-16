@@ -81,6 +81,22 @@ public class WizardCatalog {
             null
         ),
         new WizardStepDescriptor(
+            "wizardIgnitionOutputs",
+            "Ignition Outputs",
+            true,
+            WizardStepDescriptor.ALWAYS,
+            null,
+            null
+        ),
+        new WizardStepDescriptor(
+            "wizardInjectorOutputs",
+            "Injector Outputs",
+            true,
+            WizardStepDescriptor.ALWAYS,
+            null,
+            null
+        ),
+        new WizardStepDescriptor(
             "wizardInjectorFlow",
             "Injector Flow",
             true,
