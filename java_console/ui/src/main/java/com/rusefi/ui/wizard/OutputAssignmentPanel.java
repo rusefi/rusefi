@@ -23,7 +23,7 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
     enum OutputType {
         IGNITION("Ignition Outputs", "IGNITION OUTPUT SETUP", "ignitionPins", "wizardIgnitionOutputs",
             VariableRegistryValues.ts_command_e_TS_IGNITION_CATEGORY,
-            "Ignition tests produce hazardous voltage. Keep clear of coils and exposed conductors."),
+            "Ignition tests produce hazardous voltage."),
         INJECTOR("Injector Outputs", "INJECTOR OUTPUT SETUP", "injectionPins", "wizardInjectorOutputs",
             VariableRegistryValues.ts_command_e_TS_INJECTOR_CATEGORY,
             "Injector tests can release fuel. Ensure the fuel system is safe before continuing.");
@@ -55,6 +55,7 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
     private final Map<String, JComboBox<String>> editors = new LinkedHashMap<>();
     private final List<JButton> testButtons = new ArrayList<>();
     private final JButton saveButton = new JButton("Save and Continue");
+    private final JCheckBox enableBenchTests = new JCheckBox("I understand the risks - enable bench tests");
     private final JLabel statusLabel = new JLabel(" ");
     private boolean busy;
 
@@ -76,6 +77,12 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
                 Dimension preferred = super.getPreferredSize();
                 preferred.width = CARD_WIDTH;
                 return preferred;
+            }
+
+            @Override
+            public Dimension getMaximumSize() {
+                Dimension preferred = super.getPreferredSize();
+                return new Dimension(CARD_WIDTH, preferred.height);
             }
         };
         card.setBorder(BorderFactory.createCompoundBorder(
@@ -106,11 +113,28 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
         saveButton.setFont(saveButton.getFont().deriveFont(Font.BOLD));
         saveButton.addActionListener(e -> saveAndContinue());
         statusLabel.setForeground(Color.RED);
+        enableBenchTests.addActionListener(e -> updateActions());
+
+        JLabel warning = new JLabel("<html><b>WARNING:</b> " + type.safetyWarning +
+            " The engine must be stopped.</html>");
+        warning.setForeground(Color.RED);
+
+        JPanel safetyPanel = new JPanel();
+        safetyPanel.setLayout(new BoxLayout(safetyPanel, BoxLayout.Y_AXIS));
+        warning.setAlignmentX(Component.LEFT_ALIGNMENT);
+        enableBenchTests.setAlignmentX(Component.LEFT_ALIGNMENT);
+        safetyPanel.add(warning);
+        safetyPanel.add(Box.createVerticalStrut(5));
+        safetyPanel.add(enableBenchTests);
 
         JPanel footer = new JPanel(new BorderLayout());
         footer.add(statusLabel, BorderLayout.CENTER);
         footer.add(saveButton, BorderLayout.EAST);
-        card.add(footer, BorderLayout.SOUTH);
+
+        JPanel south = new JPanel(new BorderLayout(0, 8));
+        south.add(safetyPanel, BorderLayout.NORTH);
+        south.add(footer, BorderLayout.SOUTH);
+        card.add(south, BorderLayout.SOUTH);
 
         JPanel wrapper = new ScrollablePanel();
         wrapper.setLayout(new BoxLayout(wrapper, BoxLayout.Y_AXIS));
@@ -166,7 +190,7 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
             JButton testButton = new JButton("Test " + index);
             styleButton(testButton);
             int outputIndex = index;
-            testButton.addActionListener(e -> confirmAndTest(outputIndex));
+            testButton.addActionListener(e -> startTest(outputIndex));
             testButtons.add(testButton);
 
             gbc.gridy = index;
@@ -247,14 +271,7 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
         }
     }
 
-    private void confirmAndTest(int outputIndex) {
-        int result = JOptionPane.showConfirmDialog(content,
-            type.safetyWarning + "\n\nThe engine must be stopped. Test output " + outputIndex + "?",
-            "Confirm Bench Test", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (result != JOptionPane.OK_OPTION) {
-            return;
-        }
-
+    private void startTest(int outputIndex) {
         WizardConfig cfg = WizardConfig.snapshot(uiContext);
         ConfigurationImage modified = buildModifiedImage();
         if (cfg == null || modified == null) {
@@ -314,8 +331,9 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
     private void updateActions() {
         boolean enabled = !busy && ConnectionStatusLogic.INSTANCE.isConnected() && allSelected();
         saveButton.setEnabled(enabled);
+        enableBenchTests.setEnabled(!busy && ConnectionStatusLogic.INSTANCE.isConnected());
         for (JButton button : testButtons) {
-            button.setEnabled(enabled);
+            button.setEnabled(enabled && enableBenchTests.isSelected());
         }
     }
 
@@ -358,7 +376,16 @@ public class OutputAssignmentPanel extends AbstractWizardStep {
         return buildModifiedImage();
     }
 
-    boolean areActionsEnabledForTests() {
-        return saveButton.isEnabled() && testButtons.stream().allMatch(AbstractButton::isEnabled);
+    boolean isSaveEnabledForTests() {
+        return saveButton.isEnabled();
+    }
+
+    boolean areTestButtonsEnabledForTests() {
+        return testButtons.stream().allMatch(AbstractButton::isEnabled);
+    }
+
+    void setBenchTestsEnabledForTests(boolean enabled) {
+        enableBenchTests.setSelected(enabled);
+        updateActions();
     }
 }

@@ -126,11 +126,16 @@ public class OutputAssignmentPanelTest {
                 holder[0].onShow();
             });
             SwingUtilities.invokeAndWait(() -> { });
-            assertTrue(holder[0].areActionsEnabledForTests());
+            assertTrue(holder[0].isSaveEnabledForTests());
+            assertFalse(holder[0].areTestButtonsEnabledForTests());
+
+            SwingUtilities.invokeAndWait(() -> holder[0].setBenchTestsEnabledForTests(true));
+            assertTrue(holder[0].areTestButtonsEnabledForTests());
 
             ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
             SwingUtilities.invokeAndWait(() -> { });
-            assertFalse(holder[0].areActionsEnabledForTests());
+            assertFalse(holder[0].isSaveEnabledForTests());
+            assertFalse(holder[0].areTestButtonsEnabledForTests());
         } finally {
             if (holder[0] != null) {
                 SwingUtilities.invokeAndWait(holder[0]::onHide);
