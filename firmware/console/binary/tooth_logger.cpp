@@ -150,10 +150,8 @@ bool EnableToothLogger(TLmode mode) {
 	// Reset state
 	currentBuffer = nullptr;
 
-	// Empty the filled buffer list
-	CompositeBuffer* dummy;
-	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy))
-		;
+	freeBuffers.resumeX();
+	filledBuffers.resumeX();
 
 	// Put all buffers in the free list
 	for (size_t i = 0; i < bufferCount; i++) {
@@ -171,6 +169,10 @@ bool EnableToothLogger(TLmode mode) {
 
 void DisableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
+
+	// Resume all waiting threads
+	freeBuffers.resetI();
+	filledBuffers.resetI();
 
 	// Release the big buffer for another user
 	// C++ magic: here we are calling BigBufferHandle::operator=() with empty instance
@@ -190,6 +192,7 @@ static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
 	}
 
 	if (msg != MSG_OK) {
+		// someone just disabled tooth logger and reset queues?
 		// What even happened if we didn't get timeout, but also didn't get OK?
 		return nullptr;
 	}
@@ -208,8 +211,9 @@ CompositeBuffer* GetToothLoggerBufferBlocking() {
 void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
 	chibios_rt::CriticalSectionLocker csl;
 
-	msg_t msg = freeBuffers.postI(buffer);
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
+	// ignore return, nothing we can do in case of error.
+	// MSG_RESET is possible if tooth logger was disabled while buffer was outside
+	freeBuffers.postI(buffer);
 
 	// If the used list is empty, clear the ready flag
 	if (filledBuffers.getUsedCountI() == 0) {
