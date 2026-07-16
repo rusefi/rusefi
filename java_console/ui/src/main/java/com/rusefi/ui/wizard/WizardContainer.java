@@ -179,7 +179,7 @@ public class WizardContainer extends JPanel {
         singleStepMode = false;
         progressPanel.setVisible(true);
         onAllStepsComplete = this::showCompletionCard;
-        debugPanel.setVisible(true);
+        // debugPanel.setVisible(true);
         refreshDebugFlags();
         steps.clear();
         stepContentPanel.removeAll();
