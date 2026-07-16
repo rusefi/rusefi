@@ -18,7 +18,7 @@ public class CamTriggerPanel extends AbstractWizardStep {
         gbc.insets = new Insets(20, 20, 20, 20);
 
         JLabel title = new JLabel(getTitle());
-        scale(title, 3);
+        styleTitle(title);
         content.add(title, gbc);
 
         gbc.gridy++;
@@ -28,7 +28,7 @@ public class CamTriggerPanel extends AbstractWizardStep {
 
         gbc.gridy++;
         JButton skipButton = new JButton("Skip / Use Default");
-        scale(skipButton, 2);
+        stylePrimaryAction(skipButton);
         skipButton.addActionListener(e -> fireCompleted(new WizardStepResult(null, null)));
         content.add(skipButton, gbc);
     }

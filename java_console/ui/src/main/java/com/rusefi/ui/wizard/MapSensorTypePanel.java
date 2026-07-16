@@ -23,8 +23,7 @@ public class MapSensorTypePanel extends AbstractWizardStep {
 
         JLabel title = new JLabel(getTitle());
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        title.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        scale(title, 2);
+        styleTitle(title);
         content.add(title, BorderLayout.NORTH);
 
         // Wrap the dialog content so it takes its preferred size and centers horizontally
@@ -37,7 +36,7 @@ public class MapSensorTypePanel extends AbstractWizardStep {
         content.add(new JScrollPane(centerWrapper), BorderLayout.CENTER);
 
         JButton continueButton = new JButton("Continue");
-        scale(continueButton, 1.5f);
+        stylePrimaryAction(continueButton);
         continueButton.addActionListener(e -> fireCompleted(new WizardStepResult(workingImage[0])));
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

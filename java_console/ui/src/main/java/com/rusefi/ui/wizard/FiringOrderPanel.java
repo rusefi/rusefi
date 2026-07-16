@@ -47,8 +47,7 @@ public class FiringOrderPanel extends AbstractWizardStep {
 
         JLabel title = new JLabel("Select Firing Order for " + cylindersCount + " cylinders");
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        scale(title, 2);
-        title.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+        styleTitle(title);
         content.add(title, BorderLayout.NORTH);
 
         JPanel ordersPanel = new JPanel();
@@ -85,7 +84,7 @@ public class FiringOrderPanel extends AbstractWizardStep {
                     label += " (" + EXAMPLES.get(exampleKey) + ")";
                 }
                 JButton button = new JButton(label);
-                scale(button, 2);
+                stylePrimaryAction(button);
                 button.setAlignmentX(Component.CENTER_ALIGNMENT);
                 button.setMaximumSize(button.getPreferredSize());
                 button.addActionListener(e -> fireCompleted(new WizardStepResult("firingOrder", order)));

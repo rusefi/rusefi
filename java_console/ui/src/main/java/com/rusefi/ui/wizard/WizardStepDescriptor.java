@@ -22,6 +22,9 @@ public class WizardStepDescriptor {
     /** INI wizard progress flag (e.g. "wizardNumberOfCylinders"), or null for standalone steps. */
     public final String flagName;
 
+    /** Stable progress-strip title, or null for standalone steps. */
+    public final String displayTitle;
+
     /** If true, this step participates in auto-launch scanning. */
     public final boolean autoLaunch;
 
@@ -35,11 +38,13 @@ public class WizardStepDescriptor {
     public final Function<UIContext, WizardStep> factory;
 
     public WizardStepDescriptor(String flagName,
+                                String displayTitle,
                                 boolean autoLaunch,
                                 Predicate<UIContext> applicable,
                                 Predicate<UIContext> needsAttention,
                                 Function<UIContext, WizardStep> factory) {
         this.flagName = flagName;
+        this.displayTitle = displayTitle;
         this.autoLaunch = autoLaunch;
         this.applicable = applicable != null ? applicable : ALWAYS;
         this.needsAttention = needsAttention;

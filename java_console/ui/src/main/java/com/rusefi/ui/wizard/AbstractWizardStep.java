@@ -1,6 +1,10 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.field.EnumIniField;
+import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.OrdinalOutOfRangeException;
 
 import javax.management.ObjectName;
 import javax.swing.*;
@@ -53,8 +57,34 @@ public abstract class AbstractWizardStep implements WizardStep {
         c.setFont(f.deriveFont(f.getSize() * factor));
     }
 
+    protected static void styleTitle(JLabel label) {
+        label.setForeground(WizardStyle.text());
+        label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() * 1.6f));
+        label.setBorder(BorderFactory.createEmptyBorder(
+            WizardStyle.LARGE_GAP, WizardStyle.GAP, WizardStyle.LARGE_GAP, WizardStyle.GAP));
+    }
+
+    protected static void styleButton(AbstractButton button) {
+        button.putClientProperty("JButton.buttonType", "square");
+    }
+
+    protected static void stylePrimaryAction(JButton button) {
+        styleButton(button);
+        button.setMargin(new Insets(9, 18, 9, 18));
+        button.setFont(button.getFont().deriveFont(Font.BOLD));
+    }
+
     /** Returns {@code value} with surrounding INI quotes removed, or unchanged if not quoted. */
     protected static String stripQuotes(String value) {
         return EnumIniField.isQuoted(value) ? ObjectName.unquote(value) : value;
+    }
+
+    /** Returns null when a persisted enum value is not exposed by the current board's INI. */
+    protected static String readValue(IniField field, ConfigurationImage image) {
+        try {
+            return stripQuotes(ConfigurationImageGetterSetter.getStringValue(field, image));
+        } catch (OrdinalOutOfRangeException e) {
+            return null;
+        }
     }
 }

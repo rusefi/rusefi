@@ -66,16 +66,18 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
         gbc.anchor = GridBagConstraints.CENTER;
 
         JLabel label = new JLabel("How many cylinders?");
-        scale(label, 3);
+        styleTitle(label);
         mainPanel.add(label, gbc);
 
         gbc.gridy++;
         JToggleButton fourStroke = new JToggleButton("4 Stroke", true);
         JToggleButton twoStroke = new JToggleButton("2 Stroke");
-        scale(fourStroke, 2);
-        scale(twoStroke, 2);
-        fourStroke.setMargin(new Insets(15, 30, 15, 30));
-        twoStroke.setMargin(new Insets(15, 30, 15, 30));
+        styleButton(fourStroke);
+        styleButton(twoStroke);
+        scale(fourStroke, 1.2f);
+        scale(twoStroke, 1.2f);
+        fourStroke.setMargin(new Insets(9, 18, 9, 18));
+        twoStroke.setMargin(new Insets(9, 18, 9, 18));
         ButtonGroup strokeGroup = new ButtonGroup();
         strokeGroup.add(fourStroke);
         strokeGroup.add(twoStroke);
@@ -90,7 +92,8 @@ public class NumberOfCylindersPanel extends AbstractWizardStep {
 
         for (int option : options) {
             JButton button = new JButton(String.valueOf(option));
-            scale(button, 3);
+            scale(button, 1.5f);
+            stylePrimaryAction(button);
             buttonsPanel.add(button);
 
             boolean isGotcha = option == 7 || option == 9 || option == 16;

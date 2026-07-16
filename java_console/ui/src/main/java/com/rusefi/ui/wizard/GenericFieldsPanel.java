@@ -52,8 +52,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
     private void buildUi() {
         JLabel titleLabel = new JLabel(getTitle());
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        scale(titleLabel, 1.5f);
+        styleTitle(titleLabel);
         content.add(titleLabel, BorderLayout.NORTH);
 
         IniFileModel ini = uiContext.iniFileState.getIniFileModel();
@@ -105,7 +104,7 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         content.add(centerWrapper, BorderLayout.CENTER);
 
         saveButton = new JButton("Save and Continue");
-        scale(saveButton, 1.5f);
+        stylePrimaryAction(saveButton);
         saveButton.addActionListener(e -> onSave());
 
         connectionStatusLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -178,16 +177,14 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
             IniField field = cfg.ini.findIniField(entry.getKey()).orElse(null);
             if (field == null) continue;
-            String value = ConfigurationImageGetterSetter.getStringValue(field, cfg.image);
-            if (value == null) continue;
-            String unquoted = stripQuotes(value);
+            String unquoted = readValue(field, cfg.image);
             JComponent editor = entry.getValue();
 
             if (editor instanceof JComboBox) {
                 @SuppressWarnings("unchecked")
                 JComboBox<String> combo = (JComboBox<String>) editor;
                 // INVALID is a sentinel used by external tooling for "no valid value" — render blank.
-                if (INVALID_SENTINEL.equalsIgnoreCase(unquoted) || unquoted.isEmpty()) {
+                if (unquoted == null || INVALID_SENTINEL.equalsIgnoreCase(unquoted) || unquoted.isEmpty()) {
                     combo.setSelectedIndex(-1);
                 } else {
                     combo.setSelectedItem(unquoted);
@@ -241,9 +238,9 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         for (String name : fieldNames) {
             IniField field = ini.findIniField(name).orElse(null);
             if (field == null) continue;
-            String value = ConfigurationImageGetterSetter.getStringValue(field, image);
+            String value = readValue(field, image);
             if (value == null) return true;
-            String stripped = stripQuotes(value).trim();
+            String stripped = value.trim();
             if (stripped.isEmpty()) return true;
             if (INVALID_SENTINEL.equalsIgnoreCase(stripped)) return true;
         }
