@@ -5,6 +5,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.binaryprotocol.ShortcutsHelper;
 import com.rusefi.core.MessagesCentral;
@@ -43,6 +44,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -548,10 +550,10 @@ console live data tab is broken #8402
     }
 
     static void startUi(String[] args) throws InterruptedException, InvocationTargetException {
-        startUi(args, null);
+        startUi(args, CompletableFuture.completedFuture(Autoupdate.UpdateOutcome.SKIPPED));
     }
 
-    static void startUi(String[] args, AtomicReference<Consumer<String>> bannerCallback) throws InterruptedException, InvocationTargetException {
+    static void startUi(String[] args, CompletableFuture<Autoupdate.UpdateOutcome> updateOutcome) throws InterruptedException, InvocationTargetException {
         if (ConnectionAndMeta.saveReadmeHtmlToFile()) {
             new Thread(ConsoleUI::writeReadmeFile).start();
         }
@@ -560,7 +562,7 @@ console live data tab is broken #8402
         AutotestLogging.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         commonUiStartup();
 // not very useful?        VersionChecker.start();
-        SwingUtilities.invokeAndWait(() -> awtCode(args, bannerCallback));
+        SwingUtilities.invokeAndWait(() -> awtCode(args, updateOutcome));
     }
 
     /**
@@ -571,7 +573,7 @@ console live data tab is broken #8402
         tabbedPane.addTab(title, component);
     }
 
-    private static void awtCode(String[] args, AtomicReference<Consumer<String>> bannerCallback) {
+    private static void awtCode(String[] args, CompletableFuture<Autoupdate.UpdateOutcome> updateOutcome) {
         if (JustOneInstance.isAlreadyRunning()) {
             int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like another instance is already running. Do you really want to start another instance?",
                 TITLE, JOptionPane.YES_NO_OPTION);
@@ -606,9 +608,8 @@ console live data tab is broken #8402
             } else {
                 for (String p : LinkManager.getCommPorts())
                     MessagesCentral.getInstance().postMessage(Launcher.class, "Available port: " + p);
-                StartupFrame startupFrame = new StartupFrame(connectivityContext, new UIContext(connectivityContext.getConnectedEcuTarget()));
-                if (bannerCallback != null)
-                    bannerCallback.set(message -> startupFrame.restartConsole());
+                StartupFrame startupFrame = new StartupFrame(connectivityContext,
+                    new UIContext(connectivityContext.getConnectedEcuTarget()), updateOutcome);
                 startupFrame.showUi();
             }
 

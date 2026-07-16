@@ -1,61 +1,43 @@
 package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
+import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.FindFileHelper;
-import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsInfo;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.jobs.*;
 import org.jetbrains.annotations.Nullable;
-import com.rusefi.ui.LogoHelper;
-import com.rusefi.ui.util.HorizontalLine;
-import com.rusefi.ui.widgets.ToolButtons;
 import com.rusefi.util.CompatibilityOptional;
 import org.jetbrains.annotations.NotNull;
-import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.FileLog.isWindows;
-import static com.rusefi.StartupFrame.newReleaseAnnounce;
-import static com.rusefi.core.net.ConnectionAndMeta.getProperties;
-import static com.rusefi.ui.basic.UnitLabelPrinter.UNIT_IDENTIFIER_FIELD_NAMES;
 
-public class BasicUpdaterPanel implements BasicButtonCoordinator {
-    private static final Logging log = getLogging(BasicUpdaterPanel.class);
-
-    private final JPanel content = new JPanel(new VerticalFlowLayout());
+public class StartupUpdateActions implements BasicButtonCoordinator {
+    private static final Logging log = getLogging(StartupUpdateActions.class);
 
     private final boolean isObfuscated = FindFileHelper.isObfuscated();
 
-    private final String panamaUrl = getProperties().getProperty("panama_url");
-
-    private final JLabel statusMessage = new JLabel();
+    private final JLabel updateSoftwareStatus = new JLabel();
     private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings");
     private final JCheckBox verboseMessages = new JCheckBox("Verbose Status");
 
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
+    private final JButton updateSoftwareButton = new JButton("Update Software");
     // todo: this control lives on a different parent TODO fix this mess!
     private final ImportTuneControl importTuneButton;
-
-    private final JButton updateCalibrationsButton = new JButton(
-        "Update Calibrations",
-        AutoupdateUtil.loadIcon("writeconfig48.png")
-    );
-
-    private LogoLabelPopupMenu logoLabelPopupMenu = null;
 
     private final ConnectivityContext connectivityContext;
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
@@ -63,13 +45,17 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
     private @Nullable LinkManager splashLinkManager;
 //    private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
+    private boolean softwareUpdateAvailable;
+    private boolean softwareUpdateInProgress;
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
 
     private String latestReportedHash;
 
-    BasicUpdaterPanel(
-        ConnectivityContext connectivityContext, final boolean showUrlLabel,
-        final UpdateOperationCallbacks updateOperationCallbacks, SingleAsyncJobExecutor singleAsyncJobExecutor, AtomicReference<Optional<PortResult>> ecuPortToUse
+    public StartupUpdateActions(
+        ConnectivityContext connectivityContext,
+        final UpdateOperationCallbacks updateOperationCallbacks, SingleAsyncJobExecutor singleAsyncJobExecutor,
+        AtomicReference<Optional<PortResult>> ecuPortToUse,
+        CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome
     ) {
         this.connectivityContext = connectivityContext;
         this.ecuPortToUse = ecuPortToUse;
@@ -80,54 +66,32 @@ public class BasicUpdaterPanel implements BasicButtonCoordinator {
         importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this, connectivityContext);
 //        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
-        final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
-            "rusefi_updater.exe",
-            "center",
-            () -> 0
-        );
-        newReleaseNotification.ifPresent(content::add);
-        if (isWindows()) {
-            content.add(ToolButtons.createShowDeviceManagerButton());
-        }
-
-        content.add(StartupFrame.binaryModificationControl());
-
         updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
         updateFirmwareButton.setEnabled(false);
 
-        statusMessage.setForeground(Color.red);
-        content.add(statusMessage);
-        content.add(updateFirmwareButton);
+        updateSoftwareButton.setPreferredSize(updateFirmwareButton.getPreferredSize());
+        softwareUpdateAvailable = !Autoupdate.isAutoUpdateEnabled();
+        updateSoftwareButton.setVisible(softwareUpdateAvailable);
+        updateSoftwareButton.setEnabled(softwareUpdateAvailable);
+        updateSoftwareButton.addActionListener(e -> onUpdateSoftwareClicked());
+        updateSoftwareStatus.setForeground(Color.red);
+        updateSoftwareStatus.setVisible(false);
+
+        bindSoftwareUpdateOutcome(softwareUpdateOutcome, updateSoftwareButton, updateSoftwareStatus, () -> {
+            softwareUpdateAvailable = true;
+            refreshButtons();
+        });
 
         importTuneButton.setEnabled(false);
 
-        content.add(new HorizontalLine());
-        JLabel logoLabel = LogoHelper.createLogoLabel();
-        if (logoLabel != null) {
-            logoLabelPopupMenu = new LogoLabelPopupMenu(this::uploadTune, this::printUnitLabel, panamaUrl != null);
-            logoLabel.setComponentPopupMenu(logoLabelPopupMenu);
-            content.add(logoLabel);
-        }
-        if (showUrlLabel)
-            content.add(LogoHelper.createUrlLabel());
-
-/*
-never used?
-        if (ConnectionAndMeta.showUpdateCalibrations()) {
-            updateCalibrationsButton.addActionListener(this::onUpdateCalibrationsButtonClicked);
-            updateCalibrationsButton.setEnabled(false);
-            content.add(updateCalibrationsButton);
-        }
-  */
         migrateSettings.setSelected(true);
+        migrateSettings.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         migrateSettings.addActionListener(e -> updateMigrateSettingState());
 
         verboseMessages.setSelected(false);
         verboseMessages.addActionListener(e -> updateMigrateSettingState());
 
         updateMigrateSettingState();
-        content.add(migrateSettings);
-//        content.add(verboseMessages);
     }
 
     public ImportTuneControl getImportTuneButton() {
@@ -149,23 +113,63 @@ never used?
         return migrateSettings;
     }
 
+    public JButton getUpdateFirmwareButton() {
+        return updateFirmwareButton;
+    }
+
+    public JButton getUpdateSoftwareButton() {
+        return updateSoftwareButton;
+    }
+
+    public JLabel getUpdateSoftwareStatus() {
+        return updateSoftwareStatus;
+    }
+
     private void updateMigrateSettingState() {
         MigrateSettingsCheckboxState.isMigrationNeeded = migrateSettings.isSelected();
         MigrateSettingsCheckboxState.isVerboseMessages = verboseMessages.isSelected();
     }
 
-    private void hideStatusMessage() {
-        // we use .setText(" ") instead of .setVisible(false) to avoid layout contraction
-        statusMessage.setText(" ");
+    private void onUpdateSoftwareClicked() {
+        softwareUpdateInProgress = true;
+        refreshButtons();
+        Thread updateThread = new Thread(() -> Autoupdate.runManualUpdate(message -> {
+            if (message != null) {
+                Autoupdate.relaunchConsole();
+                return;
+            }
+            SwingUtilities.invokeLater(() -> {
+                softwareUpdateInProgress = false;
+                softwareUpdateAvailable = true;
+                updateSoftwareStatus.setText("No software update was installed. You can retry.");
+                updateSoftwareStatus.setVisible(true);
+                refreshButtons();
+            });
+        }), "manual-update");
+        updateThread.setDaemon(true);
+        updateThread.start();
     }
 
-    public void updateStatus(final String niceStatus) {
-        statusMessage.setText(niceStatus);
+    static void bindSoftwareUpdateOutcome(CompletableFuture<Autoupdate.UpdateOutcome> outcome,
+                                          JButton button, JLabel status, Runnable onFailure) {
+        outcome.thenAccept(value -> SwingUtilities.invokeLater(() -> {
+            applySoftwareUpdateOutcome(value, button, status);
+            if (value == Autoupdate.UpdateOutcome.FAILED) {
+                onFailure.run();
+            }
+        }));
+    }
+
+    static void applySoftwareUpdateOutcome(Autoupdate.UpdateOutcome outcome, JButton button, JLabel status) {
+        if (outcome == Autoupdate.UpdateOutcome.FAILED) {
+            status.setText("Automatic software update failed. You can retry.");
+            status.setVisible(true);
+            button.setVisible(true);
+            button.setEnabled(true);
+        }
     }
 
     public void onHardwareUpdated() {
-        hideStatusMessage();
-
         updateUpdateFirmwareJob();
         updateEcuPortToUse();
     }
@@ -178,7 +182,7 @@ never used?
         if (count == 1) {
             if (splashLinkManager == null) {
                 log.info("updateUpdateFirmwareJob: skipping — splashLinkManager not set yet (auto-connect in progress)");
-                resetUpdateFirmwareJob("Connecting...");
+                resetUpdateFirmwareJob();
                 return;
             }
             setUpdateFirmwareJob(getNonDfuUpdateFirmwareJobForPort(portsToUpdateFirmware.get(0)));
@@ -188,19 +192,7 @@ never used?
             setUpdateFirmwareJob(new DfuManualJob(connectivityContext.getConnectedEcuTarget()));
             return;
         }
-        String message;
-        if (count == 0) {
-            message = "No ECUs found";
-        } else {
-            message = String.format(
-                "Multiple ECUs found on: %s",
-                portsToUpdateFirmware.stream()
-                    .map(portResult -> portResult.port)
-                    .collect(Collectors.joining(", "))
-            );
-        }
-
-        resetUpdateFirmwareJob(message);
+        resetUpdateFirmwareJob();
     }
 
     private AsyncJob getNonDfuUpdateFirmwareJobForPort(final PortResult portToUpdateFirmware) {
@@ -243,14 +235,12 @@ never used?
 
     private void setUpdateFirmwareJob(final AsyncJob updateFirmwareJob) {
         this.updateFirmwareJob = Optional.of(updateFirmwareJob);
-        hideStatusMessage();
         refreshButtons();
     }
 
-    private void resetUpdateFirmwareJob(final String reason) {
+    private void resetUpdateFirmwareJob() {
         updateFirmwareJob = Optional.empty();
         updateFirmwareButton.setEnabled(false);
-        statusMessage.setText(reason);
     }
 
     private void updateEcuPortToUse() {
@@ -309,10 +299,6 @@ never used?
         ecuPortToUse.set(Optional.empty());
         SwingUtilities.invokeLater(() -> {
             importTuneButton.setEnabled(false);
-//            updateCalibrationsButton.setEnabled(false);
-            if (logoLabelPopupMenu != null) {
-                logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
-            }
         });
     }
 
@@ -332,42 +318,19 @@ never used?
         refreshButtons();
     }
 
-    /*
-    private void onUpdateCalibrationsButtonClicked(final ActionEvent actionEvent) {
-        disableButtons();
-        CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
-            port -> {
-                updateCalibrations.updateCalibrationsAction(port, updateCalibrationsButton, connectivityContext);
-            }, () -> {
-                JOptionPane.showMessageDialog(
-                    updateCalibrationsButton,
-                    "Device is not connected",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
-        );
-        refreshButtons();
-    }
-    */
-
     public void refreshButtons() {
         refreshUpdateFirmwareButton();
         final Optional<PortResult> ecuPort = ecuPortToUse.get();
-        final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
+        final boolean noUpdateInProgress = singleAsyncJobExecutor.isNotInProgress() && !softwareUpdateInProgress;
+        final boolean isEcuPortJobPossible = ecuPort.isPresent() && noUpdateInProgress;
         importTuneButton.setEnabled(isEcuPortJobPossible);
-//        updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
-        if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
-                isEcuPortJobPossible,
-                ecuPort.map(port -> port.getCalibrations() != null && existsAnyOfUnitIdentifierFields(port.getCalibrations().getIniFile())).orElse(false)
-            );
-        }
+        updateSoftwareButton.setEnabled(
+            updateSoftwareButton.isVisible() && softwareUpdateAvailable && noUpdateInProgress);
     }
 
     private void refreshUpdateFirmwareButton() {
         final boolean isFirmwareUpdatePossible =
-            updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress();
+            updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress() && !softwareUpdateInProgress;
         if (isFirmwareUpdatePossible) {
             final AsyncJob currentUpdateFirmwareJob = updateFirmwareJob.get();
             Optional<String> updateFirmwareButtonText = Optional.empty();
@@ -390,60 +353,10 @@ never used?
         updateFirmwareButton.setEnabled(isFirmwareUpdatePossible);
     }
 
-    private boolean existsAnyOfUnitIdentifierFields(final IniFileModel iniFile) {
-        for (final String fieldName : UNIT_IDENTIFIER_FIELD_NAMES) {
-            if (iniFile.findIniField(fieldName).isPresent()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public void disableButtons() {
         updateFirmwareButton.setEnabled(false);
+        updateSoftwareButton.setEnabled(false);
         importTuneButton.setEnabled(false);
-//        updateCalibrationsButton.setEnabled(false);
-        if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
-        }
-    }
-
-    private void uploadTune() {
-        disableButtons();
-        CompatibilityOptional.ifPresentOrElse(ecuPortToUse.get(),
-            port -> {
-                singleAsyncJobExecutor.startJob(new UploadTuneJob(connectivityContext, port, panamaUrl), logoLabelPopupMenu);
-            }, () -> {
-                JOptionPane.showMessageDialog(
-                    content,
-                    "Device is not connected",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
-        );
-        refreshButtons();
-    }
-
-    private void printUnitLabel() {
-        disableButtons();
-        CompatibilityOptional.ifPresentOrElse(ecuPortToUse.get(),
-            port -> {
-                singleAsyncJobExecutor.startJob(new PrintUnitLabelJob(connectivityContext, port, logoLabelPopupMenu), logoLabelPopupMenu);
-            }, () -> {
-                JOptionPane.showMessageDialog(
-                    updateCalibrationsButton,
-                    "Device is not connected",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
-        );
-        refreshButtons();
-    }
-
-    public Component getContent() {
-        return content;
     }
 }
