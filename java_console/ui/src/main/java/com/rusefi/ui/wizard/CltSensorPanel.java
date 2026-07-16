@@ -315,7 +315,12 @@ public class CltSensorPanel extends AbstractWizardStep {
                 adcCombo.addItem(value);
             }
         }
-        adcCombo.setSelectedItem(read(adc, cfg.image));
+        String selectedAdc = readValue(adc, cfg.image);
+        if (selectedAdc == null) {
+            adcCombo.setSelectedIndex(-1);
+        } else {
+            adcCombo.setSelectedItem(selectedAdc);
+        }
 
         presetCombo.removeAllItems();
         for (DialogModel.SettingOption option : selector.getOptions()) {
@@ -334,7 +339,9 @@ public class CltSensorPanel extends AbstractWizardStep {
             showMode(true);
         }
         optionalPanel.setVisible(!isNoInputSelected());
-        errorLabel.setText(" ");
+        errorLabel.setText(selectedAdc == null
+            ? "The stored CLT input is not available on this board. Select a new input."
+            : " ");
         nextButton.setEnabled(true);
         loading = false;
     }
@@ -552,7 +559,9 @@ public class CltSensorPanel extends AbstractWizardStep {
     }
 
     private static String read(IniField field, ConfigurationImage image) {
-        return field == null ? "" : stripQuotes(ConfigurationImageGetterSetter.getStringValue(field, image));
+        if (field == null) return "";
+        String value = readValue(field, image);
+        return value == null ? "" : value;
     }
 
     private static boolean hasCalibrationFields(IniFileModel ini) {

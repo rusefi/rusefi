@@ -177,16 +177,14 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         for (Map.Entry<String, JComponent> entry : editors.entrySet()) {
             IniField field = cfg.ini.findIniField(entry.getKey()).orElse(null);
             if (field == null) continue;
-            String value = ConfigurationImageGetterSetter.getStringValue(field, cfg.image);
-            if (value == null) continue;
-            String unquoted = stripQuotes(value);
+            String unquoted = readValue(field, cfg.image);
             JComponent editor = entry.getValue();
 
             if (editor instanceof JComboBox) {
                 @SuppressWarnings("unchecked")
                 JComboBox<String> combo = (JComboBox<String>) editor;
                 // INVALID is a sentinel used by external tooling for "no valid value" — render blank.
-                if (INVALID_SENTINEL.equalsIgnoreCase(unquoted) || unquoted.isEmpty()) {
+                if (unquoted == null || INVALID_SENTINEL.equalsIgnoreCase(unquoted) || unquoted.isEmpty()) {
                     combo.setSelectedIndex(-1);
                 } else {
                     combo.setSelectedItem(unquoted);
@@ -240,9 +238,9 @@ public class GenericFieldsPanel extends AbstractWizardStep {
         for (String name : fieldNames) {
             IniField field = ini.findIniField(name).orElse(null);
             if (field == null) continue;
-            String value = ConfigurationImageGetterSetter.getStringValue(field, image);
+            String value = readValue(field, image);
             if (value == null) return true;
-            String stripped = stripQuotes(value).trim();
+            String stripped = value.trim();
             if (stripped.isEmpty()) return true;
             if (INVALID_SENTINEL.equalsIgnoreCase(stripped)) return true;
         }

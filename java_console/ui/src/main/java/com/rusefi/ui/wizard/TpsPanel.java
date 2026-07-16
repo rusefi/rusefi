@@ -201,7 +201,12 @@ public class TpsPanel extends AbstractWizardStep {
                 adcCombo.addItem(value);
             }
         }
-        adcCombo.setSelectedItem(read(adc, cfg.image));
+        String selectedAdc = readEnum((EnumIniField) adc, cfg.image);
+        if (selectedAdc == null) {
+            adcCombo.setSelectedIndex(-1);
+        } else {
+            adcCombo.setSelectedItem(selectedAdc);
+        }
         closedField.setText(read(closed, cfg.image));
         wotField.setText(read(wot, cfg.image));
         adcCombo.setEnabled(true);
@@ -210,7 +215,9 @@ public class TpsPanel extends AbstractWizardStep {
         grabClosedButton.setEnabled(true);
         grabWotButton.setEnabled(true);
         nextButton.setEnabled(true);
-        errorLabel.setText(" ");
+        errorLabel.setText(selectedAdc == null
+            ? "The stored TPS input is not available on this board. Select a new input."
+            : " ");
     }
 
     private void setUnsupported(String message) {
@@ -280,7 +287,11 @@ public class TpsPanel extends AbstractWizardStep {
     }
 
     private static String read(IniField field, ConfigurationImage image) {
-        return stripQuotes(ConfigurationImageGetterSetter.getStringValue(field, image));
+        return readValue(field, image);
+    }
+
+    static String readEnum(EnumIniField field, ConfigurationImage image) {
+        return readValue(field, image);
     }
 
     private static Color uiColor(String key, Color fallback) {

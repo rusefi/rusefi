@@ -1,8 +1,11 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
+import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ini.reader.IniFileReaderUtil;
@@ -10,6 +13,7 @@ import com.rusefi.ui.UIContext;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
+import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -70,6 +74,18 @@ class TpsPanelTest {
 
         panel.grabClosedForTests();
         assertEquals("0.512", panel.getClosedVoltageForTests());
+    }
+
+    @Test
+    void outOfRangeStoredAdcChannelRequiresNewSelection() {
+        TreeMap<Integer, String> values = new TreeMap<>();
+        for (int i = 0; i < 15; i++) {
+            values.put(i, "Channel " + i);
+        }
+        EnumIniField field = new EnumIniField("tps1_1AdcChannel", 0, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(values), 0, 7);
+
+        assertNull(TpsPanel.readEnum(field, new ConfigurationImage(new byte[]{16})));
     }
 
     private static IniFileModel loadTestIni() throws Throwable {

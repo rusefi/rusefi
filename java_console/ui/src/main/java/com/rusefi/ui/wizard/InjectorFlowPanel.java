@@ -138,9 +138,9 @@ public class InjectorFlowPanel extends AbstractWizardStep {
         // Preselect the current stored value if it's real (not INVALID/blank)
         WizardConfig cfg = WizardConfig.snapshot(uiContext);
         if (cfg != null) {
-            String current = ConfigurationImageGetterSetter.getStringValue(hardcoded, cfg.image);
+            String current = readValue(hardcoded, cfg.image);
             if (current != null) {
-                String unquoted = stripQuotes(current).trim();
+                String unquoted = current.trim();
                 if (!unquoted.isEmpty() && !INVALID_SENTINEL.equalsIgnoreCase(unquoted)) {
                     presetList.setSelectedValue(unquoted, true);
                 }

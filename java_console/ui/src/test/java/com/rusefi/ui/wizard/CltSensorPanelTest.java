@@ -1,11 +1,14 @@
 package com.rusefi.ui.wizard;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ini.reader.IniFileReaderUtil;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,6 +105,18 @@ class CltSensorPanelTest {
         assertTrue(panel.isCustomModeVisibleForTests());
         assertEquals(CltSensorPanel.CARD_WIDTH, panel.getCardForTests().getPreferredSize().width);
         assertEquals(CltSensorPanel.CARD_WIDTH, panel.getCardForTests().getMaximumSize().width);
+    }
+
+    @Test
+    void outOfRangeStoredAdcChannelRequiresNewSelection() {
+        TreeMap<Integer, String> values = new TreeMap<>();
+        for (int i = 0; i < 15; i++) {
+            values.put(i, "Channel " + i);
+        }
+        EnumIniField field = new EnumIniField("clt_adcChannel", 0, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(values), 0, 7);
+
+        assertNull(AbstractWizardStep.readValue(field, new ConfigurationImage(new byte[]{16})));
     }
 
     @Test
