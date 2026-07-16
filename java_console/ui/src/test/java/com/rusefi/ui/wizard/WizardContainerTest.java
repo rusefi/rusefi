@@ -35,7 +35,8 @@ public class WizardContainerTest {
             return field instanceof EnumIniField ? Optional.of(field) : Optional.empty();
         });
 
-        assertEquals(Arrays.asList(0, 1, 2, 3, 4, 7), WizardContainer.findVisibleCatalogIndices(context, ini));
+        assertEquals(Arrays.asList(0, 1, 2, 3, 4, 7, 8, 9),
+            WizardContainer.findVisibleCatalogIndices(context, ini));
     }
 
     @Test
@@ -57,15 +58,21 @@ public class WizardContainerTest {
     }
 
     @Test
-    public void savingCylinderCountInvalidatesFiringOrder() {
+    public void savingCylinderCountInvalidatesDependentSteps() {
         IniFileModel ini = mock(IniFileModel.class);
         EnumIniField firingOrderFlag = mock(EnumIniField.class);
+        EnumIniField ignitionOutputsFlag = mock(EnumIniField.class);
+        EnumIniField injectorOutputsFlag = mock(EnumIniField.class);
         ConfigurationImage image = mock(ConfigurationImage.class);
         when(ini.findIniField("wizardFiringOrder")).thenReturn(Optional.of(firingOrderFlag));
+        when(ini.findIniField("wizardIgnitionOutputs")).thenReturn(Optional.of(ignitionOutputsFlag));
+        when(ini.findIniField("wizardInjectorOutputs")).thenReturn(Optional.of(injectorOutputsFlag));
 
         WizardContainer.clearDependentWizardFlags("wizardNumberOfCylinders", ini, image);
 
         verify(image).setBitValue(firingOrderFlag, 0);
+        verify(image).setBitValue(ignitionOutputsFlag, 0);
+        verify(image).setBitValue(injectorOutputsFlag, 0);
     }
 
     @Test

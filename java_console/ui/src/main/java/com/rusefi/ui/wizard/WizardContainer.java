@@ -232,11 +232,25 @@ public class WizardContainer extends JPanel {
         steps.add(camPanel);
         stepContentPanel.add(camPanel.getPanel(), "step6");
 
-        // Step 7: Injector Flow
+        // Step 7: Ignition Outputs
+        OutputAssignmentPanel ignitionOutputs = new OutputAssignmentPanel(
+            uiContext, OutputAssignmentPanel.OutputType.IGNITION);
+        wireStep(ignitionOutputs, 7);
+        steps.add(ignitionOutputs);
+        stepContentPanel.add(ignitionOutputs.getPanel(), "step7");
+
+        // Step 8: Injector Outputs
+        OutputAssignmentPanel injectorOutputs = new OutputAssignmentPanel(
+            uiContext, OutputAssignmentPanel.OutputType.INJECTOR);
+        wireStep(injectorOutputs, 8);
+        steps.add(injectorOutputs);
+        stepContentPanel.add(injectorOutputs.getPanel(), "step8");
+
+        // Step 9: Injector Flow
         InjectorFlowPanel injPanel = new InjectorFlowPanel(uiContext);
-        wireStep(injPanel, 7);
+        wireStep(injPanel, 9);
         steps.add(injPanel);
-        stepContentPanel.add(injPanel.getPanel(), "step7");
+        stepContentPanel.add(injPanel.getPanel(), "step9");
 
         // Completion card
         JPanel completionPanel = new JPanel(new GridBagLayout());
@@ -470,9 +484,13 @@ public class WizardContainer extends JPanel {
     static void clearDependentWizardFlags(String completedFlag, IniFileModel ini, ConfigurationImage image) {
         if (!"wizardNumberOfCylinders".equals(completedFlag)) return;
 
-        IniField firingOrderFlag = ini.findIniField("wizardFiringOrder").orElse(null);
-        if (firingOrderFlag instanceof EnumIniField) {
-            image.setBitValue((EnumIniField) firingOrderFlag, 0);
+        for (String flagName : new String[]{
+            "wizardFiringOrder", "wizardIgnitionOutputs", "wizardInjectorOutputs"
+        }) {
+            IniField flag = ini.findIniField(flagName).orElse(null);
+            if (flag instanceof EnumIniField) {
+                image.setBitValue((EnumIniField) flag, 0);
+            }
         }
     }
 
