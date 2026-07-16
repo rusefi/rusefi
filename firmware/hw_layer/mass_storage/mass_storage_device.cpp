@@ -38,13 +38,88 @@
 // transport callbacks below which only get a USBDriver/SCSITransport pointer
 static MassStorageController *s_msdInstance = nullptr;
 
-// After a Bulk-Only Mass Storage Reset the host has abandoned the command the SCSI
-// layer is still executing. lib_scsi ignores transport errors and keeps pumping its
-// data phase, so if we kept doing real USB transfers here the leftover data phase
-// would consume the fresh post-reset CBWs as if they were data. Refuse all transfers
-// until the command unwinds; ThreadTask then waits for the next CBW.
+// After a Bulk-Only Mass Storage Reset (or a data-phase timeout, see below) the host
+// has abandoned the command the SCSI layer is still executing. lib_scsi ignores
+// transport errors and keeps pumping its data phase, so if we kept doing real USB
+// transfers here the leftover data phase would consume the fresh post-reset CBWs as
+// if they were data. Refuse all transfers until the command unwinds; ThreadTask then
+// waits for the next CBW.
 static bool transportAbandoned() {
-	return (s_msdInstance != nullptr) && s_msdInstance->isBotResetPending();
+	return (s_msdInstance != nullptr) && s_msdInstance->isCommandAbandoned();
+}
+
+// A host that is alive keeps a data phase moving within milliseconds; usbstor's own
+// give-up timeout is ~20s. A data phase quiet for this long means the host canceled
+// its transfer and is never coming back for this command.
+#define MSD_DATA_PHASE_TIMEOUT TIME_S2I(10)
+
+// Timeout-capable versions of usbTransmit/usbTransmitWait/usbReceive (hal_usb.c),
+// which suspend with no timeout. Needed because a host can abandon a command
+// mid-data-phase by cancelling its transfer host-side: the bus stays active, so
+// neither _usb_reset()/_usb_suspend() nor the Bulk-Only Reset hook ever wakes the
+// endpoint wait, and the plain hal_usb.c calls sleep forever (observed: MSD thread
+// stuck in one READ(10) for 40+ minutes while Windows reset the composite device
+// every ~20s, dropping the CDC console each time). On timeout the endpoint's
+// active flag is cleared - same as onBulkOnlyResetIsr() - so the next transfer can
+// re-arm without tripping the "already transmitting/receiving" assert.
+static msg_t msdUsbTransmitTimeout(USBDriver *usbp, usbep_t ep,
+								   const uint8_t *buf, size_t n, sysinterval_t timeout) {
+	osalSysLock();
+
+	if (usbGetDriverStateI(usbp) != USB_ACTIVE) {
+		osalSysUnlock();
+		return MSG_RESET;
+	}
+
+	usbStartTransmitI(usbp, ep, buf, n);
+	msg_t msg = osalThreadSuspendTimeoutS(&usbp->epc[ep]->in_state->thread, timeout);
+	if (MSG_TIMEOUT == msg) {
+		usbp->transmitting &= (uint16_t)~(1U << ep);
+	}
+	osalSysUnlock();
+
+	return msg;
+}
+
+static msg_t msdUsbTransmitWaitTimeout(USBDriver *usbp, usbep_t ep, sysinterval_t timeout) {
+	osalSysLock();
+
+	if (usbGetDriverStateI(usbp) != USB_ACTIVE) {
+		osalSysUnlock();
+		return MSG_RESET;
+	}
+
+	if ((usbp->transmitting & (uint16_t)(1U << ep)) == 0) {
+		osalSysUnlock();
+		return MSG_OK;
+	}
+
+	msg_t msg = osalThreadSuspendTimeoutS(&usbp->epc[ep]->in_state->thread, timeout);
+	if (MSG_TIMEOUT == msg) {
+		usbp->transmitting &= (uint16_t)~(1U << ep);
+	}
+	osalSysUnlock();
+
+	return msg;
+}
+
+static msg_t msdUsbReceiveTimeout(USBDriver *usbp, usbep_t ep,
+								  uint8_t *buf, size_t n, sysinterval_t timeout) {
+	osalSysLock();
+
+	if (usbGetDriverStateI(usbp) != USB_ACTIVE) {
+		osalSysUnlock();
+		return MSG_RESET;
+	}
+
+	usbStartReceiveI(usbp, ep, buf, n);
+	msg_t msg = osalThreadSuspendTimeoutS(&usbp->epc[ep]->out_state->thread, timeout);
+	if (MSG_TIMEOUT == msg) {
+		usbp->receiving &= (uint16_t)~(1U << ep);
+	}
+	osalSysUnlock();
+
+	return msg;
 }
 
 static uint32_t scsi_transport_transmit(const SCSITransport *transport,
@@ -54,7 +129,10 @@ static uint32_t scsi_transport_transmit(const SCSITransport *transport,
 	}
 
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
-	msg_t status = usbTransmit(trp->usbp, trp->ep, data, len);
+	msg_t status = msdUsbTransmitTimeout(trp->usbp, trp->ep, data, len, MSD_DATA_PHASE_TIMEOUT);
+	if (MSG_TIMEOUT == status) {
+		s_msdInstance->onDataPhaseTimeout();
+	}
 	if (MSG_OK == status)
 		return len;
 	else
@@ -81,7 +159,10 @@ static uint32_t scsi_transport_transmit_wait(const SCSITransport *transport) {
 	}
 
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
-	msg_t status = usbTransmitWait(trp->usbp, trp->ep);
+	msg_t status = msdUsbTransmitWaitTimeout(trp->usbp, trp->ep, MSD_DATA_PHASE_TIMEOUT);
+	if (MSG_TIMEOUT == status) {
+		s_msdInstance->onDataPhaseTimeout();
+	}
 	if (MSG_OK == status)
 		return 0;
 	else
@@ -95,7 +176,11 @@ static uint32_t scsi_transport_receive(const SCSITransport *transport,
 	}
 
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
-	msg_t status = usbReceive(trp->usbp, trp->ep, data, len);
+	msg_t status = msdUsbReceiveTimeout(trp->usbp, trp->ep, data, len, MSD_DATA_PHASE_TIMEOUT);
+	if (MSG_TIMEOUT == status) {
+		s_msdInstance->onDataPhaseTimeout();
+		return 0;
+	}
 	if (MSG_RESET != status)
 		return status;
 	else
@@ -130,8 +215,11 @@ void MassStorageController::ThreadTask() {
 
 		if (cbwValid(m_cbw, status) && cbwMeaningful(m_cbw)) {
 			// The host only sends a CBW after any Bulk-Only Mass Storage Reset it issued
-			// has completed, so receiving one means an earlier reset is fully handled
+			// has completed, so receiving one means an earlier reset is fully handled.
+			// Likewise a fresh CBW after a data-phase timeout means the host has moved
+			// on from the abandoned command.
 			m_botResetPending = false;
+			m_dataPhaseTimedOut = false;
 
 			// Get the LUN from the incoming CBW packet
 			uint8_t target_lun = m_cbw.lun & 0x0F; // Mask out reserved bits
@@ -157,11 +245,13 @@ void MassStorageController::ThreadTask() {
 
 				m_busyOpcode = -1;
 
-				if (m_botResetPending) {
+				if (m_botResetPending || m_dataPhaseTimedOut) {
 					// A Bulk-Only Mass Storage Reset arrived while this command was executing
 					// (the reset hook also woke us out of any blocked USB transfer with
-					// MSG_RESET). The host has abandoned this command and is not expecting
-					// its CSW - sending one anyway would desynchronize the transport.
+					// MSG_RESET), or the host abandoned the command by cancelling its
+					// transfers (data-phase timeout). Either way the host is not expecting
+					// this command's CSW - sending one anyway would desynchronize the
+					// transport.
 					continue;
 				}
 
@@ -174,9 +264,15 @@ void MassStorageController::ThreadTask() {
 	}
 }
 
+void MassStorageController::onDataPhaseTimeout() {
+	// runs on the MSD thread (transport callbacks and sendCsw are only called from it)
+	m_dataPhaseTimedOut = true;
+	m_timeoutCount = m_timeoutCount + 1;
+}
+
 void MassStorageController::printDiagnostics() const {
-	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs",
-			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount);
+	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs, %lu data-phase timeouts",
+			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount, m_timeoutCount);
 
 	// snapshot: m_busySince is only meaningful while m_busyOpcode is set
 	int busyOpcode = m_busyOpcode;
@@ -253,7 +349,13 @@ void MassStorageController::sendCsw(uint8_t status, uint32_t residue) {
 	m_csw.tag = m_cbw.tag;
 	m_csw.status = status;
 
-	usbTransmit(m_usb, USB_MSD_DATA_EP, (uint8_t*)&m_csw, sizeof(m_csw));
+	// a CSW the host never reads must not wedge the thread either; nothing to unwind
+	// on timeout, the loop goes back to waiting for the next CBW regardless
+	msg_t transmitStatus = msdUsbTransmitTimeout(m_usb, USB_MSD_DATA_EP,
+			(uint8_t*)&m_csw, sizeof(m_csw), MSD_DATA_PHASE_TIMEOUT);
+	if (MSG_TIMEOUT == transmitStatus) {
+		onDataPhaseTimeout();
+	}
 }
 
 /**

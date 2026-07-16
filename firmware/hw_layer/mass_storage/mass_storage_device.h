@@ -26,9 +26,13 @@ public:
 	// Bulk-Only Mass Storage Reset handling, called from the EP0 setup hook in ISR context
 	void onBulkOnlyResetIsr(USBDriver *usbp);
 
+	// called by the SCSI transport (on the MSD thread) when a data-phase USB transfer
+	// timed out, meaning the host abandoned the command without a Bulk-Only Reset
+	void onDataPhaseTimeout();
+
 	// polled by the SCSI transport so an abandoned command stops touching USB
-	bool isBotResetPending() const {
-		return m_botResetPending;
+	bool isCommandAbandoned() const {
+		return m_botResetPending || m_dataPhaseTimedOut;
 	}
 
 protected:
@@ -54,6 +58,14 @@ private:
 	// Set by onBulkOnlyResetIsr(), tells ThreadTask to abandon the in-flight command
 	// without sending its CSW. Cleared when the next CBW arrives.
 	volatile bool m_botResetPending = false;
+
+	// Set by onDataPhaseTimeout() when the host stops moving a data phase without ever
+	// sending a Bulk-Only Reset (Windows usbstor cancels its URBs host-side, the bus
+	// stays active and nothing wakes the endpoint wait - observed wedging the MSD
+	// thread for 40+ minutes and causing recurring CDC disconnects as usbstor reset
+	// the whole composite device every ~20s). Cleared when the next CBW arrives.
+	volatile bool m_dataPhaseTimedOut = false;
+	volatile uint32_t m_timeoutCount = 0;
 
 	usbmsdstate_t m_state;
 
