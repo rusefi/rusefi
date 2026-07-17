@@ -257,7 +257,8 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		composite_logger_s* entry = &buffer->buffer[idx];
 
 		entry->x = cur.x;
-		entry->timestamp = NT2US(timestamp);
+		// timestamp is offset to buffer begin
+		entry->timestamp = NT2US(timestamp - buffer->startTime.get());
 
 		// TS uses big endian, grumble
 		// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
@@ -539,6 +540,12 @@ int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 		composite_logger_s c;
 		c.x = SWAP_UINT64(buffer->buffer[i].x);
 
+		// recover timestamp
+		efitick_t raw_time = buffer->startTime.get() + USF2NT(c.timestamp);
+		efitick_t time_us = NT2US(raw_time);
+		uint32_t sec = time_us / 1000000;
+		uint32_t usec = time_us % 1000000;
+
 		// todo: take these data points from structure, not current values. Kind of works for slow sensors, but still!
 		float vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
 		float et = Sensor::get(SensorType::Clt).value_or(0);
@@ -550,7 +557,7 @@ int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 					"%d, %d, %d, %d, %d, "
 					"%d, %d, "
 					"%d, %d, %d, %.2f, %.2f, %.2f, %.2f\r\n",	// TODO: convert to bitwise?
-				c.timestamp / 1000000, c.timestamp % 1000000,
+				sec, usec,
 				c.priLevel, c.cam1, c.cam2, c.cam3, c.cam4,
 				c.sync, c.tdc,
 				c.coil, c.injector, c.acr, vbatt, et, instantMap, tps);
