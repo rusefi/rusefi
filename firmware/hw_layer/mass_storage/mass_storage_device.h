@@ -77,9 +77,11 @@ private:
 
 	// Data-phase bytes moved by the current command, reset before each scsiExecCmd.
 	// Zero on a command that declared a data-IN phase means the host's data URB is
-	// still armed and a straight CSW would babble into it - stall bulk-IN instead.
+	// still armed and a straight CSW would babble into it - close it with a ZLP
+	// (short packet) so the URB completes without a stall + EP0 clear-halt that
+	// would disturb the CDC endpoints of the composite device.
 	volatile uint32_t m_dataPhaseBytes = 0;
-	volatile uint32_t m_noDataStallCount = 0;
+	volatile uint32_t m_noDataZlpCount = 0;
 
 	usbmsdstate_t m_state;
 
