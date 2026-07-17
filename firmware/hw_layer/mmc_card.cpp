@@ -40,6 +40,10 @@
 #include "binary_mlg_logging.h"
 #include "sd_log_trigger.h"
 
+#if defined(MODULE_DTC_MANAGER)
+#include "dtc_manager.h"
+#endif
+
 // Divide logs into 32Mb chunks.
 // When defined, every log file is pre-allocated to this size with f_expand() on create
 // and shrunk back to the actually-written size with f_truncate() on close - see
@@ -392,6 +396,7 @@ static void sdStatistics() {
 #if HAL_USE_USB_MSD
 	printMsdDiagnostics();
 #endif
+	efiPrintf("SD users %d", MMC_FS_protected.get_user_count());
 }
 
 static void sdSetMode(const char *mode) {
@@ -898,14 +903,30 @@ static int sdLoggerMlg(FIL *fd) {
 
 static void sdLoggerStop()
 {
-	logBuffer.stop();
-	sdLoggerCloseFile(&resources.fd);
-#if EFI_TOOTH_LOGGER
-	if (toothLoggerStarted) {
-		DisableToothLogger();
-		toothLoggerStarted = false;
+	switch (sdLoggerMode) {
+		case SDLoggerMode::Mlg:
+	#if EFI_TOOTH_LOGGER
+		case SDLoggerMode::ToothBin:
+		case SDLoggerMode::ToothCsv:
+	#endif
+			logBuffer.stop();
+			sdLoggerCloseFile(&resources.fd);
+		#if EFI_TOOTH_LOGGER
+			if (toothLoggerStarted) {
+				DisableToothLogger();
+				toothLoggerStarted = false;
+			}
+		#endif
+			break;
+	#if defined(MODULE_DTC_MANAGER)
+		case SDLoggerMode::Dtc:
+			DtcManagerStop();
+			break;
+	#endif
+		default:
+			break;
 	}
-#endif
+
 	sdLoggerMode = SDLoggerMode::None;
 }
 
@@ -914,17 +935,7 @@ static void sdLoggerStart()
 	// mode has changed?
 	if (sdLoggerMode != engineConfiguration->sdLoggerMode) {
 		// Stop current logger
-		switch (sdLoggerMode) {
-			case SDLoggerMode::Mlg:
-		#if EFI_TOOTH_LOGGER
-			case SDLoggerMode::ToothBin:
-			case SDLoggerMode::ToothCsv:
-		#endif
-				sdLoggerStop();
-				break;
-			default:
-				break;
-		}
+		sdLoggerStop();
 
 		sdLoggerInitDone = false;
 		sdLoggerFailed = false;
@@ -941,6 +952,14 @@ static void sdLoggerStart()
 			case SDLoggerMode::ToothBin:
 			case SDLoggerMode::ToothCsv:
 				toothLoggerStarted = EnableToothLogger();
+				break;
+		#endif
+		#if defined(MODULE_DTC_MANAGER)
+			case SDLoggerMode::Dtc:
+				{
+					int ret = DtcManagerStart(&resources.fd, &logBuffer);
+					efiPrintf("DtcManagerStart %d", ret);
+				}
 				break;
 		#endif
 			default:
@@ -1174,6 +1193,7 @@ static int sdModeExecuter(SD_MODE mode)
 			return sdLoggerTooth(&resources.fd);
 #endif
 		case SDLoggerMode::None:
+		case SDLoggerMode::Dtc:
 		default:
 			// Do nothing, sleep
 			return 0;
@@ -1376,6 +1396,15 @@ void initEarlyMmcCard() {
 	// sdmode auto
 	addConsoleActionS("sdmode", sdSetMode);
 	addConsoleAction("delreports", sdCardRemoveReportFiles);
+
+#if defined(MODULE_DTC_MANAGER)
+	addConsoleActionS("dtc_test", [](const char *tag) {
+		int ret = DtcTriggerEvent(tag);
+		if (ret < 0) {
+			efiPrintf("DTC test failed with %d", ret);
+		}
+	});
+#endif
 	//incLogFileName() use same shared FDLogFile, calling it while FDLogFile is used by log writer will cause damage
 	//addConsoleAction("incfilename", incLogFileName);
 #endif // EFI_PROD_CODE

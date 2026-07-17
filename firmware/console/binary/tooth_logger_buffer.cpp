@@ -228,19 +228,8 @@ CompositeBuffer* ToothLoggerBufferPool::flushCurrentI() {
 	return buffer;
 }
 
-bool ToothLoggerBufferPool::setCircularModeI(bool circular) {
-	if (m_circularMode != circular) {
-		m_circularMode = circular;
-		if (m_circularMode) {
-			// 50% trigger position, so event is in the middle of log
-			toothLoggerEntriesToCapture = toothLoggerEntriesTotal / 2;
-		}
-
-		// mode has changed
-		return true;
-	}
-
-	return false;
+void ToothLoggerBufferPool::setCircularModeI(bool circular) {
+	m_circularMode = circular;
 }
 
 bool ToothLoggerBufferPool::hasDataI() {

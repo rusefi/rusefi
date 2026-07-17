@@ -68,6 +68,10 @@ void setOutputOnTheBenchTestForUnitTest(OutputPin* output) {
 #include "microsecond_timer.h"
 #include "rusefi_wideband.h"
 
+#if defined(MODULE_DTC_MANAGER)
+#include "dtc_manager.h"
+#endif
+
 #if EFI_PROD_CODE
 #include "rusefi.h"
 #include "mpu_util.h"
@@ -637,6 +641,12 @@ static void handleCommandX14(uint16_t index) {
 	case TS_SD_DELETE_REPORTS:
 		sdCardRemoveReportFiles();
 		return;
+
+#if defined(MODULE_DTC_MANAGER)
+	case TS_DTC_MANAGER_SHOT:
+		DtcTriggerEvent("TS");
+		return;
+#endif // MODULE_DTC_MANAGER
 #endif // EFI_FILE_LOGGING
 
 	default:

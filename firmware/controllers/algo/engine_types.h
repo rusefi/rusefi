@@ -320,6 +320,7 @@ typedef enum {
 	TS_ESTIMATE_TORQUE_TABLE = 0x23,
 	TS_ETB_BENCH_TEST_0 = 0x24,
 	TS_ETB_BENCH_TEST_1 = 0x25,
+	TS_DTC_MANAGER_SHOT = 0x26,
 } ts_14_command;
 
 typedef enum {

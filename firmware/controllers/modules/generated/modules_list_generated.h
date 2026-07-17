@@ -24,5 +24,9 @@ CheckEngineLight,
 MILController,
 #endif
 
+#ifdef MODULE_DTC_MANAGER
+DtcManagerModule,
+#endif
+
 // Board-specific extra module types appended to Engine::engineModules
 #include "board_modules_list.h"

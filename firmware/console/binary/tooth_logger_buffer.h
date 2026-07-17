@@ -98,7 +98,7 @@ public:
 		return m_circularMode;
 	}
 
-	bool setCircularModeI(bool circular);
+	void setCircularModeI(bool circular);
 
 	// True if any entries are pending: a partial current buffer or a filled
 	// buffer waiting for a consumer. Caller must hold the critical section.
@@ -135,8 +135,6 @@ private:
 #endif
 	// rewrite older events with newer if noone is reading filledBuffers queue
 	bool m_circularMode = false;
-	// how many entries to capture after switching to circular mode
-	size_t toothLoggerEntriesToCapture = 0;
 
 	ReadyCallback m_onReady = nullptr;
 };
