@@ -82,10 +82,10 @@ public class WizardContainerTest {
 
     @Test
     public void oneAndTwoCylindersUseImplicitFiringOrders() {
-        assertEquals("One Cylinder", WizardContainer.implicitFiringOrder(1));
-        assertEquals("1-2", WizardContainer.implicitFiringOrder(2));
-        assertNull(WizardContainer.implicitFiringOrder(3));
-        assertNull(WizardContainer.implicitFiringOrder(4));
+        assertEquals(0, WizardContainer.implicitFiringOrderOrdinal(1));
+        assertEquals(8, WizardContainer.implicitFiringOrderOrdinal(2));
+        assertNull(WizardContainer.implicitFiringOrderOrdinal(3));
+        assertNull(WizardContainer.implicitFiringOrderOrdinal(4));
     }
 
     @Test
@@ -126,7 +126,8 @@ public class WizardContainerTest {
             WizardContainer.completeImplicitFiringOrder(
                 "wizardNumberOfCylinders", cylinders, ini, image);
 
-            String expectedOrder = WizardContainer.implicitFiringOrder(Integer.parseInt(cylinders));
+            String expectedOrder = orderValues.get(
+                WizardContainer.implicitFiringOrderOrdinal(Integer.parseInt(cylinders)));
             assertEquals(expectedOrder,
                 AbstractWizardStep.stripQuotes(ConfigurationImageGetterSetter.getStringValue(firingOrder, image)));
             assertEquals("yes",

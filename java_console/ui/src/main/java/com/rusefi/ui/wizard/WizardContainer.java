@@ -23,6 +23,8 @@ import static com.devexperts.logging.Logging.getLogging;
 public class WizardContainer extends JPanel {
     private static final Logging log = getLogging(WizardContainer.class);
     private static final List<WizardStepDescriptor> FLAGGED = WizardCatalog.flaggedSteps();
+    private static final int FO_1 = 0;
+    private static final int FO_1_2 = 8;
 
     private final UIContext uiContext;
     private final WizardProgressPanel progressPanel = new WizardProgressPanel();
@@ -190,7 +192,7 @@ public class WizardContainer extends JPanel {
             if (result.value != null) {
                 selectedCylinders = Integer.parseInt(result.value);
             }
-            if (implicitFiringOrder(selectedCylinders) == null) {
+            if (implicitFiringOrderOrdinal(selectedCylinders) == null) {
                 createFiringOrderStep();
             }
             rebuildVisibleCatalogIndices();
@@ -272,7 +274,7 @@ public class WizardContainer extends JPanel {
         // If step 0 is already done, read cylindersCount before building the remaining flow.
         if (isStepSatisfied(0)) {
             selectedCylinders = readCylindersCountFromEcu();
-            if (implicitFiringOrder(selectedCylinders) == null) {
+            if (implicitFiringOrderOrdinal(selectedCylinders) == null) {
                 createFiringOrderStep();
             }
         }
@@ -354,17 +356,17 @@ public class WizardContainer extends JPanel {
     }
 
     static void hideImplicitFiringOrderStep(List<Integer> visibleIndices, int cylindersCount) {
-        if (implicitFiringOrder(cylindersCount) != null) {
+        if (implicitFiringOrderOrdinal(cylindersCount) != null) {
             visibleIndices.remove(Integer.valueOf(1));
         }
     }
 
-    static String implicitFiringOrder(int cylindersCount) {
+    static Integer implicitFiringOrderOrdinal(int cylindersCount) {
         if (cylindersCount == 1) {
-            return "One Cylinder";
+            return FO_1;
         }
         if (cylindersCount == 2) {
-            return "1-2";
+            return FO_1_2;
         }
         return null;
     }
@@ -529,21 +531,21 @@ public class WizardContainer extends JPanel {
             return;
         }
 
-        String firingOrder = implicitFiringOrder(cylindersCount);
-        if (firingOrder == null) {
+        Integer firingOrderOrdinal = implicitFiringOrderOrdinal(cylindersCount);
+        if (firingOrderOrdinal == null) {
             return;
         }
 
         IniField firingOrderField = ini.findIniField("firingOrder").orElse(null);
         IniField firingOrderFlag = ini.findIniField("wizardFiringOrder").orElse(null);
-        if (firingOrderField == null || !(firingOrderFlag instanceof EnumIniField)) {
+        if (!(firingOrderField instanceof EnumIniField) || !(firingOrderFlag instanceof EnumIniField)) {
             log.warn("Wizard: cannot complete implicit firing order for " + cylindersCount + " cylinders");
             return;
         }
 
-        ConfigurationImageGetterSetter.setValue2(firingOrderField, image, "firingOrder", firingOrder);
+        image.setBitValue((EnumIniField) firingOrderField, firingOrderOrdinal);
         image.setBitValue((EnumIniField) firingOrderFlag, 1);
-        log.info("Wizard: set firingOrder = " + firingOrder + " and wizardFiringOrder = yes");
+        log.info("Wizard: set firingOrder ordinal = " + firingOrderOrdinal + " and wizardFiringOrder = yes");
     }
 
     private void advanceToNextStep() {
