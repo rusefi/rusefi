@@ -284,20 +284,36 @@ void MassStorageController::ThreadTask() {
 
 				if ((m_cbw.data_len > 0) && ((m_cbw.flags & CBW_FLAGS_DIRECTION_IN) != 0)
 						&& (m_dataPhaseBytes == 0)) {
-					// BOT "13 cases" case 4/5 (Hi > Dn): the host expects a data-IN phase
-					// but this command sent nothing (e.g. Read Capacity on a medium-less
-					// LUN), so its data URB is still armed. Sending the 13-byte CSW now
-					// would land in that buffer - if it is smaller than 13 bytes (Read
-					// Capacity posts 8) the packet overruns it and the host sees a babble
-					// error, kills the URB, loses the CSW and retries the command forever
-					// (observed: Windows in a 200 ms retry loop, babble recovery also
-					// disturbing the CDC interfaces of the composite device). Per the BOT
-					// spec, STALL bulk-IN instead: the host clear-halts the endpoint and
-					// only then collects the CSW into a proper 13-byte read.
-					osalSysLock();
-					usbStallTransmitI(m_usb, USB_MSD_DATA_EP);
-					osalSysUnlock();
-					m_noDataStallCount = m_noDataStallCount + 1;
+					// BOT "13 cases" case 4 (Hi > Dn): the host armed a data-IN URB but
+					// this command produced no data (e.g. Read Capacity on a medium-less
+					// LUN), so that URB is still waiting. We must NOT send the 13-byte CSW
+					// into it: if the URB is smaller (Read Capacity arms 8 bytes) the CSW
+					// overruns it, the host takes a babble error, kills the URB, loses the
+					// CSW and retries the command forever.
+					//
+					// Close the data phase with a zero-length packet instead of STALLing.
+					// A ZLP is a short packet, so the host's data URB completes with 0
+					// bytes and it then collects the CSW into its separate 13-byte read -
+					// the same end state as a stall, but WITHOUT the
+					// CLEAR_FEATURE(ENDPOINT_HALT) control round-trip a stall forces. That
+					// EP0 clear-halt is the last shared-core event that coincided with, and
+					// swallowed, an in-flight CDC console reply during Windows' ~20 s
+					// medium-less-LUN probe, dropping the serial link into a ~10 s host
+					// reconnect (observed: cdc-reconnect.pcapng, CDC gaps aligned to every
+					// MSD probe). A ZLP touches only this endpoint, so the CDC interfaces of
+					// the composite device are left alone.
+					//
+					// BOT case 4 nominally recommends STALL; Windows and Linux both accept a
+					// ZLP short data phase followed by CSW(failed). Validate on hardware
+					// (see USB serial stability, #9860) before relying on it across hosts.
+					uint8_t dummy = 0;
+					msg_t zlpStatus = msdUsbTransmitTimeout(m_usb, USB_MSD_DATA_EP, &dummy, 0, MSD_DATA_PHASE_TIMEOUT);
+					if (MSG_TIMEOUT == zlpStatus) {
+						// host abandoned the data phase - don't chase it with a CSW
+						onDataPhaseTimeout();
+						continue;
+					}
+					m_noDataZlpCount = m_noDataZlpCount + 1;
 				}
 
 				sendCsw(cswStatus, residue);
@@ -316,8 +332,8 @@ void MassStorageController::onDataPhaseTimeout() {
 }
 
 void MassStorageController::printDiagnostics() const {
-	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs, %lu data-phase timeouts, %lu no-data stalls",
-			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount, m_timeoutCount, m_noDataStallCount);
+	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs, %lu data-phase timeouts, %lu no-data ZLPs",
+			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount, m_timeoutCount, m_noDataZlpCount);
 
 	// snapshot: m_busySince is only meaningful while m_busyOpcode is set
 	int busyOpcode = m_busyOpcode;
