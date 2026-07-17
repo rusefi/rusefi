@@ -272,13 +272,45 @@ void MassStorageController::ThreadTask() {
 
 				m_busyOpcode = -1;
 
-				if (m_botResetPending || m_dataPhaseTimedOut) {
+				if (m_botResetPending) {
 					// A Bulk-Only Mass Storage Reset arrived while this command was executing
 					// (the reset hook also woke us out of any blocked USB transfer with
-					// MSG_RESET), or the host abandoned the command by cancelling its
-					// transfers (data-phase timeout). Either way the host is not expecting
-					// this command's CSW - sending one anyway would desynchronize the
+					// MSG_RESET). The host explicitly abandoned the command and is not
+					// expecting its CSW - sending one anyway would desynchronize the
 					// transport.
+					continue;
+				}
+
+				if (m_dataPhaseTimedOut) {
+					// The data phase stopped moving for MSD_DATA_PHASE_TIMEOUT. Either the
+					// host canceled its transfers (it will escalate to a reset no matter
+					// what we do), or it is still blocked on a transfer this command failed
+					// to complete - and going silent then guarantees usbstor's ~20 s
+					// give-up: a reset of the whole composite device that tears down the
+					// CDC console along with MSD (observed: loss-of-cdc.pcapng, one
+					// all-endpoint cancel storm -> ~10 s serial reconnect). Instead, finish
+					// the command at the transport level: STALL the data endpoint in the
+					// CBW's direction (the BOT-sanctioned "cannot complete this data
+					// phase") so a waiting host completes its data URB with an error right
+					// now, then offer a phase-error CSW for it to collect after the
+					// clear-halt. Recovery stays class-level on this one interface
+					// (clear-halt -> CSW -> Bulk-Only Reset); the CDC endpoints never
+					// notice. Arming the CSW while the endpoint is still stalled is the
+					// same sequence the pre-ZLP medium-less path used, validated on
+					// Windows (STALL -> clear-halt -> CSW observed on the wire, #9860).
+					osalSysLock();
+					if ((m_cbw.flags & CBW_FLAGS_DIRECTION_IN) != 0) {
+						usbStallTransmitI(m_usb, USB_MSD_DATA_EP);
+					} else {
+						usbStallReceiveI(m_usb, USB_MSD_DATA_EP);
+					}
+					osalSysUnlock();
+
+					uint32_t timeoutResidue = (m_cbw.data_len > m_dataPhaseBytes) ? (m_cbw.data_len - m_dataPhaseBytes) : 0;
+					if (sendCsw(CSW_STATUS_PHASE_ERROR, timeoutResidue)) {
+						// the host was still listening - command closed without a reset
+						m_timeoutCswDeliveredCount = m_timeoutCswDeliveredCount + 1;
+					}
 					continue;
 				}
 
@@ -332,8 +364,8 @@ void MassStorageController::onDataPhaseTimeout() {
 }
 
 void MassStorageController::printDiagnostics() const {
-	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs, %lu data-phase timeouts, %lu no-data ZLPs",
-			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount, m_timeoutCount, m_noDataZlpCount);
+	efiPrintf("MSD: %lu commands, %lu failed (last failed opcode 0x%02x), %lu invalid CBWs, %lu data-phase timeouts (%lu closed by CSW), %lu no-data ZLPs",
+			m_cmdCount, m_failedCmdCount, m_lastFailedOpcode, m_invalidCbwCount, m_timeoutCount, m_timeoutCswDeliveredCount, m_noDataZlpCount);
 
 	// snapshot: m_busySince is only meaningful while m_busyOpcode is set
 	int busyOpcode = m_busyOpcode;
@@ -404,7 +436,7 @@ void MassStorageController::onBulkOnlyResetIsr(USBDriver *usbp) {
 	return true;
 }
 
-void MassStorageController::sendCsw(uint8_t status, uint32_t residue) {
+bool MassStorageController::sendCsw(uint8_t status, uint32_t residue) {
 	m_csw.signature = MSD_CSW_SIGNATURE;
 	m_csw.data_residue = residue;
 	m_csw.tag = m_cbw.tag;
@@ -417,6 +449,7 @@ void MassStorageController::sendCsw(uint8_t status, uint32_t residue) {
 	if (MSG_TIMEOUT == transmitStatus) {
 		onDataPhaseTimeout();
 	}
+	return MSG_OK == transmitStatus;
 }
 
 /**

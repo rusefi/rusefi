@@ -50,7 +50,8 @@ private:
 	static bool cbwValid(const msd_cbw_t& cbw, msg_t status);
 	static bool cbwMeaningful(const msd_cbw_t& cbw);
 
-	void sendCsw(uint8_t status, uint32_t residue);
+	// returns true if the host actually read the CSW (false: timeout/reset)
+	bool sendCsw(uint8_t status, uint32_t residue);
 
 	// Diagnostic counters, written only by the MSD thread, read by the console thread.
 	// volatile so the console thread sees fresh values while the MSD thread is busy.
@@ -74,6 +75,10 @@ private:
 	// the whole composite device every ~20s). Cleared when the next CBW arrives.
 	volatile bool m_dataPhaseTimedOut = false;
 	volatile uint32_t m_timeoutCount = 0;
+	// Of those timeouts, how many the host closed out by collecting the phase-error
+	// CSW after the data-endpoint stall - i.e. recoveries that avoided a composite
+	// device reset (and its CDC console drop).
+	volatile uint32_t m_timeoutCswDeliveredCount = 0;
 
 	// Data-phase bytes moved by the current command, reset before each scsiExecCmd.
 	// Zero on a command that declared a data-IN phase means the host's data URB is
