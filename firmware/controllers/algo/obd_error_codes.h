@@ -1713,6 +1713,7 @@ enum class ObdCode : uint16_t {
 	//P3492 Cyl12 Deactivation/Intake Valve Ctrl Circ High
 	//P3493 Cyl12 Exhaust Valve Ctrl Circ/Open
 
+	// See ObdCodeIsCustom() at the end of this file
 	CUSTOM_NAN_ENGINE_LOAD = 6000,
 	CUSTOM_WRONG_ALGORITHM = 6001,
 	CUSTOM_NAN_ENGINE_LOAD_2 = 6002,
@@ -2193,3 +2194,7 @@ enum class ObdCode : uint16_t {
 	CUSTOM_Ignition_Coil_Overcharge_11 = 9361,
 	CUSTOM_Ignition_Coil_Overcharge_12 = 9362,
 };
+
+inline bool ObdCodeIsCustom(ObdCode code) {
+	return (code >= ObdCode::CUSTOM_NAN_ENGINE_LOAD);
+}
