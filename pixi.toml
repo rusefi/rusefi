@@ -1,3 +1,44 @@
+# =============================================================================
+# HOWTO - building rusEFI with this pixi environment
+# =============================================================================
+# This manifest provides the full toolchain the firmware build needs on Windows
+# (and Linux/macOS): make, arm-none-eabi-gcc, a JDK for code generation, and -
+# on Windows - the Unix userland (sed/awk/grep/coreutils/flock) that the
+# Makefiles shell out to. It replaces the need for Git Bash / Cygwin / WSL.
+#
+#   pixi install            # one-time: resolve + download the toolchain
+#   pixi run build-fw       # build firmware (== make -j12 in firmware/)
+#   pixi run test           # build + run unit tests
+#
+# Or drop into an interactive shell with everything on PATH:
+#   pixi shell              # then: cd firmware && make -j12
+#
+# Run a one-off command through the env without entering a shell:
+#   pixi run make -C firmware clean
+#
+# NOTE (Windows): run bare `make` in PowerShell/cmd fails with
+# "'sed' is not recognized" because those shells do not have the Unix userland
+# on PATH. Always go through `pixi run` / `pixi shell` so pixi activates it.
+#
+# -----------------------------------------------------------------------------
+# "global" alternative - tools on PATH everywhere, no `pixi run` prefix
+# -----------------------------------------------------------------------------
+# `pixi global` is a SEPARATE mechanism from this project manifest: it installs
+# into ~/.pixi and exposes binaries in ~/.pixi/bin (on your PATH), so you can run
+# bare `make` from any shell. Installing all tools into ONE shared global env is
+# what makes `make` able to find `sed` (the mixed setup - global make but no
+# global sed - is exactly what caused the "'sed' is not recognized" error):
+#
+#   pixi global install -e rusefi-build \
+#     make arm-gnu-toolchain openjdk \
+#     m2-bash m2-sed m2-gawk m2-grep m2-coreutils m2-findutils m2-diffutils m2-util-linux \
+#     -c conda-forge -c xtitoris
+#
+# Trade-off: global is NOT committed to the repo, NOT version-pinned by
+# pixi.lock, and drifts from CI. Prefer this project manifest (below) for a
+# reproducible, CI-matching build; use global only for personal convenience.
+# =============================================================================
+
 [project]
 name = "rusefi"
 # https://github.com/xtitoris/xtitoris-forge
@@ -9,3 +50,29 @@ platforms = ["win-64", "linux-64", "osx-arm64"]
 [dependencies]
 make = ">=4.4.1,<5"
 arm-gnu-toolchain = ">=14,<15"
+# JDK for the config/INI code generation the firmware Makefiles run (see CLAUDE.md
+# "Code generation is integrated into the Makefile"). CI supplies this via the
+# setup-java action in .github/workflows/build-firmware-windows.yaml.
+openjdk = "17.*"
+
+# The rusEFI Makefiles shell out to a Unix userland (bash, sed, awk, grep,
+# coreutils). On Linux/macOS these come from the OS. On native Windows the CI job
+# (.github/workflows/build-firmware-windows.yaml) installs Cygwin for exactly
+# this reason; locally we pull the equivalent msys2 repackages from conda-forge
+# so `make` runs from a plain `pixi shell` without Git Bash or Cygwin on PATH.
+[target.win-64.dependencies]
+m2-bash = "*"
+m2-sed = "*"
+m2-gawk = "*"
+m2-grep = "*"
+m2-coreutils = "*"
+m2-findutils = "*"
+m2-diffutils = "*"
+m2-util-linux = "*"  # provides flock, used by java_tools.mk to serialize gradle
+
+# Convenience wrappers - run as `pixi run build-fw` / `pixi run test`, or from
+# inside `pixi shell`. See the HOWTO block at the top of this file.
+[tasks]
+build-fw = { cmd = "make -j12", cwd = "firmware" }
+test = { cmd = "./test.sh", cwd = "unit_tests" }
+
