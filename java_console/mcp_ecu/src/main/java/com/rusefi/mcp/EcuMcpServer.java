@@ -2,6 +2,7 @@ package com.rusefi.mcp;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.ui.lua.LuaIncludeSyntax;
@@ -36,7 +37,8 @@ import static com.devexperts.logging.Logging.getLogging;
  *     <li><code>tools/list</code></li>
  *     <li><code>tools/call</code> for: connect, ecu_info, set_lua, get_lua, lua_reset,
  *         send_command (alias: command), read_output_channel, read_messages,
- *         wait_for_message — see java_console/mcp_ecu/README.md for the tool reference</li>
+ *         wait_for_message, reboot, reboot_to_blt — see java_console/mcp_ecu/README.md
+ *         for the tool reference</li>
  *     <li><code>notifications/initialized</code></li>
  * </ul>
  *
@@ -317,6 +319,16 @@ public class EcuMcpServer {
                         {"timeoutMs", "integer", "Wait timeout in ms. Default 10000."},
                         {"sinceSeq", "integer", "Only consider messages with seq strictly greater than this."}
                 }, new String[]{"regex"}, false)));
+        tools.add(tool("reboot",
+                "Reboot the ECU (send '" + Integration.CMD_REBOOT + "'). The serial link drops while the ECU " +
+                        "restarts — reconnect (any ECU-touching tool reconnects implicitly) after a few seconds.",
+                emptyObjectSchema()));
+        tools.add(tool("reboot_to_blt",
+                "Reboot the ECU into the OpenBLT bootloader (send '" + Integration.CMD_REBOOT_OPENBLT + "'). " +
+                        "The firmware stops and the serial link drops; the ECU re-enumerates as an OpenBLT " +
+                        "device for firmware update. Normal tools will not work until the ECU is power-cycled " +
+                        "or new firmware is flashed.",
+                emptyObjectSchema()));
 
         JSONObject result = new JSONObject();
         result.put("tools", tools);
@@ -340,6 +352,8 @@ public class EcuMcpServer {
                 case "read_output_channel": toolResult = doReadOutputChannel(args); break;
                 case "read_messages": toolResult = doReadMessages(args); break;
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
+                case "reboot":      toolResult = doReboot(Integration.CMD_REBOOT); break;
+                case "reboot_to_blt": toolResult = doReboot(Integration.CMD_REBOOT_OPENBLT); break;
                 default:
                     return toolError("Unknown tool: " + name);
             }
@@ -454,6 +468,17 @@ public class EcuMcpServer {
         JSONObject o = new JSONObject();
         o.put("queued", true);
         o.put("command", cmd);
+        return o;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doReboot(String command) throws Exception {
+        LinkManager lm = ensureConnected(null);
+        LuaService.sendCommand(lm, command);
+        JSONObject o = new JSONObject();
+        o.put("queued", true);
+        o.put("command", command);
+        o.put("note", "serial link will drop while the ECU restarts");
         return o;
     }
 

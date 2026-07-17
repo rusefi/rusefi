@@ -45,7 +45,7 @@ class EcuMcpServerTest {
 
         JSONObject toolsList = parse(responses[1]);
         JSONArray tools = (JSONArray) ((JSONObject) toolsList.get("result")).get("tools");
-        assertTrue(tools.size() >= 10, "expected our 10 tools, got " + tools.size());
+        assertTrue(tools.size() >= 12, "expected our 12 tools, got " + tools.size());
         // Make sure the headline tools are present.
         java.util.Set<String> names = new java.util.HashSet<>();
         for (Object t : tools) names.add((String) ((JSONObject) t).get("name"));
@@ -59,6 +59,8 @@ class EcuMcpServerTest {
         assertTrue(names.contains("wait_for_message"));
         assertTrue(names.contains("ecu_info"));
         assertTrue(names.contains("connect"));
+        assertTrue(names.contains("reboot"));
+        assertTrue(names.contains("reboot_to_blt"));
 
         // ping returns an empty result object.
         JSONObject ping = parse(responses[2]);

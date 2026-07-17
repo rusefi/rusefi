@@ -56,6 +56,8 @@ Behavior common to all tools:
 | `read_output_channel` | Latest gauge value by name. |
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
+| `reboot` | Reboot the ECU. |
+| `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
 
 ### `connect`
 
@@ -140,6 +142,19 @@ Returns `success: true` with `match` (same shape as a `read_messages` entry), or
 `success: false` with `error: "timeout"` and `latestSeq`. Already-buffered messages are
 checked first, so without `sinceSeq` a stale message from minutes ago can satisfy the
 wait — pass `sinceSeq` captured before triggering the action you're waiting on.
+
+### `reboot`
+
+No arguments. Queues the `reboot` command. Returns `queued: true`. The serial link
+drops while the ECU restarts; the next ECU-touching tool call reconnects implicitly
+(give the ECU a few seconds to re-enumerate).
+
+### `reboot_to_blt`
+
+No arguments. Queues the `reboot_openblt` command, rebooting the ECU into the OpenBLT
+bootloader for firmware update. Returns `queued: true`. The firmware stops and the
+device re-enumerates as an OpenBLT device — normal tools will not work again until the
+ECU is power-cycled or new firmware is flashed.
 
 ### Reading output incrementally with `sinceSeq`
 
