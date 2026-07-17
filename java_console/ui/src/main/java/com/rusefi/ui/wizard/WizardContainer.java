@@ -23,6 +23,8 @@ import static com.devexperts.logging.Logging.getLogging;
 public class WizardContainer extends JPanel {
     private static final Logging log = getLogging(WizardContainer.class);
     private static final List<WizardStepDescriptor> FLAGGED = WizardCatalog.flaggedSteps();
+    private static final int FO_1 = 0;
+    private static final int FO_1_2 = 8;
 
     private final UIContext uiContext;
     private final WizardProgressPanel progressPanel = new WizardProgressPanel();
@@ -190,8 +192,10 @@ public class WizardContainer extends JPanel {
             if (result.value != null) {
                 selectedCylinders = Integer.parseInt(result.value);
             }
-            // Create FiringOrderPanel lazily now that we know the cylinder count
-            createFiringOrderStep();
+            if (implicitFiringOrderOrdinal(selectedCylinders) == null) {
+                createFiringOrderStep();
+            }
+            rebuildVisibleCatalogIndices();
             onStepCompleted(result, steps.get(0));
         });
         steps.add(cylPanel);
@@ -267,10 +271,12 @@ public class WizardContainer extends JPanel {
         completionPanel.add(doneButton, gbc);
         stepContentPanel.add(completionPanel, "complete");
 
-        // If step 0 is already done, read cylindersCount from the ECU and create FiringOrderPanel now
+        // If step 0 is already done, read cylindersCount before building the remaining flow.
         if (isStepSatisfied(0)) {
             selectedCylinders = readCylindersCountFromEcu();
-            createFiringOrderStep();
+            if (implicitFiringOrderOrdinal(selectedCylinders) == null) {
+                createFiringOrderStep();
+            }
         }
 
         refreshDebugFlags();
@@ -345,7 +351,24 @@ public class WizardContainer extends JPanel {
     private void rebuildVisibleCatalogIndices() {
         visibleCatalogIndices.clear();
         visibleCatalogIndices.addAll(findVisibleCatalogIndices(uiContext, uiContext.iniFileState.getIniFileModel()));
+        hideImplicitFiringOrderStep(visibleCatalogIndices, selectedCylinders);
         refreshProgress();
+    }
+
+    static void hideImplicitFiringOrderStep(List<Integer> visibleIndices, int cylindersCount) {
+        if (implicitFiringOrderOrdinal(cylindersCount) != null) {
+            visibleIndices.remove(Integer.valueOf(1));
+        }
+    }
+
+    static Integer implicitFiringOrderOrdinal(int cylindersCount) {
+        if (cylindersCount == 1) {
+            return FO_1;
+        }
+        if (cylindersCount == 2) {
+            return FO_1_2;
+        }
+        return null;
     }
 
     static List<Integer> findVisibleCatalogIndices(UIContext context, IniFileModel ini) {
@@ -470,6 +493,7 @@ public class WizardContainer extends JPanel {
                 log.warn("Wizard: flag field not found or not enum: " + flagName);
             }
         }
+        completeImplicitFiringOrder(flagName, result.value, ini, modified);
 
         // Upload + burn on IO thread, advance step on EDT
         uiContext.getLinkManager().submit(() -> {
@@ -492,6 +516,36 @@ public class WizardContainer extends JPanel {
                 image.setBitValue((EnumIniField) flag, 0);
             }
         }
+    }
+
+    static void completeImplicitFiringOrder(String completedFlag, String cylindersValue,
+                                             IniFileModel ini, ConfigurationImage image) {
+        if (!"wizardNumberOfCylinders".equals(completedFlag) || cylindersValue == null) {
+            return;
+        }
+
+        final int cylindersCount;
+        try {
+            cylindersCount = Integer.parseInt(cylindersValue);
+        } catch (NumberFormatException e) {
+            return;
+        }
+
+        Integer firingOrderOrdinal = implicitFiringOrderOrdinal(cylindersCount);
+        if (firingOrderOrdinal == null) {
+            return;
+        }
+
+        IniField firingOrderField = ini.findIniField("firingOrder").orElse(null);
+        IniField firingOrderFlag = ini.findIniField("wizardFiringOrder").orElse(null);
+        if (!(firingOrderField instanceof EnumIniField) || !(firingOrderFlag instanceof EnumIniField)) {
+            log.warn("Wizard: cannot complete implicit firing order for " + cylindersCount + " cylinders");
+            return;
+        }
+
+        image.setBitValue((EnumIniField) firingOrderField, firingOrderOrdinal);
+        image.setBitValue((EnumIniField) firingOrderFlag, 1);
+        log.info("Wizard: set firingOrder ordinal = " + firingOrderOrdinal + " and wizardFiringOrder = yes");
     }
 
     private void advanceToNextStep() {
