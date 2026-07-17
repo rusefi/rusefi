@@ -27,10 +27,17 @@ class McpClient:
         *,
         client_name: str = "mcp_python",
         extra_java_args: list[str] | None = None,
+        server_args: list[str] | None = None,
+        quiet: bool = False,
     ):
         self._jar = jar_path
         self._client_name = client_name
         self._extra_java_args = extra_java_args or []
+        # arguments AFTER the jar, e.g. ["--port", "/dev/ttyACM0"]
+        self._server_args = server_args or []
+        # quiet=True suppresses the >>> / <<< chatter on stdout, for CLI
+        # wrappers that need machine-readable output
+        self._quiet = quiet
         self._next_id = 0
         self._proc: subprocess.Popen | None = None
 
@@ -38,7 +45,8 @@ class McpClient:
 
     def start(self) -> "McpClient":
         """Launch the MCP server subprocess and perform the MCP initialize handshake."""
-        cmd = ["java", "-Djava.awt.headless=true", *self._extra_java_args, "-jar", self._jar]
+        cmd = ["java", "-Djava.awt.headless=true", *self._extra_java_args, "-jar", self._jar,
+               *self._server_args]
         self._proc = subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
@@ -78,7 +86,8 @@ class McpClient:
         if params is not None:
             msg["params"] = params
         line = json.dumps(msg) + "\n"
-        print(f">>> {method}", flush=True)
+        if not self._quiet:
+            print(f">>> {method}", flush=True)
         self._proc.stdin.write(line.encode())
         self._proc.stdin.flush()
         while True:
@@ -91,10 +100,12 @@ class McpClient:
             try:
                 resp = json.loads(resp_line)
             except json.JSONDecodeError:
-                print(f"  (non-json) {resp_line.decode(errors='replace')}", flush=True)
+                if not self._quiet:
+                    print(f"  (non-json) {resp_line.decode(errors='replace')}", flush=True)
                 continue
             if resp.get("id") == req_id:
-                print(f"<<< {json.dumps(resp, indent=2)}", flush=True)
+                if not self._quiet:
+                    print(f"<<< {json.dumps(resp, indent=2)}", flush=True)
                 return resp
 
     def notify(self, method: str, params: dict | None = None):

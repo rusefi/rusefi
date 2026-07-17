@@ -46,9 +46,9 @@ If the MCP server reports `Connection failed: Failed to located .ini`:
 
 #### Python client library (`java_console/mcp_python`)
 
-A small Python package in `java_console/mcp_python/` provides reusable helpers for driving MCP servers over stdio JSON-RPC. Scripts at the repo root (`lua_can_test.py`, `pcan_sniff.py`) demonstrate usage. Run scripts from the repo root so that `java_console.mcp_python` is importable.
+A small Python package in `java_console/mcp_python/` provides reusable helpers for driving MCP servers over stdio JSON-RPC. Scripts at the repo root (`lua_can_test.py`, `pcan_sniff.py`, `mcp_drive.py`) demonstrate usage. Run scripts from the repo root so that `java_console.mcp_python` is importable.
 
-**`McpClient`** — generic context-manager that launches an MCP server JAR, performs the JSON-RPC initialize handshake, and exposes `send()`, `notify()`, and `call()` helpers:
+**`McpClient`** — generic context-manager that launches an MCP server JAR, performs the JSON-RPC initialize handshake, and exposes `send()`, `notify()`, and `call()` helpers. `server_args=` passes arguments after the jar (e.g. `["--port", "/dev/ttyACM0"]`); `quiet=True` suppresses the `>>>`/`<<<` chatter for machine-readable wrappers:
 
 ```python
 from java_console.mcp_python import McpClient
@@ -57,6 +57,15 @@ with McpClient("java_console/mcp_ecu/build/libs/mcp_ecu-all.jar") as mcp:
     mcp.call("connect")
     mcp.call("set_lua", script="function onTick() end")
     mcp.call("read_messages", maxLines=20)
+```
+
+**`mcp_drive.py`** (repo root) — command-line driver on top of `McpClient`. Single tool calls or a JSON list of `[tool, args]` pairs run inside ONE server session (one ECU connection, one message ring buffer — required for multi-step flows like `luareset` → observe boot output). Supports `"sinceSeq": "AUTO"` threading so waits/reads only consider messages produced after the previous step, avoiding stale ring-buffer matches. One JSON line per call on stdout. See its docstring for field-tested patterns (marker warm-up, `LUA:` regex anchoring, live-data-triggered "armed runs"):
+
+```bash
+./mcp_drive.py --port /dev/ttyACM0 ecu_info
+./mcp_drive.py '[["send_command",{"command":"lua print(\"warm\")"}],
+                 ["wait_for_message",{"regex":"LUA: warm","timeoutMs":25000}],
+                 ["read_messages",{"sinceSeq":"AUTO","maxLines":100}]]'
 ```
 
 **`.ini` helpers** — pre-flight functions that mirror the Java `SignatureHelper` logic, letting scripts check `.ini` availability before launching a Java MCP server:
