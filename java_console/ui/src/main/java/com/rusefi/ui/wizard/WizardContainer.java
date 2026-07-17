@@ -190,8 +190,10 @@ public class WizardContainer extends JPanel {
             if (result.value != null) {
                 selectedCylinders = Integer.parseInt(result.value);
             }
-            // Create FiringOrderPanel lazily now that we know the cylinder count
-            createFiringOrderStep();
+            if (implicitFiringOrder(selectedCylinders) == null) {
+                createFiringOrderStep();
+            }
+            rebuildVisibleCatalogIndices();
             onStepCompleted(result, steps.get(0));
         });
         steps.add(cylPanel);
@@ -267,10 +269,12 @@ public class WizardContainer extends JPanel {
         completionPanel.add(doneButton, gbc);
         stepContentPanel.add(completionPanel, "complete");
 
-        // If step 0 is already done, read cylindersCount from the ECU and create FiringOrderPanel now
+        // If step 0 is already done, read cylindersCount before building the remaining flow.
         if (isStepSatisfied(0)) {
             selectedCylinders = readCylindersCountFromEcu();
-            createFiringOrderStep();
+            if (implicitFiringOrder(selectedCylinders) == null) {
+                createFiringOrderStep();
+            }
         }
 
         refreshDebugFlags();
@@ -345,7 +349,24 @@ public class WizardContainer extends JPanel {
     private void rebuildVisibleCatalogIndices() {
         visibleCatalogIndices.clear();
         visibleCatalogIndices.addAll(findVisibleCatalogIndices(uiContext, uiContext.iniFileState.getIniFileModel()));
+        hideImplicitFiringOrderStep(visibleCatalogIndices, selectedCylinders);
         refreshProgress();
+    }
+
+    static void hideImplicitFiringOrderStep(List<Integer> visibleIndices, int cylindersCount) {
+        if (implicitFiringOrder(cylindersCount) != null) {
+            visibleIndices.remove(Integer.valueOf(1));
+        }
+    }
+
+    static String implicitFiringOrder(int cylindersCount) {
+        if (cylindersCount == 1) {
+            return "One Cylinder";
+        }
+        if (cylindersCount == 2) {
+            return "1-2";
+        }
+        return null;
     }
 
     static List<Integer> findVisibleCatalogIndices(UIContext context, IniFileModel ini) {
@@ -470,6 +491,7 @@ public class WizardContainer extends JPanel {
                 log.warn("Wizard: flag field not found or not enum: " + flagName);
             }
         }
+        completeImplicitFiringOrder(flagName, result.value, ini, modified);
 
         // Upload + burn on IO thread, advance step on EDT
         uiContext.getLinkManager().submit(() -> {
@@ -492,6 +514,36 @@ public class WizardContainer extends JPanel {
                 image.setBitValue((EnumIniField) flag, 0);
             }
         }
+    }
+
+    static void completeImplicitFiringOrder(String completedFlag, String cylindersValue,
+                                             IniFileModel ini, ConfigurationImage image) {
+        if (!"wizardNumberOfCylinders".equals(completedFlag) || cylindersValue == null) {
+            return;
+        }
+
+        final int cylindersCount;
+        try {
+            cylindersCount = Integer.parseInt(cylindersValue);
+        } catch (NumberFormatException e) {
+            return;
+        }
+
+        String firingOrder = implicitFiringOrder(cylindersCount);
+        if (firingOrder == null) {
+            return;
+        }
+
+        IniField firingOrderField = ini.findIniField("firingOrder").orElse(null);
+        IniField firingOrderFlag = ini.findIniField("wizardFiringOrder").orElse(null);
+        if (firingOrderField == null || !(firingOrderFlag instanceof EnumIniField)) {
+            log.warn("Wizard: cannot complete implicit firing order for " + cylindersCount + " cylinders");
+            return;
+        }
+
+        ConfigurationImageGetterSetter.setValue2(firingOrderField, image, "firingOrder", firingOrder);
+        image.setBitValue((EnumIniField) firingOrderFlag, 1);
+        log.info("Wizard: set firingOrder = " + firingOrder + " and wizardFiringOrder = yes");
     }
 
     private void advanceToNextStep() {
