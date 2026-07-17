@@ -15,6 +15,9 @@
 #ifdef MODULE_MIL
 #include "malfunction_indicator.h"
 #endif
+#ifdef MODULE_DTC_MANAGER
+#include "dtc_manager.h"
+#endif
 
 // Board-specific extra modules. Upstream ships an empty stub;
 // custom boards override this header via their include path.

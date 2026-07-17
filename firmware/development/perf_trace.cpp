@@ -120,7 +120,7 @@ void perfEventInstantGlobal(PE event) {
 }
 
 void perfTraceEnable() {
-#if EFI_TOOTH_LOGGER
+#if EFI_TOOTH_LOGGER && (EFI_TOOTH_LOGGER_STATICBUFFER_COUNT == 0)
 	// force release of the buffer if occupied by the tooth logger
 	if (IsToothLoggerEnabled()) {
 		// don't worry, it will be automatically enabled
