@@ -266,3 +266,127 @@ registration files, lua_pid.h and rusefi_config.txt.
 Open follow-ups:
 - lua.cpp setTickRate comment ("Limit to 1..200 hz") disagrees with clampF(1, x, 2000).
 - lua_hooks.cpp has a commented-out hasCriticalReportFile hook referencing issue #7291.
+
+## 2026-07-17 - loss-of-cdc.pcapng analysis: one-shot composite reset from pre-capture MSD wedge
+
+What: Analyzed loss-of-cdc.pcapng (repo root, USBPcap, 24.6 s, captured 2026-07-17
+12:25 - i.e. the day AFTER the #9860 fix series landed) against the recent
+mass_storage changes. Goal: confirm/refute whether the CDC drop mechanism from
+issue #9860 is still present.
+
+Devices in capture: address 21 = the ECU (VID 0483:5740, composite MSD+CDC),
+address 22 = PEAK PCAN-USB adapter (19.9k of the 22k packets - unrelated noise).
+
+Timeline (t = seconds from capture start):
+- t=0..10.8: ZERO MSD traffic from the ECU. A healthy medium-less device gets
+  ~1 Hz Test Unit Ready polls (visible later in this same capture), so at capture
+  start usbstor already had one command in flight that never completed - the MSD
+  side was already wedged/stuck before the capture began.
+- t=7.79: host opens the COM port (GET/SET LINE CODING burst); CDC request/reply
+  traffic (TS-style 7/11-byte commands, 1024-byte replies) runs cleanly for 3 s.
+- t=10.847: usbstor ~20 s give-up timer fires -> all-endpoint cancel storm on the
+  ECU: 10 URBs with USBD_STATUS_CANCELED (0xc0010000) - MSD bulk-IN 0x81 (the
+  stuck data/CSW read, pending since before capture start), CDC data 0x82/0x02,
+  CDC interrupt 0x83, plus control. This is the loss-of-CDC moment.
+- t=10.883: host immediately retries line coding - those control URBs are
+  canceled too (device still resetting).
+- t=11.03..11.05: MSD recovers: Test Unit Ready on LUN0 and LUN1 -> Check
+  Condition -> Request Sense (Good) -> Mode Sense(6) (the known-cosmetic
+  "malformed" short caching page). Both LUNs report medium-not-present.
+- t=11.28: CDC port re-opens at USB level (line coding OK) but NO data traffic
+  follows - the app-level session was dead, host serial layer sat in its ~10 s
+  timeout.
+- t=12..24.5: clean steady state: 1 Hz TUR polls per LUN, no stalls, no babble,
+  no further cancels or resets.
+- t=20.79: app fully reconnects (line coding + control line state), TS-style
+  traffic resumes. Total user-visible CDC outage: ~10 s (10.85 -> 20.79).
+
+Reading vs the 2026-07-16 fix series (298162eb075..68e7d77c042, all in
+firmware/hw_layer/mass_storage/):
+- 298162eb0/8a515546c (MSD diag #9838): sdinfo diagnostics incl. per-opcode
+  in-flight timer.
+- e1feee380 (isCommandAbandoned #9861): 10 s data-phase timeouts on all SCSI
+  transfers + CSW via msdUsb*Timeout helpers -> wedged thread self-recovers,
+  re-arms bulk-OUT.
+- 12b613c59 (#9864): LUN detach now synchronizes with in-flight command
+  (m_lunMutex held around scsiExecCmd+CSW) -> kills the SPI double-waiter
+  deadlock from the SD mode switch.
+- 04331c28f (#9866) + 68e7d77c0 (uaefi): medium-less data-IN commands answered
+  with ZLP instead of STALL -> no EP0 clear-halt round-trip near CDC traffic.
+The capture is consistent with the fixes WORKING as designed for the recurring
+part: exactly ONE reset (the tail of a wedge that began ~9 s before capture,
+matching usbstor's ~20 s timer), then 13.5 s of clean behavior with no repeat
+reset - the old signature was a reset every ~20 s.
+
+Remaining gap (why one reset still happens): the firmware 10 s data-phase
+timeout releases the MSD *thread*, but leaves the *host's* pending IN URB
+hanging - firmware just returns to CBW wait and never completes/STALLs the
+IN transfer the host is still waiting on. usbstor therefore still escalates to
+a full composite reset once, taking CDC down with it. A full fix would complete
+the host's data phase on timeout (e.g. STALL the IN endpoint so the host gets
+an immediate error -> clear-halt -> CSW path) instead of leaving the URB
+pending. Caveat: cannot verify from the capture which firmware build was
+flashed or which opcode wedged (the CBW predates the capture); console sdinfo
+counters (data-phase timeouts / no-data ZLPs) on the connected unit would
+distinguish "fixed firmware, host-side URB gap" from "stale firmware".
+
+Validation: tshark 3.6.2 field-level analysis (usb.usbd_status, endpoints,
+SCSI dissection); code cross-checked at HEAD (mass_storage_device.cpp timeout/
+ZLP/mutex mechanisms present).
+
+Open follow-ups:
+- On data-phase timeout, also complete the host-visible transfer (STALL data-IN
+  or arm+flush) so usbstor never needs its 20 s reset - would remove the single
+  remaining CDC drop.
+- Confirm via sdinfo on hardware whether the flashed build has the 07-16 fixes
+  and whether data-phase timeout counters tick.
+
+## 2026-07-17 - MSD data-phase timeout: close the command host-side (stall + phase-error CSW)
+
+What: Implemented the follow-up from the loss-of-cdc.pcapng analysis (previous
+entry). Before this change, a data-phase timeout only freed the MSD *thread*
+(e1feee380 #9861); the *host's* pending URB was left hanging and the CSW was
+skipped, so usbstor still escalated to one full composite-device reset per
+wedge - taking the CDC console down for ~10 s each time.
+
+| File | Change |
+|----------------------------------------------------|----------------------------------------|
+| firmware/hw_layer/mass_storage/mass_storage_device.cpp | ThreadTask: split the abandoned-command check. BOT reset still skips the CSW (host is not expecting one). Data-phase timeout now STALLs the data endpoint in the CBW's direction (usbStallTransmitI/usbStallReceiveI) and then sends a CSW with CSW_STATUS_PHASE_ERROR and honest residue. sendCsw() now returns whether the host read the CSW; sdinfo prints "N data-phase timeouts (M closed by CSW)" |
+| firmware/hw_layer/mass_storage/mass_storage_device.h | sendCsw() -> bool; new m_timeoutCswDeliveredCount counter |
+
+Key decisions and why:
+- STALL is the BOT-sanctioned "cannot complete this data phase" signal: a host
+  still waiting on its data URB completes it with an error immediately (well
+  before usbstor's ~20 s give-up), does a clear-halt on this one endpoint, and
+  collects the CSW - recovery stays class-level on the MSD interface, the CDC
+  endpoints never notice. A host that already canceled its URBs ignores the
+  stall and resets anyway - no worse than before.
+- Arming the CSW while the endpoint is still stalled is the exact sequence the
+  pre-ZLP medium-less path used (04331c28f), already validated on Windows
+  hardware (STALL -> clear-halt -> CSW observed on the wire).
+- CSW_STATUS_PHASE_ERROR rather than FAILED: after a broken data phase the
+  transport has genuinely lost sync; phase error makes the host run Bulk-Only
+  Reset Recovery (class request + clear both halts), fully resynchronizing
+  data toggles without any port-level reset. The existing onBulkOnlyResetIsr
+  path handles that request.
+- Safe to stall: all three msdUsb*Timeout helpers clear the endpoint's
+  active flag on timeout, so usbStall*I (which refuses while a transfer is
+  active) always takes effect by the time ThreadTask runs the recovery.
+- The no-data-ZLP timeout path intentionally keeps its plain 'continue': a
+  host that will not even take a zero-length packet is gone from the data
+  phase entirely; its next action is a new CBW (accepted normally) or a reset.
+
+Validation: uaefi firmware build (see below). No unit-test coverage exists for
+this path (EFI_PROD_CODE + HAL_USE_USB_MSD only). Hardware validation plan:
+reproduce the wedge (host abandons a command mid-data-phase), then check
+1. sdinfo shows "closed by CSW" ticking together with data-phase timeouts,
+2. a capture shows STALL -> clear-halt -> CSW(phase error) -> BOT reset
+   instead of the all-endpoint cancel storm,
+3. the CDC console stays connected across the event.
+
+Open follow-ups:
+- Wedges *below* the USB layer (e.g. blkRead stuck on a dying SD card) are
+  still uncovered: no timeout wraps lib_scsi's block-device calls, so such a
+  wedge never reaches the new recovery path (lib_scsi is in ChibiOS-Contrib).
+- The loss-of-cdc.pcapng pre-capture wedge could not be attributed (stale
+  firmware vs blkRead wedge); confirm the flashed build via sdinfo counters.
