@@ -46,6 +46,7 @@ Release template (copy/paste this for new release):
  - 6G75 crank Trigger fixes #8827
  - SD card access over USB is not reliable #9664
  - wmic.exe command-line utility is being completely eliminated. #9672
+ - USB serial stability in some scenarios #9860
 
 ## February 2026 "Day 1458"
 
