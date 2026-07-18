@@ -60,3 +60,5 @@ coverage_reports/
 .ai/mcp
 
 .claude/settings.local.json
+
+firmware/build

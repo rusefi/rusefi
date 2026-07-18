@@ -261,7 +261,7 @@ public class VariableRegistryValues {
 	public static final int CLT_CURVE_SIZE = 16;
 	public static final int CLT_FUEL_CURVE_SIZE = 16;
 	public static final int CLT_IDLE_TABLE_CLT_SIZE = 8;
-	public static final int CLT_IDLE_TABLE_RPM_SIZE = 6;
+	public static final int CLT_IDLE_TABLE_RPM_SIZE = 2;
 	public static final int CLT_LIMITER_CURVE_SIZE = 4;
 	public static final int CLT_TIMING_LOAD_AXIS_SIZE = 5;
 	public static final int CLT_TIMING_TEMP_AXIS_SIZE = 5;
@@ -447,7 +447,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final String egoSettings_NAME = "CAN O2 sensors";
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int engine_configuration_s_size = 4248;
+	public static final int engine_configuration_s_size = 4260;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
@@ -1341,9 +1341,9 @@ public class VariableRegistryValues {
 	public static final int lua_gauge_meaning_e_LUA_GAUGE_LOWER_BOUND = 0;
 	public static final int lua_gauge_meaning_e_LUA_GAUGE_UPPER_BOUND = 1;
 	public static final int LUA_PWM_COUNT = 8;
-	public static final int LUA_SCRIPT_SIZE = 8000;
+	public static final int LUA_SCRIPT_SIZE = 48000;
 	public static final int MAF_DECODING_COUNT = 32;
-	public static final String MAIN_HELP_URL = "https://rusefi.com/s/4chan";
+	public static final String MAIN_HELP_URL = "https://rusefi.com/s/uaefi";
 	public static final String MAIN_PAGE_GAUGES_FILE = "tunerstudio/main_page_gauges.ini";
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_EST_LOAD_COUNT = 16;
@@ -1408,12 +1408,12 @@ public class VariableRegistryValues {
 	public static final int PAGE_SIZE_2 = 256;
 	public static final int PAGE_SIZE_3 = 2048;
 	public static final int PAGE_SIZE_4 = 1268;
-	public static final int PAGE_SIZE_5 = 8000;
+	public static final int PAGE_SIZE_5 = 48000;
 	public static final int PEDAL_TO_TPS_RPM_SIZE = 8;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 16872;
+	public static final int persistent_config_s_size = 16792;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1425,6 +1425,7 @@ public class VariableRegistryValues {
 	public static final int pin_output_mode_e_OM_INVERTED = 1;
 	public static final int pin_output_mode_e_OM_OPENDRAIN = 2;
 	public static final int pin_output_mode_e_OM_OPENDRAIN_INVERTED = 3;
+	public static final String PINOUT_URL = "https://rusefi.com/docs/pinouts/hellen/uaefi/";
 	public static final String PPS_FAIL_INDICATOR = "Pedal error";
 	public static final String PPS_OK_INDICATOR = "Pedal OK";
 	public static final String ppsExpAverageAlpha_NAME = "Accelerator Exp Average";
@@ -1558,6 +1559,7 @@ public class VariableRegistryValues {
 	public static final int thermistor_conf_s_size = 28;
 	public static final int ThermistorConf_size = 32;
 	public static final int THR_EST_SIZE = 12;
+	public static final int TIMING_ADJUSTMENT_SIZE = 4;
 	public static final int timing_mode_e_TM_DYNAMIC = 0;
 	public static final int timing_mode_e_TM_FIXED = 1;
 	public static final int tle8888_mode_e_TL_AUTO = 0;
@@ -1579,7 +1581,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 16872;
+	public static final int TOTAL_CONFIG_SIZE = 16792;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1835,12 +1837,12 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final int TS_SCATTER_OFFSETS_COUNT = 128;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2026.07.17.alphax-4chan_f7.2719363019";
+	public static final String TS_SIGNATURE = "rusEFI master.2026.07.18.uaefi_pro.2628461124";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 2192;
-	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "C2/C3 Crank VR";
-	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "E5/E6 Cam VR";
+	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
+	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
 	public static final int TS_TRIGGER_SCOPE_ENABLE = 4;
 	public static final int TS_TRIGGER_SCOPE_READ = 6;
