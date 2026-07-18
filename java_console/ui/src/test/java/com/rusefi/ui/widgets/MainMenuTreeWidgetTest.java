@@ -224,6 +224,50 @@ todo: spllit into smaller tests?
     }
 
     @Test
+    public void testSeparatorNodes() throws FileNotFoundException {
+        UIContext uiContext = new UIContext();
+        String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        uiContext.iniFileState.setIniFileModelForTest(model);
+
+        com.rusefi.ui.widgets.tune.MainMenuTreeWidget widget = new MainMenuTreeWidget(uiContext);
+        JPanel content = widget.getContentPane();
+        JPanel topPanel = (JPanel) content.getComponent(0);
+        JTextField searchField = (JTextField) topPanel.getComponent(0);
+        JScrollPane scrollPane = (JScrollPane) content.getComponent(1);
+        JTree tree = (JTree) scrollPane.getViewport().getView();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+
+        DefaultMutableTreeNode setupNode = findNode(root, "Setup");
+        assertNotNull(setupNode);
+        DefaultMutableTreeNode separatorNode = null;
+        for (int i = 0; i < setupNode.getChildCount(); i++) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) setupNode.getChildAt(i);
+            if (child.getUserObject() instanceof com.opensr5.ini.SeparatorMenuItem) {
+                separatorNode = child;
+                break;
+            }
+        }
+        assertNotNull(separatorNode, "Setup menu should contain separator nodes");
+
+        // separator renders as a horizontal line component, not as the usual label
+        Component rendered = tree.getCellRenderer().getTreeCellRendererComponent(tree, separatorNode, false, false, true, 0, false);
+        assertFalse(rendered instanceof JLabel, "separator should not render as a text label");
+
+        // separators are excluded from search results
+        searchField.setText("setup");
+        DefaultMutableTreeNode filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        assertNoSeparators(filteredRoot);
+    }
+
+    private void assertNoSeparators(DefaultMutableTreeNode node) {
+        assertFalse(node.getUserObject() instanceof com.opensr5.ini.SeparatorMenuItem, "search results must not contain separators");
+        for (int i = 0; i < node.getChildCount(); i++) {
+            assertNoSeparators((DefaultMutableTreeNode) node.getChildAt(i));
+        }
+    }
+
+    @Test
     public void testSearchLogic() throws FileNotFoundException, InterruptedException, InvocationTargetException {
         UIContext uiContext = new UIContext();
 

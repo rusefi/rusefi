@@ -738,6 +738,11 @@ public class IniFileReader {
                 break;
             case "subMenu":
                 if (currentMenu != null) {
+                    if (SeparatorMenuItem.STD_SEPARATOR.equals(list.get(0))) {
+                        currentMenu.getItems().add(SeparatorMenuItem.INSTANCE);
+                        currentGroup = null;
+                        break;
+                    }
                     String name = list.size() > 1 ? list.get(1) : "";
                     // format: key, name, [enableExpr], [visibleExpr]
                     // positions 2 and 3 are optional; "0" is used as a placeholder meaning no expression
@@ -756,6 +761,10 @@ public class IniFileReader {
                 break;
             case "groupChildMenu":
                 if (currentGroup != null) {
+                    if (SeparatorMenuItem.STD_SEPARATOR.equals(list.get(0))) {
+                        currentGroup.getItems().add(SeparatorMenuItem.INSTANCE);
+                        break;
+                    }
                     String name = list.size() > 1 ? list.get(1) : "";
                     // format: key, name, [enableExpr], [visibleExpr]
                     // positions 2 and 3 are optional; "0" is used as a placeholder meaning no expression

@@ -6,6 +6,7 @@ import com.opensr5.ini.GroupMenuModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.MenuItem;
 import com.opensr5.ini.MenuModel;
+import com.opensr5.ini.SeparatorMenuItem;
 import com.opensr5.ini.SubMenuModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -49,6 +50,21 @@ public class MainMenuTreeWidget {
     private final Set<DefaultMutableTreeNode> disabledNodes = new HashSet<>();
     /** Keys of currently disabled submenus for a quick lookup during click handling. */
     private final Set<String> disabledKeys = new HashSet<>();
+
+    /** Renders a "std_separator" menu entry as a horizontal line. */
+    private static class SeparatorRenderer extends JComponent {
+        SeparatorRenderer() {
+            setPreferredSize(new Dimension(120, 9));
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Color color = UIManager.getColor("Separator.foreground");
+            g.setColor(color != null ? color : Color.GRAY);
+            int y = getHeight() / 2;
+            g.drawLine(0, y, getWidth(), y);
+        }
+    }
 
     private static class ExpressionEntry {
         final DefaultMutableTreeNode node;
@@ -99,12 +115,17 @@ public class MainMenuTreeWidget {
         ImageIcon crankingIcon = scaleIcon(AutoupdateUtil.loadIcon("cranking48.png"), 24);
 
         tree.setCellRenderer(new DefaultTreeCellRenderer() {
+            private final SeparatorRenderer separatorRenderer = new SeparatorRenderer();
+
             @Override
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
                 if (value instanceof DefaultMutableTreeNode) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
                     Object userObject = node.getUserObject();
+                    if (userObject instanceof SeparatorMenuItem) {
+                        return separatorRenderer;
+                    }
                     String name = userObject.toString();
                     if (userObject instanceof SubMenuModel) {
                         name = ((SubMenuModel) userObject).getName();
@@ -302,6 +323,10 @@ public class MainMenuTreeWidget {
 
     private boolean filterNode(DefaultMutableTreeNode originalNode, DefaultMutableTreeNode filteredNode, String[] tokens, String path) {
         Object userObject = originalNode.getUserObject();
+        // separators are decoration, they never match a search and would show up as stray lines
+        if (userObject instanceof SeparatorMenuItem) {
+            return false;
+        }
         String nodeText = userObject.toString();
         if (userObject instanceof SubMenuModel) {
             nodeText = ((SubMenuModel) userObject).getName();
@@ -368,6 +393,8 @@ public class MainMenuTreeWidget {
             for (MenuItem child : group.getItems()) {
                 addMenuItem(groupNode, child);
             }
+        } else if (item instanceof SeparatorMenuItem) {
+            parent.add(new DefaultMutableTreeNode(item));
         } else if (item instanceof SubMenuModel) {
             SubMenuModel subMenu = (SubMenuModel) item;
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(subMenu);
