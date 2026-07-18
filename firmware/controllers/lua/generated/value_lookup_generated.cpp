@@ -1939,6 +1939,12 @@ float getConfigValueByHash(const int hash) {
 // engineShutDownPeriod
 		case -1846425734:
 			return engineConfiguration->engineShutDownPeriod;
+// can3ListenMode
+		case 358354462:
+			return engineConfiguration->can3ListenMode;
+// verboseCan3
+		case -1056203296:
+			return engineConfiguration->verboseCan3;
 // knockSuppressMinTps
 		case 893776859:
 			return engineConfiguration->knockSuppressMinTps;
@@ -2218,36 +2224,9 @@ float getConfigValueByHash(const int hash) {
 // wizardInjectorOutputs
 		case -1528635464:
 			return config->wizardInjectorOutputs;
-// boardUseTachPullUp
-		case 885690524:
-			return config->boardUseTachPullUp;
-// boardUseCrankPullUp
-		case 1280316843:
-			return config->boardUseCrankPullUp;
-// boardUseTempPullUp
-		case -1457484942:
-			return config->boardUseTempPullUp;
-// boardUse2stepPullDown
-		case -1470758947:
-			return config->boardUse2stepPullDown;
-// boardUseCamPullDown
-		case 1304425152:
-			return config->boardUseCamPullDown;
-// boardUseD4PullDown
-		case 1481814407:
-			return config->boardUseD4PullDown;
-// boardUseD5PullDown
-		case -858840440:
-			return config->boardUseD5PullDown;
-// boardUseCamVrPullUp
-		case -94892331:
-			return config->boardUseCamVrPullUp;
-// boardUseD2PullDown
-		case 1868156805:
-			return config->boardUseD2PullDown;
-// boardUseD3PullDown
-		case -472498042:
-			return config->boardUseD3PullDown;
+// cyl8certification
+		case -2104094007:
+			return config->cyl8certification;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -5483,6 +5462,16 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->engineShutDownPeriod = value;
 		return 1;
 	}
+		case 358354462:
+	{
+		engineConfiguration->can3ListenMode = (int)value;
+		return 1;
+	}
+		case -1056203296:
+	{
+		engineConfiguration->verboseCan3 = (int)value;
+		return 1;
+	}
 		case 893776859:
 	{
 		engineConfiguration->knockSuppressMinTps = (int)value;
@@ -5948,54 +5937,9 @@ bool setConfigValueByName(const char *name, float value) {
 		config->wizardInjectorOutputs = (int)value;
 		return 1;
 	}
-		case 885690524:
+		case -2104094007:
 	{
-		config->boardUseTachPullUp = (int)value;
-		return 1;
-	}
-		case 1280316843:
-	{
-		config->boardUseCrankPullUp = (int)value;
-		return 1;
-	}
-		case -1457484942:
-	{
-		config->boardUseTempPullUp = (int)value;
-		return 1;
-	}
-		case -1470758947:
-	{
-		config->boardUse2stepPullDown = (int)value;
-		return 1;
-	}
-		case 1304425152:
-	{
-		config->boardUseCamPullDown = (int)value;
-		return 1;
-	}
-		case 1481814407:
-	{
-		config->boardUseD4PullDown = (int)value;
-		return 1;
-	}
-		case -858840440:
-	{
-		config->boardUseD5PullDown = (int)value;
-		return 1;
-	}
-		case -94892331:
-	{
-		config->boardUseCamVrPullUp = (int)value;
-		return 1;
-	}
-		case 1868156805:
-	{
-		config->boardUseD2PullDown = (int)value;
-		return 1;
-	}
-		case -472498042:
-	{
-		config->boardUseD3PullDown = (int)value;
+		config->cyl8certification = (int)value;
 		return 1;
 	}
 	}

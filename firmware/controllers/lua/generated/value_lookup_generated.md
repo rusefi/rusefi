@@ -1933,6 +1933,12 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 ### engineShutDownPeriod
 
 
+### can3ListenMode
+
+
+### verboseCan3
+
+
 ### knockSuppressMinTps
 Below TPS value all knock suppression will be disabled.
 
@@ -2212,33 +2218,6 @@ Misfire Detection: firings to wait after entering idle before flagging starts. 0
 ### wizardInjectorOutputs
 
 
-### boardUseTachPullUp
-
-
-### boardUseCrankPullUp
-
-
-### boardUseTempPullUp
-
-
-### boardUse2stepPullDown
-
-
-### boardUseCamPullDown
-
-
-### boardUseD4PullDown
-
-
-### boardUseD5PullDown
-
-
-### boardUseCamVrPullUp
-
-
-### boardUseD2PullDown
-
-
-### boardUseD3PullDown
+### cyl8certification
 
 
