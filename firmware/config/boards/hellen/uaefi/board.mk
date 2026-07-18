@@ -34,6 +34,9 @@ endif
 # EGT chip
 DDEFS += -DEFI_MAX_31855=TRUE
 
+# Malfunction Indicator Lamp (MIL / Check Engine): solid for DTCs, blink for critical faults
+DDEFS += -DEFI_MALFUNCTION_INDICATOR=TRUE
+
 DDEFS += -DHELLEN_BOARD_ID_DEBUG
 
 # on the one hand we do not use boardID YET and it takes 350ms, on the other hand who knows what the future would bring

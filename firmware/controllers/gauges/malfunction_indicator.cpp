@@ -30,51 +30,61 @@
 #if EFI_MALFUNCTION_INDICATOR
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
+#include "limp_manager.h"
 
 #include "periodic_thread_controller.h"
 
-#define TEST_MIL_CODE FALSE
+#define TEST_MIL_CODE TRUE
 
-#define MFI_LONG_BLINK	1500
-#define MFI_SHORT_BLINK	400
-#define MFI_BLINK_SEPARATOR 400
-#define MFI_CHECKENGINE_LIGHT 10000
+// Duration of the OEM-style MIL bulb-check pulse at ECU boot (ms).
+// Set to 0 to disable the boot pulse entirely.
+#define MIL_BOOT_PULSE_MS 3000
 
-static void blink_digits(int digit, int duration) {
-	for (int iter = 0; iter < digit; iter++) {
-		// todo: why we set LOW and then HIGH? not the other way around?
-		enginePins.checkEnginePin.setValue(0);
-		chThdSleepMilliseconds(duration);
-		enginePins.checkEnginePin.setValue(1);
-		chThdSleepMilliseconds(MFI_BLINK_SEPARATOR);
+// Half-period of the critical-fault attention blink (ms)
+#define MFI_CRITICAL_BLINK 250
+
+// Task period while the lamp is solid-on or off - just needs to be responsive
+#define MFI_IDLE_PERIOD 100
+
+/**
+ * A "critical" fault is one that is genuinely damaging and warrants the driver's
+ * immediate attention (blinking lamp) rather than a steady "something logged" lamp.
+ * We derive this from the LimpManager: if fuel or spark is currently being cut for
+ * one of these reasons, the lamp blinks.
+ */
+static bool isCriticalClearReason(ClearReason reason) {
+	switch (reason) {
+		case ClearReason::Fatal:
+		case ClearReason::FatalErrorRevLimit:
+		case ClearReason::OilPressure:
+		case ClearReason::BoostCut:
+		case ClearReason::LambdaProtection:
+		case ClearReason::InjectorDutyCycle:
+		case ClearReason::EtbJammedRevLimit:
+		case ClearReason::EtbProblem:
+			return true;
+		default:
+			// Normal operational cuts (rev limiter, ignition off, launch, stall, Lua, etc.)
+			// are not "critical" - they should not trigger the attention blink.
+			return false;
 	}
 }
 
-// calculate how many digits our code have
-static int DigitLength(int digit) {
-	int i = 0;
-	while (digit > 0) {
-		digit = digit / 10;
-		++i;
-	}
-	return i;
-}
+static bool isCriticalFault() {
+#if EFI_ENGINE_CONTROL
+	LimpManager* limp = getLimpManager();
 
-// display code
-static void DisplayErrorCode(int length, int code) {
-	// todo: I suggest we use 'itoa' method to simplify this logic
-	for (int iter = length - 1; iter >= 0; iter--) {
-		int ourDigit = (int) efiPow10(iter);		// 10^0 = 1, 10^1 = 10, 10^2=100, 10^3 = 1000, ....
-		int digit = 1;						// as we remember "0" we show as one blink
-		while (code >= ourDigit) {
-			code = code - ourDigit;
-			digit++;
-		}
-		if (iter % 2 == 0)
-			blink_digits(digit, MFI_SHORT_BLINK);		// even 2,0 - long blink
-		else
-			blink_digits(digit, MFI_LONG_BLINK); 		// odd  3,1 - short blink
+	LimpState injection = limp->allowInjection();
+	if (!injection.value && isCriticalClearReason(injection.reason)) {
+		return true;
 	}
+
+	LimpState ignition = limp->allowIgnition();
+	if (!ignition.value && isCriticalClearReason(ignition.reason)) {
+		return true;
+	}
+#endif // EFI_ENGINE_CONTROL
+	return false;
 }
 
 class MILController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
@@ -85,21 +95,19 @@ private:
 		UNUSED(nowNt);
 
 		assertStackVoid("MIL", ObdCode::STACK_USAGE_MIL, EXPECTED_REMAINING_STACK);
-#if EFI_SHAFT_POSITION_INPUT
-		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < MS2NT(500)) {
-			enginePins.checkEnginePin.setValue(1);
-			chThdSleepMilliseconds(500);
-			enginePins.checkEnginePin.setValue(0);
-		}
-#endif // EFI_SHAFT_POSITION_INPUT
 
-		static error_codes_set_s localErrorCopy;
-		// todo: why do I not see this on a real vehicle? is this whole blinking logic not used?
-		getErrorCodes(&localErrorCopy);
-		for (int p = 0; p < localErrorCopy.count; p++) {
-			// Calculate how many digits in this integer and display error code from start to end
-			int code = (int)localErrorCopy.error_codes[p];
-			DisplayErrorCode(DigitLength(code), code);
+		if (isCriticalFault()) {
+			// Critical fault -> blink for attention (~2 Hz)
+			enginePins.checkEnginePin.setValue(1);
+			chThdSleepMilliseconds(MFI_CRITICAL_BLINK);
+			enginePins.checkEnginePin.setValue(0);
+			chThdSleepMilliseconds(MFI_CRITICAL_BLINK);
+		} else if (hasErrorCodes()) {
+			// Non-critical DTC(s) present -> steady lamp
+			enginePins.checkEnginePin.setValue(1);
+		} else {
+			// All clear -> lamp off
+			enginePins.checkEnginePin.setValue(0);
 		}
 	}
 };
@@ -121,7 +129,15 @@ void initMalfunctionIndicator(void) {
 	if (!isMilEnabled()) {
 		return;
 	}
-	instance.setPeriod(10 /*ms*/);
+
+	// OEM-style bulb check: light the MIL for a short configurable pulse at boot
+	if (MIL_BOOT_PULSE_MS > 0) {
+		enginePins.checkEnginePin.setValue(1);
+		chThdSleepMilliseconds(MIL_BOOT_PULSE_MS);
+		enginePins.checkEnginePin.setValue(0);
+	}
+
+	instance.setPeriod(MFI_IDLE_PERIOD /*ms*/);
 	instance.start();
 
 #if	TEST_MIL_CODE
