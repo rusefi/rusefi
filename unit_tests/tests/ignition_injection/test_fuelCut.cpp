@@ -203,3 +203,59 @@ TEST(fuelCut, delay) {
 	EXPECT_NORMAL();
 }
 #endif //FUEL_RPM_COUNT == 16
+
+#if FUEL_RPM_COUNT == 16
+// While deceleration fuel cut-off is active the commanded fuel mass is zero, so the
+// injection duration computed at injection scheduling time is zero as well.
+// InjectionEvent::onTriggerTooth() treats anything under 50us as an "impossibly short"
+// pulse and reports CUSTOM_OBD_impossibly_short_INJECTION on every injection event
+// for as long as the cut is active.
+TEST(fuelCut, dfcoReportsImpossiblyShortInjection) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engine->tdcMarkEnabled = false;
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	// configure coastingFuelCut, same thresholds as the 'coasting' test above
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
+	// set cranking threshold
+	engineConfiguration->cranking.rpm = 999;
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
+
+	Sensor::setMockValue(SensorType::Map, 0);
+	// mock CLT - just above threshold ('hot engine')
+	Sensor::setMockValue(SensorType::Clt, engineConfiguration->coastingFuelCutClt + 1);
+	// mock TPS - the driver is on the throttle
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 60);
+
+	// spin the engine up to 3000 rpm - above coastingFuelCutRpmHigh
+	eth.fireTriggerEventsWithDuration(20);
+	eth.fireTriggerEventsWithDuration(20);
+	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
+
+	// run a few normal engine cycles: fuel is injected, ignore any spin-up noise
+	eth.smartFireTriggerEvents2(/*count*/ 4, /*durationMs*/ 20);
+	EXPECT_GT(engine->engineState.injectionDuration, 0);
+	eth.recentWarnings()->clear();
+
+	// a few more normal cycles - a running engine does not produce short-pulse warnings
+	eth.smartFireTriggerEvents2(/*count*/ 4, /*durationMs*/ 20);
+	EXPECT_FALSE(hasRecentWarningCode(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION));
+
+	// now lift off the throttle - deceleration fuel cut-off engages
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	eth.engine.periodicFastCallback();
+	ASSERT_TRUE(engine->module<DfcoController>()->cutFuel());
+	EXPECT_FLOAT_EQ(0, engine->engineState.injectionDuration);
+
+	// keep coasting: every injection event now hits the "impossibly short" branch
+	eth.smartFireTriggerEvents2(/*count*/ 4, /*durationMs*/ 20);
+	EXPECT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION));
+}
+#endif //FUEL_RPM_COUNT == 16

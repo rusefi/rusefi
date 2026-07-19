@@ -138,6 +138,8 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 void setVerboseTrigger(bool isEnabled);
 
 warningBuffer_t * getRecentWarnings();
+// true if the recent-warnings buffer contains the given code
+bool hasRecentWarningCode(ObdCode code);
 
 // used by EngineTestHelper::spin60_2UntilDeg func
 struct testSpinEngineUntilData {

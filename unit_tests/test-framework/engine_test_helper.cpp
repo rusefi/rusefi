@@ -598,6 +598,16 @@ warningBuffer_t * getRecentWarnings() {
   return &engine->engineState.warnings.recentWarnings;
 }
 
+bool hasRecentWarningCode(ObdCode code) {
+	warningBuffer_t *warnings = getRecentWarnings();
+	for (size_t i = 0; i < warnings->getCount(); i++) {
+		if (warnings->get(i).Code == code) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void cleanTestResultsFolder() {
   std::error_code ec;
   auto absPath = std::filesystem::absolute(TEST_RESULTS_DIR, ec);
