@@ -68,6 +68,8 @@ public class CalibrationDialogWidget {
     private Consumer<ConfigurationImage> onConfigChange;
     /** Called when the user picks "Show in Pinout" on a pin-enum field; arg is the current enum value. */
     private Consumer<String> onShowInPinout;
+    /** Restores the last navigated view; set on every update() call so the VE generator panel can return to it. */
+    private Runnable currentViewRestorer;
 
     public void setOnConfigChange(Consumer<ConfigurationImage> onConfigChange) {
         this.onConfigChange = onConfigChange;
@@ -183,6 +185,9 @@ public class CalibrationDialogWidget {
     }
 
     public void update(DialogModel dialogModel, IniFileModel iniFileModel, ConfigurationImage ci) {
+        final DialogModel capturedDm = dialogModel;
+        final IniFileModel capturedIni = iniFileModel;
+        currentViewRestorer = () -> update(capturedDm, capturedIni, workingImage);
         workingImage = ci != null ? ci.clone() : null;
         currentIniFileModel = iniFileModel;
         expressionRows.clear();
@@ -228,6 +233,9 @@ public class CalibrationDialogWidget {
     }
 
     public void update(String key, IniFileModel iniFileModel, ConfigurationImage ci) {
+        final String capturedKey = key;
+        final IniFileModel capturedIniForRestore = iniFileModel;
+        currentViewRestorer = () -> update(capturedKey, capturedIniForRestore, workingImage);
         contentPane.removeAll();
         if (key != null) {
             DialogModel dialog = iniFileModel.getDialogs().get(key);
@@ -246,18 +254,7 @@ public class CalibrationDialogWidget {
                 if ("veTableTbl".equals(table.getTableId())) {
                     final IniFileModel capturedIni = iniFileModel;
                     JButton genVeBtn = new JButton("Generate base VE...");
-                    genVeBtn.addActionListener(e -> {
-                        if (workingImage == null) return;
-                        VeTableGeneratorDialog dlg = new VeTableGeneratorDialog(
-                            SwingUtilities.getWindowAncestor(contentPane),
-                            capturedIni, workingImage,
-                            patched -> {
-                                workingImage = patched;
-                                if (onConfigChange != null) onConfigChange.accept(workingImage);
-                            }
-                        );
-                        dlg.setVisible(true);
-                    });
+                    genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
                     JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
                     veToolbar.add(genVeBtn);
                     contentPane.add(veToolbar);
@@ -410,6 +407,21 @@ public class CalibrationDialogWidget {
         }
     }
 
+    private void showVeGeneratorPanel(IniFileModel ini) {
+        if (workingImage == null) return;
+        Runnable restorer = currentViewRestorer;
+        contentPane.removeAll();
+        contentPane.setLayout(new BorderLayout());
+        VeTableGeneratorPanel panel = new VeTableGeneratorPanel(
+            ini, workingImage,
+            patched -> { workingImage = patched; if (onConfigChange != null) onConfigChange.accept(workingImage); },
+            () -> { if (restorer != null) restorer.run(); }
+        );
+        contentPane.add(panel, BorderLayout.CENTER);
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
     private void renderPanelEntry(JPanel container, PanelModel panel, IniFileModel iniFileModel, ConfigurationImage ci,
                                   boolean isBorderLayout, JPanel[] horizontalPanelRef, Runnable notifyEdit) {
         String placement = panel.getPlacement();
@@ -451,6 +463,17 @@ public class CalibrationDialogWidget {
             tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
             tuningTableView.setOnEdit(notifyEdit);
             JComponent content = tuningTableView.getContent();
+            if ("veTableTbl".equals(table.getTableId())) {
+                final IniFileModel capturedIni = iniFileModel;
+                JButton genVeBtn = new JButton("Generate base VE...");
+                genVeBtn.addActionListener(e -> showVeGeneratorPanel(capturedIni));
+                JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+                veToolbar.add(genVeBtn);
+                JPanel wrapper = new JPanel(new BorderLayout());
+                wrapper.add(veToolbar, BorderLayout.NORTH);
+                wrapper.add(content, BorderLayout.CENTER);
+                content = wrapper;
+            }
             CalibrationFieldFactory.applyStyle(content);
             content.setAlignmentX(Component.LEFT_ALIGNMENT);
             if (constraint != null) targetContainer.add(content, constraint); else targetContainer.add(content);

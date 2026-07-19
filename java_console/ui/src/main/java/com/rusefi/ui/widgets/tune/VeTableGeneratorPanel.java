@@ -7,24 +7,22 @@ import com.rusefi.tune.ve.VeGenerator;
 import com.rusefi.tune.ve.VeTableBinding;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 /**
- * Modal questionnaire dialog for generating an initial VE table using {@code archetype-base-ve-v1}.
- * <p>
- * Generate Preview is side-effect-free. Apply calls {@code onApply} with a patched clone of the
- * source image, behaving like a normal tune edit: one undo entry, ECU RAM upload when connected.
- * Burn to ECU is still required for flash persistence.
+ * Embedded panel for generating an initial VE table using {@code archetype-base-ve-v1}.
+ * Replaces the CalibrationDialogWidget content area; Apply/Discard restores the previous view.
  */
-public class VeTableGeneratorDialog extends JDialog {
+public class VeTableGeneratorPanel extends JPanel {
 
     private final IniFileModel ini;
     private final ConfigurationImage sourceImage;
     private final Consumer<ConfigurationImage> onApply;
+    private final Runnable onClose;
 
     private VeTableBinding.BoundTable boundTable;
 
@@ -39,14 +37,15 @@ public class VeTableGeneratorDialog extends JDialog {
     private JLabel statusLabel;
     private JButton applyButton;
 
-    private double[][] proposedVe;   // quantized, null until Generate is clicked
+    private double[][] proposedVe;
 
-    public VeTableGeneratorDialog(Window owner, IniFileModel ini, ConfigurationImage sourceImage,
-                                  Consumer<ConfigurationImage> onApply) {
-        super(owner, "Generate Base VE Table", ModalityType.APPLICATION_MODAL);
+    public VeTableGeneratorPanel(IniFileModel ini, ConfigurationImage sourceImage,
+                                 Consumer<ConfigurationImage> onApply, Runnable onClose) {
+        super(new BorderLayout(6, 6));
         this.ini = ini;
         this.sourceImage = sourceImage.clone();
         this.onApply = onApply;
+        this.onClose = onClose;
 
         try {
             boundTable = VeTableBinding.bind(ini, this.sourceImage);
@@ -54,8 +53,7 @@ public class VeTableGeneratorDialog extends JDialog {
             boundTable = null;
         }
 
-        setLayout(new BorderLayout(6, 6));
-        getRootPane().setBorder(BorderFactory.createEmptyBorder(8, 8, 4, 8));
+        setBorder(BorderFactory.createEmptyBorder(8, 8, 4, 8));
 
         add(buildQuestionnairePanel(), BorderLayout.WEST);
         add(buildPreviewPanel(),       BorderLayout.CENTER);
@@ -65,10 +63,6 @@ public class VeTableGeneratorDialog extends JDialog {
             statusLabel.setText("Cannot generate: Speed Density (LM_SPEED_DENSITY) with VE_None or VE_MAP required.");
             applyButton.setEnabled(false);
         }
-
-        setSize(960, 660);
-        setLocationRelativeTo(owner);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     // ---- questionnaire ----
@@ -116,7 +110,6 @@ public class VeTableGeneratorDialog extends JDialog {
         c.insets = new Insets(10, 6, 3, 6);
         p.add(genBtn, c);
 
-        // push fields to the top
         c.gridx = 0; c.gridy = row + 1; c.gridwidth = 2;
         c.weighty = 1.0; c.fill = GridBagConstraints.VERTICAL;
         p.add(Box.createVerticalGlue(), c);
@@ -163,7 +156,7 @@ public class VeTableGeneratorDialog extends JDialog {
         applyButton.addActionListener(e -> onApply());
 
         JButton discardBtn = new JButton("Discard");
-        discardBtn.addActionListener(e -> dispose());
+        discardBtn.addActionListener(e -> onClose.run());
 
         JLabel note = new JLabel("Apply schedules ECU RAM upload; use Burn to ECU for flash persistence.");
         note.setFont(note.getFont().deriveFont(Font.ITALIC, note.getFont().getSize() - 1f));
@@ -229,12 +222,11 @@ public class VeTableGeneratorDialog extends JDialog {
     private void onApply() {
         if (proposedVe == null || boundTable == null) return;
         try {
-            // Re-encode from sourceImage to guarantee a clean patch of only VE Z bytes
             ConfigurationImage patched = VeTableBinding.applyToClone(sourceImage, boundTable, proposedVe);
             onApply.accept(patched);
-            dispose();
+            onClose.run();
         } catch (VeTableBinding.BindingError e) {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this),
                 "Apply failed: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -242,10 +234,42 @@ public class VeTableGeneratorDialog extends JDialog {
     // ---- table builders ----
 
     private static JComponent buildVeTable(double[][] data, double[] rpmAxis, double[] mapAxis, boolean isDelta) {
-        JTable table = new JTable(new VePreviewModel(data, rpmAxis, mapAxis));
+        double lo = Double.MAX_VALUE, hi = -Double.MAX_VALUE;
+        if (!isDelta) {
+            for (double[] row : data) for (double v : row) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+        }
+        final double min = lo, max = hi;
+
+        JTable table = new JTable(new VePreviewModel(data, rpmAxis, mapAxis)) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (column > 0 && !isCellSelected(row, column)) {
+                    try {
+                        double val = Double.parseDouble(String.valueOf(getModel().getValueAt(row, column)));
+                        if (isDelta) {
+                            c.setBackground(val > 0.05 ? new Color(180, 230, 180) : val < -0.05 ? new Color(230, 180, 180) : Color.WHITE);
+                        } else {
+                            double ratio = (max > min) ? Math.max(0, Math.min(1, (val - min) / (max - min))) : 0.5;
+                            c.setBackground(new Color((int)(173 + ratio * 82), (int)(216 - ratio * 34), (int)(230 - ratio * 37)));
+                        }
+                        c.setForeground(Color.BLACK);
+                    } catch (NumberFormatException ignored) {}
+                }
+                return c;
+            }
+        };
+
+        DefaultTableCellRenderer centeredRenderer = new DefaultTableCellRenderer();
+        centeredRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        table.setDefaultRenderer(Object.class, centeredRenderer);
         table.getTableHeader().setReorderingAllowed(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setDefaultRenderer(Object.class, isDelta ? new DeltaRenderer() : new GradientRenderer(data));
+        table.setRowHeight(20);
+        table.getColumnModel().getColumn(0).setPreferredWidth(62);
+        for (int i = 1; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setPreferredWidth(50);
+        }
         return new JScrollPane(table);
     }
 
@@ -279,67 +303,17 @@ public class VeTableGeneratorDialog extends JDialog {
         public String getColumnName(int col) {
             if (col == 0) return "kPa \\ RPM";
             double v = (col - 1 < rpmAxis.length) ? rpmAxis[col - 1] : Double.NaN;
-            return Double.isFinite(v) ? String.format("%.0f", v) : "?";
+            return Double.isFinite(v) ? String.format(Locale.ROOT, "%.0f", v) : "?";
         }
 
         @Override
         public Object getValueAt(int row, int col) {
-            int rev = data.length - 1 - row;  // low load at bottom
+            int rev = data.length - 1 - row;
             if (col == 0) {
                 double v = rev < mapAxis.length ? mapAxis[rev] : Double.NaN;
-                return Double.isFinite(v) ? String.format("%.0f", v) : "?";
+                return Double.isFinite(v) ? String.format(Locale.ROOT, "%.0f", v) : "?";
             }
-            return String.format("%.1f", data[rev][col - 1]);
-        }
-    }
-
-    // ---- renderers ----
-
-    private static class GradientRenderer extends DefaultTableCellRenderer {
-        private final double min;
-        private final double max;
-
-        GradientRenderer(double[][] data) {
-            double lo = Double.MAX_VALUE, hi = -Double.MAX_VALUE;
-            for (double[] row : data) for (double v : row) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
-            min = lo; max = hi;
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable t, Object v, boolean sel, boolean focus, int row, int col) {
-            Component c = super.getTableCellRendererComponent(t, v, sel, focus, row, col);
-            if (sel || col == 0) return c;
-            try {
-                double val = Double.parseDouble(v.toString());
-                double ratio = (max > min) ? Math.max(0, Math.min(1, (val - min) / (max - min))) : 0.5;
-                // pastel blue -> pastel red
-                c.setBackground(new Color(
-                    (int)(173 + ratio * 82),
-                    (int)(216 - ratio * 34),
-                    (int)(230 - ratio * 37)));
-                c.setForeground(Color.BLACK);
-            } catch (NumberFormatException ignored) {}
-            return c;
-        }
-    }
-
-    private static class DeltaRenderer extends DefaultTableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable t, Object v, boolean sel, boolean focus, int row, int col) {
-            Component c = super.getTableCellRendererComponent(t, v, sel, focus, row, col);
-            if (sel || col == 0) return c;
-            try {
-                double val = Double.parseDouble(v.toString());
-                if (val > 0.05) {
-                    c.setBackground(new Color(180, 230, 180));
-                } else if (val < -0.05) {
-                    c.setBackground(new Color(230, 180, 180));
-                } else {
-                    c.setBackground(Color.WHITE);
-                }
-                c.setForeground(Color.BLACK);
-            } catch (NumberFormatException ignored) {}
-            return c;
+            return String.format(Locale.ROOT, "%.1f", data[rev][col - 1]);
         }
     }
 
