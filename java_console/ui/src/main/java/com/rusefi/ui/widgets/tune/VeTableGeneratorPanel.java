@@ -244,17 +244,21 @@ public class VeTableGeneratorPanel extends JPanel {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
-                if (column > 0 && !isCellSelected(row, column)) {
-                    try {
-                        double val = Double.parseDouble(String.valueOf(getModel().getValueAt(row, column)));
-                        if (isDelta) {
-                            c.setBackground(val > 0.05 ? new Color(180, 230, 180) : val < -0.05 ? new Color(230, 180, 180) : Color.WHITE);
-                        } else {
-                            double ratio = (max > min) ? Math.max(0, Math.min(1, (val - min) / (max - min))) : 0.5;
-                            c.setBackground(new Color((int)(173 + ratio * 82), (int)(216 - ratio * 34), (int)(230 - ratio * 37)));
-                        }
-                        c.setForeground(Color.BLACK);
-                    } catch (NumberFormatException ignored) {}
+                if (!isCellSelected(row, column)) {
+                    if (column == 0) {
+                        c.setBackground(getBackground());
+                    } else {
+                        try {
+                            double val = Double.parseDouble(String.valueOf(getModel().getValueAt(row, column)));
+                            if (isDelta) {
+                                c.setBackground(val > 0.05 ? new Color(180, 230, 180) : val < -0.05 ? new Color(230, 180, 180) : Color.WHITE);
+                            } else {
+                                double ratio = (max > min) ? Math.max(0, Math.min(1, (val - min) / (max - min))) : 0.5;
+                                c.setBackground(new Color((int)(173 + ratio * 82), (int)(216 - ratio * 34), (int)(230 - ratio * 37)));
+                            }
+                            c.setForeground(Color.BLACK);
+                        } catch (NumberFormatException ignored) {}
+                    }
                 }
                 return c;
             }
