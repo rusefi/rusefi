@@ -76,6 +76,8 @@
 std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareEarly;
 std::optional<setup_custom_board_overrides_type> custom_board_InitHardware;
 std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
+std::optional<setup_custom_board_overrides_type> custom_board_StopHardware;
+std::optional<setup_custom_board_overrides_type> custom_board_StartHardware;
 std::optional<setup_custom_board_overrides_type> custom_board_BeforeTuneDefaults;
 
 std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManagement;
@@ -300,6 +302,9 @@ void initHardwareNoConfig() {
 }
 
 void stopHardware() {
+	// board releases its user-configurable pins while activeConfiguration still describes them
+	call_board_override(custom_board_StopHardware);
+
 	stopSwitchPins();
 
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
@@ -347,6 +352,9 @@ void startHardware() {
 #if EFI_CAN_SUPPORT
 	startCanPins();
 #endif /* EFI_CAN_SUPPORT */
+
+	// board claims its user-configurable pins from engineConfiguration; runs on both boot and burn
+	call_board_override(custom_board_StartHardware);
 }
 
 PUBLIC_API_WEAK void setPinConfigurationOverrides() { }

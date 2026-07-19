@@ -57,8 +57,8 @@ The invariant: **all stop methods run before any start method**, and stopping us
 - `stopSensors()` -> `deInit*` for TPS, MAP, thermistors, flex, VSS, aux, EGT, old
   analog inputs, Lua digital inputs (`firmware/init/sensor/init_sensors.cpp`)
 - `stopTriggerInputPins()`, `stopSent()`, `stopCanPins()`, `stopKLine()`
-- `stopHardware()` - switch pins, smart-GPIO CS pins, logic analyzer, trigger
-  emulator, VVT control pins
+- `stopHardware()` - board hook `custom_board_StopHardware`, switch pins, smart-GPIO
+  CS pins, logic analyzer, trigger emulator, VVT control pins
 - `stopSpiModules()` - releases SPI pins for buses whose `is_enabled_spi_N` changed
 - `enginePins.unregisterPins()`
 
@@ -67,7 +67,8 @@ Start phase:
 - `reconfigureSensors()` - re-runs sensor init (`sensorStartUpOrReconfiguration(false)`)
 - `ButtonDebounce::startConfigurationList()`
 - `startHardware()` - shared between boot and re-init: trigger input pins, engine
-  pins, switch pins, CAN pins, start/stop button, trigger input validation
+  pins, switch pins, CAN pins, start/stop button, trigger input validation, board
+  hook `custom_board_StartHardware`
 - `startSmartCsPins()` - workaround re-init of external gpio-chip CS pins (issue
   #2107); the chips themselves are *not* restarted, see below
 - `startKLine()`, conditional `initIdleHardware()` (via `isIdleHardwareRestartNeeded()`),
@@ -79,6 +80,30 @@ Two styles coexist inside this flow, both quoted from the code comment in
 (e.g. VVT pins, boost pin), while for other systems extra effort is made to restart
 *only if* the relevant settings changed (SPI buses, idle hardware, clutch pin) using
 `isConfigurationChanged`.
+
+### Board participation in dynamic pin start/stop
+
+Board code that claims *user-configurable* pins cannot rely on
+`custom_board_OnConfigurationChange`: that hook fires from
+`incrementGlobalConfigurationVersion()` only after `applyNewHardwareSettings()` has
+already finished starting hardware, so the board's stale claim from the previous
+configuration is still registered and the pin repository rejects the new owner with
+`criticalError("Pin ... required by ... but is used by ...")`
+(`hw_layer/pin_repository.cpp`, `brain_pin_markUsed`).
+
+For this, `board_overrides.h` provides a dedicated pair that follows the
+all-stops-before-any-starts invariant:
+
+- `custom_board_StopHardware` - called at the top of `stopHardware()`, i.e. during the
+  stop phase of `applyNewHardwareSettings()`, while `activeConfiguration` still
+  describes the pins the board previously claimed. Release board-owned configurable
+  pins here (`efiSetPadUnused` / `OutputPin::deInit`).
+- `custom_board_StartHardware` - called at the end of `startHardware()`, which runs on
+  BOTH ECU start and configuration change. Claim board-owned configurable pins here
+  from `engineConfiguration`.
+
+Boards that only claim fixed pins (not user-adjustable, e.g. the Hellen CAN terminator
+output) do not need these and can keep one-time setup in `custom_board_InitHardware`.
 
 ### What is intentionally NOT restarted
 

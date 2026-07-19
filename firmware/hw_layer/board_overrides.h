@@ -86,6 +86,19 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwar
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
 extern std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange;
 
+// Dynamic hardware re-init participation (see docs/hardware-reinit-and-power-cycle.md).
+// custom_board_OnConfigurationChange fires only AFTER applyNewHardwareSettings() has finished
+// starting hardware, so it cannot release pins - a stale board claim makes the pin repository
+// reject the new owner with a criticalError. Boards that claim user-configurable pins must
+// instead use this pair, which follows the all-stops-before-any-starts invariant:
+// - custom_board_StopHardware: called during the stop phase of applyNewHardwareSettings(),
+//   while activeConfiguration still describes the previously claimed pins - release them here.
+// - custom_board_StartHardware: called from startHardware() on BOTH ECU start and configuration
+//   change - claim pins here from engineConfiguration.
+// Boards claiming only fixed pins (not user-configurable) can keep using custom_board_InitHardware.
+extern std::optional<setup_custom_board_overrides_type> custom_board_StopHardware;
+extern std::optional<setup_custom_board_overrides_type> custom_board_StartHardware;
+
 extern std::optional<setup_custom_board_overrides_type> custom_board_TriggerResetState;
 
 extern std::optional<setup_custom_board_overrides_type> custom_board_BeforeTuneDefaults;
