@@ -37,4 +37,8 @@ public class UiProperties {
     public static boolean isKnockAnalyzerEnabled() {
         return ConnectionAndMeta.getBoolean("show_knock_analyzer_tab", PropertiesHolder.INSTANCE.getProperties(), true);
     }
+
+    public static boolean isLaunchWizardEnabled() {
+        return ConnectionAndMeta.getBoolean("show_launch_wizard", PropertiesHolder.INSTANCE.getProperties(), true);
+    }
 }

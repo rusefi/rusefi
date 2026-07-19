@@ -253,7 +253,9 @@ public class ConsoleUI {
         JPanel cornerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         cornerPanel.setOpaque(false);
         cornerPanel.add(connectionStatus);
-        cornerPanel.add(launchWizardButton);
+        if (UiProperties.isLaunchWizardEnabled()) {
+            cornerPanel.add(launchWizardButton);
+        }
         tabbedPane.setCornerComponent(cornerPanel);
 
         // ---------------
