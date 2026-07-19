@@ -18,9 +18,7 @@ TEST(trigger, testNoStartUpWarningsNoSynchronizationTrigger) {
 
 	eth.fireTriggerEvents2(/*count*/10, /*duration*/50);
 	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
-	// todo: address later: false positive CUSTOM_OBD_impossibly_short_INJECTION - injection events run with zero fuel mass in this test
-	ASSERT_EQ( 1u,  getRecentWarnings()->getCount()) << "warningCounter#testNoStartUpWarningsNoSynchronizationTrigger";
-	ASSERT_EQ(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION, getRecentWarnings()->get(0).Code);
+	ASSERT_EQ( 0u,  getRecentWarnings()->getCount()) << "warningCounter#testNoStartUpWarningsNoSynchronizationTrigger";
 }
 
 TEST(trigger, testNoStartUpWarnings) {
@@ -97,9 +95,7 @@ TEST(trigger, testCamInput) {
 	}
 
 	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
-	// todo: address later: false positive CUSTOM_OBD_impossibly_short_INJECTION - injection events run with zero fuel mass in this test
-	ASSERT_EQ(1u,  getRecentWarnings()->getCount()) << "warningCounter#testCamInput";
-	ASSERT_EQ(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION, getRecentWarnings()->get(0).Code);
+	ASSERT_EQ(0u,  getRecentWarnings()->getCount()) << "warningCounter#testCamInput";
 
 	for (int i = 0; i < 600;i++) {
 		eth.fireRise(25);
@@ -107,9 +103,8 @@ TEST(trigger, testCamInput) {
 	}
 
 	// asserting that lack of camshaft signal would be detecting
-	// todo: address later: count is 2 instead of 1 because of the false positive CUSTOM_OBD_impossibly_short_INJECTION above
-	ASSERT_EQ(2u,  getRecentWarnings()->getCount()) << "warningCounter#testCamInput #2";
-	ASSERT_EQ(ObdCode::OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, getRecentWarnings()->get(1).Code) << "@1";
+	ASSERT_EQ(1u,  getRecentWarnings()->getCount()) << "warningCounter#testCamInput #2";
+	ASSERT_EQ(ObdCode::OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, getRecentWarnings()->get(0).Code) << "@0";
 	getRecentWarnings()->clear();
 
 	for (int i = 0; i < 600;i++) {
@@ -130,9 +125,7 @@ TEST(trigger, testCamInput) {
 	}
 
 	// asserting that error code has cleared
-	// todo: address later: the false positive CUSTOM_OBD_impossibly_short_INJECTION comes back after the clear() above
-	ASSERT_EQ(1u, getRecentWarnings()->getCount()) << "warningCounter#testCamInput #3";
-	ASSERT_EQ(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION, getRecentWarnings()->get(0).Code);
+	ASSERT_EQ(0u, getRecentWarnings()->getCount()) << "warningCounter#testCamInput #3";
 	EXPECT_NEAR_M3(71, engine->triggerCentral.getVVTPosition(0, 0));
 }
 

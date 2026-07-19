@@ -50,8 +50,6 @@ TEST(cranking, realCrankingFromFile) {
 		reader.processLine(&eth);
 	}
 
-	// todo: address later: false positive CUSTOM_OBD_impossibly_short_INJECTION - injection events run with zero fuel mass in this test
-	EXPECT_EQ(1u, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
-	EXPECT_EQ(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION, eth.recentWarnings()->get(0).Code);
+	EXPECT_EQ(0u, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
 	EXPECT_EQ(191, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }

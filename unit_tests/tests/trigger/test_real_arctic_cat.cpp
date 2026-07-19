@@ -8,8 +8,6 @@ TEST(arctic, realStartFromFile) {
 
 	// C9354 and C9351
 	// C9007 and C9008
-	// todo: address later: +1 is a false positive CUSTOM_OBD_impossibly_short_INJECTION - injection events run with zero fuel mass in this test
-	ASSERT_EQ(5u, helper.eth.recentWarnings()->getCount()) << "warningCounter#arcticRealCranking";
-	ASSERT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION));
+	ASSERT_EQ(4u, helper.eth.recentWarnings()->getCount()) << "warningCounter#arcticRealCranking";
 	ASSERT_EQ(2165, round(Sensor::getOrZero(SensorType::Rpm)));
 }

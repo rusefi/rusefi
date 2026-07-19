@@ -207,10 +207,10 @@ TEST(fuelCut, delay) {
 #if FUEL_RPM_COUNT == 16
 // While deceleration fuel cut-off is active the commanded fuel mass is zero, so the
 // injection duration computed at injection scheduling time is zero as well.
-// InjectionEvent::onTriggerTooth() treats anything under 50us as an "impossibly short"
-// pulse and reports CUSTOM_OBD_impossibly_short_INJECTION on every injection event
-// for as long as the cut is active.
-TEST(fuelCut, dfcoReportsImpossiblyShortInjection) {
+// Zero duration is an intentional "no injection" and must NOT be reported as an
+// "impossibly short" pulse - regression test for false-positive
+// CUSTOM_OBD_impossibly_short_INJECTION spam during coasting, see #9874.
+TEST(fuelCut, dfcoDoesNotWarnImpossiblyShortInjection) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engine->tdcMarkEnabled = false;
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
@@ -254,8 +254,37 @@ TEST(fuelCut, dfcoReportsImpossiblyShortInjection) {
 	ASSERT_TRUE(engine->module<DfcoController>()->cutFuel());
 	EXPECT_FLOAT_EQ(0, engine->engineState.injectionDuration);
 
-	// keep coasting: every injection event now hits the "impossibly short" branch
+	// keep coasting: injection events run with zero duration, which is an intentional
+	// "no injection" and must not be reported as an impossibly short pulse
 	eth.smartFireTriggerEvents2(/*count*/ 4, /*durationMs*/ 20);
+	EXPECT_FALSE(hasRecentWarningCode(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION));
+	EXPECT_EQ(0u, eth.recentWarnings()->getCount());
+}
+
+// The warning itself must survive for genuinely short nonzero pulses: with a tiny
+// commanded fuel mass and no deadtime the duration lands in (0, 50us) and the
+// scheduler-safety warning from PR #596 still fires.
+TEST(fuelCut, nonZeroImpossiblyShortInjectionStillWarns) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engine->tdcMarkEnabled = false;
+	// tiny but nonzero airmass -> tiny but nonzero fuel mass
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.0000001f, 50.0f}));
+
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
+
+	// no deadtime, so duration is not pushed above the 50us threshold
+	setTable(engineConfiguration->injector.battLagCorrTable, 0.0f);
+
+	eth.fireTriggerEventsWithDuration(20);
+	eth.fireTriggerEventsWithDuration(20);
+	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
+	eth.recentWarnings()->clear();
+
+	eth.smartFireTriggerEvents2(/*count*/ 4, /*durationMs*/ 20);
+
+	// commanded duration is nonzero but under 50us - the warning must fire
+	ASSERT_GT(engine->engineState.injectionDuration, 0);
 	EXPECT_TRUE(hasRecentWarningCode(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION));
 }
 #endif //FUEL_RPM_COUNT == 16

@@ -21,9 +21,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 		reader.processLine(&eth);
 	}
 
-	// todo: address later: false positive CUSTOM_OBD_impossibly_short_INJECTION - injection events run with zero fuel mass in this test
-	ASSERT_EQ( 1u, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-	ASSERT_EQ(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION, eth.recentWarnings()->get(0).Code);
+	ASSERT_EQ( 0u, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
 	ASSERT_EQ( 1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
 
@@ -41,9 +39,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 			reader.processLine(&eth);
 		}
 
-		// todo: address later: false positive CUSTOM_OBD_impossibly_short_INJECTION - injection events run with zero fuel mass in this test
-		ASSERT_EQ(1u, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-		ASSERT_EQ(ObdCode::CUSTOM_OBD_impossibly_short_INJECTION, eth.recentWarnings()->get(0).Code);
+		ASSERT_EQ(0u, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
 		ASSERT_EQ(1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	}
 
