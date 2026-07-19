@@ -114,6 +114,7 @@ For detailed technical documentation intended for AI assistants, see:
 - [Sensor Framework](docs/AI/sensors_system.md) - Sensor registry, conversion pipeline, redundancy and mocking.
 - [Lua Scripting API](docs/AI/lua_scripting.md) - Custom Lua hooks (lua_hooks.cpp and friends) grouped by category, indexing conventions, how to add a hook.
 - [SD Card Logging](docs/AI/sd_card_logging.md) - SD thread mode state machine, .mlg/.teeth formats, f_expand pre-allocation.
+- [Hardware Re-init & requiresPowerCycle](docs/hardware-reinit-and-power-cycle.md) - How Burn applies settings live (activeConfiguration diff, applyNewHardwareSettings stop/start), and the annotated list of reboot-only settings.
 - [Java Gradle Structure Review](docs/java-gradle-structure-review.md) - Gradle subproject inventory, dependency graph, and known structural issues in `java_console/` + `java_tools/`.
 - [Java Connectivity & UI Unit Testing](docs/java-connectivity-ui-unit-testing.md) - Test approach for the console connectivity/flashing/session layer and Swing UI: established fake/seam patterns and a refactoring-cost-ordered test backlog.
 
