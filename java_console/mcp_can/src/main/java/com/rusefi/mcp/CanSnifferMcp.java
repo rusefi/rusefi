@@ -7,8 +7,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import peak.can.basic.PCANBasic;
+import peak.can.basic.TPCANBaudrate;
+import peak.can.basic.TPCANHandle;
 import peak.can.basic.TPCANMsg;
 import peak.can.basic.TPCANStatus;
+import peak.can.basic.TPCANType;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -57,6 +60,9 @@ public class CanSnifferMcp {
     private volatile boolean running;
     private final Object connectLock = new Object();
 
+    /** Which PCAN channel this server sniffs. Defaults to USBBUS1; override with --channel. */
+    private volatile TPCANHandle channel = PCanHelper.CHANNEL;
+
     public CanSnifferMcp() {
         this(new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)),
                 new PrintStream(System.out, true, StandardCharsets.UTF_8));
@@ -68,16 +74,40 @@ public class CanSnifferMcp {
         this.out = out;
     }
 
+    /**
+     * Resolve a --channel value to a TPCANHandle. Accepts a bare USB bus number
+     * ("1", "2", ...) or a full enum name ("PCAN_USBBUS2").
+     */
+    static TPCANHandle resolveChannel(String value) {
+        String v = value.trim();
+        try {
+            if (v.matches("\\d+")) {
+                return TPCANHandle.valueOf("PCAN_USBBUS" + v);
+            }
+            return TPCANHandle.valueOf(v.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Unknown PCAN channel '" + value
+                    + "' (use a USB bus number like 1 or 2, or an enum name like PCAN_USBBUS2)");
+        }
+    }
+
     public static void main(String[] args) {
+        TPCANHandle chosen = PCanHelper.CHANNEL;
         for (int i = 0; i < args.length; i++) {
             if ("--help".equals(args[i]) || "-h".equals(args[i])) {
-                System.err.println("Usage: CanSnifferMcp");
+                System.err.println("Usage: CanSnifferMcp [--channel <n|PCAN_USBBUSn>]");
                 System.err.println("Speaks MCP (JSON-RPC 2.0) over stdio. Read-only CAN sniffer via PCAN.");
+                System.err.println("--channel selects the PCAN USB bus (default 1). Run one server per bus.");
                 return;
+            }
+            if ("--channel".equals(args[i]) && i + 1 < args.length) {
+                chosen = resolveChannel(args[++i]);
             }
         }
         try {
-            new CanSnifferMcp().run();
+            CanSnifferMcp server = new CanSnifferMcp();
+            server.channel = chosen;
+            server.run();
         } catch (Throwable t) {
             log.error("MCP server fatal", t);
             System.err.println("MCP server fatal: " + t);
@@ -118,7 +148,7 @@ public class CanSnifferMcp {
         }
         PCANBasic c = can;
         if (c != null) {
-            try { c.Uninitialize(PCanHelper.CHANNEL); } catch (Throwable ignored) {}
+            try { c.Uninitialize(channel); } catch (Throwable ignored) {}
         }
     }
 
@@ -133,7 +163,7 @@ public class CanSnifferMcp {
             while (running) {
                 try {
                     TPCANMsg rx = new TPCANMsg(Byte.MAX_VALUE);
-                    TPCANStatus status = can.Read(PCanHelper.CHANNEL, rx, null);
+                    TPCANStatus status = can.Read(channel, rx, null);
                     if (status == TPCANStatus.PCAN_ERROR_OK) {
                         byte[] data = new byte[rx.getLength()];
                         System.arraycopy(rx.getData(), 0, data, 0, rx.getLength());
@@ -314,16 +344,19 @@ public class CanSnifferMcp {
                 return r;
             }
             can = PCanHelper.create();
-            TPCANStatus status = PCanHelper.init(can);
+            TPCANStatus status = can.Initialize(channel, TPCANBaudrate.PCAN_BAUD_500K,
+                    TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
             if (status != TPCANStatus.PCAN_ERROR_OK) {
                 JSONObject r = new JSONObject();
                 r.put("connected", false);
+                r.put("channel", channel.name());
                 r.put("error", "PCAN init failed: " + status);
                 return r;
             }
             startListenerThread();
             JSONObject r = new JSONObject();
             r.put("connected", true);
+            r.put("channel", channel.name());
             return r;
         }
     }
@@ -393,6 +426,7 @@ public class CanSnifferMcp {
     private JSONObject doStatus() {
         JSONObject o = new JSONObject();
         o.put("connected", can != null && running);
+        o.put("channel", channel.name());
         synchronized (messageLock) {
             o.put("bufferedPackets", messageBuffer.size());
             o.put("totalReceived", messageSeq);
