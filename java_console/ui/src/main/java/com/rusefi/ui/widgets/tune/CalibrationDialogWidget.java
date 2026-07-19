@@ -242,6 +242,26 @@ public class CalibrationDialogWidget {
             TableModel table = iniFileModel.getTable(key);
             if (table != null) {
                 contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+                //TODO: nicer injection of this button? maybe a comment on the .ini and then hook this?
+                if ("veTableTbl".equals(table.getTableId())) {
+                    final IniFileModel capturedIni = iniFileModel;
+                    JButton genVeBtn = new JButton("Generate base VE...");
+                    genVeBtn.addActionListener(e -> {
+                        if (workingImage == null) return;
+                        VeTableGeneratorDialog dlg = new VeTableGeneratorDialog(
+                            SwingUtilities.getWindowAncestor(contentPane),
+                            capturedIni, workingImage,
+                            patched -> {
+                                workingImage = patched;
+                                if (onConfigChange != null) onConfigChange.accept(workingImage);
+                            }
+                        );
+                        dlg.setVisible(true);
+                    });
+                    JPanel veToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+                    veToolbar.add(genVeBtn);
+                    contentPane.add(veToolbar);
+                }
                 TuningTableView tuningTableView = new TuningTableView(table.getTitle());
                 tuningTableView.displayTable(iniFileModel, table.getTableId(), workingImage);
                 tuningTableView.setOnEdit(notifyEdit);
