@@ -739,7 +739,7 @@ public class IniFileReader {
             case "subMenu":
                 if (currentMenu != null) {
                     if (SeparatorMenuItem.STD_SEPARATOR.equals(list.get(0))) {
-                        currentMenu.getItems().add(SeparatorMenuItem.INSTANCE);
+                        addSeparator(currentMenu.getItems());
                         currentGroup = null;
                         break;
                     }
@@ -762,7 +762,7 @@ public class IniFileReader {
             case "groupChildMenu":
                 if (currentGroup != null) {
                     if (SeparatorMenuItem.STD_SEPARATOR.equals(list.get(0))) {
-                        currentGroup.getItems().add(SeparatorMenuItem.INSTANCE);
+                        addSeparator(currentGroup.getItems());
                         break;
                     }
                     String name = list.size() > 1 ? list.get(1) : "";
@@ -774,6 +774,17 @@ public class IniFileReader {
                 }
                 break;
         }
+    }
+
+    /**
+     * Conditional .ini templating can leave two std_separator lines in a row; a duplicate divider is noise,
+     * so consecutive separators collapse into one.
+     */
+    private static void addSeparator(List<MenuItem> items) {
+        if (!items.isEmpty() && items.get(items.size() - 1) instanceof SeparatorMenuItem) {
+            return;
+        }
+        items.add(SeparatorMenuItem.INSTANCE);
     }
 
     private void handleTopicHelp(LinkedList<String> list) {
