@@ -1,7 +1,10 @@
 package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.ArrayIniField;
+import com.opensr5.ini.field.IniField;
 import com.rusefi.tune.ve.ArchetypeBaseVeV1;
 import com.rusefi.tune.ve.VeGenerator;
 import com.rusefi.tune.ve.VeTableBinding;
@@ -11,6 +14,7 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -32,6 +36,7 @@ public class VeTableGeneratorPanel extends JPanel {
     private JComboBox<ArchetypeBaseVeV1.Aspiration> aspirationCombo;
     private JSpinner idleRpmSpinner;
     private JSpinner maxRpmSpinner;
+    private JButton genBtn;
 
     private JTabbedPane previewTabs;
     private JLabel statusLabel;
@@ -89,8 +94,10 @@ public class VeTableGeneratorPanel extends JPanel {
 
         vvtCheck = new JCheckBox("VVT present");
 
-        idleRpmSpinner = new JSpinner(new SpinnerNumberModel(800, 100, 4000, 50));
-        maxRpmSpinner  = new JSpinner(new SpinnerNumberModel(7000, 2000, 20000, 100));
+        double idleDefault = prefillIdleRpm(ini, sourceImage);
+        double maxDefault  = prefillMaxRpm(ini, sourceImage);
+        idleRpmSpinner = new JSpinner(new SpinnerNumberModel(idleDefault, 400.0, 2000.0, 50.0));
+        maxRpmSpinner  = new JSpinner(new SpinnerNumberModel(maxDefault,  1500.0, 20000.0, 100.0));
 
         int row = 0;
         addRow(p, c, row++, "Head archetype:", headCombo);
@@ -103,11 +110,25 @@ public class VeTableGeneratorPanel extends JPanel {
         p.add(vvtCheck, c);
         c.gridwidth = 1;
 
-        JButton genBtn = new JButton("Generate Preview");
+        JLabel siNote = new JLabel(
+            "<html>Note: version 1 supports four-stroke spark-ignition engines only.<br>" +
+            "Two-stroke, rotary, and other types are not supported.</html>");
+        siNote.setForeground(new Color(120, 80, 0));
+        siNote.setFont(siNote.getFont().deriveFont(siNote.getFont().getSize() - 1f));
+
+        c.insets = new Insets(8, 6, 4, 6);
+        c.gridx = 0; c.gridy = row++; c.gridwidth = 2;
+        p.add(siNote, c);
+        c.gridwidth = 1;
+        c.insets = new Insets(3, 6, 3, 6);
+
+        genBtn = new JButton("Generate Preview");
+        genBtn.setEnabled(boundTable != null);
         genBtn.addActionListener(e -> onGenerate());
+
         c.gridx = 0; c.gridy = row; c.gridwidth = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.insets = new Insets(10, 6, 3, 6);
+        c.insets = new Insets(6, 6, 3, 6);
         p.add(genBtn, c);
 
         c.gridx = 0; c.gridy = row + 1; c.gridwidth = 2;
@@ -115,6 +136,30 @@ public class VeTableGeneratorPanel extends JPanel {
         p.add(Box.createVerticalGlue(), c);
 
         return p;
+    }
+
+    private static double prefillMaxRpm(IniFileModel ini, ConfigurationImage image) {
+        try {
+            Optional<IniField> opt = ini.findIniField("rpmHardLimit");
+            if (!opt.isPresent()) return 7000;
+            String str = ConfigurationImageGetterSetter.getStringValue(opt.get(), image).trim();
+            double val = Double.parseDouble(str);
+            if (Double.isFinite(val) && val >= 1500 && val <= 20000) return val;
+        } catch (Exception ignored) {}
+        return 7000;
+    }
+
+    private static double prefillIdleRpm(IniFileModel ini, ConfigurationImage image) {
+        try {
+            Optional<IniField> opt = ini.findIniField("cltIdleRpm");
+            if (!opt.isPresent() || !(opt.get() instanceof ArrayIniField)) return 900;
+            Double[][] vals = ConfigurationImageGetterSetter.getArrayValues((ArrayIniField) opt.get(), image);
+            if (vals.length > 0 && vals[0].length > 0) {
+                double hot = vals[0][vals[0].length - 1];
+                if (Double.isFinite(hot) && hot >= 400 && hot <= 2000) return hot;
+            }
+        } catch (Exception ignored) {}
+        return 900;
     }
 
     private void addRow(JPanel p, GridBagConstraints c, int row, String label, JComponent comp) {
@@ -205,9 +250,22 @@ public class VeTableGeneratorPanel extends JPanel {
             previewTabs.setSelectedIndex(1);
             applyButton.setEnabled(true);
 
+            int changedCells = 0;
+            double minDelta = Double.MAX_VALUE, maxDelta = -Double.MAX_VALUE;
+            for (int r = 0; r < boundTable.nLoad; r++) {
+                for (int col = 0; col < boundTable.nRpm; col++) {
+                    double d = delta[r][col];
+                    if (Math.abs(d) > 0.05) changedCells++;
+                    if (d < minDelta) minDelta = d;
+                    if (d > maxDelta) maxDelta = d;
+                }
+            }
+
             StringBuilder sb = new StringBuilder("Profile: ").append(result.profileId);
             appendWarnings(sb, result.warnings);
             appendWarnings(sb, boundTable.effectiveVeWarnings);
+            sb.append(String.format(Locale.ROOT, "  |  Changed: %d cells  |  \u0394 [%.1f, %.1f]  |  Max |\u0394|: %.1f",
+                changedCells, minDelta, maxDelta, Math.max(Math.abs(minDelta), Math.abs(maxDelta))));
             statusLabel.setText(sb.toString());
 
         } catch (IllegalArgumentException e) {
