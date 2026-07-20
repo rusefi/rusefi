@@ -8,8 +8,19 @@ import javax.swing.*;
 import java.util.Objects;
 
 public class DfuSwitchJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
+    interface Rebooter {
+        void rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks);
+    }
+
+    private final Rebooter rebooter;
+
     public DfuSwitchJob(final PortResult port, final JComponent parent) {
+        this(port, parent, ProgramSelector::rebootToDfu);
+    }
+
+    DfuSwitchJob(final PortResult port, final JComponent parent, final Rebooter rebooter) {
         super("DFU switch", new SerialPortWithParentComponentJobContext(port, parent));
+        this.rebooter = rebooter;
     }
 
     @Override
@@ -18,7 +29,7 @@ public class DfuSwitchJob extends AsyncJobWithContext<SerialPortWithParentCompon
             () -> {
                 PortResult port = context.getPort();
                 Objects.requireNonNull(port, "port");
-                ProgramSelector.rebootToDfu(context.getParent(), port.port, callbacks);
+                rebooter.rebootToDfu(context.getParent(), port.port, callbacks);
             },
             onJobFinished
         );
