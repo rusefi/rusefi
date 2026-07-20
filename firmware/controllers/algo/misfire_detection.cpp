@@ -80,7 +80,7 @@ void MisfireController::registerMisfire() {
 	if (!misfireLatched && threshold > 0 && misfireTotalCount >= threshold) {
 		misfireLatched = true;
 		// Engine-wide detection => generic random/multiple-cylinder misfire code (P0300).
-		addError(ObdCode::OBD_Random_Misfire);
+		warning(ObdCode::OBD_Random_Misfire, "Misfire detected");
 	}
 }
 
