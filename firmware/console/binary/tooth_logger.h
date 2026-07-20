@@ -79,8 +79,6 @@ static_assert(sizeof(CompositeBuffer) % 4 == 0);
 // Get a reference to the buffer
 // Returns nullptr if no buffer is available
 CompositeBuffer* GetToothLoggerBufferNonblocking();
-// Blocks until a buffer is available
-CompositeBuffer* GetToothLoggerBufferBlocking();
 
 // Return a buffer to the pool once its contents have been read
 void ReturnToothLoggerBuffer(CompositeBuffer*);

@@ -150,10 +150,8 @@ bool EnableToothLogger(TLmode mode) {
 	// Reset state
 	currentBuffer = nullptr;
 
-	// Empty the filled buffer list
-	CompositeBuffer* dummy;
-	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy))
-		;
+	freeBuffers.resumeX();
+	filledBuffers.resumeX();
 
 	// Put all buffers in the free list
 	for (size_t i = 0; i < bufferCount; i++) {
@@ -172,6 +170,10 @@ bool EnableToothLogger(TLmode mode) {
 void DisableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
 
+	// Resume all waiting threads
+	freeBuffers.resetI();
+	filledBuffers.resetI();
+
 	// Release the big buffer for another user
 	// C++ magic: here we are calling BigBufferHandle::operator=() with empty instance
 	bufferHandle = {};
@@ -181,7 +183,7 @@ void DisableToothLogger() {
 }
 
 static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
-	CompositeBuffer* buffer;
+	CompositeBuffer* buffer = nullptr;
 	msg_t msg = filledBuffers.fetch(&buffer, timeout);
 
 	if (msg == MSG_TIMEOUT) {
@@ -190,6 +192,7 @@ static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
 	}
 
 	if (msg != MSG_OK) {
+		// someone just disabled tooth logger and reset queues?
 		// What even happened if we didn't get timeout, but also didn't get OK?
 		return nullptr;
 	}
@@ -201,15 +204,12 @@ CompositeBuffer* GetToothLoggerBufferNonblocking() {
 	return GetToothLoggerBufferImpl(TIME_IMMEDIATE);
 }
 
-CompositeBuffer* GetToothLoggerBufferBlocking() {
-	return GetToothLoggerBufferImpl(TIME_INFINITE);
-}
-
 void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
 	chibios_rt::CriticalSectionLocker csl;
 
-	msg_t msg = freeBuffers.postI(buffer);
-	efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
+	// ignore return, nothing we can do in case of error.
+	// MSG_RESET is possible if tooth logger was disabled while buffer was outside
+	freeBuffers.postI(buffer);
 
 	// If the used list is empty, clear the ready flag
 	if (filledBuffers.getUsedCountI() == 0) {
@@ -257,7 +257,8 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		composite_logger_s* entry = &buffer->buffer[idx];
 
 		entry->x = cur.x;
-		entry->timestamp = NT2US(timestamp);
+		// timestamp is offset to buffer begin
+		entry->timestamp = NT2US(timestamp - buffer->startTime.get());
 
 		// TS uses big endian, grumble
 		// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
@@ -539,6 +540,12 @@ int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 		composite_logger_s c;
 		c.x = SWAP_UINT64(buffer->buffer[i].x);
 
+		// recover timestamp
+		efitick_t raw_time = buffer->startTime.get() + USF2NT(c.timestamp);
+		efitick_t time_us = NT2US(raw_time);
+		uint32_t sec = time_us / 1000000;
+		uint32_t usec = time_us % 1000000;
+
 		// todo: take these data points from structure, not current values. Kind of works for slow sensors, but still!
 		float vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
 		float et = Sensor::get(SensorType::Clt).value_or(0);
@@ -550,7 +557,7 @@ int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 					"%d, %d, %d, %d, %d, "
 					"%d, %d, "
 					"%d, %d, %d, %.2f, %.2f, %.2f, %.2f\r\n",	// TODO: convert to bitwise?
-				c.timestamp / 1000000, c.timestamp % 1000000,
+				sec, usec,
 				c.priLevel, c.cam1, c.cam2, c.cam3, c.cam4,
 				c.sync, c.tdc,
 				c.coil, c.injector, c.acr, vbatt, et, instantMap, tps);

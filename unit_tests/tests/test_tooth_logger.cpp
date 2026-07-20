@@ -42,6 +42,7 @@ TEST(ToothLogger, WriteCsvRows) {
 
 	CompositeBuffer buf{};
 	buf.nextIdx = 2;
+	buf.startTime.reset(0);
 
 	// Row 0: timestamp 1.000002s, all flags zero
 	{
