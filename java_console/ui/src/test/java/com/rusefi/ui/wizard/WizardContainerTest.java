@@ -40,14 +40,14 @@ public class WizardContainerTest {
             return field instanceof EnumIniField ? Optional.of(field) : Optional.empty();
         });
 
-        assertEquals(Arrays.asList(0, 1, 2, 3, 4, 7, 8, 9),
+        assertEquals(Arrays.asList(0, 1, 2, 3, 4, 5, 8, 9, 10),
             WizardContainer.findVisibleCatalogIndices(context, ini));
     }
 
     @Test
     public void persistentFlagsDetermineStateEvenAfterAnIncompleteStep() {
         List<WizardProgressPanel.Item> items = WizardContainer.buildProgressItems(
-            Arrays.asList(0, 1, 2), 0, flag -> flag.equals("wizardMapSensorType"));
+            Arrays.asList(0, 1, 3), 0, flag -> flag.equals("wizardMapSensorType"));
 
         assertEquals(WizardProgressPanel.State.CURRENT, items.get(0).state);
         assertEquals(WizardProgressPanel.State.UPCOMING, items.get(1).state);
