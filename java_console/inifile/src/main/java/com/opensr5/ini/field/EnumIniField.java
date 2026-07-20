@@ -14,13 +14,20 @@ public class EnumIniField extends IniField {
     private final int bitPosition;
     // weird format where 'one bit' width means 0 and "two bits" means "1"
     private final int bitSize0;
+    private final boolean pinEnum;
 
     public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0) {
+        this(name, offset, type, enums, bitPosition, bitSize0, false);
+    }
+
+    public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0,
+                        boolean pinEnum) {
         super(name, offset);
         this.type = type;
         this.enums = enums;
         this.bitPosition = bitPosition;
         this.bitSize0 = bitSize0;
+        this.pinEnum = pinEnum;
     }
 
     @Override
@@ -47,6 +54,10 @@ public class EnumIniField extends IniField {
 
     public FieldType getType() {
         return type;
+    }
+
+    public boolean isPinEnum() {
+        return pinEnum;
     }
 
     public static boolean isQuoted(String q) {

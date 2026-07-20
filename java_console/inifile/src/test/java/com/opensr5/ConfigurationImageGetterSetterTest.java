@@ -59,6 +59,60 @@ public class ConfigurationImageGetterSetterTest {
     }
 
     @Test
+    public void testLegacyEnumSuffixCompatibilityRejectsUnsafeMatches() {
+        TreeMap<Integer, String> map = new TreeMap<>();
+        map.put(1, "Output (variant A)");
+        map.put(2, "Output (variant B)");
+        EnumIniField field = new EnumIniField("output", 0, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(map), 0, 7, true);
+        ConfigurationImage image = new ConfigurationImage(new byte[4]);
+
+        assertThrows(IllegalArgumentException.class,
+            () -> ConfigurationImageGetterSetter.setValue2(field, image, "output", "\"Output\""));
+        assertThrows(IllegalArgumentException.class,
+            () -> ConfigurationImageGetterSetter.setValue2(field, image, "output", "\"Different output\""));
+
+        TreeMap<Integer, String> unrecognizedSuffixMap = new TreeMap<>();
+        unrecognizedSuffixMap.put(1, "OutputExtended");
+        EnumIniField unrecognizedSuffixField = new EnumIniField("output", 0, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(unrecognizedSuffixMap), 0, 7, true);
+        assertThrows(IllegalArgumentException.class,
+            () -> ConfigurationImageGetterSetter.setValue2(
+                unrecognizedSuffixField, image, "output", "\"Output\""));
+    }
+
+    @Test
+    public void testLegacyPinEnumAcceptsKnownAdditiveSuffixes() {
+        String[] currentLabels = {
+            "Output (documentation)",
+            "Output or alternate function",
+            "Output for low count wheel",
+            "Output best for normal wheels",
+            "Output, auxiliary use",
+            "Output legacy connector A",
+        };
+        for (String currentLabel : currentLabels) {
+            TreeMap<Integer, String> map = new TreeMap<>();
+            map.put(3, currentLabel);
+            EnumIniField field = new EnumIniField("output", 0, FieldType.UINT8,
+                new EnumIniField.EnumKeyValueMap(map), 0, 7, true);
+            ConfigurationImage image = new ConfigurationImage(new byte[4]);
+
+            ConfigurationImageGetterSetter.setValue2(field, image, "output", "\"Output\"");
+            assertEquals("\"" + currentLabel + "\"",
+                ConfigurationImageGetterSetter.getStringValue(field, image));
+        }
+
+        TreeMap<Integer, String> ordinaryEnumMap = new TreeMap<>();
+        ordinaryEnumMap.put(3, "Output or alternate function");
+        EnumIniField ordinaryEnum = new EnumIniField("mode", 0, FieldType.UINT8,
+            new EnumIniField.EnumKeyValueMap(ordinaryEnumMap), 0, 7);
+        assertThrows(IllegalArgumentException.class,
+            () -> ConfigurationImageGetterSetter.setValue2(
+                ordinaryEnum, new ConfigurationImage(new byte[4]), "mode", "\"Output\""));
+    }
+
+    @Test
     public void testGetStringValueWithPrecision() {
         ConfigurationImage ci = new ConfigurationImage(new byte[4]);
         // value 1.23456
