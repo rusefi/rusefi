@@ -27,6 +27,8 @@ public class VeTableGeneratorPanel extends JPanel {
     private final ConfigurationImage sourceImage;
     private final Consumer<ConfigurationImage> onApply;
     private final Runnable onClose;
+    private final String applyLabel;
+    private final String closeLabel;
 
     private VeTableBinding.BoundTable boundTable;
 
@@ -46,11 +48,19 @@ public class VeTableGeneratorPanel extends JPanel {
 
     public VeTableGeneratorPanel(IniFileModel ini, ConfigurationImage sourceImage,
                                  Consumer<ConfigurationImage> onApply, Runnable onClose) {
+        this(ini, sourceImage, onApply, onClose, "Apply to working tune", "Discard");
+    }
+
+    public VeTableGeneratorPanel(IniFileModel ini, ConfigurationImage sourceImage,
+                                 Consumer<ConfigurationImage> onApply, Runnable onClose,
+                                 String applyLabel, String closeLabel) {
         super(new BorderLayout(6, 6));
         this.ini = ini;
         this.sourceImage = sourceImage.clone();
         this.onApply = onApply;
         this.onClose = onClose;
+        this.applyLabel = applyLabel;
+        this.closeLabel = closeLabel;
 
         try {
             boundTable = VeTableBinding.bind(ini, this.sourceImage);
@@ -196,11 +206,11 @@ public class VeTableGeneratorPanel extends JPanel {
         statusLabel = new JLabel(" ");
         statusLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
 
-        applyButton = new JButton("Apply to working tune");
+        applyButton = new JButton(applyLabel);
         applyButton.setEnabled(false);
         applyButton.addActionListener(e -> onApply());
 
-        JButton discardBtn = new JButton("Discard");
+        JButton discardBtn = new JButton(closeLabel);
         discardBtn.addActionListener(e -> onClose.run());
 
         JLabel note = new JLabel("Apply schedules ECU RAM upload; use Burn to ECU for flash persistence.");

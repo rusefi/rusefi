@@ -206,55 +206,61 @@ public class WizardContainer extends JPanel {
         stepContentPanel.add(firingOrderPlaceholder, "step1");
         steps.add(null); // placeholder slot
 
-        // Step 2: MAP Sensor Type
+        // Step 2: Base VE Table (wizardDisplacement — silently skipped on older firmware)
+        VeTableWizardStep veStep = new VeTableWizardStep(uiContext);
+        wireStep(veStep, 2);
+        steps.add(veStep);
+        stepContentPanel.add(veStep.getPanel(), "step2");
+
+        // Step 3: MAP Sensor Type
         MapSensorTypePanel mapPanel = new MapSensorTypePanel(uiContext);
-        wireStep(mapPanel, 2);
+        wireStep(mapPanel, 3);
         steps.add(mapPanel);
-        stepContentPanel.add(mapPanel.getPanel(), "step2");
+        stepContentPanel.add(mapPanel.getPanel(), "step3");
 
-        // Step 3: TPS
+        // Step 4: TPS
         TpsPanel tpsPanel = new TpsPanel(uiContext);
-        wireStep(tpsPanel, 3);
+        wireStep(tpsPanel, 4);
         steps.add(tpsPanel);
-        stepContentPanel.add(tpsPanel.getPanel(), "step3");
+        stepContentPanel.add(tpsPanel.getPanel(), "step4");
 
-        // Step 4: CLT Sensor
+        // Step 5: CLT Sensor
         CltSensorPanel cltPanel = new CltSensorPanel(uiContext);
-        wireStep(cltPanel, 4);
+        wireStep(cltPanel, 5);
         steps.add(cltPanel);
-        stepContentPanel.add(cltPanel.getPanel(), "step4");
+        stepContentPanel.add(cltPanel.getPanel(), "step5");
 
-        // Step 5: Crank Trigger
+        // Step 6: Crank Trigger
         CrankTriggerPanel crankPanel = new CrankTriggerPanel(uiContext);
-        wireStep(crankPanel, 5);
+        wireStep(crankPanel, 6);
         steps.add(crankPanel);
-        stepContentPanel.add(crankPanel.getPanel(), "step5");
+        stepContentPanel.add(crankPanel.getPanel(), "step6");
 
-        // Step 6: Cam Trigger
+        // Step 7: Cam Trigger
         CamTriggerPanel camPanel = new CamTriggerPanel(uiContext);
-        wireStep(camPanel, 6);
+        wireStep(camPanel, 7);
         steps.add(camPanel);
-        stepContentPanel.add(camPanel.getPanel(), "step6");
+        stepContentPanel.add(camPanel.getPanel(), "step7");
 
-        // Step 7: Ignition Outputs
+        // Step 8: Ignition Outputs
         OutputAssignmentPanel ignitionOutputs = new OutputAssignmentPanel(
             uiContext, OutputAssignmentPanel.OutputType.IGNITION);
-        wireStep(ignitionOutputs, 7);
+        wireStep(ignitionOutputs, 8);
         steps.add(ignitionOutputs);
-        stepContentPanel.add(ignitionOutputs.getPanel(), "step7");
+        stepContentPanel.add(ignitionOutputs.getPanel(), "step8");
 
-        // Step 8: Injector Outputs
+        // Step 9: Injector Outputs
         OutputAssignmentPanel injectorOutputs = new OutputAssignmentPanel(
             uiContext, OutputAssignmentPanel.OutputType.INJECTOR);
-        wireStep(injectorOutputs, 8);
+        wireStep(injectorOutputs, 9);
         steps.add(injectorOutputs);
-        stepContentPanel.add(injectorOutputs.getPanel(), "step8");
+        stepContentPanel.add(injectorOutputs.getPanel(), "step9");
 
-        // Step 9: Injector Flow
+        // Step 10: Injector Flow
         InjectorFlowPanel injPanel = new InjectorFlowPanel(uiContext);
-        wireStep(injPanel, 9);
+        wireStep(injPanel, 10);
         steps.add(injPanel);
-        stepContentPanel.add(injPanel.getPanel(), "step9");
+        stepContentPanel.add(injPanel.getPanel(), "step10");
 
         // Completion card
         JPanel completionPanel = new JPanel(new GridBagLayout());

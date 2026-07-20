@@ -41,6 +41,14 @@ public class WizardCatalog {
             null
         ),
         new WizardStepDescriptor(
+            "wizardDisplacement",
+            "Base VE Table",
+            true,
+            WizardStepDescriptor.ALWAYS,
+            null,
+            null
+        ),
+        new WizardStepDescriptor(
             "wizardMapSensorType",
             "MAP Sensor",
             true,
