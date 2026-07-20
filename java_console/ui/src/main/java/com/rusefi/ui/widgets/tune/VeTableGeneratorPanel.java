@@ -6,6 +6,8 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.tune.ve.ArchetypeBaseVeV1;
+import com.rusefi.tune.ve.ArchetypeBaseVeV1Supercharged;
+import com.rusefi.tune.ve.ArchetypeBaseVeV1Turbo;
 import com.rusefi.tune.ve.VeGenerator;
 import com.rusefi.tune.ve.VeTableBinding;
 
@@ -244,7 +246,16 @@ public class VeTableGeneratorPanel extends JPanel {
                 (ArchetypeBaseVeV1.Aspiration)     aspirationCombo.getSelectedItem()
             );
 
-            VeGenerator.Result result = new ArchetypeBaseVeV1(req).generate(boundTable.rpmAxis, boundTable.mapAxis);
+            VeGenerator gen;
+            ArchetypeBaseVeV1.Aspiration asp = req.aspiration;
+            if (asp == ArchetypeBaseVeV1.Aspiration.TURBOCHARGED) {
+                gen = new ArchetypeBaseVeV1Turbo(req);
+            } else if (asp == ArchetypeBaseVeV1.Aspiration.SUPERCHARGED) {
+                gen = new ArchetypeBaseVeV1Supercharged(req);
+            } else {
+                gen = new ArchetypeBaseVeV1(req);
+            }
+            VeGenerator.Result result = gen.generate(boundTable.rpmAxis, boundTable.mapAxis);
             ConfigurationImage patched = VeTableBinding.applyToClone(sourceImage, boundTable, result.veTable);
             proposedVe = VeTableBinding.decodeZ(patched, boundTable);
 
