@@ -1,5 +1,5 @@
 /**
- * @file	zero_device.cpp
+ * @file	null_device.cpp
  *
  * @date Feb 12, 2021
  * @author Matthew Kennedy, (c) 2021
