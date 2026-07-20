@@ -65,7 +65,7 @@ static const uint16_t recordLength = computeFieldsRecordLength();
 
 // MLG file header + one descriptor per field. Must land at file offset zero,
 // which is why mmc_card.cpp opens log files with FA_CREATE_ALWAYS (truncate).
-static size_t writeFileHeader(Writer& outBuffer) {
+size_t writeFileHeader(Writer& outBuffer) {
 	size_t writen = 0;
 	char buffer[Types::Header::Size];
 	// File format: MLVLG\0
@@ -120,7 +120,7 @@ static uint8_t blockRollCounter = 0;
 // One fixed-size MLG data record: 4-byte prefix (block type 0, rolling counter,
 // 16-bit timestamp at 10us resolution), then every field's current value,
 // then a 1-byte checksum (plain sum of all payload bytes).
-static size_t writeSdBlock(Writer& outBuffer) {
+size_t writeSdBlock(Writer& outBuffer) {
 	size_t writen = 0;
 	static char buffer[16];
 
