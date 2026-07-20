@@ -187,7 +187,7 @@ public class ProgramSelector {
                 job = new StLinkJob(parent, connectivityContext.getConnectedEcuTarget());
                 break;
             case DFU_SWITCH:
-                job = new DfuSwitchJob(selectedPort, parent);
+                job = new DfuSwitchJob(selectedPort, parent, linkManager);
                 break;
             case OPENBLT_SWITCH:
                 job = new OpenBltSwitchJob(selectedPort, parent, linkManager, OpenbltRebooter.PRODUCTION_REBOOTER);
