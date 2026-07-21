@@ -269,6 +269,23 @@ static int lua_canSetBaud(lua_State* l) {
 
 	return 0;
 }
+
+static int lua_canSetListenMode(lua_State* l) {
+	int bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
+	bool listenOnly = lua_toboolean(l, 2);
+
+#if !EFI_UNIT_TEST
+	int ret = setCanListenMode(bus, listenOnly);
+
+	if (ret < 0) {
+		luaL_error(l, "Failed to change CAN%d listen-only mode to %d", bus + 1, listenOnly);
+	}
+#else
+	(void)listenOnly;
+#endif
+
+	return 0;
+}
 #endif // EFI_CAN_SUPPORT
 
 static LuaAirmass luaAirmass;
@@ -1182,6 +1199,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	lua_register(lState, "txCan", lua_txCan);
 	lua_register(lState, "canSetBaud", lua_canSetBaud);
+	lua_register(lState, "canSetListenMode", lua_canSetListenMode);
 #endif
 
 #if EFI_PROD_CODE

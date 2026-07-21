@@ -125,7 +125,7 @@ static can_baudrate_e getDefaultCanBaudRate(size_t index) {
 	return engineConfiguration->canBaudRate;
 }
 
-static bool getCanListenOnly(size_t index) {
+static bool getCanConfiguredListenOnly(size_t index) {
 	switch (index) {
 	case 0:
 		return engineConfiguration->can1ListenMode;
@@ -140,6 +140,20 @@ static bool getCanListenOnly(size_t index) {
 	return engineConfiguration->can1ListenMode;
 }
 
+// Lua canSetListenMode override; zero-initialized = follow the can*ListenMode configuration
+enum class ListenOverride : int8_t { FollowConfig = 0, ForceNormal, ForceListen };
+static ListenOverride listenOverride[EFI_CAN_BUS_COUNT] = {};
+
+static bool getCanListenOnly(size_t index) {
+	if (index < EFI_CAN_BUS_COUNT && listenOverride[index] != ListenOverride::FollowConfig) {
+		return listenOverride[index] == ListenOverride::ForceListen;
+	}
+	return getCanConfiguredListenOnly(index);
+}
+
+// Last rate actually applied, so a listen-mode toggle preserves a runtime baud change
+static can_baudrate_e currentBaudRate[EFI_CAN_BUS_COUNT] = {};
+
 int txErrorCount[EFI_CAN_BUS_COUNT] = {};
 
 static void canInfo() {
@@ -148,16 +162,16 @@ static void canInfo() {
 		return;
 	}
 
-	efiPrintf("CAN1 TX %s %s err=%d", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate), txErrorCount[0]);
+	efiPrintf("CAN1 TX %s %s err=%d listenOnly=%s", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate), txErrorCount[0], boolToString(getCanListenOnly(0)));
 	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
 	canHwInfo(getCanDevice(0));
 
-	efiPrintf("CAN2 TX %s %s err=%d", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate), txErrorCount[1]);
+	efiPrintf("CAN2 TX %s %s err=%d listenOnly=%s", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate), txErrorCount[1], boolToString(getCanListenOnly(1)));
 	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
 	canHwInfo(getCanDevice(1));
 
 #if (EFI_CAN_BUS_COUNT >= 3)
-	efiPrintf("CAN3 TX %s %s err=%d", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate), txErrorCount[2]);
+	efiPrintf("CAN3 TX %s %s err=%d listenOnly=%s", hwPortname(engineConfiguration->can3TxPin), getCan_baudrate_e(engineConfiguration->can3BaudRate), txErrorCount[2], boolToString(getCanListenOnly(2)));
 	efiPrintf("CAN3 RX %s", hwPortname(engineConfiguration->can3RxPin));
 	canHwInfo(getCanDevice(2));
 #endif
@@ -284,7 +298,8 @@ void initCan() {
 			// Pointer to this local canConfig is stored inside CANDriver
 			// even it is used only during canStart this is wierd
 			CANConfig canConfig;
-			memcpy(&canConfig, findCanConfig(getDefaultCanBaudRate(index)), sizeof(canConfig));
+			currentBaudRate[index] = getDefaultCanBaudRate(index);
+			memcpy(&canConfig, findCanConfig(currentBaudRate[index]), sizeof(canConfig));
 			applyListenOnly(&canConfig, getCanListenOnly(index));
 			canStart(device[index], &canConfig);
 
@@ -312,10 +327,8 @@ bool getIsCanEnabled(void) {
 	return isCanEnabled;
 }
 
-int setCanBaud(size_t index, can_baudrate_e rate) {
-	if (index >= EFI_CAN_BUS_COUNT)
-		return -1;
-
+// Stop, reconfigure and restart one CAN peripheral; shared by setCanBaud and setCanListenMode
+static int restartCanBus(size_t index, can_baudrate_e rate) {
 	auto device = getCanDevice(index);
 	if (device == nullptr)
 		return -2;
@@ -348,7 +361,30 @@ int setCanBaud(size_t index, can_baudrate_e rate) {
 		canRead[index].start();
 	}
 
+	currentBaudRate[index] = rate;
+
 	return 0;
+}
+
+int setCanBaud(size_t index, can_baudrate_e rate) {
+	if (index >= EFI_CAN_BUS_COUNT)
+		return -1;
+
+	return restartCanBus(index, rate);
+}
+
+int setCanListenMode(size_t index, bool listenOnlyEnabled) {
+	if (index >= EFI_CAN_BUS_COUNT)
+		return -1;
+
+	listenOverride[index] = listenOnlyEnabled ? ListenOverride::ForceListen : ListenOverride::ForceNormal;
+
+	if (!isCanEnabled) {
+		// remembered; applied when CAN starts
+		return 0;
+	}
+
+	return restartCanBus(index, currentBaudRate[index]);
 }
 
 int setCanBaud(size_t index, int baudrate) {
