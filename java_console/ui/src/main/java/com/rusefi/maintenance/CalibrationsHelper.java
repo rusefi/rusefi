@@ -578,10 +578,15 @@ public class CalibrationsHelper {
             return false;
         }
 
-        final Optional<CalibrationsInfo> mergedTune = mergeCalibrations(
+        final MergeResult mergeResult = mergeCalibrationsWithPartialFailure(
             iniFileToImport, msqToImport, prevTuneHolder[0].get(), callbacks,
             new HashSet<>(Collections.singletonList("vinNumber"))
         );
+        if (!mergeResult.failedFields.isEmpty()) {
+            callbacks.logLine("WARNING: Tune loaded without incompatible fields: "
+                + String.join(", ", mergeResult.failedFields));
+        }
+        final Optional<CalibrationsInfo> mergedTune = mergeResult.mergedCalibrations;
 
         if (mergedTune.isPresent()) {
             if (!backUpCalibrationsInfo(mergedTune.get(),
