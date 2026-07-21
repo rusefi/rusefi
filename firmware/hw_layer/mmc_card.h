@@ -22,6 +22,11 @@ typedef enum __attribute__ ((__packed__)) {
 	SD_MODE_FORMAT,
 } SD_MODE;
 
+#if EFI_PROD_CODE
+bool getFSlock();
+void putFSunlock();
+#endif
+
 void initEarlyMmcCard();
 void initMmcCard();
 

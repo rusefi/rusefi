@@ -66,6 +66,7 @@
 
 #include "rtc_helper.h"
 #include "backup_ram.h"
+#include "resource_protector.h"
 
 #if EFI_STORAGE_SD == TRUE
 #include "storage_sd.h"
@@ -187,6 +188,15 @@ static MMCConfig mmccfg = {
  * fatfs MMC/SPI
  */
 static NO_CACHE FATFS MMC_FS;
+static ProtectedResource<FATFS> MMC_FS_protected;
+
+bool getFSlock() {
+	return (MMC_FS_protected.enter() != nullptr);
+}
+
+void putFSunlock() {
+	MMC_FS_protected.leave();
+}
 
 /**
  * SD card state persisted in battery-backed RAM (a single 32-bit word) so that after
@@ -681,7 +691,9 @@ static bool mountMmc() {
 		memset(&MMC_FS, 0, sizeof(FATFS));
 		ret = f_mount(&MMC_FS, "", /* Mount immediately */ 1);
 
-		if (ret != FR_OK) {
+		if (ret == FR_OK) {
+			MMC_FS_protected.open(&MMC_FS);
+		} else {
 			printFatFsError("Mount failed", ret);
 		}
 	}
@@ -711,6 +723,13 @@ static void unmountMmc() {
 	// notificate storage subsystem
 	deinitStorageSD();
 #endif // EFI_STORAGE_SD
+
+	if (MMC_FS_protected.free(TIME_MS2I(1000)) == nullptr) {
+		efiPrintf("Failed to deattach SD FATFS %d users left", MMC_FS_protected.get_user_count());
+
+		// force
+		MMC_FS_protected.close();
+	}
 
 	// FATFS: Unregister work area prior to discard it
 	ret = f_unmount("");
