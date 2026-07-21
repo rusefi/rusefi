@@ -533,7 +533,7 @@ bool warningVA(ObdCode code, bool reportToTs, const char *fmt, va_list args) {
 
 	// print Pxxxx (for standard OBD) or Cxxxx (for custom) prefix
 	size_t size = snprintf(warningBuffer, sizeof(warningBuffer), "%s%04d: ",
-		code < ObdCode::CUSTOM_NAN_ENGINE_LOAD ? "P" : "C", (int) code);
+		ObdCodeIsCustom(code) ? "C" : "P", (int) code);
 
 	chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, args);
 

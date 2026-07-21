@@ -12,6 +12,8 @@ namespace MLG::Entries { class Field; }
 
 namespace MLG{
     int getSdCardFieldsCount();
+    size_t writeFileHeader(Writer& outBuffer);
+    size_t writeSdBlock(Writer& outBuffer);
     size_t writeSdLogLine(Writer& buffer);
     void resetFileLogging();
 
