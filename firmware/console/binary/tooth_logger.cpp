@@ -47,6 +47,8 @@
 	fail("EFI_SHAFT_POSITION_INPUT required to have EFI_TOOTH_LOGGER")
 #endif
 
+#include "tooth_logger_buffer.h"
+
 /**
  * Engine idles around 20Hz and revs up to 140Hz, at 60/2 and 8 cylinders we have about 20Khz events
  * If we can read buffer at 50Hz we want buffer to be about 400 elements.
@@ -109,20 +111,10 @@ void DisableToothLogger() {
 
 #else // not EFI_UNIT_TEST
 
-// Multi-buffering between producers and consumers: trigger/coil/injector edge
-// handlers (interrupt context) append composite_logger_s entries into
-// 'currentBuffer'; a buffer that fills up (or goes 5 seconds stale) is posted to
-// 'filledBuffers', where a consumer - the TS composite-log reader or the SD card
-// thread (ToothLoggerWriter) - drains it and returns it to 'freeBuffers'.
-// Buffers live in the shared BigBuffer region, so the tooth logger cannot run
-// concurrently with other BigBuffer users. See docs/AI/sd_card_logging.md
-static constexpr size_t bufferCount = BIG_BUFFER_SIZE / sizeof(CompositeBuffer);
-static_assert(bufferCount >= 2);
-
-static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers;
-static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers;
-
-static CompositeBuffer* currentBuffer = nullptr;
+// The buffer lifecycle itself (free/filled queues, current buffer, 5 second
+// staleness flush) lives in ToothLoggerBufferPool - see tooth_logger_buffer.h.
+// This file owns the enabled flag, the current flag state 'cur', and the
+// TS-visible ready indication.
 
 static void setToothLogReady(bool value) {
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
@@ -130,32 +122,13 @@ static void setToothLogReady(bool value) {
 #endif // EFI_TUNER_STUDIO
 }
 
-static BigBufferHandle bufferHandle;
+static ToothLoggerBufferPool toothBuffers{setToothLogReady};
 
 bool EnableToothLogger(TLmode mode) {
 	chibios_rt::CriticalSectionLocker csl;
 
-	bufferHandle = getBigBuffer(BigBufferUser::ToothLogger);
-	if (!bufferHandle) {
+	if (!toothBuffers.startI()) {
 		return false;
-	}
-
-	CompositeBuffer* buffers = bufferHandle.get<CompositeBuffer>();
-
-	// Reset all buffers
-	for (size_t i = 0; i < bufferCount; i++) {
-		buffers[i].nextIdx = 0;
-	}
-
-	// Reset state
-	currentBuffer = nullptr;
-
-	freeBuffers.resumeX();
-	filledBuffers.resumeX();
-
-	// Put all buffers in the free list
-	for (size_t i = 0; i < bufferCount; i++) {
-		freeBuffers.postI(&buffers[i]);
 	}
 
 	// Enable logging of edges as they come
@@ -170,118 +143,27 @@ bool EnableToothLogger(TLmode mode) {
 void DisableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
 
-	// Resume all waiting threads
-	freeBuffers.resetI();
-	filledBuffers.resetI();
-
-	// Release the big buffer for another user
-	// C++ magic: here we are calling BigBufferHandle::operator=() with empty instance
-	bufferHandle = {};
+	toothBuffers.stopI();
 
 	ToothLoggerEnabled = false;
 	setToothLogReady(false);
 }
 
-static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
-	CompositeBuffer* buffer = nullptr;
-	msg_t msg = filledBuffers.fetch(&buffer, timeout);
-
-	if (msg == MSG_TIMEOUT) {
-		setToothLogReady(false);
-		return nullptr;
-	}
-
-	if (msg != MSG_OK) {
-		// someone just disabled tooth logger and reset queues?
-		// What even happened if we didn't get timeout, but also didn't get OK?
-		return nullptr;
-	}
-
-	return buffer;
-}
-
 CompositeBuffer* GetToothLoggerBufferNonblocking() {
-	return GetToothLoggerBufferImpl(TIME_IMMEDIATE);
+	return toothBuffers.getFilled(TIME_IMMEDIATE);
 }
 
 void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
 	chibios_rt::CriticalSectionLocker csl;
 
-	// ignore return, nothing we can do in case of error.
-	// MSG_RESET is possible if tooth logger was disabled while buffer was outside
-	freeBuffers.postI(buffer);
-
-	// If the used list is empty, clear the ready flag
-	if (filledBuffers.getUsedCountI() == 0) {
-		setToothLogReady(false);
-	}
-}
-
-static CompositeBuffer* findBuffer(efitick_t timestamp) {
-	CompositeBuffer* buffer;
-
-	if (!currentBuffer) {
-		// try and find a buffer, if none available, we can't log
-		if (MSG_OK != freeBuffers.fetchI(&buffer)) {
-			return nullptr;
-		}
-
-		// Record the time of the last buffer swap so we can force a swap after a minimum period of time
-		// This ensures the user sees *something* even if they don't have enough trigger events
-		// to fill the buffer.
-		buffer->startTime.reset(timestamp);
-		buffer->nextIdx = 0;
-
-		currentBuffer = buffer;
-	}
-
-	return currentBuffer;
+	toothBuffers.returnBufferI(buffer);
 }
 
 static void SetNextCompositeEntry(efitick_t timestamp) {
 	// This is called from multiple interrupts/threads, so we need a lock.
 	chibios_rt::CriticalSectionLocker csl;
 
-	CompositeBuffer* buffer = findBuffer(timestamp);
-
-	if (!buffer) {
-		// All buffers are full, nothing to do here.
-		return;
-	}
-
-	size_t idx = buffer->nextIdx;
-	auto nextIdx = idx + 1;
-	buffer->nextIdx = nextIdx;
-
-	if (idx < efi::size(buffer->buffer)) {
-		composite_logger_s* entry = &buffer->buffer[idx];
-
-		entry->x = cur.x;
-		// timestamp is offset to buffer begin
-		entry->timestamp = NT2US(timestamp - buffer->startTime.get());
-
-		// TS uses big endian, grumble
-		// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
-		// swap whole record byteorder
-		entry->x = SWAP_UINT64(entry->x);
-	}
-
-	// if the buffer is full...
-	bool bufferFull = nextIdx >= efi::size(buffer->buffer);
-	// ... or it's been too long since the last flush
-	bool bufferTimedOut = buffer->startTime.hasElapsedSec(5);
-
-	// Then cycle buffers and set the ready flag.
-	if (bufferFull || bufferTimedOut) {
-		// Post to the output queue
-		filledBuffers.postI(buffer);
-
-		// Null the current buffer so we get a new one next time
-		currentBuffer = nullptr;
-
-		// Flag that we are ready
-		setToothLogReady(true);
-	}
+	toothBuffers.appendI(cur, timestamp);
 }
 
 #endif // not EFI_UNIT_TEST
@@ -454,9 +336,7 @@ static int ToothLoggerWriteBin(Writer &writer, CompositeBuffer* buffer) {
 bool ToothLoggerHasData() {
 	chibios_rt::CriticalSectionLocker csl;
 
-	return ((currentBuffer) ||
-		(filledBuffers.getUsedCountI() > 0));
-
+	return toothBuffers.hasDataI();
 }
 
 // binary vs CSV output format, latched at file creation - see ToothLoggerWriter()
@@ -477,8 +357,8 @@ int ToothLoggerWriter(FileBufferedWriter &writer) {
 	CompositeBuffer* buffer = nullptr;
 	bool startNewFile = false;
 
-	// manualy pick buffer, do not use GetToothLoggerBufferImpl() as it changes TS buffer ready flag
-	msg_t msg = filledBuffers.fetch(&buffer, TIME_MS2I(3000));
+	// manualy pick buffer, do not use getFilled() as it changes TS buffer ready flag
+	msg_t msg = toothBuffers.fetchFilled(&buffer, TIME_MS2I(3000));
 	if ((msg != MSG_OK) && (msg != MSG_TIMEOUT)) {
 		// error?
 		return -1;
@@ -489,10 +369,7 @@ int ToothLoggerWriter(FileBufferedWriter &writer) {
 		startNewFile = true;
 
 		// flush data from currently writing buffer!
-		if (currentBuffer) {
-			buffer = currentBuffer;
-			currentBuffer = nullptr;
-		}
+		buffer = toothBuffers.flushCurrentI();
 	}
 
 	// can return nullptr
