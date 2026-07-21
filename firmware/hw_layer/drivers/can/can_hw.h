@@ -20,5 +20,8 @@ void startCanPins();
 bool getIsCanEnabled(void);
 int setCanBaud(size_t index, can_baudrate_e rate);
 int setCanBaud(size_t index, int baud);
+// Runtime listen-only (silent mode, no ACK / no TX) override; switch back and forth at will.
+// Overrides the can*ListenMode configuration until reboot.
+int setCanListenMode(size_t index, bool listenOnlyEnabled);
 
 #endif /* EFI_CAN_SUPPORT */

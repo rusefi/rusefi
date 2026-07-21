@@ -135,6 +135,7 @@ on the Lua tick).
 | `onCanRx(bus, id, dlc, data)` | Global fallback callback for filters registered without their own callback |
 | `global_can_data` | Legacy/workaround table populated when `enableCanRxWorkaround()` was called |
 | `canSetBaud(bus, baud)` | Runtime baud change; Lua error on failure |
+| `canSetListenMode(bus, listenOnly)` | Runtime listen-only (silent mode: no ACK, no TX) toggle, switchable back and forth; overrides `can*ListenMode` config until reboot; Lua error on failure |
 | `getCanBaudRate(busIdx)` | Configured baud for CAN1/CAN2 (not on F4) |
 | `enableCanTx(bool)` | Master `engine->allowCanTx` gate |
 | `disableExtendedCanBroadcast()` | Turns off rusEFI periodic broadcast (not on F4) |
