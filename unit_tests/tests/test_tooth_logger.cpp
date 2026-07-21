@@ -139,3 +139,42 @@ TEST(ToothLogger, WriteCsvRowsRecoverAbsoluteTime) {
 	// No extra rows
 	EXPECT_EQ(rowStart, w.data.size());
 }
+
+// A completely full buffer (nextIdx == toothLoggerEntriesPerBuffer) must emit
+// exactly one row per entry and stay within array bounds.
+TEST(ToothLogger, WriteCsvFullBuffer) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	CompositeBuffer buf{};
+	buf.nextIdx = toothLoggerEntriesPerBuffer;
+	buf.startTime.reset(0);
+
+	// Distinct, increasing offsets; the last one stays under the 5 s flush period
+	for (size_t i = 0; i < toothLoggerEntriesPerBuffer; i++) {
+		composite_logger_s c{};
+		c.timestamp = i * 20'000; // 20 ms apart -> last entry at 4.980000 s
+		c.priLevel = (i % 2) == 0;
+		buf.buffer[i].x = SWAP_UINT64(c.x);
+	}
+
+	StringWriter w;
+	int total = ToothLoggerWriteCsv(w, &buf);
+
+	EXPECT_GT(total, 0);
+	EXPECT_EQ((size_t)total, w.data.size());
+
+	// One CRLF-terminated row per entry
+	size_t crlfCount = 0;
+	for (size_t i = 0; i + 1 < w.data.size(); i++) {
+		if (w.data[i] == '\r' && w.data[i + 1] == '\n') {
+			crlfCount++;
+		}
+	}
+	EXPECT_EQ(crlfCount, toothLoggerEntriesPerBuffer);
+
+	// First and last rows carry the expected timestamps
+	EXPECT_EQ(w.data.compare(0, 10, "0.000000, "), 0) << w.data.substr(0, 30);
+	size_t lastRow = w.data.rfind("4.980000, ");
+	ASSERT_NE(lastRow, std::string::npos);
+	EXPECT_EQ(w.data.find("\r\n", lastRow) + 2, w.data.size());
+}

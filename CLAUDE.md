@@ -139,6 +139,8 @@ For detailed technical documentation intended for AI assistants, see:
 
 Code generation is integrated into the Makefile for all four delivery units: each firmware board build, unit tests (`unit_tests/`), the simulator (`simulator/`), and the Java tools. Running `make` in any of these automatically regenerates the required configuration headers and INI files — there is no reason to invoke `gen_config_board.sh`, `gen_config.sh`, or `gen_enum_to_string.sh` directly. Do not attempt to commit any generated files.
 
+Do not `git checkout`/revert build-regenerated files (e.g. `firmware/controllers/lua/generated/value_lookup_generated.cpp`) to "clean up" the working tree after a build: some checked-in copies are stale relative to the checked-in config inputs, and the checkout stamps the file newer than its generator inputs, so the next `make` considers it fresh, skips regeneration, and the build fails on missing struct members. Leave them modified (just never commit them); if already reverted, recover with `touch firmware/integration/rusefi_config.txt` or `make clean`.
+
 ### Compiler Flags
 
 - C99 with GNU extensions for C code
