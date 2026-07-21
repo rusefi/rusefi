@@ -1,10 +1,14 @@
 package com.rusefi.mcp;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.tune.xml.Msq;
+import com.rusefi.tune.xml.MsqFactory;
 import com.rusefi.ui.lua.LuaIncludeSyntax;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.lua.LuaService;
@@ -13,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -37,8 +42,8 @@ import static com.devexperts.logging.Logging.getLogging;
  *     <li><code>tools/list</code></li>
  *     <li><code>tools/call</code> for: connect, ecu_info, set_lua, get_lua, lua_reset,
  *         send_command (alias: command), read_output_channel, read_messages,
- *         wait_for_message, reboot, reboot_to_blt — see java_console/mcp_ecu/README.md
- *         for the tool reference</li>
+ *         wait_for_message, read_tune, reboot, reboot_to_blt — see
+ *         java_console/mcp_ecu/README.md for the tool reference</li>
  *     <li><code>notifications/initialized</code></li>
  * </ul>
  *
@@ -319,6 +324,16 @@ public class EcuMcpServer {
                         {"timeoutMs", "integer", "Wait timeout in ms. Default 10000."},
                         {"sinceSeq", "integer", "Only consider messages with seq strictly greater than this."}
                 }, new String[]{"regex"}, false)));
+        tools.add(tool("read_tune",
+                "Read the complete tune (all calibration constants) from the ECU and save it as a " +
+                        "TunerStudio-compatible .msq file on the MCP server host. The tune is built from " +
+                        "the controller configuration image fetched over this connection plus the matching " +
+                        ".ini definition. Returns 'path', 'constantCount', 'fileSize' and 'signature'. " +
+                        "The file is XML and can be large — read it with file tools rather than inlining it.",
+                schemaObject(new String[][]{
+                        {"path", "string", "Output .msq file path on the MCP server host (not the client). " +
+                                "Default: a temp file named rusefi_tune_*.msq."}
+                }, new String[]{}, false)));
         tools.add(tool("reboot",
                 "Reboot the ECU (send '" + Integration.CMD_REBOOT + "'). The serial link drops while the ECU " +
                         "restarts — reconnect (any ECU-touching tool reconnects implicitly) after a few seconds.",
@@ -352,6 +367,7 @@ public class EcuMcpServer {
                 case "read_output_channel": toolResult = doReadOutputChannel(args); break;
                 case "read_messages": toolResult = doReadMessages(args); break;
                 case "wait_for_message": toolResult = doWaitForMessage(args); break;
+                case "read_tune":   toolResult = doReadTune(args); break;
                 case "reboot":      toolResult = doReboot(Integration.CMD_REBOOT); break;
                 case "reboot_to_blt": toolResult = doReboot(Integration.CMD_REBOOT_OPENBLT); break;
                 default:
@@ -468,6 +484,34 @@ public class EcuMcpServer {
         JSONObject o = new JSONObject();
         o.put("queued", true);
         o.put("command", cmd);
+        return o;
+    }
+
+    @SuppressWarnings("unchecked")
+    private JSONObject doReadTune(JSONObject args) throws Exception {
+        String path = (String) args.get("path");
+
+        LinkManager lm = ensureConnected(null);
+        BinaryProtocol bp = lm.getBinaryProtocol();
+        if (bp == null)
+            return errorBody("Binary protocol not established yet");
+        ConfigurationImage image = bp.getControllerConfiguration();
+        if (image == null)
+            return errorBody("Controller configuration image not available yet");
+        IniFileModel ini = bp.getIniFileNullable();
+        if (ini == null)
+            return errorBody("No .ini model for this connection");
+
+        Msq tune = MsqFactory.valueOf(image, ini);
+        File outputFile = path != null ? new File(path) : File.createTempFile("rusefi_tune_", ".msq");
+        tune.writeXmlFile(outputFile.getAbsolutePath());
+
+        JSONObject o = new JSONObject();
+        o.put("success", true);
+        o.put("path", outputFile.getAbsolutePath());
+        o.put("constantCount", (long) tune.findPage().constant.size());
+        o.put("fileSize", outputFile.length());
+        o.put("signature", String.valueOf(bp.signature));
         return o;
     }
 

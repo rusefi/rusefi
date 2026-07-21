@@ -56,6 +56,7 @@ Behavior common to all tools:
 | `read_output_channel` | Latest gauge value by name. |
 | `read_messages` | Pull recent ECU messages (Lua `print` included). |
 | `wait_for_message` | Block until a message matches a regex. |
+| `read_tune` | Save the complete ECU tune as a `.msq` file. |
 | `reboot` | Reboot the ECU. |
 | `reboot_to_blt` | Reboot the ECU into the OpenBLT bootloader. |
 
@@ -142,6 +143,22 @@ Returns `success: true` with `match` (same shape as a `read_messages` entry), or
 `success: false` with `error: "timeout"` and `latestSeq`. Already-buffered messages are
 checked first, so without `sinceSeq` a stale message from minutes ago can satisfy the
 wait — pass `sinceSeq` captured before triggering the action you're waiting on.
+
+### `read_tune`
+
+| Argument | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `path` | string | no | temp file | Output `.msq` file path **on the MCP-server host** (not the client). Default: a temp file named `rusefi_tune_*.msq` in the system temp directory. |
+
+Reads the complete tune (every calibration constant defined by the matching `.ini`) and
+writes it as a TunerStudio-compatible `.msq` XML file — the same format the rusEFI
+console and TunerStudio use for tune save/load. The tune is built from the controller
+configuration image fetched over this connection (read in full at connect and kept in
+sync by writes made through this connection).
+
+Returns `path` (absolute), `constantCount`, `fileSize` (bytes) and `signature`. The XML
+can easily run to hundreds of kilobytes — read the file with your own file tools
+(ideally selectively) instead of trying to pull it through an MCP response.
 
 ### `reboot`
 
