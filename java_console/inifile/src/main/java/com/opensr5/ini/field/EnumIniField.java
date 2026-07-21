@@ -9,25 +9,45 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class EnumIniField extends IniField {
+    public enum PinType {
+        NONE(""),
+        GPIO("Pin"),
+        OUTPUT("Output"),
+        INPUT("Input"),
+        SWITCH("Switch input"),
+        ANALOG("Analog input"),
+        SENT("SENT input");
+
+        private final String displayName;
+
+        PinType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+    }
+
     private final FieldType type;
     private final EnumKeyValueMap enums;
     private final int bitPosition;
     // weird format where 'one bit' width means 0 and "two bits" means "1"
     private final int bitSize0;
-    private final boolean pinEnum;
+    private final PinType pinType;
 
     public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0) {
-        this(name, offset, type, enums, bitPosition, bitSize0, false);
+        this(name, offset, type, enums, bitPosition, bitSize0, PinType.NONE);
     }
 
     public EnumIniField(String name, int offset, FieldType type, EnumKeyValueMap enums, int bitPosition, int bitSize0,
-                        boolean pinEnum) {
+                        PinType pinType) {
         super(name, offset);
         this.type = type;
         this.enums = enums;
         this.bitPosition = bitPosition;
         this.bitSize0 = bitSize0;
-        this.pinEnum = pinEnum;
+        this.pinType = pinType;
     }
 
     @Override
@@ -57,7 +77,11 @@ public class EnumIniField extends IniField {
     }
 
     public boolean isPinEnum() {
-        return pinEnum;
+        return pinType != PinType.NONE;
+    }
+
+    public PinType getPinType() {
+        return pinType;
     }
 
     public static boolean isQuoted(String q) {

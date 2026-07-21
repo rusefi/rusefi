@@ -8,20 +8,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 public class EnumIniReaderHelper {
     private static final String STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS = "^\\d+\\s*=.*";
     private static final Pattern IS_KEY_VALUE_SYNTAX = Pattern.compile(STARTS_WITH_NUMBERS_OPTIONAL_SPACES_AND_EQUALS);
     private static final Pattern BIT_RANGE_DELIMITERS = Pattern.compile("[]\\[:]");
-    private static final Set<String> PIN_ENUM_LISTS = Set.of(
-        "$gpio_list",
-        "$output_pin_e_list",
-        "$brain_input_pin_e_list",
-        "$switch_input_pin_e_list",
-        "$adc_channel_e_list",
-        "$sent_input_pin_e_list"
+    private static final Map<String, EnumIniField.PinType> PIN_ENUM_LISTS = Map.of(
+        "$gpio_list", EnumIniField.PinType.GPIO,
+        "$output_pin_e_list", EnumIniField.PinType.OUTPUT,
+        "$brain_input_pin_e_list", EnumIniField.PinType.INPUT,
+        "$switch_input_pin_e_list", EnumIniField.PinType.SWITCH,
+        "$adc_channel_e_list", EnumIniField.PinType.ANALOG,
+        "$sent_input_pin_e_list", EnumIniField.PinType.SENT
     );
 
     private EnumIniReaderHelper() {
@@ -38,8 +37,9 @@ public class EnumIniReaderHelper {
         int bitSize0 = parseBitRange.getBitSize0();
 
         EnumIniField.EnumKeyValueMap enums = EnumIniField.EnumKeyValueMap.valueOf(line.getRawText(), defines);
-        boolean pinEnum = PIN_ENUM_LISTS.contains(getEnumValuesSection(line.getRawText()));
-        return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0, pinEnum);
+        EnumIniField.PinType pinType = PIN_ENUM_LISTS.getOrDefault(
+            getEnumValuesSection(line.getRawText()), EnumIniField.PinType.NONE);
+        return new EnumIniField(name, offset, type, enums, bitPosition, bitSize0, pinType);
     }
 
     public static boolean isKeyValueSyntax(String rawText) {
