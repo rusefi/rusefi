@@ -1,7 +1,7 @@
 #include "pch.h"
 #include <rusefi/timer.h>
 
-TEST(util, timer) {
+TEST(util, timerAnotherTest) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	Timer timer;
 	ASSERT_TRUE(timer.hasElapsedSec(3));
