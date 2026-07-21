@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<install4j version="11.0.5" transformSequenceNumber="11">
+  <directoryPresets config="../../../../../bundles/rusefi_bundle_uaefi/rusefi.snapshot.uaefi" />
+  <application name="uaEFI Updater" applicationId="9384-2741-6502-8137" mediaDir="." shortName="uaEFI Updater" version="1.0.0.0" allPathsRelative="true">
+    <jreBundles jdkProviderId="Zulu" release="17/17.0.14" />
+  </application>
+  <files>
+    <mountPoints>
+      <mountPoint id="1" />
+      <mountPoint id="2" location="console" />
+    </mountPoints>
+    <entries>
+      <dirEntry mountPoint="1" file="../../../../../bundles/rusefi_bundle_uaefi/rusefi.snapshot.uaefi" />
+      <fileEntry mountPoint="2" file="./installation.properties" />
+    </entries>
+  </files>
+  <launchers>
+    <launcher name="uaEFI-Grab-Fresh-And-Update-ECU" id="3">
+      <executable name="uaEFI-Grab-Fresh-And-Update-ECU" iconSet="true" executableMode="gui" workingDirectory="console" executionLevel="requireAdministrator" />
+      <java mainClass="com.rusefi.autoupdate.Autoupdate" arguments="basic-ui">
+        <classPath>
+          <archive location="console/rusefi_console.jar" failOnError="false" />
+        </classPath>
+      </java>
+      <iconImageFiles>
+        <file path="./uaefi-16.png" />
+        <file path="./uaefi-32.png" />
+        <file path="./uaefi-48.png" />
+        <file path="./uaefi-256.png" />
+      </iconImageFiles>
+    </launcher>
+    <launcher name="uaEFI-Update-ECU" id="4">
+      <executable name="uaEFI-Update-ECU" iconSet="true" executableMode="gui" workingDirectory="console" executionLevel="requireAdministrator" />
+      <java mainClass="com.rusefi.Launcher">
+        <classPath>
+          <archive location="console/rusefi_console.jar" failOnError="false" />
+        </classPath>
+      </java>
+      <iconImageFiles>
+        <file path="./uaefi-16.png" />
+        <file path="./uaefi-32.png" />
+        <file path="./uaefi-48.png" />
+        <file path="./uaefi-256.png" />
+      </iconImageFiles>
+    </launcher>
+  </launchers>
+  <installerGui>
+    <applications>
+      <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication">
+        <serializedBean>
+          <property name="customIconImageFiles">
+            <add><object class="com.install4j.api.beans.ExternalFile"><string>./uaefi-16.png</string></object></add>
+            <add><object class="com.install4j.api.beans.ExternalFile"><string>./uaefi-32.png</string></object></add>
+            <add><object class="com.install4j.api.beans.ExternalFile"><string>./uaefi-48.png</string></object></add>
+            <add><object class="com.install4j.api.beans.ExternalFile"><string>./uaefi-256.png</string></object></add>
+          </property>
+          <property name="useCustomIcon" type="boolean" value="true" />
+        </serializedBean>
+        <startup>
+          <screen id="5" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
+            <actions>
+              <action id="6" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="obtainIfNormalWin" type="boolean" value="true" />
+                </serializedBean>
+              </action>
+            </actions>
+          </screen>
+        </startup>
+        <screens>
+          <screen id="7" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" rollbackBarrierExitCode="0" />
+          <screen id="8" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" rollbackBarrierExitCode="0">
+            <condition>!context.getBooleanVariable("sys.confirmedUpdateInstallation")</condition>
+          </screen>
+          <screen id="9" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" rollbackBarrier="true" rollbackBarrierExitCode="0">
+            <actions>
+              <action id="10" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" actionElevationType="elevated" rollbackBarrierExitCode="0" failureStrategy="quit" errorMessage="${i18n:FileCorrupted}" />
+              <action id="11" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" actionElevationType="elevated" rollbackBarrierExitCode="0" />
+              <action id="12" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" actionElevationType="elevated" rollbackBarrierExitCode="0" />
+              <action id="13" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="file"><object class="java.io.File"><string>uaEFI-Grab-Fresh-And-Update-ECU</string></object></property>
+                  <property name="name" type="string">${compiler:sys.fullName}</property>
+                  <property name="runAsAdministrator" type="boolean" value="true" />
+                </serializedBean>
+              </action>
+            </actions>
+          </screen>
+          <screen id="14" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" rollbackBarrierExitCode="0" finishScreen="true" />
+        </screens>
+      </application>
+      <application id="uninstaller" beanClass="com.install4j.runtime.beans.applications.UninstallerApplication">
+        <startup>
+          <screen id="15" beanClass="com.install4j.runtime.beans.screens.StartupScreen" rollbackBarrierExitCode="0">
+            <actions>
+              <action id="16" beanClass="com.install4j.runtime.beans.actions.misc.RequireInstallerPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0" />
+            </actions>
+          </screen>
+        </startup>
+        <screens>
+          <screen id="17" beanClass="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" rollbackBarrierExitCode="0" />
+          <screen id="18" beanClass="com.install4j.runtime.beans.screens.UninstallationScreen" rollbackBarrierExitCode="0">
+            <actions>
+              <action id="19" beanClass="com.install4j.runtime.beans.actions.UninstallFilesAction" actionElevationType="elevated" rollbackBarrierExitCode="0" />
+            </actions>
+          </screen>
+          <screen id="20" beanClass="com.install4j.runtime.beans.screens.UninstallFailureScreen" rollbackBarrierExitCode="0" finishScreen="true" />
+          <screen id="21" beanClass="com.install4j.runtime.beans.screens.UninstallSuccessScreen" rollbackBarrierExitCode="0" finishScreen="true" />
+        </screens>
+      </application>
+    </applications>
+  </installerGui>
+  <mediaSets>
+    <windows name="Windows" id="22" architecture="64" />
+  </mediaSets>
+</install4j>
