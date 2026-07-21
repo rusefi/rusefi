@@ -97,3 +97,45 @@ TEST(ToothLogger, WriteCsvRows) {
 	}
 	EXPECT_EQ(crlfCount, 2u);
 }
+
+// Entry timestamps are stored as microsecond offsets from the buffer's startTime;
+// the CSV writer must recover absolute time as startTime + offset.
+TEST(ToothLogger, WriteCsvRowsRecoverAbsoluteTime) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	CompositeBuffer buf{};
+	buf.nextIdx = 3;
+	// Buffer acquired 100 seconds after boot
+	buf.startTime.reset(US2NT(100'000'000));
+
+	// Offsets: first entry in the buffer, a mid-buffer entry, and one just
+	// short of the 5 second buffer flush period (the largest possible offset).
+	const uint32_t offsetsUs[] = { 0, 1'000'002, 4'999'999 };
+
+	for (size_t i = 0; i < efi::size(offsetsUs); i++) {
+		composite_logger_s c{};
+		c.timestamp = offsetsUs[i];
+		buf.buffer[i].x = SWAP_UINT64(c.x);
+	}
+
+	StringWriter w;
+	int total = ToothLoggerWriteCsv(w, &buf);
+	EXPECT_GT(total, 0);
+
+	// Split rows and check the absolute timestamp prefix of each
+	const char* expectedPrefixes[] = { "100.000000, ", "101.000002, ", "104.999999, " };
+
+	size_t rowStart = 0;
+	for (size_t i = 0; i < efi::size(expectedPrefixes); i++) {
+		ASSERT_LT(rowStart, w.data.size());
+		EXPECT_EQ(w.data.compare(rowStart, strlen(expectedPrefixes[i]), expectedPrefixes[i]), 0)
+			<< "row " << i << ": " << w.data.substr(rowStart, 30);
+
+		size_t rowEnd = w.data.find("\r\n", rowStart);
+		ASSERT_NE(rowEnd, std::string::npos);
+		rowStart = rowEnd + 2;
+	}
+
+	// No extra rows
+	EXPECT_EQ(rowStart, w.data.size());
+}
