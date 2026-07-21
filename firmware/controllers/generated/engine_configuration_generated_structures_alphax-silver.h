@@ -5393,6 +5393,9 @@ struct engine_configuration_s {
 	 */
 	int8_t torqueReductionActivationTemperature;
 	/**
+	 * Absolute: Sensor reads ~100 kPa (14.7 psi) with engine off and no fuel pressure.
+	 * Gauge: Sensor reads 0 with engine off and no fuel pressure (most common standard 0-10 bar / 0-150 psi sensors).
+	 * Differential: Sensor is connected to intake manifold vacuum and measures pressure difference directly.
 	 * offset 3346
 	 */
 	fuel_pressure_sensor_mode_e fuelPressureSensorMode;
