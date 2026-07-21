@@ -64,7 +64,7 @@ public class ConfigurationImageGetterSetterTest {
         map.put(1, "Output (variant A)");
         map.put(2, "Output (variant B)");
         EnumIniField field = new EnumIniField("output", 0, FieldType.UINT8,
-            new EnumIniField.EnumKeyValueMap(map), 0, 7, true);
+            new EnumIniField.EnumKeyValueMap(map), 0, 7, EnumIniField.PinType.OUTPUT);
         ConfigurationImage image = new ConfigurationImage(new byte[4]);
 
         assertThrows(IllegalArgumentException.class,
@@ -75,7 +75,7 @@ public class ConfigurationImageGetterSetterTest {
         TreeMap<Integer, String> unrecognizedSuffixMap = new TreeMap<>();
         unrecognizedSuffixMap.put(1, "OutputExtended");
         EnumIniField unrecognizedSuffixField = new EnumIniField("output", 0, FieldType.UINT8,
-            new EnumIniField.EnumKeyValueMap(unrecognizedSuffixMap), 0, 7, true);
+            new EnumIniField.EnumKeyValueMap(unrecognizedSuffixMap), 0, 7, EnumIniField.PinType.OUTPUT);
         assertThrows(IllegalArgumentException.class,
             () -> ConfigurationImageGetterSetter.setValue2(
                 unrecognizedSuffixField, image, "output", "\"Output\""));
@@ -95,7 +95,7 @@ public class ConfigurationImageGetterSetterTest {
             TreeMap<Integer, String> map = new TreeMap<>();
             map.put(3, currentLabel);
             EnumIniField field = new EnumIniField("output", 0, FieldType.UINT8,
-                new EnumIniField.EnumKeyValueMap(map), 0, 7, true);
+                new EnumIniField.EnumKeyValueMap(map), 0, 7, EnumIniField.PinType.OUTPUT);
             ConfigurationImage image = new ConfigurationImage(new byte[4]);
 
             ConfigurationImageGetterSetter.setValue2(field, image, "output", "\"Output\"");
