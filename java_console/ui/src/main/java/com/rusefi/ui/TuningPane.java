@@ -18,6 +18,7 @@ import com.rusefi.ui.widgets.StatusPanel;
 import com.rusefi.ui.widgets.tune.CalibrationDialogWidget;
 import com.rusefi.ui.widgets.tune.IndicatorPanel;
 import com.rusefi.ui.widgets.tune.MainMenuTreeWidget;
+import com.rusefi.ui.widgets.tune.TunePinResolutionPanel;
 import com.rusefi.ui.widgets.tune.TuningToolbarWidget;
 
 import com.devexperts.logging.Logging;
@@ -39,6 +40,7 @@ public class TuningPane {
     private static final Logging log = Logging.getLogging(TuningPane.class);
     private static final String TUNING_CARD = "tuning";
     private static final String LOAD_CARD = "load";
+    private static final String RESOLVE_PINS_CARD = "resolvePins";
 
     private final JPanel content = new JPanel(new CardLayout());
     private final JPanel tuningContent = new JPanel(new BorderLayout());
@@ -46,6 +48,7 @@ public class TuningPane {
     private final MainMenuTreeWidget left;
     private final TuningToolbarWidget toolbar;
     private final TuneOperationStatusPanel loadStatusCard;
+    private final TunePinResolutionPanel pinResolutionPanel;
     private final CalibrationDialogWidget right;
     private TextGaugeStrip gaugeStrip;
     /** Accumulated tune edits across all dialogs for this session. Field so offline seeding can set it. */
@@ -85,6 +88,9 @@ public class TuningPane {
         }
         StatusPanel loadStatusPanel = new StatusPanel(250);
         loadStatusCard = new TuneOperationStatusPanel(loadStatusPanel, this::showTuningContent);
+        pinResolutionPanel = new TunePinResolutionPanel(
+            this::showTuningContent,
+            () -> showLoadProgress("Applying tune..."));
         toolbar = new TuningToolbarWidget(
             uiContext,
             right,
@@ -99,7 +105,9 @@ public class TuningPane {
             failed -> {
                 showTuningTab.run();
                 showLoadResult(failed);
-            }
+            },
+            pinResolutionPanel,
+            this::showPinResolution
         );
 
         if (config != null) {
@@ -218,6 +226,7 @@ public class TuningPane {
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
             if (!isConnected) {
                 SwingUtilities.invokeLater(() -> {
+                    toolbar.cancelPendingTuneLoad();
                     toolbar.onDisconnect();
                     right.reset();
                     // Preserve sessionImage for offline editing — do NOT set to null
@@ -270,6 +279,7 @@ public class TuningPane {
         tuningContent.add(splitPane, BorderLayout.CENTER);
         content.add(tuningContent, TUNING_CARD);
         content.add(loadStatusCard.getContent(), LOAD_CARD);
+        content.add(pinResolutionPanel.getContent(), RESOLVE_PINS_CARD);
         showTuningContent();
     }
 
@@ -303,8 +313,17 @@ public class TuningPane {
     }
 
     private void showLoadProgress() {
-        loadStatusCard.showProgress("Loading tune...");
+        showLoadProgress("Loading tune...");
+    }
+
+    private void showLoadProgress(String message) {
+        loadStatusCard.showProgress(message);
         ((CardLayout) content.getLayout()).show(content, LOAD_CARD);
+    }
+
+    private void showPinResolution() {
+        showTuningTab.run();
+        ((CardLayout) content.getLayout()).show(content, RESOLVE_PINS_CARD);
     }
 
     private void showLoadResult(boolean failed) {
@@ -361,11 +380,15 @@ public class TuningPane {
     }
 
     public void requestExit(Component parent, Runnable exit, boolean firmwareUpdateInProgress) {
+        Runnable cancelLoadAndExit = () -> {
+            toolbar.cancelPendingTuneLoad();
+            exit.run();
+        };
         ExitPrompt prompt = exitPrompt(toolbar.hasUnsavedChanges(sessionImage.get()),
                 ConnectionStatusLogic.INSTANCE.isConnected() && uiContext.getBinaryProtocol() != null,
                 firmwareUpdateInProgress);
         if (prompt == ExitPrompt.NONE) {
-            exit.run();
+            cancelLoadAndExit.run();
             return;
         }
 
@@ -379,7 +402,7 @@ public class TuningPane {
                 null, new Object[]{action, without, "Cancel"}, action);
         dispatchExitChoice(prompt, choice,
                 onSuccess -> toolbar.burnToEcuAndThen(right, onSuccess),
-                onSuccess -> toolbar.saveTuneAndThen(right, onSuccess), exit);
+                onSuccess -> toolbar.saveTuneAndThen(right, onSuccess), cancelLoadAndExit);
     }
 
     public void setFirmwareUpdateInProgress(boolean inProgress) {

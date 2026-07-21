@@ -9,6 +9,8 @@ import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LegacyOnlineTuneTest {
     private static final String RESOURCES = "src/test/resources/";
@@ -42,6 +44,35 @@ public class LegacyOnlineTuneTest {
         IniField field = currentIni.findIniField("boostControlPin").orElseThrow();
         assertEquals("\"B17 Low Side output 3 or injector 7 (has flyback D4)\"",
             ConfigurationImageGetterSetter.getStringValue(field, image));
+    }
+
+    @Test
+    public void online2023SemanticPinRenameIsReportedForUserResolution() throws Exception {
+        Msq tune = Msq.readTune(RESOURCES + "online-tune-1393-2023.msq");
+        IniFileModel currentIni = IniFileReaderUtil.readIniFile(CURRENT_INI + "rusefi_alphax-4chan.ini");
+
+        Msq.ApplyResult result = tune.applyOntoWithReport(
+            new ConfigurationImage(currentIni.getMetaInfo().getPageSize(0)), currentIni, null);
+
+        assertTrue(result.getFatalErrors().isEmpty());
+        assertEquals(2, result.getUnresolvedPins().size());
+        assertEquals("vvtPins1", result.getUnresolvedPins().get(0).getConstant().getName());
+        assertEquals("\"F2 - VVT#1\"", result.getUnresolvedPins().get(0).getConstant().getValue());
+        assertEquals("vvtPins2", result.getUnresolvedPins().get(1).getConstant().getName());
+    }
+
+    @Test
+    public void nonPinEnumFailureRemainsFatal() throws Exception {
+        IniFileModel currentIni = IniFileReaderUtil.readIniFile(CURRENT_INI + "rusefi_uaefi.ini");
+        Msq tune = Msq.create(currentIni.getMetaInfo().getPageSize(0), "test");
+        tune.findPage().constant.add(new com.rusefi.tune.xml.Constant(
+            "trigger_type", null, "\"not a trigger\"", null));
+
+        Msq.ApplyResult result = tune.applyOntoWithReport(
+            new ConfigurationImage(currentIni.getMetaInfo().getPageSize(0)), currentIni, null);
+
+        assertFalse(result.getFatalErrors().isEmpty());
+        assertTrue(result.getUnresolvedPins().isEmpty());
     }
 
     @Test

@@ -3,9 +3,11 @@ package com.rusefi.tune.xml;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
+import com.opensr5.ConfigurationImageGetterSetter;
 import com.rusefi.tune.ConfigurationImageGetterSetter2;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
+import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.UiVersion;
 import com.rusefi.xml.XmlUtil;
@@ -34,6 +36,80 @@ public class Msq {
 
     static {
         log.info("java=" + System.getProperty("java.version"));
+    }
+
+    public static final class ApplyIssue {
+        private final Constant constant;
+        private final EnumIniField targetField;
+        private final EnumIniField.PinType pinType;
+        private final String message;
+
+        private ApplyIssue(Constant constant, EnumIniField targetField, EnumIniField.PinType pinType, String message) {
+            this.constant = constant;
+            this.targetField = targetField;
+            this.pinType = pinType;
+            this.message = message;
+        }
+
+        public Constant getConstant() {
+            return constant;
+        }
+
+        public EnumIniField getTargetField() {
+            return targetField;
+        }
+
+        public EnumIniField.PinType getPinType() {
+            return pinType;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
+    public static final class ApplyResult {
+        private final ConfigurationImage image;
+        private final List<ApplyIssue> unresolvedPins;
+        private final List<String> fatalErrors;
+
+        private ApplyResult(ConfigurationImage image, List<ApplyIssue> unresolvedPins, List<String> fatalErrors) {
+            this.image = image;
+            this.unresolvedPins = unresolvedPins;
+            this.fatalErrors = fatalErrors;
+        }
+
+        public ConfigurationImage getImage() {
+            return image;
+        }
+
+        public List<ApplyIssue> getUnresolvedPins() {
+            return Collections.unmodifiableList(unresolvedPins);
+        }
+
+        public List<String> getFatalErrors() {
+            return Collections.unmodifiableList(fatalErrors);
+        }
+
+        public boolean hasIssues() {
+            return !unresolvedPins.isEmpty() || !fatalErrors.isEmpty();
+        }
+
+        public ConfigurationImage resolvePins(Map<String, String> selections) {
+            ConfigurationImage resolved = image.clone();
+            for (ApplyIssue issue : unresolvedPins) {
+                if (issue.targetField == null) {
+                    continue;
+                }
+                String selected = selections.get(issue.constant.getName());
+                if (selected == null) {
+                    throw new IllegalArgumentException("Missing pin selection for " + issue.constant.getName());
+                }
+                ConfigurationImageGetterSetter.setValue2(
+                    issue.targetField, resolved, issue.constant.getName(), selected);
+            }
+            return resolved;
+        }
     }
 
     /**
@@ -83,6 +159,11 @@ public class Msq {
         return ci;
     }
 
+    public ApplyResult asImageWithReport(IniFileModel instance) {
+        return applyOntoWithReport(
+            new ConfigurationImage(instance.getMetaInfo().getPageSize(0)), instance, instance);
+    }
+
     /**
      * Applies constants from this MSQ onto an existing image instead of a blank one.
      * Fields present in the MSQ but absent from {@code instance} are skipped.
@@ -91,24 +172,46 @@ public class Msq {
      * preserves the correct image size and handles firmware-version differences gracefully.
      */
     public ConfigurationImage applyOnto(ConfigurationImage base, IniFileModel instance) {
+        return applyOntoWithReport(base, instance, null).getImage();
+    }
+
+    public ApplyResult applyOntoWithReport(ConfigurationImage base, IniFileModel instance, IniFileModel sourceIni) {
         Objects.requireNonNull(instance, "ini model");
         ConfigurationImage ci = base.clone();
+        List<ApplyIssue> unresolvedPins = new ArrayList<>();
+        List<String> fatalErrors = new ArrayList<>();
         Page page = findPage();
-        if (page == null) return ci;
+        if (page == null) {
+            return new ApplyResult(ci, unresolvedPins, fatalErrors);
+        }
         for (Constant constant : page.constant) {
-            if (constant.getName().startsWith("UNALLOCATED_SPACE")) continue;
+            if (constant.getName().startsWith("UNALLOCATED_SPACE")) {
+                continue;
+            }
             IniField field = instance.getAllIniFields().get(constant.getName());
             if (field == null) {
+                IniField sourceField = sourceIni == null ? null : sourceIni.findIniField(constant.getName()).orElse(null);
+                if (sourceField instanceof EnumIniField && ((EnumIniField) sourceField).isPinEnum()) {
+                    EnumIniField sourcePin = (EnumIniField) sourceField;
+                    unresolvedPins.add(new ApplyIssue(constant, null, sourcePin.getPinType(),
+                        "Pin field is not available in the target firmware"));
+                    continue;
+                }
                 log.info("applyOnto: skipping unknown field " + constant.getName());
                 continue;
             }
             try {
                 ConfigurationImageGetterSetter2.setValue(field, ci, constant);
             } catch (IllegalArgumentException e) {
-                log.info("applyOnto: skipping incompatible value for " + constant.getName() + ": " + e.getMessage());
+                if (field instanceof EnumIniField && ((EnumIniField) field).isPinEnum()) {
+                    EnumIniField targetPin = (EnumIniField) field;
+                    unresolvedPins.add(new ApplyIssue(constant, targetPin, targetPin.getPinType(), e.getMessage()));
+                } else {
+                    fatalErrors.add(constant.getName() + ": " + e.getMessage());
+                }
             }
         }
-        return ci;
+        return new ApplyResult(ci, unresolvedPins, fatalErrors);
     }
 
     public static Msq readTune(String fileName) throws JAXBException {
@@ -173,4 +276,3 @@ public class Msq {
         return findPage().getConstantsAsMap();
     }
 }
-

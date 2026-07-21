@@ -27,12 +27,14 @@ public class OfflineTuneLoader {
         public final Msq msq;
         public final IniFileModel ini;
         public final ConfigurationImage image;
+        public final Msq.ApplyResult applyResult;
         public final String signature;
 
-        public Result(Msq msq, IniFileModel ini, ConfigurationImage image, String signature) {
+        public Result(Msq msq, IniFileModel ini, Msq.ApplyResult applyResult, String signature) {
             this.msq = msq;
             this.ini = ini;
-            this.image = image;
+            this.image = applyResult.getImage();
+            this.applyResult = applyResult;
             this.signature = signature;
         }
     }
@@ -70,8 +72,8 @@ public class OfflineTuneLoader {
             return null;
         }
 
-        ConfigurationImage image = msq.asImage(ini);
-        return new Result(msq, ini, image, signature);
+        Msq.ApplyResult applyResult = msq.asImageWithReport(ini);
+        return new Result(msq, ini, applyResult, signature);
     }
 
     private static IniFileModel tryLoadIni(String signature, Consumer<String> errorHandler) {

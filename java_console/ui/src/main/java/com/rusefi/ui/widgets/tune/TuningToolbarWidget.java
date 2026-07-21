@@ -21,7 +21,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayDeque;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -42,6 +42,7 @@ public class TuningToolbarWidget {
     private final JLabel stateLabel = new JLabel();
     private final UIContext uiContext;
     private final AtomicReference<ConfigurationImage> sessionImage;
+    private final TunePinResolutionPanel pinResolutionPanel;
 
     private final ArrayDeque<ConfigurationImage> undoStack = new ArrayDeque<>();
     private final ArrayDeque<ConfigurationImage> redoStack = new ArrayDeque<>();
@@ -60,6 +61,7 @@ public class TuningToolbarWidget {
     private final Timer undoCommitTimer;
     private final Timer uploadTimer;
     private volatile boolean firmwareUpdateInProgress;
+    private volatile boolean tuneLoadInProgress;
 
     /**
      * @param uiContext      live context (BinaryProtocol, LinkManager)
@@ -73,12 +75,15 @@ public class TuningToolbarWidget {
                                  AtomicReference<String> currentKey,
                                  AtomicReference<ConfigurationImage> sessionImage,
                                  ConfigurationImage baselineImage,
-                                 UpdateOperationCallbacks loadCallbacks,
-                                 Runnable onLoadStarted,
-                                 Consumer<Boolean> onLoadFinished) {
+                                  UpdateOperationCallbacks loadCallbacks,
+                                  Runnable onLoadStarted,
+                                  Consumer<Boolean> onLoadFinished,
+                                  TunePinResolutionPanel pinResolutionPanel,
+                                  Runnable onPinResolutionNeeded) {
         this.uiContext = uiContext;
         this.sessionImage = sessionImage;
         this.baselineImage = baselineImage;
+        this.pinResolutionPanel = pinResolutionPanel;
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
 
@@ -123,7 +128,7 @@ public class TuningToolbarWidget {
         discardButton.setEnabled(baselineImage != null);
 
         buildLoadTuneAction(uiContext, right, currentKey, sessionImage,
-            loadCallbacks, onLoadStarted, onLoadFinished);
+            loadCallbacks, onLoadStarted, onLoadFinished, pinResolutionPanel, onPinResolutionNeeded);
         buildSaveTuneAction(uiContext, right, sessionImage);
 
         undoButton.addActionListener(e -> {
@@ -273,14 +278,16 @@ public class TuningToolbarWidget {
                                      CalibrationDialogWidget right,
                                      AtomicReference<String> currentKey,
                                      AtomicReference<ConfigurationImage> sessionImage,
-                                     UpdateOperationCallbacks callbacks,
-                                     Runnable onLoadStarted,
-                                     Consumer<Boolean> onLoadFinished) {
+                                      UpdateOperationCallbacks callbacks,
+                                      Runnable onLoadStarted,
+                                      Consumer<Boolean> onLoadFinished,
+                                      TunePinResolutionPanel pinResolutionPanel,
+                                      Runnable onPinResolutionNeeded) {
         JFileChooser chooser = createMsqFileChooser();
         loadTuneAction = new AbstractAction(LoadTuneHelper.LOAD_TUNE_TEXT) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (firmwareUpdateInProgress) {
+                if (firmwareUpdateInProgress || tuneLoadInProgress) {
                     return;
                 }
                 if (chooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
@@ -291,6 +298,8 @@ public class TuningToolbarWidget {
 
                 callbacks.clear();
                 onLoadStarted.run();
+                tuneLoadInProgress = true;
+                loadTuneAction.setEnabled(false);
 
                 AsyncJobExecutor.INSTANCE.executeJob(
                     new AsyncJob("Load Tune") {
@@ -326,37 +335,55 @@ public class TuningToolbarWidget {
                                     ConfigurationImage base = currentImage == null
                                         ? new ConfigurationImage(targetIni.getMetaInfo().getPageSize(0))
                                         : currentImage.clone();
-                                    ConfigurationImage newImage = bp == null
-                                        ? result.image
-                                        : result.msq.applyOnto(base, targetIni);
-
-                                    if (bp != null) {
-                                        cb.logLine("Uploading and burning to ECU...");
-                                        CountDownLatch latch = new CountDownLatch(1);
-                                        uiContext.getLinkManager().submit(() -> {
-                                            try {
-                                                bp.uploadChanges(newImage);
-                                            } finally {
-                                                latch.countDown();
-                                            }
-                                        });
-                                        latch.await();
+                                    Msq.ApplyResult applyResult = bp == null
+                                        ? result.applyResult
+                                        : result.msq.applyOntoWithReport(base, targetIni, result.ini);
+                                    if (!applyResult.getFatalErrors().isEmpty()) {
+                                        throw new IllegalArgumentException(String.join("; ", applyResult.getFatalErrors()));
                                     }
 
+                                    ConfigurationImage resolvedImage = applyResult.getImage();
+                                    if (!applyResult.getUnresolvedPins().isEmpty()) {
+                                        CompletableFuture<TunePinResolutionPanel.Resolution> resolution =
+                                            new CompletableFuture<>();
+                                        SwingUtilities.invokeLater(() -> {
+                                            pinResolutionPanel.showRequest(applyResult, targetIni, bp != null, resolution);
+                                            onPinResolutionNeeded.run();
+                                        });
+                                        TunePinResolutionPanel.Resolution selected = resolution.get();
+                                        if (selected == null) {
+                                            cb.logLine("Tune load cancelled.");
+                                            return;
+                                        }
+                                        resolvedImage = applyResult.resolvePins(selected.getSelections());
+                                    }
+                                    ConfigurationImage newImage = resolvedImage;
+                                    if (bp != null) {
+                                        if (firmwareUpdateInProgress || uiContext.getBinaryProtocol() != bp) {
+                                            throw new IllegalStateException(
+                                                "Connection changed while resolving tune pins; tune was not written.");
+                                        }
+                                        cb.logLine("Uploading and burning to ECU...");
+                                        ConfigurationImage imageToUpload = newImage;
+                                        uiContext.getLinkManager().submit(
+                                            () -> bp.uploadChanges(imageToUpload)).get();
+                                    }
+
+                                    final ConfigurationImage appliedImage = newImage;
                                     final boolean loadedWhileDisconnected = (bp == null);
                                     SwingUtilities.invokeAndWait(() -> {
-                                        sessionImage.set(newImage);
+                                        sessionImage.set(appliedImage);
                                         // [tag:offline_tune] Loading a tune with no ECU attached is an offline session.
                                         if (loadedWhileDisconnected) {
                                             uiContext.setOfflineMode(true);
                                         }
                                         String key = currentKey.get();
                                         if (key != null) {
-                                            right.update(key, targetIni, newImage);
+                                            right.update(key, targetIni, appliedImage);
                                         }
                                         // Adopt the loaded tune as baseline (enables discard + refreshes state label).
-                                        setBaselineImage(newImage.clone());
-                                        uiContext.fireConfigImageChanged(newImage);
+                                        setBaselineImage(appliedImage.clone());
+                                        uiContext.fireConfigImageChanged(appliedImage);
                                     });
                                     cb.done();
                                     SwingUtilities.invokeLater(() -> onLoadFinished.accept(false));
@@ -370,7 +397,10 @@ public class TuningToolbarWidget {
                         }
                     },
                     callbacks,
-                    () -> { }
+                    () -> SwingUtilities.invokeLater(() -> {
+                        tuneLoadInProgress = false;
+                        loadTuneAction.setEnabled(!firmwareUpdateInProgress);
+                    })
                 );
             }
         };
@@ -380,8 +410,13 @@ public class TuningToolbarWidget {
         firmwareUpdateInProgress = inProgress;
         if (inProgress) {
             uploadTimer.stop();
+            cancelPendingTuneLoad();
         }
-        loadTuneAction.setEnabled(!inProgress);
+        loadTuneAction.setEnabled(!inProgress && !tuneLoadInProgress);
+    }
+
+    public void cancelPendingTuneLoad() {
+        SwingUtilities.invokeLater(pinResolutionPanel::cancelPending);
     }
 
     private void buildSaveTuneAction(UIContext uiContext,

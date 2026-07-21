@@ -18,6 +18,7 @@ import com.rusefi.tune_manifest.TuneModel;
 import com.rusefi.ui.table.ButtonEditor;
 import com.rusefi.ui.table.ButtonRenderer;
 import com.rusefi.ui.widgets.StatusPanel;
+import com.rusefi.ui.widgets.tune.TunePinResolutionPanel;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.CompletableFuture;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.tune_manifest.TuneManifestHelper.getLocalFolder;
@@ -43,6 +45,7 @@ public class TuneManagementTab {
 
     private static final String MAIN_CARD = "main";
     private static final String IMPORT_CARD = "import";
+    private static final String RESOLVE_PINS_CARD = "resolvePins";
 
     private final JPanel totalContent = new JPanel(new CardLayout());
     private final JPanel mainContent = new JPanel(new BorderLayout());
@@ -51,6 +54,7 @@ public class TuneManagementTab {
     private final JPanel centerPanel = new JPanel(new BorderLayout());
     private JScrollPane tableScroll;
     private final TuneOperationStatusPanel importStatusPanel;
+    private final TunePinResolutionPanel pinResolutionPanel;
     private final AtomicBoolean awaitingCompletion = new AtomicBoolean(false);
     private List<TuneModel> tunes = new ArrayList<>();
 
@@ -67,6 +71,7 @@ public class TuneManagementTab {
         this.offlineConsoleLauncher = offlineConsoleLauncher;
         Component importTuneButton = importTuneControl.getContent();
         importStatusPanel = new TuneOperationStatusPanel(statusPanelTuneTab, this::showMainContent);
+        pinResolutionPanel = new TunePinResolutionPanel(this::showMainContent, () -> { });
 
         importTuneControl.setImportErrorHandler(message -> showImportError(message, statusPanelTuneTab, showTuneTab));
 
@@ -215,6 +220,7 @@ public class TuneManagementTab {
 
         totalContent.add(mainContent, MAIN_CARD);
         totalContent.add(importStatusPanel.getContent(), IMPORT_CARD);
+        totalContent.add(pinResolutionPanel.getContent(), RESOLVE_PINS_CARD);
         showMainContent();
     }
 
@@ -299,6 +305,25 @@ public class TuneManagementTab {
         String path = chooser.getSelectedFile().getAbsolutePath();
         OfflineTuneLoader.Result result = OfflineTuneLoader.loadTuneFromFile(path, totalContent);
         if (result == null) {
+            return;
+        }
+        if (!result.applyResult.getFatalErrors().isEmpty()) {
+            JOptionPane.showMessageDialog(totalContent,
+                "This tune contains incompatible non-pin values and cannot be opened:\n"
+                    + String.join("\n", result.applyResult.getFatalErrors()),
+                "Tune needs attention", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!result.applyResult.getUnresolvedPins().isEmpty()) {
+            CompletableFuture<TunePinResolutionPanel.Resolution> resolution = new CompletableFuture<>();
+            pinResolutionPanel.showRequest(result.applyResult, result.ini, false, resolution);
+            ((CardLayout) totalContent.getLayout()).show(totalContent, RESOLVE_PINS_CARD);
+            resolution.thenAccept(selected -> {
+                if (selected != null) {
+                    offlineConsoleLauncher.accept(
+                        result.ini, result.applyResult.resolvePins(selected.getSelections()));
+                }
+            });
             return;
         }
 
