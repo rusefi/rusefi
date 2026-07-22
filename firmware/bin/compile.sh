@@ -11,6 +11,9 @@ PS3="Select a build by entering its number: "
 # This full path of the firmware directory
 FDIR=$(cd "$(dirname "$0")/.."; pwd -P)
 
+shopt -s expand_aliases
+if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
+
 # Check for -b flag
 if [ "$1" == "-b" ]; then
 	B="bundle"
