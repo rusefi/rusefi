@@ -137,6 +137,7 @@ void readFromFlash() {
 		case StorageStatus::NotFound:
 		case StorageStatus::Failed:
 		case StorageStatus::NotSupported:
+		default:
 			resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 			break;
 		case StorageStatus::IncompatibleVersion:

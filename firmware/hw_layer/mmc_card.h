@@ -22,6 +22,32 @@ typedef enum __attribute__ ((__packed__)) {
 	SD_MODE_FORMAT,
 } SD_MODE;
 
+#if EFI_PROD_CODE
+bool getFSlock();
+void putFSunlock();
+
+class FsGuard {
+private:
+    bool locked;
+public:
+	// Constructor: Automatically locks and attempts to acquire resource
+	explicit FsGuard() {
+		locked = getFSlock();
+	}
+
+	// Destructor: Automatically unlocks when going out of scope
+	~FsGuard() {
+		if (locked) {
+			putFSunlock();
+		}
+	}
+
+	bool isLocked() {
+		return locked;
+	}
+};
+#endif
+
 void initEarlyMmcCard();
 void initMmcCard();
 

@@ -66,6 +66,13 @@ StorageStatus SettingStorageSD::store(size_t id, const uint8_t *ptr, size_t size
 		return StorageStatus::NotSupported;
 	}
 
+	FsGuard guard;
+	if (!guard.isLocked()) {
+		efiPrintf("SD: write: failed to lock FS");
+		return StorageStatus::NotAvailable;
+
+	}
+
 	efiPrintf("SD: Writing storage ID %d  %s... %d bytes", id, fileName, size);
 	efitick_t startNt = getTimeNowNt();
 
@@ -104,6 +111,13 @@ StorageStatus SettingStorageSD::read(size_t id, uint8_t *ptr, size_t size) {
 
 	if (fileName == nullptr) {
 		return StorageStatus::NotSupported;
+	}
+
+	FsGuard guard;
+	if (!guard.isLocked()) {
+		efiPrintf("SD: read: failed to lock FS");
+		return StorageStatus::NotAvailable;
+
 	}
 
 	efiPrintf("SD: Reading storage ID %d %s ... %d bytes", id, fileName, size);
