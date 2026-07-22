@@ -84,6 +84,9 @@ public class TuningPane {
         if (baseline == null && initialBp != null && initialBp.getControllerConfiguration() != null) {
             baseline = initialBp.getControllerConfiguration().clone();
         }
+        if (baseline != null) {
+            left.refreshExpressions(baseline);
+        }
         StatusPanel loadStatusPanel = new StatusPanel(250);
         loadStatusCard = new TuneOperationStatusPanel(loadStatusPanel, this::showTuningContent);
         toolbar = new TuningToolbarWidget(
@@ -248,6 +251,7 @@ public class TuningPane {
                     toolbar.onEcuConnected();
                     sessionImage.set(bp.getControllerConfiguration().clone());
                     toolbar.setBaselineImage(sessionImage.get().clone());
+                    left.refreshExpressions(sessionImage.get());
                     String key = currentKey.get();
                     if (key != null) {
                         right.update(key, uiContext.iniFileState.getIniFileModel(), sessionImage.get());

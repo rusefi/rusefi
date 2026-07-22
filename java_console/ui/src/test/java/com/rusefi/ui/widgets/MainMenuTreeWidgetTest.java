@@ -254,10 +254,40 @@ todo: spllit into smaller tests?
         Component rendered = tree.getCellRenderer().getTreeCellRendererComponent(tree, separatorNode, false, false, true, 0, false);
         assertFalse(rendered instanceof JLabel, "separator should not render as a text label");
 
+        tree.setSelectionPaths(new TreePath[]{new TreePath(separatorNode.getPath())});
+        assertNull(tree.getSelectionPath(), "separator should not be selectable");
+
         // separators are excluded from search results
         searchField.setText("setup");
         DefaultMutableTreeNode filteredRoot = (DefaultMutableTreeNode) tree.getModel().getRoot();
         assertNoSeparators(filteredRoot);
+    }
+
+    @Test
+    public void testDisabledNodesAreNotSelectable() throws FileNotFoundException {
+        UIContext uiContext = new UIContext();
+        String iniPath = "../../java_console/io/src/test/java/com/rusefi/io/pin_output_mode_with_and_without_dollar/test_data/rusefi_uaefi.ini";
+        IniFileModel model = IniFileReaderUtil.readIniFile(iniPath);
+        uiContext.iniFileState.setIniFileModelForTest(model);
+
+        MainMenuTreeWidget widget = new MainMenuTreeWidget(uiContext);
+        JTree tree = (JTree) ((JScrollPane) widget.getContentPane().getComponent(1)).getViewport().getView();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+        DefaultMutableTreeNode fuel = findNode(root, "Fuel");
+        DefaultMutableTreeNode trims = findNode(fuel, "Cylinder fuel trims");
+        DefaultMutableTreeNode disabled = findNode(trims, "Fuel trim cyl 5");
+        assertNotNull(disabled);
+
+        widget.refreshExpressions(new ConfigurationImage(new byte[model.getMetaInfo().getPageSize(0)]));
+        Component rendered = tree.getCellRenderer().getTreeCellRendererComponent(
+            tree, disabled, false, false, true, 0, false);
+        assertTrue(rendered instanceof JLabel);
+        assertEquals(UIManager.getColor("Label.disabledForeground"), rendered.getForeground());
+        TreePath fuelPath = new TreePath(fuel.getPath());
+        tree.setSelectionPath(fuelPath);
+        tree.setSelectionPaths(new TreePath[]{new TreePath(disabled.getPath())});
+
+        assertEquals(fuelPath, tree.getSelectionPath(), "disabled node should not replace the selection");
     }
 
     private void assertNoSeparators(DefaultMutableTreeNode node) {
