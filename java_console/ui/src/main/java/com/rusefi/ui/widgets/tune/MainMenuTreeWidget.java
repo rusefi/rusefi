@@ -19,6 +19,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -85,6 +86,38 @@ public class MainMenuTreeWidget {
         }
 
         tree = new JTree(root);
+        tree.setSelectionModel(new DefaultTreeSelectionModel() {
+            {
+                setSelectionMode(SINGLE_TREE_SELECTION);
+            }
+
+            @Override
+            public void setSelectionPaths(TreePath[] paths) {
+                if (paths == null || paths.length == 0) {
+                    super.setSelectionPaths(paths);
+                    return;
+                }
+                for (TreePath path : paths) {
+                    if (isSelectable(path)) {
+                        super.setSelectionPaths(new TreePath[]{path});
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void addSelectionPaths(TreePath[] paths) {
+                if (paths == null) {
+                    return;
+                }
+                for (TreePath path : paths) {
+                    if (isSelectable(path)) {
+                        super.addSelectionPaths(new TreePath[]{path});
+                        return;
+                    }
+                }
+            }
+        });
         tree.setToggleClickCount(1);
         tree.addMouseListener(new MouseAdapter() {
             @Override
@@ -207,6 +240,8 @@ public class MainMenuTreeWidget {
                 });
             }
         });
+
+        refreshExpressions();
     }
 
     private void populate(IniFileModel model) {
@@ -292,6 +327,18 @@ public class MainMenuTreeWidget {
             }
             tree.scrollPathToVisible(path);
         }
+    }
+
+    private boolean isSelectable(TreePath path) {
+        if (path == null) {
+            return false;
+        }
+        Object userObject = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+        if (userObject instanceof SeparatorMenuItem) {
+            return false;
+        }
+        return !(userObject instanceof SubMenuModel)
+            || !disabledKeys.contains(((SubMenuModel) userObject).getKey());
     }
 
     /**
@@ -446,6 +493,10 @@ public class MainMenuTreeWidget {
             }
         }
 
+        if (!isSelectable(tree.getSelectionPath())) {
+            tree.clearSelection();
+        }
+
         tree.repaint();
     }
 
@@ -470,6 +521,9 @@ public class MainMenuTreeWidget {
         DefaultMutableTreeNode node = findSubMenuNode(root, subMenuKey);
         if (node != null) {
             TreePath path = new TreePath(node.getPath());
+            if (!isSelectable(path)) {
+                return;
+            }
             tree.setSelectionPath(path);
             tree.scrollPathToVisible(path);
             handleSelection(path);
