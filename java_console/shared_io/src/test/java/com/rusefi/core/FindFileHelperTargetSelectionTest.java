@@ -113,6 +113,18 @@ public class FindFileHelperTargetSelectionTest {
     }
 
     @Test
+    public void bootloaderVariantUsesExactTargetSelection() throws IOException {
+        writeInputFile("openblt_release_2026-07-01_" + TARGET + "_pro_1234567890_aaaa.bin",
+            1_000_000_002_000L);
+        File exact = writeInputFile("openblt_release_2026-07-01_" + TARGET + "_1234567890_bbbb.bin",
+            1_000_000_000_000L);
+        ConnectedEcuTarget connected = new ConnectedEcuTarget();
+        connected.setConnectedTargetForUnitTest(TARGET);
+
+        assertEquals(exact.getAbsolutePath(), FindFileHelper.findBootloaderFileForConnectedBoard(connected));
+    }
+
+    @Test
     public void nullBlankOrUnmatchedTargetResolvesToNull() throws IOException {
         writeInputFile(srecName(TARGET, "aaaa"), 1_000_000_000_000L);
 
