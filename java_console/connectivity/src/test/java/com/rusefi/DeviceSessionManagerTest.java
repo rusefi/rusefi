@@ -207,12 +207,14 @@ public class DeviceSessionManagerTest {
         jobExecutor.startJob();
 
         assertEquals(SessionState.FLASHING, manager.getState());
+        assertEquals(1, scanner.suspendCount,
+            "the scanner must not probe while the job owns a transitioning serial port");
         assertEquals(Collections.singletonList("pause"), watchdogEvents,
             "the watchdog must be paused so it does not race the flasher for the port");
     }
 
     @Test
-    public void jobFinishResumesScannerForcesRescanAndResumesWatchdog() {
+    public void jobFinishResumesExistingScannerAndWatchdog() {
         DeviceSessionManager manager = managerWithWatchdogHooks();
         FakeJobExecutor jobExecutor = new FakeJobExecutor();
         manager.setJobExecutor(jobExecutor);
@@ -222,10 +224,11 @@ public class DeviceSessionManagerTest {
 
         assertEquals(SessionState.DISCONNECTED, manager.getState(), "job over — state derives from reality again");
         assertEquals(1, scanner.resumeCount, "the scanner must resume immediately after the flash");
-        assertEquals(1, scanner.restartTimerCount, "a fresh scan cycle must be forced to detect the post-flash board state");
+        assertEquals(0, scanner.restartTimerCount,
+            "restartTimer would spawn a second worker because the lifetime scanner was never stopped");
         assertEquals(asList("pause", "resume"), watchdogEvents);
 
-        // the forced rescan is what lets the UI offer retry when the board is still in the bootloader
+        // the resumed scanner lets the UI offer retry when the board is still in the bootloader
         scanner.fireHardwareChange(hardwareWith(new PortResult("COM9", SerialPortType.OpenBlt)));
         assertEquals(SessionState.DEVICE_IN_BLT, manager.getState());
     }
