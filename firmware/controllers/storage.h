@@ -16,6 +16,8 @@ enum class StorageStatus {
 	NotSupported,
 	// all is well, but we're on a fresh chip with blank memory
 	NotFound,
+	// SD card is not mounted
+	NotAvailable,
 	// Write failed
 	Failed
 };
