@@ -2,6 +2,7 @@ package com.rusefi.ui.widgets.tune;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.DialogModel;
+import com.opensr5.ini.IndicatorModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.PanelModel;
 import com.opensr5.ini.TableModel;
@@ -414,6 +415,118 @@ public class CalibrationDialogWidgetTest {
         assertNotNull(comboBox);
         assertEquals(Color.RED, comboBox.getBackground());
         assertEquals(Color.WHITE, comboBox.getForeground());
+    }
+
+    @Test
+    public void testGridIndicatorsHaveFixedWidth() {
+        IndicatorModel indicator = new IndicatorModel("{value}",
+            "A very long disabled indicator label", "A very long enabled indicator label",
+            "white", "black", "green", "black");
+        IndicatorPanel panel = new IndicatorPanel(Collections.singletonList(indicator), mock(IniFileModel.class), 2);
+
+        assertEquals(IndicatorPanel.GRID_INDICATOR_WIDTH,
+            panel.getPanel().getComponent(0).getPreferredSize().width);
+    }
+
+    @Test
+    public void testLongComboIsWidthLimited() {
+        String longOption = "B18 VVT2 or Idle or Low Side output 2 or injector 8 with flyback protection";
+        EnumIniField field = createEnumField(longOption, "NONE");
+        ConfigurationImage image = new ConfigurationImage(new byte[1]);
+        JPanel row = CalibrationFieldFactory.createFieldRow(
+            new DialogModel.Field("test", "Output"), field, image, image.clone());
+
+        JComboBox<?> combo = null;
+        for (Component component : row.getComponents()) {
+            if (component instanceof JComboBox) {
+                combo = (JComboBox<?>) component;
+                break;
+            }
+        }
+        assertNotNull(combo);
+        assertEquals(CalibrationFieldFactory.MAX_COMBO_WIDTH, combo.getPreferredSize().width);
+        assertEquals(longOption, combo.getToolTipText());
+    }
+
+    @Test
+    public void testLongFieldLabelWrapsToTwoRows() {
+        String text = "Use absolute fuel pressure for dead time calculation";
+        com.opensr5.ini.field.StringIniField field =
+            new com.opensr5.ini.field.StringIniField("test", 0, 10);
+        ConfigurationImage image = new ConfigurationImage(new byte[10]);
+        JPanel row = CalibrationFieldFactory.createFieldRow(
+            new DialogModel.Field("test", text), field, image, image.clone(), null, null, 200);
+
+        JLabel label = getLabelFromRow(row);
+        assertNotNull(label);
+        assertTrue(label.getText().startsWith("<html>"));
+        assertEquals(text, label.getToolTipText());
+        int lineHeight = label.getFontMetrics(label.getFont()).getHeight();
+        assertTrue(label.getPreferredSize().height > lineHeight);
+        assertTrue(label.getPreferredSize().height <= lineHeight * 2);
+    }
+
+    @Test
+    public void testFieldEditorsShareColumn() {
+        IniFileModel iniFileModel = mock(IniFileModel.class);
+        when(iniFileModel.getCurves()).thenReturn(Collections.emptyMap());
+
+        com.opensr5.ini.field.StringIniField shortField =
+            new com.opensr5.ini.field.StringIniField("short", 0, 10);
+        com.opensr5.ini.field.StringIniField longField =
+            new com.opensr5.ini.field.StringIniField("long", 10, 17);
+        when(iniFileModel.findIniField("short")).thenReturn(java.util.Optional.of(shortField));
+        when(iniFileModel.findIniField("long")).thenReturn(java.util.Optional.of(longField));
+
+        DialogModel nestedDialog = new DialogModel("nested", "Nested",
+            Collections.singletonList(new DialogModel.Field("long", "A much longer field label")),
+            Collections.emptyList());
+        Map<String, DialogModel> dialogs = new HashMap<>();
+        dialogs.put("nested", nestedDialog);
+        when(iniFileModel.getDialogs()).thenReturn(dialogs);
+
+        DialogModel mainDialog = new DialogModel("main", "Main",
+            Collections.singletonList(new DialogModel.Field("short", "Mode")),
+            Collections.emptyList(),
+            Collections.singletonList(new PanelModel("nested", "north", null, null)), null);
+
+        CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
+        widget.update(mainDialog, iniFileModel, new ConfigurationImage(new byte[27]));
+
+        JPanel content = widget.getContentPane();
+        JPanel firstRow = (JPanel) content.getComponent(0);
+        JPanel nestedPanel = (JPanel) content.getComponent(1);
+        JPanel secondRow = (JPanel) nestedPanel.getComponent(0);
+        layoutTree(content);
+
+        JTextField firstEditor = getTextFieldFromRow(firstRow);
+        JTextField secondEditor = getTextFieldFromRow(secondRow);
+        assertNotNull(firstEditor);
+        assertNotNull(secondEditor);
+        assertEquals(10, firstEditor.getColumns());
+        assertEquals(17, secondEditor.getColumns());
+        assertEquals(
+            SwingUtilities.convertPoint(firstRow, firstEditor.getLocation(), content).x,
+            SwingUtilities.convertPoint(secondRow, secondEditor.getLocation(), content).x);
+    }
+
+    private static void layoutTree(Container container) {
+        container.setSize(container.getPreferredSize());
+        container.doLayout();
+        for (Component component : container.getComponents()) {
+            if (component instanceof Container) {
+                layoutTree((Container) component);
+            }
+        }
+    }
+
+    private static JTextField getTextFieldFromRow(JPanel row) {
+        for (Component component : row.getComponents()) {
+            if (component instanceof JTextField) {
+                return (JTextField) component;
+            }
+        }
+        return null;
     }
 
     @Test
