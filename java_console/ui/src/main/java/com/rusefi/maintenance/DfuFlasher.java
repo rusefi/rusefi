@@ -44,7 +44,7 @@ public class DfuFlasher {
     public static volatile boolean dfuDetectionCommandFailed = false;
 
     public static boolean haveBootloaderBinFile() {
-        return new File(BOOTLOADER_BIN_FILE).exists();
+        return new File(FindFileHelper.findBootloaderFile()).exists();
     }
 
     public static boolean doAutoDfu(
@@ -194,7 +194,8 @@ public class DfuFlasher {
                                                     final ConnectedEcuTarget connectedEcuTarget) {
         submitAction(() -> {
             JobHelper.doJob(
-                () -> executeDfuAndPaintStatusPanel(callbacks, DfuFlasher.BOOTLOADER_BIN_FILE, connectedEcuTarget),
+                () -> executeDfuAndPaintStatusPanel(callbacks,
+                    FindFileHelper.findBootloaderFileForConnectedBoard(connectedEcuTarget), connectedEcuTarget),
                 onJobFinished
             );
         });
