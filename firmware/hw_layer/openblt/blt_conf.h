@@ -261,7 +261,9 @@
 #define BOOT_XCP_UPLOAD_ENABLE          (0)
 
 /** \brief Enable the custom board-signature command. */
+#ifndef BOOT_XCP_PACKET_RECEIVED_HOOK
 #define BOOT_XCP_PACKET_RECEIVED_HOOK   (1)
+#endif
 
 #ifndef BOOT_BACKDOOR_ENTRY_TIMEOUT_MS
 // 500 ms is not enough for USB init but we hope is enough for CAN

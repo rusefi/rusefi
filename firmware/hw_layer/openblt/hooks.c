@@ -335,7 +335,7 @@ blt_int8u XcpVerifyKeyHook(blt_int8u resource, blt_int8u *key, blt_int8u len)
 ** \return    BLT_TRUE when consumed, BLT_FALSE otherwise.
 **
 ****************************************************************************************/
-blt_bool XcpPacketReceivedHook(blt_int8u *data, blt_int8u len)
+__attribute__((weak)) blt_bool XcpPacketReceivedHook(blt_int8u *data, blt_int8u len)
 {
   blt_int8u response[BOOT_COM_TX_MAX_DATA];
   blt_int16u responseLen = 1;
