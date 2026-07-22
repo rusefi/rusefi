@@ -181,6 +181,11 @@ endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
 
+ifeq (,$(WHITE_LABEL))
+WHITE_LABEL = rusefi
+endif
+DDEFS += -DXCP_STATION_ID='"$(WHITE_LABEL).$(SHORT_BOARD_NAME)"'
+
 include $(PROJECT_DIR)/init/init.mk
 include $(PROJECT_DIR)/util/util.mk
 

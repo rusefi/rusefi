@@ -196,7 +196,7 @@ $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 # We pass SUBMAKE=yes to the bootloader Make instance so it knows not to try to build configs,
 #  as that would result in two simultaneous config generations, which causes issues.
 .bootloader-sentinel: $(CONFIG_FILES) .FORCE
-	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) TGT_SENTINEL=../$(TGT_SENTINEL) $(MAKE) -C bootloader -r SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
+	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) TGT_SENTINEL=../$(TGT_SENTINEL) WHITE_LABEL=$(WHITE_LABEL) $(MAKE) -C bootloader -r SUBMAKE=yes TS_PAGE_GUARD_DEFS="$(TS_PAGE_GUARD_DEFS)"
 	@touch $@
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
