@@ -153,6 +153,7 @@ public class MainMenuTreeWidget {
         });
 
         JPanel topPanel = new JPanel(new BorderLayout());
+        searchField.putClientProperty("JTextField.placeholderText", "search here");
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -184,8 +185,8 @@ public class MainMenuTreeWidget {
         buttonPanel.add(expandAll);
         buttonPanel.add(collapseAll);
 
-        topPanel.add(searchField, BorderLayout.CENTER);
-        topPanel.add(buttonPanel, BorderLayout.EAST);
+        topPanel.add(searchField, BorderLayout.NORTH);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         contentPane.add(topPanel, BorderLayout.NORTH);
         contentPane.add(new JScrollPane(tree), BorderLayout.CENTER);
