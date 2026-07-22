@@ -12,6 +12,8 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class XcpSerial implements IXcpTransport {
     private static final Logging log = getLogging(XcpSerial.class);
+    private static final int OPEN_ATTEMPTS = 5;
+    private static final int OPEN_RETRY_DELAY_MS = 100;
     private static final boolean VERBOSE;
 
     static {
@@ -51,9 +53,21 @@ public class XcpSerial implements IXcpTransport {
                 throw new IllegalStateException("Cannot connect when already connected");
             }
 
-            SerialPort port = SerialPort.getCommPort(mPortName);
-            if (!port.openPort()) {
-                throw new IOException("Failed to connect to serial port: " + mPortName);
+            SerialPort port = null;
+            for (int attempt = 0; attempt < OPEN_ATTEMPTS; attempt++) {
+                port = SerialPort.getCommPort(mPortName);
+                if (port.openPort()) {
+                    break;
+                }
+                try {
+                    Thread.sleep(OPEN_RETRY_DELAY_MS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new IOException("Interrupted while connecting to serial port: " + mPortName, e);
+                }
+            }
+            if (!port.isOpen()) {
+                throw new IOException("Failed to connect to serial port after " + OPEN_ATTEMPTS + " attempts: " + mPortName);
             }
 
             // Opened successfully, store port

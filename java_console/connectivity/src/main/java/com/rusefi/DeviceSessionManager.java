@@ -7,6 +7,7 @@ import com.rusefi.io.LinkManager;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Window-independent owner of the "one console, all device states" session [tag:better_ux_for_flashing].
@@ -92,16 +93,21 @@ public class DeviceSessionManager {
     public void setJobExecutor(final JobExecutor jobExecutor) {
         this.jobExecutor = jobExecutor;
         if (jobExecutor != null) {
-            // Pause the watchdog during a flash job so it does not race the flasher for the port. [tag:better_ux_for_flashing]
+            // Jobs own serial-port transitions exclusively. Suspend the lifetime scanner rather than
+            // letting it probe while the live connection closes and USB re-enumerates.
             jobExecutor.addOnJobAboutToStartListener(watchdogPause);
+            jobExecutor.addOnJobAboutToStartListener(() -> {
+                try {
+                    connectivityContext.getPortScanner().suspend().await(30, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
             jobExecutor.addOnJobAboutToStartListener(this::refresh);
             jobExecutor.addOnJobInProgressFinishedListener(() -> {
-                // Flash finished (success or failure): immediately resume the scanner and force a fresh
-                // scan so the UI can detect the board's post-flash state (OpenBLT/DFU) and offer retry
-                // options. [tag:better_ux_for_flashing]
-                final PortScanner scanner = connectivityContext.getPortScanner();
-                scanner.resume();
-                scanner.restartTimer();
+                // RecurringStep.restart() is only valid after stop(). Resume the existing lifetime
+                // worker; its next scan runs within one normal scanner interval.
+                connectivityContext.getPortScanner().resume();
                 refresh();
                 watchdogResume.run();
             });

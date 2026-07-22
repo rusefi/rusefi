@@ -13,6 +13,7 @@ import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.MaintenanceUtil;
 import com.rusefi.maintenance.StLinkFlasher;
 import com.rusefi.updater.OpenbltDetectorStrategy;
+import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 
 import java.util.Collection;
 import java.util.List;
@@ -92,7 +93,7 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
      */
     interface PortProbe {
         /** @throws com.fazecast.jSerialComm.SerialPortInvalidPortException for a stale OS node */
-        boolean isPortOpenblt(String port);
+        OpenbltInfo getOpenbltInfo(String port);
 
         /** @throws com.fazecast.jSerialComm.SerialPortInvalidPortException when the port vanishes mid-probe */
         Optional<CalibrationsInfo> readEcuCalibrations(String port);
@@ -105,8 +106,8 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
 
     static final PortProbe REAL_PROBE = new PortProbe() {
         @Override
-        public boolean isPortOpenblt(String port) {
-            return EcuHardwareProbes.isPortOpenblt(port);
+        public OpenbltInfo getOpenbltInfo(String port) {
+            return EcuHardwareProbes.getOpenbltInfo(port);
         }
 
         @Override
@@ -137,17 +138,17 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
     static PortResult inspect(String serialPort, PortProbe probe) {
         log.info("Determining type of serial port: " + serialPort);
 
-        boolean isOpenblt;
+        OpenbltInfo openbltInfo;
         try {
-            isOpenblt = probe.isPortOpenblt(serialPort);
+            openbltInfo = probe.getOpenbltInfo(serialPort);
         } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
             // Return null so inspectPorts filters them out entirely. [tag:better_ux_for_flashing]
             log.info("Port " + serialPort + " is not actually available (stale OS node): " + e.getMessage());
             return null;
         }
-        log.info("Port " + serialPort + (isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
-        if (isOpenblt) {
-            return new PortResult(serialPort, SerialPortType.OpenBlt);
+        log.info("Port " + serialPort + (openbltInfo.isOpenblt ? " looks like" : " does not look like") + " an OpenBLT bootloader");
+        if (openbltInfo.isOpenblt) {
+            return new PortResult(serialPort, SerialPortType.OpenBlt, null, openbltInfo);
         }
 
         for (int attempt = 1; attempt <= DETECT_MAX_ATTEMPTS; attempt++) {
@@ -209,15 +210,15 @@ public class EcuHardwareProbes implements SerialPortScanner.HardwareProbes {
         }
     }
 
-    private static boolean isPortOpenblt(String port) {
+    private static OpenbltInfo getOpenbltInfo(String port) {
         try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
-            return OpenbltDetectorStrategy.isPortOpenblt(stream);
+            return OpenbltDetectorStrategy.detectOpenbltWithSignature(stream);
         } catch (com.fazecast.jSerialComm.SerialPortInvalidPortException e) {
             // Port is truly dead — let it propagate so inspectPort returns null.
             throw e;
         } catch (Exception e) {
-            log.info("isPortOpenblt probe failed for " + port + ": " + e);
-            return false;
+            log.info("OpenBLT probe failed for " + port + ": " + e);
+            return new OpenbltInfo(false, null);
         }
     }
 }

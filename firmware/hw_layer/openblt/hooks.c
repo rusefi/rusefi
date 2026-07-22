@@ -325,4 +325,39 @@ blt_int8u XcpVerifyKeyHook(blt_int8u resource, blt_int8u *key, blt_int8u len)
 #endif /* BOOT_XCP_SEED_KEY_ENABLE > 0 */
 
 
+#if (BOOT_XCP_PACKET_RECEIVED_HOOK > 0)
+#define RUSEFI_XCP_CMD_GET_SIGNATURE    (0xBF)
+
+/************************************************************************************//**
+** \brief     Handles the rusEFI board-signature command.
+** \param     data Pointer to received packet data.
+** \param     len Number of bytes in the packet.
+** \return    BLT_TRUE when consumed, BLT_FALSE otherwise.
+**
+****************************************************************************************/
+blt_bool XcpPacketReceivedHook(blt_int8u *data, blt_int8u len)
+{
+  blt_int8u response[BOOT_COM_TX_MAX_DATA];
+  blt_int16u responseLen = 1;
+  blt_int16u responseMax = ComGetActiveInterfaceMaxTxLen();
+
+  if ((len != 1) || (data[0] != RUSEFI_XCP_CMD_GET_SIGNATURE))
+  {
+    return BLT_FALSE;
+  }
+
+  response[0] = XCP_PID_RES;
+  while ((responseLen < responseMax) && (responseLen < sizeof(response)) &&
+         (XCP_STATION_ID[responseLen - 1] != '\0'))
+  {
+    response[responseLen] = XCP_STATION_ID[responseLen - 1];
+    responseLen++;
+  }
+
+  ComTransmitPacket(response, responseLen);
+  return BLT_TRUE;
+}
+#endif /* BOOT_XCP_PACKET_RECEIVED_HOOK > 0 */
+
+
 /*********************************** end of hooks.c ************************************/
