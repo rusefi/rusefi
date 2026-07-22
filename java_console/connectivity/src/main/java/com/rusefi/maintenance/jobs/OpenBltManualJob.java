@@ -37,6 +37,9 @@ public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentCo
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         JobHelper.doJob(
             () -> {
+                if (context.getPort().bootloaderInfo != null && context.getPort().bootloaderInfo.board != null) {
+                    connectivityContext.getConnectedEcuTarget().set(context.getPort().bootloaderInfo.board);
+                }
                 if (!steps.ensureFirmware(callbacks, connectivityContext.getConnectedEcuTarget())) {
                     callbacks.error();
                     return;

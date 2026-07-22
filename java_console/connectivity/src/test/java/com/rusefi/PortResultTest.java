@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,5 +58,7 @@ public class PortResultTest {
     public void toStringShowsPortWithFriendlyType() {
         assertEquals("COM1 (ECU)", new PortResult("COM1", SerialPortType.Ecu).toString());
         assertEquals("COM2 (OpenBLT Bootloader)", new PortResult("COM2", SerialPortType.OpenBlt).toString());
+        assertEquals("COM3 (OpenBLT Bootloader: rusefi.uaefi)",
+            new PortResult("COM3", SerialPortType.OpenBlt, null, new OpenbltInfo(true, "rusefi.uaefi")).toString());
     }
 }

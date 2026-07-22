@@ -3,6 +3,7 @@ package com.rusefi;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,11 +42,11 @@ public class EcuHardwareProbesInspectTest {
         int sleepCalls;
 
         @Override
-        public boolean isPortOpenblt(String port) {
+        public OpenbltInfo getOpenbltInfo(String port) {
             if (openbltPortThrowsStaleNode) {
                 throw new SerialPortInvalidPortException("stale OS node", null);
             }
-            return openbltPort;
+            return new OpenbltInfo(openbltPort, null);
         }
 
         @SuppressWarnings("unchecked")

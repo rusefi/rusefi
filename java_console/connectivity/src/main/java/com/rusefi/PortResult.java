@@ -6,6 +6,7 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.updater.OpenbltDetectorStrategy.OpenbltInfo;
 
 import java.util.Optional;
 
@@ -16,11 +17,18 @@ public class PortResult {
     public final SerialPortType type;
     private final CalibrationsInfo calibrations;
     private final RusEfiSignature signature;
+    public final OpenbltInfo bootloaderInfo;
 
     public PortResult(final String port, final SerialPortType type, final CalibrationsInfo calibrations) {
+        this(port, type, calibrations, null);
+    }
+
+    public PortResult(final String port, final SerialPortType type, final CalibrationsInfo calibrations,
+                      final OpenbltInfo bootloaderInfo) {
         this.port = port;
         this.type = type;
         this.calibrations = calibrations;
+        this.bootloaderInfo = bootloaderInfo;
         if (calibrations == null) {
             signature = null;
         } else {
@@ -41,6 +49,7 @@ public class PortResult {
         this.type = origin.type;
         this.calibrations = origin.calibrations;
         this.signature = origin.signature;
+        this.bootloaderInfo = origin.bootloaderInfo;
     }
 
     @Override
@@ -48,7 +57,10 @@ public class PortResult {
         if (type.friendlyString == null) {
             return this.port;
         } else {
-            return this.port + " (" + type.friendlyString + ")";
+            String identity = type == SerialPortType.OpenBlt && bootloaderInfo != null && bootloaderInfo.raw != null
+                ? ": " + bootloaderInfo.raw
+                : "";
+            return this.port + " (" + type.friendlyString + identity + ")";
         }
     }
 
