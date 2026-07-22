@@ -25,6 +25,7 @@ import java.util.List;
  * the user edits a field (dialog indicators) or to drive the initial render.
  */
 public class IndicatorPanel {
+    static final int GRID_INDICATOR_WIDTH = 110;
     private final JPanel panel;
     private final List<IndicatorModel> indicators;
     private final IniFileModel ini;
@@ -49,7 +50,7 @@ public class IndicatorPanel {
 
         for (IndicatorModel model : this.indicators) {
             JLabel label = makeLabel();
-            fixPreferredSize(label, model, ini);
+            fixPreferredSize(label, model, ini, columns > 0 ? GRID_INDICATOR_WIDTH : 0);
             panel.add(label);
         }
 
@@ -103,7 +104,7 @@ public class IndicatorPanel {
      * Locks the label's preferred/minimum size to the widest text it can ever show,
      * considering both on/off states and all enum options for bitStringValue labels.
      */
-    static void fixPreferredSize(JLabel label, IndicatorModel model, IniFileModel ini) {
+    static void fixPreferredSize(JLabel label, IndicatorModel model, IniFileModel ini, int fixedWidth) {
         if (ini == null) return;
         List<String> candidates = new ArrayList<>();
         candidates.addAll(TsStringFunction.allPossibleResolutions(model.getOnLabel(), ini));
@@ -119,9 +120,10 @@ public class IndicatorPanel {
         }
         label.setText(saved);
         if (maxW > 0) {
-            Dimension fixed = new Dimension(maxW, maxH);
+            Dimension fixed = new Dimension(fixedWidth > 0 ? fixedWidth : maxW, maxH);
             label.setPreferredSize(fixed);
             label.setMinimumSize(fixed);
+            label.setMaximumSize(fixed);
         }
     }
 
@@ -154,6 +156,7 @@ public class IndicatorPanel {
             fg = parseColor(indicator.getOffFg());
         }
         label.setText(text);
+        label.setToolTipText(text);
         label.setBackground(bg);
         label.setForeground(fg);
     }
