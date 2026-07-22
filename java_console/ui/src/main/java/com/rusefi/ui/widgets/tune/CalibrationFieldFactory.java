@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageGetterSetter;
 import com.opensr5.ini.field.EnumIniField;
 import com.opensr5.ini.field.IniField;
+import com.opensr5.ini.field.StringIniField;
 import com.opensr5.ini.DialogModel;
 
 import javax.swing.*;
@@ -26,6 +27,8 @@ import java.util.regex.Pattern;
  * @see CalibrationDialogWidget
  */
 public class CalibrationFieldFactory {
+    static final int MAX_COMBO_WIDTH = 360;
+    static final int MAX_LABEL_WIDTH = 300;
 
     // we need to maintain this in sync with the ones used on tunerstudio.template
     private static final String[][] CheckboxPairs = {
@@ -42,11 +45,31 @@ public class CalibrationFieldFactory {
     }
 
     public static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci, ConfigurationImage workingImage, Runnable onChange, Consumer<String> onShowInPinout) {
+        return createFieldRow(field, iniField, ci, workingImage, onChange, onShowInPinout, 0);
+    }
+
+    static JPanel createFieldRow(DialogModel.Field field, IniField iniField, ConfigurationImage ci,
+                                 ConfigurationImage workingImage, Runnable onChange,
+                                 Consumer<String> onShowInPinout, int labelWidth) {
         JPanel row = createRowPanel();
         row.add(Box.createHorizontalStrut(10));
 
-        JLabel label = new JLabel(field.getUiName());
+        String labelText = field.getUiName();
+        JLabel label = new JLabel(labelText);
         applyStyle(label);
+        if (labelWidth > 0) {
+            if (labelText != null && label.getPreferredSize().width > labelWidth && !labelText.startsWith("<html>")) {
+                label.setText("<html><div style='width: " + (labelWidth - 4) + "px'>" +
+                    escapeHtml(labelText) + "</div></html>");
+                label.setToolTipText(labelText);
+            }
+            Dimension size = label.getPreferredSize();
+            size.width = labelWidth;
+            size.height = Math.min(size.height, label.getFontMetrics(label.getFont()).getHeight() * 2);
+            label.setMinimumSize(size);
+            label.setPreferredSize(size);
+            label.setMaximumSize(size);
+        }
         row.add(label);
         row.add(Box.createHorizontalStrut(16));
 
@@ -66,6 +89,10 @@ public class CalibrationFieldFactory {
 
         fixRowHeight(row);
         return row;
+    }
+
+    private static String escapeHtml(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     /**
@@ -134,12 +161,17 @@ public class CalibrationFieldFactory {
         JComboBox<String> comboBox = new JComboBox<>(comboValues);
         applyStyle(comboBox);
         comboBox.setSelectedItem(cleanValue);
+        comboBox.setToolTipText(cleanValue);
         applyBackgroundColor(comboBox, cleanValue);
-        comboBox.setMaximumSize(comboBox.getPreferredSize());
+        Dimension size = comboBox.getPreferredSize();
+        size.width = Math.min(size.width, MAX_COMBO_WIDTH);
+        comboBox.setPreferredSize(size);
+        comboBox.setMaximumSize(size);
         comboBox.addActionListener(e -> {
             if (workingImage == null) return;
             String selected = (String) comboBox.getSelectedItem();
             if (selected != null) {
+                comboBox.setToolTipText(selected);
                 ConfigurationImageGetterSetter.setValue2(iniField, workingImage, iniField.getName(), selected);
                 if (onChange != null) onChange.run();
             }
@@ -195,7 +227,9 @@ public class CalibrationFieldFactory {
     }
 
     private static JTextField createTextField(IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
-        JTextField textField = new JTextField(currentValue);
+        int columns = iniField instanceof StringIniField
+            ? Math.min(((StringIniField) iniField).getSize(), 32) : 0;
+        JTextField textField = new JTextField(currentValue, columns);
         applyStyle(textField);
         applyBackgroundColor(textField, currentValue);
         textField.setMaximumSize(textField.getPreferredSize());

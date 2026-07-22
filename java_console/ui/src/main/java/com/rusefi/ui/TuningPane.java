@@ -36,6 +36,7 @@ import java.util.function.Consumer;
  * Andrey Belomutskiy, (c) 2013-2026
  */
 public class TuningPane {
+    private static final int MENU_WIDTH = 360;
     private static final Logging log = Logging.getLogging(TuningPane.class);
     private static final String TUNING_CARD = "tuning";
     private static final String LOAD_CARD = "load";
@@ -107,7 +108,9 @@ public class TuningPane {
         }
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left.getContentPane(), rightScrollPane);
-        splitPane.setResizeWeight(0.3);
+        left.getContentPane().setMinimumSize(new Dimension(180, 0));
+        splitPane.setDividerLocation(MENU_WIDTH);
+        splitPane.setResizeWeight(0);
 
         left.setOnSelect(subMenu -> {
             BinaryProtocol bp = uiContext.getBinaryProtocol();

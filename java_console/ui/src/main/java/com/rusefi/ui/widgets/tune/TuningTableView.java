@@ -18,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.util.Optional;
 
 public class TuningTableView {
+    private static final int TOOLBAR_GAP = 6;
     private final JTable table = new JTable();
     private final Surface3DView surface3DView = new Surface3DView();
     private final CardLayout cardLayout = new CardLayout();
@@ -84,6 +85,7 @@ public class TuningTableView {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
         topPanel.add(new JLabel(title));
         topPanel.add(Box.createHorizontalStrut(10));
         topPanel.add(view3d);
@@ -91,9 +93,13 @@ public class TuningTableView {
         if (!viewMode) {
             topPanel.add(Box.createHorizontalStrut(10));
             topPanel.add(new JLabel("delta:"));
+            topPanel.add(Box.createHorizontalStrut(TOOLBAR_GAP));
             topPanel.add(deltaField);
+            topPanel.add(Box.createHorizontalStrut(TOOLBAR_GAP));
             topPanel.add(upButton);
+            topPanel.add(Box.createHorizontalStrut(TOOLBAR_GAP));
             topPanel.add(downButton);
+            topPanel.add(Box.createHorizontalStrut(TOOLBAR_GAP));
             topPanel.add(equalsButton);
         }
 
@@ -336,13 +342,18 @@ public class TuningTableView {
 
         private String formatNumber(Object value) {
             if (value instanceof Number) {
-                return String.format("%." + precision + "f", ((Number) value).doubleValue()).replace(',', '.');
+                return String.format("%." + precision + "f", ((Number) value).doubleValue())
+                    .replace(',', '.').replaceFirst("\\.0+$", "");
             }
             return String.valueOf(value);
         }
     }
 
     private class GradientRenderer extends DefaultTableCellRenderer {
+        GradientRenderer() {
+            setHorizontalAlignment(SwingConstants.CENTER);
+        }
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

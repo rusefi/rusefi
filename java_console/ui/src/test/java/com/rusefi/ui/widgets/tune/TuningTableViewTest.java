@@ -8,6 +8,7 @@ import com.rusefi.config.FieldType;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
 
@@ -118,17 +119,30 @@ public class TuningTableViewTest {
     public void testDecimalPoints() {
         TuningTableView view = new TuningTableView("Test");
         JTable table = findTable(view.getContent());
-        Double[][] data = {{1.0, 2.55}, {3.0, 4.0}};
+        Double[][] data = {{1.0, 2.55}, {3.0, 1.2}};
         // Precision 2
         TuningTableView.TuningTableModel model = new TuningTableView.TuningTableModel(data, new Double[]{100.0, 200.0}, new Double[]{10.0, 20.0}, 2);
         table.setModel(model);
 
-        // data[1][0] is 3.0, with precision 2 it should be "3.00"
-        assertEquals("3.00", table.getValueAt(0, 1));
-        // data[1][1] is 4.0, with precision 2 it should be "4.00"
-        assertEquals("4.00", table.getValueAt(0, 2));
+        // Whole numbers omit an all-zero decimal part.
+        assertEquals("3", table.getValueAt(0, 1));
+        assertEquals("1", table.getValueAt(1, 1));
+        // Non-zero decimal parts keep the configured precision.
+        assertEquals("1.20", table.getValueAt(0, 2));
         // data[0][1] is 2.55, with precision 2 it should be "2.55"
         assertEquals("2.55", table.getValueAt(1, 2));
+    }
+
+    @Test
+    public void testNumbersAreCentered() {
+        TuningTableView view = new TuningTableView("Test");
+        JTable table = findTable(view.getContent());
+        table.setModel(new TuningTableView.TuningTableModel(
+            new Double[][]{{1.0}}, new Double[]{100.0}, new Double[]{10.0}, 1));
+
+        Component renderer = table.prepareRenderer(table.getCellRenderer(0, 1), 0, 1);
+        assertTrue(renderer instanceof JLabel);
+        assertEquals(SwingConstants.CENTER, ((JLabel) renderer).getHorizontalAlignment());
     }
 
     @Test
