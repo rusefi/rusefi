@@ -53,6 +53,16 @@ void VvtController::onConfigurationChange(engine_configuration_s const * previou
 	}
 }
 
+static bool shouldInvertVvt(int camIndex) {
+	// grumble grumble, can't do an array of bits in c++
+	switch (camIndex) {
+		case 0: return engineConfiguration->invertVvtControlIntake;
+		case 1: return engineConfiguration->invertVvtControlExhaust;
+	}
+
+	return false;
+}
+
 expected<angle_t> VvtController::observePlant() {
 #if EFI_SHAFT_POSITION_INPUT
 	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
@@ -80,6 +90,22 @@ expected<angle_t> VvtController::getSetpoint() {
 	engine->outputChannels.vvtTargets[index] = target;
 #endif
 
+	// If the target is very near the rest position, disable control entirely
+	// Couple reasons for this:
+	// - Avoid integrator windup from trying to jam the cam against the stop
+	// - Many VVT implementations don't like being controlled near the stop,
+	//       as this can cause problems with the lock pin jamming.
+	bool allowCamControl;
+	if (shouldInvertVvt(m_cam)) {
+		allowCamControl = m_targetHysteresis.test(target < -3, target > -1);
+	} else {
+		allowCamControl = m_targetHysteresis.test(target > 3, target < 1);
+	}
+
+	if (!allowCamControl) {
+		return unexpected;
+	}
+
 	vvtTarget = target;
 
 	return target;
@@ -89,16 +115,6 @@ expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 	// TODO: could we do VVT open loop?
 	UNUSED(target);
 	return 0;
-}
-
-static bool shouldInvertVvt(int camIndex) {
-	// grumble grumble, can't do an array of bits in c++
-	switch (camIndex) {
-		case 0: return engineConfiguration->invertVvtControlIntake;
-		case 1: return engineConfiguration->invertVvtControlExhaust;
-	}
-
-	return false;
 }
 
 expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observation) {
