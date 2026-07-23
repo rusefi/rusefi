@@ -87,7 +87,7 @@ TEST(SecondTables, PrepareForStorageProducesValidCrc) {
 	uint8_t* ptr = secondTablesGetStoragePtr();
 
 	// Interpret the container: version (4 bytes) + page4_s + crc (4 bytes).
-	ASSERT_GE(size, sizeof(page4_s) + 8);
+	ASSERT_GE(secondTablesGetStorageSize(), sizeof(page4_s) + 8);
 
 	uint32_t version;
 	memcpy(&version, ptr, sizeof(version));
