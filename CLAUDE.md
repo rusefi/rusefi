@@ -149,6 +149,7 @@ Do not `git checkout`/revert build-regenerated files (e.g. `firmware/controllers
 - C++17 (minimum) for unit tests and host-side tooling; portable C++17 features such as `std::filesystem`, `std::optional`, `std::string_view` and structured bindings are preferred over platform-specific APIs to keep unit tests cross-platform (Linux/macOS/Windows-MSVC/MinGW)
 - No RTTI, no exceptions (`-fno-rtti -fno-exceptions`)
 - LTO enabled by default
+- Warnings-as-errors differ per compiler: unit tests build under both GCC (Linux/Windows CI) and clang (macOS CI, or `make CC=clang` locally), and each catches things the other silently accepts (e.g. clang's `-Wunused-but-set-variable`/`-Wdynamic-class-memaccess`; GCC 13 and clang 18 both *suppress* `-Wtype-limits`-style tautological-comparison warnings inside template bodies, so a finding reported by one CI compiler may be unreproducible locally). Before declaring a warning fix complete, build unit tests with both: `make -j12` and `make clean && make CC=clang -j12`. GCC-only flags in `firmware/rusefi_rules.mk` must stay behind its `USE_CLANG` guard; `unit_tests/unit_test_rules.mk` sets `USE_CLANG` from clang auto-detection *before* including the shared rules — keep that ordering.
 
 ### Build Conditionals
 
