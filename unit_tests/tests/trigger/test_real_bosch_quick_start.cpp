@@ -13,7 +13,6 @@ TEST(realBQS, realHarleyCranking) {
 	while (reader.haveMore()) {
  		reader.processLine(&eth);
 
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (reader.gotRpm) {
 			  ASSERT_TRUE(Sensor::get(SensorType::Rpm).Valid);
 		}

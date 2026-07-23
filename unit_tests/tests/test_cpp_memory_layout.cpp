@@ -53,8 +53,6 @@ TEST(CppMemoryLayout, PlainStruct) {
 	ASSERT_EQ((uintptr_t)&c.field0, (uintptr_t)&c);
 }
 
-static int valueWePointAt;
-
 TEST(CppMemoryLayout, VirtualStruct) {
 	TestChildWithVirtual c;
 

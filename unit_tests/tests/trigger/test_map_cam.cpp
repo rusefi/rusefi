@@ -31,7 +31,6 @@ TEST(trigger, map_cam_by_magic_point) {
 
 	// Nothing should have been scheduled yet
 	ASSERT_EQ(1, engine->scheduler.size());
-	scheduling_s* next = engine->scheduler.getForUnitTest(0);
 	auto const fireSparkAndPrepareNextScheduleAction{ action_s::make<fireSparkAndPrepareNextSchedule>((IgnitionEvent*){})};
 
 	eth.assertEvent5("spark down#0", 0, fireSparkAndPrepareNextScheduleAction, 193333);

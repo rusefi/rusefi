@@ -432,8 +432,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	EXPECT_CALL(*eth->mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
 
-	Engine *engine = &eth->engine;
-
+	// the 'engine' global already points at eth->engine
 
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 

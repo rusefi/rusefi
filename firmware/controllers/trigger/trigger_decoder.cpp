@@ -579,9 +579,9 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			 * todo: figure out exact threshold as a function of RPM and tooth count?
 			 * Open question what is 'triggerShape.getSize()' for 60/2 is it 58 or 58*2 or 58*4?
 			 */
+#if EFI_PROD_CODE || EFI_SIMULATOR
 			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
 			bool verbose = getTriggerCentral()->isEngineSnifferEnabled && triggerConfiguration.VerboseTriggerSynchDetails;
 
 			if (verbose || (someSortOfTriggerError() && !silentTriggerError)) {

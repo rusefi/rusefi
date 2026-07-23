@@ -24,7 +24,6 @@ TEST(FlexSensorTest, highPinStart) {
 }
 
 TEST(FlexSensorTest, converter) {
-	efitick_t nowNt = 0;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	FlexSensor sensor(MS2NT(1000));
 	sensor.Register(true);

@@ -22,8 +22,8 @@ namespace {
 static int complexTestNow;
 
 struct TestPwm {
-	TestPwm(EventQueue *eventQueue) {
-		this->eventQueue = eventQueue;
+	TestPwm(EventQueue *queue) {
+		this->eventQueue = queue;
 	}
 	scheduling_s s;
 	int period;

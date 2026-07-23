@@ -6,9 +6,9 @@
 
 #include "launch_test_base.h"
 
-void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& config) {
-    setUpEngineConfiguration(config);
-    if (config.getSatisfyActivationSwitchSpeedAndTpsConditions()) {
+void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& testConfig) {
+    setUpEngineConfiguration(testConfig);
+    if (testConfig.getSatisfyActivationSwitchSpeedAndTpsConditions()) {
         configureSatisfiedActivationSwitchSpeedAndTpsConditions();
     }
 }

@@ -118,6 +118,15 @@ void setTriggerEmulatorRPM(int rpm) {
 	efiPrintf("Emulating position sensor(s). RPM=%d", rpm);
 }
 
+static TriggerEmulatorHelper helper;
+static bool hasStimPins = false;
+
+#if EFI_PROD_CODE
+PUBLIC_API_WEAK void onTriggerEmulatorPinState(int, int) { }
+#endif /* EFI_PROD_CODE */
+
+# if !EFI_UNIT_TEST
+
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		if (state != &triggerEmulatorSignals[channel])
@@ -134,16 +143,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	}
 }
 
-static TriggerEmulatorHelper helper;
-static bool hasStimPins = false;
-
 static bool hasInitTriggerEmulator = false;
-
-#if EFI_PROD_CODE
-PUBLIC_API_WEAK void onTriggerEmulatorPinState(int, int) { }
-#endif /* EFI_PROD_CODE */
-
-# if !EFI_UNIT_TEST
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
     assertStackVoid("emulator", ObdCode::STACK_USAGE_MISC, EXPECTED_REMAINING_STACK);
