@@ -69,8 +69,6 @@ void TriggerEmulatorHelper::handleEmulatorCallback(int channel, const MultiChann
 PwmConfig triggerEmulatorSignals[NUM_EMULATOR_CHANNELS];
 TriggerWaveform *triggerEmulatorWaveforms[NUM_EMULATOR_CHANNELS];
 
-static int atTriggerVersions[NUM_EMULATOR_CHANNELS] = { 0 };
-
 /**
  * todo: why is this method NOT reciprocal to getCrankDivider?!
  * todo: oh this method has only one usage? there must me another very similar method!
@@ -126,6 +124,8 @@ PUBLIC_API_WEAK void onTriggerEmulatorPinState(int, int) { }
 #endif /* EFI_PROD_CODE */
 
 # if !EFI_UNIT_TEST
+
+static int atTriggerVersions[NUM_EMULATOR_CHANNELS] = { 0 };
 
 static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
