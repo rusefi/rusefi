@@ -26,13 +26,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.rusefi.core.FindFileHelper.INPUT_FILES_PATH;
-
 /**
  * @see StLinkFlasher
  */
 public class DfuFlasher {
-    public static final String BOOTLOADER_BIN_FILE = INPUT_FILES_PATH + "/" + "openblt.bin";
     private static final String DFU_CMD_TOOL_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
     private static final String WMIC_DFU_QUERY_COMMAND = "powershell -NoProfile -Command \"Get-CimInstance Win32_PnPEntity -Filter \\\"Caption like '%STM32%' and Caption like '%Bootloader%'\\\" | Select-Object Caption, ConfigManagerErrorCode | Format-List\"";

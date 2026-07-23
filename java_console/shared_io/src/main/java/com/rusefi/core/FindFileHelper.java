@@ -129,9 +129,16 @@ public class FindFileHelper {
 
     /** Find a uniquely named bundled OpenBLT image, with the old development name as fallback. */
     public static String findBootloaderFile() {
-        String globbed = findFile(INPUT_FILES_PATH, "openblt_", ".bin", (fileDirectory, fileName) -> {
-        }, true);
-        return globbed != null ? globbed : INPUT_FILES_PATH + File.separator + "openblt.bin";
+        String bootloaderFilesPath = getBootloaderFilesPath();
+        String globbed = new File(bootloaderFilesPath).isDirectory()
+            ? findFile(bootloaderFilesPath, "openblt_", ".bin", (fileDirectory, fileName) -> {
+            }, true)
+            : null;
+        return globbed != null ? globbed : bootloaderFilesPath + File.separator + "openblt.bin";
+    }
+
+    private static String getBootloaderFilesPath() {
+        return INPUT_FILES_PATH + File.separator + "bin" + File.separator + "device";
     }
 
     public static boolean isObfuscated() {
@@ -187,17 +194,17 @@ public class FindFileHelper {
      * prevents grabbing another board's leftover image from a shared bundle dir. [tag:better_ux_for_flashing]
      */
     public static String findSrecFileForConnectedBoard(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
-        return findForConnectedBoard(connectedEcuTarget.effectiveTarget(), ".srec", findSrecFile(), "rusefi");
+        return findForConnectedBoard(connectedEcuTarget.effectiveTarget(), ".srec", findSrecFile(), "rusefi", INPUT_FILES_PATH);
     }
 
     /** @see #findSrecFileForConnectedBoard — same, for the {@code .bin} DFU image. */
     public static String findFirmwareFileForConnectedBoard(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
-        return findForConnectedBoard(connectedEcuTarget.effectiveTarget(), ".bin", findFirmwareFile(), "rusefi");
+        return findForConnectedBoard(connectedEcuTarget.effectiveTarget(), ".bin", findFirmwareFile(), "rusefi", INPUT_FILES_PATH);
     }
 
     /** @see #findSrecFileForConnectedBoard — same, for the OpenBLT bootloader image. */
     public static String findBootloaderFileForConnectedBoard(com.rusefi.core.io.ConnectedEcuTarget connectedEcuTarget) {
-        return findForConnectedBoard(connectedEcuTarget.effectiveTarget(), ".bin", findBootloaderFile(), "openblt");
+        return findForConnectedBoard(connectedEcuTarget.effectiveTarget(), ".bin", findBootloaderFile(), "openblt", getBootloaderFilesPath());
     }
 
     /**
@@ -213,8 +220,8 @@ public class FindFileHelper {
      * </ol>
      * [tag:better_ux_for_flashing]
      */
-    private static String findForConnectedBoard(String target, String suffix, String sibling, String prefix) {
-        final String localMatch = newestMatchingTarget(INPUT_FILES_PATH, target, suffix, prefix);
+    private static String findForConnectedBoard(String target, String suffix, String sibling, String prefix, String localDirectory) {
+        final String localMatch = newestMatchingTarget(localDirectory, target, suffix, prefix);
         if (localMatch != null) {
             return localMatch;
         }

@@ -114,10 +114,11 @@ public class FindFileHelperTargetSelectionTest {
 
     @Test
     public void bootloaderVariantUsesExactTargetSelection() throws IOException {
-        writeInputFile("openblt_release_2026-07-01_" + TARGET + "_pro_1234567890_aaaa.bin",
-            1_000_000_002_000L);
-        File exact = writeInputFile("openblt_release_2026-07-01_" + TARGET + "_1234567890_bbbb.bin",
-            1_000_000_000_000L);
+        Path deviceDir = Files.createDirectories(inputDir.resolve("bin/device"));
+        File related = deviceDir.resolve("openblt_release_2026-07-01_" + TARGET + "_pro_1234567890_aaaa.bin").toFile();
+        Files.write(related.toPath(), new byte[]{1});
+        File exact = deviceDir.resolve("openblt_release_2026-07-01_" + TARGET + "_1234567890_bbbb.bin").toFile();
+        Files.write(exact.toPath(), new byte[]{1});
         ConnectedEcuTarget connected = new ConnectedEcuTarget();
         connected.setConnectedTargetForUnitTest(TARGET);
 
