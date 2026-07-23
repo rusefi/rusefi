@@ -156,28 +156,40 @@ public class TriggerPaneTest {
             "pageReadCommand = \"r\"\n" +
             "page = 1\n" +
             "field1 = scalar, F32, 0, \"unit\", 1, 0, 0, 100, 1\n" +
+            "trigger_type = scalar, U08, 3, \"\", 1, 0, 0, 255, 0\n" +
             "vvtMode1 = scalar, U08, 4, \"\", 1, 0, 0, 32, 0\n" +
             "vvtMode2 = scalar, U08, 5, \"\", 1, 0, 0, 32, 0\n" +
             "[SettingContextHelp]\n" +
             "; SettingContextHelpEnd\n" +
             "\n" +
+            "\tdialog = trigger_primary, \"Primary Trigger\"\n" +
+            "\t\tfield = \"Trigger type\", trigger_type\n" +
             "\tdialog = trigger_cams, \"Cam Inputs\"\n" +
             "\t\tfield = \"Cam mode\", vvtMode1\n" +
             "\t\tfield = \"Exhaust cam mode\", vvtMode2\n" +
-            "\t\tfield = \"Field 1\", field1\n";
+            "\t\tfield = \"Field 1\", field1\n" +
+            "\tdialog = triggerConfiguration, \"\", xAxis\n" +
+            "\t\tpanel = trigger_primary\n" +
+            "\t\tpanel = trigger_cams\n";
 
         RawIniFile lines = IniFileReaderUtil.read(new java.io.ByteArrayInputStream(string.getBytes()));
         IniFileModel model = IniFileReaderUtil.readIniFile(lines, "test.ini", new com.opensr5.ini.IniFileMetaInfoImpl(lines));
         ConfigurationImage image = new ConfigurationImage(new byte[100]);
+        image.getContent()[3] = 1; // TT_FORD_ASPIRE
         image.getContent()[4] = 9; // VVT_NISSAN_VQ
         image.getContent()[5] = 8; // VVT_BARRA_3_PLUS_1
 
         CalibrationDialogWidget widget = new CalibrationDialogWidget(new UIContext());
-        widget.update("trigger_cams", model, image);
+        widget.update("triggerConfiguration", model, image);
 
         JPanel content = widget.getContentPane();
+        JPanel primaryPanel = findPanelByName(content, "Primary Trigger");
         JPanel panelWidget = findPanelByName(content, "Cam Inputs");
 
+        assertNotNull(primaryPanel, "Should find a panel widget named 'Primary Trigger'");
+        assertTrue(hasEastPanel(primaryPanel), "Should find a crank preview beside the Primary Trigger fields");
+        JPanel primaryImagePanel = (JPanel) getEastPanel(primaryPanel).getComponent(0);
+        assertEquals(1, primaryImagePanel.getComponentCount(), "Primary Trigger should retain its crank wheel");
         assertNotNull(panelWidget, "Should find a panel widget named 'Cam Inputs'");
         assertTrue(hasEastPanel(panelWidget), "Should find a trigger preview beside the Cam Inputs fields");
         JPanel triggerImagePanel = (JPanel) getEastPanel(panelWidget).getComponent(0);

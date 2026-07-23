@@ -54,10 +54,9 @@ public class CalibrationDialogWidget {
 
     private final JPanel contentPane = new ScrollablePanel();
     private final UIContext uiContext;
-    private final TriggerImageHelper triggerImageHelper = new TriggerImageHelper();
+    private final List<Runnable> triggerImageUpdaters = new ArrayList<>();
     private ConfigurationImage workingImage;
     private IniFileModel currentIniFileModel;
-    private TriggerImageHelper.Channel triggerImageChannel = TriggerImageHelper.Channel.PRIMARY;
     private int fieldRowVerticalMargin = 3;
     private final List<ExpressionRow> expressionRows = new ArrayList<>();
     private final List<IndicatorPanel> indicatorPanels = new ArrayList<>();
@@ -194,13 +193,13 @@ public class CalibrationDialogWidget {
         indicatorPanels.clear();
         readoutEntries.clear();
         gaugeReadoutEntries.clear();
+        triggerImageUpdaters.clear();
         contentPane.removeAll();
         if (dialogModel != null) {
             String uiName = dialogModel.getUiName();
             if (uiName == null || uiName.isEmpty()) {
                 uiName = dialogModel.getKey();
             }
-            triggerImageChannel = triggerImageHelper.getChannel(dialogModel.getKey(), uiName);
             contentPane.setName(uiName);
 
             applyLayout(contentPane, dialogModel.getLayoutHint());
@@ -208,9 +207,8 @@ public class CalibrationDialogWidget {
             fillPanel(contentPane, dialogModel, iniFileModel, ci,
                 getFieldLabelWidth(dialogModel, iniFileModel, new HashSet<>()));
 
-            if (triggerImageHelper.isTriggerPanel(dialogModel.getKey(), uiName)) {
-                triggerImageHelper.addTriggerPanelExtras(contentPane);
-                updateTriggerImage();
+            if (TriggerImageHelper.isTriggerPanel(dialogModel.getKey(), uiName)) {
+                addTriggerImage(contentPane, dialogModel.getKey(), uiName);
             }
         }
         contentPane.revalidate();
@@ -520,14 +518,8 @@ public class CalibrationDialogWidget {
             fillPanel(panelWidget, subDialog, iniFileModel, ci,
                 Math.max(0, fieldLabelWidth - panelWidget.getInsets().left));
 
-            if (triggerImageHelper.isTriggerPanel(subDialog.getKey(), uiName) || "Sub Panel".equals(uiName)) {
-                triggerImageHelper.addTriggerPanelExtras(panelWidget);
-                TriggerImageHelper.Channel channel = triggerImageHelper.getChannel(subDialog.getKey(), uiName);
-                if (channel == TriggerImageHelper.Channel.SECONDARY) {
-                    triggerImageHelper.updateVvtTriggerImage(currentIniFileModel, workingImage);
-                } else {
-                    triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage, channel);
-                }
+            if (TriggerImageHelper.isTriggerPanel(subDialog.getKey(), uiName) || "Sub Panel".equals(uiName)) {
+                addTriggerImage(panelWidget, subDialog.getKey(), uiName);
             }
         } else {
             panelWidget.setName(panel.getPanelName());
@@ -581,11 +573,20 @@ public class CalibrationDialogWidget {
     }
 
     private void updateTriggerImage() {
-        if (triggerImageChannel == TriggerImageHelper.Channel.SECONDARY) {
-            triggerImageHelper.updateVvtTriggerImage(currentIniFileModel, workingImage);
-        } else {
-            triggerImageHelper.updateTriggerImage(currentIniFileModel, workingImage, triggerImageChannel);
+        for (Runnable updater : triggerImageUpdaters) {
+            updater.run();
         }
+    }
+
+    private void addTriggerImage(JPanel panel, String key, String uiName) {
+        TriggerImageHelper helper = new TriggerImageHelper();
+        helper.addTriggerPanelExtras(panel);
+        TriggerImageHelper.Channel channel = TriggerImageHelper.getChannel(key, uiName);
+        Runnable updater = channel == TriggerImageHelper.Channel.SECONDARY
+            ? () -> helper.updateVvtTriggerImage(currentIniFileModel, workingImage)
+            : () -> helper.updateTriggerImage(currentIniFileModel, workingImage, channel);
+        triggerImageUpdaters.add(updater);
+        updater.run();
     }
 
     /** Pushes the current working image to all indicator panels (called when config fields change). */
