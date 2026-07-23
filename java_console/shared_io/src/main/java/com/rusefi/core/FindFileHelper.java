@@ -127,6 +127,10 @@ public class FindFileHelper {
         return globbed != null ? globbed : FIRMWARE_BIN_FILE;
     }
 
+    public static void archiveFirmwareFiles() {
+        findFile(INPUT_FILES_PATH, "rusefi_", ".bin", FindFileHelper::moveFile, false);
+    }
+
     /** Find a uniquely named bundled OpenBLT image, with the old development name as fallback. */
     public static String findBootloaderFile() {
         String bootloaderFilesPath = getBootloaderFilesPath();
