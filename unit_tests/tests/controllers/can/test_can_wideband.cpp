@@ -293,7 +293,7 @@ TEST(CanWideband, DecodeRusefiStandard)
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
 
 	// ...but no error until egine is runnig
-	EXPECT_EQ((uint8_t)wbo::Status::Preheat, dut.stateCode);
+	EXPECT_EQ((uint8_t)wbo::Status::NoHeat, dut.stateCode);
 	EXPECT_EQ(false, dut.allowed);
 
 	// Now driver should handle valid bit and error states from wbo
