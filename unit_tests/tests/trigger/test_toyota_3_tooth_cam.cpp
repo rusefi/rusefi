@@ -76,7 +76,7 @@ static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectS
 
 	// Do some number of revolutions before firing the cam tooth
 	for (size_t i = 0; i < revsBeforeVvt; i++) {
-		for (size_t j = 0; i < 10; i++)
+		for (size_t j = 0; j < 10; j++)
 		{
 			eth.fireFall(1);
 			eth.fireRise(9);

@@ -543,12 +543,6 @@ static void setTestBug299(EngineTestHelper *eth) {
 	EXPECT_EQ(value1, enginePins.injectors[1].currentLogicValue) << msg; \
 }
 
-static void setArray(float* p, size_t count, float value) {
-	while (count--) {
-		*p++ = value;
-	}
-}
-
 void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 

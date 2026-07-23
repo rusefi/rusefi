@@ -955,8 +955,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 }
 
-static void triggerShapeInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
+static void triggerShapeInfo() {
 	TriggerWaveform *shape = &getTriggerCentral()->triggerShape;
 	TriggerFormDetails *triggerFormDetails = &getTriggerCentral()->triggerFormDetails;
 	efiPrintf("syncEdge=%s", getSyncEdge(TRIGGER_WAVEFORM(syncEdge)));
@@ -965,8 +965,8 @@ static void triggerShapeInfo() {
 	for (size_t i = 0; i < shape->getSize(); i++) {
 		efiPrintf("event %d %.2f", i, triggerFormDetails->eventAngles[i]);
 	}
-#endif
 }
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 #if EFI_PROD_CODE
 extern PwmConfig triggerEmulatorSignals[NUM_EMULATOR_CHANNELS];
@@ -1063,12 +1063,12 @@ void triggerInfo(void) {
 
 }
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 static void resetRunningTriggerCounters() {
-#if !EFI_UNIT_TEST
 	getTriggerCentral()->resetCounters();
 	triggerInfo();
-#endif
 }
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 void onConfigurationChangeTriggerCallback() {
 	bool changed = false;

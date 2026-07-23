@@ -344,7 +344,8 @@ static void readChannelData(int ch, ChannelEdges& out) {
 }
 
 // Read a length-prefixed ASCII string into `out`.
-static void readString(std::string& out) {
+// Currently has no callers but kept as part of the format-reader toolkit.
+[[maybe_unused]] static void readString(std::string& out) {
 	uint64_t len = readVar();
 	out.clear();
 	out.reserve((size_t)len);
@@ -516,7 +517,8 @@ namespace {
 // 6-channel C++ writer AND the Java LogicdataStreamFile writer (modulo the
 // BLOCK marker numeric value, which is not validated by the reader -- both
 // 0x15 and 0x18 round-trip through skipVar()).
-static void readChannelDataN(int ch, int nch, ChannelEdges& out) {
+// Currently has no callers but kept as part of the format-reader toolkit.
+[[maybe_unused]] static void readChannelDataN(int ch, int nch, ChannelEdges& out) {
 	skipVar(); // CHANNEL_BLOCK
 	if (ch == 0) {
 		skipVar(); // SUB

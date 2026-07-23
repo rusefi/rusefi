@@ -47,7 +47,8 @@ static void constructTriggerFromRecording(CsvReader *reader) {
 	}
 }
 
-static void runTriggerTest(const char *fileName, uint32_t totalErrors, int syncCounter, float firstRpm) {
+// only referenced by the currently-disabled (commented-out) real6g72 tests below
+[[maybe_unused]] static void runTriggerTest(const char *fileName, uint32_t totalErrors, int syncCounter, float firstRpm) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	prepare(&eth, trigger_type_e::TT_VVT_MITSU_6G72);
