@@ -25,7 +25,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, TriggerWhe
 	}
 
 	setTimeNowUs(1'000'000 * timestampS);
-	printf("MIATANA: posting time=%d event=%d\n", getTimeNowUs(), event);
+	printf("MIATANA: posting time=%lld event=%d\n", (long long)getTimeNowUs(), event);
 	hwHandleShaftSignal((int)channel, !isFall, getTimeNowNt());
 }
 

@@ -45,7 +45,9 @@ int nmea_valid_checksum(const char *);
 
 void gps_location(loc_t *, char const * const);
 
-static int str2int(const char * a, const int len) {
+// inline (not static): a static function defined in a header trips -Wunused-function
+// in every translation unit that includes the header without calling it
+inline int str2int(const char * a, const int len) {
 	int i = 0,  k = 0;
 	while (i < len) {
 		k = (k << 3) + (k << 1) + (*a) - '0';

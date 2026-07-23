@@ -240,7 +240,7 @@ efitick_t PwmConfig::togglePwmState() {
 		}
 	}
 #if EFI_UNIT_TEST
-	printf("PWM: nextSwitchTimeNt=%d phaseIndex=%d iteration=%d\r\n", nextSwitchTimeNt,
+	printf("PWM: nextSwitchTimeNt=%lld phaseIndex=%d iteration=%d\r\n", (long long)nextSwitchTimeNt,
 			safe.phaseIndex,
 			safe.iteration);
 #endif /* EFI_UNIT_TEST */

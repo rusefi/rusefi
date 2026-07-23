@@ -496,7 +496,7 @@ int IsoTpRxTx::writeTimeout(const uint8_t *txbuf, size_t size, sysinterval_t tim
 	int offset = 0;
 
 	if (engineConfiguration->verboseIsoTp) {
-		PRINT("*** INFO: sendDataTimeout %d" PRINT_EOL, size);
+		PRINT("*** INFO: sendDataTimeout %d" PRINT_EOL, (int)size);
 	}
 
 	if (size < 1)

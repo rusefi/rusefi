@@ -67,7 +67,7 @@ static uintptr_t prevValue = 0;
 static void orderCallback(uintptr_t a) {
 	uintptr_t value = a;
 
-	printf("value=%d prevValue=%d\r\n", value, prevValue);
+	printf("value=%d prevValue=%d\r\n", (int)value, (int)prevValue);
 	ASSERT_TRUE(value > prevValue) << "orderCallback";
 
 	prevValue = value;

@@ -79,7 +79,7 @@ static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
 				float ratio = ratiosThisTime[i];
 				printf("happy ratio %f @ %d\n", ratio, i);
 			}
-			printf("************** GREAT length=%d at tooth index %d\n", length,
+			printf("************** GREAT length=%d at tooth index %d\n", (int)length,
 					toothIndex);
 			return true;
 		}

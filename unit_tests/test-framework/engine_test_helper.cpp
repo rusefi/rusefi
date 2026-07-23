@@ -200,7 +200,7 @@ static void writeEventsToFile(const char *fileName,
 	size_t count = events.size();
 
 	// todo: move magic keywords to something.txt and reuse magic constants from C and java, once we have java converter
-	fprintf(ptr, "count,%d\n", count);
+	fprintf(ptr, "count,%d\n", (int)count);
 
 #define numChannels 6 // todo: clean-up
 
@@ -259,7 +259,7 @@ void EngineTestHelper::writeEventsLogicData(const char *fileName) {
 		printf("Not enough data for %s\n", fileName);
 		return;
 	}
-	printf("Writing %d records to %s\n", events.size(), fileName);
+	printf("Writing %d records to %s\n", (int)events.size(), fileName);
 	writeLogicDataFile(fileName, events);
 }
 
@@ -269,7 +269,7 @@ void EngineTestHelper::writeEvents2(const char *fileName) {
 		printf("Not enough data for %s\n", fileName);
 		return;
 	}
-	printf("Writing %d records to %s\n", events.size(), fileName);
+	printf("Writing %d records to %s\n", (int)events.size(), fileName);
 	writeEventsToFile(fileName, events);
 }
 
