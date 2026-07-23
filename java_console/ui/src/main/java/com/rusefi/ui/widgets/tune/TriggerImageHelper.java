@@ -215,13 +215,13 @@ public class TriggerImageHelper {
         return triggerImagePanel;
     }
 
-    public Channel getChannel(String key, String uiName) {
+    public static Channel getChannel(String key, String uiName) {
         return TRIGGER_CAMS.equalsIgnoreCase(key) || CAM_INPUTS_UI_NAME.equalsIgnoreCase(uiName)
             ? Channel.SECONDARY
             : Channel.PRIMARY;
     }
 
-    public boolean isTriggerPanel(String key, String uiName) {
+    public static boolean isTriggerPanel(String key, String uiName) {
         return TRIGGER_PRIMARY.equalsIgnoreCase(key) ||
                 TRIGGER_CAMS.equalsIgnoreCase(key) ||
                 PRIMARY_TRIGGER_UI_NAME.equalsIgnoreCase(uiName) ||
