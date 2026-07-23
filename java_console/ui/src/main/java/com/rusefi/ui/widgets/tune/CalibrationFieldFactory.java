@@ -80,7 +80,13 @@ public class CalibrationFieldFactory {
             if (isCheckboxEnum(enumField)) {
                 row.add(createCheckBox(enumField, iniField, currentValue, workingImage, onChange));
             } else {
-                row.add(createComboBox(enumField, iniField, currentValue, workingImage, onChange, field.getKey(), onShowInPinout));
+                JComboBox<String> comboBox = createComboBox(enumField, iniField, currentValue, workingImage, onChange);
+                row.add(comboBox);
+                JButton pinoutButton = createPinoutButton(comboBox, field.getKey(), onShowInPinout);
+                if (pinoutButton != null) {
+                    row.add(Box.createHorizontalStrut(4));
+                    row.add(pinoutButton);
+                }
             }
         } else {
             String currentValue = ci == null ? "" : ConfigurationImageGetterSetter.getStringValue(iniField, ci);
@@ -155,7 +161,7 @@ public class CalibrationFieldFactory {
         return checkBox;
     }
 
-    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange, String fieldKey, Consumer<String> onShowInPinout) {
+    private static JComboBox<String> createComboBox(EnumIniField enumField, IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {
         String cleanValue = currentValue.replace("\"", "");
         String[] comboValues = enumField.getEnums().values().stream().filter(v -> !v.contains("INVALID")).toArray(String[]::new);
         JComboBox<String> comboBox = new JComboBox<>(comboValues);
@@ -176,54 +182,50 @@ public class CalibrationFieldFactory {
                 if (onChange != null) onChange.run();
             }
         });
-        attachPinoutContextMenu(comboBox, fieldKey, onShowInPinout);
         return comboBox;
     }
 
     /**
-     * For pin-enum fields (name matches .*pins?\d*), attaches a
-     * right-click "Show in Pinout" menu that fires the current combo value up to the
-     * caller for cross-tab navigation.
-     * <p>
-     * JComboBox.setComponentPopupMenu is unreliable: right-clicks on the arrow button or
-     * the internal renderer may not propagate in every L&F. So instead we install an
-     * explicit popup-trigger MouseListener on the combo AND its descendants.
+     * For pin-enum fields (name matches .*pins?\d*), adds a button that fires the
+     * current combo value up to the caller for cross-tab navigation.
      */
-    private static void attachPinoutContextMenu(JComboBox<String> comboBox, String fieldKey, Consumer<String> onShowInPinout) {
-        if (onShowInPinout == null || fieldKey == null) return;
-        if (!fieldKey.toLowerCase().matches(".*pins?\\d*")) return;
+    private static JButton createPinoutButton(JComboBox<String> comboBox, String fieldKey, Consumer<String> onShowInPinout) {
+        if (onShowInPinout == null || fieldKey == null) {
+            return null;
+        }
+        if (!fieldKey.toLowerCase().matches(".*pins?\\d*")) {
+            return null;
+        }
 
-        JPopupMenu menu = new JPopupMenu();
-        JMenuItem show = new JMenuItem("Show in Pinout");
-        show.addActionListener(e -> {
-            Object sel = comboBox.getSelectedItem();
-            if (sel == null) return;
-            String value = sel.toString().replace("\"", "").trim();
-            if (value.isEmpty() || "NONE".equalsIgnoreCase(value) || "INVALID".equalsIgnoreCase(value)) return;
-            onShowInPinout.accept(value);
-        });
-        menu.add(show);
-
-        MouseAdapter popupTrigger = new MouseAdapter() {
-            @Override public void mousePressed(MouseEvent e)  { maybeShow(e); }
-            @Override public void mouseReleased(MouseEvent e) { maybeShow(e); }
-            private void maybeShow(MouseEvent e) {
-                if (!e.isPopupTrigger()) return;
-                Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), comboBox);
-                menu.show(comboBox, p.x, p.y);
-                e.consume();
+        JButton button = new JButton("W") {
+            @Override
+            public void setEnabled(boolean enabled) {
+                super.setEnabled(enabled && getSelectedPin(comboBox) != null);
             }
         };
-        installRecursively(comboBox, popupTrigger);
+        button.setToolTipText("Wiring/Pinout");
+        button.setMargin(new Insets(0, 6, 0, 6));
+        button.setMaximumSize(button.getPreferredSize());
+        button.setEnabled(comboBox.isEnabled());
+        comboBox.addActionListener(e -> button.setEnabled(comboBox.isEnabled()));
+        button.addActionListener(e -> {
+            String value = getSelectedPin(comboBox);
+            if (value == null) {
+                return;
+            }
+            onShowInPinout.accept(value);
+        });
+        return button;
     }
 
-    private static void installRecursively(Component c, MouseAdapter listener) {
-        c.addMouseListener(listener);
-        if (c instanceof Container) {
-            for (Component child : ((Container) c).getComponents()) {
-                installRecursively(child, listener);
-            }
+    private static String getSelectedPin(JComboBox<String> comboBox) {
+        Object selected = comboBox.getSelectedItem();
+        if (selected == null) {
+            return null;
         }
+        String value = selected.toString().replace("\"", "").trim();
+        return value.isEmpty() || "NONE".equalsIgnoreCase(value) || "INVALID".equalsIgnoreCase(value)
+            ? null : value;
     }
 
     private static JTextField createTextField(IniField iniField, String currentValue, ConfigurationImage workingImage, Runnable onChange) {

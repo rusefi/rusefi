@@ -65,7 +65,7 @@ public class CalibrationDialogWidget {
     private static final int READOUT_GAUGE_SIZE = 150;
     /** Called after each user edit with the current working image, so listeners can re-evaluate their own expressions. */
     private Consumer<ConfigurationImage> onConfigChange;
-    /** Called when the user picks "Show in Pinout" on a pin-enum field; arg is the current enum value. */
+    /** Called when the user opens Wiring/Pinout from a pin-enum field; arg is the current enum value. */
     private Consumer<String> onShowInPinout;
     /** Restores the last navigated view; set on every update() call so the VE generator panel can return to it. */
     private Runnable currentViewRestorer;

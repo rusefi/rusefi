@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -449,6 +450,42 @@ public class CalibrationDialogWidgetTest {
     }
 
     @Test
+    public void testPinoutButton() {
+        EnumIniField field = createEnumField("B16 Low Side output 4", "NONE");
+        ConfigurationImage image = new ConfigurationImage(new byte[1]);
+        AtomicReference<String> selectedPin = new AtomicReference<>();
+        JPanel row = CalibrationFieldFactory.createFieldRow(
+            new DialogModel.Field("injectionPins1", "Injection Output 1"),
+            field, image, image.clone(), null, selectedPin::set);
+
+        JButton button = getButtonFromRow(row);
+        assertNotNull(button);
+        assertEquals("W", button.getText());
+        assertEquals("Wiring/Pinout", button.getToolTipText());
+        assertTrue(button.isEnabled());
+        button.doClick();
+        assertEquals("B16 Low Side output 4", selectedPin.get());
+
+        JComboBox<?> combo = getComboBoxFromRow(row);
+        assertNotNull(combo);
+        combo.setSelectedItem("NONE");
+        assertFalse(button.isEnabled());
+        button.setEnabled(true);
+        assertFalse(button.isEnabled());
+        selectedPin.set(null);
+        button.doClick();
+        assertNull(selectedPin.get());
+
+        combo.setSelectedItem("B16 Low Side output 4");
+        assertTrue(button.isEnabled());
+
+        JPanel nonPinRow = CalibrationFieldFactory.createFieldRow(
+            new DialogModel.Field("algorithm", "Algorithm"),
+            field, image, image.clone(), null, selectedPin::set);
+        assertNull(getButtonFromRow(nonPinRow));
+    }
+
+    @Test
     public void testLongFieldLabelWrapsToTwoRows() {
         String text = "Use absolute fuel pressure for dead time calculation";
         com.opensr5.ini.field.StringIniField field =
@@ -524,6 +561,24 @@ public class CalibrationDialogWidgetTest {
         for (Component component : row.getComponents()) {
             if (component instanceof JTextField) {
                 return (JTextField) component;
+            }
+        }
+        return null;
+    }
+
+    private static JComboBox<?> getComboBoxFromRow(JPanel row) {
+        for (Component component : row.getComponents()) {
+            if (component instanceof JComboBox) {
+                return (JComboBox<?>) component;
+            }
+        }
+        return null;
+    }
+
+    private static JButton getButtonFromRow(JPanel row) {
+        for (Component component : row.getComponents()) {
+            if (component instanceof JButton) {
+                return (JButton) component;
             }
         }
         return null;
