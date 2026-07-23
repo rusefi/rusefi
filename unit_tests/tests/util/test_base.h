@@ -21,7 +21,7 @@ protected:
     TestPersistentConfiguration& getTestPersistentConfiguration();
     TestLuaScriptExecutor& getTestLuaScriptExecutor();
 
-    void setUpEngineConfiguration(const EngineConfig& config);
+    void setUpEngineConfiguration(const EngineConfig& engineConfig);
     void periodicFastCallback();
 public:
     void periodicSlowCallback();

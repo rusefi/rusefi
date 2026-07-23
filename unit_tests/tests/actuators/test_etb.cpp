@@ -37,9 +37,9 @@ TEST(etb, initializationNoPedal) {
 TEST(etb, initializationMissingThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->etbFunctions[0] = DC_None;
-		engineConfiguration->etbFunctions[1] = DC_None;
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->etbFunctions[0] = DC_None;
+		cfg->etbFunctions[1] = DC_None;
 	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {
@@ -63,9 +63,9 @@ TEST(etb, initializationSingleThrottle) {
 	EXPECT_CALL(mocks[0], isEtbMode())
 	      .WillOnce(Return(true));
 
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->etbFunctions[0] = DC_Throttle1;
-		engineConfiguration->etbFunctions[1] = DC_None;
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->etbFunctions[0] = DC_Throttle1;
+		cfg->etbFunctions[1] = DC_None;
 	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {
@@ -91,9 +91,9 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	EXPECT_CALL(mocks[1], isEtbMode())
 	      .WillOnce(Return(true));
 
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->etbFunctions[0] = DC_None;
-		engineConfiguration->etbFunctions[1] = DC_Throttle1;
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->etbFunctions[0] = DC_None;
+		cfg->etbFunctions[1] = DC_Throttle1;
 	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {
@@ -152,9 +152,9 @@ TEST(etb, initializationWastegate) {
 	EXPECT_CALL(mocks[0], isEtbMode())
 	      .WillOnce(Return(false));
 
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->etbFunctions[0] = DC_Wastegate;
-		engineConfiguration->etbFunctions[1] = DC_None;
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->etbFunctions[0] = DC_Wastegate;
+		cfg->etbFunctions[1] = DC_None;
 	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {

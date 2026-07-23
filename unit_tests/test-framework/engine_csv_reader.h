@@ -46,14 +46,14 @@ public:
     cvsReader.processLine(eth);
   }
 
-  void assertFirstRpm(int expectedFirstRpm, int expectedFirstRpmAtIndex) {
+  void assertFirstRpm(int expectedRpm, int expectedRpmAtIndex) {
     auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 		if (!gotRpm && rpm) {
 			gotRpm = true;
 
-  			EXPECT_NEAR(rpm, expectedFirstRpm, 1);
-		  	EXPECT_EQ(lineIndex(), expectedFirstRpmAtIndex);
+  			EXPECT_NEAR(rpm, expectedRpm, 1);
+		  	EXPECT_EQ(lineIndex(), expectedRpmAtIndex);
 		}
   }
 

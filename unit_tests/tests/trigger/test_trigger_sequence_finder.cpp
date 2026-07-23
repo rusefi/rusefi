@@ -71,7 +71,7 @@ static bool tryGapSequence(size_t length, int toothIndex, TriggerWaveform &form,
 
 	try {
 		form.setShapeDefinitionError(false);
-		uint32_t res = decoder.findTriggerZeroEventIndex(form,
+		decoder.findTriggerZeroEventIndex(form,
 				triggerConfiguration);
 
 		if (!form.shapeDefinitionError) {
@@ -242,9 +242,6 @@ static size_t findAllSyncSequencesFromCsv(trigger_type_e t, size_t maxLength, si
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	size_t happySequenceCounter = 0;
-
-	trigger_config_s triggerConfig;
-	triggerConfig.type = t;
 
 	TriggerWaveform form;
 	function(&form);

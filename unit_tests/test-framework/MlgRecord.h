@@ -19,8 +19,8 @@ private:
     float scale;
 
 public:
-    Record(const std::string& fieldName, MlgDataType type, float scale)
-        : fieldName(fieldName), type(type), scale(scale) {}
+    Record(const std::string& fieldNameParam, MlgDataType typeParam, float scaleParam)
+        : fieldName(fieldNameParam), type(typeParam), scale(scaleParam) {}
 
     const std::string& getFieldName() const { return fieldName; }
 
