@@ -56,7 +56,7 @@ public class TuningPane {
     /** [tag:offline_tune] The .ini the offline tune was loaded with — used to migrate edits if a different-signature ECU connects. */
     private IniFileModel offlineIni;
     private volatile boolean firmwareUpdateInProgress;
-    /** Fired when the user picks "Show in Pinout" on a pin-enum field. Wired from ConsoleUI after construction. */
+    /** Fired when the user opens Wiring/Pinout from a pin-enum field. Wired from ConsoleUI after construction. */
     private Consumer<String> navigateToPinout;
     private Runnable showTuningTab = () -> { };
 
@@ -151,7 +151,7 @@ public class TuningPane {
             uiContext.fireConfigImageChanged(image);
         });
 
-        // Right-click "Show in Pinout" on a pin-enum combo fires the current value upward.
+        // The Wiring/Pinout button on a pin-enum combo fires the current value upward.
         right.setOnShowInPinout(value -> {
             if (navigateToPinout != null) navigateToPinout.accept(value);
         });
