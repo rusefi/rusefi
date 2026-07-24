@@ -58,8 +58,8 @@ TEST(thermistor, PtcAirCooledMotorcycle) {
 }
 
 TEST(Thermistor, Option1) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-                                                 			engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+                                                 			cfg->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
                                                  	});
 
 
@@ -77,8 +77,8 @@ TEST(Thermistor, Option1) {
 }
 
 TEST(Thermistor, Option2) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-                                                 			engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+                                                 			cfg->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
                                                  	});
 
 
@@ -94,8 +94,8 @@ TEST(Thermistor, Option2) {
 
 
 TEST(Thermistor, Option3) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-                                                 			engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+                                                 			cfg->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
                                                  	});
 
 

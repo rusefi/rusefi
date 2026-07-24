@@ -117,7 +117,6 @@ TEST(EngineModules, MapAveragingModule_onFastCallbackOddFire) {
 TEST(EngineModules, MapAveragingModule_onEnginePhase60_2_one_cylinder) {
     EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
     engineConfiguration->isMapAveragingEnabled = true;
-    testSpinEngineUntilData testSpinInfo = { 0, 0, 0 };
     engineConfiguration->measureMapOnlyInOneCylinder = true;
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);
 	MapAveragingModule mapModule;
@@ -132,7 +131,6 @@ TEST(EngineModules, MapAveragingModule_onEnginePhase60_2_one_cylinder) {
 
 TEST(EngineModules, MapAveragingModule_onEnginePhase60_2_one_cylinderCustomSampleWindow) {
     EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
-    testSpinEngineUntilData testSpinInfo = { 0, 0, 0 };
     engineConfiguration->isMapAveragingEnabled = true;
     engineConfiguration->measureMapOnlyInOneCylinder = true;
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL_60_2);

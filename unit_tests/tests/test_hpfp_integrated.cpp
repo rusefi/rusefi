@@ -18,8 +18,8 @@ static void assertToggleCounterExtra(EngineTestHelper *eth, int extra, const cha
 
 #if FUEL_RPM_COUNT == 16
 TEST(HPFP, IntegratedSchedule) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* cfg) {
+		cfg->hpfpValvePin = Gpio::A2; // arbitrary
 	});
 
 	engineConfiguration->cylindersCount = 4;

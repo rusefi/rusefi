@@ -43,7 +43,6 @@ TEST(harley, hdCrankingWithCam3) {
 		reader.processLine(&test.eth);
 
 		reader.assertFirstRpm(184, 60);
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 		if (!reader.gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 			EXPECT_EQ(reader.lineIndex(), 269);

@@ -64,8 +64,8 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 
 	persistent_config_s pc{};
 	Engine e;
-	Engine* engine = &e;
-	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
+	// EngineTestHelperBase points the 'engine' global at 'e'
+	EngineTestHelperBase base(&e, &pc.engineConfiguration, &pc);
 
 #if EFI_UNIT_TEST
 	for (size_t i = 0; i < efi::size(initState.gapRatio); i++) {

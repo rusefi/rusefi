@@ -5,8 +5,8 @@ extern float getTachDuty(void);
 
 TEST(Actuators, Tachometer) {
     // This engine has a tach pin set - we need that
-    EngineTestHelper eth(engine_type_e::MAZDA_MIATA_NB2, [](engine_configuration_s* engineConfiguration) {
-                                                       		engineConfiguration->tachOutputPin = Gpio::E8; // arbitrary tachometer
+    EngineTestHelper eth(engine_type_e::MAZDA_MIATA_NB2, [](engine_configuration_s* cfg) {
+                                                       		cfg->tachOutputPin = Gpio::E8; // arbitrary tachometer
                                                        	});
 
     // We don't actually care about ign/inj at all, just tach

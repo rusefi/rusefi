@@ -22,11 +22,11 @@ CsvReader::~CsvReader() {
 	}
 }
 
-void CsvReader::open(const char *fileName, const int* triggerColumnIndeces, const int *vvtColumnIndeces) {
+void CsvReader::open(const char *fileName, const int* triggerColumns, const int *vvtColumns) {
 	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
-	this->triggerColumnIndeces = triggerColumnIndeces;
-	this->vvtColumnIndeces = vvtColumnIndeces;
+	this->triggerColumnIndeces = triggerColumns;
+	this->vvtColumnIndeces = vvtColumns;
 	ASSERT_TRUE(fp != nullptr);
 }
 
@@ -71,8 +71,6 @@ double CsvReader::readTimestampAndValues(double *values) {
 
 // todo: separate trigger handling from csv file processing, maybe reuse 'readTimestampAndValues'?
 void CsvReader::processLine(EngineTestHelper *eth) {
-	Engine *engine = &eth->engine;
-
 	bool newTriggerState[TRIGGER_INPUT_PIN_COUNT];
 	bool newVvtState[CAM_INPUTS_COUNT];
 

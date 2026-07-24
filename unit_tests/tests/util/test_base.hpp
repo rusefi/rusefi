@@ -35,90 +35,90 @@ TestEngineState& TestBase<GtestBase, EngineType>::getTestEngineState() {
 }
 
 template<class GtestBase, engine_type_e EngineType>
-void TestBase<GtestBase, EngineType>::setUpEngineConfiguration(const EngineConfig& config) {
+void TestBase<GtestBase, EngineType>::setUpEngineConfiguration(const EngineConfig& engineConfig) {
 	// Other Sensor Inputs
-	getTestEngineConfiguration().configureClutchDownPin(config.getClutchDownPin());
-	getTestEngineConfiguration().configureClutchDownPinMode(config.getClutchDownPinMode());
-	getTestEngineConfiguration().configureClutchUpPin(config.getClutchUpPin());
-	getTestEngineConfiguration().configureClutchUpPinMode(config.getClutchUpPinMode());
+	getTestEngineConfiguration().configureClutchDownPin(engineConfig.getClutchDownPin());
+	getTestEngineConfiguration().configureClutchDownPinMode(engineConfig.getClutchDownPinMode());
+	getTestEngineConfiguration().configureClutchUpPin(engineConfig.getClutchUpPin());
+	getTestEngineConfiguration().configureClutchUpPinMode(engineConfig.getClutchUpPinMode());
 
 	// Launch Control
-	getTestEngineConfiguration().configureLaunchActivatePin(config.getLaunchActivatePin());
-	getTestEngineConfiguration().configureLaunchActivateMode(config.getLaunchActivatePinMode());
-	getTestEngineConfiguration().configureLaunchControlEnabled(config.getLaunchControlEnabled());
-	getTestEngineConfiguration().configureLaunchRpm(config.getLaunchRpm());
-	getTestEngineConfiguration().configureLaunchRpmWindow(config.getLaunchRpmWindow());
-	getTestEngineConfiguration().configureLaunchCorrectionsEndRpm(config.getLaunchCorrectionsEndRpm());
-	getTestEngineConfiguration().configureIgnitionRetardEnable(config.getIgnitionRetardEnable());
-	getTestEngineConfiguration().configureIgnitionRetard(config.getIgnitionRetard());
-	getTestEngineConfiguration().configureSmoothRetardMode(config.getSmoothRetardMode());
-	getTestEngineConfiguration().configureEnableIgnitionCut(config.getEnableIgnitionCut());
-	getTestEngineConfiguration().configureInitialIgnitionCutPercent(config.getInitialIgnitionCut());
-	getTestEngineConfiguration().configureFinalIgnitionCutPercentBeforeLaunch(config.getFinalIgnitionCutBeforeLaunch());
+	getTestEngineConfiguration().configureLaunchActivatePin(engineConfig.getLaunchActivatePin());
+	getTestEngineConfiguration().configureLaunchActivateMode(engineConfig.getLaunchActivatePinMode());
+	getTestEngineConfiguration().configureLaunchControlEnabled(engineConfig.getLaunchControlEnabled());
+	getTestEngineConfiguration().configureLaunchRpm(engineConfig.getLaunchRpm());
+	getTestEngineConfiguration().configureLaunchRpmWindow(engineConfig.getLaunchRpmWindow());
+	getTestEngineConfiguration().configureLaunchCorrectionsEndRpm(engineConfig.getLaunchCorrectionsEndRpm());
+	getTestEngineConfiguration().configureIgnitionRetardEnable(engineConfig.getIgnitionRetardEnable());
+	getTestEngineConfiguration().configureIgnitionRetard(engineConfig.getIgnitionRetard());
+	getTestEngineConfiguration().configureSmoothRetardMode(engineConfig.getSmoothRetardMode());
+	getTestEngineConfiguration().configureEnableIgnitionCut(engineConfig.getEnableIgnitionCut());
+	getTestEngineConfiguration().configureInitialIgnitionCutPercent(engineConfig.getInitialIgnitionCut());
+	getTestEngineConfiguration().configureFinalIgnitionCutPercentBeforeLaunch(engineConfig.getFinalIgnitionCutBeforeLaunch());
 
 	// Shift Torque Reduction (Flat Shift)
-	getTestEngineConfiguration().configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
-	getTestEngineConfiguration().configureTorqueReductionActivationMode(config.getTorqueReductionActivationMode());
-	getTestEngineConfiguration().configureTorqueReductionTriggerPin(config.getTorqueReductionTriggerPin());
-	getTestEngineConfiguration().configureTorqueReductionButtonMode(config.getTorqueReductionTriggerPinMode());
-	getTestEngineConfiguration().configureLimitTorqueReductionTime(config.getLimitTorqueReductionTime());
-	getTestEngineConfiguration().configureTorqueReductionTime(config.getTorqueReductionTime());
-	getTestEngineConfiguration().configureTorqueReductionArmingRpm(config.getTorqueReductionArmingRpm());
-	getTestEngineConfiguration().configureTorqueReductionArmingApp(config.getTorqueReductionArmingApp());
-	getTestEngineConfiguration().configureTorqueReductionIgnitionCut(config.getTorqueReductionIgnitionCut());
-	getTestEngineConfiguration().configureTorqueReductionIgnitionRetard(config.getTorqueReductionIgnitionRetard());
+	getTestEngineConfiguration().configureTorqueReductionEnabled(engineConfig.getTorqueReductionEnabled());
+	getTestEngineConfiguration().configureTorqueReductionActivationMode(engineConfig.getTorqueReductionActivationMode());
+	getTestEngineConfiguration().configureTorqueReductionTriggerPin(engineConfig.getTorqueReductionTriggerPin());
+	getTestEngineConfiguration().configureTorqueReductionButtonMode(engineConfig.getTorqueReductionTriggerPinMode());
+	getTestEngineConfiguration().configureLimitTorqueReductionTime(engineConfig.getLimitTorqueReductionTime());
+	getTestEngineConfiguration().configureTorqueReductionTime(engineConfig.getTorqueReductionTime());
+	getTestEngineConfiguration().configureTorqueReductionArmingRpm(engineConfig.getTorqueReductionArmingRpm());
+	getTestEngineConfiguration().configureTorqueReductionArmingApp(engineConfig.getTorqueReductionArmingApp());
+	getTestEngineConfiguration().configureTorqueReductionIgnitionCut(engineConfig.getTorqueReductionIgnitionCut());
+	getTestEngineConfiguration().configureTorqueReductionIgnitionRetard(engineConfig.getTorqueReductionIgnitionRetard());
 
-	getTestEngineConfiguration().configureFuelPressureSensorMode(config.getFuelPressureSensorMode());
+	getTestEngineConfiguration().configureFuelPressureSensorMode(engineConfig.getFuelPressureSensorMode());
 
 	// Injector
-	getTestEngineConfiguration().configureInjectorFlowAsMassFlow(config.getInjectorFlowAsMassFlow());
-	getTestEngineConfiguration().configureInjectorFlow(config.getInjectorFlow());
-	getTestEngineConfiguration().configureInjectorBattLagCorr(config.getInjectorBattLagCorr());
-	getTestEngineConfiguration().configureFuelReferencePressure(config.getFuelReferencePressure());
-	getTestEngineConfiguration().configureInjectorCompensationMode(config.getInjectorCompensationMode());
+	getTestEngineConfiguration().configureInjectorFlowAsMassFlow(engineConfig.getInjectorFlowAsMassFlow());
+	getTestEngineConfiguration().configureInjectorFlow(engineConfig.getInjectorFlow());
+	getTestEngineConfiguration().configureInjectorBattLagCorr(engineConfig.getInjectorBattLagCorr());
+	getTestEngineConfiguration().configureFuelReferencePressure(engineConfig.getFuelReferencePressure());
+	getTestEngineConfiguration().configureInjectorCompensationMode(engineConfig.getInjectorCompensationMode());
 
 	// Secondary injector
-	getTestEngineConfiguration().configureInjectorSecondaryFlow(config.getInjectorSecondaryFlow());
-	getTestEngineConfiguration().configureInjectorSecondaryBattLagCorr(config.getInjectorSecondaryBattLagCorr());
+	getTestEngineConfiguration().configureInjectorSecondaryFlow(engineConfig.getInjectorSecondaryFlow());
+	getTestEngineConfiguration().configureInjectorSecondaryBattLagCorr(engineConfig.getInjectorSecondaryBattLagCorr());
 	getTestEngineConfiguration().configureSecondaryInjectorFuelReferencePressure(
-			config.getSecondaryInjectorFuelReferencePressure()
+			engineConfig.getSecondaryInjectorFuelReferencePressure()
 	);
 	getTestEngineConfiguration().configureSecondaryInjectorCompensationMode(
-			config.getSecondaryInjectorCompensationMode()
+			engineConfig.getSecondaryInjectorCompensationMode()
 	);
 
 	// Staged injection
-	getTestEngineConfiguration().configureEnableStagedInjection(config.getStagedInjectionEnabled());
+	getTestEngineConfiguration().configureEnableStagedInjection(engineConfig.getStagedInjectionEnabled());
 
 	// Nitrous control
-	getTestEngineConfiguration().configureNitrousControlEnabled(config.getNitrousControlEnabled());
-	getTestEngineConfiguration().configureNitrousControlArmingMethod(config.getNitrousControlArmingMethod());
-	getTestEngineConfiguration().configureNitrousControlTriggerPin(config.getNitrousControlTriggerPin());
-	getTestEngineConfiguration().configureNitrousControlTriggerPinMode(config.getNitrousControlTriggerPinMode()
+	getTestEngineConfiguration().configureNitrousControlEnabled(engineConfig.getNitrousControlEnabled());
+	getTestEngineConfiguration().configureNitrousControlArmingMethod(engineConfig.getNitrousControlArmingMethod());
+	getTestEngineConfiguration().configureNitrousControlTriggerPin(engineConfig.getNitrousControlTriggerPin());
+	getTestEngineConfiguration().configureNitrousControlTriggerPinMode(engineConfig.getNitrousControlTriggerPinMode()
 	);
-	getTestEngineConfiguration().configureNitrousControlTriggerPinMode(config.getNitrousControlTriggerPinMode());
-	getTestEngineConfiguration().configureNitrousLuaGauge(config.getNitrousLuaGauge());
-	getTestEngineConfiguration().configureNitrousLuaGaugeMeaning(config.getNitrousLuaGaugeMeaning());
-	getTestEngineConfiguration().configureNitrousLuaGaugeArmingValue(config.getNitrousLuaGaugeArmingValue());
+	getTestEngineConfiguration().configureNitrousControlTriggerPinMode(engineConfig.getNitrousControlTriggerPinMode());
+	getTestEngineConfiguration().configureNitrousLuaGauge(engineConfig.getNitrousLuaGauge());
+	getTestEngineConfiguration().configureNitrousLuaGaugeMeaning(engineConfig.getNitrousLuaGaugeMeaning());
+	getTestEngineConfiguration().configureNitrousLuaGaugeArmingValue(engineConfig.getNitrousLuaGaugeArmingValue());
 
-	getTestEngineConfiguration().configureNitrousMinimumVehicleSpeed(config.getNitrousMinimumVehicleSpeed());
-	getTestEngineConfiguration().configureNitrousMinimumTps(config.getNitrousMinimumTps());
-	getTestEngineConfiguration().configureNitrousMinimumClt(config.getNitrousMinimumClt());
-	getTestEngineConfiguration().configureNitrousMaximumMap(config.getNitrousMaximumMap());
-	getTestEngineConfiguration().configureNitrousMaximumAfr(config.getNitrousMaximumAfr());
-	getTestEngineConfiguration().configureNitrousActivationRpm(config.getNitrousActivationRpm());
-	getTestEngineConfiguration().configureNitrousDeactivationRpm(config.getNitrousDeactivationRpm());
+	getTestEngineConfiguration().configureNitrousMinimumVehicleSpeed(engineConfig.getNitrousMinimumVehicleSpeed());
+	getTestEngineConfiguration().configureNitrousMinimumTps(engineConfig.getNitrousMinimumTps());
+	getTestEngineConfiguration().configureNitrousMinimumClt(engineConfig.getNitrousMinimumClt());
+	getTestEngineConfiguration().configureNitrousMaximumMap(engineConfig.getNitrousMaximumMap());
+	getTestEngineConfiguration().configureNitrousMaximumAfr(engineConfig.getNitrousMaximumAfr());
+	getTestEngineConfiguration().configureNitrousActivationRpm(engineConfig.getNitrousActivationRpm());
+	getTestEngineConfiguration().configureNitrousDeactivationRpm(engineConfig.getNitrousDeactivationRpm());
 	getTestEngineConfiguration().configureNitrousDeactivationRpmWindow(
-			config.getNitrousDeactivationRpmWindow()
+			engineConfig.getNitrousDeactivationRpmWindow()
 	);
 	getTestEngineConfiguration().configureNitrousFuelAdderPercent(
-			config.getNitrousFuelAdderPercent()
+			engineConfig.getNitrousFuelAdderPercent()
 	);
-	getTestEngineConfiguration().configureNitrousIgnitionRetard(config.getNitrousIgnitionRetard());
-	getTestEngineConfiguration().configureFuelLevelAveragingAlpha(config.getFuelLevelAveragingAlpha());
-	getTestEngineConfiguration().configureFuelLevelUpdatePeriodSec(config.getFuelLevelUpdatePeriodSec());
-	getTestEngineConfiguration().configureFuelLevelLowThresholdVoltage(config.getFuelLevelLowThresholdVoltage());
-	getTestEngineConfiguration().configureFuelLevelHighThresholdVoltage(config.getFuelLevelHighThresholdVoltage());
+	getTestEngineConfiguration().configureNitrousIgnitionRetard(engineConfig.getNitrousIgnitionRetard());
+	getTestEngineConfiguration().configureFuelLevelAveragingAlpha(engineConfig.getFuelLevelAveragingAlpha());
+	getTestEngineConfiguration().configureFuelLevelUpdatePeriodSec(engineConfig.getFuelLevelUpdatePeriodSec());
+	getTestEngineConfiguration().configureFuelLevelLowThresholdVoltage(engineConfig.getFuelLevelLowThresholdVoltage());
+	getTestEngineConfiguration().configureFuelLevelHighThresholdVoltage(engineConfig.getFuelLevelHighThresholdVoltage());
 }
 
 template<class GtestBase, engine_type_e EngineType>

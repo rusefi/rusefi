@@ -12,11 +12,11 @@ void AcTestBase::updateAcPressure(float acPressure) {
     periodicSlowCallback();
 }
 
-void AcTestBase::setUpTestConfig(const AcTestConfig& config) {
-    configureAcDelay(config.getAcDelay());
-    configureMinAcPressure(config.getMinAcPressure());
-    configureMaxAcPressure(config.getMaxAcPressure());
-    configureAcPressureEnableHysteresis(config.getAcPressureEnableHysteresis());
+void AcTestBase::setUpTestConfig(const AcTestConfig& testConfig) {
+    configureAcDelay(testConfig.getAcDelay());
+    configureMinAcPressure(testConfig.getMinAcPressure());
+    configureMaxAcPressure(testConfig.getMaxAcPressure());
+    configureAcPressureEnableHysteresis(testConfig.getAcPressureEnableHysteresis());
 }
 
 void AcTestBase::configureAcDelay(const std::optional<float> acDelay) {

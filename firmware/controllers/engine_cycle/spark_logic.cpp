@@ -24,7 +24,10 @@ extern bool verboseMode;
 	extern bool printFuelDebug;
 #endif // EFI_PRINTF_FUEL_DETAILS
 
+#if !EFI_UNIT_TEST
+// only consumed by the skipped-spark detection in startDwellByTurningSparkPinHigh()
 static const char *prevSparkName = nullptr;
+#endif // EFI_UNIT_TEST
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING

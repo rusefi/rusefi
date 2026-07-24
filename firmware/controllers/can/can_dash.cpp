@@ -70,8 +70,12 @@ static uint8_t rpmcounter;
 static uint8_t seatbeltcnt;
 static uint8_t abscounter = 0xF0;
 static uint8_t brakecnt_1 = 0xF0, brakecnt_2 = 0xF0;
-static uint8_t mph_a, mph_2a, mph_last, tmp_cnt, gear_cnt;
+static uint8_t tmp_cnt, gear_cnt;
+#if !EFI_UNIT_TEST
+// only consumed by the E90 speed frame math which is compiled out of unit tests
+static uint8_t mph_a, mph_2a, mph_last;
 static uint16_t mph_counter = 0xF000;
+#endif // EFI_UNIT_TEST
 static bool cluster_time_set;
 
 constexpr uint8_t e90_temp_offset = 49;

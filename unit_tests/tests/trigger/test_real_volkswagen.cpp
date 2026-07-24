@@ -43,8 +43,6 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		ASSERT_EQ(1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	}
 
-	auto now = getTimeNowNt();
-
 	{
 		// Offset by a short time offset, 10 seconds
 		CsvReader reader(1, /* vvtCount */ 0, 10);

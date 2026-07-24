@@ -265,6 +265,9 @@ static int lua_canSetBaud(lua_State* l) {
 	if (ret < 0) {
 		luaL_error(l, "Failed to change CAN%d baudrate to %d", bus + 1, baud);
 	}
+#else
+	(void)bus;
+	(void)baud;
 #endif
 
 	return 0;
@@ -281,6 +284,7 @@ static int lua_canSetListenMode(lua_State* l) {
 		luaL_error(l, "Failed to change CAN%d listen-only mode to %d", bus + 1, listenOnly);
 	}
 #else
+	(void)bus;
 	(void)listenOnly;
 #endif
 

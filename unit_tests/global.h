@@ -65,8 +65,12 @@ void chDbgAssert(int c, char *msg, void *arg);
 
 #ifdef __cplusplus
 namespace chibios_rt {
-	// Noop for unit tests - this does real lock in FW/sim
-	class CriticalSectionLocker { };
+	// Noop for unit tests - this does real lock in FW/sim.
+	// User-provided ctor so the RAII guard is not flagged by -Wunused-variable.
+	class CriticalSectionLocker {
+	public:
+		CriticalSectionLocker() {}
+	};
 }
 #endif
 
