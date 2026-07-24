@@ -68,7 +68,8 @@ TEST(CppMemoryLayout, VirtualStruct) {
 
 
 	int destimationInt = 1;
-	memcpy(&destimationInt, &c, 4);
+	// void* cast: we intentionally peek at the vtable pointer bytes
+	memcpy(&destimationInt, static_cast<void*>(&c), 4);
 	ASSERT_NE(540, destimationInt);
 
 	// static_cast is smart to skip the vtable, we like static_cast

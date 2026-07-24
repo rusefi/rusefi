@@ -250,7 +250,7 @@ TEST(LongTermIdleTrim, update) {
 	setArrayValues(config->ltitTable, 105);
 
     constexpr int mocked_rpm = 920;
-	constexpr int mocked_temp = 45.5;
+	constexpr auto mocked_temp = 45.5;
 
     StrictMock<MockIdleLTIT> idler;
     engine->engineModules.get<IdleController>().set(&idler);
