@@ -10,7 +10,7 @@
 
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_PROD_CODE && EFI_CAN_SUPPORT
 
 #include "can_sniffer.h"
 
@@ -381,4 +381,4 @@ void CanSniffer::putstr(const char * s)
 }
 
 #endif // CAN_SNIFFER
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_PROD_CODE && EFI_CAN_SUPPORT
