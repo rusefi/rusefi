@@ -556,7 +556,7 @@ bool validateConfigOnStartUpOrBurn() {
   }
 
 
-  defaultsOrFixOnBurn();
+  applyDefaultsOrFixAfterBurn();
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;

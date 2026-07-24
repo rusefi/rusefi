@@ -51,7 +51,7 @@ Be careful: in running-math mode the `baseCrankingFuel` already reflects the **f
 ### Legacy tune migration
 
 The 2D table fields are appended config so existing tunes stay valid. Two mechanisms keep old tunes working:
-- `defaultsOrFixOnBurn()` seeds each 2D table from its corresponding 1D curve (E0 / `primeValues`) for any tune whose ethanol axis is still all-zero, so turning flex on is neutral until calibrated.
+- `applyDefaultsOrFixAfterBurn()` seeds each 2D table from its corresponding 1D curve (E0 / `primeValues`) for any tune whose ethanol axis is still all-zero, so turning flex on is neutral until calibrated.
 - `CrankingFlexTableMigrator` (`java_console`, part of the `ComposedTuneMigrator` pipeline) reconstructs `crankingFuelFlexTable` from a user's old `crankingFuelCoef` (E0) and retired `crankingFuelCoefE100` (E100) curves, reproducing the legacy 85%-anchored blend at each ethanol node — so people who had tuned the old flex cranking curves keep their behaviour.
 
 See `docs/calibration-compatibility.md` and `TuneMigrator.java`.
