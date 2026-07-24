@@ -13,6 +13,7 @@ import static com.rusefi.maintenance.UpdateMode.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for the Update-Firmware main-button decision logic that maps a detected/selected port and
@@ -137,5 +138,11 @@ public class ProgramSelectorTest {
         PortResult resolved = resolveFlashPort(blt, true, NO_PORTS, NO_PORTS);
         assertSame(blt, resolved);
         assertEquals(OPENBLT_MANUAL, mainButtonModeFor(resolved, true));
+    }
+
+    @Test
+    public void firmwareControlsStayVisibleWhileJobRunsWithoutDetectedHardware() {
+        assertTrue(ProgramSelector.shouldShowFirmwareControls(true, true, false));
+        assertTrue(ProgramSelector.shouldShowFirmwareControls(true, false, true));
     }
 }

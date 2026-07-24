@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Objects;
 import java.io.EOFException;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortType.OpenBlt;
@@ -40,14 +42,17 @@ public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
-    private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
+    private final JPanel updateModeAndButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 32, 5));
     private final JSplitButton splitButton = new JSplitButton("Update ECU Firmware", AutoupdateUtil.loadIcon("upload48.png"));
+    private final List<JComponent> additionalFirmwareControls = new ArrayList<>();
     private final ConnectivityContext connectivityContext;
     private final JComboBox<PortResult> comboPorts;
     @Nullable
     private SingleAsyncJobExecutor jobExecutor;
     @Nullable
     private LinkManager linkManager;
+    private Function<JComponent, Boolean> firmwareUpdateInterceptor = source -> false;
+    private BooleanSupplier externalBusy = () -> false;
 
     public ProgramSelector(ConnectivityContext connectivityContext, JComboBox<PortResult> comboPorts) {
         this.connectivityContext = connectivityContext;
@@ -61,6 +66,9 @@ public class ProgramSelector {
         updateModeAndButton.add(splitButton);
 
         splitButton.addActionListener(e -> {
+            if (firmwareUpdateInterceptor.apply(splitButton)) {
+                return;
+            }
             final PortResult targetPort = resolveFlashPort();
             executeJob(splitButton, mainButtonModeFor(targetPort), targetPort);
         });
@@ -118,6 +126,7 @@ public class ProgramSelector {
         } else {
             splitButton.setText("Update Firmware");
         }
+        matchFirmwareControlSizes();
     }
 
     private boolean isLiveConnection() {
@@ -227,11 +236,22 @@ public class ProgramSelector {
         this.linkManager = linkManager;
     }
 
+    public void setFirmwareUpdateInterceptor(Function<JComponent, Boolean> firmwareUpdateInterceptor) {
+        this.firmwareUpdateInterceptor = Objects.requireNonNull(firmwareUpdateInterceptor);
+    }
+
+    public void setExternalBusySupplier(BooleanSupplier externalBusy) {
+        this.externalBusy = Objects.requireNonNull(externalBusy);
+    }
+
     /**
      * Programmatically trigger the main "Update Firmware" action for the currently selected port —
      * same as clicking the split button. Used by the console's "Update ECU" menu shortcut [tag:better_ux_for_flashing].
      */
     public void triggerUpdateFirmware() {
+        if (firmwareUpdateInterceptor.apply(splitButton)) {
+            return;
+        }
         final PortResult targetPort = resolveFlashPort();
         if (targetPort == null) {
             // Nothing detected/selected — mirrors the split button being disabled in apply(). [tag:better_ux_for_flashing]
@@ -520,9 +540,25 @@ public class ProgramSelector {
         return content;
     }
 
+    public void addFirmwareControl(JComponent control) {
+        additionalFirmwareControls.add(control);
+        updateModeAndButton.add(control, 0);
+        matchFirmwareControlSizes();
+    }
+
+    private void matchFirmwareControlSizes() {
+        Dimension size = splitButton.getPreferredSize();
+        for (JComponent control : additionalFirmwareControls) {
+            control.setPreferredSize(size);
+        }
+    }
+
     public void apply(AvailableHardware currentHardware) {
+        boolean isJobRunning = (jobExecutor != null && !jobExecutor.isNotInProgress()) || externalBusy.getAsBoolean();
+        boolean additionalControlVisible = additionalFirmwareControls.stream().anyMatch(Component::isVisible);
         noHardware.setVisible(currentHardware.isEmpty());
-        updateModeAndButton.setVisible(!currentHardware.isEmpty());
+        updateModeAndButton.setVisible(shouldShowFirmwareControls(
+            currentHardware.isEmpty(), isJobRunning, additionalControlVisible));
 
         boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
         boolean hasDfuDevice = currentHardware.isDfuFound();
@@ -560,7 +596,6 @@ public class ProgramSelector {
         }
 
         int menuItemCount = popupMenu.getComponentCount();
-        boolean isJobRunning = jobExecutor != null && !jobExecutor.isNotInProgress();
 
         splitButton.setPopupMenu(menuItemCount > 0 ? popupMenu : null);
         splitButton.setMainButtonEnabled(hasSerialPorts && !isJobRunning);
@@ -572,6 +607,14 @@ public class ProgramSelector {
 
         AutoupdateUtil.trueLayoutAndRepaint(splitButton);
         AutoupdateUtil.trueLayoutAndRepaint(content);
+    }
+
+    static boolean shouldShowFirmwareControls(
+        boolean hardwareEmpty,
+        boolean jobRunning,
+        boolean additionalControlVisible
+    ) {
+        return !hardwareEmpty || jobRunning || additionalControlVisible;
     }
 
     /**
