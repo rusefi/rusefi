@@ -13,7 +13,8 @@
 
 static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 {
-	int msgCount = 0;
+	// only read by the disabled debug printf below
+	[[maybe_unused]] int msgCount = 0;
 	int lineCount = 0;
 	int printDebug = SENT_STATISTIC_COUNTERS;
 	CsvReader reader(1, 0);

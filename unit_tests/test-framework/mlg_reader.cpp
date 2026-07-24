@@ -111,7 +111,7 @@ int BinarySensorReader::readRecordsMetadata(std::ifstream &input,
 }
 
 void BinarySensorReader::readLoggerFieldData() {
-	/*uint16_t timestamp =*/static_cast<uint16_t>(readSwappedShort(&ifs));
+	/*uint16_t timestamp =*/(void)readSwappedShort(&ifs);
 
 //    std::cout << "Reading for record " << recordCounter << std::endl;
 
@@ -120,7 +120,7 @@ void BinarySensorReader::readLoggerFieldData() {
 		currentSnapshot[record->getFieldName()] = value;
 	}
 
-	/*uint8_t crc = */static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
+	/*uint8_t crc = */(void)readByte(&ifs);
 
 	recordCounter++;
 	//logContent.emplace_back(currentSnapshot);
@@ -128,7 +128,7 @@ void BinarySensorReader::readLoggerFieldData() {
 
 std::map<const std::string, float>& BinarySensorReader::readBlock() {
 	uint8_t blockType = static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
-	/*uint8_t counter = */static_cast<uint8_t>(readByte(&ifs)); // Use the new helper
+	/*uint8_t counter = */(void)readByte(&ifs);
 
 	if (blockType == 0) {
 		readLoggerFieldData();
