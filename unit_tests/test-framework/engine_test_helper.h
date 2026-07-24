@@ -21,7 +21,7 @@ class EngineTestHelperBase
 public:
 	// we have the base method and base constructor in order to better control order if initialization
 	// base constructor contains things which need to be executed first
-	EngineTestHelperBase(Engine * eng, engine_configuration_s * config, persistent_config_s * pers);
+	EngineTestHelperBase(Engine * eng, persistent_config_s * pers);
 	~EngineTestHelperBase();
 };
 
