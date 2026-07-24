@@ -111,10 +111,12 @@ private:
 #define CAN_SID(f) ((f).std.SID)
 #define CAN_EID(f) ((f).ext.EID)
 #define CAN_ISX(f) ((f).common.XTD)
+#define CAN_ISRTR(f) ((f).common.RTR)
 #else
 #define CAN_SID(f) ((f).SID)
 #define CAN_EID(f) ((f).EID)
 #define CAN_ISX(f) ((f).IDE)
+#define CAN_ISRTR(f) ((f).RTR)
 #endif
 
 #define CAN_ID(f) (CAN_ISX(f) ? CAN_EID(f) : CAN_SID(f))
