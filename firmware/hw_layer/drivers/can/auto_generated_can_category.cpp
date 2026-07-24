@@ -1,6 +1,6 @@
 #include "global.h"
 #include "can_category.h"
-// was generated automatically by rusEFI tool  from can_category.h // by enum_to_string.jar tool on Sat Apr 04 11:57:46 UTC 2026
+// was generated automatically by rusEFI tool  from can_category.h // by enum_to_string.jar tool on Fri Jul 24 23:42:29 UTC 2026
 // see also gen_config_and_enums.bat
 
 
@@ -27,6 +27,8 @@ const char *getCanCategory(CanCategory value) {
 			return "OBD";
 		case CanCategory::SERIAL:
 			return "SERIAL";
+		case CanCategory::SNIFFER:
+			return "SNIFFER";
 		case CanCategory::TCU:
 			return "TCU";
 		case CanCategory::VERBOSE:
