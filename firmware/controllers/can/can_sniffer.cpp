@@ -10,9 +10,12 @@
 
 #include "pch.h"
 
+#if EFI_CAN_SUPPORT
+
 #include "can_sniffer.h"
 
 #if CAN_SNIFFER
+
 #include "can_msg_tx.h"
 
 void CanSniffer::ThreadTask() {
@@ -377,4 +380,5 @@ void CanSniffer::putstr(const char * s)
 	chnWriteTimeout(m_channel, (uint8_t *)s, l, TIME_MS2I(100));
 }
 
-#endif
+#endif // CAN_SNIFFER
+#endif // EFI_CAN_SUPPORT
