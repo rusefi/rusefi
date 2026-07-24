@@ -10,6 +10,9 @@ import com.rusefi.SerialPortType;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.binaryprotocol.IniNotFoundException;
+import com.rusefi.config.generated.Integration;
+import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.CalibrationBackupFailureAction;
 import com.rusefi.core.ui.CalibrationBackupFailureDialog;
@@ -56,7 +59,8 @@ public class CalibrationsHelper {
     private static volatile Optional<CalibrationsInfo> lastEcuCalibrations = Optional.empty();
 
     public enum FirmwareUpdatePolicy {
-        FORWARD_MIGRATION
+        FORWARD_MIGRATION,
+        ROLLBACK_RESTORE_OR_RESET
     }
 
     public static class MergeResult {
@@ -304,6 +308,13 @@ public class CalibrationsHelper {
                 ));
 
                 if (skipCalibrationRestore) {
+                    if (policy == FirmwareUpdatePolicy.ROLLBACK_RESTORE_OR_RESET) {
+                        return resetRollbackDefaults(
+                            newEcuPort,
+                            timestampFileNameComponent,
+                            callbacks,
+                            connectivityContext);
+                    }
                     callbacks.logLine("Skipping calibration restore - ECU will use default configuration.");
                     final Optional<CalibrationsInfo> freshCalibrations = readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
                         newEcuPort.port,
@@ -334,6 +345,15 @@ public class CalibrationsHelper {
                 }
                 if (!updatedCalibrations.isPresent()) {
                     callbacks.logLine("Failed to back up tune from ECU after firmware update...");
+
+                    if (policy == FirmwareUpdatePolicy.ROLLBACK_RESTORE_OR_RESET) {
+                        callbacks.logLine("Unable to verify the rolled-back calibration; resetting to firmware defaults.");
+                        return resetRollbackDefaults(
+                            newEcuPort,
+                            timestampFileNameComponent,
+                            callbacks,
+                            connectivityContext);
+                    }
 
                     if (isUiContext(callbacks)) {
                         CalibrationBackupFailureAction action = showCalibrationFailureDialog(
@@ -369,6 +389,16 @@ public class CalibrationsHelper {
                     } else {
                         return false;
                     }
+                }
+
+                if (policy == FirmwareUpdatePolicy.ROLLBACK_RESTORE_OR_RESET) {
+                    return restoreOrResetAfterRollback(
+                        newEcuPort,
+                        prevCalibrations.get(),
+                        updatedCalibrations.get(),
+                        timestampFileNameComponent,
+                        callbacks,
+                        connectivityContext);
                 }
 
                 // Try the strict-equivalent merge first: migrate every field, collecting any that fail.
@@ -469,6 +499,79 @@ public class CalibrationsHelper {
                 return false;
             }
         }
+    }
+
+    static boolean rollbackLayoutsMatch(final CalibrationsInfo before, final CalibrationsInfo after) {
+        final String beforeSignature = before.getIniFile().getSignature();
+        final String afterSignature = after.getIniFile().getSignature();
+        final RusEfiSignature beforeParsed = SignatureHelper.parse(beforeSignature);
+        final RusEfiSignature afterParsed = SignatureHelper.parse(afterSignature);
+        if (beforeParsed == null || afterParsed == null
+            || beforeParsed.getHash() == null || afterParsed.getHash() == null) {
+            return beforeSignature.equals(afterSignature);
+        }
+        return beforeParsed.getHash().equals(afterParsed.getHash());
+    }
+
+    private static boolean restoreOrResetAfterRollback(
+        final PortResult ecuPort,
+        final CalibrationsInfo before,
+        final CalibrationsInfo after,
+        final String timestampFileNameComponent,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
+        if (rollbackLayoutsMatch(before, after)) {
+            callbacks.logLine("Calibration layout is unchanged; restoring the pre-rollback tune.");
+            if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
+                ecuPort.port,
+                before.getImage().getConfigurationImage(),
+                callbacks,
+                connectivityContext)) {
+                return false;
+            }
+            return readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+                ecuPort.port,
+                callbacks,
+                getFileNameWithoutExtension(timestampFileNameComponent, "rollback_restored_from_ecu"),
+                connectivityContext).isPresent();
+        }
+
+        callbacks.logLine("Calibration layout changed; reverse migration is unavailable. Resetting to firmware defaults.");
+        return resetRollbackDefaults(ecuPort, timestampFileNameComponent, callbacks, connectivityContext);
+    }
+
+    private static boolean resetRollbackDefaults(
+        final PortResult ecuPort,
+        final String timestampFileNameComponent,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
+        final boolean reset = BinaryProtocolExecutor.executeWithSuspendedPortScanner(
+            ecuPort.port,
+            callbacks,
+            binaryProtocol -> {
+                final byte[] response = binaryProtocol.executeCommand(
+                    Integration.TS_EXECUTE,
+                    BinaryProtocol.getTextCommandBytesOnlyText("rewriteconfig"),
+                    "rewriteconfig");
+                return response != null
+                    && response.length == 1
+                    && response[0] == (byte) Integration.TS_RESPONSE_OK;
+            },
+            false,
+            connectivityContext,
+            "rewriteconfig");
+        if (!reset) {
+            callbacks.logLine("Failed to reset calibration after firmware rollback.");
+            return false;
+        }
+
+        return readAndBackupCurrentCalibrationsWithSuspendedPortScanner(
+            ecuPort.port,
+            callbacks,
+            getFileNameWithoutExtension(timestampFileNameComponent, "rollback_defaults_from_ecu"),
+            connectivityContext).isPresent();
     }
 
     /**
