@@ -55,6 +55,10 @@ public class CalibrationsHelper {
      *  (no live ECU to read pre-flash like the auto path does). [tag:better_ux_for_flashing] */
     private static volatile Optional<CalibrationsInfo> lastEcuCalibrations = Optional.empty();
 
+    public enum FirmwareUpdatePolicy {
+        FORWARD_MIGRATION
+    }
+
     public static class MergeResult {
         public final Optional<CalibrationsInfo> mergedCalibrations;
         public final List<String> failedFields;
@@ -185,6 +189,21 @@ public class CalibrationsHelper {
         final UpdateOperationCallbacks callbacks,
         final Supplier<Boolean> updateFirmware,
         final ConnectivityContext connectivityContext
+    ) {
+        return updateFirmwareAndRestorePreviousCalibrations(
+            parent, originalEcuPort, bp, lm, callbacks, updateFirmware, connectivityContext,
+            FirmwareUpdatePolicy.FORWARD_MIGRATION);
+    }
+
+    public static boolean updateFirmwareAndRestorePreviousCalibrations(
+        final JComponent parent,
+        final PortResult originalEcuPort,
+        @Nullable final BinaryProtocol bp,
+        @Nullable final LinkManager lm,
+        final UpdateOperationCallbacks callbacks,
+        final Supplier<Boolean> updateFirmware,
+        final ConnectivityContext connectivityContext,
+        final FirmwareUpdatePolicy policy
     ) {
         AutoupdateUtil.assertNotAwtThread();
 

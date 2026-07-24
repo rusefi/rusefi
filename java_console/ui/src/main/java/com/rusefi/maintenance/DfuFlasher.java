@@ -52,17 +52,44 @@ public class DfuFlasher {
         final UpdateOperationCallbacks callbacks,
         final ConnectivityContext connectivityContext
     ) {
+        return doAutoDfu(parent, port, bp, lm, callbacks, connectivityContext, null);
+    }
+
+    public static boolean doAutoDfu(
+        final JComponent parent,
+        final PortResult port,
+        final BinaryProtocol bp,
+        final LinkManager lm,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext,
+        final @Nullable String firmwareBinFile
+    ) {
+        return doAutoDfu(parent, port, bp, lm, callbacks, connectivityContext, firmwareBinFile,
+            CalibrationsHelper.FirmwareUpdatePolicy.FORWARD_MIGRATION);
+    }
+
+    public static boolean doAutoDfu(
+        final JComponent parent,
+        final PortResult port,
+        final BinaryProtocol bp,
+        final LinkManager lm,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext,
+        final @Nullable String firmwareBinFile,
+        final CalibrationsHelper.FirmwareUpdatePolicy policy
+    ) {
         return CalibrationsHelper.updateFirmwareAndRestorePreviousCalibrations(
             parent, port, bp, lm, callbacks,
-            () -> dfuUpdateFirmware(parent, port.port, callbacks, connectivityContext.getConnectedEcuTarget()),
-            connectivityContext);
+            () -> dfuUpdateFirmware(parent, port.port, callbacks, connectivityContext.getConnectedEcuTarget(), firmwareBinFile),
+            connectivityContext, policy);
     }
 
     private static boolean dfuUpdateFirmware(
         final JComponent parent,
         final String port,
         final UpdateOperationCallbacks callbacks,
-        final ConnectedEcuTarget connectedEcuTarget
+        final ConnectedEcuTarget connectedEcuTarget,
+        final @Nullable String firmwareBinFile
     ) {
         if (port == null) {
             JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
@@ -80,7 +107,10 @@ public class DfuFlasher {
             }
 
             timeForDfuSwitch(callbacks);
-            if (executeDFU(callbacks, FindFileHelper.findFirmwareFileForConnectedBoard(connectedEcuTarget), connectedEcuTarget)) {
+            final String fileName = firmwareBinFile != null
+                ? firmwareBinFile
+                : FindFileHelper.findFirmwareFileForConnectedBoard(connectedEcuTarget);
+            if (executeDFU(callbacks, fileName, connectedEcuTarget)) {
                 // We need to wait to allow connection to ECU port (see #7403)
                 timeForDfuSwitch(callbacks);
                 return true;
