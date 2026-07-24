@@ -22,6 +22,14 @@
 #include "string.h"
 #include "mpu_util.h"
 
+#include "can_sniffer.h"
+#include "usbcfg.h"
+
+#if HAL_USE_USB_CDC_2
+CanSniffer canSniffer(SDU[1]);
+#endif
+
+
 static bool isCanEnabled = false;
 
 #if EFI_PROD_CODE
@@ -73,7 +81,12 @@ public:
 			// Process the message
 			engine->outputChannels.canReadCounter++;
 
-			processCanRxMessage(m_index, m_buffer, getTimeNowNt());
+			auto nowNt = getTimeNowNt();
+			processCanRxMessage(m_index, m_buffer, nowNt);
+
+#if HAL_USE_USB_CDC_2
+			canSniffer.handle_can_message(m_index, m_buffer, nowNt);
+#endif
 		}
 
 		chThdExit((msg_t)0x0);
@@ -318,6 +331,9 @@ void initCan() {
 			canRead[index].setDevice(device[index]);
 			canRead[index].start();
 		}
+#if HAL_USE_USB_CDC_2
+		canSniffer.start();
+#endif
 	}
 
 	isCanEnabled = true;
