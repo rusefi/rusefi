@@ -41,8 +41,16 @@ using setup_custom_get_cylinder_ignition_trim_type = angle_t (*)(size_t /*cylind
 using setup_custom_get_cylinder_fuel_trim_type = float (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*fuelLoad*/);
 using setup_custom_bool_type = bool (*)();
 
+// Read-only configuration validation, invoked from validateConfigOnStartUpOrBurn().
+// Returns false if configuration is broken. Must NOT mutate configuration - use
+// custom_board_fix_configuration for board-specific fixes/migrations.
 using custom_validate_config_type = bool (*)();
 extern std::optional<custom_validate_config_type> custom_board_validateConfig;
+
+// Board-specific counterpart of applyDefaultsOrFixAfterBurn(): mutate configuration here to
+// fix or migrate values. Returns true if anything was changed.
+using custom_fix_configuration_type = bool (*)();
+extern std::optional<custom_fix_configuration_type> custom_board_fix_configuration;
 
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);
 extern std::optional<setup_custom_board_ts_command_override_type> custom_board_ts_command;

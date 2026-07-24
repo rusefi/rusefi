@@ -126,6 +126,7 @@ For detailed technical documentation intended for AI assistants, see:
 - **Configuration-driven**: Board and engine parameters externalized; firmware adapts via configuration
 - **Calibration Compatibility**: Maintaining [compatibility with older tunes](docs/calibration-compatibility.md) when adding new parameters.
 - **ChibiOS RTOS**: Real-time operating system foundation
+- **Config validate vs fix separation**: `validateConfigOnStartUpOrBurn()` is read-only validation; ALL configuration mutation on startup/burn belongs in `applyDefaultsOrFixAfterBurn()` (returns true if it changed anything). Board-specific fixes go in the `custom_board_fix_configuration` override (same changed-flag contract); `custom_board_validateConfig` must never mutate config.
 - **Engine modules**: Engine-asynchronous control logic derives from `EngineModule` and registers in the `type_list` in `firmware/controllers/algo/engine.h`. Before creating a module or making one compile-time optional, search the codebase for `[tag:disable_engine_module]` and read those comments — they document the module lifecycle and the TS-page guard-flag rules (a module that owns a TunerStudio page must have its `EFI_*` flag declared in the board `prepend.txt`, never in `board.mk` or `efifeatures.h`).
 
 #### Generated configuration layout

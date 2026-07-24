@@ -37,4 +37,6 @@ void setTPS1Calibration(uint16_t tpsMin, uint16_t tpsMax, uint16_t tps1Secondary
 void setCustomMap(float lowValue, float mapLowValueVoltage, float highValue, float mapHighValueVoltage);
 
 void setEtbPID(float p, float i, float d);
-void applyDefaultsOrFixAfterBurn();
+// The only place allowed to mutate configuration on start-up/burn. Returns true if anything was changed.
+// validateConfigOnStartUpOrBurn() is read-only apart from calling this.
+bool applyDefaultsOrFixAfterBurn();

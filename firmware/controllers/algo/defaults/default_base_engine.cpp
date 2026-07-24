@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "defaults.h"
+#include "board_overrides.h"
 #include "vr_pwm.h"
 #include "kline.h"
 #include "second_tables.h"
@@ -126,17 +127,22 @@ void setDynoDefaults() {
     config->dynoCarFrontalAreaM2 = 1.85;
  }
 
-void applyDefaultsOrFixAfterBurn() {
+bool applyDefaultsOrFixAfterBurn() {
+  bool changed = false;
+
   if (config->dynoCarCarMassKg == 0) {
     setDynoDefaults();
+    changed = true;
   }
 
   if (engineConfiguration->engineShutDownPeriod == 0) {
     engineConfiguration->engineShutDownPeriod = 5;
+    changed = true;
   }
 
   if (engineConfiguration->mainRelayDisableTime == 0) {
     engineConfiguration->mainRelayDisableTime = 1;
+    changed = true;
   }
 
   // Seed the 2D cranking flex table for tunes that predate it (all-zero ethanol axis). Mirror the existing
@@ -158,6 +164,7 @@ void applyDefaultsOrFixAfterBurn() {
           config->crankingFuelFlexTable[ethanolIdx][cltIdx] = config->crankingFuelCoef[cltIdx];
         }
       }
+      changed = true;
     }
   }
 
@@ -179,51 +186,66 @@ void applyDefaultsOrFixAfterBurn() {
           engineConfiguration->primeFlexTable[ethanolIdx][cltIdx] = engineConfiguration->primeValues[cltIdx];
         }
       }
+      changed = true;
     }
   }
 
 #if HW_PROTEUS && defined(STM32F4XX)
   // should have been proteus per-board validation
-  engineConfiguration->is_enabled_spi_5 = false;
+  if (engineConfiguration->is_enabled_spi_5) {
+    engineConfiguration->is_enabled_spi_5 = false;
+    changed = true;
+  }
 #endif
 
   if (engineConfiguration->launchTpsThreshold < MIN_launchTpsThreshold) {
     engineConfiguration->launchTpsThreshold = MIN_launchTpsThreshold;
+    changed = true;
   }
 
 	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
 	  engineConfiguration->mapExpAverageAlpha = 1;
+	  changed = true;
 	}
 
 	if (engineConfiguration->ppsExpAverageAlpha <= 0 || engineConfiguration->ppsExpAverageAlpha > 1) {
 	  engineConfiguration->ppsExpAverageAlpha = 1;
+	  changed = true;
 	}
 	if (engineConfiguration->afrExpAverageAlpha <= 0 || engineConfiguration->afrExpAverageAlpha > 1) {
 	  engineConfiguration->afrExpAverageAlpha = 1;
+	  changed = true;
 	}
 
 	if (engineConfiguration->referenceTorqueForGenerator == 0) {
   	engineConfiguration->referenceTorqueForGenerator = 250;
+  	changed = true;
 	}
 	if (engineConfiguration->referenceMapForGenerator == 0) {
   	engineConfiguration->referenceMapForGenerator = 100;
+  	changed = true;
 	}
 	if (engineConfiguration->referenceVeForGenerator == 0) {
   	engineConfiguration->referenceVeForGenerator = 75;
+  	changed = true;
 	}
 
 	if (engineConfiguration->alternator_iTermMin == 0) {
   	engineConfiguration->alternator_iTermMin = -1000;
+  	changed = true;
 	}
 	if (engineConfiguration->alternator_iTermMax == 0) {
   	engineConfiguration->alternator_iTermMax = 1000;
+  	changed = true;
 	}
 	if (engineConfiguration->idleReturnTargetRampDuration <= 0.1){
 		engineConfiguration->idleReturnTargetRampDuration = 3;
+		changed = true;
 	}
 
 	if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
 		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
+		changed = true;
 	}
 
 	// Conditional SD logging: seed sensible start/stop/delay for tunes that predate the
@@ -233,6 +255,7 @@ void applyDefaultsOrFixAfterBurn() {
 		engineConfiguration->sdLogStartRpm = 800;
 		engineConfiguration->sdLogStopRpm = 700;
 		engineConfiguration->sdLogStopDelay = 30;
+		changed = true;
 	}
 
 	// Flex fuel transient compensation: give tunes that predate the feature sensible
@@ -241,7 +264,14 @@ void applyDefaultsOrFixAfterBurn() {
 	if (config->flexTransientCltBins[FLEX_TRANSIENT_CLT_SIZE - 1] == 0) {
 		setLinearCurve(config->flexTransientCltBins, -40, 100, 1);
 		setLinearCurve(config->flexTransientEthanolBins, 0, 100, 1);
+		changed = true;
 	}
+
+	if (get_board_override_result(custom_board_fix_configuration, false)) {
+		changed = true;
+	}
+
+	return changed;
 }
 
 void setDefaultBaseEngine() {

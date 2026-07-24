@@ -50,11 +50,12 @@ static void uaefi_boardConfigOverrides() {
 
 }
 
-static bool uaefi_validateBoardConfig() {
+static bool uaefi_fixConfiguration() {
   if (engineConfiguration->can2RxPin != Gpio::B12) {
 	  setHellenCan2();
+	  return true;
   }
-  return true;
+  return false;
 }
 
 /**
@@ -185,7 +186,7 @@ void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = uaefi_boardDefaultConfiguration;
 	custom_board_ConfigOverrides = uaefi_boardConfigOverrides;
 	custom_board_periodicSlowCallback = uaefi_slowCallback;
-	custom_board_validateConfig = uaefi_validateBoardConfig;
+	custom_board_fix_configuration = uaefi_fixConfiguration;
 }
 
 int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {

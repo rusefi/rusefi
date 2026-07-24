@@ -556,6 +556,7 @@ bool validateConfigOnStartUpOrBurn() {
   }
 
 
+  // the only step which is allowed to modify configuration - everything else in this method is read-only validation
   applyDefaultsOrFixAfterBurn();
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
@@ -809,3 +810,4 @@ int getRusEfiVersion() {
 #endif /* EFI_UNIT_TEST */
 
 std::optional<custom_validate_config_type> custom_board_validateConfig;
+std::optional<custom_fix_configuration_type> custom_board_fix_configuration;
