@@ -12,6 +12,15 @@ PCH_DIR = ../firmware/pch
 PCHSRC = $(PCH_DIR)/pch.h
 PCHSUB = unit_tests
 
+# Detect clang before including rusefi_rules.mk so its USE_CLANG conditionals
+# (GCC-only vs clang-only warning flags) pick the right branch.
+# On Mac OS gcc from mingw-w64 is a wrapper around clang
+# so clang-specific coverage cmd args must be used
+IS_CLANG := $(shell $(CC) --version | grep -i clang >/dev/null && echo 1 || echo 0)
+ifeq ($(IS_CLANG),1)
+  USE_CLANG = yes
+endif
+
 include $(PROJECT_DIR)/rusefi_rules.mk
 
 # User may want to pass in a forced value for SANITIZE
@@ -51,10 +60,6 @@ else
   TRGT =
 endif
 
-# On Mac OS gcc from mingw-w64 is a wrapper around clang
-# so clang-specific coverage cmd args must be used
-IS_CLANG := $(shell $(CC) --version | grep -i clang >/dev/null && echo 1 || echo 0)
-
 ifeq ($(IS_CLANG),1)
 CC   = $(TRGT)clang
 CXX  = $(TRGT)clang++
@@ -85,9 +90,12 @@ ifeq ($(USE_OPT),)
   USE_OPT += -D US_TO_NT_MULTIPLIER=$(US_TO_NT_MULTIPLIER) $(DDEFS)
 endif
 
-#TODO! this is a nice goal
-#USE_OPT += $(RUSEFI_OPT)
-#USE_OPT += -Wno-error=format= -Wno-error=register -Wno-error=write-strings
+# Warnings-as-errors, same as firmware/simulator (see firmware/rusefi_rules.mk).
+# The only remaining demotion is -Wpedantic: unit_tests CWARN carries -pedantic
+# (firmware CWARN does not) and every finding is in the ext/lua submodule
+# (ljumptab.h computed-goto, an intentional GNU extension).
+USE_OPT += $(RUSEFI_OPT)
+USE_OPT += -Wno-error=pedantic
 
 # See explanation in main firmware Makefile for these three defines
 USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
@@ -162,7 +170,7 @@ ASMSRC =
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition
 
 # Define C++ warning options here
-CPPWARN = -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -Wno-format -Wno-unused-parameter
+CPPWARN = -Wall -Wextra -Wno-unused-parameter
 
 USE_OPT += -Werror=switch
 

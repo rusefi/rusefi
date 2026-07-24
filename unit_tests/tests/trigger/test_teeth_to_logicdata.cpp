@@ -53,9 +53,7 @@ void convertTeethToLogicData(const std::string& inPath, const std::string& outPa
 	events.reserve(8192);
 
 	std::string line;
-	size_t lineNo = 1;
 	while (std::getline(in, line)) {
-		lineNo++;
 		if (line.empty()) {
 			continue;
 		}
