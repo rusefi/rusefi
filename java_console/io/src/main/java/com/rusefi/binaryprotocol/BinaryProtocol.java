@@ -360,6 +360,36 @@ public class BinaryProtocol {
         return imageWithMeta;
     }
 
+    /**
+     * Read {@code size} bytes starting at {@code offset} within the specified TS protocol
+     * page (0 = main settings page, the only page on this branch).  Returns null on failure.
+     * Issues one or more TS_READ_COMMAND requests chunked by the .ini's blockingFactor.
+     */
+    @org.jetbrains.annotations.Nullable
+    public byte[] readFromPage(int page, int offset, int size) {
+        if (page != 0)
+            throw new IllegalArgumentException("Only page 0 is supported, got page=" + page);
+        byte[] result = new byte[size];
+        int idx = 0;
+        int blockingFactor = getIniFile().getBlockingFactor();
+        while (idx < size) {
+            if (stream.isClosed()) {
+                return null;
+            }
+            int thisRead = Math.min(size - idx, blockingFactor);
+            byte[] packet = smartPacketPrefix(offset + idx, thisRead);
+            byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet,
+                "readFromPage page=" + page + " offset=" + (offset + idx) + " size=" + thisRead);
+            if (!checkResponseCode(response) || response.length != thisRead + 1) {
+                log.error("readFromPage failed at page=" + page + " offset=" + (offset + idx));
+                return null;
+            }
+            System.arraycopy(response, 1, result, idx, thisRead);
+            idx += thisRead;
+        }
+        return result;
+    }
+
     public byte @NotNull [] smartPacketPrefix(int offset, int requestSize) {
         byte[] packet;
         if (isSinglePageController()) {

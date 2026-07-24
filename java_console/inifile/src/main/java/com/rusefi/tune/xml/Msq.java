@@ -78,6 +78,34 @@ public class Msq {
         return ci;
     }
 
+    /**
+     * Applies constants from this MSQ onto an existing image instead of a blank one.
+     * Fields present in the MSQ but absent from {@code instance} are skipped.
+     * Fields present in {@code base} but absent from the MSQ retain their current value.
+     * This is preferable to {@link #asImage} when loading into a live ECU because it
+     * preserves the correct image size and handles firmware-version differences gracefully.
+     */
+    public ConfigurationImage applyOnto(ConfigurationImage base, IniFileModel instance) {
+        Objects.requireNonNull(instance, "ini model");
+        ConfigurationImage ci = base.clone();
+        Page page = findPage();
+        if (page == null) return ci;
+        for (Constant constant : page.constant) {
+            if (constant.getName().startsWith("UNALLOCATED_SPACE")) continue;
+            IniField field = instance.getAllIniFields().get(constant.getName());
+            if (field == null) {
+                log.info("applyOnto: skipping unknown field " + constant.getName());
+                continue;
+            }
+            try {
+                field.setValue(ci, constant);
+            } catch (IllegalArgumentException e) {
+                log.info("applyOnto: skipping incompatible value for " + constant.getName() + ": " + e.getMessage());
+            }
+        }
+        return ci;
+    }
+
     public static Msq readTune(String fileName) throws JAXBException {
         return XmlUtil.readModel(Msq.class, new File(fileName));
     }

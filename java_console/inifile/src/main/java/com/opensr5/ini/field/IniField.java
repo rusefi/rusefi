@@ -58,6 +58,14 @@ public abstract class IniField {
         return offset;
     }
 
+    /**
+     * Human-friendly 1-based TS page for user messages/logs. This branch only has the single
+     * main settings page.
+     */
+    public int getDisplayPage() {
+        return 1;
+    }
+
     public abstract int getSize();
 
     /**
