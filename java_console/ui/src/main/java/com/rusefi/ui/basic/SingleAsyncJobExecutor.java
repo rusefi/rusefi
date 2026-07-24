@@ -103,26 +103,43 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
         onJobAboutToStart.add(listener);
     }
 
-    public void startJob(final AsyncJob job, final Component parent) {
-        startJob(job, parent, message -> JOptionPane.showMessageDialog(
+    public boolean startJob(final AsyncJob job, final Component parent) {
+        return startJob(job, parent, message -> JOptionPane.showMessageDialog(
             parent,
             message,
             "Error",
             JOptionPane.ERROR_MESSAGE
-        ));
+        ), () -> {});
     }
 
-    public void startJob(final AsyncJob job, final Component parent, Consumer<String> errorHandler) {
+    public boolean startJob(final AsyncJob job, final Component parent, Consumer<String> errorHandler) {
+        return startJob(job, parent, errorHandler, () -> {});
+    }
+
+    public boolean startJob(final AsyncJob job, final Component parent, final Runnable onAccepted) {
+        return startJob(job, parent, message -> JOptionPane.showMessageDialog(
+            parent,
+            message,
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        ), onAccepted);
+    }
+
+    private boolean startJob(final AsyncJob job, final Component parent, Consumer<String> errorHandler,
+                             final Runnable onAccepted) {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
+            onAccepted.run();
             for (Runnable listener : onJobAboutToStart) {
                 listener.run();
             }
             UpdateOperationCallbacks callbacks = recordingCallbacks(callbacksProvider.apply(job));
             callbacks.clear(); // resets lastResult to NONE and clears the selected status panel
             AsyncJobExecutor.INSTANCE.executeJob(job, callbacks, this::handleJobInProgressFinished);
+            return true;
         } else {
             errorHandler.accept(String.format("Job `%s` is already in progress!", prevJobInProgress.get().getName()));
+            return false;
         }
     }
 

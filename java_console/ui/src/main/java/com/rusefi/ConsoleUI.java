@@ -221,6 +221,9 @@ public class ConsoleUI {
         WizardContainer wizardContainer = new WizardContainer(uiContext);
         rootPanel.add(wizardContainer, "wizard");
 
+        JPanel rollbackPicker = new JPanel(new BorderLayout());
+        rootPanel.add(rollbackPicker, "rollback");
+
         CardLayout rootCardLayout = (CardLayout) rootPanel.getLayout();
 
         JButton launchWizardButton = getLaunchWizardButton(rootPanel, wizardContainer, rootCardLayout);
@@ -396,7 +399,14 @@ console live data tab is broken #8402
             }
             // Single-session device manager [tag:better_ux_for_flashing]: the scanner is kept alive for the whole console
             // lifetime so this one instance can hook / remove / re-connect / DFU / OpenBLT the board.
-            DevicePane devicePane = new DevicePane(uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane);
+            DevicePane devicePane = new DevicePane(
+                uiContext, connectivityContext, deviceSessionManager, tabbedPane.tabbedPane,
+                picker -> {
+                    rollbackPicker.removeAll();
+                    rollbackPicker.add(picker, BorderLayout.CENTER);
+                    rootCardLayout.show(rootPanel, "rollback");
+                },
+                () -> rootCardLayout.show(rootPanel, "console"));
             tabbedPane.addTab("Device", devicePane.getContent());
             mainFrame.setUpdateEcuAction(() -> {
                 tabbedPane.selectTab("Device");

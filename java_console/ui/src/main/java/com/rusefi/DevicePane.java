@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.basic.FirmwareRollbackController;
 import com.rusefi.ui.basic.MigrateSettingsCheckboxState;
 import com.rusefi.ui.basic.SingleAsyncJobExecutor;
 import com.rusefi.ui.basic.StatusPanelWithProgressBar;
@@ -12,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * The live console's "Device" tab — a single-session device manager [tag:better_ux_for_flashing].
@@ -32,6 +35,7 @@ public class DevicePane {
     private final JComboBox<PortResult> comboPorts = new JComboBox<>();
     private final ProgramSelector selector;
     private final SingleAsyncJobExecutor jobExecutor;
+    private final FirmwareRollbackController rollbackController;
     private final StatusPanelWithProgressBar statusPanel = new StatusPanelWithProgressBar();
     private final JCheckBox autoUpdateBundle = new JCheckBox("Auto-update Software", AutoupdateProperty.get());
     private final JCheckBox migrateSettings = new JCheckBox("Migrate Settings", true);
@@ -40,7 +44,8 @@ public class DevicePane {
     private SessionState lastRenderedState;
 
     public DevicePane(final UIContext uiContext, final ConnectivityContext connectivityContext,
-                      final DeviceSessionManager sessionManager, final JTabbedPane tabbedPane) {
+                      final DeviceSessionManager sessionManager, final JTabbedPane tabbedPane,
+                      final Consumer<JComponent> showRollbackPicker, final Runnable closeRollbackPicker) {
         this.connectivityContext = connectivityContext;
         this.sessionManager = sessionManager;
         this.tabbedPane = tabbedPane;
@@ -54,6 +59,19 @@ public class DevicePane {
         this.selector = new ProgramSelector(connectivityContext, comboPorts);
         selector.setJobExecutor(jobExecutor);
         selector.setLinkManager(uiContext.getLinkManager());
+        rollbackController = new FirmwareRollbackController(
+            connectivityContext,
+            statusPanel,
+            jobExecutor,
+            () -> Optional.ofNullable((PortResult) comboPorts.getSelectedItem()),
+            () -> sessionManager.getState() == SessionState.CONNECTED,
+            this::refreshFirmwareControls,
+            showRollbackPicker,
+            closeRollbackPicker);
+        rollbackController.setLinkManager(uiContext.getLinkManager());
+        selector.setFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
+        selector.setExternalBusySupplier(rollbackController::isBusy);
+        selector.addFirmwareControl(rollbackController.getRollbackButton());
 
         // Compact controls pinned to the top; the status log + progress bar fill the rest and the bar
         // sits at the bottom of the pane (as elsewhere in the console). No connect/disconnect here — the
@@ -103,6 +121,7 @@ public class DevicePane {
         reselectPort(ports, previouslySelected);
 
         // ProgramSelector builds the DFU / OpenBLT menu straight from the detected hardware.
+        rollbackController.refresh((PortResult) comboPorts.getSelectedItem());
         selector.apply(effectiveHardware);
         final boolean flashing = state == SessionState.FLASHING;
         autoUpdateBundle.setEnabled(!flashing);
@@ -115,6 +134,13 @@ public class DevicePane {
         lockConsoleForState(state);
 
         lastRenderedState = state;
+        content.revalidate();
+        content.repaint();
+    }
+
+    private void refreshFirmwareControls() {
+        selector.apply(connectivityContext.getCurrentHardware());
+        rollbackController.refreshButton();
         content.revalidate();
         content.repaint();
     }

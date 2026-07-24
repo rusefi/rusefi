@@ -86,6 +86,7 @@ public class StartupFrame {
     private static final String CARD_SCANNING = "scanning";
     private static final String CARD_STARTUP = "startup";
     private static final String CARD_WIZARD = "wizard";
+    private static final String CARD_ROLLBACK = "rollback";
     // After this delay with no single-ECU auto-connect in flight, reveal the full connect controls
     // instead of holding on the large scanning animation forever (#9715). Generous enough to cover a
     // typical scan -> auto-connect on a slow machine so the controls never flash before auto-connect.
@@ -133,6 +134,7 @@ public class StartupFrame {
     private final UIContext uiContext;
     private final CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome;
     private final JPanel rootContent = new JPanel(new CardLayout());
+    private final JPanel rollbackPicker = new JPanel(new BorderLayout());
     // The large "scanning" card shown first (#9715); its status line is updated to "Connecting to X…"
     // if a single-ECU auto-connect fires before the controls are revealed.
     private JLabel scanningStatusLabel;
@@ -430,7 +432,14 @@ public class StartupFrame {
         };
         BinaryProtocol.iniFileProvider.setStatusConsumer(firmwareStatusPanel);
         startupUpdateActions = new StartupUpdateActions(connectivityContext, firmwareStatusPanel,
-            asyncJobExecutor, ecuPortToUse, softwareUpdateOutcome);
+            asyncJobExecutor, ecuPortToUse, softwareUpdateOutcome,
+            picker -> {
+                rollbackPicker.removeAll();
+                rollbackPicker.add(picker, BorderLayout.CENTER);
+                showCard(CARD_ROLLBACK);
+            },
+            () -> showCard(CARD_STARTUP));
+        startupUpdateActions.configureFirmwareSelector(selector);
 
         JPanel firmwareTopPanel = new JPanel(new BorderLayout(0, 0));
         firmwareTopPanel.add(selector.getControl(), BorderLayout.NORTH);
@@ -438,6 +447,7 @@ public class StartupFrame {
         updateButtons.add(startupUpdateActions.getUpdateSoftwareStatus());
         updateButtons.add(startupUpdateActions.getUpdateSoftwareButton());
         updateButtons.add(startupUpdateActions.getUpdateFirmwareButton());
+        updateButtons.add(startupUpdateActions.getRollbackFirmwareButton());
         firmwareTopPanel.add(updateButtons, BorderLayout.CENTER);
         firmwareTopPanel.add(startupUpdateActions.getMigrateSettings(), BorderLayout.SOUTH);
 
@@ -474,6 +484,7 @@ public class StartupFrame {
         });
         rootContent.add(outerTabs, CARD_STARTUP);
         rootContent.add(wizardContainer, CARD_WIZARD);
+        rootContent.add(rollbackPicker, CARD_ROLLBACK);
         rootContent.add(createScanningPanel(), CARD_SCANNING);
         ((CardLayout) rootContent.getLayout()).show(rootContent, CARD_SCANNING);
 

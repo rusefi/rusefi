@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -48,6 +49,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     private boolean softwareUpdateAvailable;
     private boolean softwareUpdateInProgress;
     private final AtomicReference<Optional<PortResult>> ecuPortToUse;
+    private final FirmwareRollbackController rollbackController;
 
     private String latestReportedHash;
 
@@ -55,12 +57,18 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
         ConnectivityContext connectivityContext,
         final UpdateOperationCallbacks updateOperationCallbacks, SingleAsyncJobExecutor singleAsyncJobExecutor,
         AtomicReference<Optional<PortResult>> ecuPortToUse,
-        CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome
+        CompletableFuture<Autoupdate.UpdateOutcome> softwareUpdateOutcome,
+        Consumer<JComponent> showRollbackPicker,
+        Runnable closeRollbackPicker
     ) {
         this.connectivityContext = connectivityContext;
         this.ecuPortToUse = ecuPortToUse;
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
         this.updateOperationCallbacks = updateOperationCallbacks;
+        rollbackController = new FirmwareRollbackController(
+            connectivityContext, updateOperationCallbacks, singleAsyncJobExecutor, ecuPortToUse::get,
+            () -> !softwareUpdateInProgress, this::refreshButtons,
+            showRollbackPicker, closeRollbackPicker);
         singleAsyncJobExecutor.addOnJobAboutToStartListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
         singleAsyncJobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(this::refreshButtons));
         importTuneButton = new ImportTuneControl(singleAsyncJobExecutor, this, connectivityContext);
@@ -105,6 +113,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
      */
     public void setSplashLinkManager(@Nullable LinkManager lm) {
         this.splashLinkManager = lm;
+        rollbackController.setLinkManager(lm);
         importTuneButton.setLinkManager(lm);
         updateUpdateFirmwareJob();
     }
@@ -115,6 +124,16 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     public JButton getUpdateFirmwareButton() {
         return updateFirmwareButton;
+    }
+
+    public JButton getRollbackFirmwareButton() {
+        return rollbackController.getRollbackButton();
+    }
+
+    public void configureFirmwareSelector(ProgramSelector selector) {
+        selector.setFirmwareUpdateInterceptor(rollbackController::startLatestUpdate);
+        selector.setExternalBusySupplier(() -> rollbackController.isBusy() || softwareUpdateInProgress);
+        rollbackController.addStateChangedListener(() -> selector.apply(connectivityContext.getCurrentHardware()));
     }
 
     public JButton getUpdateSoftwareButton() {
@@ -275,6 +294,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     private void setEcuPortToUse(final PortResult port) {
         ecuPortToUse.set(Optional.of(port));
+        rollbackController.refresh(port);
 
         SwingUtilities.invokeLater(() -> {
             refreshButtons();
@@ -297,6 +317,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
 
     private void resetEcuPortToUse() {
         ecuPortToUse.set(Optional.empty());
+        rollbackController.reset();
         SwingUtilities.invokeLater(() -> {
             importTuneButton.setEnabled(false);
         });
@@ -308,6 +329,9 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     }
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
+        if (rollbackController.startLatestUpdate(updateFirmwareButton)) {
+            return;
+        }
         disableButtons();
         CompatibilityOptional.ifPresentOrElse(updateFirmwareJob,
             value -> {
@@ -321,16 +345,22 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     public void refreshButtons() {
         refreshUpdateFirmwareButton();
         final Optional<PortResult> ecuPort = ecuPortToUse.get();
-        final boolean noUpdateInProgress = singleAsyncJobExecutor.isNotInProgress() && !softwareUpdateInProgress;
+        final boolean noUpdateInProgress = singleAsyncJobExecutor.isNotInProgress()
+            && !softwareUpdateInProgress
+            && !rollbackController.isBusy();
         final boolean isEcuPortJobPossible = ecuPort.isPresent() && noUpdateInProgress;
         importTuneButton.setEnabled(isEcuPortJobPossible);
         updateSoftwareButton.setEnabled(
             updateSoftwareButton.isVisible() && softwareUpdateAvailable && noUpdateInProgress);
+        rollbackController.refreshButton();
     }
 
     private void refreshUpdateFirmwareButton() {
         final boolean isFirmwareUpdatePossible =
-            updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress() && !softwareUpdateInProgress;
+            updateFirmwareJob.isPresent()
+                && !rollbackController.isBusy()
+                && singleAsyncJobExecutor.isNotInProgress()
+                && !softwareUpdateInProgress;
         if (isFirmwareUpdatePossible) {
             final AsyncJob currentUpdateFirmwareJob = updateFirmwareJob.get();
             Optional<String> updateFirmwareButtonText = Optional.empty();
@@ -356,6 +386,7 @@ public class StartupUpdateActions implements BasicButtonCoordinator {
     @Override
     public void disableButtons() {
         updateFirmwareButton.setEnabled(false);
+        rollbackController.getRollbackButton().setEnabled(false);
         updateSoftwareButton.setEnabled(false);
         importTuneButton.setEnabled(false);
     }
