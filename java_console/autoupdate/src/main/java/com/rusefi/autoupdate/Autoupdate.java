@@ -22,6 +22,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
@@ -724,6 +725,120 @@ public class Autoupdate {
             log.info("[universal_bundle] downloadZipForTarget (" + (obfuscated ? "obfuscated" : "public")
                 + ") not available for " + info.getTarget() + ": " + e);
             return null;
+        }
+    }
+
+    public static FirmwareArtifacts downloadFirmware(FirmwareRollbackResolver.Build build,
+                                                      ConnectionAndMeta.DownloadProgressListener progress,
+                                                      Consumer<String> logger) {
+        Path ltsRoot = Paths.get(userHomeSubDirectory, "lts");
+        return downloadFirmware(build, progress, logger, ltsRoot, Autoupdate::downloadFirmwareZip);
+    }
+
+    @FunctionalInterface
+    interface FirmwareZipDownloader {
+        Path download(FirmwareRollbackResolver.Build build, Path destination, boolean obfuscated,
+                      ConnectionAndMeta.DownloadProgressListener progress, Consumer<String> logger) throws IOException;
+    }
+
+    static FirmwareArtifacts downloadFirmware(FirmwareRollbackResolver.Build build,
+                                               ConnectionAndMeta.DownloadProgressListener progress,
+                                               Consumer<String> logger,
+                                               Path ltsRoot,
+                                               FirmwareZipDownloader downloader) {
+        try {
+            Path destination = ltsRoot.resolve(build.getBoard())
+                .resolve(build.getBranch())
+                .resolve(build.getSha())
+                .toAbsolutePath();
+            Files.createDirectories(destination);
+
+            Path zip = downloader.download(build, destination, false, progress, logger);
+            if (zip == null) {
+                zip = downloader.download(build, destination, true, progress, logger);
+            }
+            if (zip == null) {
+                logger.accept("Firmware build " + build.getSha() + " is unavailable");
+                return FirmwareArtifacts.empty();
+            }
+
+            final String[] paths = new String[2];
+            FileUtil.unzip(zip.toString(), destination.toFile(), entry -> {
+                if (!isFirmwareArtifact.test(entry)) {
+                    return false;
+                }
+                String lower = entry.getName().toLowerCase();
+                String absolutePath = destination.resolve(entry.getName()).normalize().toAbsolutePath().toString();
+                if (lower.endsWith(".srec")) {
+                    paths[0] = absolutePath;
+                } else if (isDfuBin(lower)) {
+                    paths[1] = absolutePath;
+                }
+                return true;
+            });
+            FirmwareArtifacts artifacts = new FirmwareArtifacts(paths[0], paths[1]);
+            if (!artifacts.getSrecPath().isPresent() && !artifacts.getBinPath().isPresent()) {
+                logger.accept("Firmware build " + build.getSha() + " contains no SREC or BIN artifact");
+            }
+            return artifacts;
+        } catch (IOException e) {
+            log.error("Firmware download failed for " + build.getSha() + ": " + e);
+            logger.accept("Firmware download failed: " + e.getMessage());
+            return FirmwareArtifacts.empty();
+        }
+    }
+
+    private static Path downloadFirmwareZip(FirmwareRollbackResolver.Build build, Path destination,
+                                            boolean obfuscated,
+                                            ConnectionAndMeta.DownloadProgressListener progress,
+                                            Consumer<String> logger) throws IOException {
+        String suffix = obfuscated ? "_obfuscated_public" : "";
+        String fileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties())
+            + "_bundle_" + build.getBoard() + suffix + "_autoupdate.zip";
+        Path localZip = destination.resolve(fileName);
+        String baseUrl = build.getDirectoryUrl() + "autoupdate/";
+        try {
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(fileName).invoke(baseUrl);
+            if (AutoupdateUtil.hasExistingFile(localZip.toString(), connectionAndMeta.getCompleteFileSize(),
+                connectionAndMeta.getLastModified())) {
+                logger.accept("Using cached firmware build " + build.getSha());
+            } else {
+                logger.accept("Downloading firmware build " + build.getSha()
+                    + (obfuscated ? " (obfuscated)" : ""));
+                ConnectionAndMeta.downloadFile(localZip.toString(), connectionAndMeta, progress);
+            }
+            return localZip;
+        } catch (IOException e) {
+            Files.deleteIfExists(localZip);
+            log.info("Firmware ZIP " + fileName + " is unavailable: " + e);
+            return null;
+        }
+    }
+
+    private static boolean isDfuBin(String lowerName) {
+        return lowerName.endsWith("rusefi.bin")
+            || (lowerName.contains("rusefi_") && lowerName.endsWith(".bin"));
+    }
+
+    public static final class FirmwareArtifacts {
+        private final Optional<String> srecPath;
+        private final Optional<String> binPath;
+
+        private FirmwareArtifacts(String srecPath, String binPath) {
+            this.srecPath = Optional.ofNullable(srecPath);
+            this.binPath = Optional.ofNullable(binPath);
+        }
+
+        private static FirmwareArtifacts empty() {
+            return new FirmwareArtifacts(null, null);
+        }
+
+        public Optional<String> getSrecPath() {
+            return srecPath;
+        }
+
+        public Optional<String> getBinPath() {
+            return binPath;
         }
     }
 
