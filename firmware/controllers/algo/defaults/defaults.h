@@ -39,4 +39,6 @@ void setCustomMap(float lowValue, float mapLowValueVoltage, float highValue, flo
 void setEtbPID(float p, float i, float d);
 // The only place allowed to mutate configuration on start-up/burn. Returns true if anything was changed.
 // validateConfigOnStartUpOrBurn() is read-only apart from calling this.
-bool applyDefaultsOrFixAfterBurn();
+// previousConfiguration: nullptr while defaults are applied and at start-up, the currently
+// running configuration on burn.
+bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfiguration);

@@ -529,8 +529,9 @@ static bool validateGdi() {
 }
 
 // Returns false if there's an obvious problem with the loaded configuration
-bool validateConfigOnStartUpOrBurn() {
-  if (!get_board_override_result(custom_board_validateConfig, true)) {
+// previousConfiguration: nullptr on start-up, the currently running configuration on burn
+static bool validateConfig(const engine_configuration_s* previousConfiguration) {
+  if (!get_board_override_result(custom_board_validateConfig, true, previousConfiguration)) {
     return false;
   }
 #if defined(HW_HELLEN_UAEFI)
@@ -557,7 +558,7 @@ bool validateConfigOnStartUpOrBurn() {
 
 
   // the only step which is allowed to modify configuration - everything else in this method is read-only validation
-  applyDefaultsOrFixAfterBurn();
+  applyDefaultsOrFixAfterBurn(previousConfiguration);
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
@@ -740,9 +741,15 @@ bool validateConfigOnStartUpOrBurn() {
 	return true;
 }
 
+bool validateConfigOnStartUpOrBurn() {
+	// start-up: activeConfiguration is still void-prepared, there is no meaningful previous configuration
+	return validateConfig(nullptr);
+}
+
 bool validateConfigOnStartUpOrBurn(bool isRunningOnBurn) {
 	ConfigurationWizard::onConfigOnStartUpOrBurn(isRunningOnBurn);
-	return validateConfigOnStartUpOrBurn();
+	// burn: activeConfiguration still holds the configuration the ECU is currently running on
+	return validateConfig(&activeConfiguration);
 }
 
 #if !EFI_UNIT_TEST

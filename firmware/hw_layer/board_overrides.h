@@ -47,15 +47,20 @@ using setup_custom_bool_type = bool (*)();
 
 // Read-only configuration validation, invoked from validateConfigOnStartUpOrBurn()
 // at ECU startup and on every TS Burn. Returns false if configuration is broken.
-// Must NOT mutate configuration - use custom_board_fix_configuration for fixes/migrations.
-using custom_validate_config_type = bool (*)();
+// previousConfiguration is nullptr at startup and &activeConfiguration (the configuration
+// the ECU is currently running on) on burn, so a board can validate transitions and not
+// just the new state. Must NOT mutate configuration - use custom_board_fix_configuration
+// for fixes/migrations.
+using custom_validate_config_type = bool (*)(const engine_configuration_s* /*previousConfiguration*/);
 extern std::optional<custom_validate_config_type> custom_board_validateConfig;
 
 // Board-specific counterpart of applyDefaultsOrFixAfterBurn(): conditionally repair or
 // migrate configuration (defaults application, startup, every burn). Returns true if
-// anything was changed. Unlike custom_board_ConfigOverrides this is for guarded fixes,
-// not unconditional pinning of values.
-using custom_fix_configuration_type = bool (*)();
+// anything was changed. previousConfiguration is nullptr while defaults are applied and
+// at startup, &activeConfiguration (the currently running configuration) on burn.
+// Unlike custom_board_ConfigOverrides this is for guarded fixes, not unconditional
+// pinning of values.
+using custom_fix_configuration_type = bool (*)(const engine_configuration_s* /*previousConfiguration*/);
 extern std::optional<custom_fix_configuration_type> custom_board_fix_configuration;
 
 using setup_custom_board_ts_command_override_type = void (*)(uint16_t /*subsystem*/, uint16_t /*index*/);

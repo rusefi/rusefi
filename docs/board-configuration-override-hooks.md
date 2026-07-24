@@ -12,8 +12,8 @@ different lifecycle moments and have different contracts.
 |-----------------------------------|--------------------------------------------|-----------------------------|------------------------------------------------------------------------------|
 | `custom_board_DefaultConfiguration` | `void ()`                                | writes - seeds defaults     | only while building a fresh default tune (`resetConfigurationExt`)           |
 | `custom_board_ConfigOverrides`      | `void ()`                                | writes - forces values      | after flash load, after defaults, after every TS page write chunk            |
-| `custom_board_fix_configuration`    | `bool ()` -> true if changed             | writes - fixes/migrations   | from `applyDefaultsOrFixAfterBurn()`: defaults, startup, every burn          |
-| `custom_board_validateConfig`       | `bool ()` -> false if broken             | READ-ONLY                   | from `validateConfigOnStartUpOrBurn()`: startup, every burn                  |
+| `custom_board_fix_configuration`    | `bool (const engine_configuration_s* prev)` -> true if changed | writes - fixes/migrations | from `applyDefaultsOrFixAfterBurn()`: defaults, startup, every burn          |
+| `custom_board_validateConfig`       | `bool (const engine_configuration_s* prev)` -> false if broken | READ-ONLY | from `validateConfigOnStartUpOrBurn()`: startup, every burn                  |
 | `custom_board_OnConfigurationChange`| `void (const engine_configuration_s* prev)` | reads only - drives hardware | after `applyNewHardwareSettings()` on live config change; boot `initHardware()` |
 
 ## The two mental axes
@@ -72,6 +72,11 @@ guarded (`if (looksWrong) { fix; return true; }`) so the changed-flag stays
 meaningful. Example: `uaefi_fixConfiguration` re-applies CAN2 pins only when
 `can2RxPin` drifted off `Gpio::B12`.
 
+Receives the same `previousConfiguration` argument as `validateConfig` and
+`OnConfigurationChange`: `nullptr` while defaults are applied and at startup,
+`&activeConfiguration` (the currently running configuration) on burn - so a fix
+can distinguish "first boot with this tune" from "user just burned a change".
+
 Contrast with `ConfigOverrides`: an override is unconditional pinning; a fix is a
 conditional migration that reports whether it did anything.
 
@@ -84,6 +89,14 @@ every TS Burn. Must NOT mutate configuration - report problems via
 `custom_board_fix_configuration`. Note that `applyDefaultsOrFixAfterBurn()` (and
 therefore `fix_configuration`) runs partway through validation, so checks placed
 after it see the repaired tune.
+
+Like `OnConfigurationChange` it receives `previousConfiguration`: `nullptr` at
+startup (`activeConfiguration` is still void-prepared at that point), and
+`&activeConfiguration` - the configuration the ECU is currently running on - at
+burn time (burn validation happens BEFORE `onBurnRequest()` updates
+`activeConfiguration`). A non-null `prev` therefore lets a board validate the
+TRANSITION, e.g. reject on-the-fly changes to a setting that this board can only
+apply at boot, not just judge the new tune in isolation.
 
 ### custom_board_OnConfigurationChange - "push (new) config state into board hardware"
 

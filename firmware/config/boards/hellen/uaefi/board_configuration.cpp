@@ -50,7 +50,7 @@ static void uaefi_boardConfigOverrides() {
 
 }
 
-static bool uaefi_fixConfiguration() {
+static bool uaefi_fixConfiguration(const engine_configuration_s* /*previousConfiguration*/) {
   if (engineConfiguration->can2RxPin != Gpio::B12) {
 	  setHellenCan2();
 	  return true;

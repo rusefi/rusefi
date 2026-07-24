@@ -127,7 +127,7 @@ void setDynoDefaults() {
     config->dynoCarFrontalAreaM2 = 1.85;
  }
 
-bool applyDefaultsOrFixAfterBurn() {
+bool applyDefaultsOrFixAfterBurn(const engine_configuration_s* previousConfiguration) {
   bool changed = false;
 
   if (config->dynoCarCarMassKg == 0) {
@@ -267,7 +267,7 @@ bool applyDefaultsOrFixAfterBurn() {
 		changed = true;
 	}
 
-	if (get_board_override_result(custom_board_fix_configuration, false)) {
+	if (get_board_override_result(custom_board_fix_configuration, false, previousConfiguration)) {
 		changed = true;
 	}
 
@@ -552,7 +552,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->useMetricOnInterface = true;
 
   // we invoke this last so that we can validate even defaults
-  applyDefaultsOrFixAfterBurn();
+  applyDefaultsOrFixAfterBurn(/*previousConfiguration*/nullptr);
 }
 
 void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2) {
