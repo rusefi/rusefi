@@ -41,14 +41,20 @@ using setup_custom_get_cylinder_ignition_trim_type = angle_t (*)(size_t /*cylind
 using setup_custom_get_cylinder_fuel_trim_type = float (*)(size_t /*cylinderNumber*/, float /*rpm*/, float /*fuelLoad*/);
 using setup_custom_bool_type = bool (*)();
 
-// Read-only configuration validation, invoked from validateConfigOnStartUpOrBurn().
-// Returns false if configuration is broken. Must NOT mutate configuration - use
-// custom_board_fix_configuration for board-specific fixes/migrations.
+// Five hooks touch configuration at different lifecycle moments: DefaultConfiguration,
+// ConfigOverrides, fix_configuration, validateConfig, OnConfigurationChange.
+// See docs/board-configuration-override-hooks.md for timelines and a decision guide.
+
+// Read-only configuration validation, invoked from validateConfigOnStartUpOrBurn()
+// at ECU startup and on every TS Burn. Returns false if configuration is broken.
+// Must NOT mutate configuration - use custom_board_fix_configuration for fixes/migrations.
 using custom_validate_config_type = bool (*)();
 extern std::optional<custom_validate_config_type> custom_board_validateConfig;
 
-// Board-specific counterpart of applyDefaultsOrFixAfterBurn(): mutate configuration here to
-// fix or migrate values. Returns true if anything was changed.
+// Board-specific counterpart of applyDefaultsOrFixAfterBurn(): conditionally repair or
+// migrate configuration (defaults application, startup, every burn). Returns true if
+// anything was changed. Unlike custom_board_ConfigOverrides this is for guarded fixes,
+// not unconditional pinning of values.
 using custom_fix_configuration_type = bool (*)();
 extern std::optional<custom_fix_configuration_type> custom_board_fix_configuration;
 
@@ -92,6 +98,10 @@ extern std::optional<setup_custom_board_overrides_type> custom_board_boardSayHel
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareEarly;
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardware;
 extern std::optional<setup_custom_board_overrides_type> custom_board_InitHardwareExtra;
+// Pushes configuration state OUT into board hardware (e.g. pull-up enable GPIOs); does not
+// edit the tune. Fires after applyNewHardwareSettings() on every live config apply with
+// previousConfiguration = &activeConfiguration, and once at boot from initHardware() with
+// previousConfiguration = nullptr. See also the pin-release restriction below.
 extern std::optional<setup_custom_board_config_type> custom_board_OnConfigurationChange;
 
 // Dynamic hardware re-init participation (see docs/hardware-reinit-and-power-cycle.md).
@@ -128,7 +138,16 @@ extern std::optional<setup_custom_board_output_type> custom_board_getMetaLowSide
 extern std::optional<setup_custom_board_overrides_type> custom_board_LtftTrimToVeApply;
 
 // specific firmware builds are meant for specific hardware. In order to provide best user experience on well-known boards sometimes we reduce user flexibility.
+// See docs/board-configuration-override-hooks.md for how these two differ from each other
+// and from custom_board_fix_configuration.
+
+// Seeds board defaults while a FRESH tune is being built (resetConfigurationExt only -
+// blank ECU, engine type change, reset to defaults). Does not run when an existing tune
+// is loaded from flash, so users may later change anything set here.
 extern std::optional<setup_custom_board_overrides_type> custom_board_DefaultConfiguration;
+// Forces values humans must not change. Re-applied after flash load, after defaults and
+// after EVERY TunerStudio page write chunk - keep it idempotent and cheap. Anything set
+// here is effectively pinned regardless of what the user or an old calibration writes.
 extern std::optional<setup_custom_board_overrides_type> custom_board_ConfigOverrides;
 
 extern std::optional<setup_custom_get_float_type> custom_board_getFuncPairAllowedSplit;
