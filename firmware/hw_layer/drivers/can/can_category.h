@@ -18,4 +18,5 @@ enum class CanCategory : uint16_t {
 	TCU = 10,
 	HONDA_NBC = 11,
 	NBC_PURPLE = 12,
+	SNIFFER = 13,
 };
