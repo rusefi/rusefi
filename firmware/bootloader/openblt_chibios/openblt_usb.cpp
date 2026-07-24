@@ -40,7 +40,7 @@ void Rs232TransmitPacket(blt_int8u *data, blt_int8u len)
   /* first transmit the length of the packet */
   Rs232TransmitByte(len);
 
-  chnWriteTimeout(&SDU1, data, len, TIME_INFINITE);
+  chnWriteTimeout(&EFI_CONSOLE_USB_DEVICE, data, len, TIME_INFINITE);
 
   /* wait for transmission ends */
   usb_serial_flush();
@@ -52,7 +52,7 @@ PUBLIC_API_WEAK void openBltUnexpectedByte(blt_int8u firstByte) {
 static_assert(BOOT_COM_RS232_RX_MAX_DATA < 'z');
   if (firstByte == 'z') {
   const char * bltTest = "openblt\n";
-    chnWriteTimeout(&SDU1, (const uint8_t*)bltTest, sizeof(bltTest), TIME_INFINITE);
+    chnWriteTimeout(&EFI_CONSOLE_USB_DEVICE, (const uint8_t*)bltTest, sizeof(bltTest), TIME_INFINITE);
   }
 #else
   UNUSED(firstByte);
@@ -136,12 +136,12 @@ static blt_bool Rs232ReceiveByte(blt_int8u *data)
 		return BLT_FALSE;
 	}
 
-	auto bytesRead = chnReadTimeout(&SDU1, data, 1, TIME_IMMEDIATE);
+	auto bytesRead = chnReadTimeout(&EFI_CONSOLE_USB_DEVICE, data, 1, TIME_IMMEDIATE);
 
 	return bytesRead == 0 ? BLT_FALSE : BLT_TRUE;
 }
 
 static void Rs232TransmitByte(blt_int8u data)
 {
-	chnWriteTimeout(&SDU1, &data, 1, TIME_INFINITE);
+	chnWriteTimeout(&EFI_CONSOLE_USB_DEVICE, &data, 1, TIME_INFINITE);
 }
