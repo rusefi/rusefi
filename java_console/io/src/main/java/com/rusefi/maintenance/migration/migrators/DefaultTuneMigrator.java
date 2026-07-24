@@ -30,7 +30,7 @@ public enum DefaultTuneMigrator implements TuneMigrator {
     private static final Logging log = getLogging(DefaultTuneMigrator.class);
 
     // ini fields to ignore on all boards
-    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of("byFirmwareVersion");
+    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of("byFirmwareVersion", "hash3");
 
     private static final Set<String> boardSpecificIniFieldsToIgnore = ConnectionAndMeta.getNonMigratableIniFields();
 

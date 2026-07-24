@@ -228,6 +228,13 @@ public class DefaultTuneMigratorTest {
     }
 
     @Test
+    public void testFirmwareHashIsNotMigrated() {
+        assertEquals("old-firmware-sha", testContext.getPrevValue("hash3").getValue());
+        assertEquals("new-firmware-sha", testContext.getUpdatedValue("hash3").getValue());
+        assertNull(testContext.getMigratedConstants().get("hash3"));
+    }
+
+    @Test
     public void testContent() {
         assertEquals(
             "WARNING! Type of `map_samplingAngleBins` ini-field is expected to be `UINT16` instead of `FLOAT`\r\n" +
@@ -310,4 +317,3 @@ public class DefaultTuneMigratorTest {
         assertEquals(expectedValueToUpdate.getName(), valueToUpdate.getName());
     }
 }
-
