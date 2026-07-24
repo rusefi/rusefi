@@ -411,12 +411,14 @@ static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int in
 	EXPECT_NEAR_M4(angleOffset, ev->injectionStartAngle) << msg << "inj index";
 }
 
+#if FUEL_RPM_COUNT == 16
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
 	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
 
 	// There should NOT be a second injector configured
 	EXPECT_EQ(nullptr, ev->outputs[1]);
 }
+#endif //FUEL_RPM_COUNT == 16
 
 static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int injectorIndex, int secondInjectorIndex, int eventIndex, angle_t angleOffset) {
 	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);

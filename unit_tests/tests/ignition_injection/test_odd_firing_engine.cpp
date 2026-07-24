@@ -5,12 +5,13 @@
 #include "defaults.h"
 #include "util/injection_crank_helper.h"
 
+using ::testing::_;
+
+#if FUEL_RPM_COUNT == 16
 	// let's pretend to have a 32 degree V odd fire engine.
 static const float cylinderOne = -19;
 static const float cylinderTwo = 13;
 static const angle_t timing = 1; // same timing cranking and running modes
-
-using ::testing::_;
 
 static void configureOddFiringEngine(EngineTestHelper &eth) {
 	engineConfiguration->cranking.rpm = 100;
@@ -21,7 +22,6 @@ static void configureOddFiringEngine(EngineTestHelper &eth) {
 	engine->tdcMarkEnabled = false; // reduce event queue noise TODO extract helper method
 }
 
-#if FUEL_RPM_COUNT == 16
 TEST(OddFireRunningMode, hd) {
   // basic engine setup
 	EngineTestHelper eth(engine_type_e::HARLEY);
