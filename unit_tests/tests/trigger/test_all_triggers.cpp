@@ -91,7 +91,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 		GTEST_FAIL() << "Trigger type " << (int)tt << " has shapeDefinitionError.";
 	}
 
-	fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", tt, shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
+	fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", (int)tt, (int)shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
 
 	fprintf(fp, "%s=%s\n", TRIGGER_KNOWN_OPERATION_MODE, shape->knownOperationMode ? "true" : "false");
 	operation_mode_e mode = shape->getWheelOperationMode();
@@ -127,9 +127,9 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 		}
 
 		fprintf(fp, "event %d %d %d %.6f %f\n",
-				i,
-				shape->triggerSignalIndeces[triggerDefinitionCoordinate],
-				shape->triggerSignalStates[triggerDefinitionCoordinate],
+				(int)i,
+				(int)shape->triggerSignalIndeces[triggerDefinitionCoordinate],
+				(int)shape->triggerSignalStates[triggerDefinitionCoordinate],
 				triggerFormDetails->eventAngles[i],
 				initState.gapRatio[i]
 				);

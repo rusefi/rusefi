@@ -552,7 +552,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			printf("%s event %s %lld\r\n",
 					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					getTrigger_event_e(signal),
-					nowNt);
+					(long long)nowNt);
 			printf("decodeTriggerEvent ratio %.2f: current=%d previous=%d\r\n", 1.0 * toothDurations[0] / toothDurations[1],
 					toothDurations[0], toothDurations[1]);
 		}
@@ -620,7 +620,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 						getShaftSynchronized(),
 					isSynchronizationPoint,
 					currentCycle.current_index,
-					triggerShape.getSize());
+					(int)triggerShape.getSize());
 			}
 #endif /* EFI_UNIT_TEST */
 		}
@@ -805,7 +805,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("findTriggerZeroEventIndex: syncIndex located %lu!\r\n", syncIndex.Value);
+		printf("findTriggerZeroEventIndex: syncIndex located %u!\r\n", syncIndex.Value);
 	}
 #endif /* EFI_UNIT_TEST */
 

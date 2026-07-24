@@ -2,10 +2,6 @@
 
 #include "logicdata_csv_reader.h"
 
-static int getExhaustIndex() {
-	return getTriggerCentral()->vvtState[/*bankIndex*/0][/*camIndex*/1].currentCycle.current_index;
-}
-
 TEST(realk20, cranking) {
 	CsvReader reader(/* triggerCount */ 1, /* vvtCount */ 2);
 

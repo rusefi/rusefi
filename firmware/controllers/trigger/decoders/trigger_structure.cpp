@@ -281,7 +281,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("addEvent2 %.2f i=%d front=%d\r\n", angle, channelIndex, state);
+		printf("addEvent2 %.2f i=%d front=%d\r\n", angle, (int)channelIndex, (int)state);
 	}
 #endif
 

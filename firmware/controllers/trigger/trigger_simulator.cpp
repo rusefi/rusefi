@@ -64,8 +64,8 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 //	pin_state_t new3rdWheelState = multiChannelStateSequence->getChannelState(2, stateIndex);
 
 	if (printTriggerDebug) {
-		printf("TriggerStimulator: simulatedEvent: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, primaryWheelState, newPrimaryWheelState,
-				secondaryWheelState, newSecondaryWheelState );
+		printf("TriggerStimulator: simulatedEvent: %d>%d primary %d>%d secondary %d>%d\r\n", prevIndex, stateIndex, (int)primaryWheelState, (int)newPrimaryWheelState,
+				(int)secondaryWheelState, (int)newSecondaryWheelState );
 	}
 #endif /* EFI_UNIT_TEST */
 
