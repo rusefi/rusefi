@@ -58,6 +58,17 @@ public enum PropertiesHolder {
         return result;
     }
 
+    public static String getFirmwareRollbackRootUrl() {
+        return getFirmwareRollbackRootUrl(INSTANCE.getProperties());
+    }
+
+    static String getFirmwareRollbackRootUrl(Properties properties) {
+        String rollbackRoot = properties.getProperty("firmware_rollback_root_url");
+        return rollbackRoot == null || rollbackRoot.trim().isEmpty()
+            ? properties.getProperty("auto_update_root_url")
+            : rollbackRoot;
+    }
+
     public static String getPinoutBaseUrl() {
         String propertyFileValue = INSTANCE.getProperties().getProperty("pinout_base_url");
         log.info("pinout_base_url=" + propertyFileValue);

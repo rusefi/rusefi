@@ -38,9 +38,7 @@ public final class FirmwareRollbackResolver {
     }
 
     public List<Build> discover(String board, String ltsBranch) throws IOException {
-        requireSafeSegment(board, "board");
-        requireSafeSegment(ltsBranch, "ltsBranch");
-        String directoryUrl = updateRoot + board + "/" + ltsBranch + "/";
+        String directoryUrl = historyUrl(board, ltsBranch);
         HttpURLConnection connection = (HttpURLConnection) new URL(directoryUrl).openConnection();
         connection.setConnectTimeout(TIMEOUT_MILLIS);
         connection.setReadTimeout(TIMEOUT_MILLIS);
@@ -57,6 +55,12 @@ public final class FirmwareRollbackResolver {
         } finally {
             connection.disconnect();
         }
+    }
+
+    String historyUrl(String board, String ltsBranch) {
+        requireSafeSegment(board, "board");
+        requireSafeSegment(ltsBranch, "ltsBranch");
+        return updateRoot + board + "/" + ltsBranch + "/";
     }
 
     public Optional<Build> latest(List<Build> builds) {

@@ -26,16 +26,23 @@ class FirmwareRollbackResolverTest {
         "</pre></body></html>";
 
     @Test
+    void buildsHistoryUrlInsideExistingLtsBranch() {
+        FirmwareRollbackResolver resolver = new FirmwareRollbackResolver("https://example.test/build_server/lts");
+        assertEquals("https://example.test/build_server/lts/uaefi/lts-25houston/",
+            resolver.historyUrl("uaefi", "lts-25houston"));
+    }
+
+    @Test
     void parsesFullShaLinksAndSortsByTimestamp() {
         List<FirmwareRollbackResolver.Build> builds = FirmwareRollbackResolver.parseIndex(
-            INDEX, "uaefi", "lts-26-test", "https://example.test/uaefi/lts-26-test/");
+            INDEX, "uaefi", "lts-26-test", "https://example.test/build_server/lts/uaefi/lts-26-test/");
 
         assertEquals(2, builds.size());
         assertEquals(NEW_SHA, builds.get(0).getSha());
         assertEquals(OLD_SHA, builds.get(1).getSha());
         assertEquals("uaefi", builds.get(0).getBoard());
         assertEquals("lts-26-test", builds.get(0).getBranch());
-        assertEquals("https://example.test/uaefi/lts-26-test/" + NEW_SHA + "/",
+        assertEquals("https://example.test/build_server/lts/uaefi/lts-26-test/" + NEW_SHA + "/",
             builds.get(0).getDirectoryUrl());
         assertEquals(LocalDateTime.of(2026, 7, 23, 19, 26).toInstant(ZoneOffset.UTC).toEpochMilli(),
             builds.get(0).getLastModified());
@@ -45,7 +52,7 @@ class FirmwareRollbackResolverTest {
     void selectsLatestAndPreviousFromUnsortedInput() {
         FirmwareRollbackResolver resolver = new FirmwareRollbackResolver("https://example.test/");
         List<FirmwareRollbackResolver.Build> builds = FirmwareRollbackResolver.parseIndex(
-            INDEX, "uaefi-121", "lts-26", "https://example.test/uaefi-121/lts-26");
+            INDEX, "uaefi-121", "lts-26", "https://example.test/build_server/lts/uaefi-121/lts-26");
         List<FirmwareRollbackResolver.Build> unsorted = Arrays.asList(builds.get(1), builds.get(0));
 
         assertEquals(NEW_SHA, resolver.latest(unsorted).orElseThrow(AssertionError::new).getSha());

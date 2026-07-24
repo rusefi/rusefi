@@ -68,7 +68,7 @@ class AutoupdateFirmwareDownloadTest {
     private static FirmwareRollbackResolver.Build build() {
         String html = "<a href=\"" + SHA + "/\">build</a> 2026-07-23 19:26 -";
         return FirmwareRollbackResolver.parseIndex(html, "uaefi-121", "lts-26-test",
-            "https://example.test/uaefi-121/lts-26-test/").get(0);
+            "https://example.test/build_server/lts/uaefi-121/lts-26-test/").get(0);
     }
 
     private static Path createFirmwareZip(Path zip) throws IOException {

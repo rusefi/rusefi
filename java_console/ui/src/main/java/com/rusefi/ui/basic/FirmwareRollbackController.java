@@ -48,7 +48,8 @@ public final class FirmwareRollbackController {
     private final Consumer<JComponent> showPicker;
     private final Runnable closePicker;
     private final List<Runnable> stateChangedListeners = new ArrayList<>();
-    private final FirmwareRollbackResolver resolver = new FirmwareRollbackResolver(PropertiesHolder.getBaseUrl());
+    private final FirmwareRollbackResolver resolver = new FirmwareRollbackResolver(
+        PropertiesHolder.getFirmwareRollbackRootUrl());
     private final boolean enabled = isFirmwareRollbackEnabled(PropertiesHolder.INSTANCE.getProperties());
     private final JButton rollbackButton = new JButton(
         "Rollback Firmware", AutoupdateUtil.loadIcon("download48.jpg"));
