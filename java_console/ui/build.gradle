@@ -4,6 +4,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':autoupdate')
     implementation project(':connectivity')
     implementation project(':ts_plugin')
     implementation project(':trigger-ui')
