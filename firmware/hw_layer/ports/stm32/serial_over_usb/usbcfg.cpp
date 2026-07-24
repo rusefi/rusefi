@@ -340,65 +340,76 @@ static const USBDescriptor *get_descriptor(USBDriver *usbp,
 }
 
 #if HAL_USE_USB_MSD
-	/**
-	 * @brief   IN MSD state
-	 */
-	static USBInEndpointState msdInstate;
+/**
+ * @brief   IN MSD state
+ */
+static USBInEndpointState msdInstate;
 
-	/**
-	 * @brief   OUT MSD state
-	 */
-	static USBOutEndpointState msdOutstate;
+/**
+ * @brief   OUT MSD state
+ */
+static USBOutEndpointState msdOutstate;
 
-	/**
-	 * @brief   MSD initialization structure (both IN and OUT).
-	 */
-	static const USBEndpointConfig msdEpConfig = {
-	USB_EP_MODE_TYPE_BULK,
-	NULL,
-	NULL,
-	NULL,
-	USB_MSD_EP_SIZE,
-	USB_MSD_EP_SIZE,
-	&msdInstate,
-	&msdOutstate,
-	4,
-	NULL
-	};
+/**
+ * @brief   MSD initialization structure (both IN and OUT).
+ */
+static const USBEndpointConfig msdEpConfig = {
+  .ep_mode        = USB_EP_MODE_TYPE_BULK,
+  .setup_cb       = NULL,
+  .in_cb          = NULL,
+  .out_cb         = NULL,
+  .in_maxsize     = USB_MSD_EP_SIZE,
+  .out_maxsize    = USB_MSD_EP_SIZE,
+  .in_state       = &msdInstate,
+  .out_state      = &msdOutstate,
+  .in_multiplier  = 4,
+  .setup_buf      = NULL
+};
 #endif //HAL_USE_MSD
 
-// IN CDC data state.
+/**
+ * @brief   IN CDC state
+ */
 static USBInEndpointState cdcDataInstate;
-// OUT CDC data state.
+/**
+ * @brief   OUT CDC state
+ */
 static USBOutEndpointState cdcDataOutstate;
-// CDC data initialization structure (both IN and OUT).
+/**
+ * @brief   IN CDC interrupt state
+ */
+static USBInEndpointState cdcInterruptInstate;
+
+/**
+ * @brief   CDC initialization structure (both IN and OUT)
+ */
 static const USBEndpointConfig cdcDataEpConfig = {
-  USB_EP_MODE_TYPE_BULK,
-  NULL,
-  sduDataTransmitted,
-  sduDataReceived,
-  0x0040,
-  0x0040,
-  &cdcDataInstate,
-  &cdcDataOutstate,
-  4,
-  NULL
+  .ep_mode        = USB_EP_MODE_TYPE_BULK,
+  .setup_cb       = NULL,
+  .in_cb          = sduDataTransmitted,
+  .out_cb         = sduDataReceived,
+  .in_maxsize     = 0x0040,
+  .out_maxsize    = 0x0040,
+  .in_state       = &cdcDataInstate,
+  .out_state      = &cdcDataOutstate,
+  .in_multiplier  = 4,
+  .setup_buf      = NULL
 };
 
-// IN CDC interrupt state.
-static USBInEndpointState cdcInterruptInstate;
-// CDC interrupt initialization structure (IN only).
+/**
+ * @brief   CDC interrupt initialization structure (IN only)
+ */
 static const USBEndpointConfig cdcInterruptEpConfig = {
-  USB_EP_MODE_TYPE_INTR,
-  NULL,
-  sduInterruptTransmitted,
-  NULL,
-  0x0010,
-  0x0000,
-  &cdcInterruptInstate,
-  NULL,
-  1,
-  NULL
+  .ep_mode        USB_EP_MODE_TYPE_INTR,
+  .setup_cb       NULL,
+  .in_cb          sduInterruptTransmitted,
+  .out_cb         NULL,
+  .in_maxsize     0x0010,
+  .out_maxsize    0x0000,
+  .in_state       &cdcInterruptInstate,
+  .out_state      NULL,
+  .in_multiplier  1,
+  .setup_buf      NULL
 };
 
 /*
