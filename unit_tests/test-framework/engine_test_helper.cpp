@@ -46,7 +46,7 @@ bool getUnitTestCreateLogs() {
   return unitTestsCreateLogs;
 }
 
-EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
+EngineTestHelperBase::EngineTestHelperBase(Engine * eng, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
 	ButtonDebounce::resetForUnitTests();
@@ -59,7 +59,7 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 			      "Engine configuration not cleaned up by previous test");
 	}
 	engine = eng;
-	engineConfiguration = econfig;
+	engineConfiguration = &pers->engineConfiguration;
 	config = pers;
 
 	setup_custom_fw_overrides();
@@ -95,7 +95,7 @@ int EngineTestHelper::getWarningCounter() {
 FILE *jsonTrace = nullptr;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
-	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
+	EngineTestHelperBase(&engine, &persistentConfig)
 {
 	engine.reset();
 	persistentConfig = decltype(persistentConfig){};
