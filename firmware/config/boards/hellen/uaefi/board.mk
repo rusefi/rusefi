@@ -26,6 +26,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	# We are limited in flash
 	DDEFS += -DRAMDISK_INVALID
 	DEBUG_LEVEL_OPT = -Os -ggdb -g
+	# We have enough USB endpoints for one more CDC ACM, lets use it for CAN sniffer
+	DDEFS += -DHAL_USE_USB_CDC_2=TRUE
 else
 	#Knock is available on F4 and F7 only
 	DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
