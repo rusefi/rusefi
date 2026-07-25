@@ -3,8 +3,10 @@ package com.rusefi.ui.basic;
 import com.rusefi.core.io.BundleInfo;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
 import java.util.Properties;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,5 +41,15 @@ class FirmwareRollbackControllerTest {
         } finally {
             System.clearProperty("RE_FIRMWARE_ROLLBACK_ENABLED");
         }
+    }
+
+    @Test
+    void successfulSessionFlashOverridesStaleScannedHash() {
+        assertEquals("new-sha", FirmwareRollbackController.selectCurrentFirmwareSha(
+            " new-sha ", Optional.of("old-sha"), "persisted-sha"));
+        assertEquals("ecu-sha", FirmwareRollbackController.selectCurrentFirmwareSha(
+            null, Optional.of(" ecu-sha "), "persisted-sha"));
+        assertEquals("persisted-sha", FirmwareRollbackController.selectCurrentFirmwareSha(
+            null, Optional.empty(), "persisted-sha"));
     }
 }
