@@ -733,6 +733,14 @@ public class BinaryProtocol {
         stream.close();
     }
 
+    public boolean burnPage(int pageIdentifier) {
+        boolean result = BurnCommand.execute(this, pageIdentifier);
+        if (result) {
+            isBurnPending = false;
+        }
+        return result;
+    }
+
     public void setConfigurationImage(ConfigurationImage configurationImage) {
         state.setConfigurationImage(configurationImage);
     }
@@ -870,4 +878,3 @@ public class BinaryProtocol {
         return state;
     }
 }
-
