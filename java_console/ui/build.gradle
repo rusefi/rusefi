@@ -48,6 +48,26 @@ task runSdCycle(type: JavaExec) {
     }
 }
 
+// Writes a JVM argument file (build/scanAndUpdate.args) holding the -classpath for the test
+// source set, so bin/ScanAndUpdateBoardSandbox.bat can launch the sandbox via `java @argfile`.
+// An argument file is required because this classpath is ~9 KB, well over the Windows
+// command-line / environment-variable length limit. Depends on testClasses so the compiled
+// sandbox is on the path.
+task writeScanAndUpdateArgs {
+    // capture at configuration time so doLast holds no Project reference (configuration-cache safe)
+    def testRuntimeClasspath = sourceSets.test.runtimeClasspath
+    // depend on the classpath itself so every producer runs (test classes, the testFixtures
+    // jar that carries ScanAndUpdateFlow, dependency-project jars), not just testClasses
+    dependsOn testRuntimeClasspath
+    def argsFile = layout.buildDirectory.file("scanAndUpdate.args")
+    outputs.file(argsFile).withPropertyName("argsFile")
+    doLast {
+        // forward slashes: the JVM argument-file parser treats backslash as an escape character
+        def cp = testRuntimeClasspath.asPath.replace('\\', '/')
+        argsFile.get().asFile.text = "-classpath \"" + cp + "\"\n"
+    }
+}
+
 def customJavaUi = findProject(':custom-java-ui')
 
 shadowJar {
