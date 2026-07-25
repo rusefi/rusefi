@@ -9,7 +9,7 @@
 # so this bundle ships NO firmware and NO .ini.
 #
 # Requires the console jar to be built first:
-#   ./gradlew :ui:shadowJar :ts_plugin_launcher:build
+#   ./gradlew :ui:shadowJar :ts_plugin_launcher:shadowJar
 #
 # Usage: assemble_universal_bundle.sh <output-dir> [platform-name] [release-name]
 set -euo pipefail
