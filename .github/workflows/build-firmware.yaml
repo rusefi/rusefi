@@ -373,13 +373,13 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
-    - name: Checkout ST drivers submodule
-      run: git submodule update --init firmware/ext/rusefi-gha
+    - name: Checkout bundle submodules
+      run: git submodule update --init --depth=1 firmware/ext/rusefi-gha java_console/luaformatter java_console/peak-can-basic
 
     - uses: ./.github/actions/setup-java
 
     - name: Build console jar
-      run: ./gradlew :ui:shadowJar :ts_plugin_launcher:build
+      run: ./gradlew :ui:shadowJar :ts_plugin_launcher:shadowJar
 
     - name: Assemble universal bundle
       run: |
