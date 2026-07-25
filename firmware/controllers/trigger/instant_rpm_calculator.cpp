@@ -128,6 +128,18 @@ float InstantRpmCalculator::calculateInstantRpm(
 
 	prevInstantRpmValue = instantRpm;
 
+	// Track min/max within the engine cycle; publish the range once per cycle.
+	// An index at or below the previous one means the trigger wrapped: a new engine cycle started.
+	// '<=' also covers single-tooth triggers where every event lands on the same index.
+	if (current_index <= m_lastRangeIndex) {
+		m_rpmRangeLastCycle = m_cycleMinRpm > 0 ? m_cycleMaxRpm - m_cycleMinRpm : 0;
+		m_cycleMinRpm = m_cycleMaxRpm = instantRpm;
+	} else {
+		m_cycleMinRpm = m_cycleMinRpm == 0 ? instantRpm : std::min(m_cycleMinRpm, instantRpm);
+		m_cycleMaxRpm = std::max(m_cycleMaxRpm, instantRpm);
+	}
+	m_lastRangeIndex = current_index;
+
 	m_instantRpmRatio = instantRpm / instantRpmValue[prevIndex];
 
 	return instantRpm;
