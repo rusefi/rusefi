@@ -1,5 +1,7 @@
 <div align="center">
 
+Kentucky
+
 <img src="https://raw.githubusercontent.com/wiki/rusefi/rusefi/Images/logo_new.png" alt="rusEFI" width="600" />
 
 <b>GPL open-source ECU</b>
