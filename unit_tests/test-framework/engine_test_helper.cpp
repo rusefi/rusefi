@@ -400,7 +400,9 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 	if (unitTestTaskNoFastCallWhileAdvancingTimeHack) {
 		setTimeNowUs(targetTimeUs);
 	} else {
-		setTimeNtAndInvokeCallBacks(US_TO_NT_MULTIPLIER * targetTimeUs);
+		// US2NT casts to efitick_t before multiplying: plain 'int' math here overflows
+		// once mock time passes 2^31/US_TO_NT_MULTIPLIER (21.4 seconds at multiplier 100)
+		setTimeNtAndInvokeCallBacks(US2NT(targetTimeUs));
 	}
 }
 

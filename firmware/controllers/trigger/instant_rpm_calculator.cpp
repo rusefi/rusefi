@@ -70,7 +70,9 @@ float InstantRpmCalculator::calculateInstantRpm(
 
 	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 
-	// Record the time of this event so we can calculate RPM from it later
+	// Record the time of this event so we can calculate RPM from it later,
+	// keeping the previous timestamp of this same tooth for the single-tooth case below
+	uint32_t timeFullCycleAgo = timeOfLastEvent[current_index];
 	timeOfLastEvent[current_index] = nowNt32;
 
 	// Determine where we currently are in the revolution
@@ -82,20 +84,35 @@ float InstantRpmCalculator::calculateInstantRpm(
 	wrapAngle(previousAngle, "prevAngle", ObdCode::CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
 	int prevIndex = triggerShape.findAngleIndex(triggerFormDetails, previousAngle);
 
-	// now let's get precise angle for that event
-	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
-	auto time90ago = timeOfLastEvent[prevIndex];
+	uint32_t time;
+	angle_t angleDiff;
 
-	// No previous timestamp, instant RPM isn't ready yet
-	if (time90ago == 0) {
-		return prevInstantRpmValue;
+	if (prevIndex == (int)current_index) {
+		// The hunt landed back on the current tooth: this trigger has a single event
+		// per engine cycle, so the closest usable reference is this same tooth one
+		// full cycle ago - its timestamp was captured before being overwritten above
+		if (timeFullCycleAgo == 0) {
+			return prevInstantRpmValue;
+		}
+
+		time = nowNt32 - timeFullCycleAgo;
+		angleDiff = getEngineCycle(triggerShape.getWheelOperationMode());
+	} else {
+		// now let's get precise angle for that event
+		angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
+		auto time90ago = timeOfLastEvent[prevIndex];
+
+		// No previous timestamp, instant RPM isn't ready yet
+		if (time90ago == 0) {
+			return prevInstantRpmValue;
+		}
+
+		time = nowNt32 - time90ago;
+		angleDiff = currentAngle - prevIndexAngle;
+
+		// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
+		wrapAngle(angleDiff, "angleDiff", ObdCode::CUSTOM_ERR_6561);
 	}
-
-	uint32_t time = nowNt32 - time90ago;
-	angle_t angleDiff = currentAngle - prevIndexAngle;
-
-	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
-	wrapAngle(angleDiff, "angleDiff", ObdCode::CUSTOM_ERR_6561);
 
 	// just for safety, avoid divide-by-0
 	if (time == 0) {
