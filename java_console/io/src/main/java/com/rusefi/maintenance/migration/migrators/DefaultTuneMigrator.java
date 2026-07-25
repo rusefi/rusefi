@@ -38,7 +38,13 @@ public enum DefaultTuneMigrator implements TuneMigrator {
     @Override
     public void migrateTune(final TuneMigrationContext context) {
         final IniFileModel prevIni = context.getPrevIniFile();
-        final Map<String, IniField> prevIniFields = prevIni.getAllIniFields();
+        final Map<String, IniField> prevIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        prevIniFields.putAll(prevIni.getAllIniFields());
+        prevIni.getSecondaryIniFields().forEach((name, field) -> {
+            if (field.getPageIndex() != 0 && isBurnablePage(prevIni, field.getPageIndex())) {
+                prevIniFields.put(name, field);
+            }
+        });
         for (final Map.Entry<String, IniField> prevFieldEntry : prevIniFields.entrySet()) {
             migrateIniField(context, prevFieldEntry);
         }
@@ -74,6 +80,10 @@ public enum DefaultTuneMigrator implements TuneMigrator {
                     prevFieldName
                 ));
             }
+            return;
+        }
+
+        if (!isBurnablePage(newIni, newField.getPageIndex())) {
             return;
         }
 
@@ -166,5 +176,17 @@ public enum DefaultTuneMigrator implements TuneMigrator {
 
     private static boolean isUnusedField(final String fieldName) {
         return fieldName.startsWith(UnusedPrefix.UNUSED_ANYTHING_PREFIX);
+    }
+
+    private static boolean isBurnablePage(IniFileModel ini, int pageIdentifier) {
+        if (pageIdentifier == 0) {
+            return true;
+        }
+        for (int pageIndex = 0; pageIndex < ini.getMetaInfo().getnPages(); pageIndex++) {
+            if (ini.getMetaInfo().getPageIdentifier(pageIndex) == pageIdentifier) {
+                return !ini.getMetaInfo().getBurnCommand(pageIndex).isEmpty();
+            }
+        }
+        return false;
     }
 }

@@ -6,6 +6,7 @@ import java.util.Objects;
 public class VersionInfo {
     private String firmwareInfo;
     private String signature;
+    private int nPages = 1;
 
     public VersionInfo() {
     }
@@ -21,7 +22,7 @@ public class VersionInfo {
 
     @XmlAttribute
     public String getNPages() {
-        return "1";
+        return Integer.toString(nPages);
     }
 
     @XmlAttribute
@@ -42,8 +43,15 @@ public class VersionInfo {
         this.signature = signature;
     }
 
+    public void setNPages(String nPages) {
+        this.nPages = Integer.parseInt(nPages);
+    }
+
+    public void setPageCount(int nPages) {
+        this.nPages = nPages;
+    }
+
     public void validate() {
         Objects.requireNonNull(signature, "signature");
     }
 }
-
