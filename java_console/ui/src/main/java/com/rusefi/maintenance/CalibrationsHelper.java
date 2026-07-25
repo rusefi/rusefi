@@ -469,7 +469,7 @@ public class CalibrationsHelper {
                     }
                     if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
                         newEcuPort.port,
-                        mergeResult.mergedCalibrations.get().getImage().getConfigurationImage(),
+                        mergeResult.mergedCalibrations.get(),
                         callbacks,
                         connectivityContext
                     )) {
@@ -525,7 +525,7 @@ public class CalibrationsHelper {
             callbacks.logLine("Calibration layout is unchanged; restoring the pre-rollback tune.");
             if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
                 ecuPort.port,
-                before.getImage().getConfigurationImage(),
+                before.withAllPagesToWrite(),
                 callbacks,
                 connectivityContext)) {
                 return false;
@@ -643,7 +643,7 @@ public class CalibrationsHelper {
         }
         if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
             newEcuPort,
-            mergeResult.mergedCalibrations.get().getImage().getConfigurationImage(),
+            mergeResult.mergedCalibrations.get(),
             callbacks,
             connectivityContext
         )) {
@@ -717,7 +717,7 @@ public class CalibrationsHelper {
                 return false;
             }
             if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
-                    bp, lm, mergedTune.get().getImage().getConfigurationImage(), callbacks)) {
+                    bp, lm, mergedTune.get(), callbacks)) {
                 callbacks.logLine("Failed to write merged tune to ECU...");
                 return false;
             }
@@ -757,7 +757,6 @@ public class CalibrationsHelper {
         return readCalibrationsInfo(binaryProtocol, callbacks);
     }
 
-    // right now we only load first page, one day soon LTFT would ask for other pages!
     private static Optional<CalibrationsInfo> readCalibrationsInfo(
         final BinaryProtocol binaryProtocol,
         final UpdateOperationCallbacks callbacks) {
@@ -780,7 +779,30 @@ public class CalibrationsHelper {
             final ConfigurationImageMetaVersion0_0 meta = ConfigurationImageMetaVersion0_0.getMeta(iniFile);
             callbacks.logLine("Reading current calibrations...");
             final ConfigurationImageWithMeta image = binaryProtocol.readFullImageFromController(meta);
-            return Optional.of(new CalibrationsInfo(iniFile, image));
+            final Map<Integer, ConfigurationImageWithMeta> pages = new TreeMap<>();
+            pages.put(0, image);
+            for (int pageIndex = 1; pageIndex < iniFile.getMetaInfo().getnPages(); pageIndex++) {
+                final int pageIdentifier = iniFile.getMetaInfo().getPageIdentifier(pageIndex);
+                final int secondaryPageSize = iniFile.getMetaInfo().getPageSize(pageIndex);
+                callbacks.logLine(String.format(
+                    "Reading calibration page 0x%04X (%d bytes)...",
+                    pageIdentifier,
+                    secondaryPageSize
+                ));
+                final byte[] content = binaryProtocol.readFromPage(pageIdentifier, 0, secondaryPageSize);
+                if (content == null) {
+                    callbacks.logLine(String.format("Failed to read calibration page 0x%04X", pageIdentifier));
+                    return Optional.empty();
+                }
+                pages.put(
+                    pageIdentifier,
+                    new ConfigurationImageWithMeta(
+                        new ConfigurationImageMetaVersion0_0(secondaryPageSize, iniFile.getSignature()),
+                        content
+                    )
+                );
+            }
+            return Optional.of(new CalibrationsInfo(iniFile, pages, emptySet()));
         } catch (final IOException e) {
             log.error("Failed to read meta:", e);
             callbacks.logLine("Failed to read meta");
@@ -850,7 +872,7 @@ public class CalibrationsHelper {
                 zipFileName,
                 msqFileName
             ));
-            saveConfigurationImageToFiles(calibrationsInfo.getImage(), ini, zipFileName, msqFileName);
+            saveConfigurationImageToFiles(calibrationsInfo, zipFileName, msqFileName);
             callbacks.logLine(String.format(
                 "Calibrations are backed up to files `%s` and `%s`",
                 zipFileName,
@@ -984,14 +1006,21 @@ public class CalibrationsHelper {
         ComposedTuneMigrator.INSTANCE.migrateTune(context);
         final Set<Map.Entry<String, Constant>> valuesToUpdate = context.getMigratedConstants().entrySet();
         if (!valuesToUpdate.isEmpty()) {
-            final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
+            final Map<Integer, ConfigurationImageWithMeta> mergedPages = clonePages(newCalibrations);
+            final Set<Integer> pagesToWrite = new TreeSet<>();
             for (final Map.Entry<String, Constant> valueToUpdate : valuesToUpdate) {
                 final String migratedFieldName = valueToUpdate.getKey();
                 final Constant migratedValue = valueToUpdate.getValue();
                 final Optional<IniField> fieldToUpdate = newIniFile.findIniField(migratedFieldName);
                 if (fieldToUpdate.isPresent()) {
                     try {
-                        ConfigurationImageGetterSetter2.setValue(fieldToUpdate.get(), mergedImage, migratedValue);
+                        final IniField field = fieldToUpdate.get();
+                        final ConfigurationImageWithMeta page = Objects.requireNonNull(
+                            mergedPages.get(field.getPageIndex()),
+                            String.format("Calibration page 0x%04X", field.getPageIndex())
+                        );
+                        ConfigurationImageGetterSetter2.setValue(field, page.getConfigurationImage(), migratedValue);
+                        pagesToWrite.add(field.getPageIndex());
                     } catch (Throwable e) {
                         log.error(
                             String.format("We failed to set value %s for ini-field %s", migratedValue, fieldToUpdate),
@@ -1020,11 +1049,12 @@ public class CalibrationsHelper {
             }
             result = Optional.of(new CalibrationsInfo(
                 newIniFile,
-                new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent())
+                mergedPages,
+                pagesToWrite
             ));
         } else if ("true".equalsIgnoreCase(RUSEFI_FORCE_CALIBRATIONS_RESTORE)) {
             callbacks.logLine("It looks like we do not need to update previous calibrations, but for debugging we are going to rewrite to ECU new calibrations again.");
-            result = Optional.of(newCalibrations);
+            result = Optional.of(new CalibrationsInfo(newIniFile, newCalibrations.getPages(), Collections.singleton(0)));
         } else {
             callbacks.logLine("It looks like we do not need to update any fields to restore previous calibrations.");
         }
@@ -1058,14 +1088,21 @@ public class CalibrationsHelper {
             return new MergeResult(Optional.empty(), failedFields);
         }
 
-        final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
+        final Map<Integer, ConfigurationImageWithMeta> mergedPages = clonePages(newCalibrations);
+        final Set<Integer> pagesToWrite = new TreeSet<>();
         for (final Map.Entry<String, Constant> valueToUpdate : valuesToUpdate) {
             final String migratedFieldName = valueToUpdate.getKey();
             final Constant migratedValue = valueToUpdate.getValue();
             final Optional<IniField> fieldToUpdate = newIniFile.findIniField(migratedFieldName);
             if (fieldToUpdate.isPresent()) {
                 try {
-                    ConfigurationImageGetterSetter2.setValue(fieldToUpdate.get(), mergedImage, migratedValue);
+                    final IniField field = fieldToUpdate.get();
+                    final ConfigurationImageWithMeta page = Objects.requireNonNull(
+                        mergedPages.get(field.getPageIndex()),
+                        String.format("Calibration page 0x%04X", field.getPageIndex())
+                    );
+                    ConfigurationImageGetterSetter2.setValue(field, page.getConfigurationImage(), migratedValue);
+                    pagesToWrite.add(field.getPageIndex());
                     callbacks.logLine(String.format(
                         "To restore previous calibrations we are going to update the field `%s` with a value `%s`",
                         migratedFieldName,
@@ -1101,7 +1138,9 @@ public class CalibrationsHelper {
 
         if (failedFields.isEmpty() && valuesToUpdate.isEmpty() && "true".equalsIgnoreCase(RUSEFI_FORCE_CALIBRATIONS_RESTORE)) {
             callbacks.logLine("It looks like we do not need to update previous calibrations, but for debugging we are going to rewrite to ECU new calibrations again.");
-            return new MergeResult(Optional.of(newCalibrations), failedFields);
+            return new MergeResult(Optional.of(
+                new CalibrationsInfo(newIniFile, newCalibrations.getPages(), Collections.singleton(0))
+            ), failedFields);
         }
 
         if (failedFields.isEmpty() && valuesToUpdate.isEmpty()) {
@@ -1110,8 +1149,21 @@ public class CalibrationsHelper {
 
         return new MergeResult(Optional.of(new CalibrationsInfo(
             newIniFile,
-            new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent())
+            mergedPages,
+            pagesToWrite
         )), failedFields);
+    }
+
+    private static Map<Integer, ConfigurationImageWithMeta> clonePages(CalibrationsInfo calibrations) {
+        final Map<Integer, ConfigurationImageWithMeta> result = new TreeMap<>();
+        calibrations.getPages().forEach((page, imageWithMeta) -> result.put(
+            page,
+            new ConfigurationImageWithMeta(
+                imageWithMeta.getMeta(),
+                imageWithMeta.getConfigurationImage().getContent().clone()
+            )
+        ));
+        return result;
     }
 
     // package-private for CalibrationsHelperContextTest — reflection in unit tests is prohibited

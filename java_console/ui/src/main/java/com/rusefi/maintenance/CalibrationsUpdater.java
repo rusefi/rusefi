@@ -7,6 +7,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.jobs.JobHelper;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 public enum CalibrationsUpdater {
@@ -20,6 +21,22 @@ public enum CalibrationsUpdater {
     ) {
         JobHelper.doJob(() -> {
             if (updateCalibrations(port, calibrationsImage, callbacks, connectivityContext)) {
+                callbacks.done();
+            } else {
+                callbacks.error();
+            }
+        }, onJobFinished);
+    }
+
+    public synchronized void updateCalibrations(
+        final String port,
+        final CalibrationsInfo calibrations,
+        final UpdateOperationCallbacks callbacks,
+        final Runnable onJobFinished,
+        final ConnectivityContext connectivityContext
+    ) {
+        JobHelper.doJob(() -> {
+            if (updateCalibrations(port, calibrations, callbacks, connectivityContext)) {
                 callbacks.done();
             } else {
                 callbacks.error();
@@ -68,6 +85,26 @@ public enum CalibrationsUpdater {
         return result;
     }
 
+    public synchronized boolean updateCalibrations(
+        final String port,
+        final CalibrationsInfo calibrations,
+        final UpdateOperationCallbacks callbacks,
+        final ConnectivityContext connectivityContext
+    ) {
+        if (calibrations == null) {
+            callbacks.logLine("ERROR: Calibrations to update are undefined");
+            return false;
+        }
+        return BinaryProtocolExecutor.executeWithSuspendedPortScanner(
+            port,
+            callbacks,
+            binaryProtocol -> uploadPages(binaryProtocol, calibrations, callbacks),
+            false,
+            connectivityContext,
+            "uploadCalibrationPages"
+        );
+    }
+
     /**
      * Uploads calibrations via a live {@link BinaryProtocol} without opening a fresh connection.
      * All IO is submitted through {@link LinkManager#submit} so it is serialized with the pull thread.
@@ -106,5 +143,59 @@ public enum CalibrationsUpdater {
             callbacks.logLine(String.format("Failed to update configuration image (%d bytes) via live connection", size));
         }
         return result[0];
+    }
+
+    public synchronized boolean updateCalibrations(
+        final BinaryProtocol bp,
+        final LinkManager lm,
+        final CalibrationsInfo calibrations,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        if (calibrations == null) {
+            callbacks.logLine("ERROR: Calibrations to update are undefined");
+            return false;
+        }
+        final boolean[] result = {false};
+        try {
+            lm.submit(() -> result[0] = uploadPages(bp, calibrations, callbacks)).get();
+        } catch (ExecutionException | InterruptedException e) {
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            }
+            callbacks.logLine("Failed to upload calibration pages: " + e.getMessage());
+            return false;
+        }
+        return result[0];
+    }
+
+    static boolean uploadPages(
+        final BinaryProtocol binaryProtocol,
+        final CalibrationsInfo calibrations,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        for (int pageIdentifier : calibrations.getPagesToWrite()) {
+            final ConfigurationImage image = calibrations.getPage(pageIdentifier).getConfigurationImage();
+            callbacks.logLine(String.format(
+                "Updating calibration page 0x%04X (%d bytes)...",
+                pageIdentifier,
+                image.getSize()
+            ));
+            if (pageIdentifier == 0) {
+                binaryProtocol.uploadChanges(image);
+                continue;
+            }
+
+            binaryProtocol.writeInBlocks(image.getContent(), 0, 0, image.getSize(), pageIdentifier);
+            final byte[] uploaded = binaryProtocol.readFromPage(pageIdentifier, 0, image.getSize());
+            if (!Arrays.equals(image.getContent(), uploaded)) {
+                callbacks.logLine(String.format("Failed to verify calibration page 0x%04X", pageIdentifier));
+                return false;
+            }
+            if (!binaryProtocol.burnPage(pageIdentifier)) {
+                callbacks.logLine(String.format("Failed to burn calibration page 0x%04X", pageIdentifier));
+                return false;
+            }
+        }
+        return true;
     }
 }
