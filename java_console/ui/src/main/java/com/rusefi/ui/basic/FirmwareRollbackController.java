@@ -63,6 +63,7 @@ public final class FirmwareRollbackController {
     private volatile String discoveryRetryKey;
     private volatile boolean downloadInProgress;
     private volatile FirmwareRollbackResolver.Build pendingInstalledBuild;
+    private volatile @Nullable String sessionInstalledSha;
     private volatile @Nullable LinkManager linkManager;
 
     public FirmwareRollbackController(
@@ -88,6 +89,7 @@ public final class FirmwareRollbackController {
         rollbackButton.addActionListener(event -> showRollbackPicker());
         jobExecutor.addOnJobInProgressFinishedListener(() -> SwingUtilities.invokeLater(() -> {
             if (jobExecutor.getLastResult() == UpdateFirmwareResult.SUCCESS && pendingInstalledBuild != null) {
+                sessionInstalledSha = pendingInstalledBuild.getSha();
                 PersistentConfiguration.getConfig().getRoot().setProperty(
                     lastInstalledKey(pendingInstalledBuild.getBoard(), pendingInstalledBuild.getBranch()),
                     pendingInstalledBuild.getSha());
@@ -371,16 +373,27 @@ public final class FirmwareRollbackController {
     }
 
     private String currentFirmwareSha(final PortResult port) {
-        if (port.getFirmwareHash().isPresent()) {
-            final String hash = port.getFirmwareHash().get().trim();
-            if (!hash.isEmpty()) {
-                return hash;
-            }
-        }
         final BundleInfo bundle = BundleUtil.readBundleFullNameNotNull();
         final String board = connectivityContext.getConnectedEcuTarget().effectiveTarget();
-        return PersistentConfiguration.getConfig().getRoot().getProperty(
-            lastInstalledKey(board, bundle.getBranchName()), null);
+        return selectCurrentFirmwareSha(
+            sessionInstalledSha,
+            port.getFirmwareHash(),
+            PersistentConfiguration.getConfig().getRoot().getProperty(
+                lastInstalledKey(board, bundle.getBranchName()), null));
+    }
+
+    static @Nullable String selectCurrentFirmwareSha(
+        @Nullable String sessionInstalledSha,
+        Optional<String> portFirmwareSha,
+        @Nullable String persistedFirmwareSha
+    ) {
+        if (sessionInstalledSha != null && !sessionInstalledSha.trim().isEmpty()) {
+            return sessionInstalledSha.trim();
+        }
+        if (portFirmwareSha.isPresent() && !portFirmwareSha.get().trim().isEmpty()) {
+            return portFirmwareSha.get().trim();
+        }
+        return persistedFirmwareSha;
     }
 
     private boolean hasLiveConnection() {
