@@ -6,6 +6,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/integration/config_page_3.txt \
   $(PROJECT_DIR)/integration/config_page_4.txt \
   $(PROJECT_DIR)/console/binary/output_channels.txt \
+  $(PROJECT_DIR)//tunerstudio/gauge_declarations.ini \
   $(PROJECT_DIR)/controllers/engine_cycle/knock_controller.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/prime_injection.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_central.txt \
