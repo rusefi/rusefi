@@ -1,11 +1,13 @@
 package com.rusefi.maintenance.migration;
 
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.maintenance.TestCallbacks;
 import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.maintenance.migration.migrators.DefaultTuneMigrator;
+import com.rusefi.tune.ConfigurationImageGetterSetter2;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.Optional;
 
+import static java.nio.charset.StandardCharsets.US_ASCII;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.AdditionalMatchers.not;
@@ -39,6 +42,7 @@ public class SecondaryPageFieldMigrationTest {
         final IniField prevField = new StringIniField(LUA_SCRIPT, 5716, 8000);
         // ...and moved to its own dedicated page in the new .ini.
         final IniField updatedField = new StringIniField(LUA_SCRIPT, 0, 8000);
+        updatedField.setPageIndex(0x0400);
         final Constant prevConst = new Constant(LUA_SCRIPT, null, OLD_SCRIPT_VALUE, null);
 
         final IniFileModel prevIni = mock(IniFileModel.class);
@@ -66,5 +70,13 @@ public class SecondaryPageFieldMigrationTest {
         final Constant migrated = context.getMigratedConstants().get(LUA_SCRIPT);
         assertNotNull(migrated, "Secondary-page field must be migrated, not dropped as 'missed in new .ini'");
         assertEquals(OLD_SCRIPT_VALUE, migrated.getValue());
+
+        final ConfigurationImage mainPageImage = new ConfigurationImage(new byte[8000]);
+        ConfigurationImageGetterSetter2.setValue(updatedField, mainPageImage, migrated);
+        assertEquals(
+            OLD_SCRIPT_VALUE,
+            new String(mainPageImage.getContent(), 0, OLD_SCRIPT_VALUE.length(), US_ASCII),
+            "Current merge behavior writes a secondary-page field over main-page data"
+        );
     }
 }
