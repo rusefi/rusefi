@@ -1641,8 +1641,21 @@ struct output_channels_s {
 	 * offset 924
 	 */
 	float auxTemp2Resistance = (float)0;
+	/**
+	 * sync: instant RPM range
+	 * Max minus min instant RPM within the last complete engine cycle, 0 when RPM is perfectly steady
+	 * units: rpm
+	 * offset 928
+	 */
+	uint16_t instantRpmRange = (uint16_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 930
+	 */
+	uint8_t alignmentFill_at_930[2] = {};
 };
-static_assert(sizeof(output_channels_s) == 928);
+static_assert(sizeof(output_channels_s) == 932);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt
