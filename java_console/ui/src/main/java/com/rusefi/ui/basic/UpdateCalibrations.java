@@ -1,17 +1,20 @@
 package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.jobs.UpdateCalibrationsJob;
+import com.rusefi.maintenance.CalibrationsInfo;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Objects;
+import com.opensr5.ConfigurationImageWithMeta;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -32,11 +35,27 @@ public class UpdateCalibrations {
             final File selectedFile = calibrationsFileChooser.getSelectedFile();
             UpdateCalibrations.saveBinaryImageDefaultDirectory(selectedFile.getParent());
             try {
-                final ConfigurationImageWithMeta calibrationsImage = ConfigurationImageFile.readFromFile(
-                    selectedFile.getAbsolutePath()
-                );
-                singleAsyncJobExecutor.startJob(new UpdateCalibrationsJob(port, calibrationsImage, connectivityContext), parent);
-            } catch (final IOException e) {
+                if (port.getCalibrations() == null) {
+                    throw new IOException("ECU calibration layout is unavailable");
+                }
+                final Map<Integer, ConfigurationImageWithMeta> pages =
+                    ConfigurationImageFile.readPagesFromFile(selectedFile.getAbsolutePath());
+                final String archiveSignature = pages.get(0).getMeta().getEcuSignature();
+                final String ecuSignature = port.getCalibrations().getIniFile().getSignature();
+                if (!Objects.equals(archiveSignature, ecuSignature)) {
+                    throw new IOException(String.format(
+                        "Calibration signature `%s` does not match ECU signature `%s`",
+                        archiveSignature,
+                        ecuSignature
+                    ));
+                }
+                final CalibrationsInfo calibrations = new CalibrationsInfo(
+                    port.getCalibrations().getIniFile(),
+                    pages,
+                    java.util.Collections.emptySet()
+                ).withAllPagesToWrite();
+                singleAsyncJobExecutor.startJob(new UpdateCalibrationsJob(port, calibrations, connectivityContext), parent);
+            } catch (final Exception e) {
                 final String errorMsg = String.format(
                     "Failed to load calibrations from file %s",
                     selectedFile.getAbsolutePath()

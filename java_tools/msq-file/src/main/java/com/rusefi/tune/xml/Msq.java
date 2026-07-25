@@ -49,6 +49,35 @@ public class Msq {
     }
 
     @NotNull
+    public static Msq valueOf(Map<Integer, ConfigurationImage> images, String tsSignature, IniFileModel ini) {
+        Msq tune = new Msq();
+        tune.versionInfo.setSignature(tsSignature);
+        tune.page.add(new Page(null, null));
+
+        int pageCount = 0;
+        for (int pageIndex = 0; pageIndex < ini.getMetaInfo().getnPages(); pageIndex++) {
+            int pageIdentifier = ini.getMetaInfo().getPageIdentifier(pageIndex);
+            ConfigurationImage image = images.get(pageIdentifier);
+            if (image == null) {
+                continue;
+            }
+            Page outputPage = new Page(pageIndex, image.getSize());
+            tune.page.add(outputPage);
+            Collection<IniField> fields = pageIdentifier == 0
+                ? ini.getAllIniFields().values()
+                : ini.getSecondaryIniFields().values();
+            for (IniField field : fields) {
+                if (field.getPageIndex() == pageIdentifier) {
+                    tune.loadConstant(field, image, outputPage);
+                }
+            }
+            pageCount++;
+        }
+        tune.versionInfo.setPageCount(pageCount);
+        return tune;
+    }
+
+    @NotNull
     public static Msq create(int totalConfigSize, String tsSignature) {
         Msq tune = new Msq();
         tune.versionInfo.setSignature(tsSignature);
@@ -126,8 +155,11 @@ public class Msq {
 
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
         IniField field = ini.getAllIniFields().get(key);
+        loadConstant(field, image, findPage());
+    }
+
+    private void loadConstant(IniField field, ConfigurationImage image, Page page) {
         String value = ConfigurationImageGetterSetter.getStringValue(field, image);
-        Page page = findPage();
         if (page == null) {
             log.error("Msq: No page");
             return;
@@ -170,7 +202,12 @@ public class Msq {
     }
 
     public Map<String, Constant> getConstantsAsMap() {
-        return findPage().getConstantsAsMap();
+        Map<String, Constant> result = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        for (Page p : page) {
+            if (p.getSize() != null) {
+                result.putAll(p.getConstantsAsMap());
+            }
+        }
+        return result;
     }
 }
-

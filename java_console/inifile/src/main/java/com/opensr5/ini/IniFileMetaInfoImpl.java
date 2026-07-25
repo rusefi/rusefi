@@ -16,6 +16,7 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
     private final int nPages;
     private final String signature;
     private final List<String> pageReadCommands;
+    private final List<String> burnCommands = new ArrayList<>();
 /*
     private final List<String> crc32CheckCommands;
     private int totalSize;
@@ -56,6 +57,13 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
             }
 
             pageReadCommands = file.getValues("pageReadCommand");
+            try {
+                burnCommands.addAll(file.getValues("burnCommand"));
+            } catch (MandatoryLineMissing ignored) {
+                for (int page = 0; page < nPages; page++) {
+                    burnCommands.add(page == 0 ? "B" : "");
+                }
+            }
 /*
             crc32CheckCommands = file.getValues("crc32CheckCommand");
  */
@@ -103,6 +111,11 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
     @Override
     public String getPageReadCommand(int pageIndex) {
         return pageReadCommands.get(pageIndex);
+    }
+
+    @Override
+    public String getBurnCommand(int pageIndex) {
+        return burnCommands.get(pageIndex);
     }
 
     /*

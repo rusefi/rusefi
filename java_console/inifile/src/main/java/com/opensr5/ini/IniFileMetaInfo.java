@@ -15,6 +15,10 @@ public interface IniFileMetaInfo {
 
     String getPageReadCommand(int pageIndex);
 
+    default String getBurnCommand(int pageIndex) {
+        return pageIndex == 0 ? "B" : "";
+    }
+
     /*
     String getCrc32CheckCommand(int pageIndex);
 */

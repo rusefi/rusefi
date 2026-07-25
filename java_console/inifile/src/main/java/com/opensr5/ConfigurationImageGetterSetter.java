@@ -186,6 +186,15 @@ public class ConfigurationImageGetterSetter {
 
             @Override
             public Void visit(StringIniField field) {
+                if (value.length() > field.getSize()) {
+                    throw new IllegalArgumentException(name + ": String does not fit in " + field.getSize() + " bytes");
+                }
+                java.util.Arrays.fill(
+                    image.getContent(),
+                    field.getOffset(),
+                    field.getOffset() + field.getSize(),
+                    (byte) 0
+                );
                 for (int i = 0; i < value.length(); i++)
                     image.getContent()[field.getOffset() + i] = (byte) value.charAt(i);
                 return null;
