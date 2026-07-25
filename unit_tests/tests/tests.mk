@@ -38,6 +38,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_map_cam.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_rpm_acceleration.cpp \
+	tests/trigger/test_instant_rpm.cpp \
 	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_nissan_vq_vvt.cpp \
 	tests/trigger/test_override_gaps.cpp \
