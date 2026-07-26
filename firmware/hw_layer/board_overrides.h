@@ -82,6 +82,17 @@ using setup_custom_board_write_error_file_type = void (*)(FIL * /*fd*/);
 extern std::optional<setup_custom_board_write_error_file_type> custom_board_onBoardWriteErrorFile;
 #endif // EFI_FILE_LOGGING
 
+// Board-specific extra columns for the .teeth CSV trigger log (see tooth_logger.cpp,
+// active while engineConfiguration->sdTriggerLogCsv is enabled). Both hooks fill
+// 'buffer' with an snprintf-style CSV fragment and return the number of characters
+// written (excluding the null terminator); a negative value or one >= 'size' is treated
+// as an error and fails the row/header. The fragment must start with the ", " column
+// separator and must not contain a line terminator. The header hook runs once per file,
+// the line hook once per row - both must emit the same number of columns.
+using board_tooth_log_csv_fragment_type = int (*)(char* /*buffer*/, size_t /*size*/);
+extern std::optional<board_tooth_log_csv_fragment_type> custom_board_toothLogCsvHeader;
+extern std::optional<board_tooth_log_csv_fragment_type> custom_board_toothLogCsvLine;
+
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 using board_can_rx_type = void (*)(const size_t, const CANRxFrame &, efitick_t);

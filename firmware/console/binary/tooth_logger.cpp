@@ -397,20 +397,37 @@ int ToothLoggerWriter(FileBufferedWriter &writer) {
 
 #if EFI_FILE_LOGGING || EFI_UNIT_TEST
 
+#include "board_overrides.h"
+
+std::optional<board_tooth_log_csv_fragment_type> custom_board_toothLogCsvHeader;
+std::optional<board_tooth_log_csv_fragment_type> custom_board_toothLogCsvLine;
+
 int ToothLoggerWriteCsvHeader(Writer &writer) {
 	// keep in sync with composite_logger_s
 	// drop trigger - purpose not clear
-	const char header[] = "Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS\r\n";
+	const char header[] = "Time[s], Primary, Cam 1, Cam 2, Cam 3, Cam 4, Sync, TDC, Coils, Injectors, ACR, VBatt, ET, InstantMAP, TPS";
 
 	// no tailing '\0'
 	writer.write(header, sizeof(header) - 1);
+
+	if (custom_board_toothLogCsvHeader.has_value()) {
+		char extra[128];
+		int len = (*custom_board_toothLogCsvHeader)(extra, sizeof(extra));
+		if ((len < 0) || (len >= (int)sizeof(extra))) {
+			return -1;
+		}
+		writer.write(extra, len);
+	}
+
+	writer.write("\r\n", 2);
 
 	return 0;
 }
 
 int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 	size_t total = 0;
-	char tmp[128];
+	// base columns plus optional custom_board_toothLogCsvLine fragment plus CRLF
+	char tmp[192];
 
 	for (size_t i = 0; i < buffer->nextIdx; i++) {
 		// Swap back
@@ -430,22 +447,35 @@ int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 		float tps = Sensor::get(SensorType::Tps1).value_or(0);
 
 		// it is cheaper to write all data, even we have 1 cylinder engine with single crank sensor
-		int ret = chsnprintf(tmp, sizeof(tmp), "%d.%06d, "
+		// last two bytes are reserved for the CRLF terminator appended below
+		int ret = chsnprintf(tmp, sizeof(tmp) - 2, "%d.%06d, "
 					"%d, %d, %d, %d, %d, "
 					"%d, %d, "
-					"%d, %d, %d, %.2f, %.2f, %.2f, %.2f\r\n",	// TODO: convert to bitwise?
+					"%d, %d, %d, %.2f, %.2f, %.2f, %.2f",	// TODO: convert to bitwise?
 				sec, usec,
 				c.priLevel, c.cam1, c.cam2, c.cam3, c.cam4,
 				c.sync, c.tdc,
 				c.coil, c.injector, c.acr, vbatt, et, instantMap, tps);
 
-		if ((ret < 0) || (ret >= (int)sizeof(tmp))) {
+		if ((ret < 0) || (ret >= (int)sizeof(tmp) - 2)) {
 			return -1;
 		}
 
-		ret = writer.write(tmp, ret);
+		size_t len = ret;
 
-		total += ret;
+		if (custom_board_toothLogCsvLine.has_value()) {
+			size_t room = sizeof(tmp) - 2 - len;
+			int extra = (*custom_board_toothLogCsvLine)(tmp + len, room);
+			if ((extra < 0) || (extra >= (int)room)) {
+				return -1;
+			}
+			len += extra;
+		}
+
+		tmp[len++] = '\r';
+		tmp[len++] = '\n';
+
+		total += writer.write(tmp, len);
 	}
 
 	return total;
