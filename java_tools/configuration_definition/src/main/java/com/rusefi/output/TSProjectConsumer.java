@@ -38,6 +38,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     // nesting support.
     private static final String TS_IF_BLOCK_START = "@@if_block";
     private static final String TS_IF_BLOCK_END = "@@endif_block";
+    private static final java.util.regex.Pattern TS_CONDITION_TOKEN = java.util.regex.Pattern.compile("\\w+");
     private static final String TEMPLATE_TAG = "@@";
     public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
@@ -398,6 +399,12 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             token += line.charAt(index);
             index++;
         }
+        // anything glued to the token (e.g. "East@@if_ts_show_exhaust_vvt, { ... }") would make
+        // the registry lookup silently resolve to false and drop the line, so fail fast instead
+        if (!TS_CONDITION_TOKEN.matcher(token).matches())
+            throw new IllegalStateException("Malformed " + TS_CONDITION + " condition: token [" + token
+                + "] is not a plain identifier in line [" + line.trim()
+                + "] - separate the token from following syntax with whitespace");
         return token;
     }
 

@@ -20,6 +20,7 @@ import java.util.TreeSet;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TSProjectConsumerTest {
     private static final String smallContent = "hello = \";\"\n" +
@@ -35,6 +36,18 @@ public class TSProjectConsumerTest {
         assertEquals("1", TSProjectConsumer.removeToken("1@@if_ts"));
         assertEquals("12", TSProjectConsumer.removeToken("1@@if_ts 2"));
         assertEquals("H2\r\n", TSProjectConsumer.removeToken("H@@if_ts 2\r\n"));
+    }
+
+    @Test
+    public void malformedTsConditionTokenIsParseError() {
+        // real-world bug shape: a comma glued to the @@if_ token made the registry lookup miss,
+        // so the condition was silently false and the whole line vanished from the .ini
+        String line = "panel = vvtPidDialog2,\tEast@@if_ts_show_exhaust_vvt, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }";
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> TSProjectConsumer.getToken(line));
+        assertTrue(e.getMessage().contains("ts_show_exhaust_vvt,"), e.getMessage());
+        assertThrows(IllegalStateException.class, () -> TSProjectConsumer.removeToken(line));
+        // empty token is just as malformed
+        assertThrows(IllegalStateException.class, () -> TSProjectConsumer.getToken("hello @@if_ world"));
     }
 
     @Test
