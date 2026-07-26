@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Jul 12 10:53:05 UTC 2026
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Jul 26 11:49:48 EDT 2026
 // see also gen_config_and_enums.bat
 
 
@@ -1133,6 +1133,8 @@ const char *getVvt_mode_e(vvt_mode_e value) {
 			return "VVT_CUSTOM_3";
 		case VVT_CUSTOM_4:
 			return "VVT_CUSTOM_4";
+		case VVT_CUSTOM_5:
+			return "VVT_CUSTOM_5";
 		case VVT_DEV:
 			return "VVT_DEV";
 		case VVT_FORD_COYOTE:
