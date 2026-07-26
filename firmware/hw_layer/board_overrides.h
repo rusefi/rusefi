@@ -83,15 +83,30 @@ extern std::optional<setup_custom_board_write_error_file_type> custom_board_onBo
 #endif // EFI_FILE_LOGGING
 
 // Board-specific extra columns for the .teeth CSV trigger log (see tooth_logger.cpp,
-// active while engineConfiguration->sdTriggerLogCsv is enabled). Both hooks fill
+// active while engineConfiguration->sdTriggerLogCsv is enabled). Both CSV hooks fill
 // 'buffer' with an snprintf-style CSV fragment and return the number of characters
 // written (excluding the null terminator); a negative value or one >= 'size' is treated
 // as an error and fails the row/header. The fragment must start with the ", " column
 // separator and must not contain a line terminator. The header hook runs once per file,
 // the line hook once per row - both must emit the same number of columns.
-using board_tooth_log_csv_fragment_type = int (*)(char* /*buffer*/, size_t /*size*/);
-extern std::optional<board_tooth_log_csv_fragment_type> custom_board_toothLogCsvHeader;
-extern std::optional<board_tooth_log_csv_fragment_type> custom_board_toothLogCsvLine;
+//
+// The line hook's 'payload' points at this row's per-event board payload, sampled at
+// append time by custom_board_toothLogSample (nullptr when
+// TOOTH_LOG_BOARD_PAYLOAD_SIZE is 0 and the parallel array is compiled out - see
+// tooth_logger.h). The board casts it to its own payload struct; without a payload the
+// hook may still emit flush-time values, with the associated time-skew caveat.
+using board_tooth_log_csv_header_type = int (*)(char* /*buffer*/, size_t /*size*/);
+using board_tooth_log_csv_line_type = int (*)(char* /*buffer*/, size_t /*size*/, const void* /*payload*/);
+extern std::optional<board_tooth_log_csv_header_type> custom_board_toothLogCsvHeader;
+extern std::optional<board_tooth_log_csv_line_type> custom_board_toothLogCsvLine;
+
+// Per-event payload sampler: called by ToothLoggerBufferPool::appendI for every logged
+// tooth/coil/injector event, under the critical section, frequently from interrupt
+// context - must be fast and lock-free (plain loads/stores only). Fills exactly
+// TOOTH_LOG_BOARD_PAYLOAD_SIZE bytes at 'dst'. Only meaningful when
+// TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0; unfilled rows (no hook installed) are zeroed.
+using board_tooth_log_sample_type = void (*)(void* /*dst*/);
+extern std::optional<board_tooth_log_sample_type> custom_board_toothLogSample;
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"

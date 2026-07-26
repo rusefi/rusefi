@@ -10,6 +10,12 @@
 #if EFI_TOOTH_LOGGER
 
 #include "tooth_logger_buffer.h"
+#include "board_overrides.h"
+
+// Defined here (not tooth_logger.cpp) because appendI needs it in every
+// EFI_TOOTH_LOGGER build, including TS-composite-only boards without
+// EFI_FILE_LOGGING.
+std::optional<board_tooth_log_sample_type> custom_board_toothLogSample;
 
 bool ToothLoggerBufferPool::startI() {
 	m_bufferHandle = getBigBuffer(BigBufferUser::ToothLogger);
@@ -95,6 +101,17 @@ void ToothLoggerBufferPool::appendI(const composite_logger_s& state, efitick_t t
 		// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
 		// swap whole record byteorder
 		entry->x = SWAP_UINT64(entry->x);
+
+#if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
+		// Board per-event payload, sampled NOW (event time) so the .teeth CSV
+		// columns it feeds are not skewed by buffer residency the way the
+		// flush-time-sampled upstream columns are.
+		if (custom_board_toothLogSample.has_value()) {
+			(*custom_board_toothLogSample)(buffer->boardPayload[idx]);
+		} else {
+			memset(buffer->boardPayload[idx], 0, TOOTH_LOG_BOARD_PAYLOAD_SIZE);
+		}
+#endif
 	}
 
 	// if the buffer is full...

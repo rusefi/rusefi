@@ -27,6 +27,7 @@ struct CsvBoardHookGuard {
 	~CsvBoardHookGuard() {
 		custom_board_toothLogCsvHeader = std::nullopt;
 		custom_board_toothLogCsvLine = std::nullopt;
+		custom_board_toothLogSample = std::nullopt;
 	}
 };
 
@@ -198,7 +199,7 @@ TEST(ToothLogger, WriteCsvBoardOverrideColumns) {
 	custom_board_toothLogCsvHeader = [](char* buffer, size_t size) {
 		return snprintf(buffer, size, ", BoardColA, BoardColB");
 	};
-	custom_board_toothLogCsvLine = [](char* buffer, size_t size) {
+	custom_board_toothLogCsvLine = [](char* buffer, size_t size, const void* /*payload*/) {
 		return snprintf(buffer, size, ", %d, %.2f", 7, 8.25f);
 	};
 
@@ -243,7 +244,7 @@ TEST(ToothLogger, WriteCsvBoardOverrideLineOverflow) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	CsvBoardHookGuard guard;
 
-	custom_board_toothLogCsvLine = [](char* buffer, size_t size) {
+	custom_board_toothLogCsvLine = [](char* buffer, size_t size, const void* /*payload*/) {
 		// snprintf-style: report the length the fragment would need, far beyond any row buffer
 		(void)buffer;
 		(void)size;
@@ -260,3 +261,48 @@ TEST(ToothLogger, WriteCsvBoardOverrideLineOverflow) {
 	EXPECT_EQ(ToothLoggerWriteCsv(w, &buf), -1);
 	EXPECT_TRUE(w.data.empty());
 }
+
+#if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
+// The line hook receives each ROW's own payload (sampled at append time by
+// custom_board_toothLogSample), not a flush-time snapshot: distinct per-entry
+// payloads must come out as distinct per-row column values.
+TEST(ToothLogger, WriteCsvBoardPayloadIsPerRow) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	CsvBoardHookGuard guard;
+
+	custom_board_toothLogCsvLine = [](char* buffer, size_t size, const void* payload) {
+		// interpret the first 4 payload bytes as a little uint32 counter
+		uint32_t value;
+		memcpy(&value, payload, sizeof(value));
+		return snprintf(buffer, size, ", %u", (unsigned)value);
+	};
+
+	CompositeBuffer buf{};
+	buf.nextIdx = 3;
+	buf.startTime.reset(0);
+	for (size_t i = 0; i < buf.nextIdx; i++) {
+		composite_logger_s c{};
+		c.timestamp = i * 1000;
+		buf.buffer[i].x = SWAP_UINT64(c.x);
+		uint32_t value = 100 + i;
+		memcpy(buf.boardPayload[i], &value, sizeof(value));
+	}
+
+	StringWriter w;
+	int total = ToothLoggerWriteCsv(w, &buf);
+	EXPECT_GT(total, 0);
+
+	size_t rowStart = 0;
+	for (size_t i = 0; i < buf.nextIdx; i++) {
+		size_t rowEnd = w.data.find("\r\n", rowStart);
+		ASSERT_NE(rowEnd, std::string::npos);
+		std::string row = w.data.substr(rowStart, rowEnd - rowStart);
+		char expectedTail[16];
+		snprintf(expectedTail, sizeof(expectedTail), ", %u", (unsigned)(100 + i));
+		ASSERT_GE(row.size(), strlen(expectedTail));
+		EXPECT_EQ(row.substr(row.size() - strlen(expectedTail)), expectedTail)
+			<< "row " << i << ": " << row;
+		rowStart = rowEnd + 2;
+	}
+}
+#endif // TOOTH_LOG_BOARD_PAYLOAD_SIZE

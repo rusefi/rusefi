@@ -38,6 +38,12 @@ else
   $(info no board_unit_tests.mk found at $(BOARD_DIR)/board_unit_tests.mk)
 endif
 
+# Exercise the board tooth-log payload path (tooth_logger.h) in unit tests
+# unless the board mk above picked its own payload size
+ifeq (,$(findstring TOOTH_LOG_BOARD_PAYLOAD_SIZE,$(DDEFS)))
+  DDEFS += -DTOOTH_LOG_BOARD_PAYLOAD_SIZE=4
+endif
+
 include $(PROJECT_DIR)/common_libfirmware.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global

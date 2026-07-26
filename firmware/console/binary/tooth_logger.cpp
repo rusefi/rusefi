@@ -399,8 +399,8 @@ int ToothLoggerWriter(FileBufferedWriter &writer) {
 
 #include "board_overrides.h"
 
-std::optional<board_tooth_log_csv_fragment_type> custom_board_toothLogCsvHeader;
-std::optional<board_tooth_log_csv_fragment_type> custom_board_toothLogCsvLine;
+std::optional<board_tooth_log_csv_header_type> custom_board_toothLogCsvHeader;
+std::optional<board_tooth_log_csv_line_type> custom_board_toothLogCsvLine;
 
 int ToothLoggerWriteCsvHeader(Writer &writer) {
 	// keep in sync with composite_logger_s
@@ -464,8 +464,13 @@ int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 		size_t len = ret;
 
 		if (custom_board_toothLogCsvLine.has_value()) {
+#if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
+			const void* payload = buffer->boardPayload[i];
+#else
+			const void* payload = nullptr;
+#endif
 			size_t room = sizeof(tmp) - 2 - len;
-			int extra = (*custom_board_toothLogCsvLine)(tmp + len, room);
+			int extra = (*custom_board_toothLogCsvLine)(tmp + len, room, payload);
 			if ((extra < 0) || (extra >= (int)room)) {
 				return -1;
 			}

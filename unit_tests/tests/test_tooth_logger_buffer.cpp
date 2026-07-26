@@ -9,6 +9,7 @@
 #include "pch.h"
 
 #include "tooth_logger_buffer.h"
+#include "board_overrides.h"
 
 BigBufferUser getBigBufferCurrentUser();
 
@@ -229,3 +230,58 @@ TEST(ToothLoggerBuffer, FlushCurrentTakesPartialBuffer) {
 	pool.returnBufferI(buf);
 	pool.stopI();
 }
+
+#if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
+// appendI must invoke the board payload sampler ONCE per appended event, at
+// append time, storing the result in the entry's parallel-array slot; without
+// a sampler installed the slot is zeroed.
+TEST(ToothLoggerBuffer, AppendSamplesBoardPayloadPerEvent) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	struct SampleHookGuard {
+		~SampleHookGuard() {
+			custom_board_toothLogSample = std::nullopt;
+		}
+	} guard;
+
+	// a static counter: each sampled event gets a distinct value
+	static uint32_t s_sampleCounter;
+	s_sampleCounter = 1000;
+	custom_board_toothLogSample = [](void* dst) {
+		uint32_t value = s_sampleCounter++;
+		memcpy(dst, &value, sizeof(value));
+	};
+
+	ToothLoggerBufferPool pool;
+	ASSERT_TRUE(pool.startI());
+
+	composite_logger_s state{};
+	efitick_t base = getTimeNowNt();
+	for (size_t i = 0; i < toothLoggerEntriesPerBuffer; i++) {
+		pool.appendI(state, base + US2NT(i * 100));
+	}
+
+	CompositeBuffer* buf = pool.getFilled(TIME_IMMEDIATE);
+	ASSERT_NE(buf, nullptr);
+
+	// one sample per event, in append order
+	uint32_t value;
+	memcpy(&value, buf->boardPayload[0], sizeof(value));
+	EXPECT_EQ(value, 1000u);
+	memcpy(&value, buf->boardPayload[toothLoggerEntriesPerBuffer - 1], sizeof(value));
+	EXPECT_EQ(value, 1000u + toothLoggerEntriesPerBuffer - 1);
+	EXPECT_EQ(s_sampleCounter, 1000u + toothLoggerEntriesPerBuffer);
+
+	// without a sampler the slot is zeroed, not stale
+	custom_board_toothLogSample = std::nullopt;
+	pool.appendI(state, base + US2NT(toothLoggerEntriesPerBuffer * 100));
+	CompositeBuffer* buf2 = pool.flushCurrentI();
+	ASSERT_NE(buf2, nullptr);
+	ASSERT_EQ(buf2->nextIdx, 1u);
+	memcpy(&value, buf2->boardPayload[0], sizeof(value));
+	EXPECT_EQ(value, 0u);
+
+	pool.returnBufferI(buf);
+	pool.stopI();
+}
+#endif // TOOTH_LOG_BOARD_PAYLOAD_SIZE

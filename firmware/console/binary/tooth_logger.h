@@ -65,8 +65,30 @@ typedef union __attribute__((packed)) {
 
 static constexpr size_t toothLoggerEntriesPerBuffer = 250;
 
+// Optional board-defined per-event payload, sampled at append time (interrupt
+// context) by custom_board_toothLogSample and rendered into extra .teeth CSV
+// columns by custom_board_toothLogCsvLine - see board_overrides.h. The
+// composite_logger_s entry itself is a TunerStudio wire-format contract and
+// cannot grow, so the payload lives in a parallel array inside the same
+// CompositeBuffer. A board opts in by adding
+// -DTOOTH_LOG_BOARD_PAYLOAD_SIZE=<bytes per event, multiple of 4> to DDEFS of
+// BOTH its firmware and unit-test builds, and maps its own struct onto the
+// void* payload pointers (static_assert the struct size matches). The default
+// of 0 compiles the array out entirely. Note: the payload widens
+// CompositeBuffer and therefore reduces how many buffers fit in the shared
+// BigBuffer region (BIG_BUFFER_SIZE, overridable) - check the resulting
+// buffer count covers your SD-card stall tolerance.
+#ifndef TOOTH_LOG_BOARD_PAYLOAD_SIZE
+#define TOOTH_LOG_BOARD_PAYLOAD_SIZE 0
+#endif
+static_assert(TOOTH_LOG_BOARD_PAYLOAD_SIZE % 4 == 0,
+	"payload must keep CompositeBuffer 4-byte aligned");
+
 struct CompositeBuffer {
 	composite_logger_s buffer[toothLoggerEntriesPerBuffer];
+#if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
+	uint8_t boardPayload[toothLoggerEntriesPerBuffer][TOOTH_LOG_BOARD_PAYLOAD_SIZE];
+#endif
 	size_t nextIdx;
 	Timer startTime;
 };
