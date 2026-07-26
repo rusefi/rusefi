@@ -102,6 +102,16 @@ void ToothLoggerBufferPool::appendI(const composite_logger_s& state, efitick_t t
 		// swap whole record byteorder
 		entry->x = SWAP_UINT64(entry->x);
 
+#if EFI_FILE_LOGGING || EFI_UNIT_TEST
+		// Values behind the VBatt/ET/InstantMAP/TPS .teeth CSV columns, sampled
+		// NOW (event time) so they are not skewed by buffer residency.
+		composite_sensor_snapshot_s& snapshot = buffer->sensorSnapshot[idx];
+		snapshot.vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
+		snapshot.et = Sensor::get(SensorType::Clt).value_or(0);
+		snapshot.instantMap = (float)engine->outputChannels.instantMAPValue;
+		snapshot.tps = Sensor::get(SensorType::Tps1).value_or(0);
+#endif
+
 #if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
 		// Board per-event payload, sampled NOW (event time) so the .teeth CSV
 		// columns it feeds are not skewed by buffer residency the way the

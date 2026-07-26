@@ -440,11 +440,12 @@ int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 		uint32_t sec = time_us / 1000000;
 		uint32_t usec = time_us % 1000000;
 
-		// todo: take these data points from structure, not current values. Kind of works for slow sensors, but still!
-		float vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
-		float et = Sensor::get(SensorType::Clt).value_or(0);
-		float instantMap = engine->outputChannels.instantMAPValue;
-		float tps = Sensor::get(SensorType::Tps1).value_or(0);
+		// per-event values sampled at append time - see sensorSnapshot in CompositeBuffer
+		const composite_sensor_snapshot_s& snapshot = buffer->sensorSnapshot[i];
+		float vbatt = snapshot.vbatt;
+		float et = snapshot.et;
+		float instantMap = snapshot.instantMap;
+		float tps = snapshot.tps;
 
 		// it is cheaper to write all data, even we have 1 cylinder engine with single crank sensor
 		// last two bytes are reserved for the CRLF terminator appended below

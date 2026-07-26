@@ -44,6 +44,14 @@ ifeq (,$(findstring TOOTH_LOG_BOARD_PAYLOAD_SIZE,$(DDEFS)))
   DDEFS += -DTOOTH_LOG_BOARD_PAYLOAD_SIZE=4
 endif
 
+# The test payload above plus the sensorSnapshot array push
+# sizeof(CompositeBuffer) past BIG_BUFFER_SIZE/2 at the 8192 default, which
+# would fail the ToothLoggerBufferPool::bufferCount >= 2 static_assert - give
+# host builds a roomier big buffer (it is just host RAM here)
+ifeq (,$(findstring BIG_BUFFER_SIZE,$(DDEFS)))
+  DDEFS += -DBIG_BUFFER_SIZE=16384
+endif
+
 include $(PROJECT_DIR)/common_libfirmware.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global

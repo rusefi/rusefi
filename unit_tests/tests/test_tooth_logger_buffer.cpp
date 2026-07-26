@@ -231,6 +231,49 @@ TEST(ToothLoggerBuffer, FlushCurrentTakesPartialBuffer) {
 	pool.stopI();
 }
 
+// appendI must capture the VBatt/ET/InstantMAP/TPS sensor snapshot at append
+// time, per event: values changing between events must land in each entry's
+// own sensorSnapshot slot instead of one flush-time reading for the buffer.
+TEST(ToothLoggerBuffer, AppendSamplesSensorSnapshotPerEvent) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	ToothLoggerBufferPool pool;
+	ASSERT_TRUE(pool.startI());
+
+	composite_logger_s state{};
+	efitick_t base = getTimeNowNt();
+
+	// values chosen exactly representable at the x100 snapshot scaling
+	Sensor::setMockValue(SensorType::BatteryVoltage, 12.5f);
+	Sensor::setMockValue(SensorType::Clt, 80.25f);
+	Sensor::setMockValue(SensorType::Tps1, 10.5f);
+	engine->outputChannels.instantMAPValue = 55.5f;
+	pool.appendI(state, base);
+
+	Sensor::setMockValue(SensorType::BatteryVoltage, 13.75f);
+	Sensor::setMockValue(SensorType::Clt, 95.5f);
+	Sensor::setMockValue(SensorType::Tps1, 25.25f);
+	engine->outputChannels.instantMAPValue = 60.0f;
+	pool.appendI(state, base + US2NT(100));
+
+	CompositeBuffer* buf = pool.flushCurrentI();
+	ASSERT_NE(buf, nullptr);
+	ASSERT_EQ(buf->nextIdx, 2u);
+
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].vbatt, 12.5f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].et, 80.25f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].instantMap, 55.5f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[0].tps, 10.5f);
+
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].vbatt, 13.75f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].et, 95.5f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].instantMap, 60.0f);
+	EXPECT_FLOAT_EQ(buf->sensorSnapshot[1].tps, 25.25f);
+
+	pool.returnBufferI(buf);
+	pool.stopI();
+}
+
 #if TOOTH_LOG_BOARD_PAYLOAD_SIZE > 0
 // appendI must invoke the board payload sampler ONCE per appended event, at
 // append time, storing the result in the entry's parallel-array slot; without

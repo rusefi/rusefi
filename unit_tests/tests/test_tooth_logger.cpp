@@ -44,16 +44,25 @@ TEST(ToothLogger, WriteCsvHeader) {
 TEST(ToothLogger, WriteCsvRows) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	// Seed mock sensor values so we get deterministic VBatt/ET/TPS columns
-	Sensor::setMockValue(SensorType::BatteryVoltage, 12.34f);
-	Sensor::setMockValue(SensorType::Clt, 56.78f);
-	Sensor::setMockValue(SensorType::Tps1, 43.21f);
-
-	engine->outputChannels.instantMAPValue = 0;
+	// Live sensor values at CSV-write (flush) time. These must NOT appear in
+	// the output - rows carry the per-event sensorSnapshot values instead.
+	Sensor::setMockValue(SensorType::BatteryVoltage, 99.99f);
+	Sensor::setMockValue(SensorType::Clt, 88.88f);
+	Sensor::setMockValue(SensorType::Tps1, 77.77f);
 
 	CompositeBuffer buf{};
 	buf.nextIdx = 2;
 	buf.startTime.reset(0);
+
+	buf.sensorSnapshot[0].vbatt = 12.34f;
+	buf.sensorSnapshot[0].et = 56.78f;
+	buf.sensorSnapshot[0].instantMap = 101.25f;
+	buf.sensorSnapshot[0].tps = 43.21f;
+
+	buf.sensorSnapshot[1].vbatt = 13.5f;
+	buf.sensorSnapshot[1].et = 57.25f;
+	buf.sensorSnapshot[1].instantMap = 45.75f;
+	buf.sensorSnapshot[1].tps = 100.0f;
 
 	// Row 0: timestamp 1.000002s, all flags zero
 	{
@@ -91,13 +100,20 @@ TEST(ToothLogger, WriteCsvRows) {
 	EXPECT_GT(total, 0);
 	EXPECT_EQ((size_t)total, w.data.size());
 
-	// Each row ends with the per-row VBatt and ET (formatted with %.2f)
-	// and contains the timestamp prefix.
+	// Each row contains the timestamp prefix and ends with ITS OWN snapshot
+	// values (formatted with %.2f), not the flush-time sensor readings.
+	size_t row1 = w.data.find("\r\n");
+	ASSERT_NE(row1, std::string::npos);
 	EXPECT_NE(w.data.find("1.000002,"), std::string::npos);
-	EXPECT_NE(w.data.find("2.000500,"), std::string::npos);
-	EXPECT_NE(w.data.find("12.34"), std::string::npos);
-	EXPECT_NE(w.data.find("56.78"), std::string::npos);
-	EXPECT_NE(w.data.find("43.21"), std::string::npos);
+	EXPECT_NE(w.data.find("2.000500,", row1), std::string::npos);
+
+	EXPECT_LT(w.data.find("12.34, 56.78, 101.25, 43.21"), row1);
+	EXPECT_NE(w.data.find("13.50, 57.25, 45.75, 100.00", row1), std::string::npos);
+
+	// flush-time (live) sensor values must not leak into any row
+	EXPECT_EQ(w.data.find("99.99"), std::string::npos);
+	EXPECT_EQ(w.data.find("88.88"), std::string::npos);
+	EXPECT_EQ(w.data.find("77.77"), std::string::npos);
 
 	// Number of CSV rows (CRLF-terminated) must match the buffer entries.
 	size_t crlfCount = 0;
