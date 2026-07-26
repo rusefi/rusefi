@@ -1908,7 +1908,8 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_CUSTOM_25 = 25;
 	public static final int vvt_mode_e_VVT_CUSTOM_26 = 26;
 	public static final int vvt_mode_e_VVT_CUSTOM_3 = 32;
-	public static final int vvt_mode_e_VVT_CUSTOM_4 = 34;
+	public static final int vvt_mode_e_VVT_CUSTOM_4 = 33;
+	public static final int vvt_mode_e_VVT_CUSTOM_5 = 34;
 	public static final int vvt_mode_e_VVT_DEV = 23;
 	public static final int vvt_mode_e_VVT_FORD_COYOTE = 19;
 	public static final int vvt_mode_e_VVT_FORD_ST170 = 7;
