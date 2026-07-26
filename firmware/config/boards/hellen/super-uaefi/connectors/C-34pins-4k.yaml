@@ -54,7 +54,7 @@ pins:
     color: red
 
   - pin: 11C
-    function: +12v from main relay OUTPUT (most users would NOT use this. auxiliary pin to daisy chain switched power to consumers like WBO heater)
+    function: +12v from main relay OUTPUT (most users would NOT use this. hard-wired via fuse for auxiliary pin to daisy chain switched power to consumers like WBO heater)
     type: 12V
 
   - pin: 12C
@@ -77,7 +77,7 @@ pins:
 #    function:
 
   - pin: 18C
-    function: +12v from main relay OUTPUT (most users would NOT use this. auxiliary pin to daisy chain switched power to consumers like WBO heater)
+    function: +12v from main relay OUTPUT (most users would NOT use this. hard-wired via fuse for auxiliary pin to daisy chain switched power to consumers like WBO heater)
     type: 12V
 
 #  - pin: 19C
