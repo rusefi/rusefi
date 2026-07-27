@@ -13,6 +13,7 @@ import java.util.Map;
 
 import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.LAMBDA_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AfrLambdaTableMigrationTest {
     private TestTuneMigrationContext testContext;
@@ -24,11 +25,17 @@ public class AfrLambdaTableMigrationTest {
 
         final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
         assertEquals(1, migratedConstants.size());
-        assertEquals("", testContext.getTestCallbacks().getContent());
+        assertEquals(
+            "WARNING! We cannot migrate values of `lambdaTable` table when units are changed `afr` -> " +
+                "`{useLambdaOnInterface ? \"lambda\" : \"afr\"}`\r\n" +
+                "WARNING! We cannot migrate values of `lambdaTable` table when units are changed `afr` -> " +
+                "`{useLambdaOnInterface ? \"lambda\" : \"afr\"}`\r\n",
+            testContext.getTestCallbacks().getContent()
+        );
     }
 
     @Test
-    void checkLambdaTableMigration() {
+    void checkLambdaTableMigrationFailure() {
         testContext.checkPrevAndUpdatedIniFields(
             LAMBDA_TABLE_FIELD_NAME,
             new ArrayIniField(
@@ -49,15 +56,15 @@ public class AfrLambdaTableMigrationTest {
                 FieldType.UINT8,
                 16,
                 16,
-                "lambda",
+                "{useLambdaOnInterface ? \"lambda\" : \"afr\"}",
                 0.006802721088435374,
-                "0.6",
-                "1.5",
-                "2"
+                "{useLambdaOnInterface ? 0.6 : 0}",
+                "{useLambdaOnInterface ? 1.5 : 25}",
+                "{useLambdaOnInterface ? 2 : 1}"
             )
         );
 
-        testContext.checkValueMigration(
+        assertThrows(AssertionError.class, () -> testContext.checkValueMigration(
             LAMBDA_TABLE_FIELD_NAME,
             new Constant(
                 LAMBDA_TABLE_FIELD_NAME,
@@ -86,7 +93,7 @@ public class AfrLambdaTableMigrationTest {
             ),
             new Constant(
                 LAMBDA_TABLE_FIELD_NAME,
-                "lambda",
+                "{useLambdaOnInterface ? \"lambda\" : \"afr\"}",
                 "\n" +
                     "                   1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0\n" +
                     "                   1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0\n" +
@@ -105,13 +112,13 @@ public class AfrLambdaTableMigrationTest {
                     "                   0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993 0.7482993\n" +
                     "                   0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912 0.7278912\n" +
                     "            ",
-                "2",
+                "{useLambdaOnInterface ? 2 : 1}",
                 "16",
                 "16"
             ),
             new Constant(
                 LAMBDA_TABLE_FIELD_NAME,
-                "lambda",
+                "{useLambdaOnInterface ? \"lambda\" : \"afr\"}",
                 "\n" +
                     "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n" +
                     "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n" +
@@ -129,10 +136,10 @@ public class AfrLambdaTableMigrationTest {
                     "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n" +
                     "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n" +
                     "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n",
-                "2",
+                "{useLambdaOnInterface ? 2 : 1}",
                 "16",
                 "16"
             )
-        );
+        ));
     }
 }
