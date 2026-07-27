@@ -215,7 +215,7 @@ private:
 	// Time since the last tooth
 	Timer m_lastToothTimer;
 	// Phase of the last tooth relative to the sync point
-	float m_lastToothPhaseFromSyncPoint;
+	float m_lastToothPhaseFromSyncPoint = 0;
 
 	// At what engine phase do we expect the next tooth to arrive?
 	// Used for checking whether your trigger pattern is correct.
