@@ -49,11 +49,11 @@ public class AfrLambdaTableMigrationTest {
                 FieldType.UINT8,
                 16,
                 16,
-                "{useLambdaOnInterface ? \"lambda\" : \"afr\"}",
+                "lambda",
                 0.006802721088435374,
-                "{useLambdaOnInterface ? 0.6 : 0}",
-                "{useLambdaOnInterface ? 1.5 : 25}",
-                "{useLambdaOnInterface ? 2 : 1}"
+                "0.6",
+                "1.5",
+                "2"
             )
         );
 
@@ -111,7 +111,7 @@ public class AfrLambdaTableMigrationTest {
             ),
             new Constant(
                 LAMBDA_TABLE_FIELD_NAME,
-                "{useLambdaOnInterface ? \"lambda\" : \"afr\"}",
+                "lambda",
                 "\n" +
                     "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n" +
                     "         1.00 1.00 1.00 1.01 1.01 1.02 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03 1.03\n" +
@@ -129,7 +129,7 @@ public class AfrLambdaTableMigrationTest {
                     "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n" +
                     "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n" +
                     "         0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.87 0.86 0.86 0.86 0.86 0.86 0.86 0.86\n",
-                "{useLambdaOnInterface ? 2 : 1}",
+                "2",
                 "16",
                 "16"
             )
