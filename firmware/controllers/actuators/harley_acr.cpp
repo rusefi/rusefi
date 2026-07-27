@@ -31,6 +31,11 @@
 #include "board_overrides.h"
 #include "tooth_logger.h"
 
+// Defined outside the EFI_HD_ACR guard: boards install this hook from shared
+// (test-visible) code, so the symbol must exist even in builds that compile
+// the ACR strategy itself out.
+std::optional<setup_custom_bool_type> custom_board_holdAcr;
+
 #if EFI_HD_ACR
 
 static bool getAcrState() {
@@ -44,6 +49,13 @@ static bool getAcrState() {
 	// Turn off the valve if the engine isn't moving - no sense wasting power on a stopped engine
 	if (!engineMovedRecently) {
 		return false;
+	}
+
+	// Additive board-side hold (see board_overrides.h): keep the valve open past
+	// the acrRevolutions countdown, e.g. while a cranking-phase detector needs
+	// the compression signature to stay stationary between compared revolutions.
+	if (custom_board_holdAcr.has_value() && custom_board_holdAcr.value()()) {
+		return true;
 	}
 
     if (custom_board_getAcrState.has_value()) {

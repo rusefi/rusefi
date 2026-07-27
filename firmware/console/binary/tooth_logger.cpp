@@ -411,7 +411,7 @@ int ToothLoggerWriteCsvHeader(Writer &writer) {
 	writer.write(header, sizeof(header) - 1);
 
 	if (custom_board_toothLogCsvHeader.has_value()) {
-		char extra[128];
+		char extra[256];
 		int len = (*custom_board_toothLogCsvHeader)(extra, sizeof(extra));
 		if ((len < 0) || (len >= (int)sizeof(extra))) {
 			return -1;
@@ -427,7 +427,7 @@ int ToothLoggerWriteCsvHeader(Writer &writer) {
 int ToothLoggerWriteCsv(Writer &writer, CompositeBuffer* buffer) {
 	size_t total = 0;
 	// base columns plus optional custom_board_toothLogCsvLine fragment plus CRLF
-	char tmp[192];
+	char tmp[256];
 
 	for (size_t i = 0; i < buffer->nextIdx; i++) {
 		// Swap back

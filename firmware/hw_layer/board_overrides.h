@@ -192,6 +192,21 @@ extern std::optional<setup_custom_bool_type> custom_board_isBoardWithPowerManage
 extern std::optional<setup_custom_bool_type> custom_board_boardAllowTriggerActions;
 
 extern std::optional<setup_custom_bool_type> custom_board_getAcrState;
+// Additive ACR hold: when set and returning true, the Harley ACR valve is kept
+// energized regardless of the acrRevolutions countdown (the engineMovedRecently
+// power-save guard still wins). Unlike custom_board_getAcrState this does NOT
+// replace the default strategy - it only extends the open window, e.g. while a
+// board-side cranking-phase detector is holding fuel/spark off and needs the
+// compression signature to stay stationary. Defined in harley_acr.cpp.
+extern std::optional<setup_custom_bool_type> custom_board_holdAcr;
+// Dynamic variant of engineConfiguration->isPhaseSyncRequiredForIgnition:
+// while set and returning true, fuel and spark stay cut (ClearReason::
+// EnginePhase) until the trigger central reports hasSynchronizedPhase().
+// Lets a board require phase sync only for a bounded window (e.g. the first
+// few cranking cycles while a phase detector votes) and then release to
+// wasted-spark/batch operation instead of blocking the start indefinitely.
+// Defined in limp_manager.cpp.
+extern std::optional<setup_custom_bool_type> custom_board_requirePhaseSyncForFiring;
 extern std::optional<setup_custom_bool_type> custom_board_allowFlashNow;
 
 /**
