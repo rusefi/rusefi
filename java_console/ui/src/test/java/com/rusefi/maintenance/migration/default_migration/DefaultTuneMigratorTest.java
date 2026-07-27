@@ -2,6 +2,7 @@ package com.rusefi.maintenance.migration.default_migration;
 
 import static com.rusefi.maintenance.migration.default_migration.CalibrationsTestHelpers.checkField;
 import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
+import static com.rusefi.maintenance.migration.IniFieldMigrationUtils.checkIfUnitsCanBeMigrated;
 import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_RPM_BINS_FIELD_NAME;
 import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.VE_TABLE_FIELD_NAME;
 import static java.util.Collections.emptySet;
@@ -32,6 +33,12 @@ public class DefaultTuneMigratorTest {
     @Test
     public void testVehicleName() {
         checkValueToUpdateExist(VEHICLE_NAME_FIELD_NAME, PREV_VEHICLE_NAME_VALUE, null);
+    }
+
+    @Test
+    public void testDifferentUnitsAreNotMigratable() {
+        // FIXME: this should be false!!
+        assertTrue(checkIfUnitsCanBeMigrated("afr", "lambda"));
     }
 
     @Test
