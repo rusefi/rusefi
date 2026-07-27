@@ -2,7 +2,12 @@
 
 rusEFI has a Windows Edition license for [install4j](https://www.ej-technologies.com/install4j). The current license and projects use install4j 11, not version 12.
 
-This directory contains branded Windows installers for rusEFI bundles. The first product is uaEFI in `uaefi/`
+This directory contains branded Windows installers for rusEFI bundles:
+
+| Product | Project | Bundle input |
+|---------|---------|--------------|
+| rusEFI Universal | `universal/universal-updater.install4j` | `rusefi_bundle_universal/rusefi.snapshot.universal` |
+| uaEFI | `uaefi/uaefi-updater.install4j` | `rusefi_bundle_uaefi/rusefi.snapshot.uaefi` |
 
 ## Scope
 
