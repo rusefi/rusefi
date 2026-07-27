@@ -174,6 +174,11 @@ public class DeviceSessionManagerTest {
         }
 
         @Override
+        public void addOnJobWorkerAboutToStartListener(Runnable listener) {
+            aboutToStart.add(listener);
+        }
+
+        @Override
         public void addOnJobInProgressFinishedListener(Runnable listener) {
             finished.add(listener);
         }

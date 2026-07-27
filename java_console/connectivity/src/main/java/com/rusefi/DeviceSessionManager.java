@@ -37,6 +37,8 @@ public class DeviceSessionManager {
 
         void addOnJobAboutToStartListener(Runnable listener);
 
+        void addOnJobWorkerAboutToStartListener(Runnable listener);
+
         void addOnJobInProgressFinishedListener(Runnable listener);
     }
 
@@ -96,7 +98,7 @@ public class DeviceSessionManager {
             // Jobs own serial-port transitions exclusively. Suspend the lifetime scanner rather than
             // letting it probe while the live connection closes and USB re-enumerates.
             jobExecutor.addOnJobAboutToStartListener(watchdogPause);
-            jobExecutor.addOnJobAboutToStartListener(() -> {
+            jobExecutor.addOnJobWorkerAboutToStartListener(() -> {
                 try {
                     connectivityContext.getPortScanner().suspend().await(30, TimeUnit.SECONDS);
                 } catch (InterruptedException e) {
