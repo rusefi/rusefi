@@ -54,8 +54,7 @@ public class DefaultTuneMigratorTest {
 
     @Test
     public void testDifferentUnitsAreNotMigratable() {
-        // FIXME: this should be false!!
-        assertTrue(checkIfUnitsCanBeMigrated("afr", "lambda"));
+        assertFalse(checkIfUnitsCanBeMigrated("afr", "lambda"));
     }
 
     @Test
