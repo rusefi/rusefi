@@ -28,8 +28,8 @@ public enum AfrLambdaTableValuesConverter implements TableValuesConverter {
             LAMBDA_TABLE_FIELD_NAME
         );
         if ((prevLambdaTableValue != null) && (updatedLambdaTableValue != null)) {
-            final String prevLambdaTableValueUnits = prevLambdaTableValue.getUnits();
-            final String updatedLambdaTableValueUnits = updatedLambdaTableValue.getUnits();
+            final String prevLambdaTableValueUnits = getStorageValue(prevLambdaTableValue.getUnits());
+            final String updatedLambdaTableValueUnits = getStorageValue(updatedLambdaTableValue.getUnits());
             if (Objects.equals(prevLambdaTableValueUnits, updatedLambdaTableValueUnits)) {
                 return Optional.of(prevValues);
             } else {
@@ -47,7 +47,7 @@ public enum AfrLambdaTableValuesConverter implements TableValuesConverter {
                                     prevValue,
                                     prevLambdaTableValueUnits,
                                     updatedLambdaTableValueUnits,
-                                    updatedLambdaTableValue.getDigits(),
+                                    getStorageValue(updatedLambdaTableValue.getDigits()),
                                     prevStoichRatioPrimary.get(),
                                     context
                                 );
@@ -64,6 +64,18 @@ public enum AfrLambdaTableValuesConverter implements TableValuesConverter {
             }
         }
         return Optional.empty();
+    }
+
+    private String getStorageValue(final String value) {
+        if (value == null) {
+            return null;
+        }
+        final int questionIndex = value.indexOf('?');
+        final int colonIndex = value.lastIndexOf(':');
+        if (questionIndex >= 0 && colonIndex > questionIndex) {
+            return value.substring(questionIndex + 1, colonIndex).replace("\"", "").trim();
+        }
+        return value;
     }
 
     private Optional<String> convertLambdaTableElementValue(
