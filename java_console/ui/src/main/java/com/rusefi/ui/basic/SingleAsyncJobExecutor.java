@@ -16,6 +16,7 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
 
     private final java.util.List<Runnable> onJobInProgressFinished = new ArrayList<>();
     private final java.util.List<Runnable> onJobAboutToStart = new ArrayList<>();
+    private final java.util.List<Runnable> onJobWorkerAboutToStart = new ArrayList<>();
 
     private volatile Optional<AsyncJob> jobInProgress = Optional.empty();
 
@@ -95,12 +96,17 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
     }
 
     /**
-     * Runs before a new job is handed off to the executor. Use this to release resources the job
-     * will need exclusive access to (e.g. close a live serial connection so the firmware updater
-     * can open the same port).
+     * Runs before a new job is handed off to the executor. Use this for quick caller-thread state
+     * updates; blocking preparation belongs in {@link #addOnJobWorkerAboutToStartListener(Runnable)}.
      */
     public void addOnJobAboutToStartListener(Runnable listener) {
         onJobAboutToStart.add(listener);
+    }
+
+    /** Runs on the job worker immediately before the job, so blocking preparation cannot freeze Swing. */
+    @Override
+    public void addOnJobWorkerAboutToStartListener(Runnable listener) {
+        onJobWorkerAboutToStart.add(listener);
     }
 
     public boolean startJob(final AsyncJob job, final Component parent) {
@@ -135,7 +141,11 @@ public class SingleAsyncJobExecutor implements com.rusefi.DeviceSessionManager.J
             }
             UpdateOperationCallbacks callbacks = recordingCallbacks(callbacksProvider.apply(job));
             callbacks.clear(); // resets lastResult to NONE and clears the selected status panel
-            AsyncJobExecutor.INSTANCE.executeJob(job, callbacks, this::handleJobInProgressFinished);
+            AsyncJobExecutor.INSTANCE.executeJob(job, callbacks, () -> {
+                for (Runnable listener : onJobWorkerAboutToStart) {
+                    listener.run();
+                }
+            }, this::handleJobInProgressFinished);
             return true;
         } else {
             errorHandler.accept(String.format("Job `%s` is already in progress!", prevJobInProgress.get().getName()));
