@@ -13,12 +13,15 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Optional;
 
 public class TuningTableView {
     private static final int TOOLBAR_GAP = 6;
+    private static final double SMOOTHING_FACTOR = 0.25;
     private final JTable table = new JTable();
     private final Surface3DView surface3DView = new Surface3DView();
     private final CardLayout cardLayout = new CardLayout();
@@ -77,10 +80,53 @@ public class TuningTableView {
         JButton upButton = new JButton("Up");
         JButton downButton = new JButton("Down");
         JButton equalsButton = new JButton("=");
+        Action horizontalAction = new AbstractAction("H") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                interpolateHorizontal();
+            }
+        };
+        Action verticalAction = new AbstractAction("V") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                interpolateVertical();
+            }
+        };
+        Action interpolateAction = new AbstractAction("Interpolate") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                interpolateSelection();
+            }
+        };
+        Action smoothAction = new AbstractAction("Smooth") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                smoothSelection();
+            }
+        };
+        JButton horizontalButton = new JButton(horizontalAction);
+        JButton verticalButton = new JButton(verticalAction);
+        JButton interpolateButton = new JButton(interpolateAction);
+        JButton smoothButton = new JButton(smoothAction);
 
         upButton.addActionListener(e -> applyDelta(deltaField, 1));
         downButton.addActionListener(e -> applyDelta(deltaField, -1));
         equalsButton.addActionListener(e -> showSetDialog());
+        horizontalButton.setToolTipText("Interpolate Horizontal - Key: H");
+        verticalButton.setToolTipText("Interpolate Vertical - Key: V");
+        interpolateButton.setToolTipText("Interpolate selected cells - Key: /");
+        smoothButton.setToolTipText("Smooth selected cells - Key: S");
+
+        JPanel editControls = new JPanel(new FlowLayout(FlowLayout.LEFT, TOOLBAR_GAP, 0));
+        editControls.add(new JLabel("delta:"));
+        editControls.add(deltaField);
+        editControls.add(upButton);
+        editControls.add(downButton);
+        editControls.add(equalsButton);
+        editControls.add(horizontalButton);
+        editControls.add(verticalButton);
+        editControls.add(interpolateButton);
+        editControls.add(smoothButton);
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
@@ -92,15 +138,17 @@ public class TuningTableView {
 
         if (!viewMode) {
             topPanel.add(Box.createHorizontalStrut(10));
-            topPanel.add(new JLabel("delta:"));
-            topPanel.add(Box.createHorizontalStrut(TOOLBAR_GAP));
-            topPanel.add(deltaField);
-            topPanel.add(Box.createHorizontalStrut(TOOLBAR_GAP));
-            topPanel.add(upButton);
-            topPanel.add(Box.createHorizontalStrut(TOOLBAR_GAP));
-            topPanel.add(downButton);
-            topPanel.add(Box.createHorizontalStrut(TOOLBAR_GAP));
-            topPanel.add(equalsButton);
+            topPanel.add(editControls);
+
+            InputMap inputMap = content.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_H, 0), "interpolateHorizontal");
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, 0), "interpolateVertical");
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, 0), "interpolateSelection");
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "smoothSelection");
+            content.getActionMap().put("interpolateHorizontal", horizontalAction);
+            content.getActionMap().put("interpolateVertical", verticalAction);
+            content.getActionMap().put("interpolateSelection", interpolateAction);
+            content.getActionMap().put("smoothSelection", smoothAction);
         }
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -140,16 +188,37 @@ public class TuningTableView {
 
         for (int row : selectedRows) {
             for (int col : selectedCols) {
-                if (col == 0) continue; // Skip axis column
+                if (col == 0) {
+                    continue; // Skip axis column
+                }
                 int reversedRowIndex = model.data.length - 1 - row;
                 model.data[reversedRowIndex][col - 1] = value;
             }
         }
+        commitEdit(model, selectedRows, selectedCols);
+    }
+
+    public void setOnEdit(Runnable onEdit) {
+        this.onEdit = onEdit;
+    }
+
+    private boolean writeBackZBins(TuningTableModel model) {
+        if (imageTarget == null || zBinsField == null) {
+            return false;
+        }
+        ConfigurationImageGetterSetter.setArrayValues(zBinsField, imageTarget, model.data);
+        Double[][] encodedValues = ConfigurationImageGetterSetter.getArrayValues(zBinsField, imageTarget);
+        for (int row = 0; row < model.data.length; row++) {
+            System.arraycopy(encodedValues[row], 0, model.data[row], 0, model.data[row].length);
+        }
+        return true;
+    }
+
+    private void commitEdit(TuningTableModel model, int[] selectedRows, int[] selectedCols) {
+        boolean wroteImage = writeBackZBins(model);
         calculateMinMax(model.data);
         model.fireTableDataChanged();
-        writeBackZBins(model);
 
-        // Restore selection
         table.clearSelection();
         for (int row : selectedRows) {
             table.addRowSelectionInterval(row, row);
@@ -159,16 +228,9 @@ public class TuningTableView {
         }
 
         surface3DView.setData(model.data, model.xBins, model.yBins, minValue, maxValue);
-    }
-
-    public void setOnEdit(Runnable onEdit) {
-        this.onEdit = onEdit;
-    }
-
-    private void writeBackZBins(TuningTableModel model) {
-        if (imageTarget == null || zBinsField == null) return;
-        ConfigurationImageGetterSetter.setArrayValues(zBinsField, imageTarget, model.data);
-        if (onEdit != null) onEdit.run();
+        if (wroteImage && onEdit != null) {
+            onEdit.run();
+        }
     }
 
     private void applyDelta(JTextField deltaField, int sign) {
@@ -184,28 +246,221 @@ public class TuningTableView {
 
             for (int row : selectedRows) {
                 for (int col : selectedCols) {
-                    if (col == 0) continue; // Skip axis column
+                    if (col == 0) {
+                        continue; // Skip axis column
+                    }
                     int reversedRowIndex = model.data.length - 1 - row;
                     model.data[reversedRowIndex][col - 1] += delta;
                 }
             }
-            calculateMinMax(model.data);
-
-            model.fireTableDataChanged();
-            writeBackZBins(model);
-
-            // Restore selection
-            table.clearSelection();
-            for (int row : selectedRows) {
-                table.addRowSelectionInterval(row, row);
-            }
-            for (int col : selectedCols) {
-                table.addColumnSelectionInterval(col, col);
-            }
-
-            surface3DView.setData(model.data, model.xBins, model.yBins, minValue, maxValue);
+            commitEdit(model, selectedRows, selectedCols);
         } catch (NumberFormatException ignored) {
         }
+    }
+
+    private void interpolateHorizontal() {
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int[] selectedRows = table.getSelectedRows();
+        int[] selectedCols = getSelectedDataColumns();
+        if (selectedRows.length == 0 || selectedCols.length < 2) {
+            return;
+        }
+
+        int firstCol = selectedCols[0] - 1;
+        int lastCol = selectedCols[selectedCols.length - 1] - 1;
+        Double[][] source = copyData(model.data);
+        boolean changed = false;
+
+        for (int selectedRow : selectedRows) {
+            int row = model.data.length - 1 - selectedRow;
+            double firstValue = source[row][firstCol];
+            double lastValue = source[row][lastCol];
+            for (int selectedCol : selectedCols) {
+                int col = selectedCol - 1;
+                double position = (double) (col - firstCol) / (lastCol - firstCol);
+                double value = firstValue + position * (lastValue - firstValue);
+                if (Double.compare(model.data[row][col], value) != 0) {
+                    model.data[row][col] = value;
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed) {
+            commitEdit(model, selectedRows, table.getSelectedColumns());
+        }
+    }
+
+    private void interpolateSelection() {
+        int selectedRowCount = table.getSelectedRowCount();
+        int selectedColumnCount = getSelectedDataColumns().length;
+        if (selectedRowCount == 1 && selectedColumnCount > 1) {
+            interpolateHorizontal();
+        } else if (selectedRowCount > 1 && selectedColumnCount == 1) {
+            interpolateVertical();
+        } else if (selectedRowCount > 1 && selectedColumnCount > 1) {
+            interpolateBilinear();
+        }
+    }
+
+    private void interpolateVertical() {
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int[] selectedRows = table.getSelectedRows();
+        int[] selectedCols = getSelectedDataColumns();
+        if (selectedRows.length < 2 || selectedCols.length == 0) {
+            return;
+        }
+
+        int firstRow = selectedRows[0];
+        int lastRow = selectedRows[selectedRows.length - 1];
+        Double[][] source = copyData(model.data);
+        boolean changed = false;
+
+        for (int selectedCol : selectedCols) {
+            int col = selectedCol - 1;
+            double firstValue = source[model.data.length - 1 - firstRow][col];
+            double lastValue = source[model.data.length - 1 - lastRow][col];
+            for (int selectedRow : selectedRows) {
+                int row = model.data.length - 1 - selectedRow;
+                double position = (double) (selectedRow - firstRow) / (lastRow - firstRow);
+                double value = firstValue + position * (lastValue - firstValue);
+                if (Double.compare(model.data[row][col], value) != 0) {
+                    model.data[row][col] = value;
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed) {
+            commitEdit(model, selectedRows, table.getSelectedColumns());
+        }
+    }
+
+    private void interpolateBilinear() {
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int[] selectedRows = table.getSelectedRows();
+        int[] selectedCols = getSelectedDataColumns();
+        if (selectedRows.length < 2 || selectedCols.length < 2) {
+            return;
+        }
+
+        int firstRow = selectedRows[0];
+        int lastRow = selectedRows[selectedRows.length - 1];
+        int firstCol = selectedCols[0] - 1;
+        int lastCol = selectedCols[selectedCols.length - 1] - 1;
+        Double[][] source = copyData(model.data);
+        double topLeft = source[model.data.length - 1 - firstRow][firstCol];
+        double topRight = source[model.data.length - 1 - firstRow][lastCol];
+        double bottomLeft = source[model.data.length - 1 - lastRow][firstCol];
+        double bottomRight = source[model.data.length - 1 - lastRow][lastCol];
+        boolean changed = false;
+
+        for (int selectedRow : selectedRows) {
+            int row = model.data.length - 1 - selectedRow;
+            double verticalPosition = (double) (selectedRow - firstRow) / (lastRow - firstRow);
+            for (int selectedCol : selectedCols) {
+                int col = selectedCol - 1;
+                double horizontalPosition = (double) (col - firstCol) / (lastCol - firstCol);
+                double value = (1 - horizontalPosition) * (1 - verticalPosition) * topLeft
+                    + horizontalPosition * (1 - verticalPosition) * topRight
+                    + (1 - horizontalPosition) * verticalPosition * bottomLeft
+                    + horizontalPosition * verticalPosition * bottomRight;
+                if (Double.compare(model.data[row][col], value) != 0) {
+                    model.data[row][col] = value;
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed) {
+            commitEdit(model, selectedRows, table.getSelectedColumns());
+        }
+    }
+
+    private void smoothSelection() {
+        if (!(table.getModel() instanceof TuningTableModel)) {
+            return;
+        }
+        TuningTableModel model = (TuningTableModel) table.getModel();
+        int[] selectedRows = table.getSelectedRows();
+        int[] selectedCols = getSelectedDataColumns();
+        if (selectedRows.length == 0 || selectedCols.length == 0) {
+            return;
+        }
+
+        Double[][] source = copyData(model.data);
+        boolean changed = false;
+        for (int selectedRow : selectedRows) {
+            int row = model.data.length - 1 - selectedRow;
+            for (int selectedCol : selectedCols) {
+                int col = selectedCol - 1;
+                double sum = 0;
+                int count = 0;
+                for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+                    for (int colOffset = -1; colOffset <= 1; colOffset++) {
+                        if (rowOffset == 0 && colOffset == 0) {
+                            continue;
+                        }
+                        int neighborRow = row + rowOffset;
+                        int neighborCol = col + colOffset;
+                        if (neighborRow >= 0 && neighborRow < source.length
+                            && neighborCol >= 0 && neighborCol < source[neighborRow].length) {
+                            sum += source[neighborRow][neighborCol];
+                            count++;
+                        }
+                    }
+                }
+                if (count == 0) {
+                    continue;
+                }
+                double value = (1 - SMOOTHING_FACTOR) * source[row][col]
+                    + SMOOTHING_FACTOR * sum / count;
+                if (Double.compare(model.data[row][col], value) != 0) {
+                    model.data[row][col] = value;
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed) {
+            commitEdit(model, selectedRows, table.getSelectedColumns());
+        }
+    }
+
+    private int[] getSelectedDataColumns() {
+        int[] selectedCols = table.getSelectedColumns();
+        int dataColumnCount = 0;
+        for (int selectedCol : selectedCols) {
+            if (selectedCol > 0) {
+                dataColumnCount++;
+            }
+        }
+
+        int[] result = new int[dataColumnCount];
+        int index = 0;
+        for (int selectedCol : selectedCols) {
+            if (selectedCol > 0) {
+                result[index++] = selectedCol;
+            }
+        }
+        return result;
+    }
+
+    private Double[][] copyData(Double[][] data) {
+        Double[][] copy = new Double[data.length][];
+        for (int row = 0; row < data.length; row++) {
+            copy[row] = data[row].clone();
+        }
+        return copy;
     }
 
     public void displayTable(IniFileModel iniFile, String tableName, ConfigurationImage zImage, ConfigurationImage axisImage) {
