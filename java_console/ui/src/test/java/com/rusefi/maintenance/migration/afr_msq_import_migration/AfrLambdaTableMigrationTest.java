@@ -13,7 +13,6 @@ import java.util.Map;
 
 import static com.rusefi.maintenance.migration.migrators.TableAddColumnsMigrator.LAMBDA_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AfrLambdaTableMigrationTest {
     private TestTuneMigrationContext testContext;
@@ -25,17 +24,11 @@ public class AfrLambdaTableMigrationTest {
 
         final Map<String, Constant> migratedConstants = testContext.getMigratedConstants();
         assertEquals(1, migratedConstants.size());
-        assertEquals(
-            "WARNING! We cannot migrate values of `lambdaTable` table when units are changed `afr` -> " +
-                "`{useLambdaOnInterface ? \"lambda\" : \"afr\"}`\r\n" +
-                "WARNING! We cannot migrate values of `lambdaTable` table when units are changed `afr` -> " +
-                "`{useLambdaOnInterface ? \"lambda\" : \"afr\"}`\r\n",
-            testContext.getTestCallbacks().getContent()
-        );
+        assertEquals("", testContext.getTestCallbacks().getContent());
     }
 
     @Test
-    void checkLambdaTableMigrationFailure() {
+    void checkLambdaTableMigration() {
         testContext.checkPrevAndUpdatedIniFields(
             LAMBDA_TABLE_FIELD_NAME,
             new ArrayIniField(
@@ -64,7 +57,7 @@ public class AfrLambdaTableMigrationTest {
             )
         );
 
-        assertThrows(AssertionError.class, () -> testContext.checkValueMigration(
+        testContext.checkValueMigration(
             LAMBDA_TABLE_FIELD_NAME,
             new Constant(
                 LAMBDA_TABLE_FIELD_NAME,
@@ -140,6 +133,6 @@ public class AfrLambdaTableMigrationTest {
                 "16",
                 "16"
             )
-        ));
+        );
     }
 }
