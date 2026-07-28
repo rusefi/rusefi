@@ -92,6 +92,55 @@ TEST(TunerstudioCommands, writeChunkEngineConfig) {
 	EXPECT_EQ(configBytes[100], 50);
 }
 
+TEST(TunerstudioCommands, burnFixRunsAfterCrc) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	TunerStudio ts;
+
+	engineConfiguration->mapExpAverageAlpha = 0;
+	const uint32_t expectedCrc = SWAP_UINT32(crc32(engineConfiguration, sizeof(persistent_config_s)));
+
+	ts.handleBurnCommand(&channel, TS_PAGE_SETTINGS);
+	EXPECT_TRUE(channel.settingsBurnPending);
+	EXPECT_EQ(engineConfiguration->mapExpAverageAlpha, 0);
+	ts.handleBurnCommand(&channel, TS_PAGE_SETTINGS);
+	EXPECT_TRUE(channel.settingsBurnPending);
+	EXPECT_EQ(engineConfiguration->mapExpAverageAlpha, 0);
+	uint8_t zero = 0;
+	ts.handleWriteChunkCommand(&channel, TS_PAGE_SETTINGS,
+		offsetof(engine_configuration_s, mapExpAverageAlpha), sizeof(zero), &zero);
+	EXPECT_TRUE(channel.settingsBurnPending);
+	EXPECT_EQ(engineConfiguration->mapExpAverageAlpha, 0);
+
+	channel.reset();
+	ts.handleCrc32Check(&channel, TS_PAGE_SETTINGS, 0, sizeof(persistent_config_s));
+
+	uint32_t actualCrc;
+	memcpy(&actualCrc, &st5TestBuffer[3], sizeof(actualCrc));
+	EXPECT_EQ(actualCrc, expectedCrc);
+	EXPECT_FALSE(channel.settingsBurnPending);
+	EXPECT_EQ(engineConfiguration->mapExpAverageAlpha, 1);
+}
+
+TEST(TunerstudioCommands, burnFixRunsAfterTimeout) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	BufferTsChannel channel;
+	TunerStudio ts;
+
+	engineConfiguration->mapExpAverageAlpha = 0;
+	ts.handleBurnCommand(&channel, TS_PAGE_SETTINGS);
+
+	advanceTimeUs(1900000);
+	ts.handlePendingBurnTimeout(&channel);
+	EXPECT_TRUE(channel.settingsBurnPending);
+	EXPECT_EQ(engineConfiguration->mapExpAverageAlpha, 0);
+
+	advanceTimeUs(200000);
+	ts.handlePendingBurnTimeout(&channel);
+	EXPECT_FALSE(channel.settingsBurnPending);
+	EXPECT_EQ(engineConfiguration->mapExpAverageAlpha, 1);
+}
+
 static constexpr size_t TS_ERROR_PACKET_SIZE = 7;
 static constexpr uint16_t OVERSIZED_COUNT = 0xFFFF;
 

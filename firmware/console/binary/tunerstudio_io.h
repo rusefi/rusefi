@@ -20,6 +20,7 @@
 #endif
 
 #include "can.h"
+#include <rusefi/timer.h>
 
 #ifndef USART_CR2_STOP1_BITS
 // todo: acticulate why exactly does prometheus_469 as for this hack
@@ -92,6 +93,8 @@ public:
 	 * by one read. Instead after getting packet size it will try to receive one byte of
 	 * command and check if it is supported. */
 	bool in_sync = false;
+	bool settingsBurnPending = false;
+	Timer settingsBurnTimer;
 
 private:
 	bool isBigPacket(size_t size);
